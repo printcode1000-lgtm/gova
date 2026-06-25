@@ -1,0 +1,12 @@
+export { StoreIdentitySection } from './store-identity-section';
+export { MerchantInfoSection } from './merchant-info-section';
+export { ContactInfoSection } from './contact-info-section';
+export { LocationSection } from './location-section';
+export { CategoriesSection } from './categories-section';
+export { ShippingSection } from './shipping-section';
+export { ReturnsSection } from './returns-section';
+export { BrandIdentitySection } from './brand-identity-section';
+export { ProductsSection } from './products-section';
+export { CollectionsSection } from './collections-section';
+export { VerificationSection } from './verification-section';
+export { MarketingSection } from './marketing-section';

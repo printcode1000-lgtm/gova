@@ -1,0 +1,32 @@
+/* App-level Tailwind aliases (shadcn, merchant, semantic status) */
+
+@theme inline {
+  --color-foreground: var(--color-on-background);
+  --color-primary-foreground: var(--color-on-primary);
+
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-on-surface);
+  --color-popover: var(--color-surface);
+  --color-popover-foreground: var(--color-on-surface);
+  --color-muted: var(--color-surface-variant);
+  --color-muted-foreground: var(--color-on-surface-variant);
+  --color-accent: var(--color-surface-container);
+  --color-accent-foreground: var(--color-on-surface);
+  --color-destructive: var(--color-error);
+  --color-destructive-foreground: var(--color-on-error);
+  --color-border: var(--color-outline-variant);
+  --color-input: var(--color-outline);
+  --color-ring: var(--color-primary);
+
+  --color-success: var(--color-google-green);
+  --color-warning: var(--color-tertiary);
+
+  --color-merchant-gold: hsl(45 93% 47%);
+  --color-merchant-gold-foreground: #ffffff;
+  --color-merchant-success: hsl(142 76% 36%);
+  --color-merchant-success-foreground: #ffffff;
+  --color-merchant-warning: hsl(38 92% 50%);
+  --color-merchant-warning-foreground: #0f172a;
+  --color-merchant-info: hsl(199 89% 48%);
+  --color-merchant-info-foreground: #ffffff;
+}

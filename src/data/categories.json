@@ -1,0 +1,155 @@
+[
+  {
+    "id": 1,
+    "title_ar": "الملابس والأزياء",
+    "title_en": "Clothing & Fashion",
+    "icon": "fas fa-shirt",
+    "image": "Clothing & Fashion.webp",
+    "created_at": "2026-06-14 04:03:26",
+    "updated_at": "2026-06-14 04:03:26"
+  },
+  {
+    "id": 2,
+    "title_ar": "الأطعمة والمشروبات",
+    "title_en": "Food & Beverages",
+    "icon": "fas fa-utensils",
+    "image": "Food & Beverages.webp",
+    "created_at": "2026-06-14 04:03:26",
+    "updated_at": "2026-06-14 04:03:26"
+  },
+  {
+    "id": 3,
+    "title_ar": "التقنية والالكترونيات",
+    "title_en": "Tech & Electronics",
+    "icon": "fas fa-robot",
+    "image": "Tech & Electronics.webp",
+    "created_at": "2026-06-14 04:03:26",
+    "updated_at": "2026-06-14 04:03:26"
+  },
+  {
+    "id": 4,
+    "title_ar": "الصحة والجمال",
+    "title_en": "Health & Beauty",
+    "icon": "fas fa-spa",
+    "image": "Health & Beauty.webp",
+    "created_at": "2026-06-14 04:03:26",
+    "updated_at": "2026-06-14 04:03:26"
+  },
+  {
+    "id": 5,
+    "title_ar": "المنزل والأثاث",
+    "title_en": "Home & Furniture",
+    "icon": "fas fa-couch",
+    "image": "Home & Furniture.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 6,
+    "title_ar": "خدمات تعليمية",
+    "title_en": "Educational Services",
+    "icon": "fas fa-briefcase",
+    "image": "Educational Services.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 7,
+    "title_ar": "سوق المركبات",
+    "title_en": "Vehicles Market",
+    "icon": "fas fa-car",
+    "image": "Vehicles Market.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 8,
+    "title_ar": "الرياضة والترفيه",
+    "title_en": "Sports & Entertainment",
+    "icon": "fas fa-basketball-ball",
+    "image": "Sports.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 12,
+    "title_ar": "الحيوانات الأليفة",
+    "title_en": "Pets",
+    "icon": "fas fa-paw",
+    "image": "Pets.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 13,
+    "title_ar": "الفنون والحرف",
+    "title_en": "Arts & Crafts",
+    "icon": "fas fa-paint-brush",
+    "image": "Arts & Crafts.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 16,
+    "title_ar": "العقارات",
+    "title_en": "Real Estate",
+    "icon": "fas fa-city",
+    "image": "Real Estate.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 17,
+    "title_ar": "المناسبات والهدايا",
+    "title_en": "Events & Gifts",
+    "icon": "fas fa-gift",
+    "image": "Events & Gifts.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 20,
+    "title_ar": "الخدمات الطبية",
+    "title_en": "Medical Services",
+    "icon": "fas fa-user-md",
+    "image": "Medical Services.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 23,
+    "title_ar": "ماى واى",
+    "title_en": "My Way",
+    "icon": "fas fa-m",
+    "image": "My Way.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 44,
+    "title_ar": "أوريفليم",
+    "title_en": "Oriflame",
+    "icon": "fas fa-circle-notch",
+    "image": "Oriflame.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 45,
+    "title_ar": "افون",
+    "title_en": "Avon",
+    "icon": "fas fa-v",
+    "image": "Avon.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  },
+  {
+    "id": 46,
+    "title_ar": "خدمات التوصيل",
+    "title_en": "Delivery Services",
+    "icon": "fas fa-shipping-fast",
+    "image": "Shipping & Delivery.webp",
+    "created_at": "2026-06-14 04:03:27",
+    "updated_at": "2026-06-14 04:03:27"
+  }
+]
