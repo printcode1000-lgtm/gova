@@ -13,7 +13,7 @@ src/theme/
 ├── tailwind-theme.css     # Tailwind @theme mapping
 ├── base.css               # Base element styles
 ├── preferences.css        # data-* attribute driven styles (density, contrast, motion)
-├── color-balance.css      # Tonal palettes
+├── color-balance.css      # 60 · 30 · 10 usage rule + gova-* surface classes
 ├── app-overrides.css      # App-specific overrides
 └── runtime/
     ├── ThemeProvider.tsx       # React context for theme preferences
@@ -63,6 +63,54 @@ The theme exposes utility classes used across the app:
 | `text-on-surface` | Default text color token |
 
 Colors come from CSS variables defined in `tokens.css` (e.g. `--color-primary`, `--color-on-surface`).
+
+---
+
+## Color usage: 60 · 30 · 10 rule
+
+Gova does **not** use the golden ratio (φ ≈ 1.618) for colors. Palette values come from **Material Design 3 / Google** tokens in `tokens.css`. **How those colors are applied** on screen follows the **60 · 30 · 10** balance defined in `color-balance.css`:
+
+| Share | Role | Typical use |
+|-------|------|-------------|
+| **60%** | **Neutral** | Page canvas, body text, default cards |
+| **30%** | **Tonal** | `*-container` surfaces, section bands, soft brand tint |
+| **10%** | **Accent** | Primary CTAs, chips, badges, active nav, hero emphasis |
+
+### Class mapping
+
+**60% — Neutral**
+
+| Class | Purpose |
+|-------|---------|
+| `gova-canvas` | Main page background |
+| `gova-surface-neutral` | Neutral flat surface |
+| `gova-card-neutral` | Default card |
+| `gova-card-elevated` | Elevated neutral card |
+| `gova-field-surface` | Form field background |
+| `gova-empty-state` / `gova-empty-state-card` | Empty / coming-soon layouts |
+
+**30% — Tonal** (primary / secondary / tertiary / error variants)
+
+| Class | Purpose |
+|-------|---------|
+| `gova-section-tonal-*` | Full-width section bands |
+| `gova-card-tonal-*` | Tonal cards |
+| `gova-tonal-*` | Inline tonal blocks |
+| `gova-ring-*` | Icon rings with tonal border |
+| `gova-settings-section-*` | Settings panel sections |
+| `gova-onboarding-*` | Onboarding shell / sidebar |
+| `gova-merchant-band-*` | Merchant page bands |
+
+**10% — Accent**
+
+| Class | Purpose |
+|-------|---------|
+| `gova-accent-cta` / `gova-accent-cta-*` | Primary action buttons |
+| `gova-accent-chip` / `gova-accent-chip-*` | Badges and labels |
+| `gova-nav-pill-active` | Active bottom-nav item |
+| `gova-section-heading-*` | Emphasized section titles |
+
+When adding UI, prefer **neutral** for most of the layout, **tonal** for grouped content, and **accent** sparingly for actions and highlights — keeping roughly a 60 · 30 · 10 visual balance.
 
 ---
 

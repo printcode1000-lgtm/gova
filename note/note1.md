@@ -28,13 +28,14 @@ Ctrl + Shift + P
 Terminal: Clear
 
 
-# قواعد البيانات
-src/platform/ui/devtools/ui-inspector/domain/
-
 # قواعد الرسم 
 Graph Schema
 Relationship Graph in JSON format only,
 
 
-# uuid
- UUIDs   القياسية (RFC4122)
+# git
+https://git-scm.com/install/windows
+winget install --id GitHub.cli
+ثم
+ gh auth login
+choco install gh
