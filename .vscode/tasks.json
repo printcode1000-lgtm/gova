@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev Server",
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": [],
+      "detail": "تشغيل خادم التطوير على المنفذ 3000"
+    },
+    {
+      "label": "Build",
+      "type": "npm",
+      "script": "build",
+      "problemMatcher": [],
+      "detail": "بناء المشروع للإنتاج"
+    },
+    {
+      "label": "Build Static",
+      "type": "npm",
+      "script": "build:static",
+      "problemMatcher": [],
+      "detail": "تصدير ثابت (out/)"
+    },
+    {
+      "label": "Type Check",
+      "type": "npm",
+      "script": "typecheck",
+      "problemMatcher": "$tsc",
+      "detail": "فحص أنواع TypeScript"
+    },
+    {
+      "label": "Lint",
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": "$eslint-stylish",
+      "detail": "فحص الكود بـ ESLint"
+    },
+    {
+      "label": "Stop Dev Server",
+      "type": "npm",
+      "script": "server:stop",
+      "problemMatcher": [],
+      "detail": "إيقاف السيرفر على المنفذ 3000"
+    }
+  ]
+}
