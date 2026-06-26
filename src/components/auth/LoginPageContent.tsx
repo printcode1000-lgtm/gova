@@ -24,28 +24,15 @@ import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { createLoginSchema, type LoginFormData } from '@/lib/validation/auth';
 
+import { useLogin } from '@/features/auth/hooks/use-login';
+
 export function LoginPageContent() {
   const router = useRouter();
   const { t, isRTL } = useTranslation();
   const { startGuestSession } = useGuestSession();
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [submitted, setSubmitted] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const loginSchema = React.useMemo(() => createLoginSchema(t), [t]);
-
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { phone: '', password: '' },
-    mode: 'onChange',
-  });
-
-  const onSubmit = async (_data: LoginFormData) => {
-    setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setSubmitted(true);
-  };
+  const { form, isSubmitting, error, submitted, onSubmit } = useLogin();
 
   if (submitted) {
     return (
@@ -84,8 +71,14 @@ export function LoginPageContent() {
               <p className="text-base text-on-surface-variant">{t('auth.login.subtitle')}</p>
             </div>
 
+            {error && (
+              <div className="p-3 text-sm rounded bg-error/15 text-error text-center font-medium animate-in fade-in duration-200">
+                {error}
+              </div>
+            )}
+
             <FormProvider {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
+              <form onSubmit={onSubmit} className="space-y-6" noValidate>
                 <Controller
                   name="phone"
                   control={form.control}

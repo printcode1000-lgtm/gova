@@ -5,6 +5,7 @@ import { THEME_COLOR_LIGHT } from "@/theme/runtime";
 
 import { PreferencesProvider } from "@/lib/preferences";
 import { ShellLayout } from "@/components/layouts/ShellLayout";
+import { AppQueryProvider } from "@/core/providers/query-provider";
 import dynamic from "next/dynamic";
 
 const DeveloperBadge = process.env.NODE_ENV === "development"
@@ -32,11 +33,14 @@ export default function RootLayout({
         <AppInitScript />
       </head>
       <body className="antialiased">
-        <PreferencesProvider>
-          <ShellLayout>{children}</ShellLayout>
-          <DeveloperBadge />
-        </PreferencesProvider>
+        <AppQueryProvider>
+          <PreferencesProvider>
+            <ShellLayout>{children}</ShellLayout>
+            <DeveloperBadge />
+          </PreferencesProvider>
+        </AppQueryProvider>
       </body>
     </html>
   );
 }
+

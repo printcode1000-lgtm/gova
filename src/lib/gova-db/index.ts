@@ -3,13 +3,14 @@
 import type { StateStorage } from 'zustand/middleware';
 
 const DB_NAME = 'GovaDB';
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 
 export const GOVA_DB_STORES = {
   GUEST_SESSIONS: 'guestSessions',
   APP_SETTINGS: 'appSettings',
   AUTH: 'auth',
   SELLER_ONBOARDING: 'sellerOnboarding',
+  QUERY_CACHE: 'queryCache',
 } as const;
 
 export type GovaDbStoreName = (typeof GOVA_DB_STORES)[keyof typeof GOVA_DB_STORES];

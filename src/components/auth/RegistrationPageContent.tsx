@@ -18,38 +18,22 @@ import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { createRegistrationSchema, type RegistrationFormData } from '@/lib/validation/auth';
 
+import { useRegister } from '@/features/auth/hooks/use-register';
+
 export function RegistrationPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t, isRTL } = useTranslation();
-  const { endGuestSession } = useGuestSession();
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [submitted, setSubmitted] = React.useState(false);
 
-  const registrationSchema = React.useMemo(() => createRegistrationSchema(t), [t]);
-
-  const form = useForm<RegistrationFormData>({
-    resolver: zodResolver(registrationSchema),
-    defaultValues: {
-      phone: '',
-      password: '',
-      confirmPassword: '',
-      email: '',
-      phoneVerified: false,
-    },
-    mode: 'onChange',
-  });
-
-  const password = useWatch({ control: form.control, name: 'password' }) ?? '';
-  const phoneVerified = useWatch({ control: form.control, name: 'phoneVerified' }) ?? false;
-
-  const onSubmit = async (_data: RegistrationFormData) => {
-    setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setSubmitted(true);
-    endGuestSession();
-  };
+  const {
+    form,
+    isSubmitting,
+    error,
+    submitted,
+    password,
+    phoneVerified,
+    onSubmit,
+  } = useRegister();
 
   const handleContinue = () => {
     const redirect = searchParams.get('redirect');
@@ -93,8 +77,14 @@ export function RegistrationPageContent() {
               <p className="text-base text-on-surface-variant">{t('auth.registration.subtitle')}</p>
             </div>
 
+            {error && (
+              <div className="p-3 text-sm rounded bg-error/15 text-error text-center font-medium animate-in fade-in duration-200">
+                {error}
+              </div>
+            )}
+
             <FormProvider {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
+              <form onSubmit={onSubmit} className="space-y-6" noValidate>
                 <PhoneVerification />
 
                 <div className="space-y-4">
