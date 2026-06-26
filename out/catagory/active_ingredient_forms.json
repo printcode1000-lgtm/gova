@@ -1,0 +1,2442 @@
+[
+  {
+    "active_ingredient_id": 1,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 1,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 1,
+    "form_id": "form_3"
+  },
+  {
+    "active_ingredient_id": 1,
+    "form_id": "form_4"
+  },
+  {
+    "active_ingredient_id": 2,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 2,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 2,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 3,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 3,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 3,
+    "form_id": "form_7"
+  },
+  {
+    "active_ingredient_id": 4,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 5,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 6,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 7,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 7,
+    "form_id": "form_7"
+  },
+  {
+    "active_ingredient_id": 8,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 8,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 9,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 10,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 11,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 12,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 13,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 14,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 15,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 16,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 17,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 18,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 19,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 20,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 21,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 21,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 22,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 23,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 24,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 25,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 26,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 27,
+    "form_id": "form_11"
+  },
+  {
+    "active_ingredient_id": 28,
+    "form_id": "form_11"
+  },
+  {
+    "active_ingredient_id": 29,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 30,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 31,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 32,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 33,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 34,
+    "form_id": "form_11"
+  },
+  {
+    "active_ingredient_id": 35,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 36,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 36,
+    "form_id": "form_7"
+  },
+  {
+    "active_ingredient_id": 37,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 38,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 38,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 39,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 40,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 41,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 42,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 43,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 44,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 45,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 45,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 45,
+    "form_id": "form_8"
+  },
+  {
+    "active_ingredient_id": 46,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 46,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 47,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 47,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 48,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 49,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 50,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 50,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 50,
+    "form_id": "form_7"
+  },
+  {
+    "active_ingredient_id": 51,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 51,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 51,
+    "form_id": "form_9"
+  },
+  {
+    "active_ingredient_id": 52,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 52,
+    "form_id": "form_7"
+  },
+  {
+    "active_ingredient_id": 53,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 54,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 55,
+    "form_id": "form_10"
+  },
+  {
+    "active_ingredient_id": 55,
+    "form_id": "form_11"
+  },
+  {
+    "active_ingredient_id": 56,
+    "form_id": "form_12"
+  },
+  {
+    "active_ingredient_id": 56,
+    "form_id": "form_13"
+  },
+  {
+    "active_ingredient_id": 57,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 58,
+    "form_id": "form_12"
+  },
+  {
+    "active_ingredient_id": 59,
+    "form_id": "form_12"
+  },
+  {
+    "active_ingredient_id": 60,
+    "form_id": "form_12"
+  },
+  {
+    "active_ingredient_id": 61,
+    "form_id": "form_13"
+  },
+  {
+    "active_ingredient_id": 62,
+    "form_id": "form_12"
+  },
+  {
+    "active_ingredient_id": 63,
+    "form_id": "form_12"
+  },
+  {
+    "active_ingredient_id": 64,
+    "form_id": "form_12"
+  },
+  {
+    "active_ingredient_id": 65,
+    "form_id": "form_8"
+  },
+  {
+    "active_ingredient_id": 66,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 67,
+    "form_id": "form_8"
+  },
+  {
+    "active_ingredient_id": 68,
+    "form_id": "form_8"
+  },
+  {
+    "active_ingredient_id": 69,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 70,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 71,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 72,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 72,
+    "form_id": "form_15"
+  },
+  {
+    "active_ingredient_id": 73,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 73,
+    "form_id": "form_15"
+  },
+  {
+    "active_ingredient_id": 73,
+    "form_id": "form_16"
+  },
+  {
+    "active_ingredient_id": 74,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 74,
+    "form_id": "form_15"
+  },
+  {
+    "active_ingredient_id": 75,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 76,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 77,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 78,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 79,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 80,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 81,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 82,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 83,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 84,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 85,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 86,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 87,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 88,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 89,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 90,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 91,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 92,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 93,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 94,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 95,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 96,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 97,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 98,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 99,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 100,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 101,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 102,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 103,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 104,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 105,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 106,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 107,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 108,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 109,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 110,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 111,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 112,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 113,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 114,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 115,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 116,
+    "form_id": "form_55"
+  },
+  {
+    "active_ingredient_id": 116,
+    "form_id": "form_56"
+  },
+  {
+    "active_ingredient_id": 117,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 118,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 119,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 120,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 121,
+    "form_id": "form_57"
+  },
+  {
+    "active_ingredient_id": 122,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 123,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 124,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 125,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 126,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 127,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 128,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 129,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 130,
+    "form_id": "form_54"
+  },
+  {
+    "active_ingredient_id": 131,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 132,
+    "form_id": "form_54"
+  },
+  {
+    "active_ingredient_id": 133,
+    "form_id": "form_54"
+  },
+  {
+    "active_ingredient_id": 134,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 135,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 136,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 137,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 138,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 139,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 140,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 141,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 142,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 143,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 144,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 145,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 146,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 147,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 148,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 149,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 150,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 151,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 152,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 153,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 154,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 155,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 156,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 157,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 158,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 159,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 160,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 161,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 162,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 163,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 164,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 165,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 166,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 167,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 168,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 169,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 170,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 171,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 172,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 173,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 174,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 175,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 176,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 177,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 178,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 179,
+    "form_id": "form_58"
+  },
+  {
+    "active_ingredient_id": 180,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 181,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 182,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 183,
+    "form_id": "form_59"
+  },
+  {
+    "active_ingredient_id": 183,
+    "form_id": "form_60"
+  },
+  {
+    "active_ingredient_id": 184,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 185,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 186,
+    "form_id": "form_7"
+  },
+  {
+    "active_ingredient_id": 187,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 188,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 189,
+    "form_id": "form_61"
+  },
+  {
+    "active_ingredient_id": 190,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 191,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 192,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 192,
+    "form_id": "form_15"
+  },
+  {
+    "active_ingredient_id": 193,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 194,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 195,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 196,
+    "form_id": "form_22"
+  },
+  {
+    "active_ingredient_id": 197,
+    "form_id": "form_26"
+  },
+  {
+    "active_ingredient_id": 198,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 199,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 200,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 201,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 202,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 203,
+    "form_id": "form_22"
+  },
+  {
+    "active_ingredient_id": 204,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 205,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 206,
+    "form_id": "form_62"
+  },
+  {
+    "active_ingredient_id": 207,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 208,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 209,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 210,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 211,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 212,
+    "form_id": "form_30"
+  },
+  {
+    "active_ingredient_id": 213,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 214,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 215,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 216,
+    "form_id": "form_63"
+  },
+  {
+    "active_ingredient_id": 217,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 218,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 219,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 220,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 221,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 222,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 223,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 224,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 225,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 226,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 227,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 228,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 229,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 230,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 231,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 232,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 233,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 234,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 235,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 236,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 237,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 238,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 239,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 240,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 241,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 242,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 243,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 244,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 245,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 246,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 247,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 248,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 249,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 250,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 251,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 252,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 253,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 254,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 255,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 256,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 257,
+    "form_id": "form_64"
+  },
+  {
+    "active_ingredient_id": 258,
+    "form_id": "form_64"
+  },
+  {
+    "active_ingredient_id": 259,
+    "form_id": "form_64"
+  },
+  {
+    "active_ingredient_id": 260,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 261,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 262,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 263,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 264,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 265,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 266,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 267,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 268,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 269,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 270,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 271,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 272,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 273,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 274,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 275,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 276,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 277,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 278,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 279,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 280,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 281,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 282,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 283,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 283,
+    "form_id": "form_17"
+  },
+  {
+    "active_ingredient_id": 284,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 284,
+    "form_id": "form_16"
+  },
+  {
+    "active_ingredient_id": 285,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 286,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 286,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 287,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 288,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 289,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 290,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 291,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 292,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 293,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 294,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 295,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 296,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 297,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 298,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 298,
+    "form_id": "form_18"
+  },
+  {
+    "active_ingredient_id": 299,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 300,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 300,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 301,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 302,
+    "form_id": "form_20"
+  },
+  {
+    "active_ingredient_id": 303,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 304,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 305,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 306,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 307,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 308,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 309,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 310,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 311,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 312,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 313,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 314,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 315,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 316,
+    "form_id": "form_53"
+  },
+  {
+    "active_ingredient_id": 317,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 318,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 319,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 320,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 321,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 322,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 323,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 324,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 325,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 326,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 327,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 328,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 329,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 330,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 331,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 332,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 333,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 334,
+    "form_id": "form_22"
+  },
+  {
+    "active_ingredient_id": 335,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 336,
+    "form_id": "form_22"
+  },
+  {
+    "active_ingredient_id": 337,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 338,
+    "form_id": "form_22"
+  },
+  {
+    "active_ingredient_id": 339,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 340,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 341,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 342,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 342,
+    "form_id": "form_17"
+  },
+  {
+    "active_ingredient_id": 343,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 343,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 344,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 345,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 346,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 347,
+    "form_id": "form_20"
+  },
+  {
+    "active_ingredient_id": 348,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 349,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 350,
+    "form_id": "form_26"
+  },
+  {
+    "active_ingredient_id": 350,
+    "form_id": "form_27"
+  },
+  {
+    "active_ingredient_id": 351,
+    "form_id": "form_26"
+  },
+  {
+    "active_ingredient_id": 352,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 353,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 354,
+    "form_id": "form_27"
+  },
+  {
+    "active_ingredient_id": 355,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 356,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 357,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 358,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 359,
+    "form_id": "form_26"
+  },
+  {
+    "active_ingredient_id": 360,
+    "form_id": "form_26"
+  },
+  {
+    "active_ingredient_id": 361,
+    "form_id": "form_27"
+  },
+  {
+    "active_ingredient_id": 362,
+    "form_id": "form_27"
+  },
+  {
+    "active_ingredient_id": 363,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 364,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 365,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 366,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 367,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 368,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 369,
+    "form_id": "form_27"
+  },
+  {
+    "active_ingredient_id": 370,
+    "form_id": "form_28"
+  },
+  {
+    "active_ingredient_id": 370,
+    "form_id": "form_29"
+  },
+  {
+    "active_ingredient_id": 371,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 372,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 373,
+    "form_id": "form_30"
+  },
+  {
+    "active_ingredient_id": 374,
+    "form_id": "form_28"
+  },
+  {
+    "active_ingredient_id": 375,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 376,
+    "form_id": "form_29"
+  },
+  {
+    "active_ingredient_id": 377,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 378,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 379,
+    "form_id": "form_23"
+  },
+  {
+    "active_ingredient_id": 380,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 381,
+    "form_id": "form_30"
+  },
+  {
+    "active_ingredient_id": 382,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 383,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 384,
+    "form_id": "form_19"
+  },
+  {
+    "active_ingredient_id": 385,
+    "form_id": "form_31"
+  },
+  {
+    "active_ingredient_id": 385,
+    "form_id": "form_32"
+  },
+  {
+    "active_ingredient_id": 386,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 387,
+    "form_id": "form_39"
+  },
+  {
+    "active_ingredient_id": 388,
+    "form_id": "form_30"
+  },
+  {
+    "active_ingredient_id": 389,
+    "form_id": "form_46"
+  },
+  {
+    "active_ingredient_id": 390,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 391,
+    "form_id": "form_33"
+  },
+  {
+    "active_ingredient_id": 392,
+    "form_id": "form_34"
+  },
+  {
+    "active_ingredient_id": 393,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 393,
+    "form_id": "form_36"
+  },
+  {
+    "active_ingredient_id": 394,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 395,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 396,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 397,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 398,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 399,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 400,
+    "form_id": "form_22"
+  },
+  {
+    "active_ingredient_id": 400,
+    "form_id": "form_37"
+  },
+  {
+    "active_ingredient_id": 400,
+    "form_id": "form_16"
+  },
+  {
+    "active_ingredient_id": 401,
+    "form_id": "form_6"
+  },
+  {
+    "active_ingredient_id": 402,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 403,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 404,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 405,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 406,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 407,
+    "form_id": "form_38"
+  },
+  {
+    "active_ingredient_id": 408,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 409,
+    "form_id": "form_39"
+  },
+  {
+    "active_ingredient_id": 409,
+    "form_id": "form_8"
+  },
+  {
+    "active_ingredient_id": 410,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 411,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 412,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 413,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 414,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 415,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 416,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 417,
+    "form_id": "form_8"
+  },
+  {
+    "active_ingredient_id": 418,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 419,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 420,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 421,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 422,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 423,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 424,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 425,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 426,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 427,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 428,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 429,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 430,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 431,
+    "form_id": "form_24"
+  },
+  {
+    "active_ingredient_id": 432,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 433,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 434,
+    "form_id": "form_4"
+  },
+  {
+    "active_ingredient_id": 434,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 435,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 436,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 437,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 438,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 439,
+    "form_id": "form_1"
+  },
+  {
+    "active_ingredient_id": 439,
+    "form_id": "form_40"
+  },
+  {
+    "active_ingredient_id": 439,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 440,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 441,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 442,
+    "form_id": "form_2"
+  },
+  {
+    "active_ingredient_id": 443,
+    "form_id": "form_41"
+  },
+  {
+    "active_ingredient_id": 444,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 445,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 445,
+    "form_id": "form_42"
+  },
+  {
+    "active_ingredient_id": 446,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 447,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 448,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 449,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 450,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 451,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 452,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 453,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 454,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 455,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 456,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 457,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 458,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 459,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 460,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 461,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 462,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 463,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 464,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 464,
+    "form_id": "form_43"
+  },
+  {
+    "active_ingredient_id": 465,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 466,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 467,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 468,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 469,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 470,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 471,
+    "form_id": "form_44"
+  },
+  {
+    "active_ingredient_id": 472,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 473,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 474,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 475,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 476,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 477,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 478,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 479,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 480,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 481,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 482,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 483,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 484,
+    "form_id": "form_43"
+  },
+  {
+    "active_ingredient_id": 485,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 486,
+    "form_id": "form_43"
+  },
+  {
+    "active_ingredient_id": 487,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 488,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 489,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 490,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 491,
+    "form_id": "form_43"
+  },
+  {
+    "active_ingredient_id": 492,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 493,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 494,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 495,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 496,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 497,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 498,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 499,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 500,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 501,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 502,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 503,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 504,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 505,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 506,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 507,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 508,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 509,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 510,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 511,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 512,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 513,
+    "form_id": "form_45"
+  },
+  {
+    "active_ingredient_id": 514,
+    "form_id": "form_46"
+  },
+  {
+    "active_ingredient_id": 515,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 516,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 517,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 518,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 519,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 520,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 521,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 522,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 523,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 524,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 525,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 526,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 527,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 528,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 529,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 530,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 531,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 532,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 533,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 534,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 535,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 536,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 537,
+    "form_id": "form_47"
+  },
+  {
+    "active_ingredient_id": 537,
+    "form_id": "form_48"
+  },
+  {
+    "active_ingredient_id": 538,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 539,
+    "form_id": "form_49"
+  },
+  {
+    "active_ingredient_id": 540,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 541,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 542,
+    "form_id": "form_50"
+  },
+  {
+    "active_ingredient_id": 543,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 544,
+    "form_id": "form_5"
+  },
+  {
+    "active_ingredient_id": 545,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 546,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 547,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 548,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 549,
+    "form_id": "form_35"
+  },
+  {
+    "active_ingredient_id": 550,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 551,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 552,
+    "form_id": "form_25"
+  },
+  {
+    "active_ingredient_id": 553,
+    "form_id": "form_14"
+  },
+  {
+    "active_ingredient_id": 553,
+    "form_id": "form_21"
+  },
+  {
+    "active_ingredient_id": 554,
+    "form_id": "form_51"
+  },
+  {
+    "active_ingredient_id": 554,
+    "form_id": "form_52"
+  },
+  {
+    "active_ingredient_id": 555,
+    "form_id": "form_53"
+  },
+  {
+    "active_ingredient_id": 556,
+    "form_id": "form_53"
+  },
+  {
+    "active_ingredient_id": 557,
+    "form_id": "form_54"
+  },
+  {
+    "active_ingredient_id": 558,
+    "form_id": "form_25"
+  }
+]
