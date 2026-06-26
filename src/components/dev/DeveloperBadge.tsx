@@ -14,6 +14,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { fillRegistrationForm } from '@/lib/autofill/registration-autofill';
+import { fillLoginForm } from '@/lib/autofill/login-autofill';
+import { fillOnboardingRandomFixture } from '@/lib/autofill/onboarding-autofill';
 
 const pages = [
   { path: '/', name: 'Splash' },
@@ -54,6 +57,21 @@ export function DeveloperBadge() {
     const newValue = !isSplashNavEnabled;
     setIsSplashNavEnabled(newValue);
     localStorage.setItem(SPLASH_NAV_TOGGLE_KEY, newValue.toString());
+  };
+
+  const handleAutofill = async () => {
+    if (pathname === '/registration') {
+      const result = await fillRegistrationForm();
+      console.log('[Autofill Registration]:', result);
+    } else if (pathname === '/login') {
+      const result = fillLoginForm();
+      console.log('[Autofill Login]:', result);
+    } else if (pathname === '/addseller') {
+      const result = fillOnboardingRandomFixture();
+      console.log('[Autofill AddSeller]:', result);
+    } else {
+      console.log('[Autofill] Not available on this page');
+    }
   };
 
   useEffect(() => {
@@ -164,6 +182,10 @@ export function DeveloperBadge() {
               )}
             </div>
           ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleAutofill}>
+            ملء النموذج تلقائياً
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

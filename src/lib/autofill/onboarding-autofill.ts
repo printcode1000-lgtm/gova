@@ -1,7 +1,7 @@
 import { nextSellerId } from '@/lib/seller/next-id';
 
-import { constants } from './schemas';
-import { stepOrder, useOnboardingStore } from './store';
+import { constants } from '@/lib/onboarding/schemas';
+import { stepOrder, useOnboardingStore } from '@/lib/onboarding/store';
 import type {
   BusinessType,
   CouponCode,
@@ -11,7 +11,7 @@ import type {
   ReturnPolicyType,
   ShippingProvider,
   SocialLink,
-} from './types';
+} from '@/lib/onboarding/types';
 
 export type OnboardingAutofillOutcome = {
   success: boolean;
@@ -252,6 +252,15 @@ function buildRandomOnboardingData(): OnboardingData {
 
 /** Fills all onboarding steps with random alphanumeric data (dev autofill). */
 export function fillOnboardingRandomFixture(): OnboardingAutofillOutcome {
+  if (process.env.NODE_ENV !== 'development') {
+    return {
+      success: false,
+      filled: 0,
+      skipped: 0,
+      message: 'Onboarding autofill is only available in development mode',
+    };
+  }
+
   const data = buildRandomOnboardingData();
   const completedSteps: OnboardingStep[] = [...stepOrder];
 

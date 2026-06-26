@@ -23,11 +23,11 @@ npm run dev
 
 ## autofill التطويري
 
-في وضع التطوير، أضف `?autofill=1` لصفحة `/addseller` لملء نموذج التسجيل تلقائياً:
+في وضع التطوير، استخدم زر **GOVA DEV** → **ملء النموذج تلقائياً** لملء النماذج:
 
-```
-http://localhost:3000/addseller?autofill=1
-```
+- **صفحة /registration**: يملأ email, phone, password
+- **صفحة /login**: يملأ phone, password
+- **صفحة /addseller**: يملء نموذج إضافة البائع
 
 ## التوثيق
 

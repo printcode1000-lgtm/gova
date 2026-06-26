@@ -129,6 +129,15 @@
   padding: 2rem;
 }
 
+/*
+ * Autofill detection trick: browsers fire animationstart on autofilled inputs.
+ * PhoneVerification.tsx listens for `onAutoFillStart` to auto-trigger OTP in dev mode.
+ */
+@keyframes onAutoFillStart {
+  from { /* no visual change needed */ }
+  to   { /* no visual change needed */ }
+}
+
 .auth-input {
   width: 100%;
   border-radius: var(--radius-sm);
@@ -138,6 +147,8 @@
   min-height: calc(var(--gova-control-min-height) * var(--gova-density-scale));
   color: var(--color-on-surface);
   transition: border-color var(--duration-medium-1) var(--easing-standard);
+  animation-name: onAutoFillStart;
+  animation-duration: 1ms;
 }
 
 .auth-input:focus {

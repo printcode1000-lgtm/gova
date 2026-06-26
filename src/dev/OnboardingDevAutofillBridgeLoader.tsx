@@ -2,13 +2,17 @@
 
 import dynamic from 'next/dynamic';
 
-const OnboardingDevAutofillBridge = dynamic(
-  () =>
-    import('@/lib/onboarding/dev-autofill-bridge').then((mod) => mod.OnboardingDevAutofillBridge),
-  { ssr: false }
-);
+const OnboardingDevAutofillBridge = process.env.NODE_ENV === 'development'
+  ? dynamic(
+      () =>
+        import('@/lib/autofill/dev-autofill-bridge').then(
+          (mod) => mod.OnboardingDevAutofillBridge
+        ),
+      { ssr: false }
+    )
+  : null;
 
 export function OnboardingDevAutofillBridgeLoader() {
-  if (process.env.NODE_ENV !== 'development') return null;
+  if (process.env.NODE_ENV !== 'development' || !OnboardingDevAutofillBridge) return null;
   return <OnboardingDevAutofillBridge />;
 }

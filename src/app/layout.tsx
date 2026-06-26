@@ -5,7 +5,11 @@ import { THEME_COLOR_LIGHT } from "@/theme/runtime";
 
 import { PreferencesProvider } from "@/lib/preferences";
 import { ShellLayout } from "@/components/layouts/ShellLayout";
-import { DeveloperBadge } from "@/components/dev/DeveloperBadge";
+import dynamic from "next/dynamic";
+
+const DeveloperBadge = process.env.NODE_ENV === "development"
+  ? dynamic(() => import("@/components/dev/DeveloperBadge").then((m) => m.DeveloperBadge))
+  : () => null;
 
 export const metadata: Metadata = {
   title: "Gova",

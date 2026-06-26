@@ -120,6 +120,23 @@ export function PhoneVerification() {
                       void handleSendOtp();
                     }
                   }}
+                  onAnimationStart={(e) => {
+                    // Detect browser autofill: browsers fire a CSS animation on autofilled fields.
+                    // When detected, read the current input value and trigger OTP flow automatically.
+                    if (e.animationName === 'onAutoFillStart') {
+                      const target = e.currentTarget;
+                      // Small delay to let the browser finish populating the value
+                      setTimeout(() => {
+                        const raw = target.value.replace(/\D/g, '').slice(0, 11);
+                        if (raw.length >= 10) {
+                          field.onChange(raw);
+                          if (!phoneVerified && !otpSent) {
+                            void handleSendOtp();
+                          }
+                        }
+                      }, 100);
+                    }
+                  }}
                 />
                 {phoneVerified && (
                   <CheckCircle2 className="absolute end-3 top-1/2 -translate-y-1/2 h-5 w-5 text-success" />
@@ -181,6 +198,7 @@ export function PhoneVerification() {
           <div className="flex items-center gap-3 w-full">
             <button
               type="button"
+              data-gova-autofill="registration-verify-otp"
               onClick={() => void handleVerifyOtp()}
               disabled={otp.length !== 4 || isVerifying}
               className="flex-1 auth-cta h-10 text-sm"
