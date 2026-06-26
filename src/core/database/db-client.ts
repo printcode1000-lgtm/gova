@@ -1,19 +1,34 @@
 import type { IDatabaseClient } from './database-client.interface';
-import { SQLiteDatabaseClient } from './sqlite-db-client';
-import { TursoDatabaseClient } from './turso-db-client';
 
+/**
+ * DatabaseClient
+ *
+ * The top-level driver selector. Uses lazy `require()` for both
+ * SQLiteDatabaseClient and TursoDatabaseClient so neither package
+ * is pulled into the client-side bundle at module-evaluation time.
+ *
+ * - Development  → SQLiteDatabaseClient (better-sqlite3 / sqlite-proxy)
+ * - Production   → TursoDatabaseClient  (@libsql/client / Turso)
+ *
+ * Both packages are declared in `serverExternalPackages` in next.config.ts
+ * so webpack never attempts to bundle them client-side.
+ */
 export class DatabaseClient implements IDatabaseClient {
   private activeClient: IDatabaseClient;
 
   constructor() {
-    const isDev = 
+    const isDev =
       process.env.NEXT_PUBLIC_GOVA_MODE === 'development' ||
       process.env.GOVA_MODE === 'development' ||
       process.env.NODE_ENV === 'development';
 
     if (isDev) {
+      // Lazy require — only evaluated when running in dev mode
+      const { SQLiteDatabaseClient } = require('./sqlite-db-client');
       this.activeClient = new SQLiteDatabaseClient();
     } else {
+      // Lazy require — only evaluated in production, and only on the server
+      const { TursoDatabaseClient } = require('./turso-db-client');
       this.activeClient = new TursoDatabaseClient();
     }
   }
@@ -43,5 +58,5 @@ export class DatabaseClient implements IDatabaseClient {
   }
 }
 
-// Export singleton client
+// Singleton — created once per server process / browser tab
 export const dbClient: IDatabaseClient = new DatabaseClient();

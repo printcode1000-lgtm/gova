@@ -6,6 +6,11 @@ const basePath = process.env.GOVA_BASE_PATH?.replace(/\/$/, '') ?? '';
 const nextConfig: NextConfig = {
   ...(isStatic ? { output: 'export' as const } : {}),
   ...(basePath ? { basePath, assetPrefix: basePath } : {}),
+
+  // These are Node.js-only packages. Prevent Next.js from bundling them
+  // through the client-side (or edge) bundler — let Node require() them at runtime.
+  serverExternalPackages: ['@libsql/client', 'better-sqlite3'],
+
   images: {
     unoptimized: isStatic,
     formats: ['image/avif', 'image/webp'],
