@@ -19,7 +19,7 @@ export default function SplashScreen() {
       <TopMarquee />
 
       <div className="flex-1 flex flex-col items-center justify-center z-10 w-full max-w-sm">
-        <div className="mb-6 gova-ring-primary rounded-full p-3">
+        <div className="mb-6">
           <AppIcon size="lg" />
         </div>
         <h1 className="text-3xl font-bold text-primary mb-1 tracking-tight text-center">
