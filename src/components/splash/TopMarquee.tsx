@@ -1,24 +1,55 @@
 'use client';
 
-import { Shirt, Car, Building2, HeartPulse, Utensils, Smartphone } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import { useTranslation } from '@/lib/i18n';
-import type { TranslationKey } from '@/lib/i18n';
+import type { Locale } from '@/lib/i18n';
 
 import MarqueeCard from './MarqueeCard';
 
-const TOP_ITEMS = [
-  { icon: Shirt, labelKey: 'category.fashion' },
-  { icon: Car, labelKey: 'category.automotive' },
-  { icon: Building2, labelKey: 'category.realestate' },
-  { icon: HeartPulse, labelKey: 'category.medical' },
-  { icon: Utensils, labelKey: 'category.food' },
-  { icon: Smartphone, labelKey: 'category.mobile' },
-] as const satisfies ReadonlyArray<{ icon: typeof Shirt; labelKey: TranslationKey }>;
+interface Category {
+  id: number;
+  title_ar: string;
+  title_en: string;
+  icon: string;
+  image: string;
+  created_at: string;
+  updated_at: string;
+}
+
+function getRandomCategories(categories: Category[], count: number): Category[] {
+  const shuffled = [...categories];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, count);
+}
 
 export default function TopMarquee() {
-  const { t } = useTranslation();
-  const loopItems = [...TOP_ITEMS, ...TOP_ITEMS];
+  const { locale } = useTranslation();
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await fetch('/catagory/categories.json');
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
+  const selectedCategories = getRandomCategories(categories, 6);
+  const loopItems = [...selectedCategories, ...selectedCategories];
+
+  const getTitle = (category: Category, loc: Locale) => {
+    return loc === 'ar' ? category.title_ar : category.title_en;
+  };
 
   return (
     <div
@@ -27,7 +58,11 @@ export default function TopMarquee() {
     >
       <div className="splash-marquee-track splash-marquee-track--right gap-4 py-4">
         {loopItems.map((item, index) => (
-          <MarqueeCard key={`top-${index}`} icon={item.icon} label={t(item.labelKey)} />
+          <MarqueeCard 
+            key={`top-${index}`} 
+            label={getTitle(item, locale)} 
+            image={item.image} 
+          />
         ))}
       </div>
     </div>

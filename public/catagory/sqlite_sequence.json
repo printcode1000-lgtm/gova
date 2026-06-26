@@ -1,0 +1,18 @@
+[
+  {
+    "name": "active_ingredients",
+    "seq": 558
+  },
+  {
+    "name": "pharmacy_subcategories",
+    "seq": 153
+  },
+  {
+    "name": "product_brands",
+    "seq": 624
+  },
+  {
+    "name": "subcategories",
+    "seq": 131
+  }
+]

@@ -8,6 +8,8 @@ import { runInitialization } from '@/lib/initialization/initialization';
 
 import ProgressIndicator from './ProgressIndicator';
 
+const SPLASH_NAV_TOGGLE_KEY = 'gova-dev-splash-nav-toggle';
+
 export default function SplashInitializer() {
   const router = useRouter();
   const { t } = useTranslation();
@@ -34,7 +36,10 @@ export default function SplashInitializer() {
 
   useEffect(() => {
     if (isCompleteRef.current && progress === 100) {
-      router.replace('/home');
+      const isNavEnabled = localStorage.getItem(SPLASH_NAV_TOGGLE_KEY) !== 'false';
+      if (isNavEnabled) {
+        router.replace('/home');
+      }
     }
   }, [progress, router]);
 

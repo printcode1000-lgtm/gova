@@ -1,17 +1,23 @@
-import type { LucideIcon } from 'lucide-react';
+import Image from 'next/image';
 
 interface MarqueeCardProps {
-  icon: LucideIcon;
   label: string;
+  image: string;
+  isCenter?: boolean;
 }
 
-export default function MarqueeCard({ icon: Icon, label }: MarqueeCardProps) {
+export default function MarqueeCard({ label, image, isCenter = false }: MarqueeCardProps) {
   return (
-    <div className="w-48 h-32 gova-splash-marquee-card flex flex-col items-center justify-center shrink-0">
-      <div className="gova-merchant-icon-well mb-2">
-        <Icon className="w-6 h-6" />
+    <div className={`w-48 h-32 gova-splash-marquee-card relative shrink-0 overflow-hidden rounded-xl transition-opacity duration-300 ${isCenter ? 'opacity-100' : 'opacity-80'}`}>
+      <Image 
+        src={`/images/mainCategories/${image}`}
+        alt={label}
+        fill
+        className="object-cover"
+      />
+      <div className="absolute bottom-0 left-0 right-0 p-2">
+        <span className="text-xs font-semibold text-white text-center block drop-shadow-lg">{label}</span>
       </div>
-      <span className="text-xs font-semibold text-on-surface">{label}</span>
     </div>
   );
 }

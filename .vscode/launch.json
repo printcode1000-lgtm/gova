@@ -63,6 +63,15 @@
       "runtimeArgs": ["-Command", "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned"],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Export DB to JSON",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "db:export"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
     }
   ]
 }

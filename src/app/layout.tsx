@@ -5,10 +5,15 @@ import { THEME_COLOR_LIGHT } from "@/theme/runtime";
 
 import { PreferencesProvider } from "@/lib/preferences";
 import { ShellLayout } from "@/components/layouts/ShellLayout";
+import { DeveloperBadge } from "@/components/dev/DeveloperBadge";
 
 export const metadata: Metadata = {
   title: "Gova",
   description: "Gova — تطبيق Next.js",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -25,6 +30,7 @@ export default function RootLayout({
       <body className="antialiased">
         <PreferencesProvider>
           <ShellLayout>{children}</ShellLayout>
+          <DeveloperBadge />
         </PreferencesProvider>
       </body>
     </html>
