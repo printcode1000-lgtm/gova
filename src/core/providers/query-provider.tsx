@@ -4,6 +4,7 @@ import * as React from 'react';
 import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createGovaDbPersister } from '@/core/database/gova-db-persister';
+import { attachQueryObserver } from '@/core/monitor/query-observer';
 
 /** 24 hours in milliseconds */
 const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;
@@ -70,6 +71,13 @@ interface AppQueryProviderProps {
 export function AppQueryProvider({ children }: AppQueryProviderProps) {
   const queryClient = getQueryClient();
   const persister = React.useMemo(() => createGovaDbPersister(), []);
+
+  React.useEffect(() => {
+    const cleanup = attachQueryObserver(queryClient);
+    return () => {
+      cleanup();
+    };
+  }, [queryClient]);
 
   return (
     <PersistQueryClientProvider

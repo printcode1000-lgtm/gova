@@ -29,7 +29,7 @@ export class SQLiteDatabaseClient extends AbstractDatabaseClient {
     return this._db;
   }
 
-  async execute(sql: string, params: any[] = []): Promise<any[]> {
+  async rawExecute(sql: string, params: any[] = []): Promise<any[]> {
     // 1. Browser Client in Development Mode -> Call Server Route
     if (typeof window !== 'undefined') {
       const response = await fetch('/api/db', {

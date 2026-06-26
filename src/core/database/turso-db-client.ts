@@ -14,7 +14,7 @@ export class TursoDatabaseClient extends AbstractDatabaseClient {
     return this._db;
   }
 
-  async execute(sql: string, params: any[] = []): Promise<any[]> {
+  async rawExecute(sql: string, params: any[] = []): Promise<any[]> {
     const client = getTursoClient();
     const result = await client.execute({ sql, args: params });
     return result.rows as any[];
