@@ -1,0 +1,33 @@
+{
+  "sectionTitle": "Featured Products",
+  "items": [
+    {
+      "id": "f1",
+      "title": "Nova S24 Pro Phone",
+      "price": "$599",
+      "image": "https://lh3.googleusercontent.com/aida/AP1WRLtEUw6-qlL4o6Qccuslz1ZFGyo83z47nMN7FSEUDCYEw7AmquNAI3tN3jdpOMpDsahuSh4II8mz0ZnUIegHIHyRkB7kcJt1_GZ5q7NxVHab9PlnvnbrC0HmMGwXcGNLsd-mdIcumjQK-ll095WLGyg2Bbgaj5xGVewZsvspEwrQ8K8C_hDg-3vjVh_luRgh55lpnUtP27RbO7Ot7bGWqQkJj5ZzWL2PA9F7s2rfdBrw-Gw7uq23XYKJ5w",
+      "action": "go-to-nova-phone"
+    },
+    {
+      "id": "f2",
+      "title": "Elite Real Estate",
+      "price": "$1.2M",
+      "image": "https://lh3.googleusercontent.com/aida/AP1WRLviJKEzNj5O3szQyiiMOFYN5bTLlY84ez7aSiImrwY0HivS7FHIEANp1nr_fgrtJHR6LTMcoGuQ3qowcAiMbyjDhdY2Po6aa6wNqdkxrUVTWJ_xEvzc4qdfjrurOQStMajPl3obgSHeX5JUPma_43KfT_1q54qVCQlm9evFkrPeEJBNImF7Xd2xe355-hgysUpJDstGX_4pzskHwJXSd0TAQvK1H1LX-aQepVahM1SoEfG06yECjnoEIg",
+      "action": "go-to-elite-realestate"
+    },
+    {
+      "id": "f3",
+      "title": "Pro Runner Shoes",
+      "price": "$850",
+      "image": "https://lh3.googleusercontent.com/aida/AP1WRLsd8xKnUFaAmAC-62H9fY8gRyJqkMK95ilrnZkBvmtXgQ7RnCn02VTTSb1ASmlXIEwxKY1HlYYc-5OqK30TlrnJZeJ4_G7PvX1y0-ie6TuP-VXKZpJkQok7g3s3uGq9eNkxDBDWRxOyATAa9Eal7864mbBmTpCamL0gvgu7t76o3sYzVreHzLSm3RiGesXWjcR-3JhYX3psmBViPfSSKdzcoZJIl3wN_3yCzX36jnorjpQnJatK45FOPw",
+      "action": "go-to-runner-shoes"
+    },
+    {
+      "id": "f4",
+      "title": "Luxury Watch",
+      "price": "$45,000",
+      "image": "https://lh3.googleusercontent.com/aida/AP1WRLsNCuOTl0bHIbRzayCP1i2NV97MpEzhv6-X7487scdHc8UY8Zhl1tVj3KJiagW7sKcOq3SP4sK0ffvkVeQgmBZWhpHCeFxfgLDp6ESd8eIfwjy_4iCebVdAl-FK9RUW_MszRt6dBXWnv_2Ee8tjJwD6eBa8D_5y7fncl3Tu1_TwE9zmulVgVZ0UQpiVDHQ04-HfidO3MkmojC-9i_EiO6wLB9egGPgIvsed0K742sfupasCadR_Fbq8",
+      "action": "go-to-luxury-watch"
+    }
+  ]
+}

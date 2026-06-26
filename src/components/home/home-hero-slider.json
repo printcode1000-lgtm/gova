@@ -1,0 +1,24 @@
+{
+  "transition": "SlideLeft",
+  "transitionDuration": 500,
+  "autoPlay": true,
+  "loop": true,
+  "slides": [
+    {
+      "priority": 100,
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuC8-m7Ccp-1Px2GILiQBkEVbicyFRjjkymFy8ZFtdhuYRL8pQON8o1CIXyU6BN7JVfZrAI0yvezebhNWRoGVMHvg0DN77QP6OfeYY8W2MCXLeJfVyaMNxSGJlX3P3iAMznOw9eICUGva3NKPLGLvI8cNctLItAwJr7ENeM_1D_78vtUOVOwDnSGcbsS5HOdrkOT1zMs8uhh-xaosMu8LdnGFafiAQEvo9WJamGcpA3K5rbhwKVtLkguHv9lD35rXTuja9bBvgTzrkIj",
+      "title": "Industrial Excellence in Suez",
+      "subtitle": "Just Arrived",
+      "duration": 4000,
+      "action": "go-to-slide1-promo"
+    },
+    {
+      "priority": 200,
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuB5BKAM75HnyHLdSANV4UMPvSgTfcM9isT6xav32tg3Gvhoo2VHZS2bjvuAmMZ-WMizUytLM-OSXNJGlwlpSSHUzeUCPhSlf-13GvVtmlFYRo8KBxJHUd6C7-TfCGGAm31WcQmrU3uAhVycmQoa7cbdByUtAph_Lnc9fP7QJRlCAh2IAm_pBfGGn-_wmPqP3YSDPVN7R81BJObut_pcxju-opt0cQMpN0kLCsQLQnttGb-QWeNyipOCwPx-GmOSicTzoq5QKsdZTA",
+      "title": "Featured Market Deals",
+      "subtitle": "Featured",
+      "duration": 5000,
+      "action": "go-to-slide2-promo"
+    }
+  ]
+}
