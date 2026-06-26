@@ -18,16 +18,15 @@ export default function SplashScreen() {
     >
       <TopMarquee />
 
-      <div className="flex-1 flex flex-col items-center justify-center z-10 w-full max-w-sm">
-        <div className="mb-6">
+      <div className="flex-1 flex flex-col items-center justify-center z-10 w-full max-w-sm px-4">
+        <div className="mb-4 sm:mb-6">
           <AppIcon size="lg" />
         </div>
-        <h1 className="text-3xl font-bold text-primary mb-1 tracking-tight text-center">
+        <h1 className="text-2xl sm:text-3xl font-bold text-primary mb-1 tracking-tight text-center">
           {t('splash.tagline')}
         </h1>
-        <div className="text-base text-on-surface-variant font-medium tracking-wide">{t('header.brand')}</div>
 
-        <div className="mt-8 w-full flex flex-col items-center">
+        <div className="mt-6 sm:mt-8 w-full flex flex-col items-center">
           <Suspense fallback={null}>
             <SplashInitializer />
           </Suspense>

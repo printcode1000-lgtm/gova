@@ -40,6 +40,13 @@
   animation: marquee-left 30s linear infinite;
 }
 
+@media (max-width: 640px) {
+  .splash-marquee-track--right,
+  .splash-marquee-track--left {
+    animation-duration: 20s;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .splash-marquee-track--right,
   .splash-marquee-track--left,

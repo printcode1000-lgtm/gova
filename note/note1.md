@@ -34,8 +34,10 @@ Relationship Graph in JSON format only,
 
 
 # git
-https://git-scm.com/install/windows
-winget install --id GitHub.cli
-ثم
- gh auth login
-choco install gh
+
+
+
+# fix text
+header.brand سوف جوفا
+splash.tagline السويس بين ايديك
+
