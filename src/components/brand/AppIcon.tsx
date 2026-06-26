@@ -19,7 +19,7 @@ export default function AppIcon({ size = 'lg', className = '' }: AppIconProps) {
   return (
     <div className={`relative ${className}`}>
       <Image
-        src="/images/logos/logo-icon.png"
+        src="/logo.png"
         alt="Gova App Icon"
         width={sizes.imageWidth}
         height={sizes.imageHeight}
