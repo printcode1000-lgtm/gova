@@ -191,9 +191,11 @@ async function main() {
       const insertSql = `INSERT OR REPLACE INTO ${table.name} (${columns}) VALUES (${placeholders})`;
 
       for (const row of rows) {
-        const args = Object.values(row).map(val => {
-          if (val === null) return null;
-          return val;
+        const args: (string | number | bigint | null | ArrayBuffer | Uint8Array)[] = Object.values(row).map((val: unknown) => {
+          if (val === null || val === undefined) return null;
+          if (typeof val === 'string' || typeof val === 'number' || typeof val === 'bigint') return val;
+          if (val instanceof ArrayBuffer || val instanceof Uint8Array) return val;
+          return String(val);
         });
         await tursoClient.execute({ sql: insertSql, args });
       }
