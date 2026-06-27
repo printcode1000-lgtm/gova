@@ -1,11 +1,18 @@
 import type { NextConfig } from 'next';
 
-const isStatic = process.env.GOVA_MODE === 'static';
-const basePath = process.env.GOVA_BASE_PATH?.replace(/\/$/, '') ?? '';
+const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
+const repositoryName = process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '';
+
+const isStatic = process.env.GOVA_MODE === 'static' || isGithubActions;
+const basePath = process.env.GOVA_BASE_PATH?.replace(/\/$/, '') || (isGithubActions ? repositoryName : '');
 
 const nextConfig: NextConfig = {
   ...(isStatic ? { output: 'export' as const } : {}),
   ...(basePath ? { basePath, assetPrefix: basePath } : {}),
+
+  env: {
+    NEXT_PUBLIC_GOVA_BASE_PATH: basePath,
+  },
 
   // These are Node.js-only packages. Prevent Next.js from bundling them
   // through the client-side (or edge) bundler — let Node require() them at runtime.
