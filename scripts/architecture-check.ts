@@ -140,6 +140,8 @@ function checkFile(filePath: string): void {
     'TURSO_API_TOKEN',
     'TURSO_AUTH_TOKEN',
     'TURSO_DATABASE_URL',
+    'TURSO_PROFILE_DATABASE_URL',
+    'TURSO_PROFILE_AUTH_TOKEN',
     'VERCEL_TOKEN',
     'VERCEL_ORG_ID',
   ];

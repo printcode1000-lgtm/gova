@@ -21,3 +21,15 @@ export const PRIMARY_SQLITE_DB_PATH = path.join(
   SQLITE_DIRECTORY,
   'allusers.db'
 );
+
+export const PROFILE_SQLITE_DB_PATH = path.join(
+  SQLITE_DIRECTORY,
+  'profile.db'
+);
+
+export const PROFILE_SCHEMA_SYNC_REPORT_PATH = path.join(
+  process.cwd(),
+  'public',
+  'sync_data',
+  'profile-schema-sync-report.json'
+);

@@ -656,6 +656,8 @@
     "sidebar.login":  "Login",
     "sidebar.logout":  "Log out",
     "sidebar.menu":  "Menu",
+    "sidebar.preview":  "Preview",
+    "sidebar.edit":  "Edit",
     "sidebar.register":  "Register",
     "sidebar.settings":  "Settings",
     "splash.init.categoriesLoaded":  "Categories loaded",

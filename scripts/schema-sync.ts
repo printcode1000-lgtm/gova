@@ -1,6 +1,6 @@
 import { existsSync } from 'fs';
 import dotenv from 'dotenv';
-import { runSchemaSync } from '../src/core/provisioning/schema-sync';
+import { runAllSchemaSyncs } from '../src/core/provisioning/schema-sync';
 
 process.env.GOVA_PROVISIONING = 'true';
 
@@ -12,26 +12,28 @@ if (existsSync('.env.local')) {
 
 async function main() {
   const isCi = process.env.CI === 'true' || process.env.VERCEL === '1';
-  const report = await runSchemaSync({ skipIfMissingCredentials: !isCi });
+  const reports = await runAllSchemaSyncs({ skipIfMissingCredentials: !isCi });
 
-  if (report.skipped) {
-    console.log(`⏭️  Schema sync skipped: ${report.skipReason}`);
-    process.exit(0);
-  }
+  for (const [label, report] of Object.entries(reports)) {
+    if (report.skipped) {
+      console.log(`⏭️  ${label} schema sync skipped: ${report.skipReason}`);
+      continue;
+    }
 
-  console.log('✅ Schema synchronization completed');
-  console.log(`   SQLite version : ${report.sqliteSchemaVersion}`);
-  console.log(`   Turso before   : ${report.tursoSchemaVersionBefore}`);
-  console.log(`   Turso after    : ${report.tursoSchemaVersionAfter}`);
-  console.log(`   Operations     : ${report.operations.length}`);
-  console.log(`   Columns added  : ${report.columnsAdded}`);
-  console.log(`   Indexes added  : ${report.indexesAdded}`);
-  console.log(`   Duration       : ${report.durationMs}ms`);
+    console.log(`✅ ${label} schema synchronization completed`);
+    console.log(`   SQLite version : ${report.sqliteSchemaVersion}`);
+    console.log(`   Turso before   : ${report.tursoSchemaVersionBefore}`);
+    console.log(`   Turso after    : ${report.tursoSchemaVersionAfter}`);
+    console.log(`   Operations     : ${report.operations.length}`);
+    console.log(`   Columns added  : ${report.columnsAdded}`);
+    console.log(`   Indexes added  : ${report.indexesAdded}`);
+    console.log(`   Duration       : ${report.durationMs}ms`);
 
-  if (report.warnings.length > 0) {
-    console.log('⚠️  Warnings:');
-    for (const warning of report.warnings) {
-      console.log(`   - ${warning}`);
+    if (report.warnings.length > 0) {
+      console.log(`⚠️  ${label} warnings:`);
+      for (const warning of report.warnings) {
+        console.log(`   - ${warning}`);
+      }
     }
   }
 }

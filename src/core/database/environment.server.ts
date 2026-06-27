@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from 'fs';
 import path from 'path';
-import { PRIMARY_SQLITE_DB_PATH, SQLITE_DIRECTORY } from './environment';
+import { PRIMARY_SQLITE_DB_PATH, PROFILE_SQLITE_DB_PATH, SQLITE_DIRECTORY } from './environment';
 
 /** Server-only SQLite path helpers (uses Node.js fs). */
 
@@ -26,4 +26,8 @@ export function getPrimarySqliteDbPath(): string {
 
   const preferred = paths.find((p) => p.endsWith('allusers.db'));
   return preferred ?? paths[0];
+}
+
+export function getProfileSqliteDbPath(): string {
+  return PROFILE_SQLITE_DB_PATH;
 }

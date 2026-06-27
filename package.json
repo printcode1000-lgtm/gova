@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run server:stop && npm run app:init && next dev --port 3000",
-    "build": "npm run app:init && npm run architecture:check && npm run db:schema:sync && next build",
+    "build": "npm run app:init && npm run architecture:check && npm run db:ensure && npm run db:schema:sync && next build",
     "build:static": "npm run app:init && npm run architecture:check && cross-env GOVA_MODE=static next build",
     "start": "next start",
     "lint": "next lint",
@@ -17,6 +17,8 @@
     "db:provision:turso": "cross-env GOVA_PROVISIONING=true npx tsx scripts/provision-turso.ts",
     "db:setup:turso": "npm run db:schema:sync",
     "db:create:sqlite": "npx tsx scripts/create-sqlite-db.ts",
+    "db:create:profile": "npx tsx scripts/create-profile-sqlite-db.ts",
+    "db:ensure": "npx tsx scripts/ensure-sqlite-databases.ts",
     "cap:sync": "npx cap sync",
     "cap:copy": "npx cap copy",
     "cap:open:android": "npx cap open android",

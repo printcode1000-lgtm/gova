@@ -1,6 +1,6 @@
 'use client';
 
-import { LogIn, LogOut, Settings, User, X } from 'lucide-react';
+import { LogIn, LogOut, Settings, User, X, Eye, Edit } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
@@ -94,15 +94,35 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                 {t('sidebar.logout')}
               </button>
 
-              <Link href="/profile" onClick={onClose}>
-                <button
-                  type="button"
-                  className="gova-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface gova-surface-neutral active:opacity-90"
-                >
-                  <User className="w-5 h-5 shrink-0 text-primary" />
+              <div className="gova-control rounded-lg gova-surface-neutral p-2">
+                <div className="px-2 py-1 text-xs font-semibold text-on-surface-variant">
                   {t('nav.profile')}
-                </button>
-              </Link>
+                </div>
+                <div className="flex gap-1 px-2 py-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('toggle-edit-card', { detail: false }));
+                      onClose();
+                    }}
+                    className="flex items-center gap-2 rounded px-3 py-2 text-sm font-medium text-on-surface active:opacity-90"
+                  >
+                    <Eye className="w-4 h-4 shrink-0 text-primary" />
+                    {t('sidebar.preview')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('toggle-edit-card', { detail: true }));
+                      onClose();
+                    }}
+                    className="flex items-center gap-2 rounded px-3 py-2 text-sm font-medium text-on-surface active:opacity-90"
+                  >
+                    <Edit className="w-4 h-4 shrink-0 text-primary" />
+                    {t('sidebar.edit')}
+                  </button>
+                </div>
+              </div>
             </>
           ) : (
             <Link href="/login" onClick={onClose}>

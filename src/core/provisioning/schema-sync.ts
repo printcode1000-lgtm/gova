@@ -1,12 +1,16 @@
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import path from 'path';
 import { createClient } from '@libsql/client';
-import { SCHEMA_SYNC_REPORT_PATH } from '@/core/database/environment';
+import {
+  PROFILE_SCHEMA_SYNC_REPORT_PATH,
+  SCHEMA_SYNC_REPORT_PATH,
+} from '@/core/database/environment';
+import { getPrimarySqliteDbPath, getProfileSqliteDbPath } from '@/core/database/environment.server';
 import { readSqliteSchema } from './sqlite-schema-reader';
 import { readTursoSchema } from './turso-schema-reader';
 import { diffSchemas } from './schema-diff';
 import { computeSchemaVersion } from './schema-version';
-import { loadTursoCredentialsFromEnv } from './turso-provisioner';
+import { loadTursoCredentialsFromEnv, loadTursoProfileCredentialsFromEnv } from './turso-provisioner';
 import type { SchemaSyncReport } from './types';
 
 export interface RunSchemaSyncOptions {
@@ -14,14 +18,20 @@ export interface RunSchemaSyncOptions {
   skipIfMissingCredentials?: boolean;
   tursoUrl?: string;
   tursoAuthToken?: string;
+  /** SQLite file to use as schema source. Defaults to allusers.db. */
+  sqlitePath?: string;
+  /** Where to write the sync report JSON. */
+  reportPath?: string;
+  /** Label used in skip reasons and logs. */
+  databaseLabel?: string;
 }
 
-function writeReport(report: SchemaSyncReport): void {
-  const dir = path.dirname(SCHEMA_SYNC_REPORT_PATH);
+function writeReport(reportPath: string, report: SchemaSyncReport): void {
+  const dir = path.dirname(reportPath);
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
   }
-  writeFileSync(SCHEMA_SYNC_REPORT_PATH, JSON.stringify(report, null, 2), 'utf8');
+  writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf8');
 }
 
 function buildSkippedReport(reason: string): SchemaSyncReport {
@@ -46,22 +56,41 @@ function buildSkippedReport(reason: string): SchemaSyncReport {
 }
 
 /**
- * Schema Synchronization — compares SQLite (SSOT) with Turso and applies
+ * Schema Synchronization — compares one SQLite file (SSOT) with one Turso DB and applies
  * incremental DDL only. Never copies row data.
  */
 export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise<SchemaSyncReport> {
   const startedAt = Date.now();
+  const databaseLabel = options.databaseLabel ?? 'users';
+  const sqlitePath = options.sqlitePath ?? getPrimarySqliteDbPath();
+  const reportPath = options.reportPath ?? SCHEMA_SYNC_REPORT_PATH;
 
   const credentials =
     options.tursoUrl && options.tursoAuthToken
       ? { url: options.tursoUrl, authToken: options.tursoAuthToken }
-      : loadTursoCredentialsFromEnv();
+      : databaseLabel === 'profile'
+        ? loadTursoProfileCredentialsFromEnv()
+        : loadTursoCredentialsFromEnv();
 
   if (!credentials) {
-    const reason = 'Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)';
+    const reason =
+      databaseLabel === 'profile'
+        ? 'Turso profile credentials not configured (TURSO_PROFILE_DATABASE_URL / TURSO_PROFILE_AUTH_TOKEN)'
+        : 'Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)';
     if (options.skipIfMissingCredentials) {
       const report = buildSkippedReport(reason);
-      writeReport(report);
+      writeReport(reportPath, report);
+      return report;
+    }
+    throw new Error(reason);
+  }
+
+  if (!existsSync(sqlitePath)) {
+    const reason = `SQLite schema source not found for ${databaseLabel}: ${sqlitePath}`;
+    if (options.skipIfMissingCredentials) {
+      const report = buildSkippedReport(reason);
+      report.warnings.push(reason);
+      writeReport(reportPath, report);
       return report;
     }
     throw new Error(reason);
@@ -69,12 +98,12 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
 
   let sqliteSchema;
   try {
-    sqliteSchema = readSqliteSchema();
+    sqliteSchema = readSqliteSchema(sqlitePath);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     const report = buildSkippedReport(message);
     report.errors.push(message);
-    writeReport(report);
+    writeReport(reportPath, report);
     if (options.skipIfMissingCredentials) return report;
     throw error;
   }
@@ -127,13 +156,43 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
     skipped: false,
   };
 
-  writeReport(report);
+  writeReport(reportPath, report);
 
   if (errors.length > 0) {
-    throw new Error(`Schema sync completed with ${errors.length} error(s). See schema-sync-report.json`);
+    throw new Error(
+      `Schema sync for ${databaseLabel} completed with ${errors.length} error(s). See ${reportPath}`
+    );
   }
 
   return report;
+}
+
+export interface AllSchemaSyncReports {
+  users: SchemaSyncReport;
+  profile: SchemaSyncReport;
+}
+
+/**
+ * Syncs allusers.db → users Turso and profile.db → profile Turso independently.
+ */
+export async function runAllSchemaSyncs(
+  options: Pick<RunSchemaSyncOptions, 'skipIfMissingCredentials'> = {}
+): Promise<AllSchemaSyncReports> {
+  const users = await runSchemaSync({
+    ...options,
+    sqlitePath: getPrimarySqliteDbPath(),
+    reportPath: SCHEMA_SYNC_REPORT_PATH,
+    databaseLabel: 'users',
+  });
+
+  const profile = await runSchemaSync({
+    ...options,
+    sqlitePath: getProfileSqliteDbPath(),
+    reportPath: PROFILE_SCHEMA_SYNC_REPORT_PATH,
+    databaseLabel: 'profile',
+  });
+
+  return { users, profile };
 }
 
 export function getSchemaSyncReportPath(): string {

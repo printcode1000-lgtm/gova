@@ -215,10 +215,12 @@ async getByPhone(phone: string): Promise<User | null> {
 * **Responsibility:** Select SQLite or Turso driver. Expose Drizzle `db` instance and tracked `execute()`.
 * **Server-only.** Throws if instantiated in the browser.
 
-| Server Environment | Driver | Target |
-|---|---|---|
-| Development | `drizzle-orm/better-sqlite3` | `public/sync_data/sync_sqlite/allusers.db` |
-| Production | `drizzle-orm/libsql` | Turso Cloud DB |
+| Server Environment | Driver | SQLite file | Turso env |
+|---|---|---|---|
+| Development | `drizzle-orm/better-sqlite3` | `allusers.db` (auth) / `profile.db` (contacts) | — |
+| Production | `drizzle-orm/libsql` | — | `TURSO_DATABASE_URL` / `TURSO_PROFILE_DATABASE_URL` |
+
+`dbClient` → users. `profileDbClient` → profile. Schema sync maps each SQLite file to its own Turso database. See [profile-system.md](./profile-system.md).
 
 ---
 
@@ -526,8 +528,10 @@ NEXT_PUBLIC_GOVA_API_BASE_URL=     # Remote backend URL (static/Capacitor). Empt
 NEXT_PUBLIC_GOVA_BASE_PATH=        # Asset base path (GitHub Pages sub-path)
 
 # ── Turso runtime (server-only) ──
-TURSO_DATABASE_URL=
+TURSO_DATABASE_URL=                # users DB (allusers.db)
 TURSO_AUTH_TOKEN=
+TURSO_PROFILE_DATABASE_URL=        # profile DB (profile.db)
+TURSO_PROFILE_AUTH_TOKEN=
 
 # ── Turso provisioning (build/deploy scripts only) ──
 TURSO_API_TOKEN=

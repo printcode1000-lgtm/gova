@@ -87,8 +87,8 @@ function readSchemaFromFile(dbPath: string): DatabaseSchema {
 }
 
 /**
- * Reads the merged schema from all SQLite files in public/sync_data/sync_sqlite.
- * SQLite is the single source of truth for schema design.
+ * Reads the schema from a single SQLite file, or merges all .db files when no path is given.
+ * Schema sync uses one file per Turso database — do not merge for production sync.
  */
 export function readSqliteSchema(dbPath?: string): DatabaseSchema {
   const paths = dbPath ? [dbPath] : getSqliteDbPaths();

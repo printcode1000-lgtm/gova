@@ -656,6 +656,8 @@
     "sidebar.login":  "تسجيل الدخول",
     "sidebar.logout":  "تسجيل الخروج",
     "sidebar.menu":  "القائمة",
+    "sidebar.preview":  "معاينة",
+    "sidebar.edit":  "تعديل",
     "sidebar.register":  "إنشاء حساب",
     "sidebar.settings":  "الإعدادات",
     "splash.init.categoriesLoaded":  "تم تحميل الفئات",

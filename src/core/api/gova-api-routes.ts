@@ -9,4 +9,7 @@ export const GOVA_API_ROUTES = {
     logout: '/api/auth/logout',
     profile: '/api/auth/profile',
   },
+  profile: {
+    contacts: '/api/profile/contacts',
+  },
 } as const;
