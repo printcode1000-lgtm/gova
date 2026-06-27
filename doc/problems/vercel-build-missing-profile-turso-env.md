@@ -1,94 +1,94 @@
-# فشل بناء Vercel — متغيرات Turso للبروفيل غير مضبوطة
+# Vercel build failure — Turso profile environment variables not configured
 
-**التاريخ:** 2026-06-27  
-**البيئة:** Vercel Production (`main`)  
-**حالة الحل:** محلول
+**Date:** 2026-06-27  
+**Environment:** Vercel Production (`main`)  
+**Solution Status:** Resolved
 
 ---
 
-## الأعراض
+## Symptoms
 
-فشل أمر `npm run build` على Vercel برسالة:
+The `npm run build` command failed on Vercel with the message:
 
 ```
 ❌ Schema sync failed: Error: Turso profile credentials not configured
    (TURSO_PROFILE_DATABASE_URL / TURSO_PROFILE_AUTH_TOKEN)
 ```
 
-من سجل البناء:
+From the build log:
 
-- `db:ensure` نجح (وجود `allusers.db` و `profile.db`)
-- `db:schema:sync` فشل عند مزامنة قاعدة البروفيل
-- `injected env (0) from .env` — لا توجد متغيرات محلية على Vercel
+- `db:ensure` succeeded (both `allusers.db` and `profile.db` exist)
+- `db:schema:sync` failed when syncing the profile database
+- `injected env (0) from .env` — no local variables on Vercel
 
 ---
 
-## السبب
+## Cause
 
-بعد إضافة قاعدة بيانات منفصلة للبروفيل (`profile.db` → Turso `gova-profile`)، أصبح البناء يشغّل **مزامنتين**:
+After adding a separate database for the profile (`profile.db` → Turso `gova-profile`), the build now runs **two synchronizations**:
 
-| SQLite | Turso | المتغيرات المطلوبة |
+| SQLite | Turso | Required Variables |
 |--------|-------|-------------------|
 | `allusers.db` | `gova-db` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
 | `profile.db` | `gova-profile` | `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN` |
 
-على Vercel كانت متغيرات **المستخدمين** موجودة فقط. متغيرات **البروفيل** لم تُضف إلى **Environment Variables** في المشروع، بينما السكربت `schema-sync.ts` يعتبر بيئة CI/Vercel (`VERCEL=1`) بيئة إلزامية — أي غياب المتغيرات يوقف البناء ولا يتخطى المزامنة.
+On Vercel, only the **users** variables were present. The **profile** variables were not added to the project's **Environment Variables**, while the `schema-sync.ts` script treats CI/Vercel environment (`VERCEL=1`) as mandatory — meaning missing variables stop the build and do not skip synchronization.
 
 ---
 
-## الحل
+## Solution
 
-### 1. إضافة المتغيرات إلى Vercel
+### 1. Add Variables to Vercel
 
-تمت إضافة المتغيرين التاليين لجميع البيئات (Production, Preview, Development):
+Added the following two variables to all environments (Production, Preview, Development):
 
 ```env
 TURSO_PROFILE_DATABASE_URL=libsql://gova-profile-....turso.io
 TURSO_PROFILE_AUTH_TOKEN=...
 ```
 
-**يدوياً:** Vercel → Project → Settings → Environment Variables
+**Manually:** Vercel → Project → Settings → Environment Variables
 
-**تلقائياً من الجهاز المحلي** (بعد `npm run db:provision:turso` ووجود القيم في `.env.local`):
+**Automatically from local machine** (after `npm run db:provision:turso` and having values in `.env.local`):
 
 ```bash
 npm run db:push:vercel-env
 ```
 
-السكربت: `scripts/push-vercel-turso-env.ts` — يرفع الأربعة متغيرات Turso (users + profile).
+The script: `scripts/push-vercel-turso-env.ts` — pushes the four Turso variables (users + profile).
 
-### 2. إعادة النشر
+### 2. Redeploy
 
-بعد حفظ المتغيرات: **Redeploy** من لوحة Vercel، أو:
+After saving variables: **Redeploy** from Vercel dashboard, or:
 
 ```bash
 npx vercel deploy --prod
 ```
 
-### 3. التحقق من نجاح البناء
+### 3. Verify Build Success
 
-في سجل البناء يجب أن يظهر:
+The build log should show:
 
 ```
 ✅ users schema synchronization completed
 ✅ profile schema synchronization completed
 ```
 
-ثم اكتمال `next build` بدون أخطاء.
+Then `next build` completes without errors.
 
 ---
 
-## الوقاية
+## Prevention
 
-1. عند إضافة قاعدة Turso جديدة، أضف متغيراتها إلى Vercel فوراً.
-2. بعد `npm run db:provision:turso` شغّل `npm run db:push:vercel-env`.
-3. راجع `.env.example` — يجب أن يعكس كل متغيرات runtime المطلوبة للبناء.
+1. When adding a new Turso database, add its variables to Vercel immediately.
+2. After `npm run db:provision:turso`, run `npm run db:push:vercel-env`.
+3. Review `.env.example` — it should reflect all runtime variables required for the build.
 
 ---
 
-## ملفات ذات صلة
+## Related Files
 
-- `scripts/schema-sync.ts` — يشغّل `runAllSchemaSyncs` ويفشل على CI عند غياب credentials
-- `src/core/provisioning/schema-sync.ts` — منطق المزامنة لكل قاعدة على حدة
-- `doc/system/profile-system.md` — بنية قاعدة البروفيل
-- `doc/system/data-architecture-guide.md` — متغيرات البيئة
+- `scripts/schema-sync.ts` — runs `runAllSchemaSyncs` and fails on CI when credentials are missing
+- `src/core/provisioning/schema-sync.ts` — synchronization logic for each database
+- `doc/system/profile-system.md` — profile database structure
+- `doc/system/data-architecture-guide.md` — environment variables

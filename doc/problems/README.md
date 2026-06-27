@@ -1,7 +1,8 @@
-# المشكلات وحلولها
+# Problems and Solutions
 
-سجل للمشكلات التي واجهها المشروع وكيف تم حلها — للرجوع عند تكرارها أو عند إعداد بيئة جديدة.
+A log of problems encountered in the project and how they were solved — for reference when they recur or when setting up a new environment.
 
-| # | المشكلة | الملف |
+| # | Problem | File |
 |---|---------|-------|
-| 1 | فشل بناء Vercel — متغيرات Turso للبروفيل غير مضبوطة | [vercel-build-missing-profile-turso-env.md](./vercel-build-missing-profile-turso-env.md) |
+| 1 | Vercel build failure — Turso profile environment variables not configured | [vercel-build-missing-profile-turso-env.md](./vercel-build-missing-profile-turso-env.md) |
+| 2 | `/profile` prerender failure — `useSearchParams` without Suspense | [profile-prerender-useSearchParams-suspense.md](./profile-prerender-useSearchParams-suspense.md) |
