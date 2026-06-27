@@ -1,6 +1,6 @@
 'use client';
 
-import { Bell, Heart, Home, Receipt, User } from 'lucide-react';
+import { Bell, Heart, Home, Receipt } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -16,7 +16,6 @@ export function BottomNavBar() {
     { href: '/notifications', icon: Bell, label: t('nav.notifications'), showBadge: true },
     { href: '/favorites', icon: Heart, label: t('nav.favorites'), showBadge: false },
     { href: '/orders', icon: Receipt, label: t('nav.orders'), showBadge: false },
-    { href: '/profile', icon: User, label: t('nav.profile'), showBadge: false },
   ];
 
   return (

@@ -9,7 +9,7 @@ import { createRegistrationSchema, type RegistrationFormData } from '@/lib/valid
 import { useGuestSession } from '@/hooks/use-guest-session';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
-import { CURRENT_SESSION_QUERY_KEY } from './use-session-query';
+import { CURRENT_SESSION_QUERY_KEY } from '../constants/session-query-keys';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 
@@ -42,19 +42,18 @@ export function useRegister() {
         phone: data.phone,
         password: data.password,
       });
-      await sessionService.startSession({
+      return sessionService.startSession({
         token: loginResult.token,
         uid: loginResult.uid || uid,
         phone: data.phone,
         displayName: data.email?.trim() || data.phone,
       });
-      return { ...loginResult, uid: loginResult.uid || uid };
     },
     meta: authMonitorMeta('useRegister', 'RegistrationPageContent', 'Register', 'INSERT'),
 
-    onSuccess: () => {
+    onSuccess: (session) => {
       endGuestSession();
-      queryClient.invalidateQueries({ queryKey: CURRENT_SESSION_QUERY_KEY });
+      queryClient.setQueryData(CURRENT_SESSION_QUERY_KEY, session);
     },
   });
 

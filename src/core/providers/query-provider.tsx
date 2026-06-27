@@ -6,6 +6,7 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { createGovaDbPersister } from '@/core/database/gova-db-persister';
 import { attachQueryObserver } from '@/core/monitor/query-observer';
 import { publicEnv } from '@/core/config/public-env';
+import { CURRENT_SESSION_QUERY_KEY } from '@/features/auth/constants/session-query-keys';
 
 /** 24 hours in milliseconds */
 const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;
@@ -87,6 +88,9 @@ export function AppQueryProvider({ children }: AppQueryProviderProps) {
         persister,
         maxAge: TWENTY_FOUR_HOURS,
         buster: publicEnv.buildId,
+        dehydrateOptions: {
+          shouldDehydrateQuery: (query) => query.queryKey[0] !== CURRENT_SESSION_QUERY_KEY[0],
+        },
       }}
     >
       {children}

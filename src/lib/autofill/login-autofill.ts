@@ -19,13 +19,11 @@ function randomDigits(length: number): string {
 }
 
 function randomPhone(): string {
-  const prefixes = ['010', '011', '012', '015'];
-  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-  return `${prefix}${randomDigits(8)}`;
+  return '01026546550';
 }
 
 function randomPassword(): string {
-  return `${randomAlnum(12)}!@#`;
+  return '0258';
 }
 
 export type LoginAutofillOutcome = {

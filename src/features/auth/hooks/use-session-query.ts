@@ -2,14 +2,26 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { sessionService } from '../services/session-service';
-import { createGuestSession } from '../entities/session.entity';
+import {
+  createGuestSession,
+  isAuthenticatedSession,
+  type CurrentSession,
+} from '../entities/session.entity';
+import { CURRENT_SESSION_QUERY_KEY } from '../constants/session-query-keys';
 import { authMonitorMeta } from './auth-monitor-meta';
 
-/** Stable query key for the current session — shared across hooks and invalidations */
-export const CURRENT_SESSION_QUERY_KEY = ['current_session'] as const;
+export { CURRENT_SESSION_QUERY_KEY, AUTH_STATUS_QUERY_KEY } from '../constants/session-query-keys';
 
-/** @deprecated Use CURRENT_SESSION_QUERY_KEY */
-export const AUTH_STATUS_QUERY_KEY = CURRENT_SESSION_QUERY_KEY;
+function isCurrentSession(value: unknown): value is CurrentSession {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'status' in value &&
+    'sessionId' in value &&
+    ((value as CurrentSession).status === 'guest' ||
+      (value as CurrentSession).status === 'authenticated')
+  );
+}
 
 /**
  * Reads the current session via SessionService.restoreSession().
@@ -19,27 +31,29 @@ export function useSessionQuery() {
   return useQuery({
     queryKey: CURRENT_SESSION_QUERY_KEY,
     queryFn: () => sessionService.restoreSession(),
+    staleTime: 0,
     meta: authMonitorMeta('useSessionQuery', 'AppShell', 'RestoreSession', 'SELECT'),
   });
 }
 
 export function useSession() {
   const query = useSessionQuery();
-  const session = query.data ?? createGuestSession();
+  const session = isCurrentSession(query.data) ? query.data : createGuestSession();
 
   return {
     ...query,
     session,
-    isAuthenticated: session.status === 'authenticated',
-    isGuest: session.status === 'guest',
+    isAuthenticated: isAuthenticatedSession(session),
+    isGuest: !isAuthenticatedSession(session),
   };
 }
 
 /** @deprecated Use useSessionQuery or useSession */
 export function useAuthQuery() {
   const query = useSessionQuery();
+  const session = isCurrentSession(query.data) ? query.data : createGuestSession();
   return {
     ...query,
-    data: query.data ? query.data.status === 'authenticated' : undefined,
+    data: isAuthenticatedSession(session),
   };
 }

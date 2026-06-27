@@ -610,6 +610,7 @@
     "settings.uiDensity":  "UI Density",
     "settings.visualTheme":  "Visual Theme",
     "sidebar.close":  "Close",
+    "sidebar.loading":  "Loading…",
     "sidebar.login":  "Login",
     "sidebar.logout":  "Log out",
     "sidebar.menu":  "Menu",

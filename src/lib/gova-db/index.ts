@@ -68,25 +68,48 @@ async function idbRequestToPromise<T>(request: IDBRequest<T>): Promise<T> {
 export async function govaDbGet<T>(storeName: GovaDbStoreName, key: string): Promise<T | null> {
   if (!hasIndexedDb()) return null;
   return trackGovaDbOp(storeName, key, 'get', async () => {
-    const store = await getStore(storeName, 'readonly');
-    const result = await idbRequestToPromise<{ key: string; value: T } | undefined>(store.get(key));
-    return result?.value ?? null;
+    const db = await getDB();
+    return new Promise<T | null>((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const request = store.get(key);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        const row = request.result as { key: string; value: T } | undefined;
+        resolve(row?.value ?? null);
+      };
+      tx.onerror = () => reject(tx.error);
+    });
   });
 }
 
 export async function govaDbSet<T>(storeName: GovaDbStoreName, key: string, value: T): Promise<void> {
   if (!hasIndexedDb()) return;
   return trackGovaDbOp(storeName, key, 'set', async () => {
-    const store = await getStore(storeName, 'readwrite');
-    await idbRequestToPromise(store.put({ key, value }));
+    const db = await getDB();
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      const request = store.put({ key, value });
+      request.onerror = () => reject(request.error);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
   });
 }
 
 export async function govaDbDelete(storeName: GovaDbStoreName, key: string): Promise<void> {
   if (!hasIndexedDb()) return;
   return trackGovaDbOp(storeName, key, 'delete', async () => {
-    const store = await getStore(storeName, 'readwrite');
-    await idbRequestToPromise(store.delete(key));
+    const db = await getDB();
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      const request = store.delete(key);
+      request.onerror = () => reject(request.error);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
   });
 }
 

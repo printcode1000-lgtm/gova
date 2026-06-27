@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
-import { CURRENT_SESSION_QUERY_KEY } from './use-session-query';
+import { CURRENT_SESSION_QUERY_KEY } from '../constants/session-query-keys';
 import { authMonitorMeta } from './auth-monitor-meta';
 
 export function useLogout() {
@@ -12,11 +12,11 @@ export function useLogout() {
   return useMutation({
     mutationFn: async () => {
       await authService.logout();
-      await sessionService.clearSession();
+      return sessionService.clearSession();
     },
     meta: authMonitorMeta('useLogout', 'AppSidebar', 'Logout', 'DELETE'),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CURRENT_SESSION_QUERY_KEY });
+    onSuccess: (session) => {
+      queryClient.setQueryData(CURRENT_SESSION_QUERY_KEY, session);
     },
   });
 }
