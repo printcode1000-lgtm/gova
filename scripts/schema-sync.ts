@@ -39,6 +39,14 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('❌ Schema sync failed:', error);
+  const message = error instanceof Error ? error.message : String(error);
+  console.error('❌ Schema sync failed:', message);
+  if (process.env.VERCEL === '1' && message.includes('not configured')) {
+    console.error('');
+    console.error('Add these to Vercel → Project → Settings → Environment Variables:');
+    console.error('  TURSO_DATABASE_URL, TURSO_AUTH_TOKEN');
+    console.error('  TURSO_PROFILE_DATABASE_URL, TURSO_PROFILE_AUTH_TOKEN');
+    console.error('Or run locally: npm run db:push:vercel-env');
+  }
   process.exit(1);
 });

@@ -15,6 +15,7 @@
     "db:export": "npx tsx scripts/export-db-to-json.ts",
     "db:schema:sync": "cross-env GOVA_PROVISIONING=true npx tsx scripts/schema-sync.ts",
     "db:provision:turso": "cross-env GOVA_PROVISIONING=true npx tsx scripts/provision-turso.ts",
+    "db:push:vercel-env": "npx tsx scripts/push-vercel-turso-env.ts",
     "db:setup:turso": "npm run db:schema:sync",
     "db:create:sqlite": "npx tsx scripts/create-sqlite-db.ts",
     "db:create:profile": "npx tsx scripts/create-profile-sqlite-db.ts",

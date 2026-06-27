@@ -48,3 +48,11 @@ TURSO_PROFILE_AUTH_TOKEN=
 ```
 
 Provision with `npm run db:provision:turso` after setting `TURSO_API_TOKEN` and `TURSO_ORGANIZATION`.
+
+For Vercel deploys, push all four Turso runtime vars to the project:
+
+```bash
+npm run db:push:vercel-env
+```
+
+Then redeploy (or push to `main` to trigger Git integration).
