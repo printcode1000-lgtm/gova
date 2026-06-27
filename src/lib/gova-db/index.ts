@@ -16,6 +16,18 @@ export const GOVA_DB_STORES = {
 
 export type GovaDbStoreName = (typeof GOVA_DB_STORES)[keyof typeof GOVA_DB_STORES];
 
+/** IndexedDB only accepts structured-cloneable data — strip Promises/functions via JSON. */
+function toStorableValue<T>(value: T): T {
+  if (value === null || value === undefined) return value;
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return value;
+  }
+  if (value instanceof Promise) {
+    throw new Error('GovaDB: cannot store a Promise in IndexedDB');
+  }
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
 let dbInstance: IDBDatabase | null = null;
 
 function hasIndexedDb(): boolean {
@@ -85,12 +97,13 @@ export async function govaDbGet<T>(storeName: GovaDbStoreName, key: string): Pro
 
 export async function govaDbSet<T>(storeName: GovaDbStoreName, key: string, value: T): Promise<void> {
   if (!hasIndexedDb()) return;
+  const storable = toStorableValue(value);
   return trackGovaDbOp(storeName, key, 'set', async () => {
     const db = await getDB();
     await new Promise<void>((resolve, reject) => {
       const tx = db.transaction(storeName, 'readwrite');
       const store = tx.objectStore(storeName);
-      const request = store.put({ key, value });
+      const request = store.put({ key, value: storable });
       request.onerror = () => reject(request.error);
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);

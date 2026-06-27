@@ -46,6 +46,7 @@ export function useRegister() {
         token: loginResult.token,
         uid: loginResult.uid || uid,
         phone: data.phone,
+        email: data.email?.trim() || loginResult.email || '',
         displayName: data.email?.trim() || data.phone,
       });
     },

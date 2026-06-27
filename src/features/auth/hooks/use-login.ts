@@ -33,8 +33,9 @@ export function useLogin() {
       return sessionService.startSession({
         token: result.token,
         uid: result.uid,
-        phone: data.phone,
-        displayName: data.phone,
+        phone: result.phone,
+        email: result.email,
+        displayName: result.email || result.phone,
       });
     },
     meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),

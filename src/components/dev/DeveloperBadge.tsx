@@ -65,7 +65,7 @@ export function DeveloperBadge() {
       const result = await fillRegistrationForm();
       console.log('[Autofill Registration]:', result);
     } else if (pathname === '/login') {
-      const result = fillLoginForm();
+      const result = await fillLoginForm();
       console.log('[Autofill Login]:', result);
     } else if (pathname === '/addseller') {
       const result = fillOnboardingRandomFixture();

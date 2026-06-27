@@ -13,11 +13,13 @@ import {
 import type { ISessionService } from './session-service.interface';
 
 function createSession(input: StartSessionInput): AuthSession {
+  const email = input.email?.trim() ?? '';
   return {
     token: input.token,
     uid: input.uid,
     phone: input.phone,
-    displayName: input.displayName?.trim() || input.phone,
+    email,
+    displayName: input.displayName?.trim() || email || input.phone,
     loginAt: new Date().toISOString(),
   };
 }
@@ -63,7 +65,7 @@ export class SessionApiService implements ISessionService {
   }
 
   async updateSession(
-    patch: Partial<Pick<AuthSession, 'displayName' | 'phone'>>,
+    patch: Partial<Pick<AuthSession, 'displayName' | 'phone' | 'email'>>,
   ): Promise<AuthSession | null> {
     const current = await this.readStoredSession();
     if (!current) return null;

@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils';
 import { createLoginSchema, type LoginFormData } from '@/lib/validation/auth';
 
 import { useLogin } from '@/features/auth/hooks/use-login';
+import { LOGIN_AUTOFILL_EVENT } from '@/lib/autofill/dom-input';
 
 export function LoginPageContent() {
   const router = useRouter();
@@ -33,6 +34,14 @@ export function LoginPageContent() {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const { form, isSubmitting, error, submitted, onSubmit } = useLogin();
+
+  React.useEffect(() => {
+    const syncAfterAutofill = () => {
+      void form.trigger(['phone', 'password']);
+    };
+    window.addEventListener(LOGIN_AUTOFILL_EVENT, syncAfterAutofill);
+    return () => window.removeEventListener(LOGIN_AUTOFILL_EVENT, syncAfterAutofill);
+  }, [form]);
 
   if (submitted) {
     return (

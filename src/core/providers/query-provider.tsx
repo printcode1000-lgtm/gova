@@ -17,13 +17,19 @@ const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;
 /** 5 minutes in milliseconds */
 const FIVE_MINUTES = 1000 * 60 * 5;
 
-/** Session is read from GovaDB on mount — never restore it from the RQ persister. */
-function withoutPersistedSessionQuery(
+/** Never persist these query roots — they use GovaDB session or live API as SSOT. */
+const NON_PERSISTED_QUERY_ROOTS = new Set<string>([
+  CURRENT_SESSION_QUERY_KEY[0],
+  'user_profile',
+]);
+
+/** Session/auth queries must not be restored from the RQ persister. */
+function sanitizePersistedClient(
   client: PersistedClient | undefined,
 ): PersistedClient | undefined {
   if (!client?.clientState?.queries?.length) return client;
   const queries = client.clientState.queries.filter(
-    (query) => query.queryKey[0] !== CURRENT_SESSION_QUERY_KEY[0],
+    (query) => !NON_PERSISTED_QUERY_ROOTS.has(String(query.queryKey[0] ?? '')),
   );
   if (queries.length === client.clientState.queries.length) return client;
   return {
@@ -33,6 +39,13 @@ function withoutPersistedSessionQuery(
       queries,
     },
   };
+}
+
+function shouldPersistQuery(query: { queryKey: readonly unknown[]; state: { status: string } }): boolean {
+  const root = String(query.queryKey[0] ?? '');
+  if (NON_PERSISTED_QUERY_ROOTS.has(root)) return false;
+  // Pending queries may contain Promise refs in v5 — only persist settled success data.
+  return query.state.status === 'success';
 }
 
 /**
@@ -97,7 +110,7 @@ export function AppQueryProvider({ children }: AppQueryProviderProps) {
     const base = createGovaDbPersister();
     return {
       ...base,
-      restoreClient: async () => withoutPersistedSessionQuery(await base.restoreClient()),
+      restoreClient: async () => sanitizePersistedClient(await base.restoreClient()),
     };
   }, []);
 
@@ -116,7 +129,7 @@ export function AppQueryProvider({ children }: AppQueryProviderProps) {
         maxAge: TWENTY_FOUR_HOURS,
         buster: publicEnv.buildId,
         dehydrateOptions: {
-          shouldDehydrateQuery: (query) => query.queryKey[0] !== CURRENT_SESSION_QUERY_KEY[0],
+          shouldDehydrateQuery: shouldPersistQuery,
         },
       }}
     >

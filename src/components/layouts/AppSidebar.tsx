@@ -7,6 +7,7 @@ import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { useSession } from '@/features/auth/hooks/use-session-query';
+import { formatSessionPhone } from '@/features/auth/entities/session.entity';
 import { useLogout } from '@/features/auth/hooks/use-logout';
 
 interface AppSidebarProps {
@@ -86,12 +87,19 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
             <>
               <div className="gova-control w-full flex items-center gap-3 rounded-lg px-3 py-3 text-sm gova-surface-neutral">
                 <User className="w-5 h-5 shrink-0 text-primary" aria-hidden="true" />
-                <div className="min-w-0 text-start">
+                <div className="min-w-0 text-start space-y-0.5">
                   <p className="font-semibold text-on-surface truncate">
-                    {session?.displayName ?? session?.phone}
+                    {session?.displayName || session?.phone || t('nav.profile')}
                   </p>
-                  {session?.phone && session.displayName !== session.phone ? (
-                    <p className="text-xs text-on-surface-variant truncate">{session.phone}</p>
+                  {session?.phone ? (
+                    <p className="text-xs text-on-surface-variant truncate" dir="ltr">
+                      {formatSessionPhone(session.phone)}
+                    </p>
+                  ) : null}
+                  {session?.email ? (
+                    <p className="text-xs text-on-surface-variant truncate" dir="ltr">
+                      {session.email}
+                    </p>
                   ) : null}
                 </div>
               </div>

@@ -5,7 +5,7 @@ export interface ISessionService {
   startSession(input: StartSessionInput): Promise<AuthSession>;
   getCurrentSession(): Promise<AuthSession | null>;
   updateSession(
-    patch: Partial<Pick<AuthSession, 'displayName' | 'phone'>>,
+    patch: Partial<Pick<AuthSession, 'displayName' | 'phone' | 'email'>>,
   ): Promise<AuthSession | null>;
   clearSession(): Promise<null>;
 }

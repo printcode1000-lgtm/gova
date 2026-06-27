@@ -3,8 +3,11 @@ import 'server-only';
 import type { RegistrationFormData, LoginFormData } from '@/lib/validation/auth';
 import type { CreateUserCommand } from '../operations/commands/create-user.command';
 import type { UpdateLastLoginCommand } from '../operations/commands/update-last-login.command';
+import type { UpdateUserProfileCommand } from '../operations/commands/update-user-profile.command';
 import type { GetUserByPhoneQuery } from '../operations/queries/get-user-by-phone.query';
-import type { IAuthService } from './auth-service.interface';
+import type { GetUserByUidQuery } from '../operations/queries/get-user-by-uid.query';
+import type { UpdateProfileInput, UserProfile } from '../entities/profile.entity';
+import type { IAuthService, LoginResult } from './auth-service.interface';
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 
 async function hashPassword(password: string): Promise<string> {
@@ -23,7 +26,9 @@ export class AuthService implements IAuthService {
   constructor(
     private createUserCommand: CreateUserCommand,
     private updateLastLoginCommand: UpdateLastLoginCommand,
-    private getUserByPhoneQuery: GetUserByPhoneQuery
+    private getUserByPhoneQuery: GetUserByPhoneQuery,
+    private getUserByUidQuery: GetUserByUidQuery,
+    private updateUserProfileCommand: UpdateUserProfileCommand,
   ) {}
 
   async register(formData: RegistrationFormData): Promise<{ uid: string }> {
@@ -46,7 +51,7 @@ export class AuthService implements IAuthService {
     });
   }
 
-  async login(formData: LoginFormData): Promise<{ token: string; uid: string }> {
+  async login(formData: LoginFormData): Promise<LoginResult> {
     return traceServerLayer('server-service', 'AuthService.login', async () => {
       const user = await this.getUserByPhoneQuery.execute(formData.phone);
       if (!user) {
@@ -61,7 +66,30 @@ export class AuthService implements IAuthService {
       const token = generateToken();
       await this.updateLastLoginCommand.execute(user.uid);
 
-      return { token, uid: user.uid };
+      return {
+        token,
+        uid: user.uid,
+        phone: user.phone,
+        email: user.email ?? '',
+      };
+    });
+  }
+
+  async getProfile(uid: string): Promise<UserProfile> {
+    return traceServerLayer('server-service', 'AuthService.getProfile', async () => {
+      const user = await this.getUserByUidQuery.execute(uid);
+      if (!user) throw new Error('userNotFound');
+      return {
+        uid: user.uid,
+        phone: user.phone,
+        email: user.email ?? null,
+      };
+    });
+  }
+
+  async updateProfile(input: UpdateProfileInput): Promise<UserProfile> {
+    return traceServerLayer('server-service', 'AuthService.updateProfile', async () => {
+      return this.updateUserProfileCommand.execute(input);
     });
   }
 
@@ -72,7 +100,6 @@ export class AuthService implements IAuthService {
   }
 
   async isAuthenticated(): Promise<boolean> {
-    // Auth status is determined client-side from IndexedDB cache.
     return false;
   }
 }

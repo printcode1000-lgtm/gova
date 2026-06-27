@@ -68,9 +68,16 @@ interface ContactInfoCardProps {
   data?: ContactInfoData;
   onChange?: (data: ContactInfoData) => void;
   readOnly?: boolean;
+  /** Hide primary phone/email/password — use ProfileRegistrationInfoCard on profile page */
+  hidePrimarySection?: boolean;
 }
 
-export function ContactInfoCard({ data, onChange, readOnly = false }: ContactInfoCardProps) {
+export function ContactInfoCard({
+  data,
+  onChange,
+  readOnly = false,
+  hidePrimarySection = false,
+}: ContactInfoCardProps) {
   const { t } = useTranslation();
   const [localData, setLocalData] = React.useState<ContactInfoData>(() => {
     if (data) {
@@ -147,7 +154,26 @@ export function ContactInfoCard({ data, onChange, readOnly = false }: ContactInf
     addPhone(type);
   };
 
-  const addedPhoneTypes = localData.phones.map((p) => p.type);
+  const phonesForAdditional = React.useMemo(
+    () =>
+      hidePrimarySection
+        ? localData.phones.filter((p) => p.id !== 'primary-whatsapp')
+        : localData.phones,
+    [hidePrimarySection, localData.phones],
+  );
+
+  const groupedPhones = React.useMemo(() => {
+    const grouped: Record<string, PhoneLink[]> = {};
+    phonesForAdditional.forEach((phone) => {
+      if (!grouped[phone.type]) {
+        grouped[phone.type] = [];
+      }
+      grouped[phone.type].push(phone);
+    });
+    return grouped;
+  }, [phonesForAdditional]);
+
+  const addedPhoneTypes = phonesForAdditional.map((p) => p.type);
   const availablePhoneTypes = PHONE_TYPES.filter((p) => !addedPhoneTypes.includes(p));
 
   const hasAdditionalEmails = localData.emails.some((e) => e.id !== 'primary');
@@ -259,18 +285,6 @@ export function ContactInfoCard({ data, onChange, readOnly = false }: ContactInf
   const addedPlatforms = localData.socialLinks.map((s) => s.platform);
   const availablePlatforms = SOCIAL_PLATFORMS.filter((p) => !addedPlatforms.includes(p));
 
-  // Group phones by type
-  const groupedPhones = React.useMemo(() => {
-    const grouped: Record<string, PhoneLink[]> = {};
-    localData.phones.forEach((phone) => {
-      if (!grouped[phone.type]) {
-        grouped[phone.type] = [];
-      }
-      grouped[phone.type].push(phone);
-    });
-    return grouped;
-  }, [localData.phones]);
-
   // Group and sort social links by platform
   const groupedSocialLinks = React.useMemo(() => {
     const grouped: Record<string, SocialLink[]> = {};
@@ -290,7 +304,8 @@ export function ContactInfoCard({ data, onChange, readOnly = false }: ContactInf
         <CardDescription>{t('onboarding.contactInfo.description')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Primary Contact Section */}
+        {!hidePrimarySection ? (
+        /* Primary Contact Section */
         <Card>
           <CardHeader>
             <div>
@@ -391,6 +406,7 @@ export function ContactInfoCard({ data, onChange, readOnly = false }: ContactInf
             )}
           </CardContent>
         </Card>
+        ) : null}
 
         {/* Additional Contact Section */}
         <Card>

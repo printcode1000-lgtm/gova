@@ -32,16 +32,7 @@ function randomPassword(): string {
   return `${randomAlnum(12)}!@#`;
 }
 
-/** Trigger a React-controlled input value change via native setter. */
-function setNativeValue(input: HTMLInputElement, value: string) {
-  const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    'value',
-  )?.set;
-  nativeInputValueSetter?.call(input, value);
-  input.dispatchEvent(new Event('input', { bubbles: true }));
-  input.dispatchEvent(new Event('change', { bubbles: true }));
-}
+import { setNativeInputValue } from './dom-input';
 
 export type RegistrationAutofillOutcome = {
   success: boolean;
@@ -64,7 +55,7 @@ export async function fillRegistrationForm(): Promise<RegistrationAutofillOutcom
     // Phone first (required for verification)
     const phoneInput = document.querySelector('[data-gova-autofill="registration-phone"]') as HTMLInputElement;
     if (phoneInput) {
-      setNativeValue(phoneInput, randomPhone());
+      setNativeInputValue(phoneInput, randomPhone());
       filled++;
     }
 
@@ -72,13 +63,13 @@ export async function fillRegistrationForm(): Promise<RegistrationAutofillOutcom
     const passwordInput = document.querySelector('[data-gova-autofill="registration-password"]') as HTMLInputElement;
     if (passwordInput) {
       const pwd = randomPassword();
-      setNativeValue(passwordInput, pwd);
+      setNativeInputValue(passwordInput, pwd);
       filled++;
 
       // Confirm Password (must match)
       const confirmPasswordInput = document.querySelector('[data-gova-autofill="registration-confirm-password"]') as HTMLInputElement;
       if (confirmPasswordInput) {
-        setNativeValue(confirmPasswordInput, pwd);
+        setNativeInputValue(confirmPasswordInput, pwd);
         filled++;
       }
     }
@@ -86,7 +77,7 @@ export async function fillRegistrationForm(): Promise<RegistrationAutofillOutcom
     // Email
     const emailInput = document.querySelector('[data-gova-autofill="registration-email"]') as HTMLInputElement;
     if (emailInput) {
-      setNativeValue(emailInput, randomEmail());
+      setNativeInputValue(emailInput, randomEmail());
       filled++;
     }
 

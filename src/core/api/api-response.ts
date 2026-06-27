@@ -22,7 +22,7 @@ export function apiError(message: string, status = 400): NextResponse {
 
 export function mapServiceError(error: unknown): NextResponse {
   const message = error instanceof Error ? error.message : 'Internal Server Error';
-  const knownCodes = ['userNotFound', 'invalidPassword', 'phoneAlreadyRegistered'];
+  const knownCodes = ['userNotFound', 'invalidPassword', 'phoneAlreadyRegistered', 'invalidCurrentPassword', 'currentPasswordRequired'];
 
   if (knownCodes.includes(message)) {
     return apiError(message, 400);

@@ -45,7 +45,8 @@ There is **no server session**. Server `POST /api/auth/logout` exists but is a n
 | `token` | `string` | Token from login API |
 | `uid` | `string` | User id |
 | `phone` | `string` | Phone number |
-| `displayName` | `string` | Shown in sidebar (defaults to phone) |
+| `email` | `string` | Email address |
+| `displayName` | `string` | Shown in sidebar (defaults to email or phone) |
 | `loginAt` | `string` | ISO timestamp |
 
 ```typescript
@@ -123,7 +124,7 @@ Always call this in `onSuccess` of login/register/logout. Do not rely on `invali
 | Setting | Value |
 |---|---|
 | `staleTime` | `Infinity` — session changes only via `setSessionCache` or first mount |
-| Persisted to RQ cache | **No** — excluded in `AppQueryProvider` |
+| Persisted to RQ cache | **No** — `current_session` and `user_profile` excluded; only `success` queries persisted |
 | Legacy RQ rows on restore | Stripped in `AppQueryProvider` (old builds could freeze UI) |
 
 ---
@@ -158,7 +159,18 @@ useLogout()
   → setSessionCache(null)
 ```
 
-No HTTP request. This fixes logout when the API is unreachable (static export, offline).
+### Profile (phone / email / password)
+
+```
+Profile page → useProfileRegistration()
+  → authService.getProfile(uid)        // server
+  → authService.updateProfile(...)     // server
+  → sessionService.updateSession()     // IDB + setSessionCache
+```
+
+Save button appears in the registration info card only when the form is dirty.
+
+No HTTP request for logout. Profile updates use `PUT /api/auth/profile`.
 
 ### App reload
 
