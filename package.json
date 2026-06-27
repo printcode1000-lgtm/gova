@@ -16,9 +16,18 @@
     "db:schema:sync": "cross-env GOVA_PROVISIONING=true npx tsx scripts/schema-sync.ts",
     "db:provision:turso": "cross-env GOVA_PROVISIONING=true npx tsx scripts/provision-turso.ts",
     "db:setup:turso": "npm run db:schema:sync",
-    "db:create:sqlite": "npx tsx scripts/create-sqlite-db.ts"
+    "db:create:sqlite": "npx tsx scripts/create-sqlite-db.ts",
+    "cap:sync": "npx cap sync",
+    "cap:copy": "npx cap copy",
+    "cap:open:android": "npx cap open android",
+    "cap:open:ios": "npx cap open ios",
+    "cap:build": "npm run build:static && npx cap sync"
   },
   "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/cli": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/ios": "^8.4.1",
     "@hookform/resolvers": "^5.4.0",
     "@libsql/client": "^0.17.4",
     "@radix-ui/react-avatar": "^1.2.0",

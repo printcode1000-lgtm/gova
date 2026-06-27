@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { withBasePath } from '@/core/config';
 
 type AppIconSize = 'sm' | 'md' | 'lg';
 
@@ -19,7 +20,7 @@ export default function AppIcon({ size = 'lg', className = '' }: AppIconProps) {
   return (
     <div className={`relative ${className}`}>
       <Image
-        src="/logo.png"
+        src={withBasePath('/logo.png')}
         alt="Gova App Icon"
         width={sizes.imageWidth}
         height={sizes.imageHeight}

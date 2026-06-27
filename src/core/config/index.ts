@@ -6,4 +6,4 @@ export {
   isProvisioningContext,
 } from './runtime-env';
 
-export { publicEnv } from './public-env';
+export { publicEnv, withBasePath } from './public-env';

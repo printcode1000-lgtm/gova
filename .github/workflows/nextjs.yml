@@ -60,6 +60,8 @@ jobs:
 
       - name: Build static export
         env:
+          # GitHub Pages serves project sites at /{repo}/ — Vercel uses root (no base path).
+          GOVA_BASE_PATH: /${{ github.event.repository.name }}
           NEXT_PUBLIC_GOVA_API_BASE_URL: ${{ secrets.GOVA_API_BASE_URL }}
         run: npm run build:static
 

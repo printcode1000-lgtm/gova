@@ -1,4 +1,4 @@
-import { publicEnv } from '@/core/config/public-env';
+import { publicEnv, withBasePath } from '@/core/config/public-env';
 
 /**
  * GOVA API configuration — platform-agnostic.
@@ -21,10 +21,9 @@ export function buildGovaApiUrl(route: string): string {
 }
 
 export function buildPublicAssetUrl(path: string): string {
-  const base = publicEnv.basePath.replace(/\/$/, '');
-  const normalized = path.startsWith('/') ? path : `/${path}`;
+  const assetPath = withBasePath(path);
   if (typeof window !== 'undefined') {
-    return `${window.location.origin}${base}${normalized}`;
+    return `${window.location.origin}${assetPath}`;
   }
-  return `${base}${normalized}`;
+  return assetPath;
 }

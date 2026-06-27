@@ -13,3 +13,10 @@ export const publicEnv = {
     '',
   buildId: process.env.NEXT_PUBLIC_BUILD_ID ?? 'default',
 } as const;
+
+/** Prefix a public asset path with the deployment base path (e.g. `/gova` on GitHub Pages). */
+export function withBasePath(path: string): string {
+  const base = publicEnv.basePath.replace(/\/$/, '');
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${normalized}`;
+}

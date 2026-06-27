@@ -8,7 +8,7 @@ import { ShellLayout } from "@/components/layouts/ShellLayout";
 import { AppQueryProvider } from "@/core/providers/query-provider";
 import dynamic from "next/dynamic";
 
-import { isDevelopment } from "@/core/config";
+import { isDevelopment, withBasePath } from "@/core/config";
 
 const DeveloperBadge = isDevelopment
   ? dynamic(() => import("@/components/dev/DeveloperBadge").then((m) => m.DeveloperBadge))
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   title: "Gova",
   description: "Gova — تطبيق Next.js",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: withBasePath("/logo.png"),
+    apple: withBasePath("/logo.png"),
   },
 };
 
