@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { LogIn, User, Phone, Store } from 'lucide-react';
 import * as React from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import { ProfileContactsCard } from '@/components/profile/ProfileContactsCard';
 import { ProfileRegistrationInfoCard } from '@/components/profile/ProfileRegistrationInfoCard';
@@ -14,20 +15,9 @@ import { Card, CardContent } from '@/components/ui/card';
 export default function ProfilePage() {
   const { t } = useTranslation();
   const { isLoggedIn, isLoading } = useSession();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = React.useState<'registration' | 'contact' | 'store'>('registration');
-  const [showEditCard, setShowEditCard] = React.useState(false);
-
-  React.useEffect(() => {
-    const handleToggleEditCard = (event: CustomEvent<boolean>) => {
-      setShowEditCard(event.detail);
-    };
-
-    window.addEventListener('toggle-edit-card', handleToggleEditCard as EventListener);
-
-    return () => {
-      window.removeEventListener('toggle-edit-card', handleToggleEditCard as EventListener);
-    };
-  }, []);
+  const showEditCard = searchParams.get('mode') === 'edit';
 
   if (isLoading) {
     return (

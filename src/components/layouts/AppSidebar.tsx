@@ -99,28 +99,24 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                   {t('nav.profile')}
                 </div>
                 <div className="flex gap-1 px-2 py-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      window.dispatchEvent(new CustomEvent('toggle-edit-card', { detail: false }));
-                      onClose();
-                    }}
-                    className="flex items-center gap-2 rounded px-3 py-2 text-sm font-medium text-on-surface active:opacity-90"
-                  >
-                    <Eye className="w-4 h-4 shrink-0 text-primary" />
-                    {t('sidebar.preview')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      window.dispatchEvent(new CustomEvent('toggle-edit-card', { detail: true }));
-                      onClose();
-                    }}
-                    className="flex items-center gap-2 rounded px-3 py-2 text-sm font-medium text-on-surface active:opacity-90"
-                  >
-                    <Edit className="w-4 h-4 shrink-0 text-primary" />
-                    {t('sidebar.edit')}
-                  </button>
+                  <Link href="/profile?mode=preview" onClick={onClose}>
+                    <button
+                      type="button"
+                      className="flex items-center gap-2 rounded px-3 py-2 text-sm font-medium text-on-surface active:opacity-90"
+                    >
+                      <Eye className="w-4 h-4 shrink-0 text-primary" />
+                      {t('sidebar.preview')}
+                    </button>
+                  </Link>
+                  <Link href="/profile?mode=edit" onClick={onClose}>
+                    <button
+                      type="button"
+                      className="flex items-center gap-2 rounded px-3 py-2 text-sm font-medium text-on-surface active:opacity-90"
+                    >
+                      <Edit className="w-4 h-4 shrink-0 text-primary" />
+                      {t('sidebar.edit')}
+                    </button>
+                  </Link>
                 </div>
               </div>
             </>
