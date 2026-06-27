@@ -1,3 +1,5 @@
+import { isDevelopment } from '@/core/config';
+
 const ALNUM = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 function randomAlnum(length: number): string {
@@ -33,7 +35,7 @@ export type LoginAutofillOutcome = {
 };
 
 export function fillLoginForm(): LoginAutofillOutcome {
-  if (process.env.NODE_ENV !== 'development') {
+  if (!isDevelopment) {
     return {
       success: false,
       filled: 0,

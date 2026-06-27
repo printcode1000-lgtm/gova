@@ -5,6 +5,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createGovaDbPersister } from '@/core/database/gova-db-persister';
 import { attachQueryObserver } from '@/core/monitor/query-observer';
+import { publicEnv } from '@/core/config/public-env';
 
 /** 24 hours in milliseconds */
 const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;
@@ -85,7 +86,7 @@ export function AppQueryProvider({ children }: AppQueryProviderProps) {
       persistOptions={{
         persister,
         maxAge: TWENTY_FOUR_HOURS,
-        buster: process.env.NEXT_PUBLIC_BUILD_ID ?? 'default',
+        buster: publicEnv.buildId,
       }}
     >
       {children}

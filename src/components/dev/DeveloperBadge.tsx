@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { fillRegistrationForm } from '@/lib/autofill/registration-autofill';
 import { fillLoginForm } from '@/lib/autofill/login-autofill';
 import { fillOnboardingRandomFixture } from '@/lib/autofill/onboarding-autofill';
+import { isDevelopment } from '@/core/config';
 
 const pages = [
   { path: '/', name: 'Splash' },
@@ -38,7 +39,6 @@ const pages = [
 const SPLASH_NAV_TOGGLE_KEY = 'gova-dev-splash-nav-toggle';
 
 export function DeveloperBadge() {
-  const isDevelopment = process.env.NODE_ENV === 'development';
   const pathname = usePathname();
   const [position, setPosition] = useState({ x: 16, y: 0 });
   const [isMounted, setIsMounted] = useState(false);

@@ -1,4 +1,5 @@
 import { nextSellerId } from '@/lib/seller/next-id';
+import { isDevelopment } from '@/core/config';
 
 import { constants } from '@/lib/onboarding/schemas';
 import { stepOrder, useOnboardingStore } from '@/lib/onboarding/store';
@@ -252,7 +253,7 @@ function buildRandomOnboardingData(): OnboardingData {
 
 /** Fills all onboarding steps with random alphanumeric data (dev autofill). */
 export function fillOnboardingRandomFixture(): OnboardingAutofillOutcome {
-  if (process.env.NODE_ENV !== 'development') {
+  if (!isDevelopment) {
     return {
       success: false,
       filled: 0,

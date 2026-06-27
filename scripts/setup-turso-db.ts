@@ -1,34 +1,25 @@
-import { queryTurso, executeTurso } from '@/lib/db/turso';
+import { existsSync } from 'fs';
+import dotenv from 'dotenv';
+import { runSchemaSync } from '../src/core/provisioning/schema-sync';
 
-async function setupTursoDatabase() {
-  console.log('Setting up Turso database...');
+process.env.GOVA_PROVISIONING = 'true';
 
-  // Create users table
-  const createTableSQL = `
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      uid TEXT NOT NULL UNIQUE,
-      phone TEXT NOT NULL UNIQUE,
-      email TEXT,
-      password TEXT NOT NULL,
-      last_login_at DATETIME,
-      created_at DATETIME,
-      updated_at DATETIME,
-      deleted_at DATETIME
-    );
-  `;
-
-  await executeTurso(createTableSQL);
-  console.log('Created table: users');
-
-  // Create indexes for better performance
-  await executeTurso('CREATE INDEX IF NOT EXISTS idx_users_uid ON users(uid);');
-  await executeTurso('CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phone);');
-  await executeTurso('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);');
-  await executeTurso('CREATE INDEX IF NOT EXISTS idx_users_deleted_at ON users(deleted_at);');
-  console.log('Created indexes on uid, phone, email, and deleted_at');
-
-  console.log('Turso database setup completed successfully!');
+if (existsSync('.env.local')) {
+  dotenv.config({ path: '.env.local' });
+} else {
+  dotenv.config({ path: '.env' });
 }
 
-setupTursoDatabase().catch(console.error);
+runSchemaSync()
+  .then((report) => {
+    if (report.skipped) {
+      console.log(`Schema sync skipped: ${report.skipReason}`);
+      return;
+    }
+    console.log('Turso schema synchronized from SQLite (schema only, no data).');
+    console.log(`Operations: ${report.operations.length}, Duration: ${report.durationMs}ms`);
+  })
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

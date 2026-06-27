@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { useTranslation } from '@/lib/i18n';
+import { isDevelopment } from '@/core/config';
 import { cn } from '@/lib/utils';
 import type { RegistrationFormData } from '@/lib/validation/auth';
 
@@ -43,7 +44,7 @@ export function PhoneVerification() {
     setOtpSent(true);
     setCountdown(RESEND_COUNTDOWN);
 
-    if (process.env.NODE_ENV === 'development') {
+    if (isDevelopment) {
       setOtp('0000');
       await new Promise((resolve) => setTimeout(resolve, 300));
       setValue('phoneVerified', true, { shouldValidate: true });

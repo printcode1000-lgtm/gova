@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { getTursoClient } from '@/lib/db/turso';
 import { AbstractDatabaseClient } from './abstract-database-client';
 
@@ -10,7 +12,7 @@ export class TursoDatabaseClient extends AbstractDatabaseClient {
     const { drizzle } = require('drizzle-orm/libsql');
     const client = getTursoClient();
     this._db = drizzle(client);
-    
+
     return this._db;
   }
 

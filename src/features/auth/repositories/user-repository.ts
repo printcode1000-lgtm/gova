@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { eq, and, isNull } from 'drizzle-orm';
 import { dbClient } from '@/core/database/db-client';
 import type { IDatabaseClient } from '@/core/database/database-client.interface';

@@ -5,9 +5,12 @@ import { notFound } from 'next/navigation';
 import { useMonitorStore, startNewFlow, type TreeNode } from '@/core/monitor/monitor-store';
 import { LAYER_COLORS, OP_TYPE_COLORS, STATUS_COLORS, SLOW_QUERY_THRESHOLD_MS } from '@/core/monitor/types';
 import type { OperationRecord, LayerName } from '@/core/monitor/types';
+import { SchemaSyncPanel } from './SchemaSyncPanel';
 
 // Guard production environment
-if (process.env.NODE_ENV !== 'development') {
+import { isDevelopment } from '@/core/config';
+
+if (!isDevelopment) {
   notFound();
 }
 
@@ -734,7 +737,7 @@ export default function MonitorPage() {
 
       {/* ─── TABS ─── */}
       <nav className="tabs no-print">
-        {['dashboard', 'operations', 'timeline', 'call-graph', 'dependency', 'analytics', 'pinned'].map((t) => (
+        {['dashboard', 'operations', 'timeline', 'call-graph', 'dependency', 'analytics', 'schema-sync', 'pinned'].map((t) => (
           <button
             key={t}
             className={`tab-btn ${activeTab === t ? 'active' : ''}`}
@@ -1430,6 +1433,13 @@ export default function MonitorPage() {
               </div>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* ─── TAB CONTENT: SCHEMA SYNC ─── */}
+      {activeTab === 'schema-sync' && (
+        <section>
+          <SchemaSyncPanel />
         </section>
       )}
 

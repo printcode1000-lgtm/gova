@@ -7,6 +7,7 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { useMonitorStore, getSessionId, getCurrentFlowId, setActiveQueryContext, clearActiveQueryContext } from './monitor-store';
 import type { CacheSource, RefetchReason } from './types';
+import { isDevelopment } from '@/core/config';
 
 // Derive cache source from query metadata / fetch counts
 function deriveCacheSource(query: any, actionType: string): CacheSource {
@@ -34,7 +35,7 @@ function deriveRefetchReason(action: any, query: any): RefetchReason {
 let mutationCount = 0;
 
 export function attachQueryObserver(queryClient: QueryClient): () => void {
-  if (process.env.NODE_ENV !== 'development') return () => {};
+  if (!isDevelopment) return () => {};
 
   const emit = useMonitorStore.getState().emit;
   const sessionId = getSessionId();
@@ -96,7 +97,7 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
         service: query.meta?.service ?? 'unknown',
         queryOrCommand: queryKey,
         repository: query.meta?.repository ?? 'unknown',
-        dbDriver: (process.env.NODE_ENV === 'development' ? 'SQLite-Dev' : 'Turso-Production') as any,
+        dbDriver: (isDevelopment ? 'SQLite-Dev' : 'Turso-Production') as any,
         table: query.meta?.table ?? '',
         entity: query.meta?.entity ?? '',
         operationType: 'SELECT' as const,
@@ -180,7 +181,7 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
       service: mutation.options?.meta?.service ?? 'unknown',
       queryOrCommand: mutation.options?.meta?.queryOrCommand ?? 'Mutation',
       repository: mutation.options?.meta?.repository ?? 'unknown',
-      dbDriver: (process.env.NODE_ENV === 'development' ? 'SQLite-Dev' : 'Turso-Production') as any,
+      dbDriver: (isDevelopment ? 'SQLite-Dev' : 'Turso-Production') as any,
       table: mutation.options?.meta?.table ?? '',
       entity: mutation.options?.meta?.entity ?? '',
       operationType: opType,

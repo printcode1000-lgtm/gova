@@ -3,8 +3,14 @@ import type { NextConfig } from 'next';
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const repositoryName = process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '';
 
-const isStatic = process.env.GOVA_MODE === 'static' || isGithubActions;
+const isStatic = process.env.GOVA_MODE === 'static';
 const basePath = process.env.GOVA_BASE_PATH?.replace(/\/$/, '') || (isGithubActions ? repositoryName : '');
+
+const apiBaseUrl =
+  process.env.NEXT_PUBLIC_GOVA_API_BASE_URL?.replace(/\/$/, '') ||
+  process.env.NEXT_PUBLIC_GOVA_API_URL?.replace(/\/$/, '') ||
+  process.env.GOVA_API_BASE_URL?.replace(/\/$/, '') ||
+  '';
 
 const nextConfig: NextConfig = {
   ...(isStatic ? { output: 'export' as const } : {}),
@@ -12,6 +18,7 @@ const nextConfig: NextConfig = {
 
   env: {
     NEXT_PUBLIC_GOVA_BASE_PATH: basePath,
+    NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
   },
 
   // These are Node.js-only packages. Prevent Next.js from bundling them

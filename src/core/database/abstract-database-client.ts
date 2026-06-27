@@ -1,6 +1,7 @@
 import type { IDatabaseClient } from './database-client.interface';
 import { inferOperationType, readMemory } from '@/core/monitor/types';
 import { useMonitorStore, getSessionId, getCurrentFlowId, getActiveQueryContext } from '@/core/monitor/monitor-store';
+import { isDevelopment } from '@/core/config';
 
 export abstract class AbstractDatabaseClient implements IDatabaseClient {
   abstract get db(): any;
@@ -12,7 +13,7 @@ export abstract class AbstractDatabaseClient implements IDatabaseClient {
 
   // ─── Instrumented execute wrapper ────────────────────────────────────────
   protected async _trackedExecute(sql: string, params: any[] = []): Promise<any[]> {
-    if (process.env.NODE_ENV !== 'development') {
+    if (!isDevelopment) {
       return this.rawExecute(sql, params);
     }
 

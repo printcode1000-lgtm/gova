@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 
+import { govaApi } from '@/core/api';
 import { useTranslation } from '@/lib/i18n';
 import type { Locale } from '@/lib/i18n';
 
@@ -35,8 +36,7 @@ export default function TopMarquee() {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const response = await fetch('/catagory/categories.json');
-        const data = await response.json();
+        const data = await govaApi.getPublicJson<Category[]>('/catagory/categories.json');
         setCategories(data);
       } catch (error) {
         console.error('Failed to load categories:', error);

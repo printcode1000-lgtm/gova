@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 
 import { fillOnboardingRandomFixture, type OnboardingAutofillOutcome } from './onboarding-autofill';
+import { isDevelopment } from '@/core/config';
 
 declare global {
   interface Window {
@@ -13,7 +14,7 @@ declare global {
 /** Registers dev autofill hook for onboarding forms in development mode. */
 export function OnboardingDevAutofillBridge() {
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'development') return undefined;
+    if (!isDevelopment) return undefined;
 
     window.__GOVA_ADDSELLER_AUTOFILL__ = () => fillOnboardingRandomFixture();
 

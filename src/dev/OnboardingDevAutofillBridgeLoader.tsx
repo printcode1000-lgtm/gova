@@ -1,8 +1,9 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { isDevelopment } from '@/core/config';
 
-const OnboardingDevAutofillBridge = process.env.NODE_ENV === 'development'
+const OnboardingDevAutofillBridge = isDevelopment
   ? dynamic(
       () =>
         import('@/lib/autofill/dev-autofill-bridge').then(
@@ -13,6 +14,6 @@ const OnboardingDevAutofillBridge = process.env.NODE_ENV === 'development'
   : null;
 
 export function OnboardingDevAutofillBridgeLoader() {
-  if (process.env.NODE_ENV !== 'development' || !OnboardingDevAutofillBridge) return null;
+  if (!isDevelopment || !OnboardingDevAutofillBridge) return null;
   return <OnboardingDevAutofillBridge />;
 }

@@ -1,3 +1,4 @@
+import { isDevelopment } from '@/core/config';
 import { dictionaries } from './dictionaries';
 import { DEFAULT_LOCALE } from './constants';
 import type { Locale, TranslationParams } from './types';
@@ -32,7 +33,7 @@ export function translate(
   let text = dict[key] ?? dictionaries[DEFAULT_LOCALE][key];
 
   if (text === undefined) {
-    if (process.env.NODE_ENV === 'development' && !warnedKeys.has(key)) {
+    if (isDevelopment && !warnedKeys.has(key)) {
       warnedKeys.add(key);
       console.warn(`[i18n] Missing translation key: "${key}"`);
     }

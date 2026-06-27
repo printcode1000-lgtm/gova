@@ -55,8 +55,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build with Next.js
-        run: npm run build
+      - name: Architecture check
+        run: npm run architecture:check
+
+      - name: Build static export
+        env:
+          NEXT_PUBLIC_GOVA_API_BASE_URL: ${{ secrets.GOVA_API_BASE_URL }}
+        run: npm run build:static
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

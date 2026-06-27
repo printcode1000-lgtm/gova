@@ -8,7 +8,9 @@ import { ShellLayout } from "@/components/layouts/ShellLayout";
 import { AppQueryProvider } from "@/core/providers/query-provider";
 import dynamic from "next/dynamic";
 
-const DeveloperBadge = process.env.NODE_ENV === "development"
+import { isDevelopment } from "@/core/config";
+
+const DeveloperBadge = isDevelopment
   ? dynamic(() => import("@/components/dev/DeveloperBadge").then((m) => m.DeveloperBadge))
   : () => null;
 

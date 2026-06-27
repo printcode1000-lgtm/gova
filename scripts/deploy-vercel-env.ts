@@ -151,9 +151,7 @@ async function main() {
     console.log('\n🎉 Vercel configuration completed successfully!');
     console.log(`📋 Summary:`);
     console.log(`   - Project: ${PROJECT_NAME}`);
-    console.log(`   - Team ID: ${vercelOrgId}`);
-    console.log(`   - Database URL: ${process.env.TURSO_DATABASE_URL}`);
-    console.log(`   - Auth Token: [ENCRYPTED]`);
+    console.log(`   - Turso env vars synced to production + preview`);
     console.log(`\n🚀 Next step: Deploy with "npx vercel deploy --prod" or push to GitHub to trigger Actions.`);
   } catch (error) {
     console.error('❌ Error during Vercel configuration:', error);
