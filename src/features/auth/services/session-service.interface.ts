@@ -1,11 +1,11 @@
-import type { CurrentSession, StartSessionInput } from '../entities/session.entity';
+import type { AuthSession, StartSessionInput } from '../entities/session.entity';
 
 export interface ISessionService {
-  restoreSession(): Promise<CurrentSession>;
-  startSession(input: StartSessionInput): Promise<CurrentSession>;
-  getCurrentSession(): Promise<CurrentSession>;
+  restoreSession(): Promise<AuthSession | null>;
+  startSession(input: StartSessionInput): Promise<AuthSession>;
+  getCurrentSession(): Promise<AuthSession | null>;
   updateSession(
-    patch: Partial<Pick<CurrentSession, 'displayName' | 'phone'>>,
-  ): Promise<CurrentSession>;
-  clearSession(): Promise<CurrentSession>;
+    patch: Partial<Pick<AuthSession, 'displayName' | 'phone'>>,
+  ): Promise<AuthSession | null>;
+  clearSession(): Promise<null>;
 }

@@ -17,14 +17,8 @@ interface AppSidebarProps {
 export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { t, isRTL } = useTranslation();
-  const { session, isAuthenticated, isPending, refetch } = useSession();
+  const { session, isAuthenticated } = useSession();
   const logout = useLogout();
-
-  useEffect(() => {
-    if (isOpen) {
-      void refetch();
-    }
-  }, [isOpen, refetch]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -88,17 +82,15 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
         </div>
 
         <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 pt-2">
-          {isPending ? (
-            <div className="px-3 py-2 text-sm text-on-surface-variant">{t('sidebar.loading')}</div>
-          ) : isAuthenticated ? (
+          {isAuthenticated ? (
             <>
               <div className="gova-control w-full flex items-center gap-3 rounded-lg px-3 py-3 text-sm gova-surface-neutral">
                 <User className="w-5 h-5 shrink-0 text-primary" aria-hidden="true" />
                 <div className="min-w-0 text-start">
                   <p className="font-semibold text-on-surface truncate">
-                    {session.displayName ?? session.phone}
+                    {session?.displayName ?? session?.phone}
                   </p>
-                  {session.phone && session.displayName !== session.phone ? (
+                  {session?.phone && session.displayName !== session.phone ? (
                     <p className="text-xs text-on-surface-variant truncate">{session.phone}</p>
                   ) : null}
                 </div>

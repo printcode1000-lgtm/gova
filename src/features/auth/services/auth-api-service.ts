@@ -1,6 +1,7 @@
 import { govaApi, GOVA_API_ROUTES } from '@/core/api';
 import type { RegistrationFormData, LoginFormData } from '@/lib/validation/auth';
 import { sessionService } from './session-service';
+import { isAuthenticated } from '../entities/session.entity';
 import type { IAuthService } from './auth-service.interface';
 
 /**
@@ -25,7 +26,7 @@ export class AuthApiService implements IAuthService {
 
   async isAuthenticated(): Promise<boolean> {
     const session = await sessionService.getCurrentSession();
-    return session.status === 'authenticated';
+    return isAuthenticated(session);
   }
 }
 

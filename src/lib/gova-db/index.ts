@@ -167,6 +167,11 @@ export async function govaDbSetAuth(data: Partial<AuthData>): Promise<void> {
   });
 }
 
+/** Remove legacy auth token row (key: auth). */
+export async function govaDbDeleteAuthLegacy(): Promise<void> {
+  return govaDbDelete(GOVA_DB_STORES.AUTH, AUTH_KEY);
+}
+
 export async function govaDbGetCurrentSession<T>(): Promise<T | null> {
   return govaDbGet<T>(GOVA_DB_STORES.AUTH, CURRENT_SESSION_KEY);
 }

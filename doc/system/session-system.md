@@ -1,190 +1,130 @@
 # Session System
 
-GOVA manages **client-side authentication state** through a formal **Current Session** entity. **Gova IndexedDB (`GovaDB`) is the single source of truth (SSOT)** for session data on the client. React Query may cache the result of `restoreSession()` for UI reactivity — it must **never** be treated as the authority, and the `current_session` query is **not** persisted to the React Query IDB cache.
+Client authentication state in GOVA is simple:
 
-For the full data-flow architecture (GovaApiClient, Business APIs, Repository), see [data-architecture-guide.md](./data-architecture-guide.md).
+- **Logged in** → `AuthSession` in Gova IndexedDB (`auth` store, key `current`)
+- **Guest** → no record in IndexedDB (`null`)
+- **React Query** caches the result for UI only — IndexedDB is the source of truth
+
+See [data-architecture-guide.md](./data-architecture-guide.md) for the full layer architecture.
 
 ---
 
-## Role in the project
+## Model
 
 ```
-Login / Register API  →  token + uid
+Login / Register  →  token + uid
         ↓
-SessionApiService.startSession()
+sessionService.startSession()   →  write auth/current
         ↓
-Gova IndexedDB  (auth store, key: current)
+sessionService.restoreSession() →  read auth/current (or null)
         ↓
-SessionService.getCurrentSession() / restoreSession()
-        ↓
-useSessionQuery / useSession  (React Query cache)
+useSession()                    →  React Query cache
         ↓
 UI (AppSidebar, …)
 ```
 
-| Concern | Owner |
+| Layer | Responsibility |
 |---|---|
-| Session persistence (read/write) | `SessionApiService` only |
-| HTTP login/register/logout | `AuthApiService` |
-| Business logic (validate credentials) | `AuthService` (server) |
-| UI session display | Hooks → Components |
-| Raw IndexedDB primitives | `src/lib/gova-db/index.ts` (low-level; not for features/hooks/UI) |
+| `SessionApiService` | Only code that reads/writes session in IndexedDB |
+| `AuthApiService` | HTTP login/register only (no session persistence) |
+| `useLogin` / `useRegister` | API + `startSession()` + `setSessionCache()` |
+| `useLogout` | `clearSession()` + `setSessionCache(null)` — **no server call** |
+| `useSession()` | `session`, `isAuthenticated`, `isGuest` |
 
-**There is no server-side session store today.** The server issues a token on login; the client stores the full `CurrentSession` in IndexedDB. Server `logout` is a no-op; clearing happens client-side via `clearSession()`.
+There is **no server session**. Server `POST /api/auth/logout` exists but is a no-op; logout is entirely client-side.
 
 ---
 
-## Session entity
+## `AuthSession`
 
-**Location:** `src/features/auth/entities/session.entity.ts`
+**File:** `src/features/auth/entities/session.entity.ts`
 
-### `CurrentSession`
-
-| Field | Type | Guest | Authenticated |
-|---|---|---|---|
-| `status` | `'guest' \| 'authenticated'` | `'guest'` | `'authenticated'` |
-| `sessionId` | `string` | Generated | `crypto.randomUUID()` |
-| `uid` | `string?` | — | User id from API |
-| `token` | `string?` | — | Token from login API |
-| `phone` | `string?` | — | User phone |
-| `displayName` | `string?` | — | Display label (defaults to phone) |
-| `loginAt` | `string?` (ISO) | — | Session start time |
-
-A session is **valid authenticated** only when:
+| Field | Type | Description |
+|---|---|---|
+| `token` | `string` | Token from login API |
+| `uid` | `string` | User id |
+| `phone` | `string` | Phone number |
+| `displayName` | `string` | Shown in sidebar (defaults to phone) |
+| `loginAt` | `string` | ISO timestamp |
 
 ```typescript
-status === 'authenticated' && !!token && !!uid
-```
+type SessionState = AuthSession | null;  // null = guest
 
-(`isAuthenticatedSession()` in `session.entity.ts`)
-
-### Guest state
-
-When no valid session exists in IndexedDB, `getCurrentSession()` returns an in-memory **guest** session via `createGuestSession()`. Guest sessions are **not** written to IndexedDB unless you explicitly add that later.
-
----
-
-## GovaDB storage
-
-**Database:** `GovaDB` (IndexedDB, version 4)  
-**Store:** `auth` (`GOVA_DB_STORES.AUTH`)  
-**Key:** `current`
-
-Low-level helpers (used **only** by `SessionApiService`):
-
-| Helper | Purpose |
-|---|---|
-| `govaDbGetCurrentSession<T>()` | Read `current` record |
-| `govaDbSetCurrentSession<T>(session)` | Write `current` record |
-| `govaDbDeleteCurrentSession()` | Remove `current` record |
-
-### Legacy migration
-
-Older builds stored only `{ authToken }` under key `auth`. On first `restoreSession()` / `getCurrentSession()`, `SessionApiService` migrates that token into a `CurrentSession`, writes it under `current`, and clears the legacy key.
-
-### Separate: guest sessions
-
-Anonymous “continue as guest” uses a **different** store:
-
-| Store | Key | Purpose |
-|---|---|---|
-| `guestSessions` | `current` | Guest browsing id (`useGuestSession`) |
-
-Guest and authenticated sessions are independent. Login/register call `endGuestSession()` after `startSession()`.
-
----
-
-## Session Service
-
-**Interface:** `src/features/auth/services/session-service.interface.ts`  
-**Implementation:** `src/features/auth/services/session-api-service.ts`  
-**Client entry:** `src/features/auth/services/session-service.ts` → `sessionService`
-
-### API
-
-| Method | When to use | Effect |
-|---|---|---|
-| `restoreSession()` | App startup | Same as `getCurrentSession()` — reads IDB, migrates legacy, returns guest if invalid |
-| `getCurrentSession()` | Read current state | IDB → validated `CurrentSession` or guest |
-| `startSession(input)` | After successful login/register | Writes full authenticated session to IDB |
-| `updateSession(patch)` | Profile display tweaks | Merges `displayName` / `phone` when authenticated |
-| `clearSession()` | Logout | Deletes IDB record, clears legacy auth, returns guest |
-
-### `StartSessionInput`
-
-```typescript
-{
-  token: string;
-  uid: string;
-  phone: string;
-  displayName?: string;  // defaults to phone
+function isAuthenticated(session: SessionState): boolean {
+  return session !== null && !!session.token;
 }
 ```
 
-### Rules (Architecture Contract)
-
-- **Hooks, UI, and features must not** call `govaDbGetCurrentSession`, `govaDbSetAuth`, or other session IDB helpers directly.
-- **Only** `SessionApiService` reads/writes session data in IndexedDB.
-- **Do not** use token presence alone as session state in UI — use `useSession()` or `sessionService.getCurrentSession()`.
+Guest users have **no row** in IndexedDB. Do not write a guest object to IDB.
 
 ---
 
-## Auth Service (HTTP only)
+## IndexedDB
 
-**Client:** `AuthApiService` — `govaApi.post()` to `/api/auth/*`  
-**Server:** `AuthService` — credentials, token generation, repository
+| Store | Key | Value |
+|---|---|---|
+| `auth` | `current` | `AuthSession` when logged in |
+| `auth` | `auth` | Legacy `{ authToken }` — migrated once, then deleted |
 
-After refactor, `AuthApiService` **does not** persist sessions. Persistence is always:
+Helpers (used **only** inside `SessionApiService`):
 
-```
-authService.login()  →  sessionService.startSession()
-authService.logout() →  sessionService.clearSession()
-```
+- `govaDbGetCurrentSession()` / `govaDbSetCurrentSession()` / `govaDbDeleteCurrentSession()`
+- `govaDbDeleteAuthLegacy()` — removes legacy `auth` key
 
-`authService.isAuthenticated()` delegates to `sessionService.getCurrentSession()` for backward compatibility.
+**Separate:** anonymous “continue as guest” uses `guestSessions` store via `useGuestSession()` — unrelated to auth sessions.
+
+---
+
+## Session Service API
+
+**File:** `src/features/auth/services/session-api-service.ts`  
+**Export:** `sessionService` from `session-service.ts`
+
+| Method | Returns | Effect |
+|---|---|---|
+| `restoreSession()` | `AuthSession \| null` | Read IDB; migrate legacy token if needed |
+| `getCurrentSession()` | `AuthSession \| null` | Same as restore |
+| `startSession(input)` | `AuthSession` | Write `auth/current` |
+| `updateSession(patch)` | `AuthSession \| null` | Update displayName/phone when logged in |
+| `clearSession()` | `null` | Delete `auth/current` + legacy `auth` key |
 
 ---
 
 ## Hooks
 
-| Hook | Layer | Purpose |
-|---|---|---|
-| `useSessionQuery()` | Hooks | React Query wrapper; `queryFn` = `restoreSession()` |
-| `useSession()` | Hooks | Convenience: `session`, `isAuthenticated`, `isGuest` |
-| `useLogin()` | Hooks | Login form + `startSession()` on success |
-| `useRegister()` | Hooks | Register + auto-login + `startSession()` |
-| `useLogout()` | Hooks | API logout + `clearSession()` |
+### `useSession()`
 
-### Query key
-
-**Location:** `src/features/auth/constants/session-query-keys.ts`
-
-```typescript
-export const CURRENT_SESSION_QUERY_KEY = ['current_session'] as const;
+```tsx
+const { session, isAuthenticated, isGuest, isLoading } = useSession();
 ```
 
-`AUTH_STATUS_QUERY_KEY` is a deprecated alias for the same key.
+- `session` — `AuthSession | null`
+- `isAuthenticated` — `!!session?.token`
+- `isLoading` — first IDB read not finished yet
 
-### React Query cache rules
+### `useSessionQuery()`
 
-| Setting | Value | Why |
-|---|---|---|
-| `staleTime` | `0` | Every read goes through `restoreSession()` → IndexedDB |
-| Persisted to `queryCache` | **No** | `AppQueryProvider` excludes `current_session` via `dehydrateOptions` |
-| After login/register/logout | `setQueryData` | Immediate UI update; IDB remains SSOT |
+Low-level React Query wrapper. Mounted in `SessionRestore` (inside `AppShell`) so session is restored on every app load.
+
+### Cache sync after mutations
+
+**File:** `src/features/auth/hooks/session-cache.ts`
 
 ```typescript
-// After startSession / clearSession in a hook:
-queryClient.setQueryData(CURRENT_SESSION_QUERY_KEY, session);
+setSessionCache(queryClient, session);  // AuthSession after login
+setSessionCache(queryClient, null);     // after logout
 ```
 
-Do **not** rely on `invalidateQueries` alone for session UI — always call `setQueryData` with the session returned from `SessionService`.
+Always call this in `onSuccess` of login/register/logout. Do not rely on `invalidateQueries` alone.
 
-### App startup restore
+### React Query settings
 
-`SessionRestore` (`src/features/auth/components/SessionRestore.tsx`) is mounted in `AppShell`. It calls `useSessionQuery()` so every in-app route restores session from IndexedDB on load — including page reload and Capacitor cold start.
-
-`AppSidebar` also calls `refetch()` when the drawer opens, so the menu always re-reads IndexedDB before rendering auth UI.
+| Setting | Value |
+|---|---|
+| `staleTime` | `Infinity` — session changes only via `setSessionCache` or first mount |
+| Persisted to RQ cache | **No** — excluded in `AppQueryProvider` |
+| Legacy RQ rows on restore | Stripped in `AppQueryProvider` (old builds could freeze UI) |
 
 ---
 
@@ -193,136 +133,64 @@ Do **not** rely on `invalidateQueries` alone for session UI — always call `set
 ### Login
 
 ```
-LoginPageContent
-  → useLogin()
-    → authService.login(formData)          // POST /api/auth/login
-    → sessionService.startSession({...})   // IDB write
-    → endGuestSession()
-    → setQueryData(['current_session'], session)
-  → redirect /home
+useLogin()
+  → authService.login()
+  → sessionService.startSession()
+  → endGuestSession()
+  → setSessionCache(session)
 ```
 
 ### Register
 
 ```
-RegistrationPageContent
-  → useRegister()
-    → authService.register(formData)       // POST /api/auth/register
-    → authService.login(same credentials)  // auto-login
-    → sessionService.startSession({...})
-    → endGuestSession()
-    → setQueryData(['current_session'], session)
+useRegister()
+  → authService.register()
+  → authService.login()
+  → sessionService.startSession()
+  → setSessionCache(session)
 ```
-
-Registration **always** starts a session immediately (register alone does not leave the user as guest).
 
 ### Logout
 
 ```
-AppSidebar
-  → useLogout()
-    → authService.logout()       // POST /api/auth/logout (server no-op)
-    → sessionService.clearSession()
-    → setQueryData(['current_session'], guestSession)
+useLogout()
+  → sessionService.clearSession()   // IDB only
+  → setSessionCache(null)
 ```
 
-### Page reload / Capacitor restart
+No HTTP request. This fixes logout when the API is unreachable (static export, offline).
+
+### App reload
 
 ```
-AppShell mounts SessionRestore
-  → useSessionQuery()
-    → sessionService.restoreSession()
-    → reads GovaDB auth/current
-    → authenticated if valid token+uid, else guest
+AppShell → SessionRestore → useSessionQuery()
+  → sessionService.restoreSession()
+  → null (guest) or AuthSession
 ```
-
-No re-login required while the IDB record remains.
 
 ---
 
-## UI: sidebar behaviour
+## Sidebar UI
 
-**Component:** `src/components/layouts/AppSidebar.tsx`  
-**Hook:** `useSession()`
+**File:** `src/components/layouts/AppSidebar.tsx`
 
-| State | Visible items |
+| State | Items |
 |---|---|
-| **Guest** | Login, Settings |
-| **Authenticated** | User info (displayName / phone), Logout, Settings |
+| Guest | Login, Settings |
+| Authenticated | User info, Logout, Profile, Settings |
 
-Register is **not** shown in the sidebar (users reach registration from the login page).
-
----
-
-## Quick start for developers
-
-### Read session in a client component
-
-```tsx
-'use client';
-
-import { useSession } from '@/features/auth/hooks/use-session-query';
-
-export function MyComponent() {
-  const { session, isAuthenticated, isPending } = useSession();
-
-  if (isPending) return null;
-  if (!isAuthenticated) return <p>Guest</p>;
-
-  return <p>Hello, {session.displayName}</p>;
-}
-```
-
-`useSession().isAuthenticated` uses `isAuthenticatedSession()` — requires `status`, `token`, and `uid`.
-
-### Start session after a custom auth flow (from a Hook only)
-
-```typescript
-import { sessionService } from '@/features/auth/services/session-service';
-import { CURRENT_SESSION_QUERY_KEY } from '@/features/auth/constants/session-query-keys';
-
-// Inside a hook mutation onSuccess — never from UI directly:
-const session = await sessionService.startSession({
-  token: result.token,
-  uid: result.uid,
-  phone: result.phone,
-  displayName: result.phone,
-});
-queryClient.setQueryData(CURRENT_SESSION_QUERY_KEY, session);
-```
-
-### Update display name
-
-```typescript
-const session = await sessionService.updateSession({ displayName: 'New Name' });
-queryClient.setQueryData(CURRENT_SESSION_QUERY_KEY, session);
-```
-
-### Clear session (logout pattern)
-
-```typescript
-await authService.logout();
-const session = await sessionService.clearSession();
-queryClient.setQueryData(CURRENT_SESSION_QUERY_KEY, session);
-```
-
-Prefer `useLogout()` in UI instead of calling these directly.
+Profile link is **not** in the bottom nav — sidebar only, when authenticated.
 
 ---
 
-## What NOT to do
+## Rules
 
-| Anti-pattern | Why |
+| Do | Don't |
 |---|---|
-| `govaDbSetAuth({ authToken })` from hooks/UI | Bypasses Session Service; breaks SSOT |
-| `localStorage.setItem('token', …)` | Not the architecture; not persisted across GOVA tooling |
-| Zustand store as session SSOT | React Query/Zustand are caches only |
-| Persisting `current_session` in React Query `queryCache` | Stale guest state can mask real IDB session — excluded by design |
-| `invalidateQueries` only (no `setQueryData`) | UI may not update until refetch completes |
-| `session.status === 'authenticated'` without `token` + `uid` | Use `isAuthenticatedSession()` / `useSession().isAuthenticated` |
-| `useAuthQuery().data === true` as only check | Deprecated — use `useSession()` |
-| Server session in SQLite/Turso for client auth | Out of scope; client token is IDB-only today |
-| Import `@capacitor/*` for session | Platform layer must stay separate |
+| Use `useSession()` in UI | Read IndexedDB from hooks/components |
+| Use `setSessionCache()` after session mutations | Use `invalidateQueries` without `setSessionCache` |
+| Use `useLogout()` for logout | Call `authService.logout()` before clearing (unnecessary HTTP) |
+| Use `sessionService` from hooks | Store tokens in `localStorage` or Zustand as SSOT |
 
 ---
 
@@ -330,58 +198,31 @@ Prefer `useLogout()` in UI instead of calling these directly.
 
 ```
 src/features/auth/
-├── constants/
-│   └── session-query-keys.ts   # CURRENT_SESSION_QUERY_KEY (shared with providers)
-├── entities/
-│   ├── session.entity.ts       # CurrentSession, guest helpers
-│   └── user.entity.ts          # Server user row shape
+├── entities/session.entity.ts      # AuthSession, isAuthenticated, normalizeStoredSession
 ├── services/
-│   ├── session-service.interface.ts
-│   ├── session-api-service.ts  # IDB owner
-│   ├── session-service.ts      # sessionService export
-│   ├── auth-api-service.ts     # HTTP only
-│   ├── auth-service.ts         # authService export
-│   └── auth-service.server.ts  # Server business logic
+│   ├── session-api-service.ts      # IDB owner
+│   └── session-service.ts
 ├── hooks/
-│   ├── use-session-query.ts    # useSession, useSessionQuery
+│   ├── session-cache.ts            # setSessionCache
+│   ├── use-session-query.ts        # useSession, useSessionQuery
 │   ├── use-login.ts
 │   ├── use-register.ts
-│   ├── use-logout.ts
-│   └── use-auth-query.ts       # deprecated re-exports
-└── components/
-    └── SessionRestore.tsx      # App startup restore
+│   └── use-logout.ts
+└── components/SessionRestore.tsx
 
-src/lib/gova-db/index.ts        # Low-level IDB (transaction-safe get/set)
-src/core/providers/
-    query-provider.tsx          # Excludes current_session from RQ persist
-src/components/layouts/
-    AppSidebar.tsx              # Session-aware menu
-    AppShell.tsx                # Mounts SessionRestore
+src/core/providers/query-provider.tsx   # Excludes current_session from RQ persist
+src/components/layouts/AppSidebar.tsx
 ```
 
 ---
 
 ## Platform notes
 
-| Target | Session behaviour |
-|---|---|
-| **Development** (`npm run dev`) | Same — IDB in browser |
-| **Vercel** | Same — client-only IDB |
-| **Static export / GitHub Pages** | Same — IDB; API via `NEXT_PUBLIC_GOVA_API_BASE_URL` |
-| **Capacitor** | Same — WebView IndexedDB; session survives app restart |
-
-Session logic lives entirely in `src/` client code. No Capacitor plugins required for sessions.
+Session logic is identical on dev, Vercel, static export, GitHub Pages, and Capacitor — browser/WebView IndexedDB only. No Capacitor plugins required.
 
 ---
 
-## Monitoring (development)
+## Related
 
-Auth hooks pass `meta` to TanStack Query (`auth-monitor-meta.ts`). GovaDB session reads/writes appear in `/dev/monitor` under the **cache** layer via `gova-db-monitor.ts`.
-
----
-
-## Related documentation
-
-- [data-architecture-guide.md](./data-architecture-guide.md) — layers, GovaApiClient, GovaDB overview
-- [capacitor.md](./capacitor.md) — mobile shell (session unchanged)
-- [theme-system.md](./theme-system.md) — theme init (separate from session)
+- [data-architecture-guide.md](./data-architecture-guide.md)
+- [capacitor.md](./capacitor.md)

@@ -17,6 +17,21 @@ function deriveCacheSource(query: any, actionType: string): CacheSource {
   return 'Memory';
 }
 
+function toIsoTimestamp(ms: number | undefined): string | undefined {
+  if (ms === undefined || !Number.isFinite(ms)) return undefined;
+  const date = new Date(ms);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
+function computeNextStaleTimeIso(
+  dataUpdatedAt: number | undefined,
+  staleTime: number | undefined,
+): string | undefined {
+  if (!dataUpdatedAt || staleTime === undefined) return undefined;
+  if (!Number.isFinite(staleTime)) return undefined;
+  return toIsoTimestamp(dataUpdatedAt + staleTime);
+}
+
 // Derive refetch reason from the query cache action
 function deriveRefetchReason(action: any, query: any): RefetchReason {
   if (action?.meta?.refetchPage !== undefined) return 'manual';
@@ -129,10 +144,11 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
         mutationCount,
         previousResult: query.meta?.previousResult,
         currentResult: query.meta?.currentResult,
-        lastFetch: state.dataUpdatedAt ? new Date(state.dataUpdatedAt).toISOString() : undefined,
-        nextStaleTime: query.getObserversCount() > 0
-          ? new Date(state.dataUpdatedAt + (query.options?.staleTime ?? 0)).toISOString()
-          : undefined,
+        lastFetch: toIsoTimestamp(state.dataUpdatedAt),
+        nextStaleTime:
+          query.getObserversCount() > 0
+            ? computeNextStaleTimeIso(state.dataUpdatedAt, query.options?.staleTime)
+            : undefined,
         monitorLayer: cacheSource === 'IndexedDB' || cacheSource === 'Memory' ? 'cache' : 'hook',
         pinned: false,
       };

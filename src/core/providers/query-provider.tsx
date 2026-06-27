@@ -2,7 +2,10 @@
 
 import * as React from 'react';
 import { QueryClient } from '@tanstack/react-query';
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import {
+  type PersistedClient,
+  PersistQueryClientProvider,
+} from '@tanstack/react-query-persist-client';
 import { createGovaDbPersister } from '@/core/database/gova-db-persister';
 import { attachQueryObserver } from '@/core/monitor/query-observer';
 import { publicEnv } from '@/core/config/public-env';
@@ -13,6 +16,24 @@ const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;
 
 /** 5 minutes in milliseconds */
 const FIVE_MINUTES = 1000 * 60 * 5;
+
+/** Session is read from GovaDB on mount — never restore it from the RQ persister. */
+function withoutPersistedSessionQuery(
+  client: PersistedClient | undefined,
+): PersistedClient | undefined {
+  if (!client?.clientState?.queries?.length) return client;
+  const queries = client.clientState.queries.filter(
+    (query) => query.queryKey[0] !== CURRENT_SESSION_QUERY_KEY[0],
+  );
+  if (queries.length === client.clientState.queries.length) return client;
+  return {
+    ...client,
+    clientState: {
+      ...client.clientState,
+      queries,
+    },
+  };
+}
 
 /**
  * Creates the singleton QueryClient.
@@ -72,7 +93,13 @@ interface AppQueryProviderProps {
  */
 export function AppQueryProvider({ children }: AppQueryProviderProps) {
   const queryClient = getQueryClient();
-  const persister = React.useMemo(() => createGovaDbPersister(), []);
+  const persister = React.useMemo(() => {
+    const base = createGovaDbPersister();
+    return {
+      ...base,
+      restoreClient: async () => withoutPersistedSessionQuery(await base.restoreClient()),
+    };
+  }, []);
 
   React.useEffect(() => {
     const cleanup = attachQueryObserver(queryClient);

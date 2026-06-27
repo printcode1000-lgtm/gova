@@ -9,7 +9,7 @@ import { createRegistrationSchema, type RegistrationFormData } from '@/lib/valid
 import { useGuestSession } from '@/hooks/use-guest-session';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
-import { CURRENT_SESSION_QUERY_KEY } from '../constants/session-query-keys';
+import { setSessionCache } from './session-cache';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 
@@ -53,7 +53,7 @@ export function useRegister() {
 
     onSuccess: (session) => {
       endGuestSession();
-      queryClient.setQueryData(CURRENT_SESSION_QUERY_KEY, session);
+      setSessionCache(queryClient, session);
     },
   });
 

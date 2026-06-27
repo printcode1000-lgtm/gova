@@ -625,7 +625,7 @@ Browser-side offline cache — **not** the primary database. All CRUD operations
 
 | Store | Key | Purpose |
 |---|---|---|
-| `auth` | `current` | **Current Session** (`CurrentSession` — see [session-system.md](./session-system.md)) |
+| `auth` | `current` | **Auth session** (`AuthSession` when logged in — see [session-system.md](./session-system.md)) |
 | `auth` | `auth` | Legacy token key (migrated automatically) |
 | `guestSessions` | `current` | Guest session ID |
 | `queryCache` | `rq_cache` | TanStack Query persistence (`gova-db-persister.ts`) |
