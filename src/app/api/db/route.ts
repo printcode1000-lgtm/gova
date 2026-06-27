@@ -2,16 +2,23 @@ import { NextResponse } from 'next/server';
 import Database from 'better-sqlite3';
 import path from 'path';
 import { dbClient } from '@/core/database/db-client';
+import { getTursoClient } from '@/lib/db/turso';
 
 let migrationsRun = false;
+
+function isDevEnvironment(): boolean {
+  return (
+    process.env.GOVA_MODE === 'development' ||
+    process.env.NODE_ENV === 'development'
+  );
+}
 
 function ensureMigrations() {
   if (migrationsRun) return;
   try {
     const { migrate } = require('drizzle-orm/better-sqlite3/migrator');
-    const path = require('path');
     const migrationsFolder = path.join(process.cwd(), 'src', 'core', 'database', 'migrations');
-    
+
     // Run Drizzle migrations on the local database
     migrate(dbClient.db, { migrationsFolder });
     migrationsRun = true;
@@ -21,41 +28,50 @@ function ensureMigrations() {
   }
 }
 
+async function executeLocalSqlite(sql: string, params: unknown[]): Promise<unknown[]> {
+  const dbPath = path.join(process.cwd(), 'public', 'sync_data', 'sync_sqlite', 'allusers.db');
+  const db = new Database(dbPath);
+
+  try {
+    const stmt = db.prepare(sql);
+    if (sql.trim().toUpperCase().startsWith('SELECT')) {
+      return stmt.all(...params);
+    }
+
+    const info = stmt.run(...params);
+    return [info];
+  } finally {
+    db.close();
+  }
+}
+
+async function executeTursoSql(sql: string, params: unknown[]): Promise<unknown[]> {
+  const client = getTursoClient();
+  const result = await client.execute({ sql, args: params });
+
+  if (sql.trim().toUpperCase().startsWith('SELECT')) {
+    return result.rows as unknown[];
+  }
+
+  return [
+    {
+      changes: result.rowsAffected,
+      lastInsertRowid: result.lastInsertRowid,
+    },
+  ];
+}
+
 export async function POST(request: Request) {
   try {
-    const isDev = 
-      process.env.GOVA_MODE === 'development' ||
-      process.env.NODE_ENV === 'development';
-
-    // Security check: Only allow local database execution in development
-    if (!isDev) {
-      return new NextResponse('Unauthorized: Local SQLite execution is only allowed in development mode', { status: 403 });
-    }
-
-    // Apply migrations on first request
-    ensureMigrations();
-
     const { sql, params = [] } = await request.json();
 
-    const dbPath = path.join(process.cwd(), 'public', 'sync_data', 'sync_sqlite', 'allusers.db');
-    const db = new Database(dbPath);
-
-    let rows: any[] = [];
-    try {
-      const stmt = db.prepare(sql);
-      if (sql.trim().toUpperCase().startsWith('SELECT')) {
-        rows = stmt.all(...params);
-      } else {
-        const info = stmt.run(...params);
-        rows = [info];
-      }
-    } finally {
-      db.close();
-    }
+    const rows = isDevEnvironment()
+      ? (ensureMigrations(), await executeLocalSqlite(sql, params))
+      : await executeTursoSql(sql, params);
 
     return NextResponse.json({ rows });
   } catch (error: any) {
-    console.error('Local SQLite API Route Error:', error);
+    console.error('Database API Route Error:', error);
     return new NextResponse(error.message || 'Internal Server Error', { status: 500 });
   }
 }
