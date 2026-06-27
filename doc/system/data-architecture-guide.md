@@ -512,7 +512,7 @@ On page load, `PersistQueryClientProvider` restores the cache from IndexedDB bef
 | Local development | `npm run dev` | Same origin `/api/*` | SQLite |
 | Hosted backend | `npm run build` + deploy | Same origin or remote | Turso |
 | Static export (GitHub Pages) | `npm run build:static` | Remote via `GOVA_API_BASE_URL` | None (SPA only) |
-| Capacitor (Android / iOS) | `npm run cap:build` | Remote via `NEXT_PUBLIC_GOVA_API_BASE_URL` | None (native shell over `out/`) |
+| Capacitor (Android / iOS) | `npm run cap:build` | Vercel backend (baked by `cap:build`) | None (native shell over `out/`) |
 
 All four targets share **identical application code**. Only environment configuration changes.
 
@@ -541,6 +541,7 @@ GOVA_MODE=development              # development | production | static
 
 # ── Capacitor (platform layer only) ──
 CAPACITOR_SERVER_URL=              # Optional live reload (e.g. http://192.168.1.10:3000). Unset for production.
+GOVA_CAPACITOR_API_BASE_URL=       # Optional override for npm run cap:build (default: platform/capacitor.defaults.ts)
 ```
 
 **Never expose:** `TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN` in client bundles, IndexedDB, localStorage, or logs.
@@ -1092,11 +1093,10 @@ npm run build:static
 # Deploy out/ to any static host
 ```
 
-**Capacitor (Android / iOS):**
+**Capacitor (Android / iOS):** — see [capacitor.md](./capacitor.md) for the full guide.
 
 ```bash
-# Production — bundle static export into native shell:
-NEXT_PUBLIC_GOVA_API_BASE_URL=https://api.your-domain.com
+# cap:build → static export + Vercel API URL + cap sync
 npm run cap:build
 npx cap open android   # or: npx cap open ios
 
@@ -1106,7 +1106,7 @@ set CAPACITOR_SERVER_URL=http://<LAN-IP>:3000
 npx cap sync
 ```
 
-See `platform/README.md` and `capacitor.config.ts` for platform-layer details.
+See `doc/system/capacitor.md`, `platform/README.md`, and `capacitor.config.ts` for platform-layer details.
 
 ---
 

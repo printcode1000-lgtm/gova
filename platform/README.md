@@ -1,6 +1,6 @@
 # GOVA Platform Layer (Capacitor)
 
-Capacitor is a **native runtime shell** only. It serves the static export from `out/` and does not contain business logic, database drivers, or ORM code.
+Capacitor is a **native runtime shell** only. Full reference: **[doc/system/capacitor.md](../doc/system/capacitor.md)**.
 
 ## Layout
 
@@ -14,10 +14,13 @@ Capacitor is a **native runtime shell** only. It serves the static export from `
 ## Production
 
 ```bash
-NEXT_PUBLIC_GOVA_API_BASE_URL=https://api.your-domain.com npm run build:static
-npx cap sync
+npm run cap:build
 npx cap open android   # or ios
 ```
+
+`cap:build` always bakes the Vercel backend URL (`https://gova-swart.vercel.app` from `platform/capacitor.defaults.ts`) into the static export, then runs `cap sync`.
+
+To use a different backend URL: set `GOVA_CAPACITOR_API_BASE_URL` before `npm run cap:build`.
 
 ## Live reload (optional)
 
