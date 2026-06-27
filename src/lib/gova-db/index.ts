@@ -1,6 +1,7 @@
 'use client';
 
 import type { StateStorage } from 'zustand/middleware';
+import { trackGovaDbOp } from '@/core/monitor/gova-db-monitor';
 
 const DB_NAME = 'GovaDB';
 const DB_VERSION = 4;
@@ -66,27 +67,35 @@ async function idbRequestToPromise<T>(request: IDBRequest<T>): Promise<T> {
 
 export async function govaDbGet<T>(storeName: GovaDbStoreName, key: string): Promise<T | null> {
   if (!hasIndexedDb()) return null;
-  const store = await getStore(storeName, 'readonly');
-  const result = await idbRequestToPromise<{ key: string; value: T } | undefined>(store.get(key));
-  return result?.value ?? null;
+  return trackGovaDbOp(storeName, key, 'get', async () => {
+    const store = await getStore(storeName, 'readonly');
+    const result = await idbRequestToPromise<{ key: string; value: T } | undefined>(store.get(key));
+    return result?.value ?? null;
+  });
 }
 
 export async function govaDbSet<T>(storeName: GovaDbStoreName, key: string, value: T): Promise<void> {
   if (!hasIndexedDb()) return;
-  const store = await getStore(storeName, 'readwrite');
-  await idbRequestToPromise(store.put({ key, value }));
+  return trackGovaDbOp(storeName, key, 'set', async () => {
+    const store = await getStore(storeName, 'readwrite');
+    await idbRequestToPromise(store.put({ key, value }));
+  });
 }
 
 export async function govaDbDelete(storeName: GovaDbStoreName, key: string): Promise<void> {
   if (!hasIndexedDb()) return;
-  const store = await getStore(storeName, 'readwrite');
-  await idbRequestToPromise(store.delete(key));
+  return trackGovaDbOp(storeName, key, 'delete', async () => {
+    const store = await getStore(storeName, 'readwrite');
+    await idbRequestToPromise(store.delete(key));
+  });
 }
 
 export async function govaDbClearStore(storeName: GovaDbStoreName): Promise<void> {
   if (!hasIndexedDb()) return;
-  const store = await getStore(storeName, 'readwrite');
-  await idbRequestToPromise(store.clear());
+  return trackGovaDbOp(storeName, '*', 'clear', async () => {
+    const store = await getStore(storeName, 'readwrite');
+    await idbRequestToPromise(store.clear());
+  });
 }
 
 export async function govaDbClearAll(): Promise<void> {

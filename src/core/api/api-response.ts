@@ -1,11 +1,23 @@
 import { NextResponse } from 'next/server';
+import { isDevelopment } from '@/core/config';
+import { DEV_TRACE_HEADER } from '@/core/monitor/dev-trace-types';
+import { getDevTrace, serializeDevTrace } from '@/core/monitor/server-trace';
+
+function attachDevTraceHeaders(response: NextResponse): NextResponse {
+  if (!isDevelopment) return response;
+  const trace = getDevTrace();
+  if (trace.length > 0) {
+    response.headers.set(DEV_TRACE_HEADER, serializeDevTrace(trace));
+  }
+  return response;
+}
 
 export function apiSuccess<T>(data: T, status = 200): NextResponse {
-  return NextResponse.json(data, { status });
+  return attachDevTraceHeaders(NextResponse.json(data, { status }));
 }
 
 export function apiError(message: string, status = 400): NextResponse {
-  return NextResponse.json({ error: message }, { status });
+  return attachDevTraceHeaders(NextResponse.json({ error: message }, { status }));
 }
 
 export function mapServiceError(error: unknown): NextResponse {

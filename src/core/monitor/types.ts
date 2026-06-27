@@ -6,15 +6,16 @@
 export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE' | 'UNKNOWN';
 export type OperationStatus = 'pending' | 'success' | 'error';
 export type DbDriver = 'SQLite-Dev' | 'Turso-Production';
-export type CacheSource = 'Memory' | 'IndexedDB' | 'Database';
+export type CacheSource = 'Memory' | 'IndexedDB' | 'Database' | 'HTTP';
 export type RefetchReason = 'stale' | 'windowFocus' | 'manual' | 'invalidation' | 'mount' | 'unknown';
-export type LayerName = 'ui' | 'hook' | 'service' | 'query' | 'repository' | 'database' | 'cache';
+export type LayerName = 'ui' | 'hook' | 'service' | 'gova-api' | 'query' | 'repository' | 'database' | 'cache';
 
 // ─── Colour tokens ────────────────────────────────────────────────────────────
 export const LAYER_COLORS: Record<LayerName, string> = {
   ui:         '#3b82f6',
   hook:       '#06b6d4',
   service:    '#22c55e',
+  'gova-api': '#8b5cf6',
   query:      '#f97316',
   repository: '#a855f7',
   database:   '#ef4444',
@@ -112,6 +113,11 @@ export interface OperationRecord {
 
   // Pinned by developer
   pinned: boolean;
+
+  // HTTP (GovaApiClient — client-side only)
+  httpMethod?: string;
+  httpRoute?: string;
+  monitorLayer?: LayerName;
 }
 
 // ─── Aggregate statistics ─────────────────────────────────────────────────────
@@ -189,6 +195,19 @@ export interface DependencyEdge {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+export function resolveMonitorLayer(op: OperationRecord): LayerName {
+  if (op.monitorLayer) return op.monitorLayer;
+  if (op.httpRoute || op.cacheSource === 'HTTP') return 'gova-api';
+  if (op.table) return 'database';
+  if (op.repository && op.repository !== 'unknown') return 'repository';
+  if (op.queryOrCommand && op.queryOrCommand !== 'unknown' && !op.table) return 'query';
+  if (op.service && op.service !== 'unknown') return 'service';
+  if (op.hook && op.hook !== 'unknown') return 'hook';
+  if (op.cacheSource === 'IndexedDB' || op.cacheSource === 'Memory') return 'cache';
+  if (op.component && op.component !== 'unknown') return 'ui';
+  return 'hook';
+}
+
 export function inferOperationType(sql: string): OperationType {
   const verb = sql.trim().split(/\s+/)[0]?.toUpperCase();
   if (verb === 'SELECT') return 'SELECT';

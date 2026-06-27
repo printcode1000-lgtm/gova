@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { notFound } from 'next/navigation';
 import { useMonitorStore, startNewFlow, type TreeNode } from '@/core/monitor/monitor-store';
-import { LAYER_COLORS, OP_TYPE_COLORS, STATUS_COLORS, SLOW_QUERY_THRESHOLD_MS } from '@/core/monitor/types';
+import { LAYER_COLORS, OP_TYPE_COLORS, STATUS_COLORS, SLOW_QUERY_THRESHOLD_MS, resolveMonitorLayer } from '@/core/monitor/types';
 import type { OperationRecord, LayerName } from '@/core/monitor/types';
 import { SchemaSyncPanel } from './SchemaSyncPanel';
 
@@ -911,6 +911,7 @@ export default function MonitorPage() {
               <option value="">All Cache Sources</option>
               <option value="Memory">Memory Cache</option>
               <option value="IndexedDB">IndexedDB</option>
+              <option value="HTTP">HTTP (GovaApiClient)</option>
               <option value="Database">Database Source</option>
             </select>
           </div>
@@ -1131,16 +1132,8 @@ export default function MonitorPage() {
                 </div>
                 <div className="flame-chart">
                   {/* We group flowOps by layers to construct rows */}
-                  {(['ui', 'hook', 'service', 'query', 'repository', 'database'] as LayerName[]).map((layer) => {
-                    const layerItems = flowOps.filter((o) => {
-                      if (layer === 'ui') return o.component && o.component !== 'unknown';
-                      if (layer === 'hook') return o.hook && o.hook !== 'unknown';
-                      if (layer === 'service') return o.service && o.service !== 'unknown';
-                      if (layer === 'query') return o.queryOrCommand && o.queryOrCommand !== 'unknown' && !o.table;
-                      if (layer === 'repository') return o.repository && o.repository !== 'unknown';
-                      if (layer === 'database') return o.table;
-                      return false;
-                    });
+                  {(['ui', 'hook', 'service', 'gova-api', 'query', 'repository', 'database', 'cache'] as LayerName[]).map((layer) => {
+                    const layerItems = flowOps.filter((o) => resolveMonitorLayer(o) === layer);
 
                     // Calculate timing bounds of the entire flow
                     const startTimes = flowOps.map(o => o.startedAt);
@@ -1167,7 +1160,7 @@ export default function MonitorPage() {
                                   background: LAYER_COLORS[layer],
                                 }}
                               >
-                                {item.table || item.hook || item.service || item.id.slice(0, 4)} ({Math.round(item.completedAt - item.startedAt)}ms)
+                                {item.httpRoute || item.table || item.hook || item.service || item.id.slice(0, 4)} ({Math.round(item.completedAt - item.startedAt)}ms)
                               </div>
                             );
                           })}
@@ -1240,14 +1233,15 @@ export default function MonitorPage() {
                     </marker>
                   </defs>
                   {(() => {
-                    const columns = {
+                    const columns: Record<LayerName, number> = {
                       ui: 50,
-                      hook: 180,
-                      service: 310,
-                      query: 440,
-                      repository: 570,
-                      database: 700,
-                      cache: 700,
+                      hook: 150,
+                      service: 250,
+                      'gova-api': 350,
+                      query: 450,
+                      repository: 550,
+                      database: 650,
+                      cache: 750,
                     };
                     const rowCounts: Record<string, number> = {};
                     const positions: Record<string, { x: number; y: number }> = {};
@@ -1563,6 +1557,13 @@ export default function MonitorPage() {
                 <span className="info-value">{activeOp.rowsWritten}</span>
               </div>
             </div>
+
+            {activeOp.httpRoute && (
+              <div className="detail-section">
+                <div className="detail-section-title">HTTP Request (GovaApiClient)</div>
+                <pre className="code-block">{`${activeOp.httpMethod ?? 'GET'} ${activeOp.httpRoute}`}</pre>
+              </div>
+            )}
 
             {activeOp.sql && (
               <div className="detail-section">

@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { authService } from '../services/auth-service';
+import { authMonitorMeta } from './auth-monitor-meta';
 
 /** Stable query key for authentication status — shared across all hooks and invalidations */
 export const AUTH_STATUS_QUERY_KEY = ['auth_status'] as const;
@@ -20,5 +21,6 @@ export function useAuthQuery() {
   return useQuery({
     queryKey: AUTH_STATUS_QUERY_KEY,
     queryFn: () => authService.isAuthenticated(),
+    meta: authMonitorMeta('useAuthQuery', 'AppShell', 'IsAuthenticated', 'SELECT'),
   });
 }

@@ -17,6 +17,7 @@ import {
   SLOW_QUERY_THRESHOLD_MS,
   DUPLICATE_WINDOW_MS,
   N1_THRESHOLD,
+  resolveMonitorLayer,
 } from './types';
 
 // ─── Store State ──────────────────────────────────────────────────────────────
@@ -201,7 +202,7 @@ function buildStats(ops: OperationRecord[]): MonitorStats {
     activeQueries: ops.filter((o) => o.status === 'pending' && o.operationType === 'SELECT').length,
     activeMutations: ops.filter((o) => o.status === 'pending' && o.operationType !== 'SELECT').length,
     offlineReads: reads.filter((o) => o.cacheSource === 'IndexedDB').length,
-    onlineReads: reads.filter((o) => o.cacheSource === 'Database').length,
+    onlineReads: reads.filter((o) => o.cacheSource === 'Database' || o.cacheSource === 'HTTP').length,
     slowQueryCount: dbOps.filter((o) => o.executionTime > SLOW_QUERY_THRESHOLD_MS).length,
     n1Alerts: ops.filter((o) => o.isN1).length,
     duplicateAlerts: ops.filter((o) => o.isDuplicate).length,
@@ -303,14 +304,16 @@ function buildCallGraph(ops: OperationRecord[]): { nodes: CallGraphNode[]; edges
       nodes.push({
         id: op.id,
         label: op.operationType !== 'UNKNOWN'
-          ? `${op.operationType} ${op.table}`
-          : op.queryKey ?? op.id.slice(0, 8),
-        layer: 'database',
+          ? `${op.operationType} ${op.table || op.httpRoute || ''}`.trim()
+          : op.queryKey ?? op.httpRoute ?? op.id.slice(0, 8),
+        layer: resolveMonitorLayer(op),
         recordId: op.id,
       });
     }
-    if (op.parentId) {
+    if (op.parentId && seen.has(op.parentId)) {
       edges.push({ from: op.parentId, to: op.id });
+    } else if (op.correlationId && op.correlationId !== op.id && seen.has(op.correlationId)) {
+      edges.push({ from: op.correlationId, to: op.id });
     }
   });
 

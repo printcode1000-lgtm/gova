@@ -11,9 +11,9 @@ import { isDevelopment } from '@/core/config';
 
 // Derive cache source from query metadata / fetch counts
 function deriveCacheSource(query: any, actionType: string): CacheSource {
-  if (actionType === 'fetch') return 'Database';
-  if (query.state?.fetchMeta?.revalidation) return 'Database';
-  if (query.state.dataUpdateCount === 0) return 'IndexedDB'; // first restore from persister
+  if (actionType === 'fetch') return 'HTTP';
+  if (query.state?.fetchMeta?.revalidation) return 'HTTP';
+  if (query.state.dataUpdateCount === 0) return 'IndexedDB';
   return 'Memory';
 }
 
@@ -55,12 +55,17 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
           component: query.meta?.component ?? 'unknown',
           hook: query.meta?.hook ?? 'unknown',
           service: query.meta?.service ?? 'unknown',
-          queryOrCommand: JSON.stringify(query.queryKey),
+          queryOrCommand: query.meta?.queryOrCommand ?? JSON.stringify(query.queryKey),
           repository: query.meta?.repository ?? 'unknown',
+          table: query.meta?.table ?? '',
+          entity: query.meta?.entity ?? '',
           requestFlowId: getCurrentFlowId(),
         });
+        const fnStarted = performance.now();
         try {
-          return await originalQueryFn(...args);
+          const result = await originalQueryFn(...args);
+          query.meta = { ...query.meta, lastExecutionTimeMs: performance.now() - fnStarted, previousResult: query.state.data, currentResult: result };
+          return result;
         } finally {
           clearActiveQueryContext();
         }
@@ -81,7 +86,7 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
     if (queryKey.includes('rq_cache')) return;
 
     const cacheSource = deriveCacheSource(query, actionType);
-    const cacheHit = cacheSource !== 'Database';
+    const cacheHit = cacheSource === 'IndexedDB' || cacheSource === 'Memory';
     const refetchReason = deriveRefetchReason(event, query);
 
     if (actionType === 'updated' || actionType === 'added') {
@@ -91,7 +96,7 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
         requestFlowId: flowId,
         sessionId,
         feature: query.meta?.feature ?? 'unknown',
-        page: query.meta?.page ?? typeof window !== 'undefined' ? window.location.pathname : 'unknown',
+        page: query.meta?.page ?? (typeof window !== 'undefined' ? window.location.pathname : 'unknown'),
         component: query.meta?.component ?? 'unknown',
         hook: query.meta?.hook ?? 'unknown',
         service: query.meta?.service ?? 'unknown',
@@ -111,8 +116,8 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
         errorMessage: state.error ? String(state.error) : undefined,
         timestamp: ts,
         startedAt: now,
-        completedAt: now,
-        executionTime: 0,
+        completedAt: now + (query.meta?.lastExecutionTimeMs ?? 0),
+        executionTime: Math.round((query.meta?.lastExecutionTimeMs ?? 0) * 100) / 100,
         rowsRead: Array.isArray(state.data) ? state.data.length : state.data ? 1 : 0,
         rowsWritten: 0,
         queryKey,
@@ -122,10 +127,13 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
         refetchReason,
         invalidationCount: 0,
         mutationCount,
+        previousResult: query.meta?.previousResult,
+        currentResult: query.meta?.currentResult,
         lastFetch: state.dataUpdatedAt ? new Date(state.dataUpdatedAt).toISOString() : undefined,
         nextStaleTime: query.getObserversCount() > 0
           ? new Date(state.dataUpdatedAt + (query.options?.staleTime ?? 0)).toISOString()
           : undefined,
+        monitorLayer: cacheSource === 'IndexedDB' || cacheSource === 'Memory' ? 'cache' : 'hook',
         pinned: false,
       };
       emit(rec as any);
@@ -143,6 +151,7 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
     if (mutation.options?.mutationFn && !mutation.options.mutationFn.__wrapped) {
       const originalMutationFn = mutation.options.mutationFn;
       const wrapped = async (...args: any[]) => {
+        const mutationCtxId = `mut-${Date.now()}-${Math.random().toString(36).slice(2)}`;
         setActiveQueryContext({
           feature: mutation.options?.meta?.feature ?? 'unknown',
           page: typeof window !== 'undefined' ? window.location.pathname : 'unknown',
@@ -151,6 +160,9 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
           service: mutation.options?.meta?.service ?? 'unknown',
           queryOrCommand: mutation.options?.meta?.queryOrCommand ?? 'Mutation',
           repository: mutation.options?.meta?.repository ?? 'unknown',
+          table: mutation.options?.meta?.table ?? '',
+          entity: mutation.options?.meta?.entity ?? '',
+          monitorMutationId: mutationCtxId,
           requestFlowId: getCurrentFlowId(),
         });
         try {
@@ -198,11 +210,12 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
       rowsRead: 0,
       rowsWritten: mutation.state.status === 'success' ? 1 : 0,
       queryKey: undefined,
-      cacheSource: 'Database' as const,
+      cacheSource: 'HTTP' as const,
       cacheHit: false,
       refetchCount: 0,
       invalidationCount: 0,
       mutationCount,
+      monitorLayer: 'hook' as const,
       pinned: false,
     };
     useMonitorStore.getState().emit(rec as any);

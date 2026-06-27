@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { isDevelopment } from '@/core/config';
+import { createDrizzleDevLogger } from '@/core/monitor/drizzle-dev-logger';
 import { AbstractDatabaseClient } from './abstract-database-client';
 
 export class SQLiteDatabaseClient extends AbstractDatabaseClient {
@@ -13,7 +15,7 @@ export class SQLiteDatabaseClient extends AbstractDatabaseClient {
     const path = require('path');
     const dbPath = path.join(process.cwd(), 'public', 'sync_data', 'sync_sqlite', 'allusers.db');
     const sqlite = new Database(dbPath);
-    this._db = drizzle(sqlite);
+    this._db = drizzle(sqlite, isDevelopment ? { logger: createDrizzleDevLogger() } : undefined);
 
     const { ensureDevMigrations } = require('./ensure-migrations');
     ensureDevMigrations(this._db);

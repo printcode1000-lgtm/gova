@@ -1,6 +1,7 @@
 import { ApiError } from './api-error';
 import { buildGovaApiUrl, buildPublicAssetUrl } from './gova-api-config';
 import { govaHttpFetch } from './gova-http-transport';
+import { trackGovaApiRequest } from '@/core/monitor/gova-api-monitor';
 
 export interface GovaApiRequestOptions {
   headers?: Record<string, string>;
@@ -36,8 +37,11 @@ export class GovaApiClient {
       init.body = JSON.stringify(body);
     }
 
-    const response = await govaHttpFetch(buildGovaApiUrl(route), init);
-    return this.parseResponse<T>(response);
+    return trackGovaApiRequest(method, route, true, async () => {
+      const response = await govaHttpFetch(buildGovaApiUrl(route), init);
+      const data = await this.parseResponse<T>(response);
+      return { data, response };
+    });
   }
 
   private async parseResponse<T>(response: Response): Promise<T> {
@@ -88,14 +92,17 @@ export class GovaApiClient {
 
   /** Load a static JSON file from the public folder (not a Business API call). */
   async getPublicJson<T>(assetPath: string, options?: GovaApiRequestOptions): Promise<T> {
-    const response = await govaHttpFetch(buildPublicAssetUrl(assetPath), {
-      method: 'GET',
-      headers: { Accept: 'application/json', ...options?.headers },
-      credentials: 'omit',
-      signal: options?.signal,
-      cache: options?.cache ?? 'no-store',
+    return trackGovaApiRequest('GET', assetPath, false, async () => {
+      const response = await govaHttpFetch(buildPublicAssetUrl(assetPath), {
+        method: 'GET',
+        headers: { Accept: 'application/json', ...options?.headers },
+        credentials: 'omit',
+        signal: options?.signal,
+        cache: options?.cache ?? 'no-store',
+      });
+      const data = await this.parseResponse<T>(response);
+      return { data, response };
     });
-    return this.parseResponse<T>(response);
   }
 }
 

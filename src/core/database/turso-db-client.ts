@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { isDevelopment } from '@/core/config';
+import { createDrizzleDevLogger } from '@/core/monitor/drizzle-dev-logger';
 import { getTursoClient } from '@/lib/db/turso';
 import { AbstractDatabaseClient } from './abstract-database-client';
 
@@ -11,7 +13,7 @@ export class TursoDatabaseClient extends AbstractDatabaseClient {
 
     const { drizzle } = require('drizzle-orm/libsql');
     const client = getTursoClient();
-    this._db = drizzle(client);
+    this._db = drizzle(client, isDevelopment ? { logger: createDrizzleDevLogger() } : undefined);
 
     return this._db;
   }

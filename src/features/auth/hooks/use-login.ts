@@ -8,6 +8,8 @@ import { useTranslation } from '@/lib/i18n';
 import { createLoginSchema, type LoginFormData } from '@/lib/validation/auth';
 import { authService } from '../services/auth-service';
 import { AUTH_STATUS_QUERY_KEY } from './use-auth-query';
+import { authMonitorMeta } from './auth-monitor-meta';
+import { startNewFlow } from '@/core/monitor/monitor-store';
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -24,6 +26,7 @@ export function useLogin() {
 
   const mutation = useMutation({
     mutationFn: (data: LoginFormData) => authService.login(data),
+    meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),
 
     onSuccess: () => {
       // Invalidate the cached auth status so every component re-reads it
@@ -40,7 +43,10 @@ export function useLogin() {
     return msg;
   }, [mutation.error, t]);
 
-  const onSubmit = form.handleSubmit((data) => mutation.mutate(data));
+  const onSubmit = form.handleSubmit((data) => {
+    startNewFlow();
+    mutation.mutate(data);
+  });
 
   return {
     form,

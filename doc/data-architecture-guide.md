@@ -21,7 +21,7 @@ This document is the authoritative reference for how data flows through the GOVA
 
 1. [Architectural Principles](#architectural-principles)
 2. [Client/Server Data Flow](#clientserver-data-flow)
-3. [The 6-Layer Architecture](#the-6-layer-architecture)
+3. [The Layered Architecture](#the-layered-architecture)
 4. [GovaApiClient](#govaapiclient)
 5. [Business API Routes](#business-api-routes)
 6. [Database Client (Server-Only)](#database-client-server-only)
@@ -35,9 +35,11 @@ This document is the authoritative reference for how data flows through the GOVA
 14. [Security Rules](#security-rules)
 15. [Extension Guide: Adding a New Feature](#extension-guide-adding-a-new-feature)
 16. [Testability](#testability)
-17. [GoVa Operation Monitor (`/dev/monitor`)](#gova-operation-monitor-devmonitor)
-18. [Architecture Contract (Enforced)](#architecture-contract-enforced)
-19. [Scripts & Commands Cheat Sheet](#scripts--commands-cheat-sheet)
+17. [Configuration Layer](#configuration-layer)
+18. [GovaDB (IndexedDB)](#govadb-indexeddb)
+19. [GoVa Operation Monitor (`/dev/monitor`)](#gova-operation-monitor-devmonitor)
+20. [Architecture Contract (Enforced)](#architecture-contract-enforced)
+21. [Scripts & Commands Cheat Sheet](#scripts--commands-cheat-sheet)
 
 ---
 
@@ -120,16 +122,20 @@ flowchart LR
 
 ---
 
-## The 6-Layer Architecture
+## The Layered Architecture
 
-Clean Architecture is preserved on the **server**. On the **client**, the Service layer is an HTTP adapter that preserves the same interface (`IAuthService`) so Hooks remain unchanged.
+The server follows **Clean Architecture** with six domain layers (UI through Database Client on the server stack). The **full client-to-database path** adds `GovaApiClient` and **Business API** routes — see [Architecture Contract](#architecture-contract-enforced) for the complete enforced stack.
+
+On the **client**, the Service layer is an HTTP adapter that preserves the same interface (`IAuthService`) so Hooks remain unchanged.
 
 ```
-[ UI ] → [ Hook ] → [ Service ] → [ Query/Command ] → [ Repository ] → [ Database Client ]
-                         ↑
-              Client: AuthApiService + GovaApiClient
-              Server: AuthService + Business API Route
+[ UI ] → [ Hook ] → [ Client Service ] → [ GovaApiClient ] → [ Business API ]
+                                                              ↓
+              Server: [ Server Service ] → [ Query/Command ] → [ Repository ] → [ Database Client ]
 ```
+
+Client entry: `auth-service.ts` → `auth-api-service.ts` → `govaApi`  
+Server entry: API routes → `auth-service.bootstrap.server.ts` → `auth-service.server.ts`
 
 ### 1. UI Component Layer
 
@@ -161,10 +167,12 @@ Two implementations, one interface:
 | File | Environment | Behavior |
 |---|---|---|
 | `auth-api-service.ts` | Client (browser) | Calls `govaApi.post(GOVA_API_ROUTES.auth.login, …)` |
-| `auth-service.server.ts` | Server (API routes) | Runs business logic via Query/Command + Repository |
+| `auth-service.server.ts` | Server | Business logic via injected Query/Command instances |
+| `auth-service.bootstrap.server.ts` | Server | Wires commands/queries and exports `authService` singleton |
 
 * **Client entry:** `auth-service.ts` re-exports `authApiService as authService`
-* **Server entry:** API routes import `authService` from `auth-service.server.ts`
+* **Server entry:** API routes import `authService` from `auth-service.bootstrap.server.ts`
+* **Wiring:** `operations/instances.ts` creates Command/Query objects with `userRepository`
 * **Interface:** `auth-service.interface.ts` (`IAuthService`)
 
 Client login saves the returned token to GovaDB IndexedDB. Server login validates credentials and returns `{ token, uid }` without touching IndexedDB.
@@ -222,7 +230,8 @@ The client-side HTTP gateway. All platforms use this — never `fetch` directly 
 
 | File | Purpose |
 |---|---|
-| `gova-api-client.ts` | `GovaApiClient` class + `govaApi` singleton |
+| `gova-api-client.ts` | `GovaApiClient` class + `govaApi` singleton (emits dev monitor events) |
+| `gova-http-transport.ts` | The only module allowed to call `fetch()` |
 | `gova-api-config.ts` | Resolves `GOVA_API_BASE_URL` (platform-agnostic) |
 | `gova-api-routes.ts` | Canonical route constants (`GOVA_API_ROUTES`) |
 | `api-error.ts` | `ApiError` with HTTP status |
@@ -268,13 +277,15 @@ Low-level SQL proxy routes (e.g. `/api/db`) are **removed**. All routes are Busi
 |---|---|---|
 | `/api/auth/login` | POST | Authenticate user, return token |
 | `/api/auth/register` | POST | Create new user account |
-| `/api/auth/logout` | POST | Server-side logout stub (session is client-side today) |
+| `/api/auth/logout` | POST | Delegates to `authService.logout()` (session token cleared client-side) |
 
 Each route:
 
-1. Calls `ensureDevMigrations()` in development (applies Drizzle migrations to SQLite)
+1. Imports `authService` from `auth-service.bootstrap.server.ts`
 2. Delegates to the server `AuthService`
 3. Returns JSON via `apiSuccess()` / `mapServiceError()`
+
+**Dev migrations:** Applied automatically on first SQLite connection in `sqlite-db-client.ts` (not in route handlers).
 
 **Adding future routes:** `/api/products/*`, `/api/orders/*`, etc. — follow the same pattern.
 
@@ -302,7 +313,7 @@ Default dev origins (localhost, Capacitor shells) are included when `GOVA_CORS_O
 | `sqlite-db-client.ts` | Development: `better-sqlite3` + Drizzle |
 | `turso-db-client.ts` | Production: `@libsql/client` + Drizzle |
 | `abstract-database-client.ts` | Shared CRUD helpers + dev monitor instrumentation |
-| `ensure-migrations.ts` | Applies Drizzle migrations on first API request in dev |
+| `ensure-migrations.ts` | Applies Drizzle migrations on first SQLite connection in dev |
 | `environment.ts` | Client-safe runtime detection helpers |
 | `environment.server.ts` | Server-only SQLite path helpers |
 
@@ -585,19 +596,128 @@ No changes to `DatabaseClient` or `GovaApiClient` internals are required.
 
 ---
 
+## Configuration Layer
+
+**Location:** `src/core/config/`
+
+The **only** place allowed to read `process.env` (enforced by Architecture Contract).
+
+| File | Purpose |
+|---|---|
+| `runtime-env.ts` | `isDevelopment`, `isDevRuntime()`, `isStaticExportBuild()`, `isProvisioningContext()` |
+| `public-env.ts` | `NEXT_PUBLIC_*` values baked into the client bundle |
+| `server-env.ts` | Server-only re-export with `import 'server-only'` |
+| `server-env.values.ts` | Turso credentials, CORS origins — used by scripts and server code |
+
+Client code imports `publicEnv` and `isDevelopment` from `@/core/config`. Server code imports secrets from `server-env.ts` or `server-env.values.ts` (build scripts).
+
+---
+
+## GovaDB (IndexedDB)
+
+**Location:** `src/lib/gova-db/index.ts`
+
+Browser-side offline cache — **not** the primary database. All CRUD operations are instrumented in development via `gova-db-monitor.ts`.
+
+| Store | Key | Purpose |
+|---|---|---|
+| `auth` | `auth` | Auth token cache (`govaDbGetAuth` / `govaDbSetAuth`) |
+| `guestSessions` | `current` | Guest session ID |
+| `queryCache` | `rq_cache` | TanStack Query persistence (`gova-db-persister.ts`) |
+| `sellerOnboarding` | dynamic | Zustand onboarding state |
+| `appSettings` | dynamic | Reserved for future app settings |
+
+Auth Client Service writes tokens here after successful login. `useAuthQuery` reads auth status from this store (not from the server).
+
+---
+
 ## GoVa Operation Monitor (`/dev/monitor`)
 
 Available only when `NODE_ENV === 'development'`. Access at `/dev/monitor`.
 
-The monitor provides live visibility into data operations across all architectural layers. It is wired non-invasively at the infrastructure level — no business logic changes required.
+The monitor provides **end-to-end visibility during development** across the client path and server-side auth flows. It is wired at the infrastructure level — hooks pass `meta`, `GovaApiClient` emits HTTP traces, GovaDB emits IndexedDB traces, and Business API responses carry a dev trace header with server events.
 
-**Instrumentation sources:**
+### Monitoring coverage matrix (development)
 
-| Source | What it records |
+| Data path | Monitored? | How | Layer in UI |
+|---|---|---|---|
+| TanStack Query (hooks) | Yes | `query-observer.ts` + hook `meta` | `hook`, `cache` |
+| GovaApiClient → Business API | Yes | `gova-api-monitor.ts` | `gova-api` |
+| Server trace (per HTTP response) | Yes | `X-Gova-Dev-Trace` header → `emit-server-trace.ts` | `service`, `query`, `database` |
+| Drizzle SQL (dev) | Yes | `drizzle-dev-logger.ts` in trace header | `database` |
+| GovaDB IndexedDB | Yes | `gova-db-monitor.ts` wraps all IDB ops | `cache` |
+| Query persister (IDB) | Yes | Via instrumented `govaDbSet` / `govaDbGet` | `cache` |
+| Static JSON via `getPublicJson` | Yes | HTTP layer (e.g. categories, schema report) | `cache` |
+| Bundled JSON imports (`home-*.json`, i18n) | No | Build-time imports, no runtime hook | — |
+| Theme / app prefs (`localStorage`) | No | Outside data plane | — |
+| Provisioning scripts (`schema-sync` at CI) | No | Not browser runtime | — |
+| Turso Platform API (`turso-platform-api.ts`) | No | Build/deploy scripts only | — |
+
+### Dev trace header (`X-Gova-Dev-Trace`)
+
+During development, every Business API response from `apiSuccess()` / `apiError()` may include a base64url-encoded JSON array of server events collected via `AsyncLocalStorage`:
+
+```
+Business API route  (runTracedBusinessRoute)
+  → AuthService     (traceServerLayer)
+  → Query/Command   (traceServerLayer)
+  → Drizzle ORM     (drizzle-dev-logger → SQL in trace)
+```
+
+`GovaApiClient` reads this header after each Business API call and merges child events into the monitor store with `parentId` linking to the HTTP record. This bridges the Client/Server split without WebSockets.
+
+**Key files:**
+
+| File | Role |
 |---|---|
-| TanStack Query observer | Query/mutation lifecycle, cache hits/misses, refetch reasons |
-| `AbstractDatabaseClient` | SQL execution, timing, memory, row counts (server-side, dev only) |
-| Zustand monitor store | Aggregates traces, runs N+1/duplicate detection, powers the UI |
+| `server-trace.ts` | AsyncLocalStorage collector (server-only) |
+| `trace-server-layer.ts` | Wraps server service / command / query spans |
+| `drizzle-dev-logger.ts` | Logs Drizzle SQL into the trace |
+| `dev-trace-types.ts` | Shared event shapes + header name |
+| `emit-server-trace.ts` | Client-side parser + store emitter |
+| `gova-api-monitor.ts` | HTTP timing + trace header ingestion |
+| `gova-db-monitor.ts` | IndexedDB operation emitter |
+| `auth-monitor-meta.ts` | Standard TanStack `meta` for auth hooks |
+
+### What the monitor sees
+
+| Source | What it records | Layer |
+|---|---|---|
+| TanStack Query observer | Query/mutation lifecycle, cache hits, queryFn timing, result diff | `hook`, `cache` |
+| `GovaApiClient` | Business API HTTP (method, route, timing, status) | `gova-api` |
+| `X-Gova-Dev-Trace` | Server service, commands/queries, Drizzle SQL | `service`, `query`, `database` |
+| GovaDB (`gova-db-monitor`) | IndexedDB get/set/delete/clear per store | `cache` |
+| Zustand monitor store | Aggregates traces, N+1/duplicate detection, call-graph edges | — |
+| `SchemaSyncPanel` | Static schema-sync report (not live sync) | — |
+
+Auth hooks pass monitor metadata and call `startNewFlow()` on submit:
+
+```typescript
+// use-login.ts
+meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),
+// onSubmit: startNewFlow() then mutation.mutate()
+```
+
+Shared helper: `src/features/auth/hooks/auth-monitor-meta.ts`.
+
+### Request flow grouping
+
+`startNewFlow()` is called when the user submits login/register forms. All operations in that action share a `requestFlowId`, visible in the **TIMELINE** and **OPERATIONS** tabs.
+
+HTTP records link to server traces via `parentId`. Server SQL appears as child events under the matching `POST /api/auth/*` HTTP bar in the flame chart.
+
+### Out of scope (by design)
+
+These are **not** part of the runtime data plane and are intentionally not monitored:
+
+- Bundled static imports (`import data from '@/data/...'`)
+- `localStorage` theme and UI preferences
+- CI/build-time provisioning (`npm run db:schema:sync` during deploy)
+- Direct `govaHttpFetch` in `turso-platform-api.ts` (provisioning only)
+
+### Legacy note
+
+`AbstractDatabaseClient._trackedExecute()` still instruments raw SQL on the server, but auth uses Drizzle ORM directly. Server SQL visibility comes from **`drizzle-dev-logger`** in the dev trace header, not from `_trackedExecute`.
 
 ---
 
@@ -635,7 +755,7 @@ The monitor provides live visibility into data operations across all architectur
 | **Op Type** | Filter by SQL operation type: SELECT, INSERT, UPDATE, DELETE |
 | **Status** | Filter by outcome: success, pending, error |
 | **DB Driver** | Filter by SQLite-Dev or Turso-Production |
-| **Cache Source** | Filter by Memory, IndexedDB, or Database origin |
+| **Cache Source** | Filter by Memory, IndexedDB, **HTTP (GovaApiClient)**, or Database origin |
 | **Search bar** | Free-text search across features, SQL, hooks, query keys, and error messages |
 | **Reset Filters** | Clears all active filters |
 
@@ -690,7 +810,7 @@ Use this tab to step through exactly which layers fired for a single user action
 | Section | What it does |
 |---|---|
 | **Flow selector** | Pick which user-initiated request flow to inspect |
-| **Flame Chart (Layer Gantt Trace)** | Horizontal bars per architecture layer (ui → hook → service → query → repository → database) showing relative timing and duration |
+| **Flame Chart (Layer Gantt Trace)** | Horizontal bars per layer (`ui` → `hook` → `service` → **`gova-api`** → `query` → `repository` → `database` → `cache`) |
 | **Scrub Timeline Replay** | Slider to step through operations one-by-one in execution order |
 
 Click any bar to jump to that operation's detail drawer. Useful for spotting slow layers and sequential bottlenecks.
@@ -701,7 +821,7 @@ Click any bar to jump to that operation's detail drawer. Useful for spotting slo
 
 > SVG directed graph of the call chain across architecture layers.
 
-Renders nodes in columns by layer (ui → hook → service → query → repository → database/cache) with arrows showing call direction.
+Renders nodes in columns by layer (ui → hook → service → **gova-api** → query → repository → database/cache) with arrows showing call direction.
 
 - Click a node to open its operation details
 - Empty state means no operations match the current filters — run some requests first
@@ -773,8 +893,9 @@ Hover over any operation in the Operations or Timeline tabs and pin it with the 
 |---|---|
 | **Pin to Top** | Bookmark this operation in the Pinned tab |
 | **Trace Information** | Correlation ID, Flow ID, feature, page, hook, service, repository, DB driver, status |
+| **HTTP Request** | Method + route for GovaApiClient operations (e.g. `POST /api/auth/login`) |
 | **Performance Metrics** | Execution duration (ms), memory delta, rows read/written |
-| **Raw Executed SQL** | The exact SQL statement and bound parameters (server-side DB operations only) |
+| **Raw Executed SQL** | SQL + parameters (only if captured — typically not for Drizzle repository calls) |
 | **Query Result Diff** | Line-by-line JSON diff when a TanStack Query refetch changed cached data |
 | **Error Message / Stack Trace** | Full error details when status is `error` |
 
@@ -989,7 +1110,7 @@ src/
 │   ├── config/                 # Configuration layer (only process.env access)
 │   ├── database/               # DatabaseClient, schema, migrations
 │   ├── provisioning/           # Schema sync, Turso provisioning (build/deploy only)
-│   └── monitor/                # Operation Monitor store + query observer
+│   └── monitor/                # query-observer, gova-api-monitor, gova-db-monitor, server-trace, emit-server-trace
 ├── features/
 │   └── auth/
 │       ├── hooks/              # useLogin, useRegister, useAuthQuery

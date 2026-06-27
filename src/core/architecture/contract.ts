@@ -79,6 +79,7 @@ const SERVER_ONLY_ALLOWED_LAYERS: ArchitectureLayer[] = [
   'provisioning',
   'operations',
   'repository',
+  'dev-tools',
 ];
 
 export const RAW_SQL_PATTERNS = [

@@ -9,6 +9,8 @@ import { createRegistrationSchema, type RegistrationFormData } from '@/lib/valid
 import { useGuestSession } from '@/hooks/use-guest-session';
 import { authService } from '../services/auth-service';
 import { AUTH_STATUS_QUERY_KEY } from './use-auth-query';
+import { authMonitorMeta } from './auth-monitor-meta';
+import { startNewFlow } from '@/core/monitor/monitor-store';
 
 export function useRegister() {
   const { t } = useTranslation();
@@ -34,6 +36,7 @@ export function useRegister() {
 
   const mutation = useMutation({
     mutationFn: (data: RegistrationFormData) => authService.register(data),
+    meta: authMonitorMeta('useRegister', 'RegistrationPageContent', 'Register', 'INSERT'),
 
     onSuccess: () => {
       // Clear any active guest session and update the cached auth status
@@ -50,7 +53,10 @@ export function useRegister() {
     return msg;
   }, [mutation.error, t]);
 
-  const onSubmit = form.handleSubmit((data) => mutation.mutate(data));
+  const onSubmit = form.handleSubmit((data) => {
+    startNewFlow();
+    mutation.mutate(data);
+  });
 
   return {
     form,
