@@ -115,7 +115,7 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.includes('-service.server.') || (p.endsWith('.server.ts') && p.includes('/services/'))) {
     return 'server-services';
   }
-  if (p.includes('/services/') && (p.endsWith('-api-service.ts') || p.endsWith('/auth-service.ts'))) {
+  if (p.includes('/services/') && (p.endsWith('-api-service.ts') || p.endsWith('/auth-service.ts') || p.endsWith('/session-service.ts'))) {
     return 'client-services';
   }
   if (p.includes('/hooks/')) return 'hooks';
@@ -171,7 +171,7 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   if (resolved.includes('-service.server') || (resolved.includes('/services/') && resolved.endsWith('.server.ts'))) {
     return 'server-services';
   }
-  if (resolved.includes('/services/') && (resolved.includes('-api-service') || resolved.endsWith('/auth-service'))) {
+  if (resolved.includes('/services/') && (resolved.includes('-api-service') || resolved.endsWith('/auth-service') || resolved.endsWith('/session-service'))) {
     return 'client-services';
   }
   if (resolved.includes('/core/database/gova-db-persister') || resolved.startsWith('src/lib/gova-db/')) {

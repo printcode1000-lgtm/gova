@@ -1,26 +1,8 @@
-'use client';
-
-import { useQuery } from '@tanstack/react-query';
-import { authService } from '../services/auth-service';
-import { authMonitorMeta } from './auth-monitor-meta';
-
-/** Stable query key for authentication status — shared across all hooks and invalidations */
-export const AUTH_STATUS_QUERY_KEY = ['auth_status'] as const;
-
-/**
- * useAuthQuery
- *
- * Reads the authenticated state by calling authService.isAuthenticated().
- * TanStack Query caches this result and rehydrates it from GovaDB IndexedDB
- * on page reload, giving instant offline-first auth detection.
- *
- * - staleTime is inherited from the global QueryClient (5 min)
- * - gcTime    is inherited from the global QueryClient (24 h)
- */
-export function useAuthQuery() {
-  return useQuery({
-    queryKey: AUTH_STATUS_QUERY_KEY,
-    queryFn: () => authService.isAuthenticated(),
-    meta: authMonitorMeta('useAuthQuery', 'AppShell', 'IsAuthenticated', 'SELECT'),
-  });
-}
+/** @deprecated Import from use-session-query instead */
+export {
+  useAuthQuery,
+  useSession,
+  useSessionQuery,
+  AUTH_STATUS_QUERY_KEY,
+  CURRENT_SESSION_QUERY_KEY,
+} from './use-session-query';

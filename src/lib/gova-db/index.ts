@@ -130,6 +130,7 @@ export interface AuthData {
 }
 
 const AUTH_KEY = 'auth';
+const CURRENT_SESSION_KEY = 'current';
 
 export async function govaDbGetAuth(): Promise<AuthData> {
   return (await govaDbGet<AuthData>(GOVA_DB_STORES.AUTH, AUTH_KEY)) ?? {};
@@ -141,6 +142,18 @@ export async function govaDbSetAuth(data: Partial<AuthData>): Promise<void> {
     ...current,
     ...data,
   });
+}
+
+export async function govaDbGetCurrentSession<T>(): Promise<T | null> {
+  return govaDbGet<T>(GOVA_DB_STORES.AUTH, CURRENT_SESSION_KEY);
+}
+
+export async function govaDbSetCurrentSession<T>(session: T): Promise<void> {
+  return govaDbSet<T>(GOVA_DB_STORES.AUTH, CURRENT_SESSION_KEY, session);
+}
+
+export async function govaDbDeleteCurrentSession(): Promise<void> {
+  return govaDbDelete(GOVA_DB_STORES.AUTH, CURRENT_SESSION_KEY);
 }
 
 export function createGovaDbZustandStorage(storeName: GovaDbStoreName): StateStorage {

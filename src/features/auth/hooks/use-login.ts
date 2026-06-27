@@ -6,14 +6,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from '@/lib/i18n';
 import { createLoginSchema, type LoginFormData } from '@/lib/validation/auth';
+import { useGuestSession } from '@/hooks/use-guest-session';
 import { authService } from '../services/auth-service';
-import { AUTH_STATUS_QUERY_KEY } from './use-auth-query';
+import { sessionService } from '../services/session-service';
+import { CURRENT_SESSION_QUERY_KEY } from './use-session-query';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 
 export function useLogin() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { endGuestSession } = useGuestSession();
   const [showPassword, setShowPassword] = useState(false);
 
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
@@ -25,16 +28,24 @@ export function useLogin() {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: LoginFormData) => authService.login(data),
+    mutationFn: async (data: LoginFormData) => {
+      const result = await authService.login(data);
+      await sessionService.startSession({
+        token: result.token,
+        uid: result.uid,
+        phone: data.phone,
+        displayName: data.phone,
+      });
+      return result;
+    },
     meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),
 
     onSuccess: () => {
-      // Invalidate the cached auth status so every component re-reads it
-      queryClient.invalidateQueries({ queryKey: AUTH_STATUS_QUERY_KEY });
+      endGuestSession();
+      queryClient.invalidateQueries({ queryKey: CURRENT_SESSION_QUERY_KEY });
     },
   });
 
-  // Map domain error codes → localised human-readable messages
   const error = useMemo(() => {
     if (!mutation.error) return null;
     const msg = (mutation.error as Error).message;

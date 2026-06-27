@@ -8,7 +8,8 @@ import { useTranslation } from '@/lib/i18n';
 import { createRegistrationSchema, type RegistrationFormData } from '@/lib/validation/auth';
 import { useGuestSession } from '@/hooks/use-guest-session';
 import { authService } from '../services/auth-service';
-import { AUTH_STATUS_QUERY_KEY } from './use-auth-query';
+import { sessionService } from '../services/session-service';
+import { CURRENT_SESSION_QUERY_KEY } from './use-session-query';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 
@@ -35,17 +36,28 @@ export function useRegister() {
   const phoneVerified = useWatch({ control: form.control, name: 'phoneVerified' }) ?? false;
 
   const mutation = useMutation({
-    mutationFn: (data: RegistrationFormData) => authService.register(data),
+    mutationFn: async (data: RegistrationFormData) => {
+      const { uid } = await authService.register(data);
+      const loginResult = await authService.login({
+        phone: data.phone,
+        password: data.password,
+      });
+      await sessionService.startSession({
+        token: loginResult.token,
+        uid: loginResult.uid || uid,
+        phone: data.phone,
+        displayName: data.email?.trim() || data.phone,
+      });
+      return { ...loginResult, uid: loginResult.uid || uid };
+    },
     meta: authMonitorMeta('useRegister', 'RegistrationPageContent', 'Register', 'INSERT'),
 
     onSuccess: () => {
-      // Clear any active guest session and update the cached auth status
       endGuestSession();
-      queryClient.invalidateQueries({ queryKey: AUTH_STATUS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: CURRENT_SESSION_QUERY_KEY });
     },
   });
 
-  // Map domain error codes → localised human-readable messages
   const error = useMemo(() => {
     if (!mutation.error) return null;
     const msg = (mutation.error as Error).message;

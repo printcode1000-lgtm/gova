@@ -1,11 +1,13 @@
 'use client';
 
-import { LogIn, Settings, UserPlus, X } from 'lucide-react';
+import { LogIn, LogOut, Settings, User, X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
+import { useSession } from '@/features/auth/hooks/use-session-query';
+import { useLogout } from '@/features/auth/hooks/use-logout';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -15,12 +17,8 @@ interface AppSidebarProps {
 export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { t, isRTL } = useTranslation();
-
-  const sidebarLinks = [
-    { href: '/login', icon: LogIn, label: t('sidebar.login') },
-    { href: '/registration', icon: UserPlus, label: t('sidebar.register') },
-    { href: '/settings', icon: Settings, label: t('sidebar.settings') },
-  ] as const;
+  const { session, isAuthenticated, isLoading } = useSession();
+  const logout = useLogout();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -41,6 +39,12 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  const handleLogout = () => {
+    logout.mutate(undefined, {
+      onSuccess: () => onClose(),
+    });
+  };
 
   return (
     <div
@@ -78,20 +82,53 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
         </div>
 
         <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 pt-2">
-          {sidebarLinks.map(({ href, icon: Icon, label }) => (
-            <Link key={href} href={href} onClick={onClose}>
+          {isLoading ? null : isAuthenticated ? (
+            <>
+              <div className="gova-control w-full flex items-center gap-3 rounded-lg px-3 py-3 text-sm gova-surface-neutral">
+                <User className="w-5 h-5 shrink-0 text-primary" aria-hidden="true" />
+                <div className="min-w-0 text-start">
+                  <p className="font-semibold text-on-surface truncate">
+                    {session.displayName ?? session.phone}
+                  </p>
+                  {session.phone && session.displayName !== session.phone ? (
+                    <p className="text-xs text-on-surface-variant truncate">{session.phone}</p>
+                  ) : null}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={logout.isPending}
+                className="gova-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface gova-surface-neutral active:opacity-90 disabled:opacity-60"
+              >
+                <LogOut className="w-5 h-5 shrink-0 text-primary" />
+                {t('sidebar.logout')}
+              </button>
+            </>
+          ) : (
+            <Link href="/login" onClick={onClose}>
               <button
                 type="button"
                 className="gova-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface gova-surface-neutral active:opacity-90"
               >
-                <Icon className="w-5 h-5 shrink-0 text-primary" />
-                {label}
+                <LogIn className="w-5 h-5 shrink-0 text-primary" />
+                {t('sidebar.login')}
               </button>
             </Link>
-          ))}
+          )}
+
+          <Link href="/settings" onClick={onClose}>
+            <button
+              type="button"
+              className="gova-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface gova-surface-neutral active:opacity-90"
+            >
+              <Settings className="w-5 h-5 shrink-0 text-primary" />
+              {t('sidebar.settings')}
+            </button>
+          </Link>
         </div>
       </div>
     </div>
   );
 }
-

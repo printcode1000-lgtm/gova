@@ -625,13 +625,14 @@ Browser-side offline cache — **not** the primary database. All CRUD operations
 
 | Store | Key | Purpose |
 |---|---|---|
-| `auth` | `auth` | Auth token cache (`govaDbGetAuth` / `govaDbSetAuth`) |
+| `auth` | `current` | **Current Session** (`CurrentSession` — see [session-system.md](./session-system.md)) |
+| `auth` | `auth` | Legacy token key (migrated automatically) |
 | `guestSessions` | `current` | Guest session ID |
 | `queryCache` | `rq_cache` | TanStack Query persistence (`gova-db-persister.ts`) |
 | `sellerOnboarding` | dynamic | Zustand onboarding state |
 | `appSettings` | dynamic | Reserved for future app settings |
 
-Auth Client Service writes tokens here after successful login. `useAuthQuery` reads auth status from this store (not from the server).
+Auth Client Service obtains tokens from the API; **SessionApiService** persists the full session here. `useSessionQuery` reads via Session Service (not from the server). See [session-system.md](./session-system.md).
 
 ---
 
