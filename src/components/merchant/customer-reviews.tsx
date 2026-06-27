@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import type { Review, RatingDistribution } from '@/lib/merchant/types';
 import { formatRelativeTime, calculateRatingPercentage } from '@/lib/merchant/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface CustomerReviewsProps {
   reviews: Review[];
@@ -42,17 +43,19 @@ function RatingBar({
   stars,
   count,
   totalReviews,
+  t,
 }: {
   stars: number;
   count: number;
   totalReviews: number;
+  t: (key: string) => string;
 }) {
   const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
 
   return (
     <div className="flex items-center gap-2">
       <span className="w-16 text-sm font-medium">
-        {stars} {stars === 1 ? 'star' : 'stars'}
+        {stars} {stars === 1 ? t('seller.reviews.star') : t('seller.reviews.stars')}
       </span>
       <Progress value={percentage} className="h-2 flex-1" />
       <span className="w-12 text-right text-sm text-muted-foreground">
@@ -62,7 +65,7 @@ function RatingBar({
   );
 }
 
-function ReviewCard({ review }: { review: Review }) {
+function ReviewCard({ review, t }: { review: Review; t: (key: string) => string }) {
   return (
     <div className="space-y-3 p-4 sm:p-5 transition-colors hover:bg-muted/30">
       <div className="flex items-start gap-3">
@@ -85,7 +88,7 @@ function ReviewCard({ review }: { review: Review }) {
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Purchased: {review.productName}
+            {t('seller.reviews.purchased')}: {review.productName}
           </p>
         </div>
       </div>
@@ -95,7 +98,7 @@ function ReviewCard({ review }: { review: Review }) {
       <div className="flex items-center gap-4 pl-0 sm:pl-13">
         <Button variant="ghost" size="sm" className="gap-1.5 h-8 text-muted-foreground">
           <ThumbsUp className="h-3.5 w-3.5" />
-          <span className="text-xs">Helpful ({review.helpful})</span>
+          <span className="text-xs">{t('seller.reviews.helpful')} ({review.helpful})</span>
         </Button>
       </div>
     </div>
@@ -109,6 +112,8 @@ export function CustomerReviews({
   totalReviews,
   className,
 }: CustomerReviewsProps) {
+  const { t } = useTranslation();
+
   return (
     <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -116,10 +121,10 @@ export function CustomerReviews({
           <div className="gova-ring-error p-2">
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </div>
-          <CardTitle className="text-lg">Customer Reviews</CardTitle>
+          <CardTitle className="text-lg">{t('seller.reviews.title')}</CardTitle>
         </div>
         <Button variant="ghost" size="sm" className="gap-1 text-sm">
-          View All
+          {t('seller.reviews.viewAll')}
           <ChevronRight className="h-4 w-4" />
         </Button>
       </CardHeader>
@@ -132,7 +137,7 @@ export function CustomerReviews({
             <span className="text-5xl font-bold">{averageRating.toFixed(1)}</span>
             <StarRating rating={Math.round(averageRating)} size="lg" />
             <span className="text-sm text-muted-foreground">
-              Based on {totalReviews.toLocaleString()} reviews
+              {t('seller.reviews.basedOn')} {totalReviews.toLocaleString()} {t('seller.reviews.reviews')}
             </span>
           </div>
 
@@ -156,6 +161,7 @@ export function CustomerReviews({
                   ]
                 }
                 totalReviews={totalReviews}
+                t={t}
               />
             ))}
           </div>
@@ -166,7 +172,7 @@ export function CustomerReviews({
         {/* Recent Reviews */}
         <div className="divide-y">
           {reviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
+            <ReviewCard key={review.id} review={review} t={t} />
           ))}
         </div>
       </CardContent>

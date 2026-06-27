@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/lib/merchant/types';
 import { formatCurrency, getStockStatusColor } from '@/lib/merchant/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface BestSellingProductsProps {
   products: Product[];
@@ -15,12 +16,14 @@ interface BestSellingProductsProps {
 }
 
 export function BestSellingProducts({ products, className }: BestSellingProductsProps) {
+  const { t } = useTranslation();
+
   return (
     <section className={cn('', className)}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold tracking-tight">Best Selling Products</h2>
+        <h2 className="text-xl font-semibold tracking-tight">{t('seller.products.title')}</h2>
         <Button variant="ghost" size="sm" className="gap-1 text-sm">
-          View All
+          {t('seller.products.viewAll')}
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
@@ -43,7 +46,7 @@ export function BestSellingProducts({ products, className }: BestSellingProducts
                   {Math.round(
                     ((product.originalPrice - product.price) / product.originalPrice) * 100
                   )}
-                  % OFF
+                  {t('seller.products.percentOff')}
                 </Badge>
               )}
               {/* Stock Indicator */}
@@ -59,7 +62,7 @@ export function BestSellingProducts({ products, className }: BestSellingProducts
                     className={cn('mr-1 h-3 w-3', getStockStatusColor(product.stockStatus))}
                   />
                   <span className="capitalize text-xs">
-                    {product.stockStatus.replace('_', ' ')}
+                    {t(`seller.stockStatus.${product.stockStatus}`)}
                   </span>
                 </Badge>
               </div>
@@ -93,7 +96,7 @@ export function BestSellingProducts({ products, className }: BestSellingProducts
                   </span>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {product.salesCount.toLocaleString()} sold
+                  {product.salesCount.toLocaleString()} {t('seller.products.sold')}
                 </div>
               </div>
             </CardContent>

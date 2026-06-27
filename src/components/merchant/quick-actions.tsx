@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { QuickAction as QuickActionType } from '@/lib/merchant/types';
+import { useTranslation } from '@/lib/i18n';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Plus,
@@ -24,10 +25,12 @@ interface QuickActionsProps {
 }
 
 export function QuickActions({ actions, className }: QuickActionsProps) {
+  const { t } = useTranslation();
+
   return (
     <section className={cn('', className)}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold tracking-tight">Quick Actions</h2>
+        <h2 className="text-xl font-semibold tracking-tight">{t('seller.quickActions.title')}</h2>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
         {actions.map((action) => {

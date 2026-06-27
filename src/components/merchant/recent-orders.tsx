@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import type { Order } from '@/lib/merchant/types';
 import { formatCurrency, formatRelativeTime, getOrderStatusColor } from '@/lib/merchant/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface RecentOrdersProps {
   orders: Order[];
@@ -17,6 +18,8 @@ interface RecentOrdersProps {
 }
 
 export function RecentOrders({ orders, className }: RecentOrdersProps) {
+  const { t } = useTranslation();
+
   return (
     <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -24,10 +27,10 @@ export function RecentOrders({ orders, className }: RecentOrdersProps) {
           <div className="gova-merchant-icon-well-secondary">
             <Clock className="h-4 w-4 text-muted-foreground" />
           </div>
-          <CardTitle className="text-lg">Recent Orders</CardTitle>
+          <CardTitle className="text-lg">{t('seller.orders.title')}</CardTitle>
         </div>
         <Button variant="ghost" size="sm" className="gap-1 text-sm">
-          View All
+          {t('seller.orders.viewAll')}
           <ChevronRight className="h-4 w-4" />
         </Button>
       </CardHeader>
@@ -57,7 +60,7 @@ export function RecentOrders({ orders, className }: RecentOrdersProps) {
                     {order.customer.name}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {order.items} item{order.items > 1 ? 's' : ''}
+                    {order.items} {order.items > 1 ? t('seller.orders.items') : t('seller.orders.item')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
@@ -79,7 +82,7 @@ export function RecentOrders({ orders, className }: RecentOrdersProps) {
                   variant="secondary"
                   className={cn('capitalize', getOrderStatusColor(order.status))}
                 >
-                  {order.status}
+                  {t(`seller.orderStatus.${order.status}`)}
                 </Badge>
               </div>
             </div>

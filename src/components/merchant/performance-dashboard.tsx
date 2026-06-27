@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { PerformanceMetrics } from '@/lib/merchant/types';
 import { formatCurrency, getInventoryHealthColor } from '@/lib/merchant/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface PerformanceDashboardProps {
   performance: PerformanceMetrics;
@@ -90,6 +91,7 @@ function MetricCard({
 }
 
 export function PerformanceDashboard({ performance, className }: PerformanceDashboardProps) {
+  const { t } = useTranslation();
   const inventoryHealthPercent =
     performance.inventoryHealth === 'healthy'
       ? 100
@@ -100,15 +102,15 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
   return (
     <section className={cn('', className)}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold tracking-tight">Performance Dashboard</h2>
+        <h2 className="text-xl font-semibold tracking-tight">{t('seller.performance.title')}</h2>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Revenue Today */}
         <MetricCard
-          title="Revenue Today"
+          title={t('seller.performance.revenueToday')}
           value={formatCurrency(performance.revenueToday)}
-          subtitle="Total sales today"
+          subtitle={t('seller.performance.totalSalesToday')}
           trend="up"
           trendValue="+12.5%"
           icon={DollarSign}
@@ -117,9 +119,9 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
 
         {/* Revenue This Month */}
         <MetricCard
-          title="Revenue This Month"
+          title={t('seller.performance.revenueThisMonth')}
           value={formatCurrency(performance.revenueThisMonth)}
-          subtitle="Monthly performance"
+          subtitle={t('seller.performance.monthlyPerformance')}
           trend="up"
           trendValue="+8.3% vs last month"
           icon={TrendingUp}
@@ -128,9 +130,9 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
 
         {/* Orders Today */}
         <MetricCard
-          title="Orders Today"
+          title={t('seller.performance.ordersToday')}
           value={performance.ordersToday}
-          subtitle="New orders"
+          subtitle={t('seller.performance.newOrders')}
           trend="up"
           trendValue="+5"
           icon={ShoppingBag}
@@ -138,9 +140,9 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
 
         {/* Orders This Month */}
         <MetricCard
-          title="Orders This Month"
+          title={t('seller.performance.ordersThisMonth')}
           value={performance.ordersThisMonth}
-          subtitle="Monthly orders"
+          subtitle={t('seller.performance.monthlyOrders')}
           trend="up"
           trendValue="+15.2%"
           icon={Package}
@@ -154,9 +156,9 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Conversion Rate</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('seller.performance.conversionRate')}</p>
                 <p className="text-2xl font-bold tracking-tight">{performance.conversionRate}%</p>
-                <p className="text-xs text-muted-foreground">Visitors to buyers</p>
+                <p className="text-xs text-muted-foreground">{t('seller.performance.visitorsToBuyers')}</p>
               </div>
               <div className="rounded-full bg-merchant-info/10 p-2.5">
                 <Target className="h-5 w-5 text-merchant-info" />
@@ -171,11 +173,11 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Average Order Value</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('seller.performance.averageOrderValue')}</p>
                 <p className="text-2xl font-bold tracking-tight">
                   {formatCurrency(performance.averageOrderValue)}
                 </p>
-                <p className="text-xs text-muted-foreground">Per transaction</p>
+                <p className="text-xs text-muted-foreground">{t('seller.performance.perTransaction')}</p>
               </div>
               <div className="rounded-full bg-merchant-gold/10 p-2.5">
                 <Award className="h-5 w-5 text-merchant-gold" />
@@ -189,11 +191,11 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Best Selling Category</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('seller.performance.bestSellingCategory')}</p>
                 <p className="text-lg font-bold tracking-tight">
                   {performance.bestSellingCategory}
                 </p>
-                <p className="text-xs text-muted-foreground">Top performer this month</p>
+                <p className="text-xs text-muted-foreground">{t('seller.performance.topPerformer')}</p>
               </div>
               <div className="gova-merchant-icon-well-tertiary p-2.5">
                 <Award className="h-5 w-5 text-muted-foreground" />
@@ -207,10 +209,10 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Inventory Health</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('seller.performance.inventoryHealth')}</p>
                 <div className="flex items-center gap-2">
                   <p className="text-2xl font-bold tracking-tight capitalize">
-                    {performance.inventoryHealth.replace('_', ' ')}
+                    {t(`seller.performance.${performance.inventoryHealth.replace('_', '')}`)}
                   </p>
                   {performance.inventoryHealth !== 'healthy' && (
                     <AlertTriangle className="h-5 w-5 text-merchant-warning" />
@@ -221,7 +223,7 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
                 variant={performance.inventoryHealth === 'healthy' ? 'default' : 'destructive'}
                 className="capitalize"
               >
-                {performance.inventoryHealth.replace('_', ' ')}
+                {t(`seller.performance.${performance.inventoryHealth.replace('_', '')}`)}
               </Badge>
             </div>
             <Progress

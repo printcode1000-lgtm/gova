@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { Merchant } from '@/lib/merchant/types';
 import { formatCompactNumber, formatDate, getMerchantStatusColor } from '@/lib/merchant/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface MerchantHeroProps {
   merchant: Merchant;
@@ -15,6 +16,7 @@ interface MerchantHeroProps {
 }
 
 export function MerchantHero({ merchant, className }: MerchantHeroProps) {
+  const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
   return (
@@ -75,7 +77,7 @@ export function MerchantHero({ merchant, className }: MerchantHeroProps) {
                   className="gap-1.5 bg-merchant-gold/10 text-merchant-gold border-merchant-gold/30"
                 >
                   <CheckCircle2 className="h-3.5 w-3.5" />
-                  Verified
+                  {t('seller.hero.verified')}
                 </Badge>
               )}
             </div>
@@ -92,7 +94,7 @@ export function MerchantHero({ merchant, className }: MerchantHeroProps) {
               </div>
               <div className="flex items-center gap-1.5">
                 <Calendar className="h-4 w-4" />
-                <span>Joined {formatDate(merchant.joinedDate)}</span>
+                <span>{t('seller.hero.joined')} {formatDate(merchant.joinedDate)}</span>
               </div>
             </div>
 
@@ -103,13 +105,13 @@ export function MerchantHero({ merchant, className }: MerchantHeroProps) {
                 <span className="font-semibold">
                   {formatCompactNumber(merchant.social.followers)}
                 </span>
-                <span className="text-sm text-muted-foreground">followers</span>
+                <span className="text-sm text-muted-foreground">{t('seller.hero.followers')}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="font-semibold">
                   {formatCompactNumber(merchant.social.following)}
                 </span>
-                <span className="text-sm text-muted-foreground">following</span>
+                <span className="text-sm text-muted-foreground">{t('seller.hero.following')}</span>
               </div>
             </div>
           </div>
@@ -118,10 +120,10 @@ export function MerchantHero({ merchant, className }: MerchantHeroProps) {
           <div className="flex gap-3 pb-4">
             <Button size="lg" className="gap-2">
               <Users className="h-4 w-4" />
-              Follow
+              {t('seller.hero.follow')}
             </Button>
             <Button variant="outline" size="lg">
-              Message
+              {t('seller.hero.message')}
             </Button>
           </div>
         </div>

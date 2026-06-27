@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { Collection } from '@/lib/merchant/types';
+import { useTranslation } from '@/lib/i18n';
 
 interface FeaturedCollectionsProps {
   collections: Collection[];
@@ -20,12 +21,14 @@ const typeColors: Record<string, string> = {
 };
 
 export function FeaturedCollections({ collections, className }: FeaturedCollectionsProps) {
+  const { t } = useTranslation();
+
   return (
     <section className={cn('', className)}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold tracking-tight">Featured Collections</h2>
+        <h2 className="text-xl font-semibold tracking-tight">{t('seller.collections.title')}</h2>
         <Button variant="ghost" size="sm" className="gap-1 text-sm">
-          View All
+          {t('seller.collections.viewAll')}
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
@@ -50,7 +53,7 @@ export function FeaturedCollections({ collections, className }: FeaturedCollecti
                   typeColors[collection.type]
                 )}
               >
-                {collection.type}
+                {t(`seller.collectionType.${collection.type}`)}
               </Badge>
               <div className="absolute bottom-3 left-3 right-3">
                 <h3 className="font-semibold text-lg text-foreground">
@@ -58,7 +61,7 @@ export function FeaturedCollections({ collections, className }: FeaturedCollecti
                 </h3>
                 <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                   <Package className="h-4 w-4" />
-                  <span>{collection.itemCount} items</span>
+                  <span>{collection.itemCount} {t('seller.collections.items')}</span>
                 </div>
               </div>
             </div>

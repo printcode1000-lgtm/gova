@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import type { StoreInformation as StoreInformationType } from '@/lib/merchant/types';
+import { useTranslation } from '@/lib/i18n';
 
 interface StoreInformationProps {
   store: StoreInformationType;
@@ -15,6 +16,7 @@ interface StoreInformationProps {
 }
 
 export function StoreInformation({ store, className }: StoreInformationProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = React.useState(false);
   const MAX_PREVIEW_LENGTH = 150;
   const shouldTruncate = store.about.length > MAX_PREVIEW_LENGTH;
@@ -30,15 +32,15 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
             <Store className="h-5 w-5 text-muted-foreground" />
           </div>
           <div>
-            <CardTitle className="text-lg">Store Information</CardTitle>
-            <CardDescription>About this merchant</CardDescription>
+            <CardTitle className="text-lg">{t('seller.store.title')}</CardTitle>
+            <CardDescription>{t('seller.store.aboutMerchant')}</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* About Section */}
         <div className="space-y-2">
-          <h4 className="font-medium text-sm text-muted-foreground">About</h4>
+          <h4 className="font-medium text-sm text-muted-foreground">{t('seller.store.about')}</h4>
           <p className="text-sm leading-relaxed">{displayAbout}</p>
           {shouldTruncate && (
             <Button
@@ -49,11 +51,11 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
             >
               {expanded ? (
                 <>
-                  Show less <ChevronUp className="h-4 w-4" />
+                  {t('seller.store.showLess')} <ChevronUp className="h-4 w-4" />
                 </>
               ) : (
                 <>
-                  Show more <ChevronDown className="h-4 w-4" />
+                  {t('seller.store.showMore')} <ChevronDown className="h-4 w-4" />
                 </>
               )}
             </Button>
@@ -64,7 +66,7 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
 
         {/* Categories */}
         <div className="space-y-3">
-          <h4 className="font-medium text-sm text-muted-foreground">Categories</h4>
+          <h4 className="font-medium text-sm text-muted-foreground">{t('seller.store.categories')}</h4>
           <div className="flex flex-wrap gap-2">
             {store.categories.map((category) => (
               <Badge key={category} variant="secondary" className="font-normal">
@@ -81,7 +83,7 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Truck className="h-4 w-4 text-muted-foreground" />
-              <h4 className="font-medium text-sm">Shipping Coverage</h4>
+              <h4 className="font-medium text-sm">{t('seller.store.shippingCoverage')}</h4>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {store.shippingCoverage.slice(0, 4).map((country) => (
@@ -91,7 +93,7 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
               ))}
               {store.shippingCoverage.length > 4 && (
                 <Badge variant="outline" className="font-normal text-xs">
-                  +{store.shippingCoverage.length - 4} more
+                  +{store.shippingCoverage.length - 4} {t('seller.store.more')}
                 </Badge>
               )}
             </div>
@@ -100,7 +102,7 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <RefreshCw className="h-4 w-4 text-muted-foreground" />
-              <h4 className="font-medium text-sm">Return Policy</h4>
+              <h4 className="font-medium text-sm">{t('seller.store.returnPolicy')}</h4>
             </div>
             <p className="text-sm text-muted-foreground">{store.returnPolicy}</p>
           </div>
@@ -112,7 +114,7 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-merchant-gold" />
-            <h4 className="font-medium text-sm">Store Specialties</h4>
+            <h4 className="font-medium text-sm">{t('seller.store.specialties')}</h4>
           </div>
           <div className="flex flex-wrap gap-2">
             {store.specialties.map((specialty) => (

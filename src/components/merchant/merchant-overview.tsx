@@ -6,23 +6,27 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { MerchantOverview as MerchantOverviewType } from '@/lib/merchant/types';
 import { formatCurrency, formatCompactNumber } from '@/lib/merchant/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface MerchantOverviewProps {
   overview: MerchantOverviewType;
   className?: string;
 }
 
-const overviewCards = [
-  { key: 'productsCount', label: 'Products', icon: Package, format: 'number' },
-  { key: 'ordersCount', label: 'Orders', icon: ShoppingBag, format: 'number' },
-  { key: 'customersCount', label: 'Customers', icon: Users, format: 'number' },
-  { key: 'rating', label: 'Rating', icon: Star, format: 'rating' },
-  { key: 'revenue', label: 'Revenue', icon: DollarSign, format: 'currency' },
-  { key: 'completionRate', label: 'Completion Rate', icon: TrendingUp, format: 'percentage' },
-  { key: 'responseRate', label: 'Response Rate', icon: MessageCircle, format: 'percentage' },
+const getOverviewCards = (t: (key: string) => string) => [
+  { key: 'productsCount', label: t('seller.overview.products'), icon: Package, format: 'number' },
+  { key: 'ordersCount', label: t('seller.overview.orders'), icon: ShoppingBag, format: 'number' },
+  { key: 'customersCount', label: t('seller.overview.customers'), icon: Users, format: 'number' },
+  { key: 'rating', label: t('seller.overview.rating'), icon: Star, format: 'rating' },
+  { key: 'revenue', label: t('seller.overview.revenue'), icon: DollarSign, format: 'currency' },
+  { key: 'completionRate', label: t('seller.overview.completionRate'), icon: TrendingUp, format: 'percentage' },
+  { key: 'responseRate', label: t('seller.overview.responseRate'), icon: MessageCircle, format: 'percentage' },
 ] as const;
 
 export function MerchantOverview({ overview, className }: MerchantOverviewProps) {
+  const { t } = useTranslation();
+  const overviewCards = getOverviewCards(t);
+
   return (
     <section className={cn('', className)}>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">

@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { TrustCredential, Achievement, SellerBadge } from '@/lib/merchant/types';
 import { getAchievementRarityColor } from '@/lib/merchant/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface TrustCredibilityProps {
   credentials: TrustCredential[];
@@ -42,6 +43,8 @@ export function TrustCredibility({
   badges,
   className,
 }: TrustCredibilityProps) {
+  const { t } = useTranslation();
+
   return (
     <Card className={cn('overflow-hidden', className)}>
       <CardHeader>
@@ -50,8 +53,8 @@ export function TrustCredibility({
             <Award className="h-5 w-5 text-merchant-gold" />
           </div>
           <div>
-            <CardTitle className="text-lg">Trust & Credibility</CardTitle>
-            <CardDescription>Why shop with us</CardDescription>
+            <CardTitle className="text-lg">{t('seller.trust.title')}</CardTitle>
+            <CardDescription>{t('seller.trust.whyShopWithUs')}</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -82,7 +85,7 @@ export function TrustCredibility({
 
         {/* Achievements */}
         <div className="space-y-3">
-          <h4 className="font-medium text-sm text-muted-foreground">Achievements</h4>
+          <h4 className="font-medium text-sm text-muted-foreground">{t('seller.trust.achievements')}</h4>
           <div className="flex flex-wrap gap-2">
             {achievements.map((achievement) => {
               const IconComponent = achievementIcons[achievement.icon] || Trophy;
@@ -105,7 +108,7 @@ export function TrustCredibility({
 
         {/* Seller Badges */}
         <div className="space-y-3">
-          <h4 className="font-medium text-sm text-muted-foreground">Seller Badges</h4>
+          <h4 className="font-medium text-sm text-muted-foreground">{t('seller.trust.sellerBadges')}</h4>
           <div className="flex flex-wrap gap-2">
             {badges.filter((b) => b.earned).map((badge) => {
               const IconComponent = badgeIcons[badge.icon] || Crown;
@@ -120,7 +123,7 @@ export function TrustCredibility({
               );
             })}
             {badges.filter((b) => b.earned).length === 0 && (
-              <span className="text-sm text-muted-foreground">No badges earned yet</span>
+              <span className="text-sm text-muted-foreground">{t('seller.trust.noBadgesYet')}</span>
             )}
           </div>
         </div>
