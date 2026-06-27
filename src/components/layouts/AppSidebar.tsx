@@ -6,8 +6,7 @@ import { useEffect, useRef } from 'react';
 
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
-import { useSession } from '@/features/auth/hooks/use-session-query';
-import { formatSessionPhone } from '@/features/auth/entities/session.entity';
+import { useSession } from '@/features/auth/components/SessionProvider';
 import { useLogout } from '@/features/auth/hooks/use-logout';
 
 interface AppSidebarProps {
@@ -18,7 +17,7 @@ interface AppSidebarProps {
 export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { t, isRTL } = useTranslation();
-  const { session, isAuthenticated } = useSession();
+  const { isLoggedIn } = useSession();
   const logout = useLogout();
 
   useEffect(() => {
@@ -83,27 +82,8 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
         </div>
 
         <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 pt-2">
-          {isAuthenticated ? (
+          {isLoggedIn ? (
             <>
-              <div className="gova-control w-full flex items-center gap-3 rounded-lg px-3 py-3 text-sm gova-surface-neutral">
-                <User className="w-5 h-5 shrink-0 text-primary" aria-hidden="true" />
-                <div className="min-w-0 text-start space-y-0.5">
-                  <p className="font-semibold text-on-surface truncate">
-                    {session?.displayName || session?.phone || t('nav.profile')}
-                  </p>
-                  {session?.phone ? (
-                    <p className="text-xs text-on-surface-variant truncate" dir="ltr">
-                      {formatSessionPhone(session.phone)}
-                    </p>
-                  ) : null}
-                  {session?.email ? (
-                    <p className="text-xs text-on-surface-variant truncate" dir="ltr">
-                      {session.email}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-
               <button
                 type="button"
                 onClick={handleLogout}

@@ -5,7 +5,6 @@ import type { CreateUserCommand } from '../operations/commands/create-user.comma
 import type { UpdateLastLoginCommand } from '../operations/commands/update-last-login.command';
 import type { UpdateUserProfileCommand } from '../operations/commands/update-user-profile.command';
 import type { GetUserByPhoneQuery } from '../operations/queries/get-user-by-phone.query';
-import type { GetUserByUidQuery } from '../operations/queries/get-user-by-uid.query';
 import type { UpdateProfileInput, UserProfile } from '../entities/profile.entity';
 import type { IAuthService, LoginResult } from './auth-service.interface';
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
@@ -18,16 +17,11 @@ async function hashPassword(password: string): Promise<string> {
   return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-function generateToken(): string {
-  return `token_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-}
-
 export class AuthService implements IAuthService {
   constructor(
     private createUserCommand: CreateUserCommand,
     private updateLastLoginCommand: UpdateLastLoginCommand,
     private getUserByPhoneQuery: GetUserByPhoneQuery,
-    private getUserByUidQuery: GetUserByUidQuery,
     private updateUserProfileCommand: UpdateUserProfileCommand,
   ) {}
 
@@ -63,26 +57,12 @@ export class AuthService implements IAuthService {
         throw new Error('invalidPassword');
       }
 
-      const token = generateToken();
       await this.updateLastLoginCommand.execute(user.uid);
 
       return {
-        token,
         uid: user.uid,
         phone: user.phone,
         email: user.email ?? '',
-      };
-    });
-  }
-
-  async getProfile(uid: string): Promise<UserProfile> {
-    return traceServerLayer('server-service', 'AuthService.getProfile', async () => {
-      const user = await this.getUserByUidQuery.execute(uid);
-      if (!user) throw new Error('userNotFound');
-      return {
-        uid: user.uid,
-        phone: user.phone,
-        email: user.email ?? null,
       };
     });
   }
@@ -97,9 +77,5 @@ export class AuthService implements IAuthService {
     return traceServerLayer('server-service', 'AuthService.logout', async () => {
       // Session is client-side (IndexedDB). Server has no session state to clear.
     });
-  }
-
-  async isAuthenticated(): Promise<boolean> {
-    return false;
   }
 }

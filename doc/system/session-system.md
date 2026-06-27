@@ -1,63 +1,58 @@
 # Session System
 
-Client authentication state in GOVA is simple:
+Client login state in GOVA is minimal:
 
-- **Logged in** → `AuthSession` in Gova IndexedDB (`auth` store, key `current`)
-- **Guest** → no record in IndexedDB (`null`)
-- **React Query** caches the result for UI only — IndexedDB is the source of truth
+- **Logged in** → `UserSession` in Gova IndexedDB (`auth` store, key `current`)
+- **Not logged in** → no row in `auth/current` (`null`)
+- **Guest browsing** → separate `guestSessions` store via `useGuestSession()` (“متابعة كضيف”)
 
-See [data-architecture-guide.md](./data-architecture-guide.md) for the full layer architecture.
+**No token anywhere** — not in IDB, not in API responses, not in client code.
+
+See [data-architecture-guide.md](./data-architecture-guide.md) for full layer architecture.
 
 ---
 
 ## Model
 
+```typescript
+interface UserSession {
+  uid: string;
+  phone: string;
+  email?: string;  // only when present
+}
+
+type SessionState = UserSession | null;  // null = not logged in
+
+function isLoggedIn(session: SessionState): boolean {
+  return session !== null && !!session.uid;
+}
 ```
-Login / Register  →  token + uid
-        ↓
-sessionService.startSession()   →  write auth/current
-        ↓
-sessionService.restoreSession() →  read auth/current (or null)
-        ↓
-useSession()                    →  React Query cache
-        ↓
-UI (AppSidebar, …)
+
+---
+
+## Flow
+
+```
+Login / Register
+  → authService.login()           // returns { uid, phone, email }
+  → sessionService.saveSession()  // writes auth/current in IDB
+  → setSession()                  // React context (SessionProvider)
+
+Logout
+  → sessionService.clearSession() // deletes auth/current
+  → setSession(null)
+
+App load
+  → SessionProvider.cleanLegacyStore() + getSession()
 ```
 
 | Layer | Responsibility |
 |---|---|
-| `SessionApiService` | Only code that reads/writes session in IndexedDB |
-| `AuthApiService` | HTTP login/register only (no session persistence) |
-| `useLogin` / `useRegister` | API + `startSession()` + `setSessionCache()` |
-| `useLogout` | `clearSession()` + `setSessionCache(null)` — **no server call** |
-| `useSession()` | `session`, `isAuthenticated`, `isGuest` |
-
-There is **no server session**. Server `POST /api/auth/logout` exists but is a no-op; logout is entirely client-side.
-
----
-
-## `AuthSession`
-
-**File:** `src/features/auth/entities/session.entity.ts`
-
-| Field | Type | Description |
-|---|---|---|
-| `token` | `string` | Token from login API |
-| `uid` | `string` | User id |
-| `phone` | `string` | Phone number |
-| `email` | `string` | Email address |
-| `displayName` | `string` | Shown in sidebar (defaults to email or phone) |
-| `loginAt` | `string` | ISO timestamp |
-
-```typescript
-type SessionState = AuthSession | null;  // null = guest
-
-function isAuthenticated(session: SessionState): boolean {
-  return session !== null && !!session.token;
-}
-```
-
-Guest users have **no row** in IndexedDB. Do not write a guest object to IDB.
+| `SessionApiService` | Only code that reads/writes `auth/current` |
+| `SessionProvider` | Loads IDB on mount; exposes `useSession()` |
+| `useLogin` / `useRegister` | API + `saveSession()` + `setSession()` |
+| `useLogout` | `clearSession()` + `setSession(null)` |
+| `useGuestSession` | Separate guest browsing id (`guestSessions` store) |
 
 ---
 
@@ -65,144 +60,59 @@ Guest users have **no row** in IndexedDB. Do not write a guest object to IDB.
 
 | Store | Key | Value |
 |---|---|---|
-| `auth` | `current` | `AuthSession` when logged in |
-| `auth` | `auth` | Legacy `{ authToken }` — migrated once, then deleted |
+| `auth` | `current` | `{ uid, phone, email? }` when logged in |
+| `guestSessions` | `current` | Guest browsing id (unrelated to login) |
 
-Helpers (used **only** inside `SessionApiService`):
+On first load, `cleanLegacyStore()`:
 
-- `govaDbGetCurrentSession()` / `govaDbSetCurrentSession()` / `govaDbDeleteCurrentSession()`
-- `govaDbDeleteAuthLegacy()` — removes legacy `auth` key
-
-**Separate:** anonymous “continue as guest” uses `guestSessions` store via `useGuestSession()` — unrelated to auth sessions.
+- Deletes legacy `auth` key (`authToken`)
+- Removes `auth/current` rows that lack `uid` or contain old fields (`token`, `displayName`, …)
+- Normalizes valid rows to `{ uid, phone, email? }` only
 
 ---
 
 ## Session Service API
 
 **File:** `src/features/auth/services/session-api-service.ts`  
-**Export:** `sessionService` from `session-service.ts`
+**Export:** `sessionService`
 
-| Method | Returns | Effect |
-|---|---|---|
-| `restoreSession()` | `AuthSession \| null` | Read IDB; migrate legacy token if needed |
-| `getCurrentSession()` | `AuthSession \| null` | Same as restore |
-| `startSession(input)` | `AuthSession` | Write `auth/current` |
-| `updateSession(patch)` | `AuthSession \| null` | Update displayName/phone when logged in |
-| `clearSession()` | `null` | Delete `auth/current` + legacy `auth` key |
+| Method | Effect |
+|---|---|
+| `cleanLegacyStore()` | One-time cleanup + normalize on app start |
+| `getSession()` | Read `auth/current` → `UserSession \| null` |
+| `saveSession({ uid, phone, email? })` | Write `auth/current` |
+| `clearSession()` | Delete `auth/current` |
 
 ---
 
-## Hooks
+## `useSession()`
 
-### `useSession()`
+**File:** `src/features/auth/components/SessionProvider.tsx`
 
 ```tsx
-const { session, isAuthenticated, isGuest, isLoading } = useSession();
+const { session, isLoggedIn, isGuest, isLoading, setSession, refreshSession } = useSession();
 ```
 
-- `session` — `AuthSession | null`
-- `isAuthenticated` — `!!session?.token`
-- `isLoading` — first IDB read not finished yet
-
-### `useSessionQuery()`
-
-Low-level React Query wrapper. Mounted in `SessionRestore` (inside `AppShell`) so session is restored on every app load.
-
-### Cache sync after mutations
-
-**File:** `src/features/auth/hooks/session-cache.ts`
-
-```typescript
-setSessionCache(queryClient, session);  // AuthSession after login
-setSessionCache(queryClient, null);     // after logout
-```
-
-Always call this in `onSuccess` of login/register/logout. Do not rely on `invalidateQueries` alone.
-
-### React Query settings
-
-| Setting | Value |
-|---|---|
-| `staleTime` | `Infinity` — session changes only via `setSessionCache` or first mount |
-| Persisted to RQ cache | **No** — `current_session` and `user_profile` excluded; only `success` queries persisted |
-| Legacy RQ rows on restore | Stripped in `AppQueryProvider` (old builds could freeze UI) |
+Mounted in root `layout.tsx` inside `AppQueryProvider`.
 
 ---
 
-## User flows
+## Login API
 
-### Login
+`POST /api/auth/login` returns:
 
-```
-useLogin()
-  → authService.login()
-  → sessionService.startSession()
-  → endGuestSession()
-  → setSessionCache(session)
+```json
+{ "uid": "...", "phone": "...", "email": "..." }
 ```
 
-### Register
-
-```
-useRegister()
-  → authService.register()
-  → authService.login()
-  → sessionService.startSession()
-  → setSessionCache(session)
-```
-
-### Logout
-
-```
-useLogout()
-  → sessionService.clearSession()   // IDB only
-  → setSessionCache(null)
-```
-
-### Profile (phone / email / password)
-
-```
-Profile page → useProfileRegistration()
-  → authService.getProfile(uid)        // server
-  → authService.updateProfile(...)     // server
-  → sessionService.updateSession()     // IDB + setSessionCache
-```
-
-Save button appears in the registration info card only when the form is dirty.
-
-No HTTP request for logout. Profile updates use `PUT /api/auth/profile`.
-
-### App reload
-
-```
-AppShell → SessionRestore → useSessionQuery()
-  → sessionService.restoreSession()
-  → null (guest) or AuthSession
-```
+No `token` field.
 
 ---
 
-## Sidebar UI
+## Profile
 
-**File:** `src/components/layouts/AppSidebar.tsx`
-
-| State | Items |
-|---|---|
-| Guest | Login, Settings |
-| Authenticated | User info, Logout, Profile, Settings |
-
-Profile link is **not** in the bottom nav — sidebar only, when authenticated.
-
----
-
-## Rules
-
-| Do | Don't |
-|---|---|
-| Use `useSession()` in UI | Read IndexedDB from hooks/components |
-| Use `setSessionCache()` after session mutations | Use `invalidateQueries` without `setSessionCache` |
-| Use `useLogout()` for logout | Call `authService.logout()` before clearing (unnecessary HTTP) |
-| Use `sessionService` from hooks | Store tokens in `localStorage` or Zustand as SSOT |
+Profile page reads **from IDB session only** (`useSession()`).  
+Saving profile updates server (`PUT /api/auth/profile`) and rewrites IDB via `saveSession()`.
 
 ---
 
@@ -210,27 +120,30 @@ Profile link is **not** in the bottom nav — sidebar only, when authenticated.
 
 ```
 src/features/auth/
-├── entities/session.entity.ts      # AuthSession, isAuthenticated, normalizeStoredSession
-├── services/
-│   ├── session-api-service.ts      # IDB owner
-│   └── session-service.ts
-├── hooks/
-│   ├── session-cache.ts            # setSessionCache
-│   ├── use-session-query.ts        # useSession, useSessionQuery
-│   ├── use-login.ts
-│   ├── use-register.ts
-│   └── use-logout.ts
-└── components/SessionRestore.tsx
+├── entities/session.entity.ts       # UserSession, isLoggedIn, parseStoredSession
+├── services/session-api-service.ts  # IDB owner
+├── services/session-service.ts
+├── components/SessionProvider.tsx   # useSession()
+└── hooks/
+    ├── use-login.ts
+    ├── use-register.ts
+    ├── use-logout.ts
+    └── use-profile-registration.ts
 
-src/core/providers/query-provider.tsx   # Excludes current_session from RQ persist
-src/components/layouts/AppSidebar.tsx
+src/hooks/use-guest-session.ts       # guestSessions (separate)
+src/lib/gova-db/index.ts             # low-level IDB helpers
 ```
 
 ---
 
-## Platform notes
+## Rules
 
-Session logic is identical on dev, Vercel, static export, GitHub Pages, and Capacitor — browser/WebView IndexedDB only. No Capacitor plugins required.
+| Do | Don't |
+|---|---|
+| Use `useSession()` in UI | Read IDB from components directly |
+| Use `sessionService` from hooks | Store session in React Query or localStorage |
+| Use `useLogout()` for logout | Call HTTP logout before clearing IDB |
+| Keep guest browsing in `useGuestSession` | Mix guest id into `auth/current` |
 
 ---
 

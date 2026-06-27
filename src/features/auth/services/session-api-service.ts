@@ -1,84 +1,56 @@
 import {
   govaDbDeleteAuthLegacy,
   govaDbDeleteCurrentSession,
-  govaDbGetAuth,
   govaDbGetCurrentSession,
   govaDbSetCurrentSession,
 } from '@/lib/gova-db';
 import {
-  normalizeStoredSession,
-  type AuthSession,
-  type StartSessionInput,
+  parseStoredSession,
+  type SaveSessionInput,
+  type UserSession,
 } from '../entities/session.entity';
 import type { ISessionService } from './session-service.interface';
 
-function createSession(input: StartSessionInput): AuthSession {
-  const email = input.email?.trim() ?? '';
-  return {
-    token: input.token,
-    uid: input.uid,
-    phone: input.phone,
-    email,
-    displayName: input.displayName?.trim() || email || input.phone,
-    loginAt: new Date().toISOString(),
-  };
+function toStoredSession(input: SaveSessionInput): UserSession {
+  const email = input.email?.trim();
+  return email ? { uid: input.uid, phone: input.phone, email } : { uid: input.uid, phone: input.phone };
 }
 
 /**
- * Client-side session adapter — sole owner of session IndexedDB reads/writes.
- * Guest = no record in IDB (null). Authenticated = AuthSession under auth/current.
+ * Client-side session adapter — sole owner of user session IndexedDB reads/writes.
+ * Stores uid + phone + optional email only.
  */
 export class SessionApiService implements ISessionService {
-  private async readStoredSession(): Promise<AuthSession | null> {
-    const stored = normalizeStoredSession(await govaDbGetCurrentSession<unknown>());
-    if (stored) return stored;
-
-    const legacy = await govaDbGetAuth();
-    if (!legacy.authToken) return null;
-
-    const migrated = normalizeStoredSession({
-      status: 'authenticated',
-      token: legacy.authToken,
-      uid: '',
-      loginAt: new Date().toISOString(),
-    });
-    if (!migrated) return null;
-
-    await govaDbSetCurrentSession(migrated);
+  async cleanLegacyStore(): Promise<void> {
     await govaDbDeleteAuthLegacy();
-    return migrated;
+
+    const raw = await govaDbGetCurrentSession<unknown>();
+    if (!raw) return;
+
+    const parsed = parseStoredSession(raw);
+    if (!parsed) {
+      await govaDbDeleteCurrentSession();
+      return;
+    }
+
+    const normalized = toStoredSession(parsed);
+    await govaDbSetCurrentSession(normalized);
   }
 
-  async restoreSession(): Promise<AuthSession | null> {
-    return this.readStoredSession();
+  async getSession(): Promise<UserSession | null> {
+    return parseStoredSession(await govaDbGetCurrentSession<unknown>());
   }
 
-  async getCurrentSession(): Promise<AuthSession | null> {
-    return this.readStoredSession();
-  }
-
-  async startSession(input: StartSessionInput): Promise<AuthSession> {
-    const session = createSession(input);
+  async saveSession(input: SaveSessionInput): Promise<UserSession> {
+    const session = toStoredSession(input);
     await govaDbSetCurrentSession(session);
     await govaDbDeleteAuthLegacy();
     return session;
   }
 
-  async updateSession(
-    patch: Partial<Pick<AuthSession, 'displayName' | 'phone' | 'email'>>,
-  ): Promise<AuthSession | null> {
-    const current = await this.readStoredSession();
-    if (!current) return null;
-
-    const updated: AuthSession = { ...current, ...patch };
-    await govaDbSetCurrentSession(updated);
-    return updated;
-  }
-
-  async clearSession(): Promise<null> {
+  async clearSession(): Promise<void> {
     await govaDbDeleteCurrentSession();
     await govaDbDeleteAuthLegacy();
-    return null;
   }
 }
 

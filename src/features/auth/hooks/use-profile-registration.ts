@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import {
@@ -9,35 +9,23 @@ import {
   toProfileFormData,
   type ProfileFormData,
 } from '@/lib/validation/profile';
+import { useSession } from '@/features/auth/components/SessionProvider';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
-import { useSession } from './use-session-query';
-import { setSessionCache } from './session-cache';
 import { authMonitorMeta } from './auth-monitor-meta';
-
-export const USER_PROFILE_QUERY_KEY = ['user_profile'] as const;
 
 export function useProfileRegistration() {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
-  const { session, isAuthenticated } = useSession();
+  const { session, setSession } = useSession();
   const uid = session?.uid ?? '';
-
-  const profileQuery = useQuery({
-    queryKey: [...USER_PROFILE_QUERY_KEY, uid],
-    queryFn: () => authService.getProfile(uid),
-    enabled: isAuthenticated && !!uid,
-    staleTime: 60_000,
-    meta: authMonitorMeta('useProfileRegistration', 'ProfilePage', 'GetProfile', 'SELECT'),
-  });
 
   const initialForm = useMemo(
     () =>
       toProfileFormData({
-        phone: profileQuery.data?.phone ?? session?.phone,
-        email: profileQuery.data?.email ?? session?.email,
+        phone: session?.phone,
+        email: session?.email,
       }),
-    [profileQuery.data, session?.phone, session?.email],
+    [session?.phone, session?.email],
   );
 
   const [form, setForm] = useState<ProfileFormData>(initialForm);
@@ -74,15 +62,12 @@ export function useProfileRegistration() {
     },
     meta: authMonitorMeta('useProfileRegistration', 'ProfilePage', 'UpdateProfile', 'UPDATE'),
     onSuccess: async (profile) => {
-      const updatedSession = await sessionService.updateSession({
+      const updatedSession = await sessionService.saveSession({
+        uid,
         phone: profile.phone,
-        email: profile.email ?? '',
-        displayName: profile.email || profile.phone,
+        email: profile.email ?? undefined,
       });
-      if (updatedSession) {
-        setSessionCache(queryClient, updatedSession);
-      }
-      queryClient.setQueryData([...USER_PROFILE_QUERY_KEY, uid], profile);
+      setSession(updatedSession);
       const reset = toProfileFormData(profile);
       setForm(reset);
       setBaseline(reset);
@@ -119,7 +104,7 @@ export function useProfileRegistration() {
     updateField,
     fieldErrors,
     isDirty,
-    isLoading: profileQuery.isPending && !profileQuery.data,
+    isLoading: !session,
     isSaving: saveMutation.isPending,
     error,
     save,

@@ -1,11 +1,9 @@
-import type { AuthSession, StartSessionInput } from '../entities/session.entity';
+import type { SaveSessionInput, UserSession } from '../entities/session.entity';
 
 export interface ISessionService {
-  restoreSession(): Promise<AuthSession | null>;
-  startSession(input: StartSessionInput): Promise<AuthSession>;
-  getCurrentSession(): Promise<AuthSession | null>;
-  updateSession(
-    patch: Partial<Pick<AuthSession, 'displayName' | 'phone' | 'email'>>,
-  ): Promise<AuthSession | null>;
-  clearSession(): Promise<null>;
+  /** Remove legacy auth rows and normalize stored session shape. */
+  cleanLegacyStore(): Promise<void>;
+  getSession(): Promise<UserSession | null>;
+  saveSession(input: SaveSessionInput): Promise<UserSession>;
+  clearSession(): Promise<void>;
 }

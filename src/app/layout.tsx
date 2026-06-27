@@ -6,6 +6,7 @@ import { THEME_COLOR_LIGHT } from "@/theme/runtime";
 import { PreferencesProvider } from "@/lib/preferences";
 import { ShellLayout } from "@/components/layouts/ShellLayout";
 import { AppQueryProvider } from "@/core/providers/query-provider";
+import { SessionProvider } from "@/features/auth/components/SessionProvider";
 import dynamic from "next/dynamic";
 
 import { isDevelopment, withBasePath } from "@/core/config";
@@ -36,10 +37,12 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <AppQueryProvider>
-          <PreferencesProvider>
-            <ShellLayout>{children}</ShellLayout>
-            <DeveloperBadge />
-          </PreferencesProvider>
+          <SessionProvider>
+            <PreferencesProvider>
+              <ShellLayout>{children}</ShellLayout>
+              <DeveloperBadge />
+            </PreferencesProvider>
+          </SessionProvider>
         </AppQueryProvider>
       </body>
     </html>

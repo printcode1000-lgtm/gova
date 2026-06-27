@@ -3,20 +3,20 @@
 import { useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from '@/lib/i18n';
 import { createRegistrationSchema, type RegistrationFormData } from '@/lib/validation/auth';
 import { useGuestSession } from '@/hooks/use-guest-session';
+import { useSession } from '@/features/auth/components/SessionProvider';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
-import { setSessionCache } from './session-cache';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 
 export function useRegister() {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const { endGuestSession } = useGuestSession();
+  const { setSession } = useSession();
 
   const registrationSchema = useMemo(() => createRegistrationSchema(t), [t]);
 
@@ -42,19 +42,17 @@ export function useRegister() {
         phone: data.phone,
         password: data.password,
       });
-      return sessionService.startSession({
-        token: loginResult.token,
+      return sessionService.saveSession({
         uid: loginResult.uid || uid,
         phone: data.phone,
-        email: data.email?.trim() || loginResult.email || '',
-        displayName: data.email?.trim() || data.phone,
+        email: data.email?.trim() || loginResult.email || undefined,
       });
     },
     meta: authMonitorMeta('useRegister', 'RegistrationPageContent', 'Register', 'INSERT'),
 
     onSuccess: (session) => {
       endGuestSession();
-      setSessionCache(queryClient, session);
+      setSession(session);
     },
   });
 

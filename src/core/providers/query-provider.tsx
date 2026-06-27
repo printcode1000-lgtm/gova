@@ -9,7 +9,6 @@ import {
 import { createGovaDbPersister } from '@/core/database/gova-db-persister';
 import { attachQueryObserver } from '@/core/monitor/query-observer';
 import { publicEnv } from '@/core/config/public-env';
-import { CURRENT_SESSION_QUERY_KEY } from '@/features/auth/constants/session-query-keys';
 
 /** 24 hours in milliseconds */
 const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;
@@ -17,46 +16,11 @@ const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;
 /** 5 minutes in milliseconds */
 const FIVE_MINUTES = 1000 * 60 * 5;
 
-/** Never persist these query roots — they use GovaDB session or live API as SSOT. */
-const NON_PERSISTED_QUERY_ROOTS = new Set<string>([
-  CURRENT_SESSION_QUERY_KEY[0],
-  'user_profile',
-]);
-
-/** Session/auth queries must not be restored from the RQ persister. */
-function sanitizePersistedClient(
-  client: PersistedClient | undefined,
-): PersistedClient | undefined {
-  if (!client?.clientState?.queries?.length) return client;
-  const queries = client.clientState.queries.filter(
-    (query) => !NON_PERSISTED_QUERY_ROOTS.has(String(query.queryKey[0] ?? '')),
-  );
-  if (queries.length === client.clientState.queries.length) return client;
-  return {
-    ...client,
-    clientState: {
-      ...client.clientState,
-      queries,
-    },
-  };
-}
-
-function shouldPersistQuery(query: { queryKey: readonly unknown[]; state: { status: string } }): boolean {
-  const root = String(query.queryKey[0] ?? '');
-  if (NON_PERSISTED_QUERY_ROOTS.has(root)) return false;
+function shouldPersistQuery(query: { state: { status: string } }): boolean {
   // Pending queries may contain Promise refs in v5 — only persist settled success data.
   return query.state.status === 'success';
 }
 
-/**
- * Creates the singleton QueryClient.
- *
- * Default options apply project-wide:
- *   - staleTime  : 5 min  → serve cached data without refetching for 5 min
- *   - gcTime     : 24 h   → keep unused query data in memory/IndexedDB for 24 h
- *   - retry      : 1      → retry failed requests once before showing an error
- *   - networkMode: 'offlineFirst' → serve cache immediately; refetch silently in background
- */
 function makeQueryClient(): QueryClient {
   return new QueryClient({
     defaultOptions: {
@@ -75,15 +39,12 @@ function makeQueryClient(): QueryClient {
   });
 }
 
-// Keep a module-level reference so the client is not recreated on every render.
 let browserQueryClient: QueryClient | undefined;
 
 function getQueryClient(): QueryClient {
   if (typeof window === 'undefined') {
-    // Server: always create a fresh client
     return makeQueryClient();
   }
-  // Browser: reuse the same client for the lifetime of the tab
   if (!browserQueryClient) {
     browserQueryClient = makeQueryClient();
   }
@@ -94,25 +55,9 @@ interface AppQueryProviderProps {
   children: React.ReactNode;
 }
 
-/**
- * AppQueryProvider
- *
- * Wraps the application with TanStack Query and wires up GovaDB
- * as the persistence layer, enabling:
- *   - offline-first reads from IndexedDB on page load
- *   - automatic cache persistence after every query/mutation
- *   - duplicate-request prevention (staleTime / gcTime)
- *   - query invalidation after successful mutations
- */
 export function AppQueryProvider({ children }: AppQueryProviderProps) {
   const queryClient = getQueryClient();
-  const persister = React.useMemo(() => {
-    const base = createGovaDbPersister();
-    return {
-      ...base,
-      restoreClient: async () => sanitizePersistedClient(await base.restoreClient()),
-    };
-  }, []);
+  const persister = React.useMemo(() => createGovaDbPersister(), []);
 
   React.useEffect(() => {
     const cleanup = attachQueryObserver(queryClient);

@@ -3,20 +3,20 @@
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from '@/lib/i18n';
 import { createLoginSchema, type LoginFormData } from '@/lib/validation/auth';
 import { useGuestSession } from '@/hooks/use-guest-session';
+import { useSession } from '@/features/auth/components/SessionProvider';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
-import { setSessionCache } from './session-cache';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 
 export function useLogin() {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const { endGuestSession } = useGuestSession();
+  const { setSession } = useSession();
   const [showPassword, setShowPassword] = useState(false);
 
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
@@ -30,19 +30,17 @@ export function useLogin() {
   const mutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
       const result = await authService.login(data);
-      return sessionService.startSession({
-        token: result.token,
+      return sessionService.saveSession({
         uid: result.uid,
         phone: result.phone,
-        email: result.email,
-        displayName: result.email || result.phone,
+        email: result.email || undefined,
       });
     },
     meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),
 
     onSuccess: (session) => {
       endGuestSession();
-      setSessionCache(queryClient, session);
+      setSession(session);
     },
   });
 

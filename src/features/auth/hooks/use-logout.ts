@@ -1,19 +1,19 @@
 'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { useSession } from '@/features/auth/components/SessionProvider';
 import { sessionService } from '../services/session-service';
-import { setSessionCache } from './session-cache';
 import { authMonitorMeta } from './auth-monitor-meta';
 
-/** Clears session in IndexedDB and updates the UI cache. No server call — logout is client-only. */
+/** Clears session in IndexedDB and updates in-memory session state. */
 export function useLogout() {
-  const queryClient = useQueryClient();
+  const { setSession } = useSession();
 
   return useMutation({
     mutationFn: () => sessionService.clearSession(),
     meta: authMonitorMeta('useLogout', 'AppSidebar', 'Logout', 'DELETE'),
     onSuccess: () => {
-      setSessionCache(queryClient, null);
+      setSession(null);
     },
   });
 }
