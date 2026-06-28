@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { useTranslation } from '@/lib/i18n';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -14,10 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Store, X } from 'lucide-react';
 import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
 import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
+import { useProfileStoreImages } from '@/features/profile/hooks/use-profile-store-images';
+
+const MAX_COVER_IMAGES = 3;
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
   "Women's Fashion": 'womensFashion',
@@ -93,6 +94,8 @@ interface StoreIdentityCardProps {
 
 export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIdentityCardProps) {
   const { t } = useTranslation();
+  const { storeImages, isLoading: isImagesLoading, isSaving: isSavingImages, error: imagesError, saveStoreImages } =
+    useProfileStoreImages();
   const [localData, setLocalData] = React.useState<StoreIdentityData>(() => {
     if (data) {
       return data;
@@ -107,11 +110,37 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
       coverImage: null,
     };
   });
+  const [logoImage, setLogoImage] = React.useState<StoredImage | null>(null);
+  const [coverImages, setCoverImages] = React.useState<(StoredImage | null)[]>(
+    Array.from({ length: MAX_COVER_IMAGES }, () => null)
+  );
 
   React.useEffect(() => {
     if (!data) return;
     setLocalData(data);
   }, [data]);
+
+  React.useEffect(() => {
+    if (data) return;
+
+    const nextLogoImage =
+      storeImages.avatarUrl && storeImages.avatarImageKey
+        ? { imageKey: storeImages.avatarImageKey, url: storeImages.avatarUrl }
+        : null;
+    const nextCoverImages = Array.from({ length: MAX_COVER_IMAGES }, (_, index) => {
+      const imageKey = storeImages.coverImageKeys[index];
+      const url = storeImages.coverUrls[index];
+      return imageKey && url ? { imageKey, url } : null;
+    });
+
+    setLogoImage(nextLogoImage);
+    setCoverImages(nextCoverImages);
+    setLocalData((current) => ({
+      ...current,
+      storeLogo: nextLogoImage?.url ?? null,
+      coverImage: nextCoverImages.find(Boolean)?.url ?? null,
+    }));
+  }, [data, storeImages]);
 
   const updateField = <K extends keyof StoreIdentityData>(field: K, value: StoreIdentityData[K]) => {
     const newData = { ...localData, [field]: value };
@@ -127,20 +156,28 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
   };
 
   const handleLogoChange = (image: StoredImage | null) => {
+    setLogoImage(image);
     updateField('storeLogo', image?.url ?? null);
+    if (image?.isUploading) return;
+    void saveStoreImages({ avatarImageKey: image?.imageKey || null });
   };
 
-  const handleCoverChange = (image: StoredImage | null) => {
-    updateField('coverImage', image?.url ?? null);
+  const handleCoverChange = (index: number, image: StoredImage | null) => {
+    const nextCoverImages = coverImages.map((item, itemIndex) => (itemIndex === index ? image : item));
+    setCoverImages(nextCoverImages);
+    updateField('coverImage', nextCoverImages.find(Boolean)?.url ?? null);
+    if (image?.isUploading) return;
+
+    void saveStoreImages({
+      coverImageKeys: nextCoverImages
+        .map((item) => item?.imageKey)
+        .filter((imageKey): imageKey is string => Boolean(imageKey)),
+    });
   };
 
-  const logoValue: StoredImage | null = localData.storeLogo
+  const logoValue: StoredImage | null = logoImage ?? (localData.storeLogo
     ? { imageKey: '', url: localData.storeLogo }
-    : null;
-
-  const coverValue: StoredImage | null = localData.coverImage
-    ? { imageKey: '', url: localData.coverImage }
-    : null;
+    : null);
 
   return (
     <div className="space-y-4">
@@ -188,14 +225,19 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
               label={t('onboarding.storeIdentity.storeLogo')}
               hint={t('onboarding.storeIdentity.logoHint')}
             />
-            <StorageProfileImageUpload
-              storageProfileId={StorageProfiles.Cover}
-              value={coverValue}
-              onChange={handleCoverChange}
-              aspectRatio="landscape"
-              label={t('onboarding.storeIdentity.coverImage')}
-              hint={t('onboarding.storeIdentity.coverHint')}
-            />
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              {Array.from({ length: MAX_COVER_IMAGES }, (_, index) => (
+                <StorageProfileImageUpload
+                  key={index}
+                  storageProfileId={StorageProfiles.Cover}
+                  value={coverImages[index] ?? null}
+                  onChange={(image) => handleCoverChange(index, image)}
+                  aspectRatio="landscape"
+                  label={`${t('onboarding.storeIdentity.coverImage')} ${index + 1}`}
+                  hint={index === 0 ? t('onboarding.storeIdentity.coverHint') : undefined}
+                />
+              ))}
+            </div>
           </>
         ) : (
           <>
@@ -222,6 +264,12 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
           </>
         )}
       </div>
+
+      {(isImagesLoading || isSavingImages || imagesError) && (
+        <p className={`text-xs ${imagesError ? 'text-destructive' : 'text-muted-foreground'}`}>
+          {imagesError ?? (isSavingImages ? t('onboarding.common.uploading') : '')}
+        </p>
+      )}
 
       <div className="space-y-2">
         <Label htmlFor="storeDescription">{t('onboarding.storeIdentity.storeDescription')}</Label>

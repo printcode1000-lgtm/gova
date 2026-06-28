@@ -49,6 +49,14 @@ function deriveRefetchReason(action: any, query: any): RefetchReason {
 
 let mutationCount = 0;
 
+interface QueryExecutionSnapshot {
+  lastExecutionTimeMs?: number;
+  previousResult?: unknown;
+  currentResult?: unknown;
+}
+
+const queryExecutionSnapshots = new WeakMap<object, QueryExecutionSnapshot>();
+
 export function attachQueryObserver(queryClient: QueryClient): () => void {
   if (!isDevelopment) return () => {};
 
@@ -79,7 +87,11 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
         const fnStarted = performance.now();
         try {
           const result = await originalQueryFn(...args);
-          query.meta = { ...query.meta, lastExecutionTimeMs: performance.now() - fnStarted, previousResult: query.state.data, currentResult: result };
+          queryExecutionSnapshots.set(query, {
+            lastExecutionTimeMs: performance.now() - fnStarted,
+            previousResult: query.state.data,
+            currentResult: result,
+          });
           return result;
         } finally {
           clearActiveQueryContext();
@@ -103,6 +115,7 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
     const cacheSource = deriveCacheSource(query, actionType);
     const cacheHit = cacheSource === 'IndexedDB' || cacheSource === 'Memory';
     const refetchReason = deriveRefetchReason(event, query);
+    const executionSnapshot = queryExecutionSnapshots.get(query) ?? {};
 
     if (actionType === 'updated' || actionType === 'added') {
       const rec = {
@@ -131,8 +144,8 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
         errorMessage: state.error ? String(state.error) : undefined,
         timestamp: ts,
         startedAt: now,
-        completedAt: now + (query.meta?.lastExecutionTimeMs ?? 0),
-        executionTime: Math.round((query.meta?.lastExecutionTimeMs ?? 0) * 100) / 100,
+        completedAt: now + (executionSnapshot.lastExecutionTimeMs ?? 0),
+        executionTime: Math.round((executionSnapshot.lastExecutionTimeMs ?? 0) * 100) / 100,
         rowsRead: Array.isArray(state.data) ? state.data.length : state.data ? 1 : 0,
         rowsWritten: 0,
         queryKey,
@@ -142,8 +155,8 @@ export function attachQueryObserver(queryClient: QueryClient): () => void {
         refetchReason,
         invalidationCount: 0,
         mutationCount,
-        previousResult: query.meta?.previousResult,
-        currentResult: query.meta?.currentResult,
+        previousResult: executionSnapshot.previousResult,
+        currentResult: executionSnapshot.currentResult,
         lastFetch: toIsoTimestamp(state.dataUpdatedAt),
         nextStaleTime:
           query.getObserversCount() > 0

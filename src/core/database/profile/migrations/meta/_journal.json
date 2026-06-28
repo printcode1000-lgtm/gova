@@ -15,6 +15,13 @@
       "when": 1750953700000,
       "tag": "0001_store_image_keys",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "0",
+      "when": 1782604800000,
+      "tag": "0002_cover_image_keys",
+      "breakpoints": true
     }
   ]
 }

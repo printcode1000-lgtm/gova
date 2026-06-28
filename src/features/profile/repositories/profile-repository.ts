@@ -24,6 +24,13 @@ function rowToContacts(row: typeof userProfiles.$inferSelect): ProfileContactsDa
   };
 }
 
+function parseImageKeys(value: string | null | undefined): string[] {
+  if (!value) return [];
+  const parsed = parseJson<unknown>(value, []);
+  if (!Array.isArray(parsed)) return [];
+  return parsed.filter((item): item is string => typeof item === 'string' && item.length > 0);
+}
+
 export class ProfileRepository implements IProfileRepository {
   constructor(private database: IDatabaseClient = profileDbClient) {}
 
@@ -68,15 +75,25 @@ export class ProfileRepository implements IProfileRepository {
       .select({
         avatarImageKey: userProfiles.avatarImageKey,
         coverImageKey: userProfiles.coverImageKey,
+        coverImageKeysJson: userProfiles.coverImageKeysJson,
       })
       .from(userProfiles)
       .where(eq(userProfiles.uid, uid))
       .limit(1);
 
     if (rows.length === 0) return null;
+    const coverImageKeys = parseImageKeys(rows[0].coverImageKeysJson);
+    const legacyCoverImageKey = rows[0].coverImageKey ?? null;
+    const normalizedCoverImageKeys = coverImageKeys.length > 0
+      ? coverImageKeys
+      : legacyCoverImageKey
+      ? [legacyCoverImageKey]
+      : [];
+
     return {
       avatarImageKey: rows[0].avatarImageKey ?? null,
-      coverImageKey: rows[0].coverImageKey ?? null,
+      coverImageKey: normalizedCoverImageKeys[0] ?? legacyCoverImageKey,
+      coverImageKeys: normalizedCoverImageKeys,
     };
   }
 
@@ -89,7 +106,8 @@ export class ProfileRepository implements IProfileRepository {
 
     const payload = {
       avatarImageKey: keys.avatarImageKey,
-      coverImageKey: keys.coverImageKey,
+      coverImageKey: keys.coverImageKeys[0] ?? keys.coverImageKey,
+      coverImageKeysJson: JSON.stringify(keys.coverImageKeys.slice(0, 3)),
     };
 
     if (existing.length === 0) {

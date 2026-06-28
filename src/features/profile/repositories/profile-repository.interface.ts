@@ -3,6 +3,7 @@ import type { ProfileContactsData } from '../entities/profile-contacts.entity';
 export interface ProfileImageKeys {
   avatarImageKey: string | null;
   coverImageKey: string | null;
+  coverImageKeys: string[];
 }
 
 export interface IProfileRepository {
