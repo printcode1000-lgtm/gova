@@ -32,6 +32,7 @@ interface DisplayCategory {
   name_en: string;
   image: string;
   isCollection: boolean;
+  order: number | null;
 }
 
 export function CategoriesGrid() {
@@ -65,7 +66,7 @@ export function CategoriesGrid() {
         // Convert to display categories
         const displayCats: DisplayCategory[] = [];
         
-        // First, add individual categories (collection === null)
+        // Add individual categories (collection === null)
         const individualCats = collectionMap.get(null) || [];
         individualCats.forEach((cat) => {
           displayCats.push({
@@ -74,18 +75,12 @@ export function CategoriesGrid() {
             name_en: cat.title_en,
             image: cat.image,
             isCollection: false,
+            order: cat.order,
           });
         });
 
-        // Then, add collections (collection !== null), sorted by their first item's order
-        const collectionKeys = Array.from(collectionMap.keys()).filter(key => key !== null).sort((a, b) => {
-          const catsA = collectionMap.get(a) || [];
-          const catsB = collectionMap.get(b) || [];
-          const orderA = catsA[0]?.order ?? Infinity;
-          const orderB = catsB[0]?.order ?? Infinity;
-          return orderA - orderB;
-        });
-
+        // Add collections (collection !== null)
+        const collectionKeys = Array.from(collectionMap.keys()).filter(key => key !== null);
         collectionKeys.forEach((collectionKey) => {
           const cats = collectionMap.get(collectionKey) || [];
           const firstCat = cats[0];
@@ -95,7 +90,15 @@ export function CategoriesGrid() {
             name_en: firstCat.collection_en || '',
             image: firstCat.collection_image || '',
             isCollection: true,
+            order: firstCat.order,
           });
+        });
+
+        // Sort all display categories by order
+        displayCats.sort((a, b) => {
+          const orderA = a.order ?? Infinity;
+          const orderB = b.order ?? Infinity;
+          return orderA - orderB;
         });
 
         setDisplayCategories(displayCats);
