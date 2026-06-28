@@ -8,7 +8,7 @@ Client login state in GOVA is minimal:
 
 **No token anywhere** — not in IDB, not in API responses, not in client code.
 
-See [data-architecture-guide.md](./data-architecture-guide.md) for full layer architecture.
+See [data-layers/README.md](./data-layers/README.md) for full layer architecture.
 
 ---
 
@@ -149,5 +149,5 @@ src/lib/gova-db/index.ts             # low-level IDB helpers
 
 ## Related
 
-- [data-architecture-guide.md](./data-architecture-guide.md)
+- [data-layers/README.md](./data-layers/README.md)
 - [capacitor.md](./capacitor.md)

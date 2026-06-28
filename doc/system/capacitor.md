@@ -2,7 +2,7 @@
 
 GOVA uses **Capacitor as a native runtime shell only** — Android and iOS load the same static web app produced by Next.js. Capacitor does **not** contain business logic, database drivers, ORM code, or SQLite/Turso clients.
 
-For the full data-flow architecture (GovaApiClient, Business APIs, Repository), see [data-architecture-guide.md](./data-architecture-guide.md).
+For the full data-flow architecture (GovaApiClient, Business APIs, Repository), see [data-layers/README.md](./data-layers/README.md).
 
 ---
 
@@ -274,6 +274,6 @@ Platform-specific settings live in:
 
 ## Related documentation
 
-- [data-architecture-guide.md](./data-architecture-guide.md) — GovaApiClient, layers, CORS, static export
+- [data-layers/README.md](./data-layers/README.md) — GovaApiClient, layers, CORS, static export
 - [platform/README.md](../../platform/README.md) — short platform-layer summary
 - [Capacitor docs](https://capacitorjs.com/docs) — upstream framework reference

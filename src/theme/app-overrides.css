@@ -30,3 +30,12 @@
   --color-merchant-info: hsl(199 89% 48%);
   --color-merchant-info-foreground: #ffffff;
 }
+
+.title-line-contact {
+  height: 2px;
+  background: linear-gradient(90deg, #2ecc71 0, rgba(46, 204, 113, 0.4) 50%, transparent 100%);
+  flex-grow: 1;
+  margin-inline-start: 15px;
+  border-radius: 10px;
+  opacity: 0.6;
+}

@@ -91,4 +91,4 @@ Then `next build` completes without errors.
 - `scripts/schema-sync.ts` — runs `runAllSchemaSyncs` and fails on CI when credentials are missing
 - `src/core/provisioning/schema-sync.ts` — synchronization logic for each database
 - `doc/system/profile-system.md` — profile database structure
-- `doc/system/data-architecture-guide.md` — environment variables
+- `doc/system/data-layers/14-environment-variables.md` — environment variables
