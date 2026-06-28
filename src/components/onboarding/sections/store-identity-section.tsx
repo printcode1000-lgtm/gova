@@ -7,8 +7,7 @@ import { FormField, FormInput, FormTextarea, FormSelect, MultiSelect } from '../
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
-import { STORAGE_PROFILE_IDS } from '@/core/storage/constants/storage-profile-ids';
-import { nextSellerId } from '@/lib/seller/next-id';
+import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
@@ -77,17 +76,11 @@ export function StoreIdentitySection() {
   };
 
   const handleLogoChange = (image: StoredImage | null) => {
-    setStoreImage(
-      'storeLogo',
-      image ? { ...image, id: storeIdentity.storeLogo?.id ?? nextSellerId('img') } : null
-    );
+    setStoreImage('storeLogo', image);
   };
 
   const handleCoverChange = (image: StoredImage | null) => {
-    setStoreImage(
-      'coverImage',
-      image ? { ...image, id: storeIdentity.coverImage?.id ?? nextSellerId('img') } : null
-    );
+    setStoreImage('coverImage', image);
   };
 
   return (
@@ -158,7 +151,7 @@ export function StoreIdentitySection() {
 
           <div className="grid gap-6 lg:grid-cols-2">
             <StorageProfileImageUpload
-              storageProfileId={STORAGE_PROFILE_IDS.AVATAR}
+              storageProfileId={StorageProfiles.Avatar}
               value={
                 storeIdentity.storeLogo?.url
                   ? {
@@ -176,7 +169,7 @@ export function StoreIdentitySection() {
             />
 
             <StorageProfileImageUpload
-              storageProfileId={STORAGE_PROFILE_IDS.COVER}
+              storageProfileId={StorageProfiles.Cover}
               value={
                 storeIdentity.coverImage?.url
                   ? {

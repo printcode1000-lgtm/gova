@@ -8,8 +8,10 @@ import { useTranslation } from '@/lib/i18n';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 import { useStorageProfileUpload } from '@/features/storage/hooks/use-storage-profile-upload';
 
+import type { StorageProfileId } from '@/core/storage/constants/storage-profiles';
+
 export interface StorageProfileImageUploadProps {
-  storageProfileId: string;
+  storageProfileId: StorageProfileId;
   value?: StoredImage | null;
   onChange: (image: StoredImage | null) => void;
   aspectRatio?: 'square' | 'landscape' | 'portrait' | 'wide';

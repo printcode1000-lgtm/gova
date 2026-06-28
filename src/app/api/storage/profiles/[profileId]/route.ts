@@ -9,7 +9,7 @@ export async function GET(
   return runTracedBusinessRoute('GET /api/storage/profiles/:profileId', async () => {
     try {
       const { profileId } = await context.params;
-      const limits = imageStorageService.getProfileLimits(profileId);
+      const limits = imageStorageService.getProfile(profileId);
       return apiSuccess(limits);
     } catch (error) {
       return mapServiceError(error);

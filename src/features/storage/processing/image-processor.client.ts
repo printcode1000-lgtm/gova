@@ -1,11 +1,17 @@
 'use client';
 
 import { validateImageForProfile, validateImageMimeType } from '@/core/storage/rules/image-rules';
-import type { StorageProfileClientView } from '@/core/storage/types/storage-profile.types';
+import type {
+  StorageOutputFormat,
+  StorageProfileClientView,
+} from '@/core/storage/types/storage-profile.types';
 
-const WEBP_MIME = 'image/webp';
 const MIN_QUALITY = 0.1;
 const QUALITY_STEP = 0.05;
+
+const OUTPUT_MIME: Record<StorageOutputFormat, string> = {
+  webp: 'image/webp',
+};
 
 function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -23,32 +29,41 @@ function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   });
 }
 
-function canvasToWebPBlob(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  mimeType: string,
+  quality: number
+): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
         if (!blob) {
-          reject(new Error('Failed to encode WebP'));
+          reject(new Error(`Failed to encode ${mimeType}`));
           return;
         }
         resolve(blob);
       },
-      WEBP_MIME,
+      mimeType,
       quality
     );
   });
 }
 
 /**
- * Compresses an image to WebP using Canvas until it satisfies maxImageSizeKB.
- * Does not resize dimensions unless compression alone cannot reach the target.
+ * Compresses an image using Canvas until it satisfies the storage profile limits.
+ * Output format is driven by profile.outputFormat.
  */
-export async function compressImageToWebP(
+export async function compressImageForProfile(
   file: File,
   profile: StorageProfileClientView
 ): Promise<Blob> {
+  if (!profile.enabled) {
+    throw new Error(`Storage profile is disabled: ${profile.id}`);
+  }
+
   validateImageMimeType(file.type);
 
+  const mimeType = OUTPUT_MIME[profile.outputFormat];
   const img = await loadImageFromFile(file);
   const canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth;
@@ -59,12 +74,12 @@ export async function compressImageToWebP(
   ctx.drawImage(img, 0, 0);
 
   let quality = 0.92;
-  let blob = await canvasToWebPBlob(canvas, quality);
+  let blob = await canvasToBlob(canvas, mimeType, quality);
   validateImageForProfile(blob.size, profile);
 
   while (blob.size > profile.maxImageSizeKB * 1024 && quality > MIN_QUALITY) {
     quality = Math.max(MIN_QUALITY, quality - QUALITY_STEP);
-    blob = await canvasToWebPBlob(canvas, quality);
+    blob = await canvasToBlob(canvas, mimeType, quality);
   }
 
   if (blob.size > profile.maxImageSizeKB * 1024) {
@@ -73,3 +88,6 @@ export async function compressImageToWebP(
 
   return blob;
 }
+
+/** @deprecated Use compressImageForProfile */
+export const compressImageToWebP = compressImageForProfile;

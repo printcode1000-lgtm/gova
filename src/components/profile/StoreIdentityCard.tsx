@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Store, X } from 'lucide-react';
 import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
-import { STORAGE_PROFILE_IDS } from '@/core/storage/constants/storage-profile-ids';
+import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
@@ -181,7 +181,7 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
         {!readOnly ? (
           <>
             <StorageProfileImageUpload
-              storageProfileId={STORAGE_PROFILE_IDS.AVATAR}
+              storageProfileId={StorageProfiles.Avatar}
               value={logoValue}
               onChange={handleLogoChange}
               aspectRatio="square"
@@ -189,7 +189,7 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
               hint={t('onboarding.storeIdentity.logoHint')}
             />
             <StorageProfileImageUpload
-              storageProfileId={STORAGE_PROFILE_IDS.COVER}
+              storageProfileId={StorageProfiles.Cover}
               value={coverValue}
               onChange={handleCoverChange}
               aspectRatio="landscape"

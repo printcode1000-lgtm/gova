@@ -3,18 +3,24 @@
     {
       "id": "avatar",
       "maxImageSizeKB": 20,
+      "outputFormat": "webp",
+      "enabled": true,
       "provider": "CloudflareR2",
       "folder": "images/avatars"
     },
     {
       "id": "cover",
       "maxImageSizeKB": 30,
+      "outputFormat": "webp",
+      "enabled": true,
       "provider": "CloudflareR2",
       "folder": "images/covers"
     },
     {
       "id": "product-default",
       "maxImageSizeKB": 30,
+      "outputFormat": "webp",
+      "enabled": true,
       "provider": "CloudflareR2",
       "folder": "images/products/default"
     }

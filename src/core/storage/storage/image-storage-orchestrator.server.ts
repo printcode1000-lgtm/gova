@@ -1,9 +1,10 @@
 import 'server-only';
 
 import type { StorageProfile, ImageUploadResult } from '../types/storage-profile.types';
-import { getStorageProfileById } from '../profiles/storage-profile-loader.server';
+import { getStorageProfileById, assertStorageProfileEnabled } from '../profiles/storage-profile-loader.server';
 import { validateImageForProfile, validateImageMimeType } from '../rules/image-rules';
-import { buildObjectPath, generateImageKey } from '../storage/image-key';
+import { buildObjectPath } from '../storage/image-path';
+import { imageKeyGenerator } from '../storage/image-key-generator';
 import { resolveActiveProviderId, resolveStorageProvider } from '../providers/provider-resolver.server';
 
 export interface UploadImageInput {
@@ -21,10 +22,11 @@ export class ImageStorageOrchestrator {
   /** Uploads a processed image and returns full metadata. */
   async upload(input: UploadImageInput): Promise<ImageUploadResult> {
     const profile = getStorageProfileById(input.storageProfileId);
+    assertStorageProfileEnabled(profile);
     validateImageMimeType(input.contentType);
     validateImageForProfile(input.body.length, profile);
 
-    const imageKey = generateImageKey();
+    const imageKey = imageKeyGenerator.generate(profile.outputFormat);
     const objectPath = buildObjectPath(profile.folder, imageKey);
     const provider = resolveStorageProvider(profile.provider);
     const activeProviderId = resolveActiveProviderId(profile.provider);
@@ -47,6 +49,7 @@ export class ImageStorageOrchestrator {
   /** Deletes an image by key using the profile folder to rebuild the object path. */
   async deleteByKey(storageProfileId: string, imageKey: string): Promise<void> {
     const profile = getStorageProfileById(storageProfileId);
+    assertStorageProfileEnabled(profile);
     const objectPath = buildObjectPath(profile.folder, imageKey);
     const provider = resolveStorageProvider(profile.provider);
     await provider.delete(objectPath);

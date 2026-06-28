@@ -1,12 +1,12 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { compressImageToWebP } from '../processing/image-processor.client';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
-import { imageStorageApiService } from '../services/image-storage-api-service';
+import type { StorageProfileId } from '@/core/storage/constants/storage-profiles';
+import { imageStorageService } from '../services/image-storage-service';
 
 interface UseStorageProfileUploadOptions {
-  storageProfileId: string;
+  storageProfileId: StorageProfileId;
   value: StoredImage | null;
   onChange: (image: StoredImage | null) => void;
 }
@@ -19,8 +19,8 @@ interface UseStorageProfileUploadResult {
 }
 
 /**
- * Hook coordinating the client-side image pipeline:
- * load profile limits → validate → compress → upload via API.
+ * Hook for React state around ImageStorageService.
+ * Pipeline: ImageStorageService → API (compress happens inside the service).
  */
 export function useStorageProfileUpload({
   storageProfileId,
@@ -37,11 +37,9 @@ export function useStorageProfileUpload({
       onChange({ imageKey: '', url: value?.url ?? '', isUploading: true });
 
       try {
-        const profile = await imageStorageApiService.getProfileLimits(storageProfileId);
-        const compressed = await compressImageToWebP(file, profile);
-        const result = await imageStorageApiService.uploadImage(
+        const result = await imageStorageService.processAndUpload(
           storageProfileId,
-          compressed,
+          file,
           value?.imageKey ?? null
         );
         onChange({ imageKey: result.imageKey, url: result.url });
@@ -65,7 +63,7 @@ export function useStorageProfileUpload({
     setIsUploading(true);
     setError(null);
     try {
-      await imageStorageApiService.deleteImage(storageProfileId, value.imageKey);
+      await imageStorageService.deleteImage(storageProfileId, value.imageKey);
       onChange(null);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Delete failed';

@@ -8,11 +8,11 @@ import type {
   OnboardingStep,
   OnboardingData,
   OnboardingState,
-  UploadedImage,
   Product,
   Collection,
   FashionCategory,
 } from './types';
+import type { StoredImage } from '@/core/storage/types/stored-image.types';
 import { constants } from './schemas';
 
 const initialStoreIdentity: OnboardingData['storeIdentity'] = {
@@ -166,7 +166,7 @@ interface OnboardingStore extends OnboardingState {
   updateCollection: (id: string, collection: Partial<Collection>) => void;
   removeCollection: (id: string) => void;
   toggleCategory: (categoryId: string) => void;
-  setStoreImage: (field: 'storeLogo' | 'coverImage', image: UploadedImage | null) => void;
+  setStoreImage: (field: 'storeLogo' | 'coverImage', image: StoredImage | null) => void;
 }
 
 export const useOnboardingStore = create<OnboardingStore>()(
@@ -394,15 +394,11 @@ export const useOnboardingStore = create<OnboardingStore>()(
 
       setStoreImage: (field, image) =>
         set((state) => {
-          const withId =
-            image && !image.id
-              ? { ...image, id: nextSellerId('img') }
-              : image;
           if (field === 'storeLogo') {
             return {
               data: {
                 ...state.data,
-                storeIdentity: { ...state.data.storeIdentity, storeLogo: withId },
+                storeIdentity: { ...state.data.storeIdentity, storeLogo: image },
               },
               isDirty: true,
             };
@@ -410,7 +406,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
           return {
             data: {
               ...state.data,
-              storeIdentity: { ...state.data.storeIdentity, coverImage: withId },
+              storeIdentity: { ...state.data.storeIdentity, coverImage: image },
             },
             isDirty: true,
           };

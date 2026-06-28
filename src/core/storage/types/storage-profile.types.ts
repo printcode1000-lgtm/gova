@@ -1,18 +1,28 @@
 /** Supported storage provider identifiers (server-side only). */
 export type StorageProviderId = 'CloudflareR2' | 'LocalStorage' | 'GoogleDrive';
 
-/** Storage Profile — contract between UI (profile id only) and the storage system. */
+/** Output format for processed uploads (client + server). */
+export type StorageOutputFormat = 'webp';
+
+/** Storage Profile — full server config from storage-profiles.json. */
 export interface StorageProfile {
   id: string;
   maxImageSizeKB: number;
+  outputFormat: StorageOutputFormat;
+  enabled: boolean;
   provider: StorageProviderId;
   folder: string;
 }
 
-/** Client-safe subset returned by the storage profile API (no provider/folder). */
+/**
+ * Client-safe storage profile — returned by GET /api/storage/profiles/:id.
+ * Excludes provider, folder, and other server-only fields.
+ */
 export interface StorageProfileClientView {
   id: string;
   maxImageSizeKB: number;
+  outputFormat: StorageOutputFormat;
+  enabled: boolean;
 }
 
 /** Metadata persisted alongside an entity image reference. */

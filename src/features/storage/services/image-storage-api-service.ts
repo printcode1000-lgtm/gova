@@ -1,10 +1,13 @@
 import { govaApi, GOVA_API_ROUTES } from '@/core/api';
-import type { ImageUploadResult, StorageProfileClientView } from '@/core/storage/types/storage-profile.types';
-import type { IImageStorageService } from './image-storage-service.interface';
+import type {
+  ImageUploadResult,
+  StorageProfileClientView,
+} from '@/core/storage/types/storage-profile.types';
+import type { IImageStorageApiAdapter } from './image-storage-api-service.interface';
 
-/** Client-side adapter for image storage APIs. */
-export class ImageStorageApiService implements IImageStorageService {
-  async getProfileLimits(storageProfileId: string): Promise<StorageProfileClientView> {
+/** HTTP adapter — talks to Business API only. */
+export class ImageStorageApiService implements IImageStorageApiAdapter {
+  async getProfile(storageProfileId: string): Promise<StorageProfileClientView> {
     const route = GOVA_API_ROUTES.storage.profile(storageProfileId);
     return govaApi.get<StorageProfileClientView>(route);
   }

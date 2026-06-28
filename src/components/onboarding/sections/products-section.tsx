@@ -12,8 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
-import { STORAGE_PROFILE_IDS } from '@/core/storage/constants/storage-profile-ids';
-import type { Product, ProductVariant, UploadedImage } from '@/lib/onboarding/types';
+import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
+import type { Product, ProductVariant } from '@/lib/onboarding/types';
 import { nextSellerId } from '@/lib/seller/next-id';
 
 function generateId() {
@@ -117,7 +117,7 @@ function ProductForm({ product, onChange, onSave, onCancel }: ProductFormProps) 
       </FormField>
 
       <StorageProfileImageUpload
-        storageProfileId={STORAGE_PROFILE_IDS.PRODUCT_DEFAULT}
+        storageProfileId={StorageProfiles.ProductDefault}
         value={
           product.image?.url
             ? {
@@ -128,11 +128,7 @@ function ProductForm({ product, onChange, onSave, onCancel }: ProductFormProps) 
               }
             : null
         }
-        onChange={(image) =>
-          onChange({
-            image: image ? { ...image, id: product.image?.id ?? nextSellerId('img') } : null,
-          })
-        }
+        onChange={(image) => onChange({ image })}
         aspectRatio="square"
         label={t('onboarding.products.productImage')}
       />

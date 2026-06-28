@@ -1,62 +1,95 @@
 # Image Storage System
 
-Profile-driven multi-provider architecture. The UI passes only **storage profile ids** (`avatar`, `cover`, `product-default`) — never provider names, folders, or size limits.
+Profile-driven multi-provider architecture. The UI passes only **storage profile ids** via `StorageProfiles.*` — never provider names, folders, or size limits.
 
 ## Contract
 
-| Profile id | Max KB | Provider (prod) | Folder |
-|---|---|---|---|
-| `avatar` | 20 | CloudflareR2 | `images/avatars` |
-| `cover` | 30 | CloudflareR2 | `images/covers` |
-| `product-default` | 30 | CloudflareR2 | `images/products/default` |
+| Profile | Max KB | Format | Enabled | Folder |
+|---|---|---|---|---|
+| `StorageProfiles.Avatar` | 20 | webp | ✓ | `images/avatars` |
+| `StorageProfiles.Cover` | 30 | webp | ✓ | `images/covers` |
+| `StorageProfiles.ProductDefault` | 30 | webp | ✓ | `images/products/default` |
 
 Config: `src/config/storage-profiles.json` (server-only).
 
 ## Pipeline
 
 ```
-Client: Rules → Canvas (WebP) → API
+UI → ImageStorageService → API
+       ↳ compress (Canvas, profile-driven)
+
 Server: Storage Profile → Provider → Persistence
 ```
 
-**Development** (`NODE_ENV=development`): always `LocalStorageProvider` → `public/sync_data/sync_file/`.
+**Development** (`NODE_ENV=development`): `LocalStorageProvider` → `public/sync_data/sync_file/images/...`
 
-**Production / Capacitor / static**: profile provider (Cloudflare R2). Never uses `public/sync_data`.
+**Production / Capacitor / static**: profile provider (Cloudflare R2).
 
 ## Layers
 
 | Layer | Location |
 |---|---|
 | Profiles | `src/core/storage/profiles/` |
+| ImageKeyGenerator | `src/core/storage/storage/image-key-generator.ts` |
 | Rules | `src/core/storage/rules/` |
-| Processing (Canvas) | `src/core/storage/processing/` |
+| Processing (Canvas) | `src/features/storage/processing/` |
 | Providers | `src/core/storage/providers/` |
 | Orchestrator | `src/core/storage/storage/` |
-| Client service | `src/features/storage/services/image-storage-api-service.ts` |
+| **Client service** | `src/features/storage/services/image-storage-service.ts` |
+| API adapter | `src/features/storage/services/image-storage-api-service.ts` |
 | Hook | `src/features/storage/hooks/use-storage-profile-upload.ts` |
 | UI | `src/features/storage/components/StorageProfileImageUpload.tsx` |
 
 ## APIs
 
-| Method | Route | Purpose |
+| Method | Route | Response |
 |---|---|---|
-| GET | `/api/storage/profiles/:profileId` | Client-safe limits (`id`, `maxImageSizeKB`) |
+| GET | `/api/storage/profiles/:id` | Full client profile (`id`, `maxImageSizeKB`, `outputFormat`, `enabled`) |
 | POST | `/api/storage/images/upload` | Upload WebP (multipart) |
 | DELETE | `/api/storage/images/:imageKey?storageProfileId=` | Delete |
-| GET/PUT | `/api/profile/store-images` | Persist avatar/cover keys on `user_profiles` |
+| GET/PUT | `/api/profile/store-images` | Persist avatar/cover keys |
+
+## Client profile example
+
+```json
+{
+  "id": "avatar",
+  "maxImageSizeKB": 20,
+  "outputFormat": "webp",
+  "enabled": true
+}
+```
+
+## Storage profile ids
+
+Use constants — never string literals in pages:
+
+```typescript
+import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
+
+StorageProfiles.Avatar
+StorageProfiles.Cover
+StorageProfiles.ProductDefault
+```
 
 ## Persistence
 
 `user_profiles.avatar_image_key`, `user_profiles.cover_image_key`
 
-Product images: `Product.image` in onboarding state (imageKey + url). No products table yet.
+Any feature (Onboarding, Dashboard, Admin) uses `StorageProfiles.ProductDefault` + `StoredImage` — not onboarding-specific types.
 
 ## ImageKey
 
-UUID + `.webp` only (e.g. `a1b2c3d4-....webp`). Folder comes from the storage profile.
+Generated only via `ImageKeyGenerator` → `{uuid}.webp`. Folder from storage profile.
 
-## Google Drive
+## Local layout
 
-Stub only: `GoogleDriveProvider` + `GoogleDriveLocation` interface (`folderId`, `fileId`).
+```
+public/sync_data/sync_file/
+  images/
+    avatars/
+    covers/
+    products/default/
+```
 
-See also [r2-storage.md](./r2-storage.md) for Cloudflare env vars.
+See also [r2-storage.md](./r2-storage.md).

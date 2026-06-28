@@ -3,12 +3,12 @@ import type {
   StorageProfileClientView,
 } from '@/core/storage/types/storage-profile.types';
 
-/** Client-facing image storage contract (UI → ImageStorageService → API). */
-export interface IImageStorageService {
+/** Low-level HTTP adapter contract for image storage APIs. */
+export interface IImageStorageApiAdapter {
   getProfile(storageProfileId: string): Promise<StorageProfileClientView>;
-  processAndUpload(
+  uploadImage(
     storageProfileId: string,
-    file: File,
+    file: Blob,
     replaceImageKey?: string | null
   ): Promise<ImageUploadResult>;
   deleteImage(storageProfileId: string, imageKey: string): Promise<void>;

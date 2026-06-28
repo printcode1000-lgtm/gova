@@ -25,7 +25,7 @@ export interface OnboardingStepConfig {
 
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 
-/** Stored image reference — extends StoredImage with optional legacy blob-upload fields. */
+/** Legacy blob-preview upload shape (collections, verification — out of storage profile scope). */
 export interface UploadedImage extends Omit<StoredImage, 'imageKey'> {
   imageKey?: string;
   id?: string;
@@ -34,8 +34,8 @@ export interface UploadedImage extends Omit<StoredImage, 'imageKey'> {
 
 export interface StoreIdentity {
   storeName: string;
-  storeLogo: UploadedImage | null;
-  coverImage: UploadedImage | null;
+  storeLogo: StoredImage | null;
+  coverImage: StoredImage | null;
   storeDescription: string;
   storeStory: string;
   storeCategory: string;
@@ -152,7 +152,7 @@ export interface Product {
   tags: string[];
   basePrice: number;
   discountPrice: number | null;
-  image: UploadedImage | null;
+  image: StoredImage | null;
   variants: ProductVariant[];
   isActive: boolean;
   isFeatured: boolean;

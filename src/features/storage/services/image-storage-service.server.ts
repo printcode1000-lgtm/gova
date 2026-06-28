@@ -10,7 +10,7 @@ import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 
 /** Server-side image storage service. */
 export class ImageStorageService {
-  getProfileLimits(storageProfileId: string): StorageProfileClientView {
+  getProfile(storageProfileId: string): StorageProfileClientView {
     return toStorageProfileClientView(getStorageProfileById(storageProfileId));
   }
 
