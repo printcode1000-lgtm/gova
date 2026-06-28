@@ -12,7 +12,7 @@ interface UseStorageProfileUploadOptions {
 }
 
 interface UseStorageProfileUploadResult {
-  uploadFile: (file: File) => Promise<void>;
+  uploadFile: (file: File) => Promise<boolean>;
   removeImage: () => Promise<void>;
   isUploading: boolean;
   error: string | null;
@@ -43,10 +43,12 @@ export function useStorageProfileUpload({
           value?.imageKey ?? null
         );
         onChange({ imageKey: result.imageKey, url: result.url });
+        return true;
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Upload failed';
         setError(message);
         onChange(value ? { ...value, isUploading: false, error: message } : null);
+        return false;
       } finally {
         setIsUploading(false);
       }

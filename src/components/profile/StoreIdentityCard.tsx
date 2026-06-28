@@ -13,12 +13,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
-import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 import { useProfileStoreImages } from '@/features/profile/hooks/use-profile-store-images';
+import {
+  StorageImageManager,
+  parseStorageImageManagerConfig,
+} from '@/features/storage/components/StorageImageManager';
+import storeLogoImageConfig from './image-configs/store-logo.image.json';
+import storeCover1ImageConfig from './image-configs/store-cover-1.image.json';
+import storeCover2ImageConfig from './image-configs/store-cover-2.image.json';
+import storeCover3ImageConfig from './image-configs/store-cover-3.image.json';
 
-const MAX_COVER_IMAGES = 3;
+const storeLogoConfig = parseStorageImageManagerConfig(storeLogoImageConfig);
+const storeCoverConfigs = [
+  parseStorageImageManagerConfig(storeCover1ImageConfig),
+  parseStorageImageManagerConfig(storeCover2ImageConfig),
+  parseStorageImageManagerConfig(storeCover3ImageConfig),
+];
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
   "Women's Fashion": 'womensFashion',
@@ -111,9 +122,7 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
     };
   });
   const [logoImage, setLogoImage] = React.useState<StoredImage | null>(null);
-  const [coverImages, setCoverImages] = React.useState<(StoredImage | null)[]>(
-    Array.from({ length: MAX_COVER_IMAGES }, () => null)
-  );
+  const [coverImages, setCoverImages] = React.useState<StoredImage[]>([]);
 
   React.useEffect(() => {
     if (!data) return;
@@ -127,18 +136,19 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
       storeImages.avatarUrl && storeImages.avatarImageKey
         ? { imageKey: storeImages.avatarImageKey, url: storeImages.avatarUrl }
         : null;
-    const nextCoverImages = Array.from({ length: MAX_COVER_IMAGES }, (_, index) => {
-      const imageKey = storeImages.coverImageKeys[index];
-      const url = storeImages.coverUrls[index];
-      return imageKey && url ? { imageKey, url } : null;
-    });
+    const nextCoverImages = storeImages.coverImageKeys
+      .map((imageKey, index) => {
+        const url = storeImages.coverUrls[index];
+        return imageKey && url ? { imageKey, url } : null;
+      })
+      .filter((image): image is StoredImage => Boolean(image));
 
     setLogoImage(nextLogoImage);
     setCoverImages(nextCoverImages);
     setLocalData((current) => ({
       ...current,
       storeLogo: nextLogoImage?.url ?? null,
-      coverImage: nextCoverImages.find(Boolean)?.url ?? null,
+      coverImage: nextCoverImages[0]?.url ?? null,
     }));
   }, [data, storeImages]);
 
@@ -155,29 +165,29 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
     updateField('storeSpecialties', newSpecialties);
   };
 
-  const handleLogoChange = (image: StoredImage | null) => {
+  const handleLogoImagesChange = (images: StoredImage[]) => {
+    const image = images[0] ?? null;
     setLogoImage(image);
     updateField('storeLogo', image?.url ?? null);
-    if (image?.isUploading) return;
-    void saveStoreImages({ avatarImageKey: image?.imageKey || null });
+    void saveStoreImages({ avatarImageKey: image?.imageKey ?? null });
   };
 
-  const handleCoverChange = (index: number, image: StoredImage | null) => {
-    const nextCoverImages = coverImages.map((item, itemIndex) => (itemIndex === index ? image : item));
-    setCoverImages(nextCoverImages);
-    updateField('coverImage', nextCoverImages.find(Boolean)?.url ?? null);
-    if (image?.isUploading) return;
-
-    void saveStoreImages({
-      coverImageKeys: nextCoverImages
-        .map((item) => item?.imageKey)
-        .filter((imageKey): imageKey is string => Boolean(imageKey)),
-    });
+  const handleCoverImagesChange = (images: StoredImage[]) => {
+    setCoverImages(images);
+    updateField('coverImage', images[0]?.url ?? null);
+    void saveStoreImages({ coverImageKeys: images.map((image) => image.imageKey) });
   };
 
-  const logoValue: StoredImage | null = logoImage ?? (localData.storeLogo
-    ? { imageKey: '', url: localData.storeLogo }
-    : null);
+  const handleCoverImageChange = (index: number, images: StoredImage[]) => {
+    const image = images[0] ?? null;
+    const nextCoverImages = [...coverImages];
+    if (image) {
+      nextCoverImages[index] = image;
+    } else {
+      nextCoverImages.splice(index, 1);
+    }
+    handleCoverImagesChange(nextCoverImages.filter(Boolean));
+  };
 
   return (
     <div className="space-y-4">
@@ -217,24 +227,18 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
       <div className="grid gap-4 lg:grid-cols-2">
         {!readOnly ? (
           <>
-            <StorageProfileImageUpload
-              storageProfileId={StorageProfiles.Avatar}
-              value={logoValue}
-              onChange={handleLogoChange}
-              aspectRatio="square"
-              label={t('onboarding.storeIdentity.storeLogo')}
-              hint={t('onboarding.storeIdentity.logoHint')}
+            <StorageImageManager
+              config={storeLogoConfig}
+              value={logoImage ? [logoImage] : []}
+              onChange={handleLogoImagesChange}
             />
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              {Array.from({ length: MAX_COVER_IMAGES }, (_, index) => (
-                <StorageProfileImageUpload
-                  key={index}
-                  storageProfileId={StorageProfiles.Cover}
-                  value={coverImages[index] ?? null}
-                  onChange={(image) => handleCoverChange(index, image)}
-                  aspectRatio="landscape"
-                  label={`${t('onboarding.storeIdentity.coverImage')} ${index + 1}`}
-                  hint={index === 0 ? t('onboarding.storeIdentity.coverHint') : undefined}
+              {storeCoverConfigs.map((config, index) => (
+                <StorageImageManager
+                  key={config.id}
+                  config={config}
+                  value={coverImages[index] ? [coverImages[index]] : []}
+                  onChange={(images) => handleCoverImageChange(index, images)}
                 />
               ))}
             </div>

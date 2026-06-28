@@ -37,6 +37,8 @@ export function StorageProfileImageUpload({
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [selectedPreviewUrl, setSelectedPreviewUrl] = React.useState<string | null>(null);
 
   const { uploadFile, removeImage, isUploading, error: uploadError } = useStorageProfileUpload({
     storageProfileId,
@@ -52,10 +54,20 @@ export function StorageProfileImageUpload({
   };
 
   const displayError = error || uploadError;
+  const previewUrl = selectedPreviewUrl ?? value?.url ?? null;
+  const hasSelectedImage = Boolean(selectedFile && selectedPreviewUrl);
+
+  React.useEffect(() => {
+    return () => {
+      if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
+    };
+  }, [selectedPreviewUrl]);
 
   const processFile = (file: File) => {
     if (!file.type.startsWith('image/')) return;
-    void uploadFile(file);
+    if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
+    setSelectedFile(file);
+    setSelectedPreviewUrl(URL.createObjectURL(file));
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -75,8 +87,38 @@ export function StorageProfileImageUpload({
     event.preventDefault();
     event.stopPropagation();
 
+    if (selectedFile) {
+      if (!window.confirm(t('onboarding.form.confirmClearSelectedImage'))) return;
+      if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
+      setSelectedFile(null);
+      setSelectedPreviewUrl(null);
+      return;
+    }
+
     if (!window.confirm(t('onboarding.form.confirmRemoveImage'))) return;
     void removeImage();
+  };
+
+  const handleChooseClick = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    inputRef.current?.click();
+  };
+
+  const handleUploadClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!selectedFile) return;
+    if (!window.confirm(t('onboarding.form.confirmUploadImage'))) return;
+
+    const file = selectedFile;
+    void uploadFile(file).then((uploaded) => {
+      if (!uploaded) return;
+      if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
+      setSelectedFile(null);
+      setSelectedPreviewUrl(null);
+    });
   };
 
   const busy = isUploading || value?.isUploading;
@@ -96,7 +138,7 @@ export function StorageProfileImageUpload({
           aspectClasses[aspectRatio],
           isDragging && 'border-primary bg-primary/5',
           displayError ? 'border-destructive' : 'border-border',
-          value?.url && 'border-solid'
+          previewUrl && 'border-solid'
         )}
         onDrop={handleDrop}
         onDragOver={(e) => {
@@ -105,10 +147,10 @@ export function StorageProfileImageUpload({
         }}
         onDragLeave={() => setIsDragging(false)}
       >
-        {value?.url ? (
+        {previewUrl ? (
           <>
             <img
-              src={value.url}
+              src={previewUrl}
               alt={t('onboarding.form.uploadedAlt')}
               className="absolute inset-0 h-full w-full rounded-lg object-cover"
             />
@@ -127,22 +169,26 @@ export function StorageProfileImageUpload({
             >
               <X className="h-4 w-4" />
             </button>
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              onClick={() => inputRef.current?.click()}
-              disabled={busy}
-              className="absolute bottom-2 left-2 h-8 gap-1.5 bg-background/90 px-3 shadow-md"
-            >
-              <Upload className="h-3.5 w-3.5" />
-              {t('onboarding.common.upload')}
-            </Button>
+            {hasSelectedImage && (
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                onClick={handleUploadClick}
+                disabled={busy}
+                aria-label={t('onboarding.common.upload')}
+                title={t('onboarding.common.upload')}
+                className="absolute bottom-2 left-2 h-8 gap-1.5 bg-background/90 px-3 shadow-md"
+              >
+                <Upload className="h-3.5 w-3.5" />
+                {t('onboarding.common.upload')}
+              </Button>
+            )}
           </>
         ) : (
           <div
             className="absolute inset-0 flex flex-col items-center justify-center gap-3 cursor-pointer px-4"
-            onClick={() => inputRef.current?.click()}
+            onClick={handleChooseClick}
           >
             <div className="p-3 rounded-full bg-muted">
               {busy ? (
@@ -158,10 +204,13 @@ export function StorageProfileImageUpload({
               type="button"
               size="sm"
               disabled={busy}
+              onClick={handleChooseClick}
+              aria-label={t('onboarding.form.chooseImage')}
+              title={t('onboarding.form.chooseImage')}
               className="gap-1.5"
             >
               <Upload className="h-3.5 w-3.5" />
-              {t('onboarding.common.upload')}
+              {t('onboarding.form.chooseImage')}
             </Button>
           </div>
         )}

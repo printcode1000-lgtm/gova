@@ -1,0 +1,9 @@
+{
+  "id": "profile-store-cover-3",
+  "storageProfileId": "cover",
+  "maxItems": 1,
+  "aspectRatio": "landscape",
+  "allowReplace": true,
+  "confirmUpload": true,
+  "confirmRemove": true
+}

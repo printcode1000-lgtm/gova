@@ -1,0 +1,9 @@
+{
+  "id": "profile-store-logo",
+  "storageProfileId": "avatar",
+  "maxItems": 1,
+  "aspectRatio": "square",
+  "allowReplace": true,
+  "confirmUpload": true,
+  "confirmRemove": true
+}
