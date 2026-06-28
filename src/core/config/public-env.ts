@@ -12,6 +12,7 @@ export const publicEnv = {
     process.env.GOVA_API_BASE_URL?.replace(/\/$/, '') ||
     '',
   buildId: process.env.NEXT_PUBLIC_BUILD_ID ?? 'default',
+  r2PublicUrl: process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.replace(/\/$/, '') || '',
 } as const;
 
 /** Prefix a public asset path with the deployment base path (e.g. `/gova` on GitHub Pages). */

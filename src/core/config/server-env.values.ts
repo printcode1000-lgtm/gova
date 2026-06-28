@@ -59,3 +59,60 @@ export function writeTursoProfileRuntimeCredentials(url: string, authToken: stri
   process.env.TURSO_PROFILE_DATABASE_URL = url;
   process.env.TURSO_PROFILE_AUTH_TOKEN = authToken;
 }
+
+export interface R2CloudflareCredentials {
+  accountId: string;
+  apiToken: string;
+}
+
+export interface R2S3Credentials {
+  accessKeyId: string;
+  secretAccessKey: string;
+  endpoint: string;
+  bucketName: string;
+  location: string;
+  jurisdiction: 'default' | 'eu' | 'fedramp';
+}
+
+export interface R2Config {
+  cloudflare: R2CloudflareCredentials;
+  s3: R2S3Credentials;
+  publicUrl: string;
+  catalogUri: string;
+  warehouseName: string;
+}
+
+function requireEnv(key: string): string {
+  const value = process.env[key];
+  if (!value) throw new Error(`${key} environment variable is not set`);
+  return value;
+}
+
+export function getR2CloudflareCredentials(): R2CloudflareCredentials {
+  return {
+    accountId: requireEnv('R2_ACCOUNT_ID'),
+    apiToken: requireEnv('R2_API_TOKEN'),
+  };
+}
+
+export function getR2S3Credentials(): R2S3Credentials {
+  const jurisdiction = (readOptionalEnv('R2_JURISDICTION') ?? 'default') as R2S3Credentials['jurisdiction'];
+  return {
+    accessKeyId: requireEnv('R2_ACCESS_KEY_ID'),
+    secretAccessKey: requireEnv('R2_SECRET_ACCESS_KEY'),
+    endpoint: requireEnv('R2_ENDPOINT'),
+    bucketName: requireEnv('R2_BUCKET_NAME'),
+    location: readOptionalEnv('R2_LOCATION') ?? 'WEUR',
+    jurisdiction,
+  };
+}
+
+export function getR2Config(): R2Config {
+  return {
+    cloudflare: getR2CloudflareCredentials(),
+    s3: getR2S3Credentials(),
+    publicUrl: requireEnv('R2_PUBLIC_URL'),
+    catalogUri: readOptionalEnv('R2_CATALOG_URI') ?? '',
+    warehouseName: readOptionalEnv('R2_WAREHOUSE_NAME') ?? '',
+  };
+}

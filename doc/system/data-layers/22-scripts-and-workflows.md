@@ -21,6 +21,9 @@ npm run db:ensure
 npm run db:schema:sync
 npm run db:provision:turso
 npm run db:push:vercel-env
+
+# Cloudflare R2
+npm run r2:sync:cors
 ```
 
 ## Typical: local schema change (users)

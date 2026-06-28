@@ -20,6 +20,7 @@
     "db:create:sqlite": "npx tsx scripts/create-sqlite-db.ts",
     "db:create:profile": "npx tsx scripts/create-profile-sqlite-db.ts",
     "db:ensure": "npx tsx scripts/ensure-sqlite-databases.ts",
+    "r2:sync:cors": "npx tsx scripts/r2-sync-cors.ts",
     "cap:sync": "npx cap sync",
     "cap:copy": "npx cap copy",
     "cap:open:android": "npx cap open android",
@@ -27,6 +28,8 @@
     "cap:build": "npx tsx scripts/cap-build.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1075.0",
+    "@aws-sdk/s3-request-presigner": "^3.1075.0",
     "@capacitor/android": "^8.4.1",
     "@capacitor/cli": "^8.4.1",
     "@capacitor/core": "^8.4.1",

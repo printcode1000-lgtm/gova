@@ -26,9 +26,34 @@ CAPACITOR_SERVER_URL=
 GOVA_CAPACITOR_API_BASE_URL=
 ```
 
+## Cloudflare R2
+
+```env
+# Server-only
+R2_ACCOUNT_ID=
+R2_API_TOKEN=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET_NAME=gova-storage
+R2_ENDPOINT=                         # https://{account_id}.r2.cloudflarestorage.com
+R2_LOCATION=WEUR
+R2_PUBLIC_URL=                       # Public Dev URL (pub-xxx.r2.dev)
+R2_CATALOG_URI=                      # Iceberg catalog (optional)
+R2_WAREHOUSE_NAME=                   # Iceberg warehouse (optional)
+
+# Client-safe
+NEXT_PUBLIC_R2_PUBLIC_URL=
+```
+
+Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `GOVA_CORS_ORIGINS`:
+
+```bash
+npm run r2:sync:cors
+```
+
 ## Never expose
 
-`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_PROFILE_AUTH_TOKEN`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
+`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_PROFILE_AUTH_TOKEN`, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
 
 ## Vercel deploy
 
