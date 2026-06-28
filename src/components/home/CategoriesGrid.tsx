@@ -4,6 +4,7 @@ import { Store } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';
 
+import { govaApi } from '@/core/api';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -41,8 +42,7 @@ export function CategoriesGrid() {
   React.useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('/catagory/categories.json');
-        const data: Category[] = await response.json();
+        const data = await govaApi.getPublicJson<Category[]>('/catagory/categories.json');
         
         // Sort categories by order
         const sortedData = [...data].sort((a, b) => {
