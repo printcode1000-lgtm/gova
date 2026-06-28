@@ -117,7 +117,7 @@ export function FormSelect({
   );
 }
 
-interface ImageUploadProps {
+interface BlobImageUploadProps {
   value?: { url: string; preview?: string } | null;
   onChange: (file: File | null, preview: string | null) => void;
   onRemove: () => void;
@@ -129,7 +129,8 @@ interface ImageUploadProps {
   error?: string;
 }
 
-export function ImageUpload({
+/** Legacy local-preview upload for out-of-scope flows (e.g. collections). */
+export function BlobImageUpload({
   value,
   onChange,
   onRemove,
@@ -139,7 +140,7 @@ export function ImageUpload({
   label,
   hint,
   error,
-}: ImageUploadProps) {
+}: BlobImageUploadProps) {
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);

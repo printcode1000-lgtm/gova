@@ -3,7 +3,7 @@ export {
   FormInput,
   FormTextarea,
   FormSelect,
-  ImageUpload,
+  BlobImageUpload,
   MultiSelect,
   CheckboxGroup,
 } from './form-components';

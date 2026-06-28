@@ -166,8 +166,7 @@ interface OnboardingStore extends OnboardingState {
   updateCollection: (id: string, collection: Partial<Collection>) => void;
   removeCollection: (id: string) => void;
   toggleCategory: (categoryId: string) => void;
-  uploadImage: (field: string, file: File, preview: string) => void;
-  removeImage: (field: string) => void;
+  setStoreImage: (field: 'storeLogo' | 'coverImage', image: UploadedImage | null) => void;
 }
 
 export const useOnboardingStore = create<OnboardingStore>()(
@@ -393,57 +392,28 @@ export const useOnboardingStore = create<OnboardingStore>()(
           isDirty: true,
         })),
 
-      uploadImage: (field, file, preview) =>
+      setStoreImage: (field, image) =>
         set((state) => {
-          const image: UploadedImage = {
-            id: nextSellerId('img'),
-            url: preview,
-            file,
-            preview,
-            isUploading: false,
+          const withId =
+            image && !image.id
+              ? { ...image, id: nextSellerId('img') }
+              : image;
+          if (field === 'storeLogo') {
+            return {
+              data: {
+                ...state.data,
+                storeIdentity: { ...state.data.storeIdentity, storeLogo: withId },
+              },
+              isDirty: true,
+            };
+          }
+          return {
+            data: {
+              ...state.data,
+              storeIdentity: { ...state.data.storeIdentity, coverImage: withId },
+            },
+            isDirty: true,
           };
-          if (field === 'storeLogo') {
-            return {
-              data: {
-                ...state.data,
-                storeIdentity: { ...state.data.storeIdentity, storeLogo: image },
-              },
-              isDirty: true,
-            };
-          }
-          if (field === 'coverImage') {
-            return {
-              data: {
-                ...state.data,
-                storeIdentity: { ...state.data.storeIdentity, coverImage: image },
-              },
-              isDirty: true,
-            };
-          }
-          return state;
-        }),
-
-      removeImage: (field) =>
-        set((state) => {
-          if (field === 'storeLogo') {
-            return {
-              data: {
-                ...state.data,
-                storeIdentity: { ...state.data.storeIdentity, storeLogo: null },
-              },
-              isDirty: true,
-            };
-          }
-          if (field === 'coverImage') {
-            return {
-              data: {
-                ...state.data,
-                storeIdentity: { ...state.data.storeIdentity, coverImage: null },
-              },
-              isDirty: true,
-            };
-          }
-          return state;
         }),
     }),
     {

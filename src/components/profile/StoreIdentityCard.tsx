@@ -14,7 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Store, Upload, X } from 'lucide-react';
+import { Store, X } from 'lucide-react';
+import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
+import { STORAGE_PROFILE_IDS } from '@/core/storage/constants/storage-profile-ids';
+import type { StoredImage } from '@/core/storage/types/stored-image.types';
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
   "Women's Fashion": 'womensFashion',
@@ -123,20 +126,21 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
     updateField('storeSpecialties', newSpecialties);
   };
 
-  const handleImageUpload = (field: 'storeLogo' | 'coverImage') => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        updateField(field, reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleLogoChange = (image: StoredImage | null) => {
+    updateField('storeLogo', image?.url ?? null);
   };
 
-  const handleImageRemove = (field: 'storeLogo' | 'coverImage') => () => {
-    updateField(field, null);
+  const handleCoverChange = (image: StoredImage | null) => {
+    updateField('coverImage', image?.url ?? null);
   };
+
+  const logoValue: StoredImage | null = localData.storeLogo
+    ? { imageKey: '', url: localData.storeLogo }
+    : null;
+
+  const coverValue: StoredImage | null = localData.coverImage
+    ? { imageKey: '', url: localData.coverImage }
+    : null;
 
   return (
     <div className="space-y-4">
@@ -174,81 +178,49 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="space-y-2">
-          <Label>{t('onboarding.storeIdentity.storeLogo')}</Label>
-          <p className="text-xs text-muted-foreground">{t('onboarding.storeIdentity.logoHint')}</p>
-          <div className="relative aspect-square rounded-lg border-2 border-dashed border-outline-variant/50 flex flex-col items-center justify-center bg-muted/30 overflow-hidden">
-            {localData.storeLogo ? (
-              <>
-                <img
-                  src={localData.storeLogo}
-                  alt="Store Logo"
-                  className="w-full h-full object-cover"
-                />
-                {!readOnly && (
-                  <button
-                    type="button"
-                    onClick={handleImageRemove('storeLogo')}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-background/80 hover:bg-background shadow-sm"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+        {!readOnly ? (
+          <>
+            <StorageProfileImageUpload
+              storageProfileId={STORAGE_PROFILE_IDS.AVATAR}
+              value={logoValue}
+              onChange={handleLogoChange}
+              aspectRatio="square"
+              label={t('onboarding.storeIdentity.storeLogo')}
+              hint={t('onboarding.storeIdentity.logoHint')}
+            />
+            <StorageProfileImageUpload
+              storageProfileId={STORAGE_PROFILE_IDS.COVER}
+              value={coverValue}
+              onChange={handleCoverChange}
+              aspectRatio="landscape"
+              label={t('onboarding.storeIdentity.coverImage')}
+              hint={t('onboarding.storeIdentity.coverHint')}
+            />
+          </>
+        ) : (
+          <>
+            <div className="space-y-2">
+              <Label>{t('onboarding.storeIdentity.storeLogo')}</Label>
+              <div className="relative aspect-square rounded-lg border overflow-hidden">
+                {localData.storeLogo ? (
+                  <img src={localData.storeLogo} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-muted-foreground text-sm">—</div>
                 )}
-              </>
-            ) : (
-              <>
-                <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground">{t('onboarding.storeIdentity.uploadLogo')}</p>
-                {!readOnly && (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload('storeLogo')}
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                  />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>{t('onboarding.storeIdentity.coverImage')}</Label>
+              <div className="relative aspect-video rounded-lg border overflow-hidden">
+                {localData.coverImage ? (
+                  <img src={localData.coverImage} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-muted-foreground text-sm">—</div>
                 )}
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label>{t('onboarding.storeIdentity.coverImage')}</Label>
-          <p className="text-xs text-muted-foreground">{t('onboarding.storeIdentity.coverHint')}</p>
-          <div className="relative aspect-video rounded-lg border-2 border-dashed border-outline-variant/50 flex flex-col items-center justify-center bg-muted/30 overflow-hidden">
-            {localData.coverImage ? (
-              <>
-                <img
-                  src={localData.coverImage}
-                  alt="Cover Image"
-                  className="w-full h-full object-cover"
-                />
-                {!readOnly && (
-                  <button
-                    type="button"
-                    onClick={handleImageRemove('coverImage')}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-background/80 hover:bg-background shadow-sm"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </>
-            ) : (
-              <>
-                <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground">{t('onboarding.storeIdentity.uploadCover')}</p>
-                {!readOnly && (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload('coverImage')}
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                  />
-                )}
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="space-y-2">

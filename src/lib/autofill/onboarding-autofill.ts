@@ -79,6 +79,7 @@ function buildRandomProduct(categoryName: string): Product {
     tags: [randomText(3, 8), randomText(3, 8)],
     basePrice,
     discountPrice: Math.random() > 0.5 ? Math.max(1, basePrice - randomInt(1, 20)) : null,
+    image: null,
     variants: [
       {
         id: variantId,

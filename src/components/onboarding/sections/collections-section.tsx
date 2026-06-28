@@ -4,7 +4,7 @@ import * as React from 'react';
 import { FolderOpen, Plus, X, Package } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/onboarding';
 import { useTranslation } from '@/lib/i18n';
-import { FormField, FormInput, FormTextarea, ImageUpload } from '../form-components';
+import { FormField, FormInput, FormTextarea, BlobImageUpload } from '../form-components';
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -102,7 +102,7 @@ export function CollectionsSection() {
                   </FormField>
                 </div>
 
-                <ImageUpload
+                <BlobImageUpload
                   value={newCollection.coverImage}
                   onChange={(file, preview) => {
                     if (file && preview) {

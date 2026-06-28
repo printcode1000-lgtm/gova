@@ -23,13 +23,13 @@ export interface OnboardingStepConfig {
   isRequired: boolean;
 }
 
-export interface UploadedImage {
-  id: string;
-  url: string;
-  file?: File;
+import type { StoredImage } from '@/core/storage/types/stored-image.types';
+
+/** Stored image reference — extends StoredImage with optional legacy blob-upload fields. */
+export interface UploadedImage extends Omit<StoredImage, 'imageKey'> {
+  imageKey?: string;
+  id?: string;
   preview?: string;
-  isUploading: boolean;
-  error?: string;
 }
 
 export interface StoreIdentity {
@@ -152,6 +152,7 @@ export interface Product {
   tags: string[];
   basePrice: number;
   discountPrice: number | null;
+  image: UploadedImage | null;
   variants: ProductVariant[];
   isActive: boolean;
   isFeatured: boolean;

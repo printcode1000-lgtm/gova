@@ -90,6 +90,22 @@ export class GovaApiClient {
     return this.request<T>('DELETE', route, undefined, options);
   }
 
+  /** POST multipart/form-data (e.g. file uploads). Does not set Content-Type — browser sets boundary. */
+  postForm<T>(route: string, formData: FormData, options?: GovaApiRequestOptions): Promise<T> {
+    return trackGovaApiRequest('POST', route, true, async () => {
+      const response = await govaHttpFetch(buildGovaApiUrl(route), {
+        method: 'POST',
+        body: formData,
+        headers: { Accept: 'application/json', ...options?.headers },
+        credentials: 'omit',
+        signal: options?.signal,
+        cache: options?.cache,
+      });
+      const data = await this.parseResponse<T>(response);
+      return { data, response };
+    });
+  }
+
   /** Load a static JSON file from the public folder (not a Business API call). */
   async getPublicJson<T>(assetPath: string, options?: GovaApiRequestOptions): Promise<T> {
     return trackGovaApiRequest('GET', assetPath, false, async () => {

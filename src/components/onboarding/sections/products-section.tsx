@@ -11,7 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import type { Product, ProductVariant } from '@/lib/onboarding/types';
+import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
+import { STORAGE_PROFILE_IDS } from '@/core/storage/constants/storage-profile-ids';
+import type { Product, ProductVariant, UploadedImage } from '@/lib/onboarding/types';
 import { nextSellerId } from '@/lib/seller/next-id';
 
 function generateId() {
@@ -113,6 +115,27 @@ function ProductForm({ product, onChange, onSave, onCancel }: ProductFormProps) 
           error={errors.description}
         />
       </FormField>
+
+      <StorageProfileImageUpload
+        storageProfileId={STORAGE_PROFILE_IDS.PRODUCT_DEFAULT}
+        value={
+          product.image?.url
+            ? {
+                imageKey: product.image.imageKey ?? '',
+                url: product.image.url,
+                isUploading: product.image.isUploading,
+                error: product.image.error,
+              }
+            : null
+        }
+        onChange={(image) =>
+          onChange({
+            image: image ? { ...image, id: product.image?.id ?? nextSellerId('img') } : null,
+          })
+        }
+        aspectRatio="square"
+        label={t('onboarding.products.productImage')}
+      />
 
       <div className="grid gap-6 sm:grid-cols-2">
         <FormField label={t('onboarding.products.price')} htmlFor="basePrice" required error={errors.basePrice}>
@@ -261,6 +284,7 @@ export function ProductsSection() {
       tags: [],
       basePrice: 0,
       discountPrice: null,
+      image: null,
       variants: [],
       isActive: true,
       isFeatured: false,

@@ -1,5 +1,6 @@
 import { govaApi, GOVA_API_ROUTES } from '@/core/api';
 import type { ProfileContactsData, SaveProfileContactsInput } from '../entities/profile-contacts.entity';
+import type { SaveStoreImagesInput, StoreImagesData } from '../entities/store-images.entity';
 import type { IProfileService } from './profile-service.interface';
 
 export class ProfileApiService implements IProfileService {
@@ -10,6 +11,15 @@ export class ProfileApiService implements IProfileService {
 
   async saveContacts(input: SaveProfileContactsInput): Promise<ProfileContactsData> {
     return govaApi.put<ProfileContactsData>(GOVA_API_ROUTES.profile.contacts, input);
+  }
+
+  async getStoreImages(uid: string): Promise<StoreImagesData> {
+    const route = `${GOVA_API_ROUTES.profile.storeImages}?uid=${encodeURIComponent(uid)}`;
+    return govaApi.get<StoreImagesData>(route);
+  }
+
+  async saveStoreImages(input: SaveStoreImagesInput): Promise<StoreImagesData> {
+    return govaApi.put<StoreImagesData>(GOVA_API_ROUTES.profile.storeImages, input);
   }
 }
 

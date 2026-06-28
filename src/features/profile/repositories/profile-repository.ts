@@ -5,7 +5,7 @@ import { profileDbClient } from '@/core/database/profile-db-client';
 import type { IDatabaseClient } from '@/core/database/database-client.interface';
 import { userProfiles } from '@/core/database/profile/profile.schema';
 import type { ProfileContactsData } from '../entities/profile-contacts.entity';
-import type { IProfileRepository } from './profile-repository.interface';
+import type { ProfileImageKeys, IProfileRepository } from './profile-repository.interface';
 
 function parseJson<T>(value: string, fallback: T): T {
   try {
@@ -51,6 +51,46 @@ export class ProfileRepository implements IProfileRepository {
       .from(userProfiles)
       .where(eq(userProfiles.uid, uid))
       .limit(1);
+
+    if (existing.length === 0) {
+      await this.database.db.insert(userProfiles).values({
+        uid,
+        ...payload,
+      });
+      return;
+    }
+
+    await this.database.db.update(userProfiles).set(payload).where(eq(userProfiles.uid, uid));
+  }
+
+  async getImageKeys(uid: string): Promise<ProfileImageKeys | null> {
+    const rows = await this.database.db
+      .select({
+        avatarImageKey: userProfiles.avatarImageKey,
+        coverImageKey: userProfiles.coverImageKey,
+      })
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uid))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return {
+      avatarImageKey: rows[0].avatarImageKey ?? null,
+      coverImageKey: rows[0].coverImageKey ?? null,
+    };
+  }
+
+  async upsertImageKeys(uid: string, keys: ProfileImageKeys): Promise<void> {
+    const existing = await this.database.db
+      .select({ uid: userProfiles.uid })
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uid))
+      .limit(1);
+
+    const payload = {
+      avatarImageKey: keys.avatarImageKey,
+      coverImageKey: keys.coverImageKey,
+    };
 
     if (existing.length === 0) {
       await this.database.db.insert(userProfiles).values({

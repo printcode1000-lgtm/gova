@@ -3,9 +3,13 @@
 import * as React from 'react';
 import { useOnboardingStore, constants } from '@/lib/onboarding';
 import { useTranslation } from '@/lib/i18n';
-import { FormField, FormInput, FormTextarea, FormSelect, ImageUpload, MultiSelect } from '../form-components';
+import { FormField, FormInput, FormTextarea, FormSelect, MultiSelect } from '../form-components';
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
+import { STORAGE_PROFILE_IDS } from '@/core/storage/constants/storage-profile-ids';
+import { nextSellerId } from '@/lib/seller/next-id';
+import type { StoredImage } from '@/core/storage/types/stored-image.types';
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
   "Women's Fashion": 'womensFashion',
@@ -37,7 +41,7 @@ const SPECIALTY_KEYS: Record<string, string> = {
 
 export function StoreIdentitySection() {
   const { t } = useTranslation();
-  const { data, updateStoreIdentity, uploadImage, removeImage, markStepComplete } = useOnboardingStore();
+  const { data, updateStoreIdentity, setStoreImage, markStepComplete } = useOnboardingStore();
   const [errors, setErrors] = React.useState<Record<string, string>>({});
 
   const { storeIdentity } = data;
@@ -72,10 +76,18 @@ export function StoreIdentitySection() {
     return false;
   };
 
-  const handleImageUpload = (field: 'storeLogo' | 'coverImage') => (file: File | null, preview: string | null) => {
-    if (file && preview) {
-      uploadImage(field, file, preview);
-    }
+  const handleLogoChange = (image: StoredImage | null) => {
+    setStoreImage(
+      'storeLogo',
+      image ? { ...image, id: storeIdentity.storeLogo?.id ?? nextSellerId('img') } : null
+    );
+  };
+
+  const handleCoverChange = (image: StoredImage | null) => {
+    setStoreImage(
+      'coverImage',
+      image ? { ...image, id: storeIdentity.coverImage?.id ?? nextSellerId('img') } : null
+    );
   };
 
   return (
@@ -145,27 +157,41 @@ export function StoreIdentitySection() {
           </FormField>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <div>
-              <ImageUpload
-                value={storeIdentity.storeLogo}
-                onChange={handleImageUpload('storeLogo')}
-                onRemove={() => removeImage('storeLogo')}
-                aspectRatio="square"
-                label={t('onboarding.storeIdentity.storeLogo')}
-                hint={t('onboarding.storeIdentity.logoHint')}
-              />
-            </div>
+            <StorageProfileImageUpload
+              storageProfileId={STORAGE_PROFILE_IDS.AVATAR}
+              value={
+                storeIdentity.storeLogo?.url
+                  ? {
+                      imageKey: storeIdentity.storeLogo.imageKey ?? '',
+                      url: storeIdentity.storeLogo.url,
+                      isUploading: storeIdentity.storeLogo.isUploading,
+                      error: storeIdentity.storeLogo.error,
+                    }
+                  : null
+              }
+              onChange={handleLogoChange}
+              aspectRatio="square"
+              label={t('onboarding.storeIdentity.storeLogo')}
+              hint={t('onboarding.storeIdentity.logoHint')}
+            />
 
-            <div>
-              <ImageUpload
-                value={storeIdentity.coverImage}
-                onChange={handleImageUpload('coverImage')}
-                onRemove={() => removeImage('coverImage')}
-                aspectRatio="wide"
-                label={t('onboarding.storeIdentity.coverImage')}
-                hint={t('onboarding.storeIdentity.coverHint')}
-              />
-            </div>
+            <StorageProfileImageUpload
+              storageProfileId={STORAGE_PROFILE_IDS.COVER}
+              value={
+                storeIdentity.coverImage?.url
+                  ? {
+                      imageKey: storeIdentity.coverImage.imageKey ?? '',
+                      url: storeIdentity.coverImage.url,
+                      isUploading: storeIdentity.coverImage.isUploading,
+                      error: storeIdentity.coverImage.error,
+                    }
+                  : null
+              }
+              onChange={handleCoverChange}
+              aspectRatio="wide"
+              label={t('onboarding.storeIdentity.coverImage')}
+              hint={t('onboarding.storeIdentity.coverHint')}
+            />
           </div>
 
           <FormField

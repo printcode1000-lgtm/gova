@@ -56,6 +56,7 @@ export const ALLOWED_DB_DRIVER_FILES_PATTERN = [
   /^src\/core\/database\//,
   /^src\/lib\/db\//,
   /^src\/core\/provisioning\//,
+  /^src\/core\/storage\/providers\//,
 ];
 
 export const ALLOWED_SQL_FILES_PATTERN = [
@@ -108,6 +109,15 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/core/api/')) return 'api-shared';
   if (p.startsWith('src/core/config/')) return 'configuration';
   if (p.startsWith('src/core/provisioning/')) return 'provisioning';
+  if (
+    p.startsWith('src/core/storage/') &&
+    !p.includes('.client.') &&
+    !p.includes('/rules/') &&
+    !p.includes('/types/') &&
+    !p.includes('/constants/')
+  ) {
+    return 'server-services';
+  }
   if (p.startsWith('src/core/database/')) return 'database-client';
   if (p === 'src/lib/db/turso.ts') return 'database-client';
   if (p === 'src/lib/db/turso-profile.ts') return 'database-client';
@@ -230,6 +240,14 @@ export function getForbiddenImportViolation(
   if (!forbidden) return null;
 
   if (importerLayer === 'server-services' && target === 'operations') return null;
+  if (importerLayer === 'server-services' && target === 'server-services') return null;
+  if (
+    importerLayer === 'server-services' &&
+    target === 'provisioning' &&
+    (importPath.includes('/core/provisioning/r2') || importPath.includes('/core/provisioning/r2-'))
+  ) {
+    return null;
+  }
   if (importerLayer === 'operations' && target === 'repository') return null;
   if (importerLayer === 'business-api' && target === 'server-services') return null;
   if (importerLayer === 'hooks' && target === 'client-services') return null;

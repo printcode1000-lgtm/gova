@@ -1,0 +1,22 @@
+{
+  "profiles": [
+    {
+      "id": "avatar",
+      "maxImageSizeKB": 20,
+      "provider": "CloudflareR2",
+      "folder": "images/avatars"
+    },
+    {
+      "id": "cover",
+      "maxImageSizeKB": 30,
+      "provider": "CloudflareR2",
+      "folder": "images/covers"
+    },
+    {
+      "id": "product-default",
+      "maxImageSizeKB": 30,
+      "provider": "CloudflareR2",
+      "folder": "images/products/default"
+    }
+  ]
+}
