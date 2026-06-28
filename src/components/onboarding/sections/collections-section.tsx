@@ -4,7 +4,10 @@ import * as React from 'react';
 import { FolderOpen, Plus, X, Package } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/onboarding';
 import { useTranslation } from '@/lib/i18n';
-import { FormField, FormInput, FormTextarea, BlobImageUpload } from '../form-components';
+import { FormField, FormInput, FormTextarea } from '../form-components';
+import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
+import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
+import type { StoredImage } from '@/core/storage/types/stored-image.types';
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -102,17 +105,12 @@ export function CollectionsSection() {
                   </FormField>
                 </div>
 
-                <BlobImageUpload
-                  value={newCollection.coverImage}
-                  onChange={(file, preview) => {
-                    if (file && preview) {
-                      setNewCollection({
-                        ...newCollection,
-                        coverImage: { id: nextSellerId('img'), url: preview, preview, isUploading: false },
-                      });
-                    }
-                  }}
-                  onRemove={() => setNewCollection({ ...newCollection, coverImage: null })}
+                <StorageProfileImageUpload
+                  storageProfileId={StorageProfiles.Cover}
+                  value={newCollection.coverImage ?? null}
+                  onChange={(image: StoredImage | null) =>
+                    setNewCollection({ ...newCollection, coverImage: image })
+                  }
                   aspectRatio="landscape"
                   label={t('onboarding.collections.coverImage')}
                   hint={t('onboarding.collections.coverHint')}
@@ -178,7 +176,7 @@ export function CollectionsSection() {
                     {collection.coverImage ? (
                       <div className="aspect-video relative">
                         <img
-                          src={collection.coverImage.preview || collection.coverImage.url}
+                          src={collection.coverImage.url}
                           alt={collection.name}
                           className="h-full w-full object-cover"
                         />

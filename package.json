@@ -10,6 +10,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "architecture:check": "npx tsx scripts/architecture-check.ts",
+    "validate-storage-profiles": "npx tsx scripts/validate-storage-profiles.ts",
     "app:init": "npx tsx scripts/generate-app-init-public.ts",
     "server:stop": "npx tsx scripts/stop-dev-server.ts",
     "db:export": "npx tsx scripts/export-db-to-json.ts",

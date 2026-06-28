@@ -16,6 +16,17 @@ import {
   normalizePath,
   type ArchitectureLayer,
 } from '../src/core/architecture/contract';
+import {
+  IMAGE_STORAGE_API_ADAPTER,
+  IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS,
+  IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT,
+  IMAGE_STORAGE_FORBIDDEN_PATTERNS,
+  IMAGE_STORAGE_LEGACY_BLOB_UPLOAD_FILES,
+  IMAGE_STORAGE_SERVER_UPLOAD_ROUTE,
+  R2_S3_CLIENT_ALLOWED_IMPORTERS,
+  R2_S3_CLIENT_MODULE,
+} from '../src/core/architecture/image-storage-contract';
+import { validateStorageProfilesAtStartup } from '../src/core/storage/profiles/storage-profile-validator';
 
 const ROOT = process.cwd();
 const SRC = join(ROOT, 'src');
@@ -217,6 +228,85 @@ function checkFile(filePath: string): void {
       // AuthService uses IUserRepository interface with default userRepository - allowed via constructor DI
     }
   }
+
+  checkImageStorageContract(fileRel, content, filePath);
+}
+
+function checkImageStorageContract(fileRel: string, content: string, filePath: string): void {
+  if (!IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT.has(fileRel)) {
+    for (const { pattern, message } of IMAGE_STORAGE_FORBIDDEN_PATTERNS) {
+      if (pattern.test(content)) {
+        addViolation('Image Storage Contract', filePath, message, 'Use the shared Image Storage pipeline.');
+      }
+    }
+  }
+
+  if (/from\s+['"]@\/core\/provisioning\/r2-s3-client['"]/.test(content) && !R2_S3_CLIENT_ALLOWED_IMPORTERS.has(fileRel)) {
+    addViolation(
+      'Image Storage Contract',
+      filePath,
+      'R2 S3 client imported outside Provider Layer.',
+      `${R2_S3_CLIENT_MODULE} → CloudflareR2Provider only.`
+    );
+  }
+
+  if (content.includes(IMAGE_STORAGE_API_ADAPTER) && !IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS.has(fileRel)) {
+    const importsApiAdapter =
+      new RegExp(`from\\s+['"][^'"]*${IMAGE_STORAGE_API_ADAPTER}['"]`).test(content) ||
+      new RegExp(`import\\(\\s*['"][^'"]*${IMAGE_STORAGE_API_ADAPTER}['"]`).test(content);
+    if (importsApiAdapter) {
+      addViolation(
+        'Image Storage Contract',
+        filePath,
+        'Direct ImageStorageApiService import from UI or feature code.',
+        'Use ImageStorageService only.'
+      );
+    }
+  }
+
+  const usesLegacyBlobUpload =
+    /<BlobImageUpload[\s/>]/.test(content) ||
+    /import\s*\{[^}]*\bBlobImageUpload\b[^}]*\}/.test(content);
+  if (
+    usesLegacyBlobUpload &&
+    !IMAGE_STORAGE_LEGACY_BLOB_UPLOAD_FILES.has(fileRel) &&
+    fileRel !== 'src/components/onboarding/form-components.tsx'
+  ) {
+    addViolation(
+      'Image Storage Contract',
+      filePath,
+      'BlobImageUpload is forbidden outside legacy allowlist.',
+      'Use StorageProfileImageUpload + StorageProfiles.*.'
+    );
+  }
+
+  if (fileRel === IMAGE_STORAGE_SERVER_UPLOAD_ROUTE) {
+    if (
+      !content.includes('imageUploadApplicationService') &&
+      !content.includes('image-storage-service.bootstrap.server')
+    ) {
+      addViolation(
+        'Image Storage Contract',
+        filePath,
+        'Upload API must delegate to ImageUploadApplicationService.',
+        'Business API → Application Layer only.'
+      );
+    }
+  }
+
+  const isUiOrHook =
+    fileRel.startsWith('src/components/') ||
+    fileRel.startsWith('src/app/') && !fileRel.startsWith('src/app/api/') ||
+    fileRel.includes('/hooks/');
+
+  if (isUiOrHook && /\/api\/storage\/images\/upload/.test(content)) {
+    addViolation(
+      'Image Storage Contract',
+      filePath,
+      'Direct upload API call from UI layer.',
+      'Use ImageStorageService → ImageStorageApiService.'
+    );
+  }
 }
 
 function getAllowedHint(layer: ArchitectureLayer, target: ArchitectureLayer | 'forbidden-package'): string {
@@ -252,6 +342,7 @@ function printReport(): void {
     'No Drizzle Outside Repository',
     'No Invalid Imports',
     'Configuration Layer',
+    'Image Storage Contract',
   ];
 
   const failedCategories = new Set(violations.map((v) => v.layer));
@@ -278,6 +369,14 @@ function printReport(): void {
 }
 
 function main(): void {
+  try {
+    validateStorageProfilesAtStartup();
+  } catch (error) {
+    console.error('✖ storage-profiles.json validation failed');
+    console.error(error instanceof Error ? error.message : error);
+    process.exit(1);
+  }
+
   const files = walk(SRC);
   for (const file of files) {
     if (normalizePath(file).includes('/architecture/contract.ts')) continue;

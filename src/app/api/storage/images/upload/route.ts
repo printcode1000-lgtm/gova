@@ -1,4 +1,5 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
+import { getMimeTypeForOutputFormat } from '@/core/storage/output-format.registry';
 import { imageStorageService } from '@/features/storage/services/image-storage-service.bootstrap.server';
 import { runTracedBusinessRoute } from '../../../auth/traced-route';
 
@@ -17,15 +18,17 @@ export async function POST(request: Request) {
         throw new Error('storageProfileId is required');
       }
 
+      const profile = imageStorageService.getProfile(storageProfileId);
       const buffer = Buffer.from(await file.arrayBuffer());
-      const contentType = file.type || 'image/webp';
+      const contentType = file.type || getMimeTypeForOutputFormat(profile.outputFormat);
 
-      const result = await imageStorageService.uploadImage(
+      const result = await imageStorageService.upload({
         storageProfileId,
-        buffer,
+        body: buffer,
         contentType,
-        typeof replaceImageKey === 'string' && replaceImageKey ? replaceImageKey : null
-      );
+        replaceImageKey:
+          typeof replaceImageKey === 'string' && replaceImageKey ? replaceImageKey : null,
+      });
 
       return apiSuccess(result);
     } catch (error) {

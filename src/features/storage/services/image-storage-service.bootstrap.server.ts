@@ -1,3 +1,3 @@
 import 'server-only';
 
-export { imageStorageService } from './image-storage-service.server';
+export { imageUploadApplicationService as imageStorageService } from '../application/image-upload-application.bootstrap.server';

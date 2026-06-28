@@ -1,28 +1,29 @@
 {
+  "version": 1,
   "profiles": [
     {
       "id": "avatar",
-      "maxImageSizeKB": 20,
-      "outputFormat": "webp",
       "enabled": true,
       "provider": "CloudflareR2",
-      "folder": "images/avatars"
+      "folder": "images/avatars",
+      "maxImageSizeKB": 20,
+      "outputFormat": "webp"
     },
     {
       "id": "cover",
-      "maxImageSizeKB": 30,
-      "outputFormat": "webp",
       "enabled": true,
       "provider": "CloudflareR2",
-      "folder": "images/covers"
+      "folder": "images/covers",
+      "maxImageSizeKB": 30,
+      "outputFormat": "webp"
     },
     {
       "id": "product-default",
-      "maxImageSizeKB": 30,
-      "outputFormat": "webp",
       "enabled": true,
       "provider": "CloudflareR2",
-      "folder": "images/products/default"
+      "folder": "images/products/default",
+      "maxImageSizeKB": 30,
+      "outputFormat": "webp"
     }
   ]
 }

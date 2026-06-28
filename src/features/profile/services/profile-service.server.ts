@@ -9,9 +9,10 @@ import type { SaveStoreImagesInput, StoreImagesData } from '../entities/store-im
 import type { IProfileService } from './profile-service.interface';
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 import { imageStorageOrchestrator } from '@/core/storage/storage/image-storage-orchestrator.server';
+import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
 
-const AVATAR_PROFILE_ID = 'avatar';
-const COVER_PROFILE_ID = 'cover';
+const AVATAR_PROFILE_ID = StorageProfiles.Avatar;
+const COVER_PROFILE_ID = StorageProfiles.Cover;
 
 export class ProfileService implements IProfileService {
   constructor(

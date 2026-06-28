@@ -167,7 +167,7 @@ export interface Collection {
   id: string;
   name: string;
   description: string;
-  coverImage: UploadedImage | null;
+  coverImage: StoredImage | null;
   productIds: string[];
   isActive: boolean;
   isFeatured: boolean;

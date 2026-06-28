@@ -2,51 +2,35 @@ import 'server-only';
 
 import { readFileSync } from 'fs';
 import path from 'path';
-import { STORAGE_IMAGES_ROOT } from '../constants/storage-profiles';
-import type { StorageProfile, StorageProfileClientView } from '../types/storage-profile.types';
+import {
+  loadAndValidateStorageProfilesFromDisk,
+  validateStorageProfilesFile,
+} from './storage-profile-validator';
+import type { StorageProfile, StorageProfileClientView, StorageProfilesFile } from '../types/storage-profile.types';
 
-interface StorageProfilesFile {
-  profiles: StorageProfile[];
+const CONFIG_PATH = path.join(process.cwd(), 'src/config/storage-profiles.json');
+
+let cachedConfig: StorageProfilesFile | null = null;
+
+function loadConfig(): StorageProfilesFile {
+  if (cachedConfig) return cachedConfig;
+  cachedConfig = loadAndValidateStorageProfilesFromDisk();
+  return cachedConfig;
 }
 
-let cachedProfiles: StorageProfile[] | null = null;
-
-function validateProfile(profile: StorageProfile): void {
-  const folder = profile.folder.replace(/^\/+|\/+$/g, '');
-  if (!folder.startsWith(`${STORAGE_IMAGES_ROOT}/`)) {
-    throw new Error(
-      `Storage profile "${profile.id}" folder must start with "${STORAGE_IMAGES_ROOT}/": ${profile.folder}`
-    );
-  }
+/** Validates config at module load — fails startup on invalid configuration. */
+export function ensureStorageProfilesValidated(): StorageProfilesFile {
+  return loadConfig();
 }
 
-function loadProfilesFile(): StorageProfile[] {
-  if (cachedProfiles) return cachedProfiles;
-
-  const filePath = path.join(process.cwd(), 'src/config/storage-profiles.json');
-  const raw = readFileSync(filePath, 'utf8');
-  const parsed = JSON.parse(raw) as StorageProfilesFile;
-
-  if (!Array.isArray(parsed.profiles) || parsed.profiles.length === 0) {
-    throw new Error('storage-profiles.json must contain at least one profile');
-  }
-
-  for (const profile of parsed.profiles) {
-    validateProfile(profile);
-  }
-
-  cachedProfiles = parsed.profiles;
-  return cachedProfiles;
-}
-
-/** Loads all storage profiles from src/config/storage-profiles.json (server-only). */
+/** Loads all storage profiles (validated, server-only). */
 export function getAllStorageProfiles(): StorageProfile[] {
-  return loadProfilesFile();
+  return loadConfig().profiles;
 }
 
 /** Resolves a storage profile by id. Throws if not found. */
 export function getStorageProfileById(profileId: string): StorageProfile {
-  const profile = loadProfilesFile().find((p) => p.id === profileId);
+  const profile = loadConfig().profiles.find((p) => p.id === profileId);
   if (!profile) {
     throw new Error(`Unknown storage profile: ${profileId}`);
   }
@@ -70,7 +54,17 @@ export function toStorageProfileClientView(profile: StorageProfile): StorageProf
   };
 }
 
-/** Clears the in-memory cache (for tests). */
+/** Clears cache (tests). */
 export function clearStorageProfileCache(): void {
-  cachedProfiles = null;
+  cachedConfig = null;
 }
+
+/** Hot-reload helper — re-reads and validates JSON from disk. */
+export function reloadStorageProfilesFromDisk(): StorageProfilesFile {
+  const raw = readFileSync(CONFIG_PATH, 'utf8');
+  cachedConfig = validateStorageProfilesFile(JSON.parse(raw) as unknown);
+  return cachedConfig;
+}
+
+// Fail fast when this module is first imported on the server.
+ensureStorageProfilesValidated();

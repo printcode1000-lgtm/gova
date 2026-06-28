@@ -43,6 +43,7 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/public-env.ts',
   'src/core/config/server-env.ts',
   'src/core/config/server-env.values.ts',
+  'src/instrumentation.ts',
 ]);
 
 export const ALLOWED_FETCH_FILES = new Set(['src/core/api/gova-http-transport.ts']);
@@ -109,6 +110,13 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/core/api/')) return 'api-shared';
   if (p.startsWith('src/core/config/')) return 'configuration';
   if (p.startsWith('src/core/provisioning/')) return 'provisioning';
+  if (p.includes('/application/') && p.includes('/features/storage/')) return 'server-services';
+  if (
+    p === 'src/core/storage/output-format.registry.ts' ||
+    p.endsWith('/output-format.registry')
+  ) {
+    return 'shared';
+  }
   if (
     p.startsWith('src/core/storage/') &&
     !p.includes('.client.') &&

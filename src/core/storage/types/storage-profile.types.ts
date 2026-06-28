@@ -1,8 +1,14 @@
-/** Supported storage provider identifiers (server-side only). */
-export type StorageProviderId = 'CloudflareR2' | 'LocalStorage' | 'GoogleDrive';
+/** Full storage-profiles.json shape. */
+export interface StorageProfilesFile {
+  version: number;
+  profiles: StorageProfile[];
+}
 
 /** Output format for processed uploads (client + server). */
 export type StorageOutputFormat = 'webp';
+
+/** Supported storage provider identifiers (server-side only). */
+export type StorageProviderId = 'CloudflareR2' | 'LocalStorage' | 'GoogleDrive';
 
 /** Storage Profile — full server config from storage-profiles.json. */
 export interface StorageProfile {

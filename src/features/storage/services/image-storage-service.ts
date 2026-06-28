@@ -4,8 +4,8 @@ import type { IImageStorageApiAdapter } from './image-storage-api-service.interf
 import { imageStorageApiService } from './image-storage-api-service';
 
 /**
- * Client ImageStorageService — sits between UI and API.
- * Owns the client pipeline: load profile → compress → upload/delete via API adapter.
+ * Client ImageStorageService — sole public client entry point.
+ * UI → ImageStorageService → ImageStorageApiService → API
  */
 export class ImageStorageService implements IImageStorageService {
   constructor(private api: IImageStorageApiAdapter = imageStorageApiService) {}
@@ -21,7 +21,7 @@ export class ImageStorageService implements IImageStorageService {
   ) {
     const profile = await this.api.getProfile(storageProfileId);
     const compressed = await compressImageForProfile(file, profile);
-    return this.api.uploadImage(storageProfileId, compressed, replaceImageKey);
+    return this.api.uploadImage(storageProfileId, compressed, profile.outputFormat, replaceImageKey);
   }
 
   deleteImage(storageProfileId: string, imageKey: string) {

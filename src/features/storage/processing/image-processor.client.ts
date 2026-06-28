@@ -1,17 +1,11 @@
 'use client';
 
 import { validateImageForProfile, validateImageMimeType } from '@/core/storage/rules/image-rules';
-import type {
-  StorageOutputFormat,
-  StorageProfileClientView,
-} from '@/core/storage/types/storage-profile.types';
+import { getMimeTypeForOutputFormat } from '@/core/storage/output-format.registry';
+import type { StorageProfileClientView } from '@/core/storage/types/storage-profile.types';
 
 const MIN_QUALITY = 0.1;
 const QUALITY_STEP = 0.05;
-
-const OUTPUT_MIME: Record<StorageOutputFormat, string> = {
-  webp: 'image/webp',
-};
 
 function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -29,11 +23,7 @@ function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   });
 }
 
-function canvasToBlob(
-  canvas: HTMLCanvasElement,
-  mimeType: string,
-  quality: number
-): Promise<Blob> {
+function canvasToBlob(canvas: HTMLCanvasElement, mimeType: string, quality: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
@@ -50,8 +40,7 @@ function canvasToBlob(
 }
 
 /**
- * Compresses an image using Canvas until it satisfies the storage profile limits.
- * Output format is driven by profile.outputFormat.
+ * Client Image Processing Layer — compresses to profile.outputFormat via registry.
  */
 export async function compressImageForProfile(
   file: File,
@@ -62,8 +51,8 @@ export async function compressImageForProfile(
   }
 
   validateImageMimeType(file.type);
+  const mimeType = getMimeTypeForOutputFormat(profile.outputFormat);
 
-  const mimeType = OUTPUT_MIME[profile.outputFormat];
   const img = await loadImageFromFile(file);
   const canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth;
@@ -88,6 +77,3 @@ export async function compressImageForProfile(
 
   return blob;
 }
-
-/** @deprecated Use compressImageForProfile */
-export const compressImageToWebP = compressImageForProfile;
