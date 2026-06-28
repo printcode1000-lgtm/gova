@@ -58,6 +58,6 @@ UI → Hook → Client Service → GovaApiClient → Business API
 ## Related docs
 
 - [session-system.md](../session-system.md)
-- [profile-system.md](../profile-system.md)
+- [profile-system.md](./profile-system.md)
 - [capacitor.md](../capacitor.md)
 - [../problems/README.md](../problems/README.md)
