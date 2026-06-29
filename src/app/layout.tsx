@@ -7,6 +7,8 @@ import { PreferencesProvider } from "@/lib/preferences";
 import { ShellLayout } from "@/components/layouts/ShellLayout";
 import { AppQueryProvider } from "@/core/providers/query-provider";
 import { SessionProvider } from "@/features/auth/components/SessionProvider";
+import { NetworkStatusProvider } from "@/features/network/hooks/use-network-status";
+import { NetworkStatusBanner } from "@/components/network/NetworkStatusBanner";
 import dynamic from "next/dynamic";
 
 import { isDevelopment, withBasePath } from "@/core/config";
@@ -39,8 +41,11 @@ export default function RootLayout({
         <AppQueryProvider>
           <SessionProvider>
             <PreferencesProvider>
-              <ShellLayout>{children}</ShellLayout>
-              <DeveloperBadge />
+              <NetworkStatusProvider>
+                <ShellLayout>{children}</ShellLayout>
+                <NetworkStatusBanner />
+                <DeveloperBadge />
+              </NetworkStatusProvider>
             </PreferencesProvider>
           </SessionProvider>
         </AppQueryProvider>
@@ -48,4 +53,3 @@ export default function RootLayout({
     </html>
   );
 }
-

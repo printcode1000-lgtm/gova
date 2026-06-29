@@ -1,4 +1,4 @@
-import { ApiError } from './api-error';
+import { ApiError, NetworkOfflineError, NetworkUnavailableError } from './api-error';
 import { buildGovaApiUrl, buildPublicAssetUrl } from './gova-api-config';
 import { govaHttpFetch } from './gova-http-transport';
 import { trackGovaApiRequest } from '@/core/monitor/gova-api-monitor';
@@ -7,6 +7,7 @@ export interface GovaApiRequestOptions {
   headers?: Record<string, string>;
   signal?: AbortSignal;
   cache?: RequestCache;
+  suppressErrorLog?: boolean;
 }
 
 /**
@@ -19,6 +20,14 @@ export class GovaApiClient {
     body?: unknown,
     options: GovaApiRequestOptions = {}
   ): Promise<T> {
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      const error = new NetworkOfflineError();
+      if (!options.suppressErrorLog) {
+        console.error(`[GovaApiClient] ${method} ${route} failed: ${error.message}`);
+      }
+      throw error;
+    }
+
     const headers: Record<string, string> = {
       Accept: 'application/json',
       ...options.headers,
@@ -44,9 +53,18 @@ export class GovaApiClient {
         return { data, response };
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.error(`[GovaApiClient] ${method} ${route} failed: ${message}`);
-      throw error;
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw error;
+      }
+
+      const normalizedError =
+        error instanceof TypeError ? new NetworkUnavailableError() : error;
+      const message =
+        normalizedError instanceof Error ? normalizedError.message : String(normalizedError);
+      if (!options.suppressErrorLog) {
+        console.error(`[GovaApiClient] ${method} ${route} failed: ${message}`);
+      }
+      throw normalizedError;
     }
   }
 

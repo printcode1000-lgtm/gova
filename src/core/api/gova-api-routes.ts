@@ -3,6 +3,7 @@
  * Feature services reference these — never hardcode paths in UI or hooks.
  */
 export const GOVA_API_ROUTES = {
+  health: '/api/health',
   auth: {
     login: '/api/auth/login',
     register: '/api/auth/register',
