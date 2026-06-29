@@ -24,6 +24,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>GOVA uses the microphone to enter text into form fields by voice.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>GOVA converts your speech into text only when you press a microphone button.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

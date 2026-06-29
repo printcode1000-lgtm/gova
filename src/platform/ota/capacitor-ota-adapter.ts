@@ -1,48 +1,15 @@
 import { unzipSync } from 'fflate';
-
-type PluginMethod<T = unknown> = (options?: Record<string, unknown>) => Promise<T>;
-
-interface CapacitorFilesystemPlugin {
-  mkdir: PluginMethod;
-  rmdir: PluginMethod;
-  writeFile: PluginMethod;
-  getUri: PluginMethod<{ uri: string }>;
-}
+import { Capacitor, registerPlugin } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
 
 interface CapacitorWebViewPlugin {
-  setServerBasePath: PluginMethod;
-  getServerBasePath: PluginMethod<{ path: string }>;
-  persistServerBasePath: PluginMethod;
+  setServerBasePath(options: { path: string }): Promise<void>;
+  getServerBasePath(): Promise<{ path: string }>;
+  persistServerBasePath(): Promise<void>;
 }
 
-interface CapacitorRuntime {
-  isNativePlatform?: () => boolean;
-  getPlatform?: () => string;
-  Plugins?: {
-    Filesystem?: CapacitorFilesystemPlugin;
-    WebView?: CapacitorWebViewPlugin;
-  };
-}
-
-declare global {
-  interface Window {
-    Capacitor?: CapacitorRuntime;
-  }
-}
-
-const DATA_DIRECTORY = 'DATA';
+const WebView = registerPlugin<CapacitorWebViewPlugin>('WebView');
 const OTA_ROOT = 'gova-ota/releases';
-
-function runtime(): CapacitorRuntime | undefined {
-  return typeof window === 'undefined' ? undefined : window.Capacitor;
-}
-
-function plugins() {
-  const filesystem = runtime()?.Plugins?.Filesystem;
-  const webView = runtime()?.Plugins?.WebView;
-  if (!filesystem || !webView) throw new Error('Capacitor OTA plugins are unavailable');
-  return { filesystem, webView };
-}
 
 function bytesToBase64(bytes: Uint8Array): string {
   let binary = '';
@@ -68,24 +35,21 @@ function filesystemPathFromUri(uri: string): string {
 
 export const capacitorOtaAdapter = {
   isAvailable(): boolean {
-    const cap = runtime();
-    const native = cap?.isNativePlatform?.() ?? (cap?.getPlatform?.() !== 'web');
-    return Boolean(native && cap?.Plugins?.Filesystem && cap?.Plugins?.WebView);
+    return Capacitor.isNativePlatform();
   },
 
   async install(version: string, archive: ArrayBuffer): Promise<string> {
-    const { filesystem } = plugins();
     const releaseRoot = `${OTA_ROOT}/${version}`;
     const entries = unzipSync(new Uint8Array(archive));
     const fileNames = Object.keys(entries).map(safeArchivePath);
     if (!fileNames.includes('index.html')) throw new Error('OTA bundle does not contain index.html');
 
     try {
-      await filesystem.rmdir({ path: releaseRoot, directory: DATA_DIRECTORY, recursive: true });
+      await Filesystem.rmdir({ path: releaseRoot, directory: Directory.Data, recursive: true });
     } catch {
       // The first installation has no previous directory.
     }
-    await filesystem.mkdir({ path: releaseRoot, directory: DATA_DIRECTORY, recursive: true });
+    await Filesystem.mkdir({ path: releaseRoot, directory: Directory.Data, recursive: true });
 
     const createdDirectories = new Set<string>();
     for (const originalName of Object.keys(entries)) {
@@ -93,34 +57,34 @@ export const capacitorOtaAdapter = {
       if (name.endsWith('/')) continue;
       const parent = name.includes('/') ? name.slice(0, name.lastIndexOf('/')) : '';
       if (parent && !createdDirectories.has(parent)) {
-        await filesystem.mkdir({
+        await Filesystem.mkdir({
           path: `${releaseRoot}/${parent}`,
-          directory: DATA_DIRECTORY,
+          directory: Directory.Data,
           recursive: true,
         });
         createdDirectories.add(parent);
       }
-      await filesystem.writeFile({
+      await Filesystem.writeFile({
         path: `${releaseRoot}/${name}`,
-        directory: DATA_DIRECTORY,
+        directory: Directory.Data,
         data: bytesToBase64(entries[originalName]!),
         recursive: true,
       });
     }
 
-    const { uri } = await filesystem.getUri({ path: releaseRoot, directory: DATA_DIRECTORY });
+    const { uri } = await Filesystem.getUri({ path: releaseRoot, directory: Directory.Data });
     return filesystemPathFromUri(uri);
   },
 
   async currentBasePath(): Promise<string> {
-    return (await plugins().webView.getServerBasePath()).path;
+    return (await WebView.getServerBasePath()).path;
   },
 
   async activate(path: string): Promise<void> {
-    await plugins().webView.setServerBasePath({ path });
+    await WebView.setServerBasePath({ path });
   },
 
   async persistCurrentPath(): Promise<void> {
-    await plugins().webView.persistServerBasePath();
+    await WebView.persistServerBasePath();
   },
 };

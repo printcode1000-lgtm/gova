@@ -7,6 +7,76 @@
 @source "../components/**/*.{ts,tsx}";
 @source "../lib/**/*.{ts,tsx}";
 
+/* Global speech-to-text controls */
+.gova-voice-host {
+  position: relative;
+}
+
+.gova-voice-field {
+  padding-inline-end: 3.25rem !important;
+}
+
+.gova-voice-button {
+  position: absolute;
+  z-index: 20;
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--color-primary);
+  opacity: 0.72;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color var(--duration-short-3) var(--easing-standard),
+    opacity var(--duration-short-3) var(--easing-standard),
+    background-color var(--duration-short-3) var(--easing-standard);
+}
+
+.gova-voice-button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  pointer-events: none;
+}
+
+.gova-voice-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.gova-voice-button:active {
+  opacity: 1;
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.gova-voice-button--recording {
+  color: var(--color-error);
+  opacity: 1;
+  background: color-mix(in srgb, var(--color-error) 10%, transparent);
+  animation: gova-voice-glow 1.35s ease-in-out infinite;
+}
+
+@keyframes gova-voice-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 color-mix(in srgb, var(--color-error) 0%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 0 0.55rem color-mix(in srgb, var(--color-error) 65%, transparent));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gova-voice-button--recording {
+    animation: none;
+  }
+}
+
 /* App-specific motion */
 @keyframes marquee-right {
   from {

@@ -54,9 +54,11 @@ out/                             # Static assets (from build:static)
 | `@capacitor/cli` | CLI (`cap sync`, `cap open`, …) |
 | `@capacitor/android` | Android platform |
 | `@capacitor/ios` | iOS platform |
+| `@capacitor/app` | Android system Back events and confirmed application exit |
 | `@capacitor/filesystem` | Private storage for verified OTA web bundles |
+| `@capgo/capacitor-speech-recognition` | Native Arabic/English speech-to-text for automatic voice-enabled fields |
 
-No database plugin is installed. `@capacitor/filesystem` is used only by the OTA platform adapter to store verified web bundles in application-private storage; it is not a data-layer database. See [ota-update-system.md](./ota-update-system.md).
+No database plugin is installed. `@capacitor/filesystem` is used only by the OTA platform adapter to store verified web bundles in application-private storage; it is not a data-layer database. `@capacitor/app` is used by the Android platform adapter for system Back events and the confirmed exit action. The speech-recognition plugin is isolated behind the platform speech adapter. See [ota-update-system.md](./ota-update-system.md), [mobile-back-button-system.md](../system/mobile-back-button-system.md), and [voice-input-system.md](../system/voice-input-system.md).
 
 ---
 
