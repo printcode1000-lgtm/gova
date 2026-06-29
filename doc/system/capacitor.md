@@ -54,8 +54,9 @@ out/                             # Static assets (from build:static)
 | `@capacitor/cli` | CLI (`cap sync`, `cap open`, …) |
 | `@capacitor/android` | Android platform |
 | `@capacitor/ios` | iOS platform |
+| `@capacitor/filesystem` | Private storage for verified OTA web bundles |
 
-No extra Capacitor plugins are installed (no SQLite, storage, or database plugins).
+No database plugin is installed. `@capacitor/filesystem` is used only by the OTA platform adapter to store verified web bundles in application-private storage; it is not a data-layer database. See [ota-update-system.md](./ota-update-system.md).
 
 ---
 

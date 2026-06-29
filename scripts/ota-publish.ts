@@ -16,7 +16,7 @@ import {
   type OtaManifest,
   type OtaManifestPayload,
 } from './ota/ota-config';
-import { createOtaR2Client, putOtaObject } from './ota/ota-r2';
+import { createOtaR2Client, otaObjectExists, putOtaObject } from './ota/ota-r2';
 
 function argument(name: string): string | undefined {
   const index = process.argv.indexOf(`--${name}`);
@@ -87,6 +87,9 @@ const manifest: OtaManifest = { ...payload, signature };
 const manifestJson = JSON.stringify(manifest, null, 2);
 
 const client = createOtaR2Client();
+if (await otaObjectExists(client, bundleKey)) {
+  throw new Error(`OTA version ${version} already exists. Publish a new version number.`);
+}
 console.log(`⬆️ Uploading ${Math.ceil(archive.byteLength / 1024)} KB to R2...`);
 await putOtaObject(client, bundleKey, archive, 'application/zip', 'public, max-age=31536000, immutable');
 await putOtaObject(client, `${releasePrefix}/manifest.json`, manifestJson, 'application/json', 'public, max-age=31536000, immutable');

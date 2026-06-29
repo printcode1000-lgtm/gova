@@ -143,6 +143,7 @@ export const otaUpdateService = {
   async confirmRunningBundle(): Promise<void> {
     const state = readState();
     if (state.activation?.version !== publicEnv.webBundleVersion) return;
+    await capacitorOtaAdapter.persistCurrentPath();
     delete state.activation;
     delete state.pending;
     writeState(state);
@@ -177,6 +178,7 @@ export const otaUpdateService = {
         const manifest = await otaApiService.getManifest(publicEnv.otaManifestUrl, controller.signal);
         validateManifest(manifest);
         if (!(await verifyManifest(manifest))) throw new Error('OTA manifest signature is invalid');
+        if (readState().failedReleaseId === manifest.releaseId) return null;
         if (compareVersions(manifest.minimumNativeVersion, publicEnv.nativeVersion) > 0) return null;
         if (compareVersions(manifest.version, publicEnv.webBundleVersion) <= 0) return null;
 
@@ -216,7 +218,23 @@ export const otaUpdateService = {
     onProgress: (progress: OtaDownloadProgress) => void,
   ): Promise<void> {
     if (!this.isEnabled()) return;
-    await this.confirmRunningBundle();
+
+    const state = readState();
+    if (state.activation) {
+      if (state.activation.version === publicEnv.webBundleVersion) {
+        // The temporary bundle loaded successfully. Splash persists it only
+        // after the rest of application initialization reaches 100%.
+        return;
+      }
+
+      // Returning to the previously persisted bundle means that the temporary
+      // update did not finish initialization. Block this exact release.
+      if (state.pending) state.failedReleaseId = state.pending.releaseId;
+      delete state.activation;
+      delete state.pending;
+      writeState(state);
+      return;
+    }
 
     const pending = this.getPending();
     if (pending) {

@@ -27,6 +27,7 @@ export interface DownloadedOtaUpdate {
 
 export interface OtaStoredState {
   pending?: DownloadedOtaUpdate;
+  failedReleaseId?: string;
   activation?: {
     version: string;
     previousPath: string;

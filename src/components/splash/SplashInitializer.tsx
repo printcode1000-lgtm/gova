@@ -34,6 +34,8 @@ export default function SplashInitializer() {
           setStatus(t(statusKey));
         });
 
+        if (otaEnabled) await otaUpdateService.confirmRunningBundle();
+
         isCompleteRef.current = true;
       } catch (error) {
         console.error('Initialization failed:', error);

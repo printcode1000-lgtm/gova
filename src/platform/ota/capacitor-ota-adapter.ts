@@ -117,8 +117,10 @@ export const capacitorOtaAdapter = {
   },
 
   async activate(path: string): Promise<void> {
-    const { webView } = plugins();
-    await webView.setServerBasePath({ path });
-    await webView.persistServerBasePath();
+    await plugins().webView.setServerBasePath({ path });
+  },
+
+  async persistCurrentPath(): Promise<void> {
+    await plugins().webView.persistServerBasePath();
   },
 };
