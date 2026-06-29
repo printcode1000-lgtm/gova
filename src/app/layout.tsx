@@ -9,6 +9,8 @@ import { AppQueryProvider } from "@/core/providers/query-provider";
 import { SessionProvider } from "@/features/auth/components/SessionProvider";
 import { NetworkStatusProvider } from "@/features/network/hooks/use-network-status";
 import { NetworkStatusBanner } from "@/components/network/NetworkStatusBanner";
+import { OtaUpdateProvider } from "@/features/ota/hooks/use-ota-update";
+import { OtaUpdatePrompt } from "@/components/ota/OtaUpdatePrompt";
 import dynamic from "next/dynamic";
 
 import { isDevelopment, withBasePath } from "@/core/config";
@@ -42,9 +44,12 @@ export default function RootLayout({
           <SessionProvider>
             <PreferencesProvider>
               <NetworkStatusProvider>
-                <ShellLayout>{children}</ShellLayout>
-                <NetworkStatusBanner />
-                <DeveloperBadge />
+                <OtaUpdateProvider>
+                  <ShellLayout>{children}</ShellLayout>
+                  <NetworkStatusBanner />
+                  <OtaUpdatePrompt />
+                  <DeveloperBadge />
+                </OtaUpdateProvider>
               </NetworkStatusProvider>
             </PreferencesProvider>
           </SessionProvider>

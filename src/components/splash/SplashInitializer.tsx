@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useTranslation } from '@/lib/i18n';
 import { runInitialization } from '@/lib/initialization/initialization';
+import { otaUpdateService } from '@/features/ota/services/ota-update-service';
 
 import ProgressIndicator from './ProgressIndicator';
 
@@ -20,8 +21,16 @@ export default function SplashInitializer() {
   useEffect(() => {
     const initialize = async () => {
       try {
+        const otaEnabled = otaUpdateService.isEnabled();
+        if (otaEnabled) {
+          await otaUpdateService.prepareAtSplash(({ progress, statusKey }) => {
+            setProgress(progress);
+            setStatus(t(statusKey));
+          });
+        }
+
         await runInitialization(({ progress, statusKey }) => {
-          setProgress(progress);
+          setProgress(otaEnabled ? 70 + Math.round(progress * 0.3) : progress);
           setStatus(t(statusKey));
         });
 

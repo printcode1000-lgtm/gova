@@ -14,19 +14,38 @@ export interface GovaApiRequestOptions {
  * GovaApiClient — the single HTTP gateway between GOVA clients and the GOVA backend.
  */
 export class GovaApiClient {
+  private assertOnline(method: string, route: string, suppressErrorLog = false): void {
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      const error = new NetworkOfflineError();
+      if (!suppressErrorLog) {
+        console.error(`[GovaApiClient] ${method} ${route} failed: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  private normalizeNetworkError(error: unknown): unknown {
+    if (error instanceof DOMException && error.name === 'AbortError') return error;
+    return error instanceof TypeError ? new NetworkUnavailableError() : error;
+  }
+
+  private logAndThrow(method: string, route: string, error: unknown, suppressErrorLog = false): never {
+    const normalizedError = this.normalizeNetworkError(error);
+    const message =
+      normalizedError instanceof Error ? normalizedError.message : String(normalizedError);
+    if (!suppressErrorLog) {
+      console.error(`[GovaApiClient] ${method} ${route} failed: ${message}`);
+    }
+    throw normalizedError;
+  }
+
   private async request<T>(
     method: string,
     route: string,
     body?: unknown,
     options: GovaApiRequestOptions = {}
   ): Promise<T> {
-    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-      const error = new NetworkOfflineError();
-      if (!options.suppressErrorLog) {
-        console.error(`[GovaApiClient] ${method} ${route} failed: ${error.message}`);
-      }
-      throw error;
-    }
+    this.assertOnline(method, route, options.suppressErrorLog);
 
     const headers: Record<string, string> = {
       Accept: 'application/json',
@@ -53,18 +72,7 @@ export class GovaApiClient {
         return { data, response };
       });
     } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError') {
-        throw error;
-      }
-
-      const normalizedError =
-        error instanceof TypeError ? new NetworkUnavailableError() : error;
-      const message =
-        normalizedError instanceof Error ? normalizedError.message : String(normalizedError);
-      if (!options.suppressErrorLog) {
-        console.error(`[GovaApiClient] ${method} ${route} failed: ${message}`);
-      }
-      throw normalizedError;
+      this.logAndThrow(method, route, error, options.suppressErrorLog);
     }
   }
 
@@ -143,6 +151,56 @@ export class GovaApiClient {
       const data = await this.parseResponse<T>(response);
       return { data, response };
     });
+  }
+
+  /** Load JSON from an explicit HTTP(S) URL (for signed platform manifests). */
+  async getAbsoluteJson<T>(url: string, options: GovaApiRequestOptions = {}): Promise<T> {
+    this.assertOnline('GET', url, options.suppressErrorLog);
+    const parsedUrl = new URL(url);
+    if (!['https:', 'http:'].includes(parsedUrl.protocol)) {
+      throw new Error(`Unsupported URL protocol: ${parsedUrl.protocol}`);
+    }
+
+    try {
+      return await trackGovaApiRequest('GET', url, false, async () => {
+        const response = await govaHttpFetch(parsedUrl, {
+          method: 'GET',
+          headers: { Accept: 'application/json', ...options.headers },
+          credentials: 'omit',
+          signal: options.signal,
+          cache: options.cache ?? 'no-store',
+        });
+        const data = await this.parseResponse<T>(response);
+        return { data, response };
+      });
+    } catch (error) {
+      this.logAndThrow('GET', url, error, options.suppressErrorLog);
+    }
+  }
+
+  /** Load binary data from an explicit HTTP(S) URL through the HTTP gateway. */
+  async getAbsoluteBinary(url: string, options: GovaApiRequestOptions = {}): Promise<ArrayBuffer> {
+    this.assertOnline('GET', url, options.suppressErrorLog);
+    const parsedUrl = new URL(url);
+    if (!['https:', 'http:'].includes(parsedUrl.protocol)) {
+      throw new Error(`Unsupported URL protocol: ${parsedUrl.protocol}`);
+    }
+
+    try {
+      return await trackGovaApiRequest('GET', url, false, async () => {
+        const response = await govaHttpFetch(parsedUrl, {
+          method: 'GET',
+          headers: { Accept: 'application/zip, application/octet-stream', ...options.headers },
+          credentials: 'omit',
+          signal: options.signal,
+          cache: options.cache ?? 'no-store',
+        });
+        if (!response.ok) await this.parseResponse<never>(response);
+        return { data: await response.arrayBuffer(), response };
+      });
+    } catch (error) {
+      this.logAndThrow('GET', url, error, options.suppressErrorLog);
+    }
   }
 }
 

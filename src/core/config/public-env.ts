@@ -14,6 +14,10 @@ export const publicEnv = {
     '',
   buildId: process.env.NEXT_PUBLIC_BUILD_ID ?? 'default',
   r2PublicUrl: process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.replace(/\/$/, '') || '',
+  otaManifestUrl: process.env.NEXT_PUBLIC_GOVA_OTA_MANIFEST_URL || '',
+  otaPublicKey: process.env.NEXT_PUBLIC_GOVA_OTA_PUBLIC_KEY || '',
+  webBundleVersion: process.env.NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION || '0.1.0',
+  nativeVersion: process.env.NEXT_PUBLIC_GOVA_NATIVE_VERSION || '1.0.0',
 } as const;
 
 /** Prefix a public asset path with the deployment base path (e.g. `/gova` on GitHub Pages). */

@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_GOVA_BASE_PATH: basePath,
     NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
     NEXT_PUBLIC_GOVA_MODE: process.env.GOVA_MODE ?? '',
+    NEXT_PUBLIC_GOVA_OTA_MANIFEST_URL: process.env.NEXT_PUBLIC_GOVA_OTA_MANIFEST_URL ?? '',
+    NEXT_PUBLIC_GOVA_OTA_PUBLIC_KEY: process.env.NEXT_PUBLIC_GOVA_OTA_PUBLIC_KEY ?? '',
+    NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION: process.env.NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION ?? '0.1.0',
+    NEXT_PUBLIC_GOVA_NATIVE_VERSION: process.env.NEXT_PUBLIC_GOVA_NATIVE_VERSION ?? '1.0.0',
   },
 
   // These are Node.js-only packages. Prevent Next.js from bundling them
