@@ -26,6 +26,12 @@
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>GOVA uses the microphone to enter text into form fields by voice.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>GOVA uses the camera only when you choose to take a product or store image.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>GOVA lets you select one product or store image from your photo library.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>GOVA can save a photo only when you explicitly request it.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>GOVA converts your speech into text only when you press a microphone button.</string>
 	<key>UILaunchStoryboardName</key>

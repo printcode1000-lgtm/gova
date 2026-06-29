@@ -67,6 +67,23 @@ const config = parseStorageImageManagerConfig(imageConfig);
 />;
 ```
 
+## Image source picker
+
+For an empty slot, `StorageImageManager` asks the user how to add the image:
+
+- Choose one image from the device.
+- Take one new photo with the camera.
+
+The component still works with one image per slot. The source picker does not enable multiple-image selection.
+
+Native Android/iOS behavior is isolated behind:
+
+```text
+src/platform/media/capacitor-image-source-adapter.ts
+```
+
+See [Storage Image Source Picker System](../system/storage-image-source-picker-system.md) for the platform details.
+
 ## Persistence rule
 
 The component uploads/deletes through the storage system only.

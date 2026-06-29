@@ -1,12 +1,25 @@
 'use client';
 
 import * as React from 'react';
-import { AlertCircle, Image as ImageIcon, Upload, X } from 'lucide-react';
+import { AlertCircle, Camera, Image as ImageIcon, Images, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 import { StorageProfiles, type StorageProfileId } from '@/core/storage/constants/storage-profiles';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 import { useStorageProfileUpload } from '@/features/storage/hooks/use-storage-profile-upload';
+import {
+  canUseNativeImageSource,
+  captureSingleImage,
+  chooseSingleImage,
+} from '@/platform/media/capacitor-image-source-adapter';
 
 type StorageImageAspectRatio = 'square' | 'landscape' | 'portrait' | 'wide';
 
@@ -111,10 +124,14 @@ function StorageImageSlot({
   onUploaded: (index: number, image: StoredImage) => void;
   onRemoved: (index: number) => void;
 }) {
+  const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const cameraInputRef = React.useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [selectedPreviewUrl, setSelectedPreviewUrl] = React.useState<string | null>(null);
   const [isDragging, setIsDragging] = React.useState(false);
+  const [isChoosingSource, setIsChoosingSource] = React.useState(false);
+  const [sourceError, setSourceError] = React.useState<string | null>(null);
   const [uploadedImage, setUploadedImage] = React.useState<StoredImage | null>(null);
 
   React.useEffect(() => {
@@ -143,20 +160,58 @@ function StorageImageSlot({
   });
 
   const previewUrl = selectedPreviewUrl ?? image?.url ?? null;
-  const busy = isUploading || image?.isUploading;
+  const displayError = sourceError ?? error;
+  const busy = isUploading || image?.isUploading || isChoosingSource;
   const canChoose = !previewUrl || (config.allowReplace && !image?.imageKey && !selectedFile);
 
   const processFile = (file: File) => {
     if (!file.type.startsWith('image/')) return;
+    setSourceError(null);
     if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
     setSelectedFile(file);
     setSelectedPreviewUrl(URL.createObjectURL(file));
   };
 
-  const chooseFile = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    inputRef.current?.click();
+  const chooseFromDevice = async () => {
+    if (busy || !canChoose) return;
+    setSourceError(null);
+
+    if (!canUseNativeImageSource()) {
+      inputRef.current?.click();
+      return;
+    }
+
+    setIsChoosingSource(true);
+    try {
+      const file = await chooseSingleImage();
+      if (file) processFile(file);
+    } catch (sourceSelectionError) {
+      console.error('[StorageImageManager] Unable to choose an image.', sourceSelectionError);
+      setSourceError(t('storage.imageSource.error'));
+    } finally {
+      setIsChoosingSource(false);
+    }
+  };
+
+  const captureFromCamera = async () => {
+    if (busy || !canChoose) return;
+    setSourceError(null);
+
+    if (!canUseNativeImageSource()) {
+      cameraInputRef.current?.click();
+      return;
+    }
+
+    setIsChoosingSource(true);
+    try {
+      const file = await captureSingleImage();
+      if (file) processFile(file);
+    } catch (cameraError) {
+      console.error('[StorageImageManager] Unable to capture an image.', cameraError);
+      setSourceError(t('storage.imageSource.cameraError'));
+    } finally {
+      setIsChoosingSource(false);
+    }
   };
 
   const uploadSelected = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -195,7 +250,7 @@ function StorageImageSlot({
         'relative rounded-lg border-2 border-dashed transition-all duration-200',
         aspectClasses[config.aspectRatio],
         isDragging && 'border-primary bg-primary/5',
-        error ? 'border-destructive' : 'border-border',
+        displayError ? 'border-destructive' : 'border-border',
         previewUrl && 'border-solid'
       )}
       onDrop={(event) => {
@@ -244,17 +299,39 @@ function StorageImageSlot({
           )}
         </>
       ) : (
-        <div
-          className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 px-4"
-          onClick={chooseFile}
-        >
-          <div className="rounded-full bg-muted p-3">
-            <ImageIcon className="h-6 w-6 text-muted-foreground" />
-          </div>
-          <Button type="button" size="icon" onClick={chooseFile} disabled={busy} aria-label="Choose image" title="Choose image">
-            <ImageIcon className="h-4 w-4" />
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              disabled={busy}
+              aria-label={t('storage.imageSource.open')}
+              title={t('storage.imageSource.open')}
+              className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg px-4 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <span className="rounded-full bg-muted p-3">
+                {busy ? (
+                  <Upload className="h-6 w-6 animate-pulse text-muted-foreground" />
+                ) : (
+                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                )}
+              </span>
+              <span className="text-sm font-medium text-primary">
+                {t('storage.imageSource.open')}
+              </span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="min-w-56">
+            <DropdownMenuLabel>{t('storage.imageSource.title')}</DropdownMenuLabel>
+            <DropdownMenuItem className="gap-3 py-3" onSelect={() => void chooseFromDevice()}>
+              <Images className="h-5 w-5 text-primary" aria-hidden="true" />
+              {t('storage.imageSource.device')}
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-3 py-3" onSelect={() => void captureFromCamera()}>
+              <Camera className="h-5 w-5 text-primary" aria-hidden="true" />
+              {t('storage.imageSource.camera')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
 
       <input
@@ -270,10 +347,24 @@ function StorageImageSlot({
         disabled={busy}
       />
 
-      {error && (
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (file && canChoose) processFile(file);
+          event.target.value = '';
+        }}
+        disabled={busy}
+      />
+
+      {displayError && (
         <p className="absolute bottom-2 right-2 flex items-center gap-1 rounded bg-background/90 px-2 py-1 text-xs text-destructive">
           <AlertCircle className="h-3 w-3" />
-          {error}
+          {displayError}
         </p>
       )}
     </div>
