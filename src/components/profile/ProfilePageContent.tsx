@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { LogIn, User, Phone, Store } from 'lucide-react';
 import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 
 import { ProfileContactsCard } from '@/components/profile/ProfileContactsCard';
 import { ProfileRegistrationInfoCard } from '@/components/profile/ProfileRegistrationInfoCard';
@@ -11,6 +12,8 @@ import { StoreIdentityCard } from '@/components/profile/StoreIdentityCard';
 import { useSession } from '@/features/auth/components/SessionProvider';
 import { useTranslation } from '@/lib/i18n';
 import { Card, CardContent } from '@/components/ui/card';
+import { HeroSlider, type HeroSliderConfig } from '@/components/ui/HeroSlider';
+import { useProfileStoreImages } from '@/features/profile/hooks/use-profile-store-images';
 
 export function ProfilePageContent() {
   const { t } = useTranslation();
@@ -18,6 +21,27 @@ export function ProfilePageContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = React.useState<'registration' | 'contact' | 'store'>('registration');
   const showEditCard = searchParams.get('mode') === 'edit';
+  const showPreviewCard = searchParams.get('mode') === 'preview';
+  const { storeImages, isLoading: isLoadingStoreImages } = useProfileStoreImages();
+
+  const heroSliderConfig = useMemo<HeroSliderConfig>(() => {
+    const slides = storeImages.coverUrls.map((url, index) => ({
+      priority: index + 1,
+      image: url,
+      title: '',
+      subtitle: '',
+      duration: 4000,
+      action: '',
+    }));
+
+    return {
+      transition: 'SlideLeft',
+      transitionDuration: 500,
+      autoPlay: true,
+      loop: true,
+      slides,
+    };
+  }, [storeImages.coverUrls]);
 
   if (isLoading) {
     return (
@@ -41,58 +65,70 @@ export function ProfilePageContent() {
 
   return (
     <div className="container px-4 py-8">
-      <Card id="edit-profile-card" className={!showEditCard ? 'hidden' : ''}>
-        <CardContent className="p-0">
-          <div className="flex gap-4 border-b border-outline-variant px-6 pt-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('registration')}
-              className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
-                activeTab === 'registration'
-                  ? 'text-primary border-b-2 border-primary'
-                  : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
-              }`}
-            >
-              <User className="h-5 w-5" />
-              <span className="text-xs font-medium">{t('onboarding.contactInfo.primaryContact')}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('contact')}
-              className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
-                activeTab === 'contact'
-                  ? 'text-primary border-b-2 border-primary'
-                  : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
-              }`}
-            >
-              <Phone className="h-5 w-5" />
-              <span className="text-xs font-medium">{t('onboarding.contactInfo.additionalContact')}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('store')}
-              className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
-                activeTab === 'store'
-                  ? 'text-primary border-b-2 border-primary'
-                  : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
-              }`}
-            >
-              <Store className="h-5 w-5" />
-              <span className="text-xs font-medium">{t('onboarding.storeIdentity.title')}</span>
-            </button>
-          </div>
+      {showPreviewCard ? (
+        <div className="px-4">
+          {heroSliderConfig.slides.length > 0 ? (
+            <HeroSlider config={heroSliderConfig} />
+          ) : (
+            <div className="text-center text-on-surface-variant py-8">
+              {t('profile.noImages')}
+            </div>
+          )}
+        </div>
+      ) : (
+        <Card id="edit-profile-card" className={!showEditCard ? 'hidden' : ''}>
+          <CardContent className="p-0">
+            <div className="flex gap-4 border-b border-outline-variant px-6 pt-4">
+              <button
+                type="button"
+                onClick={() => setActiveTab('registration')}
+                className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
+                  activeTab === 'registration'
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
+                }`}
+              >
+                <User className="h-5 w-5" />
+                <span className="text-xs font-medium">{t('onboarding.contactInfo.primaryContact')}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('contact')}
+                className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
+                  activeTab === 'contact'
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
+                }`}
+              >
+                <Phone className="h-5 w-5" />
+                <span className="text-xs font-medium">{t('onboarding.contactInfo.additionalContact')}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('store')}
+                className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
+                  activeTab === 'store'
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
+                }`}
+              >
+                <Store className="h-5 w-5" />
+                <span className="text-xs font-medium">{t('onboarding.storeIdentity.title')}</span>
+              </button>
+            </div>
 
-          <div className="p-6">
-            {activeTab === 'registration' ? (
-              <ProfileRegistrationInfoCard />
-            ) : activeTab === 'contact' ? (
-              <ProfileContactsCard />
-            ) : (
-              <StoreIdentityCard />
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            <div className="p-6">
+              {activeTab === 'registration' ? (
+                <ProfileRegistrationInfoCard />
+              ) : activeTab === 'contact' ? (
+                <ProfileContactsCard />
+              ) : (
+                <StoreIdentityCard />
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

@@ -172,6 +172,7 @@
     "profile.subtitle":  "Manage your account phone, email, and password",
     "profile.loading":  "Loading profile…",
     "profile.loginRequired":  "Please log in to view and edit your profile",
+    "profile.noImages":  "No cover images",
     "profile.save":  "Save changes",
     "profile.saving":  "Saving…",
     "profile.saved":  "Changes saved successfully",

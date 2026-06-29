@@ -19,6 +19,7 @@ import {
   StorageImageManager,
   parseStorageImageManagerConfig,
 } from '@/features/storage/components/StorageImageManager';
+import { Image as ImageIcon, LayoutTemplate } from 'lucide-react';
 import storeLogoImageConfig from './image-configs/store-logo.image.json';
 import storeCover1ImageConfig from './image-configs/store-cover-1.image.json';
 import storeCover2ImageConfig from './image-configs/store-cover-2.image.json';
@@ -107,6 +108,7 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
   const { t } = useTranslation();
   const { storeImages, isLoading: isImagesLoading, isSaving: isSavingImages, error: imagesError, saveStoreImages } =
     useProfileStoreImages();
+  const [imageTab, setImageTab] = React.useState<'logo' | 'cover'>('logo');
   const [localData, setLocalData] = React.useState<StoreIdentityData>(() => {
     if (data) {
       return data;
@@ -227,20 +229,60 @@ export function StoreIdentityCard({ data, onChange, readOnly = false }: StoreIde
       <div className="grid gap-4 lg:grid-cols-2">
         {!readOnly ? (
           <>
-            <StorageImageManager
-              config={storeLogoConfig}
-              value={logoImage ? [logoImage] : []}
-              onChange={handleLogoImagesChange}
-            />
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              {storeCoverConfigs.map((config, index) => (
-                <StorageImageManager
-                  key={config.id}
-                  config={config}
-                  value={coverImages[index] ? [coverImages[index]] : []}
-                  onChange={(images) => handleCoverImageChange(index, images)}
-                />
-              ))}
+            <div className="lg:col-span-2">
+              <div className="flex gap-2 border-b border-outline-variant mb-4">
+                <button
+                  type="button"
+                  onClick={() => setImageTab('logo')}
+                  className={`flex items-center gap-2 pb-3 px-4 transition-colors ${
+                    imageTab === 'logo'
+                      ? 'text-primary border-b-2 border-primary'
+                      : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
+                  }`}
+                >
+                  <ImageIcon className="h-5 w-5" />
+                  <span className="text-sm font-medium">{t('onboarding.storeIdentity.storeLogo')}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setImageTab('cover')}
+                  className={`flex items-center gap-2 pb-3 px-4 transition-colors ${
+                    imageTab === 'cover'
+                      ? 'text-primary border-b-2 border-primary'
+                      : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
+                  }`}
+                >
+                  <LayoutTemplate className="h-5 w-5" />
+                  <span className="text-sm font-medium">{t('onboarding.storeIdentity.coverImage')}</span>
+                </button>
+              </div>
+
+              {imageTab === 'logo' && (
+                <div className="rounded-lg border-2 border-primary/20 p-3 bg-primary/5 inline-block">
+                  <div className="w-[150px] h-[150px]">
+                    <StorageImageManager
+                      config={storeLogoConfig}
+                      value={logoImage ? [logoImage] : []}
+                      onChange={handleLogoImagesChange}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {imageTab === 'cover' && (
+                <div className="space-y-2 rounded-lg border-2 border-primary/20 p-4 bg-primary/5">
+                  <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                    {storeCoverConfigs.map((config, index) => (
+                      <StorageImageManager
+                        key={config.id}
+                        config={config}
+                        value={coverImages[index] ? [coverImages[index]] : []}
+                        onChange={(images) => handleCoverImageChange(index, images)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </>
         ) : (
