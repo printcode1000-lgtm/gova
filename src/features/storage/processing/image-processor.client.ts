@@ -4,8 +4,50 @@ import { validateImageForProfile, validateImageMimeType } from '@/core/storage/r
 import { getMimeTypeForOutputFormat } from '@/core/storage/output-format.registry';
 import type { StorageProfileClientView } from '@/core/storage/types/storage-profile.types';
 
+const INITIAL_QUALITY = 0.86;
 const MIN_QUALITY = 0.1;
-const QUALITY_STEP = 0.05;
+const QUALITY_STEP = 0.06;
+const RESIZE_STEP = 0.85;
+const MIN_LONG_EDGE_PX = 160;
+
+function getInitialLongEdgeLimit(maxImageSizeKB: number): number {
+  if (maxImageSizeKB <= 20) return 512;
+  if (maxImageSizeKB <= 30) return 768;
+  if (maxImageSizeKB <= 100) return 1280;
+  return 1600;
+}
+
+function getScaledDimensions(
+  width: number,
+  height: number,
+  maxLongEdge: number
+): { width: number; height: number } {
+  const longEdge = Math.max(width, height);
+  const scale = longEdge > maxLongEdge ? maxLongEdge / longEdge : 1;
+
+  return {
+    width: Math.max(1, Math.round(width * scale)),
+    height: Math.max(1, Math.round(height * scale)),
+  };
+}
+
+function drawImageToCanvas(
+  img: HTMLImageElement,
+  width: number,
+  height: number
+): HTMLCanvasElement {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas not supported');
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img, 0, 0, width, height);
+  return canvas;
+}
 
 function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -41,6 +83,10 @@ function canvasToBlob(canvas: HTMLCanvasElement, mimeType: string, quality: numb
 
 /**
  * Client Image Processing Layer — compresses to profile.outputFormat via registry.
+ *
+ * The profile byte limits are intentionally preserved. For very small limits
+ * such as 20–30KB, compression must reduce both quality and dimensions; quality
+ * alone is not reliable for detailed camera photos.
  */
 export async function compressImageForProfile(
   file: File,
@@ -52,28 +98,41 @@ export async function compressImageForProfile(
 
   validateImageMimeType(file.type);
   const mimeType = getMimeTypeForOutputFormat(profile.outputFormat);
+  const maxBytes = profile.maxImageSizeKB * 1024;
 
   const img = await loadImageFromFile(file);
-  const canvas = document.createElement('canvas');
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
+  let longEdgeLimit = getInitialLongEdgeLimit(profile.maxImageSizeKB);
+  let bestBlob: Blob | null = null;
 
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('Canvas not supported');
-  ctx.drawImage(img, 0, 0);
+  while (longEdgeLimit >= MIN_LONG_EDGE_PX) {
+    const dimensions = getScaledDimensions(img.naturalWidth, img.naturalHeight, longEdgeLimit);
+    const canvas = drawImageToCanvas(img, dimensions.width, dimensions.height);
 
-  let quality = 0.92;
-  let blob = await canvasToBlob(canvas, mimeType, quality);
-  validateImageForProfile(blob.size, profile);
+    for (
+      let quality = INITIAL_QUALITY;
+      quality >= MIN_QUALITY;
+      quality = Math.max(MIN_QUALITY, quality - QUALITY_STEP)
+    ) {
+      const blob = await canvasToBlob(canvas, mimeType, quality);
+      bestBlob = !bestBlob || blob.size < bestBlob.size ? blob : bestBlob;
 
-  while (blob.size > profile.maxImageSizeKB * 1024 && quality > MIN_QUALITY) {
-    quality = Math.max(MIN_QUALITY, quality - QUALITY_STEP);
-    blob = await canvasToBlob(canvas, mimeType, quality);
+      if (blob.size <= maxBytes) {
+        validateImageForProfile(blob.size, profile);
+        return blob;
+      }
+
+      if (quality === MIN_QUALITY) break;
+    }
+
+    longEdgeLimit = Math.floor(longEdgeLimit * RESIZE_STEP);
   }
 
-  if (blob.size > profile.maxImageSizeKB * 1024) {
-    throw new Error(`Unable to compress image below ${profile.maxImageSizeKB}KB`);
+  if (bestBlob && bestBlob.size <= maxBytes) {
+    validateImageForProfile(bestBlob.size, profile);
+    return bestBlob;
   }
 
-  return blob;
+  throw new Error(
+    `Unable to compress image below ${profile.maxImageSizeKB}KB. Please choose a simpler or lower-resolution image.`
+  );
 }
