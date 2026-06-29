@@ -6,6 +6,7 @@ const LEGACY_API_URL_KEY = 'NEXT_PUBLIC_GOVA_API_URL';
 
 export const publicEnv = {
   basePath: process.env.NEXT_PUBLIC_GOVA_BASE_PATH || '',
+  mode: process.env.NEXT_PUBLIC_GOVA_MODE || '',
   apiBaseUrl:
     process.env.NEXT_PUBLIC_GOVA_API_BASE_URL?.replace(/\/$/, '') ||
     process.env[LEGACY_API_URL_KEY]?.replace(/\/$/, '') ||

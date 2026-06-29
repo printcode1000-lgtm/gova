@@ -142,7 +142,7 @@ To change the default permanently, edit `platform/capacitor.defaults.ts`.
 
 ### CORS on the backend
 
-Capacitor WebViews use origins such as `capacitor://localhost` and `http://localhost`. The Vercel backend must allow these via `GOVA_CORS_ORIGINS` on the server (see data-architecture guide). Default dev origins are included when `GOVA_CORS_ORIGINS` is unset.
+Capacitor WebViews use origins such as `capacitor://localhost`, `https://localhost` (Android), and `http://localhost`. The Vercel backend must allow these via `GOVA_CORS_ORIGINS` on the server (see data-architecture guide). Default dev origins are included when `GOVA_CORS_ORIGINS` is unset.
 
 ---
 

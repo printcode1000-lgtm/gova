@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "npm run server:stop && npm run app:init && next dev --port 3000",
     "build": "npm run app:init && npm run architecture:check && npm run db:ensure && npm run db:schema:sync && next build",
-    "build:static": "npm run app:init && npm run architecture:check && cross-env GOVA_MODE=static next build",
+    "build:static": "npx tsx scripts/build-static.ts",
+    "preview:static": "npx tsx scripts/serve-static.ts",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",

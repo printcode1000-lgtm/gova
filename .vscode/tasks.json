@@ -23,6 +23,27 @@
       "detail": "تصدير ثابت (out/)"
     },
     {
+      "label": "Preview Static",
+      "type": "npm",
+      "script": "preview:static",
+      "problemMatcher": [],
+      "detail": "تشغيل معاينة التصدير الثابت (out/)"
+    },
+    {
+      "label": "Capacitor Build",
+      "type": "npm",
+      "script": "cap:build",
+      "problemMatcher": [],
+      "detail": "بناء التطبيق المحمول مع Capacitor"
+    },
+    {
+      "label": "Open Android",
+      "type": "npm",
+      "script": "cap:open:android",
+      "problemMatcher": [],
+      "detail": "فتح المشروع في Android Studio"
+    },
+    {
       "label": "Type Check",
       "type": "npm",
       "script": "typecheck",

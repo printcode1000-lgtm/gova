@@ -37,11 +37,17 @@ export class GovaApiClient {
       init.body = JSON.stringify(body);
     }
 
-    return trackGovaApiRequest(method, route, true, async () => {
-      const response = await govaHttpFetch(buildGovaApiUrl(route), init);
-      const data = await this.parseResponse<T>(response);
-      return { data, response };
-    });
+    try {
+      return await trackGovaApiRequest(method, route, true, async () => {
+        const response = await govaHttpFetch(buildGovaApiUrl(route), init);
+        const data = await this.parseResponse<T>(response);
+        return { data, response };
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`[GovaApiClient] ${method} ${route} failed: ${message}`);
+      throw error;
+    }
   }
 
   private async parseResponse<T>(response: Response): Promise<T> {

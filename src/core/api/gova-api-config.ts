@@ -23,7 +23,11 @@ export function buildGovaApiUrl(route: string): string {
 export function buildPublicAssetUrl(path: string): string {
   const assetPath = withBasePath(path);
   if (typeof window !== 'undefined') {
-    return `${window.location.origin}${assetPath}`;
+    if (window.location.protocol === 'file:') {
+      return assetPath.startsWith('/') ? `.${assetPath}` : assetPath;
+    }
+
+    return new URL(assetPath, `${window.location.origin}/`).toString();
   }
   return assetPath;
 }

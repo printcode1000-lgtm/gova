@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+
     {
       "name": "Dev Server",
       "request": "launch",
@@ -25,6 +26,33 @@
       "type": "node",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "build:static"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Preview Static",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview:static"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Capacitor Build",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "cap:build"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Open Android",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "cap:open:android"],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}"
     },
