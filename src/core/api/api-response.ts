@@ -17,12 +17,25 @@ export function apiSuccess<T>(data: T, status = 200): NextResponse {
 }
 
 export function apiError(message: string, status = 400): NextResponse {
-  return attachDevTraceHeaders(NextResponse.json({ error: message }, { status }));
+  return attachDevTraceHeaders(
+    NextResponse.json({ error: message }, { status }),
+  );
 }
 
 export function mapServiceError(error: unknown): NextResponse {
-  const message = error instanceof Error ? error.message : 'Internal Server Error';
-  const knownCodes = ['userNotFound', 'invalidPassword', 'phoneAlreadyRegistered', 'invalidCurrentPassword', 'currentPasswordRequired'];
+  const message =
+    error instanceof Error ? error.message : 'Internal Server Error';
+  const knownCodes = [
+    'userNotFound',
+    'invalidPassword',
+    'phoneAlreadyRegistered',
+    'invalidCurrentPassword',
+    'currentPasswordRequired',
+    'invalidStoreDetails',
+    'invalidProfileContacts',
+    'invalidProfileEditor',
+    'phoneVerificationRequired',
+  ];
 
   if (knownCodes.includes(message)) {
     return apiError(message, 400);

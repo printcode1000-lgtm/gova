@@ -6,10 +6,15 @@ import { useTranslation } from '@/lib/i18n';
 import { useSession } from '@/features/auth/components/SessionProvider';
 import type { ProfileContactsData } from '../entities/profile-contacts.entity';
 import { profileService } from '../services/profile-service';
+import { mergePrimaryContacts } from '../utils/merge-primary-contacts';
 
-const profileContactsQueryKey = (uid: string) => ['profile', 'contacts', uid] as const;
+const profileContactsQueryKey = (uid: string) =>
+  ['profile', 'contacts', uid] as const;
 
-function isContactsDirty(current: ProfileContactsData, baseline: ProfileContactsData): boolean {
+function isContactsDirty(
+  current: ProfileContactsData,
+  baseline: ProfileContactsData,
+): boolean {
   return JSON.stringify(current) !== JSON.stringify(baseline);
 }
 
@@ -41,16 +46,25 @@ export function useProfileContacts() {
 
   const isDirty = isContactsDirty(contacts, baseline);
 
-  const saveMutation = useMutation({
-    mutationFn: async (data: ProfileContactsData) => {
-      if (!uid) throw new Error('userNotFound');
-      return profileService.saveContacts({ uid, ...data });
-    },
-    onSuccess: (saved) => {
+  const applySaved = useCallback(
+    (saved: ProfileContactsData) => {
       queryClient.setQueryData(profileContactsQueryKey(uid), saved);
       setContacts(saved);
       setBaseline(saved);
     },
+    [queryClient, uid],
+  );
+
+  const saveMutation = useMutation({
+    mutationFn: async (data: ProfileContactsData) => {
+      if (!uid) throw new Error('userNotFound');
+      const merged = mergePrimaryContacts(
+        { phone: session?.phone ?? '', email: session?.email },
+        data,
+      );
+      return profileService.saveContacts({ uid, ...merged });
+    },
+    onSuccess: applySaved,
   });
 
   const updateContacts = useCallback((data: ProfileContactsData) => {
@@ -67,8 +81,13 @@ export function useProfileContacts() {
     return msg;
   }, [contactsQuery.error, saveMutation.error, t]);
 
+  const saveAsync = async () => {
+    await saveMutation.mutateAsync(contacts);
+    return true;
+  };
+
   const save = () => {
-    saveMutation.mutate(contacts);
+    void saveAsync();
   };
 
   return {
@@ -79,6 +98,8 @@ export function useProfileContacts() {
     isSaving: saveMutation.isPending,
     error,
     save,
+    saveAsync,
+    applySaved,
     saved: saveMutation.isSuccess && !isDirty,
   };
 }

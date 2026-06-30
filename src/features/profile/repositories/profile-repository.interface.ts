@@ -1,4 +1,5 @@
 import type { ProfileContactsData } from '../entities/profile-contacts.entity';
+import type { StoreDetailsData } from '../entities/store-details.entity';
 
 export interface ProfileImageKeys {
   avatarImageKey: string | null;
@@ -11,4 +12,6 @@ export interface IProfileRepository {
   upsert(uid: string, data: ProfileContactsData): Promise<void>;
   getImageKeys(uid: string): Promise<ProfileImageKeys | null>;
   upsertImageKeys(uid: string, keys: ProfileImageKeys): Promise<void>;
+  getStoreDetails(uid: string): Promise<StoreDetailsData | null>;
+  upsertStoreDetails(uid: string, details: StoreDetailsData): Promise<void>;
 }

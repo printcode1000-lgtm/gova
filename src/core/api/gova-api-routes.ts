@@ -13,10 +13,13 @@ export const GOVA_API_ROUTES = {
   profile: {
     contacts: '/api/profile/contacts',
     storeImages: '/api/profile/store-images',
+    storeDetails: '/api/profile/store-details',
+    editor: '/api/profile/editor',
   },
   storage: {
     upload: '/api/storage/images/upload',
-    profile: (profileId: string) => `/api/storage/profiles/${encodeURIComponent(profileId)}`,
+    profile: (profileId: string) =>
+      `/api/storage/profiles/${encodeURIComponent(profileId)}`,
     deleteImage: (imageKey: string) =>
       `/api/storage/images/${encodeURIComponent(imageKey)}`,
   },

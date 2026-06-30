@@ -1,30 +1,89 @@
 'use client';
 
-import { ChevronDown, Lock, Loader2, Mail, Save, Smartphone } from 'lucide-react';
+import { ChevronDown, Lock, Loader2, Mail, Save } from 'lucide-react';
 import * as React from 'react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useProfileRegistration } from '@/features/auth/hooks/use-profile-registration';
+import type {
+  ProfileRegistrationController,
+  ProfileSectionStatus,
+} from './profile-save-controller';
+import { ProfilePhoneVerification } from './ProfilePhoneVerification';
 
-export function ProfileRegistrationInfoCard() {
+interface ProfileRegistrationInfoCardProps {
+  showSaveButton?: boolean;
+  onStatusChange?: (status: ProfileSectionStatus) => void;
+}
+
+export const ProfileRegistrationInfoCard = React.forwardRef<
+  ProfileRegistrationController,
+  ProfileRegistrationInfoCardProps
+>(function ProfileRegistrationInfoCard(
+  { showSaveButton = true, onStatusChange },
+  ref,
+) {
   const { t } = useTranslation();
   const {
     form,
     updateField,
     fieldErrors,
+    phoneVerified,
+    setPhoneVerified,
     isDirty,
     isLoading,
     isSaving,
     error,
     save,
+    saveAsync,
+    prepareSnapshot,
+    applySaved,
     saved,
   } = useProfileRegistration();
   const [isPasswordOpen, setIsPasswordOpen] = React.useState(false);
+  const label = t('onboarding.contactInfo.primaryContact');
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      isDirty,
+      isSaving,
+      canSave: phoneVerified,
+      label,
+      save: saveAsync,
+      prepareSnapshot,
+      applySaved,
+    }),
+    [
+      applySaved,
+      isDirty,
+      isSaving,
+      label,
+      phoneVerified,
+      prepareSnapshot,
+      saveAsync,
+    ],
+  );
+
+  React.useEffect(() => {
+    onStatusChange?.({
+      isDirty,
+      isSaving,
+      canSave: phoneVerified,
+      label,
+    });
+  }, [isDirty, isSaving, label, onStatusChange, phoneVerified]);
 
   if (isLoading) {
     return (
@@ -40,11 +99,15 @@ export function ProfileRegistrationInfoCard() {
     <Card>
       <CardHeader>
         <CardTitle>{t('onboarding.contactInfo.primaryContact')}</CardTitle>
-        <CardDescription>{t('onboarding.contactInfo.primaryContactHint')}</CardDescription>
+        <CardDescription>
+          {t('onboarding.contactInfo.primaryContactHint')}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
         {error ? (
-          <div className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">{error}</div>
+          <div className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+            {error}
+          </div>
         ) : null}
         {saved && !isDirty ? (
           <div className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
@@ -52,31 +115,13 @@ export function ProfileRegistrationInfoCard() {
           </div>
         ) : null}
 
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold flex items-center gap-2 text-on-surface">
-            <Smartphone className="h-4 w-4 text-primary" />
-            {t('auth.login.phone')}
-          </Label>
-          <div className="relative">
-            <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
-              +20
-            </span>
-            <input
-              type="tel"
-              inputMode="tel"
-              maxLength={11}
-              placeholder={t('auth.login.phonePlaceholder')}
-              className={cn('auth-input ps-12 w-full', fieldErrors.phone && 'border-error')}
-              value={form.phone}
-              onChange={(e) =>
-                updateField('phone', e.target.value.replace(/\D/g, '').slice(0, 11))
-              }
-            />
-          </div>
-          {fieldErrors.phone ? (
-            <p className="text-xs text-error">{fieldErrors.phone}</p>
-          ) : null}
-        </div>
+        <ProfilePhoneVerification
+          phone={form.phone}
+          verified={phoneVerified}
+          error={fieldErrors.phone}
+          onPhoneChange={(phone) => updateField('phone', phone)}
+          onVerifiedChange={setPhoneVerified}
+        />
 
         <div className="space-y-2">
           <Label className="text-sm font-medium flex items-center gap-2">
@@ -106,59 +151,95 @@ export function ProfileRegistrationInfoCard() {
             <Lock className="h-4 w-4" />
             {t('onboarding.contactInfo.changePassword')}
             <ChevronDown
-              className={cn('h-4 w-4 transition-transform', isPasswordOpen && 'rotate-180')}
+              className={cn(
+                'h-4 w-4 transition-transform',
+                isPasswordOpen && 'rotate-180',
+              )}
             />
           </Button>
           {isPasswordOpen ? (
             <div className="space-y-4 rounded-lg border border-outline-variant/40 p-4">
               <div className="space-y-2">
-                <Label htmlFor="currentPassword">{t('onboarding.contactInfo.currentPassword')}</Label>
+                <Label htmlFor="currentPassword">
+                  {t('onboarding.contactInfo.currentPassword')}
+                </Label>
                 <Input
                   id="currentPassword"
                   type="password"
                   value={form.currentPassword}
-                  onChange={(e) => updateField('currentPassword', e.target.value)}
-                  placeholder={t('onboarding.contactInfo.currentPasswordPlaceholder')}
-                  className={fieldErrors.currentPassword ? 'border-error' : undefined}
+                  onChange={(e) =>
+                    updateField('currentPassword', e.target.value)
+                  }
+                  placeholder={t(
+                    'onboarding.contactInfo.currentPasswordPlaceholder',
+                  )}
+                  className={
+                    fieldErrors.currentPassword ? 'border-error' : undefined
+                  }
                 />
                 {fieldErrors.currentPassword ? (
-                  <p className="text-xs text-error">{fieldErrors.currentPassword}</p>
+                  <p className="text-xs text-error">
+                    {fieldErrors.currentPassword}
+                  </p>
                 ) : null}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="newPassword">{t('onboarding.contactInfo.newPassword')}</Label>
+                <Label htmlFor="newPassword">
+                  {t('onboarding.contactInfo.newPassword')}
+                </Label>
                 <Input
                   id="newPassword"
                   type="password"
                   value={form.newPassword}
                   onChange={(e) => updateField('newPassword', e.target.value)}
-                  placeholder={t('onboarding.contactInfo.newPasswordPlaceholder')}
-                  className={fieldErrors.newPassword ? 'border-error' : undefined}
+                  placeholder={t(
+                    'onboarding.contactInfo.newPasswordPlaceholder',
+                  )}
+                  className={
+                    fieldErrors.newPassword ? 'border-error' : undefined
+                  }
                 />
                 {fieldErrors.newPassword ? (
-                  <p className="text-xs text-error">{fieldErrors.newPassword}</p>
+                  <p className="text-xs text-error">
+                    {fieldErrors.newPassword}
+                  </p>
                 ) : null}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">{t('onboarding.contactInfo.confirmPassword')}</Label>
+                <Label htmlFor="confirmPassword">
+                  {t('onboarding.contactInfo.confirmPassword')}
+                </Label>
                 <Input
                   id="confirmPassword"
                   type="password"
                   value={form.confirmPassword}
-                  onChange={(e) => updateField('confirmPassword', e.target.value)}
-                  placeholder={t('onboarding.contactInfo.confirmPasswordPlaceholder')}
-                  className={fieldErrors.confirmPassword ? 'border-error' : undefined}
+                  onChange={(e) =>
+                    updateField('confirmPassword', e.target.value)
+                  }
+                  placeholder={t(
+                    'onboarding.contactInfo.confirmPasswordPlaceholder',
+                  )}
+                  className={
+                    fieldErrors.confirmPassword ? 'border-error' : undefined
+                  }
                 />
                 {fieldErrors.confirmPassword ? (
-                  <p className="text-xs text-error">{fieldErrors.confirmPassword}</p>
+                  <p className="text-xs text-error">
+                    {fieldErrors.confirmPassword}
+                  </p>
                 ) : null}
               </div>
             </div>
           ) : null}
         </div>
 
-        {isDirty ? (
-          <Button type="button" className="w-full auth-cta h-11" onClick={save} disabled={isSaving}>
+        {showSaveButton && isDirty ? (
+          <Button
+            type="button"
+            className="w-full auth-cta h-11"
+            onClick={save}
+            disabled={isSaving}
+          >
             {isSaving ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin me-2" />
@@ -175,4 +256,4 @@ export function ProfileRegistrationInfoCard() {
       </CardContent>
     </Card>
   );
-}
+});

@@ -5,7 +5,14 @@ import { profileDbClient } from '@/core/database/profile-db-client';
 import type { IDatabaseClient } from '@/core/database/database-client.interface';
 import { userProfiles } from '@/core/database/profile/profile.schema';
 import type { ProfileContactsData } from '../entities/profile-contacts.entity';
-import type { ProfileImageKeys, IProfileRepository } from './profile-repository.interface';
+import {
+  EMPTY_STORE_DETAILS,
+  type StoreDetailsData,
+} from '../entities/store-details.entity';
+import type {
+  ProfileImageKeys,
+  IProfileRepository,
+} from './profile-repository.interface';
 
 function parseJson<T>(value: string, fallback: T): T {
   try {
@@ -15,7 +22,9 @@ function parseJson<T>(value: string, fallback: T): T {
   }
 }
 
-function rowToContacts(row: typeof userProfiles.$inferSelect): ProfileContactsData {
+function rowToContacts(
+  row: typeof userProfiles.$inferSelect,
+): ProfileContactsData {
   return {
     phones: parseJson(row.phonesJson, []),
     emails: parseJson(row.emailsJson, []),
@@ -24,11 +33,36 @@ function rowToContacts(row: typeof userProfiles.$inferSelect): ProfileContactsDa
   };
 }
 
+function normalizeStoreDetails(value: unknown): StoreDetailsData {
+  if (!value || typeof value !== 'object') return EMPTY_STORE_DETAILS;
+  const details = value as Partial<Record<keyof StoreDetailsData, unknown>>;
+
+  return {
+    storeName: typeof details.storeName === 'string' ? details.storeName : '',
+    storeDescription:
+      typeof details.storeDescription === 'string'
+        ? details.storeDescription
+        : '',
+    storeStory:
+      typeof details.storeStory === 'string' ? details.storeStory : '',
+  };
+}
+
+function rowToStoreDetails(row: {
+  storeDetailsJson: string;
+}): StoreDetailsData {
+  return normalizeStoreDetails(
+    parseJson(row.storeDetailsJson, EMPTY_STORE_DETAILS),
+  );
+}
+
 function parseImageKeys(value: string | null | undefined): string[] {
   if (!value) return [];
   const parsed = parseJson<unknown>(value, []);
   if (!Array.isArray(parsed)) return [];
-  return parsed.filter((item): item is string => typeof item === 'string' && item.length > 0);
+  return parsed.filter(
+    (item): item is string => typeof item === 'string' && item.length > 0,
+  );
 }
 
 export class ProfileRepository implements IProfileRepository {
@@ -67,7 +101,10 @@ export class ProfileRepository implements IProfileRepository {
       return;
     }
 
-    await this.database.db.update(userProfiles).set(payload).where(eq(userProfiles.uid, uid));
+    await this.database.db
+      .update(userProfiles)
+      .set(payload)
+      .where(eq(userProfiles.uid, uid));
   }
 
   async getImageKeys(uid: string): Promise<ProfileImageKeys | null> {
@@ -84,11 +121,12 @@ export class ProfileRepository implements IProfileRepository {
     if (rows.length === 0) return null;
     const coverImageKeys = parseImageKeys(rows[0].coverImageKeysJson);
     const legacyCoverImageKey = rows[0].coverImageKey ?? null;
-    const normalizedCoverImageKeys = coverImageKeys.length > 0
-      ? coverImageKeys
-      : legacyCoverImageKey
-      ? [legacyCoverImageKey]
-      : [];
+    const normalizedCoverImageKeys =
+      coverImageKeys.length > 0
+        ? coverImageKeys
+        : legacyCoverImageKey
+          ? [legacyCoverImageKey]
+          : [];
 
     return {
       avatarImageKey: rows[0].avatarImageKey ?? null,
@@ -118,7 +156,49 @@ export class ProfileRepository implements IProfileRepository {
       return;
     }
 
-    await this.database.db.update(userProfiles).set(payload).where(eq(userProfiles.uid, uid));
+    await this.database.db
+      .update(userProfiles)
+      .set(payload)
+      .where(eq(userProfiles.uid, uid));
+  }
+
+  async getStoreDetails(uid: string): Promise<StoreDetailsData | null> {
+    const rows = await this.database.db
+      .select({ storeDetailsJson: userProfiles.storeDetailsJson })
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uid))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return rowToStoreDetails(rows[0]);
+  }
+
+  async upsertStoreDetails(
+    uid: string,
+    details: StoreDetailsData,
+  ): Promise<void> {
+    const payload = {
+      storeDetailsJson: JSON.stringify(details),
+    };
+
+    const existing = await this.database.db
+      .select({ uid: userProfiles.uid })
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uid))
+      .limit(1);
+
+    if (existing.length === 0) {
+      await this.database.db.insert(userProfiles).values({
+        uid,
+        ...payload,
+      });
+      return;
+    }
+
+    await this.database.db
+      .update(userProfiles)
+      .set(payload)
+      .where(eq(userProfiles.uid, uid));
   }
 }
 

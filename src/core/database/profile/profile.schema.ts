@@ -9,6 +9,7 @@ export const userProfiles = sqliteTable('user_profiles', {
   avatarImageKey: text('avatar_image_key'),
   coverImageKey: text('cover_image_key'),
   coverImageKeysJson: text('cover_image_keys_json').notNull().default('[]'),
+  storeDetailsJson: text('store_details_json').notNull().default('{}'),
 });
 
 export type UserProfileRow = typeof userProfiles.$inferSelect;
