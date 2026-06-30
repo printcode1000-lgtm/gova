@@ -16,6 +16,54 @@ const appInitCommand = 'npm run app:init';
 const architectureCheckCommand = 'npm run architecture:check';
 const localManifestFileName = 'gova-web-manifest.json';
 
+// Public assets copied verbatim into every static build.
+const STATIC_PUBLIC_ALLOW_FILES = [
+  'gova-app-init.js',
+  'gova-theme-init.js',
+  'logo.png',
+  'catagory/categories.json',
+] as const;
+
+const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
+  'images/subCategories',
+] as const;
+
+// Main-category images are allowed only when referenced by categories.json.
+const STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY = 'images/mainCategories';
+
+// Source/development assets that must never enter out/, R2, Android, or iOS.
+const STATIC_PUBLIC_IGNORE_FILES = [
+  'catagory.db',
+  'gova-web-manifest.json',
+  'gv_app_icon.png',
+  'VERY GOOD.png',
+  'images/logo.png',
+  'catagory/active_ingredient_forms.json',
+  'catagory/active_ingredient_strengths.json',
+  'catagory/active_ingredients.json',
+  'catagory/forms.json',
+  'catagory/pharmacy_categories.json',
+  'catagory/pharmacy_subcategories.json',
+  'catagory/product_brands.json',
+  'catagory/setting.json',
+  'catagory/sqlite_sequence.json',
+  'catagory/strengths.json',
+  'catagory/subcategories.json',
+] as const;
+
+const STATIC_PUBLIC_IGNORE_DIRECTORIES = [
+  'images/icons',
+  'images/logos',
+  'sync_data',
+] as const;
+
+// Next.js routes removed only from the temporary production/static source tree.
+const STATIC_ROUTE_IGNORELIST = [
+  'app/api',
+  'app/dev',
+  'app/test1',
+] as const;
+
 function copyIfExists(source: string, destination: string): void {
   if (!existsSync(source)) {
     return;
@@ -31,16 +79,57 @@ function copyRequired(source: string, destination: string): void {
   cpSync(source, destination, { recursive: true });
 }
 
+function normalizePath(value: string): string {
+  return value.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+}
+
+function isInsideDirectory(filePath: string, directory: string): boolean {
+  return filePath.startsWith(`${directory}/`);
+}
+
+function listFiles(root: string, current = root, result: string[] = []): string[] {
+  for (const entry of readdirSync(current, { withFileTypes: true })) {
+    const fullPath = path.join(current, entry.name);
+    if (entry.isDirectory()) listFiles(root, fullPath, result);
+    else result.push(normalizePath(path.relative(root, fullPath)));
+  }
+  return result;
+}
+
+function assertPublicAssetPolicy(categoryImages: Set<string>): void {
+  const allowFiles = new Set<string>(STATIC_PUBLIC_ALLOW_FILES);
+  const ignoreFiles = new Set<string>(STATIC_PUBLIC_IGNORE_FILES);
+  const allowedCategoryImages = new Set(
+    [...categoryImages].map((image) => `${STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY}/${image}`),
+  );
+
+  const unclassified = listFiles(rootPublicDir).filter((filePath) => {
+    if (filePath.split('/').some((segment) => segment.startsWith('.'))) return false;
+    if (allowFiles.has(filePath) || allowedCategoryImages.has(filePath)) return false;
+    if (STATIC_PUBLIC_ALLOW_DIRECTORIES.some((directory) => isInsideDirectory(filePath, directory))) return false;
+    if (ignoreFiles.has(filePath)) return false;
+    if (STATIC_PUBLIC_IGNORE_DIRECTORIES.some((directory) => isInsideDirectory(filePath, directory))) return false;
+    if (isInsideDirectory(filePath, STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY)) return false;
+    return true;
+  });
+
+  if (unclassified.length > 0) {
+    throw new Error(
+      `Unclassified public assets. Add each path to the static allowlist or ignorelist:\n${unclassified.join('\n')}`,
+    );
+  }
+}
+
 function prepareStaticPublicDir(): void {
   const tempPublicDir = path.join(tempBuildDir, 'public');
-  const staticFiles = [
-    'gova-app-init.js',
-    'gova-theme-init.js',
-    'logo.png',
-    path.join('catagory', 'categories.json'),
-  ];
+  for (const relativePath of STATIC_PUBLIC_ALLOW_FILES) {
+    copyRequired(
+      path.join(rootPublicDir, relativePath),
+      path.join(tempPublicDir, relativePath),
+    );
+  }
 
-  for (const relativePath of staticFiles) {
+  for (const relativePath of STATIC_PUBLIC_ALLOW_DIRECTORIES) {
     copyRequired(
       path.join(rootPublicDir, relativePath),
       path.join(tempPublicDir, relativePath),
@@ -55,13 +144,15 @@ function prepareStaticPublicDir(): void {
       .filter((image): image is string => typeof image === 'string' && image.length > 0),
   );
 
+  assertPublicAssetPolicy(categoryImages);
+
   for (const image of categoryImages) {
     if (path.basename(image) !== image) {
       throw new Error(`Unsafe category image path: ${image}`);
     }
     copyRequired(
-      path.join(rootPublicDir, 'images', 'mainCategories', image),
-      path.join(tempPublicDir, 'images', 'mainCategories', image),
+      path.join(rootPublicDir, STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY, image),
+      path.join(tempPublicDir, STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY, image),
     );
   }
 }
@@ -71,9 +162,9 @@ function prepareTempBuildDir(): void {
   rmSync(rootOutDir, { recursive: true, force: true });
 
   copyIfExists(path.join(rootDir, 'src'), tempSrcDir);
-  rmSync(path.join(tempSrcDir, 'app', 'api'), { recursive: true, force: true });
-  rmSync(path.join(tempSrcDir, 'app', 'dev'), { recursive: true, force: true });
-  rmSync(path.join(tempSrcDir, 'app', 'test1'), { recursive: true, force: true });
+  for (const relativePath of STATIC_ROUTE_IGNORELIST) {
+    rmSync(path.join(tempSrcDir, relativePath), { recursive: true, force: true });
+  }
 
   const rootFilesToCopy = [
     '.env',
