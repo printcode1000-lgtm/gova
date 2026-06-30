@@ -255,11 +255,11 @@ export const StoreIdentityCard = React.forwardRef<
           onChange={(event) => updateField('storeStory', event.target.value)}
           placeholder={t('onboarding.storeIdentity.storyPlaceholder')}
           rows={4}
-          maxLength={1000}
+          maxLength={500}
           disabled={readOnly}
         />
         <p className="text-end text-xs text-muted-foreground">
-          {details.storeStory.length}/1000
+          {details.storeStory.length}/500
         </p>
       </div>
     </div>
