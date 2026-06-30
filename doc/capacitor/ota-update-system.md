@@ -1,48 +1,107 @@
 # OTA Update System
 
-## Purpose
+## Contract
 
-GOVA uses a file-level Capacitor OTA system. Updates are delivered as real static files on R2, not as a ZIP bundle. The app compares a local web manifest with the signed manifest on R2, downloads only changed or new files, and creates a clean staged release that contains exactly the files listed by the remote manifest.
+GOVA uses one forward-only, file-level OTA channel. There are no ZIP bundles, version directories, release history, or rollback.
 
-The update rule is forward-only:
+The application updates only when:
 
 ```text
-remote.version > local.version  -> update
-remote.version <= local.version -> do nothing
+remote.version > local.version
 ```
 
-There is no R2 rollback path. If R2 points to an older or equal version, the installed app ignores it.
+An equal or lower remote version is ignored.
 
-## Release Layout
+## R2 Layout
 
-R2 stores each release as individual files:
+R2 has one current manifest and one current file tree:
 
 ```text
 app-updates/
-├── manifest.json                         # Channel manifest, published last
-└── releases/
-    └── 0.1.3/
-        ├── manifest.json                 # Immutable release manifest
-        └── files/
-            ├── index.html
-            ├── _next/static/...
-            └── ...
+|-- manifest.json
+`-- files/
+    |-- index.html
+    |-- _next/static/...
+    `-- ...
 ```
 
-The channel manifest and release manifest use schema v2:
+Expected object counts are always:
+
+```text
+1 manifest object + manifest.fileCount file objects
+```
+
+`app-updates/releases/` is legacy and must remain absent. `cap:build` removes any legacy objects found there.
+
+## Standard Command
+
+Use one command for R2, Android, and iOS:
+
+```powershell
+npm run cap:build
+```
+
+Do not pass `--version` or `--notes`. The command performs this sequence:
+
+1. Reads the current version from `app-updates/manifest.json`.
+2. Increments the patch component automatically, such as `0.1.7` to `0.1.8`.
+3. Creates notes using the current date and time in `Africa/Cairo`.
+4. Pins the web version, native version, and deterministic Next.js Build ID to the new version.
+5. Runs the static build and generates `out/gova-web-manifest.json`.
+6. Compares the new local file list with the previous R2 manifest.
+7. Uploads only new or changed files to `app-updates/files/`.
+8. Deletes remote file objects that no longer exist locally.
+9. Signs and publishes `app-updates/manifest.json` last.
+10. Deletes legacy objects under `app-updates/releases/`.
+11. Updates Android `versionName` and `versionCode`.
+12. Updates iOS `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`.
+13. Compares the local and remote manifests.
+14. Downloads every R2 file and verifies its byte size and SHA-256.
+15. Runs `npx cap sync` only after all checks pass.
+
+No APK or IPA is created. The command prepares the Android Studio and Xcode projects.
+
+If R2 has no manifest yet, the initial version comes from `package.json`. Every later execution increments the R2 patch version.
+
+## Publish-Only Command
+
+```powershell
+npm run ota:publish
+```
+
+This command uses the same automatic version, automatic Cairo notes, static build, delta upload, deletion, signing, and single-directory layout. It does not update native project version files and does not run `cap sync`.
+
+For normal native development, use `npm run cap:build` instead.
+
+## Delta Publication
+
+For every local output path, publication compares its SHA-256 and size with the previous manifest:
+
+- Missing or different: upload it.
+- Identical: leave the existing R2 object unchanged.
+- Present on R2 but absent locally: delete it.
+
+Changed files use revalidation cache headers because their URLs remain stable between versions. The signed manifest uses `no-store` and is written only after file uploads and deletions complete.
+
+There is intentionally no rollback. If publication fails before the new manifest is written, clients continue to see the previous version. A client that reads an old manifest while files are being replaced may reject a checksum and retry on a later launch.
+
+## Manifest Schema
+
+Example schema v2 manifest:
 
 ```json
 {
   "schemaVersion": 2,
   "delivery": "files",
-  "version": "0.1.3",
-  "releaseId": "0.1.3-1782754463078",
-  "baseUrl": "https://.../app-updates/releases/0.1.3/files",
+  "releaseId": "0.1.8-1782794363515",
+  "version": "0.1.8",
+  "createdAt": "2026-06-30T06:30:15.000Z",
+  "baseUrl": "https://.../app-updates/files",
   "size": 14356238,
   "fileCount": 373,
   "minimumNativeVersion": "0.0.0",
   "mandatory": false,
-  "notes": "File-level OTA",
+  "notes": "Automatic build - 2026-06-30 09:30:15 Africa/Cairo",
   "files": {
     "index.html": {
       "sha256": "...",
@@ -53,7 +112,9 @@ The channel manifest and release manifest use schema v2:
 }
 ```
 
-The manifest is signed. Each file is verified by SHA-256 after it is loaded.
+The manifest is signed with P-256. File entries are sorted for canonical signing. Every listed path has a SHA-256 and byte size.
+
+`baseUrl` always points to the non-versioned `app-updates/files` directory.
 
 ## Local Manifest
 
@@ -64,159 +125,85 @@ out/gova-web-manifest.json
 public/gova-web-manifest.json
 ```
 
-The local manifest records the currently bundled static web assets:
+The local manifest contains the bundled version and the complete file inventory. `gova-web-manifest.json` itself is excluded from the file inventory and is not stored under `app-updates/files`.
 
-- `version`
-- `fileCount`
-- total `size`
-- every file path
-- every file `sha256`
-- every file size
+After `cap sync`, Android and iOS receive the same local manifest and static files from `out/`.
 
-The app reads `/gova-web-manifest.json` at startup and compares it with the R2 manifest. This local file is generated for bundled/staged app assets. It is not uploaded as one of the remote release files; the signed R2 manifest itself is written back into the staged release as `gova-web-manifest.json` after all files are verified.
+## Runtime Update
 
-## Update Algorithm
+At Splash, the application:
 
-At splash time, the app:
+1. Reads the local `gova-web-manifest.json`.
+2. Loads the signed R2 manifest.
+3. Validates schema, delivery type, version, metadata, signature, paths, counts, and total size.
+4. Stops when `remote.version <= local.version`.
+5. Calculates changed and deleted paths.
+6. Downloads changed files and copies unchanged files from the running bundle.
+7. Verifies every file by SHA-256.
+8. Creates a clean staged release in private Capacitor storage.
+9. Writes the signed remote manifest into the staged release as its local manifest.
+10. Activates the completed release.
 
-1. Reads the local manifest.
-2. Downloads the signed R2 channel manifest.
-3. Verifies manifest schema, delivery type, version format, file list, total size, and signature.
-4. Skips the update if `remote.version <= local.version`.
-5. Builds a diff:
-   - changed files: missing locally or different SHA-256
-   - deleted files: present locally but not present remotely
-6. Creates a clean release directory in Capacitor private storage.
-7. For each remote file:
-   - downloads it from R2 if changed;
-   - copies it from the currently served app if unchanged;
-   - verifies SHA-256;
-   - writes it into the staged release.
-8. Writes `gova-web-manifest.json` into the staged release.
-9. Saves the staged release as pending.
-10. Activates the pending release.
-11. Persists it only after the app reaches splash initialization successfully.
+Files absent from the remote manifest are absent from the staged release, so deletion propagates to the application.
 
-On Android and iOS, remote R2 requests use native `CapacitorHttp`, so OTA does not depend on browser CORS. Browser builds continue to use the normal HTTP gateway. R2 CORS must still include `https://localhost` to support older installed builds during the one-time schema v2 bootstrap.
+Android and iOS use native `CapacitorHttp` for R2 requests. R2 CORS also includes `https://localhost` for older bootstrap compatibility.
 
-Deleted files are removed by design. The staged release is created from the remote manifest only, so a file that is missing from the remote manifest is not copied into the new app version.
+## Version Synchronization
 
-## Build And Publish Order
+After a successful `cap:build`, all these values must be equal:
 
-For a native build that must match R2 exactly, publish first, then run `cap:build` with the same version:
+- R2 `manifest.version`.
+- `out/gova-web-manifest.json` version.
+- Android bundled manifest version.
+- iOS bundled manifest version.
+- Android `versionName`.
+- iOS `MARKETING_VERSION`.
 
-```powershell
-npm run ota:publish -- --version 0.1.3 --notes "File-level OTA"
-npm run cap:build -- --version 0.1.3
-```
+Android `versionCode` and iOS `CURRENT_PROJECT_VERSION` are calculated numerically from the semantic version. For example, `0.1.8` becomes `108`.
 
-`ota:publish`:
+## Diagnostics
 
-1. Runs `npm run build:static`.
-2. Pins the public web version, native version, and Next.js Build ID to the release version.
-3. Generates the file manifest.
-4. Uploads every file from `out/` to R2 except `gova-web-manifest.json`.
-5. Uploads `releases/<version>/manifest.json`.
-6. Uploads the channel `manifest.json` last.
-
-`cap:build`:
-
-1. Updates Android `versionName` and `versionCode`.
-2. Updates iOS `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`.
-3. Runs `npm run build:static` with the same web bundle version.
-4. Reads `out/gova-web-manifest.json`.
-5. Reads the R2 channel manifest.
-6. Fails if versions differ.
-7. Fails if any file path, size, or SHA-256 differs.
-8. Runs `npx cap sync` only after the local files match R2 exactly.
-
-This means Android, iOS, the local web manifest, and R2 are pinned to the same release version.
-
-## Files
-
-| File | Responsibility |
-|---|---|
-| `scripts/ota-publish.ts` | Publishes file-level OTA releases to R2 |
-| `scripts/build-static.ts` | Builds static output and writes `gova-web-manifest.json` |
-| `scripts/cap-build.ts` | Pins Android/iOS versions and verifies local files against R2 |
-| `scripts/ota/ota-config.ts` | OTA manifest schema, signing, and public build env |
-| `scripts/ota/ota-r2.ts` | R2 object access |
-| `src/features/ota/services/ota-update-service.ts` | Runtime check, diff, download, staging, activation |
-| `src/features/ota/services/ota-api-service.ts` | Manifest and file loading |
-| `src/platform/ota/capacitor-ota-adapter.ts` | Capacitor private storage and WebView base path activation |
-| `src/components/splash/SplashInitializer.tsx` | Runs OTA during splash and exposes progress details |
-| `src/components/splash/ProgressIndicator.tsx` | Shows current/R2 version, changed/deleted file counts, and download size |
-
-## Splash Diagnostics
-
-During update checks, Splash can show:
-
-- current local version
-- R2 version
-- changed file count
-- deleted file count
-- download size
-- currently processed file
-
-Runtime logs are emitted with the prefix:
-
-```text
-[GovaOTA]
-```
-
-Use Android Studio Logcat and filter by `GovaOTA` or package `com.gova.app`.
-
-Common log reasons:
+Splash displays current/R2 versions, changed and deleted counts, download size, and failure details. Android Studio Logcat messages use `[GovaOTA]`.
 
 | Message | Meaning |
 |---|---|
-| `OTA disabled` | Missing manifest URL/public key or not running on native Capacitor |
-| `No OTA update: remote version is not newer` | R2 version is equal or lower |
-| `Unsupported OTA manifest schema` | The installed native build predates schema v2 and must be run once from Android Studio/Xcode |
-| Browser CORS error | Run `npm run r2:sync:cors`; current native builds use `CapacitorHttp` as a fallback-free path |
-| `OTA manifest signature is invalid` | R2 manifest does not match the signing key |
-| `OTA ... checksum mismatch` | A downloaded/copied file does not match manifest SHA-256 |
-| `OTA changed files exceed limit` | Changed files exceed the client safety limit |
+| `OTA disabled` | OTA URL/key is missing or the app is not running in Capacitor |
+| `No OTA update: remote version is not newer` | R2 is equal to or older than the running bundle |
+| `Unsupported OTA manifest schema` | The installed bootstrap predates schema v2 |
+| `OTA manifest signature is invalid` | The manifest does not match the embedded public key |
+| `checksum mismatch` | A downloaded or copied file differs from the manifest |
+| `R2 object content mismatch` | `cap:build` found a remote size or SHA-256 mismatch |
 
-## Environment Variables
+## Main Files
 
-| Variable | Used by | Purpose |
-|---|---|---|
-| `GOVA_WEB_BUNDLE_VERSION` | `cap:build`, `build:static` | Web/native release version when `--version` is not provided |
-| `GOVA_NATIVE_VERSION` | legacy override | Prefer matching native version to web version via `cap:build -- --version` |
-| `GOVA_CAPACITOR_API_BASE_URL` | `cap:build`, `ota:publish` | API base URL baked into static assets |
-| `GOVA_OTA_R2_PUBLIC_URL` or `R2_PUBLIC_URL` | OTA scripts | Public R2 base URL |
-| `GOVA_OTA_R2_BUCKET_NAME` or `R2_BUCKET_NAME` | OTA scripts | R2 bucket name |
-| `GOVA_OTA_R2_ENDPOINT` or `R2_ENDPOINT` | OTA scripts | R2 S3 endpoint |
-| `GOVA_OTA_R2_ACCESS_KEY_ID` or `R2_ACCESS_KEY_ID` | OTA scripts | R2 access key |
-| `GOVA_OTA_R2_SECRET_ACCESS_KEY` or `R2_SECRET_ACCESS_KEY` | OTA scripts | R2 secret key |
-| `GOVA_OTA_SIGNING_PRIVATE_KEY` | OTA scripts | Optional signing key; otherwise `.ota/private-key.pem` is used |
+| File | Responsibility |
+|---|---|
+| `scripts/cap-build.ts` | Publish, full R2 verification, native versioning, and Capacitor sync |
+| `scripts/ota-publish.ts` | Automatic version and single-directory delta publication |
+| `scripts/build-static.ts` | Static build and local manifest generation |
+| `scripts/ota/ota-config.ts` | Schema, signing, URLs, and deterministic build environment |
+| `scripts/ota/ota-r2.ts` | R2 list/get/put/delete operations |
+| `src/features/ota/services/ota-update-service.ts` | Runtime comparison, staging, verification, and activation |
+| `src/features/ota/services/ota-api-service.ts` | Native/browser manifest and file transport |
+| `src/platform/ota/capacitor-ota-adapter.ts` | Private storage and WebView activation |
+| `src/components/splash/SplashInitializer.tsx` | Startup execution and progress details |
 
 ## Verification
 
-Run:
-
 ```powershell
 npm run typecheck
+npm run architecture:check
 npm run ota:self-test
-npm run build:static
+npm run cap:build
 ```
 
-For a strict native/R2 match:
+After `cap:build`, R2 must contain exactly `manifest.json` plus the objects under `files/`, and zero objects under `releases/`.
 
-```powershell
-npm run ota:publish -- --version 0.1.3
-npm run cap:build -- --version 0.1.3
-```
+## Rules
 
-`cap:build` intentionally fails if R2 is not already published with the same version and identical file hashes.
-
-## Design Constraints
-
-- Do not reintroduce `web-bundle.zip`.
-- Do not update when `remote.version <= local.version`.
-- Do not write into the currently running release in place.
-- Always stage a clean release from the remote manifest.
-- Treat the remote manifest as the source of truth for file deletion.
-- Keep Capacitor APIs inside `src/platform/ota/capacitor-ota-adapter.ts`.
-- Keep signing and R2 upload logic inside `scripts/`.
+- Never create ZIP bundles.
+- Never create versioned R2 directories.
+- Never add rollback behavior.
+- Never publish the manifest before file operations complete.
+- Never update when `remote.version <= local.version`.
+- Treat the manifest as the complete source of truth for additions, changes, and deletions.

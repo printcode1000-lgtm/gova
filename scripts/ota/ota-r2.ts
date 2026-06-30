@@ -1,4 +1,12 @@
-import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import {
   getOtaBucketName,
   type OtaManifest,
@@ -45,6 +53,43 @@ export async function getOtaManifestObject(client: S3Client, key: string): Promi
   }));
   if (!response.Body) throw new Error(`OTA object is empty: ${key}`);
   return JSON.parse(await response.Body.transformToString()) as OtaManifest;
+}
+
+export async function getOtaObjectBytes(client: S3Client, key: string): Promise<Uint8Array> {
+  const response = await client.send(new GetObjectCommand({
+    Bucket: getOtaBucketName(),
+    Key: key,
+  }));
+  if (!response.Body) throw new Error(`OTA object is empty: ${key}`);
+  return response.Body.transformToByteArray();
+}
+
+export async function listOtaObjectKeys(client: S3Client, prefix: string): Promise<string[]> {
+  const keys: string[] = [];
+  let continuationToken: string | undefined;
+  do {
+    const response = await client.send(new ListObjectsV2Command({
+      Bucket: getOtaBucketName(),
+      Prefix: prefix,
+      ContinuationToken: continuationToken,
+    }));
+    for (const object of response.Contents ?? []) {
+      if (object.Key) keys.push(object.Key);
+    }
+    continuationToken = response.IsTruncated ? response.NextContinuationToken : undefined;
+  } while (continuationToken);
+  return keys;
+}
+
+export async function deleteOtaObjects(client: S3Client, keys: string[]): Promise<void> {
+  for (let index = 0; index < keys.length; index += 1000) {
+    const batch = keys.slice(index, index + 1000);
+    if (batch.length === 0) continue;
+    await client.send(new DeleteObjectsCommand({
+      Bucket: getOtaBucketName(),
+      Delete: { Objects: batch.map((Key) => ({ Key })), Quiet: true },
+    }));
+  }
 }
 
 export async function deleteOtaObject(client: S3Client, key: string): Promise<void> {

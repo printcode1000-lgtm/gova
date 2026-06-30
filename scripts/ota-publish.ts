@@ -15,7 +15,14 @@ import {
   type OtaManifest,
   type OtaManifestPayload,
 } from './ota/ota-config';
-import { createOtaR2Client, otaObjectExists, putOtaObject } from './ota/ota-r2';
+import {
+  createOtaR2Client,
+  deleteOtaObjects,
+  getOtaManifestObject,
+  listOtaObjectKeys,
+  otaObjectExists,
+  putOtaObject,
+} from './ota/ota-r2';
 
 const LOCAL_MANIFEST_FILE = 'gova-web-manifest.json';
 
@@ -24,11 +31,6 @@ type CollectedFile = {
   sha256: string;
   size: number;
 };
-
-function argument(name: string): string | undefined {
-  const index = process.argv.indexOf(`--${name}`);
-  return index >= 0 ? process.argv[index + 1] : undefined;
-}
 
 function collectFiles(root: string, current = root, result: Record<string, CollectedFile> = {}) {
   const entries = readdirSync(current).sort((left, right) => left.localeCompare(right));
@@ -68,106 +70,126 @@ function contentTypeFor(filePath: string): string {
   return 'application/octet-stream';
 }
 
+function nextPatchVersion(current: string): string {
+  const match = /^(\d+)\.(\d+)\.(\d+)(?:-[0-9A-Za-z.-]+)?$/.exec(current);
+  if (!match) throw new Error(`R2 manifest has an invalid version: ${current}`);
+  return `${match[1]}.${match[2]}.${Number(match[3]) + 1}`;
+}
+
+function automaticNotes(now: Date): string {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Africa/Cairo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(now);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? '00';
+  return `Automatic build - ${value('year')}-${value('month')}-${value('day')} ${value('hour')}:${value('minute')}:${value('second')} Africa/Cairo`;
+}
+
 async function main(): Promise<void> {
   loadOtaEnvironment();
 
-  const version = argument('version');
-  if (!version || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
-    throw new Error('Usage: npm run ota:publish -- --version 1.2.3 [--notes "..."]');
-  }
-
-  const notes = argument('notes') ?? '';
-  const mandatory = process.argv.includes('--mandatory');
-  const minimumNativeVersion = argument('minimum-native-version') ?? '0.0.0';
+  const prefix = getOtaPrefix();
+  const manifestKey = `${prefix}/manifest.json`;
+  const filesPrefix = `${prefix}/files`;
+  const client = createOtaR2Client();
+  const previousManifest = await otaObjectExists(client, manifestKey)
+    ? await getOtaManifestObject(client, manifestKey)
+    : null;
+  const packageVersion = (JSON.parse(readFileSync('package.json', 'utf8')) as { version: string }).version;
+  const version = previousManifest ? nextPatchVersion(previousManifest.version) : packageVersion;
+  const now = new Date();
+  const notes = automaticNotes(now);
   const privateKey = getOtaPrivateKey();
   const apiBaseUrl = (
     process.env.GOVA_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, '');
-
   const buildEnv: NodeJS.ProcessEnv = {
     ...process.env,
     ...otaClientBuildEnv(version),
     NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
   };
 
-  console.log(`Building OTA file release ${version}...`);
+  console.log(`R2 current version: ${previousManifest?.version ?? 'none'}`);
+  console.log(`Automatically selected version: ${version}`);
+  console.log(`Release notes: ${notes}`);
   execSync('npm run build:static', { stdio: 'inherit', env: buildEnv });
 
   const files = collectFiles(path.resolve('out'));
-  const releaseId = `${version}-${Date.now()}`;
-  const prefix = getOtaPrefix();
-  const releasePrefix = `${prefix}/releases/${version}`;
-  const filesPrefix = `${releasePrefix}/files`;
   const baseUrl = `${getOtaPublicBaseUrl()}/${filesPrefix}`;
-  const size = Object.values(files).reduce((total, file) => total + file.size, 0);
-  const fileManifest = Object.fromEntries(
-    Object.entries(files).map(([filePath, file]) => [
-      filePath,
-      { sha256: file.sha256, size: file.size },
-    ]),
-  );
+  const isSingleDirectoryLayout = previousManifest?.baseUrl.replace(/\/$/, '') === baseUrl;
+  const changedPaths = Object.entries(files)
+    .filter(([filePath, file]) => {
+      const previous = previousManifest?.files[filePath];
+      return !isSingleDirectoryLayout || previous?.sha256 !== file.sha256 || previous.size !== file.size;
+    })
+    .map(([filePath]) => filePath);
 
+  const expectedKeys = new Set(Object.keys(files).map((filePath) => `${filesPrefix}/${filePath}`));
+  const existingKeys = await listOtaObjectKeys(client, `${filesPrefix}/`);
+  const deletedKeys = existingKeys.filter((key) => !expectedKeys.has(key));
+
+  console.log(`R2 delta: ${changedPaths.length} changed/new, ${deletedKeys.length} deleted`);
+  let uploaded = 0;
+  for (const filePath of changedPaths) {
+    const file = files[filePath]!;
+    await putOtaObject(
+      client,
+      `${filesPrefix}/${filePath}`,
+      file.bytes,
+      contentTypeFor(filePath),
+      'public, max-age=0, must-revalidate',
+    );
+    uploaded += 1;
+    if (uploaded === 1 || uploaded % 100 === 0 || uploaded === changedPaths.length) {
+      console.log(`  uploaded ${uploaded}/${changedPaths.length}: ${filePath}`);
+    }
+  }
+  await deleteOtaObjects(client, deletedKeys);
+
+  const size = Object.values(files).reduce((total, file) => total + file.size, 0);
   const payload: OtaManifestPayload = {
     schemaVersion: OTA_SCHEMA_VERSION,
     delivery: 'files',
-    releaseId,
+    releaseId: `${version}-${now.getTime()}`,
     version,
-    createdAt: new Date().toISOString(),
+    createdAt: now.toISOString(),
     baseUrl,
     size,
     fileCount: Object.keys(files).length,
-    minimumNativeVersion,
-    mandatory,
+    minimumNativeVersion: '0.0.0',
+    mandatory: false,
     notes,
-    files: fileManifest,
+    files: Object.fromEntries(
+      Object.entries(files).map(([filePath, file]) => [filePath, { sha256: file.sha256, size: file.size }]),
+    ),
   };
   const signature = sign('sha256', Buffer.from(canonicalManifestPayload(payload)), {
     key: privateKey,
     dsaEncoding: 'ieee-p1363',
   }).toString('base64');
   const manifest: OtaManifest = { ...payload, signature };
-  const manifestJson = JSON.stringify(manifest, null, 2);
-
-  const client = createOtaR2Client();
-  if (await otaObjectExists(client, `${releasePrefix}/manifest.json`)) {
-    throw new Error(`OTA version ${version} already exists. Publish a new version number.`);
-  }
-
-  console.log(`Uploading ${payload.fileCount} files (${Math.ceil(size / 1024)} KB) to R2...`);
-  let uploaded = 0;
-  for (const [filePath, file] of Object.entries(files)) {
-    await putOtaObject(
-      client,
-      `${filesPrefix}/${filePath}`,
-      file.bytes,
-      contentTypeFor(filePath),
-      'public, max-age=31536000, immutable',
-    );
-    uploaded += 1;
-    if (uploaded === 1 || uploaded % 100 === 0 || uploaded === payload.fileCount) {
-      console.log(`  uploaded ${uploaded}/${payload.fileCount}: ${filePath}`);
-    }
-  }
 
   await putOtaObject(
     client,
-    `${releasePrefix}/manifest.json`,
-    manifestJson,
-    'application/json',
-    'public, max-age=31536000, immutable',
-  );
-  await putOtaObject(
-    client,
-    `${prefix}/manifest.json`,
-    manifestJson,
+    manifestKey,
+    JSON.stringify(manifest, null, 2),
     'application/json',
     'no-store, max-age=0',
   );
 
-  console.log(`OTA ${version} published as file-level release`);
+  const legacyKeys = await listOtaObjectKeys(client, `${prefix}/releases/`);
+  await deleteOtaObjects(client, legacyKeys);
+  console.log(`Removed ${legacyKeys.length} legacy release objects`);
+  console.log(`OTA ${version} published to the single current directory`);
   console.log(`Manifest: ${getOtaManifestUrl()}`);
-  console.log(`Files: ${payload.fileCount}`);
-  console.log(`Total bytes: ${size}`);
+  console.log(`Files: ${payload.fileCount}, total bytes: ${size}`);
 }
 
 main().catch((error) => {

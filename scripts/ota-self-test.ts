@@ -20,7 +20,7 @@ async function main(): Promise<void> {
     releaseId: 'self-test',
     version: '1.0.1',
     createdAt: new Date(0).toISOString(),
-    baseUrl: 'https://example.com/app-updates/releases/1.0.1/files',
+    baseUrl: 'https://example.com/app-updates/files',
     size: Buffer.byteLength(indexHtml),
     fileCount: 1,
     minimumNativeVersion: '1.0.0',

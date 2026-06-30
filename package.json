@@ -26,7 +26,6 @@
     "ota:keygen": "npx tsx scripts/ota-keygen.ts",
     "ota:publish": "npx tsx scripts/ota-publish.ts",
     "ota:status": "npx tsx scripts/ota-status.ts",
-    "ota:rollback": "npx tsx scripts/ota-rollback.ts",
     "ota:self-test": "npx tsx scripts/ota-self-test.ts",
     "cap:sync": "npx cap sync",
     "cap:copy": "npx cap copy",

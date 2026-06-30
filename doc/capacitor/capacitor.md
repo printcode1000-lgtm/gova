@@ -67,7 +67,7 @@ No database plugin is installed. `@capacitor/filesystem` is used by the OTA plat
 
 | Command | What it does |
 |---|---|
-| `npm run cap:build -- --version <x.y.z>` | Static export + native version pinning + R2 manifest/file verification + `cap sync` |
+| `npm run cap:build` | Automatic version + R2 delta publish + full verification + native version pinning + `cap sync` |
 | `npm run cap:sync` | Copy `out/` into native projects and update native config |
 | `npm run cap:copy` | Copy web assets only (no native dependency update) |
 | `npm run cap:open:android` | Open project in Android Studio |
@@ -84,16 +84,16 @@ npx cap sync
 
 Implemented in `scripts/cap-build.ts`:
 
-1. Resolves the build version from `--version`, `GOVA_WEB_BUNDLE_VERSION`, or `package.json`.
-2. Updates Android `versionName` and `versionCode`.
-3. Updates iOS `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`.
+1. Reads the current R2 version and increments its patch number automatically.
+2. Creates release notes from the current Cairo date and time.
+3. Publishes changed/new files and deletes removed files in the single `app-updates/files` directory.
 4. Resolves API URL from `GOVA_CAPACITOR_API_BASE_URL` or `platform/capacitor.defaults.ts` (`https://gova-swart.vercel.app`).
 5. Sets `NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION`, `NEXT_PUBLIC_GOVA_NATIVE_VERSION`, and `NEXT_PUBLIC_GOVA_API_BASE_URL`.
 6. Runs `npm run build:static` (includes `architecture:check` and writes `gova-web-manifest.json`).
-7. Reads the R2 channel manifest.
-8. Fails if R2 version differs from the native/web build version.
-9. Fails if any file path, file size, SHA-256 hash, total size, or file count differs.
-10. Runs `npx cap sync` only after Android, iOS, local manifest, and R2 all match.
+7. Publishes the signed manifest last and removes legacy release directories.
+8. Downloads and verifies every R2 file by size and SHA-256.
+9. Updates Android and iOS to the automatic version.
+10. Runs `npx cap sync` only after Android, iOS, local output, and R2 all match.
 
 ---
 
@@ -102,8 +102,7 @@ Implemented in `scripts/cap-build.ts`:
 ### Android
 
 ```bash
-npm run ota:publish -- --version 0.1.3
-npm run cap:build -- --version 0.1.3
+npm run cap:build
 npm run cap:open:android
 # Build & run from Android Studio
 ```
@@ -111,8 +110,7 @@ npm run cap:open:android
 ### iOS (requires macOS + Xcode)
 
 ```bash
-npm run ota:publish -- --version 0.1.3
-npm run cap:build -- --version 0.1.3
+npm run cap:build
 npm run cap:open:ios
 # Build & run from Xcode
 ```
@@ -137,7 +135,7 @@ The API base URL is **baked at build time** into the static bundle via `NEXT_PUB
 
 | Build command | API source |
 |---|---|
-| `npm run cap:build -- --version <x.y.z>` | Always Vercel (`platform/capacitor.defaults.ts`) unless `GOVA_CAPACITOR_API_BASE_URL` is set; also verifies local files against R2 |
+| `npm run cap:build` | Always Vercel unless overridden; automatically publishes and verifies R2 |
 | `npm run build:static` (manual) | Whatever `NEXT_PUBLIC_GOVA_API_BASE_URL` is at build time |
 
 ### Override API URL for a one-off build
@@ -145,12 +143,10 @@ The API base URL is **baked at build time** into the static bundle via `NEXT_PUB
 ```bash
 # Windows
 set GOVA_CAPACITOR_API_BASE_URL=https://your-preview.vercel.app
-npm run ota:publish -- --version 0.1.3
-npm run cap:build -- --version 0.1.3
+npm run cap:build
 
 # macOS / Linux
-GOVA_CAPACITOR_API_BASE_URL=https://your-preview.vercel.app npm run ota:publish -- --version 0.1.3
-GOVA_CAPACITOR_API_BASE_URL=https://your-preview.vercel.app npm run cap:build -- --version 0.1.3
+GOVA_CAPACITOR_API_BASE_URL=https://your-preview.vercel.app npm run cap:build
 ```
 
 To change the default permanently, edit `platform/capacitor.defaults.ts`.
@@ -205,7 +201,7 @@ Live reload is configured **only in Capacitor config** — no changes to applica
 |---|---|---|
 | `CAPACITOR_SERVER_URL` | `capacitor.config.ts` | Optional dev server URL for live reload |
 | `GOVA_CAPACITOR_API_BASE_URL` | `scripts/cap-build.ts` | Override API URL for `cap:build` |
-| `GOVA_WEB_BUNDLE_VERSION` | `scripts/cap-build.ts`, `scripts/build-static.ts` | Release version when `--version` is not provided |
+| `GOVA_WEB_BUNDLE_VERSION` | legacy/manual static builds | `cap:build` derives its version from R2 automatically |
 | `NEXT_PUBLIC_GOVA_API_BASE_URL` | Next.js static build | Baked into client bundle (set automatically by `cap:build`) |
 | `NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION` | Next.js static build | Baked into client bundle and local web manifest |
 | `NEXT_PUBLIC_GOVA_NATIVE_VERSION` | Next.js static build | Native version used by OTA minimum-version checks |
@@ -234,7 +230,7 @@ See `.env.example` for templates. Capacitor-specific vars do not belong in `src/
 | Local dev (`npm run dev`) | — | Same origin `/api/*` | No |
 | Vercel (hosted) | `npm run build` | Same origin | No |
 | GitHub Pages (static) | `npm run build:static` | Remote (`NEXT_PUBLIC_GOVA_API_BASE_URL`) | No |
-| **Capacitor** | `npm run ota:publish -- --version <x.y.z>` then `npm run cap:build -- --version <x.y.z>` | Vercel (via `cap:build`) | No |
+| **Capacitor** | `npm run cap:build` | Vercel (via `cap:build`) | No |
 
 All targets share **identical** `src/` application code.
 
@@ -264,13 +260,12 @@ Platform-specific settings live in:
 
 ### White screen or 404 on launch
 
-- Run `npm run ota:publish -- --version <x.y.z>` and then `npm run cap:build -- --version <x.y.z>` so `out/` is fresh and matches R2.
+- Run `npm run cap:build` so `out/`, R2, Android, and iOS are rebuilt and synchronized together.
 - Confirm `webDir` is `out` in `capacitor.config.ts`.
 
 ### `cap:build` fails with R2 mismatch
 
-- Publish the same version first: `npm run ota:publish -- --version <x.y.z>`.
-- Re-run `npm run cap:build -- --version <x.y.z>`.
+- Re-run `npm run cap:build`; it publishes the next automatic version and verifies every R2 object before sync.
 - If it still fails, inspect the reported file path. The local `out/gova-web-manifest.json` must match the R2 channel manifest exactly.
 
 ### OTA does not apply inside the app

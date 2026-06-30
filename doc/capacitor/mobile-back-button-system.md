@@ -99,8 +99,7 @@ This avoids duplicate handlers during React remounts and prevents stale timers.
 After changing this system or any native plugin dependency, rebuild and synchronize Capacitor:
 
 ```bash
-npm run ota:publish -- --version <x.y.z>
-npm run cap:build -- --version <x.y.z>
+npm run cap:build
 ```
 
 For an Android debug APK:
@@ -124,8 +123,7 @@ Run the automated project checks:
 ```bash
 npm run typecheck
 npm run architecture:check
-npm run ota:publish -- --version <x.y.z>
-npm run cap:build -- --version <x.y.z>
+npm run cap:build
 ```
 
 Then verify on an Android emulator or physical device:

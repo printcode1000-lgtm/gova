@@ -1,4 +1,5 @@
 import { execSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { CAPACITOR_API_BASE_URL } from '../platform/capacitor.defaults';
@@ -8,32 +9,19 @@ import {
   otaClientBuildEnv,
   type OtaManifest,
 } from './ota/ota-config';
-import { createOtaR2Client, getOtaManifestObject } from './ota/ota-r2';
+import {
+  createOtaR2Client,
+  getOtaManifestObject,
+  getOtaObjectBytes,
+  listOtaObjectKeys,
+} from './ota/ota-r2';
 
 const LOCAL_MANIFEST_PATH = path.resolve('out', 'gova-web-manifest.json');
 const ANDROID_BUILD_GRADLE = path.resolve('android', 'app', 'build.gradle');
 const IOS_PROJECT_FILE = path.resolve('ios', 'App', 'App.xcodeproj', 'project.pbxproj');
 
-function argument(name: string): string | undefined {
-  const index = process.argv.indexOf(`--${name}`);
-  return index >= 0 ? process.argv[index + 1] : undefined;
-}
-
-function packageVersion(): string {
-  return (JSON.parse(readFileSync('package.json', 'utf8')) as { version: string }).version;
-}
-
-function assertVersion(version: string): void {
-  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
-    throw new Error(`Invalid version "${version}". Expected semver like 0.1.3`);
-  }
-}
-
 function versionCode(version: string): number {
-  const [major = 0, minor = 0, patch = 0] = version
-    .split('-')[0]!
-    .split('.')
-    .map((part) => Number(part) || 0);
+  const [major = 0, minor = 0, patch = 0] = version.split('.').map((part) => Number(part) || 0);
   return major * 10000 + minor * 100 + patch;
 }
 
@@ -41,13 +29,11 @@ function updateAndroidVersion(version: string): void {
   if (!existsSync(ANDROID_BUILD_GRADLE)) {
     throw new Error(`Android build file not found: ${ANDROID_BUILD_GRADLE}`);
   }
-
   const code = versionCode(version);
   const before = readFileSync(ANDROID_BUILD_GRADLE, 'utf8');
   const after = before
     .replace(/versionCode\s+\d+/, `versionCode ${code}`)
     .replace(/versionName\s+"[^"]+"/, `versionName "${version}"`);
-
   if (before !== after) writeFileSync(ANDROID_BUILD_GRADLE, after);
   console.log(`Android versionName=${version}, versionCode=${code}`);
 }
@@ -56,20 +42,18 @@ function updateIosVersion(version: string): void {
   if (!existsSync(IOS_PROJECT_FILE)) {
     throw new Error(`iOS project file not found: ${IOS_PROJECT_FILE}`);
   }
-
   const buildNumber = versionCode(version);
   const before = readFileSync(IOS_PROJECT_FILE, 'utf8');
   const after = before
     .replace(/CURRENT_PROJECT_VERSION = [^;]+;/g, `CURRENT_PROJECT_VERSION = ${buildNumber};`)
     .replace(/MARKETING_VERSION = [^;]+;/g, `MARKETING_VERSION = ${version};`);
-
   if (before !== after) writeFileSync(IOS_PROJECT_FILE, after);
   console.log(`iOS MARKETING_VERSION=${version}, CURRENT_PROJECT_VERSION=${buildNumber}`);
 }
 
 function readLocalManifest(): OtaManifest {
   if (!existsSync(LOCAL_MANIFEST_PATH)) {
-    throw new Error(`Local web manifest not found after build: ${LOCAL_MANIFEST_PATH}`);
+    throw new Error(`Local web manifest not found after OTA publish: ${LOCAL_MANIFEST_PATH}`);
   }
   return JSON.parse(readFileSync(LOCAL_MANIFEST_PATH, 'utf8')) as OtaManifest;
 }
@@ -82,76 +66,89 @@ function compareManifestFiles(local: OtaManifest, remote: OtaManifest): string[]
   if (local.fileCount !== remote.fileCount) errors.push(`fileCount ${local.fileCount} != ${remote.fileCount}`);
   if (local.size !== remote.size) errors.push(`size ${local.size} != ${remote.size}`);
 
-  const localPaths = new Set(Object.keys(local.files));
-  const remotePaths = new Set(Object.keys(remote.files));
-
-  for (const filePath of remotePaths) {
+  for (const [filePath, remoteFile] of Object.entries(remote.files)) {
     const localFile = local.files[filePath];
-    const remoteFile = remote.files[filePath];
-    if (!localFile) {
-      errors.push(`missing local file: ${filePath}`);
-      continue;
+    if (!localFile) errors.push(`missing local file: ${filePath}`);
+    else if (localFile.sha256 !== remoteFile.sha256 || localFile.size !== remoteFile.size) {
+      errors.push(`local mismatch: ${filePath}`);
     }
-    if (localFile.sha256 !== remoteFile?.sha256) errors.push(`hash mismatch: ${filePath}`);
-    if (localFile.size !== remoteFile?.size) errors.push(`size mismatch: ${filePath}`);
   }
-
-  for (const filePath of localPaths) {
-    if (!remotePaths.has(filePath)) errors.push(`extra local file: ${filePath}`);
+  for (const filePath of Object.keys(local.files)) {
+    if (!(filePath in remote.files)) errors.push(`extra local file: ${filePath}`);
   }
-
   return errors;
 }
 
-async function verifyAgainstR2(version: string): Promise<void> {
-  console.log('Verifying local web manifest against R2 channel manifest...');
-  const localManifest = readLocalManifest();
-  const remoteManifest = await getOtaManifestObject(createOtaR2Client(), `${getOtaPrefix()}/manifest.json`);
+async function mapConcurrent<T>(items: T[], limit: number, action: (item: T) => Promise<void>): Promise<void> {
+  let nextIndex = 0;
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (nextIndex < items.length) {
+      const item = items[nextIndex++]!;
+      await action(item);
+    }
+  }));
+}
 
-  if (localManifest.version !== version) {
-    throw new Error(`Local manifest version ${localManifest.version} does not match cap-build version ${version}`);
-  }
-  if (remoteManifest.version !== version) {
-    throw new Error(`R2 version ${remoteManifest.version} does not match cap-build version ${version}`);
-  }
-
-  const errors = compareManifestFiles(localManifest, remoteManifest);
-  if (errors.length > 0) {
-    const preview = errors.slice(0, 20).map((error) => `- ${error}`).join('\n');
-    throw new Error(`Local files do not match R2 manifest (${errors.length} differences):\n${preview}`);
+async function verifyR2Files(manifest: OtaManifest): Promise<void> {
+  const client = createOtaR2Client();
+  const prefix = `${getOtaPrefix()}/files/`;
+  const actualKeys = (await listOtaObjectKeys(client, prefix)).sort();
+  const expectedKeys = Object.keys(manifest.files).map((filePath) => `${prefix}${filePath}`).sort();
+  if (actualKeys.length !== expectedKeys.length || actualKeys.some((key, index) => key !== expectedKeys[index])) {
+    throw new Error(`R2 file keys do not match manifest: actual=${actualKeys.length}, expected=${expectedKeys.length}`);
   }
 
-  console.log(`R2 manifest matches local files exactly: version=${version}, files=${localManifest.fileCount}`);
+  let verified = 0;
+  await mapConcurrent(Object.entries(manifest.files), 10, async ([filePath, expected]) => {
+    const bytes = await getOtaObjectBytes(client, `${prefix}${filePath}`);
+    const hash = createHash('sha256').update(bytes).digest('hex');
+    if (bytes.byteLength !== expected.size || hash !== expected.sha256) {
+      throw new Error(`R2 object content mismatch: ${filePath}`);
+    }
+    verified += 1;
+    if (verified === 1 || verified % 100 === 0 || verified === manifest.fileCount) {
+      console.log(`  verified ${verified}/${manifest.fileCount} R2 files`);
+    }
+  });
 }
 
 async function main(): Promise<void> {
   loadOtaEnvironment();
-
-  const version = argument('version') ?? process.env.GOVA_WEB_BUNDLE_VERSION ?? packageVersion();
-  assertVersion(version);
-
   const apiBaseUrl = (
     process.env.GOVA_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, '');
+  const publishEnv: NodeJS.ProcessEnv = {
+    ...process.env,
+    GOVA_CAPACITOR_API_BASE_URL: apiBaseUrl,
+  };
 
-  console.log(`Capacitor build version: ${version}`);
-  console.log(`Capacitor API base: ${apiBaseUrl}`);
+  console.log('Publishing the next automatic OTA version to the single R2 directory...');
+  execSync('npm run ota:publish', { stdio: 'inherit', env: publishEnv });
 
-  updateAndroidVersion(version);
-  updateIosVersion(version);
-
+  const client = createOtaR2Client();
+  const remoteManifest = await getOtaManifestObject(client, `${getOtaPrefix()}/manifest.json`);
+  const localManifest = readLocalManifest();
+  const version = remoteManifest.version;
   const env: NodeJS.ProcessEnv = {
     ...process.env,
     ...otaClientBuildEnv(version),
     NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
-    NEXT_PUBLIC_GOVA_NATIVE_VERSION: version,
   };
 
-  execSync('npm run build:static', { stdio: 'inherit', env });
-  await verifyAgainstR2(version);
+  updateAndroidVersion(version);
+  updateIosVersion(version);
+
+  const errors = compareManifestFiles(localManifest, remoteManifest);
+  if (errors.length > 0) {
+    throw new Error(`Local output does not match R2 manifest (${errors.length}):\n${errors.slice(0, 20).join('\n')}`);
+  }
+
+  console.log('Verifying every R2 file by size and SHA-256...');
+  await verifyR2Files(remoteManifest);
   execSync('npx cap sync', { stdio: 'inherit', env });
 
-  console.log(`cap-build completed with Android/iOS/R2 all pinned to ${version}`);
+  console.log(`cap-build completed: R2, Android, and iOS are exactly version ${version}`);
+  console.log(`Automatic notes: ${remoteManifest.notes}`);
 }
 
 main().catch((error) => {
