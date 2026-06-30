@@ -99,7 +99,8 @@ This avoids duplicate handlers during React remounts and prevents stale timers.
 After changing this system or any native plugin dependency, rebuild and synchronize Capacitor:
 
 ```bash
-npm run cap:build
+npm run ota:publish -- --version <x.y.z>
+npm run cap:build -- --version <x.y.z>
 ```
 
 For an Android debug APK:
@@ -123,7 +124,8 @@ Run the automated project checks:
 ```bash
 npm run typecheck
 npm run architecture:check
-npm run cap:build
+npm run ota:publish -- --version <x.y.z>
+npm run cap:build -- --version <x.y.z>
 ```
 
 Then verify on an Android emulator or physical device:
@@ -167,4 +169,3 @@ Filter Logcat by package `com.gova.app`. JavaScript messages are normally report
 - Mount only one global native Back listener.
 - Do not apply Android exit behavior to browsers or iOS.
 - Do not call `App.exitApp()` without the home-page confirmation.
-

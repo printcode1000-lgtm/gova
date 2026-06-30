@@ -3,21 +3,23 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import dotenv from 'dotenv';
 
-export const OTA_SCHEMA_VERSION = 1;
+export const OTA_SCHEMA_VERSION = 2;
 export const DEFAULT_OTA_PREFIX = 'app-updates';
 export const DEFAULT_NATIVE_VERSION = '1.0.0';
 
 export interface OtaManifestPayload {
   schemaVersion: number;
+  delivery: 'files';
   releaseId: string;
   version: string;
   createdAt: string;
-  bundleUrl: string;
+  baseUrl: string;
   size: number;
-  sha256: string;
+  fileCount: number;
   minimumNativeVersion: string;
   mandatory: boolean;
   notes: string;
+  files: Record<string, { sha256: string; size: number }>;
 }
 
 export interface OtaManifest extends OtaManifestPayload {
@@ -66,17 +68,23 @@ export function getOtaPublicKeyBase64(privateKey = getOtaPrivateKey()): string {
 }
 
 export function canonicalManifestPayload(payload: OtaManifestPayload): string {
+  const sortedFiles = Object.fromEntries(
+    Object.entries(payload.files).sort(([left], [right]) => left.localeCompare(right)),
+  );
+
   return JSON.stringify({
     schemaVersion: payload.schemaVersion,
+    delivery: payload.delivery,
     releaseId: payload.releaseId,
     version: payload.version,
     createdAt: payload.createdAt,
-    bundleUrl: payload.bundleUrl,
+    baseUrl: payload.baseUrl,
     size: payload.size,
-    sha256: payload.sha256,
+    fileCount: payload.fileCount,
     minimumNativeVersion: payload.minimumNativeVersion,
     mandatory: payload.mandatory,
     notes: payload.notes,
+    files: sortedFiles,
   });
 }
 

@@ -153,6 +153,21 @@ export class GovaApiClient {
     });
   }
 
+  /** Load a static binary file from the currently served public app assets. */
+  async getPublicBinary(assetPath: string, options?: GovaApiRequestOptions): Promise<ArrayBuffer> {
+    return trackGovaApiRequest('GET', assetPath, false, async () => {
+      const response = await govaHttpFetch(buildPublicAssetUrl(assetPath), {
+        method: 'GET',
+        headers: { Accept: 'application/octet-stream, */*', ...options?.headers },
+        credentials: 'omit',
+        signal: options?.signal,
+        cache: options?.cache ?? 'no-store',
+      });
+      if (!response.ok) await this.parseResponse<never>(response);
+      return { data: await response.arrayBuffer(), response };
+    });
+  }
+
   /** Load JSON from an explicit HTTP(S) URL (for signed platform manifests). */
   async getAbsoluteJson<T>(url: string, options: GovaApiRequestOptions = {}): Promise<T> {
     this.assertOnline('GET', url, options.suppressErrorLog);

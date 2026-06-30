@@ -8,6 +8,7 @@ import type { TranslationKey } from '@/lib/i18n';
 interface ProgressIndicatorProps {
   progress: number;
   status: string;
+  details?: readonly string[];
 }
 
 const PROGRESS_MESSAGE_KEYS = [
@@ -18,7 +19,7 @@ const PROGRESS_MESSAGE_KEYS = [
   'splash.progress.message5',
 ] as const satisfies readonly TranslationKey[];
 
-export default function ProgressIndicator({ progress, status }: ProgressIndicatorProps) {
+export default function ProgressIndicator({ progress, status, details = [] }: ProgressIndicatorProps) {
   const { t } = useTranslation();
   const [msgIndex, setMsgIndex] = useState(0);
 
@@ -34,6 +35,14 @@ export default function ProgressIndicator({ progress, status }: ProgressIndicato
       <div className="h-8 text-xs font-semibold text-on-surface-variant text-center px-4 transition-all duration-500 ease-in-out">
         {status || t(PROGRESS_MESSAGE_KEYS[msgIndex])}
       </div>
+
+      {details.length > 0 && (
+        <div className="mt-2 grid w-full gap-1 rounded-xl border border-outline-variant/70 bg-surface-container/70 px-3 py-2 text-center text-[11px] font-semibold text-on-surface-variant">
+          {details.map((detail) => (
+            <span key={detail}>{detail}</span>
+          ))}
+        </div>
+      )}
 
       <div className="w-full mt-4 gova-splash-progress-track h-1 rounded-full overflow-hidden relative shadow-inner">
         <div

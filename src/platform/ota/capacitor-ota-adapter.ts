@@ -1,4 +1,3 @@
-import { unzipSync } from 'fflate';
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 
@@ -20,10 +19,15 @@ function bytesToBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
-function safeArchivePath(value: string): string {
+function safeReleasePath(value: string): string {
   const normalized = value.replace(/\\/g, '/').replace(/^\/+/, '');
-  if (!normalized || normalized.includes('../') || normalized === '..' || normalized.includes('\0')) {
-    throw new Error(`Unsafe OTA archive path: ${value}`);
+  if (
+    !normalized ||
+    normalized.includes('../') ||
+    normalized === '..' ||
+    normalized.includes('\0')
+  ) {
+    throw new Error(`Unsafe OTA file path: ${value}`);
   }
   return normalized;
 }
@@ -33,46 +37,58 @@ function filesystemPathFromUri(uri: string): string {
   return decodeURIComponent(new URL(uri).pathname);
 }
 
+async function removeReleaseRoot(releaseRoot: string): Promise<void> {
+  try {
+    await Filesystem.rmdir({ path: releaseRoot, directory: Directory.Data, recursive: true });
+  } catch {
+    // A clean install has no previous release directory.
+  }
+}
+
 export const capacitorOtaAdapter = {
   isAvailable(): boolean {
     return Capacitor.isNativePlatform();
   },
 
-  async install(version: string, archive: ArrayBuffer): Promise<string> {
-    const releaseRoot = `${OTA_ROOT}/${version}`;
-    const entries = unzipSync(new Uint8Array(archive));
-    const fileNames = Object.keys(entries).map(safeArchivePath);
-    if (!fileNames.includes('index.html')) throw new Error('OTA bundle does not contain index.html');
+  releaseRoot(version: string): string {
+    return `${OTA_ROOT}/${safeReleasePath(version)}`;
+  },
 
-    try {
-      await Filesystem.rmdir({ path: releaseRoot, directory: Directory.Data, recursive: true });
-    } catch {
-      // The first installation has no previous directory.
-    }
+  async prepareRelease(version: string): Promise<void> {
+    const releaseRoot = this.releaseRoot(version);
+    await removeReleaseRoot(releaseRoot);
     await Filesystem.mkdir({ path: releaseRoot, directory: Directory.Data, recursive: true });
+  },
 
-    const createdDirectories = new Set<string>();
-    for (const originalName of Object.keys(entries)) {
-      const name = safeArchivePath(originalName);
-      if (name.endsWith('/')) continue;
-      const parent = name.includes('/') ? name.slice(0, name.lastIndexOf('/')) : '';
-      if (parent && !createdDirectories.has(parent)) {
-        await Filesystem.mkdir({
-          path: `${releaseRoot}/${parent}`,
-          directory: Directory.Data,
-          recursive: true,
-        });
-        createdDirectories.add(parent);
-      }
-      await Filesystem.writeFile({
-        path: `${releaseRoot}/${name}`,
+  async writeReleaseFile(version: string, filePath: string, data: ArrayBuffer): Promise<void> {
+    const releaseRoot = this.releaseRoot(version);
+    const safePath = safeReleasePath(filePath);
+    const parent = safePath.includes('/') ? safePath.slice(0, safePath.lastIndexOf('/')) : '';
+    if (parent) {
+      await Filesystem.mkdir({
+        path: `${releaseRoot}/${parent}`,
         directory: Directory.Data,
-        data: bytesToBase64(entries[originalName]!),
         recursive: true,
       });
     }
 
-    const { uri } = await Filesystem.getUri({ path: releaseRoot, directory: Directory.Data });
+    await Filesystem.writeFile({
+      path: `${releaseRoot}/${safePath}`,
+      directory: Directory.Data,
+      data: bytesToBase64(new Uint8Array(data)),
+      recursive: true,
+    });
+  },
+
+  async writeReleaseTextFile(version: string, filePath: string, text: string): Promise<void> {
+    await this.writeReleaseFile(version, filePath, new TextEncoder().encode(text).buffer);
+  },
+
+  async releasePath(version: string): Promise<string> {
+    const { uri } = await Filesystem.getUri({
+      path: this.releaseRoot(version),
+      directory: Directory.Data,
+    });
     return filesystemPathFromUri(uri);
   },
 

@@ -1,5 +1,4 @@
 import { createHash, createPublicKey, sign, webcrypto } from 'node:crypto';
-import { zipSync, unzipSync } from 'fflate';
 import {
   OTA_SCHEMA_VERSION,
   canonicalManifestPayload,
@@ -14,17 +13,25 @@ import { createOtaR2Client, deleteOtaObject, putOtaObject } from './ota/ota-r2';
 async function main(): Promise<void> {
   loadOtaEnvironment();
   const privateKey = getOtaPrivateKey();
+  const indexHtml = '<!doctype html>';
   const payload: OtaManifestPayload = {
     schemaVersion: OTA_SCHEMA_VERSION,
+    delivery: 'files',
     releaseId: 'self-test',
     version: '1.0.1',
     createdAt: new Date(0).toISOString(),
-    bundleUrl: 'https://example.com/app-updates/releases/1.0.1/web-bundle.zip',
-    size: 1,
-    sha256: '0'.repeat(64),
+    baseUrl: 'https://example.com/app-updates/releases/1.0.1/files',
+    size: Buffer.byteLength(indexHtml),
+    fileCount: 1,
     minimumNativeVersion: '1.0.0',
     mandatory: false,
     notes: 'self-test',
+    files: {
+      'index.html': {
+        sha256: createHash('sha256').update(indexHtml).digest('hex'),
+        size: Buffer.byteLength(indexHtml),
+      },
+    },
   };
   const data = Buffer.from(canonicalManifestPayload(payload));
   const signature = sign('sha256', data, { key: privateKey, dsaEncoding: 'ieee-p1363' });
@@ -44,11 +51,9 @@ async function main(): Promise<void> {
   );
   if (!signatureValid) throw new Error('P-256 manifest signature verification failed');
 
-  const archive = zipSync({ 'index.html': Buffer.from('<!doctype html>') }, { level: 9 });
-  const checksum = createHash('sha256').update(archive).digest('hex');
-  const extracted = unzipSync(archive);
-  if (!extracted['index.html'] || checksum.length !== 64) {
-    throw new Error('ZIP or SHA-256 self-test failed');
+  const checksum = createHash('sha256').update(indexHtml).digest('hex');
+  if (checksum.length !== 64 || checksum !== payload.files['index.html']!.sha256) {
+    throw new Error('File SHA-256 self-test failed');
   }
   if (getOtaPublicKeyBase64(privateKey) !== Buffer.from(publicKeyDer).toString('base64')) {
     throw new Error('Public key export mismatch');
@@ -59,13 +64,13 @@ async function main(): Promise<void> {
     const key = `${getOtaPrefix()}/_self-test/${Date.now()}.txt`;
     await putOtaObject(client, key, 'ok', 'text/plain', 'no-store');
     await deleteOtaObject(client, key);
-    console.log('✅ OTA R2 write/delete probe passed');
+    console.log('OTA R2 write/delete probe passed');
   }
 
-  console.log('✅ OTA signature, SHA-256, ZIP, and public-key self-test passed');
+  console.log('OTA signature, file SHA-256, and public-key self-test passed');
 }
 
 main().catch((error) => {
-  console.error(`❌ OTA self-test failed: ${error instanceof Error ? error.message : error}`);
+  console.error(`OTA self-test failed: ${error instanceof Error ? error.message : error}`);
   process.exitCode = 1;
 });
