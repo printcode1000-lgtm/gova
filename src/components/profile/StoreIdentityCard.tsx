@@ -237,11 +237,11 @@ export const StoreIdentityCard = React.forwardRef<
           }
           placeholder={t('onboarding.storeIdentity.descriptionPlaceholder')}
           rows={4}
-          maxLength={500}
+          maxLength={100}
           disabled={readOnly}
         />
         <p className="text-end text-xs text-muted-foreground">
-          {details.storeDescription.length}/500
+          {details.storeDescription.length}/100
         </p>
       </div>
 

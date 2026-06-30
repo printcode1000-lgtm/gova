@@ -16,7 +16,7 @@ function normalizeText(value: unknown, maxLength: number): string {
 function normalizeStoreDetails(input: SaveStoreDetailsInput): StoreDetailsData {
   return {
     storeName: normalizeText(input.storeName, 120),
-    storeDescription: normalizeText(input.storeDescription, 500),
+    storeDescription: normalizeText(input.storeDescription, 100),
     storeStory: normalizeText(input.storeStory, 1000),
   };
 }
