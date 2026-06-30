@@ -44,6 +44,7 @@ function collectFiles(root: string, current = root, result: Record<string, Colle
 
     const relativePath = path.relative(root, fullPath).replace(/\\/g, '/');
     if (relativePath === LOCAL_MANIFEST_FILE) continue;
+    if (relativePath.split('/').some((segment) => segment.startsWith('.'))) continue;
     const bytes = readFileSync(fullPath);
     result[relativePath] = {
       bytes,

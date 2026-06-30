@@ -127,6 +127,12 @@ public/gova-web-manifest.json
 
 The local manifest contains the bundled version and the complete file inventory. `gova-web-manifest.json` itself is excluded from the file inventory and is not stored under `app-updates/files`.
 
+Hidden control files whose path contains a segment beginning with `.`, such as `.gitkeep` and `.DS_Store`, are excluded because Capacitor's local WebView does not reliably serve them.
+
+Static builds use an explicit public-asset allowlist. Only the runtime initialization scripts, `logo.png`, `catagory/categories.json`, and the main-category images referenced by that JSON are copied from `public/`. Development databases, `sync_data`, schema reports, source category databases, unused category exports, duplicate logos, and unused subcategory images remain available to local tooling but are not included in `out`, R2, Android, or iOS.
+
+The development-only `/dev/*` routes and the `/test1` UI test route are removed from the temporary static-build source tree. They remain available during local development but do not generate production HTML, RSC payloads, or JavaScript chunks.
+
 After `cap sync`, Android and iOS receive the same local manifest and static files from `out/`.
 
 ## Runtime Update

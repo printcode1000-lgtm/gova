@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, readdirSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
@@ -21,7 +21,49 @@ function copyIfExists(source: string, destination: string): void {
     return;
   }
 
+  mkdirSync(path.dirname(destination), { recursive: true });
   cpSync(source, destination, { recursive: true });
+}
+
+function copyRequired(source: string, destination: string): void {
+  if (!existsSync(source)) throw new Error(`Required static asset not found: ${source}`);
+  mkdirSync(path.dirname(destination), { recursive: true });
+  cpSync(source, destination, { recursive: true });
+}
+
+function prepareStaticPublicDir(): void {
+  const tempPublicDir = path.join(tempBuildDir, 'public');
+  const staticFiles = [
+    'gova-app-init.js',
+    'gova-theme-init.js',
+    'logo.png',
+    path.join('catagory', 'categories.json'),
+  ];
+
+  for (const relativePath of staticFiles) {
+    copyRequired(
+      path.join(rootPublicDir, relativePath),
+      path.join(tempPublicDir, relativePath),
+    );
+  }
+
+  const categoriesPath = path.join(rootPublicDir, 'catagory', 'categories.json');
+  const categories = JSON.parse(readFileSync(categoriesPath, 'utf8')) as Array<{ image?: unknown }>;
+  const categoryImages = new Set(
+    categories
+      .map((category) => category.image)
+      .filter((image): image is string => typeof image === 'string' && image.length > 0),
+  );
+
+  for (const image of categoryImages) {
+    if (path.basename(image) !== image) {
+      throw new Error(`Unsafe category image path: ${image}`);
+    }
+    copyRequired(
+      path.join(rootPublicDir, 'images', 'mainCategories', image),
+      path.join(tempPublicDir, 'images', 'mainCategories', image),
+    );
+  }
 }
 
 function prepareTempBuildDir(): void {
@@ -30,9 +72,10 @@ function prepareTempBuildDir(): void {
 
   copyIfExists(path.join(rootDir, 'src'), tempSrcDir);
   rmSync(path.join(tempSrcDir, 'app', 'api'), { recursive: true, force: true });
+  rmSync(path.join(tempSrcDir, 'app', 'dev'), { recursive: true, force: true });
+  rmSync(path.join(tempSrcDir, 'app', 'test1'), { recursive: true, force: true });
 
   const rootFilesToCopy = [
-    'public',
     '.env',
     '.env.local',
     'next.config.ts',
@@ -49,6 +92,8 @@ function prepareTempBuildDir(): void {
   for (const fileName of rootFilesToCopy) {
     copyIfExists(path.join(rootDir, fileName), path.join(tempBuildDir, fileName));
   }
+
+  prepareStaticPublicDir();
 }
 
 function copyBuildOutputBack(): void {
@@ -108,6 +153,7 @@ function collectManifestFiles(root: string, current = root, result: Record<strin
 
     const relativePath = path.relative(root, fullPath).replace(/\\/g, '/');
     if (relativePath === localManifestFileName) continue;
+    if (relativePath.split('/').some((segment) => segment.startsWith('.'))) continue;
 
     const bytes = readFileSync(fullPath);
     result[relativePath] = {

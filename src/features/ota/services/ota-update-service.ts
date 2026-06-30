@@ -353,9 +353,16 @@ export const otaUpdateService = {
         for (const [filePath, expected] of remoteEntries) {
           const isChanged = changedSet.has(filePath);
           const source = isChanged ? 'remote' : 'current';
-          const bytes = isChanged
-            ? await otaApiService.getFile(remoteFileUrl(remoteManifest, filePath), controller.signal)
-            : await otaApiService.getCurrentFile(filePath, controller.signal);
+          let bytes: ArrayBuffer;
+          try {
+            bytes = isChanged
+              ? await otaApiService.getFile(remoteFileUrl(remoteManifest, filePath), controller.signal)
+              : await otaApiService.getCurrentFile(filePath, controller.signal);
+          } catch (error) {
+            throw new Error(
+              `OTA ${source} file request failed: ${filePath}: ${error instanceof Error ? error.message : error}`,
+            );
+          }
           const actualHash = await sha256(bytes);
           if (actualHash !== expected.sha256) {
             throw new Error(`OTA ${source} file checksum mismatch: ${filePath}`);
