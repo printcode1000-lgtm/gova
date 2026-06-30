@@ -78,7 +78,7 @@ async function main(): Promise<void> {
 
   const notes = argument('notes') ?? '';
   const mandatory = process.argv.includes('--mandatory');
-  const minimumNativeVersion = argument('minimum-native-version') ?? '1.0.0';
+  const minimumNativeVersion = argument('minimum-native-version') ?? '0.0.0';
   const privateKey = getOtaPrivateKey();
   const apiBaseUrl = (
     process.env.GOVA_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL

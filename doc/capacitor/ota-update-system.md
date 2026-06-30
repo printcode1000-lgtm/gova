@@ -40,7 +40,7 @@ The channel manifest and release manifest use schema v2:
   "baseUrl": "https://.../app-updates/releases/0.1.3/files",
   "size": 14356238,
   "fileCount": 373,
-  "minimumNativeVersion": "1.0.0",
+  "minimumNativeVersion": "0.0.0",
   "mandatory": false,
   "notes": "File-level OTA",
   "files": {
@@ -83,20 +83,21 @@ At splash time, the app:
 2. Downloads the signed R2 channel manifest.
 3. Verifies manifest schema, delivery type, version format, file list, total size, and signature.
 4. Skips the update if `remote.version <= local.version`.
-5. Skips the update if `remote.minimumNativeVersion > nativeVersion`.
-6. Builds a diff:
+5. Builds a diff:
    - changed files: missing locally or different SHA-256
    - deleted files: present locally but not present remotely
-7. Creates a clean release directory in Capacitor private storage.
-8. For each remote file:
+6. Creates a clean release directory in Capacitor private storage.
+7. For each remote file:
    - downloads it from R2 if changed;
    - copies it from the currently served app if unchanged;
    - verifies SHA-256;
    - writes it into the staged release.
-9. Writes `gova-web-manifest.json` into the staged release.
-10. Saves the staged release as pending.
-11. Activates the pending release.
-12. Persists it only after the app reaches splash initialization successfully.
+8. Writes `gova-web-manifest.json` into the staged release.
+9. Saves the staged release as pending.
+10. Activates the pending release.
+11. Persists it only after the app reaches splash initialization successfully.
+
+On Android and iOS, remote R2 requests use native `CapacitorHttp`, so OTA does not depend on browser CORS. Browser builds continue to use the normal HTTP gateway. R2 CORS must still include `https://localhost` to support older installed builds during the one-time schema v2 bootstrap.
 
 Deleted files are removed by design. The staged release is created from the remote manifest only, so a file that is missing from the remote manifest is not copied into the new app version.
 
@@ -112,10 +113,11 @@ npm run cap:build -- --version 0.1.3
 `ota:publish`:
 
 1. Runs `npm run build:static`.
-2. Generates the file manifest.
-3. Uploads every file from `out/` to R2 except `gova-web-manifest.json`.
-4. Uploads `releases/<version>/manifest.json`.
-5. Uploads the channel `manifest.json` last.
+2. Pins the public web version, native version, and Next.js Build ID to the release version.
+3. Generates the file manifest.
+4. Uploads every file from `out/` to R2 except `gova-web-manifest.json`.
+5. Uploads `releases/<version>/manifest.json`.
+6. Uploads the channel `manifest.json` last.
 
 `cap:build`:
 
@@ -170,7 +172,8 @@ Common log reasons:
 |---|---|
 | `OTA disabled` | Missing manifest URL/public key or not running on native Capacitor |
 | `No OTA update: remote version is not newer` | R2 version is equal or lower |
-| `Skipping OTA because native version is too old` | `minimumNativeVersion` is higher than the native build |
+| `Unsupported OTA manifest schema` | The installed native build predates schema v2 and must be run once from Android Studio/Xcode |
+| Browser CORS error | Run `npm run r2:sync:cors`; current native builds use `CapacitorHttp` as a fallback-free path |
 | `OTA manifest signature is invalid` | R2 manifest does not match the signing key |
 | `OTA ... checksum mismatch` | A downloaded/copied file does not match manifest SHA-256 |
 | `OTA changed files exceed limit` | Changed files exceed the client safety limit |

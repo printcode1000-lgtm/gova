@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 export const OTA_SCHEMA_VERSION = 2;
 export const DEFAULT_OTA_PREFIX = 'app-updates';
-export const DEFAULT_NATIVE_VERSION = '1.0.0';
+export const DEFAULT_NATIVE_VERSION = '0.0.0';
 
 export interface OtaManifestPayload {
   schemaVersion: number;
@@ -91,13 +91,17 @@ export function canonicalManifestPayload(payload: OtaManifestPayload): string {
 export function otaClientBuildEnv(version: string): NodeJS.ProcessEnv {
   try {
     return {
+      GOVA_NEXT_BUILD_ID: `gova-${version}`,
       NEXT_PUBLIC_GOVA_OTA_MANIFEST_URL: getOtaManifestUrl(),
       NEXT_PUBLIC_GOVA_OTA_PUBLIC_KEY: getOtaPublicKeyBase64(),
       NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION: version,
+      NEXT_PUBLIC_GOVA_NATIVE_VERSION: version,
     };
   } catch {
     return {
+      GOVA_NEXT_BUILD_ID: `gova-${version}`,
       NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION: version,
+      NEXT_PUBLIC_GOVA_NATIVE_VERSION: version,
     };
   }
 }

@@ -6,6 +6,7 @@ const repositoryName = process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_RE
 const isStatic = process.env.GOVA_MODE === 'static';
 const basePath = process.env.GOVA_BASE_PATH?.replace(/\/$/, '') || (isGithubActions ? repositoryName : '');
 const assetPrefix = basePath;
+const deterministicBuildId = process.env.GOVA_NEXT_BUILD_ID;
 
 const apiBaseUrl =
   process.env.NEXT_PUBLIC_GOVA_API_BASE_URL?.replace(/\/$/, '') ||
@@ -18,6 +19,9 @@ const nextConfig: NextConfig = {
   ...(isStatic ? { trailingSlash: true } : {}),
   ...(basePath ? { basePath } : {}),
   ...(assetPrefix ? { assetPrefix } : {}),
+  ...(deterministicBuildId
+    ? { generateBuildId: async () => deterministicBuildId }
+    : {}),
 
   env: {
     NEXT_PUBLIC_GOVA_BASE_PATH: basePath,

@@ -161,6 +161,7 @@
     "ota.downloading":  "Downloading the application update...",
     "ota.copying":  "Copying unchanged local files...",
     "ota.diffReady":  "File differences are ready",
+    "ota.failed":  "Update check failed",
     "ota.installing":  "Preparing the update...",
     "ota.noUpdate":  "No newer update found",
     "ota.prompt.autoApply":  "If you choose Later, the update will apply on the next launch. We will remind you after 24 hours if the app stays open.",

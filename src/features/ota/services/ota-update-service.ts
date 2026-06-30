@@ -139,7 +139,7 @@ function validateManifest(manifest: OtaManifest, options: { remote: boolean }): 
     if (!/^[a-f0-9]{64}$/i.test(file.sha256)) {
       throw new Error(`Invalid OTA file hash: ${filePath}`);
     }
-    if (!Number.isSafeInteger(file.size) || file.size <= 0) {
+    if (!Number.isSafeInteger(file.size) || file.size < 0) {
       throw new Error(`Invalid OTA file size: ${filePath}`);
     }
     return total + file.size;
@@ -302,13 +302,6 @@ export const otaUpdateService = {
 
         if (readState().failedReleaseId === remoteManifest.releaseId) {
           logWarn(`Skipping previously failed release: ${remoteManifest.releaseId}`);
-          return null;
-        }
-        if (compareVersions(remoteManifest.minimumNativeVersion, publicEnv.nativeVersion) > 0) {
-          logWarn('Skipping OTA because native version is too old', {
-            nativeVersion: publicEnv.nativeVersion,
-            minimumNativeVersion: remoteManifest.minimumNativeVersion,
-          });
           return null;
         }
         if (compareVersions(remoteManifest.version, localManifest.version) <= 0) {
@@ -483,8 +476,12 @@ export const otaUpdateService = {
 
     try {
       await this.checkAndDownload(onProgress);
-    } catch {
-      // checkAndDownload already logs the exact failure reason for logcat.
+    } catch (error) {
+      onProgress({
+        progress: 20,
+        statusKey: 'ota.failed',
+        detail: error instanceof Error ? error.message : String(error),
+      });
     }
   },
 };
