@@ -5,6 +5,7 @@ import { LogIn, User, Phone, Store } from 'lucide-react';
 import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
+import Image from 'next/image';
 
 import { ProfileContactsCard } from '@/components/profile/ProfileContactsCard';
 import { ProfileRegistrationInfoCard } from '@/components/profile/ProfileRegistrationInfoCard';
@@ -68,10 +69,25 @@ export function ProfilePageContent() {
       {showPreviewCard ? (
         <div className="px-4">
           {heroSliderConfig.slides.length > 0 ? (
-            <HeroSlider config={heroSliderConfig} />
+            <div className="mb-0">
+              <HeroSlider config={heroSliderConfig} />
+            </div>
           ) : (
             <div className="text-center text-on-surface-variant py-8">
               {t('profile.noImages')}
+            </div>
+          )}
+          {storeImages.avatarUrl && (
+            <div className="flex justify-center relative -mt-20">
+              <div className="w-28 h-28 rounded-full overflow-hidden z-10 border-2 border-white shadow-md relative flex-shrink-0">
+                <Image
+                  src={storeImages.avatarUrl}
+                  alt="Avatar"
+                  width={112}
+                  height={112}
+                  className="w-full h-full object-fill"
+                />
+              </div>
             </div>
           )}
         </div>
