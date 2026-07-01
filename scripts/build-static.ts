@@ -25,11 +25,9 @@ const STATIC_PUBLIC_ALLOW_FILES = [
 ] as const;
 
 const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
+  'images/mainCategories',
   'images/subCategories',
 ] as const;
-
-// Main-category images are allowed only when referenced by categories.json.
-const STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY = 'images/mainCategories';
 
 // Source/development assets that must never enter out/, R2, Android, or iOS.
 const STATIC_PUBLIC_IGNORE_FILES = [
@@ -96,20 +94,16 @@ function listFiles(root: string, current = root, result: string[] = []): string[
   return result;
 }
 
-function assertPublicAssetPolicy(categoryImages: Set<string>): void {
+function assertPublicAssetPolicy(): void {
   const allowFiles = new Set<string>(STATIC_PUBLIC_ALLOW_FILES);
   const ignoreFiles = new Set<string>(STATIC_PUBLIC_IGNORE_FILES);
-  const allowedCategoryImages = new Set(
-    [...categoryImages].map((image) => `${STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY}/${image}`),
-  );
 
   const unclassified = listFiles(rootPublicDir).filter((filePath) => {
     if (filePath.split('/').some((segment) => segment.startsWith('.'))) return false;
-    if (allowFiles.has(filePath) || allowedCategoryImages.has(filePath)) return false;
+    if (allowFiles.has(filePath)) return false;
     if (STATIC_PUBLIC_ALLOW_DIRECTORIES.some((directory) => isInsideDirectory(filePath, directory))) return false;
     if (ignoreFiles.has(filePath)) return false;
     if (STATIC_PUBLIC_IGNORE_DIRECTORIES.some((directory) => isInsideDirectory(filePath, directory))) return false;
-    if (isInsideDirectory(filePath, STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY)) return false;
     return true;
   });
 
@@ -136,25 +130,7 @@ function prepareStaticPublicDir(): void {
     );
   }
 
-  const categoriesPath = path.join(rootPublicDir, 'catagory', 'categories.json');
-  const categories = JSON.parse(readFileSync(categoriesPath, 'utf8')) as Array<{ image?: unknown }>;
-  const categoryImages = new Set(
-    categories
-      .map((category) => category.image)
-      .filter((image): image is string => typeof image === 'string' && image.length > 0),
-  );
-
-  assertPublicAssetPolicy(categoryImages);
-
-  for (const image of categoryImages) {
-    if (path.basename(image) !== image) {
-      throw new Error(`Unsafe category image path: ${image}`);
-    }
-    copyRequired(
-      path.join(rootPublicDir, STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY, image),
-      path.join(tempPublicDir, STATIC_PUBLIC_DYNAMIC_IMAGE_DIRECTORY, image),
-    );
-  }
+  assertPublicAssetPolicy();
 }
 
 function prepareTempBuildDir(): void {

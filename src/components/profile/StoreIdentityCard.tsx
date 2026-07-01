@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Image as ImageIcon, LayoutTemplate } from 'lucide-react';
+import * as React from "react";
+import { Image as ImageIcon, LayoutTemplate } from "lucide-react";
 
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useTranslation } from '@/lib/i18n';
-import type { StoredImage } from '@/core/storage/types/stored-image.types';
-import { useProfileStoreImages } from '@/features/profile/hooks/use-profile-store-images';
-import { useStoreDetails } from '@/features/profile/hooks/use-store-details';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "@/lib/i18n";
+import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
+import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import {
   StorageImageManager,
   parseStorageImageManagerConfig,
-} from '@/features/storage/components/StorageImageManager';
+} from "@/features/storage/components/StorageImageManager";
 import type {
   ProfileSectionStatus,
   StoreDetailsController,
-} from './profile-save-controller';
-import storeLogoImageConfig from './image-configs/store-logo.image.json';
-import storeCover1ImageConfig from './image-configs/store-cover-1.image.json';
-import storeCover2ImageConfig from './image-configs/store-cover-2.image.json';
-import storeCover3ImageConfig from './image-configs/store-cover-3.image.json';
+} from "./profile-save-controller";
+import storeLogoImageConfig from "./image-configs/store-logo.image.json";
+import storeCover1ImageConfig from "./image-configs/store-cover-1.image.json";
+import storeCover2ImageConfig from "./image-configs/store-cover-2.image.json";
+import storeCover3ImageConfig from "./image-configs/store-cover-3.image.json";
 
 const storeLogoConfig = parseStorageImageManagerConfig(storeLogoImageConfig);
 const storeCoverConfigs = [
@@ -59,10 +59,10 @@ export const StoreIdentityCard = React.forwardRef<
     applySaved,
     saved,
   } = useStoreDetails();
-  const [imageTab, setImageTab] = React.useState<'logo' | 'cover'>('logo');
+  const [imageTab, setImageTab] = React.useState<"logo" | "cover">("logo");
   const [logoImage, setLogoImage] = React.useState<StoredImage | null>(null);
   const [coverImages, setCoverImages] = React.useState<StoredImage[]>([]);
-  const label = t('onboarding.storeIdentity.title');
+  const label = t("onboarding.storeIdentity.title");
 
   React.useImperativeHandle(
     ref,
@@ -125,7 +125,7 @@ export const StoreIdentityCard = React.forwardRef<
   if (isLoading) {
     return (
       <div className="py-10 text-center text-sm text-on-surface-variant">
-        {t('profile.loading')}
+        {t("profile.loading")}
       </div>
     );
   }
@@ -139,46 +139,46 @@ export const StoreIdentityCard = React.forwardRef<
       ) : null}
       {saved && !isDirty ? (
         <div className="rounded-lg bg-success/15 px-3 py-2 text-sm text-success">
-          {t('profile.saved')}
+          {t("profile.saved")}
         </div>
       ) : null}
 
       {!readOnly ? (
         <div className="space-y-4">
-          <div className="flex gap-2 border-b border-outline-variant">
+          <div className="flex gap-2 border-b border-outline-variant overflow-x-auto">
             <button
               type="button"
-              onClick={() => setImageTab('logo')}
-              className={`flex items-center gap-2 px-4 pb-3 transition-colors ${
-                imageTab === 'logo'
-                  ? 'border-b-2 border-primary text-primary'
-                  : 'border-b-2 border-transparent text-on-surface-variant hover:text-on-surface'
+              onClick={() => setImageTab("logo")}
+              className={`flex items-center gap-2 px-3 sm:px-4 pb-3 transition-colors flex-shrink-0 ${
+                imageTab === "logo"
+                  ? "border-b-2 border-primary text-primary"
+                  : "border-b-2 border-transparent text-on-surface-variant hover:text-on-surface"
               }`}
             >
-              <ImageIcon className="h-5 w-5" />
-              <span className="text-sm font-medium">
-                {t('onboarding.storeIdentity.storeLogo')}
+              <ImageIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium">
+                {t("onboarding.storeIdentity.storeLogo")}
               </span>
             </button>
             <button
               type="button"
-              onClick={() => setImageTab('cover')}
-              className={`flex items-center gap-2 px-4 pb-3 transition-colors ${
-                imageTab === 'cover'
-                  ? 'border-b-2 border-primary text-primary'
-                  : 'border-b-2 border-transparent text-on-surface-variant hover:text-on-surface'
+              onClick={() => setImageTab("cover")}
+              className={`flex items-center gap-2 px-3 sm:px-4 pb-3 transition-colors flex-shrink-0 ${
+                imageTab === "cover"
+                  ? "border-b-2 border-primary text-primary"
+                  : "border-b-2 border-transparent text-on-surface-variant hover:text-on-surface"
               }`}
             >
-              <LayoutTemplate className="h-5 w-5" />
-              <span className="text-sm font-medium">
-                {t('onboarding.storeIdentity.coverImage')}
+              <LayoutTemplate className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium">
+                {t("onboarding.storeIdentity.coverImage")}
               </span>
             </button>
           </div>
 
-          {imageTab === 'logo' ? (
-            <div className="inline-block rounded-lg border-2 border-primary/20 bg-primary/5 p-3">
-              <div className="h-[150px] w-[150px]">
+          {imageTab === "logo" ? (
+            <div className="inline-block rounded-lg border-2 border-primary/20 bg-primary/5 p-2 sm:p-3">
+              <div className="h-[120px] w-[120px] sm:h-[150px] sm:w-[150px]">
                 <StorageImageManager
                   config={storeLogoConfig}
                   value={logoImage ? [logoImage] : []}
@@ -188,9 +188,9 @@ export const StoreIdentityCard = React.forwardRef<
             </div>
           ) : null}
 
-          {imageTab === 'cover' ? (
-            <div className="space-y-2 rounded-lg border-2 border-primary/20 bg-primary/5 p-4">
-              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+          {imageTab === "cover" ? (
+            <div className="space-y-2 rounded-lg border-2 border-primary/20 bg-primary/5 p-3 sm:p-4">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
                 {storeCoverConfigs.map((config, index) => (
                   <StorageImageManager
                     key={config.id}
@@ -205,7 +205,7 @@ export const StoreIdentityCard = React.forwardRef<
 
           {(isImagesLoading || isSavingImages) && (
             <p className="text-xs text-muted-foreground">
-              {isSavingImages ? t('onboarding.common.uploading') : ''}
+              {isSavingImages ? t("onboarding.common.uploading") : ""}
             </p>
           )}
         </div>
@@ -213,13 +213,13 @@ export const StoreIdentityCard = React.forwardRef<
 
       <div className="space-y-2">
         <Label htmlFor="storeName">
-          {t('onboarding.storeIdentity.storeName')}
+          {t("onboarding.storeIdentity.storeName")}
         </Label>
         <Input
           id="storeName"
           value={details.storeName}
-          onChange={(event) => updateField('storeName', event.target.value)}
-          placeholder={t('onboarding.storeIdentity.storeNamePlaceholder')}
+          onChange={(event) => updateField("storeName", event.target.value)}
+          placeholder={t("onboarding.storeIdentity.storeNamePlaceholder")}
           maxLength={120}
           disabled={readOnly}
         />
@@ -227,15 +227,15 @@ export const StoreIdentityCard = React.forwardRef<
 
       <div className="space-y-2">
         <Label htmlFor="storeDescription">
-          {t('onboarding.storeIdentity.storeDescription')}
+          {t("onboarding.storeIdentity.storeDescription")}
         </Label>
         <Textarea
           id="storeDescription"
           value={details.storeDescription}
           onChange={(event) =>
-            updateField('storeDescription', event.target.value)
+            updateField("storeDescription", event.target.value)
           }
-          placeholder={t('onboarding.storeIdentity.descriptionPlaceholder')}
+          placeholder={t("onboarding.storeIdentity.descriptionPlaceholder")}
           rows={4}
           maxLength={100}
           disabled={readOnly}
@@ -247,13 +247,13 @@ export const StoreIdentityCard = React.forwardRef<
 
       <div className="space-y-2">
         <Label htmlFor="storeStory">
-          {t('onboarding.storeIdentity.storeStory')}
+          {t("onboarding.storeIdentity.storeStory")}
         </Label>
         <Textarea
           id="storeStory"
           value={details.storeStory}
-          onChange={(event) => updateField('storeStory', event.target.value)}
-          placeholder={t('onboarding.storeIdentity.storyPlaceholder')}
+          onChange={(event) => updateField("storeStory", event.target.value)}
+          placeholder={t("onboarding.storeIdentity.storyPlaceholder")}
           rows={4}
           maxLength={500}
           disabled={readOnly}

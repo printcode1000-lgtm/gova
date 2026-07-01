@@ -452,7 +452,7 @@ export function ContactInfoCard({
                   </div>
                   {!readOnly && (
                     <Select onValueChange={handleAddItem}>
-                      <SelectTrigger className="w-[200px]">
+                      <SelectTrigger className="w-[140px] sm:w-[180px] md:w-[200px]">
                         <SelectValue placeholder={t('onboarding.contactInfo.addItem')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -481,7 +481,7 @@ export function ContactInfoCard({
                   )}
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 sm:space-y-4">
             {/* Additional Phones */}
             {PHONE_TYPES.map((type) => {
               const typePhones = groupedPhones[type];
@@ -490,7 +490,7 @@ export function ContactInfoCard({
               return (
                 <div key={type} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold">
+                    <span className="text-xs sm:text-sm font-semibold">
                       {t(`onboarding.contactInfo.phoneTypes.${type}`)}
                     </span>
                     {!readOnly && (
@@ -498,17 +498,17 @@ export function ContactInfoCard({
                         variant="outline"
                         size="sm"
                         onClick={() => addAnotherPhone(type)}
-                        className="gap-1 h-6 px-2 text-xs"
+                        className="gap-1 h-5 sm:h-6 px-2 text-[10px] sm:text-xs"
                       >
-                        <Plus className="h-3 w-3" />
+                        <Plus className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                       </Button>
                     )}
                   </div>
                   <div className="space-y-2">
                     {typePhones.map((phone) => (
-                      <div key={phone.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                      <div key={phone.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-muted/50">
                         <div className="flex-1 relative">
-                          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
+                          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-on-surface-variant select-none">
                             +20
                           </span>
                           <input
@@ -516,7 +516,7 @@ export function ContactInfoCard({
                             inputMode="tel"
                             maxLength={11}
                             placeholder={t('auth.login.phonePlaceholder')}
-                            className="auth-input ps-12 w-full"
+                            className="auth-input ps-12 w-full text-sm"
                             value={phone.number}
                             onChange={(e) => updatePhone(phone.id, { number: e.target.value.replace(/\D/g, '').slice(0, 11) })}
                             disabled={readOnly}
@@ -527,10 +527,10 @@ export function ContactInfoCard({
                             variant="ghost"
                             size="icon"
                             onClick={() => removePhone(phone.id)}
-                            className="shrink-0 h-8 w-8"
+                            className="shrink-0 h-7 w-7 sm:h-8 sm:w-8"
                             title={t('onboarding.contactInfo.remove')}
                           >
-                            <X className="h-4 w-4" />
+                            <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </Button>
                         )}
                       </div>

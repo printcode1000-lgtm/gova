@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AppInitScript } from "@/lib/app-init";
 import { THEME_COLOR_LIGHT } from "@/theme/runtime";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+
+config.autoAddCss = false;
 
 import { PreferencesProvider } from "@/lib/preferences";
 import { ShellLayout } from "@/components/layouts/ShellLayout";

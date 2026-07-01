@@ -2,7 +2,7 @@ import type { UserProfile } from '@/features/auth/entities/profile.entity';
 import type { ProfileContactsData } from './profile-contacts.entity';
 import type { StoreDetailsData } from './store-details.entity';
 
-export type ProfileEditorSection = 'registration' | 'contact' | 'store';
+export type ProfileEditorSection = 'registration' | 'specialties' | 'contact' | 'store';
 
 export interface ProfileRegistrationSnapshot {
   phone: string;

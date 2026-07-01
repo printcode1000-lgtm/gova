@@ -85,13 +85,13 @@ export function ProfilePhoneVerification({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <span className="flex items-center gap-2 text-sm font-semibold text-on-surface">
+        <span className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-on-surface">
           <Smartphone className="h-4 w-4 text-primary" />
           {t('auth.login.phone')}
         </span>
         <div className="flex gap-2">
           <div className="relative min-w-0 flex-1">
-            <span className="absolute start-3 top-1/2 -translate-y-1/2 select-none text-sm text-on-surface-variant">
+            <span className="absolute start-3 top-1/2 -translate-y-1/2 select-none text-xs sm:text-sm text-on-surface-variant">
               +20
             </span>
             <input
@@ -101,7 +101,7 @@ export function ProfilePhoneVerification({
               disabled={verified}
               placeholder={t('auth.login.phonePlaceholder')}
               className={cn(
-                'auth-input w-full ps-12',
+                'auth-input w-full ps-12 text-sm',
                 verified && 'gova-field-surface pe-10',
                 error && 'border-error',
               )}
@@ -120,7 +120,7 @@ export function ProfilePhoneVerification({
               }}
             />
             {verified ? (
-              <CheckCircle2 className="absolute end-3 top-1/2 h-5 w-5 -translate-y-1/2 text-success" />
+              <CheckCircle2 className="absolute end-3 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-success" />
             ) : null}
           </div>
 
@@ -129,7 +129,7 @@ export function ProfilePhoneVerification({
               type="button"
               onClick={() => void handleSendOtp()}
               disabled={isSending || !canSend}
-              className="gova-control shrink-0 rounded-lg border border-outline gova-surface-neutral text-sm font-semibold text-primary disabled:opacity-50"
+              className="gova-control shrink-0 rounded-lg border border-outline gova-surface-neutral text-xs sm:text-sm font-semibold text-primary disabled:opacity-50 px-3 sm:px-4"
             >
               {isSending
                 ? '...'
@@ -142,7 +142,7 @@ export function ProfilePhoneVerification({
               type="button"
               onClick={handleEditPhone}
               aria-label={t('auth.phone.edit')}
-              className="gova-control-icon flex shrink-0 items-center justify-center rounded-lg border border-outline gova-surface-neutral"
+              className="gova-control-icon flex shrink-0 items-center justify-center rounded-lg border border-outline gova-surface-neutral h-9 w-9 sm:h-10 sm:w-10"
             >
               <Pencil className="h-4 w-4" />
             </button>
@@ -150,21 +150,21 @@ export function ProfilePhoneVerification({
         </div>
 
         {verified ? (
-          <p className="mt-1 flex items-center gap-1 text-xs text-success">
-            <CheckCircle2 className="h-3.5 w-3.5" />
+          <p className="mt-1 flex items-center gap-1 text-[10px] sm:text-xs text-success">
+            <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             {t('auth.phone.verified')}
           </p>
         ) : null}
-        {error ? <p className="text-xs text-error">{error}</p> : null}
+        {error ? <p className="text-[10px] sm:text-xs text-error">{error}</p> : null}
       </div>
 
       {otpSent && !verified ? (
-        <div className="gova-auth-tonal-panel space-y-4">
+        <div className="gova-auth-tonal-panel space-y-3 sm:space-y-4">
           <div className="space-y-1">
-            <p className="text-sm font-semibold text-on-surface">
+            <p className="text-xs sm:text-sm font-semibold text-on-surface">
               {t('auth.phone.enterOtp')}
             </p>
-            <p className="text-xs text-on-surface-variant">
+            <p className="text-[10px] sm:text-xs text-on-surface-variant">
               {t('auth.phone.sentTo')}{' '}
               <span className="font-medium text-on-surface">
                 {formatPhoneDisplay(phone)}
@@ -180,15 +180,15 @@ export function ProfilePhoneVerification({
             hasError={Boolean(otpError)}
           />
           {otpError ? (
-            <p className="text-center text-xs text-error">{otpError}</p>
+            <p className="text-center text-[10px] sm:text-xs text-error">{otpError}</p>
           ) : null}
 
-          <div className="flex w-full items-center gap-3">
+          <div className="flex w-full items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => void handleVerifyOtp()}
               disabled={otp.length !== 4 || isVerifying}
-              className="auth-cta h-10 flex-1 text-sm"
+              className="auth-cta h-9 sm:h-10 flex-1 text-xs sm:text-sm"
             >
               {isVerifying
                 ? t('auth.phone.verifying')
@@ -198,7 +198,7 @@ export function ProfilePhoneVerification({
               type="button"
               onClick={() => void handleSendOtp()}
               disabled={countdown > 0 || isSending}
-              className="shrink-0 px-3 py-2 text-sm text-primary disabled:opacity-50"
+              className="shrink-0 px-2 sm:px-3 py-2 text-[10px] sm:text-sm text-primary disabled:opacity-50"
             >
               {countdown > 0
                 ? t('auth.phone.resendIn', { seconds: countdown })

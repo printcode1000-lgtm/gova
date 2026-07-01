@@ -129,9 +129,9 @@ The local manifest contains the bundled version and the complete file inventory.
 
 Hidden control files whose path contains a segment beginning with `.`, such as `.gitkeep` and `.DS_Store`, are excluded because Capacitor's local WebView does not reliably serve them.
 
-Static builds use an explicit public-asset allowlist. The runtime initialization scripts, `logo.png`, `catagory/categories.json`, the main-category images referenced by that JSON, and the complete `public/images/subCategories` directory are copied from `public/`. Development databases, `sync_data`, schema reports, source category databases, unused category exports, and duplicate logos remain available to local tooling but are not included in `out`, R2, Android, or iOS.
+Static builds use an explicit public-asset allowlist. The runtime initialization scripts, `logo.png`, `catagory/categories.json`, and the complete `public/images/mainCategories` and `public/images/subCategories` directories are copied from `public/`. Development databases, `sync_data`, schema reports, source category databases, unused category exports, and duplicate logos remain available to local tooling but are not included in `out`, R2, Android, or iOS.
 
-The policy is reviewed directly in `scripts/build-static.ts` through `STATIC_PUBLIC_ALLOW_FILES`, `STATIC_PUBLIC_ALLOW_DIRECTORIES`, `STATIC_PUBLIC_IGNORE_FILES`, `STATIC_PUBLIC_IGNORE_DIRECTORIES`, and `STATIC_ROUTE_IGNORELIST`. The build fails when a new public asset is not classified by these lists or by the category-image rule.
+The policy is reviewed directly in `scripts/build-static.ts` through `STATIC_PUBLIC_ALLOW_FILES`, `STATIC_PUBLIC_ALLOW_DIRECTORIES`, `STATIC_PUBLIC_IGNORE_FILES`, `STATIC_PUBLIC_IGNORE_DIRECTORIES`, and `STATIC_ROUTE_IGNORELIST`. The build fails when a new public asset is not classified by these lists.
 
 The development-only `/dev/*` routes and the `/test1` UI test route are removed from the temporary static-build source tree. They remain available during local development but do not generate production HTML, RSC payloads, or JavaScript chunks.
 
@@ -215,3 +215,5 @@ After `cap:build`, R2 must contain exactly `manifest.json` plus the objects unde
 - Never publish the manifest before file operations complete.
 - Never update when `remote.version <= local.version`.
 - Treat the manifest as the complete source of truth for additions, changes, and deletions.
+
+The complete source-file allowlist, ignorelist, route exclusions, and review process are documented in [static-export-policy.md](./static-export-policy.md).

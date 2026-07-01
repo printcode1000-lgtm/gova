@@ -28,3 +28,8 @@ export interface StoreDetailsController extends ProfileSectionController {
   getSnapshot: () => StoreDetailsData;
   applySaved: (details: StoreDetailsData) => void;
 }
+
+export interface ProfileSpecialtiesController extends ProfileSectionController {
+  getSnapshot: () => { specialties: string[] };
+  applySaved: (specialties: { specialties: string[] }) => void;
+}

@@ -1,53 +1,96 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Loader2, LogIn, Phone, Save, Store, User } from 'lucide-react';
-import * as React from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
-import Image from 'next/image';
+import Link from "next/link";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  LogIn,
+  Phone,
+  Save,
+  Star,
+  Store,
+  User,
+} from "lucide-react";
+import * as React from "react";
+import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import Image from "next/image";
 
-import { ProfileContactsCard } from '@/components/profile/ProfileContactsCard';
-import { ProfileRegistrationInfoCard } from '@/components/profile/ProfileRegistrationInfoCard';
-import { StoreIdentityCard } from '@/components/profile/StoreIdentityCard';
-import { useSession } from '@/features/auth/components/SessionProvider';
-import { useTranslation } from '@/lib/i18n';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { HeroSlider, type HeroSliderConfig } from '@/components/ui/HeroSlider';
-import { useProfileStoreImages } from '@/features/profile/hooks/use-profile-store-images';
-import { useStoreDetails } from '@/features/profile/hooks/use-store-details';
-import { profileService } from '@/features/profile/services/profile-service';
-import { mergePrimaryContacts } from '@/features/profile/utils/merge-primary-contacts';
+import { ProfileContactsCard } from "@/components/profile/ProfileContactsCard";
+import { ProfileRegistrationInfoCard } from "@/components/profile/ProfileRegistrationInfoCard";
+import { SpecialtiesCard } from "@/components/profile/SpecialtiesCard";
+import { StoreIdentityCard } from "@/components/profile/StoreIdentityCard";
+import { useSession } from "@/features/auth/components/SessionProvider";
+import { useTranslation } from "@/lib/i18n";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
+import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
+import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
+import { profileService } from "@/features/profile/services/profile-service";
+import { mergePrimaryContacts } from "@/features/profile/utils/merge-primary-contacts";
 import type {
   ProfileContactsController,
   ProfileRegistrationController,
   ProfileSectionStatus,
+  ProfileSpecialtiesController,
   StoreDetailsController,
-} from './profile-save-controller';
+} from "./profile-save-controller";
 
-type ProfileEditTab = 'registration' | 'contact' | 'store';
+type ProfileEditTab = "registration" | "specialties" | "contact" | "store";
+
+const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
+  registration: "profile-registration-panel",
+  specialties: "profile-specialties-panel",
+  contact: "profile-contact-panel",
+  store: "profile-store-panel",
+};
+
+const PROFILE_SECTIONS: ProfileEditTab[] = [
+  "registration",
+  "specialties",
+  "contact",
+  "store",
+];
 
 export function ProfilePageContent() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { session, isLoggedIn, isLoading } = useSession();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] =
-    React.useState<ProfileEditTab>('registration');
+    React.useState<ProfileEditTab>("registration");
+  const [carouselHeight, setCarouselHeight] = React.useState<number>();
   const registrationRef = React.useRef<ProfileRegistrationController>(null);
+  const specialtiesRef = React.useRef<ProfileSpecialtiesController>(null);
   const contactsRef = React.useRef<ProfileContactsController>(null);
   const storeRef = React.useRef<StoreDetailsController>(null);
+  const carouselRef = React.useRef<HTMLDivElement>(null);
+  const panelRefs = React.useRef<Record<ProfileEditTab, HTMLDivElement | null>>(
+    {
+      registration: null,
+      specialties: null,
+      contact: null,
+      store: null,
+    },
+  );
+  const navButtonRefs = React.useRef<
+    Record<ProfileEditTab, HTMLButtonElement | null>
+  >({ registration: null, specialties: null, contact: null, store: null });
+  const scrollFrameRef = React.useRef<number | null>(null);
   const [sectionStatuses, setSectionStatuses] = React.useState<
     Record<ProfileEditTab, ProfileSectionStatus | null>
   >({
     registration: null,
+    specialties: null,
     contact: null,
     store: null,
   });
   const [saveError, setSaveError] = React.useState<string | null>(null);
   const [isUnifiedSaving, setIsUnifiedSaving] = React.useState(false);
-  const showEditCard = searchParams.get('mode') === 'edit';
-  const showPreviewCard = searchParams.get('mode') === 'preview';
+  const mode = searchParams.get("mode");
+  const showEditCard = mode === "edit";
+  const showPreviewCard = mode !== "edit";
   const { storeImages, isLoading: isLoadingStoreImages } =
     useProfileStoreImages();
   const { details: storeDetails, isLoading: isLoadingStoreDetails } =
@@ -57,14 +100,14 @@ export function ProfilePageContent() {
     const slides = storeImages.coverUrls.map((url, index) => ({
       priority: index + 1,
       image: url,
-      title: '',
-      subtitle: '',
+      title: "",
+      subtitle: "",
       duration: 4000,
-      action: '',
+      action: "",
     }));
 
     return {
-      transition: 'SlideLeft',
+      transition: "SlideLeft",
       transitionDuration: 500,
       autoPlay: true,
       loop: true,
@@ -92,15 +135,20 @@ export function ProfilePageContent() {
 
   const handleRegistrationStatus = React.useCallback(
     (status: ProfileSectionStatus) =>
-      updateSectionStatus('registration', status),
+      updateSectionStatus("registration", status),
+    [updateSectionStatus],
+  );
+  const handleSpecialtiesStatus = React.useCallback(
+    (status: ProfileSectionStatus) =>
+      updateSectionStatus("specialties", status),
     [updateSectionStatus],
   );
   const handleContactStatus = React.useCallback(
-    (status: ProfileSectionStatus) => updateSectionStatus('contact', status),
+    (status: ProfileSectionStatus) => updateSectionStatus("contact", status),
     [updateSectionStatus],
   );
   const handleStoreStatus = React.useCallback(
-    (status: ProfileSectionStatus) => updateSectionStatus('store', status),
+    (status: ProfileSectionStatus) => updateSectionStatus("store", status),
     [updateSectionStatus],
   );
 
@@ -113,6 +161,78 @@ export function ProfilePageContent() {
     .map(([, status]) => status?.label)
     .filter((label): label is string => Boolean(label));
   const isSaveBlocked = dirtySections.some(([, status]) => !status?.canSave);
+  const scrollToSection = React.useCallback((section: ProfileEditTab) => {
+    panelRefs.current[section]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+    navButtonRefs.current[section]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, []);
+
+  const selectSection = (section: ProfileEditTab) => {
+    setActiveTab(section);
+    scrollToSection(section);
+  };
+
+  const handleCarouselScroll = () => {
+    if (scrollFrameRef.current !== null)
+      cancelAnimationFrame(scrollFrameRef.current);
+    scrollFrameRef.current = requestAnimationFrame(() => {
+      const carousel = carouselRef.current;
+      if (!carousel) return;
+      const center =
+        carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
+      let closest = activeTab;
+      let closestDistance = Number.POSITIVE_INFINITY;
+      for (const section of PROFILE_SECTIONS) {
+        const panel = panelRefs.current[section];
+        if (!panel) continue;
+        const rect = panel.getBoundingClientRect();
+        const distance = Math.abs(rect.left + rect.width / 2 - center);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = section;
+        }
+      }
+      if (closest !== activeTab) {
+        setActiveTab(closest);
+        navButtonRefs.current[closest]?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    });
+  };
+
+  React.useEffect(
+    () => () => {
+      if (scrollFrameRef.current !== null)
+        cancelAnimationFrame(scrollFrameRef.current);
+    },
+    [],
+  );
+
+  React.useEffect(() => {
+    const panel = panelRefs.current[activeTab];
+    if (!panel) return;
+    const updateHeight = () => setCarouselHeight(panel.offsetHeight);
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, [activeTab]);
+
+  const activeSectionIndex = PROFILE_SECTIONS.indexOf(activeTab);
+  const goToAdjacentSection = (offset: -1 | 1) => {
+    const nextSection = PROFILE_SECTIONS[activeSectionIndex + offset];
+    if (nextSection) selectSection(nextSection);
+  };
   const handleSaveChangedSections = async () => {
     setSaveError(null);
     const registrationController = registrationRef.current;
@@ -129,7 +249,7 @@ export function ProfilePageContent() {
 
     const registration = registrationController.prepareSnapshot();
     if (!registration) {
-      setActiveTab('registration');
+      setActiveTab("registration");
       return;
     }
 
@@ -150,29 +270,29 @@ export function ProfilePageContent() {
         storeDetails,
       });
 
-      if (changedSections.includes('registration')) {
+      if (changedSections.includes("registration")) {
         await registrationController.applySaved(saved.registration);
       }
       if (
-        changedSections.includes('registration') ||
-        changedSections.includes('contact')
+        changedSections.includes("registration") ||
+        changedSections.includes("contact")
       ) {
         contactsController.applySaved(saved.contacts);
       }
-      if (changedSections.includes('store')) {
+      if (changedSections.includes("store")) {
         storeController.applySaved(saved.storeDetails);
       }
     } catch (error) {
       const message = (error as Error).message;
-      if (message === 'phoneVerificationRequired') {
-        setActiveTab('registration');
-        setSaveError(t('auth.registration.phoneVerificationRequired'));
-      } else if (message === 'invalidCurrentPassword') {
-        setActiveTab('registration');
-        setSaveError(t('profile.validation.invalidCurrentPassword'));
-      } else if (message === 'phoneAlreadyRegistered') {
-        setActiveTab('registration');
-        setSaveError(t('auth.validation.phoneAlreadyRegistered'));
+      if (message === "phoneVerificationRequired") {
+        setActiveTab("registration");
+        setSaveError(t("auth.registration.phoneVerificationRequired"));
+      } else if (message === "invalidCurrentPassword") {
+        setActiveTab("registration");
+        setSaveError(t("profile.validation.invalidCurrentPassword"));
+      } else if (message === "phoneAlreadyRegistered") {
+        setActiveTab("registration");
+        setSaveError(t("auth.validation.phoneAlreadyRegistered"));
       } else {
         setSaveError(message);
       }
@@ -184,7 +304,7 @@ export function ProfilePageContent() {
   if (isLoading) {
     return (
       <div className="container px-4 py-8 text-sm text-on-surface-variant">
-        {t('profile.loading')}
+        {t("profile.loading")}
       </div>
     );
   }
@@ -192,40 +312,40 @@ export function ProfilePageContent() {
   if (!isLoggedIn) {
     return (
       <div className="container px-4 py-8 max-w-lg mx-auto text-center space-y-4">
-        <p className="text-on-surface-variant">{t('profile.loginRequired')}</p>
+        <p className="text-on-surface-variant">{t("profile.loginRequired")}</p>
         <Link
           href="/login"
           className="inline-flex items-center gap-2 auth-cta px-6 h-11"
         >
           <LogIn className="h-4 w-4" />
-          {t('sidebar.login')}
+          {t("sidebar.login")}
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="container px-4 py-8">
+    <div className="container px-3 py-4 sm:px-5 sm:py-8 lg:px-6">
       {showPreviewCard ? (
-        <div className="px-4">
+        <div className="mx-auto w-full max-w-6xl px-0 sm:px-4">
           {heroSliderConfig.slides.length > 0 ? (
             <div className="mb-0">
               <HeroSlider config={heroSliderConfig} />
             </div>
           ) : isLoadingStoreImages ? (
             <div className="py-8 text-center text-sm text-on-surface-variant">
-              {t('profile.loading')}
+              {t("profile.loading")}
             </div>
           ) : (
             <div className="text-center text-on-surface-variant py-8">
-              {t('profile.noImages')}
+              {t("profile.noImages")}
             </div>
           )}
           {!isLoadingStoreDetails && (
-            <section className="mx-4 border-b border-outline-variant/60 pb-5">
-              <div className="flex min-w-0 items-start gap-4">
+            <section className="mx-2 sm:mx-4 border-b border-outline-variant/60 pb-4 sm:pb-5">
+              <div className="flex min-w-0 items-start gap-3 sm:gap-4">
                 {storeImages.avatarUrl ? (
-                  <div className="relative z-10 -mt-10 h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-4 border-surface shadow-lg">
+                  <div className="relative z-10 -mt-8 sm:-mt-10 h-20 w-20 sm:h-28 sm:w-28 flex-shrink-0 overflow-hidden rounded-full border-4 border-surface shadow-lg">
                     <Image
                       src={storeImages.avatarUrl}
                       alt="Avatar"
@@ -236,14 +356,14 @@ export function ProfilePageContent() {
                   </div>
                 ) : null}
 
-                <div className="min-w-0 flex-1 pt-3">
+                <div className="min-w-0 flex-1 pt-2 sm:pt-3">
                   {storeDetails.storeName ? (
-                    <h1 className="break-words text-xl font-bold leading-7 text-on-surface sm:text-2xl">
+                    <h1 className="break-words text-lg sm:text-xl font-bold leading-7 text-on-surface sm:text-2xl">
                       {storeDetails.storeName}
                     </h1>
                   ) : null}
                   {storeDetails.storeDescription ? (
-                    <p className="mt-1 line-clamp-2 break-words text-sm leading-6 text-on-surface-variant">
+                    <p className="mt-1 line-clamp-2 break-words text-xs sm:text-sm leading-5 sm:leading-6 text-on-surface-variant">
                       {storeDetails.storeDescription}
                     </p>
                   ) : null}
@@ -252,99 +372,252 @@ export function ProfilePageContent() {
             </section>
           )}
           {!isLoadingStoreDetails && storeDetails.storeStory ? (
-            <section className="mx-4 mt-5 space-y-2">
-              <h2 className="text-sm font-semibold text-on-surface">
-                {t('onboarding.storeIdentity.storeStory')}
+            <section className="mx-2 sm:mx-4 mt-4 sm:mt-5 space-y-2">
+              <h2 className="text-xs sm:text-sm font-semibold text-on-surface">
+                {t("onboarding.storeIdentity.storeStory")}
               </h2>
-              <p className="text-sm leading-6 text-on-surface-variant">
+              <p className="text-xs sm:text-sm leading-5 sm:leading-6 text-on-surface-variant">
                 {storeDetails.storeStory}
               </p>
             </section>
           ) : null}
         </div>
-      ) : (
-        <Card id="edit-profile-card" className={!showEditCard ? 'hidden' : ''}>
-          <CardContent className="p-0">
-            <div className="flex gap-4 border-b border-outline-variant px-6 pt-4">
-              <button
-                type="button"
-                onClick={() => setActiveTab('registration')}
-                className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
-                  activeTab === 'registration'
-                    ? 'text-primary border-b-2 border-primary'
-                    : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
-                }`}
-              >
-                <User className="h-5 w-5" />
-                <span className="text-xs font-medium">
-                  {t('onboarding.contactInfo.primaryContact')}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('contact')}
-                className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
-                  activeTab === 'contact'
-                    ? 'text-primary border-b-2 border-primary'
-                    : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
-                }`}
-              >
-                <Phone className="h-5 w-5" />
-                <span className="text-xs font-medium">
-                  {t('onboarding.contactInfo.additionalContact')}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('store')}
-                className={`flex flex-col items-center gap-1 pb-3 px-4 transition-colors ${
-                  activeTab === 'store'
-                    ? 'text-primary border-b-2 border-primary'
-                    : 'text-on-surface-variant hover:text-on-surface border-b-2 border-transparent'
-                }`}
-              >
-                <Store className="h-5 w-5" />
-                <span className="text-xs font-medium">
-                  {t('onboarding.storeIdentity.title')}
-                </span>
-              </button>
-            </div>
+      ) : showEditCard ? (
+        <div
+          id="edit-profile-card"
+          className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4"
+        >
+          <Card className="sticky top-2 z-30 overflow-hidden sm:top-4">
+            <CardContent className="p-0">
+              <div className="relative border-b border-outline-variant bg-surface-container-low/60">
+                <div
+                  className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-3 sm:gap-3 sm:px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  aria-label={t("profile.subtitle")}
+                >
+                  <button
+                    ref={(node) => {
+                      navButtonRefs.current.registration = node;
+                    }}
+                    type="button"
+                    onClick={() => selectSection("registration")}
+                    aria-pressed={activeTab === "registration"}
+                    aria-controls={PROFILE_SECTION_IDS.registration}
+                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                      activeTab === "registration"
+                        ? "border-primary bg-primary text-on-primary shadow-sm"
+                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                    }`}
+                  >
+                    <User className="h-4 w-4" />
+                    <span className="whitespace-nowrap">
+                      {t("onboarding.contactInfo.primaryContact")}
+                    </span>
+                    {sectionStatuses.registration?.isDirty ? (
+                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                    ) : null}
+                  </button>
+                  <button
+                    ref={(node) => {
+                      navButtonRefs.current.specialties = node;
+                    }}
+                    type="button"
+                    onClick={() => selectSection("specialties")}
+                    aria-pressed={activeTab === "specialties"}
+                    aria-controls={PROFILE_SECTION_IDS.specialties}
+                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                      activeTab === "specialties"
+                        ? "border-primary bg-primary text-on-primary shadow-sm"
+                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                    }`}
+                  >
+                    <Star className="h-4 w-4" />
+                    <span className="whitespace-nowrap">
+                      {t("onboarding.storeIdentity.specialties")}
+                    </span>
+                    {sectionStatuses.specialties?.isDirty ? (
+                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                    ) : null}
+                  </button>
+                  <button
+                    ref={(node) => {
+                      navButtonRefs.current.contact = node;
+                    }}
+                    type="button"
+                    onClick={() => selectSection("contact")}
+                    aria-pressed={activeTab === "contact"}
+                    aria-controls={PROFILE_SECTION_IDS.contact}
+                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                      activeTab === "contact"
+                        ? "border-primary bg-primary text-on-primary shadow-sm"
+                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                    }`}
+                  >
+                    <Phone className="h-4 w-4" />
+                    <span className="whitespace-nowrap">
+                      {t("onboarding.contactInfo.additionalContact")}
+                    </span>
+                    {sectionStatuses.contact?.isDirty ? (
+                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                    ) : null}
+                  </button>
+                  <button
+                    ref={(node) => {
+                      navButtonRefs.current.store = node;
+                    }}
+                    type="button"
+                    onClick={() => selectSection("store")}
+                    aria-pressed={activeTab === "store"}
+                    aria-controls={PROFILE_SECTION_IDS.store}
+                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                      activeTab === "store"
+                        ? "border-primary bg-primary text-on-primary shadow-sm"
+                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                    }`}
+                  >
+                    <Store className="h-4 w-4" />
+                    <span className="whitespace-nowrap">
+                      {t("onboarding.storeIdentity.title")}
+                    </span>
+                    {sectionStatuses.store?.isDirty ? (
+                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                    ) : null}
+                  </button>
+                </div>
+                <div className="pointer-events-none absolute inset-y-0 start-0 w-5 bg-gradient-to-r from-surface-container-low/95 to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 end-0 w-5 bg-gradient-to-l from-surface-container-low/95 to-transparent" />
+              </div>
+            </CardContent>
+          </Card>
 
-            <div className="p-6">
+          <Card className="overflow-hidden">
+            <CardContent className="p-0">
+              <div className="relative">
+                <div
+                  ref={carouselRef}
+                  onScroll={handleCarouselScroll}
+                  style={
+                    carouselHeight ? { height: carouselHeight } : undefined
+                  }
+                  className="flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth transition-[height] duration-300 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                >
+                  <div
+                    ref={(node) => {
+                      panelRefs.current.registration = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.registration}
+                    role="region"
+                    aria-hidden={activeTab !== "registration"}
+                    inert={activeTab !== "registration"}
+                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                  >
+                    <ProfileRegistrationInfoCard
+                      ref={registrationRef}
+                      showSaveButton={false}
+                      onStatusChange={handleRegistrationStatus}
+                    />
+                  </div>
+                  <div
+                    ref={(node) => {
+                      panelRefs.current.specialties = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.specialties}
+                    role="region"
+                    aria-hidden={activeTab !== "specialties"}
+                    inert={activeTab !== "specialties"}
+                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                  >
+                    <SpecialtiesCard
+                      ref={specialtiesRef}
+                      showSaveButton={false}
+                      onStatusChange={handleSpecialtiesStatus}
+                    />
+                  </div>
+                  <div
+                    ref={(node) => {
+                      panelRefs.current.contact = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.contact}
+                    role="region"
+                    aria-hidden={activeTab !== "contact"}
+                    inert={activeTab !== "contact"}
+                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                  >
+                    <ProfileContactsCard
+                      ref={contactsRef}
+                      showSaveButton={false}
+                      onStatusChange={handleContactStatus}
+                    />
+                  </div>
+                  <div
+                    ref={(node) => {
+                      panelRefs.current.store = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.store}
+                    role="region"
+                    aria-hidden={activeTab !== "store"}
+                    inert={activeTab !== "store"}
+                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                  >
+                    <StoreIdentityCard
+                      ref={storeRef}
+                      showSaveButton={false}
+                      onStatusChange={handleStoreStatus}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => goToAdjacentSection(-1)}
+                  disabled={activeSectionIndex === 0}
+                  aria-label={
+                    locale === "ar" ? "القسم السابق" : "Previous section"
+                  }
+                  className="absolute start-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition hover:bg-surface-container disabled:pointer-events-none disabled:opacity-25 sm:start-3"
+                >
+                  {locale === "ar" ? (
+                    <ChevronRight className="h-5 w-5" />
+                  ) : (
+                    <ChevronLeft className="h-5 w-5" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToAdjacentSection(1)}
+                  disabled={activeSectionIndex === PROFILE_SECTIONS.length - 1}
+                  aria-label={locale === "ar" ? "القسم التالي" : "Next section"}
+                  className="absolute end-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition hover:bg-surface-container disabled:pointer-events-none disabled:opacity-25 sm:end-3"
+                >
+                  {locale === "ar" ? (
+                    <ChevronLeft className="h-5 w-5" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+
               <div
-                className={activeTab === 'registration' ? 'block' : 'hidden'}
+                className="flex justify-center gap-2 border-t border-outline-variant/50 py-3"
+                aria-hidden="true"
               >
-                <ProfileRegistrationInfoCard
-                  ref={registrationRef}
-                  showSaveButton={false}
-                  onStatusChange={handleRegistrationStatus}
-                />
-              </div>
-              <div className={activeTab === 'contact' ? 'block' : 'hidden'}>
-                <ProfileContactsCard
-                  ref={contactsRef}
-                  showSaveButton={false}
-                  onStatusChange={handleContactStatus}
-                />
-              </div>
-              <div className={activeTab === 'store' ? 'block' : 'hidden'}>
-                <StoreIdentityCard
-                  ref={storeRef}
-                  showSaveButton={false}
-                  onStatusChange={handleStoreStatus}
-                />
+                {PROFILE_SECTIONS.map((section) => (
+                  <span
+                    key={section}
+                    className={`h-2 rounded-full transition-all ${activeTab === section ? "w-6 bg-primary" : "w-2 bg-outline-variant"}`}
+                  />
+                ))}
               </div>
 
               {saveError ? (
-                <div className="mt-5 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+                <div className="mx-3 mb-3 rounded-lg bg-error/15 px-3 py-2 text-sm text-error sm:mx-5">
                   {saveError}
                 </div>
               ) : null}
 
               {dirtyLabels.length > 0 ? (
-                <div className="mt-6 border-t border-outline-variant pt-4">
-                  <p className="mb-3 text-xs text-on-surface-variant">
-                    {t('profile.saveTargets')}: {dirtyLabels.join('، ')}
+                <div className="fixed inset-x-3 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-40 rounded-2xl border border-outline-variant bg-surface/95 p-3 shadow-xl backdrop-blur sm:sticky sm:inset-x-auto sm:bottom-4 sm:m-5 sm:rounded-xl">
+                  <p className="mb-2 line-clamp-1 text-xs text-on-surface-variant">
+                    {t("profile.saveTargets")}: {dirtyLabels.join("، ")}
                   </p>
                   <Button
                     type="button"
@@ -357,14 +630,14 @@ export function ProfilePageContent() {
                     ) : (
                       <Save className="h-4 w-4" />
                     )}
-                    {isUnifiedSaving ? t('profile.saving') : t('profile.save')}
+                    {isUnifiedSaving ? t("profile.saving") : t("profile.save")}
                   </Button>
                 </div>
               ) : null}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+            </CardContent>
+          </Card>
+        </div>
+      ) : null}
     </div>
   );
 }

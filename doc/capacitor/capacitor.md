@@ -299,6 +299,8 @@ Platform-specific settings live in:
 
 ## Related documentation
 
+- [static-export-policy.md](./static-export-policy.md) - complete static source-file and route allow/ignore policy
+
 - [data-layers/README.md](./data-layers/README.md) — GovaApiClient, layers, CORS, static export
 - [platform/README.md](../../platform/README.md) — short platform-layer summary
 - [Capacitor docs](https://capacitorjs.com/docs) — upstream framework reference
