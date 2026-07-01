@@ -1,7 +1,12 @@
-import { existsSync } from 'fs';
-import { execSync } from 'child_process';
-import path from 'path';
-import { PRIMARY_SQLITE_DB_PATH, PROFILE_SQLITE_DB_PATH, SQLITE_DIRECTORY } from '../src/core/database/environment';
+import { existsSync } from "fs";
+import { execSync } from "child_process";
+import path from "path";
+import {
+  PRIMARY_SQLITE_DB_PATH,
+  PRODUCT_SQLITE_DB_PATH,
+  PROFILE_SQLITE_DB_PATH,
+  SQLITE_DIRECTORY,
+} from "../src/core/database/environment";
 
 function ensureDatabase(dbPath: string, createScript: string): void {
   if (existsSync(dbPath)) {
@@ -10,12 +15,13 @@ function ensureDatabase(dbPath: string, createScript: string): void {
   }
 
   console.log(`📦 Creating ${path.basename(dbPath)}...`);
-  execSync(`npx tsx ${createScript}`, { stdio: 'inherit', cwd: process.cwd() });
+  execSync(`npx tsx ${createScript}`, { stdio: "inherit", cwd: process.cwd() });
 }
 
 if (!existsSync(SQLITE_DIRECTORY)) {
   console.log(`📁 Creating ${SQLITE_DIRECTORY}`);
 }
 
-ensureDatabase(PRIMARY_SQLITE_DB_PATH, 'scripts/create-sqlite-db.ts');
-ensureDatabase(PROFILE_SQLITE_DB_PATH, 'scripts/create-profile-sqlite-db.ts');
+ensureDatabase(PRIMARY_SQLITE_DB_PATH, "scripts/create-sqlite-db.ts");
+ensureDatabase(PROFILE_SQLITE_DB_PATH, "scripts/create-profile-sqlite-db.ts");
+ensureDatabase(PRODUCT_SQLITE_DB_PATH, "scripts/create-product-sqlite-db.ts");

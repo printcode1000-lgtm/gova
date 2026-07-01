@@ -27,4 +27,5 @@ export const GOVA_API_ROUTES = {
   dev: {
     productStyle: "/api/dev/product-style",
   },
+  products: "/api/products",
 } as const;

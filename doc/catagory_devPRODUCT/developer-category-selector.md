@@ -17,7 +17,7 @@ Primary implementation files:
 - `src/app/api/dev/product-style/route.ts`
 - `src/core/api/gova-api-routes.ts`
 - `src/components/product-preview/*`
-- `product/style/*.json`
+- `public/product/style/*.json`
 
 ## Access control
 
@@ -107,17 +107,17 @@ The table and its descendants use `data-voice-input="off"`. The global voice-inp
 
 ## Configurable components
 
-| Component key | Controls | Default order |
-| --- | --- | --- |
-| `images` | Visibility and maximum image count | 1 |
-| `rating` | Stars only or stars with comments | 2 |
-| `price` | Current price, before-discount price, needs-car value | 3 |
-| `order` | Cart, favorite, contact | 4 |
-| `mainData` | Name, brand, manufacturer, availability, description | 5 |
-| `specifications` | Color, dimensions, condition, size, weight, year | 6 |
-| `vehicleSpecs` | Brand, body type, fuel, transmission | 7 |
-| `propertySpecs` | Area, rooms, bathrooms, property type, address, location, finishing | 8 |
-| `pharmacySpecs` | Arabic name, English name, medicine form, concentration, active ingredient | 9 |
+| Component key    | Controls                                                                   | Default order |
+| ---------------- | -------------------------------------------------------------------------- | ------------- |
+| `images`         | Visibility and maximum image count                                         | 1             |
+| `rating`         | Stars only or stars with comments                                          | 2             |
+| `price`          | Current price, before-discount price, needs-car value                      | 3             |
+| `order`          | Cart, favorite, contact                                                    | 4             |
+| `mainData`       | Name, brand, manufacturer, availability, description                       | 5             |
+| `specifications` | Color, dimensions, condition, size, weight, year                           | 6             |
+| `vehicleSpecs`   | Brand, body type, fuel, transmission                                       | 7             |
+| `propertySpecs`  | Area, rooms, bathrooms, property type, address, location, finishing        | 8             |
+| `pharmacySpecs`  | Arabic name, English name, medicine form, concentration, active ingredient | 9             |
 
 The initial UI enables the general components and disables specialized vehicle, property, and pharmacy components until explicitly enabled. Existing JSON settings override all defaults after loading.
 
@@ -125,11 +125,15 @@ Order is dynamic. The preview filters out invisible components and sorts the rem
 
 ## Per-selection persistence
 
-Configuration is stored in the repository directory:
+New configuration is stored in the public repository directory:
 
 ```text
-product/style
+public/product/style
 ```
+
+Files previously created under the legacy `product/style` directory are not
+moved or deleted automatically. The current selector reads and writes the new
+public location only.
 
 Each main/subcategory pair has a separate JSON file:
 
@@ -144,6 +148,48 @@ Examples:
 0__23.json
 20__doctor-appointment.json
 ```
+
+Because the directory is under `public`, every saved settings file can also be
+read by any application page as a static asset, for example:
+
+```text
+/product/style/1__13.json
+```
+
+Client code should use `govaApi.getPublicJson(...)` to preserve the project's
+HTTP gateway convention.
+
+## Public style index
+
+The public index is available at:
+
+```text
+/product/style/index.json
+```
+
+Its source file is `public/product/style/index.json`. It is rebuilt atomically
+after every successful settings-file save by scanning the public style
+directory. Therefore, the index reflects the files that actually exist in the
+public location and does not include legacy files left under `product/style`.
+
+Example:
+
+```json
+{
+  "generatedAt": "2026-07-01T12:00:00.000Z",
+  "files": [
+    {
+      "mainCategoryId": "1",
+      "subcategoryId": "13",
+      "file": "1__13.json",
+      "path": "/product/style/1__13.json"
+    }
+  ]
+}
+```
+
+Entries are sorted by file name. Temporary files and `index.json` itself are
+excluded.
 
 Only alphanumeric characters and hyphens are accepted in either selection ID. This prevents path traversal and keeps file names portable.
 
@@ -188,7 +234,7 @@ If no file exists, the endpoint returns `exists: false` and `settings: null`. In
 
 ### PUT
 
-`PUT /api/dev/product-style` validates the complete submitted settings object, creates `product/style` if necessary, writes formatted JSON to a temporary file, and atomically renames the temporary file to the final pair-specific path.
+`PUT /api/dev/product-style` validates the complete submitted settings object, creates `public/product/style` if necessary, writes formatted JSON to a temporary file, atomically renames the temporary file to the final pair-specific path, and then atomically rebuilds the public index.
 
 The atomic rename avoids exposing a partially written JSON file.
 
@@ -326,7 +372,7 @@ Shared presentation primitives and mode types are in `shared.tsx` and `types.ts`
 - The page does not edit `categories.json` or `subcategories.json`.
 - Product style JSON controls presentation configuration only.
 - Preview form values and selected image files are temporary.
-- Product style files are not database records.
+- Product style files are public static assets, not database records.
 - Deleting a category JSON record does not delete its product style file.
 - Renaming or changing an ID can orphan an old pair-specific style file.
 - The page is not an authorization surface for production users.
