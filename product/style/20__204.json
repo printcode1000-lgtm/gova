@@ -1,6 +1,6 @@
 {
-  "mainCategoryId": "1",
-  "subcategoryId": "1",
+  "mainCategoryId": "20",
+  "subcategoryId": "204",
   "components": {
     "images": {
       "visible": true,
@@ -37,9 +37,9 @@
     },
     "specifications": {
       "visible": true,
-      "color": true,
+      "color": false,
       "dimensions": false,
-      "condition": true,
+      "condition": false,
       "size": true,
       "weight": true,
       "year": true,
@@ -65,7 +65,7 @@
       "order": 8
     },
     "pharmacySpecs": {
-      "visible": false,
+      "visible": true,
       "nameAr": true,
       "nameEn": true,
       "form": true,

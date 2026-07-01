@@ -11,6 +11,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GOVA_API_ROUTES, govaApi } from "@/core/api";
+import {
+  PharmacySpecifications,
+  ProductActions,
+  ProductImages,
+  ProductMainData,
+  ProductPrice,
+  ProductRating,
+  ProductSpecifications,
+  PropertySpecifications,
+  VehicleSpecifications,
+  type ProductPreviewMode,
+} from "@/components/product-preview";
 
 const MEDICAL_SERVICES_CATEGORY_ID = 20;
 const DOCTOR_APPOINTMENT_VALUE = "doctor-appointment";
@@ -196,7 +208,9 @@ export function DeveloperCategorySelector() {
   const [imagesCount, setImagesCount] = React.useState("4");
   const [imagesOrder, setImagesOrder] = React.useState("1");
   const [ratingVisible, setRatingVisible] = React.useState(true);
-  const [ratingType, setRatingType] = React.useState<"stars" | "stars-comments">("stars-comments");
+  const [ratingType, setRatingType] = React.useState<
+    "stars" | "stars-comments"
+  >("stars-comments");
   const [ratingOrder, setRatingOrder] = React.useState("2");
   const [priceVisible, setPriceVisible] = React.useState(true);
   const [priceCurrent, setPriceCurrent] = React.useState(true);
@@ -227,28 +241,36 @@ export function DeveloperCategorySelector() {
   const [vehicleSpecsBrand, setVehicleSpecsBrand] = React.useState(true);
   const [vehicleSpecsBodyType, setVehicleSpecsBodyType] = React.useState(true);
   const [vehicleSpecsFuel, setVehicleSpecsFuel] = React.useState(true);
-  const [vehicleSpecsTransmission, setVehicleSpecsTransmission] = React.useState(true);
+  const [vehicleSpecsTransmission, setVehicleSpecsTransmission] =
+    React.useState(true);
   const [vehicleSpecsOrder, setVehicleSpecsOrder] = React.useState("7");
   const [propertySpecsVisible, setPropertySpecsVisible] = React.useState(false);
   const [propertySpecsArea, setPropertySpecsArea] = React.useState(true);
   const [propertySpecsRooms, setPropertySpecsRooms] = React.useState(true);
-  const [propertySpecsBathrooms, setPropertySpecsBathrooms] = React.useState(true);
+  const [propertySpecsBathrooms, setPropertySpecsBathrooms] =
+    React.useState(true);
   const [propertySpecsType, setPropertySpecsType] = React.useState(true);
   const [propertySpecsAddress, setPropertySpecsAddress] = React.useState(true);
-  const [propertySpecsLocation, setPropertySpecsLocation] = React.useState(true);
-  const [propertySpecsFinishing, setPropertySpecsFinishing] = React.useState(true);
+  const [propertySpecsLocation, setPropertySpecsLocation] =
+    React.useState(true);
+  const [propertySpecsFinishing, setPropertySpecsFinishing] =
+    React.useState(true);
   const [propertySpecsOrder, setPropertySpecsOrder] = React.useState("8");
   const [pharmacySpecsVisible, setPharmacySpecsVisible] = React.useState(false);
   const [pharmacySpecsNameAr, setPharmacySpecsNameAr] = React.useState(true);
   const [pharmacySpecsNameEn, setPharmacySpecsNameEn] = React.useState(true);
   const [pharmacySpecsForm, setPharmacySpecsForm] = React.useState(true);
-  const [pharmacySpecsConcentration, setPharmacySpecsConcentration] = React.useState(true);
-  const [pharmacySpecsActiveIngredient, setPharmacySpecsActiveIngredient] = React.useState(true);
+  const [pharmacySpecsConcentration, setPharmacySpecsConcentration] =
+    React.useState(true);
+  const [pharmacySpecsActiveIngredient, setPharmacySpecsActiveIngredient] =
+    React.useState(true);
   const [pharmacySpecsOrder, setPharmacySpecsOrder] = React.useState("9");
   const [isStyleLoaded, setIsStyleLoaded] = React.useState(false);
   const [styleStatus, setStyleStatus] = React.useState<
     "idle" | "loading" | "saving" | "saved" | "error"
   >("idle");
+  const [previewMode, setPreviewMode] =
+    React.useState<ProductPreviewMode>("view");
 
   React.useEffect(() => {
     let cancelled = false;
@@ -540,7 +562,9 @@ export function DeveloperCategorySelector() {
         setPharmacySpecsNameEn(pharmacySpecs?.nameEn ?? true);
         setPharmacySpecsForm(pharmacySpecs?.form ?? true);
         setPharmacySpecsConcentration(pharmacySpecs?.concentration ?? true);
-        setPharmacySpecsActiveIngredient(pharmacySpecs?.activeIngredient ?? true);
+        setPharmacySpecsActiveIngredient(
+          pharmacySpecs?.activeIngredient ?? true,
+        );
         setPharmacySpecsOrder(String(pharmacySpecs?.order ?? 9));
         setIsStyleLoaded(true);
         setStyleStatus(response.exists ? "saved" : "idle");
@@ -644,7 +668,204 @@ export function DeveloperCategorySelector() {
     }, 350);
 
     return () => window.clearTimeout(timeout);
-  }, [imagesCount, imagesOrder, isStyleLoaded, mainCategoryId, mainDataAvailable, mainDataBrand, mainDataDescription, mainDataManufacturer, mainDataName, mainDataOrder, mainDataVisible, orderCart, orderContact, orderFavorite, orderOrder, orderVisible, pharmacySpecsActiveIngredient, pharmacySpecsConcentration, pharmacySpecsForm, pharmacySpecsNameAr, pharmacySpecsNameEn, pharmacySpecsOrder, pharmacySpecsVisible, priceBeforeDiscount, priceCurrent, priceNeedsCar, priceOrder, priceVisible, propertySpecsAddress, propertySpecsArea, propertySpecsBathrooms, propertySpecsFinishing, propertySpecsLocation, propertySpecsOrder, propertySpecsRooms, propertySpecsType, propertySpecsVisible, ratingOrder, ratingType, ratingVisible, showImages, specsColor, specsCondition, specsDimensions, specsOrder, specsSize, specsVisible, specsWeight, specsYear, subcategoryId, vehicleSpecsBodyType, vehicleSpecsBrand, vehicleSpecsFuel, vehicleSpecsOrder, vehicleSpecsTransmission, vehicleSpecsVisible]);
+  }, [
+    imagesCount,
+    imagesOrder,
+    isStyleLoaded,
+    mainCategoryId,
+    mainDataAvailable,
+    mainDataBrand,
+    mainDataDescription,
+    mainDataManufacturer,
+    mainDataName,
+    mainDataOrder,
+    mainDataVisible,
+    orderCart,
+    orderContact,
+    orderFavorite,
+    orderOrder,
+    orderVisible,
+    pharmacySpecsActiveIngredient,
+    pharmacySpecsConcentration,
+    pharmacySpecsForm,
+    pharmacySpecsNameAr,
+    pharmacySpecsNameEn,
+    pharmacySpecsOrder,
+    pharmacySpecsVisible,
+    priceBeforeDiscount,
+    priceCurrent,
+    priceNeedsCar,
+    priceOrder,
+    priceVisible,
+    propertySpecsAddress,
+    propertySpecsArea,
+    propertySpecsBathrooms,
+    propertySpecsFinishing,
+    propertySpecsLocation,
+    propertySpecsOrder,
+    propertySpecsRooms,
+    propertySpecsType,
+    propertySpecsVisible,
+    ratingOrder,
+    ratingType,
+    ratingVisible,
+    showImages,
+    specsColor,
+    specsCondition,
+    specsDimensions,
+    specsOrder,
+    specsSize,
+    specsVisible,
+    specsWeight,
+    specsYear,
+    subcategoryId,
+    vehicleSpecsBodyType,
+    vehicleSpecsBrand,
+    vehicleSpecsFuel,
+    vehicleSpecsOrder,
+    vehicleSpecsTransmission,
+    vehicleSpecsVisible,
+  ]);
+
+  const previewComponents = [
+    {
+      key: "images",
+      visible: showImages,
+      order: Number(imagesOrder || 1),
+      content: (
+        <ProductImages
+          mode={previewMode}
+          maxImages={Number(imagesCount || 1)}
+        />
+      ),
+    },
+    {
+      key: "rating",
+      visible: ratingVisible,
+      order: Number(ratingOrder || 2),
+      content: (
+        <ProductRating
+          mode={previewMode}
+          showComments={ratingType === "stars-comments"}
+        />
+      ),
+    },
+    {
+      key: "price",
+      visible: priceVisible,
+      order: Number(priceOrder || 3),
+      content: (
+        <ProductPrice
+          mode={previewMode}
+          current={priceCurrent}
+          beforeDiscount={priceBeforeDiscount}
+          needsCar={priceNeedsCar}
+        />
+      ),
+    },
+    {
+      key: "order",
+      visible: orderVisible,
+      order: Number(orderOrder || 4),
+      content: (
+        <ProductActions
+          mode={previewMode}
+          cart={orderCart}
+          favorite={orderFavorite}
+          contact={orderContact}
+        />
+      ),
+    },
+    {
+      key: "main-data",
+      visible: mainDataVisible,
+      order: Number(mainDataOrder || 5),
+      content: (
+        <ProductMainData
+          mode={previewMode}
+          fields={{
+            name: mainDataName,
+            brand: mainDataBrand,
+            manufacturer: mainDataManufacturer,
+            available: mainDataAvailable,
+            description: mainDataDescription,
+          }}
+        />
+      ),
+    },
+    {
+      key: "specifications",
+      visible: specsVisible,
+      order: Number(specsOrder || 6),
+      content: (
+        <ProductSpecifications
+          mode={previewMode}
+          fields={{
+            color: specsColor,
+            dimensions: specsDimensions,
+            condition: specsCondition,
+            size: specsSize,
+            weight: specsWeight,
+            year: specsYear,
+          }}
+        />
+      ),
+    },
+    {
+      key: "vehicle-specifications",
+      visible: vehicleSpecsVisible,
+      order: Number(vehicleSpecsOrder || 7),
+      content: (
+        <VehicleSpecifications
+          mode={previewMode}
+          fields={{
+            brand: vehicleSpecsBrand,
+            bodyType: vehicleSpecsBodyType,
+            fuel: vehicleSpecsFuel,
+            transmission: vehicleSpecsTransmission,
+          }}
+        />
+      ),
+    },
+    {
+      key: "property-specifications",
+      visible: propertySpecsVisible,
+      order: Number(propertySpecsOrder || 8),
+      content: (
+        <PropertySpecifications
+          mode={previewMode}
+          fields={{
+            area: propertySpecsArea,
+            rooms: propertySpecsRooms,
+            bathrooms: propertySpecsBathrooms,
+            type: propertySpecsType,
+            address: propertySpecsAddress,
+            location: propertySpecsLocation,
+            finishing: propertySpecsFinishing,
+          }}
+        />
+      ),
+    },
+    {
+      key: "pharmacy-specifications",
+      visible: pharmacySpecsVisible,
+      order: Number(pharmacySpecsOrder || 9),
+      content: (
+        <PharmacySpecifications
+          mode={previewMode}
+          fields={{
+            nameAr: pharmacySpecsNameAr,
+            nameEn: pharmacySpecsNameEn,
+            form: pharmacySpecsForm,
+            concentration: pharmacySpecsConcentration,
+            activeIngredient: pharmacySpecsActiveIngredient,
+          }}
+        />
+      ),
+    },
+  ]
+    .filter((component) => component.visible)
+    .sort((left, right) => left.order - right.order);
 
   return (
     <main className="mx-auto w-full px-4 py-8 sm:px-6">
@@ -924,7 +1145,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={priceCurrent}
-                                onChange={(e) => setPriceCurrent(e.target.checked)}
+                                onChange={(e) =>
+                                  setPriceCurrent(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -934,7 +1157,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={priceBeforeDiscount}
-                                onChange={(e) => setPriceBeforeDiscount(e.target.checked)}
+                                onChange={(e) =>
+                                  setPriceBeforeDiscount(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -944,7 +1169,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={priceNeedsCar}
-                                onChange={(e) => setPriceNeedsCar(e.target.checked)}
+                                onChange={(e) =>
+                                  setPriceNeedsCar(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1007,7 +1234,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={orderFavorite}
-                                onChange={(e) => setOrderFavorite(e.target.checked)}
+                                onChange={(e) =>
+                                  setOrderFavorite(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1017,11 +1246,15 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={orderContact}
-                                onChange={(e) => setOrderContact(e.target.checked)}
+                                onChange={(e) =>
+                                  setOrderContact(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
-                              <span className="text-sm">تواصل مع مقدم الخدمة</span>
+                              <span className="text-sm">
+                                تواصل مع مقدم الخدمة
+                              </span>
                             </label>
                           </div>
                         </td>
@@ -1069,7 +1302,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={mainDataName}
-                                onChange={(e) => setMainDataName(e.target.checked)}
+                                onChange={(e) =>
+                                  setMainDataName(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1079,7 +1314,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={mainDataBrand}
-                                onChange={(e) => setMainDataBrand(e.target.checked)}
+                                onChange={(e) =>
+                                  setMainDataBrand(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1089,7 +1326,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={mainDataManufacturer}
-                                onChange={(e) => setMainDataManufacturer(e.target.checked)}
+                                onChange={(e) =>
+                                  setMainDataManufacturer(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1099,7 +1338,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={mainDataAvailable}
-                                onChange={(e) => setMainDataAvailable(e.target.checked)}
+                                onChange={(e) =>
+                                  setMainDataAvailable(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1109,7 +1350,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={mainDataDescription}
-                                onChange={(e) => setMainDataDescription(e.target.checked)}
+                                onChange={(e) =>
+                                  setMainDataDescription(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1161,7 +1404,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={specsColor}
-                                onChange={(e) => setSpecsColor(e.target.checked)}
+                                onChange={(e) =>
+                                  setSpecsColor(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1171,7 +1416,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={specsDimensions}
-                                onChange={(e) => setSpecsDimensions(e.target.checked)}
+                                onChange={(e) =>
+                                  setSpecsDimensions(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1181,7 +1428,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={specsCondition}
-                                onChange={(e) => setSpecsCondition(e.target.checked)}
+                                onChange={(e) =>
+                                  setSpecsCondition(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1201,7 +1450,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={specsWeight}
-                                onChange={(e) => setSpecsWeight(e.target.checked)}
+                                onChange={(e) =>
+                                  setSpecsWeight(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1263,7 +1514,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={vehicleSpecsBrand}
-                                onChange={(e) => setVehicleSpecsBrand(e.target.checked)}
+                                onChange={(e) =>
+                                  setVehicleSpecsBrand(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1273,7 +1526,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={vehicleSpecsBodyType}
-                                onChange={(e) => setVehicleSpecsBodyType(e.target.checked)}
+                                onChange={(e) =>
+                                  setVehicleSpecsBodyType(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1283,7 +1538,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={vehicleSpecsFuel}
-                                onChange={(e) => setVehicleSpecsFuel(e.target.checked)}
+                                onChange={(e) =>
+                                  setVehicleSpecsFuel(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1293,7 +1550,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={vehicleSpecsTransmission}
-                                onChange={(e) => setVehicleSpecsTransmission(e.target.checked)}
+                                onChange={(e) =>
+                                  setVehicleSpecsTransmission(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1316,7 +1575,8 @@ export function DeveloperCategorySelector() {
                               }
                             }}
                             onBlur={() => {
-                              if (vehicleSpecsOrder === "") setVehicleSpecsOrder("7");
+                              if (vehicleSpecsOrder === "")
+                                setVehicleSpecsOrder("7");
                             }}
                             className="gova-control gova-field-surface w-20 border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -1345,7 +1605,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={propertySpecsArea}
-                                onChange={(e) => setPropertySpecsArea(e.target.checked)}
+                                onChange={(e) =>
+                                  setPropertySpecsArea(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1355,7 +1617,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={propertySpecsRooms}
-                                onChange={(e) => setPropertySpecsRooms(e.target.checked)}
+                                onChange={(e) =>
+                                  setPropertySpecsRooms(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1365,7 +1629,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={propertySpecsBathrooms}
-                                onChange={(e) => setPropertySpecsBathrooms(e.target.checked)}
+                                onChange={(e) =>
+                                  setPropertySpecsBathrooms(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1375,7 +1641,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={propertySpecsType}
-                                onChange={(e) => setPropertySpecsType(e.target.checked)}
+                                onChange={(e) =>
+                                  setPropertySpecsType(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1385,7 +1653,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={propertySpecsAddress}
-                                onChange={(e) => setPropertySpecsAddress(e.target.checked)}
+                                onChange={(e) =>
+                                  setPropertySpecsAddress(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1395,7 +1665,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={propertySpecsLocation}
-                                onChange={(e) => setPropertySpecsLocation(e.target.checked)}
+                                onChange={(e) =>
+                                  setPropertySpecsLocation(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1405,7 +1677,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={propertySpecsFinishing}
-                                onChange={(e) => setPropertySpecsFinishing(e.target.checked)}
+                                onChange={(e) =>
+                                  setPropertySpecsFinishing(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1428,7 +1702,8 @@ export function DeveloperCategorySelector() {
                               }
                             }}
                             onBlur={() => {
-                              if (propertySpecsOrder === "") setPropertySpecsOrder("8");
+                              if (propertySpecsOrder === "")
+                                setPropertySpecsOrder("8");
                             }}
                             className="gova-control gova-field-surface w-20 border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -1457,7 +1732,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={pharmacySpecsNameAr}
-                                onChange={(e) => setPharmacySpecsNameAr(e.target.checked)}
+                                onChange={(e) =>
+                                  setPharmacySpecsNameAr(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1467,7 +1744,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={pharmacySpecsNameEn}
-                                onChange={(e) => setPharmacySpecsNameEn(e.target.checked)}
+                                onChange={(e) =>
+                                  setPharmacySpecsNameEn(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1477,7 +1756,9 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={pharmacySpecsForm}
-                                onChange={(e) => setPharmacySpecsForm(e.target.checked)}
+                                onChange={(e) =>
+                                  setPharmacySpecsForm(e.target.checked)
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1487,7 +1768,11 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={pharmacySpecsConcentration}
-                                onChange={(e) => setPharmacySpecsConcentration(e.target.checked)}
+                                onChange={(e) =>
+                                  setPharmacySpecsConcentration(
+                                    e.target.checked,
+                                  )
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1497,7 +1782,11 @@ export function DeveloperCategorySelector() {
                               <input
                                 type="checkbox"
                                 checked={pharmacySpecsActiveIngredient}
-                                onChange={(e) => setPharmacySpecsActiveIngredient(e.target.checked)}
+                                onChange={(e) =>
+                                  setPharmacySpecsActiveIngredient(
+                                    e.target.checked,
+                                  )
+                                }
                                 disabled={!isStyleLoaded}
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
@@ -1520,7 +1809,8 @@ export function DeveloperCategorySelector() {
                               }
                             }}
                             onBlur={() => {
-                              if (pharmacySpecsOrder === "") setPharmacySpecsOrder("9");
+                              if (pharmacySpecsOrder === "")
+                                setPharmacySpecsOrder("9");
                             }}
                             className="gova-control gova-field-surface w-20 border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                           />
@@ -1528,6 +1818,47 @@ export function DeveloperCategorySelector() {
                       </tr>
                     </tbody>
                   </table>
+                </div>
+                <div className="border-t p-4 sm:p-6">
+                  <div className="grid grid-cols-3 gap-2">
+                    {(
+                      [
+                        ["view", "عرض"],
+                        ["edit", "تعديل"],
+                        ["new", "جديد"],
+                      ] as const
+                    ).map(([mode, label]) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        onClick={() => setPreviewMode(mode)}
+                        className={`rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors ${
+                          previewMode === mode
+                            ? "border-primary bg-primary text-on-primary"
+                            : "bg-background hover:bg-muted"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div
+                    key={`${mainCategoryId}-${subcategoryId}-${previewMode}`}
+                    className="mt-5 space-y-4 rounded-2xl bg-muted/20 p-3 sm:p-5"
+                  >
+                    {previewComponents.length > 0 ? (
+                      previewComponents.map((component) => (
+                        <React.Fragment key={component.key}>
+                          {component.content}
+                        </React.Fragment>
+                      ))
+                    ) : (
+                      <p className="py-8 text-center text-sm text-muted-foreground">
+                        لا توجد مكونات مفعّلة للعرض.
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             ) : null}

@@ -1,10 +1,10 @@
 {
-  "mainCategoryId": "1",
+  "mainCategoryId": "7",
   "subcategoryId": "1",
   "components": {
     "images": {
       "visible": true,
-      "count": 1,
+      "count": 4,
       "order": 1
     },
     "rating": {
@@ -38,7 +38,7 @@
     "specifications": {
       "visible": true,
       "color": true,
-      "dimensions": false,
+      "dimensions": true,
       "condition": true,
       "size": true,
       "weight": true,
@@ -46,7 +46,7 @@
       "order": 6
     },
     "vehicleSpecs": {
-      "visible": false,
+      "visible": true,
       "brand": true,
       "bodyType": true,
       "fuel": true,
