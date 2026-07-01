@@ -1,0 +1,18 @@
+{
+  "mainCategoryId": "1",
+  "subcategoryId": "2",
+  "components": {
+    "images": {
+      "visible": true,
+      "count": 4,
+      "search": "",
+      "order": 1
+    },
+    "rating": {
+      "visible": true,
+      "type": "stars-comments",
+      "search": "قيمة النجوم",
+      "order": 2
+    }
+  }
+}

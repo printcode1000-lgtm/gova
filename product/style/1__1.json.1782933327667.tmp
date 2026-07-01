@@ -1,0 +1,26 @@
+{
+  "mainCategoryId": "1",
+  "subcategoryId": "1",
+  "components": {
+    "images": {
+      "visible": false,
+      "count": 2,
+      "search": "",
+      "order": 4
+    },
+    "rating": {
+      "visible": false,
+      "type": "stars-comments",
+      "search": "قيمة النجوم",
+      "order": 2
+    },
+    "price": {
+      "visible": false,
+      "current": false,
+      "beforeDiscount": false,
+      "needsCar": true,
+      "search": "قيمة السعر الحالي",
+      "order": 3
+    }
+  }
+}

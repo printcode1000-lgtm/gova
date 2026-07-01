@@ -1,0 +1,14 @@
+{
+  "mainCategoryId": "3",
+  "subcategoryId": "3",
+  "components": {
+    "images": {
+      "visible": true,
+      "count": 4
+    },
+    "rating": {
+      "visible": true,
+      "type": "stars-comments"
+    }
+  }
+}

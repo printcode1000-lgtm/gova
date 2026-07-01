@@ -2,6 +2,7 @@
 
 import { Store } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import * as React from 'react';
 
 import { govaApi } from '@/core/api';
@@ -132,9 +133,9 @@ export function CategoriesGrid() {
             const name = locale === 'ar' ? cat.name_ar : cat.name_en;
             const imgSrc = `/images/mainCategories/${cat.image}`;
             return (
-              <button
+              <Link
                 key={cat.id}
-                type="button"
+                href={`/categories/${cat.id}?collection=${cat.isCollection ? '1' : '0'}`}
                 className="flex flex-col gap-2 group transition-transform duration-200 active:scale-95"
                 aria-label={name}
               >
@@ -161,7 +162,7 @@ export function CategoriesGrid() {
                     </span>
                   </div>
                 </div>
-              </button>
+              </Link>
             );
           })
         )}

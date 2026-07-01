@@ -61,6 +61,15 @@
   animation: gova-voice-glow 1.35s ease-in-out infinite;
 }
 
+/* Disable voice button for specific inputs */
+.gova-no-voice .gova-voice-button {
+  display: none !important;
+}
+
+.gova-no-voice {
+  padding-inline-end: var(--gova-control-padding-x) !important;
+}
+
 @keyframes gova-voice-glow {
   0%,
   100% {

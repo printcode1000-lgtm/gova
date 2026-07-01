@@ -24,4 +24,7 @@ export const GOVA_API_ROUTES = {
     deleteImage: (imageKey: string) =>
       `/api/storage/images/${encodeURIComponent(imageKey)}`,
   },
+  dev: {
+    productStyle: "/api/dev/product-style",
+  },
 } as const;

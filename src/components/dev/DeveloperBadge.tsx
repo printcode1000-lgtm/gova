@@ -33,6 +33,7 @@ const pages = [
   { path: '/seller', name: 'Seller' },
   { path: '/addseller', name: 'Add Seller' },
   { path: '/test1', name: 'Test1' },
+  { path: '/dev/category-selector', name: 'Category Selector' },
   { path: '/dev/monitor', name: 'Operation Monitor' },
 ];
 

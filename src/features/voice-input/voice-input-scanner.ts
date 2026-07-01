@@ -133,7 +133,13 @@ export class VoiceInputScanner {
 
   private isEligible(field: VoiceField): boolean {
     if (!field.isConnected || field.disabled || field.readOnly) return false;
-    if (field.dataset.voiceInput === 'off' || field.classList.contains('no-voice')) return false;
+    if (
+      field.dataset.voiceInput === 'off' ||
+      field.classList.contains('no-voice') ||
+      field.closest('[data-voice-input="off"]')
+    ) {
+      return false;
+    }
     if (field.autocomplete === 'one-time-code') return false;
     if (field.maxLength === 1) return false;
 

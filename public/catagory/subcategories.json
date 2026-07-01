@@ -8,7 +8,8 @@
     "icon": "fas fa-person-dress",
     "image": "Women's Clothing.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 2,
@@ -19,7 +20,8 @@
     "icon": "fas fa-person-dress",
     "image": "Hijab Fashion.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 3,
@@ -30,7 +32,8 @@
     "icon": "fas fa-user-tie",
     "image": "Men's Clothing.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 4,
@@ -41,7 +44,8 @@
     "icon": "fas fa-child-reaching",
     "image": "Children's & Newborn Clothing.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 5,
@@ -52,7 +56,8 @@
     "icon": "fas fa-shopping-bag",
     "image": "Shoes, Leather & Fabric Bags.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 6,
@@ -63,7 +68,8 @@
     "icon": "fas fa-glasses",
     "image": "Men's & Women's Accessories.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 7,
@@ -74,7 +80,8 @@
     "icon": "fas fa-running",
     "image": "Sportswear.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 8,
@@ -85,7 +92,8 @@
     "icon": "fas fa-ring",
     "image": "Formal Wear (Weddings, Parties).webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 9,
@@ -96,7 +104,8 @@
     "icon": "fas fa-bed",
     "image": "Underwear & Sleepwear.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 10,
@@ -107,7 +116,8 @@
     "icon": "fas fa-recycle",
     "image": "Good Condition Used Clothes.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 11,
@@ -118,7 +128,8 @@
     "icon": "fas fa-concierge-bell",
     "image": "Quick Dishes & Fast Meals.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 12,
@@ -129,7 +140,8 @@
     "icon": "fas fa-bread-slice",
     "image": "Bakery & Pastry.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 13,
@@ -140,7 +152,8 @@
     "icon": "fas fa-candy-cane",
     "image": "Sweets.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 14,
@@ -151,7 +164,8 @@
     "icon": "fas fa-blender",
     "image": "Drinks & Natural Juices.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 15,
@@ -162,7 +176,8 @@
     "icon": "fas fa-mug-hot",
     "image": "Cafes.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 16,
@@ -173,7 +188,8 @@
     "icon": "fas fa-utensils",
     "image": "Restaurants.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 17,
@@ -184,7 +200,8 @@
     "icon": "fas fa-egg",
     "image": "Dairy & Eggs.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 18,
@@ -195,7 +212,8 @@
     "icon": "fas fa-leaf",
     "image": "Spices & Herbs.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 19,
@@ -206,7 +224,8 @@
     "icon": "fas fa-seedling",
     "image": "Nuts, Seeds & Dried Fruits.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 20,
@@ -217,7 +236,8 @@
     "icon": "fas fa-drumstick-bite",
     "image": "Meat, Poultry & Fish.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 21,
@@ -228,7 +248,8 @@
     "icon": "fas fa-mobile-alt",
     "image": "Smartphones & Tablets.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 22,
@@ -239,7 +260,8 @@
     "icon": "fas fa-laptop",
     "image": "Laptops & Desktops.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 23,
@@ -250,7 +272,8 @@
     "icon": "fas fa-headphones-alt",
     "image": "Digital Accessories.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 24,
@@ -261,7 +284,8 @@
     "icon": "fas fa-code",
     "image": "Software & Digital Solutions.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 25,
@@ -272,7 +296,8 @@
     "icon": "fas fa-video",
     "image": "Security & Home Monitoring.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 26,
@@ -283,7 +308,8 @@
     "icon": "fas fa-wifi",
     "image": "Networking & Telecom.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 27,
@@ -294,7 +320,8 @@
     "icon": "fas fa-magic",
     "image": "Skin & Face Care.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 28,
@@ -305,7 +332,8 @@
     "icon": "fas fa-cut",
     "image": "Hair Care.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 29,
@@ -316,7 +344,8 @@
     "icon": "fas fa-paint-brush",
     "image": "Makeup & Beauty Tools.webp",
     "created_at": "2026-06-14 04:03:26",
-    "updated_at": "2026-06-14 04:03:26"
+    "updated_at": "2026-06-14 04:03:26",
+    "sub_collection": null
   },
   {
     "id": 30,
@@ -327,7 +356,8 @@
     "icon": "fas fa-spray-can",
     "image": "Perfumes, Incense & Burners.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 31,
@@ -338,7 +368,8 @@
     "icon": "fas fa-bath",
     "image": "Hygiene & Bath Supplies.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 32,
@@ -349,7 +380,8 @@
     "icon": "fas fa-bolt",
     "image": "Electric Personal Care Tools.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 33,
@@ -360,7 +392,8 @@
     "icon": "fas fa-cut",
     "image": "Personal Beauty Services.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 34,
@@ -371,7 +404,8 @@
     "icon": "fas fa-spray-can",
     "image": "Men's & Women's Perfumes.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 35,
@@ -382,7 +416,8 @@
     "icon": "fas fa-paint-brush",
     "image": "Cosmetics.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 36,
@@ -393,7 +428,8 @@
     "icon": "fas fa-car-side",
     "image": "Cars for Sale.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 37,
@@ -404,7 +440,8 @@
     "icon": "fas fa-wrench",
     "image": "Vehicle Maintenance.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 38,
@@ -415,7 +452,8 @@
     "icon": "fas fa-key",
     "image": "Vehicle Rental.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 39,
@@ -426,7 +464,8 @@
     "icon": "fas fa-motorcycle",
     "image": "Bicycle Services.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 40,
@@ -437,7 +476,8 @@
     "icon": "fas fa-cogs",
     "image": "Spare Parts, Engines & Oils.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 41,
@@ -448,7 +488,8 @@
     "icon": "fas fa-car-battery",
     "image": "Vehicle Accessories.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 42,
@@ -459,7 +500,8 @@
     "icon": "fas fa-dot-circle",
     "image": "Vehicle Tires & Wheels.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 43,
@@ -470,7 +512,8 @@
     "icon": "fas fa-couch",
     "image": "Living Room & Reception Furniture.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 44,
@@ -481,7 +524,8 @@
     "icon": "fas fa-chair",
     "image": "Office Furniture & Workspaces.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 45,
@@ -492,7 +536,8 @@
     "icon": "fas fa-utensils",
     "image": "Kitchen Supplies.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 46,
@@ -503,7 +548,8 @@
     "icon": "fas fa-chair",
     "image": "Kitchen Furniture.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 47,
@@ -514,7 +560,8 @@
     "icon": "fas fa-layer-group",
     "image": "Carpets, Curtains & Rugs.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 48,
@@ -525,7 +572,8 @@
     "icon": "fas fa-lightbulb",
     "image": "Lighting & Lamps.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 49,
@@ -536,7 +584,8 @@
     "icon": "fas fa-palette",
     "image": "Artworks & Decor.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 50,
@@ -547,7 +596,8 @@
     "icon": "fas fa-tree",
     "image": "Garden & Outdoor Decor.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 51,
@@ -558,7 +608,8 @@
     "icon": "fas fa-bed",
     "image": "Bedding, Covers & Pillows.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 52,
@@ -569,7 +620,8 @@
     "icon": "fas fa-blender",
     "image": "Home Electrical Appliances.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 53,
@@ -580,7 +632,8 @@
     "icon": "fas fa-drafting-compass",
     "image": "Interior Design & Decoration.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 54,
@@ -591,7 +644,8 @@
     "icon": "fas fa-toilet",
     "image": "Bathroom & Toilet Supplies.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 55,
@@ -602,7 +656,8 @@
     "icon": "fas fa-home",
     "image": "Apartments & Houses for Sale.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 56,
@@ -613,7 +668,8 @@
     "icon": "fas fa-house-chimney-window",
     "image": "Chalets & Villas.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 57,
@@ -624,7 +680,8 @@
     "icon": "fas fa-map-marked-alt",
     "image": "Lands & Commercial Property.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 58,
@@ -635,7 +692,8 @@
     "icon": "fas fa-building",
     "image": "Offices & Workspaces.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 59,
@@ -646,7 +704,8 @@
     "icon": "fas fa-spray-can",
     "image": "Men's & Women's Perfumes.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 60,
@@ -657,7 +716,8 @@
     "icon": "fas fa-paint-brush",
     "image": "Cosmetics.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 61,
@@ -668,7 +728,8 @@
     "icon": "fas fa-dumbbell",
     "image": "Gym.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 62,
@@ -679,7 +740,8 @@
     "icon": "fas fa-fish",
     "image": "Sports Equipment.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 63,
@@ -690,7 +752,8 @@
     "icon": "fas fa-palette",
     "image": "Drawing & Artworks.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 64,
@@ -701,7 +764,8 @@
     "icon": "fas fa-gem",
     "image": "Handmade Jewelry.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 65,
@@ -712,7 +776,8 @@
     "icon": "fas fa-cut",
     "image": "Embroidery & Sewing.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 66,
@@ -723,7 +788,8 @@
     "icon": "fas fa-burn",
     "image": "Candles & Home Fragrances.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 67,
@@ -734,7 +800,8 @@
     "icon": "fas fa-paint-roller",
     "image": "Art Tools & Supplies.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 68,
@@ -745,7 +812,8 @@
     "icon": "fas fa-tree",
     "image": "Leather & Wood Products.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 69,
@@ -756,7 +824,8 @@
     "icon": "fas fa-landmark",
     "image": "Heritage & Traditional Crafts.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 70,
@@ -767,7 +836,8 @@
     "icon": "fas fa-birthday-cake",
     "image": "Event Planning Services.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 71,
@@ -778,7 +848,8 @@
     "icon": "fas fa-gifts",
     "image": "Gifts & Flower Arrangements.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 72,
@@ -789,7 +860,8 @@
     "icon": "fas fa-video",
     "image": "Photography & Video.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 73,
@@ -800,7 +872,8 @@
     "icon": "fas fa-spray-can",
     "image": "Men's & Women's Perfumes.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 74,
@@ -811,7 +884,8 @@
     "icon": "fas fa-paint-brush",
     "image": "Cosmetics.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 75,
@@ -822,7 +896,8 @@
     "icon": "fas fa-box-open",
     "image": "Household Cleaners.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 76,
@@ -833,7 +908,8 @@
     "icon": "fas fa-pump-soap",
     "image": "Canned Food.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 77,
@@ -844,7 +920,8 @@
     "icon": "fas fa-x-ray",
     "image": "X-Ray Services.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 78,
@@ -855,7 +932,8 @@
     "icon": "fas fa-vials",
     "image": "Lab Tests & Checks.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 79,
@@ -866,7 +944,8 @@
     "icon": "fas fa-prescription-bottle-medical",
     "image": "Pharmacies.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 80,
@@ -877,7 +956,8 @@
     "icon": "fas fa-user-nurse",
     "image": "Home Nursing.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 81,
@@ -888,7 +968,8 @@
     "icon": "fas fa-hands-helping",
     "image": "Elderly & Special Needs Care.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 82,
@@ -899,7 +980,8 @@
     "icon": "fas fa-heartbeat",
     "image": "Medical Devices.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": null
   },
   {
     "id": 83,
@@ -910,7 +992,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Obstetrics and Gynaecology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 84,
@@ -921,7 +1004,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Orthopedic.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 85,
@@ -932,7 +1016,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Dental.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 86,
@@ -943,7 +1028,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Psychiatry.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 87,
@@ -954,7 +1040,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Internal Medicine.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 88,
@@ -965,7 +1052,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Chest.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 89,
@@ -976,7 +1064,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Neurology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 90,
@@ -987,7 +1076,8 @@
     "icon": "fas fa-stethoscope",
     "image": "General Surgery.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 91,
@@ -998,7 +1088,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Nutrition.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 92,
@@ -1009,7 +1100,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Pediatrics and New Born.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 93,
@@ -1020,7 +1112,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Cardiology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 94,
@@ -1031,7 +1124,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Ear Nose and Throat.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 95,
@@ -1042,7 +1136,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Vascular Surgery.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 96,
@@ -1053,7 +1148,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Physical Therapy.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 97,
@@ -1064,7 +1160,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Ophthalmology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 98,
@@ -1075,7 +1172,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Neurosurgery.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 99,
@@ -1086,7 +1184,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Gastroenterology and Hepatology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 100,
@@ -1097,7 +1196,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Plastic Surgery.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 101,
@@ -1108,7 +1208,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Rheumatology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 102,
@@ -1119,7 +1220,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Endocrinology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 103,
@@ -1130,7 +1232,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Physical Medicine and Sport Injuries.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 104,
@@ -1141,7 +1244,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Dermatology and Andrology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 105,
@@ -1152,7 +1256,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Pediatric Surgery.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 106,
@@ -1163,7 +1268,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Hematology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 107,
@@ -1174,7 +1280,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Oncosurgeon.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 108,
@@ -1185,7 +1292,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Pain Management.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 109,
@@ -1196,7 +1304,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Phoniatrics.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 110,
@@ -1207,7 +1316,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Oncology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 111,
@@ -1218,7 +1328,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Allergy and Immunology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 112,
@@ -1229,7 +1340,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Cardiothoracic Surgery.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 113,
@@ -1240,7 +1352,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Nephrology and Urology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 114,
@@ -1251,7 +1364,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Audiology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 115,
@@ -1262,7 +1376,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Family Medicine.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 116,
@@ -1273,7 +1388,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Diagnostic Radiology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 117,
@@ -1284,7 +1400,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Gastrointestinal Surgery.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 118,
@@ -1295,7 +1412,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Geriatrics.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 119,
@@ -1306,7 +1424,8 @@
     "icon": "fas fa-stethoscope",
     "image": "General Practice.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 120,
@@ -1317,7 +1436,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Interventional Radiology.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 121,
@@ -1328,7 +1448,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Bariatric Surgery.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 122,
@@ -1339,7 +1460,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Child Orthopaedics.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 123,
@@ -1350,7 +1472,8 @@
     "icon": "fas fa-stethoscope",
     "image": "IVF and Infertility.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 124,
@@ -1361,7 +1484,8 @@
     "icon": "fas fa-stethoscope",
     "image": "Genetics.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": 0
   },
   {
     "id": 125,
@@ -1372,7 +1496,8 @@
     "icon": "fas fa-chalkboard-teacher",
     "image": "Platforms.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": ""
   },
   {
     "id": 126,
@@ -1383,7 +1508,8 @@
     "icon": "fas fa-book-open",
     "image": "Books, Magazines & Media.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": ""
   },
   {
     "id": 127,
@@ -1394,7 +1520,8 @@
     "icon": "fas fa-drafting-compass",
     "image": "Printing Presses.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": ""
   },
   {
     "id": 128,
@@ -1405,7 +1532,8 @@
     "icon": "fas fa-school",
     "image": "Educational Centers.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": ""
   },
   {
     "id": 129,
@@ -1416,7 +1544,8 @@
     "icon": "fas fa-dog",
     "image": "Buying & Selling Pets.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": ""
   },
   {
     "id": 130,
@@ -1427,7 +1556,8 @@
     "icon": "fas fa-bone",
     "image": "Pet Food & Supplies.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": ""
   },
   {
     "id": 131,
@@ -1438,6 +1568,7 @@
     "icon": "fas fa-hand-holding-heart",
     "image": "Animal Care & Training.webp",
     "created_at": "2026-06-14 04:03:27",
-    "updated_at": "2026-06-14 04:03:27"
+    "updated_at": "2026-06-14 04:03:27",
+    "sub_collection": ""
   }
 ]

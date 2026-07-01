@@ -1,0 +1,44 @@
+{
+  "mainCategoryId": "1",
+  "subcategoryId": "3",
+  "components": {
+    "images": {
+      "visible": true,
+      "count": 4,
+      "search": "",
+      "order": 1
+    },
+    "rating": {
+      "visible": true,
+      "type": "stars-comments",
+      "search": "قيمة النجوم",
+      "order": 2
+    },
+    "price": {
+      "visible": true,
+      "current": true,
+      "beforeDiscount": true,
+      "needsCar": true,
+      "search": "قيمة السعر الحالي",
+      "order": 3
+    },
+    "order": {
+      "visible": true,
+      "cart": true,
+      "favorite": true,
+      "contact": true,
+      "search": "",
+      "order": 4
+    },
+    "mainData": {
+      "visible": true,
+      "name": true,
+      "brand": true,
+      "manufacturer": true,
+      "available": true,
+      "description": true,
+      "search": "الاسم، العلامة التجارية، الشركة المصنعة، وصف",
+      "order": 5
+    }
+  }
+}

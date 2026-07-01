@@ -15,6 +15,10 @@ import type {
   ProfileSpecialtiesController,
 } from "./profile-save-controller";
 
+const MEDICAL_SERVICES_CATEGORY_ID = 20;
+const DOCTOR_APPOINTMENT_GROUP_ID = -1000;
+const DOCTOR_APPOINTMENT_GROUP_ORIGINAL_ID = -1000;
+
 /**
  * EXCEPTIONAL CATEGORIES:
  *
@@ -56,6 +60,8 @@ interface Subcategory {
   image: string;
   created_at: string;
   updated_at: string;
+  sub_collection: number | null;
+  isDoctorAppointmentGroup?: boolean;
 }
 
 interface DisplayCategory {
@@ -95,6 +101,10 @@ export const SpecialtiesCard = React.forwardRef<
   const [selectedCategoryForDialog, setSelectedCategoryForDialog] =
     React.useState<DisplayCategory | null>(null);
   const [subcategories, setSubcategories] = React.useState<Subcategory[]>([]);
+  const [doctorAppointmentSubcategories, setDoctorAppointmentSubcategories] =
+    React.useState<Subcategory[]>([]);
+  const [isDoctorAppointmentView, setIsDoctorAppointmentView] =
+    React.useState(false);
   const [isLoadingSubcategories, setIsLoadingSubcategories] =
     React.useState(false);
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
@@ -280,6 +290,8 @@ export const SpecialtiesCard = React.forwardRef<
 
     setSelectedCategoryForDialog(category);
     setIsDialogOpen(true);
+    setIsDoctorAppointmentView(false);
+    setDoctorAppointmentSubcategories([]);
     fetchSubcategories(category.id);
   };
 
@@ -310,6 +322,7 @@ export const SpecialtiesCard = React.forwardRef<
             image: cat.image,
             created_at: cat.created_at,
             updated_at: cat.updated_at,
+            sub_collection: null,
           }),
         );
 
@@ -320,7 +333,36 @@ export const SpecialtiesCard = React.forwardRef<
           "/catagory/subcategories.json",
         );
         const filtered = data.filter((sub) => sub.category_id === categoryId);
-        setSubcategories(filtered);
+
+        if (categoryId === MEDICAL_SERVICES_CATEGORY_ID) {
+          const appointmentItems = filtered.filter(
+            (sub) => sub.sub_collection === 0,
+          );
+          const visibleItems = filtered.filter(
+            (sub) => sub.sub_collection !== 0,
+          );
+
+          setDoctorAppointmentSubcategories(appointmentItems);
+          setSubcategories([
+            {
+              id: DOCTOR_APPOINTMENT_GROUP_ID,
+              category_id: categoryId,
+              original_id: DOCTOR_APPOINTMENT_GROUP_ORIGINAL_ID,
+              title_ar: "\u0643\u0634\u0641 \u0637\u0628\u064a",
+              title_en: "Doctor Appointment",
+              icon: "fas fa-user-md",
+              image: "doctors_appointment.webp",
+              created_at: "",
+              updated_at: "",
+              sub_collection: null,
+              isDoctorAppointmentGroup: true,
+            },
+            ...visibleItems,
+          ]);
+        } else {
+          setDoctorAppointmentSubcategories([]);
+          setSubcategories(filtered);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch subcategories:", error);
@@ -374,6 +416,10 @@ export const SpecialtiesCard = React.forwardRef<
       };
     });
   };
+
+  const visibleSubcategories = isDoctorAppointmentView
+    ? doctorAppointmentSubcategories
+    : subcategories;
 
   if (isLoading) {
     return (
@@ -474,11 +520,26 @@ export const SpecialtiesCard = React.forwardRef<
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-surface rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-outline-variant">
-              <h2 className="text-lg font-semibold text-on-surface">
-                {locale === "ar"
-                  ? selectedCategoryForDialog?.name_ar
-                  : selectedCategoryForDialog?.name_en}
-              </h2>
+              <div className="flex items-center gap-3">
+                {isDoctorAppointmentView && (
+                  <button
+                    type="button"
+                    onClick={() => setIsDoctorAppointmentView(false)}
+                    className="px-3 py-1.5 rounded-lg text-sm bg-surface-container hover:bg-surface-container-high transition-colors"
+                  >
+                    {locale === "ar" ? "\u0631\u062c\u0648\u0639" : "Back"}
+                  </button>
+                )}
+                <h2 className="text-lg font-semibold text-on-surface">
+                  {isDoctorAppointmentView
+                    ? locale === "ar"
+                      ? "\u0643\u0634\u0641 \u0637\u0628\u064a"
+                      : "Doctor Appointment"
+                    : locale === "ar"
+                      ? selectedCategoryForDialog?.name_ar
+                      : selectedCategoryForDialog?.name_en}
+                </h2>
+              </div>
               <button
                 type="button"
                 onClick={() => setIsDialogOpen(false)}
@@ -493,7 +554,7 @@ export const SpecialtiesCard = React.forwardRef<
                 <div className="flex justify-center py-8">
                   <LoadingSpinner size="lg" />
                 </div>
-              ) : subcategories.length === 0 ? (
+              ) : visibleSubcategories.length === 0 ? (
                 <p className="text-center text-on-surface-variant py-8">
                   {locale === "ar"
                     ? "لا توجد تخصصات فرعية"
@@ -501,7 +562,7 @@ export const SpecialtiesCard = React.forwardRef<
                 </p>
               ) : (
                 <div className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
-                  {subcategories.map((subcategory) => {
+                  {visibleSubcategories.map((subcategory) => {
                     const subcategoryId = subcategory.original_id.toString();
                     const subcategoryName =
                       locale === "ar"
@@ -515,13 +576,26 @@ export const SpecialtiesCard = React.forwardRef<
                       selectedSubcategories[
                         selectedCategoryForDialog?.id.toString()
                       ] || [];
-                    const isChecked =
-                      currentCategorySubs.includes(subcategoryId);
+                    const isGroup = subcategory.isDoctorAppointmentGroup;
+                    const isChecked = isGroup
+                      ? doctorAppointmentSubcategories.some((doctorSub) =>
+                          currentCategorySubs.includes(
+                            doctorSub.original_id.toString(),
+                          ),
+                        )
+                      : currentCategorySubs.includes(subcategoryId);
 
                     return (
                       <div
                         key={subcategory.id}
-                        className="relative flex flex-col gap-1 group"
+                        className={`relative flex flex-col gap-1 group ${
+                          isGroup
+                            ? "cursor-pointer transition-transform duration-200 active:scale-95"
+                            : ""
+                        }`}
+                        onClick={() => {
+                          if (isGroup) setIsDoctorAppointmentView(true);
+                        }}
                       >
                         <div className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
                           <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright group-hover:opacity-90 transition-opacity">
@@ -537,15 +611,17 @@ export const SpecialtiesCard = React.forwardRef<
                           </div>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Checkbox
-                            id={`sub-${subcategoryId}`}
-                            checked={isChecked}
-                            onCheckedChange={() =>
-                              handleSubcategoryToggle(subcategoryId)
-                            }
-                            disabled={readOnly}
-                            className="h-4 w-4"
-                          />
+                          {!isGroup && (
+                            <Checkbox
+                              id={`sub-${subcategoryId}`}
+                              checked={isChecked}
+                              onCheckedChange={() =>
+                                handleSubcategoryToggle(subcategoryId)
+                              }
+                              disabled={readOnly}
+                              className="h-4 w-4"
+                            />
+                          )}
                           <Label
                             htmlFor={`sub-${subcategoryId}`}
                             className="text-[10px] font-normal leading-3 truncate cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
