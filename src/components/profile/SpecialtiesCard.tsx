@@ -8,6 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { govaApi } from "@/core/api";
+import { profileService } from "@/features/profile/services/profile-service";
+import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
 import type {
   ProfileSectionStatus,
   ProfileSpecialtiesController,
@@ -15,13 +17,13 @@ import type {
 
 /**
  * EXCEPTIONAL CATEGORIES:
- * 
+ *
  * 1. Beauty Store (Collection Type):
  *    - This is a collection category that contains individual categories as sub-items
  *    - When selected, it shows its collection items (e.g., "May Way", "Oriflame", "Avon") as subcategories
  *    - Collection items are fetched from categories.json where collection === category_id
  *    - Images for collection items use /images/mainCategories/ path
- * 
+ *
  * 2. Delivery Services (ID: 46):
  *    - This is an exceptional category that should NOT open a subcategory dialog
  *    - When clicked, it behaves like a normal main category (toggle selection only)
@@ -66,6 +68,7 @@ interface DisplayCategory {
 }
 
 interface SpecialtiesCardProps {
+  uid: string;
   showSaveButton?: boolean;
   onStatusChange?: (status: ProfileSectionStatus) => void;
   readOnly?: boolean;
@@ -74,10 +77,12 @@ interface SpecialtiesCardProps {
 export const SpecialtiesCard = React.forwardRef<
   ProfileSpecialtiesController,
   SpecialtiesCardProps
->(function SpecialtiesCard({ onStatusChange, readOnly = false }, ref) {
+>(function SpecialtiesCard({ uid, onStatusChange, readOnly = false }, ref) {
   const { t, locale } = useTranslation();
   const [categories, setCategories] = React.useState<Category[]>([]);
-  const [displayCategories, setDisplayCategories] = React.useState<DisplayCategory[]>([]);
+  const [displayCategories, setDisplayCategories] = React.useState<
+    DisplayCategory[]
+  >([]);
   const [selectedSpecialties, setSelectedSpecialties] = React.useState<
     string[]
   >([]);
@@ -94,6 +99,36 @@ export const SpecialtiesCard = React.forwardRef<
     React.useState(false);
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
   const label = t("onboarding.storeIdentity.specialties");
+
+  const applySelection = React.useCallback(
+    (selection: ProfileSpecialtiesSelection) => {
+      setSelectedSpecialties(selection.main.map(String));
+      setSelectedSubcategories(
+        Object.fromEntries(
+          Object.entries(selection.sub).map(([key, ids]) => [
+            key,
+            ids.map(String),
+          ]),
+        ),
+      );
+      setIsDirty(false);
+    },
+    [],
+  );
+
+  React.useEffect(() => {
+    if (!uid) return;
+    let cancelled = false;
+    profileService
+      .getSpecialties(uid)
+      .then((selection) => {
+        if (!cancelled) applySelection(selection);
+      })
+      .catch((error) => console.error("Failed to load specialties:", error));
+    return () => {
+      cancelled = true;
+    };
+  }, [applySelection, uid]);
 
   React.useEffect(() => {
     const fetchCategories = async () => {
@@ -181,15 +216,23 @@ export const SpecialtiesCard = React.forwardRef<
       canSave: true,
       label,
       save: async () => true,
-      getSnapshot: () => ({ 
-        specialties: selectedSpecialties,
-        subcategories: Object.entries(selectedSubcategories).flatMap(([categoryId, subs]) => 
-          subs.map(subId => ({ categoryId, subId }))
-        )
+      getSnapshot: () => ({
+        main: selectedSpecialties.map(Number),
+        sub: Object.fromEntries(
+          Object.entries(selectedSubcategories)
+            .filter(([, ids]) => ids.length > 0)
+            .map(([categoryId, ids]) => [categoryId, ids.map(Number)]),
+        ),
       }),
-      applySaved: () => {},
+      applySaved: applySelection,
     }),
-    [isDirty, label, selectedSpecialties, selectedSubcategories],
+    [
+      applySelection,
+      isDirty,
+      label,
+      selectedSpecialties,
+      selectedSubcategories,
+    ],
   );
 
   React.useEffect(() => {
@@ -199,13 +242,14 @@ export const SpecialtiesCard = React.forwardRef<
   const handleSpecialtyToggle = (categoryId: string) => {
     setSelectedSpecialties((prev) => {
       const isAdding = !prev.includes(categoryId);
-      
+
       if (isAdding) {
         // Check if adding would exceed the limit of 3 main categories
         if (prev.length >= 3) {
-          setToastMessage(locale === "ar" 
-            ? "لا يمكن اختيار أكثر من 3 تخصصات رئيسية" 
-            : "Cannot select more than 3 main categories"
+          setToastMessage(
+            locale === "ar"
+              ? "لا يمكن اختيار أكثر من 3 تخصصات رئيسية"
+              : "Cannot select more than 3 main categories",
           );
           setTimeout(() => setToastMessage(null), 3000);
           return prev;
@@ -233,7 +277,7 @@ export const SpecialtiesCard = React.forwardRef<
       handleSpecialtyToggle(category.id.toString());
       return;
     }
-    
+
     setSelectedCategoryForDialog(category);
     setIsDialogOpen(true);
     fetchSubcategories(category.id);
@@ -243,28 +287,32 @@ export const SpecialtiesCard = React.forwardRef<
     setIsLoadingSubcategories(true);
     try {
       // Check if this is a collection category
-      const category = displayCategories.find(cat => cat.id === categoryId);
-      
+      const category = displayCategories.find((cat) => cat.id === categoryId);
+
       if (category?.isCollection) {
         // Fetch individual categories that belong to this collection
         const data = await govaApi.getPublicJson<Category[]>(
           "/catagory/categories.json",
         );
-        const collectionItems = data.filter((cat) => cat.collection === categoryId);
-        
+        const collectionItems = data.filter(
+          (cat) => cat.collection === categoryId,
+        );
+
         // Convert collection items to subcategory-like structure
-        const subcategoryLikeItems: Subcategory[] = collectionItems.map(cat => ({
-          id: cat.id,
-          category_id: categoryId,
-          original_id: cat.id,
-          title_ar: cat.title_ar,
-          title_en: cat.title_en,
-          icon: cat.icon,
-          image: cat.image,
-          created_at: cat.created_at,
-          updated_at: cat.updated_at,
-        }));
-        
+        const subcategoryLikeItems: Subcategory[] = collectionItems.map(
+          (cat) => ({
+            id: cat.id,
+            category_id: categoryId,
+            original_id: cat.id,
+            title_ar: cat.title_ar,
+            title_en: cat.title_en,
+            icon: cat.icon,
+            image: cat.image,
+            created_at: cat.created_at,
+            updated_at: cat.updated_at,
+          }),
+        );
+
         setSubcategories(subcategoryLikeItems);
       } else {
         // Fetch regular subcategories from subcategories.json
@@ -283,7 +331,7 @@ export const SpecialtiesCard = React.forwardRef<
 
   const handleSubcategoryToggle = (subcategoryId: string) => {
     if (!selectedCategoryForDialog) return;
-    
+
     const categoryId = selectedCategoryForDialog.id.toString();
     setSelectedSubcategories((prev) => {
       const currentSubs = prev[categoryId] || [];
@@ -291,16 +339,17 @@ export const SpecialtiesCard = React.forwardRef<
       const newSubs = isAdding
         ? [...currentSubs, subcategoryId]
         : currentSubs.filter((s) => s !== subcategoryId);
-      
+
       // Auto-select/deselect main category based on subcategory selection
       setSelectedSpecialties((prevMain) => {
         if (isAdding) {
           // Adding subcategory: ensure main category is selected
           // Check if this would exceed the limit of 3 main categories
           if (!prevMain.includes(categoryId) && prevMain.length >= 3) {
-            setToastMessage(locale === "ar" 
-              ? "لا يمكن اختيار أكثر من 3 تخصصات رئيسية" 
-              : "Cannot select more than 3 main categories"
+            setToastMessage(
+              locale === "ar"
+                ? "لا يمكن اختيار أكثر من 3 تخصصات رئيسية"
+                : "Cannot select more than 3 main categories",
             );
             setTimeout(() => setToastMessage(null), 3000);
             return prevMain;
@@ -317,7 +366,7 @@ export const SpecialtiesCard = React.forwardRef<
           return prevMain;
         }
       });
-      
+
       setIsDirty(true);
       return {
         ...prev,
@@ -337,81 +386,87 @@ export const SpecialtiesCard = React.forwardRef<
   return (
     <>
       <div className="space-y-4">
-      <div>
-        <h3 className="text-sm font-semibold text-on-surface mb-2">
-          {t("onboarding.storeIdentity.specialties")}
-        </h3>
-        <p className="text-xs text-on-surface-variant mb-4">
-          {t("onboarding.storeIdentity.specialtiesHint")}
-        </p>
-      </div>
+        <div>
+          <h3 className="text-sm font-semibold text-on-surface mb-2">
+            {t("onboarding.storeIdentity.specialties")}
+          </h3>
+          <p className="text-xs text-on-surface-variant mb-4">
+            {t("onboarding.storeIdentity.specialtiesHint")}
+          </p>
+        </div>
 
-      <div className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
-        {displayCategories.map((category) => {
-          const categoryId = category.id.toString();
-          const categoryName =
-            locale === "ar" ? category.name_ar : category.name_en;
-          const imgSrc = `/images/mainCategories/${category.image}`;
+        <div className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
+          {displayCategories.map((category) => {
+            const categoryId = category.id.toString();
+            const categoryName =
+              locale === "ar" ? category.name_ar : category.name_en;
+            const imgSrc = `/images/mainCategories/${category.image}`;
 
-          return (
-            <div
-              key={category.id}
-              className="relative flex flex-col gap-1 group transition-transform duration-200 active:scale-95 cursor-pointer"
-              onClick={() => handleCategoryClick(category)}
-            >
-              <div className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
-                <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright group-hover:opacity-90 transition-opacity">
-                  <Image
-                    src={imgSrc}
-                    alt={categoryName}
-                    fill
-                    className="object-cover"
-                  />
-                  {selectedSpecialties.includes(categoryId) && (
-                    <div className="absolute inset-0 bg-primary/20" />
-                  )}
+            return (
+              <div
+                key={category.id}
+                className="relative flex flex-col gap-1 group transition-transform duration-200 active:scale-95 cursor-pointer"
+                onClick={() => handleCategoryClick(category)}
+              >
+                <div className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
+                  <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright group-hover:opacity-90 transition-opacity">
+                    <Image
+                      src={imgSrc}
+                      alt={categoryName}
+                      fill
+                      className="object-cover"
+                    />
+                    {selectedSpecialties.includes(categoryId) && (
+                      <div className="absolute inset-0 bg-primary/20" />
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSpecialtyToggle(categoryId);
+                    }}
+                  >
+                    <Checkbox
+                      id={categoryId}
+                      checked={selectedSpecialties.includes(categoryId)}
+                      onCheckedChange={() => handleSpecialtyToggle(categoryId)}
+                      disabled={readOnly}
+                      className="h-4 w-4"
+                    />
+                  </div>
+                  <Label
+                    htmlFor={categoryId}
+                    className="text-[10px] font-normal leading-3 truncate cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {categoryName}
+                  </Label>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSpecialtyToggle(categoryId);
-                  }}
-                >
-                  <Checkbox
-                    id={categoryId}
-                    checked={selectedSpecialties.includes(categoryId)}
-                    onCheckedChange={() => handleSpecialtyToggle(categoryId)}
-                    disabled={readOnly}
-                    className="h-4 w-4"
-                  />
-                </div>
-                <Label
-                  htmlFor={categoryId}
-                  className="text-[10px] font-normal leading-3 truncate cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {categoryName}
-                </Label>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {(selectedSpecialties.length > 0 || Object.values(selectedSubcategories).some(arr => arr.length > 0)) && (
-        <p className="text-xs text-muted-foreground">
-          {t("profile.selected")}: {(() => {
-            const subObj = Object.fromEntries(
-              Object.entries(selectedSubcategories).filter(([_, subs]) => subs.length > 0)
             );
-            const subStr = Object.entries(subObj)
-              .map(([catId, subs]) => `${catId}: [${subs.join(", ")}]`)
-              .join(", ");
-            return `{main: [${selectedSpecialties.join(", ")}], sub: {${subStr}}}`;
-          })()}
-        </p>
-      )}
+          })}
+        </div>
+
+        {(selectedSpecialties.length > 0 ||
+          Object.values(selectedSubcategories).some(
+            (arr) => arr.length > 0,
+          )) && (
+          <p className="text-xs text-muted-foreground">
+            {t("profile.selected")}:{" "}
+            {(() => {
+              const subObj = Object.fromEntries(
+                Object.entries(selectedSubcategories).filter(
+                  ([_, subs]) => subs.length > 0,
+                ),
+              );
+              const subStr = Object.entries(subObj)
+                .map(([catId, subs]) => `${catId}: [${subs.join(", ")}]`)
+                .join(", ");
+              return `{main: [${selectedSpecialties.join(", ")}], sub: {${subStr}}}`;
+            })()}
+          </p>
+        )}
       </div>
 
       {/* Subcategories Dialog */}
@@ -440,7 +495,9 @@ export const SpecialtiesCard = React.forwardRef<
                 </div>
               ) : subcategories.length === 0 ? (
                 <p className="text-center text-on-surface-variant py-8">
-                  {locale === "ar" ? "لا توجد تخصصات فرعية" : "No subcategories"}
+                  {locale === "ar"
+                    ? "لا توجد تخصصات فرعية"
+                    : "No subcategories"}
                 </p>
               ) : (
                 <div className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
@@ -454,8 +511,12 @@ export const SpecialtiesCard = React.forwardRef<
                     const imgSrc = selectedCategoryForDialog?.isCollection
                       ? `/images/mainCategories/${subcategory.image}`
                       : `/images/subCategories/${subcategory.image}`;
-                    const currentCategorySubs = selectedSubcategories[selectedCategoryForDialog?.id.toString()] || [];
-                    const isChecked = currentCategorySubs.includes(subcategoryId);
+                    const currentCategorySubs =
+                      selectedSubcategories[
+                        selectedCategoryForDialog?.id.toString()
+                      ] || [];
+                    const isChecked =
+                      currentCategorySubs.includes(subcategoryId);
 
                     return (
                       <div
@@ -500,7 +561,9 @@ export const SpecialtiesCard = React.forwardRef<
             </div>
             <div className="p-4 border-t border-outline-variant flex justify-between items-center">
               <p className="text-sm text-on-surface-variant">
-                {selectedCategoryForDialog && selectedSubcategories[selectedCategoryForDialog.id.toString()]?.length > 0
+                {selectedCategoryForDialog &&
+                selectedSubcategories[selectedCategoryForDialog.id.toString()]
+                  ?.length > 0
                   ? `${t("profile.selected")}: [${selectedSubcategories[selectedCategoryForDialog.id.toString()].join(", ")}]`
                   : ""}
               </p>

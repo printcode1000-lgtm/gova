@@ -238,11 +238,13 @@ export function ProfilePageContent() {
     const registrationController = registrationRef.current;
     const contactsController = contactsRef.current;
     const storeController = storeRef.current;
+    const specialtiesController = specialtiesRef.current;
     if (
       !session?.uid ||
       !registrationController ||
       !contactsController ||
-      !storeController
+      !storeController ||
+      !specialtiesController
     ) {
       return;
     }
@@ -259,6 +261,7 @@ export function ProfilePageContent() {
       contactsController.getSnapshot(),
     );
     const storeDetails = storeController.getSnapshot();
+    const specialties = specialtiesController.getSnapshot();
 
     try {
       setIsUnifiedSaving(true);
@@ -268,6 +271,7 @@ export function ProfilePageContent() {
         registration,
         contacts,
         storeDetails,
+        specialties,
       });
 
       if (changedSections.includes("registration")) {
@@ -281,6 +285,9 @@ export function ProfilePageContent() {
       }
       if (changedSections.includes("store")) {
         storeController.applySaved(saved.storeDetails);
+      }
+      if (changedSections.includes("specialties")) {
+        specialtiesController.applySaved(saved.specialties);
       }
     } catch (error) {
       const message = (error as Error).message;
@@ -527,6 +534,7 @@ export function ProfilePageContent() {
                     className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
                   >
                     <SpecialtiesCard
+                      uid={session?.uid ?? ""}
                       ref={specialtiesRef}
                       showSaveButton={false}
                       onStatusChange={handleSpecialtiesStatus}

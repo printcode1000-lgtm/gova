@@ -1,7 +1,8 @@
-import type { UserProfile } from '@/features/auth/entities/profile.entity';
-import type { ProfileRegistrationSnapshot } from '@/features/profile/entities/profile-editor.entity';
-import type { ProfileContactsData } from '@/features/profile/entities/profile-contacts.entity';
-import type { StoreDetailsData } from '@/features/profile/entities/store-details.entity';
+import type { UserProfile } from "@/features/auth/entities/profile.entity";
+import type { ProfileRegistrationSnapshot } from "@/features/profile/entities/profile-editor.entity";
+import type { ProfileContactsData } from "@/features/profile/entities/profile-contacts.entity";
+import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
+import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
 
 export interface ProfileSectionStatus {
   isDirty: boolean;
@@ -30,6 +31,6 @@ export interface StoreDetailsController extends ProfileSectionController {
 }
 
 export interface ProfileSpecialtiesController extends ProfileSectionController {
-  getSnapshot: () => { specialties: string[] };
-  applySaved: (specialties: { specialties: string[] }) => void;
+  getSnapshot: () => ProfileSpecialtiesSelection;
+  applySaved: (specialties: ProfileSpecialtiesSelection) => void;
 }

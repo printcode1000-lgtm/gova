@@ -1,6 +1,6 @@
-import 'server-only';
+import "server-only";
 
-import { ProfileService } from './profile-service.server';
+import { ProfileService } from "./profile-service.server";
 import {
   getProfileContactsQuery,
   upsertProfileContactsCommand,
@@ -8,11 +8,13 @@ import {
   upsertProfileImageKeysCommand,
   getStoreDetailsQuery,
   upsertStoreDetailsCommand,
-} from '../operations/instances';
+  getProfileSpecialtiesQuery,
+  upsertProfileSpecialtiesCommand,
+} from "../operations/instances";
 import {
   getUserByUidQuery,
   updateUserProfileCommand,
-} from '@/features/auth/operations/instances';
+} from "@/features/auth/operations/instances";
 
 export const profileService = new ProfileService(
   getProfileContactsQuery,
@@ -21,6 +23,8 @@ export const profileService = new ProfileService(
   upsertProfileImageKeysCommand,
   getStoreDetailsQuery,
   upsertStoreDetailsCommand,
+  getProfileSpecialtiesQuery,
+  upsertProfileSpecialtiesCommand,
   getUserByUidQuery,
   updateUserProfileCommand,
 );

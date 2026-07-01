@@ -1,21 +1,25 @@
-import { govaApi, GOVA_API_ROUTES } from '@/core/api';
+import { govaApi, GOVA_API_ROUTES } from "@/core/api";
 import type {
   ProfileContactsData,
   SaveProfileContactsInput,
-} from '../entities/profile-contacts.entity';
+} from "../entities/profile-contacts.entity";
 import type {
   SaveStoreImagesInput,
   StoreImagesData,
-} from '../entities/store-images.entity';
+} from "../entities/store-images.entity";
 import type {
   SaveStoreDetailsInput,
   StoreDetailsData,
-} from '../entities/store-details.entity';
-import type { IProfileService } from './profile-service.interface';
+} from "../entities/store-details.entity";
+import type { IProfileService } from "./profile-service.interface";
 import type {
   SaveProfileEditorInput,
   SaveProfileEditorResult,
-} from '../entities/profile-editor.entity';
+} from "../entities/profile-editor.entity";
+import type {
+  ProfileSpecialtiesSelection,
+  SaveProfileSpecialtiesInput,
+} from "../entities/profile-specialties.entity";
 
 export class ProfileApiService implements IProfileService {
   async getContacts(uid: string): Promise<ProfileContactsData> {
@@ -54,6 +58,20 @@ export class ProfileApiService implements IProfileService {
   ): Promise<StoreDetailsData> {
     return govaApi.put<StoreDetailsData>(
       GOVA_API_ROUTES.profile.storeDetails,
+      input,
+    );
+  }
+
+  async getSpecialties(uid: string): Promise<ProfileSpecialtiesSelection> {
+    const route = `${GOVA_API_ROUTES.profile.specialties}?uid=${encodeURIComponent(uid)}`;
+    return govaApi.get<ProfileSpecialtiesSelection>(route);
+  }
+
+  async saveSpecialties(
+    input: SaveProfileSpecialtiesInput,
+  ): Promise<ProfileSpecialtiesSelection> {
+    return govaApi.put<ProfileSpecialtiesSelection>(
+      GOVA_API_ROUTES.profile.specialties,
       input,
     );
   }

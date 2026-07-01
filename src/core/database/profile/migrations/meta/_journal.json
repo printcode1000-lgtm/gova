@@ -29,6 +29,13 @@
       "when": 1782777600000,
       "tag": "0003_store_details_json",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "0",
+      "when": 1782885600000,
+      "tag": "0004_profile_specialties",
+      "breakpoints": true
     }
   ]
 }

@@ -1,18 +1,26 @@
-import 'server-only';
+import "server-only";
 
-import { eq } from 'drizzle-orm';
-import { profileDbClient } from '@/core/database/profile-db-client';
-import type { IDatabaseClient } from '@/core/database/database-client.interface';
-import { userProfiles } from '@/core/database/profile/profile.schema';
-import type { ProfileContactsData } from '../entities/profile-contacts.entity';
+import { eq } from "drizzle-orm";
+import { profileDbClient } from "@/core/database/profile-db-client";
+import type { IDatabaseClient } from "@/core/database/database-client.interface";
+import { userProfiles } from "@/core/database/profile/profile.schema";
+import type { ProfileContactsData } from "../entities/profile-contacts.entity";
 import {
   EMPTY_STORE_DETAILS,
   type StoreDetailsData,
-} from '../entities/store-details.entity';
+} from "../entities/store-details.entity";
 import type {
   ProfileImageKeys,
   IProfileRepository,
-} from './profile-repository.interface';
+} from "./profile-repository.interface";
+import {
+  EMPTY_PROFILE_SPECIALTIES,
+  type ProfileSpecialtiesSelection,
+} from "../entities/profile-specialties.entity";
+import {
+  SPECIALTY_COLUMN_NAMES,
+  selectedSpecialtyColumns,
+} from "./specialty-columns.server";
 
 function parseJson<T>(value: string, fallback: T): T {
   try {
@@ -34,17 +42,17 @@ function rowToContacts(
 }
 
 function normalizeStoreDetails(value: unknown): StoreDetailsData {
-  if (!value || typeof value !== 'object') return EMPTY_STORE_DETAILS;
+  if (!value || typeof value !== "object") return EMPTY_STORE_DETAILS;
   const details = value as Partial<Record<keyof StoreDetailsData, unknown>>;
 
   return {
-    storeName: typeof details.storeName === 'string' ? details.storeName : '',
+    storeName: typeof details.storeName === "string" ? details.storeName : "",
     storeDescription:
-      typeof details.storeDescription === 'string'
+      typeof details.storeDescription === "string"
         ? details.storeDescription
-        : '',
+        : "",
     storeStory:
-      typeof details.storeStory === 'string' ? details.storeStory : '',
+      typeof details.storeStory === "string" ? details.storeStory : "",
   };
 }
 
@@ -61,7 +69,7 @@ function parseImageKeys(value: string | null | undefined): string[] {
   const parsed = parseJson<unknown>(value, []);
   if (!Array.isArray(parsed)) return [];
   return parsed.filter(
-    (item): item is string => typeof item === 'string' && item.length > 0,
+    (item): item is string => typeof item === "string" && item.length > 0,
   );
 }
 
@@ -199,6 +207,55 @@ export class ProfileRepository implements IProfileRepository {
       .update(userProfiles)
       .set(payload)
       .where(eq(userProfiles.uid, uid));
+  }
+
+  async getSpecialties(
+    uid: string,
+  ): Promise<ProfileSpecialtiesSelection | null> {
+    const rows = await this.database.db
+      .select({ specialtiesJson: userProfiles.specialtiesJson })
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uid))
+      .limit(1);
+    if (rows.length === 0) return null;
+    return parseJson(rows[0].specialtiesJson, EMPTY_PROFILE_SPECIALTIES);
+  }
+
+  async upsertSpecialties(
+    uid: string,
+    selection: ProfileSpecialtiesSelection,
+  ): Promise<void> {
+    const payload = { specialtiesJson: JSON.stringify(selection) };
+    const existing = await this.database.db
+      .select({ uid: userProfiles.uid })
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uid))
+      .limit(1);
+
+    if (existing.length === 0) {
+      await this.database.db.insert(userProfiles).values({ uid, ...payload });
+    } else {
+      await this.database.db
+        .update(userProfiles)
+        .set(payload)
+        .where(eq(userProfiles.uid, uid));
+    }
+
+    const enabled = selectedSpecialtyColumns(selection);
+    const values = SPECIALTY_COLUMN_NAMES.map((column) =>
+      enabled.has(column) ? 1 : 0,
+    );
+    const quotedColumns = SPECIALTY_COLUMN_NAMES.map(
+      (column) => `\`${column}\``,
+    ).join(", ");
+    const placeholders = SPECIALTY_COLUMN_NAMES.map(() => "?").join(", ");
+    const updates = SPECIALTY_COLUMN_NAMES.map(
+      (column) => `\`${column}\` = excluded.\`${column}\``,
+    ).join(", ");
+    await this.database.execute(
+      `INSERT INTO user_specialties (uid, ${quotedColumns}) VALUES (?, ${placeholders}) ON CONFLICT(uid) DO UPDATE SET ${updates}`,
+      [uid, ...values],
+    );
   }
 }
 

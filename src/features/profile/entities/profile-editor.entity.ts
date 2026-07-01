@@ -1,8 +1,13 @@
-import type { UserProfile } from '@/features/auth/entities/profile.entity';
-import type { ProfileContactsData } from './profile-contacts.entity';
-import type { StoreDetailsData } from './store-details.entity';
+import type { UserProfile } from "@/features/auth/entities/profile.entity";
+import type { ProfileContactsData } from "./profile-contacts.entity";
+import type { StoreDetailsData } from "./store-details.entity";
+import type { ProfileSpecialtiesSelection } from "./profile-specialties.entity";
 
-export type ProfileEditorSection = 'registration' | 'specialties' | 'contact' | 'store';
+export type ProfileEditorSection =
+  | "registration"
+  | "specialties"
+  | "contact"
+  | "store";
 
 export interface ProfileRegistrationSnapshot {
   phone: string;
@@ -19,10 +24,12 @@ export interface SaveProfileEditorInput {
   registration: ProfileRegistrationSnapshot;
   contacts: ProfileContactsData;
   storeDetails: StoreDetailsData;
+  specialties: ProfileSpecialtiesSelection;
 }
 
 export interface SaveProfileEditorResult {
   registration: UserProfile;
   contacts: ProfileContactsData;
   storeDetails: StoreDetailsData;
+  specialties: ProfileSpecialtiesSelection;
 }
