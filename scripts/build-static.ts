@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { withoutVsCodeDebuggerEnv } from './child-process-env';
 
 const rootDir = process.cwd();
 const tempBuildDir = path.join(rootDir, '.tmp-static-build');
@@ -22,6 +23,7 @@ const STATIC_PUBLIC_ALLOW_FILES = [
   'gova-theme-init.js',
   'logo.png',
   'catagory/categories.json',
+  'catagory/subcategories.json',
 ] as const;
 
 const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
@@ -46,7 +48,6 @@ const STATIC_PUBLIC_IGNORE_FILES = [
   'catagory/setting.json',
   'catagory/sqlite_sequence.json',
   'catagory/strengths.json',
-  'catagory/subcategories.json',
 ] as const;
 
 const STATIC_PUBLIC_IGNORE_DIRECTORIES = [
@@ -134,7 +135,7 @@ function prepareStaticPublicDir(): void {
 }
 
 function prepareTempBuildDir(): void {
-  rmSync(tempBuildDir, { recursive: true, force: true });
+  rmSync(tempBuildDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
   rmSync(rootOutDir, { recursive: true, force: true });
 
   copyIfExists(path.join(rootDir, 'src'), tempSrcDir);
@@ -257,8 +258,9 @@ function writeLocalWebManifest(): void {
 }
 
 try {
-  execSync(appInitCommand, { stdio: 'inherit', cwd: rootDir });
-  execSync(architectureCheckCommand, { stdio: 'inherit', cwd: rootDir });
+  const childEnv = withoutVsCodeDebuggerEnv(process.env);
+  execSync(appInitCommand, { stdio: 'inherit', cwd: rootDir, env: childEnv });
+  execSync(architectureCheckCommand, { stdio: 'inherit', cwd: rootDir, env: childEnv });
 
   prepareTempBuildDir();
 
@@ -266,7 +268,7 @@ try {
     stdio: 'inherit',
     cwd: tempBuildDir,
     env: {
-      ...process.env,
+      ...childEnv,
       GOVA_MODE: 'static',
     },
   });
@@ -275,5 +277,5 @@ try {
   createStaticRscPageAliases();
   writeLocalWebManifest();
 } finally {
-  rmSync(tempBuildDir, { recursive: true, force: true });
+  rmSync(tempBuildDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTranslation } from '@/lib/i18n';
 import { runInitialization } from '@/lib/initialization/initialization';
@@ -40,7 +40,7 @@ export default function SplashInitializer() {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
   const [details, setDetails] = useState<string[]>([]);
-  const isCompleteRef = useRef(false);
+  const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
     const initialize = async () => {
@@ -63,7 +63,7 @@ export default function SplashInitializer() {
 
         if (otaEnabled) await otaUpdateService.confirmRunningBundle();
 
-        isCompleteRef.current = true;
+        setIsComplete(true);
       } catch (error) {
         console.error('Initialization failed:', error);
       }
@@ -73,13 +73,13 @@ export default function SplashInitializer() {
   }, [t]);
 
   useEffect(() => {
-    if (isCompleteRef.current && progress === 100) {
+    if (isComplete && progress === 100) {
       const isNavEnabled = localStorage.getItem(SPLASH_NAV_TOGGLE_KEY) !== 'false';
       if (isNavEnabled) {
         router.replace('/home');
       }
     }
-  }, [progress, router]);
+  }, [isComplete, progress, router]);
 
   return <ProgressIndicator progress={progress} status={status} details={details} />;
 }

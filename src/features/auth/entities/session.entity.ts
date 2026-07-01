@@ -1,14 +1,21 @@
+import {
+  EMPTY_PROFILE_SPECIALTIES,
+  type ProfileSpecialtiesSelection,
+} from '@/features/profile/entities/profile-specialties.entity';
+
 /** Logged-in user session — persisted in GovaDB (auth store, key: current). */
 export interface UserSession {
   uid: string;
   phone: string;
   email?: string;
+  specialties: ProfileSpecialtiesSelection;
 }
 
 export interface SaveSessionInput {
   uid: string;
   phone: string;
   email?: string;
+  specialties?: ProfileSpecialtiesSelection;
 }
 
 /** `null` = not logged in (guest browsing may still use guestSessions store). */
@@ -27,9 +34,19 @@ export function parseStoredSession(raw: unknown): UserSession | null {
 
   const phone = typeof record.phone === 'string' ? record.phone : '';
   const email =
-    typeof record.email === 'string' && record.email.trim() ? record.email.trim() : undefined;
+    typeof record.email === 'string' && record.email.trim()
+      ? record.email.trim()
+      : undefined;
 
-  return email ? { uid, phone, email } : { uid, phone };
+  const rawSpecialties = record.specialties;
+  const specialties =
+    rawSpecialties && typeof rawSpecialties === 'object'
+      ? (rawSpecialties as ProfileSpecialtiesSelection)
+      : EMPTY_PROFILE_SPECIALTIES;
+
+  return email
+    ? { uid, phone, email, specialties }
+    : { uid, phone, specialties };
 }
 
 export function formatSessionPhone(phone: string): string {

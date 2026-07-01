@@ -5,7 +5,10 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from '@/lib/i18n';
-import { createRegistrationSchema, type RegistrationFormData } from '@/lib/validation/auth';
+import {
+  createRegistrationSchema,
+  type RegistrationFormData,
+} from '@/lib/validation/auth';
 import { useGuestSession } from '@/hooks/use-guest-session';
 import { useSession } from '@/features/auth/components/SessionProvider';
 import { authService } from '../services/auth-service';
@@ -33,7 +36,8 @@ export function useRegister() {
   });
 
   const password = useWatch({ control: form.control, name: 'password' }) ?? '';
-  const phoneVerified = useWatch({ control: form.control, name: 'phoneVerified' }) ?? false;
+  const phoneVerified =
+    useWatch({ control: form.control, name: 'phoneVerified' }) ?? false;
 
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
@@ -46,9 +50,15 @@ export function useRegister() {
         uid: loginResult.uid || uid,
         phone: data.phone,
         email: data.email?.trim() || loginResult.email || undefined,
+        specialties: loginResult.specialties,
       });
     },
-    meta: authMonitorMeta('useRegister', 'RegistrationPageContent', 'Register', 'INSERT'),
+    meta: authMonitorMeta(
+      'useRegister',
+      'RegistrationPageContent',
+      'Register',
+      'INSERT',
+    ),
 
     onSuccess: (session) => {
       endGuestSession();
@@ -59,7 +69,8 @@ export function useRegister() {
   const error = useMemo(() => {
     if (!mutation.error) return null;
     const msg = (mutation.error as Error).message;
-    if (msg === 'phoneAlreadyRegistered') return t('auth.validation.phoneAlreadyRegistered');
+    if (msg === 'phoneAlreadyRegistered')
+      return t('auth.validation.phoneAlreadyRegistered');
     return msg;
   }, [mutation.error, t]);
 

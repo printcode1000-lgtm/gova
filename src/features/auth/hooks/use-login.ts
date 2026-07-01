@@ -34,6 +34,7 @@ export function useLogin() {
         uid: result.uid,
         phone: result.phone,
         email: result.email || undefined,
+        specialties: result.specialties,
       });
     },
     meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),

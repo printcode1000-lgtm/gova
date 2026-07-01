@@ -64,6 +64,7 @@ export function useProfileRegistration() {
         uid: profile.uid,
         phone: profile.phone,
         email: profile.email ?? undefined,
+        specialties: session?.specialties,
       });
       setSession(updatedSession);
       const reset = toProfileFormData(profile);
@@ -72,7 +73,7 @@ export function useProfileRegistration() {
       setFieldErrors({});
       setPhoneVerified(true);
     },
-    [setSession],
+    [session?.specialties, setSession],
   );
 
   const saveMutation = useMutation({

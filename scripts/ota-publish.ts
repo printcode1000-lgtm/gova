@@ -3,6 +3,7 @@ import { createHash, sign } from 'node:crypto';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { CAPACITOR_API_BASE_URL } from '../platform/capacitor.defaults';
+import { withoutVsCodeDebuggerEnv } from './child-process-env';
 import {
   OTA_SCHEMA_VERSION,
   canonicalManifestPayload,
@@ -59,7 +60,9 @@ function contentTypeFor(filePath: string): string {
   const extension = path.extname(filePath).toLowerCase();
   if (extension === '.html') return 'text/html; charset=utf-8';
   if (extension === '.txt') return 'text/plain; charset=utf-8';
-  if (extension === '.json') return 'application/json; charset=utf-8';
+  // CapacitorHttp parses application/json before honoring arraybuffer, which
+  // destroys the original bytes required for OTA SHA-256 verification.
+  if (extension === '.json') return 'application/octet-stream';
   if (extension === '.js') return 'application/javascript; charset=utf-8';
   if (extension === '.css') return 'text/css; charset=utf-8';
   if (extension === '.svg') return 'image/svg+xml';
@@ -112,7 +115,7 @@ async function main(): Promise<void> {
     process.env.GOVA_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, '');
   const buildEnv: NodeJS.ProcessEnv = {
-    ...process.env,
+    ...withoutVsCodeDebuggerEnv(process.env),
     ...otaClientBuildEnv(version),
     NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
   };
@@ -128,7 +131,8 @@ async function main(): Promise<void> {
   const changedPaths = Object.entries(files)
     .filter(([filePath, file]) => {
       const previous = previousManifest?.files[filePath];
-      return !isSingleDirectoryLayout || previous?.sha256 !== file.sha256 || previous.size !== file.size;
+      const requiresBinaryTransport = path.extname(filePath).toLowerCase() === '.json';
+      return requiresBinaryTransport || !isSingleDirectoryLayout || previous?.sha256 !== file.sha256 || previous.size !== file.size;
     })
     .map(([filePath]) => filePath);
 

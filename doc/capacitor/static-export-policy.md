@@ -33,6 +33,7 @@ Filtering never deletes files from the original `src/` or `public/` directories.
 | `gova-theme-init.js` | Blocking theme initialization before React starts |
 | `logo.png` | Layout metadata and the shared `AppIcon` component |
 | `catagory/categories.json` | Category data loaded by Splash and Home |
+| `catagory/subcategories.json` | Runtime subcategory catalog and image mapping |
 
 Missing allowlisted files fail the build with `Required static asset not found`.
 
@@ -68,7 +69,6 @@ Adding a directory permits every current and future file below it. Use a directo
 | `catagory/setting.json` | SQLite export metadata |
 | `catagory/sqlite_sequence.json` | SQLite internal metadata |
 | `catagory/strengths.json` | Source export not requested by static runtime |
-| `catagory/subcategories.json` | Runtime uses bundled `src/data/subcategories.json` instead |
 
 Ignored files stay available to local tools but are not copied to static output.
 
@@ -181,6 +181,7 @@ gova-app-init.js
 gova-theme-init.js
 logo.png
 catagory/categories.json
+catagory/subcategories.json
 images/mainCategories/**
 images/subCategories/**
 ```

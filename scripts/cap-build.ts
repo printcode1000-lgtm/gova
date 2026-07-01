@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { CAPACITOR_API_BASE_URL } from '../platform/capacitor.defaults';
+import { withoutVsCodeDebuggerEnv } from './child-process-env';
 import {
   getOtaPrefix,
   loadOtaEnvironment,
@@ -118,7 +119,7 @@ async function main(): Promise<void> {
     process.env.GOVA_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, '');
   const publishEnv: NodeJS.ProcessEnv = {
-    ...process.env,
+    ...withoutVsCodeDebuggerEnv(process.env),
     GOVA_CAPACITOR_API_BASE_URL: apiBaseUrl,
   };
 
@@ -130,7 +131,7 @@ async function main(): Promise<void> {
   const localManifest = readLocalManifest();
   const version = remoteManifest.version;
   const env: NodeJS.ProcessEnv = {
-    ...process.env,
+    ...withoutVsCodeDebuggerEnv(process.env),
     ...otaClientBuildEnv(version),
     NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
   };

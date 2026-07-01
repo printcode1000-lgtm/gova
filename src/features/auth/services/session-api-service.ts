@@ -13,7 +13,10 @@ import type { ISessionService } from './session-service.interface';
 
 function toStoredSession(input: SaveSessionInput): UserSession {
   const email = input.email?.trim();
-  return email ? { uid: input.uid, phone: input.phone, email } : { uid: input.uid, phone: input.phone };
+  const specialties = input.specialties ?? { main: [], sub: {} };
+  return email
+    ? { uid: input.uid, phone: input.phone, email, specialties }
+    : { uid: input.uid, phone: input.phone, specialties };
 }
 
 /**

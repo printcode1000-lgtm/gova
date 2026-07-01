@@ -29,6 +29,7 @@ import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { profileService } from "@/features/profile/services/profile-service";
+import { sessionService } from "@/features/auth/services/session-service";
 import { mergePrimaryContacts } from "@/features/profile/utils/merge-primary-contacts";
 import type {
   ProfileContactsController,
@@ -56,7 +57,7 @@ const PROFILE_SECTIONS: ProfileEditTab[] = [
 
 export function ProfilePageContent() {
   const { t, locale } = useTranslation();
-  const { session, isLoggedIn, isLoading } = useSession();
+  const { session, isLoggedIn, isLoading, setSession } = useSession();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] =
     React.useState<ProfileEditTab>("registration");
@@ -288,6 +289,13 @@ export function ProfilePageContent() {
       }
       if (changedSections.includes("specialties")) {
         specialtiesController.applySaved(saved.specialties);
+        const updatedSession = await sessionService.saveSession({
+          uid: session.uid,
+          phone: saved.registration.phone,
+          email: saved.registration.email ?? undefined,
+          specialties: saved.specialties,
+        });
+        setSession(updatedSession);
       }
     } catch (error) {
       const message = (error as Error).message;
