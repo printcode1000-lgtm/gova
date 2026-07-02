@@ -3,6 +3,7 @@ import { execSync } from "child_process";
 import path from "path";
 import {
   PRIMARY_SQLITE_DB_PATH,
+  ADVERTISEMENTS_SQLITE_DB_PATH,
   PRODUCT_SQLITE_DB_PATH,
   PROFILE_SQLITE_DB_PATH,
   SQLITE_DIRECTORY,
@@ -25,3 +26,7 @@ if (!existsSync(SQLITE_DIRECTORY)) {
 ensureDatabase(PRIMARY_SQLITE_DB_PATH, "scripts/create-sqlite-db.ts");
 ensureDatabase(PROFILE_SQLITE_DB_PATH, "scripts/create-profile-sqlite-db.ts");
 ensureDatabase(PRODUCT_SQLITE_DB_PATH, "scripts/create-product-sqlite-db.ts");
+ensureDatabase(
+  ADVERTISEMENTS_SQLITE_DB_PATH,
+  "scripts/create-advertisements-sqlite-db.ts",
+);

@@ -1,30 +1,37 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { CategoriesGrid } from '@/components/home/CategoriesGrid';
-import { CuratedOffers } from '@/components/home/CuratedOffers';
-import { PromoBanner } from '@/components/home/PromoBanner';
-import { TrendingRibbon, type TrendingRibbonConfig } from '@/components/ui/TrendingRibbon';
-import trendingRibbonData from './home-trending-ribbon.json';
-import { FeaturedMarquee, type FeaturedMarqueeConfig } from '@/components/ui/FeaturedMarquee';
-import { HeroSlider, type HeroSliderConfig } from '@/components/ui/HeroSlider';
-import heroSliderData from './home-hero-slider.json';
-import heroMarqueeData from './home-featured-marquee.json';
+import { CategoriesGrid } from "@/components/home/CategoriesGrid";
+import { CuratedOffers } from "@/components/home/CuratedOffers";
+import { PromoBanner } from "@/components/home/PromoBanner";
+import {
+  TrendingRibbon,
+  type TrendingRibbonConfig,
+} from "@/components/ui/TrendingRibbon";
+import trendingRibbonData from "./home-trending-ribbon.json";
+import {
+  FeaturedMarquee,
+  type FeaturedMarqueeConfig,
+} from "@/components/ui/FeaturedMarquee";
+import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
+import { useHomeHeroSlider } from "@/features/advertisements/hooks/use-home-hero-slider";
+import heroMarqueeData from "./home-featured-marquee.json";
 
 export default function HomeScreen() {
+  const homeHero = useHomeHeroSlider();
   const homeHeroSliderConfig = useMemo<HeroSliderConfig>(
     () => ({
-      transition: heroSliderData.transition as HeroSliderConfig['transition'],
-      transitionDuration: heroSliderData.transitionDuration,
-      autoPlay: heroSliderData.autoPlay,
-      loop: heroSliderData.loop,
+      transition: homeHero.config.transition,
+      transitionDuration: homeHero.config.transitionDuration,
+      autoPlay: homeHero.config.autoPlay,
+      loop: homeHero.config.loop,
       onAction: (action) => {
-        console.log('Hero slider action triggered:', action);
+        console.log("Hero slider action triggered:", action);
       },
-      slides: heroSliderData.slides,
+      slides: homeHero.config.slides,
     }),
-    [],
+    [homeHero.config],
   );
 
   const homeTrendingRibbonConfig = useMemo<TrendingRibbonConfig>(
@@ -32,7 +39,7 @@ export default function HomeScreen() {
       label: trendingRibbonData.label,
       items: trendingRibbonData.items,
       onAction: (action) => {
-        console.log('Trending ribbon action triggered:', action);
+        console.log("Trending ribbon action triggered:", action);
       },
     }),
     [],
@@ -43,12 +50,11 @@ export default function HomeScreen() {
       sectionTitle: heroMarqueeData.sectionTitle,
       items: heroMarqueeData.items,
       onAction: (action) => {
-        console.log('Featured marquee action triggered:', action);
+        console.log("Featured marquee action triggered:", action);
       },
     }),
     [],
   );
-
 
   return (
     <div className="space-y-6 pb-8">
@@ -76,4 +82,3 @@ export default function HomeScreen() {
     </div>
   );
 }
-

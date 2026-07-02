@@ -8,6 +8,7 @@ import {
 } from "./ProductComponentPrimitives";
 import { ProductImageEditors } from "./ProductImageEditors";
 import { ProductImageGallery } from "./ProductImageGallery";
+import { ProductPropertySpecs } from "./ProductPropertySpecs";
 import { ProductRatingSettings } from "./ProductRatingSettings";
 import { ProductReviews } from "./ProductReviews";
 import type {
@@ -46,7 +47,6 @@ const FIELDS: Record<
     ["bathrooms", "عدد الحمامات", "number"],
     ["type", "نوع العقار", "text"],
     ["address", "العنوان", "text"],
-    ["location", "الموقع", "text"],
     ["finishing", "التشطيب", "text"],
   ],
   pharmacySpecs: [
@@ -120,7 +120,6 @@ export const PRODUCT_DEMO_FIELDS: ProductFieldValues = {
   "propertySpecs.bathrooms": "2",
   "propertySpecs.type": "شقة",
   "propertySpecs.address": "القاهرة الجديدة",
-  "propertySpecs.location": "التجمع الخامس",
   "propertySpecs.finishing": "سوبر لوكس",
   "pharmacySpecs.nameAr": "دواء تجريبي",
   "pharmacySpecs.nameEn": "Demo Medicine",
@@ -233,6 +232,17 @@ export function ProductComponentsRenderer({
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
               <ProductVehicleSpecs
+                mode={mode}
+                config={config}
+                fields={fields}
+                onChange={onFieldsChange}
+              />
+            </ProductComponentFrame>
+          );
+        if (key === "propertySpecs")
+          return (
+            <ProductComponentFrame key={key} title={TITLES[key]}>
+              <ProductPropertySpecs
                 mode={mode}
                 config={config}
                 fields={fields}

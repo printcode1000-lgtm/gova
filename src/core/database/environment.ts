@@ -30,6 +30,11 @@ export const PROFILE_SQLITE_DB_PATH = path.join(SQLITE_DIRECTORY, "profile.db");
 
 export const PRODUCT_SQLITE_DB_PATH = path.join(SQLITE_DIRECTORY, "product.db");
 
+export const ADVERTISEMENTS_SQLITE_DB_PATH = path.join(
+  SQLITE_DIRECTORY,
+  "advertisements.db",
+);
+
 export const PROFILE_SCHEMA_SYNC_REPORT_PATH = path.join(
   process.cwd(),
   "public",

@@ -702,6 +702,7 @@
     "sidebar.edit":  "تعديل",
     "sidebar.register":  "إنشاء حساب",
     "sidebar.settings":  "الإعدادات",
+    "sidebar.superAdmin":  "إدارة العرض الرئيسي",
     "splash.init.categoriesLoaded":  "تم تحميل الفئات",
     "splash.init.ready":  "التطبيق جاهز",
     "splash.init.settingsLoaded":  "تم تحميل الإعدادات",

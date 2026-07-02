@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1782980000000,
+      "tag": "0000_home_hero_slider",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1782981000000,
+      "tag": "0001_normalized_slides_history",
+      "breakpoints": true
+    }
+  ]
+}

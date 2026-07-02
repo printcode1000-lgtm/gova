@@ -99,8 +99,9 @@ export function ProfilePageContent() {
 
   const heroSliderConfig = useMemo<HeroSliderConfig>(() => {
     const slides = storeImages.coverUrls.map((url, index) => ({
-      priority: index + 1,
+      priority: (index + 1) * 100,
       image: url,
+      imageKey: storeImages.coverImageKeys[index],
       title: "",
       subtitle: "",
       duration: 4000,
@@ -114,7 +115,7 @@ export function ProfilePageContent() {
       loop: true,
       slides,
     };
-  }, [storeImages.coverUrls]);
+  }, [storeImages.coverImageKeys, storeImages.coverUrls]);
 
   const updateSectionStatus = React.useCallback(
     (section: ProfileEditTab, status: ProfileSectionStatus) => {
@@ -343,17 +344,13 @@ export function ProfilePageContent() {
     <div className="container px-3 py-4 sm:px-5 sm:py-8 lg:px-6">
       {showPreviewCard ? (
         <div className="mx-auto w-full max-w-6xl px-0 sm:px-4">
-          {heroSliderConfig.slides.length > 0 ? (
-            <div className="mb-0">
-              <HeroSlider config={heroSliderConfig} />
-            </div>
-          ) : isLoadingStoreImages ? (
+          {isLoadingStoreImages ? (
             <div className="py-8 text-center text-sm text-on-surface-variant">
               {t("profile.loading")}
             </div>
           ) : (
-            <div className="text-center text-on-surface-variant py-8">
-              {t("profile.noImages")}
+            <div className="mb-0">
+              <HeroSlider mode="view" config={heroSliderConfig} />
             </div>
           )}
           {!isLoadingStoreDetails && (

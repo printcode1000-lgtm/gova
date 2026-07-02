@@ -3,31 +3,31 @@
   "subcategoryId": "1",
   "components": {
     "images": {
-      "visible": true,
+      "visible": false,
       "count": 4,
       "order": 1
     },
     "rating": {
-      "visible": true,
+      "visible": false,
       "type": "stars-comments",
       "order": 2
     },
     "price": {
-      "visible": true,
+      "visible": false,
       "current": true,
       "beforeDiscount": true,
       "needsCar": true,
       "order": 3
     },
     "order": {
-      "visible": true,
+      "visible": false,
       "cart": true,
       "favorite": true,
       "contact": true,
       "order": 4
     },
     "mainData": {
-      "visible": true,
+      "visible": false,
       "name": true,
       "brand": true,
       "manufacturer": true,
@@ -36,7 +36,7 @@
       "order": 5
     },
     "specifications": {
-      "visible": true,
+      "visible": false,
       "color": true,
       "dimensions": true,
       "condition": true,
@@ -46,7 +46,7 @@
       "order": 6
     },
     "vehicleSpecs": {
-      "visible": true,
+      "visible": false,
       "brand": true,
       "bodyType": true,
       "fuel": true,
@@ -55,7 +55,7 @@
       "order": 7
     },
     "propertySpecs": {
-      "visible": false,
+      "visible": true,
       "area": true,
       "rooms": true,
       "bathrooms": true,

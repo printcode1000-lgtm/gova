@@ -1,6 +1,12 @@
 {
-  "generatedAt": "2026-07-02T03:29:09.362Z",
+  "generatedAt": "2026-07-02T13:11:27.830Z",
   "files": [
+    {
+      "mainCategoryId": "0",
+      "subcategoryId": "44",
+      "file": "0__44.json",
+      "path": "/product/style/0__44.json"
+    },
     {
       "mainCategoryId": "1",
       "subcategoryId": "1",

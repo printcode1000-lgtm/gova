@@ -36,15 +36,15 @@ Every config file must use this exact shape:
 
 ## Fields
 
-| Field | Purpose |
-|---|---|
-| `id` | Stable unique id for this component instance |
-| `storageProfileId` | Storage profile id: `avatar`, `cover`, `product-default`, etc. |
-| `maxItems` | Number of slots rendered by this config. Use `1` for normal one-image instances. |
-| `aspectRatio` | `square`, `landscape`, `portrait`, or `wide` |
-| `allowReplace` | Allows replacing a selected image before upload |
-| `confirmUpload` | Shows confirmation before upload |
-| `confirmRemove` | Shows confirmation before clearing/removing |
+| Field              | Purpose                                                                          |
+| ------------------ | -------------------------------------------------------------------------------- |
+| `id`               | Stable unique id for this component instance                                     |
+| `storageProfileId` | Storage profile id: `avatar`, `cover`, `product-default`, etc.                   |
+| `maxItems`         | Number of slots rendered by this config. Use `1` for normal one-image instances. |
+| `aspectRatio`      | `square`, `landscape`, `portrait`, or `wide`                                     |
+| `allowReplace`     | Allows replacing a selected image before upload                                  |
+| `confirmUpload`    | Shows confirmation before upload                                                 |
+| `confirmRemove`    | Shows confirmation before clearing/removing                                      |
 
 ## Usage
 
@@ -52,8 +52,8 @@ Every config file must use this exact shape:
 import {
   StorageImageManager,
   parseStorageImageManagerConfig,
-} from '@/features/storage/components/StorageImageManager';
-import imageConfig from './image-configs/store-logo.image.json';
+} from "@/features/storage/components/StorageImageManager";
+import imageConfig from "./image-configs/store-logo.image.json";
 
 const config = parseStorageImageManagerConfig(imageConfig);
 
@@ -103,27 +103,30 @@ For example, profile uses `useProfileStoreImages()` to save keys to `profile.db`
 
 ## Multiple images
 
-Prefer one config file per image slot when a screen needs several independent images.
+Prefer one versioned config document containing a slot array when a screen needs several independent images.
 
-Example: three cover images:
+Profile storefront images use:
 
 ```text
-store-cover-1.image.json
-store-cover-2.image.json
-store-cover-3.image.json
+src/components/profile/image-configs/storefront-images.image.json
 ```
 
-Each file can use:
+The document contains a schema version and independent slot definitions:
 
 ```json
 {
-  "id": "profile-store-cover-1",
-  "storageProfileId": "cover",
-  "maxItems": 1,
-  "aspectRatio": "landscape",
-  "allowReplace": true,
-  "confirmUpload": true,
-  "confirmRemove": true
+  "schemaVersion": 1,
+  "slots": [
+    {
+      "id": "profile-store-cover-1",
+      "storageProfileId": "cover",
+      "maxItems": 1,
+      "aspectRatio": "landscape",
+      "allowReplace": true,
+      "confirmUpload": true,
+      "confirmRemove": true
+    }
+  ]
 }
 ```
 

@@ -28,6 +28,10 @@ export const GOVA_API_ROUTES = {
     productStyle: "/api/dev/product-style",
   },
   products: "/api/products",
+  advertisements: {
+    homeHeroSlider: "/api/advertisements/home-hero-slider",
+    homeHeroSliderVersion: "/api/advertisements/home-hero-slider/version",
+  },
   productReviews: {
     root: "/api/products/reviews",
     helpful: "/api/products/reviews/helpful",

@@ -6,6 +6,7 @@ import { Image as ImageIcon, LayoutTemplate } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { useTranslation } from "@/lib/i18n";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
@@ -19,16 +20,8 @@ import type {
   StoreDetailsController,
 } from "./profile-save-controller";
 import storeLogoImageConfig from "./image-configs/store-logo.image.json";
-import storeCover1ImageConfig from "./image-configs/store-cover-1.image.json";
-import storeCover2ImageConfig from "./image-configs/store-cover-2.image.json";
-import storeCover3ImageConfig from "./image-configs/store-cover-3.image.json";
 
 const storeLogoConfig = parseStorageImageManagerConfig(storeLogoImageConfig);
-const storeCoverConfigs = [
-  parseStorageImageManagerConfig(storeCover1ImageConfig),
-  parseStorageImageManagerConfig(storeCover2ImageConfig),
-  parseStorageImageManagerConfig(storeCover3ImageConfig),
-];
 
 interface StoreIdentityCardProps {
   showSaveButton?: boolean;
@@ -59,9 +52,8 @@ export const StoreIdentityCard = React.forwardRef<
     applySaved,
     saved,
   } = useStoreDetails();
-  const [imageTab, setImageTab] = React.useState<"logo" | "cover">("logo");
+  const [imageTab, setImageTab] = React.useState<"logo" | "hero">("logo");
   const [logoImage, setLogoImage] = React.useState<StoredImage | null>(null);
-  const [coverImages, setCoverImages] = React.useState<StoredImage[]>([]);
   const label = t("onboarding.storeIdentity.title");
 
   React.useImperativeHandle(
@@ -87,15 +79,7 @@ export const StoreIdentityCard = React.forwardRef<
       storeImages.avatarUrl && storeImages.avatarImageKey
         ? { imageKey: storeImages.avatarImageKey, url: storeImages.avatarUrl }
         : null;
-    const nextCoverImages = storeImages.coverImageKeys
-      .map((imageKey, index) => {
-        const url = storeImages.coverUrls[index];
-        return imageKey && url ? { imageKey, url } : null;
-      })
-      .filter((image): image is StoredImage => Boolean(image));
-
     setLogoImage(nextLogoImage);
-    setCoverImages(nextCoverImages);
   }, [storeImages]);
 
   const handleLogoImagesChange = (images: StoredImage[]) => {
@@ -104,22 +88,32 @@ export const StoreIdentityCard = React.forwardRef<
     void saveStoreImages({ avatarImageKey: image?.imageKey ?? null });
   };
 
-  const handleCoverImagesChange = (images: StoredImage[]) => {
-    setCoverImages(images);
-    void saveStoreImages({
-      coverImageKeys: images.map((image) => image.imageKey),
-    });
-  };
+  const profileHeroConfig = React.useMemo<HeroSliderConfig>(
+    () => ({
+      transition: "SlideLeft",
+      transitionDuration: 500,
+      autoPlay: true,
+      loop: true,
+      slides: storeImages.coverUrls.map((url, index) => ({
+        priority: (index + 1) * 100,
+        image: url,
+        imageKey: storeImages.coverImageKeys[index],
+        title: "",
+        subtitle: "",
+        duration: 4000,
+        action: "",
+      })),
+    }),
+    [storeImages.coverImageKeys, storeImages.coverUrls],
+  );
 
-  const handleCoverImageChange = (index: number, images: StoredImage[]) => {
-    const image = images[0] ?? null;
-    const nextCoverImages = [...coverImages];
-    if (image) {
-      nextCoverImages[index] = image;
-    } else {
-      nextCoverImages.splice(index, 1);
-    }
-    handleCoverImagesChange(nextCoverImages.filter(Boolean));
+  const handleHeroImagesChange = (config: HeroSliderConfig) => {
+    void saveStoreImages({
+      coverImageKeys: config.slides
+        .map((slide) => slide.imageKey)
+        .filter((imageKey): imageKey is string => Boolean(imageKey))
+        .slice(0, 3),
+    });
   };
 
   if (isLoading) {
@@ -145,34 +139,30 @@ export const StoreIdentityCard = React.forwardRef<
 
       {!readOnly ? (
         <div className="space-y-4">
-          <div className="flex gap-2 border-b border-outline-variant overflow-x-auto">
+          <div className="flex gap-2 overflow-x-auto border-b border-outline-variant">
             <button
               type="button"
               onClick={() => setImageTab("logo")}
-              className={`flex items-center gap-2 px-3 sm:px-4 pb-3 transition-colors flex-shrink-0 ${
+              className={`flex flex-shrink-0 items-center gap-2 border-b-2 px-3 pb-3 text-xs font-medium transition-colors sm:text-sm ${
                 imageTab === "logo"
-                  ? "border-b-2 border-primary text-primary"
-                  : "border-b-2 border-transparent text-on-surface-variant hover:text-on-surface"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-on-surface-variant"
               }`}
             >
-              <ImageIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-xs sm:text-sm font-medium">
-                {t("onboarding.storeIdentity.storeLogo")}
-              </span>
+              <ImageIcon className="h-4 w-4" />
+              {t("onboarding.storeIdentity.storeLogo")}
             </button>
             <button
               type="button"
-              onClick={() => setImageTab("cover")}
-              className={`flex items-center gap-2 px-3 sm:px-4 pb-3 transition-colors flex-shrink-0 ${
-                imageTab === "cover"
-                  ? "border-b-2 border-primary text-primary"
-                  : "border-b-2 border-transparent text-on-surface-variant hover:text-on-surface"
+              onClick={() => setImageTab("hero")}
+              className={`flex flex-shrink-0 items-center gap-2 border-b-2 px-3 pb-3 text-xs font-medium transition-colors sm:text-sm ${
+                imageTab === "hero"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-on-surface-variant"
               }`}
             >
-              <LayoutTemplate className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-xs sm:text-sm font-medium">
-                {t("onboarding.storeIdentity.coverImage")}
-              </span>
+              <LayoutTemplate className="h-4 w-4" />
+              صور واجهة المتجر
             </button>
           </div>
 
@@ -186,22 +176,13 @@ export const StoreIdentityCard = React.forwardRef<
                 />
               </div>
             </div>
-          ) : null}
-
-          {imageTab === "cover" ? (
-            <div className="space-y-2 rounded-lg border-2 border-primary/20 bg-primary/5 p-3 sm:p-4">
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
-                {storeCoverConfigs.map((config, index) => (
-                  <StorageImageManager
-                    key={config.id}
-                    config={config}
-                    value={coverImages[index] ? [coverImages[index]] : []}
-                    onChange={(images) => handleCoverImageChange(index, images)}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : null}
+          ) : (
+            <HeroSlider
+              mode="images-edit"
+              config={profileHeroConfig}
+              onChange={handleHeroImagesChange}
+            />
+          )}
 
           {(isImagesLoading || isSavingImages) && (
             <p className="text-xs text-muted-foreground">

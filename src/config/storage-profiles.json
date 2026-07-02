@@ -18,6 +18,14 @@
       "outputFormat": "webp"
     },
     {
+      "id": "home-hero-slider",
+      "enabled": true,
+      "provider": "CloudflareR2",
+      "folder": "images/advertisements/home-hero-slider",
+      "maxImageSizeKB": 80,
+      "outputFormat": "webp"
+    },
+    {
       "id": "product-default",
       "enabled": true,
       "provider": "CloudflareR2",

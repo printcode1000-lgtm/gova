@@ -702,6 +702,7 @@
     "sidebar.edit":  "Edit",
     "sidebar.register":  "Register",
     "sidebar.settings":  "Settings",
+    "sidebar.superAdmin":  "Hero slider admin",
     "splash.init.categoriesLoaded":  "Categories loaded",
     "splash.init.ready":  "App ready",
     "splash.init.settingsLoaded":  "Settings loaded",
