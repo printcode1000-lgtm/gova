@@ -452,16 +452,22 @@ export function HeroSlider({
                         Image unavailable
                       </div>
                     )}
-                    <div className="absolute inset-0 flex flex-col justify-center px-6 text-on-primary bg-gradient-to-l from-primary via-primary/60 to-transparent">
-                      {slide.subtitle && (
-                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full w-fit mb-2 bg-black/45 text-white backdrop-blur-xs">
-                          {slide.subtitle}
-                        </span>
-                      )}
-                      <h2 className="text-2xl font-bold leading-tight">
-                        {slide.title}
-                      </h2>
-                    </div>
+                    {(slide.title || slide.subtitle) && (
+                      <div className="absolute inset-0 z-10 flex items-center px-4 sm:px-6">
+                        <div className="w-fit max-w-[88%] rounded-xl bg-gradient-to-l from-primary/90 via-primary/65 to-transparent px-4 py-4 pe-12 text-on-primary shadow-sm ltr:bg-gradient-to-r sm:max-w-[60%] sm:px-6 sm:py-5 sm:pe-16">
+                          {slide.subtitle && (
+                            <span className="mb-2 block w-fit rounded-full bg-black/45 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
+                              {slide.subtitle}
+                            </span>
+                          )}
+                          {slide.title && (
+                            <h2 className="text-2xl font-bold leading-tight drop-shadow-sm">
+                              {slide.title}
+                            </h2>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
