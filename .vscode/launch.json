@@ -48,6 +48,15 @@
       "cwd": "${workspaceFolder}"
     },
     {
+      "name": "Capacitor Build Local",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "cap:build:local"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
       "name": "Open Android",
       "request": "launch",
       "type": "node",

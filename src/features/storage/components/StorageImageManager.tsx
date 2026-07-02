@@ -70,6 +70,24 @@ const CONFIRM_UPLOAD_MESSAGE = "Upload this image and save its key?";
 const CONFIRM_REMOVE_MESSAGE = "Remove this image?";
 const CONFIRM_CLEAR_SELECTED_MESSAGE = "Clear the selected image?";
 
+function traceStorageImageManager(
+  configId: string,
+  step: string,
+  details: Record<string, unknown> = {},
+) {
+  console.info(`[StorageImageManager:${configId}] ${step}`, details);
+}
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("Unable to read image preview"));
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.readAsDataURL(file);
+  });
+}
+
 export function parseStorageImageManagerConfig(
   raw: unknown,
 ): StorageImageManagerConfig {
@@ -177,20 +195,36 @@ function StorageImageSlot({
   );
 
   React.useEffect(() => {
-    setUploadedImage(image);
-  }, [image]);
+    traceStorageImageManager(config.id, "slot-mounted", {
+      index,
+      storageProfileId: config.storageProfileId,
+      hasStoredImage: Boolean(image?.imageKey),
+    });
+    return () =>
+      traceStorageImageManager(config.id, "slot-unmounted", { index });
+  }, [config.id, config.storageProfileId, index]);
 
   React.useEffect(() => {
-    return () => {
-      if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
-    };
-  }, [selectedPreviewUrl]);
+    traceStorageImageManager(config.id, "value-synchronized", {
+      index,
+      imageKey: image?.imageKey ?? null,
+      hasUrl: Boolean(image?.url),
+    });
+    setUploadedImage(image);
+  }, [config.id, image, index]);
 
   const { uploadFile, removeImage, isUploading, error } =
     useStorageProfileUpload({
       storageProfileId: config.storageProfileId,
       value: selectedFile ? uploadedImage : image,
       onChange: (nextImage) => {
+        traceStorageImageManager(config.id, "upload-state-change", {
+          index,
+          isUploading: Boolean(nextImage?.isUploading),
+          imageKey: nextImage?.imageKey ?? null,
+          hasUrl: Boolean(nextImage?.url),
+          error: nextImage?.error ?? null,
+        });
         if (nextImage?.isUploading) return;
         if (nextImage) {
           setUploadedImage(nextImage);
@@ -208,27 +242,108 @@ function StorageImageSlot({
   const canChoose =
     !previewUrl || (config.allowReplace && !image?.imageKey && !selectedFile);
 
-  const processFile = (file: File) => {
-    if (!file.type.startsWith("image/")) return;
+  const uploadCandidate = async (file: File) => {
+    traceStorageImageManager(config.id, "upload-started", {
+      index,
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    });
+    const uploaded = await uploadFile(file);
+    if (!uploaded) {
+      traceStorageImageManager(config.id, "upload-failed", { index });
+      return false;
+    }
+    traceStorageImageManager(config.id, "upload-completed", { index });
+    setSelectedFile(null);
+    setSelectedPreviewUrl(null);
+    return true;
+  };
+
+  const processFile = async (file: File) => {
+    traceStorageImageManager(config.id, "file-received", {
+      index,
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      lastModified: file.lastModified,
+    });
+    if (!file.type.startsWith("image/")) {
+      const invalidTypeError = new Error(
+        `Unsupported selected file type: ${file.type || "unknown"}`,
+      );
+      console.error(
+        `[StorageImageManager:${config.id}] file-rejected`,
+        invalidTypeError,
+      );
+      setSourceError(invalidTypeError.message);
+      return;
+    }
     setSourceError(null);
-    if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
     setSelectedFile(file);
-    setSelectedPreviewUrl(URL.createObjectURL(file));
+    try {
+      traceStorageImageManager(config.id, "preview-read-started", { index });
+      const preview = await fileToDataUrl(file);
+      setSelectedPreviewUrl(preview);
+      traceStorageImageManager(config.id, "preview-ready", {
+        index,
+        previewScheme: "data:",
+        previewLength: preview.length,
+      });
+    } catch (previewError) {
+      console.error(
+        `[StorageImageManager:${config.id}] preview-failed`,
+        previewError,
+      );
+      setSourceError(
+        previewError instanceof Error
+          ? previewError.message
+          : "Unable to preview selected image",
+      );
+      setSelectedFile(null);
+      return;
+    }
+
+    const confirmed =
+      !config.confirmUpload || window.confirm(CONFIRM_UPLOAD_MESSAGE);
+    traceStorageImageManager(config.id, "automatic-upload-confirmation", {
+      index,
+      confirmed,
+    });
+    if (confirmed) await uploadCandidate(file);
   };
 
   const chooseFromDevice = async () => {
-    if (busy || !canChoose) return;
+    traceStorageImageManager(config.id, "device-source-requested", {
+      index,
+      busy,
+      canChoose,
+      native: canUseNativeImageSource(),
+    });
+    if (busy || !canChoose) {
+      traceStorageImageManager(config.id, "device-source-blocked", {
+        index,
+        busy,
+        canChoose,
+      });
+      return;
+    }
     setSourceError(null);
 
     if (!canUseNativeImageSource()) {
       inputRef.current?.click();
+      traceStorageImageManager(config.id, "web-file-picker-opened", { index });
       return;
     }
 
     setIsChoosingSource(true);
     try {
       const file = await chooseSingleImage();
-      if (file) processFile(file);
+      traceStorageImageManager(config.id, "native-file-picker-returned", {
+        index,
+        selected: Boolean(file),
+      });
+      if (file) await processFile(file);
     } catch (sourceSelectionError) {
       console.error(
         "[StorageImageManager] Unable to choose an image.",
@@ -241,18 +356,38 @@ function StorageImageSlot({
   };
 
   const captureFromCamera = async () => {
-    if (busy || !canChoose) return;
+    traceStorageImageManager(config.id, "camera-source-requested", {
+      index,
+      busy,
+      canChoose,
+      native: canUseNativeImageSource(),
+    });
+    if (busy || !canChoose) {
+      traceStorageImageManager(config.id, "camera-source-blocked", {
+        index,
+        busy,
+        canChoose,
+      });
+      return;
+    }
     setSourceError(null);
 
     if (!canUseNativeImageSource()) {
       cameraInputRef.current?.click();
+      traceStorageImageManager(config.id, "web-camera-picker-opened", {
+        index,
+      });
       return;
     }
 
     setIsChoosingSource(true);
     try {
       const file = await captureSingleImage();
-      if (file) processFile(file);
+      traceStorageImageManager(config.id, "native-camera-returned", {
+        index,
+        selected: Boolean(file),
+      });
+      if (file) await processFile(file);
     } catch (cameraError) {
       console.error(
         "[StorageImageManager] Unable to capture an image.",
@@ -268,14 +403,13 @@ function StorageImageSlot({
     event.preventDefault();
     event.stopPropagation();
     if (!selectedFile) return;
-    if (config.confirmUpload && !window.confirm(CONFIRM_UPLOAD_MESSAGE)) return;
-
-    void uploadFile(selectedFile).then((uploaded) => {
-      if (!uploaded) return;
-      if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
-      setSelectedFile(null);
-      setSelectedPreviewUrl(null);
+    const confirmed =
+      !config.confirmUpload || window.confirm(CONFIRM_UPLOAD_MESSAGE);
+    traceStorageImageManager(config.id, "manual-upload-confirmation", {
+      index,
+      confirmed,
     });
+    if (confirmed) void uploadCandidate(selectedFile);
   };
 
   const removeCurrent = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -288,13 +422,18 @@ function StorageImageSlot({
         !window.confirm(CONFIRM_CLEAR_SELECTED_MESSAGE)
       )
         return;
-      if (selectedPreviewUrl) URL.revokeObjectURL(selectedPreviewUrl);
+      traceStorageImageManager(config.id, "selected-file-cleared", { index });
       setSelectedFile(null);
       setSelectedPreviewUrl(null);
       return;
     }
 
     if (config.confirmRemove && !window.confirm(CONFIRM_REMOVE_MESSAGE)) return;
+    traceStorageImageManager(config.id, "stored-image-removal-confirmed", {
+      index,
+      imageKey: image?.imageKey ?? null,
+      deleteFromStorage: config.deleteFromStorageOnRemove !== false,
+    });
     if (config.deleteFromStorageOnRemove === false) {
       onRemoved(index);
       return;
@@ -315,7 +454,7 @@ function StorageImageSlot({
         event.preventDefault();
         setIsDragging(false);
         const file = event.dataTransfer.files[0];
-        if (file && canChoose) processFile(file);
+        if (file && canChoose) void processFile(file);
       }}
       onDragOver={(event) => {
         event.preventDefault();
@@ -329,6 +468,24 @@ function StorageImageSlot({
             src={previewUrl}
             alt=""
             className="absolute inset-0 h-full w-full rounded-lg object-cover"
+            onLoad={() =>
+              traceStorageImageManager(config.id, "preview-rendered", {
+                index,
+                source: selectedPreviewUrl ? "selected-file" : "stored-image",
+              })
+            }
+            onError={() => {
+              const previewError = new Error(
+                selectedPreviewUrl
+                  ? "Selected image preview failed to render"
+                  : "Stored image failed to render",
+              );
+              console.error(
+                `[StorageImageManager:${config.id}] preview-render-failed`,
+                previewError,
+              );
+              setSourceError(previewError.message);
+            }}
           />
           {busy && (
             <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/60">
@@ -411,7 +568,11 @@ function StorageImageSlot({
         className="hidden"
         onChange={(event) => {
           const file = event.target.files?.[0];
-          if (file && canChoose) processFile(file);
+          traceStorageImageManager(config.id, "web-file-input-changed", {
+            index,
+            selected: Boolean(file),
+          });
+          if (file && canChoose) void processFile(file);
           event.target.value = "";
         }}
         disabled={busy}
@@ -425,7 +586,11 @@ function StorageImageSlot({
         className="hidden"
         onChange={(event) => {
           const file = event.target.files?.[0];
-          if (file && canChoose) processFile(file);
+          traceStorageImageManager(config.id, "web-camera-input-changed", {
+            index,
+            selected: Boolean(file),
+          });
+          if (file && canChoose) void processFile(file);
           event.target.value = "";
         }}
         disabled={busy}

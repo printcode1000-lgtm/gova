@@ -54,6 +54,7 @@ export function HeroSlider({
   const [current, setCurrent] = useState(0);
   const [previous, setPrevious] = useState<number | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+  const [failedImages, setFailedImages] = useState<Record<number, boolean>>({});
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -169,6 +170,12 @@ export function HeroSlider({
 
   // Image load handler
   const handleImageLoad = (index: number) => {
+    setLoadedImages((prev) => ({ ...prev, [index]: true }));
+  };
+
+  const handleImageError = (index: number, src: string) => {
+    console.error("[HeroSlider] slide-image-load-failed", { index, src });
+    setFailedImages((prev) => ({ ...prev, [index]: true }));
     setLoadedImages((prev) => ({ ...prev, [index]: true }));
   };
 
@@ -391,6 +398,7 @@ export function HeroSlider({
                 const isActive = index === current;
                 const isExiting = index === previous;
                 const isNext = index === nextIndex;
+                const imageFailed = Boolean(failedImages[index]);
 
                 // Preload first slide, active slide, and next slide
                 const isPriority = isFirstSlide || isActive || isNext;
@@ -426,7 +434,7 @@ export function HeroSlider({
                     }}
                     aria-label={`Slide ${index + 1}: ${slide.title}`}
                   >
-                    {slide.image ? (
+                    {slide.image && !imageFailed ? (
                       <Image
                         src={slide.image}
                         alt={slide.title}
@@ -436,13 +444,13 @@ export function HeroSlider({
                         className={imgClass}
                         style={imgStyle}
                         onLoad={() => handleImageLoad(index)}
+                        onError={() => handleImageError(index, slide.image)}
                         unoptimized={shouldUseUnoptimizedImage(slide.image)}
                       />
                     ) : (
-                      <div
-                        className="absolute inset-0 bg-muted"
-                        aria-hidden="true"
-                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
+                        Image unavailable
+                      </div>
                     )}
                     <div className="absolute inset-0 flex flex-col justify-center px-6 text-on-primary bg-gradient-to-l from-primary via-primary/60 to-transparent">
                       {slide.subtitle && (

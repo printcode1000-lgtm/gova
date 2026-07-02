@@ -99,6 +99,45 @@ type StoredImage = {
 
 The feature that uses the component must save the `imageKey` in its own layer.
 
+## Selection and automatic upload
+
+Selecting an image now starts the complete flow:
+
+1. Read the selected native or browser `File`.
+2. Build a `data:` preview that works in Android WebView without a temporary Blob URL.
+3. Ask for upload confirmation when `confirmUpload` is enabled.
+4. Compress and convert the image for the selected storage profile.
+5. Send multipart data to the upload API.
+6. Persist the returned `imageKey` through the feature's `onChange` handler.
+
+If confirmation is declined, the selected preview remains visible and the manual upload button can retry the same file.
+
+## Diagnostic tracing
+
+Every stage emits a console entry prefixed with `StorageImageManager`. Entries include the slot or profile ID and safe metadata such as MIME type, byte size, output dimensions, storage provider, and returned image key. File bytes and base64 preview contents are never logged.
+
+Expected successful sequence:
+
+```text
+[StorageImageManager:<slot>] device-source-requested
+[StorageImageManager:<slot>] native-file-picker-returned
+[StorageImageManager:<slot>] file-received
+[StorageImageManager:<slot>] preview-read-started
+[StorageImageManager:<slot>] preview-ready
+[StorageImageManager:<slot>] automatic-upload-confirmation
+[StorageImageManager:<slot>] upload-started
+[StorageImageManager:<profile>] profile-request-start
+[StorageImageManager:processor] file-read-start
+[StorageImageManager:processor] image-decoded
+[StorageImageManager:processor] compression-completed
+[StorageImageManager:<profile>] api-upload-start
+[StorageImageManager:server] upload-request-received
+[StorageImageManager:server] storage-write-completed
+[StorageImageManager:<slot>] upload-completed
+```
+
+Failures use `console.error` and appear in the Errors section of `/super-admin/logs`. Resource load failures, including Blob resource failures, are also classified as errors and are not ignored.
+
 For example, profile uses `useProfileStoreImages()` to save keys to `profile.db` in development and Turso in production.
 
 ## Multiple images

@@ -11,7 +11,7 @@ import type {
 import { homeHeroSliderApiService } from "../services/home-hero-slider-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
-const CACHE_KEY = "advertisements:home-hero-slider";
+const CACHE_KEY = "advertisements:home-hero-slider:v2";
 
 interface HomeHeroCache extends HomeHeroPublished {
   lastCheckedAt: string;

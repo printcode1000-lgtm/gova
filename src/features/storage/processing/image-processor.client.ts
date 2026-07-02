@@ -1,8 +1,11 @@
-'use client';
+"use client";
 
-import { validateImageForProfile, validateImageMimeType } from '@/core/storage/rules/image-rules';
-import { getMimeTypeForOutputFormat } from '@/core/storage/output-format.registry';
-import type { StorageProfileClientView } from '@/core/storage/types/storage-profile.types';
+import {
+  validateImageForProfile,
+  validateImageMimeType,
+} from "@/core/storage/rules/image-rules";
+import { getMimeTypeForOutputFormat } from "@/core/storage/output-format.registry";
+import type { StorageProfileClientView } from "@/core/storage/types/storage-profile.types";
 
 const INITIAL_QUALITY = 0.86;
 const MIN_QUALITY = 0.1;
@@ -20,7 +23,7 @@ function getInitialLongEdgeLimit(maxImageSizeKB: number): number {
 function getScaledDimensions(
   width: number,
   height: number,
-  maxLongEdge: number
+  maxLongEdge: number,
 ): { width: number; height: number } {
   const longEdge = Math.max(width, height);
   const scale = longEdge > maxLongEdge ? maxLongEdge / longEdge : 1;
@@ -34,38 +37,61 @@ function getScaledDimensions(
 function drawImageToCanvas(
   img: HTMLImageElement,
   width: number,
-  height: number
+  height: number,
 ): HTMLCanvasElement {
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
 
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('Canvas not supported');
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas not supported");
 
   ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = 'high';
+  ctx.imageSmoothingQuality = "high";
   ctx.drawImage(img, 0, 0, width, height);
   return canvas;
 }
 
 function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
+    console.info("[StorageImageManager:processor] file-read-start", {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    });
+    const reader = new FileReader();
     const img = new Image();
     img.onload = () => {
-      URL.revokeObjectURL(url);
+      console.info("[StorageImageManager:processor] image-decoded", {
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+      });
       resolve(img);
     };
     img.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error('Failed to load image'));
+      console.error("[StorageImageManager:processor] image-decode-failed");
+      reject(new Error("Failed to load image"));
     };
-    img.src = url;
+    reader.onerror = () => {
+      console.error(
+        "[StorageImageManager:processor] file-read-failed",
+        reader.error,
+      );
+      reject(reader.error ?? new Error("Unable to read selected image"));
+    };
+    reader.onload = () => {
+      console.info("[StorageImageManager:processor] file-read-completed");
+      img.src = String(reader.result ?? "");
+    };
+    reader.readAsDataURL(file);
   });
 }
 
-function canvasToBlob(canvas: HTMLCanvasElement, mimeType: string, quality: number): Promise<Blob> {
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  mimeType: string,
+  quality: number,
+): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
@@ -76,7 +102,7 @@ function canvasToBlob(canvas: HTMLCanvasElement, mimeType: string, quality: numb
         resolve(blob);
       },
       mimeType,
-      quality
+      quality,
     );
   });
 }
@@ -90,8 +116,13 @@ function canvasToBlob(canvas: HTMLCanvasElement, mimeType: string, quality: numb
  */
 export async function compressImageForProfile(
   file: File,
-  profile: StorageProfileClientView
+  profile: StorageProfileClientView,
 ): Promise<Blob> {
+  console.info("[StorageImageManager:processor] compression-start", {
+    profileId: profile.id,
+    outputFormat: profile.outputFormat,
+    maxImageSizeKB: profile.maxImageSizeKB,
+  });
   if (!profile.enabled) {
     throw new Error(`Storage profile is disabled: ${profile.id}`);
   }
@@ -105,7 +136,11 @@ export async function compressImageForProfile(
   let bestBlob: Blob | null = null;
 
   while (longEdgeLimit >= MIN_LONG_EDGE_PX) {
-    const dimensions = getScaledDimensions(img.naturalWidth, img.naturalHeight, longEdgeLimit);
+    const dimensions = getScaledDimensions(
+      img.naturalWidth,
+      img.naturalHeight,
+      longEdgeLimit,
+    );
     const canvas = drawImageToCanvas(img, dimensions.width, dimensions.height);
 
     for (
@@ -117,6 +152,12 @@ export async function compressImageForProfile(
       bestBlob = !bestBlob || blob.size < bestBlob.size ? blob : bestBlob;
 
       if (blob.size <= maxBytes) {
+        console.info("[StorageImageManager:processor] compression-completed", {
+          outputBytes: blob.size,
+          width: dimensions.width,
+          height: dimensions.height,
+          quality,
+        });
         validateImageForProfile(blob.size, profile);
         return blob;
       }
@@ -133,6 +174,6 @@ export async function compressImageForProfile(
   }
 
   throw new Error(
-    `Unable to compress image below ${profile.maxImageSizeKB}KB. Please choose a simpler or lower-resolution image.`
+    `Unable to compress image below ${profile.maxImageSizeKB}KB. Please choose a simpler or lower-resolution image.`,
   );
 }

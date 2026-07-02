@@ -25,9 +25,11 @@ function serialize(value: unknown): string {
 }
 
 function platform(): "web" | "android" | "ios" {
-  const capacitor = (window as Window & {
-    Capacitor?: { getPlatform?: () => string };
-  }).Capacitor;
+  const capacitor = (
+    window as Window & {
+      Capacitor?: { getPlatform?: () => string };
+    }
+  ).Capacitor;
   const value = capacitor?.getPlatform?.();
   return value === "android" || value === "ios" ? value : "web";
 }
@@ -42,6 +44,12 @@ function diagnosticStack(method: ConsoleMethod, error?: Error) {
   if (error?.stack) return error.stack;
   if (method !== "warn" && method !== "error") return undefined;
   return new Error(`Captured from console.${method}`).stack;
+}
+
+function safeResourceUrl(url?: string): string | undefined {
+  if (!url?.startsWith("data:")) return url;
+  const header = url.slice(0, Math.max(0, url.indexOf(",")));
+  return `${header || "data:"},<redacted>`;
 }
 
 export function SystemLogCollector() {
@@ -117,14 +125,15 @@ export function SystemLogCollector() {
           : target instanceof HTMLLinkElement
             ? target.href
             : undefined;
+      const safeUrl = safeResourceUrl(url);
       addSystemLog({
-        level: "warning",
+        level: "error",
         consoleMethod: "resource.error",
-        message: `Failed to load ${target.tagName.toLowerCase()} resource${url ? `: ${url}` : ""}`,
+        message: `Failed to load ${target.tagName.toLowerCase()} resource${safeUrl ? `: ${safeUrl}` : ""}`,
         page: `${window.location.pathname}${window.location.search}`,
         platform: platform(),
         errorName: "ResourceLoadError",
-        sourceFile: url,
+        sourceFile: safeUrl,
         userAgent: navigator.userAgent,
         feature: "BrowserResource",
         operation: `load-${target.tagName.toLowerCase()}`,
