@@ -46,11 +46,12 @@
       "order": 6
     },
     "vehicleSpecs": {
-      "visible": false,
+      "visible": true,
       "brand": true,
       "bodyType": true,
       "fuel": true,
       "transmission": true,
+      "special": true,
       "order": 7
     },
     "propertySpecs": {

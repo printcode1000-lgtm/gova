@@ -14,6 +14,7 @@ import type {
   ProductMode,
   ProductStyleComponents,
 } from "./product-component.types";
+import { ProductVehicleSpecs } from "./ProductVehicleSpecs";
 
 const FIELDS: Record<
   string,
@@ -38,12 +39,6 @@ const FIELDS: Record<
     ["size", "المقاس", "text"],
     ["weight", "الوزن", "text"],
     ["year", "السنة", "number"],
-  ],
-  vehicleSpecs: [
-    ["brand", "الماركة", "text"],
-    ["bodyType", "نوع الهيكل", "text"],
-    ["fuel", "نوع الوقود", "text"],
-    ["transmission", "ناقل الحركة", "text"],
   ],
   propertySpecs: [
     ["area", "المساحة", "text"],
@@ -115,10 +110,11 @@ export const PRODUCT_DEMO_FIELDS: ProductFieldValues = {
   "specifications.size": "متوسط",
   "specifications.weight": "2 كجم",
   "specifications.year": "2026",
-  "vehicleSpecs.brand": "تويوتا",
-  "vehicleSpecs.bodyType": "سيدان",
-  "vehicleSpecs.fuel": "بنزين",
-  "vehicleSpecs.transmission": "أوتوماتيك",
+  "vehicleSpecs.brand": "toyota",
+  "vehicleSpecs.bodyType": "sedan",
+  "vehicleSpecs.fuel": "benzine",
+  "vehicleSpecs.transmission": "automatic",
+  "vehicleSpecs.special": "special_needs",
   "propertySpecs.area": "180 م²",
   "propertySpecs.rooms": "3",
   "propertySpecs.bathrooms": "2",
@@ -231,6 +227,17 @@ export function ProductComponentsRenderer({
                   </button>
                 ) : null}
               </div>
+            </ProductComponentFrame>
+          );
+        if (key === "vehicleSpecs")
+          return (
+            <ProductComponentFrame key={key} title={TITLES[key]}>
+              <ProductVehicleSpecs
+                mode={mode}
+                config={config}
+                fields={fields}
+                onChange={onFieldsChange}
+              />
             </ProductComponentFrame>
           );
         return (

@@ -114,6 +114,7 @@ interface ProductStyleSettings {
       bodyType: boolean;
       fuel: boolean;
       transmission: boolean;
+      special: boolean;
       order: number;
     };
     propertySpecs: {
@@ -242,6 +243,7 @@ export function DeveloperCategorySelector() {
   const [vehicleSpecsFuel, setVehicleSpecsFuel] = React.useState(true);
   const [vehicleSpecsTransmission, setVehicleSpecsTransmission] =
     React.useState(true);
+  const [vehicleSpecsSpecial, setVehicleSpecsSpecial] = React.useState(true);
   const [vehicleSpecsOrder, setVehicleSpecsOrder] = React.useState("7");
   const [propertySpecsVisible, setPropertySpecsVisible] = React.useState(false);
   const [propertySpecsArea, setPropertySpecsArea] = React.useState(true);
@@ -555,6 +557,7 @@ export function DeveloperCategorySelector() {
         setVehicleSpecsBodyType(vehicleSpecs?.bodyType ?? true);
         setVehicleSpecsFuel(vehicleSpecs?.fuel ?? true);
         setVehicleSpecsTransmission(vehicleSpecs?.transmission ?? true);
+        setVehicleSpecsSpecial(vehicleSpecs?.special ?? true);
         setVehicleSpecsOrder(String(vehicleSpecs?.order ?? 7));
         setPropertySpecsVisible(propertySpecs?.visible ?? false);
         setPropertySpecsArea(propertySpecs?.area ?? true);
@@ -644,6 +647,7 @@ export function DeveloperCategorySelector() {
             bodyType: vehicleSpecsBodyType,
             fuel: vehicleSpecsFuel,
             transmission: vehicleSpecsTransmission,
+            special: vehicleSpecsSpecial,
             order: Number(vehicleSpecsOrder || 7),
           },
           propertySpecs: {
@@ -731,6 +735,7 @@ export function DeveloperCategorySelector() {
     vehicleSpecsBrand,
     vehicleSpecsFuel,
     vehicleSpecsOrder,
+    vehicleSpecsSpecial,
     vehicleSpecsTransmission,
     vehicleSpecsVisible,
   ]);
@@ -785,6 +790,7 @@ export function DeveloperCategorySelector() {
       bodyType: vehicleSpecsBodyType,
       fuel: vehicleSpecsFuel,
       transmission: vehicleSpecsTransmission,
+      special: vehicleSpecsSpecial,
       order: Number(vehicleSpecsOrder || 7),
     },
     propertySpecs: {
@@ -1499,6 +1505,18 @@ export function DeveloperCategorySelector() {
                                 className="h-4 w-4 accent-primary cursor-pointer"
                               />
                               <span className="text-sm">ناقل الحركة</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={vehicleSpecsSpecial}
+                                onChange={(e) =>
+                                  setVehicleSpecsSpecial(e.target.checked)
+                                }
+                                disabled={!isStyleLoaded}
+                                className="h-4 w-4 accent-primary cursor-pointer"
+                              />
+                              <span className="text-sm">مواصفات خاصة</span>
                             </label>
                           </div>
                         </td>

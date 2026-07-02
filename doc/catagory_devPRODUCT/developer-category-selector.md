@@ -115,7 +115,7 @@ The table and its descendants use `data-voice-input="off"`. The global voice-inp
 | `order`          | Cart, favorite, contact                                                    | 4             |
 | `mainData`       | Name, brand, manufacturer, availability, description                       | 5             |
 | `specifications` | Color, dimensions, condition, size, weight, year                           | 6             |
-| `vehicleSpecs`   | Brand, body type, fuel, transmission                                       | 7             |
+| `vehicleSpecs`   | Brand, body type, fuel, transmission, special specifications               | 7             |
 | `propertySpecs`  | Area, rooms, bathrooms, property type, address, location, finishing        | 8             |
 | `pharmacySpecs`  | Arabic name, English name, medicine form, concentration, active ingredient | 9             |
 
@@ -301,6 +301,7 @@ A settings file has this shape:
       "bodyType": true,
       "fuel": true,
       "transmission": true,
+      "special": true,
       "order": 7
     },
     "propertySpecs": {

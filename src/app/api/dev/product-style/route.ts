@@ -64,6 +64,7 @@ interface ProductStyleSettings {
       bodyType: boolean;
       fuel: boolean;
       transmission: boolean;
+      special: boolean;
       order: number;
     };
     propertySpecs: {
@@ -198,6 +199,8 @@ function isValidSettings(value: unknown): value is ProductStyleSettings {
         typeof settings.components.vehicleSpecs.bodyType === "boolean" &&
         typeof settings.components.vehicleSpecs.fuel === "boolean" &&
         typeof settings.components.vehicleSpecs.transmission === "boolean" &&
+        (settings.components.vehicleSpecs.special === undefined ||
+          typeof settings.components.vehicleSpecs.special === "boolean") &&
         (settings.components.vehicleSpecs.order === undefined ||
           (Number.isInteger(settings.components.vehicleSpecs.order) &&
             settings.components.vehicleSpecs.order >= 1)))) &&
