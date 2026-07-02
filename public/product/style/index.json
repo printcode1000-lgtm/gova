@@ -1,4 +1,11 @@
 {
-  "generatedAt": null,
-  "files": []
+  "generatedAt": "2026-07-02T01:17:57.302Z",
+  "files": [
+    {
+      "mainCategoryId": "1",
+      "subcategoryId": "1",
+      "file": "1__1.json",
+      "path": "/product/style/1__1.json"
+    }
+  ]
 }
