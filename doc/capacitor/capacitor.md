@@ -299,6 +299,7 @@ Platform-specific settings live in:
 
 ## Related documentation
 
+- [branding-ssot.md](./branding-ssot.md) - single-source application icon and native launch-screen policy
 - [static-export-policy.md](./static-export-policy.md) - complete static source-file and route allow/ignore policy
 
 - [data-layers/README.md](./data-layers/README.md) — GovaApiClient, layers, CORS, static export

@@ -131,7 +131,7 @@ The local manifest contains the bundled version and the complete file inventory.
 
 Hidden control files whose path contains a segment beginning with `.`, such as `.gitkeep` and `.DS_Store`, are excluded because Capacitor's local WebView does not reliably serve them.
 
-Static builds use an explicit public-asset allowlist. The runtime initialization scripts, `logo.png`, `catagory/categories.json`, `catagory/subcategories.json`, and the complete `public/images/mainCategories` and `public/images/subCategories` directories are copied from `public/`. Development databases, `sync_data`, schema reports, source category databases, unused category exports, and duplicate logos remain available to local tooling but are not included in `out`, R2, Android, or iOS.
+Static builds use an explicit public-asset allowlist. Runtime initialization assets, category/subcategory data and images, vehicle data/images under `catagory/cars`, and product style definitions under `product/style` are copied from `public/`. Development databases, `sync_data`, schema reports, unused source exports, and duplicate logos remain available to local tooling but are not included in `out`, R2, Android, or iOS.
 
 The policy is reviewed directly in `scripts/build-static.ts` through `STATIC_PUBLIC_ALLOW_FILES`, `STATIC_PUBLIC_ALLOW_DIRECTORIES`, `STATIC_PUBLIC_IGNORE_FILES`, `STATIC_PUBLIC_IGNORE_DIRECTORIES`, and `STATIC_ROUTE_IGNORELIST`. The build fails when a new public asset is not classified by these lists.
 

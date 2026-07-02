@@ -43,8 +43,10 @@ Missing allowlisted files fail the build with `Required static asset not found`.
 
 | Directory | Runtime ownership |
 |---|---|
+| `catagory/cars` | Vehicle option JSON and vehicle/brand images loaded by product components |
 | `images/mainCategories` | Complete main-category image catalog, including categories supplied by external data |
 | `images/subCategories` | Complete subcategory image catalog |
+| `product/style` | Runtime product layout/style definitions loaded by product pages |
 
 Adding a directory permits every current and future file below it. Use a directory allowlist only when the whole directory is a runtime contract.
 
@@ -56,9 +58,6 @@ Adding a directory permits every current and future file below it. Use a directo
 |---|---|
 | `catagory.db` | SQLite source used by the JSON export script |
 | `gova-web-manifest.json` | Previous generated manifest; each build writes a fresh one |
-| `gv_app_icon.png` | Source/native design asset not referenced by static runtime |
-| `VERY GOOD.png` | Unused duplicate image |
-| `images/logo.png` | Unused duplicate logo |
 | `catagory/active_ingredient_forms.json` | Source export not requested by static runtime |
 | `catagory/active_ingredient_strengths.json` | Source export not requested by static runtime |
 | `catagory/active_ingredients.json` | Source export not requested by static runtime |
@@ -78,8 +77,6 @@ Ignored files stay available to local tools but are not copied to static output.
 
 | Directory | Reason |
 |---|---|
-| `images/icons` | Unused source and duplicate icon files |
-| `images/logos` | Alternate/source logos not referenced by static runtime |
 | `sync_data` | Local databases, schema reports, and development upload mirrors |
 
 Nothing below these directories may enter `out/`, R2, Android, or iOS.
@@ -182,8 +179,10 @@ gova-theme-init.js
 logo.png
 catagory/categories.json
 catagory/subcategories.json
+catagory/cars/**
 images/mainCategories/**
 images/subCategories/**
+product/style/**
 ```
 
 All other final manifest entries must be generated Next.js output or generated manifest support.

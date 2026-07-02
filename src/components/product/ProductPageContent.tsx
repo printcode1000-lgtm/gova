@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { govaApi } from "@/core/api";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
@@ -19,24 +19,19 @@ import type {
   ProductStyleComponents,
 } from "./product-component.types";
 
-interface ProductPageContentProps {
-  mode: ProductMode;
-  productId: string;
-  mainCategoryId: string;
-  subcategoryId: string;
-}
-
 interface ProductStyleFile {
   components: ProductStyleComponents;
 }
 
-export function ProductPageContent({
-  mode,
-  productId,
-  mainCategoryId: initialMain,
-  subcategoryId: initialSub,
-}: ProductPageContentProps) {
+export function ProductPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedMode = searchParams.get("mode");
+  const mode: ProductMode =
+    requestedMode === "edit" || requestedMode === "new" ? requestedMode : "view";
+  const productId = searchParams.get("productId") ?? "";
+  const initialMain = searchParams.get("mainCategoryId") ?? "";
+  const initialSub = searchParams.get("subcategoryId") ?? "";
   const { session, isLoggedIn, isLoading: sessionLoading } = useSession();
   const [product, setProduct] = React.useState<ProductRecord | null>(null);
   const [style, setStyle] = React.useState<ProductStyleFile | null>(null);

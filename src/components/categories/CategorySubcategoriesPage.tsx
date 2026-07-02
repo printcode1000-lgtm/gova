@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import * as React from "react";
 
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
@@ -42,13 +43,13 @@ interface Subcategory {
 
 interface CategorySubcategoriesPageProps {
   categoryId: string;
-  isCollectionHint: boolean;
 }
 
 export function CategorySubcategoriesPage({
   categoryId,
-  isCollectionHint,
 }: CategorySubcategoriesPageProps) {
+  const searchParams = useSearchParams();
+  const isCollectionHint = searchParams.get("collection") === "1";
   const { locale, isRTL } = useTranslation();
   const numericCategoryId = Number(categoryId);
   const [title, setTitle] = React.useState("");

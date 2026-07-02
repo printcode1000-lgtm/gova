@@ -27,17 +27,16 @@ const STATIC_PUBLIC_ALLOW_FILES = [
 ] as const;
 
 const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
+  'catagory/cars',
   'images/mainCategories',
   'images/subCategories',
+  'product/style',
 ] as const;
 
 // Source/development assets that must never enter out/, R2, Android, or iOS.
 const STATIC_PUBLIC_IGNORE_FILES = [
   'catagory.db',
   'gova-web-manifest.json',
-  'gv_app_icon.png',
-  'VERY GOOD.png',
-  'images/logo.png',
   'catagory/active_ingredient_forms.json',
   'catagory/active_ingredient_strengths.json',
   'catagory/active_ingredients.json',
@@ -51,8 +50,6 @@ const STATIC_PUBLIC_IGNORE_FILES = [
 ] as const;
 
 const STATIC_PUBLIC_IGNORE_DIRECTORIES = [
-  'images/icons',
-  'images/logos',
   'sync_data',
 ] as const;
 
