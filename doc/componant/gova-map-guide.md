@@ -259,6 +259,8 @@ Attach a `ref<GovaMapHandle>` when a UI integration needs engine-level navigatio
 
 The canvas is keyboard focusable and MapLibre keyboard navigation is enabled. Controls use native buttons, labels, visible focus rings, and a named toolbar. Loading and failure overlays use `status` and `alert` semantics. Reduced-motion preferences slow the loading animation.
 
+Controls are vertical on wider displays. On phones and short landscape screens they become a safe-area-aware horizontal strip with touch scrolling and 44px minimum targets, preventing the toolbar from covering the full map or overflowing its container.
+
 Mouse wheel, keyboard, click, double-click, drag, pinch zoom, rotation, and touch gestures are handled by MapLibre. GoVa adds a cancellable one-finger long press. The root uses CSS safe-area insets for Capacitor and mobile-browser controls.
 
 ## Capacitor lifecycle checklist

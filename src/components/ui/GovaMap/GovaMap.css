@@ -2,11 +2,15 @@
 .gova-map__canvas { position: absolute; inset: 0; }
 .gova-map .maplibregl-canvas { outline: none; }
 .gova-map .maplibregl-canvas:focus-visible { outline: 3px solid var(--color-primary, #1a73e8); outline-offset: -3px; }
-.gova-map__controls { position: absolute; z-index: 4; top: calc(.75rem + var(--gova-safe-top)); right: calc(.75rem + var(--gova-safe-right)); display: flex; flex-direction: column; gap: .5rem; }
+.gova-map .maplibregl-ctrl-attrib { min-height: 0; margin: 0; padding: 0 2px; border-radius: 2px 0 0; font-size: 8px; line-height: 10px; opacity: .82; }
+.gova-map .maplibregl-ctrl-attrib-inner { display: block; white-space: nowrap; }
+.gova-map .maplibregl-ctrl-attrib a { font-size: inherit; line-height: inherit; }
+.gova-map__controls { position: absolute; z-index: 4; top: calc(.75rem + var(--gova-safe-top)); right: calc(.75rem + var(--gova-safe-right)); display: flex; max-height: calc(100% - 1.5rem - var(--gova-safe-top) - var(--gova-safe-bottom)); flex-direction: column; gap: .5rem; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 .gova-map__control-group { display: grid; overflow: hidden; border-radius: .75rem; box-shadow: var(--shadow-1, 0 1px 4px #0003); }
-.gova-map__control, .gova-map__control-group button { display: grid; width: 2.75rem; height: 2.75rem; place-items: center; border: 1px solid var(--color-outline-variant, #dadce0); background: var(--color-surface-container-lowest, #fff); color: inherit; cursor: pointer; }
+.gova-map__control, .gova-map__control-group button { display: flex; width: 4rem; min-width: 4rem; min-height: 3.5rem; flex: 0 0 auto; flex-direction: column; align-items: center; justify-content: center; gap: .125rem; padding: .25rem; border: 1px solid var(--color-outline-variant, #dadce0); background: var(--color-surface-container-lowest, #fff); color: inherit; cursor: pointer; touch-action: manipulation; }
 .gova-map__control { border-radius: .75rem; box-shadow: var(--shadow-1, 0 1px 4px #0003); }
 .gova-map__control svg, .gova-map__control-group svg { width: 1.25rem; height: 1.25rem; }
+.gova-map__control-label { display: block; width: 100%; overflow: hidden; font-size: .625rem; font-weight: 600; line-height: .75rem; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .gova-map__control:hover, .gova-map__control-group button:hover { background: var(--color-surface-container-high, #e8eaed); }
 .gova-map__control:focus-visible, .gova-map__control-group button:focus-visible, .gova-map__retry:focus-visible { outline: 3px solid var(--color-primary, #1a73e8); outline-offset: 2px; }
 .gova-map__overlay { position: absolute; z-index: 8; inset: 0; display: grid; place-content: center; gap: .75rem; padding: 1rem; text-align: center; background: color-mix(in srgb, var(--color-surface, #fff) 86%, transparent); }
@@ -15,3 +19,8 @@
 .gova-map__popup { min-width: 10rem; color: #202124; }
 @keyframes gova-map-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .gova-map__spinner { animation-duration: 1.8s; } }
+@media (max-width: 640px), (max-height: 500px) {
+  .gova-map__controls { right: calc(.5rem + var(--gova-safe-right)); left: calc(.5rem + var(--gova-safe-left)); max-width: none; max-height: 4rem; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: .125rem; scroll-snap-type: x proximity; }
+  .gova-map__control, .gova-map__control-group { flex: 0 0 auto; scroll-snap-align: end; }
+  .gova-map__control-group { grid-auto-flow: column; }
+}

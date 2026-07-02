@@ -15,6 +15,13 @@ import type {
 
 const LATITUDE_KEY = "propertySpecs.locationLatitude";
 const LONGITUDE_KEY = "propertySpecs.locationLongitude";
+const DEFAULT_LOCATION = {
+  latitude: 29.9668,
+  longitude: 32.5498,
+  zoom: 11,
+  bearing: 0,
+  pitch: 0,
+};
 const tileProvider = createOpenStreetMapProvider();
 
 const PROPERTY_FIELDS: Array<[string, string, React.HTMLInputTypeAttribute]> = [
@@ -26,10 +33,12 @@ const PROPERTY_FIELDS: Array<[string, string, React.HTMLInputTypeAttribute]> = [
   ["finishing", "التشطيب", "text"],
 ];
 
-function readCoordinate(value: string | undefined) {
+function readCoordinate(value: string | undefined, min: number, max: number) {
   if (!value?.trim()) return null;
   const number = Number(value);
-  return Number.isFinite(number) ? number : null;
+  return Number.isFinite(number) && number >= min && number <= max
+    ? number
+    : null;
 }
 
 function openDeviceMaps(latitude: number, longitude: number) {
@@ -60,8 +69,10 @@ export function ProductPropertySpecs({
   fields: ProductFieldValues;
   onChange: (fields: ProductFieldValues) => void;
 }) {
-  const latitude = readCoordinate(fields[LATITUDE_KEY]);
-  const longitude = readCoordinate(fields[LONGITUDE_KEY]);
+  const [mapOpen, setMapOpen] = React.useState(true);
+  const [mapMessage, setMapMessage] = React.useState("");
+  const latitude = readCoordinate(fields[LATITUDE_KEY], -90, 90);
+  const longitude = readCoordinate(fields[LONGITUDE_KEY], -180, 180);
   const hasLocation = latitude !== null && longitude !== null;
 
   const updateLocation = React.useCallback(
@@ -71,8 +82,34 @@ export function ProductPropertySpecs({
         [LATITUDE_KEY]: String(nextLatitude),
         [LONGITUDE_KEY]: String(nextLongitude),
       });
+      setMapMessage("تم اختيار الموقع. احفظ المنتج لتثبيت التغيير.");
     },
     [fields, onChange],
+  );
+
+  const resetLocation = React.useCallback(() => {
+    const nextFields = { ...fields };
+    delete nextFields[LATITUDE_KEY];
+    delete nextFields[LONGITUDE_KEY];
+    onChange(nextFields);
+    setMapMessage("تمت إعادة ضبط الموقع.");
+  }, [fields, onChange]);
+
+  const shareLocation = React.useCallback(
+    async (nextLatitude: number, nextLongitude: number) => {
+      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${nextLatitude},${nextLongitude}`)}`;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: "موقع العقار", url });
+        } else {
+          await navigator.clipboard.writeText(url);
+          setMapMessage("تم نسخ رابط الموقع.");
+        }
+      } catch {
+        setMapMessage("تعذرت مشاركة الموقع.");
+      }
+    },
+    [],
   );
 
   return (
@@ -111,30 +148,80 @@ export function ProductPropertySpecs({
             )
           ) : (
             <div className="space-y-2">
-              <GovaMap
-                modes={["picker"]}
-                providers={{ tile: tileProvider }}
-                initialViewport={
-                  hasLocation
-                    ? { latitude, longitude, zoom: 15 }
-                    : undefined
-                }
-                markers={
-                  hasLocation
-                    ? [markerAt(longitude, latitude, "property-location")]
-                    : []
-                }
-                layers={{ baseMap: true, markers: true }}
-                ariaLabel="اختيار موقع العقار"
-                loadingLabel="جارٍ تحميل الخريطة…"
-                retryLabel="إعادة المحاولة"
-                onTap={({ latitude: nextLatitude, longitude: nextLongitude }) =>
-                  updateLocation(nextLatitude, nextLongitude)
-                }
-              />
+              {mapOpen ? (
+                <GovaMap
+                  modes={["picker"]}
+                  providers={{ tile: tileProvider }}
+                  initialViewport={
+                    hasLocation
+                      ? {
+                          latitude,
+                          longitude,
+                          zoom: 15,
+                          bearing: 0,
+                          pitch: 0,
+                        }
+                      : DEFAULT_LOCATION
+                  }
+                  markers={
+                    hasLocation
+                      ? [markerAt(longitude, latitude, "property-location")]
+                      : []
+                  }
+                  toolbar={{
+                    save: { enabled: true, label: "حفظ الموقع" },
+                    gps: { enabled: true, label: "تحديد الموقع الحالي" },
+                    share: { enabled: true, label: "مشاركة الموقع" },
+                    reset: { enabled: true, label: "إعادة الضبط" },
+                    close: { enabled: true, label: "إغلاق الخريطة" },
+                    recenter: { enabled: true, label: "إعادة التمركز" },
+                    zoom: { enabled: true, label: "التكبير والتصغير" },
+                    compass: { enabled: true, label: "إعادة اتجاه الشمال" },
+                    fullscreen: { enabled: true, label: "ملء الشاشة" },
+                  }}
+                  layers={{ baseMap: true, markers: true, controls: true }}
+                  ariaLabel="اختيار موقع العقار"
+                  loadingLabel="جارٍ تحميل الخريطة…"
+                  retryLabel="إعادة المحاولة"
+                  onTap={({
+                    latitude: nextLatitude,
+                    longitude: nextLongitude,
+                  }) => updateLocation(nextLatitude, nextLongitude)}
+                  onGpsCompleted={({
+                    latitude: nextLatitude,
+                    longitude: nextLongitude,
+                  }) => updateLocation(nextLatitude, nextLongitude)}
+                  onSave={() =>
+                    setMapMessage(
+                      hasLocation
+                        ? "تم تثبيت الموقع داخل بيانات النموذج. استخدم زر حفظ التعديلات أو إنشاء المنتج للحفظ النهائي."
+                        : "حدد موقعًا على الخريطة أولًا.",
+                    )
+                  }
+                  onShare={({
+                    latitude: nextLatitude,
+                    longitude: nextLongitude,
+                  }) => void shareLocation(nextLatitude, nextLongitude)}
+                  onReset={resetLocation}
+                  onClose={() => setMapOpen(false)}
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setMapOpen(true)}
+                  className="gova-control border border-input px-4 font-medium"
+                >
+                  فتح الخريطة
+                </button>
+              )}
               <p className="text-xs text-muted-foreground">
                 اضغط على الخريطة لتحديد موقع العقار.
               </p>
+              {mapMessage ? (
+                <p className="text-xs font-medium text-primary" role="status">
+                  {mapMessage}
+                </p>
+              ) : null}
             </div>
           )}
         </div>
