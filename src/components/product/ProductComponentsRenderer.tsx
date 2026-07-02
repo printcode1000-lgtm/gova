@@ -8,6 +8,8 @@ import {
 } from "./ProductComponentPrimitives";
 import { ProductImageEditors } from "./ProductImageEditors";
 import { ProductImageGallery } from "./ProductImageGallery";
+import { ProductRatingSettings } from "./ProductRatingSettings";
+import { ProductReviews } from "./ProductReviews";
 import type {
   ProductMode,
   ProductStyleComponents,
@@ -138,6 +140,8 @@ export function ProductComponentsRenderer({
   onFieldsChange,
   images,
   onImagesChange,
+  productId = "",
+  ownerUid = "",
 }: {
   mode: ProductMode;
   components: ProductStyleComponents;
@@ -145,6 +149,8 @@ export function ProductComponentsRenderer({
   onFieldsChange: (fields: ProductFieldValues) => void;
   images: StoredImage[];
   onImagesChange: (images: StoredImage[]) => void;
+  productId?: string;
+  ownerUid?: string;
 }) {
   const visible = Object.entries(components)
     .filter(([, config]) => config.visible)
@@ -174,6 +180,34 @@ export function ProductComponentsRenderer({
               )}
             </ProductComponentFrame>
           );
+        if (key === "rating") {
+          const savedMode = fields["rating.mode"];
+          const commentsEnabled =
+            savedMode === "stars"
+              ? false
+              : savedMode === "stars-comments"
+                ? true
+                : config.type === "stars-comments";
+          return (
+            <ProductComponentFrame key={key} title={TITLES[key]}>
+              {mode === "view" ? (
+                <ProductReviews
+                  productId={productId}
+                  ownerUid={ownerUid}
+                  productName={fields["mainData.name"] || "المنتج أو الخدمة"}
+                  reviewsEnabled={fields["rating.enabled"] !== "false"}
+                  targetEnabled={fields["rating.targetEnabled"] !== "false"}
+                  commentsEnabled={commentsEnabled}
+                />
+              ) : (
+                <ProductRatingSettings
+                  fields={fields}
+                  onChange={onFieldsChange}
+                />
+              )}
+            </ProductComponentFrame>
+          );
+        }
         if (key === "order")
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
@@ -203,13 +237,7 @@ export function ProductComponentsRenderer({
           <ProductComponentFrame key={key} title={TITLES[key] ?? key}>
             <div className="grid gap-3 sm:grid-cols-2">
               {(FIELDS[key] ?? []).map(([fieldKey, label, kind]) => {
-                if (
-                  key === "rating" &&
-                  fieldKey === "comment" &&
-                  config.type !== "stars-comments"
-                )
-                  return null;
-                if (key !== "rating" && config[fieldKey] === false) return null;
+                if (config[fieldKey] === false) return null;
                 const storageKey = `${key}.${fieldKey}`;
                 return (
                   <ProductField

@@ -185,6 +185,8 @@ export function ProductPageContent({
         onFieldsChange={setFields}
         images={images}
         onImagesChange={setImages}
+        productId={product?.id ?? ""}
+        ownerUid={product?.uid ?? session?.uid ?? ""}
       />
       {error ? (
         <p className="rounded-xl bg-destructive/10 p-3 text-destructive">

@@ -82,17 +82,17 @@ It does not contain product values. Missing or invalid style files prevent the p
 
 Visible components are filtered and numerically sorted by the style file's `order` value.
 
-| Style key | Stored field prefix | Content |
-| --- | --- | --- |
-| `images` | Stored in `data.images` | Product images. |
-| `rating` | `rating.*` | Rating and optional comment. |
-| `price` | `price.*` | Current price, old price, needs-car value. |
-| `order` | None | Cart, favorite, and contact actions from style configuration. |
-| `mainData` | `mainData.*` | Name, brand, manufacturer, availability, description. |
-| `specifications` | `specifications.*` | General product specifications. |
-| `vehicleSpecs` | `vehicleSpecs.*` | Vehicle-specific values. |
-| `propertySpecs` | `propertySpecs.*` | Property-specific values. |
-| `pharmacySpecs` | `pharmacySpecs.*` | Pharmacy-specific values. |
+| Style key        | Stored field prefix     | Content                                                       |
+| ---------------- | ----------------------- | ------------------------------------------------------------- |
+| `images`         | Stored in `data.images` | Product images.                                               |
+| `rating`         | `rating.*`              | Rating and optional comment.                                  |
+| `price`          | `price.*`               | Current price, old price, needs-car value.                    |
+| `order`          | None                    | Cart, favorite, and contact actions from style configuration. |
+| `mainData`       | `mainData.*`            | Name, brand, manufacturer, availability, description.         |
+| `specifications` | `specifications.*`      | General product specifications.                               |
+| `vehicleSpecs`   | `vehicleSpecs.*`        | Vehicle-specific values.                                      |
+| `propertySpecs`  | `propertySpecs.*`       | Property-specific values.                                     |
+| `pharmacySpecs`  | `pharmacySpecs.*`       | Pharmacy-specific values.                                     |
 
 The central `fields` object uses stable dotted keys such as `mainData.name` and `propertySpecs.rooms`. This keeps the database schema stable when category-specific fields change.
 
@@ -276,6 +276,75 @@ Indexes:
 - `products_category_idx` on `(main_category_id, subcategory_id)`.
 
 `uid` is intentionally not a cross-database foreign key because the owner exists in the separate users database.
+
+## Ratings and reviews
+
+The product database also owns three review tables introduced by migration
+`0001_product_reviews.sql`.
+
+### `product_reviews`
+
+Stores one review per `(product_id, uid)`. The database unique constraint and
+the service both enforce the one-review-per-user-per-product rule. Each row
+contains the reviewer snapshot name/avatar URL, rating from 1 to 5, optional
+comment, helpful count, timestamps, and `verified_purchase`.
+
+`verified_purchase` defaults to `false`. It is intentionally ready for a later
+orders-system verification integration; the current review creation flow never
+sets it to true.
+
+### `product_review_helpful`
+
+Uses `(review_id, uid)` as its composite primary key. Toggling Helpful inserts
+or removes this row and updates the cached `helpful_count` on the review.
+
+### `product_review_replies`
+
+Stores at most one seller reply per review through a unique `review_id`. The
+reply remains separate from the customer's review and has independent creation
+and update timestamps.
+
+Review and reply foreign keys use cascade deletion. The local product SQLite
+client explicitly enables `PRAGMA foreign_keys = ON` for every connection.
+
+### Review APIs
+
+```text
+GET/POST/PUT/DELETE /api/products/reviews
+POST               /api/products/reviews/helpful
+POST/DELETE        /api/products/reviews/reply
+```
+
+The list endpoint supports `newest`, `highest`, and `lowest` ordering plus
+offset/limit pagination. The UI requests three reviews per page and exposes a
+Load More button.
+
+The review service enforces:
+
+- Guests cannot create reviews.
+- The product owner cannot review the product.
+- Only the review owner can edit/delete a customer review.
+- Only the product owner can create, edit, or delete the seller reply.
+- Comments are removed when the effective rating mode is stars-only.
+
+### Product-level rating settings
+
+New/Edit mode stores these optional string values inside `data_json.fields`:
+
+```json
+{
+  "rating.enabled": "true",
+  "rating.targetEnabled": "true",
+  "rating.mode": "stars-comments"
+}
+```
+
+`rating.mode` may be `stars` or `stars-comments`. When it is absent, the
+category Style `rating.type` value is used. Product-level values always have
+priority over Style.
+
+View mode renders `ProductReviews`, including the quick summary, distribution,
+sort control, paginated cards, review modal, Helpful votes, and seller replies.
 
 ### `data_json`
 

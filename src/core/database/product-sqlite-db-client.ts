@@ -12,8 +12,10 @@ export class ProductSQLiteDatabaseClient extends AbstractDatabaseClient {
     if (this._db) return this._db;
     const { drizzle } = require("drizzle-orm/better-sqlite3");
     const Database = require("better-sqlite3");
+    const sqlite = new Database(PRODUCT_SQLITE_DB_PATH);
+    sqlite.pragma("foreign_keys = ON");
     this._db = drizzle(
-      new Database(PRODUCT_SQLITE_DB_PATH),
+      sqlite,
       isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
     );
     require("./ensure-product-migrations").ensureProductDevMigrations(this._db);
@@ -24,6 +26,7 @@ export class ProductSQLiteDatabaseClient extends AbstractDatabaseClient {
     void this.db;
     const Database = require("better-sqlite3");
     const db = new Database(PRODUCT_SQLITE_DB_PATH);
+    db.pragma("foreign_keys = ON");
     try {
       const statement = db.prepare(sql);
       return sql.trim().toUpperCase().startsWith("SELECT")
