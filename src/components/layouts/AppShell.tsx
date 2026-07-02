@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 
 import { AppHeader } from './AppHeader';
 import { BottomNavBar } from './BottomNavBar';
+import { BOTTOM_NAV_CLEARANCE } from './bottom-nav-layout';
 
 interface AppShellProps {
   children: ReactNode;
@@ -16,7 +17,12 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <>
       <AppHeader />
-      <main className="pt-16 pb-24 md:pb-6 min-h-screen gova-canvas">{children}</main>
+      <main
+        className="gova-canvas min-h-screen pt-16"
+        style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}
+      >
+        {children}
+      </main>
       <BottomNavBar />
     </>
   );

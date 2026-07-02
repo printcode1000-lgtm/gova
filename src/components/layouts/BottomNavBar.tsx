@@ -3,13 +3,33 @@
 import { Bell, Heart, Home, Receipt } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useLayoutEffect, useRef } from 'react';
 
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 
 export function BottomNavBar() {
+  const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const { t } = useTranslation();
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const publishHeight = () => {
+      document.documentElement.style.setProperty('--gova-bottom-nav-space', `${nav.offsetHeight}px`);
+    };
+
+    publishHeight();
+    const observer = new ResizeObserver(publishHeight);
+    observer.observe(nav);
+
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty('--gova-bottom-nav-space');
+    };
+  }, []);
 
   const navItems = [
     { href: '/home', icon: Home, label: t('nav.home'), showBadge: false },
@@ -20,8 +40,9 @@ export function BottomNavBar() {
 
   return (
     <nav
+      ref={navRef}
       id="bottom-navigation-bar"
-      className="fixed bottom-0 inset-x-0 z-50 flex justify-around items-center pt-2 pb-4 border-t border-outline-variant rounded-t-2xl shadow-lg gova-surface-neutral"
+      className="gova-surface-neutral fixed inset-x-0 bottom-0 z-50 flex min-h-20 items-center justify-around rounded-t-2xl border-t border-outline-variant pt-2 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] shadow-lg"
     >
       {navItems.map(({ href, icon: Icon, label, showBadge }) => {
         const isActive = pathname === href;

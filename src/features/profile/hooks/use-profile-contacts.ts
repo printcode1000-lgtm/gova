@@ -7,6 +7,7 @@ import { useSession } from '@/features/auth/components/SessionProvider';
 import type { ProfileContactsData } from '../entities/profile-contacts.entity';
 import { profileService } from '../services/profile-service';
 import { mergePrimaryContacts } from '../utils/merge-primary-contacts';
+import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 
 const profileContactsQueryKey = (uid: string) =>
   ['profile', 'contacts', uid] as const;
@@ -44,6 +45,12 @@ export function useProfileContacts() {
     setBaseline(contactsQuery.data);
   }, [contactsQuery.data]);
 
+  useEffect(() => {
+    if (contactsQuery.error) {
+      reportSystemIssue({ feature: 'Profile', operation: 'load-contacts', error: contactsQuery.error });
+    }
+  }, [contactsQuery.error]);
+
   const isDirty = isContactsDirty(contacts, baseline);
 
   const applySaved = useCallback(
@@ -65,6 +72,9 @@ export function useProfileContacts() {
       return profileService.saveContacts({ uid, ...merged });
     },
     onSuccess: applySaved,
+    onError: (error) => {
+      reportSystemIssue({ feature: 'Profile', operation: 'save-contacts', error });
+    },
   });
 
   const updateContacts = useCallback((data: ProfileContactsData) => {

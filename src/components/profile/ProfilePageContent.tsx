@@ -17,6 +17,7 @@ import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import Image from "next/image";
 
+import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
 import { ProfileContactsCard } from "@/components/profile/ProfileContactsCard";
 import { ProfileRegistrationInfoCard } from "@/components/profile/ProfileRegistrationInfoCard";
 import { SpecialtiesCard } from "@/components/profile/SpecialtiesCard";
@@ -31,6 +32,7 @@ import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { profileService } from "@/features/profile/services/profile-service";
 import { sessionService } from "@/features/auth/services/session-service";
 import { mergePrimaryContacts } from "@/features/profile/utils/merge-primary-contacts";
+import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 import type {
   ProfileContactsController,
   ProfileRegistrationController,
@@ -248,6 +250,12 @@ export function ProfilePageContent() {
       !storeController ||
       !specialtiesController
     ) {
+      reportSystemIssue({
+        level: "warning",
+        feature: "Profile",
+        operation: "save-blocked-missing-controller-or-session",
+        error: new Error("Profile save could not start because a required controller or session UID was unavailable."),
+      });
       return;
     }
 
@@ -299,6 +307,11 @@ export function ProfilePageContent() {
         setSession(updatedSession);
       }
     } catch (error) {
+      reportSystemIssue({
+        feature: "Profile",
+        operation: `save-editor:${changedSections.join(",") || "unknown"}`,
+        error,
+      });
       const message = (error as Error).message;
       if (message === "phoneVerificationRequired") {
         setActiveTab("registration");
@@ -628,7 +641,10 @@ export function ProfilePageContent() {
               ) : null}
 
               {dirtyLabels.length > 0 ? (
-                <div className="fixed inset-x-3 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-40 rounded-2xl border border-outline-variant bg-surface/95 p-3 shadow-xl backdrop-blur sm:sticky sm:inset-x-auto sm:bottom-4 sm:m-5 sm:rounded-xl">
+                <div
+                  className="fixed inset-x-3 z-40 rounded-2xl border border-outline-variant bg-surface/95 p-3 shadow-xl backdrop-blur sm:sticky sm:inset-x-auto sm:m-5 sm:rounded-xl"
+                  style={{ bottom: BOTTOM_NAV_CLEARANCE }}
+                >
                   <p className="mb-2 line-clamp-1 text-xs text-on-surface-variant">
                     {t("profile.saveTargets")}: {dirtyLabels.join("، ")}
                   </p>

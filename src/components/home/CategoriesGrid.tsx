@@ -9,6 +9,7 @@ import { govaApi } from '@/core/api';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 
 const CATEGORY_RINGS = ['gova-ring-primary', 'gova-ring-secondary', 'gova-ring-tertiary', 'gova-ring-error'] as const;
 
@@ -104,6 +105,12 @@ export function CategoriesGrid() {
 
         setDisplayCategories(displayCats);
       } catch (error) {
+        reportSystemIssue({
+          feature: 'Home',
+          operation: 'load-categories',
+          error,
+          page: '/home',
+        });
         console.error('Failed to fetch categories:', error);
       } finally {
         setLoading(false);

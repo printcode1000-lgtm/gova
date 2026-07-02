@@ -15,6 +15,7 @@ import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
+import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 
 export function useRegister() {
   const { t } = useTranslation();
@@ -63,6 +64,15 @@ export function useRegister() {
     onSuccess: (session) => {
       endGuestSession();
       setSession(session);
+    },
+    onError: (error) => {
+      reportSystemIssue({
+        level: error instanceof Error && error.message === 'phoneAlreadyRegistered' ? 'warning' : 'error',
+        feature: 'Authentication',
+        operation: 'register-and-create-session',
+        error,
+        page: '/registration',
+      });
     },
   });
 

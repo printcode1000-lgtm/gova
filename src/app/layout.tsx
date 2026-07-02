@@ -17,6 +17,8 @@ import { OtaUpdateProvider } from "@/features/ota/hooks/use-ota-update";
 import { OtaUpdatePrompt } from "@/components/ota/OtaUpdatePrompt";
 import { MobileBackButtonController } from "@/components/navigation/MobileBackButtonController";
 import { VoiceInputController } from "@/components/voice-input/VoiceInputController";
+import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
+import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
 import dynamic from "next/dynamic";
 
 import { isDevelopment, withBasePath } from "@/core/config";
@@ -48,18 +50,21 @@ export default function RootLayout({
       <body className="antialiased">
         <AppQueryProvider>
           <SessionProvider>
-            <PreferencesProvider>
-              <NetworkStatusProvider>
-                <OtaUpdateProvider>
-                  <ShellLayout>{children}</ShellLayout>
-                  <NetworkStatusBanner />
-                  <OtaUpdatePrompt />
-                  <MobileBackButtonController />
-                  <VoiceInputController />
-                  <DeveloperBadge />
-                </OtaUpdateProvider>
-              </NetworkStatusProvider>
-            </PreferencesProvider>
+            <SystemLogCollector />
+            <SystemLogErrorBoundary>
+              <PreferencesProvider>
+                <NetworkStatusProvider>
+                  <OtaUpdateProvider>
+                    <ShellLayout>{children}</ShellLayout>
+                    <NetworkStatusBanner />
+                    <OtaUpdatePrompt />
+                    <MobileBackButtonController />
+                    <VoiceInputController />
+                    <DeveloperBadge />
+                  </OtaUpdateProvider>
+                </NetworkStatusProvider>
+              </PreferencesProvider>
+            </SystemLogErrorBoundary>
           </SessionProvider>
         </AppQueryProvider>
       </body>

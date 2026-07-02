@@ -4,6 +4,7 @@ import { Eye, History, RefreshCw, Rocket, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
+import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
 import { Button } from "@/components/ui/button";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import type {
 import { homeHeroSliderApiService } from "@/features/advertisements/services/home-hero-slider-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
 const quickIntervals = [5, 15, 30, 60];
 
@@ -43,6 +45,7 @@ export function SuperAdminHeroSliderPage() {
       setDraft(next.draft);
       setIntervalMinutes(next.checkIntervalMinutes);
     } catch (error) {
+      reportSystemIssue({ feature: "HeroSliderAdmin", operation: "load-settings-and-history", error });
       setMessage(
         error instanceof Error ? error.message : "تعذر تحميل الإعدادات.",
       );
@@ -76,6 +79,7 @@ export function SuperAdminHeroSliderPage() {
           : "تم حفظ المسودة.",
       );
     } catch (error) {
+      reportSystemIssue({ feature: "HeroSliderAdmin", operation: action, error });
       setMessage(
         error instanceof Error ? error.message : "تعذر حفظ الإعدادات.",
       );
@@ -100,6 +104,7 @@ export function SuperAdminHeroSliderPage() {
       setPublications(await homeHeroSliderApiService.listPublications(session));
       setMessage("The selected publication was restored as a new version.");
     } catch (error) {
+      reportSystemIssue({ feature: "HeroSliderAdmin", operation: "restore-publication", error });
       setMessage(
         error instanceof Error
           ? error.message
@@ -261,7 +266,10 @@ export function SuperAdminHeroSliderPage() {
         )}
       </section>
 
-      <div className="sticky bottom-4 mt-6 flex flex-wrap justify-end gap-3 rounded-xl border bg-background/95 p-4 shadow-lg backdrop-blur">
+      <div
+        className="sticky mt-6 flex flex-wrap justify-end gap-3 rounded-xl border bg-background/95 p-4 shadow-lg backdrop-blur"
+        style={{ bottom: BOTTOM_NAV_CLEARANCE }}
+      >
         <Button
           type="button"
           variant="outline"

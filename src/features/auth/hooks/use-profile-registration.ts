@@ -15,6 +15,7 @@ import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import type { UserProfile } from '../entities/profile.entity';
 import type { ProfileRegistrationSnapshot } from '@/features/profile/entities/profile-editor.entity';
+import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 
 export function useProfileRegistration() {
   const { t } = useTranslation();
@@ -94,6 +95,9 @@ export function useProfileRegistration() {
       'UPDATE',
     ),
     onSuccess: applySaved,
+    onError: (error) => {
+      reportSystemIssue({ feature: 'Profile', operation: 'save-registration-info', error });
+    },
   });
 
   const error = useMemo(() => {

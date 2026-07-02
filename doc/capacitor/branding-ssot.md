@@ -30,7 +30,7 @@ It must contain real transparent pixels. The generator rejects opaque SSOT image
 
 Android and iOS icon outputs are flattened onto white only where the platform requires an opaque app icon. Adaptive foreground output remains transparent and fills its generated canvas.
 
-Before generating any web, Android, or iOS icon, the generator trims accidental transparent outer margins, normalizes the artwork, then places it at a fixed 86% scale in the square canvas. The remaining space is a consistent safety margin: transparent for web and Android foreground output, and platform-compatible for opaque icon formats. This prevents clipping and oversized artwork while avoiding hand-edited padding.
+Before generating any web, Android, or iOS icon, the generator trims accidental transparent outer margins, normalizes the artwork, then places it at a fixed 80% scale in the square canvas. The remaining space is a consistent safety margin: transparent for web and Android foreground output, and platform-compatible for opaque icon formats. This prevents clipping and oversized artwork while avoiding hand-edited padding.
 
 ## Automatic Generation
 

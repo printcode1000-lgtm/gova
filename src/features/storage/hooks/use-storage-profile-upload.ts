@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 import type { StorageProfileId } from '@/core/storage/constants/storage-profiles';
 import { imageStorageService } from '../services/image-storage-service';
+import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 
 interface UseStorageProfileUploadOptions {
   storageProfileId: StorageProfileId;
@@ -45,6 +46,11 @@ export function useStorageProfileUpload({
         onChange({ imageKey: result.imageKey, url: result.url });
         return true;
       } catch (err) {
+        reportSystemIssue({
+          feature: 'ProfileImageStorage',
+          operation: `upload:${storageProfileId}`,
+          error: err,
+        });
         const message = err instanceof Error ? err.message : 'Upload failed';
         setError(message);
         onChange(value ? { ...value, isUploading: false, error: message } : null);
@@ -68,6 +74,11 @@ export function useStorageProfileUpload({
       await imageStorageService.deleteImage(storageProfileId, value.imageKey);
       onChange(null);
     } catch (err) {
+      reportSystemIssue({
+        feature: 'ProfileImageStorage',
+        operation: `delete:${storageProfileId}`,
+        error: err,
+      });
       const message = err instanceof Error ? err.message : 'Delete failed';
       setError(message);
     } finally {

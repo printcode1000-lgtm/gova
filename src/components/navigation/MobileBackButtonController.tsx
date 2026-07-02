@@ -2,6 +2,7 @@
 
 import { LogOut } from 'lucide-react';
 
+import { BOTTOM_NAV_CLEARANCE } from '@/components/layouts/bottom-nav-layout';
 import { useMobileBackButton } from '@/features/navigation/hooks/use-mobile-back-button';
 import { useTranslation } from '@/lib/i18n';
 
@@ -15,7 +16,8 @@ export function MobileBackButtonController() {
     <div
       role="status"
       aria-live="polite"
-      className="fixed inset-x-4 bottom-20 z-[140] mx-auto flex max-w-sm items-center justify-center gap-2 rounded-2xl bg-inverse-surface px-4 py-3 text-sm font-semibold text-inverse-on-surface shadow-xl md:bottom-5"
+      className="fixed inset-x-4 z-[140] mx-auto flex max-w-sm items-center justify-center gap-2 rounded-2xl bg-inverse-surface px-4 py-3 text-sm font-semibold text-inverse-on-surface shadow-xl"
+      style={{ bottom: BOTTOM_NAV_CLEARANCE }}
     >
       <LogOut className="h-4 w-4" aria-hidden="true" />
       {t('navigation.pressBackAgainToExit')}

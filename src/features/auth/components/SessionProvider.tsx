@@ -35,10 +35,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     void (async () => {
-      await sessionService.cleanLegacyStore();
-      if (!active) return;
-      await refreshSession();
-      if (active) setIsLoading(false);
+      try {
+        await sessionService.cleanLegacyStore();
+        if (!active) return;
+        await refreshSession();
+      } catch (error) {
+        console.error('[SessionProvider] Session bootstrap failed.', error);
+      } finally {
+        if (active) setIsLoading(false);
+      }
     })();
     return () => {
       active = false;

@@ -9,6 +9,7 @@ import {
   type StoreDetailsData,
 } from '../entities/store-details.entity';
 import { profileService } from '../services/profile-service';
+import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 
 const storeDetailsQueryKey = (uid: string) =>
   ['profile', 'store-details', uid] as const;
@@ -42,6 +43,12 @@ export function useStoreDetails() {
     setBaseline(detailsQuery.data);
   }, [detailsQuery.data]);
 
+  useEffect(() => {
+    if (detailsQuery.error) {
+      reportSystemIssue({ feature: 'Profile', operation: 'load-store-details', error: detailsQuery.error });
+    }
+  }, [detailsQuery.error]);
+
   const isDirty = isStoreDetailsDirty(details, baseline);
 
   const applySaved = useCallback(
@@ -59,6 +66,9 @@ export function useStoreDetails() {
       return profileService.saveStoreDetails({ uid, ...data });
     },
     onSuccess: applySaved,
+    onError: (error) => {
+      reportSystemIssue({ feature: 'Profile', operation: 'save-store-details', error });
+    },
   });
 
   const updateField = useCallback(

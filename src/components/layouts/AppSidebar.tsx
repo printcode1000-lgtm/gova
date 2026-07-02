@@ -6,6 +6,7 @@ import {
   Eye,
   LogIn,
   LogOut,
+  ScrollText,
   Settings,
   ShieldCheck,
   X,
@@ -158,13 +159,21 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                     />
                   </button>
                   {superAdminOpen && (
-                    <div className="px-3 pb-3 ps-11">
+                    <div className="space-y-1 px-3 pb-3 ps-11">
                       <Link
                         href="/super-admin/hero-slider"
                         onClick={onClose}
                         className="block rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
                       >
                         Hero Slider
+                      </Link>
+                      <Link
+                        href="/super-admin/logs"
+                        onClick={onClose}
+                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+                      >
+                        <ScrollText className="h-4 w-4" />
+                        سجل النظام
                       </Link>
                     </div>
                   )}

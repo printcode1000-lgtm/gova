@@ -178,6 +178,54 @@ import { PreferencesProvider } from '@/lib/preferences';
 
 ---
 
+## Bottom navigation safe space
+
+All in-app routes are rendered through `AppShell`, which reserves enough space for the fixed bottom navigation. Page components must not add their own guessed bottom padding such as `pb-24` or hard-coded offsets such as `bottom-20`.
+
+### How it works
+
+- `BottomNavBar` measures its rendered height with `ResizeObserver`.
+- The measured value is published on `<html>` as `--gova-bottom-nav-space`.
+- The measurement includes the navigation content and `env(safe-area-inset-bottom)` padding.
+- `AppShell` uses the shared `BOTTOM_NAV_CLEARANCE` value as its `padding-bottom`, so every route ends above the navigation automatically.
+- The fallback is `5rem + env(safe-area-inset-bottom, 0px)`, preventing overlap before client hydration.
+- An additional `1rem` gap keeps content visually separated from the navigation.
+
+The shared expression is defined in:
+
+```ts
+// src/components/layouts/bottom-nav-layout.ts
+export const BOTTOM_NAV_CLEARANCE =
+  'calc(var(--gova-bottom-nav-space, calc(5rem + env(safe-area-inset-bottom, 0px))) + 1rem)';
+```
+
+### Fixed and sticky elements
+
+Normal page content is protected by `AppShell`. Viewport-positioned elements are outside document flow, so every page-level `fixed` or bottom-aligned `sticky` element must use the same clearance:
+
+```tsx
+import { BOTTOM_NAV_CLEARANCE } from '@/components/layouts/bottom-nav-layout';
+
+<div
+  className="fixed inset-x-4"
+  style={{ bottom: BOTTOM_NAV_CLEARANCE }}
+>
+  {/* floating action, toast, or status content */}
+</div>
+```
+
+This rule applies to floating actions, save bars, toasts, network banners, and navigation hints. Decorative elements contained inside a component, such as an absolutely positioned carousel control, do not need the app-level clearance.
+
+### Implementation rules
+
+1. Do not add per-page bottom padding to compensate for `BottomNavBar`.
+2. Do not duplicate the navigation height in Tailwind classes or CSS.
+3. Import `BOTTOM_NAV_CLEARANCE` for any new viewport-level bottom element.
+4. Keep the Safe Area padding on `BottomNavBar`; the measured height already includes it.
+5. If the navigation height changes with content, locale, density, or device insets, `ResizeObserver` updates all consumers automatically.
+
+---
+
 ## Settings UI
 
 Users change theme options in **Settings** (`src/components/settings/SettingsPageContent.tsx`):

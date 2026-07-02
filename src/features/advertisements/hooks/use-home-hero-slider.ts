@@ -9,6 +9,7 @@ import type {
   HomeHeroPublished,
 } from "../entities/home-hero-slider.entity";
 import { homeHeroSliderApiService } from "../services/home-hero-slider-api-service";
+import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
 const CACHE_KEY = "advertisements:home-hero-slider";
 
@@ -27,17 +28,17 @@ export function useHomeHeroSlider() {
   const [data, setData] = useState<HomeHeroPublished>(fallback);
 
   const checkForUpdates = useCallback(async (force = false) => {
-    const cached = await govaDbGet<HomeHeroCache>(
-      GOVA_DB_STORES.APP_SETTINGS,
-      CACHE_KEY,
-    );
-    if (cached) setData(cached);
-
-    const intervalMs = (cached?.checkIntervalMinutes ?? 15) * 60_000;
-    const lastCheck = cached ? Date.parse(cached.lastCheckedAt) : 0;
-    if (!force && Date.now() - lastCheck < intervalMs) return;
-
     try {
+      const cached = await govaDbGet<HomeHeroCache>(
+        GOVA_DB_STORES.APP_SETTINGS,
+        CACHE_KEY,
+      );
+      if (cached) setData(cached);
+
+      const intervalMs = (cached?.checkIntervalMinutes ?? 15) * 60_000;
+      const lastCheck = cached ? Date.parse(cached.lastCheckedAt) : 0;
+      if (!force && Date.now() - lastCheck < intervalMs) return;
+
       const version = await homeHeroSliderApiService.getVersion();
       let next: HomeHeroPublished = cached ?? fallback;
       if (!cached || version.version > cached.version) {
@@ -54,8 +55,15 @@ export function useHomeHeroSlider() {
         ...next,
         lastCheckedAt: new Date().toISOString(),
       });
-    } catch {
+    } catch (error) {
       // Offline and transient failures keep the last known local version visible.
+      reportSystemIssue({
+        level: "warning",
+        feature: "Home",
+        operation: "sync-hero-slider",
+        error,
+        page: "/home",
+      });
     }
   }, []);
 

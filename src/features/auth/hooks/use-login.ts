@@ -12,6 +12,7 @@ import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
+import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -42,6 +43,15 @@ export function useLogin() {
     onSuccess: (session) => {
       endGuestSession();
       setSession(session);
+    },
+    onError: (error) => {
+      reportSystemIssue({
+        level: error instanceof Error && ['userNotFound', 'invalidPassword'].includes(error.message) ? 'warning' : 'error',
+        feature: 'Authentication',
+        operation: 'login',
+        error,
+        page: '/login',
+      });
     },
   });
 

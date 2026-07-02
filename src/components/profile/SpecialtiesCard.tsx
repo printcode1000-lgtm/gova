@@ -3,6 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
 import { useTranslation } from "@/lib/i18n";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -656,7 +657,10 @@ export const SpecialtiesCard = React.forwardRef<
       )}
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-4 right-4 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg z-[100] animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div
+          className="fixed right-4 z-[100] animate-in fade-in slide-in-from-bottom-4 rounded-lg bg-red-600 px-4 py-3 text-white shadow-lg duration-300"
+          style={{ bottom: BOTTOM_NAV_CLEARANCE }}
+        >
           <p className="text-sm font-medium">{toastMessage}</p>
         </div>
       )}

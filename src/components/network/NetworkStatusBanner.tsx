@@ -3,6 +3,7 @@
 import { RefreshCw, ServerOff, Wifi, WifiOff } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
+import { BOTTOM_NAV_CLEARANCE } from '@/components/layouts/bottom-nav-layout';
 import { useNetworkStatus, type NetworkStatus } from '@/features/network/hooks/use-network-status';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -42,11 +43,12 @@ export function NetworkStatusBanner() {
       role="status"
       aria-live="polite"
       className={cn(
-        'fixed inset-x-3 bottom-20 z-[100] mx-auto flex max-w-xl items-center gap-3 rounded-2xl border px-4 py-3 shadow-lg backdrop-blur md:bottom-4',
+        'fixed inset-x-3 z-[100] mx-auto flex max-w-xl items-center gap-3 rounded-2xl border px-4 py-3 shadow-lg backdrop-blur',
         showRestored
           ? 'border-success/30 bg-success-container text-on-success-container'
           : 'border-error/30 bg-error-container text-on-error-container',
       )}
+      style={{ bottom: BOTTOM_NAV_CLEARANCE }}
     >
       <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
       <p className="min-w-0 flex-1 text-sm font-medium">{message}</p>
