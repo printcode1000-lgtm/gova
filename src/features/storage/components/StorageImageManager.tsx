@@ -88,6 +88,92 @@ function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
+async function normalizeSelectedImageFile(file: File): Promise<File> {
+  const maybeHeic =
+    !file.type || /hei[cf]/i.test(file.type) || /\.hei[cf]$/i.test(file.name);
+  if (maybeHeic) {
+    traceStorageImageManager("heic", "format-detection-started", {
+      name: file.name,
+      browserType: file.type || null,
+      size: file.size,
+    });
+    const { heicTo, isHeic } = await import("heic-to/csp");
+    if (await isHeic(file)) {
+      traceStorageImageManager("heic", "conversion-started", {
+        name: file.name,
+        inputBytes: file.size,
+      });
+      const jpeg = await heicTo({
+        blob: file,
+        type: "image/jpeg",
+        quality: 0.92,
+      });
+      const baseName = file.name.replace(/\.[^.]+$/, "") || "selected-image";
+      traceStorageImageManager("heic", "conversion-completed", {
+        outputBytes: jpeg.size,
+        outputType: jpeg.type,
+      });
+      return new File([jpeg], `${baseName}.jpg`, {
+        type: "image/jpeg",
+        lastModified: file.lastModified,
+      });
+    }
+    traceStorageImageManager("heic", "format-detection-negative", {
+      name: file.name,
+    });
+  }
+
+  if (file.type.startsWith("image/")) return file;
+
+  const bytes = new Uint8Array(await file.slice(0, 16).arrayBuffer());
+  let mimeType: string | null = null;
+  let extension: string | null = null;
+
+  if (
+    bytes.length >= 3 &&
+    bytes[0] === 0xff &&
+    bytes[1] === 0xd8 &&
+    bytes[2] === 0xff
+  ) {
+    mimeType = "image/jpeg";
+    extension = "jpg";
+  } else if (
+    bytes.length >= 8 &&
+    bytes[0] === 0x89 &&
+    bytes[1] === 0x50 &&
+    bytes[2] === 0x4e &&
+    bytes[3] === 0x47
+  ) {
+    mimeType = "image/png";
+    extension = "png";
+  } else if (
+    bytes.length >= 12 &&
+    String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" &&
+    String.fromCharCode(...bytes.slice(8, 12)) === "WEBP"
+  ) {
+    mimeType = "image/webp";
+    extension = "webp";
+  } else if (
+    bytes.length >= 6 &&
+    String.fromCharCode(...bytes.slice(0, 6)).startsWith("GIF8")
+  ) {
+    mimeType = "image/gif";
+    extension = "gif";
+  }
+
+  if (!mimeType || !extension) {
+    throw new Error(
+      `The selected file has no browser MIME type and its bytes are not a supported JPEG, PNG, WebP, or GIF image: ${file.name}`,
+    );
+  }
+
+  const baseName = file.name.replace(/\.[^.]+$/, "") || "selected-image";
+  return new File([file], `${baseName}.${extension}`, {
+    type: mimeType,
+    lastModified: file.lastModified,
+  });
+}
+
 export function parseStorageImageManagerConfig(
   raw: unknown,
 ): StorageImageManagerConfig {
@@ -144,9 +230,7 @@ function normalizeImages(
   images: StoredImage[],
   maxItems: number,
 ): StoredImage[] {
-  return images
-    .filter((image) => image.imageKey && image.url)
-    .slice(0, maxItems);
+  return images.filter((image) => image.url).slice(0, maxItems);
 }
 
 function removeAt(images: StoredImage[], index: number): StoredImage[] {
@@ -239,8 +323,7 @@ function StorageImageSlot({
   const previewUrl = selectedPreviewUrl ?? image?.url ?? null;
   const displayError = sourceError ?? error;
   const busy = isUploading || image?.isUploading || isChoosingSource;
-  const canChoose =
-    !previewUrl || (config.allowReplace && !image?.imageKey && !selectedFile);
+  const canChoose = !previewUrl || (config.allowReplace && !selectedFile);
 
   const uploadCandidate = async (file: File) => {
     traceStorageImageManager(config.id, "upload-started", {
@@ -268,22 +351,32 @@ function StorageImageSlot({
       size: file.size,
       lastModified: file.lastModified,
     });
-    if (!file.type.startsWith("image/")) {
-      const invalidTypeError = new Error(
-        `Unsupported selected file type: ${file.type || "unknown"}`,
-      );
+    let normalizedFile: File;
+    try {
+      normalizedFile = await normalizeSelectedImageFile(file);
+      traceStorageImageManager(config.id, "file-type-normalized", {
+        index,
+        originalType: file.type || null,
+        detectedType: normalizedFile.type,
+        normalizedName: normalizedFile.name,
+      });
+    } catch (fileTypeError) {
       console.error(
         `[StorageImageManager:${config.id}] file-rejected`,
-        invalidTypeError,
+        fileTypeError,
       );
-      setSourceError(invalidTypeError.message);
+      setSourceError(
+        fileTypeError instanceof Error
+          ? fileTypeError.message
+          : "Unsupported selected file",
+      );
       return;
     }
     setSourceError(null);
-    setSelectedFile(file);
+    setSelectedFile(normalizedFile);
     try {
       traceStorageImageManager(config.id, "preview-read-started", { index });
-      const preview = await fileToDataUrl(file);
+      const preview = await fileToDataUrl(normalizedFile);
       setSelectedPreviewUrl(preview);
       traceStorageImageManager(config.id, "preview-ready", {
         index,
@@ -304,13 +397,9 @@ function StorageImageSlot({
       return;
     }
 
-    const confirmed =
-      !config.confirmUpload || window.confirm(CONFIRM_UPLOAD_MESSAGE);
-    traceStorageImageManager(config.id, "automatic-upload-confirmation", {
+    traceStorageImageManager(config.id, "file-staged-for-manual-upload", {
       index,
-      confirmed,
     });
-    if (confirmed) await uploadCandidate(file);
   };
 
   const chooseFromDevice = async () => {
@@ -502,6 +591,22 @@ function StorageImageSlot({
           >
             <X className="h-4 w-4" />
           </button>
+          {config.allowReplace && !selectedFile && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                void chooseFromDevice();
+              }}
+              disabled={busy}
+              aria-label="Replace image"
+              title="Replace image"
+              className="absolute bottom-2 left-2 rounded-full bg-background/90 p-2 shadow-md transition-colors hover:bg-primary/10 disabled:opacity-50"
+            >
+              <Images className="h-4 w-4" />
+            </button>
+          )}
           {selectedFile && (
             <Button
               type="button"

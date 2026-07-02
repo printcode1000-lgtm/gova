@@ -99,18 +99,21 @@ type StoredImage = {
 
 The feature that uses the component must save the `imageKey` in its own layer.
 
-## Selection and automatic upload
+## Selection and manual upload
 
-Selecting an image now starts the complete flow:
+Selecting an image prepares it for upload:
 
 1. Read the selected native or browser `File`.
-2. Build a `data:` preview that works in Android WebView without a temporary Blob URL.
-3. Ask for upload confirmation when `confirmUpload` is enabled.
-4. Compress and convert the image for the selected storage profile.
-5. Send multipart data to the upload API.
-6. Persist the returned `imageKey` through the feature's `onChange` handler.
+2. Detect HEIC/HEIF files even when the browser returns an empty MIME type, and convert them to JPEG in the browser.
+3. Build a `data:` preview that works in Android WebView without a temporary Blob URL.
+4. Keep the selected image visible without changing the stored image reference.
+5. Wait for the user to press the upload button.
+6. Ask for upload confirmation when `confirmUpload` is enabled.
+7. Compress and convert the image for the selected storage profile.
+8. Send multipart data to the upload API.
+9. Persist the returned `imageKey` through the feature's `onChange` handler.
 
-If confirmation is declined, the selected preview remains visible and the manual upload button can retry the same file.
+If confirmation is declined, the selected preview remains visible and the upload button can retry the same file.
 
 ## Diagnostic tracing
 
@@ -124,7 +127,8 @@ Expected successful sequence:
 [StorageImageManager:<slot>] file-received
 [StorageImageManager:<slot>] preview-read-started
 [StorageImageManager:<slot>] preview-ready
-[StorageImageManager:<slot>] automatic-upload-confirmation
+[StorageImageManager:<slot>] file-staged-for-manual-upload
+[StorageImageManager:<slot>] manual-upload-confirmation
 [StorageImageManager:<slot>] upload-started
 [StorageImageManager:<profile>] profile-request-start
 [StorageImageManager:processor] file-read-start
