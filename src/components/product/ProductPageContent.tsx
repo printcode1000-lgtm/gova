@@ -1,104 +1,34 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import {
-  ProductComponentFrame,
-  ProductField,
-} from "@/components/product-preview/shared";
-import type { ProductPreviewMode } from "@/components/product-preview";
-import { StorageImageManager } from "@/features/storage/components/StorageImageManager";
-import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
+import { govaApi } from "@/core/api";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/components/SessionProvider";
-import { productApiService } from "@/features/product/services/product-api-service";
 import type {
   ProductFieldValues,
   ProductRecord,
 } from "@/features/product/entities/product.entity";
-import { govaApi } from "@/core/api";
+import { productApiService } from "@/features/product/services/product-api-service";
+import { ProductComponentsRenderer } from "./ProductComponentsRenderer";
+import type {
+  ProductMode,
+  ProductStyleComponents,
+} from "./product-component.types";
 
 interface ProductPageContentProps {
-  mode: ProductPreviewMode;
+  mode: ProductMode;
   productId: string;
   mainCategoryId: string;
   subcategoryId: string;
 }
 
-type ComponentConfig = Record<string, boolean | number | string> & {
-  visible: boolean;
-  order: number;
-};
 interface ProductStyleFile {
-  components: Record<string, ComponentConfig>;
+  components: ProductStyleComponents;
 }
-
-const FIELD_DEFINITIONS: Record<
-  string,
-  Array<[string, string, "text" | "number" | "textarea"]>
-> = {
-  mainData: [
-    ["name", "الاسم", "text"],
-    ["brand", "العلامة التجارية", "text"],
-    ["manufacturer", "الشركة المصنعة", "text"],
-    ["available", "التوفر", "text"],
-    ["description", "الوصف", "textarea"],
-  ],
-  price: [
-    ["current", "السعر الحالي", "number"],
-    ["beforeDiscount", "السعر قبل الخصم", "number"],
-    ["needsCar", "يحتاج سيارة", "text"],
-  ],
-  specifications: [
-    ["color", "اللون", "text"],
-    ["dimensions", "الأبعاد", "text"],
-    ["condition", "الحالة", "text"],
-    ["size", "المقاس", "text"],
-    ["weight", "الوزن", "text"],
-    ["year", "السنة", "number"],
-  ],
-  vehicleSpecs: [
-    ["brand", "الماركة", "text"],
-    ["bodyType", "نوع الهيكل", "text"],
-    ["fuel", "نوع الوقود", "text"],
-    ["transmission", "ناقل الحركة", "text"],
-  ],
-  propertySpecs: [
-    ["area", "المساحة", "text"],
-    ["rooms", "عدد الغرف", "number"],
-    ["bathrooms", "عدد الحمامات", "number"],
-    ["type", "نوع العقار", "text"],
-    ["address", "العنوان", "text"],
-    ["location", "الموقع", "text"],
-    ["finishing", "التشطيب", "text"],
-  ],
-  pharmacySpecs: [
-    ["nameAr", "الاسم بالعربي", "text"],
-    ["nameEn", "الاسم بالإنجليزي", "text"],
-    ["form", "شكل الدواء", "text"],
-    ["concentration", "التركيز", "text"],
-    ["activeIngredient", "المادة الفعالة", "text"],
-  ],
-  rating: [
-    ["rating", "التقييم", "number"],
-    ["comment", "التعليق", "textarea"],
-  ],
-};
-
-const COMPONENT_TITLES: Record<string, string> = {
-  images: "الصور",
-  rating: "التقييم",
-  price: "السعر",
-  order: "الطلب",
-  mainData: "البيانات الأساسية",
-  specifications: "المواصفات",
-  vehicleSpecs: "مواصفات المركبة",
-  propertySpecs: "مواصفات العقار",
-  pharmacySpecs: "مواصفات الصيدلية",
-};
 
 export function ProductPageContent({
   mode,
@@ -118,6 +48,9 @@ export function ProductPageContent({
 
   const mainCategoryId = product?.mainCategoryId ?? initialMain;
   const subcategoryId = product?.subcategoryId ?? initialSub;
+  const editable = mode !== "view";
+  const ownerAllowed =
+    mode === "new" || !product || product.uid === session?.uid;
 
   React.useEffect(() => {
     let cancelled = false;
@@ -139,10 +72,12 @@ export function ProductPageContent({
           if (!initialMain || !initialSub)
             throw new Error("يلزم تحديد التصنيف الرئيسي والفرعي.");
           if (!cancelled) {
+            setProduct(null);
             setFields({});
             setImages([]);
           }
         }
+
         const main = loadedProduct?.mainCategoryId ?? initialMain;
         const sub = loadedProduct?.subcategoryId ?? initialSub;
         const loadedStyle = await govaApi.getPublicJson<ProductStyleFile>(
@@ -165,21 +100,6 @@ export function ProductPageContent({
       cancelled = true;
     };
   }, [initialMain, initialSub, mode, productId]);
-
-  const editable = mode !== "view";
-  const ownerAllowed =
-    mode === "new" || !product || product.uid === session?.uid;
-  const components = React.useMemo(
-    () =>
-      style
-        ? Object.entries(style.components)
-            .filter(([, config]) => config.visible)
-            .sort(
-              ([, left], [, right]) => Number(left.order) - Number(right.order),
-            )
-        : [],
-    [style],
-  );
 
   const save = async () => {
     if (!session?.uid || !ownerAllowed) return;
@@ -258,92 +178,14 @@ export function ProductPageContent({
               : fields["mainData.name"] || "عرض المنتج"}
         </h1>
       </header>
-      {components.map(([key, config]) => {
-        if (key === "images")
-          return (
-            <ProductComponentFrame key={key} title={COMPONENT_TITLES[key]}>
-              {editable ? (
-                <StorageImageManager
-                  config={{
-                    id: "product-images",
-                    storageProfileId: StorageProfiles.ProductDefault,
-                    maxItems: Number(config.count || 1),
-                    aspectRatio: "square",
-                    allowReplace: true,
-                    confirmUpload: false,
-                    confirmRemove: true,
-                  }}
-                  value={images}
-                  onChange={setImages}
-                />
-              ) : (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  {images.map((image) => (
-                    <img
-                      key={image.imageKey}
-                      src={image.url}
-                      alt=""
-                      className="aspect-square w-full rounded-xl object-cover"
-                    />
-                  ))}
-                </div>
-              )}
-            </ProductComponentFrame>
-          );
-        if (key === "order")
-          return (
-            <ProductComponentFrame key={key} title={COMPONENT_TITLES[key]}>
-              <div className="flex flex-wrap gap-2">
-                {config.cart ? (
-                  <button className="rounded-xl bg-primary px-4 py-2 text-on-primary">
-                    إضافة إلى السلة
-                  </button>
-                ) : null}
-                {config.favorite ? (
-                  <button className="rounded-xl border px-4 py-2">
-                    المفضلة
-                  </button>
-                ) : null}
-                {config.contact ? (
-                  <button className="rounded-xl border px-4 py-2">تواصل</button>
-                ) : null}
-              </div>
-            </ProductComponentFrame>
-          );
-        const definitions = FIELD_DEFINITIONS[key] ?? [];
-        return (
-          <ProductComponentFrame key={key} title={COMPONENT_TITLES[key] ?? key}>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {definitions.map(([fieldKey, label, fieldType]) => {
-                if (
-                  key === "rating" &&
-                  fieldKey === "comment" &&
-                  config.type !== "stars-comments"
-                )
-                  return null;
-                if (key !== "rating" && config[fieldKey] === false) return null;
-                const storageKey = `${key}.${fieldKey}`;
-                return (
-                  <ProductField
-                    key={storageKey}
-                    label={label}
-                    value={fields[storageKey] ?? ""}
-                    mode={mode}
-                    type={fieldType === "number" ? "number" : "text"}
-                    multiline={fieldType === "textarea"}
-                    onChange={(value) =>
-                      setFields((current) => ({
-                        ...current,
-                        [storageKey]: value,
-                      }))
-                    }
-                  />
-                );
-              })}
-            </div>
-          </ProductComponentFrame>
-        );
-      })}
+      <ProductComponentsRenderer
+        mode={mode}
+        components={style?.components ?? {}}
+        fields={fields}
+        onFieldsChange={setFields}
+        images={images}
+        onImagesChange={setImages}
+      />
       {error ? (
         <p className="rounded-xl bg-destructive/10 p-3 text-destructive">
           {error}

@@ -141,6 +141,29 @@ Provider selection is environment-driven inside
 - Maximum images comes from the category-pair style file.
 - View mode reads stored image references and does not expose upload controls.
 
+## Product image gallery
+
+The real `/product` page uses `ProductImageGallery` in View mode.
+
+- The active image is rendered as one large main image.
+- With one image, no thumbnail row is rendered.
+- With multiple images, every thumbnail appears in a horizontally scrollable
+  row below the main image and the active thumbnail has a primary border.
+- With no images, one unified placeholder is rendered.
+- Thumbnail taps update the active image and reset zoom/pan.
+- Touch swipe changes the active image.
+- Touch pinch zooms from 1x to 4x.
+- Double tap toggles zoom, and a zoomed image supports touch pan.
+- Mouse-specific gallery interaction, arrows, zoom controls, hover behavior,
+  magnifier, and fullscreen are intentionally absent.
+- The initial main image is eager/high-priority. Thumbnails use native lazy
+  loading and asynchronous decoding. Previously loaded URLs are tracked for
+  smooth opacity transitions and the browser cache prevents repeat downloads.
+
+In Edit and New modes, `ProductImageEditors` renders the style-configured
+number of independent `StorageImageManager` instances. Every instance owns one
+slot (`maxItems: 1`) and uses `StorageProfiles.ProductDefault`.
+
 ## Client implementation
 
 - Route parser: `src/app/product/page.tsx`

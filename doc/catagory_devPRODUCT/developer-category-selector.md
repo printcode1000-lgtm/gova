@@ -16,7 +16,7 @@ Primary implementation files:
 - `src/components/dev/DeveloperCategorySelector.tsx`
 - `src/app/api/dev/product-style/route.ts`
 - `src/core/api/gova-api-routes.ts`
-- `src/components/product-preview/*`
+- `src/components/product/*`
 - `public/product/style/*.json`
 
 ## Access control
@@ -341,31 +341,34 @@ Changing mode remounts the preview subtree. This intentionally resets temporary 
 
 Preview values are not persisted to the JSON file or any database. Only component visibility, controls, count/type options, and order are persisted.
 
-## Reusable product preview components
+## Shared product renderer
 
-Every preview component is implemented independently under `src/components/product-preview` and exported through its `index.ts` barrel:
+The developer page and the real `/product` page use the same
+`ProductComponentsRenderer` from `src/components/product`. The developer page
+only converts its table state into the canonical `ProductStyleComponents`
+shape and supplies demonstration field/image data.
 
-- `ProductImages`
-- `ProductRating`
-- `ProductPrice`
-- `ProductActions`
-- `ProductMainData`
-- `ProductSpecifications`
-- `VehicleSpecifications`
-- `PropertySpecifications`
-- `PharmacySpecifications`
+The old `src/components/product-preview` implementation was removed. Rendering
+logic now has one source of truth:
 
-Shared presentation primitives and mode types are in `shared.tsx` and `types.ts`. Components accept a `mode` plus only the control flags relevant to that component, so they can be imported and rendered outside the developer page.
+- `ProductComponentsRenderer.tsx` controls visibility, order, fields, actions,
+  and mode behavior.
+- `ProductComponentPrimitives.tsx` provides the shared frame and field UI.
+- `ProductImageGallery.tsx` handles View-mode images.
+- `ProductImageEditors.tsx` handles Edit/New image slots.
+- `product-component.types.ts` defines the shared mode and style contracts.
 
 ## Image preview behavior
 
-- View mode renders demonstration image placeholders.
-- Edit and New modes expose a local `accept="image/*"` multi-file picker.
-- Selection is limited to the configured maximum image count.
-- Selected files are represented by browser object URLs and shown immediately.
-- Individual selected images can be removed.
-- Object URLs are revoked during cleanup to prevent memory leaks.
-- Files are never uploaded and are not saved when the mode or page changes.
+- View mode uses the real touch-only `ProductImageGallery` with demonstration
+  images.
+- Edit and New modes render the configured number of independent
+  `StorageImageManager` instances.
+- Every editor slot uses `StorageProfiles.ProductDefault` and the project's
+  normal local-development/R2-production storage pipeline.
+- Preview field values are temporary. An image explicitly uploaded through a
+  preview editor is a real storage upload, but its reference is not written to
+  a product record by this developer page.
 
 ## Important boundaries
 

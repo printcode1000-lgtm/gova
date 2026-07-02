@@ -12,17 +12,16 @@ import {
 } from "@/components/ui/select";
 import { GOVA_API_ROUTES, govaApi } from "@/core/api";
 import {
-  PharmacySpecifications,
-  ProductActions,
-  ProductImages,
-  ProductMainData,
-  ProductPrice,
-  ProductRating,
-  ProductSpecifications,
-  PropertySpecifications,
-  VehicleSpecifications,
-  type ProductPreviewMode,
-} from "@/components/product-preview";
+  PRODUCT_DEMO_FIELDS,
+  PRODUCT_DEMO_IMAGES,
+  ProductComponentsRenderer,
+} from "@/components/product/ProductComponentsRenderer";
+import type {
+  ProductMode,
+  ProductStyleComponents,
+} from "@/components/product/product-component.types";
+import type { ProductFieldValues } from "@/features/product/entities/product.entity";
+import type { StoredImage } from "@/core/storage/types/stored-image.types";
 
 const MEDICAL_SERVICES_CATEGORY_ID = 20;
 const DOCTOR_APPOINTMENT_VALUE = "doctor-appointment";
@@ -269,8 +268,17 @@ export function DeveloperCategorySelector() {
   const [styleStatus, setStyleStatus] = React.useState<
     "idle" | "loading" | "saving" | "saved" | "error"
   >("idle");
-  const [previewMode, setPreviewMode] =
-    React.useState<ProductPreviewMode>("view");
+  const [previewMode, setPreviewMode] = React.useState<ProductMode>("view");
+  const [previewFields, setPreviewFields] = React.useState<ProductFieldValues>({
+    ...PRODUCT_DEMO_FIELDS,
+  });
+  const [previewImages, setPreviewImages] =
+    React.useState<StoredImage[]>(PRODUCT_DEMO_IMAGES);
+
+  React.useEffect(() => {
+    setPreviewFields(previewMode === "new" ? {} : { ...PRODUCT_DEMO_FIELDS });
+    setPreviewImages(previewMode === "new" ? [] : [...PRODUCT_DEMO_IMAGES]);
+  }, [previewMode, mainCategoryId, subcategoryId]);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -727,145 +735,79 @@ export function DeveloperCategorySelector() {
     vehicleSpecsVisible,
   ]);
 
-  const previewComponents = [
-    {
-      key: "images",
+  const previewStyleComponents: ProductStyleComponents = {
+    images: {
       visible: showImages,
+      count: Number(imagesCount || 1),
       order: Number(imagesOrder || 1),
-      content: (
-        <ProductImages
-          mode={previewMode}
-          maxImages={Number(imagesCount || 1)}
-        />
-      ),
     },
-    {
-      key: "rating",
+    rating: {
       visible: ratingVisible,
+      type: ratingType,
       order: Number(ratingOrder || 2),
-      content: (
-        <ProductRating
-          mode={previewMode}
-          showComments={ratingType === "stars-comments"}
-        />
-      ),
     },
-    {
-      key: "price",
+    price: {
       visible: priceVisible,
+      current: priceCurrent,
+      beforeDiscount: priceBeforeDiscount,
+      needsCar: priceNeedsCar,
       order: Number(priceOrder || 3),
-      content: (
-        <ProductPrice
-          mode={previewMode}
-          current={priceCurrent}
-          beforeDiscount={priceBeforeDiscount}
-          needsCar={priceNeedsCar}
-        />
-      ),
     },
-    {
-      key: "order",
+    order: {
       visible: orderVisible,
+      cart: orderCart,
+      favorite: orderFavorite,
+      contact: orderContact,
       order: Number(orderOrder || 4),
-      content: (
-        <ProductActions
-          mode={previewMode}
-          cart={orderCart}
-          favorite={orderFavorite}
-          contact={orderContact}
-        />
-      ),
     },
-    {
-      key: "main-data",
+    mainData: {
       visible: mainDataVisible,
+      name: mainDataName,
+      brand: mainDataBrand,
+      manufacturer: mainDataManufacturer,
+      available: mainDataAvailable,
+      description: mainDataDescription,
       order: Number(mainDataOrder || 5),
-      content: (
-        <ProductMainData
-          mode={previewMode}
-          fields={{
-            name: mainDataName,
-            brand: mainDataBrand,
-            manufacturer: mainDataManufacturer,
-            available: mainDataAvailable,
-            description: mainDataDescription,
-          }}
-        />
-      ),
     },
-    {
-      key: "specifications",
+    specifications: {
       visible: specsVisible,
+      color: specsColor,
+      dimensions: specsDimensions,
+      condition: specsCondition,
+      size: specsSize,
+      weight: specsWeight,
+      year: specsYear,
       order: Number(specsOrder || 6),
-      content: (
-        <ProductSpecifications
-          mode={previewMode}
-          fields={{
-            color: specsColor,
-            dimensions: specsDimensions,
-            condition: specsCondition,
-            size: specsSize,
-            weight: specsWeight,
-            year: specsYear,
-          }}
-        />
-      ),
     },
-    {
-      key: "vehicle-specifications",
+    vehicleSpecs: {
       visible: vehicleSpecsVisible,
+      brand: vehicleSpecsBrand,
+      bodyType: vehicleSpecsBodyType,
+      fuel: vehicleSpecsFuel,
+      transmission: vehicleSpecsTransmission,
       order: Number(vehicleSpecsOrder || 7),
-      content: (
-        <VehicleSpecifications
-          mode={previewMode}
-          fields={{
-            brand: vehicleSpecsBrand,
-            bodyType: vehicleSpecsBodyType,
-            fuel: vehicleSpecsFuel,
-            transmission: vehicleSpecsTransmission,
-          }}
-        />
-      ),
     },
-    {
-      key: "property-specifications",
+    propertySpecs: {
       visible: propertySpecsVisible,
+      area: propertySpecsArea,
+      rooms: propertySpecsRooms,
+      bathrooms: propertySpecsBathrooms,
+      type: propertySpecsType,
+      address: propertySpecsAddress,
+      location: propertySpecsLocation,
+      finishing: propertySpecsFinishing,
       order: Number(propertySpecsOrder || 8),
-      content: (
-        <PropertySpecifications
-          mode={previewMode}
-          fields={{
-            area: propertySpecsArea,
-            rooms: propertySpecsRooms,
-            bathrooms: propertySpecsBathrooms,
-            type: propertySpecsType,
-            address: propertySpecsAddress,
-            location: propertySpecsLocation,
-            finishing: propertySpecsFinishing,
-          }}
-        />
-      ),
     },
-    {
-      key: "pharmacy-specifications",
+    pharmacySpecs: {
       visible: pharmacySpecsVisible,
+      nameAr: pharmacySpecsNameAr,
+      nameEn: pharmacySpecsNameEn,
+      form: pharmacySpecsForm,
+      concentration: pharmacySpecsConcentration,
+      activeIngredient: pharmacySpecsActiveIngredient,
       order: Number(pharmacySpecsOrder || 9),
-      content: (
-        <PharmacySpecifications
-          mode={previewMode}
-          fields={{
-            nameAr: pharmacySpecsNameAr,
-            nameEn: pharmacySpecsNameEn,
-            form: pharmacySpecsForm,
-            concentration: pharmacySpecsConcentration,
-            activeIngredient: pharmacySpecsActiveIngredient,
-          }}
-        />
-      ),
     },
-  ]
-    .filter((component) => component.visible)
-    .sort((left, right) => left.order - right.order);
+  };
 
   return (
     <main className="mx-auto w-full px-4 py-8 sm:px-6">
@@ -1847,17 +1789,14 @@ export function DeveloperCategorySelector() {
                     key={`${mainCategoryId}-${subcategoryId}-${previewMode}`}
                     className="mt-5 space-y-4 rounded-2xl bg-muted/20 p-3 sm:p-5"
                   >
-                    {previewComponents.length > 0 ? (
-                      previewComponents.map((component) => (
-                        <React.Fragment key={component.key}>
-                          {component.content}
-                        </React.Fragment>
-                      ))
-                    ) : (
-                      <p className="py-8 text-center text-sm text-muted-foreground">
-                        لا توجد مكونات مفعّلة للعرض.
-                      </p>
-                    )}
+                    <ProductComponentsRenderer
+                      mode={previewMode}
+                      components={previewStyleComponents}
+                      fields={previewFields}
+                      onFieldsChange={setPreviewFields}
+                      images={previewImages}
+                      onImagesChange={setPreviewImages}
+                    />
                   </div>
                 </div>
               </div>
