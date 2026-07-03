@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-07-03T09:52:01.111Z",
+  "executedAt": "2026-07-03T09:52:01.112Z",
   "durationMs": 0,
   "sqliteSchemaVersion": "n/a",
   "tursoSchemaVersionBefore": "n/a",
@@ -14,5 +14,5 @@
   "errors": [],
   "warnings": [],
   "skipped": true,
-  "skipReason": "Turso profile credentials not configured (TURSO_PROFILE_DATABASE_URL / TURSO_PROFILE_AUTH_TOKEN)"
+  "skipReason": "Turso advertisements credentials not configured (TURSO_ADVERTISEMENTS_DATABASE_URL or TURSO_DATABASE_URL)"
 }

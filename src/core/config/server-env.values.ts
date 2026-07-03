@@ -101,6 +101,33 @@ export function getTursoProductRuntimeCredentials(): {
   return { url, authToken };
 }
 
+export function getTursoAdvertisementsRuntimeCredentials(): {
+  url: string;
+  authToken: string;
+} {
+  // Prefer a dedicated advertisements database when configured.
+  // Falls back to the main Turso database so that simple deployments only
+  // need a single TURSO_DATABASE_URL / TURSO_AUTH_TOKEN pair.
+  const url =
+    process.env.TURSO_ADVERTISEMENTS_DATABASE_URL ||
+    process.env.TURSO_DATABASE_URL;
+  const authToken =
+    process.env.TURSO_ADVERTISEMENTS_AUTH_TOKEN ||
+    process.env.TURSO_AUTH_TOKEN;
+
+  if (!url)
+    throw new Error(
+      "Neither TURSO_ADVERTISEMENTS_DATABASE_URL nor TURSO_DATABASE_URL is set",
+    );
+  if (!authToken)
+    throw new Error(
+      "Neither TURSO_ADVERTISEMENTS_AUTH_TOKEN nor TURSO_AUTH_TOKEN is set",
+    );
+
+  return { url, authToken };
+}
+
+
 export interface R2CloudflareCredentials {
   accountId: string;
   apiToken: string;

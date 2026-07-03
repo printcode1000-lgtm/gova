@@ -101,8 +101,8 @@ export class HomeHeroSliderRepository {
   ): Promise<HomeHeroRecord> {
     await this.assertRevision(expectedRevision);
     const now = new Date().toISOString();
-    this.database.db.transaction((tx: any) => {
-      const result = tx
+    await this.database.db.transaction(async (tx: any) => {
+      const result = await tx
         .update(heroSliders)
         .set({
           draftJson: JSON.stringify({ ...config, slides: [] }),
@@ -117,10 +117,11 @@ export class HomeHeroSliderRepository {
             eq(heroSliders.id, HOME_HERO_SLIDER_ID),
             eq(heroSliders.revision, expectedRevision),
           ),
-        )
-        .run();
-      if (!result.changes) throw new Error("heroSliderRevisionConflict");
-      this.replaceSlides(tx, "draft", config);
+        );
+      const changes =
+        result?.changes ?? result?.rowsAffected ?? result?.length ?? 1;
+      if (changes === 0) throw new Error("heroSliderRevisionConflict");
+      await this.replaceSlides(tx, "draft", config);
     });
     return this.get();
   }
@@ -141,9 +142,9 @@ export class HomeHeroSliderRepository {
       .filter((key): key is string => Boolean(key))
       .filter((key) => !config.slides.some((slide) => slide.imageKey === key));
 
-    this.database.db.transaction((tx: any) => {
+    await this.database.db.transaction(async (tx: any) => {
       const compactConfig = JSON.stringify({ ...config, slides: [] });
-      const result = tx
+      const result = await tx
         .update(heroSliders)
         .set({
           draftJson: compactConfig,
@@ -162,35 +163,32 @@ export class HomeHeroSliderRepository {
             eq(heroSliders.id, HOME_HERO_SLIDER_ID),
             eq(heroSliders.revision, expectedRevision),
           ),
-        )
-        .run();
-      if (!result.changes) throw new Error("heroSliderRevisionConflict");
-      this.replaceSlides(tx, "draft", config);
-      this.replaceSlides(tx, "published", config);
-      tx.insert(heroSliderPublications)
-        .values({
-          sliderId: HOME_HERO_SLIDER_ID,
-          version: nextVersion,
-          configJson: JSON.stringify(config),
-          publishedBy: actorUid,
-          publishedAt: now,
-        })
-        .run();
+        );
+      const changes =
+        result?.changes ?? result?.rowsAffected ?? result?.length ?? 1;
+      if (changes === 0) throw new Error("heroSliderRevisionConflict");
+      await this.replaceSlides(tx, "draft", config);
+      await this.replaceSlides(tx, "published", config);
+      await tx.insert(heroSliderPublications).values({
+        sliderId: HOME_HERO_SLIDER_ID,
+        version: nextVersion,
+        configJson: JSON.stringify(config),
+        publishedBy: actorUid,
+        publishedAt: now,
+      });
       if (removedKeys.length) {
         const deleteAfter = new Date(
           Date.now() + 7 * 24 * 60 * 60 * 1000,
         ).toISOString();
-        tx.insert(advertisementImageCleanup)
-          .values(
-            removedKeys.map((imageKey) => ({
-              imageKey,
-              storageProfileId: HOME_HERO_SLIDER_ID,
-              queuedAt: now,
-              deleteAfter,
-              status: "pending",
-            })),
-          )
-          .run();
+        await tx.insert(advertisementImageCleanup).values(
+          removedKeys.map((imageKey) => ({
+            imageKey,
+            storageProfileId: HOME_HERO_SLIDER_ID,
+            queuedAt: now,
+            deleteAfter,
+            status: "pending",
+          })),
+        );
       }
     });
     return this.get();
@@ -267,18 +265,17 @@ export class HomeHeroSliderRepository {
     return rows.map(rowToSlide);
   }
 
-  private replaceSlides(tx: any, stage: SliderStage, config: HomeHeroConfig) {
-    tx.delete(heroSliderSlides)
+  private async replaceSlides(tx: any, stage: SliderStage, config: HomeHeroConfig) {
+    await tx.delete(heroSliderSlides)
       .where(
         and(
           eq(heroSliderSlides.sliderId, HOME_HERO_SLIDER_ID),
           eq(heroSliderSlides.stage, stage),
         ),
-      )
-      .run();
+      );
     const rows = slideRows(config, stage);
     if (rows.length > 0) {
-      tx.insert(heroSliderSlides).values(rows).run();
+      await tx.insert(heroSliderSlides).values(rows);
     }
   }
 
@@ -294,9 +291,9 @@ export class HomeHeroSliderRepository {
     if (rows.length) return;
     const draft = parseConfig(draftJson);
     const published = parseConfig(publishedJson);
-    this.database.db.transaction((tx: any) => {
-      this.replaceSlides(tx, "draft", draft);
-      this.replaceSlides(tx, "published", published);
+    await this.database.db.transaction(async (tx: any) => {
+      await this.replaceSlides(tx, "draft", draft);
+      await this.replaceSlides(tx, "published", published);
     });
   }
 

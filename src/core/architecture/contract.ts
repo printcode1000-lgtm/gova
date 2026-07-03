@@ -129,6 +129,7 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/core/database/')) return 'database-client';
   if (p === 'src/lib/db/turso.ts') return 'database-client';
   if (p === 'src/lib/db/turso-profile.ts') return 'database-client';
+  if (p === 'src/lib/db/turso-advertisements.ts') return 'database-client';
   if (p.includes('/repositories/')) return 'repository';
   if (p.includes('/operations/')) return 'operations';
   if (p.includes('-service.server.') || (p.endsWith('.server.ts') && p.includes('/services/'))) {

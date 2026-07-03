@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { isDevelopment } from '@/core/config/runtime-env';
+import { isDevRuntime } from '@/core/config/runtime-env';
 import type { StorageProviderId } from '../types/storage-profile.types';
 import type { IStorageProvider } from './storage-provider.interface';
 import { cloudflareR2Provider } from './cloudflare-r2.provider.server';
@@ -30,7 +30,7 @@ export const googleDriveProvider = new GoogleDriveProvider();
 
 /** Returns true when the Node runtime is local development (not Capacitor/static). */
 export function isLocalDevelopmentRuntime(): boolean {
-  return isDevelopment;
+  return isDevRuntime();
 }
 
 /**

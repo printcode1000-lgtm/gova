@@ -4,14 +4,22 @@ import { createClient } from '@libsql/client';
 import {
   PROFILE_SCHEMA_SYNC_REPORT_PATH,
   SCHEMA_SYNC_REPORT_PATH,
+  ADVERTISEMENTS_SQLITE_DB_PATH,
 } from '@/core/database/environment';
 import { getPrimarySqliteDbPath, getProfileSqliteDbPath } from '@/core/database/environment.server';
 import { readSqliteSchema } from './sqlite-schema-reader';
 import { readTursoSchema } from './turso-schema-reader';
 import { diffSchemas } from './schema-diff';
 import { computeSchemaVersion } from './schema-version';
-import { loadTursoCredentialsFromEnv, loadTursoProfileCredentialsFromEnv } from './turso-provisioner';
+import { loadTursoCredentialsFromEnv, loadTursoProfileCredentialsFromEnv, loadTursoAdvertisementsCredentialsFromEnv } from './turso-provisioner';
 import type { SchemaSyncReport } from './types';
+
+const ADVERTISEMENTS_SCHEMA_SYNC_REPORT_PATH = path.join(
+  process.cwd(),
+  'public',
+  'sync_data',
+  'advertisements-schema-sync-report.json',
+);
 
 export interface RunSchemaSyncOptions {
   /** When true, skip silently if Turso credentials are missing (local builds). */
@@ -70,13 +78,17 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
       ? { url: options.tursoUrl, authToken: options.tursoAuthToken }
       : databaseLabel === 'profile'
         ? loadTursoProfileCredentialsFromEnv()
-        : loadTursoCredentialsFromEnv();
+        : databaseLabel === 'advertisements'
+          ? loadTursoAdvertisementsCredentialsFromEnv()
+          : loadTursoCredentialsFromEnv();
 
   if (!credentials) {
     const reason =
       databaseLabel === 'profile'
         ? 'Turso profile credentials not configured (TURSO_PROFILE_DATABASE_URL / TURSO_PROFILE_AUTH_TOKEN)'
-        : 'Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)';
+        : databaseLabel === 'advertisements'
+          ? 'Turso advertisements credentials not configured (TURSO_ADVERTISEMENTS_DATABASE_URL or TURSO_DATABASE_URL)'
+          : 'Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)';
     if (options.skipIfMissingCredentials) {
       const report = buildSkippedReport(reason);
       writeReport(reportPath, report);
@@ -170,10 +182,12 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
 export interface AllSchemaSyncReports {
   users: SchemaSyncReport;
   profile: SchemaSyncReport;
+  advertisements: SchemaSyncReport;
 }
 
 /**
- * Syncs allusers.db → users Turso and profile.db → profile Turso independently.
+ * Syncs all SQLite sources → their respective Turso databases independently.
+ * Includes: allusers.db → users, profile.db → profile, advertisements.db → advertisements.
  */
 export async function runAllSchemaSyncs(
   options: Pick<RunSchemaSyncOptions, 'skipIfMissingCredentials'> = {}
@@ -192,7 +206,14 @@ export async function runAllSchemaSyncs(
     databaseLabel: 'profile',
   });
 
-  return { users, profile };
+  const advertisements = await runSchemaSync({
+    ...options,
+    sqlitePath: ADVERTISEMENTS_SQLITE_DB_PATH,
+    reportPath: ADVERTISEMENTS_SCHEMA_SYNC_REPORT_PATH,
+    databaseLabel: 'advertisements',
+  });
+
+  return { users, profile, advertisements };
 }
 
 export function getSchemaSyncReportPath(): string {
