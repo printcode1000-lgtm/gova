@@ -142,7 +142,7 @@ export function CategoriesGrid() {
             return (
               <Link
                 key={cat.id}
-                href={`/categories/${cat.id}?collection=${cat.isCollection ? '1' : '0'}`}
+                href={cat.isCollection ? `/collections/${cat.id}` : `/categories/${cat.id}`}
                 className="flex flex-col gap-2 group transition-transform duration-200 active:scale-95"
                 aria-label={name}
               >

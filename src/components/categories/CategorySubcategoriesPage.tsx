@@ -48,8 +48,6 @@ interface CategorySubcategoriesPageProps {
 export function CategorySubcategoriesPage({
   categoryId,
 }: CategorySubcategoriesPageProps) {
-  const searchParams = useSearchParams();
-  const isCollectionHint = searchParams.get("collection") === "1";
   const { locale, isRTL } = useTranslation();
   const numericCategoryId = Number(categoryId);
   const [title, setTitle] = React.useState("");
@@ -87,44 +85,9 @@ export function CategorySubcategoriesPage({
           return;
         }
 
-        const collectionItems = categories.filter(
-          (category) => category.collection === numericCategoryId,
-        );
         const category = categories.find(
           (item) => item.id === numericCategoryId,
         );
-        const shouldShowCollection =
-          isCollectionHint || (!category && collectionItems.length > 0);
-
-        if (shouldShowCollection && collectionItems.length > 0) {
-          const firstCollectionItem = collectionItems[0];
-          const collectionTitle =
-            locale === "ar"
-              ? firstCollectionItem.collection_ar
-              : firstCollectionItem.collection_en;
-
-          if (!cancelled) {
-            setTitle(collectionTitle || "");
-            setHeroImage(firstCollectionItem.collection_image || "");
-            setUsesMainCategoryImages(true);
-            setDoctorAppointmentItems([]);
-            setItems(
-              collectionItems.map((item) => ({
-                id: item.id,
-                category_id: numericCategoryId,
-                original_id: item.id,
-                title_ar: item.title_ar,
-                title_en: item.title_en,
-                icon: item.icon,
-                image: item.image,
-                created_at: item.created_at,
-                updated_at: item.updated_at,
-                sub_collection: null,
-              })),
-            );
-          }
-          return;
-        }
 
         if (!category) {
           setNotFound(true);
@@ -190,7 +153,7 @@ export function CategorySubcategoriesPage({
     return () => {
       cancelled = true;
     };
-  }, [isCollectionHint, locale, numericCategoryId]);
+  }, [locale, numericCategoryId]);
 
   const visibleItems = isDoctorAppointmentView ? doctorAppointmentItems : items;
   const normalizedSearchText = searchText.trim().toLowerCase();
