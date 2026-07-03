@@ -17,8 +17,13 @@ import {
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { useHomeHeroSlider } from "@/features/advertisements/hooks/use-home-hero-slider";
 import heroMarqueeData from "./home-featured-marquee.json";
+import type { CategoryDisplay } from "@/features/categories";
 
-export default function HomeScreen() {
+interface HomeScreenProps {
+  displayCategories: readonly CategoryDisplay[];
+}
+
+export default function HomeScreen({ displayCategories }: HomeScreenProps) {
   const homeHero = useHomeHeroSlider();
   const homeHeroSliderConfig = useMemo<HeroSliderConfig>(
     () => ({
@@ -63,7 +68,7 @@ export default function HomeScreen() {
       </div>
 
       <div className="gova-section-tonal gova-section-tonal-primary mx-2 sm:mx-4">
-        <CategoriesGrid />
+        <CategoriesGrid displayCategories={displayCategories} />
       </div>
 
       <div className="gova-section-tonal gova-section-tonal-tertiary mx-2 sm:mx-4">

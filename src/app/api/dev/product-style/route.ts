@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { apiError, apiSuccess } from "@/core/api/api-response";
 import { isDevelopment } from "@/core/config";
+import { categoryService } from "@/features/categories";
 
 export const runtime = "nodejs";
 
@@ -100,6 +101,10 @@ function getSelectionIds(request: Request) {
 
 function isSafeSelectionId(value: string) {
   return value.length > 0 && SAFE_SELECTION_ID.test(value);
+}
+
+function isValidCategorySelection(mainCategoryId: string, subcategoryId: string) {
+  return categoryService.resolveLegacyProductSelection(mainCategoryId, subcategoryId).valid;
 }
 
 function getStylePath(mainCategoryId: string, subcategoryId: string) {
@@ -236,7 +241,7 @@ export async function GET(request: Request) {
   if (!isDevelopment) return apiError("Not found", 404);
 
   const { mainCategoryId, subcategoryId } = getSelectionIds(request);
-  if (!isSafeSelectionId(mainCategoryId) || !isSafeSelectionId(subcategoryId)) {
+  if (!isSafeSelectionId(mainCategoryId) || !isSafeSelectionId(subcategoryId) || !isValidCategorySelection(mainCategoryId, subcategoryId)) {
     return apiError("Invalid category selection", 400);
   }
 
@@ -265,6 +270,9 @@ export async function PUT(request: Request) {
     const settings: unknown = await request.json();
     if (!isValidSettings(settings)) {
       return apiError("Invalid product style settings", 400);
+    }
+    if (!isValidCategorySelection(settings.mainCategoryId, settings.subcategoryId)) {
+      return apiError("Invalid category relationship", 400);
     }
 
     await mkdir(STYLE_DIRECTORY, { recursive: true });

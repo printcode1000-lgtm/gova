@@ -22,42 +22,11 @@ import type {
 } from "@/components/product/product-component.types";
 import type { ProductFieldValues } from "@/features/product/entities/product.entity";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import { categoryService, CATEGORY_CONSTANTS, type DeveloperCatalogCategory, type DeveloperCatalogSubcategory, type MainCategoryOption, type SubcategoryOption } from "@/features/categories";
 
-const MEDICAL_SERVICES_CATEGORY_ID = 20;
-const DOCTOR_APPOINTMENT_VALUE = "doctor-appointment";
-
-interface Category {
-  id: number;
-  title_ar: string;
-  title_en: string;
-  collection: number | null;
-  collection_ar: string | null;
-  collection_en: string | null;
-  order: number | null;
-}
-
-interface Subcategory {
-  id: number;
-  category_id: number;
-  original_id: number;
-  title_ar: string;
-  title_en: string;
-  sub_collection: number | string | null;
-}
-
-interface MainCategoryOption {
-  id: number;
-  titleAr: string;
-  titleEn: string;
-  isCollection: boolean;
-  order: number | null;
-}
-
-interface SubcategoryOption {
-  value: string;
-  titleAr: string;
-  titleEn: string;
-}
+const MEDICAL_SERVICES_CATEGORY_ID = CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID;
+const DOCTOR_APPOINTMENT_VALUE = CATEGORY_CONSTANTS.DOCTOR_APPOINTMENT_VALUE;
+const DELIVERY_SERVICES_ID = CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID;
 
 type DetailRecord = Record<string, unknown>;
 
@@ -198,12 +167,13 @@ function SelectedRecordDetails({
 }
 
 export function DeveloperCategorySelector() {
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [subcategories, setSubcategories] = React.useState<Subcategory[]>([]);
+  const catalog = categoryService.getDeveloperCatalog();
+  const categories: readonly DeveloperCatalogCategory[] = catalog.categories;
+  const subcategories: readonly DeveloperCatalogSubcategory[] = catalog.subcategories;
   const [mainCategoryId, setMainCategoryId] = React.useState("");
   const [subcategoryId, setSubcategoryId] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [loadError, setLoadError] = React.useState(false);
+  const isLoading = false;
+  const loadError = false;
   const [showImages, setShowImages] = React.useState(true);
   const [imagesCount, setImagesCount] = React.useState("4");
   const [imagesOrder, setImagesOrder] = React.useState("1");
@@ -282,39 +252,18 @@ export function DeveloperCategorySelector() {
     setPreviewImages(previewMode === "new" ? [] : [...PRODUCT_DEMO_IMAGES]);
   }, [previewMode, mainCategoryId, subcategoryId]);
 
-  React.useEffect(() => {
-    let cancelled = false;
-
-    Promise.all([
-      govaApi.getPublicJson<Category[]>("/catagory/categories.json"),
-      govaApi.getPublicJson<Subcategory[]>("/catagory/subcategories.json"),
-    ])
-      .then(([categoryData, subcategoryData]) => {
-        if (cancelled) return;
-        setCategories(categoryData);
-        setSubcategories(subcategoryData);
-      })
-      .catch(() => {
-        if (!cancelled) setLoadError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   const mainCategoryOptions = React.useMemo<MainCategoryOption[]>(() => {
     const options = new Map<string, MainCategoryOption>();
 
     categories.forEach((category) => {
       if (category.collection === null) {
+        // Delivery Services لا تظهر في الخيارات
+        if (category.id === DELIVERY_SERVICES_ID) return;
+        
         options.set(`category-${category.id}`, {
           id: category.id,
-          titleAr: category.title_ar,
-          titleEn: category.title_en,
+          titleAr: category.titleAr,
+          titleEn: category.titleEn,
           isCollection: false,
           order: category.order,
         });
@@ -325,8 +274,8 @@ export function DeveloperCategorySelector() {
       if (!options.has(key)) {
         options.set(key, {
           id: category.collection,
-          titleAr: category.collection_ar ?? "",
-          titleEn: category.collection_en ?? "",
+          titleAr: category.collectionAr ?? "",
+          titleEn: category.collectionEn ?? "",
           isCollection: true,
           order: category.order,
         });
@@ -353,21 +302,21 @@ export function DeveloperCategorySelector() {
         )
         .map((category) => ({
           value: category.id.toString(),
-          titleAr: category.title_ar,
-          titleEn: category.title_en,
+          titleAr: category.titleAr,
+          titleEn: category.titleEn,
         }));
     }
 
     const items = subcategories.filter(
-      (subcategory) => subcategory.category_id === selectedMainCategory.id,
+      (subcategory) => subcategory.categoryId === selectedMainCategory.id,
     );
 
     if (selectedMainCategory.id === MEDICAL_SERVICES_CATEGORY_ID) {
       const visibleItems = items.filter(
-        (subcategory) => subcategory.sub_collection !== 0,
+        (subcategory) => subcategory.subCollection !== 0,
       );
       const hasDoctorAppointmentItems = items.some(
-        (subcategory) => subcategory.sub_collection === 0,
+        (subcategory) => subcategory.subCollection === 0,
       );
 
       return [
@@ -381,17 +330,17 @@ export function DeveloperCategorySelector() {
             ]
           : []),
         ...visibleItems.map((subcategory) => ({
-          value: subcategory.original_id.toString(),
-          titleAr: subcategory.title_ar,
-          titleEn: subcategory.title_en,
+          value: subcategory.originalId.toString(),
+          titleAr: subcategory.titleAr,
+          titleEn: subcategory.titleEn,
         })),
       ];
     }
 
     return items.map((subcategory) => ({
-      value: subcategory.original_id.toString(),
-      titleAr: subcategory.title_ar,
-      titleEn: subcategory.title_en,
+      value: subcategory.originalId.toString(),
+      titleAr: subcategory.titleAr,
+      titleEn: subcategory.titleEn,
     }));
   }, [categories, selectedMainCategory, subcategories]);
 
@@ -413,15 +362,15 @@ export function DeveloperCategorySelector() {
 
     return {
       id: selectedMainCategory.id,
-      category_id: null,
-      original_id: null,
-      title_ar: selectedMainCategory.titleAr,
-      title_en: selectedMainCategory.titleEn,
+      categoryId: null,
+      originalId: null,
+      titleAr: selectedMainCategory.titleAr,
+      titleEn: selectedMainCategory.titleEn,
       collection: selectedMainCategory.id,
-      collection_ar: firstItem?.collection_ar ?? selectedMainCategory.titleAr,
-      collection_en: firstItem?.collection_en ?? selectedMainCategory.titleEn,
-      collection_image:
-        (firstItem as unknown as DetailRecord | undefined)?.collection_image ??
+      collectionAr: firstItem?.collectionAr ?? selectedMainCategory.titleAr,
+      collectionEn: firstItem?.collectionEn ?? selectedMainCategory.titleEn,
+      collectionImage:
+        firstItem?.collectionImage ??
         null,
       order: selectedMainCategory.order,
       is_collection: true,
@@ -443,28 +392,28 @@ export function DeveloperCategorySelector() {
     if (subcategoryId === DOCTOR_APPOINTMENT_VALUE) {
       const appointmentItems = subcategories.filter(
         (item) =>
-          item.category_id === MEDICAL_SERVICES_CATEGORY_ID &&
-          item.sub_collection === 0,
+          item.categoryId === MEDICAL_SERVICES_CATEGORY_ID &&
+          item.subCollection === 0,
       );
 
       return {
         id: DOCTOR_APPOINTMENT_VALUE,
-        category_id: MEDICAL_SERVICES_CATEGORY_ID,
-        original_id: null,
-        sub_collection: 0,
-        title_ar: "كشف طبي",
-        title_en: "Doctor Appointment",
+        categoryId: MEDICAL_SERVICES_CATEGORY_ID,
+        originalId: null,
+        subCollection: 0,
+        titleAr: "كشف طبي",
+        titleEn: "Doctor Appointment",
         image: "doctors_appointment.webp",
         is_virtual_group: true,
-        grouped_original_ids: appointmentItems.map((item) => item.original_id),
+        groupedOriginalIds: appointmentItems.map((item) => item.originalId),
         grouped_items_count: appointmentItems.length,
       };
     }
 
     const subcategory = subcategories.find(
       (item) =>
-        item.category_id === selectedMainCategory.id &&
-        item.original_id.toString() === subcategoryId,
+        item.categoryId === selectedMainCategory.id &&
+        item.originalId.toString() === subcategoryId,
     );
     return subcategory ? (subcategory as unknown as DetailRecord) : null;
   }, [categories, selectedMainCategory, subcategories, subcategoryId]);

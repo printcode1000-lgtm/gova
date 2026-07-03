@@ -48,6 +48,8 @@ import { govaApi } from '@/core/api';
 const data = await govaApi.getPublicJson<Category[]>('/catagory/categories.json');
 ```
 
+> Current architecture: this historical workaround has been superseded. UI code must import typed projections from `@/features/categories`; only the category module may import the canonical JSON files.
+
 **File changed:** `src/components/home/CategoriesGrid.tsx`
 
 ---

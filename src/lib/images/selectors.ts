@@ -1,6 +1,5 @@
-import { CategoryItem, SubcategoryItem } from '@/types/splash';
-
-import { categories, subcategories } from '../db/json';
+import type { CategoryItem, SubcategoryItem } from '@/types/splash';
+import { categoryService } from '@/features/categories';
 
 function fisherYatesShuffle<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -14,11 +13,9 @@ function fisherYatesShuffle<T>(array: T[]): T[] {
 }
 
 export async function getRandomCategories(count: number = 6): Promise<CategoryItem[]> {
-  const allCategories = await categories();
-
-  const mapped = allCategories.map((cat) => ({
+  const mapped = categoryService.getAllDisplayCategories().map((cat) => ({
     id: cat.id,
-    titleAr: cat.title_ar,
+    titleAr: cat.nameAr,
     image: cat.image,
   }));
 
@@ -27,14 +24,10 @@ export async function getRandomCategories(count: number = 6): Promise<CategoryIt
 }
 
 export async function getRandomSubcategories(count: number = 15): Promise<SubcategoryItem[]> {
-  const allSubcategories = await subcategories();
-
-  const mapped = allSubcategories.map((sub) => ({
+  const mapped = categoryService.getRandomSubcategories(count).map((sub) => ({
     id: sub.id,
-    titleAr: sub.title_ar,
+    titleAr: sub.nameAr,
     image: sub.image,
   }));
-
-  const shuffled = fisherYatesShuffle(mapped);
-  return shuffled.slice(0, count);
+  return mapped.slice(0, count) as SubcategoryItem[];
 }

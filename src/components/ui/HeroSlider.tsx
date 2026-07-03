@@ -59,12 +59,19 @@ export function HeroSlider({
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [isRTL, setIsRTL] = useState(false);
   const pressStartRef = useRef<number>(0);
   const activeConfig = mode === "view" ? config : draftConfig;
 
   useEffect(() => {
     setDraftConfig(config);
   }, [config]);
+
+  useEffect(() => {
+    setIsRTL(
+      typeof document !== "undefined" && document.documentElement.dir === "rtl"
+    );
+  }, []);
 
   const handleConfigChange = (nextConfig: HeroSliderConfig) => {
     setDraftConfig(nextConfig);
@@ -234,15 +241,9 @@ export function HeroSlider({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
-      const isRTL =
-        typeof document !== "undefined" &&
-        document.documentElement.dir === "rtl";
       isRTL ? handleNext() : handlePrev();
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
-      const isRTL =
-        typeof document !== "undefined" &&
-        document.documentElement.dir === "rtl";
       isRTL ? handlePrev() : handleNext();
     }
   };
@@ -375,8 +376,6 @@ export function HeroSlider({
     return { className, style };
   };
 
-  const isRTL =
-    typeof document !== "undefined" && document.documentElement.dir === "rtl";
   const onLeftClick = isRTL ? handleNext : handlePrev;
   const onRightClick = isRTL ? handlePrev : handleNext;
 

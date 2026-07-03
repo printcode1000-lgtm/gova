@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-03T12:31:08.302Z",
+  "generatedAt": "2026-07-03T19:26:04.163Z",
   "files": [
     {
       "mainCategoryId": "0",
@@ -12,6 +12,12 @@
       "subcategoryId": "1",
       "file": "1__1.json",
       "path": "/product/style/1__1.json"
+    },
+    {
+      "mainCategoryId": "1",
+      "subcategoryId": "13",
+      "file": "1__13.json",
+      "path": "/product/style/1__13.json"
     },
     {
       "mainCategoryId": "7",

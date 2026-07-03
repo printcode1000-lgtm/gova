@@ -27,6 +27,7 @@ import {
   R2_S3_CLIENT_MODULE,
 } from '../src/core/architecture/image-storage-contract';
 import { validateStorageProfilesAtStartup } from '../src/core/storage/profiles/storage-profile-validator';
+import { validationEngine as categoryValidationEngine } from '../src/features/categories/infrastructure/validation.engine';
 
 const ROOT = process.cwd();
 const SRC = join(ROOT, 'src');
@@ -89,6 +90,8 @@ function checkFile(filePath: string): void {
   const layer = classifyLayer(fileRel);
   const isClient = isClientComponent(content);
   const isServerOnly = isServerOnlyModule(content);
+
+  checkCategoryModuleContract(fileRel, content, filePath);
 
   if (content.includes('process.env') && !ALLOWED_PROCESS_ENV_FILES.has(fileRel)) {
     addViolation(
@@ -232,6 +235,40 @@ function checkFile(filePath: string): void {
   checkImageStorageContract(fileRel, content, filePath);
 }
 
+function checkCategoryModuleContract(fileRel: string, content: string, filePath: string): void {
+  const insideCategoryModule = fileRel.startsWith('src/features/categories/');
+  const categoryInfrastructure = fileRel.startsWith('src/features/categories/infrastructure/');
+  const productionContent = content
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/.*$/gm, '');
+
+  if (!insideCategoryModule) {
+    const internalImport = /from\s+['"]@\/features\/categories\/(domain|infrastructure|services|types)\//.test(content);
+    if (internalImport) {
+      addViolation('Category Module Contract', filePath, 'Category internals imported outside the module.', 'Import only from @/features/categories.');
+    }
+    if (/getAllForSpecialties/.test(productionContent)) {
+      addViolation('Category Module Contract', filePath, 'Legacy raw category API is forbidden.', 'Use typed category module projections.');
+    }
+    if (/\b(title_ar|title_en|category_id|original_id|sub_collection|collection_ar|collection_en|collection_image)\b/.test(productionContent)) {
+      addViolation('Category Module Contract', filePath, 'Raw category JSON fields leaked outside the module.', 'Use camelCase public projections.');
+    }
+    if (/categories\.json|subcategories\.json/.test(productionContent)) {
+      addViolation('Category Module Contract', filePath, 'Category JSON accessed outside the category module.', 'Use @/features/categories.');
+    }
+  }
+
+  if (insideCategoryModule && !categoryInfrastructure && /\b(title_ar|title_en|category_id|original_id|sub_collection)\b/.test(productionContent)) {
+    addViolation('Category Module Contract', filePath, 'Raw category fields used outside infrastructure.', 'Map raw DTOs before domain/service use.');
+  }
+  if (insideCategoryModule && /\bany\b/.test(productionContent)) {
+    addViolation('Category Module Contract', filePath, 'any is forbidden in the category module.', 'Use explicit category types.');
+  }
+  if (insideCategoryModule && /DOCTOR_APPOINTMENT_GROUP_ID|\b-1000\b/.test(productionContent)) {
+    addViolation('Category Module Contract', filePath, 'Numeric Doctor Appointment virtual IDs are forbidden.', 'Use virtual:doctor-appointment.');
+  }
+}
+
 function checkImageStorageContract(fileRel: string, content: string, filePath: string): void {
   if (!IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT.has(fileRel)) {
     for (const { pattern, message } of IMAGE_STORAGE_FORBIDDEN_PATTERNS) {
@@ -343,6 +380,7 @@ function printReport(): void {
     'No Invalid Imports',
     'Configuration Layer',
     'Image Storage Contract',
+    'Category Module Contract',
   ];
 
   const failedCategories = new Set(violations.map((v) => v.layer));
@@ -374,6 +412,13 @@ function main(): void {
   } catch (error) {
     console.error('✖ storage-profiles.json validation failed');
     console.error(error instanceof Error ? error.message : error);
+    process.exit(1);
+  }
+
+  const categoryValidation = categoryValidationEngine.validate();
+  if (!categoryValidation.valid) {
+    console.error('✖ category data validation failed');
+    for (const error of categoryValidation.errors) console.error(error);
     process.exit(1);
   }
 

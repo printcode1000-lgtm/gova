@@ -32,8 +32,8 @@ Filtering never deletes files from the original `src/` or `public/` directories.
 | `gova-app-init.js` | Blocking application initialization before React starts |
 | `gova-theme-init.js` | Blocking theme initialization before React starts |
 | `logo.png` | Layout metadata and the shared `AppIcon` component |
-| `catagory/categories.json` | Category data loaded by Splash and Home |
-| `catagory/subcategories.json` | Runtime subcategory catalog and image mapping |
+| `catagory/categories.json` | Canonical category source owned and imported only by `src/features/categories` |
+| `catagory/subcategories.json` | Canonical subcategory source owned and imported only by `src/features/categories` |
 
 Missing allowlisted files fail the build with `Required static asset not found`.
 

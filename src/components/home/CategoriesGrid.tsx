@@ -5,120 +5,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
 
-import { govaApi } from '@/core/api';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
+import type { CategoryDisplay } from '@/features/categories';
 
 const CATEGORY_RINGS = ['gova-ring-primary', 'gova-ring-secondary', 'gova-ring-tertiary', 'gova-ring-error'] as const;
 
-interface Category {
-  id: number;
-  title_ar: string;
-  title_en: string;
-  icon: string;
-  image: string;
-  created_at: string;
-  updated_at: string;
-  collection: number | null;
-  collection_ar: string | null;
-  collection_en: string | null;
-  collection_image: string | null;
-  order: number | null;
+interface CategoriesGridProps {
+  displayCategories: readonly CategoryDisplay[];
 }
 
-interface DisplayCategory {
-  id: number;
-  name_ar: string;
-  name_en: string;
-  image: string;
-  isCollection: boolean;
-  order: number | null;
-}
-
-export function CategoriesGrid() {
+export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
   const { t, isRTL, locale } = useTranslation();
-  const [displayCategories, setDisplayCategories] = React.useState<DisplayCategory[]>([]);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await govaApi.getPublicJson<Category[]>('/catagory/categories.json');
-        
-        // Sort categories by order
-        const sortedData = [...data].sort((a, b) => {
-          const orderA = a.order ?? Infinity;
-          const orderB = b.order ?? Infinity;
-          return orderA - orderB;
-        });
-
-        // Group categories by collection
-        const collectionMap = new Map<number | null, Category[]>();
-        
-        sortedData.forEach((cat) => {
-          const key = cat.collection;
-          if (!collectionMap.has(key)) {
-            collectionMap.set(key, []);
-          }
-          collectionMap.get(key)!.push(cat);
-        });
-
-        // Convert to display categories
-        const displayCats: DisplayCategory[] = [];
-        
-        // Add individual categories (collection === null)
-        const individualCats = collectionMap.get(null) || [];
-        individualCats.forEach((cat) => {
-          displayCats.push({
-            id: cat.id,
-            name_ar: cat.title_ar,
-            name_en: cat.title_en,
-            image: cat.image,
-            isCollection: false,
-            order: cat.order,
-          });
-        });
-
-        // Add collections (collection !== null)
-        const collectionKeys = Array.from(collectionMap.keys()).filter(key => key !== null);
-        collectionKeys.forEach((collectionKey) => {
-          const cats = collectionMap.get(collectionKey) || [];
-          const firstCat = cats[0];
-          displayCats.push({
-            id: collectionKey,
-            name_ar: firstCat.collection_ar || '',
-            name_en: firstCat.collection_en || '',
-            image: firstCat.collection_image || '',
-            isCollection: true,
-            order: firstCat.order,
-          });
-        });
-
-        // Sort all display categories by order
-        displayCats.sort((a, b) => {
-          const orderA = a.order ?? Infinity;
-          const orderB = b.order ?? Infinity;
-          return orderA - orderB;
-        });
-
-        setDisplayCategories(displayCats);
-      } catch (error) {
-        reportSystemIssue({
-          feature: 'Home',
-          operation: 'load-categories',
-          error,
-          page: '/home',
-        });
-        console.error('Failed to fetch categories:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   return (
     <section>
@@ -131,14 +29,9 @@ export function CategoriesGrid() {
       </div>
 
       <div className="grid grid-cols-3 gap-2 sm:gap-3 pb-2">
-        {loading ? (
-          <div className="col-span-full flex justify-center py-8">
-            <LoadingSpinner size="lg" />
-          </div>
-        ) : (
-          displayCategories.map((cat, index) => {
-            const name = locale === 'ar' ? cat.name_ar : cat.name_en;
-            const imgSrc = `/images/mainCategories/${cat.image}`;
+        {displayCategories.map((cat, index) => {
+            const name = locale === 'ar' ? cat.nameAr : cat.nameEn;
+            const imgSrc = cat.imageUrl;
             return (
               <Link
                 key={cat.id}
@@ -171,8 +64,7 @@ export function CategoriesGrid() {
                 </div>
               </Link>
             );
-          })
-        )}
+          })}
       </div>
     </section>
   );

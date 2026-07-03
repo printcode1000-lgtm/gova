@@ -2,23 +2,13 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-import { govaApi } from '@/core/api';
 import { useTranslation } from '@/lib/i18n';
 import type { Locale } from '@/lib/i18n';
+import type { CategoryDisplay } from '@/features/categories';
 
 import MarqueeCard from './MarqueeCard';
 
-interface Category {
-  id: number;
-  title_ar: string;
-  title_en: string;
-  icon: string;
-  image: string;
-  created_at: string;
-  updated_at: string;
-}
-
-function getRandomCategories(categories: Category[], count: number): Category[] {
+function getRandomCategories(categories: readonly CategoryDisplay[], count: number): CategoryDisplay[] {
   const shuffled = [...categories];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -27,30 +17,20 @@ function getRandomCategories(categories: Category[], count: number): Category[] 
   return shuffled.slice(0, count);
 }
 
-export default function TopMarquee() {
+interface TopMarqueeProps {
+  displayCategories: readonly CategoryDisplay[];
+}
+
+export default function TopMarquee({ displayCategories }: TopMarqueeProps) {
   const { locale } = useTranslation();
-  const [categories, setCategories] = useState<Category[]>([]);
   const [centerCards, setCenterCards] = useState<Set<number>>(new Set());
   const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const data = await govaApi.getPublicJson<Category[]>('/catagory/categories.json');
-        setCategories(data);
-      } catch (error) {
-        console.error('Failed to load categories:', error);
-      }
-    };
-
-    loadCategories();
-  }, []);
-
-  const selectedCategories = getRandomCategories(categories, 6);
+  const selectedCategories = getRandomCategories(displayCategories, 6);
   const loopItems = [...selectedCategories, ...selectedCategories];
 
-  const getTitle = (category: Category, loc: Locale) => {
-    return loc === 'ar' ? category.title_ar : category.title_en;
+  const getTitle = (category: CategoryDisplay, loc: Locale) => {
+    return loc === 'ar' ? category.nameAr : category.nameEn;
   };
 
   const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
@@ -101,7 +81,7 @@ export default function TopMarquee() {
           >
             <MarqueeCard 
               label={getTitle(item, locale)} 
-              image={item.image} 
+              image={item.imageUrl} 
               isCenter={centerCards.has(index)}
             />
           </div>

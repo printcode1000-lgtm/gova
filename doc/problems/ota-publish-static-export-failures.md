@@ -108,7 +108,7 @@ Next.js `output: export` cannot produce an arbitrary dynamic route. Supported pa
 
 ### Solution
 
-`src/app/categories/[categoryId]/page.tsx` now exports `generateStaticParams()` from `public/catagory/categories.json`, producing one static page per category ID.
+`src/app/categories/[categoryId]/page.tsx` now exports `generateStaticParams()` from the public API of `src/features/categories`; only that module imports `public/catagory/categories.json`.
 
 ### Prevention
 

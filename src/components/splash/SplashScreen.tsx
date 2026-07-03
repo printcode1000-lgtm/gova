@@ -4,11 +4,16 @@ import { Suspense } from 'react';
 
 import AppIcon from '@/components/brand/AppIcon';
 import { useTranslation } from '@/lib/i18n';
+import type { CategoryDisplay } from '@/features/categories';
 
 import SplashInitializer from './SplashInitializer';
 import TopMarquee from './TopMarquee';
 
-export default function SplashScreen() {
+interface SplashScreenProps {
+  displayCategories: readonly CategoryDisplay[];
+}
+
+export default function SplashScreen({ displayCategories }: SplashScreenProps) {
   const { t, isRTL } = useTranslation();
 
   return (
@@ -16,7 +21,7 @@ export default function SplashScreen() {
       className="gova-splash-canvas min-h-screen relative w-full flex flex-col items-center justify-between py-12 px-4 overflow-hidden selection:bg-primary/30"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <TopMarquee />
+      <TopMarquee displayCategories={displayCategories} />
 
       <div className="flex-1 flex flex-col items-center justify-center z-10 w-full max-w-sm px-4">
         <div className="mb-4 sm:mb-6">

@@ -1,5 +1,6 @@
 import { CollectionSubcategoriesPage } from "@/components/collections/CollectionSubcategoriesPage";
-import categories from "../../../../public/catagory/categories.json";
+import { categoryService } from "@/features/categories";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface CollectionPageProps {
@@ -7,26 +8,23 @@ interface CollectionPageProps {
 }
 
 export function generateStaticParams(): Array<{ collectionId: string }> {
-  // Extract unique collection IDs from categories.json
-  const collectionIds = new Set<number>();
-  
-  categories.forEach((category) => {
-    if (category.collection !== null) {
-      collectionIds.add(category.collection);
-    }
-  });
-  
-  return Array.from(collectionIds).map((id) => ({ collectionId: String(id) }));
+  const collections = categoryService.getCollections();
+  return collections.map((collection) => ({ collectionId: String(collection.id) }));
 }
 
 export default async function CollectionPage({
   params,
 }: CollectionPageProps) {
   const { collectionId } = await params;
+  const collection = categoryService.getCollection(Number(collectionId));
+  
+  if (!collection) {
+    notFound();
+  }
 
   return (
     <Suspense fallback={null}>
-      <CollectionSubcategoriesPage collectionId={collectionId} />
+      <CollectionSubcategoriesPage collection={collection} />
     </Suspense>
   );
 }

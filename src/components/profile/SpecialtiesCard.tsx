@@ -10,15 +10,15 @@ import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { govaApi } from "@/core/api";
 import { profileService } from "@/features/profile/services/profile-service";
+import { categoryService, CATEGORY_CONSTANTS, type CategoryDisplay, type SubcategoryDisplay } from "@/features/categories";
 import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
 import type {
   ProfileSectionStatus,
   ProfileSpecialtiesController,
 } from "./profile-save-controller";
 
-const MEDICAL_SERVICES_CATEGORY_ID = 20;
-const DOCTOR_APPOINTMENT_GROUP_ID = -1000;
-const DOCTOR_APPOINTMENT_GROUP_ORIGINAL_ID = -1000;
+const MEDICAL_SERVICES_CATEGORY_ID = CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID;
+const DELIVERY_SERVICES_ID = CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID;
 
 /**
  * EXCEPTIONAL CATEGORIES:
@@ -26,7 +26,7 @@ const DOCTOR_APPOINTMENT_GROUP_ORIGINAL_ID = -1000;
  * 1. Beauty Store (Collection Type):
  *    - This is a collection category that contains individual categories as sub-items
  *    - When selected, it shows its collection items (e.g., "May Way", "Oriflame", "Avon") as subcategories
- *    - Collection items are fetched from categories.json where collection === category_id
+ *    - Collection items are supplied by the category module as typed projections.
  *    - Images for collection items use /images/mainCategories/ path
  *
  * 2. Delivery Services (ID: 46):
@@ -35,44 +35,6 @@ const DOCTOR_APPOINTMENT_GROUP_ORIGINAL_ID = -1000;
  *    - It can be selected and saved in profile.selected without any subcategories
  *    - Handled in handleCategoryClick with an explicit check for category.id === 46
  */
-
-interface Category {
-  id: number;
-  title_ar: string;
-  title_en: string;
-  icon: string;
-  image: string;
-  created_at: string;
-  updated_at: string;
-  collection: number | null;
-  collection_ar: string | null;
-  collection_en: string | null;
-  collection_image: string | null;
-  order: number | null;
-}
-
-interface Subcategory {
-  id: number;
-  category_id: number;
-  original_id: number;
-  title_ar: string;
-  title_en: string;
-  icon: string;
-  image: string;
-  created_at: string;
-  updated_at: string;
-  sub_collection: number | null;
-  isDoctorAppointmentGroup?: boolean;
-}
-
-interface DisplayCategory {
-  id: number;
-  name_ar: string;
-  name_en: string;
-  image: string;
-  isCollection: boolean;
-  order: number | null;
-}
 
 interface SpecialtiesCardProps {
   uid: string;
@@ -86,9 +48,8 @@ export const SpecialtiesCard = React.forwardRef<
   SpecialtiesCardProps
 >(function SpecialtiesCard({ uid, onStatusChange, readOnly = false }, ref) {
   const { t, locale } = useTranslation();
-  const [categories, setCategories] = React.useState<Category[]>([]);
   const [displayCategories, setDisplayCategories] = React.useState<
-    DisplayCategory[]
+    CategoryDisplay[]
   >([]);
   const [selectedSpecialties, setSelectedSpecialties] = React.useState<
     string[]
@@ -100,10 +61,10 @@ export const SpecialtiesCard = React.forwardRef<
   const [isLoading, setIsLoading] = React.useState(true);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [selectedCategoryForDialog, setSelectedCategoryForDialog] =
-    React.useState<DisplayCategory | null>(null);
-  const [subcategories, setSubcategories] = React.useState<Subcategory[]>([]);
+    React.useState<CategoryDisplay | null>(null);
+  const [subcategories, setSubcategories] = React.useState<SubcategoryDisplay[]>([]);
   const [doctorAppointmentSubcategories, setDoctorAppointmentSubcategories] =
-    React.useState<Subcategory[]>([]);
+    React.useState<SubcategoryDisplay[]>([]);
   const [isDoctorAppointmentView, setIsDoctorAppointmentView] =
     React.useState(false);
   const [isLoadingSubcategories, setIsLoadingSubcategories] =
@@ -144,71 +105,8 @@ export const SpecialtiesCard = React.forwardRef<
   React.useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await govaApi.getPublicJson<Category[]>(
-          "/catagory/categories.json",
-        );
-
-        // Sort categories by order
-        const sortedData = [...data].sort((a, b) => {
-          const orderA = a.order ?? Infinity;
-          const orderB = b.order ?? Infinity;
-          return orderA - orderB;
-        });
-
-        setCategories(sortedData);
-
-        // Group categories by collection
-        const collectionMap = new Map<number | null, Category[]>();
-
-        sortedData.forEach((cat) => {
-          const key = cat.collection;
-          if (!collectionMap.has(key)) {
-            collectionMap.set(key, []);
-          }
-          collectionMap.get(key)!.push(cat);
-        });
-
-        // Convert to display categories
-        const displayCats: DisplayCategory[] = [];
-
-        // Add individual categories (collection === null)
-        const individualCats = collectionMap.get(null) || [];
-        individualCats.forEach((cat) => {
-          displayCats.push({
-            id: cat.id,
-            name_ar: cat.title_ar,
-            name_en: cat.title_en,
-            image: cat.image,
-            isCollection: false,
-            order: cat.order,
-          });
-        });
-
-        // Add collections (collection !== null)
-        const collectionKeys = Array.from(collectionMap.keys()).filter(
-          (key) => key !== null,
-        );
-        collectionKeys.forEach((collectionKey) => {
-          const cats = collectionMap.get(collectionKey) || [];
-          const firstCat = cats[0];
-          displayCats.push({
-            id: collectionKey,
-            name_ar: firstCat.collection_ar || "",
-            name_en: firstCat.collection_en || "",
-            image: firstCat.collection_image || "",
-            isCollection: true,
-            order: firstCat.order,
-          });
-        });
-
-        // Sort all display categories by order
-        displayCats.sort((a, b) => {
-          const orderA = a.order ?? Infinity;
-          const orderB = b.order ?? Infinity;
-          return orderA - orderB;
-        });
-
-        setDisplayCategories(displayCats);
+        const displayCats = categoryService.getProfileMainOptions();
+        setDisplayCategories([...displayCats]);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       } finally {
@@ -282,7 +180,7 @@ export const SpecialtiesCard = React.forwardRef<
     });
   };
 
-  const handleCategoryClick = (category: DisplayCategory) => {
+  const handleCategoryClick = (category: CategoryDisplay) => {
     // Exception: Delivery services (ID: 46) should not open subcategory dialog
     if (category.id === 46) {
       handleSpecialtyToggle(category.id.toString());
@@ -303,66 +201,23 @@ export const SpecialtiesCard = React.forwardRef<
       const category = displayCategories.find((cat) => cat.id === categoryId);
 
       if (category?.isCollection) {
-        // Fetch individual categories that belong to this collection
-        const data = await govaApi.getPublicJson<Category[]>(
-          "/catagory/categories.json",
-        );
-        const collectionItems = data.filter(
-          (cat) => cat.collection === categoryId,
-        );
-
-        // Convert collection items to subcategory-like structure
-        const subcategoryLikeItems: Subcategory[] = collectionItems.map(
-          (cat) => ({
-            id: cat.id,
-            category_id: categoryId,
-            original_id: cat.id,
-            title_ar: cat.title_ar,
-            title_en: cat.title_en,
-            icon: cat.icon,
-            image: cat.image,
-            created_at: cat.created_at,
-            updated_at: cat.updated_at,
-            sub_collection: null,
-          }),
-        );
-
-        setSubcategories(subcategoryLikeItems);
+        // Use categoryService to get collection items
+        const items = categoryService.getProfileSubOptions(categoryId, true);
+        setSubcategories([...items]);
       } else {
-        // Fetch regular subcategories from subcategories.json
-        const data = await govaApi.getPublicJson<Subcategory[]>(
-          "/catagory/subcategories.json",
-        );
-        const filtered = data.filter((sub) => sub.category_id === categoryId);
-
+        // Use categoryService to get regular subcategories
+        const items = categoryService.getProfileSubOptions(categoryId, false);
+        
         if (categoryId === MEDICAL_SERVICES_CATEGORY_ID) {
-          const appointmentItems = filtered.filter(
-            (sub) => sub.sub_collection === 0,
-          );
-          const visibleItems = filtered.filter(
-            (sub) => sub.sub_collection !== 0,
-          );
+          // Get actual doctor appointment items using the new service method
+          const doctorItems = categoryService.getDoctorAppointmentItems();
 
-          setDoctorAppointmentSubcategories(appointmentItems);
-          setSubcategories([
-            {
-              id: DOCTOR_APPOINTMENT_GROUP_ID,
-              category_id: categoryId,
-              original_id: DOCTOR_APPOINTMENT_GROUP_ORIGINAL_ID,
-              title_ar: "\u0643\u0634\u0641 \u0637\u0628\u064a",
-              title_en: "Doctor Appointment",
-              icon: "fas fa-user-md",
-              image: "doctors_appointment.webp",
-              created_at: "",
-              updated_at: "",
-              sub_collection: null,
-              isDoctorAppointmentGroup: true,
-            },
-            ...visibleItems,
-          ]);
+          // Keep doctor group in visible items so it can be clicked
+          setDoctorAppointmentSubcategories([...doctorItems]);
+          setSubcategories([...items]);
         } else {
           setDoctorAppointmentSubcategories([]);
-          setSubcategories(filtered);
+          setSubcategories([...items]);
         }
       }
     } catch (error) {
@@ -446,8 +301,8 @@ export const SpecialtiesCard = React.forwardRef<
           {displayCategories.map((category) => {
             const categoryId = category.id.toString();
             const categoryName =
-              locale === "ar" ? category.name_ar : category.name_en;
-            const imgSrc = `/images/mainCategories/${category.image}`;
+              locale === "ar" ? category.nameAr : category.nameEn;
+            const imgSrc = category.imageUrl;
 
             return (
               <div
@@ -537,8 +392,8 @@ export const SpecialtiesCard = React.forwardRef<
                       ? "\u0643\u0634\u0641 \u0637\u0628\u064a"
                       : "Doctor Appointment"
                     : locale === "ar"
-                      ? selectedCategoryForDialog?.name_ar
-                      : selectedCategoryForDialog?.name_en}
+                      ? selectedCategoryForDialog?.nameAr
+                      : selectedCategoryForDialog?.nameEn}
                 </h2>
               </div>
               <button
@@ -555,7 +410,7 @@ export const SpecialtiesCard = React.forwardRef<
                 <div className="flex justify-center py-8">
                   <LoadingSpinner size="lg" />
                 </div>
-              ) : visibleSubcategories.length === 0 ? (
+              ) : visibleSubcategories.length === 0 && doctorAppointmentSubcategories.length === 0 ? (
                 <p className="text-center text-on-surface-variant py-8">
                   {locale === "ar"
                     ? "لا توجد تخصصات فرعية"
@@ -564,15 +419,13 @@ export const SpecialtiesCard = React.forwardRef<
               ) : (
                 <div className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
                   {visibleSubcategories.map((subcategory) => {
-                    const subcategoryId = subcategory.original_id.toString();
+                    const subcategoryId = subcategory.originalId?.toString() || subcategory.id.toString();
                     const subcategoryName =
                       locale === "ar"
-                        ? subcategory.title_ar
-                        : subcategory.title_en;
+                        ? subcategory.nameAr
+                        : subcategory.nameEn;
                     // Use correct image path based on whether it's a collection item or regular subcategory
-                    const imgSrc = selectedCategoryForDialog?.isCollection
-                      ? `/images/mainCategories/${subcategory.image}`
-                      : `/images/subCategories/${subcategory.image}`;
+                    const imgSrc = subcategory.imageUrl;
                     const currentCategorySubs =
                       selectedSubcategories[
                         selectedCategoryForDialog?.id.toString()
@@ -581,7 +434,7 @@ export const SpecialtiesCard = React.forwardRef<
                     const isChecked = isGroup
                       ? doctorAppointmentSubcategories.some((doctorSub) =>
                           currentCategorySubs.includes(
-                            doctorSub.original_id.toString(),
+                            doctorSub.originalId?.toString() || doctorSub.id.toString(),
                           ),
                         )
                       : currentCategorySubs.includes(subcategoryId);

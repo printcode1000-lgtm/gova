@@ -12,6 +12,7 @@ import {
   productRepository,
   type ProductRepository,
 } from "../repositories/product-repository";
+import { categoryService } from "@/features/categories";
 
 const SAFE_ID = /^[a-z0-9-]+$/i;
 
@@ -58,6 +59,11 @@ export class ProductService {
       !SAFE_ID.test(input.subcategoryId)
     )
       throw new Error("invalidProduct");
+    const categorySelection = categoryService.resolveLegacyProductSelection(
+      input.mainCategoryId,
+      input.subcategoryId,
+    );
+    if (!categorySelection.valid) throw new Error("invalidCategorySelection");
     const now = new Date().toISOString();
     return this.repository.create({
       id: randomUUID(),
