@@ -288,14 +288,19 @@ function StorageImageSlot({
       traceStorageImageManager(config.id, "slot-unmounted", { index });
   }, [config.id, config.storageProfileId, index]);
 
+  const imageKey = image?.imageKey;
+  const imageUrl = image?.url;
+  const isImageUploading = image?.isUploading;
+  const imageError = image?.error;
+
   React.useEffect(() => {
     traceStorageImageManager(config.id, "value-synchronized", {
       index,
-      imageKey: image?.imageKey ?? null,
-      hasUrl: Boolean(image?.url),
+      imageKey: imageKey ?? null,
+      hasUrl: Boolean(imageUrl),
     });
     setUploadedImage(image);
-  }, [config.id, image, index]);
+  }, [config.id, imageKey, imageUrl, isImageUploading, imageError, index]);
 
   const { uploadFile, removeImage, isUploading, error } =
     useStorageProfileUpload({

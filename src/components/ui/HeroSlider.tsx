@@ -58,6 +58,8 @@ export function HeroSlider({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const pressStartRef = useRef<number>(0);
   const activeConfig = mode === "view" ? config : draftConfig;
 
   useEffect(() => {
@@ -143,7 +145,8 @@ export function HeroSlider({
       mode !== "view" ||
       !isConfigLoaded ||
       !activeConfig.autoPlay ||
-      sortedSlides.length <= 1
+      sortedSlides.length <= 1 ||
+      isPaused
     )
       return;
 
@@ -166,6 +169,7 @@ export function HeroSlider({
     activeConfig?.loop,
     sortedSlides,
     handleNext,
+    isPaused,
   ]);
 
   // Image load handler
@@ -181,6 +185,8 @@ export function HeroSlider({
 
   // Phase 8 - Mobile Touch Gestures
   const handleTouchStart = (e: React.TouchEvent) => {
+    setIsPaused(true);
+    pressStartRef.current = Date.now();
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
@@ -190,6 +196,7 @@ export function HeroSlider({
   };
 
   const handleTouchEnd = () => {
+    setIsPaused(false);
     if (touchStart === null || touchEnd === null) return;
     const minSwipeDistance = 50;
     const distance = touchStart - touchEnd;
@@ -204,6 +211,23 @@ export function HeroSlider({
     } else if (isRightSwipe) {
       isRTL ? handleNext() : handlePrev();
     }
+  };
+
+  const handleTouchCancel = () => {
+    setIsPaused(false);
+  };
+
+  const handleMouseDown = () => {
+    setIsPaused(true);
+    pressStartRef.current = Date.now();
+  };
+
+  const handleMouseUp = () => {
+    setIsPaused(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
   };
 
   // Phase 9 - Keyboard navigation helper
@@ -224,9 +248,16 @@ export function HeroSlider({
   };
 
   // Action callback
-  const handleSlideClick = (action: string) => {
+  const handleSlideClick = (action: string, isKeyboard = false) => {
     if (mode === "view" && activeConfig?.onAction) {
-      activeConfig.onAction(action);
+      if (isKeyboard) {
+        activeConfig.onAction(action);
+        return;
+      }
+      const pressDuration = Date.now() - pressStartRef.current;
+      if (pressDuration < 500) {
+        activeConfig.onAction(action);
+      }
     }
   };
 
@@ -392,6 +423,10 @@ export function HeroSlider({
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
+              onTouchCancel={handleTouchCancel}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
             >
               {sortedSlides.map((slide, index) => {
                 const isFirstSlide = index === 0;
@@ -429,7 +464,7 @@ export function HeroSlider({
                         (e.key === "Enter" || e.key === " ")
                       ) {
                         e.preventDefault();
-                        handleSlideClick(slide.action);
+                        handleSlideClick(slide.action, true);
                       }
                     }}
                     aria-label={`Slide ${index + 1}: ${slide.title}`}
@@ -484,7 +519,7 @@ export function HeroSlider({
                     className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-xs transition hover:bg-black/50 active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
                     aria-label="Previous slide"
                   >
-                    <ChevronLeft className="h-5 w-5" />
+                    {isRTL ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
                   </button>
                 </div>
 
@@ -521,7 +556,7 @@ export function HeroSlider({
                     className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-xs transition hover:bg-black/50 active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
                     aria-label="Next slide"
                   >
-                    <ChevronRight className="h-5 w-5" />
+                    {isRTL ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
                   </button>
                 </div>
               </div>

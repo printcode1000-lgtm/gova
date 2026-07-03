@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-06-28T02:54:49.337Z",
-  "durationMs": 3210,
-  "sqliteSchemaVersion": "48e4e52ddc0807d3",
-  "tursoSchemaVersionBefore": "48e4e52ddc0807d3",
-  "tursoSchemaVersionAfter": "48e4e52ddc0807d3",
+  "executedAt": "2026-07-03T05:23:03.423Z",
+  "durationMs": 0,
+  "sqliteSchemaVersion": "n/a",
+  "tursoSchemaVersionBefore": "n/a",
+  "tursoSchemaVersionAfter": "n/a",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,
@@ -13,5 +13,6 @@
   "sqlExecuted": [],
   "errors": [],
   "warnings": [],
-  "skipped": false
+  "skipped": true,
+  "skipReason": "Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)"
 }

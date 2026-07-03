@@ -1,22 +1,21 @@
 "use client";
 
-import { Eye, History, RefreshCw, Rocket, ShieldCheck } from "lucide-react";
+import { Eye, RefreshCw, Rocket, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
 import { Button } from "@/components/ui/button";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type {
-  HomeHeroPublication,
   HomeHeroRecord,
 } from "@/features/advertisements/entities/home-hero-slider.entity";
 import { homeHeroSliderApiService } from "@/features/advertisements/services/home-hero-slider-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { GOVA_DB_STORES, govaDbDelete } from "@/lib/gova-db";
 
 const quickIntervals = [5, 15, 30, 60];
 
@@ -25,7 +24,6 @@ export function SuperAdminHeroSliderPage() {
   const { session, isLoading } = useSession();
   const authorized = isSuperAdmin(session);
   const [record, setRecord] = useState<HomeHeroRecord | null>(null);
-  const [publications, setPublications] = useState<HomeHeroPublication[]>([]);
   const [draft, setDraft] = useState<HeroSliderConfig | null>(null);
   const [intervalMinutes, setIntervalMinutes] = useState(15);
   const [busy, setBusy] = useState(false);
@@ -36,16 +34,12 @@ export function SuperAdminHeroSliderPage() {
     setBusy(true);
     setMessage(null);
     try {
-      const [next, history] = await Promise.all([
-        homeHeroSliderApiService.getAdmin(session),
-        homeHeroSliderApiService.listPublications(session),
-      ]);
+      const next = await homeHeroSliderApiService.getAdmin(session);
       setRecord(next);
-      setPublications(history);
       setDraft(next.draft);
       setIntervalMinutes(next.checkIntervalMinutes);
     } catch (error) {
-      reportSystemIssue({ feature: "HeroSliderAdmin", operation: "load-settings-and-history", error });
+      reportSystemIssue({ feature: "HeroSliderAdmin", operation: "load-settings", error });
       setMessage(
         error instanceof Error ? error.message : "تعذر تحميل الإعدادات.",
       );
@@ -59,57 +53,44 @@ export function SuperAdminHeroSliderPage() {
     if (!isLoading && authorized) void load();
   }, [authorized, isLoading, load, router, session]);
 
-  const save = async (action: "save-draft" | "publish") => {
+  const publish = async () => {
     if (!session || !draft || !record) return;
     setBusy(true);
     setMessage(null);
     try {
-      const next = await homeHeroSliderApiService.save(
-        action,
+      await homeHeroSliderApiService.save(
+        "publish",
         session,
         draft,
         intervalMinutes,
         record.revision,
       );
-      setRecord(next);
-      setDraft(next.draft);
-      setMessage(
-        action === "publish"
-          ? "تم نشر التعديلات على الصفحة الرئيسية."
-          : "تم حفظ المسودة.",
-      );
+      // Invalidate IndexedDB cache so that the home page slider updates immediately
+      try {
+        await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, "advertisements:home-hero-slider:v2");
+      } catch (err) {
+        console.error("Failed to delete local slider cache:", err);
+      }
+      // Reload from server so draft/published URLs are properly resolved
+      await load();
+      setMessage("تم نشر التعديلات على الصفحة الرئيسية.");
     } catch (error) {
-      reportSystemIssue({ feature: "HeroSliderAdmin", operation: action, error });
-      setMessage(
-        error instanceof Error ? error.message : "تعذر حفظ الإعدادات.",
-      );
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const restorePublication = async (publicationId: number) => {
-    if (!session || !record) return;
-    setBusy(true);
-    setMessage(null);
-    try {
-      const next = await homeHeroSliderApiService.restore(
-        session,
-        publicationId,
-        intervalMinutes,
-        record.revision,
-      );
-      setRecord(next);
-      setDraft(next.draft);
-      setPublications(await homeHeroSliderApiService.listPublications(session));
-      setMessage("The selected publication was restored as a new version.");
-    } catch (error) {
-      reportSystemIssue({ feature: "HeroSliderAdmin", operation: "restore-publication", error });
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "Unable to restore publication.",
-      );
+      reportSystemIssue({ feature: "HeroSliderAdmin", operation: "publish", error });
+      const rawMessage = error instanceof Error ? error.message : "";
+      const arabicMessages: Record<string, string> = {
+        heroSliderRevisionConflict:
+          "تعارض في الإصدار — تم تحميل أحدث بيانات، يرجى المحاولة مجدداً.",
+        forbidden: "غير مصرح لك بهذه العملية.",
+        invalidHeroSliderConfig: "إعداد الشرائح غير صالح، يرجى مراجعة البيانات.",
+        heroSliderPublicationNotFound: "لم يتم العثور على الإصدار المطلوب.",
+      };
+      const displayMessage =
+        arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.";
+      if (rawMessage === "heroSliderRevisionConflict") {
+        // Auto-reload to get latest revision
+        await load();
+      }
+      setMessage(displayMessage);
     } finally {
       setBusy(false);
     }
@@ -213,6 +194,15 @@ export function SuperAdminHeroSliderPage() {
             <RefreshCw className="me-2 h-4 w-4" />
             فحص الآن
           </Button>
+          <Button
+            type="button"
+            onClick={() => void publish()}
+            disabled={busy}
+            className="ms-auto bg-primary text-on-primary hover:bg-primary/95"
+          >
+            <Rocket className="me-2 h-4 w-4" />
+            نشر على Home
+          </Button>
         </div>
       </section>
 
@@ -224,77 +214,7 @@ export function SuperAdminHeroSliderPage() {
         mode="admin-edit"
         config={draft}
         onChange={setDraft}
-        onCancel={() => setDraft(record.draft)}
       />
-
-      <section className="mt-6 rounded-xl border bg-card p-4">
-        <div className="mb-3 flex items-center gap-2">
-          <History className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold">Publication history</h2>
-        </div>
-        {publications.length ? (
-          <div className="space-y-2">
-            {publications.map((publication) => (
-              <div
-                key={publication.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border px-3 py-2"
-              >
-                <div className="text-sm">
-                  <span className="font-semibold">
-                    Version {publication.version}
-                  </span>
-                  <span className="ms-2 text-muted-foreground">
-                    {new Date(publication.publishedAt).toLocaleString("en")}
-                  </span>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  disabled={busy || publication.version === record.version}
-                  onClick={() => void restorePublication(publication.id)}
-                >
-                  Restore
-                </Button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            No previous publications yet.
-          </p>
-        )}
-      </section>
-
-      <div
-        className="sticky mt-6 flex flex-wrap justify-end gap-3 rounded-xl border bg-background/95 p-4 shadow-lg backdrop-blur"
-        style={{ bottom: BOTTOM_NAV_CLEARANCE }}
-      >
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setDraft(record.draft)}
-          disabled={busy}
-        >
-          التراجع عن التغييرات
-        </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => void save("save-draft")}
-          disabled={busy}
-        >
-          حفظ كمسودة
-        </Button>
-        <Button
-          type="button"
-          onClick={() => void save("publish")}
-          disabled={busy}
-        >
-          <Rocket className="me-2 h-4 w-4" />
-          نشر على Home
-        </Button>
-      </div>
     </main>
   );
 }

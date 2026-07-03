@@ -29,14 +29,16 @@ type HeroSliderMode = "view" | "admin-edit" | "images-edit";
 This is the default public display mode. It renders the carousel and enables:
 
 - Per-slide autoplay durations.
-- Previous and next controls.
+- Previous and next controls with dynamic icons (swapping ChevronLeft/ChevronRight in RTL so that arrows always point outwards `<   >` in both English and Arabic).
+- Long press pause: holding down the mouse button (on desktop) or pressing and holding (on mobile) temporarily pauses autoplay transition.
+- Click prevention on long press: when holding down on a slide to pause, releasing it does not trigger the slide action (which is only triggered on short taps/clicks < 500ms).
 - Slide indicators.
 - Touch swiping.
 - Keyboard navigation.
 - RTL-aware navigation.
 - Image preloading and loading skeletons.
-- Slide actions through `config.onAction`.
-- A safe empty state when no slides exist.
+- Slide actions through `config.onAction` (with automatic bypass for keyboard actions).
+- A safe empty state when no slides exist (displaying a user-friendly helper message instead of throwing errors).
 
 ```tsx
 <HeroSlider config={config} />
@@ -73,12 +75,10 @@ const [draft, setDraft] = useState<HeroSliderConfig>(initialConfig);
   mode="admin-edit"
   config={draft}
   onChange={setDraft}
-  onSave={saveDraft}
-  onCancel={() => setDraft(lastSavedConfig)}
 />;
 ```
 
-`onSave` and `onCancel` are optional. When supplied, the full editor displays its internal save and reset buttons. The component does not choose between draft storage and publishing; that decision belongs to the containing page.
+The super-admin page has a single "نشر على Home" button placed next to the check interval inputs for immediate publication. All previous "التراجع عن التغييرات", "حفظ كمسودة", and "تراجع" actions and their buttons have been removed from the UI.
 
 ### `images-edit`
 
@@ -110,8 +110,6 @@ interface HeroSliderProps {
   config: HeroSliderConfig;
   mode?: "view" | "admin-edit" | "images-edit";
   onChange?: (config: HeroSliderConfig) => void;
-  onSave?: (config: HeroSliderConfig) => void;
-  onCancel?: () => void;
 }
 ```
 
@@ -120,8 +118,6 @@ interface HeroSliderProps {
 | `config`   | Yes      | —        | Supplies slider behavior and slides.                                 |
 | `mode`     | No       | `"view"` | Selects public display, full editing, or image-only editing.         |
 | `onChange` | No       | —        | Receives the updated draft after an editor change.                   |
-| `onSave`   | No       | —        | Receives the current full-editor draft when its save button is used. |
-| `onCancel` | No       | —        | Handles reset or cancellation in the full editor.                    |
 
 Both editing modes maintain an internal draft and synchronize it whenever the `config` property changes.
 
@@ -211,7 +207,7 @@ The database uses four related tables. `hero_sliders` contains one Home record w
 
 `hero_slider_slides` stores each slide as an independent row. The composite identity is slider ID, stage (`draft` or `published`), and slide ID. Image keys, cached URLs, text, ordering, actions, and duration are stored as columns.
 
-`hero_slider_publications` stores immutable published snapshots with version, actor, and publication time. The super-admin page lists these records and can restore one. A restore creates a new publication and never rewrites history.
+`hero_slider_publications` stores immutable published snapshots with version, actor, and publication time. These snapshots are retained in the database for auditing and schema integration, but are no longer listed or restorable from the super-admin dashboard.
 
 `advertisement_image_cleanup` queues uploaded image keys removed by a publication. Objects are retained for a seven-day safety period and deleted by the server cleanup flow only after that period.
 
@@ -264,10 +260,9 @@ The `PUT` payload uses `action: "save-draft"`, `action: "publish"`, or `action: 
   -> receives changes through onChange
   -> saves draft without changing Home
   -> publishes normalized slide rows and increments version
-  -> may restore an older publication as a new version
 ```
 
-The super-admin page also controls `checkIntervalMinutes`, displays status and version metadata, and exposes publication history. Zod validates every submitted configuration in the server service before repository writes.
+The super-admin page also controls `checkIntervalMinutes` and displays status and version metadata. Zod validates every submitted configuration in the server service before repository writes.
 
 ## Home synchronization and IndexedDB cache
 

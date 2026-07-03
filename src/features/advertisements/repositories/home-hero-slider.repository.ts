@@ -276,7 +276,10 @@ export class HomeHeroSliderRepository {
         ),
       )
       .run();
-    tx.insert(heroSliderSlides).values(slideRows(config, stage)).run();
+    const rows = slideRows(config, stage);
+    if (rows.length > 0) {
+      tx.insert(heroSliderSlides).values(rows).run();
+    }
   }
 
   private async ensureNormalizedSlides(
