@@ -4,12 +4,14 @@ import { useCallback, useState } from "react";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import type { StorageProfileId } from "@/core/storage/constants/storage-profiles";
 import { imageStorageService } from "../services/image-storage-service";
+import type { ImageUploadProgressStage } from "../services/image-storage-service.interface";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
 interface UseStorageProfileUploadOptions {
   storageProfileId: StorageProfileId;
   value: StoredImage | null;
   onChange: (image: StoredImage | null) => void;
+  onProgress?: (stage: ImageUploadProgressStage | "deleting" | "idle") => void;
 }
 
 interface UseStorageProfileUploadResult {
@@ -27,6 +29,7 @@ export function useStorageProfileUpload({
   storageProfileId,
   value,
   onChange,
+  onProgress,
 }: UseStorageProfileUploadOptions): UseStorageProfileUploadResult {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,6 +54,7 @@ export function useStorageProfileUpload({
           storageProfileId,
           file,
           value?.imageKey ?? null,
+          onProgress,
         );
         console.info(
           `[StorageImageManager:${storageProfileId}] storage-response-received`,
@@ -86,7 +90,7 @@ export function useStorageProfileUpload({
         setIsUploading(false);
       }
     },
-    [storageProfileId, value, onChange],
+    [storageProfileId, value, onChange, onProgress],
   );
 
   const removeImage = useCallback(async () => {
@@ -95,11 +99,13 @@ export function useStorageProfileUpload({
     });
     if (!value?.imageKey) {
       onChange(null);
+      onProgress?.("idle");
       return;
     }
 
     setIsUploading(true);
     setError(null);
+    onProgress?.("deleting");
     try {
       await imageStorageService.deleteImage(storageProfileId, value.imageKey);
       console.info(
@@ -123,8 +129,9 @@ export function useStorageProfileUpload({
       setError(message);
     } finally {
       setIsUploading(false);
+      onProgress?.("idle");
     }
-  }, [storageProfileId, value, onChange]);
+  }, [storageProfileId, value, onChange, onProgress]);
 
   return { uploadFile, removeImage, isUploading, error };
 }

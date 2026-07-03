@@ -23,6 +23,8 @@
     "db:create:sqlite": "npx tsx scripts/create-sqlite-db.ts",
     "db:create:profile": "npx tsx scripts/create-profile-sqlite-db.ts",
     "db:create:product": "npx tsx scripts/create-product-sqlite-db.ts",
+    "db:reset:advertisements": "npx tsx scripts/reset-advertisements-db.ts",
+    "db:reset:advertisements:cloud": "npx tsx scripts/reset-advertisements-db.ts --cloud",
     "db:ensure": "npx tsx scripts/ensure-sqlite-databases.ts",
     "r2:sync:cors": "npx tsx scripts/r2-sync-cors.ts",
     "ota:keygen": "npx tsx scripts/ota-keygen.ts",

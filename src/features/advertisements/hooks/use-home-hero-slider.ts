@@ -21,7 +21,7 @@ const fallback: HomeHeroPublished = {
   config: fallbackSeed.config as HomeHeroConfig,
   version: 0,
   checkIntervalMinutes: 15,
-  publishedAt: "",
+  updatedAt: "",
 };
 
 export function useHomeHeroSlider() {
@@ -42,7 +42,7 @@ export function useHomeHeroSlider() {
       const version = await homeHeroSliderApiService.getVersion();
       let next: HomeHeroPublished = cached ?? fallback;
       if (!cached || version.version > cached.version) {
-        next = await homeHeroSliderApiService.getPublished();
+        next = await homeHeroSliderApiService.getCurrent();
         setData(next);
       } else if (version.checkIntervalMinutes !== cached.checkIntervalMinutes) {
         next = {

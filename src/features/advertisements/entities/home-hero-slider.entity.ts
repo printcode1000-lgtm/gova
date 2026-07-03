@@ -27,31 +27,19 @@ export interface HomeHeroConfig {
 
 export interface HomeHeroRecord {
   id: typeof HOME_HERO_SLIDER_ID;
-  draft: HomeHeroConfig;
-  published: HomeHeroConfig;
-  status: "draft" | "published";
+  config: HomeHeroConfig;
   version: number;
-  revision: number;
-  schemaVersion: number;
   checkIntervalMinutes: number;
   updatedAt: string;
-  publishedAt: string;
   updatedBy: string | null;
-  publishedBy: string | null;
-}
-
-export interface HomeHeroPublication {
-  id: number;
-  version: number;
-  publishedBy: string;
-  publishedAt: string;
+  storageWarning?: "imageDeleteFailed";
 }
 
 export interface HomeHeroPublished {
   config: HomeHeroConfig;
   version: number;
   checkIntervalMinutes: number;
-  publishedAt: string;
+  updatedAt: string;
 }
 
 export interface SuperAdminIdentity {

@@ -18,8 +18,9 @@ function parseConfig(config: HomeHeroConfig): HomeHeroConfig {
 }
 
 function assertAdmin(identity: SuperAdminIdentity): void {
-  if (!isSuperAdminIdentity(identity.uid, identity.phone))
+  if (!isSuperAdminIdentity(identity.uid, identity.phone)) {
     throw new Error("forbidden");
+  }
 }
 
 function resolveImageUrls(config: HomeHeroConfig): HomeHeroConfig {
@@ -37,29 +38,18 @@ function resolveImageUrls(config: HomeHeroConfig): HomeHeroConfig {
   };
 }
 
-async function cleanupDueImages(): Promise<void> {
-  const queued = await homeHeroSliderRepository.dueImageCleanup();
-  for (const image of queued) {
-    try {
-      await imageStorageOrchestrator.deleteByKey(
-        image.storageProfileId,
-        image.imageKey,
-      );
-      await homeHeroSliderRepository.markImageCleanup(image.id, "deleted");
-    } catch {
-      await homeHeroSliderRepository.markImageCleanup(image.id, "failed");
-    }
-  }
+function resolvedRecord(record: HomeHeroRecord): HomeHeroRecord {
+  return { ...record, config: resolveImageUrls(record.config) };
 }
 
 export const homeHeroSliderService = {
-  async getPublished(): Promise<HomeHeroPublished> {
+  async getCurrent(): Promise<HomeHeroPublished> {
     const record = await homeHeroSliderRepository.get();
     return {
-      config: resolveImageUrls(record.published),
+      config: resolveImageUrls(record.config),
       version: record.version,
       checkIntervalMinutes: record.checkIntervalMinutes,
-      publishedAt: record.publishedAt,
+      updatedAt: record.updatedAt,
     };
   },
 
@@ -68,67 +58,55 @@ export const homeHeroSliderService = {
     return {
       version: record.version,
       checkIntervalMinutes: record.checkIntervalMinutes,
-      publishedAt: record.publishedAt,
+      updatedAt: record.updatedAt,
     };
   },
 
   async getAdmin(identity: SuperAdminIdentity): Promise<HomeHeroRecord> {
     assertAdmin(identity);
-    const record = await homeHeroSliderRepository.get();
+    return resolvedRecord(await homeHeroSliderRepository.get());
+  },
+
+  async save(
+    identity: SuperAdminIdentity,
+    config: HomeHeroConfig,
+    interval: number,
+  ): Promise<HomeHeroRecord> {
+    assertAdmin(identity);
+    const current = await homeHeroSliderRepository.get();
+    const parsed = parseConfig(config);
+    const nextKeys = new Set(
+      parsed.slides
+        .map((slide) => slide.imageKey)
+        .filter((key): key is string => Boolean(key)),
+    );
+    const removedKeys = current.config.slides
+      .map((slide) => slide.imageKey)
+      .filter((key): key is string => Boolean(key))
+      .filter((key) => !nextKeys.has(key));
+
+    // Database first: a failed save never deletes an image that is still live.
+    const saved = await homeHeroSliderRepository.save(
+      parsed,
+      Math.max(5, Math.min(1440, interval)),
+      identity.uid,
+    );
+
+    // Storage second: after the single current record no longer references it.
+    let storageWarning: HomeHeroRecord["storageWarning"];
+    try {
+      await Promise.all(
+        removedKeys.map((imageKey) =>
+          imageStorageOrchestrator.deleteByKey("home-hero-slider", imageKey),
+        ),
+      );
+    } catch {
+      storageWarning = "imageDeleteFailed";
+    }
+
     return {
-      ...record,
-      draft: resolveImageUrls(record.draft),
-      published: resolveImageUrls(record.published),
+      ...resolvedRecord(saved),
+      ...(storageWarning ? { storageWarning } : {}),
     };
-  },
-
-  async listPublications(identity: SuperAdminIdentity) {
-    assertAdmin(identity);
-    return homeHeroSliderRepository.listPublications();
-  },
-
-  async saveDraft(
-    identity: SuperAdminIdentity,
-    config: HomeHeroConfig,
-    interval: number,
-    expectedRevision: number,
-  ) {
-    assertAdmin(identity);
-    return homeHeroSliderRepository.saveDraft(
-      parseConfig(config),
-      Math.max(5, Math.min(1440, interval)),
-      identity.uid,
-      expectedRevision,
-    );
-  },
-
-  async publish(
-    identity: SuperAdminIdentity,
-    config: HomeHeroConfig,
-    interval: number,
-    expectedRevision: number,
-  ) {
-    assertAdmin(identity);
-    const result = await homeHeroSliderRepository.publish(
-      parseConfig(config),
-      Math.max(5, Math.min(1440, interval)),
-      identity.uid,
-      expectedRevision,
-    );
-    await cleanupDueImages();
-    return result;
-  },
-
-  async restore(
-    identity: SuperAdminIdentity,
-    publicationId: number,
-    interval: number,
-    expectedRevision: number,
-  ) {
-    assertAdmin(identity);
-    const config =
-      await homeHeroSliderRepository.getPublicationConfig(publicationId);
-    if (!config) throw new Error("heroSliderPublicationNotFound");
-    return this.publish(identity, config, interval, expectedRevision);
   },
 };

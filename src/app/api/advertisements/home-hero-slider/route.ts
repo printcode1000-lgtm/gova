@@ -8,23 +8,8 @@ export async function GET(request: Request) {
     "GET /api/advertisements/home-hero-slider",
     async () => {
       const url = new URL(request.url);
-      if (url.searchParams.get("history") === "1") {
-        try {
-          return apiSuccess(
-            await homeHeroSliderService.listPublications({
-              uid: url.searchParams.get("uid") ?? "",
-              phone: url.searchParams.get("phone") ?? "",
-            }),
-          );
-        } catch (error) {
-          return apiError(
-            error instanceof Error ? error.message : "forbidden",
-            403,
-          );
-        }
-      }
       if (url.searchParams.get("admin") !== "1") {
-        return apiSuccess(await homeHeroSliderService.getPublished());
+        return apiSuccess(await homeHeroSliderService.getCurrent());
       }
       try {
         return apiSuccess(
@@ -49,47 +34,21 @@ export async function PUT(request: Request) {
     async () => {
       try {
         const body = (await request.json()) as {
-          action: "save-draft" | "publish" | "restore";
           identity: { uid: string; phone: string };
           config: HomeHeroConfig;
           checkIntervalMinutes: number;
-          expectedRevision: number;
-          publicationId?: number;
         };
-        const result =
-          body.action === "restore"
-            ? await homeHeroSliderService.restore(
-                body.identity,
-                body.publicationId ?? 0,
-                body.checkIntervalMinutes,
-                body.expectedRevision,
-              )
-            : body.action === "publish"
-              ? await homeHeroSliderService.publish(
-                  body.identity,
-                  body.config,
-                  body.checkIntervalMinutes,
-                  body.expectedRevision,
-                )
-              : await homeHeroSliderService.saveDraft(
-                  body.identity,
-                  body.config,
-                  body.checkIntervalMinutes,
-                  body.expectedRevision,
-                );
-        return apiSuccess(result);
+        return apiSuccess(
+          await homeHeroSliderService.save(
+            body.identity,
+            body.config,
+            body.checkIntervalMinutes,
+          ),
+        );
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "invalidHeroSliderConfig";
-        const status =
-          message === "forbidden"
-            ? 403
-            : message === "heroSliderRevisionConflict"
-              ? 409
-              : message === "heroSliderPublicationNotFound"
-                ? 404
-                : 400;
-        return apiError(message, status);
+        return apiError(message, message === "forbidden" ? 403 : 400);
       }
     },
   );

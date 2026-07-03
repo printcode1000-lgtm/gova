@@ -69,16 +69,12 @@ Autoplay and slide actions are disabled while editing. This prevents the editor 
 The project uses this mode only in `/super-admin/hero-slider`. It controls the Home slider and is not used by Profile.
 
 ```tsx
-const [draft, setDraft] = useState<HeroSliderConfig>(initialConfig);
+const [config, setConfig] = useState<HeroSliderConfig>(initialConfig);
 
-<HeroSlider
-  mode="admin-edit"
-  config={draft}
-  onChange={setDraft}
-/>;
+<HeroSlider mode="admin-edit" config={config} onChange={setConfig} />;
 ```
 
-The super-admin page has a single "نشر على Home" button placed next to the check interval inputs for immediate publication. All previous "التراجع عن التغييرات", "حفظ كمسودة", and "تراجع" actions and their buttons have been removed from the UI.
+The super-admin page has one "حفظ" button next to the check interval inputs. It replaces the current Home configuration directly; there are no draft, publish, restore, or history actions.
 
 ### `images-edit`
 
@@ -113,13 +109,13 @@ interface HeroSliderProps {
 }
 ```
 
-| Property   | Required | Default  | Purpose                                                              |
-| ---------- | -------- | -------- | -------------------------------------------------------------------- |
-| `config`   | Yes      | —        | Supplies slider behavior and slides.                                 |
-| `mode`     | No       | `"view"` | Selects public display, full editing, or image-only editing.         |
-| `onChange` | No       | —        | Receives the updated draft after an editor change.                   |
+| Property   | Required | Default  | Purpose                                                      |
+| ---------- | -------- | -------- | ------------------------------------------------------------ |
+| `config`   | Yes      | —        | Supplies slider behavior and slides.                         |
+| `mode`     | No       | `"view"` | Selects public display, full editing, or image-only editing. |
+| `onChange` | No       | —        | Receives the updated configuration after an editor change.   |
 
-Both editing modes maintain an internal draft and synchronize it whenever the `config` property changes.
+Both editing modes maintain internal editing state and synchronize it whenever the `config` property changes.
 
 ## Configuration model
 
@@ -188,28 +184,18 @@ Its schema is defined in:
 src/core/database/advertisements/advertisements.schema.ts
 ```
 
-The database uses four related tables. `hero_sliders` contains one Home record with the ID `home-hero-slider` and stores aggregate behavior and publication metadata.
+Runtime behavior uses one `hero_slider` record with the ID `home-hero-slider`. `config_json` contains the complete current configuration, including slides.
 
-| Column                   | Purpose                                                                                                |
-| ------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `id`                     | Stable slider identifier.                                                                              |
-| `draft_json`             | Draft-level behavior settings; retained for migration compatibility. Slides are normalized separately. |
-| `published_json`         | Published behavior settings; retained for migration compatibility. Slides are normalized separately.   |
-| `status`                 | `draft` or `published`.                                                                                |
-| `version`                | Incremented whenever a configuration is published.                                                     |
-| `revision`               | Incremented on every draft save, publish, or restore for optimistic locking.                           |
-| `schema_version`         | Stored configuration schema version.                                                                   |
-| `check_interval_minutes` | Client update-check interval.                                                                          |
-| `updated_by`             | UID that last changed the draft or publication.                                                        |
-| `published_by`           | UID that last published the slider.                                                                    |
-| `updated_at`             | Last draft or publish update time.                                                                     |
-| `published_at`           | Last publication time.                                                                                 |
+| Column                   | Purpose                                        |
+| ------------------------ | ---------------------------------------------- |
+| `id`                     | Stable slider identifier.                      |
+| `config_json`            | Complete current configuration and slides.     |
+| `version`                | Incremented on every successful save.          |
+| `check_interval_minutes` | Client update-check interval.                  |
+| `updated_at`             | Last successful save time.                     |
+| `updated_by`             | UID that last saved the current configuration. |
 
-`hero_slider_slides` stores each slide as an independent row. The composite identity is slider ID, stage (`draft` or `published`), and slide ID. Image keys, cached URLs, text, ordering, actions, and duration are stored as columns.
-
-`hero_slider_publications` stores immutable published snapshots with version, actor, and publication time. These snapshots are retained in the database for auditing and schema integration, but are no longer listed or restorable from the super-admin dashboard.
-
-`advertisement_image_cleanup` queues uploaded image keys removed by a publication. Objects are retained for a seven-day safety period and deleted by the server cleanup flow only after that period.
+There are no draft, publication, history, normalized-slide, or cleanup tables. The advertisements database has one clean migration. During early development it can be recreated locally with `npm run db:reset:advertisements` or in both SQLite and configured Turso with `npm run db:reset:advertisements:cloud`.
 
 The initial record is validated and seeded from:
 
@@ -228,7 +214,7 @@ API route
   -> HomeHeroSlider server service
   -> HomeHeroSlider repository
   -> advertisements database client
-  -> advertisements.db / normalized advertisement tables
+  -> advertisements.db / Turso advertisements database
 ```
 
 Relevant files:
@@ -241,28 +227,27 @@ Relevant files:
 
 ### API routes
 
-| Method and route                                                       | Purpose                                                             |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| `GET /api/advertisements/home-hero-slider`                             | Returns the published Home configuration.                           |
-| `GET /api/advertisements/home-hero-slider/version`                     | Returns version and timing metadata without the full configuration. |
-| `GET /api/advertisements/home-hero-slider?admin=1&uid=...&phone=...`   | Returns draft and publication metadata for the super-admin editor.  |
-| `GET /api/advertisements/home-hero-slider?history=1&uid=...&phone=...` | Returns publication history.                                        |
-| `PUT /api/advertisements/home-hero-slider`                             | Saves a draft, publishes, or restores a historical publication.     |
+| Method and route                                                     | Purpose                                                             |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `GET /api/advertisements/home-hero-slider`                           | Returns the current Home configuration.                             |
+| `GET /api/advertisements/home-hero-slider/version`                   | Returns version and timing metadata without the full configuration. |
+| `GET /api/advertisements/home-hero-slider?admin=1&uid=...&phone=...` | Returns the current record to the super-admin editor.               |
+| `PUT /api/advertisements/home-hero-slider`                           | Replaces the current record directly.                               |
 
-The `PUT` payload uses `action: "save-draft"`, `action: "publish"`, or `action: "restore"`. Every mutation includes `expectedRevision`. A stale revision fails instead of overwriting another editor's work. Publishing runs in one database transaction: it updates metadata, replaces normalized draft and published slides, records history, increments `version` and `revision`, and queues removed image keys.
+The `PUT` payload contains only `identity`, `config`, and `checkIntervalMinutes`. Saving validates the full configuration, updates the single record in one transaction, and increments `version`.
 
 ### Super-admin editing flow
 
 ```text
 /super-admin/hero-slider
   -> loads HomeHeroRecord through HomeHeroSliderApiService
-  -> passes record.draft to HeroSlider mode="admin-edit"
+  -> passes record.config to HeroSlider mode="admin-edit"
   -> receives changes through onChange
-  -> saves draft without changing Home
-  -> publishes normalized slide rows and increments version
+  -> saves the current record and increments version
+  -> invalidates the Home cache
 ```
 
-The super-admin page also controls `checkIntervalMinutes` and displays status and version metadata. Zod validates every submitted configuration in the server service before repository writes.
+The super-admin page also controls `checkIntervalMinutes` and displays version/update metadata. There is one Save button. Zod validates every submitted configuration before repository writes.
 
 ## Home synchronization and IndexedDB cache
 
@@ -276,7 +261,7 @@ Object store: appSettings
 Key: advertisements:home-hero-slider
 ```
 
-The cache contains the published configuration, version, publication time, check interval, and `lastCheckedAt`.
+The cache contains the current configuration, version, update time, check interval, and `lastCheckedAt`.
 
 Synchronization sequence:
 
@@ -284,7 +269,7 @@ Synchronization sequence:
 2. The hook compares `lastCheckedAt` with `checkIntervalMinutes`.
 3. If the interval has not expired, no server request is made.
 4. When the interval expires, the hook requests only the version endpoint.
-5. The full published configuration is requested only when the server version is newer or no cache exists.
+5. The full current configuration is requested only when the server version is newer or no cache exists.
 6. The new configuration and check time are stored in IndexedDB.
 7. Network failures preserve the last usable local configuration.
 
@@ -298,7 +283,7 @@ The full administrative editor uses the storage profile:
 Profile ID: home-hero-slider
 Provider: CloudflareR2
 Folder: images/advertisements/home-hero-slider
-Maximum processed image size: 80 KB
+Maximum processed image size: 1 MB (1024 KB)
 Output format: WebP
 ```
 
@@ -315,7 +300,7 @@ interface StoredImage {
 
 The URL becomes `slide.image`, while the persistent object key becomes `slide.imageKey`. Uploaded images are identified by `imageKey`; the server regenerates their public URLs through the configured storage provider when returning data. A stored URL remains useful for external seed images that have no managed key.
 
-Removing an image from a Home draft does not delete the published object. When a later publication removes a managed image key, it is added to the delayed cleanup queue. This protects live and recently restored publications from immediate object deletion.
+Removing an image in the editor only changes the local form. On Save, the server first commits the new configuration to SQLite or Turso. Only after that succeeds does it delete removed managed image keys from local storage or R2. A failed database save never deletes a referenced image, and there is no delayed cleanup queue.
 
 ## Profile slider architecture
 
@@ -411,12 +396,12 @@ These profiles are also declared in `src/config/storage-profiles.json`.
 
 ## Choosing the correct mode and persistence flow
 
-| Use case                        | Mode          | Persistence                                                     | Image profile      |
-| ------------------------------- | ------------- | --------------------------------------------------------------- | ------------------ |
-| Public Home slider              | `view`        | Published `home-hero-slider` advertisement plus IndexedDB cache | `home-hero-slider` |
-| Super-admin Home editor         | `admin-edit`  | Draft and published JSON in `advertisements.db`                 | `home-hero-slider` |
-| Profile preview                 | `view`        | Image keys in `profile.db`                                      | `cover`            |
-| Profile storefront-image editor | `images-edit` | `user_profiles.cover_image_keys_json`                           | `cover`            |
+| Use case                        | Mode          | Persistence                                            | Image profile      |
+| ------------------------------- | ------------- | ------------------------------------------------------ | ------------------ |
+| Public Home slider              | `view`        | Current `home-hero-slider` record plus IndexedDB cache | `home-hero-slider` |
+| Super-admin Home editor         | `admin-edit`  | Single current JSON record in `advertisements.db`      | `home-hero-slider` |
+| Profile preview                 | `view`        | Image keys in `profile.db`                             | `cover`            |
+| Profile storefront-image editor | `images-edit` | `user_profiles.cover_image_keys_json`                  | `cover`            |
 
 Do not connect Profile to the advertisements database. Do not use `images-edit` for Home administration because it intentionally discards non-image slide fields when rebuilding slides. Do not expose `admin-edit` to profile owners.
 
@@ -444,5 +429,5 @@ For a new editable carousel:
 - The existing application session is client-stored. Strong production authorization requires a signed server-verifiable session; hiding controls and accepting client identity fields are not sufficient against forged requests.
 - Never serialize callback functions such as `onAction`.
 - Wait for image upload completion and a non-empty `imageKey` before persisting an image reference.
-- Preserve the separation between draft and published Home images.
+- Save the database record before deleting removed Home image objects.
 - Keep Profile image limits aligned across the UI, profile service, and repository. The current maximum is three.

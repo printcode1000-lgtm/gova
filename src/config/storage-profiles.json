@@ -22,7 +22,7 @@
       "enabled": true,
       "provider": "CloudflareR2",
       "folder": "images/advertisements/home-hero-slider",
-      "maxImageSizeKB": 80,
+      "maxImageSizeKB": 1024,
       "outputFormat": "webp"
     },
     {

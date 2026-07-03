@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1782980000000,
+      "when": 1783072800000,
       "tag": "0000_home_hero_slider",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1782981000000,
-      "tag": "0001_normalized_slides_history",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1782982000000,
-      "tag": "0002_replace_unreliable_google_images",
       "breakpoints": true
     }
   ]

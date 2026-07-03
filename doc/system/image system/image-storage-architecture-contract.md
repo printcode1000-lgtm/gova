@@ -32,6 +32,7 @@ UI must never know: Provider, Cloudflare, Google Drive, Local Storage, Folder, B
 ## 6–8. Processing, Format, ImageKey
 
 - All uploads pass Image Processing (client compress + server rules validation)
+- File selection and preview are client-only; provider upload starts only after the explicit Upload action.
 - Output format from profile only — use `output-format.registry.ts`
 - Keys only via `ImageKeyGenerator`
 
@@ -47,6 +48,7 @@ UI must never know: Provider, Cloudflare, Google Drive, Local Storage, Folder, B
 - Server upload entry: `POST /api/storage/images/upload` → Application Layer
 - No direct R2/filesystem/provider instantiation outside Provider Layer
 - No duplicate upload/compression/validation logic
+- Delete UI must wait for provider deletion success before clearing its stored-image value.
 - Orphan cleanup: independent maintenance service only (future)
 
 ## Final Rule

@@ -1,15 +1,9 @@
 "use client";
 
 import * as React from "react";
-import {
-  AlertCircle,
-  Camera,
-  Image as ImageIcon,
-  Images,
-  Upload,
-  X,
-} from "lucide-react";
+import { Camera, Image as ImageIcon, Images, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,9 +60,84 @@ const aspectClasses: Record<StorageImageAspectRatio, string> = {
   wide: "aspect-[21/9]",
 };
 
-const CONFIRM_UPLOAD_MESSAGE = "Upload this image and save its key?";
-const CONFIRM_REMOVE_MESSAGE = "Remove this image?";
-const CONFIRM_CLEAR_SELECTED_MESSAGE = "Clear the selected image?";
+type ManagerStage =
+  | "idle"
+  | "selecting"
+  | "detecting"
+  | "converting"
+  | "reading"
+  | "previewing"
+  | "ready"
+  | "profile"
+  | "compressing"
+  | "uploading"
+  | "finalizing"
+  | "loadingImage"
+  | "deleting";
+
+type DialogState = {
+  kind: "confirm" | "error";
+  title: string;
+  message: string;
+  onConfirm?: () => void;
+} | null;
+
+function StorageManagerDialog({
+  state,
+  onClose,
+  confirmLabel,
+  cancelLabel,
+  closeLabel,
+}: {
+  state: DialogState;
+  onClose: () => void;
+  confirmLabel: string;
+  cancelLabel: string;
+  closeLabel: string;
+}) {
+  if (!state) return null;
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+      role="presentation"
+    >
+      <div
+        className="w-full max-w-sm rounded-xl border bg-background p-5 shadow-xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="storage-dialog-title"
+      >
+        <h2 id="storage-dialog-title" className="text-lg font-semibold">
+          {state.title}
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">{state.message}</p>
+        <div className="mt-5 flex justify-end gap-2">
+          {state.kind === "confirm" ? (
+            <>
+              <Button type="button" variant="secondary" onClick={onClose}>
+                {cancelLabel}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  const action = state.onConfirm;
+                  onClose();
+                  action?.();
+                }}
+              >
+                {confirmLabel}
+              </Button>
+            </>
+          ) : (
+            <Button type="button" onClick={onClose}>
+              {closeLabel}
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function traceStorageImageManager(
   configId: string,
@@ -88,7 +157,11 @@ function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
-async function normalizeSelectedImageFile(file: File): Promise<File> {
+async function normalizeSelectedImageFile(
+  file: File,
+  onStage?: (stage: ManagerStage) => void,
+): Promise<File> {
+  onStage?.("detecting");
   const maybeHeic =
     !file.type || /hei[cf]/i.test(file.type) || /\.hei[cf]$/i.test(file.name);
   if (maybeHeic) {
@@ -99,6 +172,7 @@ async function normalizeSelectedImageFile(file: File): Promise<File> {
     });
     const { heicTo, isHeic } = await import("heic-to/csp");
     if (await isHeic(file)) {
+      onStage?.("converting");
       traceStorageImageManager("heic", "conversion-started", {
         name: file.name,
         inputBytes: file.size,
@@ -267,6 +341,7 @@ function StorageImageSlot({
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const cameraInputRef = React.useRef<HTMLInputElement>(null);
+  const imageRef = React.useRef<HTMLImageElement>(null);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [selectedPreviewUrl, setSelectedPreviewUrl] = React.useState<
     string | null
@@ -274,6 +349,8 @@ function StorageImageSlot({
   const [isDragging, setIsDragging] = React.useState(false);
   const [isChoosingSource, setIsChoosingSource] = React.useState(false);
   const [sourceError, setSourceError] = React.useState<string | null>(null);
+  const [stage, setStage] = React.useState<ManagerStage>("idle");
+  const [dialog, setDialog] = React.useState<DialogState>(null);
   const [uploadedImage, setUploadedImage] = React.useState<StoredImage | null>(
     null,
   );
@@ -323,12 +400,47 @@ function StorageImageSlot({
         setUploadedImage(null);
         onRemoved(index);
       },
+      onProgress: setStage,
     });
 
-  const previewUrl = selectedPreviewUrl ?? image?.url ?? null;
+  // Follow the storage operation result directly. Waiting only for the parent
+  // to echo `value` back can leave the final-image stage active when feature
+  // persistence is asynchronous.
+  const previewUrl =
+    selectedPreviewUrl ?? uploadedImage?.url ?? image?.url ?? null;
   const displayError = sourceError ?? error;
   const busy = isUploading || image?.isUploading || isChoosingSource;
-  const canChoose = !previewUrl || (config.allowReplace && !selectedFile);
+  const canChoose = !previewUrl;
+  const stageLabels: Partial<Record<ManagerStage, string>> = {
+    selecting: t("storage.imageManager.stage.selecting"),
+    detecting: t("storage.imageManager.stage.detecting"),
+    converting: t("storage.imageManager.stage.converting"),
+    reading: t("storage.imageManager.stage.reading"),
+    previewing: t("storage.imageManager.stage.previewing"),
+    profile: t("storage.imageManager.stage.profile"),
+    compressing: t("storage.imageManager.stage.compressing"),
+    uploading: t("storage.imageManager.stage.uploading"),
+    finalizing: t("storage.imageManager.stage.finalizing"),
+    loadingImage: t("storage.imageManager.stage.loadingImage"),
+    deleting: t("storage.imageManager.stage.deleting"),
+  };
+  const showProgress = stage !== "idle" && stage !== "ready";
+
+  React.useEffect(() => {
+    if (stage === "loadingImage" && imageRef.current?.complete) {
+      setStage("idle");
+    }
+  }, [stage, imageUrl]);
+
+  React.useEffect(() => {
+    if (!displayError) return;
+    setStage(selectedFile ? "ready" : "idle");
+    setDialog({
+      kind: "error",
+      title: t("storage.imageManager.errorTitle"),
+      message: t("storage.imageManager.operationError"),
+    });
+  }, [displayError, selectedFile, t]);
 
   const uploadCandidate = async (file: File) => {
     traceStorageImageManager(config.id, "upload-started", {
@@ -340,9 +452,11 @@ function StorageImageSlot({
     const uploaded = await uploadFile(file);
     if (!uploaded) {
       traceStorageImageManager(config.id, "upload-failed", { index });
+      setStage("ready");
       return false;
     }
     traceStorageImageManager(config.id, "upload-completed", { index });
+    setStage("loadingImage");
     setSelectedFile(null);
     setSelectedPreviewUrl(null);
     return true;
@@ -358,7 +472,7 @@ function StorageImageSlot({
     });
     let normalizedFile: File;
     try {
-      normalizedFile = await normalizeSelectedImageFile(file);
+      normalizedFile = await normalizeSelectedImageFile(file, setStage);
       traceStorageImageManager(config.id, "file-type-normalized", {
         index,
         originalType: file.type || null,
@@ -370,18 +484,16 @@ function StorageImageSlot({
         `[StorageImageManager:${config.id}] file-rejected`,
         fileTypeError,
       );
-      setSourceError(
-        fileTypeError instanceof Error
-          ? fileTypeError.message
-          : "Unsupported selected file",
-      );
+      setSourceError(t("storage.imageManager.unsupportedFile"));
       return;
     }
     setSourceError(null);
     setSelectedFile(normalizedFile);
     try {
+      setStage("reading");
       traceStorageImageManager(config.id, "preview-read-started", { index });
       const preview = await fileToDataUrl(normalizedFile);
+      setStage("previewing");
       setSelectedPreviewUrl(preview);
       traceStorageImageManager(config.id, "preview-ready", {
         index,
@@ -393,12 +505,9 @@ function StorageImageSlot({
         `[StorageImageManager:${config.id}] preview-failed`,
         previewError,
       );
-      setSourceError(
-        previewError instanceof Error
-          ? previewError.message
-          : "Unable to preview selected image",
-      );
+      setSourceError(t("storage.imageManager.previewError"));
       setSelectedFile(null);
+      setStage("idle");
       return;
     }
 
@@ -430,6 +539,7 @@ function StorageImageSlot({
       return;
     }
 
+    setStage("selecting");
     setIsChoosingSource(true);
     try {
       const file = await chooseSingleImage();
@@ -438,12 +548,14 @@ function StorageImageSlot({
         selected: Boolean(file),
       });
       if (file) await processFile(file);
+      else setStage("idle");
     } catch (sourceSelectionError) {
       console.error(
         "[StorageImageManager] Unable to choose an image.",
         sourceSelectionError,
       );
       setSourceError(t("storage.imageSource.error"));
+      setStage("idle");
     } finally {
       setIsChoosingSource(false);
     }
@@ -474,6 +586,7 @@ function StorageImageSlot({
       return;
     }
 
+    setStage("selecting");
     setIsChoosingSource(true);
     try {
       const file = await captureSingleImage();
@@ -482,12 +595,14 @@ function StorageImageSlot({
         selected: Boolean(file),
       });
       if (file) await processFile(file);
+      else setStage("idle");
     } catch (cameraError) {
       console.error(
         "[StorageImageManager] Unable to capture an image.",
         cameraError,
       );
       setSourceError(t("storage.imageSource.cameraError"));
+      setStage("idle");
     } finally {
       setIsChoosingSource(false);
     }
@@ -497,42 +612,45 @@ function StorageImageSlot({
     event.preventDefault();
     event.stopPropagation();
     if (!selectedFile) return;
-    const confirmed =
-      !config.confirmUpload || window.confirm(CONFIRM_UPLOAD_MESSAGE);
-    traceStorageImageManager(config.id, "manual-upload-confirmation", {
-      index,
-      confirmed,
+    const runUpload = () => void uploadCandidate(selectedFile);
+    if (!config.confirmUpload) return runUpload();
+    setDialog({
+      kind: "confirm",
+      title: t("storage.imageManager.uploadTitle"),
+      message: t("storage.imageManager.confirmUpload"),
+      onConfirm: runUpload,
     });
-    if (confirmed) void uploadCandidate(selectedFile);
   };
 
   const removeCurrent = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (selectedFile) {
-      if (
-        config.confirmRemove &&
-        !window.confirm(CONFIRM_CLEAR_SELECTED_MESSAGE)
-      )
-        return;
+    const clearSelected = () => {
       traceStorageImageManager(config.id, "selected-file-cleared", { index });
       setSelectedFile(null);
       setSelectedPreviewUrl(null);
-      return;
-    }
-
-    if (config.confirmRemove && !window.confirm(CONFIRM_REMOVE_MESSAGE)) return;
-    traceStorageImageManager(config.id, "stored-image-removal-confirmed", {
-      index,
-      imageKey: image?.imageKey ?? null,
-      deleteFromStorage: config.deleteFromStorageOnRemove !== false,
+      setStage("idle");
+    };
+    const removeStored = () => {
+      traceStorageImageManager(config.id, "stored-image-removal-confirmed", {
+        index,
+        imageKey: image?.imageKey ?? null,
+        deleteFromStorage: config.deleteFromStorageOnRemove !== false,
+      });
+      if (config.deleteFromStorageOnRemove === false) onRemoved(index);
+      else void removeImage();
+    };
+    const action = selectedFile ? clearSelected : removeStored;
+    if (!config.confirmRemove) return action();
+    setDialog({
+      kind: "confirm",
+      title: t("storage.imageManager.removeTitle"),
+      message: selectedFile
+        ? t("storage.imageManager.confirmClearSelected")
+        : t("storage.imageManager.confirmRemove"),
+      onConfirm: action,
     });
-    if (config.deleteFromStorageOnRemove === false) {
-      onRemoved(index);
-      return;
-    }
-    void removeImage();
   };
 
   return (
@@ -559,15 +677,18 @@ function StorageImageSlot({
       {previewUrl ? (
         <>
           <img
+            ref={imageRef}
             src={previewUrl}
             alt=""
             className="absolute inset-0 h-full w-full rounded-lg object-cover"
-            onLoad={() =>
+            onLoad={() => {
               traceStorageImageManager(config.id, "preview-rendered", {
                 index,
                 source: selectedPreviewUrl ? "selected-file" : "stored-image",
-              })
-            }
+              });
+              if (stage === "previewing") setStage("ready");
+              if (stage === "loadingImage") setStage("idle");
+            }}
             onError={() => {
               const previewError = new Error(
                 selectedPreviewUrl
@@ -578,40 +699,25 @@ function StorageImageSlot({
                 `[StorageImageManager:${config.id}] preview-render-failed`,
                 previewError,
               );
-              setSourceError(previewError.message);
+              setSourceError(t("storage.imageManager.previewError"));
             }}
           />
-          {busy && (
-            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/60">
-              <Upload className="h-6 w-6 animate-pulse text-muted-foreground" />
+          {showProgress && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-background/80 px-4 text-center">
+              <LoadingSpinner size="md" />
+              <p className="text-sm font-medium">{stageLabels[stage]}</p>
             </div>
           )}
           <button
             type="button"
             onClick={removeCurrent}
             disabled={busy}
-            aria-label="Remove image"
-            title="Remove image"
+            aria-label={t("storage.imageManager.remove")}
+            title={t("storage.imageManager.remove")}
             className="absolute right-2 top-2 rounded-full bg-background p-1.5 shadow-md transition-colors hover:bg-destructive hover:text-destructive-foreground disabled:opacity-50"
           >
             <X className="h-4 w-4" />
           </button>
-          {config.allowReplace && !selectedFile && (
-            <button
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                void chooseFromDevice();
-              }}
-              disabled={busy}
-              aria-label="Replace image"
-              title="Replace image"
-              className="absolute bottom-2 left-2 rounded-full bg-background/90 p-2 shadow-md transition-colors hover:bg-primary/10 disabled:opacity-50"
-            >
-              <Images className="h-4 w-4" />
-            </button>
-          )}
           {selectedFile && (
             <Button
               type="button"
@@ -619,8 +725,8 @@ function StorageImageSlot({
               variant="secondary"
               onClick={uploadSelected}
               disabled={busy}
-              aria-label="Upload image"
-              title="Upload image"
+              aria-label={t("storage.imageManager.upload")}
+              title={t("storage.imageManager.upload")}
               className="absolute bottom-2 left-2 h-9 w-9 bg-background/90 shadow-md"
             >
               <Upload className="h-4 w-4" />
@@ -638,14 +744,16 @@ function StorageImageSlot({
               className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg px-4 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span className="rounded-full bg-muted p-3">
-                {busy ? (
-                  <Upload className="h-6 w-6 animate-pulse text-muted-foreground" />
+                {showProgress ? (
+                  <LoadingSpinner size="sm" />
                 ) : (
                   <ImageIcon className="h-6 w-6 text-muted-foreground" />
                 )}
               </span>
               <span className="text-sm font-medium text-primary">
-                {t("storage.imageSource.open")}
+                {showProgress
+                  ? stageLabels[stage]
+                  : t("storage.imageSource.open")}
               </span>
             </button>
           </DropdownMenuTrigger>
@@ -682,7 +790,10 @@ function StorageImageSlot({
             index,
             selected: Boolean(file),
           });
-          if (file && canChoose) void processFile(file);
+          if (file && canChoose) {
+            setStage("selecting");
+            void processFile(file);
+          }
           event.target.value = "";
         }}
         disabled={busy}
@@ -700,18 +811,22 @@ function StorageImageSlot({
             index,
             selected: Boolean(file),
           });
-          if (file && canChoose) void processFile(file);
+          if (file && canChoose) {
+            setStage("selecting");
+            void processFile(file);
+          }
           event.target.value = "";
         }}
         disabled={busy}
       />
 
-      {displayError && (
-        <p className="absolute bottom-2 right-2 flex items-center gap-1 rounded bg-background/90 px-2 py-1 text-xs text-destructive">
-          <AlertCircle className="h-3 w-3" />
-          {displayError}
-        </p>
-      )}
+      <StorageManagerDialog
+        state={dialog}
+        onClose={() => setDialog(null)}
+        confirmLabel={t("storage.imageManager.confirm")}
+        cancelLabel={t("storage.imageManager.cancel")}
+        closeLabel={t("storage.imageManager.close")}
+      />
     </div>
   );
 }

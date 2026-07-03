@@ -1,7 +1,16 @@
 import type {
   ImageUploadResult,
   StorageProfileClientView,
-} from '@/core/storage/types/storage-profile.types';
+} from "@/core/storage/types/storage-profile.types";
+
+export type ImageUploadProgressStage =
+  | "profile"
+  | "compressing"
+  | "uploading"
+  | "finalizing";
+export type ImageUploadProgressCallback = (
+  stage: ImageUploadProgressStage,
+) => void;
 
 /** Client-facing image storage contract (UI → ImageStorageService → API). */
 export interface IImageStorageService {
@@ -9,7 +18,8 @@ export interface IImageStorageService {
   processAndUpload(
     storageProfileId: string,
     file: File,
-    replaceImageKey?: string | null
+    replaceImageKey?: string | null,
+    onProgress?: ImageUploadProgressCallback,
   ): Promise<ImageUploadResult>;
   deleteImage(storageProfileId: string, imageKey: string): Promise<void>;
 }

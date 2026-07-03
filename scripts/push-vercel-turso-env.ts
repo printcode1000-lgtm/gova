@@ -14,6 +14,13 @@ const VERCEL_KEYS = [
   'TURSO_PROFILE_AUTH_TOKEN',
 ] as const;
 
+const OPTIONAL_VERCEL_KEYS = [
+  'TURSO_PRODUCT_DATABASE_URL',
+  'TURSO_PRODUCT_AUTH_TOKEN',
+  'TURSO_ADVERTISEMENTS_DATABASE_URL',
+  'TURSO_ADVERTISEMENTS_AUTH_TOKEN',
+] as const;
+
 async function vercelFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const token = process.env.VERCEL_TOKEN || process.env.VERCEL_ACCESS_TOKEN;
   if (!token) {
@@ -124,6 +131,14 @@ async function main() {
     const value = process.env[key]!.trim();
     const result = await upsertEnvVar(projectId, key, value, existing);
     console.log(`✅ ${key}: ${result}`);
+  }
+
+  for (const key of OPTIONAL_VERCEL_KEYS) {
+    const value = process.env[key]?.trim();
+    if (value) {
+      const result = await upsertEnvVar(projectId, key, value, existing);
+      console.log(`✅ ${key} (Optional): ${result}`);
+    }
   }
 
   console.log('🎉 Turso env vars synced to Vercel (production, preview, development).');

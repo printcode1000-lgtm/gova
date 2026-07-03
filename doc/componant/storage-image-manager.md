@@ -42,7 +42,7 @@ Every config file must use this exact shape:
 | `storageProfileId` | Storage profile id: `avatar`, `cover`, `product-default`, etc.                   |
 | `maxItems`         | Number of slots rendered by this config. Use `1` for normal one-image instances. |
 | `aspectRatio`      | `square`, `landscape`, `portrait`, or `wide`                                     |
-| `allowReplace`     | Allows replacing a selected image before upload                                  |
+| `allowReplace`     | Legacy compatibility flag. An uploaded image is replaced by deleting it first.   |
 | `confirmUpload`    | Shows confirmation before upload                                                 |
 | `confirmRemove`    | Shows confirmation before clearing/removing                                      |
 
@@ -106,14 +106,25 @@ Selecting an image prepares it for upload:
 1. Read the selected native or browser `File`.
 2. Detect HEIC/HEIF files even when the browser returns an empty MIME type, and convert them to JPEG in the browser.
 3. Build a `data:` preview that works in Android WebView without a temporary Blob URL.
-4. Keep the selected image visible without changing the stored image reference.
-5. Wait for the user to press the upload button.
-6. Ask for upload confirmation when `confirmUpload` is enabled.
-7. Compress and convert the image for the selected storage profile.
-8. Send multipart data to the upload API.
-9. Persist the returned `imageKey` through the feature's `onChange` handler.
+4. Show the project `LoadingSpinner` and a localized description while reading, detecting, converting, and preparing the preview.
+5. Keep the selected image visible without changing the stored image reference.
+6. Wait for the user to press the upload button. Selection never writes to local storage or a cloud provider.
+7. Ask for upload confirmation in a localized in-app dialog when `confirmUpload` is enabled.
+8. Show the spinner through profile loading, compression, upload, persistence, and final-image loading.
+9. Compress and convert the image for the selected storage profile.
+10. Send multipart data to the upload API.
+11. Persist the returned `imageKey` through the feature's `onChange` handler.
+12. Hide the upload action only after the final stored image renders.
 
 If confirmation is declined, the selected preview remains visible and the upload button can retry the same file.
+
+There is no Replace button after upload. The user deletes the stored image and then selects a new one. Confirmation and error messages use translated application dialogs; browser `alert`/`confirm` messages are forbidden in this component.
+
+## Removal
+
+The delete action is destructive storage deletion by default. The image remains visible until the provider confirms deletion. Development removes the file from `public/sync_data/sync_file/images/...`; production removes the R2 object. A failure keeps the image and opens a localized error dialog.
+
+Feature owners must persist the resulting empty image reference from `onChange`. They must not optimistically remove the database reference before storage deletion succeeds.
 
 ## Diagnostic tracing
 

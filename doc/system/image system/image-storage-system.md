@@ -4,11 +4,12 @@ Profile-driven multi-provider architecture. The UI passes only **storage profile
 
 ## Contract
 
-| Profile | Max KB | Format | Enabled | Folder |
-|---|---|---|---|---|
-| `StorageProfiles.Avatar` | 20 | webp | ✓ | `images/avatars` |
-| `StorageProfiles.Cover` | 30 | webp | ✓ | `images/covers` |
-| `StorageProfiles.ProductDefault` | 30 | webp | ✓ | `images/products/default` |
+| Profile                          | Max KB | Format | Enabled | Folder                                   |
+| -------------------------------- | ------ | ------ | ------- | ---------------------------------------- |
+| `StorageProfiles.Avatar`         | 20     | webp   | ✓       | `images/avatars`                         |
+| `StorageProfiles.Cover`          | 30     | webp   | ✓       | `images/covers`                          |
+| `StorageProfiles.ProductDefault` | 30     | webp   | ✓       | `images/products/default`                |
+| `StorageProfiles.HomeHeroSlider` | 1024   | webp   | ✓       | `images/advertisements/home-hero-slider` |
 
 Config: `src/config/storage-profiles.json` (server-only).
 
@@ -25,29 +26,31 @@ Server: Storage Profile → Provider → Persistence
 
 **Production / Capacitor / static**: profile provider (Cloudflare R2).
 
+`StorageImageManager` performs no provider write during selection or preview preparation. Upload starts only after the user presses Upload and confirms the localized application dialog. Removal calls the DELETE API and waits for provider success before clearing the UI value.
+
 ## Layers
 
-| Layer | Location |
-|---|---|
-| Profiles | `src/core/storage/profiles/` |
-| ImageKeyGenerator | `src/core/storage/storage/image-key-generator.ts` |
-| Rules | `src/core/storage/rules/` |
-| Processing (Canvas) | `src/features/storage/processing/` |
-| Providers | `src/core/storage/providers/` |
-| Orchestrator | `src/core/storage/storage/` |
-| **Client service** | `src/features/storage/services/image-storage-service.ts` |
-| API adapter | `src/features/storage/services/image-storage-api-service.ts` |
-| Hook | `src/features/storage/hooks/use-storage-profile-upload.ts` |
-| UI | `src/features/storage/components/StorageProfileImageUpload.tsx` |
+| Layer               | Location                                                        |
+| ------------------- | --------------------------------------------------------------- |
+| Profiles            | `src/core/storage/profiles/`                                    |
+| ImageKeyGenerator   | `src/core/storage/storage/image-key-generator.ts`               |
+| Rules               | `src/core/storage/rules/`                                       |
+| Processing (Canvas) | `src/features/storage/processing/`                              |
+| Providers           | `src/core/storage/providers/`                                   |
+| Orchestrator        | `src/core/storage/storage/`                                     |
+| **Client service**  | `src/features/storage/services/image-storage-service.ts`        |
+| API adapter         | `src/features/storage/services/image-storage-api-service.ts`    |
+| Hook                | `src/features/storage/hooks/use-storage-profile-upload.ts`      |
+| UI                  | `src/features/storage/components/StorageProfileImageUpload.tsx` |
 
 ## APIs
 
-| Method | Route | Response |
-|---|---|---|
-| GET | `/api/storage/profiles/:id` | Full client profile (`id`, `maxImageSizeKB`, `outputFormat`, `enabled`) |
-| POST | `/api/storage/images/upload` | Upload WebP (multipart) |
-| DELETE | `/api/storage/images/:imageKey?storageProfileId=` | Delete |
-| GET/PUT | `/api/profile/store-images` | Persist avatar/cover keys |
+| Method  | Route                                             | Response                                                                |
+| ------- | ------------------------------------------------- | ----------------------------------------------------------------------- |
+| GET     | `/api/storage/profiles/:id`                       | Full client profile (`id`, `maxImageSizeKB`, `outputFormat`, `enabled`) |
+| POST    | `/api/storage/images/upload`                      | Upload WebP (multipart)                                                 |
+| DELETE  | `/api/storage/images/:imageKey?storageProfileId=` | Delete                                                                  |
+| GET/PUT | `/api/profile/store-images`                       | Persist avatar/cover keys                                               |
 
 ## Client profile example
 
@@ -65,11 +68,11 @@ Server: Storage Profile → Provider → Persistence
 Use constants — never string literals in pages:
 
 ```typescript
-import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
+import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
 
-StorageProfiles.Avatar
-StorageProfiles.Cover
-StorageProfiles.ProductDefault
+StorageProfiles.Avatar;
+StorageProfiles.Cover;
+StorageProfiles.ProductDefault;
 ```
 
 ## Persistence

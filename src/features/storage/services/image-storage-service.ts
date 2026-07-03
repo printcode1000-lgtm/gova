@@ -1,5 +1,8 @@
 import { compressImageForProfile } from "../processing/image-processor.client";
-import type { IImageStorageService } from "./image-storage-service.interface";
+import type {
+  IImageStorageService,
+  ImageUploadProgressCallback,
+} from "./image-storage-service.interface";
 import type { IImageStorageApiAdapter } from "./image-storage-api-service.interface";
 import { imageStorageApiService } from "./image-storage-api-service";
 
@@ -18,7 +21,9 @@ export class ImageStorageService implements IImageStorageService {
     storageProfileId: string,
     file: File,
     replaceImageKey?: string | null,
+    onProgress?: ImageUploadProgressCallback,
   ) {
+    onProgress?.("profile");
     console.info(
       `[StorageImageManager:${storageProfileId}] profile-request-start`,
     );
@@ -28,18 +33,21 @@ export class ImageStorageService implements IImageStorageService {
       maxImageSizeKB: profile.maxImageSizeKB,
       outputFormat: profile.outputFormat,
     });
+    onProgress?.("compressing");
     const compressed = await compressImageForProfile(file, profile);
     console.info(`[StorageImageManager:${storageProfileId}] api-upload-start`, {
       compressedBytes: compressed.size,
       compressedType: compressed.type,
       replaceImageKey: replaceImageKey ?? null,
     });
+    onProgress?.("uploading");
     const result = await this.api.uploadImage(
       storageProfileId,
       compressed,
       profile.outputFormat,
       replaceImageKey,
     );
+    onProgress?.("finalizing");
     console.info(
       `[StorageImageManager:${storageProfileId}] api-upload-completed`,
       {

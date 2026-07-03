@@ -27,8 +27,10 @@ ios/App/App/Info.plist
 2. Pressing it opens a small source menu.
 3. The user chooses either "Choose from device" or "Take a photo".
 4. The selected or captured image is converted to a browser `File`.
-5. `StorageImageManager` shows the preview.
-6. The existing upload confirmation and upload flow continue unchanged.
+5. `StorageImageManager` shows the project spinner with localized reading/conversion/preview stages.
+6. The preview appears with an Upload button; no local or cloud write has occurred.
+7. Pressing Upload opens the localized application confirmation dialog.
+8. The spinner describes compression, upload, saving, and final-image loading until the stored image renders.
 
 The source picker only changes how the local image file is created. It does not change the storage API, image processing service, database persistence, or the feature-specific `onChange` contract.
 
@@ -127,4 +129,7 @@ Manual testing should cover:
 - Capturing one image with the camera.
 - Cancelling each source action.
 - Uploading the previewed image.
-- Replacing/removing an existing image when the config allows it.
+- Removing an existing image and selecting a new one afterward.
+- Confirming that selection alone performs no storage write.
+- Confirming that an uploaded image has no Replace button and must be deleted before another is selected.
+- Confirming that deletion removes the physical local/R2 object before the UI value is cleared.
