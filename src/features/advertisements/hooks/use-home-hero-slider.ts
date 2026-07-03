@@ -3,15 +3,21 @@
 import { useCallback, useEffect, useState } from "react";
 
 import fallbackSeed from "@/features/advertisements/config/home-hero-slider.seed.json";
-import { GOVA_DB_STORES, govaDbGet, govaDbSet } from "@/lib/gova-db";
-import type {
-  HomeHeroConfig,
-  HomeHeroPublished,
+import {
+  GOVA_DB_STORES,
+  govaDbDelete,
+  govaDbGet,
+  govaDbSet,
+} from "@/lib/gova-db";
+import {
+  HOME_HERO_CACHE_KEY,
+  type HomeHeroConfig,
+  type HomeHeroPublished,
 } from "../entities/home-hero-slider.entity";
 import { homeHeroSliderApiService } from "../services/home-hero-slider-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
-const CACHE_KEY = "advertisements:home-hero-slider:v2";
+const LEGACY_CACHE_KEY = "advertisements:home-hero-slider:v2";
 
 interface HomeHeroCache extends HomeHeroPublished {
   lastCheckedAt: string;
@@ -31,8 +37,9 @@ export function useHomeHeroSlider() {
     try {
       const cached = await govaDbGet<HomeHeroCache>(
         GOVA_DB_STORES.APP_SETTINGS,
-        CACHE_KEY,
+        HOME_HERO_CACHE_KEY,
       );
+      await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, LEGACY_CACHE_KEY);
       if (cached) setData(cached);
 
       const intervalMs = (cached?.checkIntervalMinutes ?? 15) * 60_000;
@@ -41,7 +48,11 @@ export function useHomeHeroSlider() {
 
       const version = await homeHeroSliderApiService.getVersion();
       let next: HomeHeroPublished = cached ?? fallback;
-      if (!cached || version.version > cached.version) {
+      if (
+        !cached ||
+        version.version !== cached.version ||
+        version.updatedAt !== cached.updatedAt
+      ) {
         next = await homeHeroSliderApiService.getCurrent();
         setData(next);
       } else if (version.checkIntervalMinutes !== cached.checkIntervalMinutes) {
@@ -51,10 +62,14 @@ export function useHomeHeroSlider() {
         };
         setData(next);
       }
-      await govaDbSet<HomeHeroCache>(GOVA_DB_STORES.APP_SETTINGS, CACHE_KEY, {
-        ...next,
-        lastCheckedAt: new Date().toISOString(),
-      });
+      await govaDbSet<HomeHeroCache>(
+        GOVA_DB_STORES.APP_SETTINGS,
+        HOME_HERO_CACHE_KEY,
+        {
+          ...next,
+          lastCheckedAt: new Date().toISOString(),
+        },
+      );
     } catch (error) {
       // Offline and transient failures keep the last known local version visible.
       reportSystemIssue({

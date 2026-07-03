@@ -258,7 +258,7 @@ The cached record is stored in:
 ```text
 IndexedDB database: GovaDB
 Object store: appSettings
-Key: advertisements:home-hero-slider
+Key: advertisements:home-hero-slider:v3
 ```
 
 The cache contains the current configuration, version, update time, check interval, and `lastCheckedAt`.
@@ -269,7 +269,7 @@ Synchronization sequence:
 2. The hook compares `lastCheckedAt` with `checkIntervalMinutes`.
 3. If the interval has not expired, no server request is made.
 4. When the interval expires, the hook requests only the version endpoint.
-5. The full current configuration is requested only when the server version is newer or no cache exists.
+5. The full current configuration is requested when no cache exists, or when either `version` or `updatedAt` differs. The comparison is inequality, not “greater than”, so a development database reset to a lower version cannot strand an older cache.
 6. The new configuration and check time are stored in IndexedDB.
 7. Network failures preserve the last usable local configuration.
 

@@ -1,4 +1,5 @@
 export const HOME_HERO_SLIDER_ID = "home-hero-slider";
+export const HOME_HERO_CACHE_KEY = "advertisements:home-hero-slider:v3";
 
 export type HomeHeroTransition =
   | "Fade"

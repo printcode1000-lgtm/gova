@@ -8,7 +8,10 @@ import { Button } from "@/components/ui/button";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { HomeHeroRecord } from "@/features/advertisements/entities/home-hero-slider.entity";
+import {
+  HOME_HERO_CACHE_KEY,
+  type HomeHeroRecord,
+} from "@/features/advertisements/entities/home-hero-slider.entity";
 import { homeHeroSliderApiService } from "@/features/advertisements/services/home-hero-slider-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -67,10 +70,7 @@ export function SuperAdminHeroSliderPage() {
       );
       // Invalidate IndexedDB cache so that the home page slider updates immediately
       try {
-        await govaDbDelete(
-          GOVA_DB_STORES.APP_SETTINGS,
-          "advertisements:home-hero-slider:v2",
-        );
+        await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, HOME_HERO_CACHE_KEY);
       } catch (err) {
         console.error("Failed to delete local slider cache:", err);
       }
