@@ -29,7 +29,8 @@
       "id": "product-default",
       "enabled": true,
       "provider": "CloudflareR2",
-      "folder": "images/products/default",
+      "folder": "images/products",
+      "folderStrategy": "main-category",
       "maxImageSizeKB": 30,
       "outputFormat": "webp"
     }

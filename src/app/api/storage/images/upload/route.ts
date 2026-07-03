@@ -11,6 +11,7 @@ export async function POST(request: Request) {
       const file = formData.get("file");
       const storageProfileId = formData.get("storageProfileId");
       const replaceImageKey = formData.get("replaceImageKey");
+      const storageScope = formData.get("storageScope");
 
       if (!(file instanceof Blob)) {
         throw new Error("file is required");
@@ -28,12 +29,20 @@ export async function POST(request: Request) {
         bytes: buffer.length,
         contentType,
         replacing: Boolean(replaceImageKey),
+        storageScope:
+          typeof storageScope === "string" && storageScope
+            ? storageScope
+            : null,
       });
 
       const result = await imageStorageService.upload({
         storageProfileId,
         body: buffer,
         contentType,
+        storageScope:
+          typeof storageScope === "string" && storageScope
+            ? storageScope
+            : null,
         replaceImageKey:
           typeof replaceImageKey === "string" && replaceImageKey
             ? replaceImageKey

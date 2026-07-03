@@ -36,6 +36,7 @@ export interface StorageImageManagerConfig {
   confirmUpload: boolean;
   confirmRemove: boolean;
   deleteFromStorageOnRemove?: boolean;
+  storageScope?: string;
 }
 
 interface StorageImageManagerProps {
@@ -287,6 +288,13 @@ export function parseStorageImageManagerConfig(
   if (typeof config.confirmRemove !== "boolean") {
     throw new Error(`Invalid confirmRemove for ${config.id}`);
   }
+  if (
+    config.storageScope !== undefined &&
+    (typeof config.storageScope !== "string" ||
+      !/^[A-Za-z0-9-]+$/.test(config.storageScope))
+  ) {
+    throw new Error(`Invalid storageScope for ${config.id}`);
+  }
 
   return {
     id: config.id,
@@ -297,6 +305,8 @@ export function parseStorageImageManagerConfig(
     confirmUpload: config.confirmUpload,
     confirmRemove: config.confirmRemove,
     deleteFromStorageOnRemove: config.deleteFromStorageOnRemove !== false,
+    storageScope:
+      typeof config.storageScope === "string" ? config.storageScope : undefined,
   };
 }
 
@@ -359,6 +369,7 @@ function StorageImageSlot({
     traceStorageImageManager(config.id, "slot-mounted", {
       index,
       storageProfileId: config.storageProfileId,
+      storageScope: config.storageScope,
       hasStoredImage: Boolean(image?.imageKey),
     });
     return () =>

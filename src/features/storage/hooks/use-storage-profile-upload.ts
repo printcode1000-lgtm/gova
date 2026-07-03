@@ -9,6 +9,7 @@ import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
 interface UseStorageProfileUploadOptions {
   storageProfileId: StorageProfileId;
+  storageScope?: string;
   value: StoredImage | null;
   onChange: (image: StoredImage | null) => void;
   onProgress?: (stage: ImageUploadProgressStage | "deleting" | "idle") => void;
@@ -27,6 +28,7 @@ interface UseStorageProfileUploadResult {
  */
 export function useStorageProfileUpload({
   storageProfileId,
+  storageScope,
   value,
   onChange,
   onProgress,
@@ -55,6 +57,7 @@ export function useStorageProfileUpload({
           file,
           value?.imageKey ?? null,
           onProgress,
+          storageScope,
         );
         console.info(
           `[StorageImageManager:${storageProfileId}] storage-response-received`,
@@ -90,7 +93,7 @@ export function useStorageProfileUpload({
         setIsUploading(false);
       }
     },
-    [storageProfileId, value, onChange, onProgress],
+    [storageProfileId, storageScope, value, onChange, onProgress],
   );
 
   const removeImage = useCallback(async () => {

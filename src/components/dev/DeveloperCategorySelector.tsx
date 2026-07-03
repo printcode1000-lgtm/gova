@@ -1814,6 +1814,7 @@ export function DeveloperCategorySelector() {
                       onFieldsChange={setPreviewFields}
                       images={previewImages}
                       onImagesChange={setPreviewImages}
+                      mainCategoryId={mainCategoryId}
                     />
                   </div>
                 </div>

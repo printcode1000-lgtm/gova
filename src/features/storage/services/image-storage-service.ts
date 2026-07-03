@@ -22,6 +22,7 @@ export class ImageStorageService implements IImageStorageService {
     file: File,
     replaceImageKey?: string | null,
     onProgress?: ImageUploadProgressCallback,
+    storageScope?: string | null,
   ) {
     onProgress?.("profile");
     console.info(
@@ -46,6 +47,7 @@ export class ImageStorageService implements IImageStorageService {
       compressed,
       profile.outputFormat,
       replaceImageKey,
+      storageScope,
     );
     onProgress?.("finalizing");
     console.info(

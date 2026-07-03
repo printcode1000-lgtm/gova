@@ -28,7 +28,9 @@ export function ProductPageContent() {
   const searchParams = useSearchParams();
   const requestedMode = searchParams.get("mode");
   const mode: ProductMode =
-    requestedMode === "edit" || requestedMode === "new" ? requestedMode : "view";
+    requestedMode === "edit" || requestedMode === "new"
+      ? requestedMode
+      : "view";
   const productId = searchParams.get("productId") ?? "";
   const initialMain = searchParams.get("mainCategoryId") ?? "";
   const initialSub = searchParams.get("subcategoryId") ?? "";
@@ -182,6 +184,7 @@ export function ProductPageContent() {
         onImagesChange={setImages}
         productId={product?.id ?? ""}
         ownerUid={product?.uid ?? session?.uid ?? ""}
+        mainCategoryId={mainCategoryId}
       />
       {error ? (
         <p className="rounded-xl bg-destructive/10 p-3 text-destructive">

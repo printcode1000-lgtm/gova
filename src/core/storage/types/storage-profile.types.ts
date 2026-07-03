@@ -5,10 +5,11 @@ export interface StorageProfilesFile {
 }
 
 /** Output format for processed uploads (client + server). */
-export type StorageOutputFormat = 'webp';
+export type StorageOutputFormat = "webp";
 
 /** Supported storage provider identifiers (server-side only). */
-export type StorageProviderId = 'CloudflareR2' | 'LocalStorage' | 'GoogleDrive';
+export type StorageProviderId = "CloudflareR2" | "LocalStorage" | "GoogleDrive";
+export type StorageFolderStrategy = "main-category";
 
 /** Storage Profile — full server config from storage-profiles.json. */
 export interface StorageProfile {
@@ -18,6 +19,7 @@ export interface StorageProfile {
   enabled: boolean;
   provider: StorageProviderId;
   folder: string;
+  folderStrategy?: StorageFolderStrategy;
 }
 
 /**

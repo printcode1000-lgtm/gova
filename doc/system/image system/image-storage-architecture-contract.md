@@ -26,7 +26,7 @@ UI must never know: Provider, Cloudflare, Google Drive, Local Storage, Folder, B
 ## 3–5. Storage Profiles
 
 - Single source: `src/config/storage-profiles.json` (requires `version` + `profiles`)
-- Each profile: `id`, `enabled`, `provider`, `folder`, `maxImageSizeKB`, `outputFormat`
+- Each profile: `id`, `enabled`, `provider`, `folder`, `maxImageSizeKB`, `outputFormat`, and optional validated `folderStrategy`
 - No code defaults — missing/invalid config fails startup
 
 ## 6–8. Processing, Format, ImageKey
@@ -35,6 +35,7 @@ UI must never know: Provider, Cloudflare, Google Drive, Local Storage, Folder, B
 - File selection and preview are client-only; provider upload starts only after the explicit Upload action.
 - Output format from profile only — use `output-format.registry.ts`
 - Keys only via `ImageKeyGenerator`
+- Dynamic folder profiles accept only a semantic `storageScope`; UI-provided folder paths are forbidden
 
 ## 9–12. Providers
 

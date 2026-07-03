@@ -3,7 +3,7 @@
   "subcategoryId": "1",
   "components": {
     "images": {
-      "visible": false,
+      "visible": true,
       "count": 4,
       "order": 1
     },

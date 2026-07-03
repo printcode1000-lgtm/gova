@@ -8,7 +8,7 @@ Profile-driven multi-provider architecture. The UI passes only **storage profile
 | -------------------------------- | ------ | ------ | ------- | ---------------------------------------- |
 | `StorageProfiles.Avatar`         | 20     | webp   | ✓       | `images/avatars`                         |
 | `StorageProfiles.Cover`          | 30     | webp   | ✓       | `images/covers`                          |
-| `StorageProfiles.ProductDefault` | 30     | webp   | ✓       | `images/products/default`                |
+| `StorageProfiles.ProductDefault` | 30     | webp   | ✓       | `images/products/<mainCategoryId>`       |
 | `StorageProfiles.HomeHeroSlider` | 1024   | webp   | ✓       | `images/advertisements/home-hero-slider` |
 
 Config: `src/config/storage-profiles.json` (server-only).
@@ -27,6 +27,8 @@ Server: Storage Profile → Provider → Persistence
 **Production / Capacitor / static**: profile provider (Cloudflare R2).
 
 `StorageImageManager` performs no provider write during selection or preview preparation. Upload starts only after the user presses Upload and confirms the localized application dialog. Removal calls the DELETE API and waits for provider success before clearing the UI value.
+
+`product-default` declares `folderStrategy: "main-category"`. Its configured base folder is `images/products`; callers provide only a validated main-category ID as `storageScope`. The server creates `<mainCategoryId>/<uuid>.webp` as the image key, so upload, URL resolution, replacement, and deletion all address the same local/R2 object without exposing folder construction to the UI.
 
 ## Layers
 
@@ -92,7 +94,7 @@ public/sync_data/sync_file/
   images/
     avatars/
     covers/
-    products/default/
+    products/<mainCategoryId>/
 ```
 
 See also [r2-storage.md](./r2-storage.md).

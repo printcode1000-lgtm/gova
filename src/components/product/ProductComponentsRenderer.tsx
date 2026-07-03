@@ -137,6 +137,7 @@ export function ProductComponentsRenderer({
   onImagesChange,
   productId = "",
   ownerUid = "",
+  mainCategoryId = "",
 }: {
   mode: ProductMode;
   components: ProductStyleComponents;
@@ -146,6 +147,7 @@ export function ProductComponentsRenderer({
   onImagesChange: (images: StoredImage[]) => void;
   productId?: string;
   ownerUid?: string;
+  mainCategoryId?: string;
 }) {
   const visible = Object.entries(components)
     .filter(([, config]) => config.visible)
@@ -169,6 +171,7 @@ export function ProductComponentsRenderer({
               ) : (
                 <ProductImageEditors
                   maxImages={Number(config.count || 1)}
+                  mainCategoryId={mainCategoryId}
                   images={images}
                   onChange={onImagesChange}
                 />

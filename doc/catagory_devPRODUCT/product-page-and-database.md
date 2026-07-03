@@ -119,8 +119,8 @@ ProductPageContent
   -> Runtime provider
 ```
 
-`src/config/storage-profiles.json` defines `product-default` with folder
-`images/products/default`, WebP output, and a 30 KB processed-image limit.
+`src/config/storage-profiles.json` defines `product-default` with base folder
+`images/products`, `main-category` folder strategy, WebP output, and a 30 KB processed-image limit. Both the real product editor and `/dev/category-selector` pass the selected main category ID as a validated storage scope.
 
 Provider selection is environment-driven inside
 `provider-resolver.server.ts`:
@@ -128,17 +128,18 @@ Provider selection is environment-driven inside
 - Development (`NODE_ENV=development`) always selects
   `LocalStorageProvider`, regardless of the provider declared in the profile.
   Product files are written under
-  `public/sync_data/sync_file/images/products/default/<uuid>.webp` and their
-  public URL starts with `/sync_data/sync_file/images/products/default/`.
+  `public/sync_data/sync_file/images/products/<mainCategoryId>/<uuid>.webp` and their
+  public URL starts with `/sync_data/sync_file/images/products/<mainCategoryId>/`.
 - Production, static, and Capacitor server targets use the provider declared
   by the profile. `product-default` declares `CloudflareR2`, so product images
-  are uploaded to R2 under `images/products/default/<uuid>.webp` and receive an
+  are uploaded to R2 under `images/products/<mainCategoryId>/<uuid>.webp` and receive an
   R2 public URL.
 
 - Files are compressed according to the product storage profile.
 - Uploads use the existing `/api/storage/images/upload` pipeline.
 - The product record stores the resulting `imageKey` and resolved URL.
 - Maximum images comes from the category-pair style file.
+- The stored `imageKey` is `<mainCategoryId>/<uuid>.webp`, so deletion resolves the same scoped object without accepting a client folder path.
 - View mode reads stored image references and does not expose upload controls.
 
 ## Product image gallery

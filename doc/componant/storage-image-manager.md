@@ -40,6 +40,7 @@ Every config file must use this exact shape:
 | ------------------ | -------------------------------------------------------------------------------- |
 | `id`               | Stable unique id for this component instance                                     |
 | `storageProfileId` | Storage profile id: `avatar`, `cover`, `product-default`, etc.                   |
+| `storageScope`     | Optional validated scope required by profiles with a dynamic folder strategy.    |
 | `maxItems`         | Number of slots rendered by this config. Use `1` for normal one-image instances. |
 | `aspectRatio`      | `square`, `landscape`, `portrait`, or `wide`                                     |
 | `allowReplace`     | Legacy compatibility flag. An uploaded image is replaced by deleting it first.   |
@@ -125,6 +126,8 @@ There is no Replace button after upload. The user deletes the stored image and t
 The delete action is destructive storage deletion by default. The image remains visible until the provider confirms deletion. Development removes the file from `public/sync_data/sync_file/images/...`; production removes the R2 object. A failure keeps the image and opens a localized error dialog.
 
 Feature owners must persist the resulting empty image reference from `onChange`. They must not optimistically remove the database reference before storage deletion succeeds.
+
+For `product-default`, `storageScope` is the main category ID. The storage layer validates it and returns an `imageKey` shaped as `<mainCategoryId>/<uuid>.webp`. UI code never supplies a folder path.
 
 ## Diagnostic tracing
 

@@ -6,10 +6,12 @@ import type { StoredImage } from "@/core/storage/types/stored-image.types";
 
 export function ProductImageEditors({
   maxImages,
+  mainCategoryId,
   images,
   onChange,
 }: {
   maxImages: number;
+  mainCategoryId: string;
   images: StoredImage[];
   onChange: (images: StoredImage[]) => void;
 }) {
@@ -21,6 +23,7 @@ export function ProductImageEditors({
           config={{
             id: `product-image-${index + 1}`,
             storageProfileId: StorageProfiles.ProductDefault,
+            storageScope: mainCategoryId,
             maxItems: 1,
             aspectRatio: "square",
             allowReplace: true,
