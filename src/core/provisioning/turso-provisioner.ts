@@ -157,6 +157,18 @@ export function loadTursoAdvertisementsCredentialsFromEnv(): { url: string; auth
   return { url, authToken };
 }
 
+export function loadTursoProductCredentialsFromEnv(): { url: string; authToken: string } | null {
+  const url =
+    readOptionalEnv('TURSO_PRODUCT_DATABASE_URL') ||
+    readOptionalEnv('TURSO_DATABASE_URL');
+  const authToken =
+    readOptionalEnv('TURSO_PRODUCT_AUTH_TOKEN') ||
+    readOptionalEnv('TURSO_AUTH_TOKEN');
+
+  if (!url || !authToken) return null;
+  return { url, authToken };
+}
+
 export function ensureSqliteDirectory(): void {
   if (!existsSync(SQLITE_DIRECTORY)) {
     mkdirSync(SQLITE_DIRECTORY, { recursive: true });

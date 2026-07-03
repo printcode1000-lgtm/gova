@@ -90,14 +90,20 @@ export function getTursoProductRuntimeCredentials(): {
   url: string;
   authToken: string;
 } {
-  const url = process.env.TURSO_PRODUCT_DATABASE_URL;
-  const authToken = process.env.TURSO_PRODUCT_AUTH_TOKEN;
+  const url =
+    process.env.TURSO_PRODUCT_DATABASE_URL || process.env.TURSO_DATABASE_URL;
+  const authToken =
+    process.env.TURSO_PRODUCT_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN;
+
   if (!url)
     throw new Error(
-      "TURSO_PRODUCT_DATABASE_URL environment variable is not set",
+      "Neither TURSO_PRODUCT_DATABASE_URL nor TURSO_DATABASE_URL is set",
     );
   if (!authToken)
-    throw new Error("TURSO_PRODUCT_AUTH_TOKEN environment variable is not set");
+    throw new Error(
+      "Neither TURSO_PRODUCT_AUTH_TOKEN nor TURSO_AUTH_TOKEN is set",
+    );
+
   return { url, authToken };
 }
 
