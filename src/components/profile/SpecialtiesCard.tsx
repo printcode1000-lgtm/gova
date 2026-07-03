@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { X, AlertTriangle } from "lucide-react";
 import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
 import { useTranslation } from "@/lib/i18n";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { Button } from "@/components/ui/button";
 import { govaApi } from "@/core/api";
 import { profileService } from "@/features/profile/services/profile-service";
 import { categoryService, CATEGORY_CONSTANTS, type CategoryDisplay, type SubcategoryDisplay } from "@/features/categories";
@@ -70,6 +71,7 @@ export const SpecialtiesCard = React.forwardRef<
   const [isLoadingSubcategories, setIsLoadingSubcategories] =
     React.useState(false);
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
+  const [deleteDialog, setDeleteDialog] = React.useState<{ type: 'main' | 'sub', categoryId: string, subcategoryId?: string } | null>(null);
   const label = t("onboarding.storeIdentity.specialties");
 
   const applySelection = React.useCallback(
@@ -277,6 +279,79 @@ export const SpecialtiesCard = React.forwardRef<
     ? doctorAppointmentSubcategories
     : subcategories;
 
+  const getCategoryName = (categoryId: string) => {
+    const category = displayCategories.find(cat => cat.id.toString() === categoryId);
+    return category ? (locale === 'ar' ? category.nameAr : category.nameEn) : categoryId;
+  };
+
+  const getSubcategoryName = (categoryId: string, subcategoryId: string) => {
+    const category = displayCategories.find(cat => cat.id.toString() === categoryId);
+    if (!category) return subcategoryId;
+    
+    const subcategories = categoryService.getProfileSubOptions(category.id, category.isCollection);
+    
+    // Try to find by originalId first, then by id, then by value (for collections)
+    const subcategory = subcategories.find(sub => 
+      sub.originalId?.toString() === subcategoryId || 
+      sub.id.toString() === subcategoryId ||
+      (sub.kind === 'collection-member' && sub.id.toString() === subcategoryId)
+    );
+    
+    if (subcategory) {
+      return locale === 'ar' ? subcategory.nameAr : subcategory.nameEn;
+    }
+    
+    // If not found, try to get from category tree for regular categories
+    if (!category.isCollection) {
+      const tree = categoryService.getCategoryTree(category.id);
+      if (tree) {
+        const treeSub = tree.subcategories.find(sub => 
+          sub.originalId?.toString() === subcategoryId || 
+          sub.id.toString() === subcategoryId
+        );
+        if (treeSub) {
+          return locale === 'ar' ? treeSub.nameAr : treeSub.nameEn;
+        }
+        
+        // Also check doctor appointment items (for Medical Services category)
+        if (category.id === MEDICAL_SERVICES_CATEGORY_ID) {
+          const doctorSub = tree.doctorAppointmentItems.find(sub => 
+            sub.originalId?.toString() === subcategoryId || 
+            sub.id.toString() === subcategoryId
+          );
+          if (doctorSub) {
+            return locale === 'ar' ? doctorSub.nameAr : doctorSub.nameEn;
+          }
+        }
+      }
+    }
+    
+    // Final fallback: try the service's getDoctorAppointmentItems directly
+    if (category.id === MEDICAL_SERVICES_CATEGORY_ID) {
+      const doctorItems = categoryService.getDoctorAppointmentItems();
+      const doctorSub = doctorItems.find(sub => 
+        sub.originalId?.toString() === subcategoryId || 
+        sub.id.toString() === subcategoryId
+      );
+      if (doctorSub) {
+        return locale === 'ar' ? doctorSub.nameAr : doctorSub.nameEn;
+      }
+    }
+    
+    return subcategoryId;
+  };
+
+  const handleDelete = () => {
+    if (!deleteDialog) return;
+
+    if (deleteDialog.type === 'main') {
+      handleSpecialtyToggle(deleteDialog.categoryId);
+    } else if (deleteDialog.type === 'sub' && deleteDialog.subcategoryId) {
+      handleSubcategoryToggle(deleteDialog.subcategoryId);
+    }
+    setDeleteDialog(null);
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-8">
@@ -354,20 +429,43 @@ export const SpecialtiesCard = React.forwardRef<
           Object.values(selectedSubcategories).some(
             (arr) => arr.length > 0,
           )) && (
-          <p className="text-xs text-muted-foreground">
-            {t("profile.selected")}:{" "}
-            {(() => {
-              const subObj = Object.fromEntries(
-                Object.entries(selectedSubcategories).filter(
-                  ([_, subs]) => subs.length > 0,
-                ),
+          <div className="flex flex-wrap gap-1.5 pt-2">
+            {selectedSpecialties.map((categoryId) => {
+              const categoryName = getCategoryName(categoryId);
+              const subIds = selectedSubcategories[categoryId] || [];
+              
+              return (
+                <div key={categoryId} className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-high border border-outline-variant/50">
+                  <span className="text-[11px] font-medium text-on-surface">{categoryName}</span>
+                  <button
+                    type="button"
+                    onClick={() => setDeleteDialog({ type: 'main', categoryId })}
+                    className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
+                    aria-label={locale === 'ar' ? 'حذف' : 'Delete'}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                  {subIds.length > 0 && (
+                    <div className="flex flex-wrap gap-0.5 pl-1 border-l border-outline-variant/50">
+                      {subIds.map((subId) => (
+                        <div key={subId} className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-surface-container border border-outline-variant/30">
+                          <span className="text-[10px] text-on-surface-variant">{getSubcategoryName(categoryId, subId)}</span>
+                          <button
+                            type="button"
+                            onClick={() => setDeleteDialog({ type: 'sub', categoryId, subcategoryId: subId })}
+                            className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
+                            aria-label={locale === 'ar' ? 'حذف' : 'Delete'}
+                          >
+                            <X className="h-2.5 w-2.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               );
-              const subStr = Object.entries(subObj)
-                .map(([catId, subs]) => `${catId}: [${subs.join(", ")}]`)
-                .join(", ");
-              return `{main: [${selectedSpecialties.join(", ")}], sub: {${subStr}}}`;
-            })()}
-          </p>
+            })}
+          </div>
         )}
       </div>
 
@@ -489,21 +587,36 @@ export const SpecialtiesCard = React.forwardRef<
                 </div>
               )}
             </div>
-            <div className="p-4 border-t border-outline-variant flex justify-between items-center">
-              <p className="text-sm text-on-surface-variant">
-                {selectedCategoryForDialog &&
-                selectedSubcategories[selectedCategoryForDialog.id.toString()]
-                  ?.length > 0
-                  ? `${t("profile.selected")}: [${selectedSubcategories[selectedCategoryForDialog.id.toString()].join(", ")}]`
-                  : ""}
-              </p>
-              <button
-                type="button"
-                onClick={() => setIsDialogOpen(false)}
-                className="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                {locale === "ar" ? "تم" : "Done"}
-              </button>
+            <div className="p-4 border-t border-outline-variant flex flex-col gap-3">
+              {selectedCategoryForDialog &&
+              selectedSubcategories[selectedCategoryForDialog.id.toString()]?.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedSubcategories[selectedCategoryForDialog.id.toString()].map((subId) => (
+                    <div key={subId} className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-high border border-outline-variant/50">
+                      <span className="text-[11px] font-medium text-on-surface">
+                        {getSubcategoryName(selectedCategoryForDialog.id.toString(), subId)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setDeleteDialog({ type: 'sub', categoryId: selectedCategoryForDialog.id.toString(), subcategoryId: subId })}
+                        className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
+                        aria-label={locale === 'ar' ? 'حذف' : 'Delete'}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsDialogOpen(false)}
+                  className="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                >
+                  {locale === "ar" ? "تم" : "Done"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -515,6 +628,53 @@ export const SpecialtiesCard = React.forwardRef<
           style={{ bottom: BOTTOM_NAV_CLEARANCE }}
         >
           <p className="text-sm font-medium">{toastMessage}</p>
+        </div>
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      {deleteDialog && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-surface rounded-xl shadow-xl max-w-sm w-full p-4 space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-error/10 flex items-center justify-center">
+                <AlertTriangle className="h-4 w-4 text-error" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-on-surface">
+                  {locale === 'ar' ? 'تأكيد الحذف' : 'Confirm Delete'}
+                </h3>
+                <p className="text-xs text-on-surface-variant mt-1">
+                  {deleteDialog.type === 'main'
+                    ? (locale === 'ar' 
+                        ? `هل أنت متأكد من حذف "${getCategoryName(deleteDialog.categoryId)}"؟ سيتم حذف جميع التخصصات الفرعية التابعة له.`
+                        : `Are you sure you want to delete "${getCategoryName(deleteDialog.categoryId)}"? All its subcategories will also be removed.`)
+                    : (locale === 'ar'
+                        ? `هل أنت متأكد من حذف "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"؟`
+                        : `Are you sure you want to delete "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"?`)
+                  }
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2 justify-end pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setDeleteDialog(null)}
+                className="text-xs"
+              >
+                {locale === 'ar' ? 'إلغاء' : 'Cancel'}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleDelete}
+                className="text-xs bg-error text-on-error hover:bg-error/90"
+              >
+                {locale === 'ar' ? 'حذف' : 'Delete'}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </>

@@ -657,6 +657,8 @@
     "onboarding.storeIdentity.selectSpecialties":  "Select specialties",
     "onboarding.storeIdentity.specialties":  "Store Specialties",
     "onboarding.storeIdentity.specialtiesHint":  "Select what your store specializes in",
+    "onboarding.storeIdentity.products":  "Products",
+    "onboarding.storeIdentity.productsHint":  "Organize your products by category",
     "onboarding.storeIdentity.storeCategory":  "Store Category",
     "onboarding.storeIdentity.storeDescription":  "Store Description",
     "onboarding.storeIdentity.storeLogo":  "Store Logo",

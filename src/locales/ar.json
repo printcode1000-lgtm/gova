@@ -657,6 +657,8 @@
     "onboarding.storeIdentity.selectSpecialties":  "اختر التخصصات",
     "onboarding.storeIdentity.specialties":  "تخصصات المتجر",
     "onboarding.storeIdentity.specialtiesHint":  "اختر ما يتخصص فيه متجرك",
+    "onboarding.storeIdentity.products":  "المنتجات",
+    "onboarding.storeIdentity.productsHint":  "نظم منتجاتك حسب الفئة",
     "onboarding.storeIdentity.storeCategory":  "فئة المتجر",
     "onboarding.storeIdentity.storeDescription":  "وصف المتجر",
     "onboarding.storeIdentity.storeLogo":  "صورة التعريف",

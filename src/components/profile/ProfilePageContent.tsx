@@ -7,6 +7,7 @@ import {
   Loader2,
   LogIn,
   Phone,
+  Package,
   Save,
   Star,
   Store,
@@ -21,6 +22,7 @@ import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
 import { ProfileContactsCard } from "@/components/profile/ProfileContactsCard";
 import { ProfileRegistrationInfoCard } from "@/components/profile/ProfileRegistrationInfoCard";
 import { SpecialtiesCard } from "@/components/profile/SpecialtiesCard";
+import { ProductsCard } from "@/components/profile/ProductsCard";
 import { StoreIdentityCard } from "@/components/profile/StoreIdentityCard";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useTranslation } from "@/lib/i18n";
@@ -41,11 +43,12 @@ import type {
   StoreDetailsController,
 } from "./profile-save-controller";
 
-type ProfileEditTab = "registration" | "specialties" | "contact" | "store";
+type ProfileEditTab = "registration" | "specialties" | "products" | "contact" | "store";
 
 const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
   registration: "profile-registration-panel",
   specialties: "profile-specialties-panel",
+  products: "profile-products-panel",
   contact: "profile-contact-panel",
   store: "profile-store-panel",
 };
@@ -53,6 +56,7 @@ const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
 const PROFILE_SECTIONS: ProfileEditTab[] = [
   "registration",
   "specialties",
+  "products",
   "contact",
   "store",
 ];
@@ -66,6 +70,7 @@ export function ProfilePageContent() {
   const [carouselHeight, setCarouselHeight] = React.useState<number>();
   const registrationRef = React.useRef<ProfileRegistrationController>(null);
   const specialtiesRef = React.useRef<ProfileSpecialtiesController>(null);
+  const productsRef = React.useRef<ProfileSpecialtiesController>(null);
   const contactsRef = React.useRef<ProfileContactsController>(null);
   const storeRef = React.useRef<StoreDetailsController>(null);
   const carouselRef = React.useRef<HTMLDivElement>(null);
@@ -73,19 +78,21 @@ export function ProfilePageContent() {
     {
       registration: null,
       specialties: null,
+      products: null,
       contact: null,
       store: null,
     },
   );
   const navButtonRefs = React.useRef<
     Record<ProfileEditTab, HTMLButtonElement | null>
-  >({ registration: null, specialties: null, contact: null, store: null });
+  >({ registration: null, specialties: null, products: null, contact: null, store: null });
   const scrollFrameRef = React.useRef<number | null>(null);
   const [sectionStatuses, setSectionStatuses] = React.useState<
     Record<ProfileEditTab, ProfileSectionStatus | null>
   >({
     registration: null,
     specialties: null,
+    products: null,
     contact: null,
     store: null,
   });
@@ -145,6 +152,11 @@ export function ProfilePageContent() {
   const handleSpecialtiesStatus = React.useCallback(
     (status: ProfileSectionStatus) =>
       updateSectionStatus("specialties", status),
+    [updateSectionStatus],
+  );
+  const handleProductsStatus = React.useCallback(
+    (status: ProfileSectionStatus) =>
+      updateSectionStatus("products", status),
     [updateSectionStatus],
   );
   const handleContactStatus = React.useCallback(
@@ -243,12 +255,14 @@ export function ProfilePageContent() {
     const contactsController = contactsRef.current;
     const storeController = storeRef.current;
     const specialtiesController = specialtiesRef.current;
+    const productsController = productsRef.current;
     if (
       !session?.uid ||
       !registrationController ||
       !contactsController ||
       !storeController ||
-      !specialtiesController
+      !specialtiesController ||
+      !productsController
     ) {
       reportSystemIssue({
         level: "warning",
@@ -298,6 +312,7 @@ export function ProfilePageContent() {
       }
       if (changedSections.includes("specialties")) {
         specialtiesController.applySaved(saved.specialties);
+        productsController.applySaved(saved.specialties);
         const updatedSession = await sessionService.saveSession({
           uid: session.uid,
           phone: saved.registration.phone,
@@ -305,6 +320,9 @@ export function ProfilePageContent() {
           specialties: saved.specialties,
         });
         setSession(updatedSession);
+      }
+      if (changedSections.includes("products")) {
+        productsController.applySaved(saved.specialties);
       }
     } catch (error) {
       reportSystemIssue({
@@ -465,6 +483,28 @@ export function ProfilePageContent() {
                   </button>
                   <button
                     ref={(node) => {
+                      navButtonRefs.current.products = node;
+                    }}
+                    type="button"
+                    onClick={() => selectSection("products")}
+                    aria-pressed={activeTab === "products"}
+                    aria-controls={PROFILE_SECTION_IDS.products}
+                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                      activeTab === "products"
+                        ? "border-primary bg-primary text-on-primary shadow-sm"
+                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                    }`}
+                  >
+                    <Package className="h-4 w-4" />
+                    <span className="whitespace-nowrap">
+                      {t("onboarding.storeIdentity.products")}
+                    </span>
+                    {sectionStatuses.products?.isDirty ? (
+                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                    ) : null}
+                  </button>
+                  <button
+                    ref={(node) => {
                       navButtonRefs.current.contact = node;
                     }}
                     type="button"
@@ -556,6 +596,23 @@ export function ProfilePageContent() {
                       ref={specialtiesRef}
                       showSaveButton={false}
                       onStatusChange={handleSpecialtiesStatus}
+                    />
+                  </div>
+                  <div
+                    ref={(node) => {
+                      panelRefs.current.products = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.products}
+                    role="region"
+                    aria-hidden={activeTab !== "products"}
+                    inert={activeTab !== "products"}
+                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                  >
+                    <ProductsCard
+                      uid={session?.uid ?? ""}
+                      ref={productsRef}
+                      showSaveButton={false}
+                      onStatusChange={handleProductsStatus}
                     />
                   </div>
                   <div

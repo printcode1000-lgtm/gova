@@ -6,6 +6,7 @@ import type { ProfileSpecialtiesSelection } from "./profile-specialties.entity";
 export type ProfileEditorSection =
   | "registration"
   | "specialties"
+  | "products"
   | "contact"
   | "store";
 
