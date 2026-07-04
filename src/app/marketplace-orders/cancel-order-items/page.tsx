@@ -3,37 +3,39 @@
 import React, { useState } from 'react';
 import { Package, CheckCircle2, HelpCircle, AlertTriangle, Send, Headphones } from 'lucide-react';
 import { ImagePlaceholder } from '../components/ImagePlaceholder';
+import { useTranslation } from '@/lib/i18n';
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
-          <h1 className="text-xl font-bold text-primary">Cancel Order or Items</h1>
-          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">Stitch Screen (Local)</span>
+          <h1 className="text-xl font-bold text-primary">{t('marketplaceOrders.cancelOrderItems.title')}</h1>
+          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">{t('marketplaceOrders.stitchScreen')}</span>
         </div>
         
         {/* Converted content */}
         <main className="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
 
 <div className="mb-stack-xl">
-<h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2">Cancel Order</h2>
-<p className="font-body-md text-body-md text-on-surface-variant">Order #GV-984210 • Placed on Oct 24, 2023</p>
+<h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2">{t('marketplaceOrders.cancelOrderItems.cancelOrder')}</h2>
+<p className="font-body-md text-body-md text-on-surface-variant">{t('marketplaceOrders.cancelOrderItems.cancelOrderDesc')}</p>
 </div>
 <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
 
 <div className="md:col-span-8 space-y-gutter">
 
 <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md shadow-sm">
-<h3 className="font-label-md text-label-md text-on-surface mb-stack-md">What would you like to cancel?</h3>
+<h3 className="font-label-md text-label-md text-on-surface mb-stack-md">{t('marketplaceOrders.cancelOrderItems.whatToCancel')}</h3>
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-stack-md">
 <label className="relative flex items-center p-4 border-2 border-primary bg-surface-container-low rounded-xl cursor-pointer transition-all hover:bg-surface-container">
 <input defaultChecked className="hidden" name="cancel_type" type="radio" value="full"/>
 <Package className="text-primary mr-3" data-icon="inventory_2" />
 <div className="flex flex-col">
-<span className="font-label-md text-label-md text-primary">Cancel Full Order</span>
-<span className="text-[12px] text-on-surface-variant">Refund all items &amp; shipping</span>
+<span className="font-label-md text-label-md text-primary">{t('marketplaceOrders.cancelOrderItems.cancelFullOrder')}</span>
+<span className="text-[12px] text-on-surface-variant">{t('marketplaceOrders.cancelOrderItems.cancelFullOrderDesc')}</span>
 </div>
 <CheckCircle2 className="absolute top-2 right-2  text-primary text-sm" style={{ "fontVariationSettings": "'FILL' 1" }} />
 </label>
@@ -41,8 +43,8 @@ export default function Page() {
 <input className="hidden" name="cancel_type" type="radio" value="partial"/>
 <HelpCircle className="text-on-surface-variant mr-3" data-icon="checklist" />
 <div className="flex flex-col">
-<span className="font-label-md text-label-md text-on-surface">Select Specific Items</span>
-<span className="text-[12px] text-on-surface-variant">Keep remaining items active</span>
+<span className="font-label-md text-label-md text-on-surface">{t('marketplaceOrders.cancelOrderItems.selectSpecificItems')}</span>
+<span className="text-[12px] text-on-surface-variant">{t('marketplaceOrders.cancelOrderItems.selectSpecificItemsDesc')}</span>
 </div>
 </label>
 </div>
@@ -50,8 +52,8 @@ export default function Page() {
 
 <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
 <div className="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
-<h3 className="font-label-md text-label-md text-on-surface">Review Items</h3>
-<span className="bg-primary text-on-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider" id="items-count-badge">3 Items</span>
+<h3 className="font-label-md text-label-md text-on-surface">{t('marketplaceOrders.cancelOrderItems.reviewItems')}</h3>
+<span className="bg-primary text-on-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider" id="items-count-badge">3 {t('marketplaceOrders.cancelOrderItems.items')}</span>
 </div>
 <div className="divide-y divide-outline-variant">
 
@@ -106,22 +108,22 @@ export default function Page() {
 </div>
 
 <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md shadow-sm">
-<h3 className="font-label-md text-label-md text-on-surface mb-stack-md">Cancellation Details</h3>
+<h3 className="font-label-md text-label-md text-on-surface mb-stack-md">{t('marketplaceOrders.cancelOrderItems.cancellationDetails')}</h3>
 <div className="space-y-stack-md">
 <div>
-<label className="block text-label-sm font-label-sm text-on-surface-variant mb-2">Reason for Cancellation</label>
+<label className="block text-label-sm font-label-sm text-on-surface-variant mb-2">{t('marketplaceOrders.cancelOrderItems.reason')}</label>
 <select className="w-full h-touch-target rounded-lg border border-outline-variant bg-surface px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
-<option disabled selected value="">Select a reason...</option>
-<option value="changed_mind">Changed my mind</option>
-<option value="shipping_time">Delivery time is too long</option>
-<option value="price">Found a better price elsewhere</option>
-<option value="error">Ordered by mistake</option>
-<option value="other">Other reason</option>
+<option disabled selected value="">{t('marketplaceOrders.cancelOrderItems.selectReason')}</option>
+<option value="changed_mind">{t('marketplaceOrders.cancelOrderItems.reasonChangedMind')}</option>
+<option value="shipping_time">{t('marketplaceOrders.cancelOrderItems.reasonShippingTime')}</option>
+<option value="price">{t('marketplaceOrders.cancelOrderItems.reasonPrice')}</option>
+<option value="error">{t('marketplaceOrders.cancelOrderItems.reasonError')}</option>
+<option value="other">{t('marketplaceOrders.cancelOrderItems.reasonOther')}</option>
 </select>
 </div>
 <div>
-<label className="block text-label-sm font-label-sm text-on-surface-variant mb-2">Additional Comments (Optional)</label>
-<textarea className="w-full rounded-lg border border-outline-variant bg-surface p-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none" placeholder="Tell us more about why you're cancelling..." rows={3}></textarea>
+<label className="block text-label-sm font-label-sm text-on-surface-variant mb-2">{t('marketplaceOrders.cancelOrderItems.additionalComments')}</label>
+<textarea className="w-full rounded-lg border border-outline-variant bg-surface p-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none" placeholder={t('marketplaceOrders.cancelOrderItems.tellUsMore')} rows={3}></textarea>
 </div>
 </div>
 </div>
@@ -132,43 +134,43 @@ export default function Page() {
 <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md shadow-sm">
 <h3 className="font-label-md text-label-md text-primary mb-stack-md flex items-center gap-2">
 <HelpCircle className="text-[20px]" data-icon="account_balance_wallet" />
-                            Impact Summary
+                            {t('marketplaceOrders.cancelOrderItems.impactSummary')}
                         </h3>
 <div className="space-y-stack-sm mb-stack-md border-b border-outline-variant pb-stack-md">
 <div className="flex justify-between text-body-sm text-on-surface-variant">
-<span>Selected Items Value</span>
+<span>{t('marketplaceOrders.cancelOrderItems.selectedItemsValue')}</span>
 <span>$1,693.00</span>
 </div>
 <div className="flex justify-between text-body-sm text-on-surface-variant">
-<span>Tax Refund (Estimated)</span>
+<span>{t('marketplaceOrders.cancelOrderItems.taxRefund')}</span>
 <span>$135.44</span>
 </div>
 <div className="flex justify-between text-body-sm text-on-surface-variant" id="shipping-refund-row">
-<span>Shipping Refund</span>
+<span>{t('marketplaceOrders.cancelOrderItems.shippingRefund')}</span>
 <span>$25.00</span>
 </div>
 </div>
 <div className="flex justify-between items-center mb-stack-lg">
-<span className="font-headline-md text-headline-md text-on-surface">Total Refund</span>
+<span className="font-headline-md text-headline-md text-on-surface">{t('marketplaceOrders.cancelOrderItems.totalRefund')}</span>
 <div className="text-right">
 <span className="font-headline-md text-headline-md text-secondary" id="total-refund-amount">$1,853.44</span>
-<p className="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">Credited to Visa ****4242</p>
+<p className="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">{t('marketplaceOrders.cancelOrderItems.creditedTo')}</p>
 </div>
 </div>
 <div className="p-3 bg-error-container/15 rounded-lg border border-error/20 mb-stack-lg">
 <div className="flex gap-2">
 <AlertTriangle className="text-error text-[20px]" data-icon="warning" />
 <p className="text-body-sm text-on-error-container leading-tight">
-<strong>Cancellation is permanent.</strong> You cannot undo this action or reclaim these items once submitted.
+<strong>{t('marketplaceOrders.cancelOrderItems.cancellationPermanent')}</strong> You cannot undo this action or reclaim these items once submitted.
                                 </p>
 </div>
 </div>
 <button className="w-full h-[52px] bg-primary text-on-primary rounded-xl font-label-md text-label-md shadow-lg shadow-primary/20 hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-                            Submit Cancellation
+                            {t('marketplaceOrders.cancelOrderItems.submitCancellation')}
                             <Send className="text-[20px]" data-icon="send" />
 </button>
 <button className="w-full h-touch-target mt-2 text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors">
-                            Keep My Order
+                            {t('marketplaceOrders.cancelOrderItems.keepMyOrder')}
                         </button>
 </div>
 
@@ -177,8 +179,8 @@ export default function Page() {
 <Headphones className="text-primary" data-icon="support_agent" />
 </div>
 <div>
-<h4 className="text-label-sm font-label-sm text-on-surface">Need help?</h4>
-<p className="text-[12px] text-on-surface-variant">Chat with our support team about refunds.</p>
+<h4 className="text-label-sm font-label-sm text-on-surface">{t('marketplaceOrders.cancelOrderItems.needHelp')}</h4>
+<p className="text-[12px] text-on-surface-variant">{t('marketplaceOrders.cancelOrderItems.chatSupport')}</p>
 </div>
 </div>
 </div>

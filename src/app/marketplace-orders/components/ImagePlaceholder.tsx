@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { User, Map, Package, Image, Shield, AlertTriangle, Headphones } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface ImagePlaceholderProps {
   alt?: string;
@@ -11,11 +12,12 @@ interface ImagePlaceholderProps {
 }
 
 export function ImagePlaceholder({ alt = '', className = '', width, height }: ImagePlaceholderProps) {
+  const { t } = useTranslation();
   const lowerAlt = alt.toLowerCase();
   
   // Choose icon based on alt text to make it expressive (معبر)
   let Icon = Image;
-  let label = 'صورة';
+  let label = t('marketplaceOrders.imagePlaceholder.image');
   
   if (
     lowerAlt.includes('avatar') || 
@@ -29,7 +31,7 @@ export function ImagePlaceholder({ alt = '', className = '', width, height }: Im
     lowerAlt.includes('carrier')
   ) {
     Icon = User;
-    label = 'صورة شخصية';
+    label = t('marketplaceOrders.imagePlaceholder.avatar');
   } else if (
     lowerAlt.includes('map') || 
     lowerAlt.includes('location') || 
@@ -40,7 +42,7 @@ export function ImagePlaceholder({ alt = '', className = '', width, height }: Im
     lowerAlt.includes('hub')
   ) {
     Icon = Map;
-    label = 'خريطة التتبع';
+    label = t('marketplaceOrders.imagePlaceholder.map');
   } else if (
     lowerAlt.includes('product') || 
     lowerAlt.includes('turbine') || 
@@ -55,7 +57,7 @@ export function ImagePlaceholder({ alt = '', className = '', width, height }: Im
     lowerAlt.includes('box')
   ) {
     Icon = Package;
-    label = 'صورة المنتج / الشحنة';
+    label = t('marketplaceOrders.imagePlaceholder.product');
   } else if (
     lowerAlt.includes('shield') || 
     lowerAlt.includes('verified') || 
@@ -64,7 +66,7 @@ export function ImagePlaceholder({ alt = '', className = '', width, height }: Im
     lowerAlt.includes('badge')
   ) {
     Icon = Shield;
-    label = 'شعار توثيق / حماية';
+    label = t('marketplaceOrders.imagePlaceholder.shield');
   } else if (
     lowerAlt.includes('warning') || 
     lowerAlt.includes('alert') || 
@@ -73,7 +75,7 @@ export function ImagePlaceholder({ alt = '', className = '', width, height }: Im
     lowerAlt.includes('danger')
   ) {
     Icon = AlertTriangle;
-    label = 'تنبيه / خلاف';
+    label = t('marketplaceOrders.imagePlaceholder.warning');
   } else if (
     lowerAlt.includes('support') || 
     lowerAlt.includes('agent') || 
@@ -81,7 +83,7 @@ export function ImagePlaceholder({ alt = '', className = '', width, height }: Im
     lowerAlt.includes('help')
   ) {
     Icon = Headphones;
-    label = 'الدعم الفني';
+    label = t('marketplaceOrders.imagePlaceholder.support');
   }
   
   return (

@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import { Menu, HelpCircle, ChevronRight, MapPin, MessageSquare } from 'lucide-react';
 import { ImagePlaceholder } from '../components/ImagePlaceholder';
+import { useTranslation } from '@/lib/i18n';
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
-          <h1 className="text-xl font-bold text-primary">Seller Custom Requests</h1>
-          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">Stitch Screen (Local)</span>
+          <h1 className="text-xl font-bold text-primary">{t('marketplaceOrders.sellerCustomRequests.title')}</h1>
+          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">{t('marketplaceOrders.stitchScreen')}</span>
         </div>
         
         {/* Converted content */}
@@ -25,9 +27,9 @@ export default function Page() {
 </div>
 <div className="flex items-center gap-6">
 <nav className="hidden md:flex items-center gap-8">
-<a className="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-md transition-colors" href="#">Dashboard</a>
-<a className="text-primary dark:text-primary-fixed-dim font-bold font-label-md" href="#">Requests</a>
-<a className="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-md transition-colors" href="#">Messages</a>
+<a className="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-md transition-colors" href="#">{t('marketplaceOrders.sellerCustomRequests.dashboard')}</a>
+<a className="text-primary dark:text-primary-fixed-dim font-bold font-label-md" href="#">{t('marketplaceOrders.sellerCustomRequests.requests')}</a>
+<a className="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-md transition-colors" href="#">{t('marketplaceOrders.sellerCustomRequests.messages')}</a>
 </nav>
 <div className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
 <ImagePlaceholder alt="" className="w-full h-full object-cover"   />
@@ -40,20 +42,20 @@ export default function Page() {
 <section className="mb-stack-xl">
 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-stack-lg">
 <div>
-<h2 className="font-headline-xl text-headline-xl text-primary mb-1">Custom Requests</h2>
-<p className="font-body-md text-body-md text-on-surface-variant">Manage personalized orders and image-based quotes from your customers.</p>
+<h2 className="font-headline-xl text-headline-xl text-primary mb-1">{t('marketplaceOrders.sellerCustomRequests.customRequests')}</h2>
+<p className="font-body-md text-body-md text-on-surface-variant">{t('marketplaceOrders.sellerCustomRequests.description')}</p>
 </div>
 <div className="flex items-center bg-surface-container-low p-1 rounded-xl">
-<button className="px-6 py-2 rounded-lg bg-primary text-on-primary font-label-md shadow-sm">Seller View</button>
-<button className="px-6 py-2 rounded-lg text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all">Insights</button>
+<button className="px-6 py-2 rounded-lg bg-primary text-on-primary font-label-md shadow-sm">{t('marketplaceOrders.sellerCustomRequests.sellerView')}</button>
+<button className="px-6 py-2 rounded-lg text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all">{t('marketplaceOrders.sellerCustomRequests.insights')}</button>
 </div>
 </div>
 
 <div className="flex overflow-x-auto hide-scrollbar border-b border-outline-variant gap-8">
-<button className="pb-4 px-1 border-b-2 border-primary text-primary font-bold font-label-md whitespace-nowrap">New Requests (4)</button>
-<button className="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">Pending Price (12)</button>
-<button className="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">Offer Sent (8)</button>
-<button className="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">Accepted (45)</button>
+<button className="pb-4 px-1 border-b-2 border-primary text-primary font-bold font-label-md whitespace-nowrap">{t('marketplaceOrders.sellerCustomRequests.newRequests')}</button>
+<button className="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">{t('marketplaceOrders.sellerCustomRequests.pendingPrice')}</button>
+<button className="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">{t('marketplaceOrders.sellerCustomRequests.offerSent')}</button>
+<button className="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">{t('marketplaceOrders.sellerCustomRequests.accepted')}</button>
 </div>
 </section>
 
@@ -70,7 +72,7 @@ export default function Page() {
 <p className="font-body-sm text-body-sm text-on-surface-variant">Pharma Connect • 2 mins ago</p>
 </div>
 </div>
-<span className="bg-secondary-container/15 text-on-secondary-container text-label-sm font-label-sm px-2 py-1 rounded">Urgent</span>
+<span className="bg-secondary-container/15 text-on-secondary-container text-label-sm font-label-sm px-2 py-1 rounded">{t('marketplaceOrders.sellerCustomRequests.urgent')}</span>
 </div>
 <div className="aspect-square w-full rounded-lg overflow-hidden bg-surface-container">
 <ImagePlaceholder alt="" className="w-full h-full object-cover"   />
@@ -80,7 +82,7 @@ export default function Page() {
 <div className="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-high flex items-center justify-center text-[10px] font-bold">+2</div>
 </div>
 <button className="h-touch-target px-6 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity flex items-center gap-2">
-                        Review <ChevronRight className="text-sm"  />
+                        {t('marketplaceOrders.sellerCustomRequests.review')} <ChevronRight className="text-sm"  />
 </button>
 </div>
 </div>
@@ -96,7 +98,7 @@ export default function Page() {
 <p className="font-body-sm text-body-sm text-on-surface-variant">Family Mart • 15 mins ago</p>
 </div>
 </div>
-<span className="bg-outline-variant/20 text-on-surface-variant text-label-sm font-label-sm px-2 py-1 rounded">Standard</span>
+<span className="bg-outline-variant/20 text-on-surface-variant text-label-sm font-label-sm px-2 py-1 rounded">{t('marketplaceOrders.sellerCustomRequests.standard')}</span>
 </div>
 <div className="grid grid-cols-2 gap-2 h-48 lg:h-64">
 <div className="rounded-lg overflow-hidden bg-surface-container h-full">
@@ -107,13 +109,13 @@ export default function Page() {
 <ImagePlaceholder alt="" className="w-full h-full object-cover"   />
 </div>
 <div className="rounded-lg overflow-hidden bg-surface-container flex-1 bg-primary/5 flex items-center justify-center text-primary font-bold">
-                            +4 items
+                            {t('marketplaceOrders.sellerCustomRequests.moreItems')}
                         </div>
 </div>
 </div>
 <div className="flex items-center justify-between mt-auto pt-2">
-<p className="text-label-sm font-label-sm text-on-surface-variant">Estimated: --</p>
-<button className="h-touch-target px-6 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">Review</button>
+<p className="text-label-sm font-label-sm text-on-surface-variant">{t('marketplaceOrders.sellerCustomRequests.estimated')}</p>
+<button className="h-touch-target px-6 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">{t('marketplaceOrders.sellerCustomRequests.review')}</button>
 </div>
 </div>
 
@@ -128,7 +130,7 @@ export default function Page() {
 <p className="font-body-sm text-body-sm text-on-surface-variant">HomeTech Services • 1h ago</p>
 </div>
 </div>
-<span className="bg-primary-container/10 text-primary text-label-sm font-label-sm px-2 py-1 rounded">Bidding</span>
+<span className="bg-primary-container/10 text-primary text-label-sm font-label-sm px-2 py-1 rounded">{t('marketplaceOrders.sellerCustomRequests.bidding')}</span>
 </div>
 <div className="aspect-video w-full rounded-lg overflow-hidden bg-surface-container">
 <ImagePlaceholder alt="" className="w-full h-full object-cover"   />
@@ -139,9 +141,9 @@ export default function Page() {
 <div className="flex items-center justify-between mt-auto pt-2">
 <div className="flex items-center gap-1 text-on-surface-variant">
 <MapPin className="text-sm"  />
-<span className="text-label-sm font-label-sm">Downtown</span>
+<span className="text-label-sm font-label-sm">{t('marketplaceOrders.sellerCustomRequests.downtown')}</span>
 </div>
-<button className="h-touch-target px-6 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">Review</button>
+<button className="h-touch-target px-6 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">{t('marketplaceOrders.sellerCustomRequests.review')}</button>
 </div>
 </div>
 
@@ -162,12 +164,12 @@ export default function Page() {
 <ImagePlaceholder alt="" className="w-full h-full object-cover"   />
 </div>
 <div className="flex flex-col justify-center">
-<p className="font-label-md text-label-md text-on-surface">Event: Oct 24th</p>
-<p className="font-body-sm text-body-sm text-on-surface-variant">50+ Persons • Custom Menu</p>
+<p className="font-label-md text-label-md text-on-surface">{t('marketplaceOrders.sellerCustomRequests.event')}</p>
+<p className="font-body-sm text-body-sm text-on-surface-variant">{t('marketplaceOrders.sellerCustomRequests.eventDetails')}</p>
 </div>
 </div>
 <div className="mt-auto pt-2">
-<button className="w-full h-touch-target bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">Review</button>
+<button className="w-full h-touch-target bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">{t('marketplaceOrders.sellerCustomRequests.review')}</button>
 </div>
 </div>
 
@@ -176,8 +178,8 @@ export default function Page() {
 <HelpCircle className="text-outline text-3xl"  />
 </div>
 <div>
-<h3 className="font-headline-md text-headline-md text-outline">Waiting for more...</h3>
-<p className="font-body-sm text-body-sm text-outline max-w-[200px]">New requests from customers will appear here automatically.</p>
+<h3 className="font-headline-md text-headline-md text-outline">{t('marketplaceOrders.sellerCustomRequests.waiting')}</h3>
+<p className="font-body-sm text-body-sm text-outline max-w-[200px]">{t('marketplaceOrders.sellerCustomRequests.waitingDesc')}</p>
 </div>
 </div>
 </div>

@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import { HelpCircle, ShoppingBag, Download, Filter, X, MoreVertical, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
 import { ImagePlaceholder } from '../components/ImagePlaceholder';
+import { useTranslation } from '@/lib/i18n';
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
-          <h1 className="text-xl font-bold text-primary">Audit Trail</h1>
-          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">Stitch Screen (Local)</span>
+          <h1 className="text-xl font-bold text-primary">{t('marketplaceOrders.auditTrail.title')}</h1>
+          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">{t('marketplaceOrders.stitchScreen')}</span>
         </div>
         
         {/* Converted content */}
@@ -56,31 +58,31 @@ export default function Page() {
 
 <div className="flex flex-col md:flex-row md:items-end justify-between gap-gutter">
 <div className="space-y-stack-xs">
-<h2 className="font-headline-lg text-headline-lg text-primary">Audit Trail</h2>
-<p className="font-body-md text-body-md text-on-surface-variant">Comprehensive system event log and security history.</p>
+<h2 className="font-headline-lg text-headline-lg text-primary">{t('marketplaceOrders.auditTrail.title')}</h2>
+<p className="font-body-md text-body-md text-on-surface-variant">{t('marketplaceOrders.auditTrail.description')}</p>
 </div>
 <div className="flex items-center gap-gutter">
 <button className="h-touch-target px-stack-lg bg-surface-container border border-outline-variant rounded-xl text-primary font-label-md flex items-center gap-2 hover:bg-surface-container-high transition-all">
-<Download className=""  /> Export CSV
+<Download className=""  /> {t('marketplaceOrders.auditTrail.exportCSV')}
                 </button>
 <button className="h-touch-target px-stack-lg bg-primary text-on-primary rounded-xl font-label-md flex items-center gap-2 shadow-lg active:scale-95 transition-all">
-<Filter className=""  /> Filters
+<Filter className=""  /> {t('marketplaceOrders.auditTrail.filters')}
                 </button>
 </div>
 </div>
 
 <div className="flex gap-2 overflow-x-auto py-2 custom-scrollbar">
 <span className="px-4 py-1.5 bg-primary-container text-on-primary-container rounded-full font-label-sm flex items-center gap-2 cursor-pointer">
-                All Events <X className="text-[16px]"  />
+                {t('marketplaceOrders.auditTrail.allEvents')} <X className="text-[16px]"  />
 </span>
 <span className="px-4 py-1.5 bg-surface-container border border-outline-variant text-on-surface-variant rounded-full font-label-sm hover:border-primary transition-colors cursor-pointer">
-                Security
+                {t('marketplaceOrders.auditTrail.security')}
             </span>
 <span className="px-4 py-1.5 bg-surface-container border border-outline-variant text-on-surface-variant rounded-full font-label-sm hover:border-primary transition-colors cursor-pointer">
-                Financial
+                {t('marketplaceOrders.auditTrail.financial')}
             </span>
 <span className="px-4 py-1.5 bg-surface-container border border-outline-variant text-on-surface-variant rounded-full font-label-sm hover:border-primary transition-colors cursor-pointer">
-                System Updates
+                {t('marketplaceOrders.auditTrail.systemUpdates')}
             </span>
 </div>
 
@@ -89,11 +91,11 @@ export default function Page() {
 <table className="w-full text-left border-collapse">
 <thead>
 <tr className="bg-surface-container-low border-b border-outline-variant">
-<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Timestamp</th>
-<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Action</th>
-<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Performed By</th>
-<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Old Value</th>
-<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">New Value</th>
+<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">{t('marketplaceOrders.auditTrail.timestamp')}</th>
+<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">{t('marketplaceOrders.auditTrail.action')}</th>
+<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">{t('marketplaceOrders.auditTrail.performedBy')}</th>
+<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">{t('marketplaceOrders.auditTrail.oldValue')}</th>
+<th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">{t('marketplaceOrders.auditTrail.newValue')}</th>
 <th className="px-6 py-4"></th>
 </tr>
 </thead>
@@ -109,7 +111,7 @@ export default function Page() {
 <td className="px-6 py-5">
 <div className="flex items-center gap-2">
 <span className="w-2 h-2 rounded-full bg-secondary"></span>
-<span className="font-label-md text-label-md text-secondary">Price Adjustment</span>
+<span className="font-label-md text-label-md text-secondary">{t('marketplaceOrders.auditTrail.priceAdjustment')}</span>
 </div>
 </td>
 <td className="px-6 py-5">
@@ -144,7 +146,7 @@ export default function Page() {
 <td className="px-6 py-5">
 <div className="flex items-center gap-2">
 <span className="w-2 h-2 rounded-full bg-error"></span>
-<span className="font-label-md text-label-md text-error">Access Revoked</span>
+<span className="font-label-md text-label-md text-error">{t('marketplaceOrders.auditTrail.accessRevoked')}</span>
 </div>
 </td>
 <td className="px-6 py-5">
@@ -179,7 +181,7 @@ export default function Page() {
 <td className="px-6 py-5">
 <div className="flex items-center gap-2">
 <span className="w-2 h-2 rounded-full bg-primary"></span>
-<span className="font-label-md text-label-md text-primary">Status Change</span>
+<span className="font-label-md text-label-md text-primary">{t('marketplaceOrders.auditTrail.statusChange')}</span>
 </div>
 </td>
 <td className="px-6 py-5">
@@ -214,7 +216,7 @@ export default function Page() {
 <td className="px-6 py-5">
 <div className="flex items-center gap-2">
 <span className="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
-<span className="font-label-md text-label-md text-on-tertiary-container">Metadata Edit</span>
+<span className="font-label-md text-label-md text-on-tertiary-container">{t('marketplaceOrders.auditTrail.metadataEdit')}</span>
 </div>
 </td>
 <td className="px-6 py-5">
@@ -243,7 +245,7 @@ export default function Page() {
 </div>
 
 <div className="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
-<span className="font-label-sm text-label-sm text-on-surface-variant">Showing 1-10 of 2,492 events</span>
+<span className="font-label-sm text-label-sm text-on-surface-variant">{t('marketplaceOrders.auditTrail.showingEvents', {start: 1, end: 10, total: 2492})}</span>
 <div className="flex gap-1">
 <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-high text-on-surface-variant transition-all">
 <ChevronLeft className=""  />
@@ -260,23 +262,23 @@ export default function Page() {
 
 <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter mt-stack-xl">
 <div className="bg-surface-container-low p-stack-lg rounded-xl border border-outline-variant flex flex-col gap-1">
-<span className="font-label-md text-label-md text-on-surface-variant">Daily Activity</span>
+<span className="font-label-md text-label-md text-on-surface-variant">{t('marketplaceOrders.auditTrail.dailyActivity')}</span>
 <span className="font-headline-lg text-headline-lg text-primary">+12.4%</span>
 <div className="w-full h-1 bg-surface-variant rounded-full mt-2">
 <div className="h-full bg-primary rounded-full w-[65%]"></div>
 </div>
 </div>
 <div className="bg-surface-container-low p-stack-lg rounded-xl border border-outline-variant flex flex-col gap-1">
-<span className="font-label-md text-label-md text-on-surface-variant">Security Alerts</span>
+<span className="font-label-md text-label-md text-on-surface-variant">{t('marketplaceOrders.auditTrail.securityAlerts')}</span>
 <span className="font-headline-lg text-headline-lg text-error">02</span>
-<p className="font-body-sm text-body-sm text-on-surface-variant mt-2">Critical events requiring review</p>
+<p className="font-body-sm text-body-sm text-on-surface-variant mt-2">{t('marketplaceOrders.auditTrail.criticalEvents')}</p>
 </div>
 <div className="bg-surface-container-low p-stack-lg rounded-xl border border-outline-variant flex flex-col gap-1">
-<span className="font-label-md text-label-md text-on-surface-variant">Log Integrity</span>
-<span className="font-headline-lg text-headline-lg text-secondary">Verified</span>
+<span className="font-label-md text-label-md text-on-surface-variant">{t('marketplaceOrders.auditTrail.logIntegrity')}</span>
+<span className="font-headline-lg text-headline-lg text-secondary">{t('marketplaceOrders.auditTrail.verified')}</span>
 <div className="flex items-center gap-1 mt-2 text-secondary">
 <ShieldCheck className="text-[16px]"  />
-<span className="font-label-sm text-label-sm">Hash Chain Valid</span>
+<span className="font-label-sm text-label-sm">{t('marketplaceOrders.auditTrail.hashChainValid')}</span>
 </div>
 </div>
 </div>

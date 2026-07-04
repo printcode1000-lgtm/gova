@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import { Download, ChevronDown, MapPin, Map, ShieldCheck, HelpCircle, Truck, Check, Bell, CreditCard, ShoppingCart } from 'lucide-react';
 import { ImagePlaceholder } from '../components/ImagePlaceholder';
+import { useTranslation } from '@/lib/i18n';
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
-          <h1 className="text-xl font-bold text-primary">Buyer Order Details</h1>
-          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">Stitch Screen (Local)</span>
+          <h1 className="text-xl font-bold text-primary">{t('marketplaceOrders.buyerOrderDetails.title')}</h1>
+          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">{t('marketplaceOrders.stitchScreen')}</span>
         </div>
         
         {/* Converted content */}
@@ -21,33 +23,33 @@ export default function Page() {
 <div>
 <div className="flex flex-wrap items-center gap-stack-sm mb-stack-xs">
 <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg">Order #GV-94021-X</h2>
-<span className="bg-primary-container/15 text-primary px-3 py-0.5 rounded-full text-label-sm font-label-sm uppercase tracking-wider">Mixed Order</span>
+<span className="bg-primary-container/15 text-primary px-3 py-0.5 rounded-full text-label-sm font-label-sm uppercase tracking-wider">{t('marketplaceOrders.buyerOrderDetails.mixedOrder')}</span>
 </div>
 <div className="flex items-center gap-stack-sm">
 <div className="flex items-center gap-1.5 px-3 py-1 bg-tertiary-container/15 text-tertiary-fixed-dim rounded-full">
 <span className="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
-<span className="font-label-sm text-label-sm text-on-tertiary-fixed-variant">Processing</span>
+<span className="font-label-sm text-label-sm text-on-tertiary-fixed-variant">{t('marketplaceOrders.buyerOrderDetails.processing')}</span>
 </div>
-<span className="text-on-surface-variant text-body-sm font-body-sm">Placed on Oct 24, 2023</span>
+<span className="text-on-surface-variant text-body-sm font-body-sm">{t('marketplaceOrders.buyerOrderDetails.placedOn')} Oct 24, 2023</span>
 </div>
 </div>
 <div className="flex items-center gap-stack-sm">
 <button className="h-11 px-6 bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg border border-outline-variant hover:bg-surface-container-highest transition-colors flex items-center gap-2">
 <Download className="text-[20px]"  />
-                    Invoice
+                    {t('marketplaceOrders.buyerOrderDetails.invoice')}
                 </button>
 <div className="relative group">
 <button className="h-11 px-6 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2">
-                        Actions
+                        {t('marketplaceOrders.buyerOrderDetails.actions')}
                         <ChevronDown className="text-[20px]"  />
 </button>
 
 <div className="absolute right-0 mt-2 w-48 bg-white border border-outline-variant rounded-xl shadow-xl hidden group-hover:block z-40">
 <div className="py-2">
-<a className="block px-4 py-2 text-body-sm hover:bg-surface-container text-on-surface" href="#">Contact Support</a>
-<a className="block px-4 py-2 text-body-sm hover:bg-surface-container text-on-surface" href="#">Cancel Order</a>
+<a className="block px-4 py-2 text-body-sm hover:bg-surface-container text-on-surface" href="#">{t('marketplaceOrders.buyerOrderDetails.contactSupport')}</a>
+<a className="block px-4 py-2 text-body-sm hover:bg-surface-container text-on-surface" href="#">{t('marketplaceOrders.buyerOrderDetails.cancelOrder')}</a>
 <hr className="my-1 border-outline-variant"/>
-<a className="block px-4 py-2 text-body-sm hover:bg-surface-container text-error" href="#">Report Issue</a>
+<a className="block px-4 py-2 text-body-sm hover:bg-surface-container text-error" href="#">{t('marketplaceOrders.buyerOrderDetails.reportIssue')}</a>
 </div>
 </div>
 </div>
@@ -55,12 +57,12 @@ export default function Page() {
 </section>
 
 <nav className="flex border-b border-outline-variant mb-stack-lg overflow-x-auto scrollbar-hide">
-<button className="tab-btn px-6 py-3 font-label-md text-label-md text-primary tab-active whitespace-nowrap" id="tab-overview" onClick={() => undefined}>Overview</button>
-<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-sellers" onClick={() => undefined}>Sellers &amp; Items</button>
-<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-shipments" onClick={() => undefined}>Shipments</button>
-<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-payments" onClick={() => undefined}>Payments</button>
-<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-issues" onClick={() => undefined}>Issues</button>
-<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-timeline" onClick={() => undefined}>Timeline</button>
+<button className="tab-btn px-6 py-3 font-label-md text-label-md text-primary tab-active whitespace-nowrap" id="tab-overview" onClick={() => undefined}>{t('marketplaceOrders.buyerOrderDetails.overview')}</button>
+<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-sellers" onClick={() => undefined}>{t('marketplaceOrders.buyerOrderDetails.sellersItems')}</button>
+<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-shipments" onClick={() => undefined}>{t('marketplaceOrders.buyerOrderDetails.shipments')}</button>
+<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-payments" onClick={() => undefined}>{t('marketplaceOrders.buyerOrderDetails.payments')}</button>
+<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-issues" onClick={() => undefined}>{t('marketplaceOrders.buyerOrderDetails.issues')}</button>
+<button className="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-timeline" onClick={() => undefined}>{t('marketplaceOrders.buyerOrderDetails.timeline')}</button>
 </nav>
 
 <div className="tab-pane block" id="content-overview">
@@ -70,16 +72,16 @@ export default function Page() {
 <div className="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant shadow-sm">
 <div className="flex items-center gap-2 mb-4">
 <MapPin className="text-primary"  />
-<h3 className="font-headline-md text-headline-md">Delivery Address</h3>
+<h3 className="font-headline-md text-headline-md">{t('marketplaceOrders.buyerOrderDetails.deliveryAddress')}</h3>
 </div>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
 <div>
-<p className="font-label-md text-label-md text-on-surface-variant mb-1">Shipping To</p>
+<p className="font-label-md text-label-md text-on-surface-variant mb-1">{t('marketplaceOrders.buyerOrderDetails.shippingTo')}</p>
 <p className="font-body-md text-body-md font-semibold">Jonathan Harker</p>
 <p className="font-body-md text-body-md text-on-surface-variant">4521 Business Center Dr, Suite 500<br/>San Francisco, CA 94105<br/>United States</p>
 </div>
 <div>
-<p className="font-label-md text-label-md text-on-surface-variant mb-1">Contact Info</p>
+<p className="font-label-md text-label-md text-on-surface-variant mb-1">{t('marketplaceOrders.buyerOrderDetails.contactInfo')}</p>
 <p className="font-body-md text-body-md">+1 (555) 902-1243</p>
 <p className="font-body-md text-body-md text-on-surface-variant">j.harker@corporation.com</p>
 </div>
@@ -91,7 +93,7 @@ export default function Page() {
 
 <div className="text-center opacity-40">
 <Map className="text-6xl"  />
-<p className="font-label-md">Dynamic Map View</p>
+<p className="font-label-md">{t('marketplaceOrders.buyerOrderDetails.dynamicMapView')}</p>
 </div>
 </div>
 </div>
@@ -99,7 +101,7 @@ export default function Page() {
 
 <div className="space-y-gutter">
 <div className="bg-primary text-on-primary p-stack-lg rounded-xl shadow-lg">
-<h3 className="font-headline-md text-headline-md mb-stack-lg">Order Summary</h3>
+<h3 className="font-headline-md text-headline-md mb-stack-lg">{t('marketplaceOrders.buyerOrderDetails.orderSummary')}</h3>
 <div className="space-y-3 font-body-md text-body-md">
 <div className="flex justify-between opacity-80">
 <span>Subtotal (4 items)</span>
@@ -123,7 +125,7 @@ export default function Page() {
 </div>
 </div>
 <button className="w-full mt-stack-xl py-3 bg-secondary text-on-secondary rounded-lg font-label-md text-label-md hover:bg-on-secondary-container transition-colors">
-                            Manage Payment
+                            {t('marketplaceOrders.buyerOrderDetails.managePayment')}
                         </button>
 </div>
 <div className="bg-surface-container-low p-stack-md rounded-xl border border-outline-variant flex items-center gap-4">
@@ -131,8 +133,8 @@ export default function Page() {
 <ShieldCheck className=""  />
 </div>
 <div>
-<p className="font-label-md text-label-md">Gova Protection</p>
-<p className="font-body-sm text-body-sm text-on-surface-variant">Your order is protected for up to $10,000.</p>
+<p className="font-label-md text-label-md">{t('marketplaceOrders.buyerOrderDetails.govaProtection')}</p>
+<p className="font-body-sm text-body-sm text-on-surface-variant">{t('marketplaceOrders.buyerOrderDetails.govaProtectionDesc')}</p>
 </div>
 </div>
 </div>
@@ -149,7 +151,7 @@ export default function Page() {
 <span className="font-label-md text-label-md font-bold">TechSupply Global</span>
 <span className="text-body-sm text-on-surface-variant">• Order #TS-912</span>
 </div>
-<button className="text-primary font-label-sm text-label-sm hover:underline">Message Seller</button>
+<button className="text-primary font-label-sm text-label-sm hover:underline">{t('marketplaceOrders.buyerOrderDetails.messageSeller')}</button>
 </div>
 <div className="p-stack-lg divide-y divide-outline-variant">
 
@@ -163,7 +165,7 @@ export default function Page() {
 <span className="font-label-md">$850.00</span>
 </div>
 <p className="text-body-sm text-on-surface-variant">Qty: 2 • Color: Jet Black</p>
-<div className="mt-2 inline-block px-2 py-0.5 bg-secondary-container/20 text-on-secondary-container rounded text-[10px] font-bold uppercase">In Stock</div>
+<div className="mt-2 inline-block px-2 py-0.5 bg-secondary-container/20 text-on-secondary-container rounded text-[10px] font-bold uppercase">{t('marketplaceOrders.buyerOrderDetails.inStock')}</div>
 </div>
 </div>
 
@@ -178,7 +180,7 @@ export default function Page() {
 <span className="font-label-md">$750.00</span>
 </div>
 <p className="text-body-sm text-on-surface-variant">Custom fabrication based on provided CAD specs.</p>
-<div className="mt-2 inline-block px-2 py-0.5 bg-primary-container/20 text-on-primary-fixed-variant rounded text-[10px] font-bold uppercase">Custom Request</div>
+<div className="mt-2 inline-block px-2 py-0.5 bg-primary-container/20 text-on-primary-fixed-variant rounded text-[10px] font-bold uppercase">{t('marketplaceOrders.buyerOrderDetails.customRequest')}</div>
 </div>
 </div>
 <div className="ml-24 flex gap-2">
@@ -213,7 +215,7 @@ export default function Page() {
 </div>
 </div>
 <div className="text-right">
-<p className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Tracking Number</p>
+<p className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">{t('marketplaceOrders.buyerOrderDetails.trackingNumber')}</p>
 <p className="font-body-md font-semibold text-primary underline">7728 1002 4432</p>
 </div>
 </div>
@@ -227,31 +229,31 @@ export default function Page() {
 <div className="w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center text-xs">
 <Check className="text-[14px]" style={{ "fontVariationSettings": "'FILL' 1" }} />
 </div>
-<span className="text-body-sm font-semibold">Ordered</span>
+<span className="text-body-sm font-semibold">{t('marketplaceOrders.buyerOrderDetails.ordered')}</span>
 </div>
 <div className="flex flex-col items-center gap-2">
 <div className="w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center text-xs">
 <Check className="text-[14px]" style={{ "fontVariationSettings": "'FILL' 1" }} />
 </div>
-<span className="text-body-sm font-semibold">Shipped</span>
+<span className="text-body-sm font-semibold">{t('marketplaceOrders.buyerOrderDetails.shipped')}</span>
 </div>
 <div className="flex flex-col items-center gap-2">
 <div className="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center text-xs">
 <div className="w-2 h-2 rounded-full bg-outline"></div>
 </div>
-<span className="text-body-sm text-on-surface-variant">In Transit</span>
+<span className="text-body-sm text-on-surface-variant">{t('marketplaceOrders.buyerOrderDetails.inTransit')}</span>
 </div>
 <div className="flex flex-col items-center gap-2">
 <div className="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center text-xs">
 <div className="w-2 h-2 rounded-full bg-outline"></div>
 </div>
-<span className="text-body-sm text-on-surface-variant">Delivered</span>
+<span className="text-body-sm text-on-surface-variant">{t('marketplaceOrders.buyerOrderDetails.delivered')}</span>
 </div>
 </div>
 </div>
 </div>
 <div>
-<h5 className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-stack-sm">Items in this shipment</h5>
+<h5 className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-stack-sm">{t('marketplaceOrders.buyerOrderDetails.itemsInShipment')}</h5>
 <div className="flex gap-4">
 <div className="flex -space-x-4">
 <div className="w-12 h-12 rounded-lg border-2 border-white overflow-hidden bg-surface-container">
@@ -263,7 +265,7 @@ export default function Page() {
 </div>
 <div className="flex flex-col justify-center">
 <span className="font-body-md">Enterprise Hub v4, Custom Industrial Brackets</span>
-<span className="text-body-sm text-on-surface-variant">Total Weight: 4.2 lbs</span>
+<span className="text-body-sm text-on-surface-variant">{t('marketplaceOrders.buyerOrderDetails.totalWeight')}: 4.2 lbs</span>
 </div>
 </div>
 </div>
@@ -280,7 +282,7 @@ export default function Page() {
 <Bell className="text-[12px] text-white" style={{ "fontVariationSettings": "'FILL' 1" }} />
 </div>
 <div>
-<p className="font-label-md text-label-md">Order Processing Started</p>
+<p className="font-label-md text-label-md">{t('marketplaceOrders.buyerOrderDetails.orderProcessingStarted')}</p>
 <p className="text-body-sm text-on-surface-variant mb-2">Oct 25, 2023 • 10:45 AM</p>
 <div className="bg-surface-container-low p-stack-sm rounded-lg text-body-sm border border-outline-variant">
                                 System confirmed all seller stock levels and allocated inventory.
@@ -293,7 +295,7 @@ export default function Page() {
 <CreditCard className="text-[12px] text-on-secondary-container" style={{ "fontVariationSettings": "'FILL' 1" }} />
 </div>
 <div>
-<p className="font-label-md text-label-md">Payment Authorized</p>
+<p className="font-label-md text-label-md">{t('marketplaceOrders.buyerOrderDetails.paymentAuthorized')}</p>
 <p className="text-body-sm text-on-surface-variant mb-1">Oct 24, 2023 • 04:12 PM</p>
 <p className="text-body-sm">Transaction #AUTH-9022-X1 successfully processed for $2,816.50</p>
 </div>
@@ -304,7 +306,7 @@ export default function Page() {
 <ShoppingCart className="text-[12px] text-on-surface-variant" style={{ "fontVariationSettings": "'FILL' 1" }} />
 </div>
 <div>
-<p className="font-label-md text-label-md">Order Placed</p>
+<p className="font-label-md text-label-md">{t('marketplaceOrders.buyerOrderDetails.orderPlaced')}</p>
 <p className="text-body-sm text-on-surface-variant mb-1">Oct 24, 2023 • 04:10 PM</p>
 <p className="text-body-sm">Buyer Jonathan Harker submitted the order.</p>
 </div>
