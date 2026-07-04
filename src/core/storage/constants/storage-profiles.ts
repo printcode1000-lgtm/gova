@@ -4,6 +4,7 @@ export const StorageProfiles = {
   Cover: "cover",
   ProductDefault: "product-default",
   HomeHeroSlider: "home-hero-slider",
+  SpicialOrder: "spicialOrder",
 } as const;
 
 export type StorageProfileId =

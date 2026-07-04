@@ -14,7 +14,7 @@ All monetary columns use integer minor units. For EGP, `1250` represents EGP 12.
 
 `shipment_items` has a database check requiring exactly one matching item reference. Partial unique indexes prevent the same item from being assigned to two active shipments. Completed, rejected, failed, returned, or closed assignments no longer block a later return or replacement movement.
 
-Custom image rows require a MIME type beginning with `image/`; the service applies a stricter supported-image allowlist. Status guard triggers reject unsupported status values on insert and update. Money checks reject negative persisted values.
+Custom image rows require the dedicated `spicialOrder` storage profile, a non-empty storage key, an allowed image MIME type, and a processed size no greater than 500 KB. The stored profile ID and key keep deletion and URL resolution tied to the same local/R2 object. Status guard triggers reject unsupported status values on insert and update. Money checks reject negative or non-integer persisted values.
 
 ## Development database
 
@@ -30,4 +30,3 @@ MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN=...
 ```
 
 Apply `src/modules/marketplace-orders/db/migrations/0000_marketplace_orders.sql` to the production database during provisioning. Never place credentials in source files or client-visible environment values.
-

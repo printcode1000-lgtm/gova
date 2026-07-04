@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shipment Tracking - Gova</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed-variant": "#264191",
+                    "inverse-primary": "#b6c4ff",
+                    "surface": "#f9f9ff",
+                    "surface-variant": "#dce2f3",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#90a8ff",
+                    "surface-container-highest": "#dce2f3",
+                    "on-primary-fixed": "#00164e",
+                    "primary-fixed": "#dce1ff",
+                    "on-tertiary-container": "#ef9900",
+                    "secondary-container": "#6cf8bb",
+                    "tertiary-fixed": "#ffddb8",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "tertiary-container": "#5c3800",
+                    "surface-tint": "#4059aa",
+                    "secondary-fixed-dim": "#4edea3",
+                    "inverse-on-surface": "#ebf1ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface-container-high": "#e2e8f8",
+                    "inverse-surface": "#2a313d",
+                    "on-background": "#151c27",
+                    "primary": "#00236f",
+                    "surface-dim": "#d3daea",
+                    "primary-container": "#1e3a8a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#e7eefe",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#444651",
+                    "outline-variant": "#c5c5d3",
+                    "error": "#ba1a1a",
+                    "background": "#f9f9ff",
+                    "on-secondary-container": "#00714d",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary": "#006c49",
+                    "outline": "#757682",
+                    "on-surface": "#151c27",
+                    "tertiary": "#3e2400",
+                    "on-secondary-fixed": "#002113",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-xs": "4px",
+                    "margin-desktop": "48px",
+                    "touch-target": "44px",
+                    "stack-md": "16px",
+                    "stack-xl": "32px",
+                    "gutter": "16px",
+                    "stack-lg": "24px",
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-20 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline sticky top-0 z-50 flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim transition-colors duration-200 hover:bg-surface-container-high dark:hover:bg-surface-variant p-2 rounded-full">
+                arrow_back
+            </button>
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Gova</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center space-x-6 mr-6">
+<span class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md cursor-pointer hover:text-primary transition-colors">Orders</span>
+<span class="text-primary dark:text-primary-fixed-dim font-bold font-label-md text-label-md cursor-pointer">Shipments</span>
+<span class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md cursor-pointer hover:text-primary transition-colors">Requests</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young entrepreneur in a modern office setting. The lighting is soft and natural, with a clean white background. The aesthetic is corporate yet approachable, using a high-key lighting style to maintain the light-mode UI feel. The subject is wearing a crisp navy blazer, subtly echoing the primary brand color." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4UsWcrkYc1UVTa9ILQ3IRHsJ0lpGF62XVSS8mz5iSeREpoL94vxJXQbiKhPDKwv9ZCdJAskzYh2VI6H3zA6zzvTkZlGz5Yl8bubfMnuKQ89horLqceTid5Z3APRq8jKww9LMgKizfu-atVJ59uhOOSKINwiRgVTIEQKBxpojPrE9TV8FMMZwmZmiIV1JApVt4kjYKb6U3kAyyiBgE24GIoepcX9VgH9S9gFTMOfg-O6cIfR8cTC3D"/>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+<!-- Shipment Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-stack-xl gap-stack-md">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-stack-xs">Tracking Number</p>
+<div class="flex items-center gap-3">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">#GV-8829-4401-LX</h2>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary text-lg transition-colors">content_copy</button>
+</div>
+</div>
+<div class="flex items-center gap-3 bg-secondary-container/15 px-4 py-2 rounded-full border border-secondary-container">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
+</span>
+<span class="font-label-md text-label-md text-on-secondary-container">Status: In Transit</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
+<!-- Left Column: Map & Timeline -->
+<div class="lg:col-span-8 space-y-stack-lg">
+<!-- Map View Placeholder -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">distance</span>
+<span class="font-label-md text-label-md">Current Location: Rotterdam Hub</span>
+</div>
+<span class="text-body-sm font-body-sm text-on-surface-variant italic">Updated 12 mins ago</span>
+</div>
+<div class="relative h-[350px] w-full bg-surface-variant flex items-center justify-center">
+<div class="absolute inset-0 grayscale opacity-40 mix-blend-multiply" data-location="Rotterdam, Netherlands" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBId5OCSDlxt0LIzVUsrMp6nJfvLUImh8ocxMN_znbqln6ptCbi4slqM6iRp7TCxYOJR4VglXJ_1Oq-8xsVK8Q1_M_VIpvthIkTEP0vpIdxB36VjVGnxSw2ymAXjQaTbfR4KA0h5d7Tx3NVnolO_eo5V3nbvYhwow-jmDqaA5cy9fyLFTD68TBJsZnTTMTXX1gkTKp6LwcbmblRZSasNDzdw2sEt27sg-191MhAFCzCGZRYYdO4qQQV')"></div>
+<!-- UI Overlay on Map -->
+<div class="absolute top-4 right-4 flex flex-col gap-2">
+<button class="bg-white p-2 rounded shadow-md material-symbols-outlined text-on-surface-variant hover:text-primary">add</button>
+<button class="bg-white p-2 rounded shadow-md material-symbols-outlined text-on-surface-variant hover:text-primary">remove</button>
+</div>
+<!-- Pulse Marker -->
+<div class="relative z-10">
+<div class="h-10 w-10 bg-primary rounded-full flex items-center justify-center shadow-xl border-4 border-white">
+<span class="material-symbols-outlined text-white text-xl" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<div class="absolute -inset-4 bg-primary/20 rounded-full animate-ping"></div>
+</div>
+</div>
+</section>
+<!-- Tracking Timeline -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-stack-lg shadow-sm">
+<h3 class="font-headline-md text-headline-md mb-stack-lg text-primary">Shipment Journey</h3>
+<div class="relative pl-8 space-y-stack-xl">
+<!-- Timeline Line -->
+<div class="absolute left-3 top-2 bottom-2 w-0.5 bg-outline-variant"></div>
+<!-- Step 4: Pending -->
+<div class="relative flex items-start gap-stack-lg group">
+<div class="absolute -left-8 mt-1 h-6 w-6 rounded-full bg-surface-container-high border-2 border-outline-variant z-10 flex items-center justify-center">
+<div class="h-2 w-2 rounded-full bg-outline"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md text-outline">Out for Delivery</h4>
+<span class="text-body-sm font-body-sm text-outline">Expected: Oct 24</span>
+</div>
+<p class="text-body-sm font-body-sm text-outline-variant">Final leg to destination address.</p>
+</div>
+</div>
+<!-- Step 3: Current -->
+<div class="relative flex items-start gap-stack-lg group">
+<div class="absolute -left-8 mt-1 h-6 w-6 rounded-full bg-primary-container border-2 border-primary z-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm font-bold">local_shipping</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md text-primary font-bold">In Transit</h4>
+<span class="text-body-sm font-body-sm text-primary">Active</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface mb-2">Departed Rotterdam sorting facility.</p>
+<div class="bg-surface-container rounded-lg p-3 text-body-sm text-on-surface-variant flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">info</span>
+<span>Delayed by 2 hours due to heavy port traffic.</span>
+</div>
+</div>
+</div>
+<!-- Step 2: Completed -->
+<div class="relative flex items-start gap-stack-lg group">
+<div class="absolute -left-8 mt-1 h-6 w-6 rounded-full bg-secondary-container border-2 border-secondary z-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-sm font-bold">check</span>
+</div>
+<div class="flex-1 opacity-80">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md text-on-surface">Carrier Picked Up</h4>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Oct 21, 14:30</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Consolidated at primary terminal.</p>
+</div>
+</div>
+<!-- Step 1: Completed -->
+<div class="relative flex items-start gap-stack-lg group">
+<div class="absolute -left-8 mt-1 h-6 w-6 rounded-full bg-secondary-container border-2 border-secondary z-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-sm font-bold">check</span>
+</div>
+<div class="flex-1 opacity-80">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md text-on-surface">Label Created</h4>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Oct 20, 09:12</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Shipping documentation processed by seller.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Shipment Items & Details -->
+<div class="lg:col-span-4 space-y-stack-lg">
+<!-- Shipment Content Card -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-stack-lg shadow-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-stack-md">Shipment Items (4)</h3>
+<div class="space-y-4">
+<!-- Item 1: Standard Product -->
+<div class="flex gap-4 items-center p-2 hover:bg-surface-container rounded-lg transition-colors cursor-pointer group">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex-shrink-0 overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A high-end industrial grade electric component, displayed on a clean white background. The product is shot with sharp focus, showing intricate metallic details and high-quality construction. The lighting is bright and corporate, emphasizing reliability and professional standards in a modern logistics context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD30pdaMaBrK_q8lJ5X4Eg4-9Ln67cE_A4RzyyWyNz0VrEeZlpIi_h57AF2d3g_jKPIECuvohcZ0ylI3-tH_0_1ERYapyvkAMPPRkL3TbsDrmLL7hyc-NYZ5wuzRf-h1HO2ZGUwUAzgRarAd7BKBEbhBQq10c9LLd3eOu8So5PAa5ZtSldruAhJC8Pg7SSv9yH03y5fIo5sejCLt07h0yg-pXnv-f1DZLAoMQDZkemCBWlpSP40pOag"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-label-md text-label-md truncate text-on-surface">Precision Turbine Core</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant">SKU: IND-901-X</p>
+</div>
+<span class="font-label-md text-label-md text-primary">x2</span>
+</div>
+<!-- Item 2: Custom Request -->
+<div class="flex gap-4 items-center p-2 hover:bg-surface-container rounded-lg transition-colors cursor-pointer group">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex-shrink-0 overflow-hidden border border-outline-variant relative">
+<img class="w-full h-full object-cover" data-alt="A customized bespoke piece of machinery, specifically a hand-crafted brass gear assembly. The image is a detailed close-up with shallow depth of field, set against a dark workshop background that makes the warm brass tones pop. The style is premium and artisanal, reflecting the high-value 'Custom Request' nature of the marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc-LDjq1aN6ZU_Q_Lek0Z1Jk55erCn61bjHO6j8rwYX6nlp2CTaVhUmseXeZQzPYGOJ2u_cWL5CP5j8ROd8D2twMfWRm8hAsaPe0sETm3_CXtLq5HGFqoutRRUcQj4IyU6hPJcUnx-wC33SDK8kN6Htbnm3kJC3uZWvGL170OXSb-wsugopOp9F8__rLuvNg72NKYsD88rh61-4nf7tjwe8ZDFyg0us6XNAlky2pb8TpvbnCFAdcxI"/>
+<div class="absolute top-1 right-1 bg-tertiary-container text-on-tertiary-container p-0.5 rounded shadow">
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1">
+<h4 class="font-label-md text-label-md truncate text-on-surface">Custom Brass Assembly</h4>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] px-1.5 py-0.5 rounded font-bold uppercase">Custom</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Ref: CRQ-7721</p>
+</div>
+<span class="font-label-md text-label-md text-primary">x1</span>
+</div>
+<!-- Item 3: Component -->
+<div class="flex gap-4 items-center p-2 hover:bg-surface-container rounded-lg transition-colors cursor-pointer group">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex-shrink-0 overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A stack of high-quality industrial carbon fiber sheets, layered with a visible diagonal weave pattern. The lighting is studio-quality with soft highlights reflecting off the textured surface. The aesthetic is clean, modern, and focused on material excellence and high-tech manufacturing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCV1aFMIT4qSA8EDVBoT1igZWchZ-8i6_56AXz59H3NgFnGgraQonl8flVeoIiVj6xyuoCvqmfvtlxXp9BKkFgLkuFQ_zOaRwFpb1a_Op6vR9B_6aJC6QBy0bpgBeMjKuOzabYiA3g4Nmhx8whdy1iN88Nt4gLr57xTxD8NUw-xN7j9Q8lJyZkxo8lzMmiiPxHesu7pF3qJ3F5V4rBxXj48q1inZShBGhv8ky3DupvqgZVLf_BjiVg"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-label-md text-label-md truncate text-on-surface">Carbon Fiber Plate S-4</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant">SKU: MAT-442-CF</p>
+</div>
+<span class="font-label-md text-label-md text-primary">x1</span>
+</div>
+</div>
+<button class="w-full mt-stack-lg py-3 border border-primary text-primary font-label-md text-label-md rounded-xl hover:bg-primary/5 transition-colors">
+                        View Order Details
+                    </button>
+</section>
+<!-- Carrier Info -->
+<section class="bg-primary-container text-on-primary-container rounded-xl p-stack-lg shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-label-md text-label-md uppercase tracking-wider opacity-80">Carrier Information</h3>
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div class="flex items-center gap-4 mb-stack-md">
+<div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center font-bold text-lg">GL</div>
+<div>
+<p class="font-label-md text-label-md">Global Logistics S.A.</p>
+<p class="text-body-sm font-body-sm opacity-80 text-on-primary-container/80">Express Air Freight</p>
+</div>
+</div>
+<div class="space-y-3 pt-4 border-t border-white/10">
+<button class="w-full flex items-center justify-center gap-2 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-body-sm">
+<span class="material-symbols-outlined text-sm">support_agent</span>
+                            Contact Carrier
+                        </button>
+</div>
+</section>
+<!-- Help/Actions -->
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-low border border-outline-variant rounded-xl hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-primary mb-2">help_outline</span>
+<span class="font-label-sm text-label-sm">Get Help</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-low border border-outline-variant rounded-xl hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-primary mb-2">share</span>
+<span class="font-label-sm text-label-sm">Share Tracking</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant z-50 flex justify-around items-center h-16 px-2 shadow-lg">
+<div class="flex flex-col items-center justify-center text-on-surface-variant py-1 hover:text-primary transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-label-sm text-label-sm">Shipments</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant py-1 hover:text-primary transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant py-1 hover:text-primary transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+<!-- Simple Interactivity for Map (Simulated) -->
+<script>
+        // Micro-interaction: Update relative time every minute
+        setInterval(() => {
+            const timeEl = document.querySelector('.italic');
+            if(timeEl) {
+                let current = parseInt(timeEl.innerText.match(/\d+/)[0]);
+                timeEl.innerText = `Updated ${current + 1} mins ago`;
+            }
+        }, 60000);
+
+        // Hover effect for map marker
+        const marker = document.querySelector('.animate-ping');
+        if(marker) {
+            marker.parentElement.addEventListener('mouseenter', () => {
+                marker.style.animationDuration = '0.5s';
+            });
+            marker.parentElement.addEventListener('mouseleave', () => {
+                marker.style.animationDuration = '1.5s';
+            });
+        }
+    </script>
+</body></html>

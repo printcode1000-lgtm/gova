@@ -10,6 +10,7 @@ Profile-driven multi-provider architecture. The UI passes only **storage profile
 | `StorageProfiles.Cover`          | 30     | webp   | ✓       | `images/covers`                          |
 | `StorageProfiles.ProductDefault` | 30     | webp   | ✓       | `images/products/<mainCategoryId>`       |
 | `StorageProfiles.HomeHeroSlider` | 1024   | webp   | ✓       | `images/advertisements/home-hero-slider` |
+| `StorageProfiles.SpicialOrder`   | 500    | webp   | ✓       | `images/spicialOrder`                    |
 
 Config: `src/config/storage-profiles.json` (server-only).
 
@@ -75,6 +76,7 @@ import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
 StorageProfiles.Avatar;
 StorageProfiles.Cover;
 StorageProfiles.ProductDefault;
+StorageProfiles.SpicialOrder;
 ```
 
 ## Persistence
@@ -95,6 +97,7 @@ public/sync_data/sync_file/
     avatars/
     covers/
     products/<mainCategoryId>/
+    spicialOrder/
 ```
 
 See also [r2-storage.md](./r2-storage.md).

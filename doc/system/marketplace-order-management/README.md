@@ -14,6 +14,7 @@ This documentation describes Gova's isolated marketplace order module. The modul
 - [Service API reference](./08-service-api-reference.md)
 - [Operations, configuration, and testing](./09-operations-and-testing.md)
 - [Requirements compliance matrix](./10-requirements-compliance.md)
+- [Special-order image storage](./11-special-order-image-storage.md)
 
 ## Source location
 
@@ -28,4 +29,3 @@ The implementation is isolated under `src/modules/marketplace-orders`. Consumers
 5. Every order stores an explicit three-letter currency code.
 6. Custom request attachments are images only.
 7. Important mutations produce audit records with actor identity and role.
-

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Price Offer - Gova</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-primary-fixed-variant": "#264191",
+                        "inverse-primary": "#b6c4ff",
+                        "surface": "#f9f9ff",
+                        "surface-variant": "#dce2f3",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#90a8ff",
+                        "surface-container-highest": "#dce2f3",
+                        "on-primary-fixed": "#00164e",
+                        "primary-fixed": "#dce1ff",
+                        "on-tertiary-container": "#ef9900",
+                        "secondary-container": "#6cf8bb",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "tertiary-container": "#5c3800",
+                        "surface-tint": "#4059aa",
+                        "secondary-fixed-dim": "#4edea3",
+                        "inverse-on-surface": "#ebf1ff",
+                        "surface-bright": "#f9f9ff",
+                        "surface-container-high": "#e2e8f8",
+                        "inverse-surface": "#2a313d",
+                        "on-background": "#151c27",
+                        "primary": "#00236f",
+                        "surface-dim": "#d3daea",
+                        "primary-container": "#1e3a8a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#e7eefe",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#444651",
+                        "outline-variant": "#c5c5d3",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9ff",
+                        "on-secondary-container": "#00714d",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary": "#006c49",
+                        "outline": "#757682",
+                        "on-surface": "#151c27",
+                        "tertiary": "#3e2400",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xs": "4px",
+                        "margin-desktop": "48px",
+                        "touch-target": "44px",
+                        "stack-md": "16px",
+                        "stack-xl": "32px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 10px;
+        }
+        .offer-card-glow {
+            box-shadow: 0 4px 20px -5px rgba(0, 35, 111, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md selection:bg-primary-container selection:text-white">
+<!-- Top AppBar (from JSON context) -->
+<header class="bg-surface sticky top-0 z-40 border-b border-outline-variant flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 hover:bg-surface-container-high transition-colors rounded-full">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary">Price Offer</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">Orders</a>
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">Shipments</a>
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">Requests</a>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate buyer in a minimalist office setting. High-key soft lighting, clean professional aesthetic, soft neutral background colors consistent with a modern logistics platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1g2AIoqa8kfBB84ENFZKeECoJrhtl4_tbUcPLRXhGNvyqs04PNPVC--9uoIhEpmRfYDZuD3k5V5Ol6ntuWainzsxy_6b8qd2vDpFI0eb6r5U7HZLSm5au7vXfxqf9TAP7IZ5ckALSfUtIFA570nRnp8RqHzQVzm4DlKh4ZnX14emdBMZ2iTHuNOfegEsGdMZPhsoLVFdjvkyEo8eduD4CCVNyS_oUH9s6X5meRtcFG9mP6ts-tzzJ"/>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-stack-xl pb-32">
+<!-- Status Banner -->
+<div class="mb-stack-xl flex items-center justify-between p-stack-md bg-tertiary-fixed rounded-xl border border-tertiary-container/20">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant" style="font-variation-settings: 'FILL' 1;">hourglass_empty</span>
+<span class="font-label-md text-on-tertiary-fixed-variant">Waiting for Acceptance</span>
+</div>
+<div class="hidden md:block">
+<span class="font-body-sm text-on-tertiary-fixed-variant">Expires in 23h 45m</span>
+</div>
+</div>
+<!-- Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left: Request Summary & Seller Offer -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Section: Seller's Offer Details -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden offer-card-glow">
+<div class="p-stack-lg border-b border-outline-variant bg-surface-container-low">
+<div class="flex items-center gap-stack-md">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-white">
+<span class="material-symbols-outlined">storefront</span>
+</div>
+<div>
+<h2 class="font-headline-md text-primary">Logistics Specialist #842</h2>
+<p class="text-body-sm text-on-surface-variant">Top Rated Seller • 4.9/5.0</p>
+</div>
+</div>
+</div>
+<div class="p-stack-lg space-y-stack-lg">
+<div>
+<h3 class="font-label-md text-on-surface-variant mb-stack-xs">Seller's Note</h3>
+<p class="text-body-md text-on-surface leading-relaxed italic border-l-4 border-primary/20 pl-stack-md">
+                                "I have reviewed your custom request for the specialized equipment transport. Given the fragile nature and dimensions, I've secured a climate-controlled vehicle with hydraulic lift capabilities. This offer includes insurance coverage and priority handling. I can guarantee departure within 48 hours of your acceptance."
+                            </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-md pt-stack-md border-t border-outline-variant">
+<div class="flex flex-col">
+<span class="text-label-sm text-on-surface-variant">Offer Date</span>
+<span class="font-label-md">Oct 24, 2023</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm text-on-surface-variant">Estimated Delivery</span>
+<span class="font-label-md">Oct 28 - 30, 2023</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm text-on-surface-variant">Transit Insurance</span>
+<span class="font-label-md text-on-secondary-container">Included</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Original Request Summary -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg">
+<h3 class="font-headline-md text-on-surface mb-stack-md">Your Original Request</h3>
+<div class="space-y-stack-md">
+<div>
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Description</span>
+<p class="text-body-md text-on-surface mt-stack-xs">
+                                Seeking specialized transport for a high-precision CNC motherboard assembly. Dimensions are roughly 120x80x40cm. Must be kept at constant temperature (18-24°C) and requires anti-static packaging.
+                            </p>
+</div>
+<div>
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Reference Images</span>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-stack-sm mt-stack-md">
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A detailed photograph of a large, complex green circuit board assembly inside a padded industrial transport crate. Professional lighting highlighting technical details, neutral studio environment, sharp focus on engineering components." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIg73uul0wCZ_9X2wMHQW9x08BnCHqu1p1k4KUkUIEiLGAz17A1I_7xw_8kMnQzfaGMoUNfpSJ9wtMaUuT7KrYAaFCXT3yjS44ZSKCbP_IGWRQNHnyp4fKxohTigURjfJ0AhcI5O95jRvCzPKXaOGFgZzbaMjRjutuZ1_eaH9J6jg9tdij_HHUYb5ue4775DEVn2SVhuMIMtWoSy_2rzVRlXfcVEkrIqjuxRiuJfkm4TTlon7a2203"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="Close-up shot of heavy-duty industrial shipping labels and temperature monitoring sensors attached to a wooden crate. Soft corporate blue lighting, professional documentary style, emphasizing logistics reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhxGeINGMMNVzZUFP5QjX6AlhoL0cRCgsQ2iwUJ5UD6wCRYHeOLvgKD2R61EaGgym6HwDHjAwxydDn8zKnw01pBQIGWRozrDaotHYPTymDkEpnPPVhcLPD8Fe6RPYIXSuDxVVO8C4Vd3XKKzYR8uOHERcGWaeJ6Jku5huZbnFJPRTQOnWa9nyyR3k_hpyCYsNwBUJQjdSKNSkADp_VpS0h4Yg8qSiL0ZgeUFRG-bmc3W6hJMTnOgTg"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">add_a_photo</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right: Price Breakdown & Actions -->
+<div class="lg:col-span-4">
+<aside class="sticky top-24 flex flex-col gap-gutter">
+<!-- Price Offer Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm">
+<h3 class="font-headline-md text-on-surface mb-stack-lg">Price Breakdown</h3>
+<div class="space-y-stack-md">
+<div class="flex justify-between items-center text-body-md">
+<span class="text-on-surface-variant">Unit Price (Transport)</span>
+<span class="font-label-md">$1,240.00</span>
+</div>
+<div class="flex justify-between items-center text-body-md">
+<span class="text-on-surface-variant">Expedited Shipping</span>
+<span class="font-label-md">$150.00</span>
+</div>
+<div class="flex justify-between items-center text-body-md">
+<span class="text-on-surface-variant">Service Fees</span>
+<span class="font-label-md">$45.50</span>
+</div>
+<div class="flex justify-between items-center text-body-md">
+<span class="text-on-surface-variant">Tax (VAT 5%)</span>
+<span class="font-label-md">$71.78</span>
+</div>
+<div class="pt-stack-md border-t-2 border-dashed border-outline-variant mt-stack-md">
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-primary">Total Offer</span>
+<span class="font-headline-md text-primary">$1,507.28</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="mt-stack-xl flex flex-col gap-stack-md">
+<button class="w-full h-12 bg-primary text-white rounded-xl font-label-md hover:shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                Accept Price Offer
+                            </button>
+<button class="w-full h-12 bg-white border border-error text-error rounded-xl font-label-md hover:bg-error/5 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">block</span>
+                                Reject Price Offer
+                            </button>
+<button class="w-full py-stack-xs text-on-surface-variant text-body-sm hover:text-error transition-colors text-center mt-stack-sm">
+                                Cancel My Request
+                            </button>
+</div>
+</div>
+<!-- Trust Signals -->
+<div class="bg-surface-container-high/30 rounded-xl p-stack-md border border-outline-variant/30">
+<div class="flex items-start gap-stack-sm">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div class="flex-1">
+<p class="text-label-sm text-on-secondary-fixed-variant">Buyer Protection Active</p>
+<p class="text-body-sm text-on-surface-variant mt-1 leading-tight">Funds are held in escrow until delivery is confirmed and inspected.</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only - as per Shell Rule) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant flex justify-around items-center h-16 px-2 z-50 shadow-lg">
+<div class="flex flex-col items-center justify-center text-on-surface-variant py-1">
+<span class="material-symbols-outlined">package_2</span>
+<span class="text-label-sm font-label-sm">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant py-1">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-label-sm font-label-sm">Shipments</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="text-label-sm font-label-sm">Requests</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant py-1">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</div>
+</nav>
+<!-- Simple Interactions -->
+<script>
+        // Micro-interaction: Update expiry timer (simulated)
+        let hours = 23;
+        let mins = 45;
+        setInterval(() => {
+            mins--;
+            if (mins < 0) {
+                mins = 59;
+                hours--;
+            }
+            const timerEl = document.querySelector('.text-on-tertiary-fixed-variant.font-body-sm');
+            if (timerEl) {
+                timerEl.textContent = `Expires in ${hours}h ${mins}m`;
+            }
+        }, 60000);
+
+        // Simple console logs for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const label = btn.innerText.trim() || btn.querySelector('span')?.innerText;
+                console.log(`Action triggered: ${label}`);
+            });
+        });
+    </script>
+</body></html>

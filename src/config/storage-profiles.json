@@ -33,6 +33,14 @@
       "folderStrategy": "main-category",
       "maxImageSizeKB": 30,
       "outputFormat": "webp"
+    },
+    {
+      "id": "spicialOrder",
+      "enabled": true,
+      "provider": "CloudflareR2",
+      "folder": "images/spicialOrder",
+      "maxImageSizeKB": 500,
+      "outputFormat": "webp"
     }
   ]
 }

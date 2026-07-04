@@ -17,7 +17,7 @@
 |---|---|
 | Required entities | Migration creates all core and child tables, including messages and cancellation items |
 | Product snapshots | Snapshot name, description, image, product, variant, quantity, and price columns |
-| Images only | Image validator plus database MIME check |
+| Images only | `StorageProfiles.SpicialOrder`, 500 KB client/server/database limits, storage-key persistence, image validator, and database MIME/profile checks |
 | Integer money and currency | Money value object, integer columns, non-negative checks, explicit currency |
 | Indexes and constraints | Lookup indexes, foreign keys, exclusive-item checks, status guards, active-assignment indexes |
 | Automatic statuses | Dedicated order, seller-order, and shipment calculators invoked after mutations |

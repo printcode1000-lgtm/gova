@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gova Seller Portal - Order Details</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed-variant": "#264191",
+                    "inverse-primary": "#b6c4ff",
+                    "surface": "#f9f9ff",
+                    "surface-variant": "#dce2f3",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#90a8ff",
+                    "surface-container-highest": "#dce2f3",
+                    "on-primary-fixed": "#00164e",
+                    "primary-fixed": "#dce1ff",
+                    "on-tertiary-container": "#ef9900",
+                    "secondary-container": "#6cf8bb",
+                    "tertiary-fixed": "#ffddb8",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "tertiary-container": "#5c3800",
+                    "surface-tint": "#4059aa",
+                    "secondary-fixed-dim": "#4edea3",
+                    "inverse-on-surface": "#ebf1ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface-container-high": "#e2e8f8",
+                    "inverse-surface": "#2a313d",
+                    "on-background": "#151c27",
+                    "primary": "#00236f",
+                    "surface-dim": "#d3daea",
+                    "primary-container": "#1e3a8a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#e7eefe",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#444651",
+                    "outline-variant": "#c5c5d3",
+                    "error": "#ba1a1a",
+                    "background": "#f9f9ff",
+                    "on-secondary-container": "#00714d",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary": "#006c49",
+                    "outline": "#757682",
+                    "on-surface": "#151c27",
+                    "tertiary": "#3e2400",
+                    "on-secondary-fixed": "#002113",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-xs": "4px",
+                    "margin-desktop": "48px",
+                    "touch-target": "44px",
+                    "stack-md": "16px",
+                    "stack-xl": "32px",
+                    "gutter": "16px",
+                    "stack-lg": "24px",
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- Top Navigation Header -->
+<header class="bg-surface sticky top-0 z-50 border-b border-outline-variant flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-primary cursor-pointer" onclick="window.history.back()">arrow_back</span>
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary">Gova</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="hidden md:flex gap-stack-lg mr-8">
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">Orders</a>
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">Shipments</a>
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">Earnings</a>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user in their 30s, smiling with a clean background. The lighting is bright and professional, adhering to a high-contrast modern corporate aesthetic. The overall mood is reliable and professional with sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPMaG0jKs0TGKzr8DpFLeDk-BcOMRUEDYyylljsToBeSnGinSTLe_Rfmz2LgOcpVgUYMePUjsZoXOIQErXgvxiPoagnMAz4h_YktSNwsbVb1F4M02GiE6iwRTodkbRnRt_ANUh811KlmwDaXXmYGj46dPg8MpGH7WPZavN1DhC2GbwD-IJX9aKdzlX4TpC6egn288IP8vQ2DyVsZ8aBC1j40nxk4KPFGDbjb7HQuEw8Tgj-ASu07b3"/>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-stack-xl pb-32">
+<!-- Header Info -->
+<section class="mb-stack-xl flex flex-col md:flex-row md:justify-between md:items-end gap-stack-md">
+<div>
+<div class="flex items-center gap-stack-sm mb-stack-xs">
+<span class="px-stack-sm py-0.5 bg-secondary-container/15 text-on-secondary-container text-label-sm rounded-full">Active Order</span>
+<span class="text-body-sm text-on-surface-variant font-medium">#ORD-88294-GV</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-background">Order Details</h2>
+<p class="text-body-md text-on-surface-variant mt-1">Customer: <span class="font-semibold text-on-surface">Alexander Vance</span> • Placed on Oct 24, 2023</p>
+</div>
+<div class="flex gap-stack-md">
+<button class="px-stack-lg h-touch-target border border-outline text-on-surface font-label-md rounded-xl hover:bg-surface-container-high transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+                    Contact Buyer
+                </button>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Left Column: Seller Items -->
+<div class="lg:col-span-2 space-y-gutter">
+<!-- Action Required: Custom Request Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm">
+<div class="flex items-start justify-between mb-stack-md">
+<div class="flex items-center gap-stack-md">
+<div class="w-12 h-12 bg-tertiary-fixed-dim/20 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-[28px]">design_services</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md">Custom Fabric Request</h3>
+<p class="text-body-sm text-on-surface-variant">Pending Seller Pricing</p>
+</div>
+</div>
+<span class="px-stack-md py-1 bg-tertiary-fixed-dim/30 text-tertiary font-label-sm rounded-full">New Request</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-stack-md mb-stack-lg">
+<p class="text-body-md text-on-surface italic">"Need a high-tensile waterproof variant of the standard 500D nylon for marine applications. Quantity: 200 yards."</p>
+</div>
+<div class="flex flex-col md:flex-row gap-stack-md">
+<div class="flex-1">
+<label class="block text-label-sm text-on-surface-variant mb-1">Proposed Price (per unit)</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">$</span>
+<input class="w-full pl-8 h-touch-target border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="flex items-end gap-stack-sm">
+<button class="h-touch-target px-stack-xl bg-primary text-on-primary font-label-md rounded-xl hover:opacity-90 transition-all flex-1 md:flex-none">
+                                Send Price Offer
+                            </button>
+<button class="h-touch-target px-stack-md border border-error text-error font-label-md rounded-xl hover:bg-error-container/10 transition-all">
+                                Reject
+                            </button>
+</div>
+</div>
+</div>
+<!-- Item Summary List -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="px-stack-lg py-stack-md border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md">Your Allocated Items (3)</h3>
+<span class="text-body-sm text-on-surface-variant">Merchant ID: SELLER-9912</span>
+</div>
+<div class="divide-y divide-outline-variant">
+<!-- Item 1 -->
+<div class="p-stack-lg flex items-center gap-stack-lg">
+<div class="w-20 h-20 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close-up texture of high-quality navy blue 500D industrial nylon fabric. The lighting is sharp, showing the intricate weave patterns. Professional product photography with a clean, minimalist aesthetic and corporate blue tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfdqIis_MGAN-14aMQo787aUT2uzvoioqfp-p0N1OB-M-Z1u73Ps9vlOEcS2X3cQmH8QCzWoiyQe6D5l3yfCwmwDcNawGYPLN-0baucPjMSNb_tdEraW8Ju6NQSu81o2PgHYvn7vdKpgpUAMFdhd7BQFVg5NxTFp69wD1KgtHJc_gRaTlUDBPzxzNMr_k4-UHw_4hNTXSp7BKzpSuAs_Z5xt2nYzxIwsR4A9odb2Zh0hAyWVFpr_nb"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<h4 class="font-label-md text-on-surface">Tactical Nylon 500D - Midnight Blue</h4>
+<p class="font-bold text-on-surface">$1,240.00</p>
+</div>
+<p class="text-body-sm text-on-surface-variant">Qty: 50 rolls • $24.80/unit</p>
+<div class="mt-stack-sm flex gap-stack-sm">
+<span class="px-2 py-0.5 bg-secondary-container/15 text-on-secondary-container text-[11px] font-bold rounded uppercase">In Stock</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-stack-lg flex items-center gap-stack-lg">
+<div class="w-20 h-20 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Industrial grade zinc-plated steel buckles and fasteners arranged neatly on a neutral surface. The lighting is cool and professional, with sharp focus on the metallic details. Modern corporate product photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWrKEoGUbnowRJv7I_Lbkte0ZDSD-dolHe4fPfzVdepeQOjGR83JOHzaZLnNXIs9HUHWoWHIFeOQARdI8ENrjda_jzp6TVOYY3V0kpPO52f-0yYvmUJmuH3PhDYHvoQS_B2Gon8G1F09DVAu2a3jKmzED7tggHY3yqzy3BXRkG7GjYJJ1s03VAETCW3P8aUrALfYELdwQF-6ZgYIdIkN1zgZxsfeDb4LqnSsgLTogw4z0w0_U5IWo6"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<h4 class="font-label-md text-on-surface">Zinc-Plated Steel Cargo Buckles</h4>
+<p class="font-bold text-on-surface">$450.00</p>
+</div>
+<p class="text-body-sm text-on-surface-variant">Qty: 300 units • $1.50/unit</p>
+<div class="mt-stack-sm">
+<span class="px-2 py-0.5 bg-secondary-container/15 text-on-secondary-container text-[11px] font-bold rounded uppercase">Ready to Ship</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-stack-lg bg-surface-container-low flex justify-between items-center">
+<span class="font-label-md text-on-surface-variant uppercase tracking-wider">Your Earnings Subtotal</span>
+<span class="font-headline-md text-primary">$1,690.00</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Shipment & Logistics -->
+<div class="space-y-gutter">
+<!-- Shipment Status -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm">
+<h3 class="font-headline-md text-headline-md mb-stack-lg">Shipment Logistics</h3>
+<div class="space-y-stack-lg">
+<!-- Tracking Step 1 -->
+<div class="flex gap-stack-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-secondary-container text-[18px]">check</span>
+</div>
+<div class="w-0.5 h-12 bg-secondary-container -mt-1"></div>
+</div>
+<div class="pt-1">
+<p class="font-label-md text-on-surface">Order Confirmed</p>
+<p class="text-body-sm text-on-surface-variant">Oct 24, 10:45 AM</p>
+</div>
+</div>
+<!-- Tracking Step 2 -->
+<div class="flex gap-stack-md">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center z-10">
+<div class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></div>
+</div>
+<div class="w-0.5 h-12 bg-outline-variant -mt-1"></div>
+</div>
+<div class="pt-1">
+<p class="font-label-md text-primary">Awaiting Pickup</p>
+<p class="text-body-sm text-on-surface-variant">Warehouse: Sector 4-B</p>
+</div>
+</div>
+<!-- Tracking Step 3 -->
+<div class="flex gap-stack-md opacity-50">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline flex items-center justify-center z-10">
+<span class="text-label-sm">3</span>
+</div>
+</div>
+<div class="pt-1">
+<p class="font-label-md text-on-surface">In Transit</p>
+<p class="text-body-sm text-on-surface-variant">Pending Carrier</p>
+</div>
+</div>
+</div>
+<div class="mt-stack-xl pt-stack-xl border-t border-outline-variant">
+<div class="flex items-center gap-stack-sm mb-stack-md">
+<span class="material-symbols-outlined text-on-surface-variant">local_shipping</span>
+<span class="font-label-sm text-on-surface-variant">CARRIER: GOVA LOGISTICS EXPRESS</span>
+</div>
+<button class="w-full h-touch-target border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary-container/10 transition-all">
+                            Print Shipping Labels
+                        </button>
+</div>
+</div>
+<!-- Buyer Profile Mini-Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm">
+<h4 class="font-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-md">Buyer Profile</h4>
+<div class="flex items-center gap-stack-md">
+<div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A profile photo of a middle-aged male entrepreneur with a clean-shaven look and business casual attire. Soft studio lighting with a neutral gray background. High quality and professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByOPGp7lyuN33hP0QuehJiMa5T34hXTvf8vME5NO0yRm2ByWhlfKDuutlADd-FVJq9_fVHkiCHw14g6qj7EvMkr7qNWYKDi8uYLd5chalZK8g3LUp_7A0ht0jpLzGYWOhrMT7GK0XDAjUA9TPCfEUSiuBCu59aaL-Cz-ag2BTZs-_DGyFWO8CcJH3_hlPaJnsApbMyAr_dZ7Axe8JKm3W2-QPeXK5H8KPtygioJ4W1r_pXG4d0N1pX"/>
+</div>
+<div>
+<p class="font-headline-md text-headline-md">Alexander Vance</p>
+<div class="flex items-center text-secondary text-label-sm">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span class="ml-1">Verified Enterprise Buyer</span>
+</div>
+</div>
+</div>
+<div class="mt-stack-lg pt-stack-md border-t border-outline-variant space-y-stack-sm">
+<div class="flex justify-between">
+<span class="text-body-sm text-on-surface-variant">Ship to:</span>
+<span class="text-body-sm text-on-surface font-medium text-right">882 Industrial Pkwy,<br/>Chicago, IL 60611</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Role Switcher FAB (Contextual) -->
+<div class="fixed bottom-24 right-6 md:right-12 z-50">
+<button class="bg-inverse-surface text-inverse-on-surface flex items-center gap-2 px-6 py-4 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">sync_alt</span>
+<span class="font-label-md">Switch to Buyer View</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-surface-container-lowest border-t border-outline-variant z-50 md:hidden">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1 hover:text-primary transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label-sm text-label-sm">Shipments</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1 hover:text-primary transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1 hover:text-primary transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+    </script>
+</body></html>

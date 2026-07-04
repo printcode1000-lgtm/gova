@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gova | Seller Custom Requests</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-primary-fixed-variant": "#264191",
+                        "inverse-primary": "#b6c4ff",
+                        "surface": "#f9f9ff",
+                        "surface-variant": "#dce2f3",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#90a8ff",
+                        "surface-container-highest": "#dce2f3",
+                        "on-primary-fixed": "#00164e",
+                        "primary-fixed": "#dce1ff",
+                        "on-tertiary-container": "#ef9900",
+                        "secondary-container": "#6cf8bb",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "tertiary-container": "#5c3800",
+                        "surface-tint": "#4059aa",
+                        "secondary-fixed-dim": "#4edea3",
+                        "inverse-on-surface": "#ebf1ff",
+                        "surface-bright": "#f9f9ff",
+                        "surface-container-high": "#e2e8f8",
+                        "inverse-surface": "#2a313d",
+                        "on-background": "#151c27",
+                        "primary": "#00236f",
+                        "surface-dim": "#d3daea",
+                        "primary-container": "#1e3a8a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#e7eefe",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#444651",
+                        "outline-variant": "#c5c5d3",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9ff",
+                        "on-secondary-container": "#00714d",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary": "#006c49",
+                        "outline": "#757682",
+                        "on-surface": "#151c27",
+                        "tertiary": "#3e2400",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xs": "4px",
+                        "margin-desktop": "48px",
+                        "touch-target": "44px",
+                        "stack-md": "16px",
+                        "stack-xl": "32px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline docked full-width top-0 z-40">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target">
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors duration-200 rounded-full">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Gova</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-md transition-colors" href="#">Dashboard</a>
+<a class="text-primary dark:text-primary-fixed-dim font-bold font-label-md" href="#">Requests</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-md transition-colors" href="#">Messages</a>
+</nav>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged supermarket manager wearing a clean white shirt and a navy blue apron. The background is a brightly lit, blurred office space with soft daylight and hints of corporate blue branding. The lighting is crisp and modern, reflecting a high-end professional atmosphere in light mode." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1M5ZsU6jbbecVm8XDjCKa5VTo5xVTdBW51Txc8xg63XPJ7irZJWzBW0oNLnqV-FhBFJAYHWNAJS3VLI9ZCRy7DxpCtSHhQ1mV3fjjMHJoIuTw7k07G5saTfP3QENTwhycvMkv8uCM0lbc0Z-qZGM1ZXXx97aVoEDKn5318qT_Hc-Z4oTTjOKC7w5Cs38G9RVz4R1KBe7A7DIOj-3lTBsWIPYbh5QD7gG0fVhokgeM_gGZ8Vb-xH1q"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pt-stack-lg pb-32">
+<!-- Header & Tabs Section -->
+<section class="mb-stack-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-stack-lg">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-primary mb-1">Custom Requests</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage personalized orders and image-based quotes from your customers.</p>
+</div>
+<div class="flex items-center bg-surface-container-low p-1 rounded-xl">
+<button class="px-6 py-2 rounded-lg bg-primary text-on-primary font-label-md shadow-sm">Seller View</button>
+<button class="px-6 py-2 rounded-lg text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all">Insights</button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="flex overflow-x-auto hide-scrollbar border-b border-outline-variant gap-8">
+<button class="pb-4 px-1 border-b-2 border-primary text-primary font-bold font-label-md whitespace-nowrap">New Requests (4)</button>
+<button class="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">Pending Price (12)</button>
+<button class="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">Offer Sent (8)</button>
+<button class="pb-4 px-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary font-label-md transition-all whitespace-nowrap">Accepted (45)</button>
+</div>
+</section>
+<!-- Requests Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Request Card 1: Pharmacy -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">medical_services</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Prescription Refill</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pharma Connect • 2 mins ago</p>
+</div>
+</div>
+<span class="bg-secondary-container/15 text-on-secondary-container text-label-sm font-label-sm px-2 py-1 rounded">Urgent</span>
+</div>
+<div class="aspect-square w-full rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A high-resolution, clear photo of a medical prescription paper resting on a clean white countertop. The image is taken from a top-down perspective with bright, natural lighting. The scene is minimalist and professional, utilizing a palette of soft whites and clinic-style cleanliness to reflect a high-end pharmaceutical service environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAXdTS3CwYcF5OqXKVC905e-1P0G0FhaDkVkRomeZ58DhEBBaZmFMjvPDzpdpjrdy-sIjIw_BGfSRCN055a5cHaB8MLtuHdarlAsyUfMe0VAdD0lxLLTDQE-AGShCDrh7cd7yoQbIplV9800ZxDbN-NZ-8VGHUAnCiZzyzbC5EOMySl5hJAZ14CuRiQLOTzvyDLgDwGn2fMrUIMqqQSvEYRCV-6IUOtdKidBXuDyjUEp5lIE9eGJkd"/>
+</div>
+<div class="flex items-center justify-between mt-auto pt-2">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-high flex items-center justify-center text-[10px] font-bold">+2</div>
+</div>
+<button class="h-touch-target px-6 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity flex items-center gap-2">
+                        Review <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Request Card 2: Supermarket -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-fixed-dim">shopping_basket</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Weekly Grocery List</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Family Mart • 15 mins ago</p>
+</div>
+</div>
+<span class="bg-outline-variant/20 text-on-surface-variant text-label-sm font-label-sm px-2 py-1 rounded">Standard</span>
+</div>
+<div class="grid grid-cols-2 gap-2 h-48 lg:h-64">
+<div class="rounded-lg overflow-hidden bg-surface-container h-full">
+<img class="w-full h-full object-cover" data-alt="A handwritten grocery list on a yellow sticky note, featuring items like organic milk, fresh bread, and avocados. The lighting is warm and domestic, suggesting a customer's kitchen setting. The image is crisp, modern, and high-contrast, fitting a corporate marketplace aesthetic with clean background elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvyloSJ0uY0mc3MHU9uLy-kzfBQBtVSWSEUjYuutt5D5AXKPU8dejWitnzS2rJm-9-79b1vqmcp7-9SsmGNM1obPey0SPmk9zhKPIxMrBMxL1bpyJKREVujWvI5kkggrqNTmL_XE9zOnQ58NC-NazUGrAicBzYOPxEw8AZc7WVBXSFKk4-GqsK4DjPzVJmFITH1Pv1LCd9e-cIvUuWRaPxEBn4SKQxIRPySSNeWPNiJq6ZfaSZb1Ec"/>
+</div>
+<div class="flex flex-col gap-2 h-full">
+<div class="rounded-lg overflow-hidden bg-surface-container flex-1">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a specific brand of organic almond milk on a supermarket shelf. The focus is sharp on the product label with a shallow depth of field. The lighting is bright and commercial, emphasizing product quality and brand clarity within a clean, modern UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2Fz2e3hYg3LN2UraGVMZUItgD_hATNeuB8CJi6Rc_q1X-4y872K8jM1eghHDknF11raZJaujArcHUDU7CT_pMnP-n83XTKIr71dbmIUA4Fw2T3EnxTfneT6PrtW4f0-c0iZaZzs482jioORV_K6ttH818BIU1uF64HyM4soZIY3e-7yGZz_VKeqFhG1SHXmUuWM7BjmJf20PAZxgMNKeY4CfKpF-w78zWRJsKJ_07ObKDrsA9CjRX"/>
+</div>
+<div class="rounded-lg overflow-hidden bg-surface-container flex-1 bg-primary/5 flex items-center justify-center text-primary font-bold">
+                            +4 items
+                        </div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto pt-2">
+<p class="text-label-sm font-label-sm text-on-surface-variant">Estimated: --</p>
+<button class="h-touch-target px-6 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">Review</button>
+</div>
+</div>
+<!-- Request Card 3: Service Provider -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">build</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">AC Repair Quote</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">HomeTech Services • 1h ago</p>
+</div>
+</div>
+<span class="bg-primary-container/10 text-primary text-label-sm font-label-sm px-2 py-1 rounded">Bidding</span>
+</div>
+<div class="aspect-video w-full rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A photo showing a dusty outdoor air conditioning unit with a loose panel, indicating a need for repair. The lighting is bright afternoon sun, casting sharp shadows. The visual style is clear and documentary, intended for a service provider to assess damage. The overall aesthetic is professional and functional for a high-stakes marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArn0pB6758xnA6Nwk4Sc-lHMEgD-5eeqyHsvPRnv6a4EL0_j245ZtJzCTJabrp9oWhvs2dBLLOhEfrwOUwyPM4lB3gcqvebVyYeAWmffOMX70dE8QADvzvwrEpXETJL7v1lx5B9bn9lfUkTso7hpWF_9Lj85S1q_5ltJlg1skNFjisx-NCuQ9aqgphqmYR7M2t-EweWk5ABNVMnvj1ky5iFiGgekCIOZlkYmh1f55ez35ab1Qdidjp"/>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant/30">
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">"Unit makes a loud grinding noise when starting up. Need a technician to check the compressor..."</p>
+</div>
+<div class="flex items-center justify-between mt-auto pt-2">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-label-sm font-label-sm">Downtown</span>
+</div>
+<button class="h-touch-target px-6 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">Review</button>
+</div>
+</div>
+<!-- Request Card 4: Detailed view placeholder -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-lg bg-on-tertiary-fixed-variant/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant">flatware</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Bulk Catering Order</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Taste Catering • 3h ago</p>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="w-20 h-20 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A detailed photo of a beautifully arranged gourmet appetizer platter with cheese, grapes, and crackers. The style is elegant and sophisticated, featuring soft, diffused lighting and a high-end culinary presentation. The background is a clean, modern kitchen environment, aligning with professional service standards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPuW0vnpUC0BzgFm-G1Uq6ZSstRfQyJbbKYtyQSpfBDl39RitX3ICgAvPfcopJqofErPd0dG0vZqSHFXXULQOs7lWeOKaX5vC87SRgMzZucBsDosay_9Ek0XoFoz6RJ1D3Syf039JZGSKlxTrWfk5VkNZPc3kMKWOD7OkiswzpxSf_uM_o8EySx12NtXOwH66YsTzzD4hvZoLdn2gEO1CoFkwyVrlpMIgCeH9fj7e6qUdYD9ZC-vaz"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="font-label-md text-label-md text-on-surface">Event: Oct 24th</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">50+ Persons • Custom Menu</p>
+</div>
+</div>
+<div class="mt-auto pt-2">
+<button class="w-full h-touch-target bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-opacity">Review</button>
+</div>
+</div>
+<!-- Empty State / Add Request Mock -->
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-stack-md flex flex-col items-center justify-center text-center gap-4 bg-surface/50">
+<div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-3xl">add_photo_alternate</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-outline">Waiting for more...</h3>
+<p class="font-body-sm text-body-sm text-outline max-w-[200px]">New requests from customers will appear here automatically.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline shadow-lg z-50 flex justify-around items-center h-16 px-2">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-sm text-label-sm">Shipments</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-xl px-4 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<!-- Floating Action Button (Contextual) -->
+<button class="fixed right-6 bottom-20 md:bottom-10 bg-primary text-on-primary w-14 h-14 rounded-full shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined text-2xl">chat_bubble</span>
+</button>
+<script>
+        // Simple micro-interaction for tab switching (visual only)
+        const tabs = document.querySelectorAll('button[class*="border-b-2"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('border-primary', 'text-primary', 'font-bold');
+                    t.classList.add('border-transparent', 'text-on-surface-variant');
+                });
+                tab.classList.remove('border-transparent', 'text-on-surface-variant');
+                tab.classList.add('border-primary', 'text-primary', 'font-bold');
+            });
+        });
+    </script>
+</body></html>

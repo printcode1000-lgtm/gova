@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Details | Gova</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom Tab Animation */
+        .tab-active {
+            position: relative;
+        }
+        .tab-active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #00236f;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed": "#2a1700",
+                      "on-primary-fixed-variant": "#264191",
+                      "inverse-primary": "#b6c4ff",
+                      "surface": "#f9f9ff",
+                      "surface-variant": "#dce2f3",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "on-primary-container": "#90a8ff",
+                      "surface-container-highest": "#dce2f3",
+                      "on-primary-fixed": "#00164e",
+                      "primary-fixed": "#dce1ff",
+                      "on-tertiary-container": "#ef9900",
+                      "secondary-container": "#6cf8bb",
+                      "tertiary-fixed": "#ffddb8",
+                      "primary-fixed-dim": "#b6c4ff",
+                      "tertiary-container": "#5c3800",
+                      "surface-tint": "#4059aa",
+                      "secondary-fixed-dim": "#4edea3",
+                      "inverse-on-surface": "#ebf1ff",
+                      "surface-bright": "#f9f9ff",
+                      "surface-container-high": "#e2e8f8",
+                      "inverse-surface": "#2a313d",
+                      "on-background": "#151c27",
+                      "primary": "#00236f",
+                      "surface-dim": "#d3daea",
+                      "primary-container": "#1e3a8a",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-secondary": "#ffffff",
+                      "surface-container": "#e7eefe",
+                      "on-error": "#ffffff",
+                      "on-surface-variant": "#444651",
+                      "outline-variant": "#c5c5d3",
+                      "error": "#ba1a1a",
+                      "background": "#f9f9ff",
+                      "on-secondary-container": "#00714d",
+                      "secondary-fixed": "#6ffbbe",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "secondary": "#006c49",
+                      "outline": "#757682",
+                      "on-surface": "#151c27",
+                      "tertiary": "#3e2400",
+                      "on-secondary-fixed": "#002113",
+                      "on-secondary-fixed-variant": "#005236",
+                      "surface-container-low": "#f0f3ff",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-xs": "4px",
+                      "margin-desktop": "48px",
+                      "touch-target": "44px",
+                      "stack-md": "16px",
+                      "stack-xl": "32px",
+                      "gutter": "16px",
+                      "stack-lg": "24px",
+                      "stack-sm": "8px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-xl": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                      "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen pb-24 md:pb-0 md:pt-16">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline docked full-width top-0 z-50 fixed md:absolute">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target">
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Gova</h1>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<nav class="flex gap-6">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Orders</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Shipments</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Requests</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young business executive, clean lighting, corporate style, minimalist background with soft blue tones, high quality photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbtbrywLelHcJHVwkyZ2zl27Lc3tg1s39emD03j8RGX2U8FgTH4K1wsmfaTaUq5IxK_vk4Mq3TaY3QBZ_slDHBVEJvHPqpvrzQkvkiBZ2Jsf_L6vcaooPvSRg0ionG0VXwz7bCQzt7m7weJRoqpfbFvzEZMRjj4TGnEU3f3UHpKXrtX8sila2JAGpGO_rCjBMmXbH5jmmE3mKGE6baACC8JuGy2nb7M6MZ74V6QDXZolv4M0AVSBnC"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg md:py-stack-xl mt-14 md:mt-0">
+<!-- Order Header Section -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-xl">
+<div>
+<div class="flex flex-wrap items-center gap-stack-sm mb-stack-xs">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg">Order #GV-94021-X</h2>
+<span class="bg-primary-container/15 text-primary px-3 py-0.5 rounded-full text-label-sm font-label-sm uppercase tracking-wider">Mixed Order</span>
+</div>
+<div class="flex items-center gap-stack-sm">
+<div class="flex items-center gap-1.5 px-3 py-1 bg-tertiary-container/15 text-tertiary-fixed-dim rounded-full">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-tertiary-fixed-variant">Processing</span>
+</div>
+<span class="text-on-surface-variant text-body-sm font-body-sm">Placed on Oct 24, 2023</span>
+</div>
+</div>
+<div class="flex items-center gap-stack-sm">
+<button class="h-11 px-6 bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg border border-outline-variant hover:bg-surface-container-highest transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                    Invoice
+                </button>
+<div class="relative group">
+<button class="h-11 px-6 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2">
+                        Actions
+                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+</button>
+<!-- Mock Dropdown -->
+<div class="absolute right-0 mt-2 w-48 bg-white border border-outline-variant rounded-xl shadow-xl hidden group-hover:block z-40">
+<div class="py-2">
+<a class="block px-4 py-2 text-body-sm hover:bg-surface-container text-on-surface" href="#">Contact Support</a>
+<a class="block px-4 py-2 text-body-sm hover:bg-surface-container text-on-surface" href="#">Cancel Order</a>
+<hr class="my-1 border-outline-variant"/>
+<a class="block px-4 py-2 text-body-sm hover:bg-surface-container text-error" href="#">Report Issue</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Navigation Tabs -->
+<nav class="flex border-b border-outline-variant mb-stack-lg overflow-x-auto scrollbar-hide">
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-primary tab-active whitespace-nowrap" id="tab-overview" onclick="switchTab('overview')">Overview</button>
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-sellers" onclick="switchTab('sellers')">Sellers &amp; Items</button>
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-shipments" onclick="switchTab('shipments')">Shipments</button>
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-payments" onclick="switchTab('payments')">Payments</button>
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-issues" onclick="switchTab('issues')">Issues</button>
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary whitespace-nowrap" id="tab-timeline" onclick="switchTab('timeline')">Timeline</button>
+</nav>
+<!-- Tab Content: Overview -->
+<div class="tab-pane block" id="content-overview">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Address & Details -->
+<div class="lg:col-span-2 space-y-gutter">
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant shadow-sm">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<h3 class="font-headline-md text-headline-md">Delivery Address</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Shipping To</p>
+<p class="font-body-md text-body-md font-semibold">Jonathan Harker</p>
+<p class="font-body-md text-body-md text-on-surface-variant">4521 Business Center Dr, Suite 500<br/>San Francisco, CA 94105<br/>United States</p>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Contact Info</p>
+<p class="font-body-md text-body-md">+1 (555) 902-1243</p>
+<p class="font-body-md text-body-md text-on-surface-variant">j.harker@corporation.com</p>
+</div>
+</div>
+</div>
+<!-- Map/Visual Context -->
+<div class="h-64 rounded-xl overflow-hidden border border-outline-variant relative">
+<div class="absolute inset-0 bg-surface-container-high flex items-center justify-center" data-location="San Francisco" style="">
+<!-- This element represents a map of San Francisco -->
+<div class="text-center opacity-40">
+<span class="material-symbols-outlined text-6xl">map</span>
+<p class="font-label-md">Dynamic Map View</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Pricing Breakdown Card -->
+<div class="space-y-gutter">
+<div class="bg-primary text-on-primary p-stack-lg rounded-xl shadow-lg">
+<h3 class="font-headline-md text-headline-md mb-stack-lg">Order Summary</h3>
+<div class="space-y-3 font-body-md text-body-md">
+<div class="flex justify-between opacity-80">
+<span>Subtotal (4 items)</span>
+<span>$2,450.00</span>
+</div>
+<div class="flex justify-between opacity-80">
+<span>Shipping &amp; Handling</span>
+<span>$125.50</span>
+</div>
+<div class="flex justify-between opacity-80">
+<span>Estimated Tax</span>
+<span>$196.00</span>
+</div>
+<div class="flex justify-between opacity-80">
+<span>Service Fee</span>
+<span>$45.00</span>
+</div>
+<div class="border-t border-white/20 pt-3 mt-3 flex justify-between font-bold text-lg">
+<span>Total</span>
+<span>$2,816.50</span>
+</div>
+</div>
+<button class="w-full mt-stack-xl py-3 bg-secondary text-on-secondary rounded-lg font-label-md text-label-md hover:bg-on-secondary-container transition-colors">
+                            Manage Payment
+                        </button>
+</div>
+<div class="bg-surface-container-low p-stack-md rounded-xl border border-outline-variant flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<p class="font-label-md text-label-md">Gova Protection</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Your order is protected for up to $10,000.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab Content: Sellers & Items -->
+<div class="tab-pane hidden" id="content-sellers">
+<div class="space-y-stack-lg">
+<!-- Seller Group 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="bg-surface-container px-stack-lg py-3 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">storefront</span>
+<span class="font-label-md text-label-md font-bold">TechSupply Global</span>
+<span class="text-body-sm text-on-surface-variant">• Order #TS-912</span>
+</div>
+<button class="text-primary font-label-sm text-label-sm hover:underline">Message Seller</button>
+</div>
+<div class="p-stack-lg divide-y divide-outline-variant">
+<!-- Standard Item -->
+<div class="py-4 first:pt-0 flex gap-4">
+<div class="w-20 h-20 bg-surface-container-high rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional product shot of a high-end enterprise network router, sleek metallic finish, studio lighting on a neutral gray background, industrial design aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9QgKyJu6wIs4kZs4Mmv1YozIPipZV9UQvAwLpnWCQzWQentxkM42XV92exSiqTFiHwTpk9qxCB7ZHjQIloVUToIukM33lwlyMEjvks3HBmZxSLBr1RAni90FMTuGaEXNeq2lSGzG_3i3PAeytZKkGXDo2KTT29AUGc8E-Fch5-PeVHFYRPAJs6fp_vwXnnP_7MX72nmCH83KbjL2k9xjJHiQGLA4ImD39rdtQUDWeyw8Gu7Y1sim4"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between">
+<h4 class="font-body-md font-semibold">Enterprise Hub v4</h4>
+<span class="font-label-md">$850.00</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Qty: 2 • Color: Jet Black</p>
+<div class="mt-2 inline-block px-2 py-0.5 bg-secondary-container/20 text-on-secondary-container rounded text-[10px] font-bold uppercase">In Stock</div>
+</div>
+</div>
+<!-- Custom Request Item -->
+<div class="py-4 last:pb-0">
+<div class="flex gap-4 mb-3">
+<div class="w-20 h-20 bg-surface-container-high rounded-lg overflow-hidden flex-shrink-0 border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-outline">design_services</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between">
+<h4 class="font-body-md font-semibold">Custom Industrial Brackets</h4>
+<span class="font-label-md">$750.00</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Custom fabrication based on provided CAD specs.</p>
+<div class="mt-2 inline-block px-2 py-0.5 bg-primary-container/20 text-on-primary-fixed-variant rounded text-[10px] font-bold uppercase">Custom Request</div>
+</div>
+</div>
+<div class="ml-24 flex gap-2">
+<div class="w-16 h-16 rounded-md border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Technical blueprint of a complex mechanical part, white lines on deep blue background, professional engineering document style, high resolution detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA44X-HEgsHUIsBv7dd14DWmDubdvA1WusyPPbwtjNxXUpRcdtqsdoTiLQl0FA8qaLG3AKE4KlLufBfAWyHXwy51pHOL_VqH79VZfVDujYQ8jawO06mPkNEcvpgfvs44_caFpFPKU-qJRDEyWMD9l10zZuA-m6-svgXBZWRygUOuTSEtOW_2vW0SaMVQPv0_gMrc2q-H9xsotdE3JjucOlPHBUvh5KZ_lu54OoaojonCbKQdZH7mANV"/>
+</div>
+<div class="w-16 h-16 rounded-md border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A 3D render of a custom metal bracket, brushed steel texture, isometric view, clean corporate lighting, sharp edges and professional finish." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMN1AdEG3nj9ekwNgTHGhsnD9KXqhVx36Re4K9ekiuq1FTN2DHmTUZKBo5LeDwUMjBC4_J67wubKqigxLj0PvR9D5BKZIVreQfge5cXv161PWLG-igfVnjeyJG6g6piSLuag_0WjbMeabKA-tncy3g4ZjQPhKYJqJ1ePYQYEHBLdkvGQ3Cg59HuglNfKu8hO_bDB6Zc-9in_wL28P1gsjDaHmyQBivIEIRYDzj6sGegqvWE3v9KBxT"/>
+</div>
+<div class="w-16 h-16 rounded-md border border-outline-variant flex items-center justify-center bg-surface-container text-on-surface-variant">
+<span class="text-label-sm">+1</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab Content: Shipments -->
+<div class="tab-pane hidden" id="content-shipments">
+<div class="space-y-stack-lg">
+<!-- Shipment Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm p-stack-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-stack-lg border-b border-outline-variant pb-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div>
+<h4 class="font-label-md font-bold text-headline-md">Shipment #SH-8821</h4>
+<p class="text-body-sm text-on-surface-variant">Via FedEx Ground</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Tracking Number</p>
+<p class="font-body-md font-semibold text-primary underline">7728 1002 4432</p>
+</div>
+</div>
+<div class="mb-stack-lg">
+<div class="relative pt-8 pb-4">
+<!-- Progress Bar -->
+<div class="absolute top-10 left-4 right-4 h-1 bg-surface-container-high"></div>
+<div class="absolute top-10 left-4 w-1/2 h-1 bg-secondary"></div>
+<div class="relative flex justify-between items-center text-center">
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center text-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-body-sm font-semibold">Ordered</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center text-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-body-sm font-semibold">Shipped</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center text-xs">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+</div>
+<span class="text-body-sm text-on-surface-variant">In Transit</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center text-xs">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+</div>
+<span class="text-body-sm text-on-surface-variant">Delivered</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h5 class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-stack-sm">Items in this shipment</h5>
+<div class="flex gap-4">
+<div class="flex -space-x-4">
+<div class="w-12 h-12 rounded-lg border-2 border-white overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Electronic components on a white background, macro photography, high detail, corporate logistics style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-Tq7bZNQ-1NhWccUxN1HhgyOy7eTzjrv-C3Z2L6y6E-Qu67CIVxHgwOB6vysZa2g3w8wTowr9-YmpLJI4bh_2XjTaIzUZ_SCS4qFfj4r4z5k_AdSLWR_ya7xoe9x9-QgrDGM-LI1szQ01dYx5B0RHxgQlGM3v88WMInxlAKqSIxNmP9oR6pNiuMw6B-aLjXWgUna09Ws0hAsgsWP_HoJYKklYsZ2oMWbzj2GCJCsDnxf8B4AyOUU4"/>
+</div>
+<div class="w-12 h-12 rounded-lg border-2 border-white overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Technical mechanical part, brushed aluminum, professional industrial photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF3TEaY2r9MxkI4ZP9adRHyfh1uTlkVWEl1SPKdPSKpZB9iUIM17yDZgcTPrroK2OwYR9R1u048fFXXqXYRAKRbmtlbKnuzn1Qo5y6qbHEQRuLQ_Txni_L2jWaIca7L2WHZy7o5t2nE_Z6TsZd5dN37X3EqLaTME8-GoUlDII4M_jExzvGFI7DZzi_4T4DT3wI70Zi-8ipXAx3ZzSgHGj5-AzEbUreVVkBOw_FbL2P4AayC2LgBJAx"/>
+</div>
+</div>
+<div class="flex flex-col justify-center">
+<span class="font-body-md">Enterprise Hub v4, Custom Industrial Brackets</span>
+<span class="text-body-sm text-on-surface-variant">Total Weight: 4.2 lbs</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab Content: Timeline -->
+<div class="tab-pane hidden" id="content-timeline">
+<div class="max-w-3xl">
+<div class="relative pl-8 space-y-stack-xl before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant">
+<!-- Timeline Item -->
+<div class="relative">
+<div class="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-primary-container flex items-center justify-center border-4 border-surface">
+<span class="material-symbols-outlined text-[12px] text-white" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</div>
+<div>
+<p class="font-label-md text-label-md">Order Processing Started</p>
+<p class="text-body-sm text-on-surface-variant mb-2">Oct 25, 2023 • 10:45 AM</p>
+<div class="bg-surface-container-low p-stack-sm rounded-lg text-body-sm border border-outline-variant">
+                                System confirmed all seller stock levels and allocated inventory.
+                            </div>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative">
+<div class="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-secondary-container flex items-center justify-center border-4 border-surface">
+<span class="material-symbols-outlined text-[12px] text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div>
+<p class="font-label-md text-label-md">Payment Authorized</p>
+<p class="text-body-sm text-on-surface-variant mb-1">Oct 24, 2023 • 04:12 PM</p>
+<p class="text-body-sm">Transaction #AUTH-9022-X1 successfully processed for $2,816.50</p>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative">
+<div class="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center border-4 border-surface">
+<span class="material-symbols-outlined text-[12px] text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+</div>
+<div>
+<p class="font-label-md text-label-md">Order Placed</p>
+<p class="text-body-sm text-on-surface-variant mb-1">Oct 24, 2023 • 04:10 PM</p>
+<p class="text-body-sm">Buyer Jonathan Harker submitted the order.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty placeholders for other tabs to keep demo functional -->
+<div class="tab-pane hidden p-20 text-center opacity-50" id="content-payments">
+<span class="material-symbols-outlined text-6xl mb-4">payments</span>
+<p class="text-headline-md">Payment History &amp; Settings</p>
+<p class="text-body-md">Financial records for this order are being updated.</p>
+</div>
+<div class="tab-pane hidden p-20 text-center opacity-50" id="content-issues">
+<span class="material-symbols-outlined text-6xl mb-4">report_problem</span>
+<p class="text-headline-md">Issue Tracking</p>
+<p class="text-body-md">No issues reported for this order yet.</p>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline shadow-lg dark:shadow-none md:hidden z-50">
+<button class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-xl px-4 py-1 scale-95 transition-transform">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-sm text-label-sm">Shipments</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        function switchTab(tabId) {
+            // Hide all panes
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.add('hidden');
+                pane.classList.remove('block');
+            });
+            
+            // Remove active classes from buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-primary', 'tab-active');
+                btn.classList.add('text-on-surface-variant');
+            });
+            
+            // Show target pane
+            const targetPane = document.getElementById('content-' + tabId);
+            if (targetPane) {
+                targetPane.classList.remove('hidden');
+                targetPane.classList.add('block');
+            }
+            
+            // Set active button
+            const activeBtn = document.getElementById('tab-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('text-primary', 'tab-active');
+                activeBtn.classList.remove('text-on-surface-variant');
+            }
+
+            // Simple micro-interaction: smooth scroll to top of content on mobile
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 250, behavior: 'smooth' });
+            }
+        }
+
+        // Initialize state
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Order Details UI initialized');
+        });
+    </script>
+</body></html>

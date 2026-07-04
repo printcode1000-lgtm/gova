@@ -16,7 +16,7 @@ Server routes must authenticate before constructing an actor. Never accept role 
 
 ## Validation rules
 
-The module validates safe money and currency, positive quantities, custom image MIME types, price expiry, exact shipment item references, shipment eligibility, duplicate active assignment, delivery sequence, refund ceilings, cancellation eligibility, return/replacement eligibility, and actor ownership.
+The module validates safe money and currency, positive quantities, custom image MIME types, the `spicialOrder` storage profile and key, the 500 KB image limit, price expiry, exact shipment item references, shipment eligibility, duplicate active assignment, delivery sequence, refund ceilings, cancellation eligibility, return/replacement eligibility, and actor ownership.
 
 The database repeats critical structural protections with foreign keys, checks, partial unique indexes, and status guard triggers. This protects data even when concurrent operations race.
 
@@ -25,4 +25,3 @@ The database repeats critical structural protections with foreign keys, checks, 
 Audit records include order, entity type and ID, action, old/new status, old/new serialized values, actor ID and role, reason, source, IP address, notes, and timestamps. Creation, response, pricing, approval/rejection, cancellation, shipment assignment/progress, payment, refund, return, replacement, dispute reply, and admin decision operations are audited.
 
 Audit history should be treated as append-only operational evidence. Application code must not update or delete historical audit rows.
-

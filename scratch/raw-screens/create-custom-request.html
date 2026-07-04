@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gova - Create Custom Request</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed-variant": "#264191",
+                    "inverse-primary": "#b6c4ff",
+                    "surface": "#f9f9ff",
+                    "surface-variant": "#dce2f3",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#90a8ff",
+                    "surface-container-highest": "#dce2f3",
+                    "on-primary-fixed": "#00164e",
+                    "primary-fixed": "#dce1ff",
+                    "on-tertiary-container": "#ef9900",
+                    "secondary-container": "#6cf8bb",
+                    "tertiary-fixed": "#ffddb8",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "tertiary-container": "#5c3800",
+                    "surface-tint": "#4059aa",
+                    "secondary-fixed-dim": "#4edea3",
+                    "inverse-on-surface": "#ebf1ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface-container-high": "#e2e8f8",
+                    "inverse-surface": "#2a313d",
+                    "on-background": "#151c27",
+                    "primary": "#00236f",
+                    "surface-dim": "#d3daea",
+                    "primary-container": "#1e3a8a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#e7eefe",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#444651",
+                    "outline-variant": "#c5c5d3",
+                    "error": "#ba1a1a",
+                    "background": "#f9f9ff",
+                    "on-secondary-container": "#00714d",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary": "#006c49",
+                    "outline": "#757682",
+                    "on-surface": "#151c27",
+                    "tertiary": "#3e2400",
+                    "on-secondary-fixed": "#002113",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-xs": "4px",
+                    "margin-desktop": "48px",
+                    "touch-target": "44px",
+                    "stack-md": "16px",
+                    "stack-xl": "32px",
+                    "gutter": "16px",
+                    "stack-lg": "24px",
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f9f9ff;
+            color: #151c27;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #dce2f3;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col md:flex-row pb-20 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline fixed top-0 z-50 flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer" data-icon="menu">menu</span>
+<span class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Gova</span>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-8">
+<span class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md">Orders</span>
+<span class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md">Shipments</span>
+<span class="text-primary dark:text-primary-fixed-dim font-bold font-label-md text-label-md underline underline-offset-8">Requests</span>
+<span class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md">Profile</span>
+</nav>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A close-up, high-quality portrait of a professional corporate user with a neutral, friendly expression. The lighting is soft and even, highlighting clear skin and sharp features. The background is a clean, out-of-focus modern office interior with a blue-tonal color palette. The overall aesthetic is professional, minimalist, and authoritative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKOTD7Y5zGYmdu-yOqFZ_zCBterm-j8Hju16WyRyRN16oEq5DSA3VmatRrnrbTh8EQlSnhKxe6S7ypd-fyLU2HoxOIDC-yNl1JRKlHVe6C6L8WeNYg9CmTZ8_mNreZmc3LyVMB52EOgVux1ifB8-BabArWLZ5T-9lcTdmA68a81mqZRoxvxYXdeW0yHZ2RrcYecyrANbbi2m6A-5N2I5O_pJc19dpnklSRFvexPPPeUNSoUCKQq8i1"/>
+</div>
+</div>
+</header>
+<!-- NavigationDrawer (Desktop Only) -->
+<aside class="hidden md:flex fixed inset-y-0 left-0 z-[60] flex flex-col h-full w-80 bg-surface-container-low dark:bg-inverse-surface shadow-xl dark:shadow-none transition-all duration-300 ease-in-out mt-touch-target">
+<div class="p-stack-lg flex items-center gap-stack-md">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed" data-icon="account_circle">account_circle</span>
+</div>
+<div>
+<p class="font-headline-md text-headline-md text-on-surface">Gova User</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Role Switcher</p>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<div class="text-on-surface-variant dark:text-surface-variant mx-2 px-4 py-3 flex items-center gap-stack-md hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-body-md text-body-md">Buyer View</span>
+</div>
+<div class="bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary font-bold rounded-full mx-2 px-4 py-3 flex items-center gap-stack-md cursor-pointer">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-body-md text-body-md">Seller Dashboard</span>
+</div>
+<div class="text-on-surface-variant dark:text-surface-variant mx-2 px-4 py-3 flex items-center gap-stack-md hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="speed">speed</span>
+<span class="font-body-md text-body-md">Carrier Portal</span>
+</div>
+<div class="text-on-surface-variant dark:text-surface-variant mx-2 px-4 py-3 flex items-center gap-stack-md hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Admin Panel</span>
+</div>
+</nav>
+<div class="p-stack-lg border-t border-outline-variant">
+<p class="text-label-sm font-label-sm text-outline">v1.0.4</p>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 pt-20 pb-10 md:ml-80 px-margin-mobile md:px-margin-desktop bg-background min-h-screen">
+<!-- Header -->
+<div class="max-w-4xl mx-auto mb-stack-xl">
+<h1 class="font-headline-xl text-headline-xl md:font-headline-xl md:text-headline-xl font-bold text-primary mb-2">Create Custom Request</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Describe what you need and upload images only</p>
+</div>
+<!-- Form Layout -->
+<div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Side: Basic Info -->
+<section class="lg:col-span-2 space-y-stack-lg">
+<!-- Request Details Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-md border-b border-outline-variant pb-2">Request Details</h2>
+<div class="space-y-stack-md">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Request type</label>
+<select class="w-full h-[48px] px-4 rounded-lg border border-outline focus:border-primary focus:ring-2 focus:ring-primary-container bg-surface outline-none transition-all">
+<option>Pharmacy</option>
+<option>Supermarket</option>
+<option>Electronics</option>
+<option>Specialty Goods</option>
+<option>Hardware</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Seller selector</label>
+<div class="relative">
+<input class="w-full h-[48px] px-4 rounded-lg border border-outline focus:border-primary focus:ring-2 focus:ring-primary-container bg-surface outline-none transition-all" placeholder="Search sellers..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline" data-icon="search">search</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Title</label>
+<input class="w-full h-[48px] px-4 rounded-lg border border-outline focus:border-primary focus:ring-2 focus:ring-primary-container bg-surface outline-none transition-all" placeholder="e.g., Bulk order of organic supplement X" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-stack-md">
+<div class="md:col-span-3">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Description</label>
+<textarea class="w-full p-4 rounded-lg border border-outline focus:border-primary focus:ring-2 focus:ring-primary-container bg-surface outline-none transition-all" placeholder="Describe the item in detail..." rows="4"></textarea>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Quantity</label>
+<input class="w-full h-[48px] px-4 rounded-lg border border-outline focus:border-primary focus:ring-2 focus:ring-primary-container bg-surface outline-none transition-all" min="1" type="number" value="1"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Image Upload Section -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm">
+<div class="flex items-center justify-between mb-stack-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface">Upload Images</h2>
+<span class="text-label-sm font-label-sm bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded">Images Only</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-stack-md">Upload clear images only. Videos, PDFs, and documents are not supported.</p>
+<!-- Drag & Drop / Button -->
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-stack-xl flex flex-col items-center justify-center bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer group mb-stack-md">
+<span class="material-symbols-outlined text-primary text-4xl mb-2 group-hover:scale-110 transition-transform" data-icon="cloud_upload">cloud_upload</span>
+<p class="font-label-md text-label-md text-on-surface font-bold">High-visibility Upload Images</p>
+<p class="font-body-sm text-body-sm text-outline">Drag &amp; Drop or Click to browse</p>
+</div>
+<!-- Thumbnails -->
+<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+<!-- Thumbnail 1 -->
+<div class="relative aspect-square rounded-lg overflow-hidden group">
+<div class="w-full h-full bg-cover bg-center" data-alt="A professional, clear high-resolution product shot of a pharmaceutical glass bottle on a pristine white reflective surface. The lighting is commercial-grade, emphasizing clean lines and sharp labels. The color palette is clinical and clean, using white, light grays, and deep navy accents. The overall mood is reliable, trustworthy, and efficient." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBK7wK0Z899Rvx57ZpmpNsiwPp0YI4JBUu1lknwq62nQO8TNwnHQLF1L92XYDRoqlAkFALLCXS8rs_MBgsGO-9M1teoBqBiZ2AwqjSB9aktKwpVTqXvMBn29CLdvAYyDBw6Fbh4sZ7WUDRLQw5PmUdf_jEac075nmHaDKy_DwjLEaoTKDARnzppVqnHE4AemLpKlYZHAC2Nw5XJDuLIaRdibpfVi1Hbv9sn1LwqS8hlEpr0XUF4ecqe')"></div>
+<button class="absolute top-1 right-1 bg-error text-on-error w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+</button>
+</div>
+<!-- Thumbnail 2 -->
+<div class="relative aspect-square rounded-lg overflow-hidden group">
+<div class="w-full h-full bg-cover bg-center" data-alt="A clean, top-down product photograph of high-end grocery packaging, featuring organic labeling and premium materials. The items are arranged neatly on a light neutral-toned surface under bright, daylight-balanced studio lighting. The aesthetic is corporate and modern, focusing on clarity and professional presentation of trade goods. Minimalist composition." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDK9fHL0IofJn8HWf75Ueq4McRHWaVw2VyG8o73K_YSYi29kntMbGW6blOaLk-DtugqgQuzpZ6t0UK_4-QDN0t6FLabyfEuA1v2iS3SUBOmlMRC-yxTy9KfyDxb7PgamBviNru45BQ_QFoKgQxCviDBDiFxf8CT217gL0ov_yKnQWk0GoiLOGcY2_5gBUKk7FQU_Qm2KHwCZMyO2zSwECIO2TulZ3Fs06pon0XnQjidI-ds6EfU2V8r')"></div>
+<button class="absolute top-1 right-1 bg-error text-on-error w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+</button>
+</div>
+<!-- Empty Placeholder for UI visual -->
+<div class="aspect-square rounded-lg border border-outline-variant flex items-center justify-center bg-surface-container-low border-dashed">
+<span class="material-symbols-outlined text-outline" data-icon="add_photo_alternate">add_photo_alternate</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Side: Transport & Summary -->
+<aside class="space-y-stack-lg">
+<!-- Transport Toggles -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-md">Transport Requirements</h2>
+<div class="space-y-stack-md">
+<label class="flex items-center justify-between cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping">local_shipping</span>
+<span class="font-body-md text-body-md text-on-surface">Special Vehicle</span>
+</div>
+<input class="w-6 h-6 rounded-md border-outline text-primary focus:ring-primary" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="ac_unit">ac_unit</span>
+<span class="font-body-md text-body-md text-on-surface">Refrigeration</span>
+</div>
+<input class="w-6 h-6 rounded-md border-outline text-primary focus:ring-primary" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="minor_crash">minor_crash</span>
+<span class="font-body-md text-body-md text-on-surface">Fragile</span>
+</div>
+<input class="w-6 h-6 rounded-md border-outline text-primary focus:ring-primary" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Info Card -->
+<div class="bg-primary-container text-on-primary-container p-stack-lg rounded-xl">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+<p class="font-label-md text-label-md">Guideline</p>
+</div>
+<p class="font-body-sm text-body-sm opacity-90">Custom requests are reviewed by our logistics specialists. Ensure your images show the full item and any relevant SKU or barcodes for faster processing.</p>
+</div>
+<!-- Action Button Desktop -->
+<button class="hidden lg:flex w-full bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary h-[56px] items-center justify-center rounded-xl font-bold transition-all shadow-md active:scale-95">
+                    Send Request
+                </button>
+</aside>
+</div>
+</main>
+<!-- Bottom Action Bar (Mobile Only) -->
+<div class="lg:hidden fixed bottom-16 left-0 w-full bg-surface-container-lowest p-stack-md border-t border-outline-variant z-40">
+<button class="w-full bg-primary text-on-primary h-[48px] rounded-xl font-bold shadow-lg transition-transform active:scale-95">
+            Send Request
+        </button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline shadow-lg dark:shadow-none z-50 md:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-transform scale-95 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-transform scale-95 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label-sm text-label-sm">Shipments</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-xl px-4 py-1 transition-transform scale-95 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="photo_library" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-transform scale-95 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for form focus effects and button scales
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.parentElement.classList.add('scale-[1.01]');
+                el.parentElement.style.transition = 'transform 0.2s ease-out';
+            });
+            el.addEventListener('blur', () => {
+                el.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Toggle simulation for buttons
+        const sendBtn = document.querySelector('button:contains("Send Request")');
+        if(sendBtn) {
+            sendBtn.addEventListener('click', () => {
+                sendBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Sending...';
+                setTimeout(() => {
+                    sendBtn.innerHTML = 'Send Request';
+                }, 2000);
+            });
+        }
+    </script>
+</body></html>

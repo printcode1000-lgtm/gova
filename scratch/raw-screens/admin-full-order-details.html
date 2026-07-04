@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gova | Admin Order Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-primary-fixed-variant": "#264191",
+                        "inverse-primary": "#b6c4ff",
+                        "surface": "#f9f9ff",
+                        "surface-variant": "#dce2f3",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#90a8ff",
+                        "surface-container-highest": "#dce2f3",
+                        "on-primary-fixed": "#00164e",
+                        "primary-fixed": "#dce1ff",
+                        "on-tertiary-container": "#ef9900",
+                        "secondary-container": "#6cf8bb",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "tertiary-container": "#5c3800",
+                        "surface-tint": "#4059aa",
+                        "secondary-fixed-dim": "#4edea3",
+                        "inverse-on-surface": "#ebf1ff",
+                        "surface-bright": "#f9f9ff",
+                        "surface-container-high": "#e2e8f8",
+                        "inverse-surface": "#2a313d",
+                        "on-background": "#151c27",
+                        "primary": "#00236f",
+                        "surface-dim": "#d3daea",
+                        "primary-container": "#1e3a8a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#e7eefe",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#444651",
+                        "outline-variant": "#c5c5d3",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9ff",
+                        "on-secondary-container": "#00714d",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary": "#006c49",
+                        "outline": "#757682",
+                        "on-surface": "#151c27",
+                        "tertiary": "#3e2400",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-xs": "4px",
+                        "margin-desktop": "48px",
+                        "touch-target": "44px",
+                        "stack-md": "16px",
+                        "stack-xl": "32px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "30px", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        .active-tab {
+            border-bottom: 2px solid #00236f;
+            color: #00236f;
+            font-weight: 600;
+        }
+        /* Custom scrollbar for data tables */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #dce2f3; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #757682; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-20 md:pb-0">
+<!-- Top Navigation Shell -->
+<header class="bg-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target fixed top-0 z-50">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high rounded-full transition-colors">menu</button>
+<span class="text-headline-md font-headline-md font-extrabold text-primary">Gova</span>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors" href="#">Dashboard</a>
+<a class="text-primary font-bold font-label-md text-label-md" href="#">Orders</a>
+<a class="text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors" href="#">Users</a>
+<a class="text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors" href="#">Reports</a>
+</nav>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate logistics administrator, set against a blurred high-tech control center background with soft blue lighting and minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeQmo_p-J5CLuWBPgtGOhPVlSoAsFsC3FFMEowt2mmppk9G97se8dKnH-cAVHu8KB9ubeEzKBz8m7Mq_ZTf9PZKi_EIgJkz4HKYMuYVjpOwnjoALd2rPtVAKrOnQU1wOJvWUhKlfWHCHQ4nmfyy3vn0eEahRlIMJ0cpA3Pn9NLbplNNXtw-_nBBgPMb4Tp0Cl3TD_AVaFCwNTD_PSxay7Tm4fvtV1yUP5aK8X3j1AVuwH0LlBlwmaM"/>
+</div>
+</div>
+</header>
+<div class="flex pt-16">
+<!-- Sidebar Shell (Desktop) -->
+<aside class="hidden md:flex fixed left-0 top-16 bottom-0 w-64 bg-surface-container-low flex-col py-6 border-r border-outline-variant">
+<div class="px-6 mb-8">
+<p class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Admin Panel</p>
+<p class="text-body-md font-body-md font-bold text-primary">System Overlook</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="bg-secondary-container text-on-secondary-container font-bold rounded-full mx-2 px-4 py-3 flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">speed</span>
+<span class="text-body-md font-body-md">Admin Panel</span>
+</a>
+<a class="text-on-surface-variant mx-2 px-4 py-3 flex items-center gap-3 hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="text-body-md font-body-md">Buyer View</span>
+</a>
+<a class="text-on-surface-variant mx-2 px-4 py-3 flex items-center gap-3 hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="text-body-md font-body-md">Seller Dashboard</span>
+</a>
+<a class="text-on-surface-variant mx-2 px-4 py-3 flex items-center gap-3 hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-body-md font-body-md">Carrier Portal</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface">Admin User</p>
+<p class="text-label-sm font-label-sm text-outline">v1.0.4</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-0 md:ml-64 p-margin-mobile md:p-margin-desktop">
+<!-- Breadcrumbs & Header Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-stack-lg gap-4">
+<div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-outline mb-1">
+<span>Orders</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>#ORD-99210-GX</span>
+</div>
+<h1 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-primary">Order God-View</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 h-11 border border-outline rounded-lg text-label-md font-label-md text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">tune</span>
+                        Adjust Fees
+                    </button>
+<button class="px-4 h-11 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-primary-container transition-colors flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined">gavel</span>
+                        Open Dispute Intervention
+                    </button>
+</div>
+</div>
+<!-- Dashboard Summary Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-stack-xl">
+<!-- Main Order Card -->
+<div class="md:col-span-2 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-label-sm font-label-sm text-outline uppercase">Global Order Status</p>
+<h2 class="text-headline-md font-headline-md text-primary mt-1">Processing</h2>
+</div>
+<span class="bg-secondary/15 text-secondary px-3 py-1 rounded-full text-label-sm font-label-sm">High Value</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex-1">
+<p class="text-label-sm font-label-sm text-outline">Total Value</p>
+<p class="text-headline-md font-headline-md text-on-surface">$14,240.50</p>
+</div>
+<div class="flex-1">
+<p class="text-label-sm font-label-sm text-outline">Buyer</p>
+<p class="text-body-md font-body-md font-semibold text-on-surface">Acme Corp Logistics</p>
+</div>
+</div>
+</div>
+<!-- Admin Health Metrics -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-center">
+<p class="text-label-sm font-label-sm text-outline mb-1">Escrow Balance</p>
+<p class="text-headline-md font-headline-md text-on-secondary-container">$12,104.00</p>
+<div class="mt-4 flex items-center gap-2 text-secondary text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+                        Securely Held
+                    </div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-center">
+<p class="text-label-sm font-label-sm text-outline mb-1">Sellers Involved</p>
+<p class="text-headline-md font-headline-md text-primary">3 Managed Entities</p>
+<div class="mt-4 flex items-center gap-2 text-tertiary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">info</span>
+                        2 Domestic, 1 Intl
+                    </div>
+</div>
+</div>
+<!-- Tabbed Content Section -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="flex border-b border-outline-variant overflow-x-auto no-scrollbar">
+<button class="px-6 py-4 text-label-md font-label-md active-tab whitespace-nowrap">Overview</button>
+<button class="px-6 py-4 text-label-md font-label-md text-on-surface-variant hover:text-primary whitespace-nowrap">Sellers (3)</button>
+<button class="px-6 py-4 text-label-md font-label-md text-on-surface-variant hover:text-primary whitespace-nowrap">Shipments (5)</button>
+<button class="px-6 py-4 text-label-md font-label-md text-on-surface-variant hover:text-primary whitespace-nowrap">Payments</button>
+<button class="px-6 py-4 text-label-md font-label-md text-on-surface-variant hover:text-primary whitespace-nowrap">Audit Trail</button>
+</div>
+<div class="p-6">
+<!-- Hierarchy View -->
+<div class="space-y-6">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">account_tree</span>
+<h3 class="text-headline-md font-headline-md text-on-surface">Order Hierarchy Visibility</h3>
+</div>
+<!-- Nested Hierarchy Item 1 -->
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<div class="bg-surface-container-low px-4 py-3 flex items-center justify-between border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+<span class="text-body-md font-bold text-on-surface">SellerOrder #SO-101 (Global Tech Ltd)</span>
+<span class="bg-secondary-fixed-dim text-on-secondary-fixed text-[11px] px-2 py-0.5 rounded-full font-bold">READY</span>
+</div>
+<div class="text-label-md font-bold text-primary">$8,500.00</div>
+</div>
+<div class="p-0">
+<table class="w-full text-left">
+<thead class="bg-surface text-label-sm font-label-sm text-outline border-b border-outline-variant">
+<tr>
+<th class="px-10 py-3">Line Item</th>
+<th class="px-4 py-3">Quantity</th>
+<th class="px-4 py-3">Unit Price</th>
+<th class="px-4 py-3 text-right">Total</th>
+</tr>
+</thead>
+<tbody class="text-body-sm font-body-sm text-on-surface-variant">
+<tr class="border-b border-outline-variant hover:bg-surface transition-colors">
+<td class="px-10 py-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-md bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up macro shot of a sleek industrial motherboard with metallic finishes and subtle green LED lighting, representing high-tech hardware components in a clean, professional studio setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFO-e-cQl_sUAOFmOz7x6kT6POcw9B_f2Cpea27X_07LJVxASIp27gLqTbTtpES9aQ4WFQOrvIFwk-PXJPuElA5_PaSzd6hSRlpFEyH7FjP37GFM1YiXim3yhP7a4RAyWxQAqfjE-p9rKBeMuuEY6zz_IvNAqyfwKDexVasA5v7n64qx8Yp-4twPuyqO2JKIptM71xHD53mkt_a6Nd3cBV73e1LPkCx563rmRIuIYWZfBVbRFcMOyf"/>
+</div>
+<span>Industrial PLC Controller v4</span>
+</td>
+<td class="px-4 py-4">10 Units</td>
+<td class="px-4 py-4">$750.00</td>
+<td class="px-4 py-4 text-right font-bold text-on-surface">$7,500.00</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="px-10 py-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-md bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A bundle of heavy-duty braided industrial cables in varying shades of corporate gray and deep navy, neatly coiled on a white clinical background, reflecting quality and precision logistics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPiVBhwOfKU5--Ale7XM5L1XjEaQHnbPsEjvNdPaB8c1188oftb-ySx0SWeR7mivGKiE1GSCEduXqHs22xcvGyDPjYT5pPGZIA-iL80EYACekEe3rf4hS6gzyj_7xzGsB4xNhw_jExTLV-4POO5NnDFYDA2q7nlr-BjSQzDr9eeUUIZqEcYibqEH67tRZ9aEfxWAXLDQ9I9tZsGvrurg9NFJGd_6zr2JEQQybX3sZkh8Ki17VrNh8y"/>
+</div>
+<span>Connector Harness Bundle</span>
+</td>
+<td class="px-4 py-4">20 Units</td>
+<td class="px-4 py-4">$50.00</td>
+<td class="px-4 py-4 text-right font-bold text-on-surface">$1,000.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Nested Hierarchy Item 2 -->
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<div class="bg-surface-container-low px-4 py-3 flex items-center justify-between border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+<span class="text-body-md font-bold text-on-surface">SellerOrder #SO-102 (Pioneer Parts)</span>
+<span class="bg-tertiary-fixed-dim text-on-tertiary-fixed text-[11px] px-2 py-0.5 rounded-full font-bold uppercase">Pending</span>
+</div>
+<div class="text-label-md font-bold text-primary">$5,740.50</div>
+</div>
+</div>
+<!-- Price Breakdown Zebra List -->
+<div class="mt-10 max-w-md ml-auto">
+<h4 class="text-label-md font-label-md text-outline uppercase mb-4 border-b border-outline-variant pb-2">Final Financial Summary</h4>
+<div class="space-y-0 text-body-md">
+<div class="flex justify-between py-2 px-3 bg-surface">
+<span>Subtotal (All Sellers)</span>
+<span>$13,240.50</span>
+</div>
+<div class="flex justify-between py-2 px-3">
+<span>Platform Fee (2.5%)</span>
+<span>$331.00</span>
+</div>
+<div class="flex justify-between py-2 px-3 bg-surface">
+<span>Logistics &amp; Insurance</span>
+<span>$669.00</span>
+</div>
+<div class="flex justify-between py-4 px-3 border-t-2 border-primary text-primary font-bold">
+<span class="text-headline-md font-headline-md">Total Amount</span>
+<span class="text-headline-md font-headline-md">$14,240.50</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Bottom Navigation Shell (Mobile Only) -->
+<footer class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-lowest flex justify-around items-center h-16 px-2 border-t border-outline-variant z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label-sm text-label-sm">Shipments</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</footer>
+<script>
+        // Micro-interactions for tab switching and hierarchy toggles
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.innerText.includes('expand_more')) {
+                    this.innerText = 'chevron_right';
+                    this.closest('.border').querySelector('table')?.classList.add('hidden');
+                } else if (this.innerText.includes('chevron_right') && this.classList.contains('material-symbols-outlined')) {
+                    this.innerText = 'expand_more';
+                    this.closest('.border').querySelector('table')?.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body></html>

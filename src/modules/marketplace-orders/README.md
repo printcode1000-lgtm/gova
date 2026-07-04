@@ -6,7 +6,7 @@ An isolated server-side marketplace order domain for catalog, image-only custom,
 
 `Order` owns seller groupings and the two item sources of truth. `Shipment` belongs directly to the order—not a seller—and `ShipmentItem` references exactly one `OrderItem` or `CustomRequestItem`. This permits one seller across several shipments and one shipment across several sellers and item types. Partial unique indexes prevent an item from entering two active outbound assignments.
 
-Custom requests require a description and accept only validated image MIME types. Catalog items retain name, description, image, variant and price snapshots. All money is an integer in the currency's minor unit and every order stores an explicit ISO currency.
+Custom requests require a description and at least one image uploaded through `StorageProfiles.SpicialOrder`. The dedicated profile stores processed WebP objects under `images/spicialOrder` in local development and R2 production storage, with a 500 KB maximum. Marketplace image records require the returned profile ID and image key. Catalog items retain name, description, image, variant and price snapshots. All money is an integer in the currency's minor unit and every order stores an explicit ISO currency.
 
 ## Database
 
