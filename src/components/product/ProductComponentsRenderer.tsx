@@ -174,6 +174,7 @@ export function ProductComponentsRenderer({
                   mainCategoryId={mainCategoryId}
                   images={images}
                   onChange={onImagesChange}
+                  deferStorageDeletion={mode === "edit"}
                 />
               )}
             </ProductComponentFrame>

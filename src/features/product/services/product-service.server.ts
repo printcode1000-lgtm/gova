@@ -13,6 +13,7 @@ import {
   type ProductRepository,
 } from "../repositories/product-repository";
 import { categoryService } from "@/features/categories";
+import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 
 const SAFE_ID = /^[a-z0-9-]+$/i;
 
@@ -41,6 +42,19 @@ function normalizeStatus(value: ProductStatus | undefined): ProductStatus {
   return value === "draft" || value === "archived" ? value : "active";
 }
 
+async function deleteProductImages(imageKeys: string[]): Promise<void> {
+  const results = await Promise.allSettled(
+    [...new Set(imageKeys)].map((imageKey) =>
+      imageStorageService.deleteImage("product-default", imageKey),
+    ),
+  );
+  for (const result of results) {
+    if (result.status === "rejected") {
+      console.error("Product image cleanup failed after database commit:", result.reason);
+    }
+  }
+}
+
 export class ProductService {
   constructor(private repository: ProductRepository = productRepository) {}
 
@@ -50,6 +64,22 @@ export class ProductService {
     if (!product || product.status === "archived")
       throw new Error("productNotFound");
     return product;
+  }
+
+  async listByOwnerAndCategory(
+    uid: string,
+    mainCategoryId: string,
+    subcategoryId: string,
+  ): Promise<ProductRecord[]> {
+    if (
+      !uid ||
+      !SAFE_ID.test(mainCategoryId) ||
+      !SAFE_ID.test(subcategoryId) ||
+      !categoryService.resolveLegacyProductSelection(mainCategoryId, subcategoryId).valid
+    ) {
+      throw new Error("invalidProduct");
+    }
+    return this.repository.findByOwnerAndCategory(uid, mainCategoryId, subcategoryId);
   }
 
   async create(input: CreateProductInput): Promise<ProductRecord> {
@@ -65,12 +95,13 @@ export class ProductService {
     );
     if (!categorySelection.valid) throw new Error("invalidCategorySelection");
     const now = new Date().toISOString();
+    const normalizedData = normalizeData(input.data);
     return this.repository.create({
       id: randomUUID(),
       uid: input.uid,
       mainCategoryId: input.mainCategoryId,
       subcategoryId: input.subcategoryId,
-      data: normalizeData(input.data),
+      data: normalizedData,
       status: normalizeStatus(input.status),
       createdAt: now,
       updatedAt: now,
@@ -81,15 +112,29 @@ export class ProductService {
     const existing = await this.get(input.id);
     if (!input.uid || existing.uid !== input.uid)
       throw new Error("productForbidden");
+    const normalizedData = normalizeData(input.data);
     const updated = await this.repository.update(
       input.id,
       input.uid,
-      normalizeData(input.data),
+      normalizedData,
       normalizeStatus(input.status ?? existing.status),
       new Date().toISOString(),
     );
     if (!updated) throw new Error("productNotFound");
+    const retainedKeys = new Set(normalizedData.images.map((image) => image.imageKey));
+    const removedKeys = existing.data.images
+      .map((image) => image.imageKey)
+      .filter((imageKey) => !retainedKeys.has(imageKey));
+    await deleteProductImages(removedKeys);
     return updated;
+  }
+
+  async delete(id: string, uid: string): Promise<void> {
+    const existing = await this.get(id);
+    if (!uid || existing.uid !== uid) throw new Error("productForbidden");
+    const deleted = await this.repository.delete(id, uid);
+    if (!deleted) throw new Error("productNotFound");
+    await deleteProductImages(existing.data.images.map((image) => image.imageKey));
   }
 }
 

@@ -46,6 +46,17 @@ Every config file must use this exact shape:
 | `allowReplace`     | Legacy compatibility flag. An uploaded image is replaced by deleting it first.   |
 | `confirmUpload`    | Shows confirmation before upload                                                 |
 | `confirmRemove`    | Shows confirmation before clearing/removing                                      |
+| `deleteFromStorageOnRemove` | Optional; defaults to `true`. When `false`, removal only clears the UI value and leaves provider deletion to the feature. |
+
+`storageScope` is optional only for profiles without a dynamic folder strategy. It is required when the selected storage profile declares:
+
+```json
+{
+  "folderStrategy": "main-category"
+}
+```
+
+The current `product-default` profile uses this strategy, so every product image manager must supply a valid main-category ID. The accepted scope contains only letters, numbers, and hyphens.
 
 ## Usage
 
@@ -67,6 +78,29 @@ const config = parseStorageImageManagerConfig(imageConfig);
   }}
 />;
 ```
+
+### Product image example
+
+Product images use the main category as their storage scope:
+
+```tsx
+<StorageImageManager
+  config={{
+    id: "product-image-1",
+    storageProfileId: "product-default",
+    storageScope: mainCategoryId,
+    maxItems: 1,
+    aspectRatio: "square",
+    allowReplace: true,
+    confirmUpload: false,
+    confirmRemove: true,
+  }}
+  value={image ? [image] : []}
+  onChange={setImages}
+/>
+```
+
+The value must be semantic, such as `20`; it must not contain a folder name or path such as `images/products/20`.
 
 ## Image source picker
 
@@ -125,9 +159,30 @@ There is no Replace button after upload. The user deletes the stored image and t
 
 The delete action is destructive storage deletion by default. The image remains visible until the provider confirms deletion. Development removes the file from `public/sync_data/sync_file/images/...`; production removes the R2 object. A failure keeps the image and opens a localized error dialog.
 
+Storage deletion and feature-database persistence are two sequential operations, not one distributed transaction. After provider deletion succeeds, `onChange` removes the key and the owning feature must persist that new value in SQLite/Turso. If that feature save fails, storage is already deleted and the database may temporarily retain a stale key; callers that persist asynchronously must expose/retry that failure. Product creation persists the final uploaded `imageKey` and URL inside `products.data_json` when the user presses Create Product.
+
 Feature owners must persist the resulting empty image reference from `onChange`. They must not optimistically remove the database reference before storage deletion succeeds.
 
 For `product-default`, `storageScope` is the main category ID. The storage layer validates it and returns an `imageKey` shaped as `<mainCategoryId>/<uuid>.webp`. UI code never supplies a folder path.
+
+The scope is forwarded through every layer:
+
+```text
+StorageImageManager config.storageScope
+  -> useStorageProfileUpload storageScope
+  -> ImageStorageService.processAndUpload
+  -> ImageStorageApiService multipart storageScope
+  -> ImageUploadApplicationService
+  -> ImageStorageOrchestrator
+```
+
+If a dynamic-folder profile receives no scope, or receives a value outside the allowed format, the server rejects the upload with:
+
+```text
+A valid main-category storage scope is required
+```
+
+This error means the feature supplied an incomplete upload context; it is not a provider, compression, or image-format failure.
 
 ## Diagnostic tracing
 

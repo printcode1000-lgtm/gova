@@ -1,0 +1,78 @@
+{
+  "mainCategoryId": "0",
+  "subcategoryId": "23",
+  "components": {
+    "images": {
+      "visible": true,
+      "count": 4,
+      "order": 1
+    },
+    "rating": {
+      "visible": true,
+      "type": "stars-comments",
+      "order": 2
+    },
+    "price": {
+      "visible": true,
+      "current": true,
+      "beforeDiscount": true,
+      "needsCar": true,
+      "order": 3
+    },
+    "order": {
+      "visible": true,
+      "cart": true,
+      "favorite": true,
+      "contact": true,
+      "order": 4
+    },
+    "mainData": {
+      "visible": true,
+      "name": true,
+      "brand": true,
+      "manufacturer": true,
+      "available": true,
+      "description": true,
+      "order": 5
+    },
+    "specifications": {
+      "visible": true,
+      "color": true,
+      "dimensions": true,
+      "condition": true,
+      "size": true,
+      "weight": true,
+      "year": true,
+      "order": 6
+    },
+    "vehicleSpecs": {
+      "visible": false,
+      "brand": true,
+      "bodyType": true,
+      "fuel": true,
+      "transmission": true,
+      "special": true,
+      "order": 7
+    },
+    "propertySpecs": {
+      "visible": false,
+      "area": true,
+      "rooms": true,
+      "bathrooms": true,
+      "type": true,
+      "address": true,
+      "location": true,
+      "finishing": true,
+      "order": 8
+    },
+    "pharmacySpecs": {
+      "visible": false,
+      "nameAr": true,
+      "nameEn": true,
+      "form": true,
+      "concentration": true,
+      "activeIngredient": true,
+      "order": 9
+    }
+  }
+}

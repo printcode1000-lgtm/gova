@@ -9,11 +9,13 @@ export function ProductImageEditors({
   mainCategoryId,
   images,
   onChange,
+  deferStorageDeletion = false,
 }: {
   maxImages: number;
   mainCategoryId: string;
   images: StoredImage[];
   onChange: (images: StoredImage[]) => void;
+  deferStorageDeletion?: boolean;
 }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -29,6 +31,7 @@ export function ProductImageEditors({
             allowReplace: true,
             confirmUpload: false,
             confirmRemove: true,
+            deleteFromStorageOnRemove: !deferStorageDeletion,
           }}
           value={images[index] ? [images[index]] : []}
           onChange={(slot) => {

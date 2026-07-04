@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { govaApi } from "@/core/api";
+import { ApiError, govaApi } from "@/core/api";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/components/SessionProvider";
@@ -34,6 +34,10 @@ export function ProductPageContent() {
   const productId = searchParams.get("productId") ?? "";
   const initialMain = searchParams.get("mainCategoryId") ?? "";
   const initialSub = searchParams.get("subcategoryId") ?? "";
+  const returnTo = searchParams.get("returnTo");
+  const returnUrl = returnTo === "profile-products"
+    ? "/profile?mode=edit&tab=products"
+    : null;
   const { session, isLoggedIn, isLoading: sessionLoading } = useSession();
   const [product, setProduct] = React.useState<ProductRecord | null>(null);
   const [style, setStyle] = React.useState<ProductStyleFile | null>(null);
@@ -77,9 +81,19 @@ export function ProductPageContent() {
 
         const main = loadedProduct?.mainCategoryId ?? initialMain;
         const sub = loadedProduct?.subcategoryId ?? initialSub;
-        const loadedStyle = await govaApi.getPublicJson<ProductStyleFile>(
-          `/product/style/${encodeURIComponent(main)}__${encodeURIComponent(sub)}.json`,
-        );
+        let loadedStyle: ProductStyleFile;
+        try {
+          loadedStyle = await govaApi.getPublicJson<ProductStyleFile>(
+            `/product/style/${encodeURIComponent(main)}__${encodeURIComponent(sub)}.json`,
+          );
+        } catch (styleError) {
+          if (!(styleError instanceof ApiError) || styleError.status !== 404) {
+            throw styleError;
+          }
+          loadedStyle = await govaApi.getPublicJson<ProductStyleFile>(
+            "/product/style/default.json",
+          );
+        }
         if (!cancelled) setStyle(loadedStyle);
       } catch (loadError) {
         if (!cancelled)
@@ -118,9 +132,13 @@ export function ProductPageContent() {
               data: { fields, images },
               status: product?.status,
             });
-      router.replace(
-        `/product?mode=view&productId=${encodeURIComponent(saved.id)}&mainCategoryId=${encodeURIComponent(saved.mainCategoryId)}&subcategoryId=${encodeURIComponent(saved.subcategoryId)}`,
-      );
+      if (returnUrl) {
+        router.replace(returnUrl);
+      } else {
+        router.replace(
+          `/product?mode=view&productId=${encodeURIComponent(saved.id)}&mainCategoryId=${encodeURIComponent(saved.mainCategoryId)}&subcategoryId=${encodeURIComponent(saved.subcategoryId)}`,
+        );
+      }
     } catch (saveError) {
       setError(
         saveError instanceof Error ? saveError.message : "تعذر حفظ المنتج.",

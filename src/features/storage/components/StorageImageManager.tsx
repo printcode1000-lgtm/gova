@@ -393,6 +393,7 @@ function StorageImageSlot({
   const { uploadFile, removeImage, isUploading, error } =
     useStorageProfileUpload({
       storageProfileId: config.storageProfileId,
+      storageScope: config.storageScope,
       value: selectedFile ? uploadedImage : image,
       onChange: (nextImage) => {
         traceStorageImageManager(config.id, "upload-state-change", {

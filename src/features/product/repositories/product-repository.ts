@@ -53,6 +53,18 @@ export class ProductRepository {
     return rows[0] ? mapRow(rows[0]) : null;
   }
 
+  async findByOwnerAndCategory(
+    uid: string,
+    mainCategoryId: string,
+    subcategoryId: string,
+  ): Promise<ProductRecord[]> {
+    const rows = (await productDbClient.execute(
+      "SELECT * FROM products WHERE uid = ? AND main_category_id = ? AND subcategory_id = ? AND status != 'archived' ORDER BY created_at DESC",
+      [uid, mainCategoryId, subcategoryId],
+    )) as ProductRow[];
+    return rows.map(mapRow);
+  }
+
   async create(record: ProductRecord): Promise<ProductRecord> {
     await productDbClient.execute(
       "INSERT INTO products (id, uid, main_category_id, subcategory_id, data_json, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -82,6 +94,14 @@ export class ProductRepository {
       [JSON.stringify(data), status, updatedAt, id, uid],
     );
     return this.findById(id);
+  }
+
+  async delete(id: string, uid: string): Promise<boolean> {
+    await productDbClient.execute(
+      "DELETE FROM products WHERE id = ? AND uid = ?",
+      [id, uid],
+    );
+    return (await this.findById(id)) === null;
   }
 }
 

@@ -10,7 +10,14 @@ function errorResponse(error: unknown) {
 
 export async function GET(request: Request) {
   try {
-    return apiSuccess(await productService.get(new URL(request.url).searchParams.get('id') ?? ''));
+    const searchParams = new URL(request.url).searchParams;
+    const id = searchParams.get('id');
+    if (id) return apiSuccess(await productService.get(id));
+    return apiSuccess(await productService.listByOwnerAndCategory(
+      searchParams.get('uid') ?? '',
+      searchParams.get('mainCategoryId') ?? '',
+      searchParams.get('subcategoryId') ?? '',
+    ));
   } catch (error) { return errorResponse(error); }
 }
 
@@ -22,4 +29,12 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try { return apiSuccess(await productService.update(await request.json() as UpdateProductInput)); }
   catch (error) { return errorResponse(error); }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const searchParams = new URL(request.url).searchParams;
+    await productService.delete(searchParams.get('id') ?? '', searchParams.get('uid') ?? '');
+    return apiSuccess({ deleted: true });
+  } catch (error) { return errorResponse(error); }
 }

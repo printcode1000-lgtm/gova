@@ -1,6 +1,12 @@
 {
-  "generatedAt": "2026-07-03T21:11:59.463Z",
+  "generatedAt": "2026-07-04T02:32:48.282Z",
   "files": [
+    {
+      "mainCategoryId": "0",
+      "subcategoryId": "23",
+      "file": "0__23.json",
+      "path": "/product/style/0__23.json"
+    },
     {
       "mainCategoryId": "0",
       "subcategoryId": "44",
@@ -18,6 +24,12 @@
       "subcategoryId": "13",
       "file": "1__13.json",
       "path": "/product/style/1__13.json"
+    },
+    {
+      "mainCategoryId": "16",
+      "subcategoryId": "1",
+      "file": "16__1.json",
+      "path": "/product/style/16__1.json"
     },
     {
       "mainCategoryId": "7",

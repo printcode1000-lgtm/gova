@@ -65,8 +65,13 @@ export function ProfilePageContent() {
   const { t, locale } = useTranslation();
   const { session, isLoggedIn, isLoading, setSession } = useSession();
   const searchParams = useSearchParams();
+  const requestedTab = searchParams.get("tab");
   const [activeTab, setActiveTab] =
-    React.useState<ProfileEditTab>("registration");
+    React.useState<ProfileEditTab>(() =>
+      requestedTab && PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab)
+        ? (requestedTab as ProfileEditTab)
+        : "registration",
+    );
   const [carouselHeight, setCarouselHeight] = React.useState<number>();
   const registrationRef = React.useRef<ProfileRegistrationController>(null);
   const specialtiesRef = React.useRef<ProfileSpecialtiesController>(null);
@@ -87,6 +92,7 @@ export function ProfilePageContent() {
     Record<ProfileEditTab, HTMLButtonElement | null>
   >({ registration: null, specialties: null, products: null, contact: null, store: null });
   const scrollFrameRef = React.useRef<number | null>(null);
+  const appliedRequestedTabRef = React.useRef<string | null>(null);
   const [sectionStatuses, setSectionStatuses] = React.useState<
     Record<ProfileEditTab, ProfileSectionStatus | null>
   >({
@@ -195,6 +201,22 @@ export function ProfilePageContent() {
     scrollToSection(section);
   };
 
+  React.useEffect(() => {
+    if (
+      !showEditCard ||
+      isLoading ||
+      !isLoggedIn ||
+      !requestedTab ||
+      !PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab) ||
+      appliedRequestedTabRef.current === requestedTab
+    ) return;
+    const section = requestedTab as ProfileEditTab;
+    appliedRequestedTabRef.current = requestedTab;
+    setActiveTab(section);
+    const frame = requestAnimationFrame(() => scrollToSection(section));
+    return () => cancelAnimationFrame(frame);
+  }, [isLoading, isLoggedIn, requestedTab, scrollToSection, showEditCard]);
+
   const handleCarouselScroll = () => {
     if (scrollFrameRef.current !== null)
       cancelAnimationFrame(scrollFrameRef.current);
@@ -242,7 +264,7 @@ export function ProfilePageContent() {
     const observer = new ResizeObserver(updateHeight);
     observer.observe(panel);
     return () => observer.disconnect();
-  }, [activeTab]);
+  }, [activeTab, isLoading, isLoggedIn]);
 
   const activeSectionIndex = PROFILE_SECTIONS.indexOf(activeTab);
   const goToAdjacentSection = (offset: -1 | 1) => {

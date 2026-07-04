@@ -2,15 +2,18 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronRight, ChevronLeft, Package } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ChevronDown, ChevronRight, ChevronLeft, Package, Pencil, Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { categoryService, type CategoryDisplay, type SubcategoryDisplay } from "@/features/categories";
+import { CATEGORY_CONSTANTS, categoryService, type CategoryDisplay, type SubcategoryDisplay } from "@/features/categories";
 import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
 import type {
   ProfileSectionStatus,
   ProfileSpecialtiesController,
 } from "./profile-save-controller";
+import type { ProductRecord } from "@/features/product/entities/product.entity";
+import { productApiService } from "@/features/product/services/product-api-service";
 
 interface ProductsCardProps {
   uid: string;
@@ -24,6 +27,7 @@ export const ProductsCard = React.forwardRef<
   ProductsCardProps
 >(function ProductsCard({ uid, onStatusChange, readOnly = false }, ref) {
   const { t, locale } = useTranslation();
+  const router = useRouter();
   const [displayCategories, setDisplayCategories] = React.useState<
     CategoryDisplay[]
   >([]);
@@ -36,6 +40,13 @@ export const ProductsCard = React.forwardRef<
   const [isLoading, setIsLoading] = React.useState(true);
   const [expandedCategories, setExpandedCategories] = React.useState<Set<string>>(new Set());
   const [expandedSubcategories, setExpandedSubcategories] = React.useState<Set<string>>(new Set());
+  const [productsBySubcategory, setProductsBySubcategory] = React.useState<
+    Record<string, ProductRecord[]>
+  >({});
+  const [loadingProductBuckets, setLoadingProductBuckets] = React.useState<Set<string>>(new Set());
+  const [selectedProduct, setSelectedProduct] = React.useState<ProductRecord | null>(null);
+  const [pendingDelete, setPendingDelete] = React.useState<ProductRecord | null>(null);
+  const [isDeletingProduct, setIsDeletingProduct] = React.useState(false);
   const label = t("onboarding.storeIdentity.products");
 
   const applySelection = React.useCallback(
@@ -49,10 +60,9 @@ export const ProductsCard = React.forwardRef<
           ]),
         ),
       );
-      // Auto-expand all categories and subcategories on load
-      setExpandedCategories(new Set(selection.main.map(String)));
-      const allSubIds = Object.values(selection.sub).flat().map(String);
-      setExpandedSubcategories(new Set(allSubIds));
+      // Keep all collapsed by default
+      setExpandedCategories(new Set());
+      setExpandedSubcategories(new Set());
     },
     [],
   );
@@ -120,27 +130,96 @@ export const ProductsCard = React.forwardRef<
   }, [label, onStatusChange]);
 
   const toggleCategory = (categoryId: string) => {
+    setSelectedProduct(null);
     setExpandedCategories((prev) => {
       const next = new Set(prev);
       if (next.has(categoryId)) {
         next.delete(categoryId);
       } else {
+        // Close all other categories (accordion behavior)
+        next.clear();
         next.add(categoryId);
+      }
+      return next;
+    });
+    // Also close all subcategories when switching categories
+    setExpandedSubcategories(new Set());
+  };
+
+  const productBucketKey = (categoryId: string, subcategoryId: string) =>
+    `${categoryId}:${subcategoryId}`;
+
+  const loadProducts = React.useCallback(
+    async (categoryId: string, subcategoryId: string) => {
+      if (!uid) return;
+      const key = productBucketKey(categoryId, subcategoryId);
+      setLoadingProductBuckets((current) => new Set(current).add(key));
+      try {
+        const products = await productApiService.listByOwnerAndCategory(
+          uid,
+          categoryId,
+          subcategoryId,
+        );
+        setProductsBySubcategory((current) => ({ ...current, [key]: products }));
+      } catch (error) {
+        console.error("Failed to load products for subcategory:", error);
+        setProductsBySubcategory((current) => ({ ...current, [key]: [] }));
+      } finally {
+        setLoadingProductBuckets((current) => {
+          const next = new Set(current);
+          next.delete(key);
+          return next;
+        });
+      }
+    },
+    [uid],
+  );
+
+  const toggleSubcategory = (categoryId: string, subcategoryId: string) => {
+    setSelectedProduct(null);
+    const key = productBucketKey(categoryId, subcategoryId);
+    setExpandedSubcategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        // Close all other subcategories (accordion behavior)
+        next.clear();
+        next.add(key);
+        void loadProducts(categoryId, subcategoryId);
       }
       return next;
     });
   };
 
-  const toggleSubcategory = (subcategoryId: string) => {
-    setExpandedSubcategories((prev) => {
-      const next = new Set(prev);
-      if (next.has(subcategoryId)) {
-        next.delete(subcategoryId);
-      } else {
-        next.add(subcategoryId);
-      }
-      return next;
+  const editProduct = (product: ProductRecord) => {
+    const query = new URLSearchParams({
+      mode: "edit",
+      productId: product.id,
+      mainCategoryId: product.mainCategoryId,
+      subcategoryId: product.subcategoryId,
+      returnTo: "profile-products",
     });
+    router.push(`/product?${query.toString()}`);
+  };
+
+  const confirmDeleteProduct = async () => {
+    if (!pendingDelete || !uid) return;
+    setIsDeletingProduct(true);
+    try {
+      await productApiService.delete(pendingDelete.id, uid);
+      const key = productBucketKey(pendingDelete.mainCategoryId, pendingDelete.subcategoryId);
+      setProductsBySubcategory((current) => ({
+        ...current,
+        [key]: (current[key] ?? []).filter((product) => product.id !== pendingDelete.id),
+      }));
+      setSelectedProduct(null);
+      setPendingDelete(null);
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+    } finally {
+      setIsDeletingProduct(false);
+    }
   };
 
   const getCategoryName = (categoryId: string) => {
@@ -250,6 +329,11 @@ export const ProductsCard = React.forwardRef<
     return "";
   };
 
+  const doctorAppointmentIds = React.useMemo(
+    () => new Set(categoryService.getDoctorAppointmentItems().map((item) => String(item.originalId))),
+    [],
+  );
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-8">
@@ -260,7 +344,6 @@ export const ProductsCard = React.forwardRef<
 
   const hasSelections = selectedSpecialties.length > 0 || 
     Object.values(selectedSubcategories).some(arr => arr.length > 0);
-
   return (
     <div className="space-y-4">
       <div>
@@ -280,15 +363,19 @@ export const ProductsCard = React.forwardRef<
             {locale === 'ar' ? 'لم يتم اختيار أي تخصصات بعد' : 'No specialties selected yet'}
           </p>
           <p className="text-xs text-on-surface-variant mt-1">
-            {locale === 'ar' ? 'اختر التخصصات من تبويب "التخصصات"' : 'Select specialties from the "Specialties" tab'}
+            {locale === 'ar' ? 'اختر التخصصات من تبويب "التخصصات"' : 'Choose specialties in the "Specialties" tab'}
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-3">
           {selectedSpecialties.map((categoryId) => {
             const categoryName = getCategoryName(categoryId);
             const categoryImage = getCategoryImage(categoryId);
-            const subIds = selectedSubcategories[categoryId] || [];
+            const subIds = (selectedSubcategories[categoryId] || []).filter(
+              (subId) =>
+                categoryId !== String(CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID) ||
+                !doctorAppointmentIds.has(subId),
+            );
             const isExpanded = expandedCategories.has(categoryId);
 
             return (
@@ -296,9 +383,9 @@ export const ProductsCard = React.forwardRef<
                 <button
                   type="button"
                   onClick={() => toggleCategory(categoryId)}
-                  className="w-full flex items-center gap-3 p-3 bg-surface-container-low hover:bg-surface-container transition-colors"
+                  className="w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-surface-container-low hover:bg-surface-container transition-colors"
                 >
-                  <div className="relative h-10 w-10 rounded-lg overflow-hidden bg-surface-bright flex-shrink-0">
+                  <div className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-lg overflow-hidden bg-surface-bright flex-shrink-0">
                     {categoryImage && (
                       <Image
                         src={categoryImage}
@@ -308,36 +395,39 @@ export const ProductsCard = React.forwardRef<
                       />
                     )}
                   </div>
-                  <div className="flex-1 text-start">
-                    <span className="text-sm font-medium text-on-surface">{categoryName}</span>
+                  <div className="flex-1 text-start min-w-0">
+                    <span className="text-xs sm:text-sm font-medium text-on-surface truncate">{categoryName}</span>
                     {subIds.length > 0 && (
-                      <span className="text-xs text-on-surface-variant block mt-0.5">
+                      <span className="text-[10px] sm:text-xs text-on-surface-variant block mt-0.5">
                         {locale === 'ar' ? `${subIds.length} تصنيف فرعي` : `${subIds.length} subcategories`}
                       </span>
                     )}
                   </div>
                   {locale === 'ar' ? (
-                    isExpanded ? <ChevronDown className="h-4 w-4 text-on-surface-variant" /> : <ChevronLeft className="h-4 w-4 text-on-surface-variant" />
+                    isExpanded ? <ChevronDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-on-surface-variant flex-shrink-0" /> : <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-on-surface-variant flex-shrink-0" />
                   ) : (
-                    isExpanded ? <ChevronDown className="h-4 w-4 text-on-surface-variant" /> : <ChevronRight className="h-4 w-4 text-on-surface-variant" />
+                    isExpanded ? <ChevronDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-on-surface-variant flex-shrink-0" /> : <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-on-surface-variant flex-shrink-0" />
                   )}
                 </button>
 
                 {isExpanded && subIds.length > 0 && (
-                  <div className="border-t border-outline-variant/50 p-2 space-y-2 bg-surface">
+                  <div className="border-t border-outline-variant/50 p-1.5 sm:p-2 space-y-1.5 sm:space-y-2 bg-surface">
                     {subIds.map((subId) => {
                       const subName = getSubcategoryName(categoryId, subId);
                       const subImage = getSubcategoryImage(categoryId, subId);
-                      const isSubExpanded = expandedSubcategories.has(subId);
+                      const bucketKey = productBucketKey(categoryId, subId);
+                      const isSubExpanded = expandedSubcategories.has(bucketKey);
+                      const products = productsBySubcategory[bucketKey] ?? [];
+                      const isProductsLoading = loadingProductBuckets.has(bucketKey);
 
                       return (
                         <div key={subId} className="border border-outline-variant/50 rounded-md overflow-hidden">
                           <button
                             type="button"
-                            onClick={() => toggleSubcategory(subId)}
-                            className="w-full flex items-center gap-2 p-2 bg-surface-container-high/50 hover:bg-surface-container-high transition-colors"
+                            onClick={() => toggleSubcategory(categoryId, subId)}
+                            className="w-full flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 bg-surface-container-high/50 hover:bg-surface-container-high transition-colors"
                           >
-                            <div className="relative h-8 w-8 rounded-md overflow-hidden bg-surface-bright flex-shrink-0">
+                            <div className="relative h-7 w-7 sm:h-8 sm:w-8 rounded-md overflow-hidden bg-surface-bright flex-shrink-0">
                               {subImage && (
                                 <Image
                                   src={subImage}
@@ -347,21 +437,96 @@ export const ProductsCard = React.forwardRef<
                                 />
                               )}
                             </div>
-                            <span className="text-xs font-medium text-on-surface flex-1 text-start">{subName}</span>
+                            <span className="text-[10px] sm:text-xs font-medium text-on-surface flex-1 text-start truncate">{subName}</span>
                             {locale === 'ar' ? (
-                              isSubExpanded ? <ChevronDown className="h-3 w-3 text-on-surface-variant" /> : <ChevronLeft className="h-3 w-3 text-on-surface-variant" />
+                              isSubExpanded ? <ChevronDown className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-on-surface-variant flex-shrink-0" /> : <ChevronLeft className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-on-surface-variant flex-shrink-0" />
                             ) : (
-                              isSubExpanded ? <ChevronDown className="h-3 w-3 text-on-surface-variant" /> : <ChevronRight className="h-3 w-3 text-on-surface-variant" />
+                              isSubExpanded ? <ChevronDown className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-on-surface-variant flex-shrink-0" /> : <ChevronRight className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-on-surface-variant flex-shrink-0" />
                             )}
                           </button>
 
                           {isSubExpanded && (
-                            <div className="border-t border-outline-variant/30 p-3 bg-surface-container-low/30">
-                              <div className="text-center py-4">
-                                <Package className="h-6 w-6 mx-auto text-on-surface-variant mb-2" />
-                                <p className="text-xs text-on-surface-variant">
-                                  {locale === 'ar' ? 'لا توجد منتجات مضافة بعد' : 'No products added yet'}
-                                </p>
+                            <div className="border-t border-outline-variant/30 bg-surface-container-low/30 relative min-h-[100px] sm:min-h-[120px]">
+                              <div className="p-2 sm:p-3 pb-14 sm:pb-16">
+                                {isProductsLoading ? (
+                                  <div className="flex justify-center py-4">
+                                    <LoadingSpinner size="sm" />
+                                  </div>
+                                ) : products.length > 0 ? (
+                                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                                    {products.map((product) => {
+                                      const productName = product.data.fields["mainData.name"] ||
+                                        (locale === "ar" ? "منتج بدون اسم" : "Unnamed product");
+                                      const productImage = product.data.images[0]?.url;
+                                      return (
+                                        <button
+                                          type="button"
+                                          key={product.id}
+                                          onClick={() => setSelectedProduct(product)}
+                                          className={`overflow-hidden rounded-lg border bg-surface text-start transition-colors ${
+                                            selectedProduct?.id === product.id
+                                              ? "border-primary ring-2 ring-primary/25"
+                                              : "border-outline-variant"
+                                          }`}
+                                        >
+                                          <div className="relative aspect-square bg-surface-bright">
+                                            {productImage ? (
+                                              <Image src={productImage} alt={productName} fill className="object-cover" />
+                                            ) : (
+                                              <Package className="absolute inset-0 m-auto h-7 w-7 text-on-surface-variant" />
+                                            )}
+                                          </div>
+                                          <p className="truncate px-2 py-1.5 text-[10px] font-medium sm:text-xs">
+                                            {productName}
+                                          </p>
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                ) : (
+                                  <div className="text-center py-3 sm:py-4">
+                                    <Package className="h-5 w-5 sm:h-6 sm:w-6 mx-auto text-on-surface-variant mb-1.5 sm:mb-2" />
+                                    <p className="text-[10px] sm:text-xs text-on-surface-variant">
+                                      {locale === 'ar' ? 'لا توجد منتجات مضافة بعد' : 'No products added yet'}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="absolute bottom-0 left-0 right-0 grid grid-cols-3 gap-2 p-2 sm:p-3 border-t border-outline-variant/50 bg-surface">
+                                <button
+                                  type="button"
+                                  className="flex items-center justify-center gap-1.5 rounded-lg bg-primary px-2 py-2 text-[10px] font-medium text-on-primary transition-colors hover:bg-primary/90 sm:py-2.5 sm:text-xs"
+                                  onClick={() => {
+                                    const query = new URLSearchParams({
+                                      mode: "new",
+                                      mainCategoryId: categoryId,
+                                      subcategoryId: subId,
+                                      returnTo: "profile-products",
+                                    });
+                                    router.push(`/product?${query.toString()}`);
+                                  }}
+                                >
+                                  <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                  {locale === 'ar' ? 'إضافة منتج' : 'Add Product'}
+                                </button>
+                                <button
+                                  type="button"
+                                  disabled={!selectedProduct || selectedProduct.mainCategoryId !== categoryId || selectedProduct.subcategoryId !== subId}
+                                  onClick={() => selectedProduct && editProduct(selectedProduct)}
+                                  className="flex items-center justify-center gap-1.5 rounded-lg border border-outline-variant px-2 py-2 text-[10px] font-medium disabled:opacity-40 sm:py-2.5 sm:text-xs"
+                                >
+                                  <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                  {locale === "ar" ? "تعديل" : "Edit"}
+                                </button>
+                                <button
+                                  type="button"
+                                  disabled={!selectedProduct || selectedProduct.mainCategoryId !== categoryId || selectedProduct.subcategoryId !== subId}
+                                  onClick={() => selectedProduct && setPendingDelete(selectedProduct)}
+                                  className="flex items-center justify-center gap-1.5 rounded-lg border border-destructive/50 px-2 py-2 text-[10px] font-medium text-destructive disabled:opacity-40 sm:py-2.5 sm:text-xs"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                  {locale === "ar" ? "حذف" : "Delete"}
+                                </button>
                               </div>
                             </div>
                           )}
@@ -375,6 +540,40 @@ export const ProductsCard = React.forwardRef<
           })}
         </div>
       )}
+      {pendingDelete ? (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-surface p-5 shadow-xl">
+            <h3 className="text-lg font-semibold">
+              {locale === "ar" ? "حذف المنتج" : "Delete product"}
+            </h3>
+            <p className="mt-2 text-sm text-on-surface-variant">
+              {locale === "ar"
+                ? "سيتم حذف المنتج وصوره نهائيًا من التخزين. هل تريد المتابعة؟"
+                : "The product and its stored images will be permanently deleted. Continue?"}
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                disabled={isDeletingProduct}
+                onClick={() => setPendingDelete(null)}
+                className="rounded-lg border px-4 py-2 text-sm"
+              >
+                {locale === "ar" ? "إلغاء" : "Cancel"}
+              </button>
+              <button
+                type="button"
+                disabled={isDeletingProduct}
+                onClick={() => void confirmDeleteProduct()}
+                className="rounded-lg bg-destructive px-4 py-2 text-sm text-destructive-foreground disabled:opacity-60"
+              >
+                {isDeletingProduct
+                  ? locale === "ar" ? "جارٍ الحذف…" : "Deleting…"
+                  : locale === "ar" ? "تأكيد الحذف" : "Confirm delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 });
