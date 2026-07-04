@@ -44,6 +44,7 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/server-env.ts',
   'src/core/config/server-env.values.ts',
   'src/instrumentation.ts',
+  'src/modules/marketplace-orders/db/config.ts',
 ]);
 
 export const ALLOWED_FETCH_FILES = new Set(['src/core/api/gova-http-transport.ts']);
@@ -58,6 +59,7 @@ export const ALLOWED_DB_DRIVER_FILES_PATTERN = [
   /^src\/lib\/db\//,
   /^src\/core\/provisioning\//,
   /^src\/core\/storage\/providers\//,
+  /^src\/modules\/marketplace-orders\/db\//,
 ];
 
 export const ALLOWED_SQL_FILES_PATTERN = [
@@ -65,6 +67,9 @@ export const ALLOWED_SQL_FILES_PATTERN = [
   /^src\/features\/[^/]+\/repositories\//,
   /^src\/core\/database\/migrations\//,
   /^src\/core\/provisioning\//,
+  // This bounded module owns a dedicated database and keeps its SQL inside its
+  // internal persistence/orchestration boundary. It never leaks SQL to UI code.
+  /^src\/modules\/marketplace-orders\/(db|repositories|services|audit|tests)\//,
 ];
 
 /** Client-side IndexedDB utilities — not the server Database Client layer. */
@@ -109,6 +114,9 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p === 'src/core/api/gova-api-client.ts') return 'gova-api-client';
   if (p.startsWith('src/core/api/')) return 'api-shared';
   if (p.startsWith('src/core/config/')) return 'configuration';
+  if (p.startsWith('src/modules/marketplace-orders/db/')) return 'database-client';
+  if (p.startsWith('src/modules/marketplace-orders/tests/')) return 'dev-tools';
+  if (p.startsWith('src/modules/marketplace-orders/api/') || p.startsWith('src/modules/marketplace-orders/services/')) return 'server-services';
   if (p.startsWith('src/core/provisioning/')) return 'provisioning';
   if (p.includes('/application/') && p.includes('/features/storage/')) return 'server-services';
   if (

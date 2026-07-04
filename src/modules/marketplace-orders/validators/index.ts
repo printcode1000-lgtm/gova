@@ -1,0 +1,12 @@
+import type { Actor, ItemRef } from "../domain/types";
+import { assertCurrency, assertMinorUnits } from "../domain/value-objects/money";
+export const CUSTOM_REQUEST_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"] as const;
+const IMAGE_MIMES = new Set<string>(CUSTOM_REQUEST_IMAGE_MIME_TYPES);
+export function validateImageAttachment(input: { mimeType: string; fileSize: number; imageUrl: string }) { if (!IMAGE_MIMES.has(input.mimeType.toLowerCase())) throw new Error("Custom request attachments must be supported images only"); if (!Number.isSafeInteger(input.fileSize) || input.fileSize <= 0) throw new Error("Invalid image file size"); if (!input.imageUrl.trim()) throw new Error("Image URL is required"); }
+export function validateItemRef(ref: ItemRef) { if (!Number.isSafeInteger(ref.quantity) || ref.quantity <= 0) throw new Error("quantity must be a positive integer"); const product = Boolean(ref.orderItemId), custom = Boolean(ref.customRequestItemId); if (product === custom || (ref.itemType === "order_item") !== product) throw new Error("Shipment item must reference exactly one matching item type"); }
+export function validateRefund(amount: number, paid: number, alreadyRefunded: number) { assertMinorUnits(amount); if (amount > paid - alreadyRefunded) throw new Error("Refund cannot exceed the unrefunded paid amount"); }
+export function validatePriceOfferExpiry(expiresAt: string | null, now = new Date()) { if (expiresAt && new Date(expiresAt).getTime() <= now.getTime()) throw new Error("Price offer has expired"); }
+export function requireOwnership(actor: Actor, ownerId: string, roles: Actor["role"][]) { if (actor.role === "admin") return; if (!roles.includes(actor.role) || actor.id !== ownerId) throw new Error("Forbidden"); }
+export function validateMoneyAndCurrency(amount: number, currency: string) { assertMinorUnits(amount); assertCurrency(currency); }
+export const NON_SHIPPABLE = new Set(["seller_rejected", "buyer_cancelled", "admin_cancelled", "delivered", "closed", "refunded", "returned"]);
+export const RETURN_ELIGIBLE = new Set(["delivered", "delivery_rejected"]);
