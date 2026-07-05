@@ -77,45 +77,41 @@ export function CategorySubcategoriesPage({
 
   return (
     <div className="space-y-5 px-4 py-5">
-      <section className="gova-section-tonal gova-section-tonal-primary overflow-hidden">
-        <div className="relative min-h-28 rounded-2xl bg-surface-bright p-4">
-          {headerImage && (
-            <Image
-              src={`${headerImageBasePath}/${headerImage}`}
-              alt={pageTitle}
-              fill
-              className="object-cover opacity-20"
-              priority
-            />
-          )}
-          <div className="relative z-10 space-y-3">
-            <div>
-              <h1 className="text-2xl font-bold text-on-surface">{pageTitle}</h1>
-            </div>
-            <div className="relative">
-              <Search
-                className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant ${
-                  isRTL ? "right-4" : "left-4"
-                }`}
-                aria-hidden
-              />
-              <input
-                type="search"
-                value={searchText}
-                onChange={(event) => setSearchText(event.target.value)}
-                placeholder={
-                  locale === "ar"
-                    ? "\u0627\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u062a\u0635\u0646\u064a\u0641\u0627\u062a \u0627\u0644\u0641\u0631\u0639\u064a\u0629"
-                    : "Search subcategories"
-                }
-                className={`w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary ${
-                  isRTL ? "pr-12" : "pl-12"
-                }`}
-              />
-            </div>
-          </div>
+      <div className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden">
+        {headerImage && (
+          <Image
+            src={`${headerImageBasePath}/${headerImage}`}
+            alt={pageTitle}
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
+        )}
+        <div className="relative z-10">
+          <h1 className="text-2xl font-bold text-on-surface">{pageTitle}</h1>
         </div>
-      </section>
+        <div className="relative">
+          <Search
+            className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant ${
+              isRTL ? "right-4" : "left-4"
+            }`}
+            aria-hidden
+          />
+          <input
+            type="search"
+            value={searchText}
+            onChange={(event) => setSearchText(event.target.value)}
+            placeholder={
+              locale === "ar"
+                ? "\u0627\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u062a\u0635\u0646\u064a\u0641\u0627\u062a \u0627\u0644\u0641\u0631\u0639\u064a\u0629"
+                : "Search subcategories"
+            }
+            className={`w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary ${
+              isRTL ? "pr-12" : "pl-12"
+            }`}
+          />
+        </div>
+      </div>
 
       {visibleItems.length === 0 ? (
         <p className="rounded-2xl bg-surface p-8 text-center text-sm text-on-surface-variant">

@@ -54,7 +54,7 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
                     
                   </div>
                 </div>
-                <span className="text-[11px] font-normal leading-3 truncate text-center text-on-surface">
+                <span className="text-[11px] font-semibold leading-3 truncate text-center text-primary">
                   {name}
                 </span>
               </Link>
