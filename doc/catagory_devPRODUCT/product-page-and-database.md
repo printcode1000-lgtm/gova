@@ -14,7 +14,7 @@ The values are backward compatible with Product Style filenames. Before creating
 - Subcategory must belong to the main category.
 - Collection member must belong to the collection.
 - Unknown ID or wrong relationship is rejected with `invalidCategorySelection`.
-- The default Doctor Appointment and Delivery Services do not represent a valid product choice.
+- The default Doctor Appointment does not represent a valid product choice. Delivery Services has a valid subcategory for Product Style customization.
 - Regex protects input format only; Resolver is the source of relationship validity.
 
 ## Product Style
