@@ -1,15 +1,15 @@
 # Developer Category Selector
 
-محدد المطور مستهلك للـAPI العام في `@/features/categories`.
+The developer selector is a consumer of the public API in `@/features/categories`.
 
-## التدفق
+## Flow
 
-1. يحصل على main options من الوحدة.
-2. يحصل على child options وفق نوع الأب: category أو collection.
-3. يعرض التفاصيل من نموذج camelCase Typed.
-4. قبل قراءة أو حفظ Product Style يتحقق الخادم من العلاقة بواسطة `resolveLegacyProductSelection`.
-5. اسم الملف القديم `<mainId>__<childId>.json` باقٍ للتوافق، لكن المعرفين يجب أن يمثلا علاقة صالحة.
+1. Gets main options from the module.
+2. Gets child options according to parent type: category or collection.
+3. Displays details from the camelCase Typed model.
+4. Before reading or saving Product Style, the server verifies the relationship via `resolveLegacyProductSelection`.
+5. The old filename format `<mainId>__<childId>.json` remains for compatibility, but the IDs must represent a valid relationship.
 
-`doctor-appointment` خيار عرض افتراضي وليس Product Style نهائيًا؛ يجب اختيار تخصص طبي حقيقي لإنشاء منتج. Delivery Services لا يظهر في خيارات المنتجات.
+`doctor-appointment` is a virtual display option and not a final Product Style; a real medical specialty must be selected to create a product. Delivery Services does not appear in product options.
 
-ممنوع داخل الأداة استخدام `category_id` أو `original_id` أو `sub_collection` أو قراءة ملفات JSON.
+Using `category_id`, `original_id`, or `sub_collection` or reading JSON files inside the tool is prohibited.

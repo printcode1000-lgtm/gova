@@ -1,30 +1,30 @@
 # Category Display System
 
-## مصدر العرض
+## Display Source
 
-كل أسطح العرض تعتمد على `@/features/categories`. لا تقرأ المكونات JSON ولا تكوّن المجموعات أو Doctor Appointment بنفسها.
+All display surfaces depend on `@/features/categories`. Components do not read JSON or form collections or Doctor Appointment themselves.
 
-## الأسطح
+## Surfaces
 
-- Splash وHome يستقبلان `CategoryDisplay[]` من الصفحة الخادمة ويستخدمان `imageUrl` الجاهز.
-- `/categories/[categoryId]` يحل `CategoryTree` قبل الرسم ويستخدم `notFound()` عند غياب التصنيف.
-- `/collections/[collectionId]` يحل `CollectionDisplay` قبل الرسم.
-- البحث داخل القوائم فقط هو Client-side.
-- الملف الشخصي يستخدم `getProfileMainOptions` و`getProfileSubOptions`.
-- محدد المطور يستخدم catalog وoptions Typed من الوحدة ولا يقرأ المصدر.
+- Splash and Home receive `CategoryDisplay[]` from the server page and use the ready `imageUrl`.
+- `/categories/[categoryId]` resolves `CategoryTree` before rendering and uses `notFound()` when the category is missing.
+- `/collections/[collectionId]` resolves `CollectionDisplay` before rendering.
+- Search within lists only is Client-side.
+- Profile uses `getProfileMainOptions` and `getProfileSubOptions`.
+- Developer selector uses catalog and options Typed from the module and does not read the source.
 
-## الصور
+## Images
 
-الإسقاط العام يعيد `imageUrl`. لا يجوز للمستهلك تخمين ما إذا كانت الصورة تحت `mainCategories` أو `subCategories`.
+The public projection returns `imageUrl`. The consumer must not guess whether the image is under `mainCategories` or `subCategories`.
 
 ## Medical Services
 
-تعرض القائمة الأولى عقدة `virtual:doctor-appointment`. الضغط عليها يضيف `?view=doctor-appointment` ويعرض التخصصات الحقيقية. زر الرجوع يزيل المعامل. العقدة الافتراضية ليست اختيارًا محفوظًا.
+The first list displays the `virtual:doctor-appointment` node. Clicking it adds `?view=doctor-appointment` and shows the real specialties. The back button removes the parameter. The virtual node is not a saved choice.
 
 ## Collections
 
-تُبنى المجموعة داخل الوحدة من أعضائها بعد تحقق اتساق الاسم والصورة. رابط المجموعة مستقل عن رابط التصنيف، وعضو المجموعة يفتح صفحة تصنيفه الحقيقي.
+The collection is built inside the module from its members after verifying name and image consistency. The collection link is independent of the category link, and a collection member opens its real category page.
 
 ## Static export
 
-`generateStaticParams` يأخذ التصنيفات والمجموعات من الوحدة. يقوم `scripts/build-static.ts` بنسخ ملفات `public/catagory` كأصول فقط؛ ولا يفسر محتواها أو يستخدمها كمصدر أعمال ثانٍ.
+`generateStaticParams` takes categories and collections from the module. `scripts/build-static.ts` copies `public/catagory` files as assets only; it does not interpret their content or use them as a secondary source of truth.

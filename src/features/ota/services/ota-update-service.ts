@@ -264,11 +264,55 @@ export const otaUpdateService = {
     if (activeDownload) return activeDownload;
 
     activeDownload = (async () => {
-      const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), 60_000);
+      const downloadController = new AbortController();
+      const copyController = new AbortController();
+      const downloadTimeout = window.setTimeout(() => {
+        logWarn('OTA download timeout reached (120s), aborting download operations');
+        downloadController.abort();
+      }, 120_000);
+      const copyTimeout = window.setTimeout(() => {
+        logWarn('OTA copy timeout reached (300s), aborting copy operations');
+        copyController.abort();
+      }, 300_000);
+      
+      let downloadAbortedAt: number | null = null;
+      let copyAbortedAt: number | null = null;
+      
+      downloadController.signal.addEventListener('abort', () => {
+        downloadAbortedAt = Date.now();
+        logInfo('OTA download controller aborted');
+      });
+      
+      copyController.signal.addEventListener('abort', () => {
+        copyAbortedAt = Date.now();
+        logInfo('OTA copy controller aborted');
+      });
+      
+      function getAbortReason(error: unknown): string {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          if (downloadAbortedAt !== null && (copyAbortedAt === null || downloadAbortedAt < copyAbortedAt)) {
+            return 'download timeout (120s)';
+          }
+          if (copyAbortedAt !== null) {
+            return 'copy timeout (300s)';
+          }
+          return 'manual abort';
+        }
+        return 'network error';
+      }
+      
+      logInfo('OTA check/download started', {
+        downloadTimeout: '120s',
+        copyTimeout: '300s',
+      });
+      
+      let remoteEntries: Array<[string, OtaFileEntry]> = [];
+      let processed = 0;
+      
       try {
         onProgress?.({ progress: 8, statusKey: 'ota.checking', detail: 'Reading local manifest' });
-        const localManifest = await otaApiService.getLocalManifest(controller.signal);
+        logInfo('OTA: Reading local manifest (download phase)');
+        const localManifest = await otaApiService.getLocalManifest(downloadController.signal);
         validateManifest(localManifest, { remote: false });
         logInfo(`Local OTA version: ${localManifest.version}`, {
           fileCount: localManifest.fileCount,
@@ -281,7 +325,8 @@ export const otaUpdateService = {
           detail: `Current ${localManifest.version}`,
           currentVersion: localManifest.version,
         });
-        const remoteManifest = await otaApiService.getManifest(publicEnv.otaManifestUrl, controller.signal);
+        logInfo('OTA: Fetching remote manifest from R2 (download phase)');
+        const remoteManifest = await otaApiService.getManifest(publicEnv.otaManifestUrl, downloadController.signal);
         validateManifest(remoteManifest, { remote: true });
         logInfo(`Remote OTA version: ${remoteManifest.version}`, {
           fileCount: remoteManifest.fileCount,
@@ -347,20 +392,38 @@ export const otaUpdateService = {
 
         await capacitorOtaAdapter.prepareRelease(remoteManifest.version);
         const changedSet = new Set(diff.changed);
-        const remoteEntries = Object.entries(remoteManifest.files);
-        let processed = 0;
+        remoteEntries = Object.entries(remoteManifest.files);
+        processed = 0;
+        logInfo('OTA: Starting file processing', {
+          totalFiles: remoteEntries.length,
+          changedFiles: diff.changed.length,
+          unchangedFiles: remoteEntries.length - diff.changed.length,
+          downloadPhase: '120s timeout',
+          copyPhase: '300s timeout',
+        });
 
         for (const [filePath, expected] of remoteEntries) {
           const isChanged = changedSet.has(filePath);
           const source = isChanged ? 'remote' : 'current';
+          const controller = isChanged ? downloadController : copyController;
           let bytes: ArrayBuffer;
           try {
+            if (isChanged) {
+              logInfo(`OTA: Downloading changed file [${processed + 1}/${remoteEntries.length}]: ${filePath}`);
+            }
             bytes = isChanged
               ? await otaApiService.getFile(remoteFileUrl(remoteManifest, filePath), controller.signal)
               : await otaApiService.getCurrentFile(filePath, controller.signal);
           } catch (error) {
+            const abortReason = getAbortReason(error);
+            logWarn(`OTA: ${source} file request failed`, {
+              filePath,
+              source,
+              abortReason,
+              error: error instanceof Error ? error.message : error,
+            });
             throw new Error(
-              `OTA ${source} file request failed: ${filePath}: ${error instanceof Error ? error.message : error}`,
+              `OTA ${source} file request failed: ${filePath}: ${abortReason} - ${error instanceof Error ? error.message : error}`,
             );
           }
           const actualHash = await sha256(bytes);
@@ -393,6 +456,7 @@ export const otaUpdateService = {
           deletedFileCount: diff.deleted.length,
           downloadBytes: diff.downloadBytes,
         });
+        logInfo('OTA: Writing local manifest to staged release');
         await capacitorOtaAdapter.writeReleaseTextFile(
           remoteManifest.version,
           LOCAL_MANIFEST_FILE,
@@ -412,6 +476,7 @@ export const otaUpdateService = {
         };
         writeState({ ...readState(), pending });
         logInfo(`OTA release ready: ${remoteManifest.version}`, pending);
+        logInfo('OTA check/download completed successfully');
         onProgress?.({
           progress: 70,
           statusKey: 'ota.downloaded',
@@ -424,11 +489,21 @@ export const otaUpdateService = {
         });
         return pending;
       } catch (error) {
-        logWarn('OTA check/download failed', error instanceof Error ? error.message : error);
+        const abortReason = getAbortReason(error);
+        logWarn('OTA check/download failed', {
+          reason: abortReason,
+          message: error instanceof Error ? error.message : error,
+          downloadAbortedAt,
+          copyAbortedAt,
+          processedFiles: processed,
+          totalFiles: remoteEntries.length,
+        });
         throw error;
       } finally {
-        window.clearTimeout(timeout);
+        window.clearTimeout(downloadTimeout);
+        window.clearTimeout(copyTimeout);
         activeDownload = null;
+        logInfo('OTA: Cleanup - timeouts cleared');
       }
     })();
 

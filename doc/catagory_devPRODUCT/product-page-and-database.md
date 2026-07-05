@@ -1,32 +1,32 @@
 # Product Page and Category Database Contract
 
-## التخزين الحالي
+## Current Storage
 
-يحافظ جدول المنتجات على عمودي النص القديمين:
+The products table maintains the two legacy text columns:
 
 - `main_category_id`
 - `subcategory_id`
 
-القيم متوافقة خلفيًا مع أسماء ملفات Product Style. قبل إنشاء المنتج، يحول `ProductService` القيم إلى أرقام ويمررها إلى `categoryService.resolveLegacyProductSelection`.
+The values are backward compatible with Product Style filenames. Before creating a product, `ProductService` converts the values to numbers and passes them to `categoryService.resolveLegacyProductSelection`.
 
-## قواعد الصلاحية
+## Validity Rules
 
-- التصنيف الفرعي يجب أن ينتمي إلى التصنيف الرئيسي.
-- عضو المجموعة يجب أن ينتمي إلى المجموعة.
-- المعرف المجهول أو العلاقة الخاطئة ترفض بـ`invalidCategorySelection`.
-- Doctor Appointment الافتراضي وDelivery Services لا يمثلان اختيار منتج صالحًا.
-- Regex يحمي شكل المدخل فقط؛ Resolver هو مصدر صحة العلاقة.
+- Subcategory must belong to the main category.
+- Collection member must belong to the collection.
+- Unknown ID or wrong relationship is rejected with `invalidCategorySelection`.
+- The default Doctor Appointment and Delivery Services do not represent a valid product choice.
+- Regex protects input format only; Resolver is the source of relationship validity.
 
 ## Product Style
 
-مسار API الخاص بالمطور يطبق التحقق نفسه عند GET وPUT. لا تُقرأ أو تكتب ملفات Style لعلاقة تصنيف غير صالحة. يستمر شكل اسم الملف `<mainId>__<subcategoryId>.json` حفاظًا على الملفات الحالية.
+The developer API path applies the same validation on GET and PUT. Style files are not read or written for invalid category relationships. The filename format `<mainId>__<subcategoryId>.json` continues to preserve existing files.
 
-إذا لم يوجد الملف الخاص، تستخدم صفحات الإنشاء والعرض والتعديل `public/product/style/default.json`. يعرض التصميم العام الصور والتقييم والسعر والطلب والبيانات الرئيسية والمواصفات العامة، ويخفي مكونات الصيدلية والمركبات والعقارات.
+If the custom file does not exist, the create, view, and edit pages use `public/product/style/default.json`. The default design displays images, rating, price, order, main data, and general specifications, and hides pharmacy, vehicle, and real estate components.
 
-## العرض داخل الملف الشخصي
+## Display in Profile
 
-تبويب المنتجات يطلب منتجات المالك حسب `mainCategoryId` و`subcategoryId` من قاعدة المنتجات النشطة: SQLite في التطوير وTurso في الإنتاج. تعرض الحاوية أول صورة محفوظة و`mainData.name`، ويربط العنصر بصفحة عرض المنتج. بعد إنشاء منتج قادم من الملف الشخصي تعود الصفحة إلى `/profile?mode=edit&tab=products`.
+The products tab requests owner products by `mainCategoryId` and `subcategoryId` from the active products database: SQLite in development and Turso in production. The container displays the first saved image and `mainData.name`, and links the item to the product view page. After creating a product from the profile, the page returns to `/profile?mode=edit&tab=products`.
 
-## مصدر أسماء التصنيفات
+## Source of Category Names
 
-قاعدة المنتجات لا تكرر عناوين التصنيفات أو صورها. جميع بيانات العرض تأتي من وحدة التصنيفات، وهي وحدها التي تقرأ JSON الرسمي.
+The products database does not duplicate category titles or images. All display data comes from the categories module, which alone reads the official JSON.

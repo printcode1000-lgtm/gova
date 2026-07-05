@@ -1,21 +1,21 @@
 # Category Module Architecture
 
-## العقد المعماري
+## Architectural Contract
 
-`src/features/categories` هو المالك الوحيد لبيانات التصنيفات. لا يجوز لأي مكوّن أو خدمة أو مستودع قراءة أو استيراد `categories.json` أو `subcategories.json` مباشرة. الاستيراد العام الوحيد المسموح به هو:
+`src/features/categories` is the sole owner of category data. No component, service, or repository may read or import `categories.json` or `subcategories.json` directly. The only public import allowed is:
 
 ```ts
 import { categoryService, type CategoryDisplay } from "@/features/categories";
 ```
 
-ملفات المصدر الرسمية هي:
+The official source files are:
 
 - `public/catagory/categories.json`
 - `public/catagory/subcategories.json`
 
-يبقى اسم `catagory` مؤقتًا للتوافق مع الحزم الثابتة وOTA القائمة. لا توجد نسخة بيانات ثانية تحت `src/data`.
+The name `catagory` remains temporary for compatibility with existing static bundles and OTA. There is no second data copy under `src/data`.
 
-## مسار البيانات
+## Data Path
 
 ```text
 canonical JSON
@@ -28,37 +28,37 @@ canonical JSON
   -> application consumers
 ```
 
-حقول snake_case محصورة في `infrastructure`. كل ما يخرج من الوحدة يستخدم camelCase وأنواعًا صريحة.
+snake_case fields are confined to `infrastructure`. Everything exiting the module uses camelCase and explicit types.
 
-## الهوية
+## Identity
 
-- تصنيف: `category:<id>`
-- مجموعة: `collection:<id>`
-- عضو مجموعة: `collection-member:<collectionId>:<id>`
-- تصنيف فرعي: `subcategory:<categoryId>:<originalId>`
-- مجموعة افتراضية: `virtual:doctor-appointment`
+- Category: `category:<id>`
+- Collection: `collection:<id>`
+- Collection member: `collection-member:<collectionId>:<id>`
+- Subcategory: `subcategory:<categoryId>:<originalId>`
+- Virtual collection: `virtual:doctor-appointment`
 
-رقم `originalId` فريد داخل التصنيف الأب فقط، وليس عالميًا. هوية المجموعة مستقلة عن هوية التصنيف حتى إذا تساوى الرقمان.
+The `originalId` number is unique only within the parent category, not globally. Collection identity is independent of category identity even if the numbers are equal.
 
 ## Doctor Appointment
 
-هو عقدة عرض افتراضية غير قابلة للحفظ أو إنشاء منتج. فتحها يعرض العناصر الطبية الحقيقية التي قيمة `subCollection` لها تساوي صفرًا. الذي يُحفظ هو `originalId` الحقيقي لكل تخصص. لا تستخدم الوحدة معرفات سالبة.
+It is a virtual display node that cannot be saved or used to create a product. Opening it shows the real medical items whose `subCollection` value is zero. What is saved is the real `originalId` of each specialty. The module does not use negative IDs.
 
 ## Delivery Services
 
-السجل 46 موجود في المصدر الرسمي مرة واحدة. يستبعد من سوق الصفحة الرئيسية ومحدد المنتجات، ويضاف إلى خيارات تخصصات الملف الشخصي مباشرة دون قائمة فرعية. لا تنشئ الوحدة نسخة اصطناعية منه.
+Record 46 exists once in the official source. It is excluded from the home page market and product selector, and added directly to profile specialty options without a sublist. The module does not create an artificial copy of it.
 
-## API العام
+## Public API
 
-يوفر `CategoryService` إسقاطات Typed للصفحة الرئيسية، الأشجار، المجموعات، الملف الشخصي، محدد المطور، أعمدة التخصصات، والاختيارات العشوائية. كما يوفر `resolveSelection` و`resolveLegacyProductSelection` للتحقق من علاقة الأب والابن قبل حفظ المنتجات أو إعدادات تصميمها.
+`CategoryService` provides Typed projections for the home page, trees, collections, profile, developer selector, specialty columns, and random choices. It also provides `resolveSelection` and `resolveLegacyProductSelection` to verify parent-child relationships before saving products or their design settings.
 
-لا يعيد API العام Raw DTOs ولا يحتوي على `getAllForSpecialties`.
+The public API does not return Raw DTOs and does not contain `getAllForSpecialties`.
 
-## حدود العميل والخادم
+## Client/Server Boundary
 
-المحمّل يستخدم JSON imports متوافقة مع البناء ولا يعتمد على `fs` في مسار تشغيل التطبيق. لذلك يمكن للواجهات استهلاك الإسقاطات العامة دون تسريب قارئ ملفات Node إلى حزمة العميل. عمليات فحص وجود الصور تبقى في سكربت التحقق فقط.
+The loader uses build-compatible JSON imports and does not depend on `fs` in the application runtime path. Therefore, interfaces can consume public projections without leaking Node file readers into the client bundle. Image existence checks remain in the validation script only.
 
-## التحقق والاختبارات
+## Validation and Tests
 
 ```bash
 npm run category:validate
@@ -67,4 +67,4 @@ npm run architecture:check
 npm run typecheck
 ```
 
-يفحص محرك التحقق البنية، المعرفات المكررة، علاقة الأب، `originalId` المركبة، metadata المجموعات، الحقول المطلوبة، ومسارات الصور. يمنع فحص المعمارية الوصول المباشر للـJSON أو الحقول الخام أو استيراد تفاصيل الوحدة.
+The validation engine checks structure, duplicate IDs, parent relationship, composite `originalId`, collection metadata, required fields, and image paths. The architecture check prevents direct JSON access, raw fields, or module detail imports.
