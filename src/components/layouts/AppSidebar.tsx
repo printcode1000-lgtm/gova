@@ -9,6 +9,9 @@ import {
   ScrollText,
   Settings,
   ShieldCheck,
+  Sliders,
+  Sparkles,
+  TrendingUp,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -163,9 +166,26 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                       <Link
                         href="/super-admin/hero-slider"
                         onClick={onClose}
-                        className="block rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
                       >
-                        Hero Slider
+                        <Sliders className="h-4 w-4" />
+                        {t("sidebar.heroSlider")}
+                      </Link>
+                      <Link
+                        href="/super-admin/featured-marquee"
+                        onClick={onClose}
+                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+                      >
+                        <Sparkles className="h-4 w-4" />
+                        {t("sidebar.featuredMarquee")}
+                      </Link>
+                      <Link
+                        href="/super-admin/trending-ribbon"
+                        onClick={onClose}
+                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+                      >
+                        <TrendingUp className="h-4 w-4" />
+                        {t("sidebar.trendingRibbon")}
                       </Link>
                       <Link
                         href="/super-admin/logs"
