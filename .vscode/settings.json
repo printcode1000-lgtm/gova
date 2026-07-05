@@ -8,5 +8,7 @@
   "search.exclude": {
     "**/out/**": true
   },
-  "html.validate.scripts": false
+  "html.validate.scripts": false,
+  "workbench.browser.openLocalhostLinks": true,
+  "workbench.browser.enableChatTools": true
 }

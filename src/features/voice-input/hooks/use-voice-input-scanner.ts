@@ -22,9 +22,16 @@ export function useVoiceInputScanner(options: UseVoiceInputScannerOptions): void
       stopLabel: options.stopLabel,
     });
     scannerRef.current = scanner;
-    void scanner.start();
+
+    // Delay scanner start until after hydration to avoid mismatch
+    const rafId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        void scanner.start();
+      });
+    });
 
     return () => {
+      cancelAnimationFrame(rafId);
       scannerRef.current = null;
       void scanner.destroy();
     };
