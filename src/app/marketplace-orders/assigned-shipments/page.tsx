@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import { Truck, ShoppingBag, HelpCircle, Filter, Download, Package, ShieldCheck, FileText } from 'lucide-react';
 import { ImagePlaceholder } from '../components/ImagePlaceholder';
+import { useTranslation } from '@/lib/i18n';
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
-          <h1 className="text-xl font-bold text-primary">Assigned Shipments</h1>
-          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">Stitch Screen (Local)</span>
+          <h1 className="text-xl font-bold text-primary">{t('marketplaceOrders.assignedShipments.title')}</h1>
+          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">{t('marketplaceOrders.stitchScreen')}</span>
         </div>
         
         {/* Converted content */}
@@ -22,21 +24,21 @@ export default function Page() {
 </div>
 <div>
 <h3 className="font-headline-md text-headline-md text-on-surface">Gova User</h3>
-<p className="font-body-sm text-body-sm text-on-surface-variant">Carrier Portal</p>
+<p className="font-body-sm text-body-sm text-on-surface-variant">{t('marketplaceOrders.assignedShipments.carrierPortal')}</p>
 </div>
 </div>
 <nav className="mt-4 flex flex-col gap-1">
 <a className="text-on-surface-variant dark:text-surface-variant mx-2 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out flex items-center gap-3" href="#">
-<ShoppingBag className=""  /> Buyer View
+<ShoppingBag className=""  /> {t('marketplaceOrders.adminDisputes.buyerView')}
             </a>
 <a className="text-on-surface-variant dark:text-surface-variant mx-2 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out flex items-center gap-3" href="#">
-<HelpCircle className=""  /> Seller Dashboard
+<HelpCircle className=""  /> {t('marketplaceOrders.adminDisputes.sellerDashboard')}
             </a>
 <a className="bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary font-bold rounded-full mx-2 px-4 py-3 flex items-center gap-3" href="#">
-<HelpCircle className=""  /> Carrier Portal
+<HelpCircle className=""  /> {t('marketplaceOrders.assignedShipments.carrierPortal')}
             </a>
 <a className="text-on-surface-variant dark:text-surface-variant mx-2 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full transition-all duration-300 ease-in-out flex items-center gap-3" href="#">
-<HelpCircle className=""  /> Admin Panel
+<HelpCircle className=""  /> {t('marketplaceOrders.adminDisputes.adminPanel')}
             </a>
 </nav>
 <div className="mt-auto p-6 border-t border-outline-variant">
@@ -48,41 +50,41 @@ export default function Page() {
 
 <div className="flex flex-col md:flex-row md:items-end justify-between gap-stack-md py-stack-xl">
 <div>
-<h1 className="font-headline-xl text-headline-xl text-on-surface">Assigned Shipments</h1>
-<p className="font-body-md text-body-md text-on-surface-variant">Manage your active fleet and pending transport requirements.</p>
+<h1 className="font-headline-xl text-headline-xl text-on-surface">{t('marketplaceOrders.assignedShipments.title')}</h1>
+<p className="font-body-md text-body-md text-on-surface-variant">{t('marketplaceOrders.assignedShipments.description')}</p>
 </div>
 <div className="flex gap-2">
 <button className="bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-lg font-label-md flex items-center gap-2 hover:bg-surface-variant transition-colors border border-outline-variant">
-<Filter className=""  /> Filter
+<Filter className=""  /> {t('marketplaceOrders.adminDisputes.filter')}
                 </button>
 <button className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md flex items-center gap-2 hover:opacity-90 transition-opacity">
-<Download className=""  /> Export Manifest
+<Download className=""  /> {t('marketplaceOrders.assignedShipments.exportManifest')}
                 </button>
 </div>
 </div>
 
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-stack-xl">
 <div className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-sm">
-<p className="text-label-sm font-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Active Loads</p>
+<p className="text-label-sm font-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">{t('marketplaceOrders.assignedShipments.activeLoads')}</p>
 <div className="flex items-baseline gap-2">
 <span className="text-headline-lg font-headline-lg text-primary">12</span>
 <span className="text-body-sm font-body-sm text-secondary-fixed-dim font-bold">↑ 2</span>
 </div>
 </div>
 <div className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-sm">
-<p className="text-label-sm font-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">In Transit</p>
+<p className="text-label-sm font-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">{t('marketplaceOrders.assignedShipments.inTransit')}</p>
 <div className="flex items-baseline gap-2">
 <span className="text-headline-lg font-headline-lg text-primary">08</span>
 </div>
 </div>
 <div className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-sm">
-<p className="text-label-sm font-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Next 24h</p>
+<p className="text-label-sm font-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">{t('marketplaceOrders.assignedShipments.next24h')}</p>
 <div className="flex items-baseline gap-2">
 <span className="text-headline-lg font-headline-lg text-tertiary">04</span>
 </div>
 </div>
 <div className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-sm">
-<p className="text-label-sm font-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Delivered (Today)</p>
+<p className="text-label-sm font-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">{t('marketplaceOrders.assignedShipments.deliveredToday')}</p>
 <div className="flex items-baseline gap-2">
 <span className="text-headline-lg font-headline-lg text-secondary">06</span>
 </div>
@@ -108,9 +110,9 @@ export default function Page() {
 </div>
 </div>
 <div className="flex items-center gap-2">
-<span className="bg-secondary/15 text-secondary px-3 py-1 rounded-full text-label-sm font-label-sm">In Transit</span>
+<span className="bg-secondary/15 text-secondary px-3 py-1 rounded-full text-label-sm font-label-sm">{t('marketplaceOrders.assignedShipments.inTransit')}</span>
 <span className="bg-tertiary/15 text-tertiary px-3 py-1 rounded-full text-label-sm font-label-sm flex items-center gap-1">
-<HelpCircle className="text-[16px]"  /> Refrigerated
+<HelpCircle className="text-[16px]"  /> {t('marketplaceOrders.assignedShipments.refrigerated')}
                                 </span>
 </div>
 </div>
@@ -137,16 +139,16 @@ export default function Page() {
 <div className="flex flex-wrap gap-2">
 <div className="flex items-center gap-2 text-on-surface-variant text-body-sm bg-surface-container px-3 py-1.5 rounded-lg border border-outline-variant/30">
 <HelpCircle className="text-[18px]"  />
-<span>Semi-Trailer (Reefer)</span>
+<span>{t('marketplaceOrders.assignedShipments.semiTrailer')}</span>
 </div>
 <div className="flex items-center gap-2 text-on-surface-variant text-body-sm bg-surface-container px-3 py-1.5 rounded-lg border border-outline-variant/30">
 <ShieldCheck className="text-[18px]"  />
-<span>High-Value Load</span>
+<span>{t('marketplaceOrders.assignedShipments.highValueLoad')}</span>
 </div>
 </div>
 <div className="flex gap-2 w-full sm:w-auto">
-<button className="flex-1 sm:flex-none border border-primary text-primary px-4 py-2 rounded-lg font-label-md hover:bg-primary/5 transition-colors">View Map</button>
-<button className="flex-1 sm:flex-none bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md hover:opacity-90 transition-opacity">Update Status</button>
+<button className="flex-1 sm:flex-none border border-primary text-primary px-4 py-2 rounded-lg font-label-md hover:bg-primary/5 transition-colors">{t('marketplaceOrders.assignedShipments.viewMap')}</button>
+<button className="flex-1 sm:flex-none bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md hover:opacity-90 transition-opacity">{t('marketplaceOrders.assignedShipments.updateStatus')}</button>
 </div>
 </div>
 </div>
@@ -168,9 +170,9 @@ export default function Page() {
 </div>
 </div>
 <div className="flex items-center gap-2">
-<span className="bg-tertiary/15 text-tertiary px-3 py-1 rounded-full text-label-sm font-label-sm">Awaiting Dispatch</span>
+<span className="bg-tertiary/15 text-tertiary px-3 py-1 rounded-full text-label-sm font-label-sm">{t('marketplaceOrders.assignedShipments.awaitingDispatch')}</span>
 <span className="bg-primary/15 text-primary px-3 py-1 rounded-full text-label-sm font-label-sm flex items-center gap-1">
-<HelpCircle className="text-[16px]"  /> Oversized
+<HelpCircle className="text-[16px]"  /> {t('marketplaceOrders.assignedShipments.oversized')}
                                 </span>
 </div>
 </div>
@@ -195,16 +197,16 @@ export default function Page() {
 <div className="flex flex-wrap gap-2">
 <div className="flex items-center gap-2 text-on-surface-variant text-body-sm bg-surface-container px-3 py-1.5 rounded-lg border border-outline-variant/30">
 <HelpCircle className="text-[18px]"  />
-<span>Escort Required</span>
+<span>{t('marketplaceOrders.assignedShipments.escortRequired')}</span>
 </div>
 <div className="flex items-center gap-2 text-on-surface-variant text-body-sm bg-surface-container px-3 py-1.5 rounded-lg border border-outline-variant/30">
 <HelpCircle className="text-[18px]"  />
-<span>Step Deck Trailer</span>
+<span>{t('marketplaceOrders.assignedShipments.stepDeckTrailer')}</span>
 </div>
 </div>
 <div className="flex gap-2 w-full sm:w-auto">
-<button className="flex-1 sm:flex-none border border-outline text-on-surface-variant px-4 py-2 rounded-lg font-label-md hover:bg-surface-container-high transition-colors">Manifest</button>
-<button className="flex-1 sm:flex-none bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md hover:opacity-90 transition-opacity">Assign Driver</button>
+<button className="flex-1 sm:flex-none border border-outline text-on-surface-variant px-4 py-2 rounded-lg font-label-md hover:bg-surface-container-high transition-colors">{t('marketplaceOrders.assignedShipments.manifest')}</button>
+<button className="flex-1 sm:flex-none bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md hover:opacity-90 transition-opacity">{t('marketplaceOrders.assignedShipments.assignDriver')}</button>
 </div>
 </div>
 </div>
@@ -226,15 +228,15 @@ export default function Page() {
 </div>
 </div>
 <div className="flex items-center gap-2">
-<span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-sm font-label-sm">Delivered</span>
+<span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-sm font-label-sm">{t('marketplaceOrders.assignedShipments.delivered')}</span>
 </div>
 </div>
 <div className="flex items-center justify-between">
 <div className="flex items-center gap-2 text-body-sm text-on-surface-variant">
 <FileText className="text-[18px]"  />
-<span>POD Signed by J. Smith</span>
+<span>{t('marketplaceOrders.assignedShipments.podSigned')}</span>
 </div>
-<button className="text-primary font-label-md hover:underline">View Proof</button>
+<button className="text-primary font-label-md hover:underline">{t('marketplaceOrders.assignedShipments.viewProof')}</button>
 </div>
 </div>
 </div>

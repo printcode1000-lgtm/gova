@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import { ShoppingBag, HelpCircle, Filter, Download, User, Gavel } from 'lucide-react';
 import { ImagePlaceholder } from '../components/ImagePlaceholder';
+import { useTranslation } from '@/lib/i18n';
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
-          <h1 className="text-xl font-bold text-primary">Admin Disputes</h1>
-          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">Stitch Screen (Local)</span>
+          <h1 className="text-xl font-bold text-primary">{t('marketplaceOrders.adminDisputes.title')}</h1>
+          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">{t('marketplaceOrders.stitchScreen')}</span>
         </div>
         
         {/* Converted content */}
@@ -22,26 +24,26 @@ export default function Page() {
 <ImagePlaceholder alt="" className="w-full h-full object-cover"   />
 </div>
 <div>
-<h2 className="text-on-surface font-headline-md text-headline-md">Admin Panel</h2>
-<p className="text-on-surface-variant font-body-sm text-body-sm">Global Oversight</p>
+<h2 className="text-on-surface font-headline-md text-headline-md">{t('marketplaceOrders.adminDisputes.adminPanel')}</h2>
+<p className="text-on-surface-variant font-body-sm text-body-sm">{t('marketplaceOrders.adminDisputes.globalOversight')}</p>
 </div>
 </div>
 <nav className="flex flex-col gap-1">
 <div className="text-on-surface-variant mx-2 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full cursor-pointer flex items-center gap-3 transition-all">
 <ShoppingBag className="" data-icon="shopping_bag" />
-<span className="font-body-md text-body-md">Buyer View</span>
+<span className="font-body-md text-body-md">{t('marketplaceOrders.adminDisputes.buyerView')}</span>
 </div>
 <div className="text-on-surface-variant mx-2 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full cursor-pointer flex items-center gap-3 transition-all">
 <HelpCircle className="" data-icon="storefront" />
-<span className="font-body-md text-body-md">Seller Dashboard</span>
+<span className="font-body-md text-body-md">{t('marketplaceOrders.adminDisputes.sellerDashboard')}</span>
 </div>
 <div className="text-on-surface-variant mx-2 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-variant rounded-full cursor-pointer flex items-center gap-3 transition-all">
 <HelpCircle className="" data-icon="speed" />
-<span className="font-body-md text-body-md">Carrier Portal</span>
+<span className="font-body-md text-body-md">{t('marketplaceOrders.adminDisputes.carrierPortal')}</span>
 </div>
 <div className="bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary font-bold rounded-full mx-2 px-4 py-3 flex items-center gap-3">
 <HelpCircle className="" data-icon="admin_panel_settings" />
-<span className="font-body-md text-body-md">Admin Panel</span>
+<span className="font-body-md text-body-md">{t('marketplaceOrders.adminDisputes.adminPanel')}</span>
 </div>
 </nav>
 </div>
@@ -54,17 +56,17 @@ export default function Page() {
 
 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
 <div>
-<h2 className="font-headline-xl text-headline-xl text-primary">Dispute Resolution</h2>
-<p className="font-body-md text-body-md text-on-surface-variant mt-2">Managing tripartite conflicts between Buyers, Sellers, and Carriers.</p>
+<h2 className="font-headline-xl text-headline-xl text-primary">{t('marketplaceOrders.adminDisputes.disputeResolution')}</h2>
+<p className="font-body-md text-body-md text-on-surface-variant mt-2">{t('marketplaceOrders.adminDisputes.disputeResolutionDesc')}</p>
 </div>
 <div className="flex gap-stack-sm">
 <button className="h-touch-target px-6 bg-surface-container-high rounded-lg text-primary font-label-md flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
 <Filter className="" data-icon="filter_list" />
-                    Filter
+                    {t('marketplaceOrders.adminDisputes.filter')}
                 </button>
 <button className="h-touch-target px-6 bg-primary text-on-primary rounded-lg font-label-md flex items-center gap-2 shadow-md hover:opacity-90 transition-opacity">
 <Download className="" data-icon="download" />
-                    Export Report
+                    {t('marketplaceOrders.adminDisputes.exportReport')}
                 </button>
 </div>
 </div>
@@ -72,13 +74,13 @@ export default function Page() {
 <div className="bento-grid">
 
 <div className="col-span-12 lg:col-span-4 space-y-stack-md">
-<h3 className="font-headline-md text-headline-md text-on-surface-variant px-2">Active Queue (14)</h3>
+<h3 className="font-headline-md text-headline-md text-on-surface-variant px-2">{t('marketplaceOrders.adminDisputes.activeQueue')}</h3>
 
 <div className="space-y-stack-sm h-[700px] overflow-y-auto pr-2 custom-scrollbar">
 
 <div className="p-4 bg-surface-container-highest border-l-4 border-primary rounded-xl shadow-sm cursor-pointer transition-all">
 <div className="flex justify-between items-start mb-2">
-<span className="px-2 py-1 bg-error/15 text-error text-[10px] font-bold rounded uppercase tracking-wider">Critical</span>
+<span className="px-2 py-1 bg-error/15 text-error text-[10px] font-bold rounded uppercase tracking-wider">{t('marketplaceOrders.adminDisputes.critical')}</span>
 <span className="text-label-sm text-on-surface-variant">#DSP-9042</span>
 </div>
 <h4 className="font-headline-md text-[16px] text-on-surface leading-tight">Damaged Industrial Generator Delivery</h4>
@@ -94,7 +96,7 @@ export default function Page() {
 
 <div className="p-4 bg-white border border-outline-variant rounded-xl hover:shadow-md transition-all cursor-pointer">
 <div className="flex justify-between items-start mb-2">
-<span className="px-2 py-1 bg-tertiary-container/15 text-tertiary-fixed-dim text-[10px] font-bold rounded uppercase tracking-wider">Pending</span>
+<span className="px-2 py-1 bg-tertiary-container/15 text-tertiary-fixed-dim text-[10px] font-bold rounded uppercase tracking-wider">{t('marketplaceOrders.adminDisputes.pending')}</span>
 <span className="text-label-sm text-on-surface-variant">#DSP-8821</span>
 </div>
 <h4 className="font-headline-md text-[16px] text-on-surface leading-tight">Partial Shipment Shortage - Electronics</h4>
@@ -110,7 +112,7 @@ export default function Page() {
 
 <div className="p-4 bg-white border border-outline-variant rounded-xl hover:shadow-md transition-all cursor-pointer">
 <div className="flex justify-between items-start mb-2">
-<span className="px-2 py-1 bg-secondary-container/15 text-secondary text-[10px] font-bold rounded uppercase tracking-wider">Investigating</span>
+<span className="px-2 py-1 bg-secondary-container/15 text-secondary text-[10px] font-bold rounded uppercase tracking-wider">{t('marketplaceOrders.adminDisputes.investigating')}</span>
 <span className="text-label-sm text-on-surface-variant">#DSP-8715</span>
 </div>
 <h4 className="font-headline-md text-[16px] text-on-surface leading-tight">Incorrect Billing - Route Surcharge</h4>
@@ -177,12 +179,12 @@ export default function Page() {
 </div>
 
 <div className="flex justify-center">
-<span className="px-4 py-1 bg-surface-container-high rounded-full text-[11px] text-on-surface-variant font-medium uppercase tracking-widest italic">Admin entered the thread</span>
+<span className="px-4 py-1 bg-surface-container-high rounded-full text-[11px] text-on-surface-variant font-medium uppercase tracking-widest italic">{t('marketplaceOrders.adminDisputes.adminEntered')}</span>
 </div>
 
 <div className="flex flex-col items-start max-w-[85%]">
 <div className="flex items-center gap-2 mb-1">
-<span className="font-label-md text-label-md text-secondary font-bold">Admin Resolution Officer</span>
+<span className="font-label-md text-label-md text-secondary font-bold">{t('marketplaceOrders.adminDisputes.adminResolution')}</span>
 <span className="text-on-surface-variant text-[10px]">12:05 PM</span>
 </div>
 <div className="p-4 bg-secondary-container text-on-secondary-container rounded-tr-2xl rounded-br-2xl rounded-bl-2xl shadow-sm text-body-md italic border border-secondary/20">
@@ -194,22 +196,22 @@ export default function Page() {
 <div className="p-6 bg-white border-t-2 border-primary/10">
 <div className="flex items-center gap-3 mb-4">
 <Gavel className="text-primary" data-icon="gavel" />
-<h4 className="font-headline-md text-headline-md text-on-surface">Issue Admin Decision</h4>
+<h4 className="font-headline-md text-headline-md text-on-surface">{t('marketplaceOrders.adminDisputes.issueDecision')}</h4>
 </div>
 <form className="space-y-4">
 <div className="grid grid-cols-2 gap-4">
 <div className="space-y-1">
-<label className="font-label-md text-on-surface-variant">Liable Party</label>
+<label className="font-label-md text-on-surface-variant">{t('marketplaceOrders.adminDisputes.liableParty')}</label>
 <select className="w-full h-11 border-outline-variant rounded-lg focus:ring-primary focus:border-primary">
-<option>Select Party...</option>
-<option>Buyer (Nexus Corp)</option>
-<option>Seller (Industrial Source)</option>
-<option>Carrier (SwiftLogistics)</option>
-<option>Split Liability (50/50)</option>
+<option>{t('marketplaceOrders.adminDisputes.selectParty')}</option>
+<option>{t('marketplaceOrders.adminDisputes.buyer')}</option>
+<option>{t('marketplaceOrders.adminDisputes.seller')}</option>
+<option>{t('marketplaceOrders.adminDisputes.carrier')}</option>
+<option>{t('marketplaceOrders.adminDisputes.splitLiability')}</option>
 </select>
 </div>
 <div className="space-y-1">
-<label className="font-label-md text-on-surface-variant">Refund/Credit Amount</label>
+<label className="font-label-md text-on-surface-variant">{t('marketplaceOrders.adminDisputes.refundAmount')}</label>
 <div className="relative">
 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">$</span>
 <input className="w-full h-11 pl-8 border-outline-variant rounded-lg focus:ring-primary focus:border-primary" placeholder="0.00" type="number"/>
@@ -217,12 +219,12 @@ export default function Page() {
 </div>
 </div>
 <div className="space-y-1">
-<label className="font-label-md text-on-surface-variant">Formal Justification</label>
-<textarea className="w-full min-h-[80px] border-outline-variant rounded-lg p-3 focus:ring-primary focus:border-primary" placeholder="Detail the evidence used to reach this decision..."></textarea>
+<label className="font-label-md text-on-surface-variant">{t('marketplaceOrders.adminDisputes.justification')}</label>
+<textarea className="w-full min-h-[80px] border-outline-variant rounded-lg p-3 focus:ring-primary focus:border-primary" placeholder={t('marketplaceOrders.adminDisputes.justificationPlaceholder')}></textarea>
 </div>
 <div className="flex justify-end gap-3 pt-2">
-<button className="h-11 px-6 text-on-surface-variant font-label-md hover:bg-surface-container rounded-lg transition-all" type="button">Save Draft</button>
-<button className="h-11 px-8 bg-primary text-on-primary font-label-md rounded-lg shadow-lg hover:shadow-xl active:scale-95 transition-all" type="submit">Resolve Case</button>
+<button className="h-11 px-6 text-on-surface-variant font-label-md hover:bg-surface-container rounded-lg transition-all" type="button">{t('marketplaceOrders.adminDisputes.saveDraft')}</button>
+<button className="h-11 px-8 bg-primary text-on-primary font-label-md rounded-lg shadow-lg hover:shadow-xl active:scale-95 transition-all" type="submit">{t('marketplaceOrders.adminDisputes.resolveCase')}</button>
 </div>
 </form>
 </div>

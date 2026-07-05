@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import { MapPin, Truck, Info, Check, Star, ShieldCheck, Headphones, HelpCircle, Share2, Copy, Plus, Minus } from 'lucide-react';
 import { ImagePlaceholder } from '../components/ImagePlaceholder';
+import { useTranslation } from '@/lib/i18n';
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
-          <h1 className="text-xl font-bold text-primary">Shipment Tracking</h1>
-          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">Stitch Screen (Local)</span>
+          <h1 className="text-xl font-bold text-primary">{t('marketplaceOrders.shipmentTracking.title')}</h1>
+          <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-semibold">{t('marketplaceOrders.stitchScreen')}</span>
         </div>
         
         {/* Converted content */}
@@ -19,7 +21,7 @@ export default function Page() {
 
 <div className="flex flex-col md:flex-row md:items-end justify-between mb-stack-xl gap-stack-md">
 <div>
-<p className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-stack-xs">Tracking Number</p>
+<p className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-stack-xs">{t('marketplaceOrders.shipmentTracking.trackingNumber')}</p>
 <div className="flex items-center gap-3">
 <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">#GV-8829-4401-LX</h2>
 <button className="text-on-surface-variant hover:text-primary text-lg transition-colors" ><Copy className="w-5 h-5 inline-block" /></button>
@@ -30,7 +32,7 @@ export default function Page() {
 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
 <span className="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
 </span>
-<span className="font-label-md text-label-md text-on-secondary-container">Status: In Transit</span>
+<span className="font-label-md text-label-md text-on-secondary-container">{t('marketplaceOrders.shipmentTracking.statusInTransit')}</span>
 </div>
 </div>
 <div className="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
@@ -41,9 +43,9 @@ export default function Page() {
 <div className="p-stack-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
 <div className="flex items-center gap-2">
 <MapPin className="text-primary"  />
-<span className="font-label-md text-label-md">Current Location: Rotterdam Hub</span>
+<span className="font-label-md text-label-md">{t('marketplaceOrders.shipmentTracking.currentLocation')}</span>
 </div>
-<span className="text-body-sm font-body-sm text-on-surface-variant italic">Updated 12 mins ago</span>
+<span className="text-body-sm font-body-sm text-on-surface-variant italic">{t('marketplaceOrders.shipmentTracking.updated')}</span>
 </div>
 <div className="relative h-[350px] w-full bg-surface-variant flex items-center justify-center">
 <div className="absolute inset-0 grayscale opacity-40 mix-blend-multiply" data-location="Rotterdam, Netherlands" style={{ "backgroundImage": "none" }}></div>
@@ -63,7 +65,7 @@ export default function Page() {
 </section>
 
 <section className="bg-surface-container-lowest rounded-xl border border-outline-variant p-stack-lg shadow-sm">
-<h3 className="font-headline-md text-headline-md mb-stack-lg text-primary">Shipment Journey</h3>
+<h3 className="font-headline-md text-headline-md mb-stack-lg text-primary">{t('marketplaceOrders.shipmentTracking.shipmentJourney')}</h3>
 <div className="relative pl-8 space-y-stack-xl">
 
 <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-outline-variant"></div>
@@ -74,10 +76,10 @@ export default function Page() {
 </div>
 <div className="flex-1">
 <div className="flex justify-between items-start">
-<h4 className="font-label-md text-label-md text-outline">Out for Delivery</h4>
-<span className="text-body-sm font-body-sm text-outline">Expected: Oct 24</span>
+<h4 className="font-label-md text-label-md text-outline">{t('marketplaceOrders.shipmentTracking.outForDelivery')}</h4>
+<span className="text-body-sm font-body-sm text-outline">{t('marketplaceOrders.shipmentTracking.expected')}</span>
 </div>
-<p className="text-body-sm font-body-sm text-outline-variant">Final leg to destination address.</p>
+<p className="text-body-sm font-body-sm text-outline-variant">{t('marketplaceOrders.shipmentTracking.finalLeg')}</p>
 </div>
 </div>
 
@@ -87,13 +89,13 @@ export default function Page() {
 </div>
 <div className="flex-1">
 <div className="flex justify-between items-start">
-<h4 className="font-label-md text-label-md text-primary font-bold">In Transit</h4>
-<span className="text-body-sm font-body-sm text-primary">Active</span>
+<h4 className="font-label-md text-label-md text-primary font-bold">{t('marketplaceOrders.shipmentTracking.inTransit')}</h4>
+<span className="text-body-sm font-body-sm text-primary">{t('marketplaceOrders.shipmentTracking.active')}</span>
 </div>
-<p className="text-body-md font-body-md text-on-surface mb-2">Departed Rotterdam sorting facility.</p>
+<p className="text-body-md font-body-md text-on-surface mb-2">{t('marketplaceOrders.shipmentTracking.departed')}</p>
 <div className="bg-surface-container rounded-lg p-3 text-body-sm text-on-surface-variant flex items-center gap-3">
 <Info className="text-primary"  />
-<span>Delayed by 2 hours due to heavy port traffic.</span>
+<span>{t('marketplaceOrders.shipmentTracking.delayed')}</span>
 </div>
 </div>
 </div>
@@ -104,10 +106,10 @@ export default function Page() {
 </div>
 <div className="flex-1 opacity-80">
 <div className="flex justify-between items-start">
-<h4 className="font-label-md text-label-md text-on-surface">Carrier Picked Up</h4>
+<h4 className="font-label-md text-label-md text-on-surface">{t('marketplaceOrders.shipmentTracking.carrierPickedUp')}</h4>
 <span className="text-body-sm font-body-sm text-on-surface-variant">Oct 21, 14:30</span>
 </div>
-<p className="text-body-sm font-body-sm text-on-surface-variant">Consolidated at primary terminal.</p>
+<p className="text-body-sm font-body-sm text-on-surface-variant">{t('marketplaceOrders.shipmentTracking.consolidated')}</p>
 </div>
 </div>
 
@@ -117,10 +119,10 @@ export default function Page() {
 </div>
 <div className="flex-1 opacity-80">
 <div className="flex justify-between items-start">
-<h4 className="font-label-md text-label-md text-on-surface">Label Created</h4>
+<h4 className="font-label-md text-label-md text-on-surface">{t('marketplaceOrders.shipmentTracking.labelCreated')}</h4>
 <span className="text-body-sm font-body-sm text-on-surface-variant">Oct 20, 09:12</span>
 </div>
-<p className="text-body-sm font-body-sm text-on-surface-variant">Shipping documentation processed by seller.</p>
+<p className="text-body-sm font-body-sm text-on-surface-variant">{t('marketplaceOrders.shipmentTracking.documentation')}</p>
 </div>
 </div>
 </div>
@@ -130,7 +132,7 @@ export default function Page() {
 <div className="lg:col-span-4 space-y-stack-lg">
 
 <section className="bg-surface-container-lowest rounded-xl border border-outline-variant p-stack-lg shadow-sm">
-<h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-stack-md">Shipment Items (4)</h3>
+<h3 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-stack-md">{t('marketplaceOrders.shipmentTracking.shipmentItems')}</h3>
 <div className="space-y-4">
 
 <div className="flex gap-4 items-center p-2 hover:bg-surface-container rounded-lg transition-colors cursor-pointer group">
@@ -173,13 +175,13 @@ export default function Page() {
 </div>
 </div>
 <button className="w-full mt-stack-lg py-3 border border-primary text-primary font-label-md text-label-md rounded-xl hover:bg-primary/5 transition-colors">
-                        View Order Details
+                        {t('marketplaceOrders.shipmentTracking.viewOrderDetails')}
                     </button>
 </section>
 
 <section className="bg-primary-container text-on-primary-container rounded-xl p-stack-lg shadow-sm">
 <div className="flex items-center justify-between mb-4">
-<h3 className="font-label-md text-label-md uppercase tracking-wider opacity-80">Carrier Information</h3>
+<h3 className="font-label-md text-label-md uppercase tracking-wider opacity-80">{t('marketplaceOrders.shipmentTracking.carrierInfo')}</h3>
 <ShieldCheck className=""  />
 </div>
 <div className="flex items-center gap-4 mb-stack-md">
@@ -192,7 +194,7 @@ export default function Page() {
 <div className="space-y-3 pt-4 border-t border-white/10">
 <button className="w-full flex items-center justify-center gap-2 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-body-sm">
 <Headphones className="text-sm"  />
-                            Contact Carrier
+                            {t('marketplaceOrders.shipmentTracking.contactCarrier')}
                         </button>
 </div>
 </section>
@@ -200,11 +202,11 @@ export default function Page() {
 <div className="grid grid-cols-2 gap-3">
 <button className="flex flex-col items-center justify-center p-4 bg-surface-container-low border border-outline-variant rounded-xl hover:bg-surface-container-high transition-all">
 <HelpCircle className="text-primary mb-2"  />
-<span className="font-label-sm text-label-sm">Get Help</span>
+<span className="font-label-sm text-label-sm">{t('marketplaceOrders.shipmentTracking.getHelp')}</span>
 </button>
 <button className="flex flex-col items-center justify-center p-4 bg-surface-container-low border border-outline-variant rounded-xl hover:bg-surface-container-high transition-all">
 <Share2 className="text-primary mb-2"  />
-<span className="font-label-sm text-label-sm">Share Tracking</span>
+<span className="font-label-sm text-label-sm">{t('marketplaceOrders.shipmentTracking.shareTracking')}</span>
 </button>
 </div>
 </div>
