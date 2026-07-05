@@ -42,26 +42,28 @@ export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
   const isDraggingRef = useRef(false);
   const longPressTimerRef = useRef<number | null>(null);
   const animationRef = useRef<number | null>(null);
-
-  if (!items || items.length === 0) return null;
+  const hasItems = items && items.length > 0;
 
   // Duplicate items array to ensure seamless infinite horizontal scrolling (marquee)
   // Replicate items dynamically to have at least 12 items for smooth wrapping
   const minItems = 12;
   let replicationFactor = 1;
-  let marqueeItems = [...items];
+  let marqueeItems = [...(items || [])];
   
-  replicationFactor = Math.ceil(minItems / items.length);
+  replicationFactor = hasItems ? Math.ceil(minItems / items.length) : 1;
   if (replicationFactor < 2) {
     replicationFactor = 2; // Need at least two sets to scroll infinitely
   }
   
   marqueeItems = [];
-  for (let i = 0; i < replicationFactor; i++) {
-    marqueeItems.push(...items);
+  if (hasItems) {
+    for (let i = 0; i < replicationFactor; i++) {
+      marqueeItems.push(...items);
+    }
   }
 
   useEffect(() => {
+    if (!hasItems) return;
     const wrapOffset = () => {
       const track = trackRef.current;
       if (!track) return;
@@ -199,6 +201,8 @@ export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
     }
     onAction?.(action);
   };
+
+  if (!hasItems) return null;
 
   return (
     <section className="space-y-3 overflow-hidden select-none">

@@ -38,22 +38,25 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
   const longPressTimerRef = useRef<number | null>(null);
   const animationRef = useRef<number | null>(null);
 
-  if (!items || items.length === 0) return null;
+  const hasItems = items && items.length > 0;
 
   // Replicate items dynamically to have at least 15 items for smooth infinite loop
   const minItems = 15;
   let replicationFactor = 1;
-  replicationFactor = Math.ceil(minItems / items.length);
+  replicationFactor = hasItems ? Math.ceil(minItems / items.length) : 1;
   if (replicationFactor < 2) {
     replicationFactor = 2; // Need at least two sets to scroll infinitely
   }
 
   const loopItems: TrendingRibbonItem[] = [];
-  for (let i = 0; i < replicationFactor; i++) {
-    loopItems.push(...items);
+  if (hasItems) {
+    for (let i = 0; i < replicationFactor; i++) {
+      loopItems.push(...items);
+    }
   }
 
   useEffect(() => {
+    if (!hasItems) return;
     const wrapOffset = () => {
       const track = trackRef.current;
       if (!track) return;
@@ -192,6 +195,8 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
     }
     onAction?.(action);
   };
+
+  if (!hasItems) return null;
 
   return (
     <div
