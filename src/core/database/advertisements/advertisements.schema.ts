@@ -8,3 +8,11 @@ export const heroSlider = sqliteTable("hero_slider", {
   updatedAt: text("updated_at").notNull(),
   updatedBy: text("updated_by"),
 });
+
+export const featuredMarquee = sqliteTable("featured_marquee", {
+  id: text("id").primaryKey().notNull(),
+  productIdsJson: text("product_ids_json").notNull().default("[]"),
+  version: integer("version").notNull().default(1),
+  updatedAt: text("updated_at").notNull(),
+  updatedBy: text("updated_by"),
+});

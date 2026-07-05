@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/FeaturedMarquee";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { useHomeHeroSlider } from "@/features/advertisements/hooks/use-home-hero-slider";
-import heroMarqueeData from "./home-featured-marquee.json";
+import { useHomeFeaturedMarquee } from "@/features/advertisements/hooks/use-home-featured-marquee";
 import type { CategoryDisplay } from "@/features/categories";
 
 interface HomeScreenProps {
@@ -50,15 +50,16 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
     [],
   );
 
+  const { config: featuredMarqueeData } = useHomeFeaturedMarquee();
   const homeFeaturedMarqueeConfig = useMemo<FeaturedMarqueeConfig>(
     () => ({
-      sectionTitle: heroMarqueeData.sectionTitle,
-      items: heroMarqueeData.items,
+      sectionTitle: featuredMarqueeData.sectionTitle,
+      items: featuredMarqueeData.items,
       onAction: (action) => {
         console.log("Featured marquee action triggered:", action);
       },
     }),
-    [],
+    [featuredMarqueeData],
   );
 
   return (

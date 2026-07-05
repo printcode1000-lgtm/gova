@@ -21,6 +21,7 @@ const DROP_TABLES = [
   "hero_slider_slides",
   "hero_sliders",
   "hero_slider",
+  "featured_marquee",
 ];
 
 const CREATE_HERO_SLIDER = `

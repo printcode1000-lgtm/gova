@@ -31,6 +31,7 @@ export const GOVA_API_ROUTES = {
   advertisements: {
     homeHeroSlider: "/api/advertisements/home-hero-slider",
     homeHeroSliderVersion: "/api/advertisements/home-hero-slider/version",
+    featuredMarquee: "/api/advertisements/featured-marquee",
   },
   productReviews: {
     root: "/api/products/reviews",
