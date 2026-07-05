@@ -8,14 +8,16 @@ import * as React from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import type { CategoryDisplay } from '@/features/categories';
+import { TrendingRibbon, type TrendingRibbonConfig } from '@/components/ui/TrendingRibbon';
 
 const CATEGORY_RINGS = ['gova-ring-primary', 'gova-ring-secondary', 'gova-ring-tertiary', 'gova-ring-error'] as const;
 
 interface CategoriesGridProps {
   displayCategories: readonly CategoryDisplay[];
+  trendingRibbonConfig?: TrendingRibbonConfig;
 }
 
-export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
+export function CategoriesGrid({ displayCategories, trendingRibbonConfig }: CategoriesGridProps) {
   const { t, isRTL, locale } = useTranslation();
 
   return (
@@ -23,9 +25,9 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
       <div className="flex items-center mb-4">
         <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
           <Store className="w-5 h-5 text-primary" aria-hidden />
-          {t('home.suezMarkets')}
+          السويس
         </h3>
-        <div className="title-line-contact"></div>
+        {trendingRibbonConfig && <TrendingRibbon config={trendingRibbonConfig} />}
       </div>
 
       <div className="grid grid-cols-3 gap-2 sm:gap-3 pb-2">

@@ -3,6 +3,7 @@
 import { Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
+import { useTranslation } from '@/lib/i18n';
 import { shouldUseUnoptimizedImage } from '@/lib/images/external-image';
 
 export interface FeaturedMarqueeItem {
@@ -24,6 +25,7 @@ export interface FeaturedMarqueeProps {
 }
 
 export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
+  const { t } = useTranslation();
   const { sectionTitle, items, onAction } = config || {};
   if (!items || items.length === 0) return null;
 
@@ -32,11 +34,12 @@ export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
 
   return (
     <section className="space-y-3 overflow-hidden">
-      <div className="flex justify-between items-center">
-        <h3 className="gova-section-heading gova-section-heading-tertiary">
+      <div className="flex items-center mb-4">
+        <h3 className="text-lg font-semibold text-tertiary flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-tertiary animate-pulse-subtle" aria-hidden />
-          {sectionTitle}
+          {t(sectionTitle)}
         </h3>
+        <div className="title-line-contact"></div>
       </div>
 
       <div className="relative overflow-hidden py-4 rounded-xl gova-surface-neutral" dir="ltr">

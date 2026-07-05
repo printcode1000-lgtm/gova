@@ -1,5 +1,5 @@
 {
-  "label": "Trending:",
+  "label": "home.trending.label",
   "items": [
     { "label": "Nova S24 Pro Phone",  "action": "go-to-nova-phone" },
     { "label": "Timepiece Watch",     "action": "go-to-timepiece-watch" },
