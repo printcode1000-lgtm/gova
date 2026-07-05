@@ -257,9 +257,6 @@ export function DeveloperCategorySelector() {
 
     categories.forEach((category) => {
       if (category.collection === null) {
-        // Delivery Services لا تظهر في الخيارات
-        if (category.id === DELIVERY_SERVICES_ID) return;
-        
         options.set(`category-${category.id}`, {
           id: category.id,
           titleAr: category.titleAr,

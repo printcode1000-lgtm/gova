@@ -1570,5 +1570,17 @@
     "created_at": "2026-06-14 04:03:27",
     "updated_at": "2026-06-14 04:03:27",
     "sub_collection": ""
+  },
+  {
+    "id": 132,
+    "category_id": 46,
+    "original_id": 1,
+    "title_ar": "خدمات التوصيل",
+    "title_en": "Delivery Services",
+    "icon": "fas fa-shipping-fast",
+    "image": "Shipping & Delivery.webp",
+    "created_at": "2026-07-05 21:20:00",
+    "updated_at": "2026-07-05 21:20:00",
+    "sub_collection": null
   }
 ]
