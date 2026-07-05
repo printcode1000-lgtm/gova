@@ -75,7 +75,7 @@ export class CategoryService {
 
   getMainCategories(): readonly CategoryDisplay[] {
     return categories
-      .filter((category) => category.collection === null && category.id !== CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID)
+      .filter((category) => category.collection === null)
       .map(categoryDisplay)
       .sort(byOrder);
   }

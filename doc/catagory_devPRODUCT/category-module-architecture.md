@@ -46,7 +46,7 @@ It is a virtual display node that cannot be saved or used to create a product. O
 
 ## Delivery Services
 
-Record 46 exists once in the official source. It is excluded from the home page market and product selector, and added directly to profile specialty options without a sublist. The module does not create an artificial copy of it.
+Record 46 exists once in the official source. It is included in the home page market, excluded from the product selector, and added directly to profile specialty options without a sublist. The module does not create an artificial copy of it.
 
 ## Public API
 
