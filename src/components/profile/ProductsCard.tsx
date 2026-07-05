@@ -203,6 +203,17 @@ export const ProductsCard = React.forwardRef<
     router.push(`/product?${query.toString()}`);
   };
 
+  const viewProduct = (product: ProductRecord) => {
+    const query = new URLSearchParams({
+      mode: "view",
+      productId: product.id,
+      mainCategoryId: product.mainCategoryId,
+      subcategoryId: product.subcategoryId,
+      returnTo: "profile-products",
+    });
+    router.push(`/product?${query.toString()}`);
+  };
+
   const confirmDeleteProduct = async () => {
     if (!pendingDelete || !uid) return;
     setIsDeletingProduct(true);
@@ -459,27 +470,56 @@ export const ProductsCard = React.forwardRef<
                                         (locale === "ar" ? "منتج بدون اسم" : "Unnamed product");
                                       const productImage = product.data.images[0]?.url;
                                       return (
-                                        <button
-                                          type="button"
+                                        <div
                                           key={product.id}
-                                          onClick={() => setSelectedProduct(product)}
-                                          className={`overflow-hidden rounded-lg border bg-surface text-start transition-colors ${
-                                            selectedProduct?.id === product.id
-                                              ? "border-primary ring-2 ring-primary/25"
-                                              : "border-outline-variant"
-                                          }`}
+                                          className="group relative overflow-hidden rounded-lg border border-outline-variant bg-surface text-start transition-colors hover:border-primary hover:shadow-sm"
                                         >
-                                          <div className="relative aspect-square bg-surface-bright">
-                                            {productImage ? (
-                                              <Image src={productImage} alt={productName} fill className="object-cover" />
-                                            ) : (
-                                              <Package className="absolute inset-0 m-auto h-7 w-7 text-on-surface-variant" />
-                                            )}
-                                          </div>
-                                          <p className="truncate px-2 py-1.5 text-[10px] font-medium sm:text-xs">
-                                            {productName}
-                                          </p>
-                                        </button>
+                                          {/* Clickable area to view product */}
+                                          <button
+                                            type="button"
+                                            onClick={() => viewProduct(product)}
+                                            className="w-full text-start focus:outline-none"
+                                          >
+                                            <div className="relative aspect-square bg-surface-bright">
+                                              {productImage ? (
+                                                <Image src={productImage} alt={productName} fill className="object-cover" />
+                                              ) : (
+                                                <Package className="absolute inset-0 m-auto h-7 w-7 text-on-surface-variant" />
+                                              )}
+                                            </div>
+                                            <p className="truncate px-2 py-1.5 text-[10px] font-medium sm:text-xs">
+                                              {productName}
+                                            </p>
+                                          </button>
+
+                                          {/* Floating Edit and Delete Buttons on hover */}
+                                          {!readOnly && (
+                                            <div className="absolute top-1 end-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 p-1 rounded-md backdrop-blur-xs">
+                                              <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  editProduct(product);
+                                                }}
+                                                className="p-1 rounded bg-surface hover:bg-primary hover:text-on-primary text-on-surface-variant transition-colors"
+                                                title={locale === 'ar' ? 'تعديل' : 'Edit'}
+                                              >
+                                                <Pencil className="h-3 w-3" />
+                                              </button>
+                                              <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setPendingDelete(product);
+                                                }}
+                                                className="p-1 rounded bg-surface hover:bg-destructive hover:text-on-destructive text-destructive transition-colors"
+                                                title={locale === 'ar' ? 'حذف' : 'Delete'}
+                                              >
+                                                <Trash2 className="h-3 w-3" />
+                                              </button>
+                                            </div>
+                                          )}
+                                        </div>
                                       );
                                     })}
                                   </div>
@@ -492,10 +532,10 @@ export const ProductsCard = React.forwardRef<
                                   </div>
                                 )}
                               </div>
-                              <div className="absolute bottom-0 left-0 right-0 grid grid-cols-3 gap-2 p-2 sm:p-3 border-t border-outline-variant/50 bg-surface">
+                              <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 border-t border-outline-variant/50 bg-surface">
                                 <button
                                   type="button"
-                                  className="flex items-center justify-center gap-1.5 rounded-lg bg-primary px-2 py-2 text-[10px] font-medium text-on-primary transition-colors hover:bg-primary/90 sm:py-2.5 sm:text-xs"
+                                  className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-2 py-2 text-[10px] font-medium text-on-primary transition-colors hover:bg-primary/90 sm:py-2.5 sm:text-xs"
                                   onClick={() => {
                                     const query = new URLSearchParams({
                                       mode: "new",
@@ -508,24 +548,6 @@ export const ProductsCard = React.forwardRef<
                                 >
                                   <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                   {locale === 'ar' ? 'إضافة منتج' : 'Add Product'}
-                                </button>
-                                <button
-                                  type="button"
-                                  disabled={!selectedProduct || selectedProduct.mainCategoryId !== categoryId || selectedProduct.subcategoryId !== subId}
-                                  onClick={() => selectedProduct && editProduct(selectedProduct)}
-                                  className="flex items-center justify-center gap-1.5 rounded-lg border border-outline-variant px-2 py-2 text-[10px] font-medium disabled:opacity-40 sm:py-2.5 sm:text-xs"
-                                >
-                                  <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                  {locale === "ar" ? "تعديل" : "Edit"}
-                                </button>
-                                <button
-                                  type="button"
-                                  disabled={!selectedProduct || selectedProduct.mainCategoryId !== categoryId || selectedProduct.subcategoryId !== subId}
-                                  onClick={() => selectedProduct && setPendingDelete(selectedProduct)}
-                                  className="flex items-center justify-center gap-1.5 rounded-lg border border-destructive/50 px-2 py-2 text-[10px] font-medium text-destructive disabled:opacity-40 sm:py-2.5 sm:text-xs"
-                                >
-                                  <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                  {locale === "ar" ? "حذف" : "Delete"}
                                 </button>
                               </div>
                             </div>
