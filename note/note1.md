@@ -2,16 +2,17 @@
 
  الخيار 1: تغيير السياسة للمستخدم الحالي (الأكثر أماناً)
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-
+    
 # فتح صفحة داخل المتصفح المدمج في IDE
 Cursor
 افتح Command Palette:
 Ctrl + Shift + P
 ابحث عن:
 Simple Browser: Show
-أدخل الرابط:
+أدخل الرابط التالي:
 http://localhost:3000
-
+         يسيلاتتاتا
+         ناننت
 http://localhost:3001
 
 لعرض احداث المتصفح في IDE
