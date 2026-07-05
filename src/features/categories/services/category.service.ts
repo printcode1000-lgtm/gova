@@ -193,8 +193,7 @@ export class CategoryService {
   }
 
   getProfileMainOptions(): readonly CategoryDisplay[] {
-    const delivery = categories.find((category) => category.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID);
-    return [...this.getAllDisplayCategories(), ...(delivery ? [categoryDisplay(delivery)] : [])].sort(byOrder);
+    return [...this.getAllDisplayCategories()].sort(byOrder);
   }
 
   getProfileSubOptions(categoryId: number, isCollection: boolean): readonly SubcategoryDisplay[] {
