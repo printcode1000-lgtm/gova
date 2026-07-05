@@ -51,17 +51,12 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
                       fill
                       className="object-cover"
                     />
-                    <span
-                      className={cn(
-                        'absolute bottom-2 text-[11px] font-normal leading-3 truncate px-2 py-1 rounded-md',
-                        'bg-black/50 text-white',
-                        isRTL ? 'right-2' : 'left-2'
-                      )}
-                    >
-                      {name}
-                    </span>
+                    
                   </div>
                 </div>
+                <span className="text-[11px] font-normal leading-3 truncate text-center text-on-surface">
+                  {name}
+                </span>
               </Link>
             );
           })}
@@ -69,3 +64,6 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
     </section>
   );
 }
+
+
+

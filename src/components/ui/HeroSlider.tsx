@@ -488,7 +488,7 @@ export function HeroSlider({
                     )}
                     {(slide.title || slide.subtitle) && (
                       <div className="absolute inset-0 z-10 flex items-center px-4 sm:px-6">
-                        <div className="w-fit max-w-[88%] rounded-xl bg-gradient-to-l from-primary/90 via-primary/65 to-transparent px-4 py-4 pe-12 text-on-primary shadow-sm ltr:bg-gradient-to-r sm:max-w-[60%] sm:px-6 sm:py-5 sm:pe-16">
+                        <div className="w-fit max-w-[88%] rounded-xl px-4 py-4 pe-12 text-white shadow-sm sm:max-w-[60%] sm:px-6 sm:py-5 sm:pe-16">
                           {slide.subtitle && (
                             <span className="mb-2 block w-fit rounded-full bg-black/45 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
                               {slide.subtitle}
