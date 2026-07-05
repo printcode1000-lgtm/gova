@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 import { CategoriesGrid } from "@/components/home/CategoriesGrid";
 import { CuratedOffers } from "@/components/home/CuratedOffers";
@@ -9,7 +10,6 @@ import {
   TrendingRibbon,
   type TrendingRibbonConfig,
 } from "@/components/ui/TrendingRibbon";
-import trendingRibbonData from "./home-trending-ribbon.json";
 import {
   FeaturedMarquee,
   type FeaturedMarqueeConfig,
@@ -17,6 +17,7 @@ import {
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { useHomeHeroSlider } from "@/features/advertisements/hooks/use-home-hero-slider";
 import { useHomeFeaturedMarquee } from "@/features/advertisements/hooks/use-home-featured-marquee";
+import { useHomeTrendingRibbon } from "@/features/advertisements/hooks/use-home-trending-ribbon";
 import type { CategoryDisplay } from "@/features/categories";
 
 interface HomeScreenProps {
@@ -24,6 +25,7 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ displayCategories }: HomeScreenProps) {
+  const router = useRouter();
   const homeHero = useHomeHeroSlider();
   const homeHeroSliderConfig = useMemo<HeroSliderConfig>(
     () => ({
@@ -39,15 +41,24 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
     [homeHero.config],
   );
 
+  const { config: trendingRibbonData } = useHomeTrendingRibbon();
   const homeTrendingRibbonConfig = useMemo<TrendingRibbonConfig>(
     () => ({
       label: trendingRibbonData.label,
       items: trendingRibbonData.items,
       onAction: (action) => {
-        console.log("Trending ribbon action triggered:", action);
+        if (action.startsWith("/") || action.startsWith("http")) {
+          window.location.href = action;
+        } else if (action.includes("productId=")) {
+          router.push(`/product?${action}`);
+        } else if (/^[0-9a-fA-F-]{36}$/.test(action)) {
+          router.push(`/product?mode=view&productId=${action}`);
+        } else {
+          console.log("Trending ribbon action triggered:", action);
+        }
       },
     }),
-    [],
+    [trendingRibbonData, router],
   );
 
   const { config: featuredMarqueeData } = useHomeFeaturedMarquee();
@@ -56,10 +67,10 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
       sectionTitle: featuredMarqueeData.sectionTitle,
       items: featuredMarqueeData.items,
       onAction: (action) => {
-        console.log("Featured marquee action triggered:", action);
+        router.push(`/product?${action}`);
       },
     }),
-    [featuredMarqueeData],
+    [featuredMarqueeData, router],
   );
 
   return (

@@ -27,7 +27,6 @@ export async function GET(request: Request) {
     },
   );
 }
-
 export async function PUT(request: Request) {
   return runTracedBusinessRoute(
     "PUT /api/advertisements/featured-marquee",
@@ -36,9 +35,14 @@ export async function PUT(request: Request) {
         const body = (await request.json()) as {
           identity: { uid: string; phone: string };
           config: FeaturedMarqueeConfig;
+          checkIntervalMinutes: number;
         };
         return apiSuccess(
-          await featuredMarqueeService.save(body.identity, body.config),
+          await featuredMarqueeService.save(
+            body.identity,
+            body.config,
+            body.checkIntervalMinutes,
+          ),
         );
       } catch (error) {
         const message =

@@ -15,6 +15,20 @@
       "when": 1783090000000,
       "tag": "0001_featured_marquee",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1783091000000,
+      "tag": "0002_featured_marquee_interval",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1783092000000,
+      "tag": "0003_trending_ribbon",
+      "breakpoints": true
     }
   ]
 }

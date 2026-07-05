@@ -4,72 +4,48 @@ import {
   Eye,
   GripVertical,
   Loader2,
-  Package,
   Plus,
   RefreshCw,
   Save,
   ShieldCheck,
   Trash2,
 } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { FeaturedMarquee } from "@/components/ui/FeaturedMarquee";
+import { TrendingRibbon } from "@/components/ui/TrendingRibbon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FEATURED_MARQUEE_CACHE_KEY, type FeaturedMarqueeRecord } from "@/features/advertisements/entities/featured-marquee.entity";
-import { featuredMarqueeApiService } from "@/features/advertisements/services/featured-marquee-api-service";
+import {
+  TRENDING_RIBBON_CACHE_KEY,
+  type TrendingRibbonRecord,
+} from "@/features/advertisements/entities/trending-ribbon.entity";
+import { trendingRibbonApiService } from "@/features/advertisements/services/trending-ribbon-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { GOVA_DB_STORES, govaDbDelete } from "@/lib/gova-db";
-import { productApiService } from "@/features/product/services/product-api-service";
-import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-interface ResolvedItem {
-  productId: string;
-  product: ProductRecord | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function getProductName(product: ProductRecord): string {
-  return product.data.fields["mainData.name"] ?? "منتج بدون اسم";
-}
-
-function getProductPrice(product: ProductRecord): string {
-  return product.data.fields["price.current"] ?? "";
-}
-
-function getProductImage(product: ProductRecord): string {
-  return product.data.images[0]?.url ?? "";
-}
-
-function buildProductAction(product: ProductRecord): string {
-  return [
-    `mode=view`,
-    `productId=${encodeURIComponent(product.id)}`,
-    `mainCategoryId=${encodeURIComponent(product.mainCategoryId)}`,
-    `subcategoryId=${encodeURIComponent(product.subcategoryId)}`,
-  ].join("&");
+interface FormItem {
+  label: string;
+  action: string;
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export function SuperAdminFeaturedMarqueePage() {
+export function SuperAdminTrendingRibbonPage() {
   const router = useRouter();
   const { session, isLoading: sessionLoading } = useSession();
   const authorized = isSuperAdmin(session);
 
-  const [record, setRecord] = useState<FeaturedMarqueeRecord | null>(null);
-  const [items, setItems] = useState<ResolvedItem[]>([]);
-  const [newProductId, setNewProductId] = useState("");
+  const [record, setRecord] = useState<TrendingRibbonRecord | null>(null);
+  const [badgeLabel, setBadgeLabel] = useState("home.trending.label");
+  const [items, setItems] = useState<FormItem[]>([]);
+  const [newItemLabel, setNewItemLabel] = useState("");
+  const [newItemAction, setNewItemAction] = useState("");
   const [intervalMinutes, setIntervalMinutes] = useState(15);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -87,49 +63,19 @@ export function SuperAdminFeaturedMarqueePage() {
 
   // ── Load admin record ───────────────────────────────────────────────────────
 
-  const resolveProduct = useCallback(
-    async (productId: string): Promise<ResolvedItem> => {
-      try {
-        const product = await productApiService.get(productId);
-        return { productId, product, isLoading: false, error: null };
-      } catch {
-        return {
-          productId,
-          product: null,
-          isLoading: false,
-          error: "لم يتم العثور على هذا المنتج",
-        };
-      }
-    },
-    [],
-  );
-
   const load = useCallback(async () => {
     if (!session || !isSuperAdmin(session)) return;
     setBusy(true);
     setMessage(null);
     try {
-      const next = await featuredMarqueeApiService.getAdmin(session);
+      const next = await trendingRibbonApiService.getAdmin(session);
       setRecord(next);
+      setBadgeLabel(next.config.label || "home.trending.label");
+      setItems(next.config.items || []);
       setIntervalMinutes(next.checkIntervalMinutes);
-      // Resolve all product IDs to their full records
-      const placeholders: ResolvedItem[] = next.config.productIds.map(
-        (id) => ({
-          productId: id,
-          product: null,
-          isLoading: true,
-          error: null,
-        }),
-      );
-      setItems(placeholders);
-      // Fetch each product
-      const resolved = await Promise.all(
-        next.config.productIds.map((id) => resolveProduct(id)),
-      );
-      setItems(resolved);
     } catch (error) {
       reportSystemIssue({
-        feature: "FeaturedMarqueeAdmin",
+        feature: "TrendingRibbonAdmin",
         operation: "load-settings",
         error,
       });
@@ -140,43 +86,32 @@ export function SuperAdminFeaturedMarqueePage() {
     } finally {
       setBusy(false);
     }
-  }, [session, resolveProduct]);
+  }, [session]);
 
   useEffect(() => {
     if (!sessionLoading && authorized) void load();
   }, [authorized, sessionLoading, load]);
 
-  // ── Add product ─────────────────────────────────────────────────────────────
+  // ── Add Item ────────────────────────────────────────────────────────────────
 
-  const addProduct = async () => {
-    const trimmed = newProductId.trim();
-    if (!trimmed) return;
-    if (items.some((item) => item.productId === trimmed)) {
-      setMessage("هذا المنتج مضاف بالفعل.");
+  const addItem = () => {
+    const labelTrimmed = newItemLabel.trim();
+    const actionTrimmed = newItemAction.trim();
+    if (!labelTrimmed || !actionTrimmed) {
+      setMessage("يرجى ملء كلا الحقلين: النص والإجراء.");
       setMessageType("error");
       return;
     }
-    setNewProductId("");
+    setItems((prev) => [...prev, { label: labelTrimmed, action: actionTrimmed }]);
+    setNewItemLabel("");
+    setNewItemAction("");
     setMessage(null);
-    const placeholder: ResolvedItem = {
-      productId: trimmed,
-      product: null,
-      isLoading: true,
-      error: null,
-    };
-    setItems((prev) => [...prev, placeholder]);
-    const resolved = await resolveProduct(trimmed);
-    setItems((prev) =>
-      prev.map((item) =>
-        item.productId === trimmed ? resolved : item,
-      ),
-    );
   };
 
-  // ── Remove product ──────────────────────────────────────────────────────────
+  // ── Remove Item ─────────────────────────────────────────────────────────────
 
-  const removeProduct = (productId: string) => {
-    setItems((prev) => prev.filter((item) => item.productId !== productId));
+  const removeItem = (index: number) => {
+    setItems((prev) => prev.filter((_, i) => i !== index));
   };
 
   // ── Drag-and-drop reorder ───────────────────────────────────────────────────
@@ -209,33 +144,36 @@ export function SuperAdminFeaturedMarqueePage() {
     setBusy(true);
     setMessage(null);
     try {
-      const productIds = items
-        .filter((item) => item.product !== null)
-        .map((item) => item.productId);
-      const saved = await featuredMarqueeApiService.save(
+      const saved = await trendingRibbonApiService.save(
         session,
-        { productIds },
+        {
+          label: badgeLabel.trim(),
+          items: items.map((item) => ({
+            label: item.label.trim(),
+            action: item.action.trim(),
+          })),
+        },
         intervalMinutes,
       );
       // Invalidate IndexedDB cache so that the home page updates immediately
       try {
-        await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, FEATURED_MARQUEE_CACHE_KEY);
+        await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, TRENDING_RIBBON_CACHE_KEY);
       } catch (err) {
-        console.error("Failed to delete local marquee cache:", err);
+        console.error("Failed to delete local trending ribbon cache:", err);
       }
       setRecord(saved);
       setMessage("تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.");
       setMessageType("success");
     } catch (error) {
       reportSystemIssue({
-        feature: "FeaturedMarqueeAdmin",
+        feature: "TrendingRibbonAdmin",
         operation: "save",
         error,
       });
       const rawMessage = error instanceof Error ? error.message : "";
       const arabicMessages: Record<string, string> = {
         forbidden: "غير مصرح لك بهذه العملية.",
-        invalidFeaturedMarqueeConfig: "إعداد الشريط غير صالح، يرجى مراجعة البيانات.",
+        invalidTrendingRibbonConfig: "إعداد شريط النصوص غير صالح، يرجى مراجعة البيانات.",
       };
       setMessage(
         arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.",
@@ -248,16 +186,9 @@ export function SuperAdminFeaturedMarqueePage() {
 
   // ── Preview config ──────────────────────────────────────────────────────────
 
-  const validItems = items.filter((item) => item.product !== null);
   const previewConfig = {
-    sectionTitle: "المنتجات المميزة",
-    items: validItems.map((item) => ({
-      id: item.productId,
-      title: getProductName(item.product!),
-      price: getProductPrice(item.product!),
-      image: getProductImage(item.product!),
-      action: buildProductAction(item.product!),
-    })),
+    label: badgeLabel,
+    items: items,
   };
 
   // ── Loading / auth ──────────────────────────────────────────────────────────
@@ -282,10 +213,10 @@ export function SuperAdminFeaturedMarqueePage() {
         <div>
           <p className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
           <h1 className="text-2xl font-bold">
-            إدارة الشريط المميز للصفحة الرئيسية
+            إدارة شريط النصوص المتحرك (TrendingRibbon)
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            اختر المنتجات التي تظهر في الشريط المتحرك (FeaturedMarquee).
+            أضف أي عدد من النصوص والروابط التفاعلية للعرض في الصفحة الرئيسية.
           </p>
         </div>
       </header>
@@ -370,50 +301,69 @@ export function SuperAdminFeaturedMarqueePage() {
         </div>
       )}
 
-      {/* ── Add Product ── */}
+      {/* ── Badge Settings ── */}
+      <section className="mb-6 rounded-xl border bg-card p-4">
+        <div className="mb-3 space-y-2">
+          <Label htmlFor="badge-label-input" className="font-semibold text-base block">
+            شارة العنوان (Badge Label)
+          </Label>
+          <Input
+            id="badge-label-input"
+            placeholder="مثال: home.trending.label أو الأكثر طلباً"
+            value={badgeLabel}
+            onChange={(e) => setBadgeLabel(e.target.value)}
+          />
+          <p className="text-xs text-muted-foreground">
+            النص المعروض في المربع الملون قبل الشريط. يدعم مفاتيح الترجمة أو النصوص المباشرة.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Add Item ── */}
       <section className="mb-6 rounded-xl border bg-card p-4">
         <div className="mb-3 flex items-center gap-2">
           <Plus className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold">إضافة منتج</h2>
+          <h2 className="font-semibold">إضافة نص جديد للشريط</h2>
         </div>
-        <div className="flex gap-2">
-          <div className="flex-1 space-y-1">
-            <Label htmlFor="new-product-id">معرّف المنتج (Product ID)</Label>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1">
+            <Label htmlFor="new-item-label">النص المعروض</Label>
             <Input
-              id="new-product-id"
-              placeholder="مثال: 3a1b2c-..."
-              value={newProductId}
-              onChange={(e) => setNewProductId(e.target.value)}
+              id="new-item-label"
+              placeholder="مثال: خصم 20% على العطور"
+              value={newItemLabel}
+              onChange={(e) => setNewItemLabel(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="new-item-action">الإجراء / الرابط</Label>
+            <Input
+              id="new-item-action"
+              placeholder="مثال: /profile أو معرف المنتج"
+              value={newItemAction}
+              onChange={(e) => setNewItemAction(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") void addProduct();
+                if (e.key === "Enter") addItem();
               }}
             />
           </div>
-          <div className="flex items-end">
-            <Button
-              type="button"
-              onClick={() => void addProduct()}
-              disabled={!newProductId.trim()}
-            >
-              <Plus className="me-1 h-4 w-4" />
-              إضافة
-            </Button>
-          </div>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          يمكنك نسخ معرف المنتج من صفحة المنتج (Product ID في URL: <code>productId=...</code>).
-        </p>
+        <div className="mt-3 flex justify-end">
+          <Button
+            type="button"
+            onClick={addItem}
+            disabled={!newItemLabel.trim() || !newItemAction.trim()}
+          >
+            <Plus className="me-1 h-4 w-4" />
+            إضافة إلى القائمة
+          </Button>
+        </div>
       </section>
 
-      {/* ── Product List ── */}
+      {/* ── Items List ── */}
       <section className="mb-6 rounded-xl border bg-card p-4">
         <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Package className="h-5 w-5 text-primary" />
-            <h2 className="font-semibold">
-              المنتجات المختارة ({items.length})
-            </h2>
-          </div>
+          <h2 className="font-semibold">النصوص المضافة ({items.length})</h2>
           <div className="flex gap-2">
             <Button
               type="button"
@@ -444,79 +394,35 @@ export function SuperAdminFeaturedMarqueePage() {
 
         {items.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            لا توجد منتجات مختارة. أضف معرفات المنتجات أعلاه.
+            لا توجد نصوص مضافة حالياً. أضف عناصر جديدة أعلاه.
           </p>
         ) : (
           <div className="space-y-2">
             {items.map((item, index) => (
               <div
-                key={item.productId}
+                key={`${item.label}-${index}`}
                 draggable
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={(e) => handleDragOver(e, index)}
                 onDragEnd={handleDragEnd}
-                className="flex items-center gap-3 rounded-lg border bg-surface p-2 transition-colors hover:border-primary/30"
+                className="flex items-center gap-3 rounded-lg border bg-surface p-3 transition-colors hover:border-primary/30"
               >
-                {/* Drag handle */}
                 <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-muted-foreground" />
-
-                {/* Product image */}
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-surface-bright">
-                  {item.isLoading ? (
-                    <div className="flex h-full w-full items-center justify-center">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    </div>
-                  ) : item.product && getProductImage(item.product) ? (
-                    <Image
-                      src={getProductImage(item.product)}
-                      alt={getProductName(item.product)}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center">
-                      <Package className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
-
-                {/* Product info */}
                 <div className="min-w-0 flex-1">
-                  {item.isLoading ? (
-                    <p className="text-sm text-muted-foreground">
-                      جاري التحميل…
-                    </p>
-                  ) : item.error ? (
-                    <p className="text-sm text-destructive">{item.error}</p>
-                  ) : item.product ? (
-                    <>
-                      <p className="truncate text-sm font-medium">
-                        {getProductName(item.product)}
-                      </p>
-                      <p className="text-xs text-primary">
-                        {getProductPrice(item.product)
-                          ? `${getProductPrice(item.product)} ر.س`
-                          : "—"}
-                      </p>
-                    </>
-                  ) : null}
-                  <p className="truncate text-[10px] text-muted-foreground">
-                    ID: {item.productId}
+                  <p className="truncate text-sm font-medium">{item.label}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    الإجراء: <code>{item.action}</code>
                   </p>
                 </div>
-
-                {/* Position badge */}
                 <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                   #{index + 1}
                 </span>
-
-                {/* Remove button */}
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                  onClick={() => removeProduct(item.productId)}
+                  onClick={() => removeItem(index)}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -527,20 +433,20 @@ export function SuperAdminFeaturedMarqueePage() {
 
         {items.length > 0 && (
           <p className="mt-3 text-xs text-muted-foreground">
-            اسحب العناصر لإعادة الترتيب. المنتجات التي لم يُعثر عليها لن تُحفظ.
+            اسحب العناصر لإعادة الترتيب. لا تنس الضغط على زر الحفظ لتطبيق التغييرات.
           </p>
         )}
       </section>
 
       {/* ── Live Preview ── */}
-      {validItems.length > 0 && (
+      {items.length > 0 && (
         <section className="rounded-xl border bg-card p-4">
           <div className="mb-3 flex items-center gap-2">
             <Eye className="h-5 w-5 text-primary" />
             <h2 className="font-semibold">المعاينة الحية</h2>
           </div>
-          <div className="gova-section-tonal gova-section-tonal-tertiary mx-1 rounded-xl p-4">
-            <FeaturedMarquee config={previewConfig} />
+          <div className="gova-section-tonal gova-section-tonal-primary mx-1 rounded-xl p-4">
+            <TrendingRibbon config={previewConfig} />
           </div>
         </section>
       )}

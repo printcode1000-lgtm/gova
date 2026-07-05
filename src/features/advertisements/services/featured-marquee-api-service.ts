@@ -15,6 +15,12 @@ export const featuredMarqueeApiService = {
       GOVA_API_ROUTES.advertisements.featuredMarquee,
     ),
 
+  getVersion: () =>
+    govaApi.get<Omit<FeaturedMarqueePublished, "config" | "sectionTitle">>(
+      `${GOVA_API_ROUTES.advertisements.featuredMarquee}/version`,
+      { suppressErrorLog: true },
+    ),
+
   getAdmin: (identity: SuperAdminIdentity) => {
     const query = new URLSearchParams({
       admin: "1",
@@ -26,9 +32,13 @@ export const featuredMarqueeApiService = {
     );
   },
 
-  save: (identity: SuperAdminIdentity, config: FeaturedMarqueeConfig) =>
+  save: (
+    identity: SuperAdminIdentity,
+    config: FeaturedMarqueeConfig,
+    checkIntervalMinutes: number,
+  ) =>
     govaApi.put<FeaturedMarqueeRecord>(
       GOVA_API_ROUTES.advertisements.featuredMarquee,
-      { identity, config },
+      { identity, config, checkIntervalMinutes },
     ),
 };

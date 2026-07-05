@@ -10,6 +10,7 @@ export interface FeaturedMarqueeRecord {
   id: typeof FEATURED_MARQUEE_ID;
   config: FeaturedMarqueeConfig;
   version: number;
+  checkIntervalMinutes: number;
   updatedAt: string;
   updatedBy: string | null;
 }
@@ -17,6 +18,7 @@ export interface FeaturedMarqueeRecord {
 export interface FeaturedMarqueePublished {
   config: FeaturedMarqueeConfig;
   version: number;
+  checkIntervalMinutes: number;
   updatedAt: string;
 }
 

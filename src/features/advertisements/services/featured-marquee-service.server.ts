@@ -28,6 +28,16 @@ export const featuredMarqueeService = {
     return {
       config: record.config,
       version: record.version,
+      checkIntervalMinutes: record.checkIntervalMinutes,
+      updatedAt: record.updatedAt,
+    };
+  },
+
+  async getVersion() {
+    const record = await featuredMarqueeRepository.get();
+    return {
+      version: record.version,
+      checkIntervalMinutes: record.checkIntervalMinutes,
       updatedAt: record.updatedAt,
     };
   },
@@ -40,9 +50,14 @@ export const featuredMarqueeService = {
   async save(
     identity: SuperAdminIdentity,
     config: FeaturedMarqueeConfig,
+    interval: number,
   ): Promise<FeaturedMarqueeRecord> {
     assertAdmin(identity);
     const parsed = parseConfig(config);
-    return featuredMarqueeRepository.save(parsed, identity.uid);
+    return featuredMarqueeRepository.save(
+      parsed,
+      Math.max(5, Math.min(1440, interval)),
+      identity.uid,
+    );
   },
 };

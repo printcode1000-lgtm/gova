@@ -32,6 +32,7 @@ export class FeaturedMarqueeRepository {
       id: FEATURED_MARQUEE_ID,
       config: parseConfig(row.productIdsJson),
       version: row.version,
+      checkIntervalMinutes: row.checkIntervalMinutes,
       updatedAt: row.updatedAt,
       updatedBy: row.updatedBy,
     };
@@ -39,6 +40,7 @@ export class FeaturedMarqueeRepository {
 
   async save(
     config: FeaturedMarqueeConfig,
+    checkIntervalMinutes: number,
     actorUid: string,
   ): Promise<FeaturedMarqueeRecord> {
     const current = await this.get();
@@ -47,6 +49,7 @@ export class FeaturedMarqueeRepository {
       .set({
         productIdsJson: JSON.stringify(config),
         version: current.version + 1,
+        checkIntervalMinutes,
         updatedAt: new Date().toISOString(),
         updatedBy: actorUid,
       })
@@ -69,6 +72,7 @@ export class FeaturedMarqueeRepository {
       id: FEATURED_MARQUEE_ID,
       productIdsJson: JSON.stringify(seed.config),
       version: 1,
+      checkIntervalMinutes: 15,
       updatedAt: new Date().toISOString(),
     });
   }

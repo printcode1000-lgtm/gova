@@ -2,11 +2,22 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import type { FeaturedMarqueeConfig } from "@/features/advertisements/entities/featured-marquee.entity";
-import { featuredMarqueeApiService } from "../services/featured-marquee-api-service";
-import { productApiService } from "@/features/product/services/product-api-service";
 import type { FeaturedMarqueeConfig as MarqueeUIConfig } from "@/components/ui/FeaturedMarquee";
+import type { FeaturedMarqueeConfig } from "@/features/advertisements/entities/featured-marquee.entity";
+import {
+  FEATURED_MARQUEE_CACHE_KEY,
+  type FeaturedMarqueePublished,
+} from "@/features/advertisements/entities/featured-marquee.entity";
+import { featuredMarqueeApiService } from "@/features/advertisements/services/featured-marquee-api-service";
+import { productApiService } from "@/features/product/services/product-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import {
+  GOVA_DB_STORES,
+  govaDbGet,
+  govaDbSet,
+} from "@/lib/gova-db";
+
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface HomeFeaturedMarqueeState {
   sectionTitle: string;
@@ -14,7 +25,23 @@ interface HomeFeaturedMarqueeState {
   isLoading: boolean;
 }
 
+interface FeaturedMarqueeCache extends FeaturedMarqueePublished {
+  lastCheckedAt: string;
+  resolvedConfig: MarqueeUIConfig;
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
 const FALLBACK_SECTION_TITLE = "home.featured.title";
+
+const fallback: FeaturedMarqueePublished = {
+  config: { productIds: [] },
+  version: 0,
+  checkIntervalMinutes: 15,
+  updatedAt: "",
+};
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function buildFallbackConfig(): MarqueeUIConfig {
   return { sectionTitle: FALLBACK_SECTION_TITLE, items: [] };
@@ -54,6 +81,8 @@ async function buildMarqueeConfig(
   return { sectionTitle: FALLBACK_SECTION_TITLE, items };
 }
 
+// ─── Hook ────────────────────────────────────────────────────────────────────
+
 export function useHomeFeaturedMarquee() {
   const [state, setState] = useState<HomeFeaturedMarqueeState>({
     sectionTitle: FALLBACK_SECTION_TITLE,
@@ -61,11 +90,64 @@ export function useHomeFeaturedMarquee() {
     isLoading: true,
   });
 
-  const load = useCallback(async () => {
+  const checkForUpdates = useCallback(async (force = false) => {
     try {
-      const published = await featuredMarqueeApiService.getCurrent();
-      const config = await buildMarqueeConfig(published.config);
-      setState({ sectionTitle: FALLBACK_SECTION_TITLE, config, isLoading: false });
+      const cached = await govaDbGet<FeaturedMarqueeCache>(
+        GOVA_DB_STORES.APP_SETTINGS,
+        FEATURED_MARQUEE_CACHE_KEY,
+      );
+
+      // Show cached data immediately (avoid flicker)
+      if (cached) {
+        setState({
+          sectionTitle: FALLBACK_SECTION_TITLE,
+          config: cached.resolvedConfig,
+          isLoading: false,
+        });
+      }
+
+      // Skip server check if within interval window
+      const intervalMs = (cached?.checkIntervalMinutes ?? 15) * 60_000;
+      const lastCheck = cached ? Date.parse(cached.lastCheckedAt) : 0;
+      if (!force && Date.now() - lastCheck < intervalMs) return;
+
+      // Lightweight version check — avoids downloading full config every time
+      const version = await featuredMarqueeApiService.getVersion();
+      let next: FeaturedMarqueePublished = cached ?? fallback;
+      let nextResolved: MarqueeUIConfig =
+        cached?.resolvedConfig ?? buildFallbackConfig();
+
+      if (
+        !cached ||
+        version.version !== cached.version ||
+        version.updatedAt !== cached.updatedAt
+      ) {
+        // Config changed — download full data and resolve products
+        next = await featuredMarqueeApiService.getCurrent();
+        nextResolved = await buildMarqueeConfig(next.config);
+        setState({
+          sectionTitle: FALLBACK_SECTION_TITLE,
+          config: nextResolved,
+          isLoading: false,
+        });
+      } else if (version.checkIntervalMinutes !== cached.checkIntervalMinutes) {
+        // Only interval changed — update local record
+        next = {
+          ...cached,
+          checkIntervalMinutes: version.checkIntervalMinutes,
+        };
+      }
+
+      // Persist refreshed cache
+      await govaDbSet<FeaturedMarqueeCache>(
+        GOVA_DB_STORES.APP_SETTINGS,
+        FEATURED_MARQUEE_CACHE_KEY,
+        {
+          ...next,
+          resolvedConfig: nextResolved,
+          lastCheckedAt: new Date().toISOString(),
+        },
+      );
     } catch (error) {
       reportSystemIssue({
         level: "warning",
@@ -79,8 +161,11 @@ export function useHomeFeaturedMarquee() {
   }, []);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    void checkForUpdates();
+    // Re-check every minute — actual fetch is skipped if within the interval window
+    const timer = window.setInterval(() => void checkForUpdates(), 60_000);
+    return () => window.clearInterval(timer);
+  }, [checkForUpdates]);
 
-  return state;
+  return { ...state, checkForUpdates };
 }

@@ -22,12 +22,33 @@ const DROP_TABLES = [
   "hero_sliders",
   "hero_slider",
   "featured_marquee",
+  "trending_ribbon",
 ];
 
 const CREATE_HERO_SLIDER = `
 CREATE TABLE hero_slider (
   id TEXT PRIMARY KEY NOT NULL,
   config_json TEXT NOT NULL,
+  version INTEGER NOT NULL DEFAULT 1,
+  check_interval_minutes INTEGER NOT NULL DEFAULT 15,
+  updated_at TEXT NOT NULL,
+  updated_by TEXT
+)`;
+
+const CREATE_FEATURED_MARQUEE = `
+CREATE TABLE featured_marquee (
+  id TEXT PRIMARY KEY NOT NULL,
+  product_ids_json TEXT NOT NULL DEFAULT '[]',
+  version INTEGER NOT NULL DEFAULT 1,
+  check_interval_minutes INTEGER NOT NULL DEFAULT 15,
+  updated_at TEXT NOT NULL,
+  updated_by TEXT
+)`;
+
+const CREATE_TRENDING_RIBBON = `
+CREATE TABLE trending_ribbon (
+  id TEXT PRIMARY KEY NOT NULL,
+  config_json TEXT NOT NULL DEFAULT '{}',
   version INTEGER NOT NULL DEFAULT 1,
   check_interval_minutes INTEGER NOT NULL DEFAULT 15,
   updated_at TEXT NOT NULL,
@@ -55,6 +76,16 @@ function resetLocal(): void {
       JSON.stringify(seed.config),
       new Date().toISOString(),
     );
+    db.prepare(
+      "INSERT INTO featured_marquee (id, product_ids_json, version, check_interval_minutes, updated_at) VALUES (?, '[]', 1, 15, ?)",
+    ).run("home-featured-marquee", new Date().toISOString());
+    db.prepare(
+      "INSERT INTO trending_ribbon (id, config_json, version, check_interval_minutes, updated_at) VALUES (?, ?, 1, 15, ?)",
+    ).run(
+      "home-trending-ribbon",
+      JSON.stringify({ label: "home.trending.label", items: [] }),
+      new Date().toISOString(),
+    );
   } finally {
     db.close();
   }
@@ -76,11 +107,25 @@ async function resetCloud(): Promise<void> {
       await client.execute(`DROP TABLE IF EXISTS ${table}`);
     }
     await client.execute(CREATE_HERO_SLIDER);
+    await client.execute(CREATE_FEATURED_MARQUEE);
     await client.execute({
       sql: "INSERT INTO hero_slider (id, config_json, version, check_interval_minutes, updated_at) VALUES (?, ?, 1, 15, ?)",
       args: [
         "home-hero-slider",
         JSON.stringify(seed.config),
+        new Date().toISOString(),
+      ],
+    });
+    await client.execute({
+      sql: "INSERT INTO featured_marquee (id, product_ids_json, version, check_interval_minutes, updated_at) VALUES (?, '[]', 1, 15, ?)",
+      args: ["home-featured-marquee", new Date().toISOString()],
+    });
+    await client.execute(CREATE_TRENDING_RIBBON);
+    await client.execute({
+      sql: "INSERT INTO trending_ribbon (id, config_json, version, check_interval_minutes, updated_at) VALUES (?, ?, 1, 15, ?)",
+      args: [
+        "home-trending-ribbon",
+        JSON.stringify({ label: "home.trending.label", items: [] }),
         new Date().toISOString(),
       ],
     });

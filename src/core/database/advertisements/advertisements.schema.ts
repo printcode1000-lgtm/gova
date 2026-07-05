@@ -13,6 +13,16 @@ export const featuredMarquee = sqliteTable("featured_marquee", {
   id: text("id").primaryKey().notNull(),
   productIdsJson: text("product_ids_json").notNull().default("[]"),
   version: integer("version").notNull().default(1),
+  checkIntervalMinutes: integer("check_interval_minutes").notNull().default(15),
+  updatedAt: text("updated_at").notNull(),
+  updatedBy: text("updated_by"),
+});
+
+export const trendingRibbon = sqliteTable("trending_ribbon", {
+  id: text("id").primaryKey().notNull(),
+  configJson: text("config_json").notNull().default("{}"),
+  version: integer("version").notNull().default(1),
+  checkIntervalMinutes: integer("check_interval_minutes").notNull().default(15),
   updatedAt: text("updated_at").notNull(),
   updatedBy: text("updated_by"),
 });
