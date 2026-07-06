@@ -64,6 +64,18 @@
   animation: gova-voice-glow 1.35s ease-in-out infinite;
 }
 
+.gova-voice-button--error {
+  color: var(--color-error) !important;
+  opacity: 1 !important;
+  animation: gova-voice-shake 0.4s ease-in-out !important;
+}
+
+@keyframes gova-voice-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
 /* Disable voice button for specific inputs */
 .gova-no-voice .gova-voice-button {
   display: none !important;

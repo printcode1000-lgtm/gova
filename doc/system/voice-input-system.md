@@ -71,8 +71,8 @@ Textareas and normal inputs are enabled unless they are unsafe or unsuitable for
 
 The scanner excludes:
 
-- password fields and fields whose identity contains `password` or `passcode`;
-- hidden, button, submit, reset, checkbox, radio, file, image, color, range, URL, and date/time inputs;
+- password fields and fields whose identity contains `password` or `passcode` (even when toggled to a `text` type);
+- email, URL, hidden, button, submit, reset, checkbox, radio, file, image, color, range, and date/time inputs;
 - disabled and read-only fields;
 - one-time-code fields;
 - single-character fields, such as OTP cells;
@@ -144,7 +144,19 @@ The injected element is a real `button` with:
 
 While recording, the microphone uses the theme error color and a pulsing glow. The animation is disabled when the operating system requests reduced motion.
 
-The field receives logical inline-end padding. Consequently, placement works automatically in both RTL and LTR layouts.
+The microphone button is positioned absolute inside the parent host container. Its physical alignment (left or right) is determined by the computed text direction of the parent host. 
+
+The input field receives dynamic physical padding (`padding-left` or `padding-right`) calculated as: `original computed padding + button size (40px) + edge gap (6px)`. This ensures that existing input decorators (like country code prefixes, clear buttons, or eye toggles) shift automatically and never overlap with the microphone button or the entered text.
+
+## User interaction and feedback
+
+To provide a premium and accessible user experience, the system implements:
+
+- **Listening Placeholder**: The input field's placeholder dynamically changes to "Listening... Speak now" (or "جاري الاستماع... تحدث الآن") during active recording, restoring the original placeholder once speech recognition concludes.
+- **Error Shake Feedback**: Upon a permission denial or technical error, the microphone button flashes red and shakes horizontally using a CSS keyframe animation.
+- **Audio Chime Tones**: Precise, gentle synthesized tone feedback plays using the browser Web Audio API on recording start (high sine chirp), stop (neutral sine tone), and error (low sawtooth buzz).
+
+
 
 ## Permissions
 

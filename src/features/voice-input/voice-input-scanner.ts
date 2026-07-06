@@ -47,6 +47,28 @@ const VOICE_BUTTON_SIZE = 40;
 /** Minimum gap (px) between the mic button and adjacent elements or the field edge. */
 const VOICE_EDGE_GAP = 6;
 
+/** Generates a simple tone using the Web Audio API for user feedback. */
+function playTone(frequency: number, type: OscillatorType, duration: number): void {
+  if (typeof window === 'undefined') return;
+  const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+  if (!AudioContextClass) return;
+  try {
+    const ctx = new AudioContextClass();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = frequency;
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  } catch {
+    // Ignore audio autoplay restrictions or failure
+  }
+}
+
 export class VoiceInputScanner {
   private readonly adapter: SpeechRecognitionAdapter;
   private readonly bindings = new Map<VoiceField, VoiceBinding>();
@@ -177,6 +199,10 @@ export class VoiceInputScanner {
     button.setAttribute('aria-pressed', 'false');
     button.appendChild(this.createMicrophoneIcon());
 
+    const computedStyle = window.getComputedStyle(field);
+    field.dataset.voiceOriginalPaddingLeft = computedStyle.paddingLeft;
+    field.dataset.voiceOriginalPaddingRight = computedStyle.paddingRight;
+
     field.classList.add('gova-voice-field');
     host.classList.add('gova-voice-host');
     host.appendChild(button);
@@ -208,6 +234,8 @@ export class VoiceInputScanner {
       this.sessionId += 1;
       this.setRecording(binding, false);
       this.activeBinding = null;
+      this.restorePlaceholder(binding.field);
+      playTone(440, 'sine', 0.15);
       try {
         await this.adapter.stop();
       } catch (error) {
@@ -218,6 +246,7 @@ export class VoiceInputScanner {
 
     if (this.activeBinding) {
       this.setRecording(this.activeBinding, false);
+      this.restorePlaceholder(this.activeBinding.field);
       this.activeBinding = null;
       try {
         await this.adapter.stop();
@@ -229,17 +258,24 @@ export class VoiceInputScanner {
     const currentSession = ++this.sessionId;
     this.activeBinding = binding;
     this.setRecording(binding, true);
+    this.setListeningPlaceholder(binding.field);
+    playTone(880, 'sine', 0.12);
 
     try {
       const transcript = await this.adapter.start(this.options.language);
       if (currentSession === this.sessionId && transcript && binding.field.isConnected) {
         this.insertTranscript(binding.field, transcript);
+        playTone(660, 'sine', 0.15);
       }
     } catch (error) {
       console.error('[VoiceInput] Speech recognition failed.', error);
+      if (currentSession === this.sessionId) {
+        this.triggerErrorFeedback(binding.button);
+      }
     } finally {
       if (currentSession === this.sessionId) {
         this.setRecording(binding, false);
+        this.restorePlaceholder(binding.field);
         this.activeBinding = null;
       }
     }
@@ -323,65 +359,34 @@ export class VoiceInputScanner {
       : fieldRect.top - hostRect.top + (fieldRect.height - VOICE_BUTTON_SIZE) / 2;
     button.style.top = `${Math.max(0, top)}px`;
 
-    // ── Collect absolute sibling elements that visually lie within the field ──
-    const siblings = Array.from(host.children).filter(
-      (el): el is HTMLElement => {
-        if (!(el instanceof HTMLElement) || el === field || el === button) return false;
-        const style = getComputedStyle(el);
-        if (style.position !== 'absolute') return false;
-
-        const sibRect = el.getBoundingClientRect();
-        const verticalOverlap = sibRect.top >= fieldRect.top - 5 && sibRect.bottom <= fieldRect.bottom + 5;
-        const horizontalOverlap = sibRect.left >= fieldRect.left - 5 && sibRect.right <= fieldRect.right + 5;
-        return verticalOverlap && horizontalOverlap;
-      }
-    );
+    // ── Parse original paddings from dataset ──────────────────────────────
+    const origPaddingLeft  = parseFloat(field.dataset.voiceOriginalPaddingLeft || '16');
+    const origPaddingRight = parseFloat(field.dataset.voiceOriginalPaddingRight || '16');
 
     if (isRtl) {
       // Mic sits on the physical LEFT side.
-      // Baseline: flush with the field's left edge plus a gap.
-      let micLeft = fieldRect.left - hostRect.left + VOICE_EDGE_GAP;
-
-      // Push the mic right of any sibling that lives in the left half.
-      for (const sib of siblings) {
-        const sibRect = sib.getBoundingClientRect();
-        if (sibRect.left - hostRect.left < hostRect.width / 2) {
-          micLeft = Math.max(micLeft, sibRect.right - hostRect.left + VOICE_EDGE_GAP);
-        }
-      }
-
+      // Position: flush with the field's left boundary relative to host, shifted by orig padding + edge gap.
+      const micLeft = (fieldRect.left - hostRect.left) + origPaddingLeft + VOICE_EDGE_GAP;
       button.style.left  = `${micLeft}px`;
       button.style.right = 'auto';
 
-      // Padding-left must keep placeholder text clear of the mic's right edge.
-      const micRightEdge      = micLeft + VOICE_BUTTON_SIZE;
-      const fieldPhysicalLeft = fieldRect.left - hostRect.left;
-      const neededPaddingLeft = micRightEdge - fieldPhysicalLeft + VOICE_EDGE_GAP;
-      field.style.setProperty('padding-left',  `${Math.max(0, neededPaddingLeft)}px`, 'important');
-      field.style.removeProperty('padding-right');
+      // Set explicit padding-left to base + button size + gap
+      const neededPaddingLeft = origPaddingLeft + VOICE_BUTTON_SIZE + VOICE_EDGE_GAP;
+      field.style.setProperty('padding-left', `${neededPaddingLeft}px`, 'important');
+      // Keep original padding-right
+      field.style.setProperty('padding-right', `${origPaddingRight}px`, 'important');
     } else {
       // Mic sits on the physical RIGHT side.
-      // Baseline: flush with the field's right edge plus a gap (measured from host's right).
-      let micFromRight = hostRect.right - fieldRect.right + VOICE_EDGE_GAP;
-
-      // Push the mic left of any sibling that lives in the right half.
-      for (const sib of siblings) {
-        const sibRect = sib.getBoundingClientRect();
-        if (sibRect.right - hostRect.left > hostRect.width / 2) {
-          const sibDistFromRight = hostRect.right - sibRect.left;
-          micFromRight = Math.max(micFromRight, sibDistFromRight + VOICE_EDGE_GAP);
-        }
-      }
-
+      // Position: flush with the field's right boundary relative to host (measured from host right), shifted by orig padding + edge gap.
+      const micFromRight = (hostRect.right - fieldRect.right) + origPaddingRight + VOICE_EDGE_GAP;
       button.style.right = `${micFromRight}px`;
       button.style.left  = 'auto';
 
-      // Padding-right must keep placeholder text clear of the mic's left edge.
-      const micLeftEdge        = hostRect.width - micFromRight - VOICE_BUTTON_SIZE;
-      const fieldPhysicalRight = fieldRect.right - hostRect.left;
-      const neededPaddingRight = fieldPhysicalRight - micLeftEdge + VOICE_EDGE_GAP;
-      field.style.setProperty('padding-right', `${Math.max(0, neededPaddingRight)}px`, 'important');
-      field.style.removeProperty('padding-left');
+      // Set explicit padding-right to base + button size + gap
+      const neededPaddingRight = origPaddingRight + VOICE_BUTTON_SIZE + VOICE_EDGE_GAP;
+      field.style.setProperty('padding-right', `${neededPaddingRight}px`, 'important');
+      // Keep original padding-left
+      field.style.setProperty('padding-left', `${origPaddingLeft}px`, 'important');
     }
   }
 
@@ -404,6 +409,7 @@ export class VoiceInputScanner {
     binding.field.classList.remove('gova-voice-field', 'gova-voice-field--rtl-host');
     binding.field.style.removeProperty('padding-right');
     binding.field.style.removeProperty('padding-left');
+    this.restorePlaceholder(binding.field);
     this.bindings.delete(binding.field);
 
     if (!binding.host.querySelector('[data-voice-input-button="true"]')) {
@@ -426,5 +432,28 @@ export class VoiceInputScanner {
     path.setAttribute('d', 'M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z M19 10v2a7 7 0 0 1-14 0v-2 M12 19v3 M8 22h8');
     icon.appendChild(path);
     return icon;
+  }
+
+  private setListeningPlaceholder(field: VoiceField): void {
+    if (field.dataset.voiceOriginalPlaceholder !== undefined) return;
+    field.dataset.voiceOriginalPlaceholder = field.placeholder || '';
+    field.placeholder = this.options.language === 'ar-SA'
+      ? 'جاري الاستماع... تحدث الآن'
+      : 'Listening... Speak now';
+  }
+
+  private restorePlaceholder(field: VoiceField): void {
+    if (field.dataset.voiceOriginalPlaceholder !== undefined) {
+      field.placeholder = field.dataset.voiceOriginalPlaceholder;
+      delete field.dataset.voiceOriginalPlaceholder;
+    }
+  }
+
+  private triggerErrorFeedback(button: HTMLButtonElement): void {
+    playTone(220, 'sawtooth', 0.25);
+    button.classList.add('gova-voice-button--error');
+    setTimeout(() => {
+      button.classList.remove('gova-voice-button--error');
+    }, 450);
   }
 }
