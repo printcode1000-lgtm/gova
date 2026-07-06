@@ -21,7 +21,7 @@ src/
     └── use-translation.ts  # React hook
 ```
 
-**App preferences** (`src/lib/preferences/`) store the active locale in `localStorage` under `gova-app-preferences` as `prefs.locale` (`'ar' | 'en'`).
+**App preferences** (`src/lib/preferences/`) store the active locale in GovaDB (`IndexedDB`) under the `appSettings` store with the key `app-preferences` as `locale` (`'ar' | 'en'`).
 
 ---
 
@@ -103,16 +103,17 @@ t('onboarding.progress.sectionsCompleted', { completed: 3, total: 12 })
 
 Use `isRTL` from `useTranslation()` for component-level layout (icons, chevrons, etc.).
 
-### Anti-flash mechanism (English locale)
+### Anti-flash mechanism (GovaDB async hydration)
 
-Because the static HTML is built with Arabic as the default, switching to English during hydration would cause a one-frame Arabic text flash and a sidebar direction glitch. Three guards prevent this:
+Because preferences are loaded asynchronously from GovaDB, rendering the page immediately would cause text/theme flashes. The following mechanism prevents this:
 
 | Mechanism | Location |
 |-----------|----------|
 | `mounted` guard in `AppSidebar` — returns `null` on first render | `AppSidebar.tsx` |
-| `data-hydrated="false"` on `<html>` in static markup | `layout.tsx` |
-| CSS hides `body` while `data-locale="en"` and `data-hydrated="false"` | `globals.css` |
-| `PreferencesProvider` sets `data-hydrated="true"` after loading locale | `PreferencesProvider.tsx` |
+| `data-theme-hydrated="false"` and `data-app-hydrated="false"` on `<html>` | `layout.tsx` |
+| CSS hides `body` (`opacity: 0`) by default | `globals.css` |
+| `ThemeProvider` and `PreferencesProvider` set their respective hydration flags to `"true"` on `<html>` | `ThemeProvider.tsx` & `PreferencesProvider.tsx` |
+| CSS reveals `body` with a smooth 150ms transition once both flags are `"true"` | `globals.css` |
 
 See [`doc/problems/english-locale-hydration-flash.md`](../problems/english-locale-hydration-flash.md) for the full root-cause analysis.
 
@@ -157,13 +158,13 @@ const schema = useMemo(() => createRegistrationSchema(t), [t]);
 
 ---
 
-## Storage & migration
+## Storage
+
+Stored in GovaDB (`IndexedDB`) under the `appSettings` store with the key `app-preferences`:
 
 | Key | Field |
 |-----|-------|
-| `gova-app-preferences` | `prefs.locale`, `prefs.timezone` |
-
-Legacy field `localePreview` is still read for backward compatibility.
+| `app-preferences` | `locale` |
 
 ---
 

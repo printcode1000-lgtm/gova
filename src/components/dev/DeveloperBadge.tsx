@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
+import { govaDbGet, govaDbSet, GOVA_DB_STORES } from '@/lib/gova-db';
 
 import {
   DropdownMenu,
@@ -190,14 +191,17 @@ export function DeveloperBadge() {
   useEffect(() => {
     setIsMounted(true);
     setPosition({ x: 16, y: window.innerHeight - 60 });
-    const stored = localStorage.getItem(SPLASH_NAV_TOGGLE_KEY);
-    setIsSplashNavEnabled(stored !== 'false');
+    const loadSplashNav = async () => {
+      const stored = await govaDbGet<boolean>(GOVA_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY);
+      setIsSplashNavEnabled(stored !== false);
+    };
+    void loadSplashNav();
   }, []);
 
-  const toggleSplashNav = () => {
+  const toggleSplashNav = async () => {
     const newValue = !isSplashNavEnabled;
     setIsSplashNavEnabled(newValue);
-    localStorage.setItem(SPLASH_NAV_TOGGLE_KEY, newValue.toString());
+    await govaDbSet<boolean>(GOVA_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY, newValue);
   };
 
   const handleAutofill = async () => {

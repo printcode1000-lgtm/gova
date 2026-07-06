@@ -53,15 +53,15 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
     reminderTimer.current = window.setTimeout(() => setPromptVisible(true), remaining);
   }, []);
 
-  const syncState = useCallback((state?: OtaStoredState) => {
-    const update = state?.pending ?? otaUpdateService.getPending();
+  const syncState = useCallback(async (state?: OtaStoredState) => {
+    const update = state ? (state.pending ?? null) : await otaUpdateService.getPending();
     setPending(update);
     setPromptVisible(shouldPrompt(update));
     scheduleReminder(update);
   }, [scheduleReminder]);
 
   const checkForUpdates = useCallback(async () => {
-    if (!otaUpdateService.isEnabled() || otaUpdateService.getPending()) return;
+    if (!otaUpdateService.isEnabled() || await otaUpdateService.getPending()) return;
     try {
       await otaUpdateService.checkAndDownload();
     } catch (checkError) {
@@ -108,8 +108,8 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const remindLater = useCallback(() => {
-    const update = otaUpdateService.dismissPending();
+  const remindLater = useCallback(async () => {
+    const update = await otaUpdateService.dismissPending();
     setPending(update);
     setPromptVisible(false);
     scheduleReminder(update);

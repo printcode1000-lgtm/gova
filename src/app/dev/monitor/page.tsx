@@ -78,7 +78,12 @@ export default function MonitorPage() {
     getCallGraph,
     getDependencyGraph,
     getTreeData,
+    loadTheme,
   } = useMonitorStore();
+
+  React.useEffect(() => {
+    void loadTheme();
+  }, [loadTheme]);
 
   const filteredOps = getFilteredOps();
   const stats = getStats();

@@ -1,18 +1,14 @@
 export type {
   AppPreferences,
-  AppTimezone,
   LocalePreview,
 } from './app-preferences-types';
 export {
-  APP_PREFERENCES_STORAGE_KEY,
   DEFAULT_APP_PREFERENCES,
 } from './app-preferences-types';
 export {
-  applyDocumentAppPreferences,
-  clearStoredAppPreferences,
   normalizeAppPreferences,
-  readStoredAppPreferences,
-  writeStoredAppPreferences,
+  readAppPreferencesFromDb,
+  writeAppPreferencesToDb,
 } from './app-preferences-storage';
 export {
   PreferencesProvider,

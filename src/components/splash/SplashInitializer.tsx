@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useTranslation } from '@/lib/i18n';
+import { govaDbGet, GOVA_DB_STORES } from '@/lib/gova-db';
 import { runInitialization } from '@/lib/initialization/initialization';
 import { otaUpdateService } from '@/features/ota/services/ota-update-service';
 import type { OtaDownloadProgress } from '@/features/ota/types/ota.types';
@@ -74,10 +75,14 @@ export default function SplashInitializer() {
 
   useEffect(() => {
     if (isComplete && progress === 100) {
-      const isNavEnabled = localStorage.getItem(SPLASH_NAV_TOGGLE_KEY) !== 'false';
-      if (isNavEnabled) {
-        router.replace('/home');
-      }
+      const checkNav = async () => {
+        const stored = await govaDbGet<boolean>(GOVA_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY);
+        const isNavEnabled = stored !== false;
+        if (isNavEnabled) {
+          router.replace('/home');
+        }
+      };
+      void checkNav();
     }
   }, [isComplete, progress, router]);
 

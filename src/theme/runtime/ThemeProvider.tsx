@@ -4,15 +4,12 @@ import * as React from 'react';
 
 import { applyDocumentTheme } from './apply-document-theme';
 import { DEFAULT_THEME_PREFERENCES } from './defaults';
-import { readSystemPrefersReducedMotion } from './resolve-reduced-motion';
-import { readSystemColorScheme } from './resolve-theme';
 import {
-  readStoredThemePreferences,
-  writeStoredThemePreferences,
+  readThemePreferencesFromDb,
+  writeThemePreferencesToDb,
 } from './storage';
 import type { ResolvedColorScheme } from './resolve-theme';
 import type { ThemeMode, ThemePreferences } from './types';
-import { THEME_STORAGE_KEY } from './types';
 
 export type ThemeContextValue = {
   preferences: ThemePreferences;
@@ -26,14 +23,7 @@ export type ThemeContextValue = {
 
 const ThemeContext = React.createContext<ThemeContextValue | null>(null);
 
-const THEME_MODE_CYCLE: ThemeMode[] = ['light', 'dark', 'system'];
-
-function applyWithSystemSignals(prefs: ThemePreferences): ResolvedColorScheme {
-  return applyDocumentTheme(prefs, {
-    systemScheme: readSystemColorScheme(),
-    systemPrefersReducedMotion: readSystemPrefersReducedMotion(),
-  });
-}
+const THEME_MODE_CYCLE: ThemeMode[] = ['light', 'dark'];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [preferences, setPreferences] = React.useState<ThemePreferences>(DEFAULT_THEME_PREFERENCES);
@@ -43,64 +33,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   preferencesRef.current = preferences;
 
-  const commitPreferences = React.useCallback((next: ThemePreferences) => {
+  const commitPreferences = React.useCallback(async (next: ThemePreferences) => {
     const normalized = { ...next };
     setPreferences(normalized);
-    const scheme = applyWithSystemSignals(normalized);
+    const scheme = applyDocumentTheme(normalized);
     setResolvedScheme(scheme);
-    writeStoredThemePreferences(normalized);
+    await writeThemePreferencesToDb(normalized);
   }, []);
 
   React.useEffect(() => {
-    const stored = readStoredThemePreferences();
-    commitPreferences(stored);
-    setHydrated(true);
+    async function init() {
+      const stored = await readThemePreferencesFromDb();
+      await commitPreferences(stored);
+      setHydrated(true);
+      if (typeof document !== 'undefined') {
+        document.documentElement.setAttribute('data-theme-hydrated', 'true');
+      }
+    }
+    init();
   }, [commitPreferences]);
-
-  React.useEffect(() => {
-    if (!hydrated) return undefined;
-
-    const onStorage = (event: StorageEvent) => {
-      if (event.key !== THEME_STORAGE_KEY) return;
-      commitPreferences(readStoredThemePreferences());
-    };
-
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, [hydrated, commitPreferences]);
-
-  React.useEffect(() => {
-    if (!hydrated || preferences.themeMode !== 'system') return undefined;
-
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const sync = () => {
-      const scheme = applyDocumentTheme(preferencesRef.current, {
-        systemScheme: media.matches ? 'dark' : 'light',
-        systemPrefersReducedMotion: readSystemPrefersReducedMotion(),
-      });
-      setResolvedScheme(scheme);
-    };
-
-    sync();
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
-  }, [hydrated, preferences.themeMode]);
-
-  React.useEffect(() => {
-    if (!hydrated || preferences.reducedMotion !== 'system') return undefined;
-
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => {
-      applyDocumentTheme(preferencesRef.current, {
-        systemScheme: readSystemColorScheme(),
-        systemPrefersReducedMotion: media.matches,
-      });
-    };
-
-    sync();
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
-  }, [hydrated, preferences.reducedMotion]);
 
   const updatePreferences = React.useCallback(
     (patch: Partial<ThemePreferences>) => {
@@ -127,8 +78,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const cycleThemeMode = React.useCallback(() => {
     const current = preferencesRef.current.themeMode;
-    const index = THEME_MODE_CYCLE.indexOf(current);
-    const next = THEME_MODE_CYCLE[(index + 1) % THEME_MODE_CYCLE.length] ?? 'system';
+    const next = current === 'light' ? 'dark' : 'light';
     commitPreferences({ ...preferencesRef.current, themeMode: next });
   }, [commitPreferences]);
 

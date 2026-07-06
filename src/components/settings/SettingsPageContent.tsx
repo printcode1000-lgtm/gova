@@ -1,8 +1,8 @@
 'use client';
 
-import { Accessibility, Database, FileText, Globe, Palette } from 'lucide-react';
+import { Database, FileText, Globe, Palette } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdjust, faSun, faMoon, faDesktop, faCircleHalfStroke, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAdjust, faSun, faMoon, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
 import {
   useAppPreferences,
@@ -12,17 +12,13 @@ import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import {
   CLEAR_STORAGE_WARNING,
-  calculateLocalStorageSize,
   clearAllClientStorage,
-  formatBytes,
 } from '@/lib/storage/client-storage';
 
 import {
   type SettingsDensity,
   type SettingsLocale,
-  type SettingsReducedMotion,
   type SettingsThemeMode,
-  type SettingsTimezone,
 } from './settings-types';
 
 function ToggleSwitch({
@@ -59,22 +55,14 @@ export function SettingsPageContent() {
     resetPreferences: resetApp,
   } = useAppPreferences();
 
-  const [storageSize, setStorageSize] = React.useState(0);
   const [statusText, setStatusText] = React.useState('');
   const [clearing, setClearing] = React.useState(false);
   const [tempFontSize, setTempFontSize] = React.useState(themePrefs.fontSize);
   const [showClearDialog, setShowClearDialog] = React.useState(false);
 
-  const timezoneLabels: Record<SettingsTimezone, string> = {
-    cairo: t('timezone.cairo'),
-    mecca: t('timezone.mecca'),
-    dubai: t('timezone.dubai'),
-  };
-
   const themeLabels: Record<SettingsThemeMode, string> = {
     light: t('theme.light'),
     dark: t('theme.dark'),
-    system: t('theme.light'),
   };
 
   const densityLabels: Record<SettingsDensity, string> = {
@@ -82,16 +70,6 @@ export function SettingsPageContent() {
     comfortable: t('density.comfortable'),
     spacious: t('density.spacious'),
   };
-
-  const motionLabels: Record<SettingsReducedMotion, string> = {
-    system: t('motion.system'),
-    on: t('motion.on'),
-    off: t('motion.off'),
-  };
-
-  React.useEffect(() => {
-    setStorageSize(calculateLocalStorageSize());
-  }, []);
 
   React.useEffect(() => {
     setTempFontSize(themePrefs.fontSize);
@@ -129,7 +107,6 @@ export function SettingsPageContent() {
     setClearing(true);
     try {
       await clearAllClientStorage();
-      setStorageSize(0);
       window.location.reload();
     } catch {
       showStatus(t('settings.clearError'));
@@ -137,8 +114,7 @@ export function SettingsPageContent() {
     }
   };
 
-  const storageUsagePercent = Math.min((storageSize / 5_242_880) * 100, 100);
-  const activeThemeLabel = themeLabels[themePrefs.themeMode === 'system' ? 'light' : themePrefs.themeMode];
+  const activeThemeLabel = themeLabels[themePrefs.themeMode];
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
@@ -162,9 +138,9 @@ export function SettingsPageContent() {
         <div className="gova-settings-section-secondary space-y-8">
           <div className="flex items-center gap-3 px-2">
             <Globe className="h-6 w-6 text-primary" />
-            <h2 className="text-xl font-semibold text-on-surface">اللغة</h2>
+            <h2 className="text-xl font-semibold text-on-surface">{t('settings.languageLabel')}</h2>
           </div>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-4">
             <div className="flex w-fit gap-1 rounded-full bg-surface-variant p-1">
               {(['ar', 'en'] as SettingsLocale[]).map((locale) => (
                 <button
@@ -182,7 +158,7 @@ export function SettingsPageContent() {
                 </button>
               ))}
             </div>
-            <div className="flex items-center gap-3 flex-1">
+            <div className="flex items-center gap-3 w-full sm:flex-1">
               <h3 className="text-sm font-semibold whitespace-nowrap">{t('settings.fontSize')}</h3>
               <span className="rounded-lg bg-surface-variant px-2 py-1 text-xs font-semibold whitespace-nowrap">
                 {tempFontSize}px
@@ -212,45 +188,43 @@ export function SettingsPageContent() {
                 <Palette className="h-6 w-6 text-primary" />
                 <h2 className="text-xl font-semibold text-on-surface">{t('settings.appearance')}</h2>
               </div>
-              <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-6">
-                <button
-                  type="button"
-                  onClick={cycleThemeMode}
-                  className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/20 transition-all hover:bg-primary/30"
-                  aria-label={t('settings.visualTheme')}
-                >
-                  <FontAwesomeIcon icon={getThemeIcon()} className="h-7 w-7 text-primary" />
-                </button>
-                <div className="flex-1 space-y-1">
-                  <h4 className="text-sm font-semibold">{activeThemeLabel}</h4>
-                  <p className="text-xs text-on-surface-variant">{t('settings.visualTheme')}</p>
+              <div className="flex flex-row items-center justify-center gap-6 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-6">
+                <div className="flex flex-col items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={cycleThemeMode}
+                    className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/20 transition-all hover:bg-primary/30"
+                    aria-label={t('settings.visualTheme')}
+                  >
+                    <FontAwesomeIcon icon={getThemeIcon()} className="h-7 w-7 text-primary" />
+                  </button>
+                  <div className="text-center">
+                    <h4 className="text-sm font-semibold">{activeThemeLabel}</h4>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="h-8 w-px bg-outline-variant/30" />
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => updateTheme({ highContrast: !themePrefs.highContrast })}
-                      className={cn(
-                        'flex h-14 w-14 items-center justify-center rounded-xl transition-all',
-                        themePrefs.highContrast
-                          ? 'bg-primary/20 text-primary'
-                          : 'bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80',
-                      )}
-                      aria-label={t('settings.highContrast')}
-                    >
-                      <FontAwesomeIcon icon={faAdjust} className="h-7 w-7" />
-                    </button>
-                    <div className="space-y-1">
-                      <h4 className="text-sm font-semibold">{t('settings.highContrast')}</h4>
-                      <p className="text-xs text-on-surface-variant">تباين أعلى للعناصر</p>
-                    </div>
+                <div className="h-12 w-px bg-outline-variant/30" />
+                <div className="flex flex-col items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => updateTheme({ highContrast: !themePrefs.highContrast })}
+                    className={cn(
+                      'flex h-14 w-14 items-center justify-center rounded-xl transition-all',
+                      themePrefs.highContrast
+                        ? 'bg-primary/20 text-primary'
+                        : 'bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80',
+                    )}
+                    aria-label={t('settings.highContrast')}
+                  >
+                    <FontAwesomeIcon icon={faAdjust} className="h-7 w-7" />
+                  </button>
+                  <div className="text-center">
+                    <h4 className="text-sm font-semibold">{t('settings.highContrast')}</h4>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-4">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-4">
                 <h3 className="text-lg font-semibold">{t('settings.uiDensity')}</h3>
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-3">
                   {(['compact', 'comfortable', 'spacious'] as SettingsDensity[]).map((density) => (
                     <label key={density} className="flex items-center gap-2 cursor-pointer rounded-lg px-3 py-2 transition-all hover:bg-white/10">
                       <input
@@ -278,33 +252,19 @@ export function SettingsPageContent() {
             <Database className="h-6 w-6 text-primary" />
             <h2 className="text-xl font-semibold text-on-surface">{t('settings.storage')}</h2>
           </div>
-          <div className="flex flex-col gap-6 md:flex-row">
-            <div className="flex-1 space-y-4">
-              <div className="h-2 w-full rounded-full bg-surface-variant">
-                <div
-                  className="h-2 rounded-full bg-primary transition-all"
-                  style={{ width: `${storageUsagePercent}%` }}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">{t('settings.localStorage')}</span>
-                <span className="text-xs font-semibold text-primary">{formatBytes(storageSize)}</span>
-              </div>
+          <div className="flex items-center justify-between rounded-xl gova-surface-neutral p-4">
+            <div className="flex items-center gap-3">
+              <Database className="h-5 w-5 text-outline" />
+              <span className="text-sm">{t('settings.cookiesLocalData')}</span>
             </div>
-            <div className="flex flex-1 items-center justify-between rounded-xl gova-surface-neutral p-4">
-              <div className="flex items-center gap-3">
-                <Database className="h-5 w-5 text-outline" />
-                <span className="text-sm">{t('settings.cookiesLocalData')}</span>
-              </div>
-              <button
-                type="button"
-                disabled={clearing}
-                onClick={() => void handleClearAll()}
-                className="gova-control border border-error/40 bg-error/10 text-xs font-semibold text-error hover:bg-error/20 disabled:opacity-60"
-              >
-                {clearing ? t('settings.clearing') : t('settings.clearAll')}
-              </button>
-            </div>
+            <button
+              type="button"
+              disabled={clearing}
+              onClick={() => void handleClearAll()}
+              className="gova-control border border-error/40 bg-error/10 text-xs font-semibold text-error hover:bg-error/20 disabled:opacity-60"
+            >
+              {clearing ? t('settings.clearing') : t('settings.clearAll')}
+            </button>
           </div>
         </div>
       </section>
@@ -323,11 +283,6 @@ export function SettingsPageContent() {
             />
             <SummaryRow label={t('settings.visualTheme')} value={activeThemeLabel} />
             <SummaryRow label={t('settings.uiDensity')} value={densityLabels[themePrefs.density]} />
-            <SummaryRow label={t('settings.timezone')} value={timezoneLabels[appPrefs.timezone]} />
-            <SummaryRow
-              label={t('settings.reducedMotion')}
-              value={motionLabels[themePrefs.reducedMotion]}
-            />
             <SummaryRow label={t('settings.fontSize')} value={`${themePrefs.fontSize}px`} />
           </ul>
         </div>

@@ -91,20 +91,10 @@ html[data-high-contrast='true'] *:focus-visible {
   outline-offset: 3px;
 }
 
-/* Reduced motion — tri-state preference resolved to data-reduced-motion-active */
-html[data-reduced-motion-active='true'] *,
-html[data-reduced-motion-active='true'] *::before,
-html[data-reduced-motion-active='true'] *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-  scroll-behavior: auto !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  html[data-reduced-motion='system'][data-reduced-motion-active='true'] *,
-  html[data-reduced-motion='system'][data-reduced-motion-active='true'] *::before,
-  html[data-reduced-motion='system'][data-reduced-motion-active='true'] *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

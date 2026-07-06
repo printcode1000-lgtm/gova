@@ -28,11 +28,9 @@ export function AppHeader() {
   };
 
   const themeLabel =
-    preferences.themeMode === 'system'
-      ? `${t('header.theme')}: ${t('theme.system')} (${resolvedScheme === 'dark' ? t('theme.dark') : t('theme.light')})`
-      : preferences.themeMode === 'dark'
-        ? `${t('header.theme')}: ${t('theme.dark')}`
-        : `${t('header.theme')}: ${t('theme.light')}`;
+    preferences.themeMode === 'dark'
+      ? `${t('header.theme')}: ${t('theme.dark')}`
+      : `${t('header.theme')}: ${t('theme.light')}`;
 
   return (
     <>

@@ -2,16 +2,15 @@
 
 import { ThemeProvider } from '@/theme/runtime';
 import * as React from 'react';
+import { applyDocumentLocale } from '@/lib/i18n/apply-locale';
 
 import {
-  APP_PREFERENCES_STORAGE_KEY,
   DEFAULT_APP_PREFERENCES,
   type AppPreferences,
 } from './app-preferences-types';
 import {
-  applyDocumentAppPreferences,
-  readStoredAppPreferences,
-  writeStoredAppPreferences,
+  readAppPreferencesFromDb,
+  writeAppPreferencesToDb,
 } from './app-preferences-storage';
 
 export type AppPreferencesContextValue = {
@@ -27,27 +26,21 @@ function AppPreferencesScope({ children }: { children: React.ReactNode }) {
   const preferencesRef = React.useRef(preferences);
   preferencesRef.current = preferences;
 
-  const commitPreferences = React.useCallback((next: AppPreferences) => {
+  const commitPreferences = React.useCallback(async (next: AppPreferences) => {
     setPreferences(next);
-    applyDocumentAppPreferences(next);
-    writeStoredAppPreferences(next);
+    applyDocumentLocale(next.locale);
+    await writeAppPreferencesToDb(next);
   }, []);
 
   React.useEffect(() => {
-    commitPreferences(readStoredAppPreferences());
-    if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('data-hydrated', 'true');
+    async function init() {
+      const stored = await readAppPreferencesFromDb();
+      await commitPreferences(stored);
+      if (typeof document !== 'undefined') {
+        document.documentElement.setAttribute('data-app-hydrated', 'true');
+      }
     }
-  }, [commitPreferences]);
-
-  React.useEffect(() => {
-    const onStorage = (event: StorageEvent) => {
-      if (event.key !== APP_PREFERENCES_STORAGE_KEY) return;
-      commitPreferences(readStoredAppPreferences());
-    };
-
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    init();
   }, [commitPreferences]);
 
   const updatePreferences = React.useCallback(
@@ -71,7 +64,7 @@ function AppPreferencesScope({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Unified provider: theme + app preferences (locale, timezone). */
+/** Unified provider: theme + app preferences. */
 export function PreferencesProvider({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>

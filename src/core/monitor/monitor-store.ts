@@ -4,6 +4,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { create } from 'zustand';
+import { govaDbGet, govaDbSet, GOVA_DB_STORES } from '@/lib/gova-db';
 import type {
   OperationRecord,
   MonitorStats,
@@ -39,6 +40,7 @@ interface MonitorState {
   selectOperation: (id: string | null) => void;
   setActiveTab: (tab: string) => void;
   toggleTheme: () => void;
+  loadTheme: () => Promise<void>;
   togglePin: (id: string) => void;
   setAutoScroll: (v: boolean) => void;
   exportJSON: () => void;
@@ -84,11 +86,6 @@ const DEFAULT_FILTER: MonitorFilter = {
   showPinnedOnly: false,
 };
 
-// ─── Initialise stored theme ──────────────────────────────────────────────────
-function getStoredTheme(): 'dark' | 'light' {
-  if (typeof window === 'undefined') return 'dark';
-  return (localStorage.getItem('gova-monitor-theme') as 'dark' | 'light') ?? 'dark';
-}
 
 // ─── Duplicate Detection ──────────────────────────────────────────────────────
 function detectDuplicate(ops: OperationRecord[], incoming: OperationRecord): boolean {
@@ -400,7 +397,7 @@ export const useMonitorStore = create<MonitorState>((set, get) => ({
   filter: DEFAULT_FILTER,
   selectedOperationId: null,
   activeTab: 'dashboard',
-  theme: getStoredTheme(),
+  theme: 'dark',
   autoScroll: true,
 
   emit: (record: OperationRecord) => {
@@ -436,9 +433,18 @@ export const useMonitorStore = create<MonitorState>((set, get) => ({
   toggleTheme: () =>
     set((s) => {
       const next = s.theme === 'dark' ? 'light' : 'dark';
-      try { localStorage.setItem('gova-monitor-theme', next); } catch {}
+      void govaDbSet(GOVA_DB_STORES.APP_SETTINGS, 'monitor-theme', next);
       return { theme: next };
     }),
+
+  loadTheme: async () => {
+    try {
+      const stored = await govaDbGet<'dark' | 'light'>(GOVA_DB_STORES.APP_SETTINGS, 'monitor-theme');
+      if (stored) {
+        set({ theme: stored });
+      }
+    } catch {}
+  },
 
   togglePin: (id) =>
     set((s) => ({

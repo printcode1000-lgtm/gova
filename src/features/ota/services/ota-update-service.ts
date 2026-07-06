@@ -1,5 +1,6 @@
 import { publicEnv } from '@/core/config/public-env';
 import { capacitorOtaAdapter } from '@/platform/ota/capacitor-ota-adapter';
+import { govaDbGet, govaDbSet, GOVA_DB_STORES } from '@/lib/gova-db';
 
 import { otaApiService } from './ota-api-service';
 import type {
@@ -167,16 +168,16 @@ async function verifyManifest(manifest: OtaManifest): Promise<boolean> {
   );
 }
 
-function readState(): OtaStoredState {
+async function readState(): Promise<OtaStoredState> {
   try {
-    return JSON.parse(localStorage.getItem(OTA_STATE_KEY) ?? '{}') as OtaStoredState;
+    return (await govaDbGet<OtaStoredState>(GOVA_DB_STORES.APP_SETTINGS, OTA_STATE_KEY)) ?? {};
   } catch {
     return {};
   }
 }
 
-function writeState(state: OtaStoredState): void {
-  localStorage.setItem(OTA_STATE_KEY, JSON.stringify(state));
+async function writeState(state: OtaStoredState): Promise<void> {
+  await govaDbSet<OtaStoredState>(GOVA_DB_STORES.APP_SETTINGS, OTA_STATE_KEY, state);
   window.dispatchEvent(new CustomEvent(OTA_STATE_EVENT, { detail: state }));
 }
 
@@ -220,31 +221,31 @@ export const otaUpdateService = {
 
   getState: readState,
 
-  getPending(): DownloadedOtaUpdate | null {
-    return readState().pending ?? null;
+  async getPending(): Promise<DownloadedOtaUpdate | null> {
+    return (await readState()).pending ?? null;
   },
 
-  dismissPending(): DownloadedOtaUpdate | null {
-    const state = readState();
+  async dismissPending(): Promise<DownloadedOtaUpdate | null> {
+    const state = await readState();
     if (!state.pending) return null;
     state.pending.dismissedAt = Date.now();
-    writeState(state);
+    await writeState(state);
     logInfo(`Pending update dismissed: ${state.pending.version}`);
     return state.pending;
   },
 
   async confirmRunningBundle(): Promise<void> {
-    const state = readState();
+    const state = await readState();
     if (state.activation?.version !== publicEnv.webBundleVersion) return;
     await capacitorOtaAdapter.persistCurrentPath();
     logInfo(`OTA release persisted: ${state.activation.version}`);
     delete state.activation;
     delete state.pending;
-    writeState(state);
+    await writeState(state);
   },
 
   async activatePending(): Promise<void> {
-    const state = readState();
+    const state = await readState();
     if (!state.pending) return;
     const previousPath = await capacitorOtaAdapter.currentBasePath();
     state.activation = {
@@ -252,7 +253,7 @@ export const otaUpdateService = {
       previousPath,
       startedAt: Date.now(),
     };
-    writeState(state);
+    await writeState(state);
     logInfo(`Activating OTA release: ${state.pending.version}`, { path: state.pending.path });
     await capacitorOtaAdapter.activate(state.pending.path);
   },
@@ -345,7 +346,7 @@ export const otaUpdateService = {
           throw new Error('OTA manifest signature is invalid');
         }
 
-        if (readState().failedReleaseId === remoteManifest.releaseId) {
+        if ((await readState()).failedReleaseId === remoteManifest.releaseId) {
           logWarn(`Skipping previously failed release: ${remoteManifest.releaseId}`);
           return null;
         }
@@ -364,7 +365,7 @@ export const otaUpdateService = {
           return null;
         }
 
-        const existing = this.getPending();
+        const existing = await this.getPending();
         if (existing && compareVersions(existing.version, remoteManifest.version) >= 0) {
           logInfo(`Using already downloaded pending release: ${existing.version}`);
           return existing;
@@ -474,7 +475,7 @@ export const otaUpdateService = {
           notes: remoteManifest.notes,
           downloadedAt: Date.now(),
         };
-        writeState({ ...readState(), pending });
+        await writeState({ ...(await readState()), pending });
         logInfo(`OTA release ready: ${remoteManifest.version}`, pending);
         logInfo('OTA check/download completed successfully');
         onProgress?.({
@@ -515,7 +516,7 @@ export const otaUpdateService = {
   ): Promise<void> {
     if (!this.isEnabled()) return;
 
-    const state = readState();
+    const state = await readState();
     if (state.activation) {
       if (state.activation.version === publicEnv.webBundleVersion) {
         logInfo(`Activated release reached splash: ${state.activation.version}`);
@@ -529,15 +530,15 @@ export const otaUpdateService = {
       });
       delete state.activation;
       delete state.pending;
-      writeState(state);
+      await writeState(state);
       return;
     }
 
-    let pending = this.getPending();
+    let pending = await this.getPending();
     if (pending) {
       try {
         await this.checkAndDownload(onProgress);
-        pending = this.getPending();
+        pending = await this.getPending();
       } catch (error) {
         logWarn('Pending update refresh skipped', error instanceof Error ? error.message : error);
       }

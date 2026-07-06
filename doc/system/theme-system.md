@@ -116,32 +116,22 @@ When adding UI, prefer **neutral** for most of the layout, **tonal** for grouped
 
 ## Theme preferences
 
-Stored in `localStorage` under `gova-theme-preferences`:
+Stored in GovaDB (`IndexedDB`) under the `appSettings` store with the key `theme-preferences`:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `themeMode` | `'light' \| 'dark' \| 'system'` | Color scheme preference |
-| `fontSize` | `number` (14–22) | Base font size in px |
+| `themeMode` | `'light' \| 'dark'` | Color scheme preference (defaults to `'light'`) |
+| `fontSize` | `number` (12–24) | Base font size in px |
 | `density` | `'compact' \| 'comfortable' \| 'spacious'` | UI spacing scale |
 | `highContrast` | `boolean` | Stronger borders/contrast |
-| `reducedMotion` | `'system' \| 'on' \| 'off'` | Animation preference |
 
 ---
 
 ## How theme is applied
 
-1. **Before paint:** `gova-app-init.js` reads `localStorage` and sets `<html>` attributes:
-   - `data-theme` → `light` | `dark`
-   - `data-theme-mode`, `data-density`, `data-high-contrast`, `data-reduced-motion`
-   - `--gova-font-size-base` inline style
-   - `<meta name="theme-color">` for mobile browser chrome
-
-2. **After hydration:** `ThemeProvider` loads stored prefs, syncs document, listens for:
-   - `storage` events (multi-tab sync)
-   - `prefers-color-scheme` when mode is `system`
-   - `prefers-reduced-motion` when motion is `system`
-
-3. **CSS:** `preferences.css` reacts to `html[data-*]` attributes.
+1. **Before paint:** `gova-theme-init.js` initializes default attributes on `<html>` (such as light theme, comfortable density, 16px font-size) synchronously.
+2. **After hydration:** `ThemeProvider` loads preferences asynchronously from GovaDB (`IndexedDB`), updates document attributes, and sets `data-theme-hydrated="true"` on `<html>`.
+3. **CSS:** `preferences.css` reacts to `html[data-*]` attributes. The app body fades in smoothly (150ms transition) once both theme and app preferences have completed their async hydration.
 
 ---
 

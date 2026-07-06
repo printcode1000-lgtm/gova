@@ -9,7 +9,7 @@
     "preview:static": "npx tsx scripts/serve-static.ts",
     "serve:out": "npx http-server out -p 5500 -o /profile?mode=edit",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "architecture:check": "npx tsx scripts/architecture-check.ts",
     "category:validate": "npx tsx scripts/validate-categories.ts",

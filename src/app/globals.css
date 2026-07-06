@@ -300,21 +300,17 @@
 }
 
 /*
- * Anti-flash: Hide the page body while React hasn't yet applied the real
- * locale from localStorage. Only triggers when the stored locale is English
- * (i.e. html[data-locale="en"]) and the hydration hasn't completed yet
- * (html[data-hydrated="false"]). After PreferencesProvider mounts and calls
- * applyDocumentLocale + sets data-hydrated="true", this rule stops matching
- * and the body fades in. This prevents:
- *   1. Arabic text flashing before English translations are applied.
- *   2. AppSidebar appearing on the right and sliding left during hydration.
+ * Anti-flash: Hide the page body while React hasn't yet loaded preferences from GovaDB (IndexedDB).
+ * Once both ThemeProvider and PreferencesProvider mount and set data-theme-hydrated="true"
+ * and data-app-hydrated="true", the body fades in smoothly.
  */
-html[data-locale="en"][data-hydrated="false"] body {
+body {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.15s ease;
 }
 
-html[data-hydrated="true"] body {
+html[data-theme-hydrated="true"][data-app-hydrated="true"] body {
   opacity: 1;
-  transition: opacity 0.1s ease;
+  pointer-events: auto;
 }
