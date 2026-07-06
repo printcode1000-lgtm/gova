@@ -103,6 +103,19 @@ t('onboarding.progress.sectionsCompleted', { completed: 3, total: 12 })
 
 Use `isRTL` from `useTranslation()` for component-level layout (icons, chevrons, etc.).
 
+### Anti-flash mechanism (English locale)
+
+Because the static HTML is built with Arabic as the default, switching to English during hydration would cause a one-frame Arabic text flash and a sidebar direction glitch. Three guards prevent this:
+
+| Mechanism | Location |
+|-----------|----------|
+| `mounted` guard in `AppSidebar` — returns `null` on first render | `AppSidebar.tsx` |
+| `data-hydrated="false"` on `<html>` in static markup | `layout.tsx` |
+| CSS hides `body` while `data-locale="en"` and `data-hydrated="false"` | `globals.css` |
+| `PreferencesProvider` sets `data-hydrated="true"` after loading locale | `PreferencesProvider.tsx` |
+
+See [`doc/problems/english-locale-hydration-flash.md`](../problems/english-locale-hydration-flash.md) for the full root-cause analysis.
+
 ---
 
 ## Adding a new string

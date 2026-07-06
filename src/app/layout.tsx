@@ -42,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" data-theme="light" suppressHydrationWarning>
+    <html lang="ar" dir="rtl" data-theme="light" data-hydrated="false" suppressHydrationWarning>
       <head>
         <meta name="theme-color" content={THEME_COLOR_LIGHT} />
         <AppInitScript />

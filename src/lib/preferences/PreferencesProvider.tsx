@@ -35,6 +35,9 @@ function AppPreferencesScope({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     commitPreferences(readStoredAppPreferences());
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-hydrated', 'true');
+    }
   }, [commitPreferences]);
 
   React.useEffect(() => {

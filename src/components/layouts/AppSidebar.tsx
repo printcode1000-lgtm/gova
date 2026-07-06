@@ -51,6 +51,11 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [profileMode, setProfileMode] = useState<'preview' | 'edit'>('preview');
   const logout = useLogout();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -179,6 +184,8 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
       </div>
     );
   }, [showSuperAdmin, superAdminOpen, handleSuperAdminToggle, t, onClose]);
+
+  if (!mounted) return null;
 
   return (
     <>
