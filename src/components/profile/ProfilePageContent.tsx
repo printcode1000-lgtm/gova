@@ -7,13 +7,16 @@ import {
   ChevronRight,
   Loader2,
   LogIn,
-  Phone,
-  Package,
   Save,
-  Star,
-  Store,
-  User,
 } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUserCircle,
+  faStar,
+  faTags,
+  faAddressBook,
+  faBuilding,
+} from "@fortawesome/free-solid-svg-icons";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
@@ -222,14 +225,14 @@ export function ProfilePageContent() {
                     onClick={() => selectSection("registration")}
                     aria-pressed={activeTab === "registration"}
                     aria-controls={PROFILE_SECTION_IDS.registration}
-                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
                       activeTab === "registration"
                         ? "border-primary bg-primary text-on-primary shadow-sm"
                         : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
                     }`}
                   >
-                    <User className="h-4 w-4" />
-                    <span className="whitespace-nowrap">
+                    <FontAwesomeIcon icon={faUserCircle} className="h-6 w-6" />
+                    <span className="whitespace-nowrap text-center">
                       {t("onboarding.contactInfo.primaryContact")}
                     </span>
                     {sectionStatuses.registration?.isDirty ? (
@@ -244,14 +247,14 @@ export function ProfilePageContent() {
                     onClick={() => selectSection("specialties")}
                     aria-pressed={activeTab === "specialties"}
                     aria-controls={PROFILE_SECTION_IDS.specialties}
-                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
                       activeTab === "specialties"
                         ? "border-primary bg-primary text-on-primary shadow-sm"
                         : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
                     }`}
                   >
-                    <Star className="h-4 w-4" />
-                    <span className="whitespace-nowrap">
+                    <FontAwesomeIcon icon={faStar} className="h-6 w-6" />
+                    <span className="whitespace-nowrap text-center">
                       {t("onboarding.storeIdentity.specialties")}
                     </span>
                     {sectionStatuses.specialties?.isDirty ? (
@@ -266,14 +269,14 @@ export function ProfilePageContent() {
                     onClick={() => selectSection("products")}
                     aria-pressed={activeTab === "products"}
                     aria-controls={PROFILE_SECTION_IDS.products}
-                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
                       activeTab === "products"
                         ? "border-primary bg-primary text-on-primary shadow-sm"
                         : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
                     }`}
                   >
-                    <Package className="h-4 w-4" />
-                    <span className="whitespace-nowrap">
+                    <FontAwesomeIcon icon={faTags} className="h-6 w-6" />
+                    <span className="whitespace-nowrap text-center">
                       {t("onboarding.storeIdentity.products")}
                     </span>
                     {sectionStatuses.products?.isDirty ? (
@@ -288,14 +291,14 @@ export function ProfilePageContent() {
                     onClick={() => selectSection("contact")}
                     aria-pressed={activeTab === "contact"}
                     aria-controls={PROFILE_SECTION_IDS.contact}
-                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
                       activeTab === "contact"
                         ? "border-primary bg-primary text-on-primary shadow-sm"
                         : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
                     }`}
                   >
-                    <Phone className="h-4 w-4" />
-                    <span className="whitespace-nowrap">
+                    <FontAwesomeIcon icon={faAddressBook} className="h-6 w-6" />
+                    <span className="whitespace-nowrap text-center">
                       {t("onboarding.contactInfo.additionalContact")}
                     </span>
                     {sectionStatuses.contact?.isDirty ? (
@@ -310,14 +313,14 @@ export function ProfilePageContent() {
                     onClick={() => selectSection("store")}
                     aria-pressed={activeTab === "store"}
                     aria-controls={PROFILE_SECTION_IDS.store}
-                    className={`flex h-12 min-w-fit flex-shrink-0 snap-center items-center gap-2 rounded-full border px-4 text-[13px] font-semibold transition-colors sm:px-5 sm:text-sm ${
+                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
                       activeTab === "store"
                         ? "border-primary bg-primary text-on-primary shadow-sm"
                         : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
                     }`}
                   >
-                    <Store className="h-4 w-4" />
-                    <span className="whitespace-nowrap">
+                    <FontAwesomeIcon icon={faBuilding} className="h-6 w-6" />
+                    <span className="whitespace-nowrap text-center">
                       {t("onboarding.storeIdentity.title")}
                     </span>
                     {sectionStatuses.store?.isDirty ? (
