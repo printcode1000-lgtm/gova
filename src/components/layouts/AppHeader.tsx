@@ -2,7 +2,8 @@
 
 import { Menu, Moon, Search, ShoppingCart, Sun } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { useResolvedColorScheme, useThemePreferences } from '@/lib/preferences';
 import { useTranslation } from '@/lib/i18n';
 
@@ -13,6 +14,12 @@ export function AppHeader() {
   const { preferences, toggleColorScheme, cycleThemeMode } = useThemePreferences();
   const resolvedScheme = useResolvedColorScheme();
   const { t } = useTranslation();
+  const pathname = usePathname();
+
+  // Reset sidebar state when route changes
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
 
   const toggleSidebar = (e: React.PointerEvent) => {
     e.stopPropagation();

@@ -112,7 +112,8 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
 
   const handleProfileModeChange = useCallback((mode: 'preview' | 'edit') => {
     setProfileMode(mode);
-    onClose();
+    // Small delay to allow state update before closing
+    setTimeout(() => onClose(), 100);
   }, [onClose]);
 
   const handleSuperAdminToggle = useCallback(() => {
@@ -246,9 +247,10 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
                           className={cn(
                             "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
                             profileMode === 'preview'
-                              ? "bg-blue-600 text-white shadow-sm"
+                              ? "shadow-sm"
                               : "text-gray-600 hover:text-gray-900"
                           )}
+                          style={profileMode === 'preview' ? { backgroundColor: '#2563eb', color: 'white' } : undefined}
                         >
                           <Eye className="w-4 h-4" />
                           {t("sidebar.preview")}
@@ -260,9 +262,10 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
                           className={cn(
                             "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
                             profileMode === 'edit'
-                              ? "bg-blue-600 text-white shadow-sm"
+                              ? "shadow-sm"
                               : "text-gray-600 hover:text-gray-900"
                           )}
+                          style={profileMode === 'edit' ? { backgroundColor: '#2563eb', color: 'white' } : undefined}
                         >
                           <Edit className="w-4 h-4" />
                           {t("sidebar.edit")}
