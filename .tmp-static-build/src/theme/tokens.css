@@ -1,0 +1,165 @@
+/* Material Design 3 token palette — light (:root / data-theme="light") and dark */
+
+:root,
+html[data-theme='light'] {
+  /* -------- PRIMARY (Google Blue) -------- */
+  --color-primary: #1a73e8;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #d3e3fd;
+  --color-on-primary-container: #041e49;
+  --color-primary-fixed: #d3e3fd;
+  --color-primary-fixed-dim: #a8c7fa;
+  --color-on-primary-fixed: #041e49;
+  --color-on-primary-fixed-variant: #0842a0;
+
+  /* -------- SECONDARY (Google Green) -------- */
+  --color-secondary: #1e8e3e;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #c2e7c9;
+  --color-on-secondary-container: #002106;
+  --color-secondary-fixed: #c2e7c9;
+  --color-secondary-fixed-dim: #6dd58c;
+  --color-on-secondary-fixed: #002106;
+  --color-on-secondary-fixed-variant: #0d5722;
+
+  /* -------- TERTIARY (Google Yellow) -------- */
+  --color-tertiary: #f9ab00;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #feefc3;
+  --color-on-tertiary-container: #2a1700;
+  --color-tertiary-fixed: #feefc3;
+  --color-tertiary-fixed-dim: #fdd663;
+  --color-on-tertiary-fixed: #2a1700;
+  --color-on-tertiary-fixed-variant: #5a3700;
+
+  /* -------- ERROR (Google Red) -------- */
+  --color-error: #d93025;
+  --color-on-error: #ffffff;
+  --color-error-container: #fce8e6;
+  --color-on-error-container: #5f0b06;
+
+  /* -------- NEUTRAL (Gray / Surface Lifecycle) -------- */
+  --color-surface: #f8f9fa;
+  --color-surface-dim: #e8eaed;
+  --color-surface-bright: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f5f6;
+  --color-surface-container: #eeeff1;
+  --color-surface-container-high: #e8eaed;
+  --color-surface-container-highest: #e0e0e0;
+  --color-on-surface: #202124;
+  --color-on-surface-variant: #5f6368;
+  --color-inverse-surface: #303134;
+  --color-inverse-on-surface: #f1f3f4;
+  --color-inverse-primary: #8ab4f8;
+
+  /* -------- NEUTRAL VARIANT -------- */
+  --color-outline: #9aa0a6;
+  --color-outline-variant: #dadce0;
+  --color-outline-strong: #5f6368;
+
+  /* -------- GOOGLE BRAND STANDARDS -------- */
+  --color-google-blue: #4285f4;
+  --color-google-red: #ea4335;
+  --color-google-yellow: #fbbc05;
+  --color-google-green: #34a853;
+
+  /* -------- GLOBAL BACKGROUND -------- */
+  --color-background: #ffffff;
+  --color-on-background: #202124;
+
+  /* -------- SURFACE TINTS -------- */
+  --color-surface-tint: #1a73e8;
+  --color-surface-variant: #f1f3f4;
+
+  /* -------- ELEVATION SHADOWS (Material Design 3 Tokens) -------- */
+  --shadow-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+  --shadow-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+  --shadow-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.30);
+  --shadow-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.30);
+  --shadow-5: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+
+  /* -------- SHAPE RADII -------- */
+  --radius-none: 0px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 28px;
+  --radius-3xl: 32px;
+  --radius-full: 9999px;
+
+  /* -------- MOTION & ANIMATIONS -------- */
+  --duration-short-1: 50ms;
+  --duration-short-2: 100ms;
+  --duration-short-3: 150ms;
+  --duration-medium-1: 200ms;
+  --duration-medium-2: 250ms;
+  --duration-medium-3: 300ms;
+  --duration-long-1: 350ms;
+  --duration-long-2: 400ms;
+  --duration-long-3: 450ms;
+  --duration-long-4: 500ms;
+
+  --easing-linear: cubic-bezier(0, 0, 1, 1);
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --easing-emphasized: cubic-bezier(0.2, 0, 0, 1.0);
+  --easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+  --easing-emphasized-accelerate: cubic-bezier(0.3, 0.0, 0.8, 0.15);
+}
+
+[data-theme='dark'],
+html[data-theme='dark'] {
+  --color-primary: #8ab4f8;
+  --color-on-primary: #062e6b;
+  --color-primary-container: #0842a0;
+  --color-on-primary-container: #d3e3fd;
+
+  --color-secondary: #81c995;
+  --color-on-secondary: #0f5123;
+  --color-secondary-container: #137333;
+  --color-on-secondary-container: #e6f4ea;
+
+  --color-tertiary: #fde293;
+  --color-on-tertiary: #664d03;
+  --color-tertiary-container: #9aa0a6;
+  --color-on-tertiary-container: #fef7e0;
+
+  --color-error: #f28b82;
+  --color-on-error: #60140f;
+  --color-error-container: #8c1d18;
+  --color-on-error-container: #fce8e6;
+
+  --color-surface: #1f1f1f;
+  --color-surface-dim: #121212;
+  --color-surface-bright: #2d2d2d;
+  --color-surface-container-lowest: #0f0f0f;
+  --color-surface-container-low: #1a1a1a;
+  --color-surface-container: #242424;
+  --color-surface-container-high: #2c2c2c;
+  --color-surface-container-highest: #363636;
+  --color-on-surface: #e3e3e3;
+  --color-on-surface-variant: #c4c7c5;
+  --color-inverse-surface: #e3e3e3;
+  --color-inverse-on-surface: #1f1f1f;
+  --color-inverse-primary: #1a73e8;
+
+  --color-outline: #8e918f;
+  --color-outline-variant: #444746;
+  --color-outline-strong: #c4c7c5;
+
+  --color-background: #121212;
+  --color-on-background: #e3e3e3;
+
+  --color-surface-tint: #8ab4f8;
+  --color-surface-variant: #2d2d2d;
+
+  --shadow-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.45), 0px 1px 2px 0px rgba(0, 0, 0, 0.50);
+  --shadow-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.45), 0px 1px 2px 0px rgba(0, 0, 0, 0.50);
+  --shadow-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.45), 0px 1px 3px 0px rgba(0, 0, 0, 0.50);
+  --shadow-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.45), 0px 2px 3px 0px rgba(0, 0, 0, 0.50);
+  --shadow-5: 0px 8px 12px 6px rgba(0, 0, 0, 0.45), 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
+}

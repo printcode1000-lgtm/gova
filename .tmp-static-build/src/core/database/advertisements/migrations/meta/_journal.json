@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1783072800000,
+      "tag": "0000_home_hero_slider",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1783090000000,
+      "tag": "0001_featured_marquee",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1783091000000,
+      "tag": "0002_featured_marquee_interval",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1783092000000,
+      "tag": "0003_trending_ribbon",
+      "breakpoints": true
+    }
+  ]
+}

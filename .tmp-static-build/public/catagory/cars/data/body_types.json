@@ -1,0 +1,86 @@
+[
+  {
+    "id": "others",
+    "name": "Others",
+    "name_ar": "أخرى",
+    "image": "imgs/others.svg"
+  },
+  {
+    "id": "small-city-car",
+    "name": "Small City Car",
+    "name_ar": "سيارة مدينة صغيرة",
+    "image": "imgs/small-city-car.svg"
+  },
+  {
+    "id": "hatchback",
+    "name": "Hatchback",
+    "name_ar": "هاتشباك",
+    "image": "imgs/hatchback.svg"
+  },
+  {
+    "id": "sedan",
+    "name": "Sedan",
+    "name_ar": "سيدان",
+    "image": "imgs/sedan.svg"
+  },
+  {
+    "id": "estate",
+    "name": "Estate",
+    "name_ar": "استيت",
+    "image": "imgs/estate.svg"
+  },
+  {
+    "id": "mpv",
+    "name": "Mpv",
+    "name_ar": "ام بي في",
+    "image": "imgs/mpv.svg"
+  },
+  {
+    "id": "suv",
+    "name": "Suv",
+    "name_ar": "اس يو في",
+    "image": "imgs/suv.svg"
+  },
+  {
+    "id": "4x4",
+    "name": "4x4",
+    "name_ar": "دفع رباعي",
+    "image": "imgs/4x4.svg"
+  },
+  {
+    "id": "convertible",
+    "name": "Convertible",
+    "name_ar": "كابورليه",
+    "image": "imgs/convertible.svg"
+  },
+  {
+    "id": "sports-coupe",
+    "name": "Sports Coupe",
+    "name_ar": "كوبيه رياضية",
+    "image": "imgs/sports-coupe.svg"
+  },
+  {
+    "id": "van-bus",
+    "name": "Van Bus",
+    "name_ar": "فان / باص",
+    "image": "imgs/van-bus.svg"
+  },
+  {
+    "id": "pickup",
+    "name": "Pickup",
+    "name_ar": "بيك آب",
+    "image": "imgs/pickup.svg"
+  },
+  {
+    "id": "minivan",
+    "name": "Minivan",
+    "name_ar": "ميني فان",
+    "image": "imgs/minivan.svg"
+  },
+  {
+    "id": "crossover",
+    "name": "Crossover",
+    "name_ar": "كروس أوفر",
+    "image": "imgs/crossover.svg"
+  }
+]

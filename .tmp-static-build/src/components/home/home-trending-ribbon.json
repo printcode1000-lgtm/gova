@@ -1,0 +1,9 @@
+{
+  "label": "home.trending.label",
+  "items": [
+    { "label": "Nova S24 Pro Phone",  "action": "go-to-nova-phone" },
+    { "label": "Timepiece Watch",     "action": "go-to-timepiece-watch" },
+    { "label": "Pro Runner Shoes",    "action": "go-to-runner-shoes" },
+    { "label": "Scanner Device v4",   "action": "go-to-scanner-v4" }
+  ]
+}

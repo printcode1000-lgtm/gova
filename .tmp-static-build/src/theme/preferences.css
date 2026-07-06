@@ -1,0 +1,113 @@
+/* Preference-driven document attributes (applied by @gova/theme/runtime) */
+
+:root,
+html[data-theme='light'] {
+  color-scheme: light;
+  --gova-font-size-base: 16px;
+  --gova-density-scale: 1;
+  --gova-control-padding-y: 0.625rem;
+  --gova-control-padding-x: 1rem;
+  --gova-control-min-height: 2.5rem;
+  --gova-control-radius: var(--radius-md);
+  --gova-control-gap: 0.5rem;
+}
+
+html {
+  font-size: var(--gova-font-size-base);
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+html[data-density='compact'] {
+  --gova-density-scale: 0.88;
+  --gova-control-padding-y: 0.5rem;
+  --gova-control-padding-x: 0.75rem;
+  --gova-control-min-height: 2.25rem;
+  --gova-control-gap: 0.375rem;
+}
+
+html[data-density='comfortable'] {
+  --gova-density-scale: 1;
+  --gova-control-padding-y: 0.625rem;
+  --gova-control-padding-x: 1rem;
+  --gova-control-min-height: 2.5rem;
+  --gova-control-gap: 0.5rem;
+}
+
+html[data-density='spacious'] {
+  --gova-density-scale: 1.12;
+  --gova-control-padding-y: 0.875rem;
+  --gova-control-padding-x: 1.25rem;
+  --gova-control-min-height: 2.875rem;
+  --gova-control-gap: 0.625rem;
+}
+
+/* Shared control sizing — used by shadcn + app controls */
+.gova-control {
+  min-height: calc(var(--gova-control-min-height) * var(--gova-density-scale));
+  padding: var(--gova-control-padding-y) var(--gova-control-padding-x);
+  border-radius: var(--gova-control-radius);
+  gap: var(--gova-control-gap);
+}
+
+.gova-control-icon {
+  width: calc(var(--gova-control-min-height) * var(--gova-density-scale));
+  height: calc(var(--gova-control-min-height) * var(--gova-density-scale));
+}
+
+/* High contrast */
+html[data-high-contrast='true'] {
+  --color-outline: var(--color-outline-strong);
+  --color-on-surface-variant: var(--color-on-surface);
+  --color-outline-variant: var(--color-outline);
+  --shadow-1: none;
+  --shadow-2: none;
+  --shadow-3: 0 0 0 2px var(--color-outline-strong);
+  --shadow-4: 0 0 0 2px var(--color-outline-strong);
+  --shadow-5: 0 0 0 3px var(--color-outline-strong);
+}
+
+html[data-high-contrast='true'][data-theme='dark'] {
+  --color-on-surface-variant: #f1f3f4;
+  --color-outline: #e3e3e3;
+  --color-outline-variant: #c4c7c5;
+  --color-primary: #aecbfa;
+}
+
+html[data-high-contrast='true'] button,
+html[data-high-contrast='true'] input,
+html[data-high-contrast='true'] select,
+html[data-high-contrast='true'] textarea,
+html[data-high-contrast='true'] .settings-card,
+html[data-high-contrast='true'] .auth-card {
+  border-width: 2px;
+  border-color: var(--color-outline-strong);
+}
+
+html[data-high-contrast='true'] *:focus-visible {
+  outline-width: 3px;
+  outline-offset: 3px;
+}
+
+/* Reduced motion — tri-state preference resolved to data-reduced-motion-active */
+html[data-reduced-motion-active='true'] *,
+html[data-reduced-motion-active='true'] *::before,
+html[data-reduced-motion-active='true'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-reduced-motion='system'][data-reduced-motion-active='true'] *,
+  html[data-reduced-motion='system'][data-reduced-motion-active='true'] *::before,
+  html[data-reduced-motion='system'][data-reduced-motion-active='true'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

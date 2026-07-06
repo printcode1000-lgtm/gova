@@ -171,21 +171,20 @@ function copyBuildOutputBack(): void {
 }
 
 /**
- * Next's App Router requests a flattened RSC page URL during client-side
- * navigation (for example `orders/__next.orders.__PAGE__.txt`), while the
- * Windows static export currently emits that payload as
- * `orders/__next.orders/__PAGE__.txt`.
+ * Next's App Router may request flattened RSC URLs during client-side
+ * navigation (for example `categories/45/__next.categories.$d$categoryId.txt`),
+ * while the Windows static export can emit the same payload below nested
+ * directories such as `categories/45/__next.categories/$d$categoryId.txt`.
  *
- * Plain static servers cannot rewrite between those two shapes, so create a
- * small alias beside each route. This keeps navigation working on Live Server,
- * GitHub Pages, and other file-only hosts.
+ * Plain static servers and Capacitor's local asset handler cannot rewrite
+ * between those shapes, so create aliases beside each route.
  */
-function createStaticRscPageAliases(): void {
-  const pagePayloads = readdirSync(rootOutDir, { recursive: true, withFileTypes: true }).filter(
-    (entry) => entry.isFile() && entry.name === '__PAGE__.txt',
+function createStaticRscAliases(): void {
+  const rscPayloads = readdirSync(rootOutDir, { recursive: true, withFileTypes: true }).filter(
+    (entry) => entry.isFile() && entry.name.endsWith('.txt'),
   );
 
-  for (const payload of pagePayloads) {
+  for (const payload of rscPayloads) {
     const sourcePath = path.join(payload.parentPath, payload.name);
     const relativeSourcePath = path.relative(rootOutDir, sourcePath);
     const marker = `${path.sep}__next.`;
@@ -199,6 +198,10 @@ function createStaticRscPageAliases(): void {
     const payloadPath = relativeSourcePath.slice(markerIndex + 1);
     const flattenedPayloadName = payloadPath.split(path.sep).join('.');
     const aliasPath = path.join(rootOutDir, routeDirectory, flattenedPayloadName);
+
+    if (sourcePath === aliasPath) {
+      continue;
+    }
 
     cpSync(sourcePath, aliasPath);
   }
@@ -271,7 +274,7 @@ try {
   });
 
   copyBuildOutputBack();
-  createStaticRscPageAliases();
+  createStaticRscAliases();
   writeLocalWebManifest();
 } finally {
   rmSync(tempBuildDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });

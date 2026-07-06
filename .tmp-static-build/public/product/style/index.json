@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-07-05T18:28:54.888Z",
+  "files": [
+    {
+      "mainCategoryId": "0",
+      "subcategoryId": "23",
+      "file": "0__23.json",
+      "path": "/product/style/0__23.json"
+    },
+    {
+      "mainCategoryId": "0",
+      "subcategoryId": "44",
+      "file": "0__44.json",
+      "path": "/product/style/0__44.json"
+    },
+    {
+      "mainCategoryId": "1",
+      "subcategoryId": "1",
+      "file": "1__1.json",
+      "path": "/product/style/1__1.json"
+    },
+    {
+      "mainCategoryId": "1",
+      "subcategoryId": "13",
+      "file": "1__13.json",
+      "path": "/product/style/1__13.json"
+    },
+    {
+      "mainCategoryId": "16",
+      "subcategoryId": "1",
+      "file": "16__1.json",
+      "path": "/product/style/16__1.json"
+    },
+    {
+      "mainCategoryId": "46",
+      "subcategoryId": "1",
+      "file": "46__1.json",
+      "path": "/product/style/46__1.json"
+    },
+    {
+      "mainCategoryId": "7",
+      "subcategoryId": "1",
+      "file": "7__1.json",
+      "path": "/product/style/7__1.json"
+    }
+  ]
+}
