@@ -34,13 +34,13 @@ export function AppHeader() {
 
   return (
     <>
-      <header className="fixed top-0 w-full z-50 shadow-sm border-b border-outline-variant gova-surface-neutral rounded-b-2xl">
+      <header className="fixed top-0 w-full z-50 shadow-sm border-b border-outline-variant bg-blue-100 rounded-b-2xl">
         <div className="flex justify-between items-center h-12 w-full max-w-7xl mx-auto px-2">
           <div className="flex items-center gap-3">
             <button
               type="button"
               id="header-menu-button"
-              className="gova-control-icon flex items-center justify-center rounded-full text-primary transition-colors active:bg-surface-variant"
+              className="gova-control-icon flex items-center justify-center rounded-full text-blue-900 transition-colors active:bg-blue-200"
               aria-label={t('sidebar.menu')}
               onPointerDown={toggleSidebar}
             >
@@ -49,7 +49,7 @@ export function AppHeader() {
             <Link
               id="header-brand-link"
               href="/home"
-              className="font-bold text-primary text-xl transition-all active:scale-95"
+              className="font-bold text-blue-900 text-xl transition-all active:scale-95"
             >
               {t('header.brand')}
             </Link>
@@ -59,7 +59,7 @@ export function AppHeader() {
             <button
               type="button"
               id="header-theme-button"
-              className="gova-control-icon flex items-center justify-center rounded-full text-on-surface-variant transition-colors active:bg-surface-variant"
+              className="gova-control-icon flex items-center justify-center rounded-full text-blue-900 transition-colors active:bg-blue-200"
               aria-label={themeLabel}
               title={themeLabel}
               onClick={toggleColorScheme}
@@ -78,7 +78,7 @@ export function AppHeader() {
             <button
               type="button"
               id="header-search-button"
-              className="gova-control-icon flex items-center justify-center rounded-full text-on-surface-variant transition-colors active:bg-surface-variant"
+              className="gova-control-icon flex items-center justify-center rounded-full text-blue-900 transition-colors active:bg-blue-200"
               aria-label={t('header.search')}
             >
               <Search className="w-5 h-5" />
@@ -87,7 +87,7 @@ export function AppHeader() {
             <button
               type="button"
               id="header-cart-button"
-              className="gova-control-icon flex items-center justify-center rounded-full relative text-on-surface-variant transition-colors active:bg-surface-variant"
+              className="gova-control-icon flex items-center justify-center rounded-full relative text-blue-900 transition-colors active:bg-blue-200"
               aria-label={t('header.cart')}
             >
               <ShoppingCart className="w-5 h-5" />

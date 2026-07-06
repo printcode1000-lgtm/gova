@@ -207,7 +207,7 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
             aria-modal={isOpen}
             aria-label={t("sidebar.menu")}
             className={cn(
-              "fixed top-0 inset-inline-start-0 z-[61] flex h-dvh w-72 flex-col border-e gova-drawer-panel transition-transform duration-300 ease-out",
+              "fixed top-0 inset-inline-start-0 z-[61] flex h-dvh w-72 flex-col border-e bg-blue-100 transition-transform duration-300 ease-out",
               isOpen
                 ? "translate-x-0"
                 : "rtl:translate-x-full ltr:-translate-x-full",
