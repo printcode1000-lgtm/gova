@@ -12,9 +12,12 @@
   position: relative;
 }
 
-.gova-voice-field {
-  padding-inline-end: 3.25rem !important;
-}
+/*
+ * .gova-voice-field          – added to a field whose mic sits on the physical right.
+ * .gova-voice-field--rtl-host – added to a field whose mic sits on the physical left (RTL host).
+ * Both classes are toggled by voice-input-scanner.ts. Padding is applied as an
+ * inline style (computed per-field), so no static CSS declarations are needed here.
+ */
 
 .gova-voice-button {
   position: absolute;
@@ -67,7 +70,7 @@
 }
 
 .gova-no-voice {
-  padding-inline-end: var(--gova-control-padding-x) !important;
+  padding-right: var(--gova-control-padding-x) !important;
 }
 
 @keyframes gova-voice-glow {

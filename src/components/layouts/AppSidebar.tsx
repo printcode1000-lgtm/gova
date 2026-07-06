@@ -25,6 +25,7 @@ import { FocusTrap } from "focus-trap-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
 import { useResolvedColorScheme } from "@/lib/preferences";
+import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -110,9 +111,13 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
 
   const confirmLogout = useCallback(() => {
     logout.mutate(undefined, {
-      onSuccess: () => {
+      onSuccess: async () => {
         setLogoutDialogOpen(false);
         onClose();
+        // Clear all client storage including GovaDB, cookies, and all IndexedDB databases
+        await clearAllClientStorage();
+        // Reload the page to ensure clean state
+        window.location.reload();
       },
     });
   }, [logout, onClose]);
@@ -320,9 +325,9 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
               <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
                 <FontAwesomeIcon icon={faTriangleExclamation} className="text-red-600 text-lg" />
               </div>
-              <h2 className="text-base font-semibold text-right">تأكيد تسجيل الخروج</h2>
+              <h2 className="text-base font-semibold text-right">{t("sidebar.logoutConfirmTitle")}</h2>
             </div>
-            <p className="text-gray-600 mb-4 text-sm text-right">هل أنت متأكد من أنك تريد تسجيل الخروج؟</p>
+            <p className="text-gray-600 mb-4 text-sm text-right">{t("sidebar.logoutConfirmMessage")}</p>
             <div className="flex gap-2 flex-row-reverse">
               <button
                 onClick={confirmLogout}
@@ -330,14 +335,14 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
                 className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg hover:bg-red-700 disabled:opacity-50 text-sm flex items-center justify-center gap-2"
               >
                 <FontAwesomeIcon icon={faRightFromBracket} />
-                {logout.isPending ? "جاري الخروج..." : "نعم، تسجيل الخروج"}
+                {logout.isPending ? t("sidebar.logoutting") : t("sidebar.logoutConfirm")}
               </button>
               <button
                 onClick={() => setLogoutDialogOpen(false)}
                 disabled={logout.isPending}
                 className="flex-1 border border-gray-300 py-2 px-3 rounded-lg hover:bg-gray-50 disabled:opacity-50 text-sm"
               >
-                إلغاء
+                {t("sidebar.logoutCancel")}
               </button>
             </div>
           </div>

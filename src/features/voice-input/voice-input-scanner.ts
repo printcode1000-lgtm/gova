@@ -26,6 +26,7 @@ const UNSUPPORTED_INPUT_TYPES = new Set([
   'color',
   'date',
   'datetime-local',
+  'email',
   'file',
   'hidden',
   'image',
@@ -40,9 +41,16 @@ const UNSUPPORTED_INPUT_TYPES = new Set([
   'week',
 ]);
 
+/** Physical size (px) of the injected microphone button (matches CSS width/height: 2.5rem @ 16px base). */
+const VOICE_BUTTON_SIZE = 40;
+
+/** Minimum gap (px) between the mic button and adjacent elements or the field edge. */
+const VOICE_EDGE_GAP = 6;
+
 export class VoiceInputScanner {
   private readonly adapter: SpeechRecognitionAdapter;
   private readonly bindings = new Map<VoiceField, VoiceBinding>();
+  private readonly passwordFields = new WeakSet<HTMLInputElement>();
   private observer: MutationObserver | null = null;
   private activeBinding: VoiceBinding | null = null;
   private sessionId = 0;
@@ -122,6 +130,9 @@ export class VoiceInputScanner {
   }
 
   private refreshField(field: VoiceField): void {
+    if (field instanceof HTMLInputElement && field.type === 'password') {
+      this.passwordFields.add(field);
+    }
     const binding = this.bindings.get(field);
     if (!this.isEligible(field)) {
       if (binding) this.removeBinding(binding);
@@ -144,8 +155,9 @@ export class VoiceInputScanner {
     if (field.maxLength === 1) return false;
 
     if (field instanceof HTMLInputElement) {
+      if (this.passwordFields.has(field)) return false;
       if (UNSUPPORTED_INPUT_TYPES.has(field.type)) return false;
-      const identity = `${field.id} ${field.name} ${field.autocomplete}`.toLowerCase();
+      const identity = `${field.id} ${field.name} ${field.autocomplete} ${field.getAttribute('data-gova-autofill') || ''}`.toLowerCase();
       if (identity.includes('password') || identity.includes('passcode')) return false;
     }
 
@@ -302,19 +314,74 @@ export class VoiceInputScanner {
     if (!field.isConnected || !button.isConnected) return;
 
     const fieldRect = field.getBoundingClientRect();
-    const hostRect = host.getBoundingClientRect();
-    const isRtl = getComputedStyle(field).direction === 'rtl';
+    const hostRect  = host.getBoundingClientRect();
+    const isRtl     = getComputedStyle(host).direction === 'rtl';
+
+    // ── Vertical centering ──────────────────────────────────────────────────
     const top = field instanceof HTMLTextAreaElement
       ? fieldRect.top - hostRect.top + 8
-      : fieldRect.top - hostRect.top + (fieldRect.height - 40) / 2;
-
+      : fieldRect.top - hostRect.top + (fieldRect.height - VOICE_BUTTON_SIZE) / 2;
     button.style.top = `${Math.max(0, top)}px`;
+
+    // ── Collect absolute sibling elements that visually lie within the field ──
+    const siblings = Array.from(host.children).filter(
+      (el): el is HTMLElement => {
+        if (!(el instanceof HTMLElement) || el === field || el === button) return false;
+        const style = getComputedStyle(el);
+        if (style.position !== 'absolute') return false;
+
+        const sibRect = el.getBoundingClientRect();
+        const verticalOverlap = sibRect.top >= fieldRect.top - 5 && sibRect.bottom <= fieldRect.bottom + 5;
+        const horizontalOverlap = sibRect.left >= fieldRect.left - 5 && sibRect.right <= fieldRect.right + 5;
+        return verticalOverlap && horizontalOverlap;
+      }
+    );
+
     if (isRtl) {
-      button.style.left = `${fieldRect.left - hostRect.left + 6}px`;
+      // Mic sits on the physical LEFT side.
+      // Baseline: flush with the field's left edge plus a gap.
+      let micLeft = fieldRect.left - hostRect.left + VOICE_EDGE_GAP;
+
+      // Push the mic right of any sibling that lives in the left half.
+      for (const sib of siblings) {
+        const sibRect = sib.getBoundingClientRect();
+        if (sibRect.left - hostRect.left < hostRect.width / 2) {
+          micLeft = Math.max(micLeft, sibRect.right - hostRect.left + VOICE_EDGE_GAP);
+        }
+      }
+
+      button.style.left  = `${micLeft}px`;
       button.style.right = 'auto';
+
+      // Padding-left must keep placeholder text clear of the mic's right edge.
+      const micRightEdge      = micLeft + VOICE_BUTTON_SIZE;
+      const fieldPhysicalLeft = fieldRect.left - hostRect.left;
+      const neededPaddingLeft = micRightEdge - fieldPhysicalLeft + VOICE_EDGE_GAP;
+      field.style.setProperty('padding-left',  `${Math.max(0, neededPaddingLeft)}px`, 'important');
+      field.style.removeProperty('padding-right');
     } else {
-      button.style.right = `${hostRect.right - fieldRect.right + 6}px`;
-      button.style.left = 'auto';
+      // Mic sits on the physical RIGHT side.
+      // Baseline: flush with the field's right edge plus a gap (measured from host's right).
+      let micFromRight = hostRect.right - fieldRect.right + VOICE_EDGE_GAP;
+
+      // Push the mic left of any sibling that lives in the right half.
+      for (const sib of siblings) {
+        const sibRect = sib.getBoundingClientRect();
+        if (sibRect.right - hostRect.left > hostRect.width / 2) {
+          const sibDistFromRight = hostRect.right - sibRect.left;
+          micFromRight = Math.max(micFromRight, sibDistFromRight + VOICE_EDGE_GAP);
+        }
+      }
+
+      button.style.right = `${micFromRight}px`;
+      button.style.left  = 'auto';
+
+      // Padding-right must keep placeholder text clear of the mic's left edge.
+      const micLeftEdge        = hostRect.width - micFromRight - VOICE_BUTTON_SIZE;
+      const fieldPhysicalRight = fieldRect.right - hostRect.left;
+      const neededPaddingRight = fieldPhysicalRight - micLeftEdge + VOICE_EDGE_GAP;
+      field.style.setProperty('padding-right', `${Math.max(0, neededPaddingRight)}px`, 'important');
+      field.style.removeProperty('padding-left');
     }
   }
 
@@ -334,7 +401,9 @@ export class VoiceInputScanner {
     binding.resizeObserver?.disconnect();
     window.removeEventListener('resize', binding.syncPosition);
     binding.button.remove();
-    binding.field.classList.remove('gova-voice-field');
+    binding.field.classList.remove('gova-voice-field', 'gova-voice-field--rtl-host');
+    binding.field.style.removeProperty('padding-right');
+    binding.field.style.removeProperty('padding-left');
     this.bindings.delete(binding.field);
 
     if (!binding.host.querySelector('[data-voice-input-button="true"]')) {

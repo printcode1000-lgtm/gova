@@ -31,6 +31,8 @@ export function PasswordInput({ name }: PasswordInputProps) {
           <span className="text-sm font-semibold text-on-surface">{label}</span>
           <div className="relative">
             <input
+              name={name}
+              autoComplete={name === 'password' ? 'new-password' : 'off'}
               type={show ? 'text' : 'password'}
               placeholder={placeholder}
               data-gova-autofill={

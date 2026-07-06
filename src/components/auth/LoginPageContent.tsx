@@ -140,6 +140,8 @@ export function LoginPageContent() {
                       </div>
                       <div className="relative">
                         <input
+                          name="password"
+                          autoComplete="current-password"
                           type={showPassword ? 'text' : 'password'}
                           placeholder={t('auth.login.passwordPlaceholder')}
                           data-gova-autofill="login-password"
