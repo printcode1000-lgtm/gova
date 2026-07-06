@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  AlertTriangle,
   ChevronLeft,
   ChevronRight,
   Loader2,
@@ -104,6 +105,7 @@ export function ProfilePageContent() {
   });
   const [saveError, setSaveError] = React.useState<string | null>(null);
   const [isUnifiedSaving, setIsUnifiedSaving] = React.useState(false);
+  const [saveDialog, setSaveDialog] = React.useState<{ type: 'success' | 'error', message: string } | null>(null);
   const mode = searchParams.get("mode");
   const showEditCard = mode === "edit";
   const showPreviewCard = mode !== "edit";
@@ -346,6 +348,10 @@ export function ProfilePageContent() {
       if (changedSections.includes("products")) {
         productsController.applySaved(saved.specialties);
       }
+      setSaveDialog({
+        type: 'success',
+        message: locale === 'ar' ? 'تم حفظ التغييرات بنجاح' : 'Changes saved successfully'
+      });
     } catch (error) {
       reportSystemIssue({
         feature: "Profile",
@@ -353,6 +359,7 @@ export function ProfilePageContent() {
         error,
       });
       const message = (error as Error).message;
+      let errorMessage = message;
       if (message === "phoneVerificationRequired") {
         setActiveTab("registration");
         setSaveError(t("auth.registration.phoneVerificationRequired"));
@@ -364,6 +371,10 @@ export function ProfilePageContent() {
         setSaveError(t("auth.validation.phoneAlreadyRegistered"));
       } else {
         setSaveError(message);
+        setSaveDialog({
+          type: 'error',
+          message: locale === 'ar' ? 'فشل حفظ التغييرات' : 'Failed to save changes'
+        });
       }
     } finally {
       setIsUnifiedSaving(false);
@@ -721,8 +732,7 @@ export function ProfilePageContent() {
 
               {dirtyLabels.length > 0 ? (
                 <div
-                  className="fixed inset-x-3 z-40 rounded-2xl border border-outline-variant bg-surface/95 p-3 shadow-xl backdrop-blur sm:sticky sm:inset-x-auto sm:m-5 sm:rounded-xl"
-                  style={{ bottom: BOTTOM_NAV_CLEARANCE }}
+                  className="mx-3 mb-3 rounded-2xl border border-outline-variant bg-surface/95 p-3 shadow-xl backdrop-blur sm:mx-5 sm:mb-5 sm:rounded-xl"
                 >
                   <p className="mb-2 line-clamp-1 text-xs text-on-surface-variant">
                     {t("profile.saveTargets")}: {dirtyLabels.join("، ")}
@@ -742,6 +752,47 @@ export function ProfilePageContent() {
                   </Button>
                 </div>
               ) : null}
+
+              {/* Save Result Dialog */}
+              {saveDialog && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                  <div className="bg-surface rounded-xl shadow-xl max-w-sm w-full p-4 space-y-3">
+                    <div className="flex items-start gap-3">
+                      {saveDialog.type === 'success' ? (
+                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-success/10 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-success">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                          </svg>
+                        </div>
+                      ) : (
+                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-error/10 flex items-center justify-center">
+                          <AlertTriangle className="h-5 w-5 text-error" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <h3 className="text-sm font-semibold text-on-surface">
+                          {saveDialog.type === 'success'
+                            ? (locale === 'ar' ? 'نجاح' : 'Success')
+                            : (locale === 'ar' ? 'خطأ' : 'Error')}
+                        </h3>
+                        <p className="text-xs text-on-surface-variant mt-1">
+                          {saveDialog.message}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex justify-end pt-2">
+                      <Button
+                        type="button"
+                        onClick={() => setSaveDialog(null)}
+                        className="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium hover:bg-primary/90 transition-colors h-9"
+                      >
+                        {locale === 'ar' ? 'إغلاق' : 'Close'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
