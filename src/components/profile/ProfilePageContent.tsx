@@ -459,17 +459,12 @@ export function ProfilePageContent() {
           ) : null}
         </div>
       ) : showEditCard ? (
-        <div
-          id="edit-profile-card"
-          className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4"
-        >
-          <Card className="sticky top-2 z-30 overflow-hidden sm:top-4">
-            <CardContent className="p-0">
-              <div className="relative border-b border-outline-variant bg-surface-container-low/60">
-                <div
-                  className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-3 sm:gap-3 sm:px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                  aria-label={t("profile.subtitle")}
-                >
+        <>
+          <div className="sticky top-0 z-30 w-full bg-surface-container-low/60 relative">
+            <div
+              className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-3 sm:gap-3 sm:px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              aria-label={t("profile.subtitle")}
+            >
                   <button
                     ref={(node) => {
                       navButtonRefs.current.registration = node;
@@ -584,8 +579,6 @@ export function ProfilePageContent() {
                 <div className="pointer-events-none absolute inset-y-0 start-0 w-5 bg-gradient-to-r from-surface-container-low/95 to-transparent" />
                 <div className="pointer-events-none absolute inset-y-0 end-0 w-5 bg-gradient-to-l from-surface-container-low/95 to-transparent" />
               </div>
-            </CardContent>
-          </Card>
 
           <Card className="overflow-hidden">
             <CardContent className="p-0">
@@ -681,7 +674,12 @@ export function ProfilePageContent() {
                     />
                   </div>
                 </div>
+              </div>
 
+              <div
+                className="flex items-center justify-center gap-4 border-t border-outline-variant/50 py-3"
+                aria-hidden="true"
+              >
                 <button
                   type="button"
                   onClick={() => goToAdjacentSection(-1)}
@@ -689,39 +687,35 @@ export function ProfilePageContent() {
                   aria-label={
                     locale === "ar" ? "القسم السابق" : "Previous section"
                   }
-                  className="absolute start-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition hover:bg-surface-container disabled:pointer-events-none disabled:opacity-25 sm:start-3"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition hover:bg-surface-container disabled:pointer-events-none disabled:opacity-25"
                 >
                   {locale === "ar" ? (
-                    <ChevronRight className="h-5 w-5" />
+                    <ChevronRight className="h-4 w-4" />
                   ) : (
-                    <ChevronLeft className="h-5 w-5" />
+                    <ChevronLeft className="h-4 w-4" />
                   )}
                 </button>
+                <div className="flex justify-center gap-2">
+                  {PROFILE_SECTIONS.map((section) => (
+                    <span
+                      key={section}
+                      className={`h-2 rounded-full transition-all ${activeTab === section ? "w-6 bg-primary" : "w-2 bg-outline-variant"}`}
+                    />
+                  ))}
+                </div>
                 <button
                   type="button"
                   onClick={() => goToAdjacentSection(1)}
                   disabled={activeSectionIndex === PROFILE_SECTIONS.length - 1}
                   aria-label={locale === "ar" ? "القسم التالي" : "Next section"}
-                  className="absolute end-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition hover:bg-surface-container disabled:pointer-events-none disabled:opacity-25 sm:end-3"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition hover:bg-surface-container disabled:pointer-events-none disabled:opacity-25"
                 >
                   {locale === "ar" ? (
-                    <ChevronLeft className="h-5 w-5" />
+                    <ChevronLeft className="h-4 w-4" />
                   ) : (
-                    <ChevronRight className="h-5 w-5" />
+                    <ChevronRight className="h-4 w-4" />
                   )}
                 </button>
-              </div>
-
-              <div
-                className="flex justify-center gap-2 border-t border-outline-variant/50 py-3"
-                aria-hidden="true"
-              >
-                {PROFILE_SECTIONS.map((section) => (
-                  <span
-                    key={section}
-                    className={`h-2 rounded-full transition-all ${activeTab === section ? "w-6 bg-primary" : "w-2 bg-outline-variant"}`}
-                  />
-                ))}
               </div>
 
               {saveError ? (
@@ -795,7 +789,7 @@ export function ProfilePageContent() {
               )}
             </CardContent>
           </Card>
-        </div>
+        </>
       ) : null}
     </div>
   );
