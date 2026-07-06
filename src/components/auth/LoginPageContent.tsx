@@ -97,22 +97,22 @@ export function LoginPageContent() {
                         <Smartphone className="h-4 w-4 text-primary" />
                         {t('auth.login.phone')}
                       </span>
-                      <div className="relative">
-                        <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
-                          +20
-                        </span>
+                      <div className="relative flex items-center">
                         <input
                           type="tel"
                           inputMode="tel"
                           maxLength={11}
                           placeholder={t('auth.login.phonePlaceholder')}
                           data-gova-autofill="login-phone"
-                          className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')}
+                          className={cn('auth-input w-full', fieldState.error && 'border-error')}
                           value={field.value}
                           onChange={(e) =>
                             field.onChange(e.target.value.replace(/\D/g, '').slice(0, 11))
                           }
                         />
+                        <span className="text-sm text-on-surface-variant select-none ms-2">
+                          +20
+                        </span>
                       </div>
                       {fieldState.error && (
                         <p className="text-xs text-error">{fieldState.error.message}</p>

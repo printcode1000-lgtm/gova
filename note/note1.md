@@ -11,8 +11,7 @@ Ctrl + Shift + P
 Simple Browser: Show
 أدخل الرابط التالي:
 http://localhost:3000
-         يسيلاتتاتا
-         ناننت
+http://127.0.0.1:55679/home
 http://localhost:3001
 
 لعرض احداث المتصفح في IDE

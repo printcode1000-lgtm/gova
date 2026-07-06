@@ -1,6 +1,8 @@
 'use client';
 
 import { Accessibility, Database, FileText, Globe, Palette } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAdjust, faSun, faMoon, faDesktop, faCircleHalfStroke, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
 import {
   useAppPreferences,
@@ -33,21 +35,13 @@ function ToggleSwitch({
   label: string;
 }) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={(e) => onChange(e.target.checked)}
       aria-label={label}
-      className="h-8 w-14 shrink-0 rounded-full p-0"
-      onClick={() => onChange(!checked)}
-    >
-      <div
-        className={cn(
-          'h-full w-full rounded-full transition-colors',
-          checked ? 'bg-primary' : 'bg-surface-variant',
-        )}
-      />
-    </button>
+      className="h-8 w-14 shrink-0 rounded-full accent-primary cursor-pointer"
+    />
   );
 }
 
@@ -68,6 +62,8 @@ export function SettingsPageContent() {
   const [storageSize, setStorageSize] = React.useState(0);
   const [statusText, setStatusText] = React.useState('');
   const [clearing, setClearing] = React.useState(false);
+  const [tempFontSize, setTempFontSize] = React.useState(themePrefs.fontSize);
+  const [showClearDialog, setShowClearDialog] = React.useState(false);
 
   const timezoneLabels: Record<SettingsTimezone, string> = {
     cairo: t('timezone.cairo'),
@@ -78,7 +74,7 @@ export function SettingsPageContent() {
   const themeLabels: Record<SettingsThemeMode, string> = {
     light: t('theme.light'),
     dark: t('theme.dark'),
-    system: t('theme.system'),
+    system: t('theme.light'),
   };
 
   const densityLabels: Record<SettingsDensity, string> = {
@@ -97,14 +93,39 @@ export function SettingsPageContent() {
     setStorageSize(calculateLocalStorageSize());
   }, []);
 
+  React.useEffect(() => {
+    setTempFontSize(themePrefs.fontSize);
+  }, [themePrefs.fontSize]);
+
   const showStatus = (message: string) => {
     setStatusText(message);
     window.setTimeout(() => setStatusText(''), 3000);
   };
 
-  const handleClearAll = async () => {
-    if (!window.confirm(CLEAR_STORAGE_WARNING)) return;
+  const cycleThemeMode = () => {
+    const modes: SettingsThemeMode[] = ['light', 'dark'];
+    const currentIndex = modes.indexOf(themePrefs.themeMode);
+    const nextIndex = (currentIndex + 1) % modes.length;
+    updateTheme({ themeMode: modes[nextIndex] });
+  };
 
+  const getThemeIcon = () => {
+    switch (themePrefs.themeMode) {
+      case 'light':
+        return faSun;
+      case 'dark':
+        return faMoon;
+      default:
+        return faSun;
+    }
+  };
+
+  const handleClearAll = async () => {
+    setShowClearDialog(true);
+  };
+
+  const confirmClearAll = async () => {
+    setShowClearDialog(false);
     setClearing(true);
     try {
       await clearAllClientStorage();
@@ -117,10 +138,7 @@ export function SettingsPageContent() {
   };
 
   const storageUsagePercent = Math.min((storageSize / 5_242_880) * 100, 100);
-  const activeThemeLabel =
-    themePrefs.themeMode === 'system'
-      ? `${themeLabels.system} (${resolvedScheme === 'dark' ? t('theme.dark') : t('theme.light')})`
-      : themeLabels[themePrefs.themeMode];
+  const activeThemeLabel = themeLabels[themePrefs.themeMode === 'system' ? 'light' : themePrefs.themeMode];
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
@@ -128,9 +146,6 @@ export function SettingsPageContent() {
         <h1 className="text-3xl font-bold text-primary">{t('settings.title')}</h1>
         <p className="text-base text-on-surface-variant">
           {t('settings.description')}
-        </p>
-        <p className="text-xs text-on-surface-variant" aria-live="polite">
-          {t('settings.saveAuto')}
         </p>
         {statusText ? (
           <p className="text-sm font-medium text-primary" role="status">
@@ -144,18 +159,12 @@ export function SettingsPageContent() {
         className="mb-12 space-y-6"
         lang={appPrefs.locale}
       >
-        <div className="flex items-center gap-3 px-2">
-          <Globe className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-semibold text-on-surface">{t('settings.langRegion')}</h2>
-        </div>
         <div className="gova-settings-section-secondary space-y-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-1">
-              <h3 className="text-lg font-semibold">{t('settings.chooseLang')}</h3>
-              <p className="text-sm text-on-surface-variant">
-                {t('settings.chooseLangDesc')}
-              </p>
-            </div>
+          <div className="flex items-center gap-3 px-2">
+            <Globe className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-semibold text-on-surface">اللغة</h2>
+          </div>
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex w-fit gap-1 rounded-full bg-surface-variant p-1">
               {(['ar', 'en'] as SettingsLocale[]).map((locale) => (
                 <button
@@ -173,34 +182,22 @@ export function SettingsPageContent() {
                 </button>
               ))}
             </div>
-          </div>
-          <div className="grid grid-cols-1 gap-6 border-t border-outline-variant/20 pt-4 md:grid-cols-2">
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold text-outline">{t('settings.directionPreview')}</h4>
-              <div className="flex items-center gap-4 rounded-xl gova-surface-neutral p-4">
-                <div className="flex gova-control-icon items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Globe className="h-5 w-5" />
-                </div>
-                <span className="text-sm">
-                  {appPrefs.locale === 'ar'
-                    ? t('settings.rtl')
-                    : t('settings.ltr')}
-                </span>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold text-outline">{t('settings.timezone')}</h4>
-              <select
-                className="gova-control w-full border border-outline-variant gova-field-surface text-sm text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
-                value={appPrefs.timezone}
-                onChange={(e) => updateApp({ timezone: e.target.value as SettingsTimezone })}
-              >
-                {(Object.keys(timezoneLabels) as SettingsTimezone[]).map((key) => (
-                  <option key={key} value={key}>
-                    {timezoneLabels[key]}
-                  </option>
-                ))}
-              </select>
+            <div className="flex items-center gap-3 flex-1">
+              <h3 className="text-sm font-semibold whitespace-nowrap">{t('settings.fontSize')}</h3>
+              <span className="rounded-lg bg-surface-variant px-2 py-1 text-xs font-semibold whitespace-nowrap">
+                {tempFontSize}px
+              </span>
+              <input
+                type="range"
+                min={12}
+                max={24}
+                value={tempFontSize}
+                onChange={(e) => setTempFontSize(Number(e.target.value))}
+                onMouseUp={() => updateTheme({ fontSize: tempFontSize })}
+                onMouseLeave={() => updateTheme({ fontSize: tempFontSize })}
+                onTouchEnd={() => updateTheme({ fontSize: tempFontSize })}
+                className="h-2 w-full cursor-pointer appearance-none rounded-full bg-surface-variant accent-primary"
+              />
             </div>
           </div>
         </div>
@@ -208,134 +205,67 @@ export function SettingsPageContent() {
 
       {/* Appearance */}
       <section className="mb-12 space-y-6">
-        <div className="flex items-center gap-3 px-2">
-          <Palette className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-semibold text-on-surface">{t('settings.appearance')}</h2>
-        </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             <div className="gova-settings-section-primary space-y-6">
-              <h3 className="text-lg font-semibold">{t('settings.visualTheme')}</h3>
-              <div className="grid grid-cols-3 gap-4">
-                {(['light', 'dark', 'system'] as SettingsThemeMode[]).map((mode) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    className={cn(
-                      'flex flex-col items-center gap-3 rounded-2xl p-4 transition-colors',
-                      themePrefs.themeMode === mode
-                        ? 'bg-primary/15 ring-2 ring-primary'
-                        : 'gova-surface-neutral hover:opacity-90',
-                    )}
-                    onClick={() => updateTheme({ themeMode: mode })}
-                  >
-                    <Palette className="h-8 w-8" />
-                    <span className="text-xs font-semibold">{themeLabels[mode]}</span>
-                  </button>
-                ))}
+              <div className="flex items-center gap-3 px-2">
+                <Palette className="h-6 w-6 text-primary" />
+                <h2 className="text-xl font-semibold text-on-surface">{t('settings.appearance')}</h2>
               </div>
-            </div>
-            <div className="gova-settings-section-neutral space-y-8">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">{t('settings.fontSize')}</h3>
-                  <span className="rounded-lg bg-surface-variant px-3 py-1 text-xs font-semibold">
-                    {themePrefs.fontSize}px
-                  </span>
+              <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-6">
+                <button
+                  type="button"
+                  onClick={cycleThemeMode}
+                  className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/20 transition-all hover:bg-primary/30"
+                  aria-label={t('settings.visualTheme')}
+                >
+                  <FontAwesomeIcon icon={getThemeIcon()} className="h-7 w-7 text-primary" />
+                </button>
+                <div className="flex-1 space-y-1">
+                  <h4 className="text-sm font-semibold">{activeThemeLabel}</h4>
+                  <p className="text-xs text-on-surface-variant">{t('settings.visualTheme')}</p>
                 </div>
-                <input
-                  type="range"
-                  min={12}
-                  max={24}
-                  value={themePrefs.fontSize}
-                  onChange={(e) => updateTheme({ fontSize: Number(e.target.value) })}
-                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-surface-variant accent-primary"
-                />
+                <div className="flex items-center gap-4">
+                  <div className="h-8 w-px bg-outline-variant/30" />
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => updateTheme({ highContrast: !themePrefs.highContrast })}
+                      className={cn(
+                        'flex h-14 w-14 items-center justify-center rounded-xl transition-all',
+                        themePrefs.highContrast
+                          ? 'bg-primary/20 text-primary'
+                          : 'bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80',
+                      )}
+                      aria-label={t('settings.highContrast')}
+                    >
+                      <FontAwesomeIcon icon={faAdjust} className="h-7 w-7" />
+                    </button>
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-semibold">{t('settings.highContrast')}</h4>
+                      <p className="text-xs text-on-surface-variant">تباين أعلى للعناصر</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-4">
                 <h3 className="text-lg font-semibold">{t('settings.uiDensity')}</h3>
                 <div className="flex gap-4">
                   {(['compact', 'comfortable', 'spacious'] as SettingsDensity[]).map((density) => (
-                    <button
-                      key={density}
-                      type="button"
-                      className={cn(
-                        'gova-control flex-1 text-xs font-semibold transition-colors',
-                        themePrefs.density === density
-                          ? 'bg-primary text-on-primary'
-                          : 'gova-surface-neutral text-on-surface-variant hover:text-on-surface',
-                      )}
-                      onClick={() => updateTheme({ density })}
-                    >
-                      {densityLabels[density]}
-                    </button>
+                    <label key={density} className="flex items-center gap-2 cursor-pointer rounded-lg px-3 py-2 transition-all hover:bg-white/10">
+                      <input
+                        type="radio"
+                        name="density"
+                        value={density}
+                        checked={themePrefs.density === density}
+                        onChange={() => updateTheme({ density })}
+                        className="h-4 w-4 accent-primary cursor-pointer"
+                      />
+                      <span className="text-sm">{densityLabels[density]}</span>
+                    </label>
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="gova-settings-preview-accent relative overflow-hidden">
-            <div className="relative z-10 space-y-4">
-              <h3 className="text-lg font-semibold">{t('settings.livePreview')}</h3>
-              <div className="space-y-3 opacity-90">
-                <div className="h-4 w-3/4 rounded bg-on-primary/20" />
-                <div className="h-4 w-full rounded bg-on-primary/20" />
-                <div className="h-4 w-1/2 rounded bg-on-primary/20" />
-              </div>
-              <div className="pt-4">
-                <button type="button" className="gova-control w-full gova-surface-neutral font-bold text-primary">
-                  {t('settings.demoButton')}
-                </button>
-              </div>
-            </div>
-            <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-on-primary/10 blur-2xl" />
-          </div>
-        </div>
-      </section>
-
-      {/* Accessibility */}
-      <section className="mb-12 space-y-6">
-        <div className="flex items-center gap-3 px-2">
-          <Accessibility className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-semibold text-on-surface">{t('settings.accessibility')}</h2>
-        </div>
-        <div className="gova-settings-section-tertiary divide-y divide-outline-variant/20 !shadow-none">
-          <div className="flex items-center justify-between p-6">
-            <div className="space-y-1">
-              <h3 className="text-lg font-semibold">{t('settings.highContrast')}</h3>
-              <p className="text-sm text-on-surface-variant">
-                {t('settings.highContrastDesc')}
-              </p>
-            </div>
-            <ToggleSwitch
-              checked={themePrefs.highContrast}
-              onChange={(highContrast) => updateTheme({ highContrast })}
-              label={t('settings.highContrast')}
-            />
-          </div>
-          <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-1">
-              <h3 className="text-lg font-semibold">{t('settings.reducedMotion')}</h3>
-              <p className="text-sm text-on-surface-variant">
-                {t('settings.reducedMotionDesc')}
-              </p>
-            </div>
-            <div className="flex w-full gap-2 sm:w-auto">
-              {(['system', 'on', 'off'] as SettingsReducedMotion[]).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  className={cn(
-                    'gova-control flex-1 text-xs font-semibold sm:flex-none',
-                    themePrefs.reducedMotion === mode
-                      ? 'bg-primary text-on-primary'
-                      : 'gova-surface-neutral text-on-surface-variant',
-                  )}
-                  onClick={() => updateTheme({ reducedMotion: mode })}
-                >
-                  {motionLabels[mode]}
-                </button>
-              ))}
             </div>
           </div>
         </div>
@@ -343,22 +273,22 @@ export function SettingsPageContent() {
 
       {/* Storage */}
       <section className="mb-12 space-y-6">
-        <div className="flex items-center gap-3 px-2">
-          <Database className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-semibold text-on-surface">{t('settings.storage')}</h2>
-        </div>
         <div className="gova-settings-section-error">
+          <div className="flex items-center gap-3 px-2 mb-6">
+            <Database className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-semibold text-on-surface">{t('settings.storage')}</h2>
+          </div>
           <div className="flex flex-col gap-6 md:flex-row">
             <div className="flex-1 space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">{t('settings.localStorage')}</span>
-                <span className="text-xs font-semibold text-primary">{formatBytes(storageSize)}</span>
-              </div>
               <div className="h-2 w-full rounded-full bg-surface-variant">
                 <div
                   className="h-2 rounded-full bg-primary transition-all"
                   style={{ width: `${storageUsagePercent}%` }}
                 />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">{t('settings.localStorage')}</span>
+                <span className="text-xs font-semibold text-primary">{formatBytes(storageSize)}</span>
               </div>
             </div>
             <div className="flex flex-1 items-center justify-between rounded-xl gova-surface-neutral p-4">
@@ -381,11 +311,11 @@ export function SettingsPageContent() {
 
       {/* Summary */}
       <section className="mb-12 space-y-6">
-        <div className="flex items-center gap-3 px-2">
-          <FileText className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-semibold text-on-surface">{t('settings.summary')}</h2>
-        </div>
         <div className="gova-card-neutral p-6">
+          <div className="flex items-center gap-3 px-2 mb-4">
+            <FileText className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-semibold text-on-surface">{t('settings.summary')}</h2>
+          </div>
           <ul className="grid grid-cols-1 gap-x-12 gap-y-4 md:grid-cols-2">
             <SummaryRow
               label={t('settings.languageLabel')}
@@ -407,24 +337,45 @@ export function SettingsPageContent() {
       <footer className="flex flex-col items-center justify-center gap-4 pt-12 md:flex-row-reverse">
         <button
           type="button"
-          className="gova-control w-full rounded-full border-2 border-outline font-semibold md:w-auto"
-          onClick={() => {
-            resetTheme();
-            resetApp();
-            showStatus(t('settings.resetSuccess'));
-          }}
-        >
-          {t('settings.reset')}
-        </button>
-        <button
-          type="button"
           disabled={clearing}
-          className="gova-control w-full rounded-full font-semibold text-error hover:bg-error/5 md:w-auto disabled:opacity-60"
-          onClick={() => void handleClearAll()}
+          className="gova-control flex w-full items-center justify-center gap-2 rounded-xl border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 px-6 py-3 font-semibold text-error shadow-lg shadow-error/10 transition-all hover:border-error/50 hover:shadow-error/20 md:w-auto disabled:opacity-60"
+          onClick={handleClearAll}
         >
+          <FontAwesomeIcon icon={faRotateLeft} className="h-4 w-4" />
           {clearing ? t('settings.clearing') : t('settings.restoreDefaults')}
         </button>
       </footer>
+
+      {/* Clear Confirmation Dialog */}
+      {showClearDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="mx-4 max-w-md rounded-2xl bg-surface p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-error/20">
+                <FontAwesomeIcon icon={faRotateLeft} className="h-6 w-6 text-error" />
+              </div>
+              <h3 className="text-xl font-semibold text-on-surface">{t('settings.restoreDefaults')}</h3>
+            </div>
+            <p className="mb-6 text-sm text-on-surface-variant">{CLEAR_STORAGE_WARNING}</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowClearDialog(false)}
+                className="gova-control flex-1 rounded-xl px-4 py-2 font-semibold text-on-surface-variant hover:bg-surface-variant"
+              >
+                إلغاء
+              </button>
+              <button
+                type="button"
+                onClick={confirmClearAll}
+                className="gova-control flex-1 rounded-xl bg-error px-4 py-2 font-semibold text-on-primary hover:bg-error/90"
+              >
+                تأكيد
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
