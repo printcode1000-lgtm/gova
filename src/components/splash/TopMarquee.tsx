@@ -26,7 +26,14 @@ export default function TopMarquee({ displayCategories }: TopMarqueeProps) {
   const [centerCards, setCenterCards] = useState<Set<number>>(new Set());
   const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
-  const selectedCategories = getRandomCategories(displayCategories, 6);
+  const [selectedCategories, setSelectedCategories] = useState<CategoryDisplay[]>(() =>
+    displayCategories.slice(0, 6)
+  );
+
+  useEffect(() => {
+    setSelectedCategories(getRandomCategories(displayCategories, 6));
+  }, [displayCategories]);
+
   const loopItems = [...selectedCategories, ...selectedCategories];
 
   const getTitle = (category: CategoryDisplay, loc: Locale) => {
