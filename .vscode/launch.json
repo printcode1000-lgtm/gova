@@ -39,6 +39,15 @@
       "cwd": "${workspaceFolder}"
     },
     {
+      "name": "Serve Out",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "serve:out"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    },
+    {
       "name": "Capacitor Build",
       "request": "launch",
       "type": "node",

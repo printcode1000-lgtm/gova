@@ -17,6 +17,26 @@ const appInitCommand = 'npm run app:init';
 const architectureCheckCommand = 'npm run architecture:check';
 const localManifestFileName = 'gova-web-manifest.json';
 
+function stopLiveServer(): void {
+  try {
+    // Try to kill processes using the out directory
+    if (process.platform === 'win32') {
+      try {
+        execSync('taskkill /F /IM node.exe /FI "WINDOWTITLE eq Live Server*" 2>nul', { stdio: 'ignore' });
+      } catch (e) {
+        // Ignore if no process found
+      }
+      try {
+        execSync('taskkill /F /IM code.exe /FI "WINDOWTITLE eq Live Server*" 2>nul', { stdio: 'ignore' });
+      } catch (e) {
+        // Ignore if no process found
+      }
+    }
+  } catch (error) {
+    // Ignore errors when stopping Live Server
+  }
+}
+
 // Public assets copied verbatim into every static build.
 const STATIC_PUBLIC_ALLOW_FILES = [
   'gova-app-init.js',
@@ -132,6 +152,7 @@ function prepareStaticPublicDir(): void {
 }
 
 function prepareTempBuildDir(): void {
+  stopLiveServer();
   rmSync(tempBuildDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
   rmSync(rootOutDir, { recursive: true, force: true });
 
