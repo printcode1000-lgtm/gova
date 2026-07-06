@@ -32,80 +32,21 @@ import { Button } from "@/components/ui/button";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
-import { profileService } from "@/features/profile/services/profile-service";
-import { sessionService } from "@/features/auth/services/session-service";
-import { mergePrimaryContacts } from "@/features/profile/utils/merge-primary-contacts";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 import type {
   ProfileContactsController,
   ProfileRegistrationController,
-  ProfileSectionStatus,
   ProfileSpecialtiesController,
   StoreDetailsController,
 } from "./profile-save-controller";
-
-type ProfileEditTab = "registration" | "specialties" | "products" | "contact" | "store";
-
-const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
-  registration: "profile-registration-panel",
-  specialties: "profile-specialties-panel",
-  products: "profile-products-panel",
-  contact: "profile-contact-panel",
-  store: "profile-store-panel",
-};
-
-const PROFILE_SECTIONS: ProfileEditTab[] = [
-  "registration",
-  "specialties",
-  "products",
-  "contact",
-  "store",
-];
+import type { ProfileEditTab, ProfileSectionStatus } from "./profile-page.types";
+import { PROFILE_SECTION_IDS, PROFILE_SECTIONS } from "./profile-page.types";
+import { useProfileNavigation } from "./use-profile-navigation";
+import { useProfileSave } from "./use-profile-save";
 
 export function ProfilePageContent() {
   const { t, locale } = useTranslation();
   const { session, isLoggedIn, isLoading, setSession } = useSession();
   const searchParams = useSearchParams();
-  const requestedTab = searchParams.get("tab");
-  const [activeTab, setActiveTab] =
-    React.useState<ProfileEditTab>(() =>
-      requestedTab && PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab)
-        ? (requestedTab as ProfileEditTab)
-        : "registration",
-    );
-  const [carouselHeight, setCarouselHeight] = React.useState<number>();
-  const registrationRef = React.useRef<ProfileRegistrationController>(null);
-  const specialtiesRef = React.useRef<ProfileSpecialtiesController>(null);
-  const productsRef = React.useRef<ProfileSpecialtiesController>(null);
-  const contactsRef = React.useRef<ProfileContactsController>(null);
-  const storeRef = React.useRef<StoreDetailsController>(null);
-  const carouselRef = React.useRef<HTMLDivElement>(null);
-  const panelRefs = React.useRef<Record<ProfileEditTab, HTMLDivElement | null>>(
-    {
-      registration: null,
-      specialties: null,
-      products: null,
-      contact: null,
-      store: null,
-    },
-  );
-  const navButtonRefs = React.useRef<
-    Record<ProfileEditTab, HTMLButtonElement | null>
-  >({ registration: null, specialties: null, products: null, contact: null, store: null });
-  const scrollFrameRef = React.useRef<number | null>(null);
-  const appliedRequestedTabRef = React.useRef<string | null>(null);
-  const [sectionStatuses, setSectionStatuses] = React.useState<
-    Record<ProfileEditTab, ProfileSectionStatus | null>
-  >({
-    registration: null,
-    specialties: null,
-    products: null,
-    contact: null,
-    store: null,
-  });
-  const [saveError, setSaveError] = React.useState<string | null>(null);
-  const [isUnifiedSaving, setIsUnifiedSaving] = React.useState(false);
-  const [saveDialog, setSaveDialog] = React.useState<{ type: 'success' | 'error', message: string } | null>(null);
   const mode = searchParams.get("mode");
   const showEditCard = mode === "edit";
   const showPreviewCard = mode !== "edit";
@@ -113,6 +54,48 @@ export function ProfilePageContent() {
     useProfileStoreImages();
   const { details: storeDetails, isLoading: isLoadingStoreDetails } =
     useStoreDetails();
+
+  const registrationRef = React.useRef<ProfileRegistrationController>(null);
+  const specialtiesRef = React.useRef<ProfileSpecialtiesController>(null);
+  const productsRef = React.useRef<ProfileSpecialtiesController>(null);
+  const contactsRef = React.useRef<ProfileContactsController>(null);
+  const storeRef = React.useRef<StoreDetailsController>(null);
+
+  const {
+    activeTab,
+    carouselHeight,
+    carouselRef,
+    panelRefs,
+    navButtonRefs,
+    activeSectionIndex,
+    handleCarouselScroll,
+    selectSection,
+    goToAdjacentSection,
+  } = useProfileNavigation({
+    showEditCard,
+    isLoading,
+    isLoggedIn,
+  });
+
+  const {
+    sectionStatuses,
+    saveError,
+    isUnifiedSaving,
+    saveDialog,
+    handleRegistrationStatus,
+    handleSpecialtiesStatus,
+    handleProductsStatus,
+    handleContactStatus,
+    handleStoreStatus,
+    handleSaveChangedSections,
+    setSaveDialog,
+  } = useProfileSave({
+    session,
+    locale,
+    t,
+    setActiveTab: selectSection,
+    setSession,
+  });
 
   const heroSliderConfig = useMemo<HeroSliderConfig>(() => {
     const slides = storeImages.coverUrls.map((url, index) => ({
@@ -134,48 +117,6 @@ export function ProfilePageContent() {
     };
   }, [storeImages.coverImageKeys, storeImages.coverUrls]);
 
-  const updateSectionStatus = React.useCallback(
-    (section: ProfileEditTab, status: ProfileSectionStatus) => {
-      setSectionStatuses((current) => {
-        const previous = current[section];
-        if (
-          previous?.isDirty === status.isDirty &&
-          previous?.isSaving === status.isSaving &&
-          previous?.canSave === status.canSave &&
-          previous?.label === status.label
-        ) {
-          return current;
-        }
-        return { ...current, [section]: status };
-      });
-    },
-    [],
-  );
-
-  const handleRegistrationStatus = React.useCallback(
-    (status: ProfileSectionStatus) =>
-      updateSectionStatus("registration", status),
-    [updateSectionStatus],
-  );
-  const handleSpecialtiesStatus = React.useCallback(
-    (status: ProfileSectionStatus) =>
-      updateSectionStatus("specialties", status),
-    [updateSectionStatus],
-  );
-  const handleProductsStatus = React.useCallback(
-    (status: ProfileSectionStatus) =>
-      updateSectionStatus("products", status),
-    [updateSectionStatus],
-  );
-  const handleContactStatus = React.useCallback(
-    (status: ProfileSectionStatus) => updateSectionStatus("contact", status),
-    [updateSectionStatus],
-  );
-  const handleStoreStatus = React.useCallback(
-    (status: ProfileSectionStatus) => updateSectionStatus("store", status),
-    [updateSectionStatus],
-  );
-
   const dirtySections = (
     Object.entries(sectionStatuses) as Array<
       [ProfileEditTab, ProfileSectionStatus | null]
@@ -185,201 +126,6 @@ export function ProfilePageContent() {
     .map(([, status]) => status?.label)
     .filter((label): label is string => Boolean(label));
   const isSaveBlocked = dirtySections.some(([, status]) => !status?.canSave);
-  const scrollToSection = React.useCallback((section: ProfileEditTab) => {
-    panelRefs.current[section]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-    navButtonRefs.current[section]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  }, []);
-
-  const selectSection = (section: ProfileEditTab) => {
-    setActiveTab(section);
-    scrollToSection(section);
-  };
-
-  React.useEffect(() => {
-    if (
-      !showEditCard ||
-      isLoading ||
-      !isLoggedIn ||
-      !requestedTab ||
-      !PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab) ||
-      appliedRequestedTabRef.current === requestedTab
-    ) return;
-    const section = requestedTab as ProfileEditTab;
-    appliedRequestedTabRef.current = requestedTab;
-    setActiveTab(section);
-    const frame = requestAnimationFrame(() => scrollToSection(section));
-    return () => cancelAnimationFrame(frame);
-  }, [isLoading, isLoggedIn, requestedTab, scrollToSection, showEditCard]);
-
-  const handleCarouselScroll = () => {
-    if (scrollFrameRef.current !== null)
-      cancelAnimationFrame(scrollFrameRef.current);
-    scrollFrameRef.current = requestAnimationFrame(() => {
-      const carousel = carouselRef.current;
-      if (!carousel) return;
-      const center =
-        carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
-      let closest = activeTab;
-      let closestDistance = Number.POSITIVE_INFINITY;
-      for (const section of PROFILE_SECTIONS) {
-        const panel = panelRefs.current[section];
-        if (!panel) continue;
-        const rect = panel.getBoundingClientRect();
-        const distance = Math.abs(rect.left + rect.width / 2 - center);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closest = section;
-        }
-      }
-      if (closest !== activeTab) {
-        setActiveTab(closest);
-        navButtonRefs.current[closest]?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        });
-      }
-    });
-  };
-
-  React.useEffect(
-    () => () => {
-      if (scrollFrameRef.current !== null)
-        cancelAnimationFrame(scrollFrameRef.current);
-    },
-    [],
-  );
-
-  React.useEffect(() => {
-    const panel = panelRefs.current[activeTab];
-    if (!panel) return;
-    const updateHeight = () => setCarouselHeight(panel.offsetHeight);
-    updateHeight();
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(panel);
-    return () => observer.disconnect();
-  }, [activeTab, isLoading, isLoggedIn]);
-
-  const activeSectionIndex = PROFILE_SECTIONS.indexOf(activeTab);
-  const goToAdjacentSection = (offset: -1 | 1) => {
-    const nextSection = PROFILE_SECTIONS[activeSectionIndex + offset];
-    if (nextSection) selectSection(nextSection);
-  };
-  const handleSaveChangedSections = async () => {
-    setSaveError(null);
-    const registrationController = registrationRef.current;
-    const contactsController = contactsRef.current;
-    const storeController = storeRef.current;
-    const specialtiesController = specialtiesRef.current;
-    const productsController = productsRef.current;
-    if (
-      !session?.uid ||
-      !registrationController ||
-      !contactsController ||
-      !storeController ||
-      !specialtiesController ||
-      !productsController
-    ) {
-      reportSystemIssue({
-        level: "warning",
-        feature: "Profile",
-        operation: "save-blocked-missing-controller-or-session",
-        error: new Error("Profile save could not start because a required controller or session UID was unavailable."),
-      });
-      return;
-    }
-
-    const registration = registrationController.prepareSnapshot();
-    if (!registration) {
-      setActiveTab("registration");
-      return;
-    }
-
-    const changedSections = dirtySections.map(([section]) => section);
-    const contacts = mergePrimaryContacts(
-      registration,
-      contactsController.getSnapshot(),
-    );
-    const storeDetails = storeController.getSnapshot();
-    const specialties = specialtiesController.getSnapshot();
-
-    try {
-      setIsUnifiedSaving(true);
-      const saved = await profileService.saveEditor({
-        uid: session.uid,
-        changedSections,
-        registration,
-        contacts,
-        storeDetails,
-        specialties,
-      });
-
-      if (changedSections.includes("registration")) {
-        await registrationController.applySaved(saved.registration);
-      }
-      if (
-        changedSections.includes("registration") ||
-        changedSections.includes("contact")
-      ) {
-        contactsController.applySaved(saved.contacts);
-      }
-      if (changedSections.includes("store")) {
-        storeController.applySaved(saved.storeDetails);
-      }
-      if (changedSections.includes("specialties")) {
-        specialtiesController.applySaved(saved.specialties);
-        productsController.applySaved(saved.specialties);
-        const updatedSession = await sessionService.saveSession({
-          uid: session.uid,
-          phone: saved.registration.phone,
-          email: saved.registration.email ?? undefined,
-          specialties: saved.specialties,
-        });
-        setSession(updatedSession);
-      }
-      if (changedSections.includes("products")) {
-        productsController.applySaved(saved.specialties);
-      }
-      setSaveDialog({
-        type: 'success',
-        message: locale === 'ar' ? 'تم حفظ التغييرات بنجاح' : 'Changes saved successfully'
-      });
-    } catch (error) {
-      reportSystemIssue({
-        feature: "Profile",
-        operation: `save-editor:${changedSections.join(",") || "unknown"}`,
-        error,
-      });
-      const message = (error as Error).message;
-      let errorMessage = message;
-      if (message === "phoneVerificationRequired") {
-        setActiveTab("registration");
-        setSaveError(t("auth.registration.phoneVerificationRequired"));
-      } else if (message === "invalidCurrentPassword") {
-        setActiveTab("registration");
-        setSaveError(t("profile.validation.invalidCurrentPassword"));
-      } else if (message === "phoneAlreadyRegistered") {
-        setActiveTab("registration");
-        setSaveError(t("auth.validation.phoneAlreadyRegistered"));
-      } else {
-        setSaveError(message);
-        setSaveDialog({
-          type: 'error',
-          message: locale === 'ar' ? 'فشل حفظ التغييرات' : 'Failed to save changes'
-        });
-      }
-    } finally {
-      setIsUnifiedSaving(false);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -459,7 +205,10 @@ export function ProfilePageContent() {
           ) : null}
         </div>
       ) : showEditCard ? (
-        <>
+        <div
+          id="edit-profile-card"
+          className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4"
+        >
           <div className="sticky top-0 z-30 w-full bg-surface-container-low/60 relative">
             <div
               className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-3 sm:gap-3 sm:px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -734,7 +483,13 @@ export function ProfilePageContent() {
                   <Button
                     type="button"
                     className="w-full gap-2 auth-cta h-11"
-                    onClick={handleSaveChangedSections}
+                    onClick={() => handleSaveChangedSections(
+                      registrationRef.current,
+                      contactsRef.current,
+                      storeRef.current,
+                      specialtiesRef.current,
+                      productsRef.current
+                    )}
                     disabled={isUnifiedSaving || isSaveBlocked}
                   >
                     {isUnifiedSaving ? (
@@ -789,7 +544,7 @@ export function ProfilePageContent() {
               )}
             </CardContent>
           </Card>
-        </>
+        </div>
       ) : null}
     </div>
   );
