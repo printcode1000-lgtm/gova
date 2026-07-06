@@ -29,8 +29,8 @@ export function AppHeader() {
 
   return (
     <>
-      <header className="fixed top-0 w-full z-50 shadow-sm border-b border-outline-variant gova-surface-neutral">
-        <div className="flex justify-between items-center h-16 w-full max-w-7xl mx-auto px-4">
+      <header className="fixed top-0 w-full z-50 shadow-sm border-b border-outline-variant gova-surface-neutral rounded-b-2xl">
+        <div className="flex justify-between items-center h-12 w-full max-w-7xl mx-auto px-2">
           <div className="flex items-center gap-3">
             <button
               type="button"

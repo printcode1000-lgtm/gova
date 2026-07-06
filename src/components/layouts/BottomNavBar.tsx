@@ -42,7 +42,7 @@ export function BottomNavBar() {
     <nav
       ref={navRef}
       id="bottom-navigation-bar"
-      className="gova-surface-neutral fixed inset-x-0 bottom-0 z-50 flex min-h-20 items-center justify-around rounded-t-2xl border-t border-outline-variant pt-2 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] shadow-lg"
+      className="gova-surface-neutral fixed inset-x-0 bottom-0 z-50 flex min-h-16 items-center justify-around rounded-t-2xl border-t border-outline-variant pt-1 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] shadow-lg"
     >
       {navItems.map(({ href, icon: Icon, label, showBadge }) => {
         const isActive = pathname === href;
@@ -53,7 +53,7 @@ export function BottomNavBar() {
             id={`nav-item-${href.slice(1)}`}
             href={href}
             className={cn(
-              'flex flex-col items-center justify-center relative py-1.5 px-3 min-w-[3.5rem] transition-transform active:scale-90 no-underline',
+              'flex flex-col items-center justify-center relative py-1 px-2 min-w-[3rem] transition-transform active:scale-90 no-underline',
               isActive ? 'gova-nav-pill-active font-bold' : 'text-on-surface-variant font-normal',
             )}
           >
@@ -64,7 +64,7 @@ export function BottomNavBar() {
             {showBadge && (
               <span className="absolute top-0 end-1/2 translate-x-3 w-2.5 h-2.5 rounded-full border-2 border-surface-bright bg-error animate-pulse-subtle" />
             )}
-            <span className="text-xs leading-4 font-semibold mt-0.5">{label}</span>
+            <span className="text-[10px] leading-3 font-semibold mt-0.5">{label}</span>
           </Link>
         );
       })}
