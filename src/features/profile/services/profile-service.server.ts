@@ -34,6 +34,7 @@ import type {
 import { traceServerLayer } from "@/core/monitor/trace-server-layer";
 import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
 import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
+import { categoryService, CATEGORY_CONSTANTS } from "@/features/categories";
 
 const AVATAR_PROFILE_ID = StorageProfiles.Avatar;
 const COVER_PROFILE_ID = StorageProfiles.Cover;
@@ -96,16 +97,24 @@ function normalizeCoverImageKeys(keys: string[]): string[] {
 function normalizeSpecialties(
   value: ProfileSpecialtiesSelection,
 ): ProfileSpecialtiesSelection {
-  const main = Array.from(
+  const mainCandidates = Array.from(
     new Set(
       (Array.isArray(value?.main) ? value.main : []).filter(Number.isInteger),
     ),
-  ).slice(0, 3);
+  );
+  const main = mainCandidates
+    .filter((categoryId) => {
+      if (categoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) return true;
+      return categoryService.getProfileMainOptions().some((item) => item.id === categoryId);
+    })
+    .slice(0, 3);
   const sub: Record<string, number[]> = {};
   if (value?.sub && typeof value.sub === "object") {
     for (const [categoryId, ids] of Object.entries(value.sub)) {
       if (!/^\d+$/.test(categoryId) || !Array.isArray(ids)) continue;
-      const normalized = Array.from(new Set(ids.filter(Number.isInteger)));
+      const normalized = Array.from(new Set(ids.filter(Number.isInteger))).filter((id) =>
+        categoryService.resolveLegacyProductSelection(categoryId, String(id)).valid,
+      );
       if (normalized.length > 0) sub[categoryId] = normalized;
     }
   }

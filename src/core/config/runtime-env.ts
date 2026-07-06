@@ -6,6 +6,16 @@ export const isDevelopment = process.env.NODE_ENV === 'development';
 export const isProduction = process.env.NODE_ENV === 'production';
 
 export function isDevRuntime(): boolean {
+  if (process.env.VERCEL === '1' || process.env.VERCEL_ENV) return false;
+  if (
+    process.env.TURSO_DATABASE_URL ||
+    process.env.TURSO_PROFILE_DATABASE_URL ||
+    process.env.TURSO_PRODUCT_DATABASE_URL ||
+    process.env.TURSO_ADVERTISEMENTS_DATABASE_URL
+  ) {
+    return false;
+  }
+
   return (
     process.env.NEXT_PUBLIC_GOVA_MODE === 'development' ||
     process.env.GOVA_MODE === 'development' ||

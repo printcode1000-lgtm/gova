@@ -218,7 +218,9 @@ export class CategoryService {
   }
 
   getSpecialtyColumnItems(): readonly SpecialtyColumnItem[] {
-    const normal = subcategories.map((item) => ({ categoryId: item.categoryId, originalId: item.originalId, titleEn: item.titleEn }));
+    const normal = subcategories
+      .filter((item) => item.categoryId !== CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID)
+      .map((item) => ({ categoryId: item.categoryId, originalId: item.originalId, titleEn: item.titleEn }));
     const collectionMembers = categories.filter((item) => item.collection !== null).map((item) => ({ categoryId: item.collection!, originalId: item.id, titleEn: item.titleEn }));
     const delivery = categories.find((item) => item.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID);
     return [...normal, ...collectionMembers, ...(delivery ? [{ categoryId: delivery.id, originalId: delivery.id, titleEn: delivery.titleEn }] : [])];

@@ -8,8 +8,19 @@ interface CategoryPageProps {
 }
 
 export function generateStaticParams(): Array<{ categoryId: string }> {
-  const categories = categoryService.getMainCategories();
-  return categories.map((category) => ({ categoryId: String(category.id) }));
+  const categoryIds = new Set<number>();
+
+  for (const category of categoryService.getMainCategories()) {
+    categoryIds.add(category.id);
+  }
+
+  for (const collection of categoryService.getCollections()) {
+    for (const item of collection.items) {
+      categoryIds.add(item.id);
+    }
+  }
+
+  return [...categoryIds].map((categoryId) => ({ categoryId: String(categoryId) }));
 }
 
 export default async function CategoryPage({

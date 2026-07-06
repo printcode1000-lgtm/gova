@@ -4,8 +4,15 @@ import { categoryService, CATEGORY_CONSTANTS } from "../src/features/categories"
 
 const main = categoryService.getAllDisplayCategories();
 assert(main.length > 0, "main display list must not be empty");
-assert.equal(main.filter((item) => item.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID).length, 0);
+assert.equal(main.filter((item) => item.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID).length, 1);
 assert.equal(categoryService.getProfileMainOptions().filter((item) => item.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID).length, 1);
+assert.deepEqual(
+  categoryService
+    .getSpecialtyColumnItems()
+    .filter((item) => item.categoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID)
+    .map((item) => item.originalId),
+  [CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID],
+);
 
 const medical = categoryService.getCategoryTree(CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID);
 assert(medical, "medical category must exist");
