@@ -24,6 +24,7 @@ import { FocusTrap } from "focus-trap-react";
 
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
+import { useResolvedColorScheme } from "@/lib/preferences";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -45,6 +46,7 @@ interface AppSidebarProps {
 export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { t, isRTL } = useTranslation();
+  const resolvedScheme = useResolvedColorScheme();
   const { isLoggedIn, session } = useSession();
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
@@ -207,7 +209,8 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
             aria-modal={isOpen}
             aria-label={t("sidebar.menu")}
             className={cn(
-              "fixed top-0 inset-inline-start-0 z-[61] flex h-dvh w-72 flex-col border-e bg-blue-100 transition-transform duration-300 ease-out",
+              "fixed top-0 inset-inline-start-0 z-[61] flex h-dvh w-72 flex-col border-e transition-transform duration-300 ease-out",
+              resolvedScheme === 'dark' ? 'gova-drawer-panel' : 'bg-[#F8FBFF]',
               isOpen
                 ? "translate-x-0"
                 : "rtl:translate-x-full ltr:-translate-x-full",

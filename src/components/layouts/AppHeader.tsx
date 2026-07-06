@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useResolvedColorScheme, useThemePreferences } from '@/lib/preferences';
 import { useTranslation } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 
 import { AppSidebar } from './AppSidebar';
 
@@ -34,13 +35,19 @@ export function AppHeader() {
 
   return (
     <>
-      <header className="fixed top-0 w-full z-50 shadow-sm border-b border-outline-variant bg-blue-100 rounded-b-2xl">
+      <header className={cn(
+        "fixed top-0 w-full z-50 shadow-sm border-b border-outline-variant rounded-b-2xl",
+        resolvedScheme === 'dark' ? 'gova-surface-neutral' : 'bg-[#F8FBFF]'
+      )}>
         <div className="flex justify-between items-center h-12 w-full max-w-7xl mx-auto px-2">
           <div className="flex items-center gap-3">
             <button
               type="button"
               id="header-menu-button"
-              className="gova-control-icon flex items-center justify-center rounded-full text-blue-900 transition-colors active:bg-blue-200"
+              className={cn(
+                "gova-control-icon flex items-center justify-center rounded-full transition-colors",
+                resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
+              )}
               aria-label={t('sidebar.menu')}
               onPointerDown={toggleSidebar}
             >
@@ -49,7 +56,10 @@ export function AppHeader() {
             <Link
               id="header-brand-link"
               href="/home"
-              className="font-bold text-blue-900 text-xl transition-all active:scale-95"
+              className={cn(
+                "font-bold text-xl transition-all active:scale-95",
+                resolvedScheme === 'dark' ? 'text-primary' : 'text-blue-900'
+              )}
             >
               {t('header.brand')}
             </Link>
@@ -59,7 +69,10 @@ export function AppHeader() {
             <button
               type="button"
               id="header-theme-button"
-              className="gova-control-icon flex items-center justify-center rounded-full text-blue-900 transition-colors active:bg-blue-200"
+              className={cn(
+                "gova-control-icon flex items-center justify-center rounded-full transition-colors",
+                resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
+              )}
               aria-label={themeLabel}
               title={themeLabel}
               onClick={toggleColorScheme}
@@ -78,7 +91,10 @@ export function AppHeader() {
             <button
               type="button"
               id="header-search-button"
-              className="gova-control-icon flex items-center justify-center rounded-full text-blue-900 transition-colors active:bg-blue-200"
+              className={cn(
+                "gova-control-icon flex items-center justify-center rounded-full transition-colors",
+                resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
+              )}
               aria-label={t('header.search')}
             >
               <Search className="w-5 h-5" />
@@ -87,7 +103,10 @@ export function AppHeader() {
             <button
               type="button"
               id="header-cart-button"
-              className="gova-control-icon flex items-center justify-center rounded-full relative text-blue-900 transition-colors active:bg-blue-200"
+              className={cn(
+                "gova-control-icon flex items-center justify-center rounded-full relative transition-colors",
+                resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
+              )}
               aria-label={t('header.cart')}
             >
               <ShoppingCart className="w-5 h-5" />
