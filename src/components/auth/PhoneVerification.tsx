@@ -139,7 +139,7 @@ export function PhoneVerification({
                     onChange={(e) => {
                       const raw = e.target.value.replace(/\D/g, '').slice(0, 11);
                       field.onChange(raw);
-                      if (phoneVerified) formSetValue('phoneVerified', false);
+                      if (phoneVerified) formSetValue?.('phoneVerified', false);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !phoneVerified && !otpSent) {
@@ -261,11 +261,11 @@ export function PhoneVerification({
               type="tel"
               inputMode="tel"
               maxLength={11}
-              disabled={verified}
+              disabled={phoneVerified}
               placeholder={t('auth.login.phonePlaceholder')}
               className={cn(
                 'auth-input w-full ps-12 text-sm',
-                verified && 'gova-field-surface pe-10',
+                phoneVerified && 'gova-field-surface pe-10',
                 error && 'border-error',
               )}
               value={phone}
@@ -275,18 +275,18 @@ export function PhoneVerification({
                 );
               }}
               onKeyDown={(event) => {
-                if (event.key === 'Enter' && !verified && !otpSent) {
+                if (event.key === 'Enter' && !phoneVerified && !otpSent) {
                   event.preventDefault();
                   void handleSendOtpWrapper();
                 }
               }}
             />
-            {verified ? (
+            {phoneVerified ? (
               <CheckCircle2 className="absolute end-3 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-success" />
             ) : null}
           </div>
 
-          {!verified ? (
+          {!phoneVerified ? (
             <button
               type="button"
               onClick={() => void handleSendOtpWrapper()}
@@ -311,7 +311,7 @@ export function PhoneVerification({
           )}
         </div>
 
-        {verified ? (
+        {phoneVerified ? (
           <p className="mt-1 flex items-center gap-1 text-[10px] sm:text-xs text-success">
             <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             {t('auth.phone.verified')}
@@ -320,7 +320,7 @@ export function PhoneVerification({
         {error ? <p className="text-[10px] sm:text-xs text-error">{error}</p> : null}
       </div>
 
-      {otpSent && !verified ? (
+      {otpSent && !phoneVerified ? (
         <div className="gova-auth-tonal-panel space-y-3 sm:space-y-4">
           <div className="space-y-1">
             <p className="text-xs sm:text-sm font-semibold text-on-surface">
@@ -372,3 +372,4 @@ export function PhoneVerification({
     </div>
   );
 }
+
