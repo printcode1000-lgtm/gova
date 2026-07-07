@@ -195,6 +195,7 @@ export function PhoneVerification({
                 </p>
               )}
               {fieldState.error && <p className="text-xs text-error">{fieldState.error.message}</p>}
+              {otpError && !otpSent && <p className="text-xs text-error mt-1">{otpError}</p>}
             </div>
           )}
         />
@@ -318,6 +319,7 @@ export function PhoneVerification({
           </p>
         ) : null}
         {error ? <p className="text-[10px] sm:text-xs text-error">{error}</p> : null}
+        {otpError && !otpSent ? <p className="text-[10px] sm:text-xs text-error mt-1">{otpError}</p> : null}
       </div>
 
       {otpSent && !phoneVerified ? (
