@@ -13,7 +13,7 @@ import type {
   ProfileRegistrationController,
   ProfileSectionStatus,
 } from "./profile-save-controller";
-import { ProfilePhoneVerification } from "./ProfilePhoneVerification";
+import { PhoneVerification } from "@/components/auth/PhoneVerification";
 
 interface ProfileRegistrationInfoCardProps {
   showSaveButton?: boolean;
@@ -108,11 +108,11 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
           </div>
         ) : null}
 
-        <ProfilePhoneVerification
+        <PhoneVerification
           phone={form.phone}
           verified={phoneVerified}
           error={fieldErrors.phone}
-          onPhoneChange={(phone) => updateField("phone", phone)}
+          onPhoneChange={(phone: string) => updateField("phone", phone)}
           onVerifiedChange={setPhoneVerified}
         />
 

@@ -85,7 +85,7 @@ export function RegistrationPageContent() {
 
             <FormProvider {...form}>
               <form onSubmit={onSubmit} className="space-y-6" noValidate>
-                <PhoneVerification />
+                <PhoneVerification useForm={true} />
 
                 <div className="space-y-4">
                   <PasswordInput name="password" />

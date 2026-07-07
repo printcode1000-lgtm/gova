@@ -94,6 +94,7 @@
     "auth.validation.userNotFound": "This phone number is not registered",
     "auth.validation.invalidPassword": "Incorrect password",
     "auth.validation.phoneAlreadyRegistered": "This phone number is already registered",
+    "auth.wa_msg_template": "Your verification code is: {{code}}",
     "category.accessories":  "Accessories",
     "category.automotive":  "Automotive",
     "category.education":  "Education",

@@ -94,6 +94,7 @@
     "auth.validation.userNotFound": "رقم الهاتف هذا غير مسجل لدينا",
     "auth.validation.invalidPassword": "كلمة المرور غير صحيحة",
     "auth.validation.phoneAlreadyRegistered": "رقم الهاتف هذا مسجل بالفعل",
+    "auth.wa_msg_template": "رمز التحقق الخاص بك هو: {{code}}",
     "category.accessories":  "إكسسوارات",
     "category.automotive":  "سيارات",
     "category.education":  "تعليم",
