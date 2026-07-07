@@ -23,15 +23,13 @@ export function useVoiceInputScanner(options: UseVoiceInputScannerOptions): void
     });
     scannerRef.current = scanner;
 
-    // Delay scanner start until after hydration to avoid mismatch
-    const rafId = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        void scanner.start();
-      });
-    });
+    // Delay scanner start using setTimeout to ensure hydration has completed before mutating DOM
+    const timerId = setTimeout(() => {
+      void scanner.start();
+    }, 1000);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      clearTimeout(timerId);
       scannerRef.current = null;
       void scanner.destroy();
     };
