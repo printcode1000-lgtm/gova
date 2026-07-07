@@ -20,4 +20,5 @@ export interface IAuthService {
   login(formData: LoginFormData): Promise<LoginResult>;
   updateProfile(input: UpdateProfileInput): Promise<UserProfile>;
   logout(): Promise<void>;
+  checkPhone(phone: string): Promise<{ exists: boolean }>;
 }

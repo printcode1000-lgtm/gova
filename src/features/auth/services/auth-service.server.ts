@@ -57,6 +57,17 @@ export class AuthService implements IAuthService {
     );
   }
 
+  async checkPhone(phone: string): Promise<{ exists: boolean }> {
+    return traceServerLayer(
+      'server-service',
+      'AuthService.checkPhone',
+      async () => {
+        const user = await this.getUserByPhoneQuery.execute(phone);
+        return { exists: user !== null };
+      },
+    );
+  }
+
   async login(formData: LoginFormData): Promise<LoginResult> {
     return traceServerLayer('server-service', 'AuthService.login', async () => {
       const user = await this.getUserByPhoneQuery.execute(formData.phone);

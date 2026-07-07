@@ -25,7 +25,7 @@ function corsHeaders(origin: string | null): HeadersInit {
   return headers;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (!request.nextUrl.pathname.startsWith('/api/')) {
     return NextResponse.next();
   }

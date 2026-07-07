@@ -9,6 +9,7 @@ export const GOVA_API_ROUTES = {
     register: "/api/auth/register",
     logout: "/api/auth/logout",
     profile: "/api/auth/profile",
+    checkPhone: "/api/auth/check-phone",
   },
   profile: {
     contacts: "/api/profile/contacts",

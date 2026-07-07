@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { isDevelopment } from '@/core/config';
+import { govaApi, GOVA_API_ROUTES } from '@/core/api';
 
 const RESEND_COUNTDOWN = 60;
 
@@ -48,6 +49,25 @@ export function usePhoneVerification() {
 
     setIsSending(true);
     setOtpError('');
+
+    // Check if the phone number is already registered in production/static out environments
+    if (!isDevelopment) {
+      try {
+        const response = await govaApi.get<{ exists: boolean }>(
+          `${GOVA_API_ROUTES.auth.checkPhone}?phone=${encodeURIComponent(phone)}`
+        );
+        if (response.exists) {
+          setOtpError(t('auth.validation.phoneAlreadyRegistered'));
+          setIsSending(false);
+          return;
+        }
+      } catch (err) {
+        console.error('Error checking phone registration:', err);
+        setOtpError('An error occurred. Please try again.');
+        setIsSending(false);
+        return;
+      }
+    }
 
     const newOtp = generateOtp();
     setGeneratedOtp(newOtp);

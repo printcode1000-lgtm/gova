@@ -23,6 +23,12 @@ export class AuthApiService implements IAuthService {
   async logout(): Promise<void> {
     await govaApi.post(GOVA_API_ROUTES.auth.logout, {});
   }
+
+  async checkPhone(phone: string): Promise<{ exists: boolean }> {
+    return govaApi.get<{ exists: boolean }>(
+      `${GOVA_API_ROUTES.auth.checkPhone}?phone=${encodeURIComponent(phone)}`
+    );
+  }
 }
 
 export const authApiService = new AuthApiService();
