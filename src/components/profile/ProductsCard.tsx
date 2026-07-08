@@ -474,11 +474,11 @@ export const ProductsCard = React.forwardRef<
                                           key={product.id}
                                           className="group relative overflow-hidden rounded-lg border border-outline-variant bg-surface text-start transition-colors hover:border-primary hover:shadow-sm"
                                         >
-                                          {/* Clickable area to view product */}
+                                          {/* Clickable area to select product */}
                                           <button
                                             type="button"
-                                            onClick={() => viewProduct(product)}
-                                            className="w-full text-start focus:outline-none"
+                                            onClick={() => setSelectedProduct(product)}
+                                            className={`w-full text-start focus:outline-none ${selectedProduct?.id === product.id ? 'ring-2 ring-primary' : ''}`}
                                           >
                                             <div className="relative aspect-square bg-surface-bright">
                                               {productImage ? (
@@ -491,34 +491,6 @@ export const ProductsCard = React.forwardRef<
                                               {productName}
                                             </p>
                                           </button>
-
-                                          {/* Floating Edit and Delete Buttons on hover */}
-                                          {!readOnly && (
-                                            <div className="absolute top-1 end-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 p-1 rounded-md backdrop-blur-xs">
-                                              <button
-                                                type="button"
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  editProduct(product);
-                                                }}
-                                                className="p-1 rounded bg-surface hover:bg-primary hover:text-on-primary text-on-surface-variant transition-colors"
-                                                title={locale === 'ar' ? 'تعديل' : 'Edit'}
-                                              >
-                                                <Pencil className="h-3 w-3" />
-                                              </button>
-                                              <button
-                                                type="button"
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  setPendingDelete(product);
-                                                }}
-                                                className="p-1 rounded bg-surface hover:bg-destructive hover:text-on-destructive text-destructive transition-colors"
-                                                title={locale === 'ar' ? 'حذف' : 'Delete'}
-                                              >
-                                                <Trash2 className="h-3 w-3" />
-                                              </button>
-                                            </div>
-                                          )}
                                         </div>
                                       );
                                     })}
@@ -533,22 +505,66 @@ export const ProductsCard = React.forwardRef<
                                 )}
                               </div>
                               <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 border-t border-outline-variant/50 bg-surface">
-                                <button
-                                  type="button"
-                                  className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-2 py-2 text-[10px] font-medium text-on-primary transition-colors hover:bg-primary/90 sm:py-2.5 sm:text-xs"
-                                  onClick={() => {
-                                    const query = new URLSearchParams({
-                                      mode: "new",
-                                      mainCategoryId: categoryId,
-                                      subcategoryId: subId,
-                                      returnTo: "profile-products",
-                                    });
-                                    router.push(`/product?${query.toString()}`);
-                                  }}
-                                >
-                                  <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                  {locale === 'ar' ? 'إضافة منتج' : 'Add Product'}
-                                </button>
+                                {selectedProduct ? (
+                                  <div className="flex gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => viewProduct(selectedProduct)}
+                                      className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-2 py-2 text-[10px] font-medium text-on-surface transition-colors hover:bg-primary hover:text-on-primary sm:py-2.5 sm:text-xs"
+                                      title={locale === 'ar' ? 'عرض' : 'View'}
+                                    >
+                                      <Package className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                      {locale === 'ar' ? 'عرض' : 'View'}
+                                    </button>
+                                    {!readOnly && (
+                                      <>
+                                        <button
+                                          type="button"
+                                          onClick={() => editProduct(selectedProduct)}
+                                          className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-2 py-2 text-[10px] font-medium text-on-surface transition-colors hover:bg-primary hover:text-on-primary sm:py-2.5 sm:text-xs"
+                                          title={locale === 'ar' ? 'تعديل' : 'Edit'}
+                                        >
+                                          <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                          {locale === 'ar' ? 'تعديل' : 'Edit'}
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => setPendingDelete(selectedProduct)}
+                                          className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-2 py-2 text-[10px] font-medium text-destructive transition-colors hover:bg-destructive hover:text-on-destructive sm:py-2.5 sm:text-xs"
+                                          title={locale === 'ar' ? 'حذف' : 'Delete'}
+                                        >
+                                          <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                          {locale === 'ar' ? 'حذف' : 'Delete'}
+                                        </button>
+                                      </>
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => setSelectedProduct(null)}
+                                      className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-2 py-2 text-[10px] font-medium text-on-surface transition-colors hover:bg-surface-container-high sm:py-2.5 sm:text-xs"
+                                      title={locale === 'ar' ? 'إلغاء' : 'Cancel'}
+                                    >
+                                      {locale === 'ar' ? 'إلغاء' : 'Cancel'}
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-2 py-2 text-[10px] font-medium text-on-primary transition-colors hover:bg-primary/90 sm:py-2.5 sm:text-xs"
+                                    onClick={() => {
+                                      const query = new URLSearchParams({
+                                        mode: "new",
+                                        mainCategoryId: categoryId,
+                                        subcategoryId: subId,
+                                        returnTo: "profile-products",
+                                      });
+                                      router.push(`/product?${query.toString()}`);
+                                    }}
+                                  >
+                                    <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                    {locale === 'ar' ? 'إضافة منتج' : 'Add Product'}
+                                  </button>
+                                )}
                               </div>
                             </div>
                           )}

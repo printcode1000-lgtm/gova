@@ -19,7 +19,7 @@ import { ProductVehicleSpecs } from "./ProductVehicleSpecs";
 
 const FIELDS: Record<
   string,
-  Array<[string, string, "text" | "number" | "textarea"]>
+  Array<[string, string, "text" | "number" | "textarea" | "boolean"]>
 > = {
   mainData: [
     ["name", "الاسم", "text"],
@@ -31,7 +31,7 @@ const FIELDS: Record<
   price: [
     ["current", "السعر الحالي", "number"],
     ["beforeDiscount", "السعر قبل الخصم", "number"],
-    ["needsCar", "يحتاج سيارة", "text"],
+    ["needsCar", "يحتاج سيارة", "boolean"],
   ],
   specifications: [
     ["color", "اللون", "text"],
@@ -98,7 +98,7 @@ export const PRODUCT_DEMO_FIELDS: ProductFieldValues = {
   "rating.comment": "منتج ممتاز وجودته جيدة جدًا",
   "price.current": "1250",
   "price.beforeDiscount": "1500",
-  "price.needsCar": "لا",
+  "price.needsCar": "false",
   "mainData.name": "منتج تجريبي",
   "mainData.brand": "جوفا",
   "mainData.manufacturer": "الشركة المصنعة",
@@ -266,7 +266,7 @@ export function ProductComponentsRenderer({
                     label={label}
                     value={fields[storageKey] ?? ""}
                     mode={mode}
-                    type={kind === "number" ? "number" : "text"}
+                    type={kind}
                     multiline={kind === "textarea"}
                     onChange={(value) =>
                       onFieldsChange({ ...fields, [storageKey]: value })

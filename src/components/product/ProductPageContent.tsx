@@ -59,6 +59,18 @@ export function ProductPageContent() {
   const ownerAllowed =
     mode === "new" || !product || product.uid === session?.uid;
 
+  const convertLegacyBoolean = (fields: ProductFieldValues): ProductFieldValues => {
+    const converted = { ...fields };
+    if (converted["price.needsCar"] === "نعم") {
+      converted["price.needsCar"] = "true";
+    } else if (converted["price.needsCar"] === "لا") {
+      converted["price.needsCar"] = "false";
+    } else if (converted["price.needsCar"] !== "true" && converted["price.needsCar"] !== "false") {
+      converted["price.needsCar"] = "false";
+    }
+    return converted;
+  };
+
   React.useEffect(() => {
     let cancelled = false;
     const load = async () => {
@@ -72,7 +84,8 @@ export function ProductPageContent() {
           loadedProduct = await productApiService.get(productId);
           if (!cancelled) {
             setProduct(loadedProduct);
-            setFields(loadedProduct.data.fields);
+            const convertedFields = convertLegacyBoolean(loadedProduct.data.fields);
+            setFields(convertedFields);
             setImages(loadedProduct.data.images);
           }
         } else {
@@ -203,27 +216,6 @@ export function ProductPageContent() {
 
   return (
     <main className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
-      {returnUrl && (
-        <button
-          type="button"
-          onClick={() => router.push(returnUrl)}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-        >
-          {locale === "ar" ? "← العودة إلى المنتجات" : "← Back to products"}
-        </button>
-      )}
-      <header className="rounded-2xl border bg-card p-5">
-        <p className="text-xs text-muted-foreground">
-          {mainCategoryId} / {subcategoryId}
-        </p>
-        <h1 className="text-2xl font-bold">
-          {mode === "new"
-            ? "منتج جديد"
-            : mode === "edit"
-              ? "تعديل المنتج"
-              : fields["mainData.name"] || "عرض المنتج"}
-        </h1>
-      </header>
       <ProductComponentsRenderer
         mode={mode}
         components={style?.components ?? {}}

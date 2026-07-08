@@ -2,7 +2,7 @@
 
  الخيار 1: تغيير السياسة للمستخدم الحالي (الأكثر أماناً)
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
- 6666666666
+
 # فتح صفحة داخل المتصفح المدمج في IDE
 Cursor
 افتح Command Palette:

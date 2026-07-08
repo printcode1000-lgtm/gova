@@ -8,26 +8,26 @@
       "order": 1
     },
     "rating": {
-      "visible": false,
+      "visible": true,
       "type": "stars-comments",
-      "order": 2
+      "order": 10
     },
     "price": {
-      "visible": false,
+      "visible": true,
       "current": true,
       "beforeDiscount": true,
       "needsCar": true,
       "order": 3
     },
     "order": {
-      "visible": false,
+      "visible": true,
       "cart": true,
       "favorite": true,
       "contact": true,
       "order": 4
     },
     "mainData": {
-      "visible": false,
+      "visible": true,
       "name": true,
       "brand": true,
       "manufacturer": true,
@@ -55,7 +55,7 @@
       "order": 7
     },
     "propertySpecs": {
-      "visible": true,
+      "visible": false,
       "area": true,
       "rooms": true,
       "bathrooms": true,

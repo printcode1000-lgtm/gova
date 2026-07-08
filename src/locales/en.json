@@ -702,6 +702,8 @@
     "product.price.timepieceWatch":  "$250",
     "product.price.eliteRealEstate":  "$1.2M",
     "product.price.luxuryWatch":  "$45,000",
+    "product.boolean.yes":  "Yes",
+    "product.boolean.no":  "No",
     "settings.accessibility":  "Accessibility",
     "settings.appearance":  "Appearance",
     "settings.chooseLang":  "Choose Language",
