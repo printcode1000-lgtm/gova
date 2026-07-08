@@ -1,9 +1,11 @@
 import "server-only";
 
-import { eq } from "drizzle-orm";
+import { eq, or, and } from "drizzle-orm";
 import { profileDbClient } from "@/core/database/profile-db-client";
 import type { IDatabaseClient } from "@/core/database/database-client.interface";
 import { userProfiles } from "@/core/database/profile/profile.schema";
+import type { UserProfileRow } from "@/core/database/profile/profile.schema";
+import { userSpecialties } from "@/core/database/profile/user-specialties.schema";
 import type { ProfileContactsData } from "../entities/profile-contacts.entity";
 import {
   EMPTY_STORE_DETAILS,
@@ -20,6 +22,7 @@ import {
 import {
   SPECIALTY_COLUMN_NAMES,
   selectedSpecialtyColumns,
+  columnBySelection,
 } from "./specialty-columns.server";
 
 function parseJson<T>(value: string, fallback: T): T {
@@ -256,6 +259,49 @@ export class ProfileRepository implements IProfileRepository {
       `INSERT INTO user_specialties (uid, ${quotedColumns}) VALUES (?, ${placeholders}) ON CONFLICT(uid) DO UPDATE SET ${updates}`,
       [uid, ...values],
     );
+  }
+
+  async getUsersBySpecialty(
+    columnName: string,
+    offset: number,
+    limit: number,
+  ): Promise<UserProfileRow[]> {
+    // Extract categoryId from columnName to find parent collection member column
+    // Example: "household_cleaners_5" -> categoryId=5, parent column="my_way_5"
+    const match = columnName.match(/^(.+)_(\d+)$/);
+    const categoryId = match ? Number(match[2]) : null;
+    
+    // Build OR condition: search in specific column OR parent collection member column
+    const conditions = [
+      eq(userSpecialties[columnName as keyof typeof userSpecialties] as any, 1),
+    ];
+    
+    // If this is a subcategory, also search in the parent collection member column
+    if (categoryId && categoryId !== 46) { // 46 is delivery services, handled separately
+      const parentColumn = columnBySelection.get(`${categoryId}:${categoryId}`);
+      if (parentColumn) {
+        conditions.push(eq(userSpecialties[parentColumn as keyof typeof userSpecialties] as any, 1));
+      }
+    }
+    
+    const specialtyRows = await this.database.db
+      .select({ uid: userSpecialties.uid })
+      .from(userSpecialties)
+      .where(or(...conditions))
+      .limit(limit)
+      .offset(offset);
+
+    if (specialtyRows.length === 0) return [];
+
+    const uids = specialtyRows.map((row: { uid: string }) => row.uid);
+    
+    // Fetch all profiles for the found UIDs
+    const profiles = await this.database.db
+      .select()
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uids[0]));
+
+    return profiles as UserProfileRow[];
   }
 }
 

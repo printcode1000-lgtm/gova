@@ -8,6 +8,7 @@ import type { GetStoreDetailsQuery } from "../operations/queries/get-store-detai
 import type { UpsertStoreDetailsCommand } from "../operations/commands/upsert-store-details.command";
 import type { GetProfileSpecialtiesQuery } from "../operations/queries/get-profile-specialties.query";
 import type { UpsertProfileSpecialtiesCommand } from "../operations/commands/upsert-profile-specialties.command";
+import type { GetUsersBySpecialtyQuery } from "../operations/queries/get-users-by-specialty.query";
 import type { GetUserByUidQuery } from "@/features/auth/operations/queries/get-user-by-uid.query";
 import type { UpdateUserProfileCommand } from "@/features/auth/operations/commands/update-user-profile.command";
 import type {
@@ -131,6 +132,7 @@ export class ProfileService implements IProfileService {
     private upsertStoreDetailsCommand: UpsertStoreDetailsCommand,
     private getProfileSpecialtiesQuery: GetProfileSpecialtiesQuery,
     private upsertProfileSpecialtiesCommand: UpsertProfileSpecialtiesCommand,
+    private getUsersBySpecialtyQuery: GetUsersBySpecialtyQuery,
     private getUserByUidQuery: GetUserByUidQuery,
     private updateUserProfileCommand: UpdateUserProfileCommand,
   ) {}
@@ -274,6 +276,14 @@ export class ProfileService implements IProfileService {
       input.uid,
       normalizeSpecialties(input),
     );
+  }
+
+  async getUsersBySpecialty(
+    columnName: string,
+    offset: number,
+    limit: number,
+  ) {
+    return this.getUsersBySpecialtyQuery.execute(columnName, offset, limit);
   }
 
   async saveEditor(

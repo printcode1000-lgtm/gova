@@ -1,6 +1,7 @@
 import type { ProfileContactsData } from "../entities/profile-contacts.entity";
 import type { StoreDetailsData } from "../entities/store-details.entity";
 import type { ProfileSpecialtiesSelection } from "../entities/profile-specialties.entity";
+import type { UserProfileRow } from "@/core/database/profile/profile.schema";
 
 export interface ProfileImageKeys {
   avatarImageKey: string | null;
@@ -20,4 +21,9 @@ export interface IProfileRepository {
     uid: string,
     selection: ProfileSpecialtiesSelection,
   ): Promise<void>;
+  getUsersBySpecialty(
+    columnName: string,
+    offset: number,
+    limit: number,
+  ): Promise<UserProfileRow[]>;
 }

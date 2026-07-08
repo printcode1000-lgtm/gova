@@ -20,6 +20,7 @@ import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
 } from "../entities/profile-specialties.entity";
+import type { UserProfileRow } from "@/core/database/profile/profile.schema";
 
 export class ProfileApiService implements IProfileService {
   async getContacts(uid: string): Promise<ProfileContactsData> {
@@ -74,6 +75,15 @@ export class ProfileApiService implements IProfileService {
       GOVA_API_ROUTES.profile.specialties,
       input,
     );
+  }
+
+  async getUsersBySpecialty(
+    columnName: string,
+    offset: number,
+    limit: number,
+  ): Promise<UserProfileRow[]> {
+    const route = `${GOVA_API_ROUTES.profile.usersBySpecialty}?columnName=${encodeURIComponent(columnName)}&offset=${offset}&limit=${limit}`;
+    return govaApi.get<UserProfileRow[]>(route);
   }
 
   async saveEditor(

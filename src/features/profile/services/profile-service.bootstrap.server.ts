@@ -10,6 +10,7 @@ import {
   upsertStoreDetailsCommand,
   getProfileSpecialtiesQuery,
   upsertProfileSpecialtiesCommand,
+  getUsersBySpecialtyQuery,
 } from "../operations/instances";
 import {
   getUserByUidQuery,
@@ -25,6 +26,7 @@ export const profileService = new ProfileService(
   upsertStoreDetailsCommand,
   getProfileSpecialtiesQuery,
   upsertProfileSpecialtiesCommand,
+  getUsersBySpecialtyQuery,
   getUserByUidQuery,
   updateUserProfileCommand,
 );

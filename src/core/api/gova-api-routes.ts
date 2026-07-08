@@ -17,6 +17,7 @@ export const GOVA_API_ROUTES = {
     storeDetails: "/api/profile/store-details",
     specialties: "/api/profile/specialties",
     editor: "/api/profile/editor",
+    usersBySpecialty: "/api/profile/users-by-specialty",
   },
   storage: {
     upload: "/api/storage/images/upload",

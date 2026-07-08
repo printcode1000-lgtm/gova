@@ -139,7 +139,13 @@ export function CategorySubcategoriesPage({
                 type="button"
                 className="group flex flex-col gap-2 text-start transition-transform duration-200 active:scale-95"
                 onClick={() => {
-                  if (isDoctorGroup) handleDoctorGroupClick();
+                  if (isDoctorGroup) {
+                    handleDoctorGroupClick();
+                  } else if (isDoctorAppointmentView) {
+                    router.push(`/categories/${categoryTree.category.id}/doctor-appointment/${item.originalId}`);
+                  } else {
+                    router.push(`/categories/${categoryTree.category.id}/sellers/${item.originalId}`);
+                  }
                 }}
                 aria-label={altText}
               >

@@ -9,6 +9,7 @@ import { GetStoreDetailsQuery } from "./queries/get-store-details.query";
 import { UpsertStoreDetailsCommand } from "./commands/upsert-store-details.command";
 import { GetProfileSpecialtiesQuery } from "./queries/get-profile-specialties.query";
 import { UpsertProfileSpecialtiesCommand } from "./commands/upsert-profile-specialties.command";
+import { GetUsersBySpecialtyQuery } from "./queries/get-users-by-specialty.query";
 
 export const getProfileContactsQuery = new GetProfileContactsQuery(
   profileRepository,
@@ -31,3 +32,6 @@ export const getProfileSpecialtiesQuery = new GetProfileSpecialtiesQuery(
 );
 export const upsertProfileSpecialtiesCommand =
   new UpsertProfileSpecialtiesCommand(profileRepository);
+export const getUsersBySpecialtyQuery = new GetUsersBySpecialtyQuery(
+  profileRepository,
+);

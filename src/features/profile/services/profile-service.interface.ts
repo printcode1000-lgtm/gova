@@ -18,6 +18,7 @@ import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
 } from "../entities/profile-specialties.entity";
+import type { UserProfileRow } from "@/core/database/profile/profile.schema";
 
 export interface IProfileService {
   getContacts(uid: string): Promise<ProfileContactsData>;
@@ -31,4 +32,9 @@ export interface IProfileService {
     input: SaveProfileSpecialtiesInput,
   ): Promise<ProfileSpecialtiesSelection>;
   saveEditor(input: SaveProfileEditorInput): Promise<SaveProfileEditorResult>;
+  getUsersBySpecialty(
+    columnName: string,
+    offset: number,
+    limit: number,
+  ): Promise<UserProfileRow[]>;
 }
