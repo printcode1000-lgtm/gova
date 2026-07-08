@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
 import { columnBySelection, columnByDoctorAppointment } from "@/features/profile/repositories/specialty-columns.client";
 import { useTranslation } from "@/lib/i18n";
@@ -11,12 +13,21 @@ interface SellersPageContentProps {
   subcategoryName: string;
 }
 
+function parseStoreDetails(storeDetailsJson: string) {
+  try {
+    return JSON.parse(storeDetailsJson);
+  } catch {
+    return { storeName: '' };
+  }
+}
+
 export function SellersPageContent({
   categoryId,
   subcategoryId,
   subcategoryName,
 }: SellersPageContentProps) {
   const { t, locale } = useTranslation();
+  const router = useRouter();
   const [offset, setOffset] = React.useState(0);
   const limit = 10;
 
@@ -67,17 +78,47 @@ export function SellersPageContent({
         {locale === "ar" ? `التجار في ${subcategoryName}` : `Sellers in ${subcategoryName}`}
       </h1>
 
-      {!users || users.length === 0 ? (
+      {isLoading && offset === 0 ? (
+        <div className="text-center text-sm text-on-surface-variant">
+          {t("profile.loading")}
+        </div>
+      ) : !users || users.length === 0 ? (
         <p className="text-center text-sm text-on-surface-variant">
           {locale === "ar" ? "لا يوجد تجار حالياً" : "No sellers available"}
         </p>
       ) : (
-        <div className="space-y-4">
-          {users.map((user) => (
-            <div key={user.uid} className="rounded-xl bg-surface p-4">
-              <p className="font-medium text-on-surface">{user.uid}</p>
-            </div>
-          ))}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {users.map((user) => {
+            const storeDetails = parseStoreDetails(user.storeDetailsJson || '{}');
+            const storeName = storeDetails.storeName || user.uid;
+            const avatarUrl = (user as any).avatarUrl || null;
+
+            return (
+              <button
+                key={user.uid}
+                onClick={() => router.push(`/profile?uid=${user.uid}`)}
+                className="flex flex-col items-center rounded-xl bg-surface p-4 shadow-sm"
+              >
+                <div className="relative h-24 w-24 overflow-hidden rounded-full bg-surface-bright">
+                  {avatarUrl ? (
+                    <Image
+                      src={avatarUrl}
+                      alt={storeName}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-3xl text-on-surface-variant">
+                      {storeName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <p className="mt-3 text-center text-sm font-medium text-on-surface line-clamp-2">
+                  {storeName}
+                </p>
+              </button>
+            );
+          })}
         </div>
       )}
 

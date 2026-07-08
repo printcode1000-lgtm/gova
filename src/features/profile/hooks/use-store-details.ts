@@ -21,10 +21,10 @@ function isStoreDetailsDirty(
   return JSON.stringify(current) !== JSON.stringify(baseline);
 }
 
-export function useStoreDetails() {
+export function useStoreDetails(targetUid?: string) {
   const { t } = useTranslation();
   const { session } = useSession();
-  const uid = session?.uid ?? '';
+  const uid = targetUid || session?.uid || '';
   const queryClient = useQueryClient();
 
   const detailsQuery = useQuery({
@@ -105,7 +105,7 @@ export function useStoreDetails() {
     details,
     updateField,
     isDirty,
-    isLoading: !session || detailsQuery.isLoading,
+    isLoading: !session && !targetUid || detailsQuery.isLoading,
     isSaving: saveMutation.isPending,
     error,
     save,

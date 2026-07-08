@@ -1,6 +1,8 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
+import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
+import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/profile/users-by-specialty", async () => {
@@ -10,7 +12,17 @@ export async function GET(request: Request) {
       const offset = Number(url.searchParams.get("offset") ?? "0");
       const limit = Number(url.searchParams.get("limit") ?? "10");
       
-      return apiSuccess(await profileService.getUsersBySpecialty(columnName, offset, limit));
+      const users = await profileService.getUsersBySpecialty(columnName, offset, limit);
+      
+      // Add avatarUrl to each user
+      const usersWithAvatarUrls = users.map((user) => ({
+        ...user,
+        avatarUrl: user.avatarImageKey
+          ? imageStorageOrchestrator.resolveUrl(StorageProfiles.Avatar, user.avatarImageKey)
+          : null,
+      }));
+      
+      return apiSuccess(usersWithAvatarUrls);
     } catch (error) {
       return mapServiceError(error);
     }

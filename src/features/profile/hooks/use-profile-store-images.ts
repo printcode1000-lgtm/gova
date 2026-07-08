@@ -18,9 +18,9 @@ const emptyStoreImages: StoreImagesData = {
   coverUrls: [],
 };
 
-export function useProfileStoreImages() {
+export function useProfileStoreImages(targetUid?: string) {
   const { session } = useSession();
-  const uid = session?.uid ?? '';
+  const uid = targetUid || session?.uid || '';
   const queryClient = useQueryClient();
 
   const storeImagesQuery = useQuery({

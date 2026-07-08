@@ -51,12 +51,14 @@ export function ProfilePageContent() {
   const { session, isLoggedIn, isLoading, setSession } = useSession();
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
-  const showEditCard = mode === "edit";
-  const showPreviewCard = mode !== "edit";
+  const uid = searchParams.get("uid");
+  const isViewingOtherProfile = !!uid;
+  const showEditCard = mode === "edit" && !isViewingOtherProfile;
+  const showPreviewCard = mode !== "edit" || isViewingOtherProfile;
   const { storeImages, isLoading: isLoadingStoreImages } =
-    useProfileStoreImages();
+    useProfileStoreImages(isViewingOtherProfile ? uid : undefined);
   const { details: storeDetails, isLoading: isLoadingStoreDetails } =
-    useStoreDetails();
+    useStoreDetails(isViewingOtherProfile ? uid : undefined);
 
   const registrationRef = React.useRef<ProfileRegistrationController>(null);
   const specialtiesRef = React.useRef<ProfileSpecialtiesController>(null);
@@ -138,7 +140,7 @@ export function ProfilePageContent() {
     );
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isViewingOtherProfile) {
     return (
       <div className="container px-4 py-8 max-w-lg mx-auto text-center space-y-4">
         <p className="text-on-surface-variant">{t("profile.loginRequired")}</p>
