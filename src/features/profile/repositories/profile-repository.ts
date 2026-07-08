@@ -23,6 +23,7 @@ import {
   SPECIALTY_COLUMN_NAMES,
   selectedSpecialtyColumns,
   columnBySelection,
+  columnByDoctorAppointment,
 } from "./specialty-columns.server";
 
 function parseJson<T>(value: string, fallback: T): T {
@@ -262,22 +263,25 @@ export class ProfileRepository implements IProfileRepository {
   }
 
   async getUsersBySpecialty(
-    columnName: string,
+    categoryId: number,
+    subcategoryId: number,
     offset: number,
     limit: number,
   ): Promise<UserProfileRow[]> {
-    // Extract categoryId from columnName to find parent collection member column
-    // Example: "household_cleaners_5" -> categoryId=5, parent column="my_way_5"
-    const match = columnName.match(/^(.+)_(\d+)$/);
-    const categoryId = match ? Number(match[2]) : null;
+    // Try doctor-appointment mapping first (for medical specialties), then regular subcategories
+    const columnName = columnByDoctorAppointment.get(subcategoryId) ||
+                      columnBySelection.get(`${categoryId}:${subcategoryId}`) ||
+                      columnBySelection.get(`${categoryId}:${categoryId}`);
     
+    if (!columnName) return [];
+
     // Build OR condition: search in specific column OR parent collection member column
     const conditions = [
       eq(userSpecialties[columnName as keyof typeof userSpecialties] as any, 1),
     ];
     
     // If this is a subcategory, also search in the parent collection member column
-    if (categoryId && categoryId !== 46) { // 46 is delivery services, handled separately
+    if (categoryId !== 46) { // 46 is delivery services, handled separately
       const parentColumn = columnBySelection.get(`${categoryId}:${categoryId}`);
       if (parentColumn) {
         conditions.push(eq(userSpecialties[parentColumn as keyof typeof userSpecialties] as any, 1));

@@ -4,7 +4,6 @@ import * as React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
-import { columnBySelection, columnByDoctorAppointment } from "@/features/profile/repositories/specialty-columns.client";
 import { useTranslation } from "@/lib/i18n";
 
 interface SellersPageContentProps {
@@ -31,15 +30,9 @@ export function SellersPageContent({
   const [offset, setOffset] = React.useState(0);
   const limit = 10;
 
-  // Try doctor-appointment first (for medical specialties), then regular subcategories
-  // Special handling for delivery services (categoryId=46) where originalId equals categoryId
-  // Also check parent collection member (for My Way subcategories)
-  const columnName = columnByDoctorAppointment.get(subcategoryId) || 
-                     columnBySelection.get(`${categoryId}:${subcategoryId}`) ||
-                     columnBySelection.get(`${categoryId}:${categoryId}`);
-  
   const { data: users, isLoading, error } = useUsersBySpecialty(
-    columnName || "",
+    categoryId,
+    subcategoryId,
     offset,
     limit
   );
@@ -47,14 +40,6 @@ export function SellersPageContent({
   const loadMore = () => {
     setOffset((prev) => prev + limit);
   };
-
-  if (!columnName) {
-    return (
-      <div className="container px-4 py-8 text-center text-sm text-on-surface-variant">
-        {locale === "ar" ? "تصنيف غير صالح" : "Invalid category"}
-      </div>
-    );
-  }
 
   if (isLoading && offset === 0) {
     return (

@@ -1,16 +1,15 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { profileService } from '../services/profile-service';
-import type { UserProfileRow } from '@/core/database/profile/profile.schema';
+import { profileApiService } from '../services/profile-api-service';
 
-const usersBySpecialtyQueryKey = (columnName: string, offset: number, limit: number) =>
-  ['users', 'specialty', columnName, offset, limit] as const;
+const usersBySpecialtyQueryKey = (categoryId: number, subcategoryId: number, offset: number, limit: number) =>
+  ['users', 'specialty', categoryId, subcategoryId, offset, limit] as const;
 
-export function useUsersBySpecialty(columnName: string, offset: number = 0, limit: number = 10) {
+export function useUsersBySpecialty(categoryId: number, subcategoryId: number, offset: number = 0, limit: number = 10) {
   return useQuery({
-    queryKey: usersBySpecialtyQueryKey(columnName, offset, limit),
-    queryFn: () => profileService.getUsersBySpecialty(columnName, offset, limit),
-    enabled: Boolean(columnName),
+    queryKey: usersBySpecialtyQueryKey(categoryId, subcategoryId, offset, limit),
+    queryFn: () => profileApiService.getUsersBySpecialty(categoryId, subcategoryId, offset, limit),
+    enabled: Boolean(categoryId) && Boolean(subcategoryId),
   });
 }

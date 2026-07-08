@@ -22,7 +22,8 @@ export interface IProfileRepository {
     selection: ProfileSpecialtiesSelection,
   ): Promise<void>;
   getUsersBySpecialty(
-    columnName: string,
+    categoryId: number,
+    subcategoryId: number,
     offset: number,
     limit: number,
   ): Promise<UserProfileRow[]>;

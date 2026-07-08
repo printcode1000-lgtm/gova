@@ -78,11 +78,12 @@ export class ProfileApiService implements IProfileService {
   }
 
   async getUsersBySpecialty(
-    columnName: string,
+    categoryId: number,
+    subcategoryId: number,
     offset: number,
     limit: number,
   ): Promise<UserProfileRow[]> {
-    const route = `${GOVA_API_ROUTES.profile.usersBySpecialty}?columnName=${encodeURIComponent(columnName)}&offset=${offset}&limit=${limit}`;
+    const route = `${GOVA_API_ROUTES.profile.usersBySpecialty}?categoryId=${categoryId}&subcategoryId=${subcategoryId}&offset=${offset}&limit=${limit}`;
     return govaApi.get<UserProfileRow[]>(route);
   }
 

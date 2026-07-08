@@ -33,7 +33,8 @@ export interface IProfileService {
   ): Promise<ProfileSpecialtiesSelection>;
   saveEditor(input: SaveProfileEditorInput): Promise<SaveProfileEditorResult>;
   getUsersBySpecialty(
-    columnName: string,
+    categoryId: number,
+    subcategoryId: number,
     offset: number,
     limit: number,
   ): Promise<UserProfileRow[]>;

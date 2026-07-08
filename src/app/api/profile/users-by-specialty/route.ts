@@ -8,11 +8,12 @@ export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/profile/users-by-specialty", async () => {
     try {
       const url = new URL(request.url);
-      const columnName = url.searchParams.get("columnName") ?? "";
+      const categoryId = Number(url.searchParams.get("categoryId") ?? "0");
+      const subcategoryId = Number(url.searchParams.get("subcategoryId") ?? "0");
       const offset = Number(url.searchParams.get("offset") ?? "0");
       const limit = Number(url.searchParams.get("limit") ?? "10");
       
-      const users = await profileService.getUsersBySpecialty(columnName, offset, limit);
+      const users = await profileService.getUsersBySpecialty(categoryId, subcategoryId, offset, limit);
       
       // Add avatarUrl to each user
       const usersWithAvatarUrls = users.map((user) => ({

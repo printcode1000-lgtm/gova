@@ -4,7 +4,6 @@ import * as React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
-import { columnByDoctorAppointment } from "@/features/profile/repositories/specialty-columns.client";
 import { useTranslation } from "@/lib/i18n";
 
 interface DoctorAppointmentSellersPageContentProps {
@@ -31,10 +30,9 @@ export function DoctorAppointmentSellersPageContent({
   const [offset, setOffset] = React.useState(0);
   const limit = 10;
 
-  const columnName = columnByDoctorAppointment.get(specialtyId);
-  
   const { data: users, isLoading, error } = useUsersBySpecialty(
-    columnName || "",
+    categoryId,
+    specialtyId,
     offset,
     limit
   );
@@ -42,14 +40,6 @@ export function DoctorAppointmentSellersPageContent({
   const loadMore = () => {
     setOffset((prev) => prev + limit);
   };
-
-  if (!columnName) {
-    return (
-      <div className="container px-4 py-8 text-center text-sm text-on-surface-variant">
-        {locale === "ar" ? "تخصص غير صالح" : "Invalid specialty"}
-      </div>
-    );
-  }
 
   if (isLoading && offset === 0) {
     return (

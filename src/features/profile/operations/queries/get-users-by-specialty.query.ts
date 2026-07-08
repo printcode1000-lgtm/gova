@@ -4,10 +4,11 @@ import type { IProfileRepository } from "../../repositories/profile-repository.i
 export class GetUsersBySpecialtyQuery {
   constructor(private repository: IProfileRepository) {}
   async execute(
-    columnName: string,
+    categoryId: number,
+    subcategoryId: number,
     offset: number,
     limit: number,
   ): Promise<UserProfileRow[]> {
-    return this.repository.getUsersBySpecialty(columnName, offset, limit);
+    return this.repository.getUsersBySpecialty(categoryId, subcategoryId, offset, limit);
   }
 }

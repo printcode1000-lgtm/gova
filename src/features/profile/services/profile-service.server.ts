@@ -279,11 +279,12 @@ export class ProfileService implements IProfileService {
   }
 
   async getUsersBySpecialty(
-    columnName: string,
+    categoryId: number,
+    subcategoryId: number,
     offset: number,
     limit: number,
   ) {
-    return this.getUsersBySpecialtyQuery.execute(columnName, offset, limit);
+    return this.getUsersBySpecialtyQuery.execute(categoryId, subcategoryId, offset, limit);
   }
 
   async saveEditor(
