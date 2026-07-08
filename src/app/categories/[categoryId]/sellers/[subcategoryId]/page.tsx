@@ -9,13 +9,24 @@ interface SellersPageProps {
 
 export function generateStaticParams(): Array<{ categoryId: string; subcategoryId: string }> {
   const params: Array<{ categoryId: string; subcategoryId: string }> = [];
-  
+  const categoryIds = new Set<number>();
+
   for (const category of categoryService.getMainCategories()) {
-    const tree = categoryService.getCategoryTree(category.id);
+    categoryIds.add(category.id);
+  }
+
+  for (const collection of categoryService.getCollections()) {
+    for (const item of collection.items) {
+      categoryIds.add(item.id);
+    }
+  }
+
+  for (const categoryId of categoryIds) {
+    const tree = categoryService.getCategoryTree(categoryId);
     if (tree) {
       for (const subcategory of tree.subcategories) {
         params.push({
-          categoryId: String(category.id),
+          categoryId: String(categoryId),
           subcategoryId: String(subcategory.originalId),
         });
       }

@@ -21,7 +21,19 @@
       "cwd": "${workspaceFolder}"
     },
     {
-      "name": "Build Static",
+      "name": "Build Static (Dev — with Vercel API)",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "build:static:local"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "NEXT_PUBLIC_GOVA_API_BASE_URL": "https://gova-swart.vercel.app"
+      }
+    },
+    {
+      "name": "Build Static (Plain — for cap:build)",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
@@ -30,22 +42,30 @@
       "cwd": "${workspaceFolder}"
     },
     {
-      "name": "Preview Static",
-      "request": "launch",
-      "type": "node",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "preview:static"],
-      "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
-    },
-    {
-      "name": "Serve Out",
+      "name": "Serve Out (proxy → Vercel API)",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "serve:out"],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "GOVA_STATIC_PREVIEW_API_BASE_URL": "https://gova-swart.vercel.app",
+        "PORT": "5500"
+      }
+    },
+    {
+      "name": "Serve Out (proxy → localhost:3000)",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "serve:out"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "GOVA_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3000",
+        "PORT": "5500"
+      }
     },
     {
       "name": "Capacitor Build",
