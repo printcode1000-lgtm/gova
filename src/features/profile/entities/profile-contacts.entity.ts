@@ -27,6 +27,11 @@ export interface ProfileContactsData {
   emails: EmailLink[];
   websites: WebsiteLink[];
   socialLinks: SocialLink[];
+  location?: {
+    address: string;
+    latitude: number;
+    longitude: number;
+  };
 }
 
 export const EMPTY_PROFILE_CONTACTS: ProfileContactsData = {
@@ -34,6 +39,7 @@ export const EMPTY_PROFILE_CONTACTS: ProfileContactsData = {
   emails: [],
   websites: [],
   socialLinks: [],
+  location: undefined,
 };
 
 export interface GetProfileContactsInput {

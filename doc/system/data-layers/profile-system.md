@@ -20,6 +20,7 @@ Logical link: `user_profiles.uid` → `users.uid` (no cross-file foreign key).
 | `emails_json` | TEXT | JSON array |
 | `social_links_json` | TEXT | JSON array |
 | `websites_json` | TEXT | JSON array |
+| `location_json` | TEXT | JSON object with address, latitude, longitude |
 
 JSON shape matches `ContactInfoCard` / `ProfileContactsData`.
 

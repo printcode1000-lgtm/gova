@@ -6,6 +6,7 @@ export const userProfiles = sqliteTable("user_profiles", {
   emailsJson: text("emails_json").notNull().default("[]"),
   socialLinksJson: text("social_links_json").notNull().default("[]"),
   websitesJson: text("websites_json").notNull().default("[]"),
+  locationJson: text("location_json"),
   avatarImageKey: text("avatar_image_key"),
   coverImageKey: text("cover_image_key"),
   coverImageKeysJson: text("cover_image_keys_json").notNull().default("[]"),

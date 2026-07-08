@@ -36,6 +36,13 @@
       "when": 1782885600000,
       "tag": "0004_profile_specialties",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "1782960000",
+      "when": 1782960000000,
+      "tag": "0005_location_json",
+      "breakpoints": true
     }
   ]
 }

@@ -42,6 +42,7 @@ function rowToContacts(
     emails: parseJson(row.emailsJson, []),
     websites: parseJson(row.websitesJson, []),
     socialLinks: parseJson(row.socialLinksJson, []),
+    location: row.locationJson ? parseJson(row.locationJson, undefined) : undefined,
   };
 }
 
@@ -97,6 +98,7 @@ export class ProfileRepository implements IProfileRepository {
       emailsJson: JSON.stringify(data.emails),
       socialLinksJson: JSON.stringify(data.socialLinks),
       websitesJson: JSON.stringify(data.websites),
+      locationJson: data.location ? JSON.stringify(data.location) : null,
     };
 
     const existing = await this.database.db

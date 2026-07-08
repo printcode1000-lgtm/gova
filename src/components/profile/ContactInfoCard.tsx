@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Plus, X, Phone, MessageCircle, Mail, Globe, Share2, ChevronDown, Lock, Smartphone } from 'lucide-react';
+import { Plus, X, Phone, MessageCircle, Mail, Globe, Share2, ChevronDown, Lock, Smartphone, MapPin } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import { GovaMap } from '@/components/ui/GovaMap/GovaMap';
+import { createOpenStreetMapProvider } from '@/components/ui/GovaMap/providers';
+import { createBrowserGpsProvider } from '@/components/ui/GovaMap/gps';
 
 const SOCIAL_PLATFORMS = [
   'instagram',
@@ -62,6 +65,11 @@ interface ContactInfoData {
   emails: EmailLink[];
   websites: WebsiteLink[];
   socialLinks: SocialLink[];
+  location?: {
+    address: string;
+    latitude: number;
+    longitude: number;
+  };
 }
 
 interface ContactInfoCardProps {
@@ -78,7 +86,7 @@ export function ContactInfoCard({
   readOnly = false,
   hidePrimarySection = false,
 }: ContactInfoCardProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const shouldWrapInCard = !hidePrimarySection;
   const [localData, setLocalData] = React.useState<ContactInfoData>(() => {
     if (data) {
@@ -107,6 +115,7 @@ export function ContactInfoCard({
         emails: [],
         websites: [],
         socialLinks: [],
+        location: undefined,
       };
     }
     return {
@@ -215,6 +224,8 @@ export function ContactInfoCard({
       addEmail();
     } else if (value === 'website') {
       addWebsite();
+    } else if (value === 'location') {
+      addLocation();
     } else if (PHONE_TYPES.includes(value as any)) {
       addPhone(value);
     } else if (SOCIAL_PLATFORMS.includes(value as any)) {
@@ -311,6 +322,27 @@ export function ContactInfoCard({
 
   const addAnotherLink = (platform: string) => {
     addSocialLink(platform);
+  };
+
+  const updateLocation = (updates: { address?: string; latitude?: number; longitude?: number }) => {
+    const currentLocation = localData.location || { address: '', latitude: 0, longitude: 0 };
+    const newLocation = {
+      address: updates.address ?? currentLocation.address,
+      latitude: updates.latitude ?? currentLocation.latitude,
+      longitude: updates.longitude ?? currentLocation.longitude,
+    };
+    const newData = {
+      ...localData,
+      location: newLocation,
+    };
+    setLocalData(newData);
+    onChange?.(newData);
+  };
+
+  const addLocation = () => {
+    if (!localData.location) {
+      updateLocation({ address: '', latitude: 0, longitude: 0 });
+    }
   };
 
   const addedPlatforms = localData.socialLinks.map((s) => s.platform);
@@ -474,6 +506,11 @@ export function ContactInfoCard({
                         {!hasWebsites && (
                           <SelectItem value="website">
                             {t('onboarding.contactInfo.addWebsite')}
+                          </SelectItem>
+                        )}
+                        {!localData.location && (
+                          <SelectItem value="location">
+                            {locale === 'ar' ? 'إضافة موقع' : 'Add location'}
                           </SelectItem>
                         )}
                       </SelectContent>
@@ -732,6 +769,11 @@ export function ContactInfoCard({
                       {t('onboarding.contactInfo.addWebsite')}
                     </SelectItem>
                   )}
+                  {!localData.location && (
+                    <SelectItem value="location">
+                      {locale === 'ar' ? 'إضافة موقع' : 'Add location'}
+                    </SelectItem>
+                  )}
                 </SelectContent>
               </Select>
             )}
@@ -947,6 +989,72 @@ export function ContactInfoCard({
                 </div>
               </div>
             )}
+
+            {/* Location */}
+            {!readOnly || localData.location ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    {locale === 'ar' ? 'الموقع' : 'Location'}
+                  </span>
+                </div>
+                {!readOnly ? (
+                  <div className="space-y-3">
+                    <Input
+                      value={localData.location?.address || ''}
+                      onChange={(e) => updateLocation({ address: e.target.value })}
+                      placeholder={locale === 'ar' ? 'أدخل العنوان' : 'Enter address'}
+                      disabled={readOnly}
+                    />
+                    <div className="h-48 rounded-lg overflow-hidden border border-outline-variant">
+                      <GovaMap
+                        modes={['picker']}
+                        providers={{
+                          tile: createOpenStreetMapProvider(),
+                          gps: createBrowserGpsProvider(),
+                        }}
+                        markers={localData.location?.latitude && localData.location?.longitude ? [{
+                          type: 'Feature',
+                          properties: { id: 'store-location' },
+                          geometry: {
+                            type: 'Point',
+                            coordinates: [localData.location.longitude, localData.location.latitude]
+                          }
+                        }] : []}
+                        onMarkerAdded={(marker) => {
+                          updateLocation({
+                            latitude: marker.geometry.coordinates[1],
+                            longitude: marker.geometry.coordinates[0]
+                          });
+                        }}
+                        onMarkersChanged={(markers) => {
+                          if (markers.length > 0) {
+                            updateLocation({
+                              latitude: markers[0].geometry.coordinates[1],
+                              longitude: markers[0].geometry.coordinates[0]
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-on-surface-variant">{localData.location?.address}</span>
+                    <a
+                      href={`geo:${localData.location?.latitude},${localData.location?.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                    >
+                      <MapPin className="h-4 w-4" />
+                      {locale === 'ar' ? 'فتح في الخرائط' : 'Open in maps'}
+                    </a>
+                  </div>
+                )}
+              </div>
+            ) : null}
           </div>
         </>
       )}

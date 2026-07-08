@@ -3,8 +3,10 @@
 import Link from "next/link";
 import {
   AlertTriangle,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
   Loader2,
   LogIn,
   Save,
@@ -104,6 +106,8 @@ export function ProfilePageContent() {
     setSession,
   });
 
+  const [isStoryExpanded, setIsStoryExpanded] = React.useState(false);
+
   const heroSliderConfig = useMemo<HeroSliderConfig>(() => {
     const slides = storeImages.coverUrls.map((url, index) => ({
       priority: (index + 1) * 100,
@@ -202,12 +206,23 @@ export function ProfilePageContent() {
           )}
           {!isLoadingStoreDetails && storeDetails.storeStory ? (
             <section className="mx-2 sm:mx-4 mt-4 sm:mt-5 space-y-2">
-              <h2 className="text-xs sm:text-sm font-semibold text-on-surface">
+              <button
+                type="button"
+                onClick={() => setIsStoryExpanded(!isStoryExpanded)}
+                className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-on-surface hover:text-primary transition-colors"
+              >
                 {t("onboarding.storeIdentity.storeStory")}
-              </h2>
-              <p className="text-xs sm:text-sm leading-5 sm:leading-6 text-on-surface-variant">
-                {storeDetails.storeStory}
-              </p>
+                {isStoryExpanded ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </button>
+              {isStoryExpanded && (
+                <p className="text-xs sm:text-sm leading-5 sm:leading-6 text-on-surface-variant">
+                  {storeDetails.storeStory}
+                </p>
+              )}
             </section>
           ) : null}
         </div>
