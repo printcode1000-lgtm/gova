@@ -47,6 +47,7 @@ export default async function DoctorAppointmentSellersPage({
         categoryId={Number(categoryId)}
         specialtyId={Number(specialtyId)}
         specialtyName={specialty.nameAr}
+        specialtyImage={specialty.imageUrl}
       />
     </Suspense>
   );

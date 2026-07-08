@@ -66,6 +66,7 @@ export default async function SellersPage({
         categoryId={Number(categoryId)}
         subcategoryId={Number(subcategoryId)}
         subcategoryName={targetItem.nameAr}
+        subcategoryImage={targetItem.imageUrl}
       />
     </Suspense>
   );
