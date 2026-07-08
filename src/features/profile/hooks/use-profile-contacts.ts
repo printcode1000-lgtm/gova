@@ -36,7 +36,7 @@ export function useProfileContacts() {
     emails: [],
     websites: [],
     socialLinks: [],
-    location: undefined,
+    locations: [],
   });
   const [baseline, setBaseline] = useState<ProfileContactsData>(contacts);
 

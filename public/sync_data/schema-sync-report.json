@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-07-07T04:38:03.066Z",
-  "durationMs": 0,
-  "sqliteSchemaVersion": "n/a",
-  "tursoSchemaVersionBefore": "n/a",
-  "tursoSchemaVersionAfter": "n/a",
+  "executedAt": "2026-07-08T09:44:05.471Z",
+  "durationMs": 13420,
+  "sqliteSchemaVersion": "0cb7292286b5b3e2",
+  "tursoSchemaVersionBefore": "bda614f84297d17a",
+  "tursoSchemaVersionAfter": "bda614f84297d17a",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,
@@ -12,7 +12,19 @@
   "triggersAdded": 0,
   "sqlExecuted": [],
   "errors": [],
-  "warnings": [],
-  "skipped": true,
-  "skipReason": "Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)"
+  "warnings": [
+    "Column \"users.id\" differs in type/constraints. Manual migration may be required (no DROP+CREATE).",
+    "Column \"users.last_login_at\" differs in type/constraints. Manual migration may be required (no DROP+CREATE).",
+    "Column \"users.created_at\" differs in type/constraints. Manual migration may be required (no DROP+CREATE).",
+    "Column \"users.updated_at\" differs in type/constraints. Manual migration may be required (no DROP+CREATE).",
+    "Column \"users.deleted_at\" differs in type/constraints. Manual migration may be required (no DROP+CREATE).",
+    "Table \"product_review_helpful\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"product_review_replies\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"product_reviews\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"products\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"hero_slider\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"featured_marquee\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"trending_ribbon\" exists on Turso but not in SQLite. Not dropped automatically."
+  ],
+  "skipped": false
 }

@@ -4,9 +4,8 @@ import { existsSync } from 'fs';
 // Load env files
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });
-} else {
-  dotenv.config({ path: '.env' });
 }
+dotenv.config({ path: '.env' });
 
 const vercelToken = process.env.VERCEL_TOKEN;
 const vercelOrgId = process.env.VERCEL_ORG_ID;

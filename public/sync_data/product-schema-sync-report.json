@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-07-07T04:38:03.071Z",
-  "durationMs": 0,
-  "sqliteSchemaVersion": "n/a",
-  "tursoSchemaVersionBefore": "n/a",
-  "tursoSchemaVersionAfter": "n/a",
+  "executedAt": "2026-07-08T09:44:29.830Z",
+  "durationMs": 8752,
+  "sqliteSchemaVersion": "fb5301eb41e6c98b",
+  "tursoSchemaVersionBefore": "bda614f84297d17a",
+  "tursoSchemaVersionAfter": "bda614f84297d17a",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,
@@ -12,7 +12,11 @@
   "triggersAdded": 0,
   "sqlExecuted": [],
   "errors": [],
-  "warnings": [],
-  "skipped": true,
-  "skipReason": "Turso product credentials not configured (TURSO_PRODUCT_DATABASE_URL / TURSO_PRODUCT_AUTH_TOKEN)"
+  "warnings": [
+    "Table \"users\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"hero_slider\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"featured_marquee\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"trending_ribbon\" exists on Turso but not in SQLite. Not dropped automatically."
+  ],
+  "skipped": false
 }

@@ -15,9 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { GovaMap } from '@/components/ui/GovaMap/GovaMap';
-import { createOpenStreetMapProvider } from '@/components/ui/GovaMap/providers';
-import { createBrowserGpsProvider } from '@/components/ui/GovaMap/gps';
+import { GovaMap, markerAt, createOpenStreetMapProvider, createBrowserGpsProvider } from '@/components/ui/GovaMap';
+import type { LocationEntry } from '@/features/profile/entities/profile-contacts.entity';
 
 const SOCIAL_PLATFORMS = [
   'instagram',
@@ -65,11 +64,7 @@ interface ContactInfoData {
   emails: EmailLink[];
   websites: WebsiteLink[];
   socialLinks: SocialLink[];
-  location?: {
-    address: string;
-    latitude: number;
-    longitude: number;
-  };
+  locations: LocationEntry[];
 }
 
 interface ContactInfoCardProps {
@@ -79,6 +74,9 @@ interface ContactInfoCardProps {
   /** Hide primary phone/email/password — use ProfileRegistrationInfoCard on profile page */
   hidePrimarySection?: boolean;
 }
+
+const tileProvider = createOpenStreetMapProvider();
+const gpsProvider = createBrowserGpsProvider();
 
 export function ContactInfoCard({
   data,
@@ -107,6 +105,7 @@ export function ContactInfoCard({
           ...link,
           id: link.id || `${link.platform}-${index}`,
         })),
+        locations: data.locations ?? [],
       };
     }
     if (hidePrimarySection) {
@@ -115,7 +114,7 @@ export function ContactInfoCard({
         emails: [],
         websites: [],
         socialLinks: [],
-        location: undefined,
+        locations: [],
       };
     }
     return {
@@ -123,6 +122,7 @@ export function ContactInfoCard({
       emails: [{ id: 'primary', email: '', isPrimary: true }],
       websites: [],
       socialLinks: [],
+      locations: [],
     };
   });
 
@@ -145,6 +145,7 @@ export function ContactInfoCard({
         ...link,
         id: link.id || `${link.platform}-${index}`,
       })) || [],
+      locations: data.locations ?? [],
     });
   }, [data]);
 
@@ -154,6 +155,8 @@ export function ContactInfoCard({
     newPassword: '',
     confirmPassword: '',
   });
+  const [openMapId, setOpenMapId] = React.useState<string | null>(null);
+  const [mapMessages, setMapMessages] = React.useState<Record<string, string>>({});
 
   const updateField = (field: keyof ContactInfoData, value: string) => {
     const newData = { ...localData, [field]: value };
@@ -324,25 +327,38 @@ export function ContactInfoCard({
     addSocialLink(platform);
   };
 
-  const updateLocation = (updates: { address?: string; latitude?: number; longitude?: number }) => {
-    const currentLocation = localData.location || { address: '', latitude: 0, longitude: 0 };
-    const newLocation = {
-      address: updates.address ?? currentLocation.address,
-      latitude: updates.latitude ?? currentLocation.latitude,
-      longitude: updates.longitude ?? currentLocation.longitude,
-    };
+  const addLocation = () => {
+    const id = `loc-${Date.now()}`;
+    const newEntry: LocationEntry = { id, address: '', latitude: 0, longitude: 0 };
+    const newData = { ...localData, locations: [...localData.locations, newEntry] };
+    setLocalData(newData);
+    onChange?.(newData);
+    setOpenMapId(id);
+  };
+
+  const updateLocationEntry = (id: string, updates: Partial<Omit<LocationEntry, 'id'>>) => {
     const newData = {
       ...localData,
-      location: newLocation,
+      locations: localData.locations.map((loc) =>
+        loc.id === id ? { ...loc, ...updates } : loc,
+      ),
     };
     setLocalData(newData);
     onChange?.(newData);
   };
 
-  const addLocation = () => {
-    if (!localData.location) {
-      updateLocation({ address: '', latitude: 0, longitude: 0 });
-    }
+  const removeLocation = (id: string) => {
+    const newData = {
+      ...localData,
+      locations: localData.locations.filter((loc) => loc.id !== id),
+    };
+    setLocalData(newData);
+    onChange?.(newData);
+    if (openMapId === id) setOpenMapId(null);
+  };
+
+  const setMapMessage = (id: string, msg: string) => {
+    setMapMessages((prev) => ({ ...prev, [id]: msg }));
   };
 
   const addedPlatforms = localData.socialLinks.map((s) => s.platform);
@@ -508,11 +524,9 @@ export function ContactInfoCard({
                             {t('onboarding.contactInfo.addWebsite')}
                           </SelectItem>
                         )}
-                        {!localData.location && (
-                          <SelectItem value="location">
-                            {locale === 'ar' ? 'إضافة موقع' : 'Add location'}
-                          </SelectItem>
-                        )}
+                        <SelectItem value="location">
+                          {locale === 'ar' ? 'إضافة موقع' : 'Add location'}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -769,11 +783,9 @@ export function ContactInfoCard({
                       {t('onboarding.contactInfo.addWebsite')}
                     </SelectItem>
                   )}
-                  {!localData.location && (
-                    <SelectItem value="location">
-                      {locale === 'ar' ? 'إضافة موقع' : 'Add location'}
-                    </SelectItem>
-                  )}
+                  <SelectItem value="location">
+                    {locale === 'ar' ? 'إضافة موقع' : 'Add location'}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -990,71 +1002,158 @@ export function ContactInfoCard({
               </div>
             )}
 
-            {/* Location */}
-            {!readOnly || localData.location ? (
-              <div className="space-y-2">
+            {/* Locations */}
+            {(!readOnly || localData.locations.length > 0) && (
+              <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
-                    {locale === 'ar' ? 'الموقع' : 'Location'}
+                    {locale === 'ar' ? 'المواقع' : 'Locations'}
                   </span>
                 </div>
-                {!readOnly ? (
-                  <div className="space-y-3">
-                    <Input
-                      value={localData.location?.address || ''}
-                      onChange={(e) => updateLocation({ address: e.target.value })}
-                      placeholder={locale === 'ar' ? 'أدخل العنوان' : 'Enter address'}
-                      disabled={readOnly}
-                    />
-                    <div className="h-48 rounded-lg overflow-hidden border border-outline-variant">
-                      <GovaMap
-                        modes={['picker']}
-                        providers={{
-                          tile: createOpenStreetMapProvider(),
-                          gps: createBrowserGpsProvider(),
-                        }}
-                        markers={localData.location?.latitude && localData.location?.longitude ? [{
-                          type: 'Feature',
-                          properties: { id: 'store-location' },
-                          geometry: {
-                            type: 'Point',
-                            coordinates: [localData.location.longitude, localData.location.latitude]
-                          }
-                        }] : []}
-                        onMarkerAdded={(marker) => {
-                          updateLocation({
-                            latitude: marker.geometry.coordinates[1],
-                            longitude: marker.geometry.coordinates[0]
-                          });
-                        }}
-                        onMarkersChanged={(markers) => {
-                          if (markers.length > 0) {
-                            updateLocation({
-                              latitude: markers[0].geometry.coordinates[1],
-                              longitude: markers[0].geometry.coordinates[0]
-                            });
-                          }
-                        }}
-                      />
+                
+                <div className="space-y-4">
+                  {localData.locations.map((loc, idx) => (
+                    <div key={loc.id} className="p-4 rounded-xl border border-outline-variant bg-muted/20 space-y-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-xs font-semibold text-muted-foreground">
+                          {locale === 'ar' ? `الموقع #${idx + 1}` : `Location #${idx + 1}`}
+                        </span>
+                        {!readOnly && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeLocation(loc.id)}
+                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            title={locale === 'ar' ? 'حذف الموقع' : 'Remove location'}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+
+                      {!readOnly ? (
+                        <div className="space-y-2">
+                          <Input
+                            value={loc.address || ''}
+                            onChange={(e) => updateLocationEntry(loc.id, { address: e.target.value })}
+                            placeholder={locale === 'ar' ? 'أدخل عنوان هذا الموقع' : 'Enter address for this location'}
+                          />
+                          {openMapId === loc.id ? (
+                            <div className="space-y-2">
+                              <GovaMap
+                                id={`map-${loc.id}`}
+                                modes={['picker']}
+                                providers={{
+                                  tile: tileProvider,
+                                  gps: gpsProvider,
+                                }}
+                                initialViewport={
+                                  loc.latitude && loc.longitude
+                                    ? {
+                                        latitude: loc.latitude,
+                                        longitude: loc.longitude,
+                                        zoom: 15,
+                                        bearing: 0,
+                                        pitch: 0,
+                                      }
+                                    : { latitude: 29.9668, longitude: 32.5498, zoom: 11, bearing: 0, pitch: 0 }
+                                }
+                                markers={
+                                  loc.latitude && loc.longitude
+                                    ? [markerAt(loc.longitude, loc.latitude, loc.id)]
+                                    : []
+                                }
+                                toolbar={{
+                                  save: { enabled: true, label: locale === 'ar' ? 'حفظ الموقع' : 'Save location' },
+                                  gps: { enabled: true, label: locale === 'ar' ? 'تحديد الموقع الحالي' : 'Locate me' },
+                                  share: { enabled: true, label: locale === 'ar' ? 'مشاركة الموقع' : 'Share location' },
+                                  reset: { enabled: true, label: locale === 'ar' ? 'إعادة الضبط' : 'Reset' },
+                                  close: { enabled: true, label: locale === 'ar' ? 'إغلاق الخريطة' : 'Close map' },
+                                  recenter: { enabled: true, label: locale === 'ar' ? 'إعادة التمركز' : 'Recenter' },
+                                  zoom: { enabled: true, label: locale === 'ar' ? 'التكبير والتصغير' : 'Zoom' },
+                                  compass: { enabled: true, label: locale === 'ar' ? 'إعادة اتجاه الشمال' : 'North' },
+                                  fullscreen: { enabled: true, label: locale === 'ar' ? 'ملء الشاشة' : 'Fullscreen' },
+                                }}
+                                layers={{ baseMap: true, markers: true, controls: true }}
+                                ariaLabel={locale === 'ar' ? 'اختيار موقع المتجر' : 'Pick store location'}
+                                loadingLabel={locale === 'ar' ? 'جارٍ تحميل الخريطة…' : 'Loading map…'}
+                                retryLabel={locale === 'ar' ? 'إعادة المحاولة' : 'Retry'}
+                                onTap={({ latitude: lat, longitude: lng }) => {
+                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng });
+                                  setMapMessage(loc.id, locale === 'ar' ? 'تم اختيار الموقع. احفظ الملف الشخصي لتثبيت التغيير.' : 'Location selected. Save the profile to confirm.');
+                                }}
+                                onGpsCompleted={({ latitude: lat, longitude: lng }) => {
+                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng });
+                                  setMapMessage(loc.id, locale === 'ar' ? 'تم تحديد موقعك الحالي.' : 'Current location detected.');
+                                }}
+                                onSave={() =>
+                                  setMapMessage(
+                                    loc.id,
+                                    loc.latitude && loc.longitude
+                                      ? (locale === 'ar' ? 'تم تثبيت الموقع. استخدم زر الحفظ لتأكيده.' : 'Location pinned. Use Save to confirm.')
+                                      : (locale === 'ar' ? 'حدد موقعًا على الخريطة أولًا.' : 'Tap the map to select a location first.'),
+                                  )
+                                }
+                                onShare={({ latitude: lat, longitude: lng }) => {
+                                  const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
+                                  if (typeof navigator.share === 'function') {
+                                    void navigator.share({ title: locale === 'ar' ? 'موقع المتجر' : 'Store location', url });
+                                  } else {
+                                    void navigator.clipboard.writeText(url);
+                                    setMapMessage(loc.id, locale === 'ar' ? 'تم نسخ رابط الموقع.' : 'Location link copied.');
+                                  }
+                                }}
+                                onReset={() => {
+                                  updateLocationEntry(loc.id, { address: '', latitude: 0, longitude: 0 });
+                                  setMapMessage(loc.id, locale === 'ar' ? 'تمت إعادة ضبط الموقع.' : 'Location reset.');
+                                }}
+                                onClose={() => setOpenMapId(null)}
+                              />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {locale === 'ar' ? 'اضغط على الخريطة لتحديد الموقع.' : 'Tap the map to pin a location.'}
+                              </p>
+                              {mapMessages[loc.id] && (
+                                <p className="text-xs font-medium text-primary mt-1" role="status">
+                                  {mapMessages[loc.id]}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setOpenMapId(loc.id)}
+                              className="gova-control border border-input px-4 font-medium"
+                            >
+                              {locale === 'ar' ? 'تحديد الموقع على الخريطة' : 'Set location on map'}
+                            </button>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          <div className="text-sm font-medium">{loc.address || (locale === 'ar' ? 'بدون عنوان' : 'No address')}</div>
+                          {loc.latitude && loc.longitude ? (
+                            <a
+                              href={`geo:${loc.latitude},${loc.longitude}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                            >
+                              <MapPin className="h-3 w-3" />
+                              {locale === 'ar' ? 'فتح في الخرائط' : 'Open in maps'}
+                            </a>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">
+                              {locale === 'ar' ? 'لم يتم تحديد موقع جغرافي' : 'No coordinates selected'}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-on-surface-variant">{localData.location?.address}</span>
-                    <a
-                      href={`geo:${localData.location?.latitude},${localData.location?.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
-                    >
-                      <MapPin className="h-4 w-4" />
-                      {locale === 'ar' ? 'فتح في الخرائط' : 'Open in maps'}
-                    </a>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
-            ) : null}
+            )}
           </div>
         </>
       )}

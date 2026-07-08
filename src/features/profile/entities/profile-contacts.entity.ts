@@ -22,16 +22,19 @@ export interface SocialLink {
   handle: string;
 }
 
+export interface LocationEntry {
+  id: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
 export interface ProfileContactsData {
   phones: PhoneLink[];
   emails: EmailLink[];
   websites: WebsiteLink[];
   socialLinks: SocialLink[];
-  location?: {
-    address: string;
-    latitude: number;
-    longitude: number;
-  };
+  locations: LocationEntry[];
 }
 
 export const EMPTY_PROFILE_CONTACTS: ProfileContactsData = {
@@ -39,7 +42,7 @@ export const EMPTY_PROFILE_CONTACTS: ProfileContactsData = {
   emails: [],
   websites: [],
   socialLinks: [],
-  location: undefined,
+  locations: [],
 };
 
 export interface GetProfileContactsInput {

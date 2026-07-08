@@ -9,9 +9,8 @@ import {
 
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });
-} else {
-  dotenv.config({ path: '.env' });
 }
+dotenv.config({ path: '.env' });
 
 async function main() {
   const required = ['R2_ACCOUNT_ID', 'R2_API_TOKEN', 'R2_BUCKET_NAME'];

@@ -36,7 +36,7 @@
       "order": 5
     },
     "specifications": {
-      "visible": false,
+      "visible": true,
       "color": true,
       "dimensions": true,
       "condition": true,
@@ -55,7 +55,7 @@
       "order": 7
     },
     "propertySpecs": {
-      "visible": false,
+      "visible": true,
       "area": true,
       "rooms": true,
       "bathrooms": true,

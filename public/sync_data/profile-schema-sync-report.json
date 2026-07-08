@@ -1,18 +1,35 @@
 {
-  "executedAt": "2026-07-07T04:38:03.068Z",
-  "durationMs": 0,
-  "sqliteSchemaVersion": "n/a",
-  "tursoSchemaVersionBefore": "n/a",
-  "tursoSchemaVersionAfter": "n/a",
-  "operations": [],
-  "tablesModified": 0,
-  "columnsAdded": 0,
+  "executedAt": "2026-07-08T09:44:11.165Z",
+  "durationMs": 5691,
+  "sqliteSchemaVersion": "4d7633621e81201f",
+  "tursoSchemaVersionBefore": "a41099d6add0c11f",
+  "tursoSchemaVersionAfter": "0deaefab9012243e",
+  "operations": [
+    {
+      "type": "CREATE_TABLE",
+      "tableName": "__new_user_profiles",
+      "sql": "CREATE TABLE `__new_user_profiles` (\n\t`uid` text PRIMARY KEY NOT NULL,\n\t`phones_json` text DEFAULT '[]' NOT NULL,\n\t`emails_json` text DEFAULT '[]' NOT NULL,\n\t`social_links_json` text DEFAULT '[]' NOT NULL,\n\t`websites_json` text DEFAULT '[]' NOT NULL,\n\t`location_json` text,\n\t`avatar_image_key` text,\n\t`cover_image_key` text,\n\t`cover_image_keys_json` text DEFAULT '[]' NOT NULL,\n\t`store_details_json` text DEFAULT '{}' NOT NULL,\n\t`specialties_json` text DEFAULT '{\"main\":[],\"sub\":{}}' NOT NULL\n)",
+      "description": "Create missing table \"__new_user_profiles\""
+    },
+    {
+      "type": "ADD_COLUMN",
+      "tableName": "user_profiles",
+      "sql": "ALTER TABLE \"user_profiles\" ADD COLUMN \"location_json\" TEXT",
+      "description": "Add column \"user_profiles.location_json\""
+    }
+  ],
+  "tablesModified": 1,
+  "columnsAdded": 1,
   "indexesAdded": 0,
   "viewsAdded": 0,
   "triggersAdded": 0,
-  "sqlExecuted": [],
+  "sqlExecuted": [
+    "CREATE TABLE `__new_user_profiles` (\n\t`uid` text PRIMARY KEY NOT NULL,\n\t`phones_json` text DEFAULT '[]' NOT NULL,\n\t`emails_json` text DEFAULT '[]' NOT NULL,\n\t`social_links_json` text DEFAULT '[]' NOT NULL,\n\t`websites_json` text DEFAULT '[]' NOT NULL,\n\t`location_json` text,\n\t`avatar_image_key` text,\n\t`cover_image_key` text,\n\t`cover_image_keys_json` text DEFAULT '[]' NOT NULL,\n\t`store_details_json` text DEFAULT '{}' NOT NULL,\n\t`specialties_json` text DEFAULT '{\"main\":[],\"sub\":{}}' NOT NULL\n)",
+    "ALTER TABLE \"user_profiles\" ADD COLUMN \"location_json\" TEXT"
+  ],
   "errors": [],
-  "warnings": [],
-  "skipped": true,
-  "skipReason": "Turso profile credentials not configured (TURSO_PROFILE_DATABASE_URL / TURSO_PROFILE_AUTH_TOKEN)"
+  "warnings": [
+    "Table \"user_specialties\" exists on Turso but not in SQLite. Not dropped automatically."
+  ],
+  "skipped": false
 }

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { eq, or, and } from "drizzle-orm";
+import { eq, or, and, inArray } from "drizzle-orm";
 import { profileDbClient } from "@/core/database/profile-db-client";
 import type { IDatabaseClient } from "@/core/database/database-client.interface";
 import { userProfiles } from "@/core/database/profile/profile.schema";
@@ -42,7 +42,7 @@ function rowToContacts(
     emails: parseJson(row.emailsJson, []),
     websites: parseJson(row.websitesJson, []),
     socialLinks: parseJson(row.socialLinksJson, []),
-    location: row.locationJson ? parseJson(row.locationJson, undefined) : undefined,
+    locations: parseJson<ProfileContactsData['locations']>(row.locationJson ?? '[]', []),
   };
 }
 
@@ -98,7 +98,7 @@ export class ProfileRepository implements IProfileRepository {
       emailsJson: JSON.stringify(data.emails),
       socialLinksJson: JSON.stringify(data.socialLinks),
       websitesJson: JSON.stringify(data.websites),
-      locationJson: data.location ? JSON.stringify(data.location) : null,
+      locationJson: JSON.stringify(data.locations),
     };
 
     const existing = await this.database.db
@@ -300,12 +300,12 @@ export class ProfileRepository implements IProfileRepository {
     if (specialtyRows.length === 0) return [];
 
     const uids = specialtyRows.map((row: { uid: string }) => row.uid);
-    
+
     // Fetch all profiles for the found UIDs
     const profiles = await this.database.db
       .select()
       .from(userProfiles)
-      .where(eq(userProfiles.uid, uids[0]));
+      .where(inArray(userProfiles.uid, uids));
 
     return profiles as UserProfileRow[];
   }

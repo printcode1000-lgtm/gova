@@ -6,9 +6,8 @@ process.env.GOVA_PROVISIONING = 'true';
 
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });
-} else {
-  dotenv.config({ path: '.env' });
 }
+dotenv.config({ path: '.env' });
 
 async function main() {
   const isCi = process.env.CI === 'true' || process.env.VERCEL === '1';

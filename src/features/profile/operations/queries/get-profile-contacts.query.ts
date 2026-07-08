@@ -14,6 +14,7 @@ export class GetProfileContactsQuery {
           emails: [],
           websites: [],
           socialLinks: [],
+          locations: [],
         }
       );
     });

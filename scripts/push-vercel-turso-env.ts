@@ -3,9 +3,8 @@ import dotenv from 'dotenv';
 
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });
-} else if (existsSync('.env')) {
-  dotenv.config({ path: '.env' });
 }
+dotenv.config({ path: '.env' });
 
 const VERCEL_KEYS = [
   'TURSO_DATABASE_URL',
