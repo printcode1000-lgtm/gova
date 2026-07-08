@@ -74,7 +74,6 @@ export function RegistrationPageContent() {
 
             <div className="space-y-2 text-center lg:text-start">
               <h1 className="text-3xl font-bold text-on-surface">{t('auth.registration.title')}</h1>
-              <p className="text-base text-on-surface-variant">{t('auth.registration.subtitle')}</p>
             </div>
 
             {error && (

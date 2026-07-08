@@ -132,7 +132,7 @@ export function PhoneVerification({
                     data-gova-autofill="registration-phone"
                     className={cn(
                       'auth-input ps-12 w-full',
-                      phoneVerified && 'gova-field-surface pe-10',
+                      phoneVerified && 'gova-field-surface',
                       fieldState.error && 'border-error',
                     )}
                     value={field.value}
@@ -162,9 +162,6 @@ export function PhoneVerification({
                       }
                     }}
                   />
-                  {phoneVerified && (
-                    <CheckCircle2 className="absolute end-3 top-1/2 -translate-y-1/2 h-5 w-5 text-success" />
-                  )}
                 </div>
                 {!phoneVerified && (
                   <button
@@ -266,7 +263,7 @@ export function PhoneVerification({
               placeholder={t('auth.login.phonePlaceholder')}
               className={cn(
                 'auth-input w-full ps-12 text-sm',
-                phoneVerified && 'gova-field-surface pe-10',
+                phoneVerified && 'gova-field-surface',
                 error && 'border-error',
               )}
               value={phone}
@@ -282,9 +279,6 @@ export function PhoneVerification({
                 }
               }}
             />
-            {phoneVerified ? (
-              <CheckCircle2 className="absolute end-3 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-success" />
-            ) : null}
           </div>
 
           {!phoneVerified ? (
