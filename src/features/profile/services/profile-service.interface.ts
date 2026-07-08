@@ -19,6 +19,8 @@ import type {
   SaveProfileSpecialtiesInput,
 } from "../entities/profile-specialties.entity";
 import type { UserProfileRow } from "@/core/database/profile/profile.schema";
+export type { UserProfileRow };
+
 
 export interface IProfileService {
   getContacts(uid: string): Promise<ProfileContactsData>;

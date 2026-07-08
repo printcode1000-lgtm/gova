@@ -2,6 +2,8 @@ import type { ProfileContactsData } from "../entities/profile-contacts.entity";
 import type { StoreDetailsData } from "../entities/store-details.entity";
 import type { ProfileSpecialtiesSelection } from "../entities/profile-specialties.entity";
 import type { UserProfileRow } from "@/core/database/profile/profile.schema";
+export type { UserProfileRow };
+
 
 export interface ProfileImageKeys {
   avatarImageKey: string | null;

@@ -20,7 +20,7 @@ import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
 } from "../entities/profile-specialties.entity";
-import type { UserProfileRow } from "@/core/database/profile/profile.schema";
+import type { UserProfileRow } from "./profile-service.interface";
 
 export class ProfileApiService implements IProfileService {
   async getContacts(uid: string): Promise<ProfileContactsData> {
