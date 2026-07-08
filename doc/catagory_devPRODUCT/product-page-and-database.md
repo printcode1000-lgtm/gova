@@ -30,3 +30,14 @@ The products tab requests owner products by `mainCategoryId` and `subcategoryId`
 ## Source of Category Names
 
 The products database does not duplicate category titles or images. All display data comes from the categories module, which alone reads the official JSON.
+
+## User Specialties
+
+The user_specialties table stores user specialty selections as boolean columns. Each specialty (subcategory, collection member, or medical specialty) has a corresponding column in the format `{slug(titleEn)}_{originalId}`.
+
+The table is separate from the products table and is used for:
+- Filtering users by specialty in seller pages
+- Displaying users who offer specific products or services
+- Supporting hierarchical relationships (collection members include all subcategories)
+
+The products table and user_specialties table are independent but both reference the same category data structure through the categories module.

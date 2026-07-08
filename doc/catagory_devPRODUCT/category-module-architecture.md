@@ -44,9 +44,25 @@ The `originalId` number is unique only within the parent category, not globally.
 
 It is a virtual display node that cannot be saved or used to create a product. Opening it shows the real medical items whose `subCollection` value is zero. What is saved is the real `originalId` of each specialty. The module does not use negative IDs.
 
+Medical specialties are used by the User Specialties Module to query users by specialty via the `getDoctorAppointmentItems()` projection.
+
 ## Delivery Services
 
 Record 46 exists once in the official source. It is included in the home page market, excluded from the product selector, and added directly to profile specialty options without a sublist. The module does not create an artificial copy of it.
+
+Delivery services use the specialty column `delivery_services_46` in the user_specialties table.
+
+## User Specialties Integration
+
+The CategoryService provides specialty column mapping for the User Specialties Module:
+
+- `getSpecialtyColumnItems()`: Returns items for mapping to database columns
+- `getDoctorAppointmentItems()`: Returns medical specialty items for doctor-appointment mapping
+- `getCollection(collectionId)`: Returns collection data for hierarchical specialty support
+
+Column names follow the pattern: `{slug(titleEn)}_{originalId}`
+
+The module supports hierarchical relationships where selecting a collection member automatically includes all its subcategories in the user specialties.
 
 ## Public API
 
@@ -57,6 +73,8 @@ The public API does not return Raw DTOs and does not contain `getAllForSpecialti
 ## Client/Server Boundary
 
 The loader uses build-compatible JSON imports and does not depend on `fs` in the application runtime path. Therefore, interfaces can consume public projections without leaking Node file readers into the client bundle. Image existence checks remain in the validation script only.
+
+Specialty column mapping has both server-only (`specialty-columns.server.ts`) and client-compatible (`specialty-columns.client.ts`) versions to support different rendering contexts.
 
 ## Validation and Tests
 

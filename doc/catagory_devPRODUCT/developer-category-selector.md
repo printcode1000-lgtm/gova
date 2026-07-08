@@ -13,3 +13,9 @@ The developer selector is a consumer of the public API in `@/features/categories
 `doctor-appointment` is a virtual display option and not a final Product Style; a real medical specialty must be selected to create a product. Delivery Services appears with a single subcategory for Product Style customization.
 
 Using `category_id`, `original_id`, or `sub_collection` or reading JSON files inside the tool is prohibited.
+
+## User Specialties
+
+The developer selector does not directly interact with the User Specialties Module. User specialties are managed through the profile interface, which uses the CategoryService's specialty column projections to map user selections to database columns.
+
+The specialty column mapping follows the pattern `{slug(titleEn)}_{originalId}` and supports hierarchical relationships for collection members.
