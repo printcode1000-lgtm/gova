@@ -29,6 +29,7 @@ import { SpecialtiesCard } from "@/components/profile/SpecialtiesCard";
 import { ProductsCard } from "@/components/profile/ProductsCard";
 import { StoreIdentityCard } from "@/components/profile/StoreIdentityCard";
 import { useSession } from "@/features/auth/components/SessionProvider";
+import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { useTranslation } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,7 @@ import { useProfileSave } from "./use-profile-save";
 export function ProfilePageContent() {
   const { t, locale } = useTranslation();
   const { session, isLoggedIn, isLoading, setSession } = useSession();
+  const superAdmin = isSuperAdmin(session);
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
   const uid = searchParams.get("uid");
@@ -376,6 +378,7 @@ export function ProfilePageContent() {
                       ref={specialtiesRef}
                       showSaveButton={false}
                       onStatusChange={handleSpecialtiesStatus}
+                      unlimited={superAdmin}
                     />
                   </div>
                   <div

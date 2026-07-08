@@ -42,12 +42,14 @@ interface SpecialtiesCardProps {
   showSaveButton?: boolean;
   onStatusChange?: (status: ProfileSectionStatus) => void;
   readOnly?: boolean;
+  /** When true, the 3 main-categories limit is removed (super-admin only). */
+  unlimited?: boolean;
 }
 
 export const SpecialtiesCard = React.forwardRef<
   ProfileSpecialtiesController,
   SpecialtiesCardProps
->(function SpecialtiesCard({ uid, onStatusChange, readOnly = false }, ref) {
+>(function SpecialtiesCard({ uid, onStatusChange, readOnly = false, unlimited = false }, ref) {
   const { t, locale } = useTranslation();
   const [displayCategories, setDisplayCategories] = React.useState<
     CategoryDisplay[]
@@ -155,8 +157,8 @@ export const SpecialtiesCard = React.forwardRef<
       const isAdding = !prev.includes(categoryId);
 
       if (isAdding) {
-        // Check if adding would exceed the limit of 3 main categories
-        if (prev.length >= 3) {
+        // Check if adding would exceed the limit of 3 main categories (skipped for unlimited/super-admin)
+        if (!unlimited && prev.length >= 3) {
           setToastMessage(
             locale === "ar"
               ? "لا يمكن اختيار أكثر من 3 تخصصات رئيسية"
@@ -244,8 +246,8 @@ export const SpecialtiesCard = React.forwardRef<
       setSelectedSpecialties((prevMain) => {
         if (isAdding) {
           // Adding subcategory: ensure main category is selected
-          // Check if this would exceed the limit of 3 main categories
-          if (!prevMain.includes(categoryId) && prevMain.length >= 3) {
+          // Check if this would exceed the limit of 3 main categories (skipped for unlimited/super-admin)
+          if (!unlimited && !prevMain.includes(categoryId) && prevMain.length >= 3) {
             setToastMessage(
               locale === "ar"
                 ? "لا يمكن اختيار أكثر من 3 تخصصات رئيسية"

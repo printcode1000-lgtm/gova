@@ -15,13 +15,23 @@ The module follows the project's standard layered architecture:
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
-│                    Operations Layer (Queries)                │
-│  GetUsersBySpecialtyQuery                                   │
+│               Client Service Layer (GovaApiClient)           │
+│  ProfileApiService.getUsersBySpecialty()                     │
+└─────────────────────────────────────────────────────────────┘
+                              ↓  HTTP GET
+┌─────────────────────────────────────────────────────────────┐
+│                    Business API Layer                         │
+│  GET /api/profile/users-by-specialty                         │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
 │                     Service Layer                            │
 │  ProfileService.getUsersBySpecialty()                        │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                   Query / Command Layer                       │
+│  GetUsersBySpecialtyQuery                                    │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -44,44 +54,56 @@ The module follows the project's standard layered architecture:
 
 ### Repository Layer
 - **Location**: `src/features/profile/repositories/profile-repository.ts`
-- **Method**: `getUsersBySpecialty(columnName, offset, limit)`
-- **Description**: Queries the database for users with a specific specialty
+- **Method**: `getUsersBySpecialty(categoryId, subcategoryId, offset, limit)`
+- **Description**: Resolves the correct specialty column internally using `columnByDoctorAppointment` or `columnBySelection` maps, then queries the database
 - **Features**:
+  - Resolves `categoryId + subcategoryId` → column name automatically (callers never pass raw column names)
   - Searches in both the specific column and parent collection member column
   - Supports pagination with offset/limit
-  - Returns complete user profile data
+  - Returns complete user profile data (`UserProfileRow[]`)
 
 ### Query Operation
 - **Location**: `src/features/profile/operations/queries/get-users-by-specialty.query.ts`
 - **Class**: `GetUsersBySpecialtyQuery`
-- **Description**: Query operation that wraps the repository method
+- **Method**: `execute(categoryId, subcategoryId, offset, limit)`
+- **Description**: Query operation that wraps the repository method. Imports `UserProfileRow` type from the repository interface (not from the database-client layer directly).
 
 ### Service Layer
 - **Location**: `src/features/profile/services/profile-service.server.ts`
-- **Method**: `getUsersBySpecialty(columnName, offset, limit)`
-- **Description**: Business logic layer for specialty-based user queries
+- **Method**: `getUsersBySpecialty(categoryId, subcategoryId, offset, limit)`
+- **Description**: Business logic layer that delegates to `GetUsersBySpecialtyQuery`
+
+### Client Service
+- **Location**: `src/features/profile/services/profile-api-service.ts`
+- **Method**: `getUsersBySpecialty(categoryId, subcategoryId, offset, limit)`
+- **Description**: Client-side service that calls the API endpoint via `GovaApiClient`
 
 ### React Hook
 - **Location**: `src/features/profile/hooks/use-users-by-specialty.ts`
-- **Hook**: `useUsersBySpecialty(columnName, offset, limit)`
+- **Hook**: `useUsersBySpecialty(categoryId, subcategoryId, offset?, limit?)`
 - **Description**: Client-side React hook for querying users by specialty
 - **Features**:
   - Uses React Query for caching and state management
-  - Default limit: 10
+  - Default offset: 0, default limit: 10
+  - `enabled` only when both `categoryId` and `subcategoryId` are truthy
   - Loading and error states
 
 ### API Endpoint
 - **Location**: `src/app/api/profile/users-by-specialty/route.ts`
 - **Route**: `GET /api/profile/users-by-specialty`
 - **Parameters**:
-  - `columnName`: The specialty column to search
+  - `categoryId`: The main category ID (number)
+  - `subcategoryId`: The subcategory / specialty ID (number)
   - `offset`: Pagination offset (default: 0)
   - `limit`: Pagination limit (default: 10)
+- **Response**: `UserProfileRow[]` with an extra computed field `avatarUrl` (resolved from `avatarImageKey` via `imageStorageOrchestrator`, or `null` if no avatar)
 
 ### UI Components
 - **Location**: `src/components/categories/SellersPageContent.tsx`
 - **Description**: Component for displaying sellers by specialty
 - **Features**:
+  - Receives `categoryId`, `subcategoryId`, `subcategoryName` as props
+  - Calls `useUsersBySpecialty(categoryId, subcategoryId, offset, limit)`
   - Handles both regular subcategories and doctor-appointment specialties
   - Supports pagination with "Load More" button
   - Localization support (Arabic/English)
@@ -90,7 +112,7 @@ The module follows the project's standard layered architecture:
 - **Description**: Component for displaying doctors by medical specialty
 - **Features**:
   - Specialized for medical specialties
-  - Uses doctor-appointment column mapping
+  - Calls `useUsersBySpecialty` with doctor-appointment category and specialty IDs
 
 ### Pages
 - **Location**: `src/app/categories/[categoryId]/sellers/[subcategoryId]/page.tsx`
@@ -104,8 +126,8 @@ The module follows the project's standard layered architecture:
 ### Helper Functions
 - **Location**: `src/features/profile/repositories/specialty-columns.server.ts`
 - **Functions**:
-  - `columnBySelection`: Maps `categoryId:originalId` to column name
-  - `columnByDoctorAppointment`: Maps specialty ID to column name
+  - `columnBySelection`: Map of `"categoryId:subcategoryId"` → column name
+  - `columnByDoctorAppointment`: Map of doctor specialty ID → column name
   - `selectedSpecialtyColumns`: Converts user selection to column names
   - **Feature**: Automatically includes all subcategories when a collection member is selected
 
@@ -119,11 +141,10 @@ The module follows the project's standard layered architecture:
 ```typescript
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
 
-function MyComponent() {
+function SellersPageContent({ categoryId, subcategoryId }: { categoryId: number; subcategoryId: number }) {
   const { data: users, isLoading, error } = useUsersBySpecialty(
-    "womens_clothing_1", // column name
-    0, // offset
-    10 // limit
+    categoryId,   // e.g. 1 (Women's Clothing category)
+    subcategoryId // e.g. 13 (Hijab Fashion subcategory)
   );
 
   if (isLoading) return <div>Loading...</div>;
@@ -146,9 +167,10 @@ import { profileService } from "@/features/profile/services/profile-service.boot
 
 async function getSellers() {
   const users = await profileService.getUsersBySpecialty(
-    "womens_clothing_1",
-    0,
-    10
+    1,   // categoryId  (Women's Clothing)
+    13,  // subcategoryId (Hijab Fashion)
+    0,   // offset
+    10   // limit
   );
   return users;
 }
@@ -157,11 +179,31 @@ async function getSellers() {
 ### Using the API Endpoint
 
 ```typescript
+// Regular subcategory
 const response = await fetch(
-  '/api/profile/users-by-specialty?columnName=womens_clothing_1&offset=0&limit=10'
+  '/api/profile/users-by-specialty?categoryId=1&subcategoryId=13&offset=0&limit=10'
 );
 const users = await response.json();
+// Each user object includes an extra `avatarUrl` field (string | null)
+
+// Doctor appointment specialty
+const response2 = await fetch(
+  '/api/profile/users-by-specialty?categoryId=20&subcategoryId=300&offset=0&limit=10'
+);
 ```
+
+## Specialties Selection Limit (SpecialtiesCard)
+
+The `SpecialtiesCard` component (`src/components/profile/SpecialtiesCard.tsx`) enforces the following rules when a user edits their profile:
+
+| User Role | Main Categories Limit |
+|---|---|
+| Regular user | **Max 3** main specialties |
+| Super Admin | **Unlimited** |
+
+- Exceeding the limit shows a toast: `"لا يمكن اختيار أكثر من 3 تخصصات رئيسية"` / `"Cannot select more than 3 main categories"`.
+- The `unlimited` prop is passed as `true` by `ProfilePageContent` when `isSuperAdmin(session)` returns `true`.
+- No limit is applied to subcategories under an already-selected main specialty.
 
 ## Category Hierarchy Support
 
@@ -181,10 +223,12 @@ The module supports hierarchical category relationships:
 - Special handling for medical services (categoryId=20)
 - Separate route: `/categories/[categoryId]/doctor-appointment/[specialtyId]`
 - Examples: Obstetrics & Gynaecology (300), Radiology (338), etc.
+- The repository resolves these via the `columnByDoctorAppointment` map first
 
 ### Delivery Services
 - Special handling for delivery services (categoryId=46)
 - Column: `delivery_services_46`
+- Does not open a subcategory dialog in `SpecialtiesCard`
 
 ## Column Name Mapping
 
@@ -194,6 +238,8 @@ Examples:
 - "Women's Clothing" (originalId=1) → `womens_clothing_1`
 - "Hijab Fashion" (originalId=13) → `hijab_fashion_13`
 - "Obstetrics & Gynaecology" (originalId=300) → `obstetrics_and_gynaecology_300`
+
+**The column resolution is internal to the Repository layer.** Callers (service, query, hook, API) always pass `categoryId` and `subcategoryId` — never raw column names.
 
 ## Navigation Flow
 
@@ -211,6 +257,10 @@ Examples:
 - For collection members, all subcategory columns are saved
 - **Users must re-save their specialties** after code changes to apply updates to existing data
 
+### Type Propagation
+- `UserProfileRow` is exported from `profile-repository.interface.ts` and re-exported from `profile-service.interface.ts`
+- The Query and Client Service layers import the type from their own adjacent interfaces — not from `@/core/database/...` — to avoid architecture violations
+
 ### Pagination
 - Default limit: 10 users per page
 - Offset-based pagination for infinite scroll
@@ -223,7 +273,7 @@ Examples:
 - Can be accessed via API endpoint for external clients
 
 ### Error Handling
-- Invalid column names return "Invalid category" message
+- Invalid `categoryId`/`subcategoryId` combinations that resolve to no column return an empty array `[]`
 - Empty results show "No sellers/doctors available" message
 - Loading states are handled in UI components
 
