@@ -57,7 +57,6 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
   const active = validImages[activeIndex];
 
   const pointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "touch") return;
     event.currentTarget.setPointerCapture(event.pointerId);
     const point = { x: event.clientX, y: event.clientY };
     pointers.current.set(event.pointerId, point);
@@ -78,7 +77,7 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
   };
 
   const pointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "touch" || !pointers.current.has(event.pointerId))
+    if (!pointers.current.has(event.pointerId))
       return;
     const point = { x: event.clientX, y: event.clientY };
     pointers.current.set(event.pointerId, point);
@@ -110,7 +109,6 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
   };
 
   const pointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "touch") return;
     const point = { x: event.clientX, y: event.clientY };
     const single = pointers.current.size === 1;
     pointers.current.delete(event.pointerId);
@@ -166,7 +164,7 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
           onLoad={() =>
             setLoaded((current) => new Set(current).add(active.url))
           }
-          className={`h-full w-full select-none object-contain transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
+          className={`h-full w-full select-none object-cover transition-[opacity,transform] duration-300 ${loaded.has(active.url) ? "opacity-100" : "opacity-0"}`}
           style={{
             transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
           }}
@@ -174,7 +172,7 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
       </div>
       {validImages.length > 1 ? (
         <div
-          className="mt-3 flex gap-2 overflow-x-auto pb-1"
+          className="mt-3 flex justify-center gap-2 overflow-x-auto pb-1"
           style={{ touchAction: "pan-x" }}
         >
           {validImages.map((image, index) => (
@@ -184,7 +182,7 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
               aria-label={`الصورة ${index + 1}`}
               aria-pressed={activeIndex === index}
               onPointerUp={(event) => {
-                if (event.pointerType === "touch") select(index);
+                select(index);
               }}
               className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 sm:h-20 sm:w-20 ${activeIndex === index ? "border-primary" : "border-transparent"}`}
             >
