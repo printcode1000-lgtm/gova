@@ -25,7 +25,7 @@ const FIELDS: Record<
     ["name", "الاسم", "text"],
     ["brand", "العلامة التجارية", "text"],
     ["manufacturer", "الشركة المصنعة", "text"],
-    ["available", "التوفر", "text"],
+    ["available", "التوفر", "boolean"],
     ["description", "الوصف", "textarea"],
   ],
   price: [
@@ -102,7 +102,7 @@ export const PRODUCT_DEMO_FIELDS: ProductFieldValues = {
   "mainData.name": "منتج تجريبي",
   "mainData.brand": "جوفا",
   "mainData.manufacturer": "الشركة المصنعة",
-  "mainData.available": "متوفر",
+  "mainData.available": "true",
   "mainData.description": "وصف تجريبي للمنتج أو الخدمة المعروضة.",
   "specifications.color": "أسود",
   "specifications.dimensions": "40 × 30 × 15 سم",

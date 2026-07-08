@@ -68,6 +68,13 @@ export function ProductPageContent() {
     } else if (converted["price.needsCar"] !== "true" && converted["price.needsCar"] !== "false") {
       converted["price.needsCar"] = "false";
     }
+    if (converted["mainData.available"] === "نعم" || converted["mainData.available"] === "متوفر") {
+      converted["mainData.available"] = "true";
+    } else if (converted["mainData.available"] === "لا" || converted["mainData.available"] === "غير متوفر") {
+      converted["mainData.available"] = "false";
+    } else if (converted["mainData.available"] !== "true" && converted["mainData.available"] !== "false") {
+      converted["mainData.available"] = "true";
+    }
     return converted;
   };
 
