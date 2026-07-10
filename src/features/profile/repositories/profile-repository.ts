@@ -34,15 +34,21 @@ function parseJson<T>(value: string, fallback: T): T {
   }
 }
 
+function parseJsonArray<T>(value: string | null | undefined): T[] {
+  if (!value) return [];
+  const parsed = parseJson<unknown>(value, []);
+  return Array.isArray(parsed) ? (parsed as T[]) : [];
+}
+
 function rowToContacts(
   row: typeof userProfiles.$inferSelect,
 ): ProfileContactsData {
   return {
-    phones: parseJson(row.phonesJson, []),
-    emails: parseJson(row.emailsJson, []),
-    websites: parseJson(row.websitesJson, []),
-    socialLinks: parseJson(row.socialLinksJson, []),
-    locations: parseJson<ProfileContactsData['locations']>(row.locationJson ?? '[]', []),
+    phones: parseJsonArray(row.phonesJson),
+    emails: parseJsonArray(row.emailsJson),
+    websites: parseJsonArray(row.websitesJson),
+    socialLinks: parseJsonArray(row.socialLinksJson),
+    locations: parseJsonArray(row.locationJson),
   };
 }
 

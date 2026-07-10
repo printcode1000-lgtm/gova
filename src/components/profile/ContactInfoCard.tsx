@@ -78,6 +78,32 @@ interface ContactInfoCardProps {
 const tileProvider = createOpenStreetMapProvider();
 const gpsProvider = createBrowserGpsProvider();
 
+function asArray<T>(value: T[] | unknown): T[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function normalizeContactInfoData(data: ContactInfoData): ContactInfoData {
+  return {
+    phones: asArray<PhoneLink>(data.phones).map((phone, index) => ({
+      ...phone,
+      id: phone.id || `phone-${index}`,
+    })),
+    emails: asArray<EmailLink>(data.emails).map((email, index) => ({
+      ...email,
+      id: email.id || `email-${index}`,
+    })),
+    websites: asArray<WebsiteLink>(data.websites).map((site, index) => ({
+      ...site,
+      id: site.id || `website-${index}`,
+    })),
+    socialLinks: asArray<SocialLink>(data.socialLinks).map((link, index) => ({
+      ...link,
+      id: link.id || `${link.platform}-${index}`,
+    })),
+    locations: asArray<LocationEntry>(data.locations),
+  };
+}
+
 export function ContactInfoCard({
   data,
   onChange,
@@ -88,25 +114,7 @@ export function ContactInfoCard({
   const shouldWrapInCard = !hidePrimarySection;
   const [localData, setLocalData] = React.useState<ContactInfoData>(() => {
     if (data) {
-      return {
-        phones: data.phones?.map((phone, index) => ({
-          ...phone,
-          id: phone.id || `phone-${index}`,
-        })) || [],
-        emails: data.emails?.map((email, index) => ({
-          ...email,
-          id: email.id || `email-${index}`,
-        })) || [],
-        websites: data.websites?.map((site, index) => ({
-          ...site,
-          id: site.id || `website-${index}`,
-        })) || [],
-        socialLinks: data.socialLinks.map((link, index) => ({
-          ...link,
-          id: link.id || `${link.platform}-${index}`,
-        })),
-        locations: data.locations ?? [],
-      };
+      return normalizeContactInfoData(data);
     }
     if (hidePrimarySection) {
       return {
@@ -128,25 +136,7 @@ export function ContactInfoCard({
 
   React.useEffect(() => {
     if (!data) return;
-    setLocalData({
-      phones: data.phones?.map((phone, index) => ({
-        ...phone,
-        id: phone.id || `phone-${index}`,
-      })) || [],
-      emails: data.emails?.map((email, index) => ({
-        ...email,
-        id: email.id || `email-${index}`,
-      })) || [],
-      websites: data.websites?.map((site, index) => ({
-        ...site,
-        id: site.id || `website-${index}`,
-      })) || [],
-      socialLinks: data.socialLinks?.map((link, index) => ({
-        ...link,
-        id: link.id || `${link.platform}-${index}`,
-      })) || [],
-      locations: data.locations ?? [],
-    });
+    setLocalData(normalizeContactInfoData(data));
   }, [data]);
 
   const [isPasswordOpen, setIsPasswordOpen] = React.useState(false);
