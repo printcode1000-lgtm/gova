@@ -1,31 +1,52 @@
 {
-  "executedAt": "2026-07-08T09:44:11.165Z",
-  "durationMs": 5691,
-  "sqliteSchemaVersion": "4d7633621e81201f",
-  "tursoSchemaVersionBefore": "a41099d6add0c11f",
-  "tursoSchemaVersionAfter": "0deaefab9012243e",
+  "executedAt": "2026-07-10T08:26:06.096Z",
+  "durationMs": 6606,
+  "sqliteSchemaVersion": "eb2ee5f621e11fbd",
+  "tursoSchemaVersionBefore": "a61b5054ce2691ff",
+  "tursoSchemaVersionAfter": "d09db370bd4fa10e",
   "operations": [
     {
       "type": "CREATE_TABLE",
-      "tableName": "__new_user_profiles",
-      "sql": "CREATE TABLE `__new_user_profiles` (\n\t`uid` text PRIMARY KEY NOT NULL,\n\t`phones_json` text DEFAULT '[]' NOT NULL,\n\t`emails_json` text DEFAULT '[]' NOT NULL,\n\t`social_links_json` text DEFAULT '[]' NOT NULL,\n\t`websites_json` text DEFAULT '[]' NOT NULL,\n\t`location_json` text,\n\t`avatar_image_key` text,\n\t`cover_image_key` text,\n\t`cover_image_keys_json` text DEFAULT '[]' NOT NULL,\n\t`store_details_json` text DEFAULT '{}' NOT NULL,\n\t`specialties_json` text DEFAULT '{\"main\":[],\"sub\":{}}' NOT NULL\n)",
-      "description": "Create missing table \"__new_user_profiles\""
+      "tableName": "profile_review_helpful",
+      "sql": "CREATE TABLE `profile_review_helpful` (\n  `review_id` text NOT NULL,\n  `uid` text NOT NULL,\n  `created_at` text NOT NULL,\n  PRIMARY KEY (`review_id`, `uid`),\n  FOREIGN KEY (`review_id`) REFERENCES `profile_reviews`(`id`) ON UPDATE no action ON DELETE cascade\n)",
+      "description": "Create missing table \"profile_review_helpful\""
     },
     {
-      "type": "ADD_COLUMN",
-      "tableName": "user_profiles",
-      "sql": "ALTER TABLE \"user_profiles\" ADD COLUMN \"location_json\" TEXT",
-      "description": "Add column \"user_profiles.location_json\""
+      "type": "CREATE_TABLE",
+      "tableName": "profile_review_replies",
+      "sql": "CREATE TABLE `profile_review_replies` (\n  `id` text PRIMARY KEY NOT NULL,\n  `review_id` text NOT NULL UNIQUE,\n  `seller_uid` text NOT NULL,\n  `reply_text` text NOT NULL,\n  `created_at` text NOT NULL,\n  `updated_at` text NOT NULL,\n  FOREIGN KEY (`review_id`) REFERENCES `profile_reviews`(`id`) ON UPDATE no action ON DELETE cascade\n)",
+      "description": "Create missing table \"profile_review_replies\""
+    },
+    {
+      "type": "CREATE_TABLE",
+      "tableName": "profile_reviews",
+      "sql": "CREATE TABLE `profile_reviews` (\n  `id` text PRIMARY KEY NOT NULL,\n  `target_uid` text NOT NULL,\n  `uid` text NOT NULL,\n  `reviewer_name` text NOT NULL,\n  `reviewer_avatar_url` text,\n  `rating` integer NOT NULL,\n  `comment` text NOT NULL DEFAULT '',\n  `helpful_count` integer NOT NULL DEFAULT 0,\n  `created_at` text NOT NULL,\n  `updated_at` text NOT NULL\n)",
+      "description": "Create missing table \"profile_reviews\""
+    },
+    {
+      "type": "CREATE_INDEX",
+      "tableName": "profile_reviews",
+      "sql": "CREATE INDEX `profile_reviews_target_idx` ON `profile_reviews` (`target_uid`, `created_at`);",
+      "description": "Create missing index \"profile_reviews_target_idx\""
+    },
+    {
+      "type": "CREATE_INDEX",
+      "tableName": "profile_reviews",
+      "sql": "CREATE UNIQUE INDEX `profile_reviews_target_uid_unique` ON `profile_reviews` (`target_uid`, `uid`);",
+      "description": "Create missing index \"profile_reviews_target_uid_unique\""
     }
   ],
-  "tablesModified": 1,
-  "columnsAdded": 1,
-  "indexesAdded": 0,
+  "tablesModified": 3,
+  "columnsAdded": 0,
+  "indexesAdded": 2,
   "viewsAdded": 0,
   "triggersAdded": 0,
   "sqlExecuted": [
-    "CREATE TABLE `__new_user_profiles` (\n\t`uid` text PRIMARY KEY NOT NULL,\n\t`phones_json` text DEFAULT '[]' NOT NULL,\n\t`emails_json` text DEFAULT '[]' NOT NULL,\n\t`social_links_json` text DEFAULT '[]' NOT NULL,\n\t`websites_json` text DEFAULT '[]' NOT NULL,\n\t`location_json` text,\n\t`avatar_image_key` text,\n\t`cover_image_key` text,\n\t`cover_image_keys_json` text DEFAULT '[]' NOT NULL,\n\t`store_details_json` text DEFAULT '{}' NOT NULL,\n\t`specialties_json` text DEFAULT '{\"main\":[],\"sub\":{}}' NOT NULL\n)",
-    "ALTER TABLE \"user_profiles\" ADD COLUMN \"location_json\" TEXT"
+    "CREATE TABLE `profile_review_helpful` (\n  `review_id` text NOT NULL,\n  `uid` text NOT NULL,\n  `created_at` text NOT NULL,\n  PRIMARY KEY (`review_id`, `uid`),\n  FOREIGN KEY (`review_id`) REFERENCES `profile_reviews`(`id`) ON UPDATE no action ON DELETE cascade\n)",
+    "CREATE TABLE `profile_review_replies` (\n  `id` text PRIMARY KEY NOT NULL,\n  `review_id` text NOT NULL UNIQUE,\n  `seller_uid` text NOT NULL,\n  `reply_text` text NOT NULL,\n  `created_at` text NOT NULL,\n  `updated_at` text NOT NULL,\n  FOREIGN KEY (`review_id`) REFERENCES `profile_reviews`(`id`) ON UPDATE no action ON DELETE cascade\n)",
+    "CREATE TABLE `profile_reviews` (\n  `id` text PRIMARY KEY NOT NULL,\n  `target_uid` text NOT NULL,\n  `uid` text NOT NULL,\n  `reviewer_name` text NOT NULL,\n  `reviewer_avatar_url` text,\n  `rating` integer NOT NULL,\n  `comment` text NOT NULL DEFAULT '',\n  `helpful_count` integer NOT NULL DEFAULT 0,\n  `created_at` text NOT NULL,\n  `updated_at` text NOT NULL\n)",
+    "CREATE INDEX `profile_reviews_target_idx` ON `profile_reviews` (`target_uid`, `created_at`);",
+    "CREATE UNIQUE INDEX `profile_reviews_target_uid_unique` ON `profile_reviews` (`target_uid`, `uid`);"
   ],
   "errors": [],
   "warnings": [

@@ -1,4 +1,11 @@
 import { govaApi, GOVA_API_ROUTES } from "@/core/api";
+import type { ReviewSort } from "@/features/product/entities/product-review.entity";
+import type {
+  ProfileReview,
+  ProfileReviewsResult,
+  SaveProfileReviewInput,
+  UpdateProfileReviewInput,
+} from "../entities/profile-review.entity";
 import type {
   ProfileContactsData,
   SaveProfileContactsInput,
@@ -93,6 +100,76 @@ export class ProfileApiService implements IProfileService {
     return govaApi.put<SaveProfileEditorResult>(
       GOVA_API_ROUTES.profile.editor,
       input,
+    );
+  }
+
+  async listReviews(
+    targetUid: string,
+    sort: ReviewSort,
+    offset: number,
+    limit: number,
+    uid: string,
+  ): Promise<ProfileReviewsResult> {
+    const q = new URLSearchParams({
+      targetUid,
+      sort,
+      offset: String(offset),
+      limit: String(limit),
+      uid,
+    });
+    return govaApi.get<ProfileReviewsResult>(
+      `${GOVA_API_ROUTES.profile.reviews.root}?${q}`,
+      { cache: "no-store" },
+    );
+  }
+
+  async createReview(input: SaveProfileReviewInput): Promise<ProfileReview> {
+    return govaApi.post<ProfileReview>(
+      GOVA_API_ROUTES.profile.reviews.root,
+      input,
+    );
+  }
+
+  async updateReview(input: UpdateProfileReviewInput): Promise<ProfileReview> {
+    return govaApi.put<ProfileReview>(
+      GOVA_API_ROUTES.profile.reviews.root,
+      input,
+    );
+  }
+
+  async deleteReview(reviewId: string, uid: string): Promise<{ deleted: boolean }> {
+    const q = new URLSearchParams({ reviewId, uid });
+    return govaApi.delete<{ deleted: boolean }>(
+      `${GOVA_API_ROUTES.profile.reviews.root}?${q}`,
+    );
+  }
+
+  async helpfulReview(reviewId: string, uid: string): Promise<ProfileReview> {
+    return govaApi.post<ProfileReview>(GOVA_API_ROUTES.profile.reviews.helpful, {
+      reviewId,
+      uid,
+    });
+  }
+
+  async replyReview(
+    reviewId: string,
+    uid: string,
+    text: string,
+  ): Promise<ProfileReview> {
+    return govaApi.post<ProfileReview>(GOVA_API_ROUTES.profile.reviews.reply, {
+      reviewId,
+      uid,
+      text,
+    });
+  }
+
+  async deleteReplyReview(
+    reviewId: string,
+    uid: string,
+  ): Promise<{ deleted: boolean }> {
+    const q = new URLSearchParams({ reviewId, uid });
+    return govaApi.delete<{ deleted: boolean }>(
+      `${GOVA_API_ROUTES.profile.reviews.reply}?${q}`,
     );
   }
 }

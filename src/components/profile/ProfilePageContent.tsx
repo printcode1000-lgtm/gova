@@ -36,6 +36,7 @@ import { useTranslation } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
+import { ProductReviews } from "@/components/product/ProductReviews";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import type {
@@ -225,6 +226,21 @@ export function ProfilePageContent() {
               )}
             </section>
           ) : null}
+
+          {/* Profile Reviews Section */}
+          {!isLoadingStoreDetails && storeDetails.ratingSettings?.enabled && (
+            <section className="mx-2 sm:mx-4 mt-8 sm:mt-12 border-t border-outline-variant/60 pt-8 pb-12">
+              <ProductReviews
+                type="profile"
+                targetUid={uid || session?.uid || ""}
+                ownerUid={uid || session?.uid || ""}
+                productName={storeDetails.storeName || t("profile.title")}
+                reviewsEnabled={true}
+                targetEnabled={true}
+                commentsEnabled={storeDetails.ratingSettings.mode === "stars-comments"}
+              />
+            </section>
+          )}
         </div>
       ) : showEditCard ? (
         <div

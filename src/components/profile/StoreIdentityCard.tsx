@@ -6,6 +6,14 @@ import { Image as ImageIcon, LayoutTemplate } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { useTranslation } from "@/lib/i18n";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
@@ -242,6 +250,47 @@ export const StoreIdentityCard = React.forwardRef<
         <p className="text-end text-xs text-muted-foreground">
           {details.storeStory.length}/500
         </p>
+      </div>
+
+      <div className="space-y-4 rounded-xl border border-outline-variant p-4">
+        <h3 className="text-sm font-bold">إعدادات التقييم</h3>
+        
+        <div className="flex items-center space-x-2 space-x-reverse">
+          <Checkbox
+            id="ratingEnabled"
+            checked={details.ratingSettings.enabled}
+            onCheckedChange={(checked) =>
+              updateField("ratingSettings", {
+                ...details.ratingSettings,
+                enabled: !!checked,
+              })
+            }
+            disabled={readOnly}
+          />
+          <Label htmlFor="ratingEnabled" className="cursor-pointer">تفعيل التقييمات في الملف الشخصي</Label>
+        </div>
+
+        <div className="space-y-2">
+          <Label>وضع التقييم</Label>
+          <Select
+            value={details.ratingSettings.mode}
+            onValueChange={(value: "stars" | "stars-comments") =>
+              updateField("ratingSettings", {
+                ...details.ratingSettings,
+                mode: value,
+              })
+            }
+            disabled={readOnly || !details.ratingSettings.enabled}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="اختر وضع التقييم" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="stars">نجوم فقط</SelectItem>
+              <SelectItem value="stars-comments">نجوم + تعليقات</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );

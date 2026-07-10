@@ -18,6 +18,11 @@ export const GOVA_API_ROUTES = {
     specialties: "/api/profile/specialties",
     editor: "/api/profile/editor",
     usersBySpecialty: "/api/profile/users-by-specialty",
+    reviews: {
+      root: "/api/profile/reviews",
+      helpful: "/api/profile/reviews/helpful",
+      reply: "/api/profile/reviews/reply",
+    },
   },
   storage: {
     upload: "/api/storage/images/upload",

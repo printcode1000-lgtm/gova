@@ -11,6 +11,7 @@ import {
   EMPTY_STORE_DETAILS,
   type StoreDetailsData,
 } from "../entities/store-details.entity";
+import type { ProfileRatingSettings } from "../entities/profile-review.entity";
 import type {
   ProfileImageKeys,
   IProfileRepository,
@@ -64,15 +65,39 @@ function normalizeStoreDetails(value: unknown): StoreDetailsData {
         : "",
     storeStory:
       typeof details.storeStory === "string" ? details.storeStory : "",
+    ratingSettings: normalizeRatingSettings(details.ratingSettings),
+  };
+}
+
+function normalizeRatingSettings(value: unknown): ProfileRatingSettings {
+  if (!value || typeof value !== "object") {
+    return EMPTY_STORE_DETAILS.ratingSettings;
+  }
+  const settings = value as Partial<ProfileRatingSettings>;
+  return {
+    enabled:
+      typeof settings.enabled === "boolean"
+        ? settings.enabled
+        : EMPTY_STORE_DETAILS.ratingSettings.enabled,
+    mode:
+      settings.mode === "stars" || settings.mode === "stars-comments"
+        ? settings.mode
+        : EMPTY_STORE_DETAILS.ratingSettings.mode,
   };
 }
 
 function rowToStoreDetails(row: {
   storeDetailsJson: string;
+  ratingSettingsJson: string;
 }): StoreDetailsData {
-  return normalizeStoreDetails(
+  const details = normalizeStoreDetails(
     parseJson(row.storeDetailsJson, EMPTY_STORE_DETAILS),
   );
+  const ratingSettings = parseJson(
+    row.ratingSettingsJson,
+    EMPTY_STORE_DETAILS.ratingSettings,
+  );
+  return { ...details, ratingSettings: normalizeRatingSettings(ratingSettings) };
 }
 
 function parseImageKeys(value: string | null | undefined): string[] {
@@ -89,7 +114,13 @@ export class ProfileRepository implements IProfileRepository {
 
   async getByUid(uid: string): Promise<ProfileContactsData | null> {
     const rows = await this.database.db
-      .select()
+      .select({
+        phonesJson: userProfiles.phonesJson,
+        emailsJson: userProfiles.emailsJson,
+        websitesJson: userProfiles.websitesJson,
+        socialLinksJson: userProfiles.socialLinksJson,
+        locationJson: userProfiles.locationJson,
+      })
       .from(userProfiles)
       .where(eq(userProfiles.uid, uid))
       .limit(1);
@@ -183,22 +214,29 @@ export class ProfileRepository implements IProfileRepository {
   }
 
   async getStoreDetails(uid: string): Promise<StoreDetailsData | null> {
-    const rows = await this.database.db
-      .select({ storeDetailsJson: userProfiles.storeDetailsJson })
-      .from(userProfiles)
-      .where(eq(userProfiles.uid, uid))
-      .limit(1);
+    const rows = (await this.database.execute(
+      "SELECT store_details_json, rating_settings_json FROM user_profiles WHERE uid = ? LIMIT 1",
+      [uid],
+    )) as Array<{
+      store_details_json: string;
+      rating_settings_json: string;
+    }>;
 
     if (rows.length === 0) return null;
-    return rowToStoreDetails(rows[0]);
+    return rowToStoreDetails({
+      storeDetailsJson: rows[0].store_details_json,
+      ratingSettingsJson: rows[0].rating_settings_json,
+    });
   }
 
   async upsertStoreDetails(
     uid: string,
     details: StoreDetailsData,
   ): Promise<void> {
+    const { ratingSettings, ...rest } = details;
     const payload = {
-      storeDetailsJson: JSON.stringify(details),
+      storeDetailsJson: JSON.stringify(rest),
+      ratingSettingsJson: JSON.stringify(ratingSettings),
     };
 
     const existing = await this.database.db

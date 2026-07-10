@@ -9,6 +9,7 @@ import type {
   ReviewSort,
 } from "@/features/product/entities/product-review.entity";
 import { productReviewApiService } from "@/features/product/services/product-review-api-service";
+import { profileApiService } from "@/features/profile/services/profile-api-service";
 
 const PAGE_SIZE = 3;
 function Stars({ value, size = "text-lg" }: { value: number; size?: string }) {
@@ -39,18 +40,22 @@ function relativeDate(value: string) {
 
 export function ProductReviews({
   productId,
+  targetUid,
   ownerUid,
   productName,
   reviewsEnabled,
   targetEnabled,
   commentsEnabled,
+  type = "product",
 }: {
-  productId: string;
+  productId?: string;
+  targetUid?: string;
   ownerUid: string;
   productName: string;
   reviewsEnabled: boolean;
   targetEnabled: boolean;
   commentsEnabled: boolean;
+  type?: "product" | "profile";
 }) {
   const { session, isLoggedIn } = useSession();
   const [result, setResult] = React.useState<ProductReviewsResult | null>(null);
@@ -69,7 +74,8 @@ export function ProductReviews({
   const isSeller = session?.uid === ownerUid;
   const load = React.useCallback(
     async (offset = 0, append = false) => {
-      if (!productId) {
+      const targetId = type === "product" ? productId : targetUid;
+      if (!targetId) {
         setResult({
           average: 0,
           total: 0,
@@ -89,13 +95,22 @@ export function ProductReviews({
       }
       setLoading(true);
       try {
-        const next = await productReviewApiService.list(
-          productId,
-          sort,
-          offset,
-          PAGE_SIZE,
-          session?.uid ?? "",
-        );
+        const next =
+          type === "product"
+            ? await productReviewApiService.list(
+                targetId,
+                sort,
+                offset,
+                PAGE_SIZE,
+                session?.uid ?? "",
+              )
+            : ((await profileApiService.listReviews(
+                targetId,
+                sort,
+                offset,
+                PAGE_SIZE,
+                session?.uid ?? "",
+              )) as any);
         setResult((current) =>
           append && current
             ? { ...next, reviews: [...current.reviews, ...next.reviews] }
@@ -105,7 +120,7 @@ export function ProductReviews({
         setLoading(false);
       }
     },
-    [productId, sort, session?.uid],
+    [productId, targetUid, type, sort, session?.uid],
   );
   React.useEffect(() => {
     void load();
@@ -121,22 +136,39 @@ export function ProductReviews({
     if (!session || rating < 1) return;
     setBusy(true);
     try {
-      if (editing)
-        await productReviewApiService.update({
-          reviewId: editing.id,
-          uid: session.uid,
-          rating,
-          comment,
-          styleMode: commentsEnabled ? "stars-comments" : "stars",
-        });
-      else
-        await productReviewApiService.create({
-          productId,
-          uid: session.uid,
-          rating,
-          comment,
-          styleMode: commentsEnabled ? "stars-comments" : "stars",
-        });
+      if (type === "product") {
+        if (editing)
+          await productReviewApiService.update({
+            reviewId: editing.id,
+            uid: session.uid,
+            rating,
+            comment,
+            styleMode: commentsEnabled ? "stars-comments" : "stars",
+          });
+        else
+          await productReviewApiService.create({
+            productId: productId!,
+            uid: session.uid,
+            rating,
+            comment,
+            styleMode: commentsEnabled ? "stars-comments" : "stars",
+          });
+      } else {
+        if (editing)
+          await profileApiService.updateReview({
+            reviewId: editing.id,
+            uid: session.uid,
+            rating,
+            comment,
+          });
+        else
+          await profileApiService.createReview({
+            targetUid: targetUid!,
+            uid: session.uid,
+            rating,
+            comment,
+          });
+      }
       setModal(false);
       await refresh();
     } finally {
@@ -145,18 +177,27 @@ export function ProductReviews({
   };
   const remove = async (reviewId: string) => {
     if (!session || !window.confirm("حذف التقييم؟")) return;
-    await productReviewApiService.delete(reviewId, session.uid);
+    if (type === "product")
+      await productReviewApiService.delete(reviewId, session.uid);
+    else await profileApiService.deleteReview(reviewId, session.uid);
     await refresh();
   };
   const saveReply = async () => {
     if (!session || !replyReview) return;
     setBusy(true);
     try {
-      await productReviewApiService.reply(
-        replyReview.id,
-        session.uid,
-        replyText,
-      );
+      if (type === "product")
+        await productReviewApiService.reply(
+          replyReview.id,
+          session.uid,
+          replyText,
+        );
+      else
+        await profileApiService.replyReview(
+          replyReview.id,
+          session.uid,
+          replyText,
+        );
       setReplyReview(null);
       setReplyText("");
       await refresh();
@@ -166,11 +207,14 @@ export function ProductReviews({
   };
   const deleteReply = async (reviewId: string) => {
     if (!session || !window.confirm("حذف الرد؟")) return;
-    await productReviewApiService.deleteReply(reviewId, session.uid);
+    if (type === "product")
+      await productReviewApiService.deleteReply(reviewId, session.uid);
+    else await profileApiService.deleteReplyReview(reviewId, session.uid);
     await refresh();
   };
+  const targetId = type === "product" ? productId : targetUid;
   const canRate =
-    Boolean(productId) &&
+    Boolean(targetId) &&
     isLoggedIn &&
     !isSeller &&
     reviewsEnabled &&
@@ -310,10 +354,16 @@ export function ProductReviews({
                         disabled={!isLoggedIn}
                         onClick={async () => {
                           if (session) {
-                            await productReviewApiService.helpful(
-                              review.id,
-                              session.uid,
-                            );
+                            if (type === "product")
+                              await productReviewApiService.helpful(
+                                review.id,
+                                session.uid,
+                              );
+                            else
+                              await profileApiService.helpfulReview(
+                                review.id,
+                                session.uid,
+                              );
                             await refresh();
                           }
                         }}
