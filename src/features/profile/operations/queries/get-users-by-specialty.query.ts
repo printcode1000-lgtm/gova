@@ -7,7 +7,8 @@ export class GetUsersBySpecialtyQuery {
     subcategoryId: number,
     offset: number,
     limit: number,
+    search?: string,
   ): Promise<UserProfileRow[]> {
-    return this.repository.getUsersBySpecialty(categoryId, subcategoryId, offset, limit);
+    return this.repository.getUsersBySpecialty(categoryId, subcategoryId, offset, limit, search);
   }
 }

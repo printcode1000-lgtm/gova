@@ -18,6 +18,7 @@ export const GOVA_API_ROUTES = {
     specialties: "/api/profile/specialties",
     editor: "/api/profile/editor",
     usersBySpecialty: "/api/profile/users-by-specialty",
+    fulfillmentSettings: "/api/profile/fulfillment-settings",
     reviews: {
       root: "/api/profile/reviews",
       helpful: "/api/profile/reviews/helpful",

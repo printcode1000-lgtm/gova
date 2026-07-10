@@ -18,6 +18,10 @@ import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
 } from "../entities/profile-specialties.entity";
+import type {
+  ProfileFulfillmentSettings,
+  SaveProfileFulfillmentSettingsInput,
+} from "../entities/profile-fulfillment-settings.entity";
 import type { UserProfileRow } from "@/core/database/profile/profile.schema";
 export type { UserProfileRow };
 
@@ -29,6 +33,10 @@ export interface IProfileService {
   saveStoreImages(input: SaveStoreImagesInput): Promise<StoreImagesData>;
   getStoreDetails(uid: string): Promise<StoreDetailsData>;
   saveStoreDetails(input: SaveStoreDetailsInput): Promise<StoreDetailsData>;
+  getFulfillmentSettings(uid: string): Promise<ProfileFulfillmentSettings>;
+  saveFulfillmentSettings(
+    input: SaveProfileFulfillmentSettingsInput,
+  ): Promise<ProfileFulfillmentSettings>;
   getSpecialties(uid: string): Promise<ProfileSpecialtiesSelection>;
   saveSpecialties(
     input: SaveProfileSpecialtiesInput,
@@ -39,5 +47,6 @@ export interface IProfileService {
     subcategoryId: number,
     offset: number,
     limit: number,
+    search?: string,
   ): Promise<UserProfileRow[]>;
 }

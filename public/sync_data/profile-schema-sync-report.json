@@ -1,52 +1,24 @@
 {
-  "executedAt": "2026-07-10T08:26:06.096Z",
-  "durationMs": 6606,
-  "sqliteSchemaVersion": "eb2ee5f621e11fbd",
-  "tursoSchemaVersionBefore": "a61b5054ce2691ff",
-  "tursoSchemaVersionAfter": "d09db370bd4fa10e",
+  "executedAt": "2026-07-10T09:26:19.379Z",
+  "durationMs": 6409,
+  "sqliteSchemaVersion": "caad62e0e629a08d",
+  "tursoSchemaVersionBefore": "d09db370bd4fa10e",
+  "tursoSchemaVersionAfter": "b18b3a4fba8e0b18",
   "operations": [
     {
-      "type": "CREATE_TABLE",
-      "tableName": "profile_review_helpful",
-      "sql": "CREATE TABLE `profile_review_helpful` (\n  `review_id` text NOT NULL,\n  `uid` text NOT NULL,\n  `created_at` text NOT NULL,\n  PRIMARY KEY (`review_id`, `uid`),\n  FOREIGN KEY (`review_id`) REFERENCES `profile_reviews`(`id`) ON UPDATE no action ON DELETE cascade\n)",
-      "description": "Create missing table \"profile_review_helpful\""
-    },
-    {
-      "type": "CREATE_TABLE",
-      "tableName": "profile_review_replies",
-      "sql": "CREATE TABLE `profile_review_replies` (\n  `id` text PRIMARY KEY NOT NULL,\n  `review_id` text NOT NULL UNIQUE,\n  `seller_uid` text NOT NULL,\n  `reply_text` text NOT NULL,\n  `created_at` text NOT NULL,\n  `updated_at` text NOT NULL,\n  FOREIGN KEY (`review_id`) REFERENCES `profile_reviews`(`id`) ON UPDATE no action ON DELETE cascade\n)",
-      "description": "Create missing table \"profile_review_replies\""
-    },
-    {
-      "type": "CREATE_TABLE",
-      "tableName": "profile_reviews",
-      "sql": "CREATE TABLE `profile_reviews` (\n  `id` text PRIMARY KEY NOT NULL,\n  `target_uid` text NOT NULL,\n  `uid` text NOT NULL,\n  `reviewer_name` text NOT NULL,\n  `reviewer_avatar_url` text,\n  `rating` integer NOT NULL,\n  `comment` text NOT NULL DEFAULT '',\n  `helpful_count` integer NOT NULL DEFAULT 0,\n  `created_at` text NOT NULL,\n  `updated_at` text NOT NULL\n)",
-      "description": "Create missing table \"profile_reviews\""
-    },
-    {
-      "type": "CREATE_INDEX",
-      "tableName": "profile_reviews",
-      "sql": "CREATE INDEX `profile_reviews_target_idx` ON `profile_reviews` (`target_uid`, `created_at`);",
-      "description": "Create missing index \"profile_reviews_target_idx\""
-    },
-    {
-      "type": "CREATE_INDEX",
-      "tableName": "profile_reviews",
-      "sql": "CREATE UNIQUE INDEX `profile_reviews_target_uid_unique` ON `profile_reviews` (`target_uid`, `uid`);",
-      "description": "Create missing index \"profile_reviews_target_uid_unique\""
+      "type": "ADD_COLUMN",
+      "tableName": "user_profiles",
+      "sql": "ALTER TABLE \"user_profiles\" ADD COLUMN \"fulfillment_settings_json\" TEXT NOT NULL DEFAULT '{\"selfDeliveryEnabled\":false,\"carrierUids\":[],\"returns\":{\"enabled\":false,\"returnWindowDays\":14,\"policyText\":\"\",\"returnShippingPayer\":\"case_by_case\"}}'",
+      "description": "Add column \"user_profiles.fulfillment_settings_json\""
     }
   ],
-  "tablesModified": 3,
-  "columnsAdded": 0,
-  "indexesAdded": 2,
+  "tablesModified": 0,
+  "columnsAdded": 1,
+  "indexesAdded": 0,
   "viewsAdded": 0,
   "triggersAdded": 0,
   "sqlExecuted": [
-    "CREATE TABLE `profile_review_helpful` (\n  `review_id` text NOT NULL,\n  `uid` text NOT NULL,\n  `created_at` text NOT NULL,\n  PRIMARY KEY (`review_id`, `uid`),\n  FOREIGN KEY (`review_id`) REFERENCES `profile_reviews`(`id`) ON UPDATE no action ON DELETE cascade\n)",
-    "CREATE TABLE `profile_review_replies` (\n  `id` text PRIMARY KEY NOT NULL,\n  `review_id` text NOT NULL UNIQUE,\n  `seller_uid` text NOT NULL,\n  `reply_text` text NOT NULL,\n  `created_at` text NOT NULL,\n  `updated_at` text NOT NULL,\n  FOREIGN KEY (`review_id`) REFERENCES `profile_reviews`(`id`) ON UPDATE no action ON DELETE cascade\n)",
-    "CREATE TABLE `profile_reviews` (\n  `id` text PRIMARY KEY NOT NULL,\n  `target_uid` text NOT NULL,\n  `uid` text NOT NULL,\n  `reviewer_name` text NOT NULL,\n  `reviewer_avatar_url` text,\n  `rating` integer NOT NULL,\n  `comment` text NOT NULL DEFAULT '',\n  `helpful_count` integer NOT NULL DEFAULT 0,\n  `created_at` text NOT NULL,\n  `updated_at` text NOT NULL\n)",
-    "CREATE INDEX `profile_reviews_target_idx` ON `profile_reviews` (`target_uid`, `created_at`);",
-    "CREATE UNIQUE INDEX `profile_reviews_target_uid_unique` ON `profile_reviews` (`target_uid`, `uid`);"
+    "ALTER TABLE \"user_profiles\" ADD COLUMN \"fulfillment_settings_json\" TEXT NOT NULL DEFAULT '{\"selfDeliveryEnabled\":false,\"carrierUids\":[],\"returns\":{\"enabled\":false,\"returnWindowDays\":14,\"policyText\":\"\",\"returnShippingPayer\":\"case_by_case\"}}'"
   ],
   "errors": [],
   "warnings": [

@@ -21,6 +21,11 @@ import {
   type ProfileSpecialtiesSelection,
 } from "../entities/profile-specialties.entity";
 import {
+  EMPTY_PROFILE_FULFILLMENT_SETTINGS,
+  type ProfileFulfillmentSettings,
+  type ReturnShippingPayer,
+} from "../entities/profile-fulfillment-settings.entity";
+import {
   SPECIALTY_COLUMN_NAMES,
   selectedSpecialtyColumns,
   columnBySelection,
@@ -83,6 +88,53 @@ function normalizeRatingSettings(value: unknown): ProfileRatingSettings {
       settings.mode === "stars" || settings.mode === "stars-comments"
         ? settings.mode
         : EMPTY_STORE_DETAILS.ratingSettings.mode,
+  };
+}
+
+function normalizeFulfillmentSettings(
+  value: unknown,
+): ProfileFulfillmentSettings {
+  if (!value || typeof value !== "object") {
+    return EMPTY_PROFILE_FULFILLMENT_SETTINGS;
+  }
+  const settings = value as Partial<ProfileFulfillmentSettings>;
+  const returns =
+    settings.returns && typeof settings.returns === "object"
+      ? settings.returns
+      : EMPTY_PROFILE_FULFILLMENT_SETTINGS.returns;
+  const payer = (returns as { returnShippingPayer?: unknown })
+    .returnShippingPayer;
+  const normalizedPayer: ReturnShippingPayer =
+    payer === "buyer" || payer === "seller" || payer === "case_by_case"
+      ? payer
+      : EMPTY_PROFILE_FULFILLMENT_SETTINGS.returns.returnShippingPayer;
+  const days = Number(
+    (returns as { returnWindowDays?: unknown }).returnWindowDays,
+  );
+
+  return {
+    selfDeliveryEnabled: settings.selfDeliveryEnabled === true,
+    carrierUids: Array.isArray(settings.carrierUids)
+      ? Array.from(
+          new Set(
+            settings.carrierUids.filter(
+              (uid): uid is string =>
+                typeof uid === "string" && uid.trim().length > 0,
+            ),
+          ),
+        )
+      : [],
+    returns: {
+      enabled: (returns as { enabled?: unknown }).enabled === true,
+      returnWindowDays: Number.isInteger(days)
+        ? Math.min(365, Math.max(0, days))
+        : EMPTY_PROFILE_FULFILLMENT_SETTINGS.returns.returnWindowDays,
+      policyText:
+        typeof (returns as { policyText?: unknown }).policyText === "string"
+          ? (returns as { policyText: string }).policyText
+          : "",
+      returnShippingPayer: normalizedPayer,
+    },
   };
 }
 
@@ -259,6 +311,69 @@ export class ProfileRepository implements IProfileRepository {
       .where(eq(userProfiles.uid, uid));
   }
 
+  async getFulfillmentSettings(
+    uid: string,
+  ): Promise<ProfileFulfillmentSettings | null> {
+    const rows = await this.database.db
+      .select({
+        fulfillmentSettingsJson: userProfiles.fulfillmentSettingsJson,
+      })
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uid))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return normalizeFulfillmentSettings(
+      parseJson(
+        rows[0].fulfillmentSettingsJson,
+        EMPTY_PROFILE_FULFILLMENT_SETTINGS,
+      ),
+    );
+  }
+
+  async upsertFulfillmentSettings(
+    uid: string,
+    settings: ProfileFulfillmentSettings,
+  ): Promise<void> {
+    const payload = {
+      fulfillmentSettingsJson: JSON.stringify(settings),
+    };
+
+    const existing = await this.database.db
+      .select({ uid: userProfiles.uid })
+      .from(userProfiles)
+      .where(eq(userProfiles.uid, uid))
+      .limit(1);
+
+    if (existing.length === 0) {
+      await this.database.db.insert(userProfiles).values({
+        uid,
+        ...payload,
+      });
+      return;
+    }
+
+    await this.database.db
+      .update(userProfiles)
+      .set(payload)
+      .where(eq(userProfiles.uid, uid));
+  }
+
+  async getDeliveryServiceUids(uids: string[]): Promise<string[]> {
+    const uniqueUids = Array.from(new Set(uids)).filter(Boolean);
+    if (uniqueUids.length === 0) return [];
+    const rows = await this.database.db
+      .select({ uid: userSpecialties.uid })
+      .from(userSpecialties)
+      .where(
+        and(
+          inArray(userSpecialties.uid, uniqueUids),
+          eq(userSpecialties.delivery_services_46, 1),
+        ),
+      );
+    return rows.map((row: { uid: string }) => row.uid);
+  }
+
   async getSpecialties(
     uid: string,
   ): Promise<ProfileSpecialtiesSelection | null> {
@@ -313,6 +428,7 @@ export class ProfileRepository implements IProfileRepository {
     subcategoryId: number,
     offset: number,
     limit: number,
+    search?: string,
   ): Promise<UserProfileRow[]> {
     // Try doctor-appointment mapping first (for medical specialties), then regular subcategories
     const columnName = columnByDoctorAppointment.get(subcategoryId) ||
@@ -321,37 +437,78 @@ export class ProfileRepository implements IProfileRepository {
     
     if (!columnName) return [];
 
-    // Build OR condition: search in specific column OR parent collection member column
-    const conditions = [
-      eq(userSpecialties[columnName as keyof typeof userSpecialties] as any, 1),
-    ];
-    
-    // If this is a subcategory, also search in the parent collection member column
+    const columns = [columnName];
     if (categoryId !== 46) { // 46 is delivery services, handled separately
       const parentColumn = columnBySelection.get(`${categoryId}:${categoryId}`);
-      if (parentColumn) {
-        conditions.push(eq(userSpecialties[parentColumn as keyof typeof userSpecialties] as any, 1));
-      }
+      if (parentColumn && parentColumn !== columnName) columns.push(parentColumn);
     }
-    
-    const specialtyRows = await this.database.db
-      .select({ uid: userSpecialties.uid })
-      .from(userSpecialties)
-      .where(or(...conditions))
-      .limit(limit)
-      .offset(offset);
 
-    if (specialtyRows.length === 0) return [];
+    const specialtyCondition = columns
+      .map((column) => `s.\`${column}\` = 1`)
+      .join(" OR ");
+    const params: Array<string | number> = [];
+    const searchText = search?.trim().toLowerCase();
+    let searchCondition = "";
+    if (searchText) {
+      const pattern = `%${searchText}%`;
+      searchCondition =
+        " AND (lower(p.uid) LIKE ? OR lower(p.store_details_json) LIKE ?)";
+      params.push(pattern, pattern);
+    }
+    params.push(Math.max(1, limit), Math.max(0, offset));
 
-    const uids = specialtyRows.map((row: { uid: string }) => row.uid);
+    const rows = (await this.database.execute(
+      `SELECT
+        p.uid,
+        p.phones_json,
+        p.emails_json,
+        p.social_links_json,
+        p.websites_json,
+        p.location_json,
+        p.avatar_image_key,
+        p.cover_image_key,
+        p.cover_image_keys_json,
+        p.store_details_json,
+        p.specialties_json,
+        p.rating_settings_json,
+        p.fulfillment_settings_json
+      FROM user_specialties s
+      INNER JOIN user_profiles p ON p.uid = s.uid
+      WHERE (${specialtyCondition})${searchCondition}
+      ORDER BY p.uid ASC
+      LIMIT ? OFFSET ?`,
+      params,
+    )) as Array<{
+      uid: string;
+      phones_json: string;
+      emails_json: string;
+      social_links_json: string;
+      websites_json: string;
+      location_json: string | null;
+      avatar_image_key: string | null;
+      cover_image_key: string | null;
+      cover_image_keys_json: string;
+      store_details_json: string;
+      specialties_json: string;
+      rating_settings_json: string;
+      fulfillment_settings_json: string;
+    }>;
 
-    // Fetch all profiles for the found UIDs
-    const profiles = await this.database.db
-      .select()
-      .from(userProfiles)
-      .where(inArray(userProfiles.uid, uids));
-
-    return profiles as UserProfileRow[];
+    return rows.map((row) => ({
+      uid: row.uid,
+      phonesJson: row.phones_json,
+      emailsJson: row.emails_json,
+      socialLinksJson: row.social_links_json,
+      websitesJson: row.websites_json,
+      locationJson: row.location_json,
+      avatarImageKey: row.avatar_image_key,
+      coverImageKey: row.cover_image_key,
+      coverImageKeysJson: row.cover_image_keys_json,
+      storeDetailsJson: row.store_details_json,
+      specialtiesJson: row.specialties_json,
+      ratingSettingsJson: row.rating_settings_json,
+      fulfillmentSettingsJson: row.fulfillment_settings_json,
+    })) as UserProfileRow[];
   }
 }
 

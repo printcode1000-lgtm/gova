@@ -10,6 +10,8 @@ import { UpsertStoreDetailsCommand } from "./commands/upsert-store-details.comma
 import { GetProfileSpecialtiesQuery } from "./queries/get-profile-specialties.query";
 import { UpsertProfileSpecialtiesCommand } from "./commands/upsert-profile-specialties.command";
 import { GetUsersBySpecialtyQuery } from "./queries/get-users-by-specialty.query";
+import { GetProfileFulfillmentSettingsQuery } from "./queries/get-profile-fulfillment-settings.query";
+import { UpsertProfileFulfillmentSettingsCommand } from "./commands/upsert-profile-fulfillment-settings.command";
 
 export const getProfileContactsQuery = new GetProfileContactsQuery(
   profileRepository,
@@ -35,3 +37,7 @@ export const upsertProfileSpecialtiesCommand =
 export const getUsersBySpecialtyQuery = new GetUsersBySpecialtyQuery(
   profileRepository,
 );
+export const getProfileFulfillmentSettingsQuery =
+  new GetProfileFulfillmentSettingsQuery(profileRepository);
+export const upsertProfileFulfillmentSettingsCommand =
+  new UpsertProfileFulfillmentSettingsCommand(profileRepository);

@@ -9,8 +9,11 @@ import type { UpsertStoreDetailsCommand } from "../operations/commands/upsert-st
 import type { GetProfileSpecialtiesQuery } from "../operations/queries/get-profile-specialties.query";
 import type { UpsertProfileSpecialtiesCommand } from "../operations/commands/upsert-profile-specialties.command";
 import type { GetUsersBySpecialtyQuery } from "../operations/queries/get-users-by-specialty.query";
+import type { GetProfileFulfillmentSettingsQuery } from "../operations/queries/get-profile-fulfillment-settings.query";
+import type { UpsertProfileFulfillmentSettingsCommand } from "../operations/commands/upsert-profile-fulfillment-settings.command";
 import type { GetUserByUidQuery } from "@/features/auth/operations/queries/get-user-by-uid.query";
 import type { UpdateUserProfileCommand } from "@/features/auth/operations/commands/update-user-profile.command";
+import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import type {
   ProfileContactsData,
   SaveProfileContactsInput,
@@ -32,6 +35,10 @@ import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
 } from "../entities/profile-specialties.entity";
+import type {
+  ProfileFulfillmentSettings,
+  SaveProfileFulfillmentSettingsInput,
+} from "../entities/profile-fulfillment-settings.entity";
 import { traceServerLayer } from "@/core/monitor/trace-server-layer";
 import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
 import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
@@ -97,18 +104,18 @@ function normalizeCoverImageKeys(keys: string[]): string[] {
 
 function normalizeSpecialties(
   value: ProfileSpecialtiesSelection,
+  options: { unlimited?: boolean } = {},
 ): ProfileSpecialtiesSelection {
   const mainCandidates = Array.from(
     new Set(
       (Array.isArray(value?.main) ? value.main : []).filter(Number.isInteger),
     ),
   );
-  const main = mainCandidates
-    .filter((categoryId) => {
+  const validMain = mainCandidates.filter((categoryId) => {
       if (categoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) return true;
       return categoryService.getProfileMainOptions().some((item) => item.id === categoryId);
-    })
-    .slice(0, 3);
+    });
+  const main = options.unlimited ? validMain : validMain.slice(0, 3);
   const sub: Record<string, number[]> = {};
   if (value?.sub && typeof value.sub === "object") {
     for (const [categoryId, ids] of Object.entries(value.sub)) {
@@ -133,6 +140,8 @@ export class ProfileService implements IProfileService {
     private getProfileSpecialtiesQuery: GetProfileSpecialtiesQuery,
     private upsertProfileSpecialtiesCommand: UpsertProfileSpecialtiesCommand,
     private getUsersBySpecialtyQuery: GetUsersBySpecialtyQuery,
+    private getProfileFulfillmentSettingsQuery: GetProfileFulfillmentSettingsQuery,
+    private upsertProfileFulfillmentSettingsCommand: UpsertProfileFulfillmentSettingsCommand,
     private getUserByUidQuery: GetUserByUidQuery,
     private updateUserProfileCommand: UpdateUserProfileCommand,
   ) {}
@@ -268,13 +277,33 @@ export class ProfileService implements IProfileService {
     return this.getProfileSpecialtiesQuery.execute(uid);
   }
 
+  async getFulfillmentSettings(
+    uid: string,
+  ): Promise<ProfileFulfillmentSettings> {
+    if (!uid) throw new Error("userNotFound");
+    return this.getProfileFulfillmentSettingsQuery.execute(uid);
+  }
+
+  async saveFulfillmentSettings(
+    input: SaveProfileFulfillmentSettingsInput,
+  ): Promise<ProfileFulfillmentSettings> {
+    if (!input.uid) throw new Error("userNotFound");
+    const user = await this.getUserByUidQuery.execute(input.uid);
+    if (!user) throw new Error("userNotFound");
+    return this.upsertProfileFulfillmentSettingsCommand.execute(input);
+  }
+
   async saveSpecialties(
     input: SaveProfileSpecialtiesInput,
   ): Promise<ProfileSpecialtiesSelection> {
     if (!input.uid) throw new Error("userNotFound");
+    const user = await this.getUserByUidQuery.execute(input.uid);
+    if (!user) throw new Error("userNotFound");
     return this.upsertProfileSpecialtiesCommand.execute(
       input.uid,
-      normalizeSpecialties(input),
+      normalizeSpecialties(input, {
+        unlimited: isSuperAdminIdentity(user.uid, user.phone),
+      }),
     );
   }
 
@@ -283,8 +312,9 @@ export class ProfileService implements IProfileService {
     subcategoryId: number,
     offset: number,
     limit: number,
+    search?: string,
   ) {
-    return this.getUsersBySpecialtyQuery.execute(categoryId, subcategoryId, offset, limit);
+    return this.getUsersBySpecialtyQuery.execute(categoryId, subcategoryId, offset, limit, search);
   }
 
   async saveEditor(
@@ -359,7 +389,9 @@ export class ProfileService implements IProfileService {
         const specialties = changedSections.has("specialties")
           ? await this.upsertProfileSpecialtiesCommand.execute(
               input.uid,
-              normalizeSpecialties(input.specialties),
+              normalizeSpecialties(input.specialties, {
+                unlimited: isSuperAdminIdentity(user.uid, user.phone),
+              }),
             )
           : input.specialties;
 

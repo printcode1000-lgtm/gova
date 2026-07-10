@@ -10,6 +10,7 @@ import {
   Loader2,
   LogIn,
   Save,
+  Truck,
 } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -30,6 +31,7 @@ import { ProfileRegistrationInfoCard } from "@/components/profile/ProfileRegistr
 import { SpecialtiesCard } from "@/components/profile/SpecialtiesCard";
 import { ProductsCard } from "@/components/profile/ProductsCard";
 import { StoreIdentityCard } from "@/components/profile/StoreIdentityCard";
+import { FulfillmentSettingsCard } from "@/components/profile/FulfillmentSettingsCard";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { useTranslation } from "@/lib/i18n";
@@ -43,6 +45,7 @@ import type {
   ProfileContactsController,
   ProfileRegistrationController,
   ProfileSpecialtiesController,
+  ProfileFulfillmentController,
   StoreDetailsController,
 } from "./profile-save-controller";
 import type { ProfileEditTab, ProfileSectionStatus } from "./profile-page.types";
@@ -70,6 +73,7 @@ export function ProfilePageContent() {
   const productsRef = React.useRef<ProfileSpecialtiesController>(null);
   const contactsRef = React.useRef<ProfileContactsController>(null);
   const storeRef = React.useRef<StoreDetailsController>(null);
+  const fulfillmentRef = React.useRef<ProfileFulfillmentController>(null);
 
   const {
     activeTab,
@@ -97,6 +101,7 @@ export function ProfilePageContent() {
     handleProductsStatus,
     handleContactStatus,
     handleStoreStatus,
+    handleFulfillmentStatus,
     handleSaveChangedSections,
     setSaveDialog,
   } = useProfileSave({
@@ -362,6 +367,28 @@ export function ProfilePageContent() {
                       <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
                     ) : null}
                   </button>
+                  <button
+                    ref={(node) => {
+                      navButtonRefs.current.fulfillment = node;
+                    }}
+                    type="button"
+                    onClick={() => selectSection("fulfillment")}
+                    aria-pressed={activeTab === "fulfillment"}
+                    aria-controls={PROFILE_SECTION_IDS.fulfillment}
+                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                      activeTab === "fulfillment"
+                        ? "border-primary bg-primary text-on-primary shadow-sm"
+                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                    }`}
+                  >
+                    <Truck className="h-6 w-6" />
+                    <span className="whitespace-nowrap text-center">
+                      {locale === "ar" ? "الشحن والإرجاع" : "Shipping"}
+                    </span>
+                    {sectionStatuses.fulfillment?.isDirty ? (
+                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                    ) : null}
+                  </button>
                 </div>
                 <div className="pointer-events-none absolute inset-y-0 start-0 w-5 bg-gradient-to-r from-surface-container-low/95 to-transparent" />
                 <div className="pointer-events-none absolute inset-y-0 end-0 w-5 bg-gradient-to-l from-surface-container-low/95 to-transparent" />
@@ -461,6 +488,21 @@ export function ProfilePageContent() {
                       onStatusChange={handleStoreStatus}
                     />
                   </div>
+                  <div
+                    ref={(node) => {
+                      panelRefs.current.fulfillment = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.fulfillment}
+                    role="region"
+                    aria-hidden={activeTab !== "fulfillment"}
+                    inert={activeTab !== "fulfillment"}
+                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                  >
+                    <FulfillmentSettingsCard
+                      ref={fulfillmentRef}
+                      onStatusChange={handleFulfillmentStatus}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -527,7 +569,8 @@ export function ProfilePageContent() {
                       contactsRef.current,
                       storeRef.current,
                       specialtiesRef.current,
-                      productsRef.current
+                      productsRef.current,
+                      fulfillmentRef.current
                     )}
                     disabled={isUnifiedSaving || isSaveBlocked}
                   >

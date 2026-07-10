@@ -9,8 +9,10 @@ import type {
   ProfileRegistrationController,
   ProfileSectionStatus,
   ProfileSpecialtiesController,
+  ProfileFulfillmentController,
   StoreDetailsController,
 } from "./profile-save-controller";
+import type { ProfileEditorSection } from "@/features/profile/entities/profile-editor.entity";
 
 interface UseProfileSaveProps {
   session: { uid: string } | null;
@@ -31,12 +33,14 @@ interface UseProfileSaveReturn {
   handleProductsStatus: (status: ProfileSectionStatus) => void;
   handleContactStatus: (status: ProfileSectionStatus) => void;
   handleStoreStatus: (status: ProfileSectionStatus) => void;
+  handleFulfillmentStatus: (status: ProfileSectionStatus) => void;
   handleSaveChangedSections: (
     registrationController: ProfileRegistrationController | null,
     contactsController: ProfileContactsController | null,
     storeController: StoreDetailsController | null,
     specialtiesController: ProfileSpecialtiesController | null,
-    productsController: ProfileSpecialtiesController | null
+    productsController: ProfileSpecialtiesController | null,
+    fulfillmentController: ProfileFulfillmentController | null
   ) => Promise<void>;
   setSaveDialog: React.Dispatch<React.SetStateAction<{ type: 'success' | 'error', message: string } | null>>;
 }
@@ -56,6 +60,7 @@ export function useProfileSave({
     products: null,
     contact: null,
     store: null,
+    fulfillment: null,
   });
   const [saveError, setSaveError] = React.useState<string | null>(null);
   const [isUnifiedSaving, setIsUnifiedSaving] = React.useState(false);
@@ -102,13 +107,19 @@ export function useProfileSave({
     (status: ProfileSectionStatus) => updateSectionStatus("store", status),
     [updateSectionStatus],
   );
+  const handleFulfillmentStatus = React.useCallback(
+    (status: ProfileSectionStatus) =>
+      updateSectionStatus("fulfillment", status),
+    [updateSectionStatus],
+  );
 
   const handleSaveChangedSections = async (
     registrationController: ProfileRegistrationController | null,
     contactsController: ProfileContactsController | null,
     storeController: StoreDetailsController | null,
     specialtiesController: ProfileSpecialtiesController | null,
-    productsController: ProfileSpecialtiesController | null
+    productsController: ProfileSpecialtiesController | null,
+    fulfillmentController: ProfileFulfillmentController | null
   ) => {
     setSaveError(null);
     
@@ -118,7 +129,8 @@ export function useProfileSave({
       !contactsController ||
       !storeController ||
       !specialtiesController ||
-      !productsController
+      !productsController ||
+      !fulfillmentController
     ) {
       reportSystemIssue({
         level: "warning",
@@ -141,6 +153,9 @@ export function useProfileSave({
       >
     ).filter(([, status]) => status?.isDirty);
     const changedSections = dirtySections.map(([section]) => section);
+    const editorSections = changedSections.filter(
+      (section): section is ProfileEditorSection => section !== "fulfillment",
+    );
     const contacts = mergePrimaryContacts(
       registration,
       contactsController.getSnapshot(),
@@ -150,40 +165,45 @@ export function useProfileSave({
 
     try {
       setIsUnifiedSaving(true);
-      const saved = await profileService.saveEditor({
-        uid: session.uid,
-        changedSections,
-        registration,
-        contacts,
-        storeDetails,
-        specialties,
-      });
-
-      if (changedSections.includes("registration")) {
-        await registrationController.applySaved(saved.registration);
-      }
-      if (
-        changedSections.includes("registration") ||
-        changedSections.includes("contact")
-      ) {
-        contactsController.applySaved(saved.contacts);
-      }
-      if (changedSections.includes("store")) {
-        storeController.applySaved(saved.storeDetails);
-      }
-      if (changedSections.includes("specialties")) {
-        specialtiesController.applySaved(saved.specialties);
-        productsController.applySaved(saved.specialties);
-        const updatedSession = await sessionService.saveSession({
+      if (editorSections.length > 0) {
+        const saved = await profileService.saveEditor({
           uid: session.uid,
-          phone: saved.registration.phone,
-          email: saved.registration.email ?? undefined,
-          specialties: saved.specialties,
+          changedSections: editorSections,
+          registration,
+          contacts,
+          storeDetails,
+          specialties,
         });
-        setSession(updatedSession);
+
+        if (editorSections.includes("registration")) {
+          await registrationController.applySaved(saved.registration);
+        }
+        if (
+          editorSections.includes("registration") ||
+          editorSections.includes("contact")
+        ) {
+          contactsController.applySaved(saved.contacts);
+        }
+        if (editorSections.includes("store")) {
+          storeController.applySaved(saved.storeDetails);
+        }
+        if (editorSections.includes("specialties")) {
+          specialtiesController.applySaved(saved.specialties);
+          productsController.applySaved(saved.specialties);
+          const updatedSession = await sessionService.saveSession({
+            uid: session.uid,
+            phone: saved.registration.phone,
+            email: saved.registration.email ?? undefined,
+            specialties: saved.specialties,
+          });
+          setSession(updatedSession);
+        }
+        if (editorSections.includes("products")) {
+          productsController.applySaved(saved.specialties);
+        }
       }
-      if (changedSections.includes("products")) {
-        productsController.applySaved(saved.specialties);
+      if (changedSections.includes("fulfillment")) {
+        await fulfillmentController.save();
       }
       setSaveDialog({
         type: 'success',
@@ -228,6 +248,7 @@ export function useProfileSave({
     handleProductsStatus,
     handleContactStatus,
     handleStoreStatus,
+    handleFulfillmentStatus,
     handleSaveChangedSections,
     setSaveDialog,
   };

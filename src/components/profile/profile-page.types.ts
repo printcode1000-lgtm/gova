@@ -3,10 +3,11 @@ import type {
   ProfileRegistrationController,
   ProfileSectionStatus,
   ProfileSpecialtiesController,
+  ProfileFulfillmentController,
   StoreDetailsController,
 } from "./profile-save-controller";
 
-export type ProfileEditTab = "registration" | "specialties" | "products" | "contact" | "store";
+export type ProfileEditTab = "registration" | "specialties" | "products" | "contact" | "store" | "fulfillment";
 
 export const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
   registration: "profile-registration-panel",
@@ -14,6 +15,7 @@ export const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
   products: "profile-products-panel",
   contact: "profile-contact-panel",
   store: "profile-store-panel",
+  fulfillment: "profile-fulfillment-panel",
 };
 
 export const PROFILE_SECTIONS: ProfileEditTab[] = [
@@ -22,6 +24,7 @@ export const PROFILE_SECTIONS: ProfileEditTab[] = [
   "products",
   "contact",
   "store",
+  "fulfillment",
 ];
 
 export type { ProfileSectionStatus };

@@ -24,6 +24,11 @@ export const userProfiles = sqliteTable("user_profiles", {
   ratingSettingsJson: text("rating_settings_json")
     .notNull()
     .default('{"enabled":true,"mode":"stars-comments"}'),
+  fulfillmentSettingsJson: text("fulfillment_settings_json")
+    .notNull()
+    .default(
+      '{"selfDeliveryEnabled":false,"carrierUids":[],"returns":{"enabled":false,"returnWindowDays":14,"policyText":"","returnShippingPayer":"case_by_case"}}',
+    ),
 });
 
 export const profileReviews = sqliteTable(

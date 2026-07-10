@@ -12,8 +12,9 @@ export async function GET(request: Request) {
       const subcategoryId = Number(url.searchParams.get("subcategoryId") ?? "0");
       const offset = Number(url.searchParams.get("offset") ?? "0");
       const limit = Number(url.searchParams.get("limit") ?? "10");
+      const search = url.searchParams.get("search") ?? undefined;
       
-      const users = await profileService.getUsersBySpecialty(categoryId, subcategoryId, offset, limit);
+      const users = await profileService.getUsersBySpecialty(categoryId, subcategoryId, offset, limit, search);
       
       // Add avatarUrl to each user
       const usersWithAvatarUrls = users.map((user) => ({

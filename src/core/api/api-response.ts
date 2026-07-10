@@ -34,6 +34,7 @@ export function mapServiceError(error: unknown): NextResponse {
     'invalidStoreDetails',
     'invalidProfileContacts',
     'invalidProfileEditor',
+    'invalidDeliveryCarrier',
     'phoneVerificationRequired',
   ];
 

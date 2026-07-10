@@ -11,6 +11,8 @@ import {
   getProfileSpecialtiesQuery,
   upsertProfileSpecialtiesCommand,
   getUsersBySpecialtyQuery,
+  getProfileFulfillmentSettingsQuery,
+  upsertProfileFulfillmentSettingsCommand,
 } from "../operations/instances";
 import {
   getUserByUidQuery,
@@ -27,6 +29,8 @@ export const profileService = new ProfileService(
   getProfileSpecialtiesQuery,
   upsertProfileSpecialtiesCommand,
   getUsersBySpecialtyQuery,
+  getProfileFulfillmentSettingsQuery,
+  upsertProfileFulfillmentSettingsCommand,
   getUserByUidQuery,
   updateUserProfileCommand,
 );

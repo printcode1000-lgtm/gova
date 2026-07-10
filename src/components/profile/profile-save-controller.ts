@@ -3,6 +3,7 @@ import type { ProfileRegistrationSnapshot } from "@/features/profile/entities/pr
 import type { ProfileContactsData } from "@/features/profile/entities/profile-contacts.entity";
 import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
 import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
+import type { ProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
 
 export interface ProfileSectionStatus {
   isDirty: boolean;
@@ -28,6 +29,11 @@ export interface ProfileContactsController extends ProfileSectionController {
 export interface StoreDetailsController extends ProfileSectionController {
   getSnapshot: () => StoreDetailsData;
   applySaved: (details: StoreDetailsData) => void;
+}
+
+export interface ProfileFulfillmentController extends ProfileSectionController {
+  getSnapshot: () => ProfileFulfillmentSettings;
+  applySaved: (settings: ProfileFulfillmentSettings) => void;
 }
 
 export interface ProfileSpecialtiesController extends ProfileSectionController {

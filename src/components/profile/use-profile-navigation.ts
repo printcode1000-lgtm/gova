@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import type { ProfileEditTab, PROFILE_SECTIONS } from "./profile-page.types";
+import { PROFILE_SECTIONS, type ProfileEditTab } from "./profile-page.types";
 
 interface UseProfileNavigationProps {
   showEditCard: boolean;
@@ -29,7 +29,7 @@ export function useProfileNavigation({
   const requestedTab = searchParams.get("tab");
   const [activeTab, setActiveTab] =
     React.useState<ProfileEditTab>(() =>
-      requestedTab && ["registration", "specialties", "products", "contact", "store"].includes(requestedTab as ProfileEditTab)
+      requestedTab && PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab)
         ? (requestedTab as ProfileEditTab)
         : "registration",
     );
@@ -42,11 +42,19 @@ export function useProfileNavigation({
       products: null,
       contact: null,
       store: null,
+      fulfillment: null,
     },
   );
   const navButtonRefs = React.useRef<
     Record<ProfileEditTab, HTMLButtonElement | null>
-  >({ registration: null, specialties: null, products: null, contact: null, store: null });
+  >({
+    registration: null,
+    specialties: null,
+    products: null,
+    contact: null,
+    store: null,
+    fulfillment: null,
+  });
   const scrollFrameRef = React.useRef<number | null>(null);
   const appliedRequestedTabRef = React.useRef<string | null>(null);
 
@@ -74,7 +82,7 @@ export function useProfileNavigation({
       isLoading ||
       !isLoggedIn ||
       !requestedTab ||
-      !["registration", "specialties", "products", "contact", "store"].includes(requestedTab as ProfileEditTab) ||
+      !PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab) ||
       appliedRequestedTabRef.current === requestedTab
     ) return;
     const section = requestedTab as ProfileEditTab;
@@ -94,7 +102,7 @@ export function useProfileNavigation({
         carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
       let closest = activeTab;
       let closestDistance = Number.POSITIVE_INFINITY;
-      for (const section of ["registration", "specialties", "products", "contact", "store"] as ProfileEditTab[]) {
+      for (const section of PROFILE_SECTIONS) {
         const panel = panelRefs.current[section];
         if (!panel) continue;
         const rect = panel.getBoundingClientRect();
@@ -133,9 +141,9 @@ export function useProfileNavigation({
     return () => observer.disconnect();
   }, [activeTab, isLoading, isLoggedIn]);
 
-  const activeSectionIndex = ["registration", "specialties", "products", "contact", "store"].indexOf(activeTab);
+  const activeSectionIndex = PROFILE_SECTIONS.indexOf(activeTab);
   const goToAdjacentSection = (offset: -1 | 1) => {
-    const nextSection = ["registration", "specialties", "products", "contact", "store"][activeSectionIndex + offset] as ProfileEditTab | undefined;
+    const nextSection = PROFILE_SECTIONS[activeSectionIndex + offset];
     if (nextSection) selectSection(nextSection);
   };
 

@@ -27,6 +27,10 @@ import type {
   ProfileSpecialtiesSelection,
   SaveProfileSpecialtiesInput,
 } from "../entities/profile-specialties.entity";
+import type {
+  ProfileFulfillmentSettings,
+  SaveProfileFulfillmentSettingsInput,
+} from "../entities/profile-fulfillment-settings.entity";
 import type { UserProfileRow } from "./profile-service.interface";
 
 export class ProfileApiService implements IProfileService {
@@ -89,9 +93,33 @@ export class ProfileApiService implements IProfileService {
     subcategoryId: number,
     offset: number,
     limit: number,
+    search?: string,
   ): Promise<UserProfileRow[]> {
-    const route = `${GOVA_API_ROUTES.profile.usersBySpecialty}?categoryId=${categoryId}&subcategoryId=${subcategoryId}&offset=${offset}&limit=${limit}`;
+    const q = new URLSearchParams({
+      categoryId: String(categoryId),
+      subcategoryId: String(subcategoryId),
+      offset: String(offset),
+      limit: String(limit),
+    });
+    if (search?.trim()) q.set("search", search.trim());
+    const route = `${GOVA_API_ROUTES.profile.usersBySpecialty}?${q}`;
     return govaApi.get<UserProfileRow[]>(route);
+  }
+
+  async getFulfillmentSettings(
+    uid: string,
+  ): Promise<ProfileFulfillmentSettings> {
+    const route = `${GOVA_API_ROUTES.profile.fulfillmentSettings}?uid=${encodeURIComponent(uid)}`;
+    return govaApi.get<ProfileFulfillmentSettings>(route);
+  }
+
+  async saveFulfillmentSettings(
+    input: SaveProfileFulfillmentSettingsInput,
+  ): Promise<ProfileFulfillmentSettings> {
+    return govaApi.put<ProfileFulfillmentSettings>(
+      GOVA_API_ROUTES.profile.fulfillmentSettings,
+      input,
+    );
   }
 
   async saveEditor(

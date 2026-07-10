@@ -400,12 +400,12 @@ export const SpecialtiesCard = React.forwardRef<
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
+                <div
+                  className="flex items-center gap-1"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSpecialtyToggle(categoryId);
-                    }}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <Checkbox
                       id={categoryId}

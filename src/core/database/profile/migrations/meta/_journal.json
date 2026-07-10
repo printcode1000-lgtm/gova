@@ -57,6 +57,13 @@
       "when": 1783737660000,
       "tag": "0007_profile_reviews",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "1783737720",
+      "when": 1783737720000,
+      "tag": "0008_fulfillment_settings_json",
+      "breakpoints": true
     }
   ]
 }
