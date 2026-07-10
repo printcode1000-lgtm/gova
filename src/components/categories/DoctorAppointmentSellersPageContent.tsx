@@ -22,6 +22,10 @@ function parseStoreDetails(storeDetailsJson: string) {
   }
 }
 
+function sellerProfileViewUrl(uid: string): string {
+  return `/profile?mode=view&uid=${encodeURIComponent(uid)}`;
+}
+
 export function DoctorAppointmentSellersPageContent({
   categoryId,
   specialtyId,
@@ -132,7 +136,7 @@ export function DoctorAppointmentSellersPageContent({
             return (
               <button
                 key={user.uid}
-                onClick={() => router.push(`/profile?uid=${user.uid}`)}
+                onClick={() => router.push(sellerProfileViewUrl(user.uid))}
                 className="flex flex-col items-center rounded-xl bg-surface p-4 shadow-sm"
               >
                 <div className="relative h-24 w-24 overflow-hidden rounded-full bg-surface-bright">
