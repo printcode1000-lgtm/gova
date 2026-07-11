@@ -1,25 +1,16 @@
 {
-  "executedAt": "2026-07-10T09:26:19.379Z",
-  "durationMs": 6409,
+  "executedAt": "2026-07-11T04:42:39.549Z",
+  "durationMs": 5991,
   "sqliteSchemaVersion": "caad62e0e629a08d",
-  "tursoSchemaVersionBefore": "d09db370bd4fa10e",
+  "tursoSchemaVersionBefore": "b18b3a4fba8e0b18",
   "tursoSchemaVersionAfter": "b18b3a4fba8e0b18",
-  "operations": [
-    {
-      "type": "ADD_COLUMN",
-      "tableName": "user_profiles",
-      "sql": "ALTER TABLE \"user_profiles\" ADD COLUMN \"fulfillment_settings_json\" TEXT NOT NULL DEFAULT '{\"selfDeliveryEnabled\":false,\"carrierUids\":[],\"returns\":{\"enabled\":false,\"returnWindowDays\":14,\"policyText\":\"\",\"returnShippingPayer\":\"case_by_case\"}}'",
-      "description": "Add column \"user_profiles.fulfillment_settings_json\""
-    }
-  ],
+  "operations": [],
   "tablesModified": 0,
-  "columnsAdded": 1,
+  "columnsAdded": 0,
   "indexesAdded": 0,
   "viewsAdded": 0,
   "triggersAdded": 0,
-  "sqlExecuted": [
-    "ALTER TABLE \"user_profiles\" ADD COLUMN \"fulfillment_settings_json\" TEXT NOT NULL DEFAULT '{\"selfDeliveryEnabled\":false,\"carrierUids\":[],\"returns\":{\"enabled\":false,\"returnWindowDays\":14,\"policyText\":\"\",\"returnShippingPayer\":\"case_by_case\"}}'"
-  ],
+  "sqlExecuted": [],
   "errors": [],
   "warnings": [
     "Table \"user_specialties\" exists on Turso but not in SQLite. Not dropped automatically."

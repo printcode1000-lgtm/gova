@@ -86,6 +86,14 @@ export function writeTursoProfileRuntimeCredentials(
   process.env.TURSO_PROFILE_AUTH_TOKEN = authToken;
 }
 
+export function writeTursoMarketplaceOrdersRuntimeCredentials(
+  url: string,
+  authToken: string,
+): void {
+  process.env.MARKETPLACE_ORDERS_DATABASE_URL = url;
+  process.env.MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN = authToken;
+}
+
 export function getTursoProductRuntimeCredentials(): {
   url: string;
   authToken: string;

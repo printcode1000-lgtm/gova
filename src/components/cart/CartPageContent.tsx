@@ -3,8 +3,19 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  ChevronDown,
+  ExternalLink,
+  Loader2,
+  Minus,
+  Plus,
+  ShoppingCart,
+  Trash2,
+} from "lucide-react";
 
+import { govaApi } from "@/core/api/gova-api-client";
+import { GOVA_API_ROUTES } from "@/core/api/gova-api-routes";
 import {
   clearCart,
   getCartTotalMinor,
@@ -12,6 +23,7 @@ import {
   updateCartItemQuantity,
 } from "@/features/cart/cart-store";
 import { useCart } from "@/features/cart/use-cart";
+import { useSession } from "@/features/auth/components/SessionProvider";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
@@ -26,11 +38,28 @@ function formatMoney(minor: number) {
   }).format(minor / 100);
 }
 
+function orderErrorMessage(message: string) {
+  if (message.includes("Buyer profile phone and address")) {
+    return "يجب إضافة رقم الهاتف والعنوان في بيانات البروفايل قبل إرسال الطلب.";
+  }
+  if (message.includes("Delivery carrier required")) {
+    return "لا يمكن إرسال الطلب لأن أحد البائعين لم يربط مقدم خدمة توصيل في إعدادات الشحن والإرجاع.";
+  }
+  if (message.includes("userNotFound")) {
+    return "يجب تسجيل الدخول قبل إرسال الطلب.";
+  }
+  return message || "تعذر إرسال الطلب. حاول مرة أخرى.";
+}
+
 export function CartPageContent() {
+  const router = useRouter();
+  const { session, isLoading: isSessionLoading } = useSession();
   const { items, totalQuantity } = useCart();
   const [sellerSettings, setSellerSettings] = React.useState<
     Record<string, ProfileFulfillmentSettings>
   >({});
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState("");
   const productsTotalMinor = getCartTotalMinor(items);
   const sellerIds = React.useMemo(
     () => Array.from(new Set(items.map((item) => item.sellerId))).filter(Boolean),
@@ -101,13 +130,50 @@ export function CartPageContent() {
   );
   const totalMinor = productsTotalMinor + shippingTotalMinor;
 
+  const submitOrder = async () => {
+    if (!session?.uid) {
+      setSubmitError("يجب تسجيل الدخول قبل إرسال الطلب.");
+      return;
+    }
+    setIsSubmitting(true);
+    setSubmitError("");
+    try {
+      const result = await govaApi.post<{ orderId: string }>(
+        GOVA_API_ROUTES.orders.fromCart,
+        {
+          uid: session.uid,
+          phone: session.phone,
+          items: items.map((item) => ({
+            productId: item.productId,
+            sellerId: item.sellerId,
+            name: item.name,
+            description: item.description,
+            imageUrl: item.imageUrl,
+            quantity: item.quantity,
+            unitPriceMinor: item.unitPriceMinor,
+            requiresSpecialVehicle: item.requiresSpecialVehicle,
+          })),
+        },
+        { suppressErrorLog: true },
+      );
+      clearCart();
+      router.push(`/orders/${encodeURIComponent(result.orderId)}`);
+    } catch (error) {
+      setSubmitError(
+        orderErrorMessage(error instanceof Error ? error.message : String(error)),
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
           <h1 className="text-2xl font-bold text-on-surface">السلة</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            راجع المنتجات والخدمات قبل تحويلها لاحقًا إلى طلب رسمي.
+            راجع المنتجات والخدمات قبل إرسالها كطلب رسمي بنظام الدفع عند الاستلام.
           </p>
         </div>
         {items.length > 0 ? (
@@ -148,12 +214,19 @@ export function CartPageContent() {
               >
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant pb-3">
                   <div>
-                    <h2 className="text-sm font-bold">البائع: {group.sellerId}</h2>
+                    <h2 className="text-sm font-bold">البائع</h2>
                     <p className="text-xs text-muted-foreground">
                       الشحن: {formatMoney(group.shippingMinor)}
                       {group.eligibleForFree ? " - تم تطبيق حد الشحن المجاني" : ""}
                     </p>
                   </div>
+                  <Link
+                    href={`/profile?mode=view&uid=${encodeURIComponent(group.sellerId)}`}
+                    className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    عرض بروفايل البائع
+                  </Link>
                   {group.hasSpecialVehicle ? (
                     <span className="rounded-full bg-warning/10 px-2 py-1 text-xs font-semibold text-warning">
                       يتضمن منتجًا يحتاج سيارة نقل
@@ -163,89 +236,86 @@ export function CartPageContent() {
 
                 <div className="space-y-3">
                   {group.items.map((item) => (
-              <article
-                key={item.id}
-                className="rounded-xl border border-outline-variant bg-background p-4"
-              >
-                <div className="flex gap-4">
-                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-outline-variant bg-muted">
-                    {item.imageUrl ? (
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.name}
-                        fill
-                        sizes="80px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                        بدون صورة
-                      </div>
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <h2 className="truncate font-bold text-on-surface">
-                          {item.name}
-                        </h2>
-                        <p className="mt-1 truncate text-xs text-muted-foreground">
-                          البائع: {item.sellerId}
-                        </p>
-                        {item.requiresSpecialVehicle ? (
-                          <span className="mt-2 inline-flex rounded-full bg-warning/10 px-2 py-1 text-xs font-semibold text-warning">
-                            يحتاج سيارة خاصة
-                          </span>
-                        ) : null}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeCartItem(item.id)}
-                        className="rounded-full p-2 text-muted-foreground transition hover:bg-error/10 hover:text-error"
-                        aria-label="حذف من السلة"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
+                    <article
+                      key={item.id}
+                      className="rounded-xl border border-outline-variant bg-background p-4"
+                    >
+                      <div className="flex gap-4">
+                        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-outline-variant bg-muted">
+                          {item.imageUrl ? (
+                            <Image
+                              src={item.imageUrl}
+                              alt={item.name}
+                              fill
+                              sizes="80px"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                              بدون صورة
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <h2 className="truncate font-bold text-on-surface">
+                                {item.name}
+                              </h2>
+                              {item.requiresSpecialVehicle ? (
+                                <span className="mt-2 inline-flex rounded-full bg-warning/10 px-2 py-1 text-xs font-semibold text-warning">
+                                  يحتاج سيارة خاصة
+                                </span>
+                              ) : null}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => removeCartItem(item.id)}
+                              className="rounded-full p-2 text-muted-foreground transition hover:bg-error/10 hover:text-error"
+                              aria-label="حذف من السلة"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
 
-                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                      <div className="inline-flex items-center overflow-hidden rounded-lg border border-outline-variant">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateCartItemQuantity(item.id, item.quantity - 1)
-                          }
-                          className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
-                          aria-label="تقليل الكمية"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </button>
-                        <span className="min-w-10 px-3 text-center text-sm font-bold">
-                          {item.quantity}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateCartItemQuantity(item.id, item.quantity + 1)
-                          }
-                          className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
-                          aria-label="زيادة الكمية"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </button>
+                          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                            <div className="inline-flex items-center overflow-hidden rounded-lg border border-outline-variant">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateCartItemQuantity(item.id, item.quantity - 1)
+                                }
+                                className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
+                                aria-label="تقليل الكمية"
+                              >
+                                <Minus className="h-4 w-4" />
+                              </button>
+                              <span className="min-w-10 px-3 text-center text-sm font-bold">
+                                {item.quantity}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateCartItemQuantity(item.id, item.quantity + 1)
+                                }
+                                className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
+                                aria-label="زيادة الكمية"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </div>
+                            <div className="text-end">
+                              <p className="text-xs text-muted-foreground">
+                                سعر الوحدة
+                              </p>
+                              <p className="font-bold">
+                                {formatMoney(item.unitPriceMinor)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-end">
-                        <p className="text-xs text-muted-foreground">
-                          سعر الوحدة
-                        </p>
-                        <p className="font-bold">
-                          {formatMoney(item.unitPriceMinor)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
+                    </article>
                   ))}
                 </div>
 
@@ -263,7 +333,9 @@ export function CartPageContent() {
                     <p>
                       الحالة:{" "}
                       <span className="font-semibold text-on-surface">
-                        {group.settings.returns.enabled ? "الإرجاع متاح" : "الإرجاع غير متاح"}
+                        {group.settings.returns.enabled
+                          ? "الإرجاع متاح"
+                          : "الإرجاع غير متاح"}
                       </span>
                     </p>
                     {group.settings.returns.enabled ? (
@@ -316,22 +388,27 @@ export function CartPageContent() {
               </div>
               <div className="border-t border-outline-variant pt-3">
                 <div className="flex justify-between text-base font-bold">
-                  <span>الإجمالي المبدئي</span>
+                  <span>الإجمالي</span>
                   <span>{formatMoney(totalMinor)}</span>
                 </div>
               </div>
             </div>
+            {submitError ? (
+              <p className="mt-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
+                {submitError}
+              </p>
+            ) : null}
             <button
               type="button"
-              disabled
-              className="mt-5 w-full rounded-xl bg-primary px-5 py-3 font-bold text-on-primary opacity-60"
-              title="سيتم ربطها لاحقًا بنظام إنشاء الطلب الرسمي"
+              disabled={isSubmitting || isSessionLoading}
+              onClick={submitOrder}
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              متابعة الطلب لاحقًا
+              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              إرسال الطلب
             </button>
             <p className="mt-3 text-xs leading-5 text-muted-foreground">
-              هذه السلة مؤقتة في المتصفح. عند تفعيل إتمام الطلب لاحقًا سيتم إنشاء
-              طلب رسمي متوافق مع نظام إدارة طلبات السوق.
+              سيتم إنشاء الطلب الرسمي من قاعدة البيانات، والدفع عند الاستلام فقط.
             </p>
           </aside>
         </div>

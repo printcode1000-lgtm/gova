@@ -6,11 +6,12 @@ import {
   listTursoDatabases,
 } from './turso-platform-api';
 import { SQLITE_DIRECTORY } from '@/core/database/environment';
-import { writeTursoRuntimeCredentials, writeTursoProfileRuntimeCredentials, readOptionalEnv } from '@/core/config/server-env.values';
+import { writeTursoRuntimeCredentials, writeTursoProfileRuntimeCredentials, writeTursoMarketplaceOrdersRuntimeCredentials, readOptionalEnv } from '@/core/config/server-env.values';
 import type { TursoProvisionResult } from './types';
 
 const DEFAULT_USERS_DB_NAME = 'gova-db';
 const DEFAULT_PROFILE_DB_NAME = 'gova-profile';
+const DEFAULT_MARKETPLACE_ORDERS_DB_NAME = 'gova-marketplace-orders';
 
 function updateEnvFileKeys(
   filePath: string,
@@ -45,6 +46,15 @@ function updateProfileEnvFiles(url: string, token: string): void {
   const entries = {
     TURSO_PROFILE_DATABASE_URL: url,
     TURSO_PROFILE_AUTH_TOKEN: token,
+  };
+  updateEnvFileKeys('.env', entries);
+  updateEnvFileKeys('.env.local', entries);
+}
+
+function updateMarketplaceOrdersEnvFiles(url: string, token: string): void {
+  const entries = {
+    MARKETPLACE_ORDERS_DATABASE_URL: url,
+    MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN: token,
   };
   updateEnvFileKeys('.env', entries);
   updateEnvFileKeys('.env.local', entries);
@@ -93,6 +103,29 @@ export async function provisionTursoProfileDatabase(
         updateProfileEnvFiles(url, token);
       }
       writeTursoProfileRuntimeCredentials(url, token);
+    },
+  });
+}
+
+export interface ProvisionTursoMarketplaceOrdersOptions {
+  databaseName?: string;
+  updateLocalEnv?: boolean;
+}
+
+/**
+ * Ensures the dedicated marketplace orders database exists and returns runtime credentials.
+ */
+export async function provisionTursoMarketplaceOrdersDatabase(
+  options: ProvisionTursoMarketplaceOrdersOptions = {}
+): Promise<TursoProvisionResult> {
+  return provisionNamedTursoDatabase({
+    ...options,
+    databaseName: options.databaseName ?? DEFAULT_MARKETPLACE_ORDERS_DB_NAME,
+    onProvisioned: (url, token) => {
+      if (options.updateLocalEnv !== false) {
+        updateMarketplaceOrdersEnvFiles(url, token);
+      }
+      writeTursoMarketplaceOrdersRuntimeCredentials(url, token);
     },
   });
 }
@@ -164,6 +197,14 @@ export function loadTursoProductCredentialsFromEnv(): { url: string; authToken: 
   const authToken =
     readOptionalEnv('TURSO_PRODUCT_AUTH_TOKEN') ||
     readOptionalEnv('TURSO_AUTH_TOKEN');
+
+  if (!url || !authToken) return null;
+  return { url, authToken };
+}
+
+export function loadTursoMarketplaceOrdersCredentialsFromEnv(): { url: string; authToken: string } | null {
+  const url = readOptionalEnv('MARKETPLACE_ORDERS_DATABASE_URL');
+  const authToken = readOptionalEnv('MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN');
 
   if (!url || !authToken) return null;
   return { url, authToken };

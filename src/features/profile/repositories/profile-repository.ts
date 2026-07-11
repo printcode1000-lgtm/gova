@@ -122,7 +122,7 @@ function normalizeFulfillmentSettings(
   };
 
   return {
-    selfDeliveryEnabled: settings.selfDeliveryEnabled === true,
+    selfDeliveryEnabled: false,
     carrierUids: Array.isArray(settings.carrierUids)
       ? Array.from(
           new Set(

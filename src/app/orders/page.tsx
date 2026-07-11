@@ -1,9 +1,5 @@
-'use client';
-
-import ComingSoonScreen from '@/components/layouts/ComingSoonScreen';
-import { useTranslation } from '@/lib/i18n';
+import { OrdersPageContent } from "@/components/orders/OrdersPageContent";
 
 export default function OrdersPage() {
-  const { t } = useTranslation();
-  return <ComingSoonScreen title={t('nav.orders')} tone="secondary" />;
+  return <OrdersPageContent />;
 }

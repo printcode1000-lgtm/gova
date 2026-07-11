@@ -30,7 +30,7 @@ function normalizeSettings(
   };
 
   return {
-    selfDeliveryEnabled: input.selfDeliveryEnabled === true,
+    selfDeliveryEnabled: false,
     carrierUids: normalizeCarrierUids(input.carrierUids),
     shippingPricing: {
       mode:

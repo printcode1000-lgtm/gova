@@ -49,7 +49,7 @@ export function normalizeProfileFulfillmentSettings(
   const returns = value?.returns ?? defaults.returns;
 
   return {
-    selfDeliveryEnabled: value?.selfDeliveryEnabled === true,
+    selfDeliveryEnabled: false,
     carrierUids: Array.isArray(value?.carrierUids) ? value.carrierUids : [],
     shippingPricing: {
       mode:

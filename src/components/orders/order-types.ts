@@ -1,0 +1,20 @@
+"use client";
+
+export type OrderRole = "buyer" | "seller" | "service_provider" | "admin";
+
+export type DbRow = Record<string, unknown>;
+
+export interface OrderDetails {
+  order: DbRow;
+  sellerOrders: DbRow[];
+  orderItems: DbRow[];
+  customItems: DbRow[];
+  shipments: DbRow[];
+  shipmentItems: DbRow[];
+  cancellations: DbRow[];
+  returns: DbRow[];
+  replacements: DbRow[];
+  disputes: DbRow[];
+  audit: DbRow[];
+  profiles: Record<string, unknown>;
+}

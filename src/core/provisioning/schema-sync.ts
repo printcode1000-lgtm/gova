@@ -5,6 +5,7 @@ import {
   PROFILE_SCHEMA_SYNC_REPORT_PATH,
   SCHEMA_SYNC_REPORT_PATH,
   ADVERTISEMENTS_SQLITE_DB_PATH,
+  MARKETPLACE_ORDERS_SQLITE_DB_PATH,
   PRODUCT_SQLITE_DB_PATH,
 } from '@/core/database/environment';
 import { getPrimarySqliteDbPath, getProfileSqliteDbPath } from '@/core/database/environment.server';
@@ -12,7 +13,7 @@ import { readSqliteSchema } from './sqlite-schema-reader';
 import { readTursoSchema } from './turso-schema-reader';
 import { diffSchemas } from './schema-diff';
 import { computeSchemaVersion } from './schema-version';
-import { loadTursoCredentialsFromEnv, loadTursoProfileCredentialsFromEnv, loadTursoAdvertisementsCredentialsFromEnv, loadTursoProductCredentialsFromEnv } from './turso-provisioner';
+import { loadTursoCredentialsFromEnv, loadTursoProfileCredentialsFromEnv, loadTursoAdvertisementsCredentialsFromEnv, loadTursoProductCredentialsFromEnv, loadTursoMarketplaceOrdersCredentialsFromEnv } from './turso-provisioner';
 import type { SchemaSyncReport } from './types';
 
 const ADVERTISEMENTS_SCHEMA_SYNC_REPORT_PATH = path.join(
@@ -27,6 +28,13 @@ const PRODUCT_SCHEMA_SYNC_REPORT_PATH = path.join(
   'public',
   'sync_data',
   'product-schema-sync-report.json',
+);
+
+const MARKETPLACE_ORDERS_SCHEMA_SYNC_REPORT_PATH = path.join(
+  process.cwd(),
+  'public',
+  'sync_data',
+  'marketplace-orders-schema-sync-report.json',
 );
 
 export interface RunSchemaSyncOptions {
@@ -90,6 +98,8 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
           ? loadTursoAdvertisementsCredentialsFromEnv()
           : databaseLabel === 'product'
             ? loadTursoProductCredentialsFromEnv()
+            : databaseLabel === 'marketplace-orders'
+              ? loadTursoMarketplaceOrdersCredentialsFromEnv()
             : loadTursoCredentialsFromEnv();
 
   if (!credentials) {
@@ -100,6 +110,8 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
           ? 'Turso advertisements credentials not configured (TURSO_ADVERTISEMENTS_DATABASE_URL or TURSO_DATABASE_URL)'
           : databaseLabel === 'product'
             ? 'Turso product credentials not configured (TURSO_PRODUCT_DATABASE_URL / TURSO_PRODUCT_AUTH_TOKEN)'
+            : databaseLabel === 'marketplace-orders'
+              ? 'Turso marketplace orders credentials not configured (MARKETPLACE_ORDERS_DATABASE_URL / MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN)'
             : 'Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)';
     if (options.skipIfMissingCredentials) {
       const report = buildSkippedReport(reason);
@@ -196,6 +208,7 @@ export interface AllSchemaSyncReports {
   profile: SchemaSyncReport;
   advertisements: SchemaSyncReport;
   product: SchemaSyncReport;
+  marketplaceOrders: SchemaSyncReport;
 }
 
 /**
@@ -233,7 +246,14 @@ export async function runAllSchemaSyncs(
     databaseLabel: 'product',
   });
 
-  return { users, profile, advertisements, product };
+  const marketplaceOrders = await runSchemaSync({
+    ...options,
+    sqlitePath: MARKETPLACE_ORDERS_SQLITE_DB_PATH,
+    reportPath: MARKETPLACE_ORDERS_SCHEMA_SYNC_REPORT_PATH,
+    databaseLabel: 'marketplace-orders',
+  });
+
+  return { users, profile, advertisements, product, marketplaceOrders };
 }
 
 export function getSchemaSyncReportPath(): string {

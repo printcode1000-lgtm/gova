@@ -16,7 +16,7 @@
     "category:validate": "npx tsx scripts/validate-categories.ts",
     "test:categories": "npx tsx scripts/test-categories.ts",
     "test": "npm run test:categories && npm run test:marketplace-orders",
-    "test:marketplace-orders": "npx tsx src/modules/marketplace-orders/tests/storage-profile-integration.test.ts && npx tsx src/modules/marketplace-orders/tests/schema-contract.test.ts && npx tsx src/modules/marketplace-orders/tests/marketplace-orders.test.ts && npx tsx src/modules/marketplace-orders/tests/requirements-coverage.test.ts && npx tsx src/modules/marketplace-orders/tests/security-and-invariants.test.ts",
+    "test:marketplace-orders": "npx tsx src/modules/marketplace-orders/tests/storage-profile-integration.test.ts && npx tsx src/modules/marketplace-orders/tests/schema-contract.test.ts && npx tsx src/modules/marketplace-orders/tests/marketplace-orders.test.ts && npx tsx src/modules/marketplace-orders/tests/delivery-rejection.test.ts && npx tsx src/modules/marketplace-orders/tests/requirements-coverage.test.ts && npx tsx src/modules/marketplace-orders/tests/security-and-invariants.test.ts",
     "validate-storage-profiles": "npx tsx scripts/validate-storage-profiles.ts",
     "app:init": "npx tsx scripts/generate-app-init-public.ts",
     "branding:generate": "npx tsx scripts/generate-branding-assets.ts",

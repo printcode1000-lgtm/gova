@@ -77,8 +77,6 @@ export const FulfillmentSettingsCard = React.forwardRef<
         : "Selected carriers must have the delivery services specialty.",
     saved: locale === "ar" ? "تم الحفظ" : "Saved",
     shippingMethods: locale === "ar" ? "طرق الشحن" : "Shipping methods",
-    selfDelivery:
-      locale === "ar" ? "أقوم بالتوصيل بنفسي" : "I handle delivery myself",
     linkedProviders:
       locale === "ar"
         ? "مقدمو خدمات التوصيل المرتبطون"
@@ -229,22 +227,6 @@ export const FulfillmentSettingsCard = React.forwardRef<
         <div className="flex items-center gap-2">
           <Truck className="h-5 w-5 text-primary" />
           <h3 className="text-sm font-bold">{text.shippingMethods}</h3>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Checkbox
-            id="selfDeliveryEnabled"
-            checked={settings.selfDeliveryEnabled}
-            onCheckedChange={(checked) =>
-              updateSettings((current) => ({
-                ...current,
-                selfDeliveryEnabled: checked === true,
-              }))
-            }
-          />
-          <Label htmlFor="selfDeliveryEnabled" className="cursor-pointer">
-            {text.selfDelivery}
-          </Label>
         </div>
 
         <div className="space-y-3">

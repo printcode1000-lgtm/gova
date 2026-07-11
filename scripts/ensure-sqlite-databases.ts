@@ -4,6 +4,7 @@ import path from "path";
 import {
   PRIMARY_SQLITE_DB_PATH,
   ADVERTISEMENTS_SQLITE_DB_PATH,
+  MARKETPLACE_ORDERS_SQLITE_DB_PATH,
   PRODUCT_SQLITE_DB_PATH,
   PROFILE_SQLITE_DB_PATH,
   SQLITE_DIRECTORY,
@@ -29,4 +30,8 @@ ensureDatabase(PRODUCT_SQLITE_DB_PATH, "scripts/create-product-sqlite-db.ts");
 ensureDatabase(
   ADVERTISEMENTS_SQLITE_DB_PATH,
   "scripts/create-advertisements-sqlite-db.ts",
+);
+ensureDatabase(
+  MARKETPLACE_ORDERS_SQLITE_DB_PATH,
+  "scripts/create-marketplace-orders-sqlite-db.ts",
 );

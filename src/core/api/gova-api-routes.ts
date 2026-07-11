@@ -35,6 +35,13 @@ export const GOVA_API_ROUTES = {
   dev: {
     productStyle: "/api/dev/product-style",
   },
+  orders: {
+    root: "/api/orders",
+    fromCart: "/api/orders/from-cart",
+    byId: (orderId: string) => `/api/orders/${encodeURIComponent(orderId)}`,
+    actions: (orderId: string) =>
+      `/api/orders/${encodeURIComponent(orderId)}/actions`,
+  },
   products: "/api/products",
   advertisements: {
     homeHeroSlider: "/api/advertisements/home-hero-slider",

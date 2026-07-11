@@ -18,6 +18,8 @@ const OPTIONAL_VERCEL_KEYS = [
   'TURSO_PRODUCT_AUTH_TOKEN',
   'TURSO_ADVERTISEMENTS_DATABASE_URL',
   'TURSO_ADVERTISEMENTS_AUTH_TOKEN',
+  'MARKETPLACE_ORDERS_DATABASE_URL',
+  'MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN',
 ] as const;
 
 async function vercelFetch(path: string, init: RequestInit = {}): Promise<Response> {
