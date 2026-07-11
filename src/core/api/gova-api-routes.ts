@@ -45,6 +45,8 @@ export const GOVA_API_ROUTES = {
   notifications: {
     deviceToken: "/api/notifications/device-token",
     send: "/api/notifications/send",
+    broadcastRecipients: "/api/notifications/broadcast/recipients",
+    broadcastSend: "/api/notifications/broadcast/send",
     webPushPublicKey: "/api/notifications/web-push/public-key",
     webPushVapid: "/api/notifications/web-push/vapid",
   },

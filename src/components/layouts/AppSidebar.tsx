@@ -6,6 +6,7 @@ import {
   Eye,
   LogIn,
   LogOut,
+  Megaphone,
   ScrollText,
   Settings,
   ShieldCheck,
@@ -194,6 +195,14 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
             >
               <KeyRound className="h-4 w-4" />
               إدارة VAPID
+            </Link>
+            <Link
+              href="/super-admin/notifications-broadcast"
+              onClick={onClose}
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+            >
+              <Megaphone className="h-4 w-4" />
+              إرسال إشعار جماعي
             </Link>
           </div>
         )}

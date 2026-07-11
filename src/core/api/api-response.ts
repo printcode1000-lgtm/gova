@@ -42,6 +42,7 @@ export function mapServiceError(error: unknown): NextResponse {
     'notificationRecipientsRequired',
     'notificationDedupeKeyRequired',
     'notificationContentRequired',
+    'notificationBroadcastForbidden',
     'vapidSaveFailed',
     'vapidNotConfigured',
     'webPushNotConfigured',
@@ -49,6 +50,10 @@ export function mapServiceError(error: unknown): NextResponse {
 
   if (knownCodes.includes(message)) {
     return apiError(message, 400);
+  }
+
+  if (message === 'forbidden') {
+    return apiError(message, 403);
   }
 
   return apiError(message, 500);

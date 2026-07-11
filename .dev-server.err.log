@@ -3001,3 +3001,10 @@ Capacitor plugin "WebView" already registered. Cannot register plugins twice.
 Capacitor plugin "WebView" already registered. Cannot register plugins twice.
 Capacitor plugin "WebView" already registered. Cannot register plugins twice.
 [browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)

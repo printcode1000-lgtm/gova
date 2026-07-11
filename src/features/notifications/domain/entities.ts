@@ -165,6 +165,39 @@ export interface SendNotificationToUsersResult {
   results: NotificationTokenDeliveryResult[];
 }
 
+export interface BroadcastRecipient {
+  uid: string;
+  phoneMasked: string;
+  emailMasked?: string;
+  tokenCount: number;
+  platforms: NotificationPlatform[];
+  providers: string[];
+  lastSeenAt?: string;
+}
+
+export interface BroadcastRecipientsResult {
+  userCount: number;
+  tokenCount: number;
+  providerCounts: Record<string, number>;
+  platformCounts: Record<string, number>;
+  recipients: BroadcastRecipient[];
+}
+
+export interface BroadcastNotificationInput {
+  identity: {
+    uid: string;
+    phone: string;
+  };
+  title: string;
+  body: string;
+  uids?: string[];
+  sendToAll?: boolean;
+}
+
+export interface BroadcastNotificationResult extends SendNotificationToUsersResult {
+  recipientMode: 'all' | 'selected';
+}
+
 export interface NotificationVapidPublicConfig {
   enabled: boolean;
   publicKey: string;

@@ -2,6 +2,9 @@ import { govaApi, GOVA_API_ROUTES } from '@/core/api';
 import type {
   DeleteNotificationTokenInput,
   DeviceToken,
+  BroadcastNotificationInput,
+  BroadcastNotificationResult,
+  BroadcastRecipientsResult,
   GenerateNotificationVapidInput,
   NotificationVapidAdminConfig,
   NotificationVapidPublicConfig,
@@ -28,6 +31,21 @@ export class NotificationApiService {
   sendToUsers(input: SendNotificationToUsersInput): Promise<SendNotificationToUsersResult> {
     return govaApi.post<SendNotificationToUsersResult>(
       GOVA_API_ROUTES.notifications.send,
+      input,
+    );
+  }
+
+  getBroadcastRecipients(identity: { uid: string; phone: string }): Promise<BroadcastRecipientsResult> {
+    const query = new URLSearchParams({ uid: identity.uid, phone: identity.phone });
+    return govaApi.get<BroadcastRecipientsResult>(
+      `${GOVA_API_ROUTES.notifications.broadcastRecipients}?${query}`,
+      { cache: 'no-store' },
+    );
+  }
+
+  sendBroadcast(input: BroadcastNotificationInput): Promise<BroadcastNotificationResult> {
+    return govaApi.post<BroadcastNotificationResult>(
+      GOVA_API_ROUTES.notifications.broadcastSend,
       input,
     );
   }

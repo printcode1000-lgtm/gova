@@ -593,3 +593,51 @@ public/gova-push-sw.js
 ```
 
 The service worker displays push notifications and opens the notification route or provided deep link when the user clicks the notification.
+
+## Super Admin Broadcast Notifications
+
+The super-admin broadcast page sends one notification message to many users through the same notification provider layer used by normal system notifications.
+
+Runtime page:
+
+- Super-admin broadcast page: `/super-admin/notifications-broadcast`
+
+Server APIs:
+
+```text
+GET  /api/notifications/broadcast/recipients?uid=...&phone=...
+POST /api/notifications/broadcast/send
+```
+
+Recipient source:
+
+- The recipients API reads from the users database.
+- It joins `users` with `user_notification_tokens`.
+- It returns only users with at least one enabled, non-deleted notification token.
+- Deleted users and deleted tokens are ignored.
+- Raw token values are never returned to the browser.
+- Phone and email are masked in the admin UI.
+
+Broadcast behavior:
+
+- The super admin can refresh the recipient list.
+- The super admin can select specific users or send to all eligible users.
+- The UI asks for confirmation before sending.
+- A broadcast requires both a title and body.
+- Delivery is delegated to `NotificationSendService`.
+- `NotificationSendService` routes each token to the correct registered `NotificationProvider`, such as Web Push.
+- The broadcast metadata sets `source = super_admin_broadcast` and uses `/notifications` as the default deep link.
+
+Security rules:
+
+- The recipient and send APIs require the super-admin identity.
+- The client does not query the database directly.
+- The database query and token access stay in server-only notification repositories.
+- The broadcast page shows token counts, platforms, and provider names, but never exposes token secrets.
+
+Future improvements:
+
+- Add audience filters by platform, last activity date, role, or profile specialty.
+- Add scheduling and retry dashboards.
+- Add a delivery analytics page grouped by provider and platform.
+- Add templates for repeated operational announcements.
