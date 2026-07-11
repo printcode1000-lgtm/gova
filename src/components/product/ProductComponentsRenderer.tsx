@@ -6,6 +6,7 @@ import {
   ProductComponentFrame,
   ProductField,
 } from "./ProductComponentPrimitives";
+import { ProductAddToCartButton } from "./ProductAddToCartButton";
 import { ProductImageEditors } from "./ProductImageEditors";
 import { ProductImageGallery } from "./ProductImageGallery";
 import { ProductPropertySpecs } from "./ProductPropertySpecs";
@@ -152,16 +153,19 @@ export function ProductComponentsRenderer({
   const visible = Object.entries(components)
     .filter(([, config]) => config.visible)
     .sort(([, a], [, b]) => Number(a.order) - Number(b.order));
-  if (visible.length === 0)
+
+  if (visible.length === 0) {
     return (
       <p className="py-8 text-center text-sm text-muted-foreground">
-        لا توجد مكونات مفعّلة للعرض.
+        لا توجد مكونات مفعلة للعرض.
       </p>
     );
+  }
+
   return (
     <>
       {visible.map(([key, config]) => {
-        if (key === "images")
+        if (key === "images") {
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
               {mode === "view" ? (
@@ -179,6 +183,8 @@ export function ProductComponentsRenderer({
               )}
             </ProductComponentFrame>
           );
+        }
+
         if (key === "rating") {
           const savedMode = fields["rating.mode"];
           const commentsEnabled =
@@ -187,6 +193,7 @@ export function ProductComponentsRenderer({
               : savedMode === "stars-comments"
                 ? true
                 : config.type === "stars-comments";
+
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
               {mode === "view" ? (
@@ -207,17 +214,20 @@ export function ProductComponentsRenderer({
             </ProductComponentFrame>
           );
         }
-        if (key === "order")
+
+        if (key === "order") {
+          if (mode !== "view") return null;
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
               <div className="flex flex-wrap gap-2">
                 {config.cart ? (
-                  <button
-                    type="button"
-                    className="rounded-xl bg-primary px-4 py-2 text-on-primary"
-                  >
-                    إضافة إلى السلة
-                  </button>
+                  <ProductAddToCartButton
+                    productId={productId}
+                    sellerId={ownerUid}
+                    fields={fields}
+                    images={images}
+                    mainCategoryId={mainCategoryId}
+                  />
                 ) : null}
                 {config.favorite ? (
                   <button type="button" className="rounded-xl border px-4 py-2">
@@ -232,7 +242,9 @@ export function ProductComponentsRenderer({
               </div>
             </ProductComponentFrame>
           );
-        if (key === "vehicleSpecs")
+        }
+
+        if (key === "vehicleSpecs") {
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
               <ProductVehicleSpecs
@@ -243,7 +255,9 @@ export function ProductComponentsRenderer({
               />
             </ProductComponentFrame>
           );
-        if (key === "propertySpecs")
+        }
+
+        if (key === "propertySpecs") {
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
               <ProductPropertySpecs
@@ -254,6 +268,8 @@ export function ProductComponentsRenderer({
               />
             </ProductComponentFrame>
           );
+        }
+
         return (
           <ProductComponentFrame key={key} title={TITLES[key] ?? key}>
             <div className="grid gap-3 sm:grid-cols-2">

@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useResolvedColorScheme, useThemePreferences } from '@/lib/preferences';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { useCart } from '@/features/cart/use-cart';
 
 import { AppSidebar } from './AppSidebar';
 
@@ -16,6 +17,7 @@ export function AppHeader() {
   const resolvedScheme = useResolvedColorScheme();
   const { t } = useTranslation();
   const pathname = usePathname();
+  const { totalQuantity, flashToken } = useCart();
 
   // Reset sidebar state when route changes
   useEffect(() => {
@@ -100,8 +102,8 @@ export function AppHeader() {
               <Search className="w-5 h-5" />
             </button>
 
-            <button
-              type="button"
+            <Link
+              href="/cart"
               id="header-cart-button"
               className={cn(
                 "gova-control-icon flex items-center justify-center rounded-full relative transition-colors",
@@ -110,8 +112,14 @@ export function AppHeader() {
               aria-label={t('header.cart')}
             >
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute top-2 end-2 w-2 h-2 rounded-full bg-error border border-background animate-pulse-subtle" />
-            </button>
+              {totalQuantity > 0 ? (
+                <span
+                  key={flashToken}
+                  className="absolute top-2 end-2 w-2 h-2 rounded-full bg-error border border-background animate-pulse-subtle data-[flash=true]:animate-[ping_0.65s_ease-out_1]"
+                  data-flash={flashToken > 0}
+                />
+              ) : null}
+            </Link>
           </div>
         </div>
       </header>

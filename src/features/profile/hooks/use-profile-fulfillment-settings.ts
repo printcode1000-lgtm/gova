@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
+  normalizeProfileFulfillmentSettings,
   type ProfileFulfillmentSettings,
 } from "../entities/profile-fulfillment-settings.entity";
 import { profileService } from "../services/profile-service";
@@ -40,8 +41,9 @@ export function useProfileFulfillmentSettings() {
 
   useEffect(() => {
     if (!settingsQuery.data) return;
-    setSettings(settingsQuery.data);
-    setBaseline(settingsQuery.data);
+    const normalized = normalizeProfileFulfillmentSettings(settingsQuery.data);
+    setSettings(normalized);
+    setBaseline(normalized);
   }, [settingsQuery.data]);
 
   useEffect(() => {
@@ -58,9 +60,10 @@ export function useProfileFulfillmentSettings() {
 
   const applySaved = useCallback(
     (saved: ProfileFulfillmentSettings) => {
-      queryClient.setQueryData(fulfillmentSettingsQueryKey(uid), saved);
-      setSettings(saved);
-      setBaseline(saved);
+      const normalized = normalizeProfileFulfillmentSettings(saved);
+      queryClient.setQueryData(fulfillmentSettingsQueryKey(uid), normalized);
+      setSettings(normalized);
+      setBaseline(normalized);
     },
     [queryClient, uid],
   );

@@ -111,6 +111,15 @@ function normalizeFulfillmentSettings(
   const days = Number(
     (returns as { returnWindowDays?: unknown }).returnWindowDays,
   );
+  const shippingPricing =
+    settings.shippingPricing && typeof settings.shippingPricing === "object"
+      ? settings.shippingPricing
+      : EMPTY_PROFILE_FULFILLMENT_SETTINGS.shippingPricing;
+  const shippingMode = (shippingPricing as { mode?: unknown }).mode;
+  const money = (amount: unknown, fallback: number) => {
+    const value = Number(amount);
+    return Number.isFinite(value) ? Math.max(0, value) : fallback;
+  };
 
   return {
     selfDeliveryEnabled: settings.selfDeliveryEnabled === true,
@@ -124,6 +133,35 @@ function normalizeFulfillmentSettings(
           ),
         )
       : [],
+    shippingPricing: {
+      mode:
+        shippingMode === "free" ||
+        shippingMode === "flat" ||
+        shippingMode === "by_location"
+          ? shippingMode
+          : EMPTY_PROFILE_FULFILLMENT_SETTINGS.shippingPricing.mode,
+      flatRate: money(
+        (shippingPricing as { flatRate?: unknown }).flatRate,
+        EMPTY_PROFILE_FULFILLMENT_SETTINGS.shippingPricing.flatRate,
+      ),
+      locationBaseRate: money(
+        (shippingPricing as { locationBaseRate?: unknown }).locationBaseRate,
+        EMPTY_PROFILE_FULFILLMENT_SETTINGS.shippingPricing.locationBaseRate,
+      ),
+      specialVehicleFee: money(
+        (shippingPricing as { specialVehicleFee?: unknown }).specialVehicleFee,
+        EMPTY_PROFILE_FULFILLMENT_SETTINGS.shippingPricing.specialVehicleFee,
+      ),
+      freeShippingThreshold: money(
+        (shippingPricing as { freeShippingThreshold?: unknown })
+          .freeShippingThreshold,
+        EMPTY_PROFILE_FULFILLMENT_SETTINGS.shippingPricing.freeShippingThreshold,
+      ),
+      notes:
+        typeof (shippingPricing as { notes?: unknown }).notes === "string"
+          ? (shippingPricing as { notes: string }).notes
+          : "",
+    },
     returns: {
       enabled: (returns as { enabled?: unknown }).enabled === true,
       returnWindowDays: Number.isInteger(days)

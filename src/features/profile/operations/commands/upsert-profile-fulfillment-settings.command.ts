@@ -23,10 +23,33 @@ function normalizeSettings(
 ): ProfileFulfillmentSettings {
   const days = Number(input.returns?.returnWindowDays);
   const payer = input.returns?.returnShippingPayer;
+  const shippingMode = input.shippingPricing?.mode;
+  const positiveMoney = (value: unknown) => {
+    const amount = Number(value);
+    return Number.isFinite(amount) ? Math.max(0, Math.round(amount * 100) / 100) : 0;
+  };
 
   return {
     selfDeliveryEnabled: input.selfDeliveryEnabled === true,
     carrierUids: normalizeCarrierUids(input.carrierUids),
+    shippingPricing: {
+      mode:
+        shippingMode === "free" ||
+        shippingMode === "flat" ||
+        shippingMode === "by_location"
+          ? shippingMode
+          : "free",
+      flatRate: positiveMoney(input.shippingPricing?.flatRate),
+      locationBaseRate: positiveMoney(input.shippingPricing?.locationBaseRate),
+      specialVehicleFee: positiveMoney(input.shippingPricing?.specialVehicleFee),
+      freeShippingThreshold: positiveMoney(
+        input.shippingPricing?.freeShippingThreshold,
+      ),
+      notes:
+        typeof input.shippingPricing?.notes === "string"
+          ? input.shippingPricing.notes.trim().slice(0, 1000)
+          : "",
+    },
     returns: {
       enabled: input.returns?.enabled === true,
       returnWindowDays: Number.isInteger(days)

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { CATEGORY_CONSTANTS } from "@/features/categories";
+import { normalizeProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
 import { useProfileFulfillmentSettings } from "@/features/profile/hooks/use-profile-fulfillment-settings";
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
 import { useTranslation } from "@/lib/i18n";
@@ -103,6 +104,31 @@ export const FulfillmentSettingsCard = React.forwardRef<
         ? `تم اختيار ${count} مقدم توصيل.`
         : `${count} delivery provider(s) selected.`,
     returnPolicy: locale === "ar" ? "سياسة الإرجاع" : "Return policy",
+    shippingPricing:
+      locale === "ar" ? "تسعير الشحن" : "Shipping pricing",
+    shippingPricingMode:
+      locale === "ar" ? "طريقة حساب الشحن" : "Shipping pricing method",
+    freeShipping: locale === "ar" ? "شحن مجاني" : "Free shipping",
+    flatShipping: locale === "ar" ? "قيمة ثابتة" : "Flat rate",
+    locationShipping: locale === "ar" ? "حسب المكان" : "By location",
+    flatRate: locale === "ar" ? "قيمة الشحن الثابتة" : "Flat shipping rate",
+    locationBaseRate:
+      locale === "ar"
+        ? "قيمة تقديرية حسب المكان"
+        : "Estimated location-based rate",
+    specialVehicleFee:
+      locale === "ar"
+        ? "رسوم سيارة النقل عند الحاجة"
+        : "Special vehicle fee when needed",
+    freeShippingThreshold:
+      locale === "ar"
+        ? "حد أدنى للطلب لشحن مجاني"
+        : "Free shipping minimum order",
+    shippingNotes: locale === "ar" ? "ملاحظات الشحن" : "Shipping notes",
+    shippingNotesPlaceholder:
+      locale === "ar"
+        ? "مثال: السعر النهائي قد يختلف حسب العنوان أو حجم الطلب."
+        : "Example: final shipping may vary by address or order size.",
     returnsAvailable:
       locale === "ar" ? "الإرجاع متاح" : "Returns are available",
     returnWindowDays:
@@ -149,7 +175,8 @@ export const FulfillmentSettingsCard = React.forwardRef<
   }, [isDirty, isSaving, label, onStatusChange]);
 
   const users = (deliveryUsers ?? []) as DeliveryUser[];
-  const selected = new Set(settings.carrierUids);
+  const safeSettings = normalizeProfileFulfillmentSettings(settings);
+  const selected = new Set(safeSettings.carrierUids);
   const displayedUsers = users;
   const emptyDeliveryProvidersMessage = hasSubmittedSearch
     ? text.noMatchingProviders
@@ -319,11 +346,151 @@ export const FulfillmentSettingsCard = React.forwardRef<
             </div>
           )}
 
-          {settings.carrierUids.length > 0 ? (
+          {safeSettings.carrierUids.length > 0 ? (
             <p className="text-xs text-muted-foreground">
-              {text.selectedCount(settings.carrierUids.length)}
+              {text.selectedCount(safeSettings.carrierUids.length)}
             </p>
           ) : null}
+        </div>
+      </section>
+
+      <section className="space-y-4 rounded-xl border border-outline-variant p-4">
+        <h3 className="text-sm font-bold">{text.shippingPricing}</h3>
+
+        <div className="space-y-2">
+          <Label>{text.shippingPricingMode}</Label>
+          <Select
+            value={safeSettings.shippingPricing.mode}
+            onValueChange={(value: "free" | "flat" | "by_location") =>
+              updateSettings((current) => ({
+                ...current,
+                shippingPricing: {
+                  ...current.shippingPricing,
+                  mode: value,
+                },
+              }))
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="free">{text.freeShipping}</SelectItem>
+              <SelectItem value="flat">{text.flatShipping}</SelectItem>
+              <SelectItem value="by_location">{text.locationShipping}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="shippingFlatRate">{text.flatRate}</Label>
+            <Input
+              id="shippingFlatRate"
+              type="number"
+              min={0}
+              step="0.01"
+              value={safeSettings.shippingPricing.flatRate}
+              onChange={(event) =>
+                updateSettings((current) => ({
+                  ...current,
+                  shippingPricing: {
+                    ...current.shippingPricing,
+                    flatRate: Number(event.target.value),
+                  },
+                }))
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="shippingLocationBaseRate">
+              {text.locationBaseRate}
+            </Label>
+            <Input
+              id="shippingLocationBaseRate"
+              type="number"
+              min={0}
+              step="0.01"
+              value={safeSettings.shippingPricing.locationBaseRate}
+              onChange={(event) =>
+                updateSettings((current) => ({
+                  ...current,
+                  shippingPricing: {
+                    ...current.shippingPricing,
+                    locationBaseRate: Number(event.target.value),
+                  },
+                }))
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="shippingSpecialVehicleFee">
+              {text.specialVehicleFee}
+            </Label>
+            <Input
+              id="shippingSpecialVehicleFee"
+              type="number"
+              min={0}
+              step="0.01"
+              value={safeSettings.shippingPricing.specialVehicleFee}
+              onChange={(event) =>
+                updateSettings((current) => ({
+                  ...current,
+                  shippingPricing: {
+                    ...current.shippingPricing,
+                    specialVehicleFee: Number(event.target.value),
+                  },
+                }))
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="shippingFreeThreshold">
+              {text.freeShippingThreshold}
+            </Label>
+            <Input
+              id="shippingFreeThreshold"
+              type="number"
+              min={0}
+              step="0.01"
+              value={safeSettings.shippingPricing.freeShippingThreshold}
+              onChange={(event) =>
+                updateSettings((current) => ({
+                  ...current,
+                  shippingPricing: {
+                    ...current.shippingPricing,
+                    freeShippingThreshold: Number(event.target.value),
+                  },
+                }))
+              }
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="shippingNotes">{text.shippingNotes}</Label>
+          <Textarea
+            id="shippingNotes"
+            value={safeSettings.shippingPricing.notes}
+            onChange={(event) =>
+              updateSettings((current) => ({
+                ...current,
+                shippingPricing: {
+                  ...current.shippingPricing,
+                  notes: event.target.value,
+                },
+              }))
+            }
+            maxLength={1000}
+            rows={3}
+            placeholder={text.shippingNotesPlaceholder}
+          />
+          <p className="text-end text-xs text-muted-foreground">
+            {safeSettings.shippingPricing.notes.length}/1000
+          </p>
         </div>
       </section>
 
