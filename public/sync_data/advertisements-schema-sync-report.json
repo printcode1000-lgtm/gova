@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-07-11T04:42:46.206Z",
-  "durationMs": 6656,
+  "executedAt": "2026-07-11T13:50:30.641Z",
+  "durationMs": 8359,
   "sqliteSchemaVersion": "9b2b9e663598eca9",
-  "tursoSchemaVersionBefore": "bda614f84297d17a",
-  "tursoSchemaVersionAfter": "bda614f84297d17a",
+  "tursoSchemaVersionBefore": "89ba404fcbf02915",
+  "tursoSchemaVersionAfter": "89ba404fcbf02915",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,
@@ -17,7 +17,9 @@
     "Table \"product_review_helpful\" exists on Turso but not in SQLite. Not dropped automatically.",
     "Table \"product_review_replies\" exists on Turso but not in SQLite. Not dropped automatically.",
     "Table \"product_reviews\" exists on Turso but not in SQLite. Not dropped automatically.",
-    "Table \"products\" exists on Turso but not in SQLite. Not dropped automatically."
+    "Table \"products\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"user_notification_tokens\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"notification_vapid_settings\" exists on Turso but not in SQLite. Not dropped automatically."
   ],
   "skipped": false
 }

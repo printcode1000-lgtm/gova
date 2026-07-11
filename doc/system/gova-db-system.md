@@ -7,7 +7,7 @@ Gova uses IndexedDB (GovaDB) as its primary client-side persistent storage mecha
 ## Configuration
 
 - **Database Name:** `GovaDB`
-- **Current Version:** `4`
+- **Current Version:** `5`
 - **Low-level Implementation:** `src/lib/gova-db/index.ts`
 - **Object Stores Schema:** Every object store is configured with `{ keyPath: 'key' }` and stores key-value pairs (where value can be a structured cloneable object).
 
@@ -15,7 +15,7 @@ Gova uses IndexedDB (GovaDB) as its primary client-side persistent storage mecha
 
 ## Object Stores and Keys
 
-GovaDB is divided into five distinct stores:
+GovaDB is divided into core stores plus bounded feature stores:
 
 ### 1. `appSettings`
 The general key-value store used to persist application state, settings, user preferences, OTA updates, and developer utility configurations.
@@ -47,6 +47,18 @@ Caches partial form state and draft applications during the seller registration 
 
 ### 5. `queryCache`
 Persists serialized React Query cache payloads for offline readiness.
+
+### 6. Notification stores
+The notification module stores its local state in dedicated GovaDB stores. Templates are not stored in IndexedDB; they live as JSON files in the notification module.
+
+| Store | Description |
+|-------|-------------|
+| `notifications` | Per-user notification center entries, read/unread state, routes, grouping keys, dedupe keys, and sync state. |
+| `notificationDeviceTokens` | Per-user platform device tokens for web, Android, and iOS. No provider secrets are stored here. |
+| `notificationSettings` | Per-user notification channel and target preferences. |
+| `notificationBadges` | Per-user unread badge count. |
+| `notificationAnalytics` | Local lifecycle analytics events such as sent, displayed, opened, clicked, dismissed, and failed. |
+| `notificationOfflineQueue` | Local operations waiting for browser connectivity. |
 
 ---
 

@@ -1,9 +1,7 @@
 'use client';
 
-import ComingSoonScreen from '@/components/layouts/ComingSoonScreen';
-import { useTranslation } from '@/lib/i18n';
+import { NotificationsPageContent } from '@/features/notifications';
 
 export default function NotificationsPage() {
-  const { t } = useTranslation();
-  return <ComingSoonScreen title={t('nav.notifications')} tone="error" />;
+  return <NotificationsPageContent />;
 }

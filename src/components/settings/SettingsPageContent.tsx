@@ -1,6 +1,6 @@
 'use client';
 
-import { Database, FileText, Globe, Palette } from 'lucide-react';
+import { Bell, Database, FileText, Globe, Palette } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdjust, faSun, faMoon, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
@@ -14,6 +14,8 @@ import {
   CLEAR_STORAGE_WARNING,
   clearAllClientStorage,
 } from '@/lib/storage/client-storage';
+import { useSession } from '@/features/auth/components/SessionProvider';
+import { webPushBrowserService } from '@/features/notifications/application/web-push-browser-service';
 
 import {
   type SettingsDensity,
@@ -54,8 +56,12 @@ export function SettingsPageContent() {
     updatePreferences: updateApp,
     resetPreferences: resetApp,
   } = useAppPreferences();
+  const { session } = useSession();
 
   const [statusText, setStatusText] = React.useState('');
+  const [webPushStatus, setWebPushStatus] = React.useState('');
+  const [webPushBusy, setWebPushBusy] = React.useState(false);
+  const [webPushPermission, setWebPushPermission] = React.useState<NotificationPermission | 'unsupported'>('unsupported');
   const [clearing, setClearing] = React.useState(false);
   const [tempFontSize, setTempFontSize] = React.useState(themePrefs.fontSize);
   const [showClearDialog, setShowClearDialog] = React.useState(false);
@@ -74,6 +80,10 @@ export function SettingsPageContent() {
   React.useEffect(() => {
     setTempFontSize(themePrefs.fontSize);
   }, [themePrefs.fontSize]);
+
+  React.useEffect(() => {
+    setWebPushPermission(webPushBrowserService.getPermission());
+  }, []);
 
   const showStatus = (message: string) => {
     setStatusText(message);
@@ -115,6 +125,39 @@ export function SettingsPageContent() {
   };
 
   const activeThemeLabel = themeLabels[themePrefs.themeMode];
+
+  const enableWebPush = async () => {
+    if (!session?.uid) {
+      setWebPushStatus('يجب تسجيل الدخول لتفعيل إشعارات هذا الجهاز.');
+      return;
+    }
+    setWebPushBusy(true);
+    setWebPushStatus('');
+    try {
+      await webPushBrowserService.subscribe(session.uid);
+      setWebPushPermission(webPushBrowserService.getPermission());
+      setWebPushStatus('تم تفعيل إشعارات المتصفح لهذا الجهاز.');
+    } catch (error) {
+      setWebPushStatus(error instanceof Error ? error.message : 'تعذر تفعيل إشعارات المتصفح.');
+    } finally {
+      setWebPushBusy(false);
+    }
+  };
+
+  const disableWebPush = async () => {
+    if (!session?.uid) return;
+    setWebPushBusy(true);
+    setWebPushStatus('');
+    try {
+      await webPushBrowserService.unsubscribe(session.uid);
+      setWebPushPermission(webPushBrowserService.getPermission());
+      setWebPushStatus('تم إلغاء اشتراك هذا الجهاز.');
+    } catch (error) {
+      setWebPushStatus(error instanceof Error ? error.message : 'تعذر إلغاء إشعارات هذا الجهاز.');
+    } finally {
+      setWebPushBusy(false);
+    }
+  };
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
@@ -241,6 +284,54 @@ export function SettingsPageContent() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mb-12 space-y-6">
+        <div className="gova-settings-section-secondary space-y-5">
+          <div className="flex items-center gap-3 px-2">
+            <Bell className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-semibold text-on-surface">إشعارات المتصفح</h2>
+          </div>
+          <div className="rounded-xl gova-surface-neutral p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-on-surface">حالة هذا الجهاز</p>
+                <p className="mt-1 text-xs text-on-surface-variant">
+                  الإذن الحالي: {webPushPermission === 'granted'
+                    ? 'مسموح'
+                    : webPushPermission === 'denied'
+                      ? 'مرفوض من المتصفح'
+                      : webPushPermission === 'default'
+                        ? 'لم يتم السؤال بعد'
+                        : 'غير مدعوم'}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  disabled={webPushBusy || !webPushBrowserService.isSupported()}
+                  onClick={() => void enableWebPush()}
+                  className="gova-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
+                >
+                  تفعيل إشعارات المتصفح
+                </button>
+                <button
+                  type="button"
+                  disabled={webPushBusy || !session?.uid}
+                  onClick={() => void disableWebPush()}
+                  className="gova-control rounded-xl border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface disabled:opacity-60"
+                >
+                  إلغاء اشتراك هذا الجهاز
+                </button>
+              </div>
+            </div>
+            {webPushStatus ? (
+              <p className="mt-3 rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
+                {webPushStatus}
+              </p>
+            ) : null}
           </div>
         </div>
       </section>

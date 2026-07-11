@@ -13,6 +13,7 @@ export interface OrderDetails {
   shipmentItems: DbRow[];
   cancellations: DbRow[];
   returns: DbRow[];
+  returnItems: DbRow[];
   replacements: DbRow[];
   disputes: DbRow[];
   audit: DbRow[];

@@ -24,6 +24,7 @@ import {
 } from "@/features/cart/cart-store";
 import { useCart } from "@/features/cart/use-cart";
 import { useSession } from "@/features/auth/components/SessionProvider";
+import { notificationBus } from "@/features/notifications";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
@@ -155,6 +156,18 @@ export function CartPageContent() {
           })),
         },
         { suppressErrorLog: true },
+      );
+      await notificationBus.publishEvent(
+        {
+          name: "orders.created",
+          uid: session.uid,
+          dedupeKey: `orders.created:${result.orderId}:buyer:${session.uid}`,
+          variables: {
+            orderId: result.orderId,
+            orderNumber: result.orderId,
+          },
+        },
+        "ar",
       );
       clearCart();
       router.push(`/orders/${encodeURIComponent(result.orderId)}`);

@@ -11,6 +11,7 @@ export function OrderActionButton({
   onClick,
   tone = "normal",
   full = false,
+  disabled = false,
 }: {
   action: string;
   busyAction: string;
@@ -18,13 +19,15 @@ export function OrderActionButton({
   onClick: () => void;
   tone?: "normal" | "danger";
   full?: boolean;
+  disabled?: boolean;
 }) {
   const busy = busyAction === `${action}:${id}` || busyAction === `${action}:`;
   const danger = tone === "danger";
+  const isDisabled = Boolean(busyAction) || disabled;
   return (
     <button
       type="button"
-      disabled={Boolean(busyAction)}
+      disabled={isDisabled}
       onClick={onClick}
       className={`inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
         full ? "w-full" : ""

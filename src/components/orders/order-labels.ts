@@ -20,6 +20,17 @@ export function statusLabel(status: unknown) {
     partially_cancelled: "ملغي جزئيًا",
     fully_cancelled: "ملغي بالكامل",
     waiting_for_return: "بانتظار الإرجاع",
+    requested: "تم الطلب",
+    seller_approved: "وافق البائع",
+    seller_rejected: "رفض البائع",
+    waiting_for_pickup: "بانتظار الاستلام",
+    picked_up: "تم الاستلام",
+    received: "تم الاستلام",
+    under_inspection: "قيد الفحص",
+    inspection_accepted: "تم قبول الفحص",
+    inspection_rejected: "تم رفض الفحص",
+    refund_pending: "بانتظار الاسترداد",
+    refunded: "تم الاسترداد",
     waiting_for_replacement: "بانتظار الاستبدال",
     closed: "مغلق",
     archived: "مؤرشف",
@@ -31,15 +42,23 @@ export function statusLabel(status: unknown) {
     ready_for_shipping: "جاهز للشحن",
     handed_to_shipping: "تم تسليمه للتوصيل",
     seller_accepted: "وافق البائع",
-    seller_rejected: "رفض البائع",
     buyer_cancelled: "ألغاه المشتري",
     admin_cancelled: "ألغاه المشرف",
     assigned_to_shipment: "مسند للشحن",
+    assigned: "مسند للشحن",
+    received_by_carrier: "استلمتها شركة التوصيل",
+    rejected_by_carrier: "رفضت شركة التوصيل الاستلام",
     in_transit: "في الطريق",
+    at_distribution_center: "في مركز التوزيع",
     out_for_delivery: "خارج للتسليم",
     delivered: "تم التسليم",
     delivery_rejected: "رفض المشتري الاستلام",
     waiting_for_carrier_pickup: "بانتظار استلام شركة التوصيل",
+    partially_received_by_carrier: "استلمت شركة التوصيل جزءًا من الشحنة",
+    partially_rejected_by_carrier: "رفضت شركة التوصيل جزءًا من الشحنة",
+    fully_received_by_carrier: "استلمت شركة التوصيل الشحنة",
+    arrived_at_distribution_center: "وصلت إلى مركز التوزيع",
+    partially_delivered: "تم تسليم جزء من الشحنة",
     fully_delivered: "تم التسليم بالكامل",
     customer_rejected_delivery: "رفض الاستلام من العميل",
     delivery_failed: "فشل التسليم",
@@ -88,12 +107,16 @@ export function commandLabel(action: string) {
     buyer_reject_delivery_item: "رفض استلام المنتج",
     buyer_reject_delivery_seller_order: "رفض استلام طلب البائع",
     buyer_reject_delivery_order: "رفض استلام الطلب بالكامل",
+    buyer_request_return_item: "طلب إرجاع المنتج",
+    seller_approve_return: "قبول الإرجاع",
+    seller_reject_return: "رفض الإرجاع",
     admin_create_seller_shipment: "إنشاء شحنة للبائع",
     carrier_receive_shipment: "استلام الشحنة",
     carrier_reject_shipment: "رفض استلام الشحنة",
     carrier_in_transit: "في الطريق",
     carrier_out_for_delivery: "خارج للتسليم",
     carrier_delivered: "تم التسليم",
+    carrier_deliver_shipment_item: "تسليم هذا المنتج",
   };
   return labels[action] ?? action;
 }
@@ -146,4 +169,14 @@ export function canCancelStatus(status: unknown) {
 
 export function canRejectDeliveryStatus(status: unknown) {
   return ["assigned_to_shipment", "in_transit"].includes(String(status));
+}
+
+export function canRequestReturnStatus(status: unknown) {
+  return String(status) === "delivered";
+}
+
+export function canDeliverShipmentItemStatus(status: unknown) {
+  return ["in_transit", "at_distribution_center", "out_for_delivery"].includes(
+    String(status),
+  );
 }

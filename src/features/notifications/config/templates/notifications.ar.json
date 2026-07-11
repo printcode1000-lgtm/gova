@@ -1,0 +1,111 @@
+{
+  "order.created": {
+    "title": "تم إنشاء الطلب",
+    "body": "تم إنشاء طلبك {{orderNumber}} بنجاح.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.updated": {
+    "title": "تحديث على الطلب",
+    "body": "تغيرت حالة الطلب {{orderNumber}} إلى {{status}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "shipment.updated": {
+    "title": "تحديث الشحن",
+    "body": "الشحنة الخاصة بالطلب {{orderNumber}} أصبحت: {{status}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "متابعة الشحنة" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "order.sellerAccepted": {
+    "title": "قبول من البائع",
+    "body": "قبل البائع {{sellerName}} المنتج {{productName}} داخل الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app"],
+    "targets": ["center", "badge", "orders"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.sellerRejected": {
+    "title": "رفض من البائع",
+    "body": "رفض البائع {{sellerName}} المنتج {{productName}} داخل الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "urgent"
+  },
+  "return.requested": {
+    "title": "طلب إرجاع جديد",
+    "body": "تم إرسال طلب إرجاع للمنتج {{productName}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "مراجعة الإرجاع" },
+    "groupKey": "returns",
+    "sound": "default"
+  },
+  "message.new": {
+    "title": "رسالة جديدة",
+    "body": "لديك رسالة جديدة من {{userName}}.",
+    "category": "chat",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/chat/{{chatId}}", "label": "فتح المحادثة" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "payment.received": {
+    "title": "تم تسجيل دفعة",
+    "body": "تم تسجيل مبلغ {{amount}} للطلب {{orderNumber}}.",
+    "category": "payment",
+    "priority": "normal",
+    "channels": ["in_app"],
+    "targets": ["center", "badge", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "payments",
+    "sound": "default"
+  },
+  "offer.received": {
+    "title": "عرض جديد",
+    "body": "وصلك عرض جديد بقيمة {{amount}}.",
+    "category": "offers",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "home"],
+    "deepLink": { "href": "/offers/{{offerId}}", "label": "عرض التفاصيل" },
+    "groupKey": "offers",
+    "sound": "default"
+  },
+  "system.info": {
+    "title": "تنبيه من GOVA",
+    "body": "{{message}}",
+    "category": "system",
+    "priority": "low",
+    "channels": ["in_app"],
+    "targets": ["center", "badge"],
+    "groupKey": "system",
+    "sound": "silent"
+  }
+}

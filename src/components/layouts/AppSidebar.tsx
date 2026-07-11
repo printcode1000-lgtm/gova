@@ -9,6 +9,7 @@ import {
   ScrollText,
   Settings,
   ShieldCheck,
+  KeyRound,
   Sliders,
   Sparkles,
   TrendingUp,
@@ -185,6 +186,14 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
             >
               <ScrollText className="h-4 w-4" />
               سجل النظام
+            </Link>
+            <Link
+              href="/super-admin/vapid"
+              onClick={onClose}
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+            >
+              <KeyRound className="h-4 w-4" />
+              إدارة VAPID
             </Link>
           </div>
         )}

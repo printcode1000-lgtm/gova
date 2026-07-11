@@ -8,12 +8,14 @@ import { useLayoutEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { useResolvedColorScheme } from '@/lib/preferences';
+import { useNotificationBadge } from '@/features/notifications';
 
 export function BottomNavBar() {
   const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const { t } = useTranslation();
   const resolvedScheme = useResolvedColorScheme();
+  const notificationBadge = useNotificationBadge();
 
   useLayoutEffect(() => {
     const nav = navRef.current;
@@ -35,7 +37,7 @@ export function BottomNavBar() {
 
   const navItems = [
     { href: '/home', icon: Home, label: t('nav.home'), showBadge: false },
-    { href: '/notifications', icon: Bell, label: t('nav.notifications'), showBadge: true },
+    { href: '/notifications', icon: Bell, label: t('nav.notifications'), showBadge: notificationBadge > 0, badgeCount: notificationBadge },
     { href: '/favorites', icon: Heart, label: t('nav.favorites'), showBadge: false },
     { href: '/orders', icon: Receipt, label: t('nav.orders'), showBadge: false },
   ];
@@ -49,7 +51,7 @@ export function BottomNavBar() {
         resolvedScheme === 'dark' ? 'gova-surface-neutral' : 'bg-[#F8FBFF]'
       )}
     >
-      {navItems.map(({ href, icon: Icon, label, showBadge }) => {
+      {navItems.map(({ href, icon: Icon, label, showBadge, badgeCount }) => {
         const isActive = pathname === href;
 
         return (
@@ -70,9 +72,11 @@ export function BottomNavBar() {
             />
             {showBadge && (
               <span className={cn(
-                "absolute top-0 end-1/2 translate-x-3 w-2.5 h-2.5 rounded-full border-2 bg-error animate-pulse-subtle",
+                "absolute top-0 end-1/2 flex min-h-4 min-w-4 translate-x-4 items-center justify-center rounded-full border-2 bg-error px-1 text-[9px] font-bold leading-none text-on-error animate-pulse-subtle",
                 resolvedScheme === 'dark' ? 'border-surface-bright' : 'border-blue-200'
-              )} />
+              )}>
+                {badgeCount && badgeCount > 9 ? '9+' : badgeCount}
+              </span>
             )}
             <span className="text-[10px] leading-3 font-semibold mt-0.5">{label}</span>
           </Link>

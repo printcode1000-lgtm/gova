@@ -71,6 +71,10 @@ export class OrderQueryRepository {
       "SELECT * FROM return_requests WHERE order_id=? ORDER BY created_at DESC",
       [orderId],
     );
+    const returnItems = await this.db.execute(
+      "SELECT ri.* FROM return_request_items ri JOIN return_requests r ON r.id=ri.return_request_id WHERE r.order_id=? ORDER BY ri.created_at ASC",
+      [orderId],
+    );
     const replacements = await this.db.execute(
       "SELECT * FROM replacement_requests WHERE order_id=? ORDER BY created_at DESC",
       [orderId],
@@ -93,6 +97,7 @@ export class OrderQueryRepository {
       shipmentItems,
       cancellations,
       returns,
+      returnItems,
       replacements,
       disputes,
       audit,

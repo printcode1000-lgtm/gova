@@ -42,6 +42,12 @@ export const GOVA_API_ROUTES = {
     actions: (orderId: string) =>
       `/api/orders/${encodeURIComponent(orderId)}/actions`,
   },
+  notifications: {
+    deviceToken: "/api/notifications/device-token",
+    send: "/api/notifications/send",
+    webPushPublicKey: "/api/notifications/web-push/public-key",
+    webPushVapid: "/api/notifications/web-push/vapid",
+  },
   products: "/api/products",
   advertisements: {
     homeHeroSlider: "/api/advertisements/home-hero-slider",

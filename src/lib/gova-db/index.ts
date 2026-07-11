@@ -4,7 +4,7 @@ import type { StateStorage } from 'zustand/middleware';
 import { trackGovaDbOp } from '@/core/monitor/gova-db-monitor';
 
 const DB_NAME = 'GovaDB';
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 export const GOVA_DB_STORES = {
   GUEST_SESSIONS: 'guestSessions',
@@ -12,6 +12,12 @@ export const GOVA_DB_STORES = {
   AUTH: 'auth',
   SELLER_ONBOARDING: 'sellerOnboarding',
   QUERY_CACHE: 'queryCache',
+  NOTIFICATIONS: 'notifications',
+  NOTIFICATION_DEVICE_TOKENS: 'notificationDeviceTokens',
+  NOTIFICATION_SETTINGS: 'notificationSettings',
+  NOTIFICATION_BADGES: 'notificationBadges',
+  NOTIFICATION_ANALYTICS: 'notificationAnalytics',
+  NOTIFICATION_OFFLINE_QUEUE: 'notificationOfflineQueue',
 } as const;
 
 export type GovaDbStoreName = (typeof GOVA_DB_STORES)[keyof typeof GOVA_DB_STORES];

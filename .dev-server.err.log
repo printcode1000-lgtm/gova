@@ -163,3 +163,2841 @@ Read more: https://nextjs.org/docs/app/api-reference/components/image#loading (s
   101 |
   102 |     return data as T;
 Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[browser] Image with src "/images/mainCategories/Tech%20%26%20Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Clothing%20%26%20Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical%20Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] [i18n] Missing translation key: "profile.title" (src/lib/i18n/translate.ts:38:15)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech%20%26%20Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Clothing%20%26%20Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical%20Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Women's Clothing.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Hijab Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Men's Clothing.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Children's & Newborn Clothing.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Men's & Women's Accessories.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Shoes, Leather & Fabric Bags.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Sportswear.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Formal Wear (Weddings, Parties).webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Underwear & Sleepwear.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Good Condition Used Clothes.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev/images/avatars/a486b37f-01f4-474f-8e42-59267aafbce2.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev/images/avatars/15140d92-f718-41e0-bce1-23b676d45196.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] [GovaApiClient] GET /api/profile/fulfillment-settings?uid=usr_1782522385927_pwpl7rr failed: Failed query: select "fulfillment_settings_json" from "user_profiles" where "user_profiles"."uid" = ? limit ?
+params: usr_1782522385927_pwpl7rr,1 
+    at SystemLogCollector.useEffect [as error] (src/features/system-logs/SystemLogCollector.tsx:69:26)
+    at GovaApiClient.logAndThrow (src/core/api/gova-api-client.ts:37:15)
+    at GovaApiClient.request (src/core/api/gova-api-client.ts:75:12)
+    at async wrapped (src/core/monitor/query-observer.ts:89:26)
+  67 |     methods.forEach((method) => {
+  68 |       console[method] = (...data: unknown[]) => {
+> 69 |         originals[method](...data);
+     |                          ^
+  70 |         const error = data.find((item): item is Error => item instanceof Error);
+  71 |         addSystemLog({
+  72 |           level: levelFor(method), (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/doctors_appointment.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/X-Ray Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Lab Tests & Checks.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Home Nursing.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Pharmacies.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Elderly & Special Needs Care.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/subCategories/Medical Devices.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Tech%20%26%20Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Clothing%20%26%20Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical%20Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] [i18n] Missing translation key: "profile.title" (src/lib/i18n/translate.ts:38:15)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/subCategories/Women's Clothing.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev/images/products/1/31dd0804-d76f-4f94-84a9-144ab6c22720.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Avon.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Oriflame.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/My Way.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Tech%20%26%20Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Clothing%20%26%20Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical%20Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Tech%20%26%20Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Clothing%20%26%20Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical%20Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Can't perform a React state update on a component that hasn't mounted yet. This indicates that you have a side-effect in your render function that asynchronously tries to update the component. Move this work to useEffect instead. 
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[browser] [GovaApiClient] POST /api/orders/from-cart failed: Buyer profile phone and address are required 
+    at GovaApiClient.logAndThrow (src/core/api/gova-api-client.ts:37:15)
+    at GovaApiClient.request (src/core/api/gova-api-client.ts:75:12)
+    at async submitOrder (src/components/cart/CartPageContent.tsx:141:22)
+  35 |       normalizedError instanceof Error ? normalizedError.message : String(normalizedError);
+  36 |     if (!suppressErrorLog) {
+> 37 |       console.error(`[GovaApiClient] ${method} ${route} failed: ${message}`);
+     |               ^
+  38 |     }
+  39 |     throw normalizedError;
+  40 |   } (src/core/api/gova-api-client.ts:37:15)
+[browser] [i18n] Missing translation key: "profile.title" (src/lib/i18n/translate.ts:38:15)
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+  [90m 9 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m10 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m11 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m12 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m13 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m14 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m15 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m16 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m18 |[0m
+  [90m19 |[0m [36mconst[0m roleTabs: { role: [33mOrderRole[0m; label: string }[] = [
+  [90m20 |[0m   { role: [32m"buyer"[0m, label: [32m"كمشتري"[0m },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] Uncaught Error: ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+   9 | import { useSession } from "@/features/auth/components/SessionProvider";
+  10 | import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+> 11 | import {
+     | ^^^^^^^
+> 12 |   formatMoney,
+     | ^^^^^^^^^^^^^^
+> 13 |   queryWithActor,
+     | ^^^^^^^^^^^^^^^^^
+> 14 |   statusLabel,
+     | ^^^^^^^^^^^^^^
+> 15 |   type DbRow,
+     | ^^^^^^^^^^^^^
+> 16 |   type OrderRole,
+     | ^^^^^^^^^^^^^^^^^
+> 17 | } from "./order-ui";
+     | ^^^^^^^^^^^^^^^^^^^^
+  18 |
+  19 | const roleTabs: { role: OrderRole; label: string }[] = [
+  20 |   { role: "buyer", label: "كمشتري" },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./src/components/orders/OrdersPageContent.tsx:11:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./src/components/orders/OrdersPageContent.tsx:11:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] Uncaught Error: ./src/components/orders/OrdersPageContent.tsx:11:1
+Module not found: Can't resolve './order-ui'
+   9 | import { useSession } from "@/features/auth/components/SessionProvider";
+  10 | import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+> 11 | import {
+     | ^^^^^^^
+> 12 |   formatMoney,
+     | ^^^^^^^^^^^^^^
+> 13 |   queryWithActor,
+     | ^^^^^^^^^^^^^^^^^
+> 14 |   statusLabel,
+     | ^^^^^^^^^^^^^^
+> 15 |   type DbRow,
+     | ^^^^^^^^^^^^^
+> 16 |   type OrderRole,
+     | ^^^^^^^^^^^^^^^^^
+> 17 | } from "./order-ui";
+     | ^^^^^^^^^^^^^^^^^^^^
+  18 |
+  19 | const roleTabs: { role: OrderRole; label: string }[] = [
+  20 |   { role: "buyer", label: "كمشتري" },
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrdersPageContent.tsx
+    ./src/app/orders/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./src/components/orders/OrdersPageContent.tsx:11:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./src/components/orders/OrdersPageContent.tsx:11:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+⨯ ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  [90m19 |[0m [36mimport[0m { useSession } [36mfrom[0m [32m"@/features/auth/components/SessionProvider"[0m;
+  [90m20 |[0m [36mimport[0m { isSuperAdmin } [36mfrom[0m [32m"@/features/auth/utils/super-admin"[0m;
+[31m[1m>[0m [90m21 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m22 |[0m   formatMoney,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m23 |[0m   profileAddress,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m24 |[0m   profileName,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m25 |[0m   queryWithActor,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m26 |[0m   statusLabel,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m27 |[0m   [36mtype[0m [33mDbRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m28 |[0m   [36mtype[0m [33mOrderRole[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m29 |[0m } [36mfrom[0m [32m"./order-ui"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+  [90m30 |[0m
+  [90m31 |[0m [36minterface[0m [33mOrderDetails[0m {
+  [90m32 |[0m   order: [33mDbRow[0m;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] Uncaught Error: ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  19 | import { useSession } from "@/features/auth/components/SessionProvider";
+  20 | import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+> 21 | import {
+     | ^^^^^^^
+> 22 |   formatMoney,
+     | ^^^^^^^^^^^^^^
+> 23 |   profileAddress,
+     | ^^^^^^^^^^^^^^^^^
+> 24 |   profileName,
+     | ^^^^^^^^^^^^^^
+> 25 |   queryWithActor,
+     | ^^^^^^^^^^^^^^^^^
+> 26 |   statusLabel,
+     | ^^^^^^^^^^^^^^
+> 27 |   type DbRow,
+     | ^^^^^^^^^^^^^
+> 28 |   type OrderRole,
+     | ^^^^^^^^^^^^^^^^^
+> 29 | } from "./order-ui";
+     | ^^^^^^^^^^^^^^^^^^^^
+  30 |
+  31 | interface OrderDetails {
+  32 |   order: DbRow;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./src/components/orders/OrderDetailsPageContent.tsx:21:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./src/components/orders/OrderDetailsPageContent.tsx:21:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+[browser] Uncaught Error: ./src/components/orders/OrderDetailsPageContent.tsx:21:1
+Module not found: Can't resolve './order-ui'
+  19 | import { useSession } from "@/features/auth/components/SessionProvider";
+  20 | import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+> 21 | import {
+     | ^^^^^^^
+> 22 |   formatMoney,
+     | ^^^^^^^^^^^^^^
+> 23 |   profileAddress,
+     | ^^^^^^^^^^^^^^^^^
+> 24 |   profileName,
+     | ^^^^^^^^^^^^^^
+> 25 |   queryWithActor,
+     | ^^^^^^^^^^^^^^^^^
+> 26 |   statusLabel,
+     | ^^^^^^^^^^^^^^
+> 27 |   type DbRow,
+     | ^^^^^^^^^^^^^
+> 28 |   type OrderRole,
+     | ^^^^^^^^^^^^^^^^^
+> 29 | } from "./order-ui";
+     | ^^^^^^^^^^^^^^^^^^^^
+  30 |
+  31 | interface OrderDetails {
+  32 |   order: DbRow;
+
+
+
+Import trace:
+  Server Component:
+    ./src/components/orders/OrderDetailsPageContent.tsx
+    ./src/app/orders/[orderId]/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./src/components/orders/OrderDetailsPageContent.tsx:21:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (Error: (./src/components/orders/OrderDetailsPageContent.tsx:21:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] [i18n] Missing translation key: "profile.title" (src/lib/i18n/translate.ts:38:15)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+[browser] Image with src "/images/mainCategories/Tech%20%26%20Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Tech & Electronics.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Beauty Store.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Clothing & Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Home & Furniture.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Educational Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Food & Beverages.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Vehicles Market.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Sports.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Pets.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Arts & Crafts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Real Estate.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Events & Gifts.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Health & Beauty.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Shipping & Delivery.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Clothing%20%26%20Fashion.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] Image with src "/images/mainCategories/Medical%20Services.webp" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes (src/features/system-logs/SystemLogCollector.tsx:69:26)
+[browser] [GovaApiClient] POST /api/orders/a329b8ac-8868-4fd8-9f02-7adf4f48560a/actions failed: Item must be in transit or out for delivery before delivery 
+    at SystemLogCollector.useEffect [as error] (src/features/system-logs/SystemLogCollector.tsx:69:26)
+    at GovaApiClient.logAndThrow (src/core/api/gova-api-client.ts:37:15)
+    at GovaApiClient.request (src/core/api/gova-api-client.ts:75:12)
+    at async runAction (src/components/orders/OrderDetailsPageContent.tsx:113:7)
+  67 |     methods.forEach((method) => {
+  68 |       console[method] = (...data: unknown[]) => {
+> 69 |         originals[method](...data);
+     |                          ^
+  70 |         const error = data.find((item): item is Error => item instanceof Error);
+  71 |         addSystemLog({
+  72 |           level: levelFor(method), (src/features/system-logs/SystemLogCollector.tsx:69:26)
+⚠ Fast Refresh had to perform a full reload when ./src/lib/gova-db/index.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./src/lib/gova-db/index.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (.next\dev\static\chunks\src_13c5gcb._.js:6993:191)
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./src/core/api/gova-api-routes.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+Capacitor plugin "WebView" already registered. Cannot register plugins twice.
+[browser] Capacitor plugin "WebView" already registered. Cannot register plugins twice. (src/platform/ota/capacitor-ota-adapter.ts:10:31)

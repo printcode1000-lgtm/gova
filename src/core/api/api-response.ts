@@ -36,6 +36,15 @@ export function mapServiceError(error: unknown): NextResponse {
     'invalidProfileEditor',
     'invalidDeliveryCarrier',
     'phoneVerificationRequired',
+    'invalidNotificationToken',
+    'notificationTokenSaveFailed',
+    'notificationTokenIdentifierRequired',
+    'notificationRecipientsRequired',
+    'notificationDedupeKeyRequired',
+    'notificationContentRequired',
+    'vapidSaveFailed',
+    'vapidNotConfigured',
+    'webPushNotConfigured',
   ];
 
   if (knownCodes.includes(message)) {

@@ -10,6 +10,8 @@ interface ActionInput {
   itemId?: string;
   sellerOrderId?: string;
   shipmentId?: string;
+  shipmentItemId?: string;
+  returnRequestId?: string;
   reason?: string;
 }
 
@@ -65,6 +67,24 @@ export async function POST(
           return apiSuccess(await service.buyerRejectSellerDelivery(body.sellerOrderId, body.reason || "buyer_rejected_delivery", asBuyer));
         case "buyer_reject_delivery_order":
           return apiSuccess(await service.buyerRejectOrderDelivery(orderId, body.reason || "buyer_rejected_delivery", asBuyer));
+        case "buyer_request_return_item":
+          if (!body.itemId) throw new Error("itemId is required");
+          return apiSuccess(
+            await service.createReturnRequest(
+              orderId,
+              {
+                reason: body.reason || "buyer_return_requested",
+                items: [{ itemType: "order_item", orderItemId: body.itemId, quantity: 1 }],
+              },
+              asBuyer,
+            ),
+          );
+        case "seller_approve_return":
+          if (!body.returnRequestId) throw new Error("returnRequestId is required");
+          return apiSuccess(await service.approveReturnRequest(body.returnRequestId, asSeller));
+        case "seller_reject_return":
+          if (!body.returnRequestId) throw new Error("returnRequestId is required");
+          return apiSuccess(await service.rejectReturnRequest(body.returnRequestId, asSeller, body.reason));
         case "carrier_in_transit":
           if (!body.shipmentId) throw new Error("shipmentId is required");
           return apiSuccess(await service.markShipmentInTransit(body.shipmentId, asCarrier));
@@ -80,6 +100,9 @@ export async function POST(
         case "carrier_delivered":
           if (!body.shipmentId) throw new Error("shipmentId is required");
           return apiSuccess(await service.markShipmentFullyDelivered(body.shipmentId, asCarrier));
+        case "carrier_deliver_shipment_item":
+          if (!body.shipmentItemId) throw new Error("shipmentItemId is required");
+          return apiSuccess(await service.markShipmentItemDelivered(body.shipmentItemId, asCarrier));
         default:
           throw new Error("Unknown order action");
       }

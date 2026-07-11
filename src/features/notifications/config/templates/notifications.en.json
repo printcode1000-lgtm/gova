@@ -1,0 +1,111 @@
+{
+  "order.created": {
+    "title": "Order created",
+    "body": "Your order {{orderNumber}} was created successfully.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.updated": {
+    "title": "Order update",
+    "body": "Order {{orderNumber}} changed to {{status}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "shipment.updated": {
+    "title": "Shipment update",
+    "body": "The shipment for order {{orderNumber}} is now {{status}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "Track shipment" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "order.sellerAccepted": {
+    "title": "Seller accepted",
+    "body": "{{sellerName}} accepted {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app"],
+    "targets": ["center", "badge", "orders"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.sellerRejected": {
+    "title": "Seller rejected",
+    "body": "{{sellerName}} rejected {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "urgent"
+  },
+  "return.requested": {
+    "title": "Return requested",
+    "body": "A return request was sent for {{productName}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "Review return" },
+    "groupKey": "returns",
+    "sound": "default"
+  },
+  "message.new": {
+    "title": "New message",
+    "body": "You have a new message from {{userName}}.",
+    "category": "chat",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/chat/{{chatId}}", "label": "Open chat" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "payment.received": {
+    "title": "Payment recorded",
+    "body": "{{amount}} was recorded for order {{orderNumber}}.",
+    "category": "payment",
+    "priority": "normal",
+    "channels": ["in_app"],
+    "targets": ["center", "badge", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "groupKey": "payments",
+    "sound": "default"
+  },
+  "offer.received": {
+    "title": "New offer",
+    "body": "You received a new offer for {{amount}}.",
+    "category": "offers",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "home"],
+    "deepLink": { "href": "/offers/{{offerId}}", "label": "View details" },
+    "groupKey": "offers",
+    "sound": "default"
+  },
+  "system.info": {
+    "title": "GOVA notice",
+    "body": "{{message}}",
+    "category": "system",
+    "priority": "low",
+    "channels": ["in_app"],
+    "targets": ["center", "badge"],
+    "groupKey": "system",
+    "sound": "silent"
+  }
+}
