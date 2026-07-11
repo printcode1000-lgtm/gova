@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { Image as ImageIcon, LayoutTemplate } from "lucide-react";
@@ -6,15 +6,8 @@ import { Image as ImageIcon, LayoutTemplate } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
+import { RatingSettingsEditor } from "@/components/ui/rating/RatingSettingsEditor";
 import { useTranslation } from "@/lib/i18n";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
@@ -252,46 +245,23 @@ export const StoreIdentityCard = React.forwardRef<
         </p>
       </div>
 
-      <div className="space-y-4 rounded-xl border border-outline-variant p-4">
-        <h3 className="text-sm font-bold">إعدادات التقييم</h3>
-        
-        <div className="flex items-center space-x-2 space-x-reverse">
-          <Checkbox
-            id="ratingEnabled"
-            checked={details.ratingSettings.enabled}
-            onCheckedChange={(checked) =>
-              updateField("ratingSettings", {
-                ...details.ratingSettings,
-                enabled: !!checked,
-              })
-            }
-            disabled={readOnly}
-          />
-          <Label htmlFor="ratingEnabled" className="cursor-pointer">تفعيل التقييمات في الملف الشخصي</Label>
-        </div>
+      <RatingSettingsEditor
+        enabled={details.ratingSettings.enabled}
+        mode={details.ratingSettings.mode}
+        disabled={readOnly}
+        labels={{
+          title: "\u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
+          enabled: "\u062A\u0641\u0639\u064A\u0644 \u0627\u0644\u062A\u0642\u064A\u064A\u0645\u0627\u062A \u0641\u064A \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062E\u0635\u064A",
+          mode: "\u0648\u0636\u0639 \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
+          placeholder: "\u0627\u062E\u062A\u0631 \u0648\u0636\u0639 \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
+          stars: "\u0646\u062C\u0648\u0645 \u0641\u0642\u0637",
+          starsComments: "\u0646\u062C\u0648\u0645 \u0648\u062A\u0639\u0644\u064A\u0642\u0627\u062A",
+        }}
+        onChange={(ratingSettings) =>
+          updateField("ratingSettings", ratingSettings)
+        }
+      />
 
-        <div className="space-y-2">
-          <Label>وضع التقييم</Label>
-          <Select
-            value={details.ratingSettings.mode}
-            onValueChange={(value: "stars" | "stars-comments") =>
-              updateField("ratingSettings", {
-                ...details.ratingSettings,
-                mode: value,
-              })
-            }
-            disabled={readOnly || !details.ratingSettings.enabled}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="اختر وضع التقييم" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="stars">نجوم فقط</SelectItem>
-              <SelectItem value="stars-comments">نجوم + تعليقات</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
     </div>
   );
 });
