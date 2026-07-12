@@ -8,7 +8,9 @@ import type { UserProfileRow } from "@/core/database/profile/profile.schema";
 import { userSpecialties } from "@/core/database/profile/user-specialties.schema";
 import type { ProfileContactsData } from "../entities/profile-contacts.entity";
 import {
+  EMPTY_PROFILE_SHOWCASE,
   EMPTY_STORE_DETAILS,
+  type ProfileShowcaseSettings,
   type StoreDetailsData,
 } from "../entities/store-details.entity";
 import type { ProfileRatingSettings } from "../entities/profile-review.entity";
@@ -71,6 +73,58 @@ function normalizeStoreDetails(value: unknown): StoreDetailsData {
     storeStory:
       typeof details.storeStory === "string" ? details.storeStory : "",
     ratingSettings: normalizeRatingSettings(details.ratingSettings),
+    profileShowcase: normalizeProfileShowcase(details.profileShowcase),
+  };
+}
+
+function normalizeProfileShowcase(value: unknown): ProfileShowcaseSettings {
+  if (!value || typeof value !== "object") return EMPTY_PROFILE_SHOWCASE;
+  const showcase = value as Partial<ProfileShowcaseSettings>;
+  const trending =
+    showcase.trending && typeof showcase.trending === "object"
+      ? showcase.trending
+      : EMPTY_PROFILE_SHOWCASE.trending;
+  const trendingValue = trending as {
+    label?: unknown;
+    items?: unknown;
+  };
+  return {
+    featuredProductIds: Array.isArray(showcase.featuredProductIds)
+      ? Array.from(
+          new Set(
+            showcase.featuredProductIds.filter(
+              (id): id is string => typeof id === "string" && id.trim().length > 0,
+            ),
+          ),
+        ).slice(0, 20)
+      : [],
+    trending: {
+      label:
+        typeof trendingValue.label === "string" && trendingValue.label.trim()
+          ? trendingValue.label.trim()
+          : EMPTY_PROFILE_SHOWCASE.trending.label,
+      items: Array.isArray(trendingValue.items)
+        ? trendingValue.items
+            .map((item, index) => {
+              const row = item as { id?: unknown; label?: unknown };
+              const label = typeof row.label === "string" ? row.label.trim() : "";
+              if (!label) return null;
+              return {
+                id:
+                  typeof row.id === "string" && row.id.trim()
+                    ? row.id.trim()
+                    : `trending-${index}`,
+                label,
+              };
+            })
+            .filter((item): item is { id: string; label: string } => Boolean(item))
+            .slice(0, 20)
+        : [],
+    },
+    customRequestEnabled:
+      typeof showcase.customRequestEnabled === "boolean"
+        ? showcase.customRequestEnabled
+        : EMPTY_PROFILE_SHOWCASE.customRequestEnabled,
   };
 }
 

@@ -52,6 +52,8 @@ Record 46 exists once in the official source. It is included in the home page ma
 
 Delivery services use the specialty column `delivery_services_46` in the user_specialties table.
 
+Home navigation treats Delivery Services as a direct providers entry. The Home category card uses `CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID` and routes to `/categories/46/sellers/1` instead of `/categories/46`, so users land immediately on delivery service providers.
+
 ## User Specialties Integration
 
 The CategoryService provides specialty column mapping for the User Specialties Module:

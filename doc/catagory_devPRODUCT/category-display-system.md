@@ -31,6 +31,12 @@ The collection is built inside the module from its members after verifying name 
 
 Clicking on a subcategory navigates to `/categories/[categoryId]/sellers/[subcategoryId]` to display sellers with that specialty.
 
+## Delivery Services
+
+On the Home page, clicking Delivery Services must navigate directly to `/categories/46/sellers/1`.
+
+This category has no intermediate subcategory browsing step in the Home flow. The direct route opens the delivery service providers list immediately, using the same sellers page used by normal category subcategories.
+
 ## Sellers Display
 
 The sellers pages use the User Specialties Module to query users by specialty:

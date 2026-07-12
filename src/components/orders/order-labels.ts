@@ -99,6 +99,12 @@ export function commandLabel(action: string) {
   const labels: Record<string, string> = {
     seller_accept_item: "قبول المنتج",
     seller_reject_item: "رفض المنتج",
+    seller_accept_custom_request: "قبول الطلب الخاص",
+    seller_reject_custom_request: "رفض الطلب الخاص",
+    seller_send_custom_price_offer: "إرسال عرض السعر",
+    buyer_accept_custom_price: "قبول السعر",
+    buyer_reject_custom_price: "رفض السعر",
+    buyer_cancel_custom_request: "إلغاء الطلب الخاص",
     seller_prepare_item: "بدء التجهيز",
     seller_ready_item: "جاهز للشحن",
     buyer_cancel_item: "إلغاء المنتج",

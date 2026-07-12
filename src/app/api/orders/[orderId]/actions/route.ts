@@ -1,17 +1,19 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { getMarketplaceOrderService } from "@/modules/marketplace-orders/api/server";
 import { runTracedBusinessRoute } from "../../../auth/traced-route";
-import { actorFromInput, mapOrderError } from "../../order-api-helpers";
+import { actorFromInput, mapOrderError, moneyMinor } from "../../order-api-helpers";
 
 interface ActionInput {
   uid: string;
   phone?: string;
   action: string;
   itemId?: string;
+  customItemId?: string;
   sellerOrderId?: string;
   shipmentId?: string;
   shipmentItemId?: string;
   returnRequestId?: string;
+  priceMinor?: number;
   reason?: string;
 }
 
@@ -36,6 +38,27 @@ export async function POST(
         case "seller_reject_item":
           if (!body.itemId) throw new Error("itemId is required");
           return apiSuccess(await service.sellerRejectItem(body.itemId, asSeller, body.reason));
+        case "seller_accept_custom_request":
+          if (!body.customItemId) throw new Error("customItemId is required");
+          return apiSuccess(await service.sellerAcceptCustomRequest(body.customItemId, asSeller));
+        case "seller_reject_custom_request":
+          if (!body.customItemId) throw new Error("customItemId is required");
+          return apiSuccess(await service.sellerRejectCustomRequest(body.customItemId, asSeller, body.reason));
+        case "seller_send_custom_price_offer":
+          if (!body.customItemId) throw new Error("customItemId is required");
+          return apiSuccess(
+            await service.sellerSendPriceOfferForCustomRequest(
+              body.customItemId,
+              { unitPrice: moneyMinor(body.priceMinor), quantity: 1 },
+              asSeller,
+            ),
+          );
+        case "buyer_accept_custom_price":
+          if (!body.customItemId) throw new Error("customItemId is required");
+          return apiSuccess(await service.buyerAcceptCustomRequestPrice(body.customItemId, asBuyer));
+        case "buyer_reject_custom_price":
+          if (!body.customItemId) throw new Error("customItemId is required");
+          return apiSuccess(await service.buyerRejectCustomRequestPrice(body.customItemId, asBuyer));
         case "seller_prepare_item":
           if (!body.itemId) throw new Error("itemId is required");
           return apiSuccess(await service.sellerMarkItemPreparing(body.itemId, asSeller));
@@ -54,6 +77,9 @@ export async function POST(
         case "buyer_cancel_item":
           if (!body.itemId) throw new Error("itemId is required");
           return apiSuccess(await service.cancelOrderItem(body.itemId, body.reason || "buyer_cancelled", asBuyer));
+        case "buyer_cancel_custom_request":
+          if (!body.customItemId) throw new Error("customItemId is required");
+          return apiSuccess(await service.cancelCustomRequestItem(body.customItemId, body.reason || "buyer_cancelled", asBuyer));
         case "buyer_cancel_seller_order":
           if (!body.sellerOrderId) throw new Error("sellerOrderId is required");
           return apiSuccess(await service.cancelSellerOrder(body.sellerOrderId, body.reason || "buyer_cancelled", asBuyer));

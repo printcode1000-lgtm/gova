@@ -38,6 +38,7 @@ export const GOVA_API_ROUTES = {
   orders: {
     root: "/api/orders",
     fromCart: "/api/orders/from-cart",
+    customRequestFromProfile: "/api/orders/custom-request-from-profile",
     byId: (orderId: string) => `/api/orders/${encodeURIComponent(orderId)}`,
     actions: (orderId: string) =>
       `/api/orders/${encodeURIComponent(orderId)}/actions`,

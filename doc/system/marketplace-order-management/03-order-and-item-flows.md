@@ -20,7 +20,7 @@ The service prevents adding an incompatible item type to a product-only or custo
 
 1. Call `createCustomRequestOrder` or create a mixed order.
 2. Call `addCustomRequestItem` with a title, buyer description, request type, and assigned seller or service provider.
-3. Upload one or more images through `StorageImageManager` using `StorageProfiles.SpicialOrder`, then register the returned `imageKey`, URL, MIME type, and processed byte size with `addCustomRequestImage`. Video, PDF, document, archive, text, wrong-profile, missing-key, and over-500-KB inputs are rejected.
+3. Optionally upload up to the UI-defined image limit through `StorageImageManager` using `StorageProfiles.SpicialOrder`, then register the returned `imageKey`, URL, MIME type, and processed byte size with `addCustomRequestImage`. Video, PDF, document, archive, text, wrong-profile, missing-key, and over-500-KB inputs are rejected. A profile-origin custom request may be sent with description text only.
 4. The assigned seller/provider accepts or rejects the request.
 5. For an accepted request, the seller sends a priced offer with quantity, unit price, fees, and optional expiry.
 6. The buyer accepts or rejects the offer. Acceptance after expiry is rejected.

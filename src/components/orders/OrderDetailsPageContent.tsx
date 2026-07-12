@@ -33,7 +33,7 @@ import {
 } from "./order-labels";
 import type { DbRow, OrderDetails, OrderRole } from "./order-types";
 
-type RunAction = (action: string, payload: Record<string, string>) => void;
+type RunAction = (action: string, payload: Record<string, string | number>) => void;
 
 const text = {
   loadFailed: "تعذر تحميل الطلب.",
@@ -169,8 +169,8 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
   const buyerLocation = profileAddress(buyer);
   const currency = String(order.currency ?? "EGP");
   const isBuyer = admin || session.uid === buyerId;
-  const canRejectAnyDelivery = details.orderItems.some((item) =>
-    canRejectDeliveryStatus(item.status),
+  const canRejectAnyDelivery = [...details.orderItems, ...details.customItems].some(
+    (item) => canRejectDeliveryStatus(item.status),
   );
 
   return (
@@ -319,8 +319,14 @@ function SellerOrderCard({
   runAction: RunAction;
 }) {
   const sellerId = String(sellerOrder.seller_id ?? "");
-  const carrierId = carrierFromSellerOrder(sellerOrder, details.orderItems);
+  const carrierId = carrierFromSellerOrder(sellerOrder, [
+    ...details.orderItems,
+    ...details.customItems,
+  ]);
   const sellerItems = details.orderItems.filter(
+    (item) => String(item.seller_order_id) === String(sellerOrder.id),
+  );
+  const customItems = details.customItems.filter(
     (item) => String(item.seller_order_id) === String(sellerOrder.id),
   );
   const sellerProfile = details.profiles[sellerId];
@@ -329,10 +335,10 @@ function SellerOrderCard({
   const shipmentExists = details.shipments.some(
     (shipment) => String(shipment.carrier_id ?? "") === carrierId,
   );
-  const hasPendingItems = sellerItems.some((item) =>
+  const hasPendingItems = [...sellerItems, ...customItems].some((item) =>
     isPendingSellerResponse(item.status),
   );
-  const canRejectSellerDelivery = sellerItems.some((item) =>
+  const canRejectSellerDelivery = [...sellerItems, ...customItems].some((item) =>
     canRejectDeliveryStatus(item.status),
   );
 
@@ -370,6 +376,17 @@ function SellerOrderCard({
       <div className="mt-4 space-y-3">
         {sellerItems.map((item) => (
           <OrderItemRow
+            key={String(item.id)}
+            item={item}
+            isSeller={isSeller}
+            isBuyer={isBuyer}
+            currency={currency}
+            busyAction={busyAction}
+            runAction={runAction}
+          />
+        ))}
+        {customItems.map((item) => (
+          <CustomRequestRow
             key={String(item.id)}
             item={item}
             isSeller={isSeller}
@@ -422,6 +439,142 @@ function SellerOrderCard({
         ) : null}
       </div>
     </article>
+  );
+}
+
+function CustomRequestRow({
+  item,
+  isSeller,
+  isBuyer,
+  currency,
+  busyAction,
+  runAction,
+}: {
+  item: DbRow;
+  isSeller: boolean;
+  isBuyer: boolean;
+  currency: string;
+  busyAction: string;
+  runAction: RunAction;
+}) {
+  const itemId = String(item.id);
+  return (
+    <div className="rounded-xl border border-outline-variant bg-background p-3">
+      <div className="flex gap-3">
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary/10">
+          <PackageCheck className="h-7 w-7 text-primary" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <div>
+              <h3 className="font-semibold">
+                {String(item.title ?? "طلب خاص")}
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                {text.itemStatus}: {statusLabel(item.status)}
+              </p>
+              {item.buyer_description ? (
+                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                  {String(item.buyer_description)}
+                </p>
+              ) : null}
+            </div>
+            <p className="font-bold">{formatMoney(item.total_price, currency)}</p>
+          </div>
+          <CustomRequestActions
+            item={item}
+            itemId={itemId}
+            isSeller={isSeller}
+            isBuyer={isBuyer}
+            busyAction={busyAction}
+            runAction={runAction}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CustomRequestActions({
+  item,
+  itemId,
+  isSeller,
+  isBuyer,
+  busyAction,
+  runAction,
+}: {
+  item: DbRow;
+  itemId: string;
+  isSeller: boolean;
+  isBuyer: boolean;
+  busyAction: string;
+  runAction: RunAction;
+}) {
+  const sendPrice = () => {
+    const value = window.prompt("اكتب السعر بالجنيه المصري");
+    if (!value) return;
+    const amount = Math.round(Number(value) * 100);
+    if (!Number.isSafeInteger(amount) || amount <= 0) return;
+    runAction("seller_send_custom_price_offer", {
+      customItemId: itemId,
+      priceMinor: amount,
+    });
+  };
+
+  return (
+    <div className="mt-3 flex flex-wrap gap-2">
+      {isSeller && isPendingSellerResponse(item.status) ? (
+        <>
+          <OrderActionButton
+            action="seller_accept_custom_request"
+            busyAction={busyAction}
+            id={itemId}
+            onClick={() => runAction("seller_accept_custom_request", { customItemId: itemId })}
+          />
+          <OrderActionButton
+            action="seller_reject_custom_request"
+            busyAction={busyAction}
+            id={itemId}
+            tone="danger"
+            onClick={() => runAction("seller_reject_custom_request", { customItemId: itemId })}
+          />
+        </>
+      ) : null}
+      {isSeller && item.status === "waiting_for_pricing" ? (
+        <OrderActionButton
+          action="seller_send_custom_price_offer"
+          busyAction={busyAction}
+          id={itemId}
+          onClick={sendPrice}
+        />
+      ) : null}
+      {isBuyer && item.status === "price_offer_sent" ? (
+        <>
+          <OrderActionButton
+            action="buyer_accept_custom_price"
+            busyAction={busyAction}
+            id={itemId}
+            onClick={() => runAction("buyer_accept_custom_price", { customItemId: itemId })}
+          />
+          <OrderActionButton
+            action="buyer_reject_custom_price"
+            busyAction={busyAction}
+            id={itemId}
+            tone="danger"
+            onClick={() => runAction("buyer_reject_custom_price", { customItemId: itemId })}
+          />
+        </>
+      ) : null}
+      {isBuyer && canCancelStatus(item.status) ? (
+        <OrderActionButton
+          action="buyer_cancel_custom_request"
+          busyAction={busyAction}
+          id={itemId}
+          tone="danger"
+          onClick={() => runAction("buyer_cancel_custom_request", { customItemId: itemId })}
+        />
+      ) : null}
+    </div>
   );
 }
 

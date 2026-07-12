@@ -29,4 +29,4 @@ The example manager configuration is `src/modules/marketplace-orders/examples/cu
 
 ## Required persistence behavior
 
-Do not store base64 data or image bytes in the marketplace database. Store the provider-independent key and display URL. Removal must call the shared storage deletion pipeline with `spicialOrder` and the saved key before deleting the marketplace image record. A custom request cannot advance to pricing or fulfilment without at least one registered image.
+Do not store base64 data or image bytes in the marketplace database. Store the provider-independent key and display URL. Removal must call the shared storage deletion pipeline with `spicialOrder` and the saved key before deleting the marketplace image record. Images are optional for profile-origin custom requests when the buyer provides a text description.

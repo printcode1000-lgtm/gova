@@ -21,7 +21,7 @@ import {
   faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 import * as React from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import Image from "next/image";
 
@@ -37,10 +37,18 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { useTranslation } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ContactActionBar } from "@/components/ui/contact-action-bar";
+import { FeaturedMarquee, type FeaturedMarqueeConfig } from "@/components/ui/FeaturedMarquee";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
+import { ProfileCustomRequestButton } from "@/components/ui/profile-custom-request-button";
+import { TrendingRibbon, type TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
+import { govaApi, GOVA_API_ROUTES } from "@/core/api";
 import { ProductReviews } from "@/components/product/ProductReviews";
+import type { ProductRecord } from "@/features/product/entities/product.entity";
+import { productApiService } from "@/features/product/services/product-api-service";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
+import { useProfilePublicContacts } from "@/features/profile/hooks/use-profile-public-contacts";
 import type {
   ProfileContactsController,
   ProfileRegistrationController,
@@ -55,6 +63,7 @@ import { useProfileSave } from "./use-profile-save";
 
 export function ProfilePageContent() {
   const { t, locale } = useTranslation();
+  const router = useRouter();
   const { session, isLoggedIn, isLoading, setSession } = useSession();
   const superAdmin = isSuperAdmin(session);
   const searchParams = useSearchParams();
@@ -67,6 +76,9 @@ export function ProfilePageContent() {
     useProfileStoreImages(isViewingOtherProfile ? uid : undefined);
   const { details: storeDetails, isLoading: isLoadingStoreDetails } =
     useStoreDetails(isViewingOtherProfile ? uid : undefined);
+  const previewUid = showPreviewCard ? uid || session?.uid || "" : "";
+  const { contacts: previewContacts, isLoading: isLoadingPreviewContacts } =
+    useProfilePublicContacts(previewUid);
 
   const registrationRef = React.useRef<ProfileRegistrationController>(null);
   const specialtiesRef = React.useRef<ProfileSpecialtiesController>(null);
@@ -113,6 +125,8 @@ export function ProfilePageContent() {
   });
 
   const [isStoryExpanded, setIsStoryExpanded] = React.useState(false);
+  const [featuredProducts, setFeaturedProducts] = React.useState<ProductRecord[]>([]);
+  const [isLoadingFeaturedProducts, setIsLoadingFeaturedProducts] = React.useState(false);
 
   const heroSliderConfig = useMemo<HeroSliderConfig>(() => {
     const slides = storeImages.coverUrls.map((url, index) => ({
@@ -133,6 +147,84 @@ export function ProfilePageContent() {
       slides,
     };
   }, [storeImages.coverImageKeys, storeImages.coverUrls]);
+
+  React.useEffect(() => {
+    const ids = storeDetails.profileShowcase?.featuredProductIds ?? [];
+    if (!showPreviewCard || ids.length === 0) {
+      setFeaturedProducts([]);
+      return;
+    }
+    let cancelled = false;
+    const load = async () => {
+      setIsLoadingFeaturedProducts(true);
+      try {
+        const products = await Promise.all(
+          ids.map((id) => productApiService.get(id).catch(() => null)),
+        );
+        if (!cancelled) {
+          setFeaturedProducts(
+            products.filter(
+              (product): product is ProductRecord =>
+                Boolean(product) && (!previewUid || product!.uid === previewUid),
+            ),
+          );
+        }
+      } finally {
+        if (!cancelled) setIsLoadingFeaturedProducts(false);
+      }
+    };
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [previewUid, showPreviewCard, storeDetails.profileShowcase?.featuredProductIds]);
+
+  const profileFeaturedConfig = useMemo<FeaturedMarqueeConfig>(() => ({
+    sectionTitle: "منتجات مميزة",
+    items: featuredProducts.map((product) => {
+      const price = Number(product.data.fields["price.current"] ?? 0);
+      return {
+        id: product.id,
+        title: product.data.fields["mainData.name"] || "منتج",
+        price: price > 0 ? `${price.toLocaleString("ar-EG")} ج.م` : "السعر عند الطلب",
+        image: product.data.images[0]?.url || "/images/mainCategories/General Services.webp",
+        action: `mode=view&productId=${product.id}&mainCategoryId=${product.mainCategoryId}&subcategoryId=${product.subcategoryId}`,
+      };
+    }),
+    onAction: (action) => router.push(`/product?${action}`),
+  }), [featuredProducts, router]);
+
+  const profileTrendingConfig = useMemo<TrendingRibbonConfig>(() => ({
+    label: storeDetails.profileShowcase?.trending.label || "الأكثر رواجًا",
+    items: (storeDetails.profileShowcase?.trending.items ?? []).map((item) => ({
+      label: item.label,
+      action: "",
+    })),
+  }), [storeDetails.profileShowcase?.trending]);
+
+  const submitProfileCustomRequest = async (input: {
+    title: string;
+    description: string;
+    images: { imageKey: string; url: string }[];
+  }) => {
+    if (!session?.uid || !previewUid) throw new Error("يجب تسجيل الدخول لإرسال الطلب.");
+    const result = await govaApi.post<{ orderId: string }>(
+      GOVA_API_ROUTES.orders.customRequestFromProfile,
+      {
+        uid: session.uid,
+        phone: session.phone,
+        sellerUid: previewUid,
+        title: input.title,
+        description: input.description,
+        images: input.images.map((image) => ({
+          imageKey: image.imageKey,
+          url: image.url,
+        })),
+      },
+      { suppressErrorLog: true },
+    );
+    router.push(`/orders/${encodeURIComponent(result.orderId)}?role=buyer`);
+  };
 
   const dirtySections = (
     Object.entries(sectionStatuses) as Array<
@@ -210,6 +302,30 @@ export function ProfilePageContent() {
               </div>
             </section>
           )}
+          {!isLoadingPreviewContacts && previewContacts ? (
+            <div className="mx-2 mt-4 sm:mx-4">
+              <ContactActionBar data={previewContacts} />
+            </div>
+          ) : null}
+          {storeDetails.profileShowcase?.customRequestEnabled && session?.uid && previewUid ? (
+            <section className="mx-2 mt-4 sm:mx-4">
+              <ProfileCustomRequestButton
+                onSubmit={submitProfileCustomRequest}
+                buttonLabel="إرسال طلب خاص"
+                title={`طلب خاص إلى ${storeDetails.storeName || "البائع"}`}
+              />
+            </section>
+          ) : null}
+          {!isLoadingFeaturedProducts && featuredProducts.length > 0 ? (
+            <section className="mx-2 mt-6 sm:mx-4">
+              <FeaturedMarquee config={profileFeaturedConfig} />
+            </section>
+          ) : null}
+          {profileTrendingConfig.items.length > 0 ? (
+            <section className="mt-5">
+              <TrendingRibbon config={profileTrendingConfig} />
+            </section>
+          ) : null}
           {!isLoadingStoreDetails && storeDetails.storeStory ? (
             <section className="mx-2 sm:mx-4 mt-4 sm:mt-5 space-y-2">
               <button

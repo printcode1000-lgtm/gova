@@ -7,10 +7,17 @@ import * as React from 'react';
 
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import type { CategoryDisplay } from '@/features/categories';
+import { CATEGORY_CONSTANTS, type CategoryDisplay } from '@/features/categories';
 import { TrendingRibbon, type TrendingRibbonConfig } from '@/components/ui/TrendingRibbon';
 
 const CATEGORY_RINGS = ['gova-ring-primary', 'gova-ring-secondary', 'gova-ring-tertiary', 'gova-ring-error'] as const;
+
+function getCategoryHref(cat: CategoryDisplay): string {
+  if (cat.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) {
+    return `/categories/${cat.id}/sellers/1`;
+  }
+  return cat.isCollection ? `/collections/${cat.id}` : `/categories/${cat.id}`;
+}
 
 interface CategoriesGridProps {
   displayCategories: readonly CategoryDisplay[];
@@ -37,7 +44,7 @@ export function CategoriesGrid({ displayCategories, trendingRibbonConfig }: Cate
             return (
               <Link
                 key={cat.id}
-                href={cat.isCollection ? `/collections/${cat.id}` : `/categories/${cat.id}`}
+                href={getCategoryHref(cat)}
                 className="flex flex-col gap-2 group transition-transform duration-200 active:scale-95"
                 aria-label={name}
               >

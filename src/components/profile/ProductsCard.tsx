@@ -5,9 +5,16 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronRight, ChevronLeft, Package, Pencil, Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
+import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { CATEGORY_CONSTANTS, categoryService, type CategoryDisplay, type SubcategoryDisplay } from "@/features/categories";
-import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
+import { EMPTY_PROFILE_SHOWCASE, type ProfileShowcaseSettings } from "@/features/profile/entities/store-details.entity";
+import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
+import { profileService } from "@/features/profile/services/profile-service";
+import {
+  EMPTY_PROFILE_SPECIALTIES,
+  type ProfileSpecialtiesSelection,
+} from "@/features/profile/entities/profile-specialties.entity";
 import type {
   ProfileSectionStatus,
   ProfileSpecialtiesController,
@@ -47,7 +54,11 @@ export const ProductsCard = React.forwardRef<
   const [selectedProduct, setSelectedProduct] = React.useState<ProductRecord | null>(null);
   const [pendingDelete, setPendingDelete] = React.useState<ProductRecord | null>(null);
   const [isDeletingProduct, setIsDeletingProduct] = React.useState(false);
+  const [showcaseSaving, setShowcaseSaving] = React.useState(false);
+  const [newTrendingText, setNewTrendingText] = React.useState("");
+  const { details: storeDetails, applySaved: applySavedStoreDetails } = useStoreDetails();
   const label = t("onboarding.storeIdentity.products");
+  const showcase = storeDetails.profileShowcase ?? EMPTY_PROFILE_SHOWCASE;
 
   const applySelection = React.useCallback(
     (selection: ProfileSpecialtiesSelection) => {
@@ -77,7 +88,9 @@ export const ProductsCard = React.forwardRef<
         .then((selection) => {
           if (!cancelled) applySelection(selection);
         })
-        .catch((error) => console.error("Failed to load specialties:", error));
+        .catch(() => {
+          if (!cancelled) applySelection(EMPTY_PROFILE_SPECIALTIES);
+        });
     });
     return () => {
       cancelled = true;
@@ -231,6 +244,74 @@ export const ProductsCard = React.forwardRef<
     } finally {
       setIsDeletingProduct(false);
     }
+  };
+
+  const saveShowcase = async (next: ProfileShowcaseSettings) => {
+    if (!uid) return;
+    setShowcaseSaving(true);
+    try {
+      const saved = await profileService.saveStoreDetails({
+        uid,
+        ...storeDetails,
+        profileShowcase: next,
+      });
+      applySavedStoreDetails(saved);
+    } catch (error) {
+      console.error("Failed to save profile showcase:", error);
+    } finally {
+      setShowcaseSaving(false);
+    }
+  };
+
+  const toggleFeaturedProduct = (product: ProductRecord) => {
+    const exists = showcase.featuredProductIds.includes(product.id);
+    const nextIds = exists
+      ? showcase.featuredProductIds.filter((id) => id !== product.id)
+      : [product.id, ...showcase.featuredProductIds].slice(0, 20);
+    void saveShowcase({ ...showcase, featuredProductIds: nextIds });
+  };
+
+  const addTrendingItem = () => {
+    const label = newTrendingText.trim();
+    if (!label) return;
+    setNewTrendingText("");
+    void saveShowcase({
+      ...showcase,
+      trending: {
+        ...showcase.trending,
+        items: [
+          ...showcase.trending.items,
+          { id: `trending-${Date.now()}`, label },
+        ].slice(0, 20),
+      },
+    });
+  };
+
+  const removeTrendingItem = (id: string) => {
+    void saveShowcase({
+      ...showcase,
+      trending: {
+        ...showcase.trending,
+        items: showcase.trending.items.filter((item) => item.id !== id),
+      },
+    });
+  };
+
+  const updateTrendingLabel = (value: string) => {
+    void saveShowcase({
+      ...showcase,
+      trending: {
+        ...showcase.trending,
+        label: value.trim() || EMPTY_PROFILE_SHOWCASE.trending.label,
+      },
+    });
+  };
+
+  const toggleCustomRequest = () => {
+    void saveShowcase({
+      ...showcase,
+      customRequestEnabled: !showcase.customRequestEnabled,
+    });
   };
 
   const getCategoryName = (categoryId: string) => {
@@ -520,6 +601,21 @@ export const ProductsCard = React.forwardRef<
                                       <>
                                         <button
                                           type="button"
+                                          onClick={() => toggleFeaturedProduct(selectedProduct)}
+                                          disabled={showcaseSaving}
+                                          className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-2 py-2 text-[10px] font-medium text-on-surface transition-colors hover:bg-tertiary hover:text-on-tertiary sm:py-2.5 sm:text-xs disabled:opacity-60"
+                                          title={
+                                            showcase.featuredProductIds.includes(selectedProduct.id)
+                                              ? locale === 'ar' ? 'إزالة من المميزة' : 'Remove featured'
+                                              : locale === 'ar' ? 'إضافة للمميزة' : 'Add featured'
+                                          }
+                                        >
+                                          {showcase.featuredProductIds.includes(selectedProduct.id)
+                                            ? locale === 'ar' ? 'إزالة من المميزة' : 'Remove featured'
+                                            : locale === 'ar' ? 'إضافة للمميزة' : 'Add featured'}
+                                        </button>
+                                        <button
+                                          type="button"
                                           onClick={() => editProduct(selectedProduct)}
                                           className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-2 py-2 text-[10px] font-medium text-on-surface transition-colors hover:bg-primary hover:text-on-primary sm:py-2.5 sm:text-xs"
                                           title={locale === 'ar' ? 'تعديل' : 'Edit'}
@@ -578,6 +674,99 @@ export const ProductsCard = React.forwardRef<
           })}
         </div>
       )}
+      {!readOnly ? (
+        <section className="rounded-xl border border-outline-variant bg-surface-container-low/40 p-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h4 className="text-sm font-semibold text-on-surface">
+                {locale === "ar" ? "عرض البروفايل" : "Profile display"}
+              </h4>
+              <p className="text-xs text-on-surface-variant">
+                {locale === "ar"
+                  ? "اختر المنتجات المميزة ونصوص الأكثر رواجًا وزر الطلب الخاص."
+                  : "Choose featured products, trending texts, and custom request button."}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={toggleCustomRequest}
+              disabled={showcaseSaving}
+              className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                showcase.customRequestEnabled
+                  ? "bg-primary text-on-primary"
+                  : "border border-outline-variant bg-surface text-on-surface"
+              }`}
+            >
+              {showcase.customRequestEnabled
+                ? locale === "ar" ? "الطلب الخاص مفعل" : "Custom request enabled"
+                : locale === "ar" ? "تفعيل الطلب الخاص" : "Enable custom request"}
+            </button>
+          </div>
+
+          <div className="mt-4 grid gap-3">
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-on-surface">
+                {locale === "ar" ? "عنوان شريط الأكثر رواجًا" : "Trending title"}
+              </label>
+              <Input
+                defaultValue={showcase.trending.label}
+                maxLength={80}
+                onBlur={(event) => updateTrendingLabel(event.target.value)}
+                disabled={showcaseSaving}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={newTrendingText}
+                onChange={(event) => setNewTrendingText(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    addTrendingItem();
+                  }
+                }}
+                placeholder={locale === "ar" ? "أضف نصًا يظهر في الأكثر رواجًا" : "Add a trending display text"}
+                maxLength={80}
+                disabled={showcaseSaving}
+              />
+              <button
+                type="button"
+                onClick={addTrendingItem}
+                disabled={showcaseSaving || !newTrendingText.trim()}
+                className="rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary disabled:opacity-60"
+              >
+                {locale === "ar" ? "إضافة" : "Add"}
+              </button>
+            </div>
+            {showcase.trending.items.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {showcase.trending.items.map((item) => (
+                  <span
+                    key={item.id}
+                    className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-surface px-3 py-1 text-xs"
+                  >
+                    {item.label}
+                    <button
+                      type="button"
+                      onClick={() => removeTrendingItem(item.id)}
+                      disabled={showcaseSaving}
+                      className="text-destructive"
+                      aria-label={locale === "ar" ? "حذف النص" : "Remove text"}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            <p className="text-xs text-on-surface-variant">
+              {locale === "ar"
+                ? `عدد المنتجات المميزة المختارة: ${showcase.featuredProductIds.length}`
+                : `Featured products selected: ${showcase.featuredProductIds.length}`}
+            </p>
+          </div>
+        </section>
+      ) : null}
       {pendingDelete ? (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-sm rounded-2xl bg-surface p-5 shadow-xl">

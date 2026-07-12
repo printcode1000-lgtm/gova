@@ -76,7 +76,10 @@ export class ProfileApiService implements IProfileService {
 
   async getSpecialties(uid: string): Promise<ProfileSpecialtiesSelection> {
     const route = `${GOVA_API_ROUTES.profile.specialties}?uid=${encodeURIComponent(uid)}`;
-    return govaApi.get<ProfileSpecialtiesSelection>(route);
+    return govaApi.get<ProfileSpecialtiesSelection>(route, {
+      cache: "no-store",
+      suppressErrorLog: true,
+    });
   }
 
   async saveSpecialties(
