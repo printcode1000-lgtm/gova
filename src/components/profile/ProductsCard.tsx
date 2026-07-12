@@ -8,9 +8,12 @@ import { useTranslation } from "@/lib/i18n";
 import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { CATEGORY_CONSTANTS, categoryService, type CategoryDisplay, type SubcategoryDisplay } from "@/features/categories";
-import { EMPTY_PROFILE_SHOWCASE, type ProfileShowcaseSettings } from "@/features/profile/entities/store-details.entity";
+import {
+  EMPTY_PROFILE_SHOWCASE,
+  type ProfileShowcaseSettings,
+  type StoreDetailsData,
+} from "@/features/profile/entities/store-details.entity";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
-import { profileService } from "@/features/profile/services/profile-service";
 import {
   EMPTY_PROFILE_SPECIALTIES,
   type ProfileSpecialtiesSelection,
@@ -27,6 +30,24 @@ interface ProductsCardProps {
   showSaveButton?: boolean;
   onStatusChange?: (status: ProfileSectionStatus) => void;
   readOnly?: boolean;
+}
+
+function cloneShowcase(showcase: ProfileShowcaseSettings): ProfileShowcaseSettings {
+  return {
+    featuredProductIds: [...showcase.featuredProductIds],
+    trending: {
+      label: showcase.trending.label,
+      items: showcase.trending.items.map((item) => ({ ...item })),
+    },
+    customRequestEnabled: showcase.customRequestEnabled,
+  };
+}
+
+function isShowcaseDirty(
+  current: ProfileShowcaseSettings,
+  baseline: ProfileShowcaseSettings,
+): boolean {
+  return JSON.stringify(current) !== JSON.stringify(baseline);
 }
 
 export const ProductsCard = React.forwardRef<
@@ -54,11 +75,21 @@ export const ProductsCard = React.forwardRef<
   const [selectedProduct, setSelectedProduct] = React.useState<ProductRecord | null>(null);
   const [pendingDelete, setPendingDelete] = React.useState<ProductRecord | null>(null);
   const [isDeletingProduct, setIsDeletingProduct] = React.useState(false);
-  const [showcaseSaving, setShowcaseSaving] = React.useState(false);
   const [newTrendingText, setNewTrendingText] = React.useState("");
-  const { details: storeDetails, applySaved: applySavedStoreDetails } = useStoreDetails();
+  const { details: storeDetails } = useStoreDetails();
   const label = t("onboarding.storeIdentity.products");
-  const showcase = storeDetails.profileShowcase ?? EMPTY_PROFILE_SHOWCASE;
+  const [showcase, setShowcase] = React.useState<ProfileShowcaseSettings>(
+    EMPTY_PROFILE_SHOWCASE,
+  );
+  const [savedShowcase, setSavedShowcase] =
+    React.useState<ProfileShowcaseSettings>(EMPTY_PROFILE_SHOWCASE);
+  const showcaseDirty = isShowcaseDirty(showcase, savedShowcase);
+
+  React.useEffect(() => {
+    const next = cloneShowcase(storeDetails.profileShowcase ?? EMPTY_PROFILE_SHOWCASE);
+    setShowcase(next);
+    setSavedShowcase(next);
+  }, [storeDetails.profileShowcase]);
 
   const applySelection = React.useCallback(
     (selection: ProfileSpecialtiesSelection) => {
@@ -115,7 +146,7 @@ export const ProductsCard = React.forwardRef<
   React.useImperativeHandle(
     ref,
     () => ({
-      isDirty: false,
+      isDirty: showcaseDirty,
       isSaving: false,
       canSave: true,
       label,
@@ -129,18 +160,30 @@ export const ProductsCard = React.forwardRef<
         ),
       }),
       applySaved: applySelection,
+      getStoreDetailsSnapshot: (): StoreDetailsData => ({
+        ...storeDetails,
+        profileShowcase: showcase,
+      }),
+      applyStoreDetailsSaved: (details: StoreDetailsData) => {
+        const next = cloneShowcase(details.profileShowcase ?? EMPTY_PROFILE_SHOWCASE);
+        setShowcase(next);
+        setSavedShowcase(next);
+      },
     }),
     [
       applySelection,
       label,
       selectedSpecialties,
       selectedSubcategories,
+      showcase,
+      showcaseDirty,
+      storeDetails,
     ],
   );
 
   React.useEffect(() => {
-    onStatusChange?.({ isDirty: false, isSaving: false, canSave: true, label });
-  }, [label, onStatusChange]);
+    onStatusChange?.({ isDirty: showcaseDirty, isSaving: false, canSave: true, label });
+  }, [label, onStatusChange, showcaseDirty]);
 
   const toggleCategory = (categoryId: string) => {
     setSelectedProduct(null);
@@ -246,72 +289,55 @@ export const ProductsCard = React.forwardRef<
     }
   };
 
-  const saveShowcase = async (next: ProfileShowcaseSettings) => {
-    if (!uid) return;
-    setShowcaseSaving(true);
-    try {
-      const saved = await profileService.saveStoreDetails({
-        uid,
-        ...storeDetails,
-        profileShowcase: next,
-      });
-      applySavedStoreDetails(saved);
-    } catch (error) {
-      console.error("Failed to save profile showcase:", error);
-    } finally {
-      setShowcaseSaving(false);
-    }
-  };
-
   const toggleFeaturedProduct = (product: ProductRecord) => {
     const exists = showcase.featuredProductIds.includes(product.id);
     const nextIds = exists
       ? showcase.featuredProductIds.filter((id) => id !== product.id)
       : [product.id, ...showcase.featuredProductIds].slice(0, 20);
-    void saveShowcase({ ...showcase, featuredProductIds: nextIds });
+    setShowcase((current) => ({ ...current, featuredProductIds: nextIds }));
   };
 
   const addTrendingItem = () => {
     const label = newTrendingText.trim();
     if (!label) return;
     setNewTrendingText("");
-    void saveShowcase({
-      ...showcase,
+    setShowcase((current) => ({
+      ...current,
       trending: {
-        ...showcase.trending,
+        ...current.trending,
         items: [
-          ...showcase.trending.items,
+          ...current.trending.items,
           { id: `trending-${Date.now()}`, label },
         ].slice(0, 20),
       },
-    });
+    }));
   };
 
   const removeTrendingItem = (id: string) => {
-    void saveShowcase({
-      ...showcase,
+    setShowcase((current) => ({
+      ...current,
       trending: {
-        ...showcase.trending,
-        items: showcase.trending.items.filter((item) => item.id !== id),
+        ...current.trending,
+        items: current.trending.items.filter((item) => item.id !== id),
       },
-    });
+    }));
   };
 
   const updateTrendingLabel = (value: string) => {
-    void saveShowcase({
-      ...showcase,
+    setShowcase((current) => ({
+      ...current,
       trending: {
-        ...showcase.trending,
+        ...current.trending,
         label: value.trim() || EMPTY_PROFILE_SHOWCASE.trending.label,
       },
-    });
+    }));
   };
 
   const toggleCustomRequest = () => {
-    void saveShowcase({
-      ...showcase,
-      customRequestEnabled: !showcase.customRequestEnabled,
-    });
+    setShowcase((current) => ({
+      ...current,
+      customRequestEnabled: !current.customRequestEnabled,
+    }));
   };
 
   const getCategoryName = (categoryId: string) => {
@@ -602,7 +628,6 @@ export const ProductsCard = React.forwardRef<
                                         <button
                                           type="button"
                                           onClick={() => toggleFeaturedProduct(selectedProduct)}
-                                          disabled={showcaseSaving}
                                           className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-surface-container-high px-2 py-2 text-[10px] font-medium text-on-surface transition-colors hover:bg-tertiary hover:text-on-tertiary sm:py-2.5 sm:text-xs disabled:opacity-60"
                                           title={
                                             showcase.featuredProductIds.includes(selectedProduct.id)
@@ -690,7 +715,6 @@ export const ProductsCard = React.forwardRef<
             <button
               type="button"
               onClick={toggleCustomRequest}
-              disabled={showcaseSaving}
               className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
                 showcase.customRequestEnabled
                   ? "bg-primary text-on-primary"
@@ -709,10 +733,9 @@ export const ProductsCard = React.forwardRef<
                 {locale === "ar" ? "عنوان شريط الأكثر رواجًا" : "Trending title"}
               </label>
               <Input
-                defaultValue={showcase.trending.label}
+                value={showcase.trending.label}
                 maxLength={80}
-                onBlur={(event) => updateTrendingLabel(event.target.value)}
-                disabled={showcaseSaving}
+                onChange={(event) => updateTrendingLabel(event.target.value)}
               />
             </div>
             <div className="flex gap-2">
@@ -727,12 +750,11 @@ export const ProductsCard = React.forwardRef<
                 }}
                 placeholder={locale === "ar" ? "أضف نصًا يظهر في الأكثر رواجًا" : "Add a trending display text"}
                 maxLength={80}
-                disabled={showcaseSaving}
               />
               <button
                 type="button"
                 onClick={addTrendingItem}
-                disabled={showcaseSaving || !newTrendingText.trim()}
+                disabled={!newTrendingText.trim()}
                 className="rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary disabled:opacity-60"
               >
                 {locale === "ar" ? "إضافة" : "Add"}
@@ -749,7 +771,6 @@ export const ProductsCard = React.forwardRef<
                     <button
                       type="button"
                       onClick={() => removeTrendingItem(item.id)}
-                      disabled={showcaseSaving}
                       className="text-destructive"
                       aria-label={locale === "ar" ? "حذف النص" : "Remove text"}
                     >

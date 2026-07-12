@@ -39,4 +39,6 @@ export interface ProfileFulfillmentController extends ProfileSectionController {
 export interface ProfileSpecialtiesController extends ProfileSectionController {
   getSnapshot: () => ProfileSpecialtiesSelection;
   applySaved: (specialties: ProfileSpecialtiesSelection) => void;
+  getStoreDetailsSnapshot?: () => StoreDetailsData;
+  applyStoreDetailsSaved?: (details: StoreDetailsData) => void;
 }

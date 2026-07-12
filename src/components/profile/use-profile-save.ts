@@ -153,14 +153,31 @@ export function useProfileSave({
       >
     ).filter(([, status]) => status?.isDirty);
     const changedSections = dirtySections.map(([section]) => section);
-    const editorSections = changedSections.filter(
-      (section): section is ProfileEditorSection => section !== "fulfillment",
+    const shouldSaveStoreFromProducts =
+      changedSections.includes("products") &&
+      Boolean(productsController.getStoreDetailsSnapshot);
+    const editorSections = Array.from(
+      new Set([
+        ...changedSections.filter(
+          (section): section is ProfileEditorSection => section !== "fulfillment",
+        ),
+        ...(shouldSaveStoreFromProducts ? (["store"] as const) : []),
+      ]),
     );
     const contacts = mergePrimaryContacts(
       registration,
       contactsController.getSnapshot(),
     );
-    const storeDetails = storeController.getSnapshot();
+    const baseStoreDetails = storeController.getSnapshot();
+    const productsStoreDetails = shouldSaveStoreFromProducts
+      ? productsController.getStoreDetailsSnapshot?.()
+      : null;
+    const storeDetails = productsStoreDetails
+      ? {
+          ...baseStoreDetails,
+          profileShowcase: productsStoreDetails.profileShowcase,
+        }
+      : baseStoreDetails;
     const specialties = specialtiesController.getSnapshot();
 
     try {
@@ -186,6 +203,7 @@ export function useProfileSave({
         }
         if (editorSections.includes("store")) {
           storeController.applySaved(saved.storeDetails);
+          productsController.applyStoreDetailsSaved?.(saved.storeDetails);
         }
         if (editorSections.includes("specialties")) {
           specialtiesController.applySaved(saved.specialties);
