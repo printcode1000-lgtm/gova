@@ -1,0 +1,98 @@
+"use client";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faBaby,
+  faBath,
+  faBed,
+  faCapsules,
+  faDumbbell,
+  faFireAlt,
+  faGift,
+  faHands,
+  faLeaf,
+  faMagic,
+  faMortarPestle,
+  faPaw,
+  faPercent,
+  faPills,
+  faPumpSoap,
+  faSchool,
+  faShieldAlt,
+  faSmokingBan,
+  faSnowflake,
+  faSpa,
+  faStethoscope,
+  faSun,
+  faVenusMars,
+  faWeight,
+  faWheelchair,
+  faClinicMedical,
+} from "@fortawesome/free-solid-svg-icons";
+
+const pharmacyIconMap: Record<string, IconDefinition> = {
+  "fas fa-pills": faPills,
+  "fa-pills": faPills,
+  "fas fa-spa": faSpa,
+  "fa-spa": faSpa,
+  "fas fa-pump-soap": faPumpSoap,
+  "fa-pump-soap": faPumpSoap,
+  "fas fa-bath": faBath,
+  "fa-bath": faBath,
+  "fas fa-baby": faBaby,
+  "fa-baby": faBaby,
+  "fas fa-capsules": faCapsules,
+  "fa-capsules": faCapsules,
+  "fas fa-stethoscope": faStethoscope,
+  "fa-stethoscope": faStethoscope,
+  "fas fa-shield-alt": faShieldAlt,
+  "fa-shield-alt": faShieldAlt,
+  "fas fa-magic": faMagic,
+  "fa-magic": faMagic,
+  "fas fa-venus-mars": faVenusMars,
+  "fa-venus-mars": faVenusMars,
+  "fas fa-hands": faHands,
+  "fa-hands": faHands,
+  "fas fa-bed": faBed,
+  "fa-bed": faBed,
+  "fas fa-wheelchair": faWheelchair,
+  "fa-wheelchair": faWheelchair,
+  "fas fa-dumbbell": faDumbbell,
+  "fa-dumbbell": faDumbbell,
+  "fas fa-paw": faPaw,
+  "fa-paw": faPaw,
+  "fas fa-smoking-ban": faSmokingBan,
+  "fa-smoking-ban": faSmokingBan,
+  "fas fa-leaf": faLeaf,
+  "fa-leaf": faLeaf,
+  "fas fa-clinic-medical": faClinicMedical,
+  "fa-clinic-medical": faClinicMedical,
+  "fas fa-gift": faGift,
+  "fa-gift": faGift,
+  "fas fa-fire-alt": faFireAlt,
+  "fa-fire-alt": faFireAlt,
+  "fas fa-school": faSchool,
+  "fa-school": faSchool,
+  "fas fa-sun": faSun,
+  "fa-sun": faSun,
+  "fas fa-snowflake": faSnowflake,
+  "fa-snowflake": faSnowflake,
+  "fas fa-percent": faPercent,
+  "fa-percent": faPercent,
+  "fas fa-weight": faWeight,
+  "fa-weight": faWeight,
+  "fas fa-mortar-pestle": faMortarPestle,
+  "fa-mortar-pestle": faMortarPestle,
+};
+
+export function PharmacyCategoryIcon({
+  icon,
+  className = "h-4 w-4",
+}: {
+  icon?: string | null;
+  className?: string;
+}) {
+  const definition = pharmacyIconMap[(icon ?? "").trim()] ?? faPills;
+  return <FontAwesomeIcon icon={definition} className={className} aria-hidden />;
+}

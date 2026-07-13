@@ -1,15 +1,20 @@
 import "server-only";
 
-import { categoryService } from "@/features/categories";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import type { ProductData } from "@/features/product/entities/product.entity";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_PRICE_LABEL,
   PHARMACY_SUBCATEGORY_ID,
+  type PharmacyOverrideStatus,
+  type PharmacyProfileCatalogCategoryView,
+  type PharmacyProfileCatalogProductView,
+  type PharmacyProfileCatalogSubcategoryView,
+  type PharmacyProfileCatalogView,
   type PharmacyProfileProduct,
   type PharmacyProfileProductOverride,
 } from "../entities/pharmacy-profile-catalog.types";
+import { pharmacyStaticCatalogService } from "./pharmacy-static-catalog.service";
 import { pharmacyProfileCatalogRepository } from "../repositories/pharmacy-profile-catalog-repository";
 import {
   encodePharmacyFixedProductId,
@@ -22,11 +27,11 @@ function imageUrl(value: string) {
 }
 
 function firstForm(activeIngredientId: number) {
-  return categoryService.getPharmacyFormsForActiveIngredient(activeIngredientId)[0];
+  return pharmacyStaticCatalogService.getFormsForActiveIngredient(activeIngredientId)[0];
 }
 
 function firstStrength(activeIngredientId: number) {
-  return categoryService.getPharmacyStrengthsForActiveIngredient(activeIngredientId)[0];
+  return pharmacyStaticCatalogService.getStrengthsForActiveIngredient(activeIngredientId)[0];
 }
 
 function sortByName(left: ProductRecord, right: ProductRecord) {
@@ -43,6 +48,8 @@ function overrideByFixedId(overrides: PharmacyProfileProductOverride[]) {
   );
 }
 
+const fixedSort = (value: number | null, fallback: number) => value ?? fallback;
+
 export class PharmacyProfileCatalogService {
   isPharmacyProductBucket(mainCategoryId: string, subcategoryId: string) {
     return (
@@ -58,12 +65,10 @@ export class PharmacyProfileCatalogService {
   async getProduct(productId: string): Promise<PharmacyProfileProduct | null> {
     const identity = parsePharmacyFixedProductId(productId);
     if (!identity) return null;
-    const product = categoryService
-      .getPharmacyCategories()
+    const product = pharmacyStaticCatalogService.getCategories()
       .flatMap((category) =>
-        categoryService.getPharmacySubcategories(category.id).flatMap((subcategory) =>
-          categoryService
-            .getPharmacyActiveIngredients(subcategory.id)
+        pharmacyStaticCatalogService.getSubcategories(category.id).flatMap((subcategory) =>
+          pharmacyStaticCatalogService.getActiveIngredients(subcategory.id)
             .filter(
               (activeIngredient) =>
                 activeIngredient.originalId === identity.fixedProductId,
@@ -87,12 +92,26 @@ export class PharmacyProfileCatalogService {
 
   async listProducts(uid: string): Promise<ProductRecord[]> {
     const overrides = await pharmacyProfileCatalogRepository.listProductOverrides(uid);
+    const categoryOverrides = await pharmacyProfileCatalogRepository.listCategoryOverrides(uid);
+    const subcategoryOverrides = await pharmacyProfileCatalogRepository.listSubcategoryOverrides(uid);
+    const hiddenCategoryIds = new Set(
+      categoryOverrides
+        .filter((item) => item.fixedCategoryId !== null && item.status === "hidden")
+        .map((item) => item.fixedCategoryId!),
+    );
+    const hiddenSubcategoryIds = new Set(
+      subcategoryOverrides
+        .filter((item) => item.fixedSubcategoryId !== null && item.status === "hidden")
+        .map((item) => item.fixedSubcategoryId!),
+    );
     const overridesByFixedId = overrideByFixedId(overrides);
     const products: ProductRecord[] = [];
 
-    for (const category of categoryService.getPharmacyCategories()) {
-      for (const subcategory of categoryService.getPharmacySubcategories(category.id)) {
-        for (const activeIngredient of categoryService.getPharmacyActiveIngredients(
+    for (const category of pharmacyStaticCatalogService.getCategories()) {
+      if (hiddenCategoryIds.has(category.id)) continue;
+      for (const subcategory of pharmacyStaticCatalogService.getSubcategories(category.id)) {
+        if (hiddenSubcategoryIds.has(subcategory.id)) continue;
+        for (const activeIngredient of pharmacyStaticCatalogService.getActiveIngredients(
           subcategory.id,
         )) {
           const override = overridesByFixedId.get(activeIngredient.originalId);
@@ -110,6 +129,196 @@ export class PharmacyProfileCatalogService {
     }
 
     return products.sort(sortByName);
+  }
+
+  async getCatalogView(uid: string, includeHidden = false): Promise<PharmacyProfileCatalogView> {
+    const categoryOverrides = await pharmacyProfileCatalogRepository.listCategoryOverrides(uid);
+    const subcategoryOverrides = await pharmacyProfileCatalogRepository.listSubcategoryOverrides(uid);
+    const categoryByFixedId = new Map(
+      categoryOverrides
+        .filter((item) => item.fixedCategoryId !== null)
+        .map((item) => [item.fixedCategoryId!, item]),
+    );
+    const subcategoryByFixedId = new Map(
+      subcategoryOverrides
+        .filter((item) => item.fixedSubcategoryId !== null)
+        .map((item) => [item.fixedSubcategoryId!, item]),
+    );
+
+    const categories: PharmacyProfileCatalogCategoryView[] = pharmacyStaticCatalogService.getCategories()
+      .map((category) => {
+        const override = categoryByFixedId.get(category.id);
+        return {
+          id: String(category.id),
+          fixedCategoryId: category.id,
+          nameAr: override?.nameAr || category.nameAr,
+          nameEn: override?.nameEn || category.nameEn,
+          icon: override?.icon || category.icon,
+          status: override?.status ?? "visible" as const,
+          sortOrder: fixedSort(override?.sortOrder ?? null, category.id),
+          isCustom: false,
+        };
+      })
+      .filter((item) => includeHidden || item.status !== "hidden");
+
+    for (const override of categoryOverrides.filter((item) => item.fixedCategoryId === null)) {
+      if (!includeHidden && override.status === "hidden") continue;
+      categories.push({
+        id: override.id,
+        fixedCategoryId: null,
+        nameAr: override.nameAr || "تصنيف صيدلية",
+        nameEn: override.nameEn || override.nameAr || "Pharmacy category",
+        icon: override.icon || "fas fa-pills",
+        status: override.status,
+        sortOrder: override.sortOrder ?? Number.MAX_SAFE_INTEGER,
+        isCustom: true,
+      });
+    }
+
+    const subcategories: PharmacyProfileCatalogSubcategoryView[] = pharmacyStaticCatalogService.getCategories()
+      .flatMap((category) =>
+        pharmacyStaticCatalogService.getSubcategories(category.id).map((subcategory) => {
+          const override = subcategoryByFixedId.get(subcategory.id);
+          return {
+            id: String(subcategory.id),
+            fixedSubcategoryId: subcategory.id,
+            parentCategoryId: String(category.id),
+            nameAr: override?.nameAr || subcategory.nameAr,
+            nameEn: override?.nameEn || subcategory.nameEn,
+            status: override?.status ?? "visible" as const,
+            sortOrder: fixedSort(override?.sortOrder ?? null, subcategory.id),
+            isCustom: false,
+          };
+        }),
+      )
+      .filter((item) => includeHidden || item.status !== "hidden");
+
+    for (const override of subcategoryOverrides.filter((item) => item.fixedSubcategoryId === null)) {
+      if (!includeHidden && override.status === "hidden") continue;
+      subcategories.push({
+        id: override.id,
+        fixedSubcategoryId: null,
+        parentCategoryId: override.parentCategoryId,
+        nameAr: override.nameAr || "تصنيف فرعي",
+        nameEn: override.nameEn || override.nameAr || "Pharmacy subcategory",
+        status: override.status,
+        sortOrder: override.sortOrder ?? Number.MAX_SAFE_INTEGER,
+        isCustom: true,
+      });
+    }
+
+    const productOverrides = await pharmacyProfileCatalogRepository.listProductOverrides(uid);
+    const productByFixedId = overrideByFixedId(productOverrides);
+    const hiddenCategoryIds = new Set(
+      categories.filter((item) => item.fixedCategoryId !== null && item.status === "hidden").map((item) => item.fixedCategoryId!),
+    );
+    const hiddenSubcategoryIds = new Set(
+      subcategories.filter((item) => item.fixedSubcategoryId !== null && item.status === "hidden").map((item) => item.fixedSubcategoryId!),
+    );
+    const products: PharmacyProfileCatalogProductView[] = pharmacyStaticCatalogService.getCategories()
+      .flatMap((category) => {
+        if (!includeHidden && hiddenCategoryIds.has(category.id)) return [];
+        return pharmacyStaticCatalogService.getSubcategories(category.id).flatMap((subcategory) => {
+          if (!includeHidden && hiddenSubcategoryIds.has(subcategory.id)) return [];
+          return pharmacyStaticCatalogService.getActiveIngredients(subcategory.id).map((activeIngredient) => {
+            const override = productByFixedId.get(activeIngredient.originalId);
+            return {
+              id: encodePharmacyFixedProductId(uid, activeIngredient.originalId),
+              fixedProductId: activeIngredient.originalId,
+              parentSubcategoryId: String(subcategory.id),
+              nameAr: override?.nameAr || activeIngredient.nameAr,
+              nameEn: override?.nameEn || activeIngredient.nameEn,
+              imageUrl: override?.imageUrl || imageUrl(activeIngredient.imageUrl),
+              status: override?.status ?? "visible",
+              sortOrder: activeIngredient.originalId,
+              isCustom: false,
+            };
+          });
+        });
+      })
+      .filter((item) => includeHidden || item.status !== "hidden")
+      .sort((left, right) => left.sortOrder - right.sortOrder);
+
+    for (const override of productOverrides.filter((item) => item.fixedProductId === null)) {
+      if (!includeHidden && override.status === "hidden") continue;
+      products.push({
+        id: override.id,
+        fixedProductId: null,
+        parentSubcategoryId: override.parentSubcategoryId,
+        nameAr: override.nameAr || "منتج صيدلية",
+        nameEn: override.nameEn || override.nameAr || "Pharmacy product",
+        imageUrl: override.imageUrl || "",
+        status: override.status,
+        sortOrder: override.sortOrder ?? Number.MAX_SAFE_INTEGER,
+        isCustom: true,
+      });
+    }
+
+    return {
+      categories: categories.sort((left, right) => left.sortOrder - right.sortOrder),
+      subcategories: subcategories.sort((left, right) => left.sortOrder - right.sortOrder),
+      products,
+    };
+  }
+
+  async createCategory(uid: string, nameAr: string, nameEn?: string) {
+    return pharmacyProfileCatalogRepository.createCustomCategory({ uid, nameAr, nameEn });
+  }
+
+  async createSubcategory(uid: string, parentCategoryId: string, nameAr: string, nameEn?: string) {
+    return pharmacyProfileCatalogRepository.createCustomSubcategory({
+      uid,
+      parentCategoryId,
+      nameAr,
+      nameEn,
+    });
+  }
+
+  async setCategoryStatus(uid: string, categoryId: string, status: PharmacyOverrideStatus) {
+    const fixedCategoryId = Number(categoryId);
+    if (Number.isInteger(fixedCategoryId)) {
+      await pharmacyProfileCatalogRepository.setFixedCategoryStatus(uid, fixedCategoryId, status);
+      return;
+    }
+    await pharmacyProfileCatalogRepository.setCustomCategoryStatus(uid, categoryId, status);
+  }
+
+  async setSubcategoryStatus(
+    uid: string,
+    subcategoryId: string,
+    parentCategoryId: string,
+    status: PharmacyOverrideStatus,
+  ) {
+    const fixedSubcategoryId = Number(subcategoryId);
+    if (Number.isInteger(fixedSubcategoryId)) {
+      await pharmacyProfileCatalogRepository.setFixedSubcategoryStatus(
+        uid,
+        fixedSubcategoryId,
+        parentCategoryId,
+        status,
+      );
+      return;
+    }
+    await pharmacyProfileCatalogRepository.setCustomSubcategoryStatus(uid, subcategoryId, status);
+  }
+
+  async setProductStatus(uid: string, productId: string, status: PharmacyOverrideStatus) {
+    const identity = parsePharmacyFixedProductId(productId);
+    if (!identity || identity.uid !== uid) return;
+    const product = await this.getProduct(productId);
+    if (status === "hidden") {
+      await this.hideFixedProduct(productId, uid);
+      return;
+    }
+    await pharmacyProfileCatalogRepository.upsertFixedProductOverride({
+      uid,
+      fixedProductId: identity.fixedProductId,
+      parentSubcategoryId:
+        product?.data.fields["pharmacyCatalog.subcategoryId"] ||
+        product?.data.fields["pharmacySpecs.pharmacySubcategoryId"] ||
+        "",
+      status: "visible",
+    });
   }
 
   async updateFixedProduct(
@@ -173,9 +382,9 @@ export class PharmacyProfileCatalogService {
   private toProductRecord(
     uid: string,
     source: {
-      category: ReturnType<typeof categoryService.getPharmacyCategories>[number];
-      subcategory: ReturnType<typeof categoryService.getPharmacySubcategories>[number];
-      activeIngredient: ReturnType<typeof categoryService.getPharmacyActiveIngredients>[number];
+      category: ReturnType<typeof pharmacyStaticCatalogService.getCategories>[number];
+      subcategory: ReturnType<typeof pharmacyStaticCatalogService.getSubcategories>[number];
+      activeIngredient: ReturnType<typeof pharmacyStaticCatalogService.getActiveIngredients>[number];
     },
     override?: PharmacyProfileProductOverride | null,
   ): PharmacyProfileProduct {

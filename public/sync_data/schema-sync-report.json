@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-07-12T19:53:34.345Z",
-  "durationMs": 7869,
+  "executedAt": "2026-07-13T05:09:37.394Z",
+  "durationMs": 9382,
   "sqliteSchemaVersion": "da11c058fb6c8fc9",
-  "tursoSchemaVersionBefore": "89ba404fcbf02915",
-  "tursoSchemaVersionAfter": "89ba404fcbf02915",
+  "tursoSchemaVersionBefore": "0f29fd580022df4e",
+  "tursoSchemaVersionAfter": "0f29fd580022df4e",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,
@@ -24,7 +24,10 @@
     "Table \"products\" exists on Turso but not in SQLite. Not dropped automatically.",
     "Table \"hero_slider\" exists on Turso but not in SQLite. Not dropped automatically.",
     "Table \"featured_marquee\" exists on Turso but not in SQLite. Not dropped automatically.",
-    "Table \"trending_ribbon\" exists on Turso but not in SQLite. Not dropped automatically."
+    "Table \"trending_ribbon\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"pharmacy_profile_category_overrides\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"pharmacy_profile_product_overrides\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"pharmacy_profile_subcategory_overrides\" exists on Turso but not in SQLite. Not dropped automatically."
   ],
   "skipped": false
 }

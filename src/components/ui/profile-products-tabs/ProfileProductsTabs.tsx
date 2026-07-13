@@ -15,6 +15,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import type { ProductRecord } from '@/features/product/entities/product.entity';
+import {
+  isPharmacyProfileBucket,
+  PharmacyNestedTabs,
+} from '@/features/pharmacy-profile-catalog/components/PharmacyNestedTabs';
 import type {
   ProfileProductsFilters,
   ProfileProductsMainTab,
@@ -40,6 +44,7 @@ export interface ProfileProductsTabsLabels {
 }
 
 interface ProfileProductsTabsProps {
+  ownerUid?: string;
   mode: ProfileProductsTabsMode;
   tabs: ProfileProductsMainTab[];
   selectedMainId: string;
@@ -59,7 +64,9 @@ interface ProfileProductsTabsProps {
   onDeleteProduct?: (product: ProductRecord) => void;
   onAddProduct?: (categoryId: string, subcategoryId: string) => void;
   onToggleFeatured?: (product: ProductRecord) => void;
+  onRefreshProducts?: () => void | Promise<void>;
 }
+
 
 function productTitle(product: ProductRecord): string {
   return product.data.fields['mainData.name'] || 'Product';
@@ -70,24 +77,10 @@ function productPrice(product: ProductRecord): string {
   return current ? current : product.data.fields['price.label'] || '';
 }
 
-function pharmacyCategoryId(product: ProductRecord): string {
-  return product.data.fields['pharmacyCatalog.categoryId'] || '';
-}
-
-function pharmacySubcategoryId(product: ProductRecord): string {
-  return product.data.fields['pharmacyCatalog.subcategoryId'] || '';
-}
-
-function pharmacyCategoryName(product: ProductRecord): string {
-  return product.data.fields['pharmacyCatalog.categoryNameAr'] || 'الصيدلية';
-}
-
-function pharmacySubcategoryName(product: ProductRecord): string {
-  return product.data.fields['pharmacyCatalog.subcategoryNameAr'] || 'منتجات';
-}
 
 export function ProfileProductsTabs({
   mode,
+  ownerUid = '',
   tabs,
   selectedMainId,
   selectedSubId,
@@ -106,73 +99,21 @@ export function ProfileProductsTabs({
   onDeleteProduct,
   onAddProduct,
   onToggleFeatured,
+  onRefreshProducts,
 }: ProfileProductsTabsProps) {
   const activeMain = tabs.find((tab) => tab.id === selectedMainId) ?? tabs[0];
   const showManagement = mode === 'edit';
-  const isPharmacyBucket =
-    activeSubTab?.categoryId === '20' && activeSubTab.productSubcategoryId === '204';
-  const pharmacyCategories = React.useMemo(() => {
-    if (!isPharmacyBucket) return [];
-    const map = new Map<string, { id: string; label: string; count: number }>();
-    for (const product of products) {
-      const id = pharmacyCategoryId(product);
-      if (!id) continue;
-      const current = map.get(id);
-      map.set(id, {
-        id,
-        label: current?.label || pharmacyCategoryName(product),
-        count: (current?.count ?? 0) + 1,
-      });
+  const isPharmacyBucket = isPharmacyProfileBucket(activeSubTab);
+  const [pharmacyFilteredProducts, setPharmacyFilteredProducts] =
+    React.useState<ProductRecord[]>(products);
+
+  React.useEffect(() => {
+    if (!isPharmacyBucket) {
+      setPharmacyFilteredProducts(products);
     }
-    return [...map.values()];
   }, [isPharmacyBucket, products]);
-  const [selectedPharmacyCategoryId, setSelectedPharmacyCategoryId] = React.useState('');
-  const [selectedPharmacySubcategoryId, setSelectedPharmacySubcategoryId] = React.useState('');
 
-  React.useEffect(() => {
-    if (!pharmacyCategories.length) {
-      setSelectedPharmacyCategoryId('');
-      setSelectedPharmacySubcategoryId('');
-      return;
-    }
-    if (!pharmacyCategories.some((item) => item.id === selectedPharmacyCategoryId)) {
-      setSelectedPharmacyCategoryId(pharmacyCategories[0]!.id);
-    }
-  }, [pharmacyCategories, selectedPharmacyCategoryId]);
-
-  const pharmacySubcategories = React.useMemo(() => {
-    if (!selectedPharmacyCategoryId) return [];
-    const map = new Map<string, { id: string; label: string; count: number }>();
-    for (const product of products) {
-      if (pharmacyCategoryId(product) !== selectedPharmacyCategoryId) continue;
-      const id = pharmacySubcategoryId(product);
-      if (!id) continue;
-      const current = map.get(id);
-      map.set(id, {
-        id,
-        label: current?.label || pharmacySubcategoryName(product),
-        count: (current?.count ?? 0) + 1,
-      });
-    }
-    return [...map.values()];
-  }, [products, selectedPharmacyCategoryId]);
-
-  React.useEffect(() => {
-    if (!pharmacySubcategories.length) {
-      setSelectedPharmacySubcategoryId('');
-      return;
-    }
-    if (!pharmacySubcategories.some((item) => item.id === selectedPharmacySubcategoryId)) {
-      setSelectedPharmacySubcategoryId(pharmacySubcategories[0]!.id);
-    }
-  }, [pharmacySubcategories, selectedPharmacySubcategoryId]);
-
-  const visibleProducts = React.useMemo(() => {
-    if (!isPharmacyBucket || !selectedPharmacySubcategoryId) return products;
-    return products.filter(
-      (product) => pharmacySubcategoryId(product) === selectedPharmacySubcategoryId,
-    );
-  }, [isPharmacyBucket, products, selectedPharmacySubcategoryId]);
+  const visibleProducts = isPharmacyBucket ? pharmacyFilteredProducts : products;
 
   if (isLoadingTabs) {
     return (
@@ -310,47 +251,14 @@ export function ProfileProductsTabs({
         </select>
       </div>
 
-      {isPharmacyBucket && pharmacyCategories.length > 0 ? (
-        <div className="space-y-2 rounded-lg border border-outline-variant bg-surface-container-low p-2">
-          <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {pharmacyCategories.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setSelectedPharmacyCategoryId(tab.id)}
-                className={`h-9 min-w-fit rounded-md border px-3 text-[11px] font-semibold transition ${
-                  tab.id === selectedPharmacyCategoryId
-                    ? 'border-primary bg-primary text-on-primary'
-                    : 'border-outline-variant bg-surface text-on-surface hover:border-primary/50'
-                }`}
-              >
-                {tab.label}
-                <span className="ms-2 rounded-full bg-black/10 px-1.5 text-[10px]">
-                  {tab.count}
-                </span>
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {pharmacySubcategories.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setSelectedPharmacySubcategoryId(tab.id)}
-                className={`h-8 min-w-fit rounded-md border px-3 text-[11px] font-semibold transition ${
-                  tab.id === selectedPharmacySubcategoryId
-                    ? 'border-tertiary bg-tertiary text-on-tertiary'
-                    : 'border-outline-variant bg-surface text-on-surface hover:border-tertiary/50'
-                }`}
-              >
-                {tab.label}
-                <span className="ms-2 rounded-full bg-black/10 px-1.5 text-[10px]">
-                  {tab.count}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
+      {isPharmacyBucket && ownerUid ? (
+        <PharmacyNestedTabs
+          uid={ownerUid}
+          mode={mode === 'edit' ? 'edit' : 'preview'}
+          products={products}
+          onFilteredProductsChange={setPharmacyFilteredProducts}
+          onRefreshProducts={onRefreshProducts}
+        />
       ) : null}
 
       <div className="min-h-[160px]">

@@ -35,7 +35,7 @@ import { ProductMainDataStyleEditor } from "@/components/ui/main-data/ProductMai
 import { ProductSpecificationsStyleEditor } from "@/components/ui/specifications/ProductSpecificationsStyleEditor";
 import { ProductVehicleSpecsStyleEditor } from "@/components/ui/vehicle-specs/ProductVehicleSpecsStyleEditor";
 import { ProductPropertySpecsStyleEditor } from "@/components/ui/property-specs/ProductPropertySpecsStyleEditor";
-import { ProductPharmacySpecsStyleEditor } from "@/components/ui/pharmacy-specs/ProductPharmacySpecsStyleEditor";
+import { ProductPharmacySpecsStyleEditor } from "@/features/pharmacy-profile-catalog/components/ProductPharmacySpecsStyleEditor";
 import {
   createDefaultProductStyleComponents,
   normalizeProductStyleComponents,

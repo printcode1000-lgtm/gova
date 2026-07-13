@@ -25,7 +25,7 @@ Images are served from:
 
 - `public/images/pharmacy_fixed`
 
-Raw JSON is not read directly by UI or product code. The category module exposes camelCase pharmacy projections through `categoryService`.
+Raw pharmacy JSON is owned by `src/features/pharmacy-profile-catalog`. UI, product code, and the general category module do not read the raw pharmacy files directly. Consumers use camelCase projections from `pharmacyStaticCatalogService`.
 
 ## Module Location
 
@@ -35,11 +35,14 @@ Core pharmacy storefront logic lives in:
 
 The module is responsible for:
 
-- Mapping fixed pharmacy active ingredients to `ProductRecord`
-- Creating stable fixed product IDs
-- Applying seller-specific overrides
-- Preserving local fixed images unless a seller uploads a replacement
-- Hiding fixed products per seller without deleting the source catalog
+- Loading and mapping the fixed pharmacy JSON dataset.
+- Mapping fixed pharmacy active ingredients to `ProductRecord`.
+- Creating stable fixed product IDs.
+- Applying seller-specific overrides.
+- Preserving local fixed images unless a seller uploads a replacement.
+- Hiding fixed products per seller without deleting the source catalog.
+- Rendering category icons from the JSON `icon` field anywhere pharmacy categories or subcategories appear.
+- Managing seller-specific pharmacy categories, subcategories, and products through a dedicated profile management page.
 
 ## Fixed Product IDs
 
@@ -49,7 +52,7 @@ Fixed products are exposed as normal product records using encoded IDs:
 pharmacy-fixed-{base64url(uid)}-{fixedProductOriginalId}
 ```
 
-This lets `/product?mode=view&productId=...` resolve a fixed product together with the seller-specific overrides.
+This lets `/product?mode=view&productId=...` resolve a fixed product together with seller-specific overrides.
 
 ## Data Model
 
@@ -93,12 +96,39 @@ Inside the regular profile product tabs, the Pharmacies subcategory gets an addi
 2. Pharmacy subcategory tab
 3. Product grid
 
-The nested tabs are derived from product fields:
+The nested tabs are implemented by `PharmacyNestedTabs`. The general profile tabs only call this module; they do not contain pharmacy-specific catalog logic.
+
+The nested tabs use product fields:
 
 - `pharmacyCatalog.categoryId`
 - `pharmacyCatalog.categoryNameAr`
 - `pharmacyCatalog.subcategoryId`
 - `pharmacyCatalog.subcategoryNameAr`
+
+## Pharmacy Management Page
+
+In `/profile?mode=edit`, the seller can open the dedicated pharmacy management page from the pharmacy nested tabs:
+
+```text
+/profile/pharmacy-catalog?uid={sellerUid}&categoryId={pharmacyCategoryId}&subcategoryId={pharmacySubcategoryId}
+```
+
+The page contains three coordinated columns:
+
+- Main pharmacy categories
+- Subcategories for the selected main category
+- Products for the selected subcategory
+
+Available actions:
+
+- Add a custom main category
+- Add a custom subcategory under the selected main category
+- Add a new product from the currently selected pharmacy category/subcategory
+- Hide or restore any fixed or custom category
+- Hide or restore any fixed or custom subcategory
+- Hide or restore products shown for the selected subcategory
+
+All lists are sorted by source `id` or stored `sortOrder`. Hidden rows remain visible in edit mode and are omitted in preview mode.
 
 ## Ordering
 
@@ -107,8 +137,8 @@ Fixed pharmacy products can be added to the cart immediately.
 When no numeric price is available:
 
 - `price.current` remains empty.
-- `price.label` is set to `السعر التجاري`.
-- The cart displays `السعر التجاري` instead of a zero price.
+- `price.label` is set to the Arabic commercial price label.
+- The cart displays the commercial price label instead of a zero price.
 - The order item still passes through the normal marketplace order flow.
 
 ## Editing Fixed Products
@@ -140,8 +170,7 @@ The migration file is:
 
 Recommended next steps:
 
-- Add explicit management screens for adding custom pharmacy categories and subcategories.
-- Add a restore button for hidden fixed products.
+- Add inline rename and reorder controls inside the pharmacy management page.
 - Add bulk availability controls.
 - Add pharmacy-specific filtering by prescription, form, and strength.
 - Add stock quantity support when inventory management becomes available.

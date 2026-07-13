@@ -10,12 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ProductFieldValues } from "@/features/product/entities/product.entity";
-import { categoryService } from "@/features/categories";
-import { ProductField } from "./ProductComponentPrimitives";
+import { pharmacyStaticCatalogService } from "../services/pharmacy-static-catalog.service";
+import { ProductField } from "@/components/product/ProductComponentPrimitives";
 import type {
   ProductComponentConfig,
   ProductMode,
-} from "./product-component.types";
+} from "@/components/product/product-component.types";
 
 interface ProductPharmacySpecsProps {
   mode: ProductMode;
@@ -40,7 +40,7 @@ export function ProductPharmacySpecs({
   fields,
   onChange,
 }: ProductPharmacySpecsProps) {
-  const categories = useMemo(() => categoryService.getPharmacyCategories(), []);
+  const categories = useMemo(() => pharmacyStaticCatalogService.getCategories(), []);
   const selectedCategory =
     categories.find(
       (category) =>
@@ -51,7 +51,7 @@ export function ProductPharmacySpecs({
   const subcategories = useMemo(
     () =>
       selectedCategory
-        ? categoryService.getPharmacySubcategories(selectedCategory.id)
+        ? pharmacyStaticCatalogService.getSubcategories(selectedCategory.id)
         : [],
     [selectedCategory],
   );
@@ -65,7 +65,7 @@ export function ProductPharmacySpecs({
   const activeIngredients = useMemo(
     () =>
       selectedSubcategory
-        ? categoryService.getPharmacyActiveIngredients(selectedSubcategory.id)
+        ? pharmacyStaticCatalogService.getActiveIngredients(selectedSubcategory.id)
         : [],
     [selectedSubcategory],
   );
@@ -79,7 +79,7 @@ export function ProductPharmacySpecs({
   const forms = useMemo(
     () =>
       selectedActiveIngredient
-        ? categoryService.getPharmacyFormsForActiveIngredient(
+        ? pharmacyStaticCatalogService.getFormsForActiveIngredient(
             selectedActiveIngredient.id,
           )
         : [],
@@ -95,7 +95,7 @@ export function ProductPharmacySpecs({
   const strengths = useMemo(
     () =>
       selectedActiveIngredient
-        ? categoryService.getPharmacyStrengthsForActiveIngredient(
+        ? pharmacyStaticCatalogService.getStrengthsForActiveIngredient(
             selectedActiveIngredient.id,
           )
         : [],
@@ -115,18 +115,18 @@ export function ProductPharmacySpecs({
   function selectCategory(categoryId: string) {
     const category = categories.find((item) => String(item.id) === categoryId);
     const firstSubcategory = category
-      ? categoryService.getPharmacySubcategories(category.id)[0]
+      ? pharmacyStaticCatalogService.getSubcategories(category.id)[0]
       : undefined;
     const firstActiveIngredient = firstSubcategory
-      ? categoryService.getPharmacyActiveIngredients(firstSubcategory.id)[0]
+      ? pharmacyStaticCatalogService.getActiveIngredients(firstSubcategory.id)[0]
       : undefined;
     const firstForm = firstActiveIngredient
-      ? categoryService.getPharmacyFormsForActiveIngredient(
+      ? pharmacyStaticCatalogService.getFormsForActiveIngredient(
           firstActiveIngredient.id,
         )[0]
       : undefined;
     const firstStrength = firstActiveIngredient
-      ? categoryService.getPharmacyStrengthsForActiveIngredient(
+      ? pharmacyStaticCatalogService.getStrengthsForActiveIngredient(
           firstActiveIngredient.id,
         )[0]
       : undefined;
@@ -157,15 +157,15 @@ export function ProductPharmacySpecs({
       (item) => String(item.id) === subcategoryId,
     );
     const firstActiveIngredient = subcategory
-      ? categoryService.getPharmacyActiveIngredients(subcategory.id)[0]
+      ? pharmacyStaticCatalogService.getActiveIngredients(subcategory.id)[0]
       : undefined;
     const firstForm = firstActiveIngredient
-      ? categoryService.getPharmacyFormsForActiveIngredient(
+      ? pharmacyStaticCatalogService.getFormsForActiveIngredient(
           firstActiveIngredient.id,
         )[0]
       : undefined;
     const firstStrength = firstActiveIngredient
-      ? categoryService.getPharmacyStrengthsForActiveIngredient(
+      ? pharmacyStaticCatalogService.getStrengthsForActiveIngredient(
           firstActiveIngredient.id,
         )[0]
       : undefined;
@@ -194,12 +194,12 @@ export function ProductPharmacySpecs({
       (item) => String(item.id) === activeIngredientId,
     );
     const firstForm = activeIngredient
-      ? categoryService.getPharmacyFormsForActiveIngredient(
+      ? pharmacyStaticCatalogService.getFormsForActiveIngredient(
           activeIngredient.id,
         )[0]
       : undefined;
     const firstStrength = activeIngredient
-      ? categoryService.getPharmacyStrengthsForActiveIngredient(
+      ? pharmacyStaticCatalogService.getStrengthsForActiveIngredient(
           activeIngredient.id,
         )[0]
       : undefined;

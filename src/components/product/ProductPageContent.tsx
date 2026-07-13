@@ -21,6 +21,11 @@ import type {
   ProductMode,
   ProductStyleComponents,
 } from "./product-component.types";
+import { createPharmacyInitialFields } from "@/features/pharmacy-profile-catalog/utils/pharmacy-initial-fields";
+import {
+  PHARMACY_MAIN_CATEGORY_ID,
+  PHARMACY_SUBCATEGORY_ID,
+} from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
 
 interface ProductStyleFile {
   components: ProductStyleComponents;
@@ -37,6 +42,8 @@ export function ProductPageContent() {
   const productId = searchParams.get("productId") ?? "";
   const initialMain = searchParams.get("mainCategoryId") ?? "";
   const initialSub = searchParams.get("subcategoryId") ?? "";
+  const initialPharmacyCategory = searchParams.get("pharmacyCategoryId") ?? "";
+  const initialPharmacySubcategory = searchParams.get("pharmacySubcategoryId") ?? "";
   const returnTo = searchParams.get("returnTo");
   const returnUrl = returnTo === "profile-products"
     ? "/profile?mode=edit&tab=products"
@@ -100,7 +107,15 @@ export function ProductPageContent() {
             throw new Error("يلزم تحديد التصنيف الرئيسي والفرعي.");
           if (!cancelled) {
             setProduct(null);
-            setFields({});
+            setFields(
+              initialMain === PHARMACY_MAIN_CATEGORY_ID &&
+                initialSub === PHARMACY_SUBCATEGORY_ID
+                ? createPharmacyInitialFields(
+                    initialPharmacyCategory,
+                    initialPharmacySubcategory,
+                  )
+                : {},
+            );
             setImages([]);
           }
         }
@@ -136,7 +151,7 @@ export function ProductPageContent() {
     return () => {
       cancelled = true;
     };
-  }, [initialMain, initialSub, mode, productId]);
+  }, [initialMain, initialPharmacyCategory, initialPharmacySubcategory, initialSub, mode, productId]);
 
   const save = async () => {
     if (!session?.uid || !ownerAllowed) return;

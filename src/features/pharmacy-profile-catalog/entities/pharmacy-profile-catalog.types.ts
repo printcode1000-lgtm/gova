@@ -69,3 +69,43 @@ export interface PharmacyFixedProductIdentity {
   uid: string;
   fixedProductId: number;
 }
+
+export interface PharmacyProfileCatalogCategoryView {
+  id: string;
+  fixedCategoryId: number | null;
+  nameAr: string;
+  nameEn: string;
+  icon: string;
+  status: PharmacyOverrideStatus;
+  sortOrder: number;
+  isCustom: boolean;
+}
+
+export interface PharmacyProfileCatalogSubcategoryView {
+  id: string;
+  fixedSubcategoryId: number | null;
+  parentCategoryId: string;
+  nameAr: string;
+  nameEn: string;
+  status: PharmacyOverrideStatus;
+  sortOrder: number;
+  isCustom: boolean;
+}
+
+export interface PharmacyProfileCatalogProductView {
+  id: string;
+  fixedProductId: number | null;
+  parentSubcategoryId: string;
+  nameAr: string;
+  nameEn: string;
+  imageUrl: string;
+  status: PharmacyOverrideStatus;
+  sortOrder: number;
+  isCustom: boolean;
+}
+
+export interface PharmacyProfileCatalogView {
+  categories: PharmacyProfileCatalogCategoryView[];
+  subcategories: PharmacyProfileCatalogSubcategoryView[];
+  products: PharmacyProfileCatalogProductView[];
+}

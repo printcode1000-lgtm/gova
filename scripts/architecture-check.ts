@@ -240,6 +240,7 @@ function checkFile(filePath: string): void {
 function checkCategoryModuleContract(fileRel: string, content: string, filePath: string): void {
   const insideCategoryModule = fileRel.startsWith('src/features/categories/');
   const categoryInfrastructure = fileRel.startsWith('src/features/categories/infrastructure/');
+  const pharmacyCatalogInfrastructure = fileRel.startsWith('src/features/pharmacy-profile-catalog/infrastructure/');
   const productionContent = content
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/\/\/.*$/gm, '');
@@ -252,10 +253,13 @@ function checkCategoryModuleContract(fileRel: string, content: string, filePath:
     if (/getAllForSpecialties/.test(productionContent)) {
       addViolation('Category Module Contract', filePath, 'Legacy raw category API is forbidden.', 'Use typed category module projections.');
     }
-    if (/\b(title_ar|title_en|category_id|original_id|sub_collection|collection_ar|collection_en|collection_image)\b/.test(productionContent)) {
+    if (
+      !pharmacyCatalogInfrastructure &&
+      /\b(title_ar|title_en|category_id|original_id|sub_collection|collection_ar|collection_en|collection_image)\b/.test(productionContent)
+    ) {
       addViolation('Category Module Contract', filePath, 'Raw category JSON fields leaked outside the module.', 'Use camelCase public projections.');
     }
-    if (/categories\.json|subcategories\.json/.test(productionContent)) {
+    if (!pharmacyCatalogInfrastructure && /categories\.json|subcategories\.json/.test(productionContent)) {
       addViolation('Category Module Contract', filePath, 'Category JSON accessed outside the category module.', 'Use @/features/categories.');
     }
   }

@@ -36,6 +36,7 @@ export function ProfileProductsPreview({ uid }: ProfileProductsPreviewProps) {
 
   return (
     <ProfileProductsTabs
+      ownerUid={uid}
       mode="preview"
       tabs={productsTabs.tabs}
       selectedMainId={productsTabs.selectedMainId}

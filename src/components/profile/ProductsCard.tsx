@@ -201,6 +201,7 @@ export const ProductsCard = React.forwardRef<
   return (
     <div className="space-y-4">
       <ProfileProductsTabs
+        ownerUid={uid}
         mode={readOnly ? 'preview' : 'edit'}
         tabs={productsTabs.tabs}
         selectedMainId={productsTabs.selectedMainId}
@@ -241,6 +242,7 @@ export const ProductsCard = React.forwardRef<
         onDeleteProduct={!readOnly ? setPendingDelete : undefined}
         onAddProduct={!readOnly ? addProduct : undefined}
         onToggleFeatured={!readOnly ? toggleFeaturedProduct : undefined}
+        onRefreshProducts={productsTabs.refetchActiveProducts}
       />
 
       {!readOnly ? (

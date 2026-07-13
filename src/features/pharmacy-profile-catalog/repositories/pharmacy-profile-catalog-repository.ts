@@ -10,6 +10,15 @@ import type {
   PharmacyProfileSubcategoryOverride,
 } from "../entities/pharmacy-profile-catalog.types";
 
+function isMissingPharmacyTable(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return (
+    message.includes("pharmacy_profile_") &&
+    (message.toLowerCase().includes("no such table") ||
+      message.toLowerCase().includes("not found"))
+  );
+}
+
 interface CategoryOverrideRow {
   id: string;
   uid: string;
@@ -123,42 +132,62 @@ export class PharmacyProfileCatalogRepository {
   async listCategoryOverrides(
     uid: string,
   ): Promise<PharmacyProfileCategoryOverride[]> {
-    const rows = (await productDbClient.execute(
-      "SELECT * FROM pharmacy_profile_category_overrides WHERE uid = ?",
-      [uid],
-    )) as CategoryOverrideRow[];
-    return rows.map(mapCategory);
+    try {
+      const rows = (await productDbClient.execute(
+        "SELECT * FROM pharmacy_profile_category_overrides WHERE uid = ?",
+        [uid],
+      )) as CategoryOverrideRow[];
+      return rows.map(mapCategory);
+    } catch (error) {
+      if (isMissingPharmacyTable(error)) return [];
+      throw error;
+    }
   }
 
   async listSubcategoryOverrides(
     uid: string,
   ): Promise<PharmacyProfileSubcategoryOverride[]> {
-    const rows = (await productDbClient.execute(
-      "SELECT * FROM pharmacy_profile_subcategory_overrides WHERE uid = ?",
-      [uid],
-    )) as SubcategoryOverrideRow[];
-    return rows.map(mapSubcategory);
+    try {
+      const rows = (await productDbClient.execute(
+        "SELECT * FROM pharmacy_profile_subcategory_overrides WHERE uid = ?",
+        [uid],
+      )) as SubcategoryOverrideRow[];
+      return rows.map(mapSubcategory);
+    } catch (error) {
+      if (isMissingPharmacyTable(error)) return [];
+      throw error;
+    }
   }
 
   async listProductOverrides(
     uid: string,
   ): Promise<PharmacyProfileProductOverride[]> {
-    const rows = (await productDbClient.execute(
-      "SELECT * FROM pharmacy_profile_product_overrides WHERE uid = ?",
-      [uid],
-    )) as ProductOverrideRow[];
-    return rows.map(mapProduct);
+    try {
+      const rows = (await productDbClient.execute(
+        "SELECT * FROM pharmacy_profile_product_overrides WHERE uid = ?",
+        [uid],
+      )) as ProductOverrideRow[];
+      return rows.map(mapProduct);
+    } catch (error) {
+      if (isMissingPharmacyTable(error)) return [];
+      throw error;
+    }
   }
 
   async findProductOverrideByFixedId(
     uid: string,
     fixedProductId: number,
   ): Promise<PharmacyProfileProductOverride | null> {
-    const rows = (await productDbClient.execute(
-      "SELECT * FROM pharmacy_profile_product_overrides WHERE uid = ? AND fixed_product_id = ? LIMIT 1",
-      [uid, fixedProductId],
-    )) as ProductOverrideRow[];
-    return rows[0] ? mapProduct(rows[0]) : null;
+    try {
+      const rows = (await productDbClient.execute(
+        "SELECT * FROM pharmacy_profile_product_overrides WHERE uid = ? AND fixed_product_id = ? LIMIT 1",
+        [uid, fixedProductId],
+      )) as ProductOverrideRow[];
+      return rows[0] ? mapProduct(rows[0]) : null;
+    } catch (error) {
+      if (isMissingPharmacyTable(error)) return null;
+      throw error;
+    }
   }
 
   async upsertFixedProductOverride(input: {
@@ -225,6 +254,135 @@ export class PharmacyProfileCatalogRepository {
       input.uid,
       input.fixedProductId,
     ))!;
+  }
+
+  async createCustomCategory(input: {
+    uid: string;
+    nameAr: string;
+    nameEn?: string;
+    icon?: string;
+  }): Promise<PharmacyProfileCategoryOverride> {
+    const now = new Date().toISOString();
+    const id = randomUUID();
+    await productDbClient.execute(
+      "INSERT INTO pharmacy_profile_category_overrides (id,uid,fixed_category_id,name_ar,name_en,icon,status,sort_order,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)",
+      [
+        id,
+        input.uid,
+        null,
+        input.nameAr,
+        input.nameEn ?? input.nameAr,
+        input.icon ?? "fas fa-pills",
+        "custom",
+        null,
+        now,
+        now,
+      ],
+    );
+    const rows = (await productDbClient.execute(
+      "SELECT * FROM pharmacy_profile_category_overrides WHERE id = ? LIMIT 1",
+      [id],
+    )) as CategoryOverrideRow[];
+    return mapCategory(rows[0]!);
+  }
+
+  async createCustomSubcategory(input: {
+    uid: string;
+    parentCategoryId: string;
+    nameAr: string;
+    nameEn?: string;
+  }): Promise<PharmacyProfileSubcategoryOverride> {
+    const now = new Date().toISOString();
+    const id = randomUUID();
+    await productDbClient.execute(
+      "INSERT INTO pharmacy_profile_subcategory_overrides (id,uid,fixed_subcategory_id,parent_category_id,name_ar,name_en,status,sort_order,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)",
+      [
+        id,
+        input.uid,
+        null,
+        input.parentCategoryId,
+        input.nameAr,
+        input.nameEn ?? input.nameAr,
+        "custom",
+        null,
+        now,
+        now,
+      ],
+    );
+    const rows = (await productDbClient.execute(
+      "SELECT * FROM pharmacy_profile_subcategory_overrides WHERE id = ? LIMIT 1",
+      [id],
+    )) as SubcategoryOverrideRow[];
+    return mapSubcategory(rows[0]!);
+  }
+
+  async setFixedCategoryStatus(
+    uid: string,
+    fixedCategoryId: number,
+    status: PharmacyOverrideStatus,
+  ): Promise<void> {
+    const now = new Date().toISOString();
+    const existing = (await productDbClient.execute(
+      "SELECT id FROM pharmacy_profile_category_overrides WHERE uid=? AND fixed_category_id=? LIMIT 1",
+      [uid, fixedCategoryId],
+    )) as Array<{ id: string }>;
+    if (existing[0]) {
+      await productDbClient.execute(
+        "UPDATE pharmacy_profile_category_overrides SET status=?, updated_at=? WHERE id=?",
+        [status, now, existing[0].id],
+      );
+      return;
+    }
+    await productDbClient.execute(
+      "INSERT INTO pharmacy_profile_category_overrides (id,uid,fixed_category_id,status,created_at,updated_at) VALUES (?,?,?,?,?,?)",
+      [randomUUID(), uid, fixedCategoryId, status, now, now],
+    );
+  }
+
+  async setFixedSubcategoryStatus(
+    uid: string,
+    fixedSubcategoryId: number,
+    parentCategoryId: string,
+    status: PharmacyOverrideStatus,
+  ): Promise<void> {
+    const now = new Date().toISOString();
+    const existing = (await productDbClient.execute(
+      "SELECT id FROM pharmacy_profile_subcategory_overrides WHERE uid=? AND fixed_subcategory_id=? LIMIT 1",
+      [uid, fixedSubcategoryId],
+    )) as Array<{ id: string }>;
+    if (existing[0]) {
+      await productDbClient.execute(
+        "UPDATE pharmacy_profile_subcategory_overrides SET parent_category_id=?, status=?, updated_at=? WHERE id=?",
+        [parentCategoryId, status, now, existing[0].id],
+      );
+      return;
+    }
+    await productDbClient.execute(
+      "INSERT INTO pharmacy_profile_subcategory_overrides (id,uid,fixed_subcategory_id,parent_category_id,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?)",
+      [randomUUID(), uid, fixedSubcategoryId, parentCategoryId, status, now, now],
+    );
+  }
+
+  async setCustomCategoryStatus(
+    uid: string,
+    id: string,
+    status: PharmacyOverrideStatus,
+  ): Promise<void> {
+    await productDbClient.execute(
+      "UPDATE pharmacy_profile_category_overrides SET status=?, updated_at=? WHERE id=? AND uid=? AND fixed_category_id IS NULL",
+      [status, new Date().toISOString(), id, uid],
+    );
+  }
+
+  async setCustomSubcategoryStatus(
+    uid: string,
+    id: string,
+    status: PharmacyOverrideStatus,
+  ): Promise<void> {
+    await productDbClient.execute(
+      "UPDATE pharmacy_profile_subcategory_overrides SET status=?, updated_at=? WHERE id=? AND uid=? AND fixed_subcategory_id IS NULL",
+      [status, new Date().toISOString(), id, uid],
+    );
   }
 }
 
