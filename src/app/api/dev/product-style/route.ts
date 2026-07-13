@@ -81,11 +81,14 @@ interface ProductStyleSettings {
     };
     pharmacySpecs: {
       visible: boolean;
+      pharmacyCategory: boolean;
+      pharmacySubcategory: boolean;
       nameAr: boolean;
       nameEn: boolean;
+      activeIngredient: boolean;
       form: boolean;
       concentration: boolean;
-      activeIngredient: boolean;
+      prescriptionRequired: boolean;
       order: number;
     };
   };
@@ -222,18 +225,18 @@ function isValidSettings(value: unknown): value is ProductStyleSettings {
         (settings.components.propertySpecs.order === undefined ||
           (Number.isInteger(settings.components.propertySpecs.order) &&
             settings.components.propertySpecs.order >= 1)))) &&
-    // Make pharmacySpecs optional for backward compatibility
-    (settings.components.pharmacySpecs === undefined ||
-      (typeof settings.components.pharmacySpecs.visible === "boolean" &&
+    typeof settings.components.pharmacySpecs?.visible === "boolean" &&
+    typeof settings.components.pharmacySpecs.pharmacyCategory === "boolean" &&
+    typeof settings.components.pharmacySpecs.pharmacySubcategory === "boolean" &&
         typeof settings.components.pharmacySpecs.nameAr === "boolean" &&
         typeof settings.components.pharmacySpecs.nameEn === "boolean" &&
+    typeof settings.components.pharmacySpecs.activeIngredient === "boolean" &&
         typeof settings.components.pharmacySpecs.form === "boolean" &&
         typeof settings.components.pharmacySpecs.concentration === "boolean" &&
-        typeof settings.components.pharmacySpecs.activeIngredient ===
-          "boolean" &&
-        (settings.components.pharmacySpecs.order === undefined ||
+    typeof settings.components.pharmacySpecs.prescriptionRequired ===
+      "boolean" &&
           (Number.isInteger(settings.components.pharmacySpecs.order) &&
-            settings.components.pharmacySpecs.order >= 1))))
+      settings.components.pharmacySpecs.order >= 1)
   );
 }
 

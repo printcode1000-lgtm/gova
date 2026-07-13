@@ -4,7 +4,7 @@ import type { StateStorage } from 'zustand/middleware';
 import { trackGovaDbOp } from '@/core/monitor/gova-db-monitor';
 
 const DB_NAME = 'GovaDB';
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 
 export const GOVA_DB_STORES = {
   GUEST_SESSIONS: 'guestSessions',
@@ -18,6 +18,7 @@ export const GOVA_DB_STORES = {
   NOTIFICATION_BADGES: 'notificationBadges',
   NOTIFICATION_ANALYTICS: 'notificationAnalytics',
   NOTIFICATION_OFFLINE_QUEUE: 'notificationOfflineQueue',
+  PAGE_SNAPSHOTS: 'pageSnapshots',
 } as const;
 
 export type GovaDbStoreName = (typeof GOVA_DB_STORES)[keyof typeof GOVA_DB_STORES];
@@ -127,6 +128,23 @@ export async function govaDbDelete(storeName: GovaDbStoreName, key: string): Pro
       const request = store.delete(key);
       request.onerror = () => reject(request.error);
       tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  });
+}
+
+export async function govaDbGetAll<T>(storeName: GovaDbStoreName): Promise<Array<{ key: string; value: T }>> {
+  if (!hasIndexedDb()) return [];
+  return trackGovaDbOp(storeName, '*', 'get', async () => {
+    const db = await getDB();
+    return new Promise<Array<{ key: string; value: T }>>((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const request = store.getAll();
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        resolve((request.result as Array<{ key: string; value: T }> | undefined) ?? []);
+      };
       tx.onerror = () => reject(tx.error);
     });
   });

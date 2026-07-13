@@ -15,6 +15,13 @@
       "when": 1783036800000,
       "tag": "0001_product_reviews",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "0",
+      "when": 1783900800000,
+      "tag": "0002_pharmacy_profile_catalog",
+      "breakpoints": true
     }
   ]
 }

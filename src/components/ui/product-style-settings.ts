@@ -75,11 +75,14 @@ export interface ProductPropertySpecsStyleSettings {
 
 export interface ProductPharmacySpecsStyleSettings {
   visible: boolean;
+  pharmacyCategory: boolean;
+  pharmacySubcategory: boolean;
   nameAr: boolean;
   nameEn: boolean;
+  activeIngredient: boolean;
   form: boolean;
   concentration: boolean;
-  activeIngredient: boolean;
+  prescriptionRequired: boolean;
   order: number;
 }
 
@@ -159,11 +162,14 @@ export const DEFAULT_PRODUCT_STYLE_COMPONENTS: ProductStyleSettingsComponents = 
   },
   pharmacySpecs: {
     visible: false,
+    pharmacyCategory: true,
+    pharmacySubcategory: true,
     nameAr: true,
     nameEn: true,
+    activeIngredient: true,
     form: true,
     concentration: true,
-    activeIngredient: true,
+    prescriptionRequired: true,
     order: 9,
   },
 };
@@ -342,6 +348,14 @@ export function normalizeProductStyleComponents(
         value?.pharmacySpecs?.visible,
         defaults.pharmacySpecs.visible,
       ),
+      pharmacyCategory: booleanValue(
+        value?.pharmacySpecs?.pharmacyCategory,
+        defaults.pharmacySpecs.pharmacyCategory,
+      ),
+      pharmacySubcategory: booleanValue(
+        value?.pharmacySpecs?.pharmacySubcategory,
+        defaults.pharmacySpecs.pharmacySubcategory,
+      ),
       nameAr: booleanValue(
         value?.pharmacySpecs?.nameAr,
         defaults.pharmacySpecs.nameAr,
@@ -361,6 +375,10 @@ export function normalizeProductStyleComponents(
       activeIngredient: booleanValue(
         value?.pharmacySpecs?.activeIngredient,
         defaults.pharmacySpecs.activeIngredient,
+      ),
+      prescriptionRequired: booleanValue(
+        value?.pharmacySpecs?.prescriptionRequired,
+        defaults.pharmacySpecs.prescriptionRequired,
       ),
       order: positiveInteger(
         value?.pharmacySpecs?.order,

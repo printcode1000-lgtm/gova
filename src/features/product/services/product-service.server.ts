@@ -14,6 +14,7 @@ import {
 } from "../repositories/product-repository";
 import { categoryService } from "@/features/categories";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
+import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server";
 
 const SAFE_ID = /^[a-z0-9-]+$/i;
 
@@ -59,6 +60,8 @@ export class ProductService {
   constructor(private repository: ProductRepository = productRepository) {}
 
   async get(id: string): Promise<ProductRecord> {
+    const pharmacyProduct = await pharmacyProfileCatalogService.getProduct(id);
+    if (pharmacyProduct) return pharmacyProduct;
     if (!SAFE_ID.test(id)) throw new Error("invalidProduct");
     const product = await this.repository.findById(id);
     if (!product || product.status === "archived")
@@ -79,7 +82,16 @@ export class ProductService {
     ) {
       throw new Error("invalidProduct");
     }
-    return this.repository.findByOwnerAndCategory(uid, mainCategoryId, subcategoryId);
+    const products = await this.repository.findByOwnerAndCategory(uid, mainCategoryId, subcategoryId);
+    if (pharmacyProfileCatalogService.isPharmacyProductBucket(mainCategoryId, subcategoryId)) {
+      const pharmacyProducts = await pharmacyProfileCatalogService.listProducts(uid);
+      const productIds = new Set(products.map((product) => product.id));
+      return [
+        ...pharmacyProducts.filter((product) => !productIds.has(product.id)),
+        ...products,
+      ];
+    }
+    return products;
   }
 
   async create(input: CreateProductInput): Promise<ProductRecord> {
@@ -109,6 +121,12 @@ export class ProductService {
   }
 
   async update(input: UpdateProductInput): Promise<ProductRecord> {
+    const fixedPharmacyProduct = await pharmacyProfileCatalogService.updateFixedProduct(
+      input.id,
+      input.uid,
+      normalizeData(input.data),
+    );
+    if (fixedPharmacyProduct) return fixedPharmacyProduct;
     const existing = await this.get(input.id);
     if (!input.uid || existing.uid !== input.uid)
       throw new Error("productForbidden");
@@ -130,6 +148,7 @@ export class ProductService {
   }
 
   async delete(id: string, uid: string): Promise<void> {
+    if (await pharmacyProfileCatalogService.hideFixedProduct(id, uid)) return;
     const existing = await this.get(id);
     if (!uid || existing.uid !== uid) throw new Error("productForbidden");
     const deleted = await this.repository.delete(id, uid);

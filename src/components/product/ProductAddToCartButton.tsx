@@ -39,6 +39,7 @@ export function ProductAddToCartButton({
       description: fields["mainData.description"] ?? "",
       images,
       unitPrice: numberField(fields, "price.current"),
+      priceLabel: fields["price.label"] || undefined,
       quantity: 1,
       requiresSpecialVehicle: fields["price.needsCar"] === "true",
       mainCategoryId,

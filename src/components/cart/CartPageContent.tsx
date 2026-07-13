@@ -152,6 +152,7 @@ export function CartPageContent() {
             imageUrl: item.imageUrl,
             quantity: item.quantity,
             unitPriceMinor: item.unitPriceMinor,
+            priceLabel: item.priceLabel,
             requiresSpecialVehicle: item.requiresSpecialVehicle,
           })),
         },
@@ -322,7 +323,9 @@ export function CartPageContent() {
                                 سعر الوحدة
                               </p>
                               <p className="font-bold">
-                                {formatMoney(item.unitPriceMinor)}
+                                {item.unitPriceMinor === 0 && item.priceLabel
+                                  ? item.priceLabel
+                                  : formatMoney(item.unitPriceMinor)}
                               </p>
                             </div>
                           </div>

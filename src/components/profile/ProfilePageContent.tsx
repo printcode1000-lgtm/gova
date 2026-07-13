@@ -30,6 +30,7 @@ import { ProfileContactsCard } from "@/components/profile/ProfileContactsCard";
 import { ProfileRegistrationInfoCard } from "@/components/profile/ProfileRegistrationInfoCard";
 import { SpecialtiesCard } from "@/components/profile/SpecialtiesCard";
 import { ProductsCard } from "@/components/profile/ProductsCard";
+import { ProfileProductsPreview } from "@/components/profile/ProfileProductsPreview";
 import { StoreIdentityCard } from "@/components/profile/StoreIdentityCard";
 import { FulfillmentSettingsCard } from "@/components/profile/FulfillmentSettingsCard";
 import { useSession } from "@/features/auth/components/SessionProvider";
@@ -324,6 +325,11 @@ export function ProfilePageContent() {
           {profileTrendingConfig.items.length > 0 ? (
             <section className="mt-5">
               <TrendingRibbon config={profileTrendingConfig} />
+            </section>
+          ) : null}
+          {previewUid ? (
+            <section className="mx-2 mt-6 sm:mx-4">
+              <ProfileProductsPreview uid={previewUid} />
             </section>
           ) : null}
           {!isLoadingStoreDetails && storeDetails.storeStory ? (

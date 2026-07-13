@@ -1,7 +1,17 @@
 import { CATEGORY_CONSTANTS } from "../domain/constants/category-constants";
 import type { Category } from "../domain/entities/category.entity";
 import type { Subcategory } from "../domain/entities/subcategory.entity";
-import { loadRawCategories, loadRawSubcategories } from "../infrastructure/raw-data.loader";
+import {
+  loadPharmacyActiveIngredients,
+  loadPharmacyCategories,
+  loadPharmacyForms,
+  loadPharmacyIngredientFormLinks,
+  loadPharmacyIngredientStrengthLinks,
+  loadPharmacyStrengths,
+  loadPharmacySubcategories,
+  loadRawCategories,
+  loadRawSubcategories,
+} from "../infrastructure/raw-data.loader";
 import { mapRawCategory, mapRawSubcategory } from "../infrastructure/mappers";
 import type {
   CategoryDisplay,
@@ -12,6 +22,11 @@ import type {
   DeveloperCategoryDetail,
   DeveloperCatalog,
   MainCategoryOption,
+  PharmacyCatalogActiveIngredient,
+  PharmacyCatalogCategory,
+  PharmacyCatalogForm,
+  PharmacyCatalogStrength,
+  PharmacyCatalogSubcategory,
   SpecialtyColumnItem,
   SubcategoryDisplay,
   SubcategoryOption,
@@ -19,6 +34,17 @@ import type {
 
 const categories: readonly Category[] = Object.freeze(loadRawCategories().map(mapRawCategory));
 const subcategories: readonly Subcategory[] = Object.freeze(loadRawSubcategories().map(mapRawSubcategory));
+const pharmacyCategories = Object.freeze(loadPharmacyCategories());
+const pharmacySubcategories = Object.freeze(loadPharmacySubcategories());
+const pharmacyActiveIngredients = Object.freeze(loadPharmacyActiveIngredients());
+const pharmacyForms = Object.freeze(loadPharmacyForms());
+const pharmacyStrengths = Object.freeze(loadPharmacyStrengths());
+const pharmacyIngredientFormLinks = Object.freeze(loadPharmacyIngredientFormLinks());
+const pharmacyIngredientStrengthLinks = Object.freeze(loadPharmacyIngredientStrengthLinks());
+const pharmacyFormById = new Map(pharmacyForms.map((form) => [form.id, form]));
+const pharmacyStrengthById = new Map(
+  pharmacyStrengths.map((strength) => [strength.id, strength]),
+);
 
 const mainImageUrl = (image: string) => `/images/mainCategories/${image}`;
 const subImageUrl = (image: string) => `/images/subCategories/${image}`;
@@ -232,6 +258,32 @@ export class CategoryService {
 
   getRandomSubcategories(count: number): readonly SubcategoryDisplay[] {
     return [...subcategories.map(subcategoryDisplay)].sort(() => Math.random() - 0.5).slice(0, Math.max(0, count));
+  }
+
+  getPharmacyCategories(): readonly PharmacyCatalogCategory[] {
+    return pharmacyCategories;
+  }
+
+  getPharmacySubcategories(categoryId: number): readonly PharmacyCatalogSubcategory[] {
+    return pharmacySubcategories.filter((item) => item.categoryId === categoryId);
+  }
+
+  getPharmacyActiveIngredients(subcategoryId: number): readonly PharmacyCatalogActiveIngredient[] {
+    return pharmacyActiveIngredients.filter((item) => item.subcategoryId === subcategoryId);
+  }
+
+  getPharmacyFormsForActiveIngredient(activeIngredientId: number): readonly PharmacyCatalogForm[] {
+    return pharmacyIngredientFormLinks
+      .filter((item) => item.activeIngredientId === activeIngredientId)
+      .map((item) => pharmacyFormById.get(item.formId))
+      .filter((item): item is PharmacyCatalogForm => Boolean(item));
+  }
+
+  getPharmacyStrengthsForActiveIngredient(activeIngredientId: number): readonly PharmacyCatalogStrength[] {
+    return pharmacyIngredientStrengthLinks
+      .filter((item) => item.activeIngredientId === activeIngredientId)
+      .map((item) => pharmacyStrengthById.get(item.strengthId))
+      .filter((item): item is PharmacyCatalogStrength => Boolean(item));
   }
 
   resolveSelection(input: CategorySelectionInput): CategorySelectionResult {

@@ -12,6 +12,7 @@ interface CartOrderItemInput {
   imageUrl?: string;
   quantity: number;
   unitPriceMinor: number;
+  priceLabel?: string;
   requiresSpecialVehicle?: boolean;
 }
 
@@ -105,7 +106,10 @@ export async function POST(request: Request) {
               serviceProviderId: carrierBySeller.get(sellerId),
               productId: item.productId,
               productName: item.name,
-              productDescription: item.description ?? "",
+              productDescription:
+                item.unitPriceMinor === 0 && item.priceLabel
+                  ? `${item.description ?? ""}\n${item.priceLabel}`.trim()
+                  : item.description ?? "",
               productImage: item.imageUrl ?? null,
               quantity: Math.max(1, Math.floor(Number(item.quantity))),
               unitPrice: moneyMinor(item.unitPriceMinor),

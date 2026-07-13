@@ -19,6 +19,7 @@ import { MobileBackButtonController } from "@/components/navigation/MobileBackBu
 import { VoiceInputController } from "@/components/voice-input/VoiceInputController";
 import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
 import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
+import { SnapshotProvider } from "@/features/page-snapshot";
 import dynamic from "next/dynamic";
 
 import { isDevelopment, withBasePath } from "@/core/config";
@@ -55,7 +56,9 @@ export default function RootLayout({
               <PreferencesProvider>
                 <NetworkStatusProvider>
                   <OtaUpdateProvider>
-                    <ShellLayout>{children}</ShellLayout>
+                    <SnapshotProvider>
+                      <ShellLayout>{children}</ShellLayout>
+                    </SnapshotProvider>
                     <NetworkStatusBanner />
                     <OtaUpdatePrompt />
                     <MobileBackButtonController />

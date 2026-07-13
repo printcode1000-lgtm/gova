@@ -16,6 +16,7 @@ export interface CartItem {
   imageKey: string;
   quantity: number;
   unitPriceMinor: number;
+  priceLabel?: string;
   currency: "EGP";
   requiresSpecialVehicle: boolean;
   mainCategoryId: string;
@@ -29,6 +30,7 @@ export interface AddCartItemInput {
   description?: string;
   images?: StoredImage[];
   unitPrice: number;
+  priceLabel?: string;
   quantity?: number;
   requiresSpecialVehicle?: boolean;
   mainCategoryId?: string;
@@ -56,7 +58,7 @@ function normalizeItems(value: unknown): CartItem[] {
         typeof candidate.quantity === "number" &&
         Number.isInteger(candidate.quantity) &&
         candidate.quantity > 0 &&
-        typeof candidate.unitPriceMinor === "number" &&
+    typeof candidate.unitPriceMinor === "number" &&
         Number.isInteger(candidate.unitPriceMinor) &&
         candidate.unitPriceMinor >= 0
       );
@@ -113,6 +115,7 @@ export function addCartItem(input: AddCartItemInput): CartItem[] {
       imageKey: firstImage?.imageKey ?? "",
       quantity,
       unitPriceMinor,
+      priceLabel: input.priceLabel,
       currency: "EGP",
       requiresSpecialVehicle: input.requiresSpecialVehicle === true,
       mainCategoryId: input.mainCategoryId ?? "",

@@ -9,6 +9,7 @@ import {
 import { ProductAddToCartButton } from "./ProductAddToCartButton";
 import { ProductImageEditors } from "./ProductImageEditors";
 import { ProductImageGallery } from "./ProductImageGallery";
+import { ProductPharmacySpecs } from "./ProductPharmacySpecs";
 import { ProductPropertySpecs } from "./ProductPropertySpecs";
 import { ProductRatingSettings } from "./ProductRatingSettings";
 import { ProductReviews } from "./ProductReviews";
@@ -51,11 +52,14 @@ const FIELDS: Record<
     ["finishing", "التشطيب", "text"],
   ],
   pharmacySpecs: [
+    ["pharmacyCategory", "التصنيف الرئيسي", "text"],
+    ["pharmacySubcategory", "التصنيف الفرعي", "text"],
     ["nameAr", "الاسم بالعربي", "text"],
     ["nameEn", "الاسم بالإنجليزي", "text"],
+    ["activeIngredient", "المادة الفعالة", "text"],
     ["form", "شكل الدواء", "text"],
     ["concentration", "التركيز", "text"],
-    ["activeIngredient", "المادة الفعالة", "text"],
+    ["prescriptionRequired", "يتطلب روشتة", "boolean"],
   ],
   rating: [
     ["rating", "التقييم", "number"],
@@ -122,11 +126,14 @@ export const PRODUCT_DEMO_FIELDS: ProductFieldValues = {
   "propertySpecs.type": "شقة",
   "propertySpecs.address": "القاهرة الجديدة",
   "propertySpecs.finishing": "سوبر لوكس",
+  "pharmacySpecs.pharmacyCategory": "الأدوية والعلاج",
+  "pharmacySpecs.pharmacySubcategory": "مسكنات الألم وخافض الحرارة",
   "pharmacySpecs.nameAr": "دواء تجريبي",
   "pharmacySpecs.nameEn": "Demo Medicine",
+  "pharmacySpecs.activeIngredient": "باراسيتامول",
   "pharmacySpecs.form": "أقراص",
   "pharmacySpecs.concentration": "500 مجم",
-  "pharmacySpecs.activeIngredient": "مادة فعالة تجريبية",
+  "pharmacySpecs.prescriptionRequired": "false",
 };
 
 export function ProductComponentsRenderer({
@@ -261,6 +268,19 @@ export function ProductComponentsRenderer({
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
               <ProductPropertySpecs
+                mode={mode}
+                config={config}
+                fields={fields}
+                onChange={onFieldsChange}
+              />
+            </ProductComponentFrame>
+          );
+        }
+
+        if (key === "pharmacySpecs") {
+          return (
+            <ProductComponentFrame key={key} title={TITLES[key]}>
+              <ProductPharmacySpecs
                 mode={mode}
                 config={config}
                 fields={fields}

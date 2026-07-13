@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
+import { useSnapshotState } from "@/features/page-snapshot";
 import { PROFILE_SECTIONS, type ProfileEditTab } from "./profile-page.types";
 
 interface UseProfileNavigationProps {
@@ -27,12 +28,17 @@ export function useProfileNavigation({
 }: UseProfileNavigationProps): UseProfileNavigationReturn {
   const searchParams = useSearchParams();
   const requestedTab = searchParams.get("tab");
-  const [activeTab, setActiveTab] =
-    React.useState<ProfileEditTab>(() =>
-      requestedTab && PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab)
-        ? (requestedTab as ProfileEditTab)
-        : "registration",
-    );
+  const initialTab =
+    requestedTab && PROFILE_SECTIONS.includes(requestedTab as ProfileEditTab)
+      ? (requestedTab as ProfileEditTab)
+      : "registration";
+  const [activeTab, setActiveTab] = useSnapshotState<ProfileEditTab>(
+    "profile.edit.activeTab",
+    initialTab,
+  );
+  const resolvedActiveTab = PROFILE_SECTIONS.includes(activeTab)
+    ? activeTab
+    : "registration";
   const [carouselHeight, setCarouselHeight] = React.useState<number>();
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const panelRefs = React.useRef<Record<ProfileEditTab, HTMLDivElement | null>>(
@@ -56,11 +62,13 @@ export function useProfileNavigation({
     fulfillment: null,
   });
   const scrollFrameRef = React.useRef<number | null>(null);
+  const suppressScrollSyncUntilRef = React.useRef(0);
   const appliedRequestedTabRef = React.useRef<string | null>(null);
 
   const scrollToSection = React.useCallback((section: ProfileEditTab) => {
+    suppressScrollSyncUntilRef.current = Date.now() + 500;
     panelRefs.current[section]?.scrollIntoView({
-      behavior: "smooth",
+      behavior: "auto",
       block: "nearest",
       inline: "center",
     });
@@ -92,7 +100,14 @@ export function useProfileNavigation({
     return () => cancelAnimationFrame(frame);
   }, [isLoading, isLoggedIn, requestedTab, scrollToSection, showEditCard]);
 
+  React.useEffect(() => {
+    if (!showEditCard || isLoading || !isLoggedIn) return;
+    const frame = requestAnimationFrame(() => scrollToSection(resolvedActiveTab));
+    return () => cancelAnimationFrame(frame);
+  }, [isLoading, isLoggedIn, resolvedActiveTab, scrollToSection, showEditCard]);
+
   const handleCarouselScroll = () => {
+    if (Date.now() < suppressScrollSyncUntilRef.current) return;
     if (scrollFrameRef.current !== null)
       cancelAnimationFrame(scrollFrameRef.current);
     scrollFrameRef.current = requestAnimationFrame(() => {
@@ -100,7 +115,7 @@ export function useProfileNavigation({
       if (!carousel) return;
       const center =
         carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
-      let closest = activeTab;
+      let closest = resolvedActiveTab;
       let closestDistance = Number.POSITIVE_INFINITY;
       for (const section of PROFILE_SECTIONS) {
         const panel = panelRefs.current[section];
@@ -112,7 +127,7 @@ export function useProfileNavigation({
           closest = section;
         }
       }
-      if (closest !== activeTab) {
+      if (closest !== resolvedActiveTab) {
         setActiveTab(closest);
         navButtonRefs.current[closest]?.scrollIntoView({
           behavior: "smooth",
@@ -132,23 +147,23 @@ export function useProfileNavigation({
   );
 
   React.useEffect(() => {
-    const panel = panelRefs.current[activeTab];
+    const panel = panelRefs.current[resolvedActiveTab];
     if (!panel) return;
     const updateHeight = () => setCarouselHeight(panel.offsetHeight);
     updateHeight();
     const observer = new ResizeObserver(updateHeight);
     observer.observe(panel);
     return () => observer.disconnect();
-  }, [activeTab, isLoading, isLoggedIn]);
+  }, [resolvedActiveTab, isLoading, isLoggedIn]);
 
-  const activeSectionIndex = PROFILE_SECTIONS.indexOf(activeTab);
+  const activeSectionIndex = PROFILE_SECTIONS.indexOf(resolvedActiveTab);
   const goToAdjacentSection = (offset: -1 | 1) => {
     const nextSection = PROFILE_SECTIONS[activeSectionIndex + offset];
     if (nextSection) selectSection(nextSection);
   };
 
   return {
-    activeTab,
+    activeTab: resolvedActiveTab,
     carouselHeight,
     carouselRef,
     panelRefs,
