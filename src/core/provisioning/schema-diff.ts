@@ -31,10 +31,31 @@ function normalizeColumnType(type: string): string {
   return type.trim().toUpperCase().replace(/\s+/g, ' ');
 }
 
+export interface SchemaDiffOptions {
+  ignoredExtraTables?: Set<string>;
+}
+
+function compatibleType(a: ColumnInfo, b: ColumnInfo): boolean {
+  const left = normalizeColumnType(a.type);
+  const right = normalizeColumnType(b.type);
+  if (left === right) return true;
+  const temporal = new Set(['TEXT', 'DATETIME']);
+  if (a.name.endsWith('_at') && temporal.has(left) && temporal.has(right)) return true;
+  return false;
+}
+
+function compatibleNotNull(a: ColumnInfo, b: ColumnInfo): boolean {
+  if (a.notNull === b.notNull) return true;
+  const left = normalizeColumnType(a.type);
+  const right = normalizeColumnType(b.type);
+  if (a.primaryKey && b.primaryKey && left === 'INTEGER' && right === 'INTEGER') return true;
+  return false;
+}
+
 function columnsMatch(a: ColumnInfo, b: ColumnInfo): boolean {
   return (
-    normalizeColumnType(a.type) === normalizeColumnType(b.type) &&
-    a.notNull === b.notNull &&
+    compatibleType(a, b) &&
+    compatibleNotNull(a, b) &&
     a.primaryKey === b.primaryKey
   );
 }
@@ -45,7 +66,8 @@ function columnsMatch(a: ColumnInfo, b: ColumnInfo): boolean {
  */
 export function diffSchemas(
   sqliteSchema: DatabaseSchema,
-  tursoSchema: DatabaseSchema
+  tursoSchema: DatabaseSchema,
+  options: SchemaDiffOptions = {}
 ): { operations: SchemaDiffOperation[]; warnings: string[] } {
   const operations: SchemaDiffOperation[] = [];
   const warnings: string[] = [];
@@ -96,6 +118,7 @@ export function diffSchemas(
 
   for (const tursoTableName of Object.keys(tursoSchema.tables)) {
     if (!sqliteSchema.tables[tursoTableName]) {
+      if (options.ignoredExtraTables?.has(tursoTableName)) continue;
       warnings.push(
         `Table "${tursoTableName}" exists on Turso but not in SQLite. Not dropped automatically.`
       );

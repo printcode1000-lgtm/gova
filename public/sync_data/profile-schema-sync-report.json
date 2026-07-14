@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-07-14T04:52:51.560Z",
-  "durationMs": 10933,
-  "sqliteSchemaVersion": "bd050fb1a70e7e7a",
-  "tursoSchemaVersionBefore": "eb28627a24f07b1c",
-  "tursoSchemaVersionAfter": "eb28627a24f07b1c",
+  "executedAt": "2026-07-14T04:59:33.738Z",
+  "durationMs": 10513,
+  "sqliteSchemaVersion": "6b731ed058560116",
+  "tursoSchemaVersionBefore": "da5ec54b151b6842",
+  "tursoSchemaVersionAfter": "da5ec54b151b6842",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,
@@ -12,8 +12,6 @@
   "triggersAdded": 0,
   "sqlExecuted": [],
   "errors": [],
-  "warnings": [
-    "Table \"user_specialties\" exists on Turso but not in SQLite. Not dropped automatically."
-  ],
+  "warnings": [],
   "skipped": false
 }

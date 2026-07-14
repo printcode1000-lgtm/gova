@@ -44,6 +44,10 @@ Supported: `CREATE TABLE`, `ADD COLUMN`, `CREATE INDEX`, `CREATE VIEW`, `CREATE 
 
 Each SQLite file syncs to **its own** Turso database (`allusers.db` → users Turso, `profile.db` → profile Turso).
 
+Schema diff suppresses known cross-database tables when a deployment uses a shared/fallback Turso database URL. For example, product tables in the users Turso URL are not reported as users warnings when they are known logical product tables.
+
+Temporal columns ending in `_at` treat SQLite `TEXT` and Turso `DATETIME` as compatible because the application stores ISO timestamp strings.
+
 ## Reports
 
 | File | Database |

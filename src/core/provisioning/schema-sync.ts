@@ -37,6 +37,69 @@ const MARKETPLACE_ORDERS_SCHEMA_SYNC_REPORT_PATH = path.join(
   'marketplace-orders-schema-sync-report.json',
 );
 
+const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
+  users: new Set(['users', 'user_notification_tokens', 'notification_vapid_settings']),
+  profile: new Set([
+    'user_profiles',
+    'user_specialties',
+    'profile_reviews',
+    'profile_review_helpful',
+    'profile_review_replies',
+    'follows',
+    'profile_contact_points',
+    'profile_locations',
+    'profile_images',
+    'profile_featured_products',
+    'profile_trending_items',
+    'profile_working_hours',
+    'profile_delivery_carriers',
+    'profile_search_categories',
+    'profile_category_product_counts',
+  ]),
+  advertisements: new Set(['hero_slider', 'featured_marquee', 'trending_ribbon']),
+  product: new Set([
+    'products',
+    'product_reviews',
+    'product_review_helpful',
+    'product_review_replies',
+    'pharmacy_profile_category_overrides',
+    'pharmacy_profile_subcategory_overrides',
+    'pharmacy_profile_product_overrides',
+  ]),
+  'marketplace-orders': new Set([
+    'orders',
+    'seller_orders',
+    'order_items',
+    'custom_request_items',
+    'custom_request_images',
+    'shipments',
+    'shipment_items',
+    'payments',
+    'refunds',
+    'cancellations',
+    'cancellation_items',
+    'return_requests',
+    'return_request_items',
+    'replacement_requests',
+    'replacement_request_items',
+    'disputes',
+    'dispute_messages',
+    'audit_trail',
+  ]),
+};
+
+function ignoredExtraTablesFor(databaseLabel: string): Set<string> {
+  const own = LOGICAL_DATABASE_TABLES[databaseLabel] ?? new Set<string>();
+  const ignored = new Set<string>();
+  for (const [label, tables] of Object.entries(LOGICAL_DATABASE_TABLES)) {
+    if (label === databaseLabel) continue;
+    for (const table of tables) {
+      if (!own.has(table)) ignored.add(table);
+    }
+  }
+  return ignored;
+}
+
 export interface RunSchemaSyncOptions {
   /** When true, skip silently if Turso credentials are missing (local builds). */
   skipIfMissingCredentials?: boolean;
@@ -153,7 +216,9 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
   const tursoSchemaBefore = await readTursoSchema(client as Parameters<typeof readTursoSchema>[0]);
   const tursoVersionBefore = computeSchemaVersion(tursoSchemaBefore);
 
-  const { operations, warnings } = diffSchemas(sqliteSchema, tursoSchemaBefore);
+  const { operations, warnings } = diffSchemas(sqliteSchema, tursoSchemaBefore, {
+    ignoredExtraTables: ignoredExtraTablesFor(databaseLabel),
+  });
   const sqlExecuted: string[] = [];
   const errors: string[] = [];
 

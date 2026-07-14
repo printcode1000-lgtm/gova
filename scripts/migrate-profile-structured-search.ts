@@ -147,6 +147,7 @@ async function tableExists(db: Db, table: string): Promise<boolean> {
 
 async function createStructuredTables(db: Db): Promise<void> {
   await db.run("PRAGMA foreign_keys=off");
+  await db.run("DROP TABLE IF EXISTS __new_user_profiles");
   await db.run(`CREATE TABLE IF NOT EXISTS profile_contact_points (id text PRIMARY KEY NOT NULL, uid text NOT NULL, type text NOT NULL, platform text NOT NULL DEFAULT '', label text NOT NULL DEFAULT '', value text NOT NULL, normalized_value text NOT NULL DEFAULT '', handle text NOT NULL DEFAULT '', is_primary integer NOT NULL DEFAULT 0, is_public integer NOT NULL DEFAULT 1, sort_order integer NOT NULL DEFAULT 0, created_at text NOT NULL, updated_at text NOT NULL)`);
   await db.run(`CREATE INDEX IF NOT EXISTS profile_contact_points_uid_idx ON profile_contact_points (uid)`);
   await db.run(`CREATE INDEX IF NOT EXISTS profile_contact_points_lookup_idx ON profile_contact_points (type, normalized_value)`);
@@ -168,6 +169,10 @@ async function createStructuredTables(db: Db): Promise<void> {
   await db.run(`CREATE INDEX IF NOT EXISTS profile_search_categories_lookup_idx ON profile_search_categories (category_id, subcategory_id, is_enabled)`);
   await db.run(`CREATE TABLE IF NOT EXISTS profile_category_product_counts (uid text NOT NULL, category_id text NOT NULL, subcategory_id text NOT NULL, active_product_count integer NOT NULL DEFAULT 0, draft_product_count integer NOT NULL DEFAULT 0, archived_product_count integer NOT NULL DEFAULT 0, updated_at text NOT NULL, PRIMARY KEY(uid, category_id, subcategory_id))`);
   await db.run(`CREATE INDEX IF NOT EXISTS profile_category_product_counts_lookup_idx ON profile_category_product_counts (category_id, subcategory_id)`);
+  const columns = SPECIALTY_COLUMN_NAMES.map(
+    (column) => `\`${column}\` integer NOT NULL DEFAULT 0`,
+  ).join(", ");
+  await db.run(`CREATE TABLE IF NOT EXISTS user_specialties (\`uid\` text PRIMARY KEY NOT NULL, ${columns})`);
 }
 
 async function rebuildUserProfiles(db: Db): Promise<Array<Record<string, unknown>>> {
