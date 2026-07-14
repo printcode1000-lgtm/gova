@@ -2,13 +2,15 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Search, Store, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { ProductCard } from "@/components/ui/product-card";
+import { SellerCard } from "@/components/ui/seller-card";
 import { categoryService } from "@/features/categories";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { createProductCardViewModel } from "@/features/product-card";
+import { createSellerCardViewModel } from "@/features/seller-card";
 import {
   productSearchApiService,
   type ProductSearchField,
@@ -35,21 +37,6 @@ interface ProductSearchPanelProps {
   initialSort?: ProductSearchSort;
   onProductsChange?: (products: ProductRecord[]) => void;
   onLoadingChange?: (loading: boolean) => void;
-}
-
-function parseStoreName(user: UserProfileRow) {
-  try {
-    const details = JSON.parse(user.storeDetailsJson || "{}") as {
-      storeName?: string;
-    };
-    return details.storeName || user.uid;
-  } catch {
-    return user.uid;
-  }
-}
-
-function profileUrl(uid: string) {
-  return `/profile?mode=preview&uid=${encodeURIComponent(uid)}`;
 }
 
 function defaultFieldKeys(fields: ProductSearchField[]) {
@@ -471,22 +458,14 @@ export function ProductSearchPanel({
       {!isCompact && activeMode === "sellers" ? (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {sellers.map((seller) => {
-            const name = parseStoreName(seller);
+            const card = createSellerCardViewModel(seller);
             return (
-              <button
+              <SellerCard
                 key={seller.uid}
-                type="button"
-                onClick={() => router.push(profileUrl(seller.uid))}
-                className="rounded-lg border border-outline-variant bg-surface p-4 text-center"
-              >
-                <Store className="mx-auto mb-2 h-7 w-7 text-primary" />
-                <p className="line-clamp-2 text-sm font-semibold text-on-surface">
-                  {name}
-                </p>
-                <p className="mt-1 truncate text-[11px] text-on-surface-variant">
-                  {seller.uid}
-                </p>
-              </button>
+                card={card}
+                variant="search"
+                onOpen={() => router.push(card.href)}
+              />
             );
           })}
         </div>

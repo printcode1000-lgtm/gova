@@ -46,6 +46,9 @@ export function mapServiceError(error: unknown): NextResponse {
     'vapidSaveFailed',
     'vapidNotConfigured',
     'webPushNotConfigured',
+    'invalidFollowTarget',
+    'followLoginRequired',
+    'followSelfNotAllowed',
   ];
 
   if (knownCodes.includes(message)) {

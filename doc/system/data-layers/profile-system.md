@@ -24,6 +24,22 @@ Logical link: `user_profiles.uid` → `users.uid` (no cross-file foreign key).
 
 JSON shape matches `ContactInfoCard` / `ProfileContactsData`.
 
+## Table: `follows`
+
+The profile database also stores social follow relationships in `follows`.
+
+The table supports following stores, products, and categories through `target_type` and `target_id`. Store follows use the store owner's uid as both `target_id` and `target_owner_uid`.
+
+The feature lives under `src/features/follow`, and the reusable UI component lives under `src/components/ui/follow`.
+
+## Store Details JSON
+
+`store_details_json` stores public profile display settings owned by the profile feature. It includes store name, description, story, profile showcase settings, and working hours.
+
+Working hours are normalized by `src/features/profile-working-hours` and saved through the regular profile editor flow. They are not stored in a separate table and they do not have a separate save button. The edit tab contributes its snapshot to the same profile-wide save operation as the store details section.
+
+Working hours support Saturday-first weekly display, open/closed state per day, up to four time periods per day, an optional public note, and preview status such as open now or closed now.
+
 ## Data flow
 
 ```

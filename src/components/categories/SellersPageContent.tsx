@@ -4,7 +4,10 @@ import * as React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+
+import { SellerCard } from "@/components/ui/seller-card";
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
+import { createSellerCardViewModel, sellerCardTitle } from "@/features/seller-card";
 import { useTranslation } from "@/lib/i18n";
 
 interface SellersPageContentProps {
@@ -12,18 +15,6 @@ interface SellersPageContentProps {
   subcategoryId: number;
   subcategoryName: string;
   subcategoryImage: string;
-}
-
-function parseStoreDetails(storeDetailsJson: string) {
-  try {
-    return JSON.parse(storeDetailsJson);
-  } catch {
-    return { storeName: '' };
-  }
-}
-
-function sellerProfileViewUrl(uid: string): string {
-  return `/profile?mode=view&uid=${encodeURIComponent(uid)}`;
 }
 
 export function SellersPageContent({
@@ -38,20 +29,17 @@ export function SellersPageContent({
   const [searchText, setSearchText] = React.useState("");
   const limit = 10;
 
-  const { data: users, isLoading, error } = useUsersBySpecialty(
-    categoryId,
-    subcategoryId,
-    offset,
-    limit
-  );
+  const {
+    data: users,
+    isLoading,
+    error,
+  } = useUsersBySpecialty(categoryId, subcategoryId, offset, limit);
 
   const normalizedSearchText = searchText.trim().toLowerCase();
   const filteredUsers = normalizedSearchText
-    ? users?.filter((user) => {
-        const storeDetails = parseStoreDetails(user.storeDetailsJson || '{}');
-        const storeName = storeDetails.storeName || user.uid;
-        return storeName.toLowerCase().includes(normalizedSearchText);
-      })
+    ? users?.filter((user) =>
+        sellerCardTitle(user).toLowerCase().includes(normalizedSearchText),
+      )
     : users;
 
   const loadMore = () => {
@@ -76,95 +64,76 @@ export function SellersPageContent({
 
   return (
     <div className="container px-4 py-8">
-      <div className="relative min-h-28 rounded-3xl bg-surface-bright space-y-3 p-4 overflow-hidden mb-6">
+      <div className="relative mb-6 min-h-28 overflow-hidden rounded-3xl bg-surface-bright p-4">
         <Image
           src={subcategoryImage}
-          alt={locale === "ar" ? `التجار في ${subcategoryName}` : `Sellers in ${subcategoryName}`}
+          alt={
+            locale === "ar"
+              ? `البائعون في ${subcategoryName}`
+              : `Sellers in ${subcategoryName}`
+          }
           fill
           className="object-fill opacity-20"
           priority
         />
-        <div className="relative z-10">
+        <div className="relative z-10 space-y-3">
           <h1 className="text-2xl font-bold text-on-surface">
-            {locale === "ar" ? `التجار في ${subcategoryName}` : `Sellers in ${subcategoryName}`}
+            {locale === "ar"
+              ? `البائعون في ${subcategoryName}`
+              : `Sellers in ${subcategoryName}`}
           </h1>
-        </div>
-        <div className="relative">
-          <Search
-            className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant ${
-              isRTL ? "right-4" : "left-4"
-            }`}
-            aria-hidden
-          />
-          <input
-            type="search"
-            value={searchText}
-            onChange={(event) => setSearchText(event.target.value)}
-            placeholder={
-              locale === "ar"
-                ? "ابحث في التجار"
-                : "Search sellers"
-            }
-            className={`w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary ${
-              isRTL ? "pr-12" : "pl-12"
-            }`}
-          />
+          <div className="relative">
+            <Search
+              className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant ${
+                isRTL ? "right-4" : "left-4"
+              }`}
+              aria-hidden
+            />
+            <input
+              type="search"
+              value={searchText}
+              onChange={(event) => setSearchText(event.target.value)}
+              placeholder={locale === "ar" ? "ابحث في البائعين" : "Search sellers"}
+              className={`w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary ${
+                isRTL ? "pr-12" : "pl-12"
+              }`}
+            />
+          </div>
         </div>
       </div>
 
-      {isLoading && offset === 0 ? (
-        <div className="text-center text-sm text-on-surface-variant">
-          {t("profile.loading")}
-        </div>
-      ) : !filteredUsers || filteredUsers.length === 0 ? (
+      {!filteredUsers || filteredUsers.length === 0 ? (
         <p className="text-center text-sm text-on-surface-variant">
           {normalizedSearchText
             ? locale === "ar"
               ? "لا توجد نتائج مطابقة"
               : "No matching results"
             : locale === "ar"
-            ? "لا يوجد تجار حالياً"
-            : "No sellers available"}
+              ? "لا يوجد بائعون حاليًا"
+              : "No sellers available"}
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {filteredUsers.map((user) => {
-            const storeDetails = parseStoreDetails(user.storeDetailsJson || '{}');
-            const storeName = storeDetails.storeName || user.uid;
-            const avatarUrl = (user as any).avatarUrl || null;
-
+            const card = createSellerCardViewModel(user, {
+              badge: locale === "ar" ? "بائع" : "Seller",
+            });
             return (
-              <button
+              <SellerCard
                 key={user.uid}
-                onClick={() => router.push(sellerProfileViewUrl(user.uid))}
-                className="flex flex-col items-center rounded-xl bg-surface p-4 shadow-sm"
-              >
-                <div className="relative h-24 w-24 overflow-hidden rounded-full bg-surface-bright">
-                  {avatarUrl ? (
-                    <Image
-                      src={avatarUrl}
-                      alt={storeName}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-3xl text-on-surface-variant">
-                      {storeName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <p className="mt-3 text-center text-sm font-medium text-on-surface line-clamp-2">
-                  {storeName}
-                </p>
-              </button>
+                card={card}
+                variant="category-sellers"
+                onOpen={() => router.push(card.href)}
+              />
             );
           })}
         </div>
       )}
 
-      {users && users.length === limit && (
+      {users && users.length === limit ? (
         <div className="mt-6 text-center">
           <button
+            type="button"
             onClick={loadMore}
             disabled={isLoading}
             className="rounded-xl bg-primary px-6 py-2 text-sm font-medium text-on-primary disabled:opacity-50"
@@ -172,11 +141,11 @@ export function SellersPageContent({
             {isLoading
               ? t("profile.loading")
               : locale === "ar"
-              ? "تحميل المزيد"
-              : "Load more"}
+                ? "تحميل المزيد"
+                : "Load more"}
           </button>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

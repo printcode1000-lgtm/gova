@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Clock,
   Loader2,
   LogIn,
   Save,
@@ -33,6 +34,7 @@ import { ProductsCard } from "@/components/profile/ProductsCard";
 import { ProfileProductsPreview } from "@/components/profile/ProfileProductsPreview";
 import { StoreIdentityCard } from "@/components/profile/StoreIdentityCard";
 import { FulfillmentSettingsCard } from "@/components/profile/FulfillmentSettingsCard";
+import { WorkingHoursProfileCard } from "@/components/profile/WorkingHoursProfileCard";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { useTranslation } from "@/lib/i18n";
@@ -40,9 +42,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ContactActionBar } from "@/components/ui/contact-action-bar";
 import { FeaturedMarquee, type FeaturedMarqueeConfig } from "@/components/ui/FeaturedMarquee";
+import { FollowButton } from "@/components/ui/follow";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { ProfileCustomRequestButton } from "@/components/ui/profile-custom-request-button";
 import { TrendingRibbon, type TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
+import { WorkingHoursCard } from "@/components/ui/working-hours";
 import { govaApi, GOVA_API_ROUTES } from "@/core/api";
 import { ProductReviews } from "@/components/product/ProductReviews";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
@@ -78,6 +82,7 @@ export function ProfilePageContent() {
   const { details: storeDetails, isLoading: isLoadingStoreDetails } =
     useStoreDetails(isViewingOtherProfile ? uid : undefined);
   const previewUid = showPreviewCard ? uid || session?.uid || "" : "";
+  const isPreviewOwner = Boolean(session?.uid && previewUid && session.uid === previewUid);
   const { contacts: previewContacts, isLoading: isLoadingPreviewContacts } =
     useProfilePublicContacts(previewUid);
 
@@ -86,6 +91,7 @@ export function ProfilePageContent() {
   const productsRef = React.useRef<ProfileSpecialtiesController>(null);
   const contactsRef = React.useRef<ProfileContactsController>(null);
   const storeRef = React.useRef<StoreDetailsController>(null);
+  const workingHoursRef = React.useRef<StoreDetailsController>(null);
   const fulfillmentRef = React.useRef<ProfileFulfillmentController>(null);
 
   const {
@@ -114,6 +120,7 @@ export function ProfilePageContent() {
     handleProductsStatus,
     handleContactStatus,
     handleStoreStatus,
+    handleWorkingHoursStatus,
     handleFulfillmentStatus,
     handleSaveChangedSections,
     setSaveDialog,
@@ -303,6 +310,19 @@ export function ProfilePageContent() {
                       {storeDetails.storeDescription}
                     </p>
                   ) : null}
+                  {previewUid ? (
+                    <div className="mt-3">
+                      <FollowButton
+                        targetType="store"
+                        targetId={previewUid}
+                        targetOwnerUid={previewUid}
+                        viewerUid={session?.uid}
+                        isOwner={isPreviewOwner}
+                        isSuperAdmin={superAdmin}
+                        targetLabel={storeDetails.storeName || "مقدم الخدمة"}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </section>
@@ -318,6 +338,15 @@ export function ProfilePageContent() {
                 onSubmit={submitProfileCustomRequest}
                 buttonLabel="إرسال طلب خاص"
                 title={`طلب خاص إلى ${storeDetails.storeName || "البائع"}`}
+              />
+            </section>
+          ) : null}
+          {!isLoadingStoreDetails ? (
+            <section className="mx-2 mt-4 sm:mx-4">
+              <WorkingHoursCard
+                mode="preview"
+                locale={locale === "ar" ? "ar" : "en"}
+                value={storeDetails.workingHours}
               />
             </section>
           ) : null}
@@ -495,6 +524,28 @@ export function ProfilePageContent() {
                   </button>
                   <button
                     ref={(node) => {
+                      navButtonRefs.current.workingHours = node;
+                    }}
+                    type="button"
+                    onClick={() => selectSection("workingHours")}
+                    aria-pressed={activeTab === "workingHours"}
+                    aria-controls={PROFILE_SECTION_IDS.workingHours}
+                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                      activeTab === "workingHours"
+                        ? "border-primary bg-primary text-on-primary shadow-sm"
+                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                    }`}
+                  >
+                    <Clock className="h-6 w-6" />
+                    <span className="whitespace-nowrap text-center">
+                      {locale === "ar" ? "مواعيد العمل" : "Working hours"}
+                    </span>
+                    {sectionStatuses.workingHours?.isDirty ? (
+                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                    ) : null}
+                  </button>
+                  <button
+                    ref={(node) => {
                       navButtonRefs.current.fulfillment = node;
                     }}
                     type="button"
@@ -616,6 +667,21 @@ export function ProfilePageContent() {
                   </div>
                   <div
                     ref={(node) => {
+                      panelRefs.current.workingHours = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.workingHours}
+                    role="region"
+                    aria-hidden={activeTab !== "workingHours"}
+                    inert={activeTab !== "workingHours"}
+                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                  >
+                    <WorkingHoursProfileCard
+                      ref={workingHoursRef}
+                      onStatusChange={handleWorkingHoursStatus}
+                    />
+                  </div>
+                  <div
+                    ref={(node) => {
                       panelRefs.current.fulfillment = node;
                     }}
                     id={PROFILE_SECTION_IDS.fulfillment}
@@ -694,6 +760,7 @@ export function ProfilePageContent() {
                       registrationRef.current,
                       contactsRef.current,
                       storeRef.current,
+                      workingHoursRef.current,
                       specialtiesRef.current,
                       productsRef.current,
                       fulfillmentRef.current

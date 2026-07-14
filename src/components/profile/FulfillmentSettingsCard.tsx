@@ -1,13 +1,13 @@
 ﻿"use client";
 
 import * as React from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Eye, Search, Truck } from "lucide-react";
+import { Search, Truck } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SellerCard } from "@/components/ui/seller-card";
 import {
   Select,
   SelectContent,
@@ -20,30 +20,16 @@ import { CATEGORY_CONSTANTS } from "@/features/categories";
 import { normalizeProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
 import { useProfileFulfillmentSettings } from "@/features/profile/hooks/use-profile-fulfillment-settings";
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
+import type { UserProfileRow } from "@/features/profile/services/profile-service.interface";
+import {
+  createSellerCardViewModel,
+  type SellerCardAction,
+} from "@/features/seller-card";
 import { useTranslation } from "@/lib/i18n";
 import type {
   ProfileFulfillmentController,
   ProfileSectionStatus,
 } from "./profile-save-controller";
-
-type DeliveryUser = {
-  uid: string;
-  storeDetailsJson?: string | null;
-  avatarUrl?: string | null;
-};
-
-function parseStoreName(user: DeliveryUser): string {
-  try {
-    const details = JSON.parse(user.storeDetailsJson || "{}") as {
-      storeName?: unknown;
-    };
-    return typeof details.storeName === "string" && details.storeName.trim()
-      ? details.storeName
-      : user.uid;
-  } catch {
-    return user.uid;
-  }
-}
 
 interface FulfillmentSettingsCardProps {
   onStatusChange?: (status: ProfileSectionStatus) => void;
@@ -172,7 +158,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
     onStatusChange?.({ isDirty, isSaving, canSave: true, label });
   }, [isDirty, isSaving, label, onStatusChange]);
 
-  const users = (deliveryUsers ?? []) as DeliveryUser[];
+  const users = (deliveryUsers ?? []) as UserProfileRow[];
   const safeSettings = normalizeProfileFulfillmentSettings(settings);
   const selected = new Set(safeSettings.carrierUids);
   const displayedUsers = users;
@@ -267,62 +253,37 @@ export const FulfillmentSettingsCard = React.forwardRef<
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
               {displayedUsers.map((user) => {
-                const name = parseStoreName(user);
                 const isSelected = selected.has(user.uid);
+                const card = createSellerCardViewModel(user, {
+                  badge: locale === "ar" ? "خدمة توصيل" : "Delivery provider",
+                });
+                const actions: SellerCardAction[] = [
+                  {
+                    kind: "view",
+                    label: text.viewProfile,
+                    onClick: () => openProviderProfile(user.uid),
+                  },
+                  {
+                    kind: isSelected ? "remove" : "select",
+                    label: isSelected ? text.remove : text.select,
+                    active: isSelected,
+                    tone: isSelected ? "tertiary" : "primary",
+                    onClick: () => toggleCarrier(user.uid),
+                  },
+                ];
                 return (
-                  <div
+                  <SellerCard
                     key={user.uid}
-                    className={`flex min-w-0 items-center gap-3 rounded-lg border p-3 text-start transition ${
+                    card={card}
+                    variant="linked-provider"
+                    actions={actions}
+                    className={
                       isSelected
                         ? "border-primary bg-primary/10"
-                        : "border-outline-variant bg-surface hover:border-primary/50"
-                    }`}
-                  >
-                    <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-surface-bright">
-                      {user.avatarUrl ? (
-                        <Image
-                          src={user.avatarUrl}
-                          alt={name}
-                          fill
-                          sizes="44px"
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center font-bold text-on-surface-variant">
-                          {name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-on-surface">
-                        {name}
-                      </p>
-                      <p className="truncate text-xs text-muted-foreground">
-                        {user.uid}
-                      </p>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => openProviderProfile(user.uid)}
-                        className="inline-flex h-8 items-center gap-1 rounded-full border border-outline-variant bg-surface px-3 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                        {text.viewProfile}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => toggleCarrier(user.uid)}
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                        isSelected
-                          ? "bg-primary text-on-primary"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                      >
-                        {isSelected ? text.remove : text.select}
-                      </button>
-                    </div>
-                  </div>
+                        : "hover:border-primary/50"
+                    }
+                    onOpen={() => openProviderProfile(user.uid)}
+                  />
                 );
               })}
             </div>

@@ -33,11 +33,13 @@ interface UseProfileSaveReturn {
   handleProductsStatus: (status: ProfileSectionStatus) => void;
   handleContactStatus: (status: ProfileSectionStatus) => void;
   handleStoreStatus: (status: ProfileSectionStatus) => void;
+  handleWorkingHoursStatus: (status: ProfileSectionStatus) => void;
   handleFulfillmentStatus: (status: ProfileSectionStatus) => void;
   handleSaveChangedSections: (
     registrationController: ProfileRegistrationController | null,
     contactsController: ProfileContactsController | null,
     storeController: StoreDetailsController | null,
+    workingHoursController: StoreDetailsController | null,
     specialtiesController: ProfileSpecialtiesController | null,
     productsController: ProfileSpecialtiesController | null,
     fulfillmentController: ProfileFulfillmentController | null
@@ -60,6 +62,7 @@ export function useProfileSave({
     products: null,
     contact: null,
     store: null,
+    workingHours: null,
     fulfillment: null,
   });
   const [saveError, setSaveError] = React.useState<string | null>(null);
@@ -107,6 +110,11 @@ export function useProfileSave({
     (status: ProfileSectionStatus) => updateSectionStatus("store", status),
     [updateSectionStatus],
   );
+  const handleWorkingHoursStatus = React.useCallback(
+    (status: ProfileSectionStatus) =>
+      updateSectionStatus("workingHours", status),
+    [updateSectionStatus],
+  );
   const handleFulfillmentStatus = React.useCallback(
     (status: ProfileSectionStatus) =>
       updateSectionStatus("fulfillment", status),
@@ -117,6 +125,7 @@ export function useProfileSave({
     registrationController: ProfileRegistrationController | null,
     contactsController: ProfileContactsController | null,
     storeController: StoreDetailsController | null,
+    workingHoursController: StoreDetailsController | null,
     specialtiesController: ProfileSpecialtiesController | null,
     productsController: ProfileSpecialtiesController | null,
     fulfillmentController: ProfileFulfillmentController | null
@@ -128,6 +137,7 @@ export function useProfileSave({
       !registrationController ||
       !contactsController ||
       !storeController ||
+      !workingHoursController ||
       !specialtiesController ||
       !productsController ||
       !fulfillmentController
@@ -159,8 +169,10 @@ export function useProfileSave({
     const editorSections = Array.from(
       new Set([
         ...changedSections.filter(
-          (section): section is ProfileEditorSection => section !== "fulfillment",
+          (section): section is ProfileEditorSection =>
+            section !== "fulfillment" && section !== "workingHours",
         ),
+        ...(changedSections.includes("workingHours") ? (["store"] as const) : []),
         ...(shouldSaveStoreFromProducts ? (["store"] as const) : []),
       ]),
     );
@@ -169,6 +181,7 @@ export function useProfileSave({
       contactsController.getSnapshot(),
     );
     const baseStoreDetails = storeController.getSnapshot();
+    const workingHoursStoreDetails = workingHoursController.getSnapshot();
     const productsStoreDetails = shouldSaveStoreFromProducts
       ? productsController.getStoreDetailsSnapshot?.()
       : null;
@@ -176,8 +189,12 @@ export function useProfileSave({
       ? {
           ...baseStoreDetails,
           profileShowcase: productsStoreDetails.profileShowcase,
+          workingHours: workingHoursStoreDetails.workingHours,
         }
-      : baseStoreDetails;
+      : {
+          ...baseStoreDetails,
+          workingHours: workingHoursStoreDetails.workingHours,
+        };
     const specialties = specialtiesController.getSnapshot();
 
     try {
@@ -203,6 +220,7 @@ export function useProfileSave({
         }
         if (editorSections.includes("store")) {
           storeController.applySaved(saved.storeDetails);
+          workingHoursController.applySaved(saved.storeDetails);
           productsController.applyStoreDetailsSaved?.(saved.storeDetails);
         }
         if (editorSections.includes("specialties")) {
@@ -266,6 +284,7 @@ export function useProfileSave({
     handleProductsStatus,
     handleContactStatus,
     handleStoreStatus,
+    handleWorkingHoursStatus,
     handleFulfillmentStatus,
     handleSaveChangedSections,
     setSaveDialog,

@@ -64,6 +64,13 @@
       "when": 1783737720000,
       "tag": "0008_fulfillment_settings_json",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "1784073600",
+      "when": 1784073600000,
+      "tag": "0009_follows",
+      "breakpoints": true
     }
   ]
 }

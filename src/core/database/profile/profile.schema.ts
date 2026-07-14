@@ -75,5 +75,29 @@ export const profileReviewReplies = sqliteTable("profile_review_replies", {
   updatedAt: text("updated_at").notNull(),
 });
 
+export const follows = sqliteTable(
+  "follows",
+  {
+    id: text("id").primaryKey().notNull(),
+    followerUid: text("follower_uid").notNull(),
+    targetType: text("target_type").notNull(),
+    targetId: text("target_id").notNull(),
+    targetOwnerUid: text("target_owner_uid").notNull().default(""),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [
+    index("follows_follower_idx").on(table.followerUid, table.targetType),
+    index("follows_target_idx").on(table.targetType, table.targetId),
+    index("follows_target_owner_idx").on(table.targetOwnerUid, table.targetType),
+    unique("follows_unique_target").on(
+      table.followerUid,
+      table.targetType,
+      table.targetId,
+    ),
+  ],
+);
+
 export type UserProfileRow = typeof userProfiles.$inferSelect;
 export type NewUserProfileRow = typeof userProfiles.$inferInsert;
+export type FollowRow = typeof follows.$inferSelect;
+export type NewFollowRow = typeof follows.$inferInsert;

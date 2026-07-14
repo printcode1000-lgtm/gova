@@ -48,6 +48,7 @@ export function useProfileNavigation({
       products: null,
       contact: null,
       store: null,
+      workingHours: null,
       fulfillment: null,
     },
   );
@@ -59,6 +60,7 @@ export function useProfileNavigation({
     products: null,
     contact: null,
     store: null,
+    workingHours: null,
     fulfillment: null,
   });
   const scrollFrameRef = React.useRef<number | null>(null);

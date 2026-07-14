@@ -14,6 +14,7 @@ import {
   type StoreDetailsData,
 } from "../entities/store-details.entity";
 import type { ProfileRatingSettings } from "../entities/profile-review.entity";
+import { normalizeProfileWorkingHours } from "@/features/profile-working-hours";
 import type {
   ProfileImageKeys,
   IProfileRepository,
@@ -74,6 +75,7 @@ function normalizeStoreDetails(value: unknown): StoreDetailsData {
       typeof details.storeStory === "string" ? details.storeStory : "",
     ratingSettings: normalizeRatingSettings(details.ratingSettings),
     profileShowcase: normalizeProfileShowcase(details.profileShowcase),
+    workingHours: normalizeProfileWorkingHours(details.workingHours),
   };
 }
 

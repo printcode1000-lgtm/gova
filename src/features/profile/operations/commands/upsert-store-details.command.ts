@@ -8,6 +8,7 @@ import type {
 import { EMPTY_PROFILE_SHOWCASE, EMPTY_STORE_DETAILS } from '../../entities/store-details.entity';
 import type { ProfileRatingSettings } from '../../entities/profile-review.entity';
 import type { IProfileRepository } from '../../repositories/profile-repository.interface';
+import { normalizeProfileWorkingHours } from '@/features/profile-working-hours';
 
 function normalizeText(value: unknown, maxLength: number): string {
   if (typeof value !== 'string' || value.length > maxLength) {
@@ -89,6 +90,7 @@ function normalizeStoreDetails(input: SaveStoreDetailsInput): StoreDetailsData {
     storeStory: normalizeText(input.storeStory, 1000),
     ratingSettings: normalizeRatingSettings(input.ratingSettings),
     profileShowcase: normalizeProfileShowcase(input.profileShowcase),
+    workingHours: normalizeProfileWorkingHours(input.workingHours),
   };
 }
 

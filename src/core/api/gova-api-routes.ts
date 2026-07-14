@@ -25,6 +25,10 @@ export const GOVA_API_ROUTES = {
       reply: "/api/profile/reviews/reply",
     },
   },
+  follow: {
+    root: "/api/follow",
+    status: "/api/follow/status",
+  },
   storage: {
     upload: "/api/storage/images/upload",
     profile: (profileId: string) =>

@@ -1,4 +1,8 @@
 import type { ProfileRatingSettings } from "./profile-review.entity";
+import {
+  EMPTY_PROFILE_WORKING_HOURS,
+  type ProfileWorkingHours,
+} from "@/features/profile-working-hours";
 
 export interface ProfileShowcaseTrendingItem {
   id: string;
@@ -20,6 +24,7 @@ export interface StoreDetailsData {
   storeStory: string;
   ratingSettings: ProfileRatingSettings;
   profileShowcase: ProfileShowcaseSettings;
+  workingHours: ProfileWorkingHours;
 }
 
 export const EMPTY_PROFILE_SHOWCASE: ProfileShowcaseSettings = {
@@ -40,6 +45,7 @@ export const EMPTY_STORE_DETAILS: StoreDetailsData = {
     mode: "stars-comments",
   },
   profileShowcase: EMPTY_PROFILE_SHOWCASE,
+  workingHours: EMPTY_PROFILE_WORKING_HOURS,
 };
 
 export interface SaveStoreDetailsInput extends StoreDetailsData {
