@@ -40,6 +40,12 @@ interface Violation {
 }
 
 const violations: Violation[] = [];
+const STRUCTURED_CATEGORY_COLUMN_FILES = new Set([
+  'src/core/database/profile/profile.schema.ts',
+  'src/core/database/product/product.schema.ts',
+  'src/features/profile/repositories/profile-repository.ts',
+  'src/features/product/repositories/product-repository.ts',
+]);
 
 function walk(dir: string): string[] {
   const entries = readdirSync(dir);
@@ -255,6 +261,7 @@ function checkCategoryModuleContract(fileRel: string, content: string, filePath:
     }
     if (
       !pharmacyCatalogInfrastructure &&
+      !STRUCTURED_CATEGORY_COLUMN_FILES.has(fileRel) &&
       /\b(title_ar|title_en|category_id|original_id|sub_collection|collection_ar|collection_en|collection_image)\b/.test(productionContent)
     ) {
       addViolation('Category Module Contract', filePath, 'Raw category JSON fields leaked outside the module.', 'Use camelCase public projections.');

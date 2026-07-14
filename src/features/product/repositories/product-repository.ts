@@ -1,6 +1,7 @@
 import "server-only";
 
 import { productDbClient } from "@/core/database/product-db-client";
+import { profileDbClient } from "@/core/database/profile-db-client";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import type {
   ProductDetails,
@@ -347,6 +348,48 @@ function mergeRecord(
   };
 }
 
+async function refreshProfileProductCounts(uid: string): Promise<void> {
+  const rows = (await productDbClient.execute(
+    `SELECT main_category_id category_id,
+            subcategory_id subcategory_id,
+            SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) active_count,
+            SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) draft_count,
+            SUM(CASE WHEN status = 'archived' THEN 1 ELSE 0 END) archived_count
+     FROM products
+     WHERE uid = ?
+       AND COALESCE(pharmacy_catalog_kind, '') != 'fixed'
+     GROUP BY main_category_id, subcategory_id`,
+    [uid],
+  )) as Array<{
+    category_id: string;
+    subcategory_id: string;
+    active_count: number;
+    draft_count: number;
+    archived_count: number;
+  }>;
+  await profileDbClient.execute(
+    "DELETE FROM profile_category_product_counts WHERE uid = ?",
+    [uid],
+  );
+  const timestamp = new Date().toISOString();
+  for (const row of rows) {
+    await profileDbClient.execute(
+      `INSERT INTO profile_category_product_counts
+        (uid, category_id, subcategory_id, active_product_count, draft_product_count, archived_product_count, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        uid,
+        row.category_id,
+        row.subcategory_id,
+        Number(row.active_count ?? 0),
+        Number(row.draft_count ?? 0),
+        Number(row.archived_count ?? 0),
+        timestamp,
+      ],
+    );
+  }
+}
+
 export class ProductRepository {
   async findById(id: string): Promise<ProductRecord | null> {
     const rows = (await productDbClient.execute(
@@ -373,6 +416,7 @@ export class ProductRepository {
       `INSERT INTO products (${PRODUCT_COLUMNS.join(", ")}) VALUES (${PRODUCT_COLUMNS.map(() => "?").join(", ")})`,
       rowValues(record),
     );
+    await refreshProfileProductCounts(record.uid);
     return record;
   }
 
@@ -403,6 +447,7 @@ export class ProductRepository {
       `UPDATE products SET ${assignments} WHERE id = ? AND uid = ?`,
       [...values, id, uid],
     );
+    await refreshProfileProductCounts(uid);
     return this.findById(id);
   }
 
@@ -411,6 +456,7 @@ export class ProductRepository {
       id,
       uid,
     ]);
+    await refreshProfileProductCounts(uid);
     return (await this.findById(id)) === null;
   }
 }

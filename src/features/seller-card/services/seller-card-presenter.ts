@@ -4,12 +4,6 @@ import type {
   SellerCardViewModel,
 } from "../entities/seller-card.types";
 
-interface StoreDetailsLike {
-  storeName?: unknown;
-  storeDescription?: unknown;
-  storeStory?: unknown;
-}
-
 interface StoreImagesLike {
   avatarUrl?: unknown;
   coverUrl?: unknown;
@@ -17,15 +11,6 @@ interface StoreImagesLike {
 
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
-}
-
-function parseJson<T>(value: string | null | undefined, fallback: T): T {
-  if (!value) return fallback;
-  try {
-    return JSON.parse(value) as T;
-  } catch {
-    return fallback;
-  }
 }
 
 function getOptional(row: UserProfileRow, key: string): unknown {
@@ -55,15 +40,11 @@ function ratingValue(row: UserProfileRow): number | null {
 }
 
 export function sellerCardTitle(row: UserProfileRow): string {
-  const details = parseJson<StoreDetailsLike>(row.storeDetailsJson, {});
-  return text(details.storeName) || row.uid;
+  return text(row.storeName) || row.uid;
 }
 
 export function sellerCardAvatar(row: UserProfileRow): string {
-  const images = parseJson<StoreImagesLike>(
-    text(getOptional(row, "storeImagesJson")),
-    {},
-  );
+  const images = {} as StoreImagesLike;
   return (
     text(getOptional(row, "avatarUrl")) ||
     text(images.avatarUrl) ||
@@ -78,11 +59,7 @@ export function createSellerCardViewModel(
     subtitle?: string;
   } = {},
 ): SellerCardViewModel {
-  const details = parseJson<StoreDetailsLike>(row.storeDetailsJson, {});
-  const images = parseJson<StoreImagesLike>(
-    text(getOptional(row, "storeImagesJson")),
-    {},
-  );
+  const images = {} as StoreImagesLike;
   const title = sellerCardTitle(row);
   const rating = ratingValue(row);
   const badges: SellerCardBadge[] = [];
@@ -93,7 +70,7 @@ export function createSellerCardViewModel(
     uid: row.uid,
     title,
     subtitle: options.subtitle ?? "",
-    description: text(details.storeDescription) || text(details.storeStory),
+    description: text(row.storeDescription) || text(row.storeStory),
     avatarUrl: sellerCardAvatar(row),
     coverUrl: text(getOptional(row, "coverUrl")) || text(images.coverUrl),
     initials: initialsFromName(title),
