@@ -20,12 +20,12 @@ function ratingSettings(
   styleMode?: "stars" | "stars-comments",
 ) {
   if (!product) throw new Error("productNotFound");
-  const enabled = product.data.fields["rating.enabled"] !== "false";
-  const targetEnabled = product.data.fields["rating.targetEnabled"] !== "false";
+  const enabled = product.rating.enabled;
+  const targetEnabled = product.rating.targetEnabled;
   const mode =
-    product.data.fields["rating.mode"] === "stars" ||
-    product.data.fields["rating.mode"] === "stars-comments"
-      ? product.data.fields["rating.mode"]
+    product.rating.mode === "stars" ||
+    product.rating.mode === "stars-comments"
+      ? product.rating.mode
       : (styleMode ?? "stars-comments");
   return { enabled, targetEnabled, comments: mode === "stars-comments" };
 }

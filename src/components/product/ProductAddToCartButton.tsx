@@ -3,28 +3,25 @@
 import * as React from "react";
 import { ShoppingCart } from "lucide-react";
 
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import { addCartItem } from "@/features/cart/cart-store";
-import type { ProductFieldValues } from "@/features/product/entities/product.entity";
+import type { ProductDetails } from "@/features/product/entities/product.entity";
 
 interface ProductAddToCartButtonProps {
   productId: string;
   sellerId: string;
-  fields: ProductFieldValues;
-  images: StoredImage[];
+  product: ProductDetails;
   mainCategoryId: string;
 }
 
-function numberField(fields: ProductFieldValues, key: string) {
-  const value = Number(fields[key] ?? "0");
-  return Number.isFinite(value) ? value : 0;
+function numberValue(value: string) {
+  const number = Number(value || "0");
+  return Number.isFinite(number) ? number : 0;
 }
 
 export function ProductAddToCartButton({
   productId,
   sellerId,
-  fields,
-  images,
+  product,
   mainCategoryId,
 }: ProductAddToCartButtonProps) {
   const [added, setAdded] = React.useState(false);
@@ -35,13 +32,13 @@ export function ProductAddToCartButton({
     addCartItem({
       productId,
       sellerId,
-      name: fields["mainData.name"] || "منتج بدون اسم",
-      description: fields["mainData.description"] ?? "",
-      images,
-      unitPrice: numberField(fields, "price.current"),
-      priceLabel: fields["price.label"] || undefined,
+      name: product.mainData.name || "منتج بدون اسم",
+      description: product.mainData.description,
+      images: product.images,
+      unitPrice: numberValue(product.price.current),
+      priceLabel: product.price.label || undefined,
       quantity: 1,
-      requiresSpecialVehicle: fields["price.needsCar"] === "true",
+      requiresSpecialVehicle: product.price.needsCar,
       mainCategoryId,
     });
     setAdded(true);

@@ -181,7 +181,7 @@ There is no Replace button after upload. The user deletes the stored image and t
 
 The delete action is destructive storage deletion by default. The image remains visible until the provider confirms deletion. Development removes the file from `public/sync_data/sync_file/images/...`; production removes the R2 object. A failure keeps the image and opens a localized error dialog.
 
-Storage deletion and feature-database persistence are two sequential operations, not one distributed transaction. After provider deletion succeeds, `onChange` removes the key and the owning feature must persist that new value in SQLite/Turso. If that feature save fails, storage is already deleted and the database may temporarily retain a stale key; callers that persist asynchronously must expose/retry that failure. Product creation persists the final uploaded `imageKey` and URL inside `products.data_json` when the user presses Create Product.
+Storage deletion and feature-database persistence are two sequential operations, not one distributed transaction. After provider deletion succeeds, `onChange` removes the key and the owning feature must persist that new value in SQLite/Turso. If that feature save fails, storage is already deleted and the database may temporarily retain a stale key; callers that persist asynchronously must expose/retry that failure. Product creation persists the final uploaded `imageKey` and URL in the product feature, which stores product image lists in `products.images_json` when the user presses Create Product.
 
 Feature owners must persist the resulting empty image reference from `onChange`. They must not optimistically remove the database reference before storage deletion succeeds.
 

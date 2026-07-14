@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 
@@ -17,7 +17,7 @@ import {
   govaDbSet,
 } from "@/lib/gova-db";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface HomeFeaturedMarqueeState {
   sectionTitle: string;
@@ -30,7 +30,7 @@ interface FeaturedMarqueeCache extends FeaturedMarqueePublished {
   resolvedConfig: MarqueeUIConfig;
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const FALLBACK_SECTION_TITLE = "home.featured.title";
 
@@ -41,7 +41,7 @@ const fallback: FeaturedMarqueePublished = {
   updatedAt: "",
 };
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function buildFallbackConfig(): MarqueeUIConfig {
   return { sectionTitle: FALLBACK_SECTION_TITLE, items: [] };
@@ -58,16 +58,17 @@ async function buildMarqueeConfig(
 
   // Fetch all products in parallel; skip any that fail (product deleted, etc.)
   const results = await Promise.allSettled(
-    productIds.map((id) => productApiService.get(id)),
+    productIds.map((id) =>
+      productApiService.get(id, { suppressErrorLog: true }),
+    ),
   );
 
   const items = results.flatMap((result, index) => {
     if (result.status === "rejected") return [];
     const product = result.value;
-    const name =
-      product.data.fields["mainData.name"] ?? `منتج ${String(index + 1)}`;
-    const price = product.data.fields["price.current"] ?? "";
-    const image = product.data.images[0]?.url ?? "";
+    const name = product.mainData.name || `منتج ${String(index + 1)}`;
+    const price = product.price.current;
+    const image = product.images[0]?.url ?? "";
     const action = [
       `mode=view`,
       `productId=${encodeURIComponent(product.id)}`,
@@ -81,7 +82,7 @@ async function buildMarqueeConfig(
   return { sectionTitle: FALLBACK_SECTION_TITLE, items };
 }
 
-// ─── Hook ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Hook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function useHomeFeaturedMarquee() {
   const [state, setState] = useState<HomeFeaturedMarqueeState>({
@@ -111,7 +112,7 @@ export function useHomeFeaturedMarquee() {
       const lastCheck = cached ? Date.parse(cached.lastCheckedAt) : 0;
       if (!force && Date.now() - lastCheck < intervalMs) return;
 
-      // Lightweight version check — avoids downloading full config every time
+      // Lightweight version check â€” avoids downloading full config every time
       const version = await featuredMarqueeApiService.getVersion();
       let next: FeaturedMarqueePublished = cached ?? fallback;
       let nextResolved: MarqueeUIConfig =
@@ -122,7 +123,7 @@ export function useHomeFeaturedMarquee() {
         version.version !== cached.version ||
         version.updatedAt !== cached.updatedAt
       ) {
-        // Config changed — download full data and resolve products
+        // Config changed â€” download full data and resolve products
         next = await featuredMarqueeApiService.getCurrent();
         nextResolved = await buildMarqueeConfig(next.config);
         setState({
@@ -131,7 +132,7 @@ export function useHomeFeaturedMarquee() {
           isLoading: false,
         });
       } else if (version.checkIntervalMinutes !== cached.checkIntervalMinutes) {
-        // Only interval changed — update local record
+        // Only interval changed â€” update local record
         next = {
           ...cached,
           checkIntervalMinutes: version.checkIntervalMinutes,
@@ -162,10 +163,11 @@ export function useHomeFeaturedMarquee() {
 
   useEffect(() => {
     void checkForUpdates();
-    // Re-check every minute — actual fetch is skipped if within the interval window
+    // Re-check every minute â€” actual fetch is skipped if within the interval window
     const timer = window.setInterval(() => void checkForUpdates(), 60_000);
     return () => window.clearInterval(timer);
   }, [checkForUpdates]);
 
   return { ...state, checkForUpdates };
 }
+

@@ -1,106 +1,195 @@
 # Current Databases
 
-GOVA uses **two logical databases** — each with local SQLite (dev) and a separate Turso DB (prod).
+GOVA uses multiple logical databases. Each domain has a local SQLite database for development and a matching Turso/libSQL database for production.
+
+The local SQLite schema is the source of truth. Schema synchronization applies incremental DDL from local SQLite to Turso through:
+
+```bash
+npm run db:schema:sync
+```
 
 ## Map
 
 | Domain | SQLite (dev) | Turso (prod) | Database Client | Env |
-|--------|--------------|--------------|-----------------|-----|
-| Users (auth) | `allusers.db` | `gova-db` | `dbClient` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
-| Profile (contacts) | `profile.db` | `gova-profile` | `profileDbClient` | `TURSO_PROFILE_*` |
+| --- | --- | --- | --- | --- |
+| Users and auth | `allusers.db` | Users Turso DB | `dbClient` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
+| Profile | `profile.db` | Profile Turso DB | `profileDbClient` | `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN` |
+| Products | `product.db` | Product Turso DB | `productDbClient` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
+| Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDbClient` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
+| Marketplace orders | `marketplace_orders.db` | Marketplace orders Turso DB | Marketplace orders DB client | `MARKETPLACE_ORDERS_DATABASE_URL`, `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN` |
 
-**Logical link:** `user_profiles.uid` ↔ `users.uid` (no cross-file FK).
+Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
 
----
-
-## 1. Users — `allusers.db`
+## 1. Users and Auth
 
 ### Schema
 
-`src/core/database/schema.ts` → table `users`
+```text
+src/core/database/schema.ts
+```
+
+Primary table:
+
+- `users`
 
 ### Layers
 
 | Layer | Files |
-|-------|--------|
+| --- | --- |
 | API | `/api/auth/*` |
-| Server Service | `auth-service.server.ts` |
-| Operations | `CreateUserCommand`, `GetUserByPhoneQuery`, … |
-| Repository | `user-repository.ts` → `dbClient` |
+| Server service | Auth server services |
+| Operations | Auth queries and commands |
+| Repository | User repository through `dbClient` |
 
 ### Client
 
-- Login/Register → `AuthApiService`
-- Phone/email/password → `PUT /api/auth/profile`
-- Session `{ uid, phone, email? }` → **IndexedDB** (not read from DB on client)
+- Login and registration go through `AuthApiService`.
+- Browser/client code never receives Turso credentials.
+- Session data is client-side application state, not direct database access.
 
----
-
-## 2. Profile — `profile.db`
+## 2. Profile
 
 ### Schema
 
-`src/core/database/profile/profile.schema.ts` → `user_profiles`
+```text
+src/core/database/profile/profile.schema.ts
+src/core/database/profile/user-specialties.schema.ts
+```
 
-| Column | Content |
-|--------|---------|
-| `uid` | PK |
-| `phones_json`, `emails_json`, `social_links_json`, `websites_json` | JSON arrays |
+Primary tables include:
+
+- `user_profiles`
+- `user_specialties`
+- Profile reviews and profile-related settings tables
 
 ### Layers
 
 | Layer | Files |
-|-------|--------|
-| API | `GET/PUT /api/profile/contacts` |
-| Server Service | `profile-service.server.ts` |
-| Operations | `GetProfileContactsQuery`, `UpsertProfileContactsCommand` |
-| Repository | `profile-repository.ts` → `profileDbClient` |
+| --- | --- |
+| API | `/api/profile/*` |
+| Server service | Profile server services |
+| Repository | Profile repositories through `profileDbClient` |
 
-### Client
+### Notes
 
-- `ProfileContactsCard` → `useProfileContacts` → `ProfileApiService`
+`user_profiles.uid` links logically to `users.uid`. The profile database owns profile contacts, store details, fulfillment settings, specialties, and profile review data.
 
----
+## 3. Products
 
-## Schema workflows
+### Schema
 
-### Users
-
-```bash
-# Edit src/core/database/schema.ts
-npx drizzle-kit generate
-npm run dev
-npm run build   # sync → gova-db
+```text
+src/core/database/product/product.schema.ts
+src/core/database/product/migrations
 ```
 
-### Profile
+Primary tables include:
 
-```bash
-# Edit src/core/database/profile/profile.schema.ts
-npx drizzle-kit generate --config drizzle.profile.config.ts
-npm run db:create:profile   # if needed
-npm run build               # sync → gova-profile
+- `products`
+- `product_reviews`
+- `product_review_helpful`
+- `product_review_replies`
+- `pharmacy_profile_category_overrides`
+- `pharmacy_profile_subcategory_overrides`
+- `pharmacy_profile_product_overrides`
+
+### Product Storage Rule
+
+The `products` table uses explicit columns for product attributes. It does not use `data_json` or `product.data.fields`.
+
+The only list-style product value currently stored as JSON is:
+
+- `images_json`
+
+See [Product Data Model](../product-data-model.md).
+
+### Layers
+
+| Layer | Files |
+| --- | --- |
+| API | `/api/products`, `/api/products/reviews*`, `/api/pharmacy-profile-catalog` |
+| Server service | Product and pharmacy catalog services |
+| Repository | Product repositories through `productDbClient` |
+
+## 4. Advertisements
+
+### Schema
+
+```text
+src/core/database/advertisements/advertisements.schema.ts
+src/core/database/advertisements/migrations
 ```
 
----
+Primary tables include:
 
-## Setup commands
+- `hero_slider`
+- `featured_marquee`
+- `trending_ribbon`
+
+### Layers
+
+| Layer | Files |
+| --- | --- |
+| API | `/api/advertisements/*` |
+| Server service | Advertisement services |
+| Repository | Advertisement repositories through `advertisementsDbClient` |
+
+## 5. Marketplace Orders
+
+### Schema
+
+```text
+src/modules/marketplace-orders/db/migrations
+```
+
+Primary tables include:
+
+- `orders`
+- `order_items`
+- `shipments`
+- `payments`
+- order audit, cancellation, delivery, return, and dispute tables
+
+### Layers
+
+| Layer | Files |
+| --- | --- |
+| API | `/api/orders*` |
+| Module | `src/modules/marketplace-orders` |
+| Database client | Marketplace orders DB client |
+
+See [Marketplace Order Management](../marketplace-order-management/README.md).
+
+## Schema Workflows
+
+### Ensure local databases exist
 
 ```bash
 npm run db:ensure
-npm run db:schema:sync
-npm run db:provision:turso
-npm run db:push:vercel-env
 ```
 
-See [profile-system.md](../profile-system.md) and [20-schema-provisioning.md](./20-schema-provisioning.md).
+### Sync all configured Turso databases
 
----
+```bash
+npm run db:schema:sync
+```
 
-## Adding a third database
+### Build
 
-1. `new.db` + schema + migrations + drizzle config
-2. `newDbClient` in `src/core/database/`
-3. `TURSO_NEW_*` env + provision + schema sync entry
-4. Feature: Repository → Operations → Server Service → `/api/new/`
-5. Client: `*-api-service.ts` + Hook + UI
+```bash
+npm run build
+```
+
+The build runs schema sync before Next.js compilation.
+
+## Adding a New Database
+
+1. Add a local SQLite database path.
+2. Add schema and migrations under `src/core/database/...` or the owning module.
+3. Add a database client.
+4. Add Turso environment variables.
+5. Add schema sync wiring.
+6. Keep access inside repositories and server services.
+7. Document the new database in this file.
+
+See [20 Schema Provisioning](./20-schema-provisioning.md).

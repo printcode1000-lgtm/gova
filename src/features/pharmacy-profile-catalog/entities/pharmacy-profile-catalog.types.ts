@@ -1,4 +1,4 @@
-import type { ProductRecord } from "@/features/product/entities/product.entity";
+﻿import type { ProductRecord } from "@/features/product/entities/product.entity";
 
 export const PHARMACY_MAIN_CATEGORY_ID = "20";
 export const PHARMACY_SUBCATEGORY_ID = "204";
@@ -109,3 +109,4 @@ export interface PharmacyProfileCatalogView {
   subcategories: PharmacyProfileCatalogSubcategoryView[];
   products: PharmacyProfileCatalogProductView[];
 }
+

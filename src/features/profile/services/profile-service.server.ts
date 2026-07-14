@@ -313,8 +313,9 @@ export class ProfileService implements IProfileService {
     offset: number,
     limit: number,
     search?: string,
+    minRating?: number,
   ) {
-    return this.getUsersBySpecialtyQuery.execute(categoryId, subcategoryId, offset, limit, search);
+    return this.getUsersBySpecialtyQuery.execute(categoryId, subcategoryId, offset, limit, search, minRating);
   }
 
   async saveEditor(

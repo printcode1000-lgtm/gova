@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Eye, EyeOff, PackagePlus, Plus } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, PackagePlus, Pencil, Plus } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
@@ -31,10 +31,22 @@ const text = {
   addMain: "\u0625\u0636\u0627\u0641\u0629 \u0631\u0626\u064a\u0633\u064a",
   addSub: "\u0625\u0636\u0627\u0641\u0629 \u0641\u0631\u0639\u064a",
   addProduct: "\u0625\u0636\u0627\u0641\u0629 \u0645\u0646\u062a\u062c \u062c\u062f\u064a\u062f",
-  promptMain:
-    "\u0627\u0633\u0645 \u0627\u0644\u062a\u0635\u0646\u064a\u0641 \u0627\u0644\u0631\u0626\u064a\u0633\u064a \u0627\u0644\u062c\u062f\u064a\u062f",
-  promptSub:
-    "\u0627\u0633\u0645 \u0627\u0644\u062a\u0635\u0646\u064a\u0641 \u0627\u0644\u0641\u0631\u0639\u064a \u0627\u0644\u062c\u062f\u064a\u062f",
+  addMainTitle:
+    "\u0625\u0636\u0627\u0641\u0629 \u062a\u0635\u0646\u064a\u0641 \u0631\u0626\u064a\u0633\u064a",
+  addSubTitle:
+    "\u0625\u0636\u0627\u0641\u0629 \u062a\u0635\u0646\u064a\u0641 \u0641\u0631\u0639\u064a",
+  editMainTitle:
+    "\u062a\u0639\u062f\u064a\u0644 \u062a\u0635\u0646\u064a\u0641 \u0631\u0626\u064a\u0633\u064a",
+  editSubTitle:
+    "\u062a\u0639\u062f\u064a\u0644 \u062a\u0635\u0646\u064a\u0641 \u0641\u0631\u0639\u064a",
+  nameLabel: "\u0627\u0644\u0627\u0633\u0645",
+  mainNamePlaceholder:
+    "\u0627\u0633\u0645 \u0627\u0644\u062a\u0635\u0646\u064a\u0641 \u0627\u0644\u0631\u0626\u064a\u0633\u064a",
+  subNamePlaceholder:
+    "\u0627\u0633\u0645 \u0627\u0644\u062a\u0635\u0646\u064a\u0641 \u0627\u0644\u0641\u0631\u0639\u064a",
+  cancel: "\u0625\u0644\u063a\u0627\u0621",
+  save: "\u062d\u0641\u0638",
+  edit: "\u062a\u0639\u062f\u064a\u0644",
   emptyProducts:
     "\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u0646\u062a\u062c\u0627\u062a \u0641\u064a \u0647\u0630\u0627 \u0627\u0644\u062a\u0635\u0646\u064a\u0641 \u0627\u0644\u0641\u0631\u0639\u064a.",
   hidden: "\u0645\u062e\u0641\u064a",
@@ -57,6 +69,21 @@ export function PharmacyCatalogManagerPage() {
   const [activeSubcategoryId, setActiveSubcategoryId] = React.useState(searchParams.get("subcategoryId") ?? "");
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [editDialog, setEditDialog] = React.useState<
+    | { mode: "create"; kind: "category" | "subcategory" }
+    | {
+        mode: "edit";
+        kind: "category";
+        item: PharmacyProfileCatalogCategoryView;
+      }
+    | {
+        mode: "edit";
+        kind: "subcategory";
+        item: PharmacyProfileCatalogSubcategoryView;
+      }
+    | null
+  >(null);
+  const [editName, setEditName] = React.useState("");
 
   const load = React.useCallback(async () => {
     if (!uid || !allowed) return;
@@ -121,19 +148,62 @@ export function PharmacyCatalogManagerPage() {
     }
   }
 
-  async function addCategory() {
-    const nameAr = window.prompt(text.promptMain);
-    if (!nameAr?.trim()) return;
-    await run(() => pharmacyProfileCatalogApi.createCategory(uid, nameAr.trim()));
+  function openCreateCategory() {
+    setEditName("");
+    setEditDialog({ mode: "create", kind: "category" });
   }
 
-  async function addSubcategory() {
+  function openCreateSubcategory() {
     if (!activeCategoryId) return;
-    const nameAr = window.prompt(text.promptSub);
-    if (!nameAr?.trim()) return;
-    await run(() =>
-      pharmacyProfileCatalogApi.createSubcategory(uid, activeCategoryId, nameAr.trim()),
-    );
+    setEditName("");
+    setEditDialog({ mode: "create", kind: "subcategory" });
+  }
+
+  function openEditCategory(category: PharmacyProfileCatalogCategoryView) {
+    setEditName(category.nameAr);
+    setEditDialog({ mode: "edit", kind: "category", item: category });
+  }
+
+  function openEditSubcategory(subcategory: PharmacyProfileCatalogSubcategoryView) {
+    setEditName(subcategory.nameAr);
+    setEditDialog({ mode: "edit", kind: "subcategory", item: subcategory });
+  }
+
+  async function submitEditDialog() {
+    const nameAr = editName.trim();
+    if (!nameAr || !editDialog) return;
+    if (editDialog.mode === "create" && editDialog.kind === "category") {
+      await run(() => pharmacyProfileCatalogApi.createCategory(uid, nameAr));
+      setEditDialog(null);
+      setEditName("");
+      return;
+    }
+    if (editDialog.mode === "create" && editDialog.kind === "subcategory") {
+      if (!activeCategoryId) return;
+      await run(() =>
+        pharmacyProfileCatalogApi.createSubcategory(uid, activeCategoryId, nameAr),
+      );
+      setEditDialog(null);
+      setEditName("");
+      return;
+    }
+    if (editDialog.mode !== "edit") return;
+    if (editDialog.kind === "category") {
+      await run(() =>
+        pharmacyProfileCatalogApi.updateCategory(uid, editDialog.item.id, nameAr),
+      );
+    } else {
+      await run(() =>
+        pharmacyProfileCatalogApi.updateSubcategory(
+          uid,
+          editDialog.item.id,
+          editDialog.item.parentCategoryId,
+          nameAr,
+        ),
+      );
+    }
+    setEditDialog(null);
+    setEditName("");
   }
 
   async function toggleCategory(category: PharmacyProfileCatalogCategoryView) {
@@ -226,31 +296,39 @@ export function PharmacyCatalogManagerPage() {
               title={text.mainCategories}
               actionLabel={text.addMain}
               disabled={busy}
-              onAdd={addCategory}
+              onAdd={openCreateCategory}
             >
               {categories.map((category) => (
-                <button
+                <div
                   key={category.id}
-                  type="button"
-                  onClick={() => setActiveCategoryId(category.id)}
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     category.id === activeCategoryId
                       ? "border-primary bg-primary/10"
                       : "border-outline-variant hover:border-primary/50"
                   } ${category.status === "hidden" ? "opacity-55" : ""}`}
                 >
-                  <PharmacyCategoryIcon icon={category.icon} className="h-4 w-4 text-center text-primary" />
-                  <span className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveCategoryId(category.id)}
+                    className="flex min-w-0 flex-1 items-center gap-2 text-start"
+                  >
+                    <PharmacyCategoryIcon icon={category.icon} className="h-4 w-4 text-center text-primary" />
+                    <span className="min-w-0 flex-1 truncate font-semibold">{category.nameAr}</span>
                   <StatusBadge hidden={category.status === "hidden"} />
+                  </button>
+                  <IconButton
+                    title={text.edit}
+                    disabled={busy}
+                    onClick={() => openEditCategory(category)}
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </IconButton>
                   <VisibilityButton
                     hidden={category.status === "hidden"}
                     disabled={busy}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      void toggleCategory(category);
-                    }}
+                    onClick={() => void toggleCategory(category)}
                   />
-                </button>
+                </div>
               ))}
             </ManagerColumn>
 
@@ -258,31 +336,39 @@ export function PharmacyCatalogManagerPage() {
               title={text.subcategories}
               actionLabel={text.addSub}
               disabled={busy || !activeCategoryId}
-              onAdd={addSubcategory}
+              onAdd={openCreateSubcategory}
             >
               {subcategories.map((subcategory) => (
-                <button
+                <div
                   key={subcategory.id}
-                  type="button"
-                  onClick={() => setActiveSubcategoryId(subcategory.id)}
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     subcategory.id === activeSubcategoryId
                       ? "border-tertiary bg-tertiary/10"
                       : "border-outline-variant hover:border-tertiary/50"
                   } ${subcategory.status === "hidden" ? "opacity-55" : ""}`}
                 >
-                  <PharmacyCategoryIcon icon={activeCategory?.icon} className="h-4 w-4 text-center text-tertiary" />
-                  <span className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveSubcategoryId(subcategory.id)}
+                    className="flex min-w-0 flex-1 items-center gap-2 text-start"
+                  >
+                    <PharmacyCategoryIcon icon={activeCategory?.icon} className="h-4 w-4 text-center text-tertiary" />
+                    <span className="min-w-0 flex-1 truncate font-semibold">{subcategory.nameAr}</span>
                   <StatusBadge hidden={subcategory.status === "hidden"} />
+                  </button>
+                  <IconButton
+                    title={text.edit}
+                    disabled={busy}
+                    onClick={() => openEditSubcategory(subcategory)}
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </IconButton>
                   <VisibilityButton
                     hidden={subcategory.status === "hidden"}
                     disabled={busy}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      void toggleSubcategory(subcategory);
-                    }}
+                    onClick={() => void toggleSubcategory(subcategory)}
                   />
-                </button>
+                </div>
               ))}
             </ManagerColumn>
 
@@ -307,7 +393,115 @@ export function PharmacyCatalogManagerPage() {
           </section>
         )}
       </div>
+      {editDialog ? (
+        <CreateCategoryDialog
+          dialog={editDialog}
+          value={editName}
+          disabled={busy}
+          onChange={setEditName}
+          onClose={() => {
+            setEditDialog(null);
+            setEditName("");
+          }}
+          onSubmit={() => void submitEditDialog()}
+        />
+      ) : null}
     </main>
+  );
+}
+
+function CreateCategoryDialog({
+  dialog,
+  value,
+  disabled,
+  onChange,
+  onClose,
+  onSubmit,
+}: {
+  dialog:
+    | { mode: "create"; kind: "category" | "subcategory" }
+    | { mode: "edit"; kind: "category"; item: PharmacyProfileCatalogCategoryView }
+    | { mode: "edit"; kind: "subcategory"; item: PharmacyProfileCatalogSubcategoryView };
+  value: string;
+  disabled?: boolean;
+  onChange: (value: string) => void;
+  onClose: () => void;
+  onSubmit: () => void;
+}) {
+  const title =
+    dialog.mode === "create"
+      ? dialog.kind === "category"
+        ? text.addMainTitle
+        : text.addSubTitle
+      : dialog.kind === "category"
+        ? text.editMainTitle
+        : text.editSubTitle;
+  const placeholder = dialog.kind === "category" ? text.mainNamePlaceholder : text.subNamePlaceholder;
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
+      <form
+        className="w-full max-w-md rounded-lg border border-outline-variant bg-surface p-4 shadow-xl"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSubmit();
+        }}
+      >
+        <h2 className="text-base font-bold text-on-surface">{title}</h2>
+        <label className="mt-4 block space-y-1.5 text-sm font-semibold text-on-surface">
+          <span>{text.nameLabel}</span>
+          <input
+            autoFocus
+            value={value}
+            maxLength={120}
+            disabled={disabled}
+            placeholder={placeholder}
+            onChange={(event) => onChange(event.target.value)}
+            className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </label>
+        <div className="mt-5 flex justify-end gap-2">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onClose}
+            className="h-9 rounded-lg border border-outline-variant px-4 text-xs font-semibold text-on-surface hover:border-primary disabled:opacity-60"
+          >
+            {text.cancel}
+          </button>
+          <button
+            type="submit"
+            disabled={disabled || !value.trim()}
+            className="h-9 rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary disabled:opacity-60"
+          >
+            {text.save}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function IconButton({
+  title,
+  disabled,
+  onClick,
+  children,
+}: {
+  title: string;
+  disabled?: boolean;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary disabled:opacity-50"
+      title={title}
+    >
+      {children}
+    </button>
   );
 }
 

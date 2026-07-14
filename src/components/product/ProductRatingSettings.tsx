@@ -1,25 +1,24 @@
 "use client";
 
-import type { ProductFieldValues } from "@/features/product/entities/product.entity";
+import type { ProductRatingData } from "@/features/product/entities/product.entity";
 
 export function ProductRatingSettings({
-  fields,
+  rating,
   onChange,
 }: {
-  fields: ProductFieldValues;
-  onChange: (fields: ProductFieldValues) => void;
+  rating: ProductRatingData;
+  onChange: (rating: ProductRatingData) => void;
 }) {
-  const set = (key: string, value: string) =>
-    onChange({ ...fields, [key]: value });
+  const set = (next: Partial<ProductRatingData>) =>
+    onChange({ ...rating, ...next });
+
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <label className="flex items-center gap-3 rounded-xl border p-3">
         <input
           type="checkbox"
-          checked={fields["rating.enabled"] !== "false"}
-          onChange={(event) =>
-            set("rating.enabled", String(event.target.checked))
-          }
+          checked={rating.enabled}
+          onChange={(event) => set({ enabled: event.target.checked })}
           className="h-5 w-5 accent-primary"
         />
         <span>استقبال التقييمات</span>
@@ -27,10 +26,8 @@ export function ProductRatingSettings({
       <label className="flex items-center gap-3 rounded-xl border p-3">
         <input
           type="checkbox"
-          checked={fields["rating.targetEnabled"] !== "false"}
-          onChange={(event) =>
-            set("rating.targetEnabled", String(event.target.checked))
-          }
+          checked={rating.targetEnabled}
+          onChange={(event) => set({ targetEnabled: event.target.checked })}
           className="h-5 w-5 accent-primary"
         />
         <span>تقييم المنتج أو الخدمة</span>
@@ -38,8 +35,16 @@ export function ProductRatingSettings({
       <label className="space-y-2 sm:col-span-2">
         <span className="text-sm font-medium">وضع التقييم</span>
         <select
-          value={fields["rating.mode"] || ""}
-          onChange={(event) => set("rating.mode", event.target.value)}
+          value={rating.mode}
+          onChange={(event) =>
+            set({
+              mode:
+                event.target.value === "stars" ||
+                event.target.value === "stars-comments"
+                  ? event.target.value
+                  : "",
+            })
+          }
           className="gova-control gova-field-surface w-full border border-input px-3"
         >
           <option value="">استخدام إعداد Style</option>

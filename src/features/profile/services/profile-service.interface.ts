@@ -48,5 +48,6 @@ export interface IProfileService {
     offset: number,
     limit: number,
     search?: string,
+    minRating?: number,
   ): Promise<UserProfileRow[]>;
 }

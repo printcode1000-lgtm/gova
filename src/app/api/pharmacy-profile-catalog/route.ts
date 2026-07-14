@@ -39,6 +39,18 @@ export async function POST(request: Request) {
         nameAr,
         cleanText(body.nameEn) || undefined,
       );
+    } else if (action === "update_category") {
+      const categoryId = cleanText(body.categoryId);
+      const nameAr = cleanText(body.nameAr);
+      if (!categoryId || !nameAr) {
+        return apiError("categoryId and nameAr are required", 400);
+      }
+      await pharmacyProfileCatalogService.updateCategory(
+        uid,
+        categoryId,
+        nameAr,
+        cleanText(body.nameEn) || undefined,
+      );
     } else if (action === "create_subcategory") {
       const parentCategoryId = cleanText(body.parentCategoryId);
       const nameAr = cleanText(body.nameAr);
@@ -47,6 +59,20 @@ export async function POST(request: Request) {
       }
       await pharmacyProfileCatalogService.createSubcategory(
         uid,
+        parentCategoryId,
+        nameAr,
+        cleanText(body.nameEn) || undefined,
+      );
+    } else if (action === "update_subcategory") {
+      const subcategoryId = cleanText(body.subcategoryId);
+      const parentCategoryId = cleanText(body.parentCategoryId);
+      const nameAr = cleanText(body.nameAr);
+      if (!subcategoryId || !parentCategoryId || !nameAr) {
+        return apiError("subcategoryId, parentCategoryId and nameAr are required", 400);
+      }
+      await pharmacyProfileCatalogService.updateSubcategory(
+        uid,
+        subcategoryId,
         parentCategoryId,
         nameAr,
         cleanText(body.nameEn) || undefined,

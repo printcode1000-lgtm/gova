@@ -97,6 +97,7 @@ export class ProfileApiService implements IProfileService {
     offset: number,
     limit: number,
     search?: string,
+    minRating?: number,
   ): Promise<UserProfileRow[]> {
     const q = new URLSearchParams({
       categoryId: String(categoryId),
@@ -105,6 +106,9 @@ export class ProfileApiService implements IProfileService {
       limit: String(limit),
     });
     if (search?.trim()) q.set("search", search.trim());
+    if (typeof minRating === "number" && Number.isFinite(minRating)) {
+      q.set("minRating", String(minRating));
+    }
     const route = `${GOVA_API_ROUTES.profile.usersBySpecialty}?${q}`;
     return govaApi.get<UserProfileRow[]>(route);
   }

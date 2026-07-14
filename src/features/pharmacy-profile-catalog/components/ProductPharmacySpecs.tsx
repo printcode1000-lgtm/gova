@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   Select,
@@ -9,8 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ProductFieldValues } from "@/features/product/entities/product.entity";
+import type { ProductDetails } from "@/features/product/entities/product.entity";
 import { pharmacyStaticCatalogService } from "../services/pharmacy-static-catalog.service";
+import { pharmacyProfileCatalogApi } from "../services/pharmacy-profile-catalog-api";
+import type {
+  PharmacyProfileCatalogCategoryView,
+  PharmacyProfileCatalogSubcategoryView,
+  PharmacyProfileCatalogView,
+} from "../entities/pharmacy-profile-catalog.types";
 import { ProductField } from "@/components/product/ProductComponentPrimitives";
 import type {
   ProductComponentConfig,
@@ -20,218 +26,226 @@ import type {
 interface ProductPharmacySpecsProps {
   mode: ProductMode;
   config: ProductComponentConfig;
-  fields: ProductFieldValues;
-  onChange: (fields: ProductFieldValues) => void;
-}
-
-const FIELD_PREFIX = "pharmacySpecs.";
-
-function fieldKey(key: string) {
-  return `${FIELD_PREFIX}${key}`;
-}
-
-function getField(fields: ProductFieldValues, key: string) {
-  return fields[fieldKey(key)] ?? "";
+  details: ProductDetails;
+  ownerUid?: string;
+  onChange: (details: ProductDetails) => void;
 }
 
 export function ProductPharmacySpecs({
   mode,
   config,
-  fields,
+  details,
+  ownerUid = "",
   onChange,
 }: ProductPharmacySpecsProps) {
-  const categories = useMemo(() => pharmacyStaticCatalogService.getCategories(), []);
+  const [profileCatalog, setProfileCatalog] =
+    useState<PharmacyProfileCatalogView | null>(null);
+  const specs = details.pharmacySpecs;
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!ownerUid) {
+      setProfileCatalog(null);
+      return;
+    }
+    pharmacyProfileCatalogApi
+      .list(ownerUid, false)
+      .then((catalog) => {
+        if (!cancelled) setProfileCatalog(catalog);
+      })
+      .catch(() => {
+        if (!cancelled) setProfileCatalog(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ownerUid]);
+
+  const categories = useMemo<PharmacyProfileCatalogCategoryView[]>(
+    () =>
+      profileCatalog?.categories ??
+      pharmacyStaticCatalogService.getCategories().map((category) => ({
+        id: String(category.id),
+        fixedCategoryId: category.id,
+        nameAr: category.nameAr,
+        nameEn: category.nameEn,
+        icon: category.icon,
+        status: "visible",
+        sortOrder: category.id,
+        isCustom: false,
+      })),
+    [profileCatalog?.categories],
+  );
   const selectedCategory =
     categories.find(
       (category) =>
-        String(category.id) === getField(fields, "pharmacyCategoryId") ||
-        category.nameAr === getField(fields, "pharmacyCategory"),
+        category.id === specs.pharmacyCategoryId ||
+        category.nameAr === specs.pharmacyCategory,
     ) ?? categories[0];
 
-  const subcategories = useMemo(
-    () =>
-      selectedCategory
-        ? pharmacyStaticCatalogService.getSubcategories(selectedCategory.id)
-        : [],
-    [selectedCategory],
+  const subcategories = useMemo<PharmacyProfileCatalogSubcategoryView[]>(
+    () => {
+      if (!selectedCategory) return [];
+      if (profileCatalog) {
+        return profileCatalog.subcategories.filter(
+          (subcategory) => subcategory.parentCategoryId === selectedCategory.id,
+        );
+      }
+      const fixedCategoryId =
+        selectedCategory.fixedCategoryId ?? Number(selectedCategory.id);
+      return pharmacyStaticCatalogService
+        .getSubcategories(fixedCategoryId)
+        .map((subcategory) => ({
+          id: String(subcategory.id),
+          fixedSubcategoryId: subcategory.id,
+          parentCategoryId: String(subcategory.categoryId),
+          nameAr: subcategory.nameAr,
+          nameEn: subcategory.nameEn,
+          status: "visible",
+          sortOrder: subcategory.id,
+          isCustom: false,
+        }));
+    },
+    [profileCatalog, selectedCategory],
   );
   const selectedSubcategory =
     subcategories.find(
       (subcategory) =>
-        String(subcategory.id) === getField(fields, "pharmacySubcategoryId") ||
-        subcategory.nameAr === getField(fields, "pharmacySubcategory"),
+        subcategory.id === specs.pharmacySubcategoryId ||
+        subcategory.nameAr === specs.pharmacySubcategory,
     ) ?? subcategories[0];
 
-  const activeIngredients = useMemo(
-    () =>
-      selectedSubcategory
-        ? pharmacyStaticCatalogService.getActiveIngredients(selectedSubcategory.id)
-        : [],
-    [selectedSubcategory],
-  );
-  const selectedActiveIngredient =
-    activeIngredients.find(
-      (activeIngredient) =>
-        String(activeIngredient.id) === getField(fields, "activeIngredientId") ||
-        activeIngredient.nameAr === getField(fields, "activeIngredient"),
-    ) ?? activeIngredients[0];
-
-  const forms = useMemo(
-    () =>
-      selectedActiveIngredient
-        ? pharmacyStaticCatalogService.getFormsForActiveIngredient(
-            selectedActiveIngredient.id,
-          )
-        : [],
-    [selectedActiveIngredient],
-  );
+  const forms = useMemo(() => pharmacyStaticCatalogService.getForms(), []);
   const selectedForm =
     forms.find(
-      (form) =>
-        form.id === getField(fields, "formId") ||
-        form.nameAr === getField(fields, "form"),
+      (form) => form.id === specs.formId || form.nameAr === specs.form,
     ) ?? forms[0];
 
   const strengths = useMemo(
-    () =>
-      selectedActiveIngredient
-        ? pharmacyStaticCatalogService.getStrengthsForActiveIngredient(
-            selectedActiveIngredient.id,
-          )
-        : [],
-    [selectedActiveIngredient],
+    () => pharmacyStaticCatalogService.getStrengths(),
+    [],
   );
   const selectedStrength =
     strengths.find(
       (strength) =>
-        strength.id === getField(fields, "concentrationId") ||
-        strength.value === getField(fields, "concentration"),
+        strength.id === specs.concentrationId ||
+        strength.value === specs.concentration,
     ) ?? strengths[0];
 
-  function patch(next: ProductFieldValues) {
-    onChange({ ...fields, ...next });
+  function patch(next: Partial<ProductDetails["pharmacySpecs"]>) {
+    const pharmacySpecs = { ...details.pharmacySpecs, ...next };
+    onChange({ ...details, pharmacySpecs });
+  }
+
+  function patchCatalog(next: Partial<ProductDetails["pharmacyCatalog"]>) {
+    onChange({
+      ...details,
+      pharmacyCatalog: { ...details.pharmacyCatalog, ...next },
+    });
   }
 
   function selectCategory(categoryId: string) {
-    const category = categories.find((item) => String(item.id) === categoryId);
+    const category = categories.find((item) => item.id === categoryId);
     const firstSubcategory = category
-      ? pharmacyStaticCatalogService.getSubcategories(category.id)[0]
+      ? (
+          profileCatalog?.subcategories.filter(
+            (item) => item.parentCategoryId === category.id,
+          ) ??
+          pharmacyStaticCatalogService
+            .getSubcategories(category.fixedCategoryId ?? Number(category.id))
+            .map((subcategory) => ({
+              id: String(subcategory.id),
+              fixedSubcategoryId: subcategory.id,
+              parentCategoryId: String(subcategory.categoryId),
+              nameAr: subcategory.nameAr,
+              nameEn: subcategory.nameEn,
+              status: "visible" as const,
+              sortOrder: subcategory.id,
+              isCustom: false,
+            }))
+        )[0]
       : undefined;
     const firstActiveIngredient = firstSubcategory
-      ? pharmacyStaticCatalogService.getActiveIngredients(firstSubcategory.id)[0]
-      : undefined;
-    const firstForm = firstActiveIngredient
-      ? pharmacyStaticCatalogService.getFormsForActiveIngredient(
-          firstActiveIngredient.id,
+      ? pharmacyStaticCatalogService.getActiveIngredients(
+          firstSubcategory.fixedSubcategoryId ?? -1,
         )[0]
       : undefined;
-    const firstStrength = firstActiveIngredient
-      ? pharmacyStaticCatalogService.getStrengthsForActiveIngredient(
-          firstActiveIngredient.id,
-        )[0]
-      : undefined;
+    const firstForm = pharmacyStaticCatalogService.getForms()[0];
+    const firstStrength = pharmacyStaticCatalogService.getStrengths()[0];
 
-    patch({
-      [fieldKey("pharmacyCategoryId")]: category ? String(category.id) : "",
-      [fieldKey("pharmacyCategory")]: category?.nameAr ?? "",
-      [fieldKey("pharmacySubcategoryId")]: firstSubcategory
-        ? String(firstSubcategory.id)
-        : "",
-      [fieldKey("pharmacySubcategory")]: firstSubcategory?.nameAr ?? "",
-      [fieldKey("activeIngredientId")]: firstActiveIngredient
-        ? String(firstActiveIngredient.id)
-        : "",
-      [fieldKey("activeIngredient")]: firstActiveIngredient?.nameAr ?? "",
-      [fieldKey("formId")]: firstForm?.id ?? "",
-      [fieldKey("form")]: firstForm?.nameAr ?? "",
-      [fieldKey("concentrationId")]: firstStrength?.id ?? "",
-      [fieldKey("concentration")]: firstStrength?.value ?? "",
-      [fieldKey("prescriptionRequired")]: firstActiveIngredient
-        ? String(firstActiveIngredient.prescriptionRequired)
-        : "false",
+    onChange({
+      ...details,
+      pharmacyCatalog: {
+        ...details.pharmacyCatalog,
+        categoryId: category?.id ?? "",
+        categoryNameAr: category?.nameAr ?? "",
+        categoryNameEn: category?.nameEn ?? "",
+        subcategoryId: firstSubcategory?.id ?? "",
+        subcategoryNameAr: firstSubcategory?.nameAr ?? "",
+        subcategoryNameEn: firstSubcategory?.nameEn ?? "",
+      },
+      pharmacySpecs: {
+        ...details.pharmacySpecs,
+        pharmacyCategoryId: category?.id ?? "",
+        pharmacyCategory: category?.nameAr ?? "",
+        pharmacySubcategoryId: firstSubcategory?.id ?? "",
+        pharmacySubcategory: firstSubcategory?.nameAr ?? "",
+        activeIngredientId: firstActiveIngredient
+          ? String(firstActiveIngredient.id)
+          : "",
+        activeIngredient: firstActiveIngredient?.nameAr ?? "",
+        formId: firstForm?.id ?? "",
+        form: firstForm?.nameAr ?? "",
+        concentrationId: firstStrength?.id ?? "",
+        concentration: firstStrength?.value ?? "",
+        prescriptionRequired:
+          firstActiveIngredient?.prescriptionRequired ?? false,
+      },
     });
   }
 
   function selectSubcategory(subcategoryId: string) {
     const subcategory = subcategories.find(
-      (item) => String(item.id) === subcategoryId,
+      (item) => item.id === subcategoryId,
     );
     const firstActiveIngredient = subcategory
-      ? pharmacyStaticCatalogService.getActiveIngredients(subcategory.id)[0]
-      : undefined;
-    const firstForm = firstActiveIngredient
-      ? pharmacyStaticCatalogService.getFormsForActiveIngredient(
-          firstActiveIngredient.id,
+      ? pharmacyStaticCatalogService.getActiveIngredients(
+          subcategory.fixedSubcategoryId ?? -1,
         )[0]
       : undefined;
-    const firstStrength = firstActiveIngredient
-      ? pharmacyStaticCatalogService.getStrengthsForActiveIngredient(
-          firstActiveIngredient.id,
-        )[0]
-      : undefined;
+    const firstForm = pharmacyStaticCatalogService.getForms()[0];
+    const firstStrength = pharmacyStaticCatalogService.getStrengths()[0];
 
+    patchCatalog({
+      subcategoryId: subcategory?.id ?? "",
+      subcategoryNameAr: subcategory?.nameAr ?? "",
+      subcategoryNameEn: subcategory?.nameEn ?? "",
+    });
     patch({
-      [fieldKey("pharmacySubcategoryId")]: subcategory
-        ? String(subcategory.id)
-        : "",
-      [fieldKey("pharmacySubcategory")]: subcategory?.nameAr ?? "",
-      [fieldKey("activeIngredientId")]: firstActiveIngredient
+      pharmacySubcategoryId: subcategory?.id ?? "",
+      pharmacySubcategory: subcategory?.nameAr ?? "",
+      activeIngredientId: firstActiveIngredient
         ? String(firstActiveIngredient.id)
         : "",
-      [fieldKey("activeIngredient")]: firstActiveIngredient?.nameAr ?? "",
-      [fieldKey("formId")]: firstForm?.id ?? "",
-      [fieldKey("form")]: firstForm?.nameAr ?? "",
-      [fieldKey("concentrationId")]: firstStrength?.id ?? "",
-      [fieldKey("concentration")]: firstStrength?.value ?? "",
-      [fieldKey("prescriptionRequired")]: firstActiveIngredient
-        ? String(firstActiveIngredient.prescriptionRequired)
-        : "false",
-    });
-  }
-
-  function selectActiveIngredient(activeIngredientId: string) {
-    const activeIngredient = activeIngredients.find(
-      (item) => String(item.id) === activeIngredientId,
-    );
-    const firstForm = activeIngredient
-      ? pharmacyStaticCatalogService.getFormsForActiveIngredient(
-          activeIngredient.id,
-        )[0]
-      : undefined;
-    const firstStrength = activeIngredient
-      ? pharmacyStaticCatalogService.getStrengthsForActiveIngredient(
-          activeIngredient.id,
-        )[0]
-      : undefined;
-
-    patch({
-      [fieldKey("activeIngredientId")]: activeIngredient
-        ? String(activeIngredient.id)
-        : "",
-      [fieldKey("activeIngredient")]: activeIngredient?.nameAr ?? "",
-      [fieldKey("formId")]: firstForm?.id ?? "",
-      [fieldKey("form")]: firstForm?.nameAr ?? "",
-      [fieldKey("concentrationId")]: firstStrength?.id ?? "",
-      [fieldKey("concentration")]: firstStrength?.value ?? "",
-      [fieldKey("prescriptionRequired")]: activeIngredient
-        ? String(activeIngredient.prescriptionRequired)
-        : "false",
+      activeIngredient: firstActiveIngredient?.nameAr ?? "",
+      formId: firstForm?.id ?? "",
+      form: firstForm?.nameAr ?? "",
+      concentrationId: firstStrength?.id ?? "",
+      concentration: firstStrength?.value ?? "",
+      prescriptionRequired: firstActiveIngredient?.prescriptionRequired ?? false,
     });
   }
 
   function selectForm(formId: string) {
     const form = forms.find((item) => item.id === formId);
-    patch({
-      [fieldKey("formId")]: form?.id ?? "",
-      [fieldKey("form")]: form?.nameAr ?? "",
-    });
+    patch({ formId: form?.id ?? "", form: form?.nameAr ?? "" });
   }
 
   function selectStrength(strengthId: string) {
     const strength = strengths.find((item) => item.id === strengthId);
     patch({
-      [fieldKey("concentrationId")]: strength?.id ?? "",
-      [fieldKey("concentration")]: strength?.value ?? "",
+      concentrationId: strength?.id ?? "",
+      concentration: strength?.value ?? "",
     });
   }
 
@@ -243,7 +257,7 @@ export function ProductPharmacySpecs({
         {config.pharmacyCategory ? (
           <ProductField
             label="التصنيف الرئيسي"
-            value={getField(fields, "pharmacyCategory")}
+            value={specs.pharmacyCategory}
             mode={mode}
             onChange={noop}
           />
@@ -251,7 +265,7 @@ export function ProductPharmacySpecs({
         {config.pharmacySubcategory ? (
           <ProductField
             label="التصنيف الفرعي"
-            value={getField(fields, "pharmacySubcategory")}
+            value={specs.pharmacySubcategory}
             mode={mode}
             onChange={noop}
           />
@@ -259,7 +273,7 @@ export function ProductPharmacySpecs({
         {config.nameAr ? (
           <ProductField
             label="الاسم بالعربي"
-            value={getField(fields, "nameAr")}
+            value={specs.nameAr}
             mode={mode}
             onChange={noop}
           />
@@ -267,7 +281,7 @@ export function ProductPharmacySpecs({
         {config.nameEn ? (
           <ProductField
             label="الاسم بالإنجليزي"
-            value={getField(fields, "nameEn")}
+            value={specs.nameEn}
             mode={mode}
             onChange={noop}
           />
@@ -275,7 +289,7 @@ export function ProductPharmacySpecs({
         {config.activeIngredient ? (
           <ProductField
             label="المادة الفعالة"
-            value={getField(fields, "activeIngredient")}
+            value={specs.activeIngredient}
             mode={mode}
             onChange={noop}
           />
@@ -283,7 +297,7 @@ export function ProductPharmacySpecs({
         {config.form ? (
           <ProductField
             label="شكل الدواء"
-            value={getField(fields, "form")}
+            value={specs.form}
             mode={mode}
             onChange={noop}
           />
@@ -291,7 +305,7 @@ export function ProductPharmacySpecs({
         {config.concentration ? (
           <ProductField
             label="التركيز"
-            value={getField(fields, "concentration")}
+            value={specs.concentration}
             mode={mode}
             onChange={noop}
           />
@@ -299,7 +313,7 @@ export function ProductPharmacySpecs({
         {config.prescriptionRequired ? (
           <ProductField
             label="يتطلب روشتة"
-            value={getField(fields, "prescriptionRequired")}
+            value={String(specs.prescriptionRequired)}
             mode={mode}
             type="boolean"
             onChange={noop}
@@ -340,32 +354,27 @@ export function ProductPharmacySpecs({
       {config.nameAr ? (
         <ProductField
           label="الاسم بالعربي"
-          value={getField(fields, "nameAr")}
+          value={specs.nameAr}
           mode={mode}
-          onChange={(value) => patch({ [fieldKey("nameAr")]: value })}
+          onChange={(value) => patch({ nameAr: value })}
         />
       ) : null}
       {config.nameEn ? (
         <ProductField
           label="الاسم بالإنجليزي"
-          value={getField(fields, "nameEn")}
+          value={specs.nameEn}
           mode={mode}
-          onChange={(value) => patch({ [fieldKey("nameEn")]: value })}
+          onChange={(value) => patch({ nameEn: value })}
         />
       ) : null}
       {config.activeIngredient ? (
-        <PharmacySelect
+        <ProductField
           label="المادة الفعالة"
-          value={
-            selectedActiveIngredient ? String(selectedActiveIngredient.id) : ""
+          value={specs.activeIngredient}
+          mode={mode}
+          onChange={(value) =>
+            patch({ activeIngredientId: "", activeIngredient: value })
           }
-          disabled={activeIngredients.length === 0}
-          placeholder="اختر المادة الفعالة"
-          options={activeIngredients.map((activeIngredient) => ({
-            value: String(activeIngredient.id),
-            label: activeIngredient.nameAr,
-          }))}
-          onChange={selectActiveIngredient}
         />
       ) : null}
       {config.form ? (
@@ -397,12 +406,10 @@ export function ProductPharmacySpecs({
       {config.prescriptionRequired ? (
         <ProductField
           label="يتطلب روشتة"
-          value={getField(fields, "prescriptionRequired")}
+          value={String(specs.prescriptionRequired)}
           mode={mode}
           type="boolean"
-          onChange={(value) =>
-            patch({ [fieldKey("prescriptionRequired")]: value })
-          }
+          onChange={(value) => patch({ prescriptionRequired: value === "true" })}
         />
       ) : null}
     </div>

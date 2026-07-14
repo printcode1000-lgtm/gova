@@ -13,8 +13,10 @@ export async function GET(request: Request) {
       const offset = Number(url.searchParams.get("offset") ?? "0");
       const limit = Number(url.searchParams.get("limit") ?? "10");
       const search = url.searchParams.get("search") ?? undefined;
+      const minRatingParam = url.searchParams.get("minRating");
+      const minRating = minRatingParam ? Number(minRatingParam) : undefined;
       
-      const users = await profileService.getUsersBySpecialty(categoryId, subcategoryId, offset, limit, search);
+      const users = await profileService.getUsersBySpecialty(categoryId, subcategoryId, offset, limit, search, minRating);
       
       // Add avatarUrl to each user
       const usersWithAvatarUrls = users.map((user) => ({

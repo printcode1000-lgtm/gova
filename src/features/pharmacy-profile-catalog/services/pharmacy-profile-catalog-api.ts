@@ -36,6 +36,25 @@ export const pharmacyProfileCatalogApi = {
     });
   },
 
+  updateCategory(uid: string, categoryId: string, nameAr: string) {
+    return this.action({ uid, action: "update_category", categoryId, nameAr });
+  },
+
+  updateSubcategory(
+    uid: string,
+    subcategoryId: string,
+    parentCategoryId: string,
+    nameAr: string,
+  ) {
+    return this.action({
+      uid,
+      action: "update_subcategory",
+      subcategoryId,
+      parentCategoryId,
+      nameAr,
+    });
+  },
+
   setCategoryStatus(uid: string, categoryId: string, status: PharmacyOverrideStatus) {
     return this.action({ uid, action: "set_category_status", categoryId, status });
   },

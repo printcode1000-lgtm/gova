@@ -86,6 +86,59 @@ export interface ProductPharmacySpecsStyleSettings {
   order: number;
 }
 
+export interface ProductSearchColumnSettings {
+  mainData: {
+    name: boolean;
+    brand: boolean;
+    manufacturer: boolean;
+    available: boolean;
+    description: boolean;
+  };
+  price: {
+    current: boolean;
+    beforeDiscount: boolean;
+    label: boolean;
+    needsCar: boolean;
+  };
+  rating: {
+    value: boolean;
+  };
+  specifications: {
+    color: boolean;
+    dimensions: boolean;
+    condition: boolean;
+    size: boolean;
+    weight: boolean;
+    year: boolean;
+  };
+  vehicleSpecs: {
+    brand: boolean;
+    bodyType: boolean;
+    fuel: boolean;
+    transmission: boolean;
+    special: boolean;
+  };
+  propertySpecs: {
+    area: boolean;
+    rooms: boolean;
+    bathrooms: boolean;
+    type: boolean;
+    address: boolean;
+    location: boolean;
+    finishing: boolean;
+  };
+  pharmacySpecs: {
+    pharmacyCategory: boolean;
+    pharmacySubcategory: boolean;
+    nameAr: boolean;
+    nameEn: boolean;
+    activeIngredient: boolean;
+    form: boolean;
+    concentration: boolean;
+    prescriptionRequired: boolean;
+  };
+}
+
 export interface ProductStyleSettingsComponents {
   images: ProductImagesStyleSettings;
   rating: ProductRatingStyleSettings;
@@ -96,6 +149,7 @@ export interface ProductStyleSettingsComponents {
   vehicleSpecs: ProductVehicleSpecsStyleSettings;
   propertySpecs: ProductPropertySpecsStyleSettings;
   pharmacySpecs: ProductPharmacySpecsStyleSettings;
+  searchColumns: ProductSearchColumnSettings;
 }
 
 export interface ProductStyleSettings {
@@ -171,6 +225,58 @@ export const DEFAULT_PRODUCT_STYLE_COMPONENTS: ProductStyleSettingsComponents = 
     concentration: true,
     prescriptionRequired: true,
     order: 9,
+  },
+  searchColumns: {
+    mainData: {
+      name: true,
+      brand: true,
+      manufacturer: true,
+      available: false,
+      description: true,
+    },
+    price: {
+      current: false,
+      beforeDiscount: false,
+      label: true,
+      needsCar: false,
+    },
+    rating: {
+      value: true,
+    },
+    specifications: {
+      color: true,
+      dimensions: true,
+      condition: true,
+      size: true,
+      weight: true,
+      year: true,
+    },
+    vehicleSpecs: {
+      brand: true,
+      bodyType: true,
+      fuel: true,
+      transmission: true,
+      special: true,
+    },
+    propertySpecs: {
+      area: true,
+      rooms: true,
+      bathrooms: true,
+      type: true,
+      address: true,
+      location: false,
+      finishing: true,
+    },
+    pharmacySpecs: {
+      pharmacyCategory: true,
+      pharmacySubcategory: true,
+      nameAr: true,
+      nameEn: true,
+      activeIngredient: true,
+      form: true,
+      concentration: true,
+      prescriptionRequired: false,
+    },
   },
 };
 
@@ -384,6 +490,58 @@ export function normalizeProductStyleComponents(
         value?.pharmacySpecs?.order,
         defaults.pharmacySpecs.order,
       ),
+    },
+    searchColumns: {
+      mainData: {
+        name: booleanValue(value?.searchColumns?.mainData?.name, defaults.searchColumns.mainData.name),
+        brand: booleanValue(value?.searchColumns?.mainData?.brand, defaults.searchColumns.mainData.brand),
+        manufacturer: booleanValue(value?.searchColumns?.mainData?.manufacturer, defaults.searchColumns.mainData.manufacturer),
+        available: booleanValue(value?.searchColumns?.mainData?.available, defaults.searchColumns.mainData.available),
+        description: booleanValue(value?.searchColumns?.mainData?.description, defaults.searchColumns.mainData.description),
+      },
+      price: {
+        current: booleanValue(value?.searchColumns?.price?.current, defaults.searchColumns.price.current),
+        beforeDiscount: booleanValue(value?.searchColumns?.price?.beforeDiscount, defaults.searchColumns.price.beforeDiscount),
+        label: booleanValue(value?.searchColumns?.price?.label, defaults.searchColumns.price.label),
+        needsCar: booleanValue(value?.searchColumns?.price?.needsCar, defaults.searchColumns.price.needsCar),
+      },
+      rating: {
+        value: booleanValue(value?.searchColumns?.rating?.value, defaults.searchColumns.rating.value),
+      },
+      specifications: {
+        color: booleanValue(value?.searchColumns?.specifications?.color, defaults.searchColumns.specifications.color),
+        dimensions: booleanValue(value?.searchColumns?.specifications?.dimensions, defaults.searchColumns.specifications.dimensions),
+        condition: booleanValue(value?.searchColumns?.specifications?.condition, defaults.searchColumns.specifications.condition),
+        size: booleanValue(value?.searchColumns?.specifications?.size, defaults.searchColumns.specifications.size),
+        weight: booleanValue(value?.searchColumns?.specifications?.weight, defaults.searchColumns.specifications.weight),
+        year: booleanValue(value?.searchColumns?.specifications?.year, defaults.searchColumns.specifications.year),
+      },
+      vehicleSpecs: {
+        brand: booleanValue(value?.searchColumns?.vehicleSpecs?.brand, defaults.searchColumns.vehicleSpecs.brand),
+        bodyType: booleanValue(value?.searchColumns?.vehicleSpecs?.bodyType, defaults.searchColumns.vehicleSpecs.bodyType),
+        fuel: booleanValue(value?.searchColumns?.vehicleSpecs?.fuel, defaults.searchColumns.vehicleSpecs.fuel),
+        transmission: booleanValue(value?.searchColumns?.vehicleSpecs?.transmission, defaults.searchColumns.vehicleSpecs.transmission),
+        special: booleanValue(value?.searchColumns?.vehicleSpecs?.special, defaults.searchColumns.vehicleSpecs.special),
+      },
+      propertySpecs: {
+        area: booleanValue(value?.searchColumns?.propertySpecs?.area, defaults.searchColumns.propertySpecs.area),
+        rooms: booleanValue(value?.searchColumns?.propertySpecs?.rooms, defaults.searchColumns.propertySpecs.rooms),
+        bathrooms: booleanValue(value?.searchColumns?.propertySpecs?.bathrooms, defaults.searchColumns.propertySpecs.bathrooms),
+        type: booleanValue(value?.searchColumns?.propertySpecs?.type, defaults.searchColumns.propertySpecs.type),
+        address: booleanValue(value?.searchColumns?.propertySpecs?.address, defaults.searchColumns.propertySpecs.address),
+        location: booleanValue(value?.searchColumns?.propertySpecs?.location, defaults.searchColumns.propertySpecs.location),
+        finishing: booleanValue(value?.searchColumns?.propertySpecs?.finishing, defaults.searchColumns.propertySpecs.finishing),
+      },
+      pharmacySpecs: {
+        pharmacyCategory: booleanValue(value?.searchColumns?.pharmacySpecs?.pharmacyCategory, defaults.searchColumns.pharmacySpecs.pharmacyCategory),
+        pharmacySubcategory: booleanValue(value?.searchColumns?.pharmacySpecs?.pharmacySubcategory, defaults.searchColumns.pharmacySpecs.pharmacySubcategory),
+        nameAr: booleanValue(value?.searchColumns?.pharmacySpecs?.nameAr, defaults.searchColumns.pharmacySpecs.nameAr),
+        nameEn: booleanValue(value?.searchColumns?.pharmacySpecs?.nameEn, defaults.searchColumns.pharmacySpecs.nameEn),
+        activeIngredient: booleanValue(value?.searchColumns?.pharmacySpecs?.activeIngredient, defaults.searchColumns.pharmacySpecs.activeIngredient),
+        form: booleanValue(value?.searchColumns?.pharmacySpecs?.form, defaults.searchColumns.pharmacySpecs.form),
+        concentration: booleanValue(value?.searchColumns?.pharmacySpecs?.concentration, defaults.searchColumns.pharmacySpecs.concentration),
+        prescriptionRequired: booleanValue(value?.searchColumns?.pharmacySpecs?.prescriptionRequired, defaults.searchColumns.pharmacySpecs.prescriptionRequired),
+      },
     },
   };
 }

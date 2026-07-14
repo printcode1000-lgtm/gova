@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { govaApi } from "@/core/api";
-import type { ProductFieldValues } from "@/features/product/entities/product.entity";
+import type { ProductVehicleSpecsData } from "@/features/product/entities/product.entity";
 import type {
   ProductMode,
   ProductComponentConfig,
@@ -45,13 +45,13 @@ function optionImage(option: CarOption) {
 export function ProductVehicleSpecs({
   mode,
   config,
-  fields,
+  specs,
   onChange,
 }: {
   mode: ProductMode;
   config: ProductComponentConfig;
-  fields: ProductFieldValues;
-  onChange: (fields: ProductFieldValues) => void;
+  specs: ProductVehicleSpecsData;
+  onChange: (specs: ProductVehicleSpecsData) => void;
 }) {
   const [options, setOptions] = React.useState<Record<string, CarOption[]>>({});
   const [loading, setLoading] = React.useState(true);
@@ -89,7 +89,7 @@ export function ProductVehicleSpecs({
 
   if (mode === "view") {
     const selected = enabledGroups.flatMap((group) => {
-      const value = fields[`vehicleSpecs.${group.key}`];
+      const value = specs[group.key as keyof ProductVehicleSpecsData];
       if (!value) return [];
       const option = options[group.key]?.find((item) => item.id === value);
       return [{ group, value, option }];
@@ -131,8 +131,8 @@ export function ProductVehicleSpecs({
   return (
     <div className="space-y-3">
       {enabledGroups.map((group) => {
-        const storageKey = `vehicleSpecs.${group.key}`;
-        const selectedId = fields[storageKey] ?? "";
+        const selectedId =
+          specs[group.key as keyof ProductVehicleSpecsData] ?? "";
         return (
           <details
             key={group.key}
@@ -160,8 +160,8 @@ export function ProductVehicleSpecs({
                     aria-pressed={selected}
                     onClick={() =>
                       onChange({
-                        ...fields,
-                        [storageKey]: selected ? "" : option.id,
+                        ...specs,
+                        [group.key]: selected ? "" : option.id,
                       })
                     }
                     className={`rounded-xl border p-2 text-center transition-colors ${

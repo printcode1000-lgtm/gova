@@ -90,8 +90,8 @@ export function AppHeader() {
               )}
             </button>
 
-            <button
-              type="button"
+            <Link
+              href="/search"
               id="header-search-button"
               className={cn(
                 "gova-control-icon flex items-center justify-center rounded-full transition-colors",
@@ -100,7 +100,7 @@ export function AppHeader() {
               aria-label={t('header.search')}
             >
               <Search className="w-5 h-5" />
-            </button>
+            </Link>
 
             <Link
               href="/cart"

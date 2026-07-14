@@ -13,22 +13,23 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { FeaturedMarquee } from "@/components/ui/FeaturedMarquee";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FEATURED_MARQUEE_CACHE_KEY, type FeaturedMarqueeRecord } from "@/features/advertisements/entities/featured-marquee.entity";
+import {
+  FEATURED_MARQUEE_CACHE_KEY,
+  type FeaturedMarqueeRecord,
+} from "@/features/advertisements/entities/featured-marquee.entity";
 import { featuredMarqueeApiService } from "@/features/advertisements/services/featured-marquee-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { GOVA_DB_STORES, govaDbDelete } from "@/lib/gova-db";
-import { productApiService } from "@/features/product/services/product-api-service";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
+import { productApiService } from "@/features/product/services/product-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-
-// ─── Types ───────────────────────────────────────────────────────────────────
+import { GOVA_DB_STORES, govaDbDelete } from "@/lib/gova-db";
 
 interface ResolvedItem {
   productId: string;
@@ -37,30 +38,26 @@ interface ResolvedItem {
   error: string | null;
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
 function getProductName(product: ProductRecord): string {
-  return product.data.fields["mainData.name"] ?? "منتج بدون اسم";
+  return product.mainData.name || "منتج بدون اسم";
 }
 
 function getProductPrice(product: ProductRecord): string {
-  return product.data.fields["price.current"] ?? "";
+  return product.price.current || product.price.label || "";
 }
 
 function getProductImage(product: ProductRecord): string {
-  return product.data.images[0]?.url ?? "";
+  return product.images[0]?.url ?? "";
 }
 
 function buildProductAction(product: ProductRecord): string {
   return [
-    `mode=view`,
+    "mode=view",
     `productId=${encodeURIComponent(product.id)}`,
     `mainCategoryId=${encodeURIComponent(product.mainCategoryId)}`,
     `subcategoryId=${encodeURIComponent(product.subcategoryId)}`,
   ].join("&");
 }
-
-// ─── Component ───────────────────────────────────────────────────────────────
 
 export function SuperAdminFeaturedMarqueePage() {
   const router = useRouter();
@@ -73,24 +70,23 @@ export function SuperAdminFeaturedMarqueePage() {
   const [intervalMinutes, setIntervalMinutes] = useState(15);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [messageType, setMessageType] = useState<"success" | "error">("success");
-
+  const [messageType, setMessageType] = useState<"success" | "error">(
+    "success",
+  );
   const dragIndex = useRef<number | null>(null);
-
-  // ── Auth guard ──────────────────────────────────────────────────────────────
 
   useEffect(() => {
     if (!sessionLoading && !authorized) {
       router.replace(session ? "/home" : "/login");
     }
-  }, [authorized, session, sessionLoading, router]);
-
-  // ── Load admin record ───────────────────────────────────────────────────────
+  }, [authorized, router, session, sessionLoading]);
 
   const resolveProduct = useCallback(
     async (productId: string): Promise<ResolvedItem> => {
       try {
-        const product = await productApiService.get(productId);
+        const product = await productApiService.get(productId, {
+          suppressErrorLog: true,
+        });
         return { productId, product, isLoading: false, error: null };
       } catch {
         return {
@@ -112,21 +108,19 @@ export function SuperAdminFeaturedMarqueePage() {
       const next = await featuredMarqueeApiService.getAdmin(session);
       setRecord(next);
       setIntervalMinutes(next.checkIntervalMinutes);
-      // Resolve all product IDs to their full records
-      const placeholders: ResolvedItem[] = next.config.productIds.map(
-        (id) => ({
-          productId: id,
+      setItems(
+        next.config.productIds.map((productId) => ({
+          productId,
           product: null,
           isLoading: true,
           error: null,
-        }),
+        })),
       );
-      setItems(placeholders);
-      // Fetch each product
-      const resolved = await Promise.all(
-        next.config.productIds.map((id) => resolveProduct(id)),
+      setItems(
+        await Promise.all(
+          next.config.productIds.map((productId) => resolveProduct(productId)),
+        ),
       );
-      setItems(resolved);
     } catch (error) {
       reportSystemIssue({
         feature: "FeaturedMarqueeAdmin",
@@ -140,13 +134,11 @@ export function SuperAdminFeaturedMarqueePage() {
     } finally {
       setBusy(false);
     }
-  }, [session, resolveProduct]);
+  }, [resolveProduct, session]);
 
   useEffect(() => {
     if (!sessionLoading && authorized) void load();
-  }, [authorized, sessionLoading, load]);
-
-  // ── Add product ─────────────────────────────────────────────────────────────
+  }, [authorized, load, sessionLoading]);
 
   const addProduct = async () => {
     const trimmed = newProductId.trim();
@@ -156,42 +148,38 @@ export function SuperAdminFeaturedMarqueePage() {
       setMessageType("error");
       return;
     }
+
     setNewProductId("");
     setMessage(null);
-    const placeholder: ResolvedItem = {
-      productId: trimmed,
-      product: null,
-      isLoading: true,
-      error: null,
-    };
-    setItems((prev) => [...prev, placeholder]);
+    setItems((current) => [
+      ...current,
+      { productId: trimmed, product: null, isLoading: true, error: null },
+    ]);
+
     const resolved = await resolveProduct(trimmed);
-    setItems((prev) =>
-      prev.map((item) =>
-        item.productId === trimmed ? resolved : item,
-      ),
+    setItems((current) =>
+      current.map((item) => (item.productId === trimmed ? resolved : item)),
     );
   };
 
-  // ── Remove product ──────────────────────────────────────────────────────────
-
   const removeProduct = (productId: string) => {
-    setItems((prev) => prev.filter((item) => item.productId !== productId));
+    setItems((current) =>
+      current.filter((item) => item.productId !== productId),
+    );
   };
-
-  // ── Drag-and-drop reorder ───────────────────────────────────────────────────
 
   const handleDragStart = (index: number) => {
     dragIndex.current = index;
   };
 
-  const handleDragOver = (e: React.DragEvent, overIndex: number) => {
-    e.preventDefault();
+  const handleDragOver = (event: React.DragEvent, overIndex: number) => {
+    event.preventDefault();
     const from = dragIndex.current;
     if (from === null || from === overIndex) return;
-    setItems((prev) => {
-      const next = [...prev];
+    setItems((current) => {
+      const next = [...current];
       const [moved] = next.splice(from, 1);
+      if (!moved) return current;
       next.splice(overIndex, 0, moved);
       return next;
     });
@@ -201,8 +189,6 @@ export function SuperAdminFeaturedMarqueePage() {
   const handleDragEnd = () => {
     dragIndex.current = null;
   };
-
-  // ── Save ────────────────────────────────────────────────────────────────────
 
   const save = async () => {
     if (!session || !record) return;
@@ -217,12 +203,16 @@ export function SuperAdminFeaturedMarqueePage() {
         { productIds },
         intervalMinutes,
       );
-      // Invalidate IndexedDB cache so that the home page updates immediately
+
       try {
-        await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, FEATURED_MARQUEE_CACHE_KEY);
-      } catch (err) {
-        console.error("Failed to delete local marquee cache:", err);
+        await govaDbDelete(
+          GOVA_DB_STORES.APP_SETTINGS,
+          FEATURED_MARQUEE_CACHE_KEY,
+        );
+      } catch (cacheError) {
+        console.error("Failed to delete local featured marquee cache:", cacheError);
       }
+
       setRecord(saved);
       setMessage("تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.");
       setMessageType("success");
@@ -235,62 +225,58 @@ export function SuperAdminFeaturedMarqueePage() {
       const rawMessage = error instanceof Error ? error.message : "";
       const arabicMessages: Record<string, string> = {
         forbidden: "غير مصرح لك بهذه العملية.",
-        invalidFeaturedMarqueeConfig: "إعداد الشريط غير صالح، يرجى مراجعة البيانات.",
+        invalidFeaturedMarqueeConfig:
+          "إعداد الشريط غير صالح، يرجى مراجعة البيانات.",
       };
-      setMessage(
-        arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.",
-      );
+      setMessage(arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.");
       setMessageType("error");
     } finally {
       setBusy(false);
     }
   };
 
-  // ── Preview config ──────────────────────────────────────────────────────────
-
   const validItems = items.filter((item) => item.product !== null);
-  const previewConfig = {
-    sectionTitle: "المنتجات المميزة",
-    items: validItems.map((item) => ({
-      id: item.productId,
-      title: getProductName(item.product!),
-      price: getProductPrice(item.product!),
-      image: getProductImage(item.product!),
-      action: buildProductAction(item.product!),
-    })),
-  };
-
-  // ── Loading / auth ──────────────────────────────────────────────────────────
+  const previewConfig = useMemo(
+    () => ({
+      sectionTitle: "المنتجات المميزة",
+      items: validItems.map((item) => ({
+        id: item.productId,
+        title: getProductName(item.product!),
+        price: getProductPrice(item.product!),
+        image: getProductImage(item.product!),
+        action: buildProductAction(item.product!),
+      })),
+    }),
+    [validItems],
+  );
 
   if (sessionLoading || !authorized || !record) {
     return (
       <main className="container px-4 py-8 text-sm text-on-surface-variant">
-        جاري التحقق وتحميل الإعدادات…
+        جاري التحقق وتحميل الإعدادات...
       </main>
     );
   }
 
-  // ── Render ──────────────────────────────────────────────────────────────────
-
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8">
-      {/* ── Header ── */}
       <header className="mb-6 flex items-start gap-3">
         <div className="rounded-xl bg-primary/10 p-3 text-primary">
           <ShieldCheck className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-sm font-medium text-primary">منطقة السوبر أدمن</p>
+          <p className="text-sm font-medium text-primary">
+            منطقة السوبر أدمن
+          </p>
           <h1 className="text-2xl font-bold">
-            إدارة الشريط المميز للصفحة الرئيسية
+            إدارة شريط المنتجات المميزة للصفحة الرئيسية
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            اختر المنتجات التي تظهر في الشريط المتحرك (FeaturedMarquee).
+            اختر المنتجات التي تظهر في الشريط المتحرك داخل صفحة Home.
           </p>
         </div>
       </header>
 
-      {/* ── Meta ── */}
       <section className="mb-4 grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2">
         <div>
           <p className="text-xs text-muted-foreground">الإصدار</p>
@@ -304,11 +290,10 @@ export function SuperAdminFeaturedMarqueePage() {
         </div>
       </section>
 
-      {/* ── Check Interval ── */}
       <section className="mb-6 rounded-xl border bg-card p-4">
         <div className="mb-3 flex items-center gap-2">
           <RefreshCw className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold">فترة البحث عن تحديثات</h2>
+          <h2 className="font-semibold">فترة البحث عن التحديثات</h2>
         </div>
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-52 space-y-2">
@@ -356,8 +341,7 @@ export function SuperAdminFeaturedMarqueePage() {
         </div>
       </section>
 
-      {/* ── Message ── */}
-      {message && (
+      {message ? (
         <div
           className={`mb-4 rounded-lg border px-4 py-3 text-sm ${
             messageType === "success"
@@ -368,9 +352,8 @@ export function SuperAdminFeaturedMarqueePage() {
         >
           {message}
         </div>
-      )}
+      ) : null}
 
-      {/* ── Add Product ── */}
       <section className="mb-6 rounded-xl border bg-card p-4">
         <div className="mb-3 flex items-center gap-2">
           <Plus className="h-5 w-5 text-primary" />
@@ -378,14 +361,14 @@ export function SuperAdminFeaturedMarqueePage() {
         </div>
         <div className="flex gap-2">
           <div className="flex-1 space-y-1">
-            <Label htmlFor="new-product-id">معرّف المنتج (Product ID)</Label>
+            <Label htmlFor="new-product-id">معرف المنتج Product ID</Label>
             <Input
               id="new-product-id"
               placeholder="مثال: 3a1b2c-..."
               value={newProductId}
-              onChange={(e) => setNewProductId(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") void addProduct();
+              onChange={(event) => setNewProductId(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") void addProduct();
               }}
             />
           </div>
@@ -401,11 +384,11 @@ export function SuperAdminFeaturedMarqueePage() {
           </div>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
-          يمكنك نسخ معرف المنتج من صفحة المنتج (Product ID في URL: <code>productId=...</code>).
+          يمكنك نسخ معرف المنتج من صفحة المنتج، من قيمة <code>productId</code> في
+          الرابط.
         </p>
       </section>
 
-      {/* ── Product List ── */}
       <section className="mb-6 rounded-xl border bg-card p-4">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -444,7 +427,7 @@ export function SuperAdminFeaturedMarqueePage() {
 
         {items.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            لا توجد منتجات مختارة. أضف معرفات المنتجات أعلاه.
+            لا توجد منتجات مختارة. أضف معرفات المنتجات من الأعلى.
           </p>
         ) : (
           <div className="space-y-2">
@@ -453,14 +436,12 @@ export function SuperAdminFeaturedMarqueePage() {
                 key={item.productId}
                 draggable
                 onDragStart={() => handleDragStart(index)}
-                onDragOver={(e) => handleDragOver(e, index)}
+                onDragOver={(event) => handleDragOver(event, index)}
                 onDragEnd={handleDragEnd}
                 className="flex items-center gap-3 rounded-lg border bg-surface p-2 transition-colors hover:border-primary/30"
               >
-                {/* Drag handle */}
                 <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-muted-foreground" />
 
-                {/* Product image */}
                 <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-surface-bright">
                   {item.isLoading ? (
                     <div className="flex h-full w-full items-center justify-center">
@@ -480,11 +461,10 @@ export function SuperAdminFeaturedMarqueePage() {
                   )}
                 </div>
 
-                {/* Product info */}
                 <div className="min-w-0 flex-1">
                   {item.isLoading ? (
                     <p className="text-sm text-muted-foreground">
-                      جاري التحميل…
+                      جاري التحميل...
                     </p>
                   ) : item.error ? (
                     <p className="text-sm text-destructive">{item.error}</p>
@@ -494,9 +474,7 @@ export function SuperAdminFeaturedMarqueePage() {
                         {getProductName(item.product)}
                       </p>
                       <p className="text-xs text-primary">
-                        {getProductPrice(item.product)
-                          ? `${getProductPrice(item.product)} ر.س`
-                          : "—"}
+                        {getProductPrice(item.product) || "-"}
                       </p>
                     </>
                   ) : null}
@@ -505,18 +483,17 @@ export function SuperAdminFeaturedMarqueePage() {
                   </p>
                 </div>
 
-                {/* Position badge */}
                 <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                   #{index + 1}
                 </span>
 
-                {/* Remove button */}
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
                   onClick={() => removeProduct(item.productId)}
+                  aria-label="حذف المنتج من الشريط"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -525,15 +502,15 @@ export function SuperAdminFeaturedMarqueePage() {
           </div>
         )}
 
-        {items.length > 0 && (
+        {items.length > 0 ? (
           <p className="mt-3 text-xs text-muted-foreground">
-            اسحب العناصر لإعادة الترتيب. المنتجات التي لم يُعثر عليها لن تُحفظ.
+            اسحب العناصر لإعادة الترتيب. المنتجات التي لم يتم العثور عليها لن
+            تحفظ.
           </p>
-        )}
+        ) : null}
       </section>
 
-      {/* ── Live Preview ── */}
-      {validItems.length > 0 && (
+      {validItems.length > 0 ? (
         <section className="rounded-xl border bg-card p-4">
           <div className="mb-3 flex items-center gap-2">
             <Eye className="h-5 w-5 text-primary" />
@@ -543,7 +520,7 @@ export function SuperAdminFeaturedMarqueePage() {
             <FeaturedMarquee config={previewConfig} />
           </div>
         </section>
-      )}
+      ) : null}
     </main>
   );
 }

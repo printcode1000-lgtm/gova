@@ -1,11 +1,11 @@
 'use client';
 
 import { Sparkles } from 'lucide-react';
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
+import { ProductCard } from '@/components/ui/product-card';
+import { createFeaturedProductCardViewModel } from '@/features/product-card';
 import { useTranslation } from '@/lib/i18n';
-import { shouldUseUnoptimizedImage } from '@/lib/images/external-image';
 
 export interface FeaturedMarqueeItem {
   id: string;
@@ -238,23 +238,14 @@ export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
           {marqueeItems.map((item, idx) => (
             <div
               key={`${item.id}-${idx}`}
-              role="button"
-              tabIndex={0}
               aria-label={item.title}
-              onClick={(e) => handleItemClick(e, item.action)}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onAction?.(item.action); } }}
-              className="shrink-0 w-40 rounded-xl p-2 gova-card-tonal gova-card-tonal-tertiary cursor-pointer active:scale-95 transition-transform focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+              className="shrink-0 w-40 cursor-pointer"
             >
-              <Image
-                src={item.image}
-                alt={item.title}
-                width={160}
-                height={160}
-                className="w-full aspect-square object-cover rounded-lg mb-2 pointer-events-none"
-                unoptimized={shouldUseUnoptimizedImage(item.image)}
+              <ProductCard
+                card={createFeaturedProductCardViewModel(item)}
+                variant="featured-marquee"
+                onOpen={(event) => handleItemClick(event, item.action)}
               />
-              <p className="truncate text-xs font-semibold text-on-surface pointer-events-none">{item.title}</p>
-              <p className="text-xs font-bold text-primary pointer-events-none">{item.price}</p>
             </div>
           ))}
         </div>

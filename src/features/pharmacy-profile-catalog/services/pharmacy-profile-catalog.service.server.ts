@@ -1,7 +1,8 @@
-import "server-only";
+﻿import "server-only";
 
 import type { ProductRecord } from "@/features/product/entities/product.entity";
-import type { ProductData } from "@/features/product/entities/product.entity";
+import type { ProductDetails } from "@/features/product/entities/product.entity";
+import { createEmptyProductDetails } from "@/features/product/entities/product.entity";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_PRICE_LABEL,
@@ -35,9 +36,7 @@ function firstStrength(activeIngredientId: number) {
 }
 
 function sortByName(left: ProductRecord, right: ProductRecord) {
-  return (
-    left.data.fields["mainData.name"] || ""
-  ).localeCompare(right.data.fields["mainData.name"] || "", "ar");
+  return left.mainData.name.localeCompare(right.mainData.name, "ar");
 }
 
 function overrideByFixedId(overrides: PharmacyProfileProductOverride[]) {
@@ -166,7 +165,7 @@ export class PharmacyProfileCatalogService {
       categories.push({
         id: override.id,
         fixedCategoryId: null,
-        nameAr: override.nameAr || "تصنيف صيدلية",
+        nameAr: override.nameAr || "ØªØµÙ†ÙŠÙ ØµÙŠØ¯Ù„ÙŠØ©",
         nameEn: override.nameEn || override.nameAr || "Pharmacy category",
         icon: override.icon || "fas fa-pills",
         status: override.status,
@@ -199,7 +198,7 @@ export class PharmacyProfileCatalogService {
         id: override.id,
         fixedSubcategoryId: null,
         parentCategoryId: override.parentCategoryId,
-        nameAr: override.nameAr || "تصنيف فرعي",
+        nameAr: override.nameAr || "ØªØµÙ†ÙŠÙ ÙØ±Ø¹ÙŠ",
         nameEn: override.nameEn || override.nameAr || "Pharmacy subcategory",
         status: override.status,
         sortOrder: override.sortOrder ?? Number.MAX_SAFE_INTEGER,
@@ -245,7 +244,7 @@ export class PharmacyProfileCatalogService {
         id: override.id,
         fixedProductId: null,
         parentSubcategoryId: override.parentSubcategoryId,
-        nameAr: override.nameAr || "منتج صيدلية",
+        nameAr: override.nameAr || "Ù…Ù†ØªØ¬ ØµÙŠØ¯Ù„ÙŠØ©",
         nameEn: override.nameEn || override.nameAr || "Pharmacy product",
         imageUrl: override.imageUrl || "",
         status: override.status,
@@ -268,6 +267,31 @@ export class PharmacyProfileCatalogService {
   async createSubcategory(uid: string, parentCategoryId: string, nameAr: string, nameEn?: string) {
     return pharmacyProfileCatalogRepository.createCustomSubcategory({
       uid,
+      parentCategoryId,
+      nameAr,
+      nameEn,
+    });
+  }
+
+  async updateCategory(uid: string, categoryId: string, nameAr: string, nameEn?: string) {
+    await pharmacyProfileCatalogRepository.updateCategoryName({
+      uid,
+      categoryId,
+      nameAr,
+      nameEn,
+    });
+  }
+
+  async updateSubcategory(
+    uid: string,
+    subcategoryId: string,
+    parentCategoryId: string,
+    nameAr: string,
+    nameEn?: string,
+  ) {
+    await pharmacyProfileCatalogRepository.updateSubcategoryName({
+      uid,
+      subcategoryId,
       parentCategoryId,
       nameAr,
       nameEn,
@@ -314,8 +338,8 @@ export class PharmacyProfileCatalogService {
       uid,
       fixedProductId: identity.fixedProductId,
       parentSubcategoryId:
-        product?.data.fields["pharmacyCatalog.subcategoryId"] ||
-        product?.data.fields["pharmacySpecs.pharmacySubcategoryId"] ||
+        product?.pharmacyCatalog.subcategoryId ||
+        product?.pharmacySpecs.pharmacySubcategoryId ||
         "",
       status: "visible",
     });
@@ -324,13 +348,13 @@ export class PharmacyProfileCatalogService {
   async updateFixedProduct(
     productId: string,
     uid: string,
-    data: ProductData,
+    details: ProductDetails,
   ): Promise<ProductRecord | null> {
     const identity = parsePharmacyFixedProductId(productId);
     if (!identity || identity.uid !== uid) return null;
-    const firstImage = data.images[0] ?? null;
+    const firstImage = details.images[0] ?? null;
     const isLocalFixedImage = firstImage?.imageKey?.startsWith("pharmacy-fixed/");
-    const priceValue = Number(data.fields["price.current"] ?? "");
+    const priceValue = Number(details.price.current);
     const priceMinor = Number.isFinite(priceValue) && priceValue > 0
       ? Math.round(priceValue * 100)
       : null;
@@ -338,25 +362,24 @@ export class PharmacyProfileCatalogService {
       uid,
       fixedProductId: identity.fixedProductId,
       parentSubcategoryId:
-        data.fields["pharmacyCatalog.subcategoryId"] ||
-        data.fields["pharmacySpecs.pharmacySubcategoryId"] ||
+        details.pharmacyCatalog.subcategoryId ||
+        details.pharmacySpecs.pharmacySubcategoryId ||
         "",
       nameAr:
-        data.fields["pharmacySpecs.nameAr"] ||
-        data.fields["pharmacySpecs.activeIngredient"] ||
-        data.fields["mainData.name"] ||
+        details.pharmacySpecs.nameAr ||
+        details.pharmacySpecs.activeIngredient ||
+        details.mainData.name ||
         null,
-      nameEn: data.fields["pharmacySpecs.nameEn"] || null,
-      description: data.fields["mainData.description"] || null,
+      nameEn: details.pharmacySpecs.nameEn || null,
+      description: details.mainData.description || null,
       imageUrl: firstImage && !isLocalFixedImage ? firstImage.url : null,
       imageKey: firstImage && !isLocalFixedImage ? firstImage.imageKey : null,
-      formId: data.fields["pharmacySpecs.formId"] || null,
-      formNameAr: data.fields["pharmacySpecs.form"] || null,
-      strengthId: data.fields["pharmacySpecs.concentrationId"] || null,
-      strengthValue: data.fields["pharmacySpecs.concentration"] || null,
-      prescriptionRequired:
-        data.fields["pharmacySpecs.prescriptionRequired"] === "true",
-      priceText: data.fields["price.label"] || PHARMACY_PRICE_LABEL,
+      formId: details.pharmacySpecs.formId || null,
+      formNameAr: details.pharmacySpecs.form || null,
+      strengthId: details.pharmacySpecs.concentrationId || null,
+      strengthValue: details.pharmacySpecs.concentration || null,
+      prescriptionRequired: details.pharmacySpecs.prescriptionRequired,
+      priceText: details.price.label || PHARMACY_PRICE_LABEL,
       priceMinor,
       status: "visible",
     });
@@ -371,8 +394,8 @@ export class PharmacyProfileCatalogService {
       uid,
       fixedProductId: identity.fixedProductId,
       parentSubcategoryId:
-        product.data.fields["pharmacyCatalog.subcategoryId"] ||
-        product.data.fields["pharmacySpecs.pharmacySubcategoryId"] ||
+        product.pharmacyCatalog.subcategoryId ||
+        product.pharmacySpecs.pharmacySubcategoryId ||
         "",
       status: "hidden",
     });
@@ -408,48 +431,53 @@ export class PharmacyProfileCatalogService {
       status: "active",
       createdAt: override?.createdAt ?? now,
       updatedAt: now,
-      data: {
-        fields: {
-          "mainData.name": override?.nameAr || activeIngredient.nameAr,
-          "mainData.description":
+      ...createEmptyProductDetails({
+        mainData: {
+          name: override?.nameAr || activeIngredient.nameAr,
+          brand: "",
+          manufacturer: "",
+          available: true,
+          description:
             override?.description ||
             `${subcategory.nameAr} - ${activeIngredient.nameEn}`,
-          "mainData.available": "true",
-          "price.current":
+        },
+        price: {
+          current:
             override?.priceMinor === null || override?.priceMinor === undefined
               ? ""
               : String(override.priceMinor / 100),
-          "price.label": override?.priceText || PHARMACY_PRICE_LABEL,
-          "price.needsCar": "false",
-          "pharmacyCatalog.kind": "fixed",
-          "pharmacyCatalog.categoryId": String(category.id),
-          "pharmacyCatalog.categoryNameAr": category.nameAr,
-          "pharmacyCatalog.categoryNameEn": category.nameEn,
-          "pharmacyCatalog.subcategoryId": String(subcategory.id),
-          "pharmacyCatalog.subcategoryNameAr": subcategory.nameAr,
-          "pharmacyCatalog.subcategoryNameEn": subcategory.nameEn,
-          "pharmacyCatalog.fixedProductId": String(activeIngredient.originalId),
-          "pharmacySpecs.pharmacyCategoryId": String(category.id),
-          "pharmacySpecs.pharmacyCategory": category.nameAr,
-          "pharmacySpecs.pharmacySubcategoryId": String(subcategory.id),
-          "pharmacySpecs.pharmacySubcategory": subcategory.nameAr,
-          "pharmacySpecs.activeIngredientId": String(activeIngredient.id),
-          "pharmacySpecs.activeIngredient":
-            override?.nameAr || activeIngredient.nameAr,
-          "pharmacySpecs.nameAr": override?.nameAr || activeIngredient.nameAr,
-          "pharmacySpecs.nameEn": override?.nameEn || activeIngredient.nameEn,
-          "pharmacySpecs.formId": form?.id ?? "",
-          "pharmacySpecs.form": form?.nameAr ?? "",
-          "pharmacySpecs.concentrationId": strength?.id ?? "",
-          "pharmacySpecs.concentration": strength?.value ?? "",
-          "pharmacySpecs.prescriptionRequired": String(
-            override?.prescriptionRequired ?? activeIngredient.prescriptionRequired,
-          ),
+          beforeDiscount: "",
+          label: override?.priceText || PHARMACY_PRICE_LABEL,
+          needsCar: false,
         },
-        images: finalImageUrl
-          ? [{ imageKey, url: finalImageUrl }]
-          : [],
-      },
+        pharmacyCatalog: {
+          kind: "fixed",
+          categoryId: String(category.id),
+          categoryNameAr: category.nameAr,
+          categoryNameEn: category.nameEn,
+          subcategoryId: String(subcategory.id),
+          subcategoryNameAr: subcategory.nameAr,
+          subcategoryNameEn: subcategory.nameEn,
+          fixedProductId: String(activeIngredient.originalId),
+        },
+        pharmacySpecs: {
+          pharmacyCategoryId: String(category.id),
+          pharmacyCategory: category.nameAr,
+          pharmacySubcategoryId: String(subcategory.id),
+          pharmacySubcategory: subcategory.nameAr,
+          activeIngredientId: String(activeIngredient.id),
+          activeIngredient: override?.nameAr || activeIngredient.nameAr,
+          nameAr: override?.nameAr || activeIngredient.nameAr,
+          nameEn: override?.nameEn || activeIngredient.nameEn,
+          formId: form?.id ?? "",
+          form: form?.nameAr ?? "",
+          concentrationId: strength?.id ?? "",
+          concentration: strength?.value ?? "",
+          prescriptionRequired:
+            override?.prescriptionRequired ?? activeIngredient.prescriptionRequired,
+        },
+        images: finalImageUrl ? [{ imageKey, url: finalImageUrl }] : [],
+      }),
       pharmacy: {
         fixedProductId: activeIngredient.originalId,
         fixedSubcategoryId: subcategory.id,
@@ -472,33 +500,52 @@ export class PharmacyProfileCatalogService {
       status: "active",
       createdAt: override.createdAt,
       updatedAt: now,
-      data: {
-        fields: {
-          "mainData.name": override.nameAr || "منتج صيدلية",
-          "mainData.description": override.description || "",
-          "mainData.available": "true",
-          "price.current":
+      ...createEmptyProductDetails({
+        mainData: {
+          name: override.nameAr || "منتج صيدلية",
+          brand: "",
+          manufacturer: "",
+          available: true,
+          description: override.description || "",
+        },
+        price: {
+          current:
             override.priceMinor === null || override.priceMinor === undefined
               ? ""
               : String(override.priceMinor / 100),
-          "price.label": override.priceText || PHARMACY_PRICE_LABEL,
-          "price.needsCar": "false",
-          "pharmacyCatalog.kind": "custom",
-          "pharmacyCatalog.subcategoryId": override.parentSubcategoryId,
-          "pharmacySpecs.nameAr": override.nameAr || "",
-          "pharmacySpecs.nameEn": override.nameEn || "",
-          "pharmacySpecs.formId": override.formId || "",
-          "pharmacySpecs.form": override.formNameAr || "",
-          "pharmacySpecs.concentrationId": override.strengthId || "",
-          "pharmacySpecs.concentration": override.strengthValue || "",
-          "pharmacySpecs.prescriptionRequired": String(
-            override.prescriptionRequired ?? false,
-          ),
+          beforeDiscount: "",
+          label: override.priceText || PHARMACY_PRICE_LABEL,
+          needsCar: false,
+        },
+        pharmacyCatalog: {
+          kind: "custom",
+          categoryId: "",
+          categoryNameAr: "",
+          categoryNameEn: "",
+          subcategoryId: override.parentSubcategoryId,
+          subcategoryNameAr: "",
+          subcategoryNameEn: "",
+          fixedProductId: "",
+        },
+        pharmacySpecs: {
+          pharmacyCategoryId: "",
+          pharmacyCategory: "",
+          pharmacySubcategoryId: override.parentSubcategoryId,
+          pharmacySubcategory: "",
+          activeIngredientId: "",
+          activeIngredient: override.nameAr || "",
+          nameAr: override.nameAr || "",
+          nameEn: override.nameEn || "",
+          formId: override.formId || "",
+          form: override.formNameAr || "",
+          concentrationId: override.strengthId || "",
+          concentration: override.strengthValue || "",
+          prescriptionRequired: override.prescriptionRequired ?? false,
         },
         images: override.imageUrl
           ? [{ imageKey: override.imageKey || override.id, url: override.imageUrl }]
           : [],
-      },
+      }),
       pharmacy: {
         fixedProductId: null,
         fixedSubcategoryId: null,
@@ -511,3 +558,4 @@ export class PharmacyProfileCatalogService {
 
 export const pharmacyProfileCatalogService =
   new PharmacyProfileCatalogService();
+

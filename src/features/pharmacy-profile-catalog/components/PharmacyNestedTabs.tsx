@@ -26,7 +26,7 @@ export function isPharmacyProfileBucket(activeSubTab?: {
 }
 
 export function pharmacyProductSubcategoryId(product: ProductRecord): string {
-  return product.data.fields["pharmacyCatalog.subcategoryId"] || "";
+  return product.pharmacyCatalog.subcategoryId || product.pharmacySpecs.pharmacySubcategoryId || "";
 }
 
 export function PharmacyNestedTabs({

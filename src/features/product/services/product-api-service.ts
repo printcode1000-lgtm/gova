@@ -1,4 +1,4 @@
-import { GOVA_API_ROUTES, govaApi } from "@/core/api";
+import { GOVA_API_ROUTES, govaApi, type GovaApiRequestOptions } from "@/core/api";
 import type {
   CreateProductInput,
   ProductRecord,
@@ -6,10 +6,10 @@ import type {
 } from "../entities/product.entity";
 
 export const productApiService = {
-  get(id: string) {
+  get(id: string, options: GovaApiRequestOptions = {}) {
     return govaApi.get<ProductRecord>(
       `${GOVA_API_ROUTES.products}?id=${encodeURIComponent(id)}`,
-      { cache: "no-store" },
+      { cache: "no-store", ...options },
     );
   },
   listByOwnerAndCategory(uid: string, mainCategoryId: string, subcategoryId: string) {

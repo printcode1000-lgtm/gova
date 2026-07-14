@@ -316,6 +316,96 @@ export class PharmacyProfileCatalogRepository {
     return mapSubcategory(rows[0]!);
   }
 
+  async updateCategoryName(input: {
+    uid: string;
+    categoryId: string;
+    nameAr: string;
+    nameEn?: string;
+  }): Promise<void> {
+    const now = new Date().toISOString();
+    const fixedCategoryId = Number(input.categoryId);
+    if (Number.isInteger(fixedCategoryId)) {
+      const existing = (await productDbClient.execute(
+        "SELECT id FROM pharmacy_profile_category_overrides WHERE uid=? AND fixed_category_id=? LIMIT 1",
+        [input.uid, fixedCategoryId],
+      )) as Array<{ id: string }>;
+      if (existing[0]) {
+        await productDbClient.execute(
+          "UPDATE pharmacy_profile_category_overrides SET name_ar=?, name_en=?, updated_at=? WHERE id=?",
+          [input.nameAr, input.nameEn ?? input.nameAr, now, existing[0].id],
+        );
+        return;
+      }
+      await productDbClient.execute(
+        "INSERT INTO pharmacy_profile_category_overrides (id,uid,fixed_category_id,name_ar,name_en,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)",
+        [
+          randomUUID(),
+          input.uid,
+          fixedCategoryId,
+          input.nameAr,
+          input.nameEn ?? input.nameAr,
+          "visible",
+          now,
+          now,
+        ],
+      );
+      return;
+    }
+    await productDbClient.execute(
+      "UPDATE pharmacy_profile_category_overrides SET name_ar=?, name_en=?, updated_at=? WHERE id=? AND uid=? AND fixed_category_id IS NULL",
+      [input.nameAr, input.nameEn ?? input.nameAr, now, input.categoryId, input.uid],
+    );
+  }
+
+  async updateSubcategoryName(input: {
+    uid: string;
+    subcategoryId: string;
+    parentCategoryId: string;
+    nameAr: string;
+    nameEn?: string;
+  }): Promise<void> {
+    const now = new Date().toISOString();
+    const fixedSubcategoryId = Number(input.subcategoryId);
+    if (Number.isInteger(fixedSubcategoryId)) {
+      const existing = (await productDbClient.execute(
+        "SELECT id FROM pharmacy_profile_subcategory_overrides WHERE uid=? AND fixed_subcategory_id=? LIMIT 1",
+        [input.uid, fixedSubcategoryId],
+      )) as Array<{ id: string }>;
+      if (existing[0]) {
+        await productDbClient.execute(
+          "UPDATE pharmacy_profile_subcategory_overrides SET parent_category_id=?, name_ar=?, name_en=?, updated_at=? WHERE id=?",
+          [
+            input.parentCategoryId,
+            input.nameAr,
+            input.nameEn ?? input.nameAr,
+            now,
+            existing[0].id,
+          ],
+        );
+        return;
+      }
+      await productDbClient.execute(
+        "INSERT INTO pharmacy_profile_subcategory_overrides (id,uid,fixed_subcategory_id,parent_category_id,name_ar,name_en,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?)",
+        [
+          randomUUID(),
+          input.uid,
+          fixedSubcategoryId,
+          input.parentCategoryId,
+          input.nameAr,
+          input.nameEn ?? input.nameAr,
+          "visible",
+          now,
+          now,
+        ],
+      );
+      return;
+    }
+    await productDbClient.execute(
+      "UPDATE pharmacy_profile_subcategory_overrides SET name_ar=?, name_en=?, updated_at=? WHERE id=? AND uid=? AND fixed_subcategory_id IS NULL",
+      [input.nameAr, input.nameEn ?? input.nameAr, now, input.subcategoryId, input.uid],
+    );
+  }
+
   async setFixedCategoryStatus(
     uid: string,
     fixedCategoryId: number,

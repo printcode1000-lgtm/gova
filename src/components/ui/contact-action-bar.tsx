@@ -4,7 +4,6 @@ import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
-  faAt,
   faEnvelope,
   faGlobe,
   faLocationDot,
@@ -120,13 +119,22 @@ const SOCIAL_BASE_URLS: Record<string, string> = {
   telegram: "https://t.me/",
 };
 
-export function ContactActionBar({ data, className, label = "وسائل التواصل", compact = false }: ContactActionBarProps) {
+export function ContactActionBar({
+  data,
+  className,
+  label = "وسائل التواصل",
+  compact = false,
+}: ContactActionBarProps) {
   const groups = React.useMemo(() => buildContactGroups(data), [data]);
-
   if (groups.length === 0) return null;
 
   return (
-    <section className={cn("rounded-xl border border-outline-variant bg-surface/90 px-3 py-3 shadow-sm", className)}>
+    <section
+      className={cn(
+        "rounded-xl border border-outline-variant bg-surface/90 px-3 py-3 shadow-sm",
+        className,
+      )}
+    >
       <div className="flex items-center gap-3">
         {!compact ? (
           <span className="shrink-0 text-xs font-semibold text-on-surface-variant">
@@ -145,7 +153,7 @@ export function ContactActionBar({ data, className, label = "وسائل التو
 
 function ContactActionGroup({ group }: { group: ContactGroup }) {
   if (group.options.length === 1 && isDirectGroup(group.id)) {
-    const option = group.options[0];
+    const option = group.options[0]!;
     return (
       <Button
         asChild
@@ -156,7 +164,11 @@ function ContactActionGroup({ group }: { group: ContactGroup }) {
         title={group.label}
         aria-label={group.label}
       >
-        <a href={option.href} target={isExternalHref(option.href) ? "_blank" : undefined} rel={isExternalHref(option.href) ? "noreferrer" : undefined}>
+        <a
+          href={option.href}
+          target={isExternalHref(option.href) ? "_blank" : undefined}
+          rel={isExternalHref(option.href) ? "noreferrer" : undefined}
+        >
           <FontAwesomeIcon icon={group.icon} className="h-4 w-4" />
         </a>
       </Button>
@@ -188,8 +200,14 @@ function ContactActionGroup({ group }: { group: ContactGroup }) {
                 rel={isExternalHref(option.href) ? "noreferrer" : undefined}
                 className="flex min-w-0 flex-col items-start"
               >
-                <span className="max-w-56 truncate font-medium">{option.label}</span>
-                {option.detail ? <span className="max-w-56 truncate text-xs text-muted-foreground">{option.detail}</span> : null}
+                <span className="max-w-56 truncate font-medium">
+                  {option.label}
+                </span>
+                {option.detail ? (
+                  <span className="max-w-56 truncate text-xs text-muted-foreground">
+                    {option.detail}
+                  </span>
+                ) : null}
               </a>
             </DropdownMenuItem>
           ))}
@@ -203,8 +221,12 @@ function buildContactGroups(data?: ContactActionBarData | null): ContactGroup[] 
   const phones = array(data?.phones).filter((item) => item.number?.trim());
   const emails = array(data?.emails).filter((item) => item.email?.trim());
   const websites = array(data?.websites).filter((item) => item.url?.trim());
-  const socialLinks = array(data?.socialLinks).filter((item) => item.url?.trim() || item.handle?.trim());
-  const locations = array(data?.locations).filter((item) => item.address?.trim() || hasCoordinates(item));
+  const socialLinks = array(data?.socialLinks).filter(
+    (item) => item.url?.trim() || item.handle?.trim(),
+  );
+  const locations = array(data?.locations).filter(
+    (item) => item.address?.trim() || hasCoordinates(item),
+  );
 
   const phoneOptions = phones
     .filter((item) => !isPhoneType(item, ["whatsapp", "telegram", "viber"]))
@@ -259,7 +281,9 @@ function buildContactGroups(data?: ContactActionBarData | null): ContactGroup[] 
   const locationOptions = locations.map((item, index) => ({
     id: item.id,
     label: item.address?.trim() || `الموقع ${index + 1}`,
-    detail: hasCoordinates(item) ? `${item.latitude}, ${item.longitude}` : undefined,
+    detail: hasCoordinates(item)
+      ? `${item.latitude}, ${item.longitude}`
+      : undefined,
     href: getMapsHref(item),
   }));
 
@@ -273,13 +297,21 @@ function buildContactGroups(data?: ContactActionBarData | null): ContactGroup[] 
   pushGroup(groups, "location", "الموقع", faLocationDot, locationOptions);
 
   for (const [platform, options] of groupSocialLinks(socialLinks)) {
-    pushGroup(groups, `social-${platform}`, labelSocialPlatform(platform), SOCIAL_ICONS[platform] ?? faShareNodes, options);
+    pushGroup(
+      groups,
+      `social-${platform}`,
+      labelSocialPlatform(platform),
+      SOCIAL_ICONS[platform] ?? faShareNodes,
+      options,
+    );
   }
 
   return groups;
 }
 
-function groupSocialLinks(links: ContactActionSocialLink[]): Array<[string, ContactOption[]]> {
+function groupSocialLinks(
+  links: ContactActionSocialLink[],
+): Array<[string, ContactOption[]]> {
   const grouped = new Map<string, ContactOption[]>();
   links.forEach((link) => {
     const platform = normalizePlatform(link.platform);
@@ -297,7 +329,13 @@ function groupSocialLinks(links: ContactActionSocialLink[]): Array<[string, Cont
   return [...grouped.entries()];
 }
 
-function pushGroup(groups: ContactGroup[], id: string, label: string, icon: IconDefinition, options: ContactOption[]) {
+function pushGroup(
+  groups: ContactGroup[],
+  id: string,
+  label: string,
+  icon: IconDefinition,
+  options: ContactOption[],
+) {
   if (options.length === 0) return;
   groups.push({ id, label, icon, options });
 }
@@ -354,7 +392,10 @@ function labelSocialPlatform(platform: string): string {
   return labels[platform] ?? platform;
 }
 
-function resolveSocialHref(platform: string, link: ContactActionSocialLink): string {
+function resolveSocialHref(
+  platform: string,
+  link: ContactActionSocialLink,
+): string {
   if (link.url?.trim()) return normalizeUrl(link.url);
   const handle = link.handle?.trim().replace(/^@/, "");
   if (!handle) return "";
@@ -363,16 +404,24 @@ function resolveSocialHref(platform: string, link: ContactActionSocialLink): str
 }
 
 function hasCoordinates(location: ContactActionLocation): boolean {
-  return Number.isFinite(location.latitude) && Number.isFinite(location.longitude);
+  return (
+    Number.isFinite(location.latitude) && Number.isFinite(location.longitude)
+  );
 }
 
 function getMapsHref(location: ContactActionLocation): string {
   if (hasCoordinates(location)) {
     return `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
   }
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.address.trim())}`;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    location.address.trim(),
+  )}`;
 }
 
 function isExternalHref(href: string): boolean {
-  return !href.startsWith("tel:") && !href.startsWith("mailto:") && !href.startsWith("viber:");
+  return (
+    !href.startsWith("tel:") &&
+    !href.startsWith("mailto:") &&
+    !href.startsWith("viber:")
+  );
 }

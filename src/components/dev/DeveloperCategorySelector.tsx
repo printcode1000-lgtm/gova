@@ -12,13 +12,15 @@ import {
 } from "@/components/ui/select";
 import { GOVA_API_ROUTES, govaApi } from "@/core/api";
 import {
-  PRODUCT_DEMO_FIELDS,
+  PRODUCT_DEMO_DETAILS,
   PRODUCT_DEMO_IMAGES,
   ProductComponentsRenderer,
 } from "@/components/product/ProductComponentsRenderer";
 import type { ProductMode } from "@/components/product/product-component.types";
-import type { ProductFieldValues } from "@/features/product/entities/product.entity";
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import {
+  createEmptyProductDetails,
+  type ProductDetails,
+} from "@/features/product/entities/product.entity";
 import {
   CATEGORY_CONSTANTS,
   categoryService,
@@ -35,6 +37,7 @@ import { ProductMainDataStyleEditor } from "@/components/ui/main-data/ProductMai
 import { ProductSpecificationsStyleEditor } from "@/components/ui/specifications/ProductSpecificationsStyleEditor";
 import { ProductVehicleSpecsStyleEditor } from "@/components/ui/vehicle-specs/ProductVehicleSpecsStyleEditor";
 import { ProductPropertySpecsStyleEditor } from "@/components/ui/property-specs/ProductPropertySpecsStyleEditor";
+import { ProductSearchColumnsStyleEditor } from "@/components/ui/search-columns/ProductSearchColumnsStyleEditor";
 import { ProductPharmacySpecsStyleEditor } from "@/features/pharmacy-profile-catalog/components/ProductPharmacySpecsStyleEditor";
 import {
   createDefaultProductStyleComponents,
@@ -115,18 +118,20 @@ export function DeveloperCategorySelector() {
     "idle" | "loading" | "saving" | "saved" | "error"
   >("idle");
   const [previewMode, setPreviewMode] = React.useState<ProductMode>("view");
-  const [previewFields, setPreviewFields] = React.useState<ProductFieldValues>({
-    ...PRODUCT_DEMO_FIELDS,
+  const [previewDetails, setPreviewDetails] = React.useState<ProductDetails>({
+    ...PRODUCT_DEMO_DETAILS,
+    images: PRODUCT_DEMO_IMAGES,
   });
-  const [previewImages, setPreviewImages] =
-    React.useState<StoredImage[]>(PRODUCT_DEMO_IMAGES);
 
   const isLoading = false;
   const loadError = false;
 
   React.useEffect(() => {
-    setPreviewFields(previewMode === "new" ? {} : { ...PRODUCT_DEMO_FIELDS });
-    setPreviewImages(previewMode === "new" ? [] : [...PRODUCT_DEMO_IMAGES]);
+    setPreviewDetails(
+      previewMode === "new"
+        ? createEmptyProductDetails()
+        : { ...PRODUCT_DEMO_DETAILS, images: [...PRODUCT_DEMO_IMAGES] },
+    );
   }, [previewMode, mainCategoryId, subcategoryId]);
 
   const mainCategoryOptions = React.useMemo<MainCategoryOption[]>(() => {
@@ -367,7 +372,7 @@ export function DeveloperCategorySelector() {
   const controlsDisabled = !isStyleLoaded;
 
   return (
-    <main className="mx-auto w-full px-4 py-8 sm:px-6">
+    <main className="mx-auto w-full px-4 py-8 sm:px-6" data-voice-input="off">
       <section className="rounded-3xl border bg-card p-5 shadow-sm sm:p-8">
         <p className="mb-2 w-full text-xs font-semibold uppercase tracking-wider text-primary">
           Developer only
@@ -524,6 +529,13 @@ export function DeveloperCategorySelector() {
                         updateComponent("pharmacySpecs", value)
                       }
                     />
+                    <ProductSearchColumnsStyleEditor
+                      value={components.searchColumns}
+                      disabled={controlsDisabled}
+                      onChange={(value) =>
+                        updateComponent("searchColumns", value)
+                      }
+                    />
                   </div>
                 </div>
 
@@ -561,10 +573,8 @@ export function DeveloperCategorySelector() {
                     <ProductComponentsRenderer
                       mode={previewMode}
                       components={previewStyleComponents}
-                      fields={previewFields}
-                      onFieldsChange={setPreviewFields}
-                      images={previewImages}
-                      onImagesChange={setPreviewImages}
+                      product={previewDetails}
+                      onProductChange={setPreviewDetails}
                       mainCategoryId={mainCategoryId}
                     />
                   </div>

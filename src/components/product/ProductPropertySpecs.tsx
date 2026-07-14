@@ -6,15 +6,13 @@ import {
   createOpenStreetMapProvider,
   markerAt,
 } from "@/components/ui/GovaMap";
-import type { ProductFieldValues } from "@/features/product/entities/product.entity";
+import type { ProductPropertySpecsData } from "@/features/product/entities/product.entity";
 import { ProductField } from "./ProductComponentPrimitives";
 import type {
   ProductComponentConfig,
   ProductMode,
 } from "./product-component.types";
 
-const LATITUDE_KEY = "propertySpecs.locationLatitude";
-const LONGITUDE_KEY = "propertySpecs.locationLongitude";
 const DEFAULT_LOCATION = {
   latitude: 29.9668,
   longitude: 32.5498,
@@ -61,39 +59,36 @@ function openDeviceMaps(latitude: number, longitude: number) {
 export function ProductPropertySpecs({
   mode,
   config,
-  fields,
+  specs,
   onChange,
 }: {
   mode: ProductMode;
   config: ProductComponentConfig;
-  fields: ProductFieldValues;
-  onChange: (fields: ProductFieldValues) => void;
+  specs: ProductPropertySpecsData;
+  onChange: (specs: ProductPropertySpecsData) => void;
 }) {
   const [mapOpen, setMapOpen] = React.useState(true);
   const [mapMessage, setMapMessage] = React.useState("");
-  const latitude = readCoordinate(fields[LATITUDE_KEY], -90, 90);
-  const longitude = readCoordinate(fields[LONGITUDE_KEY], -180, 180);
+  const latitude = readCoordinate(specs.locationLatitude, -90, 90);
+  const longitude = readCoordinate(specs.locationLongitude, -180, 180);
   const hasLocation = latitude !== null && longitude !== null;
 
   const updateLocation = React.useCallback(
     (nextLatitude: number, nextLongitude: number) => {
       onChange({
-        ...fields,
-        [LATITUDE_KEY]: String(nextLatitude),
-        [LONGITUDE_KEY]: String(nextLongitude),
+        ...specs,
+        locationLatitude: String(nextLatitude),
+        locationLongitude: String(nextLongitude),
       });
       setMapMessage("تم اختيار الموقع. احفظ المنتج لتثبيت التغيير.");
     },
-    [fields, onChange],
+    [onChange, specs],
   );
 
   const resetLocation = React.useCallback(() => {
-    const nextFields = { ...fields };
-    delete nextFields[LATITUDE_KEY];
-    delete nextFields[LONGITUDE_KEY];
-    onChange(nextFields);
+    onChange({ ...specs, locationLatitude: "", locationLongitude: "" });
     setMapMessage("تمت إعادة ضبط الموقع.");
-  }, [fields, onChange]);
+  }, [onChange, specs]);
 
   const shareLocation = React.useCallback(
     async (nextLatitude: number, nextLongitude: number) => {
@@ -116,15 +111,14 @@ export function ProductPropertySpecs({
     <div className="grid gap-3 sm:grid-cols-2">
       {PROPERTY_FIELDS.map(([fieldKey, label, type]) => {
         if (config[fieldKey] === false) return null;
-        const storageKey = `propertySpecs.${fieldKey}`;
         return (
           <ProductField
-            key={storageKey}
+            key={fieldKey}
             label={label}
-            value={fields[storageKey] ?? ""}
+            value={specs[fieldKey as keyof ProductPropertySpecsData] ?? ""}
             mode={mode}
             type={type}
-            onChange={(value) => onChange({ ...fields, [storageKey]: value })}
+            onChange={(value) => onChange({ ...specs, [fieldKey]: value })}
           />
         );
       })}

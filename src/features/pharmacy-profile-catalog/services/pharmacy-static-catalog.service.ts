@@ -42,6 +42,14 @@ export class PharmacyStaticCatalogService {
       .sort((left, right) => left.originalId - right.originalId);
   }
 
+  getForms(): readonly PharmacyCatalogForm[] {
+    return forms;
+  }
+
+  getStrengths(): readonly PharmacyCatalogStrength[] {
+    return strengths;
+  }
+
   getFormsForActiveIngredient(activeIngredientId: number): readonly PharmacyCatalogForm[] {
     return ingredientFormLinks
       .filter((item) => item.activeIngredientId === activeIngredientId)

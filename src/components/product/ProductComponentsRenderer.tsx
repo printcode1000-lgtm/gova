@@ -1,7 +1,10 @@
 "use client";
 
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
-import type { ProductFieldValues } from "@/features/product/entities/product.entity";
+import {
+  createEmptyProductDetails,
+  type ProductDetails,
+} from "@/features/product/entities/product.entity";
 import {
   ProductComponentFrame,
   ProductField,
@@ -19,21 +22,20 @@ import type {
 } from "./product-component.types";
 import { ProductVehicleSpecs } from "./ProductVehicleSpecs";
 
-const FIELDS: Record<
-  string,
-  Array<[string, string, "text" | "number" | "textarea" | "boolean"]>
-> = {
+type BasicFieldKind = "text" | "number" | "textarea" | "boolean";
+
+const FIELDS: Record<string, Array<[string, string, BasicFieldKind]>> = {
   mainData: [
     ["name", "الاسم", "text"],
     ["brand", "العلامة التجارية", "text"],
     ["manufacturer", "الشركة المصنعة", "text"],
-    ["available", "التوفر", "boolean"],
+    ["available", "متوفر", "boolean"],
     ["description", "الوصف", "textarea"],
   ],
   price: [
     ["current", "السعر الحالي", "number"],
     ["beforeDiscount", "السعر قبل الخصم", "number"],
-    ["needsCar", "يحتاج سيارة", "boolean"],
+    ["needsCar", "يحتاج سيارة نقل", "boolean"],
   ],
   specifications: [
     ["color", "اللون", "text"],
@@ -50,16 +52,6 @@ const FIELDS: Record<
     ["type", "نوع العقار", "text"],
     ["address", "العنوان", "text"],
     ["finishing", "التشطيب", "text"],
-  ],
-  pharmacySpecs: [
-    ["pharmacyCategory", "التصنيف الرئيسي", "text"],
-    ["pharmacySubcategory", "التصنيف الفرعي", "text"],
-    ["nameAr", "الاسم بالعربي", "text"],
-    ["nameEn", "الاسم بالإنجليزي", "text"],
-    ["activeIngredient", "المادة الفعالة", "text"],
-    ["form", "شكل الدواء", "text"],
-    ["concentration", "التركيز", "text"],
-    ["prescriptionRequired", "يتطلب روشتة", "boolean"],
   ],
   rating: [
     ["rating", "التقييم", "number"],
@@ -98,61 +90,108 @@ export const PRODUCT_DEMO_IMAGES: StoredImage[] = [
   },
 ];
 
-export const PRODUCT_DEMO_FIELDS: ProductFieldValues = {
-  "rating.rating": "4",
-  "rating.comment": "منتج ممتاز وجودته جيدة جدًا",
-  "price.current": "1250",
-  "price.beforeDiscount": "1500",
-  "price.needsCar": "false",
-  "mainData.name": "منتج تجريبي",
-  "mainData.brand": "جوفا",
-  "mainData.manufacturer": "الشركة المصنعة",
-  "mainData.available": "true",
-  "mainData.description": "وصف تجريبي للمنتج أو الخدمة المعروضة.",
-  "specifications.color": "أسود",
-  "specifications.dimensions": "40 × 30 × 15 سم",
-  "specifications.condition": "جديد",
-  "specifications.size": "متوسط",
-  "specifications.weight": "2 كجم",
-  "specifications.year": "2026",
-  "vehicleSpecs.brand": "toyota",
-  "vehicleSpecs.bodyType": "sedan",
-  "vehicleSpecs.fuel": "benzine",
-  "vehicleSpecs.transmission": "automatic",
-  "vehicleSpecs.special": "special_needs",
-  "propertySpecs.area": "180 م²",
-  "propertySpecs.rooms": "3",
-  "propertySpecs.bathrooms": "2",
-  "propertySpecs.type": "شقة",
-  "propertySpecs.address": "القاهرة الجديدة",
-  "propertySpecs.finishing": "سوبر لوكس",
-  "pharmacySpecs.pharmacyCategory": "الأدوية والعلاج",
-  "pharmacySpecs.pharmacySubcategory": "مسكنات الألم وخافض الحرارة",
-  "pharmacySpecs.nameAr": "دواء تجريبي",
-  "pharmacySpecs.nameEn": "Demo Medicine",
-  "pharmacySpecs.activeIngredient": "باراسيتامول",
-  "pharmacySpecs.form": "أقراص",
-  "pharmacySpecs.concentration": "500 مجم",
-  "pharmacySpecs.prescriptionRequired": "false",
-};
+export const PRODUCT_DEMO_DETAILS: ProductDetails = createEmptyProductDetails({
+  rating: {
+    rating: "4",
+    comment: "منتج ممتاز وجودته جيدة جدًا",
+    enabled: true,
+    targetEnabled: true,
+    mode: "",
+  },
+  price: {
+    current: "1250",
+    beforeDiscount: "1500",
+    label: "",
+    needsCar: false,
+  },
+  mainData: {
+    name: "منتج تجريبي",
+    brand: "جوفا",
+    manufacturer: "الشركة المصنعة",
+    available: true,
+    description: "وصف تجريبي للمنتج أو الخدمة المعروضة.",
+  },
+  specifications: {
+    color: "أسود",
+    dimensions: "40 x 30 x 15 سم",
+    condition: "جديد",
+    size: "متوسط",
+    weight: "2 كجم",
+    year: "2026",
+  },
+  vehicleSpecs: {
+    brand: "toyota",
+    bodyType: "sedan",
+    fuel: "benzine",
+    transmission: "automatic",
+    special: "special_needs",
+  },
+  propertySpecs: {
+    area: "180 م²",
+    rooms: "3",
+    bathrooms: "2",
+    type: "شقة",
+    address: "القاهرة الجديدة",
+    locationLatitude: "",
+    locationLongitude: "",
+    finishing: "سوبر لوكس",
+  },
+  pharmacySpecs: {
+    pharmacyCategoryId: "",
+    pharmacyCategory: "الأدوية والعلاج",
+    pharmacySubcategoryId: "",
+    pharmacySubcategory: "مسكنات الألم وخافض الحرارة",
+    activeIngredientId: "",
+    activeIngredient: "باراسيتامول",
+    nameAr: "دواء تجريبي",
+    nameEn: "Demo Medicine",
+    formId: "",
+    form: "أقراص",
+    concentrationId: "",
+    concentration: "500 مجم",
+    prescriptionRequired: false,
+  },
+});
+
+function readValue(product: ProductDetails, section: string, key: string) {
+  const value = (product as unknown as Record<string, Record<string, unknown>>)[
+    section
+  ]?.[key];
+  return typeof value === "boolean" ? String(value) : String(value ?? "");
+}
+
+function writeValue(
+  product: ProductDetails,
+  section: string,
+  key: string,
+  value: string,
+  kind: BasicFieldKind,
+): ProductDetails {
+  const currentSection =
+    (product as unknown as Record<string, Record<string, unknown>>)[section] ??
+    {};
+  return {
+    ...product,
+    [section]: {
+      ...currentSection,
+      [key]: kind === "boolean" ? value === "true" : value,
+    },
+  } as ProductDetails;
+}
 
 export function ProductComponentsRenderer({
   mode,
   components,
-  fields,
-  onFieldsChange,
-  images,
-  onImagesChange,
+  product,
+  onProductChange,
   productId = "",
   ownerUid = "",
   mainCategoryId = "",
 }: {
   mode: ProductMode;
   components: ProductStyleComponents;
-  fields: ProductFieldValues;
-  onFieldsChange: (fields: ProductFieldValues) => void;
-  images: StoredImage[];
-  onImagesChange: (images: StoredImage[]) => void;
+  product: ProductDetails;
+  onProductChange: (product: ProductDetails) => void;
   productId?: string;
   ownerUid?: string;
   mainCategoryId?: string;
@@ -177,14 +216,14 @@ export function ProductComponentsRenderer({
             <ProductComponentFrame key={key} title={TITLES[key]}>
               {mode === "view" ? (
                 <ProductImageGallery
-                  images={images.slice(0, Number(config.count || 1))}
+                  images={product.images.slice(0, Number(config.count || 1))}
                 />
               ) : (
                 <ProductImageEditors
                   maxImages={Number(config.count || 1)}
                   mainCategoryId={mainCategoryId}
-                  images={images}
-                  onChange={onImagesChange}
+                  images={product.images}
+                  onChange={(images) => onProductChange({ ...product, images })}
                   deferStorageDeletion={mode === "edit"}
                 />
               )}
@@ -193,7 +232,7 @@ export function ProductComponentsRenderer({
         }
 
         if (key === "rating") {
-          const savedMode = fields["rating.mode"];
+          const savedMode = product.rating.mode;
           const commentsEnabled =
             savedMode === "stars"
               ? false
@@ -207,15 +246,15 @@ export function ProductComponentsRenderer({
                 <ProductReviews
                   productId={productId}
                   ownerUid={ownerUid}
-                  productName={fields["mainData.name"] || "المنتج أو الخدمة"}
-                  reviewsEnabled={fields["rating.enabled"] !== "false"}
-                  targetEnabled={fields["rating.targetEnabled"] !== "false"}
+                  productName={product.mainData.name || "المنتج أو الخدمة"}
+                  reviewsEnabled={product.rating.enabled}
+                  targetEnabled={product.rating.targetEnabled}
                   commentsEnabled={commentsEnabled}
                 />
               ) : (
                 <ProductRatingSettings
-                  fields={fields}
-                  onChange={onFieldsChange}
+                  rating={product.rating}
+                  onChange={(rating) => onProductChange({ ...product, rating })}
                 />
               )}
             </ProductComponentFrame>
@@ -231,8 +270,7 @@ export function ProductComponentsRenderer({
                   <ProductAddToCartButton
                     productId={productId}
                     sellerId={ownerUid}
-                    fields={fields}
-                    images={images}
+                    product={product}
                     mainCategoryId={mainCategoryId}
                   />
                 ) : null}
@@ -257,8 +295,10 @@ export function ProductComponentsRenderer({
               <ProductVehicleSpecs
                 mode={mode}
                 config={config}
-                fields={fields}
-                onChange={onFieldsChange}
+                specs={product.vehicleSpecs}
+                onChange={(vehicleSpecs) =>
+                  onProductChange({ ...product, vehicleSpecs })
+                }
               />
             </ProductComponentFrame>
           );
@@ -270,8 +310,10 @@ export function ProductComponentsRenderer({
               <ProductPropertySpecs
                 mode={mode}
                 config={config}
-                fields={fields}
-                onChange={onFieldsChange}
+                specs={product.propertySpecs}
+                onChange={(propertySpecs) =>
+                  onProductChange({ ...product, propertySpecs })
+                }
               />
             </ProductComponentFrame>
           );
@@ -283,8 +325,9 @@ export function ProductComponentsRenderer({
               <ProductPharmacySpecs
                 mode={mode}
                 config={config}
-                fields={fields}
-                onChange={onFieldsChange}
+                details={product}
+                ownerUid={ownerUid}
+                onChange={onProductChange}
               />
             </ProductComponentFrame>
           );
@@ -295,17 +338,18 @@ export function ProductComponentsRenderer({
             <div className="grid gap-3 sm:grid-cols-2">
               {(FIELDS[key] ?? []).map(([fieldKey, label, kind]) => {
                 if (config[fieldKey] === false) return null;
-                const storageKey = `${key}.${fieldKey}`;
                 return (
                   <ProductField
-                    key={storageKey}
+                    key={`${key}.${fieldKey}`}
                     label={label}
-                    value={fields[storageKey] ?? ""}
+                    value={readValue(product, key, fieldKey)}
                     mode={mode}
                     type={kind}
                     multiline={kind === "textarea"}
                     onChange={(value) =>
-                      onFieldsChange({ ...fields, [storageKey]: value })
+                      onProductChange(
+                        writeValue(product, key, fieldKey, value, kind),
+                      )
                     }
                   />
                 );

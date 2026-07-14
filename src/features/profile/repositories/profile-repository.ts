@@ -521,6 +521,7 @@ export class ProfileRepository implements IProfileRepository {
     offset: number,
     limit: number,
     search?: string,
+    minRating?: number,
   ): Promise<UserProfileRow[]> {
     // Try doctor-appointment mapping first (for medical specialties), then regular subcategories
     const columnName = columnByDoctorAppointment.get(subcategoryId) ||
@@ -547,6 +548,11 @@ export class ProfileRepository implements IProfileRepository {
         " AND (lower(p.uid) LIKE ? OR lower(p.store_details_json) LIKE ?)";
       params.push(pattern, pattern);
     }
+    let ratingCondition = "";
+    if (typeof minRating === "number" && Number.isFinite(minRating) && minRating >= 1) {
+      ratingCondition = " AND COALESCE(r.avg_rating, 0) >= ?";
+      params.push(minRating);
+    }
     params.push(Math.max(1, limit), Math.max(0, offset));
 
     const rows = (await this.database.execute(
@@ -566,7 +572,12 @@ export class ProfileRepository implements IProfileRepository {
         p.fulfillment_settings_json
       FROM user_specialties s
       INNER JOIN user_profiles p ON p.uid = s.uid
-      WHERE (${specialtyCondition})${searchCondition}
+      LEFT JOIN (
+        SELECT target_uid, AVG(rating) avg_rating
+        FROM profile_reviews
+        GROUP BY target_uid
+      ) r ON r.target_uid = p.uid
+      WHERE (${specialtyCondition})${searchCondition}${ratingCondition}
       ORDER BY p.uid ASC
       LIMIT ? OFFSET ?`,
       params,

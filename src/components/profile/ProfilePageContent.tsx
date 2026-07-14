@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import {
@@ -160,7 +160,11 @@ export function ProfilePageContent() {
       setIsLoadingFeaturedProducts(true);
       try {
         const products = await Promise.all(
-          ids.map((id) => productApiService.get(id).catch(() => null)),
+          ids.map((id) =>
+            productApiService
+              .get(id, { suppressErrorLog: true })
+              .catch(() => null),
+          ),
         );
         if (!cancelled) {
           setFeaturedProducts(
@@ -183,12 +187,12 @@ export function ProfilePageContent() {
   const profileFeaturedConfig = useMemo<FeaturedMarqueeConfig>(() => ({
     sectionTitle: "منتجات مميزة",
     items: featuredProducts.map((product) => {
-      const price = Number(product.data.fields["price.current"] ?? 0);
+      const price = Number(product.price.current || 0);
       return {
         id: product.id,
-        title: product.data.fields["mainData.name"] || "منتج",
+        title: product.mainData.name || "منتج",
         price: price > 0 ? `${price.toLocaleString("ar-EG")} ج.م` : "السعر عند الطلب",
-        image: product.data.images[0]?.url || "/images/mainCategories/General Services.webp",
+        image: product.images[0]?.url || "/images/mainCategories/General Services.webp",
         action: `mode=view&productId=${product.id}&mainCategoryId=${product.mainCategoryId}&subcategoryId=${product.subcategoryId}`,
       };
     }),
@@ -753,3 +757,4 @@ export function ProfilePageContent() {
     </div>
   );
 }
+

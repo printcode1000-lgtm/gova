@@ -67,7 +67,15 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
       sectionTitle: featuredMarqueeData.sectionTitle,
       items: featuredMarqueeData.items,
       onAction: (action) => {
-        router.push(`/product?${action}`);
+        if (action.startsWith("/") || action.startsWith("http")) {
+          window.location.href = action;
+        } else if (action.includes("productId=")) {
+          router.push(`/product?${action}`);
+        } else if (/^[0-9a-fA-F-]{36}$/.test(action)) {
+          router.push(`/product?mode=view&productId=${encodeURIComponent(action)}`);
+        } else {
+          console.log("Featured marquee action triggered:", action);
+        }
       },
     }),
     [featuredMarqueeData, router],

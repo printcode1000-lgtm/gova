@@ -44,7 +44,7 @@ function subProductId(sub: { id: number | string; originalId?: number }): string
 }
 
 function productName(product: ProductRecord): string {
-  return product.data.fields['mainData.name'] || '';
+  return product.mainData.name || '';
 }
 
 function sortProducts(products: ProductRecord[], sortBy: ProfileProductsFilters['sortBy']) {

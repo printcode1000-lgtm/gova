@@ -3,11 +3,12 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type {
   CreateProductInput,
-  ProductData,
+  ProductDetails,
   ProductRecord,
   ProductStatus,
   UpdateProductInput,
 } from "../entities/product.entity";
+import { createEmptyProductDetails } from "../entities/product.entity";
 import {
   productRepository,
   type ProductRepository,
@@ -18,14 +19,12 @@ import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catal
 
 const SAFE_ID = /^[a-z0-9-]+$/i;
 
-function normalizeData(value: ProductData): ProductData {
-  const fields: Record<string, string> = {};
-  if (value?.fields && typeof value.fields === "object") {
-    for (const [key, fieldValue] of Object.entries(value.fields)) {
-      if (/^[a-zA-Z0-9_.-]+$/.test(key) && typeof fieldValue === "string")
-        fields[key] = fieldValue.slice(0, 10000);
-    }
-  }
+function clean(value: unknown, max = 10000) {
+  return typeof value === "string" ? value.slice(0, max) : "";
+}
+
+function normalizeDetails(value: ProductDetails): ProductDetails {
+  const details = createEmptyProductDetails(value);
   const images = Array.isArray(value?.images)
     ? value.images
         .filter(
@@ -36,7 +35,38 @@ function normalizeData(value: ProductData): ProductData {
         )
         .slice(0, 20)
     : [];
-  return { fields, images };
+  return createEmptyProductDetails({
+    ...details,
+    mainData: {
+      name: clean(details.mainData.name),
+      brand: clean(details.mainData.brand),
+      manufacturer: clean(details.mainData.manufacturer),
+      available: details.mainData.available === true,
+      description: clean(details.mainData.description),
+    },
+    price: {
+      current: clean(details.price.current, 120),
+      beforeDiscount: clean(details.price.beforeDiscount, 120),
+      label: clean(details.price.label, 500),
+      needsCar: details.price.needsCar === true,
+    },
+    pharmacySpecs: {
+      ...details.pharmacySpecs,
+      prescriptionRequired: details.pharmacySpecs.prescriptionRequired === true,
+    },
+    rating: {
+      rating: clean(details.rating.rating, 120),
+      comment: clean(details.rating.comment),
+      enabled: details.rating.enabled !== false,
+      targetEnabled: details.rating.targetEnabled !== false,
+      mode:
+        details.rating.mode === "stars" ||
+        details.rating.mode === "stars-comments"
+          ? details.rating.mode
+          : "",
+    },
+    images,
+  });
 }
 
 function normalizeStatus(value: ProductStatus | undefined): ProductStatus {
@@ -107,13 +137,13 @@ export class ProductService {
     );
     if (!categorySelection.valid) throw new Error("invalidCategorySelection");
     const now = new Date().toISOString();
-    const normalizedData = normalizeData(input.data);
+    const normalizedDetails = normalizeDetails(input);
     return this.repository.create({
       id: randomUUID(),
       uid: input.uid,
       mainCategoryId: input.mainCategoryId,
       subcategoryId: input.subcategoryId,
-      data: normalizedData,
+      ...normalizedDetails,
       status: normalizeStatus(input.status),
       createdAt: now,
       updatedAt: now,
@@ -124,23 +154,23 @@ export class ProductService {
     const fixedPharmacyProduct = await pharmacyProfileCatalogService.updateFixedProduct(
       input.id,
       input.uid,
-      normalizeData(input.data),
+      normalizeDetails(input),
     );
     if (fixedPharmacyProduct) return fixedPharmacyProduct;
     const existing = await this.get(input.id);
     if (!input.uid || existing.uid !== input.uid)
       throw new Error("productForbidden");
-    const normalizedData = normalizeData(input.data);
+    const normalizedDetails = normalizeDetails(input);
     const updated = await this.repository.update(
       input.id,
       input.uid,
-      normalizedData,
+      normalizedDetails,
       normalizeStatus(input.status ?? existing.status),
       new Date().toISOString(),
     );
     if (!updated) throw new Error("productNotFound");
-    const retainedKeys = new Set(normalizedData.images.map((image) => image.imageKey));
-    const removedKeys = existing.data.images
+    const retainedKeys = new Set(normalizedDetails.images.map((image) => image.imageKey));
+    const removedKeys = existing.images
       .map((image) => image.imageKey)
       .filter((imageKey) => !retainedKeys.has(imageKey));
     await deleteProductImages(removedKeys);
@@ -153,7 +183,7 @@ export class ProductService {
     if (!uid || existing.uid !== uid) throw new Error("productForbidden");
     const deleted = await this.repository.delete(id, uid);
     if (!deleted) throw new Error("productNotFound");
-    await deleteProductImages(existing.data.images.map((image) => image.imageKey));
+    await deleteProductImages(existing.images.map((image) => image.imageKey));
   }
 }
 

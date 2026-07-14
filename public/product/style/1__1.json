@@ -71,11 +71,63 @@
       "pharmacySubcategory": true,
       "nameAr": true,
       "nameEn": true,
-      "activeIngredient": true,
       "form": true,
       "concentration": true,
+      "activeIngredient": true,
       "prescriptionRequired": true,
       "order": 9
+    },
+    "searchColumns": {
+      "mainData": {
+        "name": true,
+        "brand": true,
+        "manufacturer": true,
+        "available": false,
+        "description": true
+      },
+      "price": {
+        "current": false,
+        "beforeDiscount": false,
+        "label": true,
+        "needsCar": false
+      },
+      "rating": {
+        "value": true
+      },
+      "specifications": {
+        "color": true,
+        "dimensions": true,
+        "condition": true,
+        "size": true,
+        "weight": true,
+        "year": true
+      },
+      "vehicleSpecs": {
+        "brand": true,
+        "bodyType": true,
+        "fuel": true,
+        "transmission": true,
+        "special": true
+      },
+      "propertySpecs": {
+        "area": true,
+        "rooms": true,
+        "bathrooms": true,
+        "type": true,
+        "address": true,
+        "location": false,
+        "finishing": true
+      },
+      "pharmacySpecs": {
+        "pharmacyCategory": true,
+        "pharmacySubcategory": true,
+        "nameAr": true,
+        "nameEn": true,
+        "activeIngredient": true,
+        "form": true,
+        "concentration": true,
+        "prescriptionRequired": false
+      }
     }
   }
 }

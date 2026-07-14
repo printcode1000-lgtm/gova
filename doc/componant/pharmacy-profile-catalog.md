@@ -98,12 +98,13 @@ Inside the regular profile product tabs, the Pharmacies subcategory gets an addi
 
 The nested tabs are implemented by `PharmacyNestedTabs`. The general profile tabs only call this module; they do not contain pharmacy-specific catalog logic.
 
-The nested tabs use product fields:
+The nested tabs use typed product properties:
 
-- `pharmacyCatalog.categoryId`
-- `pharmacyCatalog.categoryNameAr`
-- `pharmacyCatalog.subcategoryId`
-- `pharmacyCatalog.subcategoryNameAr`
+- `product.pharmacyCatalog.categoryId`
+- `product.pharmacyCatalog.categoryNameAr`
+- `product.pharmacyCatalog.subcategoryId`
+- `product.pharmacyCatalog.subcategoryNameAr`
+- `product.pharmacySpecs.pharmacySubcategoryId`
 
 ## Pharmacy Management Page
 
@@ -136,8 +137,8 @@ Fixed pharmacy products can be added to the cart immediately.
 
 When no numeric price is available:
 
-- `price.current` remains empty.
-- `price.label` is set to the Arabic commercial price label.
+- `product.price.current` remains empty.
+- `product.price.label` is set to the Arabic commercial price label.
 - The cart displays the commercial price label instead of a zero price.
 - The order item still passes through the normal marketplace order flow.
 
@@ -165,6 +166,10 @@ The schema source is the local product SQLite database. The same schema is synce
 The migration file is:
 
 - `src/core/database/product/migrations/0002_pharmacy_profile_catalog.sql`
+
+Fixed and custom pharmacy products are projected into the current typed product model. They do not use `product.data.fields`.
+
+See also [Product Data Model](../system/product-data-model.md).
 
 ## Future Work
 

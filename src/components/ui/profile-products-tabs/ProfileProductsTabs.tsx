@@ -3,18 +3,17 @@
 import * as React from 'react';
 import Image from 'next/image';
 import {
-  Eye,
   Package,
-  Pencil,
   Plus,
-  Search,
-  Star,
-  Trash2,
-  X,
 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { ProductCard } from '@/components/ui/product-card';
+import { ProductSearchPanel } from '@/components/ui/product-search';
 import type { ProductRecord } from '@/features/product/entities/product.entity';
+import {
+  createProductCardViewModel,
+  type ProductCardAction,
+} from '@/features/product-card';
 import {
   isPharmacyProfileBucket,
   PharmacyNestedTabs,
@@ -67,17 +66,6 @@ interface ProfileProductsTabsProps {
   onRefreshProducts?: () => void | Promise<void>;
 }
 
-
-function productTitle(product: ProductRecord): string {
-  return product.data.fields['mainData.name'] || 'Product';
-}
-
-function productPrice(product: ProductRecord): string {
-  const current = product.data.fields['price.current'];
-  return current ? current : product.data.fields['price.label'] || '';
-}
-
-
 export function ProfileProductsTabs({
   mode,
   ownerUid = '',
@@ -106,6 +94,8 @@ export function ProfileProductsTabs({
   const isPharmacyBucket = isPharmacyProfileBucket(activeSubTab);
   const [pharmacyFilteredProducts, setPharmacyFilteredProducts] =
     React.useState<ProductRecord[]>(products);
+  const [searchFilteredProducts, setSearchFilteredProducts] =
+    React.useState<ProductRecord[]>(products);
 
   React.useEffect(() => {
     if (!isPharmacyBucket) {
@@ -113,7 +103,12 @@ export function ProfileProductsTabs({
     }
   }, [isPharmacyBucket, products]);
 
-  const visibleProducts = isPharmacyBucket ? pharmacyFilteredProducts : products;
+  React.useEffect(() => {
+    setSearchFilteredProducts(products);
+  }, [products, activeSubTab?.id]);
+
+  const sourceProducts = searchFilteredProducts;
+  const visibleProducts = isPharmacyBucket ? pharmacyFilteredProducts : sourceProducts;
 
   if (isLoadingTabs) {
     return (
@@ -218,44 +213,23 @@ export function ProfileProductsTabs({
         </div>
       ) : null}
 
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
-        <div className="relative">
-          <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-          <Input
-            value={filters.searchText}
-            onChange={(event) => onFiltersChange({ searchText: event.target.value })}
-            placeholder={labels.searchPlaceholder}
-            className="ps-9"
-          />
-          {filters.searchText ? (
-            <button
-              type="button"
-              onClick={() => onFiltersChange({ searchText: '' })}
-              className="absolute end-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
-              aria-label="Clear"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          ) : null}
-        </div>
-        <select
-          value={filters.sortBy}
-          onChange={(event) =>
-            onFiltersChange({ sortBy: event.target.value as ProfileProductsFilters['sortBy'] })
-          }
-          className="h-10 rounded-lg border border-outline-variant bg-surface px-3 text-xs text-on-surface"
-        >
-          <option value="newest">{labels.sortNewest}</option>
-          <option value="oldest">{labels.sortOldest}</option>
-          <option value="name">{labels.sortName}</option>
-        </select>
-      </div>
+      {activeSubTab ? (
+        <ProductSearchPanel
+          variant="compact"
+          ownerUid={ownerUid}
+          fixedMainCategoryId={activeSubTab.categoryId}
+          fixedSubcategoryId={activeSubTab.productSubcategoryId}
+          includeDrafts={mode === 'edit'}
+          locale={labels.searchPlaceholder.includes('Search') ? 'en' : 'ar'}
+          onProductsChange={setSearchFilteredProducts}
+        />
+      ) : null}
 
       {isPharmacyBucket && ownerUid ? (
         <PharmacyNestedTabs
           uid={ownerUid}
           mode={mode === 'edit' ? 'edit' : 'preview'}
-          products={products}
+          products={sourceProducts}
           onFilteredProductsChange={setPharmacyFilteredProducts}
           onRefreshProducts={onRefreshProducts}
         />
@@ -274,84 +248,47 @@ export function ProfileProductsTabs({
         ) : (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {visibleProducts.map((product) => {
-              const title = productTitle(product);
-              const imageUrl = product.data.images[0]?.url;
               const featured = featuredProductIds.includes(product.id);
+              const card = createProductCardViewModel(product);
+              const actions: ProductCardAction[] = [
+                {
+                  kind: 'view',
+                  label: labels.view,
+                  onClick: () => onViewProduct(product),
+                },
+              ];
+              if (showManagement && onToggleFeatured) {
+                actions.push({
+                  kind: 'toggleFeatured',
+                  label: featured ? labels.removeFeatured : labels.addFeatured,
+                  active: featured,
+                  tone: 'tertiary',
+                  onClick: () => onToggleFeatured(product),
+                });
+              }
+              if (showManagement && onEditProduct) {
+                actions.push({
+                  kind: 'edit',
+                  label: labels.edit,
+                  onClick: () => onEditProduct(product),
+                });
+              }
+              if (showManagement && onDeleteProduct) {
+                actions.push({
+                  kind: 'delete',
+                  label: labels.delete,
+                  tone: 'danger',
+                  onClick: () => onDeleteProduct(product),
+                });
+              }
               return (
-                <article
+                <ProductCard
                   key={product.id}
-                  className="overflow-hidden rounded-lg border border-outline-variant bg-surface transition hover:border-primary/70 hover:shadow-sm"
-                >
-                  <button
-                    type="button"
-                    onClick={() => onViewProduct(product)}
-                    className="block w-full text-start"
-                  >
-                    <div className="relative aspect-square bg-surface-bright">
-                      {imageUrl ? (
-                        <Image src={imageUrl} alt={title} fill className="object-cover" />
-                      ) : (
-                        <Package className="absolute inset-0 m-auto h-8 w-8 text-on-surface-variant" />
-                      )}
-                    </div>
-                    <div className="space-y-1 p-2">
-                      <p className="line-clamp-2 min-h-[32px] text-xs font-semibold text-on-surface">
-                        {title}
-                      </p>
-                      {productPrice(product) ? (
-                        <p className="text-[11px] text-primary">{productPrice(product)}</p>
-                      ) : null}
-                    </div>
-                  </button>
-                  <div
-                    className={`grid gap-1 border-t border-outline-variant/50 p-1 ${
-                      showManagement ? 'grid-cols-4' : 'grid-cols-1'
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => onViewProduct(product)}
-                      className="flex h-8 items-center justify-center rounded-md bg-surface-container-low text-on-surface transition hover:bg-primary hover:text-on-primary"
-                      title={labels.view}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </button>
-                    {showManagement && onToggleFeatured ? (
-                      <button
-                        type="button"
-                        onClick={() => onToggleFeatured(product)}
-                        className={`flex h-8 items-center justify-center rounded-md transition ${
-                          featured
-                            ? 'bg-tertiary text-on-tertiary'
-                            : 'bg-surface-container-low text-on-surface hover:bg-tertiary hover:text-on-tertiary'
-                        }`}
-                        title={featured ? labels.removeFeatured : labels.addFeatured}
-                      >
-                        <Star className="h-4 w-4" />
-                      </button>
-                    ) : null}
-                    {showManagement && onEditProduct ? (
-                      <button
-                        type="button"
-                        onClick={() => onEditProduct(product)}
-                        className="flex h-8 items-center justify-center rounded-md bg-surface-container-low text-on-surface transition hover:bg-primary hover:text-on-primary"
-                        title={labels.edit}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                    ) : null}
-                    {showManagement && onDeleteProduct ? (
-                      <button
-                        type="button"
-                        onClick={() => onDeleteProduct(product)}
-                        className="flex h-8 items-center justify-center rounded-md bg-surface-container-low text-destructive transition hover:bg-destructive hover:text-on-destructive"
-                        title={labels.delete}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    ) : null}
-                  </div>
-                </article>
+                  card={card}
+                  variant={showManagement ? 'profile-edit' : 'profile-preview'}
+                  actions={actions}
+                  onOpen={() => onViewProduct(product)}
+                />
               );
             })}
           </div>
