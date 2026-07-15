@@ -1,10 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// GoVa Operation Monitor — Zustand Store
+// ASOL Operation Monitor — Zustand Store
 // Central in-memory store for all monitored operation records.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { create } from 'zustand';
-import { govaDbGet, govaDbSet, GOVA_DB_STORES } from '@/lib/gova-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
 import type {
   OperationRecord,
   MonitorStats,
@@ -433,13 +433,13 @@ export const useMonitorStore = create<MonitorState>((set, get) => ({
   toggleTheme: () =>
     set((s) => {
       const next = s.theme === 'dark' ? 'light' : 'dark';
-      void govaDbSet(GOVA_DB_STORES.APP_SETTINGS, 'monitor-theme', next);
+      void asolDbSet(ASOL_DB_STORES.APP_SETTINGS, 'monitor-theme', next);
       return { theme: next };
     }),
 
   loadTheme: async () => {
     try {
-      const stored = await govaDbGet<'dark' | 'light'>(GOVA_DB_STORES.APP_SETTINGS, 'monitor-theme');
+      const stored = await asolDbGet<'dark' | 'light'>(ASOL_DB_STORES.APP_SETTINGS, 'monitor-theme');
       if (stored) {
         set({ theme: stored });
       }
@@ -461,7 +461,7 @@ export const useMonitorStore = create<MonitorState>((set, get) => ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `gova-monitor-${Date.now()}.json`;
+    a.download = `asol-monitor-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   },
@@ -470,7 +470,7 @@ export const useMonitorStore = create<MonitorState>((set, get) => ({
     const ops = get().operations;
     const html = `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>GoVa Monitor Export</title>
+<head><meta charset="UTF-8"><title>ASOL Monitor Export</title>
 <style>
 body{font-family:monospace;background:#0f172a;color:#e2e8f0;padding:16px}
 table{border-collapse:collapse;width:100%}
@@ -479,7 +479,7 @@ th{background:#1e293b;color:#94a3b8}
 tr:nth-child(even){background:#1e293b}
 .success{color:#22c55e}.error{color:#ef4444}.pending{color:#94a3b8}
 </style></head><body>
-<h2>GoVa Operation Monitor Export — ${new Date().toISOString()}</h2>
+<h2>ASOL Operation Monitor Export — ${new Date().toISOString()}</h2>
 <p>Total Operations: ${ops.length}</p>
 <table>
 <tr><th>Timestamp</th><th>Feature</th><th>Page</th><th>Table</th><th>Op</th><th>Status</th><th>Time (ms)</th><th>Cache</th><th>Driver</th></tr>
@@ -499,7 +499,7 @@ ${ops.map((o) => `<tr>
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `gova-monitor-${Date.now()}.html`;
+    a.download = `asol-monitor-${Date.now()}.html`;
     a.click();
     URL.revokeObjectURL(url);
   },

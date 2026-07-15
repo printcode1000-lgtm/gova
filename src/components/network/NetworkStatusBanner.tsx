@@ -57,7 +57,7 @@ export function NetworkStatusBanner() {
           type="button"
           onClick={() => void checkConnection()}
           disabled={isChecking}
-          className="gova-control inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 text-xs font-semibold disabled:opacity-60"
+          className="asol-control inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 text-xs font-semibold disabled:opacity-60"
         >
           <RefreshCw className={cn('h-4 w-4', isChecking && 'animate-spin')} aria-hidden="true" />
           {isChecking ? t('network.checking') : t('network.retry')}

@@ -22,7 +22,7 @@ export function OtaUpdatePrompt() {
       aria-modal="true"
       aria-labelledby="ota-update-title"
     >
-      <div className="gova-card-elevated w-full max-w-md space-y-5 rounded-3xl border border-outline-variant p-6 shadow-2xl">
+      <div className="asol-card-elevated w-full max-w-md space-y-5 rounded-3xl border border-outline-variant p-6 shadow-2xl">
         <div className="flex items-start gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-container text-on-primary-container">
             <Download className="h-6 w-6" aria-hidden="true" />
@@ -37,7 +37,7 @@ export function OtaUpdatePrompt() {
           </div>
         </div>
 
-        <div className="gova-card-tonal rounded-2xl p-4 text-sm text-on-surface-variant">
+        <div className="asol-card-tonal rounded-2xl p-4 text-sm text-on-surface-variant">
           <div className="flex items-center justify-between gap-3">
             <span>{t('ota.prompt.size')}</span>
             <span className="font-semibold text-on-surface">{formatSize(pending.size)}</span>
@@ -56,7 +56,7 @@ export function OtaUpdatePrompt() {
             type="button"
             onClick={remindLater}
             disabled={isRestarting}
-            className="gova-control rounded-xl border border-outline px-4 font-semibold text-on-surface disabled:opacity-60"
+            className="asol-control rounded-xl border border-outline px-4 font-semibold text-on-surface disabled:opacity-60"
           >
             {t('ota.prompt.later')}
           </button>
@@ -64,7 +64,7 @@ export function OtaUpdatePrompt() {
             type="button"
             onClick={() => void restartNow()}
             disabled={isRestarting}
-            className="gova-accent-cta gova-control inline-flex items-center justify-center gap-2 rounded-xl px-4 font-semibold disabled:opacity-60"
+            className="asol-accent-cta asol-control inline-flex items-center justify-center gap-2 rounded-xl px-4 font-semibold disabled:opacity-60"
           >
             <RefreshCw className={`h-4 w-4 ${isRestarting ? 'animate-spin' : ''}`} aria-hidden="true" />
             {isRestarting ? t('ota.prompt.restarting') : t('ota.prompt.restart')}

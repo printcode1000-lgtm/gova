@@ -197,7 +197,7 @@ export function PerformanceDashboard({ performance, className }: PerformanceDash
                 </p>
                 <p className="text-xs text-muted-foreground">{t('seller.performance.topPerformer')}</p>
               </div>
-              <div className="gova-merchant-icon-well-tertiary p-2.5">
+              <div className="asol-merchant-icon-well-tertiary p-2.5">
                 <Award className="h-5 w-5 text-muted-foreground" />
               </div>
             </div>

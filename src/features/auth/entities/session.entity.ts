@@ -3,7 +3,7 @@ import {
   type ProfileSpecialtiesSelection,
 } from '@/features/profile/entities/profile-specialties.entity';
 
-/** Logged-in user session — persisted in GovaDB (auth store, key: current). */
+/** Logged-in user session — persisted in AsolDB (auth store, key: current). */
 export interface UserSession {
   uid: string;
   phone: string;

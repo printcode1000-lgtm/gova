@@ -1,4 +1,4 @@
-import { govaApi } from '@/core/api';
+import { asolApi } from '@/core/api';
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
 
 import type { OtaManifest } from '../types/ota.types';
@@ -20,7 +20,7 @@ function decodeBase64(value: string): ArrayBuffer {
 
 export class OtaApiService {
   getLocalManifest(signal?: AbortSignal): Promise<OtaManifest> {
-    return govaApi.getPublicJson<OtaManifest>('/gova-web-manifest.json', {
+    return asolApi.getPublicJson<OtaManifest>('/asol-web-manifest.json', {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
@@ -41,7 +41,7 @@ export class OtaApiService {
       return (typeof response.data === 'string' ? JSON.parse(response.data) : response.data) as OtaManifest;
     }
 
-    return govaApi.getAbsoluteJson<OtaManifest>(url, {
+    return asolApi.getAbsoluteJson<OtaManifest>(url, {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
@@ -65,7 +65,7 @@ export class OtaApiService {
       return decodeBase64(response.data);
     }
 
-    return govaApi.getAbsoluteBinary(url, {
+    return asolApi.getAbsoluteBinary(url, {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
@@ -73,7 +73,7 @@ export class OtaApiService {
   }
 
   getCurrentFile(path: string, signal?: AbortSignal): Promise<ArrayBuffer> {
-    return govaApi.getPublicBinary(`/${path}`, {
+    return asolApi.getPublicBinary(`/${path}`, {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,

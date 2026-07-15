@@ -15,7 +15,7 @@ if (!vercelToken || !vercelOrgId) {
   process.exit(1);
 }
 
-const PROJECT_NAME = 'gova';
+const PROJECT_NAME = 'asol';
 
 // Environment variables to push to Vercel Production
 const ENV_VARS: Array<{ key: string; value: string; target: string[] }> = [

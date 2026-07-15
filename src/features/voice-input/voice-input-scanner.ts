@@ -119,7 +119,7 @@ export class VoiceInputScanner {
   updateOptions(options: VoiceInputScannerOptions): void {
     this.options = options;
     this.bindings.forEach(({ button }) => {
-      const recording = button.classList.contains('gova-voice-button--recording');
+      const recording = button.classList.contains('asol-voice-button--recording');
       const label = recording ? options.stopLabel : options.startLabel;
       button.title = label;
       button.setAttribute('aria-label', label);
@@ -179,7 +179,7 @@ export class VoiceInputScanner {
     if (field instanceof HTMLInputElement) {
       if (this.passwordFields.has(field)) return false;
       if (UNSUPPORTED_INPUT_TYPES.has(field.type)) return false;
-      const identity = `${field.id} ${field.name} ${field.autocomplete} ${field.getAttribute('data-gova-autofill') || ''}`.toLowerCase();
+      const identity = `${field.id} ${field.name} ${field.autocomplete} ${field.getAttribute('data-asol-autofill') || ''}`.toLowerCase();
       if (identity.includes('password') || identity.includes('passcode')) return false;
     }
 
@@ -192,7 +192,7 @@ export class VoiceInputScanner {
 
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'gova-voice-button';
+    button.className = 'asol-voice-button';
     button.dataset.voiceInputButton = 'true';
     button.title = this.options.startLabel;
     button.setAttribute('aria-label', this.options.startLabel);
@@ -203,8 +203,8 @@ export class VoiceInputScanner {
     field.dataset.voiceOriginalPaddingLeft = computedStyle.paddingLeft;
     field.dataset.voiceOriginalPaddingRight = computedStyle.paddingRight;
 
-    field.classList.add('gova-voice-field');
-    host.classList.add('gova-voice-host');
+    field.classList.add('asol-voice-field');
+    host.classList.add('asol-voice-host');
     host.appendChild(button);
 
     const binding: VoiceBinding = {
@@ -338,7 +338,7 @@ export class VoiceInputScanner {
   }
 
   private setRecording(binding: VoiceBinding, recording: boolean): void {
-    binding.button.classList.toggle('gova-voice-button--recording', recording);
+    binding.button.classList.toggle('asol-voice-button--recording', recording);
     binding.button.setAttribute('aria-pressed', String(recording));
     const label = recording ? this.options.stopLabel : this.options.startLabel;
     binding.button.title = label;
@@ -406,14 +406,14 @@ export class VoiceInputScanner {
     binding.resizeObserver?.disconnect();
     window.removeEventListener('resize', binding.syncPosition);
     binding.button.remove();
-    binding.field.classList.remove('gova-voice-field', 'gova-voice-field--rtl-host');
+    binding.field.classList.remove('asol-voice-field', 'asol-voice-field--rtl-host');
     binding.field.style.removeProperty('padding-right');
     binding.field.style.removeProperty('padding-left');
     this.restorePlaceholder(binding.field);
     this.bindings.delete(binding.field);
 
     if (!binding.host.querySelector('[data-voice-input-button="true"]')) {
-      binding.host.classList.remove('gova-voice-host');
+      binding.host.classList.remove('asol-voice-host');
     }
   }
 
@@ -451,9 +451,9 @@ export class VoiceInputScanner {
 
   private triggerErrorFeedback(button: HTMLButtonElement): void {
     playTone(220, 'sawtooth', 0.25);
-    button.classList.add('gova-voice-button--error');
+    button.classList.add('asol-voice-button--error');
     setTimeout(() => {
-      button.classList.remove('gova-voice-button--error');
+      button.classList.remove('asol-voice-button--error');
     }, 450);
   }
 }

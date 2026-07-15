@@ -66,7 +66,7 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
       await otaUpdateService.checkAndDownload();
     } catch (checkError) {
       console.warn(
-        '[GovaOTA] Background update check skipped:',
+        '[AsolOTA] Background update check skipped:',
         checkError instanceof Error ? checkError.message : checkError,
       );
     }

@@ -28,7 +28,7 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
     <Card className={cn('overflow-hidden transition-all duration-300 hover:shadow-lg', className)}>
       <CardHeader>
         <div className="flex items-center gap-2">
-          <div className="gova-merchant-icon-well">
+          <div className="asol-merchant-icon-well">
             <Store className="h-5 w-5 text-muted-foreground" />
           </div>
           <div>

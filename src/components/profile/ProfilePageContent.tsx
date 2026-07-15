@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import {
@@ -47,7 +47,7 @@ import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { ProfileCustomRequestButton } from "@/components/ui/profile-custom-request-button";
 import { TrendingRibbon, type TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
 import { WorkingHoursCard } from "@/components/ui/working-hours";
-import { govaApi, GOVA_API_ROUTES } from "@/core/api";
+import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import { ProductReviews } from "@/components/product/ProductReviews";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
@@ -220,8 +220,8 @@ export function ProfilePageContent() {
     images: { imageKey: string; url: string }[];
   }) => {
     if (!session?.uid || !previewUid) throw new Error("يجب تسجيل الدخول لإرسال الطلب.");
-    const result = await govaApi.post<{ orderId: string }>(
-      GOVA_API_ROUTES.orders.customRequestFromProfile,
+    const result = await asolApi.post<{ orderId: string }>(
+      ASOL_API_ROUTES.orders.customRequestFromProfile,
       {
         uid: session.uid,
         phone: session.phone,
@@ -235,7 +235,7 @@ export function ProfilePageContent() {
       },
       { suppressErrorLog: true },
     );
-    router.push(`/orders/${encodeURIComponent(result.orderId)}?role=buyer`);
+    router.push(`/orders/details?orderId=${encodeURIComponent(result.orderId)}&role=buyer`);
   };
 
   const dirtySections = (

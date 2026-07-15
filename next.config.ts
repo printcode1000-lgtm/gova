@@ -3,15 +3,15 @@ import type { NextConfig } from 'next';
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const repositoryName = process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '';
 
-const isStatic = process.env.GOVA_MODE === 'static';
-const basePath = process.env.GOVA_BASE_PATH?.replace(/\/$/, '') || (isGithubActions ? repositoryName : '');
+const isStatic = process.env.ASOL_MODE === 'static';
+const basePath = process.env.ASOL_BASE_PATH?.replace(/\/$/, '') || (isGithubActions ? repositoryName : '');
 const assetPrefix = basePath;
-const deterministicBuildId = process.env.GOVA_NEXT_BUILD_ID;
+const deterministicBuildId = process.env.ASOL_NEXT_BUILD_ID;
 
 const apiBaseUrl =
-  process.env.NEXT_PUBLIC_GOVA_API_BASE_URL?.replace(/\/$/, '') ||
-  process.env.NEXT_PUBLIC_GOVA_API_URL?.replace(/\/$/, '') ||
-  process.env.GOVA_API_BASE_URL?.replace(/\/$/, '') ||
+  process.env.NEXT_PUBLIC_ASOL_API_BASE_URL?.replace(/\/$/, '') ||
+  process.env.NEXT_PUBLIC_ASOL_API_URL?.replace(/\/$/, '') ||
+  process.env.ASOL_API_BASE_URL?.replace(/\/$/, '') ||
   '';
 
 const nextConfig: NextConfig = {
@@ -24,13 +24,13 @@ const nextConfig: NextConfig = {
     : {}),
 
   env: {
-    NEXT_PUBLIC_GOVA_BASE_PATH: basePath,
-    NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
-    NEXT_PUBLIC_GOVA_MODE: process.env.GOVA_MODE ?? '',
-    NEXT_PUBLIC_GOVA_OTA_MANIFEST_URL: process.env.NEXT_PUBLIC_GOVA_OTA_MANIFEST_URL ?? '',
-    NEXT_PUBLIC_GOVA_OTA_PUBLIC_KEY: process.env.NEXT_PUBLIC_GOVA_OTA_PUBLIC_KEY ?? '',
-    NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION: process.env.NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION ?? '0.1.0',
-    NEXT_PUBLIC_GOVA_NATIVE_VERSION: process.env.NEXT_PUBLIC_GOVA_NATIVE_VERSION ?? '1.0.0',
+    NEXT_PUBLIC_ASOL_BASE_PATH: basePath,
+    NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
+    NEXT_PUBLIC_ASOL_MODE: process.env.ASOL_MODE ?? '',
+    NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL ?? '',
+    NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY ?? '',
+    NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION ?? '0.1.0',
+    NEXT_PUBLIC_ASOL_NATIVE_VERSION: process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ?? '1.0.0',
   },
 
   // These are Node.js-only packages. Prevent Next.js from bundling them

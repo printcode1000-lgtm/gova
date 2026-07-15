@@ -435,7 +435,7 @@ function PharmacySelect({
     <label className="space-y-1.5 text-sm font-medium">
       <span>{label}</span>
       <Select value={value} disabled={disabled} onValueChange={onChange}>
-        <SelectTrigger className="gova-control gova-field-surface w-full border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+        <SelectTrigger className="asol-control asol-field-surface w-full border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

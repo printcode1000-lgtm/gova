@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 export default function Page() {
   const { t } = useTranslation();
   return (
-    <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
+    <div className="w-full asol-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
@@ -80,7 +80,7 @@ export default function Page() {
 <div className="flex flex-col items-center py-stack-md">
 <div className="w-full h-px bg-outline-variant relative">
 <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 bg-surface-container-lowest text-label-sm font-label-sm text-tertiary-fixed-variant uppercase tracking-wider">
-                                    {t('marketplaceOrders.openViewDispute.govaResolutionJoined')}
+                                    {t('marketplaceOrders.openViewDispute.asolResolutionJoined')}
                                 </span>
 </div>
 </div>
@@ -91,7 +91,7 @@ export default function Page() {
 </div>
 <div className="space-y-1">
 <div className="flex items-center gap-2">
-<span className="font-label-md text-label-md text-tertiary font-bold">{t('marketplaceOrders.openViewDispute.govaSpecialist')}</span>
+<span className="font-label-md text-label-md text-tertiary font-bold">{t('marketplaceOrders.openViewDispute.asolSpecialist')}</span>
 <span className="text-body-sm text-label-sm text-on-surface-variant">1:30 PM</span>
 </div>
 <div className="p-4 bg-tertiary-container/20 border border-tertiary-container rounded-xl text-body-md font-body-md text-on-tertiary-container">

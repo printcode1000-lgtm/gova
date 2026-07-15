@@ -39,7 +39,7 @@ git push
 ## Typical: static site + remote API
 
 ```bash
-NEXT_PUBLIC_GOVA_API_BASE_URL=https://api.your-domain.com
+NEXT_PUBLIC_ASOL_API_BASE_URL=https://api.your-domain.com
 npm run build:static
 # Deploy out/
 ```
@@ -67,11 +67,11 @@ npm run db:push:vercel-env
 sequenceDiagram
     User->>Hook: Submit form
     Hook->>ClientService: mutate
-    ClientService->>GovaApiClient: POST /api/...
-    GovaApiClient->>BusinessAPI: JSON
+    ClientService->>AsolApiClient: POST /api/...
+    AsolApiClient->>BusinessAPI: JSON
     BusinessAPI->>ServerService: execute
     ServerService->>Repository: Drizzle
     Repository->>DatabaseClient: query
     DatabaseClient-->>Hook: JSON response
-    Hook->>GovaDB: optional cache/session
+    Hook->>AsolDB: optional cache/session
 ```

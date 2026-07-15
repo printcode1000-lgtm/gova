@@ -3,7 +3,7 @@
  * Used exclusively during build/deployment provisioning, never at runtime.
  */
 
-import { govaHttpFetch } from '@/core/api/gova-http-transport';
+import { asolHttpFetch } from '@/core/api/asol-http-transport';
 import { getTursoPlatformCredentials } from '@/core/config/server-env.values';
 
 const PLATFORM_API_BASE = 'https://api.turso.tech/v1';
@@ -21,7 +21,7 @@ function getOrganization(): string {
 }
 
 async function platformFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await govaHttpFetch(`${PLATFORM_API_BASE}${path}`, {
+  const response = await asolHttpFetch(`${PLATFORM_API_BASE}${path}`, {
     ...init,
     headers: {
       ...getPlatformHeaders(),

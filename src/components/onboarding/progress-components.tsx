@@ -158,7 +158,7 @@ export function MobileOnboardingNav({
 
   if (showCompletion) {
     return (
-      <div className="sticky top-0 z-50 gova-onboarding-sticky-bar border-b px-4 py-3">
+      <div className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b px-4 py-3">
         <Button variant="outline" className="w-full" onClick={onStepNavigate}>
           {t('onboarding.progress.backToSteps')}
         </Button>
@@ -175,7 +175,7 @@ export function MobileOnboardingNav({
   const allComplete = completedSteps.length === stepOrder.length;
 
   return (
-    <div className="sticky top-0 z-50 gova-onboarding-sticky-bar border-b">
+    <div className="sticky top-0 z-50 asol-onboarding-sticky-bar border-b">
       <div className="px-4 py-3 space-y-3">
         <div className="flex items-center gap-3">
           <Button

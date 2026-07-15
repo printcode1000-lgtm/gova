@@ -1,4 +1,4 @@
-import { govaApi, GOVA_API_ROUTES } from "@/core/api";
+import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import type { ReviewSort } from "@/features/product/entities/product-review.entity";
 import type {
   ProfileReview,
@@ -35,48 +35,48 @@ import type { UserProfileRow } from "./profile-service.interface";
 
 export class ProfileApiService implements IProfileService {
   async getContacts(uid: string): Promise<ProfileContactsData> {
-    const route = `${GOVA_API_ROUTES.profile.contacts}?uid=${encodeURIComponent(uid)}`;
-    return govaApi.get<ProfileContactsData>(route);
+    const route = `${ASOL_API_ROUTES.profile.contacts}?uid=${encodeURIComponent(uid)}`;
+    return asolApi.get<ProfileContactsData>(route);
   }
 
   async saveContacts(
     input: SaveProfileContactsInput,
   ): Promise<ProfileContactsData> {
-    return govaApi.put<ProfileContactsData>(
-      GOVA_API_ROUTES.profile.contacts,
+    return asolApi.put<ProfileContactsData>(
+      ASOL_API_ROUTES.profile.contacts,
       input,
     );
   }
 
   async getStoreImages(uid: string): Promise<StoreImagesData> {
-    const route = `${GOVA_API_ROUTES.profile.storeImages}?uid=${encodeURIComponent(uid)}`;
-    return govaApi.get<StoreImagesData>(route);
+    const route = `${ASOL_API_ROUTES.profile.storeImages}?uid=${encodeURIComponent(uid)}`;
+    return asolApi.get<StoreImagesData>(route);
   }
 
   async saveStoreImages(input: SaveStoreImagesInput): Promise<StoreImagesData> {
-    return govaApi.put<StoreImagesData>(
-      GOVA_API_ROUTES.profile.storeImages,
+    return asolApi.put<StoreImagesData>(
+      ASOL_API_ROUTES.profile.storeImages,
       input,
     );
   }
 
   async getStoreDetails(uid: string): Promise<StoreDetailsData> {
-    const route = `${GOVA_API_ROUTES.profile.storeDetails}?uid=${encodeURIComponent(uid)}`;
-    return govaApi.get<StoreDetailsData>(route);
+    const route = `${ASOL_API_ROUTES.profile.storeDetails}?uid=${encodeURIComponent(uid)}`;
+    return asolApi.get<StoreDetailsData>(route);
   }
 
   async saveStoreDetails(
     input: SaveStoreDetailsInput,
   ): Promise<StoreDetailsData> {
-    return govaApi.put<StoreDetailsData>(
-      GOVA_API_ROUTES.profile.storeDetails,
+    return asolApi.put<StoreDetailsData>(
+      ASOL_API_ROUTES.profile.storeDetails,
       input,
     );
   }
 
   async getSpecialties(uid: string): Promise<ProfileSpecialtiesSelection> {
-    const route = `${GOVA_API_ROUTES.profile.specialties}?uid=${encodeURIComponent(uid)}`;
-    return govaApi.get<ProfileSpecialtiesSelection>(route, {
+    const route = `${ASOL_API_ROUTES.profile.specialties}?uid=${encodeURIComponent(uid)}`;
+    return asolApi.get<ProfileSpecialtiesSelection>(route, {
       cache: "no-store",
       suppressErrorLog: true,
     });
@@ -85,8 +85,8 @@ export class ProfileApiService implements IProfileService {
   async saveSpecialties(
     input: SaveProfileSpecialtiesInput,
   ): Promise<ProfileSpecialtiesSelection> {
-    return govaApi.put<ProfileSpecialtiesSelection>(
-      GOVA_API_ROUTES.profile.specialties,
+    return asolApi.put<ProfileSpecialtiesSelection>(
+      ASOL_API_ROUTES.profile.specialties,
       input,
     );
   }
@@ -109,22 +109,22 @@ export class ProfileApiService implements IProfileService {
     if (typeof minRating === "number" && Number.isFinite(minRating)) {
       q.set("minRating", String(minRating));
     }
-    const route = `${GOVA_API_ROUTES.profile.usersBySpecialty}?${q}`;
-    return govaApi.get<UserProfileRow[]>(route);
+    const route = `${ASOL_API_ROUTES.profile.usersBySpecialty}?${q}`;
+    return asolApi.get<UserProfileRow[]>(route);
   }
 
   async getFulfillmentSettings(
     uid: string,
   ): Promise<ProfileFulfillmentSettings> {
-    const route = `${GOVA_API_ROUTES.profile.fulfillmentSettings}?uid=${encodeURIComponent(uid)}`;
-    return govaApi.get<ProfileFulfillmentSettings>(route);
+    const route = `${ASOL_API_ROUTES.profile.fulfillmentSettings}?uid=${encodeURIComponent(uid)}`;
+    return asolApi.get<ProfileFulfillmentSettings>(route);
   }
 
   async saveFulfillmentSettings(
     input: SaveProfileFulfillmentSettingsInput,
   ): Promise<ProfileFulfillmentSettings> {
-    return govaApi.put<ProfileFulfillmentSettings>(
-      GOVA_API_ROUTES.profile.fulfillmentSettings,
+    return asolApi.put<ProfileFulfillmentSettings>(
+      ASOL_API_ROUTES.profile.fulfillmentSettings,
       input,
     );
   }
@@ -132,8 +132,8 @@ export class ProfileApiService implements IProfileService {
   async saveEditor(
     input: SaveProfileEditorInput,
   ): Promise<SaveProfileEditorResult> {
-    return govaApi.put<SaveProfileEditorResult>(
-      GOVA_API_ROUTES.profile.editor,
+    return asolApi.put<SaveProfileEditorResult>(
+      ASOL_API_ROUTES.profile.editor,
       input,
     );
   }
@@ -152,35 +152,35 @@ export class ProfileApiService implements IProfileService {
       limit: String(limit),
       uid,
     });
-    return govaApi.get<ProfileReviewsResult>(
-      `${GOVA_API_ROUTES.profile.reviews.root}?${q}`,
+    return asolApi.get<ProfileReviewsResult>(
+      `${ASOL_API_ROUTES.profile.reviews.root}?${q}`,
       { cache: "no-store" },
     );
   }
 
   async createReview(input: SaveProfileReviewInput): Promise<ProfileReview> {
-    return govaApi.post<ProfileReview>(
-      GOVA_API_ROUTES.profile.reviews.root,
+    return asolApi.post<ProfileReview>(
+      ASOL_API_ROUTES.profile.reviews.root,
       input,
     );
   }
 
   async updateReview(input: UpdateProfileReviewInput): Promise<ProfileReview> {
-    return govaApi.put<ProfileReview>(
-      GOVA_API_ROUTES.profile.reviews.root,
+    return asolApi.put<ProfileReview>(
+      ASOL_API_ROUTES.profile.reviews.root,
       input,
     );
   }
 
   async deleteReview(reviewId: string, uid: string): Promise<{ deleted: boolean }> {
     const q = new URLSearchParams({ reviewId, uid });
-    return govaApi.delete<{ deleted: boolean }>(
-      `${GOVA_API_ROUTES.profile.reviews.root}?${q}`,
+    return asolApi.delete<{ deleted: boolean }>(
+      `${ASOL_API_ROUTES.profile.reviews.root}?${q}`,
     );
   }
 
   async helpfulReview(reviewId: string, uid: string): Promise<ProfileReview> {
-    return govaApi.post<ProfileReview>(GOVA_API_ROUTES.profile.reviews.helpful, {
+    return asolApi.post<ProfileReview>(ASOL_API_ROUTES.profile.reviews.helpful, {
       reviewId,
       uid,
     });
@@ -191,7 +191,7 @@ export class ProfileApiService implements IProfileService {
     uid: string,
     text: string,
   ): Promise<ProfileReview> {
-    return govaApi.post<ProfileReview>(GOVA_API_ROUTES.profile.reviews.reply, {
+    return asolApi.post<ProfileReview>(ASOL_API_ROUTES.profile.reviews.reply, {
       reviewId,
       uid,
       text,
@@ -203,8 +203,8 @@ export class ProfileApiService implements IProfileService {
     uid: string,
   ): Promise<{ deleted: boolean }> {
     const q = new URLSearchParams({ reviewId, uid });
-    return govaApi.delete<{ deleted: boolean }>(
-      `${GOVA_API_ROUTES.profile.reviews.reply}?${q}`,
+    return asolApi.delete<{ deleted: boolean }>(
+      `${ASOL_API_ROUTES.profile.reviews.reply}?${q}`,
     );
   }
 }

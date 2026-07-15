@@ -50,7 +50,7 @@ function CompletionScreen({
 
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center space-y-6 animate-in fade-in duration-500">
-      <div className="rounded-full gova-ring-secondary p-4">
+      <div className="rounded-full asol-ring-secondary p-4">
         <PartyPopper className="h-12 w-12 text-secondary" />
       </div>
 
@@ -147,11 +147,11 @@ export function OnboardingPage() {
     );
 
   return (
-    <div className="gova-onboarding-shell">
+    <div className="asol-onboarding-shell">
       <OnboardingDevAutofillBridgeLoader />
       <div className="hidden lg:block">
         <div className="flex">
-          <aside className="w-80 min-h-screen border-r gova-onboarding-sidebar p-6 sticky top-0">
+          <aside className="w-80 min-h-screen border-r asol-onboarding-sidebar p-6 sticky top-0">
             <div className="space-y-6">
               <div>
                 <h1 className="text-xl font-bold">{t('onboarding.page.title')}</h1>
@@ -183,7 +183,7 @@ export function OnboardingPage() {
             </div>
           </aside>
 
-          <main className="flex-1 p-8 gova-onboarding-main">
+          <main className="flex-1 p-8 asol-onboarding-main">
             <div className="max-w-3xl mx-auto">{mainContent}</div>
           </main>
         </div>

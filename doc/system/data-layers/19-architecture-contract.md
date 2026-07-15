@@ -5,7 +5,7 @@ Not documentation-only — enforced on every build and CI. Violations fail `npm 
 ## Official stack
 
 ```
-UI → Hooks → Client Services → GovaApiClient → Business API
+UI → Hooks → Client Services → AsolApiClient → Business API
   → Server Services → Query/Command → Repository → Database Client → SQLite / Turso
 ```
 
@@ -17,8 +17,8 @@ No shortcut paths. Every feature follows the same layers.
 |-------|------------|-------------------|
 | UI | Hooks, components | Repository, DB, Drizzle, Server Services |
 | Hooks | Client Services | Repository, Database, Drizzle |
-| Client Services | GovaApiClient | `fetch`, SQL, Repository |
-| GovaApiClient | HTTP transport | Direct DB |
+| Client Services | AsolApiClient | `fetch`, SQL, Repository |
+| AsolApiClient | HTTP transport | Direct DB |
 | Business API | Server Services (bootstrap) | Repository, Operations, Client Services |
 | Server Services | Query / Command | Repository direct, Drizzle, DB Client |
 | Query / Command | Repository | DB Client, Drizzle |
@@ -32,7 +32,7 @@ No shortcut paths. Every feature follows the same layers.
 
 | Rule | Allowed only in |
 |------|-----------------|
-| `fetch()`, axios, XHR | `gova-http-transport.ts` |
+| `fetch()`, axios, XHR | `asol-http-transport.ts` |
 | Raw SQL | Repository, Database Client, Provisioning |
 | `drizzle-orm` | Repository, `src/core/database/**` |
 | `@libsql/client`, `better-sqlite3` | Database Client, Provisioning |

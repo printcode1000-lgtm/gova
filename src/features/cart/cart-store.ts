@@ -2,9 +2,9 @@
 
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 
-export const CART_STORAGE_KEY = "gova:cart:v1";
-export const CART_CHANGED_EVENT = "gova:cart:changed";
-export const CART_ITEM_ADDED_EVENT = "gova:cart:item-added";
+export const CART_STORAGE_KEY = "asol:cart:v1";
+export const CART_CHANGED_EVENT = "asol:cart:changed";
+export const CART_ITEM_ADDED_EVENT = "asol:cart:item-added";
 
 export interface CartItem {
   id: string;

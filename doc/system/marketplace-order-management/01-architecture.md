@@ -33,8 +33,8 @@ Order
 - `calculators`: pricing and derived order, seller-order, and shipment statuses.
 - `permissions`: reusable buyer, seller/provider, carrier, and admin boundaries.
 - `audit`: append operations for actor-aware audit records.
-- `api`: server-only service composition for authenticated Gova server routes or actions.
+- `api`: server-only service composition for authenticated Asol server routes or actions.
 
 ## Integration rule
 
-UI code must not instantiate a database client or import the server service. A Gova business route or server action authenticates the caller, constructs an `Actor`, obtains `getMarketplaceOrderService()`, invokes one business operation, and maps domain errors to an appropriate response. The server facade runs each public operation inside a database transaction so the domain mutation, derived totals/statuses, and audit records commit or roll back together.
+UI code must not instantiate a database client or import the server service. A Asol business route or server action authenticates the caller, constructs an `Actor`, obtains `getMarketplaceOrderService()`, invokes one business operation, and maps domain errors to an appropriate response. The server facade runs each public operation inside a database transaction so the domain mutation, derived totals/statuses, and audit records commit or roll back together.

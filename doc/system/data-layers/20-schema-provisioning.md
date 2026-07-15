@@ -62,7 +62,7 @@ Viewable in Operation Monitor **Schema Sync** tab.
 ```bash
 npm run db:ensure              # Create missing .db files
 npm run db:schema:sync         # Sync both SQLite → Turso
-npm run db:provision:turso     # Create gova-db + gova-profile + sync
+npm run db:provision:turso     # Create asol-db + asol-profile + sync
 npm run db:create:sqlite       # Reset allusers.db from migrations
 npm run db:create:profile      # Create profile.db
 npm run db:push:vercel-env     # Push Turso vars to Vercel

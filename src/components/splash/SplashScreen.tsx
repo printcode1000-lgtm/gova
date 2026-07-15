@@ -18,7 +18,7 @@ export default function SplashScreen({ displayCategories }: SplashScreenProps) {
 
   return (
     <main
-      className="gova-splash-canvas min-h-screen relative w-full flex flex-col items-center justify-between py-12 px-4 overflow-hidden selection:bg-primary/30"
+      className="asol-splash-canvas min-h-screen relative w-full flex flex-col items-center justify-between py-12 px-4 overflow-hidden selection:bg-primary/30"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <TopMarquee displayCategories={displayCategories} />

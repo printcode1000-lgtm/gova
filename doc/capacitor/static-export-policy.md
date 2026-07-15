@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines exactly which source files and routes may enter a GOVA static build. It applies to `build:static`, `ota:publish`, `cap:build`, `out/`, R2, Android, and iOS.
+This document defines exactly which source files and routes may enter a ASOL static build. It applies to `build:static`, `ota:publish`, `cap:build`, `out/`, R2, Android, and iOS.
 
 The implementation is in `scripts/build-static.ts`. It is allowlist-first: the complete `public/` directory is never copied automatically.
 
@@ -29,8 +29,9 @@ Filtering never deletes files from the original `src/` or `public/` directories.
 
 | Path | Runtime ownership |
 |---|---|
-| `gova-app-init.js` | Blocking application initialization before React starts |
-| `gova-theme-init.js` | Blocking theme initialization before React starts |
+| `asol-app-init.js` | Blocking application initialization before React starts |
+| `asol-push-sw.js` | Web Push service worker registered by the notifications feature |
+| `asol-theme-init.js` | Blocking theme initialization before React starts |
 | `logo.png` | Layout metadata and the shared `AppIcon` component |
 | `catagory/categories.json` | Canonical category source owned and imported only by `src/features/categories` |
 | `catagory/subcategories.json` | Canonical subcategory source owned and imported only by `src/features/categories` |
@@ -44,7 +45,9 @@ Missing allowlisted files fail the build with `Required static asset not found`.
 | Directory | Runtime ownership |
 |---|---|
 | `catagory/cars` | Vehicle option JSON and vehicle/brand images loaded by product components |
+| `catagory/pharmacy` | Pharmacy catalog JSON imported by the pharmacy static catalog loader |
 | `images/mainCategories` | Complete main-category image catalog, including categories supplied by external data |
+| `images/pharmacy_fixed` | Pharmacy category images referenced by the pharmacy catalog |
 | `images/subCategories` | Complete subcategory image catalog |
 | `product/style` | Runtime product layout/style definitions loaded by product pages |
 
@@ -57,7 +60,7 @@ Adding a directory permits every current and future file below it. Use a directo
 | Path | Reason |
 |---|---|
 | `catagory.db` | SQLite source used by the JSON export script |
-| `gova-web-manifest.json` | Previous generated manifest; each build writes a fresh one |
+| `asol-web-manifest.json` | Previous generated manifest; each build writes a fresh one |
 | `catagory/active_ingredient_forms.json` | Source export not requested by static runtime |
 | `catagory/active_ingredient_strengths.json` | Source export not requested by static runtime |
 | `catagory/active_ingredients.json` | Source export not requested by static runtime |
@@ -89,6 +92,7 @@ Nothing below these directories may enter `out/`, R2, Android, or iOS.
 |---|---|---|
 | `app/api` | No static API route output | Static hosts cannot execute Next.js server routes |
 | `app/dev` | No `/dev/*` output | Development diagnostics are not production pages |
+| `app/orders/[orderId]` | No dynamic order-detail output | Static clients use `/orders/details?orderId=...`; the dynamic route remains for hosted compatibility |
 | `app/test1` | No `/test1` output | UI test page is not a production page |
 
 The original routes remain available during local development.
@@ -133,7 +137,7 @@ The build also creates flattened RSC aliases required by static file servers on 
 
 After compilation, `collectManifestFiles()` inventories final `out/` files:
 
-- `gova-web-manifest.json` excludes itself.
+- `asol-web-manifest.json` excludes itself.
 - hidden files are excluded.
 - every other output receives a SHA-256 and byte size.
 
@@ -145,7 +149,7 @@ After compilation, `collectManifestFiles()` inventories final `out/` files:
 2. Confirm its direct or dynamic runtime reference.
 3. Add its normalized path to `STATIC_PUBLIC_ALLOW_FILES`.
 4. Run the static build.
-5. Verify the path exists in `out/gova-web-manifest.json`.
+5. Verify the path exists in `out/asol-web-manifest.json`.
 
 For a complete required directory, add it to `STATIC_PUBLIC_ALLOW_DIRECTORIES` only after confirming every child is safe and needed. Do not allow a broad parent such as `images` when only one child directory is required.
 
@@ -166,7 +170,7 @@ Do not ignore a file merely because its runtime reference is difficult to trace.
 - Permit a complete directory when external runtime data can reference any child.
 - Keep databases, reports, source exports, and local upload mirrors out of clients.
 - Run `npm run typecheck` and `npm run architecture:check`.
-- Build and inspect `out/gova-web-manifest.json`.
+- Build and inspect `out/asol-web-manifest.json`.
 - After publication, verify R2, Android, and iOS versions and hashes match.
 
 ## Current Public Output Contract
@@ -174,13 +178,16 @@ Do not ignore a file merely because its runtime reference is difficult to trace.
 The hand-managed public portion of static output is:
 
 ```text
-gova-app-init.js
-gova-theme-init.js
+asol-app-init.js
+asol-push-sw.js
+asol-theme-init.js
 logo.png
 catagory/categories.json
 catagory/subcategories.json
 catagory/cars/**
+catagory/pharmacy/**
 images/mainCategories/**
+images/pharmacy_fixed/**
 images/subCategories/**
 product/style/**
 ```

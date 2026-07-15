@@ -12,8 +12,8 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const liveReloadUrl = process.env.CAPACITOR_SERVER_URL?.replace(/\/$/, '');
 
 const config: CapacitorConfig = {
-  appId: 'com.gova.app',
-  appName: 'GOVA',
+  appId: 'hgh.asol.app',
+  appName: 'ASOL',
   webDir: 'out',
   android: {
     allowMixedContent: true,

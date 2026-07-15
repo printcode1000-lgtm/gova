@@ -2,7 +2,7 @@
 
 import type { NotificationAnalyticsEvent } from "../domain/entities";
 import type { NotificationLifecycleEvent } from "../domain/enums";
-import { govaNotificationRepository } from "../infrastructure/gova-notification-repository";
+import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { createNotificationId } from "../shared/create-notification-id";
 
 export class AnalyticsService {
@@ -12,7 +12,7 @@ export class AnalyticsService {
     event: NotificationLifecycleEvent;
     metadata?: NotificationAnalyticsEvent["metadata"];
   }): Promise<void> {
-    await govaNotificationRepository.addAnalyticsEvent({
+    await asolNotificationRepository.addAnalyticsEvent({
       id: createNotificationId("nta"),
       uid: input.uid,
       notificationId: input.notificationId,

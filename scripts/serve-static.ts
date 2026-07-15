@@ -9,8 +9,8 @@ const rootDir = resolve('out');
 const port = Number(process.env.PORT ?? 5500);
 const host = process.env.HOST ?? '127.0.0.1';
 const apiBaseUrl = (
-  process.env.GOVA_STATIC_PREVIEW_API_BASE_URL ??
-  process.env.NEXT_PUBLIC_GOVA_API_BASE_URL ??
+  process.env.ASOL_STATIC_PREVIEW_API_BASE_URL ??
+  process.env.NEXT_PUBLIC_ASOL_API_BASE_URL ??
   CAPACITOR_API_BASE_URL
 ).replace(/\/$/, '');
 

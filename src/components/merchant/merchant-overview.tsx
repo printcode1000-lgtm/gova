@@ -57,7 +57,7 @@ export function MerchantOverview({ overview, className }: MerchantOverviewProps)
               className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg"
             >
               <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6">
-                <div className="mb-3 gova-merchant-icon-well p-2.5 transition-colors group-hover:opacity-90">
+                <div className="mb-3 asol-merchant-icon-well p-2.5 transition-colors group-hover:opacity-90">
                   <Icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary" />
                 </div>
                 <span className="text-2xl font-bold tracking-tight sm:text-3xl">

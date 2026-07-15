@@ -18,7 +18,7 @@ export interface DevTraceEvent {
   errorMessage?: string;
 }
 
-export const DEV_TRACE_HEADER = 'x-gova-dev-trace';
+export const DEV_TRACE_HEADER = 'x-asol-dev-trace';
 
 export function parseDevTraceHeader(header: string | null): DevTraceEvent[] {
   if (!header) return [];

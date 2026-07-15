@@ -87,15 +87,15 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
         <HeroSlider config={homeHeroSliderConfig} />
       </div>
 
-      <div className="gova-section-tonal gova-section-tonal-tertiary mx-1">
+      <div className="asol-section-tonal asol-section-tonal-tertiary mx-1">
         <FeaturedMarquee config={homeFeaturedMarqueeConfig} />
       </div>
 
-      <div className="gova-section-tonal gova-section-tonal-primary mx-2 sm:mx-4">
+      <div className="asol-section-tonal asol-section-tonal-primary mx-2 sm:mx-4">
         <CategoriesGrid displayCategories={displayCategories} trendingRibbonConfig={homeTrendingRibbonConfig} />
       </div>
 
-      <div className="gova-section-tonal gova-section-tonal-secondary mx-2 sm:mx-4">
+      <div className="asol-section-tonal asol-section-tonal-secondary mx-2 sm:mx-4">
         <CuratedOffers />
       </div>
 

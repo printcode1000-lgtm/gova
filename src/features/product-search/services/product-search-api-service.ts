@@ -1,4 +1,4 @@
-import { govaApi } from "@/core/api";
+import { asolApi } from "@/core/api";
 import type {
   ProductSearchField,
   ProductSearchRequest,
@@ -43,19 +43,19 @@ function sellerQuery(input: SellerSearchRequest) {
 export const productSearchApiService = {
   getFields(mainCategoryId: string, subcategoryId: string) {
     const q = new URLSearchParams({ mainCategoryId, subcategoryId });
-    return govaApi.get<{ fields: ProductSearchField[] }>(
+    return asolApi.get<{ fields: ProductSearchField[] }>(
       `/api/search/fields?${q.toString()}`,
       { cache: "no-store" },
     );
   },
   searchProducts(input: ProductSearchRequest) {
-    return govaApi.get<ProductSearchResult>(
+    return asolApi.get<ProductSearchResult>(
       `/api/search/products?${productQuery(input).toString()}`,
       { cache: "no-store" },
     );
   },
   searchSellers(input: SellerSearchRequest) {
-    return govaApi.get<SellerSearchResult>(
+    return asolApi.get<SellerSearchResult>(
       `/api/search/sellers?${sellerQuery(input).toString()}`,
       { cache: "no-store" },
     );

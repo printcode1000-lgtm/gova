@@ -1,6 +1,6 @@
 # Theme System
 
-Gova implements a **Material Design 3–style theme** with CSS custom properties, runtime preferences, and a blocking init script to prevent flash of wrong theme on load.
+Asol implements a **Material Design 3–style theme** with CSS custom properties, runtime preferences, and a blocking init script to prevent flash of wrong theme on load.
 
 ---
 
@@ -13,7 +13,7 @@ src/theme/
 ├── tailwind-theme.css     # Tailwind @theme mapping
 ├── base.css               # Base element styles
 ├── preferences.css        # data-* attribute driven styles (density, contrast, motion)
-├── color-balance.css      # 60 · 30 · 10 usage rule + gova-* surface classes
+├── color-balance.css      # 60 · 30 · 10 usage rule + asol-* surface classes
 ├── app-overrides.css      # App-specific overrides
 └── runtime/
     ├── ThemeProvider.tsx       # React context for theme preferences
@@ -24,7 +24,7 @@ src/theme/
     └── ThemeInitScript.tsx     # Deprecated — use AppInitScript
 ```
 
-**Unified init:** `src/lib/app-init/` generates `public/gova-app-init.js`, which restores **both theme and locale** before paint.
+**Unified init:** `src/lib/app-init/` generates `public/asol-app-init.js`, which restores **both theme and locale** before paint.
 
 ---
 
@@ -56,10 +56,10 @@ The theme exposes utility classes used across the app:
 
 | Class | Purpose |
 |-------|---------|
-| `gova-canvas` | Page background |
-| `gova-control` | Inputs, buttons base sizing |
-| `gova-card-tonal` | Tonal surface cards |
-| `gova-accent-cta` | Primary call-to-action |
+| `asol-canvas` | Page background |
+| `asol-control` | Inputs, buttons base sizing |
+| `asol-card-tonal` | Tonal surface cards |
+| `asol-accent-cta` | Primary call-to-action |
 | `text-on-surface` | Default text color token |
 
 Colors come from CSS variables defined in `tokens.css` (e.g. `--color-primary`, `--color-on-surface`).
@@ -68,7 +68,7 @@ Colors come from CSS variables defined in `tokens.css` (e.g. `--color-primary`, 
 
 ## Color usage: 60 · 30 · 10 rule
 
-Gova does **not** use the golden ratio (φ ≈ 1.618) for colors. Palette values come from **Material Design 3 / Google** tokens in `tokens.css`. **How those colors are applied** on screen follows the **60 · 30 · 10** balance defined in `color-balance.css`:
+Asol does **not** use the golden ratio (φ ≈ 1.618) for colors. Palette values come from **Material Design 3 / Google** tokens in `tokens.css`. **How those colors are applied** on screen follows the **60 · 30 · 10** balance defined in `color-balance.css`:
 
 | Share | Role | Typical use |
 |-------|------|-------------|
@@ -82,33 +82,33 @@ Gova does **not** use the golden ratio (φ ≈ 1.618) for colors. Palette values
 
 | Class | Purpose |
 |-------|---------|
-| `gova-canvas` | Main page background |
-| `gova-surface-neutral` | Neutral flat surface |
-| `gova-card-neutral` | Default card |
-| `gova-card-elevated` | Elevated neutral card |
-| `gova-field-surface` | Form field background |
-| `gova-empty-state` / `gova-empty-state-card` | Empty / coming-soon layouts |
+| `asol-canvas` | Main page background |
+| `asol-surface-neutral` | Neutral flat surface |
+| `asol-card-neutral` | Default card |
+| `asol-card-elevated` | Elevated neutral card |
+| `asol-field-surface` | Form field background |
+| `asol-empty-state` / `asol-empty-state-card` | Empty / coming-soon layouts |
 
 **30% — Tonal** (primary / secondary / tertiary / error variants)
 
 | Class | Purpose |
 |-------|---------|
-| `gova-section-tonal-*` | Full-width section bands |
-| `gova-card-tonal-*` | Tonal cards |
-| `gova-tonal-*` | Inline tonal blocks |
-| `gova-ring-*` | Icon rings with tonal border |
-| `gova-settings-section-*` | Settings panel sections |
-| `gova-onboarding-*` | Onboarding shell / sidebar |
-| `gova-merchant-band-*` | Merchant page bands |
+| `asol-section-tonal-*` | Full-width section bands |
+| `asol-card-tonal-*` | Tonal cards |
+| `asol-tonal-*` | Inline tonal blocks |
+| `asol-ring-*` | Icon rings with tonal border |
+| `asol-settings-section-*` | Settings panel sections |
+| `asol-onboarding-*` | Onboarding shell / sidebar |
+| `asol-merchant-band-*` | Merchant page bands |
 
 **10% — Accent**
 
 | Class | Purpose |
 |-------|---------|
-| `gova-accent-cta` / `gova-accent-cta-*` | Primary action buttons |
-| `gova-accent-chip` / `gova-accent-chip-*` | Badges and labels |
-| `gova-nav-pill-active` | Active bottom-nav item |
-| `gova-section-heading-*` | Emphasized section titles |
+| `asol-accent-cta` / `asol-accent-cta-*` | Primary action buttons |
+| `asol-accent-chip` / `asol-accent-chip-*` | Badges and labels |
+| `asol-nav-pill-active` | Active bottom-nav item |
+| `asol-section-heading-*` | Emphasized section titles |
 
 When adding UI, prefer **neutral** for most of the layout, **tonal** for grouped content, and **accent** sparingly for actions and highlights — keeping roughly a 60 · 30 · 10 visual balance.
 
@@ -116,7 +116,7 @@ When adding UI, prefer **neutral** for most of the layout, **tonal** for grouped
 
 ## Theme preferences
 
-Stored in GovaDB (`IndexedDB`) under the `appSettings` store with the key `theme-preferences`:
+Stored in AsolDB (`IndexedDB`) under the `appSettings` store with the key `theme-preferences`:
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -129,8 +129,8 @@ Stored in GovaDB (`IndexedDB`) under the `appSettings` store with the key `theme
 
 ## How theme is applied
 
-1. **Before paint:** `gova-theme-init.js` initializes default attributes on `<html>` (such as light theme, comfortable density, 16px font-size) synchronously.
-2. **After hydration:** `ThemeProvider` loads preferences asynchronously from GovaDB (`IndexedDB`), updates document attributes, and sets `data-theme-hydrated="true"` on `<html>`.
+1. **Before paint:** `asol-theme-init.js` initializes default attributes on `<html>` (such as light theme, comfortable density, 16px font-size) synchronously.
+2. **After hydration:** `ThemeProvider` loads preferences asynchronously from AsolDB (`IndexedDB`), updates document attributes, and sets `data-theme-hydrated="true"` on `<html>`.
 3. **CSS:** `preferences.css` reacts to `html[data-*]` attributes. The app body fades in smoothly (150ms transition) once both theme and app preferences have completed their async hydration.
 
 ---
@@ -175,7 +175,7 @@ All in-app routes are rendered through `AppShell`, which reserves enough space f
 ### How it works
 
 - `BottomNavBar` measures its rendered height with `ResizeObserver`.
-- The measured value is published on `<html>` as `--gova-bottom-nav-space`.
+- The measured value is published on `<html>` as `--asol-bottom-nav-space`.
 - The measurement includes the navigation content and `env(safe-area-inset-bottom)` padding.
 - `AppShell` uses the shared `BOTTOM_NAV_CLEARANCE` value as its `padding-bottom`, so every route ends above the navigation automatically.
 - The fallback is `5rem + env(safe-area-inset-bottom, 0px)`, preventing overlap before client hydration.
@@ -186,7 +186,7 @@ The shared expression is defined in:
 ```ts
 // src/components/layouts/bottom-nav-layout.ts
 export const BOTTOM_NAV_CLEARANCE =
-  'calc(var(--gova-bottom-nav-space, calc(5rem + env(safe-area-inset-bottom, 0px))) + 1rem)';
+  'calc(var(--asol-bottom-nav-space, calc(5rem + env(safe-area-inset-bottom, 0px))) + 1rem)';
 ```
 
 ### Fixed and sticky elements
@@ -236,7 +236,7 @@ Labels are translated via i18n keys: `theme.light`, `density.compact`, `motion.s
 npm run app:init
 ```
 
-Regenerates `public/gova-app-init.js` from `src/lib/app-init/build-app-init-script.ts`.  
+Regenerates `public/asol-app-init.js` from `src/lib/app-init/build-app-init-script.ts`.
 Runs automatically before `dev` and `build`.
 
 **Keep in sync:** init script logic must mirror `apply-document-theme.ts` and `apply-locale.ts`.
@@ -277,10 +277,10 @@ New component folders are picked up automatically.
 
 | Storage key | Managed by | Contents |
 |-------------|------------|----------|
-| `gova-theme-preferences` | `ThemeProvider` | Visual / accessibility |
-| `gova-app-preferences` | `AppPreferencesScope` | Locale, timezone |
+| `asol-theme-preferences` | `ThemeProvider` | Visual / accessibility |
+| `asol-app-preferences` | `AppPreferencesScope` | Locale, timezone |
 
-Both are restored by `gova-app-init.js` before paint.
+Both are restored by `asol-app-init.js` before paint.
 
 ---
 

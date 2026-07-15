@@ -4,7 +4,7 @@
 |--------|---------|-----|----------|
 | Local development | `npm run dev` | Same origin `/api/*` | SQLite |
 | Hosted backend | `npm run build` + deploy | Same origin or remote | Turso |
-| Static export (GitHub Pages) | `npm run build:static` | Remote via `GOVA_API_BASE_URL` | None (SPA only) |
+| Static export (GitHub Pages) | `npm run build:static` | Remote via `ASOL_API_BASE_URL` | None (SPA only) |
 | Capacitor (Android / iOS) | `npm run cap:build` | Baked API URL | None (shell over `out/`) |
 
 All targets share **identical application code** — only environment configuration changes.
@@ -12,8 +12,8 @@ All targets share **identical application code** — only environment configurat
 ## Static export
 
 - Output: `out/` — no Next.js server
-- All data via `GovaApiClient` → remote backend → Turso
-- Set `NEXT_PUBLIC_GOVA_API_BASE_URL` before `npm run build:static`
+- All data via `AsolApiClient` → remote backend → Turso
+- Set `NEXT_PUBLIC_ASOL_API_BASE_URL` before `npm run build:static`
 
 ## Capacitor
 

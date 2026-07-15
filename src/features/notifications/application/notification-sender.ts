@@ -12,7 +12,7 @@ import {
   NotificationTargets,
 } from "../domain/enums";
 import { capacitorLocalNotificationService } from "../infrastructure/capacitor/capacitor-local-notification.service";
-import { govaNotificationRepository } from "../infrastructure/gova-notification-repository";
+import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 import { notificationRouter } from "./notification-router";
@@ -33,7 +33,7 @@ export class NotificationSender {
       displayedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    const saved = await govaNotificationRepository.save(routed);
+    const saved = await asolNotificationRepository.save(routed);
     await notificationAnalyticsService.track({
       uid: saved.uid,
       notificationId: saved.id,

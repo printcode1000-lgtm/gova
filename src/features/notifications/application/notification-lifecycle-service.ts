@@ -1,14 +1,14 @@
 "use client";
 
 import { NotificationLifecycleEvents } from "../domain/enums";
-import { govaNotificationRepository } from "../infrastructure/gova-notification-repository";
+import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 
 export class NotificationLifecycleService {
   async markRead(uid: string, notificationId: string): Promise<void> {
     const now = new Date().toISOString();
-    await govaNotificationRepository.update(uid, notificationId, { readAt: now, openedAt: now });
+    await asolNotificationRepository.update(uid, notificationId, { readAt: now, openedAt: now });
     await notificationAnalyticsService.track({
       uid,
       notificationId,
@@ -18,12 +18,12 @@ export class NotificationLifecycleService {
   }
 
   async markAllRead(uid: string): Promise<void> {
-    await govaNotificationRepository.markAllRead(uid);
+    await asolNotificationRepository.markAllRead(uid);
     await notificationBadgeService.refresh(uid);
   }
 
   async dismiss(uid: string, notificationId: string): Promise<void> {
-    await govaNotificationRepository.update(uid, notificationId, {
+    await asolNotificationRepository.update(uid, notificationId, {
       dismissedAt: new Date().toISOString(),
     });
     await notificationAnalyticsService.track({
@@ -31,7 +31,7 @@ export class NotificationLifecycleService {
       notificationId,
       event: NotificationLifecycleEvents.Dismissed,
     });
-    await govaNotificationRepository.delete(uid, notificationId);
+    await asolNotificationRepository.delete(uid, notificationId);
     await notificationBadgeService.refresh(uid);
   }
 }

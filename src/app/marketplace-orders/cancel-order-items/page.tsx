@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 export default function Page() {
   const { t } = useTranslation();
   return (
-    <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
+    <div className="w-full asol-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
@@ -85,7 +85,7 @@ export default function Page() {
 <h4 className="font-label-md text-label-md text-on-surface">Custom Engraving Service</h4>
 <span className="font-label-md text-label-md text-on-surface">$45.00</span>
 </div>
-<p className="text-body-sm text-on-surface-variant mt-1">Type: Custom Service • Laser Etch "Gova Corp"</p>
+<p className="text-body-sm text-on-surface-variant mt-1">Type: Custom Service • Laser Etch "Asol Corp"</p>
 </div>
 </div>
 

@@ -8,7 +8,7 @@ interface CapacitorWebViewPlugin {
 }
 
 const WebView = registerPlugin<CapacitorWebViewPlugin>('WebView');
-const OTA_ROOT = 'gova-ota/releases';
+const OTA_ROOT = 'asol-ota/releases';
 
 function bytesToBase64(bytes: Uint8Array): string {
   let binary = '';

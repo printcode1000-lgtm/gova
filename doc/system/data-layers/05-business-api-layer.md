@@ -35,7 +35,7 @@ POST /api/auth/login
 
 ## CORS
 
-`src/middleware.ts` adds CORS headers for `/api/*` so Static/Capacitor can call a remote backend. Configure via `GOVA_CORS_ORIGINS`.
+`src/middleware.ts` adds CORS headers for `/api/*` so Static/Capacitor can call a remote backend. Configure via `ASOL_CORS_ORIGINS`.
 
 ## Dev migrations
 
@@ -49,4 +49,4 @@ Business API = **JSON boundary** — no SQL in routes.
 
 1. Route under `src/app/api/<domain>/`
 2. Import only `*-service.bootstrap.server.ts`
-3. Add path to `GOVA_API_ROUTES`
+3. Add path to `ASOL_API_ROUTES`

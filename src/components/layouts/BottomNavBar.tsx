@@ -22,7 +22,7 @@ export function BottomNavBar() {
     if (!nav) return;
 
     const publishHeight = () => {
-      document.documentElement.style.setProperty('--gova-bottom-nav-space', `${nav.offsetHeight}px`);
+      document.documentElement.style.setProperty('--asol-bottom-nav-space', `${nav.offsetHeight}px`);
     };
 
     publishHeight();
@@ -31,7 +31,7 @@ export function BottomNavBar() {
 
     return () => {
       observer.disconnect();
-      document.documentElement.style.removeProperty('--gova-bottom-nav-space');
+      document.documentElement.style.removeProperty('--asol-bottom-nav-space');
     };
   }, []);
 
@@ -48,7 +48,7 @@ export function BottomNavBar() {
       id="bottom-navigation-bar"
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 flex min-h-12 items-center justify-around rounded-t-2xl border-t border-outline-variant pt-0 pb-[calc(0.25rem+env(safe-area-inset-bottom,0px))] shadow-lg",
-        resolvedScheme === 'dark' ? 'gova-surface-neutral' : 'bg-[#F8FBFF]'
+        resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}
     >
       {navItems.map(({ href, icon: Icon, label, showBadge, badgeCount }) => {
@@ -62,7 +62,7 @@ export function BottomNavBar() {
             className={cn(
               'flex flex-col items-center justify-center relative py-1 px-2 min-w-[3rem] transition-transform active:scale-90 no-underline',
               resolvedScheme === 'dark' 
-                ? (isActive ? 'gova-nav-pill-active font-bold' : 'text-on-surface-variant font-normal hover:text-on-surface')
+                ? (isActive ? 'asol-nav-pill-active font-bold' : 'text-on-surface-variant font-normal hover:text-on-surface')
                 : (isActive ? 'text-blue-900 font-bold' : 'text-blue-700 font-normal hover:text-blue-900')
             )}
           >

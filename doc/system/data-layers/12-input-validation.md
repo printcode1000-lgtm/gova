@@ -5,7 +5,7 @@ Validation runs **before** data crosses layer boundaries where it matters most.
 ## Client (Hook layer)
 
 - React Hook Form + Zod schemas in hooks
-- Blocks invalid payloads before any `govaApi` call
+- Blocks invalid payloads before any `asolApi` call
 
 ## drizzle-zod
 

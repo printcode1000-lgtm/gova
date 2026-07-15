@@ -7,10 +7,10 @@ Available when `NODE_ENV === 'development'`. End-to-end visibility across client
 | Data path | Monitored? | How | UI layer |
 |-----------|------------|-----|----------|
 | TanStack Query | Yes | `query-observer.ts` + hook `meta` | hook, cache |
-| GovaApiClient → API | Yes | `gova-api-monitor.ts` | gova-api |
-| Server trace | Yes | `X-Gova-Dev-Trace` header | service, query, database |
+| AsolApiClient → API | Yes | `asol-api-monitor.ts` | asol-api |
+| Server trace | Yes | `X-Asol-Dev-Trace` header | service, query, database |
 | Drizzle SQL (dev) | Yes | `drizzle-dev-logger.ts` | database |
-| GovaDB IndexedDB | Yes | `gova-db-monitor.ts` | cache |
+| AsolDB IndexedDB | Yes | `asol-db-monitor.ts` | cache |
 | Query persister | Yes | Instrumented IDB ops | cache |
 | `getPublicJson` | Yes | HTTP layer | cache |
 | Bundled JSON / i18n imports | No | Build-time | — |
@@ -18,7 +18,7 @@ Available when `NODE_ENV === 'development'`. End-to-end visibility across client
 | Provisioning / schema-sync at CI | No | Not browser runtime | — |
 | Turso Platform API | No | Build scripts only | — |
 
-## Dev trace header (`X-Gova-Dev-Trace`)
+## Dev trace header (`X-Asol-Dev-Trace`)
 
 Business API responses may include a base64url JSON array of server events:
 
@@ -29,7 +29,7 @@ Business API (runTracedBusinessRoute)
   → Drizzle (drizzle-dev-logger)
 ```
 
-`GovaApiClient` merges server events into the monitor store via `parentId` linking to the HTTP record.
+`AsolApiClient` merges server events into the monitor store via `parentId` linking to the HTTP record.
 
 **Key files:**
 
@@ -39,8 +39,8 @@ Business API (runTracedBusinessRoute)
 | `trace-server-layer.ts` | Service/command/query spans |
 | `drizzle-dev-logger.ts` | SQL in trace |
 | `emit-server-trace.ts` | Client parser |
-| `gova-api-monitor.ts` | HTTP + header ingestion |
-| `gova-db-monitor.ts` | IndexedDB ops |
+| `asol-api-monitor.ts` | HTTP + header ingestion |
+| `asol-db-monitor.ts` | IndexedDB ops |
 | `auth-monitor-meta.ts` | Standard hook `meta` |
 
 ## Request flow grouping

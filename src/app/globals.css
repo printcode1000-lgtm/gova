@@ -8,18 +8,18 @@
 @source "../lib/**/*.{ts,tsx}";
 
 /* Global speech-to-text controls */
-.gova-voice-host {
+.asol-voice-host {
   position: relative;
 }
 
 /*
- * .gova-voice-field          – added to a field whose mic sits on the physical right.
- * .gova-voice-field--rtl-host – added to a field whose mic sits on the physical left (RTL host).
+ * .asol-voice-field          – added to a field whose mic sits on the physical right.
+ * .asol-voice-field--rtl-host – added to a field whose mic sits on the physical left (RTL host).
  * Both classes are toggled by voice-input-scanner.ts. Padding is applied as an
  * inline style (computed per-field), so no static CSS declarations are needed here.
  */
 
-.gova-voice-button {
+.asol-voice-button {
   position: absolute;
   z-index: 20;
   display: inline-flex;
@@ -41,51 +41,51 @@
     background-color var(--duration-short-3) var(--easing-standard);
 }
 
-.gova-voice-button svg {
+.asol-voice-button svg {
   width: 1.2rem;
   height: 1.2rem;
   pointer-events: none;
 }
 
-.gova-voice-button:focus-visible {
+.asol-voice-button:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-.gova-voice-button:active {
+.asol-voice-button:active {
   opacity: 1;
   background: color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 
-.gova-voice-button--recording {
+.asol-voice-button--recording {
   color: var(--color-error);
   opacity: 1;
   background: color-mix(in srgb, var(--color-error) 10%, transparent);
-  animation: gova-voice-glow 1.35s ease-in-out infinite;
+  animation: asol-voice-glow 1.35s ease-in-out infinite;
 }
 
-.gova-voice-button--error {
+.asol-voice-button--error {
   color: var(--color-error) !important;
   opacity: 1 !important;
-  animation: gova-voice-shake 0.4s ease-in-out !important;
+  animation: asol-voice-shake 0.4s ease-in-out !important;
 }
 
-@keyframes gova-voice-shake {
+@keyframes asol-voice-shake {
   0%, 100% { transform: translateX(0); }
   20%, 60% { transform: translateX(-4px); }
   40%, 80% { transform: translateX(4px); }
 }
 
 /* Disable voice button for specific inputs */
-.gova-no-voice .gova-voice-button {
+.asol-no-voice .asol-voice-button {
   display: none !important;
 }
 
-.gova-no-voice {
-  padding-right: var(--gova-control-padding-x) !important;
+.asol-no-voice {
+  padding-right: var(--asol-control-padding-x) !important;
 }
 
-@keyframes gova-voice-glow {
+@keyframes asol-voice-glow {
   0%,
   100% {
     filter: drop-shadow(0 0 0 color-mix(in srgb, var(--color-error) 0%, transparent));
@@ -96,7 +96,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gova-voice-button--recording {
+  .asol-voice-button--recording {
     animation: none;
   }
 }
@@ -237,8 +237,8 @@
   border-radius: var(--radius-sm);
   background: var(--color-surface-bright);
   border: 1px solid var(--color-outline);
-  padding: var(--gova-control-padding-y) var(--gova-control-padding-x);
-  min-height: calc(var(--gova-control-min-height) * var(--gova-density-scale));
+  padding: var(--asol-control-padding-y) var(--asol-control-padding-x);
+  min-height: calc(var(--asol-control-min-height) * var(--asol-density-scale));
   color: var(--color-on-surface);
   transition: border-color var(--duration-medium-1) var(--easing-standard);
   animation-name: onAutoFillStart;
@@ -258,8 +258,8 @@
   border-radius: var(--radius-sm);
   background: var(--color-primary);
   color: var(--color-on-primary);
-  padding: var(--gova-control-padding-y) var(--gova-control-padding-x);
-  min-height: calc(var(--gova-control-min-height) * var(--gova-density-scale));
+  padding: var(--asol-control-padding-y) var(--asol-control-padding-x);
+  min-height: calc(var(--asol-control-min-height) * var(--asol-density-scale));
   font-weight: 600;
   transition:
     transform var(--duration-short-3) var(--easing-standard),
@@ -315,7 +315,7 @@
 }
 
 /*
- * Anti-flash: Hide the page body while React hasn't yet loaded preferences from GovaDB (IndexedDB).
+ * Anti-flash: Hide the page body while React hasn't yet loaded preferences from AsolDB (IndexedDB).
  * Once both ThemeProvider and PreferencesProvider mount and set data-theme-hydrated="true"
  * and data-app-hydrated="true", the body fades in smoothly.
  */

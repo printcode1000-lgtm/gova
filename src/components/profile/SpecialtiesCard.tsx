@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Button } from "@/components/ui/button";
-import { govaApi } from "@/core/api";
+import { asolApi } from "@/core/api";
 import { profileService } from "@/features/profile/services/profile-service";
 import { categoryService, CATEGORY_CONSTANTS, type CategoryDisplay, type SubcategoryDisplay } from "@/features/categories";
 import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";

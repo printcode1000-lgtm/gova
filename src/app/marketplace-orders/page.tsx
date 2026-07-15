@@ -89,7 +89,7 @@ const screens = [
 
 export default function MarketplaceOrdersDashboard() {
   return (
-    <div className="w-full gova-canvas min-h-screen p-6 text-on-surface">
+    <div className="w-full asol-canvas min-h-screen p-6 text-on-surface">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-3 mb-8 border-b border-outline-variant/30 pb-5">
           <div className="w-12 h-12 bg-primary-container text-on-primary-container rounded-xl flex items-center justify-center">

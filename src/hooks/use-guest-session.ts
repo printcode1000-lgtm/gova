@@ -1,11 +1,11 @@
 'use client';
 
 import {
-  govaDbDeleteGuestSession,
-  govaDbGetGuestSession,
-  govaDbSetGuestSession,
+  asolDbDeleteGuestSession,
+  asolDbGetGuestSession,
+  asolDbSetGuestSession,
   type GuestSessionData,
-} from '@/lib/gova-db';
+} from '@/lib/asol-db';
 import * as React from 'react';
 
 interface UseGuestSessionReturn {
@@ -24,7 +24,7 @@ export function useGuestSession(): UseGuestSessionReturn {
 
   React.useEffect(() => {
     void (async () => {
-      const stored = await govaDbGetGuestSession();
+      const stored = await asolDbGetGuestSession();
       setSession(stored);
     })();
   }, []);
@@ -34,12 +34,12 @@ export function useGuestSession(): UseGuestSessionReturn {
       id: generateGuestId(),
       createdAt: new Date().toISOString(),
     };
-    await govaDbSetGuestSession(newSession);
+    await asolDbSetGuestSession(newSession);
     setSession(newSession);
   }, []);
 
   const endGuestSession = React.useCallback(async () => {
-    await govaDbDeleteGuestSession();
+    await asolDbDeleteGuestSession();
     setSession(null);
   }, []);
 

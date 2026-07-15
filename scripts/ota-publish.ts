@@ -25,7 +25,7 @@ import {
   putOtaObject,
 } from './ota/ota-r2';
 
-const LOCAL_MANIFEST_FILE = 'gova-web-manifest.json';
+const LOCAL_MANIFEST_FILE = 'asol-web-manifest.json';
 
 type CollectedFile = {
   bytes: Buffer;
@@ -112,12 +112,12 @@ async function main(): Promise<void> {
   const notes = automaticNotes(now);
   const privateKey = getOtaPrivateKey();
   const apiBaseUrl = (
-    process.env.GOVA_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
+    process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, '');
   const buildEnv: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
     ...otaClientBuildEnv(version),
-    NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
+    NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
   };
 
   console.log(`R2 current version: ${previousManifest?.version ?? 'none'}`);

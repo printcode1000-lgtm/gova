@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { GOVA_DB_STORES, createGovaDbZustandStorage } from '@/lib/gova-db';
+import { ASOL_DB_STORES, createAsolDbZustandStorage } from '@/lib/asol-db';
 import { nextSellerId } from '@/lib/seller/next-id';
 import type {
   OnboardingStep,
@@ -414,7 +414,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
     }),
     {
       name: 'merchant-onboarding',
-      storage: createJSONStorage(() => createGovaDbZustandStorage(GOVA_DB_STORES.SELLER_ONBOARDING)),
+      storage: createJSONStorage(() => createAsolDbZustandStorage(ASOL_DB_STORES.SELLER_ONBOARDING)),
       partialize: (state) => ({
         currentStep: state.currentStep,
         completedSteps: state.completedSteps,

@@ -1,7 +1,7 @@
 "use client";
 
-import { govaApi } from "@/core/api/gova-api-client";
-import { GOVA_API_ROUTES } from "@/core/api/gova-api-routes";
+import { asolApi } from "@/core/api/asol-api-client";
+import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import type {
   FeaturedMarqueeConfig,
   FeaturedMarqueePublished,
@@ -11,13 +11,13 @@ import type {
 
 export const featuredMarqueeApiService = {
   getCurrent: () =>
-    govaApi.get<FeaturedMarqueePublished>(
-      GOVA_API_ROUTES.advertisements.featuredMarquee,
+    asolApi.get<FeaturedMarqueePublished>(
+      ASOL_API_ROUTES.advertisements.featuredMarquee,
     ),
 
   getVersion: () =>
-    govaApi.get<Omit<FeaturedMarqueePublished, "config" | "sectionTitle">>(
-      `${GOVA_API_ROUTES.advertisements.featuredMarquee}/version`,
+    asolApi.get<Omit<FeaturedMarqueePublished, "config" | "sectionTitle">>(
+      `${ASOL_API_ROUTES.advertisements.featuredMarquee}/version`,
       { suppressErrorLog: true },
     ),
 
@@ -27,8 +27,8 @@ export const featuredMarqueeApiService = {
       uid: identity.uid,
       phone: identity.phone,
     });
-    return govaApi.get<FeaturedMarqueeRecord>(
-      `${GOVA_API_ROUTES.advertisements.featuredMarquee}?${query}`,
+    return asolApi.get<FeaturedMarqueeRecord>(
+      `${ASOL_API_ROUTES.advertisements.featuredMarquee}?${query}`,
     );
   },
 
@@ -37,8 +37,8 @@ export const featuredMarqueeApiService = {
     config: FeaturedMarqueeConfig,
     checkIntervalMinutes: number,
   ) =>
-    govaApi.put<FeaturedMarqueeRecord>(
-      GOVA_API_ROUTES.advertisements.featuredMarquee,
+    asolApi.put<FeaturedMarqueeRecord>(
+      ASOL_API_ROUTES.advertisements.featuredMarquee,
       { identity, config, checkIntervalMinutes },
     ),
 };

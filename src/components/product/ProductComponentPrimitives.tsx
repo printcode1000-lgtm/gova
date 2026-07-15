@@ -71,7 +71,7 @@ export function ProductField({
           value={value || "false"}
           onValueChange={(val) => onChange(val)}
         >
-          <SelectTrigger className="gova-control gova-field-surface w-full border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+          <SelectTrigger className="asol-control asol-field-surface w-full border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -88,7 +88,7 @@ export function ProductField({
   }
 
   const className =
-    "gova-control gova-field-surface w-full border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
+    "asol-control asol-field-surface w-full border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
   return (
     <label className="space-y-1.5 text-sm font-medium">
       <span>{label}</span>

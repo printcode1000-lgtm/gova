@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { isDevelopment } from '@/core/config';
-import { govaApi, GOVA_API_ROUTES } from '@/core/api';
+import { asolApi, ASOL_API_ROUTES } from '@/core/api';
 
 const RESEND_COUNTDOWN = 60;
 
@@ -52,8 +52,8 @@ export function usePhoneVerification() {
 
     // Check if the phone number is already registered in both development and production
     try {
-      const response = await govaApi.get<{ exists: boolean }>(
-        `${GOVA_API_ROUTES.auth.checkPhone}?phone=${encodeURIComponent(phone)}`
+      const response = await asolApi.get<{ exists: boolean }>(
+        `${ASOL_API_ROUTES.auth.checkPhone}?phone=${encodeURIComponent(phone)}`
       );
       if (response.exists) {
         setOtpError(t('auth.validation.phoneAlreadyRegistered'));

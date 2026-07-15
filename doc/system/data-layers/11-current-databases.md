@@ -1,6 +1,6 @@
 # Current Databases
 
-GOVA uses multiple logical databases. Each domain has a local SQLite database for development and a matching Turso/libSQL database for production.
+ASOL uses multiple logical databases. Each domain has a local SQLite database for development and a matching Turso/libSQL database for production.
 
 The local SQLite schema is the source of truth. Schema synchronization applies incremental DDL from local SQLite to Turso through:
 

@@ -25,12 +25,12 @@ From the build log:
 
 ## Cause
 
-After adding a separate database for the profile (`profile.db` → Turso `gova-profile`), the build now runs **two synchronizations**:
+After adding a separate database for the profile (`profile.db` → Turso `asol-profile`), the build now runs **two synchronizations**:
 
 | SQLite | Turso | Required Variables |
 |--------|-------|-------------------|
-| `allusers.db` | `gova-db` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
-| `profile.db` | `gova-profile` | `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN` |
+| `allusers.db` | `asol-db` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
+| `profile.db` | `asol-profile` | `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN` |
 
 On Vercel, only the **users** variables were present. The **profile** variables were not added to the project's **Environment Variables**, while the `schema-sync.ts` script treats CI/Vercel environment (`VERCEL=1`) as mandatory — meaning missing variables stop the build and do not skip synchronization.
 
@@ -43,7 +43,7 @@ On Vercel, only the **users** variables were present. The **profile** variables 
 Added the following two variables to all environments (Production, Preview, Development):
 
 ```env
-TURSO_PROFILE_DATABASE_URL=libsql://gova-profile-....turso.io
+TURSO_PROFILE_DATABASE_URL=libsql://asol-profile-....turso.io
 TURSO_PROFILE_AUTH_TOKEN=...
 ```
 

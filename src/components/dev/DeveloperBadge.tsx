@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-import { govaDbGet, govaDbSet, GOVA_DB_STORES } from '@/lib/gova-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
 
 import {
   DropdownMenu,
@@ -176,7 +176,7 @@ const roleColor: Record<string, string> = {
   'عام': 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
 };
 
-const SPLASH_NAV_TOGGLE_KEY = 'gova-dev-splash-nav-toggle';
+const SPLASH_NAV_TOGGLE_KEY = 'asol-dev-splash-nav-toggle';
 
 export function DeveloperBadge() {
   const pathname = usePathname();
@@ -192,7 +192,7 @@ export function DeveloperBadge() {
     setIsMounted(true);
     setPosition({ x: 16, y: window.innerHeight - 60 });
     const loadSplashNav = async () => {
-      const stored = await govaDbGet<boolean>(GOVA_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY);
+      const stored = await asolDbGet<boolean>(ASOL_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY);
       setIsSplashNavEnabled(stored !== false);
     };
     void loadSplashNav();
@@ -201,7 +201,7 @@ export function DeveloperBadge() {
   const toggleSplashNav = async () => {
     const newValue = !isSplashNavEnabled;
     setIsSplashNavEnabled(newValue);
-    await govaDbSet<boolean>(GOVA_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY, newValue);
+    await asolDbSet<boolean>(ASOL_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY, newValue);
   };
 
   const handleAutofill = async () => {
@@ -296,7 +296,7 @@ export function DeveloperBadge() {
             variant="destructive"
             className="select-none pointer-events-auto"
           >
-            GOVA DEV
+            ASOL DEV
           </Badge>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64 max-h-[80vh] overflow-y-auto">

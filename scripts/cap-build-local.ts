@@ -21,13 +21,13 @@ function readCurrentNativeVersion(): string {
 function main(): void {
   const version = readCurrentNativeVersion();
   const apiBaseUrl = (
-    process.env.GOVA_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
+    process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, '');
   const env: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
     ...otaClientBuildEnv(version),
-    GOVA_CAPACITOR_API_BASE_URL: apiBaseUrl,
-    NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
+    ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
+    NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
   };
 
   console.log(`Building local Capacitor assets with existing version ${version}...`);

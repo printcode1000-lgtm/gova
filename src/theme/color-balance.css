@@ -1,5 +1,5 @@
 /**
- * Gova 60 · 30 · 10 color balance
+ * Asol 60 · 30 · 10 color balance
  * ───────────────────────────────
  * 60% neutral — canvas, body text, default cards
  * 30% tonal   — *-container surfaces, section bands
@@ -8,7 +8,7 @@
 
 /* ── 60% NEUTRAL CANVAS ───────────────────────────────────── */
 
-.gova-canvas {
+.asol-canvas {
   background-color: var(--color-surface-container-low);
   color: var(--color-on-surface);
   background-image:
@@ -24,13 +24,13 @@
     );
 }
 
-.gova-surface-neutral {
+.asol-surface-neutral {
   background-color: var(--color-surface-bright);
   color: var(--color-on-surface);
   border: 1px solid var(--color-outline-variant);
 }
 
-.gova-card-neutral {
+.asol-card-neutral {
   background-color: var(--color-surface-bright);
   color: var(--color-on-surface);
   border: 1px solid var(--color-outline-variant);
@@ -38,7 +38,7 @@
   box-shadow: var(--shadow-1);
 }
 
-.gova-card-elevated {
+.asol-card-elevated {
   background-color: var(--color-surface-bright);
   color: var(--color-on-surface);
   border: 1px solid color-mix(in srgb, var(--color-outline-variant) 80%, transparent);
@@ -48,116 +48,116 @@
 
 /* ── 30% TONAL SURFACES ─────────────────────────────────── */
 
-.gova-tonal-primary {
+.asol-tonal-primary {
   background-color: var(--color-primary-container);
   color: var(--color-on-primary-container);
 }
 
-.gova-tonal-secondary {
+.asol-tonal-secondary {
   background-color: var(--color-secondary-container);
   color: var(--color-on-secondary-container);
 }
 
-.gova-tonal-tertiary {
+.asol-tonal-tertiary {
   background-color: var(--color-tertiary-container);
   color: var(--color-on-tertiary-container);
 }
 
-.gova-tonal-error {
+.asol-tonal-error {
   background-color: var(--color-error-container);
   color: var(--color-on-error-container);
 }
 
-.gova-section-tonal {
+.asol-section-tonal {
   border-radius: var(--radius-2xl);
   padding: 1.25rem 1rem;
 }
 
 @media (min-width: 640px) {
-  .gova-section-tonal {
+  .asol-section-tonal {
     padding: 1.5rem 1.25rem;
   }
 }
 
-.gova-section-tonal-primary {
+.asol-section-tonal-primary {
   background-color: color-mix(in srgb, var(--color-primary-container) 55%, var(--color-surface-container-low));
   color: var(--color-on-surface);
 }
 
-.gova-section-tonal-secondary {
+.asol-section-tonal-secondary {
   background-color: color-mix(in srgb, var(--color-secondary-container) 50%, var(--color-surface-container-low));
   color: var(--color-on-surface);
 }
 
-.gova-section-tonal-tertiary {
+.asol-section-tonal-tertiary {
   background-color: color-mix(in srgb, var(--color-tertiary-container) 45%, var(--color-surface-container-low));
   color: var(--color-on-surface);
 }
 
-.gova-section-tonal-error {
+.asol-section-tonal-error {
   background-color: color-mix(in srgb, var(--color-error-container) 40%, var(--color-surface-container-low));
   color: var(--color-on-surface);
 }
 
-.gova-card-tonal {
+.asol-card-tonal {
   border-radius: var(--radius-xl);
   border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
   box-shadow: var(--shadow-1);
 }
 
-.gova-card-tonal-primary {
+.asol-card-tonal-primary {
   background-color: color-mix(in srgb, var(--color-primary-container) 35%, var(--color-surface-bright));
   color: var(--color-on-surface);
 }
 
-.gova-card-tonal-secondary {
+.asol-card-tonal-secondary {
   background-color: color-mix(in srgb, var(--color-secondary-container) 30%, var(--color-surface-bright));
   color: var(--color-on-surface);
 }
 
-.gova-card-tonal-tertiary {
+.asol-card-tonal-tertiary {
   background-color: color-mix(in srgb, var(--color-tertiary-container) 28%, var(--color-surface-bright));
   color: var(--color-on-surface);
 }
 
 /* Category / icon rings — 30% halo */
-.gova-ring-primary {
+.asol-ring-primary {
   background-color: color-mix(in srgb, var(--color-primary-container) 65%, transparent);
 }
 
-.gova-ring-secondary {
+.asol-ring-secondary {
   background-color: color-mix(in srgb, var(--color-secondary-container) 65%, transparent);
 }
 
-.gova-ring-tertiary {
+.asol-ring-tertiary {
   background-color: color-mix(in srgb, var(--color-tertiary-container) 65%, transparent);
 }
 
-.gova-ring-error {
+.asol-ring-error {
   background-color: color-mix(in srgb, var(--color-error-container) 65%, transparent);
 }
 
 /* ── 10% ACCENT ─────────────────────────────────────────── */
 
-.gova-accent-cta {
+.asol-accent-cta {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
   font-weight: 600;
 }
 
-.gova-accent-cta-secondary {
+.asol-accent-cta-secondary {
   background-color: var(--color-secondary);
   color: var(--color-on-secondary);
   font-weight: 600;
 }
 
-.gova-accent-cta-tertiary {
+.asol-accent-cta-tertiary {
   background-color: var(--color-tertiary);
   color: var(--color-on-tertiary);
   font-weight: 600;
 }
 
-.gova-accent-chip {
+.asol-accent-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
@@ -169,22 +169,22 @@
   font-weight: 600;
 }
 
-.gova-accent-chip-secondary {
+.asol-accent-chip-secondary {
   background-color: var(--color-secondary);
   color: var(--color-on-secondary);
 }
 
-.gova-accent-chip-tertiary {
+.asol-accent-chip-tertiary {
   background-color: var(--color-tertiary);
   color: var(--color-on-tertiary);
 }
 
-.gova-accent-chip-error {
+.asol-accent-chip-error {
   background-color: var(--color-error);
   color: var(--color-on-error);
 }
 
-.gova-section-heading {
+.asol-section-heading {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -194,39 +194,39 @@
   font-weight: 600;
 }
 
-.gova-section-heading-primary {
+.asol-section-heading-primary {
   background-color: color-mix(in srgb, var(--color-primary-container) 80%, transparent);
   color: var(--color-on-primary-container);
   border: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
-.gova-section-heading-secondary {
+.asol-section-heading-secondary {
   background-color: color-mix(in srgb, var(--color-secondary-container) 80%, transparent);
   color: var(--color-on-secondary-container);
   border: 1px solid color-mix(in srgb, var(--color-secondary) 25%, transparent);
 }
 
-.gova-section-heading-tertiary {
+.asol-section-heading-tertiary {
   background-color: color-mix(in srgb, var(--color-tertiary-container) 80%, transparent);
   color: var(--color-on-tertiary-container);
   border: 1px solid color-mix(in srgb, var(--color-tertiary) 35%, transparent);
 }
 
-.gova-section-heading-error {
+.asol-section-heading-error {
   background-color: color-mix(in srgb, var(--color-error-container) 85%, transparent);
   color: var(--color-on-error-container);
   border: 1px solid color-mix(in srgb, var(--color-error) 25%, transparent);
 }
 
 /* Bottom nav active pill — 10% */
-.gova-nav-pill-active {
+.asol-nav-pill-active {
   background-color: var(--color-primary-container);
   color: var(--color-primary);
   border-radius: var(--radius-full);
 }
 
 /* Settings section cards — 30% tint variants */
-.gova-settings-section-neutral {
+.asol-settings-section-neutral {
   border-radius: var(--radius-3xl);
   background: var(--color-surface-bright);
   border: 1px solid var(--color-outline-variant);
@@ -234,7 +234,7 @@
   padding: 1.5rem;
 }
 
-.gova-settings-section-primary {
+.asol-settings-section-primary {
   border-radius: var(--radius-3xl);
   background: color-mix(in srgb, var(--color-primary-container) 22%, var(--color-surface-bright));
   border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-outline-variant));
@@ -242,7 +242,7 @@
   padding: 1.5rem;
 }
 
-.gova-settings-section-secondary {
+.asol-settings-section-secondary {
   border-radius: var(--radius-3xl);
   background: color-mix(in srgb, var(--color-secondary-container) 20%, var(--color-surface-bright));
   border: 1px solid color-mix(in srgb, var(--color-secondary) 15%, var(--color-outline-variant));
@@ -250,7 +250,7 @@
   padding: 1.5rem;
 }
 
-.gova-settings-section-tertiary {
+.asol-settings-section-tertiary {
   border-radius: var(--radius-3xl);
   background: color-mix(in srgb, var(--color-tertiary-container) 18%, var(--color-surface-bright));
   border: 1px solid color-mix(in srgb, var(--color-tertiary) 15%, var(--color-outline-variant));
@@ -258,7 +258,7 @@
   padding: 1.5rem;
 }
 
-.gova-settings-section-error {
+.asol-settings-section-error {
   border-radius: var(--radius-3xl);
   background: color-mix(in srgb, var(--color-error-container) 15%, var(--color-surface-bright));
   border: 1px solid color-mix(in srgb, var(--color-error) 12%, var(--color-outline-variant));
@@ -266,7 +266,7 @@
   padding: 1.5rem;
 }
 
-.gova-settings-preview-accent {
+.asol-settings-preview-accent {
   border-radius: var(--radius-3xl);
   background: linear-gradient(
     135deg,
@@ -280,11 +280,11 @@
 
 /* ── Auth layout ─────────────────────────────────────────── */
 
-.gova-auth-form-panel {
+.asol-auth-form-panel {
   background: color-mix(in srgb, var(--color-surface-bright) 88%, var(--color-primary-container));
 }
 
-.gova-auth-secondary-btn {
+.asol-auth-secondary-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -297,7 +297,7 @@
   transition: opacity var(--duration-short-3) var(--easing-standard);
 }
 
-.gova-auth-outline-btn {
+.asol-auth-outline-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -309,20 +309,20 @@
   font-weight: 600;
 }
 
-.gova-auth-tonal-panel {
+.asol-auth-tonal-panel {
   border-radius: var(--radius-xl);
   background: color-mix(in srgb, var(--color-secondary-container) 35%, var(--color-surface-bright));
   border: 1px solid color-mix(in srgb, var(--color-secondary) 20%, var(--color-outline-variant));
   padding: 1rem;
 }
 
-.gova-field-surface {
+.asol-field-surface {
   background-color: var(--color-surface-bright);
 }
 
 /* ── Empty / placeholder pages (60·30·10) ───────────────── */
 
-.gova-empty-state {
+.asol-empty-state {
   display: flex;
   min-height: 50vh;
   align-items: center;
@@ -330,7 +330,7 @@
   padding: 1rem;
 }
 
-.gova-empty-state-card {
+.asol-empty-state-card {
   max-width: 24rem;
   width: 100%;
   text-align: center;
@@ -341,7 +341,7 @@
   box-shadow: var(--shadow-2);
 }
 
-.gova-empty-state-icon {
+.asol-empty-state-icon {
   margin: 0 auto 1rem;
   width: 4rem;
   height: 4rem;
@@ -355,18 +355,18 @@
 
 /* ── Drawer / overlay ───────────────────────────────────── */
 
-.gova-overlay-dim {
+.asol-overlay-dim {
   background: color-mix(in srgb, var(--color-inverse-surface) 35%, transparent);
 }
 
-.gova-drawer-panel {
+.asol-drawer-panel {
   background: var(--color-surface-bright);
   border-color: var(--color-outline-variant);
 }
 
 /* ── Onboarding ─────────────────────────────────────────── */
 
-.gova-onboarding-shell {
+.asol-onboarding-shell {
   min-height: 100vh;
   background: var(--color-surface-container-low);
   background-image:
@@ -382,16 +382,16 @@
     );
 }
 
-.gova-onboarding-sidebar {
+.asol-onboarding-sidebar {
   background: color-mix(in srgb, var(--color-primary-container) 30%, var(--color-surface-bright));
   border-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-outline-variant));
 }
 
-.gova-onboarding-main {
+.asol-onboarding-main {
   background: color-mix(in srgb, var(--color-surface-bright) 92%, var(--color-tertiary-container));
 }
 
-.gova-onboarding-sticky-bar {
+.asol-onboarding-sticky-bar {
   background: color-mix(in srgb, var(--color-surface-bright) 92%, transparent);
   backdrop-filter: blur(8px);
   border-color: var(--color-outline-variant);
@@ -399,28 +399,28 @@
 
 /* ── Merchant page bands ────────────────────────────────── */
 
-.gova-merchant-band {
+.asol-merchant-band {
   border-radius: var(--radius-2xl);
   padding: 1.25rem;
 }
 
-.gova-merchant-band-primary {
+.asol-merchant-band-primary {
   background: color-mix(in srgb, var(--color-primary-container) 40%, transparent);
 }
 
-.gova-merchant-band-secondary {
+.asol-merchant-band-secondary {
   background: color-mix(in srgb, var(--color-secondary-container) 38%, transparent);
 }
 
-.gova-merchant-band-tertiary {
+.asol-merchant-band-tertiary {
   background: color-mix(in srgb, var(--color-tertiary-container) 35%, transparent);
 }
 
-.gova-merchant-band-error {
+.asol-merchant-band-error {
   background: color-mix(in srgb, var(--color-error-container) 30%, transparent);
 }
 
-.gova-merchant-icon-well {
+.asol-merchant-icon-well {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -430,19 +430,19 @@
   color: var(--color-primary);
 }
 
-.gova-merchant-icon-well-secondary {
+.asol-merchant-icon-well-secondary {
   background: color-mix(in srgb, var(--color-secondary-container) 70%, transparent);
   color: var(--color-secondary);
 }
 
-.gova-merchant-icon-well-tertiary {
+.asol-merchant-icon-well-tertiary {
   background: color-mix(in srgb, var(--color-tertiary-container) 70%, transparent);
   color: var(--color-tertiary);
 }
 
 /* ── Splash ─────────────────────────────────────────────── */
 
-.gova-splash-canvas {
+.asol-splash-canvas {
   background-color: var(--color-surface-container-low);
   color: var(--color-on-background);
   background-image:
@@ -458,11 +458,11 @@
     );
 }
 
-.gova-splash-progress-track {
+.asol-splash-progress-track {
   background: color-mix(in srgb, var(--color-surface-container-high) 80%, var(--color-primary-container));
 }
 
-.gova-splash-marquee-card {
+.asol-splash-marquee-card {
   background: color-mix(in srgb, var(--color-primary-container) 25%, var(--color-surface-bright));
   border: 1px solid color-mix(in srgb, var(--color-primary) 15%, var(--color-outline-variant));
   border-radius: var(--radius-xl);

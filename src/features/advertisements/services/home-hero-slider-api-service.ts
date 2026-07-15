@@ -1,7 +1,7 @@
 "use client";
 
-import { govaApi } from "@/core/api/gova-api-client";
-import { GOVA_API_ROUTES } from "@/core/api/gova-api-routes";
+import { asolApi } from "@/core/api/asol-api-client";
+import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import type {
   HomeHeroConfig,
   HomeHeroPublished,
@@ -11,12 +11,12 @@ import type {
 
 export const homeHeroSliderApiService = {
   getCurrent: () =>
-    govaApi.get<HomeHeroPublished>(
-      GOVA_API_ROUTES.advertisements.homeHeroSlider,
+    asolApi.get<HomeHeroPublished>(
+      ASOL_API_ROUTES.advertisements.homeHeroSlider,
     ),
   getVersion: () =>
-    govaApi.get<Omit<HomeHeroPublished, "config">>(
-      GOVA_API_ROUTES.advertisements.homeHeroSliderVersion,
+    asolApi.get<Omit<HomeHeroPublished, "config">>(
+      ASOL_API_ROUTES.advertisements.homeHeroSliderVersion,
       { suppressErrorLog: true },
     ),
   getAdmin: (identity: SuperAdminIdentity) => {
@@ -25,8 +25,8 @@ export const homeHeroSliderApiService = {
       uid: identity.uid,
       phone: identity.phone,
     });
-    return govaApi.get<HomeHeroRecord>(
-      `${GOVA_API_ROUTES.advertisements.homeHeroSlider}?${query}`,
+    return asolApi.get<HomeHeroRecord>(
+      `${ASOL_API_ROUTES.advertisements.homeHeroSlider}?${query}`,
     );
   },
   save: (
@@ -34,7 +34,7 @@ export const homeHeroSliderApiService = {
     config: HomeHeroConfig,
     checkIntervalMinutes: number,
   ) =>
-    govaApi.put<HomeHeroRecord>(GOVA_API_ROUTES.advertisements.homeHeroSlider, {
+    asolApi.put<HomeHeroRecord>(ASOL_API_ROUTES.advertisements.homeHeroSlider, {
       identity,
       config,
       checkIntervalMinutes,

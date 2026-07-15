@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 export default function Page() {
   const { t } = useTranslation();
   return (
-    <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
+    <div className="w-full asol-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
@@ -24,7 +24,7 @@ export default function Page() {
 <HelpCircle className=""  />
 </div>
 <div>
-<h2 className="font-headline-md text-headline-md text-primary">Gova User</h2>
+<h2 className="font-headline-md text-headline-md text-primary">Asol User</h2>
 <p className="font-body-sm text-body-sm text-on-surface-variant">Role Switcher</p>
 </div>
 </div>

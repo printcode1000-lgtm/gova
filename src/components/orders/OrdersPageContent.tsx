@@ -4,8 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { ClipboardList, Loader2, ShieldCheck } from "lucide-react";
 
-import { govaApi } from "@/core/api/gova-api-client";
-import { GOVA_API_ROUTES } from "@/core/api/gova-api-routes";
+import { asolApi } from "@/core/api/asol-api-client";
+import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import {
@@ -37,12 +37,12 @@ export function OrdersPageContent() {
       setLoading(true);
       setError("");
       try {
-        const route = `${GOVA_API_ROUTES.orders.root}?${queryWithActor(
+        const route = `${ASOL_API_ROUTES.orders.root}?${queryWithActor(
           session.uid,
           session.phone,
           activeRole,
         )}`;
-        const data = await govaApi.get<DbRow[]>(route);
+        const data = await asolApi.get<DbRow[]>(route);
         if (!cancelled) setOrders(data);
       } catch (err) {
         if (!cancelled) {
@@ -136,7 +136,7 @@ export function OrdersPageContent() {
             return (
               <Link
                 key={id}
-                href={`/orders/${encodeURIComponent(id)}?role=${activeRole}`}
+                href={`/orders/details?orderId=${encodeURIComponent(id)}&role=${activeRole}`}
                 className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition hover:border-primary"
               >
                 <div className="flex items-start justify-between gap-3">

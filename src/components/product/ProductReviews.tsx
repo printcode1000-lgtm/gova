@@ -292,7 +292,7 @@ export function ProductReviews({
           <select
             value={sort}
             onChange={(event) => setSort(event.target.value as ReviewSort)}
-            className="gova-control gova-field-surface border border-input px-3"
+            className="asol-control asol-field-surface border border-input px-3"
           >
             <option value="newest">الأحدث أولًا</option>
             <option value="highest">الأعلى تقييمًا</option>
@@ -464,7 +464,7 @@ export function ProductReviews({
               <textarea
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
-                className="gova-control gova-field-surface min-h-28 w-full border border-input p-3"
+                className="asol-control asol-field-surface min-h-28 w-full border border-input p-3"
                 placeholder="اكتب مراجعتك"
               />
             ) : null}
@@ -499,7 +499,7 @@ export function ProductReviews({
             <textarea
               value={replyText}
               onChange={(event) => setReplyText(event.target.value)}
-              className="gova-control gova-field-surface mt-4 min-h-28 w-full border border-input p-3"
+              className="asol-control asol-field-surface mt-4 min-h-28 w-full border border-input p-3"
             />
             <div className="mt-4 flex gap-2">
               <button

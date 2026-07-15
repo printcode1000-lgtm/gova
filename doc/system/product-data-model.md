@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Product Data Model defines how GOVA stores and exposes products across the UI, API, local SQLite, and Turso.
+The Product Data Model defines how ASOL stores and exposes products across the UI, API, local SQLite, and Turso.
 
 Products are first-class structured records. They must not be stored as generic JSON documents or accessed through `product.data.fields`.
 

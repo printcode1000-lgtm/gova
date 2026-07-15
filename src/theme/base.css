@@ -1,6 +1,6 @@
 @layer base {
   html {
-    font-size: var(--gova-font-size-base, 16px);
+    font-size: var(--asol-font-size-base, 16px);
   }
 
   body {

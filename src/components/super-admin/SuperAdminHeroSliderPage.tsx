@@ -16,7 +16,7 @@ import { homeHeroSliderApiService } from "@/features/advertisements/services/hom
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-import { GOVA_DB_STORES, govaDbDelete } from "@/lib/gova-db";
+import { ASOL_DB_STORES, asolDbDelete } from "@/lib/asol-db";
 
 const quickIntervals = [5, 15, 30, 60];
 
@@ -70,7 +70,7 @@ export function SuperAdminHeroSliderPage() {
       );
       // Invalidate IndexedDB cache so that the home page slider updates immediately
       try {
-        await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, HOME_HERO_CACHE_KEY);
+        await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, HOME_HERO_CACHE_KEY);
       } catch (err) {
         console.error("Failed to delete local slider cache:", err);
       }

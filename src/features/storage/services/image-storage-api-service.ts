@@ -1,4 +1,4 @@
-import { govaApi, GOVA_API_ROUTES } from "@/core/api";
+import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import type {
   ImageUploadResult,
   StorageOutputFormat,
@@ -12,8 +12,8 @@ export class ImageStorageApiService implements IImageStorageApiAdapter {
   async getProfile(
     storageProfileId: string,
   ): Promise<StorageProfileClientView> {
-    return govaApi.get<StorageProfileClientView>(
-      GOVA_API_ROUTES.storage.profile(storageProfileId),
+    return asolApi.get<StorageProfileClientView>(
+      ASOL_API_ROUTES.storage.profile(storageProfileId),
     );
   }
 
@@ -33,15 +33,15 @@ export class ImageStorageApiService implements IImageStorageApiAdapter {
     if (storageScope) {
       formData.append("storageScope", storageScope);
     }
-    return govaApi.postForm<ImageUploadResult>(
-      GOVA_API_ROUTES.storage.upload,
+    return asolApi.postForm<ImageUploadResult>(
+      ASOL_API_ROUTES.storage.upload,
       formData,
     );
   }
 
   async deleteImage(storageProfileId: string, imageKey: string): Promise<void> {
-    const route = GOVA_API_ROUTES.storage.deleteImage(imageKey);
-    await govaApi.delete<void>(
+    const route = ASOL_API_ROUTES.storage.deleteImage(imageKey);
+    await asolApi.delete<void>(
       `${route}?storageProfileId=${encodeURIComponent(storageProfileId)}`,
     );
   }

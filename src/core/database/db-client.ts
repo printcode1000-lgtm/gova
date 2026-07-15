@@ -10,7 +10,7 @@ import { isDevRuntime } from './environment';
  * Production runtime   → Turso (@libsql/client)
  *
  * Browser, Static Export, and Capacitor never instantiate this class.
- * They consume the GOVA backend through GovaApiClient only.
+ * They consume the ASOL backend through AsolApiClient only.
  */
 export class DatabaseClient implements IDatabaseClient {
   private activeClient: IDatabaseClient;

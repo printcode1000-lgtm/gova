@@ -21,7 +21,7 @@ export function EmailInput() {
             type="email"
             inputMode="email"
             placeholder="example@email.com"
-            data-gova-autofill="registration-email"
+            data-asol-autofill="registration-email"
             className={cn('auth-input w-full', fieldState.error && 'border-error')}
             value={field.value || ''}
             onChange={field.onChange}

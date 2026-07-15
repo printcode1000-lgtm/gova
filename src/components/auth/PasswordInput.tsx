@@ -35,7 +35,7 @@ export function PasswordInput({ name }: PasswordInputProps) {
               autoComplete={name === 'password' ? 'new-password' : 'off'}
               type={show ? 'text' : 'password'}
               placeholder={placeholder}
-              data-gova-autofill={
+              data-asol-autofill={
                 name === 'password' ? 'registration-password' : 'registration-confirm-password'
               }
               className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')}

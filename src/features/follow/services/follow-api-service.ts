@@ -1,4 +1,4 @@
-import { govaApi, GOVA_API_ROUTES } from "@/core/api";
+import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import type {
   FollowActionResult,
   FollowMutationInput,
@@ -18,23 +18,23 @@ function toQuery(input: FollowStatusInput): string {
 
 export const followApiService = {
   getStatus(input: FollowStatusInput) {
-    return govaApi.get<FollowStatus>(
-      `${GOVA_API_ROUTES.follow.status}?${toQuery(input)}`,
+    return asolApi.get<FollowStatus>(
+      `${ASOL_API_ROUTES.follow.status}?${toQuery(input)}`,
       { suppressErrorLog: true },
     );
   },
 
   follow(input: FollowMutationInput) {
-    return govaApi.post<FollowActionResult>(
-      GOVA_API_ROUTES.follow.root,
+    return asolApi.post<FollowActionResult>(
+      ASOL_API_ROUTES.follow.root,
       input,
       { suppressErrorLog: true },
     );
   },
 
   unfollow(input: FollowMutationInput) {
-    return govaApi.delete<FollowActionResult>(
-      `${GOVA_API_ROUTES.follow.root}?${toQuery(input)}`,
+    return asolApi.delete<FollowActionResult>(
+      `${ASOL_API_ROUTES.follow.root}?${toQuery(input)}`,
       { suppressErrorLog: true },
     );
   },

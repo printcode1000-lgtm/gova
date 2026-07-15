@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'gova-control inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'asol-control inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -13,7 +13,7 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline:
-          'gova-surface-neutral border border-input hover:bg-accent hover:text-accent-foreground',
+          'asol-surface-neutral border border-input hover:bg-accent hover:text-accent-foreground',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
@@ -21,9 +21,9 @@ const buttonVariants = cva(
       },
       size: {
         default: '',
-        sm: 'text-xs [--gova-control-min-height:2.25rem] [--gova-density-scale:0.92]',
-        lg: 'text-base [--gova-control-min-height:2.875rem] [--gova-density-scale:1.08]',
-        icon: 'gova-control-icon aspect-square p-0',
+        sm: 'text-xs [--asol-control-min-height:2.25rem] [--asol-density-scale:0.92]',
+        lg: 'text-base [--asol-control-min-height:2.875rem] [--asol-density-scale:1.08]',
+        icon: 'asol-control-icon aspect-square p-0',
       },
     },
     defaultVariants: {

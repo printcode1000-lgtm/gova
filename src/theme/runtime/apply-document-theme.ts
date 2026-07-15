@@ -38,7 +38,7 @@ export function applyDocumentTheme(
   root.setAttribute('data-density', prefs.density);
   root.setAttribute('data-high-contrast', prefs.highContrast ? 'true' : 'false');
 
-  root.style.setProperty('--gova-font-size-base', `${clampFontSize(prefs.fontSize)}px`);
+  root.style.setProperty('--asol-font-size-base', `${clampFontSize(prefs.fontSize)}px`);
   root.style.colorScheme = scheme;
   setMetaThemeColor(scheme);
 

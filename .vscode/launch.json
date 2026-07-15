@@ -29,7 +29,7 @@
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "env": {
-        "NEXT_PUBLIC_GOVA_API_BASE_URL": "https://gova-swart.vercel.app"
+        "NEXT_PUBLIC_ASOL_API_BASE_URL": "https://gova-swart.vercel.app"
       }
     },
     {
@@ -50,7 +50,7 @@
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "env": {
-        "GOVA_STATIC_PREVIEW_API_BASE_URL": "https://gova-swart.vercel.app",
+        "ASOL_STATIC_PREVIEW_API_BASE_URL": "https://gova-swart.vercel.app",
         "PORT": "5500"
       }
     },
@@ -63,7 +63,7 @@
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "env": {
-        "GOVA_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3000",
+        "ASOL_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3000",
         "PORT": "5500"
       }
     },

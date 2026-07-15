@@ -1,4 +1,4 @@
-import { GOVA_API_ROUTES, govaApi } from "@/core/api";
+import { ASOL_API_ROUTES, asolApi } from "@/core/api";
 import type {
   ProductReview,
   ProductReviewsResult,
@@ -22,37 +22,37 @@ export const productReviewApiService = {
       limit: String(limit),
       uid,
     });
-    return govaApi.get<ProductReviewsResult>(
-      `${GOVA_API_ROUTES.productReviews.root}?${q}`,
+    return asolApi.get<ProductReviewsResult>(
+      `${ASOL_API_ROUTES.productReviews.root}?${q}`,
       { cache: "no-store" },
     );
   },
   create(input: SaveReviewInput) {
-    return govaApi.post<ProductReview>(
-      GOVA_API_ROUTES.productReviews.root,
+    return asolApi.post<ProductReview>(
+      ASOL_API_ROUTES.productReviews.root,
       input,
     );
   },
   update(input: UpdateReviewInput) {
-    return govaApi.put<ProductReview>(
-      GOVA_API_ROUTES.productReviews.root,
+    return asolApi.put<ProductReview>(
+      ASOL_API_ROUTES.productReviews.root,
       input,
     );
   },
   delete(reviewId: string, uid: string) {
     const q = new URLSearchParams({ reviewId, uid });
-    return govaApi.delete<{ deleted: boolean }>(
-      `${GOVA_API_ROUTES.productReviews.root}?${q}`,
+    return asolApi.delete<{ deleted: boolean }>(
+      `${ASOL_API_ROUTES.productReviews.root}?${q}`,
     );
   },
   helpful(reviewId: string, uid: string) {
-    return govaApi.post<ProductReview>(GOVA_API_ROUTES.productReviews.helpful, {
+    return asolApi.post<ProductReview>(ASOL_API_ROUTES.productReviews.helpful, {
       reviewId,
       uid,
     });
   },
   reply(reviewId: string, uid: string, text: string) {
-    return govaApi.post<ProductReview>(GOVA_API_ROUTES.productReviews.reply, {
+    return asolApi.post<ProductReview>(ASOL_API_ROUTES.productReviews.reply, {
       reviewId,
       uid,
       text,
@@ -60,8 +60,8 @@ export const productReviewApiService = {
   },
   deleteReply(reviewId: string, uid: string) {
     const q = new URLSearchParams({ reviewId, uid });
-    return govaApi.delete<{ deleted: boolean }>(
-      `${GOVA_API_ROUTES.productReviews.reply}?${q}`,
+    return asolApi.delete<{ deleted: boolean }>(
+      `${ASOL_API_ROUTES.productReviews.reply}?${q}`,
     );
   },
 };

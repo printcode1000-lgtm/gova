@@ -1,9 +1,9 @@
-import { ApiError, govaApi, GOVA_API_ROUTES } from '@/core/api';
+import { ApiError, asolApi, ASOL_API_ROUTES } from '@/core/api';
 
 export class NetworkApiService {
   async checkHealth(signal?: AbortSignal): Promise<boolean> {
     try {
-      const result = await govaApi.get<{ status: 'ok' }>(GOVA_API_ROUTES.health, {
+      const result = await asolApi.get<{ status: 'ok' }>(ASOL_API_ROUTES.health, {
         signal,
         cache: 'no-store',
         suppressErrorLog: true,

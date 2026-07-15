@@ -5,8 +5,8 @@ The `TrendingRibbon` is a reusable, self-scrolling text ticker component designe
 ---
 
 ## Component Location
-* Code: [TrendingRibbon.tsx](file:///c:/Users/hesham/Desktop/gova/src/components/ui/TrendingRibbon.tsx)
-* Configuration Example (Home Page): [home-trending-ribbon.json](file:///c:/Users/hesham/Desktop/gova/src/components/home/home-trending-ribbon.json)
+* Code: [TrendingRibbon.tsx](file:///c:/Users/hesham/Desktop/asol/src/components/ui/TrendingRibbon.tsx)
+* Configuration Example (Home Page): [home-trending-ribbon.json](file:///c:/Users/hesham/Desktop/asol/src/components/home/home-trending-ribbon.json)
 
 ---
 

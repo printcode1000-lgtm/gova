@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 export default function Page() {
   const { t } = useTranslation();
   return (
-    <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
+    <div className="w-full asol-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
@@ -23,14 +23,14 @@ export default function Page() {
 <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
 <Package className=""  />
 </div>
-<h1 className="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Gova</h1>
+<h1 className="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Asol</h1>
 </div>
 <div className="flex items-center gap-4 p-4 rounded-xl bg-surface-container-high">
 <div className="w-10 h-10 rounded-full overflow-hidden bg-outline-variant">
 <ImagePlaceholder alt="" className="w-full h-full object-cover"   />
 </div>
 <div>
-<p className="font-label-md text-label-md text-on-surface">Gova User</p>
+<p className="font-label-md text-label-md text-on-surface">Asol User</p>
 <p className="font-body-sm text-body-sm text-on-surface-variant">Role Switcher</p>
 </div>
 </div>

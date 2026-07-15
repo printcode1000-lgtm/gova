@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { GOVA_API_ROUTES, govaApi } from "@/core/api";
+import { ASOL_API_ROUTES, asolApi } from "@/core/api";
 import {
   PRODUCT_DEMO_DETAILS,
   PRODUCT_DEMO_IMAGES,
@@ -328,9 +328,9 @@ export function DeveloperCategorySelector() {
     setStyleStatus("loading");
 
     const query = new URLSearchParams({ mainCategoryId, subcategoryId });
-    govaApi
+    asolApi
       .get<ProductStyleResponse>(
-        `${GOVA_API_ROUTES.dev.productStyle}?${query.toString()}`,
+        `${ASOL_API_ROUTES.dev.productStyle}?${query.toString()}`,
         { cache: "no-store" },
       )
       .then((response) => {
@@ -359,8 +359,8 @@ export function DeveloperCategorySelector() {
         components,
       };
 
-      govaApi
-        .put<{ saved: boolean }>(GOVA_API_ROUTES.dev.productStyle, settings)
+      asolApi
+        .put<{ saved: boolean }>(ASOL_API_ROUTES.dev.productStyle, settings)
         .then(() => setStyleStatus("saved"))
         .catch(() => setStyleStatus("error"));
     }, 350);

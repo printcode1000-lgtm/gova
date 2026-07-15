@@ -11,7 +11,7 @@ import { ADVERTISEMENTS_SQLITE_DB_PATH } from "../src/core/database/environment"
 import { loadTursoAdvertisementsCredentialsFromEnv } from "../src/core/provisioning/turso-provisioner";
 import seed from "../src/features/advertisements/config/home-hero-slider.seed.json";
 
-process.env.GOVA_PROVISIONING = "true";
+process.env.ASOL_PROVISIONING = "true";
 if (existsSync(".env")) dotenv.config({ path: ".env" });
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local" });
 

@@ -3,7 +3,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 const root = process.cwd();
-const sourcePath = path.join(root, 'assets', 'branding', 'gova-app-icon.png');
+const sourcePath = path.join(root, 'assets', 'branding', 'asol-app-icon.png');
 const white = { r: 255, g: 255, b: 255, alpha: 1 };
 const ICON_ARTWORK_SCALE = 0.86;
 const forbiddenLegacyBrandingPaths = [

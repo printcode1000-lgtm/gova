@@ -1,8 +1,8 @@
 # Capacitor Platform
 
-GOVA uses **Capacitor as a native runtime shell only** — Android and iOS load the same static web app produced by Next.js. Capacitor does **not** contain business logic, database drivers, ORM code, or SQLite/Turso clients.
+ASOL uses **Capacitor as a native runtime shell only** — Android and iOS load the same static web app produced by Next.js. Capacitor does **not** contain business logic, database drivers, ORM code, or SQLite/Turso clients.
 
-For the full data-flow architecture (GovaApiClient, Business APIs, Repository), see [data-layers/README.md](./data-layers/README.md).
+For the full data-flow architecture (AsolApiClient, Business APIs, Repository), see [data-layers/README.md](./data-layers/README.md).
 
 ---
 
@@ -77,8 +77,8 @@ No database plugin is installed. `@capacitor/filesystem` is used by the OTA plat
 
 ```bash
 # Equivalent to:
-NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION=<version> NEXT_PUBLIC_GOVA_API_BASE_URL=<vercel-url> npm run build:static
-# verify out/gova-web-manifest.json exactly matches the R2 channel manifest
+NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION=<version> NEXT_PUBLIC_ASOL_API_BASE_URL=<vercel-url> npm run build:static
+# verify out/asol-web-manifest.json exactly matches the R2 channel manifest
 npx cap sync
 ```
 
@@ -87,9 +87,9 @@ Implemented in `scripts/cap-build.ts`:
 1. Reads the current R2 version and increments its patch number automatically.
 2. Creates release notes from the current Cairo date and time.
 3. Publishes changed/new files and deletes removed files in the single `app-updates/files` directory.
-4. Resolves API URL from `GOVA_CAPACITOR_API_BASE_URL` or `platform/capacitor.defaults.ts` (`https://gova-swart.vercel.app`).
-5. Sets `NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION`, `NEXT_PUBLIC_GOVA_NATIVE_VERSION`, and `NEXT_PUBLIC_GOVA_API_BASE_URL`.
-6. Runs `npm run build:static` (includes `architecture:check` and writes `gova-web-manifest.json`).
+4. Resolves API URL from `ASOL_CAPACITOR_API_BASE_URL` or `platform/capacitor.defaults.ts` (`https://gova-swart.vercel.app`).
+5. Sets `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION`, `NEXT_PUBLIC_ASOL_NATIVE_VERSION`, and `NEXT_PUBLIC_ASOL_API_BASE_URL`.
+6. Runs `npm run build:static` (includes `architecture:check` and writes `asol-web-manifest.json`).
 7. Publishes the signed manifest last and removes legacy release directories.
 8. Downloads and verifies every R2 file by size and SHA-256.
 9. Updates Android and iOS to the automatic version.
@@ -128,32 +128,32 @@ npm run cap:open:ios
 Mobile builds never touch the database directly.
 
 ```
-UI → Hooks → Client Services → GovaApiClient → HTTPS → Vercel Business APIs → …
+UI → Hooks → Client Services → AsolApiClient → HTTPS → Vercel Business APIs → …
 ```
 
-The API base URL is **baked at build time** into the static bundle via `NEXT_PUBLIC_GOVA_API_BASE_URL`.
+The API base URL is **baked at build time** into the static bundle via `NEXT_PUBLIC_ASOL_API_BASE_URL`.
 
 | Build command | API source |
 |---|---|
 | `npm run cap:build` | Always Vercel unless overridden; automatically publishes and verifies R2 |
-| `npm run build:static` (manual) | Whatever `NEXT_PUBLIC_GOVA_API_BASE_URL` is at build time |
+| `npm run build:static` (manual) | Whatever `NEXT_PUBLIC_ASOL_API_BASE_URL` is at build time |
 
 ### Override API URL for a one-off build
 
 ```bash
 # Windows
-set GOVA_CAPACITOR_API_BASE_URL=https://your-preview.vercel.app
+set ASOL_CAPACITOR_API_BASE_URL=https://your-preview.vercel.app
 npm run cap:build
 
 # macOS / Linux
-GOVA_CAPACITOR_API_BASE_URL=https://your-preview.vercel.app npm run cap:build
+ASOL_CAPACITOR_API_BASE_URL=https://your-preview.vercel.app npm run cap:build
 ```
 
 To change the default permanently, edit `platform/capacitor.defaults.ts`.
 
 ### CORS on the backend
 
-Capacitor WebViews use origins such as `capacitor://localhost`, `https://localhost` (Android), and `http://localhost`. The Vercel backend must allow these via `GOVA_CORS_ORIGINS` on the server (see data-architecture guide). Default dev origins are included when `GOVA_CORS_ORIGINS` is unset.
+Capacitor WebViews use origins such as `capacitor://localhost`, `https://localhost` (Android), and `http://localhost`. The Vercel backend must allow these via `ASOL_CORS_ORIGINS` on the server (see data-architecture guide). Default dev origins are included when `ASOL_CORS_ORIGINS` is unset.
 
 ---
 
@@ -200,12 +200,12 @@ Live reload is configured **only in Capacitor config** — no changes to applica
 | Variable | Used by | Purpose |
 |---|---|---|
 | `CAPACITOR_SERVER_URL` | `capacitor.config.ts` | Optional dev server URL for live reload |
-| `GOVA_CAPACITOR_API_BASE_URL` | `scripts/cap-build.ts` | Override API URL for `cap:build` |
-| `GOVA_WEB_BUNDLE_VERSION` | legacy/manual static builds | `cap:build` derives its version from R2 automatically |
-| `NEXT_PUBLIC_GOVA_API_BASE_URL` | Next.js static build | Baked into client bundle (set automatically by `cap:build`) |
-| `NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION` | Next.js static build | Baked into client bundle and local web manifest |
-| `NEXT_PUBLIC_GOVA_NATIVE_VERSION` | Next.js static build | Native version used by OTA minimum-version checks |
-| `GOVA_MODE=static` | `next.config.ts` | Enables static export (`build:static`) |
+| `ASOL_CAPACITOR_API_BASE_URL` | `scripts/cap-build.ts` | Override API URL for `cap:build` |
+| `ASOL_WEB_BUNDLE_VERSION` | legacy/manual static builds | `cap:build` derives its version from R2 automatically |
+| `NEXT_PUBLIC_ASOL_API_BASE_URL` | Next.js static build | Baked into client bundle (set automatically by `cap:build`) |
+| `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` | Next.js static build | Baked into client bundle and local web manifest |
+| `NEXT_PUBLIC_ASOL_NATIVE_VERSION` | Next.js static build | Native version used by OTA minimum-version checks |
+| `ASOL_MODE=static` | `next.config.ts` | Enables static export (`build:static`) |
 
 See `.env.example` for templates. Capacitor-specific vars do not belong in `src/` — only in platform config and build scripts.
 
@@ -215,8 +215,8 @@ See `.env.example` for templates. Capacitor-specific vars do not belong in `src/
 
 | Setting | Value | Notes |
 |---|---|---|
-| `appId` | `com.gova.app` | Android/iOS bundle identifier |
-| `appName` | `GOVA` | Display name |
+| `appId` | `hgh.asol.app` | Android/iOS bundle identifier |
+| `appName` | `ASOL` | Display name |
 | `webDir` | `out` | **Always** the static export folder — never `.next` or `public` alone |
 | `android.allowMixedContent` | `true` | Allows mixed HTTP/HTTPS during dev reload |
 | `server.url` | from `CAPACITOR_SERVER_URL` | Omitted in production (bundled `out/`) |
@@ -229,7 +229,7 @@ See `.env.example` for templates. Capacitor-specific vars do not belong in `src/
 |---|---|---|---|
 | Local dev (`npm run dev`) | — | Same origin `/api/*` | No |
 | Vercel (hosted) | `npm run build` | Same origin | No |
-| GitHub Pages (static) | `npm run build:static` | Remote (`NEXT_PUBLIC_GOVA_API_BASE_URL`) | No |
+| GitHub Pages (static) | `npm run build:static` | Remote (`NEXT_PUBLIC_ASOL_API_BASE_URL`) | No |
 | **Capacitor** | `npm run cap:build` | Vercel (via `cap:build`) | No |
 
 All targets share **identical** `src/` application code.
@@ -266,18 +266,18 @@ Platform-specific settings live in:
 ### `cap:build` fails with R2 mismatch
 
 - Re-run `npm run cap:build`; it publishes the next automatic version and verifies every R2 object before sync.
-- If it still fails, inspect the reported file path. The local `out/gova-web-manifest.json` must match the R2 channel manifest exactly.
+- If it still fails, inspect the reported file path. The local `out/asol-web-manifest.json` must match the R2 channel manifest exactly.
 
 ### OTA does not apply inside the app
 
 - The app updates only when `remote.version > local.version`.
 - If R2 version is equal or lower, the app logs `No OTA update: remote version is not newer`.
-- Filter Android Logcat by `GovaOTA` for exact skip/failure reasons.
+- Filter Android Logcat by `AsolOTA` for exact skip/failure reasons.
 
 ### API calls fail (network / CORS)
 
-- Verify `NEXT_PUBLIC_GOVA_API_BASE_URL` in the built bundle (check Network tab — requests should go to Vercel).
-- Ensure Vercel backend has correct `GOVA_CORS_ORIGINS` or default Capacitor origins allowed.
+- Verify `NEXT_PUBLIC_ASOL_API_BASE_URL` in the built bundle (check Network tab — requests should go to Vercel).
+- Ensure Vercel backend has correct `ASOL_CORS_ORIGINS` or default Capacitor origins allowed.
 - On device, use production `cap:build` (not live reload) unless the dev server is reachable on LAN.
 
 ### Live reload not connecting
@@ -302,6 +302,6 @@ Platform-specific settings live in:
 - [branding-ssot.md](./branding-ssot.md) - single-source application icon and native launch-screen policy
 - [static-export-policy.md](./static-export-policy.md) - complete static source-file and route allow/ignore policy
 
-- [data-layers/README.md](./data-layers/README.md) — GovaApiClient, layers, CORS, static export
+- [data-layers/README.md](./data-layers/README.md) — AsolApiClient, layers, CORS, static export
 - [platform/README.md](../../platform/README.md) — short platform-layer summary
 - [Capacitor docs](https://capacitorjs.com/docs) — upstream framework reference

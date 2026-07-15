@@ -25,6 +25,6 @@ export class SaveNotificationVapidSettingsCommand {
 
 function normalizeSubject(subject: string): string {
   const normalized = subject.trim();
-  if (!normalized) return 'mailto:admin@gova.local';
+  if (!normalized) return 'mailto:admin@asol.local';
   return normalized;
 }

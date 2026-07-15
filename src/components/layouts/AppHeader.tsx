@@ -39,7 +39,7 @@ export function AppHeader() {
     <>
       <header className={cn(
         "fixed top-0 w-full z-50 shadow-sm border-b border-outline-variant rounded-b-2xl",
-        resolvedScheme === 'dark' ? 'gova-surface-neutral' : 'bg-[#F8FBFF]'
+        resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}>
         <div className="flex justify-between items-center h-12 w-full max-w-7xl mx-auto px-2">
           <div className="flex items-center gap-3">
@@ -47,7 +47,7 @@ export function AppHeader() {
               type="button"
               id="header-menu-button"
               className={cn(
-                "gova-control-icon flex items-center justify-center rounded-full transition-colors",
+                "asol-control-icon flex items-center justify-center rounded-full transition-colors",
                 resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
               )}
               aria-label={t('sidebar.menu')}
@@ -72,7 +72,7 @@ export function AppHeader() {
               type="button"
               id="header-theme-button"
               className={cn(
-                "gova-control-icon flex items-center justify-center rounded-full transition-colors",
+                "asol-control-icon flex items-center justify-center rounded-full transition-colors",
                 resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
               )}
               aria-label={themeLabel}
@@ -94,7 +94,7 @@ export function AppHeader() {
               href="/search"
               id="header-search-button"
               className={cn(
-                "gova-control-icon flex items-center justify-center rounded-full transition-colors",
+                "asol-control-icon flex items-center justify-center rounded-full transition-colors",
                 resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
               )}
               aria-label={t('header.search')}
@@ -106,7 +106,7 @@ export function AppHeader() {
               href="/cart"
               id="header-cart-button"
               className={cn(
-                "gova-control-icon flex items-center justify-center rounded-full relative transition-colors",
+                "asol-control-icon flex items-center justify-center rounded-full relative transition-colors",
                 resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
               )}
               aria-label={t('header.cart')}

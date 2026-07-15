@@ -1,6 +1,6 @@
 "use client";
 
-import { GOVA_DB_STORES, govaDbGet, govaDbSet } from "@/lib/gova-db";
+import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/lib/asol-db";
 import { NotificationPlatforms } from "../domain/enums";
 import { notificationApiService } from "../services/notification-api-service";
 
@@ -15,13 +15,13 @@ function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
 }
 
 async function getDeviceId(): Promise<string> {
-  const current = await govaDbGet<string>(GOVA_DB_STORES.APP_SETTINGS, DEVICE_ID_KEY);
+  const current = await asolDbGet<string>(ASOL_DB_STORES.APP_SETTINGS, DEVICE_ID_KEY);
   if (current) return current;
   const next =
     typeof crypto !== "undefined" && "randomUUID" in crypto
       ? `web:${crypto.randomUUID()}`
       : `web:${Date.now()}:${Math.random().toString(36).slice(2)}`;
-  await govaDbSet(GOVA_DB_STORES.APP_SETTINGS, DEVICE_ID_KEY, next);
+  await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, DEVICE_ID_KEY, next);
   return next;
 }
 
@@ -48,7 +48,7 @@ export class WebPushBrowserService {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") throw new Error("notificationPermissionDenied");
 
-    const registration = await navigator.serviceWorker.register("/gova-push-sw.js");
+    const registration = await navigator.serviceWorker.register("/asol-push-sw.js");
     const existing = await registration.pushManager.getSubscription();
     const subscription =
       existing ??
@@ -71,7 +71,7 @@ export class WebPushBrowserService {
 
   async unsubscribe(uid: string) {
     if (!this.isSupported()) return false;
-    const registration = await navigator.serviceWorker.getRegistration("/gova-push-sw.js");
+    const registration = await navigator.serviceWorker.getRegistration("/asol-push-sw.js");
     const subscription = await registration?.pushManager.getSubscription();
     if (subscription) await subscription.unsubscribe();
     const deviceId = await getDeviceId();

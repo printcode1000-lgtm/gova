@@ -2,7 +2,7 @@
 
 ## Contract
 
-GOVA uses one forward-only, file-level OTA channel. There are no ZIP bundles, version directories, release history, or rollback.
+ASOL uses one forward-only, file-level OTA channel. There are no ZIP bundles, version directories, release history, or rollback.
 
 The application updates only when:
 
@@ -47,7 +47,7 @@ Do not pass `--version` or `--notes`. The command performs this sequence:
 2. Increments the patch component automatically, such as `0.1.7` to `0.1.8`.
 3. Creates notes using the current date and time in `Africa/Cairo`.
 4. Pins the web version, native version, and deterministic Next.js Build ID to the new version.
-5. Runs the static build and generates `out/gova-web-manifest.json`.
+5. Runs the static build and generates `out/asol-web-manifest.json`.
 6. Compares the new local file list with the previous R2 manifest.
 7. Uploads only new or changed files to `app-updates/files/`.
 8. Deletes remote file objects that no longer exist locally.
@@ -123,11 +123,11 @@ The manifest is signed with P-256. File entries are sorted for canonical signing
 `npm run build:static` generates:
 
 ```text
-out/gova-web-manifest.json
-public/gova-web-manifest.json
+out/asol-web-manifest.json
+public/asol-web-manifest.json
 ```
 
-The local manifest contains the bundled version and the complete file inventory. `gova-web-manifest.json` itself is excluded from the file inventory and is not stored under `app-updates/files`.
+The local manifest contains the bundled version and the complete file inventory. `asol-web-manifest.json` itself is excluded from the file inventory and is not stored under `app-updates/files`.
 
 Hidden control files whose path contains a segment beginning with `.`, such as `.gitkeep` and `.DS_Store`, are excluded because Capacitor's local WebView does not reliably serve them.
 
@@ -143,7 +143,7 @@ After `cap sync`, Android and iOS receive the same local manifest and static fil
 
 At Splash, the application:
 
-1. Reads the local `gova-web-manifest.json`.
+1. Reads the local `asol-web-manifest.json`.
 2. Loads the signed R2 manifest.
 3. Validates schema, delivery type, version, metadata, signature, paths, counts, and total size.
 4. Stops when `remote.version <= local.version`.
@@ -163,7 +163,7 @@ Android and iOS use native `CapacitorHttp` for R2 requests. R2 CORS also include
 After a successful `cap:build`, all these values must be equal:
 
 - R2 `manifest.version`.
-- `out/gova-web-manifest.json` version.
+- `out/asol-web-manifest.json` version.
 - Android bundled manifest version.
 - iOS bundled manifest version.
 - Android `versionName`.
@@ -173,7 +173,7 @@ Android `versionCode` and iOS `CURRENT_PROJECT_VERSION` are calculated numerical
 
 ## Diagnostics
 
-Splash displays current/R2 versions, changed and deleted counts, download size, and failure details. Android Studio Logcat messages use `[GovaOTA]`.
+Splash displays current/R2 versions, changed and deleted counts, download size, and failure details. Android Studio Logcat messages use `[AsolOTA]`.
 
 | Message | Meaning |
 |---|---|

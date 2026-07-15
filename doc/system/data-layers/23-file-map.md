@@ -3,12 +3,12 @@
 ```
 src/
 ├── core/
-│   ├── api/                    # GovaApiClient, HTTP transport, routes
+│   ├── api/                    # AsolApiClient, HTTP transport, routes
 │   ├── architecture/           # contract.ts
 │   ├── config/                 # process.env (Configuration layer)
 │   ├── database/               # dbClient, profileDbClient, schemas, migrations
 │   ├── provisioning/           # schema sync, Turso provisioning
-│   └── monitor/                # query-observer, gova-api-monitor, server-trace
+│   └── monitor/                # query-observer, asol-api-monitor, server-trace
 ├── features/
 │   ├── auth/
 │   │   ├── hooks/
@@ -21,7 +21,7 @@ src/
 │       ├── operations/
 │       └── repositories/
 ├── lib/
-│   ├── gova-db/                # IndexedDB (cache)
+│   ├── asol-db/                # IndexedDB (cache)
 │   └── db/                     # turso.ts, turso-profile.ts
 └── app/
     └── api/                    # Business API routes
@@ -48,5 +48,5 @@ scripts/
 |---------|--------|--------|
 | Auth | `auth-service.ts` → `auth-api-service.ts` | `auth-service.bootstrap.server.ts` |
 | Profile | `profile-service.ts` → `profile-api-service.ts` | `profile-service.bootstrap.server.ts` |
-| HTTP | `govaApi` | N/A (routes call services) |
-| DB | GovaDB (cache) | `dbClient` / `profileDbClient` |
+| HTTP | `asolApi` | N/A (routes call services) |
+| DB | AsolDB (cache) | `dbClient` / `profileDbClient` |

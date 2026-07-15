@@ -1,11 +1,11 @@
-# GOVA Data Layers
+# ASOL Data Layers
 
-Authoritative reference for how data flows through GOVA — from UI to database and back. Clients never talk to SQLite or Turso directly; they use **GovaApiClient** and Business APIs.
+Authoritative reference for how data flows through ASOL — from UI to database and back. Clients never talk to SQLite or Turso directly; they use **AsolApiClient** and Business APIs.
 
 ## Data path (read / write)
 
 ```
-UI → Hook → Client Service → GovaApiClient → Business API
+UI → Hook → Client Service → AsolApiClient → Business API
   → Server Service → Query/Command → Repository → Database Client → SQLite | Turso
 ```
 
@@ -13,12 +13,12 @@ UI → Hook → Client Service → GovaApiClient → Business API
 
 | Technology | Role |
 |---|---|
-| **GovaApiClient** | Single HTTP gateway for client-side data access |
+| **AsolApiClient** | Single HTTP gateway for client-side data access |
 | **Business API Routes** | Server entry points (`/api/auth/*`, `/api/profile/*`, …) |
 | **Drizzle ORM** | Schema definition and type-safe queries |
 | **drizzle-zod** | Zod schemas from Drizzle tables |
 | **TanStack Query** | Server-state cache, mutations |
-| **GovaDB (IndexedDB)** | Session + React Query persistence (cache only) |
+| **AsolDB (IndexedDB)** | Session + React Query persistence (cache only) |
 | **SQLite** | Dev DB — schema SSOT |
 | **Turso** | Prod DB — DDL synced from SQLite, no row migration |
 
@@ -29,7 +29,7 @@ UI → Hook → Client Service → GovaApiClient → Business API
 | 1 | UI | [01-ui-layer.md](./01-ui-layer.md) |
 | 2 | Hooks | [02-hooks-layer.md](./02-hooks-layer.md) |
 | 3 | Client Service | [03-client-service-layer.md](./03-client-service-layer.md) |
-| 4 | GovaApiClient | [04-gova-api-client-layer.md](./04-gova-api-client-layer.md) |
+| 4 | AsolApiClient | [04-asol-api-client-layer.md](./04-asol-api-client-layer.md) |
 | 5 | Business API | [05-business-api-layer.md](./05-business-api-layer.md) |
 | 6 | Server Service | [06-server-service-layer.md](./06-server-service-layer.md) |
 | 7 | Query / Command | [07-query-command-layer.md](./07-query-command-layer.md) |

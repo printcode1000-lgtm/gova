@@ -34,7 +34,7 @@ export function getTursoPlatformCredentials(): {
 }
 
 export function getCorsOrigins(): string[] {
-  const fromEnv = process.env.GOVA_CORS_ORIGINS?.split(",")
+  const fromEnv = process.env.ASOL_CORS_ORIGINS?.split(",")
     .map((o) => o.trim())
     .filter(Boolean);
   if (fromEnv?.length) return fromEnv;

@@ -44,7 +44,7 @@ export default function ProgressIndicator({ progress, status, details = [] }: Pr
         </div>
       )}
 
-      <div className="w-full mt-4 gova-splash-progress-track h-1 rounded-full overflow-hidden relative shadow-inner">
+      <div className="w-full mt-4 asol-splash-progress-track h-1 rounded-full overflow-hidden relative shadow-inner">
         <div
           className="h-full bg-primary transition-all duration-300 ease-out shadow-lg"
           style={{ width: `${progress}%` }}

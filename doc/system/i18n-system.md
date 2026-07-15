@@ -1,6 +1,6 @@
 # Internationalization (i18n) System
 
-Gova uses a **lightweight custom i18n layer** — no `next-intl` dependency. All UI strings live in JSON dictionaries and are accessed through a small API in `src/lib/i18n/`.
+Asol uses a **lightweight custom i18n layer** — no `next-intl` dependency. All UI strings live in JSON dictionaries and are accessed through a small API in `src/lib/i18n/`.
 
 ---
 
@@ -21,7 +21,7 @@ src/
     └── use-translation.ts  # React hook
 ```
 
-**App preferences** (`src/lib/preferences/`) store the active locale in GovaDB (`IndexedDB`) under the `appSettings` store with the key `app-preferences` as `locale` (`'ar' | 'en'`).
+**App preferences** (`src/lib/preferences/`) store the active locale in AsolDB (`IndexedDB`) under the `appSettings` store with the key `app-preferences` as `locale` (`'ar' | 'en'`).
 
 ---
 
@@ -99,13 +99,13 @@ t('onboarding.progress.sectionsCompleted', { completed: 3, total: 12 })
 | `ar`   | `rtl`     |
 | `en`   | `ltr`     |
 
-`applyDocumentLocale()` updates `<html lang dir data-locale>`. Called when preferences change and **before first paint** via `public/gova-app-init.js`.
+`applyDocumentLocale()` updates `<html lang dir data-locale>`. Called when preferences change and **before first paint** via `public/asol-app-init.js`.
 
 Use `isRTL` from `useTranslation()` for component-level layout (icons, chevrons, etc.).
 
-### Anti-flash mechanism (GovaDB async hydration)
+### Anti-flash mechanism (AsolDB async hydration)
 
-Because preferences are loaded asynchronously from GovaDB, rendering the page immediately would cause text/theme flashes. The following mechanism prevents this:
+Because preferences are loaded asynchronously from AsolDB, rendering the page immediately would cause text/theme flashes. The following mechanism prevents this:
 
 | Mechanism | Location |
 |-----------|----------|
@@ -160,7 +160,7 @@ const schema = useMemo(() => createRegistrationSchema(t), [t]);
 
 ## Storage
 
-Stored in GovaDB (`IndexedDB`) under the `appSettings` store with the key `app-preferences`:
+Stored in AsolDB (`IndexedDB`) under the `appSettings` store with the key `app-preferences`:
 
 | Key | Field |
 |-----|-------|

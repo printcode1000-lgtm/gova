@@ -12,7 +12,7 @@ Render data to the user — no business logic, no HTTP, no SQL.
 
 | Allowed | Forbidden |
 |---------|-----------|
-| Read `loading` / `error` / `data` from hooks | Call `fetch` or `govaApi` |
+| Read `loading` / `error` / `data` from hooks | Call `fetch` or `asolApi` |
 | Pass events to hooks (`onSubmit`, `onChange`) | Import Repository or Server Service |
 | Display lists/JSON from props or hooks | Drizzle, Database Client |
 

@@ -129,10 +129,10 @@ export function PhoneVerification({
                     maxLength={11}
                     disabled={phoneVerified}
                     placeholder={t('auth.phone.placeholder')}
-                    data-gova-autofill="registration-phone"
+                    data-asol-autofill="registration-phone"
                     className={cn(
                       'auth-input ps-12 w-full',
-                      phoneVerified && 'gova-field-surface',
+                      phoneVerified && 'asol-field-surface',
                       fieldState.error && 'border-error',
                     )}
                     value={field.value}
@@ -166,10 +166,10 @@ export function PhoneVerification({
                 {!phoneVerified && (
                   <button
                     type="button"
-                    data-gova-autofill="registration-verify-phone"
+                    data-asol-autofill="registration-verify-phone"
                     onClick={() => void handleSendOtpWrapper()}
                     disabled={isSending || !phone || phone.length < 10}
-                    className="gova-control shrink-0 rounded-lg border border-outline gova-surface-neutral text-primary text-sm font-semibold disabled:opacity-50"
+                    className="asol-control shrink-0 rounded-lg border border-outline asol-surface-neutral text-primary text-sm font-semibold disabled:opacity-50"
                   >
                     {isSending ? '...' : otpSent ? t('auth.phone.resend') : t('auth.phone.verify')}
                   </button>
@@ -179,7 +179,7 @@ export function PhoneVerification({
                     type="button"
                     onClick={handleEditPhoneWrapper}
                     aria-label={t('auth.phone.edit')}
-                    className="gova-control-icon shrink-0 flex items-center justify-center rounded-lg border border-outline gova-surface-neutral"
+                    className="asol-control-icon shrink-0 flex items-center justify-center rounded-lg border border-outline asol-surface-neutral"
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
@@ -198,7 +198,7 @@ export function PhoneVerification({
         />
 
         {otpSent && !phoneVerified && (
-          <div className="gova-auth-tonal-panel space-y-4">
+          <div className="asol-auth-tonal-panel space-y-4">
             <div className="space-y-1">
               <p className="text-sm font-semibold text-on-surface">{t('auth.phone.enterOtp')}</p>
               <p className="text-xs text-on-surface-variant">
@@ -220,7 +220,7 @@ export function PhoneVerification({
             <div className="flex items-center gap-3 w-full">
               <button
                 type="button"
-                data-gova-autofill="registration-verify-otp"
+                data-asol-autofill="registration-verify-otp"
                 onClick={() => void handleVerifyOtpWrapper()}
                 disabled={otp.length !== 4 || isVerifying}
                 className="flex-1 auth-cta h-10 text-sm"
@@ -263,7 +263,7 @@ export function PhoneVerification({
               placeholder={t('auth.login.phonePlaceholder')}
               className={cn(
                 'auth-input w-full ps-12 text-sm',
-                phoneVerified && 'gova-field-surface',
+                phoneVerified && 'asol-field-surface',
                 error && 'border-error',
               )}
               value={phone}
@@ -286,7 +286,7 @@ export function PhoneVerification({
               type="button"
               onClick={() => void handleSendOtpWrapper()}
               disabled={isSending || !canSend}
-              className="gova-control shrink-0 rounded-lg border border-outline gova-surface-neutral text-xs sm:text-sm font-semibold text-primary disabled:opacity-50 px-3 sm:px-4"
+              className="asol-control shrink-0 rounded-lg border border-outline asol-surface-neutral text-xs sm:text-sm font-semibold text-primary disabled:opacity-50 px-3 sm:px-4"
             >
               {isSending
                 ? '...'
@@ -299,7 +299,7 @@ export function PhoneVerification({
               type="button"
               onClick={handleEditPhoneWrapper}
               aria-label={t('auth.phone.edit')}
-              className="gova-control-icon flex shrink-0 items-center justify-center rounded-lg border border-outline gova-surface-neutral h-9 w-9 sm:h-10 sm:w-10"
+              className="asol-control-icon flex shrink-0 items-center justify-center rounded-lg border border-outline asol-surface-neutral h-9 w-9 sm:h-10 sm:w-10"
             >
               <Pencil className="h-4 w-4" />
             </button>
@@ -317,7 +317,7 @@ export function PhoneVerification({
       </div>
 
       {otpSent && !phoneVerified ? (
-        <div className="gova-auth-tonal-panel space-y-3 sm:space-y-4">
+        <div className="asol-auth-tonal-panel space-y-3 sm:space-y-4">
           <div className="space-y-1">
             <p className="text-xs sm:text-sm font-semibold text-on-surface">
               {t('auth.phone.enterOtp')}

@@ -1,7 +1,7 @@
 "use client";
 
-import { govaApi } from "@/core/api/gova-api-client";
-import { GOVA_API_ROUTES } from "@/core/api/gova-api-routes";
+import { asolApi } from "@/core/api/asol-api-client";
+import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import type {
   TrendingRibbonConfig,
   TrendingRibbonPublished,
@@ -15,13 +15,13 @@ type TrendingRibbonVersion = Pick<
 
 export const trendingRibbonApiService = {
   getCurrent: () =>
-    govaApi.get<TrendingRibbonPublished>(
-      GOVA_API_ROUTES.advertisements.trendingRibbon,
+    asolApi.get<TrendingRibbonPublished>(
+      ASOL_API_ROUTES.advertisements.trendingRibbon,
     ),
 
   getVersion: () =>
-    govaApi.get<TrendingRibbonVersion>(
-      GOVA_API_ROUTES.advertisements.trendingRibbonVersion,
+    asolApi.get<TrendingRibbonVersion>(
+      ASOL_API_ROUTES.advertisements.trendingRibbonVersion,
       { suppressErrorLog: true },
     ),
 
@@ -31,8 +31,8 @@ export const trendingRibbonApiService = {
       uid: identity.uid,
       phone: identity.phone,
     });
-    return govaApi.get<TrendingRibbonRecord>(
-      `${GOVA_API_ROUTES.advertisements.trendingRibbon}?${query.toString()}`,
+    return asolApi.get<TrendingRibbonRecord>(
+      `${ASOL_API_ROUTES.advertisements.trendingRibbon}?${query.toString()}`,
     );
   },
 
@@ -41,8 +41,8 @@ export const trendingRibbonApiService = {
     config: TrendingRibbonConfig,
     checkIntervalMinutes: number,
   ) =>
-    govaApi.put<TrendingRibbonRecord>(
-      GOVA_API_ROUTES.advertisements.trendingRibbon,
+    asolApi.put<TrendingRibbonRecord>(
+      ASOL_API_ROUTES.advertisements.trendingRibbon,
       { identity, config, checkIntervalMinutes },
     ),
 };

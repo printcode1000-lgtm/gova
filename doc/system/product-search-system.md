@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Product Search System centralizes product and seller search for GOVA. UI components do not query product tables directly. They use the search module, which owns searchable fields, filters, sorting, and API contracts.
+The Product Search System centralizes product and seller search for ASOL. UI components do not query product tables directly. They use the search module, which owns searchable fields, filters, sorting, and API contracts.
 
 ## Main Rule
 
@@ -230,7 +230,7 @@ The server enforces enabled search fields. If a client sends a disabled field ma
 
 Planned-compatible additions:
 
-- Saved searches in GovaDB.
+- Saved searches in AsolDB.
 - Search result explanations.
 - More category-specific filters.
 - Search analytics.

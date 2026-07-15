@@ -10,7 +10,7 @@ module.exports = [
       'android/**',
       'ios/**',
       'public/**',
-      'eslint-plugin-gova/**',
+      'eslint-plugin-asol/**',
     ],
   },
   {
@@ -35,7 +35,7 @@ module.exports = [
         'error',
         {
           name: 'localStorage',
-          message: 'Do not use localStorage. Use GovaDB/IndexedDB abstraction (govaDbGet/govaDbSet) or the approved preferences service instead.'
+          message: 'Do not use localStorage. Use AsolDB/IndexedDB abstraction (asolDbGet/asolDbSet) or the approved preferences service instead.'
         }
       ],
       'no-restricted-properties': [
@@ -43,12 +43,12 @@ module.exports = [
         {
           object: 'window',
           property: 'localStorage',
-          message: 'Do not use localStorage. Use GovaDB/IndexedDB abstraction (govaDbGet/govaDbSet) or the approved preferences service instead.'
+          message: 'Do not use localStorage. Use AsolDB/IndexedDB abstraction (asolDbGet/asolDbSet) or the approved preferences service instead.'
         },
         {
           object: 'globalThis',
           property: 'localStorage',
-          message: 'Do not use localStorage. Use GovaDB/IndexedDB abstraction (govaDbGet/govaDbSet) or the approved preferences service instead.'
+          message: 'Do not use localStorage. Use AsolDB/IndexedDB abstraction (asolDbGet/asolDbSet) or the approved preferences service instead.'
         }
       ]
     }

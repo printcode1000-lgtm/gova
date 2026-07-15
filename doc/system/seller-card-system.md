@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Seller Card System is the single presentation source for seller, doctor, service-provider, and delivery-provider cards across GOVA.
+The Seller Card System is the single presentation source for seller, doctor, service-provider, and delivery-provider cards across ASOL.
 
 It prevents pages from duplicating logic for:
 

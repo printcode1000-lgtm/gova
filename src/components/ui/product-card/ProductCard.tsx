@@ -37,7 +37,7 @@ const variantClass: Record<ProductCardVariant, string> = {
   "profile-edit":
     "rounded-lg border border-outline-variant bg-surface transition hover:border-primary/70 hover:shadow-sm",
   "featured-marquee":
-    "w-40 rounded-xl p-2 gova-card-tonal gova-card-tonal-tertiary active:scale-95 transition-transform",
+    "w-40 rounded-xl p-2 asol-card-tonal asol-card-tonal-tertiary active:scale-95 transition-transform",
   compact: "rounded-lg border border-outline-variant bg-surface",
 };
 

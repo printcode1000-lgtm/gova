@@ -2,9 +2,9 @@
 
 ## Purpose
 
-GOVA provides automatic speech-to-text controls for eligible `input` and `textarea` elements across every page and feature. Pages do not need to import a microphone component or initialize speech recognition manually.
+ASOL provides automatic speech-to-text controls for eligible `input` and `textarea` elements across every page and feature. Pages do not need to import a microphone component or initialize speech recognition manually.
 
-The implementation is inspired by the Suez Bazaar shared voice utility, but is adapted to GOVA's React, Next.js, localization, theme, and Capacitor architecture.
+The implementation is inspired by the Suez Bazaar shared voice utility, but is adapted to ASOL's React, Next.js, localization, theme, and Capacitor architecture.
 
 ## User experience
 
@@ -109,7 +109,7 @@ The system extracts recognized digit characters; it does not interpret arbitrary
 
 ## React-compatible value updates
 
-Directly assigning `field.value` can bypass controlled React fields. GOVA uses the native `HTMLInputElement` or `HTMLTextAreaElement` value setter, then emits bubbling `input` and `change` events.
+Directly assigning `field.value` can bypass controlled React fields. ASOL uses the native `HTMLInputElement` or `HTMLTextAreaElement` value setter, then emits bubbling `input` and `change` events.
 
 This allows React state, React Hook Form, validation, and existing change handlers to receive the voice-entered value through the same path as keyboard input.
 
@@ -123,7 +123,7 @@ This allows React state, React Hook Form, validation, and existing change handle
 
 ## Language changes
 
-`VoiceInputController` reads the current locale from GOVA's preferences system. The scanner changes its recognition locale and accessible labels immediately when the user switches language:
+`VoiceInputController` reads the current locale from ASOL's preferences system. The scanner changes its recognition locale and accessible labels immediately when the user switches language:
 
 | Application locale | Recognition locale |
 |---|---|

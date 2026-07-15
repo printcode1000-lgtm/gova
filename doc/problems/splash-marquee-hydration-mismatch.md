@@ -10,7 +10,7 @@ Hydration failed because the server rendered text didn't match the client. As a 
   <SplashPage>
     <Suspense fallback={null}>
       <SplashScreen displayCategories={[...]}>
-        <main className="gova-splas..." dir="rtl">
+        <main className="asol-splas..." dir="rtl">
           <TopMarquee displayCategories={[...]}>
             ...
               <MarqueeCard label="التقنية وا..." image={"/images/..."} isCenter={false}>

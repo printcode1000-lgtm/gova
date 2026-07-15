@@ -4,11 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 
 import fallbackSeed from "@/features/advertisements/config/home-hero-slider.seed.json";
 import {
-  GOVA_DB_STORES,
-  govaDbDelete,
-  govaDbGet,
-  govaDbSet,
-} from "@/lib/gova-db";
+  ASOL_DB_STORES,
+  asolDbDelete,
+  asolDbGet,
+  asolDbSet,
+} from "@/lib/asol-db";
 import {
   HOME_HERO_CACHE_KEY,
   type HomeHeroConfig,
@@ -35,11 +35,11 @@ export function useHomeHeroSlider() {
 
   const checkForUpdates = useCallback(async (force = false) => {
     try {
-      const cached = await govaDbGet<HomeHeroCache>(
-        GOVA_DB_STORES.APP_SETTINGS,
+      const cached = await asolDbGet<HomeHeroCache>(
+        ASOL_DB_STORES.APP_SETTINGS,
         HOME_HERO_CACHE_KEY,
       );
-      await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, LEGACY_CACHE_KEY);
+      await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, LEGACY_CACHE_KEY);
       if (cached) setData(cached);
 
       const intervalMs = (cached?.checkIntervalMinutes ?? 15) * 60_000;
@@ -62,8 +62,8 @@ export function useHomeHeroSlider() {
         };
         setData(next);
       }
-      await govaDbSet<HomeHeroCache>(
-        GOVA_DB_STORES.APP_SETTINGS,
+      await asolDbSet<HomeHeroCache>(
+        ASOL_DB_STORES.APP_SETTINGS,
         HOME_HERO_CACHE_KEY,
         {
           ...next,

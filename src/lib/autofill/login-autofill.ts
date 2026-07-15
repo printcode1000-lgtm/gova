@@ -28,7 +28,7 @@ export async function fillLoginForm(): Promise<LoginAutofillOutcome> {
     let filled = 0;
 
     const phoneInput = document.querySelector(
-      '[data-gova-autofill="login-phone"]',
+      '[data-asol-autofill="login-phone"]',
     ) as HTMLInputElement | null;
     if (phoneInput) {
       setNativeInputValue(phoneInput, randomPhone());
@@ -36,7 +36,7 @@ export async function fillLoginForm(): Promise<LoginAutofillOutcome> {
     }
 
     const passwordInput = document.querySelector(
-      '[data-gova-autofill="login-password"]',
+      '[data-asol-autofill="login-password"]',
     ) as HTMLInputElement | null;
     if (passwordInput) {
       setNativeInputValue(passwordInput, randomPassword());

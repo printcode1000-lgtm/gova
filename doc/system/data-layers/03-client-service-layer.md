@@ -11,20 +11,20 @@ HTTP adapter on the client — same interface (`IAuthService`, `IProfileService`
 | File | Purpose |
 |------|---------|
 | `*-service.ts` | Client entry (`export … as …Service`) |
-| `*-api-service.ts` | Implements interface via `govaApi` |
+| `*-api-service.ts` | Implements interface via `asolApi` |
 | `*-service.interface.ts` | Shared contract |
 
 ## Data responsibilities
 
 | Allowed | Forbidden |
 |---------|-----------|
-| `govaApi.get/post/put` + `GOVA_API_ROUTES` | SQL, Drizzle, Repository |
+| `asolApi.get/post/put` + `ASOL_API_ROUTES` | SQL, Drizzle, Repository |
 | Map JSON ↔ entities | Heavy domain logic (belongs in Server Service) |
 
 ## Flow
 
 ```
-Hook → authService.login() → AuthApiService → govaApi.post('/api/auth/login')
+Hook → authService.login() → AuthApiService → asolApi.post('/api/auth/login')
 ```
 
 ## Rule

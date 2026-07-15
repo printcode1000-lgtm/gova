@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// GoVa Operation Monitor — Types
+// ASOL Operation Monitor — Types
 // All event shapes, constants, and colour tokens used across the monitor.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -8,14 +8,14 @@ export type OperationStatus = 'pending' | 'success' | 'error';
 export type DbDriver = 'SQLite-Dev' | 'Turso-Production';
 export type CacheSource = 'Memory' | 'IndexedDB' | 'Database' | 'HTTP';
 export type RefetchReason = 'stale' | 'windowFocus' | 'manual' | 'invalidation' | 'mount' | 'unknown';
-export type LayerName = 'ui' | 'hook' | 'service' | 'gova-api' | 'query' | 'repository' | 'database' | 'cache';
+export type LayerName = 'ui' | 'hook' | 'service' | 'asol-api' | 'query' | 'repository' | 'database' | 'cache';
 
 // ─── Colour tokens ────────────────────────────────────────────────────────────
 export const LAYER_COLORS: Record<LayerName, string> = {
   ui:         '#3b82f6',
   hook:       '#06b6d4',
   service:    '#22c55e',
-  'gova-api': '#8b5cf6',
+  'asol-api': '#8b5cf6',
   query:      '#f97316',
   repository: '#a855f7',
   database:   '#ef4444',
@@ -114,7 +114,7 @@ export interface OperationRecord {
   // Pinned by developer
   pinned: boolean;
 
-  // HTTP (GovaApiClient — client-side only)
+  // HTTP (AsolApiClient — client-side only)
   httpMethod?: string;
   httpRoute?: string;
   monitorLayer?: LayerName;
@@ -197,7 +197,7 @@ export interface DependencyEdge {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 export function resolveMonitorLayer(op: OperationRecord): LayerName {
   if (op.monitorLayer) return op.monitorLayer;
-  if (op.httpRoute || op.cacheSource === 'HTTP') return 'gova-api';
+  if (op.httpRoute || op.cacheSource === 'HTTP') return 'asol-api';
   if (op.table) return 'database';
   if (op.repository && op.repository !== 'unknown') return 'repository';
   if (op.queryOrCommand && op.queryOrCommand !== 'unknown' && !op.table) return 'query';

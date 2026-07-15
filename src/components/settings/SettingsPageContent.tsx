@@ -1,6 +1,6 @@
 'use client';
 
-import { Bell, Database, FileText, Globe, Palette } from 'lucide-react';
+import { Bell, Database, FileText, Globe, Palette, Shield } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdjust, faSun, faMoon, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
@@ -178,7 +178,7 @@ export function SettingsPageContent() {
         className="mb-12 space-y-6"
         lang={appPrefs.locale}
       >
-        <div className="gova-settings-section-secondary space-y-8">
+        <div className="asol-settings-section-secondary space-y-8">
           <div className="flex items-center gap-3 px-2">
             <Globe className="h-6 w-6 text-primary" />
             <h2 className="text-xl font-semibold text-on-surface">{t('settings.languageLabel')}</h2>
@@ -190,7 +190,7 @@ export function SettingsPageContent() {
                   key={locale}
                   type="button"
                   className={cn(
-                    'gova-control rounded-full px-6 text-xs font-semibold transition-colors',
+                    'asol-control rounded-full px-6 text-xs font-semibold transition-colors',
                     appPrefs.locale === locale
                       ? 'bg-primary text-on-primary'
                       : 'text-on-surface-variant hover:text-on-surface',
@@ -226,7 +226,7 @@ export function SettingsPageContent() {
       <section className="mb-12 space-y-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
-            <div className="gova-settings-section-primary space-y-6">
+            <div className="asol-settings-section-primary space-y-6">
               <div className="flex items-center gap-3 px-2">
                 <Palette className="h-6 w-6 text-primary" />
                 <h2 className="text-xl font-semibold text-on-surface">{t('settings.appearance')}</h2>
@@ -289,12 +289,12 @@ export function SettingsPageContent() {
       </section>
 
       <section className="mb-12 space-y-6">
-        <div className="gova-settings-section-secondary space-y-5">
+        <div className="asol-settings-section-secondary space-y-5">
           <div className="flex items-center gap-3 px-2">
             <Bell className="h-6 w-6 text-primary" />
             <h2 className="text-xl font-semibold text-on-surface">إشعارات المتصفح</h2>
           </div>
-          <div className="rounded-xl gova-surface-neutral p-4">
+          <div className="rounded-xl asol-surface-neutral p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-semibold text-on-surface">حالة هذا الجهاز</p>
@@ -313,7 +313,7 @@ export function SettingsPageContent() {
                   type="button"
                   disabled={webPushBusy || !webPushBrowserService.isSupported()}
                   onClick={() => void enableWebPush()}
-                  className="gova-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
+                  className="asol-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
                 >
                   تفعيل إشعارات المتصفح
                 </button>
@@ -321,7 +321,7 @@ export function SettingsPageContent() {
                   type="button"
                   disabled={webPushBusy || !session?.uid}
                   onClick={() => void disableWebPush()}
-                  className="gova-control rounded-xl border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface disabled:opacity-60"
+                  className="asol-control rounded-xl border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface disabled:opacity-60"
                 >
                   إلغاء اشتراك هذا الجهاز
                 </button>
@@ -336,14 +336,35 @@ export function SettingsPageContent() {
         </div>
       </section>
 
+      {/* Legal */}
+      <section className="mb-12 space-y-6">
+        <div className="asol-settings-section-secondary space-y-5">
+          <div className="flex items-center gap-3 px-2">
+            <Shield className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-semibold text-on-surface">قانوني وسياسات</h2>
+          </div>
+          <div className="rounded-xl asol-surface-neutral p-4">
+            <div className="flex flex-col gap-3">
+              <a
+                href="/privacy-policy"
+                className="flex items-center justify-between rounded-lg px-4 py-3 transition-colors hover:bg-surface-variant"
+              >
+                <span className="text-sm font-semibold text-on-surface">سياسة الخصوصية</span>
+                <FileText className="h-5 w-5 text-on-surface-variant" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Storage */}
       <section className="mb-12 space-y-6">
-        <div className="gova-settings-section-error">
+        <div className="asol-settings-section-error">
           <div className="flex items-center gap-3 px-2 mb-6">
             <Database className="h-6 w-6 text-primary" />
             <h2 className="text-xl font-semibold text-on-surface">{t('settings.storage')}</h2>
           </div>
-          <div className="flex items-center justify-between rounded-xl gova-surface-neutral p-4">
+          <div className="flex items-center justify-between rounded-xl asol-surface-neutral p-4">
             <div className="flex items-center gap-3">
               <Database className="h-5 w-5 text-outline" />
               <span className="text-sm">{t('settings.cookiesLocalData')}</span>
@@ -352,7 +373,7 @@ export function SettingsPageContent() {
               type="button"
               disabled={clearing}
               onClick={() => void handleClearAll()}
-              className="gova-control border border-error/40 bg-error/10 text-xs font-semibold text-error hover:bg-error/20 disabled:opacity-60"
+              className="asol-control border border-error/40 bg-error/10 text-xs font-semibold text-error hover:bg-error/20 disabled:opacity-60"
             >
               {clearing ? t('settings.clearing') : t('settings.clearAll')}
             </button>
@@ -362,7 +383,7 @@ export function SettingsPageContent() {
 
       {/* Summary */}
       <section className="mb-12 space-y-6">
-        <div className="gova-card-neutral p-6">
+        <div className="asol-card-neutral p-6">
           <div className="flex items-center gap-3 px-2 mb-4">
             <FileText className="h-6 w-6 text-primary" />
             <h2 className="text-xl font-semibold text-on-surface">{t('settings.summary')}</h2>
@@ -384,7 +405,7 @@ export function SettingsPageContent() {
         <button
           type="button"
           disabled={clearing}
-          className="gova-control flex w-full items-center justify-center gap-2 rounded-xl border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 px-6 py-3 font-semibold text-error shadow-lg shadow-error/10 transition-all hover:border-error/50 hover:shadow-error/20 md:w-auto disabled:opacity-60"
+          className="asol-control flex w-full items-center justify-center gap-2 rounded-xl border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 px-6 py-3 font-semibold text-error shadow-lg shadow-error/10 transition-all hover:border-error/50 hover:shadow-error/20 md:w-auto disabled:opacity-60"
           onClick={handleClearAll}
         >
           <FontAwesomeIcon icon={faRotateLeft} className="h-4 w-4" />
@@ -407,14 +428,14 @@ export function SettingsPageContent() {
               <button
                 type="button"
                 onClick={() => setShowClearDialog(false)}
-                className="gova-control flex-1 rounded-xl px-4 py-2 font-semibold text-on-surface-variant hover:bg-surface-variant"
+                className="asol-control flex-1 rounded-xl px-4 py-2 font-semibold text-on-surface-variant hover:bg-surface-variant"
               >
                 إلغاء
               </button>
               <button
                 type="button"
                 onClick={confirmClearAll}
-                className="gova-control flex-1 rounded-xl bg-error px-4 py-2 font-semibold text-on-primary hover:bg-error/90"
+                className="asol-control flex-1 rounded-xl bg-error px-4 py-2 font-semibold text-on-primary hover:bg-error/90"
               >
                 تأكيد
               </button>

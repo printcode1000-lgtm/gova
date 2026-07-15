@@ -10,10 +10,10 @@ import {
 import { trendingRibbonApiService } from "@/features/advertisements/services/trending-ribbon-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 import {
-  GOVA_DB_STORES,
-  govaDbGet,
-  govaDbSet,
-} from "@/lib/gova-db";
+  ASOL_DB_STORES,
+  asolDbGet,
+  asolDbSet,
+} from "@/lib/asol-db";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -47,8 +47,8 @@ export function useHomeTrendingRibbon() {
 
   const checkForUpdates = useCallback(async (force = false) => {
     try {
-      const cached = await govaDbGet<TrendingRibbonCache>(
-        GOVA_DB_STORES.APP_SETTINGS,
+      const cached = await asolDbGet<TrendingRibbonCache>(
+        ASOL_DB_STORES.APP_SETTINGS,
         TRENDING_RIBBON_CACHE_KEY,
       );
 
@@ -80,8 +80,8 @@ export function useHomeTrendingRibbon() {
       }
 
       // Persist updated cache
-      await govaDbSet<TrendingRibbonCache>(
-        GOVA_DB_STORES.APP_SETTINGS,
+      await asolDbSet<TrendingRibbonCache>(
+        ASOL_DB_STORES.APP_SETTINGS,
         TRENDING_RIBBON_CACHE_KEY,
         { ...next, lastCheckedAt: new Date().toISOString() },
       );

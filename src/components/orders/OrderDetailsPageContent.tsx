@@ -13,8 +13,8 @@ import {
   Truck,
 } from "lucide-react";
 
-import { govaApi } from "@/core/api/gova-api-client";
-import { GOVA_API_ROUTES } from "@/core/api/gova-api-routes";
+import { asolApi } from "@/core/api/asol-api-client";
+import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { OrderActionButton } from "./OrderActionButton";
@@ -95,12 +95,12 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
     setLoading(true);
     setError("");
     try {
-      const route = `${GOVA_API_ROUTES.orders.byId(orderId)}?${queryWithActor(
+      const route = `${ASOL_API_ROUTES.orders.byId(orderId)}?${queryWithActor(
         session.uid,
         session.phone,
         activeRole,
       )}`;
-      setDetails(await govaApi.get<OrderDetails>(route));
+      setDetails(await asolApi.get<OrderDetails>(route));
     } catch (err) {
       setError(err instanceof Error ? err.message : text.loadFailed);
     } finally {
@@ -117,7 +117,7 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
     setBusyAction(`${action}:${Object.values(payload).join(":")}`);
     setError("");
     try {
-      await govaApi.post(GOVA_API_ROUTES.orders.actions(orderId), {
+      await asolApi.post(ASOL_API_ROUTES.orders.actions(orderId), {
         uid: session.uid,
         phone: session.phone,
         action,

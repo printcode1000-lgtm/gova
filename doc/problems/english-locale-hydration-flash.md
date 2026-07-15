@@ -21,7 +21,7 @@ The static HTML exported by Next.js (`npm run build:static`) always starts with:
 <html lang="ar" dir="rtl" data-theme="light">
 ```
 
-The blocking script `gova-app-init.js` runs **before React** and correctly updates `<html>` attributes to `dir="ltr" lang="en"`, but it cannot change the **React component state** — specifically the `locale` state inside `PreferencesProvider`, which starts at the JavaScript default value `'ar'`.
+The blocking script `asol-app-init.js` runs **before React** and correctly updates `<html>` attributes to `dir="ltr" lang="en"`, but it cannot change the **React component state** — specifically the `locale` state inside `PreferencesProvider`, which starts at the JavaScript default value `'ar'`.
 
 This means during React's hydration phase:
 
@@ -124,7 +124,7 @@ html[data-hydrated="true"] body {
 
 ```
 1. Browser parses HTML → <html data-hydrated="false" lang="ar" dir="rtl">
-2. gova-app-init.js runs (blocking, before paint):
+2. asol-app-init.js runs (blocking, before paint):
      → <html data-locale="en" dir="ltr">
      → CSS rule activates → body { opacity: 0 }   ← user sees nothing yet
 3. React hydrates, PreferencesProvider mounts
@@ -153,4 +153,4 @@ The user never sees Arabic text or a mis-directed sidebar.
 
 ## Why Arabic mode is unaffected
 
-When locale is `ar`, the `gova-app-init.js` script sets `data-locale="ar"`. The CSS selector `html[data-locale="en"][data-hydrated="false"]` never matches, so the body is always visible and no change in behaviour occurs.
+When locale is `ar`, the `asol-app-init.js` script sets `data-locale="ar"`. The CSS selector `html[data-locale="en"][data-hydrated="false"]` never matches, so the body is always visible and no change in behaviour occurs.

@@ -30,7 +30,7 @@ export class NotificationVapidService {
     return {
       enabled: Boolean(settings?.enabled),
       publicKey: settings?.publicKey ?? '',
-      subject: settings?.subject ?? 'mailto:admin@gova.local',
+      subject: settings?.subject ?? 'mailto:admin@asol.local',
       hasPrivateKey: Boolean(settings?.privateKey),
       createdAt: settings?.createdAt ?? undefined,
       updatedAt: settings?.updatedAt ?? undefined,

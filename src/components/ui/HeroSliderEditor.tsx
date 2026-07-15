@@ -114,7 +114,7 @@ export function HeroSliderEditor({
           <Label htmlFor="hero-transition">نوع الانتقال</Label>
           <select
             id="hero-transition"
-            className="gova-control gova-field-surface w-full border border-input px-3 text-sm"
+            className="asol-control asol-field-surface w-full border border-input px-3 text-sm"
             value={value.transition}
             onChange={(event) =>
               onChange({

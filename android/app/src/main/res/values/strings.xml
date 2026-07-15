@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">GOVA</string>
-    <string name="title_activity_main">GOVA</string>
-    <string name="package_name">com.gova.app</string>
-    <string name="custom_url_scheme">com.gova.app</string>
+    <string name="app_name">ASOL</string>
+    <string name="title_activity_main">ASOL</string>
+    <string name="package_name">hgh.asol.app</string>
+    <string name="custom_url_scheme">hgh.asol.app</string>
 </resources>

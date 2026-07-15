@@ -2,9 +2,9 @@
 
 ## Side stores (not source of truth)
 
-### GovaDB (IndexedDB)
+### AsolDB (IndexedDB)
 
-**Location:** `src/lib/gova-db/`
+**Location:** `src/lib/asol-db/`
 
 | Store | Purpose |
 |-------|---------|
@@ -22,7 +22,7 @@ See [session-system.md](../session-system.md) for session details.
 
 - **Reads:** `useQuery` in hooks
 - **Writes:** `useMutation` + invalidation
-- **Offline:** in-memory cache + GovaDB persister (`gova-db-persister.ts`)
+- **Offline:** in-memory cache + AsolDB persister (`asol-db-persister.ts`)
 
 Provider defaults (`query-provider.tsx`):
 
@@ -38,7 +38,7 @@ Provider defaults (`query-provider.tsx`):
 
 ## Architectural principles
 
-1. **Clients are platform-agnostic** — Web, static export, Capacitor use the same `GovaApiClient`.
+1. **Clients are platform-agnostic** — Web, static export, Capacitor use the same `AsolApiClient`.
 2. **No SQL from the client** — only Business APIs with JSON payloads.
 3. **Repository builds queries** — Drizzle only in Repository on the server.
 4. **Database Client selects the driver** — dev → SQLite, prod → Turso.
@@ -53,12 +53,12 @@ Provider defaults (`query-provider.tsx`):
 User
   → UI requests Hook
   → Hook: useQuery → Client Service.getX()
-  → govaApi.get('/api/...')
+  → asolApi.get('/api/...')
   → Business API → Server Service.getX()
   → Query.execute() → Repository.select()
   → DatabaseClient → SQLite (dev) | Turso (prod)
   ← JSON ← same path back
-  → Hook updates cache (optional: GovaDB)
+  → Hook updates cache (optional: AsolDB)
   → UI renders
 ```
 
@@ -67,7 +67,7 @@ User
 ```
 UI (submit)
   → Hook: useMutation → Client Service.saveX(payload)
-  → govaApi.put/post
+  → asolApi.put/post
   → Business API → Server Service.saveX()
   → Command.execute() → Repository.upsert/insert/update
   → DatabaseClient → DB
@@ -89,24 +89,24 @@ UI (submit)
 ### Development
 
 ```
-Browser → GovaApiClient → Business API → Server Service → Query/Command
+Browser → AsolApiClient → Business API → Server Service → Query/Command
   → Repository → DatabaseClient → SQLite
 ```
 
 ### Production
 
 ```
-Browser / Capacitor / Static SPA → GovaApiClient (HTTPS)
+Browser / Capacitor / Static SPA → AsolApiClient (HTTPS)
   → Business API → Server Service → Query/Command → Repository → DatabaseClient → Turso
 ```
 
 ### Static export
 
 ```
-Static SPA → GovaApiClient → Remote GOVA Backend → Turso
+Static SPA → AsolApiClient → Remote ASOL Backend → Turso
 ```
 
-Set `NEXT_PUBLIC_GOVA_API_BASE_URL` at build time.
+Set `NEXT_PUBLIC_ASOL_API_BASE_URL` at build time.
 
 ```mermaid
 flowchart LR

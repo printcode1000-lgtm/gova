@@ -3,7 +3,7 @@
  * Bucket CORS and account-level R2 management (never in browser).
  */
 
-import { govaHttpFetch } from '@/core/api/gova-http-transport';
+import { asolHttpFetch } from '@/core/api/asol-http-transport';
 import { getR2CloudflareCredentials, getR2S3Credentials } from '@/core/config/server-env.values';
 import type { R2CorsPolicy, R2CorsRule } from './r2.types';
 
@@ -30,7 +30,7 @@ function getJurisdictionHeader(): HeadersInit {
 }
 
 async function cloudflareFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await govaHttpFetch(`${CF_API_BASE}${path}`, {
+  const response = await asolHttpFetch(`${CF_API_BASE}${path}`, {
     ...init,
     headers: {
       ...getCloudflareHeaders(),
@@ -82,7 +82,7 @@ export async function deleteR2BucketCors(bucketName?: string): Promise<void> {
 
 export async function verifyCloudflareApiToken(): Promise<boolean> {
   const { accountId, apiToken } = getR2CloudflareCredentials();
-  const response = await govaHttpFetch(
+  const response = await asolHttpFetch(
     `${CF_API_BASE}/accounts/${accountId}/tokens/verify`,
     { headers: { Authorization: `Bearer ${apiToken}` } }
   );

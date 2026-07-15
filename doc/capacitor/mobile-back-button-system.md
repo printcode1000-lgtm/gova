@@ -2,7 +2,7 @@
 
 ## Purpose
 
-GOVA handles the Android system Back action consistently across the application. The action may come from the navigation bar, a hardware button, or the Android back gesture.
+ASOL handles the Android system Back action consistently across the application. The action may come from the navigation bar, a hardware button, or the Android back gesture.
 
 The system navigates through the application's web history when possible, provides a safe fallback when no history exists, and prevents accidental exits from the home page.
 
@@ -158,7 +158,7 @@ The current contract is route-history based. It does not automatically discover 
 
 ### Inspecting Android logs
 
-Filter Logcat by package `com.gova.app`. JavaScript messages are normally reported with a source URL under `https://localhost/`, while native plugin errors are reported by Capacitor or the App plugin.
+Filter Logcat by package `hgh.asol.app`. JavaScript messages are normally reported with a source URL under `https://localhost/`, while native plugin errors are reported by Capacitor or the App plugin.
 
 ## Design constraints
 

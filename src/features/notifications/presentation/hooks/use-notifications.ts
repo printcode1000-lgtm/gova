@@ -4,7 +4,7 @@ import * as React from "react";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { NOTIFICATION_CHANGED_EVENT } from "../../domain/defaults";
 import type { NotificationEntity } from "../../domain/entities";
-import { govaNotificationRepository } from "../../infrastructure/gova-notification-repository";
+import { asolNotificationRepository } from "../../infrastructure/asol-notification-repository";
 import { notificationLifecycleService } from "../../application/notification-lifecycle-service";
 import { notificationBadgeService } from "../../application/badge-service";
 import { notificationPermissionService } from "../../application/permission-service";
@@ -26,7 +26,7 @@ export function useNotifications() {
       return;
     }
     setLoading(true);
-    const items = await govaNotificationRepository.list(uid);
+    const items = await asolNotificationRepository.list(uid);
     setNotifications(items);
     setUnreadCount(items.filter((item) => !item.readAt).length);
     await notificationBadgeService.refresh(uid);

@@ -1,6 +1,6 @@
 # Storage Image Manager
 
-`StorageImageManager` is the reusable one-image upload component for GOVA.
+`StorageImageManager` is the reusable one-image upload component for ASOL.
 
 It handles image selection, preview, upload confirmation, storage upload, and removal. It does not know any database, table, feature, or persistence rule.
 
@@ -276,7 +276,7 @@ The document contains a schema version and independent slot definitions:
 Allowed path:
 
 ```text
-UI -> StorageImageManager -> useStorageProfileUpload -> ImageStorageService -> GovaApiClient -> Storage API
+UI -> StorageImageManager -> useStorageProfileUpload -> ImageStorageService -> AsolApiClient -> Storage API
 ```
 
 Feature persistence stays outside the component:

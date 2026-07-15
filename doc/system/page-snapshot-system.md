@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Page Snapshot System restores a GOVA page to the state the user left behind, giving the web and Capacitor builds a native mobile feel. It stores snapshots in `GovaDB`, the project IndexedDB database, and never uses `localStorage` or `sessionStorage`.
+The Page Snapshot System restores a ASOL page to the state the user left behind, giving the web and Capacitor builds a native mobile feel. It stores snapshots in `AsolDB`, the project IndexedDB database, and never uses `localStorage` or `sessionStorage`.
 
 The system is mounted globally through `SnapshotProvider` in the root layout. Pages get automatic scroll, focus, and form restoration by default. Components that need local React state restoration can opt in with `useSnapshotState`.
 
@@ -21,7 +21,7 @@ entities/page-snapshot.types.ts
   Snapshot contracts, version, identity, and options.
 
 services/page-snapshot-service.ts
-  GovaDB persistence, key creation, TTL/version checks, DOM capture, and DOM restore.
+  AsolDB persistence, key creation, TTL/version checks, DOM capture, and DOM restore.
 
 hooks/use-page-snapshot.tsx
   SnapshotProvider, usePageSnapshot, and useSnapshotState.
@@ -33,10 +33,10 @@ index.ts
 Storage is provided by:
 
 ```text
-src/lib/gova-db/index.ts
+src/lib/asol-db/index.ts
 ```
 
-The `GovaDB` schema version is increased and a new object store is added:
+The `AsolDB` schema version is increased and a new object store is added:
 
 ```text
 pageSnapshots
@@ -99,7 +99,7 @@ The implementation normalizes and stable-serializes params and query values, so 
 
 1. The page renders normally.
 2. `SnapshotProvider` computes the current snapshot identity from the user, route, pathname, and query.
-3. It loads a compatible snapshot from `GovaDB`.
+3. It loads a compatible snapshot from `AsolDB`.
 4. It waits briefly so the page has time to mount required UI.
 5. It restores registered component state.
 6. It restores form values.
@@ -125,7 +125,7 @@ Snapshots are saved:
 Snapshots are stored only in IndexedDB:
 
 ```text
-GovaDB -> pageSnapshots
+AsolDB -> pageSnapshots
 ```
 
 No snapshot data is written to:
@@ -172,7 +172,7 @@ The default save flow is:
 7. Collect selected items marked with data attributes.
 8. Collect registered component state.
 9. Attach timestamp, expiration, snapshot version, and build id.
-10. Save the record to `GovaDB`.
+10. Save the record to `AsolDB`.
 
 Writes are debounced by default to reduce IndexedDB operations.
 
@@ -357,7 +357,7 @@ The system is designed to avoid excessive work:
 - Component state is restored only when registered.
 - DOM scanning is limited to forms and explicit snapshot attributes.
 - Large React state should store references or compact values, not full datasets.
-- Query data should continue to use the existing React Query GovaDB persister.
+- Query data should continue to use the existing React Query AsolDB persister.
 
 ## Capacitor Compatibility
 
@@ -367,7 +367,7 @@ Capacitor support is handled with:
 App.addListener('appStateChange', ...)
 ```
 
-When Android or iOS sends the app to the background, the provider flushes the current snapshot to `GovaDB`.
+When Android or iOS sends the app to the background, the provider flushes the current snapshot to `AsolDB`.
 
 ## Future Extensibility
 

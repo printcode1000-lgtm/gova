@@ -6,7 +6,7 @@ import {
   type PersistedClient,
   PersistQueryClientProvider,
 } from '@tanstack/react-query-persist-client';
-import { createGovaDbPersister } from '@/core/database/gova-db-persister';
+import { createAsolDbPersister } from '@/core/database/asol-db-persister';
 import { attachQueryObserver } from '@/core/monitor/query-observer';
 import { publicEnv } from '@/core/config/public-env';
 
@@ -57,7 +57,7 @@ interface AppQueryProviderProps {
 
 export function AppQueryProvider({ children }: AppQueryProviderProps) {
   const queryClient = getQueryClient();
-  const persister = React.useMemo(() => createGovaDbPersister(), []);
+  const persister = React.useMemo(() => createAsolDbPersister(), []);
 
   React.useEffect(() => {
     const cleanup = attachQueryObserver(queryClient);

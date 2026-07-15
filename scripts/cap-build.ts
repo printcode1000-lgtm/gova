@@ -17,7 +17,7 @@ import {
   listOtaObjectKeys,
 } from './ota/ota-r2';
 
-const LOCAL_MANIFEST_PATH = path.resolve('out', 'gova-web-manifest.json');
+const LOCAL_MANIFEST_PATH = path.resolve('out', 'asol-web-manifest.json');
 const ANDROID_BUILD_GRADLE = path.resolve('android', 'app', 'build.gradle');
 const IOS_PROJECT_FILE = path.resolve('ios', 'App', 'App.xcodeproj', 'project.pbxproj');
 
@@ -116,11 +116,11 @@ async function verifyR2Files(manifest: OtaManifest): Promise<void> {
 async function main(): Promise<void> {
   loadOtaEnvironment();
   const apiBaseUrl = (
-    process.env.GOVA_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
+    process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, '');
   const publishEnv: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
-    GOVA_CAPACITOR_API_BASE_URL: apiBaseUrl,
+    ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
   };
 
   console.log('Publishing the next automatic OTA version to the single R2 directory...');
@@ -133,7 +133,7 @@ async function main(): Promise<void> {
   const env: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
     ...otaClientBuildEnv(version),
-    NEXT_PUBLIC_GOVA_API_BASE_URL: apiBaseUrl,
+    NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
   };
 
   updateAndroidVersion(version);

@@ -7,7 +7,7 @@ Next.js API routes (`src/app/api/**`) are **server-side only** — they run in a
 This means every static build needs to know **where to send API requests at runtime**. That destination is controlled by a single environment variable baked in at **build time**:
 
 ```
-NEXT_PUBLIC_GOVA_API_BASE_URL
+NEXT_PUBLIC_ASOL_API_BASE_URL
 ```
 
 If this variable is empty at build time, the client falls back to `window.location.origin` — so API calls go to whatever server is currently serving the HTML. This is correct on Vercel and Capacitor WebView, but **breaks when serving `out/` with a plain file server** (like the old `http-server` or VS Code Live Server), because those servers have no `/api` handler.
@@ -16,10 +16,10 @@ If this variable is empty at build time, the client falls back to `window.locati
 
 ## How the API URL is Resolved at Runtime
 
-Source: `src/core/api/gova-api-config.ts`
+Source: `src/core/api/asol-api-config.ts`
 
 ```
-Priority 1: NEXT_PUBLIC_GOVA_API_BASE_URL  ← baked into JS bundle at next build time
+Priority 1: NEXT_PUBLIC_ASOL_API_BASE_URL  ← baked into JS bundle at next build time
 Priority 2: window.location.origin + basePath  ← runtime fallback
 ```
 
@@ -39,8 +39,8 @@ Because `NEXT_PUBLIC_*` variables are baked at **build time** (not runtime), the
 The proxy target is resolved in this order:
 
 ```
-1. GOVA_STATIC_PREVIEW_API_BASE_URL   ← set in VS Code launch config env block
-2. NEXT_PUBLIC_GOVA_API_BASE_URL      ← general fallback
+1. ASOL_STATIC_PREVIEW_API_BASE_URL   ← set in VS Code launch config env block
+2. NEXT_PUBLIC_ASOL_API_BASE_URL      ← general fallback
 3. CAPACITOR_API_BASE_URL             ← hardcoded = "https://gova-swart.vercel.app"
 ```
 
@@ -65,12 +65,12 @@ Priority 3 guarantees the proxy always has a valid upstream — `serve:out` work
 
 ```json
 "runtimeArgs": ["run", "build:static:local"],
-"env": { "NEXT_PUBLIC_GOVA_API_BASE_URL": "https://gova-swart.vercel.app" }
+"env": { "NEXT_PUBLIC_ASOL_API_BASE_URL": "https://gova-swart.vercel.app" }
 ```
 
 **What it does:**
 - Runs `npm run build:static:local`
-- `cross-env` injects `NEXT_PUBLIC_GOVA_API_BASE_URL=https://gova-swart.vercel.app` before building
+- `cross-env` injects `NEXT_PUBLIC_ASOL_API_BASE_URL=https://gova-swart.vercel.app` before building
 - The Vercel URL is baked permanently into every JS chunk in `out/`
 
 **When to use:**
@@ -89,7 +89,7 @@ Priority 3 guarantees the proxy always has a valid upstream — `serve:out` work
 ```
 
 **What it does:**
-- Runs `npm run build:static` with **no** `NEXT_PUBLIC_GOVA_API_BASE_URL`
+- Runs `npm run build:static` with **no** `NEXT_PUBLIC_ASOL_API_BASE_URL`
 - The API URL falls back to `window.location.origin` at runtime
 - `cap:build.ts` and `cap:build:local.ts` call this script and inject their own API URL
 
@@ -107,7 +107,7 @@ Priority 3 guarantees the proxy always has a valid upstream — `serve:out` work
 ```json
 "runtimeArgs": ["run", "serve:out"],
 "env": {
-  "GOVA_STATIC_PREVIEW_API_BASE_URL": "https://gova-swart.vercel.app",
+  "ASOL_STATIC_PREVIEW_API_BASE_URL": "https://gova-swart.vercel.app",
   "PORT": "5500"
 }
 ```
@@ -136,7 +136,7 @@ GET http://127.0.0.1:5500/api/profile/users-by-specialty?... 404 (Not Found)
 ```json
 "runtimeArgs": ["run", "serve:out"],
 "env": {
-  "GOVA_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3000",
+  "ASOL_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3000",
   "PORT": "5500"
 }
 ```
@@ -205,7 +205,7 @@ Step 1: Run "Capacitor Build"
 
 ```
 Step 1: Vercel CI builds automatically on push to main
-        (Vercel injects NEXT_PUBLIC_GOVA_API_BASE_URL via project env vars)
+        (Vercel injects NEXT_PUBLIC_ASOL_API_BASE_URL via project env vars)
 Step 2: Run "OTA Publish" locally to push the bundle to Cloudflare R2
 ```
 
@@ -229,9 +229,9 @@ The fix replaces `http-server` with `scripts/serve-static.ts`, which was already
 
 | Variable | Where set | Consumed by |
 |---|---|---|
-| `NEXT_PUBLIC_GOVA_API_BASE_URL` | Build script / CI / `.env.local` | Baked into JS bundle at `next build` time |
-| `GOVA_STATIC_PREVIEW_API_BASE_URL` | VS Code `env` block | `scripts/serve-static.ts` proxy (runtime) |
-| `GOVA_API_BASE_URL` | Legacy alias | Same effect as `NEXT_PUBLIC_GOVA_API_BASE_URL` |
+| `NEXT_PUBLIC_ASOL_API_BASE_URL` | Build script / CI / `.env.local` | Baked into JS bundle at `next build` time |
+| `ASOL_STATIC_PREVIEW_API_BASE_URL` | VS Code `env` block | `scripts/serve-static.ts` proxy (runtime) |
+| `ASOL_API_BASE_URL` | Legacy alias | Same effect as `NEXT_PUBLIC_ASOL_API_BASE_URL` |
 | `PORT` | VS Code `env` block | `serve-static.ts` listen port (default `5500`) |
 | `HOST` | Optional | `serve-static.ts` bind address (default `127.0.0.1`) |
 

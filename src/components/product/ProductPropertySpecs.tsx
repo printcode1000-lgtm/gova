@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import {
-  GovaMap,
+  AsolMap,
   createOpenStreetMapProvider,
   markerAt,
-} from "@/components/ui/GovaMap";
+} from "@/components/ui/AsolMap";
 import type { ProductPropertySpecsData } from "@/features/product/entities/product.entity";
 import { ProductField } from "./ProductComponentPrimitives";
 import type {
@@ -131,7 +131,7 @@ export function ProductPropertySpecs({
               <button
                 type="button"
                 onClick={() => openDeviceMaps(latitude, longitude)}
-                className="gova-control inline-flex items-center justify-center bg-primary px-5 font-semibold text-on-primary"
+                className="asol-control inline-flex items-center justify-center bg-primary px-5 font-semibold text-on-primary"
               >
                 فتح الموقع في الخرائط
               </button>
@@ -143,7 +143,7 @@ export function ProductPropertySpecs({
           ) : (
             <div className="space-y-2">
               {mapOpen ? (
-                <GovaMap
+                <AsolMap
                   modes={["picker"]}
                   providers={{ tile: tileProvider }}
                   initialViewport={
@@ -203,7 +203,7 @@ export function ProductPropertySpecs({
                 <button
                   type="button"
                   onClick={() => setMapOpen(true)}
-                  className="gova-control border border-input px-4 font-medium"
+                  className="asol-control border border-input px-4 font-medium"
                 >
                   فتح الخريطة
                 </button>

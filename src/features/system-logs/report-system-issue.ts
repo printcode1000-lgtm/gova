@@ -35,7 +35,7 @@ export function reportSystemIssue(context: SystemIssueContext) {
   const error = context.error;
   addSystemLog({
     level: context.level ?? "error",
-    consoleMethod: "gova.issue",
+    consoleMethod: "asol.issue",
     message: describe(error),
     page:
       context.page ?? `${window.location.pathname}${window.location.search}`,

@@ -15,7 +15,7 @@ The module follows the project's standard layered architecture:
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
-│               Client Service Layer (GovaApiClient)           │
+│               Client Service Layer (AsolApiClient)           │
 │  ProfileApiService.getUsersBySpecialty()                     │
 └─────────────────────────────────────────────────────────────┘
                               ↓  HTTP GET
@@ -76,7 +76,7 @@ The module follows the project's standard layered architecture:
 ### Client Service
 - **Location**: `src/features/profile/services/profile-api-service.ts`
 - **Method**: `getUsersBySpecialty(categoryId, subcategoryId, offset, limit)`
-- **Description**: Client-side service that calls the API endpoint via `GovaApiClient`
+- **Description**: Client-side service that calls the API endpoint via `AsolApiClient`
 
 ### React Hook
 - **Location**: `src/features/profile/hooks/use-users-by-specialty.ts`

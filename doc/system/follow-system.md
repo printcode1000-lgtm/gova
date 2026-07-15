@@ -1,6 +1,6 @@
 # Follow System
 
-The Follow System is a reusable module for following GOVA entities such as stores, products, and categories. It is designed as a real database-backed feature from the start, not a browser-only preference.
+The Follow System is a reusable module for following ASOL entities such as stores, products, and categories. It is designed as a real database-backed feature from the start, not a browser-only preference.
 
 ## Scope
 

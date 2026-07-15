@@ -29,8 +29,8 @@ const DeveloperBadge = isDevelopment
   : () => null;
 
 export const metadata: Metadata = {
-  title: "Gova",
-  description: "Gova — تطبيق Next.js",
+  title: "Asol",
+  description: "Asol — تطبيق Next.js",
   icons: {
     icon: withBasePath("/logo.png"),
     apple: withBasePath("/logo.png"),

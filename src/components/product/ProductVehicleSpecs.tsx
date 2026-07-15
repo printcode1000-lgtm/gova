@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { govaApi } from "@/core/api";
+import { asolApi } from "@/core/api";
 import type { ProductVehicleSpecsData } from "@/features/product/entities/product.entity";
 import type {
   ProductMode,
@@ -60,7 +60,7 @@ export function ProductVehicleSpecs({
     let active = true;
     Promise.all(
       GROUPS.map(async (group) => {
-        const items = await govaApi.getPublicJson<CarOption[]>(
+        const items = await asolApi.getPublicJson<CarOption[]>(
           `/catagory/cars/data/${group.file}`,
         );
         return [group.key, items] as const;

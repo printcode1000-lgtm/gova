@@ -1,8 +1,8 @@
 # Session System
 
-Client login state in GOVA is minimal:
+Client login state in ASOL is minimal:
 
-- **Logged in** → `UserSession` in Gova IndexedDB (`auth` store, key `current`)
+- **Logged in** → `UserSession` in Asol IndexedDB (`auth` store, key `current`)
 - **Not logged in** → no row in `auth/current` (`null`)
 - **Guest browsing** → separate `guestSessions` store via `useGuestSession()` (“متابعة كضيف”)
 
@@ -131,7 +131,7 @@ src/features/auth/
     └── use-profile-registration.ts
 
 src/hooks/use-guest-session.ts       # guestSessions (separate)
-src/lib/gova-db/index.ts             # low-level IDB helpers
+src/lib/asol-db/index.ts             # low-level IDB helpers
 ```
 
 ---

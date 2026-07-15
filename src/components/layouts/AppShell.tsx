@@ -18,7 +18,7 @@ export function AppShell({ children }: AppShellProps) {
     <>
       <AppHeader />
       <main
-        className="gova-canvas min-h-screen pt-16"
+        className="asol-canvas min-h-screen pt-16"
         style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}
       >
         {children}

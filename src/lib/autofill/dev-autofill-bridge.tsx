@@ -7,7 +7,7 @@ import { isDevelopment } from '@/core/config';
 
 declare global {
   interface Window {
-    __GOVA_ADDSELLER_AUTOFILL__?: () => OnboardingAutofillOutcome;
+    __ASOL_ADDSELLER_AUTOFILL__?: () => OnboardingAutofillOutcome;
   }
 }
 
@@ -16,10 +16,10 @@ export function OnboardingDevAutofillBridge() {
   useEffect(() => {
     if (!isDevelopment) return undefined;
 
-    window.__GOVA_ADDSELLER_AUTOFILL__ = () => fillOnboardingRandomFixture();
+    window.__ASOL_ADDSELLER_AUTOFILL__ = () => fillOnboardingRandomFixture();
 
     return () => {
-      delete window.__GOVA_ADDSELLER_AUTOFILL__;
+      delete window.__ASOL_ADDSELLER_AUTOFILL__;
     };
   }, []);
 

@@ -1,9 +1,9 @@
 # Environment Variables
 
 ```env
-# ── GOVA API (client-safe) ──
-NEXT_PUBLIC_GOVA_API_BASE_URL=     # Remote backend (static/Capacitor). Empty = same origin.
-NEXT_PUBLIC_GOVA_BASE_PATH=        # Asset base path (GitHub Pages sub-path)
+# ── ASOL API (client-safe) ──
+NEXT_PUBLIC_ASOL_API_BASE_URL=     # Remote backend (static/Capacitor). Empty = same origin.
+NEXT_PUBLIC_ASOL_BASE_PATH=        # Asset base path (GitHub Pages sub-path)
 
 # ── Turso runtime (server-only) ──
 TURSO_DATABASE_URL=                # users DB (allusers.db)
@@ -16,14 +16,14 @@ TURSO_API_TOKEN=
 TURSO_ORGANIZATION=
 
 # ── Server CORS ──
-GOVA_CORS_ORIGINS=
+ASOL_CORS_ORIGINS=
 
 # ── App mode ──
-GOVA_MODE=development              # development | production | static
+ASOL_MODE=development              # development | production | static
 
 # ── Capacitor (platform layer) ──
 CAPACITOR_SERVER_URL=
-GOVA_CAPACITOR_API_BASE_URL=
+ASOL_CAPACITOR_API_BASE_URL=
 ```
 
 ## Cloudflare R2
@@ -34,7 +34,7 @@ R2_ACCOUNT_ID=
 R2_API_TOKEN=
 R2_ACCESS_KEY_ID=
 R2_SECRET_ACCESS_KEY=
-R2_BUCKET_NAME=gova-storage
+R2_BUCKET_NAME=asol-storage
 R2_ENDPOINT=                         # https://{account_id}.r2.cloudflarestorage.com
 R2_LOCATION=WEUR
 R2_PUBLIC_URL=                       # Public Dev URL (pub-xxx.r2.dev)
@@ -45,7 +45,7 @@ R2_WAREHOUSE_NAME=                   # Iceberg warehouse (optional)
 NEXT_PUBLIC_R2_PUBLIC_URL=
 ```
 
-Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `GOVA_CORS_ORIGINS`:
+Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:
 
 ```bash
 npm run r2:sync:cors
@@ -70,5 +70,5 @@ Then redeploy. See [../problems/vercel-build-missing-profile-turso-env.md](../pr
 Change one client variable:
 
 ```env
-NEXT_PUBLIC_GOVA_API_BASE_URL=https://api.your-domain.com
+NEXT_PUBLIC_ASOL_API_BASE_URL=https://api.your-domain.com
 ```

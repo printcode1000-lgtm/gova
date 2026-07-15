@@ -228,7 +228,7 @@ export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
             window.clearTimeout(longPressTimerRef.current);
           }
         }}
-        className="relative overflow-hidden py-4 rounded-xl gova-surface-neutral touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
+        className="relative overflow-hidden py-4 rounded-xl asol-surface-neutral touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto"
         dir="ltr"
       >
         <div

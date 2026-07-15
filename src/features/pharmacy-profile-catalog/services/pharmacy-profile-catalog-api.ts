@@ -1,6 +1,6 @@
 "use client";
 
-import { govaApi } from "@/core/api";
+import { asolApi } from "@/core/api";
 import type {
   PharmacyOverrideStatus,
   PharmacyProfileCatalogView,
@@ -14,13 +14,13 @@ export const pharmacyProfileCatalogApi = {
       uid,
       includeHidden: includeHidden ? "true" : "false",
     });
-    return govaApi.get<PharmacyProfileCatalogView>(`${ROUTE}?${query.toString()}`, {
+    return asolApi.get<PharmacyProfileCatalogView>(`${ROUTE}?${query.toString()}`, {
       cache: "no-store",
     });
   },
 
   action(input: Record<string, string>) {
-    return govaApi.post<PharmacyProfileCatalogView>(ROUTE, input);
+    return asolApi.post<PharmacyProfileCatalogView>(ROUTE, input);
   },
 
   createCategory(uid: string, nameAr: string) {

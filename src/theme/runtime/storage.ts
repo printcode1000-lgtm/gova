@@ -1,4 +1,4 @@
-import { govaDbGet, govaDbSet, GOVA_DB_STORES } from '@/lib/gova-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
 import { DEFAULT_THEME_PREFERENCES, FONT_SIZE_MAX, FONT_SIZE_MIN } from './defaults';
 import type { ThemeDensity, ThemeMode, ThemePreferences } from './types';
 
@@ -35,7 +35,7 @@ const THEME_DB_KEY = 'theme-preferences';
 
 export async function readThemePreferencesFromDb(): Promise<ThemePreferences> {
   try {
-    const raw = await govaDbGet<Partial<ThemePreferences>>(GOVA_DB_STORES.APP_SETTINGS, THEME_DB_KEY);
+    const raw = await asolDbGet<Partial<ThemePreferences>>(ASOL_DB_STORES.APP_SETTINGS, THEME_DB_KEY);
     return normalizeThemePreferences(raw);
   } catch {
     return { ...DEFAULT_THEME_PREFERENCES };
@@ -43,8 +43,8 @@ export async function readThemePreferencesFromDb(): Promise<ThemePreferences> {
 }
 
 export async function writeThemePreferencesToDb(prefs: ThemePreferences): Promise<void> {
-  await govaDbSet<ThemePreferences>(
-    GOVA_DB_STORES.APP_SETTINGS,
+  await asolDbSet<ThemePreferences>(
+    ASOL_DB_STORES.APP_SETTINGS,
     THEME_DB_KEY,
     normalizeThemePreferences(prefs),
   );

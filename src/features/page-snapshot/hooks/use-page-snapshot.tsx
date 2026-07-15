@@ -63,7 +63,7 @@ function installNavigationEvents(): void {
     if (navigationEmitTimer) window.clearTimeout(navigationEmitTimer);
     navigationEmitTimer = window.setTimeout(() => {
       navigationEmitTimer = null;
-      window.dispatchEvent(new Event('gova:navigation'));
+      window.dispatchEvent(new Event('asol:navigation'));
     }, 0);
   };
   const patch = (name: 'pushState' | 'replaceState') => {
@@ -89,10 +89,10 @@ function usePageSnapshotIdentity(namespace?: string): PageSnapshotIdentity {
     const updateQuery = () => setQuery(readBrowserQuery());
     updateQuery();
     window.addEventListener('popstate', updateQuery);
-    window.addEventListener('gova:navigation', updateQuery);
+    window.addEventListener('asol:navigation', updateQuery);
     return () => {
       window.removeEventListener('popstate', updateQuery);
-      window.removeEventListener('gova:navigation', updateQuery);
+      window.removeEventListener('asol:navigation', updateQuery);
     };
   }, [pathname]);
 

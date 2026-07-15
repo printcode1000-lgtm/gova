@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Product Card System is the single presentation source for product cards across GOVA. It prevents each page from rebuilding its own card logic for product name, image, price, badges, rating, and navigation.
+The Product Card System is the single presentation source for product cards across ASOL. It prevents each page from rebuilding its own card logic for product name, image, price, badges, rating, and navigation.
 
 ## Scope
 

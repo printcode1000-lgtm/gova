@@ -213,9 +213,9 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
           window.clearTimeout(longPressTimerRef.current);
         }
       }}
-      className="gova-section-tonal-error overflow-hidden relative flex items-center py-2 mx-2 sm:mx-4 rounded-xl touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto select-none"
+      className="asol-section-tonal-error overflow-hidden relative flex items-center py-2 mx-2 sm:mx-4 rounded-xl touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto select-none"
     >
-      <div className="flex items-center gap-2 px-4 z-10 border-s border-outline-variant/40 shrink-0 gova-tonal-error rounded-e-xl py-1">
+      <div className="flex items-center gap-2 px-4 z-10 border-s border-outline-variant/40 shrink-0 asol-tonal-error rounded-e-xl py-1">
         <TrendingUp className="w-5 h-5 text-error animate-pulse-subtle" aria-hidden />
         <span className="text-xs font-bold text-on-error-container">{t(label)}</span>
       </div>

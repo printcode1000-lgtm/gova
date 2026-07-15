@@ -13,8 +13,8 @@ Example: adding a `Product` feature with a new table.
 
 ## Client
 
-7. **Routes** — add to `GOVA_API_ROUTES`
-8. **API Service** — `product-api-service.ts` using `govaApi`
+7. **Routes** — add to `ASOL_API_ROUTES`
+8. **API Service** — `product-api-service.ts` using `asolApi`
 9. **Client export** — `product-service.ts` re-exports adapter
 10. **Query keys** — stable constants in hooks
 11. **Hooks** — `useQuery` / `useMutation` + invalidation
@@ -30,4 +30,4 @@ If the feature needs its own SQLite/Turso pair:
 
 Run `npm run architecture:check` before PR — see [19-architecture-contract.md](./19-architecture-contract.md).
 
-No changes to `GovaApiClient` internals required for a normal feature.
+No changes to `AsolApiClient` internals required for a normal feature.

@@ -24,7 +24,7 @@ export function RecentOrders({ orders, className }: RecentOrdersProps) {
     <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="flex items-center gap-2">
-          <div className="gova-merchant-icon-well-secondary">
+          <div className="asol-merchant-icon-well-secondary">
             <Clock className="h-4 w-4 text-muted-foreground" />
           </div>
           <CardTitle className="text-lg">{t('seller.orders.title')}</CardTitle>

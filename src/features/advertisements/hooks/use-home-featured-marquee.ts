@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useState } from "react";
 
@@ -12,10 +12,10 @@ import { featuredMarqueeApiService } from "@/features/advertisements/services/fe
 import { productApiService } from "@/features/product/services/product-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 import {
-  GOVA_DB_STORES,
-  govaDbGet,
-  govaDbSet,
-} from "@/lib/gova-db";
+  ASOL_DB_STORES,
+  asolDbGet,
+  asolDbSet,
+} from "@/lib/asol-db";
 
 // â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -93,8 +93,8 @@ export function useHomeFeaturedMarquee() {
 
   const checkForUpdates = useCallback(async (force = false) => {
     try {
-      const cached = await govaDbGet<FeaturedMarqueeCache>(
-        GOVA_DB_STORES.APP_SETTINGS,
+      const cached = await asolDbGet<FeaturedMarqueeCache>(
+        ASOL_DB_STORES.APP_SETTINGS,
         FEATURED_MARQUEE_CACHE_KEY,
       );
 
@@ -140,8 +140,8 @@ export function useHomeFeaturedMarquee() {
       }
 
       // Persist refreshed cache
-      await govaDbSet<FeaturedMarqueeCache>(
-        GOVA_DB_STORES.APP_SETTINGS,
+      await asolDbSet<FeaturedMarqueeCache>(
+        ASOL_DB_STORES.APP_SETTINGS,
         FEATURED_MARQUEE_CACHE_KEY,
         {
           ...next,

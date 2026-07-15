@@ -21,7 +21,7 @@ export default function AppIcon({ size = 'lg', className = '' }: AppIconProps) {
     <div className={`relative ${className}`}>
       <Image
         src={withBasePath('/logo.png')}
-        alt="Gova App Icon"
+        alt="Asol App Icon"
         width={sizes.imageWidth}
         height={sizes.imageHeight}
         className="object-contain"

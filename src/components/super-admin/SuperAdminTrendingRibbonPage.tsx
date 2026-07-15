@@ -24,7 +24,7 @@ import {
 import { trendingRibbonApiService } from "@/features/advertisements/services/trending-ribbon-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { GOVA_DB_STORES, govaDbDelete } from "@/lib/gova-db";
+import { ASOL_DB_STORES, asolDbDelete } from "@/lib/asol-db";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -157,7 +157,7 @@ export function SuperAdminTrendingRibbonPage() {
       );
       // Invalidate IndexedDB cache so that the home page updates immediately
       try {
-        await govaDbDelete(GOVA_DB_STORES.APP_SETTINGS, TRENDING_RIBBON_CACHE_KEY);
+        await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, TRENDING_RIBBON_CACHE_KEY);
       } catch (err) {
         console.error("Failed to delete local trending ribbon cache:", err);
       }
@@ -445,7 +445,7 @@ export function SuperAdminTrendingRibbonPage() {
             <Eye className="h-5 w-5 text-primary" />
             <h2 className="font-semibold">المعاينة الحية</h2>
           </div>
-          <div className="gova-section-tonal gova-section-tonal-primary mx-1 rounded-xl p-4">
+          <div className="asol-section-tonal asol-section-tonal-primary mx-1 rounded-xl p-4">
             <TrendingRibbon config={previewConfig} />
           </div>
         </section>

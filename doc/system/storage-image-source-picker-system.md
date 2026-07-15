@@ -95,7 +95,7 @@ The picker uses the Capacitor Camera plugin. Because the current flow does not s
 The allowed flow remains:
 
 ```text
-UI -> StorageImageManager -> useStorageProfileUpload -> ImageStorageService -> GovaApiClient -> Storage API
+UI -> StorageImageManager -> useStorageProfileUpload -> ImageStorageService -> AsolApiClient -> Storage API
 ```
 
 The Capacitor-specific camera code is isolated behind:

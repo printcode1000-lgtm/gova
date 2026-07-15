@@ -1,4 +1,4 @@
-# GOVA Notification System
+# ASOL Notification System
 
 The notification system is a local-first module that powers the in-app notification center, badge count, template rendering, event mapping, device-token storage, and future push integrations for Web, Android, and iOS.
 
@@ -6,8 +6,8 @@ The notification system is a local-first module that powers the in-app notificat
 
 - A complete module exists under `src/features/notifications`.
 - `/notifications` now opens the notification center from the bottom navigation bar.
-- The bottom navigation notification badge reads the real unread count from GovaDB and is hidden when the count is zero.
-- Notifications persist locally in GovaDB IndexedDB stores.
+- The bottom navigation notification badge reads the real unread count from AsolDB and is hidden when the count is zero.
+- Notifications persist locally in AsolDB IndexedDB stores.
 - Templates live only in JSON files: Arabic and English.
 - Business modules publish through `NotificationBus`; they do not talk directly to push providers.
 - Event-to-template mapping is available for orders, shipments, returns, chat, payments, offers, and system notices.
@@ -42,15 +42,15 @@ The module follows a layered structure:
 
 - `domain`: typed entities, enums, defaults, and contracts.
 - `application`: use-case services such as the bus, builder, sender, receiver, router, sync, lifecycle, permissions, tokens, and analytics.
-- `infrastructure`: local GovaDB persistence and platform adapters.
+- `infrastructure`: local AsolDB persistence and platform adapters.
 - `presentation`: React page and hooks.
 - `config`: notification templates in JSON.
 - `shared`: small reusable helpers.
 - `tests`: module-level contract checks.
 
-## GovaDB Storage
+## AsolDB Storage
 
-The module uses the existing `GovaDB` IndexedDB database. The database version is `5`.
+The module uses the existing `AsolDB` IndexedDB database. The database version is `5`.
 
 Dedicated stores:
 
@@ -61,7 +61,7 @@ Dedicated stores:
 - `notificationAnalytics`
 - `notificationOfflineQueue`
 
-Templates are intentionally excluded from GovaDB. They are static versioned files inside the app bundle.
+Templates are intentionally excluded from AsolDB. They are static versioned files inside the app bundle.
 
 ## Users Database Token Storage
 
@@ -100,7 +100,7 @@ This table supports multiple devices per user and allows disabling one device wi
 1. A module publishes a custom notification, template notification, or business event through `NotificationBus`.
 2. `EventNotificationMapper` converts business events into template IDs.
 3. `NotificationBuilder` resolves the template, variables, deep link, priority, channels, targets, group key, and sound.
-4. `NotificationSender` stores the notification in GovaDB, applies routing, updates badge count, emits UI refresh events, and records analytics.
+4. `NotificationSender` stores the notification in AsolDB, applies routing, updates badge count, emits UI refresh events, and records analytics.
 5. The notification center reloads through `useNotifications`.
 6. Opening or dismissing a notification updates read state, badge state, and analytics.
 
@@ -227,7 +227,7 @@ The notification center marks the item as read before navigating.
 
 `DeviceTokenService` owns token registration, listing, and removal.
 
-Current behavior stores a safe pending token placeholder until a real push provider plugin is introduced. The token is saved locally in GovaDB and remotely through:
+Current behavior stores a safe pending token placeholder until a real push provider plugin is introduced. The token is saved locally in AsolDB and remotely through:
 
 ```text
 POST /api/notifications/device-token
@@ -301,7 +301,7 @@ Future push providers must plug into these services or server-side APIs. Firebas
 
 ### Foreground
 
-The app saves the notification to GovaDB, updates the badge, emits center refresh events, and can display a browser notification when permission is granted.
+The app saves the notification to AsolDB, updates the badge, emits center refresh events, and can display a browser notification when permission is granted.
 
 ### Background
 
@@ -332,7 +332,7 @@ Current UI records sent, displayed, opened, and dismissed.
 
 ## Deduplication
 
-`GovaNotificationRepository.save()` checks the user's existing notifications by `dedupeKey`. If a duplicate exists, it returns the existing notification and does not store a second copy.
+`AsolNotificationRepository.save()` checks the user's existing notifications by `dedupeKey`. If a duplicate exists, it returns the existing notification and does not store a second copy.
 
 Recommended dedupe key format:
 
@@ -405,7 +405,7 @@ Browser support is limited; native platform plugins can map these values to nati
 
 1. Add or extend a service under `infrastructure/capacitor`.
 2. Keep platform APIs out of domain and business modules.
-3. Store only safe local token data in GovaDB.
+3. Store only safe local token data in AsolDB.
 4. Keep provider secrets on the server.
 
 ## How To Add A Push Provider
@@ -560,7 +560,7 @@ Browser subscription flow:
 ```text
 /settings
   -> request Notification permission
-  -> register /gova-push-sw.js
+  -> register /asol-push-sw.js
   -> PushManager.subscribe(public VAPID key)
   -> POST /api/notifications/device-token
   -> user_notification_tokens(provider = web_push)
@@ -589,7 +589,7 @@ NotificationSendService
 Service worker:
 
 ```text
-public/gova-push-sw.js
+public/asol-push-sw.js
 ```
 
 The service worker displays push notifications and opens the notification route or provided deep link when the user clicks the notification.

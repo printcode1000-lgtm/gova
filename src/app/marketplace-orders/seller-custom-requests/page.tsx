@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 export default function Page() {
   const { t } = useTranslation();
   return (
-    <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
+    <div className="w-full asol-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
@@ -23,7 +23,7 @@ export default function Page() {
 <button className="p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors duration-200 rounded-full">
 <Menu className="text-primary dark:text-primary-fixed-dim"  />
 </button>
-<h1 className="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Gova</h1>
+<h1 className="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed-dim">Asol</h1>
 </div>
 <div className="flex items-center gap-6">
 <nav className="hidden md:flex items-center gap-8">

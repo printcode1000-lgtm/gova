@@ -18,7 +18,7 @@ export function PromoBanner() {
         <p className="text-sm opacity-90 mt-2">{t('home.promo.description')}</p>
         <button
           type="button"
-          className="mt-4 px-4 py-2 rounded-lg font-bold text-sm transition-transform active:scale-95 gova-accent-cta-tertiary"
+          className="mt-4 px-4 py-2 rounded-lg font-bold text-sm transition-transform active:scale-95 asol-accent-cta-tertiary"
         >
           {t('home.promo.cta')}
         </button>

@@ -12,13 +12,13 @@ const notification = builder.fromTemplate({
   locale: "ar",
   variables: {
     orderId: "ord_1",
-    orderNumber: "GOVA-1",
+    orderNumber: "ASOL-1",
   },
 });
 
 assert.equal(notification.title, "تم إنشاء الطلب");
-assert.equal(notification.body, "تم إنشاء طلبك GOVA-1 بنجاح.");
-assert.equal(notification.route?.href, "/orders/ord_1");
+assert.equal(notification.body, "تم إنشاء طلبك ASOL-1 بنجاح.");
+assert.equal(notification.route?.href, "/orders/details?orderId=ord_1");
 assert.equal(notification.category, NotificationCategories.Orders);
 assert.ok(notification.targets.includes(NotificationTargets.Badge));
 
@@ -28,7 +28,7 @@ const mapped = mapper.toTemplateInput(
     name: "orders.created",
     uid: "usr_test",
     dedupeKey: "orders.created:ord_1:buyer",
-    variables: { orderId: "ord_1", orderNumber: "GOVA-1" },
+    variables: { orderId: "ord_1", orderNumber: "ASOL-1" },
   },
   "ar",
 );

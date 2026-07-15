@@ -129,7 +129,7 @@ export function SuperAdminNotificationBroadcastPage() {
         <div className="grid gap-4">
           <div className="space-y-2">
             <Label htmlFor="broadcast-title">العنوان</Label>
-            <Input id="broadcast-title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="مثال: تحديث جديد من GOVA" />
+            <Input id="broadcast-title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="مثال: تحديث جديد من ASOL" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="broadcast-body">الرسالة</Label>

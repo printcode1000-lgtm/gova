@@ -16,7 +16,7 @@ const nextBinary = path.join(rootDir, 'node_modules', '.bin', 'next.cmd');
 
 const appInitCommand = 'npm run app:init';
 const architectureCheckCommand = 'npm run architecture:check';
-const localManifestFileName = 'gova-web-manifest.json';
+const localManifestFileName = 'asol-web-manifest.json';
 
 function stopLiveServer(): void {
   try {
@@ -40,8 +40,9 @@ function stopLiveServer(): void {
 
 // Public assets copied verbatim into every static build.
 const STATIC_PUBLIC_ALLOW_FILES = [
-  'gova-app-init.js',
-  'gova-theme-init.js',
+  'asol-app-init.js',
+  'asol-push-sw.js',
+  'asol-theme-init.js',
   'logo.png',
   'catagory/categories.json',
   'catagory/subcategories.json',
@@ -49,7 +50,9 @@ const STATIC_PUBLIC_ALLOW_FILES = [
 
 const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
   'catagory/cars',
+  'catagory/pharmacy',
   'images/mainCategories',
+  'images/pharmacy_fixed',
   'images/subCategories',
   'product/style',
 ] as const;
@@ -57,7 +60,7 @@ const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
 // Source/development assets that must never enter out/, R2, Android, or iOS.
 const STATIC_PUBLIC_IGNORE_FILES = [
   'catagory.db',
-  'gova-web-manifest.json',
+  'asol-web-manifest.json',
   'catagory/active_ingredient_forms.json',
   'catagory/active_ingredient_strengths.json',
   'catagory/active_ingredients.json',
@@ -78,6 +81,7 @@ const STATIC_PUBLIC_IGNORE_DIRECTORIES = [
 const STATIC_ROUTE_IGNORELIST = [
   'app/api',
   'app/dev',
+  'app/orders/[orderId]',
   'app/test1',
 ] as const;
 
@@ -261,13 +265,13 @@ function writeLocalWebManifest(): void {
   const manifest = {
     schemaVersion: 2,
     delivery: 'files',
-    releaseId: `${process.env.NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION ?? '0.1.0'}-local`,
-    version: process.env.NEXT_PUBLIC_GOVA_WEB_BUNDLE_VERSION ?? '0.1.0',
+    releaseId: `${process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION ?? '0.1.0'}-local`,
+    version: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION ?? '0.1.0',
     createdAt: new Date().toISOString(),
     baseUrl: '',
     size,
     fileCount: Object.keys(files).length,
-    minimumNativeVersion: process.env.NEXT_PUBLIC_GOVA_NATIVE_VERSION ?? '1.0.0',
+    minimumNativeVersion: process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ?? '1.0.0',
     mandatory: false,
     notes: 'Bundled web assets',
     files,
@@ -291,7 +295,7 @@ try {
     cwd: tempBuildDir,
     env: {
       ...childEnv,
-      GOVA_MODE: 'static',
+      ASOL_MODE: 'static',
     },
   });
 

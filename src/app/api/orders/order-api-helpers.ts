@@ -15,7 +15,7 @@ export function actorFromInput(input: ClientActorInput, fallbackRole: ActorRole)
   const uid = input.uid?.trim();
   if (!uid) throw new Error("userNotFound");
   if (isSuperAdminIdentity(uid, input.phone ?? "")) {
-    return { id: uid, role: "admin", source: "gova-web" };
+    return { id: uid, role: "admin", source: "asol-web" };
   }
   const role =
     input.role === "admin" || input.role === "system"
@@ -24,7 +24,7 @@ export function actorFromInput(input: ClientActorInput, fallbackRole: ActorRole)
   return {
     id: uid,
     role,
-    source: "gova-web",
+    source: "asol-web",
   };
 }
 

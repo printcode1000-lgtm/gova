@@ -1,9 +1,9 @@
 import {
-  govaDbDeleteAuthLegacy,
-  govaDbDeleteCurrentSession,
-  govaDbGetCurrentSession,
-  govaDbSetCurrentSession,
-} from '@/lib/gova-db';
+  asolDbDeleteAuthLegacy,
+  asolDbDeleteCurrentSession,
+  asolDbGetCurrentSession,
+  asolDbSetCurrentSession,
+} from '@/lib/asol-db';
 import {
   parseStoredSession,
   type SaveSessionInput,
@@ -25,35 +25,35 @@ function toStoredSession(input: SaveSessionInput): UserSession {
  */
 export class SessionApiService implements ISessionService {
   async cleanLegacyStore(): Promise<void> {
-    await govaDbDeleteAuthLegacy();
+    await asolDbDeleteAuthLegacy();
 
-    const raw = await govaDbGetCurrentSession<unknown>();
+    const raw = await asolDbGetCurrentSession<unknown>();
     if (!raw) return;
 
     const parsed = parseStoredSession(raw);
     if (!parsed) {
-      await govaDbDeleteCurrentSession();
+      await asolDbDeleteCurrentSession();
       return;
     }
 
     const normalized = toStoredSession(parsed);
-    await govaDbSetCurrentSession(normalized);
+    await asolDbSetCurrentSession(normalized);
   }
 
   async getSession(): Promise<UserSession | null> {
-    return parseStoredSession(await govaDbGetCurrentSession<unknown>());
+    return parseStoredSession(await asolDbGetCurrentSession<unknown>());
   }
 
   async saveSession(input: SaveSessionInput): Promise<UserSession> {
     const session = toStoredSession(input);
-    await govaDbSetCurrentSession(session);
-    await govaDbDeleteAuthLegacy();
+    await asolDbSetCurrentSession(session);
+    await asolDbDeleteAuthLegacy();
     return session;
   }
 
   async clearSession(): Promise<void> {
-    await govaDbDeleteCurrentSession();
-    await govaDbDeleteAuthLegacy();
+    await asolDbDeleteCurrentSession();
+    await asolDbDeleteAuthLegacy();
   }
 }
 

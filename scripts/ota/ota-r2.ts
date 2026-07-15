@@ -21,10 +21,10 @@ function requireEnv(key: string, fallbackKey?: string): string {
 export function createOtaR2Client(): S3Client {
   return new S3Client({
     region: 'auto',
-    endpoint: requireEnv('GOVA_OTA_R2_ENDPOINT', 'R2_ENDPOINT'),
+    endpoint: requireEnv('ASOL_OTA_R2_ENDPOINT', 'R2_ENDPOINT'),
     credentials: {
-      accessKeyId: requireEnv('GOVA_OTA_R2_ACCESS_KEY_ID', 'R2_ACCESS_KEY_ID'),
-      secretAccessKey: requireEnv('GOVA_OTA_R2_SECRET_ACCESS_KEY', 'R2_SECRET_ACCESS_KEY'),
+      accessKeyId: requireEnv('ASOL_OTA_R2_ACCESS_KEY_ID', 'R2_ACCESS_KEY_ID'),
+      secretAccessKey: requireEnv('ASOL_OTA_R2_SECRET_ACCESS_KEY', 'R2_SECRET_ACCESS_KEY'),
     },
     forcePathStyle: true,
   });

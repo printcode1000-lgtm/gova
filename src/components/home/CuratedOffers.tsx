@@ -57,11 +57,11 @@ export function CuratedOffers() {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Tag size={24} className="text-secondary" aria-hidden />
-          <h3 className="gova-section-heading gova-section-heading-secondary">
+          <h3 className="asol-section-heading asol-section-heading-secondary">
             {t("home.curated.title")}
           </h3>
         </div>
-        <span className="gova-accent-chip-tertiary">
+        <span className="asol-accent-chip-tertiary">
           {t("home.curated.limited")}
         </span>
       </div>
@@ -72,7 +72,7 @@ export function CuratedOffers() {
           return (
             <article
               key={product.id}
-              className="gova-card-tonal gova-card-tonal-secondary overflow-hidden transition-all active:scale-95"
+              className="asol-card-tonal asol-card-tonal-secondary overflow-hidden transition-all active:scale-95"
             >
               <div className="relative aspect-square">
                 <Image
@@ -84,7 +84,7 @@ export function CuratedOffers() {
                 />
                 <button
                   type="button"
-                  className="absolute top-2 start-2 w-8 h-8 rounded-full gova-surface-neutral/90 backdrop-blur flex items-center justify-center shadow-sm transition-transform active:scale-90"
+                  className="absolute top-2 start-2 w-8 h-8 rounded-full asol-surface-neutral/90 backdrop-blur flex items-center justify-center shadow-sm transition-transform active:scale-90"
                   style={{
                     color: product.favFilled
                       ? "var(--error)"
@@ -112,7 +112,7 @@ export function CuratedOffers() {
                   </span>
                   <button
                     type="button"
-                    className="w-8 h-8 rounded-lg flex items-center justify-center gova-accent-cta transition-transform active:scale-90"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center asol-accent-cta transition-transform active:scale-90"
                     aria-label={t("home.curated.addToCart")}
                   >
                     <ShoppingCart size={18} />
@@ -127,7 +127,7 @@ export function CuratedOffers() {
       <div className="flex justify-center pt-2">
         <button
           type="button"
-          className="gova-control px-6 rounded-full font-bold text-sm gova-surface-neutral text-primary transition-transform active:scale-95"
+          className="asol-control px-6 rounded-full font-bold text-sm asol-surface-neutral text-primary transition-transform active:scale-95"
         >
           {t("home.curated.showMore")}
         </button>

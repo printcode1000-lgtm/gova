@@ -66,7 +66,7 @@ export function RegistrationPageContent() {
         <AuthHero variant="registration" />
 
         <div
-          className="flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 w-full gova-auth-form-panel"
+          className="flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 w-full asol-auth-form-panel"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <div className="w-full max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl space-y-6 sm:space-y-8">

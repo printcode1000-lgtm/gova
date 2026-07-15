@@ -6,13 +6,13 @@
 | No database tokens in the browser | Turso credentials are server-only |
 | No Platform API at runtime | `TURSO_API_TOKEN` only in provisioning scripts |
 | Business APIs only | Structured JSON in/out |
-| CORS per deployment | Via `GOVA_CORS_ORIGINS` |
+| CORS per deployment | Via `ASOL_CORS_ORIGINS` |
 | Repository is server-only | `import 'server-only'` |
 | Secrets in Configuration only | Architecture Contract scan |
 
 ## CORS defaults
 
-When `GOVA_CORS_ORIGINS` is unset, dev defaults include localhost and Capacitor shell origins (`capacitor://localhost`, etc.).
+When `ASOL_CORS_ORIGINS` is unset, dev defaults include localhost and Capacitor shell origins (`capacitor://localhost`, etc.).
 
 ## Password handling
 

@@ -69,7 +69,7 @@ export function LoginPageContent() {
         <AuthHero variant="login" />
 
         <div
-          className="flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 w-full gova-auth-form-panel"
+          className="flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 w-full asol-auth-form-panel"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <div className="w-full max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl space-y-6 sm:space-y-8">
@@ -106,7 +106,7 @@ export function LoginPageContent() {
                           inputMode="tel"
                           maxLength={11}
                           placeholder={t('auth.login.phonePlaceholder')}
-                          data-gova-autofill="login-phone"
+                          data-asol-autofill="login-phone"
                           className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')}
                           value={field.value}
                           onChange={(e) =>
@@ -144,7 +144,7 @@ export function LoginPageContent() {
                           autoComplete="current-password"
                           type={showPassword ? 'text' : 'password'}
                           placeholder={t('auth.login.passwordPlaceholder')}
-                          data-gova-autofill="login-password"
+                          data-asol-autofill="login-password"
                           className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')}
                           value={field.value}
                           onChange={field.onChange}
@@ -186,7 +186,7 @@ export function LoginPageContent() {
 
                 <button
                   type="button"
-                  className="gova-auth-secondary-btn gova-control h-12 text-sm"
+                  className="asol-auth-secondary-btn asol-control h-12 text-sm"
                   onClick={() => {
                     startGuestSession();
                     router.push('/home');
@@ -204,7 +204,7 @@ export function LoginPageContent() {
                   <span className="w-full border-t border-outline-variant" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="gova-field-surface px-2 text-xs text-on-surface-variant uppercase">
+                  <span className="asol-field-surface px-2 text-xs text-on-surface-variant uppercase">
                     {t('auth.login.newHere')}
                   </span>
                 </div>
@@ -212,7 +212,7 @@ export function LoginPageContent() {
               <Link href="/registration" className="block">
                 <button
                   type="button"
-                  className="gova-auth-outline-btn gova-control h-12 text-sm group"
+                  className="asol-auth-outline-btn asol-control h-12 text-sm group"
                 >
                   {t('auth.login.createAccount')}
                   <ArrowRight className="h-4 w-4 inline ms-2 transition-transform group-hover:translate-x-1" />

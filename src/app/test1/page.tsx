@@ -23,11 +23,11 @@ export default function Test1Page() {
   };
 
   return (
-    <div className="gova-canvas py-12 px-4">
-      <div className="max-w-2xl mx-auto gova-card-tonal gova-card-tonal-primary p-8">
+    <div className="asol-canvas py-12 px-4">
+      <div className="max-w-2xl mx-auto asol-card-tonal asol-card-tonal-primary p-8">
         <h1 className="text-3xl font-bold text-on-surface mb-2 text-center">{t('test1.title')}</h1>
         <p className="text-center mb-8">
-          <span className="gova-accent-chip">{t('test1.badge')}</span>
+          <span className="asol-accent-chip">{t('test1.badge')}</span>
         </p>
 
         <form className="space-y-6">
@@ -35,7 +35,7 @@ export default function Test1Page() {
             <label className="block text-sm font-medium text-on-surface-variant mb-2">{t('test1.name')}</label>
             <input
               type="text"
-              className="gova-control gova-field-surface w-full border border-outline focus:ring-2 focus:ring-primary/25 focus:border-primary"
+              className="asol-control asol-field-surface w-full border border-outline focus:ring-2 focus:ring-primary/25 focus:border-primary"
               placeholder={t('test1.namePlaceholder')}
             />
           </div>
@@ -44,7 +44,7 @@ export default function Test1Page() {
             <label className="block text-sm font-medium text-on-surface-variant mb-2">{t('test1.address')}</label>
             <input
               type="text"
-              className="gova-control gova-field-surface w-full border border-outline focus:ring-2 focus:ring-primary/25 focus:border-primary"
+              className="asol-control asol-field-surface w-full border border-outline focus:ring-2 focus:ring-primary/25 focus:border-primary"
               placeholder={t('test1.addressPlaceholder')}
             />
           </div>
@@ -54,14 +54,14 @@ export default function Test1Page() {
               <label className="block text-sm font-medium text-on-surface-variant mb-2">{t('test1.date')}</label>
               <input
                 type="date"
-                className="gova-control gova-field-surface w-full border border-outline"
+                className="asol-control asol-field-surface w-full border border-outline"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-on-surface-variant mb-2">{t('test1.time')}</label>
               <input
                 type="time"
-                className="gova-control gova-field-surface w-full border border-outline"
+                className="asol-control asol-field-surface w-full border border-outline"
               />
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function Test1Page() {
             <label className="block text-sm font-medium text-on-surface-variant mb-2">{t('test1.password')}</label>
             <input
               type="password"
-              className="gova-control gova-field-surface w-full border border-outline focus:ring-2 focus:ring-primary/25"
+              className="asol-control asol-field-surface w-full border border-outline focus:ring-2 focus:ring-primary/25"
               placeholder={t('test1.passwordPlaceholder')}
             />
           </div>
@@ -79,14 +79,14 @@ export default function Test1Page() {
             <label className="block text-sm font-medium text-on-surface-variant mb-2">{t('test1.email')}</label>
             <input
               type="email"
-              className="gova-control gova-field-surface w-full border border-outline focus:ring-2 focus:ring-primary/25"
+              className="asol-control asol-field-surface w-full border border-outline focus:ring-2 focus:ring-primary/25"
               placeholder="example@email.com"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-on-surface-variant mb-2">{t('test1.uploadImages')}</label>
-            <label className="flex items-center justify-center w-full h-32 border-2 border-dashed border-outline rounded-xl cursor-pointer hover:border-primary transition-colors gova-card-tonal gova-card-tonal-tertiary">
+            <label className="flex items-center justify-center w-full h-32 border-2 border-dashed border-outline rounded-xl cursor-pointer hover:border-primary transition-colors asol-card-tonal asol-card-tonal-tertiary">
               <div className="text-center">
                 <svg
                   className="mx-auto h-12 w-12 text-on-surface-variant"
@@ -108,17 +108,17 @@ export default function Test1Page() {
             </label>
           </div>
 
-          <button type="button" className="gova-control w-full gova-accent-cta rounded-lg">
+          <button type="button" className="asol-control w-full asol-accent-cta rounded-lg">
             {t('test1.submit')}
           </button>
         </form>
 
         {selectedImages.length > 0 && (
-          <div className="mt-8 gova-section-tonal gova-section-tonal-secondary p-4 rounded-xl">
+          <div className="mt-8 asol-section-tonal asol-section-tonal-secondary p-4 rounded-xl">
             <h2 className="text-xl font-semibold text-on-surface mb-4">{t('test1.selectedImages')}</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {selectedImages.map((image, index) => (
-                <div key={index} className="relative gova-card-neutral overflow-hidden p-1">
+                <div key={index} className="relative asol-card-neutral overflow-hidden p-1">
                   <img
                     src={image}
                     alt={t('test1.imagePreview', { index: index + 1 })}

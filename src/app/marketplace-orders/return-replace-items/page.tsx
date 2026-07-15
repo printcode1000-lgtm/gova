@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 export default function Page() {
   const { t } = useTranslation();
   return (
-    <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
+    <div className="w-full asol-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
@@ -163,7 +163,7 @@ export default function Page() {
                             {t('marketplaceOrders.returnReplaceItems.submitRequest')}
                         </button>
 <p className="text-center text-[11px] text-on-surface-variant mt-4 px-4">
-                            By submitting, you agree to Gova's <a className="underline" href="#">{t('marketplaceOrders.returnReplaceItems.returnsPolicy')}</a> and <a className="underline" href="#">{t('marketplaceOrders.returnReplaceItems.termsOfService')}</a>.
+                            By submitting, you agree to Asol's <a className="underline" href="#">{t('marketplaceOrders.returnReplaceItems.returnsPolicy')}</a> and <a className="underline" href="#">{t('marketplaceOrders.returnReplaceItems.termsOfService')}</a>.
                         </p>
 </div>
 

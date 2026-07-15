@@ -9,4 +9,4 @@ export function setNativeInputValue(input: HTMLInputElement, value: string): voi
   input.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
-export const LOGIN_AUTOFILL_EVENT = 'gova:login-autofill';
+export const LOGIN_AUTOFILL_EVENT = 'asol:login-autofill';

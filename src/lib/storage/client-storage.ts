@@ -1,6 +1,6 @@
 'use client';
 
-import { govaDbClearAll } from '@/lib/gova-db';
+import { asolDbClearAll } from '@/lib/asol-db';
 
 function clearCookies(): void {
   if (typeof document === 'undefined') return;
@@ -33,10 +33,10 @@ async function clearIndexedDbDatabases(): Promise<void> {
 }
 
 export const CLEAR_STORAGE_WARNING =
-  'سيتم مسح كل البيانات المحلية (ملفات تعريف الارتباط وقاعدة GovaDB بما فيها جلسة الضيف وبيانات الإعداد). سيتم إعادة تحميل الصفحة. هل تريد المتابعة؟';
+  'سيتم مسح كل البيانات المحلية (ملفات تعريف الارتباط وقاعدة AsolDB بما فيها جلسة الضيف وبيانات الإعداد). سيتم إعادة تحميل الصفحة. هل تريد المتابعة؟';
 
 export async function clearAllClientStorage(): Promise<void> {
   clearCookies();
-  await govaDbClearAll();
+  await asolDbClearAll();
   await clearIndexedDbDatabases();
 }

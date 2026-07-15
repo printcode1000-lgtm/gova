@@ -41,4 +41,4 @@ Every service named in the source requirements is implemented by `MarketplaceOrd
 
 ## Verification status
 
-The module passes TypeScript checking, Gova architecture validation, executable SQLite integration tests, the full project test command, and the Next.js production build. The module test emits the number of generated audit events as an additional assertion that important paths are recorded.
+The module passes TypeScript checking, Asol architecture validation, executable SQLite integration tests, the full project test command, and the Next.js production build. The module test emits the number of generated audit events as an additional assertion that important paths are recorded.

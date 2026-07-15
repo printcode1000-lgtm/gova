@@ -2,13 +2,13 @@
 
 import { publicEnv } from '@/core/config/public-env';
 import {
-  GOVA_DB_STORES,
-  govaDbClearStore,
-  govaDbDelete,
-  govaDbGet,
-  govaDbGetAll,
-  govaDbSet,
-} from '@/lib/gova-db';
+  ASOL_DB_STORES,
+  asolDbClearStore,
+  asolDbDelete,
+  asolDbGet,
+  asolDbGetAll,
+  asolDbSet,
+} from '@/lib/asol-db';
 import {
   PAGE_SNAPSHOT_VERSION,
   type PageSnapshotFormField,
@@ -240,16 +240,16 @@ function isSnapshotCompatible(snapshot: PageSnapshotRecord, expectedVersion = PA
 export async function saveSnapshot(input: SavePageSnapshotInput): Promise<PageSnapshotRecord | null> {
   if (snapshotsPaused) return null;
   const snapshot = buildSnapshot(input);
-  await govaDbSet(GOVA_DB_STORES.PAGE_SNAPSHOTS, snapshot.key, snapshot);
+  await asolDbSet(ASOL_DB_STORES.PAGE_SNAPSHOTS, snapshot.key, snapshot);
   return snapshot;
 }
 
 export async function restoreSnapshot(input: RestorePageSnapshotInput): Promise<PageSnapshotRecord | null> {
   const key = createPageSnapshotKey(input);
-  const snapshot = await govaDbGet<PageSnapshotRecord>(GOVA_DB_STORES.PAGE_SNAPSHOTS, key);
+  const snapshot = await asolDbGet<PageSnapshotRecord>(ASOL_DB_STORES.PAGE_SNAPSHOTS, key);
   if (!snapshot) return null;
   if (!isSnapshotCompatible(snapshot, input.expectedVersion)) {
-    await govaDbDelete(GOVA_DB_STORES.PAGE_SNAPSHOTS, key);
+    await asolDbDelete(ASOL_DB_STORES.PAGE_SNAPSHOTS, key);
     return null;
   }
   return snapshot;
@@ -261,19 +261,19 @@ export async function hasSnapshot(input: RestorePageSnapshotInput): Promise<bool
 
 export async function deleteSnapshot(input: PageSnapshotIdentity | string): Promise<void> {
   const key = typeof input === 'string' ? input : createPageSnapshotKey(input);
-  await govaDbDelete(GOVA_DB_STORES.PAGE_SNAPSHOTS, key);
+  await asolDbDelete(ASOL_DB_STORES.PAGE_SNAPSHOTS, key);
 }
 
 export async function clearSnapshots(userId?: string): Promise<void> {
   if (!userId) {
-    await govaDbClearStore(GOVA_DB_STORES.PAGE_SNAPSHOTS);
+    await asolDbClearStore(ASOL_DB_STORES.PAGE_SNAPSHOTS);
     return;
   }
-  const snapshots = await govaDbGetAll<PageSnapshotRecord>(GOVA_DB_STORES.PAGE_SNAPSHOTS);
+  const snapshots = await asolDbGetAll<PageSnapshotRecord>(ASOL_DB_STORES.PAGE_SNAPSHOTS);
   await Promise.all(
     snapshots
       .filter((row) => row.value.userId === userId)
-      .map((row) => govaDbDelete(GOVA_DB_STORES.PAGE_SNAPSHOTS, row.key)),
+      .map((row) => asolDbDelete(ASOL_DB_STORES.PAGE_SNAPSHOTS, row.key)),
   );
 }
 
@@ -286,9 +286,9 @@ export function resumeSnapshot(): void {
 }
 
 export async function cleanupExpiredSnapshots(): Promise<number> {
-  const snapshots = await govaDbGetAll<PageSnapshotRecord>(GOVA_DB_STORES.PAGE_SNAPSHOTS);
+  const snapshots = await asolDbGetAll<PageSnapshotRecord>(ASOL_DB_STORES.PAGE_SNAPSHOTS);
   const expired = snapshots.filter((row) => !isSnapshotCompatible(row.value));
-  await Promise.all(expired.map((row) => govaDbDelete(GOVA_DB_STORES.PAGE_SNAPSHOTS, row.key)));
+  await Promise.all(expired.map((row) => asolDbDelete(ASOL_DB_STORES.PAGE_SNAPSHOTS, row.key)));
   return expired.length;
 }
 

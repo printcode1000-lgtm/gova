@@ -6,7 +6,7 @@
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
     "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
-    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
     "groupKey": "orders",
     "sound": "default"
   },
@@ -17,7 +17,7 @@
     "priority": "normal",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
     "targets": ["center", "badge", "popup", "orders"],
-    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
     "groupKey": "orders",
     "sound": "default"
   },
@@ -28,7 +28,7 @@
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
     "targets": ["center", "badge", "popup", "orders"],
-    "deepLink": { "href": "/orders/{{orderId}}", "label": "Track shipment" },
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Track shipment" },
     "groupKey": "shipments",
     "sound": "default"
   },
@@ -39,7 +39,7 @@
     "priority": "normal",
     "channels": ["in_app"],
     "targets": ["center", "badge", "orders"],
-    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
     "groupKey": "orders",
     "sound": "default"
   },
@@ -50,7 +50,7 @@
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
     "targets": ["center", "badge", "popup", "orders"],
-    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
     "groupKey": "orders",
     "sound": "urgent"
   },
@@ -61,7 +61,7 @@
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
     "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
-    "deepLink": { "href": "/orders/{{orderId}}", "label": "Review return" },
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Review return" },
     "groupKey": "returns",
     "sound": "default"
   },
@@ -83,7 +83,7 @@
     "priority": "normal",
     "channels": ["in_app"],
     "targets": ["center", "badge", "orders", "seller_dashboard"],
-    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
     "groupKey": "payments",
     "sound": "default"
   },
@@ -99,7 +99,7 @@
     "sound": "default"
   },
   "system.info": {
-    "title": "GOVA notice",
+    "title": "ASOL notice",
     "body": "{{message}}",
     "category": "system",
     "priority": "low",

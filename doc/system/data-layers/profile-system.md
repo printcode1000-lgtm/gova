@@ -62,7 +62,7 @@ Removed profile JSON columns:
 Profile UI
   -> Profile hooks
   -> ProfileApiService
-  -> GovaApiClient
+  -> AsolApiClient
   -> /api/profile/*
   -> ProfileService
   -> Query/Command

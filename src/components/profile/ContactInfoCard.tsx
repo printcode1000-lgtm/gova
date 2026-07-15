@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { GovaMap, markerAt, createOpenStreetMapProvider, createBrowserGpsProvider } from '@/components/ui/GovaMap';
+import { AsolMap, markerAt, createOpenStreetMapProvider, createBrowserGpsProvider } from '@/components/ui/AsolMap';
 import type { LocationEntry } from '@/features/profile/entities/profile-contacts.entity';
 
 const SOCIAL_PLATFORMS = [
@@ -1031,7 +1031,7 @@ export function ContactInfoCard({
                           />
                           {openMapId === loc.id ? (
                             <div className="space-y-2">
-                              <GovaMap
+                              <AsolMap
                                 id={`map-${loc.id}`}
                                 modes={['picker']}
                                 providers={{
@@ -1113,7 +1113,7 @@ export function ContactInfoCard({
                             <button
                               type="button"
                               onClick={() => setOpenMapId(loc.id)}
-                              className="gova-control border border-input px-4 font-medium"
+                              className="asol-control border border-input px-4 font-medium"
                             >
                               {locale === 'ar' ? 'تحديد الموقع على الخريطة' : 'Set location on map'}
                             </button>

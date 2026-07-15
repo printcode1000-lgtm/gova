@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 import { runAllSchemaSyncs } from '../src/core/provisioning/schema-sync';
 
-process.env.GOVA_PROVISIONING = 'true';
+process.env.ASOL_PROVISIONING = 'true';
 
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });

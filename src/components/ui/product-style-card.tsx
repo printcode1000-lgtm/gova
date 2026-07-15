@@ -67,7 +67,7 @@ export function ProductStyleCard({
               onOrderChange(next);
             }}
             disabled={disabled}
-            className="gova-control gova-field-surface h-9 w-20 border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="asol-control asol-field-surface h-9 w-20 border border-input px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </label>
       </div>

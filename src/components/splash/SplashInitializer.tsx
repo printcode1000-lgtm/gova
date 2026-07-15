@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useTranslation } from '@/lib/i18n';
-import { govaDbGet, GOVA_DB_STORES } from '@/lib/gova-db';
+import { asolDbGet, ASOL_DB_STORES } from '@/lib/asol-db';
 import { runInitialization } from '@/lib/initialization/initialization';
 import { otaUpdateService } from '@/features/ota/services/ota-update-service';
 import type { OtaDownloadProgress } from '@/features/ota/types/ota.types';
 
 import ProgressIndicator from './ProgressIndicator';
 
-const SPLASH_NAV_TOGGLE_KEY = 'gova-dev-splash-nav-toggle';
+const SPLASH_NAV_TOGGLE_KEY = 'asol-dev-splash-nav-toggle';
 
 function formatBytes(bytes?: number): string | null {
   if (!bytes) return null;
@@ -76,7 +76,7 @@ export default function SplashInitializer() {
   useEffect(() => {
     if (isComplete && progress === 100) {
       const checkNav = async () => {
-        const stored = await govaDbGet<boolean>(GOVA_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY);
+        const stored = await asolDbGet<boolean>(ASOL_DB_STORES.APP_SETTINGS, SPLASH_NAV_TOGGLE_KEY);
         const isNavEnabled = stored !== false;
         if (isNavEnabled) {
           router.replace('/home');

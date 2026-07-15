@@ -29,7 +29,7 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-import { GOVA_DB_STORES, govaDbDelete } from "@/lib/gova-db";
+import { ASOL_DB_STORES, asolDbDelete } from "@/lib/asol-db";
 
 interface ResolvedItem {
   productId: string;
@@ -205,8 +205,8 @@ export function SuperAdminFeaturedMarqueePage() {
       );
 
       try {
-        await govaDbDelete(
-          GOVA_DB_STORES.APP_SETTINGS,
+        await asolDbDelete(
+          ASOL_DB_STORES.APP_SETTINGS,
           FEATURED_MARQUEE_CACHE_KEY,
         );
       } catch (cacheError) {
@@ -516,7 +516,7 @@ export function SuperAdminFeaturedMarqueePage() {
             <Eye className="h-5 w-5 text-primary" />
             <h2 className="font-semibold">المعاينة الحية</h2>
           </div>
-          <div className="gova-section-tonal gova-section-tonal-tertiary mx-1 rounded-xl p-4">
+          <div className="asol-section-tonal asol-section-tonal-tertiary mx-1 rounded-xl p-4">
             <FeaturedMarquee config={previewConfig} />
           </div>
         </section>

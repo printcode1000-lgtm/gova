@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// GoVa Operation Monitor — TanStack Query Cache Observer
+// ASOL Operation Monitor — TanStack Query Cache Observer
 // Attaches to the QueryClient and translates every cache lifecycle event into
 // an OperationRecord emitted to the monitor store.
 // ─────────────────────────────────────────────────────────────────────────────

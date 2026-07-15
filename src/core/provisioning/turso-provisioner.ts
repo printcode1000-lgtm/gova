@@ -9,9 +9,9 @@ import { SQLITE_DIRECTORY } from '@/core/database/environment';
 import { writeTursoRuntimeCredentials, writeTursoProfileRuntimeCredentials, writeTursoMarketplaceOrdersRuntimeCredentials, readOptionalEnv } from '@/core/config/server-env.values';
 import type { TursoProvisionResult } from './types';
 
-const DEFAULT_USERS_DB_NAME = 'gova-db';
-const DEFAULT_PROFILE_DB_NAME = 'gova-profile';
-const DEFAULT_MARKETPLACE_ORDERS_DB_NAME = 'gova-marketplace-orders';
+const DEFAULT_USERS_DB_NAME = 'asol-db';
+const DEFAULT_PROFILE_DB_NAME = 'asol-profile';
+const DEFAULT_MARKETPLACE_ORDERS_DB_NAME = 'asol-marketplace-orders';
 
 function updateEnvFileKeys(
   filePath: string,

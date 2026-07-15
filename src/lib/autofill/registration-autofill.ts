@@ -53,21 +53,21 @@ export async function fillRegistrationForm(): Promise<RegistrationAutofillOutcom
     let filled = 0;
 
     // Phone first (required for verification)
-    const phoneInput = document.querySelector('[data-gova-autofill="registration-phone"]') as HTMLInputElement;
+    const phoneInput = document.querySelector('[data-asol-autofill="registration-phone"]') as HTMLInputElement;
     if (phoneInput) {
       setNativeInputValue(phoneInput, randomPhone());
       filled++;
     }
 
     // Password
-    const passwordInput = document.querySelector('[data-gova-autofill="registration-password"]') as HTMLInputElement;
+    const passwordInput = document.querySelector('[data-asol-autofill="registration-password"]') as HTMLInputElement;
     if (passwordInput) {
       const pwd = randomPassword();
       setNativeInputValue(passwordInput, pwd);
       filled++;
 
       // Confirm Password (must match)
-      const confirmPasswordInput = document.querySelector('[data-gova-autofill="registration-confirm-password"]') as HTMLInputElement;
+      const confirmPasswordInput = document.querySelector('[data-asol-autofill="registration-confirm-password"]') as HTMLInputElement;
       if (confirmPasswordInput) {
         setNativeInputValue(confirmPasswordInput, pwd);
         filled++;
@@ -75,7 +75,7 @@ export async function fillRegistrationForm(): Promise<RegistrationAutofillOutcom
     }
 
     // Email
-    const emailInput = document.querySelector('[data-gova-autofill="registration-email"]') as HTMLInputElement;
+    const emailInput = document.querySelector('[data-asol-autofill="registration-email"]') as HTMLInputElement;
     if (emailInput) {
       setNativeInputValue(emailInput, randomEmail());
       filled++;
@@ -85,7 +85,7 @@ export async function fillRegistrationForm(): Promise<RegistrationAutofillOutcom
     await new Promise(resolve => setTimeout(resolve, 200));
 
     // Click Verify Phone Button
-    const verifyButton = document.querySelector('[data-gova-autofill="registration-verify-phone"]') as HTMLButtonElement;
+    const verifyButton = document.querySelector('[data-asol-autofill="registration-verify-phone"]') as HTMLButtonElement;
     if (verifyButton && !verifyButton.disabled) {
       verifyButton.click();
       filled++;

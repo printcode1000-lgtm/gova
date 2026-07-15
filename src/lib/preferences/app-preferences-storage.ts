@@ -1,4 +1,4 @@
-import { govaDbGet, govaDbSet, GOVA_DB_STORES } from '@/lib/gova-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/lib/i18n/constants';
 import type { Locale } from '@/lib/i18n/types';
 
@@ -31,7 +31,7 @@ const APP_PREFS_DB_KEY = 'app-preferences';
 
 export async function readAppPreferencesFromDb(): Promise<AppPreferences> {
   try {
-    const raw = await govaDbGet<Partial<AppPreferences>>(GOVA_DB_STORES.APP_SETTINGS, APP_PREFS_DB_KEY);
+    const raw = await asolDbGet<Partial<AppPreferences>>(ASOL_DB_STORES.APP_SETTINGS, APP_PREFS_DB_KEY);
     return normalizeAppPreferences(raw);
   } catch {
     return { ...DEFAULT_APP_PREFERENCES };
@@ -39,8 +39,8 @@ export async function readAppPreferencesFromDb(): Promise<AppPreferences> {
 }
 
 export async function writeAppPreferencesToDb(prefs: AppPreferences): Promise<void> {
-  await govaDbSet<AppPreferences>(
-    GOVA_DB_STORES.APP_SETTINGS,
+  await asolDbSet<AppPreferences>(
+    ASOL_DB_STORES.APP_SETTINGS,
     APP_PREFS_DB_KEY,
     normalizeAppPreferences(prefs),
   );

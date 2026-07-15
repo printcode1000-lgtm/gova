@@ -24,5 +24,5 @@ export const DEFAULT_NOTIFICATION_PRIORITY: NotificationPriority =
 
 export const DEFAULT_NOTIFICATION_SOUND: NotificationSound = NotificationSounds.Default;
 
-export const NOTIFICATION_CHANGED_EVENT = "gova:notifications:changed";
-export const NOTIFICATION_POPUP_EVENT = "gova:notifications:popup";
+export const NOTIFICATION_CHANGED_EVENT = "asol:notifications:changed";
+export const NOTIFICATION_POPUP_EVENT = "asol:notifications:popup";

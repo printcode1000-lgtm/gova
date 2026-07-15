@@ -1,11 +1,11 @@
 # Network Status System
 
-GOVA has a centralized, platform-agnostic network status system that covers every page and every Business API request. It works in the browser, static exports, Android, and iOS without importing Capacitor into application code.
+ASOL has a centralized, platform-agnostic network status system that covers every page and every Business API request. It works in the browser, static exports, Android, and iOS without importing Capacitor into application code.
 
 The system has four responsibilities:
 
 1. Detect whether the device is offline.
-2. Verify that the GOVA backend is actually reachable.
+2. Verify that the ASOL backend is actually reachable.
 3. Show a global, translated status banner on every page.
 4. Convert low-level fetch failures into consistent application errors.
 
@@ -18,11 +18,11 @@ Root Layout
     → visibility changes
     → periodic health check
       → NetworkApiService
-        → GovaApiClient
+        → AsolApiClient
           → GET /api/health
 
 Any Business API request
-  → GovaApiClient
+  → AsolApiClient
     → device offline check
     → HTTP request
     → normalized network error
@@ -32,10 +32,10 @@ NetworkStatusBanner
   ← translated Arabic/English messages
 ```
 
-The feature follows the enforced GOVA data path:
+The feature follows the enforced ASOL data path:
 
 ```text
-UI → Hook / Provider → Client Service → GovaApiClient → Business API
+UI → Hook / Provider → Client Service → AsolApiClient → Business API
 ```
 
 No component calls `fetch()` directly.
@@ -47,7 +47,7 @@ The provider exposes four states:
 | Status | Meaning |
 |---|---|
 | `checking` | Initial connectivity check is running. |
-| `online` | The device is online and the GOVA backend is reachable. |
+| `online` | The device is online and the ASOL backend is reachable. |
 | `offline` | `navigator.onLine` reports that the device has no network connection. |
 | `server-unreachable` | The device reports a network connection, but the backend cannot be reached. This includes DNS, TLS, CORS, timeout, and server availability failures. |
 
@@ -99,7 +99,7 @@ The endpoint does not access a database and does not require authentication. Its
 
 During a gradual deployment, an older backend may return an HTTP `404` because it does not have `/api/health` yet. The network service treats any valid HTTP response as proof that the server is reachable. Transport failures have no HTTP status and remain connectivity failures.
 
-The static build removes `src/app/api` from the exported client. Therefore, static and Capacitor builds call the remote backend configured by `NEXT_PUBLIC_GOVA_API_BASE_URL`.
+The static build removes `src/app/api` from the exported client. Therefore, static and Capacitor builds call the remote backend configured by `NEXT_PUBLIC_ASOL_API_BASE_URL`.
 
 ## Global Banner
 
@@ -115,7 +115,7 @@ Displayed when the device reports no network connection:
 
 Displayed when the device is connected but the backend health check fails:
 
-> You are connected, but the GOVA server is currently unavailable.
+> You are connected, but the ASOL server is currently unavailable.
 
 ### Connection restored
 
@@ -134,7 +134,7 @@ The banner:
 
 ## API Error Normalization
 
-`GovaApiClient` protects every Business API request.
+`AsolApiClient` protects every Business API request.
 
 ### Device offline
 
@@ -168,7 +168,7 @@ Browser `fetch()` commonly throws a `TypeError` for failures such as:
 - unavailable backend;
 - loss of connectivity during a request.
 
-GovaApiClient converts that error to:
+AsolApiClient converts that error to:
 
 ```typescript
 NetworkUnavailableError
@@ -195,7 +195,7 @@ Valid HTTP error responses continue to use `ApiError` with their original status
 Failed Business API requests are logged without request bodies:
 
 ```text
-[GovaApiClient] POST /api/auth/login failed: Unable to reach the server
+[AsolApiClient] POST /api/auth/login failed: Unable to reach the server
 ```
 
 Phone numbers, passwords, tokens, and request payloads are never logged.
@@ -203,14 +203,14 @@ Phone numbers, passwords, tokens, and request payloads are never logged.
 In Android Studio Logcat, filter by:
 
 ```text
-package:com.gova.app
+package:hgh.asol.app
 ```
 
 Useful log tags and text:
 
 ```text
 Capacitor/Console
-GovaApiClient
+AsolApiClient
 ```
 
 Health checks suppress their own console errors because they run periodically and the global banner already reports their state.
@@ -247,8 +247,8 @@ src/
 │   └── NetworkStatusBanner.tsx
 ├── core/api/
 │   ├── api-error.ts
-│   ├── gova-api-client.ts
-│   └── gova-api-routes.ts
+│   ├── asol-api-client.ts
+│   └── asol-api-routes.ts
 ├── features/network/
 │   ├── hooks/
 │   │   └── use-network-status.tsx
@@ -276,7 +276,7 @@ Do not mount a separate provider on individual pages. Multiple providers would c
 
 ## Using the Status in a Component
 
-Most components do not need to check connectivity manually because GovaApiClient and the global banner already handle it.
+Most components do not need to check connectivity manually because AsolApiClient and the global banner already handle it.
 
 When a component needs to change its presentation while offline:
 
@@ -338,7 +338,7 @@ http://localhost
 ionic://localhost
 ```
 
-If `GOVA_CORS_ORIGINS` is explicitly configured in Vercel, it replaces the default origin list. Include every required origin in that variable.
+If `ASOL_CORS_ORIGINS` is explicitly configured in Vercel, it replaces the default origin list. Include every required origin in that variable.
 
 ## Deployment
 
@@ -412,7 +412,7 @@ The device cannot resolve the backend hostname. Verify that the phone itself has
 
 Check:
 
-1. `NEXT_PUBLIC_GOVA_API_BASE_URL` in the built client.
+1. `NEXT_PUBLIC_ASOL_API_BASE_URL` in the built client.
 2. `GET /api/health` on the deployed backend.
 3. CORS response headers for the current origin.
 4. DNS and TLS access from the device.
@@ -426,7 +426,7 @@ This is expected on some Wi-Fi networks. `navigator.onLine` only reports network
 | Do | Do not |
 |---|---|
 | Use `useNetworkStatus()` when UI needs connectivity state. | Read `navigator.onLine` independently in pages. |
-| Send all HTTP traffic through GovaApiClient. | Call `fetch()` from components, hooks, or services. |
+| Send all HTTP traffic through AsolApiClient. | Call `fetch()` from components, hooks, or services. |
 | Keep one provider in the root layout. | Mount providers per page. |
 | Add messages to Arabic and English dictionaries. | Hardcode user-facing network text. |
 | Log method, route, and safe error details. | Log credentials, request bodies, or personal data. |

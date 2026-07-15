@@ -1,12 +1,12 @@
 /**
- * GOVA Architecture Contract — layer definitions.
+ * ASOL Architecture Contract — layer definitions.
  * This file is the single source of truth for automated architecture checks.
  */
 
 export type ArchitectureLayer =
   | 'configuration'
-  | 'gova-http-transport'
-  | 'gova-api-client'
+  | 'asol-http-transport'
+  | 'asol-api-client'
   | 'api-shared'
   | 'ui'
   | 'hooks'
@@ -22,8 +22,8 @@ export type ArchitectureLayer =
 
 export const LAYER_LABELS: Record<ArchitectureLayer, string> = {
   configuration: 'Configuration Layer',
-  'gova-http-transport': 'HTTP Transport (fetch gateway)',
-  'gova-api-client': 'GovaApiClient',
+  'asol-http-transport': 'HTTP Transport (fetch gateway)',
+  'asol-api-client': 'AsolApiClient',
   'api-shared': 'API Shared Utilities',
   ui: 'UI Layer',
   hooks: 'Hooks Layer',
@@ -47,7 +47,7 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/modules/marketplace-orders/db/config.ts',
 ]);
 
-export const ALLOWED_FETCH_FILES = new Set(['src/core/api/gova-http-transport.ts']);
+export const ALLOWED_FETCH_FILES = new Set(['src/core/api/asol-http-transport.ts']);
 
 export const ALLOWED_DRIZZLE_ORM_FILES_PATTERN = [
   /^src\/core\/database\//,
@@ -74,8 +74,8 @@ export const ALLOWED_SQL_FILES_PATTERN = [
 
 /** Client-side IndexedDB utilities — not the server Database Client layer. */
 const CLIENT_STORAGE_PATHS = new Set([
-  'src/core/database/gova-db-persister.ts',
-  'src/lib/gova-db/index.ts',
+  'src/core/database/asol-db-persister.ts',
+  'src/lib/asol-db/index.ts',
 ]);
 
 const SERVER_ONLY_ALLOWED_LAYERS: ArchitectureLayer[] = [
@@ -110,8 +110,8 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (ALLOWED_PROCESS_ENV_FILES.has(p)) return 'configuration';
   if (CLIENT_STORAGE_PATHS.has(p)) return 'shared';
   if (p === 'src/middleware.ts') return 'configuration';
-  if (p === 'src/core/api/gova-http-transport.ts') return 'gova-http-transport';
-  if (p === 'src/core/api/gova-api-client.ts') return 'gova-api-client';
+  if (p === 'src/core/api/asol-http-transport.ts') return 'asol-http-transport';
+  if (p === 'src/core/api/asol-api-client.ts') return 'asol-api-client';
   if (p.startsWith('src/core/api/')) return 'api-shared';
   if (p.startsWith('src/core/config/')) return 'configuration';
   if (p.startsWith('src/modules/marketplace-orders/db/')) return 'database-client';
@@ -202,7 +202,7 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   if (resolved.includes('/services/') && (resolved.includes('-api-service') || resolved.endsWith('/auth-service') || resolved.endsWith('/session-service'))) {
     return 'client-services';
   }
-  if (resolved.includes('/core/database/gova-db-persister') || resolved.startsWith('src/lib/gova-db/')) {
+  if (resolved.includes('/core/database/asol-db-persister') || resolved.startsWith('src/lib/asol-db/')) {
     return 'shared';
   }
   if (resolved.includes('/core/database/db-client') || resolved.includes('/core/database/sqlite-db-client') || resolved.includes('/core/database/profile-db-client') || resolved.includes('/core/database/profile-sqlite-db-client')) {
@@ -211,7 +211,7 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   if (resolved.includes('/core/database/') || resolved === 'src/lib/db/turso.ts' || resolved === 'src/lib/db/turso-profile.ts') {
     return 'database-client';
   }
-  if (resolved.includes('/core/api/gova-api-client') || resolved === 'src/core/api') return 'gova-api-client';
+  if (resolved.includes('/core/api/asol-api-client') || resolved === 'src/core/api') return 'asol-api-client';
   if (resolved.includes('/core/api/')) return 'api-shared';
   if (resolved.includes('/hooks/')) return 'hooks';
   if (resolved.startsWith('src/components/')) return 'ui';
@@ -269,10 +269,10 @@ export function getForbiddenImportViolation(
   if (importerLayer === 'business-api' && target === 'server-services') return null;
   if (importerLayer === 'hooks' && target === 'client-services') return null;
   if (importerLayer === 'ui' && target === 'hooks') return null;
-  if (importerLayer === 'client-services' && target === 'gova-api-client') return null;
-  if (importerLayer === 'gova-api-client' && target === 'gova-http-transport') return null;
-  if (importerLayer === 'gova-api-client' && target === 'configuration') return null;
-  if (importerLayer === 'dev-tools' && (target === 'gova-api-client' || target === 'configuration')) return null;
+  if (importerLayer === 'client-services' && target === 'asol-api-client') return null;
+  if (importerLayer === 'asol-api-client' && target === 'asol-http-transport') return null;
+  if (importerLayer === 'asol-api-client' && target === 'configuration') return null;
+  if (importerLayer === 'dev-tools' && (target === 'asol-api-client' || target === 'configuration')) return null;
   if (importerLayer === 'shared' && target !== 'database-client' && target !== 'repository') return null;
 
   if (forbidden.includes(target)) {

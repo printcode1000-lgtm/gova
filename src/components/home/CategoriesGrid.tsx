@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { CATEGORY_CONSTANTS, type CategoryDisplay } from '@/features/categories';
 import { TrendingRibbon, type TrendingRibbonConfig } from '@/components/ui/TrendingRibbon';
 
-const CATEGORY_RINGS = ['gova-ring-primary', 'gova-ring-secondary', 'gova-ring-tertiary', 'gova-ring-error'] as const;
+const CATEGORY_RINGS = ['asol-ring-primary', 'asol-ring-secondary', 'asol-ring-tertiary', 'asol-ring-error'] as const;
 
 function getCategoryHref(cat: CategoryDisplay): string {
   if (cat.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) {

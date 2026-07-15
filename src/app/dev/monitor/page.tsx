@@ -715,7 +715,7 @@ export default function MonitorPage() {
       {/* ─── HEADER ─── */}
       <header className="header no-print">
         <div className="header-title">
-          <h1>GoVa Operation Monitor</h1>
+          <h1>ASOL Operation Monitor</h1>
           {isLive && <span className="badge-live">LIVE MONITORING</span>}
         </div>
         <div className="header-actions">
@@ -916,7 +916,7 @@ export default function MonitorPage() {
               <option value="">All Cache Sources</option>
               <option value="Memory">Memory Cache</option>
               <option value="IndexedDB">IndexedDB</option>
-              <option value="HTTP">HTTP (GovaApiClient)</option>
+              <option value="HTTP">HTTP (AsolApiClient)</option>
               <option value="Database">Database Source</option>
             </select>
           </div>
@@ -1137,7 +1137,7 @@ export default function MonitorPage() {
                 </div>
                 <div className="flame-chart">
                   {/* We group flowOps by layers to construct rows */}
-                  {(['ui', 'hook', 'service', 'gova-api', 'query', 'repository', 'database', 'cache'] as LayerName[]).map((layer) => {
+                  {(['ui', 'hook', 'service', 'asol-api', 'query', 'repository', 'database', 'cache'] as LayerName[]).map((layer) => {
                     const layerItems = flowOps.filter((o) => resolveMonitorLayer(o) === layer);
 
                     // Calculate timing bounds of the entire flow
@@ -1242,7 +1242,7 @@ export default function MonitorPage() {
                       ui: 50,
                       hook: 150,
                       service: 250,
-                      'gova-api': 350,
+                      'asol-api': 350,
                       query: 450,
                       repository: 550,
                       database: 650,
@@ -1565,7 +1565,7 @@ export default function MonitorPage() {
 
             {activeOp.httpRoute && (
               <div className="detail-section">
-                <div className="detail-section-title">HTTP Request (GovaApiClient)</div>
+                <div className="detail-section-title">HTTP Request (AsolApiClient)</div>
                 <pre className="code-block">{`${activeOp.httpMethod ?? 'GET'} ${activeOp.httpRoute}`}</pre>
               </div>
             )}

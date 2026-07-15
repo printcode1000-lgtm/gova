@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { SchemaSyncReport } from '@/core/provisioning/types';
-import { govaApi } from '@/core/api';
+import { asolApi } from '@/core/api';
 
 export function SchemaSyncPanel() {
   const [report, setReport] = useState<SchemaSyncReport | null>(null);
@@ -10,7 +10,7 @@ export function SchemaSyncPanel() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    govaApi
+    asolApi
       .getPublicJson<SchemaSyncReport>('/sync_data/schema-sync-report.json')
       .then((data) => {
         setReport(data);
@@ -33,7 +33,7 @@ export function SchemaSyncPanel() {
         <div className="detail-section-title">Schema Sync</div>
         <p style={{ color: '#f97316' }}>{error}</p>
         <p style={{ opacity: 0.7, fontSize: 13 }}>
-          Run <code>npm run db:schema:sync</code> or deploy the GOVA backend to generate the report.
+          Run <code>npm run db:schema:sync</code> or deploy the ASOL backend to generate the report.
         </p>
       </div>
     );

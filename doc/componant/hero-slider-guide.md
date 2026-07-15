@@ -256,7 +256,7 @@ The super-admin page also controls `checkIntervalMinutes` and displays version/u
 The cached record is stored in:
 
 ```text
-IndexedDB database: GovaDB
+IndexedDB database: AsolDB
 Object store: appSettings
 Key: advertisements:home-hero-slider:v3
 ```

@@ -5,7 +5,7 @@
 | Repository | Mock `IDatabaseClient` or in-memory Drizzle |
 | Server Service | Mock `IUserRepository` / `IProfileRepository` |
 | Business API | Integration tests against route handlers + test DB |
-| Client Service | Mock `govaApi` methods |
+| Client Service | Mock `asolApi` methods |
 | Hook | Mock service interface + `QueryClientProvider` |
 | UI | Render with pre-seeded `QueryClient` data |
 

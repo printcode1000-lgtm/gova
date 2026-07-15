@@ -110,20 +110,20 @@ function checkFile(filePath: string): void {
 
   if (/\bfetch\s*\(/.test(content) && !ALLOWED_FETCH_FILES.has(fileRel)) {
     addViolation(
-      'gova-api-client',
+      'asol-api-client',
       filePath,
-      'fetch() used outside gova-http-transport.ts.',
-      'Use govaApi from @/core/api.'
+      'fetch() used outside asol-http-transport.ts.',
+      'Use asolApi from @/core/api.'
     );
   }
 
   if (/\baxios\b/.test(content)) {
     if (/from\s+['"]axios['"]/.test(content) || /require\(['"]axios['"]\)/.test(content)) {
-      addViolation('gova-api-client', filePath, 'Direct HTTP client used outside GovaApiClient.', 'Use govaApi.');
+      addViolation('asol-api-client', filePath, 'Direct HTTP client used outside AsolApiClient.', 'Use asolApi.');
     }
   }
   if (/\bXMLHttpRequest\b/.test(content) && !/LAYER_LABELS|Architecture Contract|Forbidden/.test(content)) {
-    addViolation('gova-api-client', filePath, 'Direct HTTP client used outside GovaApiClient.', 'Use govaApi.');
+    addViolation('asol-api-client', filePath, 'Direct HTTP client used outside AsolApiClient.', 'Use asolApi.');
   }
 
   if (/from\s+['"]drizzle-orm/.test(content) || /require\(['"]drizzle-orm/.test(content)) {
@@ -185,7 +185,7 @@ function checkFile(filePath: string): void {
     for (const imp of extractImports(content)) {
       const target = importTargetLayer(imp);
       if (target === 'repository' || target === 'operations' || target === 'server-services' || target === 'database-client') {
-        addViolation(layer, filePath, `Client Component imports ${imp}.`, 'Use Client Services + GovaApiClient.');
+        addViolation(layer, filePath, `Client Component imports ${imp}.`, 'Use Client Services + AsolApiClient.');
       }
       if (imp === 'server-only') {
         addViolation(layer, filePath, 'Client Component imports server-only.', 'Forbidden.');
@@ -363,7 +363,7 @@ function getAllowedHint(layer: ArchitectureLayer, target: ArchitectureLayer | 'f
   const hints: Partial<Record<ArchitectureLayer, string>> = {
     ui: 'UI → Hooks only.',
     hooks: 'Hooks → Client Services only.',
-    'client-services': 'Client Services → GovaApiClient only.',
+    'client-services': 'Client Services → AsolApiClient only.',
     'business-api': 'Business API → Server Services only.',
     'server-services': 'Server Services → Query / Command only.',
     operations: 'Query / Command → Repository only.',
@@ -377,7 +377,7 @@ function printReport(): void {
     'UI Layer',
     'Hooks Layer',
     'Client Services',
-    'GovaApiClient',
+    'AsolApiClient',
     'Business APIs',
     'Server Services',
     'Query Layer',
@@ -387,7 +387,7 @@ function printReport(): void {
     'SQLite Rules',
     'Turso Rules',
     'No SQL Outside Repository',
-    'No fetch Outside GovaApiClient',
+    'No fetch Outside AsolApiClient',
     'No Secrets In Client',
     'No Drizzle Outside Repository',
     'No Invalid Imports',

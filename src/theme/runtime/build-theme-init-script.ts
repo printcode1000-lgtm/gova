@@ -3,7 +3,7 @@ import { THEME_COLOR_LIGHT } from './types';
 /**
  * Inline script executed before paint.
  * Sets default light theme attributes — actual preferences are
- * loaded asynchronously from GovaDB by ThemeProvider after hydration.
+ * loaded asynchronously from AsolDB by ThemeProvider after hydration.
  */
 export function buildThemeInitScript(): string {
   const lightColor = JSON.stringify(THEME_COLOR_LIGHT);

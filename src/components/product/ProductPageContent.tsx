@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Copy } from "lucide-react";
 
-import { ApiError, govaApi } from "@/core/api";
+import { ApiError, asolApi } from "@/core/api";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useTranslation } from "@/lib/i18n";
@@ -103,14 +103,14 @@ export function ProductPageContent() {
         const sub = loadedProduct?.subcategoryId ?? initialSub;
         let loadedStyle: ProductStyleFile;
         try {
-          loadedStyle = await govaApi.getPublicJson<ProductStyleFile>(
+          loadedStyle = await asolApi.getPublicJson<ProductStyleFile>(
             `/product/style/${encodeURIComponent(main)}__${encodeURIComponent(sub)}.json`,
           );
         } catch (styleError) {
           if (!(styleError instanceof ApiError) || styleError.status !== 404) {
             throw styleError;
           }
-          loadedStyle = await govaApi.getPublicJson<ProductStyleFile>(
+          loadedStyle = await asolApi.getPublicJson<ProductStyleFile>(
             "/product/style/default.json",
           );
         }

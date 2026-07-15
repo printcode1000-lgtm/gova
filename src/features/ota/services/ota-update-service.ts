@@ -1,6 +1,6 @@
 import { publicEnv } from '@/core/config/public-env';
 import { capacitorOtaAdapter } from '@/platform/ota/capacitor-ota-adapter';
-import { govaDbGet, govaDbSet, GOVA_DB_STORES } from '@/lib/gova-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
 
 import { otaApiService } from './ota-api-service';
 import type {
@@ -12,10 +12,10 @@ import type {
   OtaStoredState,
 } from '../types/ota.types';
 
-const OTA_STATE_KEY = 'gova-ota-state-v1';
-export const OTA_STATE_EVENT = 'gova:ota-state';
+const OTA_STATE_KEY = 'asol-ota-state-v1';
+export const OTA_STATE_EVENT = 'asol:ota-state';
 const MAX_CHANGED_BYTES = 50 * 1024 * 1024;
-const LOCAL_MANIFEST_FILE = 'gova-web-manifest.json';
+const LOCAL_MANIFEST_FILE = 'asol-web-manifest.json';
 
 type OtaDiff = {
   changed: string[];
@@ -24,13 +24,13 @@ type OtaDiff = {
 };
 
 function logInfo(message: string, details?: unknown): void {
-  if (details === undefined) console.info(`[GovaOTA] ${message}`);
-  else console.info(`[GovaOTA] ${message}`, details);
+  if (details === undefined) console.info(`[AsolOTA] ${message}`);
+  else console.info(`[AsolOTA] ${message}`, details);
 }
 
 function logWarn(message: string, details?: unknown): void {
-  if (details === undefined) console.warn(`[GovaOTA] ${message}`);
-  else console.warn(`[GovaOTA] ${message}`, details);
+  if (details === undefined) console.warn(`[AsolOTA] ${message}`);
+  else console.warn(`[AsolOTA] ${message}`, details);
 }
 
 function decodeBase64(value: string): ArrayBuffer {
@@ -170,14 +170,14 @@ async function verifyManifest(manifest: OtaManifest): Promise<boolean> {
 
 async function readState(): Promise<OtaStoredState> {
   try {
-    return (await govaDbGet<OtaStoredState>(GOVA_DB_STORES.APP_SETTINGS, OTA_STATE_KEY)) ?? {};
+    return (await asolDbGet<OtaStoredState>(ASOL_DB_STORES.APP_SETTINGS, OTA_STATE_KEY)) ?? {};
   } catch {
     return {};
   }
 }
 
 async function writeState(state: OtaStoredState): Promise<void> {
-  await govaDbSet<OtaStoredState>(GOVA_DB_STORES.APP_SETTINGS, OTA_STATE_KEY, state);
+  await asolDbSet<OtaStoredState>(ASOL_DB_STORES.APP_SETTINGS, OTA_STATE_KEY, state);
   window.dispatchEvent(new CustomEvent(OTA_STATE_EVENT, { detail: state }));
 }
 

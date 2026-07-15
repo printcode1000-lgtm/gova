@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 export default function Page() {
   const { t } = useTranslation();
   return (
-    <div className="w-full gova-canvas min-h-screen p-4 text-on-surface">
+    <div className="w-full asol-canvas min-h-screen p-4 text-on-surface">
       <div className="max-w-7xl mx-auto">
         {/* Screen Title for reference */}
         <div className="mb-6 flex items-center justify-between border-b border-outline-variant/30 pb-4">
@@ -24,7 +24,7 @@ export default function Page() {
 <ImagePlaceholder alt="" className="w-full h-full object-cover"   />
 </div>
 <div>
-<p className="font-body-md text-on-surface font-bold">Gova User</p>
+<p className="font-body-md text-on-surface font-bold">Asol User</p>
 <p className="text-label-sm text-on-surface-variant">{t('marketplaceOrders.myOrders.roleSwitcher')}</p>
 </div>
 </div>

@@ -23,13 +23,13 @@ Select the **driver** (SQLite dev / Turso prod) and expose Drizzle `db` to Repos
 | `npm run dev` | SQLite | `public/sync_data/sync_sqlite/*.db` |
 | Production server | Turso | env vars |
 
-Turso is **blocked** during dev runtime except when `GOVA_PROVISIONING=true` (build scripts).
+Turso is **blocked** during dev runtime except when `ASOL_PROVISIONING=true` (build scripts).
 
 Dev detection:
 
 ```typescript
-GOVA_MODE === 'development'
-|| NEXT_PUBLIC_GOVA_MODE === 'development'
+ASOL_MODE === 'development'
+|| NEXT_PUBLIC_ASOL_MODE === 'development'
 || NODE_ENV === 'development'
 ```
 

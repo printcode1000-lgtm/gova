@@ -24,7 +24,7 @@ export class WebPushNotificationProvider implements NotificationProvider {
 
     webpush.setVapidDetails(vapid.subject, vapid.publicKey, vapid.privateKey);
     const payload = JSON.stringify({
-      title: input.payload.title ?? input.payload.templateId ?? 'GOVA',
+      title: input.payload.title ?? input.payload.templateId ?? 'ASOL',
       body: input.payload.body ?? String(input.payload.variables?.message ?? ''),
       dedupeKey: input.payload.dedupeKey,
       href: String(input.payload.metadata?.href ?? '/notifications'),

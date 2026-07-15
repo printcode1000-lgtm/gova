@@ -9,7 +9,7 @@ import { parseDevTraceHeader, type DevTraceLayer } from './dev-trace-types';
 import type { LayerName, OperationRecord } from './types';
 
 const TRACE_LAYER_MAP: Record<DevTraceLayer, LayerName> = {
-  'business-api': 'gova-api',
+  'business-api': 'asol-api',
   'server-service': 'service',
   'query-command': 'query',
   repository: 'repository',

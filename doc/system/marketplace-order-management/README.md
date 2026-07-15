@@ -1,6 +1,6 @@
 # Marketplace Order Management System
 
-This documentation describes Gova's isolated marketplace order module. The module supports catalog orders, image-based custom requests, mixed orders, multiple sellers and service providers, independent multi-party shipments, payments, refunds, cancellation, returns, replacements, disputes, calculated statuses, and audit history.
+This documentation describes Asol's isolated marketplace order module. The module supports catalog orders, image-based custom requests, mixed orders, multiple sellers and service providers, independent multi-party shipments, payments, refunds, cancellation, returns, replacements, disputes, calculated statuses, and audit history.
 
 ## Documentation map
 

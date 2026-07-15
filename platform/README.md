@@ -1,4 +1,4 @@
-# GOVA Platform Layer (Capacitor)
+# ASOL Platform Layer (Capacitor)
 
 Capacitor is a **native runtime shell** only. Full reference: **[doc/system/capacitor.md](../doc/system/capacitor.md)**.
 
@@ -20,7 +20,7 @@ npx cap open android   # or ios
 
 `cap:build` always bakes the Vercel backend URL (`https://gova-swart.vercel.app` from `platform/capacitor.defaults.ts`) into the static export, then runs `cap sync`.
 
-To use a different backend URL: set `GOVA_CAPACITOR_API_BASE_URL` before `npm run cap:build`.
+To use a different backend URL: set `ASOL_CAPACITOR_API_BASE_URL` before `npm run cap:build`.
 
 ## Live reload (optional)
 
@@ -37,4 +37,4 @@ Unset `CAPACITOR_SERVER_URL` and run `npx cap sync` again to return to bundled `
 
 ## Data access
 
-Mobile builds use **GovaApiClient → HTTPS → Business APIs** only. Set `NEXT_PUBLIC_GOVA_API_BASE_URL` at build time. No SQLite, Drizzle, or Turso in the native shell.
+Mobile builds use **AsolApiClient → HTTPS → Business APIs** only. Set `NEXT_PUBLIC_ASOL_API_BASE_URL` at build time. No SQLite, Drizzle, or Turso in the native shell.

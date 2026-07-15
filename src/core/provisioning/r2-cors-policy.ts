@@ -1,11 +1,11 @@
 import { getCorsOrigins } from '@/core/config/server-env.values';
 import type { R2CorsRule } from './r2.types';
 
-/** Full browser upload CORS policy derived from GOVA_CORS_ORIGINS (or dev defaults). */
+/** Full browser upload CORS policy derived from ASOL_CORS_ORIGINS (or dev defaults). */
 export function buildDefaultR2CorsRules(): R2CorsRule[] {
   return [
     {
-      id: 'gova-browser-upload',
+      id: 'asol-browser-upload',
       allowed: {
         origins: getCorsOrigins(),
         methods: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD'],

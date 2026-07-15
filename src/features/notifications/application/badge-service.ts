@@ -1,16 +1,16 @@
 "use client";
 
 import { NotificationTargets } from "../domain/enums";
-import { govaNotificationRepository } from "../infrastructure/gova-notification-repository";
+import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { capacitorBadgeService } from "../infrastructure/capacitor/capacitor-badge.service";
 
 export class BadgeService {
   async refresh(uid: string): Promise<number> {
-    const notifications = await govaNotificationRepository.list(uid);
+    const notifications = await asolNotificationRepository.list(uid);
     const unreadCount = notifications.filter(
       (item) => !item.readAt && item.targets.includes(NotificationTargets.Badge),
     ).length;
-    await govaNotificationRepository.saveBadge({
+    await asolNotificationRepository.saveBadge({
       uid,
       unreadCount,
       updatedAt: new Date().toISOString(),
@@ -21,7 +21,7 @@ export class BadgeService {
   }
 
   async get(uid: string): Promise<number> {
-    return (await govaNotificationRepository.getBadge(uid))?.unreadCount ?? 0;
+    return (await asolNotificationRepository.getBadge(uid))?.unreadCount ?? 0;
   }
 }
 

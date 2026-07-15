@@ -45,7 +45,7 @@ export function ProductRatingSettings({
                   : "",
             })
           }
-          className="gova-control gova-field-surface w-full border border-input px-3"
+          className="asol-control asol-field-surface w-full border border-input px-3"
         >
           <option value="">استخدام إعداد Style</option>
           <option value="stars-comments">نجوم + تعليقات</option>

@@ -116,7 +116,7 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
       onSuccess: async () => {
         setLogoutDialogOpen(false);
         onClose();
-        // Clear all client storage including GovaDB, cookies, and all IndexedDB databases
+        // Clear all client storage including AsolDB, cookies, and all IndexedDB databases
         await clearAllClientStorage();
         // Reload the page to ensure clean state
         window.location.reload();
@@ -138,12 +138,12 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
   const superAdminContent = useMemo(() => {
     if (!showSuperAdmin) return null;
     return (
-      <div className="rounded-lg gova-surface-neutral">
+      <div className="rounded-lg asol-surface-neutral">
         <button
           type="button"
           onClick={handleSuperAdminToggle}
           aria-expanded={superAdminOpen}
-          className="gova-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface gova-surface-neutral active:opacity-90"
+          className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
         >
           <ShieldCheck className="w-5 h-5 shrink-0 text-primary" />
           {t("sidebar.superAdmin")}
@@ -220,7 +220,7 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
       >
         <div
           className={cn(
-            "absolute inset-0 gova-overlay-dim transition-opacity duration-300",
+            "absolute inset-0 asol-overlay-dim transition-opacity duration-300",
             isOpen ? "opacity-100" : "opacity-0",
           )}
         />
@@ -233,20 +233,20 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
             aria-label={t("sidebar.menu")}
             className={cn(
               "fixed top-0 inset-inline-start-0 z-[61] flex h-dvh w-72 flex-col border-e transition-transform duration-300 ease-out",
-              resolvedScheme === 'dark' ? 'gova-drawer-panel' : 'bg-[#F8FBFF]',
+              resolvedScheme === 'dark' ? 'asol-drawer-panel' : 'bg-[#F8FBFF]',
               isOpen
                 ? "translate-x-0"
                 : "rtl:translate-x-full ltr:-translate-x-full",
             )}
             dir={isRTL ? "rtl" : "ltr"}
           >
-          <div className="flex items-center justify-between p-3 gova-section-tonal-primary border-b border-outline-variant/30">
+          <div className="flex items-center justify-between p-3 asol-section-tonal-primary border-b border-outline-variant/30">
             <span className="text-sm font-semibold text-on-primary-container px-2">
               {t("sidebar.menu")}
             </span>
             <button
               type="button"
-              className="gova-control-icon flex items-center justify-center rounded-full text-on-surface-variant active:opacity-80"
+              className="asol-control-icon flex items-center justify-center rounded-full text-on-surface-variant active:opacity-80"
               onClick={onClose}
               aria-label={t("sidebar.close")}
             >
@@ -261,13 +261,13 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
                   type="button"
                   onClick={handleLogout}
                   disabled={logout.isPending}
-                  className="gova-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface gova-surface-neutral active:opacity-90 disabled:opacity-60"
+                  className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90 disabled:opacity-60"
                 >
                   <LogOut className="w-5 h-5 shrink-0 text-primary" />
                   {t("sidebar.logout")}
                 </button>
 
-                <div className="gova-control rounded-lg gova-surface-neutral p-2">
+                <div className="asol-control rounded-lg asol-surface-neutral p-2">
                   <div className="px-2 py-1 text-xs font-semibold flex items-center gap-2 text-blue-600">
                     <User className="w-4 h-4 text-blue-600" />
                     {t("nav.profile")}
@@ -314,7 +314,7 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
               <Link href="/login" onClick={onClose}>
                 <button
                   type="button"
-                  className="gova-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface gova-surface-neutral active:opacity-90"
+                  className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
                 >
                   <LogIn className="w-5 h-5 shrink-0 text-primary" />
                   {t("sidebar.login")}
@@ -325,7 +325,7 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
             <Link href="/settings" onClick={onClose}>
               <button
                 type="button"
-                className="gova-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface gova-surface-neutral active:opacity-90"
+                className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
               >
                 <Settings className="w-5 h-5 shrink-0 text-primary" />
                 {t("sidebar.settings")}

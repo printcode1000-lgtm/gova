@@ -14,8 +14,8 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { govaApi } from "@/core/api/gova-api-client";
-import { GOVA_API_ROUTES } from "@/core/api/gova-api-routes";
+import { asolApi } from "@/core/api/asol-api-client";
+import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import {
   clearCart,
   getCartTotalMinor,
@@ -139,8 +139,8 @@ export function CartPageContent() {
     setIsSubmitting(true);
     setSubmitError("");
     try {
-      const result = await govaApi.post<{ orderId: string }>(
-        GOVA_API_ROUTES.orders.fromCart,
+      const result = await asolApi.post<{ orderId: string }>(
+        ASOL_API_ROUTES.orders.fromCart,
         {
           uid: session.uid,
           phone: session.phone,
@@ -171,7 +171,7 @@ export function CartPageContent() {
         "ar",
       );
       clearCart();
-      router.push(`/orders/${encodeURIComponent(result.orderId)}`);
+      router.push(`/orders/details?orderId=${encodeURIComponent(result.orderId)}`);
     } catch (error) {
       setSubmitError(
         orderErrorMessage(error instanceof Error ? error.message : String(error)),

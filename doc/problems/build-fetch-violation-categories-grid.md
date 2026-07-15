@@ -11,10 +11,10 @@
 ```
 Architecture Violation
 
-Layer: gova-api-client
+Layer: asol-api-client
 File: src/components/home/CategoriesGrid.tsx
-Violation: fetch() used outside gova-http-transport.ts.
-Allowed: Use govaApi from @/core/api.
+Violation: fetch() used outside asol-http-transport.ts.
+Allowed: Use asolApi from @/core/api.
 
 Build Failed.
 ```
@@ -32,7 +32,7 @@ const response = await fetch('/catagory/categories.json');
 const data: Category[] = await response.json();
 ```
 
-GOVA Architecture Contract allows `fetch()` **only** in `src/core/api/gova-http-transport.ts`. All client data access — including static public JSON — must go through `GovaApiClient` (`govaApi.getPublicJson`).
+ASOL Architecture Contract allows `fetch()` **only** in `src/core/api/asol-http-transport.ts`. All client data access — including static public JSON — must go through `AsolApiClient` (`asolApi.getPublicJson`).
 
 `npm run build` runs `architecture:check` first, so the violation blocks deploy on Vercel and locally.
 
@@ -40,12 +40,12 @@ GOVA Architecture Contract allows `fetch()` **only** in `src/core/api/gova-http-
 
 ## Solution
 
-Replace direct `fetch` with `govaApi.getPublicJson()` — same pattern as `TopMarquee.tsx`:
+Replace direct `fetch` with `asolApi.getPublicJson()` — same pattern as `TopMarquee.tsx`:
 
 ```typescript
-import { govaApi } from '@/core/api';
+import { asolApi } from '@/core/api';
 
-const data = await govaApi.getPublicJson<Category[]>('/catagory/categories.json');
+const data = await asolApi.getPublicJson<Category[]>('/catagory/categories.json');
 ```
 
 > Current architecture: this historical workaround has been superseded. UI code must import typed projections from `@/features/categories`; only the category module may import the canonical JSON files.
@@ -66,10 +66,10 @@ npm run build                # succeeds
 ## Prevention
 
 - Never use `fetch()`, `axios`, or `XMLHttpRequest` in components, hooks, or features.
-- Static assets under `public/` → `govaApi.getPublicJson('/path/to/file.json')`
-- Business data → `govaApi.get/post/put` + `GOVA_API_ROUTES`
+- Static assets under `public/` → `asolApi.getPublicJson('/path/to/file.json')`
+- Business data → `asolApi.get/post/put` + `ASOL_API_ROUTES`
 
-See [data-layers/04-gova-api-client-layer.md](../system/data-layers/04-gova-api-client-layer.md) and [data-layers/19-architecture-contract.md](../system/data-layers/19-architecture-contract.md).
+See [data-layers/04-asol-api-client-layer.md](../system/data-layers/04-asol-api-client-layer.md) and [data-layers/19-architecture-contract.md](../system/data-layers/19-architecture-contract.md).
 
 ---
 
@@ -77,5 +77,5 @@ See [data-layers/04-gova-api-client-layer.md](../system/data-layers/04-gova-api-
 
 - `src/components/home/CategoriesGrid.tsx`
 - `src/components/splash/TopMarquee.tsx` (correct reference)
-- `src/core/api/gova-api-client.ts` — `getPublicJson()`
+- `src/core/api/asol-api-client.ts` — `getPublicJson()`
 - `scripts/architecture-check.ts`

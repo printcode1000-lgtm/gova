@@ -18,7 +18,7 @@ export function SuperAdminVapidPage() {
   const { session, isLoading } = useSession();
   const authorized = isSuperAdmin(session);
   const [config, setConfig] = useState<NotificationVapidAdminConfig | null>(null);
-  const [subject, setSubject] = useState("mailto:admin@gova.local");
+  const [subject, setSubject] = useState("mailto:admin@asol.local");
   const [enabled, setEnabled] = useState(true);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -96,7 +96,7 @@ export function SuperAdminVapidPage() {
       <section className="grid gap-4 rounded-xl border bg-card p-4 md:grid-cols-2">
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="vapid-subject">Subject</Label>
-          <Input id="vapid-subject" value={subject} onChange={(event) => setSubject(event.target.value)} placeholder="mailto:admin@gova.local" dir="ltr" />
+          <Input id="vapid-subject" value={subject} onChange={(event) => setSubject(event.target.value)} placeholder="mailto:admin@asol.local" dir="ltr" />
         </div>
         <div className="rounded-xl border bg-background p-4">
           <div className="flex items-center gap-3">
