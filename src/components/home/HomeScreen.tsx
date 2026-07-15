@@ -44,8 +44,8 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
   const { config: trendingRibbonData } = useHomeTrendingRibbon();
   const homeTrendingRibbonConfig = useMemo<TrendingRibbonConfig>(
     () => ({
-      label: trendingRibbonData.label,
-      items: trendingRibbonData.items,
+      label: trendingRibbonData?.label ?? "home.trending.label",
+      items: Array.isArray(trendingRibbonData?.items) ? trendingRibbonData.items : [],
       onAction: (action) => {
         if (action.startsWith("/") || action.startsWith("http")) {
           window.location.href = action;

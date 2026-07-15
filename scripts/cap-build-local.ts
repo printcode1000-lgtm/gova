@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { CAPACITOR_API_BASE_URL } from '../platform/capacitor.defaults';
 import { withoutVsCodeDebuggerEnv } from './child-process-env';
-import { otaClientBuildEnv } from './ota/ota-config';
+import { loadOtaEnvironment, otaClientBuildEnv } from './ota/ota-config';
 
 const ANDROID_BUILD_GRADLE = path.resolve('android', 'app', 'build.gradle');
 
@@ -19,6 +19,7 @@ function readCurrentNativeVersion(): string {
 }
 
 function main(): void {
+  loadOtaEnvironment();
   const version = readCurrentNativeVersion();
   const apiBaseUrl = (
     process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL

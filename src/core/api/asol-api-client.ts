@@ -79,6 +79,7 @@ export class AsolApiClient {
   private async parseResponse<T>(response: Response): Promise<T> {
     const text = await response.text();
     let data: unknown = null;
+    const contentType = response.headers.get('content-type')?.toLowerCase() ?? '';
 
     if (text) {
       try {
@@ -97,6 +98,13 @@ export class AsolApiClient {
           ? (data as { error: string }).error
           : `Request failed (${response.status})`;
       throw new ApiError(message, response.status);
+    }
+
+    if (text && !contentType.includes('application/json')) {
+      throw new ApiError(
+        `Expected JSON response but received ${contentType || 'an unknown content type'}`,
+        response.status,
+      );
     }
 
     return data as T;

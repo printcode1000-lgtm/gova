@@ -14,8 +14,7 @@ Do not edit generated Android, iOS, or web icons directly. Replace the SSOT imag
 npm run branding:generate
 ```
 
-The source must be a square PNG at least 500x500.
-It must contain real transparent pixels. The generator rejects opaque SSOT images and rejects known legacy branding paths if they reappear.
+The source must be a square PNG at least 500x500. Its original background is preserved; opaque images are supported. The generator rejects known legacy branding paths if they reappear.
 
 ## Generated Assets
 
@@ -28,9 +27,7 @@ It must contain real transparent pixels. The generator rejects opaque SSOT image
 - iOS `AppIcon-512@2x.png`.
 - All iOS Launch Screen image scales.
 
-Android and iOS icon outputs are flattened onto white only where the platform requires an opaque app icon. Adaptive foreground output remains transparent and fills its generated canvas.
-
-Before generating any web, Android, or iOS icon, the generator trims accidental transparent outer margins, normalizes the artwork, then places it at a fixed 86% scale in the square canvas. The remaining space is a consistent safety margin: transparent for web and Android foreground output, and platform-compatible for opaque icon formats. This prevents clipping and oversized artwork while avoiding hand-edited padding.
+The generator preserves the complete source frame and its original background. Web, iOS, and legacy Android icons are not trimmed, cropped, padded, or flattened onto another color. Android adaptive foreground icons use a 72% content scale with opaque padding sampled from the source image's top-left background pixel so Android's launcher mask does not make the artwork appear oversized; no transparency or unrelated replacement color is introduced. Platform-specific files are resized only to the exact pixel dimensions required by Android and iOS.
 
 ## Automatic Generation
 

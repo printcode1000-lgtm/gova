@@ -1,11 +1,10 @@
-import { existsSync, readdirSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, readdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
 const root = process.cwd();
 const sourcePath = path.join(root, 'assets', 'branding', 'asol-app-icon.png');
-const white = { r: 255, g: 255, b: 255, alpha: 1 };
-const ICON_ARTWORK_SCALE = 0.86;
+const ANDROID_ADAPTIVE_CONTENT_SCALE = 0.72;
 const forbiddenLegacyBrandingPaths = [
   'public/gv_app_icon.png',
   'public/VERY GOOD.png',
@@ -30,56 +29,55 @@ const androidForegroundSizes = {
   xxxhdpi: 432,
 } as const;
 
-async function normalizedArtwork(size: number): Promise<Buffer> {
+async function resizedSource(size: number): Promise<Buffer> {
   return sharp(sourcePath)
-    .trim({ threshold: 10 })
-    .resize(size, size, { fit: 'cover', position: 'centre' })
+    .resize(size, size, { fit: 'fill' })
     .png()
     .toBuffer();
 }
 
-async function transparentIcon(size: number): Promise<Buffer> {
-  const artworkSize = Math.round(size * ICON_ARTWORK_SCALE);
-  const artwork = await normalizedArtwork(artworkSize);
-  const offset = Math.floor((size - artworkSize) / 2);
-  return sharp({
-    create: { width: size, height: size, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
-  })
-    .composite([{ input: artwork, left: offset, top: offset }])
-    .png()
+async function androidAdaptiveForeground(size: number): Promise<Buffer> {
+  const contentSize = Math.round(size * ANDROID_ADAPTIVE_CONTENT_SCALE);
+  const leadingPadding = Math.floor((size - contentSize) / 2);
+  const trailingPadding = size - contentSize - leadingPadding;
+  const cornerPixel = await sharp(sourcePath)
+    .extract({ left: 0, top: 0, width: 1, height: 1 })
+    .removeAlpha()
+    .raw()
     .toBuffer();
-}
+  const background = {
+    r: cornerPixel[0] ?? 255,
+    g: cornerPixel[1] ?? 255,
+    b: cornerPixel[2] ?? 255,
+    alpha: 1,
+  };
 
-async function flatIcon(size: number): Promise<Buffer> {
-  return sharp(await transparentIcon(size)).flatten({ background: white }).png().toBuffer();
-}
-
-async function adaptiveForeground(size: number): Promise<Buffer> {
-  return transparentIcon(size);
-}
-
-async function launchCanvas(size: number, iconSize: number): Promise<Buffer> {
-  const icon = await normalizedArtwork(iconSize);
-  const offset = Math.floor((size - iconSize) / 2);
-  return sharp({ create: { width: size, height: size, channels: 4, background: white } })
-    .composite([{ input: icon, left: offset, top: offset }])
+  return sharp(sourcePath)
+    .resize(contentSize, contentSize, { fit: 'fill' })
+    .extend({
+      top: leadingPadding,
+      bottom: trailingPadding,
+      left: leadingPadding,
+      right: trailingPadding,
+      background,
+    })
     .png()
     .toBuffer();
 }
 
 async function generateWebAssets(): Promise<void> {
-  await sharp(await transparentIcon(512)).toFile(path.join(root, 'public', 'logo.png'));
+  copyFileSync(sourcePath, path.join(root, 'public', 'logo.png'));
 }
 
 async function generateAndroidAssets(): Promise<void> {
   const resRoot = path.join(root, 'android', 'app', 'src', 'main', 'res');
   for (const [density, size] of Object.entries(androidLegacySizes)) {
     const directory = path.join(resRoot, `mipmap-${density}`);
-    await sharp(await flatIcon(size)).toFile(path.join(directory, 'ic_launcher.png'));
-    await sharp(await flatIcon(size)).toFile(path.join(directory, 'ic_launcher_round.png'));
+    await sharp(await resizedSource(size)).toFile(path.join(directory, 'ic_launcher.png'));
+    await sharp(await resizedSource(size)).toFile(path.join(directory, 'ic_launcher_round.png'));
   }
   for (const [density, size] of Object.entries(androidForegroundSizes)) {
-    await sharp(await adaptiveForeground(size)).toFile(
+    await sharp(await androidAdaptiveForeground(size)).toFile(
       path.join(resRoot, `mipmap-${density}`, 'ic_launcher_foreground.png'),
     );
   }
@@ -93,11 +91,11 @@ async function generateAndroidAssets(): Promise<void> {
 
 async function generateIosAssets(): Promise<void> {
   const assetsRoot = path.join(root, 'ios', 'App', 'App', 'Assets.xcassets');
-  await sharp(await flatIcon(1024)).toFile(
+  await sharp(await resizedSource(1024)).toFile(
     path.join(assetsRoot, 'AppIcon.appiconset', 'AppIcon-512@2x.png'),
   );
 
-  const launch = await launchCanvas(2732, 420);
+  const launch = await resizedSource(2732);
   for (const fileName of [
     'splash-2732x2732.png',
     'splash-2732x2732-1.png',
@@ -112,10 +110,6 @@ async function main(): Promise<void> {
   const metadata = await sharp(sourcePath).metadata();
   if (metadata.width !== metadata.height || (metadata.width ?? 0) < 500) {
     throw new Error('Branding SSOT must be a square PNG at least 500x500');
-  }
-  const stats = await sharp(sourcePath).ensureAlpha().stats();
-  if (!metadata.hasAlpha || stats.isOpaque) {
-    throw new Error('Branding SSOT must contain real transparent pixels');
   }
   const legacyPaths = forbiddenLegacyBrandingPaths.filter((relativePath) =>
     existsSync(path.join(root, relativePath)),

@@ -11,6 +11,7 @@ import { trendingRibbonApiService } from "@/features/advertisements/services/tre
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 import {
   ASOL_DB_STORES,
+  asolDbDelete,
   asolDbGet,
   asolDbSet,
 } from "@/lib/asol-db";
@@ -37,6 +38,33 @@ const fallback: TrendingRibbonPublished = {
   updatedAt: "",
 };
 
+function isValidTrendingConfig(value: unknown): value is UIRibbonConfig {
+  if (!value || typeof value !== "object") return false;
+  const config = value as Partial<UIRibbonConfig>;
+  return (
+    typeof config.label === "string" &&
+    Array.isArray(config.items) &&
+    config.items.every(
+      (item) =>
+        Boolean(item) &&
+        typeof item === "object" &&
+        typeof item.label === "string" &&
+        typeof item.action === "string",
+    )
+  );
+}
+
+function isValidPublished(value: unknown): value is TrendingRibbonPublished {
+  if (!value || typeof value !== "object") return false;
+  const published = value as Partial<TrendingRibbonPublished>;
+  return (
+    isValidTrendingConfig(published.config) &&
+    typeof published.version === "number" &&
+    typeof published.checkIntervalMinutes === "number" &&
+    typeof published.updatedAt === "string"
+  );
+}
+
 // ─── Hook ────────────────────────────────────────────────────────────────────
 
 export function useHomeTrendingRibbon() {
@@ -47,10 +75,18 @@ export function useHomeTrendingRibbon() {
 
   const checkForUpdates = useCallback(async (force = false) => {
     try {
-      const cached = await asolDbGet<TrendingRibbonCache>(
+      const stored = await asolDbGet<TrendingRibbonCache>(
         ASOL_DB_STORES.APP_SETTINGS,
         TRENDING_RIBBON_CACHE_KEY,
       );
+      const cached = isValidPublished(stored) ? stored : null;
+
+      if (stored && !cached) {
+        await asolDbDelete(
+          ASOL_DB_STORES.APP_SETTINGS,
+          TRENDING_RIBBON_CACHE_KEY,
+        );
+      }
 
       // Show cached data immediately to avoid flicker
       if (cached) {
@@ -72,7 +108,11 @@ export function useHomeTrendingRibbon() {
         version.updatedAt !== cached.updatedAt
       ) {
         // Config changed — download full data
-        next = await trendingRibbonApiService.getCurrent();
+        const remote = await trendingRibbonApiService.getCurrent();
+        if (!isValidPublished(remote)) {
+          throw new Error("Trending ribbon API returned an invalid payload");
+        }
+        next = remote;
         setState({ config: next.config, isLoading: false });
       } else if (version.checkIntervalMinutes !== cached.checkIntervalMinutes) {
         // Only interval changed
