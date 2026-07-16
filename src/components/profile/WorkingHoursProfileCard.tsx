@@ -72,7 +72,7 @@ export const WorkingHoursProfileCard = React.forwardRef<
       <WorkingHoursCard
         mode="edit"
         locale={locale === "ar" ? "ar" : "en"}
-        value={normalizeProfileWorkingHours(details.workingHours)}
+        value={details.workingHours}
         onChange={(workingHours) => updateField("workingHours", workingHours)}
       />
     </div>

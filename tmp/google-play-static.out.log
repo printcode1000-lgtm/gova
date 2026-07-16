@@ -1,0 +1,6 @@
+
+> asol@0.1.0 serve:out
+> npx tsx scripts/serve-static.ts
+
+Serving C:\Users\hesham\Desktop\gova\out at http://127.0.0.1:5500
+Proxying /api/* to https://gova-swart.vercel.app

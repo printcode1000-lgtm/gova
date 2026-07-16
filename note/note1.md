@@ -38,6 +38,6 @@ Relationship Graph in JSON format only,
 
 
 # fix text
-header.brand سوف جوفا
+header.brand سوف أصول
 splash.tagline السويس بين ايديك
 

@@ -106,7 +106,7 @@ export const PRODUCT_DEMO_DETAILS: ProductDetails = createEmptyProductDetails({
   },
   mainData: {
     name: "منتج تجريبي",
-    brand: "جوفا",
+    brand: "أصول",
     manufacturer: "الشركة المصنعة",
     available: true,
     description: "وصف تجريبي للمنتج أو الخدمة المعروضة.",

@@ -11,7 +11,12 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { asolApi } from "@/core/api";
 import { profileService } from "@/features/profile/services/profile-service";
-import { categoryService, CATEGORY_CONSTANTS, type CategoryDisplay, type SubcategoryDisplay } from "@/features/categories";
+import {
+  categoryService,
+  CATEGORY_CONSTANTS,
+  type CategoryDisplay,
+  type SubcategoryDisplay,
+} from "@/features/categories";
 import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
 import type {
   ProfileSectionStatus,
@@ -49,7 +54,10 @@ interface SpecialtiesCardProps {
 export const SpecialtiesCard = React.forwardRef<
   ProfileSpecialtiesController,
   SpecialtiesCardProps
->(function SpecialtiesCard({ uid, onStatusChange, readOnly = false, unlimited = false }, ref) {
+>(function SpecialtiesCard(
+  { uid, onStatusChange, readOnly = false, unlimited = false },
+  ref,
+) {
   const { t, locale } = useTranslation();
   const [displayCategories, setDisplayCategories] = React.useState<
     CategoryDisplay[]
@@ -65,7 +73,9 @@ export const SpecialtiesCard = React.forwardRef<
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [selectedCategoryForDialog, setSelectedCategoryForDialog] =
     React.useState<CategoryDisplay | null>(null);
-  const [subcategories, setSubcategories] = React.useState<SubcategoryDisplay[]>([]);
+  const [subcategories, setSubcategories] = React.useState<
+    SubcategoryDisplay[]
+  >([]);
   const [doctorAppointmentSubcategories, setDoctorAppointmentSubcategories] =
     React.useState<SubcategoryDisplay[]>([]);
   const [isDoctorAppointmentView, setIsDoctorAppointmentView] =
@@ -73,7 +83,11 @@ export const SpecialtiesCard = React.forwardRef<
   const [isLoadingSubcategories, setIsLoadingSubcategories] =
     React.useState(false);
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
-  const [deleteDialog, setDeleteDialog] = React.useState<{ type: 'main' | 'sub', categoryId: string, subcategoryId?: string } | null>(null);
+  const [deleteDialog, setDeleteDialog] = React.useState<{
+    type: "main" | "sub";
+    categoryId: string;
+    subcategoryId?: string;
+  } | null>(null);
   const label = t("onboarding.storeIdentity.specialties");
 
   const applySelection = React.useCallback(
@@ -211,7 +225,7 @@ export const SpecialtiesCard = React.forwardRef<
       } else {
         // Use categoryService to get regular subcategories
         const items = categoryService.getProfileSubOptions(categoryId, false);
-        
+
         if (categoryId === MEDICAL_SERVICES_CATEGORY_ID) {
           // Get actual doctor appointment items using the new service method
           const doctorItems = categoryService.getDoctorAppointmentItems();
@@ -235,27 +249,34 @@ export const SpecialtiesCard = React.forwardRef<
     if (!selectedCategoryForDialog) return;
 
     const categoryId = selectedCategoryForDialog.id.toString();
+    const currentSubs = selectedSubcategories[categoryId] || [];
+    const isAdding = !currentSubs.includes(subcategoryId);
+
+    if (
+      isAdding &&
+      !unlimited &&
+      !selectedSpecialties.includes(categoryId) &&
+      selectedSpecialties.length >= 3
+    ) {
+      setToastMessage(
+        locale === "ar"
+          ? "لا يمكن اختيار أكثر من 3 تخصصات رئيسية"
+          : "Cannot select more than 3 main categories",
+      );
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
     setSelectedSubcategories((prev) => {
-      const currentSubs = prev[categoryId] || [];
-      const isAdding = !currentSubs.includes(subcategoryId);
+      const previousSubs = prev[categoryId] || [];
       const newSubs = isAdding
-        ? [...currentSubs, subcategoryId]
-        : currentSubs.filter((s) => s !== subcategoryId);
+        ? [...previousSubs, subcategoryId]
+        : previousSubs.filter((s) => s !== subcategoryId);
 
       // Auto-select/deselect main category based on subcategory selection
       setSelectedSpecialties((prevMain) => {
         if (isAdding) {
           // Adding subcategory: ensure main category is selected
-          // Check if this would exceed the limit of 3 main categories (skipped for unlimited/super-admin)
-          if (!unlimited && !prevMain.includes(categoryId) && prevMain.length >= 3) {
-            setToastMessage(
-              locale === "ar"
-                ? "لا يمكن اختيار أكثر من 3 تخصصات رئيسية"
-                : "Cannot select more than 3 main categories",
-            );
-            setTimeout(() => setToastMessage(null), 3000);
-            return prevMain;
-          }
           if (!prevMain.includes(categoryId)) {
             return [...prevMain, categoryId];
           }
@@ -282,73 +303,89 @@ export const SpecialtiesCard = React.forwardRef<
     : subcategories;
 
   const getCategoryName = (categoryId: string) => {
-    const category = displayCategories.find(cat => cat.id.toString() === categoryId);
-    return category ? (locale === 'ar' ? category.nameAr : category.nameEn) : categoryId;
+    const category = displayCategories.find(
+      (cat) => cat.id.toString() === categoryId,
+    );
+    return category
+      ? locale === "ar"
+        ? category.nameAr
+        : category.nameEn
+      : categoryId;
   };
 
   const getSubcategoryName = (categoryId: string, subcategoryId: string) => {
-    const category = displayCategories.find(cat => cat.id.toString() === categoryId);
-    if (!category) return subcategoryId;
-    
-    const subcategories = categoryService.getProfileSubOptions(category.id, category.isCollection);
-    
-    // Try to find by originalId first, then by id, then by value (for collections)
-    const subcategory = subcategories.find(sub => 
-      sub.originalId?.toString() === subcategoryId || 
-      sub.id.toString() === subcategoryId ||
-      (sub.kind === 'collection-member' && sub.id.toString() === subcategoryId)
+    const category = displayCategories.find(
+      (cat) => cat.id.toString() === categoryId,
     );
-    
+    if (!category) return subcategoryId;
+
+    const subcategories = categoryService.getProfileSubOptions(
+      category.id,
+      category.isCollection,
+    );
+
+    // Try to find by originalId first, then by id, then by value (for collections)
+    const subcategory = subcategories.find(
+      (sub) =>
+        sub.originalId?.toString() === subcategoryId ||
+        sub.id.toString() === subcategoryId ||
+        (sub.kind === "collection-member" &&
+          sub.id.toString() === subcategoryId),
+    );
+
     if (subcategory) {
-      return locale === 'ar' ? subcategory.nameAr : subcategory.nameEn;
+      return locale === "ar" ? subcategory.nameAr : subcategory.nameEn;
     }
-    
+
     // If not found, try to get from category tree for regular categories
     if (!category.isCollection) {
       const tree = categoryService.getCategoryTree(category.id);
       if (tree) {
-        const treeSub = tree.subcategories.find(sub => 
-          sub.originalId?.toString() === subcategoryId || 
-          sub.id.toString() === subcategoryId
+        const treeSub = tree.subcategories.find(
+          (sub) =>
+            sub.originalId?.toString() === subcategoryId ||
+            sub.id.toString() === subcategoryId,
         );
         if (treeSub) {
-          return locale === 'ar' ? treeSub.nameAr : treeSub.nameEn;
+          return locale === "ar" ? treeSub.nameAr : treeSub.nameEn;
         }
-        
+
         // Also check doctor appointment items (for Medical Services category)
         if (category.id === MEDICAL_SERVICES_CATEGORY_ID) {
-          const doctorSub = tree.doctorAppointmentItems.find(sub => 
-            sub.originalId?.toString() === subcategoryId || 
-            sub.id.toString() === subcategoryId
+          const doctorSub = tree.doctorAppointmentItems.find(
+            (sub) =>
+              sub.originalId?.toString() === subcategoryId ||
+              sub.id.toString() === subcategoryId,
           );
           if (doctorSub) {
-            return locale === 'ar' ? doctorSub.nameAr : doctorSub.nameEn;
+            return locale === "ar" ? doctorSub.nameAr : doctorSub.nameEn;
           }
         }
       }
     }
-    
+
     // Final fallback: try the service's getDoctorAppointmentItems directly
     if (category.id === MEDICAL_SERVICES_CATEGORY_ID) {
       const doctorItems = categoryService.getDoctorAppointmentItems();
-      const doctorSub = doctorItems.find(sub => 
-        sub.originalId?.toString() === subcategoryId || 
-        sub.id.toString() === subcategoryId
+      const doctorSub = doctorItems.find(
+        (sub) =>
+          sub.originalId?.toString() === subcategoryId ||
+          sub.id.toString() === subcategoryId,
       );
       if (doctorSub) {
-        return locale === 'ar' ? doctorSub.nameAr : doctorSub.nameEn;
+        return locale === "ar" ? doctorSub.nameAr : doctorSub.nameEn;
       }
     }
-    
+
     return subcategoryId;
   };
 
   const handleDelete = () => {
     if (!deleteDialog) return;
 
-    if (deleteDialog.type === 'main') {
+    if (deleteDialog.type === "main") {
       handleSpecialtyToggle(deleteDialog.categoryId);
-    } else if (deleteDialog.type === 'sub' && deleteDialog.subcategoryId) {
+    } else if (deleteDialog.type === "sub" && deleteDialog.subcategoryId) {
       handleSubcategoryToggle(deleteDialog.subcategoryId);
     }
     setDeleteDialog(null);
@@ -404,9 +441,7 @@ export const SpecialtiesCard = React.forwardRef<
                   className="flex items-center gap-1"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                  <div onClick={(e) => e.stopPropagation()}>
                     <Checkbox
                       id={categoryId}
                       checked={selectedSpecialties.includes(categoryId)}
@@ -435,28 +470,46 @@ export const SpecialtiesCard = React.forwardRef<
             {selectedSpecialties.map((categoryId) => {
               const categoryName = getCategoryName(categoryId);
               const subIds = selectedSubcategories[categoryId] || [];
-              
+
               return (
-                <div key={categoryId} className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-high border border-outline-variant/50">
-                  <span className="text-[11px] font-medium text-on-surface">{categoryName}</span>
+                <div
+                  key={categoryId}
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-high border border-outline-variant/50"
+                >
+                  <span className="text-[11px] font-medium text-on-surface">
+                    {categoryName}
+                  </span>
                   <button
                     type="button"
-                    onClick={() => setDeleteDialog({ type: 'main', categoryId })}
+                    onClick={() =>
+                      setDeleteDialog({ type: "main", categoryId })
+                    }
                     className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
-                    aria-label={locale === 'ar' ? 'حذف' : 'Delete'}
+                    aria-label={locale === "ar" ? "حذف" : "Delete"}
                   >
                     <X className="h-3 w-3" />
                   </button>
                   {subIds.length > 0 && (
                     <div className="flex flex-wrap gap-0.5 pl-1 border-l border-outline-variant/50">
                       {subIds.map((subId) => (
-                        <div key={subId} className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-surface-container border border-outline-variant/30">
-                          <span className="text-[10px] text-on-surface-variant">{getSubcategoryName(categoryId, subId)}</span>
+                        <div
+                          key={subId}
+                          className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-surface-container border border-outline-variant/30"
+                        >
+                          <span className="text-[10px] text-on-surface-variant">
+                            {getSubcategoryName(categoryId, subId)}
+                          </span>
                           <button
                             type="button"
-                            onClick={() => setDeleteDialog({ type: 'sub', categoryId, subcategoryId: subId })}
+                            onClick={() =>
+                              setDeleteDialog({
+                                type: "sub",
+                                categoryId,
+                                subcategoryId: subId,
+                              })
+                            }
                             className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
-                            aria-label={locale === 'ar' ? 'حذف' : 'Delete'}
+                            aria-label={locale === "ar" ? "حذف" : "Delete"}
                           >
                             <X className="h-2.5 w-2.5" />
                           </button>
@@ -510,7 +563,8 @@ export const SpecialtiesCard = React.forwardRef<
                 <div className="flex justify-center py-8">
                   <LoadingSpinner size="lg" />
                 </div>
-              ) : visibleSubcategories.length === 0 && doctorAppointmentSubcategories.length === 0 ? (
+              ) : visibleSubcategories.length === 0 &&
+                doctorAppointmentSubcategories.length === 0 ? (
                 <p className="text-center text-on-surface-variant py-8">
                   {locale === "ar"
                     ? "لا توجد تخصصات فرعية"
@@ -519,11 +573,11 @@ export const SpecialtiesCard = React.forwardRef<
               ) : (
                 <div className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
                   {visibleSubcategories.map((subcategory) => {
-                    const subcategoryId = subcategory.originalId?.toString() || subcategory.id.toString();
+                    const subcategoryId =
+                      subcategory.originalId?.toString() ||
+                      subcategory.id.toString();
                     const subcategoryName =
-                      locale === "ar"
-                        ? subcategory.nameAr
-                        : subcategory.nameEn;
+                      locale === "ar" ? subcategory.nameAr : subcategory.nameEn;
                     // Use correct image path based on whether it's a collection item or regular subcategory
                     const imgSrc = subcategory.imageUrl;
                     const currentCategorySubs =
@@ -534,7 +588,8 @@ export const SpecialtiesCard = React.forwardRef<
                     const isChecked = isGroup
                       ? doctorAppointmentSubcategories.some((doctorSub) =>
                           currentCategorySubs.includes(
-                            doctorSub.originalId?.toString() || doctorSub.id.toString(),
+                            doctorSub.originalId?.toString() ||
+                              doctorSub.id.toString(),
                           ),
                         )
                       : currentCategorySubs.includes(subcategoryId);
@@ -591,25 +646,41 @@ export const SpecialtiesCard = React.forwardRef<
             </div>
             <div className="p-4 border-t border-outline-variant flex flex-col gap-3">
               {selectedCategoryForDialog &&
-              selectedSubcategories[selectedCategoryForDialog.id.toString()]?.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {selectedSubcategories[selectedCategoryForDialog.id.toString()].map((subId) => (
-                    <div key={subId} className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-high border border-outline-variant/50">
-                      <span className="text-[11px] font-medium text-on-surface">
-                        {getSubcategoryName(selectedCategoryForDialog.id.toString(), subId)}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setDeleteDialog({ type: 'sub', categoryId: selectedCategoryForDialog.id.toString(), subcategoryId: subId })}
-                        className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
-                        aria-label={locale === 'ar' ? 'حذف' : 'Delete'}
+                selectedSubcategories[selectedCategoryForDialog.id.toString()]
+                  ?.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedSubcategories[
+                      selectedCategoryForDialog.id.toString()
+                    ].map((subId) => (
+                      <div
+                        key={subId}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container-high border border-outline-variant/50"
                       >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+                        <span className="text-[11px] font-medium text-on-surface">
+                          {getSubcategoryName(
+                            selectedCategoryForDialog.id.toString(),
+                            subId,
+                          )}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setDeleteDialog({
+                              type: "sub",
+                              categoryId:
+                                selectedCategoryForDialog.id.toString(),
+                              subcategoryId: subId,
+                            })
+                          }
+                          className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
+                          aria-label={locale === "ar" ? "حذف" : "Delete"}
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               <div className="flex justify-end">
                 <button
                   type="button"
@@ -643,17 +714,16 @@ export const SpecialtiesCard = React.forwardRef<
               </div>
               <div className="flex-1">
                 <h3 className="text-sm font-semibold text-on-surface">
-                  {locale === 'ar' ? 'تأكيد الحذف' : 'Confirm Delete'}
+                  {locale === "ar" ? "تأكيد الحذف" : "Confirm Delete"}
                 </h3>
                 <p className="text-xs text-on-surface-variant mt-1">
-                  {deleteDialog.type === 'main'
-                    ? (locale === 'ar' 
-                        ? `هل أنت متأكد من حذف "${getCategoryName(deleteDialog.categoryId)}"؟ سيتم حذف جميع التخصصات الفرعية التابعة له.`
-                        : `Are you sure you want to delete "${getCategoryName(deleteDialog.categoryId)}"? All its subcategories will also be removed.`)
-                    : (locale === 'ar'
-                        ? `هل أنت متأكد من حذف "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"؟`
-                        : `Are you sure you want to delete "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"?`)
-                  }
+                  {deleteDialog.type === "main"
+                    ? locale === "ar"
+                      ? `هل أنت متأكد من حذف "${getCategoryName(deleteDialog.categoryId)}"؟ سيتم حذف جميع التخصصات الفرعية التابعة له.`
+                      : `Are you sure you want to delete "${getCategoryName(deleteDialog.categoryId)}"? All its subcategories will also be removed.`
+                    : locale === "ar"
+                      ? `هل أنت متأكد من حذف "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"؟`
+                      : `Are you sure you want to delete "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"?`}
                 </p>
               </div>
             </div>
@@ -665,7 +735,7 @@ export const SpecialtiesCard = React.forwardRef<
                 onClick={() => setDeleteDialog(null)}
                 className="text-xs"
               >
-                {locale === 'ar' ? 'إلغاء' : 'Cancel'}
+                {locale === "ar" ? "إلغاء" : "Cancel"}
               </Button>
               <Button
                 type="button"
@@ -673,7 +743,7 @@ export const SpecialtiesCard = React.forwardRef<
                 onClick={handleDelete}
                 className="text-xs bg-error text-on-error hover:bg-error/90"
               >
-                {locale === 'ar' ? 'حذف' : 'Delete'}
+                {locale === "ar" ? "حذف" : "Delete"}
               </Button>
             </div>
           </div>

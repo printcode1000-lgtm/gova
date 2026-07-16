@@ -7,6 +7,7 @@ import type {
   ProfileWorkingHours,
   WorkingDayId,
   WorkingHoursDay,
+  WorkingHoursPeriod,
 } from "@/features/profile-working-hours";
 import {
   createDefaultWorkingPeriod,
@@ -31,6 +32,16 @@ function updateDay(
     ...value,
     days: value.days.map((day) => (day.day === dayId ? updater(day) : day)),
   };
+}
+
+function createNextWorkingPeriod(
+  dayId: WorkingDayId,
+  periods: WorkingHoursPeriod[],
+): WorkingHoursPeriod {
+  let index = 0;
+  const usedIds = new Set(periods.map((period) => period.id));
+  while (usedIds.has(`${dayId}-${index + 1}`)) index += 1;
+  return createDefaultWorkingPeriod(dayId, index);
 }
 
 export function WorkingHoursCard({
@@ -74,7 +85,10 @@ export function WorkingHoursCard({
       updateDay(value, dayId, (day) => ({
         ...day,
         open,
-        periods: open && day.periods.length === 0 ? [createDefaultWorkingPeriod(dayId)] : day.periods,
+        periods:
+          open && day.periods.length === 0
+            ? [createNextWorkingPeriod(dayId, day.periods)]
+            : day.periods,
       })),
     );
   };
@@ -250,7 +264,7 @@ export function WorkingHoursCard({
                           open: true,
                           periods: [
                             ...current.periods,
-                            createDefaultWorkingPeriod(day.day, current.periods.length),
+                            createNextWorkingPeriod(day.day, current.periods),
                           ],
                         })),
                       )

@@ -75,13 +75,24 @@ function createId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 }
 
+function scopedContactId(uid: string, id: string): string {
+  return `${uid}:${id}`;
+}
+
+function publicContactId(uid: string, id: string): string {
+  const prefix = `${uid}:`;
+  return id.startsWith(prefix) ? id.slice(prefix.length) : id;
+}
+
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
 function normalizePhone(value: string): string {
   const digits = value.replace(/\D/g, "");
-  return digits.startsWith("20") && digits.length === 12 ? digits.slice(2) : digits;
+  return digits.startsWith("20") && digits.length === 12
+    ? digits.slice(2)
+    : digits;
 }
 
 function normalizeSearchText(value: string): string {
@@ -181,24 +192,24 @@ export class ProfileRepository implements IProfileRepository {
       phones: contactRows
         .filter((row) => row.type === "phone")
         .map((row) => ({
-          id: row.id,
+          id: publicContactId(uid, row.id),
           number: row.value,
           type: row.platform || "phone",
         })),
       emails: contactRows
         .filter((row) => row.type === "email")
         .map((row) => ({
-          id: row.id,
+          id: publicContactId(uid, row.id),
           email: row.value,
           isPrimary: row.isPrimary,
         })),
       websites: contactRows
         .filter((row) => row.type === "website")
-        .map((row) => ({ id: row.id, url: row.value })),
+        .map((row) => ({ id: publicContactId(uid, row.id), url: row.value })),
       socialLinks: contactRows
         .filter((row) => row.type === "social")
         .map((row) => ({
-          id: row.id,
+          id: publicContactId(uid, row.id),
           platform: row.platform,
           url: row.value,
           handle: row.handle,
@@ -224,7 +235,7 @@ export class ProfileRepository implements IProfileRepository {
 
     const contacts = [
       ...data.phones.map((phone, index) => ({
-        id: phone.id || createId("contact"),
+        id: scopedContactId(uid, phone.id || createId("contact")),
         uid,
         type: "phone",
         platform: phone.type || "phone",
@@ -239,7 +250,7 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       })),
       ...data.emails.map((email, index) => ({
-        id: email.id || createId("contact"),
+        id: scopedContactId(uid, email.id || createId("contact")),
         uid,
         type: "email",
         platform: "",
@@ -254,7 +265,7 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       })),
       ...data.websites.map((site, index) => ({
-        id: site.id || createId("contact"),
+        id: scopedContactId(uid, site.id || createId("contact")),
         uid,
         type: "website",
         platform: "",
@@ -269,7 +280,7 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       })),
       ...data.socialLinks.map((link, index) => ({
-        id: link.id || createId("contact"),
+        id: scopedContactId(uid, link.id || createId("contact")),
         uid,
         type: "social",
         platform: link.platform,
@@ -341,7 +352,8 @@ export class ProfileRepository implements IProfileRepository {
       .from(profileImages)
       .where(eq(profileImages.uid, uid))
       .orderBy(profileImages.sortOrder);
-    const avatar = rows.find((row) => row.imageType === "avatar")?.imageKey ?? null;
+    const avatar =
+      rows.find((row) => row.imageType === "avatar")?.imageKey ?? null;
     const coverImageKeys = rows
       .filter((row) => row.imageType === "cover")
       .map((row) => row.imageKey);
@@ -356,7 +368,9 @@ export class ProfileRepository implements IProfileRepository {
   async upsertImageKeys(uid: string, keys: ProfileImageKeys): Promise<void> {
     await this.ensureProfile(uid);
     const timestamp = nowIso();
-    await this.database.db.delete(profileImages).where(eq(profileImages.uid, uid));
+    await this.database.db
+      .delete(profileImages)
+      .where(eq(profileImages.uid, uid));
     const rows = [
       ...(keys.avatarImageKey
         ? [
@@ -383,7 +397,8 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       })),
     ];
-    if (rows.length > 0) await this.database.db.insert(profileImages).values(rows);
+    if (rows.length > 0)
+      await this.database.db.insert(profileImages).values(rows);
   }
 
   async getStoreDetails(uid: string): Promise<StoreDetailsData | null> {
@@ -394,11 +409,12 @@ export class ProfileRepository implements IProfileRepository {
       .limit(1);
     if (rows.length === 0) return null;
     const row = rows[0];
-    const featured: Array<typeof profileFeaturedProducts.$inferSelect> = await this.database.db
-      .select()
-      .from(profileFeaturedProducts)
-      .where(eq(profileFeaturedProducts.uid, uid))
-      .orderBy(profileFeaturedProducts.sortOrder);
+    const featured: Array<typeof profileFeaturedProducts.$inferSelect> =
+      await this.database.db
+        .select()
+        .from(profileFeaturedProducts)
+        .where(eq(profileFeaturedProducts.uid, uid))
+        .orderBy(profileFeaturedProducts.sortOrder);
     const trending: ProfileTrendingItemRow[] = await this.database.db
       .select()
       .from(profileTrendingItems)
@@ -429,10 +445,15 @@ export class ProfileRepository implements IProfileRepository {
     };
   }
 
-  async upsertStoreDetails(uid: string, details: StoreDetailsData): Promise<void> {
+  async upsertStoreDetails(
+    uid: string,
+    details: StoreDetailsData,
+  ): Promise<void> {
     await this.ensureProfile(uid);
     const timestamp = nowIso();
-    const normalizedWorkingHours = normalizeProfileWorkingHours(details.workingHours);
+    const normalizedWorkingHours = normalizeProfileWorkingHours(
+      details.workingHours,
+    );
     await this.database.db
       .update(userProfiles)
       .set({
@@ -453,7 +474,9 @@ export class ProfileRepository implements IProfileRepository {
     await this.database.db
       .delete(profileFeaturedProducts)
       .where(eq(profileFeaturedProducts.uid, uid));
-    const featured = Array.from(new Set(details.profileShowcase.featuredProductIds))
+    const featured = Array.from(
+      new Set(details.profileShowcase.featuredProductIds),
+    )
       .filter(Boolean)
       .slice(0, 20)
       .map((productId, index) => ({
@@ -487,7 +510,9 @@ export class ProfileRepository implements IProfileRepository {
     await this.saveWorkingHours(uid, normalizedWorkingHours);
   }
 
-  async getFulfillmentSettings(uid: string): Promise<ProfileFulfillmentSettings | null> {
+  async getFulfillmentSettings(
+    uid: string,
+  ): Promise<ProfileFulfillmentSettings | null> {
     const rows = await this.database.db
       .select()
       .from(userProfiles)
@@ -542,7 +567,8 @@ export class ProfileRepository implements IProfileRepository {
         shippingFlatRate: settings.shippingPricing.flatRate,
         shippingLocationBaseRate: settings.shippingPricing.locationBaseRate,
         shippingSpecialVehicleFee: settings.shippingPricing.specialVehicleFee,
-        shippingFreeShippingThreshold: settings.shippingPricing.freeShippingThreshold,
+        shippingFreeShippingThreshold:
+          settings.shippingPricing.freeShippingThreshold,
         shippingNotes: settings.shippingPricing.notes,
         returnsEnabled: settings.returns.enabled,
         returnWindowDays: settings.returns.returnWindowDays,
@@ -568,7 +594,9 @@ export class ProfileRepository implements IProfileRepository {
     return rows.map((row: { uid: string }) => row.uid);
   }
 
-  async getSpecialties(uid: string): Promise<ProfileSpecialtiesSelection | null> {
+  async getSpecialties(
+    uid: string,
+  ): Promise<ProfileSpecialtiesSelection | null> {
     const rows: ProfileSearchCategoryRow[] = await this.database.db
       .select()
       .from(profileSearchCategories)
@@ -632,9 +660,18 @@ export class ProfileRepository implements IProfileRepository {
         "(p.store_name_search LIKE ? OR p.store_description_search LIKE ? OR p.primary_phone_normalized LIKE ? OR p.uid LIKE ?)",
       );
       const phone = normalizePhone(searchText);
-      params.push(`%${searchText}%`, `%${searchText}%`, `%${phone}%`, `%${searchText}%`);
+      params.push(
+        `%${searchText}%`,
+        `%${searchText}%`,
+        `%${phone}%`,
+        `%${searchText}%`,
+      );
     }
-    if (typeof minRating === "number" && Number.isFinite(minRating) && minRating >= 1) {
+    if (
+      typeof minRating === "number" &&
+      Number.isFinite(minRating) &&
+      minRating >= 1
+    ) {
       where.push("p.rating_average >= ?");
       params.push(minRating * 100);
     }
@@ -650,7 +687,10 @@ export class ProfileRepository implements IProfileRepository {
     )) as UserProfileRow[];
   }
 
-  private async saveDeliveryCarriers(uid: string, carrierUids: string[]): Promise<void> {
+  private async saveDeliveryCarriers(
+    uid: string,
+    carrierUids: string[],
+  ): Promise<void> {
     const timestamp = nowIso();
     await this.database.db
       .delete(profileDeliveryCarriers)
@@ -665,7 +705,8 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       }),
     );
-    if (rows.length > 0) await this.database.db.insert(profileDeliveryCarriers).values(rows);
+    if (rows.length > 0)
+      await this.database.db.insert(profileDeliveryCarriers).values(rows);
   }
 
   private async getWorkingHours(uid: string) {
@@ -692,7 +733,10 @@ export class ProfileRepository implements IProfileRepository {
     });
   }
 
-  private async saveWorkingHours(uid: string, value: StoreDetailsData["workingHours"]) {
+  private async saveWorkingHours(
+    uid: string,
+    value: StoreDetailsData["workingHours"],
+  ) {
     const timestamp = nowIso();
     await this.database.db
       .delete(profileWorkingHours)
@@ -728,7 +772,8 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       }));
     });
-    if (rows.length > 0) await this.database.db.insert(profileWorkingHours).values(rows);
+    if (rows.length > 0)
+      await this.database.db.insert(profileWorkingHours).values(rows);
   }
 
   private async rebuildSearchCategories(
@@ -747,7 +792,8 @@ export class ProfileRepository implements IProfileRepository {
         specialtyColumn:
           categoryId === 46
             ? "delivery_services_46"
-            : (columnBySelection.get(`${categoryId}:${categoryId}`) ?? ""),
+            : (columnBySelection.get(`${categoryId}:${categoryId}`) ??
+              `main_category_${categoryId}`),
         source: "main",
         isEnabled: true,
         updatedAt: timestamp,
