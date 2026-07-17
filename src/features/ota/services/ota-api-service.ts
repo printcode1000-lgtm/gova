@@ -1,7 +1,14 @@
-import { asolApi } from '@/core/api';
+import { asolApi, ASOL_API_ROUTES } from '@/core/api';
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
 
-import type { OtaManifest } from '../types/ota.types';
+import type {
+  OtaAdminDashboard,
+  OtaIdentity,
+  OtaManifest,
+  OtaReleaseAccess,
+  OtaReleaseDiff,
+  SetOtaReleaseApprovalInput,
+} from '../types/ota.types';
 
 function assertSuccessfulResponse(status: number, url: string): void {
   if (status < 200 || status >= 300) {
@@ -77,6 +84,42 @@ export class OtaApiService {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
+    });
+  }
+
+  getReleaseAccess(input: {
+    releaseId: string;
+    version: string;
+    identity?: OtaIdentity;
+  }, signal?: AbortSignal): Promise<OtaReleaseAccess> {
+    return asolApi.post<OtaReleaseAccess>(ASOL_API_ROUTES.ota.access, input, {
+      signal,
+      cache: 'no-store',
+      suppressErrorLog: true,
+    });
+  }
+
+  getAdminDashboard(identity: OtaIdentity): Promise<OtaAdminDashboard> {
+    const query = new URLSearchParams({ uid: identity.uid, phone: identity.phone });
+    return asolApi.get<OtaAdminDashboard>(`${ASOL_API_ROUTES.ota.adminReleases}?${query}`, {
+      cache: 'no-store',
+    });
+  }
+
+  getReleaseDiff(identity: OtaIdentity, baseReleaseId: string): Promise<OtaReleaseDiff> {
+    const query = new URLSearchParams({
+      uid: identity.uid,
+      phone: identity.phone,
+      baseReleaseId,
+    });
+    return asolApi.get<OtaReleaseDiff>(`${ASOL_API_ROUTES.ota.adminReleaseDiff}?${query}`, {
+      cache: 'no-store',
+    });
+  }
+
+  setReleaseApproval(input: SetOtaReleaseApprovalInput): Promise<OtaAdminDashboard> {
+    return asolApi.put<OtaAdminDashboard>(ASOL_API_ROUTES.ota.adminReleases, input, {
+      cache: 'no-store',
     });
   }
 }

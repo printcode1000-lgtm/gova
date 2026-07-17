@@ -55,6 +55,11 @@ export const ASOL_API_ROUTES = {
     webPushPublicKey: "/api/notifications/web-push/public-key",
     webPushVapid: "/api/notifications/web-push/vapid",
   },
+  ota: {
+    access: "/api/ota/access",
+    adminReleases: "/api/ota/admin/releases",
+    adminReleaseDiff: "/api/ota/admin/releases/diff",
+  },
   products: "/api/products",
   advertisements: {
     homeHeroSlider: "/api/advertisements/home-hero-slider",

@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { useSession } from '@/features/auth/components/SessionProvider';
+import { isSuperAdmin } from '@/features/auth/utils/super-admin';
 import { useTranslation } from '@/lib/i18n';
 import { asolDbGet, ASOL_DB_STORES } from '@/lib/asol-db';
 import { runInitialization } from '@/lib/initialization/initialization';
@@ -38,22 +40,28 @@ function buildOtaDetails(update: OtaDownloadProgress): string[] {
 export default function SplashInitializer() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { session, isLoading: isSessionLoading } = useSession();
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
   const [details, setDetails] = useState<string[]>([]);
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
+    if (isSessionLoading) return;
+
     const initialize = async () => {
       try {
         const otaEnabled = otaUpdateService.isEnabled();
         if (otaEnabled) {
-          await otaUpdateService.prepareAtSplash((update) => {
-            const { progress, statusKey } = update;
-            setProgress(progress);
-            setStatus(t(statusKey));
-            setDetails(buildOtaDetails(update));
-          });
+          await otaUpdateService.prepareAtSplash(
+            (update) => {
+              const { progress, statusKey } = update;
+              setProgress(progress);
+              setStatus(t(statusKey));
+              setDetails(buildOtaDetails(update));
+            },
+            session ?? undefined,
+          );
         }
 
         await runInitialization(({ progress, statusKey }) => {
@@ -71,7 +79,7 @@ export default function SplashInitializer() {
     };
 
     void initialize();
-  }, [t]);
+  }, [isSessionLoading, session, t]);
 
   useEffect(() => {
     if (isComplete && progress === 100) {
@@ -86,5 +94,12 @@ export default function SplashInitializer() {
     }
   }, [isComplete, progress, router]);
 
-  return <ProgressIndicator progress={progress} status={status} details={details} />;
+  return (
+    <ProgressIndicator
+      progress={progress}
+      status={status}
+      details={details}
+      canViewDetails={!isSessionLoading && isSuperAdmin(session)}
+    />
+  );
 }

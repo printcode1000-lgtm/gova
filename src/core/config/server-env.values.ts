@@ -3,6 +3,10 @@
  * Next.js app code should import from server-env.ts instead.
  */
 
+import { createPublicKey } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+
 export function getTursoRuntimeCredentials(): {
   url: string;
   authToken: string;
@@ -51,6 +55,48 @@ export function getCorsOrigins(): string[] {
 
 export function readOptionalEnv(key: string): string | undefined {
   return process.env[key];
+}
+
+export function getOtaApprovalServerConfig(): {
+  manifestUrl: string;
+  publicKey: string;
+} {
+  const explicitManifestUrl = process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL?.trim();
+  const publicBaseUrl = (
+    process.env.ASOL_OTA_R2_PUBLIC_URL ||
+    process.env.R2_PUBLIC_URL ||
+    process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
+    ''
+  ).replace(/\/$/, '');
+  const prefix = (process.env.ASOL_OTA_R2_PREFIX || 'app-updates').replace(/^\/+|\/+$/g, '');
+  const manifestUrl = explicitManifestUrl || (publicBaseUrl ? `${publicBaseUrl}/${prefix}/manifest.json` : '');
+
+  let publicKey = (
+    process.env.ASOL_OTA_PUBLIC_KEY ||
+    process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY ||
+    ''
+  ).trim();
+  if (!publicKey) {
+    const localPublicKeyPath = path.resolve('.ota', 'public-key.pem');
+    if (existsSync(localPublicKeyPath)) {
+      publicKey = createPublicKey(readFileSync(localPublicKeyPath))
+        .export({ format: 'der', type: 'spki' })
+        .toString('base64');
+    }
+  }
+  if (!publicKey) {
+    const privateKey = process.env.ASOL_OTA_SIGNING_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    const localPrivateKeyPath = path.resolve('.ota', 'private-key.pem');
+    const source = privateKey || (existsSync(localPrivateKeyPath) ? readFileSync(localPrivateKeyPath) : null);
+    if (source) {
+      publicKey = createPublicKey(source)
+        .export({ format: 'der', type: 'spki' })
+        .toString('base64');
+    }
+  }
+
+  if (!manifestUrl || !publicKey) throw new Error('otaNotConfigured');
+  return { manifestUrl, publicKey };
 }
 
 export function writeTursoRuntimeCredentials(

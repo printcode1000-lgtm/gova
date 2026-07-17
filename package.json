@@ -43,6 +43,7 @@
     "cap:open:android": "npx cap open android",
     "cap:open:ios": "npx cap open ios",
     "cap:build": "npx tsx scripts/cap-build.ts",
+    "cap:build:resume": "npx tsx scripts/cap-build.ts --resume",
     "cap:build:local": "npx tsx scripts/cap-build-local.ts"
   },
   "dependencies": {

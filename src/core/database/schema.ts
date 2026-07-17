@@ -48,9 +48,57 @@ export const notificationVapidSettings = sqliteTable('notification_vapid_setting
   updatedAt: text('updated_at').$defaultFn(() => new Date().toISOString()),
 });
 
+export const otaReleases = sqliteTable(
+  'ota_releases',
+  {
+    releaseId: text('release_id').primaryKey(),
+    version: text('version').notNull(),
+    manifestCreatedAt: text('manifest_created_at').notNull(),
+    baseUrl: text('base_url').notNull(),
+    size: integer('size').notNull(),
+    fileCount: integer('file_count').notNull(),
+    minimumNativeVersion: text('minimum_native_version').notNull(),
+    mandatory: integer('mandatory', { mode: 'boolean' }).notNull().default(false),
+    notes: text('notes').notNull().default(''),
+    signature: text('signature').notNull(),
+    manifestJson: text('manifest_json').notNull(),
+    approved: integer('approved', { mode: 'boolean' }).notNull().default(false),
+    approvedAt: text('approved_at'),
+    approvedByUid: text('approved_by_uid'),
+    revokedAt: text('revoked_at'),
+    revokedByUid: text('revoked_by_uid'),
+    discoveredAt: text('discovered_at').notNull(),
+    lastSeenAt: text('last_seen_at').notNull(),
+  },
+  (table) => ({
+    versionIdx: index('ota_releases_version_idx').on(table.version),
+    approvedIdx: index('ota_releases_approved_idx').on(table.approved),
+  }),
+);
+
+export const otaReleaseAudit = sqliteTable(
+  'ota_release_audit',
+  {
+    id: text('id').primaryKey(),
+    releaseId: text('release_id').notNull(),
+    version: text('version').notNull(),
+    action: text('action', { enum: ['discovered', 'approved', 'revoked'] }).notNull(),
+    actorUid: text('actor_uid'),
+    createdAt: text('created_at').notNull(),
+  },
+  (table) => ({
+    releaseIdx: index('ota_release_audit_release_idx').on(table.releaseId),
+    createdAtIdx: index('ota_release_audit_created_at_idx').on(table.createdAt),
+  }),
+);
+
 export type UserEntity = typeof users.$inferSelect;
 export type NewUserEntity = typeof users.$inferInsert;
 export type UserNotificationTokenEntity = typeof userNotificationTokens.$inferSelect;
 export type NewUserNotificationTokenEntity = typeof userNotificationTokens.$inferInsert;
 export type NotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferSelect;
 export type NewNotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferInsert;
+export type OtaReleaseEntity = typeof otaReleases.$inferSelect;
+export type NewOtaReleaseEntity = typeof otaReleases.$inferInsert;
+export type OtaReleaseAuditEntity = typeof otaReleaseAudit.$inferSelect;
+export type NewOtaReleaseAuditEntity = typeof otaReleaseAudit.$inferInsert;

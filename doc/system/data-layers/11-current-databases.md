@@ -31,6 +31,10 @@ src/core/database/schema.ts
 Primary table:
 
 - `users`
+- `user_notification_tokens`
+- `notification_vapid_settings`
+- `ota_releases`
+- `ota_release_audit`
 
 ### Layers
 
@@ -40,6 +44,8 @@ Primary table:
 | Server service | Auth server services |
 | Operations | Auth queries and commands |
 | Repository | User repository through `dbClient` |
+
+OTA approval also uses this database through `/api/ota/access` and `/api/ota/admin/releases`. `ota_releases` stores the exact `releaseId + version`, signed-manifest snapshot, and approval/revocation metadata. `ota_release_audit` records discovery and every super-admin approval decision.
 
 ### Client
 

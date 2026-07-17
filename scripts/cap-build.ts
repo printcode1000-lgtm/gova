@@ -115,6 +115,7 @@ async function verifyR2Files(manifest: OtaManifest): Promise<void> {
 
 async function main(): Promise<void> {
   loadOtaEnvironment();
+  const resumePublishedRelease = process.argv.includes('--resume');
   const apiBaseUrl = (
     process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, '');
@@ -123,8 +124,12 @@ async function main(): Promise<void> {
     ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
   };
 
-  console.log('Publishing the next automatic OTA version to the single R2 directory...');
-  execSync('npm run ota:publish', { stdio: 'inherit', env: publishEnv });
+  if (resumePublishedRelease) {
+    console.log('Resuming cap-build from the already published R2 manifest; no new OTA version will be created.');
+  } else {
+    console.log('Publishing the next automatic OTA version to the single R2 directory...');
+    execSync('npm run ota:publish', { stdio: 'inherit', env: publishEnv });
+  }
 
   const client = createOtaR2Client();
   const remoteManifest = await getOtaManifestObject(client, `${getOtaPrefix()}/manifest.json`);

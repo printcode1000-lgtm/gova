@@ -49,6 +49,17 @@ export function mapServiceError(error: unknown): NextResponse {
     'invalidFollowTarget',
     'followLoginRequired',
     'followSelfNotAllowed',
+    'otaReleaseIdentityRequired',
+    'otaReleaseNotFound',
+    'otaReleaseNotCurrent',
+    'otaReleaseSaveFailed',
+    'otaManifestInvalid',
+    'otaManifestUnavailable',
+    'otaManifestSignatureInvalid',
+    'otaNotConfigured',
+    'otaBaseReleaseRequired',
+    'otaBaseReleaseMatchesCurrent',
+    'otaStoredManifestInvalid',
   ];
 
   if (knownCodes.includes(message)) {

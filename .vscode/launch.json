@@ -73,7 +73,7 @@
       "type": "node",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "cap:build"],
-      "console": "integratedTerminal",
+      "console": "internalConsole",
       "cwd": "${workspaceFolder}"
     },
     {
@@ -82,7 +82,7 @@
       "type": "node",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "cap:build:local"],
-      "console": "integratedTerminal",
+      "console": "internalConsole",
       "cwd": "${workspaceFolder}"
     },
     {
@@ -145,7 +145,7 @@
       "type": "node",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "ota:publish"],
-      "console": "integratedTerminal",
+      "console": "internalConsole",
       "cwd": "${workspaceFolder}"
     }
   ]

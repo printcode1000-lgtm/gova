@@ -2,6 +2,7 @@
 
 import {
   ChevronDown,
+  CloudDownload,
   Edit,
   Eye,
   LogIn,
@@ -179,6 +180,14 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
             >
               <TrendingUp className="h-4 w-4" />
               {t("sidebar.trendingRibbon")}
+            </Link>
+            <Link
+              href="/super-admin/ota-releases"
+              onClick={onClose}
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+            >
+              <CloudDownload className="h-4 w-4" />
+              {t("sidebar.otaReleases")}
             </Link>
             <Link
               href="/super-admin/logs"

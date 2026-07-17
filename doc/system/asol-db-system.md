@@ -24,7 +24,7 @@ The general key-value store used to persist application state, settings, user pr
 |-----|------------|-------------|
 | `theme-preferences` | `ThemePreferences` | Visual theme settings: `{ themeMode: 'light' \| 'dark', fontSize: number, density: ThemeDensity, highContrast: boolean }` |
 | `app-preferences` | `AppPreferences` | App preference settings: `{ locale: Locale }` |
-| `ota-state` | `OtaStoredState` | Persistent OTA update state: `{ pending?, failedReleaseId?, activation? }` |
+| `asol-ota-state-v1` | `OtaStoredState` | Device-local OTA state: `{ pending?, failedReleaseId?, activation? }`. Release approval is never stored or trusted in IndexedDB. |
 | `asol-dev-splash-nav-toggle` | `boolean` | Developer toggle to enable or disable automatic splash screen navigation to home. |
 | `monitor-theme` | `'light' \| 'dark'` | Active theme for the developer live logs monitor panel. |
 
@@ -106,3 +106,4 @@ Because IndexedDB queries are asynchronous, Asol coordinates hydration states on
 1. **Never use LocalStorage.** Use `asolDbGet` / `asolDbSet` with the `appSettings` store instead.
 2. **Handle Promises.** All AsolDB actions return a Promise and must be awaited or chained with `.then()`.
 3. **Structured Cloning.** Do not attempt to store functions, promises, or non-serializable objects in the database.
+4. **OTA approval is server-owned.** AsolDB may cache a downloaded/pending release, but `/api/ota/access` must authorize both download and activation. A local value must never grant approval.

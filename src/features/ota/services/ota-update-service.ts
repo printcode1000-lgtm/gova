@@ -7,6 +7,7 @@ import type {
   DownloadedOtaUpdate,
   OtaDownloadProgress,
   OtaFileEntry,
+  OtaIdentity,
   OtaManifest,
   OtaManifestPayload,
   OtaStoredState,
@@ -244,9 +245,17 @@ export const otaUpdateService = {
     await writeState(state);
   },
 
-  async activatePending(): Promise<void> {
+  async activatePending(identity?: OtaIdentity): Promise<void> {
     const state = await readState();
     if (!state.pending) return;
+    const access = await otaApiService.getReleaseAccess({
+      releaseId: state.pending.releaseId,
+      version: state.pending.version,
+      identity,
+    });
+    if (!access.allowed) {
+      throw new Error(`OTA release ${state.pending.version} is awaiting super-admin approval`);
+    }
     const previousPath = await capacitorOtaAdapter.currentBasePath();
     state.activation = {
       version: state.pending.version,
@@ -260,6 +269,7 @@ export const otaUpdateService = {
 
   async checkAndDownload(
     onProgress?: (progress: OtaDownloadProgress) => void,
+    identity?: OtaIdentity,
   ): Promise<DownloadedOtaUpdate | null> {
     if (!this.isEnabled()) return null;
     if (activeDownload) return activeDownload;
@@ -359,6 +369,28 @@ export const otaUpdateService = {
             progress: 22,
             statusKey: 'ota.noUpdate',
             detail: `${localManifest.version} = ${remoteManifest.version}`,
+            currentVersion: localManifest.version,
+            remoteVersion: remoteManifest.version,
+          });
+          return null;
+        }
+
+        const access = await otaApiService.getReleaseAccess(
+          {
+            releaseId: remoteManifest.releaseId,
+            version: remoteManifest.version,
+            identity,
+          },
+          downloadController.signal,
+        );
+        if (!access.allowed) {
+          logInfo(`OTA release awaiting approval: ${remoteManifest.version}`, {
+            releaseId: remoteManifest.releaseId,
+          });
+          onProgress?.({
+            progress: 22,
+            statusKey: 'ota.awaitingApproval',
+            detail: `Release ${remoteManifest.version} is not approved`,
             currentVersion: localManifest.version,
             remoteVersion: remoteManifest.version,
           });
@@ -513,6 +545,7 @@ export const otaUpdateService = {
 
   async prepareAtSplash(
     onProgress: (progress: OtaDownloadProgress) => void,
+    identity?: OtaIdentity,
   ): Promise<void> {
     if (!this.isEnabled()) return;
 
@@ -537,10 +570,26 @@ export const otaUpdateService = {
     let pending = await this.getPending();
     if (pending) {
       try {
-        await this.checkAndDownload(onProgress);
+        const access = await otaApiService.getReleaseAccess({
+          releaseId: pending.releaseId,
+          version: pending.version,
+          identity,
+        });
+        if (!access.allowed) {
+          logInfo(`Pending OTA release is no longer approved: ${pending.version}`);
+          onProgress({
+            progress: 20,
+            statusKey: 'ota.awaitingApproval',
+            detail: `Release ${pending.version} is not approved`,
+            remoteVersion: pending.version,
+          });
+          return;
+        }
+        await this.checkAndDownload(onProgress, identity);
         pending = await this.getPending();
       } catch (error) {
         logWarn('Pending update refresh skipped', error instanceof Error ? error.message : error);
+        return;
       }
       if (pending) {
         onProgress({
@@ -553,12 +602,12 @@ export const otaUpdateService = {
           downloadBytes: pending.size,
         });
       }
-      await this.activatePending();
+      await this.activatePending(identity);
       return;
     }
 
     try {
-      await this.checkAndDownload(onProgress);
+      await this.checkAndDownload(onProgress, identity);
     } catch (error) {
       onProgress({
         progress: 20,

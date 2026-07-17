@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from 'react';
 
+import { useSession } from '@/features/auth/components/SessionProvider';
 import { OTA_STATE_EVENT, otaUpdateService } from '../services/ota-update-service';
 import type { DownloadedOtaUpdate, OtaStoredState } from '../types/ota.types';
 
@@ -34,6 +35,7 @@ function shouldPrompt(update: DownloadedOtaUpdate | null): boolean {
 }
 
 export function OtaUpdateProvider({ children }: { children: ReactNode }) {
+  const { session, isLoading: isSessionLoading } = useSession();
   const [pending, setPending] = useState<DownloadedOtaUpdate | null>(null);
   const [promptVisible, setPromptVisible] = useState(false);
   const [isRestarting, setIsRestarting] = useState(false);
@@ -61,16 +63,16 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
   }, [scheduleReminder]);
 
   const checkForUpdates = useCallback(async () => {
-    if (!otaUpdateService.isEnabled() || await otaUpdateService.getPending()) return;
+    if (isSessionLoading || !otaUpdateService.isEnabled() || await otaUpdateService.getPending()) return;
     try {
-      await otaUpdateService.checkAndDownload();
+      await otaUpdateService.checkAndDownload(undefined, session ?? undefined);
     } catch (checkError) {
       console.warn(
         '[AsolOTA] Background update check skipped:',
         checkError instanceof Error ? checkError.message : checkError,
       );
     }
-  }, []);
+  }, [isSessionLoading, session]);
 
   useEffect(() => {
     const handleState = (event: Event) => {
@@ -101,12 +103,12 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
     setError(null);
     setIsRestarting(true);
     try {
-      await otaUpdateService.activatePending();
+      await otaUpdateService.activatePending(session ?? undefined);
     } catch (restartError) {
       setError(restartError instanceof Error ? restartError.message : 'OTA activation failed');
       setIsRestarting(false);
     }
-  }, []);
+  }, [session]);
 
   const remindLater = useCallback(async () => {
     const update = await otaUpdateService.dismissPending();

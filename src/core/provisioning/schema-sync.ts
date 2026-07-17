@@ -38,7 +38,13 @@ const MARKETPLACE_ORDERS_SCHEMA_SYNC_REPORT_PATH = path.join(
 );
 
 const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
-  users: new Set(['users', 'user_notification_tokens', 'notification_vapid_settings']),
+  users: new Set([
+    'users',
+    'user_notification_tokens',
+    'notification_vapid_settings',
+    'ota_releases',
+    'ota_release_audit',
+  ]),
   profile: new Set([
     'user_profiles',
     'user_specialties',

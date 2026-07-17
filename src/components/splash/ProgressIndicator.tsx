@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useTranslation } from '@/lib/i18n';
 import type { TranslationKey } from '@/lib/i18n';
 
@@ -9,6 +10,7 @@ interface ProgressIndicatorProps {
   progress: number;
   status: string;
   details?: readonly string[];
+  canViewDetails?: boolean;
 }
 
 const PROGRESS_MESSAGE_KEYS = [
@@ -19,7 +21,12 @@ const PROGRESS_MESSAGE_KEYS = [
   'splash.progress.message5',
 ] as const satisfies readonly TranslationKey[];
 
-export default function ProgressIndicator({ progress, status, details = [] }: ProgressIndicatorProps) {
+export default function ProgressIndicator({
+  progress,
+  status,
+  details = [],
+  canViewDetails = false,
+}: ProgressIndicatorProps) {
   const { t } = useTranslation();
   const [msgIndex, setMsgIndex] = useState(0);
 
@@ -36,13 +43,16 @@ export default function ProgressIndicator({ progress, status, details = [] }: Pr
         {status || t(PROGRESS_MESSAGE_KEYS[msgIndex])}
       </div>
 
-      {details.length > 0 && (
-        <div className="mt-2 grid w-full gap-1 rounded-xl border border-outline-variant/70 bg-surface-container/70 px-3 py-2 text-center text-[11px] font-semibold text-on-surface-variant">
-          {details.map((detail) => (
-            <span key={detail}>{detail}</span>
-          ))}
-        </div>
-      )}
+      {details.length > 0 &&
+        (canViewDetails ? (
+          <div className="mt-2 grid w-full gap-1 rounded-xl border border-outline-variant/70 bg-surface-container/70 px-3 py-2 text-center text-[11px] font-semibold text-on-surface-variant">
+            {details.map((detail) => (
+              <span key={detail}>{detail}</span>
+            ))}
+          </div>
+        ) : (
+          <LoadingSpinner size="md" className="mt-2" role="status" aria-label={t('splash.progress.loading')} />
+        ))}
 
       <div className="w-full mt-4 asol-splash-progress-track h-1 rounded-full overflow-hidden relative shadow-inner">
         <div
