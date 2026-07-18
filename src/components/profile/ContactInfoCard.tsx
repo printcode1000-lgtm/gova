@@ -39,7 +39,6 @@ interface SocialLink {
   id: string;
   platform: string;
   url: string;
-  handle: string;
 }
 
 interface WebsiteLink {
@@ -287,13 +286,13 @@ export function ContactInfoCard({
   const addSocialLink = (platform: string) => {
     const newData = {
       ...localData,
-      socialLinks: [...localData.socialLinks, { id: Date.now().toString(), platform, url: '', handle: '' }],
+      socialLinks: [...localData.socialLinks, { id: Date.now().toString(), platform, url: '' }],
     };
     setLocalData(newData);
     onChange?.(newData);
   };
 
-  const updateSocialLink = (id: string, updates: { url?: string; handle?: string }) => {
+  const updateSocialLink = (id: string, updates: { url?: string }) => {
     const newData = {
       ...localData,
       socialLinks: localData.socialLinks.map((s) =>
@@ -658,10 +657,11 @@ export function ContactInfoCard({
                           <div key={link.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                             <div className="flex-1">
                               <Input
-                                value={link.handle}
-                                onChange={(e) => updateSocialLink(link.id, { handle: e.target.value })}
-                                placeholder={t('onboarding.contactInfo.usernamePlaceholder')}
+                                value={link.url}
+                                onChange={(e) => updateSocialLink(link.id, { url: e.target.value })}
+                                placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
                                 className="w-full"
+                                inputMode="url"
                                 disabled={readOnly}
                               />
                             </div>
@@ -917,10 +917,11 @@ export function ContactInfoCard({
                           <div key={link.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                             <div className="flex-1">
                               <Input
-                                value={link.handle}
-                                onChange={(e) => updateSocialLink(link.id, { handle: e.target.value })}
-                                placeholder={t('onboarding.contactInfo.usernamePlaceholder')}
+                                value={link.url}
+                                onChange={(e) => updateSocialLink(link.id, { url: e.target.value })}
+                                placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
                                 className="w-full"
+                                inputMode="url"
                                 disabled={readOnly}
                               />
                             </div>

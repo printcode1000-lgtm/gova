@@ -126,7 +126,6 @@ function buildRandomOnboardingData(): OnboardingData {
   const socialLinks: SocialLink[] = pickMany(socialPlatforms, 1, 2).map((platform) => ({
     platform,
     url: `https://${randomAlnum(6)}.example.com`,
-    handle: `@${randomAlnum(8)}`,
   }));
 
   const coupon: CouponCode = {

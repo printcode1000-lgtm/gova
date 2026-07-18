@@ -45,7 +45,9 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
   const homeTrendingRibbonConfig = useMemo<TrendingRibbonConfig>(
     () => ({
       label: trendingRibbonData?.label ?? "home.trending.label",
-      items: Array.isArray(trendingRibbonData?.items) ? trendingRibbonData.items : [],
+      items: Array.isArray(trendingRibbonData?.items)
+        ? trendingRibbonData.items
+        : [],
       onAction: (action) => {
         if (action.startsWith("/") || action.startsWith("http")) {
           window.location.href = action;
@@ -72,7 +74,9 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
         } else if (action.includes("productId=")) {
           router.push(`/product?${action}`);
         } else if (/^[0-9a-fA-F-]{36}$/.test(action)) {
-          router.push(`/product?mode=view&productId=${encodeURIComponent(action)}`);
+          router.push(
+            `/product?mode=view&productId=${encodeURIComponent(action)}`,
+          );
         } else {
           console.log("Featured marquee action triggered:", action);
         }
@@ -87,12 +91,18 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
         <HeroSlider config={homeHeroSliderConfig} />
       </div>
 
-      <div className="asol-section-tonal asol-section-tonal-tertiary mx-1">
+      <section className="mx-2 sm:mx-4">
         <FeaturedMarquee config={homeFeaturedMarqueeConfig} />
-      </div>
+      </section>
+
+      {homeTrendingRibbonConfig.items.length > 0 ? (
+        <section className="overflow-hidden rounded-2xl border border-error/20 shadow-sm">
+          <TrendingRibbon config={homeTrendingRibbonConfig} />
+        </section>
+      ) : null}
 
       <div className="asol-section-tonal asol-section-tonal-primary mx-2 sm:mx-4">
-        <CategoriesGrid displayCategories={displayCategories} trendingRibbonConfig={homeTrendingRibbonConfig} />
+        <CategoriesGrid displayCategories={displayCategories} />
       </div>
 
       <div className="asol-section-tonal asol-section-tonal-secondary mx-2 sm:mx-4">

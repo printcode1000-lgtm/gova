@@ -3,10 +3,8 @@
 import Link from "next/link";
 import {
   AlertTriangle,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronUp,
   Clock,
   Loader2,
   LogIn,
@@ -24,14 +22,12 @@ import {
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import Image from "next/image";
 
 import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
 import { ProfileContactsCard } from "@/components/profile/ProfileContactsCard";
 import { ProfileRegistrationInfoCard } from "@/components/profile/ProfileRegistrationInfoCard";
 import { SpecialtiesCard } from "@/components/profile/SpecialtiesCard";
 import { ProductsCard } from "@/components/profile/ProductsCard";
-import { ProfileProductsPreview } from "@/components/profile/ProfileProductsPreview";
 import { StoreIdentityCard } from "@/components/profile/StoreIdentityCard";
 import { FulfillmentSettingsCard } from "@/components/profile/FulfillmentSettingsCard";
 import { WorkingHoursProfileCard } from "@/components/profile/WorkingHoursProfileCard";
@@ -40,20 +36,17 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { useTranslation } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ContactActionBar } from "@/components/ui/contact-action-bar";
-import { FeaturedMarquee, type FeaturedMarqueeConfig } from "@/components/ui/FeaturedMarquee";
-import { FollowButton } from "@/components/ui/follow";
-import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
-import { ProfileCustomRequestButton } from "@/components/ui/profile-custom-request-button";
-import { TrendingRibbon, type TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
-import { WorkingHoursCard } from "@/components/ui/working-hours";
+import type { FeaturedMarqueeConfig } from "@/components/ui/FeaturedMarquee";
+import type { HeroSliderConfig } from "@/components/ui/HeroSlider";
+import type { TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
 import { asolApi, ASOL_API_ROUTES } from "@/core/api";
-import { ProductReviews } from "@/components/product/ProductReviews";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { useProfilePublicContacts } from "@/features/profile/hooks/use-profile-public-contacts";
+import { useProfilePublicFulfillmentSettings } from "@/features/profile/hooks/use-profile-public-fulfillment-settings";
+import { ProfilePreviewContent } from "./ProfilePreviewContent";
 import type {
   ProfileContactsController,
   ProfileRegistrationController,
@@ -61,7 +54,10 @@ import type {
   ProfileFulfillmentController,
   StoreDetailsController,
 } from "./profile-save-controller";
-import type { ProfileEditTab, ProfileSectionStatus } from "./profile-page.types";
+import type {
+  ProfileEditTab,
+  ProfileSectionStatus,
+} from "./profile-page.types";
 import { PROFILE_SECTION_IDS, PROFILE_SECTIONS } from "./profile-page.types";
 import { useProfileNavigation } from "./use-profile-navigation";
 import { useProfileSave } from "./use-profile-save";
@@ -82,9 +78,15 @@ export function ProfilePageContent() {
   const { details: storeDetails, isLoading: isLoadingStoreDetails } =
     useStoreDetails(isViewingOtherProfile ? uid : undefined);
   const previewUid = showPreviewCard ? uid || session?.uid || "" : "";
-  const isPreviewOwner = Boolean(session?.uid && previewUid && session.uid === previewUid);
+  const isPreviewOwner = Boolean(
+    session?.uid && previewUid && session.uid === previewUid,
+  );
   const { contacts: previewContacts, isLoading: isLoadingPreviewContacts } =
     useProfilePublicContacts(previewUid);
+  const {
+    settings: previewFulfillment,
+    isLoading: isLoadingPreviewFulfillment,
+  } = useProfilePublicFulfillmentSettings(previewUid);
 
   const registrationRef = React.useRef<ProfileRegistrationController>(null);
   const specialtiesRef = React.useRef<ProfileSpecialtiesController>(null);
@@ -132,9 +134,11 @@ export function ProfilePageContent() {
     setSession,
   });
 
-  const [isStoryExpanded, setIsStoryExpanded] = React.useState(false);
-  const [featuredProducts, setFeaturedProducts] = React.useState<ProductRecord[]>([]);
-  const [isLoadingFeaturedProducts, setIsLoadingFeaturedProducts] = React.useState(false);
+  const [featuredProducts, setFeaturedProducts] = React.useState<
+    ProductRecord[]
+  >([]);
+  const [isLoadingFeaturedProducts, setIsLoadingFeaturedProducts] =
+    React.useState(false);
 
   const heroSliderConfig = useMemo<HeroSliderConfig>(() => {
     const slides = storeImages.coverUrls.map((url, index) => ({
@@ -177,7 +181,9 @@ export function ProfilePageContent() {
           setFeaturedProducts(
             products.filter(
               (product): product is ProductRecord =>
-                Boolean(product) && (!previewUid || product!.uid === previewUid),
+                Boolean(product) &&
+                product!.status === "active" &&
+                (!previewUid || product!.uid === previewUid),
             ),
           );
         }
@@ -189,37 +195,55 @@ export function ProfilePageContent() {
     return () => {
       cancelled = true;
     };
-  }, [previewUid, showPreviewCard, storeDetails.profileShowcase?.featuredProductIds]);
+  }, [
+    previewUid,
+    showPreviewCard,
+    storeDetails.profileShowcase?.featuredProductIds,
+  ]);
 
-  const profileFeaturedConfig = useMemo<FeaturedMarqueeConfig>(() => ({
-    sectionTitle: "منتجات مميزة",
-    items: featuredProducts.map((product) => {
-      const price = Number(product.price.current || 0);
-      return {
-        id: product.id,
-        title: product.mainData.name || "منتج",
-        price: price > 0 ? `${price.toLocaleString("ar-EG")} ج.م` : "السعر عند الطلب",
-        image: product.images[0]?.url || "/images/mainCategories/General Services.webp",
-        action: `mode=view&productId=${product.id}&mainCategoryId=${product.mainCategoryId}&subcategoryId=${product.subcategoryId}`,
-      };
+  const profileFeaturedConfig = useMemo<FeaturedMarqueeConfig>(
+    () => ({
+      sectionTitle: "منتجات مميزة",
+      items: featuredProducts.map((product) => {
+        const price = Number(product.price.current || 0);
+        return {
+          id: product.id,
+          title: product.mainData.name || "منتج",
+          price:
+            price > 0
+              ? `${price.toLocaleString("ar-EG")} ج.م`
+              : "السعر عند الطلب",
+          image:
+            product.images[0]?.url ||
+            "/images/mainCategories/General Services.webp",
+          action: `mode=view&productId=${product.id}&mainCategoryId=${product.mainCategoryId}&subcategoryId=${product.subcategoryId}`,
+        };
+      }),
+      onAction: (action) => router.push(`/product?${action}`),
     }),
-    onAction: (action) => router.push(`/product?${action}`),
-  }), [featuredProducts, router]);
+    [featuredProducts, router],
+  );
 
-  const profileTrendingConfig = useMemo<TrendingRibbonConfig>(() => ({
-    label: storeDetails.profileShowcase?.trending.label || "الأكثر رواجًا",
-    items: (storeDetails.profileShowcase?.trending.items ?? []).map((item) => ({
-      label: item.label,
-      action: "",
-    })),
-  }), [storeDetails.profileShowcase?.trending]);
+  const profileTrendingConfig = useMemo<TrendingRibbonConfig>(
+    () => ({
+      label: storeDetails.profileShowcase?.trending.label || "الأكثر رواجًا",
+      items: (storeDetails.profileShowcase?.trending.items ?? []).map(
+        (item) => ({
+          label: item.label,
+          action: "",
+        }),
+      ),
+    }),
+    [storeDetails.profileShowcase?.trending],
+  );
 
   const submitProfileCustomRequest = async (input: {
     title: string;
     description: string;
     images: { imageKey: string; url: string }[];
   }) => {
-    if (!session?.uid || !previewUid) throw new Error("يجب تسجيل الدخول لإرسال الطلب.");
+    if (!session?.uid || !previewUid)
+      throw new Error("يجب تسجيل الدخول لإرسال الطلب.");
     const result = await asolApi.post<{ orderId: string }>(
       ASOL_API_ROUTES.orders.customRequestFromProfile,
       {
@@ -235,7 +259,9 @@ export function ProfilePageContent() {
       },
       { suppressErrorLog: true },
     );
-    router.push(`/orders/details?orderId=${encodeURIComponent(result.orderId)}&role=buyer`);
+    router.push(
+      `/orders/details?orderId=${encodeURIComponent(result.orderId)}&role=buyer`,
+    );
   };
 
   const dirtySections = (
@@ -247,7 +273,6 @@ export function ProfilePageContent() {
     .map(([, status]) => status?.label)
     .filter((label): label is string => Boolean(label));
   const isSaveBlocked = dirtySections.some(([, status]) => !status?.canSave);
-
   if (isLoading) {
     return (
       <div className="container px-4 py-8 text-sm text-on-surface-variant">
@@ -274,134 +299,29 @@ export function ProfilePageContent() {
   return (
     <div className="container px-3 py-4 sm:px-5 sm:py-8 lg:px-6">
       {showPreviewCard ? (
-        <div className="mx-auto w-full max-w-6xl px-0 sm:px-4">
-          {isLoadingStoreImages ? (
-            <div className="py-8 text-center text-sm text-on-surface-variant">
-              {t("profile.loading")}
-            </div>
-          ) : (
-            <div className="mb-0">
-              <HeroSlider mode="view" config={heroSliderConfig} />
-            </div>
-          )}
-          {!isLoadingStoreDetails && (
-            <section className="mx-2 sm:mx-4 border-b border-outline-variant/60 pb-4 sm:pb-5">
-              <div className="flex min-w-0 items-start gap-3 sm:gap-4">
-                {storeImages.avatarUrl ? (
-                  <div className="relative z-10 -mt-8 sm:-mt-10 h-20 w-20 sm:h-28 sm:w-28 flex-shrink-0 overflow-hidden rounded-full border-4 border-surface shadow-lg">
-                    <Image
-                      src={storeImages.avatarUrl}
-                      alt="Avatar"
-                      width={112}
-                      height={112}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ) : null}
-
-                <div className="min-w-0 flex-1 pt-2 sm:pt-3">
-                  {storeDetails.storeName ? (
-                    <h1 className="break-words text-lg sm:text-xl font-bold leading-7 text-on-surface sm:text-2xl">
-                      {storeDetails.storeName}
-                    </h1>
-                  ) : null}
-                  {storeDetails.storeDescription ? (
-                    <p className="mt-1 line-clamp-2 break-words text-xs sm:text-sm leading-5 sm:leading-6 text-on-surface-variant">
-                      {storeDetails.storeDescription}
-                    </p>
-                  ) : null}
-                  {previewUid ? (
-                    <div className="mt-3">
-                      <FollowButton
-                        targetType="store"
-                        targetId={previewUid}
-                        targetOwnerUid={previewUid}
-                        viewerUid={session?.uid}
-                        isOwner={isPreviewOwner}
-                        isSuperAdmin={superAdmin}
-                        targetLabel={storeDetails.storeName || "مقدم الخدمة"}
-                      />
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            </section>
-          )}
-          {!isLoadingPreviewContacts && previewContacts ? (
-            <div className="mx-2 mt-4 sm:mx-4">
-              <ContactActionBar data={previewContacts} />
-            </div>
-          ) : null}
-          {storeDetails.profileShowcase?.customRequestEnabled && session?.uid && previewUid ? (
-            <section className="mx-2 mt-4 sm:mx-4">
-              <ProfileCustomRequestButton
-                onSubmit={submitProfileCustomRequest}
-                buttonLabel="إرسال طلب خاص"
-                title={`طلب خاص إلى ${storeDetails.storeName || "البائع"}`}
-              />
-            </section>
-          ) : null}
-          {!isLoadingStoreDetails ? (
-            <section className="mx-2 mt-4 sm:mx-4">
-              <WorkingHoursCard
-                mode="preview"
-                locale={locale === "ar" ? "ar" : "en"}
-                value={storeDetails.workingHours}
-              />
-            </section>
-          ) : null}
-          {!isLoadingFeaturedProducts && featuredProducts.length > 0 ? (
-            <section className="mx-2 mt-6 sm:mx-4">
-              <FeaturedMarquee config={profileFeaturedConfig} />
-            </section>
-          ) : null}
-          {profileTrendingConfig.items.length > 0 ? (
-            <section className="mt-5">
-              <TrendingRibbon config={profileTrendingConfig} />
-            </section>
-          ) : null}
-          {previewUid ? (
-            <section className="mx-2 mt-6 sm:mx-4">
-              <ProfileProductsPreview uid={previewUid} />
-            </section>
-          ) : null}
-          {!isLoadingStoreDetails && storeDetails.storeStory ? (
-            <section className="mx-2 sm:mx-4 mt-4 sm:mt-5 space-y-2">
-              <button
-                type="button"
-                onClick={() => setIsStoryExpanded(!isStoryExpanded)}
-                className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-on-surface hover:text-primary transition-colors"
-              >
-                {t("onboarding.storeIdentity.storeStory")}
-                {isStoryExpanded ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
-              </button>
-              {isStoryExpanded && (
-                <p className="text-xs sm:text-sm leading-5 sm:leading-6 text-on-surface-variant">
-                  {storeDetails.storeStory}
-                </p>
-              )}
-            </section>
-          ) : null}
-
-          {/* Profile Reviews Section */}
-          {!isLoadingStoreDetails && storeDetails.ratingSettings?.enabled && (
-            <section className="mx-2 sm:mx-4 mt-8 sm:mt-12 border-t border-outline-variant/60 pt-8 pb-12">
-              <ProductReviews
-                type="profile"
-                targetUid={uid || session?.uid || ""}
-                ownerUid={uid || session?.uid || ""}
-                productName={storeDetails.storeName || t("profile.title")}
-                reviewsEnabled={true}
-                targetEnabled={true}
-                commentsEnabled={storeDetails.ratingSettings.mode === "stars-comments"}
-              />
-            </section>
-          )}
-        </div>
+        <ProfilePreviewContent
+          locale={locale === "ar" ? "ar" : "en"}
+          previewUid={previewUid}
+          session={session}
+          isOwner={isPreviewOwner}
+          isSuperAdmin={superAdmin}
+          storeImages={storeImages}
+          storeDetails={storeDetails}
+          contacts={previewContacts}
+          fulfillment={previewFulfillment}
+          heroConfig={heroSliderConfig}
+          featuredConfig={profileFeaturedConfig}
+          trendingConfig={profileTrendingConfig}
+          hasFeaturedProducts={featuredProducts.length > 0}
+          loading={{
+            images: isLoadingStoreImages,
+            details: isLoadingStoreDetails,
+            contacts: isLoadingPreviewContacts,
+            fulfillment: isLoadingPreviewFulfillment,
+            featured: isLoadingFeaturedProducts,
+          }}
+          onCustomRequest={submitProfileCustomRequest}
+        />
       ) : showEditCard ? (
         <div
           id="edit-profile-card"
@@ -412,164 +332,164 @@ export function ProfilePageContent() {
               className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-3 sm:gap-3 sm:px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               aria-label={t("profile.subtitle")}
             >
-                  <button
-                    ref={(node) => {
-                      navButtonRefs.current.registration = node;
-                    }}
-                    type="button"
-                    onClick={() => selectSection("registration")}
-                    aria-pressed={activeTab === "registration"}
-                    aria-controls={PROFILE_SECTION_IDS.registration}
-                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                      activeTab === "registration"
-                        ? "border-primary bg-primary text-on-primary shadow-sm"
-                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                    }`}
-                  >
-                    <FontAwesomeIcon icon={faUserCircle} className="h-6 w-6" />
-                    <span className="whitespace-nowrap text-center">
-                      {t("onboarding.contactInfo.primaryContact")}
-                    </span>
-                    {sectionStatuses.registration?.isDirty ? (
-                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                    ) : null}
-                  </button>
-                  <button
-                    ref={(node) => {
-                      navButtonRefs.current.specialties = node;
-                    }}
-                    type="button"
-                    onClick={() => selectSection("specialties")}
-                    aria-pressed={activeTab === "specialties"}
-                    aria-controls={PROFILE_SECTION_IDS.specialties}
-                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                      activeTab === "specialties"
-                        ? "border-primary bg-primary text-on-primary shadow-sm"
-                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                    }`}
-                  >
-                    <FontAwesomeIcon icon={faStar} className="h-6 w-6" />
-                    <span className="whitespace-nowrap text-center">
-                      {t("onboarding.storeIdentity.specialties")}
-                    </span>
-                    {sectionStatuses.specialties?.isDirty ? (
-                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                    ) : null}
-                  </button>
-                  <button
-                    ref={(node) => {
-                      navButtonRefs.current.products = node;
-                    }}
-                    type="button"
-                    onClick={() => selectSection("products")}
-                    aria-pressed={activeTab === "products"}
-                    aria-controls={PROFILE_SECTION_IDS.products}
-                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                      activeTab === "products"
-                        ? "border-primary bg-primary text-on-primary shadow-sm"
-                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                    }`}
-                  >
-                    <FontAwesomeIcon icon={faTags} className="h-6 w-6" />
-                    <span className="whitespace-nowrap text-center">
-                      {t("onboarding.storeIdentity.products")}
-                    </span>
-                    {sectionStatuses.products?.isDirty ? (
-                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                    ) : null}
-                  </button>
-                  <button
-                    ref={(node) => {
-                      navButtonRefs.current.contact = node;
-                    }}
-                    type="button"
-                    onClick={() => selectSection("contact")}
-                    aria-pressed={activeTab === "contact"}
-                    aria-controls={PROFILE_SECTION_IDS.contact}
-                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                      activeTab === "contact"
-                        ? "border-primary bg-primary text-on-primary shadow-sm"
-                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                    }`}
-                  >
-                    <FontAwesomeIcon icon={faAddressBook} className="h-6 w-6" />
-                    <span className="whitespace-nowrap text-center">
-                      {t("onboarding.contactInfo.additionalContact")}
-                    </span>
-                    {sectionStatuses.contact?.isDirty ? (
-                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                    ) : null}
-                  </button>
-                  <button
-                    ref={(node) => {
-                      navButtonRefs.current.store = node;
-                    }}
-                    type="button"
-                    onClick={() => selectSection("store")}
-                    aria-pressed={activeTab === "store"}
-                    aria-controls={PROFILE_SECTION_IDS.store}
-                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                      activeTab === "store"
-                        ? "border-primary bg-primary text-on-primary shadow-sm"
-                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                    }`}
-                  >
-                    <FontAwesomeIcon icon={faBuilding} className="h-6 w-6" />
-                    <span className="whitespace-nowrap text-center">
-                      {t("onboarding.storeIdentity.title")}
-                    </span>
-                    {sectionStatuses.store?.isDirty ? (
-                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                    ) : null}
-                  </button>
-                  <button
-                    ref={(node) => {
-                      navButtonRefs.current.workingHours = node;
-                    }}
-                    type="button"
-                    onClick={() => selectSection("workingHours")}
-                    aria-pressed={activeTab === "workingHours"}
-                    aria-controls={PROFILE_SECTION_IDS.workingHours}
-                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                      activeTab === "workingHours"
-                        ? "border-primary bg-primary text-on-primary shadow-sm"
-                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                    }`}
-                  >
-                    <Clock className="h-6 w-6" />
-                    <span className="whitespace-nowrap text-center">
-                      {locale === "ar" ? "مواعيد العمل" : "Working hours"}
-                    </span>
-                    {sectionStatuses.workingHours?.isDirty ? (
-                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                    ) : null}
-                  </button>
-                  <button
-                    ref={(node) => {
-                      navButtonRefs.current.fulfillment = node;
-                    }}
-                    type="button"
-                    onClick={() => selectSection("fulfillment")}
-                    aria-pressed={activeTab === "fulfillment"}
-                    aria-controls={PROFILE_SECTION_IDS.fulfillment}
-                    className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                      activeTab === "fulfillment"
-                        ? "border-primary bg-primary text-on-primary shadow-sm"
-                        : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                    }`}
-                  >
-                    <Truck className="h-6 w-6" />
-                    <span className="whitespace-nowrap text-center">
-                      {locale === "ar" ? "الشحن والإرجاع" : "Shipping"}
-                    </span>
-                    {sectionStatuses.fulfillment?.isDirty ? (
-                      <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                    ) : null}
-                  </button>
-                </div>
-                <div className="pointer-events-none absolute inset-y-0 start-0 w-5 bg-gradient-to-r from-surface-container-low/95 to-transparent" />
-                <div className="pointer-events-none absolute inset-y-0 end-0 w-5 bg-gradient-to-l from-surface-container-low/95 to-transparent" />
-              </div>
+              <button
+                ref={(node) => {
+                  navButtonRefs.current.registration = node;
+                }}
+                type="button"
+                onClick={() => selectSection("registration")}
+                aria-pressed={activeTab === "registration"}
+                aria-controls={PROFILE_SECTION_IDS.registration}
+                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                  activeTab === "registration"
+                    ? "border-primary bg-primary text-on-primary shadow-sm"
+                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                }`}
+              >
+                <FontAwesomeIcon icon={faUserCircle} className="h-6 w-6" />
+                <span className="whitespace-nowrap text-center">
+                  {t("onboarding.contactInfo.primaryContact")}
+                </span>
+                {sectionStatuses.registration?.isDirty ? (
+                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                ) : null}
+              </button>
+              <button
+                ref={(node) => {
+                  navButtonRefs.current.specialties = node;
+                }}
+                type="button"
+                onClick={() => selectSection("specialties")}
+                aria-pressed={activeTab === "specialties"}
+                aria-controls={PROFILE_SECTION_IDS.specialties}
+                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                  activeTab === "specialties"
+                    ? "border-primary bg-primary text-on-primary shadow-sm"
+                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                }`}
+              >
+                <FontAwesomeIcon icon={faStar} className="h-6 w-6" />
+                <span className="whitespace-nowrap text-center">
+                  {t("onboarding.storeIdentity.specialties")}
+                </span>
+                {sectionStatuses.specialties?.isDirty ? (
+                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                ) : null}
+              </button>
+              <button
+                ref={(node) => {
+                  navButtonRefs.current.products = node;
+                }}
+                type="button"
+                onClick={() => selectSection("products")}
+                aria-pressed={activeTab === "products"}
+                aria-controls={PROFILE_SECTION_IDS.products}
+                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                  activeTab === "products"
+                    ? "border-primary bg-primary text-on-primary shadow-sm"
+                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                }`}
+              >
+                <FontAwesomeIcon icon={faTags} className="h-6 w-6" />
+                <span className="whitespace-nowrap text-center">
+                  {t("onboarding.storeIdentity.products")}
+                </span>
+                {sectionStatuses.products?.isDirty ? (
+                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                ) : null}
+              </button>
+              <button
+                ref={(node) => {
+                  navButtonRefs.current.contact = node;
+                }}
+                type="button"
+                onClick={() => selectSection("contact")}
+                aria-pressed={activeTab === "contact"}
+                aria-controls={PROFILE_SECTION_IDS.contact}
+                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                  activeTab === "contact"
+                    ? "border-primary bg-primary text-on-primary shadow-sm"
+                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                }`}
+              >
+                <FontAwesomeIcon icon={faAddressBook} className="h-6 w-6" />
+                <span className="whitespace-nowrap text-center">
+                  {t("onboarding.contactInfo.additionalContact")}
+                </span>
+                {sectionStatuses.contact?.isDirty ? (
+                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                ) : null}
+              </button>
+              <button
+                ref={(node) => {
+                  navButtonRefs.current.store = node;
+                }}
+                type="button"
+                onClick={() => selectSection("store")}
+                aria-pressed={activeTab === "store"}
+                aria-controls={PROFILE_SECTION_IDS.store}
+                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                  activeTab === "store"
+                    ? "border-primary bg-primary text-on-primary shadow-sm"
+                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                }`}
+              >
+                <FontAwesomeIcon icon={faBuilding} className="h-6 w-6" />
+                <span className="whitespace-nowrap text-center">
+                  {t("onboarding.storeIdentity.title")}
+                </span>
+                {sectionStatuses.store?.isDirty ? (
+                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                ) : null}
+              </button>
+              <button
+                ref={(node) => {
+                  navButtonRefs.current.workingHours = node;
+                }}
+                type="button"
+                onClick={() => selectSection("workingHours")}
+                aria-pressed={activeTab === "workingHours"}
+                aria-controls={PROFILE_SECTION_IDS.workingHours}
+                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                  activeTab === "workingHours"
+                    ? "border-primary bg-primary text-on-primary shadow-sm"
+                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                }`}
+              >
+                <Clock className="h-6 w-6" />
+                <span className="whitespace-nowrap text-center">
+                  {locale === "ar" ? "مواعيد العمل" : "Working hours"}
+                </span>
+                {sectionStatuses.workingHours?.isDirty ? (
+                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                ) : null}
+              </button>
+              <button
+                ref={(node) => {
+                  navButtonRefs.current.fulfillment = node;
+                }}
+                type="button"
+                onClick={() => selectSection("fulfillment")}
+                aria-pressed={activeTab === "fulfillment"}
+                aria-controls={PROFILE_SECTION_IDS.fulfillment}
+                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
+                  activeTab === "fulfillment"
+                    ? "border-primary bg-primary text-on-primary shadow-sm"
+                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
+                }`}
+              >
+                <Truck className="h-6 w-6" />
+                <span className="whitespace-nowrap text-center">
+                  {locale === "ar" ? "الشحن والإرجاع" : "Shipping"}
+                </span>
+                {sectionStatuses.fulfillment?.isDirty ? (
+                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
+                ) : null}
+              </button>
+            </div>
+            <div className="pointer-events-none absolute inset-y-0 start-0 w-5 bg-gradient-to-r from-surface-container-low/95 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 end-0 w-5 bg-gradient-to-l from-surface-container-low/95 to-transparent" />
+          </div>
 
           <Card className="overflow-hidden">
             <CardContent className="p-0">
@@ -747,24 +667,24 @@ export function ProfilePageContent() {
               ) : null}
 
               {dirtyLabels.length > 0 ? (
-                <div
-                  className="mx-3 mb-3 rounded-2xl border border-outline-variant bg-surface/95 p-3 shadow-xl backdrop-blur sm:mx-5 sm:mb-5 sm:rounded-xl"
-                >
+                <div className="mx-3 mb-3 rounded-2xl border border-outline-variant bg-surface/95 p-3 shadow-xl backdrop-blur sm:mx-5 sm:mb-5 sm:rounded-xl">
                   <p className="mb-2 line-clamp-1 text-xs text-on-surface-variant">
                     {t("profile.saveTargets")}: {dirtyLabels.join("، ")}
                   </p>
                   <Button
                     type="button"
                     className="w-full gap-2 auth-cta h-11"
-                    onClick={() => handleSaveChangedSections(
-                      registrationRef.current,
-                      contactsRef.current,
-                      storeRef.current,
-                      workingHoursRef.current,
-                      specialtiesRef.current,
-                      productsRef.current,
-                      fulfillmentRef.current
-                    )}
+                    onClick={() =>
+                      handleSaveChangedSections(
+                        registrationRef.current,
+                        contactsRef.current,
+                        storeRef.current,
+                        workingHoursRef.current,
+                        specialtiesRef.current,
+                        productsRef.current,
+                        fulfillmentRef.current,
+                      )
+                    }
                     disabled={isUnifiedSaving || isSaveBlocked}
                   >
                     {isUnifiedSaving ? (
@@ -782,9 +702,20 @@ export function ProfilePageContent() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
                   <div className="bg-surface rounded-xl shadow-xl max-w-sm w-full p-4 space-y-3">
                     <div className="flex items-start gap-3">
-                      {saveDialog.type === 'success' ? (
+                      {saveDialog.type === "success" ? (
                         <div className="flex-shrink-0 h-10 w-10 rounded-full bg-success/10 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-success">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="text-success"
+                          >
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                           </svg>
@@ -796,9 +727,13 @@ export function ProfilePageContent() {
                       )}
                       <div className="flex-1">
                         <h3 className="text-sm font-semibold text-on-surface">
-                          {saveDialog.type === 'success'
-                            ? (locale === 'ar' ? 'نجاح' : 'Success')
-                            : (locale === 'ar' ? 'خطأ' : 'Error')}
+                          {saveDialog.type === "success"
+                            ? locale === "ar"
+                              ? "نجاح"
+                              : "Success"
+                            : locale === "ar"
+                              ? "خطأ"
+                              : "Error"}
                         </h3>
                         <p className="text-xs text-on-surface-variant mt-1">
                           {saveDialog.message}
@@ -811,7 +746,7 @@ export function ProfilePageContent() {
                         onClick={() => setSaveDialog(null)}
                         className="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium hover:bg-primary/90 transition-colors h-9"
                       >
-                        {locale === 'ar' ? 'إغلاق' : 'Close'}
+                        {locale === "ar" ? "إغلاق" : "Close"}
                       </Button>
                     </div>
                   </div>
@@ -824,4 +759,3 @@ export function ProfilePageContent() {
     </div>
   );
 }
-

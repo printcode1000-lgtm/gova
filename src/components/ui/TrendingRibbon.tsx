@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { TrendingUp } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { TrendingUp } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation } from "@/lib/i18n";
 
 export interface TrendingRibbonItem {
   label: string;
@@ -21,7 +21,7 @@ export interface TrendingRibbonProps {
 }
 
 export function TrendingRibbon({ config }: TrendingRibbonProps) {
-  const { t } = useTranslation();
+  const { t, isRTL } = useTranslation();
   const { label, items, onAction } = config || {};
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,7 +67,8 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
       if (scrollLeftRef.current >= singleWidth) {
         scrollLeftRef.current = scrollLeftRef.current % singleWidth;
       } else if (scrollLeftRef.current < 0) {
-        scrollLeftRef.current = (scrollLeftRef.current % singleWidth) + singleWidth;
+        scrollLeftRef.current =
+          (scrollLeftRef.current % singleWidth) + singleWidth;
       }
     };
 
@@ -78,6 +79,13 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
         track.style.transform = `translate3d(${-scrollLeftRef.current}px, 0, 0)`;
       }
     };
+
+    const track = trackRef.current;
+    if (track) {
+      const singleWidth = track.scrollWidth / replicationFactor;
+      scrollLeftRef.current = isRTL ? singleWidth : 0;
+      updateTransform();
+    }
 
     const loop = () => {
       if (isDownRef.current) {
@@ -90,8 +98,8 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
         wrapOffset();
         updateTransform();
       } else if (!isHoveredRef.current && !isLongPressedRef.current) {
-        // Auto scroll
-        scrollLeftRef.current += 0.8; // px per frame
+        // Arabic moves left-to-right; English moves right-to-left.
+        scrollLeftRef.current += isRTL ? -0.3 : 0.3;
 
         wrapOffset();
         updateTransform();
@@ -109,7 +117,7 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
         window.clearTimeout(longPressTimerRef.current);
       }
     };
-  }, [items, replicationFactor]);
+  }, [hasItems, isRTL, items, replicationFactor]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     isDownRef.current = true;
@@ -161,7 +169,8 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
         if (scrollLeftRef.current >= singleWidth) {
           scrollLeftRef.current = scrollLeftRef.current % singleWidth;
         } else if (scrollLeftRef.current < 0) {
-          scrollLeftRef.current = (scrollLeftRef.current % singleWidth) + singleWidth;
+          scrollLeftRef.current =
+            (scrollLeftRef.current % singleWidth) + singleWidth;
         }
       }
       track.style.transform = `translate3d(${-scrollLeftRef.current}px, 0, 0)`;
@@ -200,12 +209,15 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
 
   return (
     <div
+      dir={isRTL ? "rtl" : "ltr"}
       ref={containerRef}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
-      onPointerEnter={() => { isHoveredRef.current = true; }}
+      onPointerEnter={() => {
+        isHoveredRef.current = true;
+      }}
       onPointerLeave={() => {
         isHoveredRef.current = false;
         isDownRef.current = false;
@@ -216,8 +228,13 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
       className="asol-section-tonal-error overflow-hidden relative flex items-center py-2 mx-2 sm:mx-4 rounded-xl touch-pan-y cursor-grab active:cursor-grabbing pointer-events-auto select-none"
     >
       <div className="flex items-center gap-2 px-4 z-10 border-s border-outline-variant/40 shrink-0 asol-tonal-error rounded-e-xl py-1">
-        <TrendingUp className="w-5 h-5 text-error animate-pulse-subtle" aria-hidden />
-        <span className="text-xs font-bold text-on-error-container">{t(label)}</span>
+        <TrendingUp
+          className="w-5 h-5 text-error animate-pulse-subtle"
+          aria-hidden
+        />
+        <span className="text-xs font-bold text-on-error-container">
+          {t(label)}
+        </span>
       </div>
 
       <div className="flex-1 overflow-hidden" dir="ltr">
@@ -228,6 +245,7 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
           {loopItems.map((item, i) => (
             <span key={i} className="flex items-center gap-8 shrink-0">
               <button
+                dir={isRTL ? "rtl" : "ltr"}
                 type="button"
                 onClick={(e) => handleItemClick(e, item.action)}
                 className="text-sm text-on-surface-variant hover:text-primary transition-colors focus:outline-hidden focus-visible:underline cursor-pointer"
@@ -243,4 +261,3 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
     </div>
   );
 }
-

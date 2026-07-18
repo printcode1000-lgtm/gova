@@ -8,9 +8,10 @@ import type { ProfileContactsData } from '../entities/profile-contacts.entity';
 import { profileService } from '../services/profile-service';
 import { mergePrimaryContacts } from '../utils/merge-primary-contacts';
 import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
-
-const profileContactsQueryKey = (uid: string) =>
-  ['profile', 'contacts', uid] as const;
+import {
+  profileContactsQueryKey,
+  profilePublicContactsQueryKey,
+} from './profile-contact-query-keys';
 
 function isContactsDirty(
   current: ProfileContactsData,
@@ -57,6 +58,7 @@ export function useProfileContacts() {
   const applySaved = useCallback(
     (saved: ProfileContactsData) => {
       queryClient.setQueryData(profileContactsQueryKey(uid), saved);
+      queryClient.setQueryData(profilePublicContactsQueryKey(uid), saved);
       setContacts(saved);
       setBaseline(saved);
     },

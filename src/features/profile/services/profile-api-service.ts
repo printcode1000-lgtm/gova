@@ -36,7 +36,7 @@ import type { UserProfileRow } from "./profile-service.interface";
 export class ProfileApiService implements IProfileService {
   async getContacts(uid: string): Promise<ProfileContactsData> {
     const route = `${ASOL_API_ROUTES.profile.contacts}?uid=${encodeURIComponent(uid)}`;
-    return asolApi.get<ProfileContactsData>(route);
+    return asolApi.get<ProfileContactsData>(route, { cache: "no-store" });
   }
 
   async saveContacts(

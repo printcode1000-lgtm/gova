@@ -54,7 +54,6 @@ export interface ContactActionSocialLink {
   id: string;
   platform: string;
   url?: string;
-  handle?: string;
 }
 
 export interface ContactActionLocation {
@@ -107,18 +106,6 @@ const SOCIAL_ICONS: Record<string, IconDefinition> = {
   whatsapp: faWhatsapp,
 };
 
-const SOCIAL_BASE_URLS: Record<string, string> = {
-  facebook: "https://facebook.com/",
-  instagram: "https://instagram.com/",
-  twitter: "https://x.com/",
-  x: "https://x.com/",
-  tiktok: "https://www.tiktok.com/@",
-  youtube: "https://youtube.com/",
-  pinterest: "https://pinterest.com/",
-  linkedin: "https://linkedin.com/in/",
-  telegram: "https://t.me/",
-};
-
 export function ContactActionBar({
   data,
   className,
@@ -141,7 +128,11 @@ export function ContactActionBar({
             {label}
           </span>
         ) : null}
-        <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          data-snapshot-scroll
+          data-snapshot-id="profile-preview-contact-actions"
+          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {groups.map((group) => (
             <ContactActionGroup key={group.id} group={group} />
           ))}
@@ -217,12 +208,14 @@ function ContactActionGroup({ group }: { group: ContactGroup }) {
   );
 }
 
-function buildContactGroups(data?: ContactActionBarData | null): ContactGroup[] {
+function buildContactGroups(
+  data?: ContactActionBarData | null,
+): ContactGroup[] {
   const phones = array(data?.phones).filter((item) => item.number?.trim());
   const emails = array(data?.emails).filter((item) => item.email?.trim());
   const websites = array(data?.websites).filter((item) => item.url?.trim());
-  const socialLinks = array(data?.socialLinks).filter(
-    (item) => item.url?.trim() || item.handle?.trim(),
+  const socialLinks = array(data?.socialLinks).filter((item) =>
+    item.url?.trim(),
   );
   const locations = array(data?.locations).filter(
     (item) => item.address?.trim() || hasCoordinates(item),
@@ -315,13 +308,13 @@ function groupSocialLinks(
   const grouped = new Map<string, ContactOption[]>();
   links.forEach((link) => {
     const platform = normalizePlatform(link.platform);
-    const href = resolveSocialHref(platform, link);
+    const href = resolveSocialHref(link);
     if (!href) return;
     const options = grouped.get(platform) ?? [];
     options.push({
       id: link.id,
       label: labelSocialPlatform(platform),
-      detail: link.handle || link.url,
+      detail: link.url,
       href,
     });
     grouped.set(platform, options);
@@ -392,15 +385,8 @@ function labelSocialPlatform(platform: string): string {
   return labels[platform] ?? platform;
 }
 
-function resolveSocialHref(
-  platform: string,
-  link: ContactActionSocialLink,
-): string {
-  if (link.url?.trim()) return normalizeUrl(link.url);
-  const handle = link.handle?.trim().replace(/^@/, "");
-  if (!handle) return "";
-  const base = SOCIAL_BASE_URLS[platform];
-  return base ? `${base}${encodeURIComponent(handle)}` : "";
+function resolveSocialHref(link: ContactActionSocialLink): string {
+  return link.url?.trim() ? normalizeUrl(link.url) : "";
 }
 
 function hasCoordinates(location: ContactActionLocation): boolean {

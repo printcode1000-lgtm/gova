@@ -148,7 +148,7 @@ async function tableExists(db: Db, table: string): Promise<boolean> {
 async function createStructuredTables(db: Db): Promise<void> {
   await db.run("PRAGMA foreign_keys=off");
   await db.run("DROP TABLE IF EXISTS __new_user_profiles");
-  await db.run(`CREATE TABLE IF NOT EXISTS profile_contact_points (id text PRIMARY KEY NOT NULL, uid text NOT NULL, type text NOT NULL, platform text NOT NULL DEFAULT '', label text NOT NULL DEFAULT '', value text NOT NULL, normalized_value text NOT NULL DEFAULT '', handle text NOT NULL DEFAULT '', is_primary integer NOT NULL DEFAULT 0, is_public integer NOT NULL DEFAULT 1, sort_order integer NOT NULL DEFAULT 0, created_at text NOT NULL, updated_at text NOT NULL)`);
+  await db.run(`CREATE TABLE IF NOT EXISTS profile_contact_points (id text PRIMARY KEY NOT NULL, uid text NOT NULL, type text NOT NULL, platform text NOT NULL DEFAULT '', label text NOT NULL DEFAULT '', value text NOT NULL, normalized_value text NOT NULL DEFAULT '', is_primary integer NOT NULL DEFAULT 0, is_public integer NOT NULL DEFAULT 1, sort_order integer NOT NULL DEFAULT 0, created_at text NOT NULL, updated_at text NOT NULL)`);
   await db.run(`CREATE INDEX IF NOT EXISTS profile_contact_points_uid_idx ON profile_contact_points (uid)`);
   await db.run(`CREATE INDEX IF NOT EXISTS profile_contact_points_lookup_idx ON profile_contact_points (type, normalized_value)`);
   await db.run(`CREATE TABLE IF NOT EXISTS profile_locations (id text PRIMARY KEY NOT NULL, uid text NOT NULL, label text NOT NULL DEFAULT '', address text NOT NULL DEFAULT '', governorate text NOT NULL DEFAULT '', city text NOT NULL DEFAULT '', area text NOT NULL DEFAULT '', latitude text NOT NULL DEFAULT '', longitude text NOT NULL DEFAULT '', is_primary integer NOT NULL DEFAULT 0, is_public integer NOT NULL DEFAULT 1, sort_order integer NOT NULL DEFAULT 0, created_at text NOT NULL, updated_at text NOT NULL)`);
@@ -255,7 +255,7 @@ async function populateStructuredData(db: Db, oldRows: Array<Record<string, unkn
 
     for (const [index, phone] of phones.entries()) {
       if (!phone.number) continue;
-      await db.run(`INSERT OR REPLACE INTO profile_contact_points VALUES (?, ?, 'phone', ?, ?, ?, ?, '', ?, 1, ?, ?, ?)`, [
+      await db.run(`INSERT OR REPLACE INTO profile_contact_points VALUES (?, ?, 'phone', ?, ?, ?, ?, ?, 1, ?, ?, ?)`, [
         phone.id || id("contact"),
         uid,
         phone.type || "phone",
@@ -270,7 +270,7 @@ async function populateStructuredData(db: Db, oldRows: Array<Record<string, unkn
     }
     for (const [index, email] of emails.entries()) {
       if (!email.email) continue;
-      await db.run(`INSERT OR REPLACE INTO profile_contact_points VALUES (?, ?, 'email', '', 'email', ?, ?, '', ?, 1, ?, ?, ?)`, [
+      await db.run(`INSERT OR REPLACE INTO profile_contact_points VALUES (?, ?, 'email', '', 'email', ?, ?, ?, 1, ?, ?, ?)`, [
         email.id || id("contact"),
         uid,
         email.email,
@@ -283,7 +283,7 @@ async function populateStructuredData(db: Db, oldRows: Array<Record<string, unkn
     }
     for (const [index, site] of websites.entries()) {
       if (!site.url) continue;
-      await db.run(`INSERT OR REPLACE INTO profile_contact_points VALUES (?, ?, 'website', '', 'website', ?, ?, '', ?, 1, ?, ?, ?)`, [
+      await db.run(`INSERT OR REPLACE INTO profile_contact_points VALUES (?, ?, 'website', '', 'website', ?, ?, ?, 1, ?, ?, ?)`, [
         site.id || id("contact"),
         uid,
         site.url,
@@ -296,14 +296,13 @@ async function populateStructuredData(db: Db, oldRows: Array<Record<string, unkn
     }
     for (const [index, link] of socialLinks.entries()) {
       if (!link.url) continue;
-      await db.run(`INSERT OR REPLACE INTO profile_contact_points VALUES (?, ?, 'social', ?, ?, ?, ?, ?, 0, 1, ?, ?, ?)`, [
+      await db.run(`INSERT OR REPLACE INTO profile_contact_points VALUES (?, ?, 'social', ?, ?, ?, ?, 0, 1, ?, ?, ?)`, [
         link.id || id("contact"),
         uid,
         link.platform || "",
         link.platform || "",
         link.url,
         String(link.url).toLowerCase(),
-        link.handle || "",
         300 + index,
         timestamp,
         timestamp,

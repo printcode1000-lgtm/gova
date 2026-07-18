@@ -1,29 +1,26 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import Image from 'next/image';
-import {
-  Package,
-  Plus,
-} from 'lucide-react';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { ProductCard } from '@/components/ui/product-card';
-import { ProductSearchPanel } from '@/components/ui/product-search';
-import type { ProductRecord } from '@/features/product/entities/product.entity';
+import * as React from "react";
+import Image from "next/image";
+import { Package, Plus } from "lucide-react";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { ProductCard } from "@/components/ui/product-card";
+import { ProductSearchPanel } from "@/components/ui/product-search";
+import type { ProductRecord } from "@/features/product/entities/product.entity";
 import {
   createProductCardViewModel,
   type ProductCardAction,
-} from '@/features/product-card';
+} from "@/features/product-card";
 import {
   isPharmacyProfileBucket,
   PharmacyNestedTabs,
-} from '@/features/pharmacy-profile-catalog/components/PharmacyNestedTabs';
+} from "@/features/pharmacy-profile-catalog/components/PharmacyNestedTabs";
 import type {
   ProfileProductsFilters,
   ProfileProductsMainTab,
   ProfileProductsSubTab,
   ProfileProductsTabsMode,
-} from '@/features/profile-products';
+} from "@/features/profile-products";
 
 export interface ProfileProductsTabsLabels {
   title: string;
@@ -68,7 +65,7 @@ interface ProfileProductsTabsProps {
 
 export function ProfileProductsTabs({
   mode,
-  ownerUid = '',
+  ownerUid = "",
   tabs,
   selectedMainId,
   selectedSubId,
@@ -90,7 +87,7 @@ export function ProfileProductsTabs({
   onRefreshProducts,
 }: ProfileProductsTabsProps) {
   const activeMain = tabs.find((tab) => tab.id === selectedMainId) ?? tabs[0];
-  const showManagement = mode === 'edit';
+  const showManagement = mode === "edit";
   const isPharmacyBucket = isPharmacyProfileBucket(activeSubTab);
   const [pharmacyFilteredProducts, setPharmacyFilteredProducts] =
     React.useState<ProductRecord[]>(products);
@@ -108,7 +105,9 @@ export function ProfileProductsTabs({
   }, [products, activeSubTab?.id]);
 
   const sourceProducts = searchFilteredProducts;
-  const visibleProducts = isPharmacyBucket ? pharmacyFilteredProducts : sourceProducts;
+  const visibleProducts = isPharmacyBucket
+    ? pharmacyFilteredProducts
+    : sourceProducts;
 
   if (isLoadingTabs) {
     return (
@@ -127,12 +126,16 @@ export function ProfileProductsTabs({
             {labels.title}
           </h3>
           {labels.hint ? (
-            <p className="mt-1 text-xs text-on-surface-variant">{labels.hint}</p>
+            <p className="mt-1 text-xs text-on-surface-variant">
+              {labels.hint}
+            </p>
           ) : null}
         </div>
         <div className="rounded-lg border border-dashed border-outline-variant py-8 text-center">
           <Package className="mx-auto mb-2 h-8 w-8 text-on-surface-variant" />
-          <p className="text-sm text-on-surface-variant">{labels.emptySpecialties}</p>
+          <p className="text-sm text-on-surface-variant">
+            {labels.emptySpecialties}
+          </p>
         </div>
       </section>
     );
@@ -147,13 +150,20 @@ export function ProfileProductsTabs({
             {labels.title}
           </h3>
           {labels.hint ? (
-            <p className="mt-1 text-xs text-on-surface-variant">{labels.hint}</p>
+            <p className="mt-1 text-xs text-on-surface-variant">
+              {labels.hint}
+            </p>
           ) : null}
         </div>
         {showManagement && activeSubTab && onAddProduct ? (
           <button
             type="button"
-            onClick={() => onAddProduct(activeSubTab.categoryId, activeSubTab.productSubcategoryId)}
+            onClick={() =>
+              onAddProduct(
+                activeSubTab.categoryId,
+                activeSubTab.productSubcategoryId,
+              )
+            }
             className="inline-flex h-9 items-center gap-2 rounded-lg bg-primary px-3 text-xs font-semibold text-on-primary transition hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
@@ -162,7 +172,11 @@ export function ProfileProductsTabs({
         ) : null}
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div
+        data-snapshot-scroll
+        data-snapshot-id={`profile-products-main-${mode}-${ownerUid}`}
+        className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -170,13 +184,18 @@ export function ProfileProductsTabs({
             onClick={() => onSelectMain(tab.id)}
             className={`flex h-12 min-w-fit items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition ${
               tab.id === selectedMainId
-                ? 'border-primary bg-primary text-on-primary'
-                : 'border-outline-variant bg-surface text-on-surface hover:border-primary/50'
+                ? "border-primary bg-primary text-on-primary"
+                : "border-outline-variant bg-surface text-on-surface hover:border-primary/50"
             }`}
           >
             <span className="relative h-7 w-7 overflow-hidden rounded-md bg-surface-bright">
               {tab.imageUrl ? (
-                <Image src={tab.imageUrl} alt={tab.label} fill className="object-cover" />
+                <Image
+                  src={tab.imageUrl}
+                  alt={tab.label}
+                  fill
+                  className="object-cover"
+                />
               ) : null}
             </span>
             <span className="whitespace-nowrap">{tab.label}</span>
@@ -185,7 +204,11 @@ export function ProfileProductsTabs({
       </div>
 
       {activeMain?.subTabs.length ? (
-        <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          data-snapshot-scroll
+          data-snapshot-id={`profile-products-sub-${mode}-${ownerUid}`}
+          className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {activeMain.subTabs.map((tab) => (
             <button
               key={tab.id}
@@ -193,17 +216,22 @@ export function ProfileProductsTabs({
               onClick={() => onSelectSub(tab.id)}
               className={`flex h-10 min-w-fit items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold transition ${
                 tab.id === selectedSubId
-                  ? 'border-tertiary bg-tertiary text-on-tertiary'
-                  : 'border-outline-variant bg-surface-container-low text-on-surface hover:border-tertiary/50'
+                  ? "border-tertiary bg-tertiary text-on-tertiary"
+                  : "border-outline-variant bg-surface-container-low text-on-surface hover:border-tertiary/50"
               }`}
             >
               <span className="relative h-6 w-6 overflow-hidden rounded bg-surface-bright">
                 {tab.imageUrl ? (
-                  <Image src={tab.imageUrl} alt={tab.label} fill className="object-cover" />
+                  <Image
+                    src={tab.imageUrl}
+                    alt={tab.label}
+                    fill
+                    className="object-cover"
+                  />
                 ) : null}
               </span>
               <span className="whitespace-nowrap">{tab.label}</span>
-              {typeof tab.productCount === 'number' ? (
+              {typeof tab.productCount === "number" ? (
                 <span className="rounded-full bg-black/10 px-1.5 text-[10px]">
                   {tab.productCount}
                 </span>
@@ -219,8 +247,8 @@ export function ProfileProductsTabs({
           ownerUid={ownerUid}
           fixedMainCategoryId={activeSubTab.categoryId}
           fixedSubcategoryId={activeSubTab.productSubcategoryId}
-          includeDrafts={mode === 'edit'}
-          locale={labels.searchPlaceholder.includes('Search') ? 'en' : 'ar'}
+          includeDrafts={mode === "edit"}
+          locale={labels.searchPlaceholder.includes("Search") ? "en" : "ar"}
           onProductsChange={setSearchFilteredProducts}
         />
       ) : null}
@@ -228,7 +256,7 @@ export function ProfileProductsTabs({
       {isPharmacyBucket && ownerUid ? (
         <PharmacyNestedTabs
           uid={ownerUid}
-          mode={mode === 'edit' ? 'edit' : 'preview'}
+          mode={mode === "edit" ? "edit" : "preview"}
           products={sourceProducts}
           onFilteredProductsChange={setPharmacyFilteredProducts}
           onRefreshProducts={onRefreshProducts}
@@ -243,7 +271,9 @@ export function ProfileProductsTabs({
         ) : visibleProducts.length === 0 ? (
           <div className="rounded-lg border border-dashed border-outline-variant py-8 text-center">
             <Package className="mx-auto mb-2 h-7 w-7 text-on-surface-variant" />
-            <p className="text-xs text-on-surface-variant">{labels.emptyProducts}</p>
+            <p className="text-xs text-on-surface-variant">
+              {labels.emptyProducts}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
@@ -252,32 +282,32 @@ export function ProfileProductsTabs({
               const card = createProductCardViewModel(product);
               const actions: ProductCardAction[] = [
                 {
-                  kind: 'view',
+                  kind: "view",
                   label: labels.view,
                   onClick: () => onViewProduct(product),
                 },
               ];
               if (showManagement && onToggleFeatured) {
                 actions.push({
-                  kind: 'toggleFeatured',
+                  kind: "toggleFeatured",
                   label: featured ? labels.removeFeatured : labels.addFeatured,
                   active: featured,
-                  tone: 'tertiary',
+                  tone: "tertiary",
                   onClick: () => onToggleFeatured(product),
                 });
               }
               if (showManagement && onEditProduct) {
                 actions.push({
-                  kind: 'edit',
+                  kind: "edit",
                   label: labels.edit,
                   onClick: () => onEditProduct(product),
                 });
               }
               if (showManagement && onDeleteProduct) {
                 actions.push({
-                  kind: 'delete',
+                  kind: "delete",
                   label: labels.delete,
-                  tone: 'danger',
+                  tone: "danger",
                   onClick: () => onDeleteProduct(product),
                 });
               }
@@ -285,7 +315,7 @@ export function ProfileProductsTabs({
                 <ProductCard
                   key={product.id}
                   card={card}
-                  variant={showManagement ? 'profile-edit' : 'profile-preview'}
+                  variant={showManagement ? "profile-edit" : "profile-preview"}
                   actions={actions}
                   onOpen={() => onViewProduct(product)}
                 />

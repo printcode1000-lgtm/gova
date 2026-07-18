@@ -67,7 +67,6 @@ export const profileContactPoints = sqliteTable(
     label: text("label").notNull().default(""),
     value: text("value").notNull(),
     normalizedValue: text("normalized_value").notNull().default(""),
-    handle: text("handle").notNull().default(""),
     isPrimary: integer("is_primary", { mode: "boolean" }).notNull().default(false),
     isPublic: integer("is_public", { mode: "boolean" }).notNull().default(true),
     sortOrder: integer("sort_order").notNull().default(0),

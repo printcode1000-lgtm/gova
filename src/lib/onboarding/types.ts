@@ -56,7 +56,6 @@ export interface MerchantInfo {
 export interface SocialLink {
   platform: string;
   url: string;
-  handle: string;
 }
 
 export interface ContactInfo {

@@ -4,6 +4,8 @@
  */
 export const ASOL_API_ROUTES = {
   health: "/api/health",
+  contact: "/api/contact",
+  accountDeletion: "/api/account/delete",
   auth: {
     login: "/api/auth/login",
     register: "/api/auth/register",

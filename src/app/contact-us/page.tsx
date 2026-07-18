@@ -1,7 +1,3 @@
-'use client';
+import { ContactPageContent } from "@/features/contact/components/ContactPageContent";
 
-import ComingSoonScreen from '@/components/layouts/ComingSoonScreen';
-
-export default function ContactUsPage() {
-  return <ComingSoonScreen title="تواصل معنا" tone="secondary" />;
-}
+export default function ContactUsPage() { return <ContactPageContent />; }

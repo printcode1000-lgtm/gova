@@ -7,6 +7,7 @@ import {
   Eye,
   LogIn,
   LogOut,
+  MessagesSquare,
   Megaphone,
   ScrollText,
   Settings,
@@ -338,6 +339,15 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
               >
                 <Settings className="w-5 h-5 shrink-0 text-primary" />
                 {t("sidebar.settings")}
+              </button>
+            </Link>
+            <Link href="/contact-us" onClick={onClose}>
+              <button
+                type="button"
+                className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
+              >
+                <MessagesSquare className="w-5 h-5 shrink-0 text-primary" />
+                {t("sidebar.contactUs")}
               </button>
             </Link>
           </div>

@@ -55,11 +55,11 @@ export function ContactInfoSection() {
     const exists = contactInfo.socialLinks.find((s) => s.platform === platform);
     if (exists) return;
     updateContactInfo({
-      socialLinks: [...contactInfo.socialLinks, { platform, url: '', handle: '' }],
+      socialLinks: [...contactInfo.socialLinks, { platform, url: '' }],
     });
   };
 
-  const updateSocialLink = (platform: string, updates: { url?: string; handle?: string }) => {
+  const updateSocialLink = (platform: string, updates: { url?: string }) => {
     updateContactInfo({
       socialLinks: contactInfo.socialLinks.map((s) =>
         s.platform === platform ? { ...s, ...updates } : s,
@@ -164,9 +164,10 @@ export function ContactInfoSection() {
                     </span>
                     <div className="flex-1 flex gap-2">
                       <FormInput
-                        value={link.handle}
-                        onChange={(e) => updateSocialLink(link.platform, { handle: e.target.value })}
-                        placeholder={t('onboarding.contactInfo.usernamePlaceholder')}
+                        value={link.url}
+                        onChange={(e) => updateSocialLink(link.platform, { url: e.target.value })}
+                        placeholder={t('onboarding.contactInfo.socialUrlPlaceholder')}
+                        inputMode="url"
                         className="flex-1"
                       />
                     </div>

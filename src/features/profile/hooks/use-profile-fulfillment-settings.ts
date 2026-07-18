@@ -10,9 +10,7 @@ import {
 } from "../entities/profile-fulfillment-settings.entity";
 import { profileService } from "../services/profile-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-
-const fulfillmentSettingsQueryKey = (uid: string) =>
-  ["profile", "fulfillment-settings", uid] as const;
+import { profileFulfillmentSettingsQueryKey } from "./use-profile-public-fulfillment-settings";
 
 function isDirty(
   current: ProfileFulfillmentSettings,
@@ -27,7 +25,7 @@ export function useProfileFulfillmentSettings() {
   const queryClient = useQueryClient();
 
   const settingsQuery = useQuery({
-    queryKey: fulfillmentSettingsQueryKey(uid),
+    queryKey: profileFulfillmentSettingsQueryKey(uid),
     queryFn: () => profileService.getFulfillmentSettings(uid),
     enabled: Boolean(uid),
   });
@@ -61,7 +59,10 @@ export function useProfileFulfillmentSettings() {
   const applySaved = useCallback(
     (saved: ProfileFulfillmentSettings) => {
       const normalized = normalizeProfileFulfillmentSettings(saved);
-      queryClient.setQueryData(fulfillmentSettingsQueryKey(uid), normalized);
+      queryClient.setQueryData(
+        profileFulfillmentSettingsQueryKey(uid),
+        normalized,
+      );
       setSettings(normalized);
       setBaseline(normalized);
     },
@@ -84,7 +85,11 @@ export function useProfileFulfillmentSettings() {
   });
 
   const updateSettings = useCallback(
-    (updater: (current: ProfileFulfillmentSettings) => ProfileFulfillmentSettings) => {
+    (
+      updater: (
+        current: ProfileFulfillmentSettings,
+      ) => ProfileFulfillmentSettings,
+    ) => {
       setSettings(updater);
     },
     [],

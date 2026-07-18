@@ -3,15 +3,15 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { profileService } from "../services/profile-service";
-
-const profilePublicContactsQueryKey = (uid: string) =>
-  ["profile", "public-contacts", uid] as const;
+import { profilePublicContactsQueryKey } from "./profile-contact-query-keys";
 
 export function useProfilePublicContacts(uid: string) {
   const contactsQuery = useQuery({
     queryKey: profilePublicContactsQueryKey(uid),
     queryFn: () => profileService.getContacts(uid),
     enabled: Boolean(uid),
+    staleTime: 0,
+    refetchOnMount: "always",
   });
 
   return {

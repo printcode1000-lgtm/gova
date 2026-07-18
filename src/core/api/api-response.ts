@@ -65,6 +65,8 @@ export function mapServiceError(error: unknown): NextResponse {
     'passwordRecoveryWeakPassword',
     'passwordRecoveryPasswordMismatch',
     'passwordRecoveryInvalidToken',
+    'invalidContactMessage',
+    'accountDeletionConfirmationInvalid',
   ];
 
   if (knownCodes.includes(message)) {
@@ -78,6 +80,9 @@ export function mapServiceError(error: unknown): NextResponse {
   if (message === 'passwordRecoveryRateLimited') {
     return apiError(message, 429);
   }
+
+  if (message === 'contactRateLimited') return apiError(message, 429);
+  if (message === 'accountDeletionSuperAdminForbidden') return apiError(message, 403);
 
   if (message === 'passwordRecoveryNotConfigured') {
     return apiError(message, 503);
