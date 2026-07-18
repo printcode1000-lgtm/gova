@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { useResolvedColorScheme } from '@/lib/preferences';
 import { useNotificationBadge } from '@/features/notifications';
+import { useFavorites } from '@/features/favorites';
 
 export function BottomNavBar() {
   const navRef = useRef<HTMLElement>(null);
@@ -16,6 +17,7 @@ export function BottomNavBar() {
   const { t } = useTranslation();
   const resolvedScheme = useResolvedColorScheme();
   const notificationBadge = useNotificationBadge();
+  const { totalCount: favoriteCount } = useFavorites();
 
   useLayoutEffect(() => {
     const nav = navRef.current;
@@ -52,7 +54,8 @@ export function BottomNavBar() {
       )}
     >
       {navItems.map(({ href, icon: Icon, label, showBadge, badgeCount }) => {
-        const isActive = pathname === href;
+        const isActive = pathname === href || pathname.startsWith(`${href}/`);
+        const favoriteHasItems = href === '/favorites' && favoriteCount > 0;
 
         return (
           <Link
@@ -67,7 +70,10 @@ export function BottomNavBar() {
             )}
           >
             <Icon
-              className="w-5 h-5 transition-transform duration-200"
+              className={cn(
+                "w-5 h-5 transition-transform duration-200",
+                favoriteHasItems && "fill-current",
+              )}
               style={{ transform: isActive ? 'scale(1.1)' : 'scale(1)' }}
             />
             {showBadge && (

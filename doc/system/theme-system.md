@@ -175,6 +175,7 @@ All in-app routes are rendered through `AppShell`, which reserves enough space f
 ### How it works
 
 - `BottomNavBar` measures its rendered height with `ResizeObserver`.
+- The favorites navigation heart is filled whenever the current device-local favorites collection is non-empty. Route selection styling remains independent from that filled state.
 - The measured value is published on `<html>` as `--asol-bottom-nav-space`.
 - The measurement includes the navigation content and `env(safe-area-inset-bottom)` padding.
 - `AppShell` uses the shared `BOTTOM_NAV_CLEARANCE` value as its `padding-bottom`, so every route ends above the navigation automatically.

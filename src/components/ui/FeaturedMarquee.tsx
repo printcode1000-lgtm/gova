@@ -244,6 +244,7 @@ export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
               <ProductCard
                 card={createFeaturedProductCardViewModel(item)}
                 variant="featured-marquee"
+                favoriteEnabled={false}
                 onOpen={(event) => handleItemClick(event, item.action)}
               />
             </div>

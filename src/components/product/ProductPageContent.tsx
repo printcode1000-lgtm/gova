@@ -10,6 +10,7 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useTranslation } from "@/lib/i18n";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { categoryService } from "@/features/categories";
 import type {
   ProductDetails,
   ProductRecord,
@@ -67,6 +68,21 @@ export function ProductPageContent() {
   const editable = mode !== "view";
   const ownerAllowed =
     mode === "new" || !product || product.uid === session?.uid;
+  const adminCategoryInfo = React.useMemo(() => {
+    const numericMainId = Number(mainCategoryId);
+    const main = categoryService
+      .getDeveloperMainOptions()
+      .find((option) => option.id === numericMainId);
+    const sub = main
+      ? categoryService
+          .getDeveloperSubOptions(main.id, main.isCollection)
+          .find((option) => option.value === subcategoryId)
+      : undefined;
+    return {
+      mainName: main ? (locale === "ar" ? main.titleAr : main.titleEn) : "",
+      subName: sub ? (locale === "ar" ? sub.titleAr : sub.titleEn) : "",
+    };
+  }, [locale, mainCategoryId, subcategoryId]);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -258,6 +274,26 @@ export function ProductPageContent() {
             <AdminCopyValue
               label={locale === "ar" ? "معرف المالك" : "Owner ID"}
               value={product?.uid || ""}
+              onCopy={copyToClipboard}
+            />
+            <AdminCopyValue
+              label={locale === "ar" ? "التصنيف الرئيسي" : "Main Category"}
+              value={adminCategoryInfo.mainName}
+              onCopy={copyToClipboard}
+            />
+            <AdminCopyValue
+              label={locale === "ar" ? "معرف التصنيف الرئيسي" : "Main Category ID"}
+              value={mainCategoryId}
+              onCopy={copyToClipboard}
+            />
+            <AdminCopyValue
+              label={locale === "ar" ? "التصنيف الفرعي" : "Subcategory"}
+              value={adminCategoryInfo.subName}
+              onCopy={copyToClipboard}
+            />
+            <AdminCopyValue
+              label={locale === "ar" ? "معرف التصنيف الفرعي" : "Subcategory ID"}
+              value={subcategoryId}
               onCopy={copyToClipboard}
             />
           </div>

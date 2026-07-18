@@ -14,6 +14,8 @@ It prevents pages from duplicating logic for:
 - Context badges.
 - Context actions.
 
+Public search, category-seller, and doctor-seller variants integrate with the device-local Favorites module. Linked-provider and compact cards keep favorites hidden by default.
+
 ## Architecture
 
 ```text
@@ -157,6 +159,7 @@ The shared card does not:
 - Save profile data.
 - Own search or pagination.
 - Mutate fulfillment settings.
+- Treat a private favorite as a social follow. Favorites and follows remain separate systems.
 
 ## Future Extensibility
 

@@ -10,6 +10,11 @@ export const ASOL_API_ROUTES = {
     logout: "/api/auth/logout",
     profile: "/api/auth/profile",
     checkPhone: "/api/auth/check-phone",
+    passwordRecovery: {
+      request: "/api/auth/password-recovery/request",
+      verify: "/api/auth/password-recovery/verify",
+      reset: "/api/auth/password-recovery/reset",
+    },
   },
   profile: {
     contacts: "/api/profile/contacts",

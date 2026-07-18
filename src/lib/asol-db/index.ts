@@ -4,7 +4,7 @@ import type { StateStorage } from 'zustand/middleware';
 import { trackAsolDbOp } from '@/core/monitor/asol-db-monitor';
 
 const DB_NAME = 'AsolDB';
-const DB_VERSION = 6;
+const DB_VERSION = 8;
 
 export const ASOL_DB_STORES = {
   GUEST_SESSIONS: 'guestSessions',
@@ -19,6 +19,8 @@ export const ASOL_DB_STORES = {
   NOTIFICATION_ANALYTICS: 'notificationAnalytics',
   NOTIFICATION_OFFLINE_QUEUE: 'notificationOfflineQueue',
   PAGE_SNAPSHOTS: 'pageSnapshots',
+  FAVORITES: 'favorites',
+  CART: 'cart',
 } as const;
 
 export type AsolDbStoreName = (typeof ASOL_DB_STORES)[keyof typeof ASOL_DB_STORES];

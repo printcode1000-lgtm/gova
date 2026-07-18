@@ -60,6 +60,11 @@ export function mapServiceError(error: unknown): NextResponse {
     'otaBaseReleaseRequired',
     'otaBaseReleaseMatchesCurrent',
     'otaStoredManifestInvalid',
+    'passwordRecoveryInvalidPhone',
+    'passwordRecoveryInvalidCode',
+    'passwordRecoveryWeakPassword',
+    'passwordRecoveryPasswordMismatch',
+    'passwordRecoveryInvalidToken',
   ];
 
   if (knownCodes.includes(message)) {
@@ -68,6 +73,14 @@ export function mapServiceError(error: unknown): NextResponse {
 
   if (message === 'forbidden') {
     return apiError(message, 403);
+  }
+
+  if (message === 'passwordRecoveryRateLimited') {
+    return apiError(message, 429);
+  }
+
+  if (message === 'passwordRecoveryNotConfigured') {
+    return apiError(message, 503);
   }
 
   return apiError(message, 500);

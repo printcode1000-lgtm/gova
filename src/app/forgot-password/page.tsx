@@ -1,9 +1,5 @@
-'use client';
-
-import ComingSoonScreen from '@/components/layouts/ComingSoonScreen';
-import { useTranslation } from '@/lib/i18n';
+import { PasswordRecoveryPageContent } from '@/features/password-recovery/components/PasswordRecoveryPageContent';
 
 export default function ForgotPasswordPage() {
-  const { t } = useTranslation();
-  return <ComingSoonScreen title={t('auth.forgotPassword.title')} tone="secondary" />;
+  return <PasswordRecoveryPageContent />;
 }

@@ -10,12 +10,14 @@ import type {
   SellerCardViewModel,
 } from "@/features/seller-card";
 import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
+import { FavoriteButton, favoriteFromSellerCard } from "@/features/favorites";
 
 interface SellerCardProps {
   card: SellerCardViewModel;
   variant: SellerCardVariant;
   actions?: SellerCardAction[];
   className?: string;
+  favoriteEnabled?: boolean;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: SellerCardViewModel,
@@ -74,12 +76,25 @@ export function SellerCard({
   variant,
   actions = [],
   className = "",
+  favoriteEnabled,
   onOpen,
 }: SellerCardProps) {
   const horizontal = variant === "linked-provider" || variant === "compact";
+  const showFavorite =
+    (favoriteEnabled ??
+      (variant === "search" ||
+        variant === "category-sellers" ||
+        variant === "doctor-sellers")) &&
+    Boolean(card.uid);
 
   return (
-    <article className={`${variantClass[variant]} ${className}`}>
+    <article className={`relative ${variantClass[variant]} ${className}`}>
+      {showFavorite ? (
+        <FavoriteButton
+          item={favoriteFromSellerCard(card)}
+          className="absolute end-2 top-2 z-10"
+        />
+      ) : null}
       <button
         type="button"
         onClick={(event) => onOpen?.(event, card)}

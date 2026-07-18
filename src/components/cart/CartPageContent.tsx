@@ -170,7 +170,7 @@ export function CartPageContent() {
         },
         "ar",
       );
-      clearCart();
+      await clearCart();
       router.push(`/orders/details?orderId=${encodeURIComponent(result.orderId)}`);
     } catch (error) {
       setSubmitError(
@@ -193,7 +193,7 @@ export function CartPageContent() {
         {items.length > 0 ? (
           <button
             type="button"
-            onClick={clearCart}
+            onClick={() => void clearCart()}
             className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition hover:border-error hover:text-error"
           >
             <Trash2 className="h-4 w-4" />
@@ -284,7 +284,7 @@ export function CartPageContent() {
                             </div>
                             <button
                               type="button"
-                              onClick={() => removeCartItem(item.id)}
+                              onClick={() => void removeCartItem(item.id)}
                               className="rounded-full p-2 text-muted-foreground transition hover:bg-error/10 hover:text-error"
                               aria-label="حذف من السلة"
                             >
@@ -297,7 +297,7 @@ export function CartPageContent() {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  updateCartItemQuantity(item.id, item.quantity - 1)
+                                  void updateCartItemQuantity(item.id, item.quantity - 1)
                                 }
                                 className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
                                 aria-label="تقليل الكمية"
@@ -310,7 +310,7 @@ export function CartPageContent() {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  updateCartItemQuantity(item.id, item.quantity + 1)
+                                  void updateCartItemQuantity(item.id, item.quantity + 1)
                                 }
                                 className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
                                 aria-label="زيادة الكمية"

@@ -15,6 +15,8 @@ The system is used by:
 
 The card can be reused in future product strips, recommendations, cart suggestions, and seller dashboards without duplicating product display logic.
 
+Public product-card variants integrate with the device-local Favorites module. Search and profile-preview cards show a favorite control above the image. Featured-marquee, profile-edit, and compact variants keep that control hidden.
+
 ## Architecture
 
 ```text
@@ -155,6 +157,7 @@ The shared card does not:
 - Save or mutate products.
 - Own search, filtering, sorting, or profile tab state.
 - Read route params directly.
+- Persist favorite data itself; it delegates that behavior to `src/features/favorites`.
 
 ## Integration Notes
 

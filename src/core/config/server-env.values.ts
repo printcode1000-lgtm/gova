@@ -57,6 +57,22 @@ export function readOptionalEnv(key: string): string | undefined {
   return process.env[key];
 }
 
+export function getPasswordRecoveryConfig(): {
+  gmailUser: string;
+  gmailAppPassword: string;
+  signingSecret: string;
+} {
+  const gmailUser = process.env.PASSWORD_RECOVERY_GMAIL_USER?.trim();
+  const gmailAppPassword = process.env.PASSWORD_RECOVERY_GMAIL_APP_PASSWORD?.replace(/\s+/g, '');
+  const signingSecret = process.env.PASSWORD_RECOVERY_SIGNING_SECRET?.trim();
+
+  if (!gmailUser || !gmailAppPassword || !signingSecret) {
+    throw new Error('passwordRecoveryNotConfigured');
+  }
+
+  return { gmailUser, gmailAppPassword, signingSecret };
+}
+
 export function getOtaApprovalServerConfig(): {
   manifestUrl: string;
   publicKey: string;

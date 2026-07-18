@@ -12,6 +12,35 @@ export const users = sqliteTable('users', {
   deletedAt: text('deleted_at'),
 });
 
+export const passwordRecoveryChallenges = sqliteTable(
+  'password_recovery_challenges',
+  {
+    id: text('id').primaryKey(),
+    phoneHash: text('phone_hash').notNull(),
+    uid: text('uid'),
+    codeHash: text('code_hash').notNull(),
+    resetTokenHash: text('reset_token_hash'),
+    requestIpHash: text('request_ip_hash').notNull(),
+    expiresAt: text('expires_at').notNull(),
+    verifiedAt: text('verified_at'),
+    consumedAt: text('consumed_at'),
+    attempts: integer('attempts').notNull().default(0),
+    createdAt: text('created_at').notNull(),
+    lastAttemptAt: text('last_attempt_at'),
+  },
+  (table) => ({
+    phoneCreatedIdx: index('password_recovery_phone_created_idx').on(
+      table.phoneHash,
+      table.createdAt,
+    ),
+    ipCreatedIdx: index('password_recovery_ip_created_idx').on(
+      table.requestIpHash,
+      table.createdAt,
+    ),
+    resetTokenIdx: index('password_recovery_reset_token_idx').on(table.resetTokenHash),
+  }),
+);
+
 export const userNotificationTokens = sqliteTable(
   'user_notification_tokens',
   {
@@ -94,6 +123,8 @@ export const otaReleaseAudit = sqliteTable(
 
 export type UserEntity = typeof users.$inferSelect;
 export type NewUserEntity = typeof users.$inferInsert;
+export type PasswordRecoveryChallengeEntity = typeof passwordRecoveryChallenges.$inferSelect;
+export type NewPasswordRecoveryChallengeEntity = typeof passwordRecoveryChallenges.$inferInsert;
 export type UserNotificationTokenEntity = typeof userNotificationTokens.$inferSelect;
 export type NewUserNotificationTokenEntity = typeof userNotificationTokens.$inferInsert;
 export type NotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferSelect;

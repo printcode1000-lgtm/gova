@@ -20,6 +20,7 @@ import { VoiceInputController } from "@/components/voice-input/VoiceInputControl
 import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
 import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
 import { SnapshotProvider } from "@/features/page-snapshot";
+import { FavoritesProvider } from "@/features/favorites";
 import dynamic from "next/dynamic";
 
 import { isDevelopment, withBasePath } from "@/core/config";
@@ -51,23 +52,25 @@ export default function RootLayout({
       <body className="antialiased">
         <AppQueryProvider>
           <SessionProvider>
-            <SystemLogCollector />
-            <SystemLogErrorBoundary>
-              <PreferencesProvider>
-                <NetworkStatusProvider>
-                  <OtaUpdateProvider>
-                    <SnapshotProvider>
-                      <ShellLayout>{children}</ShellLayout>
-                    </SnapshotProvider>
-                    <NetworkStatusBanner />
-                    <OtaUpdatePrompt />
-                    <MobileBackButtonController />
-                    <VoiceInputController />
-                    <DeveloperBadge />
-                  </OtaUpdateProvider>
-                </NetworkStatusProvider>
-              </PreferencesProvider>
-            </SystemLogErrorBoundary>
+            <FavoritesProvider>
+              <SystemLogCollector />
+              <SystemLogErrorBoundary>
+                <PreferencesProvider>
+                  <NetworkStatusProvider>
+                    <OtaUpdateProvider>
+                      <SnapshotProvider>
+                        <ShellLayout>{children}</ShellLayout>
+                      </SnapshotProvider>
+                      <NetworkStatusBanner />
+                      <OtaUpdatePrompt />
+                      <MobileBackButtonController />
+                      <VoiceInputController />
+                      <DeveloperBadge />
+                    </OtaUpdateProvider>
+                  </NetworkStatusProvider>
+                </PreferencesProvider>
+              </SystemLogErrorBoundary>
+            </FavoritesProvider>
           </SessionProvider>
         </AppQueryProvider>
       </body>

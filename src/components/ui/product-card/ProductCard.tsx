@@ -18,12 +18,14 @@ import type {
   ProductCardViewModel,
 } from "@/features/product-card";
 import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
+import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
 
 interface ProductCardProps {
   card: ProductCardViewModel;
   variant: ProductCardVariant;
   actions?: ProductCardAction[];
   className?: string;
+  favoriteEnabled?: boolean;
   onOpen?: (
     event: React.MouseEvent<HTMLButtonElement>,
     card: ProductCardViewModel,
@@ -83,13 +85,26 @@ export function ProductCard({
   variant,
   actions = [],
   className = "",
+  favoriteEnabled,
   onOpen,
 }: ProductCardProps) {
   const isFeatured = variant === "featured-marquee";
   const hasActions = actions.length > 0;
+  const showFavorite =
+    (favoriteEnabled ??
+      (variant === "search" ||
+        variant === "profile-preview" ||
+        variant === "featured-marquee")) &&
+    Boolean(card.id);
 
   return (
-    <article className={`overflow-hidden ${variantClass[variant]} ${className}`}>
+    <article className={`relative overflow-hidden ${variantClass[variant]} ${className}`}>
+      {showFavorite ? (
+        <FavoriteButton
+          item={favoriteFromProductCard(card)}
+          className="absolute end-2 top-2 z-10"
+        />
+      ) : null}
       <button
         type="button"
         onClick={(event) => onOpen?.(event, card)}

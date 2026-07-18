@@ -29,6 +29,13 @@
       "when": 1784186401987,
       "tag": "0003_ota_release_approval",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1784346122764,
+      "tag": "0004_breezy_cammi",
+      "breakpoints": true
     }
   ]
 }
