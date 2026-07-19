@@ -10,11 +10,13 @@ The notification system is a local-first module that powers the in-app notificat
 - A complete module exists under `src/features/notifications`.
 - `/notifications` now opens the notification center from the bottom navigation bar.
 - The bottom navigation notification badge reads the real unread count from AsolDB and is hidden when the count is zero.
+- Badge counts include only unread notifications that target `badge`.
 - Notifications persist locally in AsolDB IndexedDB stores.
 - Templates live only in JSON files: Arabic and English.
 - Business modules publish through `NotificationBus`; they do not talk directly to push providers.
 - Event-to-template mapping is available for orders, shipments, returns, chat, payments, offers, and system notices.
 - Deduplication uses `dedupeKey`; duplicate entries are not stored again.
+- Dismissed notifications store their `id` and `dedupeKey` locally so Web Push or Android tray imports do not restore items the user already deleted.
 - Notification lifecycle analytics are stored locally.
 - Optional Capacitor-facing services are isolated behind infrastructure services.
 - Push provider credentials are not present in the client.
@@ -53,7 +55,7 @@ The module follows a layered structure:
 
 ## AsolDB Storage
 
-The module uses the existing `AsolDB` IndexedDB database. The database version is `5`.
+The module uses the existing `AsolDB` IndexedDB database. The database version is `8`.
 
 Dedicated stores:
 
@@ -65,6 +67,12 @@ Dedicated stores:
 - `notificationOfflineQueue`
 
 Templates are intentionally excluded from AsolDB. They are static versioned files inside the app bundle.
+
+The `notificationSettings` store also contains the bounded
+`user:<uid>:dismissed` list. The list stores notification `id` and `dedupeKey`
+values for deleted center items and is used to reject later imports of the same
+notification from Web Push service-worker payloads or Android delivered
+notifications.
 
 ## Users Database Token Storage
 
@@ -105,7 +113,8 @@ This table supports multiple devices per user and allows disabling one device wi
 3. `NotificationBuilder` resolves the template, variables, deep link, priority, channels, targets, group key, and sound.
 4. `NotificationSender` stores the notification in AsolDB, applies routing, updates badge count, emits UI refresh events, and records analytics.
 5. The notification center reloads through `useNotifications`.
-6. Opening or dismissing a notification updates read state, badge state, and analytics.
+6. Opening, marking all as read, or dismissing a notification updates badge state and emits a UI refresh event so `/notifications` and the bottom bar stay in sync.
+7. Dismissing a notification also remembers its `id` and `dedupeKey`; repeated Web Push or Android tray imports with the same identity are ignored.
 
 ## Notification Bus
 
@@ -304,15 +313,15 @@ Future push providers must plug into these services or server-side APIs. Firebas
 
 ### Foreground
 
-The app saves the notification to AsolDB, updates the badge, emits center refresh events, and can display a browser notification when permission is granted.
+The app saves the notification to AsolDB, updates the badge, emits center refresh events, and can display a browser notification when permission is granted. Badge refresh counts only unread notifications that include the `badge` target.
 
 ### Background
 
-The operating system should display native push notifications. When the app becomes active, `NotificationSyncService` can drain queued local operations and refresh UI state.
+The operating system should display native push notifications. When the app becomes active, Android delivered notifications can be imported into the local center. Imports skip notifications already remembered in `user:<uid>:dismissed`.
 
 ### Terminated
 
-No cloud persistence is used for local notification center state. Native notification centers keep received notifications while the app is terminated. On future mobile startup integration, `NotificationReceiver.importNativeNotifications()` is the import point for native notifications.
+No cloud persistence is used for local notification center state. Native notification centers keep received notifications while the app is terminated. Android startup import reads delivered tray notifications through the Capacitor adapter, skips empty `ASOL` placeholders, and ignores locally dismissed notification identities.
 
 ## Offline Queue
 
@@ -335,7 +344,7 @@ Current UI records sent, displayed, opened, and dismissed.
 
 ## Deduplication
 
-`AsolNotificationRepository.save()` checks the user's existing notifications by `dedupeKey`. If a duplicate exists, it returns the existing notification and does not store a second copy.
+`AsolNotificationRepository.save()` checks the user's existing notifications by `dedupeKey`. If a duplicate exists, it returns the existing notification and does not store a second copy. It also checks `user:<uid>:dismissed`; if the incoming notification's `id` or `dedupeKey` was dismissed before, the item is ignored instead of being restored.
 
 Recommended dedupe key format:
 
@@ -601,6 +610,8 @@ The service worker displays push notifications, stores a local copy in the
 AsolDB notification center for the target `uid`, refreshes the local badge
 state, notifies open app windows to reload `/notifications`, and opens the
 notification route or provided deep link when the user clicks the notification.
+Before storing, it reads `user:<uid>:dismissed` and skips any notification whose
+`id` or `dedupeKey` was already deleted by the user.
 
 ## Super Admin Broadcast Notifications
 

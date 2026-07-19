@@ -50,16 +50,24 @@ All values are configured for Production, Preview, and Development in the linked
 
 1. After session hydration, it initializes native listeners.
 2. It creates all Android notification channels.
-3. It imports notifications still present in the Android notification tray.
+3. It imports notifications still present in the Android notification tray, except notifications the user already dismissed locally and empty `ASOL` placeholders with no body or payload.
 4. If the user previously enabled notifications, it re-registers with FCM on startup to refresh the token timestamp.
 5. Foreground notifications are saved to AsolDB and refresh the badge.
 6. Tapping a background or terminated-state notification saves it, marks it read, and opens its validated internal route.
 7. Logout, account deletion, and clearing application data unregister the native token before local storage is erased.
 
+Dismissed notification identities are remembered locally by `id` and
+`dedupeKey`. Android tray import checks that list before saving delivered
+notifications, so deleting an item from `/notifications` prevents it from
+appearing again when the app resumes. If an Android payload does not provide a
+stable id, the adapter derives a stable fallback from the title, body, and route
+instead of using the current time.
+
 The web push path mirrors the same center behavior through
 `public/asol-push-sw.js`: incoming browser push payloads include the target
 `uid`, are stored in the local AsolDB notification list, refresh the local
 badge, and notify open app windows so `/notifications` updates immediately.
+The service worker also checks the same local dismissed list before storing.
 
 Permission is requested only after an explicit user action. Android 13 and newer use the native `POST_NOTIFICATIONS` permission through the Capacitor plugin.
 
@@ -118,3 +126,4 @@ After installing the debug or release build on a physical Android device:
 5. Send another while the app is in the background.
 6. Swipe the app away from recent apps, send another, and tap it from the system tray.
 7. Confirm the custom sound, notification-center entry, unread badge, and deep link.
+8. Delete the notification from `/notifications`, leave the page, return, and confirm it does not reappear and the bottom badge count is updated.
