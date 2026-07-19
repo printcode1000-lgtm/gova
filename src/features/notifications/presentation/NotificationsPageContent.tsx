@@ -80,7 +80,7 @@ export function NotificationsPageContent() {
           سجل الدخول لعرض مركز الإشعارات الخاص بك.
         </p>
         <Link
-          href="/auth/login"
+          href="/login"
           className="mt-5 inline-flex rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary"
         >
           تسجيل الدخول

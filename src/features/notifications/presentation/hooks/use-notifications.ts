@@ -4,6 +4,7 @@ import * as React from "react";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { NOTIFICATION_CHANGED_EVENT } from "../../domain/defaults";
 import type { NotificationEntity } from "../../domain/entities";
+import { NotificationTargets } from "../../domain/enums";
 import { asolNotificationRepository } from "../../infrastructure/asol-notification-repository";
 import { notificationLifecycleService } from "../../application/notification-lifecycle-service";
 import { notificationBadgeService } from "../../application/badge-service";
@@ -29,8 +30,11 @@ export function useNotifications() {
     }
     setLoading(true);
     const items = await asolNotificationRepository.list(uid);
+    const badgeCount = items.filter(
+      (item) => !item.readAt && item.targets.includes(NotificationTargets.Badge),
+    ).length;
     setNotifications(items);
-    setUnreadCount(items.filter((item) => !item.readAt).length);
+    setUnreadCount(badgeCount);
     await notificationBadgeService.refresh(uid);
     setLoading(false);
   }, [uid]);

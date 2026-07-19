@@ -106,17 +106,34 @@ async function saveNotificationToCenter(payload) {
   const notification = toNotificationEntity(payload);
   const db = await openAsolDb();
   await new Promise((resolve, reject) => {
-    const tx = db.transaction(['notifications', 'notificationBadges'], 'readwrite');
+    const tx = db.transaction(
+      ['notifications', 'notificationBadges', 'notificationSettings'],
+      'readwrite',
+    );
     const notificationsStore = tx.objectStore('notifications');
     const badgesStore = tx.objectStore('notificationBadges');
+    const settingsStore = tx.objectStore('notificationSettings');
     const listKey = `user:${notification.uid}:list`;
     const badgeKey = `user:${notification.uid}`;
+    const dismissedKey = `user:${notification.uid}:dismissed`;
 
     tx.onerror = () => reject(tx.error);
     tx.oncomplete = () => resolve();
 
-    getRow(notificationsStore, listKey)
-      .then((row) => {
+    Promise.all([
+      getRow(notificationsStore, listKey),
+      getRow(settingsStore, dismissedKey),
+    ])
+      .then(([row, dismissedRow]) => {
+        const dismissed = Array.isArray(dismissedRow && dismissedRow.value)
+          ? dismissedRow.value
+          : [];
+        if (
+          dismissed.includes(notification.id) ||
+          dismissed.includes(notification.dedupeKey)
+        ) {
+          return undefined;
+        }
         const current = Array.isArray(row && row.value) ? row.value : [];
         const exists = current.some((item) => item.dedupeKey === notification.dedupeKey);
         const next = exists ? current : [notification, ...current].slice(0, 250);

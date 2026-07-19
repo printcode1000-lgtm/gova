@@ -21,6 +21,7 @@ const badgeKey = (uid: string) => `user:${uid}`;
 const tokenListKey = (uid: string) => `user:${uid}:tokens`;
 const analyticsListKey = (uid: string) => `user:${uid}:analytics`;
 const offlineQueueKey = (uid: string) => `user:${uid}:queue`;
+const dismissedKey = (uid: string) => `user:${uid}:dismissed`;
 
 export class AsolNotificationRepository {
   async list(uid: string): Promise<NotificationEntity[]> {
@@ -31,6 +32,16 @@ export class AsolNotificationRepository {
   }
 
   async save(notification: NotificationEntity): Promise<NotificationEntity> {
+    const dismissed = await this.listDismissed(notification.uid);
+    if (
+      dismissed.some(
+        (item) =>
+          item === notification.dedupeKey ||
+          item === notification.id,
+      )
+    ) {
+      return notification;
+    }
     const current = await this.list(notification.uid);
     if (current.some((item) => item.dedupeKey === notification.dedupeKey)) {
       return current.find((item) => item.dedupeKey === notification.dedupeKey) ?? notification;
@@ -62,15 +73,46 @@ export class AsolNotificationRepository {
 
   async delete(uid: string, notificationId: string): Promise<void> {
     const current = await this.list(uid);
+    const deleted = current.find((item) => item.id === notificationId);
     await asolDbSet(
       ASOL_DB_STORES.NOTIFICATIONS,
       listKey(uid),
       current.filter((item) => item.id !== notificationId),
     );
+    if (deleted) await this.rememberDismissed(deleted);
   }
 
   async clear(uid: string): Promise<void> {
+    const current = await this.list(uid);
+    await this.rememberDismissedMany(current);
     await asolDbDelete(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid));
+  }
+
+  async listDismissed(uid: string): Promise<string[]> {
+    return (await asolDbGet<string[]>(
+      ASOL_DB_STORES.NOTIFICATION_SETTINGS,
+      dismissedKey(uid),
+    )) ?? [];
+  }
+
+  async rememberDismissed(notification: NotificationEntity): Promise<void> {
+    await this.rememberDismissedMany([notification]);
+  }
+
+  async rememberDismissedMany(notifications: NotificationEntity[]): Promise<void> {
+    const uid = notifications[0]?.uid;
+    if (!uid) return;
+    const current = await this.listDismissed(uid);
+    const next = new Set(current);
+    for (const notification of notifications) {
+      if (notification.id) next.add(notification.id);
+      if (notification.dedupeKey) next.add(notification.dedupeKey);
+    }
+    await asolDbSet(
+      ASOL_DB_STORES.NOTIFICATION_SETTINGS,
+      dismissedKey(uid),
+      Array.from(next).slice(-500),
+    );
   }
 
   async getSettings(uid: string): Promise<NotificationSettings | null> {

@@ -7,6 +7,7 @@ import {
 } from "@capacitor/push-notifications";
 import type { PluginListenerHandle } from "@capacitor/core";
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/lib/asol-db";
+import { asolNotificationRepository } from "../asol-notification-repository";
 import type { DeviceToken, NotificationEntity } from "../../domain/entities";
 import {
   NotificationCategories,
@@ -57,6 +58,24 @@ function safeInternalRoute(value: string): string | undefined {
   return value.startsWith("/") && !value.startsWith("//") ? value : undefined;
 }
 
+function fallbackNotificationKey(native: PushNotificationSchema): string {
+  const data = (native.data ?? {}) as Record<string, unknown>;
+  const title = native.title || dataString(data, "title") || "ASOL";
+  const body = native.body || dataString(data, "body");
+  const route = dataString(data, "routeHref");
+  return `push:${title}:${body}:${route}`;
+}
+
+function isEmptySystemPlaceholder(native: PushNotificationSchema): boolean {
+  const data = (native.data ?? {}) as Record<string, unknown>;
+  const hasData = Object.values(data).some(
+    (value) => value !== null && value !== undefined && String(value).trim(),
+  );
+  const title = native.title || dataString(data, "title") || "";
+  const body = native.body || dataString(data, "body");
+  return !hasData && title.toUpperCase() === "ASOL" && !body;
+}
+
 function toNotificationEntity(
   uid: string,
   native: PushNotificationSchema,
@@ -64,7 +83,7 @@ function toNotificationEntity(
   const data = (native.data ?? {}) as Record<string, unknown>;
   const now = new Date().toISOString();
   const id =
-    dataString(data, "notificationId") || native.id || `push_${Date.now()}`;
+    dataString(data, "notificationId") || native.id || fallbackNotificationKey(native);
   const routeHref = safeInternalRoute(dataString(data, "routeHref"));
   const categoryValue = dataString(data, "category");
   const priorityValue = dataString(data, "priority");
@@ -316,10 +335,14 @@ export class CapacitorPushService {
   private async importDeliveredNotifications(): Promise<void> {
     if (!this.currentUid || !this.receivedHandler) return;
     const delivered = await PushNotifications.getDeliveredNotifications();
+    const dismissed = new Set(
+      await asolNotificationRepository.listDismissed(this.currentUid),
+    );
     for (const notification of delivered.notifications) {
-      await this.receivedHandler(
-        toNotificationEntity(this.currentUid, notification),
-      );
+      if (isEmptySystemPlaceholder(notification)) continue;
+      const entity = toNotificationEntity(this.currentUid, notification);
+      if (dismissed.has(entity.id) || dismissed.has(entity.dedupeKey)) continue;
+      await this.receivedHandler(entity);
     }
   }
 }

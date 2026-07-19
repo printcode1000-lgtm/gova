@@ -7,7 +7,7 @@ Asol uses IndexedDB (AsolDB) as its primary client-side persistent storage mecha
 ## Configuration
 
 - **Database Name:** `AsolDB`
-- **Current Version:** `5`
+- **Current Version:** `8`
 - **Low-level Implementation:** `src/lib/asol-db/index.ts`
 - **Object Stores Schema:** Every object store is configured with `{ keyPath: 'key' }` and stores key-value pairs (where value can be a structured cloneable object).
 
@@ -55,7 +55,7 @@ The notification module stores its local state in dedicated AsolDB stores. Templ
 |-------|-------------|
 | `notifications` | Per-user notification center entries, read/unread state, routes, grouping keys, dedupe keys, and sync state. |
 | `notificationDeviceTokens` | Per-user platform device tokens for web, Android, and iOS. No provider secrets are stored here. |
-| `notificationSettings` | Per-user notification channel and target preferences. |
+| `notificationSettings` | Per-user notification channel and target preferences. It also stores the bounded `user:<uid>:dismissed` list of dismissed notification `id` and `dedupeKey` values so deleted local notifications are not re-imported from Web Push or Android tray payloads. |
 | `notificationBadges` | Per-user unread badge count. |
 | `notificationAnalytics` | Local lifecycle analytics events such as sent, displayed, opened, clicked, dismissed, and failed. |
 | `notificationOfflineQueue` | Local operations waiting for browser connectivity. |
