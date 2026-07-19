@@ -367,9 +367,9 @@ export function ProfilePageContent() {
           id="edit-profile-card"
           className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4"
         >
-          <div className="sticky top-12 z-30 w-full rounded-3xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
+          <div className="sticky top-12 z-30 w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
             <div
-              className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-3 sm:gap-3 sm:px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               aria-label={t("profile.subtitle")}
             >
               {PROFILE_SECTIONS.map((section) => {
@@ -395,8 +395,10 @@ export function ProfilePageContent() {
                     onClick={() => selectSection(section)}
                     aria-pressed={active}
                     aria-controls={PROFILE_SECTION_IDS[section]}
-                    className="group relative flex min-h-20 w-20 shrink-0 snap-center flex-col items-center justify-center gap-1 rounded-xl border px-1 py-1.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+                    className="group relative flex h-16 w-16 shrink-0 snap-center flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 hover:border-opacity-100 hover:shadow-md active:scale-95"
                     style={{
+                      paddingInline: "0.0625rem",
+                      paddingBlock: "0.0625rem",
                       background: active
                         ? `linear-gradient(135deg, ${color}26, ${color}10)`
                         : `linear-gradient(135deg, ${color}14, ${color}06)`,
@@ -405,10 +407,21 @@ export function ProfilePageContent() {
                   >
                     <FontAwesomeIcon
                       icon={PROFILE_EDIT_TAB_ICONS[section]}
-                      className="h-12 w-12 transition-transform group-hover:scale-105"
-                      style={{ color }}
+                      className="shrink-0 transition-transform group-hover:scale-105"
+                      style={{
+                        color,
+                        width: "2rem",
+                        height: "2rem",
+                        fontSize: "2rem",
+                      }}
                     />
-                    <span className="line-clamp-2 w-[5.5rem] origin-top scale-[0.55] text-center text-[10px] font-semibold leading-[10px] tracking-tight text-muted-foreground">
+                    <span
+                      className="line-clamp-2 block w-full text-center font-semibold tracking-tight text-muted-foreground"
+                      style={{
+                        fontSize: "0.5rem",
+                        lineHeight: "0.6rem",
+                      }}
+                    >
                       {labels[section]}
                     </span>
                     {sectionStatuses[section]?.isDirty ? (
@@ -418,8 +431,6 @@ export function ProfilePageContent() {
                 );
               })}
             </div>
-            <div className="pointer-events-none absolute inset-y-0 start-0 w-5 bg-gradient-to-r from-surface-container-low/95 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 end-0 w-5 bg-gradient-to-l from-surface-container-low/95 to-transparent" />
           </div>
 
           <div className="sticky top-[9.25rem] z-20 rounded-3xl border border-primary/20 bg-surface/90 p-3 shadow-lg shadow-primary/5 backdrop-blur-xl sm:p-4">
