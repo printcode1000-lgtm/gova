@@ -5,6 +5,7 @@ import { capacitorPushService } from "../infrastructure/capacitor/capacitor-push
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationApiService } from "../services/notification-api-service";
 import type { NotificationEntity } from "../domain/entities";
+import { webPushBrowserService } from "./web-push-browser-service";
 
 export class DeviceTokenService {
   async register(uid: string, phone: string): Promise<DeviceToken | null> {
@@ -40,17 +41,15 @@ export class DeviceTokenService {
 
   async unregister(uid: string, phone: string): Promise<void> {
     const tokens = await this.list(uid);
-    const androidTokens = tokens.filter(
-      (token) => token.platform === "android",
-    );
     await Promise.all(
-      androidTokens.map(async (token) => {
-        await notificationApiService
-          .removeToken({ uid, phone, tokenId: token.id })
-          .catch(() => undefined);
+      tokens.map(async (token) => {
+        await notificationApiService.removeToken({ uid, phone, tokenId: token.id });
         await asolNotificationRepository.removeDeviceToken(uid, token.id);
       }),
     );
+    if (webPushBrowserService.isSupported()) {
+      await webPushBrowserService.unsubscribe(uid, phone);
+    }
     await capacitorPushService.unregister();
   }
 

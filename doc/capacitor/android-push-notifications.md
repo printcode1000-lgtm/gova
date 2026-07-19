@@ -54,7 +54,7 @@ All values are configured for Production, Preview, and Development in the linked
 4. If the user previously enabled notifications, it re-registers with FCM on startup to refresh the token timestamp.
 5. Foreground notifications are saved to AsolDB and refresh the badge.
 6. Tapping a background or terminated-state notification saves it, marks it read, and opens its validated internal route.
-7. Logout, account deletion, and clearing application data unregister the native token before local storage is erased.
+7. Logout, account deletion, and clearing application data unregister the native token before local storage is erased. Logout also removes any locally known Web, Android, or iOS notification token from the server through the shared device-token service.
 
 Dismissed notification identities are remembered locally by `id` and
 `dedupeKey`. Android tray import checks that list before saving delivered
@@ -73,15 +73,17 @@ Permission is requested only after an explicit user action. Android 13 and newer
 
 ## Channels
 
-| Channel | Purpose | Sound |
-| --- | --- | --- |
-| `asol_general_v1` | General and system notifications | `custom_notification.mp3` |
-| `asol_orders_v1` | Orders, shipping, and returns | `custom_notification.mp3` |
-| `asol_chat_v1` | Chat and messages | `custom_notification.mp3` |
-| `asol_urgent_v1` | Critical notifications | `custom_notification.mp3` |
-| `asol_silent_v1` | Silent updates | None |
+| Channel | Purpose | Sound | Vibration |
+| --- | --- | --- | --- |
+| `asol_general_v2` | General and system notifications | `custom_notification.mp3` | Yes |
+| `asol_orders_v2` | Orders, shipping, and returns | `custom_notification.mp3` | Yes |
+| `asol_chat_v2` | Chat and messages | `custom_notification.mp3` | Yes |
+| `asol_urgent_v2` | Critical notifications | `custom_notification.mp3` | Yes |
+| `asol_updates_v2` | General update notifications | `custom_notification.mp3` | Yes |
 
 Channel IDs are versioned because Android does not allow an application to replace the sound configuration of an already-created channel. Users can still override channel behavior from Android system settings.
+All ASOL Android channels are intentionally audible and vibrating. FCM payloads
+route to the v2 channels and always use the custom notification sound.
 
 ## Server Delivery
 

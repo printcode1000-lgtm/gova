@@ -248,6 +248,12 @@ DELETE /api/notifications/device-token
 
 When a real Web Push, FCM, or APNs token is available, the platform adapter should pass the real token into the same registration flow. Server credentials remain outside the client.
 
+Logout must unregister the current device before client storage is cleared. The
+logout flow removes locally known device tokens from the server and also asks
+the active Web Push subscription, when supported, to unsubscribe and delete its
+server token by device id. This applies to Web, Android, and future iOS tokens
+stored through the same device-token service.
+
 ## Multi-User Sending
 
 The backend has an API for preparing delivery to one or many users:

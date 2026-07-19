@@ -286,7 +286,7 @@ export class CapacitorPushService {
     const sound = "custom_notification.mp3";
     await Promise.all([
       PushNotifications.createChannel({
-        id: "asol_general_v1",
+        id: "asol_general_v2",
         name: "ASOL - الإشعارات العامة",
         description: "الإشعارات العامة من أصول",
         importance: 4,
@@ -295,7 +295,7 @@ export class CapacitorPushService {
         sound,
       }),
       PushNotifications.createChannel({
-        id: "asol_orders_v1",
+        id: "asol_orders_v2",
         name: "ASOL - الطلبات",
         description: "تحديثات الطلبات والشحن والإرجاع",
         importance: 4,
@@ -304,7 +304,7 @@ export class CapacitorPushService {
         sound,
       }),
       PushNotifications.createChannel({
-        id: "asol_chat_v1",
+        id: "asol_chat_v2",
         name: "ASOL - المحادثات",
         description: "الرسائل والمحادثات الجديدة",
         importance: 4,
@@ -313,7 +313,7 @@ export class CapacitorPushService {
         sound,
       }),
       PushNotifications.createChannel({
-        id: "asol_urgent_v1",
+        id: "asol_urgent_v2",
         name: "ASOL - التنبيهات المهمة",
         description: "التنبيهات العاجلة والمهمة",
         importance: 5,
@@ -322,12 +322,13 @@ export class CapacitorPushService {
         sound,
       }),
       PushNotifications.createChannel({
-        id: "asol_silent_v1",
-        name: "ASOL - صامت",
-        description: "إشعارات أصول الصامتة",
-        importance: 2,
+        id: "asol_updates_v2",
+        name: "ASOL - التحديثات",
+        description: "إشعارات التحديثات العامة من أصول",
+        importance: 4,
         visibility: 0,
-        vibration: false,
+        vibration: true,
+        sound,
       }),
     ]);
   }

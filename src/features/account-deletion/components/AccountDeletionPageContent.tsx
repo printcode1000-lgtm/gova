@@ -84,16 +84,12 @@ export function AccountDeletionPageContent() {
     }
     setState("deleting");
     try {
+      await notificationDeviceTokenService.unregister(session.uid, session.phone);
       await accountDeletionApiService.delete({
         uid: session.uid,
         currentPassword: password,
         confirmation: phrase,
       });
-      if (notificationDeviceTokenService.isAndroid())
-        await notificationDeviceTokenService.unregister(
-          session.uid,
-          session.phone,
-        );
       await clearAllClientStorage();
       window.location.replace("/");
     } catch {

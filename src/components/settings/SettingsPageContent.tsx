@@ -144,14 +144,7 @@ export function SettingsPageContent() {
     setClearing(true);
     try {
       if (session) {
-        if (isAndroidNotifications) {
-          await notificationDeviceTokenService.unregister(
-            session.uid,
-            session.phone,
-          );
-        } else if (!isIosNotifications && webPushBrowserService.isSupported()) {
-          await webPushBrowserService.unsubscribe(session.uid, session.phone);
-        }
+        await notificationDeviceTokenService.unregister(session.uid, session.phone);
       }
       resetTheme();
       resetApp();

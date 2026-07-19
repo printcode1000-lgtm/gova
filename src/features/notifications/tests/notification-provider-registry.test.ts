@@ -44,7 +44,7 @@ async function main() {
   assert.equal(result.status, "sent");
   assert.equal(result.tokenCount, 1);
   assert.equal(sentMessage?.message.android.restricted_package_name, "hgh.asol.app");
-  assert.equal(sentMessage?.message.android.notification.channel_id, "asol_general_v1");
+  assert.equal(sentMessage?.message.android.notification.channel_id, "asol_general_v2");
   assert.equal(sentMessage?.message.android.notification.sound, "custom_notification");
   assert.equal(sentMessage?.message.data.dedupeKey, "system.info:test");
   assert.equal(sentMessage?.message.data.uid, "usr_1");

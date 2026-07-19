@@ -12,11 +12,10 @@ import type {
 const MAX_PARALLEL_SENDS = 25;
 
 function channelId(input: NotificationProviderSendInput): string {
-  if (input.payload.sound === "silent") return "asol_silent_v1";
-  if (input.payload.priority === "critical") return "asol_urgent_v1";
-  if (input.payload.category === "orders") return "asol_orders_v1";
-  if (input.payload.category === "chat") return "asol_chat_v1";
-  return "asol_general_v1";
+  if (input.payload.priority === "critical") return "asol_urgent_v2";
+  if (input.payload.category === "orders") return "asol_orders_v2";
+  if (input.payload.category === "chat") return "asol_chat_v2";
+  return "asol_general_v2";
 }
 
 function cleanData(input: NotificationProviderSendInput): Record<string, string> {
@@ -44,7 +43,7 @@ function buildMessage(
   input: NotificationProviderSendInput,
   token: RegisteredNotificationToken,
 ): FcmHttpV1Message {
-  const sound = input.payload.sound === "silent" ? undefined : "custom_notification";
+  const sound = "custom_notification";
   return {
     message: {
       token: token.token,

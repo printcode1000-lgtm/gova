@@ -121,11 +121,8 @@ export const AppSidebar = React.memo(function AppSidebar({
   }, []);
 
   const confirmLogout = useCallback(async () => {
-    if (session && notificationDeviceTokenService.isAndroid()) {
-      await notificationDeviceTokenService.unregister(
-        session.uid,
-        session.phone,
-      );
+    if (session) {
+      await notificationDeviceTokenService.unregister(session.uid, session.phone);
     }
     logout.mutate(undefined, {
       onSuccess: async () => {
