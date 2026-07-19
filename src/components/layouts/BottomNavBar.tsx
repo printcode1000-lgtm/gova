@@ -63,11 +63,14 @@ export function BottomNavBar() {
             id={`nav-item-${href.slice(1)}`}
             href={href}
             className={cn(
-              'flex flex-col items-center justify-center relative py-1 px-2 min-w-[3rem] transition-transform active:scale-90 no-underline',
-              resolvedScheme === 'dark' 
-                ? (isActive ? 'asol-nav-pill-active font-bold' : 'text-on-surface-variant font-normal hover:text-on-surface')
-                : (isActive ? 'text-blue-900 font-bold' : 'text-blue-700 font-normal hover:text-blue-900')
+              'relative flex min-w-[3.35rem] flex-col items-center justify-center rounded-2xl px-3 py-1.5 no-underline transition-all duration-200 active:scale-90',
+              isActive
+                ? 'asol-nav-pill-active shadow-sm ring-1 ring-primary/20'
+                : resolvedScheme === 'dark'
+                  ? 'text-on-surface-variant font-normal hover:bg-surface-container-high hover:text-on-surface'
+                  : 'text-blue-700 font-normal hover:bg-blue-100/70 hover:text-blue-900'
             )}
+            aria-current={isActive ? 'page' : undefined}
           >
             <Icon
               className={cn(

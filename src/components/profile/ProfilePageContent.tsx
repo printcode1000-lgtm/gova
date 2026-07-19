@@ -5,19 +5,24 @@ import {
   AlertTriangle,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Loader2,
   LogIn,
-  Save,
-  Truck,
 } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
-  faUserCircle,
+  faBuilding,
+  faCircleCheck,
+  faClock,
+  faComments,
+  faFloppyDisk,
+  faListCheck,
+  faPenToSquare,
   faStar,
   faTags,
-  faAddressBook,
-  faBuilding,
+  faTruckFast,
+  faTriangleExclamation,
+  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -61,6 +66,26 @@ import type {
 import { PROFILE_SECTION_IDS, PROFILE_SECTIONS } from "./profile-page.types";
 import { useProfileNavigation } from "./use-profile-navigation";
 import { useProfileSave } from "./use-profile-save";
+
+const PROFILE_EDIT_TAB_COLORS: Record<ProfileEditTab, string> = {
+  registration: "#7C3AED",
+  specialties: "#D97706",
+  products: "#16A34A",
+  contact: "#2563EB",
+  store: "#4F46E5",
+  workingHours: "#EA580C",
+  fulfillment: "#0891B2",
+};
+
+const PROFILE_EDIT_TAB_ICONS: Record<ProfileEditTab, IconDefinition> = {
+  registration: faUserCircle,
+  specialties: faStar,
+  products: faTags,
+  contact: faComments,
+  store: faBuilding,
+  workingHours: faClock,
+  fulfillment: faTruckFast,
+};
 
 export function ProfilePageContent() {
   const { t, locale } = useTranslation();
@@ -273,6 +298,21 @@ export function ProfilePageContent() {
     .map(([, status]) => status?.label)
     .filter((label): label is string => Boolean(label));
   const isSaveBlocked = dirtySections.some(([, status]) => !status?.canSave);
+  const activeTabLabel = sectionStatuses[activeTab]?.label;
+  const saveProfileChanges = React.useCallback(
+    () =>
+      handleSaveChangedSections(
+        registrationRef.current,
+        contactsRef.current,
+        storeRef.current,
+        workingHoursRef.current,
+        specialtiesRef.current,
+        productsRef.current,
+        fulfillmentRef.current,
+      ),
+    [handleSaveChangedSections],
+  );
+
   if (isLoading) {
     return (
       <div className="container px-4 py-8 text-sm text-on-surface-variant">
@@ -327,171 +367,128 @@ export function ProfilePageContent() {
           id="edit-profile-card"
           className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4"
         >
-          <div className="sticky top-0 z-30 w-full bg-surface-container-low/60 relative">
+          <div className="sticky top-12 z-30 w-full rounded-3xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
             <div
               className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-3 sm:gap-3 sm:px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               aria-label={t("profile.subtitle")}
             >
-              <button
-                ref={(node) => {
-                  navButtonRefs.current.registration = node;
-                }}
-                type="button"
-                onClick={() => selectSection("registration")}
-                aria-pressed={activeTab === "registration"}
-                aria-controls={PROFILE_SECTION_IDS.registration}
-                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                  activeTab === "registration"
-                    ? "border-primary bg-primary text-on-primary shadow-sm"
-                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                }`}
-              >
-                <FontAwesomeIcon icon={faUserCircle} className="h-6 w-6" />
-                <span className="whitespace-nowrap text-center">
-                  {t("onboarding.contactInfo.primaryContact")}
-                </span>
-                {sectionStatuses.registration?.isDirty ? (
-                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                ) : null}
-              </button>
-              <button
-                ref={(node) => {
-                  navButtonRefs.current.specialties = node;
-                }}
-                type="button"
-                onClick={() => selectSection("specialties")}
-                aria-pressed={activeTab === "specialties"}
-                aria-controls={PROFILE_SECTION_IDS.specialties}
-                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                  activeTab === "specialties"
-                    ? "border-primary bg-primary text-on-primary shadow-sm"
-                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                }`}
-              >
-                <FontAwesomeIcon icon={faStar} className="h-6 w-6" />
-                <span className="whitespace-nowrap text-center">
-                  {t("onboarding.storeIdentity.specialties")}
-                </span>
-                {sectionStatuses.specialties?.isDirty ? (
-                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                ) : null}
-              </button>
-              <button
-                ref={(node) => {
-                  navButtonRefs.current.products = node;
-                }}
-                type="button"
-                onClick={() => selectSection("products")}
-                aria-pressed={activeTab === "products"}
-                aria-controls={PROFILE_SECTION_IDS.products}
-                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                  activeTab === "products"
-                    ? "border-primary bg-primary text-on-primary shadow-sm"
-                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                }`}
-              >
-                <FontAwesomeIcon icon={faTags} className="h-6 w-6" />
-                <span className="whitespace-nowrap text-center">
-                  {t("onboarding.storeIdentity.products")}
-                </span>
-                {sectionStatuses.products?.isDirty ? (
-                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                ) : null}
-              </button>
-              <button
-                ref={(node) => {
-                  navButtonRefs.current.contact = node;
-                }}
-                type="button"
-                onClick={() => selectSection("contact")}
-                aria-pressed={activeTab === "contact"}
-                aria-controls={PROFILE_SECTION_IDS.contact}
-                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                  activeTab === "contact"
-                    ? "border-primary bg-primary text-on-primary shadow-sm"
-                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                }`}
-              >
-                <FontAwesomeIcon icon={faAddressBook} className="h-6 w-6" />
-                <span className="whitespace-nowrap text-center">
-                  {t("onboarding.contactInfo.additionalContact")}
-                </span>
-                {sectionStatuses.contact?.isDirty ? (
-                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                ) : null}
-              </button>
-              <button
-                ref={(node) => {
-                  navButtonRefs.current.store = node;
-                }}
-                type="button"
-                onClick={() => selectSection("store")}
-                aria-pressed={activeTab === "store"}
-                aria-controls={PROFILE_SECTION_IDS.store}
-                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                  activeTab === "store"
-                    ? "border-primary bg-primary text-on-primary shadow-sm"
-                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                }`}
-              >
-                <FontAwesomeIcon icon={faBuilding} className="h-6 w-6" />
-                <span className="whitespace-nowrap text-center">
-                  {t("onboarding.storeIdentity.title")}
-                </span>
-                {sectionStatuses.store?.isDirty ? (
-                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                ) : null}
-              </button>
-              <button
-                ref={(node) => {
-                  navButtonRefs.current.workingHours = node;
-                }}
-                type="button"
-                onClick={() => selectSection("workingHours")}
-                aria-pressed={activeTab === "workingHours"}
-                aria-controls={PROFILE_SECTION_IDS.workingHours}
-                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                  activeTab === "workingHours"
-                    ? "border-primary bg-primary text-on-primary shadow-sm"
-                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                }`}
-              >
-                <Clock className="h-6 w-6" />
-                <span className="whitespace-nowrap text-center">
-                  {locale === "ar" ? "مواعيد العمل" : "Working hours"}
-                </span>
-                {sectionStatuses.workingHours?.isDirty ? (
-                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                ) : null}
-              </button>
-              <button
-                ref={(node) => {
-                  navButtonRefs.current.fulfillment = node;
-                }}
-                type="button"
-                onClick={() => selectSection("fulfillment")}
-                aria-pressed={activeTab === "fulfillment"}
-                aria-controls={PROFILE_SECTION_IDS.fulfillment}
-                className={`flex h-auto min-w-fit flex-shrink-0 snap-center flex-col items-center gap-1 rounded-full border px-3 py-2 text-[11px] font-semibold transition-colors sm:px-4 sm:text-xs ${
-                  activeTab === "fulfillment"
-                    ? "border-primary bg-primary text-on-primary shadow-sm"
-                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
-                }`}
-              >
-                <Truck className="h-6 w-6" />
-                <span className="whitespace-nowrap text-center">
-                  {locale === "ar" ? "الشحن والإرجاع" : "Shipping"}
-                </span>
-                {sectionStatuses.fulfillment?.isDirty ? (
-                  <span className="h-2 w-2 rounded-full bg-error ring-2 ring-surface" />
-                ) : null}
-              </button>
+              {PROFILE_SECTIONS.map((section) => {
+                const color = PROFILE_EDIT_TAB_COLORS[section];
+                const active = activeTab === section;
+                const labels: Record<ProfileEditTab, string> = {
+                  registration: t("onboarding.contactInfo.primaryContact"),
+                  specialties: t("onboarding.storeIdentity.specialties"),
+                  products: t("onboarding.storeIdentity.products"),
+                  contact: t("onboarding.contactInfo.additionalContact"),
+                  store: t("onboarding.storeIdentity.title"),
+                  workingHours: locale === "ar" ? "مواعيد العمل" : "Working hours",
+                  fulfillment: locale === "ar" ? "الشحن والإرجاع" : "Shipping",
+                };
+
+                return (
+                  <button
+                    key={section}
+                    ref={(node) => {
+                      navButtonRefs.current[section] = node;
+                    }}
+                    type="button"
+                    onClick={() => selectSection(section)}
+                    aria-pressed={active}
+                    aria-controls={PROFILE_SECTION_IDS[section]}
+                    className="group relative flex min-h-20 w-20 shrink-0 snap-center flex-col items-center justify-center gap-1 rounded-xl border px-1 py-1.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+                    style={{
+                      background: active
+                        ? `linear-gradient(135deg, ${color}26, ${color}10)`
+                        : `linear-gradient(135deg, ${color}14, ${color}06)`,
+                      borderColor: active ? `${color}AA` : `${color}55`,
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={PROFILE_EDIT_TAB_ICONS[section]}
+                      className="h-12 w-12 transition-transform group-hover:scale-105"
+                      style={{ color }}
+                    />
+                    <span className="line-clamp-2 w-[5.5rem] origin-top scale-[0.55] text-center text-[10px] font-semibold leading-[10px] tracking-tight text-muted-foreground">
+                      {labels[section]}
+                    </span>
+                    {sectionStatuses[section]?.isDirty ? (
+                      <span className="absolute end-1 top-1 h-2.5 w-2.5 rounded-full bg-error ring-2 ring-surface" />
+                    ) : null}
+                  </button>
+                );
+              })}
             </div>
             <div className="pointer-events-none absolute inset-y-0 start-0 w-5 bg-gradient-to-r from-surface-container-low/95 to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 end-0 w-5 bg-gradient-to-l from-surface-container-low/95 to-transparent" />
           </div>
 
-          <Card className="overflow-hidden">
+          <div className="sticky top-[9.25rem] z-20 rounded-3xl border border-primary/20 bg-surface/90 p-3 shadow-lg shadow-primary/5 backdrop-blur-xl sm:p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-start gap-3">
+                <span
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+                    dirtyLabels.length > 0
+                      ? "bg-error/10 text-error"
+                      : "bg-primary/10 text-primary"
+                  }`}
+                >
+                  <FontAwesomeIcon
+                    icon={
+                      isUnifiedSaving
+                        ? faFloppyDisk
+                        : dirtyLabels.length > 0
+                          ? faPenToSquare
+                          : faCircleCheck
+                    }
+                    className="h-5 w-5"
+                  />
+                </span>
+                <div className="min-w-0">
+                  <p className="flex flex-wrap items-center gap-2 text-sm font-bold text-on-surface">
+                    <FontAwesomeIcon icon={faListCheck} className="h-4 w-4 text-primary" />
+                    {locale === "ar" ? "حفظ تعديلات الملف" : "Save profile changes"}
+                    {activeTabLabel ? (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                        {activeTabLabel}
+                      </span>
+                    ) : null}
+                  </p>
+                  <p className="mt-1 line-clamp-2 text-xs leading-5 text-on-surface-variant">
+                    {isUnifiedSaving
+                      ? t("profile.saving")
+                      : dirtyLabels.length > 0
+                        ? `${t("profile.saveTargets")}: ${dirtyLabels.join("، ")}`
+                        : locale === "ar"
+                          ? "لا توجد تغييرات غير محفوظة في التبويب الحالي أو باقي التبويبات."
+                          : "There are no unsaved changes in the current tab or other tabs."}
+                  </p>
+                  {saveError ? (
+                    <p className="mt-2 inline-flex items-center gap-2 rounded-xl bg-error/10 px-3 py-1.5 text-xs font-semibold text-error">
+                      <FontAwesomeIcon icon={faTriangleExclamation} className="h-4 w-4" />
+                      {saveError}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+              <Button
+                type="button"
+                className="h-11 shrink-0 gap-2 rounded-2xl px-5 font-bold shadow-md shadow-primary/15"
+                onClick={() => void saveProfileChanges()}
+                disabled={
+                  isUnifiedSaving || isSaveBlocked || dirtyLabels.length === 0
+                }
+              >
+                {isUnifiedSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <FontAwesomeIcon icon={faFloppyDisk} className="h-4 w-4" />
+                )}
+                {isUnifiedSaving ? t("profile.saving") : t("profile.save")}
+              </Button>
+            </div>
+          </div>
+
+          <Card className="overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
             <CardContent className="p-0">
               <div className="relative">
                 <div
@@ -510,13 +507,21 @@ export function ProfilePageContent() {
                     role="region"
                     aria-hidden={activeTab !== "registration"}
                     inert={activeTab !== "registration"}
-                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileRegistrationInfoCard
-                      ref={registrationRef}
-                      showSaveButton={false}
-                      onStatusChange={handleRegistrationStatus}
-                    />
+                    <ProfileEditSectionFrame
+                      icon={faUserCircle}
+                      title={t("onboarding.contactInfo.primaryContact")}
+                      status={sectionStatuses.registration}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.registration}
+                    >
+                      <ProfileRegistrationInfoCard
+                        ref={registrationRef}
+                        showSaveButton={false}
+                        onStatusChange={handleRegistrationStatus}
+                      />
+                    </ProfileEditSectionFrame>
                   </div>
                   <div
                     ref={(node) => {
@@ -526,15 +531,23 @@ export function ProfilePageContent() {
                     role="region"
                     aria-hidden={activeTab !== "specialties"}
                     inert={activeTab !== "specialties"}
-                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <SpecialtiesCard
-                      uid={session?.uid ?? ""}
-                      ref={specialtiesRef}
-                      showSaveButton={false}
-                      onStatusChange={handleSpecialtiesStatus}
-                      unlimited={superAdmin}
-                    />
+                    <ProfileEditSectionFrame
+                      icon={faStar}
+                      title={t("onboarding.storeIdentity.specialties")}
+                      status={sectionStatuses.specialties}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.specialties}
+                    >
+                      <SpecialtiesCard
+                        uid={session?.uid ?? ""}
+                        ref={specialtiesRef}
+                        showSaveButton={false}
+                        onStatusChange={handleSpecialtiesStatus}
+                        unlimited={superAdmin}
+                      />
+                    </ProfileEditSectionFrame>
                   </div>
                   <div
                     ref={(node) => {
@@ -544,14 +557,22 @@ export function ProfilePageContent() {
                     role="region"
                     aria-hidden={activeTab !== "products"}
                     inert={activeTab !== "products"}
-                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProductsCard
-                      uid={session?.uid ?? ""}
-                      ref={productsRef}
-                      showSaveButton={false}
-                      onStatusChange={handleProductsStatus}
-                    />
+                    <ProfileEditSectionFrame
+                      icon={faTags}
+                      title={t("onboarding.storeIdentity.products")}
+                      status={sectionStatuses.products}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.products}
+                    >
+                      <ProductsCard
+                        uid={session?.uid ?? ""}
+                        ref={productsRef}
+                        showSaveButton={false}
+                        onStatusChange={handleProductsStatus}
+                      />
+                    </ProfileEditSectionFrame>
                   </div>
                   <div
                     ref={(node) => {
@@ -561,13 +582,22 @@ export function ProfilePageContent() {
                     role="region"
                     aria-hidden={activeTab !== "contact"}
                     inert={activeTab !== "contact"}
-                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <ProfileContactsCard
-                      ref={contactsRef}
-                      showSaveButton={false}
-                      onStatusChange={handleContactStatus}
-                    />
+                    <ProfileEditSectionFrame
+                      icon={faComments}
+                      title={t("onboarding.contactInfo.additionalContact")}
+                      status={sectionStatuses.contact}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.contact}
+                      hideHeader
+                    >
+                      <ProfileContactsCard
+                        ref={contactsRef}
+                        showSaveButton={false}
+                        onStatusChange={handleContactStatus}
+                      />
+                    </ProfileEditSectionFrame>
                   </div>
                   <div
                     ref={(node) => {
@@ -577,13 +607,21 @@ export function ProfilePageContent() {
                     role="region"
                     aria-hidden={activeTab !== "store"}
                     inert={activeTab !== "store"}
-                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <StoreIdentityCard
-                      ref={storeRef}
-                      showSaveButton={false}
-                      onStatusChange={handleStoreStatus}
-                    />
+                    <ProfileEditSectionFrame
+                      icon={faBuilding}
+                      title={t("onboarding.storeIdentity.title")}
+                      status={sectionStatuses.store}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.store}
+                    >
+                      <StoreIdentityCard
+                        ref={storeRef}
+                        showSaveButton={false}
+                        onStatusChange={handleStoreStatus}
+                      />
+                    </ProfileEditSectionFrame>
                   </div>
                   <div
                     ref={(node) => {
@@ -593,12 +631,20 @@ export function ProfilePageContent() {
                     role="region"
                     aria-hidden={activeTab !== "workingHours"}
                     inert={activeTab !== "workingHours"}
-                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <WorkingHoursProfileCard
-                      ref={workingHoursRef}
-                      onStatusChange={handleWorkingHoursStatus}
-                    />
+                    <ProfileEditSectionFrame
+                      icon={faClock}
+                      title={locale === "ar" ? "مواعيد العمل" : "Working hours"}
+                      status={sectionStatuses.workingHours}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.workingHours}
+                    >
+                      <WorkingHoursProfileCard
+                        ref={workingHoursRef}
+                        onStatusChange={handleWorkingHoursStatus}
+                      />
+                    </ProfileEditSectionFrame>
                   </div>
                   <div
                     ref={(node) => {
@@ -608,12 +654,20 @@ export function ProfilePageContent() {
                     role="region"
                     aria-hidden={activeTab !== "fulfillment"}
                     inert={activeTab !== "fulfillment"}
-                    className="min-w-full snap-center p-3 sm:p-5 lg:p-6"
+                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
-                    <FulfillmentSettingsCard
-                      ref={fulfillmentRef}
-                      onStatusChange={handleFulfillmentStatus}
-                    />
+                    <ProfileEditSectionFrame
+                      icon={faTruckFast}
+                      title={locale === "ar" ? "الشحن والإرجاع" : "Shipping"}
+                      status={sectionStatuses.fulfillment}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.fulfillment}
+                    >
+                      <FulfillmentSettingsCard
+                        ref={fulfillmentRef}
+                        onStatusChange={handleFulfillmentStatus}
+                      />
+                    </ProfileEditSectionFrame>
                   </div>
                 </div>
               </div>
@@ -663,37 +717,6 @@ export function ProfilePageContent() {
               {saveError ? (
                 <div className="mx-3 mb-3 rounded-lg bg-error/15 px-3 py-2 text-sm text-error sm:mx-5">
                   {saveError}
-                </div>
-              ) : null}
-
-              {dirtyLabels.length > 0 ? (
-                <div className="mx-3 mb-3 rounded-2xl border border-outline-variant bg-surface/95 p-3 shadow-xl backdrop-blur sm:mx-5 sm:mb-5 sm:rounded-xl">
-                  <p className="mb-2 line-clamp-1 text-xs text-on-surface-variant">
-                    {t("profile.saveTargets")}: {dirtyLabels.join("، ")}
-                  </p>
-                  <Button
-                    type="button"
-                    className="w-full gap-2 auth-cta h-11"
-                    onClick={() =>
-                      handleSaveChangedSections(
-                        registrationRef.current,
-                        contactsRef.current,
-                        storeRef.current,
-                        workingHoursRef.current,
-                        specialtiesRef.current,
-                        productsRef.current,
-                        fulfillmentRef.current,
-                      )
-                    }
-                    disabled={isUnifiedSaving || isSaveBlocked}
-                  >
-                    {isUnifiedSaving ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Save className="h-4 w-4" />
-                    )}
-                    {isUnifiedSaving ? t("profile.saving") : t("profile.save")}
-                  </Button>
                 </div>
               ) : null}
 
@@ -757,5 +780,95 @@ export function ProfilePageContent() {
         </div>
       ) : null}
     </div>
+  );
+}
+
+function ProfileEditSectionFrame({
+  children,
+  icon,
+  title,
+  status,
+  locale,
+  color,
+  hideHeader = false,
+}: {
+  children: React.ReactNode;
+  icon: IconDefinition;
+  title: string;
+  status: ProfileSectionStatus | null | undefined;
+  locale: string;
+  color: string;
+  hideHeader?: boolean;
+}) {
+  const isDirty = Boolean(status?.isDirty);
+  const isSaving = Boolean(status?.isSaving);
+  const canSave = status?.canSave !== false;
+  const statusText = isSaving
+    ? locale === "ar"
+      ? "جاري الحفظ"
+      : "Saving"
+    : isDirty
+      ? canSave
+        ? locale === "ar"
+          ? "غير محفوظ"
+          : "Unsaved"
+        : locale === "ar"
+          ? "يحتاج مراجعة"
+          : "Needs review"
+      : locale === "ar"
+        ? "مستقر"
+        : "Stable";
+
+  return (
+    <section
+      className="rounded-3xl border bg-surface/90 p-3 shadow-lg shadow-primary/5 sm:p-4"
+      style={{ borderColor: `${color}44` }}
+    >
+      {!hideHeader ? (
+      <div
+        className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl px-3 py-3"
+        style={{ backgroundColor: `${color}10` }}
+      >
+        <div className="flex min-w-0 items-center gap-3">
+          <span
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+            style={{ backgroundColor: `${color}18`, color }}
+          >
+            <FontAwesomeIcon icon={icon} className="h-5 w-5" />
+          </span>
+          <div className="min-w-0">
+            <h2 className="truncate text-base font-bold text-on-surface">
+              {title}
+            </h2>
+            <p className="mt-0.5 text-xs text-on-surface-variant">
+              {locale === "ar"
+                ? "تابع تعديلات هذا القسم واحفظها من شريط الحفظ."
+                : "Review this section and save it from the save bar."}
+            </p>
+          </div>
+        </div>
+        <span
+          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold ${
+            isSaving
+              ? "bg-primary/10 text-primary"
+              : isDirty
+                ? canSave
+                  ? "bg-error/10 text-error"
+                  : "bg-error-container text-on-error-container"
+                : "bg-primary/10 text-primary"
+          }`}
+        >
+          <FontAwesomeIcon
+            icon={isDirty ? faPenToSquare : faCircleCheck}
+            className="h-3.5 w-3.5"
+          />
+          {statusText}
+        </span>
+      </div>
+      ) : null}
+      <div className="[&_.auth-input]:shadow-sm [&_button]:transition-all">
+        {children}
+      </div>
+    </section>
   );
 }

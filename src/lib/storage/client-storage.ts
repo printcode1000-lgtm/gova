@@ -12,6 +12,33 @@ function clearCookies(): void {
   }
 }
 
+function clearWebStorage(): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    window.localStorage?.clear();
+  } catch {
+    // Ignore restricted storage errors and continue clearing the rest.
+  }
+
+  try {
+    window.sessionStorage?.clear();
+  } catch {
+    // Ignore restricted storage errors and continue clearing the rest.
+  }
+}
+
+async function clearCacheStorage(): Promise<void> {
+  if (typeof window === 'undefined' || !('caches' in window)) return;
+
+  try {
+    const names = await window.caches.keys();
+    await Promise.all(names.map((name) => window.caches.delete(name)));
+  } catch {
+    // Cache Storage may be blocked in some runtimes; reset should still continue.
+  }
+}
+
 async function clearIndexedDbDatabases(): Promise<void> {
   if (typeof window === 'undefined' || !window.indexedDB?.databases) return;
   const dbs = await window.indexedDB.databases();
@@ -37,6 +64,8 @@ export const CLEAR_STORAGE_WARNING =
 
 export async function clearAllClientStorage(): Promise<void> {
   clearCookies();
+  clearWebStorage();
   await asolDbClearAll();
   await clearIndexedDbDatabases();
+  await clearCacheStorage();
 }

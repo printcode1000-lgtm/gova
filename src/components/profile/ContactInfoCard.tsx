@@ -2,21 +2,18 @@
 
 import * as React from 'react';
 import { Plus, X, Phone, MessageCircle, Mail, Globe, Share2, ChevronDown, Lock, Smartphone, MapPin } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faEnvelope, faGlobe, faLocationDot, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from '@/lib/i18n';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { AsolMap, markerAt, createOpenStreetMapProvider, createBrowserGpsProvider } from '@/components/ui/AsolMap';
 import type { LocationEntry } from '@/features/profile/entities/profile-contacts.entity';
+import { getContactVisualColor, getContactVisualIcon } from './contact-visual-style';
 
 const SOCIAL_PLATFORMS = [
   'instagram',
@@ -74,6 +71,14 @@ interface ContactInfoCardProps {
   hidePrimarySection?: boolean;
 }
 
+interface ContactQuickAddItem {
+  id: string;
+  label: string;
+  icon: IconDefinition;
+  available: boolean;
+  badge?: string;
+}
+
 const tileProvider = createOpenStreetMapProvider();
 const gpsProvider = createBrowserGpsProvider();
 
@@ -101,6 +106,14 @@ function normalizeContactInfoData(data: ContactInfoData): ContactInfoData {
     })),
     locations: asArray<LocationEntry>(data.locations),
   };
+}
+
+function quickAddColor(id: string): string {
+  return getContactVisualColor(id);
+}
+
+function quickAddIcon(id: string): IconDefinition {
+  return getContactVisualIcon(id);
 }
 
 export function ContactInfoCard({
@@ -352,6 +365,48 @@ export function ContactInfoCard({
 
   const addedPlatforms = localData.socialLinks.map((s) => s.platform);
   const availablePlatforms = SOCIAL_PLATFORMS.filter((p) => !addedPlatforms.includes(p));
+  const quickAddItems = React.useMemo(
+    () => [
+      {
+        id: 'location',
+        label: locale === 'ar' ? 'تحديد الموقع الجغرافي' : 'Pick geolocation',
+        icon: faLocationDot,
+        available: true,
+      },
+      ...availablePhoneTypes.map((type) => ({
+        id: type,
+        label: t(`onboarding.contactInfo.phoneTypes.${type}`),
+        icon: getContactVisualIcon(type),
+        available: true,
+      })),
+      {
+        id: 'email',
+        label: t('onboarding.contactInfo.addEmail'),
+        icon: faEnvelope,
+        available: !hasAdditionalEmails,
+      },
+      ...availablePlatforms.map((platform) => ({
+        id: platform,
+        label: t(`onboarding.contactInfo.platforms.${platform}`),
+        icon: getContactVisualIcon(platform),
+        available: true,
+      })),
+      {
+        id: 'website',
+        label: t('onboarding.contactInfo.addWebsite'),
+        icon: faGlobe,
+        available: !hasWebsites,
+      },
+    ],
+    [
+      availablePhoneTypes,
+      availablePlatforms,
+      hasAdditionalEmails,
+      hasWebsites,
+      locale,
+      t,
+    ],
+  );
 
   // Group and sort social links by platform
   const groupedSocialLinks = React.useMemo(() => {
@@ -487,41 +542,17 @@ export function ContactInfoCard({
                     </CardTitle>
                     <CardDescription className="text-xs">{t('onboarding.contactInfo.additionalContactHint')}</CardDescription>
                   </div>
-                  {!readOnly && (
-                    <Select onValueChange={handleAddItem}>
-                      <SelectTrigger className="w-[140px] sm:w-[180px] md:w-[200px]">
-                        <SelectValue placeholder={t('onboarding.contactInfo.addItem')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availablePhoneTypes.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {t(`onboarding.contactInfo.phoneTypes.${type}`)}
-                          </SelectItem>
-                        ))}
-                        {!hasAdditionalEmails && (
-                          <SelectItem value="email">
-                            {t('onboarding.contactInfo.addEmail')}
-                          </SelectItem>
-                        )}
-                        {availablePlatforms.map((platform) => (
-                          <SelectItem key={platform} value={platform}>
-                            {t(`onboarding.contactInfo.platforms.${platform}`)}
-                          </SelectItem>
-                        ))}
-                        {!hasWebsites && (
-                          <SelectItem value="website">
-                            {t('onboarding.contactInfo.addWebsite')}
-                          </SelectItem>
-                        )}
-                        <SelectItem value="location">
-                          {locale === 'ar' ? 'إضافة موقع' : 'Add location'}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
                 </div>
               </CardHeader>
               <CardContent className="space-y-3 sm:space-y-4">
+                {!readOnly && (
+                  <ContactQuickAddGrid
+                    items={quickAddItems}
+                    onAdd={handleAddItem}
+                    title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
+                    emptyText={locale === 'ar' ? 'تمت إضافة كل الوسائل الأساسية المتاحة.' : 'All primary contact methods are already added.'}
+                  />
+                )}
             {/* Additional Phones */}
             {PHONE_TYPES.map((type) => {
               const typePhones = groupedPhones[type];
@@ -530,7 +561,12 @@ export function ContactInfoCard({
               return (
                 <div key={type} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs sm:text-sm font-semibold">
+                    <FontAwesomeIcon
+                      icon={quickAddIcon(type)}
+                      className="h-4 w-4"
+                      style={{ color: quickAddColor(type) }}
+                    />
+                    <span className="text-xs sm:text-sm font-semibold" style={{ color: quickAddColor(type) }}>
                       {t(`onboarding.contactInfo.phoneTypes.${type}`)}
                     </span>
                     {!readOnly && (
@@ -546,7 +582,19 @@ export function ContactInfoCard({
                   </div>
                   <div className="space-y-2">
                     {typePhones.map((phone) => (
-                      <div key={phone.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-muted/50">
+                      <div
+                        key={phone.id}
+                        className="flex items-center gap-2 rounded-lg border p-2 sm:gap-3 sm:p-3"
+                        style={{
+                          backgroundColor: `${quickAddColor(type)}10`,
+                          borderColor: `${quickAddColor(type)}44`,
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={quickAddIcon(type)}
+                          className="hidden h-4 w-4 shrink-0 sm:block"
+                          style={{ color: quickAddColor(type) }}
+                        />
                         <div className="flex-1 relative">
                           <span className="absolute start-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm text-on-surface-variant select-none">
                             +20
@@ -585,8 +633,8 @@ export function ContactInfoCard({
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    {t('onboarding.contactInfo.emails')}
+                    <FontAwesomeIcon icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
+                    <span style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
                     <Button
@@ -601,7 +649,15 @@ export function ContactInfoCard({
                 </div>
                 <div className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink) => (
-                    <div key={emailLink.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <div
+                      key={emailLink.id}
+                      className="flex items-center gap-3 rounded-lg border p-3"
+                      style={{
+                        backgroundColor: `${quickAddColor('email')}10`,
+                        borderColor: `${quickAddColor('email')}44`,
+                      }}
+                    >
+                      <FontAwesomeIcon icon={quickAddIcon('email')} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor('email') }} />
                       <div className="flex-1">
                         <Input
                           value={emailLink.email}
@@ -638,7 +694,12 @@ export function ContactInfoCard({
                   return (
                     <div key={platform} className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold">
+                        <FontAwesomeIcon
+                          icon={quickAddIcon(platform)}
+                          className="h-4 w-4"
+                          style={{ color: quickAddColor(platform) }}
+                        />
+                        <span className="text-sm font-semibold" style={{ color: quickAddColor(platform) }}>
                           {t(`onboarding.contactInfo.platforms.${platform}`)}
                         </span>
                         {!readOnly && (
@@ -654,7 +715,15 @@ export function ContactInfoCard({
                       </div>
                       <div className="space-y-2">
                         {platformLinks.map((link) => (
-                          <div key={link.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                          <div
+                            key={link.id}
+                            className="flex items-center gap-3 rounded-lg border p-3"
+                            style={{
+                              backgroundColor: `${quickAddColor(platform)}10`,
+                              borderColor: `${quickAddColor(platform)}44`,
+                            }}
+                          >
+                            <FontAwesomeIcon icon={quickAddIcon(platform)} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor(platform) }} />
                             <div className="flex-1">
                               <Input
                                 value={link.url}
@@ -690,8 +759,8 @@ export function ContactInfoCard({
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold flex items-center gap-2">
-                    <Globe className="h-4 w-4 text-muted-foreground" />
-                    {t('onboarding.contactInfo.websites')}
+                    <FontAwesomeIcon icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
+                    <span style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
                     <Button
@@ -706,7 +775,15 @@ export function ContactInfoCard({
                 </div>
                 <div className="space-y-2">
                   {localData.websites.map((site) => (
-                    <div key={site.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <div
+                      key={site.id}
+                      className="flex items-center gap-3 rounded-lg border p-3"
+                      style={{
+                        backgroundColor: `${quickAddColor('website')}10`,
+                        borderColor: `${quickAddColor('website')}44`,
+                      }}
+                    >
+                      <FontAwesomeIcon icon={quickAddIcon('website')} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor('website') }} />
                       <div className="flex-1">
                         <Input
                           value={site.url}
@@ -747,41 +824,17 @@ export function ContactInfoCard({
               </h2>
               <p className="text-xs text-muted-foreground">{t('onboarding.contactInfo.additionalContactHint')}</p>
             </div>
-            {!readOnly && (
-              <Select onValueChange={handleAddItem}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder={t('onboarding.contactInfo.addItem')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {availablePhoneTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {t(`onboarding.contactInfo.phoneTypes.${type}`)}
-                    </SelectItem>
-                  ))}
-                  {!hasAdditionalEmails && (
-                    <SelectItem value="email">
-                      {t('onboarding.contactInfo.addEmail')}
-                    </SelectItem>
-                  )}
-                  {availablePlatforms.map((platform) => (
-                    <SelectItem key={platform} value={platform}>
-                      {t(`onboarding.contactInfo.platforms.${platform}`)}
-                    </SelectItem>
-                  ))}
-                  {!hasWebsites && (
-                    <SelectItem value="website">
-                      {t('onboarding.contactInfo.addWebsite')}
-                    </SelectItem>
-                  )}
-                  <SelectItem value="location">
-                    {locale === 'ar' ? 'إضافة موقع' : 'Add location'}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            )}
           </div>
 
           <div className="space-y-4">
+            {!readOnly && (
+              <ContactQuickAddGrid
+                items={quickAddItems}
+                onAdd={handleAddItem}
+                title={locale === 'ar' ? 'أضف وسيلة تواصل بسرعة' : 'Quick add contact method'}
+                emptyText={locale === 'ar' ? 'تمت إضافة كل الوسائل الأساسية المتاحة.' : 'All primary contact methods are already added.'}
+              />
+            )}
             {/* Additional Phones */}
             {PHONE_TYPES.map((type) => {
               const typePhones = groupedPhones[type];
@@ -790,7 +843,12 @@ export function ContactInfoCard({
               return (
                 <div key={type} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold">
+                    <FontAwesomeIcon
+                      icon={quickAddIcon(type)}
+                      className="h-4 w-4"
+                      style={{ color: quickAddColor(type) }}
+                    />
+                    <span className="text-sm font-semibold" style={{ color: quickAddColor(type) }}>
                       {t(`onboarding.contactInfo.phoneTypes.${type}`)}
                     </span>
                     {!readOnly && (
@@ -806,7 +864,19 @@ export function ContactInfoCard({
                   </div>
                   <div className="space-y-2">
                     {typePhones.map((phone) => (
-                      <div key={phone.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                      <div
+                        key={phone.id}
+                        className="flex items-center gap-3 rounded-lg border p-3"
+                        style={{
+                          backgroundColor: `${quickAddColor(type)}10`,
+                          borderColor: `${quickAddColor(type)}44`,
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={quickAddIcon(type)}
+                          className="hidden h-4 w-4 shrink-0 sm:block"
+                          style={{ color: quickAddColor(type) }}
+                        />
                         <div className="flex-1 relative">
                           <span className="absolute start-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant select-none">
                             +20
@@ -845,8 +915,8 @@ export function ContactInfoCard({
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    {t('onboarding.contactInfo.emails')}
+                    <FontAwesomeIcon icon={quickAddIcon('email')} className="h-4 w-4" style={{ color: quickAddColor('email') }} />
+                    <span style={{ color: quickAddColor('email') }}>{t('onboarding.contactInfo.emails')}</span>
                   </span>
                   {!readOnly && (
                     <Button
@@ -861,7 +931,15 @@ export function ContactInfoCard({
                 </div>
                 <div className="space-y-2">
                   {localData.emails.filter((e) => e.id !== 'primary').map((emailLink) => (
-                    <div key={emailLink.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <div
+                      key={emailLink.id}
+                      className="flex items-center gap-3 rounded-lg border p-3"
+                      style={{
+                        backgroundColor: `${quickAddColor('email')}10`,
+                        borderColor: `${quickAddColor('email')}44`,
+                      }}
+                    >
+                      <FontAwesomeIcon icon={quickAddIcon('email')} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor('email') }} />
                       <div className="flex-1">
                         <Input
                           value={emailLink.email}
@@ -898,7 +976,12 @@ export function ContactInfoCard({
                   return (
                     <div key={platform} className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold">
+                        <FontAwesomeIcon
+                          icon={quickAddIcon(platform)}
+                          className="h-4 w-4"
+                          style={{ color: quickAddColor(platform) }}
+                        />
+                        <span className="text-sm font-semibold" style={{ color: quickAddColor(platform) }}>
                           {t(`onboarding.contactInfo.platforms.${platform}`)}
                         </span>
                         {!readOnly && (
@@ -914,7 +997,15 @@ export function ContactInfoCard({
                       </div>
                       <div className="space-y-2">
                         {platformLinks.map((link) => (
-                          <div key={link.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                          <div
+                            key={link.id}
+                            className="flex items-center gap-3 rounded-lg border p-3"
+                            style={{
+                              backgroundColor: `${quickAddColor(platform)}10`,
+                              borderColor: `${quickAddColor(platform)}44`,
+                            }}
+                          >
+                            <FontAwesomeIcon icon={quickAddIcon(platform)} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor(platform) }} />
                             <div className="flex-1">
                               <Input
                                 value={link.url}
@@ -950,8 +1041,8 @@ export function ContactInfoCard({
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold flex items-center gap-2">
-                    <Globe className="h-4 w-4 text-muted-foreground" />
-                    {t('onboarding.contactInfo.websites')}
+                    <FontAwesomeIcon icon={quickAddIcon('website')} className="h-4 w-4" style={{ color: quickAddColor('website') }} />
+                    <span style={{ color: quickAddColor('website') }}>{t('onboarding.contactInfo.websites')}</span>
                   </span>
                   {!readOnly && (
                     <Button
@@ -966,7 +1057,15 @@ export function ContactInfoCard({
                 </div>
                 <div className="space-y-2">
                   {localData.websites.map((site) => (
-                    <div key={site.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <div
+                      key={site.id}
+                      className="flex items-center gap-3 rounded-lg border p-3"
+                      style={{
+                        backgroundColor: `${quickAddColor('website')}10`,
+                        borderColor: `${quickAddColor('website')}44`,
+                      }}
+                    >
+                      <FontAwesomeIcon icon={quickAddIcon('website')} className="hidden h-4 w-4 shrink-0 sm:block" style={{ color: quickAddColor('website') }} />
                       <div className="flex-1">
                         <Input
                           value={site.url}
@@ -994,20 +1093,28 @@ export function ContactInfoCard({
             )}
 
             {/* Locations */}
-            {(!readOnly || localData.locations.length > 0) && (
+            {localData.locations.length > 0 && (
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    {locale === 'ar' ? 'المواقع' : 'Locations'}
+                    <FontAwesomeIcon icon={quickAddIcon('location')} className="h-4 w-4" style={{ color: quickAddColor('location') }} />
+                    <span style={{ color: quickAddColor('location') }}>{locale === 'ar' ? 'المواقع' : 'Locations'}</span>
                   </span>
                 </div>
                 
                 <div className="space-y-4">
                   {localData.locations.map((loc, idx) => (
-                    <div key={loc.id} className="p-4 rounded-xl border border-outline-variant bg-muted/20 space-y-3">
+                    <div
+                      key={loc.id}
+                      className="space-y-3 rounded-xl border p-4"
+                      style={{
+                        backgroundColor: `${quickAddColor('location')}10`,
+                        borderColor: `${quickAddColor('location')}44`,
+                      }}
+                    >
                       <div className="flex items-center justify-between gap-3">
-                        <span className="text-xs font-semibold text-muted-foreground">
+                        <span className="flex items-center gap-2 text-xs font-semibold" style={{ color: quickAddColor('location') }}>
+                          <FontAwesomeIcon icon={quickAddIcon('location')} className="h-3.5 w-3.5" />
                           {locale === 'ar' ? `الموقع #${idx + 1}` : `Location #${idx + 1}`}
                         </span>
                         {!readOnly && (
@@ -1149,6 +1256,90 @@ export function ContactInfoCard({
         </>
       )}
     </>
+  );
+}
+
+function ContactQuickAddGrid({
+  items,
+  onAdd,
+  title,
+  emptyText,
+}: {
+  items: ContactQuickAddItem[];
+  onAdd: (id: string) => void;
+  title: string;
+  emptyText: string;
+}) {
+  const visibleItems = items.filter((item) => item.available);
+  const completedItems = items.filter((item) => !item.available);
+
+  return (
+    <div className="rounded-2xl border border-outline-variant/60 bg-surface-container-low p-3 sm:p-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="flex items-center gap-2 text-sm font-bold text-on-surface">
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
+          </span>
+          {title}
+        </p>
+        {completedItems.length > 0 ? (
+          <span className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary">
+            {completedItems.length}
+          </span>
+        ) : null}
+      </div>
+
+      {visibleItems.length > 0 ? (
+        <div className="flex snap-x snap-mandatory gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {visibleItems.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onAdd(item.id)}
+              className="group relative flex min-h-12 w-16 shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg border px-0.5 py-1 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:scale-95 sm:w-16"
+              style={{
+                background: `linear-gradient(135deg, ${getContactVisualColor(item.id)}1F, ${getContactVisualColor(item.id)}08)`,
+                borderColor: `${getContactVisualColor(item.id)}55`,
+              }}
+            >
+              {item.badge ? (
+                <span className="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-on-primary shadow-sm">
+                  {item.badge}
+                </span>
+              ) : null}
+              <FontAwesomeIcon
+                icon={item.icon}
+                className="h-5 w-5 transition-transform group-hover:scale-105"
+                style={{ color: getContactVisualColor(item.id) }}
+              />
+              <span
+                className="line-clamp-2 w-[4.5rem] origin-top scale-[0.55] text-center text-[10px] font-semibold leading-[10px] tracking-tight text-muted-foreground"
+              >
+                {item.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <p className="rounded-xl bg-surface px-3 py-2 text-xs text-on-surface-variant">
+          {emptyText}
+        </p>
+      )}
+
+      {completedItems.length > 0 ? (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {completedItems.map((item) => (
+            <span
+              key={item.id}
+              className="inline-flex items-center gap-1 rounded-full bg-surface px-2 py-1 text-[11px] font-semibold text-on-surface-variant"
+            >
+              <FontAwesomeIcon icon={item.icon} className="h-3 w-3" />
+              {item.label}
+            </span>
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
 

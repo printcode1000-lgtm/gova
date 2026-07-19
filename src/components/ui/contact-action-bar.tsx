@@ -5,23 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faEnvelope,
+  faFax,
   faGlobe,
   faLocationDot,
   faPhone,
-  faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faFacebook,
-  faInstagram,
-  faLinkedin,
-  faPinterest,
-  faTelegram,
-  faTiktok,
-  faViber,
-  faWhatsapp,
-  faXTwitter,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +20,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import {
+  getContactVisualColor,
+  getContactVisualIcon,
+} from "@/components/profile/contact-visual-style";
 
 export interface ContactActionPhone {
   id: string;
@@ -92,20 +84,6 @@ interface ContactGroup {
   options: ContactOption[];
 }
 
-const SOCIAL_ICONS: Record<string, IconDefinition> = {
-  facebook: faFacebook,
-  instagram: faInstagram,
-  twitter: faXTwitter,
-  x: faXTwitter,
-  tiktok: faTiktok,
-  youtube: faYoutube,
-  pinterest: faPinterest,
-  linkedin: faLinkedin,
-  telegram: faTelegram,
-  viber: faViber,
-  whatsapp: faWhatsapp,
-};
-
 export function ContactActionBar({
   data,
   className,
@@ -143,6 +121,8 @@ export function ContactActionBar({
 }
 
 function ContactActionGroup({ group }: { group: ContactGroup }) {
+  const color = getContactVisualColor(group.id);
+  const icon = getContactVisualIcon(group.id);
   if (group.options.length === 1 && isDirectGroup(group.id)) {
     const option = group.options[0]!;
     return (
@@ -151,7 +131,12 @@ function ContactActionGroup({ group }: { group: ContactGroup }) {
         type="button"
         size="icon"
         variant="outline"
-        className="h-10 w-10 shrink-0 rounded-full"
+        className="h-10 w-10 shrink-0 rounded-full border bg-surface/80"
+        style={{
+          color,
+          borderColor: `${color}66`,
+          background: `linear-gradient(135deg, ${color}1F, ${color}08)`,
+        }}
         title={group.label}
         aria-label={group.label}
       >
@@ -160,7 +145,7 @@ function ContactActionGroup({ group }: { group: ContactGroup }) {
           target={isExternalHref(option.href) ? "_blank" : undefined}
           rel={isExternalHref(option.href) ? "noreferrer" : undefined}
         >
-          <FontAwesomeIcon icon={group.icon} className="h-4 w-4" />
+          <FontAwesomeIcon icon={icon} className="h-4 w-4" />
         </a>
       </Button>
     );
@@ -173,23 +158,35 @@ function ContactActionGroup({ group }: { group: ContactGroup }) {
           type="button"
           size="icon"
           variant="outline"
-          className="h-10 w-10 shrink-0 rounded-full"
+          className="h-10 w-10 shrink-0 rounded-full border bg-surface/80"
+          style={{
+            color,
+            borderColor: `${color}66`,
+            background: `linear-gradient(135deg, ${color}1F, ${color}08)`,
+          }}
           title={group.label}
           aria-label={group.label}
         >
-          <FontAwesomeIcon icon={group.icon} className="h-4 w-4" />
+          <FontAwesomeIcon icon={icon} className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="min-w-64">
         <div dir="rtl">
-          <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+          <DropdownMenuLabel className="flex items-center gap-2" style={{ color }}>
+            <FontAwesomeIcon icon={icon} className="h-4 w-4" />
+            {group.label}
+          </DropdownMenuLabel>
           {group.options.map((option) => (
             <DropdownMenuItem key={option.id} asChild>
               <a
                 href={option.href}
                 target={isExternalHref(option.href) ? "_blank" : undefined}
                 rel={isExternalHref(option.href) ? "noreferrer" : undefined}
-                className="flex min-w-0 flex-col items-start"
+                className="flex min-w-0 flex-col items-start rounded-md"
+                style={{
+                  backgroundColor: `${color}0D`,
+                  borderInlineStart: `3px solid ${color}`,
+                }}
               >
                 <span className="max-w-56 truncate font-medium">
                   {option.label}
@@ -222,10 +219,19 @@ function buildContactGroups(
   );
 
   const phoneOptions = phones
-    .filter((item) => !isPhoneType(item, ["whatsapp", "telegram", "viber"]))
+    .filter((item) => !isPhoneType(item, ["whatsapp", "telegram", "viber", "fax"]))
     .map((item) => ({
       id: item.id,
       label: labelPhoneType(item.type),
+      detail: item.number,
+      href: `tel:${normalizeDialNumber(item.number)}`,
+    }));
+
+  const faxOptions = phones
+    .filter((item) => isPhoneType(item, ["fax"]))
+    .map((item) => ({
+      id: item.id,
+      label: "فاكس",
       detail: item.number,
       href: `tel:${normalizeDialNumber(item.number)}`,
     }));
@@ -282,9 +288,10 @@ function buildContactGroups(
 
   const groups: ContactGroup[] = [];
   pushGroup(groups, "phone", "اتصال", faPhone, phoneOptions);
-  pushGroup(groups, "whatsapp", "واتساب", faWhatsapp, whatsappOptions);
-  pushGroup(groups, "telegram", "Telegram", faTelegram, telegramOptions);
-  pushGroup(groups, "viber", "Viber", faViber, viberOptions);
+  pushGroup(groups, "fax", "فاكس", faFax, faxOptions);
+  pushGroup(groups, "whatsapp", "واتساب", getContactVisualIcon("whatsapp"), whatsappOptions);
+  pushGroup(groups, "telegram", "Telegram", getContactVisualIcon("telegram"), telegramOptions);
+  pushGroup(groups, "viber", "Viber", getContactVisualIcon("viber"), viberOptions);
   pushGroup(groups, "email", "البريد الإلكتروني", faEnvelope, emailOptions);
   pushGroup(groups, "website", "الموقع الإلكتروني", faGlobe, websiteOptions);
   pushGroup(groups, "location", "الموقع", faLocationDot, locationOptions);
@@ -294,7 +301,7 @@ function buildContactGroups(
       groups,
       `social-${platform}`,
       labelSocialPlatform(platform),
-      SOCIAL_ICONS[platform] ?? faShareNodes,
+      getContactVisualIcon(platform),
       options,
     );
   }

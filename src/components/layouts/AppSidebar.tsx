@@ -20,6 +20,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,7 +32,11 @@ import { FocusTrap } from "focus-trap-react";
 
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
-import { useResolvedColorScheme } from "@/lib/preferences";
+import {
+  useAppPreferences,
+  useResolvedColorScheme,
+  useThemePreferences,
+} from "@/lib/preferences";
 import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useLogout } from "@/features/auth/hooks/use-logout";
@@ -59,13 +64,20 @@ export const AppSidebar = React.memo(function AppSidebar({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { t, isRTL } = useTranslation();
   const resolvedScheme = useResolvedColorScheme();
+  const { resetPreferences: resetThemePreferences } = useThemePreferences();
+  const { resetPreferences: resetAppPreferences } = useAppPreferences();
   const { isLoggedIn, session } = useSession();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  const [profileMode, setProfileMode] = useState<"preview" | "edit">("preview");
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
+  const isProfilePage = pathname === "/profile";
+  const activeProfileMode = isProfilePage ? searchParams.get("mode") : null;
+  const isProfilePreviewActive = activeProfileMode === "preview";
+  const isProfileEditActive = activeProfileMode === "edit";
 
   useEffect(() => {
     setMounted(true);
@@ -121,29 +133,42 @@ export const AppSidebar = React.memo(function AppSidebar({
   }, []);
 
   const confirmLogout = useCallback(async () => {
-    if (session) {
-      await notificationDeviceTokenService.unregister(session.uid, session.phone);
-    }
-    logout.mutate(undefined, {
-      onSuccess: async () => {
-        setLogoutDialogOpen(false);
-        onClose();
-        // Clear all client storage including AsolDB, cookies, and all IndexedDB databases
-        await clearAllClientStorage();
-        // Reload the page to ensure clean state
-        window.location.reload();
-      },
-    });
-  }, [logout, onClose, session]);
+    if (logout.isPending) return;
 
-  const handleProfileModeChange = useCallback(
-    (mode: "preview" | "edit") => {
-      setProfileMode(mode);
-      // Small delay to allow state update before closing
-      setTimeout(() => onClose(), 100);
-    },
-    [onClose],
-  );
+    try {
+      if (session) {
+        try {
+          await notificationDeviceTokenService.unregister(
+            session.uid,
+            session.phone,
+          );
+        } catch {
+          // Logout should still clear the device even if a notification provider is unavailable.
+        }
+      }
+
+      await logout.mutateAsync();
+      setLogoutDialogOpen(false);
+      onClose();
+      resetThemePreferences();
+      resetAppPreferences();
+      await clearAllClientStorage();
+      window.location.assign("/login");
+    } catch {
+      setLogoutDialogOpen(false);
+      onClose();
+      resetThemePreferences();
+      resetAppPreferences();
+      await clearAllClientStorage();
+      window.location.assign("/login");
+    }
+  }, [
+    logout,
+    onClose,
+    resetAppPreferences,
+    resetThemePreferences,
+    session,
+  ]);
 
   const handleSuperAdminToggle = useCallback(() => {
     setSuperAdminOpen((open) => !open);
@@ -299,19 +324,19 @@ export const AppSidebar = React.memo(function AppSidebar({
                       <div className="flex w-full bg-gray-100 rounded-lg p-1">
                         <Link
                           href="/profile?mode=preview"
-                          onClick={() => handleProfileModeChange("preview")}
+                          onClick={onClose}
                           className="flex-1"
                         >
                           <button
                             type="button"
                             className={cn(
                               "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
-                              profileMode === "preview"
+                              isProfilePreviewActive
                                 ? "shadow-sm"
                                 : "text-gray-600 hover:text-gray-900",
                             )}
                             style={
-                              profileMode === "preview"
+                              isProfilePreviewActive
                                 ? { backgroundColor: "#2563eb", color: "white" }
                                 : undefined
                             }
@@ -322,19 +347,19 @@ export const AppSidebar = React.memo(function AppSidebar({
                         </Link>
                         <Link
                           href="/profile?mode=edit"
-                          onClick={() => handleProfileModeChange("edit")}
+                          onClick={onClose}
                           className="flex-1"
                         >
                           <button
                             type="button"
                             className={cn(
                               "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
-                              profileMode === "edit"
+                              isProfileEditActive
                                 ? "shadow-sm"
                                 : "text-gray-600 hover:text-gray-900",
                             )}
                             style={
-                              profileMode === "edit"
+                              isProfileEditActive
                                 ? { backgroundColor: "#2563eb", color: "white" }
                                 : undefined
                             }

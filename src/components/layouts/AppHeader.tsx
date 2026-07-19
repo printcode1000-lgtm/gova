@@ -18,6 +18,9 @@ export function AppHeader() {
   const { t } = useTranslation();
   const pathname = usePathname();
   const { totalQuantity, flashToken } = useCart();
+  const isHomeActive = pathname === '/home';
+  const isSearchActive = pathname === '/search' || pathname.startsWith('/search/');
+  const isCartActive = pathname === '/cart' || pathname.startsWith('/cart/');
 
   // Reset sidebar state when route changes
   useEffect(() => {
@@ -47,9 +50,14 @@ export function AppHeader() {
               type="button"
               id="header-menu-button"
               className={cn(
-                "asol-control-icon flex items-center justify-center rounded-full transition-colors",
-                resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
+                "asol-control-icon flex items-center justify-center rounded-full transition-all duration-200",
+                isSidebarOpen
+                  ? 'bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20'
+                  : resolvedScheme === 'dark'
+                    ? 'text-primary hover:bg-surface-container-high active:bg-surface-variant'
+                    : 'text-blue-900 hover:bg-blue-100/70 active:bg-blue-200'
               )}
+              aria-pressed={isSidebarOpen}
               aria-label={t('sidebar.menu')}
               onPointerDown={toggleSidebar}
             >
@@ -59,9 +67,14 @@ export function AppHeader() {
               id="header-brand-link"
               href="/home"
               className={cn(
-                "font-bold text-xl transition-all active:scale-95",
-                resolvedScheme === 'dark' ? 'text-primary' : 'text-blue-900'
+                "rounded-2xl px-2 py-1 text-xl font-bold no-underline transition-all active:scale-95",
+                isHomeActive
+                  ? 'bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20'
+                  : resolvedScheme === 'dark'
+                    ? 'text-primary hover:bg-surface-container-high'
+                    : 'text-blue-900 hover:bg-blue-100/70'
               )}
+              aria-current={isHomeActive ? 'page' : undefined}
             >
               {t('header.brand')}
             </Link>
@@ -72,8 +85,10 @@ export function AppHeader() {
               type="button"
               id="header-theme-button"
               className={cn(
-                "asol-control-icon flex items-center justify-center rounded-full transition-colors",
-                resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
+                "asol-control-icon flex items-center justify-center rounded-full transition-all duration-200",
+                resolvedScheme === 'dark'
+                  ? 'text-primary hover:bg-surface-container-high active:bg-surface-variant'
+                  : 'text-blue-900 hover:bg-blue-100/70 active:bg-blue-200'
               )}
               aria-label={themeLabel}
               title={themeLabel}
@@ -94,9 +109,14 @@ export function AppHeader() {
               href="/search"
               id="header-search-button"
               className={cn(
-                "asol-control-icon flex items-center justify-center rounded-full transition-colors",
-                resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
+                "asol-control-icon flex items-center justify-center rounded-full transition-all duration-200",
+                isSearchActive
+                  ? 'bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20'
+                  : resolvedScheme === 'dark'
+                    ? 'text-primary hover:bg-surface-container-high active:bg-surface-variant'
+                    : 'text-blue-900 hover:bg-blue-100/70 active:bg-blue-200'
               )}
+              aria-current={isSearchActive ? 'page' : undefined}
               aria-label={t('header.search')}
             >
               <Search className="w-5 h-5" />
@@ -106,9 +126,14 @@ export function AppHeader() {
               href="/cart"
               id="header-cart-button"
               className={cn(
-                "asol-control-icon flex items-center justify-center rounded-full relative transition-colors",
-                resolvedScheme === 'dark' ? 'text-primary active:bg-surface-variant' : 'text-blue-900 active:bg-blue-200'
+                "asol-control-icon relative flex items-center justify-center rounded-full transition-all duration-200",
+                isCartActive
+                  ? 'bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20'
+                  : resolvedScheme === 'dark'
+                    ? 'text-primary hover:bg-surface-container-high active:bg-surface-variant'
+                    : 'text-blue-900 hover:bg-blue-100/70 active:bg-blue-200'
               )}
+              aria-current={isCartActive ? 'page' : undefined}
               aria-label={t('header.cart')}
             >
               <ShoppingCart className="w-5 h-5" />
