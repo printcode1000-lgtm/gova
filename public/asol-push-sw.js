@@ -72,6 +72,21 @@ function safeInternalRoute(value) {
     : undefined;
 }
 
+function hasText(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function isValidPushPayload(payload) {
+  if (!payload || typeof payload !== 'object') return false;
+  if (!hasText(payload.uid)) return false;
+  return (
+    hasText(payload.title) ||
+    hasText(payload.body) ||
+    hasText(payload.templateId) ||
+    hasText(payload.notificationId)
+  );
+}
+
 function toNotificationEntity(payload) {
   const now = new Date().toISOString();
   const id = payload.notificationId || `web_push_${Date.now()}`;
@@ -166,6 +181,8 @@ self.addEventListener('push', (event) => {
   } catch {
     payload = { title: 'ASOL', body: event.data ? event.data.text() : '' };
   }
+
+  if (!isValidPushPayload(payload)) return;
 
   const title = payload.title || 'ASOL';
   const options = {

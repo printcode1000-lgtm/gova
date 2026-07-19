@@ -11,7 +11,7 @@ import {
   Square,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +39,7 @@ export function SuperAdminNotificationBroadcastPage() {
   const [result, setResult] = useState<BroadcastNotificationResult | null>(
     null,
   );
+  const sendInFlightRef = useRef(false);
 
   const load = useCallback(async () => {
     if (!session || !isSuperAdmin(session)) return;
@@ -91,18 +92,24 @@ export function SuperAdminNotificationBroadcastPage() {
   };
 
   const send = async (sendToAll: boolean) => {
-    if (!session) return;
+    if (!session || sendInFlightRef.current) return;
     const count = sendToAll ? (data?.userCount ?? 0) : selected.size;
     const confirmed = window.confirm(
       `سيتم إرسال الإشعار إلى ${count} مستخدم. هل تريد المتابعة؟`,
     );
     if (!confirmed) return;
+    sendInFlightRef.current = true;
     setBusy(true);
     setMessage("");
     setResult(null);
     try {
+      const requestId =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `${Date.now()}:${Math.random().toString(36).slice(2)}`;
       const next = await notificationApiService.sendBroadcast({
         identity: session,
+        requestId,
         title,
         body,
         sendToAll,
@@ -115,6 +122,7 @@ export function SuperAdminNotificationBroadcastPage() {
         error instanceof Error ? error.message : "تعذر إرسال الإشعار الجماعي.",
       );
     } finally {
+      sendInFlightRef.current = false;
       setBusy(false);
     }
   };
@@ -219,7 +227,11 @@ export function SuperAdminNotificationBroadcastPage() {
                 busy || !data?.userCount || !title.trim() || !body.trim()
               }
             >
-              <BellRing className="me-2 h-4 w-4" />
+              {busy ? (
+                <Loader2 className="me-2 h-4 w-4 animate-spin" />
+              ) : (
+                <BellRing className="me-2 h-4 w-4" />
+              )}
               إرسال للجميع
             </Button>
           </div>

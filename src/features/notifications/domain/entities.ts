@@ -192,6 +192,7 @@ export interface BroadcastNotificationInput {
     uid: string;
     phone: string;
   };
+  requestId?: string;
   title: string;
   body: string;
   uids?: string[];

@@ -23,15 +23,35 @@ const analyticsListKey = (uid: string) => `user:${uid}:analytics`;
 const offlineQueueKey = (uid: string) => `user:${uid}:queue`;
 const dismissedKey = (uid: string) => `user:${uid}:dismissed`;
 
+function isEmptyPlaceholder(notification: NotificationEntity): boolean {
+  return (
+    notification.title.trim().toUpperCase() === "ASOL" &&
+    !notification.body.trim() &&
+    !notification.route?.href &&
+    !notification.templateId &&
+    !notification.eventName
+  );
+}
+
 export class AsolNotificationRepository {
   async list(uid: string): Promise<NotificationEntity[]> {
-    return (await asolDbGet<NotificationEntity[]>(
+    const current = (await asolDbGet<NotificationEntity[]>(
       ASOL_DB_STORES.NOTIFICATIONS,
       listKey(uid),
     )) ?? [];
+    const cleaned = current.filter((item) => !isEmptyPlaceholder(item));
+    if (cleaned.length !== current.length) {
+      await asolDbSet(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid), cleaned);
+      await this.rememberDismissedMany(current.filter(isEmptyPlaceholder));
+    }
+    return cleaned;
   }
 
   async save(notification: NotificationEntity): Promise<NotificationEntity> {
+    if (isEmptyPlaceholder(notification)) {
+      await this.rememberDismissed(notification);
+      return notification;
+    }
     const dismissed = await this.listDismissed(notification.uid);
     if (
       dismissed.some(
