@@ -619,6 +619,10 @@ notification route or provided deep link when the user clicks the notification.
 Before storing, it reads `user:<uid>:dismissed` and skips any notification whose
 `id` or `dedupeKey` was already deleted by the user.
 
+The service worker ignores invalid push payloads that do not include a target
+`uid` or any meaningful notification identity/content. This prevents empty
+browser pushes from appearing as blank `ASOL` notifications.
+
 ## Super Admin Broadcast Notifications
 
 The super-admin broadcast page sends one notification message to many users through the same notification provider layer used by normal system notifications.
@@ -648,10 +652,12 @@ Broadcast behavior:
 - The super admin can refresh the recipient list.
 - The super admin can select specific users or send to all eligible users.
 - The UI asks for confirmation before sending.
+- The UI blocks duplicate in-flight send clicks.
 - A broadcast requires both a title and body.
 - Delivery is delegated to `NotificationSendService`.
 - `NotificationSendService` routes each token to the correct registered `NotificationProvider`, such as Web Push.
 - The broadcast metadata sets `source = super_admin_broadcast` and uses `/notifications` as the default deep link.
+- Broadcast `dedupeKey` is stable for the same title, body, and audience. Sending the exact same message to the same audience will not create duplicate notification-center entries.
 
 Security rules:
 

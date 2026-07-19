@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { createHash } from 'node:crypto';
 import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
 import type {
   BroadcastNotificationInput,
@@ -49,15 +50,21 @@ export class NotificationBroadcastService {
       : (input.uids ?? []).map((uid) => uid.trim()).filter((uid) => allowed.has(uid));
     const uids = Array.from(new Set(requested));
     if (uids.length === 0) throw new Error('notificationRecipientsRequired');
+    const audienceKey = input.sendToAll ? 'all' : uids.slice().sort().join(',');
+    const dedupeHash = createHash('sha256')
+      .update(JSON.stringify({ title, body, audienceKey }))
+      .digest('hex')
+      .slice(0, 24);
     const result = await this.sendService.sendToUsers({
       actorUid: input.identity.uid,
       uids,
       title,
       body,
-      dedupeKey: `broadcast:${Date.now()}:${Math.random().toString(36).slice(2)}`,
+      dedupeKey: `broadcast:${dedupeHash}`,
       metadata: {
         href: '/notifications',
         source: 'super_admin_broadcast',
+        requestId: input.requestId ?? '',
       },
     });
     return {
