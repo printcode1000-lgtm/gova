@@ -1,13 +1,15 @@
 {
   "version": "0.2.0",
   "configurations": [
-
     {
       "name": "Dev Server",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}"
     },
@@ -16,16 +18,42 @@
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "build"],
+      "runtimeArgs": [
+        "run",
+        "build"
+      ],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL",
+        "order": 2
+      }
+    },
+    {
+      "name": "Full Test",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL",
+        "order": 3
+      }
     },
     {
       "name": "Build Static (Dev — with Vercel API)",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "build:static:local"],
+      "runtimeArgs": [
+        "run",
+        "build:static:local"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "env": {
@@ -37,7 +65,10 @@
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "build:static"],
+      "runtimeArgs": [
+        "run",
+        "build:static"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}"
     },
@@ -46,7 +77,10 @@
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "serve:out"],
+      "runtimeArgs": [
+        "run",
+        "serve:out"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "env": {
@@ -59,7 +93,10 @@
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "serve:out"],
+      "runtimeArgs": [
+        "run",
+        "serve:out"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "env": {
@@ -72,52 +109,154 @@
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "cap:build"],
+      "runtimeArgs": [
+        "run",
+        "cap:build"
+      ],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 1
+      }
     },
     {
       "name": "Capacitor Build Local",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "cap:build:local"],
+      "runtimeArgs": [
+        "run",
+        "cap:build:local"
+      ],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 2
+      }
+    },
+    {
+      "name": "Capacitor Sync",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "cap:sync"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 3
+      }
+    },
+    {
+      "name": "Capacitor Copy",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "cap:copy"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 4
+      }
     },
     {
       "name": "Open Android",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "cap:open:android"],
+      "runtimeArgs": [
+        "run",
+        "cap:open:android"
+      ],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 5
+      }
+    },
+    {
+      "name": "Open iOS",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "cap:open:ios"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 6
+      }
     },
     {
       "name": "Type Check",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "typecheck"],
+      "runtimeArgs": [
+        "run",
+        "typecheck"
+      ],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Quality",
+        "order": 1
+      }
     },
     {
       "name": "Lint",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "lint"],
+      "runtimeArgs": [
+        "run",
+        "lint"
+      ],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Quality",
+        "order": 2
+      }
+    },
+    {
+      "name": "Architecture Check",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "architecture:check"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Quality",
+        "order": 3
+      }
     },
     {
       "name": "Stop Dev Server",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "server:stop"],
+      "runtimeArgs": [
+        "run",
+        "server:stop"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}"
     },
@@ -126,7 +265,10 @@
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "powershell",
-      "runtimeArgs": ["-Command", "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned"],
+      "runtimeArgs": [
+        "-Command",
+        "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}"
     },
@@ -135,7 +277,10 @@
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "db:export"],
+      "runtimeArgs": [
+        "run",
+        "db:export"
+      ],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}"
     },
@@ -144,9 +289,96 @@
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "ota:publish"],
+      "runtimeArgs": [
+        "run",
+        "ota:publish"
+      ],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL OTA",
+        "order": 1
+      }
+    },
+    {
+      "name": "OTA Status",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "ota:status"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL OTA",
+        "order": 2
+      }
+    },
+    {
+      "name": "OTA Self Test",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "ota:self-test"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL OTA",
+        "order": 3
+      }
+    },
+    {
+      "name": "Android Push Sync Assets",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "android:push:sync-assets"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Notifications",
+        "order": 1
+      }
+    },
+    {
+      "name": "DB Schema Sync",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "db:schema:sync"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Database",
+        "order": 1
+      }
+    },
+    {
+      "name": "Validate Storage Profiles",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "validate-storage-profiles"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Storage",
+        "order": 1
+      }
     }
   ]
 }
