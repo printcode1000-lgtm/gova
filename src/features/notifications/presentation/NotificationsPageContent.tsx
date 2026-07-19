@@ -49,7 +49,6 @@ export function NotificationsPageContent() {
     markRead,
     markAllRead,
     dismiss,
-    requestPermission,
   } = useNotifications();
   const [filter, setFilter] = React.useState<(typeof filters)[number]["id"]>("all");
 
@@ -100,14 +99,13 @@ export function NotificationsPageContent() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => void requestPermission()}
+          <Link
+            href="/settings"
             className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-3 py-2 text-sm font-semibold transition hover:border-primary hover:text-primary"
           >
             <Bell className="h-4 w-4" />
             تفعيل التنبيهات
-          </button>
+          </Link>
           <button
             type="button"
             onClick={() => void markAllRead()}

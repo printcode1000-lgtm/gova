@@ -44,6 +44,7 @@ const STATIC_PUBLIC_ALLOW_FILES = [
   'asol-push-sw.js',
   'asol-theme-init.js',
   'logo.png',
+  'images/qr-code.png',
   'catagory/categories.json',
   'catagory/subcategories.json',
 ] as const;

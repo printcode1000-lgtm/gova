@@ -1,61 +1,19 @@
 {
-  "executedAt": "2026-07-16T07:38:26.088Z",
-  "durationMs": 12978,
+  "executedAt": "2026-07-19T06:29:04.050Z",
+  "durationMs": 11200,
   "sqliteSchemaVersion": "8c5b6f33149788b9",
-  "tursoSchemaVersionBefore": "bb76357574779f63",
-  "tursoSchemaVersionAfter": "7db008308d046faa",
-  "operations": [
-    {
-      "type": "CREATE_TABLE",
-      "tableName": "ota_release_audit",
-      "sql": "CREATE TABLE `ota_release_audit` (\n\t`id` text PRIMARY KEY NOT NULL,\n\t`release_id` text NOT NULL,\n\t`version` text NOT NULL,\n\t`action` text NOT NULL,\n\t`actor_uid` text,\n\t`created_at` text NOT NULL\n)",
-      "description": "Create missing table \"ota_release_audit\""
-    },
-    {
-      "type": "CREATE_TABLE",
-      "tableName": "ota_releases",
-      "sql": "CREATE TABLE `ota_releases` (\n\t`release_id` text PRIMARY KEY NOT NULL,\n\t`version` text NOT NULL,\n\t`manifest_created_at` text NOT NULL,\n\t`base_url` text NOT NULL,\n\t`size` integer NOT NULL,\n\t`file_count` integer NOT NULL,\n\t`minimum_native_version` text NOT NULL,\n\t`mandatory` integer DEFAULT false NOT NULL,\n\t`notes` text DEFAULT '' NOT NULL,\n\t`signature` text NOT NULL,\n\t`manifest_json` text NOT NULL,\n\t`approved` integer DEFAULT false NOT NULL,\n\t`approved_at` text,\n\t`approved_by_uid` text,\n\t`revoked_at` text,\n\t`revoked_by_uid` text,\n\t`discovered_at` text NOT NULL,\n\t`last_seen_at` text NOT NULL\n)",
-      "description": "Create missing table \"ota_releases\""
-    },
-    {
-      "type": "CREATE_INDEX",
-      "tableName": "ota_release_audit",
-      "sql": "CREATE INDEX `ota_release_audit_created_at_idx` ON `ota_release_audit` (`created_at`);",
-      "description": "Create missing index \"ota_release_audit_created_at_idx\""
-    },
-    {
-      "type": "CREATE_INDEX",
-      "tableName": "ota_release_audit",
-      "sql": "CREATE INDEX `ota_release_audit_release_idx` ON `ota_release_audit` (`release_id`);",
-      "description": "Create missing index \"ota_release_audit_release_idx\""
-    },
-    {
-      "type": "CREATE_INDEX",
-      "tableName": "ota_releases",
-      "sql": "CREATE INDEX `ota_releases_approved_idx` ON `ota_releases` (`approved`);",
-      "description": "Create missing index \"ota_releases_approved_idx\""
-    },
-    {
-      "type": "CREATE_INDEX",
-      "tableName": "ota_releases",
-      "sql": "CREATE INDEX `ota_releases_version_idx` ON `ota_releases` (`version`);",
-      "description": "Create missing index \"ota_releases_version_idx\""
-    }
-  ],
-  "tablesModified": 2,
+  "tursoSchemaVersionBefore": "660d23f809f96907",
+  "tursoSchemaVersionAfter": "660d23f809f96907",
+  "operations": [],
+  "tablesModified": 0,
   "columnsAdded": 0,
-  "indexesAdded": 4,
+  "indexesAdded": 0,
   "viewsAdded": 0,
   "triggersAdded": 0,
-  "sqlExecuted": [
-    "CREATE TABLE `ota_release_audit` (\n\t`id` text PRIMARY KEY NOT NULL,\n\t`release_id` text NOT NULL,\n\t`version` text NOT NULL,\n\t`action` text NOT NULL,\n\t`actor_uid` text,\n\t`created_at` text NOT NULL\n)",
-    "CREATE TABLE `ota_releases` (\n\t`release_id` text PRIMARY KEY NOT NULL,\n\t`version` text NOT NULL,\n\t`manifest_created_at` text NOT NULL,\n\t`base_url` text NOT NULL,\n\t`size` integer NOT NULL,\n\t`file_count` integer NOT NULL,\n\t`minimum_native_version` text NOT NULL,\n\t`mandatory` integer DEFAULT false NOT NULL,\n\t`notes` text DEFAULT '' NOT NULL,\n\t`signature` text NOT NULL,\n\t`manifest_json` text NOT NULL,\n\t`approved` integer DEFAULT false NOT NULL,\n\t`approved_at` text,\n\t`approved_by_uid` text,\n\t`revoked_at` text,\n\t`revoked_by_uid` text,\n\t`discovered_at` text NOT NULL,\n\t`last_seen_at` text NOT NULL\n)",
-    "CREATE INDEX `ota_release_audit_created_at_idx` ON `ota_release_audit` (`created_at`);",
-    "CREATE INDEX `ota_release_audit_release_idx` ON `ota_release_audit` (`release_id`);",
-    "CREATE INDEX `ota_releases_approved_idx` ON `ota_releases` (`approved`);",
-    "CREATE INDEX `ota_releases_version_idx` ON `ota_releases` (`version`);"
-  ],
+  "sqlExecuted": [],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "Table \"password_recovery_challenges\" exists on Turso but not in SQLite. Not dropped automatically."
+  ],
   "skipped": false
 }

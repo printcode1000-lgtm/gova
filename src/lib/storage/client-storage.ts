@@ -33,7 +33,7 @@ async function clearIndexedDbDatabases(): Promise<void> {
 }
 
 export const CLEAR_STORAGE_WARNING =
-  'سيتم مسح كل البيانات المحلية (ملفات تعريف الارتباط وقاعدة AsolDB بما فيها جلسة الضيف وبيانات الإعداد). سيتم إعادة تحميل الصفحة. هل تريد المتابعة؟';
+  'سيتم إلغاء اشتراك إشعارات هذا الجهاز وحذف رمزه من الخادم، ثم مسح كل البيانات المحلية وإعادة الإعدادات الافتراضية وتحميل الصفحة من جديد. هل تريد المتابعة؟';
 
 export async function clearAllClientStorage(): Promise<void> {
   clearCookies();

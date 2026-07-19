@@ -1,0 +1,22 @@
+# Local and generated build output
+.git/
+.next/
+**/.next/
+.tmp-static-build/
+apps/
+tmp/
+node_modules/
+out/
+coverage/
+*.apk
+
+# Native projects are built locally and are not part of the Vercel server.
+android/
+ios/
+
+# Credentials and machine-local environment files must never be uploaded.
+.env*
+.ota/
+assets/google-play/*firebase-adminsdk*.json
+assets/google-play/google-services.json
+assets/google-play/custom_notification.mp3

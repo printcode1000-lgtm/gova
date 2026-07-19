@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, readdirSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
@@ -73,12 +73,15 @@ async function generateAndroidAssets(): Promise<void> {
   const resRoot = path.join(root, 'android', 'app', 'src', 'main', 'res');
   for (const [density, size] of Object.entries(androidLegacySizes)) {
     const directory = path.join(resRoot, `mipmap-${density}`);
+    mkdirSync(directory, { recursive: true });
     await sharp(await resizedSource(size)).toFile(path.join(directory, 'ic_launcher.png'));
     await sharp(await resizedSource(size)).toFile(path.join(directory, 'ic_launcher_round.png'));
   }
   for (const [density, size] of Object.entries(androidForegroundSizes)) {
+    const directory = path.join(resRoot, `mipmap-${density}`);
+    mkdirSync(directory, { recursive: true });
     await sharp(await androidAdaptiveForeground(size)).toFile(
-      path.join(resRoot, `mipmap-${density}`, 'ic_launcher_foreground.png'),
+      path.join(directory, 'ic_launcher_foreground.png'),
     );
   }
 
@@ -91,8 +94,12 @@ async function generateAndroidAssets(): Promise<void> {
 
 async function generateIosAssets(): Promise<void> {
   const assetsRoot = path.join(root, 'ios', 'App', 'App', 'Assets.xcassets');
+  const appIconRoot = path.join(assetsRoot, 'AppIcon.appiconset');
+  const splashRoot = path.join(assetsRoot, 'Splash.imageset');
+  mkdirSync(appIconRoot, { recursive: true });
+  mkdirSync(splashRoot, { recursive: true });
   await sharp(await resizedSource(1024)).toFile(
-    path.join(assetsRoot, 'AppIcon.appiconset', 'AppIcon-512@2x.png'),
+    path.join(appIconRoot, 'AppIcon-512@2x.png'),
   );
 
   const launch = await resizedSource(2732);
@@ -101,7 +108,7 @@ async function generateIosAssets(): Promise<void> {
     'splash-2732x2732-1.png',
     'splash-2732x2732-2.png',
   ]) {
-    await sharp(launch).toFile(path.join(assetsRoot, 'Splash.imageset', fileName));
+    await sharp(launch).toFile(path.join(splashRoot, fileName));
   }
 }
 

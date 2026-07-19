@@ -1,4 +1,4 @@
-import { asolApi, ASOL_API_ROUTES } from '@/core/api';
+import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import type {
   DeleteNotificationTokenInput,
   DeviceToken,
@@ -12,38 +12,54 @@ import type {
   SaveNotificationVapidInput,
   SendNotificationToUsersInput,
   SendNotificationToUsersResult,
-} from '../domain/entities';
+} from "../domain/entities";
 
 export class NotificationApiService {
   registerToken(input: RegisterNotificationTokenInput): Promise<DeviceToken> {
-    return asolApi.post<DeviceToken>(ASOL_API_ROUTES.notifications.deviceToken, input);
+    return asolApi.post<DeviceToken>(
+      ASOL_API_ROUTES.notifications.deviceToken,
+      input,
+    );
   }
 
-  removeToken(input: DeleteNotificationTokenInput): Promise<{ deleted: boolean }> {
+  removeToken(
+    input: DeleteNotificationTokenInput,
+  ): Promise<{ deleted: boolean }> {
     const query = new URLSearchParams({ uid: input.uid });
-    if (input.deviceId) query.set('deviceId', input.deviceId);
-    if (input.tokenId) query.set('tokenId', input.tokenId);
+    if (input.phone) query.set("phone", input.phone);
+    if (input.deviceId) query.set("deviceId", input.deviceId);
+    if (input.tokenId) query.set("tokenId", input.tokenId);
     return asolApi.delete<{ deleted: boolean }>(
       `${ASOL_API_ROUTES.notifications.deviceToken}?${query}`,
     );
   }
 
-  sendToUsers(input: SendNotificationToUsersInput): Promise<SendNotificationToUsersResult> {
+  sendToUsers(
+    input: SendNotificationToUsersInput,
+  ): Promise<SendNotificationToUsersResult> {
     return asolApi.post<SendNotificationToUsersResult>(
       ASOL_API_ROUTES.notifications.send,
       input,
     );
   }
 
-  getBroadcastRecipients(identity: { uid: string; phone: string }): Promise<BroadcastRecipientsResult> {
-    const query = new URLSearchParams({ uid: identity.uid, phone: identity.phone });
+  getBroadcastRecipients(identity: {
+    uid: string;
+    phone: string;
+  }): Promise<BroadcastRecipientsResult> {
+    const query = new URLSearchParams({
+      uid: identity.uid,
+      phone: identity.phone,
+    });
     return asolApi.get<BroadcastRecipientsResult>(
       `${ASOL_API_ROUTES.notifications.broadcastRecipients}?${query}`,
-      { cache: 'no-store' },
+      { cache: "no-store" },
     );
   }
 
-  sendBroadcast(input: BroadcastNotificationInput): Promise<BroadcastNotificationResult> {
+  sendBroadcast(
+    input: BroadcastNotificationInput,
+  ): Promise<BroadcastNotificationResult> {
     return asolApi.post<BroadcastNotificationResult>(
       ASOL_API_ROUTES.notifications.broadcastSend,
       input,
@@ -53,26 +69,36 @@ export class NotificationApiService {
   getWebPushPublicKey(): Promise<NotificationVapidPublicConfig> {
     return asolApi.get<NotificationVapidPublicConfig>(
       ASOL_API_ROUTES.notifications.webPushPublicKey,
-      { cache: 'no-store' },
+      { cache: "no-store" },
     );
   }
 
-  getVapidAdmin(identity: { uid: string; phone: string }): Promise<NotificationVapidAdminConfig> {
-    const query = new URLSearchParams({ uid: identity.uid, phone: identity.phone });
+  getVapidAdmin(identity: {
+    uid: string;
+    phone: string;
+  }): Promise<NotificationVapidAdminConfig> {
+    const query = new URLSearchParams({
+      uid: identity.uid,
+      phone: identity.phone,
+    });
     return asolApi.get<NotificationVapidAdminConfig>(
       `${ASOL_API_ROUTES.notifications.webPushVapid}?${query}`,
-      { cache: 'no-store' },
+      { cache: "no-store" },
     );
   }
 
-  generateVapid(input: GenerateNotificationVapidInput): Promise<NotificationVapidAdminConfig> {
+  generateVapid(
+    input: GenerateNotificationVapidInput,
+  ): Promise<NotificationVapidAdminConfig> {
     return asolApi.post<NotificationVapidAdminConfig>(
       ASOL_API_ROUTES.notifications.webPushVapid,
       input,
     );
   }
 
-  saveVapid(input: SaveNotificationVapidInput): Promise<NotificationVapidAdminConfig> {
+  saveVapid(
+    input: SaveNotificationVapidInput,
+  ): Promise<NotificationVapidAdminConfig> {
     return asolApi.put<NotificationVapidAdminConfig>(
       ASOL_API_ROUTES.notifications.webPushVapid,
       input,

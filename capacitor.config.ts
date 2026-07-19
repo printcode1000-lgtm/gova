@@ -1,4 +1,4 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import type { CapacitorConfig } from "@capacitor/cli";
 
 /**
  * Capacitor platform configuration — runtime shell only.
@@ -9,19 +9,24 @@ import type { CapacitorConfig } from '@capacitor/cli';
  *   CAPACITOR_SERVER_URL=http://192.168.1.10:3000 npx cap sync
  * Requires `npm run dev` on that host. No application code changes.
  */
-const liveReloadUrl = process.env.CAPACITOR_SERVER_URL?.replace(/\/$/, '');
+const liveReloadUrl = process.env.CAPACITOR_SERVER_URL?.replace(/\/$/, "");
 
 const config: CapacitorConfig = {
-  appId: 'hgh.asol.app',
-  appName: 'ASOL',
-  webDir: 'out',
+  appId: "hgh.asol.app",
+  appName: "ASOL",
+  webDir: "out",
   android: {
     allowMixedContent: true,
+  },
+  plugins: {
+    PushNotifications: {
+      presentationOptions: ["alert", "sound"],
+    },
   },
   server: liveReloadUrl
     ? {
         url: liveReloadUrl,
-        cleartext: liveReloadUrl.startsWith('http://'),
+        cleartext: liveReloadUrl.startsWith("http://"),
       }
     : undefined,
 };

@@ -123,6 +123,7 @@ export interface RegisteredNotificationToken extends DeviceToken {
 
 export interface RegisterNotificationTokenInput {
   uid: string;
+  phone: string;
   platform: NotificationPlatform;
   provider: string;
   deviceId: string;
@@ -132,6 +133,7 @@ export interface RegisterNotificationTokenInput {
 
 export interface DeleteNotificationTokenInput {
   uid: string;
+  phone?: string;
   deviceId?: string;
   tokenId?: string;
 }
@@ -151,11 +153,13 @@ export interface SendNotificationToUsersInput {
 export interface NotificationTokenDeliveryResult {
   uid: string;
   tokenCount: number;
-  status: "queued" | "no_tokens";
+  status: "sent" | "partial" | "queued" | "failed" | "no_tokens";
   providers?: Array<{
     provider: string;
     tokenCount: number;
-    status: "queued" | "failed";
+    status: "sent" | "partial" | "queued" | "failed";
+    successCount?: number;
+    failureCount?: number;
     message?: string;
   }>;
 }
@@ -195,7 +199,7 @@ export interface BroadcastNotificationInput {
 }
 
 export interface BroadcastNotificationResult extends SendNotificationToUsersResult {
-  recipientMode: 'all' | 'selected';
+  recipientMode: "all" | "selected";
 }
 
 export interface NotificationVapidPublicConfig {

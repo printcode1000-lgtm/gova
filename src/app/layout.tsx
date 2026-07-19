@@ -21,12 +21,15 @@ import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
 import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
 import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
+import { AndroidPushController, WebPushController } from "@/features/notifications";
 import dynamic from "next/dynamic";
 
 import { isDevelopment, withBasePath } from "@/core/config";
 
 const DeveloperBadge = isDevelopment
-  ? dynamic(() => import("@/components/dev/DeveloperBadge").then((m) => m.DeveloperBadge))
+  ? dynamic(() =>
+      import("@/components/dev/DeveloperBadge").then((m) => m.DeveloperBadge),
+    )
   : () => null;
 
 export const metadata: Metadata = {
@@ -44,7 +47,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl" data-theme="light" data-theme-hydrated="false" data-app-hydrated="false" suppressHydrationWarning>
+    <html
+      lang="ar"
+      dir="rtl"
+      data-theme="light"
+      data-theme-hydrated="false"
+      data-app-hydrated="false"
+      suppressHydrationWarning
+    >
       <head>
         <meta name="theme-color" content={THEME_COLOR_LIGHT} />
         <AppInitScript />
@@ -54,6 +64,8 @@ export default function RootLayout({
           <SessionProvider>
             <FavoritesProvider>
               <SystemLogCollector />
+              <AndroidPushController />
+              <WebPushController />
               <SystemLogErrorBoundary>
                 <PreferencesProvider>
                   <NetworkStatusProvider>

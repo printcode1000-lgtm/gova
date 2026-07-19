@@ -35,3 +35,12 @@ Thumbs.db
 
 # OTA signing material
 .ota/
+
+# Firebase server credentials and generated Android client config
+assets/google-play/*firebase-adminsdk*.json
+assets/google-play/google-services.json
+android/app/google-services.json
+android/app/src/main/res/raw/custom_notification.mp3
+
+.vercel
+.env*

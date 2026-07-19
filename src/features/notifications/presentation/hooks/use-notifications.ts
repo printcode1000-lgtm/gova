@@ -14,7 +14,9 @@ import { notificationDeviceTokenService } from "../../application/device-token-s
 export function useNotifications() {
   const { session, isLoading } = useSession();
   const uid = session?.uid ?? "";
-  const [notifications, setNotifications] = React.useState<NotificationEntity[]>([]);
+  const [notifications, setNotifications] = React.useState<
+    NotificationEntity[]
+  >([]);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
 
@@ -64,7 +66,10 @@ export function useNotifications() {
     requestPermission: async () => {
       const permission = await notificationPermissionService.request();
       if (uid && (permission === "granted" || permission === "unsupported")) {
-        await notificationDeviceTokenService.register(uid);
+        await notificationDeviceTokenService.register(
+          uid,
+          session?.phone ?? "",
+        );
       }
       return permission;
     },

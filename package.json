@@ -40,8 +40,9 @@
     "ota:publish": "npx tsx scripts/ota-publish.ts",
     "ota:status": "npx tsx scripts/ota-status.ts",
     "ota:self-test": "npx tsx scripts/ota-self-test.ts",
-    "cap:sync": "npx cap sync",
-    "cap:copy": "npx cap copy",
+    "android:push:sync-assets": "npx tsx scripts/sync-android-push-assets.ts",
+    "cap:sync": "npm run android:push:sync-assets && npx cap sync",
+    "cap:copy": "npm run android:push:sync-assets && npx cap copy",
     "cap:open:android": "npx cap open android",
     "cap:open:ios": "npx cap open ios",
     "cap:build": "npx tsx scripts/cap-build.ts",
@@ -58,6 +59,7 @@
     "@capacitor/core": "^8.4.1",
     "@capacitor/filesystem": "^8.1.2",
     "@capacitor/ios": "^8.4.1",
+    "@capacitor/push-notifications": "^8.1.2",
     "@capgo/capacitor-speech-recognition": "^8.1.7",
     "@fortawesome/fontawesome-svg-core": "^7.3.0",
     "@fortawesome/free-brands-svg-icons": "^7.3.0",
@@ -88,10 +90,11 @@
     "drizzle-zod": "^0.8.3",
     "fflate": "^0.8.3",
     "focus-trap-react": "^12.0.3",
+    "google-auth-library": "^10.9.0",
     "heic-to": "^1.5.2",
     "lucide-react": "^1.21.0",
     "maplibre-gl": "^5.24.0",
-    "next": "16.2.9",
+    "next": "16.2.10",
     "nodemailer": "^9.0.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -116,11 +119,14 @@
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.39.4",
-    "eslint-config-next": "^16.2.9",
+    "eslint-config-next": "16.2.10",
     "prettier": "^3.8.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4.3.1",
     "tsx": "^4.22.4",
     "typescript": "5.x"
+  },
+  "overrides": {
+    "postcss": "8.5.15"
   }
 }

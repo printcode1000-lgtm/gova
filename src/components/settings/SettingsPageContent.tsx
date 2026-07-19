@@ -1,27 +1,31 @@
-'use client';
+"use client";
 
-import { Bell, Database, FileText, Globe, Palette, Shield } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdjust, faSun, faMoon, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
-import * as React from 'react';
+import { Bell, Database, FileText, Globe, Palette, Shield } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  useAppPreferences,
-  useThemePreferences,
-} from '@/lib/preferences';
-import { useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+  faAdjust,
+  faSun,
+  faMoon,
+  faRotateLeft,
+} from "@fortawesome/free-solid-svg-icons";
+import * as React from "react";
+import { useAppPreferences, useThemePreferences } from "@/lib/preferences";
+import { useTranslation } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import {
   CLEAR_STORAGE_WARNING,
   clearAllClientStorage,
-} from '@/lib/storage/client-storage';
-import { useSession } from '@/features/auth/components/SessionProvider';
-import { webPushBrowserService } from '@/features/notifications/application/web-push-browser-service';
+} from "@/lib/storage/client-storage";
+import { useSession } from "@/features/auth/components/SessionProvider";
+import { webPushBrowserService } from "@/features/notifications/application/web-push-browser-service";
+import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
+import { notificationPermissionService } from "@/features/notifications/application/permission-service";
 
 import {
   type SettingsDensity,
   type SettingsLocale,
   type SettingsThemeMode,
-} from './settings-types';
+} from "./settings-types";
 
 function ToggleSwitch({
   checked,
@@ -57,24 +61,34 @@ export function SettingsPageContent() {
     resetPreferences: resetApp,
   } = useAppPreferences();
   const { session } = useSession();
+  const [notificationPlatform, setNotificationPlatform] = React.useState<
+    "android" | "ios" | "web"
+  >("web");
+  const isAndroidNotifications = notificationPlatform === "android";
+  const isIosNotifications = notificationPlatform === "ios";
 
-  const [statusText, setStatusText] = React.useState('');
-  const [webPushStatus, setWebPushStatus] = React.useState('');
+  const [statusText, setStatusText] = React.useState("");
+  const [webPushStatus, setWebPushStatus] = React.useState("");
   const [webPushBusy, setWebPushBusy] = React.useState(false);
-  const [webPushPermission, setWebPushPermission] = React.useState<NotificationPermission | 'unsupported'>('unsupported');
+  const [webPushPermission, setWebPushPermission] = React.useState<
+    NotificationPermission | "unsupported"
+  >("unsupported");
+  const [androidPushEnabled, setAndroidPushEnabled] = React.useState(false);
+  const [androidPushPermission, setAndroidPushPermission] =
+    React.useState<string>("unsupported");
   const [clearing, setClearing] = React.useState(false);
   const [tempFontSize, setTempFontSize] = React.useState(themePrefs.fontSize);
   const [showClearDialog, setShowClearDialog] = React.useState(false);
 
   const themeLabels: Record<SettingsThemeMode, string> = {
-    light: t('theme.light'),
-    dark: t('theme.dark'),
+    light: t("theme.light"),
+    dark: t("theme.dark"),
   };
 
   const densityLabels: Record<SettingsDensity, string> = {
-    compact: t('density.compact'),
-    comfortable: t('density.comfortable'),
-    spacious: t('density.spacious'),
+    compact: t("density.compact"),
+    comfortable: t("density.comfortable"),
+    spacious: t("density.spacious"),
   };
 
   React.useEffect(() => {
@@ -82,16 +96,29 @@ export function SettingsPageContent() {
   }, [themePrefs.fontSize]);
 
   React.useEffect(() => {
-    setWebPushPermission(webPushBrowserService.getPermission());
+    setNotificationPlatform(notificationDeviceTokenService.getPlatform());
   }, []);
+
+  React.useEffect(() => {
+    setWebPushPermission(webPushBrowserService.getPermission());
+    if (isAndroidNotifications) {
+      void Promise.all([
+        notificationDeviceTokenService.isAndroidEnabled(),
+        notificationDeviceTokenService.getAndroidPermission(),
+      ]).then(([enabled, permission]) => {
+        setAndroidPushEnabled(enabled);
+        setAndroidPushPermission(permission);
+      });
+    }
+  }, [isAndroidNotifications]);
 
   const showStatus = (message: string) => {
     setStatusText(message);
-    window.setTimeout(() => setStatusText(''), 3000);
+    window.setTimeout(() => setStatusText(""), 3000);
   };
 
   const cycleThemeMode = () => {
-    const modes: SettingsThemeMode[] = ['light', 'dark'];
+    const modes: SettingsThemeMode[] = ["light", "dark"];
     const currentIndex = modes.indexOf(themePrefs.themeMode);
     const nextIndex = (currentIndex + 1) % modes.length;
     updateTheme({ themeMode: modes[nextIndex] });
@@ -99,9 +126,9 @@ export function SettingsPageContent() {
 
   const getThemeIcon = () => {
     switch (themePrefs.themeMode) {
-      case 'light':
+      case "light":
         return faSun;
-      case 'dark':
+      case "dark":
         return faMoon;
       default:
         return faSun;
@@ -116,10 +143,22 @@ export function SettingsPageContent() {
     setShowClearDialog(false);
     setClearing(true);
     try {
+      if (session) {
+        if (isAndroidNotifications) {
+          await notificationDeviceTokenService.unregister(
+            session.uid,
+            session.phone,
+          );
+        } else if (!isIosNotifications && webPushBrowserService.isSupported()) {
+          await webPushBrowserService.unsubscribe(session.uid, session.phone);
+        }
+      }
+      resetTheme();
+      resetApp();
       await clearAllClientStorage();
       window.location.reload();
     } catch {
-      showStatus(t('settings.clearError'));
+      showStatus(t("settings.clearError"));
       setClearing(false);
     }
   };
@@ -128,17 +167,19 @@ export function SettingsPageContent() {
 
   const enableWebPush = async () => {
     if (!session?.uid) {
-      setWebPushStatus('يجب تسجيل الدخول لتفعيل إشعارات هذا الجهاز.');
+      setWebPushStatus("يجب تسجيل الدخول لتفعيل إشعارات هذا الجهاز.");
       return;
     }
     setWebPushBusy(true);
-    setWebPushStatus('');
+    setWebPushStatus("");
     try {
-      await webPushBrowserService.subscribe(session.uid);
+      await webPushBrowserService.subscribe(session.uid, session.phone);
       setWebPushPermission(webPushBrowserService.getPermission());
-      setWebPushStatus('تم تفعيل إشعارات المتصفح لهذا الجهاز.');
+      setWebPushStatus("تم تفعيل إشعارات المتصفح لهذا الجهاز.");
     } catch (error) {
-      setWebPushStatus(error instanceof Error ? error.message : 'تعذر تفعيل إشعارات المتصفح.');
+      setWebPushStatus(
+        error instanceof Error ? error.message : "تعذر تفعيل إشعارات المتصفح.",
+      );
     } finally {
       setWebPushBusy(false);
     }
@@ -147,13 +188,61 @@ export function SettingsPageContent() {
   const disableWebPush = async () => {
     if (!session?.uid) return;
     setWebPushBusy(true);
-    setWebPushStatus('');
+    setWebPushStatus("");
     try {
-      await webPushBrowserService.unsubscribe(session.uid);
+      await webPushBrowserService.unsubscribe(session.uid, session.phone);
       setWebPushPermission(webPushBrowserService.getPermission());
-      setWebPushStatus('تم إلغاء اشتراك هذا الجهاز.');
+      setWebPushStatus("تم إلغاء اشتراك هذا الجهاز.");
     } catch (error) {
-      setWebPushStatus(error instanceof Error ? error.message : 'تعذر إلغاء إشعارات هذا الجهاز.');
+      setWebPushStatus(
+        error instanceof Error
+          ? error.message
+          : "تعذر إلغاء إشعارات هذا الجهاز.",
+      );
+    } finally {
+      setWebPushBusy(false);
+    }
+  };
+
+  const enableAndroidPush = async () => {
+    if (!session?.uid) {
+      setWebPushStatus("يجب تسجيل الدخول لتفعيل إشعارات Android.");
+      return;
+    }
+    setWebPushBusy(true);
+    setWebPushStatus("");
+    try {
+      const permission = await notificationPermissionService.request();
+      setAndroidPushPermission(permission);
+      if (permission !== "granted")
+        throw new Error("لم يتم منح إذن الإشعارات.");
+      await notificationDeviceTokenService.register(session.uid, session.phone);
+      setAndroidPushEnabled(true);
+      setWebPushStatus("تم تفعيل إشعارات Android والنغمة المخصصة لهذا الجهاز.");
+    } catch (error) {
+      setWebPushStatus(
+        error instanceof Error ? error.message : "تعذر تفعيل إشعارات Android.",
+      );
+    } finally {
+      setWebPushBusy(false);
+    }
+  };
+
+  const disableAndroidPush = async () => {
+    if (!session?.uid) return;
+    setWebPushBusy(true);
+    setWebPushStatus("");
+    try {
+      await notificationDeviceTokenService.unregister(
+        session.uid,
+        session.phone,
+      );
+      setAndroidPushEnabled(false);
+      setWebPushStatus("تم إلغاء إشعارات Android لهذا الجهاز.");
+    } catch (error) {
+      setWebPushStatus(
+        error instanceof Error ? error.message : "تعذر إلغاء إشعارات Android.",
+      );
     } finally {
       setWebPushBusy(false);
     }
@@ -162,9 +251,11 @@ export function SettingsPageContent() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 pb-32 sm:px-6 sm:py-12 md:px-12">
       <header className="mb-12 space-y-2 text-center">
-        <h1 className="text-3xl font-bold text-primary">{t('settings.title')}</h1>
+        <h1 className="text-3xl font-bold text-primary">
+          {t("settings.title")}
+        </h1>
         <p className="text-base text-on-surface-variant">
-          {t('settings.description')}
+          {t("settings.description")}
         </p>
         {statusText ? (
           <p className="text-sm font-medium text-primary" role="status">
@@ -174,35 +265,36 @@ export function SettingsPageContent() {
       </header>
 
       {/* Language & Region */}
-      <section
-        className="mb-12 space-y-6"
-        lang={appPrefs.locale}
-      >
+      <section className="mb-12 space-y-6" lang={appPrefs.locale}>
         <div className="asol-settings-section-secondary space-y-8">
           <div className="flex items-center gap-3 px-2">
             <Globe className="h-6 w-6 text-primary" />
-            <h2 className="text-xl font-semibold text-on-surface">{t('settings.languageLabel')}</h2>
+            <h2 className="text-xl font-semibold text-on-surface">
+              {t("settings.languageLabel")}
+            </h2>
           </div>
           <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-4">
             <div className="flex w-fit gap-1 rounded-full bg-surface-variant p-1">
-              {(['ar', 'en'] as SettingsLocale[]).map((locale) => (
+              {(["ar", "en"] as SettingsLocale[]).map((locale) => (
                 <button
                   key={locale}
                   type="button"
                   className={cn(
-                    'asol-control rounded-full px-6 text-xs font-semibold transition-colors',
+                    "asol-control rounded-full px-6 text-xs font-semibold transition-colors",
                     appPrefs.locale === locale
-                      ? 'bg-primary text-on-primary'
-                      : 'text-on-surface-variant hover:text-on-surface',
+                      ? "bg-primary text-on-primary"
+                      : "text-on-surface-variant hover:text-on-surface",
                   )}
                   onClick={() => updateApp({ locale })}
                 >
-                  {locale === 'ar' ? t('common.arabic') : t('common.english')}
+                  {locale === "ar" ? t("common.arabic") : t("common.english")}
                 </button>
               ))}
             </div>
             <div className="flex items-center gap-3 w-full sm:flex-1">
-              <h3 className="text-sm font-semibold whitespace-nowrap">{t('settings.fontSize')}</h3>
+              <h3 className="text-sm font-semibold whitespace-nowrap">
+                {t("settings.fontSize")}
+              </h3>
               <span className="rounded-lg bg-surface-variant px-2 py-1 text-xs font-semibold whitespace-nowrap">
                 {tempFontSize}px
               </span>
@@ -229,7 +321,9 @@ export function SettingsPageContent() {
             <div className="asol-settings-section-primary space-y-6">
               <div className="flex items-center gap-3 px-2">
                 <Palette className="h-6 w-6 text-primary" />
-                <h2 className="text-xl font-semibold text-on-surface">{t('settings.appearance')}</h2>
+                <h2 className="text-xl font-semibold text-on-surface">
+                  {t("settings.appearance")}
+                </h2>
               </div>
               <div className="flex flex-row items-center justify-center gap-6 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-6">
                 <div className="flex flex-col items-center gap-2">
@@ -237,39 +331,55 @@ export function SettingsPageContent() {
                     type="button"
                     onClick={cycleThemeMode}
                     className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/20 transition-all hover:bg-primary/30"
-                    aria-label={t('settings.visualTheme')}
+                    aria-label={t("settings.visualTheme")}
                   >
-                    <FontAwesomeIcon icon={getThemeIcon()} className="h-7 w-7 text-primary" />
+                    <FontAwesomeIcon
+                      icon={getThemeIcon()}
+                      className="h-7 w-7 text-primary"
+                    />
                   </button>
                   <div className="text-center">
-                    <h4 className="text-sm font-semibold">{activeThemeLabel}</h4>
+                    <h4 className="text-sm font-semibold">
+                      {activeThemeLabel}
+                    </h4>
                   </div>
                 </div>
                 <div className="h-12 w-px bg-outline-variant/30" />
                 <div className="flex flex-col items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => updateTheme({ highContrast: !themePrefs.highContrast })}
+                    onClick={() =>
+                      updateTheme({ highContrast: !themePrefs.highContrast })
+                    }
                     className={cn(
-                      'flex h-14 w-14 items-center justify-center rounded-xl transition-all',
+                      "flex h-14 w-14 items-center justify-center rounded-xl transition-all",
                       themePrefs.highContrast
-                        ? 'bg-primary/20 text-primary'
-                        : 'bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80',
+                        ? "bg-primary/20 text-primary"
+                        : "bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80",
                     )}
-                    aria-label={t('settings.highContrast')}
+                    aria-label={t("settings.highContrast")}
                   >
                     <FontAwesomeIcon icon={faAdjust} className="h-7 w-7" />
                   </button>
                   <div className="text-center">
-                    <h4 className="text-sm font-semibold">{t('settings.highContrast')}</h4>
+                    <h4 className="text-sm font-semibold">
+                      {t("settings.highContrast")}
+                    </h4>
                   </div>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-4">
-                <h3 className="text-lg font-semibold">{t('settings.uiDensity')}</h3>
+                <h3 className="text-lg font-semibold">
+                  {t("settings.uiDensity")}
+                </h3>
                 <div className="flex flex-wrap gap-3">
-                  {(['compact', 'comfortable', 'spacious'] as SettingsDensity[]).map((density) => (
-                    <label key={density} className="flex items-center gap-2 cursor-pointer rounded-lg px-3 py-2 transition-all hover:bg-white/10">
+                  {(
+                    ["compact", "comfortable", "spacious"] as SettingsDensity[]
+                  ).map((density) => (
+                    <label
+                      key={density}
+                      className="flex items-center gap-2 cursor-pointer rounded-lg px-3 py-2 transition-all hover:bg-white/10"
+                    >
                       <input
                         type="radio"
                         name="density"
@@ -292,39 +402,90 @@ export function SettingsPageContent() {
         <div className="asol-settings-section-secondary space-y-5">
           <div className="flex items-center gap-3 px-2">
             <Bell className="h-6 w-6 text-primary" />
-            <h2 className="text-xl font-semibold text-on-surface">إشعارات المتصفح</h2>
+            <h2 className="text-xl font-semibold text-on-surface">
+              {isAndroidNotifications
+                ? "إشعارات Android"
+                : isIosNotifications
+                  ? "إشعارات iOS"
+                  : "إشعارات المتصفح"}
+            </h2>
           </div>
           <div className="rounded-xl asol-surface-neutral p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-semibold text-on-surface">حالة هذا الجهاز</p>
-                <p className="mt-1 text-xs text-on-surface-variant">
-                  الإذن الحالي: {webPushPermission === 'granted'
-                    ? 'مسموح'
-                    : webPushPermission === 'denied'
-                      ? 'مرفوض من المتصفح'
-                      : webPushPermission === 'default'
-                        ? 'لم يتم السؤال بعد'
-                        : 'غير مدعوم'}
+                <p className="text-sm font-semibold text-on-surface">
+                  حالة هذا الجهاز
                 </p>
+                <p className="mt-1 text-xs text-on-surface-variant">
+                  الإذن الحالي:{" "}
+                  {(isAndroidNotifications
+                    ? androidPushPermission
+                    : webPushPermission) === "granted"
+                    ? "مسموح"
+                    : (isAndroidNotifications
+                          ? androidPushPermission
+                          : webPushPermission) === "denied"
+                      ? "مرفوض من إعدادات النظام"
+                      : (isAndroidNotifications
+                            ? androidPushPermission
+                            : webPushPermission) === "default" ||
+                          androidPushPermission === "prompt"
+                        ? "لم يتم السؤال بعد"
+                        : "غير مدعوم"}
+                  {isAndroidNotifications && androidPushEnabled
+                    ? " — الجهاز مسجل في FCM"
+                    : ""}
+                </p>
+                {isIosNotifications ? (
+                  <p className="mt-2 text-xs text-on-surface-variant">
+                    إعداد Firebase الحالي خاص بتطبيق Android. لن يعرض هذا الجهاز إعدادات المتصفح غير المناسبة له.
+                  </p>
+                ) : null}
               </div>
               <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  disabled={webPushBusy || !webPushBrowserService.isSupported()}
-                  onClick={() => void enableWebPush()}
-                  className="asol-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
-                >
-                  تفعيل إشعارات المتصفح
-                </button>
-                <button
-                  type="button"
-                  disabled={webPushBusy || !session?.uid}
-                  onClick={() => void disableWebPush()}
-                  className="asol-control rounded-xl border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface disabled:opacity-60"
-                >
-                  إلغاء اشتراك هذا الجهاز
-                </button>
+                {isAndroidNotifications ? (
+                  <>
+                    <button
+                      type="button"
+                      disabled={webPushBusy || androidPushEnabled}
+                      onClick={() => void enableAndroidPush()}
+                      className="asol-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
+                    >
+                      تفعيل إشعارات Android
+                    </button>
+                    <button
+                      type="button"
+                      disabled={
+                        webPushBusy || !session?.uid || !androidPushEnabled
+                      }
+                      onClick={() => void disableAndroidPush()}
+                      className="asol-control rounded-xl border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface disabled:opacity-60"
+                    >
+                      إلغاء اشتراك هذا الجهاز
+                    </button>
+                  </>
+                ) : isIosNotifications ? null : (
+                  <>
+                    <button
+                      type="button"
+                      disabled={
+                        webPushBusy || !webPushBrowserService.isSupported()
+                      }
+                      onClick={() => void enableWebPush()}
+                      className="asol-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
+                    >
+                      تفعيل إشعارات المتصفح
+                    </button>
+                    <button
+                      type="button"
+                      disabled={webPushBusy || !session?.uid}
+                      onClick={() => void disableWebPush()}
+                      className="asol-control rounded-xl border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface disabled:opacity-60"
+                    >
+                      إلغاء اشتراك هذا الجهاز
+                    </button>
+                  </>
+                )}
               </div>
             </div>
             {webPushStatus ? (
@@ -341,7 +502,9 @@ export function SettingsPageContent() {
         <div className="asol-settings-section-secondary space-y-5">
           <div className="flex items-center gap-3 px-2">
             <Shield className="h-6 w-6 text-primary" />
-            <h2 className="text-xl font-semibold text-on-surface">قانوني وسياسات</h2>
+            <h2 className="text-xl font-semibold text-on-surface">
+              قانوني وسياسات
+            </h2>
           </div>
           <div className="rounded-xl asol-surface-neutral p-4">
             <div className="flex flex-col gap-3">
@@ -349,7 +512,9 @@ export function SettingsPageContent() {
                 href="/privacy-policy"
                 className="flex items-center justify-between rounded-lg px-4 py-3 transition-colors hover:bg-surface-variant"
               >
-                <span className="text-sm font-semibold text-on-surface">سياسة الخصوصية</span>
+                <span className="text-sm font-semibold text-on-surface">
+                  سياسة الخصوصية
+                </span>
                 <FileText className="h-5 w-5 text-on-surface-variant" />
               </a>
             </div>
@@ -362,12 +527,14 @@ export function SettingsPageContent() {
         <div className="asol-settings-section-error">
           <div className="flex items-center gap-3 px-2 mb-6">
             <Database className="h-6 w-6 text-primary" />
-            <h2 className="text-xl font-semibold text-on-surface">{t('settings.storage')}</h2>
+            <h2 className="text-xl font-semibold text-on-surface">
+              {t("settings.storage")}
+            </h2>
           </div>
           <div className="flex items-center justify-between rounded-xl asol-surface-neutral p-4">
             <div className="flex items-center gap-3">
               <Database className="h-5 w-5 text-outline" />
-              <span className="text-sm">{t('settings.cookiesLocalData')}</span>
+              <span className="text-sm">{t("settings.cookiesLocalData")}</span>
             </div>
             <button
               type="button"
@@ -375,7 +542,7 @@ export function SettingsPageContent() {
               onClick={() => void handleClearAll()}
               className="asol-control border border-error/40 bg-error/10 text-xs font-semibold text-error hover:bg-error/20 disabled:opacity-60"
             >
-              {clearing ? t('settings.clearing') : t('settings.clearAll')}
+              {clearing ? t("settings.clearing") : t("settings.clearAll")}
             </button>
           </div>
         </div>
@@ -386,16 +553,31 @@ export function SettingsPageContent() {
         <div className="asol-card-neutral p-6">
           <div className="flex items-center gap-3 px-2 mb-4">
             <FileText className="h-6 w-6 text-primary" />
-            <h2 className="text-xl font-semibold text-on-surface">{t('settings.summary')}</h2>
+            <h2 className="text-xl font-semibold text-on-surface">
+              {t("settings.summary")}
+            </h2>
           </div>
           <ul className="grid grid-cols-1 gap-x-12 gap-y-4 md:grid-cols-2">
             <SummaryRow
-              label={t('settings.languageLabel')}
-              value={appPrefs.locale === 'ar' ? t('common.arabic') : t('common.english')}
+              label={t("settings.languageLabel")}
+              value={
+                appPrefs.locale === "ar"
+                  ? t("common.arabic")
+                  : t("common.english")
+              }
             />
-            <SummaryRow label={t('settings.visualTheme')} value={activeThemeLabel} />
-            <SummaryRow label={t('settings.uiDensity')} value={densityLabels[themePrefs.density]} />
-            <SummaryRow label={t('settings.fontSize')} value={`${themePrefs.fontSize}px`} />
+            <SummaryRow
+              label={t("settings.visualTheme")}
+              value={activeThemeLabel}
+            />
+            <SummaryRow
+              label={t("settings.uiDensity")}
+              value={densityLabels[themePrefs.density]}
+            />
+            <SummaryRow
+              label={t("settings.fontSize")}
+              value={`${themePrefs.fontSize}px`}
+            />
           </ul>
         </div>
       </section>
@@ -409,7 +591,7 @@ export function SettingsPageContent() {
           onClick={handleClearAll}
         >
           <FontAwesomeIcon icon={faRotateLeft} className="h-4 w-4" />
-          {clearing ? t('settings.clearing') : t('settings.restoreDefaults')}
+          {clearing ? t("settings.clearing") : t("settings.restoreDefaults")}
         </button>
       </footer>
 
@@ -419,11 +601,18 @@ export function SettingsPageContent() {
           <div className="mx-4 max-w-md rounded-2xl bg-surface p-6 shadow-2xl">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-error/20">
-                <FontAwesomeIcon icon={faRotateLeft} className="h-6 w-6 text-error" />
+                <FontAwesomeIcon
+                  icon={faRotateLeft}
+                  className="h-6 w-6 text-error"
+                />
               </div>
-              <h3 className="text-xl font-semibold text-on-surface">{t('settings.restoreDefaults')}</h3>
+              <h3 className="text-xl font-semibold text-on-surface">
+                {t("settings.restoreDefaults")}
+              </h3>
             </div>
-            <p className="mb-6 text-sm text-on-surface-variant">{CLEAR_STORAGE_WARNING}</p>
+            <p className="mb-6 text-sm text-on-surface-variant">
+              {CLEAR_STORAGE_WARNING}
+            </p>
             <div className="flex gap-3">
               <button
                 type="button"

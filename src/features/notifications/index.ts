@@ -7,3 +7,5 @@ export * from "./application/event-notification-mapper";
 export * from "./application/notification-template-loader";
 export * from "./presentation/hooks/use-notifications";
 export * from "./presentation/NotificationsPageContent";
+export * from "./presentation/AndroidPushController";
+export * from "./presentation/WebPushController";

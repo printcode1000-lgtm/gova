@@ -23,7 +23,10 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRightFromBracket, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faRightFromBracket,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import { FocusTrap } from "focus-trap-react";
 
 import { cn } from "@/lib/utils";
@@ -33,6 +36,7 @@ import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
 import {
   Dialog,
   DialogContent,
@@ -48,7 +52,10 @@ interface AppSidebarProps {
   onClose: () => void;
 }
 
-export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
+export const AppSidebar = React.memo(function AppSidebar({
+  isOpen,
+  onClose,
+}: AppSidebarProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { t, isRTL } = useTranslation();
   const resolvedScheme = useResolvedColorScheme();
@@ -56,7 +63,7 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  const [profileMode, setProfileMode] = useState<'preview' | 'edit'>('preview');
+  const [profileMode, setProfileMode] = useState<"preview" | "edit">("preview");
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
 
@@ -77,7 +84,7 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
     };
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
@@ -95,15 +102,15 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
       document.body.style.overflow = "hidden";
       // Save scroll position
       const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
+      document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      
+      document.body.style.width = "100%";
+
       return () => {
         document.body.style.overflow = "";
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
         window.scrollTo(0, scrollY);
       };
     }
@@ -113,7 +120,13 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
     setLogoutDialogOpen(true);
   }, []);
 
-  const confirmLogout = useCallback(() => {
+  const confirmLogout = useCallback(async () => {
+    if (session && notificationDeviceTokenService.isAndroid()) {
+      await notificationDeviceTokenService.unregister(
+        session.uid,
+        session.phone,
+      );
+    }
     logout.mutate(undefined, {
       onSuccess: async () => {
         setLogoutDialogOpen(false);
@@ -124,13 +137,16 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
         window.location.reload();
       },
     });
-  }, [logout, onClose]);
+  }, [logout, onClose, session]);
 
-  const handleProfileModeChange = useCallback((mode: 'preview' | 'edit') => {
-    setProfileMode(mode);
-    // Small delay to allow state update before closing
-    setTimeout(() => onClose(), 100);
-  }, [onClose]);
+  const handleProfileModeChange = useCallback(
+    (mode: "preview" | "edit") => {
+      setProfileMode(mode);
+      // Small delay to allow state update before closing
+      setTimeout(() => onClose(), 100);
+    },
+    [onClose],
+  );
 
   const handleSuperAdminToggle = useCallback(() => {
     setSuperAdminOpen((open) => !open);
@@ -243,115 +259,131 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
             aria-label={t("sidebar.menu")}
             className={cn(
               "fixed top-0 inset-inline-start-0 z-[61] flex h-dvh w-72 flex-col border-e transition-transform duration-300 ease-out",
-              resolvedScheme === 'dark' ? 'asol-drawer-panel' : 'bg-[#F8FBFF]',
+              resolvedScheme === "dark" ? "asol-drawer-panel" : "bg-[#F8FBFF]",
               isOpen
                 ? "translate-x-0"
                 : "rtl:translate-x-full ltr:-translate-x-full",
             )}
             dir={isRTL ? "rtl" : "ltr"}
           >
-          <div className="flex items-center justify-between p-3 asol-section-tonal-primary border-b border-outline-variant/30">
-            <span className="text-sm font-semibold text-on-primary-container px-2">
-              {t("sidebar.menu")}
-            </span>
-            <button
-              type="button"
-              className="asol-control-icon flex items-center justify-center rounded-full text-on-surface-variant active:opacity-80"
-              onClick={onClose}
-              aria-label={t("sidebar.close")}
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+            <div className="flex items-center justify-between p-3 asol-section-tonal-primary border-b border-outline-variant/30">
+              <span className="text-sm font-semibold text-on-primary-container px-2">
+                {t("sidebar.menu")}
+              </span>
+              <button
+                type="button"
+                className="asol-control-icon flex items-center justify-center rounded-full text-on-surface-variant active:opacity-80"
+                onClick={onClose}
+                aria-label={t("sidebar.close")}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-          <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 pt-2">
-            {isLoggedIn ? (
-              <>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  disabled={logout.isPending}
-                  className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90 disabled:opacity-60"
-                >
-                  <LogOut className="w-5 h-5 shrink-0 text-primary" />
-                  {t("sidebar.logout")}
-                </button>
+            <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 pt-2">
+              {isLoggedIn ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    disabled={logout.isPending}
+                    className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90 disabled:opacity-60"
+                  >
+                    <LogOut className="w-5 h-5 shrink-0 text-primary" />
+                    {t("sidebar.logout")}
+                  </button>
 
-                <div className="asol-control rounded-lg asol-surface-neutral p-2">
-                  <div className="px-2 py-1 text-xs font-semibold flex items-center gap-2 text-blue-600">
-                    <User className="w-4 h-4 text-blue-600" />
-                    {t("nav.profile")}
-                  </div>
-                  <div className="flex gap-1 px-2 py-1">
-                    <div className="flex w-full bg-gray-100 rounded-lg p-1">
-                      <Link href="/profile?mode=preview" onClick={() => handleProfileModeChange('preview')} className="flex-1">
-                        <button
-                          type="button"
-                          className={cn(
-                            "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
-                            profileMode === 'preview'
-                              ? "shadow-sm"
-                              : "text-gray-600 hover:text-gray-900"
-                          )}
-                          style={profileMode === 'preview' ? { backgroundColor: '#2563eb', color: 'white' } : undefined}
+                  <div className="asol-control rounded-lg asol-surface-neutral p-2">
+                    <div className="px-2 py-1 text-xs font-semibold flex items-center gap-2 text-blue-600">
+                      <User className="w-4 h-4 text-blue-600" />
+                      {t("nav.profile")}
+                    </div>
+                    <div className="flex gap-1 px-2 py-1">
+                      <div className="flex w-full bg-gray-100 rounded-lg p-1">
+                        <Link
+                          href="/profile?mode=preview"
+                          onClick={() => handleProfileModeChange("preview")}
+                          className="flex-1"
                         >
-                          <Eye className="w-4 h-4" />
-                          {t("sidebar.preview")}
-                        </button>
-                      </Link>
-                      <Link href="/profile?mode=edit" onClick={() => handleProfileModeChange('edit')} className="flex-1">
-                        <button
-                          type="button"
-                          className={cn(
-                            "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
-                            profileMode === 'edit'
-                              ? "shadow-sm"
-                              : "text-gray-600 hover:text-gray-900"
-                          )}
-                          style={profileMode === 'edit' ? { backgroundColor: '#2563eb', color: 'white' } : undefined}
+                          <button
+                            type="button"
+                            className={cn(
+                              "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
+                              profileMode === "preview"
+                                ? "shadow-sm"
+                                : "text-gray-600 hover:text-gray-900",
+                            )}
+                            style={
+                              profileMode === "preview"
+                                ? { backgroundColor: "#2563eb", color: "white" }
+                                : undefined
+                            }
+                          >
+                            <Eye className="w-4 h-4" />
+                            {t("sidebar.preview")}
+                          </button>
+                        </Link>
+                        <Link
+                          href="/profile?mode=edit"
+                          onClick={() => handleProfileModeChange("edit")}
+                          className="flex-1"
                         >
-                          <Edit className="w-4 h-4" />
-                          {t("sidebar.edit")}
-                        </button>
-                      </Link>
+                          <button
+                            type="button"
+                            className={cn(
+                              "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
+                              profileMode === "edit"
+                                ? "shadow-sm"
+                                : "text-gray-600 hover:text-gray-900",
+                            )}
+                            style={
+                              profileMode === "edit"
+                                ? { backgroundColor: "#2563eb", color: "white" }
+                                : undefined
+                            }
+                          >
+                            <Edit className="w-4 h-4" />
+                            {t("sidebar.edit")}
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {superAdminContent}
-              </>
-            ) : (
-              <Link href="/login" onClick={onClose}>
+                  {superAdminContent}
+                </>
+              ) : (
+                <Link href="/login" onClick={onClose}>
+                  <button
+                    type="button"
+                    className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
+                  >
+                    <LogIn className="w-5 h-5 shrink-0 text-primary" />
+                    {t("sidebar.login")}
+                  </button>
+                </Link>
+              )}
+
+              <Link href="/settings" onClick={onClose}>
                 <button
                   type="button"
                   className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
                 >
-                  <LogIn className="w-5 h-5 shrink-0 text-primary" />
-                  {t("sidebar.login")}
+                  <Settings className="w-5 h-5 shrink-0 text-primary" />
+                  {t("sidebar.settings")}
                 </button>
               </Link>
-            )}
-
-            <Link href="/settings" onClick={onClose}>
-              <button
-                type="button"
-                className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
-              >
-                <Settings className="w-5 h-5 shrink-0 text-primary" />
-                {t("sidebar.settings")}
-              </button>
-            </Link>
-            <Link href="/contact-us" onClick={onClose}>
-              <button
-                type="button"
-                className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
-              >
-                <MessagesSquare className="w-5 h-5 shrink-0 text-primary" />
-                {t("sidebar.contactUs")}
-              </button>
-            </Link>
+              <Link href="/contact-us" onClick={onClose}>
+                <button
+                  type="button"
+                  className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
+                >
+                  <MessagesSquare className="w-5 h-5 shrink-0 text-primary" />
+                  {t("sidebar.contactUs")}
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
         </FocusTrap>
       </div>
 
@@ -360,11 +392,18 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
           <div className="bg-white rounded-xl p-5 max-w-sm w-full shadow-xl">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                <FontAwesomeIcon icon={faTriangleExclamation} className="text-red-600 text-lg" />
+                <FontAwesomeIcon
+                  icon={faTriangleExclamation}
+                  className="text-red-600 text-lg"
+                />
               </div>
-              <h2 className="text-base font-semibold text-right">{t("sidebar.logoutConfirmTitle")}</h2>
+              <h2 className="text-base font-semibold text-right">
+                {t("sidebar.logoutConfirmTitle")}
+              </h2>
             </div>
-            <p className="text-gray-600 mb-4 text-sm text-right">{t("sidebar.logoutConfirmMessage")}</p>
+            <p className="text-gray-600 mb-4 text-sm text-right">
+              {t("sidebar.logoutConfirmMessage")}
+            </p>
             <div className="flex gap-2 flex-row-reverse">
               <button
                 onClick={confirmLogout}
@@ -372,7 +411,9 @@ export const AppSidebar = React.memo(function AppSidebar({ isOpen, onClose }: Ap
                 className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg hover:bg-red-700 disabled:opacity-50 text-sm flex items-center justify-center gap-2"
               >
                 <FontAwesomeIcon icon={faRightFromBracket} />
-                {logout.isPending ? t("sidebar.logoutting") : t("sidebar.logoutConfirm")}
+                {logout.isPending
+                  ? t("sidebar.logoutting")
+                  : t("sidebar.logoutConfirm")}
               </button>
               <button
                 onClick={() => setLogoutDialogOpen(false)}

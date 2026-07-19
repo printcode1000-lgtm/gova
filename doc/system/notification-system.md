@@ -1,5 +1,8 @@
 # ASOL Notification System
 
+> Android production setup and operational checks are documented in
+> [`../capacitor/android-push-notifications.md`](../capacitor/android-push-notifications.md).
+
 The notification system is a local-first module that powers the in-app notification center, badge count, template rendering, event mapping, device-token storage, and future push integrations for Web, Android, and iOS.
 
 ## Implemented Now
@@ -418,7 +421,7 @@ Browser support is limited; native platform plugins can map these values to nati
 
 ## Future Work
 
-- Connect real push transports inside the existing Web Push, FCM, and APNs provider adapters.
+- Connect the real APNs transport inside the existing provider adapter.
 - Import native notification-center entries on mobile startup.
 - Add grouped notification views by `groupKey`.
 - Add notification settings UI for channel and target preferences.
@@ -468,8 +471,10 @@ Provider responsibilities:
 
 Current provider behavior:
 
-- FCM, APNs, and Web Push adapters are safe placeholders.
-- They return `queued` delivery results but do not call external networks yet.
+- FCM uses Firebase Admin on the server and returns real per-batch delivery results.
+- Invalid or unregistered FCM tokens are disabled after Firebase rejects them.
+- APNs remains a safe placeholder until Apple credentials are configured.
+- Web Push uses the configured VAPID transport.
 - No provider credentials or private keys are stored in client code.
 - Real provider credentials must be added through server-only configuration.
 
@@ -592,7 +597,10 @@ Service worker:
 public/asol-push-sw.js
 ```
 
-The service worker displays push notifications and opens the notification route or provided deep link when the user clicks the notification.
+The service worker displays push notifications, stores a local copy in the
+AsolDB notification center for the target `uid`, refreshes the local badge
+state, notifies open app windows to reload `/notifications`, and opens the
+notification route or provided deep link when the user clicks the notification.
 
 ## Super Admin Broadcast Notifications
 

@@ -3,9 +3,9 @@
  * Next.js app code should import from server-env.ts instead.
  */
 
-import { createPublicKey } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
-import path from 'node:path';
+import { createPublicKey } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 
 export function getTursoRuntimeCredentials(): {
   url: string;
@@ -63,55 +63,111 @@ export function getPasswordRecoveryConfig(): {
   signingSecret: string;
 } {
   const gmailUser = process.env.PASSWORD_RECOVERY_GMAIL_USER?.trim();
-  const gmailAppPassword = process.env.PASSWORD_RECOVERY_GMAIL_APP_PASSWORD?.replace(/\s+/g, '');
+  const gmailAppPassword =
+    process.env.PASSWORD_RECOVERY_GMAIL_APP_PASSWORD?.replace(/\s+/g, "");
   const signingSecret = process.env.PASSWORD_RECOVERY_SIGNING_SECRET?.trim();
 
   if (!gmailUser || !gmailAppPassword || !signingSecret) {
-    throw new Error('passwordRecoveryNotConfigured');
+    throw new Error("passwordRecoveryNotConfigured");
   }
 
   return { gmailUser, gmailAppPassword, signingSecret };
+}
+
+export interface FirebaseAdminServiceAccountConfig {
+  projectId: string;
+  clientEmail: string;
+  privateKey: string;
+}
+
+export function getFirebaseAdminServiceAccount(): FirebaseAdminServiceAccountConfig {
+  const encoded = process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64?.trim();
+  const inline = process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON?.trim();
+  const raw = encoded
+    ? Buffer.from(encoded, "base64").toString("utf8")
+    : inline || "";
+
+  if (!raw) throw new Error("firebaseAdminNotConfigured");
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    throw new Error("firebaseAdminInvalidJson");
+  }
+
+  const projectId =
+    typeof parsed.project_id === "string" ? parsed.project_id.trim() : "";
+  const clientEmail =
+    typeof parsed.client_email === "string" ? parsed.client_email.trim() : "";
+  const privateKey =
+    typeof parsed.private_key === "string"
+      ? parsed.private_key.replace(/\\n/g, "\n")
+      : "";
+  if (projectId !== "asole-73f1f" || !clientEmail || !privateKey) {
+    throw new Error("firebaseAdminInvalidCredentials");
+  }
+  return { projectId, clientEmail, privateKey };
+}
+
+export function getNotificationInternalSecret(): string {
+  const secret = process.env.ASOL_NOTIFICATION_INTERNAL_SECRET?.trim();
+  if (!secret || secret.length < 32)
+    throw new Error("notificationInternalSecretNotConfigured");
+  return secret;
 }
 
 export function getOtaApprovalServerConfig(): {
   manifestUrl: string;
   publicKey: string;
 } {
-  const explicitManifestUrl = process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL?.trim();
+  const explicitManifestUrl =
+    process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL?.trim();
   const publicBaseUrl = (
     process.env.ASOL_OTA_R2_PUBLIC_URL ||
     process.env.R2_PUBLIC_URL ||
     process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
-    ''
-  ).replace(/\/$/, '');
-  const prefix = (process.env.ASOL_OTA_R2_PREFIX || 'app-updates').replace(/^\/+|\/+$/g, '');
-  const manifestUrl = explicitManifestUrl || (publicBaseUrl ? `${publicBaseUrl}/${prefix}/manifest.json` : '');
+    ""
+  ).replace(/\/$/, "");
+  const prefix = (process.env.ASOL_OTA_R2_PREFIX || "app-updates").replace(
+    /^\/+|\/+$/g,
+    "",
+  );
+  const manifestUrl =
+    explicitManifestUrl ||
+    (publicBaseUrl ? `${publicBaseUrl}/${prefix}/manifest.json` : "");
 
   let publicKey = (
     process.env.ASOL_OTA_PUBLIC_KEY ||
     process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY ||
-    ''
+    ""
   ).trim();
   if (!publicKey) {
-    const localPublicKeyPath = path.resolve('.ota', 'public-key.pem');
+    const localPublicKeyPath = path.resolve(".ota", "public-key.pem");
     if (existsSync(localPublicKeyPath)) {
       publicKey = createPublicKey(readFileSync(localPublicKeyPath))
-        .export({ format: 'der', type: 'spki' })
-        .toString('base64');
+        .export({ format: "der", type: "spki" })
+        .toString("base64");
     }
   }
   if (!publicKey) {
-    const privateKey = process.env.ASOL_OTA_SIGNING_PRIVATE_KEY?.replace(/\\n/g, '\n');
-    const localPrivateKeyPath = path.resolve('.ota', 'private-key.pem');
-    const source = privateKey || (existsSync(localPrivateKeyPath) ? readFileSync(localPrivateKeyPath) : null);
+    const privateKey = process.env.ASOL_OTA_SIGNING_PRIVATE_KEY?.replace(
+      /\\n/g,
+      "\n",
+    );
+    const localPrivateKeyPath = path.resolve(".ota", "private-key.pem");
+    const source =
+      privateKey ||
+      (existsSync(localPrivateKeyPath)
+        ? readFileSync(localPrivateKeyPath)
+        : null);
     if (source) {
       publicKey = createPublicKey(source)
-        .export({ format: 'der', type: 'spki' })
-        .toString('base64');
+        .export({ format: "der", type: "spki" })
+        .toString("base64");
     }
   }
 
-  if (!manifestUrl || !publicKey) throw new Error('otaNotConfigured');
+  if (!manifestUrl || !publicKey) throw new Error("otaNotConfigured");
   return { manifestUrl, publicKey };
 }
 
@@ -188,8 +244,7 @@ export function getTursoAdvertisementsRuntimeCredentials(): {
     process.env.TURSO_ADVERTISEMENTS_DATABASE_URL ||
     process.env.TURSO_DATABASE_URL;
   const authToken =
-    process.env.TURSO_ADVERTISEMENTS_AUTH_TOKEN ||
-    process.env.TURSO_AUTH_TOKEN;
+    process.env.TURSO_ADVERTISEMENTS_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN;
 
   if (!url)
     throw new Error(
@@ -202,7 +257,6 @@ export function getTursoAdvertisementsRuntimeCredentials(): {
 
   return { url, authToken };
 }
-
 
 export interface R2CloudflareCredentials {
   accountId: string;
