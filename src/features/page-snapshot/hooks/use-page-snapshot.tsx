@@ -2,14 +2,17 @@
 
 import * as React from 'react';
 import { App as CapacitorApp } from '@capacitor/app';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useSession } from '@/features/auth/components/SessionProvider';
 import {
   applySnapshotToDom,
+  captureSnapshot,
   cleanupExpiredSnapshots,
+  createPageSnapshotKey,
   deleteSnapshot,
   hasSnapshot,
   pauseSnapshot,
+  persistSnapshot,
   restoreSnapshot,
   resumeSnapshot,
   saveSnapshot,
@@ -48,30 +51,16 @@ function searchParamsToRecord(params: URLSearchParams): Record<string, string | 
   return result;
 }
 
-function readBrowserQuery(): Record<string, string | string[]> {
-  if (typeof window === 'undefined') return {};
-  return searchParamsToRecord(new URLSearchParams(window.location.search));
-}
-
 let navigationEventsInstalled = false;
-let navigationEmitTimer: number | null = null;
 
 function installNavigationEvents(): void {
   if (typeof window === 'undefined' || navigationEventsInstalled) return;
   navigationEventsInstalled = true;
-  const emit = () => {
-    if (navigationEmitTimer) window.clearTimeout(navigationEmitTimer);
-    navigationEmitTimer = window.setTimeout(() => {
-      navigationEmitTimer = null;
-      window.dispatchEvent(new Event('asol:navigation'));
-    }, 0);
-  };
   const patch = (name: 'pushState' | 'replaceState') => {
     const original = window.history[name];
     window.history[name] = function patchedHistoryMethod(...args) {
-      const result = original.apply(this, args);
-      emit();
-      return result;
+      window.dispatchEvent(new Event('asol:before-navigation'));
+      return original.apply(this, args);
     };
   };
   patch('pushState');
@@ -80,21 +69,18 @@ function installNavigationEvents(): void {
 
 function usePageSnapshotIdentity(namespace?: string): PageSnapshotIdentity {
   const pathname = usePathname() || '/';
+  const searchParams = useSearchParams();
   const { session } = useSession();
-  const [query, setQuery] = React.useState<Record<string, string | string[]>>({});
+  const querySignature = searchParams.toString();
+  const query = React.useMemo(
+    () => searchParamsToRecord(new URLSearchParams(querySignature)),
+    [querySignature],
+  );
   const route = namespace ? `${namespace}:${pathname}` : pathname;
 
   React.useEffect(() => {
     installNavigationEvents();
-    const updateQuery = () => setQuery(readBrowserQuery());
-    updateQuery();
-    window.addEventListener('popstate', updateQuery);
-    window.addEventListener('asol:navigation', updateQuery);
-    return () => {
-      window.removeEventListener('popstate', updateQuery);
-      window.removeEventListener('asol:navigation', updateQuery);
-    };
-  }, [pathname]);
+  }, []);
 
   return React.useMemo(
     () => ({
@@ -119,10 +105,12 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
   );
   const [lastSnapshot, setLastSnapshot] = React.useState<PageSnapshotRecord | null>(null);
   const lastSnapshotRef = React.useRef<PageSnapshotRecord | null>(null);
+  const restoreRequestRef = React.useRef(0);
+  const pendingSavesRef = React.useRef(
+    new Map<string, Promise<PageSnapshotRecord | null>>(),
+  );
 
-  React.useEffect(() => {
-    identityRef.current = identity;
-  }, [identity]);
+  identityRef.current = identity;
 
   const buildPartial = React.useCallback(() => {
     const componentState: Record<string, unknown> = {};
@@ -132,12 +120,23 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
     return { componentState };
   }, []);
 
-  const runSave = React.useCallback(async () => {
-    const saved = await saveSnapshot({
-      ...identityRef.current,
+  const runSave = React.useCallback(async (targetIdentity = identityRef.current) => {
+    const targetKey = createPageSnapshotKey(targetIdentity);
+    const capturedSnapshot = captureSnapshot({
+      ...targetIdentity,
       partial: buildPartial(),
     });
-    if (saved) {
+    if (!capturedSnapshot) return;
+    const previousSave = pendingSavesRef.current.get(targetKey);
+    const saveOperation = (previousSave ?? Promise.resolve(null))
+      .catch(() => null)
+      .then(() => persistSnapshot(capturedSnapshot));
+    pendingSavesRef.current.set(targetKey, saveOperation);
+    const saved = await saveOperation;
+    if (pendingSavesRef.current.get(targetKey) === saveOperation) {
+      pendingSavesRef.current.delete(targetKey);
+    }
+    if (saved && createPageSnapshotKey(identityRef.current) === targetKey) {
       lastSnapshotRef.current = saved;
       setLastSnapshot(saved);
     }
@@ -150,12 +149,12 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
     }, DEFAULT_DEBOUNCE_MS);
   }, [runSave]);
 
-  const flushSave = React.useCallback(() => {
+  const flushSave = React.useCallback((targetIdentity = identityRef.current) => {
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current);
       saveTimerRef.current = null;
     }
-    void runSave();
+    void runSave(targetIdentity);
   }, [runSave]);
 
   const registerState = React.useCallback(
@@ -163,6 +162,7 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
       registryRef.current.set(key, entry as SnapshotRegistryEntry);
       if (
         lastSnapshotRef.current &&
+        lastSnapshotRef.current.key === createPageSnapshotKey(identityRef.current) &&
         Object.prototype.hasOwnProperty.call(lastSnapshotRef.current.componentState, key)
       ) {
         entry.set(lastSnapshotRef.current.componentState[key] as T);
@@ -174,12 +174,23 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
-  const restoreCurrent = React.useCallback(async () => {
-    const snapshot = await restoreSnapshot(identityRef.current);
-    if (!snapshot) return;
+  const restoreCurrent = React.useCallback(async (targetIdentity: PageSnapshotIdentity) => {
+    const requestId = ++restoreRequestRef.current;
+    const targetKey = createPageSnapshotKey(targetIdentity);
+    await pendingSavesRef.current.get(targetKey)?.catch(() => null);
+    const snapshot = await restoreSnapshot(targetIdentity);
+    if (
+      !snapshot ||
+      requestId !== restoreRequestRef.current ||
+      createPageSnapshotKey(identityRef.current) !== targetKey
+    ) return;
     lastSnapshotRef.current = snapshot;
     setLastSnapshot(snapshot);
     window.setTimeout(() => {
+      if (
+        requestId !== restoreRequestRef.current ||
+        createPageSnapshotKey(identityRef.current) !== targetKey
+      ) return;
       Object.entries(snapshot.componentState).forEach(([key, value]) => {
         registryRef.current.get(key)?.set(value);
       });
@@ -192,29 +203,44 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   React.useEffect(() => {
-    void restoreCurrent();
+    const targetIdentity = identity;
+    const targetKey = createPageSnapshotKey(targetIdentity);
+    if (lastSnapshotRef.current?.key !== targetKey) {
+      lastSnapshotRef.current = null;
+      setLastSnapshot(null);
+    }
+    void restoreCurrent(targetIdentity);
     return () => {
-      flushSave();
+      restoreRequestRef.current += 1;
     };
-  }, [flushSave, identitySignature, restoreCurrent]);
+  }, [identity, identitySignature, restoreCurrent]);
 
   React.useEffect(() => {
     const onPageHide = () => flushSave();
+    const onBeforeNavigation = () => flushSave(identityRef.current);
     const onVisibility = () => {
       if (document.visibilityState === 'hidden') flushSave();
     };
     window.addEventListener('pagehide', onPageHide);
     window.addEventListener('beforeunload', onPageHide);
+    window.addEventListener('asol:before-navigation', onBeforeNavigation);
+    window.addEventListener('popstate', onBeforeNavigation);
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       window.removeEventListener('pagehide', onPageHide);
       window.removeEventListener('beforeunload', onPageHide);
+      window.removeEventListener('asol:before-navigation', onBeforeNavigation);
+      window.removeEventListener('popstate', onBeforeNavigation);
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [flushSave]);
 
   React.useEffect(() => {
     const onImportantChange = (event: Event) => {
+      if (event.type === 'scroll') {
+        requestSave();
+        return;
+      }
       const target = event.target;
       if (!(target instanceof Element)) return;
       if (target.closest('[data-snapshot-ignore]')) return;
@@ -223,10 +249,12 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
     document.addEventListener('input', onImportantChange, true);
     document.addEventListener('change', onImportantChange, true);
     document.addEventListener('click', onImportantChange, true);
+    document.addEventListener('scroll', onImportantChange, true);
     return () => {
       document.removeEventListener('input', onImportantChange, true);
       document.removeEventListener('change', onImportantChange, true);
       document.removeEventListener('click', onImportantChange, true);
+      document.removeEventListener('scroll', onImportantChange, true);
     };
   }, [requestSave]);
 

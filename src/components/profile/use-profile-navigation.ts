@@ -67,19 +67,19 @@ export function useProfileNavigation({
   const suppressScrollSyncUntilRef = React.useRef(0);
   const appliedRequestedTabRef = React.useRef<string | null>(null);
 
+  const centerElementHorizontally = React.useCallback((element: HTMLElement | null) => {
+    if (!element) return;
+    const parent = element.parentElement;
+    if (!parent) return;
+    const left = element.offsetLeft - parent.clientWidth / 2 + element.clientWidth / 2;
+    parent.scrollTo({ left, behavior: "auto" });
+  }, []);
+
   const scrollToSection = React.useCallback((section: ProfileEditTab) => {
     suppressScrollSyncUntilRef.current = Date.now() + 500;
-    panelRefs.current[section]?.scrollIntoView({
-      behavior: "auto",
-      block: "nearest",
-      inline: "center",
-    });
-    navButtonRefs.current[section]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  }, []);
+    centerElementHorizontally(panelRefs.current[section]);
+    centerElementHorizontally(navButtonRefs.current[section]);
+  }, [centerElementHorizontally]);
 
   const selectSection = (section: ProfileEditTab) => {
     setActiveTab(section);

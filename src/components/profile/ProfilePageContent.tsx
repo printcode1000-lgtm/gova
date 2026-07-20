@@ -47,6 +47,7 @@ import type { TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
 import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
+import { usePageSnapshot } from "@/features/page-snapshot";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { useProfilePublicContacts } from "@/features/profile/hooks/use-profile-public-contacts";
@@ -158,6 +159,11 @@ export function ProfilePageContent() {
     setActiveTab: selectSection,
     setSession,
   });
+  const editSnapshotReady = showEditCard && !isLoading && isLoggedIn;
+  const { restoreSnapshot: restoreEditSnapshot } = usePageSnapshot({
+    restoreWhen: editSnapshotReady,
+  });
+  const restoredEditSnapshotRef = React.useRef(false);
 
   const [featuredProducts, setFeaturedProducts] = React.useState<
     ProductRecord[]
@@ -225,6 +231,65 @@ export function ProfilePageContent() {
     showPreviewCard,
     storeDetails.profileShowcase?.featuredProductIds,
   ]);
+
+  React.useEffect(() => {
+    if (!editSnapshotReady) {
+      restoredEditSnapshotRef.current = false;
+    }
+  }, [editSnapshotReady]);
+
+  React.useEffect(() => {
+    if (!editSnapshotReady || restoredEditSnapshotRef.current) return;
+    restoredEditSnapshotRef.current = true;
+    let cancelled = false;
+    let userInteracted = false;
+    let observer: ResizeObserver | null = null;
+    const timers: number[] = [];
+    const stopAutomaticRestore = () => {
+      userInteracted = true;
+    };
+    const restore = async () => {
+      const snapshot = await restoreEditSnapshot();
+      if (!snapshot || cancelled) return;
+      const restoreScroll = () => {
+        if (cancelled || userInteracted) return;
+        for (const [selector, position] of Object.entries(snapshot.scroll.elements)) {
+          document.querySelector<HTMLElement>(selector)?.scrollTo({
+            left: position.x,
+            top: position.y,
+            behavior: "auto",
+          });
+        }
+        window.scrollTo({
+          left: snapshot.scroll.x,
+          top: snapshot.scroll.y,
+          behavior: "auto",
+        });
+      };
+
+      [80, 220, 500, 900, 1600, 2600].forEach((delay) => {
+        timers.push(window.setTimeout(restoreScroll, delay));
+      });
+      observer = new ResizeObserver(restoreScroll);
+      observer.observe(document.documentElement);
+    };
+
+    window.addEventListener("pointerdown", stopAutomaticRestore, { passive: true });
+    window.addEventListener("wheel", stopAutomaticRestore, { passive: true });
+    window.addEventListener("touchstart", stopAutomaticRestore, { passive: true });
+    window.addEventListener("keydown", stopAutomaticRestore);
+    void restore();
+
+    return () => {
+      cancelled = true;
+      observer?.disconnect();
+      timers.forEach((timer) => window.clearTimeout(timer));
+      window.removeEventListener("pointerdown", stopAutomaticRestore);
+      window.removeEventListener("wheel", stopAutomaticRestore);
+      window.removeEventListener("touchstart", stopAutomaticRestore);
+      window.removeEventListener("keydown", stopAutomaticRestore);
+    };
+  }, [editSnapshotReady, restoreEditSnapshot]);
 
   const profileFeaturedConfig = useMemo<FeaturedMarqueeConfig>(
     () => ({
@@ -369,6 +434,8 @@ export function ProfilePageContent() {
         >
           <div className="sticky top-12 z-30 w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
             <div
+              data-snapshot-scroll
+              data-snapshot-id="profile-edit-tabs-scroll"
               className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               aria-label={t("profile.subtitle")}
             >
@@ -503,6 +570,8 @@ export function ProfilePageContent() {
             <CardContent className="p-0">
               <div className="relative">
                 <div
+                  data-snapshot-scroll
+                  data-snapshot-id="profile-edit-carousel-scroll"
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
                   style={

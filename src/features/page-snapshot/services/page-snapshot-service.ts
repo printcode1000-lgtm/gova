@@ -229,6 +229,16 @@ function buildSnapshot(input: SavePageSnapshotInput): PageSnapshotRecord {
   };
 }
 
+export function captureSnapshot(input: SavePageSnapshotInput): PageSnapshotRecord | null {
+  if (snapshotsPaused) return null;
+  return buildSnapshot(input);
+}
+
+export async function persistSnapshot(snapshot: PageSnapshotRecord): Promise<PageSnapshotRecord> {
+  await asolDbSet(ASOL_DB_STORES.PAGE_SNAPSHOTS, snapshot.key, snapshot);
+  return snapshot;
+}
+
 function isSnapshotCompatible(snapshot: PageSnapshotRecord, expectedVersion = PAGE_SNAPSHOT_VERSION): boolean {
   return (
     snapshot.snapshotVersion === expectedVersion &&
@@ -238,10 +248,8 @@ function isSnapshotCompatible(snapshot: PageSnapshotRecord, expectedVersion = PA
 }
 
 export async function saveSnapshot(input: SavePageSnapshotInput): Promise<PageSnapshotRecord | null> {
-  if (snapshotsPaused) return null;
-  const snapshot = buildSnapshot(input);
-  await asolDbSet(ASOL_DB_STORES.PAGE_SNAPSHOTS, snapshot.key, snapshot);
-  return snapshot;
+  const snapshot = captureSnapshot(input);
+  return snapshot ? persistSnapshot(snapshot) : null;
 }
 
 export async function restoreSnapshot(input: RestorePageSnapshotInput): Promise<PageSnapshotRecord | null> {
