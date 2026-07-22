@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-07-19T09:34:52.595Z",
-  "durationMs": 9447,
+  "executedAt": "2026-07-22T12:51:05.830Z",
+  "durationMs": 10036,
   "sqliteSchemaVersion": "d192a4a7cecbd646",
-  "tursoSchemaVersionBefore": "660d23f809f96907",
-  "tursoSchemaVersionAfter": "660d23f809f96907",
+  "tursoSchemaVersionBefore": "2e8f5de648f7a544",
+  "tursoSchemaVersionAfter": "2e8f5de648f7a544",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,

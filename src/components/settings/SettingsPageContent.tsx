@@ -65,6 +65,8 @@ export function SettingsPageContent() {
   const [notificationPlatform, setNotificationPlatform] = React.useState<
     "android" | "ios" | "web"
   >("web");
+  const [notificationRuntimeReady, setNotificationRuntimeReady] =
+    React.useState(false);
   const isAndroidNotifications = notificationPlatform === "android";
   const isIosNotifications = notificationPlatform === "ios";
 
@@ -100,6 +102,7 @@ export function SettingsPageContent() {
 
   React.useEffect(() => {
     setNotificationPlatform(notificationDeviceTokenService.getPlatform());
+    setNotificationRuntimeReady(true);
   }, []);
 
   React.useEffect(() => {
@@ -116,7 +119,7 @@ export function SettingsPageContent() {
   }, [isAndroidNotifications, isIosNotifications]);
 
   React.useEffect(() => {
-    if (!session) return;
+    if (!session?.sessionToken) return;
     void specialtyChatClient
       .preference(session)
       .then((value) => setSpecialtyRequestsEnabled(value.enabled))
@@ -124,7 +127,7 @@ export function SettingsPageContent() {
   }, [session]);
 
   const updateSpecialtyRequests = async (enabled: boolean) => {
-    if (!session || specialtyPreferenceBusy) return;
+    if (!session?.sessionToken || specialtyPreferenceBusy) return;
     setSpecialtyPreferenceBusy(true);
     try {
       const value = await specialtyChatClient.preference(session, enabled);
@@ -168,8 +171,10 @@ export function SettingsPageContent() {
     setShowClearDialog(false);
     setClearing(true);
     try {
-      if (session) {
+      if (session?.sessionToken) {
         await specialtyChatClient.preference(session, true).catch(() => undefined);
+      }
+      if (session) {
         await notificationDeviceTokenService.unregister(session.uid, session.phone);
       }
       resetTheme();
@@ -497,7 +502,9 @@ export function SettingsPageContent() {
                     <button
                       type="button"
                       disabled={
-                        webPushBusy || !webPushBrowserService.isSupported()
+                        webPushBusy ||
+                        !notificationRuntimeReady ||
+                        !webPushBrowserService.isSupported()
                       }
                       onClick={() => void enableWebPush()}
                       className="asol-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
@@ -521,7 +528,7 @@ export function SettingsPageContent() {
                 {webPushStatus}
               </p>
             ) : null}
-            {session ? (
+            {session?.sessionToken ? (
               <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface p-4">
                 <div>
                   <p className="text-sm font-semibold text-on-surface">طلبات المشترين حسب التخصص</p>

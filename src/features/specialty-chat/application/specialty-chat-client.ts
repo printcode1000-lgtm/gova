@@ -105,7 +105,7 @@ export const specialtyChatClient = {
     return result;
   },
 
-  preference(session: UserSession, enabled?: boolean) {
+  async preference(session: UserSession, enabled?: boolean) {
     return asolApi.post<SpecialtyChatPreferenceResult>("/api/specialty-chat/preference", {
       identity: identity(session),
       ...(typeof enabled === "boolean" ? { enabled } : {}),

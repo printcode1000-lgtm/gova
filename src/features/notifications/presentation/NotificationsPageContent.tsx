@@ -178,7 +178,7 @@ function NotificationCard({
   const requestId = String(notification.metadata?.requestId ?? "");
   const peerUid = String(notification.metadata?.senderUid ?? notification.metadata?.peerUid ?? "");
   const canReply = Boolean(
-    session &&
+    session?.sessionToken &&
       capability &&
       requestId &&
       notification.metadata?.outgoing !== true &&
@@ -189,7 +189,7 @@ function NotificationCard({
   const [replyStatus, setReplyStatus] = React.useState("");
 
   const sendReply = async () => {
-    if (!session || !canReply || !reply.trim()) return;
+    if (!session?.sessionToken || !canReply || !reply.trim()) return;
     setReplying(true);
     setReplyStatus("");
     try {

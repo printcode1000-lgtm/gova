@@ -59,7 +59,7 @@ export function useNotifications() {
     setUnreadCount(badgeCount);
     await notificationBadgeService.refresh(uid);
     setLoading(false);
-    if (session) {
+    if (session?.sessionToken) {
       for (const item of items) {
         const kind = item.metadata?.specialtyChatKind;
         const capability = String(item.metadata?.capability ?? "");
@@ -143,7 +143,7 @@ export function useNotifications() {
           : item?.metadata?.messageId ?? "",
       );
       if (
-        session && capability && targetMessageId && item?.metadata?.outgoing !== true &&
+        session?.sessionToken && capability && targetMessageId && item?.metadata?.outgoing !== true &&
         (kind === SPECIALTY_CHAT_KINDS.Request || kind === SPECIALTY_CHAT_KINDS.Message)
       ) {
         void specialtyChatClient.receipt(session, { capability, targetMessageId, status: "read" });
@@ -153,7 +153,7 @@ export function useNotifications() {
     markAllRead: async () => {
       if (!uid) return;
       await notificationLifecycleService.markAllRead(uid);
-      if (session) {
+      if (session?.sessionToken) {
         for (const item of notifications.filter((candidate) => !candidate.readAt)) {
           const kind = item.metadata?.specialtyChatKind;
           const capability = String(item.metadata?.capability ?? "");
