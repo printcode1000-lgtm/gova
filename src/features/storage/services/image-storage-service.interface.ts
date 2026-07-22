@@ -21,6 +21,7 @@ export interface IImageStorageService {
     replaceImageKey?: string | null,
     onProgress?: ImageUploadProgressCallback,
     storageScope?: string | null,
+    signal?: AbortSignal,
   ): Promise<ImageUploadResult>;
   deleteImage(storageProfileId: string, imageKey: string): Promise<void>;
 }

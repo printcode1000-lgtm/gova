@@ -35,7 +35,7 @@ export const IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT = new Set([
   'src/core/architecture/image-storage-contract.ts',
 ]);
 
-/** Legacy blob upload — must migrate to StorageProfileImageUpload. */
+/** Legacy blob upload — must migrate to StorageImageManager. */
 export const IMAGE_STORAGE_LEGACY_BLOB_UPLOAD_FILES = new Set([
   'src/components/onboarding/form-components.tsx',
   'src/components/onboarding/sections/verification-section.tsx',

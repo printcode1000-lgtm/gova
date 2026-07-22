@@ -25,8 +25,10 @@ import {
 } from "../../domain/enums";
 import { capacitorPlatformService } from "./capacitor-platform.service";
 
-const DEVICE_ID_KEY = "android-push-device-id";
-const ENABLED_KEY = "android-push-enabled";
+const LEGACY_ANDROID_DEVICE_ID_KEY = "android-push-device-id";
+const LEGACY_ANDROID_ENABLED_KEY = "android-push-enabled";
+const deviceIdKey = (platform: "android" | "ios") => `${platform}-push-device-id`;
+const enabledKey = (platform: "android" | "ios") => `${platform}-push-enabled`;
 const REGISTRATION_TIMEOUT_MS = 20_000;
 
 type ReceivedHandler = (
@@ -129,17 +131,26 @@ function toNotificationEntity(
 }
 
 async function getDeviceId(): Promise<string> {
+  const platform = capacitorPlatformService.getPlatform();
+  if (platform !== "android" && platform !== "ios") return "";
   const existing = await asolDbGet<string>(
     ASOL_DB_STORES.APP_SETTINGS,
-    DEVICE_ID_KEY,
+    deviceIdKey(platform),
   );
   if (existing) return existing;
+  if (platform === "android") {
+    const legacy = await asolDbGet<string>(ASOL_DB_STORES.APP_SETTINGS, LEGACY_ANDROID_DEVICE_ID_KEY);
+    if (legacy) {
+      await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, deviceIdKey(platform), legacy);
+      return legacy;
+    }
+  }
   const randomId =
     typeof crypto !== "undefined" && "randomUUID" in crypto
       ? crypto.randomUUID()
       : `${Date.now()}:${Math.random().toString(36).slice(2)}`;
-  const generated = `android:${randomId}`;
-  await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, DEVICE_ID_KEY, generated);
+  const generated = `${platform}:${randomId}`;
+  await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, deviceIdKey(platform), generated);
   return generated;
 }
 
@@ -159,6 +170,11 @@ export class CapacitorPushService {
     );
   }
 
+  isNativePush(): boolean {
+    const platform = capacitorPlatformService.getPlatform();
+    return capacitorPlatformService.isNative() && (platform === "android" || platform === "ios");
+  }
+
   getPlatform(): "android" | "ios" | "web" {
     return capacitorPlatformService.getPlatform();
   }
@@ -167,20 +183,22 @@ export class CapacitorPushService {
     uid: string,
     handlers: { onReceived: ReceivedHandler; onAction: ActionHandler },
   ): Promise<void> {
-    if (!this.isAndroid()) return;
+    if (!this.isNativePush()) return;
     this.currentUid = uid;
     this.receivedHandler = handlers.onReceived;
     this.actionHandler = handlers.onAction;
     await this.ensureListeners();
-    await this.createChannels();
+    if (this.isAndroid()) await this.createChannels();
     await this.importDeliveredNotifications();
   }
 
   async register(uid: string): Promise<DeviceToken | null> {
-    if (!this.isAndroid()) return null;
+    if (!this.isNativePush()) return null;
+    const platform = capacitorPlatformService.getPlatform();
+    if (platform !== "android" && platform !== "ios") return null;
     this.currentUid = uid;
     await this.ensureListeners();
-    await this.createChannels();
+    if (this.isAndroid()) await this.createChannels();
     const permission = await PushNotifications.checkPermissions();
     if (permission.receive !== "granted")
       throw new Error("notificationPermissionDenied");
@@ -208,15 +226,15 @@ export class CapacitorPushService {
 
     const now = new Date().toISOString();
     const deviceId = await getDeviceId();
-    await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, ENABLED_KEY, true);
+    await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, enabledKey(platform), true);
     return {
-      id: `ntok_${uid}_android_${deviceId}`.replace(/[^a-zA-Z0-9_:-]/g, "_"),
+      id: `ntok_${uid}_${platform}_${deviceId}`.replace(/[^a-zA-Z0-9_:-]/g, "_"),
       uid,
-      platform: "android",
-      provider: "fcm",
+      platform,
+      provider: platform === "android" ? "fcm" : "apns",
       deviceId,
       token: tokenValue,
-      deviceLabel: "ASOL Android",
+      deviceLabel: platform === "android" ? "ASOL Android" : "ASOL iOS",
       enabled: true,
       lastSeenAt: now,
       createdAt: now,
@@ -225,26 +243,33 @@ export class CapacitorPushService {
   }
 
   async isEnabled(): Promise<boolean> {
-    if (!this.isAndroid()) return false;
-    return (
-      (await asolDbGet<boolean>(ASOL_DB_STORES.APP_SETTINGS, ENABLED_KEY)) ===
-      true
-    );
+    if (!this.isNativePush()) return false;
+    const platform = capacitorPlatformService.getPlatform();
+    if (platform !== "android" && platform !== "ios") return false;
+    const current = await asolDbGet<boolean>(ASOL_DB_STORES.APP_SETTINGS, enabledKey(platform));
+    if (current === true) return true;
+    return platform === "android" &&
+      (await asolDbGet<boolean>(ASOL_DB_STORES.APP_SETTINGS, LEGACY_ANDROID_ENABLED_KEY)) === true;
   }
 
   async unregister(): Promise<void> {
-    if (!this.isAndroid()) return;
+    if (!this.isNativePush()) return;
+    const platform = capacitorPlatformService.getPlatform();
+    if (platform !== "android" && platform !== "ios") return;
     await PushNotifications.unregister().catch(() => undefined);
     await PushNotifications.removeAllDeliveredNotifications().catch(
       () => undefined,
     );
-    await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, ENABLED_KEY, false);
+    await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, enabledKey(platform), false);
+    if (platform === "android") {
+      await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, LEGACY_ANDROID_ENABLED_KEY, false);
+    }
   }
 
   async permissionState(): Promise<
     "granted" | "denied" | "prompt" | "unsupported"
   > {
-    if (!this.isAndroid()) return "unsupported";
+    if (!this.isNativePush()) return "unsupported";
     const result = await PushNotifications.checkPermissions();
     return result.receive === "prompt-with-rationale"
       ? "prompt"

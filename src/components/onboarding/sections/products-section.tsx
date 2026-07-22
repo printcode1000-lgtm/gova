@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
+import { StorageImageManager } from '@/features/storage/components/StorageImageManager';
 import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
 import type { Product, ProductVariant } from '@/lib/onboarding/types';
 import { nextSellerId } from '@/lib/seller/next-id';
@@ -116,20 +116,28 @@ function ProductForm({ product, onChange, onSave, onCancel }: ProductFormProps) 
         />
       </FormField>
 
-      <StorageProfileImageUpload
-        storageProfileId={StorageProfiles.ProductDefault}
+      <StorageImageManager
+        config={{
+          id: 'onboarding-product-image',
+          storageProfileId: StorageProfiles.ProductDefault,
+          storageScope: categories.find((category) => category.name === product.category)?.id,
+          maxItems: 1,
+          aspectRatio: 'square',
+          allowReplace: true,
+          confirmUpload: true,
+          confirmRemove: true,
+        }}
         value={
           product.image?.url
-            ? {
+            ? [{
                 imageKey: product.image.imageKey ?? '',
                 url: product.image.url,
                 isUploading: product.image.isUploading,
                 error: product.image.error,
-              }
-            : null
+              }]
+            : []
         }
-        onChange={(image) => onChange({ image })}
-        aspectRatio="square"
+        onChange={(images) => onChange({ image: images[0] ?? null })}
         label={t('onboarding.products.productImage')}
       />
 

@@ -49,6 +49,36 @@ async function main() {
   assert.equal(sentMessage?.message.data.dedupeKey, "system.info:test");
   assert.equal(sentMessage?.message.data.uid, "usr_1");
 
+  let receiptMessage: FcmHttpV1Message | null = null;
+  const receiptProvider = new FcmNotificationProvider(() => ({
+    send: async (message) => {
+      receiptMessage = message;
+      return { success: true, messageId: "projects/asole/messages/receipt" };
+    },
+  }));
+  await receiptProvider.send({
+    tokens: [token],
+    payload: {
+      locale: "ar",
+      notificationId: "notification_receipt",
+      dedupeKey: "receipt:msg_12345678:received:usr_1",
+      title: "Receipt",
+      body: "received",
+      category: "chat",
+      priority: "normal",
+      sound: "silent",
+      metadata: {
+        dataOnly: true,
+        specialtyChatKind: "specialty_receipt",
+        targetMessageId: "msg_12345678",
+      },
+    },
+  });
+  assert.equal(receiptMessage?.message.notification, undefined);
+  assert.equal(receiptMessage?.message.android.notification, undefined);
+  assert.equal(receiptMessage?.message.android.ttl, "604800s");
+  assert.equal(receiptMessage?.message.data.meta_specialtyChatKind, "specialty_receipt");
+
   const invalidProvider = new FcmNotificationProvider(() => ({
     send: async () => ({ success: false, errorCode: "UNREGISTERED" }),
   }));

@@ -1,12 +1,12 @@
 # Session System
 
-Client login state in ASOL is minimal:
+Client login state in ASOL is local-first and cryptographically verifiable for protected notification-chat operations:
 
 - **Logged in** → `UserSession` in Asol IndexedDB (`auth` store, key `current`)
 - **Not logged in** → no row in `auth/current` (`null`)
 - **Guest browsing** → separate `guestSessions` store via `useGuestSession()` (“متابعة كضيف”)
 
-**No token anywhere** — not in IDB, not in API responses, not in client code.
+The login response includes a 30-day HMAC-signed `sessionToken`. It is persisted only in AsolDB with the local session, is removed on logout/reset, and has no server session table.
 
 See [data-layers/README.md](./data-layers/README.md) for full layer architecture.
 
@@ -19,6 +19,8 @@ interface UserSession {
   uid: string;
   phone: string;
   email?: string;  // only when present
+  specialties: ProfileSpecialtiesSelection;
+  sessionToken?: string; // present after a new password login
 }
 
 type SessionState = UserSession | null;  // null = not logged in
@@ -34,7 +36,7 @@ function isLoggedIn(session: SessionState): boolean {
 
 ```
 Login / Register
-  → authService.login()           // returns { uid, phone, email }
+  → authService.login()           // returns identity, specialties, signed sessionToken
   → sessionService.saveSession()  // writes auth/current in IDB
   → setSession()                  // React context (SessionProvider)
 
@@ -60,14 +62,14 @@ App load
 
 | Store | Key | Value |
 |---|---|---|
-| `auth` | `current` | `{ uid, phone, email? }` when logged in |
+| `auth` | `current` | `{ uid, phone, email?, specialties, sessionToken? }` when logged in |
 | `guestSessions` | `current` | Guest browsing id (unrelated to login) |
 
 On first load, `cleanLegacyStore()`:
 
-- Deletes legacy `auth` key (`authToken`)
-- Removes `auth/current` rows that lack `uid` or contain old fields (`token`, `displayName`, …)
-- Normalizes valid rows to `{ uid, phone, email? }` only
+- Deletes the obsolete legacy `auth` key.
+- Removes `auth/current` rows that lack `uid`.
+- Preserves a valid signed `sessionToken` and normalizes identity, email, and specialties.
 
 ---
 
@@ -80,7 +82,7 @@ On first load, `cleanLegacyStore()`:
 |---|---|
 | `cleanLegacyStore()` | One-time cleanup + normalize on app start |
 | `getSession()` | Read `auth/current` → `UserSession \| null` |
-| `saveSession({ uid, phone, email? })` | Write `auth/current` |
+| `saveSession({ uid, phone, email?, specialties?, sessionToken? })` | Write `auth/current` |
 | `clearSession()` | Delete `auth/current` |
 
 ---
@@ -102,10 +104,10 @@ Mounted in root `layout.tsx` inside `AppQueryProvider`.
 `POST /api/auth/login` returns:
 
 ```json
-{ "uid": "...", "phone": "...", "email": "..." }
+{ "uid": "...", "phone": "...", "email": "...", "specialties": { "main": [], "sub": {} }, "sessionToken": "..." }
 ```
 
-No `token` field.
+The token is signed server-side after password verification. The server validates its signature and expiry without storing a cloud session row. Sessions created before this feature remain usable for ordinary browsing, but specialty-chat mutations require one fresh login.
 
 ---
 

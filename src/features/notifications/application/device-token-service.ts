@@ -57,11 +57,19 @@ export class DeviceTokenService {
     return capacitorPushService.isAndroid();
   }
 
+  isNativePush(): boolean {
+    return capacitorPushService.isNativePush();
+  }
+
   getPlatform(): "android" | "ios" | "web" {
     return capacitorPushService.getPlatform();
   }
 
   isAndroidEnabled(): Promise<boolean> {
+    return capacitorPushService.isEnabled();
+  }
+
+  isNativeEnabled(): Promise<boolean> {
     return capacitorPushService.isEnabled();
   }
 

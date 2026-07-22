@@ -9,6 +9,7 @@ export interface UserSession {
   phone: string;
   email?: string;
   specialties: ProfileSpecialtiesSelection;
+  sessionToken?: string;
 }
 
 export interface SaveSessionInput {
@@ -16,6 +17,7 @@ export interface SaveSessionInput {
   phone: string;
   email?: string;
   specialties?: ProfileSpecialtiesSelection;
+  sessionToken?: string;
 }
 
 /** `null` = not logged in (guest browsing may still use guestSessions store). */
@@ -39,14 +41,18 @@ export function parseStoredSession(raw: unknown): UserSession | null {
       : undefined;
 
   const rawSpecialties = record.specialties;
+  const sessionToken =
+    typeof record.sessionToken === 'string' && record.sessionToken.trim()
+      ? record.sessionToken.trim()
+      : undefined;
   const specialties =
     rawSpecialties && typeof rawSpecialties === 'object'
       ? (rawSpecialties as ProfileSpecialtiesSelection)
       : EMPTY_PROFILE_SPECIALTIES;
 
   return email
-    ? { uid, phone, email, specialties }
-    : { uid, phone, specialties };
+    ? { uid, phone, email, specialties, ...(sessionToken ? { sessionToken } : {}) }
+    : { uid, phone, specialties, ...(sessionToken ? { sessionToken } : {}) };
 }
 
 export function formatSessionPhone(phone: string): string {

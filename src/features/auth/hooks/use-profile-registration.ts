@@ -66,6 +66,7 @@ export function useProfileRegistration() {
         phone: profile.phone,
         email: profile.email ?? undefined,
         specialties: session?.specialties,
+        sessionToken: session?.sessionToken,
       });
       setSession(updatedSession);
       const reset = toProfileFormData(profile);

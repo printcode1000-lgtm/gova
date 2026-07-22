@@ -6,7 +6,7 @@ import { useTranslation } from '@/lib/i18n';
 import { FormField, FormInput, FormTextarea, FormSelect, MultiSelect } from '../form-components';
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
+import { StorageImageManager } from '@/features/storage/components/StorageImageManager';
 import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 
@@ -150,38 +150,52 @@ export function StoreIdentitySection() {
           </FormField>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <StorageProfileImageUpload
-              storageProfileId={StorageProfiles.Avatar}
+            <StorageImageManager
+              config={{
+                id: 'onboarding-store-logo',
+                storageProfileId: StorageProfiles.Avatar,
+                maxItems: 1,
+                aspectRatio: 'square',
+                allowReplace: true,
+                confirmUpload: true,
+                confirmRemove: true,
+              }}
               value={
                 storeIdentity.storeLogo?.url
-                  ? {
+                  ? [{
                       imageKey: storeIdentity.storeLogo.imageKey ?? '',
                       url: storeIdentity.storeLogo.url,
                       isUploading: storeIdentity.storeLogo.isUploading,
                       error: storeIdentity.storeLogo.error,
-                    }
-                  : null
+                    }]
+                  : []
               }
-              onChange={handleLogoChange}
-              aspectRatio="square"
+              onChange={(images) => handleLogoChange(images[0] ?? null)}
               label={t('onboarding.storeIdentity.storeLogo')}
               hint={t('onboarding.storeIdentity.logoHint')}
             />
 
-            <StorageProfileImageUpload
-              storageProfileId={StorageProfiles.Cover}
+            <StorageImageManager
+              config={{
+                id: 'onboarding-store-cover',
+                storageProfileId: StorageProfiles.Cover,
+                maxItems: 1,
+                aspectRatio: 'wide',
+                allowReplace: true,
+                confirmUpload: true,
+                confirmRemove: true,
+              }}
               value={
                 storeIdentity.coverImage?.url
-                  ? {
+                  ? [{
                       imageKey: storeIdentity.coverImage.imageKey ?? '',
                       url: storeIdentity.coverImage.url,
                       isUploading: storeIdentity.coverImage.isUploading,
                       error: storeIdentity.coverImage.error,
-                    }
-                  : null
+                    }]
+                  : []
               }
-              onChange={handleCoverChange}
-              aspectRatio="wide"
+              onChange={(images) => handleCoverChange(images[0] ?? null)}
               label={t('onboarding.storeIdentity.coverImage')}
               hint={t('onboarding.storeIdentity.coverHint')}
             />

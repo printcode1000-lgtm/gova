@@ -81,6 +81,50 @@ export class AsolNotificationRepository {
     await asolDbSet(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid), next);
   }
 
+  async applyMessageReceipt(
+    uid: string,
+    targetMessageId: string,
+    status: "received" | "read",
+    receiptFromUid = "",
+  ): Promise<void> {
+    const current = await this.list(uid);
+    const now = new Date().toISOString();
+    const next = current.map((item) => {
+      const kind = item.metadata?.specialtyChatKind;
+      const matches = targetMessageId.startsWith("req_")
+        ? item.id === targetMessageId ||
+          (kind === "specialty_request" && item.metadata?.requestId === targetMessageId)
+        : item.id === targetMessageId || item.metadata?.messageId === targetMessageId;
+      if (!matches || item.metadata?.outgoing !== true) return item;
+      const receivedBy = new Set(
+        String(item.metadata?.remoteReceivedBy ?? "").split(",").filter(Boolean),
+      );
+      const readBy = new Set(
+        String(item.metadata?.remoteReadBy ?? "").split(",").filter(Boolean),
+      );
+      if (receiptFromUid) receivedBy.add(receiptFromUid);
+      if (status === "read" && receiptFromUid) readBy.add(receiptFromUid);
+      return {
+        ...item,
+        updatedAt: now,
+        metadata: {
+          ...item.metadata,
+          remoteReceivedAt: item.metadata?.remoteReceivedAt ?? now,
+          remoteReceivedBy: [...receivedBy].join(","),
+          remoteReceivedCount: receivedBy.size,
+          ...(status === "read"
+            ? {
+                remoteReadAt: now,
+                remoteReadBy: [...readBy].join(","),
+                remoteReadCount: readBy.size,
+              }
+            : {}),
+        },
+      };
+    });
+    await asolDbSet(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid), next);
+  }
+
   async markAllRead(uid: string): Promise<void> {
     const now = new Date().toISOString();
     const current = await this.list(uid);

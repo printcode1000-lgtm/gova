@@ -13,6 +13,7 @@ export interface LoginResult {
   phone: string;
   email: string;
   specialties: ProfileSpecialtiesSelection;
+  sessionToken: string;
 }
 
 export interface IAuthService {

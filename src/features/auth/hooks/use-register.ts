@@ -52,6 +52,7 @@ export function useRegister() {
         phone: data.phone,
         email: data.email?.trim() || loginResult.email || undefined,
         specialties: loginResult.specialties,
+        sessionToken: loginResult.sessionToken,
       });
     },
     meta: authMonitorMeta(

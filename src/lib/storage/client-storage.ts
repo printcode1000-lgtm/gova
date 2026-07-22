@@ -16,6 +16,8 @@ function clearWebStorage(): void {
   if (typeof window === 'undefined') return;
 
   try {
+    // Cleanup-only legacy compatibility: the application never writes notification data here.
+    // eslint-disable-next-line no-restricted-properties
     window.localStorage?.clear();
   } catch {
     // Ignore restricted storage errors and continue clearing the rest.

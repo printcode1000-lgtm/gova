@@ -15,6 +15,7 @@ import type {
 import type { IAuthService, LoginResult } from './auth-service.interface';
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 import type { GetProfileSpecialtiesQuery } from '@/features/profile/operations/queries/get-profile-specialties.query';
+import { createSignedSessionToken } from './signed-session-token.server';
 
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -90,6 +91,7 @@ export class AuthService implements IAuthService {
         phone: user.phone,
         email: user.email ?? '',
         specialties,
+        sessionToken: createSignedSessionToken(user.uid, user.phone),
       };
     });
   }

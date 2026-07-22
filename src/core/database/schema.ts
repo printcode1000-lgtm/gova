@@ -51,6 +51,9 @@ export const userNotificationTokens = sqliteTable(
     deviceId: text('device_id').notNull(),
     token: text('token').notNull(),
     enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
+    specialtyRequestsEnabled: integer('specialty_requests_enabled', { mode: 'boolean' })
+      .notNull()
+      .default(true),
     lastSeenAt: text('last_seen_at'),
     createdAt: text('created_at').$defaultFn(() => new Date().toISOString()),
     updatedAt: text('updated_at').$defaultFn(() => new Date().toISOString()),
@@ -75,6 +78,14 @@ export const notificationVapidSettings = sqliteTable('notification_vapid_setting
   enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
   createdAt: text('created_at').$defaultFn(() => new Date().toISOString()),
   updatedAt: text('updated_at').$defaultFn(() => new Date().toISOString()),
+});
+
+export const userNotificationPreferences = sqliteTable('user_notification_preferences', {
+  uid: text('uid').primaryKey(),
+  specialtyRequestsEnabled: integer('specialty_requests_enabled', { mode: 'boolean' })
+    .notNull()
+    .default(true),
+  updatedAt: text('updated_at').notNull(),
 });
 
 export const otaReleases = sqliteTable(
@@ -127,6 +138,7 @@ export type PasswordRecoveryChallengeEntity = typeof passwordRecoveryChallenges.
 export type NewPasswordRecoveryChallengeEntity = typeof passwordRecoveryChallenges.$inferInsert;
 export type UserNotificationTokenEntity = typeof userNotificationTokens.$inferSelect;
 export type NewUserNotificationTokenEntity = typeof userNotificationTokens.$inferInsert;
+export type UserNotificationPreferenceEntity = typeof userNotificationPreferences.$inferSelect;
 export type NotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferSelect;
 export type NewNotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferInsert;
 export type OtaReleaseEntity = typeof otaReleases.$inferSelect;

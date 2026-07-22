@@ -11,6 +11,9 @@ import { notificationBadgeService } from "../../application/badge-service";
 import { notificationPermissionService } from "../../application/permission-service";
 import { notificationSyncService } from "../../application/notification-sync-service";
 import { notificationDeviceTokenService } from "../../application/device-token-service";
+import { SPECIALTY_CHAT_KINDS, specialtyChatClient } from "@/features/specialty-chat";
+
+const receiptInFlight = new Set<string>();
 
 export function useNotifications() {
   const { session, isLoading } = useSession();
@@ -29,7 +32,26 @@ export function useNotifications() {
       return;
     }
     setLoading(true);
-    const items = await asolNotificationRepository.list(uid);
+    let items = await asolNotificationRepository.list(uid);
+    const receipts = items.filter(
+      (item) => item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Receipt,
+    );
+    if (receipts.length > 0) {
+      for (const receipt of receipts) {
+        const target = String(receipt.metadata?.targetMessageId ?? "");
+        const status = receipt.metadata?.receiptStatus;
+        if (target && (status === "received" || status === "read")) {
+          await asolNotificationRepository.applyMessageReceipt(
+            uid,
+            target,
+            status,
+            String(receipt.metadata?.receiptFromUid ?? ""),
+          );
+        }
+        await asolNotificationRepository.delete(uid, receipt.id);
+      }
+      items = await asolNotificationRepository.list(uid);
+    }
     const badgeCount = items.filter(
       (item) => !item.readAt && item.targets.includes(NotificationTargets.Badge),
     ).length;
@@ -37,7 +59,39 @@ export function useNotifications() {
     setUnreadCount(badgeCount);
     await notificationBadgeService.refresh(uid);
     setLoading(false);
-  }, [uid]);
+    if (session) {
+      for (const item of items) {
+        const kind = item.metadata?.specialtyChatKind;
+        const capability = String(item.metadata?.capability ?? "");
+        const targetMessageId = String(
+          kind === SPECIALTY_CHAT_KINDS.Request
+            ? item.metadata?.requestId ?? ""
+            : item.metadata?.messageId ?? "",
+        );
+        if (
+          item.metadata?.outgoing !== true &&
+          item.metadata?.receivedReceiptSent !== true &&
+          capability &&
+          targetMessageId &&
+          (kind === SPECIALTY_CHAT_KINDS.Request || kind === SPECIALTY_CHAT_KINDS.Message)
+        ) {
+          const receiptKey = `${uid}:${item.id}:received`;
+          if (!receiptInFlight.has(receiptKey)) {
+            receiptInFlight.add(receiptKey);
+            void specialtyChatClient
+              .receipt(session, { capability, targetMessageId, status: "received" })
+              .then(() =>
+                asolNotificationRepository.update(uid, item.id, {
+                  metadata: { ...item.metadata, receivedReceiptSent: true },
+                }),
+              )
+              .catch(() => undefined)
+              .finally(() => receiptInFlight.delete(receiptKey));
+          }
+        }
+      }
+    }
+  }, [session, uid]);
 
   React.useEffect(() => {
     void refresh();
@@ -79,12 +133,43 @@ export function useNotifications() {
     },
     markRead: async (notificationId: string) => {
       if (!uid) return;
+      const item = notifications.find((candidate) => candidate.id === notificationId);
       await notificationLifecycleService.markRead(uid, notificationId);
+      const kind = item?.metadata?.specialtyChatKind;
+      const capability = String(item?.metadata?.capability ?? "");
+      const targetMessageId = String(
+        kind === SPECIALTY_CHAT_KINDS.Request
+          ? item?.metadata?.requestId ?? ""
+          : item?.metadata?.messageId ?? "",
+      );
+      if (
+        session && capability && targetMessageId && item?.metadata?.outgoing !== true &&
+        (kind === SPECIALTY_CHAT_KINDS.Request || kind === SPECIALTY_CHAT_KINDS.Message)
+      ) {
+        void specialtyChatClient.receipt(session, { capability, targetMessageId, status: "read" });
+      }
       await refresh();
     },
     markAllRead: async () => {
       if (!uid) return;
       await notificationLifecycleService.markAllRead(uid);
+      if (session) {
+        for (const item of notifications.filter((candidate) => !candidate.readAt)) {
+          const kind = item.metadata?.specialtyChatKind;
+          const capability = String(item.metadata?.capability ?? "");
+          const targetMessageId = String(
+            kind === SPECIALTY_CHAT_KINDS.Request
+              ? item.metadata?.requestId ?? ""
+              : item.metadata?.messageId ?? "",
+          );
+          if (
+            capability && targetMessageId && item.metadata?.outgoing !== true &&
+            (kind === SPECIALTY_CHAT_KINDS.Request || kind === SPECIALTY_CHAT_KINDS.Message)
+          ) {
+            void specialtyChatClient.receipt(session, { capability, targetMessageId, status: "read" });
+          }
+        }
+      }
       await refresh();
     },
     dismiss: async (notificationId: string) => {

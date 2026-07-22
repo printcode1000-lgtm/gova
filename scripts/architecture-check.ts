@@ -326,7 +326,7 @@ function checkImageStorageContract(fileRel: string, content: string, filePath: s
       'Image Storage Contract',
       filePath,
       'BlobImageUpload is forbidden outside legacy allowlist.',
-      'Use StorageProfileImageUpload + StorageProfiles.*.'
+      'Use StorageImageManager + StorageProfiles.*.'
     );
   }
 

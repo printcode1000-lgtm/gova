@@ -6,14 +6,14 @@ import { getFirebaseAdminServiceAccount } from "@/core/config/server-env";
 export interface FcmHttpV1Message {
   message: {
     token: string;
-    notification: { title: string; body: string };
+    notification?: { title: string; body: string };
     data: Record<string, string>;
     android: {
       priority: "HIGH" | "NORMAL";
       ttl: string;
       restricted_package_name: string;
       collapse_key: string;
-      notification: {
+      notification?: {
         channel_id: string;
         icon: string;
         color: string;

@@ -254,6 +254,7 @@
     "storage.imageManager.stage.converting":  "جارٍ تحويل صيغة الصورة…",
     "storage.imageManager.stage.reading":  "جارٍ قراءة الصورة…",
     "storage.imageManager.stage.previewing":  "جارٍ تجهيز المعاينة…",
+    "storage.imageManager.stage.queued":  "في انتظار الرفع — الترتيب {{position}}",
     "storage.imageManager.stage.profile":  "جارٍ تحميل إعدادات التخزين…",
     "storage.imageManager.stage.compressing":  "جارٍ ضغط الصورة وتحسينها…",
     "storage.imageManager.stage.uploading":  "جارٍ رفع الصورة…",

@@ -9,6 +9,9 @@ import type { RegisteredNotificationToken } from '../../domain/entities';
 
 function buildPayload(input: NotificationProviderSendInput, token: RegisteredNotificationToken): string {
   const href = input.payload.route?.href ?? String(input.payload.metadata?.href ?? '/notifications');
+  const metadata = Object.fromEntries(
+    Object.entries(input.payload.metadata ?? {}).filter(([, value]) => value !== null && value !== undefined),
+  );
   return JSON.stringify({
     uid: token.uid,
     notificationId: input.payload.notificationId,
@@ -24,6 +27,7 @@ function buildPayload(input: NotificationProviderSendInput, token: RegisteredNot
     routeHref: href,
     routeLabel: input.payload.route?.label,
     createdAt: new Date().toISOString(),
+    metadata,
   });
 }
 

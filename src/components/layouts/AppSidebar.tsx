@@ -20,7 +20,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -40,6 +40,7 @@ import {
 import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useLogout } from "@/features/auth/hooks/use-logout";
+import { specialtyChatClient } from "@/features/specialty-chat";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
 import {
@@ -68,20 +69,27 @@ export const AppSidebar = React.memo(function AppSidebar({
   const { resetPreferences: resetAppPreferences } = useAppPreferences();
   const { isLoggedIn, session } = useSession();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
   const isProfilePage = pathname === "/profile";
-  const activeProfileMode = isProfilePage ? searchParams.get("mode") : null;
+  const [activeProfileMode, setActiveProfileMode] = useState<string | null>(null);
   const isProfilePreviewActive = activeProfileMode === "preview";
   const isProfileEditActive = activeProfileMode === "edit";
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setActiveProfileMode(
+      isProfilePage && typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("mode")
+        : null,
+    );
+  }, [isOpen, isProfilePage, pathname]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -138,6 +146,7 @@ export const AppSidebar = React.memo(function AppSidebar({
     try {
       if (session) {
         try {
+          await specialtyChatClient.preference(session, true).catch(() => undefined);
           await notificationDeviceTokenService.unregister(
             session.uid,
             session.phone,

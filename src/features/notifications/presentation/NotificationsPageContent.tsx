@@ -17,6 +17,8 @@ import { NotificationCategories } from "../domain/enums";
 import type { NotificationCategory } from "../domain/enums";
 import type { NotificationEntity } from "../domain/entities";
 import { useNotifications } from "./hooks/use-notifications";
+import { useSession } from "@/features/auth/components/SessionProvider";
+import { specialtyChatClient, SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat";
 
 const filters: Array<{ id: "all" | "unread" | NotificationCategory; label: string }> = [
   { id: "all", label: "الكل" },
@@ -168,8 +170,45 @@ function NotificationCard({
   onOpen: () => void;
   onDismiss: () => void;
 }) {
+  const { session } = useSession();
   const Icon = categoryIcon(notification.category);
   const unread = !notification.readAt;
+  const chatKind = String(notification.metadata?.specialtyChatKind ?? "");
+  const capability = String(notification.metadata?.capability ?? "");
+  const requestId = String(notification.metadata?.requestId ?? "");
+  const peerUid = String(notification.metadata?.senderUid ?? notification.metadata?.peerUid ?? "");
+  const canReply = Boolean(
+    session &&
+      capability &&
+      requestId &&
+      notification.metadata?.outgoing !== true &&
+      (chatKind === SPECIALTY_CHAT_KINDS.Request || chatKind === SPECIALTY_CHAT_KINDS.Message),
+  );
+  const [reply, setReply] = React.useState("");
+  const [replying, setReplying] = React.useState(false);
+  const [replyStatus, setReplyStatus] = React.useState("");
+
+  const sendReply = async () => {
+    if (!session || !canReply || !reply.trim()) return;
+    setReplying(true);
+    setReplyStatus("");
+    try {
+      const messageId = `msg_${crypto.randomUUID().replace(/-/g, "")}`;
+      await specialtyChatClient.sendMessage(session, {
+        messageId,
+        requestId,
+        peerUid,
+        capability,
+        message: reply.trim(),
+      });
+      setReply("");
+      setReplyStatus("تم إرسال الرد بصورة خاصة.");
+    } catch (error) {
+      setReplyStatus(error instanceof Error ? error.message : "تعذر إرسال الرد.");
+    } finally {
+      setReplying(false);
+    }
+  };
   return (
     <article
       className={cn(
@@ -193,6 +232,24 @@ function NotificationCard({
               <p className="mt-1 text-sm leading-6 text-muted-foreground">
                 {notification.body}
               </p>
+              {chatKind === SPECIALTY_CHAT_KINDS.Request ? (
+                <p className="mt-2 text-xs font-semibold text-primary">
+                  {notification.metadata?.mainCategoryName ? `${notification.metadata.mainCategoryName} ← ` : ""}
+                  {String(notification.metadata?.subcategoryName ?? "")}
+                  {notification.metadata?.outgoing === true
+                    ? ` — أُرسلت إلى ${Number(notification.metadata?.acceptedUsers ?? 0)}، وصلت إلى ${Number(notification.metadata?.remoteReceivedCount ?? 0)}، قرأها ${Number(notification.metadata?.remoteReadCount ?? 0)}`
+                    : ""}
+                </p>
+              ) : null}
+              {notification.metadata?.outgoing === true ? (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {notification.metadata?.remoteReadAt
+                    ? "مقروءة"
+                    : notification.metadata?.remoteReceivedAt
+                      ? "وصلت"
+                      : "أُرسلت"}
+                </p>
+              ) : null}
             </div>
             {unread ? (
               <span className="rounded-full bg-error px-2 py-1 text-xs font-bold text-on-error">
@@ -234,6 +291,26 @@ function NotificationCard({
               </button>
             </div>
           </div>
+          {canReply ? (
+            <div className="mt-3 flex flex-col gap-2 border-t border-outline-variant pt-3 sm:flex-row">
+              <input
+                value={reply}
+                onChange={(event) => setReply(event.target.value.slice(0, 800))}
+                placeholder="اكتب ردًا خاصًا..."
+                className="min-w-0 flex-1 rounded-xl border border-outline-variant bg-surface px-3 py-2 text-sm"
+              />
+              <button
+                type="button"
+                disabled={replying || !reply.trim()}
+                onClick={() => void sendReply()}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-on-primary disabled:opacity-50"
+              >
+                {replying ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageCircle className="h-4 w-4" />}
+                رد خاص
+              </button>
+            </div>
+          ) : null}
+          {replyStatus ? <p className="mt-2 text-xs font-semibold text-primary" role="status">{replyStatus}</p> : null}
         </div>
       </div>
     </article>

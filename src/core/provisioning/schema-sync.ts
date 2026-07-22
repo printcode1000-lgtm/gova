@@ -41,6 +41,7 @@ const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
   users: new Set([
     'users',
     'user_notification_tokens',
+    'user_notification_preferences',
     'notification_vapid_settings',
     'ota_releases',
     'ota_release_audit',

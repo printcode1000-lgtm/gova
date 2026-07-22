@@ -20,6 +20,7 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { webPushBrowserService } from "@/features/notifications/application/web-push-browser-service";
 import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
 import { notificationPermissionService } from "@/features/notifications/application/permission-service";
+import { specialtyChatClient } from "@/features/specialty-chat";
 
 import {
   type SettingsDensity,
@@ -79,6 +80,8 @@ export function SettingsPageContent() {
   const [clearing, setClearing] = React.useState(false);
   const [tempFontSize, setTempFontSize] = React.useState(themePrefs.fontSize);
   const [showClearDialog, setShowClearDialog] = React.useState(false);
+  const [specialtyRequestsEnabled, setSpecialtyRequestsEnabled] = React.useState(true);
+  const [specialtyPreferenceBusy, setSpecialtyPreferenceBusy] = React.useState(false);
 
   const themeLabels: Record<SettingsThemeMode, string> = {
     light: t("theme.light"),
@@ -101,16 +104,38 @@ export function SettingsPageContent() {
 
   React.useEffect(() => {
     setWebPushPermission(webPushBrowserService.getPermission());
-    if (isAndroidNotifications) {
+    if (isAndroidNotifications || isIosNotifications) {
       void Promise.all([
-        notificationDeviceTokenService.isAndroidEnabled(),
+        notificationDeviceTokenService.isNativeEnabled(),
         notificationDeviceTokenService.getAndroidPermission(),
       ]).then(([enabled, permission]) => {
         setAndroidPushEnabled(enabled);
         setAndroidPushPermission(permission);
       });
     }
-  }, [isAndroidNotifications]);
+  }, [isAndroidNotifications, isIosNotifications]);
+
+  React.useEffect(() => {
+    if (!session) return;
+    void specialtyChatClient
+      .preference(session)
+      .then((value) => setSpecialtyRequestsEnabled(value.enabled))
+      .catch(() => undefined);
+  }, [session]);
+
+  const updateSpecialtyRequests = async (enabled: boolean) => {
+    if (!session || specialtyPreferenceBusy) return;
+    setSpecialtyPreferenceBusy(true);
+    try {
+      const value = await specialtyChatClient.preference(session, enabled);
+      setSpecialtyRequestsEnabled(value.enabled);
+      showStatus(value.enabled ? "تم تفعيل استقبال طلبات التخصص." : "تم إيقاف استقبال طلبات التخصص.");
+    } catch (error) {
+      showStatus(error instanceof Error ? error.message : "تعذر حفظ إعداد طلبات التخصص.");
+    } finally {
+      setSpecialtyPreferenceBusy(false);
+    }
+  };
 
   const showStatus = (message: string) => {
     setStatusText(message);
@@ -144,6 +169,7 @@ export function SettingsPageContent() {
     setClearing(true);
     try {
       if (session) {
+        await specialtyChatClient.preference(session, true).catch(() => undefined);
         await notificationDeviceTokenService.unregister(session.uid, session.phone);
       }
       resetTheme();
@@ -211,10 +237,16 @@ export function SettingsPageContent() {
         throw new Error("لم يتم منح إذن الإشعارات.");
       await notificationDeviceTokenService.register(session.uid, session.phone);
       setAndroidPushEnabled(true);
-      setWebPushStatus("تم تفعيل إشعارات Android والنغمة المخصصة لهذا الجهاز.");
+      setWebPushStatus(
+        isIosNotifications
+          ? "تم تفعيل إشعارات iOS لهذا الجهاز."
+          : "تم تفعيل إشعارات Android والنغمة المخصصة لهذا الجهاز.",
+      );
     } catch (error) {
       setWebPushStatus(
-        error instanceof Error ? error.message : "تعذر تفعيل إشعارات Android.",
+        error instanceof Error
+          ? error.message
+          : `تعذر تفعيل إشعارات ${isIosNotifications ? "iOS" : "Android"}.`,
       );
     } finally {
       setWebPushBusy(false);
@@ -231,10 +263,12 @@ export function SettingsPageContent() {
         session.phone,
       );
       setAndroidPushEnabled(false);
-      setWebPushStatus("تم إلغاء إشعارات Android لهذا الجهاز.");
+      setWebPushStatus(`تم إلغاء إشعارات ${isIosNotifications ? "iOS" : "Android"} لهذا الجهاز.`);
     } catch (error) {
       setWebPushStatus(
-        error instanceof Error ? error.message : "تعذر إلغاء إشعارات Android.",
+        error instanceof Error
+          ? error.message
+          : `تعذر إلغاء إشعارات ${isIosNotifications ? "iOS" : "Android"}.`,
       );
     } finally {
       setWebPushBusy(false);
@@ -413,30 +447,31 @@ export function SettingsPageContent() {
                   الإذن الحالي:{" "}
                   {(isAndroidNotifications
                     ? androidPushPermission
+                    : isIosNotifications
+                      ? androidPushPermission
                     : webPushPermission) === "granted"
                     ? "مسموح"
                     : (isAndroidNotifications
                           ? androidPushPermission
+                          : isIosNotifications
+                            ? androidPushPermission
                           : webPushPermission) === "denied"
                       ? "مرفوض من إعدادات النظام"
                       : (isAndroidNotifications
                             ? androidPushPermission
+                            : isIosNotifications
+                              ? androidPushPermission
                             : webPushPermission) === "default" ||
                           androidPushPermission === "prompt"
                         ? "لم يتم السؤال بعد"
                         : "غير مدعوم"}
-                  {isAndroidNotifications && androidPushEnabled
-                    ? " — الجهاز مسجل في FCM"
+                  {(isAndroidNotifications || isIosNotifications) && androidPushEnabled
+                    ? ` — الجهاز مسجل في ${isIosNotifications ? "APNs" : "FCM"}`
                     : ""}
                 </p>
-                {isIosNotifications ? (
-                  <p className="mt-2 text-xs text-on-surface-variant">
-                    إعداد Firebase الحالي خاص بتطبيق Android. لن يعرض هذا الجهاز إعدادات المتصفح غير المناسبة له.
-                  </p>
-                ) : null}
               </div>
               <div className="flex flex-wrap gap-2">
-                {isAndroidNotifications ? (
+                {isAndroidNotifications || isIosNotifications ? (
                   <>
                     <button
                       type="button"
@@ -444,7 +479,7 @@ export function SettingsPageContent() {
                       onClick={() => void enableAndroidPush()}
                       className="asol-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
                     >
-                      تفعيل إشعارات Android
+                      تفعيل إشعارات {isIosNotifications ? "iOS" : "Android"}
                     </button>
                     <button
                       type="button"
@@ -457,7 +492,7 @@ export function SettingsPageContent() {
                       إلغاء اشتراك هذا الجهاز
                     </button>
                   </>
-                ) : isIosNotifications ? null : (
+                ) : (
                   <>
                     <button
                       type="button"
@@ -485,6 +520,19 @@ export function SettingsPageContent() {
               <p className="mt-3 rounded-lg bg-surface px-3 py-2 text-sm text-on-surface-variant">
                 {webPushStatus}
               </p>
+            ) : null}
+            {session ? (
+              <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface p-4">
+                <div>
+                  <p className="text-sm font-semibold text-on-surface">طلبات المشترين حسب التخصص</p>
+                  <p className="mt-1 text-xs text-on-surface-variant">السماح للمشترين بإرسال طلبات نصية إلى تخصصاتك. الردود خاصة ولا يراها بقية مقدمي الخدمة.</p>
+                </div>
+                <ToggleSwitch
+                  checked={specialtyRequestsEnabled}
+                  onChange={(enabled) => void updateSpecialtyRequests(enabled)}
+                  label="استقبال طلبات المشترين حسب التخصص"
+                />
+              </div>
             ) : null}
           </div>
         </div>

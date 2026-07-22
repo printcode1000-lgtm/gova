@@ -14,14 +14,15 @@ import type { ISessionService } from './session-service.interface';
 function toStoredSession(input: SaveSessionInput): UserSession {
   const email = input.email?.trim();
   const specialties = input.specialties ?? { main: [], sub: {} };
+  const sessionToken = input.sessionToken?.trim();
   return email
-    ? { uid: input.uid, phone: input.phone, email, specialties }
-    : { uid: input.uid, phone: input.phone, specialties };
+    ? { uid: input.uid, phone: input.phone, email, specialties, ...(sessionToken ? { sessionToken } : {}) }
+    : { uid: input.uid, phone: input.phone, specialties, ...(sessionToken ? { sessionToken } : {}) };
 }
 
 /**
  * Client-side session adapter — sole owner of user session IndexedDB reads/writes.
- * Stores uid + phone + optional email only.
+ * Stores identity/profile hints plus the optional signed server session token in AsolDB only.
  */
 export class SessionApiService implements ISessionService {
   async cleanLegacyStore(): Promise<void> {

@@ -20,7 +20,7 @@ Server entry point — accept JSON, delegate to Server Service, return JSON.
 ```
 POST /api/auth/login
   → authService.login(body)
-  → return { uid, phone, email }
+  → return { uid, phone, email, specialties, sessionToken }
 ```
 
 ## Current routes

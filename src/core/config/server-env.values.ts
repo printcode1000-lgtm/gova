@@ -116,6 +116,37 @@ export function getNotificationInternalSecret(): string {
   return secret;
 }
 
+export function getAsolSessionSigningSecret(): string {
+  const secret =
+    process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ||
+    process.env.ASOL_NOTIFICATION_INTERNAL_SECRET?.trim() ||
+    process.env.TURSO_AUTH_TOKEN?.trim() ||
+    "";
+  if (secret.length < 32) throw new Error("sessionSigningSecretNotConfigured");
+  return secret;
+}
+
+export function getApnsServerConfig(): {
+  teamId: string;
+  keyId: string;
+  bundleId: string;
+  privateKey: string;
+  production: boolean;
+} | null {
+  const teamId = process.env.APNS_TEAM_ID?.trim() ?? "";
+  const keyId = process.env.APNS_KEY_ID?.trim() ?? "";
+  const bundleId = process.env.APNS_BUNDLE_ID?.trim() || "hgh.asol.app";
+  const privateKey = (process.env.APNS_PRIVATE_KEY ?? "").replace(/\\n/g, "\n").trim();
+  if (!teamId || !keyId || !privateKey) return null;
+  return {
+    teamId,
+    keyId,
+    bundleId,
+    privateKey,
+    production: process.env.APNS_PRODUCTION?.trim().toLowerCase() === "true",
+  };
+}
+
 export function getOtaApprovalServerConfig(): {
   manifestUrl: string;
   publicKey: string;

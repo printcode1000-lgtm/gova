@@ -23,6 +23,7 @@ export class ImageStorageApiService implements IImageStorageApiAdapter {
     outputFormat: StorageOutputFormat,
     replaceImageKey?: string | null,
     storageScope?: string | null,
+    signal?: AbortSignal,
   ): Promise<ImageUploadResult> {
     const formData = new FormData();
     formData.append("file", file, buildUploadFilename(outputFormat));
@@ -36,6 +37,7 @@ export class ImageStorageApiService implements IImageStorageApiAdapter {
     return asolApi.postForm<ImageUploadResult>(
       ASOL_API_ROUTES.storage.upload,
       formData,
+      { signal },
     );
   }
 

@@ -67,6 +67,15 @@ export function mapServiceError(error: unknown): NextResponse {
     'passwordRecoveryInvalidToken',
     'invalidContactMessage',
     'accountDeletionConfirmationInvalid',
+    'specialtyChatMessageInvalid',
+    'specialtyChatRequestInvalid',
+    'specialtyChatSelectionInvalid',
+    'specialtyChatCapabilityInvalid',
+    'specialtyChatCapabilityExpired',
+    'specialtyChatReceiptInvalid',
+    'sessionTokenInvalid',
+    'sessionTokenExpired',
+    'specialtyChatLoginRefreshRequired',
   ];
 
   if (knownCodes.includes(message)) {
@@ -82,11 +91,13 @@ export function mapServiceError(error: unknown): NextResponse {
   }
 
   if (message === 'contactRateLimited') return apiError(message, 429);
+  if (message === 'specialtyChatRateLimited') return apiError(message, 429);
   if (message === 'accountDeletionSuperAdminForbidden') return apiError(message, 403);
 
   if (message === 'passwordRecoveryNotConfigured') {
     return apiError(message, 503);
   }
+  if (message === 'sessionSigningSecretNotConfigured') return apiError(message, 503);
 
   return apiError(message, 500);
 }

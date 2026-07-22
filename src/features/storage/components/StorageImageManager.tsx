@@ -44,6 +44,8 @@ interface StorageImageManagerProps {
   value: StoredImage[];
   onChange: (images: StoredImage[]) => void;
   className?: string;
+  label?: React.ReactNode;
+  hint?: React.ReactNode;
 }
 
 const storageProfileIds = new Set<string>(Object.values(StorageProfiles));
@@ -63,6 +65,7 @@ const aspectClasses: Record<StorageImageAspectRatio, string> = {
 
 type ManagerStage =
   | "idle"
+  | "queued"
   | "selecting"
   | "detecting"
   | "converting"
@@ -390,10 +393,19 @@ function StorageImageSlot({
     setUploadedImage(image);
   }, [config.id, imageKey, imageUrl, isImageUploading, imageError, index]);
 
-  const { uploadFile, removeImage, isUploading, error } =
+  const {
+    uploadFile,
+    removeImage,
+    isUploading,
+    error,
+    queueStatus,
+    queuePosition,
+    cancelUpload,
+  } =
     useStorageProfileUpload({
       storageProfileId: config.storageProfileId,
       storageScope: config.storageScope,
+      queueOwnerId: `${config.id}-${index}`,
       value: selectedFile ? uploadedImage : image,
       onChange: (nextImage) => {
         traceStorageImageManager(config.id, "upload-state-change", {
@@ -422,6 +434,7 @@ function StorageImageSlot({
     selectedPreviewUrl ?? uploadedImage?.url ?? image?.url ?? null;
   const displayError = sourceError ?? error;
   const busy = isUploading || image?.isUploading || isChoosingSource;
+  const isQueued = queueStatus === "queued";
   const canChoose = !previewUrl;
   const stageLabels: Partial<Record<ManagerStage, string>> = {
     selecting: t("storage.imageManager.stage.selecting"),
@@ -429,6 +442,9 @@ function StorageImageSlot({
     converting: t("storage.imageManager.stage.converting"),
     reading: t("storage.imageManager.stage.reading"),
     previewing: t("storage.imageManager.stage.previewing"),
+    queued: t("storage.imageManager.stage.queued", {
+      position: queuePosition,
+    }),
     profile: t("storage.imageManager.stage.profile"),
     compressing: t("storage.imageManager.stage.compressing"),
     uploading: t("storage.imageManager.stage.uploading"),
@@ -639,6 +655,7 @@ function StorageImageSlot({
     event.stopPropagation();
 
     const clearSelected = () => {
+      if (isQueued) cancelUpload();
       traceStorageImageManager(config.id, "selected-file-cleared", { index });
       setSelectedFile(null);
       setSelectedPreviewUrl(null);
@@ -723,7 +740,7 @@ function StorageImageSlot({
           <button
             type="button"
             onClick={removeCurrent}
-            disabled={busy}
+            disabled={busy && !isQueued}
             aria-label={t("storage.imageManager.remove")}
             title={t("storage.imageManager.remove")}
             className="absolute right-2 top-2 rounded-full bg-background p-1.5 shadow-md transition-colors hover:bg-destructive hover:text-destructive-foreground disabled:opacity-50"
@@ -848,6 +865,8 @@ export function StorageImageManager({
   value,
   onChange,
   className,
+  label,
+  hint,
 }: StorageImageManagerProps) {
   const parsedConfig = parseStorageImageManagerConfig(config);
   const maxItems = Math.max(1, parsedConfig.maxItems);
@@ -858,31 +877,37 @@ export function StorageImageManager({
   );
 
   return (
-    <div
-      className={cn(
-        maxItems > 1 ? "grid gap-3 sm:grid-cols-3 lg:grid-cols-1" : "space-y-3",
-        className,
-      )}
-    >
-      {slots.map((image, index) => (
-        <StorageImageSlot
-          key={`${parsedConfig.id}-${index}`}
-          config={parsedConfig}
-          image={image}
-          index={index}
-          onUploaded={(itemIndex, uploadedImage) => {
-            onChange(
-              normalizeImages(
-                replaceAt(images, itemIndex, uploadedImage),
-                maxItems,
-              ),
-            );
-          }}
-          onRemoved={(itemIndex) => {
-            onChange(normalizeImages(removeAt(images, itemIndex), maxItems));
-          }}
-        />
-      ))}
+    <div className="space-y-2">
+      {label ? (
+        <p className="text-sm font-medium text-on-surface">{label}</p>
+      ) : null}
+      <div
+        className={cn(
+          maxItems > 1 ? "grid gap-3 sm:grid-cols-3 lg:grid-cols-1" : "space-y-3",
+          className,
+        )}
+      >
+        {slots.map((image, index) => (
+          <StorageImageSlot
+            key={`${parsedConfig.id}-${index}`}
+            config={parsedConfig}
+            image={image}
+            index={index}
+            onUploaded={(itemIndex, uploadedImage) => {
+              onChange(
+                normalizeImages(
+                  replaceAt(images, itemIndex, uploadedImage),
+                  maxItems,
+                ),
+              );
+            }}
+            onRemoved={(itemIndex) => {
+              onChange(normalizeImages(removeAt(images, itemIndex), maxItems));
+            }}
+          />
+        ))}
+      </div>
+      {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
     </div>
   );
 }

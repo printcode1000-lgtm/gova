@@ -5,7 +5,7 @@ import { FolderOpen, Plus, X, Package } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/onboarding';
 import { useTranslation } from '@/lib/i18n';
 import { FormField, FormInput, FormTextarea } from '../form-components';
-import { StorageProfileImageUpload } from '@/features/storage/components/StorageProfileImageUpload';
+import { StorageImageManager } from '@/features/storage/components/StorageImageManager';
 import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
 import type { StoredImage } from '@/core/storage/types/stored-image.types';
 import { StepNavigation } from '../progress-components';
@@ -105,13 +105,20 @@ export function CollectionsSection() {
                   </FormField>
                 </div>
 
-                <StorageProfileImageUpload
-                  storageProfileId={StorageProfiles.Cover}
-                  value={newCollection.coverImage ?? null}
-                  onChange={(image: StoredImage | null) =>
-                    setNewCollection({ ...newCollection, coverImage: image })
+                <StorageImageManager
+                  config={{
+                    id: 'onboarding-collection-cover',
+                    storageProfileId: StorageProfiles.Cover,
+                    maxItems: 1,
+                    aspectRatio: 'landscape',
+                    allowReplace: true,
+                    confirmUpload: true,
+                    confirmRemove: true,
+                  }}
+                  value={newCollection.coverImage ? [newCollection.coverImage] : []}
+                  onChange={(images: StoredImage[]) =>
+                    setNewCollection({ ...newCollection, coverImage: images[0] ?? null })
                   }
-                  aspectRatio="landscape"
                   label={t('onboarding.collections.coverImage')}
                   hint={t('onboarding.collections.coverHint')}
                 />

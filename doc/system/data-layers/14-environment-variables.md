@@ -17,6 +17,7 @@ TURSO_ORGANIZATION=
 
 # ── Server CORS ──
 ASOL_CORS_ORIGINS=
+ASOL_SESSION_SIGNING_SECRET=        # Server-only, at least 32 random characters
 
 # ── App mode ──
 ASOL_MODE=development              # development | production | static
@@ -51,9 +52,20 @@ Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS
 npm run r2:sync:cors
 ```
 
+## Apple Push Notification service
+
+```env
+# Server-only. Encode PEM line breaks as \\n in hosted environment values.
+APNS_TEAM_ID=
+APNS_KEY_ID=
+APNS_BUNDLE_ID=hgh.asol.app
+APNS_PRIVATE_KEY=
+APNS_PRODUCTION=false
+```
+
 ## Never expose
 
-`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_PROFILE_AUTH_TOKEN`, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
+`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_PROFILE_AUTH_TOKEN`, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
 
 ## Vercel deploy
 

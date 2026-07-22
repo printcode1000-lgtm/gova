@@ -1,10 +1,11 @@
 import 'server-only';
 
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, inArray, isNull } from 'drizzle-orm';
 import { dbClient } from '@/core/database/db-client';
 import type { IDatabaseClient } from '@/core/database/database-client.interface';
 import {
   userNotificationTokens,
+  userNotificationPreferences,
   type NewUserNotificationTokenEntity,
   type UserNotificationTokenEntity,
 } from '@/core/database/schema';
@@ -45,6 +46,7 @@ export class UserNotificationTokenRepository {
       deviceId: input.deviceId,
       token: input.token,
       enabled: true,
+      specialtyRequestsEnabled: existing[0]?.specialtyRequestsEnabled ?? true,
       lastSeenAt: now,
       createdAt: existing[0]?.createdAt ?? now,
       updatedAt: now,
@@ -89,6 +91,37 @@ export class UserNotificationTokenRepository {
   async listByUids(uids: string[]): Promise<Record<string, RegisteredNotificationToken[]>> {
     const pairs = await Promise.all(uids.map(async (uid) => [uid, await this.listByUid(uid)] as const));
     return Object.fromEntries(pairs);
+  }
+
+  async setSpecialtyRequestsEnabled(uid: string, enabled: boolean): Promise<void> {
+    const updatedAt = new Date().toISOString();
+    await this.database.execute(
+      `INSERT INTO user_notification_preferences (uid, specialty_requests_enabled, updated_at)
+       VALUES (?, ?, ?)
+       ON CONFLICT(uid) DO UPDATE SET specialty_requests_enabled = excluded.specialty_requests_enabled, updated_at = excluded.updated_at`,
+      [uid, enabled ? 1 : 0, updatedAt],
+    );
+    await this.database.db.update(userNotificationTokens).set({ specialtyRequestsEnabled: enabled, updatedAt }).where(eq(userNotificationTokens.uid, uid));
+  }
+
+  async specialtyRequestsEnabled(uid: string): Promise<boolean> {
+    const rows = await this.database.db
+      .select({ enabled: userNotificationPreferences.specialtyRequestsEnabled })
+      .from(userNotificationPreferences)
+      .where(eq(userNotificationPreferences.uid, uid))
+      .limit(1);
+    return rows[0]?.enabled ?? true;
+  }
+
+  async filterSpecialtyRequestsEnabled(uids: string[]): Promise<string[]> {
+    const unique = Array.from(new Set(uids.filter(Boolean)));
+    if (unique.length === 0) return [];
+    const rows = await this.database.db
+      .select({ uid: userNotificationPreferences.uid, enabled: userNotificationPreferences.specialtyRequestsEnabled })
+      .from(userNotificationPreferences)
+      .where(inArray(userNotificationPreferences.uid, unique));
+    const disabled = new Set(rows.filter((row: { uid: string; enabled: boolean }) => !row.enabled).map((row: { uid: string }) => row.uid));
+    return unique.filter((uid) => !disabled.has(uid));
   }
 
   async disable(input: DeleteNotificationTokenInput): Promise<void> {
@@ -145,5 +178,6 @@ function toDomainToken(row: UserNotificationTokenEntity): RegisteredNotification
     createdAt: row.createdAt ?? new Date().toISOString(),
     updatedAt: row.updatedAt ?? new Date().toISOString(),
     deletedAt: row.deletedAt,
+    specialtyRequestsEnabled: row.specialtyRequestsEnabled,
   };
 }

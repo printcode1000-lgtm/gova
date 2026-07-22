@@ -44,10 +44,11 @@ function buildMessage(
   token: RegisteredNotificationToken,
 ): FcmHttpV1Message {
   const sound = "custom_notification";
+  const dataOnly = input.payload.metadata?.dataOnly === true;
   return {
     message: {
       token: token.token,
-      notification: {
+      notification: dataOnly ? undefined : {
         title: input.payload.title ?? "ASOL",
         body: input.payload.body ?? "",
       },
@@ -57,10 +58,10 @@ function buildMessage(
           input.payload.priority === "high" || input.payload.priority === "critical"
             ? "HIGH"
             : "NORMAL",
-        ttl: "86400s",
+        ttl: input.payload.category === "chat" ? "604800s" : "86400s",
         restricted_package_name: "hgh.asol.app",
         collapse_key: input.payload.dedupeKey.slice(0, 64),
-        notification: {
+        notification: dataOnly ? undefined : {
           channel_id: channelId(input),
           icon: "ic_stat_asol_notification",
           color: "#006C4C",

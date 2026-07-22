@@ -119,6 +119,7 @@ export interface DeviceToken {
 
 export interface RegisteredNotificationToken extends DeviceToken {
   deletedAt?: string | null;
+  specialtyRequestsEnabled?: boolean;
 }
 
 export interface RegisterNotificationTokenInput {
@@ -148,6 +149,10 @@ export interface SendNotificationToUsersInput {
   dedupeKey: string;
   variables?: Record<string, string | number | boolean | null>;
   metadata?: Record<string, string | number | boolean | null>;
+  category?: NotificationCategory;
+  priority?: NotificationPriority;
+  sound?: NotificationSound;
+  route?: NotificationRoute;
 }
 
 export interface NotificationTokenDeliveryResult {

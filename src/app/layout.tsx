@@ -23,6 +23,7 @@ import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
 import { AndroidPushController, WebPushController } from "@/features/notifications";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 import { isDevelopment, withBasePath } from "@/core/config";
 
@@ -70,9 +71,11 @@ export default function RootLayout({
                 <PreferencesProvider>
                   <NetworkStatusProvider>
                     <OtaUpdateProvider>
-                      <SnapshotProvider>
-                        <ShellLayout>{children}</ShellLayout>
-                      </SnapshotProvider>
+                      <Suspense fallback={<ShellLayout>{children}</ShellLayout>}>
+                        <SnapshotProvider>
+                          <ShellLayout>{children}</ShellLayout>
+                        </SnapshotProvider>
+                      </Suspense>
                       <NetworkStatusBanner />
                       <OtaUpdatePrompt />
                       <MobileBackButtonController />

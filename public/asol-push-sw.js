@@ -112,7 +112,10 @@ function toNotificationEntity(payload) {
     displayedAt: now,
     createdAt: payload.createdAt || now,
     updatedAt: now,
-    metadata: { provider: 'web_push' },
+    metadata: {
+      provider: 'web_push',
+      ...(payload.metadata && typeof payload.metadata === 'object' ? payload.metadata : {}),
+    },
   };
 }
 
@@ -174,6 +177,55 @@ async function saveNotificationToCenter(payload) {
   }
 }
 
+async function applySpecialtyChatReceipt(payload) {
+  const metadata = payload && payload.metadata;
+  if (!metadata || metadata.specialtyChatKind !== 'specialty_receipt' || !payload.uid) return false;
+  const targetMessageId = String(metadata.targetMessageId || '');
+  const status = metadata.receiptStatus;
+  if (!targetMessageId || (status !== 'received' && status !== 'read')) return true;
+  const db = await openAsolDb();
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(['notifications'], 'readwrite');
+    const store = tx.objectStore('notifications');
+    const key = `user:${payload.uid}:list`;
+    tx.onerror = () => reject(tx.error);
+    tx.oncomplete = () => resolve();
+    getRow(store, key).then((row) => {
+      const now = new Date().toISOString();
+      const current = Array.isArray(row && row.value) ? row.value : [];
+      const next = current.map((item) => {
+        const itemMetadata = item.metadata || {};
+        const matches = targetMessageId.startsWith('req_')
+          ? item.id === targetMessageId || (itemMetadata.specialtyChatKind === 'specialty_request' && itemMetadata.requestId === targetMessageId)
+          : item.id === targetMessageId || itemMetadata.messageId === targetMessageId;
+        if (!matches || itemMetadata.outgoing !== true) return item;
+        const receiptFromUid = String(metadata.receiptFromUid || '');
+        const receivedBy = new Set(String(itemMetadata.remoteReceivedBy || '').split(',').filter(Boolean));
+        const readBy = new Set(String(itemMetadata.remoteReadBy || '').split(',').filter(Boolean));
+        if (receiptFromUid) receivedBy.add(receiptFromUid);
+        if (status === 'read' && receiptFromUid) readBy.add(receiptFromUid);
+        return {
+          ...item,
+          updatedAt: now,
+          metadata: {
+            ...itemMetadata,
+            remoteReceivedAt: itemMetadata.remoteReceivedAt || now,
+            remoteReceivedBy: [...receivedBy].join(','),
+            remoteReceivedCount: receivedBy.size,
+            ...(status === 'read'
+              ? { remoteReadAt: now, remoteReadBy: [...readBy].join(','), remoteReadCount: readBy.size }
+              : {}),
+          },
+        };
+      });
+      return putRow(store, key, next);
+    }).catch(reject);
+  });
+  const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+  for (const client of clients) client.postMessage({ type: ASOL_NOTIFICATION_CHANGED_EVENT, uid: payload.uid });
+  return true;
+}
+
 self.addEventListener('push', (event) => {
   let payload = {};
   try {
@@ -183,6 +235,11 @@ self.addEventListener('push', (event) => {
   }
 
   if (!isValidPushPayload(payload)) return;
+
+  if (payload.metadata && payload.metadata.specialtyChatKind === 'specialty_receipt') {
+    event.waitUntil(applySpecialtyChatReceipt(payload).catch(() => undefined));
+    return;
+  }
 
   const title = payload.title || 'ASOL';
   const options = {

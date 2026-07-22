@@ -23,12 +23,15 @@ export class ImageStorageService implements IImageStorageService {
     replaceImageKey?: string | null,
     onProgress?: ImageUploadProgressCallback,
     storageScope?: string | null,
+    signal?: AbortSignal,
   ) {
+    if (signal?.aborted) throw signal.reason;
     onProgress?.("profile");
     console.info(
       `[StorageImageManager:${storageProfileId}] profile-request-start`,
     );
     const profile = await this.api.getProfile(storageProfileId);
+    if (signal?.aborted) throw signal.reason;
     console.info(`[StorageImageManager:${storageProfileId}] profile-received`, {
       enabled: profile.enabled,
       maxImageSizeKB: profile.maxImageSizeKB,
@@ -36,6 +39,7 @@ export class ImageStorageService implements IImageStorageService {
     });
     onProgress?.("compressing");
     const compressed = await compressImageForProfile(file, profile);
+    if (signal?.aborted) throw signal.reason;
     console.info(`[StorageImageManager:${storageProfileId}] api-upload-start`, {
       compressedBytes: compressed.size,
       compressedType: compressed.type,
@@ -48,7 +52,9 @@ export class ImageStorageService implements IImageStorageService {
       profile.outputFormat,
       replaceImageKey,
       storageScope,
+      signal,
     );
+    if (signal?.aborted) throw signal.reason;
     onProgress?.("finalizing");
     console.info(
       `[StorageImageManager:${storageProfileId}] api-upload-completed`,

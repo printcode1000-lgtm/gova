@@ -136,13 +136,13 @@ export class NotificationSendService {
       locale,
       title: input.title?.trim() || "ASOL",
       body: input.body?.trim() || "",
-      category: NotificationCategories.System,
-      priority: NotificationPriorities.Normal,
-      route: {
+      category: input.category ?? NotificationCategories.System,
+      priority: input.priority ?? NotificationPriorities.Normal,
+      route: input.route ?? {
         href: String(input.metadata?.href ?? "/notifications"),
         label: locale === "ar" ? "فتح" : "Open",
       },
-      sound: NotificationSounds.Default,
+      sound: input.sound ?? NotificationSounds.Default,
       dedupeKey: input.dedupeKey,
       variables: input.variables,
       metadata: input.metadata,

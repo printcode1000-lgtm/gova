@@ -254,6 +254,7 @@
     "storage.imageManager.stage.converting":  "Converting image format…",
     "storage.imageManager.stage.reading":  "Reading image…",
     "storage.imageManager.stage.previewing":  "Preparing preview…",
+    "storage.imageManager.stage.queued":  "Waiting to upload — position {{position}}",
     "storage.imageManager.stage.profile":  "Loading storage settings…",
     "storage.imageManager.stage.compressing":  "Compressing and optimizing image…",
     "storage.imageManager.stage.uploading":  "Uploading image…",

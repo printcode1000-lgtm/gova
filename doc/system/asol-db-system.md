@@ -33,7 +33,7 @@ Stores user authentication session state.
 
 | Key | Value Type | Description |
 |-----|------------|-------------|
-| `current` | `UserSession \| null` | Authenticated session info: `{ uid, phone, email? }` |
+| `current` | `UserSession \| null` | Authenticated session info: `{ uid, phone, email?, specialties, sessionToken? }`. The signed token is local-only and removed with the session. |
 
 ### 3. `guestSessions`
 Manages guest browsing identifiers.
@@ -58,6 +58,8 @@ The notification module stores its local state in dedicated AsolDB stores. Templ
 | `notificationSettings` | Per-user notification channel and target preferences. It also stores the bounded `user:<uid>:dismissed` list of dismissed notification `id` and `dedupeKey` values so deleted local notifications are not re-imported from Web Push or Android tray payloads. |
 | `notificationBadges` | Per-user unread badge count. |
 | `notificationAnalytics` | Local lifecycle analytics events such as sent, displayed, opened, clicked, dismissed, and failed. |
+
+Notification cards and specialty-chat message bodies have no SQLite/Turso table. Their sole application persistence is the `notifications` store in this IndexedDB database, including inside Capacitor WebViews.
 | `notificationOfflineQueue` | Local operations waiting for browser connectivity. |
 
 ---

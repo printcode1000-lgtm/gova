@@ -14,6 +14,7 @@ export interface IImageStorageApiAdapter {
     outputFormat: StorageOutputFormat,
     replaceImageKey?: string | null,
     storageScope?: string | null,
+    signal?: AbortSignal,
   ): Promise<ImageUploadResult>;
   deleteImage(storageProfileId: string, imageKey: string): Promise<void>;
 }

@@ -5,6 +5,7 @@ import { useSession } from '@/features/auth/components/SessionProvider';
 import { authApiService } from '../services/auth-api-service';
 import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
+import { imageUploadQueue } from '@/features/storage/services/image-upload-queue';
 
 /** Clears session in IndexedDB and updates in-memory session state. */
 export function useLogout() {
@@ -12,6 +13,7 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: async () => {
+      imageUploadQueue.clear();
       try {
         await authApiService.logout();
       } catch {

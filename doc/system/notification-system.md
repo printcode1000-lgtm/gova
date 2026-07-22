@@ -1,5 +1,9 @@
 # ASOL Notification System
 
+> Specialty-based buyer/provider conversations are documented in [`specialty-notification-chat.md`](specialty-notification-chat.md). They use notifications as their sole transport and keep message content only in the local notification center.
+
+Notification bodies and notification-center rows have no SQLite/Turso table. Device tokens, push-provider credentials, and per-user delivery preferences are server metadata only; actual notification cards, lifecycle analytics, badges, receipts, and conversation messages are persisted exclusively in AsolDB IndexedDB on the current client.
+
 > Android production setup and operational checks are documented in
 > [`../capacitor/android-push-notifications.md`](../capacitor/android-push-notifications.md).
 
@@ -299,7 +303,7 @@ Rules:
 - `NotificationSendService` resolves registered tokens by provider key.
 - `NotificationProviderRegistry` chooses the correct provider.
 - Unknown providers use `NoopNotificationProvider`.
-- FCM/APNs/Web Push placeholders do not contain credentials or SDK wiring yet.
+- FCM, APNs, and Web Push transports load credentials only from server-side environment configuration; unconfigured transports return an explicit failed result.
 - Real provider credentials must be loaded only from server configuration.
 
 ## Push Flow
@@ -488,7 +492,7 @@ Current provider behavior:
 
 - FCM uses Firebase Admin on the server and returns real per-batch delivery results.
 - Invalid or unregistered FCM tokens are disabled after Firebase rejects them.
-- APNs remains a safe placeholder until Apple credentials are configured.
+- APNs uses the HTTP/2 token provider when Apple credentials are configured and returns `apnsNotConfigured` otherwise.
 - Web Push uses the configured VAPID transport.
 - No provider credentials or private keys are stored in client code.
 - Real provider credentials must be added through server-only configuration.

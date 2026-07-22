@@ -36,6 +36,7 @@ export function useLogin() {
         phone: result.phone,
         email: result.email || undefined,
         specialties: result.specialties,
+        sessionToken: result.sessionToken,
       });
     },
     meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),

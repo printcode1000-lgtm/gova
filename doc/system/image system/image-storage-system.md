@@ -29,6 +29,17 @@ Server: Storage Profile → Provider → Persistence
 
 `StorageImageManager` performs no provider write during selection or preview preparation. Upload starts only after the user presses Upload and confirms the localized application dialog. Removal calls the DELETE API and waits for provider success before clearing the UI value.
 
+## Upload queue
+
+All `StorageImageManager` instances share the in-memory FIFO queue in
+`src/features/storage/services/image-upload-queue.ts`. The queue processes one
+complete image pipeline at a time (profile lookup, compression, upload, and
+finalization), updates waiting positions, prevents duplicate requests for the
+same manager slot and file, and continues after an item fails. A queued item can
+be cancelled before it starts. Logout clears queued items and aborts the active
+request. Files are intentionally not persisted, so the queue lasts only for the
+current application session on Web, Android, and iOS.
+
 `product-default` declares `folderStrategy: "main-category"`. Its configured base folder is `images/products`; callers provide only a validated main-category ID as `storageScope`. The server creates `<mainCategoryId>/<uuid>.webp` as the image key, so upload, URL resolution, replacement, and deletion all address the same local/R2 object without exposing folder construction to the UI.
 
 ## Layers
@@ -44,7 +55,7 @@ Server: Storage Profile → Provider → Persistence
 | **Client service**  | `src/features/storage/services/image-storage-service.ts`        |
 | API adapter         | `src/features/storage/services/image-storage-api-service.ts`    |
 | Hook                | `src/features/storage/hooks/use-storage-profile-upload.ts`      |
-| UI                  | `src/features/storage/components/StorageProfileImageUpload.tsx` |
+| UI                  | `src/features/storage/components/StorageImageManager.tsx`       |
 
 ## APIs
 

@@ -59,6 +59,7 @@ export class AccountDeletionRepository {
 
   async deleteMain(uid: string): Promise<void> {
     await dbClient.execute("DELETE FROM user_notification_tokens WHERE uid = ?", [uid]);
+    await dbClient.execute("DELETE FROM user_notification_preferences WHERE uid = ?", [uid]);
     await dbClient.execute("DELETE FROM password_recovery_challenges WHERE uid = ?", [uid]);
     await dbClient.execute("UPDATE ota_releases SET approved_by_uid = NULL WHERE approved_by_uid = ?", [uid]);
     await dbClient.execute("UPDATE ota_releases SET revoked_by_uid = NULL WHERE revoked_by_uid = ?", [uid]);

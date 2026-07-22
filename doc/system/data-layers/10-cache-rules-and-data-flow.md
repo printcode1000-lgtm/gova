@@ -8,13 +8,13 @@
 
 | Store | Purpose |
 |-------|---------|
-| `auth/current` | User session `{ uid, phone, email? }` |
+| `auth/current` | User session `{ uid, phone, email?, specialties, sessionToken? }` |
 | `queryCache` | TanStack Query persistence |
 | `guestSessions` | Guest session ID |
 | `sellerOnboarding` | Zustand onboarding state |
 | `appSettings` | Reserved |
 
-**Rule:** IndexedDB is a **local cache** — not the primary database. Persistent data lives in SQLite/Turso via API.
+**Rule:** IndexedDB is normally a local cache. Notification-center entries, notification analytics/badges, and notification-only conversation bodies are explicit local-only sources of truth and are never copied to SQLite/Turso.
 
 See [session-system.md](../session-system.md) for session details.
 

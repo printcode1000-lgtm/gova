@@ -7,7 +7,8 @@ export class CapacitorPermissionService {
   async request(): Promise<NotificationPermission | "unsupported"> {
     if (
       capacitorPlatformService.isNative() &&
-      capacitorPlatformService.getPlatform() === "android"
+      (capacitorPlatformService.getPlatform() === "android" ||
+        capacitorPlatformService.getPlatform() === "ios")
     ) {
       let status = await PushNotifications.checkPermissions();
       if (
@@ -31,7 +32,8 @@ export class CapacitorPermissionService {
   getCurrent(): NotificationPermission | "unsupported" {
     if (
       capacitorPlatformService.isNative() &&
-      capacitorPlatformService.getPlatform() === "android"
+      (capacitorPlatformService.getPlatform() === "android" ||
+        capacitorPlatformService.getPlatform() === "ios")
     ) {
       return "default";
     }

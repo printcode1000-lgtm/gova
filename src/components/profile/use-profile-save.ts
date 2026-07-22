@@ -13,9 +13,10 @@ import type {
   StoreDetailsController,
 } from "./profile-save-controller";
 import type { ProfileEditorSection } from "@/features/profile/entities/profile-editor.entity";
+import type { UserSession } from "@/features/auth/entities/session.entity";
 
 interface UseProfileSaveProps {
-  session: { uid: string } | null;
+  session: Pick<UserSession, "uid" | "sessionToken"> | null;
   locale: string;
   t: (key: string) => string;
   setActiveTab: (tab: ProfileEditTab) => void;
@@ -231,6 +232,7 @@ export function useProfileSave({
             phone: saved.registration.phone,
             email: saved.registration.email ?? undefined,
             specialties: saved.specialties,
+            sessionToken: session?.sessionToken,
           });
           setSession(updatedSession);
         }

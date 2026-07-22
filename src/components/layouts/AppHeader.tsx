@@ -8,6 +8,7 @@ import { useResolvedColorScheme, useThemePreferences } from '@/lib/preferences';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/features/cart/use-cart';
+import { SpecialtyRequestComposer } from '@/features/specialty-chat';
 
 import { AppSidebar } from './AppSidebar';
 
@@ -81,6 +82,7 @@ export function AppHeader() {
           </div>
 
           <div className="flex items-center gap-2">
+            <SpecialtyRequestComposer />
             <button
               type="button"
               id="header-theme-button"

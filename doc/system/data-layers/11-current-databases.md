@@ -32,6 +32,7 @@ Primary table:
 
 - `users`
 - `user_notification_tokens`
+- `user_notification_preferences` (provider opt-in/out metadata only; no conversation content)
 - `notification_vapid_settings`
 - `ota_releases`
 - `ota_release_audit`

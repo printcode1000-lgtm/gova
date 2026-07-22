@@ -105,7 +105,7 @@ route to the v2 channels and always use the custom notification sound.
 
 The Firebase private key is loaded only by server code. Device-token registration verifies the supplied uid and phone against the users database and validates platform/provider combinations and input sizes. The general multi-user send route requires a server-only bearer secret. The super-admin broadcast route retains its super-admin identity check and calls the server delivery service directly.
 
-The project currently uses client-persisted sessions. Therefore uid-and-phone verification is the strongest device-registration ownership check available without introducing a signed server session.
+The project uses client-persisted sessions with a signed, expiring server token issued after password login. Specialty-chat APIs require that signature in addition to checking the current UID and phone. Device-token registration retains its existing UID/phone compatibility contract.
 
 ## Verification
 
