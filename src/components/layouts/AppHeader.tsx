@@ -19,7 +19,6 @@ export function AppHeader() {
   const { t } = useTranslation();
   const pathname = usePathname();
   const { totalQuantity, flashToken } = useCart();
-  const isHomeActive = pathname === '/home';
   const isSearchActive = pathname === '/search' || pathname.startsWith('/search/');
   const isCartActive = pathname === '/cart' || pathname.startsWith('/cart/');
 
@@ -64,21 +63,6 @@ export function AppHeader() {
             >
               <Menu className="w-5 h-5" />
             </button>
-            <Link
-              id="header-brand-link"
-              href="/home"
-              className={cn(
-                "rounded-2xl px-2 py-1 text-xl font-bold no-underline transition-all active:scale-95",
-                isHomeActive
-                  ? 'bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20'
-                  : resolvedScheme === 'dark'
-                    ? 'text-primary hover:bg-surface-container-high'
-                    : 'text-blue-900 hover:bg-blue-100/70'
-              )}
-              aria-current={isHomeActive ? 'page' : undefined}
-            >
-              {t('header.brand')}
-            </Link>
           </div>
 
           <div className="flex items-center gap-2">
