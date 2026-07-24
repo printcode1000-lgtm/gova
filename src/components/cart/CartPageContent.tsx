@@ -22,6 +22,7 @@ import {
   removeCartItem,
   updateCartItemQuantity,
 } from "@/features/cart/cart-store";
+import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { useCart } from "@/features/cart/use-cart";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { notificationBus } from "@/features/notifications";
@@ -63,7 +64,8 @@ export function CartPageContent() {
   const [submitError, setSubmitError] = React.useState("");
   const productsTotalMinor = getCartTotalMinor(items);
   const sellerIds = React.useMemo(
-    () => Array.from(new Set(items.map((item) => item.sellerId))).filter(Boolean),
+    () =>
+      Array.from(new Set(items.map((item) => item.sellerId))).filter(Boolean),
     [items],
   );
 
@@ -73,8 +75,12 @@ export function CartPageContent() {
       const entries = await Promise.all(
         sellerIds.map(async (sellerId) => {
           try {
-            const settings = await profileService.getFulfillmentSettings(sellerId);
-            return [sellerId, normalizeProfileFulfillmentSettings(settings)] as const;
+            const settings =
+              await profileService.getFulfillmentSettings(sellerId);
+            return [
+              sellerId,
+              normalizeProfileFulfillmentSettings(settings),
+            ] as const;
           } catch {
             return [sellerId, EMPTY_PROFILE_FULFILLMENT_SETTINGS] as const;
           }
@@ -95,30 +101,24 @@ export function CartPageContent() {
         const subtotalMinor = getCartTotalMinor(sellerItems);
         const settings =
           sellerSettings[sellerId] ?? EMPTY_PROFILE_FULFILLMENT_SETTINGS;
-        const pricing = settings.shippingPricing;
         const hasSpecialVehicle = sellerItems.some(
           (item) => item.requiresSpecialVehicle,
         );
-        const thresholdMinor = Math.round(pricing.freeShippingThreshold * 100);
-        const eligibleForFree =
-          thresholdMinor > 0 && subtotalMinor >= thresholdMinor;
-        const baseShipping =
-          pricing.mode === "free" || eligibleForFree
-            ? 0
-            : pricing.mode === "flat"
-              ? pricing.flatRate
-              : pricing.locationBaseRate;
-        const shippingMinor =
-          Math.round(baseShipping * 100) +
-          (hasSpecialVehicle ? Math.round(pricing.specialVehicleFee * 100) : 0);
+        const shipping = calculateSellerShipping(
+          settings.shippingPricing,
+          subtotalMinor,
+          hasSpecialVehicle,
+        );
 
         return {
           sellerId,
           items: sellerItems,
           settings,
           subtotalMinor,
-          shippingMinor,
-          eligibleForFree,
+          shippingMinor: shipping.confirmedShippingMinor,
+          specialVehicleFeeMinor: shipping.specialVehicleFeeMinor,
+          quoteRequired: shipping.quoteRequired,
+          eligibleForFree: shipping.freeThresholdApplied,
           hasSpecialVehicle,
         };
       }),
@@ -130,6 +130,9 @@ export function CartPageContent() {
     0,
   );
   const totalMinor = productsTotalMinor + shippingTotalMinor;
+  const hasPendingShippingQuote = sellerGroups.some(
+    (group) => group.quoteRequired,
+  );
 
   const submitOrder = async () => {
     if (!session?.uid) {
@@ -171,10 +174,14 @@ export function CartPageContent() {
         "ar",
       );
       await clearCart();
-      router.push(`/orders/details?orderId=${encodeURIComponent(result.orderId)}`);
+      router.push(
+        `/orders/details?orderId=${encodeURIComponent(result.orderId)}`,
+      );
     } catch (error) {
       setSubmitError(
-        orderErrorMessage(error instanceof Error ? error.message : String(error)),
+        orderErrorMessage(
+          error instanceof Error ? error.message : String(error),
+        ),
       );
     } finally {
       setIsSubmitting(false);
@@ -187,7 +194,8 @@ export function CartPageContent() {
         <div>
           <h1 className="text-2xl font-bold text-on-surface">السلة</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            راجع المنتجات والخدمات قبل إرسالها كطلب رسمي بنظام الدفع عند الاستلام.
+            راجع المنتجات والخدمات قبل إرسالها كطلب رسمي بنظام الدفع عند
+            الاستلام.
           </p>
         </div>
         {items.length > 0 ? (
@@ -230,8 +238,12 @@ export function CartPageContent() {
                   <div>
                     <h2 className="text-sm font-bold">البائع</h2>
                     <p className="text-xs text-muted-foreground">
-                      الشحن: {formatMoney(group.shippingMinor)}
-                      {group.eligibleForFree ? " - تم تطبيق حد الشحن المجاني" : ""}
+                      {group.quoteRequired
+                        ? `رسوم مؤكدة حاليًا: ${formatMoney(group.shippingMinor)} — تكلفة الشحن حسب المكان تُحدد بعد الطلب`
+                        : `الشحن: ${formatMoney(group.shippingMinor)}`}
+                      {group.eligibleForFree
+                        ? " - تم تطبيق حد الشحن المجاني"
+                        : ""}
                     </p>
                   </div>
                   <Link
@@ -297,7 +309,10 @@ export function CartPageContent() {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  void updateCartItemQuantity(item.id, item.quantity - 1)
+                                  void updateCartItemQuantity(
+                                    item.id,
+                                    item.quantity - 1,
+                                  )
                                 }
                                 className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
                                 aria-label="تقليل الكمية"
@@ -310,7 +325,10 @@ export function CartPageContent() {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  void updateCartItemQuantity(item.id, item.quantity + 1)
+                                  void updateCartItemQuantity(
+                                    item.id,
+                                    item.quantity + 1,
+                                  )
                                 }
                                 className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
                                 aria-label="زيادة الكمية"
@@ -365,9 +383,11 @@ export function CartPageContent() {
                         <p>
                           تكلفة شحن الإرجاع:{" "}
                           <span className="font-semibold text-on-surface">
-                            {group.settings.returns.returnShippingPayer === "buyer"
+                            {group.settings.returns.returnShippingPayer ===
+                            "buyer"
                               ? "المشتري"
-                              : group.settings.returns.returnShippingPayer === "seller"
+                              : group.settings.returns.returnShippingPayer ===
+                                  "seller"
                                 ? "البائع"
                                 : "حسب الحالة"}
                           </span>
@@ -396,11 +416,19 @@ export function CartPageContent() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">إجمالي المنتجات</span>
-                <span className="font-semibold">{formatMoney(productsTotalMinor)}</span>
+                <span className="font-semibold">
+                  {formatMoney(productsTotalMinor)}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">إجمالي الشحن</span>
-                <span className="font-semibold">{formatMoney(shippingTotalMinor)}</span>
+                <span className="text-muted-foreground">
+                  {hasPendingShippingQuote
+                    ? "رسوم الشحن المؤكدة حاليًا"
+                    : "إجمالي الشحن"}
+                </span>
+                <span className="font-semibold">
+                  {formatMoney(shippingTotalMinor)}
+                </span>
               </div>
               <div className="border-t border-outline-variant pt-3">
                 <div className="flex justify-between text-base font-bold">
@@ -409,6 +437,12 @@ export function CartPageContent() {
                 </div>
               </div>
             </div>
+            {hasPendingShippingQuote ? (
+              <p className="mt-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm leading-6 text-on-surface">
+                الإجمالي مبدئي ولا يشمل عروض الشحن حسب المكان. ستُضاف قيمة كل
+                عرض فقط بعد موافقتك عليه من صفحة تفاصيل الطلب.
+              </p>
+            ) : null}
             {submitError ? (
               <p className="mt-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
                 {submitError}
@@ -420,11 +454,14 @@ export function CartPageContent() {
               onClick={submitOrder}
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {isSubmitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : null}
               إرسال الطلب
             </button>
             <p className="mt-3 text-xs leading-5 text-muted-foreground">
-              سيتم إنشاء الطلب الرسمي من قاعدة البيانات، والدفع عند الاستلام فقط.
+              سيتم إنشاء الطلب الرسمي من قاعدة البيانات، والدفع عند الاستلام
+              فقط.
             </p>
           </aside>
         </div>

@@ -16,13 +16,14 @@ No production credentials are needed for development. The first server-side serv
 
 ```text
 npm run typecheck
+npm run test:shipping-pricing
 npm run test:marketplace-orders
 npm test
 npm run architecture:check
 npm run build
 ```
 
-The executable suites use in-memory SQLite databases with the production migration. They verify the complete table/column/service/enum contract, real foreign keys, integer-money guards, checks, triggers, indexes, service transitions, calculated totals/statuses, both duplicate-assignment paths, image rejection, cross-order isolation, role permissions, and audit creation.
+The executable suites use in-memory SQLite databases with the production migration. They verify the complete table/column/service/enum contract, real foreign keys, integer-money guards, checks, triggers, indexes, service transitions, calculated totals/statuses, location-quote permissions and revisions, buyer-approved shipping totals, processing gates, both duplicate-assignment paths, image rejection, cross-order isolation, role permissions, and audit creation.
 
 ## Operational diagnostics
 

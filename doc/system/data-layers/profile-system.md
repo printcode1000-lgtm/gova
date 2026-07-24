@@ -22,7 +22,7 @@ Logical link: `user_profiles.uid` points to `users.uid`. There is no cross-datab
 | Primary contact | `primary_phone`, `primary_phone_normalized`, `primary_whatsapp`, `primary_whatsapp_normalized`, `primary_email` |
 | Primary location | `primary_address`, `primary_governorate`, `primary_city`, `primary_area`, `primary_latitude`, `primary_longitude` |
 | Rating cache | `rating_enabled`, `rating_mode`, `rating_average`, `rating_count` |
-| Shipping | `shipping_pricing_mode`, `shipping_flat_rate`, `shipping_location_base_rate`, `shipping_special_vehicle_fee`, `shipping_free_shipping_threshold`, `shipping_notes` |
+| Shipping | `shipping_pricing_mode`, `shipping_flat_rate`, legacy `shipping_location_base_rate` (always zero and unused), `shipping_special_vehicle_fee`, `shipping_free_shipping_threshold`, `shipping_notes` |
 | Returns | `returns_enabled`, `return_window_days`, `return_shipping_payer`, `return_policy_text` |
 | Profile display | `custom_request_enabled`, `trending_label` |
 
@@ -72,6 +72,8 @@ Profile UI
 ```
 
 Basic registration credentials stay in the users/auth database. Profile display, search, contacts, locations, shipping, returns, working hours, follows, and seller category indexes stay in the profile database.
+
+Shipping mode `by_location` stores no estimated numeric location value. It starts the buyer-approved quote flow in the marketplace-orders database. Special-vehicle fees are evaluated per seller cart group and apply only when at least one included product requires a transport vehicle.
 
 ## Store Details
 

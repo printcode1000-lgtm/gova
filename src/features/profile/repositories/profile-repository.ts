@@ -531,7 +531,6 @@ export class ProfileRepository implements IProfileRepository {
             ? row.shippingPricingMode
             : "free",
         flatRate: row.shippingFlatRate,
-        locationBaseRate: row.shippingLocationBaseRate,
         specialVehicleFee: row.shippingSpecialVehicleFee,
         freeShippingThreshold: row.shippingFreeShippingThreshold,
         notes: row.shippingNotes,
@@ -560,7 +559,9 @@ export class ProfileRepository implements IProfileRepository {
       .set({
         shippingPricingMode: settings.shippingPricing.mode,
         shippingFlatRate: settings.shippingPricing.flatRate,
-        shippingLocationBaseRate: settings.shippingPricing.locationBaseRate,
+        // Kept at zero only for the legacy database column. Location-based
+        // shipping is now negotiated through a buyer-approved order quote.
+        shippingLocationBaseRate: 0,
         shippingSpecialVehicleFee: settings.shippingPricing.specialVehicleFee,
         shippingFreeShippingThreshold:
           settings.shippingPricing.freeShippingThreshold,

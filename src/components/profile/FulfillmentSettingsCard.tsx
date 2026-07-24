@@ -88,18 +88,13 @@ export const FulfillmentSettingsCard = React.forwardRef<
         ? `تم اختيار ${count} مقدم توصيل.`
         : `${count} delivery provider(s) selected.`,
     returnPolicy: locale === "ar" ? "سياسة الإرجاع" : "Return policy",
-    shippingPricing:
-      locale === "ar" ? "تسعير الشحن" : "Shipping pricing",
+    shippingPricing: locale === "ar" ? "تسعير الشحن" : "Shipping pricing",
     shippingPricingMode:
       locale === "ar" ? "طريقة حساب الشحن" : "Shipping pricing method",
     freeShipping: locale === "ar" ? "شحن مجاني" : "Free shipping",
     flatShipping: locale === "ar" ? "قيمة ثابتة" : "Flat rate",
     locationShipping: locale === "ar" ? "حسب المكان" : "By location",
     flatRate: locale === "ar" ? "قيمة الشحن الثابتة" : "Flat shipping rate",
-    locationBaseRate:
-      locale === "ar"
-        ? "قيمة تقديرية حسب المكان"
-        : "Estimated location-based rate",
     specialVehicleFee:
       locale === "ar"
         ? "رسوم سيارة النقل عند الحاجة"
@@ -118,9 +113,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
     returnWindowDays:
       locale === "ar" ? "عدد أيام الإرجاع" : "Return window days",
     returnShippingPayer:
-      locale === "ar"
-        ? "من يتحمل تكلفة شحن الإرجاع"
-        : "Return shipping payer",
+      locale === "ar" ? "من يتحمل تكلفة شحن الإرجاع" : "Return shipping payer",
     buyer: locale === "ar" ? "المشتري" : "Buyer",
     seller: locale === "ar" ? "البائع" : "Seller",
     caseByCase: locale === "ar" ? "حسب الحالة" : "Case by case",
@@ -198,9 +191,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
     <div className="space-y-5">
       {error ? (
         <div className="rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
-          {error === "invalidDeliveryCarrier"
-            ? text.invalidCarrier
-            : error}
+          {error === "invalidDeliveryCarrier" ? text.invalidCarrier : error}
         </div>
       ) : null}
       {saved && !isDirty ? (
@@ -320,53 +311,35 @@ export const FulfillmentSettingsCard = React.forwardRef<
             <SelectContent>
               <SelectItem value="free">{text.freeShipping}</SelectItem>
               <SelectItem value="flat">{text.flatShipping}</SelectItem>
-              <SelectItem value="by_location">{text.locationShipping}</SelectItem>
+              <SelectItem value="by_location">
+                {text.locationShipping}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="shippingFlatRate">{text.flatRate}</Label>
-            <Input
-              id="shippingFlatRate"
-              type="number"
-              min={0}
-              step="0.01"
-              value={safeSettings.shippingPricing.flatRate}
-              onChange={(event) =>
-                updateSettings((current) => ({
-                  ...current,
-                  shippingPricing: {
-                    ...current.shippingPricing,
-                    flatRate: Number(event.target.value),
-                  },
-                }))
-              }
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="shippingLocationBaseRate">
-              {text.locationBaseRate}
-            </Label>
-            <Input
-              id="shippingLocationBaseRate"
-              type="number"
-              min={0}
-              step="0.01"
-              value={safeSettings.shippingPricing.locationBaseRate}
-              onChange={(event) =>
-                updateSettings((current) => ({
-                  ...current,
-                  shippingPricing: {
-                    ...current.shippingPricing,
-                    locationBaseRate: Number(event.target.value),
-                  },
-                }))
-              }
-            />
-          </div>
+          {safeSettings.shippingPricing.mode === "flat" ? (
+            <div className="space-y-2">
+              <Label htmlFor="shippingFlatRate">{text.flatRate}</Label>
+              <Input
+                id="shippingFlatRate"
+                type="number"
+                min={0}
+                step="0.01"
+                value={safeSettings.shippingPricing.flatRate}
+                onChange={(event) =>
+                  updateSettings((current) => ({
+                    ...current,
+                    shippingPricing: {
+                      ...current.shippingPricing,
+                      flatRate: Number(event.target.value),
+                    },
+                  }))
+                }
+              />
+            </div>
+          ) : null}
 
           <div className="space-y-2">
             <Label htmlFor="shippingSpecialVehicleFee">
@@ -390,28 +363,38 @@ export const FulfillmentSettingsCard = React.forwardRef<
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="shippingFreeThreshold">
-              {text.freeShippingThreshold}
-            </Label>
-            <Input
-              id="shippingFreeThreshold"
-              type="number"
-              min={0}
-              step="0.01"
-              value={safeSettings.shippingPricing.freeShippingThreshold}
-              onChange={(event) =>
-                updateSettings((current) => ({
-                  ...current,
-                  shippingPricing: {
-                    ...current.shippingPricing,
-                    freeShippingThreshold: Number(event.target.value),
-                  },
-                }))
-              }
-            />
-          </div>
+          {safeSettings.shippingPricing.mode !== "free" ? (
+            <div className="space-y-2">
+              <Label htmlFor="shippingFreeThreshold">
+                {text.freeShippingThreshold}
+              </Label>
+              <Input
+                id="shippingFreeThreshold"
+                type="number"
+                min={0}
+                step="0.01"
+                value={safeSettings.shippingPricing.freeShippingThreshold}
+                onChange={(event) =>
+                  updateSettings((current) => ({
+                    ...current,
+                    shippingPricing: {
+                      ...current.shippingPricing,
+                      freeShippingThreshold: Number(event.target.value),
+                    },
+                  }))
+                }
+              />
+            </div>
+          ) : null}
         </div>
+
+        {safeSettings.shippingPricing.mode === "by_location" ? (
+          <p className="rounded-xl border border-primary/25 bg-primary/10 px-3 py-2 text-sm leading-6 text-on-surface">
+            {locale === "ar"
+              ? "سيتم تحديد قيمة الشحن بعد إنشاء الطلب ومراجعة عنوان المشتري، ولن تُضاف إلى الإجمالي إلا بعد موافقة المشتري على العرض."
+              : "Shipping will be quoted after the order and buyer address are reviewed, and will only be added after the buyer accepts the quote."}
+          </p>
+        ) : null}
 
         <div className="space-y-2">
           <Label htmlFor="shippingNotes">{text.shippingNotes}</Label>
@@ -494,15 +477,9 @@ export const FulfillmentSettingsCard = React.forwardRef<
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="buyer">
-                {text.buyer}
-              </SelectItem>
-              <SelectItem value="seller">
-                {text.seller}
-              </SelectItem>
-              <SelectItem value="case_by_case">
-                {text.caseByCase}
-              </SelectItem>
+              <SelectItem value="buyer">{text.buyer}</SelectItem>
+              <SelectItem value="seller">{text.seller}</SelectItem>
+              <SelectItem value="case_by_case">{text.caseByCase}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -529,7 +506,6 @@ export const FulfillmentSettingsCard = React.forwardRef<
             {settings.returns.policyText.length}/2000
           </p>
         </div>
-
       </section>
     </div>
   );

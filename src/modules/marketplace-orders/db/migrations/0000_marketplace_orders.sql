@@ -74,3 +74,33 @@ CREATE TRIGGER IF NOT EXISTS payment_money_update_guard BEFORE UPDATE OF amount 
 CREATE TRIGGER IF NOT EXISTS custom_request_requires_image_guard BEFORE UPDATE OF status ON custom_request_items WHEN NEW.status IN ('waiting_for_pricing','price_offer_sent','buyer_accepted_price','seller_accepted','preparing','ready_for_shipping','assigned_to_shipment','in_transit','delivered','return_requested','replacement_requested','returned','refunded','replaced','closed') AND NOT EXISTS (SELECT 1 FROM custom_request_images WHERE custom_request_item_id=NEW.id) BEGIN SELECT RAISE(ABORT,'custom request requires at least one image'); END;
 CREATE TRIGGER IF NOT EXISTS custom_image_order_guard BEFORE INSERT ON custom_request_images WHEN NOT EXISTS (SELECT 1 FROM custom_request_items WHERE id=NEW.custom_request_item_id AND order_id=NEW.order_id) BEGIN SELECT RAISE(ABORT,'custom image order mismatch'); END;
 CREATE TRIGGER IF NOT EXISTS shipment_item_consistency_guard BEFORE INSERT ON shipment_items WHEN NOT EXISTS (SELECT 1 FROM shipments WHERE id=NEW.shipment_id AND order_id=NEW.order_id) OR NOT EXISTS (SELECT 1 FROM seller_orders WHERE id=NEW.seller_order_id AND order_id=NEW.order_id) OR (NEW.item_type='order_item' AND NOT EXISTS (SELECT 1 FROM order_items WHERE id=NEW.order_item_id AND order_id=NEW.order_id AND seller_order_id=NEW.seller_order_id)) OR (NEW.item_type='custom_request_item' AND NOT EXISTS (SELECT 1 FROM custom_request_items WHERE id=NEW.custom_request_item_id AND order_id=NEW.order_id AND seller_order_id=NEW.seller_order_id)) BEGIN SELECT RAISE(ABORT,'shipment item relationship mismatch'); END;
+
+CREATE TABLE IF NOT EXISTS shipping_quotes (
+  id TEXT PRIMARY KEY,
+  order_id TEXT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  seller_order_id TEXT NOT NULL REFERENCES seller_orders(id) ON DELETE CASCADE,
+  seller_id TEXT NOT NULL,
+  service_provider_id TEXT,
+  buyer_id TEXT NOT NULL,
+  version INTEGER NOT NULL CHECK(version > 0),
+  proposed_by TEXT,
+  proposed_by_role TEXT CHECK(proposed_by_role IS NULL OR proposed_by_role IN ('seller','service_provider','admin')),
+  base_shipping_price INTEGER NOT NULL DEFAULT 0 CHECK(base_shipping_price >= 0),
+  special_vehicle_fee INTEGER NOT NULL DEFAULT 0 CHECK(special_vehicle_fee >= 0),
+  total_shipping_price INTEGER NOT NULL DEFAULT 0 CHECK(total_shipping_price >= 0),
+  status TEXT NOT NULL CHECK(status IN ('requested','pending_buyer','accepted','rejected','superseded','expired','cancelled')),
+  notes TEXT,
+  expires_at TEXT,
+  responded_at TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(seller_order_id, version)
+);
+CREATE INDEX IF NOT EXISTS shipping_quotes_order_id_idx ON shipping_quotes(order_id);
+CREATE INDEX IF NOT EXISTS shipping_quotes_seller_order_id_idx ON shipping_quotes(seller_order_id);
+CREATE INDEX IF NOT EXISTS shipping_quotes_buyer_id_idx ON shipping_quotes(buyer_id);
+CREATE INDEX IF NOT EXISTS shipping_quotes_status_idx ON shipping_quotes(status);
+CREATE UNIQUE INDEX IF NOT EXISTS shipping_quotes_one_pending_idx ON shipping_quotes(seller_order_id) WHERE status='pending_buyer';
+CREATE UNIQUE INDEX IF NOT EXISTS shipping_quotes_one_accepted_idx ON shipping_quotes(seller_order_id) WHERE status='accepted';
+CREATE TRIGGER IF NOT EXISTS shipping_quote_money_insert_guard BEFORE INSERT ON shipping_quotes WHEN typeof(NEW.base_shipping_price)<>'integer' OR typeof(NEW.special_vehicle_fee)<>'integer' OR typeof(NEW.total_shipping_price)<>'integer' BEGIN SELECT RAISE(ABORT,'shipping quote money must use integer minor units'); END;
+CREATE TRIGGER IF NOT EXISTS shipping_quote_money_update_guard BEFORE UPDATE OF base_shipping_price,special_vehicle_fee,total_shipping_price ON shipping_quotes WHEN typeof(NEW.base_shipping_price)<>'integer' OR typeof(NEW.special_vehicle_fee)<>'integer' OR typeof(NEW.total_shipping_price)<>'integer' BEGIN SELECT RAISE(ABORT,'shipping quote money must use integer minor units'); END;

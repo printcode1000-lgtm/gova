@@ -1,8 +1,13 @@
 import { apiSuccess } from "@/core/api/api-response";
+import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { getMarketplaceOrderService } from "@/modules/marketplace-orders/api/server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
-import { actorFromInput, mapOrderError, moneyMinor } from "../order-api-helpers";
+import {
+  actorFromInput,
+  mapOrderError,
+  moneyMinor,
+} from "../order-api-helpers";
 
 interface CartOrderItemInput {
   productId: string;
@@ -22,7 +27,9 @@ interface FromCartInput {
   items: CartOrderItemInput[];
 }
 
-function firstCarrier(settings: Awaited<ReturnType<typeof profileService.getFulfillmentSettings>>) {
+function firstCarrier(
+  settings: Awaited<ReturnType<typeof profileService.getFulfillmentSettings>>,
+) {
   return settings.carrierUids.find(Boolean) ?? "";
 }
 
@@ -34,25 +41,26 @@ function shippingForSeller(
     (total, item) => total + moneyMinor(item.unitPriceMinor) * item.quantity,
     0,
   );
-  const pricing = settings.shippingPricing;
-  const threshold = Math.round(pricing.freeShippingThreshold * 100);
-  const free = pricing.mode === "free" || (threshold > 0 && subtotal >= threshold);
-  const base = free
-    ? 0
-    : pricing.mode === "flat"
-      ? Math.round(pricing.flatRate * 100)
-      : Math.round(pricing.locationBaseRate * 100);
-  const vehicle = items.some((item) => item.requiresSpecialVehicle)
-    ? Math.round(pricing.specialVehicleFee * 100)
-    : 0;
-  return base + vehicle;
+  const result = calculateSellerShipping(
+    settings.shippingPricing,
+    subtotal,
+    items.some((item) => item.requiresSpecialVehicle),
+  );
+  return {
+    confirmedShipping: result.confirmedShippingMinor,
+    quoteRequired: result.quoteRequired,
+    specialVehicleFee: result.specialVehicleFeeMinor,
+  };
 }
 
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/orders/from-cart", async () => {
     try {
       const body = (await request.json()) as FromCartInput;
-      const actor = actorFromInput({ uid: body.uid, phone: body.phone }, "buyer");
+      const actor = actorFromInput(
+        { uid: body.uid, phone: body.phone },
+        "buyer",
+      );
       if (!Array.isArray(body.items) || body.items.length === 0) {
         throw new Error("Cart items are required");
       }
@@ -64,13 +72,19 @@ export async function POST(request: Request) {
         throw new Error("Buyer profile phone and address are required");
       }
 
-      const sellerIds = Array.from(new Set(body.items.map((item) => item.sellerId))).filter(Boolean);
-      const fulfillmentBySeller = new Map<string, Awaited<ReturnType<typeof profileService.getFulfillmentSettings>>>();
+      const sellerIds = Array.from(
+        new Set(body.items.map((item) => item.sellerId)),
+      ).filter(Boolean);
+      const fulfillmentBySeller = new Map<
+        string,
+        Awaited<ReturnType<typeof profileService.getFulfillmentSettings>>
+      >();
       const carrierBySeller = new Map<string, string>();
       for (const sellerId of sellerIds) {
         const settings = await profileService.getFulfillmentSettings(sellerId);
         const carrierUid = firstCarrier(settings);
-        if (!carrierUid) throw new Error(`Delivery carrier required for seller ${sellerId}`);
+        if (!carrierUid)
+          throw new Error(`Delivery carrier required for seller ${sellerId}`);
         fulfillmentBySeller.set(sellerId, settings);
         carrierBySeller.set(sellerId, carrierUid);
       }
@@ -95,11 +109,17 @@ export async function POST(request: Request) {
       );
 
       for (const sellerId of sellerIds) {
-        const sellerItems = body.items.filter((item) => item.sellerId === sellerId);
-        const sellerShipping = shippingForSeller(fulfillmentBySeller.get(sellerId)!, sellerItems);
+        const sellerItems = body.items.filter(
+          (item) => item.sellerId === sellerId,
+        );
+        const sellerShipping = shippingForSeller(
+          fulfillmentBySeller.get(sellerId)!,
+          sellerItems,
+        );
         let shippingAssigned = false;
+        let sellerOrderId = "";
         for (const item of sellerItems) {
-          await service.addOrderItem(
+          const createdItem = await service.addOrderItem(
             String(order.id),
             {
               sellerId,
@@ -109,17 +129,26 @@ export async function POST(request: Request) {
               productDescription:
                 item.unitPriceMinor === 0 && item.priceLabel
                   ? `${item.description ?? ""}\n${item.priceLabel}`.trim()
-                  : item.description ?? "",
+                  : (item.description ?? ""),
               productImage: item.imageUrl ?? null,
               quantity: Math.max(1, Math.floor(Number(item.quantity))),
               unitPrice: moneyMinor(item.unitPriceMinor),
-              shipping: shippingAssigned ? 0 : sellerShipping,
+              shipping: shippingAssigned ? 0 : sellerShipping.confirmedShipping,
               shippingNotes: `carrier:${carrierBySeller.get(sellerId)}`,
               requiresSpecialVehicle: item.requiresSpecialVehicle === true,
             },
             actor,
           );
+          sellerOrderId = String(createdItem.seller_order_id ?? sellerOrderId);
           shippingAssigned = true;
+        }
+        if (sellerShipping.quoteRequired && sellerOrderId) {
+          await service.requestShippingQuote(
+            String(order.id),
+            sellerOrderId,
+            sellerShipping.specialVehicleFee,
+            actor,
+          );
         }
       }
 

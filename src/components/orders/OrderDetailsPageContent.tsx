@@ -6,15 +6,22 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   ArrowRight,
+  CheckCircle2,
+  CircleDollarSign,
   ExternalLink,
   Loader2,
+  MapPin,
   PackageCheck,
+  Send,
   ShieldCheck,
   Truck,
+  XCircle,
 } from "lucide-react";
 
 import { asolApi } from "@/core/api/asol-api-client";
 import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { OrderActionButton } from "./OrderActionButton";
@@ -33,7 +40,10 @@ import {
 } from "./order-labels";
 import type { DbRow, OrderDetails, OrderRole } from "./order-types";
 
-type RunAction = (action: string, payload: Record<string, string | number>) => void;
+type RunAction = (
+  action: string,
+  payload: Record<string, string | number>,
+) => void;
 
 const text = {
   loadFailed: "تعذر تحميل الطلب.",
@@ -117,16 +127,21 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
     setBusyAction(`${action}:${Object.values(payload).join(":")}`);
     setError("");
     try {
-      await asolApi.post(ASOL_API_ROUTES.orders.actions(orderId), {
-        uid: session.uid,
-        phone: session.phone,
-        action,
-        reason:
-          action.includes("cancel") || action.includes("reject")
-            ? text.actionReason
-            : undefined,
-        ...payload,
-      }, { suppressErrorLog: true });
+      await asolApi.post(
+        ASOL_API_ROUTES.orders.actions(orderId),
+        {
+          uid: session.uid,
+          phone: session.phone,
+          role: activeRole,
+          action,
+          reason:
+            action.includes("cancel") || action.includes("reject")
+              ? text.actionReason
+              : undefined,
+          ...payload,
+        },
+        { suppressErrorLog: true },
+      );
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : text.actionFailed);
@@ -169,9 +184,10 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
   const buyerLocation = profileAddress(buyer);
   const currency = String(order.currency ?? "EGP");
   const isBuyer = admin || session.uid === buyerId;
-  const canRejectAnyDelivery = [...details.orderItems, ...details.customItems].some(
-    (item) => canRejectDeliveryStatus(item.status),
-  );
+  const canRejectAnyDelivery = [
+    ...details.orderItems,
+    ...details.customItems,
+  ].some((item) => canRejectDeliveryStatus(item.status));
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
@@ -204,6 +220,11 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
         buyerAddress={buyerLocation.address}
         buyerPhone={buyerLocation.phone}
         currency={currency}
+        hasPendingShippingQuote={details.shippingQuotes.some((quote) =>
+          ["requested", "pending_buyer", "rejected"].includes(
+            String(quote.status),
+          ),
+        )}
       />
 
       <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
@@ -254,7 +275,10 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
 
 function BackToOrders() {
   return (
-    <Link href="/orders" className="inline-flex items-center gap-2 text-sm text-primary">
+    <Link
+      href="/orders"
+      className="inline-flex items-center gap-2 text-sm text-primary"
+    >
       <ArrowRight className="h-4 w-4" />
       {text.back}
     </Link>
@@ -266,11 +290,13 @@ function OrderSummary({
   buyerAddress,
   buyerPhone,
   currency,
+  hasPendingShippingQuote,
 }: {
   order: DbRow;
   buyerAddress: string;
   buyerPhone: string;
   currency: string;
+  hasPendingShippingQuote: boolean;
 }) {
   return (
     <section className="mb-5 grid gap-4 md:grid-cols-3">
@@ -279,6 +305,11 @@ function OrderSummary({
         <p className="mt-1 text-xl font-bold">
           {formatMoney(order.grand_total, currency)}
         </p>
+        {hasPendingShippingQuote ? (
+          <p className="mt-2 text-xs leading-5 text-warning">
+            الإجمالي مبدئي حتى قبول عرض الشحن حسب المكان.
+          </p>
+        ) : null}
       </div>
       <div className="rounded-xl border border-outline-variant bg-surface p-4">
         <p className="text-sm text-muted-foreground">{text.remaining}</p>
@@ -332,14 +363,18 @@ function SellerOrderCard({
   const sellerProfile = details.profiles[sellerId];
   const carrierProfile = carrierId ? details.profiles[carrierId] : null;
   const isSeller = admin || sessionUid === sellerId;
+  const isCarrier = admin || (Boolean(carrierId) && sessionUid === carrierId);
+  const shippingQuotes = details.shippingQuotes.filter(
+    (quote) => String(quote.seller_order_id) === String(sellerOrder.id),
+  );
   const shipmentExists = details.shipments.some(
     (shipment) => String(shipment.carrier_id ?? "") === carrierId,
   );
   const hasPendingItems = [...sellerItems, ...customItems].some((item) =>
     isPendingSellerResponse(item.status),
   );
-  const canRejectSellerDelivery = [...sellerItems, ...customItems].some((item) =>
-    canRejectDeliveryStatus(item.status),
+  const canRejectSellerDelivery = [...sellerItems, ...customItems].some(
+    (item) => canRejectDeliveryStatus(item.status),
   );
 
   return (
@@ -371,6 +406,18 @@ function SellerOrderCard({
         >
           {isSeller ? text.sellerHint : text.notSellerHint}
         </p>
+      ) : null}
+
+      {shippingQuotes.length > 0 ? (
+        <ShippingQuotePanel
+          sellerOrderId={String(sellerOrder.id)}
+          quotes={shippingQuotes}
+          currency={currency}
+          canPropose={isSeller || isCarrier}
+          isBuyer={isBuyer}
+          busyAction={busyAction}
+          runAction={runAction}
+        />
       ) : null}
 
       <div className="mt-4 space-y-3">
@@ -442,6 +489,200 @@ function SellerOrderCard({
   );
 }
 
+function ShippingQuotePanel({
+  sellerOrderId,
+  quotes,
+  currency,
+  canPropose,
+  isBuyer,
+  busyAction,
+  runAction,
+}: {
+  sellerOrderId: string;
+  quotes: DbRow[];
+  currency: string;
+  canPropose: boolean;
+  isBuyer: boolean;
+  busyAction: string;
+  runAction: RunAction;
+}) {
+  const latest = [...quotes].sort(
+    (left, right) => Number(right.version ?? 0) - Number(left.version ?? 0),
+  )[0];
+  const status = String(latest?.status ?? "requested");
+  const canSend =
+    canPropose && ["requested", "rejected", "expired"].includes(status);
+  const canRespond = isBuyer && status === "pending_buyer";
+  const [amount, setAmount] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+  const amountMinor = Math.round(Number(amount) * 100);
+  const validAmount = Number.isSafeInteger(amountMinor) && amountMinor >= 0;
+  const sending = busyAction.startsWith("seller_send_shipping_quote:");
+
+  const statusText: Record<string, string> = {
+    requested: "بانتظار تحديد قيمة الشحن",
+    pending_buyer: "بانتظار موافقة المشتري",
+    accepted: "اعتمد المشتري عرض الشحن",
+    rejected: "رفض المشتري العرض ويمكن إرسال قيمة معدلة",
+    expired: "انتهت صلاحية العرض ويمكن إرسال قيمة جديدة",
+    cancelled: "أُلغي عرض الشحن",
+  };
+
+  return (
+    <section className="mt-4 overflow-hidden rounded-xl border border-primary/25 bg-primary/5">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-primary/15 px-3 py-3">
+        <div className="flex items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary">
+            <MapPin className="h-5 w-5" />
+          </span>
+          <div>
+            <h3 className="text-sm font-bold">عرض الشحن حسب المكان</h3>
+            <p className="text-xs text-muted-foreground">
+              الإصدار {String(latest.version ?? 1)} ·{" "}
+              {statusText[status] ?? status}
+            </p>
+          </div>
+        </div>
+        {status === "accepted" ? (
+          <CheckCircle2 className="h-6 w-6 text-success" />
+        ) : status === "rejected" ? (
+          <XCircle className="h-6 w-6 text-error" />
+        ) : (
+          <CircleDollarSign className="h-6 w-6 text-primary" />
+        )}
+      </div>
+
+      {status !== "requested" ? (
+        <div className="grid gap-2 px-3 py-3 text-sm sm:grid-cols-3">
+          <QuoteAmount
+            label="الشحن الأساسي"
+            value={latest.base_shipping_price}
+            currency={currency}
+          />
+          <QuoteAmount
+            label="سيارة النقل عند الحاجة"
+            value={latest.special_vehicle_fee}
+            currency={currency}
+          />
+          <QuoteAmount
+            label="إجمالي العرض"
+            value={latest.total_shipping_price}
+            currency={currency}
+            emphasized
+          />
+          {latest.notes ? (
+            <p className="rounded-lg bg-surface px-3 py-2 text-xs leading-5 text-muted-foreground sm:col-span-3">
+              {String(latest.notes)}
+            </p>
+          ) : null}
+        </div>
+      ) : (
+        <p className="px-3 py-3 text-sm leading-6 text-muted-foreground">
+          تُراجع وجهة المشتري أولًا، ثم تُرسل قيمة الشحن. لا تُضاف القيمة إلى
+          إجمالي الطلب إلا بعد موافقة المشتري.
+        </p>
+      )}
+
+      {canSend ? (
+        <div className="grid gap-3 border-t border-primary/15 px-3 py-3 sm:grid-cols-[180px_1fr_auto] sm:items-end">
+          <label className="space-y-1 text-xs font-semibold">
+            قيمة الشحن الأساسية بالجنيه
+            <Input
+              type="number"
+              min={0}
+              step="0.01"
+              inputMode="decimal"
+              value={amount}
+              onChange={(event) => setAmount(event.target.value)}
+              placeholder="0.00"
+            />
+          </label>
+          <label className="space-y-1 text-xs font-semibold">
+            توضيح اختياري للمشتري
+            <Textarea
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+              maxLength={1000}
+              rows={2}
+              placeholder="المسافة أو طريقة التوصيل أو مدة الوصول"
+            />
+          </label>
+          <button
+            type="button"
+            disabled={!validAmount || sending || Boolean(busyAction)}
+            onClick={() =>
+              runAction("seller_send_shipping_quote", {
+                sellerOrderId,
+                shippingPriceMinor: amountMinor,
+                notes,
+              })
+            }
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-on-primary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {sending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+            إرسال العرض
+          </button>
+        </div>
+      ) : null}
+
+      {canRespond ? (
+        <div className="flex flex-wrap gap-2 border-t border-primary/15 px-3 py-3">
+          <OrderActionButton
+            action="buyer_accept_shipping_quote"
+            busyAction={busyAction}
+            id={String(latest.id)}
+            onClick={() =>
+              runAction("buyer_accept_shipping_quote", {
+                shippingQuoteId: String(latest.id),
+              })
+            }
+          />
+          <OrderActionButton
+            action="buyer_reject_shipping_quote"
+            busyAction={busyAction}
+            id={String(latest.id)}
+            tone="danger"
+            onClick={() =>
+              runAction("buyer_reject_shipping_quote", {
+                shippingQuoteId: String(latest.id),
+              })
+            }
+          />
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+function QuoteAmount({
+  label,
+  value,
+  currency,
+  emphasized = false,
+}: {
+  label: string;
+  value: unknown;
+  currency: string;
+  emphasized?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-lg bg-surface px-3 py-2 ${emphasized ? "ring-1 ring-primary/30" : ""}`}
+    >
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p
+        className={`mt-1 ${emphasized ? "font-bold text-primary" : "font-semibold"}`}
+      >
+        {formatMoney(value, currency)}
+      </p>
+    </div>
+  );
+}
+
 function CustomRequestRow({
   item,
   isSeller,
@@ -479,7 +720,9 @@ function CustomRequestRow({
                 </p>
               ) : null}
             </div>
-            <p className="font-bold">{formatMoney(item.total_price, currency)}</p>
+            <p className="font-bold">
+              {formatMoney(item.total_price, currency)}
+            </p>
           </div>
           <CustomRequestActions
             item={item}
@@ -529,14 +772,22 @@ function CustomRequestActions({
             action="seller_accept_custom_request"
             busyAction={busyAction}
             id={itemId}
-            onClick={() => runAction("seller_accept_custom_request", { customItemId: itemId })}
+            onClick={() =>
+              runAction("seller_accept_custom_request", {
+                customItemId: itemId,
+              })
+            }
           />
           <OrderActionButton
             action="seller_reject_custom_request"
             busyAction={busyAction}
             id={itemId}
             tone="danger"
-            onClick={() => runAction("seller_reject_custom_request", { customItemId: itemId })}
+            onClick={() =>
+              runAction("seller_reject_custom_request", {
+                customItemId: itemId,
+              })
+            }
           />
         </>
       ) : null}
@@ -554,14 +805,18 @@ function CustomRequestActions({
             action="buyer_accept_custom_price"
             busyAction={busyAction}
             id={itemId}
-            onClick={() => runAction("buyer_accept_custom_price", { customItemId: itemId })}
+            onClick={() =>
+              runAction("buyer_accept_custom_price", { customItemId: itemId })
+            }
           />
           <OrderActionButton
             action="buyer_reject_custom_price"
             busyAction={busyAction}
             id={itemId}
             tone="danger"
-            onClick={() => runAction("buyer_reject_custom_price", { customItemId: itemId })}
+            onClick={() =>
+              runAction("buyer_reject_custom_price", { customItemId: itemId })
+            }
           />
         </>
       ) : null}
@@ -571,14 +826,22 @@ function CustomRequestActions({
           busyAction={busyAction}
           id={itemId}
           tone="danger"
-          onClick={() => runAction("buyer_cancel_custom_request", { customItemId: itemId })}
+          onClick={() =>
+            runAction("buyer_cancel_custom_request", { customItemId: itemId })
+          }
         />
       ) : null}
     </div>
   );
 }
 
-function ProfileLinks({ sellerId, carrierId }: { sellerId: string; carrierId: string }) {
+function ProfileLinks({
+  sellerId,
+  carrierId,
+}: {
+  sellerId: string;
+  carrierId: string;
+}) {
   return (
     <div className="flex flex-wrap gap-2">
       <Link
@@ -640,11 +903,13 @@ function OrderItemRow({
                 {String(item.product_name_snapshot ?? text.product)}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {text.quantity}: {String(item.quantity ?? 1)} - {text.itemStatus}:{" "}
-                {statusLabel(item.status)}
+                {text.quantity}: {String(item.quantity ?? 1)} -{" "}
+                {text.itemStatus}: {statusLabel(item.status)}
               </p>
             </div>
-            <p className="font-bold">{formatMoney(item.total_price, currency)}</p>
+            <p className="font-bold">
+              {formatMoney(item.total_price, currency)}
+            </p>
           </div>
           <ItemActions
             item={item}
@@ -842,15 +1107,28 @@ function ShipmentCard({
   const shipmentItems = details.shipmentItems.filter(
     (item) => String(item.shipment_id) === shipmentId,
   );
-  const canReceive = ["waiting_for_carrier_pickup", "partially_received_by_carrier"].includes(shipmentStatus);
-  const canReject = ["waiting_for_carrier_pickup", "partially_received_by_carrier"].includes(shipmentStatus);
+  const canReceive = [
+    "waiting_for_carrier_pickup",
+    "partially_received_by_carrier",
+  ].includes(shipmentStatus);
+  const canReject = [
+    "waiting_for_carrier_pickup",
+    "partially_received_by_carrier",
+  ].includes(shipmentStatus);
   const canTransit = [
     "waiting_for_carrier_pickup",
     "fully_received_by_carrier",
     "partially_received_by_carrier",
   ].includes(shipmentStatus);
-  const canOutForDelivery = ["in_transit", "arrived_at_distribution_center"].includes(shipmentStatus);
-  const canDeliver = ["in_transit", "out_for_delivery", "partially_delivered"].includes(shipmentStatus);
+  const canOutForDelivery = [
+    "in_transit",
+    "arrived_at_distribution_center",
+  ].includes(shipmentStatus);
+  const canDeliver = [
+    "in_transit",
+    "out_for_delivery",
+    "partially_delivered",
+  ].includes(shipmentStatus);
 
   return (
     <div className="rounded-lg border border-outline-variant p-3">
@@ -866,7 +1144,9 @@ function ShipmentCard({
               action="carrier_receive_shipment"
               busyAction={busyAction}
               id={shipmentId}
-              onClick={() => runAction("carrier_receive_shipment", { shipmentId })}
+              onClick={() =>
+                runAction("carrier_receive_shipment", { shipmentId })
+              }
             />
           ) : null}
           {canReject ? (
@@ -875,7 +1155,9 @@ function ShipmentCard({
               busyAction={busyAction}
               id={shipmentId}
               tone="danger"
-              onClick={() => runAction("carrier_reject_shipment", { shipmentId })}
+              onClick={() =>
+                runAction("carrier_reject_shipment", { shipmentId })
+              }
             />
           ) : null}
           {canTransit ? (
@@ -891,7 +1173,9 @@ function ShipmentCard({
               action="carrier_out_for_delivery"
               busyAction={busyAction}
               id={shipmentId}
-              onClick={() => runAction("carrier_out_for_delivery", { shipmentId })}
+              onClick={() =>
+                runAction("carrier_out_for_delivery", { shipmentId })
+              }
             />
           ) : null}
           {canDeliver ? (
@@ -951,7 +1235,8 @@ function ShipmentItemRow({
         <div>
           <p className="font-semibold">{title}</p>
           <p className="text-xs text-muted-foreground">
-            {text.quantity}: {String(shipmentItem.quantity ?? 1)} - {statusLabel(shipmentItem.status)}
+            {text.quantity}: {String(shipmentItem.quantity ?? 1)} -{" "}
+            {statusLabel(shipmentItem.status)}
           </p>
         </div>
         {isCarrier && canDeliverShipmentItemStatus(shipmentItem.status) ? (
@@ -991,21 +1276,25 @@ function ReturnsPanel({
         <div className="mt-3 space-y-3">
           {details.returns.map((returnRequest) => {
             const requestItems = details.returnItems.filter(
-              (item) => String(item.return_request_id) === String(returnRequest.id),
+              (item) =>
+                String(item.return_request_id) === String(returnRequest.id),
             );
             const firstOrderItem = details.orderItems.find((orderItem) =>
               requestItems.some(
                 (item) => String(item.order_item_id) === String(orderItem.id),
               ),
             );
-            const sellerOrder = details.sellerOrders.find((order) =>
-              String(order.id) === String(returnRequest.seller_order_id) ||
-              String(order.id) === String(firstOrderItem?.seller_order_id),
+            const sellerOrder = details.sellerOrders.find(
+              (order) =>
+                String(order.id) === String(returnRequest.seller_order_id) ||
+                String(order.id) === String(firstOrderItem?.seller_order_id),
             );
             const isSeller =
-              admin || (sellerOrder && sessionUid === String(sellerOrder.seller_id));
+              admin ||
+              (sellerOrder && sessionUid === String(sellerOrder.seller_id));
             const returnRequestId = String(returnRequest.id);
-            const canDecide = isSeller && String(returnRequest.status) === "requested";
+            const canDecide =
+              isSeller && String(returnRequest.status) === "requested";
             return (
               <div
                 key={returnRequestId}
@@ -1023,15 +1312,18 @@ function ReturnsPanel({
                   <div className="mt-2 space-y-1">
                     {requestItems.map((requestItem) => {
                       const orderItem = details.orderItems.find(
-                        (item) => String(item.id) === String(requestItem.order_item_id),
+                        (item) =>
+                          String(item.id) === String(requestItem.order_item_id),
                       );
                       return (
                         <p
                           key={String(requestItem.id)}
                           className="text-xs text-muted-foreground"
                         >
-                          {String(orderItem?.product_name_snapshot ?? text.product)} - {text.quantity}:{" "}
-                          {String(requestItem.quantity ?? 1)}
+                          {String(
+                            orderItem?.product_name_snapshot ?? text.product,
+                          )}{" "}
+                          - {text.quantity}: {String(requestItem.quantity ?? 1)}
                         </p>
                       );
                     })}

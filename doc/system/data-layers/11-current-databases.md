@@ -154,6 +154,7 @@ Primary tables include:
 - `orders`
 - `order_items`
 - `shipments`
+- `shipping_quotes`
 - `payments`
 - order audit, cancellation, delivery, return, and dispute tables
 

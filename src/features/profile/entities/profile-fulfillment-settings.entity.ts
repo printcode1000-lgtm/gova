@@ -14,7 +14,6 @@ export interface ProfileFulfillmentSettings {
   shippingPricing: {
     mode: ShippingPricingMode;
     flatRate: number;
-    locationBaseRate: number;
     specialVehicleFee: number;
     freeShippingThreshold: number;
     notes: string;
@@ -28,7 +27,6 @@ export const EMPTY_PROFILE_FULFILLMENT_SETTINGS: ProfileFulfillmentSettings = {
   shippingPricing: {
     mode: "free",
     flatRate: 0,
-    locationBaseRate: 0,
     specialVehicleFee: 0,
     freeShippingThreshold: 0,
     notes: "",
@@ -61,9 +59,6 @@ export function normalizeProfileFulfillmentSettings(
       flatRate: Number.isFinite(Number(shippingPricing.flatRate))
         ? Number(shippingPricing.flatRate)
         : defaults.shippingPricing.flatRate,
-      locationBaseRate: Number.isFinite(Number(shippingPricing.locationBaseRate))
-        ? Number(shippingPricing.locationBaseRate)
-        : defaults.shippingPricing.locationBaseRate,
       specialVehicleFee: Number.isFinite(Number(shippingPricing.specialVehicleFee))
         ? Number(shippingPricing.specialVehicleFee)
         : defaults.shippingPricing.specialVehicleFee,

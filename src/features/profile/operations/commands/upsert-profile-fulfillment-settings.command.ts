@@ -40,7 +40,6 @@ function normalizeSettings(
           ? shippingMode
           : "free",
       flatRate: positiveMoney(input.shippingPricing?.flatRate),
-      locationBaseRate: positiveMoney(input.shippingPricing?.locationBaseRate),
       specialVehicleFee: positiveMoney(input.shippingPricing?.specialVehicleFee),
       freeShippingThreshold: positiveMoney(
         input.shippingPricing?.freeShippingThreshold,

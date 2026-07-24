@@ -63,6 +63,10 @@ export class OrderQueryRepository {
       "SELECT * FROM shipment_items WHERE order_id=? ORDER BY created_at ASC",
       [orderId],
     );
+    const shippingQuotes = await this.db.execute(
+      "SELECT * FROM shipping_quotes WHERE order_id=? ORDER BY seller_order_id ASC, version DESC",
+      [orderId],
+    );
     const cancellations = await this.db.execute(
       "SELECT * FROM cancellations WHERE order_id=? ORDER BY created_at DESC",
       [orderId],
@@ -95,6 +99,7 @@ export class OrderQueryRepository {
       customItems,
       shipments,
       shipmentItems,
+      shippingQuotes,
       cancellations,
       returns,
       returnItems,

@@ -13,6 +13,15 @@ Server code calls `getMarketplaceOrderService()` from `src/modules/marketplace-o
 - `sellerSendPriceOfferForCustomRequest`
 - `buyerAcceptCustomRequestPrice`, `buyerRejectCustomRequestPrice`
 
+## Location shipping quote operations
+
+- `requestShippingQuote`
+- `proposeShippingQuote`
+- `acceptShippingQuote`
+- `rejectShippingQuote`
+
+Quote requests are created for `by_location` cart groups. Sellers/providers propose, buyers decide, and processing/shipment gates require acceptance.
+
 ## Cancellation operations
 
 - `cancelFullOrder`

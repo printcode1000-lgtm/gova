@@ -163,8 +163,10 @@ export function ProfileFulfillmentPreviewCard({
       ? [
           {
             icon: faTruck,
-            label: ar ? "التكلفة الأساسية" : "Base fee",
-            value: money(pricing.locationBaseRate),
+            label: ar ? "التسعير حسب المكان" : "Location pricing",
+            value: ar
+              ? "تُحدد القيمة بعد الطلب وتحتاج موافقة المشتري"
+              : "Quoted after ordering and requires buyer approval",
           },
         ]
       : []),

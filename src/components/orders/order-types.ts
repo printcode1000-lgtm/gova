@@ -11,6 +11,7 @@ export interface OrderDetails {
   customItems: DbRow[];
   shipments: DbRow[];
   shipmentItems: DbRow[];
+  shippingQuotes: DbRow[];
   cancellations: DbRow[];
   returns: DbRow[];
   returnItems: DbRow[];

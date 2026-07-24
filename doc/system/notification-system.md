@@ -239,6 +239,13 @@ route: { href: "/orders/ord_123", label: "عرض الطلب" }
 
 The notification center marks the item as read before navigating.
 
+Location-based shipping quote transitions use deduplicated high-priority custom
+notifications. A new proposal opens the order as the buyer; acceptance or
+rejection opens it in the seller/provider view. Payload metadata contains the
+order ID, quote ID, quote status, and integer minor-unit amount. Notification
+content received by the client follows the normal local-only AsolDB retention
+policy.
+
 ## Device Token Flow
 
 `DeviceTokenService` owns token registration, listing, and removal.

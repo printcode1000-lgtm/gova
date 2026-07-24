@@ -27,6 +27,7 @@
 | Requirement group | Implementation evidence |
 |---|---|
 | Seller acceptance and pricing | Seller response and custom price-offer methods with buyer approval/expiry validation |
+| Location shipping approval | Versioned seller-order quotes, seller/provider proposal, buyer decision, notification, pricing recalculation, and processing gate |
 | Partial fulfilment and cancellation | Per-item states and aggregate calculators |
 | Transport requirements | Item transport columns and automatic shipment roll-up |
 | Payments and partial refunds | Independent payment/refund tables and ceiling validation |

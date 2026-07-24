@@ -2,7 +2,7 @@
 
 ## Aggregate tables
 
-The migration creates `orders`, `seller_orders`, `order_items`, `custom_request_items`, `custom_request_images`, `shipments`, `shipment_items`, `payments`, `refunds`, `cancellations`, `cancellation_items`, `return_requests`, `return_request_items`, `replacement_requests`, `replacement_request_items`, `disputes`, `dispute_messages`, and `audit_trail`.
+The migration creates `orders`, `seller_orders`, `order_items`, `custom_request_items`, `custom_request_images`, `shipments`, `shipment_items`, `shipping_quotes`, `payments`, `refunds`, `cancellations`, `cancellation_items`, `return_requests`, `return_request_items`, `replacement_requests`, `replacement_request_items`, `disputes`, `dispute_messages`, and `audit_trail`.
 
 Foreign keys use cascading deletion only where the child has no independent meaning outside its parent. The migration enables SQLite foreign keys explicitly. Lookup indexes cover order number, buyer, seller, provider, carrier, status, product, tracking number, entity references, and creation time.
 
@@ -15,6 +15,8 @@ All monetary columns use integer minor units. For EGP, `1250` represents EGP 12.
 `shipment_items` has a database check requiring exactly one matching item reference. Partial unique indexes prevent the same item from being assigned to two active shipments. Completed, rejected, failed, returned, or closed assignments no longer block a later return or replacement movement.
 
 Custom image rows require the dedicated `spicialOrder` storage profile, a non-empty storage key, an allowed image MIME type, and a processed size no greater than 500 KB. The stored profile ID and key keep deletion and URL resolution tied to the same local/R2 object. Status guard triggers reject unsupported status values on insert and update. Money checks reject negative or non-integer persisted values.
+
+`shipping_quotes` keeps a versioned history per seller order. Partial unique indexes permit only one `pending_buyer` row and one `accepted` row. Base, special-vehicle, and total values use integer minor units and are guarded by database triggers.
 
 ## Development database
 
