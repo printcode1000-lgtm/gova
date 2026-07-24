@@ -475,17 +475,19 @@ export function ProfilePageContent() {
                       {active ? (
                         <>
                           <span
-                            className="asol-profile-tab-wave pointer-events-none absolute inset-0 rounded-full border"
+                            className="asol-profile-tab-wave pointer-events-none absolute inset-0 rounded-full"
                             style={{
-                              borderColor: `${color}80`,
-                              backgroundColor: `${color}12`,
+                              color: `${color}80`,
+                              borderColor: `${color}B8`,
+                              backgroundColor: `${color}20`,
                             }}
                           />
                           <span
-                            className="asol-profile-tab-wave asol-profile-tab-wave--delayed pointer-events-none absolute inset-0 rounded-full border"
+                            className="asol-profile-tab-wave asol-profile-tab-wave--delayed pointer-events-none absolute inset-0 rounded-full"
                             style={{
-                              borderColor: `${color}66`,
-                              backgroundColor: `${color}0D`,
+                              color: `${color}66`,
+                              borderColor: `${color}9E`,
+                              backgroundColor: `${color}18`,
                             }}
                           />
                         </>

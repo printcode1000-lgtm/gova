@@ -181,25 +181,28 @@
 @keyframes asol-profile-tab-wave {
   0% {
     opacity: 0;
-    transform: scale(0.52);
+    transform: scale(0.48);
   }
-  16% {
-    opacity: 0.38;
+  14% {
+    opacity: 0.68;
   }
-  72%,
+  68%,
   100% {
     opacity: 0;
-    transform: scale(1.34);
+    transform: scale(1.48);
   }
 }
 
 .asol-profile-tab-wave {
-  animation: asol-profile-tab-wave 3.2s ease-out infinite;
+  animation: asol-profile-tab-wave 2.9s ease-out infinite;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: 0 0 0.5rem currentColor;
   will-change: opacity, transform;
 }
 
 .asol-profile-tab-wave--delayed {
-  animation-delay: -1.6s;
+  animation-delay: -1.45s;
 }
 
 .home-marquee-cards-track {
