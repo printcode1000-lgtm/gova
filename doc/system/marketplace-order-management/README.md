@@ -16,6 +16,7 @@ This documentation describes Asol's isolated marketplace order module. The modul
 - [Requirements compliance matrix](./10-requirements-compliance.md)
 - [Special-order image storage](./11-special-order-image-storage.md)
 - [Location-based shipping quotes](./12-location-shipping-quotes.md)
+- [Unified multi-seller delivery](./13-unified-multi-seller-delivery.md)
 
 ## Source location
 
@@ -31,3 +32,5 @@ The implementation is isolated under `src/modules/marketplace-orders`. Consumers
 6. Custom request attachments are images only.
 7. Important mutations produce audit records with actor identity and role.
 8. Location-based shipping is added to totals only after explicit buyer acceptance.
+9. Multi-seller delivery is charged only after accepted quote groups cover
+   every active seller stop; each accepted route group is charged once.

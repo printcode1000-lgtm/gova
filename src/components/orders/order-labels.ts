@@ -105,6 +105,11 @@ export function commandLabel(action: string) {
     seller_send_shipping_quote: "إرسال عرض الشحن",
     buyer_accept_shipping_quote: "قبول عرض الشحن",
     buyer_reject_shipping_quote: "رفض عرض الشحن",
+    provider_send_unified_delivery_quote: "إرسال عرض التوصيل الموحّد",
+    buyer_accept_unified_delivery_quote: "اختيار هذا العرض",
+    buyer_reject_unified_delivery_quote: "رفض العرض",
+    buyer_choose_separate_delivery: "العودة للتوصيل المنفصل",
+    admin_create_unified_delivery_shipment: "إنشاء الشحنة الموحّدة",
     buyer_accept_custom_price: "قبول السعر",
     buyer_reject_custom_price: "رفض السعر",
     buyer_cancel_custom_request: "إلغاء الطلب الخاص",
@@ -132,7 +137,10 @@ export function commandLabel(action: string) {
 
 export function profileName(profile: unknown, fallback: string) {
   const record = profile as
-    | { storeDetails?: { storeName?: string }; contacts?: { phones?: { number: string }[] } }
+    | {
+        storeDetails?: { storeName?: string };
+        contacts?: { phones?: { number: string }[] };
+      }
     | undefined;
   return (
     record?.storeDetails?.storeName?.trim() ||
@@ -143,7 +151,12 @@ export function profileName(profile: unknown, fallback: string) {
 
 export function profileAddress(profile: unknown) {
   const record = profile as
-    | { contacts?: { locations?: { address: string }[]; phones?: { number: string }[] } }
+    | {
+        contacts?: {
+          locations?: { address: string }[];
+          phones?: { number: string }[];
+        };
+      }
     | undefined;
   return {
     address: record?.contacts?.locations?.[0]?.address ?? "",
@@ -159,8 +172,8 @@ export function carrierFromSellerOrder(sellerOrder: DbRow, items: DbRow[]) {
   const direct = String(sellerOrder.service_provider_id ?? "");
   if (direct) return direct;
   const note = String(
-    items.find((item) => item.seller_order_id === sellerOrder.id)?.shipping_notes ??
-      "",
+    items.find((item) => item.seller_order_id === sellerOrder.id)
+      ?.shipping_notes ?? "",
   );
   return note.startsWith("carrier:") ? note.slice("carrier:".length) : "";
 }

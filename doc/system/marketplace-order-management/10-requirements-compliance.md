@@ -28,6 +28,7 @@
 |---|---|
 | Seller acceptance and pricing | Seller response and custom price-offer methods with buyer approval/expiry validation |
 | Location shipping approval | Versioned seller-order quotes, seller/provider proposal, buyer decision, notification, pricing recalculation, and processing gate |
+| Unified multi-seller delivery | Ranked scoped candidates, full-route and non-overlapping hybrid quotes, buyer choice, exactly-once group fees, separate fallback, repricing, and grouped shipments |
 | Partial fulfilment and cancellation | Per-item states and aggregate calculators |
 | Transport requirements | Item transport columns and automatic shipment roll-up |
 | Payments and partial refunds | Independent payment/refund tables and ceiling validation |

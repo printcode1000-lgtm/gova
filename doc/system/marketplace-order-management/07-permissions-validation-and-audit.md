@@ -12,11 +12,21 @@ Every mutation receives an authenticated actor containing an ID and role. Roles 
 - Carriers update only shipments assigned to their carrier ID.
 - Admins may access and intervene across the system, but their mutations remain audited.
 
+For delivery plans, invited providers can quote only their snapshotted stop
+scope. Their order-details response excludes competitors, other providers'
+quotes, unrelated seller stops, and fallback comparison prices. Buyers decide
+quotes and the separate fallback; only admins create grouped plan shipments.
+
 Server routes must authenticate before constructing an actor. Never accept role or actor ID directly from an untrusted request body.
 
 ## Validation rules
 
 The module validates safe money and currency, positive quantities, custom image MIME types, the `spicialOrder` storage profile and key, the 500 KB image limit, price expiry, exact shipment item references, shipment eligibility, duplicate active assignment, delivery sequence, refund ceilings, cancellation eligibility, return/replacement eligibility, and actor ownership.
+
+Delivery-plan validation also rejects overlapping accepted stop coverage,
+duplicate pending provider quotes, special-vehicle fees without an eligible
+covered item, payment before full coverage, processing before resolution, and
+shipment creation before every active item is ready.
 
 The database repeats critical structural protections with foreign keys, checks, partial unique indexes, and status guard triggers. This protects data even when concurrent operations race.
 

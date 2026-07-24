@@ -30,3 +30,12 @@ Request types are `pharmacy`, `supermarket`, `service`, `custom_purchase`, and `
 ## Partial acceptance and cancellation
 
 Item status is independent. A seller may accept some items and reject others, producing a calculated partially accepted seller order. Buyers or admins may cancel an eligible item, seller group, or full order. Delivered or closed items must use return or replacement flows instead of cancellation.
+
+## Multi-seller delivery planning
+
+When cart submission creates more than one seller group and finds an eligible
+delivery provider, it snapshots seller pickup stops and opens one delivery plan.
+The buyer can choose one full-route offer, combine non-overlapping partial
+offers, or return to separate seller delivery. Item cancellation that changes
+the active stop set invalidates the previous route price and requires a new
+buyer-approved quote.

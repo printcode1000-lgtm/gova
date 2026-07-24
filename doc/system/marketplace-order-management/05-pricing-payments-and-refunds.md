@@ -10,6 +10,13 @@ Seller-order aggregation calculates subtotal, discount, shipping, tax, commissio
 
 For `by_location`, the cart stores no guessed base rate. It creates a seller-order quote request and shows only already-confirmed fees. The accepted quote total is applied to an active catalog item, after which the standard seller-order and order aggregations recalculate. A free-shipping threshold removes the base rate, but a special-vehicle fee remains when an item requires a vehicle.
 
+For multi-seller unified delivery, shipping remains zero until accepted quote
+groups cover every active seller stop. Each quote total is applied once inside
+its scope, so a unified plan charges one route and a hybrid plan charges one
+route per accepted group rather than one fee per seller. Payment registration
+is rejected while the plan is unresolved. Separate fallback values are
+comparison data only until the buyer explicitly selects that strategy.
+
 ## Calculation safety
 
 No calculation uses decimal currency values. Inputs must be non-negative JavaScript safe integers. Multiplication and addition are checked for safe integer overflow. Discounts cannot make a total negative.

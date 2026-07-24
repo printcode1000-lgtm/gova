@@ -1,6 +1,6 @@
 # Marketplace Order Management
 
-An isolated server-side marketplace order domain for catalog, image-only custom, and mixed orders. It supports multiple sellers/service providers, independent multi-seller shipments, buyer-approved location shipping quotes, minor-unit pricing, payments/refunds, partial cancellation and fulfilment, returns, replacements, disputes, permissions, and append-only audit history.
+An isolated server-side marketplace order domain for catalog, image-only custom, and mixed orders. It supports multiple sellers/service providers, unified and hybrid multi-seller delivery plans, independent shipments, buyer-approved location shipping quotes, minor-unit pricing, payments/refunds, partial cancellation and fulfilment, returns, replacements, disputes, permissions, and append-only audit history.
 
 ## Model
 
@@ -9,6 +9,13 @@ An isolated server-side marketplace order domain for catalog, image-only custom,
 Custom requests require a description and at least one image uploaded through `StorageProfiles.SpicialOrder`. The dedicated profile stores processed WebP objects under `images/spicialOrder` in local development and R2 production storage, with a 500 KB maximum. Marketplace image records require the returned profile ID and image key. Catalog items retain name, description, image, variant and price snapshots. All money is an integer in the currency's minor unit and every order stores an explicit ISO currency.
 
 Location-based shipping creates a versioned quote per seller order. The assigned seller or service provider proposes the base value, the buyer accepts or rejects it, and only acceptance writes the total quote into order pricing. Special-vehicle fees are included only when an item requires that transport, and remain independent from free base-shipping rules.
+
+For a cart containing multiple sellers, the module can instead invite ranked
+delivery providers to quote a single route or non-overlapping route groups.
+Shipping remains zero until buyer-accepted quotes cover every active seller
+stop. A unified route is charged once; a hybrid route is charged once per
+accepted group. Cancellation that changes the route requires repricing, and the
+buyer may return to the original separate-delivery arrangements.
 
 ## Database
 

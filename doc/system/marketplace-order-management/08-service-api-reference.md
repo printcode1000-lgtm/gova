@@ -22,6 +22,20 @@ Server code calls `getMarketplaceOrderService()` from `src/modules/marketplace-o
 
 Quote requests are created for `by_location` cart groups. Sellers/providers propose, buyers decide, and processing/shipment gates require acceptance.
 
+## Unified delivery-plan operations
+
+- `createUnifiedDeliveryPlan`
+- `proposeUnifiedDeliveryQuote`
+- `acceptUnifiedDeliveryQuote`
+- `rejectUnifiedDeliveryQuote`
+- `chooseSeparateDelivery`
+- `createUnifiedDeliveryShipment`
+
+Plan creation snapshots candidate stop coverage. Quote acceptance supports one
+full-route provider or several non-overlapping hybrid groups. Separate delivery
+restores seller provider assignments and confirmed fallback fees, while
+location-priced seller groups return to their standard quote flow.
+
 ## Cancellation operations
 
 - `cancelFullOrder`

@@ -155,6 +155,13 @@ Primary tables include:
 - `order_items`
 - `shipments`
 - `shipping_quotes`
+- `delivery_plans`
+- `delivery_plan_stops`
+- `delivery_plan_candidates`
+- `delivery_plan_candidate_stops`
+- `delivery_plan_quotes`
+- `delivery_plan_quote_stops`
+- `delivery_plan_shipments`
 - `payments`
 - order audit, cancellation, delivery, return, and dispute tables
 

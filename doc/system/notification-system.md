@@ -246,6 +246,15 @@ order ID, quote ID, quote status, and integer minor-unit amount. Notification
 content received by the client follows the normal local-only AsolDB retention
 policy.
 
+Unified delivery plans use the same notification pipeline. Candidate providers
+receive one deduplicated high-priority invitation for the plan. New or revised
+offers notify the buyer; acceptance, rejection, and selection of separate
+delivery notify the relevant provider. Payload metadata identifies the order,
+plan, quote, transition, and accepted minor-unit total when applicable. Push is
+only a transport signal: authoritative plan and quote state lives in the
+marketplace-orders database, while notification-center copies remain local-only
+in AsolDB/IndexedDB.
+
 ## Device Token Flow
 
 `DeviceTokenService` owns token registration, listing, and removal.

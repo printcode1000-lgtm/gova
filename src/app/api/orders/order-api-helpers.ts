@@ -54,7 +54,10 @@ export function mapOrderError(error: unknown) {
     message.includes("already") ||
     message.includes("awaiting") ||
     message.includes("expired") ||
-    message.includes("cannot be replaced")
+    message.includes("cannot be replaced") ||
+    message.includes("cannot switch") ||
+    message.includes("not accepting") ||
+    message.includes("Use the unified")
   ) {
     return apiError(message, 409);
   }

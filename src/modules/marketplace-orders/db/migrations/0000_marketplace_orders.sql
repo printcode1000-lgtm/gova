@@ -104,3 +104,103 @@ CREATE UNIQUE INDEX IF NOT EXISTS shipping_quotes_one_pending_idx ON shipping_qu
 CREATE UNIQUE INDEX IF NOT EXISTS shipping_quotes_one_accepted_idx ON shipping_quotes(seller_order_id) WHERE status='accepted';
 CREATE TRIGGER IF NOT EXISTS shipping_quote_money_insert_guard BEFORE INSERT ON shipping_quotes WHEN typeof(NEW.base_shipping_price)<>'integer' OR typeof(NEW.special_vehicle_fee)<>'integer' OR typeof(NEW.total_shipping_price)<>'integer' BEGIN SELECT RAISE(ABORT,'shipping quote money must use integer minor units'); END;
 CREATE TRIGGER IF NOT EXISTS shipping_quote_money_update_guard BEFORE UPDATE OF base_shipping_price,special_vehicle_fee,total_shipping_price ON shipping_quotes WHEN typeof(NEW.base_shipping_price)<>'integer' OR typeof(NEW.special_vehicle_fee)<>'integer' OR typeof(NEW.total_shipping_price)<>'integer' BEGIN SELECT RAISE(ABORT,'shipping quote money must use integer minor units'); END;
+
+CREATE TABLE IF NOT EXISTS delivery_plans (
+  id TEXT PRIMARY KEY,
+  order_id TEXT NOT NULL UNIQUE REFERENCES orders(id) ON DELETE CASCADE,
+  buyer_id TEXT NOT NULL,
+  strategy TEXT NOT NULL DEFAULT 'unified' CHECK(strategy IN ('unified','hybrid','separate')),
+  status TEXT NOT NULL DEFAULT 'collecting_quotes' CHECK(status IN ('collecting_quotes','pending_buyer','accepted','reprice_required','separate_selected','cancelled','completed')),
+  selected_quote_id TEXT,
+  fallback_confirmed_price INTEGER NOT NULL DEFAULT 0 CHECK(fallback_confirmed_price >= 0),
+  fallback_has_pending_quotes INTEGER NOT NULL DEFAULT 0 CHECK(fallback_has_pending_quotes IN (0,1)),
+  fallback_available INTEGER NOT NULL DEFAULT 1 CHECK(fallback_available IN (0,1)),
+  special_vehicle_required INTEGER NOT NULL DEFAULT 0 CHECK(special_vehicle_required IN (0,1)),
+  seller_count INTEGER NOT NULL CHECK(seller_count >= 0),
+  currency TEXT NOT NULL CHECK(length(currency)=3),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS delivery_plan_stops (
+  id TEXT PRIMARY KEY,
+  plan_id TEXT NOT NULL REFERENCES delivery_plans(id) ON DELETE CASCADE,
+  order_id TEXT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  seller_order_id TEXT NOT NULL REFERENCES seller_orders(id) ON DELETE CASCADE,
+  seller_id TEXT NOT NULL,
+  original_carrier_id TEXT,
+  pickup_address_snapshot_json TEXT NOT NULL,
+  requires_location_quote INTEGER NOT NULL DEFAULT 0 CHECK(requires_location_quote IN (0,1)),
+  fallback_shipping_price INTEGER NOT NULL DEFAULT 0 CHECK(fallback_shipping_price >= 0),
+  fallback_special_vehicle_fee INTEGER NOT NULL DEFAULT 0 CHECK(fallback_special_vehicle_fee >= 0),
+  pickup_sequence INTEGER NOT NULL DEFAULT 0 CHECK(pickup_sequence >= 0),
+  status TEXT NOT NULL DEFAULT 'waiting' CHECK(status IN ('waiting','ready','collected','skipped','cancelled')),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(plan_id, seller_order_id)
+);
+CREATE TABLE IF NOT EXISTS delivery_plan_candidates (
+  plan_id TEXT NOT NULL REFERENCES delivery_plans(id) ON DELETE CASCADE,
+  provider_id TEXT NOT NULL,
+  source TEXT NOT NULL CHECK(source IN ('linked','qualified_network','admin')),
+  coverage_score INTEGER NOT NULL DEFAULT 0 CHECK(coverage_score >= 0),
+  status TEXT NOT NULL DEFAULT 'invited' CHECK(status IN ('invited','viewed','declined','quoted')),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY(plan_id, provider_id)
+);
+CREATE TABLE IF NOT EXISTS delivery_plan_candidate_stops (
+  plan_id TEXT NOT NULL,
+  provider_id TEXT NOT NULL,
+  stop_id TEXT NOT NULL REFERENCES delivery_plan_stops(id) ON DELETE CASCADE,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(plan_id, provider_id, stop_id),
+  FOREIGN KEY(plan_id, provider_id) REFERENCES delivery_plan_candidates(plan_id, provider_id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS delivery_plan_quotes (
+  id TEXT PRIMARY KEY,
+  plan_id TEXT NOT NULL REFERENCES delivery_plans(id) ON DELETE CASCADE,
+  order_id TEXT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  provider_id TEXT NOT NULL,
+  version INTEGER NOT NULL CHECK(version > 0),
+  base_shipping_price INTEGER NOT NULL DEFAULT 0 CHECK(base_shipping_price >= 0),
+  special_vehicle_fee INTEGER NOT NULL DEFAULT 0 CHECK(special_vehicle_fee >= 0),
+  total_shipping_price INTEGER NOT NULL DEFAULT 0 CHECK(total_shipping_price >= 0),
+  status TEXT NOT NULL CHECK(status IN ('pending_buyer','accepted','rejected','superseded','withdrawn','expired')),
+  notes TEXT,
+  expires_at TEXT,
+  responded_at TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(plan_id, provider_id, version)
+);
+CREATE TABLE IF NOT EXISTS delivery_plan_quote_stops (
+  quote_id TEXT NOT NULL REFERENCES delivery_plan_quotes(id) ON DELETE CASCADE,
+  plan_id TEXT NOT NULL REFERENCES delivery_plans(id) ON DELETE CASCADE,
+  stop_id TEXT NOT NULL REFERENCES delivery_plan_stops(id) ON DELETE CASCADE,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(quote_id, stop_id)
+);
+CREATE TABLE IF NOT EXISTS delivery_plan_shipments (
+  plan_id TEXT NOT NULL REFERENCES delivery_plans(id) ON DELETE CASCADE,
+  shipment_id TEXT NOT NULL UNIQUE REFERENCES shipments(id) ON DELETE CASCADE,
+  quote_id TEXT REFERENCES delivery_plan_quotes(id) ON DELETE SET NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(plan_id, shipment_id)
+);
+CREATE INDEX IF NOT EXISTS delivery_plans_order_id_idx ON delivery_plans(order_id);
+CREATE INDEX IF NOT EXISTS delivery_plans_buyer_id_idx ON delivery_plans(buyer_id);
+CREATE INDEX IF NOT EXISTS delivery_plans_status_idx ON delivery_plans(status);
+CREATE INDEX IF NOT EXISTS delivery_plan_stops_plan_id_idx ON delivery_plan_stops(plan_id);
+CREATE INDEX IF NOT EXISTS delivery_plan_stops_seller_order_idx ON delivery_plan_stops(seller_order_id);
+CREATE INDEX IF NOT EXISTS delivery_plan_candidates_provider_idx ON delivery_plan_candidates(provider_id);
+CREATE INDEX IF NOT EXISTS delivery_plan_candidate_stops_stop_idx ON delivery_plan_candidate_stops(stop_id);
+CREATE INDEX IF NOT EXISTS delivery_plan_quotes_plan_id_idx ON delivery_plan_quotes(plan_id);
+CREATE INDEX IF NOT EXISTS delivery_plan_quotes_provider_id_idx ON delivery_plan_quotes(provider_id);
+CREATE INDEX IF NOT EXISTS delivery_plan_quotes_status_idx ON delivery_plan_quotes(status);
+CREATE INDEX IF NOT EXISTS delivery_plan_quote_stops_stop_idx ON delivery_plan_quote_stops(stop_id);
+CREATE UNIQUE INDEX IF NOT EXISTS delivery_plan_quotes_one_pending_provider_idx ON delivery_plan_quotes(plan_id,provider_id) WHERE status='pending_buyer';
+CREATE TRIGGER IF NOT EXISTS delivery_plan_money_insert_guard BEFORE INSERT ON delivery_plans WHEN typeof(NEW.fallback_confirmed_price)<>'integer' BEGIN SELECT RAISE(ABORT,'delivery plan money must use integer minor units'); END;
+CREATE TRIGGER IF NOT EXISTS delivery_plan_money_update_guard BEFORE UPDATE OF fallback_confirmed_price ON delivery_plans WHEN typeof(NEW.fallback_confirmed_price)<>'integer' BEGIN SELECT RAISE(ABORT,'delivery plan money must use integer minor units'); END;
+CREATE TRIGGER IF NOT EXISTS delivery_plan_stop_money_insert_guard BEFORE INSERT ON delivery_plan_stops WHEN typeof(NEW.fallback_shipping_price)<>'integer' OR typeof(NEW.fallback_special_vehicle_fee)<>'integer' BEGIN SELECT RAISE(ABORT,'delivery plan stop money must use integer minor units'); END;
+CREATE TRIGGER IF NOT EXISTS delivery_plan_quote_money_insert_guard BEFORE INSERT ON delivery_plan_quotes WHEN typeof(NEW.base_shipping_price)<>'integer' OR typeof(NEW.special_vehicle_fee)<>'integer' OR typeof(NEW.total_shipping_price)<>'integer' BEGIN SELECT RAISE(ABORT,'delivery plan quote money must use integer minor units'); END;
+CREATE TRIGGER IF NOT EXISTS delivery_plan_quote_money_update_guard BEFORE UPDATE OF base_shipping_price,special_vehicle_fee,total_shipping_price ON delivery_plan_quotes WHEN typeof(NEW.base_shipping_price)<>'integer' OR typeof(NEW.special_vehicle_fee)<>'integer' OR typeof(NEW.total_shipping_price)<>'integer' BEGIN SELECT RAISE(ABORT,'delivery plan quote money must use integer minor units'); END;

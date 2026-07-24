@@ -28,3 +28,11 @@ Returns and replacements are separate aggregates with their own item tables. Onl
 
 Disputes may reference an order, seller group, item, shipment, or return. Buyer, seller/provider, carrier, and admin replies produce role-specific statuses. Only an admin may issue the final administrative decision.
 
+## Delivery-plan lifecycle
+
+Delivery plans use `collecting_quotes`, `pending_buyer`, `accepted`,
+`reprice_required`, `separate_selected`, `cancelled`, and `completed`.
+Accepting only part of the active stop set produces a pending hybrid plan;
+coverage of every stop produces an accepted unified or hybrid plan. A route
+change removes applied shipping and enters `reprice_required`; shipment
+creation completes the plan.

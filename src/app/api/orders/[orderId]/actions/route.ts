@@ -1,5 +1,8 @@
 import { apiSuccess } from "@/core/api/api-response";
-import { getMarketplaceOrderService } from "@/modules/marketplace-orders/api/server";
+import {
+  getMarketplaceOrderQueries,
+  getMarketplaceOrderService,
+} from "@/modules/marketplace-orders/api/server";
 import { runTracedBusinessRoute } from "../../../auth/traced-route";
 import {
   actorFromInput,
@@ -26,9 +29,77 @@ interface ActionInput {
   returnRequestId?: string;
   priceMinor?: number;
   shippingQuoteId?: string;
+  deliveryPlanId?: string;
+  deliveryPlanQuoteId?: string;
   shippingPriceMinor?: number;
+  specialVehicleFeeMinor?: number;
   notes?: string;
   reason?: string;
+}
+
+async function notifyDeliveryPlan(input: {
+  uids: string[];
+  orderId: string;
+  planId: string;
+  quoteId?: string;
+  status: "new_quote" | "accepted" | "rejected" | "separate";
+  amount?: number;
+}) {
+  const recipients = Array.from(new Set(input.uids.filter(Boolean)));
+  if (recipients.length === 0) return;
+  const amount =
+    typeof input.amount === "number"
+      ? new Intl.NumberFormat("ar-EG", {
+          style: "currency",
+          currency: "EGP",
+        }).format(input.amount / 100)
+      : "";
+  const content =
+    input.status === "new_quote"
+      ? {
+          title: "عرض جديد للتوصيل الموحّد",
+          body: `وصل عرض بقيمة ${amount} لجمع طلبك من عدة بائعين في شحنة واحدة.`,
+          role: "buyer",
+        }
+      : input.status === "accepted"
+        ? {
+            title: "تم اختيار عرض التوصيل الموحّد",
+            body: `وافق المشتري على عرضك بقيمة ${amount}.`,
+            role: "service_provider",
+          }
+        : input.status === "rejected"
+          ? {
+              title: "لم يتم اختيار عرض التوصيل",
+              body: `رفض المشتري عرض التوصيل بقيمة ${amount}. يمكنك إرسال عرض معدل.`,
+              role: "service_provider",
+            }
+          : {
+              title: "اختيار التوصيل المنفصل",
+              body: "اختار المشتري العودة إلى توصيل كل بائع بصورة مستقلة.",
+              role: "service_provider",
+            };
+  await notificationSendService
+    .sendToUsers({
+      uids: recipients,
+      title: content.title,
+      body: content.body,
+      locale: "ar",
+      category: NotificationCategories.Offers,
+      priority: NotificationPriorities.High,
+      dedupeKey: `delivery-plan:${input.planId}:${input.quoteId ?? input.status}:${input.status}`,
+      route: {
+        href: `/orders/details?orderId=${encodeURIComponent(input.orderId)}&role=${content.role}`,
+        label: "عرض خطة التوصيل",
+      },
+      metadata: {
+        orderId: input.orderId,
+        deliveryPlanId: input.planId,
+        deliveryPlanQuoteId: input.quoteId ?? null,
+        deliveryPlanStatus: input.status,
+        amount: input.amount ?? null,
+      },
+    })
+    .catch(() => undefined);
 }
 
 async function notifyShippingQuote(input: {
@@ -121,6 +192,13 @@ export async function POST(
           adminCapable.role === "admin"
             ? adminCapable
             : actorFromInput(identity, "carrier");
+        const asDeliveryProvider =
+          adminCapable.role === "admin"
+            ? adminCapable
+            : actorFromInput(
+                { ...identity, role: "service_provider" },
+                "service_provider",
+              );
 
         switch (body.action) {
           case "seller_accept_item":
@@ -182,6 +260,99 @@ export async function POST(
               amount: Number(quote.total_shipping_price),
             });
             return apiSuccess(quote);
+          }
+          case "provider_send_unified_delivery_quote": {
+            if (!body.deliveryPlanId)
+              throw new Error("deliveryPlanId is required");
+            const quote = await service.proposeUnifiedDeliveryQuote(
+              body.deliveryPlanId,
+              {
+                baseShippingPrice: moneyMinor(body.shippingPriceMinor),
+                specialVehicleFee: moneyMinor(body.specialVehicleFeeMinor ?? 0),
+                notes: body.notes,
+              },
+              asDeliveryProvider,
+            );
+            const details =
+              await getMarketplaceOrderQueries().getDetails(orderId);
+            await notifyDeliveryPlan({
+              uids: [String(details?.order.buyer_id ?? "")],
+              orderId,
+              planId: body.deliveryPlanId,
+              quoteId: String(quote.id),
+              status: "new_quote",
+              amount: Number(quote.total_shipping_price),
+            });
+            return apiSuccess(quote);
+          }
+          case "buyer_accept_unified_delivery_quote": {
+            if (!body.deliveryPlanQuoteId)
+              throw new Error("deliveryPlanQuoteId is required");
+            const plan = await service.acceptUnifiedDeliveryQuote(
+              body.deliveryPlanQuoteId,
+              asBuyer,
+            );
+            const details =
+              await getMarketplaceOrderQueries().getDetails(orderId);
+            const quote = details?.deliveryPlanQuotes.find(
+              (entry) => String(entry.id) === body.deliveryPlanQuoteId,
+            );
+            await notifyDeliveryPlan({
+              uids: [String(quote?.provider_id ?? "")],
+              orderId,
+              planId: String(plan.id),
+              quoteId: body.deliveryPlanQuoteId,
+              status: "accepted",
+              amount: Number(quote?.total_shipping_price ?? 0),
+            });
+            return apiSuccess(plan);
+          }
+          case "buyer_reject_unified_delivery_quote": {
+            if (!body.deliveryPlanQuoteId)
+              throw new Error("deliveryPlanQuoteId is required");
+            const quote = await service.rejectUnifiedDeliveryQuote(
+              body.deliveryPlanQuoteId,
+              asBuyer,
+            );
+            await notifyDeliveryPlan({
+              uids: [String(quote.provider_id ?? "")],
+              orderId,
+              planId: String(quote.plan_id),
+              quoteId: body.deliveryPlanQuoteId,
+              status: "rejected",
+              amount: Number(quote.total_shipping_price),
+            });
+            return apiSuccess(quote);
+          }
+          case "buyer_choose_separate_delivery": {
+            if (!body.deliveryPlanId)
+              throw new Error("deliveryPlanId is required");
+            const plan = await service.chooseSeparateDelivery(
+              body.deliveryPlanId,
+              asBuyer,
+            );
+            const details =
+              await getMarketplaceOrderQueries().getDetails(orderId);
+            await notifyDeliveryPlan({
+              uids:
+                details?.deliveryPlanCandidates.map((candidate) =>
+                  String(candidate.provider_id),
+                ) ?? [],
+              orderId,
+              planId: body.deliveryPlanId,
+              status: "separate",
+            });
+            return apiSuccess(plan);
+          }
+          case "admin_create_unified_delivery_shipment": {
+            if (!body.deliveryPlanId)
+              throw new Error("deliveryPlanId is required");
+            return apiSuccess(
+              await service.createUnifiedDeliveryShipment(
+                body.deliveryPlanId,
+                adminCapable,
+              ),
+            );
           }
           case "buyer_accept_shipping_quote": {
             if (!body.shippingQuoteId)

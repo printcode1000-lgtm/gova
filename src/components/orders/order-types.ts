@@ -12,6 +12,13 @@ export interface OrderDetails {
   shipments: DbRow[];
   shipmentItems: DbRow[];
   shippingQuotes: DbRow[];
+  deliveryPlans: DbRow[];
+  deliveryPlanStops: DbRow[];
+  deliveryPlanCandidates: DbRow[];
+  deliveryPlanCandidateStops: DbRow[];
+  deliveryPlanQuotes: DbRow[];
+  deliveryPlanQuoteStops: DbRow[];
+  deliveryPlanShipments: DbRow[];
   cancellations: DbRow[];
   returns: DbRow[];
   returnItems: DbRow[];

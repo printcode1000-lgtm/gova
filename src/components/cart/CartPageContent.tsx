@@ -12,6 +12,7 @@ import {
   Plus,
   ShoppingCart,
   Trash2,
+  Truck,
 } from "lucide-react";
 
 import { asolApi } from "@/core/api/asol-api-client";
@@ -60,6 +61,8 @@ export function CartPageContent() {
   const [sellerSettings, setSellerSettings] = React.useState<
     Record<string, ProfileFulfillmentSettings>
   >({});
+  const [qualifiedDeliveryAvailable, setQualifiedDeliveryAvailable] =
+    React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState("");
   const productsTotalMinor = getCartTotalMinor(items);
@@ -94,6 +97,25 @@ export function CartPageContent() {
     };
   }, [sellerIds]);
 
+  React.useEffect(() => {
+    let cancelled = false;
+    if (sellerIds.length < 2) {
+      setQualifiedDeliveryAvailable(false);
+      return;
+    }
+    void profileService
+      .getUsersBySpecialty(46, 132, 0, 1)
+      .then((users) => {
+        if (!cancelled) setQualifiedDeliveryAvailable(users.length > 0);
+      })
+      .catch(() => {
+        if (!cancelled) setQualifiedDeliveryAvailable(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [sellerIds.length]);
+
   const sellerGroups = React.useMemo(
     () =>
       sellerIds.map((sellerId) => {
@@ -125,14 +147,21 @@ export function CartPageContent() {
     [items, sellerIds, sellerSettings],
   );
 
-  const shippingTotalMinor = sellerGroups.reduce(
+  const separateDeliveryEstimateMinor = sellerGroups.reduce(
     (total, group) => total + group.shippingMinor,
     0,
   );
+  const unifiedDeliveryAvailable =
+    sellerGroups.length > 1 &&
+    (qualifiedDeliveryAvailable ||
+      sellerGroups.some((group) => group.settings.carrierUids.length > 0));
+  const shippingTotalMinor = unifiedDeliveryAvailable
+    ? 0
+    : separateDeliveryEstimateMinor;
   const totalMinor = productsTotalMinor + shippingTotalMinor;
-  const hasPendingShippingQuote = sellerGroups.some(
-    (group) => group.quoteRequired,
-  );
+  const hasPendingShippingQuote =
+    unifiedDeliveryAvailable ||
+    sellerGroups.some((group) => group.quoteRequired);
 
   const submitOrder = async () => {
     if (!session?.uid) {
@@ -229,6 +258,30 @@ export function CartPageContent() {
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
           <section className="space-y-4">
+            {unifiedDeliveryAvailable ? (
+              <div className="rounded-xl border border-primary/30 bg-primary/10 p-4">
+                <div className="flex items-start gap-3">
+                  <Truck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <div>
+                    <h2 className="font-bold text-primary">
+                      توصيل موحّد لعدة بائعين
+                    </h2>
+                    <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                      سيطلب النظام عرضًا واحدًا لجمع المنتجات من{" "}
+                      {sellerGroups.length} بائعين وتسليمها إليك في شحنة واحدة،
+                      ولن تُحسب رسوم كل بائع بصورة منفصلة.
+                    </p>
+                    <p className="mt-2 text-xs font-semibold text-on-surface">
+                      تكلفة التوصيل المنفصل المؤكدة حاليًا:{" "}
+                      {formatMoney(separateDeliveryEstimateMinor)}
+                      {sellerGroups.some((group) => group.quoteRequired)
+                        ? "، وقد تزيد بعد تسعير المواقع."
+                        : ""}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : null}
             {sellerGroups.map((group) => (
               <div
                 key={group.sellerId}
@@ -238,9 +291,11 @@ export function CartPageContent() {
                   <div>
                     <h2 className="text-sm font-bold">البائع</h2>
                     <p className="text-xs text-muted-foreground">
-                      {group.quoteRequired
-                        ? `رسوم مؤكدة حاليًا: ${formatMoney(group.shippingMinor)} — تكلفة الشحن حسب المكان تُحدد بعد الطلب`
-                        : `الشحن: ${formatMoney(group.shippingMinor)}`}
+                      {unifiedDeliveryAvailable
+                        ? `مرجع التوصيل المنفصل: ${formatMoney(group.shippingMinor)}`
+                        : group.quoteRequired
+                          ? `رسوم مؤكدة حاليًا: ${formatMoney(group.shippingMinor)} — تكلفة الشحن حسب المكان تُحدد بعد الطلب`
+                          : `الشحن: ${formatMoney(group.shippingMinor)}`}
                       {group.eligibleForFree
                         ? " - تم تطبيق حد الشحن المجاني"
                         : ""}
@@ -422,12 +477,16 @@ export function CartPageContent() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">
-                  {hasPendingShippingQuote
-                    ? "رسوم الشحن المؤكدة حاليًا"
-                    : "إجمالي الشحن"}
+                  {unifiedDeliveryAvailable
+                    ? "التوصيل الموحد"
+                    : hasPendingShippingQuote
+                      ? "رسوم الشحن المؤكدة حاليًا"
+                      : "إجمالي الشحن"}
                 </span>
                 <span className="font-semibold">
-                  {formatMoney(shippingTotalMinor)}
+                  {unifiedDeliveryAvailable
+                    ? "بانتظار العروض"
+                    : formatMoney(shippingTotalMinor)}
                 </span>
               </div>
               <div className="border-t border-outline-variant pt-3">
@@ -439,8 +498,9 @@ export function CartPageContent() {
             </div>
             {hasPendingShippingQuote ? (
               <p className="mt-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-sm leading-6 text-on-surface">
-                الإجمالي مبدئي ولا يشمل عروض الشحن حسب المكان. ستُضاف قيمة كل
-                عرض فقط بعد موافقتك عليه من صفحة تفاصيل الطلب.
+                {unifiedDeliveryAvailable
+                  ? "الإجمالي مبدئي ولا يشمل التوصيل الموحد. ستظهر عروض مقدمي التوصيل في صفحة الطلب، ولن تُضاف أي قيمة إلا بعد اختيارك وموافقتك."
+                  : "الإجمالي مبدئي ولا يشمل عروض الشحن حسب المكان. ستُضاف قيمة كل عرض فقط بعد موافقتك عليه من صفحة تفاصيل الطلب."}
               </p>
             ) : null}
             {submitError ? (

@@ -1,5 +1,6 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { getMarketplaceOrderQueries } from "@/modules/marketplace-orders/api/server";
+import { filterOrderDetailsForActor } from "@/modules/marketplace-orders/domain/order-details-visibility";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { actorFromInput, mapOrderError } from "../order-api-helpers";
@@ -31,8 +32,9 @@ export async function GET(
       );
       const repo = getMarketplaceOrderQueries();
       if (!(await repo.canAccess(orderId, actor))) throw new Error("Forbidden");
-      const details = await repo.getDetails(orderId);
+      let details = await repo.getDetails(orderId);
       if (!details) throw new Error("Order not found");
+      details = filterOrderDetailsForActor(details, actor);
       const order = details.order as Record<string, unknown>;
       const sellerIds = Array.from(
         new Set(details.sellerOrders.map((row) => String(row.seller_id))),
@@ -40,22 +42,34 @@ export async function GET(
       const carrierIds = Array.from(
         new Set(
           details.sellerOrders
-            .map((row) =>
-              String(row.service_provider_id ?? "") ||
-              String(
-                details.orderItems.find(
-                  (item) => item.seller_order_id === row.id,
-                )?.shipping_notes ?? "",
-              ).replace(/^carrier:/, ""),
+            .map(
+              (row) =>
+                String(row.service_provider_id ?? "") ||
+                String(
+                  details.orderItems.find(
+                    (item) => item.seller_order_id === row.id,
+                  )?.shipping_notes ?? "",
+                ).replace(/^carrier:/, ""),
             )
             .filter(Boolean),
         ),
       );
+      const candidateProviderIds = Array.from(
+        new Set(
+          details.deliveryPlanCandidates
+            .map((row) => String(row.provider_id ?? ""))
+            .filter(Boolean),
+        ),
+      );
       const profileEntries = await Promise.all(
-        [String(order.buyer_id), ...sellerIds, ...carrierIds].map(async (uid) => [
-          uid,
-          await profileSnapshot(uid),
-        ] as const),
+        Array.from(
+          new Set([
+            String(order.buyer_id),
+            ...sellerIds,
+            ...carrierIds,
+            ...candidateProviderIds,
+          ]),
+        ).map(async (uid) => [uid, await profileSnapshot(uid)] as const),
       );
       return apiSuccess({
         ...details,

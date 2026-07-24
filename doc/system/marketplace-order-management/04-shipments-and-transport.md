@@ -26,3 +26,11 @@ After each assignment, the service recalculates shipment transport requirements 
 ## Carrier lifecycle
 
 Only the assigned carrier or an admin may perform carrier updates. The supported operations receive or reject shipment items, move items through transit, distribution-center, and out-for-delivery states, and record delivery, delivery rejection, or delivery failure. Tracking changes are audited. Delivery is rejected unless the item has entered the delivery lifecycle. Shipment status is derived from all shipment-item statuses, enabling partial receipt and partial delivery.
+
+## Unified and hybrid route fulfilment
+
+An accepted unified plan creates one shipment covering all active seller stops.
+An accepted hybrid plan creates one shipment for each accepted, non-overlapping
+quote group. The quoted provider becomes that group's carrier. Shipment
+creation is allowed only after every active covered item is ready for shipping,
+and ordinary seller shipment creation is blocked while the plan owns the route.
