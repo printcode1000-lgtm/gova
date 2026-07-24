@@ -41,10 +41,10 @@ The Business API server resolves the manifest from `NEXT_PUBLIC_ASOL_OTA_MANIFES
 
 The users database owns two tables:
 
-| Table | Purpose |
-|---|---|
-| `ota_releases` | Manifest snapshot, release metadata, approval/revocation state, and actor timestamps |
-| `ota_release_audit` | Append-only discovery, approval, and revocation events |
+| Table               | Purpose                                                                              |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| `ota_releases`      | Manifest snapshot, release metadata, approval/revocation state, and actor timestamps |
+| `ota_release_audit` | Append-only discovery, approval, and revocation events                               |
 
 The full manifest JSON is retained in `ota_releases` so historical metadata remains available after the single R2 manifest is replaced by a later publication.
 
@@ -69,12 +69,12 @@ The full manifest JSON is retained in `ota_releases` so historical metadata rema
 
 `GET /api/ota/admin/releases/diff` accepts a prior `baseReleaseId` and always compares it with the currently signed R2 manifest. The comparison runs on the server so clients do not download historical manifest snapshots.
 
-| Classification | Rule |
-|---|---|
-| Added | Path exists only in the current manifest |
-| Modified | Path exists in both manifests and SHA-256 differs |
-| Deleted | Path exists only in the prior manifest |
-| Unchanged | Path and SHA-256 are identical |
+| Classification | Rule                                              |
+| -------------- | ------------------------------------------------- |
+| Added          | Path exists only in the current manifest          |
+| Modified       | Path exists in both manifests and SHA-256 differs |
+| Deleted        | Path exists only in the prior manifest            |
+| Unchanged      | Path and SHA-256 are identical                    |
 
 OTA transfers a modified file in full. Therefore `downloadBytes` is the sum of every added file's current size plus every modified file's current size; it is not a binary patch-size estimate. Historical comparisons are available only for releases whose manifest was discovered and retained by the approval system.
 
@@ -136,6 +136,13 @@ npm run ota:publish
 ```
 
 This command uses the same automatic version, automatic Cairo notes, static build, delta upload, deletion, signing, and single-directory layout. It does not update native project version files and does not run `cap sync`.
+
+The static build includes the fresh-install defaults and private-data audit.
+OTA changes application files but deliberately preserves AsolDB, the current
+session, theme, locale, cart, favorites, notifications, and page state. It must
+not be used as a remote data-reset mechanism. For the first-install test flow,
+see
+[installation-state-and-clean-testing.md](./installation-state-and-clean-testing.md).
 
 For normal native development, use `npm run cap:build` instead.
 
@@ -253,15 +260,15 @@ Android `versionCode` and iOS `CURRENT_PROJECT_VERSION` are calculated numerical
 
 Splash displays technical current/R2 versions, changed/deleted counts, download size, and failure details only to the super-admin. Other users see a loading spinner. Android Studio Logcat messages use `[AsolOTA]`.
 
-| Message | Meaning |
-|---|---|
-| `OTA disabled` | OTA URL/key is missing or the app is not running in Capacitor |
-| `No OTA update: remote version is not newer` | R2 is equal to or older than the running bundle |
-| `OTA release awaiting approval` | A newer release exists but is not approved for ordinary users |
-| `Unsupported OTA manifest schema` | The installed bootstrap predates schema v2 |
-| `OTA manifest signature is invalid` | The manifest does not match the embedded public key |
-| `checksum mismatch` | A downloaded or copied file differs from the manifest |
-| `R2 object content mismatch` | `cap:build` found a remote size or SHA-256 mismatch |
+| Message                                      | Meaning                                                       |
+| -------------------------------------------- | ------------------------------------------------------------- |
+| `OTA disabled`                               | OTA URL/key is missing or the app is not running in Capacitor |
+| `No OTA update: remote version is not newer` | R2 is equal to or older than the running bundle               |
+| `OTA release awaiting approval`              | A newer release exists but is not approved for ordinary users |
+| `Unsupported OTA manifest schema`            | The installed bootstrap predates schema v2                    |
+| `OTA manifest signature is invalid`          | The manifest does not match the embedded public key           |
+| `checksum mismatch`                          | A downloaded or copied file differs from the manifest         |
+| `R2 object content mismatch`                 | `cap:build` found a remote size or SHA-256 mismatch           |
 
 ### PowerShell / PSReadLine rendering failure
 
@@ -274,20 +281,20 @@ Splash displays technical current/R2 versions, changed/deleted counts, download 
 
 ## Main Files
 
-| File | Responsibility |
-|---|---|
-| `scripts/cap-build.ts` | Publish, full R2 verification, native versioning, and Capacitor sync |
-| `scripts/ota-publish.ts` | Automatic version and single-directory delta publication |
-| `scripts/build-static.ts` | Static build and local manifest generation |
-| `scripts/ota/ota-config.ts` | Schema, signing, URLs, and deterministic build environment |
-| `scripts/ota/ota-r2.ts` | R2 list/get/put/delete operations |
-| `src/features/ota/services/ota-update-service.ts` | Runtime comparison, staging, verification, and activation |
-| `src/features/ota/services/ota-api-service.ts` | Native/browser manifest and file transport |
-| `src/features/ota/services/ota-release-service.server.ts` | Server-side manifest verification, access decisions, and approval management |
-| `src/features/ota/repositories/ota-release-repository.ts` | Release state and audit persistence |
-| `src/platform/ota/capacitor-ota-adapter.ts` | Private storage and WebView activation |
-| `src/components/splash/SplashInitializer.tsx` | Startup execution and progress details |
-| `src/components/super-admin/SuperAdminOtaReleasesPage.tsx` | Approval dashboard and device testing controls |
+| File                                                       | Responsibility                                                               |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `scripts/cap-build.ts`                                     | Publish, full R2 verification, native versioning, and Capacitor sync         |
+| `scripts/ota-publish.ts`                                   | Automatic version and single-directory delta publication                     |
+| `scripts/build-static.ts`                                  | Static build and local manifest generation                                   |
+| `scripts/ota/ota-config.ts`                                | Schema, signing, URLs, and deterministic build environment                   |
+| `scripts/ota/ota-r2.ts`                                    | R2 list/get/put/delete operations                                            |
+| `src/features/ota/services/ota-update-service.ts`          | Runtime comparison, staging, verification, and activation                    |
+| `src/features/ota/services/ota-api-service.ts`             | Native/browser manifest and file transport                                   |
+| `src/features/ota/services/ota-release-service.server.ts`  | Server-side manifest verification, access decisions, and approval management |
+| `src/features/ota/repositories/ota-release-repository.ts`  | Release state and audit persistence                                          |
+| `src/platform/ota/capacitor-ota-adapter.ts`                | Private storage and WebView activation                                       |
+| `src/components/splash/SplashInitializer.tsx`              | Startup execution and progress details                                       |
+| `src/components/super-admin/SuperAdminOtaReleasesPage.tsx` | Approval dashboard and device testing controls                               |
 
 ## Verification
 

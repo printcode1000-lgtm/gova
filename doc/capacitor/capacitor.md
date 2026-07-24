@@ -20,13 +20,13 @@ Capacitor sync
 android/  ·  ios/       ← native shells
 ```
 
-| Layer | Responsibility |
-|---|---|
-| `src/` (UI, Hooks, Services, API client) | Same code as web — platform-agnostic |
-| `out/` | Static export consumed by Capacitor |
-| `platform/` | Capacitor defaults and platform-only config |
-| `capacitor.config.ts` | App id, webDir, live-reload server URL |
-| `android/` · `ios/` | Generated native projects (commit to repo) |
+| Layer                                    | Responsibility                              |
+| ---------------------------------------- | ------------------------------------------- |
+| `src/` (UI, Hooks, Services, API client) | Same code as web — platform-agnostic        |
+| `out/`                                   | Static export consumed by Capacitor         |
+| `platform/`                              | Capacitor defaults and platform-only config |
+| `capacitor.config.ts`                    | App id, webDir, live-reload server URL      |
+| `android/` · `ios/`                      | Generated native projects (commit to repo)  |
 
 **Not in Capacitor:** Repository, Drizzle, SQLite, Turso, SQL, database plugins.
 
@@ -48,16 +48,16 @@ out/                             # Static assets (from build:static)
 
 ### Dependencies (package.json)
 
-| Package | Purpose |
-|---|---|
-| `@capacitor/core` | Runtime bridge |
-| `@capacitor/cli` | CLI (`cap sync`, `cap open`, …) |
-| `@capacitor/android` | Android platform |
-| `@capacitor/ios` | iOS platform |
-| `@capacitor/app` | Android system Back events and confirmed application exit |
-| `@capacitor/filesystem` | Private storage for verified file-level OTA releases |
-| `@capacitor/camera` | Native one-image gallery selection and camera capture for `StorageImageManager` |
-| `@capgo/capacitor-speech-recognition` | Native Arabic/English speech-to-text for automatic voice-enabled fields |
+| Package                               | Purpose                                                                         |
+| ------------------------------------- | ------------------------------------------------------------------------------- |
+| `@capacitor/core`                     | Runtime bridge                                                                  |
+| `@capacitor/cli`                      | CLI (`cap sync`, `cap open`, …)                                                 |
+| `@capacitor/android`                  | Android platform                                                                |
+| `@capacitor/ios`                      | iOS platform                                                                    |
+| `@capacitor/app`                      | Android system Back events and confirmed application exit                       |
+| `@capacitor/filesystem`               | Private storage for verified file-level OTA releases                            |
+| `@capacitor/camera`                   | Native one-image gallery selection and camera capture for `StorageImageManager` |
+| `@capgo/capacitor-speech-recognition` | Native Arabic/English speech-to-text for automatic voice-enabled fields         |
 
 No database plugin is installed. `@capacitor/filesystem` is used by the OTA platform adapter to store verified file-level web releases in application-private storage and by the image source picker to read the selected native image into a browser `File`; it is not a data-layer database. `@capacitor/app` is used by the Android platform adapter for system Back events and the confirmed exit action. The camera plugin is isolated behind the image source picker adapter, and the speech-recognition plugin is isolated behind the platform speech adapter. See [ota-update-system.md](./ota-update-system.md), [mobile-back-button-system.md](../system/mobile-back-button-system.md), [storage-image-source-picker-system.md](../system/storage-image-source-picker-system.md), and [voice-input-system.md](../system/voice-input-system.md).
 
@@ -65,13 +65,17 @@ No database plugin is installed. `@capacitor/filesystem` is used by the OTA plat
 
 ## npm scripts
 
-| Command | What it does |
-|---|---|
-| `npm run cap:build` | Automatic version + R2 delta publish + full verification + native version pinning + `cap sync` |
-| `npm run cap:sync` | Copy `out/` into native projects and update native config |
-| `npm run cap:copy` | Copy web assets only (no native dependency update) |
-| `npm run cap:open:android` | Open project in Android Studio |
-| `npm run cap:open:ios` | Open project in Xcode |
+| Command                         | What it does                                                                                   |
+| ------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `npm run cap:build`             | Automatic version + R2 delta publish + full verification + native version pinning + `cap sync` |
+| `npm run cap:build:local`       | Build and synchronize local device assets without publishing                                   |
+| `npm run cap:verify-defaults`   | Verify the fresh-install defaults and reject persisted/private data files                      |
+| `npm run cap:run:clean:android` | Build locally, clear the Android test app data, and run a fresh installation                   |
+| `npm run cap:run:clean:ios`     | Build locally, uninstall the iOS simulator app, and run a fresh installation                   |
+| `npm run cap:sync`              | Copy `out/` into native projects and update native config                                      |
+| `npm run cap:copy`              | Copy web assets only (no native dependency update)                                             |
+| `npm run cap:open:android`      | Open project in Android Studio                                                                 |
+| `npm run cap:open:ios`          | Open project in Xcode                                                                          |
 
 ### `cap:build` internals
 
@@ -89,11 +93,20 @@ Implemented in `scripts/cap-build.ts`:
 3. Publishes changed/new files and deletes removed files in the single `app-updates/files` directory.
 4. Resolves API URL from `ASOL_CAPACITOR_API_BASE_URL` or `platform/capacitor.defaults.ts` (`https://gova-swart.vercel.app`).
 5. Sets `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION`, `NEXT_PUBLIC_ASOL_NATIVE_VERSION`, and `NEXT_PUBLIC_ASOL_API_BASE_URL`.
-6. Runs `npm run build:static` (includes `architecture:check` and writes `asol-web-manifest.json`).
+6. Runs `npm run build:static` (includes `architecture:check`, the
+   fresh-install defaults/privacy audit, and writes
+   `asol-web-manifest.json`).
 7. Publishes the signed manifest last and removes legacy release directories.
 8. Downloads and verifies every R2 file by size and SHA-256.
 9. Updates Android and iOS to the automatic version.
 10. Runs `npx cap sync` only after Android, iOS, local output, and R2 all match.
+
+Building or publishing replaces application files only. It never packages the
+developer browser's session or IndexedDB. A new installation starts in Arabic,
+RTL, light mode and logged out; an update intentionally preserves each
+existing user's local session and preferences. Use the dedicated clean-run
+commands to test a first launch on an already-used device. See
+[installation-state-and-clean-testing.md](./installation-state-and-clean-testing.md).
 
 ---
 
@@ -133,10 +146,10 @@ UI → Hooks → Client Services → AsolApiClient → HTTPS → Vercel Business
 
 The API base URL is **baked at build time** into the static bundle via `NEXT_PUBLIC_ASOL_API_BASE_URL`.
 
-| Build command | API source |
-|---|---|
-| `npm run cap:build` | Always Vercel unless overridden; automatically publishes and verifies R2 |
-| `npm run build:static` (manual) | Whatever `NEXT_PUBLIC_ASOL_API_BASE_URL` is at build time |
+| Build command                   | API source                                                               |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| `npm run cap:build`             | Always Vercel unless overridden; automatically publishes and verifies R2 |
+| `npm run build:static` (manual) | Whatever `NEXT_PUBLIC_ASOL_API_BASE_URL` is at build time                |
 
 ### Override API URL for a one-off build
 
@@ -197,15 +210,15 @@ Live reload is configured **only in Capacitor config** — no changes to applica
 
 ## Environment variables
 
-| Variable | Used by | Purpose |
-|---|---|---|
-| `CAPACITOR_SERVER_URL` | `capacitor.config.ts` | Optional dev server URL for live reload |
-| `ASOL_CAPACITOR_API_BASE_URL` | `scripts/cap-build.ts` | Override API URL for `cap:build` |
-| `ASOL_WEB_BUNDLE_VERSION` | legacy/manual static builds | `cap:build` derives its version from R2 automatically |
-| `NEXT_PUBLIC_ASOL_API_BASE_URL` | Next.js static build | Baked into client bundle (set automatically by `cap:build`) |
-| `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` | Next.js static build | Baked into client bundle and local web manifest |
-| `NEXT_PUBLIC_ASOL_NATIVE_VERSION` | Next.js static build | Native version used by OTA minimum-version checks |
-| `ASOL_MODE=static` | `next.config.ts` | Enables static export (`build:static`) |
+| Variable                              | Used by                     | Purpose                                                     |
+| ------------------------------------- | --------------------------- | ----------------------------------------------------------- |
+| `CAPACITOR_SERVER_URL`                | `capacitor.config.ts`       | Optional dev server URL for live reload                     |
+| `ASOL_CAPACITOR_API_BASE_URL`         | `scripts/cap-build.ts`      | Override API URL for `cap:build`                            |
+| `ASOL_WEB_BUNDLE_VERSION`             | legacy/manual static builds | `cap:build` derives its version from R2 automatically       |
+| `NEXT_PUBLIC_ASOL_API_BASE_URL`       | Next.js static build        | Baked into client bundle (set automatically by `cap:build`) |
+| `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` | Next.js static build        | Baked into client bundle and local web manifest             |
+| `NEXT_PUBLIC_ASOL_NATIVE_VERSION`     | Next.js static build        | Native version used by OTA minimum-version checks           |
+| `ASOL_MODE=static`                    | `next.config.ts`            | Enables static export (`build:static`)                      |
 
 See `.env.example` for templates. Capacitor-specific vars do not belong in `src/` — only in platform config and build scripts.
 
@@ -213,24 +226,24 @@ See `.env.example` for templates. Capacitor-specific vars do not belong in `src/
 
 ## `capacitor.config.ts` reference
 
-| Setting | Value | Notes |
-|---|---|---|
-| `appId` | `hgh.asol.app` | Android/iOS bundle identifier |
-| `appName` | `ASOL` | Display name |
-| `webDir` | `out` | **Always** the static export folder — never `.next` or `public` alone |
-| `android.allowMixedContent` | `true` | Allows mixed HTTP/HTTPS during dev reload |
-| `server.url` | from `CAPACITOR_SERVER_URL` | Omitted in production (bundled `out/`) |
+| Setting                     | Value                       | Notes                                                                 |
+| --------------------------- | --------------------------- | --------------------------------------------------------------------- |
+| `appId`                     | `hgh.asol.app`              | Android/iOS bundle identifier                                         |
+| `appName`                   | `ASOL`                      | Display name                                                          |
+| `webDir`                    | `out`                       | **Always** the static export folder — never `.next` or `public` alone |
+| `android.allowMixedContent` | `true`                      | Allows mixed HTTP/HTTPS during dev reload                             |
+| `server.url`                | from `CAPACITOR_SERVER_URL` | Omitted in production (bundled `out/`)                                |
 
 ---
 
 ## Deployment targets comparison
 
-| Target | Command | API | Database in client |
-|---|---|---|---|
-| Local dev (`npm run dev`) | — | Same origin `/api/*` | No |
-| Vercel (hosted) | `npm run build` | Same origin | No |
-| GitHub Pages (static) | `npm run build:static` | Remote (`NEXT_PUBLIC_ASOL_API_BASE_URL`) | No |
-| **Capacitor** | `npm run cap:build` | Vercel (via `cap:build`) | No |
+| Target                    | Command                | API                                      | Database in client |
+| ------------------------- | ---------------------- | ---------------------------------------- | ------------------ |
+| Local dev (`npm run dev`) | —                      | Same origin `/api/*`                     | No                 |
+| Vercel (hosted)           | `npm run build`        | Same origin                              | No                 |
+| GitHub Pages (static)     | `npm run build:static` | Remote (`NEXT_PUBLIC_ASOL_API_BASE_URL`) | No                 |
+| **Capacitor**             | `npm run cap:build`    | Vercel (via `cap:build`)                 | No                 |
 
 All targets share **identical** `src/` application code.
 

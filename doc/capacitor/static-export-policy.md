@@ -27,13 +27,13 @@ Filtering never deletes files from the original `src/` or `public/` directories.
 
 `STATIC_PUBLIC_ALLOW_FILES` contains required individual files:
 
-| Path | Runtime ownership |
-|---|---|
-| `asol-app-init.js` | Blocking application initialization before React starts |
-| `asol-push-sw.js` | Web Push service worker registered by the notifications feature |
-| `asol-theme-init.js` | Blocking theme initialization before React starts |
-| `logo.png` | Layout metadata and the shared `AppIcon` component |
-| `catagory/categories.json` | Canonical category source owned and imported only by `src/features/categories` |
+| Path                          | Runtime ownership                                                                 |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| `asol-app-init.js`            | Blocking application initialization before React starts                           |
+| `asol-push-sw.js`             | Web Push service worker registered by the notifications feature                   |
+| `asol-theme-init.js`          | Blocking theme initialization before React starts                                 |
+| `logo.png`                    | Layout metadata and the shared `AppIcon` component                                |
+| `catagory/categories.json`    | Canonical category source owned and imported only by `src/features/categories`    |
 | `catagory/subcategories.json` | Canonical subcategory source owned and imported only by `src/features/categories` |
 
 Missing allowlisted files fail the build with `Required static asset not found`.
@@ -42,14 +42,14 @@ Missing allowlisted files fail the build with `Required static asset not found`.
 
 `STATIC_PUBLIC_ALLOW_DIRECTORIES` copies these directories recursively:
 
-| Directory | Runtime ownership |
-|---|---|
-| `catagory/cars` | Vehicle option JSON and vehicle/brand images loaded by product components |
-| `catagory/pharmacy` | Pharmacy catalog JSON imported by the pharmacy static catalog loader |
+| Directory               | Runtime ownership                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------ |
+| `catagory/cars`         | Vehicle option JSON and vehicle/brand images loaded by product components            |
+| `catagory/pharmacy`     | Pharmacy catalog JSON imported by the pharmacy static catalog loader                 |
 | `images/mainCategories` | Complete main-category image catalog, including categories supplied by external data |
-| `images/pharmacy_fixed` | Pharmacy category images referenced by the pharmacy catalog |
-| `images/subCategories` | Complete subcategory image catalog |
-| `product/style` | Runtime product layout/style definitions loaded by product pages |
+| `images/pharmacy_fixed` | Pharmacy category images referenced by the pharmacy catalog                          |
+| `images/subCategories`  | Complete subcategory image catalog                                                   |
+| `product/style`         | Runtime product layout/style definitions loaded by product pages                     |
 
 Adding a directory permits every current and future file below it. Use a directory allowlist only when the whole directory is a runtime contract.
 
@@ -57,20 +57,20 @@ Adding a directory permits every current and future file below it. Use a directo
 
 `STATIC_PUBLIC_IGNORE_FILES` contains reviewed files that must remain outside clients:
 
-| Path | Reason |
-|---|---|
-| `catagory.db` | SQLite source used by the JSON export script |
-| `asol-web-manifest.json` | Previous generated manifest; each build writes a fresh one |
-| `catagory/active_ingredient_forms.json` | Source export not requested by static runtime |
-| `catagory/active_ingredient_strengths.json` | Source export not requested by static runtime |
-| `catagory/active_ingredients.json` | Source export not requested by static runtime |
-| `catagory/forms.json` | Source export not requested by static runtime |
-| `catagory/pharmacy_categories.json` | Source export not requested by static runtime |
-| `catagory/pharmacy_subcategories.json` | Source export not requested by static runtime |
-| `catagory/product_brands.json` | Source export not requested by static runtime |
-| `catagory/setting.json` | SQLite export metadata |
-| `catagory/sqlite_sequence.json` | SQLite internal metadata |
-| `catagory/strengths.json` | Source export not requested by static runtime |
+| Path                                        | Reason                                                     |
+| ------------------------------------------- | ---------------------------------------------------------- |
+| `catagory.db`                               | SQLite source used by the JSON export script               |
+| `asol-web-manifest.json`                    | Previous generated manifest; each build writes a fresh one |
+| `catagory/active_ingredient_forms.json`     | Source export not requested by static runtime              |
+| `catagory/active_ingredient_strengths.json` | Source export not requested by static runtime              |
+| `catagory/active_ingredients.json`          | Source export not requested by static runtime              |
+| `catagory/forms.json`                       | Source export not requested by static runtime              |
+| `catagory/pharmacy_categories.json`         | Source export not requested by static runtime              |
+| `catagory/pharmacy_subcategories.json`      | Source export not requested by static runtime              |
+| `catagory/product_brands.json`              | Source export not requested by static runtime              |
+| `catagory/setting.json`                     | SQLite export metadata                                     |
+| `catagory/sqlite_sequence.json`             | SQLite internal metadata                                   |
+| `catagory/strengths.json`                   | Source export not requested by static runtime              |
 
 Ignored files stay available to local tools but are not copied to static output.
 
@@ -78,8 +78,8 @@ Ignored files stay available to local tools but are not copied to static output.
 
 `STATIC_PUBLIC_IGNORE_DIRECTORIES` excludes these directories recursively:
 
-| Directory | Reason |
-|---|---|
+| Directory   | Reason                                                          |
+| ----------- | --------------------------------------------------------------- |
 | `sync_data` | Local databases, schema reports, and development upload mirrors |
 
 Nothing below these directories may enter `out/`, R2, Android, or iOS.
@@ -88,12 +88,12 @@ Nothing below these directories may enter `out/`, R2, Android, or iOS.
 
 `STATIC_ROUTE_IGNORELIST` removes routes only from the temporary static source:
 
-| Source path | Result | Reason |
-|---|---|---|
-| `app/api` | No static API route output | Static hosts cannot execute Next.js server routes |
-| `app/dev` | No `/dev/*` output | Development diagnostics are not production pages |
+| Source path            | Result                         | Reason                                                                                               |
+| ---------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `app/api`              | No static API route output     | Static hosts cannot execute Next.js server routes                                                    |
+| `app/dev`              | No `/dev/*` output             | Development diagnostics are not production pages                                                     |
 | `app/orders/[orderId]` | No dynamic order-detail output | Static clients use `/orders/details?orderId=...`; the dynamic route remains for hosted compatibility |
-| `app/test1` | No `/test1` output | UI test page is not a production page |
+| `app/test1`            | No `/test1` output             | UI test page is not a production page                                                                |
 
 The original routes remain available during local development.
 
@@ -142,6 +142,12 @@ After compilation, `collectManifestFiles()` inventories final `out/` files:
 - every other output receives a SHA-256 and byte size.
 
 `ota:publish` publishes exactly that inventory. A file removed by a policy change is deleted from R2 during the next publication and is absent from the next staged application release.
+
+After route generation, the build runs `auditCapacitorDefaultBundle`. It rejects
+an output that does not start in Arabic/RTL/light mode or that contains `.env`,
+Firebase configuration, SQLite, or `sync_data` artifacts. This audit is shared
+by manual static builds, local Capacitor builds, `ota:publish`, and
+`cap:build`.
 
 ## Adding A Runtime File
 

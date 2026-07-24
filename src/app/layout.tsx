@@ -21,11 +21,15 @@ import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
 import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
 import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
-import { AndroidPushController, WebPushController } from "@/features/notifications";
+import {
+  AndroidPushController,
+  WebPushController,
+} from "@/features/notifications";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
 import { isDevelopment, withBasePath } from "@/core/config";
+import { InstallationBootstrap } from "@/lib/installation";
 
 const DeveloperBadge = isDevelopment
   ? dynamic(() =>
@@ -61,33 +65,37 @@ export default function RootLayout({
         <AppInitScript />
       </head>
       <body className="antialiased">
-        <AppQueryProvider>
-          <SessionProvider>
-            <FavoritesProvider>
-              <SystemLogCollector />
-              <AndroidPushController />
-              <WebPushController />
-              <SystemLogErrorBoundary>
-                <PreferencesProvider>
-                  <NetworkStatusProvider>
-                    <OtaUpdateProvider>
-                      <Suspense fallback={<ShellLayout>{children}</ShellLayout>}>
-                        <SnapshotProvider>
-                          <ShellLayout>{children}</ShellLayout>
-                        </SnapshotProvider>
-                      </Suspense>
-                      <NetworkStatusBanner />
-                      <OtaUpdatePrompt />
-                      <MobileBackButtonController />
-                      <VoiceInputController />
-                      <DeveloperBadge />
-                    </OtaUpdateProvider>
-                  </NetworkStatusProvider>
-                </PreferencesProvider>
-              </SystemLogErrorBoundary>
-            </FavoritesProvider>
-          </SessionProvider>
-        </AppQueryProvider>
+        <InstallationBootstrap>
+          <AppQueryProvider>
+            <SessionProvider>
+              <FavoritesProvider>
+                <SystemLogCollector />
+                <AndroidPushController />
+                <WebPushController />
+                <SystemLogErrorBoundary>
+                  <PreferencesProvider>
+                    <NetworkStatusProvider>
+                      <OtaUpdateProvider>
+                        <Suspense
+                          fallback={<ShellLayout>{children}</ShellLayout>}
+                        >
+                          <SnapshotProvider>
+                            <ShellLayout>{children}</ShellLayout>
+                          </SnapshotProvider>
+                        </Suspense>
+                        <NetworkStatusBanner />
+                        <OtaUpdatePrompt />
+                        <MobileBackButtonController />
+                        <VoiceInputController />
+                        <DeveloperBadge />
+                      </OtaUpdateProvider>
+                    </NetworkStatusProvider>
+                  </PreferencesProvider>
+                </SystemLogErrorBoundary>
+              </FavoritesProvider>
+            </SessionProvider>
+          </AppQueryProvider>
+        </InstallationBootstrap>
       </body>
     </html>
   );

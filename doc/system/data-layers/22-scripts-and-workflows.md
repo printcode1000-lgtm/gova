@@ -49,9 +49,18 @@ npm run build:static
 ```bash
 npm run cap:build
 npx cap open android
+
+# First-install testing without publishing
+npm run cap:run:clean:android
+
+# Audit the generated default state
+npm run cap:verify-defaults
 ```
 
-See [capacitor.md](../capacitor.md).
+Normal native and OTA updates preserve AsolDB and the current user session.
+Clean-run commands are limited to test targets. See
+[capacitor.md](../../capacitor/capacitor.md) and
+[installation-state-and-clean-testing.md](../../capacitor/installation-state-and-clean-testing.md).
 
 ## Typical: new Turso + Vercel
 

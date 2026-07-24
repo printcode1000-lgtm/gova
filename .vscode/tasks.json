@@ -77,6 +77,27 @@
       "detail": "بناء محلي لتطبيق Capacitor مناسب للتجربة على الجهاز أثناء التطوير."
     },
     {
+      "label": "Cap Clean Android - تشغيل نظيف",
+      "type": "npm",
+      "script": "cap:run:clean:android",
+      "problemMatcher": [],
+      "detail": "يبني النسخة المحلية، يمسح بيانات تطبيق ASOL على جهاز Android الاختباري فقط، ثم يشغله كتثبيت جديد بالإعدادات الافتراضية."
+    },
+    {
+      "label": "Cap Clean iOS - تشغيل نظيف",
+      "type": "npm",
+      "script": "cap:run:clean:ios",
+      "problemMatcher": [],
+      "detail": "يبني النسخة المحلية، يزيل تطبيق ASOL من محاكي iOS، ثم يشغله كتثبيت جديد؛ يتطلب macOS وXcode."
+    },
+    {
+      "label": "Cap Defaults - فحص البداية",
+      "type": "npm",
+      "script": "cap:verify-defaults",
+      "problemMatcher": [],
+      "detail": "يفحص أن ملفات Capacitor تبدأ بالعربية وRTL والوضع الفاتح ولا تحتوي ملفات جلسات أو قواعد بيانات محلية."
+    },
+    {
       "label": "Cap Sync - مزامنة الإضافات",
       "type": "npm",
       "script": "cap:sync",

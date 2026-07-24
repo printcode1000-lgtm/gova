@@ -15,7 +15,8 @@
     "architecture:check": "npx tsx scripts/architecture-check.ts",
     "category:validate": "npx tsx scripts/validate-categories.ts",
     "test:categories": "npx tsx scripts/test-categories.ts",
-    "test": "npm run test:categories && npm run test:shipping-pricing && npm run test:delivery-planner && npm run test:marketplace-orders && npm run test:notifications && npm run test:favorites && npm run test:password-recovery && npm run test:image-upload-queue",
+    "test:installation-bootstrap": "npx tsx src/lib/installation/tests/installation-policy.test.ts",
+    "test": "npm run test:categories && npm run test:installation-bootstrap && npm run test:shipping-pricing && npm run test:delivery-planner && npm run test:marketplace-orders && npm run test:notifications && npm run test:favorites && npm run test:password-recovery && npm run test:image-upload-queue",
     "test:shipping-pricing": "npx tsx src/features/cart/tests/shipping-pricing.test.ts",
     "test:delivery-planner": "npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts",
     "test:marketplace-orders": "npx tsx src/modules/marketplace-orders/tests/storage-profile-integration.test.ts && npx tsx src/modules/marketplace-orders/tests/schema-contract.test.ts && npx tsx src/modules/marketplace-orders/tests/marketplace-orders.test.ts && npx tsx src/modules/marketplace-orders/tests/delivery-rejection.test.ts && npx tsx src/modules/marketplace-orders/tests/requirements-coverage.test.ts && npx tsx src/modules/marketplace-orders/tests/security-and-invariants.test.ts && npx tsx src/modules/marketplace-orders/tests/shipping-quotes.test.ts && npx tsx src/modules/marketplace-orders/tests/unified-delivery-plan.test.ts && npx tsx src/modules/marketplace-orders/tests/order-details-visibility.test.ts",
@@ -50,7 +51,10 @@
     "cap:open:ios": "npx cap open ios",
     "cap:build": "npx tsx scripts/cap-build.ts",
     "cap:build:resume": "npx tsx scripts/cap-build.ts --resume",
-    "cap:build:local": "npx tsx scripts/cap-build-local.ts"
+    "cap:build:local": "npx tsx scripts/cap-build-local.ts",
+    "cap:verify-defaults": "npx tsx scripts/audit-capacitor-defaults.ts",
+    "cap:run:clean:android": "npx tsx scripts/cap-run-clean.ts android",
+    "cap:run:clean:ios": "npx tsx scripts/cap-run-clean.ts ios"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

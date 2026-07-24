@@ -130,6 +130,45 @@
       }
     },
     {
+      "name": "Cap Clean Android - تشغيل نظيف",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "cap:run:clean:android"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 3
+      }
+    },
+    {
+      "name": "Cap Clean iOS - تشغيل نظيف",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "cap:run:clean:ios"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 4
+      }
+    },
+    {
+      "name": "Cap Defaults - فحص البداية",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "cap:verify-defaults"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 5
+      }
+    },
+    {
       "name": "Cap Sync - مزامنة الإضافات",
       "request": "launch",
       "type": "node",
