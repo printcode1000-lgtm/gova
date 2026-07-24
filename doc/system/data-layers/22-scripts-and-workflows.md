@@ -55,6 +55,9 @@ npm run cap:run:clean:android
 
 # Audit the generated default state
 npm run cap:verify-defaults
+
+# Verify Android cannot restore local state after reinstall
+npm run android:backup:validate
 ```
 
 Normal native and OTA updates preserve AsolDB and the current user session.

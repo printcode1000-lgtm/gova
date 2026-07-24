@@ -149,6 +149,11 @@ Firebase configuration, SQLite, or `sync_data` artifacts. This audit is shared
 by manual static builds, local Capacitor builds, `ota:publish`, and
 `cap:build`.
 
+The separate Android backup-policy validator protects the native container.
+`cap sync` and `cap copy` run it before and after Capacitor synchronization, so
+a manifest merge or later configuration change cannot silently re-enable
+backup or automatic restoration of client data.
+
 ## Adding A Runtime File
 
 1. Add the file under `public/`.

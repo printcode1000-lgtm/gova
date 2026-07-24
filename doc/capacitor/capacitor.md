@@ -65,17 +65,18 @@ No database plugin is installed. `@capacitor/filesystem` is used by the OTA plat
 
 ## npm scripts
 
-| Command                         | What it does                                                                                   |
-| ------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `npm run cap:build`             | Automatic version + R2 delta publish + full verification + native version pinning + `cap sync` |
-| `npm run cap:build:local`       | Build and synchronize local device assets without publishing                                   |
-| `npm run cap:verify-defaults`   | Verify the fresh-install defaults and reject persisted/private data files                      |
-| `npm run cap:run:clean:android` | Build locally, clear the Android test app data, and run a fresh installation                   |
-| `npm run cap:run:clean:ios`     | Build locally, uninstall the iOS simulator app, and run a fresh installation                   |
-| `npm run cap:sync`              | Copy `out/` into native projects and update native config                                      |
-| `npm run cap:copy`              | Copy web assets only (no native dependency update)                                             |
-| `npm run cap:open:android`      | Open project in Android Studio                                                                 |
-| `npm run cap:open:ios`          | Open project in Xcode                                                                          |
+| Command                           | What it does                                                                                   |
+| --------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `npm run cap:build`               | Automatic version + R2 delta publish + full verification + native version pinning + `cap sync` |
+| `npm run cap:build:local`         | Build and synchronize local device assets without publishing                                   |
+| `npm run cap:verify-defaults`     | Verify the fresh-install defaults and reject persisted/private data files                      |
+| `npm run cap:run:clean:android`   | Build locally, clear the Android test app data, and run a fresh installation                   |
+| `npm run cap:run:clean:ios`       | Build locally, uninstall the iOS simulator app, and run a fresh installation                   |
+| `npm run android:backup:validate` | Verify that cloud backup, auto-restore, and device transfer remain disabled                    |
+| `npm run cap:sync`                | Copy `out/` into native projects and update native config                                      |
+| `npm run cap:copy`                | Copy web assets only (no native dependency update)                                             |
+| `npm run cap:open:android`        | Open project in Android Studio                                                                 |
+| `npm run cap:open:ios`            | Open project in Xcode                                                                          |
 
 ### `cap:build` internals
 
@@ -107,6 +108,11 @@ RTL, light mode and logged out; an update intentionally preserves each
 existing user's local session and preferences. Use the dedicated clean-run
 commands to test a first launch on an already-used device. See
 [installation-state-and-clean-testing.md](./installation-state-and-clean-testing.md).
+
+Android backup restoration is explicitly disabled in the application manifest
+and in both legacy and Android 12+ extraction rules. Consequently, uninstalling
+and reinstalling cannot restore an earlier AsolDB session or dark-theme
+preference from Google Backup or device-to-device transfer.
 
 ---
 

@@ -17,6 +17,26 @@ ASOL intentionally distinguishes three cases:
 This prevents a release from unexpectedly logging out existing users or
 discarding their settings.
 
+## Android backup and reinstall
+
+Android Auto Backup and device-to-device transfer are disabled for ASOL.
+`AndroidManifest.xml` sets `android:allowBackup="false"` and references both
+legacy full-backup rules and Android 12+ data-extraction rules. Every Android
+storage domain is excluded, including app files, databases, preferences,
+device-protected storage, external app storage, and WebView data containing
+AsolDB/IndexedDB.
+
+This distinction is intentional:
+
+- updating an installed application preserves its existing on-device data;
+- clearing application data resets it;
+- uninstalling and reinstalling starts clean and Android must not restore a
+  previous session or theme from Google Backup or device transfer.
+
+`npm run android:backup:validate` verifies the manifest and both rule files.
+The validation runs before and after `cap sync` and `cap copy`, and is also part
+of `cap:verify-defaults` and the complete test suite.
+
 ## Runtime bootstrap
 
 `InstallationBootstrap` runs before session, favorites, preferences,
@@ -43,6 +63,7 @@ The audit verifies:
   defaults;
 - no `.env`, Firebase configuration file, SQLite database, or `sync_data`
   directory entered the static output.
+- Android cannot back up or restore client data after reinstall.
 
 Run the audit independently with:
 
