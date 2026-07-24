@@ -363,7 +363,6 @@ export function ProfilePageContent() {
     .map(([, status]) => status?.label)
     .filter((label): label is string => Boolean(label));
   const isSaveBlocked = dirtySections.some(([, status]) => !status?.canSave);
-  const activeTabLabel = sectionStatuses[activeTab]?.label;
   const saveProfileChanges = React.useCallback(
     () =>
       handleSaveChangedSections(
@@ -430,9 +429,9 @@ export function ProfilePageContent() {
       ) : showEditCard ? (
         <div
           id="edit-profile-card"
-          className="mx-auto w-full max-w-4xl space-y-3 sm:space-y-4"
+          className="mx-auto flex w-full max-w-4xl flex-col gap-3 sm:gap-4"
         >
-          <div className="sticky top-12 z-30 w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
+          <div className="order-2 sticky top-12 z-30 w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
             <div
               data-snapshot-scroll
               data-snapshot-id="profile-edit-tabs-scroll"
@@ -472,16 +471,39 @@ export function ProfilePageContent() {
                       borderColor: active ? `${color}AA` : `${color}55`,
                     }}
                   >
-                    <FontAwesomeIcon
-                      icon={PROFILE_EDIT_TAB_ICONS[section]}
-                      className="shrink-0 transition-transform group-hover:scale-105"
-                      style={{
-                        color,
-                        width: "2rem",
-                        height: "2rem",
-                        fontSize: "2rem",
-                      }}
-                    />
+                    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center">
+                      {active ? (
+                        <>
+                          <span
+                            className="asol-profile-tab-wave pointer-events-none absolute inset-0 rounded-full border"
+                            style={{
+                              borderColor: `${color}80`,
+                              backgroundColor: `${color}12`,
+                            }}
+                          />
+                          <span
+                            className="asol-profile-tab-wave asol-profile-tab-wave--delayed pointer-events-none absolute inset-0 rounded-full border"
+                            style={{
+                              borderColor: `${color}66`,
+                              backgroundColor: `${color}0D`,
+                            }}
+                          />
+                        </>
+                      ) : null}
+                      <FontAwesomeIcon
+                        icon={PROFILE_EDIT_TAB_ICONS[section]}
+                        className="relative z-10 shrink-0 transition-transform duration-300 group-hover:scale-105"
+                        style={{
+                          color,
+                          width: "2rem",
+                          height: "2rem",
+                          fontSize: "2rem",
+                          filter: active
+                            ? `drop-shadow(0 0 0.35rem ${color}55)`
+                            : undefined,
+                        }}
+                      />
+                    </span>
                     <span
                       className="line-clamp-2 block w-full text-center font-semibold tracking-tight text-muted-foreground"
                       style={{
@@ -500,7 +522,8 @@ export function ProfilePageContent() {
             </div>
           </div>
 
-          <div className="sticky top-[9.25rem] z-20 rounded-3xl border border-primary/20 bg-surface/90 p-3 shadow-lg shadow-primary/5 backdrop-blur-xl sm:p-4">
+          {dirtySections.length > 0 ? (
+            <div className="order-1 rounded-3xl border border-primary/20 bg-surface/90 p-3 shadow-lg shadow-primary/5 backdrop-blur-xl sm:p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex min-w-0 items-start gap-3">
                 <span
@@ -525,11 +548,14 @@ export function ProfilePageContent() {
                   <p className="flex flex-wrap items-center gap-2 text-sm font-bold text-on-surface">
                     <FontAwesomeIcon icon={faListCheck} className="h-4 w-4 text-primary" />
                     {locale === "ar" ? "حفظ تعديلات الملف" : "Save profile changes"}
-                    {activeTabLabel ? (
-                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                        {activeTabLabel}
-                      </span>
-                    ) : null}
+                    <span className="rounded-full bg-error/10 px-2 py-0.5 text-[11px] font-semibold text-error">
+                      {dirtySections.length}{" "}
+                      {locale === "ar"
+                        ? "قسم معدل"
+                        : dirtySections.length === 1
+                          ? "changed section"
+                          : "changed sections"}
+                    </span>
                   </p>
                   <p className="mt-1 line-clamp-2 text-xs leading-5 text-on-surface-variant">
                     {isUnifiedSaving
@@ -553,7 +579,7 @@ export function ProfilePageContent() {
                 className="h-11 shrink-0 gap-2 rounded-2xl px-5 font-bold shadow-md shadow-primary/15"
                 onClick={() => void saveProfileChanges()}
                 disabled={
-                  isUnifiedSaving || isSaveBlocked || dirtyLabels.length === 0
+                  isUnifiedSaving || isSaveBlocked || dirtySections.length === 0
                 }
               >
                 {isUnifiedSaving ? (
@@ -564,9 +590,10 @@ export function ProfilePageContent() {
                 {isUnifiedSaving ? t("profile.saving") : t("profile.save")}
               </Button>
             </div>
-          </div>
+            </div>
+          ) : null}
 
-          <Card className="overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
+          <Card className="order-3 overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
             <CardContent className="p-0">
               <div className="relative">
                 <div
