@@ -169,6 +169,19 @@
       }
     },
     {
+      "name": "Android R8 - فحص Release",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "android:r8:verify-release"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 6
+      }
+    },
+    {
       "name": "Cap Sync - مزامنة الإضافات",
       "request": "launch",
       "type": "node",

@@ -173,6 +173,14 @@ async function main(): Promise<void> {
     ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
   };
 
+  console.log(
+    "Validating Android backup and R8 release policies before any OTA publication...",
+  );
+  execSync("npm run android:backup:validate && npm run android:r8:validate", {
+    stdio: "inherit",
+    env: publishEnv,
+  });
+
   if (resumePublishedRelease) {
     console.log(
       "Resuming cap-build from the already published R2 manifest; no new OTA version will be created.",

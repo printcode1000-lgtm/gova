@@ -98,6 +98,13 @@
       "detail": "يفحص أن ملفات Capacitor تبدأ بالعربية وRTL والوضع الفاتح ولا تحتوي ملفات جلسات أو قواعد بيانات محلية."
     },
     {
+      "label": "Android R8 - فحص Release",
+      "type": "npm",
+      "script": "android:r8:verify-release",
+      "problemMatcher": [],
+      "detail": "يشغّل تحسين R8 وتقليص موارد Release ويتحقق من بقاء نقاط دخول Capacitor والإشعارات، دون إنشاء APK أو AAB."
+    },
+    {
       "label": "Cap Sync - مزامنة الإضافات",
       "type": "npm",
       "script": "cap:sync",

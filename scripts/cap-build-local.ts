@@ -38,6 +38,10 @@ function main(): void {
     "R2 publishing, native version updates, and icon generation are disabled.",
   );
 
+  execSync("npm run android:backup:validate && npm run android:r8:validate", {
+    stdio: "inherit",
+    env,
+  });
   execSync("npx tsx scripts/build-static.ts", { stdio: "inherit", env });
   execSync("npm run cap:sync", { stdio: "inherit", env });
 

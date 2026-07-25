@@ -65,18 +65,20 @@ No database plugin is installed. `@capacitor/filesystem` is used by the OTA plat
 
 ## npm scripts
 
-| Command                           | What it does                                                                                   |
-| --------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `npm run cap:build`               | Automatic version + R2 delta publish + full verification + native version pinning + `cap sync` |
-| `npm run cap:build:local`         | Build and synchronize local device assets without publishing                                   |
-| `npm run cap:verify-defaults`     | Verify the fresh-install defaults and reject persisted/private data files                      |
-| `npm run cap:run:clean:android`   | Build locally, clear the Android test app data, and run a fresh installation                   |
-| `npm run cap:run:clean:ios`       | Build locally, uninstall the iOS simulator app, and run a fresh installation                   |
-| `npm run android:backup:validate` | Verify that cloud backup, auto-restore, and device transfer remain disabled                    |
-| `npm run cap:sync`                | Copy `out/` into native projects and update native config                                      |
-| `npm run cap:copy`                | Copy web assets only (no native dependency update)                                             |
-| `npm run cap:open:android`        | Open project in Android Studio                                                                 |
-| `npm run cap:open:ios`            | Open project in Xcode                                                                          |
+| Command                             | What it does                                                                                   |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `npm run cap:build`                 | Automatic version + R2 delta publish + full verification + native version pinning + `cap sync` |
+| `npm run cap:build:local`           | Build and synchronize local device assets without publishing                                   |
+| `npm run cap:verify-defaults`       | Verify the fresh-install defaults and reject persisted/private data files                      |
+| `npm run cap:run:clean:android`     | Build locally, clear the Android test app data, and run a fresh installation                   |
+| `npm run cap:run:clean:ios`         | Build locally, uninstall the iOS simulator app, and run a fresh installation                   |
+| `npm run android:backup:validate`   | Verify that cloud backup, auto-restore, and device transfer remain disabled                    |
+| `npm run android:r8:validate`       | Verify the permanent Release optimization and keep-rule policy                                 |
+| `npm run android:r8:verify-release` | Run R8/resource shrinking without APK/AAB and inspect reports and reflected entry points       |
+| `npm run cap:sync`                  | Copy `out/` into native projects and update native config                                      |
+| `npm run cap:copy`                  | Copy web assets only (no native dependency update)                                             |
+| `npm run cap:open:android`          | Open project in Android Studio                                                                 |
+| `npm run cap:open:ios`              | Open project in Xcode                                                                          |
 
 ### `cap:build` internals
 
@@ -113,6 +115,11 @@ Android backup restoration is explicitly disabled in the application manifest
 and in both legacy and Android 12+ extraction rules. Consequently, uninstalling
 and reinstalling cannot restore an earlier AsolDB session or dark-theme
 preference from Google Backup or device-to-device transfer.
+
+Release builds enable R8 and optimized resource shrinking while Debug remains
+unminified. The build relies on Capacitor's consumer rules plus narrow WebView
+reflection safeguards, and validates the policy before `cap:build` publishes
+anything. See [android-r8-optimization.md](./android-r8-optimization.md).
 
 ---
 

@@ -154,6 +154,11 @@ The separate Android backup-policy validator protects the native container.
 a manifest merge or later configuration change cannot silently re-enable
 backup or automatic restoration of client data.
 
+The same pre/post synchronization gates validate Android Release R8 and
+resource shrinking. `cap:build` performs both native policy checks before any
+OTA write, even though R8 itself applies to the native container rather than to
+the exported web files.
+
 ## Adding A Runtime File
 
 1. Add the file under `public/`.

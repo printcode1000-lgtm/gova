@@ -58,6 +58,10 @@ npm run cap:verify-defaults
 
 # Verify Android cannot restore local state after reinstall
 npm run android:backup:validate
+
+# Validate and execute Release optimization without APK/AAB packaging
+npm run android:r8:validate
+npm run android:r8:verify-release
 ```
 
 Normal native and OTA updates preserve AsolDB and the current user session.
