@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/TrendingRibbon";
 import { WorkingHoursCard } from "@/components/ui/working-hours";
 import { ProductReviews } from "@/components/product/ProductReviews";
+import { SellerDiscountsPreview } from "@/features/seller-discounts";
 import type { UserSession } from "@/features/auth/entities/session.entity";
 import type { ProfileContactsData } from "@/features/profile/entities/profile-contacts.entity";
 import type { ProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
@@ -194,6 +195,10 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           details={storeDetails}
           fulfillment={fulfillment}
         />
+      ) : null}
+
+      {previewUid ? (
+        <SellerDiscountsPreview sellerUid={previewUid} locale={locale} />
       ) : null}
 
       {!loading.featured && props.hasFeaturedProducts ? (

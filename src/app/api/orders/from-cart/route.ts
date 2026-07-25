@@ -7,6 +7,7 @@ import {
 } from "@/features/notifications/domain/enums";
 import { notificationSendService } from "@/features/notifications/services/notification-service.bootstrap.server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
 import { getMarketplaceOrderService } from "@/modules/marketplace-orders/api/server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import {
@@ -25,11 +26,13 @@ interface CartOrderItemInput {
   unitPriceMinor: number;
   priceLabel?: string;
   requiresSpecialVehicle?: boolean;
+  mainCategoryId?: string;
 }
 
 interface FromCartInput {
   uid: string;
   phone?: string;
+  couponCodes?: string[];
   items: CartOrderItemInput[];
 }
 
@@ -124,6 +127,24 @@ export async function POST(request: Request) {
           ),
         );
       }
+      const discountQuote = await sellerDiscountService.quoteCart({
+        items: body.items.map((item) => ({
+          id: `${item.productId}:${item.sellerId}`,
+          productId: item.productId,
+          sellerId: item.sellerId,
+          name: item.name,
+          quantity: item.quantity,
+          unitPriceMinor: item.unitPriceMinor,
+          mainCategoryId: item.mainCategoryId ?? "",
+        })),
+        context: {
+          buyerUid: body.uid,
+          couponCodes: Array.isArray(body.couponCodes) ? body.couponCodes : [],
+          isApp: true,
+          isFirstOrder: false,
+          isFollower: false,
+        },
+      });
       const deliveryDraft = createMultiSellerDeliveryDraft(
         sellerIds.map((sellerId) => {
           const shipping = sellerDelivery.get(sellerId)!;
@@ -172,14 +193,56 @@ export async function POST(request: Request) {
       );
 
       const planStops: Array<Record<string, unknown>> = [];
+      const appliedDiscountUsages: Array<{
+        discountId: string;
+        sellerUid: string;
+        discountMinor: number;
+        shippingDiscountMinor: number;
+      }> = [];
       for (const sellerId of sellerIds) {
         const sellerItems = body.items.filter(
           (item) => item.sellerId === sellerId,
         );
         const sellerShipping = sellerDelivery.get(sellerId)!;
+        const sellerQuote = discountQuote.sellers.find(
+          (quote) => quote.sellerUid === sellerId,
+        );
+        const remainingItemDiscountByProductId = new Map<string, number>();
+        let remainingSellerDiscount = sellerQuote?.discountMinor ?? 0;
+        for (const item of sellerItems) {
+          if (remainingSellerDiscount <= 0) break;
+          const itemId = `${item.productId}:${item.sellerId}`;
+          const itemAffected =
+            sellerQuote?.applied.some(
+              (discount) =>
+                discount.affectedItemIds.length === 0 ||
+                discount.affectedItemIds.includes(itemId),
+            ) ?? false;
+          if (!itemAffected) continue;
+          const itemSubtotal = moneyMinor(item.unitPriceMinor) * item.quantity;
+          const assigned = Math.min(itemSubtotal, remainingSellerDiscount);
+          remainingItemDiscountByProductId.set(item.productId, assigned);
+          remainingSellerDiscount -= assigned;
+        }
+        const hasFreeShippingDiscount =
+          sellerQuote?.applied.some(
+            (discount) =>
+              discount.shippingDiscountMinor === Number.MAX_SAFE_INTEGER,
+          ) ?? false;
+        if (sellerQuote) {
+          appliedDiscountUsages.push(
+            ...sellerQuote.applied.map((discount) => ({
+              discountId: discount.discountId,
+              sellerUid: discount.sellerUid,
+              discountMinor: discount.discountMinor,
+              shippingDiscountMinor: discount.shippingDiscountMinor,
+            })),
+          );
+        }
         let shippingAssigned = false;
         let sellerOrderId = "";
         for (const item of sellerItems) {
+          const assignShipping = !deliveryDraft.enabled && !shippingAssigned;
           const createdItem = await service.addOrderItem(
             String(order.id),
             {
@@ -194,11 +257,17 @@ export async function POST(request: Request) {
               productImage: item.imageUrl ?? null,
               quantity: Math.max(1, Math.floor(Number(item.quantity))),
               unitPrice: moneyMinor(item.unitPriceMinor),
+              itemDiscount:
+                remainingItemDiscountByProductId.get(item.productId) ?? 0,
               shipping: deliveryDraft.enabled
                 ? 0
                 : shippingAssigned
                   ? 0
                   : sellerShipping.confirmedShipping,
+              shippingDiscount:
+                assignShipping && hasFreeShippingDiscount
+                  ? sellerShipping.confirmedShipping
+                  : 0,
               shippingNotes: `carrier:${carrierBySeller.get(sellerId)}`,
               requiresSpecialVehicle: item.requiresSpecialVehicle === true,
             },
@@ -206,6 +275,32 @@ export async function POST(request: Request) {
           );
           sellerOrderId = String(createdItem.seller_order_id ?? sellerOrderId);
           shippingAssigned = true;
+        }
+        const giftProductIds = Array.from(
+          new Set(
+            sellerQuote?.applied
+              .map((discount) => discount.giftProductId)
+              .filter(Boolean) ?? [],
+          ),
+        );
+        for (const giftProductId of giftProductIds) {
+          await service.addOrderItem(
+            String(order.id),
+            {
+              sellerId,
+              serviceProviderId: carrierBySeller.get(sellerId),
+              productId: giftProductId,
+              productName: "هدية مجانية",
+              productDescription: "تمت إضافتها تلقائيًا من عرض المتجر.",
+              productImage: null,
+              quantity: 1,
+              unitPrice: 0,
+              shipping: 0,
+              shippingNotes: `discount-gift:${giftProductId}`,
+              requiresSpecialVehicle: false,
+            },
+            actor,
+          );
         }
         if (deliveryDraft.enabled && sellerOrderId) {
           planStops.push({
@@ -263,6 +358,12 @@ export async function POST(request: Request) {
           })
           .catch(() => undefined);
       }
+
+      await sellerDiscountService.recordAppliedUsages({
+        buyerUid: body.uid,
+        orderId: String(order.id),
+        applied: appliedDiscountUsages,
+      });
 
       return apiSuccess(
         {

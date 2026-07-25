@@ -10,6 +10,7 @@ import type {
   ProfileSectionStatus,
   ProfileSpecialtiesController,
   ProfileFulfillmentController,
+  ProfileDiscountsController,
   StoreDetailsController,
 } from "./profile-save-controller";
 import type { ProfileEditorSection } from "@/features/profile/entities/profile-editor.entity";
@@ -36,6 +37,7 @@ interface UseProfileSaveReturn {
   handleStoreStatus: (status: ProfileSectionStatus) => void;
   handleWorkingHoursStatus: (status: ProfileSectionStatus) => void;
   handleFulfillmentStatus: (status: ProfileSectionStatus) => void;
+  handleDiscountsStatus: (status: ProfileSectionStatus) => void;
   handleSaveChangedSections: (
     registrationController: ProfileRegistrationController | null,
     contactsController: ProfileContactsController | null,
@@ -43,7 +45,8 @@ interface UseProfileSaveReturn {
     workingHoursController: StoreDetailsController | null,
     specialtiesController: ProfileSpecialtiesController | null,
     productsController: ProfileSpecialtiesController | null,
-    fulfillmentController: ProfileFulfillmentController | null
+    fulfillmentController: ProfileFulfillmentController | null,
+    discountsController: ProfileDiscountsController | null
   ) => Promise<void>;
   setSaveDialog: React.Dispatch<React.SetStateAction<{ type: 'success' | 'error', message: string } | null>>;
 }
@@ -65,6 +68,7 @@ export function useProfileSave({
     store: null,
     workingHours: null,
     fulfillment: null,
+    discounts: null,
   });
   const [saveError, setSaveError] = React.useState<string | null>(null);
   const [isUnifiedSaving, setIsUnifiedSaving] = React.useState(false);
@@ -121,6 +125,11 @@ export function useProfileSave({
       updateSectionStatus("fulfillment", status),
     [updateSectionStatus],
   );
+  const handleDiscountsStatus = React.useCallback(
+    (status: ProfileSectionStatus) =>
+      updateSectionStatus("discounts", status),
+    [updateSectionStatus],
+  );
 
   const handleSaveChangedSections = async (
     registrationController: ProfileRegistrationController | null,
@@ -129,7 +138,8 @@ export function useProfileSave({
     workingHoursController: StoreDetailsController | null,
     specialtiesController: ProfileSpecialtiesController | null,
     productsController: ProfileSpecialtiesController | null,
-    fulfillmentController: ProfileFulfillmentController | null
+    fulfillmentController: ProfileFulfillmentController | null,
+    discountsController: ProfileDiscountsController | null
   ) => {
     setSaveError(null);
     
@@ -141,7 +151,8 @@ export function useProfileSave({
       !workingHoursController ||
       !specialtiesController ||
       !productsController ||
-      !fulfillmentController
+      !fulfillmentController ||
+      !discountsController
     ) {
       reportSystemIssue({
         level: "warning",
@@ -171,7 +182,9 @@ export function useProfileSave({
       new Set([
         ...changedSections.filter(
           (section): section is ProfileEditorSection =>
-            section !== "fulfillment" && section !== "workingHours",
+            section !== "fulfillment" &&
+            section !== "workingHours" &&
+            section !== "discounts",
         ),
         ...(changedSections.includes("workingHours") ? (["store"] as const) : []),
         ...(shouldSaveStoreFromProducts ? (["store"] as const) : []),
@@ -243,6 +256,9 @@ export function useProfileSave({
       if (changedSections.includes("fulfillment")) {
         await fulfillmentController.save();
       }
+      if (changedSections.includes("discounts")) {
+        await discountsController.save();
+      }
       setSaveDialog({
         type: 'success',
         message: locale === 'ar' ? 'تم حفظ التغييرات بنجاح' : 'Changes saved successfully'
@@ -288,6 +304,7 @@ export function useProfileSave({
     handleStoreStatus,
     handleWorkingHoursStatus,
     handleFulfillmentStatus,
+    handleDiscountsStatus,
     handleSaveChangedSections,
     setSaveDialog,
   };

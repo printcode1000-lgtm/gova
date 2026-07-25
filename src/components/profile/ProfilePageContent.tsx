@@ -18,6 +18,7 @@ import {
   faFloppyDisk,
   faListCheck,
   faPenToSquare,
+  faPercent,
   faStar,
   faTags,
   faTruckFast,
@@ -52,6 +53,10 @@ import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-stor
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { useProfilePublicContacts } from "@/features/profile/hooks/use-profile-public-contacts";
 import { useProfilePublicFulfillmentSettings } from "@/features/profile/hooks/use-profile-public-fulfillment-settings";
+import {
+  SellerDiscountsManager,
+  type SellerDiscountsController,
+} from "@/features/seller-discounts";
 import { ProfilePreviewContent } from "./ProfilePreviewContent";
 import type {
   ProfileContactsController,
@@ -76,6 +81,7 @@ const PROFILE_EDIT_TAB_COLORS: Record<ProfileEditTab, string> = {
   store: "#4F46E5",
   workingHours: "#EA580C",
   fulfillment: "#0891B2",
+  discounts: "#DB2777",
 };
 
 const PROFILE_EDIT_TAB_ICONS: Record<ProfileEditTab, IconDefinition> = {
@@ -86,6 +92,7 @@ const PROFILE_EDIT_TAB_ICONS: Record<ProfileEditTab, IconDefinition> = {
   store: faBuilding,
   workingHours: faClock,
   fulfillment: faTruckFast,
+  discounts: faPercent,
 };
 
 export function ProfilePageContent() {
@@ -121,6 +128,7 @@ export function ProfilePageContent() {
   const storeRef = React.useRef<StoreDetailsController>(null);
   const workingHoursRef = React.useRef<StoreDetailsController>(null);
   const fulfillmentRef = React.useRef<ProfileFulfillmentController>(null);
+  const discountsRef = React.useRef<SellerDiscountsController>(null);
 
   const {
     activeTab,
@@ -150,6 +158,7 @@ export function ProfilePageContent() {
     handleStoreStatus,
     handleWorkingHoursStatus,
     handleFulfillmentStatus,
+    handleDiscountsStatus,
     handleSaveChangedSections,
     setSaveDialog,
   } = useProfileSave({
@@ -373,6 +382,7 @@ export function ProfilePageContent() {
         specialtiesRef.current,
         productsRef.current,
         fulfillmentRef.current,
+        discountsRef.current,
       ),
     [handleSaveChangedSections],
   );
@@ -449,6 +459,7 @@ export function ProfilePageContent() {
                   store: t("onboarding.storeIdentity.title"),
                   workingHours: locale === "ar" ? "مواعيد العمل" : "Working hours",
                   fulfillment: locale === "ar" ? "الشحن والإرجاع" : "Shipping",
+                  discounts: locale === "ar" ? "العروض" : "Offers",
                 };
 
                 return (
@@ -775,6 +786,31 @@ export function ProfilePageContent() {
                       <FulfillmentSettingsCard
                         ref={fulfillmentRef}
                         onStatusChange={handleFulfillmentStatus}
+                      />
+                    </ProfileEditSectionFrame>
+                  </div>
+                  <div
+                    ref={(node) => {
+                      panelRefs.current.discounts = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.discounts}
+                    role="region"
+                    aria-hidden={activeTab !== "discounts"}
+                    inert={activeTab !== "discounts"}
+                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                  >
+                    <ProfileEditSectionFrame
+                      icon={faPercent}
+                      title={locale === "ar" ? "العروض والخصومات" : "Offers"}
+                      status={sectionStatuses.discounts}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.discounts}
+                    >
+                      <SellerDiscountsManager
+                        ref={discountsRef}
+                        sellerUid={session?.uid ?? ""}
+                        locale={locale === "ar" ? "ar" : "en"}
+                        onStatusChange={handleDiscountsStatus}
                       />
                     </ProfileEditSectionFrame>
                   </div>

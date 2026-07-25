@@ -50,6 +50,7 @@ export function useProfileNavigation({
       store: null,
       workingHours: null,
       fulfillment: null,
+      discounts: null,
     },
   );
   const navButtonRefs = React.useRef<
@@ -62,6 +63,7 @@ export function useProfileNavigation({
     store: null,
     workingHours: null,
     fulfillment: null,
+    discounts: null,
   });
   const scrollFrameRef = React.useRef<number | null>(null);
   const suppressScrollSyncUntilRef = React.useRef(0);

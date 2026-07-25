@@ -4,6 +4,7 @@ import type { ProfileContactsData } from "@/features/profile/entities/profile-co
 import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
 import type { ProfileSpecialtiesSelection } from "@/features/profile/entities/profile-specialties.entity";
 import type { ProfileFulfillmentSettings } from "@/features/profile/entities/profile-fulfillment-settings.entity";
+import type { SellerDiscountRule } from "@/features/seller-discounts/entities/seller-discount.entity";
 
 export interface ProfileSectionStatus {
   isDirty: boolean;
@@ -41,4 +42,9 @@ export interface ProfileSpecialtiesController extends ProfileSectionController {
   applySaved: (specialties: ProfileSpecialtiesSelection) => void;
   getStoreDetailsSnapshot?: () => StoreDetailsData;
   applyStoreDetailsSaved?: (details: StoreDetailsData) => void;
+}
+
+export interface ProfileDiscountsController extends ProfileSectionController {
+  getSnapshot: () => SellerDiscountRule[];
+  applySaved: (discounts: SellerDiscountRule[]) => void;
 }

@@ -27,6 +27,7 @@ import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { useCart } from "@/features/cart/use-cart";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { notificationBus } from "@/features/notifications";
+import { useCartDiscountQuote } from "@/features/seller-discounts";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   normalizeProfileFulfillmentSettings,
@@ -65,6 +66,7 @@ export function CartPageContent() {
     React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState("");
+  const [couponText, setCouponText] = React.useState("");
   const productsTotalMinor = getCartTotalMinor(items);
   const sellerIds = React.useMemo(
     () =>
@@ -147,6 +149,23 @@ export function CartPageContent() {
     [items, sellerIds, sellerSettings],
   );
 
+  const couponCodes = React.useMemo(
+    () =>
+      couponText
+        .split(",")
+        .map((code) => code.trim())
+        .filter(Boolean),
+    [couponText],
+  );
+  const { quote: discountQuote, isLoading: isLoadingDiscountQuote } =
+    useCartDiscountQuote(items, {
+      buyerUid: session?.uid,
+      couponCodes,
+      isApp: true,
+      isFirstOrder: false,
+      isFollower: false,
+    });
+
   const separateDeliveryEstimateMinor = sellerGroups.reduce(
     (total, group) => total + group.shippingMinor,
     0,
@@ -158,7 +177,21 @@ export function CartPageContent() {
   const shippingTotalMinor = unifiedDeliveryAvailable
     ? 0
     : separateDeliveryEstimateMinor;
-  const totalMinor = productsTotalMinor + shippingTotalMinor;
+  const productsDiscountMinor = discountQuote?.discountMinor ?? 0;
+  const shippingDiscountMinor =
+    discountQuote?.sellers.reduce((total, seller) => {
+      if (seller.shippingDiscountMinor !== Number.MAX_SAFE_INTEGER) {
+        return total + seller.shippingDiscountMinor;
+      }
+      const group = sellerGroups.find((item) => item.sellerId === seller.sellerUid);
+      return total + (group?.shippingMinor ?? 0);
+    }, 0) ?? 0;
+  const payableShippingMinor = Math.max(
+    0,
+    shippingTotalMinor - shippingDiscountMinor,
+  );
+  const totalMinor =
+    productsTotalMinor - productsDiscountMinor + payableShippingMinor;
   const hasPendingShippingQuote =
     unifiedDeliveryAvailable ||
     sellerGroups.some((group) => group.quoteRequired);
@@ -176,6 +209,7 @@ export function CartPageContent() {
         {
           uid: session.uid,
           phone: session.phone,
+          couponCodes,
           items: items.map((item) => ({
             productId: item.productId,
             sellerId: item.sellerId,
@@ -186,6 +220,7 @@ export function CartPageContent() {
             unitPriceMinor: item.unitPriceMinor,
             priceLabel: item.priceLabel,
             requiresSpecialVehicle: item.requiresSpecialVehicle,
+            mainCategoryId: item.mainCategoryId,
           })),
         },
         { suppressErrorLog: true },
@@ -314,6 +349,34 @@ export function CartPageContent() {
                     </span>
                   ) : null}
                 </div>
+
+                {discountQuote?.sellers
+                  .find((seller) => seller.sellerUid === group.sellerId)
+                  ?.applied.length ? (
+                  <div className="mb-3 rounded-lg border border-primary/20 bg-primary/10 p-3 text-sm">
+                    <p className="font-bold text-primary">خصومات مطبقة</p>
+                    <div className="mt-2 space-y-1 text-xs text-on-surface">
+                      {discountQuote.sellers
+                        .find((seller) => seller.sellerUid === group.sellerId)!
+                        .applied.map((discount) => (
+                          <div
+                            key={discount.discountId}
+                            className="flex justify-between gap-3"
+                          >
+                            <span>{discount.title}</span>
+                            <span className="font-semibold text-primary">
+                              {discount.shippingDiscountMinor ===
+                              Number.MAX_SAFE_INTEGER
+                                ? "شحن مجاني"
+                                : discount.giftProductId
+                                  ? "هدية مجانية"
+                                  : `-${formatMoney(discount.discountMinor)}`}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                ) : null}
 
                 <div className="space-y-3">
                   {group.items.map((item) => (
@@ -465,6 +528,20 @@ export function CartPageContent() {
           <aside className="h-fit rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
             <h2 className="font-bold">ملخص السلة</h2>
             <div className="mt-4 space-y-3 text-sm">
+              <label className="block space-y-1.5">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  كود الخصم
+                </span>
+                <input
+                  value={couponText}
+                  onChange={(event) => setCouponText(event.target.value)}
+                  placeholder="WELCOME10"
+                  className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
+                />
+                <span className="block text-[11px] text-muted-foreground">
+                  يمكن إدخال أكثر من كود بفاصلة.
+                </span>
+              </label>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">عدد العناصر</span>
                 <span className="font-semibold">{totalQuantity}</span>
@@ -475,6 +552,20 @@ export function CartPageContent() {
                   {formatMoney(productsTotalMinor)}
                 </span>
               </div>
+              {isLoadingDiscountQuote ? (
+                <div className="flex justify-between text-primary">
+                  <span>جاري حساب الخصومات</span>
+                  <span>...</span>
+                </div>
+              ) : null}
+              {productsDiscountMinor > 0 ? (
+                <div className="flex justify-between text-primary">
+                  <span>خصومات المنتجات والطلبات</span>
+                  <span className="font-semibold">
+                    -{formatMoney(productsDiscountMinor)}
+                  </span>
+                </div>
+              ) : null}
               <div className="flex justify-between">
                 <span className="text-muted-foreground">
                   {unifiedDeliveryAvailable
@@ -489,6 +580,14 @@ export function CartPageContent() {
                     : formatMoney(shippingTotalMinor)}
                 </span>
               </div>
+              {shippingDiscountMinor > 0 && !unifiedDeliveryAvailable ? (
+                <div className="flex justify-between text-primary">
+                  <span>خصم الشحن</span>
+                  <span className="font-semibold">
+                    -{formatMoney(shippingDiscountMinor)}
+                  </span>
+                </div>
+              ) : null}
               <div className="border-t border-outline-variant pt-3">
                 <div className="flex justify-between text-base font-bold">
                   <span>الإجمالي</span>

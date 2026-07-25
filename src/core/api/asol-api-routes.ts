@@ -24,6 +24,8 @@ export const ASOL_API_ROUTES = {
     storeDetails: "/api/profile/store-details",
     specialties: "/api/profile/specialties",
     editor: "/api/profile/editor",
+    discounts: "/api/profile/discounts",
+    discountQuote: "/api/profile/discounts/quote",
     usersBySpecialty: "/api/profile/users-by-specialty",
     fulfillmentSettings: "/api/profile/fulfillment-settings",
     reviews: {

@@ -14,7 +14,8 @@ export type ProfileEditTab =
   | "contact"
   | "store"
   | "workingHours"
-  | "fulfillment";
+  | "fulfillment"
+  | "discounts";
 
 export const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
   registration: "profile-registration-panel",
@@ -24,6 +25,7 @@ export const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
   store: "profile-store-panel",
   workingHours: "profile-working-hours-panel",
   fulfillment: "profile-fulfillment-panel",
+  discounts: "profile-discounts-panel",
 };
 
 export const PROFILE_SECTIONS: ProfileEditTab[] = [
@@ -34,6 +36,7 @@ export const PROFILE_SECTIONS: ProfileEditTab[] = [
   "store",
   "workingHours",
   "fulfillment",
+  "discounts",
 ];
 
 export type { ProfileSectionStatus };

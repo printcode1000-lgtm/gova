@@ -297,6 +297,78 @@ export const follows = sqliteTable(
   ],
 );
 
+export const sellerDiscounts = sqliteTable(
+  "seller_discounts",
+  {
+    id: text("id").primaryKey().notNull(),
+    sellerUid: text("seller_uid")
+      .notNull()
+      .references(() => userProfiles.uid, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    title: text("title").notNull().default(""),
+    description: text("description").notNull().default(""),
+    status: text("status").notNull().default("active"),
+    priority: integer("priority").notNull().default(100),
+    combinable: integer("combinable", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    startsAt: text("starts_at").notNull().default(""),
+    endsAt: text("ends_at").notNull().default(""),
+    couponCode: text("coupon_code").notNull().default(""),
+    valueType: text("value_type").notNull().default("percentage"),
+    value: integer("value").notNull().default(0),
+    maxDiscountMinor: integer("max_discount_minor").notNull().default(0),
+    minSubtotalMinor: integer("min_subtotal_minor").notNull().default(0),
+    minQuantity: integer("min_quantity").notNull().default(0),
+    buyQuantity: integer("buy_quantity").notNull().default(0),
+    getQuantity: integer("get_quantity").notNull().default(0),
+    usageLimitTotal: integer("usage_limit_total").notNull().default(0),
+    usageLimitPerBuyer: integer("usage_limit_per_buyer").notNull().default(0),
+    firstOrderOnly: integer("first_order_only", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    followersOnly: integer("followers_only", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    appOnly: integer("app_only", { mode: "boolean" }).notNull().default(false),
+    productIdsJson: text("product_ids_json").notNull().default("[]"),
+    categoryIdsJson: text("category_ids_json").notNull().default("[]"),
+    excludedProductIdsJson: text("excluded_product_ids_json")
+      .notNull()
+      .default("[]"),
+    bundleProductIdsJson: text("bundle_product_ids_json")
+      .notNull()
+      .default("[]"),
+    giftProductId: text("gift_product_id").notNull().default(""),
+    metadataJson: text("metadata_json").notNull().default("{}"),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [
+    index("seller_discounts_seller_status_idx").on(table.sellerUid, table.status),
+    index("seller_discounts_coupon_idx").on(table.sellerUid, table.couponCode),
+  ],
+);
+
+export const sellerDiscountUsages = sqliteTable(
+  "seller_discount_usages",
+  {
+    id: text("id").primaryKey().notNull(),
+    discountId: text("discount_id")
+      .notNull()
+      .references(() => sellerDiscounts.id, { onDelete: "cascade" }),
+    sellerUid: text("seller_uid").notNull(),
+    buyerUid: text("buyer_uid").notNull().default(""),
+    orderId: text("order_id").notNull().default(""),
+    discountMinor: integer("discount_minor").notNull().default(0),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [
+    index("seller_discount_usages_discount_idx").on(table.discountId),
+    index("seller_discount_usages_buyer_idx").on(table.discountId, table.buyerUid),
+  ],
+);
+
 export type UserProfileRow = typeof userProfiles.$inferSelect;
 export type NewUserProfileRow = typeof userProfiles.$inferInsert;
 export type FollowRow = typeof follows.$inferSelect;
@@ -310,3 +382,5 @@ export type ProfileCategoryProductCountRow = typeof profileCategoryProductCounts
 export type ProfileFeaturedProductRow = typeof profileFeaturedProducts.$inferSelect;
 export type ProfileTrendingItemRow = typeof profileTrendingItems.$inferSelect;
 export type ProfileWorkingHourRow = typeof profileWorkingHours.$inferSelect;
+export type SellerDiscountRow = typeof sellerDiscounts.$inferSelect;
+export type SellerDiscountUsageRow = typeof sellerDiscountUsages.$inferSelect;
