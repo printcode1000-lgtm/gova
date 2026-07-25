@@ -31,7 +31,18 @@ export function apiError(message: string, status = 400): NextResponse {
   );
 }
 
+function isJsonBodyParseError(error: unknown): boolean {
+  return (
+    error instanceof SyntaxError &&
+    /JSON|Unexpected end of JSON input/i.test(error.message)
+  );
+}
+
 export function mapServiceError(error: unknown): NextResponse {
+  if (isJsonBodyParseError(error)) {
+    return apiError('invalidJsonBody', 400);
+  }
+
   const message =
     error instanceof Error ? error.message : 'Internal Server Error';
   const knownCodes = [
