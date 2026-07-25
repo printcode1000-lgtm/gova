@@ -1,68 +1,137 @@
-# نظام السجلات المباشرة للسوبر أدمن
+# Super Admin System Logs
 
-## الهدف
+## Purpose
 
-يعرض المسار `/super-admin/logs` رسائل تشغيل التطبيق في ذاكرة الجلسة الحالية للسوبر أدمن. لا يستخدم النظام قاعدة بيانات أو `IndexedDB` أو خدمة خارجية، ولا يرسل أي سجل عبر الشبكة.
+`/super-admin/logs` displays two log streams:
 
-## الصلاحية ودورة الحياة
+- Live in-memory logs for the current Super Admin session.
+- Persisted central logs collected from Web, Android, iOS, and server/API code.
 
-- يبدأ الملتقط بعد تحميل الجلسة والتأكد من أن المستخدم `Super Admin`.
-- المستخدم العادي لا يفعّل الملتقط ولا يستطيع فتح الصفحة.
-- تبقى السجلات أثناء التنقل الداخلي بين الصفحات.
-- تفقد السجلات عند إعادة تحميل التطبيق بالكامل أو إغلاقه؛ لأنها محفوظة في ذاكرة JavaScript فقط.
-- يمكن إيقاف الالتقاط وتشغيله من زر التحكم. الإيقاف لا يحذف العناصر الموجودة.
+The goal is that application errors do not disappear silently. Browser runtime
+errors, React errors, failed resources, failed API calls, mapped server errors,
+and unhandled API route exceptions all have a registration path.
 
-## المصادر والتصنيف
+## Client coverage
 
-يلتف `SystemLogCollector` حول `console.log` و`console.info` و`console.debug` و`console.warn` و`console.error` مع إبقاء الإخراج الأصلي في الطرفية. كما يستمع إلى `window.error` و`unhandledrejection`.
+`SystemLogCollector` is mounted in the root layout. It wraps:
 
-التصنيفات هي:
+- `console.warn`
+- `console.error`
+- `window.error`
+- `unhandledrejection`
+- resource load failures for images, scripts, iframes, and links
 
-- `normal`: الرسائل الطبيعية ومعلومات التصحيح.
-- `warning`: رسائل `console.warn`.
-- `error`: `console.error` والأخطاء غير المعالجة والوعود المرفوضة.
+The live in-memory store is visible only when the current session is Super Admin.
+Persisted warning/error telemetry is submitted for all users through:
 
-عند العمل داخل Capacitor تحدد المنصة باسم `android` أو `ios`، وإلا تكون `web`.
+```text
+POST /api/system-logs/ingest
+```
 
-## منع التكرار
+Normal console messages stay local and are not persisted.
 
-تُبنى بصمة من المستوى والطريقة والرسالة والصفحة والمنصة ونوع الخطأ والمصدر وStack Trace. عند وصول البصمة نفسها لا ينشأ عنصر جديد، بل يزيد عداد `occurrences` ويتحدث وقت `lastOccurredAt`. يبقى `firstOccurredAt` لبيان بداية المشكلة.
+## React and Next.js coverage
 
-## التفاصيل المسجلة
+The root app is wrapped by `SystemLogErrorBoundary`, which records React render
+and lifecycle errors with component stack information.
 
-يحمل كل عنصر الرسالة، التصنيف، طريقة Console، الصفحة، المنصة، أول وآخر وقت، عدد التكرارات، نوع الخطأ، ملف المصدر والسطر والعمود عند توفرها، `User Agent` و`Stack Trace`. تُنشأ Stack Trace تشخيصية لتحذيرات وأخطاء Console التي لا تحتوي كائن `Error`.
+`src/app/global-error.tsx` records root-level Next.js failures that escape route
+boundaries.
 
-## التحكم
+Several important routes also keep local `error.tsx` files using
+`RouteErrorFallback`.
 
-- تشغيل أو إيقاف التقاط الرسائل الجديدة.
-- مسح جميع الأقسام.
-- نسخ أو مسح القسم الحالي.
-- نسخ عنصر واحد بجميع تفاصيله.
+## API and server coverage
 
-كل أزرار العمليات أيقونات، مع `title` و`aria-label` لتوضيح الوظيفة وإتاحتها لقارئات الشاشة.
+Business API routes use `runTracedBusinessRoute`. Unhandled route failures are
+persisted with route name and execution context.
 
-## الحدود
+Most API route catch blocks return `mapServiceError(error)`. That function now
+also records the mapped error centrally before returning a JSON error response.
+This closes the common gap where a server error is intentionally caught and
+therefore never reaches `console.error`.
 
-يلتقط النظام JavaScript وWebView داخل الويب وAndroid وiOS. لا تستطيع صفحة الويب قراءة مخرجات PowerShell أو Gradle أو Xcode أو Logcat الأصلية المستقلة. يتطلب ذلك قناة Native أو عملية وسيطة، وهو خارج هذا النظام المحلي غير الشبكي.
+The system intentionally does not log the system-log API recursively.
 
-## تغطية المسارات الحرجة
+## Storage
 
-توجد طبقة `SystemLogErrorBoundary` حول واجهة التطبيق لالتقاط أخطاء React أثناء الرسم ودورات الحياة مع `componentStack`. كما تسجل نقاط الفشل المستهلكة داخل `try/catch` وReact Query في المسارات التالية:
+Persistent logs are stored in the profile database:
 
-- `/super-admin/hero-slider`: التحميل والحفظ والنشر واستعادة إصدار.
-- `/profile?mode=preview`: تحميل صور المتجر وتفاصيله وبيانات المعاينة.
-- `/profile?mode=edit`: تحميل وحفظ بيانات التسجيل والتواصل والمتجر والصور والتخصصات والحفظ الموحد.
-- `/login`: فشل تسجيل الدخول أو إنشاء الجلسة، مع تصنيف بيانات الدخول غير الصحيحة كتحذير.
-- `/registration`: فشل إنشاء الحساب أو تسجيل الدخول اللاحق أو إنشاء الجلسة، مع تصنيف رقم الهاتف المسجل مسبقًا كتحذير.
-- `/home`: أخطاء رسم المسار، تحميل التصنيفات، قراءة وكتابة كاش Hero Slider، فحص الإصدار وجلب النسخة المنشورة، إضافة إلى فشل تحميل موارد الصور والسكربتات والروابط.
+```text
+system_logs
+```
 
-تملك المسارات الأربعة ملفات `error.tsx` أيضًا لالتقاط أخطاء حدود مسارات Next.js، بما فيها أخطاء الرسم التي تحمل `digest`. ويشمل ملف Profile أخطاء رفع صور الملف الشخصي وحذفها، حتى عندما يعرض المكوّن رسالة للمستخدم بدل إعادة رمي الخطأ.
+Migration:
 
-تظل قاعدة الصلاحية كما هي: لا يضاف شيء إلى مخزن السجلات إلا إذا كانت الجلسة الحالية جلسة سوبر أدمن وكان الالتقاط مشغّلًا. لذلك لا تُخزن محاولات دخول مستخدم لم تثبت هويته كسوبر أدمن؛ فهذا متطلب مقصود لحماية النظام وعدم تشغيله للمستخدمين العاديين.
+```text
+src/core/database/profile/migrations/0013_system_logs.sql
+```
 
-## الملفات
+The repository also creates the table on first use so existing local SQLite
+databases are healed without requiring a manual reset.
 
-- `src/features/system-logs/system-log-store.ts`: مخزن الذاكرة ومنع التكرار والتحكم.
-- `src/features/system-logs/SystemLogCollector.tsx`: التقاط الرسائل والأخطاء.
-- `src/components/super-admin/SuperAdminLogsPage.tsx`: واجهة العرض والنسخ والمسح.
-- `src/app/super-admin/logs/page.tsx`: مسار الصفحة.
+## Super Admin page
+
+`/super-admin/logs` loads persisted logs through:
+
+```text
+GET /api/system-logs?uid=&phone=&limit=
+```
+
+Only the configured Super Admin identity can list or clear persisted logs.
+
+The page groups logs by:
+
+- normal
+- warning
+- error
+
+Persisted entries are marked as saved. The clear-all and clear-section actions
+clear both the live local store and the persisted store.
+
+## Platforms
+
+Client logs mark platform as:
+
+- `web`
+- `android`
+- `ios`
+
+Server logs mark platform as:
+
+- `server`
+
+Capacitor WebView errors are captured at the JavaScript/WebView layer. Native
+crashes that terminate the app before JavaScript can run still require a native
+crash reporter or a platform bridge, but JavaScript, WebView, API, and server
+errors now have a central logging path.
+
+## Privacy and safety
+
+The server redacts common sensitive values before storage:
+
+- email addresses
+- Egyptian mobile phone patterns
+- token, secret, password, and authorization-like values
+
+Client submissions are deduplicated for a short window before sending. Server
+storage deduplicates by fingerprint and increments `occurrences`.
+
+## Source map
+
+```text
+src/features/system-logs/
+  SystemLogCollector.tsx
+  SystemLogErrorBoundary.tsx
+  RouteErrorFallback.tsx
+  report-system-issue.ts
+  persistent-client-log.ts
+  entities/persistent-system-log.entity.ts
+  repositories/persistent-system-log-repository.ts
+  services/persistent-system-log-service.server.ts
+  services/persistent-system-log-api-service.ts
+
+src/app/api/system-logs/
+src/app/global-error.tsx
+src/components/super-admin/SuperAdminLogsPage.tsx
+```

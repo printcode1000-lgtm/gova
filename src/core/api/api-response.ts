@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { isDevelopment } from '@/core/config';
 import { DEV_TRACE_HEADER } from '@/core/monitor/dev-trace-types';
 import { getDevTrace, serializeDevTrace } from '@/core/monitor/server-trace';
+import { logServerSystemIssue } from '@/features/system-logs/services/persistent-system-log-service.server';
 
 function attachDevTraceHeaders(response: NextResponse): NextResponse {
   if (!isDevelopment) return response;
@@ -79,25 +80,56 @@ export function mapServiceError(error: unknown): NextResponse {
   ];
 
   if (knownCodes.includes(message)) {
+    void logMappedServiceError(error, message, 400);
     return apiError(message, 400);
   }
 
   if (message === 'forbidden') {
+    void logMappedServiceError(error, message, 403);
     return apiError(message, 403);
   }
 
   if (message === 'passwordRecoveryRateLimited') {
+    void logMappedServiceError(error, message, 429);
     return apiError(message, 429);
   }
 
-  if (message === 'contactRateLimited') return apiError(message, 429);
-  if (message === 'specialtyChatRateLimited') return apiError(message, 429);
-  if (message === 'accountDeletionSuperAdminForbidden') return apiError(message, 403);
+  if (message === 'contactRateLimited') {
+    void logMappedServiceError(error, message, 429);
+    return apiError(message, 429);
+  }
+  if (message === 'specialtyChatRateLimited') {
+    void logMappedServiceError(error, message, 429);
+    return apiError(message, 429);
+  }
+  if (message === 'accountDeletionSuperAdminForbidden') {
+    void logMappedServiceError(error, message, 403);
+    return apiError(message, 403);
+  }
 
   if (message === 'passwordRecoveryNotConfigured') {
+    void logMappedServiceError(error, message, 503);
     return apiError(message, 503);
   }
-  if (message === 'sessionSigningSecretNotConfigured') return apiError(message, 503);
+  if (message === 'sessionSigningSecretNotConfigured') {
+    void logMappedServiceError(error, message, 503);
+    return apiError(message, 503);
+  }
 
+  void logMappedServiceError(error, message, 500);
   return apiError(message, 500);
+}
+
+async function logMappedServiceError(
+  error: unknown,
+  message: string,
+  statusCode: number,
+) {
+  if (typeof message === 'string' && message.includes('/api/system-logs')) return;
+  await logServerSystemIssue({
+    error,
+    feature: 'BusinessAPI',
+    operation: 'mapped-service-error',
+    statusCode,
+  }).catch(() => undefined);
 }

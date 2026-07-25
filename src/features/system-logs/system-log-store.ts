@@ -12,7 +12,7 @@ export interface SystemLogEntry {
   lastOccurredAt: string;
   occurrences: number;
   page: string;
-  platform: "web" | "android" | "ios";
+  platform: "web" | "android" | "ios" | "server";
   errorName?: string;
   sourceFile?: string;
   sourceLine?: number;

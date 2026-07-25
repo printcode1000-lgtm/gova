@@ -2,6 +2,7 @@ import 'server-only';
 
 import type { NextResponse } from 'next/server';
 import { pushDevTrace, runWithDevTrace } from '@/core/monitor/server-trace';
+import { logServerSystemIssue } from '@/features/system-logs/services/persistent-system-log-service.server';
 
 export async function runTracedBusinessRoute(
   routeName: string,
@@ -26,6 +27,14 @@ export async function runTracedBusinessRoute(
         status: 'error',
         errorMessage: error instanceof Error ? error.message : String(error),
       });
+      if (!routeName.includes('/api/system-logs')) {
+        await logServerSystemIssue({
+          error,
+          feature: 'BusinessAPI',
+          operation: 'unhandled-route-error',
+          routeName,
+        }).catch(() => undefined);
+      }
       throw error;
     }
   });

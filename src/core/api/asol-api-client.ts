@@ -143,7 +143,9 @@ export class AsolApiClient {
       });
       const data = await this.parseResponse<T>(response);
       return { data, response };
-    });
+    }).catch((error) =>
+      this.logAndThrow('POST', route, error, options?.suppressErrorLog),
+    );
   }
 
   /** Load a static JSON file from the public folder (not a Business API call). */
@@ -158,7 +160,9 @@ export class AsolApiClient {
       });
       const data = await this.parseResponse<T>(response);
       return { data, response };
-    });
+    }).catch((error) =>
+      this.logAndThrow('GET', assetPath, error, options?.suppressErrorLog),
+    );
   }
 
   /** Load a static binary file from the currently served public app assets. */
@@ -173,7 +177,9 @@ export class AsolApiClient {
       });
       if (!response.ok) await this.parseResponse<never>(response);
       return { data: await response.arrayBuffer(), response };
-    });
+    }).catch((error) =>
+      this.logAndThrow('GET', assetPath, error, options?.suppressErrorLog),
+    );
   }
 
   /** Load JSON from an explicit HTTP(S) URL (for signed platform manifests). */

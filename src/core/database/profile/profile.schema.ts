@@ -369,6 +369,42 @@ export const sellerDiscountUsages = sqliteTable(
   ],
 );
 
+export const systemLogs = sqliteTable(
+  "system_logs",
+  {
+    id: text("id").primaryKey().notNull(),
+    fingerprint: text("fingerprint").notNull().unique(),
+    level: text("level").notNull(),
+    source: text("source").notNull(),
+    consoleMethod: text("console_method").notNull().default(""),
+    message: text("message").notNull(),
+    page: text("page").notNull().default(""),
+    platform: text("platform").notNull().default("server"),
+    errorName: text("error_name").notNull().default(""),
+    sourceFile: text("source_file").notNull().default(""),
+    sourceLine: integer("source_line"),
+    sourceColumn: integer("source_column"),
+    userAgent: text("user_agent").notNull().default(""),
+    feature: text("feature").notNull().default(""),
+    operation: text("operation").notNull().default(""),
+    stack: text("stack").notNull().default(""),
+    routeName: text("route_name").notNull().default(""),
+    statusCode: integer("status_code"),
+    requestMethod: text("request_method").notNull().default(""),
+    appVersion: text("app_version").notNull().default(""),
+    nativeVersion: text("native_version").notNull().default(""),
+    uid: text("uid").notNull().default(""),
+    occurrences: integer("occurrences").notNull().default(1),
+    firstOccurredAt: text("first_occurred_at").notNull(),
+    lastOccurredAt: text("last_occurred_at").notNull(),
+  },
+  (table) => [
+    index("system_logs_level_time_idx").on(table.level, table.lastOccurredAt),
+    index("system_logs_platform_time_idx").on(table.platform, table.lastOccurredAt),
+    index("system_logs_feature_idx").on(table.feature, table.operation),
+  ],
+);
+
 export type UserProfileRow = typeof userProfiles.$inferSelect;
 export type NewUserProfileRow = typeof userProfiles.$inferInsert;
 export type FollowRow = typeof follows.$inferSelect;
@@ -384,3 +420,4 @@ export type ProfileTrendingItemRow = typeof profileTrendingItems.$inferSelect;
 export type ProfileWorkingHourRow = typeof profileWorkingHours.$inferSelect;
 export type SellerDiscountRow = typeof sellerDiscounts.$inferSelect;
 export type SellerDiscountUsageRow = typeof sellerDiscountUsages.$inferSelect;
+export type SystemLogRow = typeof systemLogs.$inferSelect;

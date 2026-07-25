@@ -34,6 +34,10 @@ export const ASOL_API_ROUTES = {
       reply: "/api/profile/reviews/reply",
     },
   },
+  systemLogs: {
+    root: "/api/system-logs",
+    ingest: "/api/system-logs/ingest",
+  },
   follow: {
     root: "/api/follow",
     status: "/api/follow/status",

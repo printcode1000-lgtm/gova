@@ -4,11 +4,13 @@ import { useEffect } from "react";
 
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { publicEnv } from "@/core/config";
 import {
   addSystemLog,
   setSystemLogCollectorAuthorized,
   type SystemLogLevel,
 } from "@/features/system-logs/system-log-store";
+import { submitPersistentClientLog } from "./persistent-client-log";
 
 type ConsoleMethod = "log" | "info" | "debug" | "warn" | "error";
 
@@ -46,6 +48,28 @@ function diagnosticStack(method: ConsoleMethod, error?: Error) {
   return new Error(`Captured from console.${method}`).stack;
 }
 
+function page() {
+  return `${window.location.pathname}${window.location.search}`;
+}
+
+function uid() {
+  try {
+    const raw = document.cookie
+      .split(";")
+      .find((item) => item.trim().startsWith("asol_uid="));
+    return raw ? decodeURIComponent(raw.split("=")[1] ?? "") : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function versions() {
+  return {
+    appVersion: publicEnv.webBundleVersion,
+    nativeVersion: publicEnv.nativeVersion,
+  };
+}
+
 function safeResourceUrl(url?: string): string | undefined {
   if (!url?.startsWith("data:")) return url;
   const header = url.slice(0, Math.max(0, url.indexOf(",")));
@@ -58,7 +82,6 @@ export function SystemLogCollector() {
 
   useEffect(() => {
     setSystemLogCollectorAuthorized(enabled);
-    if (!enabled) return () => setSystemLogCollectorAuthorized(false);
 
     const originals = Object.fromEntries(
       methods.map((method) => [method, console[method].bind(console)]),
@@ -68,25 +91,31 @@ export function SystemLogCollector() {
       console[method] = (...data: unknown[]) => {
         originals[method](...data);
         const error = data.find((item): item is Error => item instanceof Error);
-        addSystemLog({
-          level: levelFor(method),
+        const level = levelFor(method);
+        const entry = {
+          level,
           consoleMethod: `console.${method}`,
           message: data.map(serialize).join(" "),
-          page: `${window.location.pathname}${window.location.search}`,
+          page: page(),
           platform: platform(),
           errorName: error?.name,
           userAgent: navigator.userAgent,
           stack: diagnosticStack(method, error),
-        });
+          uid: uid(),
+        } as const;
+        addSystemLog(entry);
+        if (level !== "normal") {
+          submitPersistentClientLog({ ...entry, ...versions(), source: "client" });
+        }
       };
     });
 
     const handleError = (event: ErrorEvent) => {
-      addSystemLog({
+      const entry = {
         level: "error",
         consoleMethod: "window.error",
         message: event.message || "Unhandled browser error",
-        page: `${window.location.pathname}${window.location.search}`,
+        page: page(),
         platform: platform(),
         errorName:
           event.error instanceof Error ? event.error.name : "UnhandledError",
@@ -95,22 +124,28 @@ export function SystemLogCollector() {
         sourceColumn: event.colno || undefined,
         userAgent: navigator.userAgent,
         stack: event.error instanceof Error ? event.error.stack : undefined,
-      });
+        uid: uid(),
+      } as const;
+      addSystemLog(entry);
+      submitPersistentClientLog({ ...entry, ...versions(), source: "client" });
     };
 
     const handleRejection = (event: PromiseRejectionEvent) => {
       const reason = event.reason;
-      addSystemLog({
+      const entry = {
         level: "error",
         consoleMethod: "unhandledrejection",
         message: serialize(reason),
-        page: `${window.location.pathname}${window.location.search}`,
+        page: page(),
         platform: platform(),
         errorName:
           reason instanceof Error ? reason.name : "UnhandledPromiseRejection",
         userAgent: navigator.userAgent,
         stack: reason instanceof Error ? reason.stack : undefined,
-      });
+        uid: uid(),
+      } as const;
+      addSystemLog(entry);
+      submitPersistentClientLog({ ...entry, ...versions(), source: "client" });
     };
 
     const handleResourceError = (event: Event) => {
@@ -126,11 +161,11 @@ export function SystemLogCollector() {
             ? target.href
             : undefined;
       const safeUrl = safeResourceUrl(url);
-      addSystemLog({
+      const entry = {
         level: "error",
         consoleMethod: "resource.error",
         message: `Failed to load ${target.tagName.toLowerCase()} resource${safeUrl ? `: ${safeUrl}` : ""}`,
-        page: `${window.location.pathname}${window.location.search}`,
+        page: page(),
         platform: platform(),
         errorName: "ResourceLoadError",
         sourceFile: safeUrl,
@@ -138,7 +173,10 @@ export function SystemLogCollector() {
         feature: "BrowserResource",
         operation: `load-${target.tagName.toLowerCase()}`,
         stack: new Error("Resource load failure").stack,
-      });
+        uid: uid(),
+      } as const;
+      addSystemLog(entry);
+      submitPersistentClientLog({ ...entry, ...versions(), source: "resource" });
     };
 
     window.addEventListener("error", handleError);

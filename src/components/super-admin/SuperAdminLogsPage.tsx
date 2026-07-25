@@ -26,6 +26,8 @@ import {
   type SystemLogEntry,
   type SystemLogLevel,
 } from "@/features/system-logs/system-log-store";
+import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
+import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
 import { cn } from "@/lib/utils";
 
 const sections: Array<{
@@ -84,14 +86,61 @@ export function SuperAdminLogsPage() {
   );
   const [active, setActive] = useState<SystemLogLevel>("normal");
   const [copied, setCopied] = useState<SystemLogLevel | null>(null);
+  const [persistentLogs, setPersistentLogs] = useState<PersistentSystemLogEntry[]>([]);
 
   useEffect(() => {
     if (!isLoading && !authorized) router.replace(session ? "/home" : "/login");
   }, [authorized, isLoading, router, session]);
 
+  useEffect(() => {
+    if (!authorized || !session) return;
+    let cancelled = false;
+    const load = () => {
+      void persistentSystemLogApiService
+        .list(session.uid, session.phone, 500)
+        .then((items) => {
+          if (!cancelled) setPersistentLogs(items);
+        })
+        .catch(() => undefined);
+    };
+    load();
+    const timer = window.setInterval(load, 20_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [authorized, session]);
+
+  const allLogs = useMemo<SystemLogEntry[]>(
+    () => [
+      ...logs,
+      ...persistentLogs.map((entry, index) => ({
+        id: -1 - index,
+        fingerprint: `persistent:${entry.fingerprint}`,
+        level: entry.level,
+        consoleMethod: entry.consoleMethod || entry.source,
+        message: entry.message,
+        firstOccurredAt: entry.firstOccurredAt,
+        lastOccurredAt: entry.lastOccurredAt,
+        occurrences: entry.occurrences,
+        page: entry.page,
+        platform: entry.platform,
+        errorName: entry.errorName,
+        sourceFile: entry.sourceFile,
+        sourceLine: entry.sourceLine,
+        sourceColumn: entry.sourceColumn,
+        userAgent: entry.userAgent ?? "",
+        feature: entry.feature,
+        operation: entry.operation,
+        stack: entry.stack,
+      })),
+    ],
+    [logs, persistentLogs],
+  );
+
   const grouped = useMemo(
-    () => Object.fromEntries(sections.map(({ level }) => [level, logs.filter((entry) => entry.level === level)])) as Record<SystemLogLevel, SystemLogEntry[]>,
-    [logs],
+    () => Object.fromEntries(sections.map(({ level }) => [level, allLogs.filter((entry) => entry.level === level)])) as Record<SystemLogLevel, SystemLogEntry[]>,
+    [allLogs],
   );
 
   if (isLoading || !authorized) {
@@ -132,7 +181,23 @@ export function SuperAdminLogsPage() {
           >
             {captureEnabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </Button>
-          <Button type="button" size="icon" variant="destructive" onClick={clearAllSystemLogs} disabled={!logs.length} aria-label="مسح جميع السجلات" title="مسح جميع السجلات">
+          <Button
+            type="button"
+            size="icon"
+            variant="destructive"
+            onClick={() => {
+              clearAllSystemLogs();
+              if (session) {
+                void persistentSystemLogApiService
+                  .clear(session.uid, session.phone)
+                  .then(() => setPersistentLogs([]))
+                  .catch(() => undefined);
+              }
+            }}
+            disabled={!allLogs.length}
+            aria-label="مسح جميع السجلات"
+            title="مسح جميع السجلات"
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -157,7 +222,27 @@ export function SuperAdminLogsPage() {
           <h2 className="flex items-center gap-2 font-semibold"><Icon className={cn("h-5 w-5", section.color)} />{section.title}</h2>
           <div className="flex gap-2">
             <Button type="button" size="icon" variant="outline" disabled={!current.length} onClick={() => void copySection()} aria-label="نسخ القسم" title={copied === active ? "تم النسخ" : "نسخ القسم"}><ClipboardCopy className="h-4 w-4" /></Button>
-            <Button type="button" size="icon" variant="destructive" disabled={!current.length} onClick={() => clearSystemLogs(active)} aria-label="مسح القسم" title="مسح القسم"><Trash2 className="h-4 w-4" /></Button>
+            <Button
+              type="button"
+              size="icon"
+              variant="destructive"
+              disabled={!current.length}
+              onClick={() => {
+                clearSystemLogs(active);
+                if (session) {
+                  void persistentSystemLogApiService
+                    .clear(session.uid, session.phone, active)
+                    .then(() =>
+                      setPersistentLogs((items) =>
+                        items.filter((item) => item.level !== active),
+                      ),
+                    )
+                    .catch(() => undefined);
+                }
+              }}
+              aria-label="مسح القسم"
+              title="مسح القسم"
+            ><Trash2 className="h-4 w-4" /></Button>
           </div>
         </div>
 
@@ -169,6 +254,7 @@ export function SuperAdminLogsPage() {
                   <div className="mb-2 flex items-start justify-between gap-3">
                     <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground" dir="ltr">
                       <time title="آخر ظهور">{new Date(entry.lastOccurredAt).toLocaleString("ar-EG")}</time><span>{entry.platform}</span><code>{entry.consoleMethod}</code><code>{entry.page}</code>
+                      {entry.id < 0 && <span className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">محفوظ</span>}
                       {entry.occurrences > 1 && <span className="rounded-full bg-muted px-2 py-0.5 font-bold" title="عدد مرات التكرار">×{entry.occurrences}</span>}
                     </div>
                     <Button type="button" size="icon" variant="ghost" onClick={() => void copyEntry(entry)} aria-label="نسخ هذا السجل" title="نسخ هذا السجل"><ClipboardCopy className="h-4 w-4" /></Button>

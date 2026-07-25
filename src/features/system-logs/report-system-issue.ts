@@ -4,6 +4,8 @@ import {
   addSystemLog,
   type SystemLogLevel,
 } from "@/features/system-logs/system-log-store";
+import { publicEnv } from "@/core/config";
+import { submitPersistentClientLog } from "./persistent-client-log";
 
 export interface SystemIssueContext {
   level?: Extract<SystemLogLevel, "warning" | "error">;
@@ -33,7 +35,7 @@ function getPlatform(): "web" | "android" | "ios" {
 
 export function reportSystemIssue(context: SystemIssueContext) {
   const error = context.error;
-  addSystemLog({
+  const entry = {
     level: context.level ?? "error",
     consoleMethod: "asol.issue",
     message: describe(error),
@@ -48,6 +50,12 @@ export function reportSystemIssue(context: SystemIssueContext) {
       error instanceof Error
         ? error.stack
         : new Error(`${context.feature}: ${context.operation}`).stack,
+  } as const;
+  addSystemLog(entry);
+  submitPersistentClientLog({
+    ...entry,
+    source: "client",
+    appVersion: publicEnv.webBundleVersion,
+    nativeVersion: publicEnv.nativeVersion,
   });
 }
-
