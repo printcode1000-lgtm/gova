@@ -123,7 +123,9 @@ export function SettingsPageContent() {
     void specialtyChatClient
       .preference(session)
       .then((value) => setSpecialtyRequestsEnabled(value.enabled))
-      .catch(() => undefined);
+      .catch((error) => {
+        console.warn("[Settings] Failed to load specialty chat preference.", error);
+      });
   }, [session]);
 
   const updateSpecialtyRequests = async (enabled: boolean) => {
@@ -172,7 +174,9 @@ export function SettingsPageContent() {
     setClearing(true);
     try {
       if (session?.sessionToken) {
-        await specialtyChatClient.preference(session, true).catch(() => undefined);
+        await specialtyChatClient.preference(session, true).catch((error) => {
+          console.warn("[Settings] Failed to reset specialty chat preference.", error);
+        });
       }
       if (session) {
         await notificationDeviceTokenService.unregister(session.uid, session.phone);
@@ -181,7 +185,8 @@ export function SettingsPageContent() {
       resetApp();
       await clearAllClientStorage();
       window.location.reload();
-    } catch {
+    } catch (error) {
+      console.error("[Settings] Failed to clear client storage.", error);
       showStatus(t("settings.clearError"));
       setClearing(false);
     }

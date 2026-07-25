@@ -8,6 +8,7 @@ import {
 import { notificationSendService } from "@/features/notifications/services/notification-service.bootstrap.server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
+import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 import { getMarketplaceOrderService } from "@/modules/marketplace-orders/api/server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import {
@@ -356,7 +357,14 @@ export async function POST(request: Request) {
               specialVehicleRequired: deliveryDraft.specialVehicleRequired,
             },
           })
-          .catch(() => undefined);
+          .catch((error) =>
+            logServerSystemIssue({
+              error,
+              feature: "Orders",
+              operation: "notify-unified-delivery-plan",
+              routeName: "POST /api/orders/from-cart",
+            }).catch(() => undefined),
+          );
       }
 
       await sellerDiscountService.recordAppliedUsages({

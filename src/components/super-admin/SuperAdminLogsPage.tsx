@@ -101,7 +101,9 @@ export function SuperAdminLogsPage() {
         .then((items) => {
           if (!cancelled) setPersistentLogs(items);
         })
-        .catch(() => undefined);
+        .catch((error) => {
+          console.warn("[SystemLogs] Failed to load persistent logs.", error);
+        });
     };
     load();
     const timer = window.setInterval(load, 20_000);
@@ -191,7 +193,9 @@ export function SuperAdminLogsPage() {
                 void persistentSystemLogApiService
                   .clear(session.uid, session.phone)
                   .then(() => setPersistentLogs([]))
-                  .catch(() => undefined);
+                  .catch((error) => {
+                    console.warn("[SystemLogs] Failed to clear persistent logs.", error);
+                  });
               }
             }}
             disabled={!allLogs.length}
@@ -237,7 +241,9 @@ export function SuperAdminLogsPage() {
                         items.filter((item) => item.level !== active),
                       ),
                     )
-                    .catch(() => undefined);
+                    .catch((error) => {
+                      console.warn("[SystemLogs] Failed to clear persistent log section.", error);
+                    });
                 }
               }}
               aria-label="مسح القسم"

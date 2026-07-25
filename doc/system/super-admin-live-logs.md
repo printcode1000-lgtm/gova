@@ -53,6 +53,34 @@ therefore never reaches `console.error`.
 
 The system intentionally does not log the system-log API recursively.
 
+## Silent error guard
+
+The project includes a validation guard:
+
+```text
+npm run validate:error-logging
+```
+
+It is also part of `npm test`. The guard fails when it finds:
+
+- empty `catch {}` blocks outside approved generated bootstrap scripts
+- promises suppressed with `.catch(() => undefined)` or `.catch(() => null)`
+  without logging context
+- API routes without a tracing wrapper or a catch block
+- search API catch blocks that return generic errors instead of
+  `mapServiceError(error)`
+
+The only approved rejection suppression is the final fallback around the logging
+call itself, for example `logServerSystemIssue(...).catch(() => undefined)`.
+That prevents recursive failures if the central logging route or database is the
+thing currently failing.
+
+Non-critical client fallbacks, such as failed page snapshots, push cleanup,
+notification receipts, logout cleanup, and profile preview helper loads, now
+write `console.warn` or `console.error`. Because the root collector captures
+warnings and errors on Web, Android WebView, and iOS WebView, these are no
+longer silent.
+
 ## Storage
 
 Persistent logs are stored in the profile database:
@@ -134,4 +162,5 @@ src/features/system-logs/
 src/app/api/system-logs/
 src/app/global-error.tsx
 src/components/super-admin/SuperAdminLogsPage.tsx
+scripts/validate-error-logging.ts
 ```

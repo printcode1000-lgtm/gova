@@ -64,8 +64,8 @@ function playTone(frequency: number, type: OscillatorType, duration: number): vo
     gain.connect(ctx.destination);
     osc.start();
     osc.stop(ctx.currentTime + duration);
-  } catch {
-    // Ignore audio autoplay restrictions or failure
+  } catch (error) {
+    console.warn('[VoiceInput] Failed to play feedback tone.', error);
   }
 }
 
@@ -133,8 +133,8 @@ export class VoiceInputScanner {
 
     try {
       await this.adapter.stop();
-    } catch {
-      // The recognizer may already be stopped by the operating system.
+    } catch (error) {
+      console.warn('[VoiceInput] Failed to stop recognizer during cleanup.', error);
     }
 
     Array.from(this.bindings.values()).forEach((binding) => this.removeBinding(binding));
@@ -250,8 +250,8 @@ export class VoiceInputScanner {
       this.activeBinding = null;
       try {
         await this.adapter.stop();
-      } catch {
-        // Starting the new session is still safe after an operating-system auto-stop.
+      } catch (error) {
+        console.warn('[VoiceInput] Failed to stop previous recognizer session.', error);
       }
     }
 
@@ -400,7 +400,9 @@ export class VoiceInputScanner {
     if (this.activeBinding === binding) {
       this.sessionId += 1;
       this.activeBinding = null;
-      void this.adapter.stop().catch(() => undefined);
+      void this.adapter
+        .stop()
+        .catch((error) => console.warn('[VoiceInput] Failed to stop removed binding.', error));
     }
 
     binding.resizeObserver?.disconnect();

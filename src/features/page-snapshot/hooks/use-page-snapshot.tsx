@@ -129,7 +129,10 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
     if (!capturedSnapshot) return;
     const previousSave = pendingSavesRef.current.get(targetKey);
     const saveOperation = (previousSave ?? Promise.resolve(null))
-      .catch(() => null)
+      .catch((error) => {
+        console.warn('[PageSnapshot] Previous save failed before retry.', error);
+        return null;
+      })
       .then(() => persistSnapshot(capturedSnapshot));
     pendingSavesRef.current.set(targetKey, saveOperation);
     const saved = await saveOperation;
@@ -177,7 +180,10 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
   const restoreCurrent = React.useCallback(async (targetIdentity: PageSnapshotIdentity) => {
     const requestId = ++restoreRequestRef.current;
     const targetKey = createPageSnapshotKey(targetIdentity);
-    await pendingSavesRef.current.get(targetKey)?.catch(() => null);
+    await pendingSavesRef.current.get(targetKey)?.catch((error) => {
+      console.warn('[PageSnapshot] Pending save failed before restore.', error);
+      return null;
+    });
     const snapshot = await restoreSnapshot(targetIdentity);
     if (
       !snapshot ||
@@ -271,7 +277,9 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
       remove = () => {
         void handle.remove();
       };
-    }).catch(() => undefined);
+    }).catch((error) => {
+      console.warn('[PageSnapshot] Failed to install app state listener.', error);
+    });
     return () => {
       cancelled = true;
       remove?.();

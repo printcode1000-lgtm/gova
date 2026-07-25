@@ -293,7 +293,8 @@ export async function PUT(request: Request) {
     await rebuildPublicStyleIndex();
 
     return apiSuccess({ saved: true });
-  } catch {
+  } catch (error) {
+    console.error("[ProductStyleAPI] Failed to save product style.", error);
     return apiError("Failed to save product style", 500);
   }
 }

@@ -18,6 +18,14 @@ export function apiSuccess<T>(data: T, status = 200): NextResponse {
 }
 
 export function apiError(message: string, status = 400): NextResponse {
+  if (status >= 500 && !message.includes('/api/system-logs')) {
+    void logServerSystemIssue({
+      error: new Error(message),
+      feature: 'BusinessAPI',
+      operation: 'api-error-response',
+      statusCode: status,
+    }).catch(() => undefined);
+  }
   return attachDevTraceHeaders(
     NextResponse.json({ error: message }, { status }),
   );

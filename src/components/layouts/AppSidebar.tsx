@@ -146,13 +146,15 @@ export const AppSidebar = React.memo(function AppSidebar({
     try {
       if (session) {
         try {
-          await specialtyChatClient.preference(session, true).catch(() => undefined);
+          await specialtyChatClient.preference(session, true).catch((error) => {
+            console.warn("[AppSidebar] Failed to reset specialty chat preference during logout.", error);
+          });
           await notificationDeviceTokenService.unregister(
             session.uid,
             session.phone,
           );
-        } catch {
-          // Logout should still clear the device even if a notification provider is unavailable.
+        } catch (error) {
+          console.warn("[AppSidebar] Failed to unregister notification device during logout.", error);
         }
       }
 
@@ -163,7 +165,8 @@ export const AppSidebar = React.memo(function AppSidebar({
       resetAppPreferences();
       await clearAllClientStorage();
       window.location.assign("/login");
-    } catch {
+    } catch (error) {
+      console.error("[AppSidebar] Logout cleanup failed.", error);
       setLogoutDialogOpen(false);
       onClose();
       resetThemePreferences();

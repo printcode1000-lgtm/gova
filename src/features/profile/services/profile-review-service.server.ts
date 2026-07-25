@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getUserByUidQuery } from "@/features/auth/operations/instances";
+import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 import type { ReviewSort } from "@/features/product/entities/product-review.entity";
 import type {
   ProfileReviewsResult,
@@ -77,7 +78,14 @@ export class ProfileReviewService {
     const avatarUrl = await profileService
       .getStoreImages(input.uid)
       .then((images) => images.avatarUrl)
-      .catch(() => null);
+      .catch((error) => {
+        void logServerSystemIssue({
+          error,
+          feature: "ProfileReviews",
+          operation: "load-reviewer-avatar",
+        }).catch(() => undefined);
+        return null;
+      });
     return profileReviewRepository.create(
       input.targetUid,
       input.uid,

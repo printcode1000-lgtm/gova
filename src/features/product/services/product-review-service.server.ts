@@ -2,6 +2,7 @@ import "server-only";
 
 import { getUserByUidQuery } from "@/features/auth/operations/instances";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 import { productRepository } from "../repositories/product-repository";
 import { productReviewRepository } from "../repositories/product-review-repository";
 import type {
@@ -91,7 +92,14 @@ export class ProductReviewService {
     const avatarUrl = await profileService
       .getStoreImages(input.uid)
       .then((images) => images.avatarUrl)
-      .catch(() => null);
+      .catch((error) => {
+        void logServerSystemIssue({
+          error,
+          feature: "ProductReviews",
+          operation: "load-reviewer-avatar",
+        }).catch(() => undefined);
+        return null;
+      });
     return productReviewRepository.create(
       input.productId,
       input.uid,

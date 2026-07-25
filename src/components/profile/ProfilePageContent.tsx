@@ -214,7 +214,10 @@ export function ProfilePageContent() {
           ids.map((id) =>
             productApiService
               .get(id, { suppressErrorLog: true })
-              .catch(() => null),
+              .catch((error) => {
+                console.warn("[Profile] Failed to load featured product.", { id, error });
+                return null;
+              }),
           ),
         );
         if (!cancelled) {

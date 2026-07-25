@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from "@/core/api/api-response";
+import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import type { SellerSearchRequest } from "@/features/product-search/entities/product-search.types";
 import { productSearchService } from "@/features/product-search/services/product-search-service.server";
 
@@ -16,6 +16,6 @@ export async function GET(request: Request) {
     };
     return apiSuccess(await productSearchService.searchSellers(payload));
   } catch (error) {
-    return apiError(error instanceof Error ? error.message : "searchFailed", 400);
+    return mapServiceError(error);
   }
 }

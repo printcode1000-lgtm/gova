@@ -19,6 +19,7 @@ import { MobileBackButtonController } from "@/components/navigation/MobileBackBu
 import { VoiceInputController } from "@/components/voice-input/VoiceInputController";
 import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
 import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
+import { SuperAdminErrorFloatingButton } from "@/features/system-logs/SuperAdminErrorFloatingButton";
 import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
 import {
@@ -87,6 +88,7 @@ export default function RootLayout({
                         <OtaUpdatePrompt />
                         <MobileBackButtonController />
                         <VoiceInputController />
+                        <SuperAdminErrorFloatingButton />
                         <DeveloperBadge />
                       </OtaUpdateProvider>
                     </NetworkStatusProvider>

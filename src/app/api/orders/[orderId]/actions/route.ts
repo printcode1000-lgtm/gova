@@ -15,6 +15,7 @@ import {
   NotificationCategories,
   NotificationPriorities,
 } from "@/features/notifications/domain/enums";
+import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 
 interface ActionInput {
   uid: string;
@@ -99,7 +100,14 @@ async function notifyDeliveryPlan(input: {
         amount: input.amount ?? null,
       },
     })
-    .catch(() => undefined);
+    .catch((error) =>
+      logServerSystemIssue({
+        error,
+        feature: "Orders",
+        operation: "notify-delivery-plan",
+        routeName: "POST /api/orders/:orderId/actions",
+      }).catch(() => undefined),
+    );
 }
 
 async function notifyShippingQuote(input: {
@@ -152,7 +160,14 @@ async function notifyShippingQuote(input: {
         amount: input.amount,
       },
     })
-    .catch(() => undefined);
+    .catch((error) =>
+      logServerSystemIssue({
+        error,
+        feature: "Orders",
+        operation: "notify-shipping-quote",
+        routeName: "POST /api/orders/:orderId/actions",
+      }).catch(() => undefined),
+    );
 }
 
 export async function POST(

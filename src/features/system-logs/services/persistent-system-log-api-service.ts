@@ -4,13 +4,20 @@ import type {
   PersistentSystemLogInput,
 } from "../entities/persistent-system-log.entity";
 
+function notifySystemLogsChanged() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event("asol:system-logs-changed"));
+}
+
 export class PersistentSystemLogApiService {
   async ingest(input: PersistentSystemLogInput) {
-    return asolApi.post<{ ok: true }>(
+    const result = await asolApi.post<{ ok: true }>(
       ASOL_API_ROUTES.systemLogs.ingest,
       input,
       { suppressErrorLog: true },
     );
+    notifySystemLogsChanged();
+    return result;
   }
 
   async list(uid: string, phone: string, limit = 300) {
@@ -24,10 +31,12 @@ export class PersistentSystemLogApiService {
   async clear(uid: string, phone: string, level?: string) {
     const q = new URLSearchParams({ uid, phone });
     if (level) q.set("level", level);
-    return asolApi.delete<{ ok: true }>(
+    const result = await asolApi.delete<{ ok: true }>(
       `${ASOL_API_ROUTES.systemLogs.root}?${q}`,
       { suppressErrorLog: true },
     );
+    notifySystemLogsChanged();
+    return result;
   }
 }
 

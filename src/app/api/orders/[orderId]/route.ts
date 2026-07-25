@@ -2,14 +2,39 @@ import { apiSuccess } from "@/core/api/api-response";
 import { getMarketplaceOrderQueries } from "@/modules/marketplace-orders/api/server";
 import { filterOrderDetailsForActor } from "@/modules/marketplace-orders/domain/order-details-visibility";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { actorFromInput, mapOrderError } from "../order-api-helpers";
 
 async function profileSnapshot(uid: string) {
   const [contacts, fulfillment, storeDetails] = await Promise.all([
-    profileService.getContacts(uid).catch(() => null),
-    profileService.getFulfillmentSettings(uid).catch(() => null),
-    profileService.getStoreDetails(uid).catch(() => null),
+    profileService.getContacts(uid).catch((error) => {
+      void logServerSystemIssue({
+        error,
+        feature: "Orders",
+        operation: "load-order-profile-contacts",
+        routeName: "GET /api/orders/:orderId",
+      }).catch(() => undefined);
+      return null;
+    }),
+    profileService.getFulfillmentSettings(uid).catch((error) => {
+      void logServerSystemIssue({
+        error,
+        feature: "Orders",
+        operation: "load-order-profile-fulfillment",
+        routeName: "GET /api/orders/:orderId",
+      }).catch(() => undefined);
+      return null;
+    }),
+    profileService.getStoreDetails(uid).catch((error) => {
+      void logServerSystemIssue({
+        error,
+        feature: "Orders",
+        operation: "load-order-profile-store-details",
+        routeName: "GET /api/orders/:orderId",
+      }).catch(() => undefined);
+      return null;
+    }),
   ]);
   return { uid, contacts, fulfillment, storeDetails };
 }

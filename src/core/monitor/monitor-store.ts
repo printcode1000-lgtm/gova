@@ -443,7 +443,9 @@ export const useMonitorStore = create<MonitorState>((set, get) => ({
       if (stored) {
         set({ theme: stored });
       }
-    } catch {}
+    } catch (error) {
+      console.warn("[OperationMonitor] Failed to load saved theme.", error);
+    }
   },
 
   togglePin: (id) =>

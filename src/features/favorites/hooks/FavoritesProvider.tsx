@@ -89,7 +89,9 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const persist = React.useCallback(async (next: FavoriteCollection) => {
     const scope = scopeRef.current;
     writeQueueRef.current = writeQueueRef.current
-      .catch(() => undefined)
+      .catch((error) => {
+        console.warn("[Favorites] Previous write failed before retry.", error);
+      })
       .then(() => favoriteStorage.write(scope, next));
     await writeQueueRef.current;
   }, []);

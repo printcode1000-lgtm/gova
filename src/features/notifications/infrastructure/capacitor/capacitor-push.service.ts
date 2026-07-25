@@ -256,10 +256,12 @@ export class CapacitorPushService {
     if (!this.isNativePush()) return;
     const platform = capacitorPlatformService.getPlatform();
     if (platform !== "android" && platform !== "ios") return;
-    await PushNotifications.unregister().catch(() => undefined);
-    await PushNotifications.removeAllDeliveredNotifications().catch(
-      () => undefined,
-    );
+    await PushNotifications.unregister().catch((error) => {
+      console.warn("[CapacitorPush] Failed to unregister push notifications.", error);
+    });
+    await PushNotifications.removeAllDeliveredNotifications().catch((error) => {
+      console.warn("[CapacitorPush] Failed to remove delivered notifications.", error);
+    });
     await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, enabledKey(platform), false);
     if (platform === "android") {
       await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, LEGACY_ANDROID_ENABLED_KEY, false);

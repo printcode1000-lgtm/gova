@@ -85,7 +85,9 @@ export function useNotifications() {
                   metadata: { ...item.metadata, receivedReceiptSent: true },
                 }),
               )
-              .catch(() => undefined)
+              .catch((error) => {
+                console.warn("[Notifications] Failed to send received receipt.", error);
+              })
               .finally(() => receiptInFlight.delete(receiptKey));
           }
         }
