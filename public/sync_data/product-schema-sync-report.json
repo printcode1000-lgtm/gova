@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-07-22T12:51:05.830Z",
-  "durationMs": 10036,
+  "executedAt": "2026-07-26T03:29:13.608Z",
+  "durationMs": 6115,
   "sqliteSchemaVersion": "d192a4a7cecbd646",
-  "tursoSchemaVersionBefore": "2e8f5de648f7a544",
-  "tursoSchemaVersionAfter": "2e8f5de648f7a544",
+  "tursoSchemaVersionBefore": "d192a4a7cecbd646",
+  "tursoSchemaVersionAfter": "d192a4a7cecbd646",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,
@@ -12,8 +12,6 @@
   "triggersAdded": 0,
   "sqlExecuted": [],
   "errors": [],
-  "warnings": [
-    "Table \"password_recovery_challenges\" exists on Turso but not in SQLite. Not dropped automatically."
-  ],
+  "warnings": [],
   "skipped": false
 }

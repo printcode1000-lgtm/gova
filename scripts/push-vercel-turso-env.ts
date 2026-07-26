@@ -45,7 +45,7 @@ async function resolveProjectId(): Promise<string> {
   const fromEnv = process.env.VERCEL_PROJECT_ID;
   if (fromEnv) return fromEnv;
 
-  const projectName = process.env.VERCEL_PROJECT_NAME || 'asol';
+  const projectName = process.env.VERCEL_PROJECT_NAME || 'gova';
   const response = await vercelFetch('/v9/projects');
   if (!response.ok) {
     throw new Error(`Failed to list Vercel projects (${response.status})`);
