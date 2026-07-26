@@ -1,4 +1,4 @@
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { execSync } from "child_process";
 import path from "path";
 import {
@@ -40,8 +40,14 @@ ensureDatabase(
 const BetterSqlite = require("better-sqlite3") as typeof import("better-sqlite3");
 const profileDatabase = new BetterSqlite(PROFILE_SQLITE_DB_PATH);
 try {
+  for (const migration of [
+    "src/core/database/profile/migrations/0012_seller_discounts.sql",
+    "src/core/database/profile/migrations/0013_system_logs.sql",
+  ]) {
+    profileDatabase.exec(readFileSync(path.join(process.cwd(), migration), "utf8"));
+  }
   profileDatabase.exec(DATA_HEALTH_METADATA_STATEMENTS.join(";\n"));
-  console.log("✅ Data health metadata schema ready in profile.db");
+  console.log("✅ Profile runtime indexes and data health schema ready in profile.db");
 } finally {
   profileDatabase.close();
 }

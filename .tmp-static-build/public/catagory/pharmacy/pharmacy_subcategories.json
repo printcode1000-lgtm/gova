@@ -1,0 +1,1379 @@
+[
+  {
+    "id": 1,
+    "pharmacy_category_id": 1,
+    "original_id": 101,
+    "title_ar": "مسكنات الألم وخافض الحرارة",
+    "title_en": "Pain Relievers & Antipyretics",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 2,
+    "pharmacy_category_id": 1,
+    "original_id": 102,
+    "title_ar": "أدوية البرد والسعال",
+    "title_en": "Cold & Cough Medicines",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 3,
+    "pharmacy_category_id": 1,
+    "original_id": 103,
+    "title_ar": "أدوية الجهاز الهضمي",
+    "title_en": "Gastrointestinal Medicines",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 4,
+    "pharmacy_category_id": 1,
+    "original_id": 104,
+    "title_ar": "أدوية الحساسية",
+    "title_en": "Allergy Medicines",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 5,
+    "pharmacy_category_id": 1,
+    "original_id": 105,
+    "title_ar": "المضادات الحيوية (بوصفة)",
+    "title_en": "Antibiotics (Prescription)",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 6,
+    "pharmacy_category_id": 1,
+    "original_id": 106,
+    "title_ar": "قطرات العين والأنف والأذن",
+    "title_en": "Eye, Nose & Ear Drops",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 7,
+    "pharmacy_category_id": 1,
+    "original_id": 107,
+    "title_ar": "كريمات ومراهم علاجية",
+    "title_en": "Therapeutic Creams & Ointments",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 8,
+    "pharmacy_category_id": 1,
+    "original_id": 108,
+    "title_ar": "أدوية الضغط والقلب",
+    "title_en": "Blood Pressure & Heart Medicines",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 9,
+    "pharmacy_category_id": 1,
+    "original_id": 109,
+    "title_ar": "أدوية السكري والغدد",
+    "title_en": "Diabetes & Glandular Medicines",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 10,
+    "pharmacy_category_id": 2,
+    "original_id": 201,
+    "title_ar": "غسول ومنظفات",
+    "title_en": "Cleansers & Washes",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 11,
+    "pharmacy_category_id": 2,
+    "original_id": 202,
+    "title_ar": "مرطبات ولوشن",
+    "title_en": "Moisturizers & Lotions",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 12,
+    "pharmacy_category_id": 2,
+    "original_id": 203,
+    "title_ar": "واقي الشمس",
+    "title_en": "Sunscreen",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 13,
+    "pharmacy_category_id": 2,
+    "original_id": 204,
+    "title_ar": "تفتيح وتوحيد اللون",
+    "title_en": "Lightening & Skin Tone Evening",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 14,
+    "pharmacy_category_id": 2,
+    "original_id": 205,
+    "title_ar": "مضاد التجاعيد",
+    "title_en": "Anti-Wrinkle",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 15,
+    "pharmacy_category_id": 2,
+    "original_id": 206,
+    "title_ar": "علاج الحبوب",
+    "title_en": "Acne Treatment",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 16,
+    "pharmacy_category_id": 2,
+    "original_id": 207,
+    "title_ar": "ماسكات وسكراب",
+    "title_en": "Masks & Scrubs",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 17,
+    "pharmacy_category_id": 2,
+    "original_id": 208,
+    "title_ar": "العناية بالشفاه والعين",
+    "title_en": "Lip & Eye Care",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 18,
+    "pharmacy_category_id": 3,
+    "original_id": 301,
+    "title_ar": "شامبو وبلسم",
+    "title_en": "Shampoo & Conditioner",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 19,
+    "pharmacy_category_id": 3,
+    "original_id": 302,
+    "title_ar": "تساقط الشعر",
+    "title_en": "Hair Loss",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 20,
+    "pharmacy_category_id": 3,
+    "original_id": 303,
+    "title_ar": "زيوت وسيروم",
+    "title_en": "Oils & Serums",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 21,
+    "pharmacy_category_id": 3,
+    "original_id": 304,
+    "title_ar": "ماسكات وحمامات كريم",
+    "title_en": "Masks & Cream Baths",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 22,
+    "pharmacy_category_id": 3,
+    "original_id": 305,
+    "title_ar": "قشرة الشعر",
+    "title_en": "Dandruff",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 23,
+    "pharmacy_category_id": 3,
+    "original_id": 306,
+    "title_ar": "صبغات الشعر",
+    "title_en": "Hair Dyes",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 24,
+    "pharmacy_category_id": 4,
+    "original_id": 401,
+    "title_ar": "العناية بالفم والأسنان",
+    "title_en": "Oral & Dental Care",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 25,
+    "pharmacy_category_id": 4,
+    "original_id": 402,
+    "title_ar": "مزيلات العرق",
+    "title_en": "Deodorants",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 26,
+    "pharmacy_category_id": 4,
+    "original_id": 403,
+    "title_ar": "شاور جل وصابون",
+    "title_en": "Shower Gel & Soap",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 27,
+    "pharmacy_category_id": 4,
+    "original_id": 404,
+    "title_ar": "العناية النسائية",
+    "title_en": "Feminine Care",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 28,
+    "pharmacy_category_id": 4,
+    "original_id": 405,
+    "title_ar": "العناية الرجالية",
+    "title_en": "Men's Care",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 29,
+    "pharmacy_category_id": 4,
+    "original_id": 406,
+    "title_ar": "إزالة الشعر",
+    "title_en": "Hair Removal",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 30,
+    "pharmacy_category_id": 5,
+    "original_id": 501,
+    "title_ar": "حفاضات",
+    "title_en": "Diapers",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 31,
+    "pharmacy_category_id": 5,
+    "original_id": 502,
+    "title_ar": "حليب أطفال",
+    "title_en": "Baby Formula",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 32,
+    "pharmacy_category_id": 5,
+    "original_id": 503,
+    "title_ar": "أغذية أطفال",
+    "title_en": "Baby Food",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 33,
+    "pharmacy_category_id": 5,
+    "original_id": 504,
+    "title_ar": "مستلزمات الرضاعة",
+    "title_en": "Nursing Supplies",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 34,
+    "pharmacy_category_id": 5,
+    "original_id": 505,
+    "title_ar": "عناية ببشرة الطفل",
+    "title_en": "Baby Skin Care",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 35,
+    "pharmacy_category_id": 5,
+    "original_id": 506,
+    "title_ar": "طفح الحفاض",
+    "title_en": "Diaper Rash",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 36,
+    "pharmacy_category_id": 5,
+    "original_id": 507,
+    "title_ar": "مستلزمات السلامة للأطفال",
+    "title_en": "Baby Safety Supplies",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 37,
+    "pharmacy_category_id": 5,
+    "original_id": 508,
+    "title_ar": "ميزان حرارة أطفال رقمي",
+    "title_en": "Digital Baby Thermometer",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 38,
+    "pharmacy_category_id": 5,
+    "original_id": 509,
+    "title_ar": "شفاطات أنف أطفال",
+    "title_en": "Baby Nasal Aspirators",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 39,
+    "pharmacy_category_id": 6,
+    "original_id": 601,
+    "title_ar": "فيتامينات عامة",
+    "title_en": "General Vitamins",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 40,
+    "pharmacy_category_id": 6,
+    "original_id": 602,
+    "title_ar": "المناعة",
+    "title_en": "Immunity",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 41,
+    "pharmacy_category_id": 6,
+    "original_id": 603,
+    "title_ar": "العظام والمفاصل",
+    "title_en": "Bones & Joints",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 42,
+    "pharmacy_category_id": 6,
+    "original_id": 604,
+    "title_ar": "الحديد",
+    "title_en": "Iron",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 43,
+    "pharmacy_category_id": 6,
+    "original_id": 605,
+    "title_ar": "أوميجا 3",
+    "title_en": "Omega 3",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 44,
+    "pharmacy_category_id": 6,
+    "original_id": 606,
+    "title_ar": "مكملات الأطفال",
+    "title_en": "Children's Supplements",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 45,
+    "pharmacy_category_id": 7,
+    "original_id": 701,
+    "title_ar": "أجهزة الضغط",
+    "title_en": "Blood Pressure Monitors",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 46,
+    "pharmacy_category_id": 7,
+    "original_id": 702,
+    "title_ar": "أجهزة السكر",
+    "title_en": "Blood Glucose Monitors",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 47,
+    "pharmacy_category_id": 7,
+    "original_id": 703,
+    "title_ar": "ترمومترات",
+    "title_en": "Thermometers",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 48,
+    "pharmacy_category_id": 7,
+    "original_id": 704,
+    "title_ar": "أجهزة تنفس",
+    "title_en": "Nebulizers & Respiratory",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 49,
+    "pharmacy_category_id": 7,
+    "original_id": 705,
+    "title_ar": "إسعافات أولية",
+    "title_en": "First Aid",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 50,
+    "pharmacy_category_id": 7,
+    "original_id": 706,
+    "title_ar": "دعامات وأربطة",
+    "title_en": "Braces & Bandages",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 51,
+    "pharmacy_category_id": 8,
+    "original_id": 801,
+    "title_ar": "كمامات ومعقمات",
+    "title_en": "Masks & Sanitizers",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 52,
+    "pharmacy_category_id": 8,
+    "original_id": 802,
+    "title_ar": "مطهرات",
+    "title_en": "Antiseptics",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 53,
+    "pharmacy_category_id": 8,
+    "original_id": 803,
+    "title_ar": "خدمات الدايت والسناكس الصحي",
+    "title_en": "Diet Products & Healthy Snacks",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 54,
+    "pharmacy_category_id": 8,
+    "original_id": 804,
+    "title_ar": "مكملات غذائية رياضية (بروتين)",
+    "title_en": "Sports Supplements (Protein)",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 55,
+    "pharmacy_category_id": 8,
+    "original_id": 805,
+    "title_ar": "الرعاية المنزلية للجروح",
+    "title_en": "Home Wound Care",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 56,
+    "pharmacy_category_id": 8,
+    "original_id": 806,
+    "title_ar": "مستلزمات ما بعد العمليات",
+    "title_en": "Post-Operative Supplies",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 57,
+    "pharmacy_category_id": 8,
+    "original_id": 807,
+    "title_ar": "خدمات الإسعافات الأولية المنزلية",
+    "title_en": "Home First Aid Products",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 58,
+    "pharmacy_category_id": 8,
+    "original_id": 808,
+    "title_ar": "أجهزة قياس الحرارة والرطوبة",
+    "title_en": "Temperature & Humidity Monitors",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 59,
+    "pharmacy_category_id": 8,
+    "original_id": 809,
+    "title_ar": "خدمات مكافحة الحشرات (طبيعية)",
+    "title_en": "Insect Repellents (Natural)",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 60,
+    "pharmacy_category_id": 9,
+    "original_id": 901,
+    "title_ar": "مكياج الوجه",
+    "title_en": "Face Makeup",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 61,
+    "pharmacy_category_id": 9,
+    "original_id": 902,
+    "title_ar": "مكياج العيون",
+    "title_en": "Eye Makeup",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 62,
+    "pharmacy_category_id": 9,
+    "original_id": 903,
+    "title_ar": "مكياج الشفاه",
+    "title_en": "Lip Makeup",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 63,
+    "pharmacy_category_id": 9,
+    "original_id": 904,
+    "title_ar": "العناية بالأظافر",
+    "title_en": "Nail Care",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 64,
+    "pharmacy_category_id": 9,
+    "original_id": 905,
+    "title_ar": "فرش وأدوات",
+    "title_en": "Brushes & Tools",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 65,
+    "pharmacy_category_id": 10,
+    "original_id": 1001,
+    "title_ar": "واقيات ذكرية وأنثوية",
+    "title_en": "Condoms & Protection",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 66,
+    "pharmacy_category_id": 10,
+    "original_id": 1002,
+    "title_ar": "مواد تشحيم (جل خاص)",
+    "title_en": "Lubricants",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 67,
+    "pharmacy_category_id": 10,
+    "original_id": 1003,
+    "title_ar": "خدمات تأخير القذف",
+    "title_en": "Delay Products",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 68,
+    "pharmacy_category_id": 10,
+    "original_id": 1004,
+    "title_ar": "اختبارات حمل وتبويض",
+    "title_en": "Pregnancy & Ovulation Tests",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 69,
+    "pharmacy_category_id": 10,
+    "original_id": 1005,
+    "title_ar": "خدمات تعزيز الرغبة",
+    "title_en": "Desire Enhancers",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 70,
+    "pharmacy_category_id": 10,
+    "original_id": 1006,
+    "title_ar": "مكملات خصوبة",
+    "title_en": "Fertility Supplements",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 71,
+    "pharmacy_category_id": 11,
+    "original_id": 1101,
+    "title_ar": "كريمات تشقق القدمين",
+    "title_en": "Cracked Heel Creams",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 72,
+    "pharmacy_category_id": 11,
+    "original_id": 1102,
+    "title_ar": "لاصقات مسامير القدم",
+    "title_en": "Corn Plasters",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 73,
+    "pharmacy_category_id": 11,
+    "original_id": 1103,
+    "title_ar": "علاج فطريات الأظافر والقدم",
+    "title_en": "Nail & Foot Fungus Treatment",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 74,
+    "pharmacy_category_id": 11,
+    "original_id": 1104,
+    "title_ar": "بخاخات تطهير القدمين",
+    "title_en": "Foot Sanitizing Sprays",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 75,
+    "pharmacy_category_id": 11,
+    "original_id": 1105,
+    "title_ar": "أدوات العناية بالأظافر",
+    "title_en": "Nail Care Tools",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 76,
+    "pharmacy_category_id": 11,
+    "original_id": 1106,
+    "title_ar": "طلاءات أظافر علاجية",
+    "title_en": "Therapeutic Nail Polishes",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 77,
+    "pharmacy_category_id": 11,
+    "original_id": 1107,
+    "title_ar": "جوارب ضاغطة للقدمين",
+    "title_en": "Compression Socks",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 78,
+    "pharmacy_category_id": 11,
+    "original_id": 1108,
+    "title_ar": "خدمات علاج تشقق اليدين الشديد",
+    "title_en": "Severe Hand Crack Treatments",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 79,
+    "pharmacy_category_id": 12,
+    "original_id": 1201,
+    "title_ar": "مكملات طبيعية للنوم (ميلاتونين)",
+    "title_en": "Natural Sleep Supplements (Melatonin)",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 80,
+    "pharmacy_category_id": 12,
+    "original_id": 1202,
+    "title_ar": "زيوت عطرية مهدئة",
+    "title_en": "Soothing Essential Oils",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 81,
+    "pharmacy_category_id": 12,
+    "original_id": 1203,
+    "title_ar": "أجهزة الضوضاء البيضاء",
+    "title_en": "White Noise Machines",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 82,
+    "pharmacy_category_id": 12,
+    "original_id": 1204,
+    "title_ar": "أقنعة العين",
+    "title_en": "Eye Masks",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 83,
+    "pharmacy_category_id": 12,
+    "original_id": 1205,
+    "title_ar": "خدمات تخفيف التوتر",
+    "title_en": "Stress Relief Products",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 84,
+    "pharmacy_category_id": 12,
+    "original_id": 1206,
+    "title_ar": "بخاخات وسائد مهدئة",
+    "title_en": "Soothing Pillow Sprays",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 85,
+    "pharmacy_category_id": 13,
+    "original_id": 1301,
+    "title_ar": "فيتامينات كبار السن",
+    "title_en": "Senior Vitamins",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 86,
+    "pharmacy_category_id": 13,
+    "original_id": 1302,
+    "title_ar": "مستلزمات الحركة (عكازات، مشايات)",
+    "title_en": "Mobility Aids (Crutches, Walkers)",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 87,
+    "pharmacy_category_id": 13,
+    "original_id": 1303,
+    "title_ar": "العناية اليومية لكبار السن",
+    "title_en": "Daily Elderly Care",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 88,
+    "pharmacy_category_id": 13,
+    "original_id": 1304,
+    "title_ar": "مستلزمات سلس البول",
+    "title_en": "Incontinence Supplies",
+    "created_at": "2026-06-14 04:03:39",
+    "updated_at": "2026-06-14 04:03:39"
+  },
+  {
+    "id": 89,
+    "pharmacy_category_id": 13,
+    "original_id": 1305,
+    "title_ar": "أجهزة قياس الضغط والسكر",
+    "title_en": "BP & Glucose Monitors",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 90,
+    "pharmacy_category_id": 13,
+    "original_id": 1306,
+    "title_ar": "أجراس تنبيه ومساعدات طوارئ",
+    "title_en": "Alert Bells & Emergency Aids",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 91,
+    "pharmacy_category_id": 13,
+    "original_id": 1307,
+    "title_ar": "مقاعد حمام وكراسي متحركة صغيرة",
+    "title_en": "Bath Seats & Small Wheelchairs",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 92,
+    "pharmacy_category_id": 14,
+    "original_id": 1401,
+    "title_ar": "مشروبات طاقة ورياضية",
+    "title_en": "Energy & Sports Drinks",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 93,
+    "pharmacy_category_id": 14,
+    "original_id": 1402,
+    "title_ar": "بروتين بار ووجبات خفيفة",
+    "title_en": "Protein Bars & Snacks",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 94,
+    "pharmacy_category_id": 14,
+    "original_id": 1403,
+    "title_ar": "مكملات قبل وبعد التمرين",
+    "title_en": "Pre & Post Workout Supplements",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 95,
+    "pharmacy_category_id": 14,
+    "original_id": 1404,
+    "title_ar": "أحماض أمينية (BCAA)",
+    "title_en": "Amino Acids (BCAA)",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 96,
+    "pharmacy_category_id": 14,
+    "original_id": 1405,
+    "title_ar": "كريمات ومراهم للعضلات",
+    "title_en": "Muscle Creams & Ointments",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 97,
+    "pharmacy_category_id": 14,
+    "original_id": 1406,
+    "title_ar": "أشرطة لاصقة رياضية (كينيسيو)",
+    "title_en": "Kinesio Tapes",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 98,
+    "pharmacy_category_id": 14,
+    "original_id": 1407,
+    "title_ar": "زجاجات مياه رياضية",
+    "title_en": "Sports Water Bottles",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 99,
+    "pharmacy_category_id": 15,
+    "original_id": 1501,
+    "title_ar": "فيتامينات ومكملات للحيوانات",
+    "title_en": "Pet Vitamins & Supplements",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 100,
+    "pharmacy_category_id": 15,
+    "original_id": 1502,
+    "title_ar": "شامبو ومنظفات للحيوانات",
+    "title_en": "Pet Shampoos & Cleansers",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 101,
+    "pharmacy_category_id": 15,
+    "original_id": 1503,
+    "title_ar": "مضادات براغيث وقراد",
+    "title_en": "Flea & Tick Treatments",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 102,
+    "pharmacy_category_id": 15,
+    "original_id": 1504,
+    "title_ar": "مستلزمات تنظيف الأسنان",
+    "title_en": "Dental Care Supplies",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 103,
+    "pharmacy_category_id": 15,
+    "original_id": 1505,
+    "title_ar": "ألعاب ومستلزمات يومية",
+    "title_en": "Toys & Daily Supplies",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 104,
+    "pharmacy_category_id": 16,
+    "original_id": 1601,
+    "title_ar": "لاصقات النيكوتين",
+    "title_en": "Nicotine Patches",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 105,
+    "pharmacy_category_id": 16,
+    "original_id": 1602,
+    "title_ar": "علكة النيكوتين",
+    "title_en": "Nicotine Gum",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 106,
+    "pharmacy_category_id": 16,
+    "original_id": 1603,
+    "title_ar": "بخاخات الفم",
+    "title_en": "Mouth Sprays",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 107,
+    "pharmacy_category_id": 16,
+    "original_id": 1604,
+    "title_ar": "أجهزة التدخين الإلكتروني (حسب التشريع)",
+    "title_en": "E-Smoking Devices (per regulation)",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 108,
+    "pharmacy_category_id": 16,
+    "original_id": 1605,
+    "title_ar": "كتب وكتيبات توعوية",
+    "title_en": "Awareness Books & Booklets",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 109,
+    "pharmacy_category_id": 17,
+    "original_id": 1701,
+    "title_ar": "عناية بشرة طبيعية",
+    "title_en": "Natural Skin Care",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 110,
+    "pharmacy_category_id": 17,
+    "original_id": 1702,
+    "title_ar": "عناية شعر طبيعية",
+    "title_en": "Natural Hair Care",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 111,
+    "pharmacy_category_id": 17,
+    "original_id": 1703,
+    "title_ar": "مكملات غذائية عضوية",
+    "title_en": "Organic Dietary Supplements",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 112,
+    "pharmacy_category_id": 17,
+    "original_id": 1704,
+    "title_ar": "زيوت طبيعية نادرة",
+    "title_en": "Rare Natural Oils",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 113,
+    "pharmacy_category_id": 17,
+    "original_id": 1705,
+    "title_ar": "خدمات منزلية صديقة للبيئة",
+    "title_en": "Eco-Friendly Home Products",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 114,
+    "pharmacy_category_id": 18,
+    "original_id": 1801,
+    "title_ar": "قياس ضغط الدم",
+    "title_en": "Blood Pressure Measurement",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 115,
+    "pharmacy_category_id": 18,
+    "original_id": 1802,
+    "title_ar": "قياس السكر",
+    "title_en": "Blood Glucose Measurement",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 116,
+    "pharmacy_category_id": 18,
+    "original_id": 1803,
+    "title_ar": "استشارات دوائية",
+    "title_en": "Medication Consultations",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 117,
+    "pharmacy_category_id": 18,
+    "original_id": 1804,
+    "title_ar": "تطعيمات (إن وجدت)",
+    "title_en": "Vaccinations (if available)",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 118,
+    "pharmacy_category_id": 18,
+    "original_id": 1805,
+    "title_ar": "تحليل سريع (كوليسترول - فيتامين د)",
+    "title_en": "Quick Tests (Cholesterol - Vit D)",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 119,
+    "pharmacy_category_id": 19,
+    "original_id": 1901,
+    "title_ar": "عطور رجالية",
+    "title_en": "Men's Perfumes",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 120,
+    "pharmacy_category_id": 19,
+    "original_id": 1902,
+    "title_ar": "عطور نسائية",
+    "title_en": "Women's Perfumes",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 121,
+    "pharmacy_category_id": 19,
+    "original_id": 1903,
+    "title_ar": "مجموعات هدايا تجميلية",
+    "title_en": "Cosmetic Gift Sets",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 122,
+    "pharmacy_category_id": 19,
+    "original_id": 1904,
+    "title_ar": "شموع معطرة",
+    "title_en": "Scented Candles",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 123,
+    "pharmacy_category_id": 19,
+    "original_id": 1905,
+    "title_ar": "بوكسات هدايا جاهزة",
+    "title_en": "Ready-Made Gift Boxes",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 124,
+    "pharmacy_category_id": 20,
+    "original_id": 2001,
+    "title_ar": "أفضل مسكنات الألم",
+    "title_en": "Top Pain Relievers",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 125,
+    "pharmacy_category_id": 20,
+    "original_id": 2002,
+    "title_ar": "أفضل فيتامينات",
+    "title_en": "Top Vitamins",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 126,
+    "pharmacy_category_id": 20,
+    "original_id": 2003,
+    "title_ar": "أفضل كريمات البشرة",
+    "title_en": "Top Skin Creams",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 127,
+    "pharmacy_category_id": 20,
+    "original_id": 2004,
+    "title_ar": "أفضل خدمات الشعر",
+    "title_en": "Top Hair Products",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 128,
+    "pharmacy_category_id": 21,
+    "original_id": 2201,
+    "title_ar": "معقمات ومطهرات للحقائب",
+    "title_en": "Sanitizers for Bags",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 129,
+    "pharmacy_category_id": 21,
+    "original_id": 2202,
+    "title_ar": "فيتامينات للتركيز والذاكرة",
+    "title_en": "Vitamins for Focus & Memory",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 130,
+    "pharmacy_category_id": 21,
+    "original_id": 2203,
+    "title_ar": "مستلزمات الإسعافات المدرسية",
+    "title_en": "School First Aid Supplies",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 131,
+    "pharmacy_category_id": 21,
+    "original_id": 2204,
+    "title_ar": "كريمات واقية من الشمس للأطفال",
+    "title_en": "Kids Sunscreen Creams",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 132,
+    "pharmacy_category_id": 22,
+    "original_id": 2201,
+    "title_ar": "واقيات شمس للأطفال والكبار",
+    "title_en": "Sunscreen for Kids & Adults",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 133,
+    "pharmacy_category_id": 22,
+    "original_id": 2202,
+    "title_ar": "مرطبات ما بعد الشمس",
+    "title_en": "After-Sun Moisturizers",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 134,
+    "pharmacy_category_id": 22,
+    "original_id": 2203,
+    "title_ar": "طاردات البعوض والحشرات",
+    "title_en": "Mosquito & Insect Repellents",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 135,
+    "pharmacy_category_id": 22,
+    "original_id": 2204,
+    "title_ar": "خدمات علاج لسعات الحشرات",
+    "title_en": "Insect Bite Treatments",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 136,
+    "pharmacy_category_id": 23,
+    "original_id": 2301,
+    "title_ar": "مرطبات شفاه وأيدي",
+    "title_en": "Lip & Hand Moisturizers",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 137,
+    "pharmacy_category_id": 23,
+    "original_id": 2302,
+    "title_ar": "فيتامين سي والمناعة",
+    "title_en": "Vitamin C & Immunity",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 138,
+    "pharmacy_category_id": 23,
+    "original_id": 2303,
+    "title_ar": "أجهزة ترطيب الجو",
+    "title_en": "Air Humidifiers",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 139,
+    "pharmacy_category_id": 23,
+    "original_id": 2304,
+    "title_ar": "مراهم وقائية من البرد",
+    "title_en": "Preventive Cold Ointments",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 140,
+    "pharmacy_category_id": 24,
+    "original_id": 2401,
+    "title_ar": "خصم 50% على خدمات مختارة",
+    "title_en": "50% Off Select Products",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 141,
+    "pharmacy_category_id": 24,
+    "original_id": 2402,
+    "title_ar": "اشتري 2 واحصل على الثالث مجاناً",
+    "title_en": "Buy 2 Get 1 Free",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 142,
+    "pharmacy_category_id": 24,
+    "original_id": 2403,
+    "title_ar": "عرض الشهر",
+    "title_en": "Offer of the Month",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 143,
+    "pharmacy_category_id": 25,
+    "original_id": 2501,
+    "title_ar": "مثبطات الشهية الطبيعية",
+    "title_en": "Natural Appetite Suppressants",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 144,
+    "pharmacy_category_id": 25,
+    "original_id": 2502,
+    "title_ar": "بدائل الوجبات",
+    "title_en": "Meal Replacements",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 145,
+    "pharmacy_category_id": 25,
+    "original_id": 2503,
+    "title_ar": "مشروبات حارقة للدهون",
+    "title_en": "Fat Burner Drinks",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 146,
+    "pharmacy_category_id": 25,
+    "original_id": 2504,
+    "title_ar": "أجهزة قياس الوزن والدهون",
+    "title_en": "Weight & Body Fat Scales",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 147,
+    "pharmacy_category_id": 25,
+    "original_id": 2505,
+    "title_ar": "كريمات تنسيق الجسم",
+    "title_en": "Body Contouring Creams",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 148,
+    "pharmacy_category_id": 25,
+    "original_id": 2506,
+    "title_ar": "أحزمة ومشدات",
+    "title_en": "Belts & Corsets",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 149,
+    "pharmacy_category_id": 26,
+    "original_id": 2601,
+    "title_ar": "أدوات الحجامة (كاسات)",
+    "title_en": "Cupping Tools (Cups)",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 150,
+    "pharmacy_category_id": 26,
+    "original_id": 2602,
+    "title_ar": "زيوت طبيعية للحجامة",
+    "title_en": "Natural Oils for Cupping",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 151,
+    "pharmacy_category_id": 26,
+    "original_id": 2603,
+    "title_ar": "أعشاب طبية (ينسون، بابونج، زعتر)",
+    "title_en": "Medicinal Herbs (Anise, Chamomile, Thyme)",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 152,
+    "pharmacy_category_id": 26,
+    "original_id": 2604,
+    "title_ar": "عسل طبيعي وملكات النحل",
+    "title_en": "Natural Honey & Royal Jelly",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  },
+  {
+    "id": 153,
+    "pharmacy_category_id": 26,
+    "original_id": 2605,
+    "title_ar": "حبة البركة وزيتها",
+    "title_en": "Black Seed & Oil",
+    "created_at": "2026-06-14 04:03:40",
+    "updated_at": "2026-06-14 04:03:40"
+  }
+]

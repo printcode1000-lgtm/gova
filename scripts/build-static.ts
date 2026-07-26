@@ -355,6 +355,7 @@ try {
   copyBuildOutputBack();
   createStaticRscAliases();
   auditGeneratedStaticRoutes();
+  auditPharmacyStaticImages();
   auditCapacitorDefaultBundle(rootOutDir);
   writeLocalWebManifest();
 } finally {
@@ -364,6 +365,36 @@ try {
     maxRetries: 5,
     retryDelay: 200,
   });
+}
+
+function auditPharmacyStaticImages(): void {
+  const catalogPath = path.join(
+    rootDir,
+    "public",
+    "catagory",
+    "pharmacy",
+    "active_ingredients.json",
+  );
+  const items = JSON.parse(readFileSync(catalogPath, "utf8")) as Array<{
+    id: number;
+    image_url?: string;
+  }>;
+  const missing = items
+    .filter((item) => item.image_url)
+    .filter(
+      (item) =>
+        !existsSync(
+          path.join(rootOutDir, String(item.image_url).replace(/^\/+/, "")),
+        ),
+    );
+  if (missing.length > 0) {
+    throw new Error(
+      `Static pharmacy image audit failed: ${missing.length} files are missing. First: ${missing[0]?.id} ${missing[0]?.image_url}`,
+    );
+  }
+  console.log(
+    `Static pharmacy image audit passed: ${items.filter((item) => item.image_url).length} images.`,
+  );
 }
 
 function auditGeneratedStaticRoutes(): void {

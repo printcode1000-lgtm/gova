@@ -1,0 +1,6 @@
+[
+    { "id": "none", "name": "None", "name_ar": "لا يوجد", "default": true },
+    { "id": "special_needs", "name": "Special Needs", "name_ar": "احتياجات خاصة" },
+    { "id": "taxi", "name": "Taxi", "name_ar": "تاكسي" },
+    { "id": "terms", "name": "Terms", "name_ar": "شروط" }
+]
