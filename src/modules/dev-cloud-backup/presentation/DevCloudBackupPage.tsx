@@ -11,11 +11,9 @@ import {
   RefreshCw,
   ShieldAlert,
   Trash2,
-  Upload,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { asolApi } from "@/core/api";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -25,9 +23,7 @@ import type {
   DevCloudBackupInspectResult,
   DevCloudBackupDiffReport,
   DevCloudBackupListItem,
-  DevCloudBackupRestoreMode,
   DevCloudBackupRestorePreview,
-  DevCloudBackupRestoreResult,
   DevCloudBackupScope,
   DevCloudBackupSummary,
   DevCloudBackupUpdateResult,
@@ -46,6 +42,17 @@ interface ListResponse {
 interface InspectResponse {
   inspect: DevCloudBackupInspectResult;
   preview: DevCloudBackupRestorePreview;
+}
+
+type BackupOperationKind = "inspect" | "compare" | "update";
+
+interface BackupOperationStatus {
+  kind: BackupOperationKind;
+  fileName: string;
+  phase: "running" | "done" | "failed";
+  message: string;
+  startedAt: string;
+  finishedAt?: string;
 }
 
 function sizeText(bytes: number) {
@@ -68,27 +75,47 @@ function dateText(value?: string) {
       });
 }
 
+function formatOperationTime(value?: string) {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleTimeString("ar-EG", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+}
+
+function backupOperationTitle(kind: BackupOperationKind) {
+  if (kind === "inspect") return "فحص النسخة";
+  if (kind === "compare") return "مقارنة النسخة";
+  return "تحديث النسخة";
+}
+
+function operationBusyFor(busy: string, kind: BackupOperationKind, fileName: string) {
+  const prefix =
+    kind === "inspect" ? "inspect-saved" : kind === "compare" ? "compare-saved" : "update-saved";
+  return busy === `${prefix}:${fileName}`;
+}
+
 export function DevCloudBackupPage() {
   const { session, isLoading } = useSession();
   const allowedUser = !isLoading && isSuperAdmin(session);
   const [state, setState] = React.useState<ListResponse | null>(null);
   const [scope, setScope] =
     React.useState<DevCloudBackupScope>("all-r2");
-  const [restoreMode, setRestoreMode] =
-    React.useState<DevCloudBackupRestoreMode>("merge");
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [inspection, setInspection] = React.useState<InspectResponse | null>(
     null,
   );
   const [created, setCreated] = React.useState<DevCloudBackupSummary | null>(
     null,
   );
-  const [restoreResult, setRestoreResult] =
-    React.useState<DevCloudBackupRestoreResult | null>(null);
   const [diff, setDiff] = React.useState<DevCloudBackupDiffReport | null>(null);
   const [updatedZip, setUpdatedZip] =
     React.useState<DevCloudBackupUpdateResult | null>(null);
-  const [confirmationText, setConfirmationText] = React.useState("");
+  const [operationStatus, setOperationStatus] =
+    React.useState<BackupOperationStatus | null>(null);
   const [busy, setBusy] = React.useState("");
   const [error, setError] = React.useState("");
   const [notice, setNotice] = React.useState("");
@@ -125,6 +152,35 @@ export function DevCloudBackupPage() {
   React.useEffect(() => {
     void load();
   }, [load]);
+
+  const startOperation = React.useCallback(
+    (kind: BackupOperationKind, fileName: string, message: string) => {
+      setOperationStatus({
+        kind,
+        fileName,
+        phase: "running",
+        message,
+        startedAt: new Date().toISOString(),
+      });
+    },
+    [],
+  );
+
+  const finishOperation = React.useCallback(
+    (phase: "done" | "failed", message: string) => {
+      setOperationStatus((current) =>
+        current
+          ? {
+              ...current,
+              phase,
+              message,
+              finishedAt: new Date().toISOString(),
+            }
+          : current,
+      );
+    },
+    [],
+  );
 
   const createBackup = async () => {
     if (!authHeaders) return;
@@ -178,98 +234,18 @@ export function DevCloudBackupPage() {
     }
   };
 
-  const inspectSelected = async (nextMode = restoreMode) => {
-    if (!authHeaders || !selectedFile) return;
-    setBusy("inspect");
-    setError("");
-    setInspection(null);
-    setDiff(null);
-    setUpdatedZip(null);
-    setRestoreResult(null);
-    setConfirmationText("");
-    try {
-      const form = new FormData();
-      form.set("file", selectedFile);
-      form.set("mode", nextMode);
-      setInspection(
-        await asolApi.postForm<InspectResponse>(
-          DEV_CLOUD_BACKUP_API.inspect,
-          form,
-          { headers: authHeaders },
-        ),
-      );
-    } catch (inspectError) {
-      setError(
-        inspectError instanceof Error
-          ? inspectError.message
-          : "تعذر فحص ملف النسخة",
-      );
-    } finally {
-      setBusy("");
-    }
-  };
-
-  const compareSelected = async () => {
-    if (!authHeaders || !selectedFile) return;
-    setBusy("compare");
-    setError("");
-    setNotice("");
-    setDiff(null);
-    try {
-      const form = new FormData();
-      form.set("file", selectedFile);
-      setDiff(
-        await asolApi.postForm<DevCloudBackupDiffReport>(
-          DEV_CLOUD_BACKUP_API.compare,
-          form,
-          { headers: authHeaders },
-        ),
-      );
-    } catch (compareError) {
-      setError(
-        compareError instanceof Error
-          ? compareError.message
-          : "تعذر مقارنة النسخة بالسحابة",
-      );
-    } finally {
-      setBusy("");
-    }
-  };
-
-  const updateSelectedFromCloud = async () => {
-    if (!authHeaders || !selectedFile) return;
-    setBusy("update");
-    setError("");
-    setNotice("");
-    setUpdatedZip(null);
-    try {
-      const form = new FormData();
-      form.set("file", selectedFile);
-      const result = await asolApi.postForm<DevCloudBackupUpdateResult>(
-        DEV_CLOUD_BACKUP_API.updateFromCloud,
-        form,
-        { headers: authHeaders },
-      );
-      setUpdatedZip(result);
-      setDiff(result.diff);
-      setNotice("تم إنشاء zip محدث من Turso وR2 مع تقرير الفروقات داخل reports/cloud-diff.json.");
-      await load();
-    } catch (updateError) {
-      setError(
-        updateError instanceof Error
-          ? updateError.message
-          : "تعذر تحديث ملف النسخة من السحابة",
-      );
-    } finally {
-      setBusy("");
-    }
-  };
-
   const updateSavedBackup = async (fileName: string) => {
     if (!authHeaders) return;
     setBusy(`update-saved:${fileName}`);
     setError("");
     setNotice("");
+    setInspection(null);
+    setUpdatedZip(null);
+    startOperation(
+      "update",
+      fileName,
+      `جاري تحديث ${fileName} من Turso وR2 وإنشاء ملف zip محدث...`,
+    );
     try {
       const result = await asolApi.post<DevCloudBackupUpdateResult>(
         DEV_CLOUD_BACKUP_API.updateSaved,
@@ -278,14 +254,93 @@ export function DevCloudBackupPage() {
       );
       setUpdatedZip(result);
       setDiff(result.diff);
-      setNotice(`تم إنشاء نسخة محدثة من ${fileName}.`);
+      const message = `تم تحديث ${fileName} وإنشاء ${result.fileName}: ${result.tableCount} جدول، ${result.rowCount} سجل، ${result.r2ObjectCount} صورة R2.`;
+      setNotice(message);
+      finishOperation("done", message);
       await load();
     } catch (updateError) {
-      setError(
+      const message =
         updateError instanceof Error
           ? updateError.message
-          : "تعذر تحديث النسخة المحفوظة",
+          : "تعذر تحديث النسخة المحفوظة";
+      setError(message);
+      finishOperation("failed", message);
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const inspectSavedBackup = async (fileName: string) => {
+    if (!authHeaders) return;
+    setBusy(`inspect-saved:${fileName}`);
+    setError("");
+    setNotice("");
+    setInspection(null);
+    setDiff(null);
+    setUpdatedZip(null);
+    startOperation(
+      "inspect",
+      fileName,
+      `جاري فحص ${fileName} وقراءة manifest ومحتويات zip...`,
+    );
+    try {
+      const result = await asolApi.post<InspectResponse>(
+        DEV_CLOUD_BACKUP_API.inspectSaved,
+        { fileName },
+        { headers: authHeaders, suppressErrorLog: true },
       );
+      setInspection(result);
+      const rowCount = result.preview.databases.reduce((sum, item) => sum + item.rowCount, 0);
+      const tableCount = result.preview.databases.reduce((sum, item) => sum + item.tableCount, 0);
+      const warningCount = result.preview.warnings.length + result.inspect.warnings.length;
+      const message = `تم فحص ${fileName}: ${result.preview.databases.length} قاعدة، ${tableCount} جدول، ${rowCount} سجل، ${result.preview.r2ObjectCount} صورة R2، ${warningCount} تحذير.`;
+      setNotice(message);
+      finishOperation("done", message);
+    } catch (inspectError) {
+      const message =
+        inspectError instanceof Error
+          ? inspectError.message
+          : "تعذر فحص النسخة المحفوظة";
+      setError(message);
+      finishOperation("failed", message);
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const compareSavedBackup = async (fileName: string) => {
+    if (!authHeaders) return;
+    setBusy(`compare-saved:${fileName}`);
+    setError("");
+    setNotice("");
+    setDiff(null);
+    setInspection(null);
+    setUpdatedZip(null);
+    startOperation(
+      "compare",
+      fileName,
+      `جاري مقارنة ${fileName} مع أحدث بيانات Turso وR2...`,
+    );
+    try {
+      const result = await asolApi.post<DevCloudBackupDiffReport>(
+        DEV_CLOUD_BACKUP_API.compareSaved,
+        { fileName },
+        { headers: authHeaders, suppressErrorLog: true },
+      );
+      setDiff(result);
+      const message =
+        result.status === "matched"
+          ? `تمت مقارنة ${fileName}: النسخة متطابقة مع السحابة، ${result.summary.cloudRows} سجل و${result.summary.cloudR2Objects} صورة R2.`
+          : `تمت مقارنة ${fileName}: توجد فروقات في ${result.summary.changedTables} جدول و${result.summary.changedR2Objects} صورة R2.`;
+      setNotice(message);
+      finishOperation("done", message);
+    } catch (compareError) {
+      const message =
+        compareError instanceof Error
+          ? compareError.message
+          : "تعذر مقارنة النسخة المحفوظة";
+      setError(message);
+      finishOperation("failed", message);
     } finally {
       setBusy("");
     }
@@ -319,35 +374,6 @@ export function DevCloudBackupPage() {
     }
   };
 
-  const restoreSelected = async () => {
-    if (!authHeaders || !selectedFile || !inspection) return;
-    setBusy("restore");
-    setError("");
-    setNotice("");
-    try {
-      const form = new FormData();
-      form.set("file", selectedFile);
-      form.set("mode", restoreMode);
-      form.set("confirmationText", confirmationText);
-      const result = await asolApi.postForm<DevCloudBackupRestoreResult>(
-        DEV_CLOUD_BACKUP_API.restore,
-        form,
-        { headers: authHeaders },
-      );
-      setRestoreResult(result);
-      setNotice("تم استرجاع النسخة إلى Turso وR2.");
-      await load();
-    } catch (restoreError) {
-      setError(
-        restoreError instanceof Error
-          ? restoreError.message
-          : "تعذر استرجاع النسخة",
-      );
-    } finally {
-      setBusy("");
-    }
-  };
-
   if (isLoading) {
     return <main className="p-4 text-sm text-on-surface-variant">جاري التحميل...</main>;
   }
@@ -364,6 +390,10 @@ export function DevCloudBackupPage() {
 
   const devAllowed = state?.environment.allowed ?? false;
   const preview = inspection?.preview;
+  const savedOperationBusy =
+    busy.startsWith("inspect-saved:") ||
+    busy.startsWith("compare-saved:") ||
+    busy.startsWith("update-saved:");
 
   return (
     <main className="mx-auto w-full max-w-7xl space-y-4 p-4 pb-24" dir="rtl">
@@ -374,8 +404,7 @@ export function DevCloudBackupPage() {
             نسخ سحابة التطوير
           </h1>
           <p className="mt-1 text-sm text-on-surface-variant">
-            نسخ واسترجاع Turso وCloudflare R2 من بيئة التطوير فقط، مع ملفات zip
-            قابلة للفحص والتعديل.
+            إنشاء وفحص ومقارنة وتحديث نسخ Turso وCloudflare R2 من بيئة التطوير فقط. كل العمليات تعمل على النسخ المحفوظة المنشأة من النظام.
           </p>
         </div>
         <Button type="button" variant="outline" onClick={() => void load()} disabled={busy === "load"}>
@@ -406,6 +435,38 @@ export function DevCloudBackupPage() {
       {notice ? (
         <section className="rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700">
           {notice}
+        </section>
+      ) : null}
+      {operationStatus ? (
+        <section
+          className={`rounded-md border p-3 text-sm ${
+            operationStatus.phase === "failed"
+              ? "border-red-200 bg-red-50 text-red-700"
+              : operationStatus.phase === "done"
+                ? "border-green-200 bg-green-50 text-green-700"
+                : "border-blue-200 bg-blue-50 text-blue-800"
+          }`}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2 font-semibold">
+              {operationStatus.phase === "running" ? (
+                <RefreshCw className="h-4 w-4 animate-spin" />
+              ) : (
+                <FileArchive className="h-4 w-4" />
+              )}
+              <span>{backupOperationTitle(operationStatus.kind)}</span>
+            </div>
+            <div className="text-xs opacity-80">
+              {formatOperationTime(operationStatus.startedAt)}
+              {operationStatus.finishedAt
+                ? ` - ${formatOperationTime(operationStatus.finishedAt)}`
+                : ""}
+            </div>
+          </div>
+          <div className="mt-2 break-all" dir="ltr">
+            {operationStatus.fileName}
+          </div>
+          <div className="mt-2">{operationStatus.message}</div>
         </section>
       ) : null}
 
@@ -451,66 +512,14 @@ export function DevCloudBackupPage() {
 
         <div className="rounded-md border bg-surface p-4">
           <div className="flex items-center gap-2 font-semibold">
-            <Upload className="h-5 w-5" />
-            فحص واسترجاع zip معدل
+            <GitCompareArrows className="h-5 w-5" />
+            نتائج أوامر النسخ
           </div>
-          <div className="mt-4 grid gap-3">
-            <Input
-              type="file"
-              accept=".zip,application/zip"
-              disabled={!devAllowed || busy === "inspect" || busy === "restore"}
-              onChange={(event) => {
-                setSelectedFile(event.target.files?.[0] ?? null);
-                setInspection(null);
-                setDiff(null);
-                setUpdatedZip(null);
-                setRestoreResult(null);
-                setConfirmationText("");
-              }}
-            />
-            <select
-              value={restoreMode}
-              onChange={(event) => {
-                const next = event.target.value as DevCloudBackupRestoreMode;
-                setRestoreMode(next);
-                if (selectedFile) void inspectSelected(next);
-              }}
-              className="h-10 rounded-md border bg-background px-3 text-sm"
-              disabled={!devAllowed}
-            >
-              <option value="merge">دمج آمن: إضافة وتحديث فقط</option>
-              <option value="replace">استبدال كامل حسب محتوى النسخة</option>
-            </select>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={!devAllowed || !selectedFile || busy === "inspect"}
-              onClick={() => void inspectSelected()}
-            >
-              <ArchiveRestore className="h-4 w-4" />
-              فحص النسخة
-            </Button>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <Button
-                type="button"
-                variant="outline"
-                disabled={!devAllowed || !selectedFile || busy === "compare"}
-                onClick={() => void compareSelected()}
-              >
-                <GitCompareArrows className="h-4 w-4" />
-                {busy === "compare" ? "جاري المقارنة" : "مقارنة بالسحابة"}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={!devAllowed || !selectedFile || busy === "update"}
-                onClick={() => void updateSelectedFromCloud()}
-              >
-                <CloudDownload className="h-4 w-4" />
-                {busy === "update" ? "جاري التحديث" : "تحديث zip من السحابة"}
-              </Button>
+          {!diff && !updatedZip && !preview ? (
+            <div className="mt-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
+              استخدم أزرار فحص أو مقارنة أو تحديث من قائمة النسخ المحفوظة. لا توجد أي عملية يدوية أو رفع ملف من هذه الصفحة.
             </div>
-          </div>
+          ) : null}
           {diff ? (
             <div className="mt-4 space-y-3 rounded-md border bg-surface p-3 text-sm">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -592,42 +601,6 @@ export function DevCloudBackupPage() {
                   ))}
                 </div>
               ) : null}
-              <div className="space-y-2">
-                <div className="text-sm">
-                  اكتب عبارة التأكيد:
-                  <span className="ms-2 select-all rounded bg-muted px-2 py-1 font-semibold" dir="ltr">
-                    {preview.confirmationText}
-                  </span>
-                </div>
-                <Input
-                  value={confirmationText}
-                  onChange={(event) => setConfirmationText(event.target.value)}
-                  dir="ltr"
-                  autoComplete="off"
-                />
-                <Button
-                  type="button"
-                  variant={restoreMode === "replace" ? "destructive" : "default"}
-                  disabled={
-                    !devAllowed ||
-                    busy === "restore" ||
-                    confirmationText !== preview.confirmationText
-                  }
-                  onClick={() => void restoreSelected()}
-                >
-                  <ArchiveRestore className="h-4 w-4" />
-                  {busy === "restore" ? "جاري الاسترجاع" : "استرجاع النسخة"}
-                </Button>
-              </div>
-            </div>
-          ) : null}
-          {restoreResult ? (
-            <div className="mt-4 grid gap-2 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700">
-              <Detail label="قواعد مسترجعة" value={String(restoreResult.restoredDatabases)} />
-              <Detail label="جداول" value={String(restoreResult.restoredTables)} />
-              <Detail label="سجلات" value={String(restoreResult.restoredRows)} />
-              <Detail label="صور مرفوعة" value={String(restoreResult.uploadedR2Objects)} />
-              <Detail label="صور محذوفة" value={String(restoreResult.deletedR2Objects)} />
             </div>
           ) : null}
         </div>
@@ -639,53 +612,100 @@ export function DevCloudBackupPage() {
           النسخ المحفوظة محليًا
         </div>
         <div className="divide-y">
-          {(state?.backups ?? []).map((backup) => (
-            <div
-              key={backup.fileName}
-              className="grid gap-3 p-3 text-sm md:grid-cols-[1fr_auto]"
-            >
-              <div className="min-w-0">
-                <div className="break-all font-medium" dir="ltr">
-                  {backup.fileName}
+          {(state?.backups ?? []).map((backup) => {
+            const inspectBusy = operationBusyFor(busy, "inspect", backup.fileName);
+            const compareBusy = operationBusyFor(busy, "compare", backup.fileName);
+            const updateBusy = operationBusyFor(busy, "update", backup.fileName);
+            const thisBackupOperation =
+              operationStatus?.fileName === backup.fileName ? operationStatus : null;
+            const commandDisabled = !devAllowed || savedOperationBusy;
+
+            return (
+              <div
+                key={backup.fileName}
+                className="grid gap-3 p-3 text-sm md:grid-cols-[1fr_auto]"
+              >
+                <div className="min-w-0">
+                  <div className="break-all font-medium" dir="ltr">
+                    {backup.fileName}
+                  </div>
+                  <div className="mt-1 text-xs text-on-surface-variant">
+                    {dateText(backup.modifiedAt)}، {sizeText(backup.sizeBytes)}
+                  </div>
+                  {thisBackupOperation ? (
+                    <div
+                      className={`mt-2 rounded-md border px-2 py-1 text-xs ${
+                        thisBackupOperation.phase === "failed"
+                          ? "border-red-200 bg-red-50 text-red-700"
+                          : thisBackupOperation.phase === "done"
+                            ? "border-green-200 bg-green-50 text-green-700"
+                            : "border-blue-200 bg-blue-50 text-blue-800"
+                      }`}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        {thisBackupOperation.phase === "running" ? (
+                          <RefreshCw className="h-3 w-3 animate-spin" />
+                        ) : null}
+                        {thisBackupOperation.message}
+                      </span>
+                    </div>
+                  ) : null}
                 </div>
-                <div className="mt-1 text-xs text-on-surface-variant">
-                  {dateText(backup.modifiedAt)}، {sizeText(backup.sizeBytes)}
+                <div className="flex flex-wrap gap-2 md:justify-end">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={!devAllowed || busy === `download:${backup.fileName}`}
+                    onClick={() => void downloadBackup(backup.fileName)}
+                  >
+                    <Download className="h-4 w-4" />
+                    تنزيل
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={commandDisabled}
+                    onClick={() => void inspectSavedBackup(backup.fileName)}
+                  >
+                    <ArchiveRestore className="h-4 w-4" />
+                    {inspectBusy ? "جاري فحص هذا الملف" : "فحص"}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={commandDisabled}
+                    onClick={() => void compareSavedBackup(backup.fileName)}
+                  >
+                    <GitCompareArrows className="h-4 w-4" />
+                    {compareBusy ? "جاري مقارنة هذا الملف" : "مقارنة"}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={commandDisabled}
+                    onClick={() => void updateSavedBackup(backup.fileName)}
+                  >
+                    <RefreshCw className={updateBusy ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
+                    {updateBusy ? "جاري تحديث هذا الملف" : "تحديث"}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    disabled={!devAllowed || busy === `delete:${backup.fileName}` || savedOperationBusy}
+                    onClick={() => void deleteSavedBackup(backup.fileName)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    {busy === `delete:${backup.fileName}` ? "جاري الحذف" : "حذف"}
+                  </Button>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 md:justify-end">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  disabled={!devAllowed || busy === `download:${backup.fileName}`}
-                  onClick={() => void downloadBackup(backup.fileName)}
-                >
-                  <Download className="h-4 w-4" />
-                  تنزيل
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  disabled={!devAllowed || busy === `update-saved:${backup.fileName}`}
-                  onClick={() => void updateSavedBackup(backup.fileName)}
-                >
-                  <RefreshCw className="h-4 w-4" />
-                  {busy === `update-saved:${backup.fileName}` ? "جاري التحديث" : "تحديث"}
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="destructive"
-                  disabled={!devAllowed || busy === `delete:${backup.fileName}`}
-                  onClick={() => void deleteSavedBackup(backup.fileName)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                  {busy === `delete:${backup.fileName}` ? "جاري الحذف" : "حذف"}
-                </Button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
           {state?.backups.length === 0 ? (
             <div className="p-6 text-center text-sm text-on-surface-variant">
               لا توجد نسخ محفوظة بعد.

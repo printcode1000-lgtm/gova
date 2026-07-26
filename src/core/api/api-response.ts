@@ -118,8 +118,8 @@ export function mapServiceError(error: unknown): NextResponse {
     'dataHealthOrderPurgeSelectionChanged',
     'dataHealthOrderPurgeIncomplete',
     'devCloudBackupDevelopmentOnly',
-    'devCloudBackupFileInvalid',
     'devCloudBackupFileRequired',
+    'devCloudBackupFileInvalid',
     'devCloudBackupNotFound',
     'devCloudBackupManifestMissing',
     'devCloudBackupManifestUnsupported',
@@ -137,6 +137,7 @@ export function mapServiceError(error: unknown): NextResponse {
   ];
   const quietKnownCodes = new Set([
     'dataHealthNoOrdersToPurge',
+    'devCloudBackupFileRequired',
   ]);
 
   if (knownCodes.includes(message)) {

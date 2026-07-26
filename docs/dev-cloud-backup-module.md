@@ -9,6 +9,11 @@ backing up and restoring the cloud development state:
 
 The UI is available at `/super-admin/dev-cloud-backup`.
 
+The page is command-driven only. Operators do not upload or edit zip files
+manually. Backups are created by the module, stored under `.backups/dev-cloud/`,
+then inspected, compared, updated, downloaded, or deleted through buttons on the
+saved backup row.
+
 The backup policy is strict: if any configured Turso source is missing or R2
 cannot be listed/downloaded, the operation fails and no partial zip is treated as
 a successful backup.
@@ -79,7 +84,8 @@ the current local `.env` credentials.
 
 ## Compare And Update
 
-The page can compare an uploaded zip with the current Turso/R2 state.
+The page compares saved zip files with the current Turso/R2 state. Manual zip
+upload and manual restore flows are disabled.
 
 Comparison uses SHA-256 hashes of every exported table JSON file and every R2
 object body, so it detects content changes, not only count changes.
@@ -87,9 +93,9 @@ object body, so it detects content changes, not only count changes.
 The “update zip from cloud” action creates a new full `all-r2` backup from the
 current cloud state and adds:
 
-- `reports/cloud-diff.json`: differences between the uploaded zip and current
+- `reports/cloud-diff.json`: differences between the saved zip and current
   cloud state.
-- `reports/original-manifest.json`: the manifest from the uploaded zip.
+- `reports/original-manifest.json`: the manifest from the saved zip that was updated.
 
 This is the safe way to evolve an edited or old backup file without losing a
 record of what changed.

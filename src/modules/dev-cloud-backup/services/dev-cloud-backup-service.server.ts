@@ -358,6 +358,23 @@ export class DevCloudBackupService {
     return this.updateZipFromCloud(new Uint8Array(backup.body));
   }
 
+  async compareSavedBackupWithCloud(fileName: string): Promise<DevCloudBackupDiffReport> {
+    const backup = await this.readBackup(fileName);
+    return this.compareWithCloud(new Uint8Array(backup.body));
+  }
+
+  async inspectSavedBackup(fileName: string): Promise<{
+    inspect: DevCloudBackupInspectResult;
+    preview: DevCloudBackupRestorePreview;
+  }> {
+    const backup = await this.readBackup(fileName);
+    const buffer = new Uint8Array(backup.body);
+    return {
+      inspect: this.inspectZip(buffer),
+      preview: this.previewRestore(buffer, "merge"),
+    };
+  }
+
   async deleteSavedBackup(fileName: string): Promise<{ deleted: true; fileName: string }> {
     assertDevCloudBackupAllowed();
     const safeName = safeZipName(fileName);
