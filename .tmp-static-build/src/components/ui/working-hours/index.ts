@@ -1,1 +1,0 @@
-export { WorkingHoursCard } from "./WorkingHoursCard";
