@@ -4,6 +4,8 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { advertisementsDbClient } from "@/core/database/advertisements-db-client";
+import { dbClient } from "@/core/database/db-client";
+import type { IDatabaseClient } from "@/core/database/database-client.interface";
 import { productDbClient } from "@/core/database/product-db-client";
 import { profileDbClient } from "@/core/database/profile-db-client";
 import { getAllStorageProfiles } from "@/core/storage/profiles/storage-profile-loader.server";
@@ -32,6 +34,7 @@ export interface StorageInventory {
 
 type Row = Record<string, unknown>;
 type StorageObjectEntry = { path: string; updatedAt?: string };
+type GenericDatabaseClient = Pick<IDatabaseClient, "execute">;
 
 const IMAGE_EXTENSION_PATTERN = /\.(?:avif|gif|jpe?g|png|webp)$/i;
 const IGNORED_STORAGE_FILE_NAMES = new Set([
@@ -43,6 +46,10 @@ const IGNORED_STORAGE_FILE_NAMES = new Set([
 
 function text(value: unknown): string {
   return String(value ?? "").trim();
+}
+
+function quoteIdentifier(value: string): string {
+  return `"${value.replace(/"/g, '""')}"`;
 }
 
 function parseJson(value: unknown): unknown {
@@ -145,6 +152,40 @@ function referenceFromObjectPath(
   };
 }
 
+function isTextColumnType(value: unknown): boolean {
+  const type = text(value).toUpperCase();
+  return (
+    !type ||
+    type.includes("TEXT") ||
+    type.includes("CHAR") ||
+    type.includes("CLOB") ||
+    type.includes("JSON") ||
+    type.includes("VARCHAR")
+  );
+}
+
+function addReferenceIfMissing(
+  references: StorageReference[],
+  seenReferences: Set<string>,
+  referenceItem: StorageReference | null,
+) {
+  if (!referenceItem) return;
+  const key = `${referenceItem.objectPath}:${referenceItem.database}:${referenceItem.table}:${referenceItem.recordId}`;
+  if (seenReferences.has(key)) return;
+  seenReferences.add(key);
+  references.push(referenceItem);
+}
+
+function textContainsObjectPath(value: unknown, objectPath: string): boolean {
+  const normalized = normalizeObjectPath(text(value));
+  if (!normalized) return false;
+  return (
+    normalized.includes(objectPath) ||
+    normalized.includes(encodeURI(objectPath)) ||
+    normalized.includes(objectPath.replace(/^images\//, "sync_data/sync_file/images/"))
+  );
+}
+
 export class StorageInventoryRepository {
   async collect(): Promise<StorageInventory> {
     const ordersDb = createMarketplaceOrdersDb();
@@ -168,10 +209,13 @@ export class StorageInventoryRepository {
       ]);
 
     const references: StorageReference[] = [];
+    const seenReferences = new Set<string>();
     for (const row of profileImages) {
       const imageKey = text(row.image_key);
       if (!imageKey) continue;
-      references.push(
+      addReferenceIfMissing(
+        references,
+        seenReferences,
         reference({
           storageProfileId:
             text(row.image_type) === "avatar" ? "avatar" : "cover",
@@ -191,7 +235,9 @@ export class StorageInventoryRepository {
         "product-default",
       ).values()) {
         if (imageKey.startsWith("pharmacy-fixed/")) continue;
-        references.push(
+        addReferenceIfMissing(
+          references,
+          seenReferences,
           reference({
             storageProfileId,
             imageKey,
@@ -207,7 +253,9 @@ export class StorageInventoryRepository {
     for (const row of pharmacyOverrides) {
       const imageKey = text(row.image_key);
       if (imageKey && !imageKey.startsWith("pharmacy-fixed/")) {
-        references.push(
+        addReferenceIfMissing(
+          references,
+          seenReferences,
           reference({
             storageProfileId: "product-default",
             imageKey,
@@ -226,13 +274,15 @@ export class StorageInventoryRepository {
         recordId: text(row.id),
         ownerUid: text(row.uid),
       });
-      if (urlReference) references.push(urlReference);
+      addReferenceIfMissing(references, seenReferences, urlReference);
     }
 
     for (const row of customImages) {
       const imageKey = text(row.image_key);
       if (imageKey) {
-        references.push(
+        addReferenceIfMissing(
+          references,
+          seenReferences,
           reference({
             storageProfileId: text(row.storage_profile_id) || "spicialOrder",
             imageKey,
@@ -251,7 +301,7 @@ export class StorageInventoryRepository {
         recordId: text(row.id),
         ownerUid: text(row.uploaded_by),
       });
-      if (urlReference) references.push(urlReference);
+      addReferenceIfMissing(references, seenReferences, urlReference);
     }
 
     for (const row of heroRows) {
@@ -259,7 +309,9 @@ export class StorageInventoryRepository {
         parseJson(row.config_json),
         "home-hero-slider",
       ).values()) {
-        references.push(
+        addReferenceIfMissing(
+          references,
+          seenReferences,
           reference({
             storageProfileId,
             imageKey,
@@ -271,7 +323,6 @@ export class StorageInventoryRepository {
         );
       }
     }
-
     const objects = new Map<string, StorageObjectEntry>();
     const warnings: string[] = [];
     for (const profile of getAllStorageProfiles().filter(
@@ -311,7 +362,13 @@ export class StorageInventoryRepository {
       (asset) => !existsSync(path.join(process.cwd(), "public", asset.path)),
     );
     const objectPaths = new Set(objects.keys());
-
+    const dynamicReferences = await this.collectDynamicReferences(
+      [...objectPaths],
+      warnings,
+    );
+    for (const item of dynamicReferences) {
+      addReferenceIfMissing(references, seenReferences, item);
+    }
     return {
       references,
       objectPaths,
@@ -327,6 +384,81 @@ export class StorageInventoryRepository {
         pharmacyAssets.length,
       warnings,
     };
+  }
+
+  private async collectDynamicReferences(
+    objectPaths: string[],
+    warnings: string[],
+  ): Promise<StorageReference[]> {
+    if (objectPaths.length === 0) return [];
+    const databases: Array<{
+      name: string;
+      client: GenericDatabaseClient;
+    }> = [
+      { name: "users", client: dbClient },
+      { name: "profile", client: profileDbClient },
+      { name: "product", client: productDbClient },
+      { name: "advertisements", client: advertisementsDbClient },
+      { name: "marketplace_orders", client: createMarketplaceOrdersDb() },
+    ];
+    const references: StorageReference[] = [];
+    for (const database of databases) {
+      try {
+        const tables = await database.client.execute(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'",
+        );
+        for (const tableRow of tables) {
+          const table = text(tableRow.name);
+          if (!table) continue;
+          const columns = await database.client.execute(
+            `PRAGMA table_info(${quoteIdentifier(table)})`,
+          );
+          const idColumn = columns.some((column) => text(column.name) === "id")
+            ? "id"
+            : "";
+          const textColumns = columns
+            .filter((column) => isTextColumnType(column.type))
+            .map((column) => text(column.name))
+            .filter(Boolean);
+          if (textColumns.length === 0) continue;
+          const where = textColumns
+            .map((column) => `${quoteIdentifier(column)} LIKE '%images/%'`)
+            .join(" OR ");
+          const selectedColumns = [
+            idColumn
+              ? `${quoteIdentifier(idColumn)} AS __record_id`
+              : "rowid AS __record_id",
+            ...textColumns.map((column) => quoteIdentifier(column)),
+          ].join(", ");
+          const rows = await database.client.execute(
+            `SELECT ${selectedColumns} FROM ${quoteIdentifier(table)} WHERE ${where} LIMIT 5000`,
+          );
+          for (const row of rows) {
+            for (const column of textColumns) {
+              const value = row[column];
+              for (const objectPath of objectPaths) {
+                if (!textContainsObjectPath(value, objectPath)) continue;
+                const dynamicReference = referenceFromObjectPath({
+                  objectPath,
+                  database: database.name,
+                  table,
+                  recordId: text(row.__record_id),
+                  ownerUid: "",
+                });
+                if (dynamicReference) references.push(dynamicReference);
+              }
+            }
+          }
+        }
+      } catch (error) {
+        warnings.push(
+          `${database.name}: dynamic reference scan failed: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
+      }
+    }
+    return references;
   }
 }
 

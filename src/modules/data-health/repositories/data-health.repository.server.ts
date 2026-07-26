@@ -30,6 +30,11 @@ import { storageInventoryRepository } from "./storage-inventory.repository.serve
 
 type Row = Record<string, unknown>;
 
+export interface QuarantinedOriginalCleanupResult {
+  deletedRecords: number;
+  storageObjects: Array<{ storageProfileId: string; imageKey: string }>;
+}
+
 interface ScanContext {
   users: Set<string>;
   products: Set<string>;
@@ -411,10 +416,17 @@ export class DataHealthRepository {
   async getQuarantineEntry(id: string): Promise<Row | undefined> {
     await this.ensureMetadata();
     const rows = (await profileDbClient.execute(
-      "SELECT id, fingerprint, resource_type, storage_profile_id, resource_key, eligible_for_deletion_at, released_at, deleted_at FROM data_health_quarantine WHERE id=? LIMIT 1",
+      "SELECT id, fingerprint, resource_type, storage_profile_id, resource_key, database_name, table_name, record_id, eligible_for_deletion_at, released_at, deleted_at FROM data_health_quarantine WHERE id=? LIMIT 1",
       [id],
     )) as Row[];
     return rows[0];
+  }
+
+  async listActiveQuarantineEntries(): Promise<Row[]> {
+    await this.ensureMetadata();
+    return (await profileDbClient.execute(
+      "SELECT id, fingerprint, resource_type, storage_profile_id, resource_key, database_name, table_name, record_id, eligible_for_deletion_at, released_at, deleted_at FROM data_health_quarantine WHERE COALESCE(released_at, '')='' AND COALESCE(deleted_at, '')='' ORDER BY quarantined_at ASC",
+    )) as Row[];
   }
 
   async markQuarantineDeleted(id: string, deletedAt: string) {
@@ -422,6 +434,15 @@ export class DataHealthRepository {
     const rows = (await profileDbClient.execute(
       "UPDATE data_health_quarantine SET deleted_at=?, last_verified_at=? WHERE id=? AND COALESCE(released_at, '')='' AND COALESCE(deleted_at, '')='' RETURNING id",
       [deletedAt, deletedAt, id],
+    )) as Row[];
+    if (!resultChanged(rows)) throw new Error("quarantineChangedOrMissing");
+  }
+
+  async deleteQuarantineEntry(id: string) {
+    await this.ensureMetadata();
+    const rows = (await profileDbClient.execute(
+      "DELETE FROM data_health_quarantine WHERE id=? RETURNING id",
+      [id],
     )) as Row[];
     if (!resultChanged(rows)) throw new Error("quarantineChangedOrMissing");
   }
@@ -457,6 +478,130 @@ export class DataHealthRepository {
       reason: `cleared=${cleared}`,
     });
     return cleared;
+  }
+
+  async resetQuarantinedFindings(updatedAt: string) {
+    await this.ensureMetadata();
+    await profileDbClient.execute(
+      "UPDATE data_health_findings SET state='recurring', last_seen_at=? WHERE state='quarantined'",
+      [updatedAt],
+    );
+  }
+
+  async getQuarantinedOriginalCleanupTarget(
+    entry: Row,
+  ): Promise<QuarantinedOriginalCleanupResult> {
+    const database = text(entry.database_name);
+    const table = text(entry.table_name);
+    const id = text(entry.record_id);
+    const storageObjects: Array<{ storageProfileId: string; imageKey: string }> =
+      [];
+    if (!database || !table || !id) {
+      return { deletedRecords: 0, storageObjects };
+    }
+
+    if (database === "profile" && table === "profile_images") {
+      const rows = (await profileDbClient.execute(
+        "SELECT image_key, image_type FROM profile_images WHERE id=? LIMIT 1",
+        [id],
+      )) as Row[];
+      const row = rows[0];
+      const imageKey = text(row?.image_key);
+      if (imageKey) {
+        storageObjects.push({
+          storageProfileId:
+            text(row?.image_type) === "avatar" ? "avatar" : "cover",
+          imageKey,
+        });
+      }
+      return { deletedRecords: rows.length, storageObjects };
+    }
+
+    if (database === "profile" && table === "user_profiles") {
+      const rows = (await profileDbClient.execute(
+        "SELECT uid FROM user_profiles WHERE uid=? LIMIT 1",
+        [id],
+      )) as Row[];
+      return { deletedRecords: rows.length, storageObjects };
+    }
+
+    if (
+      database === "product" &&
+      table === "pharmacy_profile_product_overrides"
+    ) {
+      const rows = (await productDbClient.execute(
+        "SELECT image_key FROM pharmacy_profile_product_overrides WHERE id=? LIMIT 1",
+        [id],
+      )) as Row[];
+      const imageKey = text(rows[0]?.image_key);
+      if (imageKey && !imageKey.startsWith("pharmacy-fixed/")) {
+        storageObjects.push({ storageProfileId: "product-default", imageKey });
+      }
+      return { deletedRecords: rows.length, storageObjects };
+    }
+
+    if (database === "marketplace_orders" && table === "custom_request_images") {
+      const ordersDb = createMarketplaceOrdersDb();
+      const rows = (await ordersDb.execute(
+        "SELECT storage_profile_id, image_key FROM custom_request_images WHERE id=? LIMIT 1",
+        [id],
+      )) as Row[];
+      const imageKey = text(rows[0]?.image_key);
+      if (imageKey) {
+        storageObjects.push({
+          storageProfileId: text(rows[0]?.storage_profile_id) || "spicialOrder",
+          imageKey,
+        });
+      }
+      return { deletedRecords: rows.length, storageObjects };
+    }
+
+    throw new Error(`unsupportedQuarantineRecord:${database}.${table}`);
+  }
+
+  async deleteQuarantinedOriginalRecord(entry: Row): Promise<number> {
+    const database = text(entry.database_name);
+    const table = text(entry.table_name);
+    const id = text(entry.record_id);
+    if (!database || !table || !id) return 0;
+
+    if (database === "profile" && table === "profile_images") {
+      const deleted = (await profileDbClient.execute(
+        "DELETE FROM profile_images WHERE id=? RETURNING id",
+        [id],
+      )) as Row[];
+      return deleted.length;
+    }
+
+    if (database === "profile" && table === "user_profiles") {
+      const deleted = (await profileDbClient.execute(
+        "DELETE FROM user_profiles WHERE uid=? RETURNING uid AS id",
+        [id],
+      )) as Row[];
+      return deleted.length;
+    }
+
+    if (
+      database === "product" &&
+      table === "pharmacy_profile_product_overrides"
+    ) {
+      const deleted = (await productDbClient.execute(
+        "DELETE FROM pharmacy_profile_product_overrides WHERE id=? RETURNING id",
+        [id],
+      )) as Row[];
+      return deleted.length;
+    }
+
+    if (database === "marketplace_orders" && table === "custom_request_images") {
+      const ordersDb = createMarketplaceOrdersDb();
+      const deleted = (await ordersDb.execute(
+        "DELETE FROM custom_request_images WHERE id=? RETURNING id",
+        [id],
+      )) as Row[];
+      return deleted.length;
+    }
+
+    throw new Error(`unsupportedQuarantineRecord:${database}.${table}`);
   }
 
   async addManualAudit(input: {

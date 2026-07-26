@@ -98,15 +98,76 @@ export class DataHealthService {
       throw new Error("dataHealthCleanupConfirmationRequired");
     }
     const now = new Date().toISOString();
-    const cleared = await dataHealthRepository.clearActiveQuarantine({
-      adminUid: input.adminUid,
-      clearedAt: now,
-    });
+    const entries = await dataHealthRepository.listActiveQuarantineEntries();
+    let cleared = 0;
+    let deletedStorageObjects = 0;
+    let deletedRecords = 0;
+    const skipped: Array<{ id: string; reason: string }> = [];
+
+    for (const entry of entries) {
+      const id = text(entry.id);
+      const fingerprint = text(entry.fingerprint);
+      const resourceType = text(entry.resource_type);
+      const recordId = text(entry.record_id) || text(entry.resource_key) || id;
+      try {
+        if (resourceType === "image") {
+          await imageStorageOrchestrator.deleteByKey(
+            text(entry.storage_profile_id),
+            text(entry.resource_key),
+          );
+          deletedStorageObjects += 1;
+        } else if (resourceType === "record") {
+          const target =
+            await dataHealthRepository.getQuarantinedOriginalCleanupTarget(
+              entry,
+            );
+          for (const storageObject of target.storageObjects) {
+            await imageStorageOrchestrator.deleteByKey(
+              storageObject.storageProfileId,
+              storageObject.imageKey,
+            );
+            deletedStorageObjects += 1;
+          }
+          deletedRecords +=
+            await dataHealthRepository.deleteQuarantinedOriginalRecord(entry);
+        } else {
+          throw new Error(`unsupportedQuarantineResource:${resourceType}`);
+        }
+
+        await dataHealthRepository.deleteQuarantineEntry(id);
+        await dataHealthRepository.addManualAudit({
+          adminUid: input.adminUid,
+          action:
+            resourceType === "image"
+              ? "delete-storage-object"
+              : "delete-quarantined-record",
+          recordId,
+          fingerprint,
+          status: "cleaned",
+          reason: `storage=${deletedStorageObjects}, records=${deletedRecords}`,
+        });
+        cleared += 1;
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        skipped.push({ id, reason });
+        await dataHealthRepository.addManualAudit({
+          adminUid: input.adminUid,
+          action: "clear-quarantine",
+          recordId,
+          fingerprint,
+          status: "skipped",
+          reason,
+        });
+      }
+    }
+    if (cleared > 0) {
+      await dataHealthRepository.resetQuarantinedFindings(now);
+    }
     await persistentSystemLogService.add({
       level: "normal",
       source: "server",
       consoleMethod: "server.info",
-      message: `Data health quarantine cleared: cleared=${cleared}`,
+      message: `Data health quarantine cleared: cleared=${cleared}, storage=${deletedStorageObjects}, records=${deletedRecords}, skipped=${skipped.length}`,
       page: "/super-admin/data-health",
       platform: "server",
       feature: "DataHealth",
@@ -115,7 +176,13 @@ export class DataHealthService {
       requestMethod: "POST",
       uid: input.adminUid,
     });
-    return { clearedAt: now, cleared };
+    return {
+      clearedAt: now,
+      cleared,
+      deletedStorageObjects,
+      deletedRecords,
+      skipped,
+    };
   }
 
   async clearRunHistory(input: { adminUid: string; confirm: string }) {

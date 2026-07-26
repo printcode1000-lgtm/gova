@@ -527,21 +527,33 @@ export function DataHealthPage() {
     if (
       !authHeaders ||
       !window.confirm(
-        "سيتم مسح كل عناصر الحجر من القائمة بدون حذف ملفات التخزين أو السجلات الأصلية. هل تريد المتابعة؟",
+        "سيتم حذف كل عناصر الحجر مع ملفات التخزين والسجلات الأصلية المرتبطة بها. العناصر التي يفشل حذفها ستبقى في الحجر. هل تريد المتابعة؟",
       )
     ) {
       return;
     }
     setError("");
     try {
-      const result = await asolApi.post<{ cleared: number; clearedAt: string }>(
+      const result = await asolApi.post<{
+        cleared: number;
+        clearedAt: string;
+        deletedStorageObjects: number;
+        deletedRecords: number;
+        skipped: Array<{ id: string; reason: string }>;
+      }>(
         DATA_HEALTH_API.quarantineClear,
         { confirm: "CLEAR_DATA_HEALTH_QUARANTINE" },
         { headers: authHeaders },
       );
       await loadHistory();
       await scan();
-      setNotice(`تم مسح ${result.cleared} عنصر من الحجر.`);
+      setNotice(
+        `تم تنظيف ${result.cleared} عنصر من الحجر، وحذف ${result.deletedStorageObjects} ملف تخزين و${result.deletedRecords} سجل أصلي${
+          result.skipped.length > 0
+            ? `، وتعذر تنظيف ${result.skipped.length} عنصر`
+            : ""
+        }.`,
+      );
     } catch (clearError) {
       setError(
         clearError instanceof Error
