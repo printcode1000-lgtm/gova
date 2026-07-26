@@ -37,6 +37,20 @@ Thumbs.db
 # OTA signing material
 .ota/
 
+# Fastlane / store publishing credentials and generated packages
+.bundle/
+bin/
+fastlane/.env*
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+fastlane/play-store-key.json
+fastlane/app-store-connect-api-key*.p8
+android/app/*.jks
+android/app/*.keystore
+ios/build/fastlane/
+
 # Firebase server credentials and generated Android client config
 assets/google-play/*firebase-adminsdk*.json
 assets/google-play/google-services.json

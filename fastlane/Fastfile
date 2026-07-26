@@ -1,0 +1,70 @@
+opt_out_usage
+
+default_platform(:android)
+
+APP_ROOT = File.expand_path("..", __dir__)
+
+def run_command(command)
+  UI.command(command)
+  sh(command)
+end
+
+def npm_run(script)
+  run_command("npm run #{script}")
+end
+
+def capacitor_sync(platform)
+  npm_run("build:static")
+  npm_run("android:push:sync-assets") if platform == :android
+  run_command("npx cap sync #{platform}")
+end
+
+platform :android do
+  desc "Build Android release bundle without uploading"
+  lane :build do
+    capacitor_sync(:android)
+    gradle(
+      project_dir: "android",
+      task: "bundle",
+      build_type: "Release"
+    )
+  end
+
+  desc "Upload Android bundle to Google Play internal track"
+  lane :internal do
+    build
+    upload_to_play_store(
+      track: ENV.fetch("GOOGLE_PLAY_TRACK", "internal"),
+      json_key: ENV.fetch("GOOGLE_PLAY_JSON_KEY_FILE"),
+      package_name: ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"),
+      aab: "android/app/build/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+end
+
+platform :ios do
+  desc "Build iOS app archive without uploading. Requires macOS/Xcode."
+  lane :build do
+    capacitor_sync(:ios)
+    build_app(
+      project: "ios/App/App.xcodeproj",
+      scheme: "App",
+      export_method: ENV.fetch("ASOL_IOS_EXPORT_METHOD", "app-store"),
+      output_directory: "ios/build/fastlane",
+      output_name: "ASOL.ipa"
+    )
+  end
+
+  desc "Upload iOS build to TestFlight. Requires macOS/Xcode and App Store Connect auth."
+  lane :beta do
+    build
+    upload_to_testflight(
+      ipa: "ios/build/fastlane/ASOL.ipa",
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

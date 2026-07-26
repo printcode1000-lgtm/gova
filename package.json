@@ -60,6 +60,11 @@
     "cap:build": "npx tsx scripts/cap-build.ts",
     "cap:build:resume": "npx tsx scripts/cap-build.ts --resume",
     "cap:build:local": "npx tsx scripts/cap-build-local.ts",
+    "fastlane": "node scripts/fastlane-runner.js",
+    "fastlane:android:build": "node scripts/fastlane-runner.js android build",
+    "fastlane:android:internal": "node scripts/fastlane-runner.js android internal",
+    "fastlane:ios:build": "node scripts/fastlane-runner.js ios build",
+    "fastlane:ios:testflight": "node scripts/fastlane-runner.js ios beta",
     "cap:verify-defaults": "npx tsx scripts/audit-capacitor-defaults.ts && npm run android:backup:validate && npm run android:r8:validate",
     "cap:run:clean:android": "npx tsx scripts/cap-run-clean.ts android",
     "cap:run:clean:ios": "npx tsx scripts/cap-run-clean.ts ios"
