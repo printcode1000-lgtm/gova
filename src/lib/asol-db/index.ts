@@ -193,6 +193,7 @@ export interface AuthData {
 
 const AUTH_KEY = 'auth';
 const CURRENT_SESSION_KEY = 'current';
+const SUPER_ADMIN_ORIGINAL_SESSION_KEY = 'superAdminOriginalSession';
 
 export async function asolDbGetAuth(): Promise<AuthData> {
   return (await asolDbGet<AuthData>(ASOL_DB_STORES.AUTH, AUTH_KEY)) ?? {};
@@ -221,6 +222,18 @@ export async function asolDbSetCurrentSession<T>(session: T): Promise<void> {
 
 export async function asolDbDeleteCurrentSession(): Promise<void> {
   return asolDbDelete(ASOL_DB_STORES.AUTH, CURRENT_SESSION_KEY);
+}
+
+export async function asolDbGetSuperAdminOriginalSession<T>(): Promise<T | null> {
+  return asolDbGet<T>(ASOL_DB_STORES.AUTH, SUPER_ADMIN_ORIGINAL_SESSION_KEY);
+}
+
+export async function asolDbSetSuperAdminOriginalSession<T>(session: T): Promise<void> {
+  return asolDbSet<T>(ASOL_DB_STORES.AUTH, SUPER_ADMIN_ORIGINAL_SESSION_KEY, session);
+}
+
+export async function asolDbDeleteSuperAdminOriginalSession(): Promise<void> {
+  return asolDbDelete(ASOL_DB_STORES.AUTH, SUPER_ADMIN_ORIGINAL_SESSION_KEY);
 }
 
 export function createAsolDbZustandStorage(storeName: AsolDbStoreName): StateStorage {

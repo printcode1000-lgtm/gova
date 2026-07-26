@@ -66,6 +66,12 @@ const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
     'seller_discounts',
     'seller_discount_usages',
     'system_logs',
+    'data_health_runs',
+    'data_health_findings',
+    'data_health_cleanup_plans',
+    'data_health_cleanup_audit',
+    'data_health_quarantine',
+    'data_health_locks',
   ]),
   advertisements: new Set(['hero_slider', 'featured_marquee', 'trending_ribbon']),
   product: new Set([

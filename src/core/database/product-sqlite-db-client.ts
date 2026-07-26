@@ -29,7 +29,8 @@ export class ProductSQLiteDatabaseClient extends AbstractDatabaseClient {
     db.pragma("foreign_keys = ON");
     try {
       const statement = db.prepare(sql);
-      return sql.trim().toUpperCase().startsWith("SELECT")
+      return sql.trim().toUpperCase().startsWith("SELECT") ||
+        /\bRETURNING\b/i.test(sql)
         ? statement.all(...params)
         : [statement.run(...params)];
     } finally {

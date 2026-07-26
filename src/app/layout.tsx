@@ -20,6 +20,7 @@ import { VoiceInputController } from "@/components/voice-input/VoiceInputControl
 import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
 import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
 import { SuperAdminErrorFloatingButton } from "@/features/system-logs/SuperAdminErrorFloatingButton";
+import { SuperAdminImpersonationBanner } from "@/features/super-admin/components/SuperAdminImpersonationBanner";
 import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
 import {
@@ -88,6 +89,7 @@ export default function RootLayout({
                         <OtaUpdatePrompt />
                         <MobileBackButtonController />
                         <VoiceInputController />
+                        <SuperAdminImpersonationBanner />
                         <SuperAdminErrorFloatingButton />
                         <DeveloperBadge />
                       </OtaUpdateProvider>

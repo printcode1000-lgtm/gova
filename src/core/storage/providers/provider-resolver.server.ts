@@ -24,6 +24,10 @@ export class GoogleDriveProvider implements IStorageProvider {
   resolvePublicUrl(_objectPath: string): string {
     throw new Error('GoogleDriveProvider is not implemented');
   }
+
+  list(_prefix: string): Promise<string[]> {
+    return Promise.reject(new Error('GoogleDriveProvider is not implemented'));
+  }
 }
 
 export const googleDriveProvider = new GoogleDriveProvider();

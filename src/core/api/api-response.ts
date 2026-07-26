@@ -96,6 +96,19 @@ export function mapServiceError(error: unknown): NextResponse {
     'sessionTokenInvalid',
     'sessionTokenExpired',
     'specialtyChatLoginRefreshRequired',
+    'invalidImpersonationTarget',
+    'dataHealthCleanupConfirmationRequired',
+    'dataHealthSelectionRequired',
+    'dataHealthSelectionTooLarge',
+    'dataHealthSelectionChanged',
+    'dataHealthPlanInvalid',
+    'dataHealthPlanConsumed',
+    'dataHealthPlanExpired',
+    'dataHealthEnvironmentChanged',
+    'dataHealthCleanupBusy',
+    'dataHealthQuarantineInvalid',
+    'dataHealthQuarantineNotEligible',
+    'dataHealthQuarantineNoLongerOrphan',
   ];
 
   if (knownCodes.includes(message)) {

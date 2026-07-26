@@ -69,7 +69,11 @@ export async function deleteR2Object(key: string): Promise<void> {
   );
 }
 
-export async function listR2Objects(prefix = '', maxKeys = 1000): Promise<R2ListResult> {
+export async function listR2Objects(
+  prefix = '',
+  maxKeys = 1000,
+  continuationToken?: string,
+): Promise<R2ListResult> {
   const { bucketName } = getR2S3Credentials();
   const client = createR2S3Client();
 
@@ -78,12 +82,14 @@ export async function listR2Objects(prefix = '', maxKeys = 1000): Promise<R2List
       Bucket: bucketName,
       Prefix: prefix || undefined,
       MaxKeys: maxKeys,
+      ContinuationToken: continuationToken,
     })
   );
 
   return {
     keys: (result.Contents ?? []).map((item) => item.Key).filter((key): key is string => Boolean(key)),
     isTruncated: result.IsTruncated ?? false,
+    continuationToken: result.NextContinuationToken,
   };
 }
 

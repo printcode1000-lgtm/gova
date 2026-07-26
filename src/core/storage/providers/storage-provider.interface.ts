@@ -12,6 +12,9 @@ export interface IStorageProvider {
 
   /** Resolves a public or servable URL for display. */
   resolvePublicUrl(objectPath: string): string;
+
+  /** Lists all object paths under a prefix for integrity checks. */
+  list(prefix: string): Promise<string[]>;
 }
 
 export interface ResolvedUploadContext {

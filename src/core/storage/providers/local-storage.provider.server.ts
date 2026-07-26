@@ -1,6 +1,12 @@
 import 'server-only';
 
-import { mkdirSync, writeFileSync, unlinkSync, existsSync } from 'fs';
+import {
+  mkdirSync,
+  writeFileSync,
+  unlinkSync,
+  existsSync,
+  readdirSync,
+} from 'fs';
 import path from 'path';
 import { publicEnv } from '@/core/config/public-env';
 import { assertPathUnderImagesRoot } from '../storage/image-path';
@@ -37,6 +43,24 @@ export class LocalStorageProvider implements IStorageProvider {
     const base = publicEnv.basePath.replace(/\/$/, '');
     const normalized = objectPath.replace(/^\/+/, '');
     return `${base}/sync_data/sync_file/${normalized}`;
+  }
+
+  list(prefix: string): Promise<string[]> {
+    assertPathUnderImagesRoot(prefix);
+    const root = path.join(LOCAL_SYNC_ROOT, prefix);
+    if (!existsSync(root)) return Promise.resolve([]);
+    const keys: string[] = [];
+    const walk = (directory: string) => {
+      for (const entry of readdirSync(directory, { withFileTypes: true })) {
+        const fullPath = path.join(directory, entry.name);
+        if (entry.isDirectory()) walk(fullPath);
+        else if (entry.isFile()) {
+          keys.push(path.relative(LOCAL_SYNC_ROOT, fullPath).replace(/\\/g, '/'));
+        }
+      }
+    };
+    walk(root);
+    return Promise.resolve(keys);
   }
 }
 

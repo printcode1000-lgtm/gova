@@ -29,4 +29,5 @@ export interface R2UploadResult {
 export interface R2ListResult {
   keys: string[];
   isTruncated: boolean;
+  continuationToken?: string;
 }

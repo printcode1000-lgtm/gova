@@ -1,7 +1,11 @@
 import 'server-only';
 
 import { getR2Config } from '@/core/config/server-env.values';
-import { uploadR2Object, deleteR2Object } from '@/core/provisioning/r2-s3-client';
+import {
+  uploadR2Object,
+  deleteR2Object,
+  listR2Objects,
+} from '@/core/provisioning/r2-s3-client';
 import { buildR2PublicObjectUrl } from '@/core/provisioning/r2-cors-policy';
 import type { IStorageProvider } from './storage-provider.interface';
 
@@ -21,6 +25,19 @@ export class CloudflareR2Provider implements IStorageProvider {
   resolvePublicUrl(objectPath: string): string {
     const { publicUrl } = getR2Config();
     return buildR2PublicObjectUrl(publicUrl, objectPath);
+  }
+
+  async list(prefix: string): Promise<string[]> {
+    const keys: string[] = [];
+    let continuationToken: string | undefined;
+    do {
+      const page = await listR2Objects(prefix, 1000, continuationToken);
+      keys.push(...page.keys);
+      continuationToken = page.isTruncated
+        ? page.continuationToken
+        : undefined;
+    } while (continuationToken);
+    return keys;
   }
 }
 

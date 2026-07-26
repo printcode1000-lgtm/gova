@@ -87,6 +87,13 @@ export class ImageStorageOrchestrator {
     return getStorageProfileById(profileId);
   }
 
+  async listByProfile(storageProfileId: string): Promise<string[]> {
+    const profile = getStorageProfileById(storageProfileId);
+    assertStorageProfileEnabled(profile);
+    const provider = resolveStorageProvider(profile.provider);
+    return provider.list(profile.folder);
+  }
+
   private resolveImageKey(
     profile: StorageProfile,
     generatedKey: string,

@@ -29,7 +29,8 @@ export class AdvertisementsSQLiteDatabaseClient extends AbstractDatabaseClient {
     const db = new Database(ADVERTISEMENTS_SQLITE_DB_PATH);
     try {
       const statement = db.prepare(sql);
-      return sql.trim().toUpperCase().startsWith("SELECT")
+      return sql.trim().toUpperCase().startsWith("SELECT") ||
+        /\bRETURNING\b/i.test(sql)
         ? statement.all(...params)
         : [statement.run(...params)];
     } finally {

@@ -31,7 +31,10 @@ export class SQLiteDatabaseClient extends AbstractDatabaseClient {
 
     try {
       const stmt = db.prepare(sql);
-      if (sql.trim().toUpperCase().startsWith('SELECT')) {
+      if (
+        sql.trim().toUpperCase().startsWith('SELECT') ||
+        /\bRETURNING\b/i.test(sql)
+      ) {
         return stmt.all(...params);
       }
 

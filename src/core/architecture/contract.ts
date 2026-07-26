@@ -60,6 +60,7 @@ export const ALLOWED_DB_DRIVER_FILES_PATTERN = [
   /^src\/core\/provisioning\//,
   /^src\/core\/storage\/providers\//,
   /^src\/modules\/marketplace-orders\/db\//,
+  /^src\/modules\/data-health\/repositories\/schema-comparison\.repository\.server\.ts$/,
 ];
 
 export const ALLOWED_SQL_FILES_PATTERN = [
@@ -70,6 +71,8 @@ export const ALLOWED_SQL_FILES_PATTERN = [
   // This bounded module owns a dedicated database and keeps its SQL inside its
   // internal persistence/orchestration boundary. It never leaks SQL to UI code.
   /^src\/modules\/marketplace-orders\/(db|repositories|services|audit|tests)\//,
+  /^src\/modules\/data-health\/repositories\//,
+  /^src\/modules\/data-health\/db\//,
 ];
 
 /** Client-side IndexedDB utilities — not the server Database Client layer. */
@@ -115,6 +118,7 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/core/api/')) return 'api-shared';
   if (p.startsWith('src/core/config/')) return 'configuration';
   if (p.startsWith('src/modules/marketplace-orders/db/')) return 'database-client';
+  if (p.startsWith('src/modules/data-health/services/')) return 'server-services';
   if (p.startsWith('src/modules/marketplace-orders/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/marketplace-orders/api/') || p.startsWith('src/modules/marketplace-orders/services/')) return 'server-services';
   if (p.startsWith('src/core/provisioning/')) return 'provisioning';
@@ -266,6 +270,13 @@ export function getForbiddenImportViolation(
     return null;
   }
   if (importerLayer === 'operations' && target === 'repository') return null;
+  if (
+    importerLayer === 'repository' &&
+    target === 'server-services' &&
+    importPath.includes('/core/storage/storage/')
+  ) {
+    return null;
+  }
   if (importerLayer === 'business-api' && target === 'server-services') return null;
   if (importerLayer === 'hooks' && target === 'client-services') return null;
   if (importerLayer === 'ui' && target === 'hooks') return null;

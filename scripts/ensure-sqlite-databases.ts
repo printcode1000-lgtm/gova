@@ -9,6 +9,7 @@ import {
   PROFILE_SQLITE_DB_PATH,
   SQLITE_DIRECTORY,
 } from "../src/core/database/environment";
+import { DATA_HEALTH_METADATA_STATEMENTS } from "../src/modules/data-health/db/metadata-schema";
 
 function ensureDatabase(dbPath: string, createScript: string): void {
   if (existsSync(dbPath)) {
@@ -35,3 +36,12 @@ ensureDatabase(
   MARKETPLACE_ORDERS_SQLITE_DB_PATH,
   "scripts/create-marketplace-orders-sqlite-db.ts",
 );
+
+const BetterSqlite = require("better-sqlite3") as typeof import("better-sqlite3");
+const profileDatabase = new BetterSqlite(PROFILE_SQLITE_DB_PATH);
+try {
+  profileDatabase.exec(DATA_HEALTH_METADATA_STATEMENTS.join(";\n"));
+  console.log("✅ Data health metadata schema ready in profile.db");
+} finally {
+  profileDatabase.close();
+}
