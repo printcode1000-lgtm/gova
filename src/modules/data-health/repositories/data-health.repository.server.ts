@@ -380,6 +380,25 @@ export class DataHealthRepository {
     };
   }
 
+  async clearRunHistory(): Promise<{ runs: number; findings: number }> {
+    await this.ensureMetadata();
+    const findingRows = (await profileDbClient.execute(
+      "DELETE FROM data_health_findings RETURNING id",
+    )) as Row[];
+    const runRows = (await profileDbClient.execute(
+      "DELETE FROM data_health_runs RETURNING id",
+    )) as Row[];
+    return { runs: runRows.length, findings: findingRows.length };
+  }
+
+  async clearCleanupAudit(): Promise<{ audit: number }> {
+    await this.ensureMetadata();
+    const rows = (await profileDbClient.execute(
+      "DELETE FROM data_health_cleanup_audit RETURNING id",
+    )) as Row[];
+    return { audit: rows.length };
+  }
+
   async getQuarantineEntry(id: string): Promise<Row | undefined> {
     await this.ensureMetadata();
     const rows = (await profileDbClient.execute(

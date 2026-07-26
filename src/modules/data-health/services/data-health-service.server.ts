@@ -118,6 +118,50 @@ export class DataHealthService {
     return { clearedAt: now, cleared };
   }
 
+  async clearRunHistory(input: { adminUid: string; confirm: string }) {
+    if (input.confirm !== "CLEAR_DATA_HEALTH_RUN_HISTORY") {
+      throw new Error("dataHealthCleanupConfirmationRequired");
+    }
+    const clearedAt = new Date().toISOString();
+    const result = await dataHealthRepository.clearRunHistory();
+    await persistentSystemLogService.add({
+      level: "normal",
+      source: "server",
+      consoleMethod: "server.info",
+      message: `Data health run history cleared: runs=${result.runs}, findings=${result.findings}`,
+      page: "/super-admin/data-health",
+      platform: "server",
+      feature: "DataHealth",
+      operation: "clear-run-history",
+      routeName: "/api/super-admin/data-health/history/runs/clear",
+      requestMethod: "POST",
+      uid: input.adminUid,
+    });
+    return { clearedAt, ...result };
+  }
+
+  async clearCleanupAudit(input: { adminUid: string; confirm: string }) {
+    if (input.confirm !== "CLEAR_DATA_HEALTH_CLEANUP_AUDIT") {
+      throw new Error("dataHealthCleanupConfirmationRequired");
+    }
+    const clearedAt = new Date().toISOString();
+    const result = await dataHealthRepository.clearCleanupAudit();
+    await persistentSystemLogService.add({
+      level: "normal",
+      source: "server",
+      consoleMethod: "server.info",
+      message: `Data health cleanup audit cleared: audit=${result.audit}`,
+      page: "/super-admin/data-health",
+      platform: "server",
+      feature: "DataHealth",
+      operation: "clear-cleanup-audit",
+      routeName: "/api/super-admin/data-health/history/audit/clear",
+      requestMethod: "POST",
+      uid: input.adminUid,
+    });
+    return { clearedAt, ...result };
+  }
+
   async createCleanupPlan(input: {
     adminUid: string;
     issueIds: string[];

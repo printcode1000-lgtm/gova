@@ -5,6 +5,8 @@ export const DATA_HEALTH_API = {
   plan: "/api/super-admin/data-health/plan",
   cleanup: "/api/super-admin/data-health/cleanup",
   history: "/api/super-admin/data-health/history",
+  historyRunsClear: "/api/super-admin/data-health/history/runs/clear",
+  historyAuditClear: "/api/super-admin/data-health/history/audit/clear",
   schema: "/api/super-admin/data-health/schema",
   orderPurgePlan: "/api/super-admin/data-health/orders/plan",
   orderPurge: "/api/super-admin/data-health/orders/purge",

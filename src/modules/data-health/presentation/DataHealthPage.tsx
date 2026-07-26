@@ -551,6 +551,69 @@ export function DataHealthPage() {
     }
   };
 
+  const clearRunHistory = async () => {
+    if (
+      !authHeaders ||
+      !window.confirm(
+        "سيتم حذف سجل الفحوصات ونتائج الفحوصات السابقة فقط. لن يتم حذف الحجر أو البيانات الفعلية. هل تريد المتابعة؟",
+      )
+    ) {
+      return;
+    }
+    setError("");
+    try {
+      const result = await asolApi.post<{
+        runs: number;
+        findings: number;
+        clearedAt: string;
+      }>(
+        DATA_HEALTH_API.historyRunsClear,
+        { confirm: "CLEAR_DATA_HEALTH_RUN_HISTORY" },
+        { headers: authHeaders },
+      );
+      await loadHistory();
+      setNotice(
+        `تم حذف ${result.runs} فحص و${result.findings} نتيجة فحص من السجل.`,
+      );
+    } catch (clearError) {
+      setError(
+        clearError instanceof Error
+          ? clearError.message
+          : "تعذر حذف سجل الفحوصات",
+      );
+    }
+  };
+
+  const clearCleanupAudit = async () => {
+    if (
+      !authHeaders ||
+      !window.confirm(
+        "سيتم حذف سجلات تدقيق التنظيف فقط. لن يتم حذف الحجر أو البيانات الفعلية. هل تريد المتابعة؟",
+      )
+    ) {
+      return;
+    }
+    setError("");
+    try {
+      const result = await asolApi.post<{
+        audit: number;
+        clearedAt: string;
+      }>(
+        DATA_HEALTH_API.historyAuditClear,
+        { confirm: "CLEAR_DATA_HEALTH_CLEANUP_AUDIT" },
+        { headers: authHeaders },
+      );
+      await loadHistory();
+      setNotice(`تم حذف ${result.audit} سجل من تدقيق التنظيف.`);
+    } catch (clearError) {
+      setError(
+        clearError instanceof Error
+          ? clearError.message
+          : "تعذر حذف سجلات تدقيق التنظيف",
+      );
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
@@ -916,6 +979,8 @@ export function DataHealthPage() {
             onRelease={releaseQuarantine}
             onDeleteImage={deleteQuarantinedImage}
             onClearQuarantine={clearQuarantine}
+            onClearRunHistory={clearRunHistory}
+            onClearCleanupAudit={clearCleanupAudit}
           />
         </TabsContent>
       </Tabs>
@@ -1297,18 +1362,34 @@ function HistoryPanel({
   onRelease,
   onDeleteImage,
   onClearQuarantine,
+  onClearRunHistory,
+  onClearCleanupAudit,
 }: {
   history: HistoryResponse;
   onRelease: (id: string) => Promise<void>;
   onDeleteImage: (id: string) => Promise<void>;
   onClearQuarantine: () => Promise<void>;
+  onClearRunHistory: () => Promise<void>;
+  onClearCleanupAudit: () => Promise<void>;
 }) {
   return (
     <div className="grid gap-4 xl:grid-cols-2">
       <section className="overflow-hidden rounded-md border bg-surface">
-        <div className="flex items-center gap-2 border-b p-3 font-semibold">
-          <History className="h-4 w-4" />
-          سجل الفحوصات
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div className="flex items-center gap-2 font-semibold">
+            <History className="h-4 w-4" />
+            سجل الفحوصات
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            disabled={history.runs.length === 0}
+            onClick={() => void onClearRunHistory()}
+          >
+            <Trash2 className="h-4 w-4" />
+            حذف السجل
+          </Button>
         </div>
         <div className="divide-y">
           {history.runs.map((run) => (
@@ -1336,9 +1417,21 @@ function HistoryPanel({
         </div>
       </section>
       <section className="overflow-hidden rounded-md border bg-surface">
-        <div className="flex items-center gap-2 border-b p-3 font-semibold">
-          <ShieldCheck className="h-4 w-4" />
-          تدقيق التنظيف
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div className="flex items-center gap-2 font-semibold">
+            <ShieldCheck className="h-4 w-4" />
+            تدقيق التنظيف
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            disabled={history.audit.length === 0}
+            onClick={() => void onClearCleanupAudit()}
+          >
+            <Trash2 className="h-4 w-4" />
+            حذف التدقيق
+          </Button>
         </div>
         <div className="divide-y">
           {history.audit.map((entry) => (
