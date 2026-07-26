@@ -46,6 +46,7 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/instrumentation.ts',
   'src/modules/marketplace-orders/db/config.ts',
   'src/modules/dev-cloud-backup/domain/development-guard.server.ts',
+  'src/modules/google-play-console/domain/development-guard.server.ts',
   'src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
 ]);
 
@@ -128,8 +129,10 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/modules/marketplace-orders/db/')) return 'database-client';
   if (p === 'src/modules/data-health/domain/execution-context.server.ts') return 'configuration';
   if (p === 'src/modules/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
+  if (p === 'src/modules/google-play-console/domain/development-guard.server.ts') return 'configuration';
   if (p.startsWith('src/modules/data-health/services/')) return 'server-services';
   if (p.startsWith('src/modules/dev-cloud-backup/services/')) return 'server-services';
+  if (p.startsWith('src/modules/google-play-console/services/')) return 'server-services';
   if (p.startsWith('src/modules/data-health/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/dev-cloud-backup/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/marketplace-orders/tests/')) return 'dev-tools';

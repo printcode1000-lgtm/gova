@@ -127,6 +127,8 @@ export function mapServiceError(error: unknown): NextResponse {
     'devCloudBackupTursoSourceMissing',
     'devCloudBackupRestoreConfirmationRequired',
     'devCloudBackupArchiveIncomplete',
+    'googlePlayConsoleDevelopmentOnly',
+    'googlePlayConsoleCredentialsMissing',
   ];
   const quietKnownCodes = new Set([
     'dataHealthNoOrdersToPurge',

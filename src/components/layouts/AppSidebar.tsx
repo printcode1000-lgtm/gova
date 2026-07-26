@@ -15,6 +15,7 @@ import {
   Settings,
   ShieldCheck,
   KeyRound,
+  ShoppingBag,
   Sliders,
   Sparkles,
   TrendingUp,
@@ -55,6 +56,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { publicEnv } from "@/core/config";
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -83,6 +85,11 @@ export const AppSidebar = React.memo(function AppSidebar({
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
+  const showLocalDevelopmentTools =
+    publicEnv.mode === "development" ||
+    (mounted &&
+      typeof window !== "undefined" &&
+      ["localhost", "127.0.0.1"].includes(window.location.hostname));
   const isProfilePage = pathname === "/profile";
   const [activeProfileMode, setActiveProfileMode] = useState<string | null>(null);
   const isProfilePreviewActive = activeProfileMode === "preview";
@@ -220,7 +227,8 @@ export const AppSidebar = React.memo(function AppSidebar({
 
     if (
       pathname.includes("/data-health") ||
-      pathname.includes("/dev-cloud-backup")
+      pathname.includes("/dev-cloud-backup") ||
+      pathname.includes("/google-play-console")
     ) {
       setSuperAdminGroupsOpen((current) => ({ ...current, data: true }));
       return;
@@ -329,6 +337,12 @@ export const AppSidebar = React.memo(function AppSidebar({
                     <DatabaseBackup className="h-4 w-4" />
                     نسخ سحابة التطوير
                   </Link>
+                  {showLocalDevelopmentTools ? (
+                    <Link href="/super-admin/google-play-console" onClick={onClose} className={itemClass}>
+                      <ShoppingBag className="h-4 w-4" />
+                      Google Play Console
+                    </Link>
+                  ) : null}
                 </div>
               )}
             </div>
@@ -462,6 +476,16 @@ export const AppSidebar = React.memo(function AppSidebar({
               <DatabaseBackup className="h-4 w-4" />
               نسخ سحابة التطوير
             </Link>
+            {showLocalDevelopmentTools ? (
+              <Link
+                href="/super-admin/google-play-console"
+                onClick={onClose}
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+              >
+                <ShoppingBag className="h-4 w-4" />
+                Google Play Console
+              </Link>
+            ) : null}
             <Link
               href="/super-admin/vapid"
               onClick={onClose}
@@ -485,6 +509,7 @@ export const AppSidebar = React.memo(function AppSidebar({
     );
   }, [
     showSuperAdmin,
+    showLocalDevelopmentTools,
     superAdminOpen,
     superAdminGroupsOpen,
     handleSuperAdminToggle,
