@@ -48,6 +48,19 @@ function diagnosticStack(method: ConsoleMethod, error?: Error) {
   return new Error(`Captured from console.${method}`).stack;
 }
 
+function shouldIgnoreConsoleEntry(method: ConsoleMethod, data: unknown[]) {
+  if (method !== "info") return false;
+  if (typeof data[0] !== "string") return false;
+  if (data[0] !== "[AsolOTA] OTA disabled") return false;
+  const details = data[1];
+  return (
+    details !== null &&
+    typeof details === "object" &&
+    "nativePlatform" in details &&
+    (details as { nativePlatform?: unknown }).nativePlatform === false
+  );
+}
+
 function page() {
   return `${window.location.pathname}${window.location.search}`;
 }
@@ -90,6 +103,7 @@ export function SystemLogCollector() {
     methods.forEach((method) => {
       console[method] = (...data: unknown[]) => {
         originals[method](...data);
+        if (shouldIgnoreConsoleEntry(method, data)) return;
         const error = data.find((item): item is Error => item instanceof Error);
         const level = levelFor(method);
         const entry = {

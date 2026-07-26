@@ -74,6 +74,12 @@ export const AppSidebar = React.memo(function AppSidebar({
   const pathname = usePathname();
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
+  const [superAdminGroupsOpen, setSuperAdminGroupsOpen] = useState({
+    content: true,
+    data: false,
+    notifications: false,
+    system: false,
+  });
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
@@ -189,9 +195,60 @@ export const AppSidebar = React.memo(function AppSidebar({
     setSuperAdminOpen((open) => !open);
   }, []);
 
+  const handleSuperAdminGroupToggle = useCallback(
+    (group: keyof typeof superAdminGroupsOpen) => {
+      setSuperAdminGroupsOpen((current) => ({
+        ...current,
+        [group]: !current[group],
+      }));
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (!pathname.startsWith("/super-admin")) return;
+    setSuperAdminOpen(true);
+
+    if (
+      pathname.includes("/hero-slider") ||
+      pathname.includes("/featured-marquee") ||
+      pathname.includes("/trending-ribbon")
+    ) {
+      setSuperAdminGroupsOpen((current) => ({ ...current, content: true }));
+      return;
+    }
+
+    if (
+      pathname.includes("/data-health") ||
+      pathname.includes("/dev-cloud-backup")
+    ) {
+      setSuperAdminGroupsOpen((current) => ({ ...current, data: true }));
+      return;
+    }
+
+    if (
+      pathname.includes("/notifications-broadcast") ||
+      pathname.includes("/vapid")
+    ) {
+      setSuperAdminGroupsOpen((current) => ({
+        ...current,
+        notifications: true,
+      }));
+      return;
+    }
+
+    setSuperAdminGroupsOpen((current) => ({ ...current, system: true }));
+  }, [pathname]);
+
   // Memoize super admin content
   const superAdminContent = useMemo(() => {
     if (!showSuperAdmin) return null;
+    const itemClass =
+      "flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary";
+    const groupButtonClass =
+      "flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold text-on-surface hover:bg-primary/10";
+    const groupPanelClass =
+      "ms-2 space-y-1 border-s border-outline-variant/40 ps-2";
     return (
       <div className="rounded-lg asol-surface-neutral">
         <button
@@ -210,7 +267,137 @@ export const AppSidebar = React.memo(function AppSidebar({
           />
         </button>
         {superAdminOpen && (
-          <div className="space-y-1 px-3 pb-3 pe-3 ps-11">
+          <>
+          <div className="space-y-2 px-3 pb-3 pe-3 ps-11">
+            <div className="rounded-md border border-outline-variant/30 bg-background/40">
+              <button
+                type="button"
+                onClick={() => handleSuperAdminGroupToggle("content")}
+                aria-expanded={superAdminGroupsOpen.content}
+                className={groupButtonClass}
+              >
+                <Sliders className="h-4 w-4 text-primary" />
+                المحتوى والعروض
+                <ChevronDown
+                  className={cn(
+                    "ms-auto h-4 w-4 transition-transform",
+                    superAdminGroupsOpen.content && "rotate-180",
+                  )}
+                />
+              </button>
+              {superAdminGroupsOpen.content && (
+                <div className={groupPanelClass}>
+                  <Link href="/super-admin/hero-slider" onClick={onClose} className={itemClass}>
+                    <Sliders className="h-4 w-4" />
+                    {t("sidebar.heroSlider")}
+                  </Link>
+                  <Link href="/super-admin/featured-marquee" onClick={onClose} className={itemClass}>
+                    <Sparkles className="h-4 w-4" />
+                    {t("sidebar.featuredMarquee")}
+                  </Link>
+                  <Link href="/super-admin/trending-ribbon" onClick={onClose} className={itemClass}>
+                    <TrendingUp className="h-4 w-4" />
+                    {t("sidebar.trendingRibbon")}
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            <div className="rounded-md border border-outline-variant/30 bg-background/40">
+              <button
+                type="button"
+                onClick={() => handleSuperAdminGroupToggle("data")}
+                aria-expanded={superAdminGroupsOpen.data}
+                className={groupButtonClass}
+              >
+                <DatabaseZap className="h-4 w-4 text-primary" />
+                البيانات والنسخ
+                <ChevronDown
+                  className={cn(
+                    "ms-auto h-4 w-4 transition-transform",
+                    superAdminGroupsOpen.data && "rotate-180",
+                  )}
+                />
+              </button>
+              {superAdminGroupsOpen.data && (
+                <div className={groupPanelClass}>
+                  <Link href="/super-admin/data-health" onClick={onClose} className={itemClass}>
+                    <DatabaseZap className="h-4 w-4" />
+                    فحص سلامة البيانات
+                  </Link>
+                  <Link href="/super-admin/dev-cloud-backup" onClick={onClose} className={itemClass}>
+                    <DatabaseBackup className="h-4 w-4" />
+                    نسخ سحابة التطوير
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            <div className="rounded-md border border-outline-variant/30 bg-background/40">
+              <button
+                type="button"
+                onClick={() => handleSuperAdminGroupToggle("notifications")}
+                aria-expanded={superAdminGroupsOpen.notifications}
+                className={groupButtonClass}
+              >
+                <Megaphone className="h-4 w-4 text-primary" />
+                الإشعارات
+                <ChevronDown
+                  className={cn(
+                    "ms-auto h-4 w-4 transition-transform",
+                    superAdminGroupsOpen.notifications && "rotate-180",
+                  )}
+                />
+              </button>
+              {superAdminGroupsOpen.notifications && (
+                <div className={groupPanelClass}>
+                  <Link href="/super-admin/notifications-broadcast" onClick={onClose} className={itemClass}>
+                    <Megaphone className="h-4 w-4" />
+                    إرسال إشعار جماعي
+                  </Link>
+                  <Link href="/super-admin/vapid" onClick={onClose} className={itemClass}>
+                    <KeyRound className="h-4 w-4" />
+                    إدارة VAPID
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            <div className="rounded-md border border-outline-variant/30 bg-background/40">
+              <button
+                type="button"
+                onClick={() => handleSuperAdminGroupToggle("system")}
+                aria-expanded={superAdminGroupsOpen.system}
+                className={groupButtonClass}
+              >
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                النظام والصلاحيات
+                <ChevronDown
+                  className={cn(
+                    "ms-auto h-4 w-4 transition-transform",
+                    superAdminGroupsOpen.system && "rotate-180",
+                  )}
+                />
+              </button>
+              {superAdminGroupsOpen.system && (
+                <div className={groupPanelClass}>
+                  <Link href="/super-admin/logs" onClick={onClose} className={itemClass}>
+                    <ScrollText className="h-4 w-4" />
+                    سجل النظام
+                  </Link>
+                  <Link href="/super-admin/users" onClick={onClose} className={itemClass}>
+                    <Users className="h-4 w-4" />
+                    بحث المستخدمين
+                  </Link>
+                  <Link href="/super-admin/ota-releases" onClick={onClose} className={itemClass}>
+                    <CloudDownload className="h-4 w-4" />
+                    {t("sidebar.otaReleases")}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="hidden">
             <Link
               href="/super-admin/hero-slider"
               onClick={onClose}
@@ -292,10 +479,19 @@ export const AppSidebar = React.memo(function AppSidebar({
               إرسال إشعار جماعي
             </Link>
           </div>
+          </>
         )}
       </div>
     );
-  }, [showSuperAdmin, superAdminOpen, handleSuperAdminToggle, t, onClose]);
+  }, [
+    showSuperAdmin,
+    superAdminOpen,
+    superAdminGroupsOpen,
+    handleSuperAdminToggle,
+    handleSuperAdminGroupToggle,
+    t,
+    onClose,
+  ]);
 
   if (!mounted) return null;
 
