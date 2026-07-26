@@ -31,6 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { asolApi } from "@/core/api";
+import { ApiError } from "@/core/api/api-error";
 import { publicEnv } from "@/core/config/public-env";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -346,11 +347,18 @@ export function DataHealthPage() {
       const next = await asolApi.post<DataHealthOrderPurgePlan>(
         DATA_HEALTH_API.orderPurgePlan,
         {},
-        { headers: authHeaders },
+        { headers: authHeaders, suppressErrorLog: true },
       );
       setOrderPurgePlan(next);
       setOrderPurgeConfirmation("");
     } catch (purgeError) {
+      if (
+        purgeError instanceof ApiError &&
+        purgeError.message === "dataHealthNoOrdersToPurge"
+      ) {
+        setNotice("لا توجد طلبات محفوظة حاليًا للحذف.");
+        return;
+      }
       setError(
         purgeError instanceof Error
           ? purgeError.message

@@ -128,9 +128,14 @@ export function mapServiceError(error: unknown): NextResponse {
     'devCloudBackupRestoreConfirmationRequired',
     'devCloudBackupArchiveIncomplete',
   ];
+  const quietKnownCodes = new Set([
+    'dataHealthNoOrdersToPurge',
+  ]);
 
   if (knownCodes.includes(message)) {
-    void logMappedServiceError(error, message, 400);
+    if (!quietKnownCodes.has(message)) {
+      void logMappedServiceError(error, message, 400);
+    }
     return apiError(message, 400);
   }
 
