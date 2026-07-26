@@ -38,6 +38,8 @@ interface ProductStyleSettings {
       cart: boolean;
       favorite: boolean;
       contact: boolean;
+      share?: boolean;
+      profile?: boolean;
       order: number;
     };
     mainData: {
@@ -174,6 +176,10 @@ function isValidSettings(value: unknown): value is ProductStyleSettings {
         typeof settings.components.order.cart === "boolean" &&
         typeof settings.components.order.favorite === "boolean" &&
         typeof settings.components.order.contact === "boolean" &&
+        (settings.components.order.share === undefined ||
+          typeof settings.components.order.share === "boolean") &&
+        (settings.components.order.profile === undefined ||
+          typeof settings.components.order.profile === "boolean") &&
         (settings.components.order.order === undefined ||
           (Number.isInteger(settings.components.order.order) &&
             settings.components.order.order >= 1)))) &&

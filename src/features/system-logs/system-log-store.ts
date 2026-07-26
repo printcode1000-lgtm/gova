@@ -29,10 +29,16 @@ let entries: SystemLogEntry[] = [];
 let nextId = 1;
 let captureEnabled = true;
 let collectorAuthorized = false;
+let notifyScheduled = false;
 const listeners = new Set<Listener>();
 
 function notify() {
-  listeners.forEach((listener) => listener());
+  if (notifyScheduled) return;
+  notifyScheduled = true;
+  queueMicrotask(() => {
+    notifyScheduled = false;
+    listeners.forEach((listener) => listener());
+  });
 }
 
 export function addSystemLog(

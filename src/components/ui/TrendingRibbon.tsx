@@ -206,6 +206,7 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
   };
 
   if (!hasItems) return null;
+  const displayLabel = label.includes(".") ? t(label) : label;
 
   return (
     <div
@@ -233,7 +234,7 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
           aria-hidden
         />
         <span className="text-xs font-bold text-on-error-container">
-          {t(label)}
+          {displayLabel}
         </span>
       </div>
 

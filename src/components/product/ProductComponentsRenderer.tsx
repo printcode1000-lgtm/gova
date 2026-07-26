@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import {
   createEmptyProductDetails,
@@ -187,6 +188,8 @@ export function ProductComponentsRenderer({
   productId = "",
   ownerUid = "",
   mainCategoryId = "",
+  shareAction = null,
+  profileAction = null,
 }: {
   mode: ProductMode;
   components: ProductStyleComponents;
@@ -195,6 +198,8 @@ export function ProductComponentsRenderer({
   productId?: string;
   ownerUid?: string;
   mainCategoryId?: string;
+  shareAction?: ReactNode;
+  profileAction?: ReactNode;
 }) {
   const visible = Object.entries(components)
     .filter(([, config]) => config.visible)
@@ -263,6 +268,8 @@ export function ProductComponentsRenderer({
 
         if (key === "order") {
           if (mode !== "view") return null;
+          const showShare = config.share !== false;
+          const showProfile = config.profile !== false;
           return (
             <ProductComponentFrame key={key} title={TITLES[key]}>
               <div className="flex flex-wrap gap-2">
@@ -284,6 +291,8 @@ export function ProductComponentsRenderer({
                     تواصل
                   </button>
                 ) : null}
+                {showShare ? shareAction : null}
+                {showProfile ? profileAction : null}
               </div>
             </ProductComponentFrame>
           );

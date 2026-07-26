@@ -3,9 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Copy } from "lucide-react";
+import { Copy, Share2, UserCircle } from "lucide-react";
 
 import { ApiError, asolApi } from "@/core/api";
+import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useTranslation } from "@/lib/i18n";
@@ -31,8 +32,14 @@ import {
   PHARMACY_SUBCATEGORY_ID,
 } from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
 
+const PRODUCT_SHARE_ORIGIN = "https://gova-swart.vercel.app/";
+
 interface ProductStyleFile {
   components: ProductStyleComponents;
+}
+
+function setQueryParam(params: URLSearchParams, key: string, value: string) {
+  if (value.trim()) params.set(key, value.trim());
 }
 
 export function ProductPageContent() {
@@ -62,10 +69,54 @@ export function ProductPageContent() {
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [shareStatus, setShareStatus] = React.useState("");
+  const shareStatusTimerRef = React.useRef<number | null>(null);
 
   const mainCategoryId = product?.mainCategoryId ?? initialMain;
   const subcategoryId = product?.subcategoryId ?? initialSub;
   const editable = mode !== "view";
+  const productShareUrl = React.useMemo(() => {
+    const id = product?.id || productId;
+    if (mode !== "view" || !id) return "";
+    const url = new URL("/product", PRODUCT_SHARE_ORIGIN);
+    url.searchParams.set("mode", "view");
+    url.searchParams.set("productId", id);
+    setQueryParam(url.searchParams, "mainCategoryId", mainCategoryId);
+    setQueryParam(url.searchParams, "subcategoryId", subcategoryId);
+    setQueryParam(
+      url.searchParams,
+      "pharmacyCategoryId",
+      details.pharmacySpecs.pharmacyCategoryId ||
+        details.pharmacyCatalog.categoryId ||
+        initialPharmacyCategory,
+    );
+    setQueryParam(
+      url.searchParams,
+      "pharmacySubcategoryId",
+      details.pharmacySpecs.pharmacySubcategoryId ||
+        details.pharmacyCatalog.subcategoryId ||
+        initialPharmacySubcategory,
+    );
+    setQueryParam(
+      url.searchParams,
+      "fixedProductId",
+      details.pharmacyCatalog.fixedProductId,
+    );
+    return url.toString();
+  }, [
+    details.pharmacyCatalog.categoryId,
+    details.pharmacyCatalog.fixedProductId,
+    details.pharmacyCatalog.subcategoryId,
+    details.pharmacySpecs.pharmacyCategoryId,
+    details.pharmacySpecs.pharmacySubcategoryId,
+    initialPharmacyCategory,
+    initialPharmacySubcategory,
+    mainCategoryId,
+    mode,
+    product?.id,
+    productId,
+    subcategoryId,
+  ]);
   const ownerAllowed =
     mode === "new" || !product || product.uid === session?.uid;
   const adminCategoryInfo = React.useMemo(() => {
@@ -155,6 +206,89 @@ export function ProductPageContent() {
     productId,
   ]);
 
+  React.useEffect(
+    () => () => {
+      if (shareStatusTimerRef.current) {
+        window.clearTimeout(shareStatusTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const showShareStatus = (message: string) => {
+    setShareStatus(message);
+    if (shareStatusTimerRef.current) {
+      window.clearTimeout(shareStatusTimerRef.current);
+    }
+    shareStatusTimerRef.current = window.setTimeout(() => {
+      setShareStatus("");
+      shareStatusTimerRef.current = null;
+    }, 2200);
+  };
+
+  const shareProduct = async () => {
+    if (!productShareUrl) return;
+    const productTitle =
+      details.mainData.name ||
+      (locale === "ar"
+        ? details.pharmacySpecs.nameAr || details.pharmacySpecs.nameEn
+        : details.pharmacySpecs.nameEn || details.pharmacySpecs.nameAr) ||
+      (locale === "ar" ? "منتج على Gova" : "Product on Gova");
+    try {
+      if (typeof navigator.share === "function") {
+        await navigator.share({
+          title: productTitle,
+          text:
+            locale === "ar"
+              ? "رابط المنتج على Gova"
+              : "Product link on Gova",
+          url: productShareUrl,
+        });
+        return;
+      }
+      await navigator.clipboard.writeText(productShareUrl);
+      showShareStatus(locale === "ar" ? "تم نسخ رابط المنتج" : "Product link copied");
+    } catch (shareError) {
+      if (shareError instanceof DOMException && shareError.name === "AbortError") return;
+      console.warn("[ProductPage] Failed to share product link.", shareError);
+      try {
+        await navigator.clipboard.writeText(productShareUrl);
+        showShareStatus(locale === "ar" ? "تم نسخ رابط المنتج" : "Product link copied");
+      } catch {
+        showShareStatus(locale === "ar" ? "تعذرت مشاركة الرابط" : "Could not share link");
+      }
+    }
+  };
+
+  const shareAction =
+    mode === "view" && productShareUrl ? (
+      <div className="flex flex-col items-stretch gap-1">
+        <Button
+          type="button"
+          variant="outline"
+          className="gap-2"
+          onClick={() => void shareProduct()}
+        >
+          <Share2 className="h-4 w-4" />
+          {locale === "ar" ? "مشاركة المنتج" : "Share product"}
+        </Button>
+        {shareStatus ? (
+          <p className="text-center text-xs font-semibold text-primary" role="status">
+            {shareStatus}
+          </p>
+        ) : null}
+      </div>
+    ) : null;
+  const profileAction =
+    mode === "view" && product?.uid ? (
+      <Button asChild variant="outline" className="gap-2">
+        <Link href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}>
+          <UserCircle className="h-4 w-4" />
+          {locale === "ar" ? "بروفايل صاحب المنتج" : "Owner profile"}
+        </Link>
+      </Button>
+    ) : null;
+
   const save = async () => {
     if (!session?.uid || !ownerAllowed) return;
     setSaving(true);
@@ -240,6 +374,8 @@ export function ProductPageContent() {
         productId={product?.id ?? ""}
         ownerUid={product?.uid ?? session?.uid ?? ""}
         mainCategoryId={mainCategoryId}
+        shareAction={shareAction}
+        profileAction={profileAction}
       />
       {error ? (
         <p className="rounded-xl bg-destructive/10 p-3 text-destructive">

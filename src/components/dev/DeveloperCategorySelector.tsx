@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Share2, UserCircle } from "lucide-react";
 
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import {
@@ -576,6 +577,26 @@ export function DeveloperCategorySelector() {
                       product={previewDetails}
                       onProductChange={setPreviewDetails}
                       mainCategoryId={mainCategoryId}
+                      ownerUid="demo-owner"
+                      productId="demo-product"
+                      shareAction={
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-2 rounded-xl border px-4 py-2"
+                        >
+                          <Share2 className="h-4 w-4" />
+                          مشاركة المنتج
+                        </button>
+                      }
+                      profileAction={
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-2 rounded-xl border px-4 py-2"
+                        >
+                          <UserCircle className="h-4 w-4" />
+                          بروفايل صاحب المنتج
+                        </button>
+                      }
                     />
                   </div>
                 </div>

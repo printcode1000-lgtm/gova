@@ -24,7 +24,9 @@
       "cart": true,
       "favorite": true,
       "contact": true,
-      "order": 4
+      "order": 4,
+      "share": true,
+      "profile": true
     },
     "mainData": {
       "visible": true,

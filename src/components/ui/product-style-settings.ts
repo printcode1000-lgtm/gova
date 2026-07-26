@@ -27,6 +27,8 @@ export interface ProductOrderStyleSettings {
   cart: boolean;
   favorite: boolean;
   contact: boolean;
+  share: boolean;
+  profile: boolean;
   order: number;
 }
 
@@ -173,6 +175,8 @@ export const DEFAULT_PRODUCT_STYLE_COMPONENTS: ProductStyleSettingsComponents = 
     cart: true,
     favorite: true,
     contact: true,
+    share: true,
+    profile: true,
     order: 4,
   },
   mainData: {
@@ -327,6 +331,8 @@ export function normalizeProductStyleComponents(
       cart: booleanValue(value?.order?.cart, defaults.order.cart),
       favorite: booleanValue(value?.order?.favorite, defaults.order.favorite),
       contact: booleanValue(value?.order?.contact, defaults.order.contact),
+      share: booleanValue(value?.order?.share, defaults.order.share),
+      profile: booleanValue(value?.order?.profile, defaults.order.profile),
       order: positiveInteger(value?.order?.order, defaults.order.order),
     },
     mainData: {

@@ -45,6 +45,18 @@ export function ProductOrderStyleEditor({
           disabled={disabled}
           onChange={(contact) => onChange({ ...value, contact })}
         />
+        <OptionCheckbox
+          label="مشاركة المنتج"
+          checked={value.share}
+          disabled={disabled}
+          onChange={(share) => onChange({ ...value, share })}
+        />
+        <OptionCheckbox
+          label="بروفايل صاحب المنتج"
+          checked={value.profile}
+          disabled={disabled}
+          onChange={(profile) => onChange({ ...value, profile })}
+        />
       </div>
     </ProductStyleCard>
   );

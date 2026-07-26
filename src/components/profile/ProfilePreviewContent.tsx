@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -12,6 +12,7 @@ import {
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 import { ContactActionBar } from "@/components/ui/contact-action-bar";
+import { Button } from "@/components/ui/button";
 import {
   FeaturedMarquee,
   type FeaturedMarqueeConfig,
@@ -37,6 +38,8 @@ import {
   ProfileFulfillmentPreviewCard,
   ProfilePreviewMetrics,
 } from "./ProfilePreviewInformation";
+
+const PROFILE_SHARE_ORIGIN = "https://gova-swart.vercel.app/";
 
 interface ProfilePreviewContentProps {
   locale: "ar" | "en";
@@ -90,6 +93,15 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
     !loading.featured;
   const { restoreSnapshot } = usePageSnapshot({ restoreWhen: ready });
   const restoredRef = useRef("");
+  const shareStatusTimerRef = useRef<number | null>(null);
+  const [shareStatus, setShareStatus] = useState("");
+  const shareUrl = useMemo(() => {
+    if (!previewUid) return "";
+    const url = new URL("/profile", PROFILE_SHARE_ORIGIN);
+    url.searchParams.set("mode", "preview");
+    url.searchParams.set("uid", previewUid);
+    return url.toString();
+  }, [previewUid]);
 
   useEffect(() => {
     if (!ready || !previewUid || restoredRef.current === previewUid) return;
@@ -99,6 +111,56 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
     }, 220);
     return () => window.clearTimeout(timer);
   }, [previewUid, ready, restoreSnapshot]);
+
+  useEffect(
+    () => () => {
+      if (shareStatusTimerRef.current) {
+        window.clearTimeout(shareStatusTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const showShareStatus = (message: string) => {
+    setShareStatus(message);
+    if (shareStatusTimerRef.current) {
+      window.clearTimeout(shareStatusTimerRef.current);
+    }
+    shareStatusTimerRef.current = window.setTimeout(() => {
+      setShareStatus("");
+      shareStatusTimerRef.current = null;
+    }, 2200);
+  };
+
+  const shareProfile = async () => {
+    if (!shareUrl) return;
+    const title =
+      storeDetails.storeName ||
+      (ar ? "صفحة مقدم الخدمة" : "Provider profile");
+    try {
+      if (typeof navigator.share === "function") {
+        await navigator.share({
+          title,
+          text: ar
+            ? "رابط صفحة مقدم الخدمة على Gova"
+            : "Provider profile on Gova",
+          url: shareUrl,
+        });
+        return;
+      }
+      await navigator.clipboard.writeText(shareUrl);
+      showShareStatus(ar ? "تم نسخ رابط الصفحة" : "Profile link copied");
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      console.warn("[ProfilePreview] Failed to share profile link.", error);
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        showShareStatus(ar ? "تم نسخ رابط الصفحة" : "Profile link copied");
+      } catch {
+        showShareStatus(ar ? "تعذرت مشاركة الرابط" : "Could not share link");
+      }
+    }
+  };
 
   return (
     <div
@@ -177,14 +239,31 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
               className="border-0 bg-transparent p-0 shadow-none"
             />
           </div>
-          {storeDetails.profileShowcase?.customRequestEnabled &&
-          session?.uid &&
-          previewUid ? (
-            <ProfileCustomRequestButton
-              onSubmit={props.onCustomRequest}
-              buttonLabel={ar ? "إرسال طلب خاص" : "Send custom request"}
-              title={`${ar ? "طلب خاص إلى" : "Custom request to"} ${storeDetails.storeName || (ar ? "البائع" : "seller")}`}
-            />
+          {previewUid ? (
+            <div className="flex flex-col items-stretch gap-2 sm:min-w-48">
+              {storeDetails.profileShowcase?.customRequestEnabled &&
+              session?.uid ? (
+                <ProfileCustomRequestButton
+                  onSubmit={props.onCustomRequest}
+                  buttonLabel={ar ? "إرسال طلب خاص" : "Send custom request"}
+                  title={`${ar ? "طلب خاص إلى" : "Custom request to"} ${storeDetails.storeName || (ar ? "البائع" : "seller")}`}
+                />
+              ) : null}
+              <Button
+                type="button"
+                variant="outline"
+                className="gap-2"
+                onClick={() => void shareProfile()}
+              >
+                <FontAwesomeIcon icon={faShareNodes} className="h-4 w-4" />
+                {ar ? "مشاركة الصفحة" : "Share profile"}
+              </Button>
+              {shareStatus ? (
+                <p className="text-center text-xs font-semibold text-primary" role="status">
+                  {shareStatus}
+                </p>
+              ) : null}
+            </div>
           ) : null}
         </section>
       ) : null}
