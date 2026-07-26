@@ -523,6 +523,34 @@ export function DataHealthPage() {
     }
   };
 
+  const clearQuarantine = async () => {
+    if (
+      !authHeaders ||
+      !window.confirm(
+        "سيتم مسح كل عناصر الحجر من القائمة بدون حذف ملفات التخزين أو السجلات الأصلية. هل تريد المتابعة؟",
+      )
+    ) {
+      return;
+    }
+    setError("");
+    try {
+      const result = await asolApi.post<{ cleared: number; clearedAt: string }>(
+        DATA_HEALTH_API.quarantineClear,
+        { confirm: "CLEAR_DATA_HEALTH_QUARANTINE" },
+        { headers: authHeaders },
+      );
+      await loadHistory();
+      await scan();
+      setNotice(`تم مسح ${result.cleared} عنصر من الحجر.`);
+    } catch (clearError) {
+      setError(
+        clearError instanceof Error
+          ? clearError.message
+          : "تعذر تنظيف الحجر",
+      );
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="p-4 text-sm text-on-surface-variant">جاري التحميل...</div>
@@ -887,6 +915,7 @@ export function DataHealthPage() {
             history={history}
             onRelease={releaseQuarantine}
             onDeleteImage={deleteQuarantinedImage}
+            onClearQuarantine={clearQuarantine}
           />
         </TabsContent>
       </Tabs>
@@ -1267,10 +1296,12 @@ function HistoryPanel({
   history,
   onRelease,
   onDeleteImage,
+  onClearQuarantine,
 }: {
   history: HistoryResponse;
   onRelease: (id: string) => Promise<void>;
   onDeleteImage: (id: string) => Promise<void>;
+  onClearQuarantine: () => Promise<void>;
 }) {
   return (
     <div className="grid gap-4 xl:grid-cols-2">
@@ -1343,9 +1374,21 @@ function HistoryPanel({
         </div>
       </section>
       <section className="overflow-hidden rounded-md border bg-surface xl:col-span-2">
-        <div className="flex items-center gap-2 border-b p-3 font-semibold">
-          <ShieldCheck className="h-4 w-4" />
-          الحجر الصحي
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
+          <div className="flex items-center gap-2 font-semibold">
+            <ShieldCheck className="h-4 w-4" />
+            الحجر الصحي
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            disabled={history.quarantine.length === 0}
+            onClick={() => void onClearQuarantine()}
+          >
+            <Trash2 className="h-4 w-4" />
+            تنظيف الحجر
+          </Button>
         </div>
         <div className="divide-y">
           {history.quarantine.map((entry) => (

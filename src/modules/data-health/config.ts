@@ -11,4 +11,5 @@ export const DATA_HEALTH_API = {
   orderPurgeRetryImages: "/api/super-admin/data-health/orders/retry-images",
   quarantineDelete: "/api/super-admin/data-health/quarantine/delete",
   quarantineRelease: "/api/super-admin/data-health/quarantine/release",
+  quarantineClear: "/api/super-admin/data-health/quarantine/clear",
 } as const;

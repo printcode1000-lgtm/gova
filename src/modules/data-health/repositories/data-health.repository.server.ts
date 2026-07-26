@@ -407,6 +407,27 @@ export class DataHealthRepository {
     if (!resultChanged(rows)) throw new Error("quarantineChangedOrMissing");
   }
 
+  async clearActiveQuarantine(input: {
+    adminUid: string;
+    clearedAt: string;
+  }): Promise<number> {
+    await this.ensureMetadata();
+    const rows = (await profileDbClient.execute(
+      "UPDATE data_health_quarantine SET deleted_at=?, last_verified_at=? WHERE released_at='' AND deleted_at='' RETURNING id",
+      [input.clearedAt, input.clearedAt],
+    )) as Row[];
+    const cleared = rows.length;
+    await this.addManualAudit({
+      adminUid: input.adminUid,
+      action: "clear-quarantine",
+      recordId: "data_health_quarantine",
+      fingerprint: `clear-quarantine:${input.clearedAt}`,
+      status: "cleaned",
+      reason: `cleared=${cleared}`,
+    });
+    return cleared;
+  }
+
   async addManualAudit(input: {
     adminUid: string;
     action: string;

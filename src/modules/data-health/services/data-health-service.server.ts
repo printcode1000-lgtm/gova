@@ -93,6 +93,31 @@ export class DataHealthService {
     return { releasedAt: now };
   }
 
+  async clearQuarantine(input: { adminUid: string; confirm: string }) {
+    if (input.confirm !== "CLEAR_DATA_HEALTH_QUARANTINE") {
+      throw new Error("dataHealthCleanupConfirmationRequired");
+    }
+    const now = new Date().toISOString();
+    const cleared = await dataHealthRepository.clearActiveQuarantine({
+      adminUid: input.adminUid,
+      clearedAt: now,
+    });
+    await persistentSystemLogService.add({
+      level: "normal",
+      source: "server",
+      consoleMethod: "server.info",
+      message: `Data health quarantine cleared: cleared=${cleared}`,
+      page: "/super-admin/data-health",
+      platform: "server",
+      feature: "DataHealth",
+      operation: "clear-quarantine",
+      routeName: "/api/super-admin/data-health/quarantine/clear",
+      requestMethod: "POST",
+      uid: input.adminUid,
+    });
+    return { clearedAt: now, cleared };
+  }
+
   async createCleanupPlan(input: {
     adminUid: string;
     issueIds: string[];
