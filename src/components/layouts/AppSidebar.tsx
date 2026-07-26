@@ -3,6 +3,7 @@
 import {
   ChevronDown,
   CloudDownload,
+  DatabaseBackup,
   DatabaseZap,
   Edit,
   Eye,
@@ -265,6 +266,14 @@ export const AppSidebar = React.memo(function AppSidebar({
             >
               <DatabaseZap className="h-4 w-4" />
               فحص سلامة البيانات
+            </Link>
+            <Link
+              href="/super-admin/dev-cloud-backup"
+              onClick={onClose}
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+            >
+              <DatabaseBackup className="h-4 w-4" />
+              نسخ سحابة التطوير
             </Link>
             <Link
               href="/super-admin/vapid"

@@ -130,6 +130,25 @@ export class AsolApiClient {
     return this.request<T>('DELETE', route, undefined, options);
   }
 
+  async getBinary(route: string, options?: AsolApiRequestOptions): Promise<ArrayBuffer> {
+    this.assertOnline('GET', route, options?.suppressErrorLog);
+    try {
+      return await trackAsolApiRequest('GET', route, true, async () => {
+        const response = await asolHttpFetch(buildAsolApiUrl(route), {
+          method: 'GET',
+          headers: { Accept: 'application/zip, application/octet-stream', ...options?.headers },
+          credentials: 'omit',
+          signal: options?.signal,
+          cache: options?.cache ?? 'no-store',
+        });
+        if (!response.ok) await this.parseResponse<never>(response);
+        return { data: await response.arrayBuffer(), response };
+      });
+    } catch (error) {
+      this.logAndThrow('GET', route, error, options?.suppressErrorLog);
+    }
+  }
+
   /** POST multipart/form-data (e.g. file uploads). Does not set Content-Type — browser sets boundary. */
   postForm<T>(route: string, formData: FormData, options?: AsolApiRequestOptions): Promise<T> {
     return trackAsolApiRequest('POST', route, true, async () => {

@@ -117,6 +117,16 @@ export function mapServiceError(error: unknown): NextResponse {
     'dataHealthOrderPurgeBusy',
     'dataHealthOrderPurgeSelectionChanged',
     'dataHealthOrderPurgeIncomplete',
+    'devCloudBackupDevelopmentOnly',
+    'devCloudBackupFileInvalid',
+    'devCloudBackupFileRequired',
+    'devCloudBackupNotFound',
+    'devCloudBackupManifestMissing',
+    'devCloudBackupManifestUnsupported',
+    'devCloudBackupManifestInvalidEnvironment',
+    'devCloudBackupTursoSourceMissing',
+    'devCloudBackupRestoreConfirmationRequired',
+    'devCloudBackupArchiveIncomplete',
   ];
 
   if (knownCodes.includes(message)) {

@@ -45,6 +45,8 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/server-env.values.ts',
   'src/instrumentation.ts',
   'src/modules/marketplace-orders/db/config.ts',
+  'src/modules/dev-cloud-backup/domain/development-guard.server.ts',
+  'src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
 ]);
 
 export const ALLOWED_FETCH_FILES = new Set(['src/core/api/asol-http-transport.ts']);
@@ -61,7 +63,9 @@ export const ALLOWED_DB_DRIVER_FILES_PATTERN = [
   /^src\/core\/storage\/providers\//,
   /^src\/modules\/marketplace-orders\/db\//,
   /^src\/modules\/data-health\/repositories\/schema-comparison\.repository\.server\.ts$/,
+  /^src\/modules\/dev-cloud-backup\/repositories\/turso-backup\.repository\.server\.ts$/,
   /^src\/modules\/data-health\/tests\//,
+  /^src\/modules\/dev-cloud-backup\/tests\//,
 ];
 
 export const ALLOWED_SQL_FILES_PATTERN = [
@@ -75,6 +79,8 @@ export const ALLOWED_SQL_FILES_PATTERN = [
   /^src\/modules\/data-health\/repositories\//,
   /^src\/modules\/data-health\/db\//,
   /^src\/modules\/data-health\/tests\//,
+  /^src\/modules\/dev-cloud-backup\/repositories\//,
+  /^src\/modules\/dev-cloud-backup\/tests\//,
 ];
 
 /** Client-side IndexedDB utilities — not the server Database Client layer. */
@@ -121,8 +127,11 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/core/config/')) return 'configuration';
   if (p.startsWith('src/modules/marketplace-orders/db/')) return 'database-client';
   if (p === 'src/modules/data-health/domain/execution-context.server.ts') return 'configuration';
+  if (p === 'src/modules/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
   if (p.startsWith('src/modules/data-health/services/')) return 'server-services';
+  if (p.startsWith('src/modules/dev-cloud-backup/services/')) return 'server-services';
   if (p.startsWith('src/modules/data-health/tests/')) return 'dev-tools';
+  if (p.startsWith('src/modules/dev-cloud-backup/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/marketplace-orders/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/marketplace-orders/api/') || p.startsWith('src/modules/marketplace-orders/services/')) return 'server-services';
   if (p.startsWith('src/core/provisioning/')) return 'provisioning';
@@ -280,6 +289,13 @@ export function getForbiddenImportViolation(
     target === 'server-services' &&
     (importPath.includes('/core/storage/storage/') ||
       importPath.includes('/core/storage/profiles/'))
+  ) {
+    return null;
+  }
+  if (
+    importerLayer === 'repository' &&
+    target === 'provisioning' &&
+    importPath.includes('/core/provisioning/r2-s3-client')
   ) {
     return null;
   }

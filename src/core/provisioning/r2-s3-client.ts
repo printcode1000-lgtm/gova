@@ -69,6 +69,35 @@ export async function deleteR2Object(key: string): Promise<void> {
   );
 }
 
+export async function downloadR2Object(key: string): Promise<{
+  body: Uint8Array;
+  contentType?: string;
+  size?: number;
+  lastModified?: string;
+  etag?: string;
+}> {
+  const { bucketName } = getR2S3Credentials();
+  const client = createR2S3Client();
+
+  const result = await client.send(
+    new GetObjectCommand({
+      Bucket: bucketName,
+      Key: key,
+    }),
+  );
+  const body = result.Body
+    ? await result.Body.transformToByteArray()
+    : new Uint8Array();
+
+  return {
+    body,
+    contentType: result.ContentType,
+    size: result.ContentLength,
+    lastModified: result.LastModified?.toISOString(),
+    etag: result.ETag,
+  };
+}
+
 export async function listR2Objects(
   prefix = '',
   maxKeys = 1000,
