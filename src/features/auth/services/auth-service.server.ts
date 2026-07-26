@@ -16,6 +16,7 @@ import type { IAuthService, LoginResult } from './auth-service.interface';
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 import type { GetProfileSpecialtiesQuery } from '@/features/profile/operations/queries/get-profile-specialties.query';
 import { createSignedSessionToken } from './signed-session-token.server';
+import { normalizeAuthPhone } from '../utils/phone-normalization';
 
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -40,11 +41,12 @@ export class AuthService implements IAuthService {
       'AuthService.register',
       async () => {
         const hashedPassword = await hashPassword(formData.password);
+        const phone = normalizeAuthPhone(formData.phone);
         const uid = `usr_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
         await this.createUserCommand.execute({
           uid,
-          phone: formData.phone,
+          phone,
           email: formData.email || null,
           password: hashedPassword,
           last_login_at: null,
@@ -63,7 +65,7 @@ export class AuthService implements IAuthService {
       'server-service',
       'AuthService.checkPhone',
       async () => {
-        const user = await this.getUserByPhoneQuery.execute(phone);
+        const user = await this.getUserByPhoneQuery.execute(normalizeAuthPhone(phone));
         return { exists: user !== null };
       },
     );
@@ -71,7 +73,9 @@ export class AuthService implements IAuthService {
 
   async login(formData: LoginFormData): Promise<LoginResult> {
     return traceServerLayer('server-service', 'AuthService.login', async () => {
-      const user = await this.getUserByPhoneQuery.execute(formData.phone);
+      const user = await this.getUserByPhoneQuery.execute(
+        normalizeAuthPhone(formData.phone),
+      );
       if (!user) {
         throw new Error('userNotFound');
       }

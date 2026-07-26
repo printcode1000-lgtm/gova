@@ -1,6 +1,7 @@
 import type { IUserRepository } from '../../repositories/user-repository.interface';
 import type { UserProfile, UpdateProfileInput } from '../../entities/profile.entity';
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
+import { normalizeAuthPhone } from '../../utils/phone-normalization';
 
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -27,21 +28,23 @@ export class UpdateUserProfileCommand {
         });
       }
 
-      if (input.phone !== user.phone) {
-        const existing = await this.userRepository.getByPhone(input.phone);
+      const phone = normalizeAuthPhone(input.phone);
+
+      if (phone !== user.phone) {
+        const existing = await this.userRepository.getByPhone(phone);
         if (existing && existing.uid !== input.uid) {
           throw new Error('phoneAlreadyRegistered');
         }
       }
 
       await this.userRepository.update(input.uid, {
-        phone: input.phone,
+        phone,
         email: input.email.trim() || null,
       });
 
       return {
         uid: input.uid,
-        phone: input.phone,
+        phone,
         email: input.email.trim() || null,
       };
     });

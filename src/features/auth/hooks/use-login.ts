@@ -46,8 +46,15 @@ export function useLogin() {
       setSession(session);
     },
     onError: (error) => {
+      if (
+        error instanceof Error &&
+        ['userNotFound', 'invalidPassword'].includes(error.message)
+      ) {
+        return;
+      }
+
       reportSystemIssue({
-        level: error instanceof Error && ['userNotFound', 'invalidPassword'].includes(error.message) ? 'warning' : 'error',
+        level: 'error',
         feature: 'Authentication',
         operation: 'login',
         error,

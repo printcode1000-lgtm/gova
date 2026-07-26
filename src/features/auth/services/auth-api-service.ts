@@ -13,7 +13,9 @@ export class AuthApiService implements IAuthService {
   }
 
   async login(formData: LoginFormData): Promise<LoginResult> {
-    return asolApi.post<LoginResult>(ASOL_API_ROUTES.auth.login, formData);
+    return asolApi.post<LoginResult>(ASOL_API_ROUTES.auth.login, formData, {
+      suppressErrorLog: true,
+    });
   }
 
   async updateProfile(input: UpdateProfileInput): Promise<UserProfile> {

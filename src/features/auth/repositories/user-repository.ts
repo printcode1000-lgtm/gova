@@ -1,11 +1,12 @@
 import 'server-only';
 
-import { eq, and, isNull } from 'drizzle-orm';
+import { eq, and, isNull, inArray } from 'drizzle-orm';
 import { dbClient } from '@/core/database/db-client';
 import type { IDatabaseClient } from '@/core/database/database-client.interface';
 import { users } from '@/core/database/schema';
 import type { User } from '../entities/user.entity';
 import type { IUserRepository } from './user-repository.interface';
+import { authPhoneCandidates, normalizeAuthPhone } from '../utils/phone-normalization';
 
 export class UserRepository implements IUserRepository {
   constructor(private database: IDatabaseClient = dbClient) {}
@@ -13,7 +14,7 @@ export class UserRepository implements IUserRepository {
   async create(user: Omit<User, 'id'>): Promise<void> {
     await this.database.db.insert(users).values({
       uid: user.uid,
-      phone: user.phone,
+      phone: normalizeAuthPhone(user.phone),
       email: user.email || null,
       password: user.password || '',
       lastLoginAt: user.last_login_at || null,
@@ -24,11 +25,14 @@ export class UserRepository implements IUserRepository {
   }
 
   async getByPhone(phone: string): Promise<User | null> {
+    const candidates = authPhoneCandidates(phone);
+    if (candidates.length === 0) return null;
+
     const rows = await this.database.db
       .select()
       .from(users)
       .where(and(
-        eq(users.phone, phone),
+        inArray(users.phone, candidates),
         isNull(users.deletedAt)
       ))
       .limit(1);
@@ -78,7 +82,7 @@ export class UserRepository implements IUserRepository {
   async update(uid: string, fields: Partial<User>): Promise<void> {
     const updateData: any = {};
     
-    if (fields.phone !== undefined) updateData.phone = fields.phone;
+    if (fields.phone !== undefined) updateData.phone = normalizeAuthPhone(fields.phone);
     if (fields.email !== undefined) updateData.email = fields.email;
     if (fields.password !== undefined) updateData.password = fields.password;
     if (fields.last_login_at !== undefined) updateData.lastLoginAt = fields.last_login_at;
