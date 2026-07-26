@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createMemoryMarketplaceDb } from "../db/test-client";
+import { rowsOrChanges } from "../db/result-mapper";
 import { MarketplaceOrderService } from "../services/marketplace-order-service";
 import * as enums from "../domain/enums";
 const columns: Record<string, string> = {
@@ -59,6 +60,22 @@ const methods =
   );
 async function main() {
   const db = createMemoryMarketplaceDb();
+  assert.deepEqual(
+    rowsOrChanges("SELECT id FROM orders WHERE id=?", {
+      rows: [],
+      rowsAffected: 0,
+    }),
+    [],
+    "empty production SELECT must not be reported as a changes row",
+  );
+  assert.deepEqual(
+    rowsOrChanges("DELETE FROM orders WHERE id=?", {
+      rows: [],
+      rowsAffected: 0,
+    }),
+    [{ changes: 0 }],
+    "empty production write must still report affected rows",
+  );
   for (const [table, required] of Object.entries(columns)) {
     const actual = new Set(
       (await db.execute(`PRAGMA table_info(${table})`)).map((x) =>

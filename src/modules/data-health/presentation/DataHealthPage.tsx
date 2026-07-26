@@ -391,36 +391,12 @@ export function DataHealthPage() {
       setOrderPurgePlan(null);
       setOrderPurgeConfirmation("");
       setNotice(
-        `تم حذف ${result.deletedOrders} طلب و${result.deletedImages} صورة. الصور المعلقة: ${result.pendingImages}.`,
+        `تم حذف ${result.deletedOrders} طلب و${result.deletedImages} صورة نهائيًا بدون أرشفة أو جدولة حذف.`,
       );
       await scan();
     } catch (purgeError) {
       setError(
         purgeError instanceof Error ? purgeError.message : "تعذر حذف الطلبات",
-      );
-    } finally {
-      setOrderPurgeBusy(false);
-    }
-  };
-
-  const retryPendingOrderImages = async () => {
-    if (!authHeaders) return;
-    setOrderPurgeBusy(true);
-    setError("");
-    try {
-      const result = await asolApi.post<{ deleted: number; pending: number }>(
-        DATA_HEALTH_API.orderPurgeRetryImages,
-        {},
-        { headers: authHeaders },
-      );
-      setNotice(
-        `تم حذف ${result.deleted} صورة معلقة، والمتبقي ${result.pending}.`,
-      );
-    } catch (retryError) {
-      setError(
-        retryError instanceof Error
-          ? retryError.message
-          : "تعذر إعادة محاولة حذف الصور",
       );
     } finally {
       setOrderPurgeBusy(false);
@@ -955,19 +931,10 @@ export function DataHealthPage() {
               </div>
               <p className="mt-1 text-xs text-red-700">
                 يشمل الطلبات العادية والمخصصة والمختلطة وكل السجلات التابعة وصور
-                الطلبات المخصصة. تبدأ العملية بمعاينة ولا تنفذ دون تأكيد مكتوب.
+                الطلبات المخصصة. يتم حذف الصور والبيانات فعليًا بدون أرشفة أو جدولة حذف.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                disabled={orderPurgeBusy}
-                onClick={retryPendingOrderImages}
-              >
-                <RefreshCw className="h-4 w-4" />
-                إعادة حذف الصور المعلقة
-              </Button>
               <Button
                 type="button"
                 variant="destructive"

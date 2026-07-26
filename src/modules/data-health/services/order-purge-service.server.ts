@@ -121,36 +121,17 @@ export class OrderPurgeService {
         throw new Error("dataHealthOrderPurgeSelectionChanged");
       }
 
-      await orderPurgeRepository.createStorageTasks(
-        input.planId,
-        snapshot.images,
-        now,
-      );
+      const imageResult = await this.deleteImagesImmediately(snapshot.images);
 
       let deletedRows: Record<string, number>;
       try {
         deletedRows = await orderPurgeRepository.deleteAll(snapshot);
       } catch (error) {
-        for (const task of await orderPurgeRepository.preparedStorageTasks(
-          input.planId,
-        )) {
-          await orderPurgeRepository.markStorageTask(
-            text(task.id),
-            "cancelled",
-            new Date().toISOString(),
-            "Order transaction rolled back",
-          );
-        }
         throw error;
       }
 
-      await orderPurgeRepository.activateStorageTasks(
-        input.planId,
-        new Date().toISOString(),
-      );
-      const imageResult = await this.processPendingImages(input.planId);
       const completedAt = new Date().toISOString();
-      const status = imageResult.pending > 0 ? "partial" : "completed";
+      const status: "completed" = "completed";
       await orderPurgeRepository.finishPlan({
         id: input.planId,
         status,
@@ -162,7 +143,7 @@ export class OrderPurgeService {
         deletedOrders: snapshot.orderCount,
         deletedRows,
         deletedImages: imageResult.deleted,
-        pendingImages: imageResult.pending,
+        pendingImages: 0,
         completedAt,
       };
       await orderPurgeRepository.addAudit({
@@ -178,9 +159,9 @@ export class OrderPurgeService {
         after: result,
       });
       await persistentSystemLogService.add({
-        level: status === "partial" ? "warning" : "normal",
+        level: "normal",
         source: "server",
-        consoleMethod: status === "partial" ? "server.warn" : "server.info",
+        consoleMethod: "server.info",
         message: `Order purge ${input.planId}: orders=${result.deletedOrders}, images=${result.deletedImages}, pending=${result.pendingImages}`,
         page: "/super-admin/data-health",
         platform: "server",
@@ -264,6 +245,20 @@ export class OrderPurgeService {
       }
     }
     return { deleted, pending };
+  }
+
+  private async deleteImagesImmediately(
+    images: OrderPurgeSnapshot["images"],
+  ): Promise<{ deleted: number }> {
+    let deleted = 0;
+    for (const image of images) {
+      await imageStorageOrchestrator.deleteByKey(
+        image.storageProfileId,
+        image.imageKey,
+      );
+      deleted += 1;
+    }
+    return { deleted };
   }
 }
 

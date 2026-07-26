@@ -77,6 +77,10 @@ function jsonStringArray(value: unknown): string[] | null {
   return null;
 }
 
+function realRows(rows: Row[]): Row[] {
+  return rows.filter((row) => text(row.id));
+}
+
 function routeFor(database: string, table: string, recordId: string): string {
   if (table === "products")
     return `/product?mode=view&id=${encodeURIComponent(recordId)}`;
@@ -196,7 +200,7 @@ export class DataHealthRepository {
       ]);
 
       const ordersDb = createMarketplaceOrdersDb();
-      const [orders, sellerOrders, customItems] = await Promise.all([
+      const [orderRows, sellerOrderRows, customItemRows] = await Promise.all([
         ordersDb.execute(
           "SELECT id, order_number, buyer_id, calculated_status, closed_at, archived_at, created_at, updated_at FROM orders",
         ),
@@ -207,6 +211,9 @@ export class DataHealthRepository {
           "SELECT id, order_id, seller_order_id, seller_id, service_provider_id, status, created_at, updated_at FROM custom_request_items",
         ),
       ]);
+      const orders = realRows(orderRows);
+      const sellerOrders = realRows(sellerOrderRows);
+      const customItems = realRows(customItemRows);
 
       const context: ScanContext = {
         users: new Set(userRows.map((row) => text(row.uid))),
@@ -1188,7 +1195,7 @@ export class DataHealthRepository {
     context: ScanContext,
   ): Promise<number> {
     const db = createMarketplaceOrdersDb();
-    const [items, images, shipments, payments, returns, replacements] =
+    const [itemRows, imageRows, shipmentRows, paymentRows, returnRows, replacementRows] =
       await Promise.all([
         db.execute(
           "SELECT id, order_id, seller_order_id, seller_id, product_id, product_name_snapshot, product_image_snapshot, created_at, updated_at FROM order_items",
@@ -1209,6 +1216,12 @@ export class DataHealthRepository {
           "SELECT id, order_id, buyer_id, status, created_at, updated_at FROM replacement_requests",
         ),
       ]);
+    const items = realRows(itemRows);
+    const images = realRows(imageRows);
+    const shipments = realRows(shipmentRows);
+    const payments = realRows(paymentRows);
+    const returns = realRows(returnRows);
+    const replacements = realRows(replacementRows);
     for (const row of items) {
       const baseBroken =
         !context.orders.has(text(row.order_id)) ||
