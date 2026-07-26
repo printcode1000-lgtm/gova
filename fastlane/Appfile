@@ -1,6 +1,16 @@
+require "base64"
+require "tmpdir"
+
 app_identifier(ENV.fetch("ASOL_IOS_BUNDLE_ID", "hgh.asol.app"))
 apple_id(ENV["FASTLANE_USER"])
 team_id(ENV["ASOL_IOS_TEAM_ID"])
 
-json_key_file(ENV.fetch("GOOGLE_PLAY_JSON_KEY_FILE", "assets/google-play/asole-73f1f-dc494a4b5159.json"))
+if ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64"].to_s.strip.length > 0
+  google_play_temp_key_path = File.join(Dir.tmpdir, "asol-google-play-appfile-#{Process.pid}.json")
+  File.write(google_play_temp_key_path, Base64.decode64(ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64"]))
+  at_exit { File.delete(google_play_temp_key_path) if File.exist?(google_play_temp_key_path) }
+  json_key_file(google_play_temp_key_path)
+else
+  json_key_file(ENV.fetch("GOOGLE_PLAY_JSON_KEY_FILE", "assets/google-play/asole-73f1f-dc494a4b5159.json"))
+end
 package_name(ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"))

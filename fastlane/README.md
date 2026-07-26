@@ -31,6 +31,38 @@ Validate Android publishing prerequisites
 
 Build Android release bundle without uploading
 
+### android aab_signed
+
+```sh
+[bundle exec] fastlane android aab_signed
+```
+
+Build signed Android release bundle without uploading
+
+### android aab_unsigned
+
+```sh
+[bundle exec] fastlane android aab_unsigned
+```
+
+Build unsigned Android release bundle without uploading
+
+### android apk_signed
+
+```sh
+[bundle exec] fastlane android apk_signed
+```
+
+Build signed Android release APK without uploading
+
+### android apk_unsigned
+
+```sh
+[bundle exec] fastlane android apk_unsigned
+```
+
+Build unsigned Android release APK without uploading
+
 ### android internal
 
 ```sh
@@ -38,6 +70,14 @@ Build Android release bundle without uploading
 ```
 
 Upload Android bundle to Google Play internal track
+
+### android production
+
+```sh
+[bundle exec] fastlane android production
+```
+
+Upload Android bundle to Google Play production track
 
 ----
 

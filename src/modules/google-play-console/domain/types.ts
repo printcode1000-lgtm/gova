@@ -9,6 +9,7 @@ export interface GooglePlayConsoleConfigStatus {
   packageName: string;
   keyFilePath: string;
   keyFileExists: boolean;
+  credentialSource: "environment" | "file" | "missing";
   serviceAccountEmail: string;
   serviceAccountProjectId: string;
   serviceAccountUniqueId: string;

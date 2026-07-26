@@ -65,9 +65,18 @@ function collectTrackReleases(data: unknown) {
         status: releaseItem.status ?? "unknown",
         versionCodes: releaseItem.versionCodes ?? [],
         userFraction: releaseItem.userFraction,
+        versioned: Boolean(releaseItem.versionCodes?.length),
       };
     });
   });
+}
+
+function collectProductionVersionCodes(data: unknown) {
+  return new Set(
+    collectTrackReleases(data)
+      .filter((release) => release.track === "production")
+      .flatMap((release) => release.versionCodes.map(String)),
+  );
 }
 
 function releaseStatusText(status: string) {
@@ -202,6 +211,7 @@ export function GooglePlayConsolePage() {
                 <Detail label="حساب الخدمة" value={snapshot.config.serviceAccountEmail || "-"} ltr />
                 <Detail label="Project ID" value={snapshot.config.serviceAccountProjectId || "-"} ltr />
                 <Detail label="Unique ID" value={snapshot.config.serviceAccountUniqueId || "-"} ltr />
+                <Detail label="مصدر الاعتماد" value={snapshot.config.credentialSource} ltr />
                 <Detail label="ملف المفتاح" value={snapshot.config.keyFilePath} ltr />
                 <Detail label="آخر قراءة" value={dateText(snapshot.fetchedAt)} />
               </div>
@@ -227,7 +237,12 @@ export function GooglePlayConsolePage() {
               <SimpleCount data={subscriptions?.data} itemKey="subscriptions" emptyText="لا توجد اشتراكات متاحة." />
             </EndpointCard>
             <EndpointCard endpoint={endpointByKey(snapshot, "apks")} icon={<Box className="h-5 w-5" />} />
-            <EndpointCard endpoint={endpointByKey(snapshot, "bundles")} icon={<Box className="h-5 w-5" />} />
+            <EndpointCard endpoint={endpointByKey(snapshot, "bundles")} icon={<Box className="h-5 w-5" />}>
+              <BundleList
+                data={endpointByKey(snapshot, "bundles")?.data}
+                productionVersionCodes={collectProductionVersionCodes(tracks?.data)}
+              />
+            </EndpointCard>
           </section>
 
           <section className="rounded-md border bg-surface p-4">
@@ -337,7 +352,11 @@ function TrackList({ data }: { data: unknown }) {
               return (
                 <div key={releaseIndex} className="mt-2 rounded-md bg-background p-2 text-xs">
                   <div className="font-medium">{releaseItem.name || "إصدار بدون اسم"}</div>
-                  <div>{releaseStatusText(releaseItem.status ?? "unknown")}</div>
+                  <div>
+                    {(releaseItem.versionCodes ?? []).length
+                      ? releaseStatusText(releaseItem.status ?? "unknown")
+                      : "تعطيل/تهيئة مسار بدون حزمة إصدار"}
+                  </div>
                   <div dir="ltr">status: {releaseItem.status ?? "-"}</div>
                   <div dir="ltr">versionCodes: {(releaseItem.versionCodes ?? []).join(", ") || "-"}</div>
                   {releaseItem.userFraction ? <div dir="ltr">rollout: {releaseItem.userFraction}</div> : null}
@@ -359,6 +378,8 @@ function PublishingStatusPanel({
   if (!endpoint?.ok) return null;
   const releases = collectTrackReleases(endpoint.data);
   const published = releases.filter((release) => release.status === "completed");
+  const versionedPublished = published.filter((release) => release.versioned);
+  const disabledMarkers = published.filter((release) => !release.versioned);
   const drafts = releases.filter((release) => release.status === "draft");
   const rollout = releases.filter((release) => release.status === "inProgress");
   const halted = releases.filter((release) => release.status === "halted");
@@ -370,15 +391,76 @@ function PublishingStatusPanel({
         حالة النشر حسب Google Play
       </div>
       <div className="grid gap-3 md:grid-cols-4">
-        <ReleaseBucket title="منشور وموافق عليه" releases={published} />
+        <ReleaseBucket title="منشور وموافق عليه" releases={versionedPublished} />
         <ReleaseBucket title="قيد الطرح التدريجي" releases={rollout} />
         <ReleaseBucket title="مسودات لم ترسل" releases={drafts} />
-        <ReleaseBucket title="طرح متوقف" releases={halted} />
+        <ReleaseBucket title="مسارات معطلة" releases={[...halted, ...disabledMarkers]} />
       </div>
       <div className="mt-3 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
         لا يعرض Android Publisher API حالة مراجعة منفصلة باسم “قيد المراجعة” ضمن بيانات المسارات. إذا كان هناك إصدار قيد مراجعة داخل واجهة Play Console ولم يظهر هنا، فهذا يعني أن Google لم يرجعه عبر صلاحيات API الحالية أو عبر نقطة المسارات.
       </div>
     </section>
+  );
+}
+
+function BundleList({
+  data,
+  productionVersionCodes,
+}: {
+  data: unknown;
+  productionVersionCodes: Set<string>;
+}) {
+  const bundles = getArray(data, "bundles") as Array<{
+    versionCode?: number;
+    sha1?: string;
+    sha256?: string;
+  }>;
+  if (!bundles.length) {
+    return <div className="mt-3 text-sm text-on-surface-variant">لا توجد حزم AAB.</div>;
+  }
+
+  const active = bundles.filter((bundle) =>
+    productionVersionCodes.has(String(bundle.versionCode)),
+  );
+  const archived = bundles.filter(
+    (bundle) => !productionVersionCodes.has(String(bundle.versionCode)),
+  );
+
+  return (
+    <div className="mt-3 space-y-3 text-sm">
+      <div className="rounded-md border border-green-200 bg-green-50 p-3 text-green-800">
+        <div className="font-semibold">الحزم النشطة في production</div>
+        <BundleRows bundles={active} />
+      </div>
+      {archived.length ? (
+        <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-amber-800">
+          <div className="font-semibold">حزم موجودة في مكتبة Google Play وليست نشطة</div>
+          <p className="mt-1 text-xs">
+            Android Publisher API يعرض هذه الحزم من مكتبة AAB، لكنه لا يوفر أمر حذف لها؛ الحذف العملي يكون بإزالتها من مسارات النشر، وهذا تم بالفعل.
+          </p>
+          <BundleRows bundles={archived} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function BundleRows({
+  bundles,
+}: {
+  bundles: Array<{ versionCode?: number; sha1?: string; sha256?: string }>;
+}) {
+  if (!bundles.length) return <div className="mt-2 text-xs">لا يوجد</div>;
+  return (
+    <div className="mt-2 space-y-2">
+      {bundles.map((bundle) => (
+        <div key={bundle.versionCode} className="rounded-md bg-background p-2 text-xs" dir="ltr">
+          <div>versionCode: {bundle.versionCode ?? "-"}</div>
+          <div className="break-all">sha1: {bundle.sha1 ?? "-"}</div>
+          <div className="break-all">sha256: {bundle.sha256 ?? "-"}</div>
+        </div>
+      ))}
+    </div>
   );
 }
 

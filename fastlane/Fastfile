@@ -1,6 +1,8 @@
 opt_out_usage
 
 require "json"
+require "base64"
+require "tmpdir"
 
 default_platform(:android)
 
@@ -17,8 +19,30 @@ def ensure_file!(label, relative_path)
   path
 end
 
+def google_play_key_data
+  raw = ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64"].to_s.strip
+  return nil if raw.empty?
+  Base64.decode64(raw)
+end
+
+def google_play_temp_key_path
+  data = google_play_key_data
+  return nil if data.to_s.strip.empty?
+
+  @google_play_temp_key_path ||= begin
+    path = File.join(Dir.tmpdir, "asol-google-play-#{Process.pid}.json")
+    File.write(path, data)
+    at_exit { File.delete(path) if File.exist?(path) }
+    path
+  end
+end
+
 def google_play_key_path
-  ENV.fetch("GOOGLE_PLAY_JSON_KEY_FILE", "assets/google-play/asole-73f1f-dc494a4b5159.json")
+  google_play_temp_key_path || ENV.fetch("GOOGLE_PLAY_JSON_KEY_FILE", "assets/google-play/asole-73f1f-dc494a4b5159.json")
+end
+
+def google_play_key_options
+  { json_key: google_play_key_path }
 end
 
 def android_keystore_path
@@ -61,6 +85,26 @@ def capacitor_sync(platform)
   run_command("npx cap sync #{platform}")
 end
 
+def without_android_signing
+  keys = %w[
+    ASOL_ANDROID_KEYSTORE_PASSWORD
+    ASOL_ANDROID_KEY_ALIAS
+    ASOL_ANDROID_KEY_PASSWORD
+    ASOL_ANDROID_KEYSTORE_FILE
+  ]
+  previous = keys.to_h { |key| [key, ENV[key]] }
+  keys.each { |key| ENV.delete(key) }
+  yield
+ensure
+  previous.each do |key, value|
+    if value.nil?
+      ENV.delete(key)
+    else
+      ENV[key] = value
+    end
+  end
+end
+
 platform :android do
   desc "Validate Android publishing prerequisites"
   lane :doctor do
@@ -79,12 +123,69 @@ platform :android do
     )
   end
 
+  desc "Build signed Android release bundle without uploading"
+  lane :aab_signed do
+    build
+  end
+
+  desc "Build unsigned Android release bundle without uploading"
+  lane :aab_unsigned do
+    check_google_play_key!
+    capacitor_sync(:android)
+    without_android_signing do
+      gradle(
+        project_dir: "android",
+        task: "bundle",
+        build_type: "Release"
+      )
+    end
+  end
+
+  desc "Build signed Android release APK without uploading"
+  lane :apk_signed do
+    doctor
+    capacitor_sync(:android)
+    gradle(
+      project_dir: "android",
+      task: "assemble",
+      build_type: "Release"
+    )
+  end
+
+  desc "Build unsigned Android release APK without uploading"
+  lane :apk_unsigned do
+    check_google_play_key!
+    capacitor_sync(:android)
+    without_android_signing do
+      gradle(
+        project_dir: "android",
+        task: "assemble",
+        build_type: "Release"
+      )
+    end
+  end
+
   desc "Upload Android bundle to Google Play internal track"
   lane :internal do
     build
     upload_to_play_store(
       track: ENV.fetch("GOOGLE_PLAY_TRACK", "internal"),
-      json_key: google_play_key_path,
+      **google_play_key_options,
+      package_name: ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"),
+      aab: "android/app/build/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  desc "Upload Android bundle to Google Play production track"
+  lane :production do
+    build
+    upload_to_play_store(
+      track: "production",
+      **google_play_key_options,
       package_name: ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"),
       aab: "android/app/build/outputs/bundle/release/app-release.aab",
       skip_upload_metadata: true,

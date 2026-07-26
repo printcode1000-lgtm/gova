@@ -129,6 +129,11 @@ export function mapServiceError(error: unknown): NextResponse {
     'devCloudBackupArchiveIncomplete',
     'googlePlayConsoleDevelopmentOnly',
     'googlePlayConsoleCredentialsMissing',
+    'googlePlayEditMissing',
+    'googlePlayImageFileRequired',
+    'googlePlayImageIdRequired',
+    'googlePlayFastlaneActionRequired',
+    'googlePlayProductionConfirmationRequired',
   ];
   const quietKnownCodes = new Set([
     'dataHealthNoOrdersToPurge',

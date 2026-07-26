@@ -1,8 +1,5 @@
 import "server-only";
 
-import fs from "node:fs/promises";
-import path from "node:path";
-
 import { GoogleAuth } from "google-auth-library";
 
 import {
@@ -15,18 +12,11 @@ import type {
   GooglePlayConsoleEndpointResult,
   GooglePlayConsoleSnapshot,
 } from "../domain/types";
+import { resolveGooglePlayCredentials } from "./google-play-credentials.server";
 
 const ANDROID_PUBLISHER_SCOPE =
   "https://www.googleapis.com/auth/androidpublisher";
 const API_ROOT = "https://androidpublisher.googleapis.com/androidpublisher/v3";
-
-type ServiceAccountFile = {
-  client_email?: string;
-  client_id?: string;
-  project_id?: string;
-  private_key?: string;
-  private_key_id?: string;
-};
 
 function toErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
@@ -46,7 +36,15 @@ function countReleases(value: unknown): number {
   return tracks.reduce((sum, track) => {
     if (!track || typeof track !== "object") return sum;
     const releases = (track as { releases?: unknown }).releases;
-    return sum + (Array.isArray(releases) ? releases.length : 0);
+    if (!Array.isArray(releases)) return sum;
+    return (
+      sum +
+      releases.filter((release) => {
+        if (!release || typeof release !== "object") return false;
+        const versionCodes = (release as { versionCodes?: unknown }).versionCodes;
+        return Array.isArray(versionCodes) && versionCodes.length > 0;
+      }).length
+    );
   }, 0);
 }
 
@@ -55,10 +53,13 @@ export class GooglePlayConsoleService {
     assertGooglePlayConsoleAllowed();
 
     const config = await this.readConfigStatus();
-    if (!config.keyFileExists) throw new Error("googlePlayConsoleCredentialsMissing");
+    const credentialResolution = await resolveGooglePlayCredentials();
+    if (!credentialResolution.credentials) {
+      throw new Error("googlePlayConsoleCredentialsMissing");
+    }
 
     const auth = new GoogleAuth({
-      keyFile: config.keyFilePath,
+      credentials: credentialResolution.credentials,
       scopes: [ANDROID_PUBLISHER_SCOPE],
     });
     const client = await auth.getClient();
@@ -148,26 +149,16 @@ export class GooglePlayConsoleService {
 
   private async readConfigStatus(): Promise<GooglePlayConsoleConfigStatus> {
     const config = resolveGooglePlayConsoleConfig();
-    const exists = await fs
-      .access(config.keyFilePath)
-      .then(() => true)
-      .catch(() => false);
-    let serviceAccount: ServiceAccountFile = {};
-
-    if (exists) {
-      const parsed = JSON.parse(
-        await fs.readFile(config.keyFilePath, "utf8"),
-      ) as ServiceAccountFile;
-      serviceAccount = parsed;
-    }
+    const credentialResolution = await resolveGooglePlayCredentials();
 
     return {
       packageName: config.packageName,
-      keyFilePath: path.relative(process.cwd(), config.keyFilePath),
-      keyFileExists: exists,
-      serviceAccountEmail: serviceAccount.client_email ?? "",
-      serviceAccountProjectId: serviceAccount.project_id ?? "",
-      serviceAccountUniqueId: serviceAccount.client_id ?? "",
+      keyFilePath: credentialResolution.status.keyFilePath,
+      keyFileExists: credentialResolution.status.keyFileExists,
+      credentialSource: credentialResolution.status.source,
+      serviceAccountEmail: credentialResolution.status.serviceAccountEmail,
+      serviceAccountProjectId: credentialResolution.status.serviceAccountProjectId,
+      serviceAccountUniqueId: credentialResolution.status.serviceAccountUniqueId,
     };
   }
 

@@ -42,3 +42,38 @@ export function resolveGooglePlayConsoleConfig(): Pick<
     ),
   };
 }
+
+export function resolveGooglePlayServiceAccountEnvironment() {
+  return {
+    jsonBase64: process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64?.trim() ?? "",
+    type: process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_TYPE || "service_account",
+    projectId: process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_PROJECT_ID,
+    privateKeyId: process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_PRIVATE_KEY_ID,
+    privateKeyBase64:
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_PRIVATE_KEY_BASE64?.trim() ?? "",
+    clientEmail:
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_EMAIL?.trim() ||
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL?.trim() ||
+      "",
+    clientId:
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_ID ||
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_UNIQUE_ID,
+    authUri:
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_URI ||
+      "https://accounts.google.com/o/oauth2/auth",
+    tokenUri:
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_TOKEN_URI ||
+      "https://oauth2.googleapis.com/token",
+    authProviderX509CertUrl:
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL ||
+      "https://www.googleapis.com/oauth2/v1/certs",
+    clientX509CertUrl:
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL,
+    universeDomain:
+      process.env.GOOGLE_PLAY_SERVICE_ACCOUNT_UNIVERSE_DOMAIN || "googleapis.com",
+  };
+}
+
+export function googlePlayFastlaneEnvironment() {
+  return { ...process.env };
+}

@@ -7,6 +7,7 @@ import {
   DatabaseZap,
   Edit,
   Eye,
+  Image as ImageIcon,
   LogIn,
   LogOut,
   MessagesSquare,
@@ -228,7 +229,8 @@ export const AppSidebar = React.memo(function AppSidebar({
     if (
       pathname.includes("/data-health") ||
       pathname.includes("/dev-cloud-backup") ||
-      pathname.includes("/google-play-console")
+      pathname.includes("/google-play-console") ||
+      pathname.includes("/google-play-store-assets")
     ) {
       setSuperAdminGroupsOpen((current) => ({ ...current, data: true }));
       return;
@@ -338,10 +340,16 @@ export const AppSidebar = React.memo(function AppSidebar({
                     نسخ سحابة التطوير
                   </Link>
                   {showLocalDevelopmentTools ? (
-                    <Link href="/super-admin/google-play-console" onClick={onClose} className={itemClass}>
-                      <ShoppingBag className="h-4 w-4" />
-                      Google Play Console
-                    </Link>
+                    <>
+                      <Link href="/super-admin/google-play-console" onClick={onClose} className={itemClass}>
+                        <ShoppingBag className="h-4 w-4" />
+                        Google Play Console
+                      </Link>
+                      <Link href="/super-admin/google-play-store-assets" onClick={onClose} className={itemClass}>
+                        <ImageIcon className="h-4 w-4" />
+                        بيانات متجر Google Play
+                      </Link>
+                    </>
                   ) : null}
                 </div>
               )}
@@ -477,14 +485,24 @@ export const AppSidebar = React.memo(function AppSidebar({
               نسخ سحابة التطوير
             </Link>
             {showLocalDevelopmentTools ? (
-              <Link
-                href="/super-admin/google-play-console"
-                onClick={onClose}
-                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
-              >
-                <ShoppingBag className="h-4 w-4" />
-                Google Play Console
-              </Link>
+              <>
+                <Link
+                  href="/super-admin/google-play-console"
+                  onClick={onClose}
+                  className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  Google Play Console
+                </Link>
+                <Link
+                  href="/super-admin/google-play-store-assets"
+                  onClick={onClose}
+                  className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary"
+                >
+                  <ImageIcon className="h-4 w-4" />
+                  بيانات متجر Google Play
+                </Link>
+              </>
             ) : null}
             <Link
               href="/super-admin/vapid"
