@@ -58,9 +58,18 @@ function parseJson(value: unknown): unknown {
 
 function jsonStringArray(value: unknown): string[] | null {
   const parsed = parseJson(value);
-  return Array.isArray(parsed)
-    ? parsed.filter((item): item is string => typeof item === "string")
-    : null;
+  if (Array.isArray(parsed)) {
+    return parsed.filter((item): item is string => typeof item === "string");
+  }
+  if (parsed && typeof parsed === "object") {
+    const productIds = (parsed as Record<string, unknown>).productIds;
+    if (Array.isArray(productIds)) {
+      return productIds.filter(
+        (item): item is string => typeof item === "string",
+      );
+    }
+  }
+  return null;
 }
 
 function routeFor(database: string, table: string, recordId: string): string {
@@ -331,7 +340,7 @@ export class DataHealthRepository {
         "SELECT id, plan_id, admin_uid, environment, issue_id, action, record_id, status, reason, created_at FROM data_health_cleanup_audit ORDER BY created_at DESC LIMIT 100",
       ) as Promise<Row[]>,
       profileDbClient.execute(
-        "SELECT id, fingerprint, resource_type, storage_profile_id, resource_key, database_name, table_name, record_id, reason, quarantined_by, quarantined_at, eligible_for_deletion_at, last_verified_at FROM data_health_quarantine WHERE released_at='' AND deleted_at='' ORDER BY quarantined_at DESC LIMIT 200",
+        "SELECT id, fingerprint, resource_type, storage_profile_id, resource_key, database_name, table_name, record_id, reason, quarantined_by, quarantined_at, eligible_for_deletion_at, last_verified_at FROM data_health_quarantine WHERE COALESCE(released_at, '')='' AND COALESCE(deleted_at, '')='' ORDER BY quarantined_at DESC LIMIT 200",
       ) as Promise<Row[]>,
     ]);
     return {
@@ -411,7 +420,7 @@ export class DataHealthRepository {
   async markQuarantineDeleted(id: string, deletedAt: string) {
     await this.ensureMetadata();
     const rows = (await profileDbClient.execute(
-      "UPDATE data_health_quarantine SET deleted_at=?, last_verified_at=? WHERE id=? AND released_at='' AND deleted_at='' RETURNING id",
+      "UPDATE data_health_quarantine SET deleted_at=?, last_verified_at=? WHERE id=? AND COALESCE(released_at, '')='' AND COALESCE(deleted_at, '')='' RETURNING id",
       [deletedAt, deletedAt, id],
     )) as Row[];
     if (!resultChanged(rows)) throw new Error("quarantineChangedOrMissing");
@@ -420,7 +429,7 @@ export class DataHealthRepository {
   async releaseQuarantine(id: string, releasedAt: string) {
     await this.ensureMetadata();
     const rows = (await profileDbClient.execute(
-      "UPDATE data_health_quarantine SET released_at=?, last_verified_at=? WHERE id=? AND released_at='' AND deleted_at='' RETURNING id",
+      "UPDATE data_health_quarantine SET released_at=?, last_verified_at=? WHERE id=? AND COALESCE(released_at, '')='' AND COALESCE(deleted_at, '')='' RETURNING id",
       [releasedAt, releasedAt, id],
     )) as Row[];
     if (!resultChanged(rows)) throw new Error("quarantineChangedOrMissing");
@@ -432,10 +441,13 @@ export class DataHealthRepository {
   }): Promise<number> {
     await this.ensureMetadata();
     const rows = (await profileDbClient.execute(
-      "UPDATE data_health_quarantine SET deleted_at=?, last_verified_at=? WHERE released_at='' AND deleted_at='' RETURNING id",
-      [input.clearedAt, input.clearedAt],
+      "DELETE FROM data_health_quarantine RETURNING id",
     )) as Row[];
     const cleared = rows.length;
+    await profileDbClient.execute(
+      "UPDATE data_health_findings SET state='recurring', last_seen_at=? WHERE state='quarantined'",
+      [input.clearedAt],
+    );
     await this.addManualAudit({
       adminUid: input.adminUid,
       action: "clear-quarantine",
@@ -1249,7 +1261,7 @@ export class DataHealthRepository {
           }),
         );
       }
-      for (const row of foreignKeys) {
+      for (const row of foreignKeys.filter((item) => text(item.table))) {
         issues.push(
           makeIssue({
             category: "database",
@@ -1273,7 +1285,7 @@ export class DataHealthRepository {
       ordersDb.execute("PRAGMA foreign_key_check"),
     ]);
     checked += quick.length + foreignKeys.length;
-    for (const row of foreignKeys) {
+    for (const row of foreignKeys.filter((item) => text(item.table))) {
       issues.push(
         makeIssue({
           category: "database",
@@ -1381,7 +1393,7 @@ export class DataHealthRepository {
   private async applyFindingState(issues: DataHealthIssue[]) {
     const [quarantined, previousFindings] = (await Promise.all([
       profileDbClient.execute(
-        "SELECT fingerprint FROM data_health_quarantine WHERE released_at='' AND deleted_at=''",
+        "SELECT fingerprint FROM data_health_quarantine WHERE COALESCE(released_at, '')='' AND COALESCE(deleted_at, '')=''",
       ),
       profileDbClient.execute(
         "SELECT fingerprint, MIN(first_seen_at) AS first_seen_at FROM data_health_findings GROUP BY fingerprint",
@@ -1734,7 +1746,7 @@ export class DataHealthRepository {
       issue.evidence.imageKey ?? issue.evidence.objectPath ?? issue.relatedId,
     );
     await profileDbClient.execute(
-      "INSERT INTO data_health_quarantine (id, fingerprint, resource_type, storage_profile_id, resource_key, database_name, table_name, record_id, reason, quarantined_by, quarantined_at, eligible_for_deletion_at, last_verified_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(fingerprint) DO UPDATE SET last_verified_at=excluded.last_verified_at, reason=excluded.reason",
+      "INSERT INTO data_health_quarantine (id, fingerprint, resource_type, storage_profile_id, resource_key, database_name, table_name, record_id, reason, quarantined_by, quarantined_at, eligible_for_deletion_at, last_verified_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(fingerprint) DO UPDATE SET resource_type=excluded.resource_type, storage_profile_id=excluded.storage_profile_id, resource_key=excluded.resource_key, database_name=excluded.database_name, table_name=excluded.table_name, record_id=excluded.record_id, reason=excluded.reason, quarantined_by=excluded.quarantined_by, quarantined_at=excluded.quarantined_at, eligible_for_deletion_at=excluded.eligible_for_deletion_at, last_verified_at=excluded.last_verified_at, released_at='', deleted_at=''",
       [
         randomUUID(),
         issue.fingerprint,

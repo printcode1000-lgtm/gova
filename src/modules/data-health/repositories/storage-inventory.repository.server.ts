@@ -33,6 +33,14 @@ export interface StorageInventory {
 type Row = Record<string, unknown>;
 type StorageObjectEntry = { path: string; updatedAt?: string };
 
+const IMAGE_EXTENSION_PATTERN = /\.(?:avif|gif|jpe?g|png|webp)$/i;
+const IGNORED_STORAGE_FILE_NAMES = new Set([
+  ".gitkeep",
+  ".gitignore",
+  ".ds_store",
+  "thumbs.db",
+]);
+
 function text(value: unknown): string {
   return String(value ?? "").trim();
 }
@@ -74,6 +82,31 @@ function collectStoredImages(
   return result;
 }
 
+function normalizeObjectPath(value: string): string {
+  return value.trim().replace(/\\/g, "/").replace(/^\/+/, "");
+}
+
+function isImageObjectPath(objectPath: string): boolean {
+  const normalized = normalizeObjectPath(objectPath);
+  const fileName = normalized.split("/").pop()?.toLowerCase() ?? "";
+  return (
+    Boolean(fileName) &&
+    !IGNORED_STORAGE_FILE_NAMES.has(fileName) &&
+    IMAGE_EXTENSION_PATTERN.test(fileName)
+  );
+}
+
+function objectPathFromUrlOrPath(value: unknown): string {
+  const raw = text(value);
+  if (!raw) return "";
+  try {
+    const parsed = new URL(raw, "https://asol.local");
+    return normalizeObjectPath(parsed.pathname);
+  } catch {
+    return normalizeObjectPath(raw);
+  }
+}
+
 function reference(
   input: Omit<StorageReference, "objectPath">,
 ): StorageReference {
@@ -81,6 +114,34 @@ function reference(
   return {
     ...input,
     objectPath: buildObjectPath(profile.folder, input.imageKey),
+  };
+}
+
+function referenceFromObjectPath(
+  input: Omit<StorageReference, "objectPath" | "imageKey" | "storageProfileId"> & {
+    objectPath: string;
+  },
+): StorageReference | null {
+  const objectPath = normalizeObjectPath(input.objectPath);
+  const profile = getAllStorageProfiles()
+    .filter((candidate) => candidate.enabled)
+    .sort((left, right) => right.folder.length - left.folder.length)
+    .find(
+      (candidate) =>
+        objectPath === candidate.folder ||
+        objectPath.startsWith(`${candidate.folder}/`) ||
+        objectPath.startsWith(`sync_data/sync_file/${candidate.folder}/`),
+    );
+  if (!profile) return null;
+  const canonicalObjectPath = objectPath.startsWith("sync_data/sync_file/")
+    ? objectPath.slice("sync_data/sync_file/".length)
+    : objectPath;
+  if (!isImageObjectPath(canonicalObjectPath)) return null;
+  return {
+    ...input,
+    storageProfileId: profile.id,
+    imageKey: canonicalObjectPath.slice(profile.folder.length + 1),
+    objectPath: canonicalObjectPath,
   };
 }
 
@@ -96,10 +157,10 @@ export class StorageInventoryRepository {
           "SELECT id, uid, images_json FROM products",
         ) as Promise<Row[]>,
         productDbClient.execute(
-          "SELECT id, uid, image_key FROM pharmacy_profile_product_overrides WHERE image_key IS NOT NULL AND image_key <> ''",
+          "SELECT id, uid, image_url, image_key FROM pharmacy_profile_product_overrides WHERE (image_key IS NOT NULL AND image_key <> '') OR (image_url IS NOT NULL AND image_url <> '')",
         ) as Promise<Row[]>,
         ordersDb.execute(
-          "SELECT id, uploaded_by, storage_profile_id, image_key FROM custom_request_images",
+          "SELECT id, uploaded_by, storage_profile_id, image_url, image_key FROM custom_request_images",
         ),
         advertisementsDbClient.execute(
           "SELECT id, config_json FROM hero_slider",
@@ -145,32 +206,52 @@ export class StorageInventoryRepository {
 
     for (const row of pharmacyOverrides) {
       const imageKey = text(row.image_key);
-      if (!imageKey || imageKey.startsWith("pharmacy-fixed/")) continue;
-      references.push(
-        reference({
-          storageProfileId: "product-default",
-          imageKey,
-          database: "product",
-          table: "pharmacy_profile_product_overrides",
-          recordId: text(row.id),
-          ownerUid: text(row.uid),
-        }),
-      );
+      if (imageKey && !imageKey.startsWith("pharmacy-fixed/")) {
+        references.push(
+          reference({
+            storageProfileId: "product-default",
+            imageKey,
+            database: "product",
+            table: "pharmacy_profile_product_overrides",
+            recordId: text(row.id),
+            ownerUid: text(row.uid),
+          }),
+        );
+        continue;
+      }
+      const urlReference = referenceFromObjectPath({
+        objectPath: objectPathFromUrlOrPath(row.image_url),
+        database: "product",
+        table: "pharmacy_profile_product_overrides",
+        recordId: text(row.id),
+        ownerUid: text(row.uid),
+      });
+      if (urlReference) references.push(urlReference);
     }
 
     for (const row of customImages) {
       const imageKey = text(row.image_key);
-      if (!imageKey) continue;
-      references.push(
-        reference({
-          storageProfileId: text(row.storage_profile_id) || "spicialOrder",
-          imageKey,
-          database: "marketplace_orders",
-          table: "custom_request_images",
-          recordId: text(row.id),
-          ownerUid: text(row.uploaded_by),
-        }),
-      );
+      if (imageKey) {
+        references.push(
+          reference({
+            storageProfileId: text(row.storage_profile_id) || "spicialOrder",
+            imageKey,
+            database: "marketplace_orders",
+            table: "custom_request_images",
+            recordId: text(row.id),
+            ownerUid: text(row.uploaded_by),
+          }),
+        );
+        continue;
+      }
+      const urlReference = referenceFromObjectPath({
+        objectPath: objectPathFromUrlOrPath(row.image_url),
+        database: "marketplace_orders",
+        table: "custom_request_images",
+        recordId: text(row.id),
+        ownerUid: text(row.uploaded_by),
+      });
+      if (urlReference) references.push(urlReference);
     }
 
     for (const row of heroRows) {
@@ -200,7 +281,9 @@ export class StorageInventoryRepository {
         for (const object of await imageStorageOrchestrator.listByProfile(
           profile.id,
         )) {
-          objects.set(object.path, object);
+          const objectPath = normalizeObjectPath(object.path);
+          if (!isImageObjectPath(objectPath)) continue;
+          objects.set(objectPath, { ...object, path: objectPath });
         }
       } catch (error) {
         warnings.push(
