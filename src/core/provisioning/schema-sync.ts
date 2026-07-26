@@ -40,6 +40,7 @@ const MARKETPLACE_ORDERS_SCHEMA_SYNC_REPORT_PATH = path.join(
 const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
   users: new Set([
     'users',
+    'password_recovery_challenges',
     'user_notification_tokens',
     'user_notification_preferences',
     'notification_vapid_settings',
@@ -62,6 +63,9 @@ const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
     'profile_delivery_carriers',
     'profile_search_categories',
     'profile_category_product_counts',
+    'seller_discounts',
+    'seller_discount_usages',
+    'system_logs',
   ]),
   advertisements: new Set(['hero_slider', 'featured_marquee', 'trending_ribbon']),
   product: new Set([
@@ -92,6 +96,14 @@ const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
     'disputes',
     'dispute_messages',
     'audit_trail',
+    'shipping_quotes',
+    'delivery_plans',
+    'delivery_plan_stops',
+    'delivery_plan_candidates',
+    'delivery_plan_candidate_stops',
+    'delivery_plan_quotes',
+    'delivery_plan_quote_stops',
+    'delivery_plan_shipments',
   ]),
 };
 
@@ -118,6 +130,8 @@ export interface RunSchemaSyncOptions {
   reportPath?: string;
   /** Label used in skip reasons and logs. */
   databaseLabel?: string;
+  /** When true, drop extra Turso objects that do not exist in the SQLite schema source. */
+  removeExtraObjects?: boolean;
 }
 
 function writeReport(reportPath: string, report: SchemaSyncReport): void {
@@ -177,7 +191,7 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
       databaseLabel === 'profile'
         ? 'Turso profile credentials not configured (TURSO_PROFILE_DATABASE_URL / TURSO_PROFILE_AUTH_TOKEN)'
         : databaseLabel === 'advertisements'
-          ? 'Turso advertisements credentials not configured (TURSO_ADVERTISEMENTS_DATABASE_URL or TURSO_DATABASE_URL)'
+          ? 'Turso advertisements credentials not configured (TURSO_ADVERTISEMENTS_DATABASE_URL / TURSO_ADVERTISEMENTS_AUTH_TOKEN)'
           : databaseLabel === 'product'
             ? 'Turso product credentials not configured (TURSO_PRODUCT_DATABASE_URL / TURSO_PRODUCT_AUTH_TOKEN)'
             : databaseLabel === 'marketplace-orders'
@@ -225,6 +239,7 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
 
   const { operations, warnings } = diffSchemas(sqliteSchema, tursoSchemaBefore, {
     ignoredExtraTables: ignoredExtraTablesFor(databaseLabel),
+    removeExtraObjects: options.removeExtraObjects,
   });
   const sqlExecuted: string[] = [];
   const errors: string[] = [];
@@ -288,7 +303,7 @@ export interface AllSchemaSyncReports {
  * Includes: allusers.db → users, profile.db → profile, advertisements.db → advertisements, product.db → product.
  */
 export async function runAllSchemaSyncs(
-  options: Pick<RunSchemaSyncOptions, 'skipIfMissingCredentials'> = {}
+  options: Pick<RunSchemaSyncOptions, 'skipIfMissingCredentials' | 'removeExtraObjects'> = {}
 ): Promise<AllSchemaSyncReports> {
   const users = await runSchemaSync({
     ...options,

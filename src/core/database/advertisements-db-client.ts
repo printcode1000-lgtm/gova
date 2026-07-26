@@ -9,9 +9,9 @@ import { isDevRuntime } from "./environment";
  * Development runtime  → SQLite (public/sync_data/sync_sqlite/advertisements.db)
  * Production runtime   → Turso (@libsql/client)
  *
- * Reads TURSO_ADVERTISEMENTS_DATABASE_URL / TURSO_ADVERTISEMENTS_AUTH_TOKEN when set,
- * otherwise falls back to the main TURSO_DATABASE_URL / TURSO_AUTH_TOKEN pair so that
- * simple single-database deployments work without extra environment variables.
+ * Reads TURSO_ADVERTISEMENTS_DATABASE_URL / TURSO_ADVERTISEMENTS_AUTH_TOKEN.
+ * Advertisements use a dedicated Turso database so its cloud schema can stay
+ * exactly aligned with public/sync_data/sync_sqlite/advertisements.db.
  */
 function createAdvertisementsDbClient(): IDatabaseClient {
   if (isDevRuntime()) {
@@ -29,4 +29,3 @@ function createAdvertisementsDbClient(): IDatabaseClient {
 // Dedicated advertisements database. Turso replaces SQLite in production.
 export const advertisementsDbClient: IDatabaseClient =
   createAdvertisementsDbClient();
-

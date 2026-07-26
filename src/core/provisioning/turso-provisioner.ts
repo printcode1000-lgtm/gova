@@ -6,11 +6,20 @@ import {
   listTursoDatabases,
 } from './turso-platform-api';
 import { SQLITE_DIRECTORY } from '@/core/database/environment';
-import { writeTursoRuntimeCredentials, writeTursoProfileRuntimeCredentials, writeTursoMarketplaceOrdersRuntimeCredentials, readOptionalEnv } from '@/core/config/server-env.values';
+import {
+  writeTursoAdvertisementsRuntimeCredentials,
+  writeTursoMarketplaceOrdersRuntimeCredentials,
+  writeTursoProductRuntimeCredentials,
+  writeTursoProfileRuntimeCredentials,
+  writeTursoRuntimeCredentials,
+  readOptionalEnv,
+} from '@/core/config/server-env.values';
 import type { TursoProvisionResult } from './types';
 
 const DEFAULT_USERS_DB_NAME = 'asol-db';
 const DEFAULT_PROFILE_DB_NAME = 'asol-profile';
+const DEFAULT_PRODUCT_DB_NAME = 'asol-product';
+const DEFAULT_ADVERTISEMENTS_DB_NAME = 'asol-advertisements';
 const DEFAULT_MARKETPLACE_ORDERS_DB_NAME = 'asol-marketplace-orders';
 
 function updateEnvFileKeys(
@@ -60,6 +69,24 @@ function updateMarketplaceOrdersEnvFiles(url: string, token: string): void {
   updateEnvFileKeys('.env.local', entries);
 }
 
+function updateProductEnvFiles(url: string, token: string): void {
+  const entries = {
+    TURSO_PRODUCT_DATABASE_URL: url,
+    TURSO_PRODUCT_AUTH_TOKEN: token,
+  };
+  updateEnvFileKeys('.env', entries);
+  updateEnvFileKeys('.env.local', entries);
+}
+
+function updateAdvertisementsEnvFiles(url: string, token: string): void {
+  const entries = {
+    TURSO_ADVERTISEMENTS_DATABASE_URL: url,
+    TURSO_ADVERTISEMENTS_AUTH_TOKEN: token,
+  };
+  updateEnvFileKeys('.env', entries);
+  updateEnvFileKeys('.env.local', entries);
+}
+
 export interface ProvisionTursoOptions {
   databaseName?: string;
   updateLocalEnv?: boolean;
@@ -103,6 +130,52 @@ export async function provisionTursoProfileDatabase(
         updateProfileEnvFiles(url, token);
       }
       writeTursoProfileRuntimeCredentials(url, token);
+    },
+  });
+}
+
+export interface ProvisionTursoProductOptions {
+  databaseName?: string;
+  updateLocalEnv?: boolean;
+}
+
+/**
+ * Ensures the dedicated product database exists and returns runtime credentials.
+ */
+export async function provisionTursoProductDatabase(
+  options: ProvisionTursoProductOptions = {}
+): Promise<TursoProvisionResult> {
+  return provisionNamedTursoDatabase({
+    ...options,
+    databaseName: options.databaseName ?? DEFAULT_PRODUCT_DB_NAME,
+    onProvisioned: (url, token) => {
+      if (options.updateLocalEnv !== false) {
+        updateProductEnvFiles(url, token);
+      }
+      writeTursoProductRuntimeCredentials(url, token);
+    },
+  });
+}
+
+export interface ProvisionTursoAdvertisementsOptions {
+  databaseName?: string;
+  updateLocalEnv?: boolean;
+}
+
+/**
+ * Ensures the dedicated advertisements database exists and returns runtime credentials.
+ */
+export async function provisionTursoAdvertisementsDatabase(
+  options: ProvisionTursoAdvertisementsOptions = {}
+): Promise<TursoProvisionResult> {
+  return provisionNamedTursoDatabase({
+    ...options,
+    databaseName: options.databaseName ?? DEFAULT_ADVERTISEMENTS_DB_NAME,
+    onProvisioned: (url, token) => {
+      if (options.updateLocalEnv !== false) {
+        updateAdvertisementsEnvFiles(url, token);
+      }
+      writeTursoAdvertisementsRuntimeCredentials(url, token);
     },
   });
 }
@@ -179,24 +252,16 @@ export function loadTursoProfileCredentialsFromEnv(): { url: string; authToken: 
 }
 
 export function loadTursoAdvertisementsCredentialsFromEnv(): { url: string; authToken: string } | null {
-  const url =
-    readOptionalEnv('TURSO_ADVERTISEMENTS_DATABASE_URL') ||
-    readOptionalEnv('TURSO_DATABASE_URL');
-  const authToken =
-    readOptionalEnv('TURSO_ADVERTISEMENTS_AUTH_TOKEN') ||
-    readOptionalEnv('TURSO_AUTH_TOKEN');
+  const url = readOptionalEnv('TURSO_ADVERTISEMENTS_DATABASE_URL');
+  const authToken = readOptionalEnv('TURSO_ADVERTISEMENTS_AUTH_TOKEN');
 
   if (!url || !authToken) return null;
   return { url, authToken };
 }
 
 export function loadTursoProductCredentialsFromEnv(): { url: string; authToken: string } | null {
-  const url =
-    readOptionalEnv('TURSO_PRODUCT_DATABASE_URL') ||
-    readOptionalEnv('TURSO_DATABASE_URL');
-  const authToken =
-    readOptionalEnv('TURSO_PRODUCT_AUTH_TOKEN') ||
-    readOptionalEnv('TURSO_AUTH_TOKEN');
+  const url = readOptionalEnv('TURSO_PRODUCT_DATABASE_URL');
+  const authToken = readOptionalEnv('TURSO_PRODUCT_AUTH_TOKEN');
 
   if (!url || !authToken) return null;
   return { url, authToken };

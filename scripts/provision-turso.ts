@@ -1,8 +1,10 @@
 import { existsSync } from "fs";
 import dotenv from "dotenv";
 import {
+  provisionTursoAdvertisementsDatabase,
   provisionTursoDatabase,
   provisionTursoMarketplaceOrdersDatabase,
+  provisionTursoProductDatabase,
   provisionTursoProfileDatabase,
 } from "../src/core/provisioning/turso-provisioner";
 import { runAllSchemaSyncs } from "../src/core/provisioning/schema-sync";
@@ -28,6 +30,16 @@ async function main() {
   const profileProvision = await provisionTursoProfileDatabase();
   console.log(`Turso profile DB ready: ${profileProvision.databaseName} (${profileProvision.databaseUrl})`);
 
+  console.log("Provisioning Turso product database...");
+  const productProvision = await provisionTursoProductDatabase();
+  console.log(`Turso product DB ready: ${productProvision.databaseName} (${productProvision.databaseUrl})`);
+
+  console.log("Provisioning Turso advertisements database...");
+  const advertisementsProvision = await provisionTursoAdvertisementsDatabase();
+  console.log(
+    `Turso advertisements DB ready: ${advertisementsProvision.databaseName} (${advertisementsProvision.databaseUrl})`,
+  );
+
   console.log("Provisioning Turso marketplace orders database...");
   const marketplaceOrdersProvision = await provisionTursoMarketplaceOrdersDatabase();
   console.log(
@@ -35,7 +47,7 @@ async function main() {
   );
 
   console.log("Running schema synchronization (SQLite to Turso, schema only)...");
-  const reports = await runAllSchemaSyncs();
+  const reports = await runAllSchemaSyncs({ removeExtraObjects: true });
 
   console.log("Turso provisioning and schema sync completed.");
   for (const [label, report] of Object.entries(reports)) {

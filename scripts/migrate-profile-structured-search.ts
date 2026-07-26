@@ -86,11 +86,11 @@ function tursoDb(kind: "profile" | "product" = "profile"): Db {
   const url =
     kind === "profile"
       ? process.env.TURSO_PROFILE_DATABASE_URL
-      : process.env.TURSO_PRODUCT_DATABASE_URL || process.env.TURSO_DATABASE_URL;
+      : process.env.TURSO_PRODUCT_DATABASE_URL;
   const authToken =
     kind === "profile"
       ? process.env.TURSO_PROFILE_AUTH_TOKEN
-      : process.env.TURSO_PRODUCT_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN;
+      : process.env.TURSO_PRODUCT_AUTH_TOKEN;
   if (!url || !authToken) throw new Error(`Turso ${kind} credentials are missing`);
   const client = createClient({ url, authToken });
   return {

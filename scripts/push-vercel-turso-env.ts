@@ -11,9 +11,6 @@ const VERCEL_KEYS = [
   'TURSO_AUTH_TOKEN',
   'TURSO_PROFILE_DATABASE_URL',
   'TURSO_PROFILE_AUTH_TOKEN',
-] as const;
-
-const OPTIONAL_VERCEL_KEYS = [
   'TURSO_PRODUCT_DATABASE_URL',
   'TURSO_PRODUCT_AUTH_TOKEN',
   'TURSO_ADVERTISEMENTS_DATABASE_URL',
@@ -21,6 +18,8 @@ const OPTIONAL_VERCEL_KEYS = [
   'MARKETPLACE_ORDERS_DATABASE_URL',
   'MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN',
 ] as const;
+
+const OPTIONAL_VERCEL_KEYS = [] as const;
 
 async function vercelFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const token = process.env.VERCEL_TOKEN || process.env.VERCEL_ACCESS_TOKEN;

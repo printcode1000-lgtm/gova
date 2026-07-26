@@ -42,7 +42,11 @@ export type SchemaDiffOperationType =
   | 'ADD_COLUMN'
   | 'CREATE_INDEX'
   | 'CREATE_VIEW'
-  | 'CREATE_TRIGGER';
+  | 'CREATE_TRIGGER'
+  | 'DROP_INDEX'
+  | 'DROP_VIEW'
+  | 'DROP_TRIGGER'
+  | 'DROP_TABLE';
 
 export interface SchemaDiffOperation {
   type: SchemaDiffOperationType;

@@ -33,6 +33,7 @@ function normalizeColumnType(type: string): string {
 
 export interface SchemaDiffOptions {
   ignoredExtraTables?: Set<string>;
+  removeExtraObjects?: boolean;
 }
 
 function compatibleType(a: ColumnInfo, b: ColumnInfo): boolean {
@@ -119,6 +120,15 @@ export function diffSchemas(
   for (const tursoTableName of Object.keys(tursoSchema.tables)) {
     if (!sqliteSchema.tables[tursoTableName]) {
       if (options.ignoredExtraTables?.has(tursoTableName)) continue;
+      if (options.removeExtraObjects) {
+        operations.push({
+          type: 'DROP_TABLE',
+          tableName: tursoTableName,
+          sql: `DROP TABLE IF EXISTS ${quoteIdent(tursoTableName)}`,
+          description: `Drop extra table "${tursoTableName}"`,
+        });
+        continue;
+      }
       warnings.push(
         `Table "${tursoTableName}" exists on Turso but not in SQLite. Not dropped automatically.`
       );
@@ -137,6 +147,20 @@ export function diffSchemas(
     });
   }
 
+  if (options.removeExtraObjects) {
+    for (const indexName of Object.keys(tursoSchema.indexes).sort()) {
+      if (sqliteSchema.indexes[indexName]) continue;
+      const index = tursoSchema.indexes[indexName];
+      if (options.ignoredExtraTables?.has(index.tableName)) continue;
+      operations.push({
+        type: 'DROP_INDEX',
+        tableName: index.tableName,
+        sql: `DROP INDEX IF EXISTS ${quoteIdent(indexName)}`,
+        description: `Drop extra index "${indexName}"`,
+      });
+    }
+  }
+
   for (const viewName of Object.keys(sqliteSchema.views).sort()) {
     if (tursoSchema.views[viewName]) continue;
     const view = sqliteSchema.views[viewName];
@@ -145,6 +169,17 @@ export function diffSchemas(
       sql: view.sql.endsWith(';') ? view.sql : `${view.sql};`,
       description: `Create missing view "${viewName}"`,
     });
+  }
+
+  if (options.removeExtraObjects) {
+    for (const viewName of Object.keys(tursoSchema.views).sort()) {
+      if (sqliteSchema.views[viewName]) continue;
+      operations.push({
+        type: 'DROP_VIEW',
+        sql: `DROP VIEW IF EXISTS ${quoteIdent(viewName)}`,
+        description: `Drop extra view "${viewName}"`,
+      });
+    }
   }
 
   for (const triggerName of Object.keys(sqliteSchema.triggers).sort()) {
@@ -157,5 +192,34 @@ export function diffSchemas(
     });
   }
 
-  return { operations, warnings };
+  if (options.removeExtraObjects) {
+    for (const triggerName of Object.keys(tursoSchema.triggers).sort()) {
+      if (sqliteSchema.triggers[triggerName]) continue;
+      operations.push({
+        type: 'DROP_TRIGGER',
+        sql: `DROP TRIGGER IF EXISTS ${quoteIdent(triggerName)}`,
+        description: `Drop extra trigger "${triggerName}"`,
+      });
+    }
+  }
+
+  return {
+    operations: operations.sort((a, b) => operationOrder(a.type) - operationOrder(b.type)),
+    warnings,
+  };
+}
+
+function operationOrder(type: SchemaDiffOperation['type']): number {
+  switch (type) {
+    case 'DROP_TRIGGER':
+      return 0;
+    case 'DROP_VIEW':
+      return 1;
+    case 'DROP_INDEX':
+      return 2;
+    case 'DROP_TABLE':
+      return 3;
+    default:
+      return 10;
+  }
 }

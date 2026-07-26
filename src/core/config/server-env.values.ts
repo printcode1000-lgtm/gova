@@ -243,23 +243,33 @@ export function writeTursoMarketplaceOrdersRuntimeCredentials(
   process.env.MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN = authToken;
 }
 
+export function writeTursoProductRuntimeCredentials(
+  url: string,
+  authToken: string,
+): void {
+  process.env.TURSO_PRODUCT_DATABASE_URL = url;
+  process.env.TURSO_PRODUCT_AUTH_TOKEN = authToken;
+}
+
+export function writeTursoAdvertisementsRuntimeCredentials(
+  url: string,
+  authToken: string,
+): void {
+  process.env.TURSO_ADVERTISEMENTS_DATABASE_URL = url;
+  process.env.TURSO_ADVERTISEMENTS_AUTH_TOKEN = authToken;
+}
+
 export function getTursoProductRuntimeCredentials(): {
   url: string;
   authToken: string;
 } {
-  const url =
-    process.env.TURSO_PRODUCT_DATABASE_URL || process.env.TURSO_DATABASE_URL;
-  const authToken =
-    process.env.TURSO_PRODUCT_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN;
+  const url = process.env.TURSO_PRODUCT_DATABASE_URL;
+  const authToken = process.env.TURSO_PRODUCT_AUTH_TOKEN;
 
   if (!url)
-    throw new Error(
-      "Neither TURSO_PRODUCT_DATABASE_URL nor TURSO_DATABASE_URL is set",
-    );
+    throw new Error("TURSO_PRODUCT_DATABASE_URL environment variable is not set");
   if (!authToken)
-    throw new Error(
-      "Neither TURSO_PRODUCT_AUTH_TOKEN nor TURSO_AUTH_TOKEN is set",
-    );
+    throw new Error("TURSO_PRODUCT_AUTH_TOKEN environment variable is not set");
 
   return { url, authToken };
 }
@@ -268,22 +278,16 @@ export function getTursoAdvertisementsRuntimeCredentials(): {
   url: string;
   authToken: string;
 } {
-  // Prefer a dedicated advertisements database when configured.
-  // Falls back to the main Turso database so that simple deployments only
-  // need a single TURSO_DATABASE_URL / TURSO_AUTH_TOKEN pair.
-  const url =
-    process.env.TURSO_ADVERTISEMENTS_DATABASE_URL ||
-    process.env.TURSO_DATABASE_URL;
-  const authToken =
-    process.env.TURSO_ADVERTISEMENTS_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN;
+  const url = process.env.TURSO_ADVERTISEMENTS_DATABASE_URL;
+  const authToken = process.env.TURSO_ADVERTISEMENTS_AUTH_TOKEN;
 
   if (!url)
     throw new Error(
-      "Neither TURSO_ADVERTISEMENTS_DATABASE_URL nor TURSO_DATABASE_URL is set",
+      "TURSO_ADVERTISEMENTS_DATABASE_URL environment variable is not set",
     );
   if (!authToken)
     throw new Error(
-      "Neither TURSO_ADVERTISEMENTS_AUTH_TOKEN nor TURSO_AUTH_TOKEN is set",
+      "TURSO_ADVERTISEMENTS_AUTH_TOKEN environment variable is not set",
     );
 
   return { url, authToken };
