@@ -10,6 +10,7 @@ import {
   FileArchive,
   RefreshCw,
   ShieldAlert,
+  Trash2,
   Upload,
 } from "lucide-react";
 
@@ -258,6 +259,60 @@ export function DevCloudBackupPage() {
         updateError instanceof Error
           ? updateError.message
           : "تعذر تحديث ملف النسخة من السحابة",
+      );
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const updateSavedBackup = async (fileName: string) => {
+    if (!authHeaders) return;
+    setBusy(`update-saved:${fileName}`);
+    setError("");
+    setNotice("");
+    try {
+      const result = await asolApi.post<DevCloudBackupUpdateResult>(
+        DEV_CLOUD_BACKUP_API.updateSaved,
+        { fileName },
+        { headers: authHeaders },
+      );
+      setUpdatedZip(result);
+      setDiff(result.diff);
+      setNotice(`تم إنشاء نسخة محدثة من ${fileName}.`);
+      await load();
+    } catch (updateError) {
+      setError(
+        updateError instanceof Error
+          ? updateError.message
+          : "تعذر تحديث النسخة المحفوظة",
+      );
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const deleteSavedBackup = async (fileName: string) => {
+    if (!authHeaders) return;
+    const confirmed = window.confirm(
+      `سيتم حذف النسخة المحلية فقط:\n${fileName}\nهل تريد المتابعة؟`,
+    );
+    if (!confirmed) return;
+    setBusy(`delete:${fileName}`);
+    setError("");
+    setNotice("");
+    try {
+      await asolApi.post<{ deleted: true; fileName: string }>(
+        DEV_CLOUD_BACKUP_API.deleteSaved,
+        { fileName },
+        { headers: authHeaders },
+      );
+      setNotice(`تم حذف النسخة المحلية ${fileName}.`);
+      await load();
+    } catch (deleteError) {
+      setError(
+        deleteError instanceof Error
+          ? deleteError.message
+          : "تعذر حذف النسخة المحفوظة",
       );
     } finally {
       setBusy("");
@@ -587,7 +642,7 @@ export function DevCloudBackupPage() {
           {(state?.backups ?? []).map((backup) => (
             <div
               key={backup.fileName}
-              className="grid gap-3 p-3 text-sm md:grid-cols-[1fr_auto_auto]"
+              className="grid gap-3 p-3 text-sm md:grid-cols-[1fr_auto]"
             >
               <div className="min-w-0">
                 <div className="break-all font-medium" dir="ltr">
@@ -597,16 +652,38 @@ export function DevCloudBackupPage() {
                   {dateText(backup.modifiedAt)}، {sizeText(backup.sizeBytes)}
                 </div>
               </div>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                disabled={!devAllowed || busy === `download:${backup.fileName}`}
-                onClick={() => void downloadBackup(backup.fileName)}
-              >
-                <Download className="h-4 w-4" />
-                تنزيل
-              </Button>
+              <div className="flex flex-wrap gap-2 md:justify-end">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={!devAllowed || busy === `download:${backup.fileName}`}
+                  onClick={() => void downloadBackup(backup.fileName)}
+                >
+                  <Download className="h-4 w-4" />
+                  تنزيل
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={!devAllowed || busy === `update-saved:${backup.fileName}`}
+                  onClick={() => void updateSavedBackup(backup.fileName)}
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  {busy === `update-saved:${backup.fileName}` ? "جاري التحديث" : "تحديث"}
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  disabled={!devAllowed || busy === `delete:${backup.fileName}`}
+                  onClick={() => void deleteSavedBackup(backup.fileName)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  {busy === `delete:${backup.fileName}` ? "جاري الحذف" : "حذف"}
+                </Button>
+              </div>
             </div>
           ))}
           {state?.backups.length === 0 ? (

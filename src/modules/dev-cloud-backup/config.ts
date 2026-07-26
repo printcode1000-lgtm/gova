@@ -7,5 +7,7 @@ export const DEV_CLOUD_BACKUP_API = {
   inspect: "/api/super-admin/dev-cloud-backup/backups/inspect",
   compare: "/api/super-admin/dev-cloud-backup/backups/compare",
   updateFromCloud: "/api/super-admin/dev-cloud-backup/backups/update-from-cloud",
+  updateSaved: "/api/super-admin/dev-cloud-backup/backups/update-saved",
+  deleteSaved: "/api/super-admin/dev-cloud-backup/backups/delete",
   restore: "/api/super-admin/dev-cloud-backup/backups/restore",
 } as const;

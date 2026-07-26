@@ -2,7 +2,7 @@ import "server-only";
 
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
 
@@ -351,6 +351,20 @@ export class DevCloudBackupService {
     });
     const summary = await this.saveArchive(archive, "-cloud-updated");
     return { ...summary, diff };
+  }
+
+  async updateSavedBackupFromCloud(fileName: string): Promise<DevCloudBackupUpdateResult> {
+    const backup = await this.readBackup(fileName);
+    return this.updateZipFromCloud(new Uint8Array(backup.body));
+  }
+
+  async deleteSavedBackup(fileName: string): Promise<{ deleted: true; fileName: string }> {
+    assertDevCloudBackupAllowed();
+    const safeName = safeZipName(fileName);
+    const fullPath = path.join(BACKUP_DIR, safeName);
+    if (!existsSync(fullPath)) throw new Error("devCloudBackupNotFound");
+    await unlink(fullPath);
+    return { deleted: true, fileName: safeName };
   }
 
   async restore(
