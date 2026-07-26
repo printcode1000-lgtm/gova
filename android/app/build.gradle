@@ -1,8 +1,24 @@
 apply plugin: 'com.android.application'
 
+def releaseKeystorePath = System.getenv("ASOL_ANDROID_KEYSTORE_FILE")
+def releaseKeystorePassword = System.getenv("ASOL_ANDROID_KEYSTORE_PASSWORD")
+def releaseKeyAlias = System.getenv("ASOL_ANDROID_KEY_ALIAS")
+def releaseKeyPassword = System.getenv("ASOL_ANDROID_KEY_PASSWORD")
+def hasReleaseSigning = releaseKeystorePath && releaseKeystorePassword && releaseKeyAlias && releaseKeyPassword
+
 android {
     namespace = "hgh.asol.app"
     compileSdk = rootProject.ext.compileSdkVersion
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile rootProject.file("../${releaseKeystorePath}")
+                storePassword releaseKeystorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
     defaultConfig {
         applicationId "hgh.asol.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -20,6 +36,9 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

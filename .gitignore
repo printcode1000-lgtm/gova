@@ -54,8 +54,12 @@ ios/build/fastlane/
 # Firebase server credentials and generated Android client config
 assets/google-play/*firebase-adminsdk*.json
 assets/google-play/google-services.json
+assets/google-play/*.json
+assets/google-play/*.jks
 android/app/google-services.json
 android/app/src/main/res/raw/custom_notification.mp3
 
 .vercel
 .env*
+!.env.example
+!fastlane/.env.example

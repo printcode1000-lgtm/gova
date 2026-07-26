@@ -2,5 +2,5 @@ app_identifier(ENV.fetch("ASOL_IOS_BUNDLE_ID", "hgh.asol.app"))
 apple_id(ENV["FASTLANE_USER"])
 team_id(ENV["ASOL_IOS_TEAM_ID"])
 
-json_key_file(ENV["GOOGLE_PLAY_JSON_KEY_FILE"])
+json_key_file(ENV.fetch("GOOGLE_PLAY_JSON_KEY_FILE", "assets/google-play/asole-73f1f-dc494a4b5159.json"))
 package_name(ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"))

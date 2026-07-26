@@ -1,8 +1,50 @@
 opt_out_usage
 
+require "json"
+
 default_platform(:android)
 
 APP_ROOT = File.expand_path("..", __dir__)
+
+def root_path(relative_path)
+  File.expand_path(relative_path.to_s, APP_ROOT)
+end
+
+def ensure_file!(label, relative_path)
+  UI.user_error!("#{label} is not configured") if relative_path.to_s.strip.empty?
+  path = root_path(relative_path)
+  UI.user_error!("#{label} was not found at #{path}") unless File.exist?(path)
+  path
+end
+
+def google_play_key_path
+  ENV.fetch("GOOGLE_PLAY_JSON_KEY_FILE", "assets/google-play/asole-73f1f-dc494a4b5159.json")
+end
+
+def android_keystore_path
+  ENV.fetch("ASOL_ANDROID_KEYSTORE_FILE", "assets/google-play/k.jks")
+end
+
+def check_google_play_key!
+  path = ensure_file!("Google Play service account JSON", google_play_key_path)
+  json = JSON.parse(File.read(path))
+  expected_email = ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL"]
+  if expected_email.to_s.strip.length > 0 && json["client_email"] != expected_email
+    UI.user_error!("Google Play JSON email does not match #{expected_email}")
+  end
+  UI.success("Google Play service account key is present")
+end
+
+def check_android_signing!
+  ensure_file!("Android release keystore", android_keystore_path)
+  missing = %w[
+    ASOL_ANDROID_KEYSTORE_PASSWORD
+    ASOL_ANDROID_KEY_ALIAS
+    ASOL_ANDROID_KEY_PASSWORD
+  ].select { |key| ENV[key].to_s.strip.empty? }
+  UI.user_error!("Android signing is missing: #{missing.join(", ")}") unless missing.empty?
+  UI.success("Android signing environment is present")
+end
 
 def run_command(command)
   UI.command(command)
@@ -20,8 +62,15 @@ def capacitor_sync(platform)
 end
 
 platform :android do
+  desc "Validate Android publishing prerequisites"
+  lane :doctor do
+    check_google_play_key!
+    check_android_signing!
+  end
+
   desc "Build Android release bundle without uploading"
   lane :build do
+    doctor
     capacitor_sync(:android)
     gradle(
       project_dir: "android",
@@ -35,7 +84,7 @@ platform :android do
     build
     upload_to_play_store(
       track: ENV.fetch("GOOGLE_PLAY_TRACK", "internal"),
-      json_key: ENV.fetch("GOOGLE_PLAY_JSON_KEY_FILE"),
+      json_key: google_play_key_path,
       package_name: ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"),
       aab: "android/app/build/outputs/bundle/release/app-release.aab",
       skip_upload_metadata: true,
@@ -47,8 +96,16 @@ platform :android do
 end
 
 platform :ios do
+  desc "Validate iOS publishing prerequisites"
+  lane :doctor do
+    missing = %w[ASOL_IOS_TEAM_ID FASTLANE_USER].select { |key| ENV[key].to_s.strip.empty? }
+    UI.user_error!("iOS publishing is missing: #{missing.join(", ")}") unless missing.empty?
+    UI.success("iOS publishing environment is present")
+  end
+
   desc "Build iOS app archive without uploading. Requires macOS/Xcode."
   lane :build do
+    doctor
     capacitor_sync(:ios)
     build_app(
       project: "ios/App/App.xcodeproj",

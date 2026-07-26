@@ -1,39 +1,77 @@
-# ASOL Fastlane Module
+fastlane documentation
+----
 
-This module prepares future Google Play and App Store publishing for the Capacitor app.
+# Installation
 
-## Installed Runtime
+Make sure you have the latest version of the Xcode command line tools installed:
 
-- Ruby is expected on `PATH`, or at `C:\Ruby33-x64`.
-- fastlane is pinned through the root `Gemfile`.
-- Run through `npm run fastlane -- <platform> <lane>`.
+```sh
+xcode-select --install
+```
 
-## Lanes
+For _fastlane_ installation instructions, see [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
 
-- `android build`: builds the Android release AAB only.
-- `android internal`: builds and uploads the AAB to Google Play internal testing.
-- `ios build`: builds the iOS IPA on macOS/Xcode.
-- `ios testflight`: builds and uploads the IPA to TestFlight on macOS/Xcode.
+# Available Actions
 
-## Required Secrets
+## Android
 
-Never commit these files or values.
+### android doctor
 
-- `GOOGLE_PLAY_JSON_KEY_FILE`: path to the Google Play service-account JSON.
-- `ASOL_ANDROID_PACKAGE_NAME`: defaults to `hgh.asol.app`.
-- `FASTLANE_USER`: Apple ID email for App Store Connect.
-- `ASOL_IOS_TEAM_ID`: Apple Developer Team ID.
-- `ASOL_IOS_BUNDLE_ID`: defaults to `hgh.asol.app`.
-- `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD`: optional for Apple ID flows.
+```sh
+[bundle exec] fastlane android doctor
+```
 
-Recommended future App Store Connect API key variables:
+Validate Android publishing prerequisites
 
-- `APP_STORE_CONNECT_API_KEY_KEY_ID`
-- `APP_STORE_CONNECT_API_KEY_ISSUER_ID`
-- `APP_STORE_CONNECT_API_KEY_KEY_FILEPATH`
+### android build
 
-## Notes
+```sh
+[bundle exec] fastlane android build
+```
 
-- Android publishing can run from Windows after signing and Google Play credentials are configured.
-- iOS publishing requires macOS with Xcode, even if this repository is prepared from Windows.
-- The current Android Gradle project does not define release signing yet; add keystore-backed signing before production upload.
+Build Android release bundle without uploading
+
+### android internal
+
+```sh
+[bundle exec] fastlane android internal
+```
+
+Upload Android bundle to Google Play internal track
+
+----
+
+
+## iOS
+
+### ios doctor
+
+```sh
+[bundle exec] fastlane ios doctor
+```
+
+Validate iOS publishing prerequisites
+
+### ios build
+
+```sh
+[bundle exec] fastlane ios build
+```
+
+Build iOS app archive without uploading. Requires macOS/Xcode.
+
+### ios beta
+
+```sh
+[bundle exec] fastlane ios beta
+```
+
+Upload iOS build to TestFlight. Requires macOS/Xcode and App Store Connect auth.
+
+----
+
+This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
+
+More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
+
+The documentation of _fastlane_ can be found on [docs.fastlane.tools](https://docs.fastlane.tools).
