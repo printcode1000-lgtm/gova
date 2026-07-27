@@ -444,7 +444,7 @@ export function ProfilePageContent() {
           id="edit-profile-card"
           className="mx-auto flex w-full max-w-4xl flex-col gap-3 sm:gap-4"
         >
-          <div className="order-2 sticky top-12 z-30 w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
+          <div className="order-2 w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
             <div
               data-snapshot-scroll
               data-snapshot-id="profile-edit-tabs-scroll"
