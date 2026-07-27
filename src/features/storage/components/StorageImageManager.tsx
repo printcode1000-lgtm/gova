@@ -317,7 +317,9 @@ function normalizeImages(
   images: StoredImage[],
   maxItems: number,
 ): StoredImage[] {
-  return images.filter((image) => image.url).slice(0, maxItems);
+  return images
+    .filter((image) => image.url || image.isUploading || image.error)
+    .slice(0, maxItems);
 }
 
 function removeAt(images: StoredImage[], index: number): StoredImage[] {
@@ -415,7 +417,11 @@ function StorageImageSlot({
           hasUrl: Boolean(nextImage?.url),
           error: nextImage?.error ?? null,
         });
-        if (nextImage?.isUploading) return;
+        if (nextImage?.isUploading) {
+          setUploadedImage(nextImage);
+          onUploaded(index, nextImage);
+          return;
+        }
         if (nextImage) {
           setUploadedImage(nextImage);
           onUploaded(index, nextImage);

@@ -172,9 +172,11 @@ export function ProductPageContent() {
         try {
           loadedStyle = await asolApi.getPublicJson<ProductStyleFile>(
             `/product/style/${encodeURIComponent(main)}__${encodeURIComponent(sub)}.json`,
+            { suppressErrorLog: true },
           );
         } catch (styleError) {
           if (!(styleError instanceof ApiError) || styleError.status !== 404) {
+            console.error("[ProductPage] Failed to load product style.", styleError);
             throw styleError;
           }
           loadedStyle = await asolApi.getPublicJson<ProductStyleFile>(

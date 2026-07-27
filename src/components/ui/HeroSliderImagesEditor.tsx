@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { ImageIcon } from "lucide-react";
 
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
@@ -36,18 +37,39 @@ export function HeroSliderImagesEditor({
   value,
   onChange,
 }: HeroSliderImagesEditorProps) {
-  const images = value.slides
-    .filter((slide) => slide.image)
-    .slice(0, MAX_PROFILE_SLIDES)
-    .map((slide) => ({ imageKey: slide.imageKey ?? "", url: slide.image }));
+  const savedImages = React.useMemo(
+    () =>
+      value.slides
+        .filter((slide) => slide.image)
+        .slice(0, MAX_PROFILE_SLIDES)
+        .map((slide) => ({ imageKey: slide.imageKey ?? "", url: slide.image })),
+    [value.slides],
+  );
+  const [slotImages, setSlotImages] = React.useState<Array<StoredImage | null>>(
+    () => Array.from({ length: MAX_PROFILE_SLIDES }, (_, index) => savedImages[index] ?? null),
+  );
 
-  const updateSlot = (index: number, slotImages: StoredImage[]) => {
-    const nextImages = [...images];
-    const image = slotImages[0] ?? null;
+  React.useEffect(() => {
+    setSlotImages((current) =>
+      Array.from({ length: MAX_PROFILE_SLIDES }, (_, index) => {
+        const currentImage = current[index] ?? null;
+        if (currentImage?.isUploading || currentImage?.error) return currentImage;
+        return savedImages[index] ?? null;
+      }),
+    );
+  }, [savedImages]);
+
+  const updateSlot = (index: number, nextSlotValue: StoredImage[]) => {
+    const nextImages = [...slotImages];
+    const image = nextSlotValue[0] ?? null;
     if (image) nextImages[index] = image;
-    else nextImages.splice(index, 1);
+    else nextImages[index] = null;
+    setSlotImages(
+      Array.from({ length: MAX_PROFILE_SLIDES }, (_, itemIndex) => nextImages[itemIndex] ?? null),
+    );
+    if (image && !image.url) return;
     const compact = nextImages
-      .filter((item) => item?.url)
+      .filter((item): item is StoredImage => Boolean(item?.url && !item.isUploading))
       .slice(0, MAX_PROFILE_SLIDES);
     onChange({
       ...value,
@@ -74,8 +96,8 @@ export function HeroSliderImagesEditor({
           <StorageImageManager
             key={slotConfig.id}
             config={slotConfig}
-            value={images[index] ? [images[index]] : []}
-            onChange={(slotImages) => updateSlot(index, slotImages)}
+            value={slotImages[index] ? [slotImages[index]!] : []}
+            onChange={(nextSlotImages) => updateSlot(index, nextSlotImages)}
           />
         ))}
       </div>

@@ -57,7 +57,11 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
   const active = validImages[activeIndex];
 
   const pointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Some browsers can drop pointer capture during rapid pinch gestures.
+    }
     const point = { x: event.clientX, y: event.clientY };
     pointers.current.set(event.pointerId, point);
     if (pointers.current.size === 1) {
@@ -81,7 +85,9 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
       return;
     const point = { x: event.clientX, y: event.clientY };
     pointers.current.set(event.pointerId, point);
-    if (pointers.current.size === 2 && pinchStart.current) {
+    const currentPinchStart = pinchStart.current;
+    const currentPanStart = panStart.current;
+    if (pointers.current.size === 2 && currentPinchStart) {
       const [a, b] = [...pointers.current.values()];
       const center = midpoint(a, b);
       setScale(
@@ -89,19 +95,19 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
           4,
           Math.max(
             1,
-            (pinchStart.current.scale * distance(a, b)) /
-              pinchStart.current.distance,
+            (currentPinchStart.scale * distance(a, b)) /
+              currentPinchStart.distance,
           ),
         ),
       );
       setOffset({
-        x: pinchStart.current.offset.x + center.x - pinchStart.current.center.x,
-        y: pinchStart.current.offset.y + center.y - pinchStart.current.center.y,
+        x: currentPinchStart.offset.x + center.x - currentPinchStart.center.x,
+        y: currentPinchStart.offset.y + center.y - currentPinchStart.center.y,
       });
-    } else if (pointers.current.size === 1 && scale > 1 && panStart.current) {
+    } else if (pointers.current.size === 1 && scale > 1 && currentPanStart) {
       setOffset((current) => ({
-        x: current.x + point.x - panStart.current!.x,
-        y: current.y + point.y - panStart.current!.y,
+        x: current.x + point.x - currentPanStart.x,
+        y: current.y + point.y - currentPanStart.y,
       }));
       panStart.current = point;
       swipeStart.current = null;
@@ -138,10 +144,21 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
       } else lastTap.current = { time: now, point };
     }
     if (pointers.current.size < 2) pinchStart.current = null;
+    if (pointers.current.size === 1) {
+      panStart.current = [...pointers.current.values()][0] ?? null;
+      swipeStart.current = null;
+    }
     if (pointers.current.size === 0) {
       swipeStart.current = null;
       panStart.current = null;
     }
+  };
+
+  const clearGesture = () => {
+    pointers.current.clear();
+    swipeStart.current = null;
+    panStart.current = null;
+    pinchStart.current = null;
   };
 
   return (
@@ -153,6 +170,7 @@ export function ProductImageGallery({ images }: { images: StoredImage[] }) {
         onPointerMove={pointerMove}
         onPointerUp={pointerEnd}
         onPointerCancel={pointerEnd}
+        onPointerLeave={clearGesture}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

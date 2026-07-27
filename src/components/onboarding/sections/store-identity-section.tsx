@@ -161,7 +161,9 @@ export function StoreIdentitySection() {
                 confirmRemove: true,
               }}
               value={
-                storeIdentity.storeLogo?.url
+                storeIdentity.storeLogo?.url ||
+                storeIdentity.storeLogo?.isUploading ||
+                storeIdentity.storeLogo?.error
                   ? [{
                       imageKey: storeIdentity.storeLogo.imageKey ?? '',
                       url: storeIdentity.storeLogo.url,
@@ -186,7 +188,9 @@ export function StoreIdentitySection() {
                 confirmRemove: true,
               }}
               value={
-                storeIdentity.coverImage?.url
+                storeIdentity.coverImage?.url ||
+                storeIdentity.coverImage?.isUploading ||
+                storeIdentity.coverImage?.error
                   ? [{
                       imageKey: storeIdentity.coverImage.imageKey ?? '',
                       url: storeIdentity.coverImage.url,

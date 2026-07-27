@@ -33,6 +33,15 @@ interface ProfileCustomRequestButtonProps {
   disabled?: boolean;
 }
 
+function normalizeCustomRequestImages(images: Array<StoredImage | null | undefined>): StoredImage[] {
+  return images
+    .filter(
+      (image): image is StoredImage =>
+        Boolean(image && (image.url || image.isUploading || image.error)),
+    )
+    .slice(0, 4);
+}
+
 export function ProfileCustomRequestButton({
   onSubmit,
   title = "إرسال طلب خاص",
@@ -142,10 +151,10 @@ export function ProfileCustomRequestButton({
                   }}
                   value={images[index] ? [images[index]] : []}
                   onChange={(slot) => {
-                    const next = [...images];
+                    const next: Array<StoredImage | null> = [...images];
                     if (slot[0]) next[index] = slot[0];
-                    else next.splice(index, 1);
-                    setImages(next.filter(Boolean).slice(0, 4));
+                    else next[index] = null;
+                    setImages(normalizeCustomRequestImages(next));
                   }}
                 />
               ))}

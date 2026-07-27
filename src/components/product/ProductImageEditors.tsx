@@ -4,6 +4,15 @@ import { StorageImageManager } from "@/features/storage/components/StorageImageM
 import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 
+function normalizeProductImages(images: Array<StoredImage | null | undefined>, maxImages: number): StoredImage[] {
+  return images
+    .filter(
+      (image): image is StoredImage =>
+        Boolean(image && (image.url || image.isUploading || image.error)),
+    )
+    .slice(0, maxImages);
+}
+
 export function ProductImageEditors({
   maxImages,
   mainCategoryId,
@@ -35,10 +44,10 @@ export function ProductImageEditors({
           }}
           value={images[index] ? [images[index]] : []}
           onChange={(slot) => {
-            const next = [...images];
+            const next: Array<StoredImage | null> = [...images];
             if (slot[0]) next[index] = slot[0];
-            else next.splice(index, 1);
-            onChange(next.filter(Boolean).slice(0, maxImages));
+            else next[index] = null;
+            onChange(normalizeProductImages(next, maxImages));
           }}
         />
       ))}

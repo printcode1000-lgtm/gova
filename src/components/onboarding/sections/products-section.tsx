@@ -128,7 +128,7 @@ function ProductForm({ product, onChange, onSave, onCancel }: ProductFormProps) 
           confirmRemove: true,
         }}
         value={
-          product.image?.url
+          product.image?.url || product.image?.isUploading || product.image?.error
             ? [{
                 imageKey: product.image.imageKey ?? '',
                 url: product.image.url,
