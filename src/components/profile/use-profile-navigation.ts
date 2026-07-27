@@ -67,21 +67,43 @@ export function useProfileNavigation({
   });
   const scrollFrameRef = React.useRef<number | null>(null);
   const suppressScrollSyncUntilRef = React.useRef(0);
+  const programmaticScrollTargetRef = React.useRef<ProfileEditTab | null>(null);
+  const programmaticScrollClearTimerRef = React.useRef<number | null>(null);
   const appliedRequestedTabRef = React.useRef<string | null>(null);
 
-  const centerElementHorizontally = React.useCallback((element: HTMLElement | null) => {
-    if (!element) return;
+  const scrollElementIntoViewWithoutSmooth = React.useCallback((element: HTMLElement | null) => {
+    if (!element?.parentElement) return;
     const parent = element.parentElement;
-    if (!parent) return;
-    const left = element.offsetLeft - parent.clientWidth / 2 + element.clientWidth / 2;
-    parent.scrollTo({ left, behavior: "auto" });
+    const previousScrollBehavior = parent.style.scrollBehavior;
+    parent.style.scrollBehavior = "auto";
+    element.scrollIntoView({
+      behavior: "auto",
+      block: "nearest",
+      inline: "center",
+    });
+    parent.style.scrollBehavior = previousScrollBehavior;
   }, []);
 
   const scrollToSection = React.useCallback((section: ProfileEditTab) => {
-    suppressScrollSyncUntilRef.current = Date.now() + 500;
-    centerElementHorizontally(panelRefs.current[section]);
-    centerElementHorizontally(navButtonRefs.current[section]);
-  }, [centerElementHorizontally]);
+    suppressScrollSyncUntilRef.current = Date.now() + 1000;
+    programmaticScrollTargetRef.current = section;
+    if (scrollFrameRef.current !== null) {
+      cancelAnimationFrame(scrollFrameRef.current);
+      scrollFrameRef.current = null;
+    }
+    if (programmaticScrollClearTimerRef.current !== null) {
+      window.clearTimeout(programmaticScrollClearTimerRef.current);
+    }
+
+    scrollElementIntoViewWithoutSmooth(panelRefs.current[section]);
+    scrollElementIntoViewWithoutSmooth(navButtonRefs.current[section]);
+
+    programmaticScrollClearTimerRef.current = window.setTimeout(() => {
+      if (programmaticScrollTargetRef.current === section) {
+        programmaticScrollTargetRef.current = null;
+      }
+    }, 350);
+  }, [scrollElementIntoViewWithoutSmooth]);
 
   const selectSection = (section: ProfileEditTab) => {
     setActiveTab(section);
@@ -112,9 +134,13 @@ export function useProfileNavigation({
 
   const handleCarouselScroll = () => {
     if (Date.now() < suppressScrollSyncUntilRef.current) return;
+    if (programmaticScrollTargetRef.current) return;
     if (scrollFrameRef.current !== null)
       cancelAnimationFrame(scrollFrameRef.current);
     scrollFrameRef.current = requestAnimationFrame(() => {
+      scrollFrameRef.current = null;
+      if (Date.now() < suppressScrollSyncUntilRef.current) return;
+      if (programmaticScrollTargetRef.current) return;
       const carousel = carouselRef.current;
       if (!carousel) return;
       const center =
@@ -146,6 +172,8 @@ export function useProfileNavigation({
     () => () => {
       if (scrollFrameRef.current !== null)
         cancelAnimationFrame(scrollFrameRef.current);
+      if (programmaticScrollClearTimerRef.current !== null)
+        window.clearTimeout(programmaticScrollClearTimerRef.current);
     },
     [],
   );
