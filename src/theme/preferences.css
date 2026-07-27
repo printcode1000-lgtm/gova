@@ -86,6 +86,11 @@ html[data-high-contrast='true'] .auth-card {
   border-color: var(--color-outline-strong);
 }
 
+html[data-high-contrast='true'] button.asol-control-icon {
+  border-width: 0;
+  border-color: transparent;
+}
+
 html[data-high-contrast='true'] *:focus-visible {
   outline-width: 3px;
   outline-offset: 3px;

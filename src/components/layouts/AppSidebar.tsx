@@ -95,6 +95,27 @@ export const AppSidebar = React.memo(function AppSidebar({
   const [activeProfileMode, setActiveProfileMode] = useState<string | null>(null);
   const isProfilePreviewActive = activeProfileMode === "preview";
   const isProfileEditActive = activeProfileMode === "edit";
+  const sidebarTone =
+    resolvedScheme === "dark"
+      ? "text-primary hover:text-primary"
+      : "text-blue-900 hover:text-blue-900";
+  const sidebarActiveTone = "bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20";
+  const sidebarSurface =
+    resolvedScheme === "dark"
+      ? "asol-surface-neutral"
+      : "bg-[#F8FBFF]";
+  const sidebarHoverSurface =
+    resolvedScheme === "dark"
+      ? "hover:bg-surface-container-high active:bg-surface-variant"
+      : "hover:bg-blue-100/70 active:bg-blue-200";
+  const sidebarControlClass = cn(
+    "asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium active:opacity-90",
+    sidebarSurface,
+    sidebarTone,
+    sidebarHoverSurface,
+  );
+  const sidebarIconClass = "w-5 h-5 shrink-0";
+  const sidebarSmallIconClass = "h-4 w-4 shrink-0";
 
   useEffect(() => {
     setMounted(true);
@@ -253,10 +274,16 @@ export const AppSidebar = React.memo(function AppSidebar({
   // Memoize super admin content
   const superAdminContent = useMemo(() => {
     if (!showSuperAdmin) return null;
-    const itemClass =
-      "flex items-center gap-2 rounded-md px-3 py-2 text-sm text-on-surface-variant hover:bg-primary/10 hover:text-primary";
-    const groupButtonClass =
-      "flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold text-on-surface hover:bg-primary/10";
+    const itemClass = cn(
+      "flex items-center gap-2 rounded-md px-3 py-2 text-sm",
+      sidebarTone,
+      sidebarHoverSurface,
+    );
+    const groupButtonClass = cn(
+      "flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold",
+      sidebarTone,
+      sidebarHoverSurface,
+    );
     const groupPanelClass =
       "ms-2 space-y-1 border-s border-outline-variant/40 ps-2";
     return (
@@ -265,9 +292,9 @@ export const AppSidebar = React.memo(function AppSidebar({
           type="button"
           onClick={handleSuperAdminToggle}
           aria-expanded={superAdminOpen}
-          className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
+          className={sidebarControlClass}
         >
-          <ShieldCheck className="w-5 h-5 shrink-0 text-primary" />
+          <ShieldCheck className={sidebarIconClass} />
           {t("sidebar.superAdmin")}
           <ChevronDown
             className={cn(
@@ -286,7 +313,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 aria-expanded={superAdminGroupsOpen.content}
                 className={groupButtonClass}
               >
-                <Sliders className="h-4 w-4 text-primary" />
+                <Sliders className={sidebarSmallIconClass} />
                 المحتوى والعروض
                 <ChevronDown
                   className={cn(
@@ -298,15 +325,15 @@ export const AppSidebar = React.memo(function AppSidebar({
               {superAdminGroupsOpen.content && (
                 <div className={groupPanelClass}>
                   <Link href="/super-admin/hero-slider" onClick={onClose} className={itemClass}>
-                    <Sliders className="h-4 w-4" />
+                    <Sliders className={sidebarSmallIconClass} />
                     {t("sidebar.heroSlider")}
                   </Link>
                   <Link href="/super-admin/featured-marquee" onClick={onClose} className={itemClass}>
-                    <Sparkles className="h-4 w-4" />
+                    <Sparkles className={sidebarSmallIconClass} />
                     {t("sidebar.featuredMarquee")}
                   </Link>
                   <Link href="/super-admin/trending-ribbon" onClick={onClose} className={itemClass}>
-                    <TrendingUp className="h-4 w-4" />
+                    <TrendingUp className={sidebarSmallIconClass} />
                     {t("sidebar.trendingRibbon")}
                   </Link>
                 </div>
@@ -320,7 +347,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 aria-expanded={superAdminGroupsOpen.data}
                 className={groupButtonClass}
               >
-                <DatabaseZap className="h-4 w-4 text-primary" />
+                <DatabaseZap className={sidebarSmallIconClass} />
                 البيانات والنسخ
                 <ChevronDown
                   className={cn(
@@ -332,21 +359,21 @@ export const AppSidebar = React.memo(function AppSidebar({
               {superAdminGroupsOpen.data && (
                 <div className={groupPanelClass}>
                   <Link href="/super-admin/data-health" onClick={onClose} className={itemClass}>
-                    <DatabaseZap className="h-4 w-4" />
+                    <DatabaseZap className={sidebarSmallIconClass} />
                     فحص سلامة البيانات
                   </Link>
                   <Link href="/super-admin/dev-cloud-backup" onClick={onClose} className={itemClass}>
-                    <DatabaseBackup className="h-4 w-4" />
+                    <DatabaseBackup className={sidebarSmallIconClass} />
                     نسخ سحابة التطوير
                   </Link>
                   {showLocalDevelopmentTools ? (
                     <>
                       <Link href="/super-admin/google-play-console" onClick={onClose} className={itemClass}>
-                        <ShoppingBag className="h-4 w-4" />
+                        <ShoppingBag className={sidebarSmallIconClass} />
                         Google Play Console
                       </Link>
                       <Link href="/super-admin/google-play-store-assets" onClick={onClose} className={itemClass}>
-                        <ImageIcon className="h-4 w-4" />
+                        <ImageIcon className={sidebarSmallIconClass} />
                         بيانات متجر Google Play
                       </Link>
                     </>
@@ -362,7 +389,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 aria-expanded={superAdminGroupsOpen.notifications}
                 className={groupButtonClass}
               >
-                <Megaphone className="h-4 w-4 text-primary" />
+                <Megaphone className={sidebarSmallIconClass} />
                 الإشعارات
                 <ChevronDown
                   className={cn(
@@ -374,11 +401,11 @@ export const AppSidebar = React.memo(function AppSidebar({
               {superAdminGroupsOpen.notifications && (
                 <div className={groupPanelClass}>
                   <Link href="/super-admin/notifications-broadcast" onClick={onClose} className={itemClass}>
-                    <Megaphone className="h-4 w-4" />
+                    <Megaphone className={sidebarSmallIconClass} />
                     إرسال إشعار جماعي
                   </Link>
                   <Link href="/super-admin/vapid" onClick={onClose} className={itemClass}>
-                    <KeyRound className="h-4 w-4" />
+                    <KeyRound className={sidebarSmallIconClass} />
                     إدارة VAPID
                   </Link>
                 </div>
@@ -392,7 +419,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 aria-expanded={superAdminGroupsOpen.system}
                 className={groupButtonClass}
               >
-                <ShieldCheck className="h-4 w-4 text-primary" />
+                <ShieldCheck className={sidebarSmallIconClass} />
                 النظام والصلاحيات
                 <ChevronDown
                   className={cn(
@@ -404,15 +431,15 @@ export const AppSidebar = React.memo(function AppSidebar({
               {superAdminGroupsOpen.system && (
                 <div className={groupPanelClass}>
                   <Link href="/super-admin/logs" onClick={onClose} className={itemClass}>
-                    <ScrollText className="h-4 w-4" />
+                    <ScrollText className={sidebarSmallIconClass} />
                     سجل النظام
                   </Link>
                   <Link href="/super-admin/users" onClick={onClose} className={itemClass}>
-                    <Users className="h-4 w-4" />
+                    <Users className={sidebarSmallIconClass} />
                     بحث المستخدمين
                   </Link>
                   <Link href="/super-admin/ota-releases" onClick={onClose} className={itemClass}>
-                    <CloudDownload className="h-4 w-4" />
+                    <CloudDownload className={sidebarSmallIconClass} />
                     {t("sidebar.otaReleases")}
                   </Link>
                 </div>
@@ -534,6 +561,11 @@ export const AppSidebar = React.memo(function AppSidebar({
     handleSuperAdminGroupToggle,
     t,
     onClose,
+    sidebarControlClass,
+    sidebarHoverSurface,
+    sidebarIconClass,
+    sidebarSmallIconClass,
+    sidebarTone,
   ]);
 
   if (!mounted) return null;
@@ -572,7 +604,11 @@ export const AppSidebar = React.memo(function AppSidebar({
               </span>
               <button
                 type="button"
-                className="asol-control-icon flex items-center justify-center rounded-full text-on-surface-variant active:opacity-80"
+                className={cn(
+                  "asol-control-icon flex items-center justify-center rounded-full active:opacity-80",
+                  sidebarTone,
+                  sidebarHoverSurface,
+                )}
                 onClick={onClose}
                 aria-label={t("sidebar.close")}
               >
@@ -587,19 +623,26 @@ export const AppSidebar = React.memo(function AppSidebar({
                     type="button"
                     onClick={handleLogout}
                     disabled={logout.isPending}
-                    className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90 disabled:opacity-60"
+                    className={cn(sidebarControlClass, "disabled:opacity-60")}
                   >
-                    <LogOut className="w-5 h-5 shrink-0 text-primary" />
+                    <LogOut className={sidebarIconClass} />
                     {t("sidebar.logout")}
                   </button>
 
-                  <div className="asol-control rounded-lg asol-surface-neutral p-2">
-                    <div className="px-2 py-1 text-xs font-semibold flex items-center gap-2 text-blue-600">
-                      <User className="w-4 h-4 text-blue-600" />
+                  <div className={cn("asol-control rounded-lg p-2", sidebarSurface)}>
+                    <div className={cn("px-2 py-1 text-xs font-semibold flex items-center gap-2", sidebarTone)}>
+                      <User className={sidebarSmallIconClass} />
                       {t("nav.profile")}
                     </div>
                     <div className="flex gap-1 px-2 py-1">
-                      <div className="flex w-full bg-gray-100 rounded-lg p-1">
+                      <div
+                        className={cn(
+                          "flex w-full rounded-lg p-1",
+                          resolvedScheme === "dark"
+                            ? "bg-surface-container-high"
+                            : "bg-blue-50",
+                        )}
+                      >
                         <Link
                           href="/profile?mode=preview"
                           onClick={onClose}
@@ -610,14 +653,9 @@ export const AppSidebar = React.memo(function AppSidebar({
                             className={cn(
                               "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
                               isProfilePreviewActive
-                                ? "shadow-sm"
-                                : "text-gray-600 hover:text-gray-900",
+                                ? sidebarActiveTone
+                                : cn(sidebarTone, sidebarHoverSurface),
                             )}
-                            style={
-                              isProfilePreviewActive
-                                ? { backgroundColor: "#2563eb", color: "white" }
-                                : undefined
-                            }
                           >
                             <Eye className="w-4 h-4" />
                             {t("sidebar.preview")}
@@ -633,14 +671,9 @@ export const AppSidebar = React.memo(function AppSidebar({
                             className={cn(
                               "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
                               isProfileEditActive
-                                ? "shadow-sm"
-                                : "text-gray-600 hover:text-gray-900",
+                                ? sidebarActiveTone
+                                : cn(sidebarTone, sidebarHoverSurface),
                             )}
-                            style={
-                              isProfileEditActive
-                                ? { backgroundColor: "#2563eb", color: "white" }
-                                : undefined
-                            }
                           >
                             <Edit className="w-4 h-4" />
                             {t("sidebar.edit")}
@@ -656,29 +689,23 @@ export const AppSidebar = React.memo(function AppSidebar({
                 <Link href="/login" onClick={onClose}>
                   <button
                     type="button"
-                    className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
+                    className={sidebarControlClass}
                   >
-                    <LogIn className="w-5 h-5 shrink-0 text-primary" />
+                    <LogIn className={sidebarIconClass} />
                     {t("sidebar.login")}
                   </button>
                 </Link>
               )}
 
               <Link href="/settings" onClick={onClose}>
-                <button
-                  type="button"
-                  className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
-                >
-                  <Settings className="w-5 h-5 shrink-0 text-primary" />
+                <button type="button" className={sidebarControlClass}>
+                  <Settings className={sidebarIconClass} />
                   {t("sidebar.settings")}
                 </button>
               </Link>
               <Link href="/contact-us" onClick={onClose}>
-                <button
-                  type="button"
-                  className="asol-control w-full flex items-center justify-start gap-3 rounded-lg text-sm font-medium text-on-surface asol-surface-neutral active:opacity-90"
-                >
-                  <MessagesSquare className="w-5 h-5 shrink-0 text-primary" />
+                <button type="button" className={sidebarControlClass}>
+                  <MessagesSquare className={sidebarIconClass} />
                   {t("sidebar.contactUs")}
                 </button>
               </Link>

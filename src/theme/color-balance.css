@@ -221,7 +221,7 @@
 /* Bottom nav active pill — 10% */
 .asol-nav-pill-active {
   background-color: var(--color-primary-container);
-  color: var(--color-primary);
+  color: var(--color-on-primary-container);
   border-radius: var(--radius-full);
 }
 
