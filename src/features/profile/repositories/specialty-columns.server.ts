@@ -48,24 +48,11 @@ export function selectedSpecialtyColumns(
     }
   }
   
-  // Handle main categories - for collection members and delivery services
+  // Main categories are only searchable directly when they do not have child
+  // choices in the profile UI. Child-backed specialties come from selection.sub.
   for (const mainCategoryId of selection.main) {
     if (mainCategoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) {
       selected.add("delivery_services_46");
-    } else {
-      // For collection members, the column uses the main category ID as originalId
-      const column = columnBySelection.get(`${mainCategoryId}:${mainCategoryId}`);
-      if (column) selected.add(column);
-      
-      // Also add ALL subcategories of this collection member
-      // Example: if user selects "My Way" (collection member), add all its subcategories
-      const memberTree = categoryService.getCategoryTree(mainCategoryId);
-      if (memberTree) {
-        for (const subcategory of memberTree.subcategories) {
-          const subColumn = columnBySelection.get(`${mainCategoryId}:${subcategory.originalId}`);
-          if (subColumn) selected.add(subColumn);
-        }
-      }
     }
   }
   

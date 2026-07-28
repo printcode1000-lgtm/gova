@@ -12,11 +12,16 @@ export const productApiService = {
       { cache: "no-store", ...options },
     );
   },
-  listByOwnerAndCategory(uid: string, mainCategoryId: string, subcategoryId: string) {
+  listByOwnerAndCategory(
+    uid: string,
+    mainCategoryId: string,
+    subcategoryId: string,
+    options: AsolApiRequestOptions = {},
+  ) {
     const query = new URLSearchParams({ uid, mainCategoryId, subcategoryId });
     return asolApi.get<ProductRecord[]>(
       `${ASOL_API_ROUTES.products}?${query.toString()}`,
-      { cache: "no-store" },
+      { cache: "no-store", ...options },
     );
   },
   create(input: CreateProductInput) {

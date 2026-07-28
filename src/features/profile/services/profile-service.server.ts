@@ -102,6 +102,34 @@ function normalizeCoverImageKeys(keys: string[]): string[] {
     .slice(0, MAX_COVER_IMAGES);
 }
 
+function isIntegerId(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value);
+}
+
+function selectableProfileSubcategoryIds(categoryId: number): Set<number> {
+  const category = categoryService
+    .getProfileMainOptions()
+    .find((item) => item.id === categoryId);
+  if (!category) return new Set();
+
+  const ids = categoryService
+    .getProfileSubOptions(category.id, category.isCollection)
+    .filter((item) => !item.isDoctorAppointmentGroup && item.selectable !== false)
+    .map((item) => item.originalId ?? item.id)
+    .filter(isIntegerId);
+
+  if (category.id === CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID) {
+    ids.push(
+      ...categoryService
+        .getDoctorAppointmentItems()
+        .map((item) => item.originalId ?? item.id)
+        .filter(isIntegerId),
+    );
+  }
+
+  return new Set(ids);
+}
+
 function normalizeSpecialties(
   value: ProfileSpecialtiesSelection,
   options: { unlimited?: boolean } = {},
@@ -115,18 +143,34 @@ function normalizeSpecialties(
       if (categoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) return true;
       return categoryService.getProfileMainOptions().some((item) => item.id === categoryId);
     });
-  const main = options.unlimited ? validMain : validMain.slice(0, 3);
   const sub: Record<string, number[]> = {};
   if (value?.sub && typeof value.sub === "object") {
     for (const [categoryId, ids] of Object.entries(value.sub)) {
       if (!/^\d+$/.test(categoryId) || !Array.isArray(ids)) continue;
-      const normalized = Array.from(new Set(ids.filter(Number.isInteger))).filter((id) =>
-        categoryService.resolveLegacyProductSelection(categoryId, String(id)).valid,
-      );
+      const numericCategoryId = Number(categoryId);
+      if (!validMain.includes(numericCategoryId)) continue;
+      const allowedIds = selectableProfileSubcategoryIds(numericCategoryId);
+      const normalized = Array.from(new Set(ids.filter(Number.isInteger))).filter((id) => {
+        if (allowedIds.has(id)) return true;
+        return categoryService.resolveLegacyProductSelection(categoryId, String(id)).valid;
+      });
       if (normalized.length > 0) sub[categoryId] = normalized;
     }
   }
-  return { main, sub };
+
+  const pairedMain = validMain.filter((categoryId) => {
+    if (categoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) return true;
+    const selectableIds = selectableProfileSubcategoryIds(categoryId);
+    return selectableIds.size === 0 || (sub[String(categoryId)]?.length ?? 0) > 0;
+  });
+
+  const main = options.unlimited ? pairedMain : pairedMain.slice(0, 3);
+  const allowedMain = new Set(main.map(String));
+  const pairedSub = Object.fromEntries(
+    Object.entries(sub).filter(([categoryId]) => allowedMain.has(categoryId)),
+  );
+
+  return { main, sub: pairedSub };
 }
 
 export class ProfileService implements IProfileService {

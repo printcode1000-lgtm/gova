@@ -11,6 +11,7 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { asolApi } from "@/core/api";
 import { profileService } from "@/features/profile/services/profile-service";
+import { productApiService } from "@/features/product/services/product-api-service";
 import {
   categoryService,
   CATEGORY_CONSTANTS,
@@ -25,6 +26,74 @@ import type {
 
 const MEDICAL_SERVICES_CATEGORY_ID = CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID;
 const DELIVERY_SERVICES_ID = CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID;
+
+function isIntegerId(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value);
+}
+
+function selectableSubcategoryIdsForCategory(category: CategoryDisplay): string[] {
+  const regularIds = categoryService
+    .getProfileSubOptions(category.id, category.isCollection)
+    .filter((item) => !item.isDoctorAppointmentGroup && item.selectable !== false)
+    .map((item) => item.originalId ?? item.id)
+    .filter(isIntegerId)
+    .map(String);
+
+  if (category.id !== MEDICAL_SERVICES_CATEGORY_ID) {
+    return regularIds;
+  }
+
+  const doctorIds = categoryService
+    .getDoctorAppointmentItems()
+    .map((item) => item.originalId ?? item.id)
+    .filter(isIntegerId)
+    .map(String);
+
+  return Array.from(new Set([...regularIds, ...doctorIds]));
+}
+
+function categoryRequiresSubcategorySelection(category: CategoryDisplay): boolean {
+  return (
+    category.id !== DELIVERY_SERVICES_ID &&
+    selectableSubcategoryIdsForCategory(category).length > 0
+  );
+}
+
+function normalizeLoadedSpecialties(
+  selection: ProfileSpecialtiesSelection,
+): ProfileSpecialtiesSelection {
+  const categories = categoryService.getProfileMainOptions();
+  const categoryById = new Map(categories.map((category) => [category.id, category]));
+  const normalizedSub = Object.fromEntries(
+    Object.entries(selection.sub)
+      .map(([categoryId, ids]) => {
+        const category = categoryById.get(Number(categoryId));
+        if (!category) return null;
+        const allowedIds = new Set(selectableSubcategoryIdsForCategory(category));
+        const normalizedIds = Array.from(
+          new Set(ids.map(String).filter((id) => allowedIds.has(id))),
+        ).map(Number);
+        return normalizedIds.length > 0 ? [categoryId, normalizedIds] : null;
+      })
+      .filter((entry): entry is [string, number[]] => Boolean(entry)),
+  );
+  const main = Array.from(new Set(selection.main)).filter((categoryId) => {
+    const category = categoryById.get(categoryId);
+    if (!category) return false;
+    return (
+      !categoryRequiresSubcategorySelection(category) ||
+      (normalizedSub[String(categoryId)]?.length ?? 0) > 0
+    );
+  });
+  const mainSet = new Set(main.map(String));
+
+  return {
+    main,
+    sub: Object.fromEntries(
+      Object.entries(normalizedSub).filter(([categoryId]) => mainSet.has(categoryId)),
+    ),
+  };
+}
 
 /**
  * EXCEPTIONAL CATEGORIES:
@@ -88,14 +157,20 @@ export const SpecialtiesCard = React.forwardRef<
     categoryId: string;
     subcategoryId?: string;
   } | null>(null);
+  const [deleteProductWarning, setDeleteProductWarning] = React.useState<{
+    isLoading: boolean;
+    count: number;
+    names: string[];
+  }>({ isLoading: false, count: 0, names: [] });
   const label = t("onboarding.storeIdentity.specialties");
 
   const applySelection = React.useCallback(
     (selection: ProfileSpecialtiesSelection) => {
-      setSelectedSpecialties(selection.main.map(String));
+      const normalized = normalizeLoadedSpecialties(selection);
+      setSelectedSpecialties(normalized.main.map(String));
       setSelectedSubcategories(
         Object.fromEntries(
-          Object.entries(selection.sub).map(([key, ids]) => [
+          Object.entries(normalized.sub).map(([key, ids]) => [
             key,
             ids.map(String),
           ]),
@@ -143,14 +218,15 @@ export const SpecialtiesCard = React.forwardRef<
       canSave: true,
       label,
       save: async () => true,
-      getSnapshot: () => ({
-        main: selectedSpecialties.map(Number),
-        sub: Object.fromEntries(
-          Object.entries(selectedSubcategories)
-            .filter(([, ids]) => ids.length > 0)
-            .map(([categoryId, ids]) => [categoryId, ids.map(Number)]),
-        ),
-      }),
+      getSnapshot: () =>
+        normalizeLoadedSpecialties({
+          main: selectedSpecialties.map(Number),
+          sub: Object.fromEntries(
+            Object.entries(selectedSubcategories)
+              .filter(([, ids]) => ids.length > 0)
+              .map(([categoryId, ids]) => [categoryId, ids.map(Number)]),
+          ),
+        }),
       applySaved: applySelection,
     }),
     [
@@ -165,6 +241,56 @@ export const SpecialtiesCard = React.forwardRef<
   React.useEffect(() => {
     onStatusChange?.({ isDirty, isSaving: false, canSave: true, label });
   }, [isDirty, label, onStatusChange]);
+
+  React.useEffect(() => {
+    if (!deleteDialog || !uid) {
+      setDeleteProductWarning({ isLoading: false, count: 0, names: [] });
+      return;
+    }
+
+    let cancelled = false;
+    const pairs = deleteDialog.subcategoryId
+      ? [[deleteDialog.categoryId, deleteDialog.subcategoryId]]
+      : (selectedSubcategories[deleteDialog.categoryId] ?? []).map((subId) => [
+          deleteDialog.categoryId,
+          subId,
+        ]);
+
+    if (pairs.length === 0) {
+      setDeleteProductWarning({ isLoading: false, count: 0, names: [] });
+      return;
+    }
+
+    setDeleteProductWarning({ isLoading: true, count: 0, names: [] });
+    Promise.all(
+      pairs.map(([categoryId, subcategoryId]) =>
+        productApiService
+          .listByOwnerAndCategory(uid, categoryId, subcategoryId, {
+            suppressErrorLog: true,
+          })
+          .catch(() => []),
+      ),
+    ).then((groups) => {
+      if (cancelled) return;
+      const products = groups.flat();
+      const names = Array.from(
+        new Set(
+          products
+            .map((product) => product.mainData.name.trim())
+            .filter(Boolean),
+        ),
+      ).slice(0, 3);
+      setDeleteProductWarning({
+        isLoading: false,
+        count: products.length,
+        names,
+      });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [deleteDialog, selectedSubcategories, uid]);
 
   const handleSpecialtyToggle = (categoryId: string) => {
     setSelectedSpecialties((prev) => {
@@ -199,8 +325,10 @@ export const SpecialtiesCard = React.forwardRef<
   };
 
   const handleCategoryClick = (category: CategoryDisplay) => {
+    if (readOnly) return;
+
     // Exception: Delivery services (ID: 46) should not open subcategory dialog
-    if (category.id === 46) {
+    if (!categoryRequiresSubcategorySelection(category)) {
       handleSpecialtyToggle(category.id.toString());
       return;
     }
@@ -445,7 +573,13 @@ export const SpecialtiesCard = React.forwardRef<
                     <Checkbox
                       id={categoryId}
                       checked={selectedSpecialties.includes(categoryId)}
-                      onCheckedChange={() => handleSpecialtyToggle(categoryId)}
+                      onCheckedChange={() => {
+                        if (selectedSpecialties.includes(categoryId)) {
+                          setDeleteDialog({ type: "main", categoryId });
+                        } else {
+                          handleCategoryClick(category);
+                        }
+                      }}
                       disabled={readOnly}
                       className="h-4 w-4"
                     />
@@ -725,6 +859,39 @@ export const SpecialtiesCard = React.forwardRef<
                       ? `هل أنت متأكد من حذف "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"؟`
                       : `Are you sure you want to delete "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"?`}
                 </p>
+                <div className="mt-2 rounded-lg border border-warning/35 bg-warning/10 px-3 py-2 text-xs text-on-surface">
+                  {deleteProductWarning.isLoading ? (
+                    <span>
+                      {locale === "ar"
+                        ? "جاري فحص المنتجات المرتبطة بهذا التخصص..."
+                        : "Checking products linked to this specialty..."}
+                    </span>
+                  ) : deleteProductWarning.count > 0 ? (
+                    <div className="space-y-1">
+                      <p className="font-medium text-warning">
+                        {locale === "ar"
+                          ? `تنبيه: لديك ${deleteProductWarning.count.toLocaleString("ar-EG")} منتج/منتجات داخل هذا التخصص.`
+                          : `Warning: you have ${deleteProductWarning.count.toLocaleString("en-US")} product(s) in this specialty.`}
+                      </p>
+                      {deleteProductWarning.names.length > 0 && (
+                        <p className="text-on-surface-variant">
+                          {deleteProductWarning.names.join("، ")}
+                        </p>
+                      )}
+                      <p className="text-on-surface-variant">
+                        {locale === "ar"
+                          ? "إلغاء الاشتراك لا يحذف المنتجات، لكنه قد يجعلها خارج تخصصات ملفك المختارة."
+                          : "Unsubscribing will not delete products, but they may no longer match your selected profile specialties."}
+                      </p>
+                    </div>
+                  ) : (
+                    <span className="text-on-surface-variant">
+                      {locale === "ar"
+                        ? "لا توجد منتجات مرتبطة بهذا التخصص حاليًا."
+                        : "No products are currently linked to this specialty."}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex gap-2 justify-end pt-2">
@@ -741,6 +908,7 @@ export const SpecialtiesCard = React.forwardRef<
                 type="button"
                 size="sm"
                 onClick={handleDelete}
+                disabled={deleteProductWarning.isLoading}
                 className="text-xs bg-error text-on-error hover:bg-error/90"
               >
                 {locale === "ar" ? "حذف" : "Delete"}
