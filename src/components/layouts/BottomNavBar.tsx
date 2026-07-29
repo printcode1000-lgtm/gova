@@ -22,9 +22,17 @@ export function BottomNavBar() {
   useLayoutEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
+    let frame: number | null = null;
 
     const publishHeight = () => {
-      document.documentElement.style.setProperty('--asol-bottom-nav-space', `${nav.offsetHeight}px`);
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        document.documentElement.style.setProperty(
+          '--asol-bottom-nav-space',
+          `${nav.offsetHeight}px`,
+        );
+      });
     };
 
     publishHeight();
@@ -33,6 +41,7 @@ export function BottomNavBar() {
 
     return () => {
       observer.disconnect();
+      if (frame !== null) cancelAnimationFrame(frame);
       document.documentElement.style.removeProperty('--asol-bottom-nav-space');
     };
   }, []);

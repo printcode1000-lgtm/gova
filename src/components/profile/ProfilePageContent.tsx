@@ -256,6 +256,7 @@ export function ProfilePageContent() {
     let cancelled = false;
     let userInteracted = false;
     let observer: ResizeObserver | null = null;
+    let restoreFrame: number | null = null;
     const timers: number[] = [];
     const stopAutomaticRestore = () => {
       userInteracted = true;
@@ -278,11 +279,18 @@ export function ProfilePageContent() {
           behavior: "auto",
         });
       };
+      const scheduleRestoreScroll = () => {
+        if (restoreFrame !== null) cancelAnimationFrame(restoreFrame);
+        restoreFrame = requestAnimationFrame(() => {
+          restoreFrame = null;
+          restoreScroll();
+        });
+      };
 
       [80, 220, 500, 900, 1600, 2600].forEach((delay) => {
         timers.push(window.setTimeout(restoreScroll, delay));
       });
-      observer = new ResizeObserver(restoreScroll);
+      observer = new ResizeObserver(scheduleRestoreScroll);
       observer.observe(document.documentElement);
     };
 
@@ -295,6 +303,7 @@ export function ProfilePageContent() {
     return () => {
       cancelled = true;
       observer?.disconnect();
+      if (restoreFrame !== null) cancelAnimationFrame(restoreFrame);
       timers.forEach((timer) => window.clearTimeout(timer));
       window.removeEventListener("pointerdown", stopAutomaticRestore);
       window.removeEventListener("wheel", stopAutomaticRestore);

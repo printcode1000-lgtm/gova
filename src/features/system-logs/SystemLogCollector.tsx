@@ -89,6 +89,13 @@ function safeResourceUrl(url?: string): string | undefined {
   return `${header || "data:"},<redacted>`;
 }
 
+function isBenignBrowserError(message: string): boolean {
+  return (
+    message === "ResizeObserver loop completed with undelivered notifications." ||
+    message === "ResizeObserver loop limit exceeded"
+  );
+}
+
 export function SystemLogCollector() {
   const { session, isLoading } = useSession();
   const enabled = !isLoading && isSuperAdmin(session);
@@ -125,6 +132,7 @@ export function SystemLogCollector() {
     });
 
     const handleError = (event: ErrorEvent) => {
+      if (isBenignBrowserError(event.message)) return;
       const entry = {
         level: "error",
         consoleMethod: "window.error",

@@ -1,4 +1,19 @@
-/** Google CDN blocks Next.js image optimizer fetches (403/400). */
+const UNOPTIMIZED_HOSTS = [
+  'googleusercontent.com',
+  'r2.dev',
+  'cloudflarestorage.com',
+];
+
+/** Some external storage/CDN hosts reject or intermittently fail Next.js optimizer fetches. */
 export function shouldUseUnoptimizedImage(src: string): boolean {
-  return src.includes('googleusercontent.com');
+  if (!src.startsWith('http://') && !src.startsWith('https://')) return false;
+
+  try {
+    const { hostname } = new URL(src);
+    return UNOPTIMIZED_HOSTS.some(
+      (host) => hostname === host || hostname.endsWith(`.${host}`),
+    );
+  } catch {
+    return false;
+  }
 }

@@ -24,6 +24,7 @@ export default function AppIcon({ size = 'lg', className = '' }: AppIconProps) {
         alt="Asol App Icon"
         width={sizes.imageWidth}
         height={sizes.imageHeight}
+        loading="eager"
         className="object-contain"
       />
     </div>

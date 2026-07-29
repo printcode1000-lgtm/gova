@@ -7,7 +7,15 @@ interface CapacitorWebViewPlugin {
   persistServerBasePath(): Promise<void>;
 }
 
-const WebView = registerPlugin<CapacitorWebViewPlugin>('WebView');
+const globalCapacitorPlugins = globalThis as typeof globalThis & {
+  __asolWebViewPlugin?: CapacitorWebViewPlugin;
+};
+
+const WebView =
+  globalCapacitorPlugins.__asolWebViewPlugin ??
+  registerPlugin<CapacitorWebViewPlugin>('WebView');
+
+globalCapacitorPlugins.__asolWebViewPlugin = WebView;
 const OTA_ROOT = 'asol-ota/releases';
 
 function bytesToBase64(bytes: Uint8Array): string {

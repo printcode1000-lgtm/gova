@@ -181,11 +181,22 @@ export function useProfileNavigation({
   React.useEffect(() => {
     const panel = panelRefs.current[resolvedActiveTab];
     if (!panel) return;
+    let frame: number | null = null;
     const updateHeight = () => setCarouselHeight(panel.offsetHeight);
+    const scheduleUpdateHeight = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        updateHeight();
+      });
+    };
     updateHeight();
-    const observer = new ResizeObserver(updateHeight);
+    const observer = new ResizeObserver(scheduleUpdateHeight);
     observer.observe(panel);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, [resolvedActiveTab, isLoading, isLoggedIn]);
 
   const activeSectionIndex = PROFILE_SECTIONS.indexOf(resolvedActiveTab);
