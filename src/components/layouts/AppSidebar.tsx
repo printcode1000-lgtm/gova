@@ -44,6 +44,7 @@ import {
 } from "@/lib/preferences";
 import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
+import { queueLogoutSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { specialtyChatClient } from "@/features/specialty-chat";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -202,7 +203,8 @@ export const AppSidebar = React.memo(function AppSidebar({
       resetThemePreferences();
       resetAppPreferences();
       await clearAllClientStorage();
-      window.location.assign("/login");
+      queueLogoutSuccessToast();
+      window.location.assign("/home");
     } catch (error) {
       console.error("[AppSidebar] Logout cleanup failed.", error);
       setLogoutDialogOpen(false);
@@ -210,7 +212,8 @@ export const AppSidebar = React.memo(function AppSidebar({
       resetThemePreferences();
       resetAppPreferences();
       await clearAllClientStorage();
-      window.location.assign("/login");
+      queueLogoutSuccessToast();
+      window.location.assign("/home");
     }
   }, [
     logout,

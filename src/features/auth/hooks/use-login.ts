@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -13,9 +14,11 @@ import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
+import { queueLoginSuccessToast } from '@/features/auth/components/LoginSuccessToast';
 
 export function useLogin() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
   const [showPassword, setShowPassword] = useState(false);
@@ -44,6 +47,8 @@ export function useLogin() {
     onSuccess: (session) => {
       endGuestSession();
       setSession(session);
+      queueLoginSuccessToast();
+      router.replace('/home');
     },
     onError: (error) => {
       if (

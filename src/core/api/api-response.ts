@@ -136,6 +136,8 @@ export function mapServiceError(error: unknown): NextResponse {
     'googlePlayProductionConfirmationRequired',
   ];
   const quietKnownCodes = new Set([
+    'userNotFound',
+    'invalidPassword',
     'dataHealthNoOrdersToPurge',
     'devCloudBackupFileRequired',
   ]);

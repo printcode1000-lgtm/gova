@@ -11,6 +11,7 @@ import { PreferencesProvider } from "@/lib/preferences";
 import { ShellLayout } from "@/components/layouts/ShellLayout";
 import { AppQueryProvider } from "@/core/providers/query-provider";
 import { SessionProvider } from "@/features/auth/components/SessionProvider";
+import { LoginSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { NetworkStatusProvider } from "@/features/network/hooks/use-network-status";
 import { NetworkStatusBanner } from "@/components/network/NetworkStatusBanner";
 import { OtaUpdateProvider } from "@/features/ota/hooks/use-ota-update";
@@ -86,6 +87,7 @@ export default function RootLayout({
                           </SnapshotProvider>
                         </Suspense>
                         <NetworkStatusBanner />
+                        <LoginSuccessToast />
                         <OtaUpdatePrompt />
                         <MobileBackButtonController />
                         <VoiceInputController />

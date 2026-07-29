@@ -74,6 +74,8 @@
     "auth.login.successMessage":  "You have successfully signed in to your account.",
     "auth.login.title":  "Welcome back",
     "auth.login.welcomeBack":  "Welcome back!",
+    "auth.logout.successTitle": "Signed out",
+    "auth.logout.successMessage": "You have been signed out successfully.",
     "auth.otp.digit":  "Verification digit {{index}}",
     "auth.password.confirmLabel":  "Confirm Password",
     "auth.password.confirmPlaceholder":  "Confirm password",

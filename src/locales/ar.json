@@ -74,6 +74,8 @@
     "auth.login.successMessage":  "تم تسجيل الدخول إلى حسابك بنجاح.",
     "auth.login.title":  "مرحباً بعودتك",
     "auth.login.welcomeBack":  "مرحباً بعودتك!",
+    "auth.logout.successTitle": "تم تسجيل الخروج",
+    "auth.logout.successMessage": "تم تسجيل خروجك بنجاح.",
     "auth.otp.digit":  "رمز التحقق {{index}}",
     "auth.password.confirmLabel":  "تأكيد كلمة المرور",
     "auth.password.confirmPlaceholder":  "تأكيد كلمة المرور",

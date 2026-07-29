@@ -1,6 +1,5 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ArrowRight,
   Eye,
@@ -8,21 +7,19 @@ import {
   Loader2,
   Lock,
   LogIn,
-  Shield,
   Smartphone,
   User,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider } from 'react-hook-form';
 
 import { AuthHero } from '@/components/auth/AuthHero';
 import { AuthMobileBrand } from '@/components/auth/AuthMobileBrand';
 import { useGuestSession } from '@/hooks/use-guest-session';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { createLoginSchema, type LoginFormData } from '@/lib/validation/auth';
 
 import { useLogin } from '@/features/auth/hooks/use-login';
 import { LOGIN_AUTOFILL_EVENT } from '@/lib/autofill/dom-input';
@@ -33,7 +30,7 @@ export function LoginPageContent() {
   const { startGuestSession } = useGuestSession();
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const { form, isSubmitting, error, submitted, onSubmit } = useLogin();
+  const { form, isSubmitting, error, onSubmit } = useLogin();
 
   React.useEffect(() => {
     const syncAfterAutofill = () => {
@@ -42,26 +39,6 @@ export function LoginPageContent() {
     window.addEventListener(LOGIN_AUTOFILL_EVENT, syncAfterAutofill);
     return () => window.removeEventListener(LOGIN_AUTOFILL_EVENT, syncAfterAutofill);
   }, [form]);
-
-  if (submitted) {
-    return (
-      <div className="auth-page flex items-center justify-center px-4">
-        <div className="auth-card w-full max-w-md text-center space-y-6">
-          <div className="mx-auto w-20 h-20 rounded-full bg-success/15 flex items-center justify-center">
-            <Shield className="h-10 w-10 text-success" />
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-on-surface">{t('auth.login.welcomeBack')}</h2>
-            <p className="text-base text-on-surface-variant">{t('auth.login.successMessage')}</p>
-          </div>
-          <button type="button" onClick={() => router.push('/home')} className="w-full auth-cta h-12">
-            {t('auth.login.continueToApp')}
-            <ArrowRight className="h-4 w-4 ms-2" />
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="auth-page">
