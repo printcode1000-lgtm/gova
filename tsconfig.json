@@ -38,6 +38,7 @@
   "exclude": [
     "node_modules",
     "out",
+    ".next/dev/types/**/*.ts",
     "scripts",
     "**/__tests__/*",
     "**/*.test.ts",

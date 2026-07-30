@@ -37,7 +37,7 @@ export const ADVERTISEMENTS_SQLITE_DB_PATH = path.join(
 
 export const MARKETPLACE_ORDERS_SQLITE_DB_PATH = path.join(
   SQLITE_DIRECTORY,
-  "marketplace_orders.db",
+  "marketplace-orders.db",
 );
 
 export const PROFILE_SCHEMA_SYNC_REPORT_PATH = path.join(

@@ -198,12 +198,16 @@ export class TursoBackupRepository {
         }
         await client.execute("COMMIT");
       } catch (error) {
-        await client.execute("ROLLBACK").catch(() => undefined);
+        await client.execute("ROLLBACK").catch((rollbackError) => {
+          console.warn("[DevCloudBackup] Failed to rollback Turso restore transaction.", rollbackError);
+        });
         throw error;
       }
       return { tableCount: manifest.tables.length, rowCount };
     } finally {
-      await client.execute("PRAGMA foreign_keys = ON").catch(() => undefined);
+      await client.execute("PRAGMA foreign_keys = ON").catch((pragmaError) => {
+        console.warn("[DevCloudBackup] Failed to restore Turso foreign key pragma.", pragmaError);
+      });
       client.close();
     }
   }

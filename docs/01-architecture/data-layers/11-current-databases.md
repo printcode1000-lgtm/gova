@@ -16,7 +16,7 @@ npm run db:schema:sync
 | Profile | `profile.db` | Profile Turso DB | `profileDbClient` | `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN` |
 | Products | `product.db` | Product Turso DB | `productDbClient` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
 | Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDbClient` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
-| Marketplace orders | `marketplace_orders.db` | Marketplace orders Turso DB | Marketplace orders DB client | `MARKETPLACE_ORDERS_DATABASE_URL`, `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN` |
+| Marketplace orders | `marketplace-orders.db` | Marketplace orders Turso DB | Marketplace orders DB client | `MARKETPLACE_ORDERS_DATABASE_URL`, `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN` |
 
 Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
 

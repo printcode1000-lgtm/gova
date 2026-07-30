@@ -11,7 +11,7 @@ of truth for their matching Turso databases.
 | `profile.db` | `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN` |
 | `product.db` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
 | `advertisements.db` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
-| `marketplace_orders.db` | `MARKETPLACE_ORDERS_DATABASE_URL`, `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN` |
+| `marketplace-orders.db` | `MARKETPLACE_ORDERS_DATABASE_URL`, `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN` |
 
 Product and advertisements databases must not fall back to the users database.
 Keeping them dedicated prevents unrelated tables from appearing in the wrong

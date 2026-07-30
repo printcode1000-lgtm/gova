@@ -27,7 +27,7 @@ links may contain one unified shipment or several hybrid group shipments.
 
 ## Development database
 
-The default development file is `public/sync_data/sync_sqlite/marketplace_orders.db`. It is created lazily and receives the idempotent migration when the server database adapter starts. `MARKETPLACE_ORDERS_SQLITE_PATH` may select another local file.
+The default development file is `public/sync_data/sync_sqlite/marketplace-orders.db`. It is created lazily and receives the idempotent migration when the server database adapter starts. `MARKETPLACE_ORDERS_SQLITE_PATH` may select another local file.
 
 ## Production database
 

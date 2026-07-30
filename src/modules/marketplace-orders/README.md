@@ -19,7 +19,7 @@ buyer may return to the original separate-delivery arrangements.
 
 ## Database
 
-Development lazily creates and migrates `public/sync_data/sync_sqlite/marketplace_orders.db`. `MARKETPLACE_ORDERS_SQLITE_PATH` can override it. Production uses a dedicated libSQL/Turso database through `MARKETPLACE_ORDERS_DATABASE_URL` and `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN`; apply `db/migrations/0000_marketplace_orders.sql` during provisioning. Credentials are never embedded.
+Development lazily creates and migrates `public/sync_data/sync_sqlite/marketplace-orders.db`. `MARKETPLACE_ORDERS_SQLITE_PATH` can override it. Production uses a dedicated libSQL/Turso database through `MARKETPLACE_ORDERS_DATABASE_URL` and `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN`; apply `db/migrations/0000_marketplace_orders.sql` during provisioning. Credentials are never embedded.
 
 ## Status, pricing, audit, and access
 

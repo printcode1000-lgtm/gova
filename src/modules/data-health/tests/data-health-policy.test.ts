@@ -108,7 +108,7 @@ const sqliteFiles = {
   profile: "profile.db",
   product: "product.db",
   advertisements: "advertisements.db",
-  marketplace_orders: "marketplace_orders.db",
+  marketplace_orders: "marketplace-orders.db",
 } as const;
 const unregisteredImageColumns: string[] = [];
 for (const [databaseName, fileName] of Object.entries(sqliteFiles)) {

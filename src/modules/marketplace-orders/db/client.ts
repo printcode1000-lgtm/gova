@@ -9,7 +9,7 @@ export function createMarketplaceOrdersDb():MarketplaceDb {
   const config=getMarketplaceDatabaseConfig();
   if(!config.isProduction){
     const Database=require("better-sqlite3");
-    const dbPath=config.sqlitePath||path.join(process.cwd(),"public/sync_data/sync_sqlite/marketplace_orders.db");
+    const dbPath=config.sqlitePath||path.join(process.cwd(),"public/sync_data/sync_sqlite/marketplace-orders.db");
     fs.mkdirSync(path.dirname(dbPath),{recursive:true}); const sqlite=new Database(dbPath); sqlite.pragma("foreign_keys = ON"); sqlite.exec(fs.readFileSync(path.join(process.cwd(),"src/modules/marketplace-orders/db/migrations/0000_marketplace_orders.sql"),"utf8"));
     const api:MarketplaceDb={async execute(sql,params=[]){const s=sqlite.prepare(sql),args=normalize(params);return isReadQuery(sql)?s.all(...args):[{changes:s.run(...args).changes}]},async transaction(work){sqlite.exec("BEGIN IMMEDIATE");try{const result=await work(api);sqlite.exec("COMMIT");return result}catch(error){sqlite.exec("ROLLBACK");throw error}}}; return api;
   }

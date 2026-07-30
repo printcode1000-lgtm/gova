@@ -203,7 +203,9 @@ export class GooglePlayStoreAssetsService {
             method: "DELETE",
             url: `${API_ROOT}/applications/${packageName}/edits/${encodeURIComponent(editId)}`,
           })
-          .catch(() => undefined);
+          .catch((deleteError) => {
+            console.warn("[GooglePlayAssets] Failed to delete temporary edit.", deleteError);
+          });
       }
     }
   }

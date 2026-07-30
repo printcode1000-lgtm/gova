@@ -67,14 +67,24 @@ export async function listTursoDatabases(): Promise<Array<{ Name: string; Hostna
 
 export async function createTursoDatabase(
   name: string,
-  group: string
+  group: string,
+  seedDatabaseName?: string
 ): Promise<{ Hostname: string }> {
   const organization = getOrganization();
+  const body: { name: string; group: string; seed?: { type: 'database'; name: string } } = {
+    name,
+    group,
+  };
+
+  if (seedDatabaseName) {
+    body.seed = { type: 'database', name: seedDatabaseName };
+  }
+
   const data = await platformFetch<{ database: { Hostname: string } }>(
     `/organizations/${organization}/databases`,
     {
       method: 'POST',
-      body: JSON.stringify({ name, group }),
+      body: JSON.stringify(body),
     }
   );
   return data.database;

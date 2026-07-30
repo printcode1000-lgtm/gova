@@ -23,14 +23,32 @@ function requireMatch(source: string, pattern: RegExp, message: string): void {
   if (!pattern.test(source)) throw new Error(message);
 }
 
+function findGradleBlock(source: string, blockName: string, startAt = 0): string | null {
+  const pattern = new RegExp(`${blockName}\\s*\\{`, "g");
+  pattern.lastIndex = startAt;
+  const match = pattern.exec(source);
+  if (!match) return null;
+
+  let depth = 1;
+  const bodyStart = pattern.lastIndex;
+  for (let index = bodyStart; index < source.length; index += 1) {
+    const char = source[index];
+    if (char === "{") depth += 1;
+    if (char === "}") depth -= 1;
+    if (depth === 0) return source.slice(bodyStart, index);
+  }
+  return null;
+}
+
 const buildGradle = readRequired(appBuildGradlePath);
 const properties = readRequired(gradlePropertiesPath);
 const appRules = readRequired(appRulesPath);
 const capacitorRules = readRequired(capacitorRulesPath);
-const releaseBlock = /release\s*\{([\s\S]*?)\n\s*\}/.exec(buildGradle)?.[1];
+const buildTypesBlock = findGradleBlock(buildGradle, "buildTypes");
+const releaseBlock = buildTypesBlock ? findGradleBlock(buildTypesBlock, "release") : null;
 
 if (!releaseBlock) {
-  throw new Error("android/app/build.gradle must define a release build type.");
+  throw new Error("android/app/build.gradle must define a release build type with R8 settings.");
 }
 
 requireMatch(

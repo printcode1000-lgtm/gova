@@ -16,11 +16,11 @@ import {
 } from '@/core/config/server-env.values';
 import type { TursoProvisionResult } from './types';
 
-const DEFAULT_USERS_DB_NAME = 'asol-db';
-const DEFAULT_PROFILE_DB_NAME = 'asol-profile';
-const DEFAULT_PRODUCT_DB_NAME = 'asol-product';
-const DEFAULT_ADVERTISEMENTS_DB_NAME = 'asol-advertisements';
-const DEFAULT_MARKETPLACE_ORDERS_DB_NAME = 'asol-marketplace-orders';
+const DEFAULT_USERS_DB_NAME = 'allusers';
+const DEFAULT_PROFILE_DB_NAME = 'profile';
+const DEFAULT_PRODUCT_DB_NAME = 'product';
+const DEFAULT_ADVERTISEMENTS_DB_NAME = 'advertisements';
+const DEFAULT_MARKETPLACE_ORDERS_DB_NAME = 'marketplace-orders';
 
 function updateEnvFileKeys(
   filePath: string,
@@ -89,6 +89,7 @@ function updateAdvertisementsEnvFiles(url: string, token: string): void {
 
 export interface ProvisionTursoOptions {
   databaseName?: string;
+  seedDatabaseName?: string;
   updateLocalEnv?: boolean;
 }
 
@@ -113,6 +114,7 @@ export async function provisionTursoDatabase(
 
 export interface ProvisionTursoProfileOptions {
   databaseName?: string;
+  seedDatabaseName?: string;
   updateLocalEnv?: boolean;
 }
 
@@ -136,6 +138,7 @@ export async function provisionTursoProfileDatabase(
 
 export interface ProvisionTursoProductOptions {
   databaseName?: string;
+  seedDatabaseName?: string;
   updateLocalEnv?: boolean;
 }
 
@@ -159,6 +162,7 @@ export async function provisionTursoProductDatabase(
 
 export interface ProvisionTursoAdvertisementsOptions {
   databaseName?: string;
+  seedDatabaseName?: string;
   updateLocalEnv?: boolean;
 }
 
@@ -182,6 +186,7 @@ export async function provisionTursoAdvertisementsDatabase(
 
 export interface ProvisionTursoMarketplaceOrdersOptions {
   databaseName?: string;
+  seedDatabaseName?: string;
   updateLocalEnv?: boolean;
 }
 
@@ -205,6 +210,7 @@ export async function provisionTursoMarketplaceOrdersDatabase(
 
 async function provisionNamedTursoDatabase(options: {
   databaseName: string;
+  seedDatabaseName?: string;
   updateLocalEnv?: boolean;
   onProvisioned: (url: string, token: string) => void;
 }): Promise<TursoProvisionResult> {
@@ -217,7 +223,11 @@ async function provisionNamedTursoDatabase(options: {
   let created = false;
 
   if (!database) {
-    const createdDb = await createTursoDatabase(options.databaseName, groupName);
+    const createdDb = await createTursoDatabase(
+      options.databaseName,
+      groupName,
+      options.seedDatabaseName,
+    );
     database = { Name: options.databaseName, Hostname: createdDb.Hostname };
     created = true;
   }

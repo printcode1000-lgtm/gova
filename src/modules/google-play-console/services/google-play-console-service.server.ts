@@ -134,7 +134,9 @@ export class GooglePlayConsoleService {
           method: "DELETE",
           url: `${API_ROOT}/applications/${packageName}/edits/${encodeURIComponent(editId)}`,
         })
-        .catch(() => undefined);
+        .catch((deleteError) => {
+          console.warn("[GooglePlayConsole] Failed to delete temporary edit.", deleteError);
+        });
     }
 
     return {
