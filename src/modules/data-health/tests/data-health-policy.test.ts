@@ -4,6 +4,7 @@ import path from "node:path";
 
 import Database from "better-sqlite3";
 
+import { DATABASE_SHARD_NAMES, sqliteFileNameForShard } from "@/core/database/database-shards";
 import {
   cleanupConfirmationText,
   isOlderThan,
@@ -105,10 +106,14 @@ const registeredColumns = new Set(
   ),
 );
 const sqliteFiles = {
-  profile: "profile.db",
   product: "product.db",
   advertisements: "advertisements.db",
-  marketplace_orders: "marketplace-orders.db",
+  ...Object.fromEntries(
+    DATABASE_SHARD_NAMES.map((databaseName) => [
+      databaseName,
+      sqliteFileNameForShard(databaseName),
+    ]),
+  ),
 } as const;
 const unregisteredImageColumns: string[] = [];
 for (const [databaseName, fileName] of Object.entries(sqliteFiles)) {

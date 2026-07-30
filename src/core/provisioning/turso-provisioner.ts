@@ -8,19 +8,15 @@ import {
 import { SQLITE_DIRECTORY } from '@/core/database/environment';
 import {
   writeTursoAdvertisementsRuntimeCredentials,
-  writeTursoMarketplaceOrdersRuntimeCredentials,
   writeTursoProductRuntimeCredentials,
-  writeTursoProfileRuntimeCredentials,
   writeTursoRuntimeCredentials,
   readOptionalEnv,
 } from '@/core/config/server-env.values';
 import type { TursoProvisionResult } from './types';
 
 const DEFAULT_USERS_DB_NAME = 'allusers';
-const DEFAULT_PROFILE_DB_NAME = 'profile';
 const DEFAULT_PRODUCT_DB_NAME = 'product';
 const DEFAULT_ADVERTISEMENTS_DB_NAME = 'advertisements';
-const DEFAULT_MARKETPLACE_ORDERS_DB_NAME = 'marketplace-orders';
 
 function updateEnvFileKeys(
   filePath: string,
@@ -46,24 +42,6 @@ function updateUsersEnvFiles(url: string, token: string): void {
   const entries = {
     TURSO_DATABASE_URL: url,
     TURSO_AUTH_TOKEN: token,
-  };
-  updateEnvFileKeys('.env', entries);
-  updateEnvFileKeys('.env.local', entries);
-}
-
-function updateProfileEnvFiles(url: string, token: string): void {
-  const entries = {
-    TURSO_PROFILE_DATABASE_URL: url,
-    TURSO_PROFILE_AUTH_TOKEN: token,
-  };
-  updateEnvFileKeys('.env', entries);
-  updateEnvFileKeys('.env.local', entries);
-}
-
-function updateMarketplaceOrdersEnvFiles(url: string, token: string): void {
-  const entries = {
-    MARKETPLACE_ORDERS_DATABASE_URL: url,
-    MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN: token,
   };
   updateEnvFileKeys('.env', entries);
   updateEnvFileKeys('.env.local', entries);
@@ -108,30 +86,6 @@ export async function provisionTursoDatabase(
         updateUsersEnvFiles(url, token);
       }
       writeTursoRuntimeCredentials(url, token);
-    },
-  });
-}
-
-export interface ProvisionTursoProfileOptions {
-  databaseName?: string;
-  seedDatabaseName?: string;
-  updateLocalEnv?: boolean;
-}
-
-/**
- * Ensures Turso profile database exists and returns runtime credentials.
- */
-export async function provisionTursoProfileDatabase(
-  options: ProvisionTursoProfileOptions = {}
-): Promise<TursoProvisionResult> {
-  return provisionNamedTursoDatabase({
-    ...options,
-    databaseName: options.databaseName ?? DEFAULT_PROFILE_DB_NAME,
-    onProvisioned: (url, token) => {
-      if (options.updateLocalEnv !== false) {
-        updateProfileEnvFiles(url, token);
-      }
-      writeTursoProfileRuntimeCredentials(url, token);
     },
   });
 }
@@ -184,30 +138,6 @@ export async function provisionTursoAdvertisementsDatabase(
   });
 }
 
-export interface ProvisionTursoMarketplaceOrdersOptions {
-  databaseName?: string;
-  seedDatabaseName?: string;
-  updateLocalEnv?: boolean;
-}
-
-/**
- * Ensures the dedicated marketplace orders database exists and returns runtime credentials.
- */
-export async function provisionTursoMarketplaceOrdersDatabase(
-  options: ProvisionTursoMarketplaceOrdersOptions = {}
-): Promise<TursoProvisionResult> {
-  return provisionNamedTursoDatabase({
-    ...options,
-    databaseName: options.databaseName ?? DEFAULT_MARKETPLACE_ORDERS_DB_NAME,
-    onProvisioned: (url, token) => {
-      if (options.updateLocalEnv !== false) {
-        updateMarketplaceOrdersEnvFiles(url, token);
-      }
-      writeTursoMarketplaceOrdersRuntimeCredentials(url, token);
-    },
-  });
-}
-
 async function provisionNamedTursoDatabase(options: {
   databaseName: string;
   seedDatabaseName?: string;
@@ -253,14 +183,6 @@ export function loadTursoCredentialsFromEnv(): { url: string; authToken: string 
   return { url, authToken };
 }
 
-export function loadTursoProfileCredentialsFromEnv(): { url: string; authToken: string } | null {
-  const url = readOptionalEnv('TURSO_PROFILE_DATABASE_URL');
-  const authToken = readOptionalEnv('TURSO_PROFILE_AUTH_TOKEN');
-
-  if (!url || !authToken) return null;
-  return { url, authToken };
-}
-
 export function loadTursoAdvertisementsCredentialsFromEnv(): { url: string; authToken: string } | null {
   const url = readOptionalEnv('TURSO_ADVERTISEMENTS_DATABASE_URL');
   const authToken = readOptionalEnv('TURSO_ADVERTISEMENTS_AUTH_TOKEN');
@@ -272,14 +194,6 @@ export function loadTursoAdvertisementsCredentialsFromEnv(): { url: string; auth
 export function loadTursoProductCredentialsFromEnv(): { url: string; authToken: string } | null {
   const url = readOptionalEnv('TURSO_PRODUCT_DATABASE_URL');
   const authToken = readOptionalEnv('TURSO_PRODUCT_AUTH_TOKEN');
-
-  if (!url || !authToken) return null;
-  return { url, authToken };
-}
-
-export function loadTursoMarketplaceOrdersCredentialsFromEnv(): { url: string; authToken: string } | null {
-  const url = readOptionalEnv('MARKETPLACE_ORDERS_DATABASE_URL');
-  const authToken = readOptionalEnv('MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN');
 
   if (!url || !authToken) return null;
   return { url, authToken };

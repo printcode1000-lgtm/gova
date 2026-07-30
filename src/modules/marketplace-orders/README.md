@@ -19,7 +19,7 @@ buyer may return to the original separate-delivery arrangements.
 
 ## Database
 
-Development lazily creates and migrates `public/sync_data/sync_sqlite/marketplace-orders.db`. `MARKETPLACE_ORDERS_SQLITE_PATH` can override it. Production uses a dedicated libSQL/Turso database through `MARKETPLACE_ORDERS_DATABASE_URL` and `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN`; apply `db/migrations/0000_marketplace_orders.sql` during provisioning. Credentials are never embedded.
+Development and production run on the marketplace order shards declared in `src/core/database/database-shards.ts`. `npm run db:ensure` regenerates the local SQLite shards from the source schema/data, and `npm run db:schema:sync` syncs each shard to its matching Turso database. Credentials use the shard key pattern `<SHARD>_DATABASE_URL` and `<SHARD>_DATABASE_AUTH_TOKEN`; the legacy single `marketplace-orders` runtime database is no longer used.
 
 ## Status, pricing, audit, and access
 

@@ -1,23 +1,27 @@
 import { existsSync, readFileSync } from 'fs';
 import dotenv from 'dotenv';
+import { DATABASE_SHARD_NAMES, envPrefixForShard } from '../src/core/database/database-shards';
 
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });
 }
 dotenv.config({ path: '.env' });
 
-const VERCEL_KEYS = [
+const LEGACY_TURSO_KEYS = [
   'TURSO_DATABASE_URL',
   'TURSO_AUTH_TOKEN',
-  'TURSO_PROFILE_DATABASE_URL',
-  'TURSO_PROFILE_AUTH_TOKEN',
   'TURSO_PRODUCT_DATABASE_URL',
   'TURSO_PRODUCT_AUTH_TOKEN',
   'TURSO_ADVERTISEMENTS_DATABASE_URL',
   'TURSO_ADVERTISEMENTS_AUTH_TOKEN',
-  'MARKETPLACE_ORDERS_DATABASE_URL',
-  'MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN',
 ] as const;
+
+const SHARD_TURSO_KEYS = DATABASE_SHARD_NAMES.flatMap((databaseName) => {
+  const prefix = envPrefixForShard(databaseName);
+  return [`${prefix}_DATABASE_URL`, `${prefix}_DATABASE_AUTH_TOKEN`];
+});
+
+const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;
 
 const OPTIONAL_VERCEL_KEYS = [] as const;
 

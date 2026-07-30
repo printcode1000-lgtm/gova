@@ -8,13 +8,12 @@ of truth for their matching Turso databases.
 | Local SQLite | Turso environment variables |
 | --- | --- |
 | `allusers.db` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
-| `profile.db` | `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN` |
 | `product.db` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
 | `advertisements.db` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
-| `marketplace-orders.db` | `MARKETPLACE_ORDERS_DATABASE_URL`, `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN` |
+| profile/order shard files | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
-Product and advertisements databases must not fall back to the users database.
-Keeping them dedicated prevents unrelated tables from appearing in the wrong
+Product, advertisements, and every profile/order shard must stay dedicated.
+Keeping them separate prevents unrelated tables from appearing in the wrong
 cloud schema.
 
 ## Normal Schema Sync
@@ -42,6 +41,6 @@ that each Turso database is dedicated to its matching local SQLite file.
 npm run db:provision:turso
 ```
 
-Provisioning creates or reuses all five dedicated Turso databases, writes their
-runtime credentials, and then runs schema synchronization with exact cleanup
-enabled.
+Provisioning creates or reuses users/product/advertisements plus all 17 profile
+and order shards, writes their runtime credentials, and then runs schema
+synchronization with exact cleanup enabled.

@@ -156,7 +156,6 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   }
   if (p.startsWith('src/core/database/')) return 'database-client';
   if (p === 'src/lib/db/turso.ts') return 'database-client';
-  if (p === 'src/lib/db/turso-profile.ts') return 'database-client';
   if (p === 'src/lib/db/turso-advertisements.ts') return 'database-client';
   if (p.includes('/repositories/')) return 'repository';
   if (p.includes('/operations/')) return 'operations';
@@ -225,10 +224,10 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   if (resolved.includes('/core/database/asol-db-persister') || resolved.startsWith('src/lib/asol-db/')) {
     return 'shared';
   }
-  if (resolved.includes('/core/database/db-client') || resolved.includes('/core/database/sqlite-db-client') || resolved.includes('/core/database/profile-db-client') || resolved.includes('/core/database/profile-sqlite-db-client')) {
+  if (resolved.includes('/core/database/db-client') || resolved.includes('/core/database/sqlite-db-client') || resolved.includes('/core/database/profile-db-client')) {
     return 'database-client';
   }
-  if (resolved.includes('/core/database/') || resolved === 'src/lib/db/turso.ts' || resolved === 'src/lib/db/turso-profile.ts') {
+  if (resolved.includes('/core/database/') || resolved === 'src/lib/db/turso.ts') {
     return 'database-client';
   }
   if (resolved.includes('/core/api/asol-api-client') || resolved === 'src/core/api') return 'asol-api-client';

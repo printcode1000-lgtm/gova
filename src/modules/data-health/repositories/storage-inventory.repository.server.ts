@@ -4,10 +4,16 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { advertisementsDbClient } from "@/core/database/advertisements-db-client";
+import {
+  DATABASE_SHARDS,
+  DATABASE_SHARD_NAMES,
+  type DatabaseShardName,
+} from "@/core/database/database-shards";
 import { dbClient } from "@/core/database/db-client";
 import type { IDatabaseClient } from "@/core/database/database-client.interface";
 import { productDbClient } from "@/core/database/product-db-client";
 import { profileDbClient } from "@/core/database/profile-db-client";
+import { ShardedRawDatabaseClient } from "@/core/database/sharded-raw-database-client";
 import { getAllStorageProfiles } from "@/core/storage/profiles/storage-profile-loader.server";
 import { buildObjectPath } from "@/core/storage/storage/image-path";
 import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
@@ -286,7 +292,7 @@ export class StorageInventoryRepository {
           reference({
             storageProfileId: text(row.storage_profile_id) || "spicialOrder",
             imageKey,
-            database: "marketplace_orders",
+            database: "orders-items",
             table: "custom_request_images",
             recordId: text(row.id),
             ownerUid: text(row.uploaded_by),
@@ -296,7 +302,7 @@ export class StorageInventoryRepository {
       }
       const urlReference = referenceFromObjectPath({
         objectPath: objectPathFromUrlOrPath(row.image_url),
-        database: "marketplace_orders",
+        database: "orders-items",
         table: "custom_request_images",
         recordId: text(row.id),
         ownerUid: text(row.uploaded_by),
@@ -396,10 +402,15 @@ export class StorageInventoryRepository {
       client: GenericDatabaseClient;
     }> = [
       { name: "users", client: dbClient },
-      { name: "profile", client: profileDbClient },
       { name: "product", client: productDbClient },
       { name: "advertisements", client: advertisementsDbClient },
-      { name: "marketplace_orders", client: createMarketplaceOrdersDb() },
+      ...DATABASE_SHARD_NAMES.map((databaseName) => ({
+        name: databaseName,
+        client: new ShardedRawDatabaseClient(
+          Object.fromEntries(DATABASE_SHARDS[databaseName].map((table) => [table, databaseName])),
+          databaseName as DatabaseShardName,
+        ) as GenericDatabaseClient,
+      })),
     ];
     const references: StorageReference[] = [];
     for (const database of databases) {

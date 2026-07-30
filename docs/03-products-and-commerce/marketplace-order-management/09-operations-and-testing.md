@@ -2,7 +2,7 @@
 
 ## Local setup
 
-No production credentials are needed for development. The first server-side service construction creates the default SQLite file and applies the module migration. To isolate a test or developer database, set `MARKETPLACE_ORDERS_SQLITE_PATH` before starting the server.
+No production credentials are needed for development. `npm run db:ensure` creates or refreshes the local order shard files before build/test runs. Tests that need an isolated database use the in-memory marketplace test client.
 
 ## Production setup
 

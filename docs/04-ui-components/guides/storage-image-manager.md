@@ -233,7 +233,7 @@ Expected successful sequence:
 
 Failures use `console.error` and appear in the Errors section of `/super-admin/logs`. Resource load failures, including Blob resource failures, are also classified as errors and are not ignored.
 
-For example, profile uses `useProfileStoreImages()` to save keys to `profile.db` in development and Turso in production.
+For example, profile uses `useProfileStoreImages()` to save keys to the profile media shard in development and Turso in production.
 
 ## Multiple images
 

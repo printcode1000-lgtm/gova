@@ -1,2 +1,1 @@
-Set `MARKETPLACE_ORDERS_DATABASE_URL` and optionally `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN`. Apply `../migrations/0000_marketplace_orders.sql` to the dedicated libSQL/Turso database before serving traffic.
-
+Production uses the marketplace order Turso shards declared in `src/core/database/database-shards.ts`. Provision/sync with `npm run db:provision:turso` or `npm run db:schema:sync`; each shard uses `<SHARD>_DATABASE_URL` and `<SHARD>_DATABASE_AUTH_TOKEN`.

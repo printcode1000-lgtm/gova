@@ -96,12 +96,36 @@ export class MarketplaceOrderService {
       )
         return;
     } else {
-      const old = kind === "replacement" ? "old_" : "",
-        match = await this.one(
-          `SELECT 1 ok FROM ${prefix}_request_items ri LEFT JOIN order_items oi ON oi.id=ri.${old}order_item_id LEFT JOIN custom_request_items ci ON ci.id=ri.${old}custom_request_item_id WHERE ri.${prefix}_request_id=? AND (oi.seller_id=? OR ci.seller_id=? OR ci.service_provider_id=?) LIMIT 1`,
-          [requestId, actor.id, actor.id, actor.id],
+      const old = kind === "replacement" ? "old_" : "";
+      const requestItems = await this.db.execute(
+        `SELECT ${old}order_item_id order_item_id, ${old}custom_request_item_id custom_request_item_id FROM ${prefix}_request_items WHERE ${prefix}_request_id=?`,
+        [requestId],
+      );
+      const orderItemIds = requestItems
+        .map((item) => item.order_item_id)
+        .filter((value): value is string => typeof value === "string" && value.length > 0);
+      const customItemIds = requestItems
+        .map((item) => item.custom_request_item_id)
+        .filter((value): value is string => typeof value === "string" && value.length > 0);
+      if (orderItemIds.length > 0) {
+        const rows = await this.db.execute(
+          `SELECT seller_id FROM order_items WHERE id IN (${orderItemIds.map(() => "?").join(",")})`,
+          orderItemIds,
         );
-      if (match) return;
+        if (rows.some((item) => item.seller_id === actor.id)) return;
+      }
+      if (customItemIds.length > 0) {
+        const rows = await this.db.execute(
+          `SELECT seller_id,service_provider_id FROM custom_request_items WHERE id IN (${customItemIds.map(() => "?").join(",")})`,
+          customItemIds,
+        );
+        if (
+          rows.some(
+            (item) => item.seller_id === actor.id || item.service_provider_id === actor.id,
+          )
+        )
+          return;
+      }
     }
     throw new Error("Forbidden");
   }
@@ -1145,9 +1169,18 @@ export class MarketplaceOrderService {
     if (quotes.length === 0)
       throw new Error("Accepted delivery quote not found");
     for (const quote of quotes) {
-      const scopedItem = await this.one(
-        "SELECT oi.* FROM order_items oi JOIN delivery_plan_stops dps ON dps.seller_order_id=oi.seller_order_id JOIN delivery_plan_quote_stops dpqs ON dpqs.stop_id=dps.id WHERE dpqs.quote_id=? AND oi.status NOT IN ('seller_rejected','buyer_cancelled','admin_cancelled','closed') ORDER BY oi.created_at,oi.id LIMIT 1",
+      const quoteStops = await this.db.execute(
+        "SELECT dps.seller_order_id FROM delivery_plan_stops dps JOIN delivery_plan_quote_stops dpqs ON dpqs.stop_id=dps.id WHERE dpqs.quote_id=?",
         [quote.id],
+      );
+      const sellerOrderIds = quoteStops
+        .map((stop) => stop.seller_order_id)
+        .filter((value): value is string => typeof value === "string" && value.length > 0);
+      if (sellerOrderIds.length === 0) continue;
+      const sellerOrderPlaceholders = sellerOrderIds.map(() => "?").join(",");
+      const scopedItem = await this.one(
+        `SELECT * FROM order_items WHERE seller_order_id IN (${sellerOrderPlaceholders}) AND status NOT IN ('seller_rejected','buyer_cancelled','admin_cancelled','closed') ORDER BY created_at,id LIMIT 1`,
+        sellerOrderIds,
       );
       if (!scopedItem) continue;
       await this.setOrderItemShipping(
@@ -1155,15 +1188,15 @@ export class MarketplaceOrderService {
         Number(quote.total_shipping_price),
       );
       await this.db.execute(
-        "UPDATE seller_orders SET service_provider_id=?,updated_at=? WHERE id IN (SELECT dps.seller_order_id FROM delivery_plan_stops dps JOIN delivery_plan_quote_stops dpqs ON dpqs.stop_id=dps.id WHERE dpqs.quote_id=?)",
-        [quote.provider_id, now(), quote.id],
+        `UPDATE seller_orders SET service_provider_id=?,updated_at=? WHERE id IN (${sellerOrderPlaceholders})`,
+        [quote.provider_id, now(), ...sellerOrderIds],
       );
       await this.db.execute(
-        "UPDATE order_items SET shipping_notes=?,updated_at=? WHERE seller_order_id IN (SELECT dps.seller_order_id FROM delivery_plan_stops dps JOIN delivery_plan_quote_stops dpqs ON dpqs.stop_id=dps.id WHERE dpqs.quote_id=?)",
+        `UPDATE order_items SET shipping_notes=?,updated_at=? WHERE seller_order_id IN (${sellerOrderPlaceholders})`,
         [
           `carrier:${quote.provider_id};delivery-plan:${plan.id};delivery-quote:${quote.id}`,
           now(),
-          quote.id,
+          ...sellerOrderIds,
         ],
       );
     }
@@ -1213,10 +1246,23 @@ export class MarketplaceOrderService {
       throw new Error("Delivery provider has no active pickup stops");
     const placeholders = coveredStops.map(() => "?").join(","),
       coveredIds = coveredStops.map((stop) => String(stop.stop_id));
-    const scopeTransport = await this.one(
-      `SELECT MAX(oi.requires_special_vehicle) special FROM order_items oi JOIN delivery_plan_stops dps ON dps.seller_order_id=oi.seller_order_id WHERE dps.id IN (${placeholders}) AND oi.status NOT IN ('seller_rejected','buyer_cancelled','admin_cancelled','closed')`,
+    const scopedStops = await this.db.execute(
+      `SELECT seller_order_id FROM delivery_plan_stops WHERE id IN (${placeholders})`,
       coveredIds,
     );
+    const sellerOrderIds = scopedStops
+      .map((stop) => stop.seller_order_id)
+      .filter((value): value is string => typeof value === "string" && value.length > 0);
+    const scopeItems =
+      sellerOrderIds.length > 0
+        ? await this.db.execute(
+            `SELECT requires_special_vehicle FROM order_items WHERE seller_order_id IN (${sellerOrderIds.map(() => "?").join(",")}) AND status NOT IN ('seller_rejected','buyer_cancelled','admin_cancelled','closed')`,
+            sellerOrderIds,
+          )
+        : [];
+    const scopeTransport = {
+      special: scopeItems.some((item) => Number(item.requires_special_vehicle) > 0) ? 1 : 0,
+    };
     const base = Number(input.baseShippingPrice),
       vehicle = Number(input.specialVehicleFee ?? 0);
     if (
@@ -1547,10 +1593,20 @@ export class MarketplaceOrderService {
       ]),
       created: Row[] = [];
     for (const quote of quotes) {
-      const scopedItems = await this.db.execute(
-        "SELECT oi.* FROM order_items oi JOIN delivery_plan_stops dps ON dps.seller_order_id=oi.seller_order_id JOIN delivery_plan_quote_stops dpqs ON dpqs.stop_id=dps.id WHERE dpqs.quote_id=? AND oi.status='ready_for_shipping' ORDER BY oi.created_at,oi.id",
+      const quoteStops = await this.db.execute(
+        "SELECT dps.seller_order_id FROM delivery_plan_stops dps JOIN delivery_plan_quote_stops dpqs ON dpqs.stop_id=dps.id WHERE dpqs.quote_id=?",
         [quote.id],
       );
+      const sellerOrderIds = quoteStops
+        .map((stop) => stop.seller_order_id)
+        .filter((value): value is string => typeof value === "string" && value.length > 0);
+      const scopedItems =
+        sellerOrderIds.length > 0
+          ? await this.db.execute(
+              `SELECT * FROM order_items WHERE seller_order_id IN (${sellerOrderIds.map(() => "?").join(",")}) AND status='ready_for_shipping' ORDER BY created_at,id`,
+              sellerOrderIds,
+            )
+          : [];
       if (scopedItems.length === 0) continue;
       const stops = await this.db.execute(
         "SELECT dps.pickup_address_snapshot_json FROM delivery_plan_stops dps JOIN delivery_plan_quote_stops dpqs ON dpqs.stop_id=dps.id WHERE dpqs.quote_id=? AND dps.status<>'cancelled' ORDER BY dps.pickup_sequence",
@@ -1667,10 +1723,15 @@ export class MarketplaceOrderService {
     return this.one("SELECT * FROM shipping_quotes WHERE id=?", [quoteId]);
   }
   private async requireAcceptedShippingQuote(sellerOrderId: string) {
-    const plan = await this.one(
-      "SELECT dp.status FROM delivery_plans dp JOIN delivery_plan_stops dps ON dps.plan_id=dp.id WHERE dps.seller_order_id=? LIMIT 1",
+    const stop = await this.one(
+      "SELECT plan_id FROM delivery_plan_stops WHERE seller_order_id=? LIMIT 1",
       [sellerOrderId],
     );
+    const plan = stop
+      ? await this.one("SELECT status FROM delivery_plans WHERE id=? LIMIT 1", [
+          stop.plan_id,
+        ])
+      : null;
     if (
       plan &&
       ["collecting_quotes", "pending_buyer", "reprice_required"].includes(
@@ -1938,10 +1999,15 @@ export class MarketplaceOrderService {
       [input.sellerOrderId, orderId],
     );
     if (!so) throw new Error("Seller order not found");
-    const deliveryPlan = await this.one(
-      "SELECT dp.status FROM delivery_plans dp JOIN delivery_plan_stops dps ON dps.plan_id=dp.id WHERE dps.seller_order_id=? LIMIT 1",
+    const deliveryStop = await this.one(
+      "SELECT plan_id FROM delivery_plan_stops WHERE seller_order_id=? LIMIT 1",
       [so.id],
     );
+    const deliveryPlan = deliveryStop
+      ? await this.one("SELECT status FROM delivery_plans WHERE id=? LIMIT 1", [
+          deliveryStop.plan_id,
+        ])
+      : null;
     if (
       deliveryPlan &&
       !["separate_selected", "cancelled"].includes(String(deliveryPlan.status))
@@ -2086,19 +2152,48 @@ export class MarketplaceOrderService {
   }
   private async syncShipmentTransport(shipmentId: string, actor: Actor) {
     const shipment = await this.one("SELECT * FROM shipments WHERE id=?", [
-        shipmentId,
-      ]),
-      r = await this.one(
-        "SELECT MAX(requires_special_vehicle) special, MAX(requires_refrigeration) cold, MAX(requires_special_loading) loading, MAX(required_vehicle_type) vehicle, SUM(weight) weight FROM (SELECT oi.requires_special_vehicle,oi.requires_refrigeration,oi.requires_special_loading,oi.required_vehicle_type,oi.weight FROM shipment_items si JOIN order_items oi ON oi.id=si.order_item_id WHERE si.shipment_id=? UNION ALL SELECT ci.requires_special_vehicle,ci.requires_refrigeration,ci.requires_special_loading,ci.required_vehicle_type,ci.estimated_weight FROM shipment_items si JOIN custom_request_items ci ON ci.id=si.custom_request_item_id WHERE si.shipment_id=?)",
-        [shipmentId, shipmentId],
-      ),
-      next = {
-        containsSpecialVehicleItems: r?.special ?? 0,
-        requiresRefrigeration: r?.cold ?? 0,
-        requiresSpecialLoading: r?.loading ?? 0,
-        requiredVehicleType: r?.vehicle ?? null,
-        totalWeight: r?.weight ?? null,
-      };
+      shipmentId,
+    ]);
+    const shipmentItems = await this.db.execute(
+      "SELECT * FROM shipment_items WHERE shipment_id=?",
+      [shipmentId],
+    );
+    const orderItemIds = shipmentItems
+      .map((item) => item.order_item_id)
+      .filter(Boolean);
+    const customItemIds = shipmentItems
+      .map((item) => item.custom_request_item_id)
+      .filter(Boolean);
+    const orderItems =
+      orderItemIds.length > 0
+        ? await this.db.execute(
+            `SELECT requires_special_vehicle,requires_refrigeration,requires_special_loading,required_vehicle_type,weight FROM order_items WHERE id IN (${orderItemIds.map(() => "?").join(",")})`,
+            orderItemIds,
+          )
+        : [];
+    const customItems =
+      customItemIds.length > 0
+        ? await this.db.execute(
+            `SELECT requires_special_vehicle,requires_refrigeration,requires_special_loading,required_vehicle_type,estimated_weight FROM custom_request_items WHERE id IN (${customItemIds.map(() => "?").join(",")})`,
+            customItemIds,
+          )
+        : [];
+    const transportRows: Array<Record<string, unknown>> = [
+      ...orderItems.map((item) => ({ ...item, row_weight: item.weight })),
+      ...customItems.map((item) => ({ ...item, row_weight: item.estimated_weight })),
+    ];
+    const totalWeight = transportRows.reduce((sum, item) => {
+      const weight = item.row_weight == null ? 0 : Number(item.row_weight);
+      return sum + (Number.isFinite(weight) ? weight : 0);
+    }, 0);
+    const next = {
+      containsSpecialVehicleItems: transportRows.some((item) => Number(item.requires_special_vehicle) > 0) ? 1 : 0,
+      requiresRefrigeration: transportRows.some((item) => Number(item.requires_refrigeration) > 0) ? 1 : 0,
+      requiresSpecialLoading: transportRows.some((item) => Number(item.requires_special_loading) > 0) ? 1 : 0,
+      requiredVehicleType:
+        transportRows.find((item) => item.required_vehicle_type)?.required_vehicle_type ?? null,
+      totalWeight: totalWeight > 0 ? totalWeight : null,
+    };
     await this.db.execute(
       "UPDATE shipments SET contains_special_vehicle_items=?,requires_refrigeration=?,requires_special_loading=?,required_vehicle_type=?,total_weight=?,updated_at=? WHERE id=?",
       [
@@ -2890,10 +2985,16 @@ export class MarketplaceOrderService {
       sellerOrderId,
     ]);
     if (!so) throw new Error("Seller order not found");
-    const rows = await this.db.execute(
-        "SELECT status FROM order_items WHERE seller_order_id=? UNION ALL SELECT status FROM custom_request_items WHERE seller_order_id=?",
-        [sellerOrderId, sellerOrderId],
-      ),
+    const rows = [
+        ...(await this.db.execute(
+          "SELECT status FROM order_items WHERE seller_order_id=?",
+          [sellerOrderId],
+        )),
+        ...(await this.db.execute(
+          "SELECT status FROM custom_request_items WHERE seller_order_id=?",
+          [sellerOrderId],
+        )),
+      ],
       status = calculateSellerOrderStatus(rows.map((x) => String(x.status)));
     if (so.status !== status) {
       await this.db.execute(
@@ -2920,9 +3021,26 @@ export class MarketplaceOrderService {
       sellerOrderId,
     ]);
     if (!old) throw new Error("Seller order not found");
-    const r = await this.one(
-        "SELECT COALESCE(SUM(subtotal),0) subtotal,COALESCE(SUM(discount),0) discount,COALESCE(SUM(shipping),0) shipping,COALESCE(SUM(tax),0) tax,COALESCE(SUM(commission),0) commission,COALESCE(SUM(total),0) total FROM (SELECT subtotal_price subtotal,item_discount_amount+coupon_discount_amount discount,shipping_price-shipping_discount_amount shipping,tax_amount tax,commission_amount commission,total_price total FROM order_items WHERE seller_order_id=? UNION ALL SELECT subtotal_price,discount_amount,shipping_price-shipping_discount_amount,tax_amount,commission_amount,total_price FROM custom_request_items WHERE seller_order_id=?)",
-        [sellerOrderId, sellerOrderId],
+    const rows = [
+        ...(await this.db.execute(
+          "SELECT subtotal_price subtotal,item_discount_amount+coupon_discount_amount discount,shipping_price-shipping_discount_amount shipping,tax_amount tax,commission_amount commission,total_price total FROM order_items WHERE seller_order_id=?",
+          [sellerOrderId],
+        )),
+        ...(await this.db.execute(
+          "SELECT subtotal_price subtotal,discount_amount discount,shipping_price-shipping_discount_amount shipping,tax_amount tax,commission_amount commission,total_price total FROM custom_request_items WHERE seller_order_id=?",
+          [sellerOrderId],
+        )),
+      ],
+      r = rows.reduce<{ subtotal: number; discount: number; shipping: number; tax: number; commission: number; total: number }>(
+        (sum, row) => ({
+          subtotal: sum.subtotal + Number(row.subtotal ?? 0),
+          discount: sum.discount + Number(row.discount ?? 0),
+          shipping: sum.shipping + Number(row.shipping ?? 0),
+          tax: sum.tax + Number(row.tax ?? 0),
+          commission: sum.commission + Number(row.commission ?? 0),
+          total: sum.total + Number(row.total ?? 0),
+        }),
+        { subtotal: 0, discount: 0, shipping: 0, tax: 0, commission: 0, total: 0 },
       ),
       next = {
         subtotal: Number(r.subtotal),
@@ -2969,10 +3087,16 @@ export class MarketplaceOrderService {
   ) {
     const order = await this.one("SELECT * FROM orders WHERE id=?", [orderId]);
     if (!order) throw new Error("Order not found");
-    const rows = (await this.db.execute(
-        "SELECT subtotal_price subtotal,item_discount_amount+coupon_discount_amount discount,shipping_price shipping,shipping_discount_amount shippingDiscount,tax_amount tax,service_fee_amount serviceFee,commission_amount platformFee,total_price total,paid_amount paid,refunded_amount refunded FROM order_items WHERE order_id=? UNION ALL SELECT subtotal_price,discount_amount,shipping_price,shipping_discount_amount,tax_amount,service_fee_amount,commission_amount,total_price,paid_amount,refunded_amount FROM custom_request_items WHERE order_id=?",
-        [orderId, orderId],
-      )) as any[],
+    const rows = [
+        ...(await this.db.execute(
+          "SELECT subtotal_price subtotal,item_discount_amount+coupon_discount_amount discount,shipping_price shipping,shipping_discount_amount shippingDiscount,tax_amount tax,service_fee_amount serviceFee,commission_amount platformFee,total_price total,paid_amount paid,refunded_amount refunded FROM order_items WHERE order_id=?",
+          [orderId],
+        )),
+        ...(await this.db.execute(
+          "SELECT subtotal_price subtotal,discount_amount discount,shipping_price shipping,shipping_discount_amount shippingDiscount,tax_amount tax,service_fee_amount serviceFee,commission_amount platformFee,total_price total,paid_amount paid,refunded_amount refunded FROM custom_request_items WHERE order_id=?",
+          [orderId],
+        )),
+      ] as any[],
       payments = Number(
         (
           await this.one(
@@ -3046,10 +3170,10 @@ export class MarketplaceOrderService {
         calculatedStatus: order.calculated_status,
         archivedAt: order.archived_at,
         closedAt: order.closed_at,
-        itemStatuses: await vals(
-          "SELECT status FROM order_items WHERE order_id=? UNION ALL SELECT status FROM custom_request_items WHERE order_id=?",
-          [orderId, orderId],
-        ),
+        itemStatuses: [
+          ...(await vals("SELECT status FROM order_items WHERE order_id=?")),
+          ...(await vals("SELECT status FROM custom_request_items WHERE order_id=?")),
+        ],
         sellerStatuses: (await vals(
           "SELECT status FROM seller_orders WHERE order_id=?",
         )) as any,

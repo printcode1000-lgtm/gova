@@ -644,19 +644,23 @@ export class ProfileRepository implements IProfileRepository {
     search?: string,
     minRating?: number,
   ): Promise<UserProfileRow[]> {
-    const params: Array<string | number> = [categoryId, subcategoryId];
-    const where = [
-      "c.category_id = ?",
-      "c.subcategory_id = ?",
-      "c.is_enabled = 1",
-    ];
     const searchText = normalizeSearchText(search ?? "");
+    const categoryRows = (await this.database.execute(
+      `SELECT DISTINCT uid FROM profile_search_categories c
+       WHERE c.category_id = ? AND c.subcategory_id = ? AND c.is_enabled = 1`,
+      [categoryId, subcategoryId],
+    )) as Array<{ uid: string }>;
+    const uids = categoryRows.map((row) => row.uid).filter(Boolean);
+    if (uids.length === 0) return [];
+    const uidPlaceholders = uids.map(() => "?").join(",");
+    const profileParams: Array<string | number> = [...uids];
+    const profileWhere = [`p.uid IN (${uidPlaceholders})`];
     if (searchText) {
-      where.push(
+      profileWhere.push(
         "(p.store_name_search LIKE ? OR p.store_description_search LIKE ? OR p.primary_phone_normalized LIKE ? OR p.uid LIKE ?)",
       );
       const phone = normalizePhone(searchText);
-      params.push(
+      profileParams.push(
         `%${searchText}%`,
         `%${searchText}%`,
         `%${phone}%`,
@@ -668,18 +672,17 @@ export class ProfileRepository implements IProfileRepository {
       Number.isFinite(minRating) &&
       minRating >= 1
     ) {
-      where.push("p.rating_average >= ?");
-      params.push(minRating * 100);
+      profileWhere.push("p.rating_average >= ?");
+      profileParams.push(minRating * 100);
     }
-    params.push(Math.max(1, limit), Math.max(0, offset));
+    profileParams.push(Math.max(1, limit), Math.max(0, offset));
     return (await this.database.execute(
-      `SELECT DISTINCT p.*
-       FROM profile_search_categories c
-       INNER JOIN user_profiles p ON p.uid = c.uid
-       WHERE ${where.join(" AND ")}
+      `SELECT p.*
+       FROM user_profiles p
+       WHERE ${profileWhere.join(" AND ")}
        ORDER BY p.store_name COLLATE NOCASE ASC, p.uid ASC
        LIMIT ? OFFSET ?`,
-      params,
+      profileParams,
     )) as UserProfileRow[];
   }
 

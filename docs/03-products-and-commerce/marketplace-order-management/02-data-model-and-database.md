@@ -27,15 +27,17 @@ links may contain one unified shipment or several hybrid group shipments.
 
 ## Development database
 
-The default development file is `public/sync_data/sync_sqlite/marketplace-orders.db`. It is created lazily and receives the idempotent migration when the server database adapter starts. `MARKETPLACE_ORDERS_SQLITE_PATH` may select another local file.
+Development uses generated order shard files in `public/sync_data/sync_sqlite` (`orders-core.db`, `orders-items.db`, and the remaining order shards). `npm run db:ensure` refreshes the shards from the local source database and verifies all 17 profile/order shards exist.
 
 ## Production database
 
 Production uses a dedicated libSQL/Turso connection:
 
 ```env
-MARKETPLACE_ORDERS_DATABASE_URL=libsql://...
-MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN=...
+ORDERS_CORE_DATABASE_URL=libsql://...
+ORDERS_CORE_DATABASE_AUTH_TOKEN=...
+ORDERS_ITEMS_DATABASE_URL=libsql://...
+ORDERS_ITEMS_DATABASE_AUTH_TOKEN=...
 ```
 
-Apply `src/modules/marketplace-orders/db/migrations/0000_marketplace_orders.sql` to the production database during provisioning. Never place credentials in source files or client-visible environment values.
+Provision and sync the order shards with `npm run db:provision:turso` or `npm run db:schema:sync`. Never place credentials in source files or client-visible environment values.

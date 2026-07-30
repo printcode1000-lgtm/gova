@@ -42,7 +42,7 @@ Supported: `CREATE TABLE`, `ADD COLUMN`, `CREATE INDEX`, `CREATE VIEW`, `CREATE 
 
 **Never:** INSERT, UPDATE, DELETE, or row migration.
 
-Each SQLite file syncs to **its own** Turso database (`allusers.db` → users Turso, `profile.db` → profile Turso).
+Each SQLite file syncs to **its own** Turso database. Profile and order data sync through the 17 shard files rather than the old monolithic source files.
 
 Schema diff suppresses known cross-database tables when a deployment uses a shared/fallback Turso database URL. For example, product tables in the users Turso URL are not reported as users warnings when they are known logical product tables.
 
@@ -53,18 +53,17 @@ Temporal columns ending in `_at` treat SQLite `TEXT` and Turso `DATETIME` as com
 | File | Database |
 |------|----------|
 | `public/sync_data/schema-sync-report.json` | Users |
-| `public/sync_data/profile-schema-sync-report.json` | Profile |
+| `public/sync_data/*-schema-sync-report.json` | Product, advertisements, and profile/order shards |
 
 Viewable in Operation Monitor **Schema Sync** tab.
 
 ## Scripts
 
 ```bash
-npm run db:ensure              # Create missing .db files
-npm run db:schema:sync         # Sync both SQLite → Turso
+npm run db:ensure              # Create source DBs and refresh all profile/order shards
+npm run db:schema:sync         # Sync SQLite databases and shards to Turso
 npm run db:provision:turso     # Create Turso DBs matching local SQLite names + sync
 npm run db:create:sqlite       # Reset allusers.db from migrations
-npm run db:create:profile      # Create profile.db
 npm run db:push:vercel-env     # Push Turso vars to Vercel
 ```
 
@@ -77,12 +76,12 @@ Schema sync runs automatically in `npm run build`.
 3. Generate: `npx drizzle-kit generate`
 4. Apply (dev): `ensureDevMigrations()` on first connection
 
-## Migration pipeline (profile)
+## Migration pipeline (profile/order shards)
 
-1. `drizzle.profile.config.ts` → `src/core/database/profile/profile.schema.ts`
-2. Output: `src/core/database/profile/migrations/`
-3. Generate: `npx drizzle-kit generate --config drizzle.profile.config.ts`
-4. Apply (dev): `ensureProfileDevMigrations()` on first profile connection
+1. Profile source migrations live in `src/core/database/profile/migrations/`
+2. Order source migration lives in `src/modules/marketplace-orders/db/migrations/`
+3. `npm run db:ensure` creates source SQLite files and refreshes the 17 runtime shards
+4. Runtime clients read/write the shard files directly
 
 ## Example DDL sync
 

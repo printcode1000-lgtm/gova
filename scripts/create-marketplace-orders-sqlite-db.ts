@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync } from "fs";
 import path from "path";
 import Database from "better-sqlite3";
 
-import { MARKETPLACE_ORDERS_SQLITE_DB_PATH } from "../src/core/database/environment";
+import { MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH } from "../src/core/database/environment";
 
 const migrationPath = path.join(
   process.cwd(),
@@ -14,10 +14,10 @@ const migrationPath = path.join(
   "0000_marketplace_orders.sql",
 );
 
-const dbDir = path.dirname(MARKETPLACE_ORDERS_SQLITE_DB_PATH);
+const dbDir = path.dirname(MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH);
 if (!existsSync(dbDir)) mkdirSync(dbDir, { recursive: true });
 
-const db = new Database(MARKETPLACE_ORDERS_SQLITE_DB_PATH);
+const db = new Database(MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH);
 try {
   db.pragma("foreign_keys = ON");
   db.exec(readFileSync(migrationPath, "utf8"));

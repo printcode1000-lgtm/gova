@@ -2,18 +2,24 @@ import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import path from 'path';
 import { createClient } from '@libsql/client';
 import {
-  PROFILE_SCHEMA_SYNC_REPORT_PATH,
   SCHEMA_SYNC_REPORT_PATH,
   ADVERTISEMENTS_SQLITE_DB_PATH,
-  MARKETPLACE_ORDERS_SQLITE_DB_PATH,
   PRODUCT_SQLITE_DB_PATH,
+  SQLITE_DIRECTORY,
 } from '@/core/database/environment';
-import { getPrimarySqliteDbPath, getProfileSqliteDbPath } from '@/core/database/environment.server';
+import { getPrimarySqliteDbPath } from '@/core/database/environment.server';
+import {
+  DATABASE_SHARDS,
+  DATABASE_SHARD_NAMES,
+  envPrefixForShard,
+  sqliteFileNameForShard,
+} from '@/core/database/database-shards';
+import { readOptionalEnv } from '@/core/config/server-env.values';
 import { readSqliteSchema } from './sqlite-schema-reader';
 import { readTursoSchema } from './turso-schema-reader';
 import { diffSchemas } from './schema-diff';
 import { computeSchemaVersion } from './schema-version';
-import { loadTursoCredentialsFromEnv, loadTursoProfileCredentialsFromEnv, loadTursoAdvertisementsCredentialsFromEnv, loadTursoProductCredentialsFromEnv, loadTursoMarketplaceOrdersCredentialsFromEnv } from './turso-provisioner';
+import { loadTursoCredentialsFromEnv, loadTursoAdvertisementsCredentialsFromEnv, loadTursoProductCredentialsFromEnv } from './turso-provisioner';
 import type { SchemaSyncReport } from './types';
 
 const ADVERTISEMENTS_SCHEMA_SYNC_REPORT_PATH = path.join(
@@ -30,13 +36,6 @@ const PRODUCT_SCHEMA_SYNC_REPORT_PATH = path.join(
   'product-schema-sync-report.json',
 );
 
-const MARKETPLACE_ORDERS_SCHEMA_SYNC_REPORT_PATH = path.join(
-  process.cwd(),
-  'public',
-  'sync_data',
-  'marketplace-orders-schema-sync-report.json',
-);
-
 const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
   users: new Set([
     'users',
@@ -46,34 +45,6 @@ const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
     'notification_vapid_settings',
     'ota_releases',
     'ota_release_audit',
-  ]),
-  profile: new Set([
-    'user_profiles',
-    'user_specialties',
-    'profile_reviews',
-    'profile_review_helpful',
-    'profile_review_replies',
-    'follows',
-    'profile_contact_points',
-    'profile_locations',
-    'profile_images',
-    'profile_featured_products',
-    'profile_trending_items',
-    'profile_working_hours',
-    'profile_delivery_carriers',
-    'profile_search_categories',
-    'profile_category_product_counts',
-    'seller_discounts',
-    'seller_discount_usages',
-    'system_logs',
-    'data_health_runs',
-    'data_health_findings',
-    'data_health_cleanup_plans',
-    'data_health_cleanup_audit',
-    'data_health_quarantine',
-    'data_health_locks',
-    'data_health_order_purge_plans',
-    'data_health_storage_deletion_tasks',
   ]),
   advertisements: new Set(['hero_slider', 'featured_marquee', 'trending_ribbon']),
   product: new Set([
@@ -85,34 +56,12 @@ const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
     'pharmacy_profile_subcategory_overrides',
     'pharmacy_profile_product_overrides',
   ]),
-  'marketplace-orders': new Set([
-    'orders',
-    'seller_orders',
-    'order_items',
-    'custom_request_items',
-    'custom_request_images',
-    'shipments',
-    'shipment_items',
-    'payments',
-    'refunds',
-    'cancellations',
-    'cancellation_items',
-    'return_requests',
-    'return_request_items',
-    'replacement_requests',
-    'replacement_request_items',
-    'disputes',
-    'dispute_messages',
-    'audit_trail',
-    'shipping_quotes',
-    'delivery_plans',
-    'delivery_plan_stops',
-    'delivery_plan_candidates',
-    'delivery_plan_candidate_stops',
-    'delivery_plan_quotes',
-    'delivery_plan_quote_stops',
-    'delivery_plan_shipments',
-  ]),
+  ...Object.fromEntries(
+    Object.entries(DATABASE_SHARDS).map(([databaseName, tables]) => [
+      databaseName,
+      new Set(tables),
+    ]),
+  ),
 };
 
 function ignoredExtraTablesFor(databaseLabel: string): Set<string> {
@@ -184,26 +133,22 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
   const credentials =
     options.tursoUrl && options.tursoAuthToken
       ? { url: options.tursoUrl, authToken: options.tursoAuthToken }
-      : databaseLabel === 'profile'
-        ? loadTursoProfileCredentialsFromEnv()
-        : databaseLabel === 'advertisements'
+      : databaseLabel === 'advertisements'
           ? loadTursoAdvertisementsCredentialsFromEnv()
           : databaseLabel === 'product'
             ? loadTursoProductCredentialsFromEnv()
-            : databaseLabel === 'marketplace-orders'
-              ? loadTursoMarketplaceOrdersCredentialsFromEnv()
-            : loadTursoCredentialsFromEnv();
+            : DATABASE_SHARD_NAMES.includes(databaseLabel as any)
+              ? loadTursoShardCredentialsFromEnv(databaseLabel)
+              : loadTursoCredentialsFromEnv();
 
   if (!credentials) {
     const reason =
-      databaseLabel === 'profile'
-        ? 'Turso profile credentials not configured (TURSO_PROFILE_DATABASE_URL / TURSO_PROFILE_AUTH_TOKEN)'
-        : databaseLabel === 'advertisements'
+      databaseLabel === 'advertisements'
           ? 'Turso advertisements credentials not configured (TURSO_ADVERTISEMENTS_DATABASE_URL / TURSO_ADVERTISEMENTS_AUTH_TOKEN)'
           : databaseLabel === 'product'
             ? 'Turso product credentials not configured (TURSO_PRODUCT_DATABASE_URL / TURSO_PRODUCT_AUTH_TOKEN)'
-            : databaseLabel === 'marketplace-orders'
-              ? 'Turso marketplace orders credentials not configured (MARKETPLACE_ORDERS_DATABASE_URL / MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN)'
+            : DATABASE_SHARD_NAMES.includes(databaseLabel as any)
+              ? `Turso shard credentials not configured (${envPrefixForShard(databaseLabel as any)}_DATABASE_URL / ${envPrefixForShard(databaseLabel as any)}_DATABASE_AUTH_TOKEN)`
             : 'Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)';
     if (options.skipIfMissingCredentials) {
       const report = buildSkippedReport(reason);
@@ -300,15 +245,22 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
 
 export interface AllSchemaSyncReports {
   users: SchemaSyncReport;
-  profile: SchemaSyncReport;
   advertisements: SchemaSyncReport;
   product: SchemaSyncReport;
-  marketplaceOrders: SchemaSyncReport;
+  shards: Record<string, SchemaSyncReport>;
+}
+
+function loadTursoShardCredentialsFromEnv(databaseLabel: string): { url: string; authToken: string } | null {
+  const prefix = envPrefixForShard(databaseLabel as any);
+  const url = readOptionalEnv(`${prefix}_DATABASE_URL`);
+  const authToken = readOptionalEnv(`${prefix}_DATABASE_AUTH_TOKEN`);
+  if (!url || !authToken) return null;
+  return { url, authToken };
 }
 
 /**
  * Syncs all SQLite sources → their respective Turso databases independently.
- * Includes: allusers.db → users, profile.db → profile, advertisements.db → advertisements, product.db → product.
+ * Includes allusers, product, advertisements, and every profile/orders shard.
  */
 export async function runAllSchemaSyncs(
   options: Pick<RunSchemaSyncOptions, 'skipIfMissingCredentials' | 'removeExtraObjects'> = {}
@@ -318,13 +270,6 @@ export async function runAllSchemaSyncs(
     sqlitePath: getPrimarySqliteDbPath(),
     reportPath: SCHEMA_SYNC_REPORT_PATH,
     databaseLabel: 'users',
-  });
-
-  const profile = await runSchemaSync({
-    ...options,
-    sqlitePath: getProfileSqliteDbPath(),
-    reportPath: PROFILE_SCHEMA_SYNC_REPORT_PATH,
-    databaseLabel: 'profile',
   });
 
   const advertisements = await runSchemaSync({
@@ -341,14 +286,17 @@ export async function runAllSchemaSyncs(
     databaseLabel: 'product',
   });
 
-  const marketplaceOrders = await runSchemaSync({
-    ...options,
-    sqlitePath: MARKETPLACE_ORDERS_SQLITE_DB_PATH,
-    reportPath: MARKETPLACE_ORDERS_SCHEMA_SYNC_REPORT_PATH,
-    databaseLabel: 'marketplace-orders',
-  });
+  const shards: Record<string, SchemaSyncReport> = {};
+  for (const databaseName of DATABASE_SHARD_NAMES) {
+    shards[databaseName] = await runSchemaSync({
+      ...options,
+      sqlitePath: path.join(SQLITE_DIRECTORY, sqliteFileNameForShard(databaseName)),
+      reportPath: path.join(process.cwd(), 'public', 'sync_data', `${databaseName}-schema-sync-report.json`),
+      databaseLabel: databaseName,
+    });
+  }
 
-  return { users, profile, advertisements, product, marketplaceOrders };
+  return { users, advertisements, product, shards };
 }
 
 export function getSchemaSyncReportPath(): string {

@@ -3,6 +3,7 @@ import "server-only";
 import { createClient, type Client } from "@libsql/client";
 
 import { readOptionalEnv } from "@/core/config/server-env.values";
+import { DATABASE_SHARD_NAMES, envPrefixForShard } from "@/core/database/database-shards";
 
 import type { DevCloudBackupDatabaseManifest } from "../domain/types";
 
@@ -29,12 +30,6 @@ export const TURSO_BACKUP_SOURCES: TursoBackupSource[] = [
     tokenKey: "TURSO_AUTH_TOKEN",
   },
   {
-    id: "profile",
-    label: "Profile",
-    urlKey: "TURSO_PROFILE_DATABASE_URL",
-    tokenKey: "TURSO_PROFILE_AUTH_TOKEN",
-  },
-  {
     id: "product",
     label: "Product",
     urlKey: "TURSO_PRODUCT_DATABASE_URL",
@@ -46,12 +41,15 @@ export const TURSO_BACKUP_SOURCES: TursoBackupSource[] = [
     urlKey: "TURSO_ADVERTISEMENTS_DATABASE_URL",
     tokenKey: "TURSO_ADVERTISEMENTS_AUTH_TOKEN",
   },
-  {
-    id: "marketplace-orders",
-    label: "Marketplace orders",
-    urlKey: "MARKETPLACE_ORDERS_DATABASE_URL",
-    tokenKey: "MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN",
-  },
+  ...DATABASE_SHARD_NAMES.map((databaseName) => {
+    const prefix = envPrefixForShard(databaseName);
+    return {
+      id: databaseName,
+      label: databaseName,
+      urlKey: `${prefix}_DATABASE_URL`,
+      tokenKey: `${prefix}_DATABASE_AUTH_TOKEN`,
+    };
+  }),
 ];
 
 function encodeJson(value: unknown): Uint8Array {

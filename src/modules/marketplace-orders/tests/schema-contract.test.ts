@@ -1,8 +1,20 @@
 import assert from "node:assert/strict";
 import { createMemoryMarketplaceDb } from "../db/test-client";
-import { rowsOrChanges } from "../db/result-mapper";
 import { MarketplaceOrderService } from "../services/marketplace-order-service";
 import * as enums from "../domain/enums";
+
+const rowsOrChanges = (
+  sql: string,
+  result: { rows: unknown[]; rowsAffected: number },
+): Record<string, unknown>[] => {
+  const isReadQuery = /^\s*(SELECT|WITH|PRAGMA)/i.test(sql);
+  if (isReadQuery || result.rows.length > 0) {
+    return result.rows as Record<string, unknown>[];
+  }
+
+  return [{ changes: result.rowsAffected }];
+};
+
 const columns: Record<string, string> = {
   orders:
     "id order_number buyer_id order_type delivery_address_snapshot_json currency notes source calculated_status subtotal_price items_discount_total order_discount_total shipping_total shipping_discount_total tax_total service_fee_total platform_fee_total grand_total paid_total refunded_total remaining_total created_at updated_at closed_at archived_at",

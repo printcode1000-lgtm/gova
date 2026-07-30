@@ -4,18 +4,18 @@ import type { IDatabaseClient } from './database-client.interface';
 import { isDevRuntime } from './environment';
 
 /**
- * ProfileDatabaseClient — server-only driver selector for profile.db / Turso profile.
+ * ProfileDatabaseClient — server-only driver selector for the sharded profile databases.
  */
 export class ProfileDatabaseClient implements IDatabaseClient {
   private activeClient: IDatabaseClient;
 
   constructor() {
     if (isDevRuntime()) {
-      const { ProfileSQLiteDatabaseClient } = require('./profile-sqlite-db-client');
-      this.activeClient = new ProfileSQLiteDatabaseClient();
+      const { ProfileShardedDatabaseClient } = require('./profile-sharded-db-client');
+      this.activeClient = new ProfileShardedDatabaseClient();
     } else {
-      const { ProfileTursoDatabaseClient } = require('./profile-turso-db-client');
-      this.activeClient = new ProfileTursoDatabaseClient();
+      const { ProfileShardedDatabaseClient } = require('./profile-sharded-db-client');
+      this.activeClient = new ProfileShardedDatabaseClient();
     }
   }
 

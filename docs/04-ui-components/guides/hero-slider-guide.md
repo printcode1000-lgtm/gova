@@ -360,7 +360,7 @@ src/components/profile/image-configs/storefront-images.image.json
 
 ### Profile database fields
 
-Profile image references are stored in `profile.db`, table `user_profiles`:
+Profile image references are stored in the profile shards:
 
 | Column                  | Purpose                                                          |
 | ----------------------- | ---------------------------------------------------------------- |
@@ -400,7 +400,7 @@ These profiles are also declared in `src/config/storage-profiles.json`.
 | ------------------------------- | ------------- | ------------------------------------------------------ | ------------------ |
 | Public Home slider              | `view`        | Current `home-hero-slider` record plus IndexedDB cache | `home-hero-slider` |
 | Super-admin Home editor         | `admin-edit`  | Single current JSON record in `advertisements.db`      | `home-hero-slider` |
-| Profile preview                 | `view`        | Image keys in `profile.db`                             | `cover`            |
+| Profile preview                 | `view`        | Image keys in the profile media/core shards            | `cover`            |
 | Profile storefront-image editor | `images-edit` | `user_profiles.cover_image_keys_json`                  | `cover`            |
 
 Do not connect Profile to the advertisements database. Do not use `images-edit` for Home administration because it intentionally discards non-image slide fields when rebuilding slides. Do not expose `admin-edit` to profile owners.

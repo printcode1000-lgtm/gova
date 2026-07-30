@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 
 import { advertisementsDbClient } from "@/core/database/advertisements-db-client";
 import { dbClient } from "@/core/database/db-client";
+import { MARKETPLACE_ORDER_TABLE_TO_DATABASE } from "@/core/database/database-shards";
 import { productDbClient } from "@/core/database/product-db-client";
 import { profileDbClient } from "@/core/database/profile-db-client";
 import { getAllStorageProfiles } from "@/core/storage/profiles/storage-profile-loader.server";
@@ -87,10 +88,16 @@ function routeFor(database: string, table: string, recordId: string): string {
   if (table === "user_profiles") {
     return `/profile?mode=preview&uid=${encodeURIComponent(recordId)}`;
   }
-  if (database === "marketplace_orders") {
+  if (database.startsWith("orders-")) {
     return `/orders/${encodeURIComponent(recordId)}`;
   }
   return "";
+}
+
+function orderShardFor(table: string): string {
+  return MARKETPLACE_ORDER_TABLE_TO_DATABASE[
+    table as keyof typeof MARKETPLACE_ORDER_TABLE_TO_DATABASE
+  ] ?? "orders-core";
 }
 
 function resultChanged(rows: Row[]): boolean {
@@ -547,7 +554,7 @@ export class DataHealthRepository {
       return { deletedRecords: rows.length, storageObjects };
     }
 
-    if (database === "marketplace_orders" && table === "custom_request_images") {
+    if (database === "orders-items" && table === "custom_request_images") {
       const ordersDb = createMarketplaceOrdersDb();
       const rows = (await ordersDb.execute(
         "SELECT storage_profile_id, image_key FROM custom_request_images WHERE id=? LIMIT 1",
@@ -599,7 +606,7 @@ export class DataHealthRepository {
       return deleted.length;
     }
 
-    if (database === "marketplace_orders" && table === "custom_request_images") {
+    if (database === "orders-items" && table === "custom_request_images") {
       const ordersDb = createMarketplaceOrdersDb();
       const deleted = (await ordersDb.execute(
         "DELETE FROM custom_request_images WHERE id=? RETURNING id",
@@ -732,7 +739,7 @@ export class DataHealthRepository {
           makeIssue({
             category: "order",
             severity: "critical",
-            database: "marketplace_orders",
+            database: "orders-core",
             table: "orders",
             recordId: id,
             ownerUid: buyerId,
@@ -745,7 +752,7 @@ export class DataHealthRepository {
             },
             cleanupAction: archivedAt ? "none" : "archive-order",
             cleanupMode: archivedAt ? "protected" : "automatic",
-            route: routeFor("marketplace_orders", "orders", id),
+            route: routeFor("orders-core", "orders", id),
             createdAt: text(order.created_at),
             updatedAt: text(order.updated_at),
           }),
@@ -759,7 +766,7 @@ export class DataHealthRepository {
           makeIssue({
             category: "order",
             severity: "info",
-            database: "marketplace_orders",
+            database: "orders-core",
             table: "orders",
             recordId: id,
             ownerUid: buyerId,
@@ -768,7 +775,7 @@ export class DataHealthRepository {
             evidence: { closedAt, archivedAt },
             cleanupAction: "archive-order",
             cleanupMode: "automatic",
-            route: routeFor("marketplace_orders", "orders", id),
+            route: routeFor("orders-core", "orders", id),
             createdAt: text(order.created_at),
             updatedAt: text(order.updated_at),
           }),
@@ -788,7 +795,7 @@ export class DataHealthRepository {
           makeIssue({
             category: "order",
             severity: "critical",
-            database: "marketplace_orders",
+            database: "orders-core",
             table: "seller_orders",
             recordId: text(row.id),
             ownerUid: sellerId,
@@ -821,7 +828,7 @@ export class DataHealthRepository {
           makeIssue({
             category: "order",
             severity: "critical",
-            database: "marketplace_orders",
+            database: "orders-items",
             table: "custom_request_items",
             recordId: text(row.id),
             ownerUid: sellerId || providerId,
@@ -1236,7 +1243,7 @@ export class DataHealthRepository {
           makeIssue({
             category: "order",
             severity: baseBroken ? "critical" : "warning",
-            database: "marketplace_orders",
+            database: "orders-items",
             table: "order_items",
             recordId: text(row.id),
             ownerUid: text(row.seller_id),
@@ -1264,7 +1271,7 @@ export class DataHealthRepository {
           makeIssue({
             category: "image",
             severity: "critical",
-            database: "marketplace_orders",
+            database: "orders-items",
             table: "custom_request_images",
             recordId: text(row.id),
             ownerUid: text(row.uploaded_by),
@@ -1448,7 +1455,7 @@ export class DataHealthRepository {
         makeIssue({
           category: "database",
           severity: "critical",
-          database: "marketplace_orders",
+          database: "orders-core",
           table: text(row.table) || "foreign_key",
           recordId: text(row.rowid) || text(row.parent),
           ownerUid: "",
@@ -1669,7 +1676,7 @@ export class DataHealthRepository {
       makeIssue({
         category: "order",
         severity: "critical",
-        database: "marketplace_orders",
+        database: orderShardFor(table),
         table,
         recordId: text(row.id),
         ownerUid,

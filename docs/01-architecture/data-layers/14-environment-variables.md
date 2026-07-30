@@ -8,8 +8,14 @@ NEXT_PUBLIC_ASOL_BASE_PATH=        # Asset base path (GitHub Pages sub-path)
 # ── Turso runtime (server-only) ──
 TURSO_DATABASE_URL=                # users DB (allusers.db)
 TURSO_AUTH_TOKEN=
-TURSO_PROFILE_DATABASE_URL=        # profile DB (profile.db)
-TURSO_PROFILE_AUTH_TOKEN=
+TURSO_PRODUCT_DATABASE_URL=        # product DB
+TURSO_PRODUCT_AUTH_TOKEN=
+TURSO_ADVERTISEMENTS_DATABASE_URL= # advertisements DB
+TURSO_ADVERTISEMENTS_AUTH_TOKEN=
+PROFILE_CORE_DATABASE_URL=         # shard example
+PROFILE_CORE_DATABASE_AUTH_TOKEN=
+ORDERS_CORE_DATABASE_URL=          # shard example
+ORDERS_CORE_DATABASE_AUTH_TOKEN=
 
 # ── Turso provisioning (build/deploy scripts only) ──
 TURSO_API_TOKEN=
@@ -65,17 +71,17 @@ APNS_PRODUCTION=false
 
 ## Never expose
 
-`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_PROFILE_AUTH_TOKEN`, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
+`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
 
 ## Vercel deploy
 
-After local provisioning, push all four Turso runtime vars:
+After local provisioning, push users/product/advertisements plus every shard runtime variable:
 
 ```bash
 npm run db:push:vercel-env
 ```
 
-Then redeploy. See [../problems/vercel-build-missing-profile-turso-env.md](../problems/vercel-build-missing-profile-turso-env.md).
+Then redeploy.
 
 ## Moving the backend
 

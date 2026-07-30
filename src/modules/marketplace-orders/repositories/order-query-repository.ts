@@ -4,6 +4,14 @@ import type { MarketplaceDb } from "../db/client";
 
 type Row = Record<string, unknown>;
 
+function placeholders(values: unknown[]): string {
+  return values.map(() => "?").join(",");
+}
+
+function uniqueStrings(values: unknown[]): string[] {
+  return [...new Set(values.map((value) => String(value)).filter(Boolean))];
+}
+
 export class OrderQueryRepository {
   constructor(private db: MarketplaceDb) {}
 
@@ -20,15 +28,42 @@ export class OrderQueryRepository {
       );
     }
     if (actor.role === "seller" || actor.role === "service_provider") {
+      const sellerOrders = await this.db.execute(
+        "SELECT order_id FROM seller_orders WHERE seller_id=? OR service_provider_id=?",
+        [actor.id, actor.id],
+      );
+      const candidates = await this.db.execute(
+        "SELECT plan_id FROM delivery_plan_candidates WHERE provider_id=?",
+        [actor.id],
+      );
+      let planOrders: Row[] = [];
+      const planIds = uniqueStrings(candidates.map((row) => row.plan_id));
+      if (planIds.length > 0) {
+        planOrders = await this.db.execute(
+          `SELECT order_id FROM delivery_plans WHERE id IN (${placeholders(planIds)})`,
+          planIds,
+        );
+      }
+      const orderIds = uniqueStrings([
+        ...sellerOrders.map((row) => row.order_id),
+        ...planOrders.map((row) => row.order_id),
+      ]);
+      if (orderIds.length === 0) return [];
       return this.db.execute(
-        "SELECT DISTINCT o.* FROM orders o LEFT JOIN seller_orders so ON so.order_id=o.id LEFT JOIN delivery_plans dp ON dp.order_id=o.id LEFT JOIN delivery_plan_candidates dpc ON dpc.plan_id=dp.id WHERE so.seller_id=? OR so.service_provider_id=? OR dpc.provider_id=? ORDER BY o.created_at DESC LIMIT 100",
-        [actor.id, actor.id, actor.id],
+        `SELECT * FROM orders WHERE id IN (${placeholders(orderIds)}) ORDER BY created_at DESC LIMIT 100`,
+        orderIds,
       );
     }
     if (actor.role === "carrier") {
-      return this.db.execute(
-        "SELECT DISTINCT o.* FROM orders o JOIN shipments s ON s.order_id=o.id WHERE s.carrier_id=? ORDER BY o.created_at DESC LIMIT 100",
+      const shipments = await this.db.execute(
+        "SELECT DISTINCT order_id FROM shipments WHERE carrier_id=?",
         [actor.id],
+      );
+      const orderIds = uniqueStrings(shipments.map((row) => row.order_id));
+      if (orderIds.length === 0) return [];
+      return this.db.execute(
+        `SELECT * FROM orders WHERE id IN (${placeholders(orderIds)}) ORDER BY created_at DESC LIMIT 100`,
+        orderIds,
       );
     }
     return [];
@@ -78,24 +113,40 @@ export class OrderQueryRepository {
       [orderId],
     );
     const deliveryPlanCandidates = await this.db.execute(
-      "SELECT dpc.* FROM delivery_plan_candidates dpc JOIN delivery_plans dp ON dp.id=dpc.plan_id WHERE dp.order_id=? ORDER BY dpc.coverage_score DESC,dpc.provider_id ASC",
-      [orderId],
+      deliveryPlans.length > 0
+        ? `SELECT * FROM delivery_plan_candidates WHERE plan_id IN (${placeholders(
+            deliveryPlans.map((plan) => plan.id),
+          )}) ORDER BY coverage_score DESC,provider_id ASC`
+        : "SELECT * FROM delivery_plan_candidates WHERE 1=0",
+      deliveryPlans.map((plan) => plan.id),
     );
     const deliveryPlanCandidateStops = await this.db.execute(
-      "SELECT dpcs.* FROM delivery_plan_candidate_stops dpcs JOIN delivery_plans dp ON dp.id=dpcs.plan_id WHERE dp.order_id=?",
-      [orderId],
+      deliveryPlans.length > 0
+        ? `SELECT * FROM delivery_plan_candidate_stops WHERE plan_id IN (${placeholders(
+            deliveryPlans.map((plan) => plan.id),
+          )})`
+        : "SELECT * FROM delivery_plan_candidate_stops WHERE 1=0",
+      deliveryPlans.map((plan) => plan.id),
     );
     const deliveryPlanQuotes = await this.db.execute(
       "SELECT * FROM delivery_plan_quotes WHERE order_id=? ORDER BY total_shipping_price ASC,created_at DESC",
       [orderId],
     );
     const deliveryPlanQuoteStops = await this.db.execute(
-      "SELECT dpqs.* FROM delivery_plan_quote_stops dpqs JOIN delivery_plans dp ON dp.id=dpqs.plan_id WHERE dp.order_id=?",
-      [orderId],
+      deliveryPlans.length > 0
+        ? `SELECT * FROM delivery_plan_quote_stops WHERE plan_id IN (${placeholders(
+            deliveryPlans.map((plan) => plan.id),
+          )})`
+        : "SELECT * FROM delivery_plan_quote_stops WHERE 1=0",
+      deliveryPlans.map((plan) => plan.id),
     );
     const deliveryPlanShipments = await this.db.execute(
-      "SELECT dps.* FROM delivery_plan_shipments dps JOIN delivery_plans dp ON dp.id=dps.plan_id WHERE dp.order_id=?",
-      [orderId],
+      deliveryPlans.length > 0
+        ? `SELECT * FROM delivery_plan_shipments WHERE plan_id IN (${placeholders(
+            deliveryPlans.map((plan) => plan.id),
+          )})`
+        : "SELECT * FROM delivery_plan_shipments WHERE 1=0",
+      deliveryPlans.map((plan) => plan.id),
     );
     const cancellations = await this.db.execute(
       "SELECT * FROM cancellations WHERE order_id=? ORDER BY created_at DESC",
@@ -106,8 +157,12 @@ export class OrderQueryRepository {
       [orderId],
     );
     const returnItems = await this.db.execute(
-      "SELECT ri.* FROM return_request_items ri JOIN return_requests r ON r.id=ri.return_request_id WHERE r.order_id=? ORDER BY ri.created_at ASC",
-      [orderId],
+      returns.length > 0
+        ? `SELECT * FROM return_request_items WHERE return_request_id IN (${placeholders(
+            returns.map((row) => row.id),
+          )}) ORDER BY created_at ASC`
+        : "SELECT * FROM return_request_items WHERE 1=0",
+      returns.map((row) => row.id),
     );
     const replacements = await this.db.execute(
       "SELECT * FROM replacement_requests WHERE order_id=? ORDER BY created_at DESC",
@@ -152,11 +207,23 @@ export class OrderQueryRepository {
     if (!order) return false;
     if (actor.role === "buyer") return order.buyer_id === actor.id;
     if (actor.role === "seller" || actor.role === "service_provider") {
-      const rows = await this.db.execute(
-        "SELECT 1 ok FROM seller_orders WHERE order_id=? AND (seller_id=? OR service_provider_id=?) UNION ALL SELECT 1 ok FROM delivery_plan_candidates dpc JOIN delivery_plans dp ON dp.id=dpc.plan_id WHERE dp.order_id=? AND dpc.provider_id=? LIMIT 1",
-        [orderId, actor.id, actor.id, orderId, actor.id],
+      const sellerRows = await this.db.execute(
+        "SELECT 1 ok FROM seller_orders WHERE order_id=? AND (seller_id=? OR service_provider_id=?) LIMIT 1",
+        [orderId, actor.id, actor.id],
       );
-      return rows.length > 0;
+      if (sellerRows.length > 0) return true;
+      const plans = await this.db.execute("SELECT id FROM delivery_plans WHERE order_id=?", [
+        orderId,
+      ]);
+      if (plans.length === 0) return false;
+      const planIds = plans.map((plan) => plan.id);
+      const candidateRows = await this.db.execute(
+        `SELECT 1 ok FROM delivery_plan_candidates WHERE plan_id IN (${placeholders(
+          planIds,
+        )}) AND provider_id=? LIMIT 1`,
+        [...planIds, actor.id],
+      );
+      return candidateRows.length > 0;
     }
     if (actor.role === "carrier") {
       const rows = await this.db.execute(

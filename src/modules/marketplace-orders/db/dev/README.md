@@ -1,1 +1,1 @@
-Development uses `public/sync_data/sync_sqlite/marketplace-orders.db` and applies the idempotent module migration when the server-side client starts. Override with `MARKETPLACE_ORDERS_SQLITE_PATH`.
+Development uses the generated marketplace order shard files in `public/sync_data/sync_sqlite`. Run `npm run db:ensure` to refresh them from the local source database and verify all 17 shards exist.

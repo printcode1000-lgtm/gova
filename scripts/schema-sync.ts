@@ -16,8 +16,14 @@ async function main() {
     skipIfMissingCredentials: !isCi,
     removeExtraObjects,
   });
+  const flatReports = {
+    users: reports.users,
+    advertisements: reports.advertisements,
+    product: reports.product,
+    ...reports.shards,
+  };
 
-  for (const [label, report] of Object.entries(reports)) {
+  for (const [label, report] of Object.entries(flatReports)) {
     if (report.skipped) {
       console.log(`${label} schema sync skipped: ${report.skipReason}`);
       continue;
@@ -49,14 +55,11 @@ main().catch((error) => {
     console.error("");
     console.error("Add these to Vercel Project Settings Environment Variables:");
     console.error("  TURSO_DATABASE_URL, TURSO_AUTH_TOKEN");
-    console.error("  TURSO_PROFILE_DATABASE_URL, TURSO_PROFILE_AUTH_TOKEN");
     console.error("  TURSO_PRODUCT_DATABASE_URL, TURSO_PRODUCT_AUTH_TOKEN");
     console.error(
       "  TURSO_ADVERTISEMENTS_DATABASE_URL, TURSO_ADVERTISEMENTS_AUTH_TOKEN",
     );
-    console.error(
-      "  MARKETPLACE_ORDERS_DATABASE_URL, MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN",
-    );
+    console.error("  plus every *_DATABASE_URL / *_DATABASE_AUTH_TOKEN shard key");
     console.error("Or run locally: npm run db:push:vercel-env");
   }
   process.exit(1);

@@ -13,10 +13,10 @@ npm run db:schema:sync
 | Domain | SQLite (dev) | Turso (prod) | Database Client | Env |
 | --- | --- | --- | --- | --- |
 | Users and auth | `allusers.db` | Users Turso DB | `dbClient` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
-| Profile | `profile.db` | Profile Turso DB | `profileDbClient` | `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN` |
 | Products | `product.db` | Product Turso DB | `productDbClient` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
 | Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDbClient` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
-| Marketplace orders | `marketplace-orders.db` | Marketplace orders Turso DB | Marketplace orders DB client | `MARKETPLACE_ORDERS_DATABASE_URL`, `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN` |
+| Profile shards | `profile-*.db`, `system-ops.db` | Matching Turso shards | `profileDbClient` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
+| Marketplace order shards | `orders-*.db` | Matching Turso shards | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
 Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
 
@@ -79,7 +79,7 @@ Primary tables include:
 
 ### Notes
 
-`user_profiles.uid` links logically to `users.uid`. The profile database owns profile contacts, store details, fulfillment settings, specialties, and profile review data.
+`user_profiles.uid` links logically to `users.uid`. Profile data is split across profile shards for core identity, contacts, media, social data, catalog indexes, promotions, fulfillment, and system operations.
 
 ## 3. Products
 

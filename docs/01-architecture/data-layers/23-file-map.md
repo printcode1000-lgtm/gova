@@ -22,15 +22,15 @@ src/
 │       └── repositories/
 ├── lib/
 │   ├── asol-db/                # IndexedDB (cache)
-│   └── db/                     # turso.ts, turso-profile.ts
+│   └── db/                     # turso.ts and database adapters
 └── app/
     └── api/                    # Business API routes
 
 public/
 └── sync_data/
-    ├── sync_sqlite/            # allusers.db, profile.db
+    ├── sync_sqlite/            # allusers.db, product.db, advertisements.db, profile/order shards
     ├── schema-sync-report.json
-    └── profile-schema-sync-report.json
+    └── *-schema-sync-report.json
 
 scripts/
 ├── architecture-check.ts

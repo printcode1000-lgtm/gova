@@ -18,7 +18,7 @@ export interface DataHealthImageSourceDefinition {
  */
 export const DATA_HEALTH_IMAGE_SOURCES = [
   {
-    database: "profile",
+    database: "profile-media",
     table: "profile_images",
     columns: ["image_key", "image_type"],
     ownership: "owned",
@@ -37,7 +37,7 @@ export const DATA_HEALTH_IMAGE_SOURCES = [
     ownership: "shared-snapshot",
   },
   {
-    database: "profile",
+    database: "profile-social",
     table: "profile_reviews",
     columns: ["reviewer_avatar_url"],
     ownership: "shared-snapshot",
@@ -50,7 +50,7 @@ export const DATA_HEALTH_IMAGE_SOURCES = [
     defaultStorageProfileId: "product-default",
   },
   {
-    database: "marketplace_orders",
+    database: "orders-items",
     table: "custom_request_images",
     columns: [
       "storage_profile_id",
@@ -62,7 +62,7 @@ export const DATA_HEALTH_IMAGE_SOURCES = [
     defaultStorageProfileId: "spicialOrder",
   },
   {
-    database: "marketplace_orders",
+    database: "orders-items",
     table: "order_items",
     columns: ["product_image_snapshot"],
     ownership: "shared-snapshot",
@@ -81,7 +81,7 @@ export const DATA_HEALTH_IMAGE_SOURCES = [
     ownership: "static-asset",
   },
   {
-    database: "profile",
+    database: "system-ops",
     table: "data_health_storage_deletion_tasks",
     columns: ["image_key", "storage_profile_id"],
     ownership: "deletion-task",

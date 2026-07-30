@@ -210,39 +210,6 @@ export function writeTursoRuntimeCredentials(
   process.env.TURSO_AUTH_TOKEN = authToken;
 }
 
-export function getTursoProfileRuntimeCredentials(): {
-  url: string;
-  authToken: string;
-} {
-  const url = process.env.TURSO_PROFILE_DATABASE_URL;
-  const authToken = process.env.TURSO_PROFILE_AUTH_TOKEN;
-
-  if (!url)
-    throw new Error(
-      "TURSO_PROFILE_DATABASE_URL environment variable is not set",
-    );
-  if (!authToken)
-    throw new Error("TURSO_PROFILE_AUTH_TOKEN environment variable is not set");
-
-  return { url, authToken };
-}
-
-export function writeTursoProfileRuntimeCredentials(
-  url: string,
-  authToken: string,
-): void {
-  process.env.TURSO_PROFILE_DATABASE_URL = url;
-  process.env.TURSO_PROFILE_AUTH_TOKEN = authToken;
-}
-
-export function writeTursoMarketplaceOrdersRuntimeCredentials(
-  url: string,
-  authToken: string,
-): void {
-  process.env.MARKETPLACE_ORDERS_DATABASE_URL = url;
-  process.env.MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN = authToken;
-}
-
 export function writeTursoProductRuntimeCredentials(
   url: string,
   authToken: string,

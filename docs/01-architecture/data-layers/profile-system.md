@@ -6,8 +6,8 @@ Extended profile data lives in a separate database from auth users.
 
 | Environment | Users/Auth | Profile |
 |-------------|------------|---------|
-| Development | `public/sync_data/sync_sqlite/allusers.db` | `public/sync_data/sync_sqlite/profile.db` |
-| Production | Turso `TURSO_DATABASE_URL` | Turso `TURSO_PROFILE_DATABASE_URL` |
+| Development | `public/sync_data/sync_sqlite/allusers.db` | profile shard files in `public/sync_data/sync_sqlite` |
+| Production | Turso `TURSO_DATABASE_URL` | profile shard Turso databases |
 
 Logical link: `user_profiles.uid` points to `users.uid`. There is no cross-database foreign key.
 
@@ -68,7 +68,7 @@ Profile UI
   -> Query/Command
   -> ProfileRepository
   -> profileDbClient
-  -> profile.db | Turso profile
+  -> profile shards | Turso profile shards
 ```
 
 Basic registration credentials stay in the users/auth database. Profile display, search, contacts, locations, shipping, returns, working hours, follows, and seller category indexes stay in the profile database.
@@ -111,24 +111,18 @@ The structural migration is:
 src/core/database/profile/migrations/0010_profile_structured_search.sql
 ```
 
-Existing local and Turso databases are rebuilt with:
+Existing local shards and Turso schemas are refreshed with:
 
 ```bash
-npx tsx scripts/migrate-profile-structured-search.ts
-npx tsx scripts/migrate-profile-structured-search.ts --cloud
-```
-
-After migration, run:
-
-```bash
+npm run db:ensure
 npm run db:schema:sync
 ```
 
 ## Environment
 
 ```env
-TURSO_PROFILE_DATABASE_URL=
-TURSO_PROFILE_AUTH_TOKEN=
+PROFILE_CORE_DATABASE_URL=
+PROFILE_CORE_DATABASE_AUTH_TOKEN=
 TURSO_PRODUCT_DATABASE_URL=
 TURSO_PRODUCT_AUTH_TOKEN=
 ```

@@ -3,11 +3,10 @@ import dotenv from "dotenv";
 import {
   provisionTursoAdvertisementsDatabase,
   provisionTursoDatabase,
-  provisionTursoMarketplaceOrdersDatabase,
   provisionTursoProductDatabase,
-  provisionTursoProfileDatabase,
 } from "../src/core/provisioning/turso-provisioner";
 import { runAllSchemaSyncs } from "../src/core/provisioning/schema-sync";
+import { provisionDatabaseShards } from "./provision-database-shards";
 
 process.env.ASOL_PROVISIONING = "true";
 
@@ -26,10 +25,6 @@ async function main() {
   const usersProvision = await provisionTursoDatabase();
   console.log(`Turso users DB ready: ${usersProvision.databaseName} (${usersProvision.databaseUrl})`);
 
-  console.log("Provisioning Turso profile database...");
-  const profileProvision = await provisionTursoProfileDatabase();
-  console.log(`Turso profile DB ready: ${profileProvision.databaseName} (${profileProvision.databaseUrl})`);
-
   console.log("Provisioning Turso product database...");
   const productProvision = await provisionTursoProductDatabase();
   console.log(`Turso product DB ready: ${productProvision.databaseName} (${productProvision.databaseUrl})`);
@@ -40,11 +35,8 @@ async function main() {
     `Turso advertisements DB ready: ${advertisementsProvision.databaseName} (${advertisementsProvision.databaseUrl})`,
   );
 
-  console.log("Provisioning Turso marketplace orders database...");
-  const marketplaceOrdersProvision = await provisionTursoMarketplaceOrdersDatabase();
-  console.log(
-    `Turso marketplace orders DB ready: ${marketplaceOrdersProvision.databaseName} (${marketplaceOrdersProvision.databaseUrl})`,
-  );
+  console.log("Provisioning Turso profile/orders shards...");
+  await provisionDatabaseShards();
 
   console.log("Running schema synchronization (SQLite to Turso, schema only)...");
   const reports = await runAllSchemaSyncs({ removeExtraObjects: true });

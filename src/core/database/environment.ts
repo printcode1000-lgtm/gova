@@ -26,7 +26,10 @@ export const PRIMARY_SQLITE_DB_PATH = path.join(
   "allusers.db",
 );
 
-export const PROFILE_SQLITE_DB_PATH = path.join(SQLITE_DIRECTORY, "profile.db");
+export const PROFILE_SOURCE_SQLITE_DB_PATH = path.join(
+  SQLITE_DIRECTORY,
+  "profile.db",
+);
 
 export const PRODUCT_SQLITE_DB_PATH = path.join(SQLITE_DIRECTORY, "product.db");
 
@@ -35,14 +38,7 @@ export const ADVERTISEMENTS_SQLITE_DB_PATH = path.join(
   "advertisements.db",
 );
 
-export const MARKETPLACE_ORDERS_SQLITE_DB_PATH = path.join(
+export const MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH = path.join(
   SQLITE_DIRECTORY,
   "marketplace-orders.db",
-);
-
-export const PROFILE_SCHEMA_SYNC_REPORT_PATH = path.join(
-  process.cwd(),
-  "public",
-  "sync_data",
-  "profile-schema-sync-report.json",
 );

@@ -1,14 +1,21 @@
 import "server-only";
 
 import { createHash } from "node:crypto";
+import { createRequire } from "node:module";
+import path from "node:path";
 import { createClient } from "@libsql/client";
 
 import { readOptionalEnv } from "@/core/config/server-env.values";
 import { advertisementsDbClient } from "@/core/database/advertisements-db-client";
+import {
+  DATABASE_SHARD_NAMES,
+  envPrefixForShard,
+  sqliteFileNameForShard,
+  type DatabaseShardName,
+} from "@/core/database/database-shards";
 import { dbClient } from "@/core/database/db-client";
 import { productDbClient } from "@/core/database/product-db-client";
-import { profileDbClient } from "@/core/database/profile-db-client";
-import { createMarketplaceOrdersDb } from "@/modules/marketplace-orders/db/client";
+import { SQLITE_DIRECTORY } from "@/core/database/environment";
 
 import type {
   DataHealthSchemaComparison,
@@ -23,6 +30,8 @@ type Executor = {
     params?: unknown[],
   ): Promise<unknown>;
 };
+
+const nodeRequire = createRequire(import.meta.url);
 
 interface SchemaObject {
   type: string;
@@ -89,6 +98,25 @@ async function readSchema(
   return schema;
 }
 
+class LocalShardSchemaExecutor implements Executor {
+  private readonly db: any;
+
+  constructor(databaseName: DatabaseShardName) {
+    const sqliteModule = nodeRequire("better-sqlite3");
+    const Database = sqliteModule.default ?? sqliteModule;
+    this.db = new Database(path.join(SQLITE_DIRECTORY, sqliteFileNameForShard(databaseName)), {
+      readonly: true,
+    });
+  }
+
+  async execute(sql: string | { sql: string; args?: unknown[] }, params: unknown[] = []) {
+    const statement = typeof sql === "string" ? sql : sql.sql;
+    const args = typeof sql === "string" ? params : (sql.args ?? []);
+    return this.db.prepare(statement).all(...args);
+  }
+}
+
+
 function schemaVersion(schema: Map<string, SchemaObject>): string {
   const canonical = [...schema.entries()]
     .sort(([left], [right]) => left.localeCompare(right))
@@ -154,12 +182,6 @@ const SOURCES = [
     credentials: () => credentials("TURSO_DATABASE_URL", "TURSO_AUTH_TOKEN"),
   },
   {
-    label: "profile",
-    local: () => profileDbClient as unknown as Executor,
-    credentials: () =>
-      credentials("TURSO_PROFILE_DATABASE_URL", "TURSO_PROFILE_AUTH_TOKEN"),
-  },
-  {
     label: "product",
     local: () => productDbClient as unknown as Executor,
     credentials: () =>
@@ -174,15 +196,15 @@ const SOURCES = [
         "TURSO_ADVERTISEMENTS_AUTH_TOKEN",
       ),
   },
-  {
-    label: "marketplace-orders",
-    local: () => createMarketplaceOrdersDb() as unknown as Executor,
-    credentials: () =>
-      credentials(
-        "MARKETPLACE_ORDERS_DATABASE_URL",
-        "MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN",
-      ),
-  },
+  ...DATABASE_SHARD_NAMES.map((databaseName) => {
+    const prefix = envPrefixForShard(databaseName);
+    return {
+      label: databaseName,
+      local: () => new LocalShardSchemaExecutor(databaseName),
+      credentials: () =>
+        credentials(`${prefix}_DATABASE_URL`, `${prefix}_DATABASE_AUTH_TOKEN`),
+    };
+  }),
 ] as const;
 
 export class SchemaComparisonRepository {

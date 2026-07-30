@@ -121,12 +121,10 @@ Turso sources are discovered from the environment variables already used by the
 project:
 
 - `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
-- `TURSO_PROFILE_DATABASE_URL`, `TURSO_PROFILE_AUTH_TOKEN`
+- every profile/order shard pair using `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN`
 - `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN`
 - `TURSO_ADVERTISEMENTS_DATABASE_URL`,
   `TURSO_ADVERTISEMENTS_AUTH_TOKEN`
-- `MARKETPLACE_ORDERS_DATABASE_URL`,
-  `MARKETPLACE_ORDERS_DATABASE_AUTH_TOKEN`
 
 R2 full mode uses an empty prefix and lists the whole bucket. Known-project-file
 mode reads enabled `CloudflareR2` profiles from
