@@ -86,7 +86,7 @@ export function LoginSuccessToast() {
     <div
       role="status"
       aria-live="polite"
-      className="fixed left-1/2 top-1/2 z-[80] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 items-start gap-3 rounded-lg border border-success/30 bg-success-container px-4 py-3 text-on-success-container shadow-lg"
+      className="fixed left-1/2 top-1/2 z-[80] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 items-start gap-3 rounded-lg border border-success/30 bg-surface px-4 py-3 text-on-surface shadow-lg"
     >
       <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" />
       <div className="min-w-0">

@@ -423,7 +423,7 @@ export function ProfilePageContent() {
   }
 
   return (
-    <div className="container px-3 py-4 sm:px-5 sm:py-8 lg:px-6">
+    <div className="container px-3 py-1 sm:px-5 sm:py-2 lg:px-6">
       {showPreviewCard ? (
         <ProfilePreviewContent
           locale={locale === "ar" ? "ar" : "en"}
