@@ -104,7 +104,7 @@ The value must be semantic, such as `20`; it must not contain a folder name or p
 
 ### Special-order image example
 
-Custom marketplace requests use the dedicated `spicialOrder` profile. The spelling is an intentional stable contract identifier. It limits each processed WebP image to 500 KB and stores it under the isolated `images/spicialOrder` folder in both local development storage and Cloudflare R2.
+Custom marketplace requests use the dedicated `spicialOrder` profile. The spelling is an intentional stable contract identifier. It limits each processed WebP image to 500 KB, stores local development files under `public/sync_data/sync_file/images/spicialOrder`, and stores cloud files under `images/content/spicialOrder` in Cloudflare R2.
 
 ```tsx
 <StorageImageManager

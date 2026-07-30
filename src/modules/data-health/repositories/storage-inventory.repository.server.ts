@@ -15,8 +15,8 @@ import { productDbClient } from "@/core/database/product-db-client";
 import { profileDbClient } from "@/core/database/profile-db-client";
 import { ShardedRawDatabaseClient } from "@/core/database/sharded-raw-database-client";
 import { getAllStorageProfiles } from "@/core/storage/profiles/storage-profile-loader.server";
-import { buildObjectPath } from "@/core/storage/storage/image-path";
 import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
+import { storageFolderCandidates } from "@/core/storage/storage/storage-profile-path";
 import { createMarketplaceOrdersDb } from "@/modules/marketplace-orders/db/client";
 
 export interface StorageReference {
@@ -126,7 +126,10 @@ function reference(
   const profile = imageStorageOrchestrator.getProfile(input.storageProfileId);
   return {
     ...input,
-    objectPath: buildObjectPath(profile.folder, input.imageKey),
+    objectPath: imageStorageOrchestrator.resolveObjectPath(
+      profile.id,
+      input.imageKey,
+    ),
   };
 }
 
@@ -138,22 +141,37 @@ function referenceFromObjectPath(
   const objectPath = normalizeObjectPath(input.objectPath);
   const profile = getAllStorageProfiles()
     .filter((candidate) => candidate.enabled)
-    .sort((left, right) => right.folder.length - left.folder.length)
+    .sort(
+      (left, right) =>
+        Math.max(...storageFolderCandidates(right).map((item) => item.length)) -
+        Math.max(...storageFolderCandidates(left).map((item) => item.length)),
+    )
     .find(
       (candidate) =>
-        objectPath === candidate.folder ||
-        objectPath.startsWith(`${candidate.folder}/`) ||
-        objectPath.startsWith(`sync_data/sync_file/${candidate.folder}/`),
+        storageFolderCandidates(candidate).some(
+          (folder) =>
+            objectPath === folder ||
+            objectPath.startsWith(`${folder}/`) ||
+            objectPath.startsWith(`sync_data/sync_file/${folder}/`),
+        ),
     );
   if (!profile) return null;
   const canonicalObjectPath = objectPath.startsWith("sync_data/sync_file/")
     ? objectPath.slice("sync_data/sync_file/".length)
     : objectPath;
   if (!isImageObjectPath(canonicalObjectPath)) return null;
+  const matchedFolder = storageFolderCandidates(profile)
+    .sort((left, right) => right.length - left.length)
+    .find(
+      (folder) =>
+        canonicalObjectPath === folder ||
+        canonicalObjectPath.startsWith(`${folder}/`),
+    );
+  if (!matchedFolder) return null;
   return {
     ...input,
     storageProfileId: profile.id,
-    imageKey: canonicalObjectPath.slice(profile.folder.length + 1),
+    imageKey: canonicalObjectPath.slice(matchedFolder.length + 1),
     objectPath: canonicalObjectPath,
   };
 }

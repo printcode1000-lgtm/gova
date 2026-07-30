@@ -8,6 +8,7 @@ import { MARKETPLACE_ORDER_TABLE_TO_DATABASE } from "@/core/database/database-sh
 import { productDbClient } from "@/core/database/product-db-client";
 import { profileDbClient } from "@/core/database/profile-db-client";
 import { getAllStorageProfiles } from "@/core/storage/profiles/storage-profile-loader.server";
+import { storageFolderCandidates } from "@/core/storage/storage/storage-profile-path";
 import { createMarketplaceOrdersDb } from "@/modules/marketplace-orders/db/client";
 
 import {
@@ -1718,11 +1719,17 @@ export class DataHealthRepository {
 
   private profileIdForObjectPath(objectPath: string): string {
     const profile = [...getAllStorageProfiles()]
-      .sort((left, right) => right.folder.length - left.folder.length)
+      .sort(
+        (left, right) =>
+          Math.max(...storageFolderCandidates(right).map((item) => item.length)) -
+          Math.max(...storageFolderCandidates(left).map((item) => item.length)),
+      )
       .find(
         (candidate) =>
-          objectPath === candidate.folder ||
-          objectPath.startsWith(`${candidate.folder}/`),
+          storageFolderCandidates(candidate).some(
+            (folder) =>
+              objectPath === folder || objectPath.startsWith(`${folder}/`),
+          ),
       );
     if (!profile)
       throw new Error(`Unregistered storage object path: ${objectPath}`);
@@ -1730,8 +1737,13 @@ export class DataHealthRepository {
   }
 
   private imageKeyForObjectPath(profileId: string, objectPath: string): string {
-    const folder = this.storageProfile(profileId).folder;
-    return objectPath.startsWith(`${folder}/`)
+    const folder = storageFolderCandidates(this.storageProfile(profileId))
+      .sort((left, right) => right.length - left.length)
+      .find(
+        (candidate) =>
+          objectPath === candidate || objectPath.startsWith(`${candidate}/`),
+      );
+    return folder
       ? objectPath.slice(folder.length + 1)
       : objectPath;
   }

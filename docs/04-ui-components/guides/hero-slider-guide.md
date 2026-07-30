@@ -282,7 +282,8 @@ The full administrative editor uses the storage profile:
 ```text
 Profile ID: home-hero-slider
 Provider: CloudflareR2
-Folder: images/advertisements/home-hero-slider
+Local folder: images/advertisements/home-hero-slider
+R2 folder: images/content/advertisements/home-hero-slider
 Maximum processed image size: 1 MB (1024 KB)
 Output format: WebP
 ```
@@ -377,7 +378,8 @@ Storefront images use the existing Cover storage profile:
 ```text
 Profile ID: cover
 Provider: CloudflareR2
-Folder: images/covers
+Local folder: images/covers
+R2 folder: images/profile/covers
 Maximum processed image size: 30 KB
 Output format: WebP
 ```
@@ -387,7 +389,8 @@ The store logo uses the Avatar storage profile:
 ```text
 Profile ID: avatar
 Provider: CloudflareR2
-Folder: images/avatars
+Local folder: images/avatars
+R2 folder: images/profile/avatars
 Maximum processed image size: 20 KB
 Output format: WebP
 ```

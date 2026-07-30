@@ -72,6 +72,7 @@ const storageProfiles = JSON.parse(
     enabled: boolean;
     provider: string;
     folder: string;
+    cloudFolder?: string;
   }>;
 };
 const enabledProfileIds = new Set(
@@ -82,12 +83,22 @@ const enabledProfileIds = new Set(
 for (const profile of storageProfiles.profiles.filter(
   (candidate) => candidate.enabled,
 )) {
-  assert.equal(
-    profile.provider,
-    "CloudflareR2",
-    `Cloud storage profile ${profile.id} must use CloudflareR2`,
-  );
   assert.match(profile.folder, /^images\//);
+  if (profile.id === "product-default") {
+    assert.equal(
+      profile.provider,
+      "CloudflareR2Products",
+      "Product images must stay on the legacy product R2 provider",
+    );
+    assert.equal(profile.cloudFolder ?? profile.folder, "images/products");
+  } else {
+    assert.equal(
+      profile.provider,
+      "CloudflareR2",
+      `Cloud storage profile ${profile.id} must use CloudflareR2`,
+    );
+    assert.match(profile.cloudFolder ?? profile.folder, /^images\/(profile|content)\//);
+  }
 }
 for (const source of DATA_HEALTH_IMAGE_SOURCES) {
   if (source.defaultStorageProfileId) {

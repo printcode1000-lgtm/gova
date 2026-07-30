@@ -19,6 +19,7 @@ interface StorageProfileConfig {
     enabled?: boolean;
     provider?: string;
     folder?: string;
+    cloudFolder?: string;
   }>;
 }
 
@@ -45,7 +46,7 @@ function knownPrefixes(): string[] {
   for (const profile of config.profiles ?? []) {
     if (profile.enabled === false) continue;
     if (profile.provider !== "CloudflareR2") continue;
-    const folder = profile.folder?.replace(/^\/+|\/+$/g, "");
+    const folder = (profile.cloudFolder ?? profile.folder)?.replace(/^\/+|\/+$/g, "");
     if (folder) prefixes.add(`${folder}/`);
   }
   return [...prefixes].sort();

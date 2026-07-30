@@ -15,6 +15,7 @@ import {
   resolveActiveProviderId,
   resolveStorageProvider,
 } from "../providers/provider-resolver.server";
+import { storageFolderForProvider } from "./storage-profile-path";
 import { getMimeTypeForOutputFormat } from "../output-format.registry";
 import type { StorageObjectEntry } from "../providers/storage-provider.interface";
 
@@ -45,9 +46,12 @@ export class ImageStorageOrchestrator {
       generatedKey,
       input.storageScope,
     );
-    const objectPath = buildObjectPath(profile.folder, imageKey);
-    const provider = resolveStorageProvider(profile.provider);
     const activeProviderId = resolveActiveProviderId(profile.provider);
+    const objectPath = buildObjectPath(
+      storageFolderForProvider(profile, activeProviderId),
+      imageKey,
+    );
+    const provider = resolveStorageProvider(profile.provider);
 
     const { url } = await provider.upload(objectPath, input.body, contentType);
 
@@ -67,7 +71,7 @@ export class ImageStorageOrchestrator {
   async deleteByKey(storageProfileId: string, imageKey: string): Promise<void> {
     const profile = getStorageProfileById(storageProfileId);
     assertStorageProfileEnabled(profile);
-    const objectPath = buildObjectPath(profile.folder, imageKey);
+    const objectPath = this.resolveObjectPath(storageProfileId, imageKey);
     const provider = resolveStorageProvider(profile.provider);
     await provider.delete(objectPath);
   }
@@ -79,7 +83,7 @@ export class ImageStorageOrchestrator {
   ): string {
     if (knownUrl) return knownUrl;
     const profile = getStorageProfileById(storageProfileId);
-    const objectPath = buildObjectPath(profile.folder, imageKey);
+    const objectPath = this.resolveObjectPath(storageProfileId, imageKey);
     const provider = resolveStorageProvider(profile.provider);
     return provider.resolvePublicUrl(objectPath);
   }
@@ -88,11 +92,21 @@ export class ImageStorageOrchestrator {
     return getStorageProfileById(profileId);
   }
 
+  resolveObjectPath(storageProfileId: string, imageKey: string): string {
+    const profile = getStorageProfileById(storageProfileId);
+    const activeProviderId = resolveActiveProviderId(profile.provider);
+    return buildObjectPath(
+      storageFolderForProvider(profile, activeProviderId),
+      imageKey,
+    );
+  }
+
   async listByProfile(storageProfileId: string): Promise<StorageObjectEntry[]> {
     const profile = getStorageProfileById(storageProfileId);
     assertStorageProfileEnabled(profile);
     const provider = resolveStorageProvider(profile.provider);
-    return provider.list(profile.folder);
+    const activeProviderId = resolveActiveProviderId(profile.provider);
+    return provider.list(storageFolderForProvider(profile, activeProviderId));
   }
 
   private resolveImageKey(

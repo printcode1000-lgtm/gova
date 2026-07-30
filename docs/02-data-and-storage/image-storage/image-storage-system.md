@@ -4,13 +4,13 @@ Profile-driven multi-provider architecture. The UI passes only **storage profile
 
 ## Contract
 
-| Profile                          | Max KB | Format | Enabled | Folder                                   |
-| -------------------------------- | ------ | ------ | ------- | ---------------------------------------- |
-| `StorageProfiles.Avatar`         | 20     | webp   | ✓       | `images/avatars`                         |
-| `StorageProfiles.Cover`          | 30     | webp   | ✓       | `images/covers`                          |
-| `StorageProfiles.ProductDefault` | 30     | webp   | ✓       | `images/products/<mainCategoryId>`       |
-| `StorageProfiles.HomeHeroSlider` | 1024   | webp   | ✓       | `images/advertisements/home-hero-slider` |
-| `StorageProfiles.SpicialOrder`   | 500    | webp   | ✓       | `images/spicialOrder`                    |
+| Profile                          | Max KB | Format | Local folder                             | R2 cloud folder                                  |
+| -------------------------------- | ------ | ------ | ---------------------------------------- | ------------------------------------------------ |
+| `StorageProfiles.Avatar`         | 20     | webp   | `images/avatars`                         | `images/profile/avatars`                         |
+| `StorageProfiles.Cover`          | 30     | webp   | `images/covers`                          | `images/profile/covers`                          |
+| `StorageProfiles.ProductDefault` | 30     | webp   | `images/products/<mainCategoryId>`       | `images/products/<mainCategoryId>` in the legacy product R2 bucket |
+| `StorageProfiles.HomeHeroSlider` | 1024   | webp   | `images/advertisements/home-hero-slider` | `images/content/advertisements/home-hero-slider` |
+| `StorageProfiles.SpicialOrder`   | 500    | webp   | `images/spicialOrder`                    | `images/content/spicialOrder`                    |
 
 Config: `src/config/storage-profiles.json` (server-only).
 
@@ -25,7 +25,7 @@ Server: Storage Profile → Provider → Persistence
 
 **Development** (`NODE_ENV=development`): `LocalStorageProvider` → `public/sync_data/sync_file/images/...`
 
-**Production / Capacitor / static**: profile provider (Cloudflare R2).
+**Production / Capacitor / static**: profile provider (Cloudflare R2). The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use the legacy product R2 bucket under `images/products/...`.
 
 `StorageImageManager` performs no provider write during selection or preview preparation. Upload starts only after the user presses Upload and confirms the localized application dialog. Removal calls the DELETE API and waits for provider success before clearing the UI value.
 
@@ -40,7 +40,7 @@ be cancelled before it starts. Logout clears queued items and aborts the active
 request. Files are intentionally not persisted, so the queue lasts only for the
 current application session on Web, Android, and iOS.
 
-`product-default` declares `folderStrategy: "main-category"`. Its configured base folder is `images/products`; callers provide only a validated main-category ID as `storageScope`. The server creates `<mainCategoryId>/<uuid>.webp` as the image key, so upload, URL resolution, replacement, and deletion all address the same local/R2 object without exposing folder construction to the UI.
+`product-default` declares `folderStrategy: "main-category"`. Its local base folder is `images/products`, and its cloud base folder remains `images/products` on the legacy product R2 bucket/account; callers provide only a validated main-category ID as `storageScope`. The server creates `<mainCategoryId>/<uuid>.webp` as the image key, so upload, URL resolution, replacement, and deletion all address the correct provider object without exposing folder construction to the UI.
 
 ## Layers
 

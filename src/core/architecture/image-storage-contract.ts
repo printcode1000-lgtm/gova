@@ -15,7 +15,10 @@ export const IMAGE_STORAGE_APPLICATION_LAYER =
 /** Modules allowed to import R2 S3 operations (Provider Layer only). */
 export const R2_S3_CLIENT_ALLOWED_IMPORTERS = new Set([
   'src/core/storage/providers/cloudflare-r2.provider.server.ts',
+  'src/core/storage/providers/cloudflare-r2-products.provider.server.ts',
   'src/modules/dev-cloud-backup/repositories/r2-backup.repository.server.ts',
+  'scripts/migrate-r2-image-public-url.ts',
+  'scripts/migrate-r2-cloud-folders.ts',
 ]);
 
 /** R2 client module — forbidden patterns allowed here only. */
@@ -31,9 +34,12 @@ export const IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS = new Set([
 export const IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT = new Set([
   R2_S3_CLIENT_MODULE,
   'src/core/storage/providers/cloudflare-r2.provider.server.ts',
+  'src/core/storage/providers/cloudflare-r2-products.provider.server.ts',
   'src/core/storage/providers/local-storage.provider.server.ts',
   'src/core/storage/storage/image-key-generator.ts',
   'src/modules/dev-cloud-backup/repositories/r2-backup.repository.server.ts',
+  'scripts/migrate-r2-image-public-url.ts',
+  'scripts/migrate-r2-cloud-folders.ts',
   'src/core/architecture/image-storage-contract.ts',
 ]);
 

@@ -317,3 +317,33 @@ export function getR2Config(): R2Config {
     warehouseName: readOptionalEnv("R2_WAREHOUSE_NAME") ?? "",
   };
 }
+
+export function getProductR2CloudflareCredentials(): R2CloudflareCredentials {
+  return {
+    accountId: requireEnv("PRODUCT_R2_ACCOUNT_ID"),
+    apiToken: requireEnv("PRODUCT_R2_API_TOKEN"),
+  };
+}
+
+export function getProductR2S3Credentials(): R2S3Credentials {
+  const jurisdiction = (readOptionalEnv("PRODUCT_R2_JURISDICTION") ??
+    "default") as R2S3Credentials["jurisdiction"];
+  return {
+    accessKeyId: requireEnv("PRODUCT_R2_ACCESS_KEY_ID"),
+    secretAccessKey: requireEnv("PRODUCT_R2_SECRET_ACCESS_KEY"),
+    endpoint: requireEnv("PRODUCT_R2_ENDPOINT"),
+    bucketName: requireEnv("PRODUCT_R2_BUCKET_NAME"),
+    location: readOptionalEnv("PRODUCT_R2_LOCATION") ?? "WEUR",
+    jurisdiction,
+  };
+}
+
+export function getProductR2Config(): R2Config {
+  return {
+    cloudflare: getProductR2CloudflareCredentials(),
+    s3: getProductR2S3Credentials(),
+    publicUrl: requireEnv("PRODUCT_R2_PUBLIC_URL"),
+    catalogUri: readOptionalEnv("PRODUCT_R2_CATALOG_URI") ?? "",
+    warehouseName: readOptionalEnv("PRODUCT_R2_WAREHOUSE_NAME") ?? "",
+  };
+}

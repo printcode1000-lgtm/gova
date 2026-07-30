@@ -6,6 +6,7 @@
       "enabled": true,
       "provider": "CloudflareR2",
       "folder": "images/avatars",
+      "cloudFolder": "images/profile/avatars",
       "maxImageSizeKB": 20,
       "outputFormat": "webp"
     },
@@ -14,6 +15,7 @@
       "enabled": true,
       "provider": "CloudflareR2",
       "folder": "images/covers",
+      "cloudFolder": "images/profile/covers",
       "maxImageSizeKB": 30,
       "outputFormat": "webp"
     },
@@ -22,14 +24,16 @@
       "enabled": true,
       "provider": "CloudflareR2",
       "folder": "images/advertisements/home-hero-slider",
+      "cloudFolder": "images/content/advertisements/home-hero-slider",
       "maxImageSizeKB": 1024,
       "outputFormat": "webp"
     },
     {
       "id": "product-default",
       "enabled": true,
-      "provider": "CloudflareR2",
+      "provider": "CloudflareR2Products",
       "folder": "images/products",
+      "cloudFolder": "images/products",
       "folderStrategy": "main-category",
       "maxImageSizeKB": 30,
       "outputFormat": "webp"
@@ -39,6 +43,7 @@
       "enabled": true,
       "provider": "CloudflareR2",
       "folder": "images/spicialOrder",
+      "cloudFolder": "images/content/spicialOrder",
       "maxImageSizeKB": 500,
       "outputFormat": "webp"
     }

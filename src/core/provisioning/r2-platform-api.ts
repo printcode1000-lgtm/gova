@@ -15,6 +15,15 @@ interface CloudflareApiResponse<T> {
   result: T;
 }
 
+class CloudflareR2ApiError extends Error {
+  constructor(
+    readonly status: number,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
 function getCloudflareHeaders(): HeadersInit {
   const { apiToken } = getR2CloudflareCredentials();
   return {
@@ -43,7 +52,10 @@ async function cloudflareFetch<T>(path: string, init?: RequestInit): Promise<T> 
 
   if (!response.ok || !body.success) {
     const message = body.errors?.map((e) => e.message).join('; ') || response.statusText;
-    throw new Error(`Cloudflare R2 API error (${response.status}): ${message}`);
+    throw new CloudflareR2ApiError(
+      response.status,
+      `Cloudflare R2 API error (${response.status}): ${message}`,
+    );
   }
 
   return body.result;
@@ -52,9 +64,17 @@ async function cloudflareFetch<T>(path: string, init?: RequestInit): Promise<T> 
 export async function getR2BucketCors(bucketName?: string): Promise<R2CorsRule[]> {
   const { accountId } = getR2CloudflareCredentials();
   const bucket = bucketName ?? getR2S3Credentials().bucketName;
-  const result = await cloudflareFetch<{ rules?: R2CorsRule[] }>(
-    `/accounts/${accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`
-  );
+  let result: { rules?: R2CorsRule[] };
+  try {
+    result = await cloudflareFetch<{ rules?: R2CorsRule[] }>(
+      `/accounts/${accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
+    );
+  } catch (error) {
+    if (error instanceof CloudflareR2ApiError && error.status === 404) {
+      return [];
+    }
+    throw error;
+  }
   return result.rules ?? [];
 }
 

@@ -36,26 +36,45 @@ ASOL_CAPACITOR_API_BASE_URL=
 ## Cloudflare R2
 
 ```env
-# Server-only
+# Server-only: general images, excluding products
 R2_ACCOUNT_ID=
 R2_API_TOKEN=
 R2_ACCESS_KEY_ID=
 R2_SECRET_ACCESS_KEY=
-R2_BUCKET_NAME=asol-storage
-R2_ENDPOINT=                         # https://{account_id}.r2.cloudflarestorage.com
+R2_BUCKET_NAME=pic1
+R2_ENDPOINT=https://8486fdbb1c87dc78481f2def0a23e043.r2.cloudflarestorage.com
 R2_LOCATION=WEUR
-R2_PUBLIC_URL=                       # Public Dev URL (pub-xxx.r2.dev)
-R2_CATALOG_URI=                      # Iceberg catalog (optional)
-R2_WAREHOUSE_NAME=                   # Iceberg warehouse (optional)
+R2_PUBLIC_URL=https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev
+R2_CATALOG_URI=https://catalog.cloudflarestorage.com/8486fdbb1c87dc78481f2def0a23e043/pic1
+R2_WAREHOUSE_NAME=8486fdbb1c87dc78481f2def0a23e043_pic1
 
 # Client-safe
-NEXT_PUBLIC_R2_PUBLIC_URL=
+NEXT_PUBLIC_R2_PUBLIC_URL=https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev
+
+# Server-only: product images stay on the legacy product R2 bucket
+PRODUCT_R2_ACCOUNT_ID=
+PRODUCT_R2_API_TOKEN=
+PRODUCT_R2_ACCESS_KEY_ID=
+PRODUCT_R2_SECRET_ACCESS_KEY=
+PRODUCT_R2_BUCKET_NAME=gova-storage
+PRODUCT_R2_ENDPOINT=https://166409f3b449d8f1da0dee6d25ed3e08.r2.cloudflarestorage.com
+PRODUCT_R2_LOCATION=WEUR
+PRODUCT_R2_JURISDICTION=default
+PRODUCT_R2_PUBLIC_URL=https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev
+PRODUCT_R2_CATALOG_URI=https://catalog.cloudflarestorage.com/166409f3b449d8f1da0dee6d25ed3e08/gova-storage
+PRODUCT_R2_WAREHOUSE_NAME=166409f3b449d8f1da0dee6d25ed3e08_gova-storage
 ```
 
 Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:
 
 ```bash
 npm run r2:sync:cors
+```
+
+Migrate old public image URLs to the active R2 bucket:
+
+```bash
+npm run r2:migrate:images
 ```
 
 ## Apple Push Notification service
@@ -71,7 +90,7 @@ APNS_PRODUCTION=false
 
 ## Never expose
 
-`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
+`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
 
 ## Vercel deploy
 

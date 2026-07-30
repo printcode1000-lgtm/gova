@@ -1,6 +1,8 @@
 # Cloudflare R2 Storage
 
-Account: `Bids.stories@gmail.com` · Bucket: `asol-storage` · Region: `WEUR`
+General images account: `8486fdbb1c87dc78481f2def0a23e043` - Bucket: `pic1` - Region: `WEUR`
+
+Product images stay on the legacy product R2 account/bucket configured by `PRODUCT_R2_*`.
 
 ## Env vars
 
@@ -13,9 +15,11 @@ Local secrets live in `.env.local` (gitignored). Template in `.env.example`.
 | File | Purpose |
 |------|---------|
 | `src/core/provisioning/r2-platform-api.ts` | Cloudflare REST — CORS get/put/delete, token verify |
-| `src/core/provisioning/r2-s3-client.ts` | S3-compatible upload, delete, list, presigned URLs |
+| `src/core/provisioning/r2-s3-client.ts` | S3-compatible upload, delete, list, presigned URLs for both regular and product R2 buckets |
 | `src/core/provisioning/r2-cors-policy.ts` | Default CORS rules from `ASOL_CORS_ORIGINS` |
 | `scripts/r2-sync-cors.ts` | Apply full browser CORS to bucket |
+| `scripts/migrate-r2-image-public-url.ts` | Copy old public R2 image URLs into the active bucket and rewrite database references |
+| `scripts/migrate-r2-cloud-folders.ts` | Move active R2 objects from legacy profile folders into the current two cloud folders |
 
 ## Sync CORS
 
@@ -27,9 +31,28 @@ Applies `GET`, `PUT`, `POST`, `DELETE`, `HEAD` for all origins in `ASOL_CORS_ORI
 
 ## Public URLs
 
-- **Public Dev URL:** `R2_PUBLIC_URL` / `NEXT_PUBLIC_R2_PUBLIC_URL`
-- **S3 endpoint:** `R2_ENDPOINT` + bucket `asol-storage`
+- **General Public Dev URL:** `R2_PUBLIC_URL` / `NEXT_PUBLIC_R2_PUBLIC_URL`
+- **General S3 endpoint:** `R2_ENDPOINT` + bucket `pic1`
+- **Product Public Dev URL:** `PRODUCT_R2_PUBLIC_URL`
+- **Product S3 endpoint:** `PRODUCT_R2_ENDPOINT` + bucket `PRODUCT_R2_BUCKET_NAME`
 - **Custom Domain:** not configured yet
+
+## Cloud Layout
+
+- `images/profile/...`: avatar and cover images.
+- `images/content/...`: home hero slider and marketplace request images in the general R2 bucket.
+- `images/products/...`: product images in the legacy product R2 bucket.
+
+Local development keeps the original single root under `public/sync_data/sync_file/images/...`.
+
+## Migration
+
+```bash
+npm run r2:migrate:images
+npm run r2:migrate:folders
+```
+
+The public URL migration uses `OLD_R2_PUBLIC_URL` or `R2_MIGRATION_SOURCE_PUBLIC_URL` from `.env.local`, copies referenced objects into the active bucket, and rewrites known image references in local SQLite and Turso. The folder migration moves active R2 objects from legacy profile folders into `images/profile` or `images/content`.
 
 ## Packages
 

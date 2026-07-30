@@ -45,6 +45,8 @@
     "db:reset:advertisements:cloud": "npx tsx scripts/reset-advertisements-db.ts --cloud",
     "db:ensure": "npx tsx scripts/ensure-sqlite-databases.ts",
     "r2:sync:cors": "npx tsx scripts/r2-sync-cors.ts",
+    "r2:migrate:images": "npx tsx scripts/migrate-r2-image-public-url.ts",
+    "r2:migrate:folders": "npx tsx scripts/migrate-r2-cloud-folders.ts",
     "ota:keygen": "npx tsx scripts/ota-keygen.ts",
     "ota:publish": "npx tsx scripts/ota-publish.ts",
     "ota:status": "npx tsx scripts/ota-status.ts",

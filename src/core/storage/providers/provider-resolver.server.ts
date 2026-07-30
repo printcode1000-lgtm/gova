@@ -7,6 +7,7 @@ import type {
   StorageObjectEntry,
 } from './storage-provider.interface';
 import { cloudflareR2Provider } from './cloudflare-r2.provider.server';
+import { cloudflareR2ProductsProvider } from './cloudflare-r2-products.provider.server';
 import { localStorageProvider } from './local-storage.provider.server';
 
 /**
@@ -49,21 +50,20 @@ export function resolveStorageProvider(profileProvider: StorageProviderId): ISto
     return localStorageProvider;
   }
 
-  if (profileProvider !== 'CloudflareR2') {
-    throw new Error(
-      `Cloud runtime requires CloudflareR2 storage, received: ${profileProvider}`,
-    );
-  }
+  if (profileProvider === 'CloudflareR2') return cloudflareR2Provider;
+  if (profileProvider === 'CloudflareR2Products') return cloudflareR2ProductsProvider;
 
-  return cloudflareR2Provider;
+  throw new Error(
+    `Cloud runtime requires a Cloudflare R2 storage provider, received: ${profileProvider}`,
+  );
 }
 
 /** Returns the provider id that will actually handle the upload. */
 export function resolveActiveProviderId(profileProvider: StorageProviderId): StorageProviderId {
   if (isLocalDevelopmentRuntime()) return 'LocalStorage';
-  if (profileProvider !== 'CloudflareR2') {
+  if (profileProvider !== 'CloudflareR2' && profileProvider !== 'CloudflareR2Products') {
     throw new Error(
-      `Cloud runtime requires CloudflareR2 storage, received: ${profileProvider}`,
+      `Cloud runtime requires a Cloudflare R2 storage provider, received: ${profileProvider}`,
     );
   }
   return profileProvider;
