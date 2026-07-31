@@ -190,29 +190,6 @@ export interface DataHealthOrderPurgeResult {
   completedAt: string;
 }
 
-export interface DataHealthFactoryResetPlan {
-  id: string;
-  environment: "development" | "production";
-  databaseSource: "sqlite" | "turso";
-  storageSource: "local" | "r2";
-  domainCount: number;
-  domainCounts: Record<string, Record<string, number>>;
-  totalRows: number;
-  imageCount: number;
-  expiresAt: string;
-  confirmationText: string;
-}
-
-export interface DataHealthFactoryResetResult {
-  resetId: string;
-  environment: "development" | "production";
-  deletedRowsByDomain: Record<string, Record<string, number>>;
-  domainErrors: Record<string, string>;
-  deletedImages: number;
-  failedImages: number;
-  completedAt: string;
-}
-
 export interface DataHealthHistoryEntry {
   id: string;
   environment: string;

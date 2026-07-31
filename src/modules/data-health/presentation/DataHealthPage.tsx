@@ -43,8 +43,6 @@ import type {
   DataHealthAuditEntry,
   DataHealthCleanupPlan,
   DataHealthCleanupResult,
-  DataHealthFactoryResetPlan,
-  DataHealthFactoryResetResult,
   DataHealthHistoryEntry,
   DataHealthIssue,
   DataHealthOrderPurgePlan,
@@ -142,12 +140,6 @@ export function DataHealthPage() {
   const [orderPurgeConfirmation, setOrderPurgeConfirmation] =
     React.useState("");
   const [orderPurgeBusy, setOrderPurgeBusy] = React.useState(false);
-  const [factoryResetPlan, setFactoryResetPlan] =
-    React.useState<DataHealthFactoryResetPlan | null>(null);
-  const [factoryResetConfirmation, setFactoryResetConfirmation] =
-    React.useState("");
-  const [factoryResetPassword, setFactoryResetPassword] = React.useState("");
-  const [factoryResetBusy, setFactoryResetBusy] = React.useState(false);
 
   const authHeaders = React.useMemo(
     () =>
@@ -411,73 +403,6 @@ export function DataHealthPage() {
       );
     } finally {
       setOrderPurgeBusy(false);
-    }
-  };
-
-  const createFactoryResetPlan = async () => {
-    if (!authHeaders) return;
-    setFactoryResetBusy(true);
-    setError("");
-    setNotice("");
-    try {
-      const next = await asolApi.post<DataHealthFactoryResetPlan>(
-        DATA_HEALTH_API.factoryResetPlan,
-        {},
-        { headers: authHeaders, suppressErrorLog: true },
-      );
-      setFactoryResetPlan(next);
-      setFactoryResetConfirmation("");
-      setFactoryResetPassword("");
-    } catch (resetError) {
-      setError(
-        resetError instanceof Error
-          ? resetError.message
-          : "تعذر إعداد معاينة إعادة ضبط المصنع",
-      );
-    } finally {
-      setFactoryResetBusy(false);
-    }
-  };
-
-  const executeFactoryReset = async () => {
-    if (
-      !authHeaders ||
-      !factoryResetPlan ||
-      factoryResetConfirmation !== factoryResetPlan.confirmationText ||
-      !factoryResetPassword
-    ) {
-      return;
-    }
-    setFactoryResetBusy(true);
-    setError("");
-    try {
-      const result = await asolApi.post<DataHealthFactoryResetResult>(
-        DATA_HEALTH_API.factoryResetExecute,
-        {
-          planId: factoryResetPlan.id,
-          confirmationText: factoryResetConfirmation,
-          currentPassword: factoryResetPassword,
-        },
-        { headers: authHeaders },
-      );
-      setFactoryResetPlan(null);
-      setFactoryResetConfirmation("");
-      setFactoryResetPassword("");
-      const errorCount = Object.keys(result.domainErrors).length;
-      setNotice(
-        errorCount === 0
-          ? `تمت إعادة ضبط المصنع بنجاح. تم حذف ${result.deletedImages} صورة (فشل ${result.failedImages}) وبقي فقط حساب السوبر أدمن.`
-          : `اكتملت إعادة الضبط جزئيًا: فشل ${errorCount} نطاق من قواعد البيانات. راجع سجل التدقيق للتفاصيل.`,
-      );
-      await scan();
-    } catch (resetError) {
-      setError(
-        resetError instanceof Error
-          ? resetError.message
-          : "تعذر تنفيذ إعادة ضبط المصنع",
-      );
-    } finally {
-      setFactoryResetBusy(false);
     }
   };
 
@@ -1025,33 +950,6 @@ export function DataHealthPage() {
               </Button>
             </div>
           </section>
-
-          <section className="flex flex-wrap items-center justify-between gap-3 rounded-md border-2 border-red-600 bg-red-100 p-4">
-            <div>
-              <div className="flex items-center gap-2 text-sm font-bold text-red-900">
-                <AlertTriangle className="h-5 w-5" />
-                إعادة ضبط المصنع الكاملة (خطر جسيم)
-              </div>
-              <p className="mt-1 text-xs font-medium text-red-800">
-                تحذف كل البيانات من كل قواعد البيانات وكل الصور من كل مساحات
-                التخزين، دون إمكانية تراجع. يبقى فقط حساب السوبر أدمن (uid،
-                الهاتف، كلمة المرور). كل شيء آخر — بما فيه بيانات السوبر أدمن
-                في النطاقات الأخرى — يُحذف نهائيًا.
-              </p>
-            </div>
-            <Button
-              type="button"
-              variant="destructive"
-              className="bg-red-700 hover:bg-red-800"
-              disabled={factoryResetBusy}
-              onClick={createFactoryResetPlan}
-            >
-              <Trash2 className="h-4 w-4" />
-              {factoryResetBusy
-                ? "جاري الإعداد"
-                : "معاينة إعادة ضبط المصنع"}
-            </Button>
-          </section>
         </TabsContent>
 
         <TabsContent value="schema">
@@ -1257,120 +1155,6 @@ export function DataHealthPage() {
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        open={Boolean(factoryResetPlan)}
-        onOpenChange={(open) => {
-          if (!open && !factoryResetBusy) {
-            setFactoryResetPlan(null);
-            setFactoryResetPassword("");
-          }
-        }}
-      >
-        <DialogContent
-          className="max-h-[85vh] max-w-2xl overflow-y-auto border-2 border-red-600"
-          dir="rtl"
-        >
-          <DialogHeader>
-            <DialogTitle className="text-red-800">
-              معاينة إعادة ضبط المصنع الكاملة
-            </DialogTitle>
-            <DialogDescription className="font-medium text-red-700">
-              عملية نهائية لا يمكن التراجع عنها. ستُحذف كل قواعد البيانات وكل
-              الصور، ولا يبقى سوى حساب السوبر أدمن. الخطة صالحة حتى{" "}
-              {dateText(factoryResetPlan?.expiresAt)}.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-2 sm:grid-cols-3">
-            <DetailRow
-              label="عدد النطاقات"
-              value={String(factoryResetPlan?.domainCount ?? 0)}
-            />
-            <DetailRow
-              label="إجمالي السجلات"
-              value={String(factoryResetPlan?.totalRows ?? 0)}
-            />
-            <DetailRow
-              label="الصور"
-              value={String(factoryResetPlan?.imageCount ?? 0)}
-            />
-          </div>
-          <div className="max-h-52 overflow-y-auto rounded-md border">
-            {Object.entries(factoryResetPlan?.domainCounts ?? {}).map(
-              ([domain, tables]) => {
-                const domainTotal = Object.values(tables).reduce(
-                  (sum, count) => sum + count,
-                  0,
-                );
-                return (
-                  <div
-                    key={domain}
-                    className="flex items-center justify-between border-b px-3 py-2 text-sm last:border-b-0"
-                  >
-                    <span dir="ltr">{domain}</span>
-                    <span>{domainTotal}</span>
-                  </div>
-                );
-              },
-            )}
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">
-              اكتب العبارة التالية حرفيًا للتأكيد:
-            </label>
-            <div className="select-all rounded-md bg-muted p-2 text-sm font-semibold">
-              {factoryResetPlan?.confirmationText}
-            </div>
-            <Input
-              value={factoryResetConfirmation}
-              onChange={(event) =>
-                setFactoryResetConfirmation(event.target.value)
-              }
-              autoComplete="off"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">
-              كلمة مرور حساب السوبر أدمن الحالية:
-            </label>
-            <Input
-              type="password"
-              value={factoryResetPassword}
-              onChange={(event) =>
-                setFactoryResetPassword(event.target.value)
-              }
-              autoComplete="current-password"
-            />
-          </div>
-          <DialogFooter className="gap-2">
-            <Button
-              variant="outline"
-              disabled={factoryResetBusy}
-              onClick={() => {
-                setFactoryResetPlan(null);
-                setFactoryResetPassword("");
-              }}
-            >
-              إلغاء
-            </Button>
-            <Button
-              variant="destructive"
-              className="bg-red-700 hover:bg-red-800"
-              disabled={
-                factoryResetBusy ||
-                !factoryResetPlan ||
-                factoryResetConfirmation !== factoryResetPlan.confirmationText ||
-                !factoryResetPassword
-              }
-              onClick={executeFactoryReset}
-            >
-              <Trash2 className="h-4 w-4" />
-              {factoryResetBusy
-                ? "جاري إعادة الضبط"
-                : "إعادة ضبط المصنع نهائيًا"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </main>
   );
 }

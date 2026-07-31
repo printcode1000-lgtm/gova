@@ -11,8 +11,6 @@ export const DATA_HEALTH_API = {
   orderPurgePlan: "/api/super-admin/data-health/orders/plan",
   orderPurge: "/api/super-admin/data-health/orders/purge",
   orderPurgeRetryImages: "/api/super-admin/data-health/orders/retry-images",
-  factoryResetPlan: "/api/super-admin/data-health/factory-reset/plan",
-  factoryResetExecute: "/api/super-admin/data-health/factory-reset/execute",
   quarantineDelete: "/api/super-admin/data-health/quarantine/delete",
   quarantineRelease: "/api/super-admin/data-health/quarantine/release",
   quarantineClear: "/api/super-admin/data-health/quarantine/clear",

@@ -46,6 +46,8 @@
     "db:create:product": "npx tsx src/modules/data-access/tooling/create-product-sqlite-db.ts",
     "db:reset:advertisements": "npx tsx src/modules/data-access/tooling/reset-advertisements-db.ts",
     "db:reset:advertisements:cloud": "npx tsx src/modules/data-access/tooling/reset-advertisements-db.ts --cloud",
+    "db:drop:factory-reset": "npx tsx src/modules/data-access/tooling/drop-factory-reset-tables.ts",
+    "db:drop:factory-reset:cloud": "npx tsx src/modules/data-access/tooling/drop-factory-reset-tables.ts --cloud",
     "db:ensure": "npx tsx src/modules/data-access/tooling/ensure-sqlite-databases.ts",
     "r2:sync:cors": "npx tsx scripts/r2-sync-cors.ts",
     "r2:migrate:images": "npx tsx src/modules/data-access/tooling/migrate-r2-image-public-url.ts",
