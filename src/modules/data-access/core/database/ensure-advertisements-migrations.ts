@@ -11,6 +11,8 @@ export function ensureAdvertisementsDevMigrations(db: unknown): void {
     migrationsFolder: path.join(
       process.cwd(),
       "src",
+      "modules",
+      "data-access",
       "core",
       "database",
       "advertisements",

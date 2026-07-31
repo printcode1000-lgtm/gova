@@ -14,7 +14,7 @@ export function ensureDevMigrations(db: { db?: unknown } | unknown): void {
   try {
     const { migrate } = require('drizzle-orm/better-sqlite3/migrator');
     const database = db && typeof db === 'object' && 'db' in (db as object) ? (db as { db: unknown }).db : db;
-    const migrationsFolder = path.join(process.cwd(), 'src', 'core', 'database', 'migrations');
+    const migrationsFolder = path.join(process.cwd(), 'src', 'modules', 'data-access', 'core', 'database', 'migrations');
 
     migrate(database, { migrationsFolder });
     migrationsRun = true;
