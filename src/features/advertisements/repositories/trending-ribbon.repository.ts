@@ -5,13 +5,11 @@ import { eq } from "drizzle-orm";
 import { advertisementsDbClient } from "@/core/database/advertisements-db-client";
 import { trendingRibbon } from "@/core/database/advertisements/advertisements.schema";
 import type { IDatabaseClient } from "@/core/database/database-client.interface";
-import seedDocument from "@/features/advertisements/config/trending-ribbon.seed.json";
 import {
   TRENDING_RIBBON_ID,
   type TrendingRibbonConfig,
   type TrendingRibbonRecord,
 } from "../entities/trending-ribbon.entity";
-import { trendingRibbonConfigSchema } from "../validation/trending-ribbon.schema";
 
 function parseConfig(raw: string): TrendingRibbonConfig {
   return JSON.parse(raw) as TrendingRibbonConfig;
@@ -21,12 +19,17 @@ export class TrendingRibbonRepository {
   constructor(private database: IDatabaseClient = advertisementsDbClient) {}
 
   async get(): Promise<TrendingRibbonRecord> {
-    let row = await this.getRow();
+    const row = await this.getRow();
     if (!row) {
-      await this.seed();
-      row = await this.getRow();
+      return {
+        id: TRENDING_RIBBON_ID,
+        config: { label: "home.trending.label", items: [] },
+        version: 0,
+        checkIntervalMinutes: 15,
+        updatedAt: "",
+        updatedBy: null,
+      };
     }
-    if (!row) throw new Error("trendingRibbonNotFound");
 
     return {
       id: TRENDING_RIBBON_ID,
@@ -44,16 +47,24 @@ export class TrendingRibbonRepository {
     actorUid: string,
   ): Promise<TrendingRibbonRecord> {
     const current = await this.get();
-    await this.database.db
-      .update(trendingRibbon)
-      .set({
-        configJson: JSON.stringify(config),
-        version: current.version + 1,
-        checkIntervalMinutes,
-        updatedAt: new Date().toISOString(),
-        updatedBy: actorUid,
-      })
-      .where(eq(trendingRibbon.id, TRENDING_RIBBON_ID));
+    const values = {
+      configJson: JSON.stringify(config),
+      version: current.version + 1,
+      checkIntervalMinutes,
+      updatedAt: new Date().toISOString(),
+      updatedBy: actorUid,
+    };
+    if (await this.getRow()) {
+      await this.database.db
+        .update(trendingRibbon)
+        .set(values)
+        .where(eq(trendingRibbon.id, TRENDING_RIBBON_ID));
+    } else {
+      await this.database.db.insert(trendingRibbon).values({
+        id: TRENDING_RIBBON_ID,
+        ...values,
+      });
+    }
     return this.get();
   }
 
@@ -64,17 +75,6 @@ export class TrendingRibbonRepository {
       .where(eq(trendingRibbon.id, TRENDING_RIBBON_ID))
       .limit(1);
     return rows[0] ?? null;
-  }
-
-  private async seed(): Promise<void> {
-    const config = trendingRibbonConfigSchema.parse(seedDocument);
-    await this.database.db.insert(trendingRibbon).values({
-      id: TRENDING_RIBBON_ID,
-      configJson: JSON.stringify(config),
-      version: 1,
-      checkIntervalMinutes: 15,
-      updatedAt: new Date().toISOString(),
-    });
   }
 }
 

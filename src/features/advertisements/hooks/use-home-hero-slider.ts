@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import fallbackSeed from "@/features/advertisements/config/home-hero-slider.seed.json";
 import {
   ASOL_DB_STORES,
   asolDbDelete,
@@ -24,7 +23,13 @@ interface HomeHeroCache extends HomeHeroPublished {
 }
 
 const fallback: HomeHeroPublished = {
-  config: fallbackSeed.config as HomeHeroConfig,
+  config: {
+    transition: "SlideLeft",
+    transitionDuration: 500,
+    autoPlay: false,
+    loop: false,
+    slides: [],
+  } satisfies HomeHeroConfig,
   version: 0,
   checkIntervalMinutes: 15,
   updatedAt: "",
