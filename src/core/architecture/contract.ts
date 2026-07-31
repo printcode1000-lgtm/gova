@@ -39,7 +39,7 @@ export const LAYER_LABELS: Record<ArchitectureLayer, string> = {
 };
 
 export const ALLOWED_PROCESS_ENV_FILES = new Set([
-  'src/core/config/runtime-env.ts',
+  'src/core/config/runtime-context.server.ts',
   'src/core/config/public-env.ts',
   'src/core/config/server-env.ts',
   'src/core/config/server-env.values.ts',

@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { isDevRuntime } from '@/core/config/runtime-env';
+import { isDevRuntime } from '@/core/config/runtime-context.server';
 import type { StorageProviderId } from '../types/storage-profile.types';
 import type {
   IStorageProvider,

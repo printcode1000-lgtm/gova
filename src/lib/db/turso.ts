@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { isDevRuntime, isProvisioningContext } from '@/core/config/runtime-env';
+import { isDevRuntime, isProvisioningContext } from '@/core/config/runtime-context.server';
 import { getTursoRuntimeCredentials } from '@/core/config/server-env';
 
 let tursoClientInstance: unknown | null = null;

@@ -1,24 +1,20 @@
 import "server-only";
+import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
 
 export function assertDevCloudBackupAllowed(): void {
-  const isDev =
-    process.env.NODE_ENV === "development" &&
-    process.env.NEXT_PHASE !== "phase-production-build" &&
-    process.env.NEXT_PUBLIC_ASOL_MODE !== "static" &&
-    !process.env.VERCEL;
+  const runtime = getServerRuntimeContext();
+  const isDev = runtime.isDevelopment && process.env.NEXT_PHASE !== "phase-production-build";
 
   if (!isDev) throw new Error("devCloudBackupDevelopmentOnly");
 }
 
 export function devCloudBackupEnvironment() {
+  const runtime = getServerRuntimeContext();
   return {
     allowed:
-      process.env.NODE_ENV === "development" &&
-      process.env.NEXT_PHASE !== "phase-production-build" &&
-      process.env.NEXT_PUBLIC_ASOL_MODE !== "static" &&
-      !process.env.VERCEL,
-    nodeEnv: process.env.NODE_ENV ?? "",
-    publicMode: process.env.NEXT_PUBLIC_ASOL_MODE ?? "",
-    vercel: Boolean(process.env.VERCEL),
+      runtime.isDevelopment && process.env.NEXT_PHASE !== "phase-production-build",
+    nodeEnv: runtime.isDevelopment ? "development" : "production",
+    publicMode: runtime.deployment,
+    vercel: runtime.deployment === "web-production",
   };
 }

@@ -27,6 +27,7 @@
     "test:image-upload-queue": "npx tsx src/features/storage/tests/image-upload-queue.test.ts",
     "test:data-health": "npx tsx scripts/test-data-health-environment.ts && npx tsx src/modules/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/modules/data-health/tests/order-purge.test.ts",
     "test:dev-cloud-backup": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
+    "test:runtime-context": "npx tsx scripts/test-runtime-context.ts",
     "validate:error-logging": "npx tsx scripts/validate-error-logging.ts",
     "validate-storage-profiles": "npx tsx scripts/validate-storage-profiles.ts",
     "app:init": "npx tsx scripts/generate-app-init-public.ts",

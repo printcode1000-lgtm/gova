@@ -36,6 +36,8 @@ function extractReferencedTables(sql: string, knownTables: Iterable<string>): st
     /\bINTO\s+["'`]?([A-Za-z_][\w]*)["'`]?/gi,
     /\bUPDATE\s+["'`]?([A-Za-z_][\w]*)["'`]?/gi,
     /\bDELETE\s+FROM\s+["'`]?([A-Za-z_][\w]*)["'`]?/gi,
+    /\bCREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?["'`]?([A-Za-z_][\w]*)["'`]?/gi,
+    /\bON\s+["'`]?([A-Za-z_][\w]*)["'`]?/gi,
   ];
 
   for (const pattern of patterns) {

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { isDevRuntime } from "../src/core/config/runtime-env";
+import { isDevRuntime } from "../src/core/config/runtime-context.server";
 
 const keys = [
   "NODE_ENV",

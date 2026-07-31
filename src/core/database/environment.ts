@@ -3,7 +3,7 @@ import {
   isDevRuntime,
   isStaticExportBuild,
   isProvisioningContext,
-} from "@/core/config/runtime-env";
+} from "@/core/config/runtime-context.server";
 
 export { isDevRuntime, isStaticExportBuild, isProvisioningContext };
 

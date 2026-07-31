@@ -1,6 +1,6 @@
 import "server-only";
 
-import { isDevRuntime } from "@/core/config/runtime-env";
+import { isDevRuntime } from "@/core/config/runtime-context.server";
 
 export interface DataHealthExecutionContext {
   environment: "development" | "production";

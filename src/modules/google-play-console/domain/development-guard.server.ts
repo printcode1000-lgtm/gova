@@ -2,7 +2,7 @@ import "server-only";
 
 import path from "node:path";
 
-import { isDevRuntime } from "@/core/config";
+import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
 
 import type {
   GooglePlayConsoleConfigStatus,
@@ -14,10 +14,10 @@ const DEFAULT_KEY_FILE = "assets/google-play/asole-73f1f-dc494a4b5159.json";
 
 export function googlePlayConsoleEnvironment(): GooglePlayConsoleEnvironment {
   return {
-    allowed: isDevRuntime(),
-    nodeEnv: process.env.NODE_ENV ?? "",
-    publicMode: process.env.NEXT_PUBLIC_ASOL_MODE ?? "",
-    vercel: Boolean(process.env.VERCEL || process.env.VERCEL_ENV),
+    allowed: getServerRuntimeContext().isDevelopment,
+    nodeEnv: getServerRuntimeContext().isDevelopment ? "development" : "production",
+    publicMode: getServerRuntimeContext().deployment,
+    vercel: getServerRuntimeContext().deployment === "web-production",
   };
 }
 
