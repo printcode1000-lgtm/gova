@@ -17,6 +17,7 @@ export const trendingRibbonApiService = {
   getCurrent: () =>
     asolApi.get<TrendingRibbonPublished>(
       ASOL_API_ROUTES.advertisements.trendingRibbon,
+      { suppressErrorLog: true },
     ),
 
   getVersion: () =>

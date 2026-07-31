@@ -13,6 +13,7 @@ export const featuredMarqueeApiService = {
   getCurrent: () =>
     asolApi.get<FeaturedMarqueePublished>(
       ASOL_API_ROUTES.advertisements.featuredMarquee,
+      { suppressErrorLog: true },
     ),
 
   getVersion: () =>

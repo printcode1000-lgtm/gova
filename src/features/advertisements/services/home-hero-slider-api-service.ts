@@ -13,6 +13,7 @@ export const homeHeroSliderApiService = {
   getCurrent: () =>
     asolApi.get<HomeHeroPublished>(
       ASOL_API_ROUTES.advertisements.homeHeroSlider,
+      { suppressErrorLog: true },
     ),
   getVersion: () =>
     asolApi.get<Omit<HomeHeroPublished, "config">>(
