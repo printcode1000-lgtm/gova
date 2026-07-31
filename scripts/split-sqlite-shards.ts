@@ -96,6 +96,31 @@ function copyTable(source: Database.Database, target: Database.Database, tableNa
   insertMany(rows);
 }
 
+function replaceShardFile(stagedPath: string, targetPath: string): boolean {
+  if (!fs.existsSync(targetPath)) {
+    fs.renameSync(stagedPath, targetPath);
+    return true;
+  }
+
+  const backupPath = `${targetPath}.replace-${process.pid}`;
+  try {
+    fs.renameSync(targetPath, backupPath);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`Skipped ${path.basename(targetPath)} because it is in use: ${message}`);
+    return false;
+  }
+
+  try {
+    fs.renameSync(stagedPath, targetPath);
+    fs.rmSync(backupPath, { force: true });
+    return true;
+  } catch (error) {
+    fs.renameSync(backupPath, targetPath);
+    throw error;
+  }
+}
+
 function splitSource(sourceFile: string, shards: ShardMap): void {
   const sourcePath = path.join(SQLITE_DIRECTORY, sourceFile);
   if (!fs.existsSync(sourcePath)) throw new Error(`Source database missing: ${sourcePath}`);
@@ -108,9 +133,10 @@ function splitSource(sourceFile: string, shards: ShardMap): void {
         sqliteFileNameForShard(databaseName as DatabaseShardName),
       );
       fs.mkdirSync(path.dirname(targetPath), { recursive: true });
-      if (fs.existsSync(targetPath)) fs.rmSync(targetPath);
+      const stagedPath = `${targetPath}.staged-${process.pid}`;
+      fs.rmSync(stagedPath, { force: true });
 
-      const target = new Database(targetPath);
+      const target = new Database(stagedPath);
       try {
         target.pragma("foreign_keys = OFF");
         for (const tableName of tables) {
@@ -138,9 +164,14 @@ function splitSource(sourceFile: string, shards: ShardMap): void {
           }
         }
         target.pragma("foreign_keys = ON");
-        console.log(`${databaseName}: ${tables.length} table(s) copied to ${targetPath}`);
       } finally {
         target.close();
+      }
+
+      if (replaceShardFile(stagedPath, targetPath)) {
+        console.log(`${databaseName}: ${tables.length} table(s) copied to ${targetPath}`);
+      } else {
+        fs.rmSync(stagedPath, { force: true });
       }
     }
   } finally {

@@ -1,10 +1,7 @@
 import "server-only";
 
-import { and, count, eq } from "drizzle-orm";
-
 import { profileDbClient } from "@/core/database/profile-db-client";
 import type { IDatabaseClient } from "@/core/database/database-client.interface";
-import { follows } from "@/core/database/profile/profile.schema";
 import type {
   FollowAudience,
   FollowMutationInput,
@@ -26,29 +23,19 @@ export class FollowRepository {
     followerCount: number;
     isFollowing: boolean;
   }> {
-    const [countRow] = await this.database.db
-      .select({ value: count() })
-      .from(follows)
-      .where(
-        and(
-          eq(follows.targetType, input.targetType),
-          eq(follows.targetId, input.targetId),
-        ),
-      );
+    const [countRow] = await this.database.execute(
+      "SELECT COUNT(*) AS value FROM follows WHERE target_type = ? AND target_id = ?",
+      [input.targetType, input.targetId],
+    );
 
     let isFollowing = false;
     if (input.viewerUid) {
-      const rows = await this.database.db
-        .select({ id: follows.id })
-        .from(follows)
-        .where(
-          and(
-            eq(follows.followerUid, input.viewerUid),
-            eq(follows.targetType, input.targetType),
-            eq(follows.targetId, input.targetId),
-          ),
-        )
-        .limit(1);
+      const rows = await this.database.execute(
+        `SELECT id FROM follows
+         WHERE follower_uid = ? AND target_type = ? AND target_id = ?
+         LIMIT 1`,
+        [input.viewerUid, input.targetType, input.targetId],
+      );
       isFollowing = rows.length > 0;
     }
 
@@ -59,49 +46,37 @@ export class FollowRepository {
   }
 
   async follow(input: FollowMutationInput): Promise<boolean> {
-    const existing = await this.database.db
-      .select({ id: follows.id })
-      .from(follows)
-      .where(
-        and(
-          eq(follows.followerUid, input.viewerUid),
-          eq(follows.targetType, input.targetType),
-          eq(follows.targetId, input.targetId),
-        ),
-      )
-      .limit(1);
+    const existing = await this.database.execute(
+      `SELECT id FROM follows
+       WHERE follower_uid = ? AND target_type = ? AND target_id = ?
+       LIMIT 1`,
+      [input.viewerUid, input.targetType, input.targetId],
+    );
 
     if (existing.length > 0) return false;
 
-    await this.database.db.insert(follows).values({
+    await this.database.insert("follows", {
       id: createFollowId(),
-      followerUid: input.viewerUid,
-      targetType: input.targetType,
-      targetId: input.targetId,
-      targetOwnerUid: input.targetOwnerUid ?? "",
-      createdAt: new Date().toISOString(),
+      follower_uid: input.viewerUid,
+      target_type: input.targetType,
+      target_id: input.targetId,
+      target_owner_uid: input.targetOwnerUid ?? "",
+      created_at: new Date().toISOString(),
     });
     return true;
   }
 
   async unfollow(input: FollowMutationInput): Promise<boolean> {
-    const existing = await this.database.db
-      .select({ id: follows.id })
-      .from(follows)
-      .where(
-        and(
-          eq(follows.followerUid, input.viewerUid),
-          eq(follows.targetType, input.targetType),
-          eq(follows.targetId, input.targetId),
-        ),
-      )
-      .limit(1);
+    const existing = await this.database.execute(
+      `SELECT id FROM follows
+       WHERE follower_uid = ? AND target_type = ? AND target_id = ?
+       LIMIT 1`,
+      [input.viewerUid, input.targetType, input.targetId],
+    );
 
     if (existing.length === 0) return false;
 
-    await this.database.db
-      .delete(follows)
-      .where(eq(follows.id, existing[0].id));
+    await this.database.delete("follows", { id: existing[0].id });
     return true;
   }
 
@@ -109,12 +84,10 @@ export class FollowRepository {
     targetType: FollowTargetType,
     targetId: string,
   ): Promise<FollowAudience> {
-    const rows = await this.database.db
-      .select({ followerUid: follows.followerUid })
-      .from(follows)
-      .where(
-        and(eq(follows.targetType, targetType), eq(follows.targetId, targetId)),
-      );
+    const rows = await this.database.execute(
+      "SELECT follower_uid AS followerUid FROM follows WHERE target_type = ? AND target_id = ?",
+      [targetType, targetId],
+    );
 
     return {
       targetType,
