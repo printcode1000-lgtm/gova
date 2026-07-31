@@ -1763,6 +1763,9 @@ export class DataHealthRepository {
     for (const issue of issues) {
       if (quarantineSet.has(issue.fingerprint)) {
         issue.state = "quarantined";
+        // A quarantined resource has an active retention record. It must not
+        // be selectable again from the findings tab and restart that retention.
+        issue.canClean = false;
         continue;
       }
       if (firstSeenByFingerprint.has(issue.fingerprint)) {
