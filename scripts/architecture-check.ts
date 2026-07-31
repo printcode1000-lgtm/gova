@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
 import { join, relative } from 'path';
 import {
   ALLOWED_DRIZZLE_ORM_FILES_PATTERN,
@@ -6,6 +6,7 @@ import {
   ALLOWED_FETCH_FILES,
   ALLOWED_PROCESS_ENV_FILES,
   ALLOWED_SQL_FILES_PATTERN,
+  DIRECT_DATABASE_CALL_PATTERNS,
   LAYER_LABELS,
   RAW_SQL_PATTERNS,
   classifyLayer,
@@ -31,6 +32,17 @@ import { validationEngine as categoryValidationEngine } from '../src/features/ca
 
 const ROOT = process.cwd();
 const SRC = join(ROOT, 'src');
+const SCRIPTS = join(ROOT, 'scripts');
+const PUBLIC_PUSH_WORKER = join(ROOT, 'public', 'asol-push-sw.js');
+const PUSH_WORKER_SOURCE = join(
+  ROOT,
+  'src',
+  'modules',
+  'data-access',
+  'browser',
+  'workers',
+  'asol-push-sw.js',
+);
 
 interface Violation {
   layer: string;
@@ -41,10 +53,10 @@ interface Violation {
 
 const violations: Violation[] = [];
 const STRUCTURED_CATEGORY_COLUMN_FILES = new Set([
-  'src/core/database/profile/profile.schema.ts',
-  'src/core/database/product/product.schema.ts',
-  'src/features/profile/repositories/profile-repository.ts',
-  'src/features/product/repositories/product-repository.ts',
+  'src/modules/data-access/core/database/profile/profile.schema.ts',
+  'src/modules/data-access/core/database/product/product.schema.ts',
+  'src/modules/data-access/domains/profile/repositories/profile-repository.ts',
+  'src/modules/data-access/domains/product/repositories/product-repository.ts',
 ]);
 
 function walk(dir: string): string[] {
@@ -54,7 +66,7 @@ function walk(dir: string): string[] {
     const full = join(dir, entry);
     const stat = statSync(full);
     if (stat.isDirectory()) files.push(...walk(full));
-    else if (/\.(ts|tsx)$/.test(entry)) files.push(full);
+    else if (/\.(ts|tsx|js|mjs|cjs)$/.test(entry)) files.push(full);
   }
   return files;
 }
@@ -99,7 +111,12 @@ function checkFile(filePath: string): void {
 
   checkCategoryModuleContract(fileRel, content, filePath);
 
-  if (content.includes('process.env') && !ALLOWED_PROCESS_ENV_FILES.has(fileRel)) {
+  if (
+    content.includes('process.env') &&
+    !ALLOWED_PROCESS_ENV_FILES.has(fileRel) &&
+    layer !== 'provisioning' &&
+    layer !== 'database-client'
+  ) {
     addViolation(
       'configuration',
       filePath,
@@ -108,7 +125,11 @@ function checkFile(filePath: string): void {
     );
   }
 
-  if (/\bfetch\s*\(/.test(content) && !ALLOWED_FETCH_FILES.has(fileRel)) {
+  if (
+    /\bfetch\s*\(/.test(content) &&
+    !ALLOWED_FETCH_FILES.has(fileRel) &&
+    layer !== 'provisioning'
+  ) {
     addViolation(
       'asol-api-client',
       filePath,
@@ -148,12 +169,35 @@ function checkFile(filePath: string): void {
     }
   }
 
+  if (
+    /\b(?:window\.)?indexedDB\s*\./.test(content) &&
+    !fileRel.startsWith('src/modules/data-access/browser/')
+  ) {
+    addViolation(
+      'database-client',
+      filePath,
+      'IndexedDB accessed outside the central Data Access browser adapter.',
+      'Use @/modules/data-access/browser.'
+    );
+  }
+
   const strippedContent = content
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/\/\/.*$/gm, '');
 
   if (RAW_SQL_PATTERNS.some((pattern) => pattern.test(strippedContent)) && !matchesAny(fileRel, ALLOWED_SQL_FILES_PATTERN)) {
     addViolation('repository', filePath, 'Raw SQL detected outside Repository / Database Client.', 'Repository only.');
+  }
+  if (
+    DIRECT_DATABASE_CALL_PATTERNS.some((pattern) => pattern.test(strippedContent)) &&
+    !fileRel.startsWith('src/modules/data-access/')
+  ) {
+    addViolation(
+      'database-client',
+      filePath,
+      'Direct database execution detected outside the central Data Access module.',
+      'Call a typed data-access query or command.',
+    );
   }
 
   const secretPatterns = [
@@ -243,6 +287,67 @@ function checkFile(filePath: string): void {
   }
 
   checkImageStorageContract(fileRel, content, filePath);
+}
+
+function checkExternalDataAccessOwnership(filePath: string): void {
+  const content = readFileSync(filePath, 'utf8');
+  const fileRel = rel(filePath);
+  const strippedContent = content
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/.*$/gm, '');
+
+  if (/from\s+['"](?:better-sqlite3|@libsql\/|drizzle-orm)/.test(content)) {
+    addViolation(
+      'database-client',
+      filePath,
+      'Database driver imported outside the central Data Access module.',
+      'Move the implementation to src/modules/data-access.',
+    );
+  }
+  if (/\b(?:window\.)?indexedDB\s*\./.test(content)) {
+    addViolation(
+      'database-client',
+      filePath,
+      'IndexedDB accessed outside the central Data Access browser adapter.',
+      'Use src/modules/data-access/browser.',
+    );
+  }
+  if (RAW_SQL_PATTERNS.some((pattern) => pattern.test(strippedContent))) {
+    addViolation(
+      'repository',
+      filePath,
+      `Database statement detected outside Data Access (${fileRel}).`,
+      'Move the query or command to src/modules/data-access.',
+    );
+  }
+  if (DIRECT_DATABASE_CALL_PATTERNS.some((pattern) => pattern.test(strippedContent))) {
+    addViolation(
+      'database-client',
+      filePath,
+      'Direct database execution detected outside the central Data Access module.',
+      'Call a typed data-access query or command.',
+    );
+  }
+}
+
+function checkGeneratedDataAccessArtifacts(): void {
+  if (!existsSync(PUSH_WORKER_SOURCE) || !existsSync(PUBLIC_PUSH_WORKER)) {
+    addViolation(
+      'database-client',
+      PUSH_WORKER_SOURCE,
+      'The IndexedDB push-worker source or its public artifact is missing.',
+      'Run npm run data-access:sync-public.',
+    );
+    return;
+  }
+  if (readFileSync(PUSH_WORKER_SOURCE, 'utf8') !== readFileSync(PUBLIC_PUSH_WORKER, 'utf8')) {
+    addViolation(
+      'database-client',
+      PUBLIC_PUSH_WORKER,
+      'Generated push worker differs from its Data Access source.',
+      'Edit the module source, then run npm run data-access:sync-public.',
+    );
+  }
 }
 
 function checkCategoryModuleContract(fileRel: string, content: string, filePath: string): void {
@@ -442,6 +547,12 @@ function main(): void {
     if (normalizePath(file).includes('/architecture/contract.ts')) continue;
     checkFile(file);
   }
+
+  for (const file of walk(SCRIPTS)) {
+    if (rel(file) === 'scripts/architecture-check.ts') continue;
+    checkExternalDataAccessOwnership(file);
+  }
+  checkGeneratedDataAccessArtifacts();
 
   printReport();
 

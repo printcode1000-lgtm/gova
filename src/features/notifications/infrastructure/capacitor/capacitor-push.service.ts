@@ -6,7 +6,7 @@ import {
   type PushNotificationSchema,
 } from "@capacitor/push-notifications";
 import type { PluginListenerHandle } from "@capacitor/core";
-import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/lib/asol-db";
+import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
 import { asolNotificationRepository } from "../asol-notification-repository";
 import type { DeviceToken, NotificationEntity } from "../../domain/entities";
 import {

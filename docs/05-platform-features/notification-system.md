@@ -59,7 +59,7 @@ The module follows a layered structure:
 
 ## AsolDB Storage
 
-The module uses the existing `AsolDB` IndexedDB database. The database version is `8`.
+The module uses the existing `AsolDB` IndexedDB database. The database version is `9`.
 
 Dedicated stores:
 

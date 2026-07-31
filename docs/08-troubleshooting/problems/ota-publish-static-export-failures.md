@@ -29,7 +29,7 @@ The file was ultimately classified as a normal runtime asset in `STATIC_PUBLIC_A
 ### Related files
 
 - `scripts/build-static.ts`
-- `src/features/profile/repositories/specialty-columns.server.ts`
+- `src/modules/data-access/domains/profile/repositories/specialty-columns.server.ts`
 - `doc/capacitor/static-export-policy.md`
 
 ## 2. Debugger inheritance and temporary-directory lock

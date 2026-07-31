@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import type { StorageProfileId } from "@/core/storage/constants/storage-profiles";
 import { imageStorageService } from "../services/image-storage-service";
@@ -12,11 +12,16 @@ import {
   type ImageUploadQueueHandle,
   type ImageUploadQueueStatus,
 } from "../services/image-upload-queue";
+import {
+  deleteImageUploadDraft,
+  updateImageUploadDraft,
+} from "../services/image-upload-draft-service";
 
 interface UseStorageProfileUploadOptions {
   storageProfileId: StorageProfileId;
   storageScope?: string;
   queueOwnerId: string;
+  draftKey: string | null;
   value: StoredImage | null;
   onChange: (image: StoredImage | null) => void;
   onProgress?: (
@@ -25,13 +30,29 @@ interface UseStorageProfileUploadOptions {
 }
 
 interface UseStorageProfileUploadResult {
-  uploadFile: (file: File) => Promise<boolean>;
+  uploadFile: (file: File, draftId: string) => Promise<boolean>;
   removeImage: () => Promise<void>;
   isUploading: boolean;
   error: string | null;
   queueStatus: ImageUploadQueueStatus | null;
   queuePosition: number;
   cancelUpload: () => boolean;
+}
+
+async function runDraftOperation(
+  operation: string,
+  action: () => Promise<unknown>,
+): Promise<void> {
+  try {
+    await action();
+  } catch (error) {
+    console.error(`[ImageUploadDrafts] ${operation} failed`, error);
+    reportSystemIssue({
+      feature: "ImageUploadDrafts",
+      operation,
+      error,
+    });
+  }
 }
 
 /**
@@ -42,6 +63,7 @@ export function useStorageProfileUpload({
   storageProfileId,
   storageScope,
   queueOwnerId,
+  draftKey,
   value,
   onChange,
   onProgress,
@@ -53,11 +75,21 @@ export function useStorageProfileUpload({
   );
   const [queuePosition, setQueuePosition] = useState(0);
   const uploadHandleRef = useRef<ImageUploadQueueHandle<unknown> | null>(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const uploadFile = useCallback(
-    async (file: File) => {
-      setIsUploading(true);
-      setError(null);
+    async (file: File, draftId: string) => {
+      if (mountedRef.current) {
+        setIsUploading(true);
+        setError(null);
+      }
       onChange({ imageKey: "", url: value?.url ?? "", isUploading: true });
 
       try {
@@ -70,12 +102,36 @@ export function useStorageProfileUpload({
           file.size,
           file.lastModified,
         ].join(":");
+        const deduplicationKey = draftKey ?? fingerprint;
+        if (draftKey) {
+          const queuedDraft = await updateImageUploadDraft(draftKey, draftId, {
+            status: "queued",
+            queuePosition: Math.max(
+              1,
+              imageUploadQueue.getSnapshot().queued + 1,
+            ),
+            error: undefined,
+          });
+          if (!queuedDraft) throw new Error("Image upload draft is unavailable");
+        }
         const handle = imageUploadQueue.enqueue({
-          deduplicationKey: fingerprint,
+          deduplicationKey,
           onStateChange: (state) => {
-            setQueueStatus(state.status);
-            setQueuePosition(state.position);
-            if (state.status === "queued") onProgress?.("queued");
+            if (mountedRef.current) {
+              setQueueStatus(state.status);
+              setQueuePosition(state.position);
+              if (state.status === "queued") onProgress?.("queued");
+            }
+            if (draftKey) {
+              void runDraftOperation("queue-state", () =>
+                updateImageUploadDraft(draftKey, draftId, {
+                  status:
+                    state.status === "running" ? "uploading" : "queued",
+                  queuePosition: state.position,
+                  error: undefined,
+                }),
+              );
+            }
           },
           run: (signal) =>
             imageStorageService.processAndUpload(
@@ -89,14 +145,63 @@ export function useStorageProfileUpload({
         });
         uploadHandleRef.current = handle;
         const result = await handle.promise;
-        onChange({ imageKey: result.imageKey, url: result.url });
+        const uploadedImage = { imageKey: result.imageKey, url: result.url };
+        let completionSaved = !draftKey;
+        if (draftKey) {
+          try {
+            completionSaved = Boolean(
+              await updateImageUploadDraft(draftKey, draftId, {
+                status: "completed",
+                queuePosition: 0,
+                error: undefined,
+                uploadedImage,
+              }),
+            );
+          } catch (draftError) {
+            console.error(
+              "[ImageUploadDrafts] completion-state failed",
+              draftError,
+            );
+            reportSystemIssue({
+              feature: "ImageUploadDrafts",
+              operation: "completion-state",
+              error: draftError,
+            });
+          }
+        }
+        if (mountedRef.current) {
+          onChange(uploadedImage);
+          if (draftKey) {
+            await runDraftOperation("delete-completed", () =>
+              deleteImageUploadDraft(draftKey, draftId),
+            );
+          }
+        } else if (!completionSaved) {
+          await runDraftOperation("rollback-unrecoverable-upload", () =>
+            imageStorageService.deleteImage(
+              storageProfileId,
+              uploadedImage.imageKey,
+            ),
+          );
+        }
         return true;
       } catch (err) {
         if (isImageUploadCancelledError(err)) {
-          setError(null);
-          onChange(
-            value ? { ...value, isUploading: false, error: undefined } : null,
-          );
+          if (draftKey) {
+            await runDraftOperation("cancelled-state", () =>
+              updateImageUploadDraft(draftKey, draftId, {
+                status: "ready",
+                queuePosition: 0,
+                error: undefined,
+              }),
+            );
+          }
+          if (mountedRef.current) {
+            setError(null);
+            onChange(
+              value ? { ...value, isUploading: false, error: undefined } : null,
+            );
+          }
           return false;
         }
         console.error(
@@ -109,19 +214,40 @@ export function useStorageProfileUpload({
           error: err,
         });
         const message = err instanceof Error ? err.message : "Upload failed";
-        setError(message);
-        onChange(
-          value ? { ...value, isUploading: false, error: message } : null,
-        );
+        if (draftKey) {
+          await runDraftOperation("failed-state", () =>
+            updateImageUploadDraft(draftKey, draftId, {
+              status: "failed",
+              queuePosition: 0,
+              error: message,
+            }),
+          );
+        }
+        if (mountedRef.current) {
+          setError(message);
+          onChange(
+            value ? { ...value, isUploading: false, error: message } : null,
+          );
+        }
         return false;
       } finally {
-        setIsUploading(false);
-        setQueueStatus(null);
-        setQueuePosition(0);
+        if (mountedRef.current) {
+          setIsUploading(false);
+          setQueueStatus(null);
+          setQueuePosition(0);
+        }
         uploadHandleRef.current = null;
       }
     },
-    [queueOwnerId, storageProfileId, storageScope, value, onChange, onProgress],
+    [
+      draftKey,
+      queueOwnerId,
+      storageProfileId,
+      storageScope,
+      value,
+      onChange,
+      onProgress,
+    ],
   );
 
   const cancelUpload = useCallback(

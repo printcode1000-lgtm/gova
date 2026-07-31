@@ -1,0 +1,1 @@
+Production uses the marketplace order Turso shards declared in `src/modules/data-access/core/database/database-shards.ts`. Provision/sync with `npm run db:provision:turso` or `npm run db:schema:sync`; each shard uses `<SHARD>_DATABASE_URL` and `<SHARD>_DATABASE_AUTH_TOKEN`.

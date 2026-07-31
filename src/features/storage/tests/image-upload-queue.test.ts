@@ -4,6 +4,12 @@ import {
   ImageUploadCancelledError,
   ImageUploadQueue,
 } from "../services/image-upload-queue";
+import {
+  buildImageUploadDraftKey,
+  imageUploadDraftToFile,
+  type ImageUploadDraft,
+} from "../services/image-upload-draft-service";
+import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -21,9 +27,13 @@ async function testSequentialUploads() {
   let active = 0;
   let maximumActive = 0;
   const order: string[] = [];
+  const firstStates: string[] = [];
+  const secondStates: string[] = [];
 
   const first = queue.enqueue({
     deduplicationKey: "first",
+    onStateChange: (state) =>
+      firstStates.push(`${state.status}:${state.position}`),
     run: async () => {
       active += 1;
       maximumActive = Math.max(maximumActive, active);
@@ -36,6 +46,8 @@ async function testSequentialUploads() {
   });
   const second = queue.enqueue({
     deduplicationKey: "second",
+    onStateChange: (state) =>
+      secondStates.push(`${state.status}:${state.position}`),
     run: async () => {
       active += 1;
       maximumActive = Math.max(maximumActive, active);
@@ -46,12 +58,60 @@ async function testSequentialUploads() {
   });
 
   await Promise.resolve();
+  assert.equal(queue.has("first"), true);
+  assert.equal(queue.has("second"), true);
   assert.deepEqual(queue.getSnapshot(), { active: 1, queued: 1 });
   firstGate.resolve();
   assert.equal(await first.promise, "first");
   assert.equal(await second.promise, "second");
+  assert.equal(queue.has("first"), false);
+  assert.equal(queue.has("second"), false);
   assert.equal(maximumActive, 1);
   assert.deepEqual(order, ["first:start", "first:end", "second:start"]);
+  assert.deepEqual(firstStates, ["queued:1", "running:0"]);
+  assert.deepEqual(secondStates, ["queued:1", "running:0"]);
+}
+
+function testDraftIdentityAndFileRestoration() {
+  const base = {
+    ownerId: "user-1",
+    pageKey: "/profile",
+    managerId: "profile-avatar",
+    slotIndex: 0,
+    storageProfileId: StorageProfiles.Avatar,
+  };
+  const firstKey = buildImageUploadDraftKey(base);
+  assert.notEqual(
+    firstKey,
+    buildImageUploadDraftKey({ ...base, ownerId: "user-2" }),
+  );
+  assert.notEqual(
+    firstKey,
+    buildImageUploadDraftKey({ ...base, slotIndex: 1 }),
+  );
+
+  const blob = new Blob([new Uint8Array([1, 2, 3])], {
+    type: "image/png",
+  });
+  const draft: ImageUploadDraft = {
+    key: firstKey,
+    draftId: "draft-1",
+    ...base,
+    blob,
+    fileName: "avatar.png",
+    fileType: "image/png",
+    fileSize: blob.size,
+    lastModified: 123,
+    status: "ready",
+    queuePosition: 0,
+    createdAt: "2026-07-31T00:00:00.000Z",
+    updatedAt: "2026-07-31T00:00:00.000Z",
+  };
+  const file = imageUploadDraftToFile(draft);
+  assert.equal(file.name, "avatar.png");
+  assert.equal(file.type, "image/png");
+  assert.equal(file.size, 3);
+  assert.equal(file.lastModified, 123);
 }
 
 async function testFailureDoesNotStopQueue() {
@@ -99,6 +159,7 @@ async function main() {
   await testSequentialUploads();
   await testFailureDoesNotStopQueue();
   await testQueuedCancellationAndDeduplication();
+  testDraftIdentityAndFileRestoration();
   console.log("Image upload queue tests passed.");
 }
 

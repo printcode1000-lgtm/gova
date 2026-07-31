@@ -16,7 +16,7 @@ import {
 import { isDevelopment } from '@/core/config';
 import { fillLoginForm } from '@/lib/autofill/login-autofill';
 import { fillRegistrationForm } from '@/lib/autofill/registration-autofill';
-import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
 
 const pages = [
   { path: '/', name: 'Splash' },

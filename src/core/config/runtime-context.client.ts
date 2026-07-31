@@ -1,7 +1,11 @@
 "use client";
 
 import { publicEnv } from "./public-env";
-import type { AppPlatform, AppRuntimeContext } from "./runtime-context";
+import {
+  resolveClientRuntime,
+  type AppPlatform,
+  type AppRuntimeContext,
+} from "./runtime-context";
 
 function platform(): AppPlatform {
   const candidate = (globalThis as typeof globalThis & {
@@ -17,16 +21,12 @@ export function getClientRuntimeContext(): AppRuntimeContext {
     (globalThis as typeof globalThis & { Capacitor?: { isNativePlatform?: () => boolean } })
       .Capacitor?.isNativePlatform?.(),
   );
-  const isStatic = publicEnv.mode === "static";
-  return {
-    deployment: isStatic ? "static-export" : publicEnv.mode === "development" ? "local-development" : "web-production",
+  return resolveClientRuntime({
+    mode: publicEnv.mode,
+    apiBaseUrl: publicEnv.apiBaseUrl,
     platform: currentPlatform,
-    dataSource: publicEnv.mode === "development" ? "local" : "cloud",
-    isDevelopment: publicEnv.mode === "development",
-    isNative,
-    isStatic,
-    isProvisioning: false,
-    supportsServerApi: !isStatic || Boolean(publicEnv.apiBaseUrl),
-    supportsOta: isNative && Boolean(publicEnv.otaManifestUrl && publicEnv.otaPublicKey),
-  };
+    native: isNative,
+    otaManifestUrl: publicEnv.otaManifestUrl,
+    otaPublicKey: publicEnv.otaPublicKey,
+  });
 }

@@ -81,13 +81,13 @@ seller_discount_usages
 Migration:
 
 ```text
-src/core/database/profile/migrations/0012_seller_discounts.sql
+src/modules/data-access/core/database/profile/migrations/0012_seller_discounts.sql
 ```
 
 Drizzle schema:
 
 ```text
-src/core/database/profile/profile.schema.ts
+src/modules/data-access/core/database/profile/profile.schema.ts
 ```
 
 Discount definitions live in the profile database because they are seller-owned

@@ -6,7 +6,7 @@ import {
   type PersistedClient,
   PersistQueryClientProvider,
 } from '@tanstack/react-query-persist-client';
-import { createAsolDbPersister } from '@/core/database/asol-db-persister';
+import { createAsolDbPersister } from '@/modules/data-access/browser/asol-db-persister';
 import { attachQueryObserver } from '@/core/monitor/query-observer';
 import { publicEnv } from '@/core/config/public-env';
 

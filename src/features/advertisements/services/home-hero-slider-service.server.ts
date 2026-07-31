@@ -8,7 +8,7 @@ import type {
   HomeHeroRecord,
   SuperAdminIdentity,
 } from "../entities/home-hero-slider.entity";
-import { homeHeroSliderRepository } from "../repositories/home-hero-slider.repository";
+import { homeHeroSliderRepository } from "@/modules/data-access/domains/advertisements/index.server";
 import { homeHeroConfigSchema } from "../validation/home-hero-slider.schema";
 
 function parseConfig(config: HomeHeroConfig): HomeHeroConfig {

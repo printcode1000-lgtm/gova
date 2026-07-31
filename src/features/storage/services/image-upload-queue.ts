@@ -123,6 +123,10 @@ export class ImageUploadQueue {
     return { active: this.active ? 1 : 0, queued: this.pending.length };
   }
 
+  has(deduplicationKey: string): boolean {
+    return this.keys.has(deduplicationKey);
+  }
+
   private notifyPendingPositions(): void {
     this.pending.forEach((item, index) => {
       item.onStateChange?.({ status: "queued", position: index + 1 });

@@ -9,7 +9,7 @@ import type {
   FollowStatusInput,
   FollowTargetType,
 } from "../entities/follow.types";
-import { FollowRepository } from "../repositories/follow-repository";
+import { FollowRepository } from "@/modules/data-access/domains/follow/index.server";
 
 function normalizeTargetType(value: unknown): FollowTargetType {
   if (typeof value !== "string") throw new Error("invalidFollowTarget");

@@ -2,46 +2,38 @@
 
 ## Role
 
-Entity-level data access — Drizzle queries only.
+Repositories own persistence mapping and database statements for one domain.
 
 ## Location
 
-`src/features/[feature]/repositories/`
+`src/modules/data-access/domains/[domain]/repositories/`
 
-```
-*-repository.interface.ts
-*-repository.ts
-```
-
-## Data responsibilities
+## Responsibilities
 
 | Allowed | Forbidden |
-|---------|-----------|
-| `database.db.select/insert/update` | Raw SQL strings (except via Drizzle) |
-| Inject `IDatabaseClient` (mockable) | UI, Hooks |
-| Map row ↔ entity | Choose SQLite vs Turso |
+|---|---|
+| Drizzle or parameterized SQL | UI and hooks |
+| Typed data-source or port injection | Choosing environment in a feature |
+| Row-to-entity mapping | Exposing credentials or SQL to clients |
 
 ## Pattern
 
 ```typescript
-constructor(private database: IDatabaseClient = profileDbClient) {}
+constructor(private database: IDatabaseClient = profilesDataSource) {}
 
 async getByUid(uid: string) {
   return this.database.db.select().from(userProfiles).where(eq(...));
 }
 ```
 
-## One repository per database client
+The central data-source registry chooses SQLite in development and Turso in
+production. A repository knows its logical source, never a file name or URL.
 
-| Repository | Database Client |
-|------------|-----------------|
-| `UserRepository` | `dbClient` |
-| `ProfileRepository` | `profileDbClient` |
+## Adding persistence
 
-Repository does **not** know the `.db` filename — only the client.
+1. Add or update the schema under `src/modules/data-access/core/database`.
+2. Add a focused repository method and its typed contract.
+3. Call it from a query or command.
+4. Export the public operation through the domain `index.server.ts`.
 
-## Adding a table
-
-1. Schema under `src/core/database/`
-2. Repository methods + interface
-3. Wire in `operations/instances.ts`
+See [25-central-data-access-module.md](./25-central-data-access-module.md).

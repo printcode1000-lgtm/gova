@@ -7,7 +7,7 @@ import type {
   BroadcastNotificationResult,
   BroadcastRecipientsResult,
 } from '../domain/entities';
-import { ListBroadcastRecipientsQuery } from '../operations/queries/list-broadcast-recipients.query';
+import { ListBroadcastRecipientsQuery } from '@/modules/data-access/domains/notifications/operations/queries/list-broadcast-recipients.query';
 import { NotificationSendService } from './notification-send-service.server';
 
 export class NotificationBroadcastService {

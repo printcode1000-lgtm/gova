@@ -2,7 +2,7 @@ import "server-only";
 import { createHash } from "node:crypto";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
-import { accountDeletionRepository, type AccountDeletionRepository } from "../repositories/account-deletion-repository.server";
+import { accountDeletionRepository, type AccountDeletionRepository } from "@/modules/data-access/domains/account-deletion/index.server";
 import { ACCOUNT_DELETION_PHRASE, type DeleteAccountInput, type DeleteAccountResult } from "../types";
 
 export class AccountDeletionService {

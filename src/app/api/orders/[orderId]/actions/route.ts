@@ -2,7 +2,7 @@ import { apiSuccess } from "@/core/api/api-response";
 import {
   getMarketplaceOrderQueries,
   getMarketplaceOrderService,
-} from "@/modules/marketplace-orders/api/server";
+} from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../../../auth/traced-route";
 import {
   actorFromInput,

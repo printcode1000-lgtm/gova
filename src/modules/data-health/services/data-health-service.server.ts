@@ -13,8 +13,8 @@ import type {
   DataHealthReport,
   DataHealthSchemaComparison,
 } from "../domain/types";
-import { dataHealthRepository } from "../repositories/data-health.repository.server";
-import { schemaComparisonRepository } from "../repositories/schema-comparison.repository.server";
+import { dataHealthRepository } from "@/modules/data-access/domains/data-health/index.server";
+import { schemaComparisonRepository } from "@/modules/data-access/domains/data-health/index.server";
 
 function text(value: unknown): string {
   return String(value ?? "").trim();

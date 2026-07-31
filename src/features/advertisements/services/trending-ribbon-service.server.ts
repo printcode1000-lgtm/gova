@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { TrendingRibbonConfig, TrendingRibbonPublished, TrendingRibbonRecord } from "../entities/trending-ribbon.entity";
-import { trendingRibbonRepository } from "../repositories/trending-ribbon.repository";
+import { trendingRibbonRepository } from "@/modules/data-access/domains/advertisements/index.server";
 import { trendingRibbonConfigSchema } from "../validation/trending-ribbon.schema";
 
 export const featuredTrendingRibbonService = {

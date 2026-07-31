@@ -5,7 +5,7 @@ import {
   asolDbGetGuestSession,
   asolDbSetGuestSession,
   type GuestSessionData,
-} from '@/lib/asol-db';
+} from '@/modules/data-access/browser/asol-db';
 import * as React from 'react';
 
 interface UseGuestSessionReturn {

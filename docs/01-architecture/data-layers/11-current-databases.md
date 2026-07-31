@@ -12,10 +12,10 @@ npm run db:schema:sync
 
 | Domain | SQLite (dev) | Turso (prod) | Database Client | Env |
 | --- | --- | --- | --- | --- |
-| Users and auth | `allusers.db` | Users Turso DB | `dbClient` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
-| Products | `product.db` | Product Turso DB | `productDbClient` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
-| Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDbClient` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
-| Profile shards | `profile-*.db`, `system-ops.db` | Matching Turso shards | `profileDbClient` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
+| Users and auth | `allusers.db` | Users Turso DB | `usersDataSource` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
+| Products | `product.db` | Product Turso DB | `productsDataSource` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
+| Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDataSource` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
+| Profile shards | `profile-*.db`, `system-ops.db` | Matching Turso shards | `profilesDataSource` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 | Marketplace order shards | `orders-*.db` | Matching Turso shards | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
 Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
@@ -25,7 +25,7 @@ Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. 
 ### Schema
 
 ```text
-src/core/database/schema.ts
+src/modules/data-access/core/database/schema.ts
 ```
 
 Primary table:
@@ -44,7 +44,7 @@ Primary table:
 | API | `/api/auth/*` |
 | Server service | Auth server services |
 | Operations | Auth queries and commands |
-| Repository | User repository through `dbClient` |
+| Repository | User repository through `usersDataSource` |
 
 OTA approval also uses this database through `/api/ota/access` and `/api/ota/admin/releases`. `ota_releases` stores the exact `releaseId + version`, signed-manifest snapshot, and approval/revocation metadata. `ota_release_audit` records discovery and every super-admin approval decision.
 
@@ -59,8 +59,8 @@ OTA approval also uses this database through `/api/ota/access` and `/api/ota/adm
 ### Schema
 
 ```text
-src/core/database/profile/profile.schema.ts
-src/core/database/profile/user-specialties.schema.ts
+src/modules/data-access/core/database/profile/profile.schema.ts
+src/modules/data-access/core/database/profile/user-specialties.schema.ts
 ```
 
 Primary tables include:
@@ -75,7 +75,7 @@ Primary tables include:
 | --- | --- |
 | API | `/api/profile/*` |
 | Server service | Profile server services |
-| Repository | Profile repositories through `profileDbClient` |
+| Repository | Profile repositories through `profilesDataSource` |
 
 ### Notes
 
@@ -86,8 +86,8 @@ Primary tables include:
 ### Schema
 
 ```text
-src/core/database/product/product.schema.ts
-src/core/database/product/migrations
+src/modules/data-access/core/database/product/product.schema.ts
+src/modules/data-access/core/database/product/migrations
 ```
 
 Primary tables include:
@@ -116,15 +116,15 @@ See [Product Data Model](../product-data-model.md).
 | --- | --- |
 | API | `/api/products`, `/api/products/reviews*`, `/api/pharmacy-profile-catalog` |
 | Server service | Product and pharmacy catalog services |
-| Repository | Product repositories through `productDbClient` |
+| Repository | Product repositories through `productsDataSource` |
 
 ## 4. Advertisements
 
 ### Schema
 
 ```text
-src/core/database/advertisements/advertisements.schema.ts
-src/core/database/advertisements/migrations
+src/modules/data-access/core/database/advertisements/advertisements.schema.ts
+src/modules/data-access/core/database/advertisements/migrations
 ```
 
 Primary tables include:
@@ -139,14 +139,14 @@ Primary tables include:
 | --- | --- |
 | API | `/api/advertisements/*` |
 | Server service | Advertisement services |
-| Repository | Advertisement repositories through `advertisementsDbClient` |
+| Repository | Advertisement repositories through `advertisementsDataSource` |
 
 ## 5. Marketplace Orders
 
 ### Schema
 
 ```text
-src/modules/marketplace-orders/db/migrations
+src/modules/data-access/domains/marketplace-orders/db/migrations
 ```
 
 Primary tables include:
@@ -200,7 +200,7 @@ The build runs schema sync before Next.js compilation.
 ## Adding a New Database
 
 1. Add a local SQLite database path.
-2. Add schema and migrations under `src/core/database/...` or the owning module.
+2. Add schema and migrations under `src/modules/data-access/core/database/...` or the owning module.
 3. Add a database client.
 4. Add Turso environment variables.
 5. Add schema sync wiring.

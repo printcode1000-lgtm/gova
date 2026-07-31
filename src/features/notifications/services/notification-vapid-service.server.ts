@@ -7,8 +7,8 @@ import type {
   SaveNotificationVapidInput,
 } from '../domain/entities';
 import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
-import { SaveNotificationVapidSettingsCommand } from '../operations/commands/save-notification-vapid-settings.command';
-import { GetNotificationVapidSettingsQuery } from '../operations/queries/get-notification-vapid-settings.query';
+import { SaveNotificationVapidSettingsCommand } from '@/modules/data-access/domains/notifications/operations/commands/save-notification-vapid-settings.command';
+import { GetNotificationVapidSettingsQuery } from '@/modules/data-access/domains/notifications/operations/queries/get-notification-vapid-settings.query';
 
 export class NotificationVapidService {
   constructor(

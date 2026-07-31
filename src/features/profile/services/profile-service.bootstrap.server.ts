@@ -13,11 +13,11 @@ import {
   getUsersBySpecialtyQuery,
   getProfileFulfillmentSettingsQuery,
   upsertProfileFulfillmentSettingsCommand,
-} from "../operations/instances";
+} from "@/modules/data-access/domains/profile/operations/instances";
 import {
   getUserByUidQuery,
   updateUserProfileCommand,
-} from "@/features/auth/operations/instances";
+} from "@/modules/data-access/domains/auth/operations/instances";
 
 export const profileService = new ProfileService(
   getProfileContactsQuery,

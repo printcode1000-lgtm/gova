@@ -6,8 +6,8 @@ import type {
   SendNotificationToUsersInput,
   SendNotificationToUsersResult,
 } from "../domain/entities";
-import { ListNotificationTokensQuery } from "../operations/queries/list-notification-tokens.query";
-import { DeleteNotificationTokenCommand } from "../operations/commands/delete-notification-token.command";
+import { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
+import { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
 import { NotificationBuilder } from "../application/notification-builder";
 import {
   NotificationCategories,

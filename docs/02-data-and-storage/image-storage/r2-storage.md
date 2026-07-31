@@ -19,8 +19,8 @@ Local secrets live in `.env.local` (gitignored). Template in `.env.example`.
 | `src/core/provisioning/r2-cors-policy.ts` | Default CORS rules from `ASOL_CORS_ORIGINS` |
 | `src/core/config/r2-storage-topology.ts` | Canonical non-secret identity of the general and product R2 targets |
 | `scripts/r2-sync-cors.ts` | Apply full browser CORS to bucket |
-| `scripts/migrate-r2-image-public-url.ts` | Copy old public R2 image URLs into the active bucket and rewrite database references |
-| `scripts/migrate-r2-cloud-folders.ts` | Move active R2 objects from legacy profile folders into the current two cloud folders |
+| `src/modules/data-access/tooling/migrate-r2-image-public-url.ts` | Copy old public R2 image URLs into the active bucket and rewrite database references |
+| `src/modules/data-access/tooling/migrate-r2-cloud-folders.ts` | Move active R2 objects from legacy profile folders into the current two cloud folders |
 
 ## Sync CORS
 

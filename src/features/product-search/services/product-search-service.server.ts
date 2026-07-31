@@ -8,7 +8,7 @@ import type {
   SellerSearchRequest,
   SellerSearchResult,
 } from "../entities/product-search.types";
-import { productSearchRepository } from "../repositories/product-search-repository";
+import { productSearchRepository } from "@/modules/data-access/domains/product-search/index.server";
 import { getEnabledProductSearchFieldKeys } from "./product-search-fields.server";
 
 const SAFE_ID = /^\d+$/;

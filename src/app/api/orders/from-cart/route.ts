@@ -9,7 +9,7 @@ import { notificationSendService } from "@/features/notifications/services/notif
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
-import { getMarketplaceOrderService } from "@/modules/marketplace-orders/api/server";
+import { getMarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import {
   actorFromInput,

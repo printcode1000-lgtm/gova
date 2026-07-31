@@ -16,7 +16,7 @@ import {
   type PharmacyProfileProductOverride,
 } from "../entities/pharmacy-profile-catalog.types";
 import { pharmacyStaticCatalogService } from "./pharmacy-static-catalog.service";
-import { pharmacyProfileCatalogRepository } from "../repositories/pharmacy-profile-catalog-repository";
+import { pharmacyProfileCatalogRepository } from "@/modules/data-access/domains/pharmacy-profile-catalog/index.server";
 import {
   encodePharmacyFixedProductId,
   parsePharmacyFixedProductId,

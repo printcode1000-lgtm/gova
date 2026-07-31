@@ -22,7 +22,7 @@ import type {
   ProfileFulfillmentSettings,
   SaveProfileFulfillmentSettingsInput,
 } from "../entities/profile-fulfillment-settings.entity";
-import type { UserProfileRow } from "@/core/database/profile/profile.schema";
+import type { UserProfileRow } from "../entities/user-profile-row.entity";
 export type { UserProfileRow };
 
 

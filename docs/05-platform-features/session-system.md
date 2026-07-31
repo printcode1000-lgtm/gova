@@ -133,7 +133,7 @@ src/features/auth/
     └── use-profile-registration.ts
 
 src/hooks/use-guest-session.ts       # guestSessions (separate)
-src/lib/asol-db/index.ts             # low-level IDB helpers
+src/modules/data-access/browser/asol-db/index.ts             # low-level IDB helpers
 ```
 
 ---

@@ -6,7 +6,7 @@ import type {
   SaveSellerDiscountInput,
 } from "../entities/seller-discount.entity";
 import { calculateCartDiscounts } from "./seller-discount-engine";
-import { sellerDiscountRepository } from "../repositories/seller-discount-repository";
+import { sellerDiscountRepository } from "@/modules/data-access/domains/seller-discounts/index.server";
 
 export class SellerDiscountService {
   async listSellerDiscounts(sellerUid: string, includeInactive = true) {

@@ -1,6 +1,6 @@
 import { publicEnv } from '@/core/config/public-env';
 import { capacitorOtaAdapter } from '@/platform/ota/capacitor-ota-adapter';
-import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
 
 import { otaApiService } from './ota-api-service';
 import type {

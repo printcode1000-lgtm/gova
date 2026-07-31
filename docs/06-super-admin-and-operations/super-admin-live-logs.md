@@ -92,7 +92,7 @@ system_logs
 Migration:
 
 ```text
-src/core/database/profile/migrations/0013_system_logs.sql
+src/modules/data-access/core/database/profile/migrations/0013_system_logs.sql
 ```
 
 The repository also creates the table on first use so existing local SQLite

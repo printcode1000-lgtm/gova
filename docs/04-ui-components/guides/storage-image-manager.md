@@ -165,13 +165,17 @@ Selecting an image prepares it for upload:
 3. Build a `data:` preview that works in Android WebView without a temporary Blob URL.
 4. Show the project `LoadingSpinner` and a localized description while reading, detecting, converting, and preparing the preview.
 5. Keep the selected image visible without changing the stored image reference.
-6. Wait for the user to press the upload button. Selection never writes to local storage or a cloud provider.
+6. Persist the original image `Blob` and metadata in the `imageUploadDrafts` AsolDB store before displaying the preview. No local filesystem or cloud provider write occurs yet.
 7. Ask for upload confirmation in a localized in-app dialog when `confirmUpload` is enabled.
 8. Show the spinner through profile loading, compression, upload, persistence, and final-image loading.
 9. Compress and convert the image for the selected storage profile.
 10. Send multipart data to the upload API.
 11. Persist the returned `imageKey` through the feature's `onChange` handler.
 12. Hide the upload action only after the final stored image renders.
+
+Navigating away and returning restores the selected preview and its `ready`, `queued`, `uploading`, or `failed` state from IndexedDB. All instances use one application-wide FIFO queue with concurrency `1`; every queued or active slot keeps its own spinner until that slot completes. A failed item does not block later items. A full page reload automatically resumes drafts that were previously queued or uploading but no longer have a live in-memory task.
+
+Draft keys include the authenticated `uid` (or `guest`), current pathname, manager id, slot index, storage profile, and storage scope. Removing a selected image deletes its draft. Logout cancels the queue and clears the draft store before the session is removed.
 
 If confirmation is declined, the selected preview remains visible and the upload button can retry the same file.
 

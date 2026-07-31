@@ -4,17 +4,17 @@ import type {
   RegistrationFormData,
   LoginFormData,
 } from '@/lib/validation/auth';
-import type { CreateUserCommand } from '../operations/commands/create-user.command';
-import type { UpdateLastLoginCommand } from '../operations/commands/update-last-login.command';
-import type { UpdateUserProfileCommand } from '../operations/commands/update-user-profile.command';
-import type { GetUserByPhoneQuery } from '../operations/queries/get-user-by-phone.query';
+import type { CreateUserCommand } from '@/modules/data-access/domains/auth/operations/commands/create-user.command';
+import type { UpdateLastLoginCommand } from '@/modules/data-access/domains/auth/operations/commands/update-last-login.command';
+import type { UpdateUserProfileCommand } from '@/modules/data-access/domains/auth/operations/commands/update-user-profile.command';
+import type { GetUserByPhoneQuery } from '@/modules/data-access/domains/auth/operations/queries/get-user-by-phone.query';
 import type {
   UpdateProfileInput,
   UserProfile,
 } from '../entities/profile.entity';
 import type { IAuthService, LoginResult } from './auth-service.interface';
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
-import type { GetProfileSpecialtiesQuery } from '@/features/profile/operations/queries/get-profile-specialties.query';
+import type { GetProfileSpecialtiesQuery } from '@/modules/data-access/domains/profile/operations/queries/get-profile-specialties.query';
 import { createSignedSessionToken } from './signed-session-token.server';
 import { normalizeAuthPhone } from '../utils/phone-normalization';
 

@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
 import dotenv from 'dotenv';
-import { DATABASE_SHARD_NAMES, envPrefixForShard } from '../src/core/database/database-shards';
+import { DATABASE_SHARD_NAMES, envPrefixForShard } from '../src/modules/data-access/core/database/database-shards';
 
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });

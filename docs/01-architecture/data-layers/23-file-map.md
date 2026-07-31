@@ -1,52 +1,37 @@
 # File Map (Data Path)
 
-```
+```text
 src/
-├── core/
-│   ├── api/                    # AsolApiClient, HTTP transport, routes
-│   ├── architecture/           # contract.ts
-│   ├── config/                 # process.env (Configuration layer)
-│   ├── database/               # dbClient, profileDbClient, schemas, migrations
-│   ├── provisioning/           # schema sync, Turso provisioning
-│   └── monitor/                # query-observer, asol-api-monitor, server-trace
-├── features/
-│   ├── auth/
-│   │   ├── hooks/
-│   │   ├── services/           # client + server + bootstrap
-│   │   ├── operations/
-│   │   └── repositories/
-│   └── profile/
-│       ├── hooks/
-│       ├── services/
-│       ├── operations/
-│       └── repositories/
-├── lib/
-│   ├── asol-db/                # IndexedDB (cache)
-│   └── db/                     # turso.ts and database adapters
-└── app/
-    └── api/                    # Business API routes
+|-- core/
+|   |-- api/                         # AsolApiClient and HTTP transport
+|   |-- architecture/                # enforced dependency contracts
+|   |-- config/                      # runtime and server configuration
+|   `-- provisioning/                # R2-only provisioning utilities
+|-- modules/
+|   `-- data-access/
+|       |-- core/
+|       |   |-- data-source-registry.ts
+|       |   |-- database/            # adapters, schemas, migrations, shards
+|       |   `-- turso/               # low-level libSQL clients
+|       |-- browser/                 # AsolDB and IndexedDB operations
+|       |-- domains/                 # queries, commands, repositories, ports
+|       `-- provisioning/core/       # SQLite-to-Turso schema provisioning
+|-- features/                        # UI, hooks, client/server feature services
+`-- app/api/                         # Business API routes
 
-public/
-└── sync_data/
-    ├── sync_sqlite/            # allusers.db, product.db, advertisements.db, profile/order shards
-    ├── schema-sync-report.json
-    └── *-schema-sync-report.json
-
-scripts/
-├── architecture-check.ts
-├── schema-sync.ts
-├── provision-turso.ts
-├── ensure-sqlite-databases.ts
-├── create-sqlite-db.ts
-├── create-profile-sqlite-db.ts
-└── push-vercel-turso-env.ts
+public/sync_data/
+|-- sync_sqlite/                     # local databases and shards
+|-- schema-sync-report.json
+`-- *-schema-sync-report.json
 ```
 
-## Client vs server entry points
+## Client and server entry points
 
 | Concern | Client | Server |
-|---------|--------|--------|
-| Auth | `auth-service.ts` → `auth-api-service.ts` | `auth-service.bootstrap.server.ts` |
-| Profile | `profile-service.ts` → `profile-api-service.ts` | `profile-service.bootstrap.server.ts` |
-| HTTP | `asolApi` | N/A (routes call services) |
-| DB | AsolDB (cache) | `dbClient` / `profileDbClient` |
+|---|---|---|
+| HTTP | `asolApi` | Business API routes |
+| Browser persistence | `@/modules/data-access/browser` | Not available |
+| Domain data | Client API service | `domains/<domain>/index.server.ts` |
+| Database source | Not available | Central `DataSourceRegistry` |
+
+See [25-central-data-access-module.md](./25-central-data-access-module.md).

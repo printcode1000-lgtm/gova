@@ -1,4 +1,4 @@
-import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/lib/i18n/constants';
 import type { Locale } from '@/lib/i18n/types';
 

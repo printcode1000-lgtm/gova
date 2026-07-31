@@ -63,6 +63,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { publicEnv } from "@/core/config";
+import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -190,6 +191,7 @@ export const AppSidebar = React.memo(function AppSidebar({
     if (logout.isPending) return;
 
     const exitingSession = session;
+    void clearImageUploadClientState();
     setLogoutDialogOpen(false);
     onClose();
     queueLogoutSuccessToast();

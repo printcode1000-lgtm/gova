@@ -2,7 +2,7 @@ import 'server-only';
 
 import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
 import { getPasswordRecoveryConfig } from '@/core/config/server-env';
-import { PasswordRecoveryOperations } from '../operations/password-recovery.operations';
+import { PasswordRecoveryOperations } from '@/modules/data-access/domains/password-recovery/operations/password-recovery.operations';
 import {
   maskRecoveryEmail,
   normalizeRecoveryPhone,

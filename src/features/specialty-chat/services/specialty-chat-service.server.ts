@@ -2,9 +2,9 @@ import "server-only";
 
 import { categoryService } from "@/features/categories";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
-import { GetNotificationUserIdentityQuery } from "@/features/notifications/operations/queries/get-notification-user-identity.query";
-import { GetSpecialtyRequestPreferenceQuery } from "@/features/notifications/operations/queries/get-specialty-request-preference.query";
-import { SetSpecialtyRequestPreferenceCommand } from "@/features/notifications/operations/commands/set-specialty-request-preference.command";
+import { GetNotificationUserIdentityQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-user-identity.query";
+import { GetSpecialtyRequestPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-specialty-request-preference.query";
+import { SetSpecialtyRequestPreferenceCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-specialty-request-preference.command";
 import { notificationSendService } from "@/features/notifications/services/notification-service.bootstrap.server";
 import { NotificationCategories, NotificationPriorities, NotificationSounds } from "@/features/notifications/domain/enums";
 import { createSpecialtyChatCapability, verifySpecialtyChatCapability } from "./specialty-chat-capability.server";

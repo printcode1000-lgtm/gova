@@ -67,7 +67,7 @@ Profile UI
   -> ProfileService
   -> Query/Command
   -> ProfileRepository
-  -> profileDbClient
+  -> profilesDataSource
   -> profile shards | Turso profile shards
 ```
 
@@ -108,7 +108,7 @@ Fixed pharmacy starter products are excluded from these counts. Only real saved 
 The structural migration is:
 
 ```text
-src/core/database/profile/migrations/0010_profile_structured_search.sql
+src/modules/data-access/core/database/profile/migrations/0010_profile_structured_search.sql
 ```
 
 Existing local shards and Turso schemas are refreshed with:

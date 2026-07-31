@@ -19,6 +19,18 @@ import {
 } from "@/core/storage/constants/storage-profiles";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import { useStorageProfileUpload } from "@/features/storage/hooks/use-storage-profile-upload";
+import { useSession } from "@/features/auth/components/SessionProvider";
+import { imageUploadQueue } from "@/features/storage/services/image-upload-queue";
+import {
+  buildImageUploadDraftKey,
+  createImageUploadDraft,
+  deleteImageUploadDraft,
+  getImageUploadDraft,
+  imageUploadDraftToFile,
+  subscribeImageUploadDraft,
+  type ImageUploadDraft,
+  type ImageUploadDraftStatus,
+} from "@/features/storage/services/image-upload-draft-service";
 import {
   canUseNativeImageSource,
   captureSingleImage,
@@ -346,12 +358,16 @@ function StorageImageSlot({
   config,
   image,
   index,
+  draftOwnerId,
+  draftPageKey,
   onUploaded,
   onRemoved,
 }: {
   config: StorageImageManagerConfig;
   image: StoredImage | null;
   index: number;
+  draftOwnerId: string | null;
+  draftPageKey: string | null;
   onUploaded: (index: number, image: StoredImage) => void;
   onRemoved: (index: number) => void;
 }) {
@@ -360,6 +376,9 @@ function StorageImageSlot({
   const cameraInputRef = React.useRef<HTMLInputElement>(null);
   const imageRef = React.useRef<HTMLImageElement>(null);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [selectedDraftId, setSelectedDraftId] = React.useState<string | null>(
+    null,
+  );
   const [selectedPreviewUrl, setSelectedPreviewUrl] = React.useState<
     string | null
   >(null);
@@ -371,6 +390,38 @@ function StorageImageSlot({
   const [dialog, setDialog] = React.useState<DialogState>(null);
   const [uploadedImage, setUploadedImage] = React.useState<StoredImage | null>(
     null,
+  );
+  const [draftStatus, setDraftStatus] =
+    React.useState<ImageUploadDraftStatus | null>(null);
+  const [draftQueuePosition, setDraftQueuePosition] = React.useState(0);
+  const draftReadSequenceRef = React.useRef(0);
+  const activeUploadDraftIdRef = React.useRef<string | null>(null);
+  const hydratedDraftIdRef = React.useRef<string | null>(null);
+  const onUploadedRef = React.useRef(onUploaded);
+  React.useEffect(() => {
+    onUploadedRef.current = onUploaded;
+  }, [onUploaded]);
+
+  const draftKey = React.useMemo(
+    () =>
+      draftOwnerId && draftPageKey
+        ? buildImageUploadDraftKey({
+            ownerId: draftOwnerId,
+            pageKey: draftPageKey,
+            managerId: config.id,
+            slotIndex: index,
+            storageProfileId: config.storageProfileId,
+            storageScope: config.storageScope,
+          })
+        : null,
+    [
+      config.id,
+      config.storageProfileId,
+      config.storageScope,
+      draftOwnerId,
+      draftPageKey,
+      index,
+    ],
   );
 
   React.useEffect(() => {
@@ -399,6 +450,83 @@ function StorageImageSlot({
     setStoredPreviewFailed(false);
   }, [config.id, imageKey, imageUrl, isImageUploading, imageError, index]);
 
+  const applyDraft = React.useCallback(
+    async (draft: ImageUploadDraft | null) => {
+      const sequence = ++draftReadSequenceRef.current;
+      if (!draft) {
+        hydratedDraftIdRef.current = null;
+        setSelectedFile(null);
+        setSelectedDraftId(null);
+        setSelectedPreviewUrl(null);
+        setDraftStatus(null);
+        setDraftQueuePosition(0);
+        return;
+      }
+
+      if (draft.status === "completed" && draft.uploadedImage) {
+        if (activeUploadDraftIdRef.current === draft.draftId) return;
+        hydratedDraftIdRef.current = null;
+        setUploadedImage(draft.uploadedImage);
+        onUploadedRef.current(index, draft.uploadedImage);
+        setSelectedFile(null);
+        setSelectedDraftId(null);
+        setSelectedPreviewUrl(null);
+        setDraftStatus(null);
+        setDraftQueuePosition(0);
+        setStage("loadingImage");
+        await deleteImageUploadDraft(draft.key, draft.draftId);
+        return;
+      }
+
+      if (hydratedDraftIdRef.current === draft.draftId) {
+        setDraftStatus(draft.status);
+        setDraftQueuePosition(draft.queuePosition);
+        setSourceError(draft.error ?? null);
+        if (draft.status === "queued") setStage("queued");
+        else if (draft.status === "uploading") setStage("uploading");
+        else setStage("ready");
+        return;
+      }
+
+      const file = imageUploadDraftToFile(draft);
+      const preview = await fileToDataUrl(file);
+      if (sequence !== draftReadSequenceRef.current) return;
+      hydratedDraftIdRef.current = draft.draftId;
+      setSelectedFile(file);
+      setSelectedDraftId(draft.draftId);
+      setSelectedPreviewUrl(preview);
+      setDraftStatus(draft.status);
+      setDraftQueuePosition(draft.queuePosition);
+      setSourceError(draft.error ?? null);
+      if (draft.status === "queued") setStage("queued");
+      else if (draft.status === "uploading") setStage("uploading");
+      else setStage("ready");
+    },
+    [index],
+  );
+
+  React.useEffect(() => {
+    if (!draftKey) return;
+    let active = true;
+    const receiveDraft = (draft: ImageUploadDraft | null) => {
+      if (!active) return;
+      void applyDraft(draft).catch((draftError) => {
+        console.error(
+          `[StorageImageManager:${config.id}] draft-restore-failed`,
+          draftError,
+        );
+        if (active) setSourceError("draftRestoreFailed");
+      });
+    };
+    const unsubscribe = subscribeImageUploadDraft(draftKey, receiveDraft);
+    void getImageUploadDraft(draftKey).then(receiveDraft);
+    return () => {
+      active = false;
+      draftReadSequenceRef.current += 1;
+      unsubscribe();
+    };
+  }, [applyDraft, config.id, draftKey]);
+
   const {
     uploadFile,
     removeImage,
@@ -411,6 +539,7 @@ function StorageImageSlot({
     storageProfileId: config.storageProfileId,
     storageScope: config.storageScope,
     queueOwnerId: `${config.id}-${index}`,
+    draftKey,
     value: selectedFile ? uploadedImage : image,
     onChange: (nextImage) => {
       traceStorageImageManager(config.id, "upload-state-change", {
@@ -443,9 +572,16 @@ function StorageImageSlot({
     selectedPreviewUrl ??
     (storedPreviewFailed ? null : (uploadedImage?.url ?? image?.url ?? null));
   const displayError = sourceError ?? error;
-  const busy = isUploading || image?.isUploading || isChoosingSource;
-  const isQueued = queueStatus === "queued";
-  const canChoose = !previewUrl;
+  const durableUploadActive =
+    draftStatus === "queued" || draftStatus === "uploading";
+  const busy =
+    isUploading ||
+    image?.isUploading ||
+    isChoosingSource ||
+    durableUploadActive;
+  const isQueued = queueStatus === "queued" || draftStatus === "queued";
+  const canChoose = Boolean(draftKey) && !previewUrl;
+  const effectiveQueuePosition = queuePosition || draftQueuePosition;
   const stageLabels: Partial<Record<ManagerStage, string>> = {
     selecting: t("storage.imageManager.stage.selecting"),
     detecting: t("storage.imageManager.stage.detecting"),
@@ -453,7 +589,7 @@ function StorageImageSlot({
     reading: t("storage.imageManager.stage.reading"),
     previewing: t("storage.imageManager.stage.previewing"),
     queued: t("storage.imageManager.stage.queued", {
-      position: queuePosition,
+      position: effectiveQueuePosition,
     }),
     profile: t("storage.imageManager.stage.profile"),
     compressing: t("storage.imageManager.stage.compressing"),
@@ -481,24 +617,48 @@ function StorageImageSlot({
   }, [displayError, selectedFile, t]);
 
   const uploadCandidate = async (file: File) => {
+    if (!selectedDraftId) return false;
+    const uploadingDraftId = selectedDraftId;
+    activeUploadDraftIdRef.current = uploadingDraftId;
     traceStorageImageManager(config.id, "upload-started", {
       index,
       name: file.name,
       type: file.type,
       size: file.size,
     });
-    const uploaded = await uploadFile(file);
-    if (!uploaded) {
-      traceStorageImageManager(config.id, "upload-failed", { index });
-      setStage("ready");
-      return false;
+    try {
+      const uploaded = await uploadFile(file, uploadingDraftId);
+      if (!uploaded) {
+        traceStorageImageManager(config.id, "upload-failed", { index });
+        setStage("ready");
+        return false;
+      }
+      traceStorageImageManager(config.id, "upload-completed", { index });
+      setStage("loadingImage");
+      setSelectedFile(null);
+      setSelectedDraftId(null);
+      setSelectedPreviewUrl(null);
+      return true;
+    } finally {
+      if (activeUploadDraftIdRef.current === uploadingDraftId) {
+        activeUploadDraftIdRef.current = null;
+      }
     }
-    traceStorageImageManager(config.id, "upload-completed", { index });
-    setStage("loadingImage");
-    setSelectedFile(null);
-    setSelectedPreviewUrl(null);
-    return true;
   };
+
+  React.useEffect(() => {
+    if (
+      !draftKey ||
+      !selectedFile ||
+      !selectedDraftId ||
+      isUploading ||
+      (draftStatus !== "queued" && draftStatus !== "uploading") ||
+      imageUploadQueue.has(draftKey)
+    ) {
+      return;
+    }
+    void uploadCandidate(selectedFile);
+  }, [draftKey, draftStatus, isUploading, selectedDraftId, selectedFile]);
 
   const processFile = async (file: File) => {
     traceStorageImageManager(config.id, "file-received", {
@@ -526,12 +686,29 @@ function StorageImageSlot({
       return;
     }
     setSourceError(null);
-    setSelectedFile(normalizedFile);
     try {
       setStage("reading");
       traceStorageImageManager(config.id, "preview-read-started", { index });
       const preview = await fileToDataUrl(normalizedFile);
       setStage("previewing");
+      if (!draftKey || !draftOwnerId || !draftPageKey) {
+        throw new Error("Image draft storage is not ready");
+      }
+      const draft = await createImageUploadDraft({
+        key: draftKey,
+        ownerId: draftOwnerId,
+        pageKey: draftPageKey,
+        managerId: config.id,
+        slotIndex: index,
+        storageProfileId: config.storageProfileId,
+        storageScope: config.storageScope,
+        file: normalizedFile,
+      });
+      hydratedDraftIdRef.current = draft.draftId;
+      setSelectedFile(normalizedFile);
+      setSelectedDraftId(draft.draftId);
+      setDraftStatus("ready");
+      setDraftQueuePosition(0);
       setSelectedPreviewUrl(preview);
       traceStorageImageManager(config.id, "preview-ready", {
         index,
@@ -545,6 +722,7 @@ function StorageImageSlot({
       );
       setSourceError(t("storage.imageManager.previewError"));
       setSelectedFile(null);
+      setSelectedDraftId(null);
       setStage("idle");
       return;
     }
@@ -667,9 +845,15 @@ function StorageImageSlot({
     const clearSelected = () => {
       if (isQueued) cancelUpload();
       traceStorageImageManager(config.id, "selected-file-cleared", { index });
+      const draftId = selectedDraftId;
+      hydratedDraftIdRef.current = null;
       setSelectedFile(null);
+      setSelectedDraftId(null);
       setSelectedPreviewUrl(null);
+      setDraftStatus(null);
+      setDraftQueuePosition(0);
       setStage("idle");
+      if (draftKey) void deleteImageUploadDraft(draftKey, draftId ?? undefined);
     };
     const removeStored = () => {
       traceStorageImageManager(config.id, "stored-image-removal-confirmed", {
@@ -881,6 +1065,12 @@ export function StorageImageManager({
   label,
   hint,
 }: StorageImageManagerProps) {
+  const { session, isLoading: isSessionLoading } = useSession();
+  const [draftPageKey, setDraftPageKey] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    setDraftPageKey(window.location.pathname);
+  }, []);
+  const draftOwnerId = isSessionLoading ? null : (session?.uid ?? "guest");
   const parsedConfig = parseStorageImageManagerConfig(config);
   const maxItems = Math.max(1, parsedConfig.maxItems);
   const images = normalizeImages(value, maxItems);
@@ -908,6 +1098,8 @@ export function StorageImageManager({
             config={parsedConfig}
             image={image}
             index={index}
+            draftOwnerId={draftOwnerId}
+            draftPageKey={draftPageKey}
             onUploaded={(itemIndex, uploadedImage) => {
               onChange(
                 normalizeImages(

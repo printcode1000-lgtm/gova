@@ -44,7 +44,7 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/server-env.ts',
   'src/core/config/server-env.values.ts',
   'src/instrumentation.ts',
-  'src/modules/marketplace-orders/db/config.ts',
+  'src/modules/data-access/domains/marketplace-orders/db/config.ts',
   'src/modules/dev-cloud-backup/domain/development-guard.server.ts',
   'src/modules/google-play-console/domain/development-guard.server.ts',
   'src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
@@ -53,41 +53,21 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
 export const ALLOWED_FETCH_FILES = new Set(['src/core/api/asol-http-transport.ts']);
 
 export const ALLOWED_DRIZZLE_ORM_FILES_PATTERN = [
-  /^src\/core\/database\//,
-  /^src\/features\/[^/]+\/repositories\//,
+  /^src\/modules\/data-access\//,
 ];
 
 export const ALLOWED_DB_DRIVER_FILES_PATTERN = [
-  /^src\/core\/database\//,
-  /^src\/lib\/db\//,
-  /^src\/core\/provisioning\//,
-  /^src\/core\/storage\/providers\//,
-  /^src\/modules\/marketplace-orders\/db\//,
-  /^src\/modules\/data-health\/repositories\/schema-comparison\.repository\.server\.ts$/,
-  /^src\/modules\/dev-cloud-backup\/repositories\/turso-backup\.repository\.server\.ts$/,
-  /^src\/modules\/data-health\/tests\//,
-  /^src\/modules\/dev-cloud-backup\/tests\//,
+  /^src\/modules\/data-access\//,
 ];
 
 export const ALLOWED_SQL_FILES_PATTERN = [
-  /^src\/core\/database\//,
-  /^src\/features\/[^/]+\/repositories\//,
-  /^src\/core\/database\/migrations\//,
-  /^src\/core\/provisioning\//,
-  // This bounded module owns a dedicated database and keeps its SQL inside its
-  // internal persistence/orchestration boundary. It never leaks SQL to UI code.
-  /^src\/modules\/marketplace-orders\/(db|repositories|services|audit|tests)\//,
-  /^src\/modules\/data-health\/repositories\//,
-  /^src\/modules\/data-health\/db\//,
-  /^src\/modules\/data-health\/tests\//,
-  /^src\/modules\/dev-cloud-backup\/repositories\//,
-  /^src\/modules\/dev-cloud-backup\/tests\//,
+  /^src\/modules\/data-access\//,
 ];
 
 /** Client-side IndexedDB utilities — not the server Database Client layer. */
 const CLIENT_STORAGE_PATHS = new Set([
-  'src/core/database/asol-db-persister.ts',
-  'src/lib/asol-db/index.ts',
+  'src/modules/data-access/browser/asol-db-persister.ts',
+  'src/modules/data-access/browser/asol-db/index.ts',
 ]);
 
 const SERVER_ONLY_ALLOWED_LAYERS: ArchitectureLayer[] = [
@@ -110,6 +90,12 @@ export const RAW_SQL_PATTERNS = [
   /\.execute\s*\(\s*['"`]\s*(SELECT|INSERT|UPDATE|DELETE)/i,
   /\.prepare\s*\(\s*['"`]\s*(SELECT|INSERT|UPDATE|DELETE)/i,
   /\.raw\s*\(\s*['"`]\s*(SELECT|INSERT|UPDATE|DELETE)/i,
+  /\bPRAGMA\s+[A-Za-z_]/i,
+  /\b(?:CREATE|ALTER|DROP)\s+(?:TABLE|INDEX|TRIGGER|VIEW)\b/i,
+];
+
+export const DIRECT_DATABASE_CALL_PATTERNS = [
+  /\b(?:db|database|sqlite|turso|client|connection|drizzleDb)\s*\.\s*(?:execute|prepare|exec|run|all|transaction)\s*\(/,
 ];
 
 export function normalizePath(filePath: string): string {
@@ -126,18 +112,26 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p === 'src/core/api/asol-api-client.ts') return 'asol-api-client';
   if (p.startsWith('src/core/api/')) return 'api-shared';
   if (p.startsWith('src/core/config/')) return 'configuration';
-  if (p.startsWith('src/modules/marketplace-orders/db/')) return 'database-client';
+  if (p.startsWith('src/core/provisioning/')) return 'provisioning';
+  if (p.startsWith('src/modules/data-access/tooling/')) return 'provisioning';
+  if (p.startsWith('src/modules/data-access/domains/') && p.includes('/tests/')) return 'dev-tools';
+  if (p.startsWith('src/modules/data-access/domains/') && p.includes('/application/')) return 'server-services';
+  if (p.startsWith('src/modules/data-access/core/')) return 'database-client';
+  if (p.startsWith('src/modules/data-access/browser/')) return 'shared';
+  if (p.startsWith('src/modules/data-access/domains/marketplace-orders/db/')) return 'database-client';
+  if (p.startsWith('src/modules/data-access/domains/marketplace-orders/') && p.endsWith('/index.server.ts')) return 'server-services';
+  if (p.startsWith('src/modules/data-access/domains/') && p.endsWith('/index.server.ts')) return 'operations';
+  if (p.startsWith('src/modules/data-access/domains/') && p.includes('/commands/')) return 'operations';
+  if (p.startsWith('src/modules/data-access/domains/') && p.includes('/queries/')) return 'operations';
   if (p === 'src/modules/data-health/domain/execution-context.server.ts') return 'configuration';
   if (p === 'src/modules/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
   if (p === 'src/modules/google-play-console/domain/development-guard.server.ts') return 'configuration';
   if (p.startsWith('src/modules/data-health/services/')) return 'server-services';
   if (p.startsWith('src/modules/dev-cloud-backup/services/')) return 'server-services';
   if (p.startsWith('src/modules/google-play-console/services/')) return 'server-services';
-  if (p.startsWith('src/modules/data-health/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/dev-cloud-backup/tests/')) return 'dev-tools';
-  if (p.startsWith('src/modules/marketplace-orders/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/marketplace-orders/api/') || p.startsWith('src/modules/marketplace-orders/services/')) return 'server-services';
-  if (p.startsWith('src/core/provisioning/')) return 'provisioning';
+  if (p.startsWith('src/modules/data-access/provisioning/core/')) return 'provisioning';
   if (p.includes('/application/') && p.includes('/features/storage/')) return 'server-services';
   if (
     p === 'src/core/storage/output-format.registry.ts' ||
@@ -154,9 +148,6 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   ) {
     return 'server-services';
   }
-  if (p.startsWith('src/core/database/')) return 'database-client';
-  if (p === 'src/lib/db/turso.ts') return 'database-client';
-  if (p === 'src/lib/db/turso-advertisements.ts') return 'database-client';
   if (p.includes('/repositories/')) return 'repository';
   if (p.includes('/operations/')) return 'operations';
   if (p.includes('-service.server.') || (p.endsWith('.server.ts') && p.includes('/services/'))) {
@@ -213,6 +204,20 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   const resolved = importPath.startsWith('@/') ? `src/${importPath.slice(2)}` : null;
   if (!resolved) return 'external';
 
+  if (resolved.startsWith('src/modules/data-access/core/')) return 'database-client';
+  if (resolved.startsWith('src/modules/data-access/browser/')) return 'shared';
+  if (resolved.startsWith('src/modules/data-access/domains/marketplace-orders/') && resolved.endsWith('/index.server')) {
+    return 'server-services';
+  }
+  if (resolved.startsWith('src/modules/data-access/domains/') && resolved.endsWith('/index.server')) {
+    return 'operations';
+  }
+  if (
+    resolved.startsWith('src/modules/data-access/domains/') &&
+    (resolved.includes('/commands/') || resolved.includes('/queries/'))
+  ) {
+    return 'operations';
+  }
   if (resolved.includes('/repositories/')) return 'repository';
   if (resolved.includes('/operations/')) return 'operations';
   if (resolved.includes('-service.server') || (resolved.includes('/services/') && resolved.endsWith('.server.ts'))) {
@@ -221,13 +226,13 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   if (resolved.includes('/services/') && (resolved.includes('-api-service') || resolved.endsWith('/auth-service') || resolved.endsWith('/session-service'))) {
     return 'client-services';
   }
-  if (resolved.includes('/core/database/asol-db-persister') || resolved.startsWith('src/lib/asol-db/')) {
+  if (resolved.includes('/core/database/asol-db-persister') || resolved.startsWith('src/modules/data-access/browser/asol-db/')) {
     return 'shared';
   }
   if (resolved.includes('/core/database/db-client') || resolved.includes('/core/database/sqlite-db-client') || resolved.includes('/core/database/profile-db-client')) {
     return 'database-client';
   }
-  if (resolved.includes('/core/database/') || resolved === 'src/lib/db/turso.ts') {
+  if (resolved.includes('/core/database/') || resolved === 'src/modules/data-access/core/turso/users-turso-client.ts') {
     return 'database-client';
   }
   if (resolved.includes('/core/api/asol-api-client') || resolved === 'src/core/api') return 'asol-api-client';
@@ -269,7 +274,7 @@ export function getForbiddenImportViolation(
     if (importerLayer === 'repository' || importerLayer === 'database-client' || importerLayer === 'provisioning') {
       return null;
     }
-    if (importerLayer === 'dev-tools' && importPath === 'better-sqlite3') return null;
+    if (importerLayer === 'dev-tools') return null;
     return `Forbidden package import "${importPath}" in ${LAYER_LABELS[importerLayer]}.`;
   }
 

@@ -7,8 +7,8 @@ Asol uses IndexedDB (AsolDB) as its primary client-side persistent storage mecha
 ## Configuration
 
 - **Database Name:** `AsolDB`
-- **Current Version:** `8`
-- **Low-level Implementation:** `src/lib/asol-db/index.ts`
+- **Current Version:** `9`
+- **Low-level Implementation:** `src/modules/data-access/browser/asol-db/index.ts`
 - **Object Stores Schema:** Every object store is configured with `{ keyPath: 'key' }` and stores key-value pairs (where value can be a structured cloneable object).
 
 ---
@@ -62,11 +62,15 @@ The notification module stores its local state in dedicated AsolDB stores. Templ
 Notification cards and specialty-chat message bodies have no SQLite/Turso table. Their sole application persistence is the `notifications` store in this IndexedDB database, including inside Capacitor WebViews.
 | `notificationOfflineQueue` | Local operations waiting for browser connectivity. |
 
+### 7. `imageUploadDrafts`
+
+Stores the original `Blob` and safe file metadata for every image currently staged, queued, uploading, failed, or awaiting completion recovery in `StorageImageManager`. Keys are isolated by user, page, manager id, slot, storage profile, and storage scope. Completed and removed drafts are deleted, and logout clears the entire store.
+
 ---
 
 ## Core Database APIs
 
-`src/lib/asol-db/index.ts` exposes the following asynchronous helper functions:
+`src/modules/data-access/browser/asol-db/index.ts` exposes the following asynchronous helper functions:
 
 ```typescript
 // Read value associated with a key from a store
@@ -74,6 +78,9 @@ export async function asolDbGet<T>(storeName: AsolDbStoreName, key: string): Pro
 
 // Write or update value associated with a key in a store
 export async function asolDbSet<T>(storeName: AsolDbStoreName, key: string, value: T): Promise<void>;
+
+// Write structured-cloneable binary values such as Blob/File without JSON conversion
+export async function asolDbSetStructured<T>(storeName: AsolDbStoreName, key: string, value: T): Promise<void>;
 
 // Delete a key-value pair from a store
 export async function asolDbDelete(storeName: AsolDbStoreName, key: string): Promise<void>;

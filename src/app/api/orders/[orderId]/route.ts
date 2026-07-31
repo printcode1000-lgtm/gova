@@ -1,5 +1,5 @@
 import { apiSuccess } from "@/core/api/api-response";
-import { getMarketplaceOrderQueries } from "@/modules/marketplace-orders/api/server";
+import { getMarketplaceOrderQueries } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { filterOrderDetailsForActor } from "@/modules/marketplace-orders/domain/order-details-visibility";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";

@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { create } from 'zustand';
-import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/lib/asol-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
 import type {
   OperationRecord,
   MonitorStats,

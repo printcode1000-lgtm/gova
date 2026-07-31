@@ -21,6 +21,7 @@ npm run db:ensure
 npm run db:schema:sync
 npm run db:provision:turso
 npm run db:push:vercel-env
+npm run data-access:sync-public
 
 # Cloudflare R2
 npm run r2:sync:cors
@@ -29,12 +30,17 @@ npm run r2:sync:cors
 ## Typical: local schema change (users)
 
 ```bash
-# 1. Edit src/core/database/schema.ts
+# 1. Edit src/modules/data-access/core/database/schema.ts
 npx drizzle-kit generate
 npm run dev                    # migrations on first API call
 npm run build                  # sync DDL to Turso
 git push
 ```
+
+All executable database implementations are under
+`src/modules/data-access/tooling/`. Package commands are the supported entry
+points. Files under `scripts/` may coordinate builds and configuration, but the
+architecture check rejects database drivers, SQL, and IndexedDB access there.
 
 ## Typical: static site + remote API
 

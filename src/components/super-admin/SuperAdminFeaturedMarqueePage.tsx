@@ -29,7 +29,7 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-import { ASOL_DB_STORES, asolDbDelete } from "@/lib/asol-db";
+import { ASOL_DB_STORES, asolDbDelete } from "@/modules/data-access/browser/asol-db";
 
 interface ResolvedItem {
   productId: string;

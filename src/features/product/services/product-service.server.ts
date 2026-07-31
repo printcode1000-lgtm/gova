@@ -12,7 +12,7 @@ import { createEmptyProductDetails } from "../entities/product.entity";
 import {
   productRepository,
   type ProductRepository,
-} from "../repositories/product-repository";
+} from "@/modules/data-access/domains/product/index.server";
 import { categoryService } from "@/features/categories";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server";

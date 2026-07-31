@@ -12,6 +12,7 @@ import {
 
 import { isLoggedIn, type UserSession } from '../entities/session.entity';
 import { sessionService } from '../services/session-service';
+import { clearImageUploadClientState } from '@/features/storage/services/image-upload-client-lifecycle';
 
 interface SessionContextValue {
   session: UserSession | null;
@@ -51,7 +52,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [refreshSession]);
 
   useEffect(() => {
-    const clearInvalidSession = () => setSessionState(null);
+    const clearInvalidSession = () => {
+      void clearImageUploadClientState();
+      setSessionState(null);
+    };
     window.addEventListener("asol-session-invalid", clearInvalidSession);
     return () => window.removeEventListener("asol-session-invalid", clearInvalidSession);
   }, []);

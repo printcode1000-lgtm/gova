@@ -2,7 +2,11 @@
 
 ## Construction
 
-Server code calls `getMarketplaceOrderService()` from `src/modules/marketplace-orders/api/server.ts`. Tests may construct `MarketplaceOrderService` with an injected `MarketplaceDb`.
+Server code calls `getMarketplaceOrderService()` from the typed
+`src/modules/data-access/domains/marketplace-orders/index.server.ts` facade.
+The facade does not export `MarketplaceDb` or a raw client. Database-backed
+tests live inside that data-access domain and may inject the disposable test
+store directly.
 
 ## Order and item operations
 

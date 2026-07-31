@@ -5,10 +5,10 @@ import type {
   RegisteredNotificationToken,
   RegisterNotificationTokenInput,
 } from "../domain/entities";
-import { DeleteNotificationTokenCommand } from "../operations/commands/delete-notification-token.command";
-import { UpsertNotificationTokenCommand } from "../operations/commands/upsert-notification-token.command";
-import { ListNotificationTokensQuery } from "../operations/queries/list-notification-tokens.query";
-import { GetNotificationUserIdentityQuery } from "../operations/queries/get-notification-user-identity.query";
+import { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
+import { UpsertNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/upsert-notification-token.command";
+import { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
+import { GetNotificationUserIdentityQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-user-identity.query";
 
 export class NotificationTokenService {
   constructor(

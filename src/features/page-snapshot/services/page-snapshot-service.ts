@@ -8,7 +8,7 @@ import {
   asolDbGet,
   asolDbGetAll,
   asolDbSet,
-} from '@/lib/asol-db';
+} from '@/modules/data-access/browser/asol-db';
 import {
   PAGE_SNAPSHOT_VERSION,
   type PageSnapshotFormField,

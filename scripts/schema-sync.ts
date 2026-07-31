@@ -1,6 +1,6 @@
 import { existsSync } from "fs";
 import dotenv from "dotenv";
-import { runAllSchemaSyncs } from "../src/core/provisioning/schema-sync";
+import { runAllSchemaSyncs } from "../src/modules/data-access/provisioning/core/schema-sync";
 
 process.env.ASOL_PROVISIONING = "true";
 

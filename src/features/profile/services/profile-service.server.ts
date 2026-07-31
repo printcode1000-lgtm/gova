@@ -1,18 +1,18 @@
 import "server-only";
 
-import type { GetProfileContactsQuery } from "../operations/queries/get-profile-contacts.query";
-import type { UpsertProfileContactsCommand } from "../operations/commands/upsert-profile-contacts.command";
-import type { GetProfileImageKeysQuery } from "../operations/queries/get-profile-image-keys.query";
-import type { UpsertProfileImageKeysCommand } from "../operations/commands/upsert-profile-image-keys.command";
-import type { GetStoreDetailsQuery } from "../operations/queries/get-store-details.query";
-import type { UpsertStoreDetailsCommand } from "../operations/commands/upsert-store-details.command";
-import type { GetProfileSpecialtiesQuery } from "../operations/queries/get-profile-specialties.query";
-import type { UpsertProfileSpecialtiesCommand } from "../operations/commands/upsert-profile-specialties.command";
-import type { GetUsersBySpecialtyQuery } from "../operations/queries/get-users-by-specialty.query";
-import type { GetProfileFulfillmentSettingsQuery } from "../operations/queries/get-profile-fulfillment-settings.query";
-import type { UpsertProfileFulfillmentSettingsCommand } from "../operations/commands/upsert-profile-fulfillment-settings.command";
-import type { GetUserByUidQuery } from "@/features/auth/operations/queries/get-user-by-uid.query";
-import type { UpdateUserProfileCommand } from "@/features/auth/operations/commands/update-user-profile.command";
+import type { GetProfileContactsQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-contacts.query";
+import type { UpsertProfileContactsCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-contacts.command";
+import type { GetProfileImageKeysQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-image-keys.query";
+import type { UpsertProfileImageKeysCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-image-keys.command";
+import type { GetStoreDetailsQuery } from "@/modules/data-access/domains/profile/operations/queries/get-store-details.query";
+import type { UpsertStoreDetailsCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-store-details.command";
+import type { GetProfileSpecialtiesQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-specialties.query";
+import type { UpsertProfileSpecialtiesCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-specialties.command";
+import type { GetUsersBySpecialtyQuery } from "@/modules/data-access/domains/profile/operations/queries/get-users-by-specialty.query";
+import type { GetProfileFulfillmentSettingsQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-fulfillment-settings.query";
+import type { UpsertProfileFulfillmentSettingsCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-fulfillment-settings.command";
+import type { GetUserByUidQuery } from "@/modules/data-access/domains/auth/operations/queries/get-user-by-uid.query";
+import type { UpdateUserProfileCommand } from "@/modules/data-access/domains/auth/operations/commands/update-user-profile.command";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import type {
   ProfileContactsData,

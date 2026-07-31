@@ -1,6 +1,9 @@
 'use client';
 
-import { asolDbClearAll } from '@/lib/asol-db';
+import {
+  asolDbClearAll,
+  clearBrowserDatabases,
+} from '@/modules/data-access/browser';
 
 function clearCookies(): void {
   if (typeof document === 'undefined') return;
@@ -41,26 +44,6 @@ async function clearCacheStorage(): Promise<void> {
   }
 }
 
-async function clearIndexedDbDatabases(): Promise<void> {
-  if (typeof window === 'undefined' || !window.indexedDB?.databases) return;
-  const dbs = await window.indexedDB.databases();
-  await Promise.all(
-    dbs.map(
-      (db) =>
-        new Promise<void>((resolve) => {
-          if (!db.name) {
-            resolve();
-            return;
-          }
-          const request = window.indexedDB.deleteDatabase(db.name);
-          request.onsuccess = () => resolve();
-          request.onerror = () => resolve();
-          request.onblocked = () => resolve();
-        }),
-    ),
-  );
-}
-
 export const CLEAR_STORAGE_WARNING =
   'سيتم إلغاء اشتراك إشعارات هذا الجهاز وحذف رمزه من الخادم، ثم مسح كل البيانات المحلية وإعادة الإعدادات الافتراضية وتحميل الصفحة من جديد. هل تريد المتابعة؟';
 
@@ -68,6 +51,6 @@ export async function clearAllClientStorage(): Promise<void> {
   clearCookies();
   clearWebStorage();
   await asolDbClearAll();
-  await clearIndexedDbDatabases();
+  await clearBrowserDatabases();
   await clearCacheStorage();
 }

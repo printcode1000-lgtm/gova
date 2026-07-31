@@ -6,8 +6,8 @@ import {
   getUserByPhoneQuery,
   updateLastLoginCommand,
   updateUserProfileCommand,
-} from '../operations/instances';
-import { getProfileSpecialtiesQuery } from '@/features/profile/operations/instances';
+} from '@/modules/data-access/domains/auth/operations/instances';
+import { getProfileSpecialtiesQuery } from '@/modules/data-access/domains/profile/operations/instances';
 
 export const authService = new AuthService(
   createUserCommand,

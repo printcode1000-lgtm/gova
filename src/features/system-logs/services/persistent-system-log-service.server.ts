@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { PersistentSystemLogInput } from "../entities/persistent-system-log.entity";
-import { persistentSystemLogRepository } from "../repositories/persistent-system-log-repository";
+import { persistentSystemLogRepository } from "@/modules/data-access/domains/system-logs/index.server";
 
 function redact(value: string | undefined) {
   if (!value) return "";

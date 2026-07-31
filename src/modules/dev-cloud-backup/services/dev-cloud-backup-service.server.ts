@@ -25,7 +25,7 @@ import {
   type DevCloudBackupUpdateResult,
 } from "../domain/types";
 import { r2BackupRepository } from "../repositories/r2-backup.repository.server";
-import { tursoBackupRepository } from "../repositories/turso-backup.repository.server";
+import { tursoBackupRepository } from "@/modules/data-access/domains/dev-cloud-backup/index.server";
 
 const BACKUP_DIR = path.join(process.cwd(), ".backups", "dev-cloud");
 const MANIFEST_FILE = "manifest.json";

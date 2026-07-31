@@ -291,7 +291,7 @@ Splash displays technical current/R2 versions, changed/deleted counts, download 
 | `src/features/ota/services/ota-update-service.ts`          | Runtime comparison, staging, verification, and activation                    |
 | `src/features/ota/services/ota-api-service.ts`             | Native/browser manifest and file transport                                   |
 | `src/features/ota/services/ota-release-service.server.ts`  | Server-side manifest verification, access decisions, and approval management |
-| `src/features/ota/repositories/ota-release-repository.ts`  | Release state and audit persistence                                          |
+| `src/modules/data-access/domains/ota/repositories/ota-release-repository.ts`  | Release state and audit persistence                                          |
 | `src/platform/ota/capacitor-ota-adapter.ts`                | Private storage and WebView activation                                       |
 | `src/components/splash/SplashInitializer.tsx`              | Startup execution and progress details                                       |
 | `src/components/super-admin/SuperAdminOtaReleasesPage.tsx` | Approval dashboard and device testing controls                               |

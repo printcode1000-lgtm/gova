@@ -12,7 +12,7 @@ Server entry point — accept JSON, delegate to Server Service, return JSON.
 
 | Allowed | Forbidden |
 |---------|-----------|
-| `authService` from `*-bootstrap.server.ts` | Repository, Operations, `dbClient` |
+| `authService` from `*-bootstrap.server.ts` | Repository, Operations, `usersDataSource` |
 | `apiSuccess()` / `mapServiceError()` | Client Service |
 
 ## Route pattern

@@ -5,7 +5,7 @@ import { persistentSystemLogService } from "@/features/system-logs/services/pers
 import {
   superAdminUserSearchRepository,
   type SuperAdminUserSearchFilters,
-} from "../repositories/super-admin-user-search-repository.server";
+} from "@/modules/data-access/domains/super-admin/index.server";
 
 export class SuperAdminUserService {
   search(filters: SuperAdminUserSearchFilters) {

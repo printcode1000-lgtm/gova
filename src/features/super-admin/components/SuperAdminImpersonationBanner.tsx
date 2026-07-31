@@ -11,7 +11,7 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import {
   asolDbDeleteSuperAdminOriginalSession,
   asolDbGetSuperAdminOriginalSession,
-} from "@/lib/asol-db";
+} from "@/modules/data-access/browser/asol-db";
 
 export function SuperAdminImpersonationBanner() {
   const { session, setSession } = useSession();

@@ -1,6 +1,6 @@
 "use client";
 
-import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/lib/asol-db";
+import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
 import { NotificationPlatforms } from "../domain/enums";
 import { notificationApiService } from "../services/notification-api-service";
 

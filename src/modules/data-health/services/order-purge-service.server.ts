@@ -14,7 +14,7 @@ import type {
 import {
   orderPurgeRepository,
   type OrderPurgeSnapshot,
-} from "../repositories/order-purge.repository.server";
+} from "@/modules/data-access/domains/data-health/index.server";
 
 type Row = Record<string, unknown>;
 

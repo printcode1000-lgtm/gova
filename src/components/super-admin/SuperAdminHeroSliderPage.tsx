@@ -16,7 +16,7 @@ import { homeHeroSliderApiService } from "@/features/advertisements/services/hom
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-import { ASOL_DB_STORES, asolDbDelete } from "@/lib/asol-db";
+import { ASOL_DB_STORES, asolDbDelete } from "@/modules/data-access/browser/asol-db";
 
 const quickIntervals = [5, 15, 30, 60];
 

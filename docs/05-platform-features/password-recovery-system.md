@@ -73,10 +73,10 @@ npm run db:schema:sync
 
 - `src/features/password-recovery/services/password-recovery-service.server.ts`: قواعد التدفق والحماية.
 - `src/features/password-recovery/services/password-recovery-email-service.server.ts`: إرسال Gmail.
-- `src/features/password-recovery/repositories/password-recovery-repository.ts`: تخزين التحديات.
+- `src/modules/data-access/domains/password-recovery/repositories/password-recovery-repository.ts`: تخزين التحديات.
 - `src/features/password-recovery/components/PasswordRecoveryPageContent.tsx`: واجهة الخطوات.
 - `src/app/api/auth/password-recovery/*`: نقاط API.
-- `src/core/database/migrations/0004_breezy_cammi.sql`: هجرة قاعدة البيانات.
+- `src/modules/data-access/core/database/migrations/0004_breezy_cammi.sql`: هجرة قاعدة البيانات.
 
 ## الاختبار
 

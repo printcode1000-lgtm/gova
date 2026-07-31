@@ -165,7 +165,7 @@ The schema source is the local product SQLite database. The same schema is synce
 
 The migration file is:
 
-- `src/core/database/product/migrations/0002_pharmacy_profile_catalog.sql`
+- `src/modules/data-access/core/database/product/migrations/0002_pharmacy_profile_catalog.sql`
 
 Fixed and custom pharmacy products are projected into the current typed product model. They do not use `product.data.fields`.
 

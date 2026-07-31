@@ -7,7 +7,7 @@ import {
   asolDbDelete,
   asolDbGet,
   asolDbSet,
-} from "@/lib/asol-db";
+} from "@/modules/data-access/browser/asol-db";
 import {
   HOME_HERO_CACHE_KEY,
   type HomeHeroConfig,

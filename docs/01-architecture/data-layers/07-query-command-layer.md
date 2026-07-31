@@ -2,39 +2,37 @@
 
 ## Role
 
-Separate **reads** (Query) from **writes** (Command) — one DB operation or a related group per class.
+Separate reads (queries) from writes (commands). Each file owns one operation
+or one cohesive transactional aggregate.
 
 ## Location
 
-`src/features/[feature]/operations/`
+`src/modules/data-access/domains/[domain]/queries/` and
+`src/modules/data-access/domains/[domain]/commands/`
 
-```
-operations/
-├── queries/
-├── commands/
-└── instances.ts
+```text
+domains/[domain]/
+|-- queries/
+|-- commands/
+|-- repositories/
+`-- index.server.ts
 ```
 
 ## Responsibilities
 
 | Query | Command |
-|-------|---------|
-| Read via Repository | Write/update via Repository |
-| No hidden side effects | Domain rules before INSERT/UPDATE |
+|---|---|
+| Read through a repository or typed port | Validate and coordinate writes |
+| No hidden side effects | Own transaction boundaries when needed |
 
-## Allowed / forbidden
-
-| Allowed | Forbidden |
-|---------|-----------|
-| `IUserRepository`, `IProfileRepository` | Direct `dbClient` |
-| `import 'server-only'` | Client imports |
-
-## Rule
-
-Query/Command = **use-case DB operations** — Repository runs Drizzle.
+Queries and commands do not select SQLite or Turso. Server services consume
+them through the domain `index.server.ts` entry point.
 
 ## Adding an operation
 
-1. New Command or Query class
-2. Register in `instances.ts`
-3. Inject into Server Service
+1. Add one query or command file.
+2. Depend on a repository interface or narrow data port.
+3. Export public operations from the domain `index.server.ts`.
+4. Inject or call the operation from the server service.
+
+See [25-central-data-access-module.md](./25-central-data-access-module.md).

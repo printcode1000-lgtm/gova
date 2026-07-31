@@ -5,7 +5,7 @@ import { createPublicKey, verify } from 'node:crypto';
 import { asolApi } from '@/core/api';
 import { getOtaApprovalServerConfig } from '@/core/config/server-env';
 import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
-import { otaReleaseRepository } from '../repositories/ota-release-repository';
+import { otaReleaseRepository } from '@/modules/data-access/domains/ota/index.server';
 import { compareOtaManifests } from '../utils/ota-release-diff';
 import type {
   OtaAdminDashboard,

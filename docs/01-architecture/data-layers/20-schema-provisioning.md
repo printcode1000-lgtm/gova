@@ -2,7 +2,7 @@
 
 Used **only during build, deployment, and CI** — never at application runtime.
 
-**Location:** `src/core/provisioning/`
+**Location:** `src/modules/data-access/provisioning/core/`
 
 | Module | Role |
 |--------|------|
@@ -71,15 +71,15 @@ Schema sync runs automatically in `npm run build`.
 
 ## Migration pipeline (users)
 
-1. `drizzle.config.ts` → `src/core/database/schema.ts`
-2. Output: `src/core/database/migrations/`
+1. `drizzle.config.ts` → `src/modules/data-access/core/database/schema.ts`
+2. Output: `src/modules/data-access/core/database/migrations/`
 3. Generate: `npx drizzle-kit generate`
 4. Apply (dev): `ensureDevMigrations()` on first connection
 
 ## Migration pipeline (profile/order shards)
 
-1. Profile source migrations live in `src/core/database/profile/migrations/`
-2. Order source migration lives in `src/modules/marketplace-orders/db/migrations/`
+1. Profile source migrations live in `src/modules/data-access/core/database/profile/migrations/`
+2. Order source migration lives in `src/modules/data-access/domains/marketplace-orders/db/migrations/`
 3. `npm run db:ensure` creates source SQLite files and refreshes the 17 runtime shards
 4. Runtime clients read/write the shard files directly
 

@@ -1,5 +1,5 @@
 import { apiSuccess } from "@/core/api/api-response";
-import { getMarketplaceOrderQueries } from "@/modules/marketplace-orders/api/server";
+import { getMarketplaceOrderQueries } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../auth/traced-route";
 import { actorFromInput, mapOrderError } from "./order-api-helpers";
 

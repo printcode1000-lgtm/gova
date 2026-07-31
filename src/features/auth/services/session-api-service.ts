@@ -3,7 +3,7 @@ import {
   asolDbDeleteCurrentSession,
   asolDbGetCurrentSession,
   asolDbSetCurrentSession,
-} from '@/lib/asol-db';
+} from '@/modules/data-access/browser/asol-db';
 import {
   parseStoredSession,
   type SaveSessionInput,

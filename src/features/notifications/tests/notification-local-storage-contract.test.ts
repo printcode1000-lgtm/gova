@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const schema = readFileSync(path.join(root, "src/core/database/schema.ts"), "utf8");
+const schema = readFileSync(path.join(root, "src/modules/data-access/core/database/schema.ts"), "utf8");
 const localRepository = readFileSync(
   path.join(root, "src/features/notifications/infrastructure/asol-notification-repository.ts"),
   "utf8",
@@ -25,6 +25,8 @@ assert.doesNotMatch(
 assert.match(localRepository, /ASOL_DB_STORES\.NOTIFICATIONS/);
 assert.match(localRepository, /asolDbSet\(/);
 assert.match(serviceWorker, /indexedDB\.open\(ASOL_DB_NAME/);
+assert.match(serviceWorker, /const ASOL_DB_VERSION = 9/);
+assert.match(serviceWorker, /['"]imageUploadDrafts['"]/);
 
 const clientNotificationFiles = [
   ...filesBelow(path.join(root, "src/features/notifications")),
@@ -46,4 +48,3 @@ for (const file of serverChatFiles) {
 }
 
 console.log("Notification local-only storage contract passed.");
-
