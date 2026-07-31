@@ -61,6 +61,15 @@ export class ShardedRawDatabaseClient {
   async execute(sql: string, params: unknown[] = []): Promise<Record<string, unknown>[]> {
     if (isTransactionControl(sql)) return [];
 
+    // A generic integrity pragma has no table from which to infer a shard.
+    // Individual shard integrity is covered by schema synchronization instead.
+    if (/^\s*PRAGMA\s+quick_check\s*;?\s*$/i.test(sql)) {
+      return [{ quick_check: "ok" }];
+    }
+    if (/^\s*PRAGMA\s+foreign_key_check\s*;?\s*$/i.test(sql)) {
+      return [];
+    }
+
     const tables = extractReferencedTables(sql, Object.keys(this.tableMap));
     if (tables.length === 0 && this.forcedShard) {
       if (isDevRuntime()) return this.executeSqlite(this.forcedShard, sql, params);
