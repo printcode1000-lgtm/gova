@@ -144,11 +144,13 @@ function StorageManagerDialog({
 }
 
 function traceStorageImageManager(
-  configId: string,
-  step: string,
-  details: Record<string, unknown> = {},
+  _configId: string,
+  _step: string,
+  _details: Record<string, unknown> = {},
 ) {
-  console.info(`[StorageImageManager:${configId}] ${step}`, details);
+  void _configId;
+  void _step;
+  void _details;
 }
 
 function fileToDataUrl(file: File): Promise<string> {

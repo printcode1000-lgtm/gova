@@ -19,7 +19,9 @@ interface UseStorageProfileUploadOptions {
   queueOwnerId: string;
   value: StoredImage | null;
   onChange: (image: StoredImage | null) => void;
-  onProgress?: (stage: ImageUploadProgressStage | "queued" | "deleting" | "idle") => void;
+  onProgress?: (
+    stage: ImageUploadProgressStage | "queued" | "deleting" | "idle",
+  ) => void;
 }
 
 interface UseStorageProfileUploadResult {
@@ -46,26 +48,19 @@ export function useStorageProfileUpload({
 }: UseStorageProfileUploadOptions): UseStorageProfileUploadResult {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [queueStatus, setQueueStatus] = useState<ImageUploadQueueStatus | null>(null);
+  const [queueStatus, setQueueStatus] = useState<ImageUploadQueueStatus | null>(
+    null,
+  );
   const [queuePosition, setQueuePosition] = useState(0);
   const uploadHandleRef = useRef<ImageUploadQueueHandle<unknown> | null>(null);
 
   const uploadFile = useCallback(
     async (file: File) => {
-      console.info(`[StorageImageManager:${storageProfileId}] pipeline-start`, {
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        replacingImageKey: value?.imageKey ?? null,
-      });
       setIsUploading(true);
       setError(null);
       onChange({ imageKey: "", url: value?.url ?? "", isUploading: true });
 
       try {
-        console.info(
-          `[StorageImageManager:${storageProfileId}] process-and-upload-start`,
-        );
         const fingerprint = [
           queueOwnerId,
           storageProfileId,
@@ -94,24 +89,14 @@ export function useStorageProfileUpload({
         });
         uploadHandleRef.current = handle;
         const result = await handle.promise;
-        console.info(
-          `[StorageImageManager:${storageProfileId}] storage-response-received`,
-          {
-            imageKey: result.imageKey,
-            storageProfileId: result.storageProfileId,
-            provider: result.provider,
-            hasUrl: Boolean(result.url),
-          },
-        );
         onChange({ imageKey: result.imageKey, url: result.url });
         return true;
       } catch (err) {
         if (isImageUploadCancelledError(err)) {
-          console.info(
-            `[StorageImageManager:${storageProfileId}] queue-item-cancelled`,
-          );
           setError(null);
-          onChange(value ? { ...value, isUploading: false, error: undefined } : null);
+          onChange(
+            value ? { ...value, isUploading: false, error: undefined } : null,
+          );
           return false;
         }
         console.error(
@@ -130,9 +115,6 @@ export function useStorageProfileUpload({
         );
         return false;
       } finally {
-        console.info(
-          `[StorageImageManager:${storageProfileId}] pipeline-finished`,
-        );
         setIsUploading(false);
         setQueueStatus(null);
         setQueuePosition(0);
@@ -148,9 +130,6 @@ export function useStorageProfileUpload({
   );
 
   const removeImage = useCallback(async () => {
-    console.info(`[StorageImageManager:${storageProfileId}] delete-requested`, {
-      imageKey: value?.imageKey ?? null,
-    });
     if (!value?.imageKey) {
       onChange(null);
       onProgress?.("idle");
@@ -162,12 +141,6 @@ export function useStorageProfileUpload({
     onProgress?.("deleting");
     try {
       await imageStorageService.deleteImage(storageProfileId, value.imageKey);
-      console.info(
-        `[StorageImageManager:${storageProfileId}] delete-completed`,
-        {
-          imageKey: value.imageKey,
-        },
-      );
       onChange(null);
     } catch (err) {
       console.error(

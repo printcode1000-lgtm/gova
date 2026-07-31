@@ -54,18 +54,9 @@ function drawImageToCanvas(
 
 function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    console.info("[StorageImageManager:processor] file-read-start", {
-      name: file.name,
-      type: file.type,
-      size: file.size,
-    });
     const reader = new FileReader();
     const img = new Image();
     img.onload = () => {
-      console.info("[StorageImageManager:processor] image-decoded", {
-        width: img.naturalWidth,
-        height: img.naturalHeight,
-      });
       resolve(img);
     };
     img.onerror = () => {
@@ -80,7 +71,6 @@ function loadImageFromFile(file: File): Promise<HTMLImageElement> {
       reject(reader.error ?? new Error("Unable to read selected image"));
     };
     reader.onload = () => {
-      console.info("[StorageImageManager:processor] file-read-completed");
       img.src = String(reader.result ?? "");
     };
     reader.readAsDataURL(file);
@@ -118,11 +108,6 @@ export async function compressImageForProfile(
   file: File,
   profile: StorageProfileClientView,
 ): Promise<Blob> {
-  console.info("[StorageImageManager:processor] compression-start", {
-    profileId: profile.id,
-    outputFormat: profile.outputFormat,
-    maxImageSizeKB: profile.maxImageSizeKB,
-  });
   if (!profile.enabled) {
     throw new Error(`Storage profile is disabled: ${profile.id}`);
   }
@@ -152,12 +137,6 @@ export async function compressImageForProfile(
       bestBlob = !bestBlob || blob.size < bestBlob.size ? blob : bestBlob;
 
       if (blob.size <= maxBytes) {
-        console.info("[StorageImageManager:processor] compression-completed", {
-          outputBytes: blob.size,
-          width: dimensions.width,
-          height: dimensions.height,
-          quality,
-        });
         validateImageForProfile(blob.size, profile);
         return blob;
       }
