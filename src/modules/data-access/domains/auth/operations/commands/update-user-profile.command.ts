@@ -2,14 +2,7 @@ import type { IUserRepository } from '@/modules/data-access/domains/auth/reposit
 import type { UserProfile, UpdateProfileInput } from '@/features/auth/entities/profile.entity';
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 import { normalizeAuthPhone } from '@/features/auth/utils/phone-normalization';
-
-async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-}
+import { hashPassword } from '@/features/auth/utils/password-hash.server';
 
 export class UpdateUserProfileCommand {
   constructor(private userRepository: IUserRepository) {}

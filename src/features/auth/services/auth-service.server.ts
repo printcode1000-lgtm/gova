@@ -17,14 +17,7 @@ import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 import type { GetProfileSpecialtiesQuery } from '@/modules/data-access/domains/profile/operations/queries/get-profile-specialties.query';
 import { createSignedSessionToken } from './signed-session-token.server';
 import { normalizeAuthPhone } from '../utils/phone-normalization';
-
-async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-}
+import { hashPassword } from '../utils/password-hash.server';
 
 export class AuthService implements IAuthService {
   constructor(
