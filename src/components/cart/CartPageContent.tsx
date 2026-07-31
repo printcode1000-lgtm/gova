@@ -26,6 +26,7 @@ import {
 import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { useCart } from "@/features/cart/use-cart";
 import { useSession } from "@/features/auth/components/SessionProvider";
+import { useTranslation } from "@/lib/i18n";
 import { notificationBus } from "@/features/notifications";
 import { useCartDiscountQuote } from "@/features/seller-discounts";
 import {
@@ -35,8 +36,8 @@ import {
 } from "@/features/profile/entities/profile-fulfillment-settings.entity";
 import { profileService } from "@/features/profile/services/profile-service";
 
-function formatMoney(minor: number) {
-  return new Intl.NumberFormat("ar-EG", {
+function formatMoney(minor: number, locale = "ar") {
+  return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-EG", {
     style: "currency",
     currency: "EGP",
   }).format(minor / 100);
@@ -57,6 +58,20 @@ function orderErrorMessage(message: string) {
 
 export function CartPageContent() {
   const router = useRouter();
+  const { locale } = useTranslation();
+  const copy = locale === "ar" ? {
+    title: "السلة", description: "راجع المنتجات والخدمات قبل إرسالها كطلب رسمي بنظام الدفع عند الاستلام.", clear: "تفريغ السلة",
+    emptyTitle: "السلة فارغة", emptyText: "عند إضافة منتج أو خدمة ستظهر هنا، وستظهر النقطة الحمراء في الهيدر.", browse: "تصفح المنتجات",
+    seller: "البائع", viewSeller: "عرض بروفايل البائع", noImage: "بدون صورة", unitPrice: "سعر الوحدة", summary: "ملخص السلة",
+    coupon: "كود الخصم", couponHint: "يمكن إدخال أكثر من كود بفاصلة.", itemCount: "عدد العناصر", productsTotal: "إجمالي المنتجات",
+    loadingDiscounts: "جاري حساب الخصومات", total: "الإجمالي", submit: "إرسال الطلب", submitHint: "سيتم إنشاء الطلب الرسمي من قاعدة البيانات، والدفع عند الاستلام فقط.",
+  } : {
+    title: "Cart", description: "Review products and services before submitting an official cash-on-delivery order.", clear: "Clear cart",
+    emptyTitle: "Your cart is empty", emptyText: "Products and services you add will appear here.", browse: "Browse products",
+    seller: "Seller", viewSeller: "View seller profile", noImage: "No image", unitPrice: "Unit price", summary: "Cart summary",
+    coupon: "Discount code", couponHint: "Separate multiple codes with commas.", itemCount: "Items", productsTotal: "Products total",
+    loadingDiscounts: "Calculating discounts", total: "Total", submit: "Submit order", submitHint: "The official order will be created in the database. Payment is cash on delivery only.",
+  };
   const { session, isLoading: isSessionLoading } = useSession();
   const { items, totalQuantity } = useCart();
   const [sellerSettings, setSellerSettings] = React.useState<
@@ -256,10 +271,9 @@ export function CartPageContent() {
     <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-on-surface">السلة</h1>
+          <h1 className="text-2xl font-bold text-on-surface">{copy.title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            راجع المنتجات والخدمات قبل إرسالها كطلب رسمي بنظام الدفع عند
-            الاستلام.
+            {copy.description}
           </p>
         </div>
         {items.length > 0 ? (
@@ -269,7 +283,7 @@ export function CartPageContent() {
             className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition hover:border-error hover:text-error"
           >
             <Trash2 className="h-4 w-4" />
-            تفريغ السلة
+            {copy.clear}
           </button>
         ) : null}
       </div>
@@ -279,15 +293,15 @@ export function CartPageContent() {
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted">
             <ShoppingCart className="h-7 w-7 text-muted-foreground" />
           </div>
-          <h2 className="mt-4 text-lg font-bold">السلة فارغة</h2>
+          <h2 className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            عند إضافة منتج أو خدمة ستظهر هنا، وستظهر النقطة الحمراء في الهيدر.
+            {copy.emptyText}
           </p>
           <Link
             href="/home"
             className="mt-5 inline-flex rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary"
           >
-            تصفح المنتجات
+            {copy.browse}
           </Link>
         </section>
       ) : (
@@ -324,7 +338,7 @@ export function CartPageContent() {
               >
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant pb-3">
                   <div>
-                    <h2 className="text-sm font-bold">البائع</h2>
+                    <h2 className="text-sm font-bold">{copy.seller}</h2>
                     <p className="text-xs text-muted-foreground">
                       {unifiedDeliveryAvailable
                         ? `مرجع التوصيل المنفصل: ${formatMoney(group.shippingMinor)}`
@@ -341,7 +355,7 @@ export function CartPageContent() {
                     className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
                   >
                     <ExternalLink className="h-4 w-4" />
-                    عرض بروفايل البائع
+                    {copy.viewSeller}
                   </Link>
                   {group.hasSpecialVehicle ? (
                     <span className="rounded-full bg-warning/10 px-2 py-1 text-xs font-semibold text-warning">
@@ -396,7 +410,7 @@ export function CartPageContent() {
                             />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                              بدون صورة
+                              {copy.noImage}
                             </div>
                           )}
                         </div>
@@ -456,7 +470,7 @@ export function CartPageContent() {
                             </div>
                             <div className="text-end">
                               <p className="text-xs text-muted-foreground">
-                                سعر الوحدة
+                                {copy.unitPrice}
                               </p>
                               <p className="font-bold">
                                 {item.unitPriceMinor === 0 && item.priceLabel
@@ -526,11 +540,11 @@ export function CartPageContent() {
           </section>
 
           <aside className="h-fit rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
-            <h2 className="font-bold">ملخص السلة</h2>
+            <h2 className="font-bold">{copy.summary}</h2>
             <div className="mt-4 space-y-3 text-sm">
               <label className="block space-y-1.5">
                 <span className="text-xs font-semibold text-muted-foreground">
-                  كود الخصم
+                  {copy.coupon}
                 </span>
                 <input
                   value={couponText}
@@ -539,22 +553,22 @@ export function CartPageContent() {
                   className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
                 />
                 <span className="block text-[11px] text-muted-foreground">
-                  يمكن إدخال أكثر من كود بفاصلة.
+                  {copy.couponHint}
                 </span>
               </label>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">عدد العناصر</span>
+                <span className="text-muted-foreground">{copy.itemCount}</span>
                 <span className="font-semibold">{totalQuantity}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">إجمالي المنتجات</span>
+                <span className="text-muted-foreground">{copy.productsTotal}</span>
                 <span className="font-semibold">
-                  {formatMoney(productsTotalMinor)}
+                  {formatMoney(productsTotalMinor, locale)}
                 </span>
               </div>
               {isLoadingDiscountQuote ? (
                 <div className="flex justify-between text-primary">
-                  <span>جاري حساب الخصومات</span>
+                  <span>{copy.loadingDiscounts}</span>
                   <span>...</span>
                 </div>
               ) : null}
@@ -590,8 +604,8 @@ export function CartPageContent() {
               ) : null}
               <div className="border-t border-outline-variant pt-3">
                 <div className="flex justify-between text-base font-bold">
-                  <span>الإجمالي</span>
-                  <span>{formatMoney(totalMinor)}</span>
+                  <span>{copy.total}</span>
+                  <span>{formatMoney(totalMinor, locale)}</span>
                 </div>
               </div>
             </div>
@@ -616,11 +630,10 @@ export function CartPageContent() {
               {isSubmitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : null}
-              إرسال الطلب
+              {copy.submit}
             </button>
             <p className="mt-3 text-xs leading-5 text-muted-foreground">
-              سيتم إنشاء الطلب الرسمي من قاعدة البيانات، والدفع عند الاستلام
-              فقط.
+              {copy.submitHint}
             </p>
           </aside>
         </div>

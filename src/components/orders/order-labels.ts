@@ -2,14 +2,44 @@
 
 import type { DbRow, OrderRole } from "./order-types";
 
-export function formatMoney(minor: unknown, currency = "EGP") {
-  return new Intl.NumberFormat("ar-EG", {
+export function formatMoney(minor: unknown, currency = "EGP", locale = "ar") {
+  return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-EG", {
     style: "currency",
     currency,
   }).format(Number(minor ?? 0) / 100);
 }
 
-export function statusLabel(status: unknown) {
+export function statusLabel(status: unknown, locale = "ar") {
+  if (locale !== "ar") {
+    const englishLabels: Record<string, string> = {
+      new: "New", waiting_for_seller_response: "Waiting for seller response",
+      waiting_for_pricing: "Waiting for pricing", processing: "Processing",
+      partially_fulfilled: "Partially fulfilled", fully_fulfilled: "Fulfilled",
+      partially_cancelled: "Partially cancelled", fully_cancelled: "Cancelled",
+      waiting_for_return: "Waiting for return", requested: "Requested",
+      seller_approved: "Approved by seller", seller_rejected: "Rejected by seller",
+      waiting_for_pickup: "Waiting for pickup", picked_up: "Picked up", received: "Received",
+      under_inspection: "Under inspection", inspection_accepted: "Inspection accepted",
+      inspection_rejected: "Inspection rejected", refund_pending: "Refund pending", refunded: "Refunded",
+      waiting_for_replacement: "Waiting for replacement", closed: "Closed", archived: "Archived",
+      waiting_for_response: "Waiting for response", fully_accepted: "Fully accepted",
+      partially_accepted: "Partially accepted", fully_rejected: "Fully rejected", preparing: "Preparing",
+      ready_for_shipping: "Ready for shipping", handed_to_shipping: "Handed to delivery",
+      seller_accepted: "Accepted by seller", buyer_cancelled: "Cancelled by buyer",
+      admin_cancelled: "Cancelled by admin", assigned_to_shipment: "Assigned to shipment",
+      assigned: "Assigned to shipment", received_by_carrier: "Received by carrier",
+      rejected_by_carrier: "Rejected by carrier", in_transit: "In transit",
+      at_distribution_center: "At distribution center", out_for_delivery: "Out for delivery",
+      delivered: "Delivered", delivery_rejected: "Delivery rejected",
+      waiting_for_carrier_pickup: "Waiting for carrier pickup",
+      partially_received_by_carrier: "Partially received by carrier",
+      partially_rejected_by_carrier: "Partially rejected by carrier",
+      fully_received_by_carrier: "Received by carrier", arrived_at_distribution_center: "Arrived at distribution center",
+      partially_delivered: "Partially delivered", fully_delivered: "Delivered",
+      customer_rejected_delivery: "Delivery rejected by customer", delivery_failed: "Delivery failed",
+    };
+    return englishLabels[String(status)] ?? "Unknown";
+  }
   const labels: Record<string, string> = {
     new: "جديد",
     waiting_for_seller_response: "بانتظار رد البائع",
