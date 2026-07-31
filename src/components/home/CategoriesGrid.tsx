@@ -63,6 +63,7 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
                     src={imgSrc}
                     alt={name}
                     fill
+                    sizes="(max-width: 640px) 33vw, 220px"
                     className="object-cover"
                   />
                 </div>

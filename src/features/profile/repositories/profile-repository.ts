@@ -593,21 +593,27 @@ export class ProfileRepository implements IProfileRepository {
   async getSpecialties(
     uid: string,
   ): Promise<ProfileSpecialtiesSelection | null> {
-    const rows: ProfileSearchCategoryRow[] = await this.database.db
-      .select()
-      .from(profileSearchCategories)
-      .where(eq(profileSearchCategories.uid, uid));
+    const rows = (await this.database.execute(
+      `SELECT category_id, subcategory_id, source
+       FROM profile_search_categories
+       WHERE uid = ?`,
+      [uid],
+    )) as Array<{
+      category_id: number | string;
+      subcategory_id: number | string;
+      source: string;
+    }>;
     if (rows.length === 0) return EMPTY_PROFILE_SPECIALTIES;
 
     const main = rows
       .filter((row) => row.source === "main")
-      .map((row) => row.categoryId);
+      .map((row) => Number(row.category_id));
     const sub: Record<string, number[]> = {};
     rows
       .filter((row) => row.source !== "main")
       .forEach((row) => {
-        const key = String(row.categoryId);
-        sub[key] = [...(sub[key] ?? []), row.subcategoryId];
+        const key = String(row.category_id);
+        sub[key] = [...(sub[key] ?? []), Number(row.subcategory_id)];
       });
     return { main: Array.from(new Set(main)), sub };
   }

@@ -11,11 +11,14 @@ const globalCapacitorPlugins = globalThis as typeof globalThis & {
   __asolWebViewPlugin?: CapacitorWebViewPlugin;
 };
 
-const WebView =
-  globalCapacitorPlugins.__asolWebViewPlugin ??
-  registerPlugin<CapacitorWebViewPlugin>('WebView');
+function webViewPlugin(): CapacitorWebViewPlugin {
+  const existing = globalCapacitorPlugins.__asolWebViewPlugin;
+  if (existing) return existing;
 
-globalCapacitorPlugins.__asolWebViewPlugin = WebView;
+  const plugin = registerPlugin<CapacitorWebViewPlugin>('WebView');
+  globalCapacitorPlugins.__asolWebViewPlugin = plugin;
+  return plugin;
+}
 const OTA_ROOT = 'asol-ota/releases';
 
 function bytesToBase64(bytes: Uint8Array): string {
@@ -111,14 +114,14 @@ export const capacitorOtaAdapter = {
   },
 
   async currentBasePath(): Promise<string> {
-    return (await WebView.getServerBasePath()).path;
+    return (await webViewPlugin().getServerBasePath()).path;
   },
 
   async activate(path: string): Promise<void> {
-    await WebView.setServerBasePath({ path });
+    await webViewPlugin().setServerBasePath({ path });
   },
 
   async persistCurrentPath(): Promise<void> {
-    await WebView.persistServerBasePath();
+    await webViewPlugin().persistServerBasePath();
   },
 };
