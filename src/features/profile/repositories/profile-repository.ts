@@ -170,23 +170,11 @@ export class ProfileRepository implements IProfileRepository {
   }
 
   async getByUid(uid: string): Promise<ProfileContactsData | null> {
-    const profile = await this.database.db
-      .select({ uid: userProfiles.uid })
-      .from(userProfiles)
-      .where(eq(userProfiles.uid, uid))
-      .limit(1);
+    const profile = await this.database.execute("SELECT uid FROM user_profiles WHERE uid = ? LIMIT 1", [uid]);
     if (profile.length === 0) return null;
 
-    const contactRows: ProfileContactPointRow[] = await this.database.db
-      .select()
-      .from(profileContactPoints)
-      .where(eq(profileContactPoints.uid, uid))
-      .orderBy(profileContactPoints.sortOrder);
-    const locationRows: ProfileLocationRow[] = await this.database.db
-      .select()
-      .from(profileLocations)
-      .where(eq(profileLocations.uid, uid))
-      .orderBy(profileLocations.sortOrder);
+    const contactRows = await this.database.execute("SELECT id, type, platform, value, is_primary AS isPrimary FROM profile_contact_points WHERE uid = ? ORDER BY sort_order", [uid]) as ProfileContactPointRow[];
+    const locationRows = await this.database.execute("SELECT id, address, latitude, longitude FROM profile_locations WHERE uid = ? ORDER BY sort_order", [uid]) as ProfileLocationRow[];
 
     return {
       phones: contactRows
@@ -342,11 +330,7 @@ export class ProfileRepository implements IProfileRepository {
   }
 
   async getImageKeys(uid: string): Promise<ProfileImageKeys | null> {
-    const rows: ProfileImageRow[] = await this.database.db
-      .select()
-      .from(profileImages)
-      .where(eq(profileImages.uid, uid))
-      .orderBy(profileImages.sortOrder);
+    const rows = await this.database.execute("SELECT image_key AS imageKey, image_type AS imageType FROM profile_images WHERE uid = ? ORDER BY sort_order", [uid]) as ProfileImageRow[];
     const avatar =
       rows.find((row) => row.imageType === "avatar")?.imageKey ?? null;
     const coverImageKeys = rows
@@ -397,24 +381,11 @@ export class ProfileRepository implements IProfileRepository {
   }
 
   async getStoreDetails(uid: string): Promise<StoreDetailsData | null> {
-    const rows = await this.database.db
-      .select()
-      .from(userProfiles)
-      .where(eq(userProfiles.uid, uid))
-      .limit(1);
+    const rows = await this.database.execute(`SELECT store_name AS storeName, store_description AS storeDescription, store_story AS storeStory, rating_enabled AS ratingEnabled, rating_mode AS ratingMode, trending_label AS trendingLabel, custom_request_enabled AS customRequestEnabled FROM user_profiles WHERE uid = ? LIMIT 1`, [uid]);
     if (rows.length === 0) return null;
     const row = rows[0];
-    const featured: Array<typeof profileFeaturedProducts.$inferSelect> =
-      await this.database.db
-        .select()
-        .from(profileFeaturedProducts)
-        .where(eq(profileFeaturedProducts.uid, uid))
-        .orderBy(profileFeaturedProducts.sortOrder);
-    const trending: ProfileTrendingItemRow[] = await this.database.db
-      .select()
-      .from(profileTrendingItems)
-      .where(eq(profileTrendingItems.uid, uid))
-      .orderBy(profileTrendingItems.sortOrder);
+    const featured = await this.database.execute("SELECT product_id AS productId FROM profile_featured_products WHERE uid = ? ORDER BY sort_order", [uid]) as Array<{ productId: string }>;
+    const trending = await this.database.execute("SELECT id, label FROM profile_trending_items WHERE uid = ? ORDER BY sort_order", [uid]) as ProfileTrendingItemRow[];
     const workingHours = await this.getWorkingHours(uid);
 
     return {
@@ -508,18 +479,10 @@ export class ProfileRepository implements IProfileRepository {
   async getFulfillmentSettings(
     uid: string,
   ): Promise<ProfileFulfillmentSettings | null> {
-    const rows = await this.database.db
-      .select()
-      .from(userProfiles)
-      .where(eq(userProfiles.uid, uid))
-      .limit(1);
+    const rows = await this.database.execute(`SELECT shipping_pricing_mode AS shippingPricingMode, shipping_flat_rate AS shippingFlatRate, shipping_special_vehicle_fee AS shippingSpecialVehicleFee, shipping_free_shipping_threshold AS shippingFreeShippingThreshold, shipping_notes AS shippingNotes, returns_enabled AS returnsEnabled, return_window_days AS returnWindowDays, return_policy_text AS returnPolicyText, return_shipping_payer AS returnShippingPayer FROM user_profiles WHERE uid = ? LIMIT 1`, [uid]);
     if (rows.length === 0) return null;
     const row = rows[0];
-    const carriers: ProfileDeliveryCarrierRow[] = await this.database.db
-      .select()
-      .from(profileDeliveryCarriers)
-      .where(eq(profileDeliveryCarriers.sellerUid, uid))
-      .orderBy(profileDeliveryCarriers.priority);
+    const carriers = await this.database.execute("SELECT carrier_uid AS carrierUid FROM profile_delivery_carriers WHERE seller_uid = ? ORDER BY priority", [uid]) as ProfileDeliveryCarrierRow[];
     return {
       selfDeliveryEnabled: false,
       carrierUids: carriers.map((carrier) => carrier.carrierUid),
@@ -715,11 +678,18 @@ export class ProfileRepository implements IProfileRepository {
   }
 
   private async getWorkingHours(uid: string) {
-    const rows: ProfileWorkingHourRow[] = await this.database.db
-      .select()
-      .from(profileWorkingHours)
-      .where(eq(profileWorkingHours.uid, uid))
-      .orderBy(profileWorkingHours.dayOfWeek, profileWorkingHours.periodIndex);
+    const rows = await this.database.execute(
+      `SELECT id,
+              day_of_week AS dayOfWeek,
+              is_open AS isOpen,
+              open_time AS openTime,
+              close_time AS closeTime,
+              note
+       FROM profile_working_hours
+       WHERE uid = ?
+       ORDER BY day_of_week, period_index`,
+      [uid],
+    ) as ProfileWorkingHourRow[];
     if (rows.length === 0) return EMPTY_PROFILE_WORKING_HOURS;
     const days = WORKING_DAY_LABELS.map((day, dayIndex) => {
       const periods = rows
