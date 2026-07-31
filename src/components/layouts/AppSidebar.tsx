@@ -46,7 +46,10 @@ import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { queueLogoutSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { useLogout } from "@/features/auth/hooks/use-logout";
-import { specialtyChatClient } from "@/features/specialty-chat";
+import {
+  isSpecialtyChatSessionTokenFailure,
+  specialtyChatClient,
+} from "@/features/specialty-chat";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
 import {
@@ -186,7 +189,9 @@ export const AppSidebar = React.memo(function AppSidebar({
       if (session) {
         try {
           await specialtyChatClient.preference(session, true).catch((error) => {
-            console.warn("[AppSidebar] Failed to reset specialty chat preference during logout.", error);
+            if (!isSpecialtyChatSessionTokenFailure(error)) {
+              console.warn("[AppSidebar] Failed to reset specialty chat preference during logout.", error);
+            }
           });
           await notificationDeviceTokenService.unregister(
             session.uid,

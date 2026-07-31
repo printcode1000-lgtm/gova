@@ -2,6 +2,7 @@
 
 import { asolApi } from "@/core/api/asol-api-client";
 import type { UserSession } from "@/features/auth/entities/session.entity";
+import { sessionService } from "@/features/auth/services/session-service";
 import { asolNotificationRepository } from "@/features/notifications/infrastructure/asol-notification-repository";
 import { NOTIFICATION_CHANGED_EVENT } from "@/features/notifications/domain/defaults";
 import type { NotificationEntity } from "@/features/notifications/domain/entities";
@@ -16,6 +17,19 @@ function notifyChanged(uid: string) {
 function identity(session: UserSession) {
   if (!session.sessionToken) throw new Error("specialtyChatLoginRefreshRequired");
   return { uid: session.uid, phone: session.phone, sessionToken: session.sessionToken };
+}
+
+export function isSpecialtyChatSessionTokenFailure(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error.message === "sessionTokenInvalid" || error.message === "sessionTokenExpired")
+  );
+}
+
+async function clearInvalidSession(error: unknown): Promise<void> {
+  if (!isSpecialtyChatSessionTokenFailure(error)) return;
+  await sessionService.clearSession();
+  window.dispatchEvent(new Event("asol-session-invalid"));
 }
 
 async function saveOutgoing(input: {
@@ -106,10 +120,15 @@ export const specialtyChatClient = {
   },
 
   async preference(session: UserSession, enabled?: boolean) {
-    return asolApi.post<SpecialtyChatPreferenceResult>("/api/specialty-chat/preference", {
-      identity: identity(session),
-      ...(typeof enabled === "boolean" ? { enabled } : {}),
-    });
+    try {
+      return await asolApi.post<SpecialtyChatPreferenceResult>("/api/specialty-chat/preference", {
+        identity: identity(session),
+        ...(typeof enabled === "boolean" ? { enabled } : {}),
+      }, { suppressErrorLog: true });
+    } catch (error) {
+      await clearInvalidSession(error);
+      throw error;
+    }
   },
 
   async receipt(

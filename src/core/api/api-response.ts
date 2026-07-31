@@ -140,6 +140,8 @@ export function mapServiceError(error: unknown): NextResponse {
     'invalidPassword',
     'dataHealthNoOrdersToPurge',
     'devCloudBackupFileRequired',
+    'sessionTokenInvalid',
+    'sessionTokenExpired',
   ]);
 
   if (knownCodes.includes(message)) {

@@ -50,6 +50,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     };
   }, [refreshSession]);
 
+  useEffect(() => {
+    const clearInvalidSession = () => setSessionState(null);
+    window.addEventListener("asol-session-invalid", clearInvalidSession);
+    return () => window.removeEventListener("asol-session-invalid", clearInvalidSession);
+  }, []);
+
   const setSession = useCallback((next: UserSession | null) => {
     setSessionState(next);
   }, []);

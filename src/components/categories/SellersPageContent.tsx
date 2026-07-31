@@ -13,14 +13,16 @@ import { useTranslation } from "@/lib/i18n";
 interface SellersPageContentProps {
   categoryId: number;
   subcategoryId: number;
-  subcategoryName: string;
+  subcategoryNameAr: string;
+  subcategoryNameEn: string;
   subcategoryImage: string;
 }
 
 export function SellersPageContent({
   categoryId,
   subcategoryId,
-  subcategoryName,
+  subcategoryNameAr,
+  subcategoryNameEn,
   subcategoryImage,
 }: SellersPageContentProps) {
   const { t, locale, isRTL } = useTranslation();
@@ -28,6 +30,7 @@ export function SellersPageContent({
   const [offset, setOffset] = React.useState(0);
   const [searchText, setSearchText] = React.useState("");
   const limit = 10;
+  const subcategoryName = locale === "ar" ? subcategoryNameAr : subcategoryNameEn;
 
   const {
     data: users,

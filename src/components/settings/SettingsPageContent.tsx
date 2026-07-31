@@ -20,7 +20,10 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { webPushBrowserService } from "@/features/notifications/application/web-push-browser-service";
 import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
 import { notificationPermissionService } from "@/features/notifications/application/permission-service";
-import { specialtyChatClient } from "@/features/specialty-chat";
+import {
+  isSpecialtyChatSessionTokenFailure,
+  specialtyChatClient,
+} from "@/features/specialty-chat";
 
 import {
   type SettingsDensity,
@@ -124,6 +127,7 @@ export function SettingsPageContent() {
       .preference(session)
       .then((value) => setSpecialtyRequestsEnabled(value.enabled))
       .catch((error) => {
+        if (isSpecialtyChatSessionTokenFailure(error)) return;
         console.warn("[Settings] Failed to load specialty chat preference.", error);
       });
   }, [session]);
@@ -175,6 +179,7 @@ export function SettingsPageContent() {
     try {
       if (session?.sessionToken) {
         await specialtyChatClient.preference(session, true).catch((error) => {
+          if (isSpecialtyChatSessionTokenFailure(error)) return;
           console.warn("[Settings] Failed to reset specialty chat preference.", error);
         });
       }

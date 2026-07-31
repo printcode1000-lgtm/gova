@@ -65,7 +65,8 @@ export default async function SellersPage({
       <SellersPageContent 
         categoryId={Number(categoryId)}
         subcategoryId={Number(subcategoryId)}
-        subcategoryName={targetItem.nameAr}
+        subcategoryNameAr={targetItem.nameAr}
+        subcategoryNameEn={targetItem.nameEn}
         subcategoryImage={targetItem.imageUrl}
       />
     </Suspense>
