@@ -79,9 +79,8 @@ export class ImageStorageOrchestrator {
   resolveUrl(
     storageProfileId: string,
     imageKey: string,
-    knownUrl?: string,
+    _knownUrl?: string,
   ): string {
-    if (knownUrl) return knownUrl;
     const profile = getStorageProfileById(storageProfileId);
     const objectPath = this.resolveObjectPath(storageProfileId, imageKey);
     const provider = resolveStorageProvider(profile.provider);
