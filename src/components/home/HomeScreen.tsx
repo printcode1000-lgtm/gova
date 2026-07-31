@@ -4,8 +4,6 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import { CategoriesGrid } from "@/components/home/CategoriesGrid";
-import { CuratedOffers } from "@/components/home/CuratedOffers";
-import { PromoBanner } from "@/components/home/PromoBanner";
 import {
   TrendingRibbon,
   type TrendingRibbonConfig,
@@ -105,13 +103,6 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
         <CategoriesGrid displayCategories={displayCategories} />
       </div>
 
-      <div className="asol-section-tonal asol-section-tonal-secondary mx-2 sm:mx-4">
-        <CuratedOffers />
-      </div>
-
-      <div className="px-4">
-        <PromoBanner />
-      </div>
     </div>
   );
 }
