@@ -1495,8 +1495,16 @@ export class DataHealthRepository {
             imageKey: item.imageKey,
             objectPath: item.objectPath,
           },
-          cleanupAction: "none",
-          cleanupMode: "manual",
+          cleanupAction:
+            item.database === "profile" && item.table === "profile_images"
+              ? "quarantine-record"
+              : "none",
+          // A profile image reference whose object is absent is safe to
+          // quarantine: the original binary is already unavailable.
+          cleanupMode:
+            item.database === "profile" && item.table === "profile_images"
+              ? "quarantine"
+              : "manual",
           relatedId: item.imageKey,
         }),
       );
