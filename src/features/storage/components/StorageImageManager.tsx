@@ -364,6 +364,7 @@ function StorageImageSlot({
   const [isDragging, setIsDragging] = React.useState(false);
   const [isChoosingSource, setIsChoosingSource] = React.useState(false);
   const [sourceError, setSourceError] = React.useState<string | null>(null);
+  const [storedPreviewFailed, setStoredPreviewFailed] = React.useState(false);
   const [stage, setStage] = React.useState<ManagerStage>("idle");
   const [dialog, setDialog] = React.useState<DialogState>(null);
   const [uploadedImage, setUploadedImage] = React.useState<StoredImage | null>(
@@ -393,6 +394,7 @@ function StorageImageSlot({
       hasUrl: Boolean(imageUrl),
     });
     setUploadedImage(image);
+    setStoredPreviewFailed(false);
   }, [config.id, imageKey, imageUrl, isImageUploading, imageError, index]);
 
   const {
@@ -403,41 +405,41 @@ function StorageImageSlot({
     queueStatus,
     queuePosition,
     cancelUpload,
-  } =
-    useStorageProfileUpload({
-      storageProfileId: config.storageProfileId,
-      storageScope: config.storageScope,
-      queueOwnerId: `${config.id}-${index}`,
-      value: selectedFile ? uploadedImage : image,
-      onChange: (nextImage) => {
-        traceStorageImageManager(config.id, "upload-state-change", {
-          index,
-          isUploading: Boolean(nextImage?.isUploading),
-          imageKey: nextImage?.imageKey ?? null,
-          hasUrl: Boolean(nextImage?.url),
-          error: nextImage?.error ?? null,
-        });
-        if (nextImage?.isUploading) {
-          setUploadedImage(nextImage);
-          onUploaded(index, nextImage);
-          return;
-        }
-        if (nextImage) {
-          setUploadedImage(nextImage);
-          onUploaded(index, nextImage);
-          return;
-        }
-        setUploadedImage(null);
-        onRemoved(index);
-      },
-      onProgress: setStage,
-    });
+  } = useStorageProfileUpload({
+    storageProfileId: config.storageProfileId,
+    storageScope: config.storageScope,
+    queueOwnerId: `${config.id}-${index}`,
+    value: selectedFile ? uploadedImage : image,
+    onChange: (nextImage) => {
+      traceStorageImageManager(config.id, "upload-state-change", {
+        index,
+        isUploading: Boolean(nextImage?.isUploading),
+        imageKey: nextImage?.imageKey ?? null,
+        hasUrl: Boolean(nextImage?.url),
+        error: nextImage?.error ?? null,
+      });
+      if (nextImage?.isUploading) {
+        setUploadedImage(nextImage);
+        onUploaded(index, nextImage);
+        return;
+      }
+      if (nextImage) {
+        setUploadedImage(nextImage);
+        onUploaded(index, nextImage);
+        return;
+      }
+      setUploadedImage(null);
+      onRemoved(index);
+    },
+    onProgress: setStage,
+  });
 
   // Follow the storage operation result directly. Waiting only for the parent
   // to echo `value` back can leave the final-image stage active when feature
   // persistence is asynchronous.
   const previewUrl =
-    selectedPreviewUrl ?? uploadedImage?.url ?? image?.url ?? null;
+    selectedPreviewUrl ??
+    (storedPreviewFailed ? null : (uploadedImage?.url ?? image?.url ?? null));
   const displayError = sourceError ?? error;
   const busy = isUploading || image?.isUploading || isChoosingSource;
   const isQueued = queueStatus === "queued";
@@ -725,15 +727,18 @@ function StorageImageSlot({
               if (stage === "loadingImage") setStage("idle");
             }}
             onError={() => {
-              const previewError = new Error(
-                selectedPreviewUrl
-                  ? "Selected image preview failed to render"
-                  : "Stored image failed to render",
-              );
-              console.error(
-                `[StorageImageManager:${config.id}] preview-render-failed`,
-                previewError,
-              );
+              const storedImageFailed = !selectedPreviewUrl;
+              if (storedImageFailed) {
+                setStoredPreviewFailed(true);
+                console.warn(
+                  `[StorageImageManager:${config.id}] stored-image-unavailable`,
+                  { imageKey: image?.imageKey ?? null },
+                );
+              } else {
+                console.warn(
+                  `[StorageImageManager:${config.id}] selected-image-preview-unavailable`,
+                );
+              }
               setSourceError(t("storage.imageManager.previewError"));
             }}
           />
@@ -889,7 +894,9 @@ export function StorageImageManager({
       ) : null}
       <div
         className={cn(
-          maxItems > 1 ? "grid gap-3 sm:grid-cols-3 lg:grid-cols-1" : "space-y-3",
+          maxItems > 1
+            ? "grid gap-3 sm:grid-cols-3 lg:grid-cols-1"
+            : "space-y-3",
           className,
         )}
       >

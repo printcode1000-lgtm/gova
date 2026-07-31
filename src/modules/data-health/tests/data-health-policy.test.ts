@@ -14,6 +14,7 @@ import {
   cleanupConfirmationText,
   isOlderThan,
   makeIssue,
+  quarantineResourceType,
   stableHash,
 } from "../domain/policy";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../db/metadata-schema";
@@ -38,6 +39,8 @@ const second = makeIssue({ ...base, title: "translated title" });
 assert.equal(first.fingerprint, second.fingerprint);
 assert.equal(first.snapshotHash, second.snapshotHash);
 assert.equal(first.canClean, true);
+assert.equal(quarantineResourceType("quarantine-record"), "record");
+assert.equal(quarantineResourceType("quarantine-storage-object"), "image");
 
 const protectedIssue = makeIssue({
   ...base,

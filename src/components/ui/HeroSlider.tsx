@@ -69,7 +69,7 @@ export function HeroSlider({
 
   useEffect(() => {
     setIsRTL(
-      typeof document !== "undefined" && document.documentElement.dir === "rtl"
+      typeof document !== "undefined" && document.documentElement.dir === "rtl",
     );
   }, []);
 
@@ -185,7 +185,10 @@ export function HeroSlider({
   };
 
   const handleImageError = (index: number, src: string) => {
-    console.error("[HeroSlider] slide-image-load-failed", { index, src });
+    // A removed cloud object is a recoverable content problem. Render the
+    // built-in fallback without escalating the browser's resource event into
+    // an application error.
+    console.warn("[HeroSlider] slide-image-unavailable", { index, src });
     setFailedImages((prev) => ({ ...prev, [index]: true }));
     setLoadedImages((prev) => ({ ...prev, [index]: true }));
   };
@@ -518,7 +521,11 @@ export function HeroSlider({
                     className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-xs transition hover:bg-black/50 active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
                     aria-label="Previous slide"
                   >
-                    {isRTL ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+                    {isRTL ? (
+                      <ChevronRight className="h-5 w-5" />
+                    ) : (
+                      <ChevronLeft className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
 
@@ -555,7 +562,11 @@ export function HeroSlider({
                     className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-xs transition hover:bg-black/50 active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
                     aria-label="Next slide"
                   >
-                    {isRTL ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+                    {isRTL ? (
+                      <ChevronLeft className="h-5 w-5" />
+                    ) : (
+                      <ChevronRight className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>

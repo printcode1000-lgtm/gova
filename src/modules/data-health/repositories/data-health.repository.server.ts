@@ -21,6 +21,7 @@ import {
   DATA_HEALTH_POLICY,
   isOlderThan,
   makeIssue,
+  quarantineResourceType,
   severityRank,
 } from "../domain/policy";
 import { resolveDataHealthExecutionContext } from "../domain/execution-context.server";
@@ -2115,7 +2116,7 @@ export class DataHealthRepository {
       [
         randomUUID(),
         issue.fingerprint,
-        issue.category === "image" ? "image" : "record",
+        quarantineResourceType(issue.cleanupAction),
         storageProfileId,
         resourceKey,
         issue.database,

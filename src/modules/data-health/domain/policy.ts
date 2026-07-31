@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import type {
+  DataHealthCleanupAction,
   DataHealthCleanupMode,
   DataHealthIssue,
   DataHealthSeverity,
@@ -60,6 +61,12 @@ export function severityRank(severity: DataHealthSeverity): number {
 
 export function cleanupModeForBrokenRelation(): DataHealthCleanupMode {
   return "automatic";
+}
+
+export function quarantineResourceType(
+  action: DataHealthCleanupAction,
+): "image" | "record" {
+  return action === "quarantine-record" ? "record" : "image";
 }
 
 export function isOlderThan(

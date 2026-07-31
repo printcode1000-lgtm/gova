@@ -20,6 +20,17 @@ function text(value: unknown): string {
   return String(value ?? "").trim();
 }
 
+function quarantineEntryResourceType(entry: Record<string, unknown>) {
+  if (
+    text(entry.resource_type) === "record" ||
+    (text(entry.database_name) === "profile" &&
+      text(entry.table_name) === "profile_images")
+  ) {
+    return "record" as const;
+  }
+  return "image" as const;
+}
+
 export class DataHealthService {
   scan(): Promise<DataHealthReport> {
     return dataHealthRepository.scan();
@@ -107,7 +118,7 @@ export class DataHealthService {
     for (const entry of entries) {
       const id = text(entry.id);
       const fingerprint = text(entry.fingerprint);
-      const resourceType = text(entry.resource_type);
+      const resourceType = quarantineEntryResourceType(entry);
       const recordId = text(entry.record_id) || text(entry.resource_key) || id;
       try {
         if (resourceType === "image") {
