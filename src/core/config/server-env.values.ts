@@ -6,6 +6,10 @@
 import { createPublicKey } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import {
+  assertR2StorageTarget,
+  assertR2StorageTargetFields,
+} from "./r2-storage-topology";
 
 export function getTursoRuntimeCredentials(): {
   url: string;
@@ -290,16 +294,20 @@ function requireEnv(key: string): string {
 }
 
 export function getR2CloudflareCredentials(): R2CloudflareCredentials {
-  return {
+  const credentials = {
     accountId: requireEnv("R2_ACCOUNT_ID"),
     apiToken: requireEnv("R2_API_TOKEN"),
   };
+  assertR2StorageTargetFields("general", {
+    accountId: credentials.accountId,
+  });
+  return credentials;
 }
 
 export function getR2S3Credentials(): R2S3Credentials {
   const jurisdiction = (readOptionalEnv("R2_JURISDICTION") ??
     "default") as R2S3Credentials["jurisdiction"];
-  return {
+  const credentials = {
     accessKeyId: requireEnv("R2_ACCESS_KEY_ID"),
     secretAccessKey: requireEnv("R2_SECRET_ACCESS_KEY"),
     endpoint: requireEnv("R2_ENDPOINT"),
@@ -307,29 +315,46 @@ export function getR2S3Credentials(): R2S3Credentials {
     location: readOptionalEnv("R2_LOCATION") ?? "WEUR",
     jurisdiction,
   };
+  assertR2StorageTargetFields("general", credentials);
+  return credentials;
 }
 
 export function getR2Config(): R2Config {
-  return {
-    cloudflare: getR2CloudflareCredentials(),
-    s3: getR2S3Credentials(),
+  const cloudflare = getR2CloudflareCredentials();
+  const s3 = getR2S3Credentials();
+  const config = {
+    cloudflare,
+    s3,
     publicUrl: requireEnv("R2_PUBLIC_URL"),
     catalogUri: readOptionalEnv("R2_CATALOG_URI") ?? "",
     warehouseName: readOptionalEnv("R2_WAREHOUSE_NAME") ?? "",
   };
+  assertR2StorageTarget("general", {
+    accountId: cloudflare.accountId,
+    endpoint: s3.endpoint,
+    bucketName: s3.bucketName,
+    publicUrl: config.publicUrl,
+    location: s3.location,
+    jurisdiction: s3.jurisdiction,
+  });
+  return config;
 }
 
 export function getProductR2CloudflareCredentials(): R2CloudflareCredentials {
-  return {
+  const credentials = {
     accountId: requireEnv("PRODUCT_R2_ACCOUNT_ID"),
     apiToken: requireEnv("PRODUCT_R2_API_TOKEN"),
   };
+  assertR2StorageTargetFields("products", {
+    accountId: credentials.accountId,
+  });
+  return credentials;
 }
 
 export function getProductR2S3Credentials(): R2S3Credentials {
   const jurisdiction = (readOptionalEnv("PRODUCT_R2_JURISDICTION") ??
     "default") as R2S3Credentials["jurisdiction"];
-  return {
+  const credentials = {
     accessKeyId: requireEnv("PRODUCT_R2_ACCESS_KEY_ID"),
     secretAccessKey: requireEnv("PRODUCT_R2_SECRET_ACCESS_KEY"),
     endpoint: requireEnv("PRODUCT_R2_ENDPOINT"),
@@ -337,14 +362,27 @@ export function getProductR2S3Credentials(): R2S3Credentials {
     location: readOptionalEnv("PRODUCT_R2_LOCATION") ?? "WEUR",
     jurisdiction,
   };
+  assertR2StorageTargetFields("products", credentials);
+  return credentials;
 }
 
 export function getProductR2Config(): R2Config {
-  return {
-    cloudflare: getProductR2CloudflareCredentials(),
-    s3: getProductR2S3Credentials(),
+  const cloudflare = getProductR2CloudflareCredentials();
+  const s3 = getProductR2S3Credentials();
+  const config = {
+    cloudflare,
+    s3,
     publicUrl: requireEnv("PRODUCT_R2_PUBLIC_URL"),
     catalogUri: readOptionalEnv("PRODUCT_R2_CATALOG_URI") ?? "",
     warehouseName: readOptionalEnv("PRODUCT_R2_WAREHOUSE_NAME") ?? "",
   };
+  assertR2StorageTarget("products", {
+    accountId: cloudflare.accountId,
+    endpoint: s3.endpoint,
+    bucketName: s3.bucketName,
+    publicUrl: config.publicUrl,
+    location: s3.location,
+    jurisdiction: s3.jurisdiction,
+  });
+  return config;
 }

@@ -6,6 +6,7 @@
 import {
   DeleteObjectCommand,
   GetObjectCommand,
+  HeadObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
@@ -123,6 +124,48 @@ export async function deleteProductR2Object(key: string): Promise<void> {
       Bucket: bucketName,
       Key: key,
     })
+  );
+}
+
+async function configuredR2ObjectExists(
+  client: S3Client,
+  bucketName: string,
+  key: string,
+): Promise<boolean> {
+  try {
+    await client.send(
+      new HeadObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+      }),
+    );
+    return true;
+  } catch (error) {
+    const statusCode = (error as { $metadata?: { httpStatusCode?: number } })
+      .$metadata?.httpStatusCode;
+    const name = (error as { name?: string }).name;
+    if (statusCode === 404 || name === 'NotFound' || name === 'NoSuchKey') {
+      return false;
+    }
+    throw error;
+  }
+}
+
+export async function r2ObjectExists(key: string): Promise<boolean> {
+  const config = getR2Config();
+  return configuredR2ObjectExists(
+    createR2S3Client(),
+    config.s3.bucketName,
+    key,
+  );
+}
+
+export async function productR2ObjectExists(key: string): Promise<boolean> {
+  const config = getProductR2Config();
+  return configuredR2ObjectExists(
+    createProductR2S3Client(),
+    config.s3.bucketName,
+    key,
   );
 }
 

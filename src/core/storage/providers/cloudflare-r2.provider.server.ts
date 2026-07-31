@@ -5,6 +5,7 @@ import {
   uploadR2Object,
   deleteR2Object,
   listR2Objects,
+  r2ObjectExists,
 } from '@/core/provisioning/r2-s3-client';
 import { buildR2PublicObjectUrl } from '@/core/provisioning/r2-cors-policy';
 import type {
@@ -23,6 +24,10 @@ export class CloudflareR2Provider implements IStorageProvider {
 
   async delete(objectPath: string): Promise<void> {
     await deleteR2Object(objectPath);
+  }
+
+  exists(objectPath: string): Promise<boolean> {
+    return r2ObjectExists(objectPath);
   }
 
   resolvePublicUrl(objectPath: string): string {

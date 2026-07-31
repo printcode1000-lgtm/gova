@@ -4,6 +4,7 @@ import { getProductR2Config } from '@/core/config/server-env.values';
 import {
   deleteProductR2Object,
   listProductR2Objects,
+  productR2ObjectExists,
   uploadProductR2Object,
 } from '@/core/provisioning/r2-s3-client';
 import { buildR2PublicObjectUrl } from '@/core/provisioning/r2-cors-policy';
@@ -23,6 +24,10 @@ export class CloudflareR2ProductsProvider implements IStorageProvider {
 
   async delete(objectPath: string): Promise<void> {
     await deleteProductR2Object(objectPath);
+  }
+
+  exists(objectPath: string): Promise<boolean> {
+    return productR2ObjectExists(objectPath);
   }
 
   resolvePublicUrl(objectPath: string): string {

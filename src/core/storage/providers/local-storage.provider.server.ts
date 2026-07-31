@@ -43,6 +43,11 @@ export class LocalStorageProvider implements IStorageProvider {
     return Promise.resolve();
   }
 
+  exists(objectPath: string): Promise<boolean> {
+    assertPathUnderImagesRoot(objectPath);
+    return Promise.resolve(existsSync(path.join(LOCAL_SYNC_ROOT, objectPath)));
+  }
+
   resolvePublicUrl(objectPath: string): string {
     const base = publicEnv.basePath.replace(/\/$/, '');
     const normalized = objectPath.replace(/^\/+/, '');

@@ -15,6 +15,9 @@ export interface IStorageProvider {
   /** Deletes an object at the given path. */
   delete(objectPath: string): Promise<void>;
 
+  /** Checks whether an object exists in this exact storage target. */
+  exists(objectPath: string): Promise<boolean>;
+
   /** Resolves a public or servable URL for display. */
   resolvePublicUrl(objectPath: string): string;
 

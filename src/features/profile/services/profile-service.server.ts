@@ -252,24 +252,45 @@ export class ProfileService implements IProfileService {
             : coverImageKey
               ? [coverImageKey]
               : [];
+        const avatarExists = avatarImageKey
+          ? await imageStorageOrchestrator.existsByKey(
+              AVATAR_PROFILE_ID,
+              avatarImageKey,
+            )
+          : false;
+        const existingCoverImageKeys = (
+          await Promise.all(
+            normalizedCoverImageKeys.map(async (key) => ({
+              key,
+              exists: await imageStorageOrchestrator.existsByKey(
+                COVER_PROFILE_ID,
+                key,
+              ),
+            })),
+          )
+        )
+          .filter(({ exists }) => exists)
+          .map(({ key }) => key);
+        const existingCoverImageKey = existingCoverImageKeys[0] ?? null;
 
         return {
           avatarImageKey,
-          coverImageKey,
-          coverImageKeys: normalizedCoverImageKeys,
-          avatarUrl: avatarImageKey
-            ? imageStorageOrchestrator.resolveUrl(
-                AVATAR_PROFILE_ID,
-                avatarImageKey,
-              )
-            : null,
-          coverUrl: coverImageKey
+          coverImageKey: existingCoverImageKey,
+          coverImageKeys: existingCoverImageKeys,
+          avatarUrl:
+            avatarImageKey && avatarExists
+              ? imageStorageOrchestrator.resolveUrl(
+                  AVATAR_PROFILE_ID,
+                  avatarImageKey,
+                )
+              : null,
+          coverUrl: existingCoverImageKey
             ? imageStorageOrchestrator.resolveUrl(
                 COVER_PROFILE_ID,
-                coverImageKey,
+                existingCoverImageKey,
               )
             : null,
-          coverUrls: normalizedCoverImageKeys.map((key) =>
+          coverUrls: existingCoverImageKeys.map((key) =>
             imageStorageOrchestrator.resolveUrl(COVER_PROFILE_ID, key),
           ),
         };

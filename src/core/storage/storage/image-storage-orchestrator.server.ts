@@ -87,6 +87,16 @@ export class ImageStorageOrchestrator {
     return provider.resolvePublicUrl(objectPath);
   }
 
+  async existsByKey(
+    storageProfileId: string,
+    imageKey: string,
+  ): Promise<boolean> {
+    const profile = getStorageProfileById(storageProfileId);
+    assertStorageProfileEnabled(profile);
+    const objectPath = this.resolveObjectPath(storageProfileId, imageKey);
+    return resolveStorageProvider(profile.provider).exists(objectPath);
+  }
+
   getProfile(profileId: string): StorageProfile {
     return getStorageProfileById(profileId);
   }
