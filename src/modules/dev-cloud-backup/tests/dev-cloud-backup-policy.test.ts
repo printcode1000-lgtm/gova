@@ -57,6 +57,11 @@ try {
     `unexpected R2 backup prefixes: ${prefixes.join(", ")}`,
   );
 
+  assert.ok(
+    prefixes.includes("images/products/"),
+    "product R2 prefix is missing from the cloud backup scope",
+  );
+
   assert.deepEqual(r2BackupRepository.prefixesForScope("all-r2"), [""]);
   console.log("dev-cloud-backup policy: environment guard and R2 scope verified");
 } finally {

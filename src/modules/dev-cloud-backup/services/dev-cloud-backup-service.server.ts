@@ -49,14 +49,34 @@ function safeZipName(fileName: string): string {
 function parseManifest(files: Record<string, Uint8Array>): DevCloudBackupManifest {
   const raw = files[MANIFEST_FILE];
   if (!raw) throw new Error("devCloudBackupManifestMissing");
-  const manifest = JSON.parse(strFromU8(raw)) as DevCloudBackupManifest;
+  const manifest = JSON.parse(strFromU8(raw)) as DevCloudBackupManifest & {
+    r2?: DevCloudBackupManifest["r2"] & {
+      bucketName?: string;
+      bucketNames?: DevCloudBackupManifest["r2"]["bucketNames"];
+      objects?: Array<DevCloudBackupManifest["r2"]["objects"][number] & { storage?: "primary" | "products" }>;
+    };
+  };
   if (!manifest || manifest.manifestVersion !== DEV_CLOUD_BACKUP_MANIFEST_VERSION) {
     throw new Error("devCloudBackupManifestUnsupported");
   }
   if (manifest.environment !== "development") {
     throw new Error("devCloudBackupManifestInvalidEnvironment");
   }
-  return manifest;
+  const r2 = manifest.r2;
+  if (!r2) throw new Error("devCloudBackupManifestInvalidR2");
+
+  // Archives created before R2 was split had one unnamed bucket; it is the primary bucket.
+  return {
+    ...manifest,
+    r2: {
+      ...r2,
+      bucketNames: r2.bucketNames ?? (r2.bucketName ? { primary: r2.bucketName } : {}),
+      objects: (r2.objects ?? []).map((object) => ({
+        ...object,
+        storage: object.storage ?? "primary",
+      })),
+    },
+  };
 }
 
 function restoreConfirmation(mode: DevCloudBackupRestoreMode) {
@@ -161,7 +181,7 @@ export class DevCloudBackupService {
       scope,
       databases,
       r2: {
-        bucketName: r2.bucketName,
+        bucketNames: r2.bucketNames,
         objectCount: r2.objects.length,
         totalBytes: r2.totalBytes,
         objects: r2.objects,
@@ -289,8 +309,9 @@ export class DevCloudBackupService {
       }
     }
 
-    const zipObjects = new Map(zipManifest.r2.objects.map((object) => [object.key, object]));
-    const cloudObjects = new Map(cloud.manifest.r2.objects.map((object) => [object.key, object]));
+    const objectIdentity = (object: (typeof zipManifest.r2.objects)[number]) => `${object.storage}:${object.key}`;
+    const zipObjects = new Map(zipManifest.r2.objects.map((object) => [objectIdentity(object), object]));
+    const cloudObjects = new Map(cloud.manifest.r2.objects.map((object) => [objectIdentity(object), object]));
     const objectKeys = new Set([...zipObjects.keys(), ...cloudObjects.keys()]);
     for (const key of objectKeys) {
       const zipObject = zipObjects.get(key);
@@ -299,19 +320,22 @@ export class DevCloudBackupService {
       const cloudHash = cloudObject ? hashBytes(cloud.files[cloudObject.file]) : "";
       if (!zipObject && cloudObject) {
         r2Differences.push({
-          key,
+          storage: cloudObject.storage,
+          key: cloudObject.key,
           status: "missing-in-zip",
           cloudSize: cloudObject.size,
         });
       } else if (zipObject && !cloudObject) {
         r2Differences.push({
-          key,
+          storage: zipObject.storage,
+          key: zipObject.key,
           status: "missing-in-cloud",
           zipSize: zipObject.size,
         });
       } else if (zipObject && cloudObject && zipHash !== cloudHash) {
         r2Differences.push({
-          key,
+          storage: cloudObject.storage,
+          key: cloudObject.key,
           status: "changed",
           zipSize: zipObject.size,
           cloudSize: cloudObject.size,

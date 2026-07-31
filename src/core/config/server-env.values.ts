@@ -155,6 +155,7 @@ export function getOtaApprovalServerConfig(): {
     process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL?.trim();
   const publicBaseUrl = (
     process.env.ASOL_OTA_R2_PUBLIC_URL ||
+    process.env.PRODUCT_R2_PUBLIC_URL ||
     process.env.R2_PUBLIC_URL ||
     process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
     ""

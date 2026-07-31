@@ -18,6 +18,7 @@ export interface DevCloudBackupDatabaseManifest {
 }
 
 export interface DevCloudBackupR2ObjectManifest {
+  storage: "primary" | "products";
   key: string;
   file: string;
   size: number;
@@ -35,7 +36,7 @@ export interface DevCloudBackupManifest {
   scope: DevCloudBackupScope;
   databases: DevCloudBackupDatabaseManifest[];
   r2: {
-    bucketName?: string;
+    bucketNames: Partial<Record<"primary" | "products", string>>;
     objectCount: number;
     totalBytes: number;
     objects: DevCloudBackupR2ObjectManifest[];
@@ -72,6 +73,7 @@ export interface DevCloudBackupDiffReport {
     cloudRows: number;
   }>;
   r2Differences: Array<{
+    storage: "primary" | "products";
     key: string;
     status: "missing-in-zip" | "missing-in-cloud" | "changed";
     zipSize?: number;

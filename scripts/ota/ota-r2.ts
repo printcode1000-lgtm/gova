@@ -69,19 +69,21 @@ async function withR2Retry<T>(operation: string, action: () => Promise<T>): Prom
   });
 }
 
-function requireEnv(key: string, fallbackKey?: string): string {
-  const value = process.env[key] ?? (fallbackKey ? process.env[fallbackKey] : undefined);
-  if (!value) throw new Error(`${key}${fallbackKey ? ` or ${fallbackKey}` : ''} is required`);
+function requireEnv(key: string, ...fallbackKeys: string[]): string {
+  const value = [key, ...fallbackKeys]
+    .map((candidate) => process.env[candidate])
+    .find(Boolean);
+  if (!value) throw new Error(`${[key, ...fallbackKeys].join(' or ')} is required`);
   return value;
 }
 
 export function createOtaR2Client(): S3Client {
   return new S3Client({
     region: 'auto',
-    endpoint: requireEnv('ASOL_OTA_R2_ENDPOINT', 'R2_ENDPOINT'),
+    endpoint: requireEnv('ASOL_OTA_R2_ENDPOINT', 'PRODUCT_R2_ENDPOINT', 'R2_ENDPOINT'),
     credentials: {
-      accessKeyId: requireEnv('ASOL_OTA_R2_ACCESS_KEY_ID', 'R2_ACCESS_KEY_ID'),
-      secretAccessKey: requireEnv('ASOL_OTA_R2_SECRET_ACCESS_KEY', 'R2_SECRET_ACCESS_KEY'),
+      accessKeyId: requireEnv('ASOL_OTA_R2_ACCESS_KEY_ID', 'PRODUCT_R2_ACCESS_KEY_ID', 'R2_ACCESS_KEY_ID'),
+      secretAccessKey: requireEnv('ASOL_OTA_R2_SECRET_ACCESS_KEY', 'PRODUCT_R2_SECRET_ACCESS_KEY', 'R2_SECRET_ACCESS_KEY'),
     },
     forcePathStyle: true,
     maxAttempts: 4,
