@@ -38,6 +38,7 @@ function toStorableValue<T>(value: T): T {
 }
 
 let dbInstance: IDBDatabase | null = null;
+let dbOpening: Promise<IDBDatabase> | null = null;
 
 function hasIndexedDb(): boolean {
   return typeof indexedDB !== 'undefined';
@@ -45,16 +46,28 @@ function hasIndexedDb(): boolean {
 
 async function getDB(): Promise<IDBDatabase> {
   if (dbInstance) return dbInstance;
+  if (dbOpening) return dbOpening;
   if (!hasIndexedDb()) {
     throw new Error('AsolDB IndexedDB storage is only available in the browser');
   }
 
-  return new Promise((resolve, reject) => {
+  dbOpening = new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-    request.onerror = () => reject(request.error);
+    request.onerror = () => {
+      dbOpening = null;
+      reject(request.error);
+    };
     request.onsuccess = () => {
       dbInstance = request.result;
+      dbOpening = null;
+      dbInstance.onversionchange = () => {
+        dbInstance?.close();
+        dbInstance = null;
+      };
+      dbInstance.onclose = () => {
+        dbInstance = null;
+      };
       resolve(dbInstance);
     };
 
@@ -68,6 +81,7 @@ async function getDB(): Promise<IDBDatabase> {
       }
     };
   });
+  return dbOpening;
 }
 
 async function getStore(
@@ -150,6 +164,22 @@ export async function asolDbGetAll<T>(storeName: AsolDbStoreName): Promise<Array
       tx.onerror = () => reject(tx.error);
     });
   });
+}
+
+function isClosingConnectionError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'InvalidStateError' &&
+    error.message.includes('database connection is closing');
+}
+
+async function retryClosingConnection<T>(operation: () => Promise<T>): Promise<T> {
+  try {
+    return await operation();
+  } catch (error) {
+    if (!isClosingConnectionError(error)) throw error;
+    dbInstance?.close();
+    dbInstance = null;
+    return operation();
+  }
 }
 
 export async function asolDbClearStore(storeName: AsolDbStoreName): Promise<void> {
