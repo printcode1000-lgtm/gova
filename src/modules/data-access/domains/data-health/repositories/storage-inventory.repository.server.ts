@@ -47,6 +47,28 @@ const IGNORED_STORAGE_FILE_NAMES = new Set([
   "thumbs.db",
 ]);
 
+/**
+ * Tables that record observations *about* images rather than use them.
+ * The dynamic reference scan reads every text column, so a finding, a
+ * quarantine entry, an audit row, or a log line that stores an object path
+ * would otherwise count as a live reference — which makes every reported
+ * orphan disappear from the next scan and masks it forever.
+ *
+ * `data_health_storage_deletion_tasks` is deliberately absent: a queued
+ * deletion legitimately claims its image (ownership `deletion-task` in the
+ * image source registry) until the purge finishes.
+ */
+const NON_REFERENCE_TABLES = new Set([
+  "data_health_runs",
+  "data_health_findings",
+  "data_health_cleanup_plans",
+  "data_health_cleanup_audit",
+  "data_health_quarantine",
+  "data_health_locks",
+  "data_health_order_purge_plans",
+  "system_logs",
+]);
+
 function text(value: unknown): string {
   return String(value ?? "").trim();
 }
@@ -435,7 +457,7 @@ export class StorageInventoryRepository {
         );
         for (const tableRow of tables) {
           const table = text(tableRow.name);
-          if (!table) continue;
+          if (!table || NON_REFERENCE_TABLES.has(table)) continue;
           const columns = await database.client.execute(
             `PRAGMA table_info(${quoteIdentifier(table)})`,
           );
