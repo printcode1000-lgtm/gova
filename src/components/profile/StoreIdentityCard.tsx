@@ -86,7 +86,7 @@ export const StoreIdentityCard = React.forwardRef<
   const handleLogoImagesChange = (images: StoredImage[]) => {
     const image = images[0] ?? null;
     setLogoImage(image);
-    void saveStoreImages({ avatarImageKey: image?.imageKey ?? null });
+    saveStoreImages({ avatarImageKey: image?.imageKey ?? null });
   };
 
   const profileHeroConfig = React.useMemo<HeroSliderConfig>(
@@ -109,7 +109,7 @@ export const StoreIdentityCard = React.forwardRef<
   );
 
   const handleHeroImagesChange = (config: HeroSliderConfig) => {
-    void saveStoreImages({
+    saveStoreImages({
       coverImageKeys: config.slides
         .map((slide) => slide.imageKey)
         .filter((imageKey): imageKey is string => Boolean(imageKey))
@@ -250,18 +250,21 @@ export const StoreIdentityCard = React.forwardRef<
         mode={details.ratingSettings.mode}
         disabled={readOnly}
         labels={{
-          title: "\u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
-          enabled: "\u062A\u0641\u0639\u064A\u0644 \u0627\u0644\u062A\u0642\u064A\u064A\u0645\u0627\u062A \u0641\u064A \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062E\u0635\u064A",
+          title:
+            "\u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
+          enabled:
+            "\u062A\u0641\u0639\u064A\u0644 \u0627\u0644\u062A\u0642\u064A\u064A\u0645\u0627\u062A \u0641\u064A \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062E\u0635\u064A",
           mode: "\u0648\u0636\u0639 \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
-          placeholder: "\u0627\u062E\u062A\u0631 \u0648\u0636\u0639 \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
+          placeholder:
+            "\u0627\u062E\u062A\u0631 \u0648\u0636\u0639 \u0627\u0644\u062A\u0642\u064A\u064A\u0645",
           stars: "\u0646\u062C\u0648\u0645 \u0641\u0642\u0637",
-          starsComments: "\u0646\u062C\u0648\u0645 \u0648\u062A\u0639\u0644\u064A\u0642\u0627\u062A",
+          starsComments:
+            "\u0646\u062C\u0648\u0645 \u0648\u062A\u0639\u0644\u064A\u0642\u0627\u062A",
         }}
         onChange={(ratingSettings) =>
           updateField("ratingSettings", ratingSettings)
         }
       />
-
     </div>
   );
 });

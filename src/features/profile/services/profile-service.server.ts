@@ -97,9 +97,14 @@ function assertBrowserMergedContacts(
 }
 
 function normalizeCoverImageKeys(keys: string[]): string[] {
-  return keys
-    .filter((key) => typeof key === "string" && key.length > 0)
-    .slice(0, MAX_COVER_IMAGES);
+  return Array.from(
+    new Set(
+      keys
+        .filter((key): key is string => typeof key === "string")
+        .map((key) => key.trim())
+        .filter(Boolean),
+    ),
+  ).slice(0, MAX_COVER_IMAGES);
 }
 
 function isIntegerId(value: unknown): value is number {
@@ -114,7 +119,9 @@ function selectableProfileSubcategoryIds(categoryId: number): Set<number> {
 
   const ids = categoryService
     .getProfileSubOptions(category.id, category.isCollection)
-    .filter((item) => !item.isDoctorAppointmentGroup && item.selectable !== false)
+    .filter(
+      (item) => !item.isDoctorAppointmentGroup && item.selectable !== false,
+    )
     .map((item) => item.originalId ?? item.id)
     .filter(isIntegerId);
 
@@ -140,9 +147,11 @@ function normalizeSpecialties(
     ),
   );
   const validMain = mainCandidates.filter((categoryId) => {
-      if (categoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) return true;
-      return categoryService.getProfileMainOptions().some((item) => item.id === categoryId);
-    });
+    if (categoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) return true;
+    return categoryService
+      .getProfileMainOptions()
+      .some((item) => item.id === categoryId);
+  });
   const sub: Record<string, number[]> = {};
   if (value?.sub && typeof value.sub === "object") {
     for (const [categoryId, ids] of Object.entries(value.sub)) {
@@ -150,9 +159,14 @@ function normalizeSpecialties(
       const numericCategoryId = Number(categoryId);
       if (!validMain.includes(numericCategoryId)) continue;
       const allowedIds = selectableProfileSubcategoryIds(numericCategoryId);
-      const normalized = Array.from(new Set(ids.filter(Number.isInteger))).filter((id) => {
+      const normalized = Array.from(
+        new Set(ids.filter(Number.isInteger)),
+      ).filter((id) => {
         if (allowedIds.has(id)) return true;
-        return categoryService.resolveLegacyProductSelection(categoryId, String(id)).valid;
+        return categoryService.resolveLegacyProductSelection(
+          categoryId,
+          String(id),
+        ).valid;
       });
       if (normalized.length > 0) sub[categoryId] = normalized;
     }
@@ -161,7 +175,9 @@ function normalizeSpecialties(
   const pairedMain = validMain.filter((categoryId) => {
     if (categoryId === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) return true;
     const selectableIds = selectableProfileSubcategoryIds(categoryId);
-    return selectableIds.size === 0 || (sub[String(categoryId)]?.length ?? 0) > 0;
+    return (
+      selectableIds.size === 0 || (sub[String(categoryId)]?.length ?? 0) > 0
+    );
   });
 
   const main = options.unlimited ? pairedMain : pairedMain.slice(0, 3);
@@ -359,7 +375,14 @@ export class ProfileService implements IProfileService {
     search?: string,
     minRating?: number,
   ) {
-    return this.getUsersBySpecialtyQuery.execute(categoryId, subcategoryId, offset, limit, search, minRating);
+    return this.getUsersBySpecialtyQuery.execute(
+      categoryId,
+      subcategoryId,
+      offset,
+      limit,
+      search,
+      minRating,
+    );
   }
 
   async saveEditor(

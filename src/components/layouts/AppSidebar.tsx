@@ -25,7 +25,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,6 +34,7 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { FocusTrap } from "focus-trap-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
@@ -77,7 +78,9 @@ export const AppSidebar = React.memo(function AppSidebar({
   const resolvedScheme = useResolvedColorScheme();
   const { resetPreferences: resetThemePreferences } = useThemePreferences();
   const { resetPreferences: resetAppPreferences } = useAppPreferences();
-  const { isLoggedIn, session } = useSession();
+  const { isLoggedIn, session, setSession } = useSession();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const pathname = usePathname();
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
@@ -96,18 +99,19 @@ export const AppSidebar = React.memo(function AppSidebar({
       typeof window !== "undefined" &&
       ["localhost", "127.0.0.1"].includes(window.location.hostname));
   const isProfilePage = pathname === "/profile";
-  const [activeProfileMode, setActiveProfileMode] = useState<string | null>(null);
+  const [activeProfileMode, setActiveProfileMode] = useState<string | null>(
+    null,
+  );
   const isProfilePreviewActive = activeProfileMode === "preview";
   const isProfileEditActive = activeProfileMode === "edit";
   const sidebarTone =
     resolvedScheme === "dark"
       ? "text-primary font-normal hover:text-primary"
       : "text-blue-900 font-normal hover:text-blue-900";
-  const sidebarActiveTone = "asol-nav-pill-active shadow-sm ring-1 ring-primary/20";
+  const sidebarActiveTone =
+    "asol-nav-pill-active shadow-sm ring-1 ring-primary/20";
   const sidebarSurface =
-    resolvedScheme === "dark"
-      ? "bg-surface-bright"
-      : "bg-[#F8FBFF]";
+    resolvedScheme === "dark" ? "bg-surface-bright" : "bg-[#F8FBFF]";
   const sidebarHoverSurface =
     resolvedScheme === "dark"
       ? "hover:bg-surface-container-high active:bg-surface-variant"
@@ -182,50 +186,68 @@ export const AppSidebar = React.memo(function AppSidebar({
     setLogoutDialogOpen(true);
   }, []);
 
-  const confirmLogout = useCallback(async () => {
+  const confirmLogout = useCallback(() => {
     if (logout.isPending) return;
 
-    try {
-      if (session) {
+    const exitingSession = session;
+    setLogoutDialogOpen(false);
+    onClose();
+    queueLogoutSuccessToast();
+    router.replace("/home");
+    setSession(null);
+    queryClient.clear();
+
+    void (async () => {
+      try {
+        if (exitingSession) {
+          try {
+            await specialtyChatClient
+              .preference(exitingSession, true)
+              .catch((error) => {
+                if (!isSpecialtyChatSessionTokenFailure(error)) {
+                  console.warn(
+                    "[AppSidebar] Failed to reset specialty chat preference during logout.",
+                    error,
+                  );
+                }
+              });
+            await notificationDeviceTokenService.unregister(
+              exitingSession.uid,
+              exitingSession.phone,
+            );
+          } catch (error) {
+            console.warn(
+              "[AppSidebar] Failed to unregister notification device during logout.",
+              error,
+            );
+          }
+        }
+
+        await logout.mutateAsync();
+        resetThemePreferences();
+        resetAppPreferences();
+        await clearAllClientStorage();
+      } catch (error) {
+        console.warn("[AppSidebar] Logout cleanup failed.", error);
         try {
-          await specialtyChatClient.preference(session, true).catch((error) => {
-            if (!isSpecialtyChatSessionTokenFailure(error)) {
-              console.warn("[AppSidebar] Failed to reset specialty chat preference during logout.", error);
-            }
-          });
-          await notificationDeviceTokenService.unregister(
-            session.uid,
-            session.phone,
+          await clearAllClientStorage();
+        } catch (cleanupError) {
+          console.warn(
+            "[AppSidebar] Local logout cleanup failed.",
+            cleanupError,
           );
-        } catch (error) {
-          console.warn("[AppSidebar] Failed to unregister notification device during logout.", error);
         }
       }
-
-      await logout.mutateAsync();
-      setLogoutDialogOpen(false);
-      onClose();
-      resetThemePreferences();
-      resetAppPreferences();
-      await clearAllClientStorage();
-      queueLogoutSuccessToast();
-      window.location.assign("/home");
-    } catch (error) {
-      console.error("[AppSidebar] Logout cleanup failed.", error);
-      setLogoutDialogOpen(false);
-      onClose();
-      resetThemePreferences();
-      resetAppPreferences();
-      await clearAllClientStorage();
-      queueLogoutSuccessToast();
-      window.location.assign("/home");
-    }
+    })();
   }, [
     logout,
     onClose,
+    queryClient,
     resetAppPreferences,
     resetThemePreferences,
+    router,
     session,
+    setSession,
   ]);
 
   const handleSuperAdminToggle = useCallback(() => {
@@ -331,15 +353,27 @@ export const AppSidebar = React.memo(function AppSidebar({
               </button>
               {superAdminGroupsOpen.content && (
                 <div className={groupPanelClass}>
-                  <Link href="/super-admin/hero-slider" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/hero-slider"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <Sliders className={sidebarSmallIconClass} />
                     {t("sidebar.heroSlider")}
                   </Link>
-                  <Link href="/super-admin/featured-marquee" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/featured-marquee"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <Sparkles className={sidebarSmallIconClass} />
                     {t("sidebar.featuredMarquee")}
                   </Link>
-                  <Link href="/super-admin/trending-ribbon" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/trending-ribbon"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <TrendingUp className={sidebarSmallIconClass} />
                     {t("sidebar.trendingRibbon")}
                   </Link>
@@ -365,21 +399,37 @@ export const AppSidebar = React.memo(function AppSidebar({
               </button>
               {superAdminGroupsOpen.data && (
                 <div className={groupPanelClass}>
-                  <Link href="/super-admin/data-health" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/data-health"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <DatabaseZap className={sidebarSmallIconClass} />
                     فحص سلامة البيانات
                   </Link>
-                  <Link href="/super-admin/dev-cloud-backup" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/dev-cloud-backup"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <DatabaseBackup className={sidebarSmallIconClass} />
                     نسخ سحابة التطوير
                   </Link>
                   {showLocalDevelopmentTools ? (
                     <>
-                      <Link href="/super-admin/google-play-console" onClick={onClose} className={itemClass}>
+                      <Link
+                        href="/super-admin/google-play-console"
+                        onClick={onClose}
+                        className={itemClass}
+                      >
                         <ShoppingBag className={sidebarSmallIconClass} />
                         Google Play Console
                       </Link>
-                      <Link href="/super-admin/google-play-store-assets" onClick={onClose} className={itemClass}>
+                      <Link
+                        href="/super-admin/google-play-store-assets"
+                        onClick={onClose}
+                        className={itemClass}
+                      >
                         <ImageIcon className={sidebarSmallIconClass} />
                         بيانات متجر Google Play
                       </Link>
@@ -407,11 +457,19 @@ export const AppSidebar = React.memo(function AppSidebar({
               </button>
               {superAdminGroupsOpen.notifications && (
                 <div className={groupPanelClass}>
-                  <Link href="/super-admin/notifications-broadcast" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/notifications-broadcast"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <Megaphone className={sidebarSmallIconClass} />
                     إرسال إشعار جماعي
                   </Link>
-                  <Link href="/super-admin/vapid" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/vapid"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <KeyRound className={sidebarSmallIconClass} />
                     إدارة VAPID
                   </Link>
@@ -437,15 +495,27 @@ export const AppSidebar = React.memo(function AppSidebar({
               </button>
               {superAdminGroupsOpen.system && (
                 <div className={groupPanelClass}>
-                  <Link href="/super-admin/logs" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/logs"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <ScrollText className={sidebarSmallIconClass} />
                     سجل النظام
                   </Link>
-                  <Link href="/super-admin/users" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/users"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <Users className={sidebarSmallIconClass} />
                     بحث المستخدمين
                   </Link>
-                  <Link href="/super-admin/ota-releases" onClick={onClose} className={itemClass}>
+                  <Link
+                    href="/super-admin/ota-releases"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
                     <CloudDownload className={sidebarSmallIconClass} />
                     {t("sidebar.otaReleases")}
                   </Link>
@@ -534,8 +604,18 @@ export const AppSidebar = React.memo(function AppSidebar({
                     {t("sidebar.logout")}
                   </button>
 
-                  <div className={cn("asol-control rounded-lg p-2", sidebarSurface)}>
-                    <div className={cn("px-2 py-1 text-xs font-semibold flex items-center gap-2", sidebarTone)}>
+                  <div
+                    className={cn(
+                      "asol-control rounded-lg p-2",
+                      sidebarSurface,
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "px-2 py-1 text-xs font-semibold flex items-center gap-2",
+                        sidebarTone,
+                      )}
+                    >
                       <User className={sidebarSmallIconClass} />
                       {t("nav.profile")}
                     </div>
@@ -592,10 +672,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 </>
               ) : (
                 <Link href="/login" onClick={onClose}>
-                  <button
-                    type="button"
-                    className={sidebarControlClass}
-                  >
+                  <button type="button" className={sidebarControlClass}>
                     <LogIn className={sidebarIconClass} />
                     {t("sidebar.login")}
                   </button>

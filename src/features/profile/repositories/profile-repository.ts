@@ -104,12 +104,13 @@ export class ProfileRepository implements IProfileRepository {
     table: string,
     columns: string[],
     rows: unknown[][],
+    conflictClause = "",
   ): Promise<void> {
     if (rows.length === 0) return;
     const quotedColumns = columns.map((column) => `"${column}"`).join(", ");
     const rowPlaceholders = `(${columns.map(() => "?").join(", ")})`;
     await this.database.execute(
-      `INSERT INTO "${table}" (${quotedColumns}) VALUES ${rows.map(() => rowPlaceholders).join(", ")}`,
+      `INSERT INTO "${table}" (${quotedColumns}) VALUES ${rows.map(() => rowPlaceholders).join(", ")} ${conflictClause}`.trim(),
       rows.flat(),
     );
   }
@@ -369,6 +370,9 @@ export class ProfileRepository implements IProfileRepository {
   async upsertImageKeys(uid: string, keys: ProfileImageKeys): Promise<void> {
     await this.ensureProfile(uid);
     const timestamp = nowIso();
+    const coverImageKeys = Array.from(
+      new Set(keys.coverImageKeys.map((key) => key.trim()).filter(Boolean)),
+    ).slice(0, 3);
     await this.database.execute("DELETE FROM profile_images WHERE uid = ?", [
       uid,
     ]);
@@ -387,7 +391,7 @@ export class ProfileRepository implements IProfileRepository {
             },
           ]
         : []),
-      ...keys.coverImageKeys.slice(0, 3).map((imageKey, index) => ({
+      ...coverImageKeys.map((imageKey, index) => ({
         id: createId("image"),
         uid,
         imageKey,
@@ -420,6 +424,10 @@ export class ProfileRepository implements IProfileRepository {
         row.createdAt,
         row.updatedAt,
       ]),
+      `ON CONFLICT(uid, image_key, image_type) DO UPDATE SET
+         is_primary = excluded.is_primary,
+         sort_order = excluded.sort_order,
+         updated_at = excluded.updated_at`,
     );
   }
 

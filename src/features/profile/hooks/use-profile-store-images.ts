@@ -1,13 +1,17 @@
-'use client';
+"use client";
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
-import { useSession } from '@/features/auth/components/SessionProvider';
-import type { SaveStoreImagesInput, StoreImagesData } from '../entities/store-images.entity';
-import { profileService } from '../services/profile-service';
-import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo } from "react";
+import { useSession } from "@/features/auth/components/SessionProvider";
+import type {
+  SaveStoreImagesInput,
+  StoreImagesData,
+} from "../entities/store-images.entity";
+import { profileService } from "../services/profile-service";
+import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
-const profileStoreImagesQueryKey = (uid: string) => ['profile', 'store-images', uid] as const;
+const profileStoreImagesQueryKey = (uid: string) =>
+  ["profile", "store-images", uid] as const;
 
 const emptyStoreImages: StoreImagesData = {
   avatarImageKey: null,
@@ -20,7 +24,7 @@ const emptyStoreImages: StoreImagesData = {
 
 export function useProfileStoreImages(targetUid?: string) {
   const { session } = useSession();
-  const uid = targetUid || session?.uid || '';
+  const uid = targetUid || session?.uid || "";
   const queryClient = useQueryClient();
 
   const storeImagesQuery = useQuery({
@@ -28,45 +32,54 @@ export function useProfileStoreImages(targetUid?: string) {
     queryFn: () => profileService.getStoreImages(uid),
     enabled: Boolean(uid),
     meta: {
-      feature: 'Profile',
-      page: '/profile',
-      component: 'StoreIdentityCard',
-      hook: 'useProfileStoreImages',
-      service: 'ProfileApiService.getStoreImages',
-      queryOrCommand: 'GetProfileImageKeysQuery',
-      repository: 'ProfileRepository',
-      table: 'user_profiles',
-      entity: 'StoreImages',
+      feature: "Profile",
+      page: "/profile",
+      component: "StoreIdentityCard",
+      hook: "useProfileStoreImages",
+      service: "ProfileApiService.getStoreImages",
+      queryOrCommand: "GetProfileImageKeysQuery",
+      repository: "ProfileRepository",
+      table: "user_profiles",
+      entity: "StoreImages",
     },
   });
 
   useEffect(() => {
     if (storeImagesQuery.error) {
-      reportSystemIssue({ feature: 'Profile', operation: 'load-store-images', error: storeImagesQuery.error });
+      reportSystemIssue({
+        feature: "Profile",
+        operation: "load-store-images",
+        error: storeImagesQuery.error,
+      });
     }
   }, [storeImagesQuery.error]);
 
   const saveMutation = useMutation({
-    mutationFn: async (input: Omit<SaveStoreImagesInput, 'uid'>) => {
-      if (!uid) throw new Error('userNotFound');
+    scope: { id: `profile-store-images:${uid}` },
+    mutationFn: async (input: Omit<SaveStoreImagesInput, "uid">) => {
+      if (!uid) throw new Error("userNotFound");
       return profileService.saveStoreImages({ uid, ...input });
     },
     onSuccess: (saved) => {
       queryClient.setQueryData(profileStoreImagesQueryKey(uid), saved);
     },
     onError: (error) => {
-      reportSystemIssue({ feature: 'Profile', operation: 'save-store-images', error });
+      reportSystemIssue({
+        feature: "Profile",
+        operation: "save-store-images",
+        error,
+      });
     },
     meta: {
-      feature: 'Profile',
-      component: 'StoreIdentityCard',
-      hook: 'useProfileStoreImages',
-      service: 'ProfileApiService.saveStoreImages',
-      queryOrCommand: 'UpsertProfileImageKeysCommand',
-      repository: 'ProfileRepository',
-      table: 'user_profiles',
-      entity: 'StoreImages',
-      operationType: 'UPDATE',
+      feature: "Profile",
+      component: "StoreIdentityCard",
+      hook: "useProfileStoreImages",
+      service: "ProfileApiService.saveStoreImages",
+      queryOrCommand: "UpsertProfileImageKeysCommand",
+      repository: "ProfileRepository",
+      table: "user_profiles",
+      entity: "StoreImages",
+      operationType: "UPDATE",
     },
   });
 
@@ -80,6 +93,6 @@ export function useProfileStoreImages(targetUid?: string) {
     isLoading: storeImagesQuery.isLoading,
     isSaving: saveMutation.isPending,
     error,
-    saveStoreImages: saveMutation.mutateAsync,
+    saveStoreImages: saveMutation.mutate,
   };
 }
