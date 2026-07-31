@@ -4,7 +4,12 @@ import path from "node:path";
 
 import Database from "better-sqlite3";
 
-import { DATABASE_SHARD_NAMES, sqliteFileNameForShard } from "@/core/database/database-shards";
+import {
+  DATABASE_SHARD_NAMES,
+  MARKETPLACE_ORDER_SHARD_DATABASE_NAMES,
+  PROFILE_SHARD_DATABASE_NAMES,
+  sqliteFileNameForShard,
+} from "@/core/database/database-shards";
 import {
   cleanupConfirmationText,
   isOlderThan,
@@ -80,6 +85,11 @@ const enabledProfileIds = new Set(
     .filter((profile) => profile.enabled)
     .map((profile) => profile.id),
 );
+assert.equal(DATABASE_SHARD_NAMES.length, 17);
+assert.equal(PROFILE_SHARD_DATABASE_NAMES.length, 8);
+assert.equal(MARKETPLACE_ORDER_SHARD_DATABASE_NAMES.length, 9);
+assert.ok(DATABASE_SHARD_NAMES.includes("system-ops"));
+assert.ok(DATABASE_SHARD_NAMES.includes("orders-disputes-audit"));
 for (const profile of storageProfiles.profiles.filter(
   (candidate) => candidate.enabled,
 )) {
@@ -97,9 +107,29 @@ for (const profile of storageProfiles.profiles.filter(
       "CloudflareR2",
       `Cloud storage profile ${profile.id} must use CloudflareR2`,
     );
-    assert.match(profile.cloudFolder ?? profile.folder, /^images\/(profile|content)\//);
+    assert.match(
+      profile.cloudFolder ?? profile.folder,
+      /^images\/(profile|content)\//,
+    );
   }
 }
+assert.deepEqual(
+  storageProfiles.profiles
+    .filter(
+      (profile) =>
+        profile.enabled && profile.provider === "CloudflareR2Products",
+    )
+    .map((profile) => profile.id),
+  ["product-default"],
+  "Only product images may use the legacy product R2 provider",
+);
+assert.equal(
+  storageProfiles.profiles.filter(
+    (profile) => profile.enabled && profile.provider === "CloudflareR2",
+  ).length,
+  4,
+  "The primary R2 provider must own the four non-product image profiles",
+);
 for (const source of DATA_HEALTH_IMAGE_SOURCES) {
   if (source.defaultStorageProfileId) {
     assert.ok(

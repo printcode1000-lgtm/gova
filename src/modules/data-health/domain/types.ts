@@ -75,6 +75,47 @@ export interface DataHealthSchemaComparison {
   databases: DataHealthSchemaDifference[];
 }
 
+export type DataHealthTopologyStatus =
+  | "ready"
+  | "warning"
+  | "unavailable"
+  | "not-applicable";
+
+export interface DataHealthDatabaseTopologyItem {
+  id: string;
+  kind: "core" | "profile-shard" | "order-shard";
+  tables: string[];
+  status: DataHealthTopologyStatus;
+  message?: string;
+}
+
+export interface DataHealthStorageTopologyItem {
+  id: string;
+  kind: "primary-r2" | "product-r2" | "local-mirror";
+  provider: string;
+  profiles: string[];
+  cloudFolders: string[];
+  localFolders: string[];
+  referencedObjects: number;
+  discoveredObjects: number;
+  status: DataHealthTopologyStatus;
+  message?: string;
+}
+
+export interface DataHealthImageSourceTopologyItem {
+  database: string;
+  table: string;
+  columns: string[];
+  ownership: "owned" | "shared-snapshot" | "static-asset" | "deletion-task";
+  storageProfileId?: string;
+}
+
+export interface DataHealthTopology {
+  databases: DataHealthDatabaseTopologyItem[];
+  storage: DataHealthStorageTopologyItem[];
+  imageSources: DataHealthImageSourceTopologyItem[];
+}
+
 export interface DataHealthReport {
   runId: string;
   generatedAt: string;
@@ -97,6 +138,7 @@ export interface DataHealthReport {
   };
   issues: DataHealthIssue[];
   schemaComparison: DataHealthSchemaComparison;
+  topology: DataHealthTopology;
 }
 
 export interface DataHealthCleanupPlan {

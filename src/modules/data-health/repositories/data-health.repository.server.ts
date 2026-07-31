@@ -4,9 +4,15 @@ import { randomUUID } from "node:crypto";
 
 import { advertisementsDbClient } from "@/core/database/advertisements-db-client";
 import { dbClient } from "@/core/database/db-client";
-import { MARKETPLACE_ORDER_TABLE_TO_DATABASE } from "@/core/database/database-shards";
+import {
+  DATABASE_SHARDS,
+  DATABASE_SHARD_NAMES,
+  DATABASE_SHARD_TABLE_TO_DATABASE,
+  MARKETPLACE_ORDER_TABLE_TO_DATABASE,
+} from "@/core/database/database-shards";
 import { productDbClient } from "@/core/database/product-db-client";
 import { profileDbClient } from "@/core/database/profile-db-client";
+import { ShardedRawDatabaseClient } from "@/core/database/sharded-raw-database-client";
 import { getAllStorageProfiles } from "@/core/storage/profiles/storage-profile-loader.server";
 import { storageFolderCandidates } from "@/core/storage/storage/storage-profile-path";
 import { createMarketplaceOrdersDb } from "@/modules/marketplace-orders/db/client";
@@ -18,6 +24,7 @@ import {
   severityRank,
 } from "../domain/policy";
 import { resolveDataHealthExecutionContext } from "../domain/execution-context.server";
+import { DATA_HEALTH_IMAGE_SOURCES } from "../domain/source-registry";
 import type {
   DataHealthAuditEntry,
   DataHealthCleanupAction,
@@ -26,6 +33,7 @@ import type {
   DataHealthIssue,
   DataHealthQuarantineEntry,
   DataHealthReport,
+  DataHealthTopology,
 } from "../domain/types";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../db/metadata-schema";
 import { storageInventoryRepository } from "./storage-inventory.repository.server";
@@ -96,9 +104,11 @@ function routeFor(database: string, table: string, recordId: string): string {
 }
 
 function orderShardFor(table: string): string {
-  return MARKETPLACE_ORDER_TABLE_TO_DATABASE[
-    table as keyof typeof MARKETPLACE_ORDER_TABLE_TO_DATABASE
-  ] ?? "orders-core";
+  return (
+    MARKETPLACE_ORDER_TABLE_TO_DATABASE[
+      table as keyof typeof MARKETPLACE_ORDER_TABLE_TO_DATABASE
+    ] ?? "orders-core"
+  );
 }
 
 function resultChanged(rows: Row[]): boolean {
@@ -270,6 +280,7 @@ export class DataHealthRepository {
       const inventory = await storageInventoryRepository.collect();
       scannedRecords += inventory.scannedRecords;
       this.collectStorageIssues(issues, inventory);
+      const topology = await this.collectTopology(inventory, execution.runtime);
 
       for (const warning of inventory.warnings) {
         issues.push(
@@ -328,6 +339,7 @@ export class DataHealthRepository {
           generatedAt: new Date().toISOString(),
           databases: [],
         },
+        topology,
       };
       await this.persistReport(report, firstSeenByFingerprint);
       return report;
@@ -343,6 +355,160 @@ export class DataHealthRepository {
       );
       throw error;
     }
+  }
+
+  private async collectTopology(
+    inventory: Awaited<ReturnType<typeof storageInventoryRepository.collect>>,
+    runtime: DataHealthReport["execution"]["runtime"],
+  ): Promise<DataHealthTopology> {
+    const coreDatabases = [
+      { id: "users", client: dbClient },
+      { id: "product", client: productDbClient },
+      { id: "advertisements", client: advertisementsDbClient },
+    ] as const;
+    const coreChecks = await Promise.all(
+      coreDatabases.map(async ({ id, client }) => {
+        try {
+          await client.execute("SELECT 1 AS connection_check");
+          const tables = (await client.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name",
+          )) as Row[];
+          return {
+            id,
+            kind: "core" as const,
+            tables: tables.map((row) => text(row.name)).filter(Boolean),
+            status: "ready" as const,
+          };
+        } catch (error) {
+          return {
+            id,
+            kind: "core" as const,
+            tables: [],
+            status: "unavailable" as const,
+            message:
+              error instanceof Error
+                ? error.message
+                : "Connection check failed",
+          };
+        }
+      }),
+    );
+    const shardChecks = await Promise.all(
+      DATABASE_SHARD_NAMES.map(async (id) => {
+        try {
+          const client = new ShardedRawDatabaseClient(
+            DATABASE_SHARD_TABLE_TO_DATABASE,
+            id,
+          );
+          await client.execute("SELECT 1 AS connection_check");
+          return {
+            id,
+            kind:
+              id.startsWith("profile-") || id === "system-ops"
+                ? ("profile-shard" as const)
+                : ("order-shard" as const),
+            tables: [...DATABASE_SHARDS[id]],
+            status: "ready" as const,
+          };
+        } catch (error) {
+          return {
+            id,
+            kind:
+              id.startsWith("profile-") || id === "system-ops"
+                ? ("profile-shard" as const)
+                : ("order-shard" as const),
+            tables: [...DATABASE_SHARDS[id]],
+            status: "unavailable" as const,
+            message:
+              error instanceof Error
+                ? error.message
+                : "Connection check failed",
+          };
+        }
+      }),
+    );
+    const profiles = getAllStorageProfiles().filter(
+      (profile) => profile.enabled,
+    );
+    const storage: DataHealthTopology["storage"] = (
+      [
+        {
+          id: "r2-primary",
+          kind: "primary-r2" as const,
+          provider: "CloudflareR2",
+        },
+        {
+          id: "r2-products",
+          kind: "product-r2" as const,
+          provider: "CloudflareR2Products",
+        },
+      ] as const
+    ).map((store) => {
+      const assigned = profiles.filter(
+        (profile) => profile.provider === store.provider,
+      );
+      const profileIds = assigned.map((profile) => profile.id);
+      const warnings = inventory.warnings.filter((warning) =>
+        profileIds.some((profileId) => warning.startsWith(`${profileId}:`)),
+      );
+      const folders = new Set(
+        assigned
+          .map((profile) => profile.cloudFolder)
+          .filter((folder): folder is string => Boolean(folder)),
+      );
+      const referencedObjects = inventory.references.filter((reference) =>
+        profileIds.includes(reference.storageProfileId),
+      ).length;
+      const discoveredObjects = [...inventory.objectPaths].filter(
+        (objectPath) =>
+          [...folders].some(
+            (folder) =>
+              objectPath === folder || objectPath.startsWith(`${folder}/`),
+          ),
+      ).length;
+      return {
+        id: store.id,
+        kind: store.kind,
+        provider: store.provider,
+        profiles: profileIds,
+        cloudFolders: [...folders],
+        localFolders: [...new Set(assigned.map((profile) => profile.folder))],
+        referencedObjects,
+        discoveredObjects,
+        status: warnings.length > 0 ? ("warning" as const) : ("ready" as const),
+        message: warnings.length > 0 ? warnings.join(" | ") : undefined,
+      };
+    });
+    storage.push({
+      id: "local-sync-mirror",
+      kind: "local-mirror",
+      provider: "public/sync_data/sync_file",
+      profiles: profiles.map((profile) => profile.id),
+      cloudFolders: [],
+      localFolders: [...new Set(profiles.map((profile) => profile.folder))],
+      referencedObjects: inventory.references.length,
+      discoveredObjects:
+        runtime === "development-local" ? inventory.objectPaths.size : 0,
+      status: runtime === "development-local" ? "ready" : "not-applicable",
+      message:
+        runtime === "development-local"
+          ? undefined
+          : "The local mirror is not mounted in cloud runtime.",
+    });
+    return {
+      databases: [...coreChecks, ...shardChecks],
+      storage,
+      imageSources: DATA_HEALTH_IMAGE_SOURCES.map((source) => ({
+        database: source.database,
+        table: source.table,
+        columns: [...source.columns],
+        ownership: source.ownership,
+        storageProfileId:
+          "defaultStorageProfileId" in source
+            ? source.defaultStorageProfileId
+            : undefined,
+      })),
+    };
   }
 
   async history(): Promise<{
@@ -509,8 +675,10 @@ export class DataHealthRepository {
     const database = text(entry.database_name);
     const table = text(entry.table_name);
     const id = text(entry.record_id);
-    const storageObjects: Array<{ storageProfileId: string; imageKey: string }> =
-      [];
+    const storageObjects: Array<{
+      storageProfileId: string;
+      imageKey: string;
+    }> = [];
     if (!database || !table || !id) {
       return { deletedRecords: 0, storageObjects };
     }
@@ -1203,27 +1371,33 @@ export class DataHealthRepository {
     context: ScanContext,
   ): Promise<number> {
     const db = createMarketplaceOrdersDb();
-    const [itemRows, imageRows, shipmentRows, paymentRows, returnRows, replacementRows] =
-      await Promise.all([
-        db.execute(
-          "SELECT id, order_id, seller_order_id, seller_id, product_id, product_name_snapshot, product_image_snapshot, created_at, updated_at FROM order_items",
-        ),
-        db.execute(
-          "SELECT id, custom_request_item_id, order_id, uploaded_by, storage_profile_id, image_key, created_at, updated_at FROM custom_request_images",
-        ),
-        db.execute(
-          "SELECT id, order_id, carrier_id, created_at, updated_at FROM shipments",
-        ),
-        db.execute(
-          "SELECT id, order_id, buyer_id, status, created_at, updated_at FROM payments",
-        ),
-        db.execute(
-          "SELECT id, order_id, buyer_id, carrier_id, status, created_at, updated_at FROM return_requests",
-        ),
-        db.execute(
-          "SELECT id, order_id, buyer_id, status, created_at, updated_at FROM replacement_requests",
-        ),
-      ]);
+    const [
+      itemRows,
+      imageRows,
+      shipmentRows,
+      paymentRows,
+      returnRows,
+      replacementRows,
+    ] = await Promise.all([
+      db.execute(
+        "SELECT id, order_id, seller_order_id, seller_id, product_id, product_name_snapshot, product_image_snapshot, created_at, updated_at FROM order_items",
+      ),
+      db.execute(
+        "SELECT id, custom_request_item_id, order_id, uploaded_by, storage_profile_id, image_key, created_at, updated_at FROM custom_request_images",
+      ),
+      db.execute(
+        "SELECT id, order_id, carrier_id, created_at, updated_at FROM shipments",
+      ),
+      db.execute(
+        "SELECT id, order_id, buyer_id, status, created_at, updated_at FROM payments",
+      ),
+      db.execute(
+        "SELECT id, order_id, buyer_id, carrier_id, status, created_at, updated_at FROM return_requests",
+      ),
+      db.execute(
+        "SELECT id, order_id, buyer_id, status, created_at, updated_at FROM replacement_requests",
+      ),
+    ]);
     const items = realRows(itemRows);
     const images = realRows(imageRows);
     const shipments = realRows(shipmentRows);
@@ -1395,17 +1569,44 @@ export class DataHealthRepository {
     issues: DataHealthIssue[],
   ): Promise<number> {
     const databases = [
-      ["users", dbClient],
-      ["profile", profileDbClient],
-      ["product", productDbClient],
-      ["advertisements", advertisementsDbClient],
-    ] as const;
+      { name: "users", client: dbClient },
+      { name: "product", client: productDbClient },
+      { name: "advertisements", client: advertisementsDbClient },
+      ...DATABASE_SHARD_NAMES.map((name) => ({
+        name,
+        client: new ShardedRawDatabaseClient(
+          DATABASE_SHARD_TABLE_TO_DATABASE,
+          name,
+        ),
+      })),
+    ];
     let checked = 0;
-    for (const [name, client] of databases) {
-      const [quick, foreignKeys] = await Promise.all([
-        client.execute("PRAGMA quick_check") as Promise<Row[]>,
-        client.execute("PRAGMA foreign_key_check") as Promise<Row[]>,
-      ]);
+    for (const { name, client } of databases) {
+      let quick: Row[];
+      let foreignKeys: Row[];
+      try {
+        [quick, foreignKeys] = await Promise.all([
+          client.execute("PRAGMA quick_check") as Promise<Row[]>,
+          client.execute("PRAGMA foreign_key_check") as Promise<Row[]>,
+        ]);
+      } catch (error) {
+        issues.push(
+          makeIssue({
+            category: "database",
+            severity: "warning",
+            database: name,
+            table: "integrity",
+            recordId: name,
+            ownerUid: "",
+            title: "Database integrity check unavailable",
+            details: error instanceof Error ? error.message : String(error),
+            evidence: { check: "quick_check_and_foreign_key_check" },
+            cleanupAction: "none",
+            cleanupMode: "protected",
+          }),
+        );
+        continue;
+      }
       checked += quick.length + foreignKeys.length;
       const quickResult = text(
         quick[0]?.quick_check ?? quick[0]?.integrity_check,
@@ -1444,29 +1645,6 @@ export class DataHealthRepository {
           }),
         );
       }
-    }
-    const ordersDb = createMarketplaceOrdersDb();
-    const [quick, foreignKeys] = await Promise.all([
-      ordersDb.execute("PRAGMA quick_check"),
-      ordersDb.execute("PRAGMA foreign_key_check"),
-    ]);
-    checked += quick.length + foreignKeys.length;
-    for (const row of foreignKeys.filter((item) => text(item.table))) {
-      issues.push(
-        makeIssue({
-          category: "database",
-          severity: "critical",
-          database: "orders-core",
-          table: text(row.table) || "foreign_key",
-          recordId: text(row.rowid) || text(row.parent),
-          ownerUid: "",
-          title: "مخالفة مفتاح أجنبي في الطلبات",
-          details: `table=${text(row.table)}, parent=${text(row.parent)}`,
-          evidence: { ...row },
-          cleanupAction: "none",
-          cleanupMode: "protected",
-        }),
-      );
     }
     return checked;
   }
@@ -1729,15 +1907,16 @@ export class DataHealthRepository {
     const profile = [...getAllStorageProfiles()]
       .sort(
         (left, right) =>
-          Math.max(...storageFolderCandidates(right).map((item) => item.length)) -
+          Math.max(
+            ...storageFolderCandidates(right).map((item) => item.length),
+          ) -
           Math.max(...storageFolderCandidates(left).map((item) => item.length)),
       )
-      .find(
-        (candidate) =>
-          storageFolderCandidates(candidate).some(
-            (folder) =>
-              objectPath === folder || objectPath.startsWith(`${folder}/`),
-          ),
+      .find((candidate) =>
+        storageFolderCandidates(candidate).some(
+          (folder) =>
+            objectPath === folder || objectPath.startsWith(`${folder}/`),
+        ),
       );
     if (!profile)
       throw new Error(`Unregistered storage object path: ${objectPath}`);
@@ -1751,9 +1930,7 @@ export class DataHealthRepository {
         (candidate) =>
           objectPath === candidate || objectPath.startsWith(`${candidate}/`),
       );
-    return folder
-      ? objectPath.slice(folder.length + 1)
-      : objectPath;
+    return folder ? objectPath.slice(folder.length + 1) : objectPath;
   }
 
   private storageProfile(profileId: string) {
