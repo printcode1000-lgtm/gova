@@ -45,7 +45,6 @@ export async function POST(request: Request) {
 
       const sellerFulfillment = await profileService.getFulfillmentSettings(sellerUid);
       const carrierUid = firstCarrier(sellerFulfillment);
-      if (!carrierUid) throw new Error(`Delivery carrier required for seller ${sellerUid}`);
 
       const service = getMarketplaceOrderService();
       const order = await service.createCustomRequestOrder(
@@ -70,12 +69,12 @@ export async function POST(request: Request) {
         String(order.id),
         {
           sellerId: sellerUid,
-          serviceProviderId: carrierUid,
+          ...(carrierUid ? { serviceProviderId: carrierUid } : {}),
           title: body.title?.trim() || "طلب خاص",
           buyerDescription: description || "طلب خاص مرفق بصورة",
           requestType: "custom_purchase",
           requestedQuantity: 1,
-          shippingNotes: `carrier:${carrierUid}`,
+          ...(carrierUid ? { shippingNotes: `carrier:${carrierUid}` } : {}),
         },
         actor,
       );
