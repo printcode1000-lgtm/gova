@@ -1,31 +1,17 @@
 import "server-only";
 
-import { and, eq, inArray } from "drizzle-orm";
 import { profileDbClient } from "@/core/database/profile-db-client";
 import { productDbClient } from "@/core/database/product-db-client";
 import type { IDatabaseClient } from "@/core/database/database-client.interface";
-import {
-  profileContactPoints,
-  profileDeliveryCarriers,
-  profileFeaturedProducts,
-  profileImages,
-  profileLocations,
-  profileSearchCategories,
-  profileTrendingItems,
-  profileWorkingHours,
-  userProfiles,
-} from "@/core/database/profile/profile.schema";
 import type { UserProfileRow } from "@/core/database/profile/profile.schema";
 import type {
   ProfileContactPointRow,
   ProfileDeliveryCarrierRow,
   ProfileImageRow,
   ProfileLocationRow,
-  ProfileSearchCategoryRow,
   ProfileTrendingItemRow,
   ProfileWorkingHourRow,
 } from "@/core/database/profile/profile.schema";
-import { userSpecialties } from "@/core/database/profile/user-specialties.schema";
 import type { ProfileContactsData } from "../entities/profile-contacts.entity";
 import {
   EMPTY_PROFILE_SHOWCASE,
@@ -75,17 +61,15 @@ function createId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 }
 
-function scopedContactId(uid: string, id: string): string {
-  return `${uid}:${id}`;
+function scopedContactId(uid: string, type: string, id: string): string {
+  return `${uid}:${type}:${id}`;
 }
 
-function publicContactId(uid: string, id: string): string {
-  const prefix = `${uid}:`;
-  return id.startsWith(prefix) ? id.slice(prefix.length) : id;
-}
-
-function text(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
+function publicContactId(uid: string, type: string, id: string): string {
+  const typedPrefix = `${uid}:${type}:`;
+  if (id.startsWith(typedPrefix)) return id.slice(typedPrefix.length);
+  const legacyPrefix = `${uid}:`;
+  return id.startsWith(legacyPrefix) ? id.slice(legacyPrefix.length) : id;
 }
 
 function normalizePhone(value: string): string {
@@ -106,98 +90,71 @@ function normalizeSearchText(value: string): string {
     .replace(/\s+/g, " ");
 }
 
-function bool(value: unknown, fallback = false): boolean {
-  if (typeof value === "boolean") return value;
-  if (value === 0 || value === 1) return value === 1;
-  return fallback;
-}
-
-function numberValue(value: unknown, fallback = 0): number {
-  const next = Number(value);
-  return Number.isFinite(next) ? Math.max(0, next) : fallback;
-}
-
-function emptyUserProfile(uid: string): typeof userProfiles.$inferInsert {
-  return {
-    uid,
-    storeName: "",
-    storeDescription: "",
-    storeStory: "",
-    storeNameSearch: "",
-    storeDescriptionSearch: "",
-    customRequestEnabled: true,
-    trendingLabel: EMPTY_PROFILE_SHOWCASE.trending.label,
-    primaryPhone: "",
-    primaryPhoneNormalized: "",
-    primaryWhatsapp: "",
-    primaryWhatsappNormalized: "",
-    primaryEmail: "",
-    primaryAddress: "",
-    primaryGovernorate: "",
-    primaryCity: "",
-    primaryArea: "",
-    primaryLatitude: "",
-    primaryLongitude: "",
-    ratingEnabled: true,
-    ratingMode: "stars-comments",
-    ratingAverage: 0,
-    ratingCount: 0,
-    shippingPricingMode: "free",
-    shippingFlatRate: 0,
-    shippingLocationBaseRate: 0,
-    shippingSpecialVehicleFee: 0,
-    shippingFreeShippingThreshold: 0,
-    shippingNotes: "",
-    returnsEnabled: false,
-    returnWindowDays: 14,
-    returnShippingPayer: "case_by_case",
-    returnPolicyText: "",
-  };
-}
-
 export class ProfileRepository implements IProfileRepository {
   constructor(private database: IDatabaseClient = profileDbClient) {}
 
   private async ensureProfile(uid: string): Promise<void> {
-    const rows = await this.database.db
-      .select({ uid: userProfiles.uid })
-      .from(userProfiles)
-      .where(eq(userProfiles.uid, uid))
-      .limit(1);
-    if (rows.length === 0) {
-      await this.database.db.insert(userProfiles).values(emptyUserProfile(uid));
-    }
+    await this.database.execute(
+      "INSERT INTO user_profiles (uid) VALUES (?) ON CONFLICT(uid) DO NOTHING",
+      [uid],
+    );
+  }
+
+  private async insertRows(
+    table: string,
+    columns: string[],
+    rows: unknown[][],
+  ): Promise<void> {
+    if (rows.length === 0) return;
+    const quotedColumns = columns.map((column) => `"${column}"`).join(", ");
+    const rowPlaceholders = `(${columns.map(() => "?").join(", ")})`;
+    await this.database.execute(
+      `INSERT INTO "${table}" (${quotedColumns}) VALUES ${rows.map(() => rowPlaceholders).join(", ")}`,
+      rows.flat(),
+    );
   }
 
   async getByUid(uid: string): Promise<ProfileContactsData | null> {
-    const profile = await this.database.execute("SELECT uid FROM user_profiles WHERE uid = ? LIMIT 1", [uid]);
+    const profile = await this.database.execute(
+      "SELECT uid FROM user_profiles WHERE uid = ? LIMIT 1",
+      [uid],
+    );
     if (profile.length === 0) return null;
 
-    const contactRows = await this.database.execute("SELECT id, type, platform, value, is_primary AS isPrimary FROM profile_contact_points WHERE uid = ? ORDER BY sort_order", [uid]) as ProfileContactPointRow[];
-    const locationRows = await this.database.execute("SELECT id, address, latitude, longitude FROM profile_locations WHERE uid = ? ORDER BY sort_order", [uid]) as ProfileLocationRow[];
+    const contactRows = (await this.database.execute(
+      "SELECT id, type, platform, value, is_primary AS isPrimary FROM profile_contact_points WHERE uid = ? ORDER BY sort_order",
+      [uid],
+    )) as ProfileContactPointRow[];
+    const locationRows = (await this.database.execute(
+      "SELECT id, address, latitude, longitude FROM profile_locations WHERE uid = ? ORDER BY sort_order",
+      [uid],
+    )) as ProfileLocationRow[];
 
     return {
       phones: contactRows
         .filter((row) => row.type === "phone")
         .map((row) => ({
-          id: publicContactId(uid, row.id),
+          id: publicContactId(uid, "phone", row.id),
           number: row.value,
           type: row.platform || "phone",
         })),
       emails: contactRows
         .filter((row) => row.type === "email")
         .map((row) => ({
-          id: publicContactId(uid, row.id),
+          id: publicContactId(uid, "email", row.id),
           email: row.value,
           isPrimary: row.isPrimary,
         })),
       websites: contactRows
         .filter((row) => row.type === "website")
-        .map((row) => ({ id: publicContactId(uid, row.id), url: row.value })),
+        .map((row) => ({
+          id: publicContactId(uid, "website", row.id),
+          url: row.value,
+        })),
       socialLinks: contactRows
         .filter((row) => row.type === "social")
         .map((row) => ({
-          id: publicContactId(uid, row.id),
+          id: publicContactId(uid, "social", row.id),
           platform: row.platform,
           url: row.value,
         })),
@@ -213,16 +170,17 @@ export class ProfileRepository implements IProfileRepository {
   async upsert(uid: string, data: ProfileContactsData): Promise<void> {
     await this.ensureProfile(uid);
     const timestamp = nowIso();
-    await this.database.db
-      .delete(profileContactPoints)
-      .where(eq(profileContactPoints.uid, uid));
-    await this.database.db
-      .delete(profileLocations)
-      .where(eq(profileLocations.uid, uid));
+    await this.database.execute(
+      "DELETE FROM profile_contact_points WHERE uid = ?",
+      [uid],
+    );
+    await this.database.execute("DELETE FROM profile_locations WHERE uid = ?", [
+      uid,
+    ]);
 
     const contacts = [
       ...data.phones.map((phone, index) => ({
-        id: scopedContactId(uid, phone.id || createId("contact")),
+        id: scopedContactId(uid, "phone", phone.id || createId("contact")),
         uid,
         type: "phone",
         platform: phone.type || "phone",
@@ -236,7 +194,7 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       })),
       ...data.emails.map((email, index) => ({
-        id: scopedContactId(uid, email.id || createId("contact")),
+        id: scopedContactId(uid, "email", email.id || createId("contact")),
         uid,
         type: "email",
         platform: "",
@@ -250,7 +208,7 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       })),
       ...data.websites.map((site, index) => ({
-        id: scopedContactId(uid, site.id || createId("contact")),
+        id: scopedContactId(uid, "website", site.id || createId("contact")),
         uid,
         type: "website",
         platform: "",
@@ -264,7 +222,7 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       })),
       ...data.socialLinks.map((link, index) => ({
-        id: scopedContactId(uid, link.id || createId("contact")),
+        id: scopedContactId(uid, "social", link.id || createId("contact")),
         uid,
         type: "social",
         platform: link.platform,
@@ -279,9 +237,37 @@ export class ProfileRepository implements IProfileRepository {
       })),
     ].filter((row) => row.value);
 
-    if (contacts.length > 0) {
-      await this.database.db.insert(profileContactPoints).values(contacts);
-    }
+    await this.insertRows(
+      "profile_contact_points",
+      [
+        "id",
+        "uid",
+        "type",
+        "platform",
+        "label",
+        "value",
+        "normalized_value",
+        "is_primary",
+        "is_public",
+        "sort_order",
+        "created_at",
+        "updated_at",
+      ],
+      contacts.map((row) => [
+        row.id,
+        row.uid,
+        row.type,
+        row.platform,
+        row.label,
+        row.value,
+        row.normalizedValue,
+        row.isPrimary,
+        row.isPublic,
+        row.sortOrder,
+        row.createdAt,
+        row.updatedAt,
+      ]),
+    );
 
     const locations = data.locations
       .filter((location) => location.address.trim())
@@ -301,9 +287,41 @@ export class ProfileRepository implements IProfileRepository {
         createdAt: timestamp,
         updatedAt: timestamp,
       }));
-    if (locations.length > 0) {
-      await this.database.db.insert(profileLocations).values(locations);
-    }
+    await this.insertRows(
+      "profile_locations",
+      [
+        "id",
+        "uid",
+        "label",
+        "address",
+        "governorate",
+        "city",
+        "area",
+        "latitude",
+        "longitude",
+        "is_primary",
+        "is_public",
+        "sort_order",
+        "created_at",
+        "updated_at",
+      ],
+      locations.map((row) => [
+        row.id,
+        row.uid,
+        row.label,
+        row.address,
+        row.governorate,
+        row.city,
+        row.area,
+        row.latitude,
+        row.longitude,
+        row.isPrimary,
+        row.isPublic,
+        row.sortOrder,
+        row.createdAt,
+        row.updatedAt,
+      ]),
+    );
 
     const primaryPhone = data.phones[0]?.number.trim() ?? "";
     const primaryWhatsapp =
@@ -314,23 +332,27 @@ export class ProfileRepository implements IProfileRepository {
       data.emails[0]?.email.trim() ??
       "";
     const primaryLocation = locations[0];
-    await this.database.db
-      .update(userProfiles)
-      .set({
-        primaryPhone,
-        primaryPhoneNormalized: normalizePhone(primaryPhone),
-        primaryWhatsapp,
-        primaryWhatsappNormalized: normalizePhone(primaryWhatsapp),
-        primaryEmail,
-        primaryAddress: primaryLocation?.address ?? "",
-        primaryLatitude: primaryLocation?.latitude ?? "",
-        primaryLongitude: primaryLocation?.longitude ?? "",
-      })
-      .where(eq(userProfiles.uid, uid));
+    await this.database.update(
+      "user_profiles",
+      {
+        primary_phone: primaryPhone,
+        primary_phone_normalized: normalizePhone(primaryPhone),
+        primary_whatsapp: primaryWhatsapp,
+        primary_whatsapp_normalized: normalizePhone(primaryWhatsapp),
+        primary_email: primaryEmail,
+        primary_address: primaryLocation?.address ?? "",
+        primary_latitude: primaryLocation?.latitude ?? "",
+        primary_longitude: primaryLocation?.longitude ?? "",
+      },
+      { uid },
+    );
   }
 
   async getImageKeys(uid: string): Promise<ProfileImageKeys | null> {
-    const rows = await this.database.execute("SELECT image_key AS imageKey, image_type AS imageType FROM profile_images WHERE uid = ? ORDER BY sort_order", [uid]) as ProfileImageRow[];
+    const rows = (await this.database.execute(
+      "SELECT image_key AS imageKey, image_type AS imageType FROM profile_images WHERE uid = ? ORDER BY sort_order",
+      [uid],
+    )) as ProfileImageRow[];
     const avatar =
       rows.find((row) => row.imageType === "avatar")?.imageKey ?? null;
     const coverImageKeys = rows
@@ -347,9 +369,9 @@ export class ProfileRepository implements IProfileRepository {
   async upsertImageKeys(uid: string, keys: ProfileImageKeys): Promise<void> {
     await this.ensureProfile(uid);
     const timestamp = nowIso();
-    await this.database.db
-      .delete(profileImages)
-      .where(eq(profileImages.uid, uid));
+    await this.database.execute("DELETE FROM profile_images WHERE uid = ?", [
+      uid,
+    ]);
     const rows = [
       ...(keys.avatarImageKey
         ? [
@@ -376,16 +398,46 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       })),
     ];
-    if (rows.length > 0)
-      await this.database.db.insert(profileImages).values(rows);
+    await this.insertRows(
+      "profile_images",
+      [
+        "id",
+        "uid",
+        "image_key",
+        "image_type",
+        "is_primary",
+        "sort_order",
+        "created_at",
+        "updated_at",
+      ],
+      rows.map((row) => [
+        row.id,
+        row.uid,
+        row.imageKey,
+        row.imageType,
+        row.isPrimary,
+        row.sortOrder,
+        row.createdAt,
+        row.updatedAt,
+      ]),
+    );
   }
 
   async getStoreDetails(uid: string): Promise<StoreDetailsData | null> {
-    const rows = await this.database.execute(`SELECT store_name AS storeName, store_description AS storeDescription, store_story AS storeStory, rating_enabled AS ratingEnabled, rating_mode AS ratingMode, trending_label AS trendingLabel, custom_request_enabled AS customRequestEnabled FROM user_profiles WHERE uid = ? LIMIT 1`, [uid]);
+    const rows = await this.database.execute(
+      `SELECT store_name AS storeName, store_description AS storeDescription, store_story AS storeStory, rating_enabled AS ratingEnabled, rating_mode AS ratingMode, trending_label AS trendingLabel, custom_request_enabled AS customRequestEnabled FROM user_profiles WHERE uid = ? LIMIT 1`,
+      [uid],
+    );
     if (rows.length === 0) return null;
     const row = rows[0];
-    const featured = await this.database.execute("SELECT product_id AS productId FROM profile_featured_products WHERE uid = ? ORDER BY sort_order", [uid]) as Array<{ productId: string }>;
-    const trending = await this.database.execute("SELECT id, label FROM profile_trending_items WHERE uid = ? ORDER BY sort_order", [uid]) as ProfileTrendingItemRow[];
+    const featured = (await this.database.execute(
+      "SELECT product_id AS productId FROM profile_featured_products WHERE uid = ? ORDER BY sort_order",
+      [uid],
+    )) as Array<{ productId: string }>;
+    const trending = (await this.database.execute(
+      "SELECT id, label FROM profile_trending_items WHERE uid = ? ORDER BY sort_order",
+      [uid],
+    )) as ProfileTrendingItemRow[];
     const workingHours = await this.getWorkingHours(uid);
 
     return {
@@ -420,26 +472,28 @@ export class ProfileRepository implements IProfileRepository {
     const normalizedWorkingHours = normalizeProfileWorkingHours(
       details.workingHours,
     );
-    await this.database.db
-      .update(userProfiles)
-      .set({
-        storeName: details.storeName.trim(),
-        storeDescription: details.storeDescription.trim(),
-        storeStory: details.storeStory.trim(),
-        storeNameSearch: normalizeSearchText(details.storeName),
-        storeDescriptionSearch: normalizeSearchText(details.storeDescription),
-        customRequestEnabled: details.profileShowcase.customRequestEnabled,
-        trendingLabel:
+    await this.database.update(
+      "user_profiles",
+      {
+        store_name: details.storeName.trim(),
+        store_description: details.storeDescription.trim(),
+        store_story: details.storeStory.trim(),
+        store_name_search: normalizeSearchText(details.storeName),
+        store_description_search: normalizeSearchText(details.storeDescription),
+        custom_request_enabled: details.profileShowcase.customRequestEnabled,
+        trending_label:
           details.profileShowcase.trending.label.trim() ||
           EMPTY_PROFILE_SHOWCASE.trending.label,
-        ratingEnabled: details.ratingSettings.enabled,
-        ratingMode: details.ratingSettings.mode,
-      })
-      .where(eq(userProfiles.uid, uid));
+        rating_enabled: details.ratingSettings.enabled,
+        rating_mode: details.ratingSettings.mode,
+      },
+      { uid },
+    );
 
-    await this.database.db
-      .delete(profileFeaturedProducts)
-      .where(eq(profileFeaturedProducts.uid, uid));
+    await this.database.execute(
+      "DELETE FROM profile_featured_products WHERE uid = ?",
+      [uid],
+    );
     const featured = Array.from(
       new Set(details.profileShowcase.featuredProductIds),
     )
@@ -451,13 +505,21 @@ export class ProfileRepository implements IProfileRepository {
         sortOrder: index,
         createdAt: timestamp,
       }));
-    if (featured.length > 0) {
-      await this.database.db.insert(profileFeaturedProducts).values(featured);
-    }
+    await this.insertRows(
+      "profile_featured_products",
+      ["uid", "product_id", "sort_order", "created_at"],
+      featured.map((row) => [
+        row.uid,
+        row.productId,
+        row.sortOrder,
+        row.createdAt,
+      ]),
+    );
 
-    await this.database.db
-      .delete(profileTrendingItems)
-      .where(eq(profileTrendingItems.uid, uid));
+    await this.database.execute(
+      "DELETE FROM profile_trending_items WHERE uid = ?",
+      [uid],
+    );
     const trending = details.profileShowcase.trending.items
       .filter((item) => item.label.trim())
       .slice(0, 20)
@@ -469,9 +531,18 @@ export class ProfileRepository implements IProfileRepository {
         createdAt: timestamp,
         updatedAt: timestamp,
       }));
-    if (trending.length > 0) {
-      await this.database.db.insert(profileTrendingItems).values(trending);
-    }
+    await this.insertRows(
+      "profile_trending_items",
+      ["id", "uid", "label", "sort_order", "created_at", "updated_at"],
+      trending.map((row) => [
+        row.id,
+        row.uid,
+        row.label,
+        row.sortOrder,
+        row.createdAt,
+        row.updatedAt,
+      ]),
+    );
 
     await this.saveWorkingHours(uid, normalizedWorkingHours);
   }
@@ -479,10 +550,16 @@ export class ProfileRepository implements IProfileRepository {
   async getFulfillmentSettings(
     uid: string,
   ): Promise<ProfileFulfillmentSettings | null> {
-    const rows = await this.database.execute(`SELECT shipping_pricing_mode AS shippingPricingMode, shipping_flat_rate AS shippingFlatRate, shipping_special_vehicle_fee AS shippingSpecialVehicleFee, shipping_free_shipping_threshold AS shippingFreeShippingThreshold, shipping_notes AS shippingNotes, returns_enabled AS returnsEnabled, return_window_days AS returnWindowDays, return_policy_text AS returnPolicyText, return_shipping_payer AS returnShippingPayer FROM user_profiles WHERE uid = ? LIMIT 1`, [uid]);
+    const rows = await this.database.execute(
+      `SELECT shipping_pricing_mode AS shippingPricingMode, shipping_flat_rate AS shippingFlatRate, shipping_special_vehicle_fee AS shippingSpecialVehicleFee, shipping_free_shipping_threshold AS shippingFreeShippingThreshold, shipping_notes AS shippingNotes, returns_enabled AS returnsEnabled, return_window_days AS returnWindowDays, return_policy_text AS returnPolicyText, return_shipping_payer AS returnShippingPayer FROM user_profiles WHERE uid = ? LIMIT 1`,
+      [uid],
+    );
     if (rows.length === 0) return null;
     const row = rows[0];
-    const carriers = await this.database.execute("SELECT carrier_uid AS carrierUid FROM profile_delivery_carriers WHERE seller_uid = ? ORDER BY priority", [uid]) as ProfileDeliveryCarrierRow[];
+    const carriers = (await this.database.execute(
+      "SELECT carrier_uid AS carrierUid FROM profile_delivery_carriers WHERE seller_uid = ? ORDER BY priority",
+      [uid],
+    )) as ProfileDeliveryCarrierRow[];
     return {
       selfDeliveryEnabled: false,
       carrierUids: carriers.map((carrier) => carrier.carrierUid),
@@ -517,39 +594,36 @@ export class ProfileRepository implements IProfileRepository {
     settings: ProfileFulfillmentSettings,
   ): Promise<void> {
     await this.ensureProfile(uid);
-    await this.database.db
-      .update(userProfiles)
-      .set({
-        shippingPricingMode: settings.shippingPricing.mode,
-        shippingFlatRate: settings.shippingPricing.flatRate,
-        // Kept at zero only for the legacy database column. Location-based
-        // shipping is now negotiated through a buyer-approved order quote.
-        shippingLocationBaseRate: 0,
-        shippingSpecialVehicleFee: settings.shippingPricing.specialVehicleFee,
-        shippingFreeShippingThreshold:
+    await this.database.update(
+      "user_profiles",
+      {
+        shipping_pricing_mode: settings.shippingPricing.mode,
+        shipping_flat_rate: settings.shippingPricing.flatRate,
+        // Location-based shipping is negotiated through a buyer-approved quote.
+        shipping_location_base_rate: 0,
+        shipping_special_vehicle_fee:
+          settings.shippingPricing.specialVehicleFee,
+        shipping_free_shipping_threshold:
           settings.shippingPricing.freeShippingThreshold,
-        shippingNotes: settings.shippingPricing.notes,
-        returnsEnabled: settings.returns.enabled,
-        returnWindowDays: settings.returns.returnWindowDays,
-        returnShippingPayer: settings.returns.returnShippingPayer,
-        returnPolicyText: settings.returns.policyText,
-      })
-      .where(eq(userProfiles.uid, uid));
+        shipping_notes: settings.shippingPricing.notes,
+        returns_enabled: settings.returns.enabled,
+        return_window_days: settings.returns.returnWindowDays,
+        return_shipping_payer: settings.returns.returnShippingPayer,
+        return_policy_text: settings.returns.policyText,
+      },
+      { uid },
+    );
     await this.saveDeliveryCarriers(uid, settings.carrierUids);
   }
 
   async getDeliveryServiceUids(uids: string[]): Promise<string[]> {
     const uniqueUids = Array.from(new Set(uids)).filter(Boolean);
     if (uniqueUids.length === 0) return [];
-    const rows: ProfileSearchCategoryRow[] = await this.database.db
-      .select({ uid: userSpecialties.uid })
-      .from(userSpecialties)
-      .where(
-        and(
-          inArray(userSpecialties.uid, uniqueUids),
-          eq(userSpecialties.delivery_services_46, 1),
-        ),
-      );
+    const placeholders = uniqueUids.map(() => "?").join(", ");
+    const rows = (await this.database.execute(
+      `SELECT uid FROM user_specialties WHERE uid IN (${placeholders}) AND delivery_services_46 = 1`,
+      uniqueUids,
+    )) as Array<{ uid: string }>;
     return rows.map((row: { uid: string }) => row.uid);
   }
 
@@ -660,9 +734,10 @@ export class ProfileRepository implements IProfileRepository {
     carrierUids: string[],
   ): Promise<void> {
     const timestamp = nowIso();
-    await this.database.db
-      .delete(profileDeliveryCarriers)
-      .where(eq(profileDeliveryCarriers.sellerUid, uid));
+    await this.database.execute(
+      "DELETE FROM profile_delivery_carriers WHERE seller_uid = ?",
+      [uid],
+    );
     const rows = Array.from(new Set(carrierUids.filter(Boolean))).map(
       (carrierUid, index) => ({
         sellerUid: uid,
@@ -673,12 +748,29 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       }),
     );
-    if (rows.length > 0)
-      await this.database.db.insert(profileDeliveryCarriers).values(rows);
+    await this.insertRows(
+      "profile_delivery_carriers",
+      [
+        "seller_uid",
+        "carrier_uid",
+        "is_default",
+        "priority",
+        "created_at",
+        "updated_at",
+      ],
+      rows.map((row) => [
+        row.sellerUid,
+        row.carrierUid,
+        row.isDefault,
+        row.priority,
+        row.createdAt,
+        row.updatedAt,
+      ]),
+    );
   }
 
   private async getWorkingHours(uid: string) {
-    const rows = await this.database.execute(
+    const rows = (await this.database.execute(
       `SELECT id,
               day_of_week AS dayOfWeek,
               is_open AS isOpen,
@@ -689,7 +781,7 @@ export class ProfileRepository implements IProfileRepository {
        WHERE uid = ?
        ORDER BY day_of_week, period_index`,
       [uid],
-    ) as ProfileWorkingHourRow[];
+    )) as ProfileWorkingHourRow[];
     if (rows.length === 0) return EMPTY_PROFILE_WORKING_HOURS;
     const days = WORKING_DAY_LABELS.map((day, dayIndex) => {
       const periods = rows
@@ -713,9 +805,10 @@ export class ProfileRepository implements IProfileRepository {
     value: StoreDetailsData["workingHours"],
   ) {
     const timestamp = nowIso();
-    await this.database.db
-      .delete(profileWorkingHours)
-      .where(eq(profileWorkingHours.uid, uid));
+    await this.database.execute(
+      "DELETE FROM profile_working_hours WHERE uid = ?",
+      [uid],
+    );
     const rows = value.days.flatMap((day) => {
       const dayIndex = DAY_TO_INDEX.get(day.day) ?? 0;
       if (!day.open || day.periods.length === 0) {
@@ -747,8 +840,33 @@ export class ProfileRepository implements IProfileRepository {
         updatedAt: timestamp,
       }));
     });
-    if (rows.length > 0)
-      await this.database.db.insert(profileWorkingHours).values(rows);
+    await this.insertRows(
+      "profile_working_hours",
+      [
+        "id",
+        "uid",
+        "day_of_week",
+        "period_index",
+        "is_open",
+        "open_time",
+        "close_time",
+        "note",
+        "created_at",
+        "updated_at",
+      ],
+      rows.map((row) => [
+        row.id,
+        row.uid,
+        row.dayOfWeek,
+        row.periodIndex,
+        row.isOpen,
+        row.openTime,
+        row.closeTime,
+        row.note,
+        row.createdAt,
+        row.updatedAt,
+      ]),
+    );
   }
 
   private async rebuildSearchCategories(
@@ -756,9 +874,10 @@ export class ProfileRepository implements IProfileRepository {
     selection: ProfileSpecialtiesSelection,
   ): Promise<void> {
     const timestamp = nowIso();
-    await this.database.db
-      .delete(profileSearchCategories)
-      .where(eq(profileSearchCategories.uid, uid));
+    await this.database.execute(
+      "DELETE FROM profile_search_categories WHERE uid = ?",
+      [uid],
+    );
     const rows = [
       ...selection.main.map((categoryId) => ({
         uid,
@@ -788,9 +907,27 @@ export class ProfileRepository implements IProfileRepository {
         })),
       ),
     ].filter((row) => row.specialtyColumn);
-    if (rows.length > 0) {
-      await this.database.db.insert(profileSearchCategories).values(rows);
-    }
+    await this.insertRows(
+      "profile_search_categories",
+      [
+        "uid",
+        "category_id",
+        "subcategory_id",
+        "specialty_column",
+        "source",
+        "is_enabled",
+        "updated_at",
+      ],
+      rows.map((row) => [
+        row.uid,
+        row.categoryId,
+        row.subcategoryId,
+        row.specialtyColumn,
+        row.source,
+        row.isEnabled,
+        row.updatedAt,
+      ]),
+    );
   }
 
   private async refreshProductCounts(uid: string): Promise<void> {
