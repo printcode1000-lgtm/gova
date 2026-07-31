@@ -1,11 +1,8 @@
 import "server-only";
 
-import { eq, inArray } from "drizzle-orm";
 import { profileDbClient } from "@/core/database/profile-db-client";
 import type { IDatabaseClient } from "@/core/database/database-client.interface";
 import {
-  sellerDiscounts,
-  sellerDiscountUsages,
   type SellerDiscountRow,
 } from "@/core/database/profile/profile.schema";
 import type {
@@ -160,6 +157,77 @@ function toRow(input: SaveSellerDiscountInput, timestamp: string) {
   };
 }
 
+const DISCOUNT_SELECT = `
+  SELECT id,
+         seller_uid AS sellerUid,
+         type,
+         title,
+         description,
+         status,
+         priority,
+         combinable,
+         starts_at AS startsAt,
+         ends_at AS endsAt,
+         coupon_code AS couponCode,
+         value_type AS valueType,
+         value,
+         max_discount_minor AS maxDiscountMinor,
+         min_subtotal_minor AS minSubtotalMinor,
+         min_quantity AS minQuantity,
+         buy_quantity AS buyQuantity,
+         get_quantity AS getQuantity,
+         usage_limit_total AS usageLimitTotal,
+         usage_limit_per_buyer AS usageLimitPerBuyer,
+         first_order_only AS firstOrderOnly,
+         followers_only AS followersOnly,
+         app_only AS appOnly,
+         product_ids_json AS productIdsJson,
+         category_ids_json AS categoryIdsJson,
+         excluded_product_ids_json AS excludedProductIdsJson,
+         bundle_product_ids_json AS bundleProductIdsJson,
+         gift_product_id AS giftProductId,
+         metadata_json AS metadataJson,
+         created_at AS createdAt,
+         updated_at AS updatedAt
+  FROM seller_discounts`;
+
+function toDatabaseRow(input: SaveSellerDiscountInput, timestamp: string) {
+  const row = toRow(input, timestamp);
+  return {
+    id: row.id,
+    seller_uid: row.sellerUid,
+    type: row.type,
+    title: row.title,
+    description: row.description,
+    status: row.status,
+    priority: row.priority,
+    combinable: row.combinable,
+    starts_at: row.startsAt,
+    ends_at: row.endsAt,
+    coupon_code: row.couponCode,
+    value_type: row.valueType,
+    value: row.value,
+    max_discount_minor: row.maxDiscountMinor,
+    min_subtotal_minor: row.minSubtotalMinor,
+    min_quantity: row.minQuantity,
+    buy_quantity: row.buyQuantity,
+    get_quantity: row.getQuantity,
+    usage_limit_total: row.usageLimitTotal,
+    usage_limit_per_buyer: row.usageLimitPerBuyer,
+    first_order_only: row.firstOrderOnly,
+    followers_only: row.followersOnly,
+    app_only: row.appOnly,
+    product_ids_json: row.productIdsJson,
+    category_ids_json: row.categoryIdsJson,
+    excluded_product_ids_json: row.excludedProductIdsJson,
+    bundle_product_ids_json: row.bundleProductIdsJson,
+    gift_product_id: row.giftProductId,
+    metadata_json: row.metadataJson,
+    created_at: timestamp,
+    updated_at: row.updatedAt,
+  };
+}
+
 export class SellerDiscountRepository {
   private schemaReady = false;
 
@@ -230,10 +298,10 @@ export class SellerDiscountRepository {
 
   async listBySeller(sellerUid: string, includeInactive = true) {
     await this.ensureSchema();
-    const rows: SellerDiscountRow[] = await this.database.db
-      .select()
-      .from(sellerDiscounts)
-      .where(eq(sellerDiscounts.sellerUid, sellerUid));
+    const rows = (await this.database.execute(
+      `${DISCOUNT_SELECT} WHERE seller_uid = ?`,
+      [sellerUid],
+    )) as SellerDiscountRow[];
     return rows
       .map(rowToRule)
       .filter((rule) => includeInactive || rule.status === "active")
@@ -244,24 +312,23 @@ export class SellerDiscountRepository {
     await this.ensureSchema();
     const unique = Array.from(new Set(sellerUids.filter(Boolean)));
     if (unique.length === 0) return [];
-    const rows: SellerDiscountRow[] = await this.database.db
-      .select()
-      .from(sellerDiscounts)
-      .where(inArray(sellerDiscounts.sellerUid, unique));
+    const rows = (await this.database.execute(
+      `${DISCOUNT_SELECT} WHERE seller_uid IN (${unique.map(() => "?").join(", ")})`,
+      unique,
+    )) as SellerDiscountRow[];
     return rows.map(rowToRule).filter((rule) => rule.status === "active");
   }
 
   async replaceSellerDiscounts(sellerUid: string, input: SaveSellerDiscountInput[]) {
     await this.ensureSchema();
     const timestamp = nowIso();
-    const rows = input.map((discount) => ({
-      ...toRow({ ...discount, sellerUid }, timestamp),
-      createdAt: timestamp,
-    }));
-    await this.database.db
-      .delete(sellerDiscounts)
-      .where(eq(sellerDiscounts.sellerUid, sellerUid));
-    if (rows.length > 0) await this.database.db.insert(sellerDiscounts).values(rows);
+    const rows = input.map((discount) =>
+      toDatabaseRow({ ...discount, sellerUid }, timestamp),
+    );
+    await this.database.delete("seller_discounts", { seller_uid: sellerUid });
+    for (const row of rows) {
+      await this.database.insert("seller_discounts", row);
+    }
     return this.listBySeller(sellerUid, true);
   }
 
@@ -293,14 +360,14 @@ export class SellerDiscountRepository {
     discountMinor: number;
   }) {
     await this.ensureSchema();
-    await this.database.db.insert(sellerDiscountUsages).values({
+    await this.database.insert("seller_discount_usages", {
       id: createId("discount_usage"),
-      discountId: input.discountId,
-      sellerUid: input.sellerUid,
-      buyerUid: input.buyerUid ?? "",
-      orderId: input.orderId ?? "",
-      discountMinor: Math.max(0, Math.floor(input.discountMinor)),
-      createdAt: nowIso(),
+      discount_id: input.discountId,
+      seller_uid: input.sellerUid,
+      buyer_uid: input.buyerUid ?? "",
+      order_id: input.orderId ?? "",
+      discount_minor: Math.max(0, Math.floor(input.discountMinor)),
+      created_at: nowIso(),
     });
   }
 }
