@@ -5,6 +5,13 @@ type NativeBridge = { getCurrentPosition(options?: PositionOptions): Promise<Nat
 
 const toLocation = (position: NativePosition, source: AsolMapLocation['source']): AsolMapLocation => ({ latitude: position.coords.latitude, longitude: position.coords.longitude, accuracy: position.coords.accuracy, heading: position.coords.heading ?? null, speed: position.coords.speed ?? null, timestamp: position.timestamp, source });
 
+/**
+ * Raw browser geolocation.
+ *
+ * Prefer `createNativePlatformGpsProvider()`: it is the default for ASOL maps
+ * and routes through the Native Platform Location module. This provider exists
+ * for tests and for callers that deliberately need the unmediated browser API.
+ */
 export function createBrowserGpsProvider(): GpsProvider {
   return {
     id: 'browser', isAvailable: () => typeof navigator !== 'undefined' && 'geolocation' in navigator,

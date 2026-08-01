@@ -4,8 +4,20 @@
 code and native device capabilities.
 
 Pages, components, hooks, and feature services import from `@/native-platform`.
-Importing `@capacitor/*` anywhere else is a contract violation rejected by
-`npm run architecture:check`.
+
+The **Native Platform Contract** check in `npm run architecture:check` rejects,
+anywhere outside `src/native-platform`:
+
+| Forbidden | Use instead |
+|---|---|
+| `@capacitor/*` imports | the module's public API |
+| `navigator.share` / `navigator.canShare` | `nativePlatform.share.send` |
+| `navigator.geolocation` | `nativePlatform.location` |
+| `Notification.requestPermission` | `nativePlatform.permissions.requestIfNeeded` |
+
+Forbidding only the Capacitor imports would leave the layer bypassable through
+the equivalent browser APIs, which carry none of its permission handling or
+error normalization.
 
 ---
 
@@ -577,6 +589,7 @@ work normally.**
 | TypeScript layer, contracts, validation, queue, duplicate filter | Unit-tested (`npm run test:native-platform`) |
 | Architecture contract enforcement | Verified — the rule was proven to reject a real violation |
 | Existing consumers (image picker, voice input, push) | Migrated; behaviour preserved; existing suites pass |
+| Application migration to the layer | Complete — no page uses `navigator.share`, `navigator.geolocation`, or a raw file input |
 | Plugin behaviour on real hardware | **Not verified in this environment** |
 | Android share receiving | Source complete; **needs a device run** |
 | iOS share receiving | Source complete; **needs the Xcode steps above** |
@@ -605,10 +618,9 @@ Upgrading Capacitor requires upgrading all of them together.
 
 ### Sanctioned exceptions to the contract
 
-Four files outside `src/native-platform` may import Capacitor, listed in
-`CAPACITOR_IMPORT_ALLOWED_FILES` in `scripts/architecture-check.ts`. They cover
-native concerns outside the eight modules — application lifecycle, OTA delivery,
-and the native HTTP bridge:
+**Capacitor imports** — four files, listed in `CAPACITOR_IMPORT_ALLOWED_FILES`
+in `scripts/architecture-check.ts`. They cover native concerns outside the
+eight modules: application lifecycle, OTA delivery, and the native HTTP bridge.
 
 ```
 src/platform/navigation/capacitor-back-button-adapter.ts
@@ -617,7 +629,14 @@ src/features/ota/services/ota-api-service.ts
 src/features/page-snapshot/hooks/use-page-snapshot.tsx
 ```
 
-Do not extend this list for anything the eight modules already cover.
+**Browser APIs** — one file, listed per-pattern in
+`NATIVE_CAPABILITY_PATTERNS`:
+
+```
+src/components/ui/AsolMap/gps.ts   # createBrowserGpsProvider, an explicit opt-out
+```
+
+Do not extend either list for anything the eight modules already cover.
 
 ### Compatibility shims
 
@@ -631,6 +650,18 @@ not have to change:
 
 They contain no plugin code. When their consumers migrate to the module APIs
 directly, delete the shims.
+
+### Web Push is inside the contract
+
+Web Push is not a Capacitor transport, so `notifications.push.isSupported()`
+returns `false` in the browser and `web-push-browser-service` keeps its own
+service-worker subscription logic.
+
+Its **permission**, however, goes through the Permission Manager like every
+other permission in the application. Before this, `subscribe()` called
+`Notification.requestPermission()` directly, which prompted implicitly in the
+middle of a subscription flow and broke the layer's "never prompt until
+required" guarantee on the web.
 
 ### Deliberate omissions
 

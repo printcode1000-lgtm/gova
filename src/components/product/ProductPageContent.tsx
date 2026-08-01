@@ -31,6 +31,8 @@ import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,
 } from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
+import { isCancelledError } from "@/native-platform";
+import { share } from "@/native-platform/share";
 
 const PRODUCT_SHARE_ORIGIN = "https://gova-swart.vercel.app/";
 
@@ -237,8 +239,8 @@ export function ProductPageContent() {
         : details.pharmacySpecs.nameEn || details.pharmacySpecs.nameAr) ||
       (locale === "ar" ? "منتج على Gova" : "Product on Gova");
     try {
-      if (typeof navigator.share === "function") {
-        await navigator.share({
+      if (await share.canSend()) {
+        await share.send({
           title: productTitle,
           text:
             locale === "ar"
@@ -251,7 +253,8 @@ export function ProductPageContent() {
       await navigator.clipboard.writeText(productShareUrl);
       showShareStatus(locale === "ar" ? "تم نسخ رابط المنتج" : "Product link copied");
     } catch (shareError) {
-      if (shareError instanceof DOMException && shareError.name === "AbortError") return;
+      // Dismissing the share sheet is not a failure.
+      if (isCancelledError(shareError)) return;
       console.warn("[ProductPage] Failed to share product link.", shareError);
       try {
         await navigator.clipboard.writeText(productShareUrl);

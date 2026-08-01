@@ -109,7 +109,7 @@ export function SettingsPageContent() {
   }, []);
 
   React.useEffect(() => {
-    setWebPushPermission(webPushBrowserService.getPermission());
+    void webPushBrowserService.getPermission().then(setWebPushPermission);
     if (isAndroidNotifications || isIosNotifications) {
       void Promise.all([
         notificationDeviceTokenService.isNativeEnabled(),
@@ -208,7 +208,7 @@ export function SettingsPageContent() {
     setWebPushStatus("");
     try {
       await webPushBrowserService.subscribe(session.uid, session.phone);
-      setWebPushPermission(webPushBrowserService.getPermission());
+      setWebPushPermission(await webPushBrowserService.getPermission());
       setWebPushStatus("تم تفعيل إشعارات المتصفح لهذا الجهاز.");
     } catch (error) {
       setWebPushStatus(
@@ -225,7 +225,7 @@ export function SettingsPageContent() {
     setWebPushStatus("");
     try {
       await webPushBrowserService.unsubscribe(session.uid, session.phone);
-      setWebPushPermission(webPushBrowserService.getPermission());
+      setWebPushPermission(await webPushBrowserService.getPermission());
       setWebPushStatus("تم إلغاء اشتراك هذا الجهاز.");
     } catch (error) {
       setWebPushStatus(

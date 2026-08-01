@@ -39,6 +39,8 @@ import type { ProfileFulfillmentSettings } from "@/features/profile/entities/pro
 import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
 import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
+import { isCancelledError } from "@/native-platform";
+import { share } from "@/native-platform/share";
 import { useTranslation } from "@/lib/i18n";
 import { ProfileProductsPreview } from "./ProfileProductsPreview";
 import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
@@ -142,8 +144,8 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       storeDetails.storeName ||
       (t("profilePreview.pageTitle"));
     try {
-      if (typeof navigator.share === "function") {
-        await navigator.share({
+      if (await share.canSend()) {
+        await share.send({
           title,
           text: t("profilePreview.shareText"),
           url: shareUrl,
@@ -153,7 +155,8 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       await navigator.clipboard.writeText(shareUrl);
       showShareStatus(t("profilePreview.linkCopied"));
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
+      // Dismissing the share sheet is not a failure.
+      if (isCancelledError(error)) return;
       console.warn("[ProfilePreview] Failed to share profile link.", error);
       try {
         await navigator.clipboard.writeText(shareUrl);

@@ -11,6 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { DocumentType, VerificationDocument } from '@/lib/onboarding/types';
 import { nextSellerId } from '@/lib/seller/next-id';
+import { isCancelledError } from "@/native-platform";
+import { files } from "@/native-platform/files";
 
 const DOCUMENT_TYPES: DocumentType[] = [
   'business_license',
@@ -35,6 +37,23 @@ export function VerificationSection() {
   const handleNext = () => {
     markStepComplete('verification');
     return true;
+  };
+
+  /**
+   * Open the platform picker through the Native Platform Files module so
+   * verification documents use the same picker as the rest of the application.
+   */
+  const pickDocument = async (type: DocumentType) => {
+    try {
+      const picked = await files.user.pickFile({
+        accept: ["image/*", "application/pdf"],
+      });
+      handleFileUpload(type, picked.file);
+    } catch (error) {
+      // Dismissing the picker is a normal outcome, not an error.
+      if (isCancelledError(error)) return;
+      console.warn("[Verification] Document selection failed.", error);
+    }
   };
 
   const handleFileUpload = (type: DocumentType, file: File) => {
@@ -153,16 +172,12 @@ export function VerificationSection() {
                     </Button>
                   ) : (
                     <div className="relative">
-                      <input
-                        type="file"
-                        accept="image/*,.pdf"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleFileUpload(docType, file);
-                        }}
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                      />
-                      <Button variant="outline" size="sm" disabled={isUploading}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={isUploading}
+                        onClick={() => void pickDocument(docType)}
+                      >
                         {isUploading ? (
                           <>
                             <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />

@@ -111,17 +111,73 @@ const CAPACITOR_IMPORT_ALLOWED_FILES = new Set([
 const CAPACITOR_IMPORT_PATTERN =
   /from\s+['"]@(?:capacitor|capacitor-mlkit|capawesome|capgo)\//;
 
+/**
+ * Browser APIs that duplicate a Native Platform module.
+ *
+ * Forbidding only `@capacitor/*` is not enough: `navigator.share` and
+ * `navigator.geolocation` reach the same capability through the web API and
+ * would silently bypass the layer's permission handling and error taxonomy.
+ */
+const NATIVE_CAPABILITY_PATTERNS: Array<{
+  pattern: RegExp;
+  api: string;
+  use: string;
+  /** Files that may still use the raw API, with the reason. */
+  allowed: Set<string>;
+}> = [
+  {
+    pattern: /\bnavigator\s*\.\s*(?:share|canShare)\s*[({]/,
+    api: 'navigator.share',
+    use: 'nativePlatform.share.send',
+    allowed: new Set<string>(),
+  },
+  {
+    pattern: /\bnavigator\s*\.\s*geolocation\b/,
+    api: 'navigator.geolocation',
+    use: 'nativePlatform.location',
+    allowed: new Set([
+      // Explicit opt-out provider kept for tests and deliberate raw access.
+      'src/components/ui/AsolMap/gps.ts',
+    ]),
+  },
+  {
+    pattern: /\bNotification\s*\.\s*requestPermission\s*\(/,
+    api: 'Notification.requestPermission',
+    use: 'nativePlatform.permissions.requestIfNeeded',
+    allowed: new Set<string>(),
+  },
+];
+
 function checkNativePlatformContract(fileRel: string, content: string, filePath: string): void {
   if (fileRel.startsWith(NATIVE_PLATFORM_ROOT)) return;
-  if (CAPACITOR_IMPORT_ALLOWED_FILES.has(fileRel)) return;
-  if (!CAPACITOR_IMPORT_PATTERN.test(content)) return;
 
-  addViolation(
-    'Native Platform Contract',
-    filePath,
-    'Capacitor plugin imported outside the Native Platform layer.',
-    'Use the public API exported from src/native-platform.',
-  );
+  if (
+    !CAPACITOR_IMPORT_ALLOWED_FILES.has(fileRel) &&
+    CAPACITOR_IMPORT_PATTERN.test(content)
+  ) {
+    addViolation(
+      'Native Platform Contract',
+      filePath,
+      'Capacitor plugin imported outside the Native Platform layer.',
+      'Use the public API exported from src/native-platform.',
+    );
+  }
+
+  // Comments and doc blocks reference these API names legitimately.
+  const code = content
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/.*$/gm, '');
+
+  for (const { pattern, api, use, allowed } of NATIVE_CAPABILITY_PATTERNS) {
+    if (allowed.has(fileRel)) continue;
+    if (!pattern.test(code)) continue;
+    addViolation(
+      'Native Platform Contract',
+      filePath,
+      `${api} used outside the Native Platform layer.`,
+      `Use ${use} instead.`,
+    );
+  }
 }
 
 function matchesAny(path: string, patterns: RegExp[]): boolean {

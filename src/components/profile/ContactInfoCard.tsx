@@ -11,9 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { AsolMap, markerAt, createOpenStreetMapProvider, createBrowserGpsProvider } from '@/components/ui/AsolMap';
+import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGpsProvider } from '@/components/ui/AsolMap';
 import type { LocationEntry } from '@/features/profile/entities/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from './contact-visual-style';
+import { shareLocationUrl } from "@/features/sharing/share-location-url";
 
 const SOCIAL_PLATFORMS = [
   'instagram',
@@ -80,7 +81,7 @@ interface ContactQuickAddItem {
 }
 
 const tileProvider = createOpenStreetMapProvider();
-const gpsProvider = createBrowserGpsProvider();
+const gpsProvider = createNativePlatformGpsProvider();
 
 function asArray<T>(value: T[] | unknown): T[] {
   return Array.isArray(value) ? value : [];
@@ -1195,12 +1196,15 @@ export function ContactInfoCard({
                                 }
                                 onShare={({ latitude: lat, longitude: lng }) => {
                                   const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
-                                  if (typeof navigator.share === 'function') {
-                                    void navigator.share({ title: locale === 'ar' ? 'موقع المتجر' : 'Store location', url });
-                                  } else {
-                                    void navigator.clipboard.writeText(url);
-                                    setMapMessage(loc.id, locale === 'ar' ? 'تم نسخ رابط الموقع.' : 'Location link copied.');
-                                  }
+                                  void shareLocationUrl(
+                                    url,
+                                    locale === 'ar' ? 'موقع المتجر' : 'Store location',
+                                    () =>
+                                      setMapMessage(
+                                        loc.id,
+                                        locale === 'ar' ? 'تم نسخ رابط الموقع.' : 'Location link copied.',
+                                      ),
+                                  )
                                 }}
                                 onReset={() => {
                                   updateLocationEntry(loc.id, { address: '', latitude: 0, longitude: 0 });

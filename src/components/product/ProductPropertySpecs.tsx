@@ -12,6 +12,8 @@ import type {
   ProductComponentConfig,
   ProductMode,
 } from "./product-component.types";
+import { isCancelledError } from "@/native-platform";
+import { share } from "@/native-platform/share";
 
 const DEFAULT_LOCATION = {
   latitude: 29.9668,
@@ -94,13 +96,15 @@ export function ProductPropertySpecs({
     async (nextLatitude: number, nextLongitude: number) => {
       const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${nextLatitude},${nextLongitude}`)}`;
       try {
-        if (navigator.share) {
-          await navigator.share({ title: "موقع العقار", url });
+        if (await share.canSend()) {
+          await share.send({ title: "موقع العقار", url });
         } else {
           await navigator.clipboard.writeText(url);
           setMapMessage("تم نسخ رابط الموقع.");
         }
-      } catch {
+      } catch (error) {
+        // Dismissing the share sheet is not a failure.
+        if (isCancelledError(error)) return;
         setMapMessage("تعذرت مشاركة الموقع.");
       }
     },

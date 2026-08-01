@@ -19,7 +19,7 @@ import {
 import { createRoot, type Root } from "react-dom/client";
 import { AsolMapControls } from "./AsolMapControls";
 import { circleToPolygon, collection, markerAt } from "./geometry";
-import { createBrowserGpsProvider } from "./gps";
+import { createNativePlatformGpsProvider } from "./native-platform-gps";
 import { defaultTheme, resolveTheme } from "./theme";
 import type {
   Coordinates,
@@ -248,7 +248,7 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
     }, []);
     const startGps = useCallback(async () => {
       const provider =
-        propsRef.current.providers.gps ?? createBrowserGpsProvider();
+        propsRef.current.providers.gps ?? createNativePlatformGpsProvider();
       try {
         if (!(await provider.isAvailable()))
           throw new Error("Geolocation is unavailable on this device.");

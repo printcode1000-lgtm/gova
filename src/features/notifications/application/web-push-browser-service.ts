@@ -3,6 +3,7 @@
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
 import { NotificationPlatforms } from "../domain/enums";
 import { notificationApiService } from "../services/notification-api-service";
+import { permissionManager, PermissionKinds } from "@/native-platform/permissions";
 
 const DEVICE_ID_KEY = "web-push-device-id";
 
@@ -69,10 +70,18 @@ export class WebPushBrowserService {
     );
   }
 
-  getPermission(): NotificationPermission | "unsupported" {
-    if (typeof window === "undefined" || !("Notification" in window))
-      return "unsupported";
-    return Notification.permission;
+  /**
+   * Current permission, without prompting.
+   * Delegates to the Permission Manager; the historical return shape is kept
+   * so existing callers do not change.
+   */
+  async getPermission(): Promise<NotificationPermission | "unsupported"> {
+    const result = await permissionManager.check(PermissionKinds.Notifications);
+    if (result.state === "unsupported") return "unsupported";
+    if (result.granted) return "granted";
+    return result.state === "denied" || result.state === "blocked"
+      ? "denied"
+      : "default";
   }
 
   async subscribe(uid: string, phone: string) {
@@ -80,9 +89,12 @@ export class WebPushBrowserService {
     const vapid = await notificationApiService.getWebPushPublicKey();
     if (!vapid.enabled || !vapid.publicKey)
       throw new Error("webPushNotConfigured");
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted")
-      throw new Error("notificationPermissionDenied");
+    // Routed through the Native Platform Permission Manager so every
+    // notification permission in the application follows one policy.
+    const permission = await permissionManager.requestIfNeeded(
+      PermissionKinds.Notifications,
+    );
+    if (!permission.granted) throw new Error("notificationPermissionDenied");
 
     const registration = await waitForActiveServiceWorker(
       await navigator.serviceWorker.register("/asol-push-sw.js", {

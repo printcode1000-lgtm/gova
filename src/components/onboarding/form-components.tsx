@@ -16,6 +16,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from '@/lib/i18n';
+import { isCancelledError } from "@/native-platform";
+import { files } from "@/native-platform/files";
 
 interface FormFieldProps {
   label: string;
@@ -142,7 +144,6 @@ export function BlobImageUpload({
   error,
 }: BlobImageUploadProps) {
   const { t } = useTranslation();
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
   const [localError, setLocalError] = React.useState<string | null>(null);
 
@@ -190,9 +191,23 @@ export function BlobImageUpload({
     reader.readAsDataURL(file);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) processFile(file);
+  /**
+   * Open the platform file picker through the Native Platform Files module,
+   * so onboarding uses the same picker as the rest of the application.
+   */
+  const openPicker = async () => {
+    try {
+      const picked = await files.user.pickFile({
+        accept: accept.split(",").map((entry) => entry.trim()).filter(Boolean),
+      });
+      processFile(picked.file);
+    } catch (error) {
+      // Dismissing the picker is a normal outcome, not an error.
+      if (isCancelledError(error)) return;
+      setLocalError(
+        error instanceof Error ? error.message : String(error),
+      );
+    }
   };
 
   return (
@@ -235,7 +250,7 @@ export function BlobImageUpload({
         ) : (
           <div
             className="absolute inset-0 flex flex-col items-center justify-center gap-2 cursor-pointer"
-            onClick={() => inputRef.current?.click()}
+            onClick={() => void openPicker()}
           >
             <div className="rounded-full bg-muted p-3">
               <ImageIcon className="h-6 w-6 text-muted-foreground" />
@@ -251,14 +266,6 @@ export function BlobImageUpload({
           </div>
         )}
       </div>
-
-      <input
-        ref={inputRef}
-        type="file"
-        accept={accept}
-        onChange={handleInputChange}
-        className="hidden"
-      />
 
       {(error || localError) && (
         <p className="text-xs text-destructive flex items-center gap-1">
