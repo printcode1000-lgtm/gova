@@ -1,8 +1,19 @@
 export const DEV_CLOUD_BACKUP_MANIFEST_VERSION = 1;
 export const DEV_CLOUD_BACKUP_MODULE_VERSION = "1.0.0";
 
-export type DevCloudBackupScope = "known-project-files" | "all-r2";
 export type DevCloudBackupRestoreMode = "merge" | "replace";
+
+export const DEV_CLOUD_BACKUP_RESTORE_MODES: readonly DevCloudBackupRestoreMode[] =
+  ["merge", "replace"];
+
+/** Shared by the server (validation) and the page (prompt) so they cannot drift. */
+export function devCloudBackupRestoreConfirmation(
+  mode: DevCloudBackupRestoreMode,
+): string {
+  return mode === "replace"
+    ? "RESTORE_DEV_CLOUD_BACKUP_REPLACE"
+    : "RESTORE_DEV_CLOUD_BACKUP_MERGE";
+}
 
 export interface DevCloudBackupDatabaseManifest {
   id: string;
@@ -33,7 +44,6 @@ export interface DevCloudBackupManifest {
   backupId: string;
   createdAt: string;
   environment: "development";
-  scope: DevCloudBackupScope;
   databases: DevCloudBackupDatabaseManifest[];
   r2: {
     bucketNames: Partial<Record<"primary" | "products", string>>;
@@ -50,7 +60,6 @@ export interface DevCloudBackupSummary {
   fileName: string;
   sizeBytes: number;
   createdAt: string;
-  scope: DevCloudBackupScope;
   databaseCount: number;
   tableCount: number;
   rowCount: number;

@@ -1,6 +1,5 @@
 import "server-only";
 
-import storageProfiles from "@/config/storage-profiles.json";
 import {
   getProductR2S3Credentials,
   getR2S3Credentials,
@@ -16,19 +15,7 @@ import {
   uploadR2Object,
 } from "@/core/provisioning/r2-s3-client";
 
-import type {
-  DevCloudBackupR2ObjectManifest,
-  DevCloudBackupScope,
-} from "../domain/types";
-
-interface StorageProfileConfig {
-  profiles?: Array<{
-    enabled?: boolean;
-    provider?: string;
-    folder?: string;
-    cloudFolder?: string;
-  }>;
-}
+import type { DevCloudBackupR2ObjectManifest } from "../domain/types";
 
 export interface R2BackupExport {
   bucketNames: Partial<Record<R2Storage, string>>;
@@ -77,19 +64,6 @@ function keyFromR2File(file: string): string {
   return decodeURIComponent(encoded);
 }
 
-function knownPrefixes(storage: R2Storage): string[] {
-  const config = storageProfiles as StorageProfileConfig;
-  const prefixes = new Set<string>();
-  for (const profile of config.profiles ?? []) {
-    if (profile.enabled === false) continue;
-    if (storage === "primary" && profile.provider !== "CloudflareR2") continue;
-    if (storage === "products" && profile.provider !== "CloudflareR2Products") continue;
-    const folder = (profile.cloudFolder ?? profile.folder)?.replace(/^\/+|\/+$/g, "");
-    if (folder) prefixes.add(`${folder}/`);
-  }
-  return [...prefixes].sort();
-}
-
 async function listAll(
   operations: R2StorageOperations,
   prefix: string,
@@ -104,15 +78,16 @@ async function listAll(
   return objects;
 }
 
+/** Every object in every bucket. The backup admits no prefix exclusions. */
+const FULL_BUCKET_PREFIXES = [""] as const;
+
 export class R2BackupRepository {
-  prefixesForScope(scope: DevCloudBackupScope): string[] {
-    return scope === "all-r2"
-      ? [""]
-      : [...new Set(R2_STORAGES.flatMap((operations) => knownPrefixes(operations.storage)))].sort();
+  prefixes(): string[] {
+    return [...FULL_BUCKET_PREFIXES];
   }
 
-  async exportObjects(scope: DevCloudBackupScope): Promise<R2BackupExport> {
-    const prefixes = this.prefixesForScope(scope);
+  async exportObjects(): Promise<R2BackupExport> {
+    const prefixes = this.prefixes();
     const seen = new Set<string>();
     const files: Record<string, Uint8Array> = {};
     const objects: DevCloudBackupR2ObjectManifest[] = [];
@@ -121,8 +96,7 @@ export class R2BackupRepository {
 
     for (const operations of R2_STORAGES) {
       bucketNames[operations.storage] = operations.bucketName();
-      const storagePrefixes = scope === "all-r2" ? [""] : knownPrefixes(operations.storage);
-      for (const prefix of storagePrefixes) {
+      for (const prefix of FULL_BUCKET_PREFIXES) {
         for (const item of await listAll(operations, prefix)) {
           const identity = `${operations.storage}:${item.path}`;
           if (seen.has(identity)) continue;
@@ -158,7 +132,6 @@ export class R2BackupRepository {
     objects: DevCloudBackupR2ObjectManifest[],
     files: Record<string, Uint8Array>,
     mode: "merge" | "replace",
-    prefixes: string[],
   ): Promise<{ uploaded: number; deleted: number }> {
     let uploaded = 0;
     let deleted = 0;
@@ -175,10 +148,7 @@ export class R2BackupRepository {
 
     if (mode === "replace") {
       for (const operations of R2_STORAGES) {
-        const targetPrefixes = prefixes.includes("")
-          ? [""]
-          : knownPrefixes(operations.storage).filter((prefix) => prefixes.includes(prefix));
-        for (const prefix of targetPrefixes) {
+        for (const prefix of FULL_BUCKET_PREFIXES) {
           for (const object of await listAll(operations, prefix)) {
             if (!backupKeys.has(`${operations.storage}:${object.path}`)) {
               await operations.remove(object.path);

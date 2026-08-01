@@ -2,7 +2,10 @@ import "server-only";
 
 import { createClient, type Client } from "@libsql/client";
 
-import { readOptionalEnv } from "@/core/config/server-env.values";
+import {
+  listLibsqlDatabaseUrlKeys,
+  readOptionalEnv,
+} from "@/core/config/server-env.values";
 import { DATABASE_SHARD_NAMES, envPrefixForShard } from "@/modules/data-access/core/database/database-shards";
 
 import type { DevCloudBackupDatabaseManifest } from "@/modules/dev-cloud-backup/domain/types";
@@ -22,7 +25,12 @@ export interface TursoDatabaseBackup {
   rowCount: number;
 }
 
-export const TURSO_BACKUP_SOURCES: TursoBackupSource[] = [
+/**
+ * Databases whose env var names do not follow the shard convention.
+ * They are seeded here only so they keep a readable id and label; discovery
+ * below would find them anyway.
+ */
+const NAMED_BACKUP_SOURCES: TursoBackupSource[] = [
   {
     id: "allusers",
     label: "All users",
@@ -51,6 +59,51 @@ export const TURSO_BACKUP_SOURCES: TursoBackupSource[] = [
     };
   }),
 ];
+
+/** Token env var candidates for a `<NAME>_DATABASE_URL` key, most specific first. */
+function tokenKeyCandidates(urlKey: string): string[] {
+  const base = urlKey.replace(/_DATABASE_URL$/, "");
+  return [`${base}_DATABASE_AUTH_TOKEN`, `${base}_AUTH_TOKEN`];
+}
+
+function sourceIdForUrlKey(urlKey: string): string {
+  return urlKey
+    .replace(/_DATABASE_URL$/, "")
+    .replace(/^TURSO_/, "")
+    .toLowerCase()
+    .replace(/_/g, "-");
+}
+
+/**
+ * Every Turso database reachable from the environment — no exceptions.
+ *
+ * The named list above is a labelling aid, not the source of truth: any
+ * `*_DATABASE_URL` holding a libsql:// value is picked up automatically, so a
+ * database added to the environment can never be silently left out of a backup.
+ */
+export function discoverTursoBackupSources(): TursoBackupSource[] {
+  const sources: TursoBackupSource[] = [];
+  const claimedUrlKeys = new Set<string>();
+
+  for (const source of NAMED_BACKUP_SOURCES) {
+    if (!readOptionalEnv(source.urlKey)?.trim()) continue;
+    sources.push(source);
+    claimedUrlKeys.add(source.urlKey);
+  }
+
+  for (const urlKey of listLibsqlDatabaseUrlKeys()) {
+    if (claimedUrlKeys.has(urlKey)) continue;
+    const tokenKey = tokenKeyCandidates(urlKey).find((candidate) =>
+      readOptionalEnv(candidate)?.trim(),
+    );
+    if (!tokenKey) continue;
+    const id = sourceIdForUrlKey(urlKey);
+    sources.push({ id, label: id, urlKey, tokenKey });
+    claimedUrlKeys.add(urlKey);
+  }
+
+  return sources.sort((left, right) => left.id.localeCompare(right.id));
+}
 
 function encodeJson(value: unknown): Uint8Array {
   return new TextEncoder().encode(JSON.stringify(value, null, 2));
@@ -117,7 +170,7 @@ async function readSchema(client: Client): Promise<string> {
 
 export class TursoBackupRepository {
   sources() {
-    return TURSO_BACKUP_SOURCES;
+    return discoverTursoBackupSources();
   }
 
   async exportDatabase(source: TursoBackupSource): Promise<TursoDatabaseBackup> {
@@ -164,8 +217,12 @@ export class TursoBackupRepository {
     files: Record<string, Uint8Array>,
     mode: "merge" | "replace",
   ): Promise<{ tableCount: number; rowCount: number }> {
-    const source = TURSO_BACKUP_SOURCES.find((item) => item.id === manifest.id);
-    if (!source) return { tableCount: 0, rowCount: 0 };
+    const source = discoverTursoBackupSources().find(
+      (item) => item.id === manifest.id,
+    );
+    // Never skip silently: a database in the archive that no longer resolves
+    // would leave the restore partial while still reporting success.
+    if (!source) throw new Error(`devCloudBackupTursoSourceMissing:${manifest.id}`);
     const credentials = getCredentials(source);
     if (!credentials) throw new Error(`Missing Turso credentials for ${source.id}`);
 

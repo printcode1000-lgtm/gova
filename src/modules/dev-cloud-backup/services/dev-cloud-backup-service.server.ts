@@ -13,6 +13,7 @@ import {
 import {
   DEV_CLOUD_BACKUP_MANIFEST_VERSION,
   DEV_CLOUD_BACKUP_MODULE_VERSION,
+  devCloudBackupRestoreConfirmation,
   type DevCloudBackupInspectResult,
   type DevCloudBackupListItem,
   type DevCloudBackupDiffReport,
@@ -20,7 +21,6 @@ import {
   type DevCloudBackupRestoreMode,
   type DevCloudBackupRestorePreview,
   type DevCloudBackupRestoreResult,
-  type DevCloudBackupScope,
   type DevCloudBackupSummary,
   type DevCloudBackupUpdateResult,
 } from "../domain/types";
@@ -79,12 +79,6 @@ function parseManifest(files: Record<string, Uint8Array>): DevCloudBackupManifes
   };
 }
 
-function restoreConfirmation(mode: DevCloudBackupRestoreMode) {
-  return mode === "replace"
-    ? "RESTORE_DEV_CLOUD_BACKUP_REPLACE"
-    : "RESTORE_DEV_CLOUD_BACKUP_MERGE";
-}
-
 function summarize(
   fileName: string,
   zip: Uint8Array,
@@ -104,7 +98,6 @@ function summarize(
     fileName,
     sizeBytes: zip.byteLength,
     createdAt: manifest.createdAt,
-    scope: manifest.scope,
     databaseCount: manifest.databases.length,
     tableCount,
     rowCount,
@@ -148,7 +141,6 @@ export class DevCloudBackupService {
   }
 
   private async buildArchive(
-    scope: DevCloudBackupScope,
     extraFiles: Record<string, Uint8Array> = {},
   ): Promise<{
     backupId: string;
@@ -169,7 +161,7 @@ export class DevCloudBackupService {
       databases.push(backup.manifest);
     }
 
-    const r2 = await r2BackupRepository.exportObjects(scope);
+    const r2 = await r2BackupRepository.exportObjects();
     Object.assign(files, r2.files);
 
     const manifest: DevCloudBackupManifest = {
@@ -178,7 +170,6 @@ export class DevCloudBackupService {
       backupId,
       createdAt,
       environment: "development",
-      scope,
       databases,
       r2: {
         bucketNames: r2.bucketNames,
@@ -211,8 +202,8 @@ export class DevCloudBackupService {
     return summarize(fileName, archive.zip, archive.manifest);
   }
 
-  async create(scope: DevCloudBackupScope): Promise<DevCloudBackupSummary> {
-    const archive = await this.buildArchive(scope);
+  async create(): Promise<DevCloudBackupSummary> {
+    const archive = await this.buildArchive();
     return this.saveArchive(archive);
   }
 
@@ -247,7 +238,7 @@ export class DevCloudBackupService {
     const inspected = this.inspectZip(buffer);
     return {
       mode,
-      confirmationText: restoreConfirmation(mode),
+      confirmationText: devCloudBackupRestoreConfirmation(mode),
       databases: inspected.manifest.databases.map((database) => ({
         id: database.id,
         tableCount: database.tables.length,
@@ -262,7 +253,7 @@ export class DevCloudBackupService {
     assertDevCloudBackupAllowed();
     const zipFiles = unzipSync(buffer);
     const zipManifest = parseManifest(zipFiles);
-    const cloud = await this.buildArchive("all-r2");
+    const cloud = await this.buildArchive();
     const comparedAt = new Date().toISOString();
     const databaseDifferences: DevCloudBackupDiffReport["databaseDifferences"] = [];
     const r2Differences: DevCloudBackupDiffReport["r2Differences"] = [];
@@ -369,7 +360,7 @@ export class DevCloudBackupService {
     const zipFiles = unzipSync(buffer);
     const originalManifest = parseManifest(zipFiles);
     const diff = await this.compareWithCloud(buffer);
-    const archive = await this.buildArchive("all-r2", {
+    const archive = await this.buildArchive({
       "reports/cloud-diff.json": textFile(diff),
       "reports/original-manifest.json": textFile(originalManifest),
     });
@@ -414,7 +405,7 @@ export class DevCloudBackupService {
     confirmationText: string,
   ): Promise<DevCloudBackupRestoreResult> {
     assertDevCloudBackupAllowed();
-    if (confirmationText !== restoreConfirmation(mode)) {
+    if (confirmationText !== devCloudBackupRestoreConfirmation(mode)) {
       throw new Error("devCloudBackupRestoreConfirmationRequired");
     }
     const files = unzipSync(buffer);
@@ -426,7 +417,9 @@ export class DevCloudBackupService {
     let restoredTables = 0;
     let restoredRows = 0;
     for (const database of manifest.databases) {
-      if (database.error) continue;
+      if (database.error) {
+        throw new Error(`devCloudBackupArchiveIncomplete:${database.id}`);
+      }
       const result = await tursoBackupRepository.restoreDatabase(database, files, mode);
       restoredDatabases += 1;
       restoredTables += result.tableCount;
@@ -437,7 +430,6 @@ export class DevCloudBackupService {
       manifest.r2.objects,
       files,
       mode,
-      manifest.r2.prefixes,
     );
 
     return {
@@ -449,6 +441,20 @@ export class DevCloudBackupService {
       uploadedR2Objects: r2Result.uploaded,
       deletedR2Objects: r2Result.deleted,
     };
+  }
+
+  /**
+   * Restore a backup the module itself created and stored under `.backups/`.
+   * The archive is addressed by file name only — nothing is uploaded or edited
+   * by hand at any point.
+   */
+  async restoreSavedBackup(
+    fileName: string,
+    mode: DevCloudBackupRestoreMode,
+    confirmationText: string,
+  ): Promise<DevCloudBackupRestoreResult> {
+    const backup = await this.readBackup(fileName);
+    return this.restore(new Uint8Array(backup.body), mode, confirmationText);
   }
 }
 

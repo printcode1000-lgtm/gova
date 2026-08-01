@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 
+import dotenv from "dotenv";
+
+import { discoverTursoBackupSources } from "@/modules/data-access/domains/dev-cloud-backup/repositories/turso-backup.repository.server";
 import {
   assertDevCloudBackupAllowed,
   devCloudBackupEnvironment,
@@ -50,20 +54,37 @@ try {
   });
   assert.equal(devCloudBackupEnvironment().allowed, false);
 
-  const prefixes = r2BackupRepository.prefixesForScope("known-project-files");
-  assert.ok(prefixes.length > 0, "known project R2 backup prefixes are missing");
-  assert.ok(
-    prefixes.every((prefix) => prefix.startsWith("images/") && prefix.endsWith("/")),
-    `unexpected R2 backup prefixes: ${prefixes.join(", ")}`,
+  // R2 admits no exclusions: the only prefix is the whole bucket.
+  assert.deepEqual(
+    r2BackupRepository.prefixes(),
+    [""],
+    "R2 backup must cover every object with no prefix filtering",
   );
 
-  assert.ok(
-    prefixes.includes("images/products/"),
-    "product R2 prefix is missing from the cloud backup scope",
+  // Database coverage must be exhaustive: every libsql database reachable from
+  // the environment has to appear in the backup sources, or a database could be
+  // silently left out of every backup.
+  // Loaded only now: .env sets ASOL_MODE, which would flip the guard above.
+  if (existsSync(".env")) dotenv.config({ path: ".env" });
+  if (existsSync(".env.local")) dotenv.config({ path: ".env.local" });
+  const sourceUrlKeys = new Set(
+    discoverTursoBackupSources().map((source) => source.urlKey),
+  );
+  const environmentUrlKeys = Object.keys(process.env).filter(
+    (key) =>
+      key.endsWith("_DATABASE_URL") &&
+      (process.env[key] ?? "").trim().startsWith("libsql://"),
+  );
+  const uncovered = environmentUrlKeys.filter((key) => !sourceUrlKeys.has(key));
+  assert.deepEqual(
+    uncovered,
+    [],
+    `these databases would never be backed up: ${uncovered.join(", ")}`,
   );
 
-  assert.deepEqual(r2BackupRepository.prefixesForScope("all-r2"), [""]);
-  console.log("dev-cloud-backup policy: environment guard and R2 scope verified");
+  console.log(
+    `dev-cloud-backup policy: guard, full-bucket R2 scope, and ${sourceUrlKeys.size} database sources verified`,
+  );
 } finally {
   setEnv(original);
 }

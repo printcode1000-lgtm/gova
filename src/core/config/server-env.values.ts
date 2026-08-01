@@ -61,6 +61,20 @@ export function readOptionalEnv(key: string): string | undefined {
   return process.env[key];
 }
 
+/**
+ * Names of every configured libsql database URL variable.
+ * Lets callers cover all databases without hardcoding a list that can drift.
+ */
+export function listLibsqlDatabaseUrlKeys(): string[] {
+  return Object.keys(process.env)
+    .filter(
+      (key) =>
+        key.endsWith("_DATABASE_URL") &&
+        (process.env[key] ?? "").trim().startsWith("libsql://"),
+    )
+    .sort();
+}
+
 export function getPasswordRecoveryConfig(): {
   gmailUser: string;
   gmailAppPassword: string;

@@ -3,9 +3,10 @@
 `src/modules/dev-cloud-backup` is a super-admin development-only tool for
 backing up and restoring the cloud development state:
 
-- Turso databases used by the app.
-- Cloudflare R2 images/files. The default mode backs up the whole bucket with
-  no prefix exclusions.
+- Every Turso database reachable from the environment. Sources are discovered,
+  not listed, so a database added to `.env` cannot be left out.
+- Every Cloudflare R2 object in both the general and product buckets. There is
+  no scope option and no prefix filtering: a backup is always complete.
 
 The UI is available at `/super-admin/dev-cloud-backup`.
 
@@ -41,23 +42,12 @@ from the page.
 gova-dev-cloud-backup-<timestamp>-<id>.zip
   manifest.json
   turso/
-    allusers/
-      schema.sql
-      data/<table>.json
-    profile/
-      schema.sql
-      data/<table>.json
-    product/
-      schema.sql
-      data/<table>.json
-    advertisements/
-      schema.sql
-      data/<table>.json
-    marketplace-orders/
+    <database-id>/          # one folder per discovered database
       schema.sql
       data/<table>.json
   r2/
-    objects/<encoded-r2-key>
+    primary/objects/<encoded-r2-key>
+    products/objects/<encoded-r2-key>
   reports/
     cloud-diff.json
     original-manifest.json
@@ -85,13 +75,13 @@ the current local `.env` credentials.
 ## Compare And Update
 
 The page compares saved zip files with the current Turso/R2 state. Manual zip
-upload and manual restore flows are disabled.
+upload is not supported and has no endpoint.
 
 Comparison uses SHA-256 hashes of every exported table JSON file and every R2
 object body, so it detects content changes, not only count changes.
 
-The “update zip from cloud” action creates a new full `all-r2` backup from the
-current cloud state and adds:
+The “update zip from cloud” action creates a new full backup from the current
+cloud state and adds:
 
 - `reports/cloud-diff.json`: differences between the saved zip and current
   cloud state.
@@ -100,36 +90,44 @@ current cloud state and adds:
 This is the safe way to evolve an edited or old backup file without losing a
 record of what changed.
 
-## Restore Modes
+## Restore
 
-`merge` is the default mode. It runs `INSERT OR REPLACE` for all rows and uploads
-all R2 objects from the archive. It does not delete cloud rows or R2 objects that
-are absent from the backup.
+Restore runs against a backup the module itself created and still holds under
+`.backups/dev-cloud/`. The saved backup row carries both buttons; the archive is
+addressed by file name and nothing is ever uploaded by hand.
 
-`replace` deletes rows from the backed-up tables before reinserting them. It also
-deletes R2 objects under the backed-up prefixes when those objects are absent
-from the archive. Use it only after inspecting the preview.
+`merge` runs `INSERT OR REPLACE` for all rows and uploads all R2 objects from the
+archive. It does not delete cloud rows or R2 objects that are absent from the
+backup.
 
-Both modes require typing the exact confirmation text shown by the page:
+`replace` deletes rows from the backed-up tables before reinserting them, and
+deletes every R2 object in both buckets that is absent from the archive. It makes
+the cloud match the archive exactly.
+
+Each mode sends its own confirmation text, produced by
+`devCloudBackupRestoreConfirmation` so the page and the server cannot drift:
 
 - `RESTORE_DEV_CLOUD_BACKUP_MERGE`
 - `RESTORE_DEV_CLOUD_BACKUP_REPLACE`
 
+A restore refuses to start if the archive is incomplete, and fails loudly rather
+than skipping a database whose credentials no longer resolve.
+
 ## Source Coverage
 
-Turso sources are discovered from the environment variables already used by the
-project:
+Coverage is exhaustive by construction, not by a maintained list.
 
-- `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
-- every profile/order shard pair using `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN`
-- `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN`
-- `TURSO_ADVERTISEMENTS_DATABASE_URL`,
-  `TURSO_ADVERTISEMENTS_AUTH_TOKEN`
+`discoverTursoBackupSources()` reads every `*_DATABASE_URL` variable holding a
+`libsql://` value and pairs it with `<NAME>_DATABASE_AUTH_TOKEN` or
+`<NAME>_AUTH_TOKEN`. Well-known databases (`allusers`, `product`,
+`advertisements`, and the shards from `DATABASE_SHARD_NAMES`) are seeded first so
+they keep readable ids; discovery would find them regardless.
 
-R2 full mode uses an empty prefix and lists the whole bucket. Known-project-file
-mode reads enabled `CloudflareR2` profiles from
-`src/config/storage-profiles.json`; it is available only for targeted checks and
-is not the default.
+R2 always lists both buckets from an empty prefix. There is no partial mode.
+
+`npm run test:dev-cloud-backup` fails if any libsql database in the environment
+is missing from the backup sources, so the guarantee is enforced by the test
+suite rather than by attention.
 
 ## Verification
 

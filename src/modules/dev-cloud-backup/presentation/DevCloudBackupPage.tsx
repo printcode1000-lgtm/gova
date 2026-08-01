@@ -19,14 +19,16 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 
 import { DEV_CLOUD_BACKUP_API } from "../config";
-import type {
-  DevCloudBackupInspectResult,
-  DevCloudBackupDiffReport,
-  DevCloudBackupListItem,
-  DevCloudBackupRestorePreview,
-  DevCloudBackupScope,
-  DevCloudBackupSummary,
-  DevCloudBackupUpdateResult,
+import {
+  devCloudBackupRestoreConfirmation,
+  type DevCloudBackupInspectResult,
+  type DevCloudBackupDiffReport,
+  type DevCloudBackupListItem,
+  type DevCloudBackupRestoreMode,
+  type DevCloudBackupRestorePreview,
+  type DevCloudBackupRestoreResult,
+  type DevCloudBackupSummary,
+  type DevCloudBackupUpdateResult,
 } from "../domain/types";
 
 interface ListResponse {
@@ -44,7 +46,7 @@ interface InspectResponse {
   preview: DevCloudBackupRestorePreview;
 }
 
-type BackupOperationKind = "inspect" | "compare" | "update";
+type BackupOperationKind = "inspect" | "compare" | "update" | "restore";
 
 interface BackupOperationStatus {
   kind: BackupOperationKind;
@@ -90,12 +92,19 @@ function formatOperationTime(value?: string) {
 function backupOperationTitle(kind: BackupOperationKind) {
   if (kind === "inspect") return "فحص النسخة";
   if (kind === "compare") return "مقارنة النسخة";
+  if (kind === "restore") return "استعادة النسخة";
   return "تحديث النسخة";
 }
 
 function operationBusyFor(busy: string, kind: BackupOperationKind, fileName: string) {
   const prefix =
-    kind === "inspect" ? "inspect-saved" : kind === "compare" ? "compare-saved" : "update-saved";
+    kind === "inspect"
+      ? "inspect-saved"
+      : kind === "compare"
+        ? "compare-saved"
+        : kind === "restore"
+          ? "restore-saved"
+          : "update-saved";
   return busy === `${prefix}:${fileName}`;
 }
 
@@ -103,8 +112,6 @@ export function DevCloudBackupPage() {
   const { session, isLoading } = useSession();
   const allowedUser = !isLoading && isSuperAdmin(session);
   const [state, setState] = React.useState<ListResponse | null>(null);
-  const [scope, setScope] =
-    React.useState<DevCloudBackupScope>("all-r2");
   const [inspection, setInspection] = React.useState<InspectResponse | null>(
     null,
   );
@@ -191,7 +198,7 @@ export function DevCloudBackupPage() {
     try {
       const next = await asolApi.post<DevCloudBackupSummary>(
         DEV_CLOUD_BACKUP_API.create,
-        { scope },
+        {},
         { headers: authHeaders },
       );
       setCreated(next);
@@ -374,6 +381,50 @@ export function DevCloudBackupPage() {
     }
   };
 
+  const restoreSavedBackup = async (
+    fileName: string,
+    mode: DevCloudBackupRestoreMode,
+  ) => {
+    if (!authHeaders) return;
+    const confirmationText = devCloudBackupRestoreConfirmation(mode);
+    setBusy(`restore-saved:${fileName}`);
+    setError("");
+    setNotice("");
+    startOperation(
+      "restore",
+      fileName,
+      mode === "replace"
+        ? `جاري استعادة ${fileName} بوضع المطابقة التامة...`
+        : `جاري استعادة ${fileName} بوضع الدمج...`,
+    );
+    try {
+      const result = await asolApi.post<DevCloudBackupRestoreResult>(
+        DEV_CLOUD_BACKUP_API.restoreSaved,
+        { fileName, mode, confirmationText },
+        { headers: authHeaders },
+      );
+      const message =
+        `تمت الاستعادة: ${result.restoredDatabases} قاعدة، ` +
+        `${result.restoredTables} جدول، ${result.restoredRows} سجل، ` +
+        `${result.uploadedR2Objects} ملف R2` +
+        (result.deletedR2Objects > 0
+          ? `، وحُذف ${result.deletedR2Objects} ملف زائد`
+          : "");
+      finishOperation("done", message);
+      setNotice(message);
+      await load();
+    } catch (restoreError) {
+      const message =
+        restoreError instanceof Error
+          ? restoreError.message
+          : "تعذر تنفيذ الاستعادة";
+      finishOperation("failed", message);
+      setError(message);
+    } finally {
+      setBusy("");
+    }
+  };
+
   if (isLoading) {
     return <main className="p-4 text-sm text-on-surface-variant">جاري التحميل...</main>;
   }
@@ -393,7 +444,8 @@ export function DevCloudBackupPage() {
   const savedOperationBusy =
     busy.startsWith("inspect-saved:") ||
     busy.startsWith("compare-saved:") ||
-    busy.startsWith("update-saved:");
+    busy.startsWith("update-saved:") ||
+    busy.startsWith("restore-saved:");
 
   return (
     <main className="mx-auto w-full max-w-7xl space-y-4 p-4 pb-24" dir="rtl">
@@ -477,18 +529,9 @@ export function DevCloudBackupPage() {
             إنشاء نسخة جديدة
           </div>
           <div className="mt-4 grid gap-3">
-            <select
-              value={scope}
-              onChange={(event) => setScope(event.target.value as DevCloudBackupScope)}
-              className="h-10 rounded-md border bg-background px-3 text-sm"
-              disabled={!devAllowed || busy === "create"}
-            >
-              <option value="all-r2">كل ملفات R2</option>
-              <option value="known-project-files">ملفات R2 المعروفة للمشروع فقط</option>
-            </select>
             <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
-              الاختيار الافتراضي يحفظ كل قواعد Turso وكل كائنات R2 بدون استثناء.
-              الخيار الثاني مخصص للفحص الضيق فقط.
+تحفظ النسخة كل قواعد Turso المتاحة في البيئة وكل كائنات R2 في
+              الحسابين، بلا أي استثناء.
             </div>
             <Button
               type="button"
@@ -616,6 +659,7 @@ export function DevCloudBackupPage() {
             const inspectBusy = operationBusyFor(busy, "inspect", backup.fileName);
             const compareBusy = operationBusyFor(busy, "compare", backup.fileName);
             const updateBusy = operationBusyFor(busy, "update", backup.fileName);
+            const restoreBusy = busy === `restore-saved:${backup.fileName}`;
             const thisBackupOperation =
               operationStatus?.fileName === backup.fileName ? operationStatus : null;
             const commandDisabled = !devAllowed || savedOperationBusy;
@@ -691,6 +735,28 @@ export function DevCloudBackupPage() {
                   >
                     <RefreshCw className={updateBusy ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
                     {updateBusy ? "جاري تحديث هذا الملف" : "تحديث"}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="border-amber-400 text-amber-800 hover:bg-amber-50"
+                    disabled={commandDisabled}
+                    onClick={() => void restoreSavedBackup(backup.fileName, "merge")}
+                  >
+                    <DatabaseBackup className="h-4 w-4" />
+                    {restoreBusy ? "جاري الاستعادة" : "استعادة (دمج)"}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    className="bg-amber-700 hover:bg-amber-800"
+                    disabled={commandDisabled}
+                    onClick={() => void restoreSavedBackup(backup.fileName, "replace")}
+                  >
+                    <DatabaseBackup className="h-4 w-4" />
+                    {restoreBusy ? "جاري الاستعادة" : "استعادة (مطابقة تامة)"}
                   </Button>
                   <Button
                     type="button"
