@@ -6,6 +6,7 @@ import { Bell, Heart, Loader2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { followApiService, type FollowStatus, type FollowTargetType } from "@/features/follow";
+import { useTranslation } from "@/lib/i18n";
 
 type DialogMode =
   | "login_required"
@@ -33,54 +34,60 @@ const targetLabels: Record<FollowTargetType, string> = {
   category: "الفئة",
 };
 
-function formatCount(value: number): string {
-  return new Intl.NumberFormat("ar-EG").format(Math.max(0, value));
+const targetLabelsEn: Record<FollowTargetType, string> = {
+  store: "Provider",
+  product: "Product",
+  category: "Category",
+};
+
+function formatCount(value: number, locale: string): string {
+  return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US").format(Math.max(0, value));
 }
 
-function dialogText(mode: DialogMode, label: string) {
+function dialogText(mode: DialogMode, label: string, t: (key: string, params?: Record<string, string | number>) => string) {
   switch (mode) {
     case "login_required":
       return {
-        title: "تسجيل الدخول مطلوب",
-        body: `يجب تسجيل الدخول حتى تتمكن من متابعة ${label}.`,
-        action: "تسجيل الدخول لاحقًا",
+        title: t("follow.dialog.loginRequired.title"),
+        body: t("follow.dialog.loginRequired.body", { label }),
+        action: t("follow.dialog.loginRequired.action"),
       };
     case "confirm_follow":
       return {
-        title: "تأكيد المتابعة",
-        body: `سوف تقوم بمتابعة ${label}. يمكنك إلغاء المتابعة في أي وقت.`,
-        action: "متابعة",
+        title: t("follow.dialog.confirmFollow.title"),
+        body: t("follow.dialog.confirmFollow.body", { label }),
+        action: t("follow.dialog.confirmFollow.action"),
       };
     case "confirm_unfollow":
       return {
-        title: "تأكيد إلغاء المتابعة",
-        body: `سوف تلغي متابعة ${label}.`,
-        action: "إلغاء المتابعة",
+        title: t("follow.dialog.confirmUnfollow.title"),
+        body: t("follow.dialog.confirmUnfollow.body", { label }),
+        action: t("follow.dialog.confirmUnfollow.action"),
       };
     case "owner_actions":
       return {
-        title: "إجراءات المتابعين",
-        body: `يمكنك إدارة متابعي ${label} من هنا. بعض الإجراءات ستفعل لاحقًا.`,
-        action: "إغلاق",
+        title: t("follow.dialog.ownerActions.title"),
+        body: t("follow.dialog.ownerActions.body", { label }),
+        action: t("follow.dialog.ownerActions.action"),
       };
     case "coming_soon":
       return {
-        title: "قيد التجهيز",
-        body: "إرسال إشعار للمتابعين سيتم تفعيله لاحقًا من خلال نظام الإشعارات.",
-        action: "حسنًا",
+        title: t("follow.dialog.comingSoon.title"),
+        body: t("follow.dialog.comingSoon.body"),
+        action: t("follow.dialog.comingSoon.action"),
       };
     case "success":
       return {
-        title: "تم بنجاح",
-        body: "تم تحديث حالة المتابعة.",
-        action: "حسنًا",
+        title: t("follow.dialog.success.title"),
+        body: t("follow.dialog.success.body"),
+        action: t("follow.dialog.success.action"),
       };
     case "error":
     default:
       return {
-        title: "تعذر تنفيذ العملية",
-        body: "حدث خطأ أثناء تحديث المتابعة. حاول مرة أخرى.",
-        action: "حسنًا",
+        title: t("follow.dialog.error.title"),
+        body: t("follow.dialog.error.body"),
+        action: t("follow.dialog.error.action"),
       };
   }
 }
@@ -95,7 +102,8 @@ export function FollowButton({
   targetLabel,
   className,
 }: FollowButtonProps) {
-  const label = targetLabel || targetLabels[targetType];
+  const { t, locale } = useTranslation();
+  const label = targetLabel || (locale === "ar" ? targetLabels[targetType] : targetLabelsEn[targetType]);
   const [status, setStatus] = React.useState<FollowStatus | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isMutating, setIsMutating] = React.useState(false);
@@ -139,10 +147,10 @@ export function FollowButton({
   const count = status?.followerCount ?? 0;
   const active = status?.isFollowing ?? false;
   const text = canManage
-    ? "إجراءات المتابعين"
+    ? t("follow.button.followers")
     : active
-      ? "إلغاء المتابعة"
-      : "متابعة";
+      ? t("follow.button.unfollow")
+      : t("follow.button.follow");
   const icon = isLoading ? (
     <Loader2 className="h-4 w-4 animate-spin" />
   ) : canManage ? (
@@ -183,7 +191,7 @@ export function FollowButton({
     }
   };
 
-  const textForDialog = dialogMode ? dialogText(dialogMode, label) : null;
+  const textForDialog = dialogMode ? dialogText(dialogMode, label, t) : null;
 
   return (
     <>
@@ -197,7 +205,7 @@ export function FollowButton({
         {icon}
         <span>{text}</span>
         <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-          {formatCount(count)}
+          {formatCount(count, locale)}
         </span>
       </Button>
 
@@ -227,9 +235,9 @@ export function FollowButton({
             {dialogMode === "owner_actions" ? (
               <div className="mt-4 space-y-2">
                 <div className="rounded-lg border border-outline-variant bg-surface-container-low px-3 py-2 text-xs text-on-surface-variant">
-                  عدد المتابعين:{" "}
+                  {t("follow.dialog.followerCount")}:{" "}
                   <span className="font-semibold text-on-surface">
-                    {formatCount(count)}
+                    {formatCount(count, locale)}
                   </span>
                 </div>
                 <Button
@@ -239,9 +247,9 @@ export function FollowButton({
                   onClick={() => setDialogMode("coming_soon")}
                 >
                   <Bell className="h-4 w-4" />
-                  إرسال إشعار للمتابعين
+                  {t("follow.dialog.notifyFollowers")}
                   <span className="ms-auto text-xs text-on-surface-variant">
-                    قريبًا
+                    {t("follow.dialog.comingSoonBadge")}
                   </span>
                 </Button>
               </div>
