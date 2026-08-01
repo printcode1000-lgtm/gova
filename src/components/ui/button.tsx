@@ -53,4 +53,29 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = 'Button';
 
+/**
+ * Compact action tile: icon stacked above a short label.
+ * Overrides the `.asol-control` spacing vars so the control can grow
+ * vertically instead of staying on one line, and carries the shared accent
+ * treatment so every tile in a row looks identical.
+ */
+export const ACTION_TILE_CLASS =
+  'h-12 min-w-0 shrink-0 flex-col justify-center border bg-surface/80 asol-surface-neutral ' +
+  '[--asol-control-gap:0.125rem] [--asol-control-padding-x:0.375rem] ' +
+  '[--asol-control-padding-y:0.25rem]';
+
+/**
+ * Accent applied inline so it wins over the variant's own colour classes,
+ * keeping every tile in a row visually identical.
+ */
+export const ACTION_TILE_STYLE: React.CSSProperties = {
+  color: 'rgb(79, 70, 229)',
+  borderColor: 'rgba(79, 70, 229, 0.4)',
+  background:
+    'linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(79, 70, 229, 0.03))',
+};
+
+/** Label under an {@link ACTION_TILE_CLASS} icon. */
+export const ACTION_TILE_LABEL_CLASS = 'text-[9px] font-medium leading-tight';
+
 export { Button, buttonVariants };

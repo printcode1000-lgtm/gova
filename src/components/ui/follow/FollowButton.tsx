@@ -3,7 +3,12 @@
 import * as React from "react";
 import { Bell, Heart, Loader2, Users } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import {
+  ACTION_TILE_CLASS,
+  ACTION_TILE_LABEL_CLASS,
+  ACTION_TILE_STYLE,
+  Button,
+} from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { followApiService, type FollowStatus, type FollowTargetType } from "@/features/follow";
 import { useTranslation } from "@/lib/i18n";
@@ -152,11 +157,11 @@ export function FollowButton({
       ? t("follow.button.unfollow")
       : t("follow.button.follow");
   const icon = isLoading ? (
-    <Loader2 className="h-4 w-4 animate-spin" />
+    <Loader2 className="h-5 w-5 animate-spin" />
   ) : canManage ? (
-    <Users className="h-4 w-4" />
+    <Users className="h-5 w-5" />
   ) : (
-    <Heart className={cn("h-4 w-4", active && "fill-current")} />
+    <Heart className={cn("h-5 w-5", active && "fill-current")} />
   );
 
   const openPrimaryDialog = () => {
@@ -200,13 +205,16 @@ export function FollowButton({
         variant={active && !canManage ? "secondary" : "outline"}
         onClick={openPrimaryDialog}
         disabled={isLoading || !targetId}
-        className={cn("gap-2", className)}
+        className={cn(ACTION_TILE_CLASS, className)}
+        style={ACTION_TILE_STYLE}
       >
-        {icon}
-        <span>{text}</span>
-        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-          {formatCount(count, locale)}
+        <span className="relative flex">
+          {icon}
+          <span className="absolute -top-2 -end-3 min-w-4 rounded-full bg-primary/10 px-1 text-[10px] font-semibold leading-4 text-primary">
+            {formatCount(count, locale)}
+          </span>
         </span>
+        <span className={ACTION_TILE_LABEL_CLASS}>{text}</span>
       </Button>
 
       {dialogMode && textForDialog ? (

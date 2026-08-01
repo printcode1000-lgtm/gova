@@ -13,7 +13,12 @@ import {
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 import { ContactActionBar } from "@/components/ui/contact-action-bar";
-import { Button } from "@/components/ui/button";
+import {
+  ACTION_TILE_CLASS,
+  ACTION_TILE_LABEL_CLASS,
+  ACTION_TILE_STYLE,
+  Button,
+} from "@/components/ui/button";
 import {
   FeaturedMarquee,
   type FeaturedMarqueeConfig,
@@ -34,6 +39,7 @@ import type { ProfileFulfillmentSettings } from "@/features/profile/entities/pro
 import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
 import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
+import { useTranslation } from "@/lib/i18n";
 import { ProfileProductsPreview } from "./ProfileProductsPreview";
 import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
 
@@ -78,7 +84,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
     fulfillment,
     loading,
   } = props;
-  const ar = locale === "ar";
+  const { t } = useTranslation();
   const [storyExpanded, setStoryExpanded] = useSnapshotState(
     "profile.preview.storyExpanded",
     false,
@@ -134,28 +140,26 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
     if (!shareUrl) return;
     const title =
       storeDetails.storeName ||
-      (ar ? "صفحة مقدم الخدمة" : "Provider profile");
+      (t("profilePreview.pageTitle"));
     try {
       if (typeof navigator.share === "function") {
         await navigator.share({
           title,
-          text: ar
-            ? "رابط صفحة مقدم الخدمة على Gova"
-            : "Provider profile on Gova",
+          text: t("profilePreview.shareText"),
           url: shareUrl,
         });
         return;
       }
       await navigator.clipboard.writeText(shareUrl);
-      showShareStatus(ar ? "تم نسخ رابط الصفحة" : "Profile link copied");
+      showShareStatus(t("profilePreview.linkCopied"));
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       console.warn("[ProfilePreview] Failed to share profile link.", error);
       try {
         await navigator.clipboard.writeText(shareUrl);
-        showShareStatus(ar ? "تم نسخ رابط الصفحة" : "Profile link copied");
+        showShareStatus(t("profilePreview.linkCopied"));
       } catch {
-        showShareStatus(ar ? "تعذرت مشاركة الرابط" : "Could not share link");
+        showShareStatus(t("profilePreview.shareFailed"));
       }
     }
   };
@@ -168,16 +172,16 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       <div>
         {loading.images ? (
           <div className="py-8 text-center text-sm text-on-surface-variant">
-            {ar ? "جارٍ التحميل..." : "Loading..."}
+            {t("profilePreview.loading")}
           </div>
         ) : (
-          <div className="mb-0">
+          <div className="mb-0 -mt-4">
             <HeroSlider mode="view" config={props.heroConfig} />
           </div>
         )}
 
         {!loading.details ? (
-          <section className="mx-2 mt-6 border-b border-outline-variant/60 pb-4 sm:mx-4 sm:pb-5 sm:mt-8">
+          <section className="mx-2 mt-3 border-b border-outline-variant/60 pb-4 sm:mx-4 sm:pb-5 sm:mt-4">
             <div className="flex min-w-0 items-start gap-3 sm:gap-4">
               {storeImages.avatarUrl ? (
                 <div className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-4 border-surface shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
@@ -192,76 +196,71 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
               ) : null}
 
               <div className="min-w-0 flex-1">
-                <div className="flex flex-col gap-2">
-                  {previewUid ? (
-                    <div className="flex items-center gap-2">
-                      <FollowButton
-                        targetType="store"
-                        targetId={previewUid}
-                        targetOwnerUid={previewUid}
-                        viewerUid={session?.uid}
-                        isOwner={props.isOwner}
-                        isSuperAdmin={props.isSuperAdmin}
-                        targetLabel={
-                          storeDetails.storeName ||
-                          (ar ? "مقدم الخدمة" : "Provider")
-                        }
-                      />
+                {previewUid ? (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <FollowButton
+                      targetType="store"
+                      targetId={previewUid}
+                      targetOwnerUid={previewUid}
+                      viewerUid={session?.uid}
+                      isOwner={props.isOwner}
+                      isSuperAdmin={props.isSuperAdmin}
+                      targetLabel={
+                        storeDetails.storeName ||
+                        (t("profilePreview.providerFallback"))
+                      }
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={`${ACTION_TILE_CLASS} border-input hover:bg-accent hover:text-accent-foreground`}
+                      style={ACTION_TILE_STYLE}
+                      title={t("profilePreview.shareAria")}
+                      aria-label={t("profilePreview.shareAria")}
+                      onClick={() => void shareProfile()}
+                    >
+                      <FontAwesomeIcon icon={faShareNodes} className="h-5 w-5" />
+                      <span className={ACTION_TILE_LABEL_CLASS}>
+                        {t("profilePreview.share")}
+                      </span>
+                    </Button>
+                    {storeDetails.profileShowcase?.customRequestEnabled && session?.uid ? (
                       <Button
                         type="button"
-                        size="icon"
                         variant="outline"
-                        className="h-10 w-10 shrink-0 rounded-full border bg-surface/80 asol-surface-neutral border-input hover:bg-accent hover:text-accent-foreground asol-control-icon"
-                        style={{
-                          color: "rgb(79, 70, 229)",
-                          borderColor: "rgba(79, 70, 229, 0.4)",
-                          background: "linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(79, 70, 229, 0.03))",
+                        className={`${ACTION_TILE_CLASS} border-input hover:bg-accent hover:text-accent-foreground`}
+                        style={ACTION_TILE_STYLE}
+                        title={t("profilePreview.customRequestAria")}
+                        aria-label={t("profilePreview.customRequestAria")}
+                        onClick={() => {
+                          const customRequestButton = document.querySelector('[data-custom-request-trigger]') as HTMLButtonElement;
+                          if (customRequestButton) {
+                            customRequestButton.click();
+                          }
                         }}
-                        title={ar ? "مشاركة الصفحة" : "Share profile"}
-                        aria-label={ar ? "مشاركة الصفحة" : "Share profile"}
-                        onClick={() => void shareProfile()}
                       >
-                        <FontAwesomeIcon icon={faShareNodes} className="h-4 w-4" />
+                        <FontAwesomeIcon icon={faPaperPlane} className="h-5 w-5" />
+                        <span className={ACTION_TILE_LABEL_CLASS}>
+                          {t("profilePreview.customRequest")}
+                        </span>
                       </Button>
-                      {storeDetails.profileShowcase?.customRequestEnabled && session?.uid ? (
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="outline"
-                          className="h-10 w-10 shrink-0 rounded-full border bg-surface/80 asol-surface-neutral border-input hover:bg-accent hover:text-accent-foreground asol-control-icon"
-                          style={{
-                            color: "rgb(79, 70, 229)",
-                            borderColor: "rgba(79, 70, 229, 0.4)",
-                            background: "linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(79, 70, 229, 0.03))",
-                          }}
-                          title={ar ? "إرسال طلب خاص" : "Send custom request"}
-                          aria-label={ar ? "إرسال طلب خاص" : "Send custom request"}
-                          onClick={() => {
-                            const customRequestButton = document.querySelector('[data-custom-request-trigger]') as HTMLButtonElement;
-                            if (customRequestButton) {
-                              customRequestButton.click();
-                            }
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faPaperPlane} className="h-4 w-4" />
-                        </Button>
-                      ) : null}
-                    </div>
-                  ) : null}
-                  <div className="min-w-0 flex-1">
-                    {storeDetails.storeName ? (
-                      <h1 className="break-words text-lg font-bold leading-7 text-on-surface sm:text-2xl">
-                        {storeDetails.storeName}
-                      </h1>
-                    ) : null}
-                    {storeDetails.storeDescription ? (
-                      <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6">
-                        {storeDetails.storeDescription}
-                      </p>
                     ) : null}
                   </div>
-                </div>
+                ) : null}
               </div>
+            </div>
+
+            <div className="mt-3 min-w-0">
+              {storeDetails.storeName ? (
+                <h1 className="break-words text-lg font-bold leading-7 text-on-surface sm:text-2xl">
+                  {storeDetails.storeName}
+                </h1>
+              ) : null}
+              {storeDetails.storeDescription ? (
+                <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6">
+                  {storeDetails.storeDescription}
+                </p>
+              ) : null}
             </div>
           </section>
         ) : null}
@@ -272,7 +271,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           <div>
             <h2 className="mb-3 flex items-center gap-2 text-sm font-bold">
               <FontAwesomeIcon icon={faShareNodes} className="text-primary" />
-              {ar ? "تواصل سريع" : "Quick contact"}
+              {t("profilePreview.quickContact")}
             </h2>
             <ContactActionBar
               data={contacts}
@@ -293,8 +292,8 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         <div className="hidden">
           <ProfileCustomRequestButton
             onSubmit={props.onCustomRequest}
-            buttonLabel={ar ? "إرسال طلب خاص" : "Send custom request"}
-            title={`${ar ? "طلب خاص إلى" : "Custom request to"} ${storeDetails.storeName || (ar ? "البائع" : "seller")}`}
+            buttonLabel={t("profilePreview.customRequestAria")}
+            title={`${t("profilePreview.customRequestTo")} ${storeDetails.storeName || (t("profilePreview.sellerFallback"))}`}
           />
         </div>
       ) : null}
@@ -321,9 +320,9 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         <section className="rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:p-6">
           <SectionHeading
             icon={faBoxOpen}
-            title={ar ? "المنتجات والخدمات" : "Products & services"}
+            title={t("profilePreview.products")}
             hint={
-              ar ? "تظهر المنتجات النشطة فقط" : "Only active products are shown"
+              t("profilePreview.productsHint")
             }
           />
           <ProfileProductsPreview uid={previewUid} />
@@ -335,11 +334,9 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           <div className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6">
             <SectionHeading
               icon={faClock}
-              title={ar ? "مواعيد العمل" : "Working hours"}
+              title={t("profilePreview.workingHours")}
               hint={
-                ar
-                  ? "أوقات استقبال الطلبات والتواصل"
-                  : "Availability for orders and contact"
+                t("profilePreview.workingHoursHint")
               }
             />
             <WorkingHoursCard
@@ -371,12 +368,10 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
             </span>
             <span className="flex-1">
               <strong className="block text-lg">
-                {ar ? "قصة المتجر" : "Store story"}
+                {t("profilePreview.storeStory")}
               </strong>
               <span className="text-xs text-on-surface-variant">
-                {ar
-                  ? "تعرف على قصة وهوية النشاط"
-                  : "Discover the story behind this business"}
+                {t("profilePreview.storeStoryHint")}
               </span>
             </span>
             <FontAwesomeIcon
@@ -397,12 +392,10 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           <SectionHeading
             icon={faComments}
             title={
-              ar ? "التقييمات وآراء العملاء" : "Ratings & customer reviews"
+              t("profilePreview.reviews")
             }
             hint={
-              ar
-                ? "تجارب موثقة من مجتمع أصول"
-                : "Experiences from the ASOL community"
+              t("profilePreview.reviewsHint")
             }
           />
           <ProductReviews
@@ -410,7 +403,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
             targetUid={previewUid}
             ownerUid={previewUid}
             productName={
-              storeDetails.storeName || (ar ? "الملف الشخصي" : "Profile")
+              storeDetails.storeName || (t("profilePreview.profile"))
             }
             reviewsEnabled
             targetEnabled

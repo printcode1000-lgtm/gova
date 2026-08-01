@@ -423,8 +423,9 @@ export function ProfilePageContent() {
   }
 
   return (
-    <div className="container px-3 py-1 sm:px-5 sm:py-2 lg:px-6">
+    <div className="container px-3 pb-1 sm:px-5 sm:pb-2 lg:px-6">
       {showPreviewCard ? (
+        <div className="pt-0.5 sm:pt-1">
         <ProfilePreviewContent
           locale={locale === "ar" ? "ar" : "en"}
           previewUid={previewUid}
@@ -448,10 +449,11 @@ export function ProfilePageContent() {
           }}
           onCustomRequest={submitProfileCustomRequest}
         />
+        </div>
       ) : showEditCard ? (
         <div
           id="edit-profile-card"
-          className="mx-auto flex w-full max-w-4xl flex-col gap-3 sm:gap-4"
+          className="mx-auto flex w-full max-w-4xl flex-col gap-3 pt-1 sm:gap-4 sm:pt-2"
         >
           <div className="order-2 w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
             <div
