@@ -1,6 +1,6 @@
 /**
- * Single responsibility: derive OTA capability requirements from capability
- * tokens that survived into the built web bundle.
+ * Single responsibility: read and validate the capability requirements emitted
+ * by the static build.
  */
 
 import type { Buffer } from "node:buffer";
@@ -18,23 +18,33 @@ export interface ScannableBuiltFile {
 export function scanBuiltCapabilities(
   files: Record<string, ScannableBuiltFile>,
 ): string[] {
-  const generated = files["asol-required-capabilities.json"];
-  if (generated) {
-    const parsed = JSON.parse(generated.bytes.toString("utf8"));
-    if (
-      !Array.isArray(parsed) ||
-      parsed.some((key) => !ALL_CAPABILITY_KEYS.includes(key))
-    ) {
-      throw new Error("Built capability metadata is invalid");
-    }
-    return [...new Set<string>(parsed)].sort();
+  const metadataFile = "asol-required-capabilities.json";
+  const generated = files[metadataFile];
+  if (!generated) {
+    throw new Error(
+      `Missing ${metadataFile}; run npm run build:static before checking or publishing an OTA release.`,
+    );
   }
-  const searchable = Object.entries(files)
-    .filter(([filePath]) => /\.(?:js|html|json)$/i.test(filePath))
-    .map(([, file]) => file.bytes.toString("utf8"))
-    .join("\n");
 
-  return ALL_CAPABILITY_KEYS.filter((key) => searchable.includes(key)).sort();
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(generated.bytes.toString("utf8"));
+  } catch {
+    throw new Error(
+      `Invalid ${metadataFile}; run npm run build:static before checking or publishing an OTA release.`,
+    );
+  }
+  if (
+    !Array.isArray(parsed) ||
+    parsed.some(
+      (key) => typeof key !== "string" || !ALL_CAPABILITY_KEYS.includes(key),
+    )
+  ) {
+    throw new Error(
+      `Invalid ${metadataFile}; run npm run build:static before checking or publishing an OTA release.`,
+    );
+  }
+  return [...new Set<string>(parsed)].sort();
 }
 
 const apiPatterns = new Map<string, string>([

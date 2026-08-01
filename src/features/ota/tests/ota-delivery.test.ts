@@ -77,6 +77,19 @@ async function main(): Promise<void> {
     }),
     ["barcode.scan", "network.status"],
   );
+  assert.throws(
+    () => scanBuiltCapabilities({}),
+    /Missing asol-required-capabilities\.json; run npm run build:static/,
+  );
+  assert.throws(
+    () =>
+      scanBuiltCapabilities({
+        "asol-required-capabilities.json": {
+          bytes: Buffer.from('["unknown.capability"]'),
+        },
+      }),
+    /Invalid asol-required-capabilities\.json; run npm run build:static/,
+  );
 
   let active = 0;
   let maximum = 0;

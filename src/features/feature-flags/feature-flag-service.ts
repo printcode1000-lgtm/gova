@@ -3,31 +3,53 @@
  * capability checks, keeping unreleased UI dark by default.
  */
 import { capabilities } from "@/native-platform";
+import type { CapabilityKey } from "@/native-platform";
 import type {
   FeatureFlagDefinition,
   RemoteFeatureFlagProvider,
   RemoteFeatureFlagValues,
 } from "./types";
 
-let remoteValues: RemoteFeatureFlagValues = {};
-let provider: RemoteFeatureFlagProvider | null = null;
+type CapabilityLookup = (capability: CapabilityKey) => Promise<boolean>;
 
-export const featureFlags = {
+export class FeatureFlagService {
+  private remoteValues: RemoteFeatureFlagValues = {};
+  private provider: RemoteFeatureFlagProvider | null = null;
+
+  constructor(
+    private readonly hasCapability: CapabilityLookup = (key) =>
+      capabilities.has(key),
+  ) {}
+
   configureRemoteProvider(nextProvider: RemoteFeatureFlagProvider): void {
-    provider = nextProvider;
-  },
+    this.provider = nextProvider;
+  }
+
   setRemoteValues(values: RemoteFeatureFlagValues): void {
-    remoteValues = { ...values };
-  },
+    this.remoteValues = { ...values };
+  }
+
   async refresh(): Promise<void> {
-    if (provider) remoteValues = { ...(await provider()) };
-  },
+    if (!this.provider) return;
+    // Propagate provider failures so bootstrap can report them; assignment after
+    // the await deliberately preserves the last known-good values.
+    this.remoteValues = { ...(await this.provider()) };
+  }
+
   async isEnabled(definition: FeatureFlagDefinition): Promise<boolean> {
     const remotelyEnabled =
-      remoteValues[definition.key] ?? definition.defaultEnabled ?? false;
+      this.remoteValues[definition.key] ?? definition.defaultEnabled ?? false;
     if (!remotelyEnabled) return false;
     return definition.capability
-      ? capabilities.has(definition.capability)
+      ? this.hasCapability(definition.capability)
       : true;
-  },
-} as const;
+  }
+
+  /** Test/bootstrap support for returning the service to its initial state. */
+  reset(): void {
+    this.remoteValues = {};
+    this.provider = null;
+  }
+}
+
+export const featureFlags = new FeatureFlagService();
