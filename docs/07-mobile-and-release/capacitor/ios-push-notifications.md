@@ -14,6 +14,12 @@ through APNs. Capacitor's Push Notifications plugin returns an APNs device token
 on iOS, the API stores it with provider `apns`, and the server sends it through
 the APNs HTTP/2 provider. Android continues to use FCM.
 
+The complete Firebase Apple configuration downloaded from Firebase Console is
+stored at `ios/App/App/GoogleService-Info.plist` and is included in the Xcode App
+target resources. Firebase documents this client configuration as containing
+project and application identifiers rather than server credentials. Keep the
+complete file intact; do not copy it into `public/`, `out/`, or JavaScript env.
+
 Do not add `FirebaseMessaging` or change iOS tokens to provider `fcm` without a
 coordinated client, API, database, and notification-provider migration.
 
@@ -44,10 +50,9 @@ a physical device or distributing a release:
 4. Test remote push on a physical device; the iOS simulator is not the release
    verification target for APNs registration.
 
-If Firebase Cloud Messaging is intentionally adopted for iOS in the future,
-download the complete `GoogleService-Info.plist` from Firebase Console and add
-it to the App target. The App ID shown in the console is not sufficient to
-reconstruct that plist safely.
+If Firebase Cloud Messaging is intentionally adopted for iOS in the future, the
+configuration file is already present, but the Firebase Apple SDK and the
+coordinated token-provider migration are still required.
 
 ## Known SPM compatibility boundary
 

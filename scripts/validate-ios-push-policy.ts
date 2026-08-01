@@ -21,6 +21,7 @@ const entitlements = read("ios/App/App/App.entitlements");
 const appDelegate = read("ios/App/App/AppDelegate.swift");
 const capacitorConfig = read("capacitor.config.ts");
 const envExample = read(".env.example");
+const firebaseConfig = read("ios/App/App/GoogleService-Info.plist");
 const errors: string[] = [];
 
 function requireText(source: string, value: string, message: string): void {
@@ -51,6 +52,11 @@ requireText(
   project,
   "com.apple.Push",
   "The Xcode Push Notifications capability is not enabled.",
+);
+requireText(
+  project,
+  "GoogleService-Info.plist in Resources",
+  "The Firebase Apple configuration must belong to the App resources target.",
 );
 requireText(
   entitlements,
@@ -86,6 +92,24 @@ for (const [key, value] of [
   ["FIREBASE_IOS_BUNDLE_ID", expected.bundleId],
 ] as const) {
   requireText(envExample, `${key}=${value}`, `${key} identity is incorrect.`);
+}
+
+for (const [key, value] of [
+  ["BUNDLE_ID", expected.bundleId],
+  ["PROJECT_ID", expected.firebaseProjectId],
+  ["GCM_SENDER_ID", expected.firebaseProjectNumber],
+  ["GOOGLE_APP_ID", expected.firebaseAppId],
+] as const) {
+  requireText(
+    firebaseConfig,
+    `<key>${key}</key>`,
+    `GoogleService-Info.plist is missing ${key}.`,
+  );
+  requireText(
+    firebaseConfig,
+    `<string>${value}</string>`,
+    `GoogleService-Info.plist ${key} identity is incorrect.`,
+  );
 }
 
 if (errors.length > 0) {
