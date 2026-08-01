@@ -8,10 +8,75 @@ The application downloads or activates an update only when:
 
 ```text
 remote.version > local.version
+AND remote.minimumNativeVersion <= installed native version
 AND (release.approved = true OR actor is the super-admin)
 ```
 
-An equal or lower remote version is ignored. A missing approval record, a revoked release, or an unavailable approval API fails closed: the client continues with its running bundle and downloads no OTA files.
+An equal or lower remote version is ignored. A missing approval record, a
+revoked release, or an unavailable approval API fails closed: the client
+continues with its running bundle and downloads no OTA files.
+
+## The Golden Rule
+
+> **OTA ships UI and logic that run inside the native capabilities already
+> installed on the device. Any new device capability is a store release.**
+
+A web bundle that calls a Capacitor plugin, permission, or intent filter the
+installed shell does not contain **will not crash**. The Native Platform layer
+degrades it to an `Unavailable` error. That silent degradation is more
+dangerous than a crash, because nothing reports it and the feature simply does
+nothing for the user.
+
+Two mechanisms enforce the rule:
+
+### 1. Runtime gate — the device refuses an incompatible bundle
+
+`ota-update-service.ts` compares `manifest.minimumNativeVersion` against
+`publicEnv.nativeVersion` and skips the release with the
+`ota.nativeUpdateRequired` status when the shell is too old.
+
+### 2. Publish gate — the channel refuses an unsafe upload
+
+`scripts/ota/ota-native-compatibility.ts` compares the working tree against
+the commit the last store build was made from. When any of these changed,
+`npm run ota:publish` **refuses to run**:
+
+| Surface | Why it matters |
+|---|---|
+| `android/` · `ios/` | Manifest, entitlements, native sources |
+| `capacitor.config.ts` · `platform/` | Shell configuration |
+| `assets/` · `fastlane/` | Bundled resources and release tooling |
+| `src/native-platform/` | The binding between web code and native plugins |
+| `@capacitor/*` dependencies | Native code shipped with a store build |
+
+To publish anyway, the requirement must be **declared deliberately**:
+
+```bash
+ASOL_OTA_MINIMUM_NATIVE_VERSION=<version> npm run ota:publish
+```
+
+### Testing the gate safely
+
+```bash
+npm run ota:check              # runs the gate only — builds nothing, uploads nothing
+npm run test:ota-compatibility # unit tests for the surface classifier
+```
+
+**Never run `npm run ota:publish` to test the gate.** Passing the gate
+continues straight into a real build and a real upload that overwrites the
+live channel.
+
+### Baseline
+
+The gate needs to know which commit the installed shell was built from. Tag it
+at every store release:
+
+```bash
+git tag native-v0.1.52 && git push origin native-v0.1.52
+```
+
+Or override for one run with `ASOL_OTA_NATIVE_BASELINE=<commit>`. Without a
+baseline the gate fails closed and refuses to publish.
 
 ## Release Approval Gate
 
@@ -171,6 +236,9 @@ JSON files below `app-updates/files` are uploaded as `application/octet-stream`,
 There is intentionally no rollback. If publication fails before the new manifest is written, clients continue to see the previous version. A client that reads an old manifest while files are being replaced may reject a checksum and retry on a later launch.
 
 ## Manifest Schema
+
+`minimumNativeVersion` is **enforced**, not advisory: a device whose native
+version is lower skips the release entirely. See [The Golden Rule](#the-golden-rule).
 
 Example schema v2 manifest:
 

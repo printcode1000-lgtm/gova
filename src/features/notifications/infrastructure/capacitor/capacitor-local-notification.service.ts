@@ -10,8 +10,9 @@ import type { NotificationEntity } from "../../domain/entities";
  * code path serves the browser, Android, and iOS. It must not call
  * `new Notification(...)` or a Capacitor plugin directly.
  *
- * The permission is never requested here; a notification is only displayed if
- * permission already exists, which the module enforces internally.
+ * The permission is never requested here. `schedule()` checks it on every
+ * platform and exits quietly when it is absent, so a missing permission
+ * degrades to "no notification" rather than an error or a surprise prompt.
  */
 export class CapacitorLocalNotificationService {
   async display(notification: NotificationEntity): Promise<void> {

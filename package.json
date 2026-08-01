@@ -55,6 +55,8 @@
     "r2:migrate:folders": "npx tsx src/modules/data-access/tooling/migrate-r2-cloud-folders.ts",
     "ota:keygen": "npx tsx scripts/ota-keygen.ts",
     "ota:publish": "npx tsx scripts/ota-publish.ts",
+    "ota:check": "npx tsx scripts/ota-publish.ts --dry-run",
+    "test:ota-compatibility": "npx tsx scripts/test-ota-native-compatibility.ts",
     "ota:status": "npx tsx scripts/ota-status.ts",
     "ota:self-test": "npx tsx scripts/ota-self-test.ts",
     "android:push:sync-assets": "npx tsx scripts/sync-android-push-assets.ts",

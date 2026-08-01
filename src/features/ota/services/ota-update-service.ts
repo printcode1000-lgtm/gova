@@ -375,6 +375,28 @@ export const otaUpdateService = {
           return null;
         }
 
+        // A web bundle may rely on a native capability (a Capacitor plugin, a
+        // permission, an intent filter) that an older shell does not contain.
+        // Applying it would leave the application silently degraded, so the
+        // release is refused until the user installs a newer store build.
+        if (
+          compareVersions(remoteManifest.minimumNativeVersion, publicEnv.nativeVersion) > 0
+        ) {
+          logWarn('Skipping OTA update: the installed native shell is too old', {
+            installedNativeVersion: publicEnv.nativeVersion,
+            requiredNativeVersion: remoteManifest.minimumNativeVersion,
+            remoteVersion: remoteManifest.version,
+          });
+          onProgress?.({
+            progress: 22,
+            statusKey: 'ota.nativeUpdateRequired',
+            detail: `${publicEnv.nativeVersion} < ${remoteManifest.minimumNativeVersion}`,
+            currentVersion: localManifest.version,
+            remoteVersion: remoteManifest.version,
+          });
+          return null;
+        }
+
         const access = await otaApiService.getReleaseAccess(
           {
             releaseId: remoteManifest.releaseId,

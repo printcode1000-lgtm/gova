@@ -5,6 +5,11 @@ import path from 'node:path';
 import { CAPACITOR_API_BASE_URL } from '../platform/capacitor.defaults';
 import { withoutVsCodeDebuggerEnv } from './child-process-env';
 import {
+  formatReport,
+  inspectNativeCompatibility,
+  resolveNativeBaseline,
+} from './ota/ota-native-compatibility';
+import {
   OTA_SCHEMA_VERSION,
   canonicalManifestPayload,
   getOtaManifestUrl,
@@ -96,8 +101,66 @@ function automaticNotes(now: Date): string {
   return `Automatic build - ${value('year')}-${value('month')}-${value('day')} ${value('hour')}:${value('minute')}:${value('second')} Africa/Cairo`;
 }
 
+/**
+ * Enforce the golden rule before anything is uploaded.
+ *
+ * OTA ships UI and logic that run inside the native capabilities already
+ * installed on the device. Any new device capability is a store release.
+ *
+ * @returns The `minimumNativeVersion` to stamp into the manifest.
+ * @throws When the native shell changed and the publisher has not declared a
+ *         new minimum version.
+ */
+function assertNativeCompatibility(): string {
+  const baseline = resolveNativeBaseline();
+  const report = inspectNativeCompatibility(baseline);
+  const declared = process.env.ASOL_OTA_MINIMUM_NATIVE_VERSION?.trim();
+
+  console.log('\nOTA native compatibility');
+  console.log(formatReport(report, baseline));
+
+  if (!baseline) {
+    throw new Error(
+      'Cannot prove OTA native compatibility: no native baseline found.\n' +
+        'Tag the commit the current store build was made from, for example:\n' +
+        '  git tag native-v1.0.0 && git push origin native-v1.0.0\n' +
+        'Or set ASOL_OTA_NATIVE_BASELINE to that commit.',
+    );
+  }
+
+  if (report.requiresStoreRelease && !declared) {
+    throw new Error(
+      'Refusing to publish: the native shell changed since the last store release.\n' +
+        'A web bundle that needs a capability the installed shell lacks degrades\n' +
+        'silently instead of failing loudly.\n\n' +
+        formatReport(report, baseline) +
+        '\n\nEither publish a new store build and re-tag the baseline, or, if this\n' +
+        'bundle genuinely runs on the older shell, declare the requirement:\n' +
+        '  ASOL_OTA_MINIMUM_NATIVE_VERSION=<version> npm run ota:publish',
+    );
+  }
+
+  // No native surface changed: the bundle runs on any shell that already
+  // serves the current release line.
+  const resolved = declared || process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION?.trim() || '1.0.0';
+  console.log(`minimumNativeVersion: ${resolved}${declared ? ' (declared)' : ' (inherited)'}\n`);
+  return resolved;
+}
+
 async function main(): Promise<void> {
   loadOtaEnvironment();
+
+  const minimumNativeVersion = assertNativeCompatibility();
+
+  // `--dry-run` verifies the compatibility gate without building or touching
+  // R2. Use it to test the gate; a real run overwrites the live channel.
+  if (process.argv.includes('--dry-run')) {
+    console.log(
+      `Dry run: the compatibility gate passed and would stamp ` +
+        `minimumNativeVersion=${minimumNativeVersion}. Nothing was built or uploaded.`,
+    );
+    return;
+  }
 
   const prefix = getOtaPrefix();
   const manifestKey = `${prefix}/manifest.json`;
@@ -168,7 +231,7 @@ async function main(): Promise<void> {
     baseUrl,
     size,
     fileCount: Object.keys(files).length,
-    minimumNativeVersion: '0.0.0',
+    minimumNativeVersion,
     mandatory: false,
     notes,
     files: Object.fromEntries(

@@ -210,6 +210,7 @@
     "ota.diffReady":  "File differences are ready",
     "ota.failed":  "Update check failed",
     "ota.installing":  "Preparing the update...",
+    "ota.nativeUpdateRequired":  "This update needs a newer app version. Update it from the store.",
     "ota.noUpdate":  "No newer update found",
     "ota.prompt.autoApply":  "If you choose Later, the update will apply on the next launch. We will remind you after 24 hours if the app stays open.",
     "ota.prompt.description":  "Version {{version}} has been downloaded and verified. Restart the application interface to activate it.",

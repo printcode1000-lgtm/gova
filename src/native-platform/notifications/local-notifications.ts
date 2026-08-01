@@ -11,6 +11,7 @@
 import { toNativeError } from "../core/errors";
 import { createLazyPlugin } from "../core/lazy-plugin";
 import { hasDom, isAndroid, isNativePlatform } from "../core/platform";
+import { localNotificationAdapter } from "../permissions/permission-adapters";
 import { permissionManager } from "../permissions/permission-manager";
 import type { PermissionResult } from "../permissions/types";
 import {
@@ -43,8 +44,29 @@ export class LocalNotificationsModule {
     return permissionManager.requestLocalNotificationsIfNeeded();
   }
 
-  /** Schedule a notification. Delivers immediately when `at` is omitted. */
+  /**
+   * True when the OS will actually display a local notification.
+   * Never prompts.
+   */
+  async isPermitted(): Promise<boolean> {
+    if (isNativePlatform()) {
+      const result = await localNotificationAdapter().check();
+      // A platform with no such permission concept still displays.
+      return result === "granted" || result === "unsupported";
+    }
+    if (!hasDom() || !("Notification" in window)) return false;
+    return Notification.permission === "granted";
+  }
+
+  /**
+   * Schedule a notification. Delivers immediately when `at` is omitted.
+   *
+   * Exits quietly when permission is absent: a local notification is a
+   * convenience, never a critical operation, and this module must not prompt.
+   */
   async schedule(notification: LocalNotificationSchedule): Promise<void> {
+    if (!(await this.isPermitted())) return;
+
     if (isNativePlatform()) {
       const plugin = await localPlugin.required();
       try {
@@ -72,8 +94,7 @@ export class LocalNotificationsModule {
       return;
     }
 
-    if (!hasDom() || !("Notification" in window)) return;
-    if (Notification.permission !== "granted") return;
+    if (!hasDom()) return;
 
     const show = () => {
       new Notification(notification.title, {
