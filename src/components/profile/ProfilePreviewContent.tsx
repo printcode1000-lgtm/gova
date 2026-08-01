@@ -39,7 +39,7 @@ import type { ProfileFulfillmentSettings } from "@/features/profile/entities/pro
 import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
 import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
-import { isCancelledError } from "@/native-platform";
+import { clipboard, isCancelledError } from "@/native-platform";
 import { share } from "@/native-platform/share";
 import { useTranslation } from "@/lib/i18n";
 import { ProfileProductsPreview } from "./ProfileProductsPreview";
@@ -152,14 +152,14 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         });
         return;
       }
-      await navigator.clipboard.writeText(shareUrl);
+      await clipboard.write(shareUrl);
       showShareStatus(t("profilePreview.linkCopied"));
     } catch (error) {
       // Dismissing the share sheet is not a failure.
       if (isCancelledError(error)) return;
       console.warn("[ProfilePreview] Failed to share profile link.", error);
       try {
-        await navigator.clipboard.writeText(shareUrl);
+        await clipboard.write(shareUrl);
         showShareStatus(t("profilePreview.linkCopied"));
       } catch {
         showShareStatus(t("profilePreview.shareFailed"));

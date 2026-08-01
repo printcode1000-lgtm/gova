@@ -5,7 +5,7 @@ export interface OtaFileEntry {
 
 export interface OtaManifestPayload {
   schemaVersion: number;
-  delivery: 'files';
+  delivery: "files";
   releaseId: string;
   version: string;
   createdAt: string;
@@ -13,6 +13,7 @@ export interface OtaManifestPayload {
   size: number;
   fileCount: number;
   minimumNativeVersion: string;
+  requiredCapabilities: string[];
   mandatory: boolean;
   notes: string;
   files: Record<string, OtaFileEntry>;
@@ -31,6 +32,8 @@ export interface DownloadedOtaUpdate {
   deletedFileCount: number;
   notes: string;
   downloadedAt: number;
+  changedFiles: string[];
+  deletedFiles: string[];
   dismissedAt?: number;
 }
 
@@ -41,7 +44,16 @@ export interface OtaStoredState {
     version: string;
     previousPath: string;
     startedAt: number;
+    releaseId?: string;
   };
+  resume?: OtaResumeState;
+  workingBaselineVersion?: string;
+}
+
+export interface OtaResumeState {
+  releaseId: string;
+  version: string;
+  completed: Record<string, string>;
 }
 
 export type OtaDownloadProgress = {
@@ -66,7 +78,7 @@ export interface OtaReleaseAccess {
   allowed: boolean;
   approved: boolean;
   superAdmin: boolean;
-  reason: 'approved' | 'super_admin' | 'awaiting_approval';
+  reason: "approved" | "super_admin" | "awaiting_approval";
 }
 
 export interface OtaReleaseSummary {
@@ -93,7 +105,7 @@ export interface OtaReleaseAuditEntry {
   id: string;
   releaseId: string;
   version: string;
-  action: 'discovered' | 'approved' | 'revoked';
+  action: "discovered" | "approved" | "revoked";
   actorUid?: string;
   createdAt: string;
 }
@@ -111,7 +123,7 @@ export interface OtaAdminDashboard {
   audit: OtaReleaseAuditEntry[];
 }
 
-export type OtaFileChangeKind = 'added' | 'modified' | 'deleted' | 'unchanged';
+export type OtaFileChangeKind = "added" | "modified" | "deleted" | "unchanged";
 
 export interface OtaFileChange {
   path: string;

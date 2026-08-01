@@ -6,7 +6,7 @@
  * has to reach for `navigator.share` itself.
  */
 
-import { isCancelledError } from "@/native-platform";
+import { clipboard, isCancelledError } from "@/native-platform";
 import { share } from "@/native-platform/share";
 
 /**
@@ -26,13 +26,13 @@ export async function shareLocationUrl(
       await share.send({ title, url });
       return;
     }
-    await navigator.clipboard.writeText(url);
+    await clipboard.write(url);
     onCopied?.();
   } catch (error) {
     // Dismissing the share sheet is a normal outcome, not a failure.
     if (isCancelledError(error)) return;
     try {
-      await navigator.clipboard.writeText(url);
+      await clipboard.write(url);
       onCopied?.();
     } catch {
       onFailed?.();

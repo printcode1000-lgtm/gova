@@ -6,6 +6,7 @@ import path from "node:path";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { categoryService } from "../src/features/categories";
 import { auditCapacitorDefaultBundle } from "./lib/capacitor-defaults-audit";
+import { scanSourceCapabilityReferences } from "./ota/ota-capability-scan";
 
 const rootDir = process.cwd();
 const tempBuildDir = path.join(rootDir, ".tmp-static-build");
@@ -223,6 +224,11 @@ function prepareTempBuildDir(): void {
   }
 
   prepareStaticPublicDir();
+  const requiredCapabilities = scanSourceCapabilityReferences(tempSrcDir);
+  writeFileSync(
+    path.join(tempBuildDir, "public", "asol-required-capabilities.json"),
+    JSON.stringify(requiredCapabilities),
+  );
 }
 
 function copyBuildOutputBack(): void {
@@ -323,7 +329,13 @@ function writeLocalWebManifest(): void {
     size,
     fileCount: Object.keys(files).length,
     minimumNativeVersion:
-      process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ?? "1.0.0",
+      process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ?? "0.2.0",
+    requiredCapabilities: JSON.parse(
+      readFileSync(
+        path.join(rootOutDir, "asol-required-capabilities.json"),
+        "utf8",
+      ),
+    ),
     mandatory: false,
     notes: "Bundled web assets",
     files,

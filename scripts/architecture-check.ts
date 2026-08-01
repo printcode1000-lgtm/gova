@@ -146,6 +146,12 @@ const NATIVE_CAPABILITY_PATTERNS: Array<{
     use: 'nativePlatform.permissions.requestIfNeeded',
     allowed: new Set<string>(),
   },
+  {
+    pattern: /\bnavigator\s*\.\s*clipboard\b/,
+    api: 'navigator.clipboard',
+    use: 'nativePlatform.clipboard',
+    allowed: new Set<string>(),
+  },
 ];
 
 function checkNativePlatformContract(fileRel: string, content: string, filePath: string): void {

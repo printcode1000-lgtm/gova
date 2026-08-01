@@ -2,13 +2,14 @@
 
 ## Contract
 
-ASOL uses one forward-only, file-level OTA channel. There are no ZIP bundles, version directories, or automatic rollback. Release approval history is stored in the users Turso database; R2 still contains only the current file tree and manifest.
+ASOL uses one forward-only, file-level OTA channel. There are no ZIP bundles or versioned R2 directories. The device keeps a changed-files-only rollback backup during activation. Release approval history is stored in the users Turso database; R2 still contains only the current file tree and manifest.
 
 The application downloads or activates an update only when:
 
 ```text
 remote.version > local.version
 AND remote.minimumNativeVersion <= installed native version
+AND every remote.requiredCapabilities entry is present in the installed shell
 AND (release.approved = true OR actor is the super-admin)
 ```
 
@@ -31,8 +32,8 @@ Two mechanisms enforce the rule:
 
 ### 1. Runtime gate — the device refuses an incompatible bundle
 
-`ota-update-service.ts` compares `manifest.minimumNativeVersion` against
-`publicEnv.nativeVersion` and skips the release with the
+`ota-update-service.ts` compares `manifest.minimumNativeVersion` against the
+installed version returned at runtime by Capacitor App and skips the release with the
 `ota.nativeUpdateRequired` status when the shell is too old.
 
 ### 2. Publish gate — the channel refuses an unsafe upload
@@ -41,13 +42,13 @@ Two mechanisms enforce the rule:
 the commit the last store build was made from. When any of these changed,
 `npm run ota:publish` **refuses to run**:
 
-| Surface | Why it matters |
-|---|---|
-| `android/` · `ios/` | Manifest, entitlements, native sources |
-| `capacitor.config.ts` · `platform/` | Shell configuration |
-| `assets/` · `fastlane/` | Bundled resources and release tooling |
-| `src/native-platform/` | The binding between web code and native plugins |
-| `@capacitor/*` dependencies | Native code shipped with a store build |
+| Surface                             | Why it matters                                  |
+| ----------------------------------- | ----------------------------------------------- |
+| `android/` · `ios/`                 | Manifest, entitlements, native sources          |
+| `capacitor.config.ts` · `platform/` | Shell configuration                             |
+| `assets/` · `fastlane/`             | Bundled resources and release tooling           |
+| `src/native-platform/`              | The binding between web code and native plugins |
+| `@capacitor/*` dependencies         | Native code shipped with a store build          |
 
 To publish anyway, the requirement must be **declared deliberately**:
 
@@ -233,7 +234,7 @@ All R2 GET, HEAD, LIST, PUT, and DELETE operations use SDK adaptive retries plus
 
 JSON files below `app-updates/files` are uploaded as `application/octet-stream`, not `application/json`. Android `CapacitorHttp` otherwise parses JSON before honoring `arraybuffer`, which changes the byte representation and prevents SHA-256 verification. JSON OTA objects are therefore refreshed on every publication to guarantee the correct transport metadata; the manifest itself remains `application/json`.
 
-There is intentionally no rollback. If publication fails before the new manifest is written, clients continue to see the previous version. A client that reads an old manifest while files are being replaced may reject a checksum and retry on a later launch.
+There is intentionally no server-side channel rollback. If publication fails before the new manifest is written, clients continue to see the previous version. A client that reads an old manifest while files are being replaced may reject a checksum and retry on a later launch. This is separate from the device-side changed-file rollback used during activation.
 
 ## Manifest Schema
 
@@ -253,6 +254,7 @@ Example schema v2 manifest:
   "size": 14356238,
   "fileCount": 373,
   "minimumNativeVersion": "0.0.0",
+  "requiredCapabilities": ["camera.takePhoto", "share.send"],
   "mandatory": false,
   "notes": "Automatic build - 2026-06-30 09:30:15 Africa/Cairo",
   "files": {
@@ -265,7 +267,7 @@ Example schema v2 manifest:
 }
 ```
 
-The manifest is signed with P-256. File entries are sorted for canonical signing. Every listed path has a SHA-256 and byte size.
+The manifest is signed with P-256. Capability keys and file entries are sorted for canonical signing. Every listed path has a SHA-256 and byte size.
 
 `baseUrl` always points to the non-versioned `app-updates/files` directory.
 
@@ -301,11 +303,11 @@ At Splash, the application:
 5. Calls `/api/ota/access` with the exact remote release identity and the current user identity when available.
 6. Stops before diff calculation or file download unless the release is approved or the actor is the super-admin.
 7. Calculates changed and deleted paths.
-8. Downloads changed files and copies unchanged files from the running bundle.
-9. Verifies every file by SHA-256.
-10. Creates a clean staged release in private Capacitor storage.
-11. Writes the signed remote manifest into the staged release as its local manifest.
-12. Rechecks release access before activation, then activates the completed release.
+8. Re-verifies already staged resume files by SHA-256.
+9. Downloads only remaining changed files, with six concurrent workers.
+10. Persists each verified completion marker so interruption resumes safely.
+11. Writes the signed remote manifest into staging; unchanged files are never copied during normal OTA updates.
+12. Rechecks release access, backs up only changed/deleted working files, patches the working directory, and activates it.
 
 Files absent from the remote manifest are absent from the staged release, so deletion propagates to the application.
 
@@ -349,20 +351,20 @@ Splash displays technical current/R2 versions, changed/deleted counts, download 
 
 ## Main Files
 
-| File                                                       | Responsibility                                                               |
-| ---------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `scripts/cap-build.ts`                                     | Publish, full R2 verification, native versioning, and Capacitor sync         |
-| `scripts/ota-publish.ts`                                   | Automatic version and single-directory delta publication                     |
-| `scripts/build-static.ts`                                  | Static build and local manifest generation                                   |
-| `scripts/ota/ota-config.ts`                                | Schema, signing, URLs, and deterministic build environment                   |
-| `scripts/ota/ota-r2.ts`                                    | R2 list/get/put/delete operations                                            |
-| `src/features/ota/services/ota-update-service.ts`          | Runtime comparison, staging, verification, and activation                    |
-| `src/features/ota/services/ota-api-service.ts`             | Native/browser manifest and file transport                                   |
-| `src/features/ota/services/ota-release-service.server.ts`  | Server-side manifest verification, access decisions, and approval management |
-| `src/modules/data-access/domains/ota/repositories/ota-release-repository.ts`  | Release state and audit persistence                                          |
-| `src/platform/ota/capacitor-ota-adapter.ts`                | Private storage and WebView activation                                       |
-| `src/components/splash/SplashInitializer.tsx`              | Startup execution and progress details                                       |
-| `src/components/super-admin/SuperAdminOtaReleasesPage.tsx` | Approval dashboard and device testing controls                               |
+| File                                                                         | Responsibility                                                               |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `scripts/cap-build.ts`                                                       | Publish, full R2 verification, native versioning, and Capacitor sync         |
+| `scripts/ota-publish.ts`                                                     | Automatic version and single-directory delta publication                     |
+| `scripts/build-static.ts`                                                    | Static build and local manifest generation                                   |
+| `scripts/ota/ota-config.ts`                                                  | Schema, signing, URLs, and deterministic build environment                   |
+| `scripts/ota/ota-r2.ts`                                                      | R2 list/get/put/delete operations                                            |
+| `src/features/ota/services/ota-update-service.ts`                            | Runtime comparison, staging, verification, and activation                    |
+| `src/features/ota/services/ota-api-service.ts`                               | Native/browser manifest and file transport                                   |
+| `src/features/ota/services/ota-release-service.server.ts`                    | Server-side manifest verification, access decisions, and approval management |
+| `src/modules/data-access/domains/ota/repositories/ota-release-repository.ts` | Release state and audit persistence                                          |
+| `src/platform/ota/capacitor-ota-adapter.ts`                                  | Private storage and WebView activation                                       |
+| `src/components/splash/SplashInitializer.tsx`                                | Startup execution and progress details                                       |
+| `src/components/super-admin/SuperAdminOtaReleasesPage.tsx`                   | Approval dashboard and device testing controls                               |
 
 ## Verification
 
@@ -386,7 +388,7 @@ After `cap:build`, R2 must contain exactly `manifest.json` plus the objects unde
 
 - Never create ZIP bundles.
 - Never create versioned R2 directories.
-- Never add rollback behavior.
+- Never weaken the changed-files rollback transaction or remove its pre-mutation activation state.
 - Never publish the manifest before file operations complete.
 - Never update when `remote.version <= local.version`.
 - Never download or activate an unapproved release for a guest or ordinary user.
@@ -400,3 +402,46 @@ After `cap:build`, R2 must contain exactly `manifest.json` plus the objects unde
 The gate is enforced by clients containing this approval implementation. A native or already activated web bundle built before this feature cannot know about the approval API and retains its historical behavior. Roll out the gate as a controlled bootstrap/native baseline before relying on it for later unapproved releases.
 
 The complete source-file allowlist, ignorelist, route exclusions, and review process are documented in [static-export-policy.md](./static-export-policy.md).
+
+## Capability-aware delivery
+
+Every manifest carries `requiredCapabilities`. The static build generates
+`asol-required-capabilities.json` automatically from Native Platform API and
+`CapabilityKeys` references; the publisher reads that built artifact and puts
+the sorted list inside the canonical ECDSA-signed payload. The client asks the
+runtime capability registry for missing keys before approval lookup or file
+download. Any missing key produces `ota.nativeUpdateRequired` with the exact
+keys. `minimumNativeVersion` remains as a compatibility floor.
+
+## Delta, resume, and rollback
+
+Changed files download into `asol-ota/staging/<version>` with a concurrency of
+six. A completion marker stores the expected SHA-256 per file. On restart the
+client re-reads and hashes every marked staged file before skipping its
+download. Unchanged files have no download, read, or write operation during a
+normal OTA.
+
+The `0.2.0` shell performs one baseline provisioning when it first moves from
+read-only store assets to `asol-ota/current`. This is a one-time shell migration,
+not a per-release copy. Later releases patch that working directory only.
+
+Before mutation, activation state is persisted and every changed/deleted file
+plus the prior manifest is copied to `asol-ota/rollback/<version>`. Files that
+did not previously exist are recorded. If the new bundle does not reach splash
+with its expected version, splash restores backups, removes newly added files,
+marks the release failed, and reactivates the previous path. A confirmed bundle
+persists the WebView path and deletes staging and rollback data.
+
+## What still requires a store release
+
+- Adding or upgrading native plugin code.
+- Adding an Android/iOS permission or changing its purpose text.
+- Adding an Android intent filter, iOS Share Extension, App Group, entitlement,
+  background mode, URL scheme, or native privacy manifest entry.
+- Changing native application code, signing/provisioning, target SDK, icons,
+  splash assets, bundle identifiers, or the native/build version.
+- Expanding the shell capability set and bumping `NATIVE_CAPABILITY_VERSION`.
+
+UI, JavaScript business logic, localization, and features that use capabilities
+already reported by the installed shell may use OTA after the compatibility and
+approval gates pass.

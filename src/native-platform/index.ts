@@ -19,6 +19,21 @@ import { notifications } from "./notifications";
 import { permissionManager } from "./permissions";
 import { share } from "./share";
 import { speechRecognition } from "./speech";
+import { capabilities } from "./capabilities";
+import { actionSheet } from "./action-sheet";
+import { browser } from "./browser";
+import { clipboard } from "./clipboard";
+import { device } from "./device";
+import { dialog } from "./dialog";
+import { haptics } from "./haptics";
+import { keyboard } from "./keyboard";
+import { network } from "./network";
+import { preferences } from "./preferences";
+import { screenOrientation } from "./screen-orientation";
+import { splashScreen } from "./splash-screen";
+import { statusBar } from "./status-bar";
+import { textZoom } from "./text-zoom";
+import { toast } from "./toast";
 
 export const nativePlatform = {
   camera,
@@ -29,6 +44,21 @@ export const nativePlatform = {
   notifications,
   barcode: barcodeScanner,
   permissions: permissionManager,
+  capabilities,
+  actionSheet,
+  browser,
+  clipboard,
+  device,
+  dialog,
+  haptics,
+  keyboard,
+  network,
+  preferences,
+  screenOrientation,
+  splashScreen,
+  statusBar,
+  textZoom,
+  toast,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -61,3 +91,18 @@ export * from "./files";
 export * from "./share";
 export * from "./notifications";
 export * from "./barcode";
+export * from "./capabilities";
+export * from "./action-sheet";
+export * from "./browser";
+export * from "./clipboard";
+export * from "./device";
+export * from "./dialog";
+export * from "./haptics";
+export * from "./keyboard";
+export * from "./network";
+export * from "./preferences";
+export * from "./screen-orientation";
+export * from "./splash-screen";
+export * from "./status-bar";
+export * from "./text-zoom";
+export * from "./toast";

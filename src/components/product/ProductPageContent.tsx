@@ -31,7 +31,7 @@ import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,
 } from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
-import { isCancelledError } from "@/native-platform";
+import { clipboard, isCancelledError } from "@/native-platform";
 import { share } from "@/native-platform/share";
 
 const PRODUCT_SHARE_ORIGIN = "https://gova-swart.vercel.app/";
@@ -250,14 +250,14 @@ export function ProductPageContent() {
         });
         return;
       }
-      await navigator.clipboard.writeText(productShareUrl);
+      await clipboard.write(productShareUrl);
       showShareStatus(locale === "ar" ? "تم نسخ رابط المنتج" : "Product link copied");
     } catch (shareError) {
       // Dismissing the share sheet is not a failure.
       if (isCancelledError(shareError)) return;
       console.warn("[ProductPage] Failed to share product link.", shareError);
       try {
-        await navigator.clipboard.writeText(productShareUrl);
+        await clipboard.write(productShareUrl);
         showShareStatus(locale === "ar" ? "تم نسخ رابط المنتج" : "Product link copied");
       } catch {
         showShareStatus(locale === "ar" ? "تعذرت مشاركة الرابط" : "Could not share link");
@@ -332,7 +332,7 @@ export function ProductPageContent() {
 
   const copyToClipboard = async (text: string) => {
     if (!text) return;
-    await navigator.clipboard.writeText(text);
+    await clipboard.write(text);
   };
 
   if (loading || sessionLoading)

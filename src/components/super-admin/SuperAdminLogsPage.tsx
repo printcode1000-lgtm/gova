@@ -29,6 +29,7 @@ import {
 import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
 import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
 import { cn } from "@/lib/utils";
+import { clipboard } from "@/native-platform";
 
 const sections: Array<{
   level: SystemLogLevel;
@@ -154,13 +155,13 @@ export function SuperAdminLogsPage() {
   const Icon = section.icon;
 
   const copySection = async () => {
-    await navigator.clipboard.writeText(formatForCopy(current));
+    await clipboard.write(formatForCopy(current));
     setCopied(active);
     window.setTimeout(() => setCopied(null), 1500);
   };
 
   const copyEntry = async (entry: SystemLogEntry) => {
-    await navigator.clipboard.writeText(formatEntryForCopy(entry));
+    await clipboard.write(formatEntryForCopy(entry));
   };
 
   return (

@@ -28,6 +28,7 @@ import type {
   OtaDownloadProgress,
   OtaReleaseAuditEntry,
 } from "@/features/ota/types/ota.types";
+import { clipboard } from "@/native-platform";
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -132,7 +133,7 @@ export function SuperAdminOtaReleasesPage() {
 
   const copyManifest = async () => {
     if (!dashboard) return;
-    await navigator.clipboard.writeText(JSON.stringify(dashboard.current.manifest, null, 2));
+    await clipboard.write(JSON.stringify(dashboard.current.manifest, null, 2));
     setMessage("تم نسخ Manifest الإصدار.");
   };
 

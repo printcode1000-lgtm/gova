@@ -8,12 +8,13 @@ Pages, components, hooks, and feature services import from `@/native-platform`.
 The **Native Platform Contract** check in `npm run architecture:check` rejects,
 anywhere outside `src/native-platform`:
 
-| Forbidden | Use instead |
-|---|---|
-| `@capacitor/*` imports | the module's public API |
-| `navigator.share` / `navigator.canShare` | `nativePlatform.share.send` |
-| `navigator.geolocation` | `nativePlatform.location` |
-| `Notification.requestPermission` | `nativePlatform.permissions.requestIfNeeded` |
+| Forbidden                                | Use instead                                  |
+| ---------------------------------------- | -------------------------------------------- |
+| `@capacitor/*` imports                   | the module's public API                      |
+| `navigator.share` / `navigator.canShare` | `nativePlatform.share.send`                  |
+| `navigator.geolocation`                  | `nativePlatform.location`                    |
+| `navigator.clipboard`                    | `nativePlatform.clipboard`                   |
+| `Notification.requestPermission`         | `nativePlatform.permissions.requestIfNeeded` |
 
 Forbidding only the Capacitor imports would leave the layer bypassable through
 the equivalent browser APIs, which carry none of its permission handling or
@@ -60,10 +61,10 @@ Adapters (native / web)
 Every module follows the same three-file shape, each file with one
 responsibility:
 
-| File | Responsibility |
-|---|---|
-| `types.ts` | The contract: inputs, normalized outputs, presets. No logic. |
-| `<module>.ts` | Facade: pick the platform adapter, enforce permissions. No plugin code. |
+| File           | Responsibility                                                            |
+| -------------- | ------------------------------------------------------------------------- |
+| `types.ts`     | The contract: inputs, normalized outputs, presets. No logic.              |
+| `<module>.ts`  | Facade: pick the platform adapter, enforce permissions. No plugin code.   |
 | `*-adapter.ts` | Talk to exactly one plugin (or the browser API) and normalize its result. |
 
 **Design rules**
@@ -314,21 +315,21 @@ Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition
 
 ## Platform differences
 
-| Capability | Web | Android | iOS |
-|---|---|---|---|
-| Camera capture | `<input capture>` | `@capacitor/camera` | `@capacitor/camera` |
-| Gallery pick | `<input type=file>` | native picker | native picker |
-| Location | Geolocation API | Geolocation plugin | Geolocation plugin |
-| Speech | Web Speech API | plugin (partial results) | plugin (partial results) |
-| App storage | in-memory, page lifetime | Filesystem Data/Cache | Filesystem Data/Cache |
-| File picking | `<input type=file>` | FilePicker plugin | FilePicker plugin |
-| Save to device | anchor download | share sheet | share sheet |
-| Share (send) | `navigator.share` | Share plugin | Share plugin |
-| Share (receive) | not supported | intent filters | Share Extension |
-| Push | not supported here | FCM | APNs |
-| Local notifications | Web Notification + timer | LocalNotifications | LocalNotifications |
-| Barcode | not supported | ML Kit | ML Kit |
-| Open settings | not supported | `App.openSettings()` | `app-settings:` URL |
+| Capability          | Web                      | Android                  | iOS                      |
+| ------------------- | ------------------------ | ------------------------ | ------------------------ |
+| Camera capture      | `<input capture>`        | `@capacitor/camera`      | `@capacitor/camera`      |
+| Gallery pick        | `<input type=file>`      | native picker            | native picker            |
+| Location            | Geolocation API          | Geolocation plugin       | Geolocation plugin       |
+| Speech              | Web Speech API           | plugin (partial results) | plugin (partial results) |
+| App storage         | in-memory, page lifetime | Filesystem Data/Cache    | Filesystem Data/Cache    |
+| File picking        | `<input type=file>`      | FilePicker plugin        | FilePicker plugin        |
+| Save to device      | anchor download          | share sheet              | share sheet              |
+| Share (send)        | `navigator.share`        | Share plugin             | Share plugin             |
+| Share (receive)     | not supported            | intent filters           | Share Extension          |
+| Push                | not supported here       | FCM                      | APNs                     |
+| Local notifications | Web Notification + timer | LocalNotifications       | LocalNotifications       |
+| Barcode             | not supported            | ML Kit                   | ML Kit                   |
+| Open settings       | not supported            | `App.openSettings()`     | `app-settings:` URL      |
 
 **Notable asymmetries**
 
@@ -361,12 +362,12 @@ Caller                Module facade         Permission Manager      Adapter
 
 `requestIfNeeded` prompts only when it can help:
 
-| Current state | Behaviour |
-|---|---|
-| `granted` | returns immediately, no prompt |
-| `unsupported` | returns immediately |
-| `prompt` | shows the system prompt |
-| `denied` → still denied after request | reported as **`blocked`** |
+| Current state                         | Behaviour                      |
+| ------------------------------------- | ------------------------------ |
+| `granted`                             | returns immediately, no prompt |
+| `unsupported`                         | returns immediately            |
+| `prompt`                              | shows the system prompt        |
+| `denied` → still denied after request | reported as **`blocked`**      |
 
 `blocked` means the OS will not prompt again in this install. The UI should
 offer `permissionManager.openSettings()` rather than a button that silently
@@ -473,24 +474,28 @@ preference.**
 Everything throws `NativePlatformError` with a `code`, the `module` that raised
 it, and the original `cause`.
 
-| Code | Meaning | Typical UI response |
-|---|---|---|
-| `unavailable` | No such feature here, or the plugin is absent | Hide the entry point |
-| `permission-denied` | Access refused | Explain why; offer settings if `blocked` |
-| `cancelled` | User dismissed a picker or prompt | Do nothing — this is not an error |
-| `timeout` | Operation exceeded its budget | Offer retry |
-| `invalid-argument` | Caller passed something impossible | Programming error; fix the call |
-| `service-disabled` | GPS or a device service is off | Ask the user to enable it |
-| `internal` | Unclassified plugin failure | Generic message; log the cause |
+| Code                | Meaning                                       | Typical UI response                      |
+| ------------------- | --------------------------------------------- | ---------------------------------------- |
+| `unavailable`       | No such feature here, or the plugin is absent | Hide the entry point                     |
+| `permission-denied` | Access refused                                | Explain why; offer settings if `blocked` |
+| `cancelled`         | User dismissed a picker or prompt             | Do nothing — this is not an error        |
+| `timeout`           | Operation exceeded its budget                 | Offer retry                              |
+| `invalid-argument`  | Caller passed something impossible            | Programming error; fix the call          |
+| `service-disabled`  | GPS or a device service is off                | Ask the user to enable it                |
+| `internal`          | Unclassified plugin failure                   | Generic message; log the cause           |
 
 ```ts
-import { camera, isCancelledError, NativePlatformError } from "@/native-platform";
+import {
+  camera,
+  isCancelledError,
+  NativePlatformError,
+} from "@/native-platform";
 
 try {
   const image = await camera.takePhoto();
   upload(image.file);
 } catch (error) {
-  if (isCancelledError(error)) return;              // user backed out
+  if (isCancelledError(error)) return; // user backed out
   if (error instanceof NativePlatformError) {
     if (error.code === "permission-denied") showPermissionHelp();
     else showError(error.message);
@@ -552,47 +557,69 @@ Everything is committed and applied by `npx cap sync`:
 - Share intent filters on `MainActivity`
 - `ShareReceivePlugin.java`, registered in `MainActivity.onCreate`
 
-### iOS — requires manual Xcode steps
+### iOS — project registration complete
 
-The Swift sources are committed, but a Share Extension is an **Xcode target**
-that cannot be generated from the command line. On a macOS machine:
+The `ShareExtension` target, embedded `.appex`, bridge source, App Group
+entitlements, and `asol` URL scheme are committed in the Xcode project.
+`scripts/configure-ios-share-extension.rb` makes this registration idempotent.
 
-1. **App Group** — in Xcode, select the `App` target →
-   *Signing & Capabilities* → **+ Capability** → *App Groups* → add
-   `group.hgh.asol.app`.
-2. **Share Extension target** — *File → New → Target… → Share Extension*, name
-   it `ShareExtension`.
-   - Replace the generated `ShareViewController.swift` with
-     `ios/ShareExtension/ShareViewController.swift`.
-   - Replace the generated `Info.plist` with `ios/ShareExtension/Info.plist`.
-   - Add the same App Group capability to this target, using
-     `ios/ShareExtension/ShareExtension.entitlements`.
-3. **Bridge plugin** — add `ios/App/App/ShareReceivePlugin.swift` to the `App`
-   target.
-4. **URL scheme** — register `asol` under *Info → URL Types* so the extension
-   can bring the app forward.
-5. **Provisioning** — regenerate profiles for both bundle ids; App Groups
-   require an updated App ID in the Apple Developer portal.
-
-Until these steps are done, `share.initializeReceiving()` resolves without a
-bridge and receiving reports nothing on iOS. **Sending, and every other module,
-work normally.**
+Apple Developer provisioning is still external: register
+`hgh.asol.app.ShareExtension`, enable `group.hgh.asol.app` for both identifiers,
+and regenerate the two provisioning profiles before archive. Validate the
+extension on macOS and a real iPhone because Windows cannot compile or launch
+it.
 
 ---
 
 ## Future maintenance notes
 
+### Capability registry
+
+`nativePlatform.capabilities` reports support without requesting permissions:
+
+```ts
+if (await nativePlatform.capabilities.has(CapabilityKeys.BarcodeScan)) {
+  // It is safe to expose the scanner entry point; scanning still requests
+  // camera permission only when the user starts it.
+}
+```
+
+`has`, `hasAll`, `missing`, and `snapshot` resolve plugin presence lazily and
+cache results for the process session. `shell-capabilities.ts` declares the
+keys compiled into the shell and `NATIVE_CAPABILITY_VERSION` changes whenever
+that set changes. Capability discovery never asks for an OS permission.
+
+The curated `0.2.0` shell adds Browser, Haptics, Network, Device, Clipboard,
+Status Bar, Keyboard, Splash Screen, Preferences, Screen Orientation, Dialog,
+Toast, Action Sheet, and Text Zoom. Each has `types.ts`, a facade, and a lazy
+native adapter. None adds a dangerous Android permission. ML Kit Barcode remains
+CocoaPods-only and is intentionally not migrated; every compatible plugin is
+listed in `ios/App/CapApp-SPM/Package.swift`.
+
+To add a capability:
+
+1. Add one user-visible key to `capability-keys.ts`.
+2. Add a lazy plugin family mapping and platform support decision to
+   `capability-registry.ts`.
+3. Add the key to the shell declaration and bump
+   `NATIVE_CAPABILITY_VERSION`.
+4. Expose the operation through a Native Platform facade; permissions remain
+   explicit in the operation, never in capability detection.
+5. Run the Native Platform, OTA delivery, architecture, type, and lint checks.
+6. Publish a store shell and move the `native-v*` baseline tag before relying
+   on the key from OTA-delivered UI.
+
 ### Verified vs. not verified
 
-| Area | Status |
-|---|---|
-| TypeScript layer, contracts, validation, queue, duplicate filter | Unit-tested (`npm run test:native-platform`) |
-| Architecture contract enforcement | Verified — the rule was proven to reject a real violation |
-| Existing consumers (image picker, voice input, push) | Migrated; behaviour preserved; existing suites pass |
-| Application migration to the layer | Complete — no page uses `navigator.share`, `navigator.geolocation`, or a raw file input |
-| Plugin behaviour on real hardware | **Not verified in this environment** |
-| Android share receiving | Source complete; **needs a device run** |
-| iOS share receiving | Source complete; **needs the Xcode steps above** |
+| Area                                                             | Status                                                                                  |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| TypeScript layer, contracts, validation, queue, duplicate filter | Unit-tested (`npm run test:native-platform`)                                            |
+| Architecture contract enforcement                                | Verified — the rule was proven to reject a real violation                               |
+| Existing consumers (image picker, voice input, push)             | Migrated; behaviour preserved; existing suites pass                                     |
+| Application migration to the layer                               | Complete — no page uses `navigator.share`, `navigator.geolocation`, or a raw file input |
+| Plugin behaviour on real hardware                                | **Not verified in this environment**                                                    |
+| Android share receiving                                          | Source complete; **needs a device run**                                                 |
+| iOS share receiving                                              | Xcode target complete; **needs Apple provisioning and a device run**                    |
 
 Camera, Location, Speech, Files, Share-send, Push, Local notifications, and
 Barcode all depend on device hardware and cannot be exercised on a Windows
@@ -602,17 +629,31 @@ workstation. Test them on a real device before release.
 
 All plugins are pinned to the Capacitor 8 line:
 
-| Plugin | Version |
-|---|---|
-| `@capacitor/camera` | ^8.2.0 |
-| `@capacitor/filesystem` | ^8.1.2 |
-| `@capacitor/geolocation` | ^8.2.0 |
-| `@capacitor/share` | ^8.0.1 |
-| `@capacitor/push-notifications` | ^8.1.2 |
-| `@capacitor/local-notifications` | ^8.2.1 |
-| `@capacitor-mlkit/barcode-scanning` | ^8.1.0 |
-| `@capawesome/capacitor-file-picker` | ^8.0.3 |
-| `@capgo/capacitor-speech-recognition` | ^8.1.7 |
+| Plugin                                | Version |
+| ------------------------------------- | ------- |
+| `@capacitor/camera`                   | ^8.2.0  |
+| `@capacitor/filesystem`               | ^8.1.2  |
+| `@capacitor/geolocation`              | ^8.2.0  |
+| `@capacitor/share`                    | ^8.0.1  |
+| `@capacitor/push-notifications`       | ^8.1.2  |
+| `@capacitor/local-notifications`      | ^8.2.1  |
+| `@capacitor-mlkit/barcode-scanning`   | ^8.1.0  |
+| `@capawesome/capacitor-file-picker`   | ^8.0.3  |
+| `@capgo/capacitor-speech-recognition` | ^8.1.7  |
+| `@capacitor/browser`                  | ^8.0.4  |
+| `@capacitor/haptics`                  | ^8.0.2  |
+| `@capacitor/network`                  | ^8.0.1  |
+| `@capacitor/device`                   | ^8.0.3  |
+| `@capacitor/clipboard`                | ^8.0.1  |
+| `@capacitor/status-bar`               | ^8.0.3  |
+| `@capacitor/keyboard`                 | ^8.0.5  |
+| `@capacitor/splash-screen`            | ^8.0.2  |
+| `@capacitor/preferences`              | ^8.0.1  |
+| `@capacitor/screen-orientation`       | ^8.0.1  |
+| `@capacitor/dialog`                   | ^8.0.1  |
+| `@capacitor/toast`                    | ^8.0.1  |
+| `@capacitor/action-sheet`             | ^8.1.1  |
+| `@capacitor/text-zoom`                | ^8.0.1  |
 
 Upgrading Capacitor requires upgrading all of them together.
 
@@ -620,7 +661,7 @@ Upgrading Capacitor requires upgrading all of them together.
 
 **Capacitor imports** — four files, listed in `CAPACITOR_IMPORT_ALLOWED_FILES`
 in `scripts/architecture-check.ts`. They cover native concerns outside the
-eight modules: application lifecycle, OTA delivery, and the native HTTP bridge.
+Native Platform modules: application lifecycle, OTA delivery, and the native HTTP bridge.
 
 ```
 src/platform/navigation/capacitor-back-button-adapter.ts
@@ -636,7 +677,7 @@ src/features/page-snapshot/hooks/use-page-snapshot.tsx
 src/components/ui/AsolMap/gps.ts   # createBrowserGpsProvider, an explicit opt-out
 ```
 
-Do not extend either list for anything the eight modules already cover.
+Do not extend either list for anything the Native Platform modules already cover.
 
 ### Compatibility shims
 
