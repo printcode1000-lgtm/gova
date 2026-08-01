@@ -1,44 +1,34 @@
 "use client";
 
-import { PushNotifications } from "@capacitor/push-notifications";
+import { permissionManager, PermissionKinds } from "@/native-platform/permissions";
 import { capacitorPlatformService } from "./capacitor-platform.service";
 
+/**
+ * Notification permission for the notifications feature.
+ *
+ * Delegates to the Native Platform Permission Manager; it must not import a
+ * Capacitor plugin directly.
+ */
 export class CapacitorPermissionService {
   async request(): Promise<NotificationPermission | "unsupported"> {
-    if (
-      capacitorPlatformService.isNative() &&
-      (capacitorPlatformService.getPlatform() === "android" ||
-        capacitorPlatformService.getPlatform() === "ios")
-    ) {
-      let status = await PushNotifications.checkPermissions();
-      if (
-        status.receive === "prompt" ||
-        status.receive === "prompt-with-rationale"
-      ) {
-        status = await PushNotifications.requestPermissions();
-      }
-      return status.receive === "granted"
-        ? "granted"
-        : status.receive === "denied"
-          ? "denied"
-          : "default";
-    }
-    if (typeof window === "undefined" || !("Notification" in window))
-      return "unsupported";
-    if (Notification.permission === "granted") return "granted";
-    return Notification.requestPermission();
+    const result = await permissionManager.requestIfNeeded(
+      PermissionKinds.Notifications,
+    );
+    if (result.state === "unsupported") return "unsupported";
+    if (result.granted) return "granted";
+    // A blocked permission is a denial the user can only undo in settings.
+    return result.state === "denied" || result.state === "blocked"
+      ? "denied"
+      : "default";
   }
 
   getCurrent(): NotificationPermission | "unsupported" {
-    if (
-      capacitorPlatformService.isNative() &&
-      (capacitorPlatformService.getPlatform() === "android" ||
-        capacitorPlatformService.getPlatform() === "ios")
-    ) {
-      return "default";
-    }
-    if (typeof window === "undefined" || !("Notification" in window))
+    // Native platforms answer asynchronously; the synchronous contract keeps
+    // its historical "default" until `request()` resolves.
+    if (capacitorPlatformService.isNative()) return "default";
+    if (typeof window === "undefined" || !("Notification" in window)) {
       return "unsupported";
+    }
     return Notification.permission;
   }
 }

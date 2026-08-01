@@ -58,6 +58,11 @@ out/                             # Static assets (from build:static)
 | `@capacitor/filesystem`               | Private storage for verified file-level OTA releases                            |
 | `@capacitor/camera`                   | Native one-image gallery selection and camera capture for `StorageImageManager` |
 | `@capgo/capacitor-speech-recognition` | Native Arabic/English speech-to-text for automatic voice-enabled fields         |
+| `@capacitor/geolocation`              | Foreground device location for the Native Platform Location module              |
+| `@capacitor/share`                    | System share sheet for the Native Platform Share module                        |
+| `@capacitor/local-notifications`      | Device-scheduled notifications and badging                                     |
+| `@capacitor-mlkit/barcode-scanning`   | QR and barcode scanning                                                        |
+| `@capawesome/capacitor-file-picker`   | Document and file selection for the Native Platform Files module               |
 
 No database plugin is installed. `@capacitor/filesystem` is used by the OTA platform adapter to store verified file-level web releases in application-private storage and by the image source picker to read the selected native image into a browser `File`; it is not a data-layer database. `@capacitor/app` is used by the Android platform adapter for system Back events and the confirmed exit action. The camera plugin is isolated behind the image source picker adapter, and the speech-recognition plugin is isolated behind the platform speech adapter. See [ota-update-system.md](./ota-update-system.md), [mobile-back-button-system.md](../system/mobile-back-button-system.md), [storage-image-source-picker-system.md](../system/storage-image-source-picker-system.md), and [voice-input-system.md](../system/voice-input-system.md).
 
@@ -264,9 +269,13 @@ All targets share **identical** `src/` application code.
 
 ## Architecture contract
 
+All native capabilities are reached through the **Native Platform layer**
+(`src/native-platform`). See [native-platform.md](./native-platform.md).
+
 Capacitor integration must **not**:
 
-- Add imports of `@capacitor/*` inside UI, Hooks, Services, Repository, or Business APIs
+- Add imports of `@capacitor/*` outside `src/native-platform` — enforced by the
+  **Native Platform Contract** check in `npm run architecture:check`
 - Add SQLite, Drizzle, Turso, or SQL in the mobile shell
 - Change Architecture Contract exceptions
 - Hardcode API URLs inside `src/` (use build-time env only)

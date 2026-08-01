@@ -1,11 +1,10 @@
 "use client";
 
 import {
-  PushNotifications,
-  type ActionPerformed,
-  type PushNotificationSchema,
-} from "@capacitor/push-notifications";
-import type { PluginListenerHandle } from "@capacitor/core";
+  pushNotifications,
+  type NotificationPayload,
+} from "@/native-platform/notifications";
+import type { Unsubscribe } from "@/native-platform";
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
 import { asolNotificationRepository } from "../asol-notification-repository";
 import type { DeviceToken, NotificationEntity } from "../../domain/entities";
@@ -29,7 +28,6 @@ const LEGACY_ANDROID_DEVICE_ID_KEY = "android-push-device-id";
 const LEGACY_ANDROID_ENABLED_KEY = "android-push-enabled";
 const deviceIdKey = (platform: "android" | "ios") => `${platform}-push-device-id`;
 const enabledKey = (platform: "android" | "ios") => `${platform}-push-enabled`;
-const REGISTRATION_TIMEOUT_MS = 20_000;
 
 type ReceivedHandler = (
   notification: NotificationEntity,
@@ -60,7 +58,7 @@ function safeInternalRoute(value: string): string | undefined {
   return value.startsWith("/") && !value.startsWith("//") ? value : undefined;
 }
 
-function fallbackNotificationKey(native: PushNotificationSchema): string {
+function fallbackNotificationKey(native: NotificationPayload): string {
   const data = (native.data ?? {}) as Record<string, unknown>;
   const title = native.title || dataString(data, "title") || "ASOL";
   const body = native.body || dataString(data, "body");
@@ -68,7 +66,7 @@ function fallbackNotificationKey(native: PushNotificationSchema): string {
   return `push:${title}:${body}:${route}`;
 }
 
-function isEmptySystemPlaceholder(native: PushNotificationSchema): boolean {
+function isEmptySystemPlaceholder(native: NotificationPayload): boolean {
   const data = (native.data ?? {}) as Record<string, unknown>;
   const hasData = Object.values(data).some(
     (value) => value !== null && value !== undefined && String(value).trim(),
@@ -80,7 +78,7 @@ function isEmptySystemPlaceholder(native: PushNotificationSchema): boolean {
 
 function toNotificationEntity(
   uid: string,
-  native: PushNotificationSchema,
+  native: NotificationPayload,
 ): NotificationEntity {
   const data = (native.data ?? {}) as Record<string, unknown>;
   const now = new Date().toISOString();
@@ -157,11 +155,9 @@ async function getDeviceId(): Promise<string> {
 export class CapacitorPushService {
   private currentUid = "";
   private listenersReady = false;
-  private listeners: PluginListenerHandle[] = [];
+  private listeners: Unsubscribe[] = [];
   private receivedHandler: ReceivedHandler | null = null;
   private actionHandler: ActionHandler | null = null;
-  private registrationResolve: ((token: string) => void) | null = null;
-  private registrationReject: ((error: Error) => void) | null = null;
 
   isAndroid(): boolean {
     return (
@@ -199,30 +195,22 @@ export class CapacitorPushService {
     this.currentUid = uid;
     await this.ensureListeners();
     if (this.isAndroid()) await this.createChannels();
-    const permission = await PushNotifications.checkPermissions();
-    if (permission.receive !== "granted")
-      throw new Error("notificationPermissionDenied");
+    const permission = await pushNotifications.checkPermission();
+    if (!permission.granted) throw new Error("notificationPermissionDenied");
 
-    const tokenValue = await new Promise<string>((resolve, reject) => {
-      const timeout = window.setTimeout(() => {
-        this.registrationResolve = null;
-        this.registrationReject = null;
-        reject(new Error("notificationRegistrationTimeout"));
-      }, REGISTRATION_TIMEOUT_MS);
-      this.registrationResolve = (value) => {
-        window.clearTimeout(timeout);
-        this.registrationResolve = null;
-        this.registrationReject = null;
-        resolve(value);
-      };
-      this.registrationReject = (error) => {
-        window.clearTimeout(timeout);
-        this.registrationResolve = null;
-        this.registrationReject = null;
-        reject(error);
-      };
-      void PushNotifications.register().catch(this.registrationReject);
-    });
+    // The Native Platform module owns the registration handshake and its
+    // timeout; failures surface as the historical error identifiers.
+    const tokenValue = await pushNotifications
+      .register()
+      .then((token) => token.value)
+      .catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(
+          message.includes("timed out")
+            ? "notificationRegistrationTimeout"
+            : "notificationPermissionDenied",
+        );
+      });
 
     const now = new Date().toISOString();
     const deviceId = await getDeviceId();
@@ -256,12 +244,8 @@ export class CapacitorPushService {
     if (!this.isNativePush()) return;
     const platform = capacitorPlatformService.getPlatform();
     if (platform !== "android" && platform !== "ios") return;
-    await PushNotifications.unregister().catch((error) => {
-      console.warn("[CapacitorPush] Failed to unregister push notifications.", error);
-    });
-    await PushNotifications.removeAllDeliveredNotifications().catch((error) => {
-      console.warn("[CapacitorPush] Failed to remove delivered notifications.", error);
-    });
+    await pushNotifications.unregister();
+    await pushNotifications.removeAllDelivered();
     await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, enabledKey(platform), false);
     if (platform === "android") {
       await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, LEGACY_ANDROID_ENABLED_KEY, false);
@@ -272,101 +256,49 @@ export class CapacitorPushService {
     "granted" | "denied" | "prompt" | "unsupported"
   > {
     if (!this.isNativePush()) return "unsupported";
-    const result = await PushNotifications.checkPermissions();
-    return result.receive === "prompt-with-rationale"
-      ? "prompt"
-      : result.receive;
+    const result = await pushNotifications.checkPermission();
+    if (result.state === "unsupported") return "unsupported";
+    if (result.granted) return "granted";
+    return result.state === "denied" || result.state === "blocked"
+      ? "denied"
+      : "prompt";
   }
 
   private async ensureListeners(): Promise<void> {
     if (this.listenersReady) return;
     this.listenersReady = true;
+    await pushNotifications.ensureListeners();
     this.listeners.push(
-      await PushNotifications.addListener("registration", ({ value }) => {
-        this.registrationResolve?.(value);
+      pushNotifications.onReceived((native) => {
+        if (!this.currentUid) return;
+        void this.receivedHandler?.(
+          toNotificationEntity(this.currentUid, native),
+        );
       }),
-      await PushNotifications.addListener("registrationError", ({ error }) => {
-        this.registrationReject?.(new Error(error));
+      pushNotifications.onAction((native) => {
+        if (!this.currentUid) return;
+        void this.actionHandler?.(
+          toNotificationEntity(this.currentUid, native),
+        );
       }),
-      await PushNotifications.addListener(
-        "pushNotificationReceived",
-        (native) => {
-          if (!this.currentUid) return;
-          void this.receivedHandler?.(
-            toNotificationEntity(this.currentUid, native),
-          );
-        },
-      ),
-      await PushNotifications.addListener(
-        "pushNotificationActionPerformed",
-        (action: ActionPerformed) => {
-          if (!this.currentUid) return;
-          void this.actionHandler?.(
-            toNotificationEntity(this.currentUid, action.notification),
-          );
-        },
-      ),
     );
   }
 
+  /**
+   * Android channels are declared once in the Native Platform module so the
+   * ids, names, and sound stay identical to already-installed clients.
+   */
   private async createChannels(): Promise<void> {
-    const sound = "custom_notification.mp3";
-    await Promise.all([
-      PushNotifications.createChannel({
-        id: "asol_general_v2",
-        name: "ASOL - الإشعارات العامة",
-        description: "الإشعارات العامة من أصول",
-        importance: 4,
-        visibility: 0,
-        vibration: true,
-        sound,
-      }),
-      PushNotifications.createChannel({
-        id: "asol_orders_v2",
-        name: "ASOL - الطلبات",
-        description: "تحديثات الطلبات والشحن والإرجاع",
-        importance: 4,
-        visibility: 0,
-        vibration: true,
-        sound,
-      }),
-      PushNotifications.createChannel({
-        id: "asol_chat_v2",
-        name: "ASOL - المحادثات",
-        description: "الرسائل والمحادثات الجديدة",
-        importance: 4,
-        visibility: 0,
-        vibration: true,
-        sound,
-      }),
-      PushNotifications.createChannel({
-        id: "asol_urgent_v2",
-        name: "ASOL - التنبيهات المهمة",
-        description: "التنبيهات العاجلة والمهمة",
-        importance: 5,
-        visibility: 0,
-        vibration: true,
-        sound,
-      }),
-      PushNotifications.createChannel({
-        id: "asol_updates_v2",
-        name: "ASOL - التحديثات",
-        description: "إشعارات التحديثات العامة من أصول",
-        importance: 4,
-        visibility: 0,
-        vibration: true,
-        sound,
-      }),
-    ]);
+    await pushNotifications.createChannels();
   }
 
   private async importDeliveredNotifications(): Promise<void> {
     if (!this.currentUid || !this.receivedHandler) return;
-    const delivered = await PushNotifications.getDeliveredNotifications();
+    const delivered = await pushNotifications.getDelivered();
     const dismissed = new Set(
       await asolNotificationRepository.listDismissed(this.currentUid),
     );
-    for (const notification of delivered.notifications) {
+    for (const notification of delivered) {
       if (isEmptySystemPlaceholder(notification)) continue;
       const entity = toNotificationEntity(this.currentUid, notification);
       if (dismissed.has(entity.id) || dismissed.has(entity.dedupeKey)) continue;

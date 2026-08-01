@@ -34,6 +34,14 @@
 	<string>ASOL can save a photo only when you explicitly request it.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>ASOL converts your speech into text only when you press a microphone button.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ASOL uses your location only while the app is open, to show nearby providers and fill delivery addresses.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>ASOL accesses documents only when you choose a file to attach.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>app-settings</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

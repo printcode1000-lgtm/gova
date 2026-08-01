@@ -1,0 +1,646 @@
+# Native Platform
+
+`src/native-platform` is the **only** sanctioned bridge between ASOL application
+code and native device capabilities.
+
+Pages, components, hooks, and feature services import from `@/native-platform`.
+Importing `@capacitor/*` anywhere else is a contract violation rejected by
+`npm run architecture:check`.
+
+---
+
+## Contents
+
+- [Architecture](#architecture)
+- [Folder structure](#folder-structure)
+- [Public APIs](#public-apis)
+- [Platform differences](#platform-differences)
+- [Permission flow](#permission-flow)
+- [Share & Receive flow](#share--receive-flow)
+- [Notification flow](#notification-flow)
+- [Error handling](#error-handling)
+- [Extension points](#extension-points)
+- [Native project setup](#native-project-setup)
+- [Future maintenance notes](#future-maintenance-notes)
+
+---
+
+## Architecture
+
+```
+Pages · Components · Hooks · Feature services
+                  │
+                  ▼
+        @/native-platform            ← the only import surface
+                  │
+   ┌──────────────┼──────────────┐
+   ▼              ▼              ▼
+Module facade  Permission    core/
+(camera.ts)     Manager      (errors, platform,
+   │                          binary, listener,
+   ▼                          lazy-plugin)
+Adapters (native / web)
+   │
+   ▼
+@capacitor/* plugins          ← never imported outside this layer
+```
+
+Every module follows the same three-file shape, each file with one
+responsibility:
+
+| File | Responsibility |
+|---|---|
+| `types.ts` | The contract: inputs, normalized outputs, presets. No logic. |
+| `<module>.ts` | Facade: pick the platform adapter, enforce permissions. No plugin code. |
+| `*-adapter.ts` | Talk to exactly one plugin (or the browser API) and normalize its result. |
+
+**Design rules**
+
+1. **Single responsibility.** A facade never parses bytes; an adapter never
+   decides about permissions; `types.ts` never contains behaviour.
+2. **Lazy by default.** Plugins load through `createLazyPlugin` on first use.
+   An uninstalled plugin degrades to an `Unavailable` error instead of breaking
+   the bundle. This is what makes every feature optional.
+3. **Normalized results.** Callers receive browser-native values (`File`,
+   numbers, plain objects) on every platform. Platform paths such as
+   `content://…` or `file:///data/user/0/…` never cross the boundary.
+4. **One error type.** Everything throws `NativePlatformError`.
+
+---
+
+## Folder structure
+
+```text
+src/native-platform/
+├── index.ts                     # public barrel + nativePlatform namespace
+├── core/
+│   ├── platform.ts              # web/android/ios detection
+│   ├── errors.ts                # NativePlatformError + classification
+│   ├── lazy-plugin.ts           # failure-tolerant dynamic import
+│   ├── binary.ts                # base64/bytes/Blob/File + image sniffing
+│   └── listener.ts              # emitter + plugin-handle cleanup
+├── permissions/
+│   ├── types.ts                 # PermissionKind / PermissionState
+│   ├── permission-adapters.ts   # one adapter per kind, per platform
+│   ├── permission-manager.ts    # check / request / requestIfNeeded / openSettings
+│   └── index.ts
+├── camera/
+│   ├── types.ts
+│   ├── camera-native-adapter.ts
+│   ├── camera-web-adapter.ts
+│   ├── camera.ts
+│   └── index.ts
+├── location/                    # types.ts · location.ts · index.ts
+├── speech/                      # types.ts · speech-native-adapter.ts ·
+│                                #  speech-web-adapter.ts · speech.ts
+├── files/
+│   ├── types.ts
+│   ├── app-storage.ts           # application-private storage
+│   ├── user-files.ts            # picking, opening, saving to device
+│   └── index.ts
+├── share/
+│   ├── types.ts
+│   ├── share-validator.ts       # untrusted-input validation
+│   ├── share-queue.ts           # pending queue, deliver-once
+│   ├── share.ts
+│   └── index.ts
+├── notifications/
+│   ├── types.ts                 # channels live here
+│   ├── push-notifications.ts    # FCM/APNs transport
+│   ├── local-notifications.ts   # scheduling + badge
+│   └── index.ts
+├── barcode/
+│   ├── types.ts
+│   ├── duplicate-filter.ts
+│   ├── barcode-scanner.ts
+│   └── index.ts
+└── tests/
+    └── native-platform-contract.test.ts
+```
+
+Native project files:
+
+```text
+android/app/src/main/AndroidManifest.xml            # permissions + intent filters
+android/app/src/main/java/hgh/asol/app/
+├── MainActivity.java                               # registers ShareReceivePlugin
+└── ShareReceivePlugin.java                         # ACTION_SEND bridge
+ios/App/App/Info.plist                              # usage descriptions
+ios/App/App/ShareReceivePlugin.swift                # App Group → WebView bridge
+ios/ShareExtension/                                 # Share Extension target
+├── ShareViewController.swift
+├── Info.plist
+└── ShareExtension.entitlements
+```
+
+---
+
+## Public APIs
+
+Import either the namespace or the individual module:
+
+```ts
+import { nativePlatform } from "@/native-platform";
+// or
+import { camera } from "@/native-platform/camera";
+```
+
+### Camera
+
+```ts
+camera.isAvailable(): Promise<boolean>
+camera.takePhoto(options?: CapturePhotoOptions): Promise<CameraImage>
+camera.pickImage(options?: PickImageOptions): Promise<CameraImage>
+camera.pickImages(options?: PickImageOptions): Promise<CameraImage[]>
+```
+
+`CapturePhotoOptions`: `direction` (`rear` | `front`), `quality`
+(`low` | `medium` | `high`), `correctOrientation`, `saveToGallery`.
+
+`CameraImage` carries a browser `File`, the container detected from the actual
+bytes (not the device's claim), the MIME type, and the byte size.
+
+### Location
+
+```ts
+location.isAvailable(): Promise<boolean>
+location.isServiceEnabled(): Promise<boolean>
+location.getCurrentPosition(options?): Promise<LocationFix>
+location.watchPosition(listener, options?, onError?): Promise<WatchHandle>
+location.stopAllWatches(): Promise<void>
+location.openSettings(): Promise<boolean>
+```
+
+Accuracy presets: `low` · `balanced` · `high`. **Background location tracking is
+deliberately not implemented** and no background permission is requested.
+
+### Speech Recognition
+
+Voice-to-text only. This module never records, stores, or uploads audio.
+
+```ts
+speechRecognition.isAvailable(): Promise<boolean>
+speechRecognition.checkPermission(): Promise<PermissionResult>
+speechRecognition.requestPermission(): Promise<PermissionResult>
+speechRecognition.startListening(options?): Promise<SpeechSession>
+speechRecognition.stopListening(): Promise<string>
+speechRecognition.transcribeOnce(options?): Promise<string>
+speechRecognition.isListening(): boolean
+```
+
+`SpeechSession` exposes `onResult` (interim **and** final), `onEnd`, `onError`,
+and `stop()`. Options: `language` (any BCP-47 tag), `partialResults`,
+`continuous`, `addPunctuation`.
+
+Only one session runs at a time; `startListening` stops any previous session
+first.
+
+### Files
+
+Two halves with distinct responsibilities:
+
+```ts
+// Application-private storage the user never browses
+files.app.write(path, data, { area })      // area: "data" | "cache"
+files.app.writeText(path, text, { area })
+files.app.read(path, { area }): Promise<Uint8Array>
+files.app.readText(path, { area }): Promise<string>
+files.app.exists(path, { area }): Promise<boolean>
+files.app.info(path, { area }): Promise<AppFileInfo | null>
+files.app.delete(path, { area })
+files.app.clearCache()
+files.app.ensureDirectory(path, { area })
+
+// User-facing
+files.user.pickFile(options?): Promise<PickedFile>
+files.user.pickFiles(options?): Promise<PickedFile[]>
+files.user.pickImages(options?): Promise<PickedFile[]>
+files.user.pickPdf(): Promise<PickedFile>
+files.user.pickDocuments(options?): Promise<PickedFile[]>
+files.user.saveToDevice(blob, { fileName, mimeType })
+files.user.openExternally(cachePath)
+```
+
+Application paths are **logical and relative**. `assertSafePath` rejects
+traversal (`../`), absolute paths, drive letters, and null bytes.
+
+### Share & Receive
+
+```ts
+// Sending
+share.canSend(): Promise<boolean>
+share.send(options: ShareSendOptions): Promise<void>
+
+// Receiving
+share.initializeReceiving(): Promise<void>   // call once at startup
+share.getPendingItems(): ReceivedItem[]
+share.consumeItem(id): ReceivedItem | null
+share.consumeAllItems(): ReceivedItem[]
+share.clearItem(id): void
+share.addListener(listener): Unsubscribe
+share.dispose(): Promise<void>
+```
+
+### Notifications
+
+```ts
+// Push (FCM / APNs)
+notifications.push.isSupported(): boolean
+notifications.push.checkPermission(): Promise<PermissionResult>
+notifications.push.requestPermission(): Promise<PermissionResult>
+notifications.push.register(): Promise<PushToken>
+notifications.push.unregister(): Promise<void>
+notifications.push.getDelivered(): Promise<NotificationPayload[]>
+notifications.push.removeAllDelivered(): Promise<void>
+notifications.push.onToken(listener): Unsubscribe
+notifications.push.onReceived(listener): Unsubscribe
+notifications.push.onAction(listener): Unsubscribe
+notifications.push.createChannels(): Promise<void>
+
+// Local
+notifications.local.requestPermission(): Promise<PermissionResult>
+notifications.local.schedule(notification): Promise<void>
+notifications.local.scheduleMany(notifications): Promise<void>
+notifications.local.cancel(id): Promise<void>
+notifications.local.cancelAll(): Promise<void>
+notifications.local.getPending(): Promise<number[]>
+notifications.local.setBadge(count): Promise<void>
+notifications.local.clearBadge(): Promise<void>
+notifications.local.clearDelivered(): Promise<void>
+```
+
+### Barcode Scanner
+
+```ts
+barcodeScanner.isAvailable(): Promise<boolean>
+barcodeScanner.scanOnce(options?): Promise<ScanResult>
+barcodeScanner.startScan(options?): Promise<ScanSession>
+barcodeScanner.stopScan(): Promise<void>
+barcodeScanner.isScanning(): boolean
+```
+
+`ScanSession` exposes `onScan`, `setTorch(enabled)`, `isTorchAvailable()`, and
+`stop()`. Options: `formats` (defaults to every supported format; `QR_ONLY`
+preset available), `facing`, `duplicateWindowMs` (default 2000).
+
+### Permission Manager
+
+```ts
+permissionManager.check(kind): Promise<PermissionResult>
+permissionManager.request(kind): Promise<PermissionResult>
+permissionManager.requestIfNeeded(kind): Promise<PermissionResult>
+permissionManager.checkAll(kinds): Promise<Record<string, PermissionResult>>
+permissionManager.requestAllIfNeeded(kinds): Promise<boolean>
+permissionManager.requestLocalNotificationsIfNeeded(): Promise<PermissionResult>
+permissionManager.openSettings(): Promise<boolean>
+```
+
+Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition` ·
+`notifications`.
+
+---
+
+## Platform differences
+
+| Capability | Web | Android | iOS |
+|---|---|---|---|
+| Camera capture | `<input capture>` | `@capacitor/camera` | `@capacitor/camera` |
+| Gallery pick | `<input type=file>` | native picker | native picker |
+| Location | Geolocation API | Geolocation plugin | Geolocation plugin |
+| Speech | Web Speech API | plugin (partial results) | plugin (partial results) |
+| App storage | in-memory, page lifetime | Filesystem Data/Cache | Filesystem Data/Cache |
+| File picking | `<input type=file>` | FilePicker plugin | FilePicker plugin |
+| Save to device | anchor download | share sheet | share sheet |
+| Share (send) | `navigator.share` | Share plugin | Share plugin |
+| Share (receive) | not supported | intent filters | Share Extension |
+| Push | not supported here | FCM | APNs |
+| Local notifications | Web Notification + timer | LocalNotifications | LocalNotifications |
+| Barcode | not supported | ML Kit | ML Kit |
+| Open settings | not supported | `App.openSettings()` | `app-settings:` URL |
+
+**Notable asymmetries**
+
+- Web app storage is **page-lifetime only**. It matches `cache` semantics; do
+  not rely on `data` persisting in a browser.
+- The browser file input has no cancel event; the adapters detect dismissal via
+  a window `focus` heuristic, so a cancel resolves ~400 ms later.
+- Android needs the Google ML Kit scanner module, downloaded on demand by
+  `ensureReady()`.
+- iOS reports `limited` photo access; the layer maps it to `granted` because
+  the picker still works.
+
+---
+
+## Permission flow
+
+```
+Caller                Module facade         Permission Manager      Adapter
+  │  takePhoto()          │                        │                   │
+  ├──────────────────────►│                        │                   │
+  │                       │  requestIfNeeded()     │                   │
+  │                       ├───────────────────────►│  check()          │
+  │                       │                        ├──────────────────►│
+  │                       │                        │◄── Granted ───────┤
+  │                       │◄── granted:true ───────┤  (no prompt)      │
+  │                       │                        │                   │
+  │                       │   plugin call          │                   │
+  │◄──── CameraImage ─────┤                        │                   │
+```
+
+`requestIfNeeded` prompts only when it can help:
+
+| Current state | Behaviour |
+|---|---|
+| `granted` | returns immediately, no prompt |
+| `unsupported` | returns immediately |
+| `prompt` | shows the system prompt |
+| `denied` → still denied after request | reported as **`blocked`** |
+
+`blocked` means the OS will not prompt again in this install. The UI should
+offer `permissionManager.openSettings()` rather than a button that silently
+does nothing.
+
+**Notification permission is never requested implicitly.** `push.register()`
+throws if permission is absent; the caller must invoke `requestPermission()`
+at the moment the user asks for notifications.
+
+---
+
+## Share & Receive flow
+
+### Sending
+
+```
+send({ text, url, files })
+      │
+      ├─ files? → copy into app cache → resolve native URI
+      │
+      └─ Share plugin (native) or navigator.share (web) → OS share sheet
+```
+
+Blobs cannot be handed to a share sheet directly, so outgoing files are staged
+into `cache/outbox/` first.
+
+### Receiving
+
+```
+Other app ──► OS share sheet ──► ASOL
+                                  │
+        ┌─────────────────────────┴──────────────────────────┐
+        ▼ Android                                   ▼ iOS
+  Intent filter (ACTION_SEND /                Share Extension writes to
+  ACTION_SEND_MULTIPLE)                       App Group container
+        │                                             │
+  ShareReceivePlugin.java                      ShareReceivePlugin.swift
+  reads the intent, caps at 25 MB,             drains pending.json + ShareInbox/
+  base64-encodes                                       │
+        └─────────────────┬───────────────────────────┘
+                          ▼
+              share-validator.ts   ← untrusted input boundary
+                          │  • URL scheme allow-list (http/https only)
+                          │  • MIME allow-list
+                          │  • 25 MB cap
+                          │  • file-name sanitisation
+                          ▼
+                  share-queue.ts   ← deliver-once, bounded to 50
+                          │
+                          ▼
+        share.getPendingItems() / addListener()
+```
+
+**Guarantees**
+
+1. Content arriving before the WebView is ready is **buffered**, then drained by
+   `initializeReceiving()`. Nothing is lost when the OS cold-starts the app into
+   a share.
+2. A late-mounting subscriber still receives everything queued — `addListener`
+   replays the backlog.
+3. `consumeItem` returns an item **exactly once**.
+4. **Nothing is ever uploaded automatically.** Received content is validated,
+   held in application-private storage, and surfaced only when the application
+   asks.
+
+Content shared into the app is treated as hostile input. `javascript:`,
+`file:`, and `data:` URLs are rejected; unknown binary MIME types are dropped
+rather than trusted; file names are stripped of path separators.
+
+---
+
+## Notification flow
+
+```
+Server ──► FCM (Android) / APNs (iOS) ──► device
+                                            │
+                                    push-notifications.ts
+                                            │
+                        ┌───────────────────┼───────────────────┐
+                        ▼                   ▼                   ▼
+                  onToken()           onReceived()          onAction()
+                (register/refresh)   (foreground)        (user tapped)
+                        │                   │                   │
+                        └───────────────────┴───────────────────┘
+                                            ▼
+                          features/notifications  ← business meaning
+                          (category, routing, dedupe, persistence)
+```
+
+The Native Platform layer is a **transport**. It carries no business meaning:
+categories, routing, dedupe keys, and persistence remain in
+`src/features/notifications`, which now consumes this layer instead of importing
+the plugin directly.
+
+Android channels are declared once in `notifications/types.ts`. **Their ids,
+names, and sound are matched by already-installed clients — changing them
+creates a duplicate channel and silently discards the user's existing
+preference.**
+
+---
+
+## Error handling
+
+Everything throws `NativePlatformError` with a `code`, the `module` that raised
+it, and the original `cause`.
+
+| Code | Meaning | Typical UI response |
+|---|---|---|
+| `unavailable` | No such feature here, or the plugin is absent | Hide the entry point |
+| `permission-denied` | Access refused | Explain why; offer settings if `blocked` |
+| `cancelled` | User dismissed a picker or prompt | Do nothing — this is not an error |
+| `timeout` | Operation exceeded its budget | Offer retry |
+| `invalid-argument` | Caller passed something impossible | Programming error; fix the call |
+| `service-disabled` | GPS or a device service is off | Ask the user to enable it |
+| `internal` | Unclassified plugin failure | Generic message; log the cause |
+
+```ts
+import { camera, isCancelledError, NativePlatformError } from "@/native-platform";
+
+try {
+  const image = await camera.takePhoto();
+  upload(image.file);
+} catch (error) {
+  if (isCancelledError(error)) return;              // user backed out
+  if (error instanceof NativePlatformError) {
+    if (error.code === "permission-denied") showPermissionHelp();
+    else showError(error.message);
+  }
+}
+```
+
+Raw plugin errors are classified by `toNativeError()`; no module re-implements
+cancellation or permission detection.
+
+---
+
+## Extension points
+
+### Add a new module
+
+1. Create `src/native-platform/<module>/`.
+2. `types.ts` — contract only.
+3. `<module>-native-adapter.ts` and/or `<module>-web-adapter.ts` — one plugin
+   each, wrapped in `createLazyPlugin`, errors funnelled through
+   `toNativeError`.
+4. `<module>.ts` — facade: platform selection and permission enforcement.
+5. `index.ts` — public exports.
+6. Re-export from `src/native-platform/index.ts` and add to the
+   `nativePlatform` namespace.
+
+### Add a new permission kind
+
+1. Add it to `PermissionKinds` in `permissions/types.ts`.
+2. Add an entry to both `NATIVE_ADAPTERS` and `WEB_ADAPTERS` in
+   `permission-adapters.ts`.
+3. Declare the OS strings (`Info.plist`, `AndroidManifest.xml`).
+
+### Add a barcode format
+
+Add it to `BarcodeFormats` in `barcode/types.ts`; `ALL_FORMATS` derives
+automatically.
+
+### Add a notification channel
+
+Add it to `DEFAULT_CHANNELS` in `notifications/types.ts`. Both push and local
+modules register from that one list.
+
+### Accept a new shared MIME type
+
+1. Add it to `DOCUMENT_MIME` (or a new classifier) in `share-validator.ts`.
+2. Add a matching `<data android:mimeType>` intent filter.
+3. Widen `NSExtensionActivationRule` in the Share Extension `Info.plist`.
+
+---
+
+## Native project setup
+
+### Android — complete
+
+Everything is committed and applied by `npx cap sync`:
+
+- Permissions and `<queries>` in `AndroidManifest.xml`
+- Share intent filters on `MainActivity`
+- `ShareReceivePlugin.java`, registered in `MainActivity.onCreate`
+
+### iOS — requires manual Xcode steps
+
+The Swift sources are committed, but a Share Extension is an **Xcode target**
+that cannot be generated from the command line. On a macOS machine:
+
+1. **App Group** — in Xcode, select the `App` target →
+   *Signing & Capabilities* → **+ Capability** → *App Groups* → add
+   `group.hgh.asol.app`.
+2. **Share Extension target** — *File → New → Target… → Share Extension*, name
+   it `ShareExtension`.
+   - Replace the generated `ShareViewController.swift` with
+     `ios/ShareExtension/ShareViewController.swift`.
+   - Replace the generated `Info.plist` with `ios/ShareExtension/Info.plist`.
+   - Add the same App Group capability to this target, using
+     `ios/ShareExtension/ShareExtension.entitlements`.
+3. **Bridge plugin** — add `ios/App/App/ShareReceivePlugin.swift` to the `App`
+   target.
+4. **URL scheme** — register `asol` under *Info → URL Types* so the extension
+   can bring the app forward.
+5. **Provisioning** — regenerate profiles for both bundle ids; App Groups
+   require an updated App ID in the Apple Developer portal.
+
+Until these steps are done, `share.initializeReceiving()` resolves without a
+bridge and receiving reports nothing on iOS. **Sending, and every other module,
+work normally.**
+
+---
+
+## Future maintenance notes
+
+### Verified vs. not verified
+
+| Area | Status |
+|---|---|
+| TypeScript layer, contracts, validation, queue, duplicate filter | Unit-tested (`npm run test:native-platform`) |
+| Architecture contract enforcement | Verified — the rule was proven to reject a real violation |
+| Existing consumers (image picker, voice input, push) | Migrated; behaviour preserved; existing suites pass |
+| Plugin behaviour on real hardware | **Not verified in this environment** |
+| Android share receiving | Source complete; **needs a device run** |
+| iOS share receiving | Source complete; **needs the Xcode steps above** |
+
+Camera, Location, Speech, Files, Share-send, Push, Local notifications, and
+Barcode all depend on device hardware and cannot be exercised on a Windows
+workstation. Test them on a real device before release.
+
+### Plugin versions
+
+All plugins are pinned to the Capacitor 8 line:
+
+| Plugin | Version |
+|---|---|
+| `@capacitor/camera` | ^8.2.0 |
+| `@capacitor/filesystem` | ^8.1.2 |
+| `@capacitor/geolocation` | ^8.2.0 |
+| `@capacitor/share` | ^8.0.1 |
+| `@capacitor/push-notifications` | ^8.1.2 |
+| `@capacitor/local-notifications` | ^8.2.1 |
+| `@capacitor-mlkit/barcode-scanning` | ^8.1.0 |
+| `@capawesome/capacitor-file-picker` | ^8.0.3 |
+| `@capgo/capacitor-speech-recognition` | ^8.1.7 |
+
+Upgrading Capacitor requires upgrading all of them together.
+
+### Sanctioned exceptions to the contract
+
+Four files outside `src/native-platform` may import Capacitor, listed in
+`CAPACITOR_IMPORT_ALLOWED_FILES` in `scripts/architecture-check.ts`. They cover
+native concerns outside the eight modules — application lifecycle, OTA delivery,
+and the native HTTP bridge:
+
+```
+src/platform/navigation/capacitor-back-button-adapter.ts
+src/platform/ota/capacitor-ota-adapter.ts
+src/features/ota/services/ota-api-service.ts
+src/features/page-snapshot/hooks/use-page-snapshot.tsx
+```
+
+Do not extend this list for anything the eight modules already cover.
+
+### Compatibility shims
+
+Two files adapt the new layer to older narrow interfaces so existing callers did
+not have to change:
+
+- `src/platform/media/capacitor-image-source-adapter.ts` → Camera
+  (`StorageImageManager` expects `null` on cancel rather than a throw)
+- `src/platform/speech/speech-recognition-adapter.ts` → Speech
+  (voice-input scanner expects a single-shot `Promise<string>`)
+
+They contain no plugin code. When their consumers migrate to the module APIs
+directly, delete the shims.
+
+### Deliberate omissions
+
+- **Background location** — not implemented; no background permission is
+  requested. Adding it changes the app's privacy disclosure on both stores.
+- **Audio recording** — the Speech module converts speech to text only. It must
+  never gain a "save the audio" capability without a new privacy review.
+
+### Related documentation
+
+- [capacitor.md](./capacitor.md) — Capacitor shell, build, and OTA
+- [voice-input-system.md](../../05-platform-features/voice-input-system.md)
+- [storage-image-source-picker-system.md](../../02-data-and-storage/storage-image-source-picker-system.md)

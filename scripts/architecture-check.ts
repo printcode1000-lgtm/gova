@@ -84,6 +84,46 @@ function addViolation(layer: ArchitectureLayer | string, file: string, message: 
   });
 }
 
+/**
+ * Native Platform Contract.
+ *
+ * Capacitor plugins may only be imported from `src/native-platform`. Every
+ * other layer reaches native capabilities through that module's public API.
+ *
+ * The allow-list below covers native concerns that are deliberately outside
+ * the eight Native Platform modules (application lifecycle, OTA delivery, and
+ * the HTTP bridge). They are platform adapters in their own right and are the
+ * only sanctioned exceptions.
+ */
+const NATIVE_PLATFORM_ROOT = 'src/native-platform/';
+
+const CAPACITOR_IMPORT_ALLOWED_FILES = new Set([
+  // Android system Back button and confirmed application exit.
+  'src/platform/navigation/capacitor-back-button-adapter.ts',
+  // File-level OTA release storage and WebView base-path switching.
+  'src/platform/ota/capacitor-ota-adapter.ts',
+  // Native HTTP transport used by the OTA downloader.
+  'src/features/ota/services/ota-api-service.ts',
+  // Application resume/pause events for page snapshots.
+  'src/features/page-snapshot/hooks/use-page-snapshot.tsx',
+]);
+
+const CAPACITOR_IMPORT_PATTERN =
+  /from\s+['"]@(?:capacitor|capacitor-mlkit|capawesome|capgo)\//;
+
+function checkNativePlatformContract(fileRel: string, content: string, filePath: string): void {
+  if (fileRel.startsWith(NATIVE_PLATFORM_ROOT)) return;
+  if (CAPACITOR_IMPORT_ALLOWED_FILES.has(fileRel)) return;
+  if (!CAPACITOR_IMPORT_PATTERN.test(content)) return;
+
+  addViolation(
+    'Native Platform Contract',
+    filePath,
+    'Capacitor plugin imported outside the Native Platform layer.',
+    'Use the public API exported from src/native-platform.',
+  );
+}
+
 function matchesAny(path: string, patterns: RegExp[]): boolean {
   return patterns.some((p) => p.test(path));
 }
@@ -287,6 +327,7 @@ function checkFile(filePath: string): void {
   }
 
   checkImageStorageContract(fileRel, content, filePath);
+  checkNativePlatformContract(fileRel, content, filePath);
 }
 
 function checkExternalDataAccessOwnership(filePath: string): void {
@@ -501,6 +542,7 @@ function printReport(): void {
     'Configuration Layer',
     'Image Storage Contract',
     'Category Module Contract',
+    'Native Platform Contract',
   ];
 
   const failedCategories = new Set(violations.map((v) => v.layer));
