@@ -13,7 +13,7 @@ import type {
   ProductMode,
 } from "./product-component.types";
 import { isCancelledError } from "@/native-platform";
-import { share } from "@/native-platform/share";
+import { shareLocationUrl } from "@/features/sharing/share-location-url";
 
 const DEFAULT_LOCATION = {
   latitude: 29.9668,
@@ -95,18 +95,14 @@ export function ProductPropertySpecs({
   const shareLocation = React.useCallback(
     async (nextLatitude: number, nextLongitude: number) => {
       const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${nextLatitude},${nextLongitude}`)}`;
-      try {
-        if (await share.canSend()) {
-          await share.send({ title: "موقع العقار", url });
-        } else {
-          await navigator.clipboard.writeText(url);
-          setMapMessage("تم نسخ رابط الموقع.");
-        }
-      } catch (error) {
-        // Dismissing the share sheet is not a failure.
-        if (isCancelledError(error)) return;
-        setMapMessage("تعذرت مشاركة الموقع.");
-      }
+      // The shared helper also copies the link when sharing is unavailable or
+      // fails, so the user is never left without a way to keep the location.
+      await shareLocationUrl(
+        url,
+        "موقع العقار",
+        () => setMapMessage("تم نسخ رابط الموقع."),
+        () => setMapMessage("تعذرت مشاركة الموقع."),
+      );
     },
     [],
   );
