@@ -31,6 +31,7 @@ interface ProfileCustomRequestButtonProps {
   description?: string;
   buttonLabel?: string;
   disabled?: boolean;
+  iconOnly?: boolean;
 }
 
 function normalizeCustomRequestImages(images: Array<StoredImage | null | undefined>): StoredImage[] {
@@ -48,6 +49,7 @@ export function ProfileCustomRequestButton({
   description = "اكتب وصف الطلب ويمكنك إضافة حتى 4 صور. الصور اختيارية.",
   buttonLabel = "طلب خاص",
   disabled = false,
+  iconOnly = false,
 }: ProfileCustomRequestButtonProps) {
   const [open, setOpen] = React.useState(false);
   const [requestTitle, setRequestTitle] = React.useState("");
@@ -85,7 +87,12 @@ export function ProfileCustomRequestButton({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button type="button" disabled={disabled} className="gap-2">
+        <Button 
+          type="button" 
+          disabled={disabled} 
+          className="gap-2"
+          data-custom-request-trigger
+        >
           <ImagePlus className="h-4 w-4" />
           {buttonLabel}
         </Button>

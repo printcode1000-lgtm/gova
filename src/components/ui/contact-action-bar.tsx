@@ -63,11 +63,20 @@ export interface ContactActionBarData {
   locations?: ContactActionLocation[] | null;
 }
 
+export interface CustomActionButton {
+  id: string;
+  icon: React.ReactNode;
+  label: string;
+  onClick?: () => void;
+  color?: string;
+}
+
 interface ContactActionBarProps {
   data?: ContactActionBarData | null;
   className?: string;
   label?: string;
   compact?: boolean;
+  customActions?: CustomActionButton[];
 }
 
 interface ContactOption {
@@ -89,9 +98,10 @@ export function ContactActionBar({
   className,
   label = "وسائل التواصل",
   compact = false,
+  customActions,
 }: ContactActionBarProps) {
   const groups = React.useMemo(() => buildContactGroups(data), [data]);
-  if (groups.length === 0) return null;
+  if (groups.length === 0 && !customActions?.length) return null;
 
   return (
     <section
@@ -113,6 +123,9 @@ export function ContactActionBar({
         >
           {groups.map((group) => (
             <ContactActionGroup key={group.id} group={group} />
+          ))}
+          {customActions?.map((action) => (
+            <CustomActionButton key={action.id} action={action} />
           ))}
         </div>
       </div>
@@ -202,6 +215,28 @@ function ContactActionGroup({ group }: { group: ContactGroup }) {
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function CustomActionButton({ action }: { action: CustomActionButton }) {
+  const color = action.color || "rgb(79, 70, 229)";
+  return (
+    <Button
+      type="button"
+      size="icon"
+      variant="outline"
+      className="h-10 w-10 shrink-0 rounded-full border bg-surface/80"
+      style={{
+        color,
+        borderColor: `${color}66`,
+        background: `linear-gradient(135deg, ${color}1F, ${color}08)`,
+      }}
+      title={action.label}
+      aria-label={action.label}
+      onClick={action.onClick}
+    >
+      {action.icon}
+    </Button>
   );
 }
 

@@ -9,6 +9,7 @@ import {
   faBoxOpen,
   faClock,
   faComments,
+  faPaperPlane,
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 import { ContactActionBar } from "@/components/ui/contact-action-bar";
@@ -176,7 +177,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         )}
 
         {!loading.details ? (
-          <section className="mx-2 border-b border-outline-variant/60 pb-4 sm:mx-4 sm:pb-5">
+          <section className="mx-2 mt-6 border-b border-outline-variant/60 pb-4 sm:mx-4 sm:pb-5 sm:mt-8">
             <div className="flex min-w-0 items-start gap-3 sm:gap-4">
               {storeImages.avatarUrl ? (
                 <div className="relative z-10 -mt-8 h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-4 border-surface shadow-lg sm:-mt-10 sm:h-28 sm:w-28">
@@ -190,33 +191,76 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                 </div>
               ) : null}
 
-              <div className="min-w-0 flex-1 pt-2 sm:pt-3">
-                {storeDetails.storeName ? (
-                  <h1 className="break-words text-lg font-bold leading-7 text-on-surface sm:text-2xl">
-                    {storeDetails.storeName}
-                  </h1>
-                ) : null}
-                {storeDetails.storeDescription ? (
-                  <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6">
-                    {storeDetails.storeDescription}
-                  </p>
-                ) : null}
-                {previewUid ? (
-                  <div className="mt-3">
-                    <FollowButton
-                      targetType="store"
-                      targetId={previewUid}
-                      targetOwnerUid={previewUid}
-                      viewerUid={session?.uid}
-                      isOwner={props.isOwner}
-                      isSuperAdmin={props.isSuperAdmin}
-                      targetLabel={
-                        storeDetails.storeName ||
-                        (ar ? "مقدم الخدمة" : "Provider")
-                      }
-                    />
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-col gap-2">
+                  {previewUid ? (
+                    <div className="flex items-center gap-2">
+                      <FollowButton
+                        targetType="store"
+                        targetId={previewUid}
+                        targetOwnerUid={previewUid}
+                        viewerUid={session?.uid}
+                        isOwner={props.isOwner}
+                        isSuperAdmin={props.isSuperAdmin}
+                        targetLabel={
+                          storeDetails.storeName ||
+                          (ar ? "مقدم الخدمة" : "Provider")
+                        }
+                      />
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        className="h-10 w-10 shrink-0 rounded-full border bg-surface/80 asol-surface-neutral border-input hover:bg-accent hover:text-accent-foreground asol-control-icon"
+                        style={{
+                          color: "rgb(79, 70, 229)",
+                          borderColor: "rgba(79, 70, 229, 0.4)",
+                          background: "linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(79, 70, 229, 0.03))",
+                        }}
+                        title={ar ? "مشاركة الصفحة" : "Share profile"}
+                        aria-label={ar ? "مشاركة الصفحة" : "Share profile"}
+                        onClick={() => void shareProfile()}
+                      >
+                        <FontAwesomeIcon icon={faShareNodes} className="h-4 w-4" />
+                      </Button>
+                      {storeDetails.profileShowcase?.customRequestEnabled && session?.uid ? (
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="outline"
+                          className="h-10 w-10 shrink-0 rounded-full border bg-surface/80 asol-surface-neutral border-input hover:bg-accent hover:text-accent-foreground asol-control-icon"
+                          style={{
+                            color: "rgb(79, 70, 229)",
+                            borderColor: "rgba(79, 70, 229, 0.4)",
+                            background: "linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(79, 70, 229, 0.03))",
+                          }}
+                          title={ar ? "إرسال طلب خاص" : "Send custom request"}
+                          aria-label={ar ? "إرسال طلب خاص" : "Send custom request"}
+                          onClick={() => {
+                            const customRequestButton = document.querySelector('[data-custom-request-trigger]') as HTMLButtonElement;
+                            if (customRequestButton) {
+                              customRequestButton.click();
+                            }
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faPaperPlane} className="h-4 w-4" />
+                        </Button>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  <div className="min-w-0 flex-1">
+                    {storeDetails.storeName ? (
+                      <h1 className="break-words text-lg font-bold leading-7 text-on-surface sm:text-2xl">
+                        {storeDetails.storeName}
+                      </h1>
+                    ) : null}
+                    {storeDetails.storeDescription ? (
+                      <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-on-surface-variant sm:text-sm sm:leading-6">
+                        {storeDetails.storeDescription}
+                      </p>
+                    ) : null}
                   </div>
-                ) : null}
+                </div>
               </div>
             </div>
           </section>
@@ -236,33 +280,23 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
               className="border-0 bg-transparent p-0 shadow-none"
             />
           </div>
-          {previewUid ? (
-            <div className="flex flex-col items-stretch gap-2 sm:min-w-48">
-              {storeDetails.profileShowcase?.customRequestEnabled &&
-              session?.uid ? (
-                <ProfileCustomRequestButton
-                  onSubmit={props.onCustomRequest}
-                  buttonLabel={ar ? "إرسال طلب خاص" : "Send custom request"}
-                  title={`${ar ? "طلب خاص إلى" : "Custom request to"} ${storeDetails.storeName || (ar ? "البائع" : "seller")}`}
-                />
-              ) : null}
-              <Button
-                type="button"
-                variant="outline"
-                className="gap-2"
-                onClick={() => void shareProfile()}
-              >
-                <FontAwesomeIcon icon={faShareNodes} className="h-4 w-4" />
-                {ar ? "مشاركة الصفحة" : "Share profile"}
-              </Button>
-              {shareStatus ? (
-                <p className="text-center text-xs font-semibold text-primary" role="status">
-                  {shareStatus}
-                </p>
-              ) : null}
-            </div>
+          {shareStatus ? (
+            <p className="text-center text-xs font-semibold text-primary" role="status">
+              {shareStatus}
+            </p>
           ) : null}
         </section>
+      ) : null}
+
+      {/* Hidden custom request button for icon-only trigger */}
+      {storeDetails.profileShowcase?.customRequestEnabled && session?.uid ? (
+        <div className="hidden">
+          <ProfileCustomRequestButton
+            onSubmit={props.onCustomRequest}
+            buttonLabel={ar ? "إرسال طلب خاص" : "Send custom request"}
+            title={`${ar ? "طلب خاص إلى" : "Custom request to"} ${storeDetails.storeName || (ar ? "البائع" : "seller")}`}
+          />
+        </div>
       ) : null}
 
 
