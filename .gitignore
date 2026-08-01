@@ -59,6 +59,14 @@ assets/google-play/*.jks
 android/app/google-services.json
 android/app/src/main/res/raw/custom_notification.mp3
 
+# Apple signing and push credentials.
+# The APNs authentication key is a private signing key valid for every app
+# under the team account. Upload it to Firebase Console, never to git.
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+
 .vercel
 .env*
 !.env.example

@@ -8,6 +8,7 @@ import type { Unsubscribe } from "@/native-platform";
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
 import { asolNotificationRepository } from "../asol-notification-repository";
 import type { DeviceToken, NotificationEntity } from "../../domain/entities";
+import { resolvePushProvider } from "../../domain/push-token-kind";
 import {
   NotificationCategories,
   NotificationChannels,
@@ -219,7 +220,9 @@ export class CapacitorPushService {
       id: `ntok_${uid}_${platform}_${deviceId}`.replace(/[^a-zA-Z0-9_:-]/g, "_"),
       uid,
       platform,
-      provider: platform === "android" ? "fcm" : "apns",
+      // Classified from the token itself: Apple yields an FCM token once the
+      // Firebase iOS SDK is installed, and a raw APNs token until then.
+      provider: resolvePushProvider(platform, tokenValue),
       deviceId,
       token: tokenValue,
       deviceLabel: platform === "android" ? "ASOL Android" : "ASOL iOS",

@@ -124,19 +124,36 @@ async function sendOne(
   });
 }
 
+/**
+ * Optional direct-to-APNs transport.
+ *
+ * Firebase Cloud Messaging is the normal delivery path for Apple devices and
+ * needs no `APNS_*` variables. A token only reaches this provider when it is a
+ * raw Apple device token, which happens while the Firebase Messaging iOS SDK
+ * is still absent from the Xcode project.
+ *
+ * Configuring `APNS_*` is a deliberate opt-in, not a requirement.
+ */
 export class ApnsNotificationProvider implements NotificationProvider {
   readonly provider = "apns";
 
   async send(input: NotificationProviderSendInput): Promise<NotificationProviderSendResult> {
     const config = getApnsServerConfig();
     if (!config) {
+      // Tokens are deliberately not reported invalid: the device is fine, the
+      // application simply has not started issuing Firebase tokens yet.
       return {
         provider: this.provider,
         tokenCount: input.tokens.length,
         status: "failed",
         successCount: 0,
         failureCount: input.tokens.length,
-        message: "apnsNotConfigured",
+        message:
+          "appleTokenNotDeliverable: this device registered a raw APNs token, " +
+          "which means the Firebase Messaging iOS SDK is not installed in the " +
+          "Xcode project. Install it so Apple devices register Firebase tokens " +
+          "and deliver through Firebase Admin, or set APNS_* to enable the " +
+          "optional direct APNs transport.",
       };
     }
     const results: ApnsResult[] = [];

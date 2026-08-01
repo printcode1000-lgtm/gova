@@ -112,6 +112,51 @@ for (const [key, value] of [
   );
 }
 
+// Firebase Cloud Messaging is the unified delivery path for Android and Apple,
+// so the FCM message builder must carry an Apple payload block. Without it,
+// iOS notifications arrive with no sound, priority, or silent-push support.
+const fcmMessage = read(
+  "src/features/notifications/services/providers/fcm-http-v1.server.ts",
+);
+const fcmProvider = read(
+  "src/features/notifications/services/providers/fcm-notification-provider.server.ts",
+);
+
+requireText(
+  fcmMessage,
+  "apns?: FcmApnsConfig;",
+  "FcmHttpV1Message must carry an apns block so Apple devices receive sound and priority.",
+);
+requireText(
+  fcmProvider,
+  "buildApnsConfig",
+  "The FCM provider must build an Apple payload for every message.",
+);
+requireText(
+  fcmProvider,
+  "firebaseAdminNotConfigured",
+  "A missing Firebase Admin credential must produce a clear, named error.",
+);
+
+// The APNs authentication key is a private signing key for the whole team
+// account and must never be committed. Match a live rule, not a commented one.
+const gitignore = read(".gitignore");
+const ignoresP8 = gitignore
+  .split(/\r?\n/)
+  .some((line) => line.trim() === "*.p8");
+if (!ignoresP8) {
+  errors.push("The APNs authentication key (.p8) must be gitignored.");
+}
+
+// Apple tokens are classified by shape, not by platform name, so a raw APNs
+// token is never sent to FCM and de-registered as invalid.
+const tokenKind = read("src/features/notifications/domain/push-token-kind.ts");
+requireText(
+  tokenKind,
+  "resolvePushProvider",
+  "Push provider selection must classify the token before choosing a transport.",
+);
+
 if (errors.length > 0) {
   throw new Error(
     `iOS push policy validation failed:\n${errors
@@ -121,5 +166,6 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `iOS push policy passed: ${expected.bundleId} uses Capacitor/APNs; Firebase Apple app ${expected.firebaseAppId} is documented.`,
+  `iOS push policy passed: ${expected.bundleId} delivers through Firebase Cloud Messaging ` +
+    `(app ${expected.firebaseAppId}); the APNs key stays in Firebase Console and out of git.`,
 );

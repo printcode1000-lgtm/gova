@@ -3,6 +3,35 @@ import "server-only";
 import { GoogleAuth } from "google-auth-library";
 import { getFirebaseAdminServiceAccount } from "@/core/config/server-env";
 
+/**
+ * Apple-specific delivery options.
+ *
+ * FCM forwards these to APNs verbatim, so sound, badge, and priority only work
+ * on iOS when this block is present — the `android` block is ignored for
+ * Apple tokens and the common `notification` block cannot express them.
+ */
+export interface FcmApnsConfig {
+  headers?: {
+    /** "10" delivers immediately; "5" allows the system to batch. */
+    "apns-priority"?: string;
+    "apns-push-type"?: "alert" | "background";
+    "apns-collapse-id"?: string;
+    /** Unix epoch seconds; "0" means do not retry. */
+    "apns-expiration"?: string;
+  };
+  payload: {
+    aps: {
+      alert?: { title: string; body: string };
+      sound?: string | { critical: number; name: string; volume: number };
+      badge?: number;
+      /** 1 wakes the app for a silent, data-only delivery. */
+      "content-available"?: number;
+      "thread-id"?: string;
+      "interruption-level"?: "passive" | "active" | "time-sensitive" | "critical";
+    };
+  };
+}
+
 export interface FcmHttpV1Message {
   message: {
     token: string;
@@ -22,6 +51,7 @@ export interface FcmHttpV1Message {
         visibility: "PRIVATE";
       };
     };
+    apns?: FcmApnsConfig;
   };
 }
 

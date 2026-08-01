@@ -36,6 +36,54 @@ coordinated client, API, database, and notification-provider migration.
 Run `npm run ios:push:validate` to verify that these settings and all registered
 identities remain aligned.
 
+## Delivery path: Firebase Cloud Messaging
+
+**Firebase Admin is the unified server-side push provider for both Android and
+Apple.** The server holds one credential —
+`FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` — and Firebase Cloud Messaging forwards
+Apple messages to APNs on Google's infrastructure.
+
+`APNS_*` environment variables are **not required** for the normal flow.
+
+```
+Server ──► Firebase Admin (FCM HTTP v1) ──┬──► Android device
+                                          └──► APNs ──► Apple device
+```
+
+### Provider selection is decided by the token, not the platform
+
+`@capacitor/push-notifications` returns different tokens on Apple depending on
+what is installed in the Xcode project:
+
+| Xcode state | Token issued | Provider | Outcome |
+|---|---|---|---|
+| Firebase Messaging iOS SDK **installed** | Firebase registration token | `fcm` | Delivered through Firebase Admin |
+| Firebase Messaging iOS SDK **absent** | Raw APNs device token (64 hex chars) | `apns` | Clear, actionable error |
+
+`src/features/notifications/domain/push-token-kind.ts` classifies the token by
+shape. This matters: a raw APNs token sent to FCM is rejected as
+`INVALID_ARGUMENT`, and the send service treats that as a dead device and
+deletes the registration. Classifying first prevents Apple devices from being
+silently de-registered.
+
+The routing is **self-correcting**: the moment the Firebase Messaging iOS SDK is
+added, Apple devices begin issuing Firebase tokens and route to Firebase Admin
+with no code change and no data migration.
+
+### Apple payload options
+
+FCM ignores the `android` block for Apple tokens, so sound, priority, grouping,
+and silent delivery are expressed in the `apns` block built by
+`fcm-notification-provider.server.ts`:
+
+| Concern | Alert push | Data-only push |
+|---|---|---|
+| `apns-push-type` | `alert` | `background` |
+| `apns-priority` | `10` when high/critical, else `5` | `5` (APNs rejects `10`) |
+| `aps.sound` | `custom_notification.caf` | omitted |
+| `aps.content-available` | omitted | `1` |
+| `interruption-level` | `time-sensitive` when critical | omitted |
+
 ## External Apple configuration still required
 
 Native source configuration cannot create Apple credentials. Before testing on
@@ -44,15 +92,45 @@ a physical device or distributing a release:
 1. Set the Xcode development team for the App target and use an App ID with the
    Push Notifications capability enabled.
 2. Create an APNs authentication key (`.p8`) in the Apple Developer account.
-3. Configure the server-only values `APNS_TEAM_ID`, `APNS_KEY_ID`,
-   `APNS_BUNDLE_ID=hgh.asol.app`, `APNS_PRIVATE_KEY`, and set
-   `APNS_PRODUCTION=true` for production delivery.
-4. Test remote push on a physical device; the iOS simulator is not the release
+3. **Upload that `.p8` key to Firebase**, not to this repository:
+
+   > **Firebase Console → Project Settings → Cloud Messaging →
+   > Apple app configuration → APNs Authentication Key → Upload**
+   >
+   > Provide the `.p8` file, the Key ID, and the Team ID.
+
+   This is what authorises Firebase to deliver to APNs on the project's behalf.
+
+   **The `.p8` key must never be committed to this repository.** It is a private
+   signing key valid for every application under the Apple team account.
+
+4. Install the Firebase Messaging iOS SDK in the Xcode project so Apple devices
+   issue Firebase registration tokens (see the checklist below).
+5. Test remote push on a physical device; the iOS simulator is not the release
    verification target for APNs registration.
 
-If Firebase Cloud Messaging is intentionally adopted for iOS in the future, the
-configuration file is already present, but the Firebase Apple SDK and the
-coordinated token-provider migration are still required.
+### Optional: direct APNs transport
+
+`ApnsNotificationProvider` remains available as an opt-in fallback. It is used
+only when a device registered a raw APNs token, and only if `APNS_TEAM_ID`,
+`APNS_KEY_ID`, `APNS_BUNDLE_ID`, and `APNS_PRIVATE_KEY` are configured.
+Leaving them unset is the supported default and produces a clear error rather
+than a silent failure.
+
+### Remaining Xcode step
+
+Apple devices cannot issue Firebase tokens until the SDK is present:
+
+1. In Xcode, add the `firebase-ios-sdk` Swift Package and select the
+   **FirebaseMessaging** product for the App target.
+2. Call `FirebaseApp.configure()` at the top of
+   `application(_:didFinishLaunchingWithOptions:)` in `AppDelegate.swift`.
+3. `GoogleService-Info.plist` is already committed and already a member of the
+   App target's Resources — no further action needed for it.
+
+Until this is done, Apple push registration succeeds, the token is stored with
+provider `apns`, and sends return
+`appleTokenNotDeliverable` explaining exactly what is missing.
 
 ## Known SPM compatibility boundary
 

@@ -5,11 +5,15 @@ import type {
 } from "./notification-provider.interface";
 import type { RegisteredNotificationToken } from "../../domain/entities";
 import type {
+  FcmApnsConfig,
   FcmHttpV1Client,
   FcmHttpV1Message,
 } from "./fcm-http-v1.server";
 
 const MAX_PARALLEL_SENDS = 25;
+
+/** Bundled in the Apple app; Android uses the extensionless resource name. */
+const APPLE_SOUND_FILE = "custom_notification.caf";
 
 function channelId(input: NotificationProviderSendInput): string {
   if (input.payload.priority === "critical") return "asol_urgent_v2";
@@ -39,6 +43,59 @@ function cleanData(input: NotificationProviderSendInput): Record<string, string>
   return data;
 }
 
+function isHighPriority(input: NotificationProviderSendInput): boolean {
+  return (
+    input.payload.priority === "high" || input.payload.priority === "critical"
+  );
+}
+
+/**
+ * Apple delivery options.
+ *
+ * FCM ignores the `android` block for Apple tokens, so iOS sound, badge, and
+ * priority must be expressed here or they are silently dropped.
+ */
+function buildApnsConfig(
+  input: NotificationProviderSendInput,
+  dataOnly: boolean,
+): FcmApnsConfig {
+  if (dataOnly) {
+    return {
+      headers: {
+        "apns-push-type": "background",
+        // A background push must be priority 5; APNs rejects 10.
+        "apns-priority": "5",
+      },
+      payload: { aps: { "content-available": 1 } },
+    };
+  }
+
+  return {
+    headers: {
+      "apns-push-type": "alert",
+      "apns-priority": isHighPriority(input) ? "10" : "5",
+      "apns-collapse-id": input.payload.dedupeKey.slice(0, 64),
+      "apns-expiration": String(
+        Math.floor(Date.now() / 1000) +
+          (input.payload.category === "chat" ? 604_800 : 86_400),
+      ),
+    },
+    payload: {
+      aps: {
+        alert: {
+          title: input.payload.title ?? "ASOL",
+          body: input.payload.body ?? "",
+        },
+        // iOS expects the file name with its extension.
+        sound: APPLE_SOUND_FILE,
+        "thread-id": input.payload.groupKey || input.payload.category,
+        "interruption-level":
+          input.payload.priority === "critical" ? "time-sensitive" : "active",
+      },
+    },
+  };
+}
+
 function buildMessage(
   input: NotificationProviderSendInput,
   token: RegisteredNotificationToken,
@@ -54,10 +111,7 @@ function buildMessage(
       },
       data: { ...cleanData(input), uid: token.uid },
       android: {
-        priority:
-          input.payload.priority === "high" || input.payload.priority === "critical"
-            ? "HIGH"
-            : "NORMAL",
+        priority: isHighPriority(input) ? "HIGH" : "NORMAL",
         ttl: input.payload.category === "chat" ? "604800s" : "86400s",
         restricted_package_name: "hgh.asol.app",
         collapse_key: input.payload.dedupeKey.slice(0, 64),
@@ -70,6 +124,7 @@ function buildMessage(
           visibility: "PRIVATE",
         },
       },
+      apns: buildApnsConfig(input, dataOnly),
     },
   };
 }
@@ -96,13 +151,17 @@ export class FcmNotificationProvider implements NotificationProvider {
         ? await this.clientFactory()
         : await (await import("./fcm-http-v1.server")).getFcmHttpV1Client();
     } catch {
+      // Firebase Admin is the single push credential for Android and Apple.
+      // Tokens are kept: this is a server misconfiguration, not a dead device.
       return {
         provider: this.provider,
         tokenCount: input.tokens.length,
         status: "failed",
         successCount: 0,
         failureCount: input.tokens.length,
-        message: "fcmConfigurationFailed",
+        message:
+          "firebaseAdminNotConfigured: set FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64 " +
+          "so Firebase Cloud Messaging can deliver to Android and Apple devices.",
       };
     }
 
