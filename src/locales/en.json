@@ -200,7 +200,7 @@
     "network.offline":  "No internet connection. Check your network and try again.",
     "network.restored":  "Internet connection restored.",
     "network.retry":  "Try again",
-    "network.serverUnavailable":  "You are connected, but the ASOL server is currently unavailable.",
+    "network.serverUnavailable":  "You are connected to the network, but the internet is currently unavailable.",
     "ota.applying":  "Applying the ready update...",
     "ota.awaitingApproval":  "A new release is awaiting super-admin approval",
     "ota.checking":  "Checking for updates...",
