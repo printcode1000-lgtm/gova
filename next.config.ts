@@ -59,9 +59,11 @@ const nextConfig: NextConfig = {
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
           {
+            // Keep in sync with ALLOWED_REQUEST_HEADERS in src/proxy.ts,
+            // which overrides this for /api/*.
             key: 'Access-Control-Allow-Headers',
             value:
-              'Content-Type, Authorization, X-Asol-Session-Token, X-Asol-Trace-Id',
+              'Content-Type, Authorization, Accept, X-Asol-Session-Token, X-Asol-Trace-Id',
           },
         ],
       },

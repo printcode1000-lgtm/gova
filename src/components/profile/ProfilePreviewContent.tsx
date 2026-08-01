@@ -34,10 +34,7 @@ import type { StoreDetailsData } from "@/features/profile/entities/store-details
 import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
 import { ProfileProductsPreview } from "./ProfileProductsPreview";
-import {
-  ProfileFulfillmentPreviewCard,
-  ProfilePreviewMetrics,
-} from "./ProfilePreviewInformation";
+import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
 
 const PROFILE_SHARE_ORIGIN = "https://gova-swart.vercel.app/";
 
@@ -268,13 +265,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         </section>
       ) : null}
 
-      {!loading.details && !loading.fulfillment ? (
-        <ProfilePreviewMetrics
-          locale={locale}
-          details={storeDetails}
-          fulfillment={fulfillment}
-        />
-      ) : null}
+
 
       {previewUid ? (
         <SellerDiscountsPreview sellerUid={previewUid} locale={locale} />
