@@ -13,7 +13,12 @@ const tempSrcDir = path.join(tempBuildDir, "src");
 const tempOutDir = path.join(tempBuildDir, "out");
 const rootOutDir = path.join(rootDir, "out");
 const rootPublicDir = path.join(rootDir, "public");
-const nextBinary = path.join(rootDir, "node_modules", ".bin", "next.cmd");
+const nextBinary = path.join(
+  rootDir,
+  "node_modules",
+  ".bin",
+  process.platform === "win32" ? "next.cmd" : "next",
+);
 
 const appInitCommand = "npm run app:init";
 const architectureCheckCommand = "npm run architecture:check";

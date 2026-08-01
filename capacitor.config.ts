@@ -20,7 +20,7 @@ const config: CapacitorConfig = {
   },
   plugins: {
     PushNotifications: {
-      presentationOptions: ["alert", "sound"],
+      presentationOptions: ["badge", "sound", "banner", "list"],
     },
   },
   server: liveReloadUrl
