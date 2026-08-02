@@ -1,5 +1,5 @@
-import { SuperAdminOtaReleasesPage } from "@/components/super-admin/SuperAdminOtaReleasesPage";
+import { redirect } from "next/navigation";
 
 export default function OtaReleasesAdminPage() {
-  return <SuperAdminOtaReleasesPage />;
+  redirect("/super-admin/google-play-store-assets?tab=ota-releases");
 }

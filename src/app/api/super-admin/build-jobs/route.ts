@@ -7,7 +7,8 @@ export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/super-admin/build-jobs", async () => {
     try {
       assertSuperAdminRequest(request);
-      return apiSuccess(await listBuildJobs());
+      const params = new URL(request.url).searchParams;
+      return apiSuccess(await listBuildJobs(Number(params.get("page") || 1), Number(params.get("pageSize") || 20)));
     } catch (error) {
       return mapServiceError(error);
     }

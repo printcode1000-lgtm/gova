@@ -1,30 +1,38 @@
-# Google Play Store Assets Admin
+# Unified Super-Admin Release Console
 
-لوحة `/super-admin/google-play-store-assets` أصبحت مركز إصدار كامل للسوبر أدمن في بيئة التطوير فقط. الصفحة مقسمة إلى خمس تبويبات: نظرة عامة، النصوص، الصور، البناء والنشر، والمهام والسجل.
+The development-only release console is available at `/super-admin/google-play-store-assets`. Its state is URL-addressable with `?tab=<id>`. The former Google Play and OTA pages redirect to their matching tabs.
 
-## Overview
+## Tabs
 
-تعرض الحزمة `hgh.asol.app`، اللغة الافتراضية، حالة حارس التطوير، مصدر اعتماد Google Play، آخر قراءة، المسارات النشطة، وإصدار OTA الحالي إن كان معروفا.
+1. `overview`: package, language, environment guard, credentials source, live OTA version, tracks, and build lock state.
+2. `store-text`: store details and localized listings with a required pending-diff acknowledgement.
+3. `store-images`: validated image uploads, galleries, deletion, backups, and restore.
+4. `play-console`: read-only Android Publisher endpoints, configuration status, tracks, listings, reviews, products, APKs, and bundles.
+5. `play-tracks`: release status, staged rollout, changelogs, promotion, and R8 mapping upload.
+6. `build-publish`: the validated command catalog and command-specific operational documentation.
+7. `jobs`: persisted job history, bounded streaming logs, cancellation, and changed artifacts.
+8. `bundle-analysis`: APK/AAB composition, device-delivery estimates, R8 provenance, and comparisons.
+9. `ota-releases`: approval, revocation, rollout, download testing, manifests, file changes, adoption, and audit history.
 
-## Text And Listings
+## Safety Model
 
-النصوص تدعم تفاصيل المتجر واللغات المتعددة. قبل الاعتماد تظهر Diff بين الحالة الحالية والتعديلات، ويجب تأكيد المراجعة قبل الحفظ. كل عملية حفظ تنشئ نسخة JSON احتياطية في `.backups/google-play-store-assets`.
+- The page and every API route require a super-admin session and the server-side development guard.
+- Client requests use `asolApi`; credentials and private keys never reach the browser.
+- Live commands require their exact confirmation phrase and readiness settings.
+- Native, Fastlane, and OTA jobs use a persisted exclusive lock. Cancellation verifies that the process tree has stopped before releasing it.
+- Store mutations use Google Play edits and create JSON backups under `.backups/google-play-store-assets` before commit.
 
-## Images
+## Store Image Validation
 
-الرفع يدعم ملفات متعددة للقطات الشاشة، مع تحقق على العميل والخادم:
+- Icon: PNG, exactly 512 x 512, at most 1 MB.
+- Feature graphic: PNG or JPEG, exactly 1024 x 500, at most 15 MB.
+- TV banner: PNG or JPEG, exactly 1280 x 720, at most 15 MB.
+- Screenshots: PNG or JPEG, each side 320 to 3840 pixels, ratio at most 2:1, at most eight images per type, and at most 8 MB each.
 
-- Icon: PNG فقط، 512x512، وحجم لا يتجاوز 1024KB.
-- Feature graphic: 1024x500.
-- Phone / 7 inch / 10 inch screenshots: كل ضلع بين 320 و3840، والنسبة القصوى 2:1، والحد الأقصى 8 صور لكل نوع.
-- PNG أو JPEG فقط.
+## Publisher Snapshot
 
-رسائل الرفض تعرض القيمة الفعلية والمطلوبة بالعربية والإنجليزية.
+The read-only Publisher tab keeps endpoint failures isolated. A denied reviews or subscriptions permission is shown on that endpoint without hiding successful track, listing, APK, or bundle data. Service-account secrets are redacted server-side.
 
-## Tracks And Release Metadata
+## Bundle Analysis
 
-الخدمة تدعم قراءة وتحديث مسارات `internal`, `alpha`, `beta`, و`production`، وإرفاق changelogs حسب اللغة، وإدارة staged rollout عبر `userFraction` وحالات `halted` و`completed`، وترقية `versionCode` من مسار إلى آخر بدون إعادة بناء.
-
-## Backups And Restore
-
-يمكن استعراض نسخ `.backups/google-play-store-assets` واستعادة نسخة مختارة. الاستعادة تمر عبر نفس دورة `edit -> commit` في Google Play.
+The analyzer reads the ZIP central directory once, caches by path metadata and SHA-256, rejects unclassified known-format entries, and reconciles compressed entries plus header and directory overhead against archive size. R8 reports appear only beside a matching optimized release artifact within the provenance time window. Delivery size remains explicitly estimated because Google Play can split and recompress by ABI, density, and language.

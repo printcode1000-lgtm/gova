@@ -46,10 +46,16 @@ android {
             minifyEnabled false
             shrinkResources false
             versionNameSuffix "-nor8"
-            if (hasReleaseSigning) {
-                signingConfig signingConfigs.release
-            }
         }
+    }
+}
+
+gradle.taskGraph.whenReady { graph ->
+    def noR8TaskRequested = graph.allTasks.any { task ->
+        task.path == ':app:bundleReleaseNoR8' || task.path == ':app:assembleReleaseNoR8'
+    }
+    if (noR8TaskRequested && project.findProperty('asol.allowNoR8') != 'true') {
+        throw new GradleException('ReleaseNoR8 is diagnostic-only. Re-run with -Pasol.allowNoR8=true.')
     }
 }
 

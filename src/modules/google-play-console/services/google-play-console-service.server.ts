@@ -13,6 +13,7 @@ import type {
   GooglePlayConsoleSnapshot,
 } from "../domain/types";
 import { resolveGooglePlayCredentials } from "./google-play-credentials.server";
+import { withGooglePlayEditLock } from "./google-play-edit-lock.server";
 
 const ANDROID_PUBLISHER_SCOPE =
   "https://www.googleapis.com/auth/androidpublisher";
@@ -50,6 +51,10 @@ function countReleases(value: unknown): number {
 
 export class GooglePlayConsoleService {
   async snapshot(): Promise<GooglePlayConsoleSnapshot> {
+    return withGooglePlayEditLock(() => this.snapshotWithExclusiveEdit());
+  }
+
+  private async snapshotWithExclusiveEdit(): Promise<GooglePlayConsoleSnapshot> {
     assertGooglePlayConsoleAllowed();
 
     const config = await this.readConfigStatus();

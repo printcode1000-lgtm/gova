@@ -77,3 +77,14 @@ export function resolveGooglePlayServiceAccountEnvironment() {
 export function googlePlayFastlaneEnvironment() {
   return { ...process.env };
 }
+
+export function resolveNpmCliPath(): string {
+  return (
+    process.env.npm_execpath?.trim() ||
+    path.join(path.dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js")
+  );
+}
+
+export function releaseCommandEnvironment(names: readonly string[]): Record<string, string> {
+  return Object.fromEntries(names.map((name) => [name, process.env[name]?.trim() ?? ""]));
+}

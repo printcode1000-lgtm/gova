@@ -45,6 +45,15 @@ def google_play_key_options
   { json_key: google_play_key_path }
 end
 
+def localized_release_changelog(options)
+  encoded = options[:release_notes_b64].to_s
+  return nil if encoded.empty?
+  notes = JSON.parse(Base64.urlsafe_decode64(encoded))
+  notes.sort.map { |language, text| "[#{language}] #{text}" }.join("\n\n")
+rescue JSON::ParserError, ArgumentError => error
+  UI.user_error!("Invalid localized release notes: #{error.message}")
+end
+
 def android_keystore_path
   ENV.fetch("ASOL_ANDROID_KEYSTORE_FILE", "assets/google-play/k.jks")
 end
@@ -172,7 +181,8 @@ platform :android do
     gradle(
       project_dir: "android",
       task: "bundle",
-      build_type: "ReleaseNoR8"
+      build_type: "ReleaseNoR8",
+      properties: { "asol.allowNoR8" => "true" }
     )
   end
 
@@ -184,7 +194,8 @@ platform :android do
       gradle(
         project_dir: "android",
         task: "bundle",
-        build_type: "ReleaseNoR8"
+        build_type: "ReleaseNoR8",
+        properties: { "asol.allowNoR8" => "true" }
       )
     end
   end
@@ -196,7 +207,8 @@ platform :android do
     gradle(
       project_dir: "android",
       task: "assemble",
-      build_type: "ReleaseNoR8"
+      build_type: "ReleaseNoR8",
+      properties: { "asol.allowNoR8" => "true" }
     )
   end
 
@@ -208,16 +220,19 @@ platform :android do
       gradle(
         project_dir: "android",
         task: "assemble",
-        build_type: "ReleaseNoR8"
+        build_type: "ReleaseNoR8",
+        properties: { "asol.allowNoR8" => "true" }
       )
     end
   end
 
   desc "Upload Android bundle to Google Play internal track"
-  lane :internal do
+  lane :internal do |options|
     build
     upload_to_play_store(
-      track: ENV.fetch("GOOGLE_PLAY_TRACK", "internal"),
+      track: options[:track] || ENV.fetch("GOOGLE_PLAY_TRACK", "internal"),
+      rollout: options[:rollout],
+      changelog: localized_release_changelog(options),
       **google_play_key_options,
       package_name: ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"),
       aab: "android/app/build/outputs/bundle/release/app-release.aab",
@@ -229,10 +244,12 @@ platform :android do
   end
 
   desc "Upload Android bundle to Google Play production track"
-  lane :production do
+  lane :production do |options|
     build
     upload_to_play_store(
       track: "production",
+      rollout: options[:rollout],
+      changelog: localized_release_changelog(options),
       **google_play_key_options,
       package_name: ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"),
       aab: "android/app/build/outputs/bundle/release/app-release.aab",

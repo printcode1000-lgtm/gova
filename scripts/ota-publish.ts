@@ -6,6 +6,7 @@ import { zipSync } from "fflate";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { compareOtaCanonicalStrings } from "../src/features/ota/utils/ota-canonical-order";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { assertReleaseStaticBundle } from "./assert-release-static-bundle";
 import {
   formatReport,
   inspectNativeCompatibility,
@@ -49,9 +50,10 @@ const LOCAL_MANIFEST_FILE = "asol-web-manifest.json";
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const mandatory = args.includes("--mandatory");
-const notesIndex = args.indexOf("--notes");
-const notesOverride =
-  notesIndex >= 0 && args[notesIndex + 1] ? args[notesIndex + 1] : undefined;
+const notesArguments = args.filter((argument) => argument.startsWith("--notes"));
+if (args.includes("--notes") || notesArguments.length > 1) throw new Error("Release notes must use exactly one --notes=<value> argument.");
+const notesOverride = notesArguments[0]?.slice("--notes=".length);
+if (notesArguments.length && (!notesOverride?.trim() || notesOverride.startsWith("--"))) throw new Error("Release notes must be non-empty and cannot begin with --.");
 
 type CollectedFile = {
   bytes: Buffer;
@@ -237,21 +239,15 @@ async function main(): Promise<void> {
     NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
   };
 
+  const existingManifestPath = path.resolve("out", LOCAL_MANIFEST_FILE);
+  if (existsSync(existingManifestPath)) assertReleaseStaticBundle(existingManifestPath);
+
   console.log(`R2 current version: ${previousManifest?.version ?? "none"}`);
   console.log(`Automatically selected version: ${version}`);
   console.log(`Release notes: ${notes}`);
   execSync("npm run build:static", { stdio: "inherit", env: buildEnv });
   const localManifestPath = path.resolve("out", LOCAL_MANIFEST_FILE);
-  if (existsSync(localManifestPath)) {
-    const localManifest = JSON.parse(readFileSync(localManifestPath, "utf8")) as {
-      diagnostic?: boolean;
-    };
-    if (localManifest.diagnostic) {
-      throw new Error(
-        "Refusing to publish OTA from a diagnostic static build. Run npm run build:static without --diagnostic.",
-      );
-    }
-  }
+  assertReleaseStaticBundle(localManifestPath);
 
   const files = collectFiles(path.resolve("out"));
   const requiredCapabilities = scanBuiltCapabilities(files);

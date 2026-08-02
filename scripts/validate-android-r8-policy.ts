@@ -1,149 +1,103 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
-const appBuildGradlePath = path.resolve("android", "app", "build.gradle");
-const gradlePropertiesPath = path.resolve("android", "gradle.properties");
-const appRulesPath = path.resolve("android", "app", "proguard-rules.pro");
-const capacitorRulesPath = path.resolve(
-  "node_modules",
-  "@capacitor",
-  "android",
-  "capacitor",
-  "proguard-rules.pro",
-);
-const fastfilePath = path.resolve("fastlane", "Fastfile");
-
-function readRequired(filePath: string): string {
-  if (!existsSync(filePath)) {
-    throw new Error(`Required R8 policy file is missing: ${filePath}`);
-  }
-  return readFileSync(filePath, "utf8");
+export interface AndroidR8PolicySources {
+  buildGradle: string;
+  properties: string;
+  appRules: string;
+  capacitorRules: string;
+  fastfile: string;
 }
 
 function requireMatch(source: string, pattern: RegExp, message: string): void {
   if (!pattern.test(source)) throw new Error(message);
 }
 
-function findGradleBlock(source: string, blockName: string, startAt = 0): string | null {
+export function findGradleBlock(source: string, blockName: string, startAt = 0): string | null {
   const pattern = new RegExp(`${blockName}\\s*\\{`, "g");
   pattern.lastIndex = startAt;
   const match = pattern.exec(source);
   if (!match) return null;
-
   let depth = 1;
   const bodyStart = pattern.lastIndex;
   for (let index = bodyStart; index < source.length; index += 1) {
-    const char = source[index];
-    if (char === "{") depth += 1;
-    if (char === "}") depth -= 1;
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
     if (depth === 0) return source.slice(bodyStart, index);
   }
   return null;
 }
 
-const buildGradle = readRequired(appBuildGradlePath);
-const properties = readRequired(gradlePropertiesPath);
-const appRules = readRequired(appRulesPath);
-const capacitorRules = readRequired(capacitorRulesPath);
-const fastfile = readRequired(fastfilePath);
-const buildTypesBlock = findGradleBlock(buildGradle, "buildTypes");
-const releaseBlock = buildTypesBlock ? findGradleBlock(buildTypesBlock, "release") : null;
-const releaseNoR8Block = buildTypesBlock ? findGradleBlock(buildTypesBlock, "releaseNoR8") : null;
-
-if (!releaseBlock) {
-  throw new Error("android/app/build.gradle must define a release build type with R8 settings.");
+export function findFastlaneLanes(source: string): Array<{ name: string; body: string }> {
+  const lanes: Array<{ name: string; body: string }> = [];
+  const lanePattern = /lane\s+:(\w+)\s+do\b/g;
+  let match: RegExpExecArray | null;
+  while ((match = lanePattern.exec(source))) {
+    let depth = 1;
+    const bodyStart = lanePattern.lastIndex;
+    const tokens = /\b(do|end)\b/g;
+    tokens.lastIndex = bodyStart;
+    let token: RegExpExecArray | null;
+    while ((token = tokens.exec(source))) {
+      if (token[1] === "do") depth += 1;
+      else depth -= 1;
+      if (depth === 0) {
+        lanes.push({ name: match[1]!, body: source.slice(bodyStart, token.index) });
+        lanePattern.lastIndex = tokens.lastIndex;
+        break;
+      }
+    }
+    if (depth !== 0) throw new Error(`Fastlane lane ${match[1]} has an unmatched do/end block.`);
+  }
+  return lanes;
 }
 
-requireMatch(
-  releaseBlock,
-  /minifyEnabled\s*(?:=\s*)?true/,
-  "The Android release build must enable R8 with minifyEnabled true.",
-);
-requireMatch(
-  releaseBlock,
-  /shrinkResources\s*(?:=\s*)?true/,
-  "The Android release build must enable shrinkResources true.",
-);
-requireMatch(
-  releaseBlock,
-  /getDefaultProguardFile\(['"]proguard-android-optimize\.txt['"]\)/,
-  "The Android release build must use proguard-android-optimize.txt.",
-);
-requireMatch(
-  releaseBlock,
-  /['"]proguard-rules\.pro['"]/,
-  "The Android release build must include the app ProGuard rules.",
-);
-
-if (releaseNoR8Block) {
-  requireMatch(
-    releaseNoR8Block,
-    /versionNameSuffix\s*(?:=)?\s*['"][^'"]*-nor8[^'"]*['"]/,
-    "releaseNoR8 must declare a versionNameSuffix containing -nor8.",
-  );
-  if (/minifyEnabled\s*(?:=\s*)?true/.test(releaseNoR8Block)) {
-    throw new Error("releaseNoR8 must not set minifyEnabled true.");
+export function validateAndroidR8PolicySources(sources: AndroidR8PolicySources): void {
+  const buildTypesBlock = findGradleBlock(sources.buildGradle, "buildTypes");
+  const releaseBlock = buildTypesBlock ? findGradleBlock(buildTypesBlock, "release") : null;
+  const releaseNoR8Block = buildTypesBlock ? findGradleBlock(buildTypesBlock, "releaseNoR8") : null;
+  if (!releaseBlock) throw new Error("android/app/build.gradle must define a release build type with R8 settings.");
+  requireMatch(releaseBlock, /minifyEnabled\s*(?:=\s*)?true/, "The Android release build must enable R8 with minifyEnabled true.");
+  requireMatch(releaseBlock, /shrinkResources\s*(?:=\s*)?true/, "The Android release build must enable shrinkResources true.");
+  requireMatch(releaseBlock, /getDefaultProguardFile\(['\"]proguard-android-optimize\.txt['\"]\)/, "The Android release build must use proguard-android-optimize.txt.");
+  requireMatch(releaseBlock, /['\"]proguard-rules\.pro['\"]/, "The Android release build must include the app ProGuard rules.");
+  if (releaseNoR8Block) {
+    requireMatch(releaseNoR8Block, /versionNameSuffix\s*(?:=)?\s*['\"][^'\"]*-nor8[^'\"]*['\"]/, "releaseNoR8 must declare a versionNameSuffix containing -nor8.");
+    if (/minifyEnabled\s*(?:=\s*)?true/.test(releaseNoR8Block)) throw new Error("releaseNoR8 must not set minifyEnabled true.");
+    requireMatch(sources.buildGradle, /asol\.allowNoR8/, "releaseNoR8 assemble/bundle tasks must be protected by the asol.allowNoR8 Gradle property.");
+  }
+  for (const lane of findFastlaneLanes(sources.fastfile)) {
+    if (/upload_to_play_store/.test(lane.body) && /ReleaseNoR8|releaseNoR8|no_r8/.test(lane.body)) throw new Error(`Publishing lane ${lane.name} must not reference releaseNoR8/no_r8 outputs.`);
+  }
+  if (/android\.enableR8\.fullMode\s*=\s*false/.test(sources.properties)) throw new Error("R8 full mode must not be disabled.");
+  if (/android\.r8\.strictFullModeForKeepRules\s*=\s*false/.test(sources.properties)) throw new Error("Strict R8 keep-rule semantics must not be disabled.");
+  if (/android\.r8\.optimizedResourceShrinking\s*=\s*false/.test(sources.properties)) throw new Error("Optimized R8 resource shrinking must not be disabled.");
+  requireMatch(sources.appRules, /@android\.webkit\.JavascriptInterface\s+<methods>;/, "App R8 rules must preserve WebView JavaScript interface methods.");
+  requireMatch(sources.appRules, /RuntimeVisibleAnnotations/, "App R8 rules must preserve runtime-visible annotations.");
+  requireMatch(sources.capacitorRules, /extends\s+com\.getcapacitor\.Plugin/, "Installed Capacitor consumer rules must preserve Plugin subclasses.");
+  requireMatch(sources.capacitorRules, /@com\.getcapacitor\.PluginMethod/, "Installed Capacitor consumer rules must preserve PluginMethod entry points.");
+  for (const forbidden of [/-dontshrink\b/, /-dontoptimize\b/, /-dontobfuscate\b/, /-keep\s+class\s+\*\*/]) {
+    if (forbidden.test(sources.appRules)) throw new Error(`App R8 rules contain an optimization-blocking rule: ${forbidden.source}`);
   }
 }
 
-const androidLanePattern = /lane\s+:(\w+)\s+do([\s\S]*?)\n\s*end/g;
-let laneMatch: RegExpExecArray | null;
-while ((laneMatch = androidLanePattern.exec(fastfile))) {
-  const [, laneName, laneBody = ""] = laneMatch;
-  if (
-    /upload_to_play_store/.test(laneBody) &&
-    /ReleaseNoR8|releaseNoR8|no_r8/.test(laneBody)
-  ) {
-    throw new Error(
-      `Publishing lane ${laneName} must not reference releaseNoR8/no_r8 outputs.`,
-    );
-  }
+function readRequired(filePath: string): string {
+  if (!existsSync(filePath)) throw new Error(`Required R8 policy file is missing: ${filePath}`);
+  return readFileSync(filePath, "utf8");
 }
 
-if (/android\.enableR8\.fullMode\s*=\s*false/.test(properties)) {
-  throw new Error("R8 full mode must not be disabled.");
-}
-if (/android\.r8\.strictFullModeForKeepRules\s*=\s*false/.test(properties)) {
-  throw new Error("Strict R8 keep-rule semantics must not be disabled.");
-}
-if (/android\.r8\.optimizedResourceShrinking\s*=\s*false/.test(properties)) {
-  throw new Error("Optimized R8 resource shrinking must not be disabled.");
-}
-
-requireMatch(
-  appRules,
-  /@android\.webkit\.JavascriptInterface\s+<methods>;/,
-  "App R8 rules must preserve WebView JavaScript interface methods.",
-);
-requireMatch(
-  appRules,
-  /RuntimeVisibleAnnotations/,
-  "App R8 rules must preserve runtime-visible annotations.",
-);
-requireMatch(
-  capacitorRules,
-  /extends\s+com\.getcapacitor\.Plugin/,
-  "Installed Capacitor consumer rules must preserve Plugin subclasses.",
-);
-requireMatch(
-  capacitorRules,
-  /@com\.getcapacitor\.PluginMethod/,
-  "Installed Capacitor consumer rules must preserve PluginMethod entry points.",
-);
-
-for (const forbidden of [
-  /-dontshrink\b/,
-  /-dontoptimize\b/,
-  /-dontobfuscate\b/,
-  /-keep\s+class\s+\*\*/,
-]) {
-  if (forbidden.test(appRules)) {
-    throw new Error(
-      `App R8 rules contain an optimization-blocking rule: ${forbidden.source}`,
-    );
-  }
+export function validateAndroidR8Policy(root = process.cwd()): void {
+  validateAndroidR8PolicySources({
+    buildGradle: readRequired(path.resolve(root, "android", "app", "build.gradle")),
+    properties: readRequired(path.resolve(root, "android", "gradle.properties")),
+    appRules: readRequired(path.resolve(root, "android", "app", "proguard-rules.pro")),
+    capacitorRules: readRequired(path.resolve(root, "node_modules", "@capacitor", "android", "capacitor", "proguard-rules.pro")),
+    fastfile: readRequired(path.resolve(root, "fastlane", "Fastfile")),
+  });
 }
 
-console.log(
-  "Android R8 policy verified: release code/resource optimization is enabled with Capacitor reflection safeguards and no broad optimization blockers.",
-);
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  validateAndroidR8Policy();
+  console.log("Android R8 policy verified: release code/resource optimization is enabled with Capacitor reflection safeguards and no broad optimization blockers.");
+}

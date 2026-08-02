@@ -2,7 +2,6 @@
 
 import {
   ChevronDown,
-  CloudDownload,
   DatabaseBackup,
   DatabaseZap,
   Edit,
@@ -16,7 +15,6 @@ import {
   Settings,
   ShieldCheck,
   KeyRound,
-  ShoppingBag,
   Sliders,
   Sparkles,
   TrendingUp,
@@ -282,7 +280,6 @@ export const AppSidebar = React.memo(function AppSidebar({
     if (
       pathname.includes("/data-health") ||
       pathname.includes("/dev-cloud-backup") ||
-      pathname.includes("/google-play-console") ||
       pathname.includes("/google-play-store-assets")
     ) {
       setSuperAdminGroupsOpen((current) => ({ ...current, data: true }));
@@ -418,24 +415,14 @@ export const AppSidebar = React.memo(function AppSidebar({
                     نسخ سحابة التطوير
                   </Link>
                   {showLocalDevelopmentTools ? (
-                    <>
-                      <Link
-                        href="/super-admin/google-play-console"
-                        onClick={onClose}
-                        className={itemClass}
-                      >
-                        <ShoppingBag className={sidebarSmallIconClass} />
-                        Google Play Console
-                      </Link>
-                      <Link
-                        href="/super-admin/google-play-store-assets"
-                        onClick={onClose}
-                        className={itemClass}
-                      >
-                        <ImageIcon className={sidebarSmallIconClass} />
-                        بيانات متجر Google Play
-                      </Link>
-                    </>
+                    <Link
+                      href="/super-admin/google-play-store-assets"
+                      onClick={onClose}
+                      className={itemClass}
+                    >
+                      <ImageIcon className={sidebarSmallIconClass} />
+                      {t("releaseConsole.title")}
+                    </Link>
                   ) : null}
                 </div>
               )}
@@ -512,14 +499,6 @@ export const AppSidebar = React.memo(function AppSidebar({
                   >
                     <Users className={sidebarSmallIconClass} />
                     بحث المستخدمين
-                  </Link>
-                  <Link
-                    href="/super-admin/ota-releases"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <CloudDownload className={sidebarSmallIconClass} />
-                    {t("sidebar.otaReleases")}
                   </Link>
                 </div>
               )}

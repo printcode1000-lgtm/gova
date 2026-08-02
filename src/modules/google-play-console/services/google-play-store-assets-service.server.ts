@@ -31,6 +31,7 @@ import {
 } from "../domain/store-assets-types";
 import { readImageDimensions, validateGooglePlayImage } from "../domain/image-validation";
 import { resolveGooglePlayCredentials } from "./google-play-credentials.server";
+import { withGooglePlayEditLock } from "./google-play-edit-lock.server";
 
 const ANDROID_PUBLISHER_SCOPE =
   "https://www.googleapis.com/auth/androidpublisher";
@@ -121,6 +122,7 @@ export class GooglePlayStoreAssetsService {
         size: input.buffer.byteLength,
         dimensions,
         existingCount: currentImages.length,
+        bytes: input.buffer,
       });
       if (!validation.ok) throw new Error(validation.message);
       const before = await this.readSnapshot(client, packageName, editId);
@@ -291,6 +293,17 @@ export class GooglePlayStoreAssetsService {
       editId: string;
     }) => Promise<T>,
     deleteAfter = true,
+  ): Promise<T> {
+    return withGooglePlayEditLock(() => this.withExclusiveEdit(operation, deleteAfter));
+  }
+
+  private async withExclusiveEdit<T>(
+    operation: (context: {
+      client: Awaited<ReturnType<GoogleAuth["getClient"]>>;
+      packageName: string;
+      editId: string;
+    }) => Promise<T>,
+    deleteAfter: boolean,
   ): Promise<T> {
     assertGooglePlayConsoleAllowed();
     const config = resolveGooglePlayConsoleConfig();

@@ -4,149 +4,312 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { googlePlayFastlaneEnvironment } from "@/modules/google-play-console/domain/development-guard.server";
-import { assertGooglePlayConsoleAllowed } from "@/modules/google-play-console/domain/development-guard.server";
+import {
+  assertGooglePlayConsoleAllowed,
+  googlePlayFastlaneEnvironment,
+  releaseCommandEnvironment,
+  resolveNpmCliPath,
+} from "@/modules/google-play-console/domain/development-guard.server";
 
-import { BUILD_COMMAND_CATALOG, findBuildCommand } from "../domain/build-command-catalog";
-import type { BuildCommandCatalogEntry } from "../domain/build-command-catalog";
-import type { BuildJobRecord, StartBuildJobInput } from "../domain/build-job-types";
-import { scanBuildJobArtifacts } from "./build-job-artifacts.server";
+import { BUILD_COMMAND_CATALOG, findBuildCommand, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
+import { assertBuildJobTransition, type BuildCommandReadiness, type BuildJobRecord, type PaginatedBuildJobs, type StartBuildJobInput } from "../domain/build-job-types";
+import { changedBuildArtifacts, snapshotBuildOutputs } from "./build-job-artifacts.server";
 
 const JOB_DIR = path.join(process.cwd(), ".backups", "build-jobs");
+const LOCK_PATH = path.join(JOB_DIR, "exclusive.lock");
+const JOB_ID_PATTERN = /^job-\d+-[a-z0-9]{6}$/;
+const JOB_RETENTION = 100;
+const LOG_CHUNK_BYTES = 256 * 1024;
 const liveProcesses = new Map<string, ChildProcessWithoutNullStreams>();
-let activeExclusiveJobId: string | null = null;
+let reconciliation: Promise<void> | null = null;
 
-function now() {
-  return new Date().toISOString();
+type LockRecord = { jobId: string; pid: number; commandId: string; startedAt: string };
+
+export function trackBuildJobProcess(jobId: string, child: ChildProcessWithoutNullStreams): void {
+  assertBuildJobId(jobId);
+  liveProcesses.set(jobId, child);
 }
 
-function isExclusive(command: BuildCommandCatalogEntry) {
-  return command.category === "native-android" || command.category === "ota" || command.category === "fastlane";
+export function assertBuildJobId(jobId: string): void {
+  if (!JOB_ID_PATTERN.test(jobId)) throw new Error("releaseJobIdInvalid");
 }
 
-async function writeRecord(record: BuildJobRecord) {
+export function isProcessAlive(pid: number): boolean {
+  if (!Number.isSafeInteger(pid) || pid <= 0) return false;
+  try { process.kill(pid, 0); return true; } catch { return false; }
+}
+
+export async function acquireBuildJobLock(lock: LockRecord, lockPath = LOCK_PATH, alive = isProcessAlive): Promise<void> {
+  await fs.mkdir(path.dirname(lockPath), { recursive: true });
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const handle = await fs.open(lockPath, "wx");
+      try { await handle.writeFile(JSON.stringify(lock), "utf8"); } finally { await handle.close(); }
+      return;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+      const current = await readLock(lockPath);
+      if (current && alive(current.pid)) throw new Error(`releaseCommandSingleFlightActive:${current.jobId}`);
+      await fs.appendFile(path.join(path.dirname(lockPath), "reconciliation.log"), `${new Date().toISOString()} reclaimed stale lock ${current?.jobId ?? "invalid"}\n`);
+      await removeIfExists(lockPath);
+    }
+  }
+  throw new Error("releaseCommandSingleFlightActive");
+}
+
+export async function releaseBuildJobLock(jobId: string, lockPath = LOCK_PATH): Promise<void> {
+  const current = await readLock(lockPath);
+  if (current?.jobId === jobId) await removeIfExists(lockPath);
+}
+
+async function updateLockPid(jobId: string, pid: number): Promise<void> {
+  const current = await readLock(LOCK_PATH);
+  if (current?.jobId === jobId) {
+    const temporaryPath = `${LOCK_PATH}.${jobId}.tmp`;
+    await fs.writeFile(temporaryPath, JSON.stringify({ ...current, pid }), "utf8");
+    await fs.rename(temporaryPath, LOCK_PATH);
+  }
+}
+
+async function readLock(lockPath: string): Promise<LockRecord | null> {
+  try { return JSON.parse(await fs.readFile(lockPath, "utf8")) as LockRecord; } catch { return null; }
+}
+
+async function writeRecord(record: BuildJobRecord): Promise<void> {
   await fs.mkdir(JOB_DIR, { recursive: true });
-  await fs.writeFile(path.join(JOB_DIR, `${record.id}.json`), JSON.stringify(record, null, 2), "utf8");
+  await fs.writeFile(recordPath(record.id), JSON.stringify(record, null, 2), "utf8");
 }
 
-async function readRecord(jobId: string): Promise<BuildJobRecord> {
-  return JSON.parse(await fs.readFile(path.join(JOB_DIR, `${jobId}.json`), "utf8")) as BuildJobRecord;
+export async function readBuildJobRecord(jobId: string): Promise<BuildJobRecord> {
+  assertBuildJobId(jobId);
+  try { return JSON.parse(await fs.readFile(recordPath(jobId), "utf8")) as BuildJobRecord; }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") throw new Error("releaseJobNotFound"); throw error; }
 }
 
-async function appendLog(jobId: string, chunk: string | Buffer) {
+function recordPath(jobId: string): string { return path.join(JOB_DIR, `${jobId}.json`); }
+function logPath(jobId: string): string { return path.join(JOB_DIR, `${jobId}.log`); }
+function now(): string { return new Date().toISOString(); }
+
+async function appendLog(jobId: string, chunk: string | Buffer): Promise<void> {
+  assertBuildJobId(jobId);
   await fs.mkdir(JOB_DIR, { recursive: true });
-  await fs.appendFile(path.join(JOB_DIR, `${jobId}.log`), chunk);
+  await fs.appendFile(logPath(jobId), chunk);
+}
+
+export function commandReadiness(command: BuildCommandCatalogEntry): BuildCommandReadiness {
+  const environment = releaseCommandEnvironment(command.requiredEnv);
+  const missingEnv = command.requiredEnv.filter((name) => !environment[name]);
+  return { commandId: command.id, ready: missingEnv.length === 0, missingEnv, reason: missingEnv.length ? "releaseCommandMissingEnvironment" : undefined };
+}
+
+export function assertCommandReadiness(command: BuildCommandCatalogEntry): void {
+  const readiness = commandReadiness(command);
+  if (!readiness.ready) throw new Error(`releaseCommandMissingEnvironment:${readiness.missingEnv.join(",")}`);
 }
 
 export async function startBuildJob(input: StartBuildJobInput): Promise<BuildJobRecord> {
   assertGooglePlayConsoleAllowed();
+  await ensureReconciled();
   const command = findBuildCommand(input.commandId);
   if (!command) throw new Error("releaseCommandUnknown");
-  if (command.danger === "publishes-live" && input.confirmationPhrase !== command.confirmationPhrase) {
-    throw new Error("releaseCommandConfirmationRequired");
+  assertCommandReadiness(command);
+  if (command.danger === "publishes-live" && input.confirmationPhrase !== command.confirmationPhrase) throw new Error("releaseCommandConfirmationRequired");
+  const parameterArgv = materializeBuildCommandParameters(command, input.parameters);
+  const id = `job-${Date.now()}-${Math.random().toString(36).slice(2, 8).padEnd(6, "0")}`;
+  if (command.exclusive) await acquireBuildJobLock({ jobId: id, pid: process.pid, commandId: command.id, startedAt: now() });
+  try {
+    const record: BuildJobRecord = {
+      id, commandId: command.id,
+      command: { id: command.id, script: command.script, argv: [...command.argv, ...parameterArgv], category: command.category, danger: command.danger },
+      status: "queued", queuedAt: now(), logPath: path.relative(process.cwd(), logPath(id)).replace(/\\/g, "/"),
+      artifactSnapshot: await snapshotBuildOutputs(),
+    };
+    await writeRecord(record);
+    void runJob(record, command).catch(async (error) => {
+      try {
+        const failed = await readBuildJobRecord(id);
+        if (failed.status === "queued" || failed.status === "running") {
+          setJobStatus(failed, "failed"); failed.error = error instanceof Error ? error.message : String(error); failed.finishedAt = now(); await writeRecord(failed);
+        }
+      } finally { if (command.exclusive) await releaseBuildJobLock(id); }
+    });
+    return record;
+  } catch (error) {
+    if (command.exclusive) await releaseBuildJobLock(id);
+    throw error;
   }
-  if (isExclusive(command) && activeExclusiveJobId) {
-    throw new Error(`releaseCommandSingleFlightActive:${activeExclusiveJobId}`);
-  }
-
-  const id = `job-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const record: BuildJobRecord = {
-    id,
-    commandId: command.id,
-    command: {
-      id: command.id,
-      script: command.script,
-      argv: [...command.argv, ...(input.extraArgs ?? [])],
-      category: command.category,
-      danger: command.danger,
-    },
-    status: "queued",
-    queuedAt: now(),
-    logPath: path.relative(process.cwd(), path.join(JOB_DIR, `${id}.log`)).replace(/\\/g, "/"),
-  };
-  await writeRecord(record);
-  void runJob(record, command, input.extraArgs ?? []);
-  return record;
 }
 
-export async function listBuildJobs(): Promise<{ catalog: typeof BUILD_COMMAND_CATALOG; jobs: BuildJobRecord[] }> {
+export async function listBuildJobs(page = 1, pageSize = 20): Promise<PaginatedBuildJobs> {
   assertGooglePlayConsoleAllowed();
-  await fs.mkdir(JOB_DIR, { recursive: true });
-  const files = (await fs.readdir(JOB_DIR)).filter((file) => file.endsWith(".json"));
-  const jobs = await Promise.all(files.map((file) => fs.readFile(path.join(JOB_DIR, file), "utf8").then((text) => JSON.parse(text) as BuildJobRecord)));
-  return { catalog: BUILD_COMMAND_CATALOG, jobs: jobs.sort((left, right) => right.queuedAt.localeCompare(left.queuedAt)) };
+  await ensureReconciled();
+  const safePage = Math.max(1, Math.floor(page));
+  const safeSize = Math.max(1, Math.min(50, Math.floor(pageSize)));
+  await pruneRecords();
+  const jobs = await readAllRecords();
+  const start = (safePage - 1) * safeSize;
+  return { jobs: jobs.slice(start, start + safeSize), page: safePage, pageSize: safeSize, total: jobs.length, hasMore: start + safeSize < jobs.length };
+}
+
+export async function buildCommandCatalogPayload(): Promise<{ catalog: readonly BuildCommandCatalogEntry[]; readiness: BuildCommandReadiness[] }> {
+  assertGooglePlayConsoleAllowed();
+  await ensureReconciled();
+  return { catalog: BUILD_COMMAND_CATALOG, readiness: BUILD_COMMAND_CATALOG.map(commandReadiness) };
 }
 
 export async function cancelBuildJob(jobId: string): Promise<BuildJobRecord> {
   assertGooglePlayConsoleAllowed();
-  const child = liveProcesses.get(jobId);
-  if (child?.pid) {
-    if (process.platform === "win32") {
-      spawn("taskkill", ["/pid", String(child.pid), "/T", "/F"]);
-    } else {
-      child.kill("SIGTERM");
-    }
+  assertBuildJobId(jobId);
+  const record = await readBuildJobRecord(jobId);
+  const pid = liveProcesses.get(jobId)?.pid ?? record.pid;
+  let killError: unknown;
+  try {
+    if (pid && isProcessAlive(pid)) await terminateProcessTree(pid);
+  } catch (error) { killError = error; }
+  const stillAlive = Boolean(pid && isProcessAlive(pid));
+  if (killError || stillAlive) {
+    record.error = `releaseCommandCancelFailed:${
+      killError instanceof Error ? killError.message : stillAlive ? "processStillRunning" : String(killError)
+    }`;
+    await writeRecord(record);
+    return record;
   }
-  const record = await readRecord(jobId);
-  record.status = "cancelled";
+  if (record.status === "queued" || record.status === "running") setJobStatus(record, "cancelled");
   record.finishedAt = now();
+  liveProcesses.delete(jobId);
   await writeRecord(record);
+  await releaseBuildJobLock(jobId);
   return record;
 }
 
-export async function readBuildJobLog(jobId: string, offset = 0) {
+export async function terminateProcessTree(
+  pid: number,
+  platform: NodeJS.Platform = process.platform,
+  alive: (candidate: number) => boolean = isProcessAlive,
+): Promise<void> {
+  if (platform === "win32") {
+    await new Promise<void>((resolve, reject) => {
+      const killer = spawn("taskkill.exe", ["/pid", String(pid), "/T", "/F"], { shell: false });
+      killer.once("error", reject);
+      killer.once("close", (code) => code === 0 ? resolve() : reject(new Error(`taskkill:${code}`)));
+    });
+  } else {
+    process.kill(pid, "SIGTERM");
+  }
+  for (let attempt = 0; attempt < 40 && alive(pid); attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  if (alive(pid)) throw new Error("processStillRunning");
+}
+
+export async function readBuildJobLog(
+  jobId: string,
+  offset = 0,
+): Promise<{ text: string; nextOffset: number; hasMore: boolean }> {
   assertGooglePlayConsoleAllowed();
-  const logPath = path.join(JOB_DIR, `${jobId}.log`);
-  const handle = await fs.open(logPath, "a+");
+  assertBuildJobId(jobId);
+  let handle;
+  try { handle = await fs.open(logPath(jobId), "r"); }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") throw new Error("releaseJobLogNotFound"); throw error; }
   try {
     const stat = await handle.stat();
-    const start = Math.max(0, Math.min(offset, stat.size));
-    const length = stat.size - start;
+    const start = Math.max(0, Math.min(Number.isFinite(offset) ? Math.floor(offset) : 0, stat.size));
+    const length = Math.min(LOG_CHUNK_BYTES, stat.size - start);
     const buffer = Buffer.alloc(length);
-    if (length > 0) await handle.read(buffer, 0, length, start);
-    return { offset: stat.size, text: buffer.toString("utf8") };
-  } finally {
-    await handle.close();
-  }
+    if (buffer.length) await handle.read(buffer, 0, buffer.length, start);
+    const nextOffset = start + buffer.length;
+    return { text: buffer.toString("utf8"), nextOffset, hasMore: nextOffset < stat.size };
+  } finally { await handle.close(); }
 }
 
 export async function artifactsForJob(jobId: string) {
   assertGooglePlayConsoleAllowed();
-  const record = await readRecord(jobId);
-  return record.artifacts ?? scanBuildJobArtifacts();
+  return (await readBuildJobRecord(jobId)).artifacts ?? [];
 }
 
-async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry, extraArgs: string[]) {
-  const exclusive = isExclusive(command);
-  if (exclusive) activeExclusiveJobId = record.id;
-  record.status = "running";
-  record.startedAt = now();
-  await writeRecord(record);
-  await appendLog(record.id, `> npm run ${command.script} ${[...command.argv, ...extraArgs].join(" ")}\n`);
-
-  const child = spawn("npm", ["run", command.script, "--", ...command.argv, ...extraArgs], {
-    cwd: process.cwd(),
-    shell: process.platform === "win32",
-    env: googlePlayFastlaneEnvironment(),
-  });
-  liveProcesses.set(record.id, child);
+async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry): Promise<void> {
+  const latest = await readBuildJobRecord(record.id);
+  if (latest.status === "cancelled") { await releaseBuildJobLock(record.id); return; }
+  setJobStatus(latest, "running"); latest.startedAt = now();
+  await writeRecord(latest);
+  await appendLog(record.id, `> npm run ${command.script} -- ${latest.command.argv.join(" ")}\n`);
+  const child = spawn(
+    process.execPath,
+    [resolveNpmCliPath(), "run", command.script, "--", ...latest.command.argv],
+    { cwd: process.cwd(), shell: false, env: googlePlayFastlaneEnvironment() },
+  );
+  latest.pid = child.pid;
+  await writeRecord(latest);
+  if (child.pid && command.exclusive) await updateLockPid(record.id, child.pid);
+  trackBuildJobProcess(record.id, child);
   child.stdout.on("data", (chunk) => void appendLog(record.id, chunk));
   child.stderr.on("data", (chunk) => void appendLog(record.id, chunk));
-  child.on("error", async (error) => {
-    record.status = "failed";
-    record.error = error.message;
-    record.finishedAt = now();
-    await writeRecord(record);
-  });
-  child.on("close", async (code) => {
+  let finalized = false;
+  const finalize = async (status: "succeeded" | "failed", code: number | null, error?: string) => {
+    if (finalized) return; finalized = true;
     liveProcesses.delete(record.id);
-    if (exclusive && activeExclusiveJobId === record.id) activeExclusiveJobId = null;
-    const latest = await readRecord(record.id);
-    if (latest.status === "cancelled") return;
-    latest.status = code === 0 ? "succeeded" : "failed";
-    latest.exitCode = code;
-    latest.finishedAt = now();
-    latest.artifacts = await scanBuildJobArtifacts();
-    await writeRecord(latest);
-  });
+    try {
+      const current = await readBuildJobRecord(record.id);
+      if (current.status !== "cancelled") {
+        setJobStatus(current, status); current.exitCode = code; current.finishedAt = now(); current.error = error;
+        current.artifacts = await changedBuildArtifacts(current.artifactSnapshot ?? {});
+        delete current.artifactSnapshot;
+        await writeRecord(current);
+      }
+    } finally { if (command.exclusive) await releaseBuildJobLock(record.id); }
+  };
+  child.once("error", (error) => void finalize("failed", null, error.message));
+  child.once("close", (code) => void finalize(code === 0 ? "succeeded" : "failed", code));
+}
+
+async function ensureReconciled(): Promise<void> {
+  if (!reconciliation) reconciliation = reconcileAndPrune().catch((error) => { reconciliation = null; throw error; });
+  await reconciliation;
+}
+
+export async function reconcileBuildJobs(jobDir = JOB_DIR, alive = isProcessAlive): Promise<void> {
+  await fs.mkdir(jobDir, { recursive: true });
+  const files = (await fs.readdir(jobDir)).filter((file) => JOB_ID_PATTERN.test(file.replace(/\.json$/, "")) && file.endsWith(".json"));
+  const lock = await readLock(path.join(jobDir, "exclusive.lock"));
+  for (const file of files) {
+    const fullPath = path.join(jobDir, file);
+    const record = JSON.parse(await fs.readFile(fullPath, "utf8")) as BuildJobRecord;
+    const ownedQueuedJob = record.status === "queued" && lock?.jobId === record.id && alive(lock.pid);
+    if ((record.status === "running" || record.status === "queued") && !ownedQueuedJob && (!record.pid || !alive(record.pid))) {
+      setJobStatus(record, "interrupted"); record.finishedAt = now(); record.error = "releaseCommandInterrupted";
+      await fs.writeFile(fullPath, JSON.stringify(record, null, 2), "utf8");
+      await releaseBuildJobLock(record.id, path.join(jobDir, "exclusive.lock"));
+    }
+  }
+  if (lock && !alive(lock.pid)) await releaseBuildJobLock(lock.jobId, path.join(jobDir, "exclusive.lock"));
+}
+
+async function reconcileAndPrune(): Promise<void> {
+  await reconcileBuildJobs();
+  await pruneRecords();
+}
+
+async function pruneRecords(): Promise<void> {
+  const records = await readAllRecords();
+  for (const record of records.slice(JOB_RETENTION)) {
+    await removeIfExists(recordPath(record.id));
+    await removeIfExists(logPath(record.id));
+  }
+}
+
+async function readAllRecords(): Promise<BuildJobRecord[]> {
+  await fs.mkdir(JOB_DIR, { recursive: true });
+  const files = (await fs.readdir(JOB_DIR)).filter((file) => JOB_ID_PATTERN.test(file.replace(/\.json$/, "")) && file.endsWith(".json"));
+  const jobs = await Promise.all(files.map(async (file) => JSON.parse(await fs.readFile(path.join(JOB_DIR, file), "utf8")) as BuildJobRecord));
+  return jobs.sort((left, right) => right.queuedAt.localeCompare(left.queuedAt));
+}
+
+function setJobStatus(record: BuildJobRecord, next: BuildJobRecord["status"]): void {
+  assertBuildJobTransition(record.status, next);
+  record.status = next;
+}
+
+async function removeIfExists(filePath: string): Promise<void> {
+  try { await fs.unlink(filePath); }
+  catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
 }

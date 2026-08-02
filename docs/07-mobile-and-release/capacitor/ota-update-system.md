@@ -126,7 +126,7 @@ The full manifest JSON is retained in `ota_releases` so historical metadata rema
 
 ### Super-admin Page
 
-`/super-admin/ota-releases` is linked from the super-admin sidebar and provides:
+`/super-admin/google-play-store-assets?tab=ota-releases` is the OTA section of the unified release console and provides:
 
 - current R2 release/version and release ID;
 - server-side signature verification state;

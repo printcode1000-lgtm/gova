@@ -1,5 +1,5 @@
-import { GooglePlayConsolePage } from "@/modules/google-play-console";
+import { redirect } from "next/navigation";
 
 export default function SuperAdminGooglePlayConsoleRoute() {
-  return <GooglePlayConsolePage />;
+  redirect("/super-admin/google-play-store-assets?tab=play-console");
 }

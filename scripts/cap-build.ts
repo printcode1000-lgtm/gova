@@ -1,9 +1,10 @@
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { assertCapBuildInputBundle } from "./assert-release-static-bundle";
 import {
   getOtaPrefix,
   loadOtaEnvironment,
@@ -214,6 +215,7 @@ async function main(): Promise<void> {
       `  version rewrites: android versionCode=${versionCode(resolvedVersion)}, versionName=${resolvedVersion}; iOS MARKETING_VERSION=${resolvedVersion}`,
     );
     console.log("  cap sync: npm run cap:sync");
+    if (noR8) console.log("  Gradle tasks: :app:bundleReleaseNoR8 :app:assembleReleaseNoR8 -Pasol.allowNoR8=true");
     console.log("  mutations: none");
     return;
   }
@@ -238,6 +240,8 @@ async function main(): Promise<void> {
     );
     execSync("npm run ota:publish", { stdio: "inherit", env: publishEnv });
   }
+
+  assertCapBuildInputBundle({ resume: resumePublishedRelease, skipOta, dryRun });
 
   const client = createOtaR2Client();
   const remoteManifest = await getOtaManifestObject(
@@ -265,6 +269,16 @@ async function main(): Promise<void> {
   console.log("Verifying every R2 file by size and SHA-256...");
   await verifyR2Files(remoteManifest);
   execSync("npm run cap:sync", { stdio: "inherit", env });
+
+  if (noR8) {
+    const androidDirectory = path.resolve("android");
+    const tasks = [":app:bundleReleaseNoR8", ":app:assembleReleaseNoR8", "-Pasol.allowNoR8=true"];
+    if (process.platform === "win32") {
+      execFileSync(process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe", ["/d", "/c", "gradlew.bat", ...tasks], { cwd: androidDirectory, stdio: "inherit", env });
+    } else {
+      execFileSync(path.join(androidDirectory, "gradlew"), tasks, { cwd: androidDirectory, stdio: "inherit", env });
+    }
+  }
 
   console.log(
     `cap-build completed: R2, Android, and iOS are exactly version ${version}`,

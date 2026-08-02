@@ -1,5 +1,5 @@
-import { GooglePlayStoreAssetsPage } from "@/modules/google-play-console";
+import { ReleaseConsolePage } from "@/modules/google-play-console";
 
 export default function SuperAdminGooglePlayStoreAssetsRoute() {
-  return <GooglePlayStoreAssetsPage />;
+  return <ReleaseConsolePage />;
 }
