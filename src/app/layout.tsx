@@ -33,6 +33,7 @@ import { Suspense } from "react";
 
 import { isDevelopment, withBasePath } from "@/core/config";
 import { InstallationBootstrap } from "@/lib/installation";
+import { PreAuthFailureMonitor } from "@/features/system-logs/PreAuthFailureMonitor";
 
 const DeveloperBadge = isDevelopment
   ? dynamic(() =>
@@ -74,6 +75,7 @@ export default function RootLayout({
         <AppInitScript />
       </head>
       <body className="antialiased">
+        <PreAuthFailureMonitor />
         <InstallationBootstrap>
           <AppQueryProvider>
             <SessionProvider>

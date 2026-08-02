@@ -13,12 +13,28 @@ function redact(value: string | undefined) {
 
 export class PersistentSystemLogService {
   async add(input: PersistentSystemLogInput) {
-    return persistentSystemLogRepository.add({
+    const sanitized = {
       ...input,
       message: redact(input.message),
       stack: redact(input.stack),
       userAgent: redact(input.userAgent),
-    });
+    };
+    const terminalDetails = {
+      source: sanitized.source,
+      platform: sanitized.platform,
+      feature: sanitized.feature,
+      operation: sanitized.operation,
+      errorName: sanitized.errorName,
+      statusCode: sanitized.statusCode,
+      page: sanitized.page,
+      message: sanitized.message,
+    };
+    if (sanitized.level === "warning") {
+      console.warn("[Asol][SystemLog] Operation did not complete", terminalDetails);
+    } else if (sanitized.level === "error") {
+      console.error("[Asol][SystemLog] Operation failed", terminalDetails);
+    }
+    return persistentSystemLogRepository.add(sanitized);
   }
 
   async addBatch(inputs: PersistentSystemLogInput[]) {

@@ -32,7 +32,7 @@ export function BuildPublishTab() {
     <section className="space-y-5">
       <ReleaseCommandConfirmDialog pending={jobs.pending} catalog={jobs.catalog} locked={locked} t={t}
         onConfirm={(overrides) => void jobs.confirmStart(overrides)} onCancel={jobs.dismissStart} />
-      <AndroidReleasePaths busy={locked} jobs={jobs.jobs} start={jobs.start} t={t} />
+      <AndroidReleasePaths busy={locked} jobs={jobs.jobs} start={jobs.start} cancel={jobs.cancel} t={t} />
       {CATEGORIES.map((category) => (
         <section key={category} className="space-y-3">
           <h2 className="font-semibold">{t(`releaseConsole.categories.${category}`)}</h2>

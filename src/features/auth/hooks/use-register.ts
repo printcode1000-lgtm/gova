@@ -16,6 +16,7 @@ import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export function useRegister() {
   const { t } = useTranslation();
@@ -43,10 +44,18 @@ export function useRegister() {
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
       const { uid } = await authService.register(data);
+      if (!uid?.trim()) throw new Error('invalidRegistrationResponse');
       const loginResult = await authService.login({
         phone: data.phone,
         password: data.password,
       });
+      if (
+        !loginResult.uid?.trim() ||
+        !loginResult.phone?.trim() ||
+        !loginResult.sessionToken?.trim()
+      ) {
+        throw new Error('invalidPostRegistrationLoginResponse');
+      }
       return sessionService.saveSession({
         uid: loginResult.uid || uid,
         phone: data.phone,
@@ -63,12 +72,24 @@ export function useRegister() {
     ),
 
     onSuccess: (session) => {
-      endGuestSession();
-      setSession(session);
+      try {
+        endGuestSession();
+        setSession(session);
+      } catch (error) {
+        reportPreAuthFailure('complete-registration', error);
+      }
     },
     onError: (error) => {
+      const expectedPhoneConflict =
+        error instanceof Error && error.message === 'phoneAlreadyRegistered';
+      reportPreAuthFailure(
+        expectedPhoneConflict ? 'registration-phone-rejected' : 'register-and-create-session',
+        error,
+        {},
+        expectedPhoneConflict ? 'warn' : 'error',
+      );
       reportSystemIssue({
-        level: error instanceof Error && error.message === 'phoneAlreadyRegistered' ? 'warning' : 'error',
+        level: expectedPhoneConflict ? 'warning' : 'error',
         feature: 'Authentication',
         operation: 'register-and-create-session',
         error,
@@ -85,10 +106,20 @@ export function useRegister() {
     return msg;
   }, [mutation.error, t]);
 
-  const onSubmit = form.handleSubmit((data) => {
-    startNewFlow();
-    mutation.mutate(data);
-  });
+  const onSubmit = form.handleSubmit(
+    (data) => {
+      startNewFlow();
+      mutation.mutate(data);
+    },
+    (fieldErrors) => {
+      reportPreAuthFailure(
+        'validate-registration-form',
+        new Error('registrationFormInvalid'),
+        { fields: Object.keys(fieldErrors).sort().join(',') },
+        'warn',
+      );
+    },
+  );
 
   return {
     form,

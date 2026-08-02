@@ -51,6 +51,19 @@ export function reportSystemIssue(context: SystemIssueContext) {
         ? error.stack
         : new Error(`${context.feature}: ${context.operation}`).stack,
   } as const;
+  const terminalDetails = {
+    platform: entry.platform,
+    feature: entry.feature,
+    operation: entry.operation,
+    errorName: entry.errorName,
+    message: entry.message,
+    page: entry.page,
+  };
+  if (entry.level === "warning") {
+    console.warn("[Asol][SystemIssue] Operation did not complete", terminalDetails);
+  } else {
+    console.error("[Asol][SystemIssue] Operation failed", terminalDetails);
+  }
   addSystemLog(entry);
   submitPersistentClientLog({
     ...entry,

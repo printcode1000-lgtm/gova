@@ -24,7 +24,13 @@ export function apiError(message: string, status = 400): NextResponse {
       feature: 'BusinessAPI',
       operation: 'api-error-response',
       statusCode: status,
-    }).catch(() => undefined);
+    }).catch((loggingError) => {
+      console.error('[Asol][BusinessAPI] Failed to persist API error', {
+        statusCode: status,
+        message:
+          loggingError instanceof Error ? loggingError.message : String(loggingError),
+      });
+    });
   }
   return attachDevTraceHeaders(
     NextResponse.json({ error: message }, { status }),
@@ -198,5 +204,11 @@ async function logMappedServiceError(
     feature: 'BusinessAPI',
     operation: 'mapped-service-error',
     statusCode,
-  }).catch(() => undefined);
+  }).catch((loggingError) => {
+    console.error('[Asol][BusinessAPI] Failed to persist mapped service error', {
+      statusCode,
+      message:
+        loggingError instanceof Error ? loggingError.message : String(loggingError),
+    });
+  });
 }

@@ -111,6 +111,8 @@ function proxyApiRequest(
 
 createServer((req, res) => {
   const requestUrl = req.url ?? '/';
+  // Lets the release console probe this server's liveness from localhost:3000.
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   if (requestUrl === '/api' || requestUrl.startsWith('/api/')) {
     proxyApiRequest(req, res);

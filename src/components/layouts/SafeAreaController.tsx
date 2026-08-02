@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useResolvedColorScheme } from '@/lib/preferences';
 import { isNativePlatform } from '@/native-platform/core/platform';
 import { statusBar, type StatusBarInfo } from '@/native-platform/status-bar';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 const STATUS_BAR_HEIGHT_VAR = '--asol-native-status-bar-height';
 
@@ -43,7 +44,8 @@ export function SafeAreaController() {
       try {
         const info = await statusBar.getInfo();
         if (!disposed) applyInset(info);
-      } catch {
+      } catch (error) {
+        reportPreAuthFailure('read-native-status-bar-inset', error, {}, 'warn');
         // Plugin unavailable: fall back to env(safe-area-inset-top) alone.
         if (!disposed) root.style.setProperty(STATUS_BAR_HEIGHT_VAR, '0px');
       }
@@ -97,7 +99,8 @@ export function SafeAreaController() {
         if (disposed) remove();
         else unsubscribe = remove;
       })
-      .catch(() => {
+      .catch((error) => {
+        reportPreAuthFailure('subscribe-native-status-bar', error, {}, 'warn');
         // Listener support is optional; the polled reads still cover rotation.
       });
 
@@ -124,7 +127,8 @@ export function SafeAreaController() {
     // `dark` means light glyphs (for a dark background) and vice versa.
     void statusBar
       .setStyle(colorScheme === 'dark' ? 'dark' : 'light')
-      .catch(() => {
+      .catch((error) => {
+        reportPreAuthFailure('set-native-status-bar-style', error, {}, 'warn');
         // Appearance is cosmetic; never break rendering over it.
       });
   }, [colorScheme]);

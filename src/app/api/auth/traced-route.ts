@@ -18,6 +18,13 @@ export async function runTracedBusinessRoute(
         executionTimeMs: Date.now() - startedAt,
         status: response.ok ? 'success' : 'error',
       });
+      if (!response.ok) {
+        console.error('[Asol][BusinessAPI] Request did not complete', {
+          routeName,
+          statusCode: response.status,
+          executionTimeMs: Date.now() - startedAt,
+        });
+      }
       return response;
     } catch (error) {
       pushDevTrace({
@@ -33,7 +40,13 @@ export async function runTracedBusinessRoute(
           feature: 'BusinessAPI',
           operation: 'unhandled-route-error',
           routeName,
-        }).catch(() => undefined);
+        }).catch((loggingError) => {
+          console.error('[Asol][BusinessAPI] Failed to persist route error', {
+            routeName,
+            message:
+              loggingError instanceof Error ? loggingError.message : String(loggingError),
+          });
+        });
       }
       throw error;
     }

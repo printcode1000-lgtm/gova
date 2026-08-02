@@ -4,11 +4,13 @@ import * as React from 'react';
 import { QueryClient } from '@tanstack/react-query';
 import {
   type PersistedClient,
+  type Persister,
   PersistQueryClientProvider,
 } from '@tanstack/react-query-persist-client';
 import { createAsolDbPersister } from '@/modules/data-access/browser/asol-db-persister';
 import { attachQueryObserver } from '@/core/monitor/query-observer';
 import { publicEnv } from '@/core/config/public-env';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 /** 24 hours in milliseconds */
 const TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 24;
@@ -57,7 +59,35 @@ interface AppQueryProviderProps {
 
 export function AppQueryProvider({ children }: AppQueryProviderProps) {
   const queryClient = getQueryClient();
-  const persister = React.useMemo(() => createAsolDbPersister(), []);
+  const persister = React.useMemo<Persister>(() => {
+    const storage = createAsolDbPersister();
+    return {
+      persistClient: async (client) => {
+        try {
+          await storage.persistClient(client);
+        } catch (error) {
+          reportPreAuthFailure('persist-query-cache', error);
+          throw error;
+        }
+      },
+      restoreClient: async () => {
+        try {
+          return await storage.restoreClient();
+        } catch (error) {
+          reportPreAuthFailure('restore-query-cache', error);
+          throw error;
+        }
+      },
+      removeClient: async () => {
+        try {
+          await storage.removeClient();
+        } catch (error) {
+          reportPreAuthFailure('remove-query-cache', error);
+          throw error;
+        }
+      },
+    };
+  }, []);
 
   React.useEffect(() => {
     const cleanup = attachQueryObserver(queryClient);

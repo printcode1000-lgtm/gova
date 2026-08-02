@@ -16,6 +16,7 @@ import { authMonitorMeta } from './auth-monitor-meta';
 import type { UserProfile } from '../entities/profile.entity';
 import type { ProfileRegistrationSnapshot } from '@/features/profile/entities/profile-editor.entity';
 import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export function useProfileRegistration() {
   const { t } = useTranslation();
@@ -97,6 +98,7 @@ export function useProfileRegistration() {
     ),
     onSuccess: applySaved,
     onError: (error) => {
+      reportPreAuthFailure('save-registration-info', error);
       reportSystemIssue({ feature: 'Profile', operation: 'save-registration-info', error });
     },
   });
@@ -124,6 +126,12 @@ export function useProfileRegistration() {
           if (!nextErrors[key]) nextErrors[key] = issue.message;
         }
         setFieldErrors(nextErrors);
+        reportPreAuthFailure(
+          'validate-registration-profile',
+          new Error('registrationProfileInvalid'),
+          { fields: Object.keys(nextErrors).sort().join(',') },
+          'warn',
+        );
         return null;
       }
 
@@ -132,6 +140,12 @@ export function useProfileRegistration() {
           ...current,
           phone: t('auth.registration.phoneVerificationRequired'),
         }));
+        reportPreAuthFailure(
+          'validate-registration-profile-phone',
+          new Error('phoneVerificationRequired'),
+          {},
+          'warn',
+        );
         return null;
       }
 
@@ -146,7 +160,9 @@ export function useProfileRegistration() {
   };
 
   const save = () => {
-    void saveAsync();
+    void saveAsync().catch((error) => {
+      reportPreAuthFailure('save-registration-info', error);
+    });
   };
 
   return {

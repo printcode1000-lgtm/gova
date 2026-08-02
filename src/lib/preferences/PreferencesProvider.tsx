@@ -12,6 +12,7 @@ import {
   readAppPreferencesFromDb,
   writeAppPreferencesToDb,
 } from './app-preferences-storage';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export type AppPreferencesContextValue = {
   preferences: AppPreferences;
@@ -34,10 +35,15 @@ function AppPreferencesScope({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     async function init() {
-      const stored = await readAppPreferencesFromDb();
-      await commitPreferences(stored);
-      if (typeof document !== 'undefined') {
-        document.documentElement.setAttribute('data-app-hydrated', 'true');
+      try {
+        const stored = await readAppPreferencesFromDb();
+        await commitPreferences(stored);
+      } catch (error) {
+        reportPreAuthFailure('initialize-app-preferences', error);
+      } finally {
+        if (typeof document !== 'undefined') {
+          document.documentElement.setAttribute('data-app-hydrated', 'true');
+        }
       }
     }
     init();
@@ -45,13 +51,17 @@ function AppPreferencesScope({ children }: { children: React.ReactNode }) {
 
   const updatePreferences = React.useCallback(
     (patch: Partial<AppPreferences>) => {
-      commitPreferences({ ...preferencesRef.current, ...patch });
+      void commitPreferences({ ...preferencesRef.current, ...patch }).catch((error) => {
+        reportPreAuthFailure('update-app-preferences', error);
+      });
     },
     [commitPreferences],
   );
 
   const resetPreferences = React.useCallback(() => {
-    commitPreferences({ ...DEFAULT_APP_PREFERENCES });
+    void commitPreferences({ ...DEFAULT_APP_PREFERENCES }).catch((error) => {
+      reportPreAuthFailure('reset-app-preferences', error);
+    });
   }, [commitPreferences]);
 
   const value = React.useMemo(

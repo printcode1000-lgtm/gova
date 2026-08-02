@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 
 import { initializeClientInstallation } from "./installation-bootstrap";
+import { reportPreAuthFailure } from "@/features/system-logs/pre-auth-failure-reporter";
 
 export function InstallationBootstrap({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
@@ -11,7 +12,7 @@ export function InstallationBootstrap({ children }: { children: ReactNode }) {
     let active = true;
     void initializeClientInstallation()
       .catch((error) => {
-        console.error("[InstallationBootstrap] Initialization failed.", error);
+        reportPreAuthFailure("installation-bootstrap", error);
       })
       .finally(() => {
         if (active) setReady(true);

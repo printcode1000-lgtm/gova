@@ -10,6 +10,7 @@ import {
 } from './storage';
 import type { ResolvedColorScheme } from './resolve-theme';
 import type { ThemeMode, ThemePreferences } from './types';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export type ThemeContextValue = {
   preferences: ThemePreferences;
@@ -43,11 +44,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     async function init() {
-      const stored = await readThemePreferencesFromDb();
-      await commitPreferences(stored);
-      setHydrated(true);
-      if (typeof document !== 'undefined') {
-        document.documentElement.setAttribute('data-theme-hydrated', 'true');
+      try {
+        const stored = await readThemePreferencesFromDb();
+        await commitPreferences(stored);
+      } catch (error) {
+        reportPreAuthFailure('initialize-theme-preferences', error);
+      } finally {
+        setHydrated(true);
+        if (typeof document !== 'undefined') {
+          document.documentElement.setAttribute('data-theme-hydrated', 'true');
+        }
       }
     }
     init();
@@ -55,31 +61,41 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const updatePreferences = React.useCallback(
     (patch: Partial<ThemePreferences>) => {
-      commitPreferences({ ...preferencesRef.current, ...patch });
+      void commitPreferences({ ...preferencesRef.current, ...patch }).catch((error) => {
+        reportPreAuthFailure('update-theme-preferences', error);
+      });
     },
     [commitPreferences],
   );
 
   const resetPreferences = React.useCallback(() => {
-    commitPreferences({ ...DEFAULT_THEME_PREFERENCES });
+    void commitPreferences({ ...DEFAULT_THEME_PREFERENCES }).catch((error) => {
+      reportPreAuthFailure('reset-theme-preferences', error);
+    });
   }, [commitPreferences]);
 
   const replacePreferences = React.useCallback(
     (next: ThemePreferences) => {
-      commitPreferences(next);
+      void commitPreferences(next).catch((error) => {
+        reportPreAuthFailure('replace-theme-preferences', error);
+      });
     },
     [commitPreferences],
   );
 
   const toggleColorScheme = React.useCallback(() => {
     const nextMode: ThemeMode = resolvedScheme === 'dark' ? 'light' : 'dark';
-    commitPreferences({ ...preferencesRef.current, themeMode: nextMode });
+    void commitPreferences({ ...preferencesRef.current, themeMode: nextMode }).catch((error) => {
+      reportPreAuthFailure('toggle-theme-color-scheme', error);
+    });
   }, [commitPreferences, resolvedScheme]);
 
   const cycleThemeMode = React.useCallback(() => {
     const current = preferencesRef.current.themeMode;
     const next = current === 'light' ? 'dark' : 'light';
-    commitPreferences({ ...preferencesRef.current, themeMode: next });
+    void commitPreferences({ ...preferencesRef.current, themeMode: next }).catch((error) => {
+      reportPreAuthFailure('cycle-theme-mode', error);
+    });
   }, [commitPreferences]);
 
   const value = React.useMemo(

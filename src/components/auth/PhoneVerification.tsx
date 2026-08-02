@@ -6,6 +6,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 import type { RegistrationFormData } from '@/lib/validation/auth';
 
 import { OtpInput } from './OtpInput';
@@ -59,11 +60,23 @@ export function PhoneVerification({
   } = usePhoneVerification();
 
   const handleSendOtpWrapper = async () => {
-    if (isFormMode && formTrigger) {
-      const isValid = await formTrigger('phone');
-      if (!isValid) return;
+    try {
+      if (isFormMode && formTrigger) {
+        const isValid = await formTrigger('phone');
+        if (!isValid) {
+          reportPreAuthFailure(
+            'validate-registration-phone',
+            new Error('registrationPhoneInvalid'),
+            {},
+            'warn',
+          );
+          return;
+        }
+      }
+      await handleSendOtp(phone);
+    } catch (error) {
+      reportPreAuthFailure('start-phone-verification', error);
     }
-    await handleSendOtp(phone);
   };
 
   const handleVerifyOtpWrapper = async () => {
@@ -74,7 +87,11 @@ export function PhoneVerification({
         onVerifiedChange(true);
       }
     };
-    await handleVerifyOtp(otp, onVerified);
+    try {
+      await handleVerifyOtp(otp, onVerified);
+    } catch (error) {
+      reportPreAuthFailure('complete-phone-verification', error);
+    }
   };
 
   const handleEditPhoneWrapper = () => {

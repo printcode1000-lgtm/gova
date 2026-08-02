@@ -15,6 +15,7 @@ import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 import { queueLoginSuccessToast } from '@/features/auth/components/LoginSuccessToast';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -34,6 +35,9 @@ export function useLogin() {
   const mutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
       const result = await authService.login(data);
+      if (!result.uid?.trim() || !result.phone?.trim() || !result.sessionToken?.trim()) {
+        throw new Error('invalidLoginResponse');
+      }
       return sessionService.saveSession({
         uid: result.uid,
         phone: result.phone,
@@ -45,18 +49,25 @@ export function useLogin() {
     meta: authMonitorMeta('useLogin', 'LoginPageContent', 'Login', 'UPDATE'),
 
     onSuccess: (session) => {
-      endGuestSession();
-      setSession(session);
-      queueLoginSuccessToast();
-      router.replace('/home');
+      try {
+        endGuestSession();
+        setSession(session);
+        queueLoginSuccessToast();
+        router.replace('/home');
+      } catch (error) {
+        reportPreAuthFailure('complete-login', error);
+      }
     },
     onError: (error) => {
       if (
         error instanceof Error &&
         ['userNotFound', 'invalidPassword'].includes(error.message)
       ) {
+        reportPreAuthFailure('login-credentials-rejected', error, {}, 'warn');
         return;
       }
+
+      reportPreAuthFailure('login', error);
 
       reportSystemIssue({
         level: 'error',
@@ -76,10 +87,20 @@ export function useLogin() {
     return msg;
   }, [mutation.error, t]);
 
-  const onSubmit = form.handleSubmit((data) => {
-    startNewFlow();
-    mutation.mutate(data);
-  });
+  const onSubmit = form.handleSubmit(
+    (data) => {
+      startNewFlow();
+      mutation.mutate(data);
+    },
+    (fieldErrors) => {
+      reportPreAuthFailure(
+        'validate-login-form',
+        new Error('loginFormInvalid'),
+        { fields: Object.keys(fieldErrors).sort().join(',') },
+        'warn',
+      );
+    },
+  );
 
   return {
     form,

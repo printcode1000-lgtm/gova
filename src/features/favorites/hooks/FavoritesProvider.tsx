@@ -17,6 +17,7 @@ import {
   restoreFavorite,
 } from "../services/favorite-collection";
 import { favoriteStorage } from "../services/favorite-storage";
+import { reportPreAuthFailure } from "@/features/system-logs/pre-auth-failure-reporter";
 
 interface FavoritesContextValue {
   items: FavoriteItem[];
@@ -68,7 +69,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
           : await favoriteStorage.read(scope);
         if (active) publish(next);
       } catch (error) {
-        console.error("[Favorites] Failed to load local favorites.", error);
+        reportPreAuthFailure("load-local-favorites", error);
         if (active) publish(favoriteStorage.empty());
       } finally {
         if (active) setIsLoading(false);
@@ -90,7 +91,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     const scope = scopeRef.current;
     writeQueueRef.current = writeQueueRef.current
       .catch((error) => {
-        console.warn("[Favorites] Previous write failed before retry.", error);
+        reportPreAuthFailure("retry-local-favorites-write", error, {}, "warn");
       })
       .then(() => favoriteStorage.write(scope, next));
     await writeQueueRef.current;
@@ -113,7 +114,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       try {
         await persist(next);
       } catch (error) {
-        console.error("[Favorites] Failed to save local favorites.", error);
+        reportPreAuthFailure("save-local-favorites", error);
         publish(previous);
         setNotice({ message: "تعذر حفظ التغيير محليًا" });
       }
@@ -151,7 +152,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     try {
       await persist(next);
     } catch (error) {
-      console.error("[Favorites] Failed to restore local favorite.", error);
+      reportPreAuthFailure("restore-local-favorite", error);
       publish(previous);
       setNotice({ message: "تعذر استعادة العنصر" });
     }

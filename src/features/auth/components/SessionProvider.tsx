@@ -13,6 +13,7 @@ import {
 import { isLoggedIn, type UserSession } from '../entities/session.entity';
 import { sessionService } from '../services/session-service';
 import { clearImageUploadClientState } from '@/features/storage/services/image-upload-client-lifecycle';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 interface SessionContextValue {
   session: UserSession | null;
@@ -41,7 +42,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         await refreshSession();
       } catch (error) {
-        console.error('[SessionProvider] Session bootstrap failed.', error);
+        reportPreAuthFailure('session-bootstrap', error);
       } finally {
         if (active) setIsLoading(false);
       }
@@ -53,7 +54,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const clearInvalidSession = () => {
-      void clearImageUploadClientState();
+      void clearImageUploadClientState().catch((error) => {
+        reportPreAuthFailure('clear-invalid-session-state', error);
+      });
       setSessionState(null);
     };
     window.addEventListener("asol-session-invalid", clearInvalidSession);

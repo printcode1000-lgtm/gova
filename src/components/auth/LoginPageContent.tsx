@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 
 import { useLogin } from '@/features/auth/hooks/use-login';
 import { LOGIN_AUTOFILL_EVENT } from '@/lib/autofill/dom-input';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export function LoginPageContent() {
   const router = useRouter();
@@ -34,7 +35,9 @@ export function LoginPageContent() {
 
   React.useEffect(() => {
     const syncAfterAutofill = () => {
-      void form.trigger(['phone', 'password']);
+      void form.trigger(['phone', 'password']).catch((error) => {
+        reportPreAuthFailure('validate-login-autofill', error);
+      });
     };
     window.addEventListener(LOGIN_AUTOFILL_EVENT, syncAfterAutofill);
     return () => window.removeEventListener(LOGIN_AUTOFILL_EVENT, syncAfterAutofill);

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { isDevelopment } from '@/core/config';
 import { asolApi, ASOL_API_ROUTES } from '@/core/api';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 const RESEND_COUNTDOWN = 60;
 
@@ -40,7 +41,10 @@ export function usePhoneVerification() {
     const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(textMsg)}`;
 
     // فتح التطبيق الخاص بالواتساب في نافذة/تبويب جديد
-    window.open(waUrl, '_blank');
+    const openedWindow = window.open(waUrl, '_blank');
+    if (!openedWindow) {
+      reportPreAuthFailure('open-whatsapp-verification', new Error('popupBlocked'));
+    }
     console.log(`[WhatsApp Link] Done Attempt : ${waUrl}`);
   };
 
@@ -56,12 +60,18 @@ export function usePhoneVerification() {
         `${ASOL_API_ROUTES.auth.checkPhone}?phone=${encodeURIComponent(phone)}`
       );
       if (response.exists) {
+        reportPreAuthFailure(
+          'check-registration-phone',
+          new Error('phoneAlreadyRegistered'),
+          {},
+          'warn',
+        );
         setOtpError(t('auth.validation.phoneAlreadyRegistered'));
         setIsSending(false);
         return;
       }
     } catch (err) {
-      console.error('Error checking phone registration:', err);
+      reportPreAuthFailure('check-registration-phone', err);
       setOtpError('An error occurred. Please try again.');
       setIsSending(false);
       return;
@@ -71,14 +81,14 @@ export function usePhoneVerification() {
     setGeneratedOtp(newOtp);
 
     // إرسال عبر واتساب في بيئة الإنتاج
-    if (!isDevelopment) {
-      await sendWhatsappVerificationCode(phone, newOtp);
-    }
+    try {
+      if (!isDevelopment) {
+        await sendWhatsappVerificationCode(phone, newOtp);
+      }
 
     // محاكاة وقت الإرسال
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    setIsSending(false);
     setOtpSent(true);
     setCountdown(RESEND_COUNTDOWN);
 
@@ -86,6 +96,12 @@ export function usePhoneVerification() {
     if (isDevelopment) {
       setOtp(newOtp);
       await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+    } catch (error) {
+      reportPreAuthFailure('send-phone-verification-code', error);
+      setOtpError('An error occurred. Please try again.');
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -99,15 +115,21 @@ export function usePhoneVerification() {
     setOtpError('');
 
     // محاكاة وقت التحقق
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-
-    setIsVerifying(false);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1200));
 
     // التحقق من الرمز
-    if (inputOtp === generatedOtp) {
-      onVerified();
-    } else {
-      setOtpError(t('auth.validation.invalidPassword')); // يمكن تغيير هذه الرسالة لخطأ OTP
+      if (inputOtp === generatedOtp) {
+        onVerified();
+      } else {
+        reportPreAuthFailure('verify-phone-code', new Error('invalidOtp'), {}, 'warn');
+        setOtpError(t('auth.validation.invalidPassword')); // يمكن تغيير هذه الرسالة لخطأ OTP
+      }
+    } catch (error) {
+      reportPreAuthFailure('verify-phone-code', error);
+      setOtpError('An error occurred. Please try again.');
+    } finally {
+      setIsVerifying(false);
     }
   };
 

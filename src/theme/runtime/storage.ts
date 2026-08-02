@@ -34,12 +34,11 @@ export function normalizeThemePreferences(
 const THEME_DB_KEY = 'theme-preferences';
 
 export async function readThemePreferencesFromDb(): Promise<ThemePreferences> {
-  try {
-    const raw = await asolDbGet<Partial<ThemePreferences>>(ASOL_DB_STORES.APP_SETTINGS, THEME_DB_KEY);
-    return normalizeThemePreferences(raw);
-  } catch {
-    return { ...DEFAULT_THEME_PREFERENCES };
-  }
+  const raw = await asolDbGet<Partial<ThemePreferences>>(
+    ASOL_DB_STORES.APP_SETTINGS,
+    THEME_DB_KEY,
+  );
+  return normalizeThemePreferences(raw);
 }
 
 export async function writeThemePreferencesToDb(prefs: ThemePreferences): Promise<void> {

@@ -1,33 +1,42 @@
 "use client";
 
-import { CheckCircle2, CloudUpload, ExternalLink, FolderOpen, LoaderCircle, Play, XCircle } from "lucide-react";
+import * as React from "react";
+import {
+  CheckCircle2, CloudUpload, ExternalLink, FolderOpen, LoaderCircle, Play, Square, XCircle,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { asolApi } from "@/core/api";
 import type { BuildJobRecord, BuildJobStatus } from "@/modules/release-commands/domain/build-job-types";
 
 /** Local static preview served by `npm run preview:static`. */
 const STATIC_PREVIEW_URL = "http://127.0.0.1:5500/";
+const PREVIEW_PROBE_TIMEOUT_MS = 2500;
 
 const PATHS = [
   {
     id: "release-android-with-ota",
     title: "releaseConsole.androidPaths.withOta.title",
     description: "releaseConsole.androidPaths.withOta.description",
+    action: "releaseConsole.androidPaths.withOta.action",
   },
   {
     id: "release-android-no-ota",
     title: "releaseConsole.androidPaths.noOta.title",
     description: "releaseConsole.androidPaths.noOta.description",
+    action: "releaseConsole.androidPaths.noOta.action",
   },
   {
     id: "build-static",
     title: "releaseConsole.androidPaths.buildStatic.title",
     description: "releaseConsole.androidPaths.buildStatic.description",
+    action: "releaseConsole.androidPaths.buildStatic.action",
   },
   {
     id: "cap-prepare-android",
     title: "releaseConsole.androidPaths.prepare.title",
     description: "releaseConsole.androidPaths.prepare.description",
+    action: "releaseConsole.androidPaths.prepare.action",
     // Secondary action on the same card: open the synced project in the IDE.
     secondary: {
       id: "cap-open-android",
@@ -38,6 +47,7 @@ const PATHS = [
     id: "ota-publish",
     title: "releaseConsole.androidPaths.publishOta.title",
     description: "releaseConsole.androidPaths.publishOta.description",
+    action: "releaseConsole.androidPaths.publishOta.action",
     // Publishes live to R2; the confirmation dialog also demands its phrase.
     danger: true,
   },
@@ -66,16 +76,52 @@ function StatusChip({ job, t }: { job: BuildJobRecord; t: (key: string) => strin
   );
 }
 
-export function AndroidReleasePaths({ busy, jobs, start, t }: {
+/** Stop button — only rendered while that command's own job is in flight. */
+function StopButton({ job, cancel, t }: {
+  job: BuildJobRecord;
+  cancel: (job: BuildJobRecord) => Promise<unknown>;
+  t: (key: string) => string;
+}) {
+  return (
+    <Button variant="destructive" onClick={() => void cancel(job)}
+      title={`${t("releaseConsole.androidPaths.stop")} ${job.id}`}>
+      <Square className="h-4 w-4" />{t("releaseConsole.androidPaths.stop")}
+    </Button>
+  );
+}
+
+export function AndroidReleasePaths({ busy, jobs, start, cancel, t }: {
   busy: boolean;
   jobs: readonly BuildJobRecord[];
   start: (input: { commandId: string }) => Promise<unknown>;
+  cancel: (job: BuildJobRecord) => Promise<unknown>;
   t: (key: string) => string;
 }) {
   // Both paths live in one container pinned to the top of the tab, so the two
   // one-click releases are reachable without scrolling to their category.
   const openOutputsJob = latestJobFor(jobs, "android-open-outputs");
   const openOutputsRunning = Boolean(openOutputsJob && RUNNING_STATUSES.has(openOutputsJob.status));
+  const [previewState, setPreviewState] = React.useState<"idle" | "checking" | "offline">("idle");
+
+  // The static preview is a separate local server; opening a dead port would
+  // just show a blank tab, so its liveness is probed through the API client
+  // first (`serve-static.ts` answers with a permissive CORS header).
+  const openPreview = async () => {
+    setPreviewState("checking");
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), PREVIEW_PROBE_TIMEOUT_MS);
+    try {
+      await asolApi.getAbsoluteBinary(STATIC_PREVIEW_URL, {
+        signal: controller.signal, suppressErrorLog: true,
+      });
+      setPreviewState("idle");
+      window.open(STATIC_PREVIEW_URL, "_blank", "noopener,noreferrer");
+    } catch {
+      setPreviewState("offline");
+    } finally {
+      clearTimeout(timer);
+    }
+  };
   return <section className="rounded-lg border bg-surface-container-low p-2">
     <h2 className="font-semibold">{t("releaseConsole.androidPaths.groupTitle")}</h2>
     <div className="mt-2 grid gap-2 lg:grid-cols-2">
@@ -95,7 +141,7 @@ export function AndroidReleasePaths({ busy, jobs, start, t }: {
               disabled={busy} onClick={() => void start({ commandId: path.id })}>
               {running ? <LoaderCircle className="h-4 w-4 animate-spin" />
                 : "danger" in path && path.danger ? <CloudUpload className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              {running ? t("releaseConsole.jobStatus.running") : t("releaseConsole.build.launch")}
+              {running ? t("releaseConsole.jobStatus.running") : t(path.action)}
             </Button>
             {secondary ? (
               <Button variant="outline" disabled={busy}
@@ -106,6 +152,9 @@ export function AndroidReleasePaths({ busy, jobs, start, t }: {
                 {t(secondary.label)}
               </Button>
             ) : null}
+            {running && job ? <StopButton job={job} cancel={cancel} t={t} /> : null}
+            {secondaryRunning && secondaryJob
+              ? <StopButton job={secondaryJob} cancel={cancel} t={t} /> : null}
           </div>
           {job ? <StatusChip job={job} t={t} /> : null}
           {secondaryJob ? <StatusChip job={secondaryJob} t={t} /> : null}
@@ -121,12 +170,22 @@ export function AndroidReleasePaths({ busy, jobs, start, t }: {
           : <FolderOpen className="h-4 w-4" />}
         {t("releaseConsole.androidPaths.openOutputs")}
       </Button>
+      {openOutputsRunning && openOutputsJob
+        ? <StopButton job={openOutputsJob} cancel={cancel} t={t} /> : null}
       {/* `window.open` rather than a plain anchor: embedded webviews ignore
           target="_blank" on links, and this must always be a new tab. */}
-      <Button variant="outline"
-        onClick={() => window.open(STATIC_PREVIEW_URL, "_blank", "noopener,noreferrer")}>
-        <ExternalLink className="h-4 w-4" />{t("releaseConsole.build.preview")}
+      <Button variant="outline" disabled={previewState === "checking"}
+        onClick={() => void openPreview()}>
+        {previewState === "checking"
+          ? <LoaderCircle className="h-4 w-4 animate-spin" />
+          : <ExternalLink className="h-4 w-4" />}
+        {t("releaseConsole.androidPaths.openPreview")}
       </Button>
+      {previewState === "offline" ? (
+        <span role="alert" className="rounded-md bg-error-container px-2 py-1 text-xs text-on-error-container">
+          {t("releaseConsole.androidPaths.previewOffline")}
+        </span>
+      ) : null}
       {openOutputsJob ? (
         <span className="text-xs text-on-surface-variant">
           {t(`releaseConsole.jobStatus.${openOutputsJob.status}`)}

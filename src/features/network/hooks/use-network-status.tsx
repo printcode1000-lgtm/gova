@@ -12,6 +12,7 @@ import {
 } from 'react';
 
 import { networkApiService } from '../services/network-api-service';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export type NetworkStatus = 'checking' | 'online' | 'offline' | 'server-unreachable';
 
@@ -40,6 +41,12 @@ export function NetworkStatusProvider({ children }: { children: ReactNode }) {
     activeCheck.current?.abort();
 
     if (browserIsOffline()) {
+      reportPreAuthFailure(
+        'startup-network-health-check',
+        new Error('browserOffline'),
+        {},
+        'warn',
+      );
       setStatus('offline');
       setIsChecking(false);
       return;
@@ -52,10 +59,19 @@ export function NetworkStatusProvider({ children }: { children: ReactNode }) {
     try {
       const healthy = await networkApiService.checkHealth(controller.signal);
       if (sequence === checkSequence.current) {
+        if (!healthy) {
+          reportPreAuthFailure(
+            'startup-network-health-check',
+            new Error('serverUnreachable'),
+            {},
+            'warn',
+          );
+        }
         setStatus(healthy ? 'online' : 'server-unreachable');
       }
     } catch (error) {
       if (controller.signal.aborted) return;
+      reportPreAuthFailure('startup-network-health-check', error, {}, 'warn');
       if (sequence === checkSequence.current) {
         setStatus(browserIsOffline() ? 'offline' : 'server-unreachable');
       }

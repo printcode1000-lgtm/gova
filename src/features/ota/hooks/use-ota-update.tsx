@@ -18,6 +18,7 @@ import {
   otaUpdateService,
 } from "../services/ota-update-service";
 import type { OtaDownloadProgress, OtaStoredState } from "../types/ota.types";
+import { reportPreAuthFailure } from "@/features/system-logs/pre-auth-failure-reporter";
 
 interface OtaUpdateContextValue {
   state: OtaStoredState;
@@ -49,8 +50,10 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
       await otaUpdateService.checkDailyAndDownload(report, identity);
       await sync();
     } catch (failure) {
-      console.warn("[AsolOTA] Silent daily check deferred", failure);
-      await sync();
+      reportPreAuthFailure("ota-daily-check", failure, {}, "warn");
+      await sync().catch((syncFailure) => {
+        reportPreAuthFailure("ota-state-sync-after-failure", syncFailure);
+      });
     } finally {
       setBusy(false);
     }
@@ -64,8 +67,12 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener(OTA_STATE_EVENT, handleState);
     document.addEventListener("visibilitychange", handleVisibility);
-    void sync();
-    void runDaily();
+    void sync().catch((failure) => {
+      reportPreAuthFailure("ota-initial-state-sync", failure);
+    });
+    void runDaily().catch((failure) => {
+      reportPreAuthFailure("ota-initial-daily-check", failure);
+    });
     return () => {
       window.removeEventListener(OTA_STATE_EVENT, handleState);
       document.removeEventListener("visibilitychange", handleVisibility);
@@ -79,9 +86,12 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
     try {
       await otaUpdateService.checkAndDownload(report, identity);
     } catch (failure) {
+      reportPreAuthFailure("ota-manual-check", failure);
       setError(failure instanceof Error ? failure.message : String(failure));
     } finally {
-      await sync();
+      await sync().catch((failure) => {
+        reportPreAuthFailure("ota-state-sync-after-manual-check", failure);
+      });
       setBusy(false);
     }
   }, [busy, identity, report, sync]);

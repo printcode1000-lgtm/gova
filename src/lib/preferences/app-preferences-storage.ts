@@ -30,12 +30,11 @@ export function normalizeAppPreferences(
 const APP_PREFS_DB_KEY = 'app-preferences';
 
 export async function readAppPreferencesFromDb(): Promise<AppPreferences> {
-  try {
-    const raw = await asolDbGet<Partial<AppPreferences>>(ASOL_DB_STORES.APP_SETTINGS, APP_PREFS_DB_KEY);
-    return normalizeAppPreferences(raw);
-  } catch {
-    return { ...DEFAULT_APP_PREFERENCES };
-  }
+  const raw = await asolDbGet<Partial<AppPreferences>>(
+    ASOL_DB_STORES.APP_SETTINGS,
+    APP_PREFS_DB_KEY,
+  );
+  return normalizeAppPreferences(raw);
 }
 
 export async function writeAppPreferencesToDb(prefs: AppPreferences): Promise<void> {

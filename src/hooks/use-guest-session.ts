@@ -7,6 +7,7 @@ import {
   type GuestSessionData,
 } from '@/modules/data-access/browser/asol-db';
 import * as React from 'react';
+import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 interface UseGuestSessionReturn {
   isGuest: boolean;
@@ -24,8 +25,12 @@ export function useGuestSession(): UseGuestSessionReturn {
 
   React.useEffect(() => {
     void (async () => {
-      const stored = await asolDbGetGuestSession();
-      setSession(stored);
+      try {
+        const stored = await asolDbGetGuestSession();
+        setSession(stored);
+      } catch (error) {
+        reportPreAuthFailure('load-guest-session', error);
+      }
     })();
   }, []);
 
@@ -47,10 +52,14 @@ export function useGuestSession(): UseGuestSessionReturn {
     isGuest: !!session,
     guestId: session?.id ?? null,
     startGuestSession: React.useCallback(() => {
-      void startGuestSession();
+      void startGuestSession().catch((error) => {
+        reportPreAuthFailure('start-guest-session', error);
+      });
     }, [startGuestSession]),
     endGuestSession: React.useCallback(() => {
-      void endGuestSession();
+      void endGuestSession().catch((error) => {
+        reportPreAuthFailure('end-guest-session', error);
+      });
     }, [endGuestSession]),
   };
 }
