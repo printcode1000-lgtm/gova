@@ -30,7 +30,8 @@ export function ReleaseConsolePage() {
     </div>
   </main>;
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-4 p-4 pb-24" dir={isRTL ? "rtl" : "ltr"}>
+    <main className="asol-release-console mx-auto w-full max-w-7xl space-y-4 p-4 pb-24"
+      dir={isRTL ? "rtl" : "ltr"}>
       <header><h1 className="text-2xl font-semibold">{t("releaseConsole.title")}</h1>
         <p className="mt-1 text-sm text-on-surface-variant">{t("releaseConsole.subtitle")}</p></header>
       <Tabs value={active} onValueChange={select}>

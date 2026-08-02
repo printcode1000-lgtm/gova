@@ -402,3 +402,22 @@ html[data-theme-hydrated="true"][data-app-hydrated="true"] body {
   opacity: 1;
   pointer-events: auto;
 }
+
+/* The release console mixes Arabic prose with command names, versions, and
+ * paths. Plaintext bidi isolates each text run without changing explicit LTR
+ * code blocks, inputs, or tables. */
+.asol-release-console {
+  text-align: start;
+}
+
+.asol-release-console :where(
+  h1, h2, h3, h4, p, label, summary, button, dt, dd, li, figcaption
+) {
+  text-align: start;
+  unicode-bidi: plaintext;
+}
+
+.asol-release-console [dir="ltr"] {
+  text-align: left;
+  unicode-bidi: isolate;
+}

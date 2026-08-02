@@ -8,8 +8,7 @@ export type BuildParameterName =
   | "optimization"
   | "releaseNotes"
   | "diagnostic"
-  | "resume"
-  | "skipOta"
+  | "otaSource"
   | "dryRun";
 
 export type BuildParameterSchema =
@@ -31,6 +30,7 @@ export interface BuildCommandCatalogEntry {
   expectedArtifactMeaningKeys: string[];
   estimatedDuration: string;
   exclusive: boolean;
+  hidden?: boolean;
   parameters: readonly BuildParameterSchema[];
   documentation: {
     titleKey: string;
@@ -47,8 +47,12 @@ const otaEnv = ["ASOL_OTA_R2_BUCKET_NAME", "ASOL_OTA_SIGNING_PRIVATE_KEY"];
 const notes = { name: "notes", type: "string", flag: "--notes", maxLength: 4000 } as const;
 const mandatory = { name: "mandatory", type: "boolean", flag: "--mandatory" } as const;
 const diagnostic = { name: "diagnostic", type: "boolean", flag: "--diagnostic" } as const;
-const resume = { name: "resume", type: "boolean", flag: "--resume" } as const;
-const skipOta = { name: "skipOta", type: "boolean", flag: "--skip-ota" } as const;
+const otaSource = {
+  name: "otaSource",
+  type: "enum",
+  flag: "--ota-source",
+  values: ["publish-new", "resume-published", "skip-ota"],
+} as const;
 const dryRun = { name: "dryRun", type: "boolean", flag: "--dry-run" } as const;
 const track = { name: "track", type: "enum", flag: "track", values: ["internal", "alpha", "beta", "production"] } as const;
 const rollout = { name: "rollout", type: "number", flag: "rollout", min: 0, max: 1 } as const;
@@ -57,10 +61,10 @@ const optimization = { name: "optimization", type: "enum", flag: "--optimization
 
 const exclusiveCategories = new Set<BuildCommandCategory>(["ota", "native-android", "fastlane"]);
 
-function entry(id: string, script: string, category: BuildCommandCategory, danger: BuildCommandDanger, requiredEnv: string[], expectedArtifacts: string[], estimatedDuration: string, confirmationPhrase?: string, parameters: readonly BuildParameterSchema[] = []): BuildCommandCatalogEntry {
+function entry(id: string, script: string, category: BuildCommandCategory, danger: BuildCommandDanger, requiredEnv: string[], expectedArtifacts: string[], estimatedDuration: string, confirmationPhrase?: string, parameters: readonly BuildParameterSchema[] = [], hidden = false): BuildCommandCatalogEntry {
   return {
     id, script, argv: [], category, danger, confirmationPhrase, requiredEnv, expectedArtifacts,
-    expectedArtifactMeaningKeys: expectedArtifacts.map(artifactMeaningKey), estimatedDuration,
+    expectedArtifactMeaningKeys: expectedArtifacts.map(artifactMeaningKey), estimatedDuration, hidden,
     exclusive: exclusiveCategories.has(category), parameters,
     documentation: {
       titleKey: `releaseConsole.commandDocs.${id}.title`,
@@ -87,7 +91,14 @@ export const BUILD_COMMAND_CATALOG = [
   entry("ota-publish", "ota:publish", "ota", "publishes-live", otaEnv, ["out/asol-web-manifest.json"], "10-20 min", "PUBLISH_OTA", [notes, mandatory]),
   entry("ota-status", "ota:status", "ota", "safe", otaEnv, [], "30 sec"),
   entry("ota-self-test", "ota:self-test", "verification", "safe", otaEnv, [], "1-3 min"),
-  entry("cap-build", "cap:build", "native-android", "destructive", [], ["android/app/src/main/assets/public", "android/app/build/outputs"], "20-45 min", undefined, [resume, skipOta, dryRun, optimization]),
+  entry("cap-build", "cap:build", "native-android", "destructive", [], ["android/app/src/main/assets/public", "android/app/build/outputs"], "20-45 min", undefined, [otaSource, dryRun, optimization]),
+  entry("release-android-with-ota", "release:android:with-ota", "native-android", "destructive", [], ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "25-50 min", undefined, [], true),
+  entry("release-android-no-ota", "release:android:no-ota", "native-android", "destructive", [...playEnv, ...signingEnv], ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "30-60 min", undefined, [], true),
+  entry("cap-open-android", "cap:open:android", "native-android", "safe", [], [], "<1 min", undefined, [], true),
+  // Verification category on purpose: opening a folder must not take the
+  // exclusive release lock that the native-android commands hold.
+  entry("android-open-outputs", "android:open:outputs", "verification", "safe", [], [], "<1 min", undefined, [], true),
+  entry("cap-prepare-android", "cap:prepare:android", "native-android", "destructive", [], ["out/asol-web-manifest.json", "android/app/src/main/assets/public"], "12-25 min", undefined, [], true),
   entry("cap-sync", "cap:sync", "native-android", "safe", [], ["android/app/src/main/assets/public"], "3-8 min"),
   entry("cap-copy", "cap:copy", "native-android", "safe", [], ["android/app/src/main/assets/public"], "2-5 min"),
   entry("cap-verify-defaults", "cap:verify-defaults", "verification", "safe", [], [], "1-3 min"),
@@ -135,6 +146,10 @@ export function materializeBuildCommandParameters(command: BuildCommandCatalogEn
     } else if (schema.type === "enum") {
       if (typeof value !== "string" || !schema.values.includes(value)) throw new Error(`releaseCommandParameterInvalid:${schema.name}`);
       if (schema.name === "optimization") { if (value === "no-r8") argv.push("--no-r8"); }
+      else if (schema.name === "otaSource") {
+        if (value === "resume-published") argv.push("--resume");
+        if (value === "skip-ota") argv.push("--skip-ota");
+      }
       else argv.push(`${schema.flag}:${value}`);
     } else if (schema.type === "number") {
       if (typeof value !== "number" || !Number.isFinite(value) || value < schema.min || value > schema.max) throw new Error(`releaseCommandParameterInvalid:${schema.name}`);
