@@ -1,5 +1,6 @@
 import { asolApi, ASOL_API_ROUTES } from '@/core/api';
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
+import { nativePlatform } from '@/native-platform';
 
 import type {
   OtaAdminDashboard,
@@ -26,6 +27,35 @@ function decodeBase64(value: string): ArrayBuffer {
 }
 
 export class OtaApiService {
+  private cachedInstallationId: string | null = null;
+
+  /**
+   * Staged rollout excludes any installation that reports no id, so this must
+   * never return empty and must never change within a session: a fresh id each
+   * call would move the device between buckets and flap its eligibility.
+   * Preference failures therefore degrade to a session-stable id rather than
+   * to nothing.
+   */
+  private async rolloutInstallationId(): Promise<string> {
+    if (this.cachedInstallationId) return this.cachedInstallationId;
+    const key = 'asol-ota-rollout-installation-id';
+    let value: string | null = null;
+    try {
+      value = (await nativePlatform.preferences.get(key)).value;
+    } catch {
+      // An unavailable preference store must not disable rollout eligibility.
+    }
+    if (!value) {
+      value = crypto.randomUUID();
+      try {
+        await nativePlatform.preferences.set(key, value);
+      } catch {
+        // Persisting failed; the in-memory id still keeps this session stable.
+      }
+    }
+    this.cachedInstallationId = value;
+    return value;
+  }
   getLocalManifest(signal?: AbortSignal): Promise<OtaManifest> {
     return asolApi.getPublicJson<OtaManifest>('/asol-web-manifest.json', {
       signal,
@@ -34,7 +64,7 @@ export class OtaApiService {
     });
   }
 
-  async getManifest(url: string, signal?: AbortSignal): Promise<OtaManifest> {
+  private async getRemoteJson<T>(url: string, signal?: AbortSignal): Promise<T> {
     if (Capacitor.isNativePlatform()) {
       if (signal?.aborted) throw new DOMException('The operation was aborted', 'AbortError');
       const response = await CapacitorHttp.get({
@@ -45,14 +75,22 @@ export class OtaApiService {
         readTimeout: 30_000,
       });
       assertSuccessfulResponse(response.status, url);
-      return (typeof response.data === 'string' ? JSON.parse(response.data) : response.data) as OtaManifest;
+      return (typeof response.data === 'string' ? JSON.parse(response.data) : response.data) as T;
     }
 
-    return asolApi.getAbsoluteJson<OtaManifest>(url, {
+    return asolApi.getAbsoluteJson<T>(url, {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,
     });
+  }
+
+  getManifest(url: string, signal?: AbortSignal): Promise<OtaManifest> {
+    return this.getRemoteJson<OtaManifest>(url, signal);
+  }
+
+  getRevocationDocument(url: string, signal?: AbortSignal): Promise<unknown> {
+    return this.getRemoteJson<unknown>(url, signal);
   }
 
   async getFile(url: string, signal?: AbortSignal): Promise<ArrayBuffer> {
@@ -87,12 +125,15 @@ export class OtaApiService {
     });
   }
 
-  getReleaseAccess(input: {
+  async getReleaseAccess(input: {
     releaseId: string;
     version: string;
     identity?: OtaIdentity;
   }, signal?: AbortSignal): Promise<OtaReleaseAccess> {
-    return asolApi.post<OtaReleaseAccess>(ASOL_API_ROUTES.ota.access, input, {
+    return asolApi.post<OtaReleaseAccess>(ASOL_API_ROUTES.ota.access, {
+      ...input,
+      installationId: await this.rolloutInstallationId(),
+    }, {
       signal,
       cache: 'no-store',
       suppressErrorLog: true,

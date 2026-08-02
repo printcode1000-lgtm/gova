@@ -7,42 +7,22 @@ import { getOtaApprovalServerConfig } from "@/core/config/server-env";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import { otaReleaseRepository } from "@/modules/data-access/domains/ota/index.server";
 import { compareOtaManifests } from "../utils/ota-release-diff";
+import { compareOtaCanonicalStrings } from "../utils/ota-canonical-order";
+import { isOtaRolloutEligible } from "../utils/ota-rollout";
+import { summarizeOtaAdoption } from "../utils/ota-adoption";
+import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
+import {
+  canonicalOtaManifestPayload,
+  legacyOtaManifestPayload,
+} from "../utils/ota-signature-payload";
 import type {
   OtaAdminDashboard,
   OtaIdentity,
   OtaManifest,
-  OtaManifestPayload,
   OtaReleaseAccess,
   OtaReleaseDiff,
   SetOtaReleaseApprovalInput,
 } from "../types/ota.types";
-
-function sortedFiles(
-  files: OtaManifestPayload["files"],
-): OtaManifestPayload["files"] {
-  return Object.fromEntries(
-    Object.entries(files).sort(([left], [right]) => left.localeCompare(right)),
-  );
-}
-
-function canonicalPayload(manifest: OtaManifest): string {
-  return JSON.stringify({
-    schemaVersion: manifest.schemaVersion,
-    delivery: manifest.delivery,
-    releaseId: manifest.releaseId,
-    version: manifest.version,
-    createdAt: manifest.createdAt,
-    baseUrl: manifest.baseUrl,
-    size: manifest.size,
-    fileCount: manifest.fileCount,
-    minimumNativeVersion: manifest.minimumNativeVersion,
-    requiredCapabilities: [...(manifest.requiredCapabilities ?? [])].sort(),
-    mandatory: manifest.mandatory,
-    notes: manifest.notes,
-    files: sortedFiles(manifest.files),
-    bundles: manifest.bundles,
-  });
-}
 
 function assertManifest(manifest: OtaManifest): void {
   if (manifest.schemaVersion !== 2 || manifest.delivery !== "files")
@@ -59,7 +39,15 @@ function assertManifest(manifest: OtaManifest): void {
   ) {
     throw new Error("otaManifestInvalid");
   }
-  for (const bundle of [manifest.bundles?.full, manifest.bundles?.delta]) {
+  const deltas = manifest.bundles?.deltas ?? [];
+  if (
+    manifest.bundles &&
+    (!Array.isArray(manifest.bundles.deltas) ||
+      deltas.some((delta, index) =>
+        !delta.fromVersion ||
+        (index > 0 && compareOtaCanonicalStrings(deltas[index - 1]!.fromVersion, delta.fromVersion) >= 0)))
+  ) throw new Error("otaManifestInvalid");
+  for (const bundle of [manifest.bundles?.full, ...deltas]) {
     if (!bundle) continue;
     const normalized = bundle.path.replaceAll("\\", "/");
     if (
@@ -87,12 +75,17 @@ function verifyManifestSignature(manifest: OtaManifest): boolean {
     format: "der",
     type: "spki",
   });
-  return verify(
-    "sha256",
-    Buffer.from(canonicalPayload(manifest)),
-    { key: publicKey, dsaEncoding: "ieee-p1363" },
-    Buffer.from(manifest.signature, "base64"),
-  );
+  const signature = Buffer.from(manifest.signature, "base64");
+  const verifyPayload = (payload: string) =>
+    verify(
+      "sha256",
+      Buffer.from(payload),
+      { key: publicKey, dsaEncoding: "ieee-p1363" },
+      signature,
+    );
+  if (verifyPayload(canonicalOtaManifestPayload(manifest))) return true;
+  const legacyPayload = legacyOtaManifestPayload(manifest);
+  return legacyPayload !== null && verifyPayload(legacyPayload);
 }
 
 async function fetchCurrentManifest(): Promise<OtaManifest> {
@@ -116,6 +109,7 @@ export const otaReleaseService = {
     releaseId: string;
     version: string;
     identity?: OtaIdentity;
+    installationId?: string;
   }): Promise<OtaReleaseAccess> {
     if (!input.releaseId || !input.version)
       throw new Error("otaReleaseIdentityRequired");
@@ -138,13 +132,24 @@ export const otaReleaseService = {
     const approved = Boolean(
       release?.version === input.version && release.approved,
     );
+    const rolloutEligible = Boolean(
+      approved && release && isOtaRolloutEligible(
+        input.releaseId,
+        input.installationId ?? "",
+        release.rolloutPercentage,
+      ),
+    );
     return {
       releaseId: input.releaseId,
       version: input.version,
-      allowed: approved,
+      allowed: rolloutEligible,
       approved,
       superAdmin: false,
-      reason: approved ? "approved" : "awaiting_approval",
+      reason: !approved
+        ? "awaiting_approval"
+        : rolloutEligible
+          ? "approved"
+          : "rollout_pending",
     };
   },
 
@@ -157,6 +162,7 @@ export const otaReleaseService = {
       current: { release, manifest, signatureVerified: true },
       history: await otaReleaseRepository.list(),
       audit: await otaReleaseRepository.listAudit(),
+      adoption: summarizeOtaAdoption(await persistentSystemLogService.list(1000)),
     };
   },
 
@@ -187,11 +193,12 @@ export const otaReleaseService = {
     ) {
       throw new Error("otaReleaseNotCurrent");
     }
-    await otaReleaseRepository.discover(manifest);
+    const release = await otaReleaseRepository.discover(manifest);
     await otaReleaseRepository.setApproval({
       releaseId: input.releaseId,
       version: input.version,
       approved: input.approved,
+      rolloutPercentage: input.rolloutPercentage ?? release.rolloutPercentage,
       actorUid: input.identity.uid,
     });
     return this.getAdminDashboard(input.identity);

@@ -103,6 +103,7 @@ const apiPatterns = new Map<string, string>([
   ["backgroundDownload.schedule", CapabilityKeys.BackgroundDownloadBundle],
   ["backgroundDownload.status", CapabilityKeys.BackgroundDownloadBundle],
   ["backgroundDownload.read", CapabilityKeys.BackgroundDownloadBundle],
+  ["storageCapacity.getFreeSpace", CapabilityKeys.StorageCapacityFreeSpace],
 ]);
 
 export function scanSourceCapabilityReferences(root: string): string[] {

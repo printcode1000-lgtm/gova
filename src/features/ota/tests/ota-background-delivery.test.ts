@@ -1,24 +1,29 @@
 /** Single responsibility: verify daily scheduling, bundle safety, and durable task state. */
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
+import { createHash, generateKeyPairSync, sign, verify } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { zipSync } from "fflate";
 
 import {
   extractOtaBundle,
   selectOtaBundle,
-  verifyOtaBundleChunks,
   type OtaBundleSink,
 } from "../utils/ota-bundle";
 import {
+  clampFutureOtaCheckTimestamp,
   isDailyOtaCheckDue,
   isReadyForOtaActivation,
   migrateOtaState,
   OTA_DAILY_CHECK_INTERVAL_MS,
   reconcileNativeDownloadTask,
+  requiredOtaFreeBytes,
   shouldRunOtaCheck,
 } from "../utils/ota-state";
 import type { OtaDownloadProgress, OtaManifest } from "../types/ota.types";
+import {
+  canonicalOtaManifestPayload,
+  legacyOtaManifestPayload,
+} from "../utils/ota-signature-payload";
 
 function hash(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
@@ -51,7 +56,10 @@ function manifest(): OtaManifest {
     },
     bundles: {
       full: { path: "bundles/r/full.zip", sha256: "a".repeat(64), size: 20 },
-      delta: { path: "bundles/r/from-1.0.0.zip", fromVersion: "1.0.0", sha256: "b".repeat(64), size: 10 },
+      deltas: [
+        { path: "bundles/r/from-0.9.0.zip", fromVersion: "0.9.0", sha256: "c".repeat(64), size: 12 },
+        { path: "bundles/r/from-1.0.0.zip", fromVersion: "1.0.0", sha256: "b".repeat(64), size: 10 },
+      ],
     },
     signature: "test",
   };
@@ -76,18 +84,36 @@ function memorySink(files: Map<string, Uint8Array>): OtaBundleSink {
 async function main(): Promise<void> {
   const ota = manifest();
   assert.equal(selectOtaBundle(ota, "1.0.0")?.kind, "delta");
-  assert.equal(selectOtaBundle(ota, "0.9.0")?.kind, "full");
+  assert.equal(selectOtaBundle(ota, "0.8.0")?.kind, "full");
   assert.equal(selectOtaBundle({ ...ota, bundles: undefined }, "1.0.0"), null);
+
+  const legacy = { ...ota, bundles: undefined } as OtaManifest & {
+    requiredCapabilities?: string[];
+  };
+  delete legacy.requiredCapabilities;
+  const legacyPayload = legacyOtaManifestPayload(legacy);
+  assert.ok(legacyPayload);
+  assert.notEqual(legacyPayload, canonicalOtaManifestPayload(legacy));
+  const keys = generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+  const legacySignature = sign("sha256", Buffer.from(legacyPayload), {
+    key: keys.privateKey,
+    dsaEncoding: "ieee-p1363",
+  });
+  assert.equal(
+    verify(
+      "sha256",
+      Buffer.from(legacyPayload),
+      { key: keys.publicKey, dsaEncoding: "ieee-p1363" },
+      legacySignature,
+    ),
+    true,
+  );
+  assert.equal(legacyOtaManifestPayload(ota), null);
 
   const archive = zipSync({
     "a.js": new TextEncoder().encode("alpha"),
     "nested/b.js": new TextEncoder().encode("beta"),
   });
-  await verifyOtaBundleChunks(chunks(archive), hash(archive), archive.length);
-  await assert.rejects(
-    verifyOtaBundleChunks(chunks(archive), "0".repeat(64), archive.length),
-    /checksum mismatch/,
-  );
   const files = new Map<string, Uint8Array>();
   assert.deepEqual(
     await extractOtaBundle(chunks(archive), ota.files, memorySink(files)),
@@ -110,6 +136,11 @@ async function main(): Promise<void> {
   assert.equal(isDailyOtaCheckDue(undefined, now), true);
   assert.equal(isDailyOtaCheckDue(now - 1_000, now), false);
   assert.equal(isDailyOtaCheckDue(now - OTA_DAILY_CHECK_INTERVAL_MS, now), true);
+  assert.equal(isDailyOtaCheckDue(now + OTA_DAILY_CHECK_INTERVAL_MS, now), true);
+  assert.equal(isDailyOtaCheckDue(now, now - 5_000), true, "a backwards clock jump is due");
+  assert.equal(clampFutureOtaCheckTimestamp(now + 1, now), now);
+  assert.equal(clampFutureOtaCheckTimestamp(now - 1, now), now - 1);
+  assert.equal(requiredOtaFreeBytes(10_000_000, 4_000_000), 28_800_000);
   assert.equal(shouldRunOtaCheck("automatic", now - 1_000, now), false);
   assert.equal(shouldRunOtaCheck("manual", now - 1_000, now), true);
 
@@ -160,7 +191,7 @@ async function main(): Promise<void> {
   const checkSource = readFileSync("src/features/ota/services/ota-update-service.ts", "utf8")
     .split("async checkAndDownload", 2)[1]!
     .split("async checkDailyAndDownload", 1)[0]!;
-  const failureBlock = checkSource.split("} catch (error) {", 2)[1]!;
+  const failureBlock = checkSource.slice(checkSource.lastIndexOf("} catch (error) {"));
   assert.equal(failureBlock.includes("lastSuccessfulCheckAt"), false, "a failed check does not consume the interval");
   assert.equal(checkSource.includes("downloadNativeBundle("), true, "discovery immediately starts native delivery");
   assert.equal(checkSource.includes("downloadPerFile("), true, "web keeps the per-file fallback");

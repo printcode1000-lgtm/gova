@@ -208,6 +208,9 @@
     "ota.nativeUpdateRequired":  "يلزم تحديث التطبيق من المتجر",
     "ota.noUpdate":  "لا يوجد تحديث جديد",
     "ota.verifying":  "جارٍ التحقق من التحديث",
+    "ota.bundleVerifying": "جارٍ التحقق من سلامة حزمة التحديث",
+    "ota.insufficientStorage": "وفّر مساحة لا تقل عن {size} لتنزيل هذا التحديث",
+    "ota.provisioningBaseline": "جارٍ تجهيز مساحة التحديث المحلية",
     "profilePreview.pageTitle":  "صفحة مقدم الخدمة",
     "profilePreview.linkCopied":  "تم نسخ رابط الصفحة",
     "profilePreview.shareFailed":  "تعذرت مشاركة الرابط",
@@ -1494,5 +1497,6 @@
     "ota.settings.checking": "جارٍ الفحص والتنزيل",
     "ota.current": "التطبيق محدّث",
     "ota.ready": "التحديث جاهز وسيُثبّت عند التشغيل التالي",
-    "ota.revoked": "تم سحب التحديث"
+    "ota.revoked": "تم سحب التحديث",
+    "ota.superseded": "استُبدل التحديث الجاهز بإصدار أحدث"
 }

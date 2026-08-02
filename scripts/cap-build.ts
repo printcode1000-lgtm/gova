@@ -160,7 +160,7 @@ async function verifyR2Files(manifest: OtaManifest): Promise<void> {
       }
     },
   );
-  const bundles = [manifest.bundles?.full, manifest.bundles?.delta].filter(
+  const bundles = [manifest.bundles?.full, ...(manifest.bundles?.deltas ?? [])].filter(
     (bundle): bundle is NonNullable<typeof bundle> => Boolean(bundle),
   );
   for (const bundle of bundles) {

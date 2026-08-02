@@ -3,8 +3,8 @@
 ## Contract
 
 ASOL uses one forward-only OTA channel. File paths, sizes, and SHA-256 values
-remain the unit of truth, while native background delivery uses one signed ZIP
-transport object per release. The device keeps a changed-files-only rollback
+remain the unit of truth, while each native download uses one signed ZIP
+transport object selected from the current release. The device keeps a changed-files-only rollback
 backup during activation. Release approval history is stored in the users
 Turso database.
 
@@ -90,8 +90,14 @@ Every R2 manifest is identified by the exact pair `releaseId + version`. Approva
 - Newly discovered releases are inserted with `approved = false`.
 - Guests and ordinary authenticated users cannot download or activate an unapproved release.
 - The super-admin bypasses approval and can download a release immediately for device testing.
-- Approving a release makes it available to all clients on their next automatic check.
-- Revoking a release prevents new downloads and activation of pending copies. It does not roll back devices that already activated the release.
+- Approving a release makes it available to the configured rollout cohort on
+  its next automatic check; the default 100% preserves the previous behaviour.
+- Each release has a server-side rollout percentage, defaulting to 100%. An
+  anonymous installation key and release ID produce a stable 0-99 bucket. A
+  percentage increase only admits additional buckets and requires no republish.
+- Revoking approval prevents new downloads and pending activation. Emergency
+  version revocation also returns an activated OTA to the native store baseline
+  at the first connected foreground session.
 - The signed manifest is validated by the server before it can be shown or approved in the admin UI.
 
 Approval is exposed through Business APIs:
@@ -150,18 +156,25 @@ OTA transfers a modified file in full. Therefore `downloadBytes` is the sum of e
 
 ## R2 Layout
 
-R2 has one current manifest and file tree plus immutable release bundles:
+R2 has one current manifest and file tree, three manifest history entries, and
+only the current release's immutable transport bundles:
 
 ```text
 app-updates/
 |-- manifest.json
+|-- revocations.json
 |-- files/
     |-- index.html
     |-- _next/static/...
     `-- ...
+|-- history/
+|   |-- <version>.json
+|   `-- ... latest three only
 `-- bundles/<releaseId>/
     |-- full.zip
-    `-- from-<previousVersion>.zip
+    |-- from-<version-1>.zip
+    |-- from-<version-2>.zip
+    `-- from-<version-3>.zip
 ```
 
 `app-updates/releases/` is legacy and must remain absent. `cap:build` removes any legacy objects found there.
@@ -182,12 +195,13 @@ Do not pass `--version` or `--notes`. The command performs this sequence:
 4. Pins the web version, native version, and deterministic Next.js Build ID to the new version.
 5. Runs the static build and generates `out/asol-web-manifest.json`.
 6. Compares the new local file list with the previous R2 manifest.
-7. Creates a full transport bundle and a changed-files-only bundle from the
-   immediately previous version.
+7. Creates a full transport bundle and up to three changed-files-only bundles
+   from retained manifest history.
 8. Uploads only new or changed individual files and the immutable bundles.
 9. Deletes remote file objects that no longer exist locally.
-10. Signs and publishes `app-updates/manifest.json` last, including bundle hashes.
-11. Deletes legacy objects under `app-updates/releases/`.
+10. Signs and publishes `app-updates/manifest.json`, including bundle hashes.
+11. Archives the manifest, republishes revocations, retains three history
+    records, removes older bundle directories, and deletes legacy releases.
 12. Updates Android `versionName` and `versionCode`.
 13. Updates iOS `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`.
 14. Compares the local and remote manifests.
@@ -233,12 +247,26 @@ For every local output path, publication compares its SHA-256 and size with the 
 
 Changed files use revalidation cache headers because their URLs remain stable between versions. The signed manifest uses `no-store` and is written only after file uploads and deletions complete.
 
-The normal native path downloads one `from-<previousVersion>.zip` when its
-`fromVersion` equals the running bundle. A client farther behind downloads
-`full.zip`. Web/recovery clients retain the individual-file path. ZIP is only
+The mutable `files/` tree is exposed between the first file PUT and the final
+manifest commit. The publisher prints this exact window in milliseconds; for a
+multi-thousand-file release it can last several minutes depending on R2 and the
+connection. Native ZIP keys are immutable and unaffected. A per-file client
+that detects an old-manifest/new-file checksum race discards discovery and
+staging, waits one second, refetches the manifest, and retries the whole check
+once. Avoid publishing at peak usage times. Version-scoping the full `files/`
+tree was rejected because it would permanently multiply storage for a bounded
+race already handled by verification and retry.
+
+The normal native path searches up to three `deltas` for a `fromVersion` equal
+to the running bundle. A client farther behind downloads `full.zip`.
+Web/recovery clients retain the individual-file path. ZIP is only
 the transport: its hash is signed, extraction is streamed with `fflate.Unzip`,
 every entry passes path validation, and every extracted file is checked against
 the signed per-file hash before the release can become ready.
+
+The native downloader checks ZIP size and SHA-256 in 64 KB chunks before it
+reports `completed`. JavaScript then crosses the bridge once for streaming
+extraction; per-file hashes are still checked after extraction.
 
 All R2 GET, HEAD, LIST, PUT, and DELETE operations use SDK adaptive retries plus explicit exponential-backoff retries for timeouts, rate limits, server errors, `InternalError`, and `SlowDown`. A final error includes the operation, object key, HTTP status, request ID, and SDK attempt count when provided.
 
@@ -275,13 +303,18 @@ Example schema v2 manifest:
   },
   "bundles": {
     "full": { "path": "bundles/<releaseId>/full.zip", "sha256": "...", "size": 21000000 },
-    "delta": { "path": "bundles/<releaseId>/from-0.1.7.zip", "fromVersion": "0.1.7", "sha256": "...", "size": 12000000 }
+    "deltas": [
+      { "path": "bundles/<releaseId>/from-0.1.5.zip", "fromVersion": "0.1.5", "sha256": "...", "size": 13000000 },
+      { "path": "bundles/<releaseId>/from-0.1.6.zip", "fromVersion": "0.1.6", "sha256": "...", "size": 12500000 },
+      { "path": "bundles/<releaseId>/from-0.1.7.zip", "fromVersion": "0.1.7", "sha256": "...", "size": 12000000 }
+    ]
   },
   "signature": "..."
 }
 ```
 
-The manifest is signed with P-256. Capability keys and file entries are sorted for canonical signing. Every listed path has a SHA-256 and byte size.
+The manifest is signed with P-256. Capability keys, file entries, and Delta
+metadata are sorted for canonical signing. Every listed path has a SHA-256 and byte size.
 
 `baseUrl` always points to the non-versioned `app-updates/files` directory.
 
@@ -314,6 +347,86 @@ checks bypass the interval. Failed discovery does not advance the successful
 check timestamp. Native Android uses one `DownloadManager` task and iOS uses
 one background `URLSession` task; task identity is persisted and reattached
 after normal process recreation. Web falls back to verified per-file transfer.
+
+Before creating a native download, the shell measures free bytes on the app's
+data volume. Atomic activation needs one complete candidate, up to one complete
+staged payload, and the transport; required free space is therefore
+`(2 * manifest.size + transport.size) * 1.20`. The 20% margin covers filesystem
+metadata and temporary I/O. Insufficient space is retryable, not a failed
+release. If measurement is unavailable, OTA proceeds with its integrity checks.
+
+A successful daily timestamp that lies in the device's future is immediately
+due and is clamped to the current wall clock. This self-heals manual clock
+changes, dead-RTC boots, factory resets, and backwards time jumps.
+
+Every foreground entry also fetches the compact signed `revocations.json` with
+a three-second bound independent of the daily interval. Successfully verified
+documents and their highest accepted `issuedAt` are persisted together in
+AsolDB. Offline, timed-out, invalid, or tampered responses fall back to that
+persisted document and are never cached as successful fetches. A correctly
+signed document older than the persisted high-water mark is rejected as a
+replay. A revoked pending release is discarded. A revoked running OTA returns
+to Capacitor's bundled `public` assets and clears OTA staging and transaction
+state. This never runs on splash, so emergency rollback applies on the first
+foreground session, using either a fresh verified document or the last verified
+offline copy.
+
+The web application is outside this kill switch by design: `isEnabled()` is
+false without the Capacitor adapter, and web deployments are served fresh from
+the host. During an incident, do not interpret web behavior as proof that native
+clients have received or applied a revocation.
+
+Emergency revocation does not build the project and uploads only the compact
+control document:
+
+```bash
+npm run ota:revoke -- 0.2.4
+npm run ota:revoke -- --restore 0.2.4
+```
+
+The command updates `scripts/ota/ota-revocations.json`, signs it with the OTA
+key, and writes `app-updates/revocations.json` with `no-store, max-age=0`.
+Normal publication republishes the tracked list.
+
+Never reuse a revoked version number. Revocation identifies the version string,
+not the release ID, so republishing a fixed build under the same version remains
+revoked. Publish the fix with a higher version.
+
+### Escalation ladder — pick the lowest rung that covers the blast radius
+
+The rollout percentage is **not** a brake: it can only be raised, never lowered
+(`otaRolloutCannotDecrease`), because lowering it would strand devices that were
+already told they were eligible. Stopping a bad release uses these three rungs
+instead, in order:
+
+| Rung | Command | Stops | Does not stop |
+| --- | --- | --- | --- |
+| 1. Withdraw approval | super-admin page, set the release unapproved | New downloads, immediately | Anything already downloaded or activated |
+| 2. Withdraw approval, then wait one launch | as above | Staged releases — `reverifyPendingApproval` discards them at splash | Devices that already activated |
+| 3. Revoke | `npm run ota:revoke -- <version>` | Everything, including activated devices, which revert to the store bundle | Offline devices, until their first connected foreground session |
+
+Rung 1 is the default response and needs no build. Escalate to rung 3 only when
+the release is already running on devices — it forces every one of them back to
+the store-bundled version, which is disruptive but always safe.
+
+### Emergency revocation runbook
+
+1. Record the current tracked and live `revokedVersions` lists.
+2. Run `npm run ota:revoke -- <version>` and confirm the command reports the
+   version while changing only `revocations.json` and the tracked list.
+3. Bring a test device online, foreground the installed app, and confirm it
+   returns to the store-bundled version. The check is not performed on splash.
+4. Confirm pending devices refuse the version and offline devices continue to
+   enforce it after one successful foreground fetch.
+5. Publish the repaired application under a new version. Restore the old entry
+   only when deliberately required with
+   `npm run ota:revoke -- --restore <version>`, then repeat the live/tracked
+   comparison.
+
+A ready pending release no longer blocks discovery. If the signed remote
+manifest is newer, its staged payload and native task are cleaned, status moves
+through `ota.superseded`, and normal download continues for the newer release.
+The automatic 24-hour gate remains unchanged; manual checks still bypass it.
 
 Splash performs no discovery and no download. A fully ready release receives
 one approval request bounded to two seconds. Explicit revocation discards it;
@@ -356,6 +469,14 @@ After a successful `cap:build`, all these values must be equal:
 Android `versionCode` and iOS `CURRENT_PROJECT_VERSION` are calculated numerically from the semantic version. For example, `0.1.8` becomes `108`.
 
 ## Diagnostics
+
+OTA lifecycle outcomes use the existing `system_logs` ingestion path. Devices
+queue and batch check, discovery, download, verification, activation, rollback,
+and revocation outcomes in AsolDB; logging failure never blocks OTA. Payloads
+contain only local/target versions, outcome/reason codes, and platform. Each
+installation sends a terminal release outcome once, so the server's deduplicated
+`occurrences` count is displayed as an adoption count on the super-admin OTA
+page without transmitting account or device identity.
 
 Splash displays technical current/R2 versions, changed/deleted counts, download size, and failure details only to the super-admin. Other users see a loading spinner. Android Studio Logcat messages use `[AsolOTA]`.
 
@@ -444,22 +565,54 @@ keys. `minimumNativeVersion` remains as a compatibility floor.
 
 ## Delta, resume, and rollback
 
-Changed files download into `asol-ota/staging/<version>` with a concurrency of
-six. A completion marker stores the expected SHA-256 per file. On restart the
-client re-reads and hashes every marked staged file before skipping its
-download. Unchanged files have no download, read, or write operation during a
-normal OTA.
+The staged release *is* the activation candidate: before downloading, the client
+clones the served tree to `asol-ota/active/<version>` and writes changed files
+straight into that clone, with a concurrency of six. A completion marker stores
+the expected SHA-256 per file. On restart the client re-reads and hashes every
+marked file before skipping its download, and a resume whose candidate directory
+no longer exists restarts from a fresh clone. Unchanged files have no download
+or write operation during a normal OTA.
 
-The `0.2.0` shell performs one baseline provisioning when it first moves from
-read-only store assets to `asol-ota/current`. This is a one-time shell migration,
-not a per-release copy. Later releases patch that working directory only.
+The shell performs one baseline provisioning when it first moves from read-only
+store assets to private OTA storage. It reports dedicated progress, copies local
+files with concurrency 24, and checkpoints every 32 verified files so process
+death resumes near the interruption instead of restarting all 3,457 files.
 
-Before mutation, activation state is persisted and every changed/deleted file
-plus the prior manifest is copied to `asol-ota/rollback/<version>`. Files that
-did not previously exist are recorded. If the new bundle does not reach splash
-with its expected version, splash restores backups, removes newly added files,
-marks the release failed, and reactivates the previous path. A confirmed bundle
-persists the WebView path and deletes staging and rollback data.
+Activation never mutates the directory currently served by WebView, and never
+copies anything. The candidate is already complete when the download finishes —
+deletions are applied to it at that point — so activation is a single WebView
+path switch with no startup cost.
+
+At peak, storage holds the served tree, the candidate tree, and the ZIP:
+`2 * manifest.size + transport.size`. That is exactly what
+`requiredOtaFreeBytes` reserves before scheduling a download, so a device that
+passes the free-space check cannot run out of space during activation. There is
+no separate staging tree to reclaim; after confirmation the previous candidate
+and the baseline working tree are removed, leaving one active full tree.
+
+Rollback first records `rollbackPending`, switches to the prior path, and only
+then removes the candidate; interruption at any rollback step is retried on the
+next launch.
+
+## iOS Xcode verification checklist
+
+The source review verifies that `BackgroundDownloadPlugin.swift` and
+`StorageCapacityPlugin.swift` are members of the App target Sources phase, use
+Capacitor 8's `CAPPlugin`/`CAPBridgedPlugin` registration shape, and use the
+installed `CAPPluginCall` optional accessors. The background session reuses the
+same identifier through `AppDelegate`, moves the temporary file synchronously,
+and hashes it as 64 KB chunks. This is source review only; Windows does not
+compile Swift. Before the store release, verify all of the following in Xcode:
+
+1. Compile both local plugins against the resolved Capacitor 8 package.
+2. Confirm `volumeAvailableCapacityForImportantUsageKey` and its numeric bridge
+   on the minimum supported iOS version.
+3. Start a download, let iOS terminate and relaunch the app, and confirm the
+   background-session completion handler is called exactly once.
+4. Exercise download completion while protected data is unavailable and confirm
+   the temporary-file move into Application Support remains valid.
+5. Run Thread Sanitizer while status, completion, and removal overlap to verify
+   `UserDefaults` and session callback coordination.
 
 ## What still requires a store release
 

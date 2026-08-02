@@ -39,6 +39,7 @@ async function main(): Promise<void> {
         sha256: createHash("sha256").update(indexHtml).digest("hex"),
         size: Buffer.byteLength(indexHtml),
       },
+      deltas: [],
     },
   };
   const data = Buffer.from(canonicalManifestPayload(payload));

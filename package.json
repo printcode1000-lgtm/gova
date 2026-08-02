@@ -16,7 +16,7 @@
     "category:validate": "npx tsx scripts/validate-categories.ts",
     "test:categories": "npx tsx scripts/test-categories.ts",
     "test:installation-bootstrap": "npx tsx src/lib/installation/tests/installation-policy.test.ts",
-    "test": "npm run validate:error-logging && npm run test:categories && npm run test:installation-bootstrap && npm run test:r2-storage && npm run android:backup:validate && npm run android:r8:validate && npm run test:shipping-pricing && npm run test:delivery-planner && npm run test:seller-discounts && npm run test:marketplace-orders && npm run test:notifications && npm run test:favorites && npm run test:password-recovery && npm run test:image-upload-queue && npm run test:feature-flags && npm run test:ota-background && npm run test:data-health",
+    "test": "npm run validate:error-logging && npm run test:categories && npm run test:installation-bootstrap && npm run test:r2-storage && npm run android:backup:validate && npm run android:r8:validate && npm run test:shipping-pricing && npm run test:delivery-planner && npm run test:seller-discounts && npm run test:marketplace-orders && npm run test:notifications && npm run test:favorites && npm run test:password-recovery && npm run test:image-upload-queue && npm run test:feature-flags && npm run test:native-platform && npm run test:ota-compatibility && npm run test:ota-delivery && npm run test:ota-background && npm run test:ota-hardening && npm run test:data-health",
     "test:shipping-pricing": "npx tsx src/features/cart/tests/shipping-pricing.test.ts",
     "test:delivery-planner": "npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts",
     "test:seller-discounts": "npx tsx src/features/seller-discounts/tests/seller-discount-engine.test.ts",
@@ -31,6 +31,7 @@
     "test:feature-flags": "npx tsx src/features/feature-flags/tests/feature-flag-service.test.ts",
     "test:ota-delivery": "npx tsx src/features/ota/tests/ota-delivery.test.ts",
     "test:ota-background": "npx tsx src/features/ota/tests/ota-background-delivery.test.ts",
+    "test:ota-hardening": "npx tsx src/features/ota/tests/ota-hardening.test.ts",
     "test:runtime-context": "npx tsx scripts/test-runtime-context.ts && npx tsx src/modules/data-access/core/database-runtime-policy.test.ts",
     "test:r2-storage": "npx tsx scripts/test-r2-storage-topology.ts",
     "validate:error-logging": "npx tsx scripts/validate-error-logging.ts",
@@ -58,6 +59,7 @@
     "r2:migrate:folders": "npx tsx src/modules/data-access/tooling/migrate-r2-cloud-folders.ts",
     "ota:keygen": "npx tsx scripts/ota-keygen.ts",
     "ota:publish": "npx tsx scripts/ota-publish.ts",
+    "ota:revoke": "npx tsx scripts/ota/ota-revoke.ts",
     "ota:check": "npx tsx scripts/ota-publish.ts --dry-run",
     "test:ota-compatibility": "npx tsx scripts/test-ota-native-compatibility.ts",
     "ota:status": "npx tsx scripts/ota-status.ts",
@@ -91,7 +93,6 @@
     "cap:run:clean:ios": "npx tsx scripts/cap-run-clean.ts ios"
   },
   "dependencies": {
-    "@aws-crypto/sha256-browser": "^5.2.0",
     "@aws-sdk/client-s3": "^3.1075.0",
     "@aws-sdk/s3-request-presigner": "^3.1075.0",
     "@capacitor-mlkit/barcode-scanning": "^8.1.0",

@@ -36,7 +36,8 @@ type PluginFamily =
   | "toast"
   | "actionSheet"
   | "textZoom"
-  | "backgroundDownload";
+  | "backgroundDownload"
+  | "storageCapacity";
 
 const pluginLoaders: Record<
   PluginFamily,
@@ -149,6 +150,13 @@ const pluginLoaders: Record<
     }
     return true;
   }),
+  storageCapacity: createLazyPlugin("StorageCapacity", async () => {
+    const { Capacitor } = await import("@capacitor/core");
+    if (!Capacitor.isPluginAvailable("StorageCapacity")) {
+      throw new Error("StorageCapacity is not registered in this shell");
+    }
+    return true;
+  }),
 };
 
 const familyByKey = new Map<CapabilityKey, PluginFamily>([
@@ -192,6 +200,7 @@ const familyByKey = new Map<CapabilityKey, PluginFamily>([
   [CapabilityKeys.TextZoomGet, "textZoom"],
   [CapabilityKeys.TextZoomSet, "textZoom"],
   [CapabilityKeys.BackgroundDownloadBundle, "backgroundDownload"],
+  [CapabilityKeys.StorageCapacityFreeSpace, "storageCapacity"],
 ]);
 
 const webCapabilities = new Set<CapabilityKey>([

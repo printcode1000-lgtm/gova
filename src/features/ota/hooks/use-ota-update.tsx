@@ -45,6 +45,7 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
     if (isLoading || pathname === "/" || !otaUpdateService.isEnabled()) return;
     setBusy(true);
     try {
+      await otaUpdateService.enforceRevocations();
       await otaUpdateService.checkDailyAndDownload(report, identity);
       await sync();
     } catch (failure) {

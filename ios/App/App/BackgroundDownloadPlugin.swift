@@ -1,4 +1,5 @@
 import Capacitor
+import CryptoKit
 import Foundation
 
 /**
@@ -38,6 +39,7 @@ final class AsolBackgroundDownloadCoordinator: NSObject, URLSessionDownloadDeleg
             let task = self.session.downloadTask(with: url)
             task.taskDescription = releaseId
             self.defaults.removeObject(forKey: self.errorKey(releaseId))
+            self.defaults.set("pending", forKey: self.verificationKey(releaseId))
             self.defaults.set(sha256, forKey: self.hashKey(releaseId))
             self.defaults.set(size, forKey: self.sizeKey(releaseId))
             self.defaults.set(task.taskIdentifier, forKey: self.taskKey(releaseId))
@@ -52,6 +54,8 @@ final class AsolBackgroundDownloadCoordinator: NSObject, URLSessionDownloadDeleg
                 completion(self.snapshot(releaseId: releaseId, task: task))
             } else if let path = self.defaults.string(forKey: self.pathKey(releaseId)), FileManager.default.fileExists(atPath: path) {
                 completion(self.completedSnapshot(releaseId: releaseId, path: path))
+            } else if self.defaults.string(forKey: self.verificationKey(releaseId)) == "failed" {
+                completion(self.failedSnapshot(releaseId: releaseId))
             } else {
                 completion(["id": "", "releaseId": releaseId, "status": "missing", "bytesDownloaded": 0, "totalBytes": 0])
             }
@@ -62,14 +66,29 @@ final class AsolBackgroundDownloadCoordinator: NSObject, URLSessionDownloadDeleg
         session.getAllTasks { tasks in
             tasks.filter { $0.taskDescription == releaseId }.forEach { $0.cancel() }
             if let path = self.defaults.string(forKey: self.pathKey(releaseId)) { try? FileManager.default.removeItem(atPath: path) }
-            [self.pathKey(releaseId), self.hashKey(releaseId), self.sizeKey(releaseId), self.taskKey(releaseId)].forEach { self.defaults.removeObject(forKey: $0) }
+            [self.pathKey(releaseId), self.hashKey(releaseId), self.sizeKey(releaseId), self.taskKey(releaseId), self.verificationKey(releaseId), self.errorKey(releaseId)].forEach { self.defaults.removeObject(forKey: $0) }
             completion()
         }
     }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let releaseId = downloadTask.taskDescription else { return }
+        defaults.set("verifying", forKey: verificationKey(releaseId))
         do {
+            let expectedHash = defaults.string(forKey: hashKey(releaseId)) ?? ""
+            let expectedSize = Int64(defaults.integer(forKey: sizeKey(releaseId)))
+            let attributes = try FileManager.default.attributesOfItem(atPath: location.path)
+            let actualSize = (attributes[.size] as? NSNumber)?.int64Value ?? -1
+            let handle = try FileHandle(forReadingFrom: location)
+            defer { try? handle.close() }
+            var hasher = SHA256()
+            while let data = try handle.read(upToCount: 64 * 1024), !data.isEmpty {
+                hasher.update(data: data)
+            }
+            let actualHash = hasher.finalize().map { String(format: "%02x", $0) }.joined()
+            guard actualSize == expectedSize && actualHash.caseInsensitiveCompare(expectedHash) == .orderedSame else {
+                throw NSError(domain: "AsolOTA", code: 1, userInfo: [NSLocalizedDescriptionKey: "OTA bundle checksum mismatch"])
+            }
             let root = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
                 .appendingPathComponent("AsolOTA", isDirectory: true)
             try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
@@ -77,9 +96,19 @@ final class AsolBackgroundDownloadCoordinator: NSObject, URLSessionDownloadDeleg
             try? FileManager.default.removeItem(at: destination)
             try FileManager.default.moveItem(at: location, to: destination)
             defaults.set(destination.path, forKey: pathKey(releaseId))
+            defaults.set("completed", forKey: verificationKey(releaseId))
+            defaults.removeObject(forKey: errorKey(releaseId))
         } catch {
+            try? FileManager.default.removeItem(at: location)
+            defaults.set("failed", forKey: verificationKey(releaseId))
             defaults.set(error.localizedDescription, forKey: errorKey(releaseId))
         }
+    }
+
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard let error, let releaseId = task.taskDescription else { return }
+        defaults.set("failed", forKey: verificationKey(releaseId))
+        defaults.set(error.localizedDescription, forKey: errorKey(releaseId))
     }
 
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
@@ -91,7 +120,11 @@ final class AsolBackgroundDownloadCoordinator: NSObject, URLSessionDownloadDeleg
         switch task.state {
         case .running: state = "downloading"
         case .suspended: state = "pending"
-        case .completed: state = defaults.string(forKey: pathKey(releaseId)) == nil ? "failed" : "completed"
+        case .completed:
+            let verification = defaults.string(forKey: verificationKey(releaseId))
+            if verification == "completed" { state = "completed" }
+            else if verification == "failed" { state = "failed" }
+            else { state = "verifying" }
         default: state = "failed"
         }
         var value: [String: Any] = [
@@ -110,7 +143,16 @@ final class AsolBackgroundDownloadCoordinator: NSObject, URLSessionDownloadDeleg
         let expected = defaults.object(forKey: sizeKey(releaseId)) == nil
             ? size
             : Int64(defaults.integer(forKey: sizeKey(releaseId)))
+        let verification = defaults.string(forKey: verificationKey(releaseId))
+        if verification == "failed" { return failedSnapshot(releaseId: releaseId) }
+        if verification != "completed" {
+            return ["id": String(defaults.integer(forKey: taskKey(releaseId))), "releaseId": releaseId, "status": "verifying", "bytesDownloaded": size, "totalBytes": expected]
+        }
         return ["id": String(defaults.integer(forKey: taskKey(releaseId))), "releaseId": releaseId, "status": "completed", "bytesDownloaded": size, "totalBytes": expected, "filePath": path]
+    }
+
+    private func failedSnapshot(releaseId: String) -> [String: Any] {
+        return ["id": String(defaults.integer(forKey: taskKey(releaseId))), "releaseId": releaseId, "status": "failed", "bytesDownloaded": 0, "totalBytes": defaults.integer(forKey: sizeKey(releaseId)), "error": defaults.string(forKey: errorKey(releaseId)) ?? "OTA bundle verification failed"]
     }
 
     private func pathKey(_ id: String) -> String { "asol.ota.\(id).path" }
@@ -118,6 +160,7 @@ final class AsolBackgroundDownloadCoordinator: NSObject, URLSessionDownloadDeleg
     private func sizeKey(_ id: String) -> String { "asol.ota.\(id).size" }
     private func taskKey(_ id: String) -> String { "asol.ota.\(id).task" }
     private func errorKey(_ id: String) -> String { "asol.ota.\(id).error" }
+    private func verificationKey(_ id: String) -> String { "asol.ota.\(id).verification" }
 }
 
 @objc(BackgroundDownloadPlugin)

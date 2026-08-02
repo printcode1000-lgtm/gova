@@ -1,8 +1,9 @@
 import { App } from "@capacitor/app";
 import { Capacitor, registerPlugin } from "@capacitor/core";
-import { Directory, Encoding, Filesystem } from "@capacitor/filesystem";
+import { Directory, Filesystem } from "@capacitor/filesystem";
 
 interface CapacitorWebViewPlugin {
+  setServerAssetPath(options: { path: string }): Promise<void>;
   setServerBasePath(options: { path: string }): Promise<void>;
   getServerBasePath(): Promise<{ path: string }>;
   persistServerBasePath(): Promise<void>;
@@ -22,6 +23,7 @@ function webViewPlugin(): CapacitorWebViewPlugin {
 }
 const OTA_ROOT = "asol-ota";
 const WORKING_ROOT = `${OTA_ROOT}/current`;
+const ACTIVE_ROOT = `${OTA_ROOT}/active`;
 
 function bytesToBase64(bytes: Uint8Array): string {
   let binary = "";
@@ -104,18 +106,41 @@ export const capacitorOtaAdapter = {
     return (await App.getInfo()).version;
   },
 
+  /**
+   * The staged release *is* the activation candidate. Downloading straight into
+   * the candidate keeps peak disk at one served tree plus one candidate, and
+   * leaves activation a pure path switch with no copying at startup.
+   */
   releaseRoot(version: string): string {
-    return `${OTA_ROOT}/staging/${safeReleasePath(version)}`;
+    return `${ACTIVE_ROOT}/${safeReleasePath(version)}`;
   },
 
-  async prepareRelease(version: string): Promise<void> {
-    const releaseRoot = this.releaseRoot(version);
-    await removeReleaseRoot(releaseRoot);
-    await ensureDirectory(releaseRoot);
+  /**
+   * Materialize a complete candidate beside the served tree by cloning the base
+   * version, so partially downloaded files never leave it incomplete.
+   */
+  async prepareRelease(baseVersion: string, version: string): Promise<void> {
+    const candidateRoot = this.releaseRoot(version);
+    const priorActiveRoot = `${ACTIVE_ROOT}/${safeReleasePath(baseVersion)}`;
+    const sourceRoot = (await exists(priorActiveRoot))
+      ? priorActiveRoot
+      : WORKING_ROOT;
+    if (!(await exists(sourceRoot))) {
+      throw new Error(`OTA candidate source is missing: ${baseVersion}`);
+    }
+    await removeReleaseRoot(candidateRoot);
+    await ensureDirectory(ACTIVE_ROOT);
+    await Filesystem.copy({
+      from: sourceRoot,
+      to: candidateRoot,
+      directory: Directory.Data,
+      toDirectory: Directory.Data,
+    });
   },
 
-  async ensureRelease(version: string): Promise<void> {
-    await ensureDirectory(this.releaseRoot(version));
+  /** A resume is only valid while its candidate tree still exists. */
+  async releaseExists(version: string): Promise<boolean> {
+    return exists(this.releaseRoot(version));
   },
 
   async releaseFileExists(version: string, filePath: string): Promise<boolean> {
@@ -216,7 +241,7 @@ export const capacitorOtaAdapter = {
   },
 
   async isWorkingPath(path: string): Promise<boolean> {
-    return path === (await this.workingPath());
+    return path === (await this.workingPath()) || path.includes("/asol-ota/active/");
   },
 
   async writeWorkingFile(filePath: string, data: ArrayBuffer): Promise<void> {
@@ -233,113 +258,57 @@ export const capacitorOtaAdapter = {
     });
   },
 
-  async applyDelta(
-    version: string,
-    changed: readonly string[],
-    deleted: readonly string[],
-  ): Promise<{ addedFiles: string[] }> {
-    const backupRoot = `${OTA_ROOT}/rollback/${safeReleasePath(version)}`;
-    await removeReleaseRoot(backupRoot);
-    await ensureDirectory(backupRoot);
-    const addedFiles: string[] = [];
-    const touched = [
-      ...new Set([...changed, ...deleted, "asol-web-manifest.json"]),
-    ];
-    for (const filePath of touched) {
-      const safePath = safeReleasePath(filePath);
-      const source = `${WORKING_ROOT}/${safePath}`;
-      if (!(await exists(source))) {
-        addedFiles.push(safePath);
-        continue;
-      }
-      const parent = safePath.includes("/")
-        ? safePath.slice(0, safePath.lastIndexOf("/"))
-        : "";
-      if (parent) await ensureDirectory(`${backupRoot}/${parent}`);
-      await Filesystem.copy({
-        from: source,
-        to: `${backupRoot}/${safePath}`,
-        directory: Directory.Data,
-        toDirectory: Directory.Data,
-      });
-    }
-    await Filesystem.writeFile({
-      path: `${backupRoot}/rollback-meta.json`,
+  async prepareWorkingBaseline(): Promise<void> {
+    await removeReleaseRoot(WORKING_ROOT);
+    await ensureDirectory(WORKING_ROOT);
+  },
+
+  async readWorkingFile(filePath: string): Promise<ArrayBuffer> {
+    const result = await Filesystem.readFile({
+      path: `${WORKING_ROOT}/${safeReleasePath(filePath)}`,
       directory: Directory.Data,
-      data: JSON.stringify({ addedFiles }),
     });
-    for (const filePath of changed) {
-      const safePath = safeReleasePath(filePath);
-      const parent = safePath.includes("/")
-        ? safePath.slice(0, safePath.lastIndexOf("/"))
-        : "";
-      if (parent) await ensureDirectory(`${WORKING_ROOT}/${parent}`);
-      await Filesystem.copy({
-        from: `${this.releaseRoot(version)}/${safePath}`,
-        to: `${WORKING_ROOT}/${safePath}`,
-        directory: Directory.Data,
-        toDirectory: Directory.Data,
-      });
+    const encoded = typeof result.data === "string"
+      ? result.data
+      : await result.data.text();
+    const binary = atob(encoded);
+    return Uint8Array.from(binary, (character) => character.charCodeAt(0)).buffer;
+  },
+
+  /**
+   * Complete the candidate by dropping the files this release removes. The
+   * changed files were written straight into it while downloading, so nothing
+   * is copied here and activation stays a single path switch.
+   */
+  async finalizeCandidate(
+    version: string,
+    deleted: readonly string[],
+  ): Promise<string> {
+    const candidateRoot = this.releaseRoot(version);
+    if (!(await exists(candidateRoot))) {
+      throw new Error(`OTA candidate is missing: ${version}`);
     }
     for (const filePath of deleted)
-      await removeFile(`${WORKING_ROOT}/${safeReleasePath(filePath)}`);
-    await Filesystem.copy({
-      from: `${this.releaseRoot(version)}/asol-web-manifest.json`,
-      to: `${WORKING_ROOT}/asol-web-manifest.json`,
-      directory: Directory.Data,
-      toDirectory: Directory.Data,
-    });
-    return { addedFiles };
+      await removeFile(`${candidateRoot}/${safeReleasePath(filePath)}`);
+    return this.activationPath(version);
   },
 
   async rollbackDelta(version: string): Promise<void> {
-    const backupRoot = `${OTA_ROOT}/rollback/${safeReleasePath(version)}`;
-    let addedFiles: string[] = [];
-    try {
-      const metadata = await Filesystem.readFile({
-        path: `${backupRoot}/rollback-meta.json`,
-        directory: Directory.Data,
-        encoding: Encoding.UTF8,
-      });
-      addedFiles = JSON.parse(String(metadata.data)).addedFiles ?? [];
-    } catch {
-      /* An activation interrupted before mutation has nothing new to remove. */
-    }
-    for (const filePath of addedFiles)
-      await removeFile(`${WORKING_ROOT}/${safeReleasePath(filePath)}`);
-    const restore = async (relative = ""): Promise<void> => {
-      const root = relative ? `${backupRoot}/${relative}` : backupRoot;
-      let listing: Awaited<ReturnType<typeof Filesystem.readdir>>;
-      try {
-        listing = await Filesystem.readdir({
-          path: root,
-          directory: Directory.Data,
-        });
-      } catch {
-        return;
-      }
-      for (const entry of listing.files) {
-        const child = relative ? `${relative}/${entry.name}` : entry.name;
-        if (entry.type === "directory") await restore(child);
-        else if (child !== "rollback-meta.json") {
-          const parent = child.includes("/")
-            ? child.slice(0, child.lastIndexOf("/"))
-            : "";
-          if (parent) await ensureDirectory(`${WORKING_ROOT}/${parent}`);
-          await Filesystem.copy({
-            from: `${backupRoot}/${child}`,
-            to: `${WORKING_ROOT}/${child}`,
-            directory: Directory.Data,
-            toDirectory: Directory.Data,
-          });
-        }
-      }
-    };
-    await restore();
+    await removeReleaseRoot(this.releaseRoot(version));
+  },
+
+  async activationPath(version: string): Promise<string> {
+    return this.releasePath(version);
+  },
+
+  async confirmActivation(version: string, previousVersion: string): Promise<void> {
+    // The candidate for `version` is now the served tree — never remove it.
+    if (previousVersion !== version)
+      await removeReleaseRoot(`${ACTIVE_ROOT}/${safeReleasePath(previousVersion)}`);
+    await removeReleaseRoot(WORKING_ROOT);
   },
 
   async cleanupTransaction(version: string): Promise<void> {
-    await removeReleaseRoot(`${OTA_ROOT}/rollback/${safeReleasePath(version)}`);
     await removeReleaseRoot(this.releaseRoot(version));
   },
 
@@ -353,5 +322,14 @@ export const capacitorOtaAdapter = {
 
   async persistCurrentPath(): Promise<void> {
     await webViewPlugin().persistServerBasePath();
+  },
+
+  async revertToNativeBaseline(): Promise<void> {
+    // Capacitor 8 exposes bundled assets through the `public` asset path. An
+    // empty persisted base path makes the next launch choose those assets too.
+    await webViewPlugin().setServerBasePath({ path: "" });
+    await webViewPlugin().persistServerBasePath();
+    await webViewPlugin().setServerAssetPath({ path: "public" });
+    await removeReleaseRoot(OTA_ROOT);
   },
 };

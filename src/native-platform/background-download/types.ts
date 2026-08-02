@@ -9,6 +9,7 @@ export interface BackgroundDownloadRequest {
 export type BackgroundDownloadStatus =
   | "pending"
   | "downloading"
+  | "verifying"
   | "completed"
   | "failed"
   | "missing";

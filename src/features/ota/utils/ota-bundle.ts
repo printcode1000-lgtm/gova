@@ -1,6 +1,5 @@
 /** Single responsibility: select and safely stream OTA bundle entries into staging. */
 import { Unzip, UnzipInflate } from "fflate";
-import { Sha256 } from "@aws-crypto/sha256-browser";
 
 import type {
   OtaBundleEntry,
@@ -36,7 +35,9 @@ export function selectOtaBundle(
   manifest: OtaManifest,
   localVersion: string,
 ): SelectedOtaBundle | null {
-  const delta = manifest.bundles?.delta;
+  const delta = manifest.bundles?.deltas.find(
+    (candidate) => candidate.fromVersion === localVersion,
+  );
   if (delta?.fromVersion === localVersion) return { kind: "delta", entry: delta };
   const full = manifest.bundles?.full;
   return full ? { kind: "full", entry: full } : null;
@@ -46,25 +47,6 @@ export function bundleUrl(manifest: OtaManifest, entry: OtaBundleEntry): string 
   if (/^https:\/\//i.test(entry.path)) return entry.path;
   const releaseRoot = manifest.baseUrl.replace(/\/files\/?$/, "");
   return `${releaseRoot}/${safeBundlePath(entry.path)}`;
-}
-
-export async function verifyOtaBundleChunks(
-  chunks: AsyncIterable<Uint8Array>,
-  expectedHash: string,
-  expectedSize: number,
-): Promise<void> {
-  const hash = new Sha256();
-  let size = 0;
-  for await (const chunk of chunks) {
-    size += chunk.length;
-    hash.update(chunk);
-  }
-  const digest = Array.from(await hash.digest(), (byte) =>
-    byte.toString(16).padStart(2, "0"),
-  ).join("");
-  if (size !== expectedSize || digest !== expectedHash) {
-    throw new Error("OTA bundle checksum mismatch");
-  }
 }
 
 export async function extractOtaBundle(

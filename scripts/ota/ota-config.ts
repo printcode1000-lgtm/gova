@@ -2,6 +2,7 @@ import { createPublicKey } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import dotenv from "dotenv";
+import { compareOtaCanonicalStrings } from "../../src/features/ota/utils/ota-canonical-order";
 
 export const OTA_SCHEMA_VERSION = 2;
 export const DEFAULT_OTA_PREFIX = "app-updates";
@@ -23,12 +24,12 @@ export interface OtaManifestPayload {
   files: Record<string, { sha256: string; size: number }>;
   bundles?: {
     full: { path: string; sha256: string; size: number };
-    delta?: {
+    deltas: Array<{
       path: string;
       fromVersion: string;
       sha256: string;
       size: number;
-    };
+    }>;
   };
 }
 
@@ -100,9 +101,27 @@ export function getOtaPublicKeyBase64(privateKey = getOtaPrivateKey()): string {
 export function canonicalManifestPayload(payload: OtaManifestPayload): string {
   const sortedFiles = Object.fromEntries(
     Object.entries(payload.files).sort(([left], [right]) =>
-      left.localeCompare(right),
+      compareOtaCanonicalStrings(left, right),
     ),
   );
+
+  const bundles = payload.bundles
+    ? {
+        full: {
+          path: payload.bundles.full.path,
+          sha256: payload.bundles.full.sha256,
+          size: payload.bundles.full.size,
+        },
+        deltas: [...payload.bundles.deltas]
+          .sort((left, right) => compareOtaCanonicalStrings(left.fromVersion, right.fromVersion))
+          .map((delta) => ({
+            path: delta.path,
+            fromVersion: delta.fromVersion,
+            sha256: delta.sha256,
+            size: delta.size,
+          })),
+      }
+    : undefined;
 
   return JSON.stringify({
     schemaVersion: payload.schemaVersion,
@@ -114,11 +133,11 @@ export function canonicalManifestPayload(payload: OtaManifestPayload): string {
     size: payload.size,
     fileCount: payload.fileCount,
     minimumNativeVersion: payload.minimumNativeVersion,
-    requiredCapabilities: [...(payload.requiredCapabilities ?? [])].sort(),
+    requiredCapabilities: [...(payload.requiredCapabilities ?? [])].sort(compareOtaCanonicalStrings),
     mandatory: payload.mandatory,
     notes: payload.notes,
     files: sortedFiles,
-    bundles: payload.bundles,
+    bundles,
   });
 }
 

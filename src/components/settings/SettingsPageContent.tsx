@@ -680,7 +680,13 @@ export function SettingsPageContent() {
               </div>
               <div>
                 <dt className="text-on-surface-variant">{t("ota.settings.status")}</dt>
-                <dd className="font-semibold text-on-surface">{t(otaStatusKey)}</dd>
+                <dd className="font-semibold text-on-surface">
+                  {t(otaStatusKey, {
+                    size: formatOtaBytes(
+                      ota.progress?.requiredFreeBytes ?? ota.state.requiredFreeBytes ?? 0,
+                    ),
+                  })}
+                </dd>
               </div>
             </dl>
             {otaTotal > 0 && ota.state.download ? (

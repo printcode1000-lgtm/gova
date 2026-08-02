@@ -14,6 +14,13 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.security.MessageDigest;
+import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Single responsibility: hand one signed OTA bundle to Android's durable
@@ -23,6 +30,8 @@ import java.io.File;
 public class BackgroundDownloadPlugin extends Plugin {
     private static final String PREFS = "asol_ota_background_downloads";
     private static final String ACTIVE_RELEASE = "active_release";
+    private static final ExecutorService HASH_EXECUTOR = Executors.newSingleThreadExecutor();
+    private static final Set<String> ACTIVE_VERIFICATIONS = ConcurrentHashMap.newKeySet();
 
     @Override
     public void load() {
@@ -95,6 +104,8 @@ public class BackgroundDownloadPlugin extends Plugin {
                     .putString(pathKey(releaseId), destination.getAbsolutePath())
                     .putString(hashKey(releaseId), sha256)
                     .putLong(sizeKey(releaseId), size)
+                    .putString(verificationKey(releaseId), "pending")
+                    .remove(errorKey(releaseId))
                     .apply();
             call.resolve(snapshot(releaseId, id));
         } catch (Exception error) {
@@ -146,8 +157,7 @@ public class BackgroundDownloadPlugin extends Plugin {
             result.put("bytesDownloaded", Math.max(downloaded, 0));
             if (total > 0) result.put("totalBytes", total);
             if (status == DownloadManager.STATUS_SUCCESSFUL) {
-                result.put("status", "completed");
-                result.put("filePath", prefs().getString(pathKey(releaseId), null));
+                applyVerificationSnapshot(releaseId, result);
             } else if (status == DownloadManager.STATUS_FAILED) {
                 result.put("status", "failed");
                 result.put("error", "Android DownloadManager failed the OTA transfer");
@@ -167,6 +177,64 @@ public class BackgroundDownloadPlugin extends Plugin {
         return result;
     }
 
+    private void applyVerificationSnapshot(String releaseId, JSObject result) {
+        SharedPreferences prefs = prefs();
+        String verification = prefs.getString(verificationKey(releaseId), "pending");
+        if ("completed".equals(verification)) {
+            result.put("status", "completed");
+            result.put("filePath", prefs.getString(pathKey(releaseId), null));
+            return;
+        }
+        if ("failed".equals(verification)) {
+            result.put("status", "failed");
+            result.put("error", prefs.getString(errorKey(releaseId), "OTA bundle checksum mismatch"));
+            return;
+        }
+        result.put("status", "verifying");
+        if (ACTIVE_VERIFICATIONS.add(releaseId)) {
+            prefs.edit().putString(verificationKey(releaseId), "verifying").apply();
+            HASH_EXECUTOR.execute(() -> verifyDownloadedFile(releaseId));
+        }
+    }
+
+    private void verifyDownloadedFile(String releaseId) {
+        SharedPreferences prefs = prefs();
+        String path = prefs.getString(pathKey(releaseId), null);
+        String expectedHash = prefs.getString(hashKey(releaseId), "");
+        long expectedSize = prefs.getLong(sizeKey(releaseId), -1L);
+        File file = path == null ? null : new File(path);
+        try {
+            if (file == null || !file.isFile()) throw new IllegalStateException("Downloaded OTA bundle is missing");
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            long actualSize = 0;
+            byte[] buffer = new byte[64 * 1024];
+            try (FileInputStream input = new FileInputStream(file)) {
+                int read;
+                while ((read = input.read(buffer)) != -1) {
+                    digest.update(buffer, 0, read);
+                    actualSize += read;
+                }
+            }
+            StringBuilder actualHash = new StringBuilder(64);
+            for (byte value : digest.digest()) actualHash.append(String.format(Locale.ROOT, "%02x", value & 0xff));
+            if (actualSize != expectedSize || !actualHash.toString().equalsIgnoreCase(expectedHash)) {
+                throw new IllegalStateException("OTA bundle checksum mismatch");
+            }
+            if (prefs.contains(idKey(releaseId))) {
+                prefs.edit().putString(verificationKey(releaseId), "completed").remove(errorKey(releaseId)).apply();
+            }
+        } catch (Exception error) {
+            if (file != null) file.delete();
+            if (prefs.contains(idKey(releaseId))) {
+                prefs.edit().putString(verificationKey(releaseId), "failed")
+                        .putString(errorKey(releaseId), error.getMessage() == null ? "OTA bundle verification failed" : error.getMessage())
+                        .apply();
+            }
+        } finally {
+            ACTIVE_VERIFICATIONS.remove(releaseId);
+        }
+    }
+
     private boolean validReleaseId(String value) {
         return value != null && value.matches("[A-Za-z0-9._-]{1,160}");
     }
@@ -182,7 +250,8 @@ public class BackgroundDownloadPlugin extends Plugin {
         if (path != null) new File(path).delete();
         SharedPreferences.Editor editor = prefs.edit()
                 .remove(idKey(releaseId)).remove(pathKey(releaseId))
-                .remove(hashKey(releaseId)).remove(sizeKey(releaseId));
+                .remove(hashKey(releaseId)).remove(sizeKey(releaseId))
+                .remove(verificationKey(releaseId)).remove(errorKey(releaseId));
         if (releaseId.equals(prefs.getString(ACTIVE_RELEASE, null))) editor.remove(ACTIVE_RELEASE);
         editor.apply();
     }
@@ -192,4 +261,6 @@ public class BackgroundDownloadPlugin extends Plugin {
     private String pathKey(String id) { return id + ":path"; }
     private String hashKey(String id) { return id + ":sha256"; }
     private String sizeKey(String id) { return id + ":size"; }
+    private String verificationKey(String id) { return id + ":verification"; }
+    private String errorKey(String id) { return id + ":error"; }
 }

@@ -47,6 +47,7 @@ function formatDate(value?: string): string {
 function auditLabel(action: OtaReleaseAuditEntry["action"]): string {
   if (action === "approved") return "تم الاعتماد";
   if (action === "revoked") return "تم إلغاء الاعتماد";
+  if (action === "rollout_changed") return "تم تغيير نسبة الإتاحة";
   return "تم اكتشاف الإصدار";
 }
 
@@ -59,6 +60,7 @@ export function SuperAdminOtaReleasesPage() {
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
   const [deviceProgress, setDeviceProgress] = useState<OtaDownloadProgress | null>(null);
+  const [rolloutPercentage, setRolloutPercentage] = useState(100);
 
   const load = useCallback(async () => {
     if (!session || !isSuperAdmin(session)) return;
@@ -77,6 +79,11 @@ export function SuperAdminOtaReleasesPage() {
     if (!isSessionLoading && !authorized) router.replace(session ? "/home" : "/login");
     if (!isSessionLoading && authorized) void load();
   }, [authorized, isSessionLoading, load, router, session]);
+
+  useEffect(() => {
+    if (dashboard?.current.release)
+      setRolloutPercentage(dashboard.current.release.rolloutPercentage);
+  }, [dashboard?.current.release]);
 
   const files = useMemo(() => {
     const entries = Object.entries(dashboard?.current.manifest.files ?? {});
@@ -102,11 +109,33 @@ export function SuperAdminOtaReleasesPage() {
         releaseId: release.releaseId,
         version: release.version,
         approved,
+        rolloutPercentage,
       });
       setDashboard(next);
       setMessage(approved ? "تم اعتماد الإصدار وإتاحته للمستخدمين." : "تم إلغاء اعتماد الإصدار.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "تعذر تغيير حالة الاعتماد.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const saveRollout = async () => {
+    if (!session || !dashboard) return;
+    const release = dashboard.current.release;
+    setBusy(true);
+    setMessage("");
+    try {
+      setDashboard(await otaApiService.setReleaseApproval({
+        identity: session,
+        releaseId: release.releaseId,
+        version: release.version,
+        approved: release.approved,
+        rolloutPercentage,
+      }));
+      setMessage(`تم ضبط الإتاحة على ${rolloutPercentage}٪.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "تعذر تغيير نسبة الإتاحة.");
     } finally {
       setBusy(false);
     }
@@ -246,6 +275,41 @@ export function SuperAdminOtaReleasesPage() {
             </div>
           </section>
 
+          <section className="rounded-xl border bg-card p-5">
+            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+              <div>
+                <h2 className="text-lg font-bold">الإتاحة المرحلية</h2>
+                <p className="text-sm text-muted-foreground">
+                  النسبة ثابتة لكل تثبيت وإصدار. بعد الاعتماد يمكن رفعها فقط.
+                </p>
+              </div>
+              <div className="flex items-end gap-2">
+                <label className="grid gap-1 text-sm">
+                  <span>النسبة المئوية</span>
+                  <Input
+                    type="number"
+                    min={release.rolloutPercentage}
+                    max={100}
+                    value={rolloutPercentage}
+                    onChange={(event) => setRolloutPercentage(
+                      Math.max(0, Math.min(100, Number(event.target.value) || 0)),
+                    )}
+                    className="w-28"
+                    dir="ltr"
+                  />
+                </label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={busy || rolloutPercentage === release.rolloutPercentage}
+                  onClick={() => void saveRollout()}
+                >
+                  حفظ النسبة
+                </Button>
+              </div>
+            </div>
+          </section>
+
           <section className="grid gap-4 lg:grid-cols-2">
             <div className="rounded-xl border bg-card p-5">
               <h2 className="mb-4 text-lg font-bold">بيانات الإصدار</h2>
@@ -291,6 +355,41 @@ export function SuperAdminOtaReleasesPage() {
           </section>
 
           {session ? <OtaReleaseChangesSection dashboard={dashboard} identity={session} /> : null}
+
+          <section className="rounded-xl border bg-card p-5">
+            <h2 className="mb-4 text-lg font-bold">نتائج وصول الإصدارات</h2>
+            <div className="overflow-auto rounded-lg border">
+              <table className="w-full min-w-[760px] text-sm">
+                <thead className="bg-muted">
+                  <tr>
+                    <th className="p-3 text-start">الإصدار</th>
+                    <th className="p-3 text-start">نجاح التفعيل</th>
+                    <th className="p-3 text-start">فشل التنزيل</th>
+                    <th className="p-3 text-start">فشل التحقق</th>
+                    <th className="p-3 text-start">فشل التفعيل</th>
+                    <th className="p-3 text-start">تراجع</th>
+                    <th className="p-3 text-start">سحب طارئ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dashboard.adoption.map((item) => (
+                    <tr key={item.version} className="border-t">
+                      <td className="p-3 font-semibold" dir="ltr">{item.version}</td>
+                      <td className="p-3">{item.outcomes.activation_succeeded ?? 0}</td>
+                      <td className="p-3">{item.outcomes.download_failed ?? 0}</td>
+                      <td className="p-3">{item.outcomes.verification_failed ?? 0}</td>
+                      <td className="p-3">{item.outcomes.activation_failed ?? 0}</td>
+                      <td className="p-3">{item.outcomes.rollback_performed ?? 0}</td>
+                      <td className="p-3">{item.outcomes.revocation_applied ?? 0}</td>
+                    </tr>
+                  ))}
+                  {!dashboard.adoption.length ? (
+                    <tr><td className="p-4 text-muted-foreground" colSpan={7}>لا توجد نتائج أجهزة بعد.</td></tr>
+                  ) : null}
+                </tbody>
+              </table>
+            </div>
+          </section>
 
           <section className="grid gap-4 xl:grid-cols-2">
             <div className="rounded-xl border bg-card p-5">

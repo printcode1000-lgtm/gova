@@ -12,7 +12,7 @@ export interface OtaBundleEntry {
 
 export interface OtaManifestBundles {
   full: OtaBundleEntry;
-  delta?: OtaBundleEntry & { fromVersion: string };
+  deltas: Array<OtaBundleEntry & { fromVersion: string }>;
 }
 
 export interface OtaManifestPayload {
@@ -37,6 +37,7 @@ export interface OtaManifest extends OtaManifestPayload {
 }
 
 export interface DownloadedOtaUpdate {
+  baseVersion: string;
   version: string;
   releaseId: string;
   path: string;
@@ -54,11 +55,17 @@ export interface OtaStoredState {
   failedReleaseId?: string;
   activation?: {
     version: string;
+    baseVersion: string;
     previousPath: string;
     startedAt: number;
     releaseId?: string;
+    rollbackPending?: boolean;
   };
   resume?: OtaResumeState;
+  baseline?: {
+    version: string;
+    completed: Record<string, string>;
+  };
   workingBaselineVersion?: string;
   lastSuccessfulCheckAt?: number;
   discovered?: {
@@ -81,6 +88,7 @@ export interface OtaStoredState {
   };
   lastStatusKey?: string;
   nativeUpdateRequired?: boolean;
+  requiredFreeBytes?: number;
 }
 
 export interface OtaResumeState {
@@ -98,6 +106,7 @@ export type OtaDownloadProgress = {
   downloadedBytes?: number;
   totalBytes?: number;
   nativeUpdateRequired?: boolean;
+  requiredFreeBytes?: number;
 };
 
 export interface OtaIdentity {
@@ -111,7 +120,7 @@ export interface OtaReleaseAccess {
   allowed: boolean;
   approved: boolean;
   superAdmin: boolean;
-  reason: "approved" | "super_admin" | "awaiting_approval";
+  reason: "approved" | "super_admin" | "awaiting_approval" | "rollout_pending";
 }
 
 export interface OtaReleaseSummary {
@@ -126,6 +135,7 @@ export interface OtaReleaseSummary {
   notes: string;
   signature: string;
   approved: boolean;
+  rolloutPercentage: number;
   approvedAt?: string;
   approvedByUid?: string;
   revokedAt?: string;
@@ -138,7 +148,7 @@ export interface OtaReleaseAuditEntry {
   id: string;
   releaseId: string;
   version: string;
-  action: "discovered" | "approved" | "revoked";
+  action: "discovered" | "approved" | "revoked" | "rollout_changed";
   actorUid?: string;
   createdAt: string;
 }
@@ -154,6 +164,12 @@ export interface OtaAdminDashboard {
   current: OtaAdminCurrentRelease;
   history: OtaReleaseSummary[];
   audit: OtaReleaseAuditEntry[];
+  adoption: OtaAdoptionSummary[];
+}
+
+export interface OtaAdoptionSummary {
+  version: string;
+  outcomes: Record<string, number>;
 }
 
 export type OtaFileChangeKind = "added" | "modified" | "deleted" | "unchanged";
@@ -201,4 +217,5 @@ export interface SetOtaReleaseApprovalInput {
   releaseId: string;
   version: string;
   approved: boolean;
+  rolloutPercentage?: number;
 }

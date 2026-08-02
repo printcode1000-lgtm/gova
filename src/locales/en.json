@@ -208,6 +208,9 @@
     "ota.nativeUpdateRequired":  "Update the app from the store",
     "ota.noUpdate":  "No new update",
     "ota.verifying":  "Verifying update",
+    "ota.bundleVerifying": "Verifying update package integrity",
+    "ota.insufficientStorage": "Free at least {size} to download this update",
+    "ota.provisioningBaseline": "Preparing local update storage",
     "profilePreview.pageTitle":  "Provider profile",
     "profilePreview.linkCopied":  "Profile link copied",
     "profilePreview.shareFailed":  "Could not share link",
@@ -1494,5 +1497,6 @@
     "ota.settings.checking": "Checking and downloading",
     "ota.current": "App is up to date",
     "ota.ready": "Update ready and will install on next launch",
-    "ota.revoked": "Update was revoked"
+    "ota.revoked": "Update was revoked",
+    "ota.superseded": "The ready update was replaced by a newer release"
 }

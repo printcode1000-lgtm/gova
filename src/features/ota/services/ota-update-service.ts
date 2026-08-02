@@ -10,12 +10,17 @@ import {
 } from "@/modules/data-access/browser/asol-db";
 
 import { otaApiService } from "./ota-api-service";
+import { otaRevocationService } from "./ota-revocation-service";
+import { otaFailureReason, recordOtaOutcome } from "./ota-outcome-logger";
+import { canonicalOtaManifestPayload } from "../utils/ota-signature-payload";
+import type { OtaRevocationDocument } from "../utils/ota-revocation-document";
+import { compareOtaCanonicalStrings } from "../utils/ota-canonical-order";
+import { OtaStaleRemoteFileError } from "../utils/ota-stale-file-error";
 import { evaluateOtaCapabilities } from "../utils/ota-capability-gate";
 import {
   bundleUrl,
   extractOtaBundle,
   selectOtaBundle,
-  verifyOtaBundleChunks,
 } from "../utils/ota-bundle";
 import {
   pendingDeltaFiles,
@@ -23,10 +28,16 @@ import {
   runBounded,
 } from "../utils/ota-delta-plan";
 import {
+  clampFutureOtaCheckTimestamp,
+  compareOtaVersions,
   isDailyOtaCheckDue,
   isReadyForOtaActivation,
   migrateOtaState,
+  nativeDownloadPollAction,
   reconcileNativeDownloadTask,
+  requiredOtaFreeBytes,
+  shouldPersistNativeDownloadProgress,
+  shouldSupersedePending,
 } from "../utils/ota-state";
 import type {
   DownloadedOtaUpdate,
@@ -41,9 +52,16 @@ import type {
 const OTA_STATE_KEY = "asol-ota-state-v1";
 export const OTA_STATE_EVENT = "asol:ota-state";
 export const OTA_DOWNLOAD_CONCURRENCY = 6;
+export const OTA_BASELINE_CONCURRENCY = 24;
+const OTA_BASELINE_CHECKPOINT_FILES = 32;
 const LOCAL_MANIFEST_FILE = "asol-web-manifest.json";
 const MAX_DOWNLOAD_BYTES = 50 * 1024 * 1024;
 const APPROVAL_TIMEOUT_MS = 2_000;
+const REVOCATION_TIMEOUT_MS = 3_000;
+const NATIVE_DOWNLOAD_POLL_MS = 1_000;
+// A one-hour ceiling lets a 10 MB bundle finish at roughly 3 KB/s, including
+// native SHA verification, while still guaranteeing that activeCheck settles.
+const NATIVE_DOWNLOAD_TIMEOUT_MS = 60 * 60 * 1_000;
 
 function logInfo(message: string, details?: unknown): void {
   if (details === undefined) console.info(`[AsolOTA] ${message}`);
@@ -69,42 +87,7 @@ async function sha256(bytes: ArrayBuffer): Promise<string> {
   return encodeHex(await crypto.subtle.digest("SHA-256", bytes));
 }
 
-function compareVersions(left: string, right: string): number {
-  const parse = (value: string) =>
-    value.split("-")[0]!.split(".").map((part) => Number(part) || 0);
-  const a = parse(left);
-  const b = parse(right);
-  for (let index = 0; index < Math.max(a.length, b.length, 3); index += 1) {
-    const difference = (a[index] ?? 0) - (b[index] ?? 0);
-    if (difference) return difference;
-  }
-  return 0;
-}
-
-function sortedFiles(files: Record<string, OtaFileEntry>): Record<string, OtaFileEntry> {
-  return Object.fromEntries(
-    Object.entries(files).sort(([left], [right]) => left.localeCompare(right)),
-  );
-}
-
-function canonicalPayload(payload: OtaManifestPayload): string {
-  return JSON.stringify({
-    schemaVersion: payload.schemaVersion,
-    delivery: payload.delivery,
-    releaseId: payload.releaseId,
-    version: payload.version,
-    createdAt: payload.createdAt,
-    baseUrl: payload.baseUrl,
-    size: payload.size,
-    fileCount: payload.fileCount,
-    minimumNativeVersion: payload.minimumNativeVersion,
-    requiredCapabilities: [...(payload.requiredCapabilities ?? [])].sort(),
-    mandatory: payload.mandatory,
-    notes: payload.notes,
-    files: sortedFiles(payload.files),
-    bundles: payload.bundles,
-  });
-}
+export const canonicalOtaClientPayload = canonicalOtaManifestPayload;
 
 function manifestPayload(manifest: OtaManifest): OtaManifestPayload {
   const { signature: _signature, ...payload } = manifest;
@@ -151,7 +134,15 @@ function validateManifest(manifest: OtaManifest, remote: boolean): void {
   }, 0);
   if (total !== manifest.size) throw new Error("OTA manifest total size mismatch");
 
-  for (const bundle of [manifest.bundles?.full, manifest.bundles?.delta]) {
+  const deltas = manifest.bundles?.deltas ?? [];
+  if (
+    manifest.bundles &&
+    (!Array.isArray(manifest.bundles.deltas) ||
+      deltas.some((delta, index) =>
+        !delta.fromVersion ||
+        (index > 0 && compareOtaCanonicalStrings(deltas[index - 1]!.fromVersion, delta.fromVersion) >= 0)))
+  ) throw new Error("OTA bundle deltas are invalid");
+  for (const bundle of [manifest.bundles?.full, ...deltas]) {
     if (!bundle) continue;
     safeFilePath(bundle.path);
     if (!/^[a-f0-9]{64}$/i.test(bundle.sha256) || !Number.isSafeInteger(bundle.size) || bundle.size <= 0)
@@ -172,7 +163,7 @@ async function verifyManifest(manifest: OtaManifest): Promise<boolean> {
     { name: "ECDSA", hash: "SHA-256" },
     key,
     decodeBase64(manifest.signature ?? ""),
-    new TextEncoder().encode(canonicalPayload(manifestPayload(manifest))),
+    new TextEncoder().encode(canonicalOtaClientPayload(manifestPayload(manifest))),
   );
 }
 
@@ -195,14 +186,16 @@ async function updateStatus(
   state: OtaStoredState,
   progress: OtaDownloadProgress,
   notify?: (progress: OtaDownloadProgress) => void,
+  persist = true,
 ): Promise<void> {
   state.lastStatusKey = progress.statusKey;
   state.nativeUpdateRequired = progress.nativeUpdateRequired;
+  state.requiredFreeBytes = progress.requiredFreeBytes;
   if (state.download) {
     state.download.downloadedBytes = progress.downloadedBytes ?? state.download.downloadedBytes;
     state.download.totalBytes = progress.totalBytes ?? state.download.totalBytes;
   }
-  await writeState(state);
+  if (persist) await writeState(state);
   notify?.(progress);
 }
 
@@ -237,22 +230,73 @@ async function* nativeTaskChunks(task: BackgroundDownloadTask): AsyncGenerator<U
   if (failure) throw failure;
 }
 
-async function provisionWorkingBaseline(localManifest: OtaManifest, state: OtaStoredState): Promise<void> {
+async function provisionWorkingBaseline(
+  localManifest: OtaManifest,
+  state: OtaStoredState,
+  notify?: (progress: OtaDownloadProgress) => void,
+): Promise<void> {
   const currentPath = await capacitorOtaAdapter.currentBasePath();
   if (
     (await capacitorOtaAdapter.isWorkingPath(currentPath)) ||
     state.workingBaselineVersion === localManifest.version
   ) return;
-  await runBounded(Object.entries(localManifest.files), OTA_DOWNLOAD_CONCURRENCY, async ([path, expected]) => {
+  if (state.baseline?.version !== localManifest.version) {
+    await capacitorOtaAdapter.prepareWorkingBaseline();
+    state.baseline = { version: localManifest.version, completed: {} };
+    await writeState(state);
+  }
+  const baseline = state.baseline;
+  for (const [path, expected] of Object.entries(localManifest.files)) {
+    if (baseline.completed[path] !== expected.sha256) continue;
+    try {
+      const bytes = await capacitorOtaAdapter.readWorkingFile(path);
+      if ((await sha256(bytes)) !== expected.sha256) delete baseline.completed[path];
+    } catch {
+      delete baseline.completed[path];
+    }
+  }
+  const entries = Object.entries(localManifest.files);
+  const remaining = entries.filter(([path, expected]) => baseline.completed[path] !== expected.sha256);
+  let completedCount = entries.length - remaining.length;
+  let completedBytes = entries.reduce(
+    (total, [path, expected]) => total + (baseline.completed[path] === expected.sha256 ? expected.size : 0),
+    0,
+  );
+  let checkpointCount = completedCount;
+  const reportBaseline = () => {
+    const progress: OtaDownloadProgress = {
+    progress: Math.round(completedCount / Math.max(entries.length, 1) * 100),
+    statusKey: "ota.provisioningBaseline",
+    downloadedBytes: completedBytes,
+    totalBytes: localManifest.size,
+    };
+    state.lastStatusKey = progress.statusKey;
+    notify?.(progress);
+  };
+  reportBaseline();
+  await runBounded(remaining, OTA_BASELINE_CONCURRENCY, async ([path, expected]) => {
     const bytes = await otaApiService.getCurrentFile(path);
-    if ((await sha256(bytes)) !== expected.sha256) throw new Error(`OTA baseline checksum mismatch: ${path}`);
+    if ((await sha256(bytes)) !== expected.sha256) {
+      throw new OtaStaleRemoteFileError(path);
+    }
     await capacitorOtaAdapter.writeWorkingFile(path, bytes);
+    baseline.completed[path] = expected.sha256;
+    completedCount += 1;
+    completedBytes += expected.size;
+    reportBaseline();
+    if (completedCount - checkpointCount >= OTA_BASELINE_CHECKPOINT_FILES) {
+      checkpointCount = completedCount;
+      state.baseline = { ...baseline, completed: { ...baseline.completed } };
+      await writeState(state);
+    }
   });
   await capacitorOtaAdapter.writeWorkingFile(
     LOCAL_MANIFEST_FILE,
     new TextEncoder().encode(JSON.stringify(localManifest, null, 2)).buffer,
   );
   state.workingBaselineVersion = localManifest.version;
+  delete state.baseline;
+  await writeState(state);
 }
 
 async function finalizePending(
@@ -262,13 +306,14 @@ async function finalizePending(
   deleted: string[],
   totalBytes: number,
   state: OtaStoredState,
+  notify?: (progress: OtaDownloadProgress) => void,
 ): Promise<DownloadedOtaUpdate> {
   await capacitorOtaAdapter.writeReleaseTextFile(remote.version, LOCAL_MANIFEST_FILE, JSON.stringify(remote, null, 2));
-  await provisionWorkingBaseline(localManifest, state);
   const pending: DownloadedOtaUpdate = {
+    baseVersion: localManifest.version,
     version: remote.version,
     releaseId: remote.releaseId,
-    path: await capacitorOtaAdapter.workingPath(),
+    path: await capacitorOtaAdapter.finalizeCandidate(remote.version, deleted),
     size: totalBytes,
     totalBytes,
     notes: remote.notes,
@@ -295,10 +340,12 @@ async function downloadPerFile(
   state: OtaStoredState,
   notify?: (progress: OtaDownloadProgress) => void,
 ): Promise<DownloadedOtaUpdate> {
-  const resumable = state.resume?.releaseId === remote.releaseId;
-  if (resumable) await capacitorOtaAdapter.ensureRelease(remote.version);
-  else {
-    await capacitorOtaAdapter.prepareRelease(remote.version);
+  await provisionWorkingBaseline(local, state, notify);
+  const resumable =
+    state.resume?.releaseId === remote.releaseId &&
+    (await capacitorOtaAdapter.releaseExists(remote.version));
+  if (!resumable) {
+    await capacitorOtaAdapter.prepareRelease(local.version, remote.version);
     state.resume = { releaseId: remote.releaseId, version: remote.version, completed: {} };
   }
   const resume = state.resume!;
@@ -314,14 +361,14 @@ async function downloadPerFile(
   await runBounded(remaining, OTA_DOWNLOAD_CONCURRENCY, async (path) => {
     const expected = remote.files[path]!;
     const bytes = await otaApiService.getFile(remoteFileUrl(remote, path));
-    if ((await sha256(bytes)) !== expected.sha256) throw new Error(`OTA remote file checksum mismatch: ${path}`);
+    if ((await sha256(bytes)) !== expected.sha256) throw new OtaStaleRemoteFileError(path);
     await capacitorOtaAdapter.writeReleaseFile(remote.version, path, bytes);
     resume.completed[path] = expected.sha256;
     downloaded += expected.size;
     state.resume = { ...resume, completed: { ...resume.completed } };
     await updateStatus(state, { progress: Math.round(downloaded / Math.max(totalBytes, 1) * 100), statusKey: "ota.downloading", downloadedBytes: downloaded, totalBytes }, notify);
   });
-  return finalizePending(local, remote, changed, deleted, totalBytes, state);
+  return finalizePending(local, remote, changed, deleted, totalBytes, state, notify);
 }
 
 async function downloadNativeBundle(
@@ -336,18 +383,20 @@ async function downloadNativeBundle(
   if (!selected) return downloadPerFile(local, remote, changed, deleted, state.download?.totalBytes ?? 0, state, notify);
   const entry = selected.entry;
   if (entry.size > MAX_DOWNLOAD_BYTES) throw new Error("OTA bundle exceeds download limit");
-  let task = await nativePlatform.backgroundDownload.status(remote.releaseId);
-  if (task.status === "missing" || task.status === "failed") {
-    if (task.status === "failed") await nativePlatform.backgroundDownload.remove(remote.releaseId);
-    task = await nativePlatform.backgroundDownload.schedule({
+  const schedule = () => nativePlatform.backgroundDownload.schedule({
       releaseId: remote.releaseId,
       url: bundleUrl(remote, entry),
       sha256: entry.sha256,
       size: entry.size,
     });
-    if (task.status === "missing") {
-      throw new Error("Native OTA task could not be recovered");
-    }
+  let task = await nativePlatform.backgroundDownload.status(remote.releaseId);
+  let rescheduledMissing = false;
+  if (task.status === "failed") {
+    await nativePlatform.backgroundDownload.remove(remote.releaseId);
+    task = await schedule();
+  } else if (task.status === "missing") {
+    task = await schedule();
+    rescheduledMissing = true;
   }
   state.download = {
     releaseId: remote.releaseId,
@@ -360,22 +409,61 @@ async function downloadNativeBundle(
     bundlePath: entry.path,
   };
   await writeState(state);
-  while (task.status !== "completed") {
-    if (task.status === "failed") throw new Error(task.error ?? "OTA background download failed");
+  const pollingStartedAt = Date.now();
+  let lastPersistedAt = pollingStartedAt;
+  let lastPersistedPercent = Math.round(
+    task.bytesDownloaded / Math.max(entry.size, 1) * 100,
+  );
+  let previousStatus: typeof task.status | null = null;
+  while (true) {
+    if (Date.now() - pollingStartedAt >= NATIVE_DOWNLOAD_TIMEOUT_MS) {
+      throw new Error("OTA background download exceeded the one-hour polling limit");
+    }
+    const action = nativeDownloadPollAction(task.status, rescheduledMissing);
+    if (action === "complete") break;
+    if (action === "fail") {
+      throw new Error(
+        task.status === "missing"
+          ? "Native OTA task is still missing after one reschedule"
+          : task.error ?? "OTA background download failed",
+      );
+    }
+    if (action === "reschedule") {
+      task = await schedule();
+      rescheduledMissing = true;
+      continue;
+    }
+    const verifyingBundle = task.status === "verifying";
+    const progressPercent = Math.round(
+      task.bytesDownloaded / Math.max(entry.size, 1) * 100,
+    );
+    const now = Date.now();
+    const enteredVerifying = verifyingBundle && previousStatus !== "verifying";
+    const persistProgress = enteredVerifying || shouldPersistNativeDownloadProgress(
+      lastPersistedPercent,
+      progressPercent,
+      lastPersistedAt,
+      now,
+    );
     await updateStatus(state, {
-      progress: Math.round(task.bytesDownloaded / Math.max(entry.size, 1) * 100),
-      statusKey: "ota.downloading",
+      progress: progressPercent,
+      statusKey: verifyingBundle ? "ota.bundleVerifying" : "ota.downloading",
       downloadedBytes: task.bytesDownloaded,
       totalBytes: entry.size,
-    }, notify);
-    await new Promise((resolve) => window.setTimeout(resolve, 1_000));
+    }, notify, persistProgress);
+    if (persistProgress) {
+      lastPersistedAt = now;
+      lastPersistedPercent = progressPercent;
+    }
+    previousStatus = task.status;
+    await new Promise((resolve) => window.setTimeout(resolve, NATIVE_DOWNLOAD_POLL_MS));
     task = await nativePlatform.backgroundDownload.status(remote.releaseId);
     state.download = reconcileNativeDownloadTask(state.download, task);
   }
-  await verifyOtaBundleChunks(nativeTaskChunks(task), entry.sha256, entry.size);
   state.download.status = "extracting";
   await updateStatus(state, { progress: 100, statusKey: "ota.verifying", downloadedBytes: entry.size, totalBytes: entry.size }, notify);
-  await capacitorOtaAdapter.prepareRelease(remote.version);
+  await provisionWorkingBaseline(local, state, notify);
+  await capacitorOtaAdapter.prepareRelease(local.version, remote.version);
   const expected = Object.fromEntries(
     (selected.kind === "delta" ? changed : Object.keys(remote.files)).map((path) => [path, remote.files[path]!]),
   );
@@ -388,7 +476,7 @@ async function downloadNativeBundle(
     },
   });
   await nativePlatform.backgroundDownload.remove(remote.releaseId);
-  return finalizePending(local, remote, changed, deleted, entry.size, state);
+  return finalizePending(local, remote, changed, deleted, entry.size, state, notify);
 }
 
 let activeCheck: Promise<DownloadedOtaUpdate | null> | null = null;
@@ -404,11 +492,78 @@ export const otaUpdateService = {
     return (await readOtaState()).pending ?? null;
   },
 
+  async enforceRevocations(): Promise<boolean> {
+    if (!this.isEnabled()) return false;
+    const controller = new AbortController();
+    let timeout = 0;
+    try {
+      const document = await Promise.race([
+        otaRevocationService.getDocument(controller.signal),
+        new Promise<OtaRevocationDocument | null>((resolve) => {
+          timeout = window.setTimeout(() => {
+            controller.abort();
+            void otaRevocationService.getPersistedDocument().then(resolve);
+          }, REVOCATION_TIMEOUT_MS);
+        }),
+      ]);
+      if (!document) return false;
+      const revoked = new Set(document.revokedVersions);
+      const state = await readOtaState();
+      if (state.pending && revoked.has(state.pending.version)) {
+        recordOtaOutcome({
+          outcome: "revocation_applied",
+          localVersion: publicEnv.webBundleVersion,
+          targetVersion: state.pending.version,
+          releaseId: state.pending.releaseId,
+        });
+        await capacitorOtaAdapter.cleanupTransaction(state.pending.version);
+        await nativePlatform.backgroundDownload.remove(state.pending.releaseId);
+        delete state.pending;
+        state.lastStatusKey = "ota.revoked";
+      }
+      if (!revoked.has(publicEnv.webBundleVersion)) {
+        await writeState(state);
+        return false;
+      }
+
+      recordOtaOutcome({
+        outcome: "revocation_applied",
+        localVersion: publicEnv.webBundleVersion,
+        targetVersion: publicEnv.webBundleVersion,
+      });
+
+      if (state.download) await nativePlatform.backgroundDownload.remove(state.download.releaseId);
+      if (state.activation) await capacitorOtaAdapter.cleanupTransaction(state.activation.version);
+      delete state.pending;
+      delete state.download;
+      delete state.discovered;
+      delete state.resume;
+      delete state.activation;
+      delete state.workingBaselineVersion;
+      state.lastStatusKey = "ota.revoked";
+      await writeState(state);
+      await capacitorOtaAdapter.revertToNativeBaseline();
+      return true;
+    } finally {
+      if (timeout) window.clearTimeout(timeout);
+    }
+  },
+
   async confirmRunningBundle(): Promise<void> {
     const state = await readOtaState();
     if (state.activation?.version !== publicEnv.webBundleVersion) return;
+    const baseVersion = state.activation.baseVersion || publicEnv.webBundleVersion;
     await capacitorOtaAdapter.persistCurrentPath();
-    await capacitorOtaAdapter.cleanupTransaction(state.activation.version);
+    await capacitorOtaAdapter.confirmActivation(
+      state.activation.version,
+      baseVersion,
+    );
+    recordOtaOutcome({
+      outcome: "activation_succeeded",
+      localVersion: baseVersion,
+      targetVersion: state.activation.version,
+      releaseId: state.activation.releaseId,
+    });
     delete state.activation;
     delete state.pending;
     state.lastStatusKey = "ota.current";
@@ -436,21 +591,30 @@ export const otaUpdateService = {
     const state = await readOtaState();
     const pending = state.pending;
     if (!isReadyForOtaActivation(pending) || !pending) return;
+    const baseVersion = pending.baseVersion || publicEnv.webBundleVersion;
     if (!approvalAlreadyChecked) {
       const access = await otaApiService.getReleaseAccess({ releaseId: pending.releaseId, version: pending.version, identity });
       if (!access.allowed) { await this.discardPending(state); return; }
     }
     state.activation = {
       version: pending.version,
+      baseVersion,
       releaseId: pending.releaseId,
       previousPath: await capacitorOtaAdapter.currentBasePath(),
       startedAt: Date.now(),
     };
     await writeState(state);
     try {
-      await capacitorOtaAdapter.applyDelta(pending.version, pending.changedFiles, pending.deletedFiles);
+      // The candidate was completed during download; activation is one switch.
       await capacitorOtaAdapter.activate(pending.path);
     } catch (error) {
+      recordOtaOutcome({
+        outcome: "activation_failed",
+        localVersion: baseVersion,
+        targetVersion: pending.version,
+        releaseId: pending.releaseId,
+        reason: otaFailureReason(error),
+      });
       await capacitorOtaAdapter.rollbackDelta(pending.version);
       delete state.activation;
       await writeState(state);
@@ -463,15 +627,36 @@ export const otaUpdateService = {
     identity?: OtaIdentity,
   ): Promise<DownloadedOtaUpdate | null> {
     if (!this.isEnabled()) return null;
+    if (await this.enforceRevocations()) return null;
     if (activeCheck) return activeCheck;
     activeCheck = (async () => {
       const state = await readOtaState();
-      if (state.pending) {
-        await this.reverifyPendingApproval(identity);
-        return (await readOtaState()).pending ?? null;
-      }
-      try {
+      let staleFileRetryUsed = false;
+      while (true) {
+       try {
         await updateStatus(state, { progress: 0, statusKey: "ota.checking", downloadedBytes: 0, totalBytes: 0 }, notify);
+        let prefetchedRemote: OtaManifest | null = null;
+        if (state.pending) {
+          prefetchedRemote = await otaApiService.getManifest(publicEnv.otaManifestUrl);
+          validateManifest(prefetchedRemote, true);
+          if (!(await verifyManifest(prefetchedRemote))) throw new Error("OTA manifest signature is invalid");
+          if (await otaRevocationService.isVersionRevoked(prefetchedRemote.version)) {
+            state.lastSuccessfulCheckAt = Date.now();
+            await writeState(state);
+            await this.reverifyPendingApproval(identity);
+            return (await readOtaState()).pending ?? null;
+          }
+          if (!shouldSupersedePending(state.pending.version, prefetchedRemote.version)) {
+            state.lastSuccessfulCheckAt = Date.now();
+            await writeState(state);
+            await this.reverifyPendingApproval(identity);
+            return (await readOtaState()).pending ?? null;
+          }
+          await capacitorOtaAdapter.cleanupTransaction(state.pending.version);
+          await nativePlatform.backgroundDownload.remove(state.pending.releaseId);
+          delete state.pending;
+          await updateStatus(state, { progress: 0, statusKey: "ota.superseded", downloadedBytes: 0, totalBytes: 0 }, notify);
+        }
         const local = await otaApiService.getLocalManifest();
         if (
           state.download &&
@@ -482,6 +667,20 @@ export const otaUpdateService = {
           validateManifest(local, false);
           validateManifest(remote, true);
           if (!(await verifyManifest(remote))) throw new Error("Stored OTA manifest signature is invalid");
+          recordOtaOutcome({
+            outcome: "check_performed",
+            localVersion: local.version,
+            targetVersion: remote.version,
+            releaseId: remote.releaseId,
+          });
+          if (await otaRevocationService.isVersionRevoked(remote.version)) {
+            await nativePlatform.backgroundDownload.remove(remote.releaseId);
+            delete state.download;
+            delete state.discovered;
+            state.lastStatusKey = "ota.revoked";
+            await writeState(state);
+            return null;
+          }
           const access = await otaApiService.getReleaseAccess({ releaseId: remote.releaseId, version: remote.version, identity });
           if (!access.allowed) {
             await nativePlatform.backgroundDownload.remove(remote.releaseId);
@@ -491,22 +690,39 @@ export const otaUpdateService = {
             await writeState(state);
             return null;
           }
+          recordOtaOutcome({
+            outcome: "download_started",
+            localVersion: local.version,
+            targetVersion: remote.version,
+            releaseId: remote.releaseId,
+          });
           return nativePlatform.backgroundDownload.isAvailable() && selectOtaBundle(remote, local.version)
             ? downloadNativeBundle(local, remote, stored.changedFiles, stored.deletedFiles, state, notify)
             : downloadPerFile(local, remote, stored.changedFiles, stored.deletedFiles, stored.totalBytes, state, notify);
         }
-        const remote = await otaApiService.getManifest(publicEnv.otaManifestUrl);
+        const remote = prefetchedRemote ?? await otaApiService.getManifest(publicEnv.otaManifestUrl);
         validateManifest(local, false);
         validateManifest(remote, true);
         if (!(await verifyManifest(remote))) throw new Error("OTA manifest signature is invalid");
-        if (state.failedReleaseId === remote.releaseId || compareVersions(remote.version, local.version) <= 0) {
+        recordOtaOutcome({
+          outcome: "check_performed",
+          localVersion: local.version,
+          targetVersion: remote.version,
+          releaseId: remote.releaseId,
+        });
+        if (await otaRevocationService.isVersionRevoked(remote.version)) {
+          state.lastSuccessfulCheckAt = Date.now();
+          await updateStatus(state, { progress: 100, statusKey: "ota.revoked", downloadedBytes: 0, totalBytes: 0 }, notify);
+          return null;
+        }
+        if (state.failedReleaseId === remote.releaseId || compareOtaVersions(remote.version, local.version) <= 0) {
           state.lastSuccessfulCheckAt = Date.now();
           await updateStatus(state, { progress: 100, statusKey: "ota.noUpdate", downloadedBytes: 0, totalBytes: 0 }, notify);
           return null;
         }
         const installedNativeVersion = await capacitorOtaAdapter.nativeVersion();
         const capabilityDecision = await evaluateOtaCapabilities(remote.requiredCapabilities, capabilities);
-        if (compareVersions(remote.minimumNativeVersion, installedNativeVersion) > 0 || !capabilityDecision.compatible) {
+        if (compareOtaVersions(remote.minimumNativeVersion, installedNativeVersion) > 0 || !capabilityDecision.compatible) {
           state.lastSuccessfulCheckAt = Date.now();
           await updateStatus(state, { progress: 100, statusKey: "ota.nativeUpdateRequired", nativeUpdateRequired: true }, notify);
           return null;
@@ -514,14 +730,42 @@ export const otaUpdateService = {
         const access = await otaApiService.getReleaseAccess({ releaseId: remote.releaseId, version: remote.version, identity });
         if (!access.allowed) {
           state.lastSuccessfulCheckAt = Date.now();
-          await updateStatus(state, { progress: 100, statusKey: "ota.awaitingApproval" }, notify);
+          await updateStatus(state, {
+            progress: 100,
+            statusKey: access.reason === "rollout_pending" ? "ota.noUpdate" : "ota.awaitingApproval",
+          }, notify);
           return null;
         }
         const diff = planOtaDelta(local, remote);
-        state.lastSuccessfulCheckAt = Date.now();
+        recordOtaOutcome({
+          outcome: "update_discovered",
+          localVersion: local.version,
+          targetVersion: remote.version,
+          releaseId: remote.releaseId,
+        });
         const selected = selectOtaBundle(remote, local.version);
         const totalBytes = selected?.entry.size ?? diff.downloadBytes;
         if (totalBytes > MAX_DOWNLOAD_BYTES) throw new Error("OTA download exceeds size limit");
+        const requiredFreeBytes = requiredOtaFreeBytes(remote.size, totalBytes);
+        try {
+          const { availableBytes } = await nativePlatform.storageCapacity.getFreeSpace();
+          if (availableBytes < requiredFreeBytes) {
+            await updateStatus(state, {
+              progress: 0,
+              statusKey: "ota.insufficientStorage",
+              downloadedBytes: 0,
+              totalBytes,
+              requiredFreeBytes,
+            }, notify);
+            return null;
+          }
+        } catch (error) {
+          // Measurement unavailable must not disable OTA on an otherwise
+          // compatible shell; extraction still retains all integrity checks.
+          logWarn("Free-space preflight unavailable; continuing", error);
+        }
+        state.lastSuccessfulCheckAt = Date.now();
+        delete state.requiredFreeBytes;
         state.discovered = {
           releaseId: remote.releaseId,
           version: remote.version,
@@ -538,13 +782,54 @@ export const otaUpdateService = {
           totalBytes,
         };
         await writeState(state);
+        recordOtaOutcome({
+          outcome: "download_started",
+          localVersion: local.version,
+          targetVersion: remote.version,
+          releaseId: remote.releaseId,
+        });
         return nativePlatform.backgroundDownload.isAvailable() && selected
           ? downloadNativeBundle(local, remote, diff.changed, diff.deleted, state, notify)
           : downloadPerFile(local, remote, diff.changed, diff.deleted, diff.downloadBytes, state, notify);
       } catch (error) {
+        if (error instanceof OtaStaleRemoteFileError && !staleFileRetryUsed) {
+          staleFileRetryUsed = true;
+          const staleVersion = state.download?.version ?? state.discovered?.version;
+          if (state.download) {
+            await nativePlatform.backgroundDownload.remove(state.download.releaseId);
+          }
+          if (staleVersion) await capacitorOtaAdapter.cleanupTransaction(staleVersion);
+          delete state.download;
+          delete state.discovered;
+          delete state.resume;
+          state.lastStatusKey = "ota.checking";
+          await writeState(state);
+          await new Promise((resolve) => window.setTimeout(resolve, 1_000));
+          continue;
+        }
         state.lastStatusKey = "ota.failed";
         await writeState(state);
+        const targetVersion = state.download?.version ?? state.discovered?.version ?? "unknown";
+        const releaseId = state.download?.releaseId ?? state.discovered?.releaseId;
+        const reason = otaFailureReason(error);
+        recordOtaOutcome({
+          outcome: "download_failed",
+          localVersion: publicEnv.webBundleVersion,
+          targetVersion,
+          releaseId,
+          reason,
+        });
+        if (reason === "verification") {
+          recordOtaOutcome({
+            outcome: "verification_failed",
+            localVersion: publicEnv.webBundleVersion,
+            targetVersion,
+            releaseId,
+            reason,
+          });
+        }
         throw error;
+      }
       }
     })().finally(() => { activeCheck = null; });
     return activeCheck;
@@ -556,8 +841,14 @@ export const otaUpdateService = {
     now = Date.now(),
   ): Promise<DownloadedOtaUpdate | null> {
     const state = await readOtaState();
+    const due = isDailyOtaCheckDue(state.lastSuccessfulCheckAt, now);
+    const clamped = clampFutureOtaCheckTimestamp(state.lastSuccessfulCheckAt, now);
+    if (clamped !== state.lastSuccessfulCheckAt) {
+      state.lastSuccessfulCheckAt = clamped;
+      await writeState(state);
+    }
     if (state.pending) await this.reverifyPendingApproval(identity);
-    if (state.download || isDailyOtaCheckDue(state.lastSuccessfulCheckAt, now))
+    if (state.download || due)
       return this.checkAndDownload(notify, identity);
     return null;
   },
@@ -568,12 +859,23 @@ export const otaUpdateService = {
     if (state.activation) {
       if (state.activation.version === publicEnv.webBundleVersion) return;
       if (state.pending) state.failedReleaseId = state.pending.releaseId;
+      const currentPath = await capacitorOtaAdapter.currentBasePath();
+      if (currentPath !== state.activation.previousPath) {
+        state.activation.rollbackPending = true;
+        await writeState(state);
+        await capacitorOtaAdapter.activate(state.activation.previousPath);
+        return;
+      }
       await capacitorOtaAdapter.rollbackDelta(state.activation.version);
-      const previousPath = state.activation.previousPath;
+      recordOtaOutcome({
+        outcome: "rollback_performed",
+        localVersion: state.activation.baseVersion || publicEnv.webBundleVersion,
+        targetVersion: state.activation.version,
+        releaseId: state.activation.releaseId,
+      });
       delete state.activation;
       delete state.pending;
       await writeState(state);
-      await capacitorOtaAdapter.activate(previousPath);
       return;
     }
     if (!state.pending?.ready) return;

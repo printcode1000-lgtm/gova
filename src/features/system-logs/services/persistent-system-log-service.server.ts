@@ -21,6 +21,10 @@ export class PersistentSystemLogService {
     });
   }
 
+  async addBatch(inputs: PersistentSystemLogInput[]) {
+    for (const input of inputs) await this.add(input);
+  }
+
   async list(limit?: number) {
     return persistentSystemLogRepository.list(limit);
   }

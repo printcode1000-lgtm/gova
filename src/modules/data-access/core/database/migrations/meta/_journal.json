@@ -50,6 +50,13 @@
       "when": 1784696159134,
       "tag": "0006_specialty_request_preferences",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1785643200000,
+      "tag": "0007_ota_staged_rollout",
+      "breakpoints": true
     }
   ]
 }

@@ -4,6 +4,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { zipSync } from "fflate";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
+import { compareOtaCanonicalStrings } from "../src/features/ota/utils/ota-canonical-order";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import {
   formatReport,
@@ -31,6 +32,18 @@ import {
   putOtaObject,
 } from "./ota/ota-r2";
 import { scanBuiltCapabilities } from "./ota/ota-capability-scan";
+import {
+  changedPathsFromHistory,
+  selectRecentHistoryKeys,
+  staleBundleKeys,
+} from "./ota/ota-bundle-history";
+import {
+  createSignedRevocationDocument,
+  mergeRevokedVersions,
+  readTrackedRevokedVersions,
+  writeTrackedRevokedVersions,
+} from "./ota/ota-revocation";
+import { readVerifiedLiveRevocationDocument } from "./ota/ota-live-revocation";
 
 const LOCAL_MANIFEST_FILE = "asol-web-manifest.json";
 
@@ -45,9 +58,7 @@ function collectFiles(
   current = root,
   result: Record<string, CollectedFile> = {},
 ) {
-  const entries = readdirSync(current).sort((left, right) =>
-    left.localeCompare(right),
-  );
+  const entries = readdirSync(current).sort(compareOtaCanonicalStrings);
   for (const entry of entries) {
     const fullPath = path.join(current, entry);
     const stat = statSync(fullPath);
@@ -177,7 +188,29 @@ async function main(): Promise<void> {
   const prefix = getOtaPrefix();
   const manifestKey = `${prefix}/manifest.json`;
   const filesPrefix = `${prefix}/files`;
+  const historyPrefix = `${prefix}/history`;
   const client = createOtaR2Client();
+  const privateKey = getOtaPrivateKey();
+  const revocationKey = `${prefix}/revocations.json`;
+  const trackedRevocations = readTrackedRevokedVersions();
+  const liveRevocations = await readVerifiedLiveRevocationDocument(
+    client,
+    revocationKey,
+    privateKey,
+  );
+  const { merged: mergedRevocations, recovered: recoveredRevocations } =
+    mergeRevokedVersions(
+      trackedRevocations,
+      liveRevocations?.revokedVersions ?? [],
+    );
+  if (recoveredRevocations.length) {
+    writeTrackedRevokedVersions(mergedRevocations);
+    console.warn(
+      "\n*** OTA REVOCATION DRIFT RECOVERED ***\n" +
+        `Recovered from the live signed document: ${recoveredRevocations.join(", ")}\n` +
+        "The tracked revocation file was updated; commit it before publishing.\n",
+    );
+  }
   const previousManifest = (await otaObjectExists(client, manifestKey))
     ? await getOtaManifestObject(client, manifestKey)
     : null;
@@ -189,7 +222,6 @@ async function main(): Promise<void> {
     : packageVersion;
   const now = new Date();
   const notes = automaticNotes(now);
-  const privateKey = getOtaPrivateKey();
   const apiBaseUrl = (
     process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, "");
@@ -236,7 +268,18 @@ async function main(): Promise<void> {
       ),
     );
   const fullBundle = zipFiles(Object.keys(files));
-  const deltaBundle = previousManifest ? zipFiles(changedPaths) : null;
+  const existingHistoryKeys = await listOtaObjectKeys(client, `${historyPrefix}/`);
+  const sourceHistoryKeys = selectRecentHistoryKeys(existingHistoryKeys, historyPrefix);
+  const historyManifests = await Promise.all(
+    sourceHistoryKeys.map((key) => getOtaManifestObject(client, key)),
+  );
+  const deltaBundles = historyManifests
+    .map((base) => {
+      const paths = changedPathsFromHistory(files, base, baseUrl);
+      const bundle = zipFiles(paths);
+      return { base, bundle };
+    })
+    .sort((left, right) => compareOtaCanonicalStrings(left.base.version, right.base.version));
   const bundleMetadata = (bundle: Buffer, objectPath: string) => ({
     path: objectPath.slice(prefix.length + 1),
     sha256: createHash("sha256").update(bundle).digest("hex"),
@@ -252,6 +295,7 @@ async function main(): Promise<void> {
   console.log(
     `R2 delta: ${changedPaths.length} changed/new, ${deletedKeys.length} deleted`,
   );
+  const publishWindowStartedAt = Date.now();
   let uploaded = 0;
   for (const filePath of uploadPaths) {
     const file = files[filePath]!;
@@ -279,11 +323,11 @@ async function main(): Promise<void> {
     "application/zip",
     "public, max-age=31536000, immutable",
   );
-  if (deltaBundle) {
+  for (const { base, bundle } of deltaBundles) {
     await putOtaObject(
       client,
-      `${bundlePrefix}/from-${previousManifest!.version}.zip`,
-      deltaBundle,
+      `${bundlePrefix}/from-${base.version}.zip`,
+      bundle,
       "application/zip",
       "public, max-age=31536000, immutable",
     );
@@ -314,17 +358,10 @@ async function main(): Promise<void> {
     ),
     bundles: {
       full: bundleMetadata(fullBundle, `${bundlePrefix}/full.zip`),
-      ...(deltaBundle && previousManifest
-        ? {
-            delta: {
-              ...bundleMetadata(
-                deltaBundle,
-                `${bundlePrefix}/from-${previousManifest.version}.zip`,
-              ),
-              fromVersion: previousManifest.version,
-            },
-          }
-        : {}),
+      deltas: deltaBundles.map(({ base, bundle }) => ({
+        ...bundleMetadata(bundle, `${bundlePrefix}/from-${base.version}.zip`),
+        fromVersion: base.version,
+      })),
     },
   };
   const signature = sign(
@@ -344,10 +381,49 @@ async function main(): Promise<void> {
     "application/json",
     "no-store, max-age=0",
   );
+  console.log(
+    `Per-file publish window: ${Date.now() - publishWindowStartedAt} ms ` +
+      "(first mutable file upload through manifest commit)",
+  );
+
+  await putOtaObject(
+    client,
+    `${historyPrefix}/${version}.json`,
+    JSON.stringify(manifest, null, 2),
+    "application/json",
+    "public, max-age=31536000, immutable",
+  );
+  const revocations = createSignedRevocationDocument(
+    mergedRevocations,
+    now.toISOString(),
+    privateKey,
+  );
+  await putOtaObject(
+    client,
+    revocationKey,
+    JSON.stringify(revocations, null, 2),
+    "application/json",
+    "no-store, max-age=0",
+  );
+
+  const bundleKeys = await listOtaObjectKeys(client, `${prefix}/bundles/`);
+  const deletedBundleKeys = staleBundleKeys(bundleKeys, bundlePrefix);
+  await deleteOtaObjects(client, deletedBundleKeys);
+  const allHistoryKeys = await listOtaObjectKeys(client, `${historyPrefix}/`);
+  const retainedHistoryKeys = new Set(selectRecentHistoryKeys(allHistoryKeys, historyPrefix));
+  const deletedHistoryKeys = allHistoryKeys.filter((key) => !retainedHistoryKeys.has(key));
+  await deleteOtaObjects(client, deletedHistoryKeys);
 
   const legacyKeys = await listOtaObjectKeys(client, `${prefix}/releases/`);
   await deleteOtaObjects(client, legacyKeys);
   console.log(`Removed ${legacyKeys.length} legacy release objects`);
+  console.log(
+    `Published ${1 + deltaBundles.length} bundles: full=${fullBundle.byteLength} bytes, ` +
+      `deltas=${deltaBundles.map(({ base, bundle }) => `${base.version}:${bundle.byteLength}`).join(", ") || "none"}`,
+  );
+  console.log(
+    `Removed ${deletedBundleKeys.length} stale bundle objects and ${deletedHistoryKeys.length} stale history objects`,
+  );
   console.log(`OTA ${version} published to the single current directory`);
   console.log(`Manifest: ${getOtaManifestUrl()}`);
   console.log(`Files: ${payload.fileCount}, total bytes: ${size}`);

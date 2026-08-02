@@ -7,6 +7,7 @@ interface OtaAccessBody {
   releaseId?: string;
   version?: string;
   identity?: OtaIdentity;
+  installationId?: string;
 }
 
 export async function POST(request: Request) {
@@ -18,6 +19,7 @@ export async function POST(request: Request) {
           releaseId: body.releaseId?.trim() ?? '',
           version: body.version?.trim() ?? '',
           identity: body.identity,
+          installationId: body.installationId?.trim(),
         }),
       );
     } catch (error) {

@@ -50,8 +50,9 @@ function normalize(input: Partial<PersistentSystemLogInput>): PersistentSystemLo
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/system-logs/ingest", async () => {
     try {
-      const body = (await request.json()) as Partial<PersistentSystemLogInput>;
-      await persistentSystemLogService.add(normalize(body));
+      const body = (await request.json()) as Partial<PersistentSystemLogInput> | Partial<PersistentSystemLogInput>[];
+      const inputs = (Array.isArray(body) ? body : [body]).slice(0, 100).map(normalize);
+      await persistentSystemLogService.addBatch(inputs);
       return apiSuccess({ ok: true });
     } catch (error) {
       return mapServiceError(error);

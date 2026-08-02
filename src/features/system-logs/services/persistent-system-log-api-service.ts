@@ -20,6 +20,16 @@ export class PersistentSystemLogApiService {
     return result;
   }
 
+  async ingestBatch(inputs: PersistentSystemLogInput[]) {
+    const result = await asolApi.post<{ ok: true }>(
+      ASOL_API_ROUTES.systemLogs.ingest,
+      inputs,
+      { suppressErrorLog: true },
+    );
+    notifySystemLogsChanged();
+    return result;
+  }
+
   async list(uid: string, phone: string, limit = 300) {
     const q = new URLSearchParams({ uid, phone, limit: String(limit) });
     return asolApi.get<PersistentSystemLogEntry[]>(

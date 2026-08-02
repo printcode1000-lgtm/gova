@@ -21,9 +21,13 @@ import type {
 export class OtaReleaseRepository {
   constructor(private readonly database: IDatabaseClient = usersDataSource) {}
 
-  async getApproval(releaseId: string): Promise<{ version: string; approved: boolean } | null> {
+  async getApproval(releaseId: string): Promise<{ version: string; approved: boolean; rolloutPercentage: number } | null> {
     const rows = await this.database.db
-      .select({ version: otaReleases.version, approved: otaReleases.approved })
+      .select({
+        version: otaReleases.version,
+        approved: otaReleases.approved,
+        rolloutPercentage: otaReleases.rolloutPercentage,
+      })
       .from(otaReleases)
       .where(eq(otaReleases.releaseId, releaseId))
       .limit(1);
@@ -99,11 +103,19 @@ export class OtaReleaseRepository {
     releaseId: string;
     version: string;
     approved: boolean;
+    rolloutPercentage: number;
     actorUid: string;
   }): Promise<OtaReleaseSummary> {
     const current = await this.get(input.releaseId);
     if (!current || current.version !== input.version) throw new Error('otaReleaseNotFound');
-    if (current.approved === input.approved) return current;
+    if (!Number.isInteger(input.rolloutPercentage) || input.rolloutPercentage < 0 || input.rolloutPercentage > 100)
+      throw new Error('otaRolloutInvalid');
+    if (input.rolloutPercentage < current.rolloutPercentage)
+      throw new Error('otaRolloutCannotDecrease');
+    if (
+      current.approved === input.approved &&
+      current.rolloutPercentage === input.rolloutPercentage
+    ) return current;
 
     const now = new Date().toISOString();
     await this.database.db
@@ -112,6 +124,7 @@ export class OtaReleaseRepository {
         input.approved
           ? {
               approved: true,
+              rolloutPercentage: input.rolloutPercentage,
               approvedAt: now,
               approvedByUid: input.actorUid,
               revokedAt: null,
@@ -119,6 +132,7 @@ export class OtaReleaseRepository {
             }
           : {
               approved: false,
+              rolloutPercentage: input.rolloutPercentage,
               revokedAt: now,
               revokedByUid: input.actorUid,
             },
@@ -128,7 +142,9 @@ export class OtaReleaseRepository {
     await this.addAudit({
       releaseId: input.releaseId,
       version: input.version,
-      action: input.approved ? 'approved' : 'revoked',
+      action: current.approved !== input.approved
+        ? (input.approved ? 'approved' : 'revoked')
+        : 'rollout_changed',
       actorUid: input.actorUid,
     });
 
@@ -188,6 +204,7 @@ function toSummary(row: OtaReleaseEntity): OtaReleaseSummary {
     notes: row.notes,
     signature: row.signature,
     approved: row.approved,
+    rolloutPercentage: row.rolloutPercentage,
     approvedAt: row.approvedAt ?? undefined,
     approvedByUid: row.approvedByUid ?? undefined,
     revokedAt: row.revokedAt ?? undefined,

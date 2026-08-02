@@ -35,6 +35,7 @@ import { statusBar } from "./status-bar";
 import { textZoom } from "./text-zoom";
 import { toast } from "./toast";
 import { backgroundDownload } from "./background-download";
+import { storageCapacity } from "./storage-capacity";
 
 export const nativePlatform = {
   camera,
@@ -61,6 +62,7 @@ export const nativePlatform = {
   textZoom,
   toast,
   backgroundDownload,
+  storageCapacity,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -109,3 +111,4 @@ export * from "./status-bar";
 export * from "./text-zoom";
 export * from "./toast";
 export * from "./background-download";
+export * from "./storage-capacity";
