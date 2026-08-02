@@ -21,6 +21,15 @@ export interface OtaManifestPayload {
   mandatory: boolean;
   notes: string;
   files: Record<string, { sha256: string; size: number }>;
+  bundles?: {
+    full: { path: string; sha256: string; size: number };
+    delta?: {
+      path: string;
+      fromVersion: string;
+      sha256: string;
+      size: number;
+    };
+  };
 }
 
 export interface OtaManifest extends OtaManifestPayload {
@@ -109,6 +118,7 @@ export function canonicalManifestPayload(payload: OtaManifestPayload): string {
     mandatory: payload.mandatory,
     notes: payload.notes,
     files: sortedFiles,
+    bundles: payload.bundles,
   });
 }
 

@@ -11,6 +11,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        if identifier == AsolBackgroundDownloadCoordinator.sessionIdentifier {
+            // iOS resumes normal system-terminated transfers here. A user Force
+            // Quit cancels them; ASOL reconnects and retries after next launch.
+            AsolBackgroundDownloadCoordinator.shared.attach(completionHandler: completionHandler)
+        } else {
+            completionHandler()
+        }
+    }
+
     // Forward APNs registration results to Capacitor's Push Notifications
     // plugin. Without these callbacks JavaScript never receives the iOS token
     // (or the native registration error) after PushNotifications.register().

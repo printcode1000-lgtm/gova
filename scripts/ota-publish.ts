@@ -2,6 +2,7 @@ import { execSync } from "node:child_process";
 import { createHash, sign } from "node:crypto";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
+import { zipSync } from "fflate";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import {
@@ -205,22 +206,42 @@ async function main(): Promise<void> {
 
   const files = collectFiles(path.resolve("out"));
   const requiredCapabilities = scanBuiltCapabilities(files);
-  const baseUrl = `${getOtaPublicBaseUrl()}/${filesPrefix}`;
+  const publicRoot = getOtaPublicBaseUrl();
+  const baseUrl = `${publicRoot}/${filesPrefix}`;
   const isSingleDirectoryLayout =
     previousManifest?.baseUrl.replace(/\/$/, "") === baseUrl;
   const changedPaths = Object.entries(files)
     .filter(([filePath, file]) => {
       const previous = previousManifest?.files[filePath];
-      const requiresBinaryTransport =
-        path.extname(filePath).toLowerCase() === ".json";
       return (
-        requiresBinaryTransport ||
         !isSingleDirectoryLayout ||
         previous?.sha256 !== file.sha256 ||
         previous.size !== file.size
       );
     })
     .map(([filePath]) => filePath);
+  const uploadPaths = Object.keys(files).filter(
+    (filePath) =>
+      changedPaths.includes(filePath) ||
+      path.extname(filePath).toLowerCase() === ".json",
+  );
+
+  const releaseId = `${version}-${now.getTime()}`;
+  const bundlePrefix = `${prefix}/bundles/${releaseId}`;
+  const zipFiles = (paths: readonly string[]) =>
+    Buffer.from(
+      zipSync(
+        Object.fromEntries(paths.map((filePath) => [filePath, files[filePath]!.bytes])),
+        { level: 6 },
+      ),
+    );
+  const fullBundle = zipFiles(Object.keys(files));
+  const deltaBundle = previousManifest ? zipFiles(changedPaths) : null;
+  const bundleMetadata = (bundle: Buffer, objectPath: string) => ({
+    path: objectPath.slice(prefix.length + 1),
+    sha256: createHash("sha256").update(bundle).digest("hex"),
+    size: bundle.byteLength,
+  });
 
   const expectedKeys = new Set(
     Object.keys(files).map((filePath) => `${filesPrefix}/${filePath}`),
@@ -232,7 +253,7 @@ async function main(): Promise<void> {
     `R2 delta: ${changedPaths.length} changed/new, ${deletedKeys.length} deleted`,
   );
   let uploaded = 0;
-  for (const filePath of changedPaths) {
+  for (const filePath of uploadPaths) {
     const file = files[filePath]!;
     await putOtaObject(
       client,
@@ -245,12 +266,28 @@ async function main(): Promise<void> {
     if (
       uploaded === 1 ||
       uploaded % 100 === 0 ||
-      uploaded === changedPaths.length
+      uploaded === uploadPaths.length
     ) {
-      console.log(`  uploaded ${uploaded}/${changedPaths.length}: ${filePath}`);
+      console.log(`  uploaded ${uploaded}/${uploadPaths.length}: ${filePath}`);
     }
   }
   await deleteOtaObjects(client, deletedKeys);
+  await putOtaObject(
+    client,
+    `${bundlePrefix}/full.zip`,
+    fullBundle,
+    "application/zip",
+    "public, max-age=31536000, immutable",
+  );
+  if (deltaBundle) {
+    await putOtaObject(
+      client,
+      `${bundlePrefix}/from-${previousManifest!.version}.zip`,
+      deltaBundle,
+      "application/zip",
+      "public, max-age=31536000, immutable",
+    );
+  }
 
   const size = Object.values(files).reduce(
     (total, file) => total + file.size,
@@ -259,7 +296,7 @@ async function main(): Promise<void> {
   const payload: OtaManifestPayload = {
     schemaVersion: OTA_SCHEMA_VERSION,
     delivery: "files",
-    releaseId: `${version}-${now.getTime()}`,
+    releaseId,
     version,
     createdAt: now.toISOString(),
     baseUrl,
@@ -275,6 +312,20 @@ async function main(): Promise<void> {
         { sha256: file.sha256, size: file.size },
       ]),
     ),
+    bundles: {
+      full: bundleMetadata(fullBundle, `${bundlePrefix}/full.zip`),
+      ...(deltaBundle && previousManifest
+        ? {
+            delta: {
+              ...bundleMetadata(
+                deltaBundle,
+                `${bundlePrefix}/from-${previousManifest.version}.zip`,
+              ),
+              fromVersion: previousManifest.version,
+            },
+          }
+        : {}),
+    },
   };
   const signature = sign(
     "sha256",

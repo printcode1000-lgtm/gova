@@ -15,7 +15,6 @@ import { LoginSuccessToast } from "@/features/auth/components/LoginSuccessToast"
 import { NetworkStatusProvider } from "@/features/network/hooks/use-network-status";
 import { NetworkStatusBanner } from "@/components/network/NetworkStatusBanner";
 import { OtaUpdateProvider } from "@/features/ota/hooks/use-ota-update";
-import { OtaUpdatePrompt } from "@/components/ota/OtaUpdatePrompt";
 import { MobileBackButtonController } from "@/components/navigation/MobileBackButtonController";
 import { VoiceInputController } from "@/components/voice-input/VoiceInputController";
 import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
@@ -88,7 +87,6 @@ export default function RootLayout({
                         </Suspense>
                         <NetworkStatusBanner />
                         <LoginSuccessToast />
-                        <OtaUpdatePrompt />
                         <MobileBackButtonController />
                         <VoiceInputController />
                         <SuperAdminImpersonationBanner />

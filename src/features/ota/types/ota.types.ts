@@ -3,6 +3,18 @@ export interface OtaFileEntry {
   size: number;
 }
 
+export interface OtaBundleEntry {
+  path: string;
+  sha256: string;
+  size: number;
+  fromVersion?: string;
+}
+
+export interface OtaManifestBundles {
+  full: OtaBundleEntry;
+  delta?: OtaBundleEntry & { fromVersion: string };
+}
+
 export interface OtaManifestPayload {
   schemaVersion: number;
   delivery: "files";
@@ -17,6 +29,7 @@ export interface OtaManifestPayload {
   mandatory: boolean;
   notes: string;
   files: Record<string, OtaFileEntry>;
+  bundles?: OtaManifestBundles;
 }
 
 export interface OtaManifest extends OtaManifestPayload {
@@ -28,13 +41,12 @@ export interface DownloadedOtaUpdate {
   releaseId: string;
   path: string;
   size: number;
-  changedFileCount: number;
-  deletedFileCount: number;
+  totalBytes: number;
   notes: string;
   downloadedAt: number;
   changedFiles: string[];
   deletedFiles: string[];
-  dismissedAt?: number;
+  ready: true;
 }
 
 export interface OtaStoredState {
@@ -48,6 +60,27 @@ export interface OtaStoredState {
   };
   resume?: OtaResumeState;
   workingBaselineVersion?: string;
+  lastSuccessfulCheckAt?: number;
+  discovered?: {
+    releaseId: string;
+    version: string;
+    totalBytes: number;
+    manifest: OtaManifest;
+    changedFiles: string[];
+    deletedFiles: string[];
+  };
+  download?: {
+    releaseId: string;
+    version: string;
+    status: "requested" | "downloading" | "extracting";
+    downloadedBytes: number;
+    totalBytes: number;
+    nativeTaskId?: string;
+    expectedSha256?: string;
+    bundlePath?: string;
+  };
+  lastStatusKey?: string;
+  nativeUpdateRequired?: boolean;
 }
 
 export interface OtaResumeState {
@@ -62,9 +95,9 @@ export type OtaDownloadProgress = {
   detail?: string;
   currentVersion?: string;
   remoteVersion?: string;
-  changedFileCount?: number;
-  deletedFileCount?: number;
-  downloadBytes?: number;
+  downloadedBytes?: number;
+  totalBytes?: number;
+  nativeUpdateRequired?: boolean;
 };
 
 export interface OtaIdentity {

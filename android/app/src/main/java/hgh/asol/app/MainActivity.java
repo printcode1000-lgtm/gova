@@ -14,6 +14,7 @@ public class MainActivity extends BridgeActivity {
         // Registered before super.onCreate so the plugin can inspect the
         // launch intent that started this activity from the share sheet.
         registerPlugin(ShareReceivePlugin.class);
+        registerPlugin(BackgroundDownloadPlugin.class);
         super.onCreate(savedInstanceState);
     }
 

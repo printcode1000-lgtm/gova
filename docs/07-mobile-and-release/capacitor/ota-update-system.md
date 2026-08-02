@@ -2,7 +2,11 @@
 
 ## Contract
 
-ASOL uses one forward-only, file-level OTA channel. There are no ZIP bundles or versioned R2 directories. The device keeps a changed-files-only rollback backup during activation. Release approval history is stored in the users Turso database; R2 still contains only the current file tree and manifest.
+ASOL uses one forward-only OTA channel. File paths, sizes, and SHA-256 values
+remain the unit of truth, while native background delivery uses one signed ZIP
+transport object per release. The device keeps a changed-files-only rollback
+backup during activation. Release approval history is stored in the users
+Turso database.
 
 The application downloads or activates an update only when:
 
@@ -146,21 +150,18 @@ OTA transfers a modified file in full. Therefore `downloadBytes` is the sum of e
 
 ## R2 Layout
 
-R2 has one current manifest and one current file tree:
+R2 has one current manifest and file tree plus immutable release bundles:
 
 ```text
 app-updates/
 |-- manifest.json
-`-- files/
+|-- files/
     |-- index.html
     |-- _next/static/...
     `-- ...
-```
-
-Expected object counts are always:
-
-```text
-1 manifest object + manifest.fileCount file objects
+`-- bundles/<releaseId>/
+    |-- full.zip
+    `-- from-<previousVersion>.zip
 ```
 
 `app-updates/releases/` is legacy and must remain absent. `cap:build` removes any legacy objects found there.
@@ -181,15 +182,17 @@ Do not pass `--version` or `--notes`. The command performs this sequence:
 4. Pins the web version, native version, and deterministic Next.js Build ID to the new version.
 5. Runs the static build and generates `out/asol-web-manifest.json`.
 6. Compares the new local file list with the previous R2 manifest.
-7. Uploads only new or changed files to `app-updates/files/`.
-8. Deletes remote file objects that no longer exist locally.
-9. Signs and publishes `app-updates/manifest.json` last.
-10. Deletes legacy objects under `app-updates/releases/`.
-11. Updates Android `versionName` and `versionCode`.
-12. Updates iOS `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`.
-13. Compares the local and remote manifests.
-14. Downloads every R2 file and verifies its byte size and SHA-256.
-15. Runs `npx cap sync` only after all checks pass.
+7. Creates a full transport bundle and a changed-files-only bundle from the
+   immediately previous version.
+8. Uploads only new or changed individual files and the immutable bundles.
+9. Deletes remote file objects that no longer exist locally.
+10. Signs and publishes `app-updates/manifest.json` last, including bundle hashes.
+11. Deletes legacy objects under `app-updates/releases/`.
+12. Updates Android `versionName` and `versionCode`.
+13. Updates iOS `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`.
+14. Compares the local and remote manifests.
+15. Downloads every R2 file and bundle and verifies its byte size and SHA-256.
+16. Runs `npx cap sync` only after all checks pass.
 
 No APK or IPA is created. The command prepares the Android Studio and Xcode projects.
 
@@ -230,6 +233,13 @@ For every local output path, publication compares its SHA-256 and size with the 
 
 Changed files use revalidation cache headers because their URLs remain stable between versions. The signed manifest uses `no-store` and is written only after file uploads and deletions complete.
 
+The normal native path downloads one `from-<previousVersion>.zip` when its
+`fromVersion` equals the running bundle. A client farther behind downloads
+`full.zip`. Web/recovery clients retain the individual-file path. ZIP is only
+the transport: its hash is signed, extraction is streamed with `fflate.Unzip`,
+every entry passes path validation, and every extracted file is checked against
+the signed per-file hash before the release can become ready.
+
 All R2 GET, HEAD, LIST, PUT, and DELETE operations use SDK adaptive retries plus explicit exponential-backoff retries for timeouts, rate limits, server errors, `InternalError`, and `SlowDown`. A final error includes the operation, object key, HTTP status, request ID, and SDK attempt count when provided.
 
 JSON files below `app-updates/files` are uploaded as `application/octet-stream`, not `application/json`. Android `CapacitorHttp` otherwise parses JSON before honoring `arraybuffer`, which changes the byte representation and prevents SHA-256 verification. JSON OTA objects are therefore refreshed on every publication to guarantee the correct transport metadata; the manifest itself remains `application/json`.
@@ -263,6 +273,10 @@ Example schema v2 manifest:
       "size": 1234
     }
   },
+  "bundles": {
+    "full": { "path": "bundles/<releaseId>/full.zip", "sha256": "...", "size": 21000000 },
+    "delta": { "path": "bundles/<releaseId>/from-0.1.7.zip", "fromVersion": "0.1.7", "sha256": "...", "size": 12000000 }
+  },
   "signature": "..."
 }
 ```
@@ -294,20 +308,35 @@ After `cap sync`, Android and iOS receive the same local manifest and static fil
 
 ## Runtime Update
 
-At Splash, the application:
+After the interactive UI opens, the application checks silently at most once
+per 24 hours. A successful discovery starts downloading immediately. Manual
+checks bypass the interval. Failed discovery does not advance the successful
+check timestamp. Native Android uses one `DownloadManager` task and iOS uses
+one background `URLSession` task; task identity is persisted and reattached
+after normal process recreation. Web falls back to verified per-file transfer.
 
-1. Reads the local `asol-web-manifest.json`.
-2. Loads the signed R2 manifest.
-3. Validates schema, delivery type, version, metadata, signature, paths, counts, and total size.
-4. Stops when `remote.version <= local.version`.
-5. Calls `/api/ota/access` with the exact remote release identity and the current user identity when available.
-6. Stops before diff calculation or file download unless the release is approved or the actor is the super-admin.
-7. Calculates changed and deleted paths.
-8. Re-verifies already staged resume files by SHA-256.
-9. Downloads only remaining changed files, with six concurrent workers.
-10. Persists each verified completion marker so interruption resumes safely.
-11. Writes the signed remote manifest into staging; unchanged files are never copied during normal OTA updates.
-12. Rechecks release access, backs up only changed/deleted working files, patches the working directory, and activates it.
+Splash performs no discovery and no download. A fully ready release receives
+one approval request bounded to two seconds. Explicit revocation discards it;
+approval activates it; timeout/offline failure activates using the approval
+proven at download time. The next foreground session rechecks pending approval.
+The deliberate residual gap is that a release revoked after download can still
+activate when the device is offline both at revocation recheck and launch.
+
+After activation, the expected bundle must initialize and confirm itself. If it
+does not, only touched files are restored and the previous WebView path is
+reactivated. A partial download is never activated.
+
+Android continues normal DownloadManager work across backgrounding, process
+death, and reboot where the OS permits. Android Force Stop blocks it until the
+next launch. iOS background URLSession survives suspension and normal system
+termination, but user Force Quit cancels transfers; ASOL resumes on next launch.
+These limitations are OS policy and are not represented as stronger guarantees.
+
+AOSP restricts `DOWNLOAD_WITHOUT_NOTIFICATION` to platform-signed/system apps.
+ASOL requests hidden DownloadManager visibility only when an OEM has granted
+that permission; ordinary Play installations show Android's running download
+notification so the transfer remains functional and policy-compliant. Silent
+refers to discovery and in-app prompts, not suppression of mandatory OS UI.
 
 Files absent from the remote manifest are absent from the staged release, so deletion propagates to the application.
 

@@ -160,6 +160,20 @@ async function verifyR2Files(manifest: OtaManifest): Promise<void> {
       }
     },
   );
+  const bundles = [manifest.bundles?.full, manifest.bundles?.delta].filter(
+    (bundle): bundle is NonNullable<typeof bundle> => Boolean(bundle),
+  );
+  for (const bundle of bundles) {
+    const bytes = await getOtaObjectBytes(
+      client,
+      `${getOtaPrefix()}/${bundle.path}`,
+    );
+    const hash = createHash("sha256").update(bytes).digest("hex");
+    if (bytes.byteLength !== bundle.size || hash !== bundle.sha256) {
+      throw new Error(`R2 OTA bundle content mismatch: ${bundle.path}`);
+    }
+    console.log(`  verified OTA bundle: ${bundle.path}`);
+  }
 }
 
 async function main(): Promise<void> {

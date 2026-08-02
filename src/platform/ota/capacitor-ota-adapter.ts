@@ -159,6 +159,33 @@ export const capacitorOtaAdapter = {
     });
   },
 
+  async beginReleaseFile(version: string, filePath: string): Promise<void> {
+    const releaseRoot = this.releaseRoot(version);
+    const safePath = safeReleasePath(filePath);
+    const parent = safePath.includes("/")
+      ? safePath.slice(0, safePath.lastIndexOf("/"))
+      : "";
+    if (parent) await ensureDirectory(`${releaseRoot}/${parent}`);
+    await Filesystem.writeFile({
+      path: `${releaseRoot}/${safePath}`,
+      directory: Directory.Data,
+      data: "",
+      recursive: true,
+    });
+  },
+
+  async appendReleaseFile(
+    version: string,
+    filePath: string,
+    data: Uint8Array,
+  ): Promise<void> {
+    await Filesystem.appendFile({
+      path: `${this.releaseRoot(version)}/${safeReleasePath(filePath)}`,
+      directory: Directory.Data,
+      data: bytesToBase64(data),
+    });
+  },
+
   async writeReleaseTextFile(
     version: string,
     filePath: string,

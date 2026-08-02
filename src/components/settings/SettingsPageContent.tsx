@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Database, FileText, Globe, Palette, Shield } from "lucide-react";
+import { Bell, Database, FileText, Globe, Palette, RefreshCw, Shield } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAdjust,
@@ -17,6 +17,8 @@ import {
   clearAllClientStorage,
 } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
+import { useOtaUpdate } from "@/features/ota/hooks/use-ota-update";
+import { publicEnv } from "@/core/config/public-env";
 import { webPushBrowserService } from "@/features/notifications/application/web-push-browser-service";
 import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
 import { notificationPermissionService } from "@/features/notifications/application/permission-service";
@@ -65,6 +67,7 @@ export function SettingsPageContent() {
     resetPreferences: resetApp,
   } = useAppPreferences();
   const { session } = useSession();
+  const ota = useOtaUpdate();
   const [notificationPlatform, setNotificationPlatform] = React.useState<
     "android" | "ios" | "web"
   >("web");
@@ -198,6 +201,16 @@ export function SettingsPageContent() {
   };
 
   const activeThemeLabel = themeLabels[themePrefs.themeMode];
+  const otaDownloaded = ota.progress?.downloadedBytes ?? ota.state.download?.downloadedBytes ?? 0;
+  const otaTotal = ota.progress?.totalBytes ?? ota.state.download?.totalBytes ?? 0;
+  const otaPercent = otaTotal > 0 ? Math.min(100, Math.round((otaDownloaded / otaTotal) * 100)) : 0;
+  const otaStatusKey = ota.state.pending?.ready
+    ? "ota.ready"
+    : ota.progress?.statusKey ?? ota.state.lastStatusKey ?? "ota.current";
+  const formatOtaBytes = (bytes: number) =>
+    bytes < 1024 * 1024
+      ? `${(bytes / 1024).toFixed(bytes ? 1 : 0)} KB`
+      : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 
   const enableWebPush = async () => {
     if (!session?.uid) {
@@ -637,6 +650,61 @@ export function SettingsPageContent() {
               value={`${themePrefs.fontSize}px`}
             />
           </ul>
+        </div>
+      </section>
+
+      {/* Updates */}
+      <section className="mb-12 space-y-6">
+        <div className="asol-settings-section-secondary space-y-5">
+          <div className="flex items-center gap-3 px-2">
+            <RefreshCw className="h-6 w-6 text-primary" aria-hidden="true" />
+            <h2 className="text-xl font-semibold text-on-surface">{t("ota.settings.title")}</h2>
+          </div>
+          <div className="asol-surface-neutral space-y-4 rounded-xl p-4">
+            <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="text-on-surface-variant">{t("ota.settings.nativeVersion")}</dt>
+                <dd className="font-semibold text-on-surface" dir="ltr">{publicEnv.nativeVersion}</dd>
+              </div>
+              <div>
+                <dt className="text-on-surface-variant">{t("ota.settings.webVersion")}</dt>
+                <dd className="font-semibold text-on-surface" dir="ltr">{publicEnv.webBundleVersion}</dd>
+              </div>
+              <div>
+                <dt className="text-on-surface-variant">{t("ota.settings.lastCheck")}</dt>
+                <dd className="font-semibold text-on-surface">
+                  {ota.state.lastSuccessfulCheckAt
+                    ? new Intl.DateTimeFormat(appPrefs.locale, { dateStyle: "medium", timeStyle: "short" }).format(ota.state.lastSuccessfulCheckAt)
+                    : t("ota.settings.never")}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-on-surface-variant">{t("ota.settings.status")}</dt>
+                <dd className="font-semibold text-on-surface">{t(otaStatusKey)}</dd>
+              </div>
+            </dl>
+            {otaTotal > 0 && ota.state.download ? (
+              <div className="space-y-2" aria-live="polite">
+                <div className="flex items-center justify-between text-sm font-semibold text-on-surface">
+                  <span>{otaPercent}%</span>
+                  <span dir="ltr">{formatOtaBytes(otaDownloaded)} / {formatOtaBytes(otaTotal)}</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-surface-variant">
+                  <div className="h-full bg-primary transition-[width]" style={{ width: `${otaPercent}%` }} />
+                </div>
+              </div>
+            ) : null}
+            {ota.error ? <p className="text-sm text-error">{ota.error}</p> : null}
+            <button
+              type="button"
+              onClick={() => void ota.checkNow()}
+              disabled={ota.busy}
+              className="asol-control inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
+            >
+              <RefreshCw className={`h-4 w-4 ${ota.busy ? "animate-spin" : ""}`} aria-hidden="true" />
+              {ota.busy ? t("ota.settings.checking") : t("ota.settings.check")}
+            </button>
+          </div>
         </div>
       </section>
 

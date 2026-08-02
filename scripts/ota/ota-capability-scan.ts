@@ -100,6 +100,9 @@ const apiPatterns = new Map<string, string>([
   ["actionSheet.show", CapabilityKeys.ActionSheetShow],
   ["textZoom.get", CapabilityKeys.TextZoomGet],
   ["textZoom.set", CapabilityKeys.TextZoomSet],
+  ["backgroundDownload.schedule", CapabilityKeys.BackgroundDownloadBundle],
+  ["backgroundDownload.status", CapabilityKeys.BackgroundDownloadBundle],
+  ["backgroundDownload.read", CapabilityKeys.BackgroundDownloadBundle],
 ]);
 
 export function scanSourceCapabilityReferences(root: string): string[] {

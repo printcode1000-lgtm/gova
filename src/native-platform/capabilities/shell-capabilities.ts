@@ -5,7 +5,7 @@
 
 import { CapabilityKeys, type CapabilityKey } from "./capability-keys";
 
-export const NATIVE_CAPABILITY_VERSION = 1;
+export const NATIVE_CAPABILITY_VERSION = 2;
 
 export const SHELL_CAPABILITIES: readonly CapabilityKey[] = Object.freeze([
   CapabilityKeys.CameraTakePhoto,
@@ -48,4 +48,5 @@ export const SHELL_CAPABILITIES: readonly CapabilityKey[] = Object.freeze([
   CapabilityKeys.ActionSheetShow,
   CapabilityKeys.TextZoomGet,
   CapabilityKeys.TextZoomSet,
+  CapabilityKeys.BackgroundDownloadBundle,
 ]);

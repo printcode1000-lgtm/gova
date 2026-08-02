@@ -34,6 +34,7 @@ import { splashScreen } from "./splash-screen";
 import { statusBar } from "./status-bar";
 import { textZoom } from "./text-zoom";
 import { toast } from "./toast";
+import { backgroundDownload } from "./background-download";
 
 export const nativePlatform = {
   camera,
@@ -59,6 +60,7 @@ export const nativePlatform = {
   statusBar,
   textZoom,
   toast,
+  backgroundDownload,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -106,3 +108,4 @@ export * from "./splash-screen";
 export * from "./status-bar";
 export * from "./text-zoom";
 export * from "./toast";
+export * from "./background-download";

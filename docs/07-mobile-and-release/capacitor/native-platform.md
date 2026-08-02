@@ -596,6 +596,13 @@ native adapter. None adds a dangerous Android permission. ML Kit Barcode remains
 CocoaPods-only and is intentionally not migrated; every compatible plugin is
 listed in `ios/App/CapApp-SPM/Package.swift`.
 
+The shell also includes the local `BackgroundDownload` bridge. Android hands
+one signed OTA bundle to `DownloadManager`; iOS uses one background
+`URLSession` and forwards completion through `AppDelegate`. Feature code sees
+only `nativePlatform.backgroundDownload`. Completion metadata is untrusted:
+the web layer streams the file, verifies its signed bundle hash, validates ZIP
+entry paths, and verifies every extracted file hash before activation.
+
 To add a capability:
 
 1. Add one user-visible key to `capability-keys.ts`.

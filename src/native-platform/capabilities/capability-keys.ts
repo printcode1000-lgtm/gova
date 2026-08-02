@@ -44,6 +44,7 @@ export const CapabilityKeys = Object.freeze({
   ActionSheetShow: "actionSheet.show",
   TextZoomGet: "textZoom.get",
   TextZoomSet: "textZoom.set",
+  BackgroundDownloadBundle: "backgroundDownload.bundle",
 } as const);
 
 export type CapabilityKey =

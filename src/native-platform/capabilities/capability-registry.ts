@@ -35,7 +35,8 @@ type PluginFamily =
   | "dialog"
   | "toast"
   | "actionSheet"
-  | "textZoom";
+  | "textZoom"
+  | "backgroundDownload";
 
 const pluginLoaders: Record<
   PluginFamily,
@@ -141,6 +142,13 @@ const pluginLoaders: Record<
     "TextZoom",
     async () => (await import("@capacitor/text-zoom")).TextZoom,
   ),
+  backgroundDownload: createLazyPlugin("BackgroundDownload", async () => {
+    const { Capacitor } = await import("@capacitor/core");
+    if (!Capacitor.isPluginAvailable("BackgroundDownload")) {
+      throw new Error("BackgroundDownload is not registered in this shell");
+    }
+    return true;
+  }),
 };
 
 const familyByKey = new Map<CapabilityKey, PluginFamily>([
@@ -183,6 +191,7 @@ const familyByKey = new Map<CapabilityKey, PluginFamily>([
   [CapabilityKeys.ActionSheetShow, "actionSheet"],
   [CapabilityKeys.TextZoomGet, "textZoom"],
   [CapabilityKeys.TextZoomSet, "textZoom"],
+  [CapabilityKeys.BackgroundDownloadBundle, "backgroundDownload"],
 ]);
 
 const webCapabilities = new Set<CapabilityKey>([

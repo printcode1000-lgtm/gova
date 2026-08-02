@@ -33,6 +33,13 @@ async function main(): Promise<void> {
         size: Buffer.byteLength(indexHtml),
       },
     },
+    bundles: {
+      full: {
+        path: "bundles/self-test/full.zip",
+        sha256: createHash("sha256").update(indexHtml).digest("hex"),
+        size: Buffer.byteLength(indexHtml),
+      },
+    },
   };
   const data = Buffer.from(canonicalManifestPayload(payload));
   const signature = sign("sha256", data, {

@@ -40,6 +40,7 @@ function canonicalPayload(manifest: OtaManifest): string {
     mandatory: manifest.mandatory,
     notes: manifest.notes,
     files: sortedFiles(manifest.files),
+    bundles: manifest.bundles,
   });
 }
 
@@ -57,6 +58,20 @@ function assertManifest(manifest: OtaManifest): void {
     Object.keys(manifest.files).length !== manifest.fileCount
   ) {
     throw new Error("otaManifestInvalid");
+  }
+  for (const bundle of [manifest.bundles?.full, manifest.bundles?.delta]) {
+    if (!bundle) continue;
+    const normalized = bundle.path.replaceAll("\\", "/");
+    if (
+      !normalized ||
+      normalized.startsWith("/") ||
+      normalized.split("/").includes("..") ||
+      !/^[a-f0-9]{64}$/i.test(bundle.sha256) ||
+      !Number.isSafeInteger(bundle.size) ||
+      bundle.size <= 0
+    ) {
+      throw new Error("otaManifestInvalid");
+    }
   }
 }
 
