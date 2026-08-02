@@ -41,10 +41,12 @@ export function AppHeader() {
   return (
     <>
       <header className={cn(
-        "fixed top-0 w-full z-50 shadow-sm border-b border-outline-variant rounded-b-2xl",
+        "fixed top-0 w-full z-50 pt-[var(--asol-app-header-inset)] shadow-sm border-b border-outline-variant rounded-b-2xl",
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}>
-        <div className="flex justify-between items-center h-12 w-full max-w-7xl mx-auto px-2">
+        {/* Row height is driven by the shared variable so the content padding
+            in `.asol-shell-main` can never drift out of sync with it. */}
+        <div className="flex justify-between items-center h-[var(--asol-header-bar-height)] w-full max-w-7xl mx-auto px-2">
           <div className="flex items-center gap-3">
             <button
               type="button"

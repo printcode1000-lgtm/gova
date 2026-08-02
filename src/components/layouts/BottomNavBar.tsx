@@ -22,17 +22,12 @@ export function BottomNavBar() {
   useLayoutEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
-    let frame: number | null = null;
+    const root = document.documentElement;
 
+    // Written synchronously: a requestAnimationFrame callback never runs while
+    // the document is hidden, which would leave pages without bottom clearance.
     const publishHeight = () => {
-      if (frame !== null) cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        frame = null;
-        document.documentElement.style.setProperty(
-          '--asol-bottom-nav-space',
-          `${nav.offsetHeight}px`,
-        );
-      });
+      root.style.setProperty('--asol-bottom-nav-space', `${nav.offsetHeight}px`);
     };
 
     publishHeight();
@@ -41,8 +36,7 @@ export function BottomNavBar() {
 
     return () => {
       observer.disconnect();
-      if (frame !== null) cancelAnimationFrame(frame);
-      document.documentElement.style.removeProperty('--asol-bottom-nav-space');
+      root.style.removeProperty('--asol-bottom-nav-space');
     };
   }, []);
 
@@ -58,7 +52,7 @@ export function BottomNavBar() {
       ref={navRef}
       id="bottom-navigation-bar"
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 flex min-h-12 items-center justify-around rounded-t-2xl border-t border-outline-variant pt-0 pb-[calc(0.25rem+env(safe-area-inset-bottom,0px))] shadow-lg",
+        "fixed inset-x-0 bottom-0 z-50 flex min-h-12 items-center justify-around rounded-t-2xl border-t border-outline-variant pt-0 pb-[calc(0.25rem+var(--asol-safe-area-bottom))] shadow-lg",
         resolvedScheme === 'dark' ? 'asol-surface-neutral' : 'bg-[#F8FBFF]'
       )}
     >

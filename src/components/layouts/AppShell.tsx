@@ -14,11 +14,13 @@ interface AppShellProps {
  * App shell for in-app routes (all pages except splash `/`).
  */
 export function AppShell({ children }: AppShellProps) {
+  // System insets are owned by `SafeAreaController` at the root layout, so the
+  // shell only has to consume the resulting CSS variables.
   return (
     <>
       <AppHeader />
       <main
-        className="asol-canvas min-h-screen pt-16"
+        className="asol-canvas asol-shell-main min-h-screen"
         style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}
       >
         {children}

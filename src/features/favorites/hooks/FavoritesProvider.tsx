@@ -180,8 +180,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         <div
           className="fixed inset-x-4 z-[70] mx-auto flex max-w-sm items-center justify-between gap-3 rounded-xl bg-inverse-surface px-4 py-3 text-sm text-inverse-on-surface shadow-xl"
           style={{
-            bottom:
-              "calc(var(--asol-bottom-nav-space, calc(5rem + env(safe-area-inset-bottom, 0px))) + 0.75rem)",
+            bottom: "calc(var(--asol-bottom-nav-space) + 0.75rem)",
           }}
         >
           <span>{notice.message}</span>

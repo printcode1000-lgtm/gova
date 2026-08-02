@@ -47,6 +47,10 @@ import {
 import { readVerifiedLiveRevocationDocument } from "./ota/ota-live-revocation";
 
 const LOCAL_MANIFEST_FILE = "asol-web-manifest.json";
+const OTA_UPLOAD_CONCURRENCY = Math.max(
+  1,
+  Number.parseInt(process.env.ASOL_OTA_UPLOAD_CONCURRENCY ?? "24", 10) || 24,
+);
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const mandatory = args.includes("--mandatory");
@@ -87,6 +91,30 @@ function collectFiles(
     };
   }
   return result;
+}
+
+async function uploadFilesConcurrently<T>(
+  items: readonly T[],
+  upload: (item: T) => Promise<void>,
+): Promise<void> {
+  let nextIndex = 0;
+  let completed = 0;
+  const worker = async () => {
+    while (true) {
+      const index = nextIndex;
+      nextIndex += 1;
+      if (index >= items.length) return;
+      await upload(items[index]!);
+      completed += 1;
+      if (completed === 1 || completed % 100 === 0 || completed === items.length) {
+        console.log(`  uploaded ${completed}/${items.length}`);
+      }
+    }
+  };
+  await Promise.all(Array.from(
+    { length: Math.min(OTA_UPLOAD_CONCURRENCY, items.length) },
+    () => worker(),
+  ));
 }
 
 function contentTypeFor(filePath: string): string {
@@ -309,8 +337,7 @@ async function main(): Promise<void> {
     `R2 delta: ${changedPaths.length} changed/new, ${deletedKeys.length} deleted`,
   );
   const publishWindowStartedAt = Date.now();
-  let uploaded = 0;
-  for (const filePath of uploadPaths) {
+  await uploadFilesConcurrently(uploadPaths, async (filePath) => {
     const file = files[filePath]!;
     await putOtaObject(
       client,
@@ -319,15 +346,7 @@ async function main(): Promise<void> {
       contentTypeFor(filePath),
       "public, max-age=0, must-revalidate",
     );
-    uploaded += 1;
-    if (
-      uploaded === 1 ||
-      uploaded % 100 === 0 ||
-      uploaded === uploadPaths.length
-    ) {
-      console.log(`  uploaded ${uploaded}/${uploadPaths.length}: ${filePath}`);
-    }
-  }
+  });
   await deleteOtaObjects(client, deletedKeys);
   await putOtaObject(
     client,

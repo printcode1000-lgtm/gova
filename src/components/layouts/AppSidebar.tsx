@@ -554,7 +554,7 @@ export const AppSidebar = React.memo(function AppSidebar({
             )}
             dir={isRTL ? "rtl" : "ltr"}
           >
-            <div className="flex shrink-0 items-center justify-between border-b border-outline-variant/30 asol-section-tonal-primary px-3 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
+            <div className="flex shrink-0 items-center justify-between border-b border-outline-variant/30 asol-section-tonal-primary px-3 pb-3 pt-[calc(0.75rem+var(--asol-safe-area-top))]">
               <span className="text-sm font-semibold text-on-primary-container px-2">
                 {t("sidebar.menu")}
               </span>
@@ -572,7 +572,7 @@ export const AppSidebar = React.memo(function AppSidebar({
               </button>
             </div>
 
-            <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain p-3 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] [scrollbar-width:thin]">
+            <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain p-3 pt-2 pb-[calc(0.75rem+var(--asol-safe-area-bottom))] [scrollbar-width:thin]">
               {isLoggedIn ? (
                 <>
                   <button

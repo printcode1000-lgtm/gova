@@ -63,6 +63,38 @@ Build signed Android release APK without uploading
 
 Build unsigned Android release APK without uploading
 
+### android aab_signed_no_r8
+
+```sh
+[bundle exec] fastlane android aab_signed_no_r8
+```
+
+Build signed Android releaseNoR8 bundle without uploading
+
+### android aab_unsigned_no_r8
+
+```sh
+[bundle exec] fastlane android aab_unsigned_no_r8
+```
+
+Build unsigned Android releaseNoR8 bundle without uploading
+
+### android apk_signed_no_r8
+
+```sh
+[bundle exec] fastlane android apk_signed_no_r8
+```
+
+Build signed Android releaseNoR8 APK without uploading
+
+### android apk_unsigned_no_r8
+
+```sh
+[bundle exec] fastlane android apk_unsigned_no_r8
+```
+
+Build unsigned Android releaseNoR8 APK without uploading
+
 ### android internal
 
 ```sh

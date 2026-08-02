@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AppInitScript } from "@/lib/app-init";
 import { THEME_COLOR_LIGHT } from "@/theme/runtime";
@@ -9,6 +9,7 @@ config.autoAddCss = false;
 
 import { PreferencesProvider } from "@/lib/preferences";
 import { ShellLayout } from "@/components/layouts/ShellLayout";
+import { SafeAreaController } from "@/components/layouts/SafeAreaController";
 import { AppQueryProvider } from "@/core/providers/query-provider";
 import { SessionProvider } from "@/features/auth/components/SessionProvider";
 import { LoginSuccessToast } from "@/features/auth/components/LoginSuccessToast";
@@ -48,6 +49,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -78,6 +85,8 @@ export default function RootLayout({
                   <PreferencesProvider>
                     <NetworkStatusProvider>
                       <OtaUpdateProvider>
+                        {/* Owns the system insets for every route, shell or not. */}
+                        <SafeAreaController />
                         <Suspense
                           fallback={<ShellLayout>{children}</ShellLayout>}
                         >

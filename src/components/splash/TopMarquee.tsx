@@ -74,7 +74,7 @@ export default function TopMarquee({ displayCategories }: TopMarqueeProps) {
 
   return (
     <div
-      className="absolute top-0 inset-x-0 overflow-hidden pointer-events-none z-0"
+      className="absolute top-[var(--asol-safe-area-top)] inset-x-0 overflow-hidden pointer-events-none z-0"
       dir="ltr"
     >
       <div className="splash-marquee-track splash-marquee-track--right gap-4 py-4">

@@ -7,6 +7,52 @@
 @source "../components/**/*.{ts,tsx}";
 @source "../lib/**/*.{ts,tsx}";
 
+/*
+ * System-inset layer — the single source of truth for every edge the OS owns.
+ *
+ * The WebView is drawn edge-to-edge (mandatory on Android 15+, default on iOS),
+ * so any element pinned to a screen edge has to leave the system its space.
+ * `env(safe-area-inset-*)` is the primary source; on Android WebViews that do
+ * not report it, `SafeAreaController` publishes the measured native height into
+ * `--asol-native-status-bar-height` and `max()` picks whichever is real.
+ */
+:root {
+  /* Published at runtime by SafeAreaController (native only). */
+  --asol-native-status-bar-height: 0px;
+
+  --asol-safe-area-top: max(
+    env(safe-area-inset-top, 0px),
+    var(--asol-native-status-bar-height)
+  );
+  --asol-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Height of the header's content row — must match AppHeader's inner row. */
+  --asol-header-bar-height: 3rem;
+  /* Anything pinned above the header (e.g. the impersonation banner) reports
+     its own height here; it already includes the top safe area. */
+  --asol-top-overlay-height: 0px;
+  /* Free space the header must leave at its top edge. */
+  --asol-app-header-inset: max(
+    var(--asol-safe-area-top),
+    var(--asol-top-overlay-height)
+  );
+  --asol-app-header-height: calc(
+    var(--asol-header-bar-height) + var(--asol-app-header-inset)
+  );
+  /* Breathing room between the header and page content. */
+  --asol-shell-main-gap: 1rem;
+
+  /* Measured by BottomNavBar (its padding already includes the bottom inset). */
+  --asol-bottom-nav-space: calc(5rem + var(--asol-safe-area-bottom));
+  --asol-bottom-nav-clearance: calc(var(--asol-bottom-nav-space) + 1rem);
+}
+
+.asol-shell-main {
+  padding-top: calc(
+    var(--asol-app-header-height) + var(--asol-shell-main-gap)
+  );
+}
+
 /* Global speech-to-text controls */
 .asol-voice-host {
   position: relative;

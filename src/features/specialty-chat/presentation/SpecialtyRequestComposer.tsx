@@ -149,7 +149,7 @@ export function SpecialtyRequestComposer() {
       ) : null}
       {open ? (
         <div className="fixed inset-0 z-[80] flex items-center justify-center overflow-hidden bg-black/50 p-2 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="specialty-request-title">
-          <form onSubmit={submit} className="flex max-h-[calc(100dvh-1rem)] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-3xl bg-surface px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-2xl sm:max-h-[min(92dvh,46rem)] sm:p-5" dir={isRTL ? "rtl" : "ltr"}>
+          <form onSubmit={submit} className="flex max-h-[calc(100dvh-1rem)] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-3xl bg-surface px-3 pb-[max(0.75rem,var(--asol-safe-area-bottom))] pt-3 shadow-2xl sm:max-h-[min(92dvh,46rem)] sm:p-5" dir={isRTL ? "rtl" : "ltr"}>
             <div className="mb-3 flex shrink-0 items-start justify-between gap-2 sm:mb-5 sm:gap-3">
               <div className="flex min-w-0 items-center gap-2 sm:gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-container text-primary sm:h-11 sm:w-11"><Users className="h-4 w-4 sm:h-5 sm:w-5" /></span>
