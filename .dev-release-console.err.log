@@ -1,0 +1,156 @@
+[GooglePlayConsole] Failed to delete temporary edit. Error: This Edit has been deleted.
+    at async GooglePlayConsoleService.snapshot (src\modules\google-play-console\services\google-play-console-service.server.ts:132:7)
+    at async (src\app\api\super-admin\google-play-console\route.ts:39:27)
+    at async (src\app\api\auth\traced-route.ts:14:24)
+  130 |
+  131 |     if (editId) {
+> 132 |       await client
+      |       ^
+  133 |         .request({
+  134 |           method: "DELETE",
+  135 |           url: `${API_ROOT}/applications/${packageName}/edits/${encodeURIComponent(editId... {
+  config: {
+    method: 'DELETE',
+    url: URL {
+      href: 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/hgh.asol.app/edits/05515264885303391100',
+      origin: 'https://androidpublisher.googleapis.com',
+      protocol: 'https:',
+      username: '',
+      password: '',
+      host: 'androidpublisher.googleapis.com',
+      hostname: 'androidpublisher.googleapis.com',
+      port: '',
+      pathname: '/androidpublisher/v3/applications/hgh.asol.app/edits/05515264885303391100',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    },
+    headers: Headers {
+      authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+      'x-goog-api-client': 'gl-node/24.18.0',
+      'User-Agent': 'google-api-nodejs-client/10.9.0'
+    },
+    validateStatus: [Function: validateStatus],
+    responseType: 'unknown',
+    errorRedactor: [Function: defaultErrorRedactor]
+  },
+  response: Response {
+    size: 0,
+    data: { error: [Object] },
+    config: {
+      method: 'DELETE',
+      url: URL {},
+      headers: Headers {
+        authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+        'x-goog-api-client': 'gl-node/24.18.0',
+        'User-Agent': 'google-api-nodejs-client/10.9.0'
+      },
+      validateStatus: [Function: validateStatus],
+      responseType: 'unknown',
+      errorRedactor: [Function: defaultErrorRedactor]
+    },
+    Symbol(Body internals): {
+      body: [Gunzip],
+      stream: [Gunzip],
+      boundary: null,
+      disturbed: true,
+      error: null
+    },
+    Symbol(Response internals): {
+      type: 'default',
+      url: 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/hgh.asol.app/edits/05515264885303391100',
+      status: 400,
+      statusText: 'Bad Request',
+      headers: [Object],
+      counter: 0,
+      highWaterMark: 16384
+    }
+  },
+  code: 400,
+  status: 400,
+  error: undefined,
+  [cause]: {
+    message: 'This Edit has been deleted.',
+    code: 400,
+    status: 'FAILED_PRECONDITION',
+    errors: [ [Object] ]
+  }
+}
+[GooglePlayAssets] Failed to delete temporary edit. Error: This Edit has been deleted.
+    at async GooglePlayStoreAssetsService.withEdit (src\modules\google-play-console\services\google-play-store-assets-service.server.ts:316:9)
+    at async (src\app\api\super-admin\google-play-store-assets\route.ts:12:27)
+    at async (src\app\api\auth\traced-route.ts:14:24)
+  314 |     } finally {
+  315 |       if (deleteAfter) {
+> 316 |         await client
+      |         ^
+  317 |           .request({
+  318 |             method: "DELETE",
+  319 |             url: `${API_ROOT}/applications/${packageName}/edits/${encodeURIComponent(edit... {
+  config: {
+    method: 'DELETE',
+    url: URL {
+      href: 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/hgh.asol.app/edits/01139161858529356076',
+      origin: 'https://androidpublisher.googleapis.com',
+      protocol: 'https:',
+      username: '',
+      password: '',
+      host: 'androidpublisher.googleapis.com',
+      hostname: 'androidpublisher.googleapis.com',
+      port: '',
+      pathname: '/androidpublisher/v3/applications/hgh.asol.app/edits/01139161858529356076',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    },
+    headers: Headers {
+      authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+      'x-goog-api-client': 'gl-node/24.18.0',
+      'User-Agent': 'google-api-nodejs-client/10.9.0'
+    },
+    validateStatus: [Function: validateStatus],
+    responseType: 'unknown',
+    errorRedactor: [Function: defaultErrorRedactor]
+  },
+  response: Response {
+    size: 0,
+    data: { error: [Object] },
+    config: {
+      method: 'DELETE',
+      url: URL {},
+      headers: Headers {
+        authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+        'x-goog-api-client': 'gl-node/24.18.0',
+        'User-Agent': 'google-api-nodejs-client/10.9.0'
+      },
+      validateStatus: [Function: validateStatus],
+      responseType: 'unknown',
+      errorRedactor: [Function: defaultErrorRedactor]
+    },
+    Symbol(Body internals): {
+      body: [Gunzip],
+      stream: [Gunzip],
+      boundary: null,
+      disturbed: true,
+      error: null
+    },
+    Symbol(Response internals): {
+      type: 'default',
+      url: 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/hgh.asol.app/edits/01139161858529356076',
+      status: 400,
+      statusText: 'Bad Request',
+      headers: [Object],
+      counter: 0,
+      highWaterMark: 16384
+    }
+  },
+  code: 400,
+  status: 400,
+  error: undefined,
+  [cause]: {
+    message: 'This Edit has been deleted.',
+    code: 400,
+    status: 'FAILED_PRECONDITION',
+    errors: [ [Object] ]
+  }
+}

@@ -1,48 +1,30 @@
 # Google Play Store Assets Admin
 
-## الصفحة
+لوحة `/super-admin/google-play-store-assets` أصبحت مركز إصدار كامل للسوبر أدمن في بيئة التطوير فقط. الصفحة مقسمة إلى خمس تبويبات: نظرة عامة، النصوص، الصور، البناء والنشر، والمهام والسجل.
 
-`/super-admin/google-play-store-assets`
+## Overview
 
-صفحة تطوير فقط للسوبر أدمن لإدارة بيانات Google Play القابلة للتعديل عبر Android Publisher API وfastlane.
+تعرض الحزمة `hgh.asol.app`، اللغة الافتراضية، حالة حارس التطوير، مصدر اعتماد Google Play، آخر قراءة، المسارات النشطة، وإصدار OTA الحالي إن كان معروفا.
 
-## ما تدعمه
+## Text And Listings
 
-- قراءة وتعديل تفاصيل التطبيق المتاحة عبر `edits.details`.
-- قراءة وتعديل قوائم المتجر لكل لغة عبر `edits.listings`.
-- قراءة ورفع وحذف الصور لكل نوع متاح عبر `edits.images`.
-- إنشاء AAB/APK موقع وغير موقع عبر fastlane.
-- نشر AAB إلى internal أو production.
-- حفظ نسخة احتياطية JSON قبل تعديل النصوص داخل `.backups/google-play-store-assets`.
+النصوص تدعم تفاصيل المتجر واللغات المتعددة. قبل الاعتماد تظهر Diff بين الحالة الحالية والتعديلات، ويجب تأكيد المراجعة قبل الحفظ. كل عملية حفظ تنشئ نسخة JSON احتياطية في `.backups/google-play-store-assets`.
 
-## الأصول المدعومة
+## Images
 
-- أيقونة التطبيق.
-- الصورة الترويجية.
-- لقطات الهاتف.
-- لقطات 7 بوصة.
-- لقطات 10 بوصة.
-- بانر TV.
-- لقطات TV.
-- لقطات Wear.
+الرفع يدعم ملفات متعددة للقطات الشاشة، مع تحقق على العميل والخادم:
 
-## الاعتماد الآمن
+- Icon: PNG فقط، 512x512، وحجم لا يتجاوز 1024KB.
+- Feature graphic: 1024x500.
+- Phone / 7 inch / 10 inch screenshots: كل ضلع بين 320 و3840، والنسبة القصوى 2:1، والحد الأقصى 8 صور لكل نوع.
+- PNG أو JPEG فقط.
 
-تم نقل ملف حساب الخدمة من:
+رسائل الرفض تعرض القيمة الفعلية والمطلوبة بالعربية والإنجليزية.
 
-`assets/google-play/asole-73f1f-dc494a4b5159.json`
+## Tracks And Release Metadata
 
-إلى متغيرات البيئة المحلية:
+الخدمة تدعم قراءة وتحديث مسارات `internal`, `alpha`, `beta`, و`production`، وإرفاق changelogs حسب اللغة، وإدارة staged rollout عبر `userFraction` وحالات `halted` و`completed`، وترقية `versionCode` من مسار إلى آخر بدون إعادة بناء.
 
-- `.env`
-- `fastlane/.env`
+## Backups And Restore
 
-المتغير الأساسي هو:
-
-`GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64`
-
-ولا يتم عرض أي مفتاح خاص في الواجهة أو في الكود. fastlane ينشئ ملف JSON مؤقتًا وقت التشغيل فقط ويحذفه تلقائيًا عند انتهاء الأمر.
-
-## حدود Google الرسمية
-
-الصفحة تعرض وتعدل كل ما توفره Android Publisher API لهذه النقاط. بعض عناصر Play Console الحديثة، مثل بعض بيانات السياسة أو نموذج أمان البيانات، قد لا تكون مكشوفة عبر نفس API؛ في هذه الحالة ستبقى غير متاحة برمجيًا وتحتاج واجهة Play Console نفسها.
+يمكن استعراض نسخ `.backups/google-play-store-assets` واستعادة نسخة مختارة. الاستعادة تمر عبر نفس دورة `edit -> commit` في Google Play.

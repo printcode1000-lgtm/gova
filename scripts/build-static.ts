@@ -24,6 +24,7 @@ const nextBinary = path.join(
 const appInitCommand = "npm run app:init";
 const architectureCheckCommand = "npm run architecture:check";
 const localManifestFileName = "asol-web-manifest.json";
+const diagnostic = process.argv.includes("--diagnostic");
 
 function stopLiveServer(): void {
   try {
@@ -338,6 +339,7 @@ function writeLocalWebManifest(): void {
     ),
     mandatory: false,
     notes: "Bundled web assets",
+    diagnostic,
     files,
   };
 
@@ -371,8 +373,12 @@ try {
 
   copyBuildOutputBack();
   createStaticRscAliases();
-  auditGeneratedStaticRoutes();
-  auditPharmacyStaticImages();
+  if (diagnostic) {
+    console.log("Diagnostic static build: skipped route and pharmacy audits.");
+  } else {
+    auditGeneratedStaticRoutes();
+    auditPharmacyStaticImages();
+  }
   auditCapacitorDefaultBundle(rootOutDir);
   writeLocalWebManifest();
 } finally {

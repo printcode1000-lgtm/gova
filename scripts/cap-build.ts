@@ -178,7 +178,11 @@ async function verifyR2Files(manifest: OtaManifest): Promise<void> {
 
 async function main(): Promise<void> {
   loadOtaEnvironment();
-  const resumePublishedRelease = process.argv.includes("--resume");
+  const args = process.argv.slice(2);
+  const resumePublishedRelease = args.includes("--resume");
+  const noR8 = args.includes("--no-r8");
+  const skipOta = args.includes("--skip-ota");
+  const dryRun = args.includes("--dry-run");
   const apiBaseUrl = (
     process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, "");
@@ -186,6 +190,33 @@ async function main(): Promise<void> {
     ...withoutVsCodeDebuggerEnv(process.env),
     ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
   };
+
+  if (noR8 && !skipOta && !dryRun) {
+    throw new Error(
+      "--no-r8 is only allowed with --skip-ota or --dry-run; releaseNoR8 builds must never be part of publishing.",
+    );
+  }
+
+  if (dryRun) {
+    const packageVersion = JSON.parse(readFileSync("package.json", "utf8")) as {
+      version: string;
+    };
+    const resolvedVersion = packageVersion.version;
+    console.log("cap-build dry run plan");
+    console.log(`  version: ${resolvedVersion}`);
+    console.log(`  Android build type: ${noR8 ? "ReleaseNoR8" : "Release"}`);
+    console.log(
+      `  OTA action: ${
+        skipOta ? "skip" : resumePublishedRelease ? "resume existing manifest" : "publish next OTA"
+      }`,
+    );
+    console.log(
+      `  version rewrites: android versionCode=${versionCode(resolvedVersion)}, versionName=${resolvedVersion}; iOS MARKETING_VERSION=${resolvedVersion}`,
+    );
+    console.log("  cap sync: npm run cap:sync");
+    console.log("  mutations: none");
+    return;
+  }
 
   console.log(
     "Validating Android backup and R8 release policies before any OTA publication...",
@@ -199,6 +230,8 @@ async function main(): Promise<void> {
     console.log(
       "Resuming cap-build from the already published R2 manifest; no new OTA version will be created.",
     );
+  } else if (skipOta) {
+    console.log("Skipping OTA publication by request; using the existing local manifest.");
   } else {
     console.log(
       "Publishing the next automatic OTA version to the single R2 directory...",

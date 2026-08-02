@@ -165,6 +165,54 @@ platform :android do
     end
   end
 
+  desc "Build signed Android releaseNoR8 bundle without uploading"
+  lane :aab_signed_no_r8 do
+    doctor
+    capacitor_sync(:android)
+    gradle(
+      project_dir: "android",
+      task: "bundle",
+      build_type: "ReleaseNoR8"
+    )
+  end
+
+  desc "Build unsigned Android releaseNoR8 bundle without uploading"
+  lane :aab_unsigned_no_r8 do
+    check_google_play_key!
+    capacitor_sync(:android)
+    without_android_signing do
+      gradle(
+        project_dir: "android",
+        task: "bundle",
+        build_type: "ReleaseNoR8"
+      )
+    end
+  end
+
+  desc "Build signed Android releaseNoR8 APK without uploading"
+  lane :apk_signed_no_r8 do
+    doctor
+    capacitor_sync(:android)
+    gradle(
+      project_dir: "android",
+      task: "assemble",
+      build_type: "ReleaseNoR8"
+    )
+  end
+
+  desc "Build unsigned Android releaseNoR8 APK without uploading"
+  lane :apk_unsigned_no_r8 do
+    check_google_play_key!
+    capacitor_sync(:android)
+    without_android_signing do
+      gradle(
+        project_dir: "android",
+        task: "assemble",
+        build_type: "ReleaseNoR8"
+      )
+    end
+  end
+
   desc "Upload Android bundle to Google Play internal track"
   lane :internal do
     build

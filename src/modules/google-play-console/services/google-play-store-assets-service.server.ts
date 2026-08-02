@@ -14,15 +14,22 @@ import {
 } from "../domain/development-guard.server";
 import {
   GOOGLE_PLAY_IMAGE_TYPES,
+  type GooglePlayBackupDescriptor,
   type GooglePlayFastlaneAction,
   type GooglePlayFastlaneResult,
   type GooglePlayImageType,
+  type GooglePlayMappingUploadInput,
+  type GooglePlayPromoteInput,
   type GooglePlayStoreAssetsMutationResult,
   type GooglePlayStoreAssetsSnapshot,
   type GooglePlayStoreAssetsUpdateInput,
   type GooglePlayStoreImageGroup,
   type GooglePlayStoreListing,
+  type GooglePlayTrackMutationInput,
+  type GooglePlayTrackName,
+  type GooglePlayTrackSnapshot,
 } from "../domain/store-assets-types";
+import { readImageDimensions, validateGooglePlayImage } from "../domain/image-validation";
 import { resolveGooglePlayCredentials } from "./google-play-credentials.server";
 
 const ANDROID_PUBLISHER_SCOPE =
@@ -31,6 +38,7 @@ const API_ROOT = "https://androidpublisher.googleapis.com/androidpublisher/v3";
 const UPLOAD_ROOT =
   "https://androidpublisher.googleapis.com/upload/androidpublisher/v3";
 const BACKUP_DIR = path.join(process.cwd(), ".backups", "google-play-store-assets");
+const TRACKS: GooglePlayTrackName[] = ["internal", "alpha", "beta", "production"];
 
 function asErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : String(error);
@@ -60,6 +68,7 @@ export class GooglePlayStoreAssetsService {
     return this.withEdit(async ({ client, packageName, editId }) => {
       const before = await this.readSnapshot(client, packageName, editId);
       const backupFile = await this.writeBackup(before);
+      const diff = JSON.stringify({ before: before.listings, after: input.listings ?? [] }, null, 2);
 
       if (input.details) {
         await client.request({
@@ -84,6 +93,7 @@ export class GooglePlayStoreAssetsService {
         editId,
         backupFile,
         snapshot: await this.snapshot(),
+        diff,
       };
     }, false);
   }
@@ -96,6 +106,25 @@ export class GooglePlayStoreAssetsService {
     buffer: Buffer;
   }): Promise<GooglePlayStoreAssetsMutationResult> {
     return this.withEdit(async ({ client, packageName, editId }) => {
+      const currentImages = await this.readImagesForType(
+        client,
+        packageName,
+        editId,
+        input.language,
+        input.imageType,
+      );
+      const dimensions = readImageDimensions(input.buffer);
+      if (!dimensions) throw new Error("تعذر قراءة أبعاد الصورة / Could not read image dimensions.");
+      const validation = validateGooglePlayImage({
+        imageType: input.imageType,
+        contentType: input.contentType,
+        size: input.buffer.byteLength,
+        dimensions,
+        existingCount: currentImages.length,
+      });
+      if (!validation.ok) throw new Error(validation.message);
+      const before = await this.readSnapshot(client, packageName, editId);
+      const backupFile = await this.writeBackup(before);
       await client.request({
         method: "POST",
         url:
@@ -109,7 +138,7 @@ export class GooglePlayStoreAssetsService {
         data: input.buffer,
       });
       await this.commit(client, packageName, editId);
-      return { committed: true, editId, snapshot: await this.snapshot() };
+      return { committed: true, editId, backupFile, snapshot: await this.snapshot() };
     }, false);
   }
 
@@ -119,6 +148,8 @@ export class GooglePlayStoreAssetsService {
     imageId: string;
   }): Promise<GooglePlayStoreAssetsMutationResult> {
     return this.withEdit(async ({ client, packageName, editId }) => {
+      const before = await this.readSnapshot(client, packageName, editId);
+      const backupFile = await this.writeBackup(before);
       await client.request({
         method: "DELETE",
         url:
@@ -127,7 +158,91 @@ export class GooglePlayStoreAssetsService {
           `/${encodeURIComponent(input.imageType)}/${encodeURIComponent(input.imageId)}`,
       });
       await this.commit(client, packageName, editId);
-      return { committed: true, editId, snapshot: await this.snapshot() };
+      return { committed: true, editId, backupFile, snapshot: await this.snapshot() };
+    }, false);
+  }
+
+  async deleteListing(language: string): Promise<GooglePlayStoreAssetsMutationResult> {
+    return this.withEdit(async ({ client, packageName, editId }) => {
+      const before = await this.readSnapshot(client, packageName, editId);
+      const backupFile = await this.writeBackup(before);
+      await client.request({
+        method: "DELETE",
+        url: `${API_ROOT}/applications/${packageName}/edits/${editId}/listings/${encodeURIComponent(language)}`,
+      });
+      await this.commit(client, packageName, editId);
+      return { committed: true, editId, backupFile, snapshot: await this.snapshot() };
+    }, false);
+  }
+
+  async listBackups(): Promise<GooglePlayBackupDescriptor[]> {
+    await fs.mkdir(BACKUP_DIR, { recursive: true });
+    const files = (await fs.readdir(BACKUP_DIR)).filter((file) => file.endsWith(".json"));
+    const items = await Promise.all(files.map(async (file) => {
+      const fullPath = path.join(BACKUP_DIR, file);
+      const stat = await fs.stat(fullPath);
+      return {
+        name: file,
+        path: path.relative(process.cwd(), fullPath).replace(/\\/g, "/"),
+        size: stat.size,
+        mtime: stat.mtime.toISOString(),
+      };
+    }));
+    return items.sort((left, right) => right.mtime.localeCompare(left.mtime));
+  }
+
+  async restoreBackup(name: string): Promise<GooglePlayStoreAssetsMutationResult> {
+    const safeName = path.basename(name);
+    const snapshot = JSON.parse(await fs.readFile(path.join(BACKUP_DIR, safeName), "utf8")) as GooglePlayStoreAssetsSnapshot;
+    return this.updateText({ details: snapshot.details, listings: snapshot.listings });
+  }
+
+  async updateTrack(input: GooglePlayTrackMutationInput): Promise<GooglePlayStoreAssetsMutationResult> {
+    return this.withEdit(async ({ client, packageName, editId }) => {
+      const before = await this.readSnapshot(client, packageName, editId);
+      const backupFile = await this.writeBackup(before);
+      await client.request({
+        method: "PUT",
+        url: `${API_ROOT}/applications/${packageName}/edits/${editId}/tracks/${encodeURIComponent(input.track)}`,
+        data: { track: input.track, releases: [input.release] },
+      });
+      await this.commit(client, packageName, editId);
+      return { committed: true, editId, backupFile, snapshot: await this.snapshot() };
+    }, false);
+  }
+
+  async promoteRelease(input: GooglePlayPromoteInput): Promise<GooglePlayStoreAssetsMutationResult> {
+    const source = await this.snapshot();
+    const sourceTrack = source.tracks?.find((track) => track.track === input.fromTrack);
+    const sourceRelease = sourceTrack?.releases.find((release) =>
+      release.versionCodes?.map(String).includes(String(input.versionCode)),
+    );
+    if (!sourceRelease) throw new Error("googlePlayReleaseNotFoundForPromotion");
+    return this.updateTrack({
+      track: input.toTrack,
+      release: {
+        ...sourceRelease,
+        versionCodes: [String(input.versionCode)],
+        status: input.toTrack === "production" ? "inProgress" : "completed",
+        releaseNotes: input.releaseNotes ?? sourceRelease.releaseNotes,
+      },
+    });
+  }
+
+  async uploadMapping(input: GooglePlayMappingUploadInput): Promise<GooglePlayStoreAssetsMutationResult> {
+    return this.withEdit(async ({ client, packageName, editId }) => {
+      const before = await this.readSnapshot(client, packageName, editId);
+      const backupFile = await this.writeBackup(before);
+      await client.request({
+        method: "POST",
+        url:
+          `${UPLOAD_ROOT}/applications/${packageName}/edits/${editId}` +
+          `/deobfuscationfiles/${encodeURIComponent(String(input.versionCode))}/proguard?uploadType=media`,
+        headers: { "Content-Type": input.contentType || "text/plain" },
+        data: input.buffer,
+      });
+      await this.commit(client, packageName, editId);
+      return { committed: true, editId, backupFile, snapshot: await this.snapshot() };
     }, false);
   }
 
@@ -265,6 +380,18 @@ export class GooglePlayStoreAssetsService {
         }
       }
     }
+    const tracks: GooglePlayTrackSnapshot[] = [];
+    for (const track of TRACKS) {
+      try {
+        const response = await client.request<{ releases?: GooglePlayTrackSnapshot["releases"] }>({
+          url: `${API_ROOT}/applications/${packageName}/edits/${editId}/tracks/${encodeURIComponent(track)}`,
+        });
+        tracks.push({ track, releases: response.data.releases ?? [] });
+      } catch (error) {
+        warnings.push(`track ${track}: ${asErrorMessage(error)}`);
+        tracks.push({ track, releases: [] });
+      }
+    }
 
     return {
       environment: googlePlayConsoleEnvironment(),
@@ -274,8 +401,32 @@ export class GooglePlayStoreAssetsService {
       details,
       listings,
       images,
+      tracks,
+      backups: await this.listBackups(),
+      liveOtaVersion: this.readLiveOtaVersion(),
       warnings,
     };
+  }
+
+  private async readImagesForType(
+    client: Awaited<ReturnType<GoogleAuth["getClient"]>>,
+    packageName: string,
+    editId: string,
+    language: string,
+    imageType: GooglePlayImageType,
+  ) {
+    return client
+      .request<{ images?: GooglePlayStoreImageGroup["images"] }>({
+        url:
+          `${API_ROOT}/applications/${packageName}/edits/${editId}` +
+          `/listings/${encodeURIComponent(language)}/${encodeURIComponent(imageType)}`,
+      })
+      .then((response) => response.data.images ?? [])
+      .catch(() => []);
+  }
+
+  private readLiveOtaVersion() {
+    return undefined;
   }
 
   private async commit(

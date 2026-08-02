@@ -11,6 +11,7 @@ const capacitorRulesPath = path.resolve(
   "capacitor",
   "proguard-rules.pro",
 );
+const fastfilePath = path.resolve("fastlane", "Fastfile");
 
 function readRequired(filePath: string): string {
   if (!existsSync(filePath)) {
@@ -44,8 +45,10 @@ const buildGradle = readRequired(appBuildGradlePath);
 const properties = readRequired(gradlePropertiesPath);
 const appRules = readRequired(appRulesPath);
 const capacitorRules = readRequired(capacitorRulesPath);
+const fastfile = readRequired(fastfilePath);
 const buildTypesBlock = findGradleBlock(buildGradle, "buildTypes");
 const releaseBlock = buildTypesBlock ? findGradleBlock(buildTypesBlock, "release") : null;
+const releaseNoR8Block = buildTypesBlock ? findGradleBlock(buildTypesBlock, "releaseNoR8") : null;
 
 if (!releaseBlock) {
   throw new Error("android/app/build.gradle must define a release build type with R8 settings.");
@@ -71,6 +74,31 @@ requireMatch(
   /['"]proguard-rules\.pro['"]/,
   "The Android release build must include the app ProGuard rules.",
 );
+
+if (releaseNoR8Block) {
+  requireMatch(
+    releaseNoR8Block,
+    /versionNameSuffix\s*(?:=)?\s*['"][^'"]*-nor8[^'"]*['"]/,
+    "releaseNoR8 must declare a versionNameSuffix containing -nor8.",
+  );
+  if (/minifyEnabled\s*(?:=\s*)?true/.test(releaseNoR8Block)) {
+    throw new Error("releaseNoR8 must not set minifyEnabled true.");
+  }
+}
+
+const androidLanePattern = /lane\s+:(\w+)\s+do([\s\S]*?)\n\s*end/g;
+let laneMatch: RegExpExecArray | null;
+while ((laneMatch = androidLanePattern.exec(fastfile))) {
+  const [, laneName, laneBody = ""] = laneMatch;
+  if (
+    /upload_to_play_store/.test(laneBody) &&
+    /ReleaseNoR8|releaseNoR8|no_r8/.test(laneBody)
+  ) {
+    throw new Error(
+      `Publishing lane ${laneName} must not reference releaseNoR8/no_r8 outputs.`,
+    );
+  }
+}
 
 if (/android\.enableR8\.fullMode\s*=\s*false/.test(properties)) {
   throw new Error("R8 full mode must not be disabled.");

@@ -126,6 +126,9 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p === 'src/modules/data-health/domain/execution-context.server.ts') return 'configuration';
   if (p === 'src/modules/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
   if (p === 'src/modules/google-play-console/domain/development-guard.server.ts') return 'configuration';
+  if (p.startsWith('src/modules/release-commands/tests/')) return 'dev-tools';
+  if (p.startsWith('src/modules/release-commands/services/') && p.endsWith('-api-service.ts')) return 'client-services';
+  if (p.startsWith('src/modules/release-commands/services/')) return 'server-services';
   if (p.startsWith('src/modules/data-health/services/')) return 'server-services';
   if (p.startsWith('src/modules/dev-cloud-backup/services/')) return 'server-services';
   if (p.startsWith('src/modules/google-play-console/services/')) return 'server-services';

@@ -48,6 +48,9 @@ export interface GooglePlayStoreAssetsSnapshot {
   };
   listings: GooglePlayStoreListing[];
   images: GooglePlayStoreImageGroup[];
+  tracks?: GooglePlayTrackSnapshot[];
+  backups?: GooglePlayBackupDescriptor[];
+  liveOtaVersion?: string;
   warnings: string[];
 }
 
@@ -61,6 +64,53 @@ export interface GooglePlayStoreAssetsMutationResult {
   editId: string;
   backupFile?: string;
   snapshot: GooglePlayStoreAssetsSnapshot;
+  diff?: string;
+}
+
+export type GooglePlayTrackName = "internal" | "alpha" | "beta" | "production";
+
+export interface GooglePlayReleaseNote {
+  language: string;
+  text: string;
+}
+
+export interface GooglePlayTrackRelease {
+  name?: string;
+  versionCodes?: string[];
+  status?: "draft" | "inProgress" | "halted" | "completed";
+  userFraction?: number;
+  releaseNotes?: GooglePlayReleaseNote[];
+}
+
+export interface GooglePlayTrackSnapshot {
+  track: GooglePlayTrackName;
+  releases: GooglePlayTrackRelease[];
+}
+
+export interface GooglePlayTrackMutationInput {
+  track: GooglePlayTrackName;
+  release: GooglePlayTrackRelease;
+}
+
+export interface GooglePlayPromoteInput {
+  fromTrack: GooglePlayTrackName;
+  toTrack: GooglePlayTrackName;
+  versionCode: string;
+  releaseNotes?: GooglePlayReleaseNote[];
+}
+
+export interface GooglePlayMappingUploadInput {
+  versionCode: string;
+  fileName: string;
+  contentType: string;
+  buffer: Buffer;
+}
+
+export interface GooglePlayBackupDescriptor {
+  name: string;
+  path: string;
+  size: number;
+  mtime: string;
 }
 
 export type GooglePlayFastlaneAction =

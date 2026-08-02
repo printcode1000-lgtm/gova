@@ -41,6 +41,15 @@ android {
             }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        releaseNoR8 {
+            initWith release
+            minifyEnabled false
+            shrinkResources false
+            versionNameSuffix "-nor8"
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
+        }
     }
 }
 

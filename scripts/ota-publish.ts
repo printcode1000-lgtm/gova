@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 import { createHash, sign } from "node:crypto";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { zipSync } from "fflate";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
@@ -46,6 +46,12 @@ import {
 import { readVerifiedLiveRevocationDocument } from "./ota/ota-live-revocation";
 
 const LOCAL_MANIFEST_FILE = "asol-web-manifest.json";
+const args = process.argv.slice(2);
+const dryRun = args.includes("--dry-run");
+const mandatory = args.includes("--mandatory");
+const notesIndex = args.indexOf("--notes");
+const notesOverride =
+  notesIndex >= 0 && args[notesIndex + 1] ? args[notesIndex + 1] : undefined;
 
 type CollectedFile = {
   bytes: Buffer;
@@ -177,7 +183,7 @@ async function main(): Promise<void> {
 
   // `--dry-run` verifies the compatibility gate without building or touching
   // R2. Use it to test the gate; a real run overwrites the live channel.
-  if (process.argv.includes("--dry-run")) {
+  if (dryRun) {
     console.log(
       `Dry run: the compatibility gate passed and would stamp ` +
         `minimumNativeVersion=${minimumNativeVersion}. Nothing was built or uploaded.`,
@@ -221,7 +227,7 @@ async function main(): Promise<void> {
     ? nextPatchVersion(previousManifest.version)
     : packageVersion;
   const now = new Date();
-  const notes = automaticNotes(now);
+  const notes = notesOverride ?? automaticNotes(now);
   const apiBaseUrl = (
     process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, "");
@@ -235,6 +241,17 @@ async function main(): Promise<void> {
   console.log(`Automatically selected version: ${version}`);
   console.log(`Release notes: ${notes}`);
   execSync("npm run build:static", { stdio: "inherit", env: buildEnv });
+  const localManifestPath = path.resolve("out", LOCAL_MANIFEST_FILE);
+  if (existsSync(localManifestPath)) {
+    const localManifest = JSON.parse(readFileSync(localManifestPath, "utf8")) as {
+      diagnostic?: boolean;
+    };
+    if (localManifest.diagnostic) {
+      throw new Error(
+        "Refusing to publish OTA from a diagnostic static build. Run npm run build:static without --diagnostic.",
+      );
+    }
+  }
 
   const files = collectFiles(path.resolve("out"));
   const requiredCapabilities = scanBuiltCapabilities(files);
@@ -348,7 +365,7 @@ async function main(): Promise<void> {
     fileCount: Object.keys(files).length,
     minimumNativeVersion,
     requiredCapabilities,
-    mandatory: false,
+    mandatory,
     notes,
     files: Object.fromEntries(
       Object.entries(files).map(([filePath, file]) => [

@@ -11,6 +11,9 @@ module.exports = [
       'ios/**',
       'public/**',
       'eslint-plugin-asol/**',
+      '.claude/**',
+      '.devin/**',
+      'tmp/**',
     ],
   },
   {
