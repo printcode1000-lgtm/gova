@@ -1,0 +1,1 @@
+ALTER TABLE `user_profiles` ADD COLUMN `fulfillment_settings_json` text NOT NULL DEFAULT '{"selfDeliveryEnabled":false,"carrierUids":[],"returns":{"enabled":false,"returnWindowDays":14,"policyText":"","returnShippingPayer":"case_by_case"}}';

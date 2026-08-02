@@ -1,0 +1,10 @@
+{
+  "id": "marketplace-custom-request-images",
+  "storageProfileId": "spicialOrder",
+  "maxItems": 5,
+  "aspectRatio": "square",
+  "allowReplace": true,
+  "confirmUpload": true,
+  "confirmRemove": true,
+  "deleteFromStorageOnRemove": true
+}

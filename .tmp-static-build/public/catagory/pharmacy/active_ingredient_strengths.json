@@ -1,0 +1,2502 @@
+[
+  {
+    "active_ingredient_id": 1,
+    "strength_id": "str_1"
+  },
+  {
+    "active_ingredient_id": 1,
+    "strength_id": "str_2"
+  },
+  {
+    "active_ingredient_id": 1,
+    "strength_id": "str_3"
+  },
+  {
+    "active_ingredient_id": 2,
+    "strength_id": "str_4"
+  },
+  {
+    "active_ingredient_id": 2,
+    "strength_id": "str_5"
+  },
+  {
+    "active_ingredient_id": 2,
+    "strength_id": "str_6"
+  },
+  {
+    "active_ingredient_id": 2,
+    "strength_id": "str_7"
+  },
+  {
+    "active_ingredient_id": 2,
+    "strength_id": "str_8"
+  },
+  {
+    "active_ingredient_id": 3,
+    "strength_id": "str_9"
+  },
+  {
+    "active_ingredient_id": 3,
+    "strength_id": "str_10"
+  },
+  {
+    "active_ingredient_id": 4,
+    "strength_id": "str_11"
+  },
+  {
+    "active_ingredient_id": 4,
+    "strength_id": "str_3"
+  },
+  {
+    "active_ingredient_id": 4,
+    "strength_id": "str_12"
+  },
+  {
+    "active_ingredient_id": 5,
+    "strength_id": "str_13"
+  },
+  {
+    "active_ingredient_id": 5,
+    "strength_id": "str_14"
+  },
+  {
+    "active_ingredient_id": 6,
+    "strength_id": "str_10"
+  },
+  {
+    "active_ingredient_id": 7,
+    "strength_id": "str_15"
+  },
+  {
+    "active_ingredient_id": 7,
+    "strength_id": "str_16"
+  },
+  {
+    "active_ingredient_id": 8,
+    "strength_id": "str_16"
+  },
+  {
+    "active_ingredient_id": 9,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 10,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 11,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 12,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 13,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 14,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 15,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 16,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 17,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 18,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 19,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 20,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 21,
+    "strength_id": "str_17"
+  },
+  {
+    "active_ingredient_id": 22,
+    "strength_id": "str_18"
+  },
+  {
+    "active_ingredient_id": 23,
+    "strength_id": "str_16"
+  },
+  {
+    "active_ingredient_id": 23,
+    "strength_id": "str_18"
+  },
+  {
+    "active_ingredient_id": 24,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 25,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 26,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 27,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 28,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 29,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 30,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 31,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 32,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 33,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 34,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 35,
+    "strength_id": "str_19"
+  },
+  {
+    "active_ingredient_id": 36,
+    "strength_id": "str_20"
+  },
+  {
+    "active_ingredient_id": 37,
+    "strength_id": "str_7"
+  },
+  {
+    "active_ingredient_id": 37,
+    "strength_id": "str_21"
+  },
+  {
+    "active_ingredient_id": 38,
+    "strength_id": "str_22"
+  },
+  {
+    "active_ingredient_id": 38,
+    "strength_id": "str_23"
+  },
+  {
+    "active_ingredient_id": 39,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 40,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 41,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 42,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 43,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 44,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 45,
+    "strength_id": "str_15"
+  },
+  {
+    "active_ingredient_id": 46,
+    "strength_id": "str_15"
+  },
+  {
+    "active_ingredient_id": 47,
+    "strength_id": "str_24"
+  },
+  {
+    "active_ingredient_id": 47,
+    "strength_id": "str_25"
+  },
+  {
+    "active_ingredient_id": 48,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 49,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 50,
+    "strength_id": "str_26"
+  },
+  {
+    "active_ingredient_id": 50,
+    "strength_id": "str_27"
+  },
+  {
+    "active_ingredient_id": 50,
+    "strength_id": "str_28"
+  },
+  {
+    "active_ingredient_id": 50,
+    "strength_id": "str_29"
+  },
+  {
+    "active_ingredient_id": 51,
+    "strength_id": "str_3"
+  },
+  {
+    "active_ingredient_id": 52,
+    "strength_id": "str_3"
+  },
+  {
+    "active_ingredient_id": 53,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 54,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 55,
+    "strength_id": "str_30"
+  },
+  {
+    "active_ingredient_id": 56,
+    "strength_id": "str_31"
+  },
+  {
+    "active_ingredient_id": 57,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 58,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 59,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 60,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 61,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 62,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 63,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 64,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 65,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 66,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 67,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 68,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 69,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 70,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 71,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 72,
+    "strength_id": "str_32"
+  },
+  {
+    "active_ingredient_id": 73,
+    "strength_id": "str_30"
+  },
+  {
+    "active_ingredient_id": 74,
+    "strength_id": "str_33"
+  },
+  {
+    "active_ingredient_id": 74,
+    "strength_id": "str_34"
+  },
+  {
+    "active_ingredient_id": 74,
+    "strength_id": "str_35"
+  },
+  {
+    "active_ingredient_id": 75,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 76,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 77,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 78,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 79,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 80,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 81,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 82,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 83,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 84,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 85,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 86,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 87,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 88,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 89,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 90,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 91,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 92,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 93,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 94,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 95,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 96,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 97,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 98,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 99,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 100,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 101,
+    "strength_id": "str_36"
+  },
+  {
+    "active_ingredient_id": 102,
+    "strength_id": "str_36"
+  },
+  {
+    "active_ingredient_id": 103,
+    "strength_id": "str_37"
+  },
+  {
+    "active_ingredient_id": 104,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 105,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 106,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 107,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 108,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 109,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 110,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 111,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 112,
+    "strength_id": "str_28"
+  },
+  {
+    "active_ingredient_id": 113,
+    "strength_id": "str_38"
+  },
+  {
+    "active_ingredient_id": 114,
+    "strength_id": "str_10"
+  },
+  {
+    "active_ingredient_id": 115,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 116,
+    "strength_id": "str_99"
+  },
+  {
+    "active_ingredient_id": 117,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 118,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 119,
+    "strength_id": "str_42"
+  },
+  {
+    "active_ingredient_id": 120,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 121,
+    "strength_id": "str_100"
+  },
+  {
+    "active_ingredient_id": 121,
+    "strength_id": "str_101"
+  },
+  {
+    "active_ingredient_id": 122,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 123,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 124,
+    "strength_id": "str_102"
+  },
+  {
+    "active_ingredient_id": 124,
+    "strength_id": "str_34"
+  },
+  {
+    "active_ingredient_id": 125,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 126,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 127,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 128,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 129,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 130,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 131,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 132,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 133,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 134,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 135,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 136,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 137,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 138,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 139,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 140,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 141,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 142,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 143,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 144,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 145,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 146,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 147,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 148,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 149,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 150,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 151,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 152,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 153,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 154,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 155,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 156,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 157,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 158,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 159,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 160,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 161,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 162,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 163,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 164,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 165,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 166,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 167,
+    "strength_id": "str_83"
+  },
+  {
+    "active_ingredient_id": 168,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 169,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 170,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 171,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 172,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 173,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 174,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 175,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 176,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 177,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 178,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 179,
+    "strength_id": "str_103"
+  },
+  {
+    "active_ingredient_id": 179,
+    "strength_id": "str_104"
+  },
+  {
+    "active_ingredient_id": 180,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 181,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 182,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 183,
+    "strength_id": "str_105"
+  },
+  {
+    "active_ingredient_id": 183,
+    "strength_id": "str_55"
+  },
+  {
+    "active_ingredient_id": 184,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 185,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 186,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 187,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 188,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 189,
+    "strength_id": "str_77"
+  },
+  {
+    "active_ingredient_id": 190,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 191,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 192,
+    "strength_id": "str_49"
+  },
+  {
+    "active_ingredient_id": 192,
+    "strength_id": "str_22"
+  },
+  {
+    "active_ingredient_id": 193,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 194,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 195,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 196,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 197,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 198,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 199,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 200,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 201,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 202,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 203,
+    "strength_id": "str_105"
+  },
+  {
+    "active_ingredient_id": 204,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 205,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 206,
+    "strength_id": "str_106"
+  },
+  {
+    "active_ingredient_id": 207,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 208,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 209,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 210,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 211,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 212,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 213,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 214,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 215,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 216,
+    "strength_id": "str_107"
+  },
+  {
+    "active_ingredient_id": 216,
+    "strength_id": "str_108"
+  },
+  {
+    "active_ingredient_id": 217,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 218,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 219,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 220,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 221,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 222,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 223,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 224,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 225,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 226,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 227,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 228,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 229,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 230,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 231,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 232,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 233,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 234,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 235,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 236,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 237,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 238,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 239,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 240,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 241,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 242,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 243,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 244,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 245,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 246,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 247,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 248,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 249,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 250,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 251,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 252,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 253,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 254,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 255,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 256,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 257,
+    "strength_id": "str_45"
+  },
+  {
+    "active_ingredient_id": 258,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 259,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 260,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 261,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 262,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 263,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 264,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 265,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 266,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 267,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 268,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 269,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 270,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 271,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 272,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 273,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 274,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 275,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 276,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 277,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 278,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 279,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 280,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 281,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 282,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 283,
+    "strength_id": "str_39"
+  },
+  {
+    "active_ingredient_id": 283,
+    "strength_id": "str_40"
+  },
+  {
+    "active_ingredient_id": 284,
+    "strength_id": "str_40"
+  },
+  {
+    "active_ingredient_id": 284,
+    "strength_id": "str_41"
+  },
+  {
+    "active_ingredient_id": 285,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 286,
+    "strength_id": "str_42"
+  },
+  {
+    "active_ingredient_id": 286,
+    "strength_id": "str_43"
+  },
+  {
+    "active_ingredient_id": 287,
+    "strength_id": "str_44"
+  },
+  {
+    "active_ingredient_id": 287,
+    "strength_id": "str_45"
+  },
+  {
+    "active_ingredient_id": 288,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 289,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 290,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 291,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 292,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 293,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 294,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 295,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 296,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 297,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 298,
+    "strength_id": "str_42"
+  },
+  {
+    "active_ingredient_id": 299,
+    "strength_id": "str_46"
+  },
+  {
+    "active_ingredient_id": 299,
+    "strength_id": "str_47"
+  },
+  {
+    "active_ingredient_id": 300,
+    "strength_id": "str_48"
+  },
+  {
+    "active_ingredient_id": 300,
+    "strength_id": "str_49"
+  },
+  {
+    "active_ingredient_id": 301,
+    "strength_id": "str_50"
+  },
+  {
+    "active_ingredient_id": 301,
+    "strength_id": "str_51"
+  },
+  {
+    "active_ingredient_id": 302,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 303,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 304,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 305,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 306,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 307,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 308,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 309,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 310,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 311,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 312,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 313,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 314,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 315,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 316,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 317,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 318,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 319,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 320,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 321,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 322,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 323,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 324,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 325,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 326,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 327,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 328,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 329,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 330,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 331,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 332,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 333,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 334,
+    "strength_id": "str_53"
+  },
+  {
+    "active_ingredient_id": 334,
+    "strength_id": "str_39"
+  },
+  {
+    "active_ingredient_id": 335,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 336,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 337,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 338,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 339,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 340,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 341,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 342,
+    "strength_id": "str_51"
+  },
+  {
+    "active_ingredient_id": 343,
+    "strength_id": "str_45"
+  },
+  {
+    "active_ingredient_id": 343,
+    "strength_id": "str_39"
+  },
+  {
+    "active_ingredient_id": 344,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 345,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 346,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 347,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 348,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 349,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 350,
+    "strength_id": "str_54"
+  },
+  {
+    "active_ingredient_id": 350,
+    "strength_id": "str_55"
+  },
+  {
+    "active_ingredient_id": 351,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 352,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 353,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 354,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 355,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 356,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 357,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 358,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 359,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 360,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 361,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 362,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 363,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 364,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 365,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 366,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 367,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 368,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 369,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 370,
+    "strength_id": "str_53"
+  },
+  {
+    "active_ingredient_id": 370,
+    "strength_id": "str_42"
+  },
+  {
+    "active_ingredient_id": 371,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 372,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 373,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 374,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 375,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 376,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 377,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 378,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 379,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 380,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 381,
+    "strength_id": "str_56"
+  },
+  {
+    "active_ingredient_id": 381,
+    "strength_id": "str_57"
+  },
+  {
+    "active_ingredient_id": 382,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 383,
+    "strength_id": "str_58"
+  },
+  {
+    "active_ingredient_id": 383,
+    "strength_id": "str_59"
+  },
+  {
+    "active_ingredient_id": 384,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 385,
+    "strength_id": "str_60"
+  },
+  {
+    "active_ingredient_id": 385,
+    "strength_id": "str_61"
+  },
+  {
+    "active_ingredient_id": 385,
+    "strength_id": "str_62"
+  },
+  {
+    "active_ingredient_id": 385,
+    "strength_id": "str_63"
+  },
+  {
+    "active_ingredient_id": 385,
+    "strength_id": "str_64"
+  },
+  {
+    "active_ingredient_id": 385,
+    "strength_id": "str_65"
+  },
+  {
+    "active_ingredient_id": 385,
+    "strength_id": "str_66"
+  },
+  {
+    "active_ingredient_id": 386,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 387,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 388,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 389,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 390,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 391,
+    "strength_id": "str_67"
+  },
+  {
+    "active_ingredient_id": 391,
+    "strength_id": "str_68"
+  },
+  {
+    "active_ingredient_id": 391,
+    "strength_id": "str_69"
+  },
+  {
+    "active_ingredient_id": 391,
+    "strength_id": "str_70"
+  },
+  {
+    "active_ingredient_id": 391,
+    "strength_id": "str_71"
+  },
+  {
+    "active_ingredient_id": 391,
+    "strength_id": "str_72"
+  },
+  {
+    "active_ingredient_id": 392,
+    "strength_id": "str_73"
+  },
+  {
+    "active_ingredient_id": 393,
+    "strength_id": "str_74"
+  },
+  {
+    "active_ingredient_id": 393,
+    "strength_id": "str_75"
+  },
+  {
+    "active_ingredient_id": 393,
+    "strength_id": "str_76"
+  },
+  {
+    "active_ingredient_id": 394,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 395,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 396,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 397,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 398,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 399,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 400,
+    "strength_id": "str_39"
+  },
+  {
+    "active_ingredient_id": 400,
+    "strength_id": "str_55"
+  },
+  {
+    "active_ingredient_id": 401,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 402,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 403,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 404,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 405,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 406,
+    "strength_id": "str_77"
+  },
+  {
+    "active_ingredient_id": 406,
+    "strength_id": "str_73"
+  },
+  {
+    "active_ingredient_id": 406,
+    "strength_id": "str_22"
+  },
+  {
+    "active_ingredient_id": 407,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 408,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 409,
+    "strength_id": "str_78"
+  },
+  {
+    "active_ingredient_id": 409,
+    "strength_id": "str_79"
+  },
+  {
+    "active_ingredient_id": 410,
+    "strength_id": "str_80"
+  },
+  {
+    "active_ingredient_id": 410,
+    "strength_id": "str_81"
+  },
+  {
+    "active_ingredient_id": 410,
+    "strength_id": "str_82"
+  },
+  {
+    "active_ingredient_id": 411,
+    "strength_id": "str_83"
+  },
+  {
+    "active_ingredient_id": 411,
+    "strength_id": "str_84"
+  },
+  {
+    "active_ingredient_id": 412,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 413,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 414,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 415,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 416,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 417,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 418,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 419,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 420,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 421,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 422,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 423,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 424,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 425,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 426,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 427,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 428,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 429,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 430,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 431,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 432,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 433,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 434,
+    "strength_id": "str_85"
+  },
+  {
+    "active_ingredient_id": 434,
+    "strength_id": "str_39"
+  },
+  {
+    "active_ingredient_id": 435,
+    "strength_id": "str_83"
+  },
+  {
+    "active_ingredient_id": 435,
+    "strength_id": "str_84"
+  },
+  {
+    "active_ingredient_id": 436,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 437,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 438,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 439,
+    "strength_id": "str_82"
+  },
+  {
+    "active_ingredient_id": 439,
+    "strength_id": "str_86"
+  },
+  {
+    "active_ingredient_id": 440,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 441,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 442,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 443,
+    "strength_id": "str_82"
+  },
+  {
+    "active_ingredient_id": 444,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 445,
+    "strength_id": "str_79"
+  },
+  {
+    "active_ingredient_id": 446,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 447,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 448,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 449,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 450,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 451,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 452,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 453,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 454,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 455,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 456,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 457,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 458,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 459,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 460,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 461,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 462,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 463,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 464,
+    "strength_id": "str_87"
+  },
+  {
+    "active_ingredient_id": 465,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 466,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 467,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 468,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 469,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 470,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 471,
+    "strength_id": "str_79"
+  },
+  {
+    "active_ingredient_id": 472,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 473,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 474,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 475,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 476,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 477,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 478,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 479,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 480,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 481,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 482,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 483,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 484,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 485,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 486,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 487,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 488,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 489,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 490,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 491,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 492,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 493,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 494,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 495,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 496,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 497,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 498,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 499,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 500,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 501,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 502,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 503,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 504,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 505,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 506,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 507,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 508,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 509,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 510,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 511,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 512,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 513,
+    "strength_id": "str_79"
+  },
+  {
+    "active_ingredient_id": 514,
+    "strength_id": "str_88"
+  },
+  {
+    "active_ingredient_id": 514,
+    "strength_id": "str_89"
+  },
+  {
+    "active_ingredient_id": 515,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 516,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 517,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 518,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 519,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 520,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 521,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 522,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 523,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 524,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 525,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 526,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 527,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 528,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 529,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 530,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 531,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 532,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 533,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 534,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 535,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 536,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 537,
+    "strength_id": "str_90"
+  },
+  {
+    "active_ingredient_id": 538,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 539,
+    "strength_id": "str_91"
+  },
+  {
+    "active_ingredient_id": 539,
+    "strength_id": "str_92"
+  },
+  {
+    "active_ingredient_id": 539,
+    "strength_id": "str_93"
+  },
+  {
+    "active_ingredient_id": 539,
+    "strength_id": "str_94"
+  },
+  {
+    "active_ingredient_id": 539,
+    "strength_id": "str_95"
+  },
+  {
+    "active_ingredient_id": 540,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 541,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 542,
+    "strength_id": "str_96"
+  },
+  {
+    "active_ingredient_id": 543,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 544,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 545,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 546,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 547,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 548,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 549,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 550,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 551,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 552,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 553,
+    "strength_id": "str_97"
+  },
+  {
+    "active_ingredient_id": 554,
+    "strength_id": "str_98"
+  },
+  {
+    "active_ingredient_id": 555,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 556,
+    "strength_id": "str_default"
+  },
+  {
+    "active_ingredient_id": 557,
+    "strength_id": "str_52"
+  },
+  {
+    "active_ingredient_id": 558,
+    "strength_id": "str_52"
+  }
+]

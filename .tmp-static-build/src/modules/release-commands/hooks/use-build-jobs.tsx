@@ -1,0 +1,72 @@
+"use client";
+
+import * as React from "react";
+
+import type { BuildCommandCatalogEntry } from "../domain/build-command-catalog";
+import type { BuildCommandReadiness, BuildJobRecord, StartBuildJobInput } from "../domain/build-job-types";
+import { buildJobApiService } from "../services/build-job-api-service";
+
+export function useBuildJobs(headers?: Record<string, string>) {
+  const [catalog, setCatalog] = React.useState<readonly BuildCommandCatalogEntry[]>([]);
+  const [readiness, setReadiness] = React.useState<BuildCommandReadiness[]>([]);
+  const [jobs, setJobs] = React.useState<BuildJobRecord[]>([]);
+  const [selectedJobId, setSelectedJobId] = React.useState("");
+  const [log, setLog] = React.useState("");
+  const [logOffset, setLogOffset] = React.useState(0);
+  const [busy, setBusy] = React.useState(false);
+
+  const refresh = React.useCallback(async () => {
+    if (!headers) return;
+    const nextJobs = (await buildJobApiService.list(1, headers)).jobs;
+    setJobs(nextJobs);
+    setSelectedJobId((current) => current || nextJobs[0]?.id || "");
+  }, [headers]);
+
+  React.useEffect(() => {
+    if (!headers) return;
+    void buildJobApiService.catalog(headers).then((data) => { setCatalog(data.catalog); setReadiness(data.readiness); });
+  }, [headers]);
+
+  React.useEffect(() => {
+    void refresh();
+    const interval = window.setInterval(() => void refresh(), 5000);
+    return () => window.clearInterval(interval);
+  }, [refresh]);
+
+  React.useEffect(() => {
+    if (!headers || !selectedJobId) return;
+    let cancelled = false;
+    const drain = async () => {
+      try {
+        let offset = logOffset;
+        let hasMore = true;
+        while (!cancelled && hasMore) {
+          const next = await buildJobApiService.log(selectedJobId, offset, headers);
+          if (next.text) setLog((current) => current + next.text);
+          offset = next.nextOffset;
+          hasMore = next.hasMore;
+        }
+        if (!cancelled) setLogOffset(offset);
+      } catch { /* A queued job may not have created its log yet. */ }
+    };
+    void drain();
+    const interval = window.setInterval(() => void drain(), 1500);
+    return () => { cancelled = true; window.clearInterval(interval); };
+  }, [headers, logOffset, selectedJobId]);
+
+  const start = React.useCallback(async (input: StartBuildJobInput) => {
+    if (!headers) return null;
+    setBusy(true);
+    try {
+      const job = await buildJobApiService.start(input, headers);
+      setSelectedJobId(job.id); setLog(""); setLogOffset(0); await refresh(); return job;
+    } finally { setBusy(false); }
+  }, [headers, refresh]);
+
+  const cancel = React.useCallback(async (job: BuildJobRecord) => {
+    if (!headers) return;
+    await buildJobApiService.cancel(job.id, headers); await refresh();
+  }, [headers, refresh]);
+
+  return { catalog, readiness, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, busy, start, cancel, refresh };
+}

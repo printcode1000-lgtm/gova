@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "config": {
+    "transition": "SlideLeft",
+    "transitionDuration": 500,
+    "autoPlay": true,
+    "loop": true,
+    "slides": [
+      {
+        "priority": 100,
+        "image": "/images/mainCategories/Tech%20%26%20Electronics.webp",
+        "title": "Industrial Excellence in Suez",
+        "subtitle": "Just Arrived",
+        "duration": 4000,
+        "action": "go-to-slide1-promo"
+      },
+      {
+        "priority": 200,
+        "image": "/images/mainCategories/Real%20Estate.webp",
+        "title": "Featured Market Deals",
+        "subtitle": "Featured",
+        "duration": 5000,
+        "action": "go-to-slide2-promo"
+      }
+    ]
+  }
+}
