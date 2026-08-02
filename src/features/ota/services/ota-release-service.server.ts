@@ -99,6 +99,14 @@ async function fetchCurrentManifest(): Promise<OtaManifest> {
   return manifest;
 }
 
+function adminManifestIssue(error: unknown): OtaAdminDashboard["current"]["issue"] {
+  const message = error instanceof Error ? error.message : "";
+  if (message === "otaManifestInvalid" || message === "otaManifestSignatureInvalid") {
+    return message;
+  }
+  return "otaManifestUnavailable";
+}
+
 function assertAdmin(identity: OtaIdentity): void {
   if (!isSuperAdminIdentity(identity.uid, identity.phone))
     throw new Error("forbidden");
@@ -155,15 +163,30 @@ export const otaReleaseService = {
 
   async getAdminDashboard(identity: OtaIdentity): Promise<OtaAdminDashboard> {
     assertAdmin(identity);
-    const manifest = await fetchCurrentManifest();
-    const release = await otaReleaseRepository.discover(manifest);
-    return {
-      manifestUrl: manifestUrl(),
-      current: { release, manifest, signatureVerified: true },
-      history: await otaReleaseRepository.list(),
-      audit: await otaReleaseRepository.listAudit(),
-      adoption: summarizeOtaAdoption(await persistentSystemLogService.list(1000)),
-    };
+    const [history, audit, logs] = await Promise.all([
+      otaReleaseRepository.list(),
+      otaReleaseRepository.listAudit(),
+      persistentSystemLogService.list(1000),
+    ]);
+    try {
+      const manifest = await fetchCurrentManifest();
+      const release = await otaReleaseRepository.discover(manifest);
+      return {
+        manifestUrl: manifestUrl(),
+        current: { release, manifest, signatureVerified: true },
+        history,
+        audit,
+        adoption: summarizeOtaAdoption(logs),
+      };
+    } catch (error) {
+      return {
+        manifestUrl: manifestUrl(),
+        current: { signatureVerified: false, issue: adminManifestIssue(error) },
+        history,
+        audit,
+        adoption: summarizeOtaAdoption(logs),
+      };
+    }
   },
 
   async getReleaseDiff(input: {

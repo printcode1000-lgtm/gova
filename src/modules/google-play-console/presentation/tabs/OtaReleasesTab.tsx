@@ -31,7 +31,11 @@ export function OtaReleasesTab() {
         <div className="mt-2 h-2 overflow-hidden rounded-sm bg-muted"><div className="h-full bg-primary"
           style={{ width: `${ota.progress.progress}%` }} /></div>
       </div> : null}
-      {release && current && ota.dashboard ? (
+      {ota.dashboard && !release ? (
+        <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
+          {t("releaseConsole.ota.loadFailed")}
+        </div>
+      ) : release && current?.manifest && ota.dashboard ? (
         <>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Metric label={t("releaseConsole.ota.currentVersion")} value={release.version}

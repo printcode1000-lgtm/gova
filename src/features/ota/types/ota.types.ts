@@ -154,9 +154,10 @@ export interface OtaReleaseAuditEntry {
 }
 
 export interface OtaAdminCurrentRelease {
-  release: OtaReleaseSummary;
-  manifest: OtaManifest;
+  release?: OtaReleaseSummary;
+  manifest?: OtaManifest;
   signatureVerified: boolean;
+  issue?: "otaManifestInvalid" | "otaManifestSignatureInvalid" | "otaManifestUnavailable";
 }
 
 export interface OtaAdminDashboard {

@@ -37,6 +37,7 @@ export function useOtaAdmin() {
   const changeApproval = async (approved: boolean) => {
     if (!session || !dashboard) return;
     const release = dashboard.current.release;
+    if (!release) return;
     setBusy(true);
     try {
       setDashboard(await otaApiService.setReleaseApproval({
@@ -52,7 +53,8 @@ export function useOtaAdmin() {
     finally { setBusy(false); }
   };
   const copyManifest = async () => {
-    if (dashboard) await clipboard.write(JSON.stringify(dashboard.current.manifest, null, 2));
+    if (dashboard?.current.manifest)
+      await clipboard.write(JSON.stringify(dashboard.current.manifest, null, 2));
   };
   return {
     dashboard, diff, baseReleaseId, setBaseReleaseId, progress, rollout, setRollout,
