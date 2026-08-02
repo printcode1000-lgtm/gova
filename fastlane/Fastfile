@@ -89,6 +89,12 @@ def npm_run(script)
 end
 
 def capacitor_sync(platform)
+  # Native WebViews do not have a backend at their own localhost origin.
+  # Always bake the deployed API origin into the static bundle for phone builds.
+  ENV["NEXT_PUBLIC_ASOL_API_BASE_URL"] = ENV.fetch(
+    "ASOL_CAPACITOR_API_BASE_URL",
+    "https://gova-swart.vercel.app"
+  )
   npm_run("build:static")
   npm_run("android:push:sync-assets") if platform == :android
   run_command("npx cap sync #{platform}")
