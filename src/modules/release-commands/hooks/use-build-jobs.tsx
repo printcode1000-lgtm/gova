@@ -14,6 +14,7 @@ export function useBuildJobs(headers?: Record<string, string>) {
   const [log, setLog] = React.useState("");
   const [logOffset, setLogOffset] = React.useState(0);
   const [busy, setBusy] = React.useState(false);
+  const [startError, setStartError] = React.useState("");
 
   const refresh = React.useCallback(async () => {
     if (!headers) return;
@@ -57,9 +58,13 @@ export function useBuildJobs(headers?: Record<string, string>) {
   const start = React.useCallback(async (input: StartBuildJobInput) => {
     if (!headers) return null;
     setBusy(true);
+    setStartError("");
     try {
       const job = await buildJobApiService.start(input, headers);
       setSelectedJobId(job.id); setLog(""); setLogOffset(0); await refresh(); return job;
+    } catch (error) {
+      setStartError(error instanceof Error ? error.message : String(error));
+      return null;
     } finally { setBusy(false); }
   }, [headers, refresh]);
 
@@ -68,5 +73,5 @@ export function useBuildJobs(headers?: Record<string, string>) {
     await buildJobApiService.cancel(job.id, headers); await refresh();
   }, [headers, refresh]);
 
-  return { catalog, readiness, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, busy, start, cancel, refresh };
+  return { catalog, readiness, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, busy, startError, start, cancel, refresh };
 }

@@ -1,5 +1,0 @@
-export const CATEGORY_CONSTANTS = {
-  MEDICAL_SERVICES_ID: 20,
-  DELIVERY_SERVICES_ID: 46,
-  DOCTOR_APPOINTMENT_VALUE: "doctor-appointment",
-} as const;

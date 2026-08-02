@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, LockKeyhole, Play } from "lucide-react";
+import { ChevronDown, ExternalLink, LoaderCircle, LockKeyhole, Play } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ export function BuildPublishTab() {
   const jobs = useReleaseJobs();
   const [values, setValues] = React.useState<Record<string, Record<string, unknown>>>({});
   const [confirmations, setConfirmations] = React.useState<Record<string, string>>({});
+  const activeJob = jobs.jobs.find((job) => job.status === "queued" || job.status === "running");
   const change = (id: string, name: BuildParameterName, value: unknown) => {
     setValues((current) => ({ ...current, [id]: { ...current[id], [name]: value } }));
   };
@@ -31,6 +32,7 @@ export function BuildPublishTab() {
           <div className="grid gap-3 lg:grid-cols-2">
             {jobs.catalog.filter((item) => item.category === category).map((command) => {
               const ready = jobs.readiness.find((item) => item.commandId === command.id);
+              const latestJob = jobs.jobs.find((job) => job.commandId === command.id);
               const confirmation = confirmations[command.id] ?? "";
               return (
                 <details key={command.id} className="group rounded-md border bg-surface p-4">
@@ -57,15 +59,30 @@ export function BuildPublishTab() {
                     ) : null}
                     {!ready?.ready ? <div className="rounded-md bg-muted p-2">
                       {t("releaseConsole.build.notReady", { names: ready?.missingEnv.join(", ") || "-" })}</div> : null}
-                    <Button variant={command.danger === "publishes-live" ? "destructive" : "outline"}
-                      disabled={jobs.busy || !ready?.ready || Boolean(
-                        command.confirmationPhrase && confirmation !== command.confirmationPhrase,
-                      )}
-                      onClick={() => void jobs.start({ commandId: command.id,
-                        parameters: values[command.id], confirmationPhrase: confirmation })}>
-                      {command.exclusive ? <LockKeyhole className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                      {t("releaseConsole.build.launch")}
-                    </Button>
+                    {jobs.startError ? <div role="alert" className="rounded-md bg-error-container p-2 text-on-error-container">
+                      {t("releaseConsole.errors.job")}: {jobs.startError}
+                    </div> : null}
+                    {latestJob ? <div role="status" className="rounded-md bg-muted p-2 text-xs">
+                      <strong><code dir="ltr">{latestJob.id}</code></strong>{" "}
+                      {t(`releaseConsole.jobStatus.${latestJob.status}`)}
+                    </div> : null}
+                    <div className="flex flex-wrap gap-2">
+                      <Button variant={command.danger === "publishes-live" ? "destructive" : "outline"}
+                        disabled={jobs.busy || Boolean(activeJob) || !ready?.ready || Boolean(
+                          command.confirmationPhrase && confirmation !== command.confirmationPhrase,
+                        )}
+                        onClick={() => void jobs.start({ commandId: command.id,
+                          parameters: values[command.id], confirmationPhrase: confirmation })}>
+                        {jobs.busy || activeJob ? <LoaderCircle className="h-4 w-4 animate-spin" /> :
+                          command.exclusive ? <LockKeyhole className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                        {jobs.busy || activeJob ? t("releaseConsole.jobStatus.running") : t("releaseConsole.build.launch")}
+                      </Button>
+                      <Button asChild variant="outline" title="Open local static preview">
+                        <a href="http://127.0.0.1:5500/" target="_blank" rel="noreferrer">
+                          <ExternalLink className="h-4 w-4" />{t("releaseConsole.build.preview")}
+                        </a>
+                      </Button>
+                    </div>
                   </div>
                 </details>
               );

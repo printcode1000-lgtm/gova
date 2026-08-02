@@ -1574,6 +1574,7 @@
     "releaseConsole.build.danger": "مستوى الخطورة",
     "releaseConsole.build.exclusive": "يحجز قفل الإصدار الحصري",
     "releaseConsole.build.launch": "بدء الأمر",
+    "releaseConsole.build.preview": "معاينة الناتج",
     "releaseConsole.build.confirmationExact": "اكتب حرفيا: {{phrase}}",
     "releaseConsole.build.notReady": "غير متاح. إعدادات البيئة الناقصة: {{names}}",
     "releaseConsole.common.yes": "نعم",

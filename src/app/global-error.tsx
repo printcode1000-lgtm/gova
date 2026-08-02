@@ -1,24 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-
 export default function GlobalError({
-  error,
   reset,
 }: {
-  error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    reportSystemIssue({
-      feature: "NextRoot",
-      operation: "global-error-boundary",
-      error,
-      page: typeof window !== "undefined" ? window.location.pathname : "root",
-    });
-  }, [error]);
-
   return (
     <html lang="ar" dir="rtl">
       <body>

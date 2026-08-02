@@ -61,6 +61,15 @@ function shouldIgnoreConsoleEntry(method: ConsoleMethod, data: unknown[]) {
   );
 }
 
+function isExpectedOtaFilesystemMiss(method: ConsoleMethod, data: unknown[]) {
+  if (method !== "error") return false;
+  const message = data.map(serialize).join(" ");
+  return (
+    message.includes("OS-PLUG-FILE-0008") &&
+    /'(?:stat|rmdir)' failed because file at '.+\/asol-ota\/.+' does not exist\./.test(message)
+  );
+}
+
 function page() {
   return `${window.location.pathname}${window.location.search}`;
 }
@@ -110,7 +119,7 @@ export function SystemLogCollector() {
     methods.forEach((method) => {
       console[method] = (...data: unknown[]) => {
         originals[method](...data);
-        if (shouldIgnoreConsoleEntry(method, data)) return;
+        if (shouldIgnoreConsoleEntry(method, data) || isExpectedOtaFilesystemMiss(method, data)) return;
         const error = data.find((item): item is Error => item instanceof Error);
         const level = levelFor(method);
         const entry = {

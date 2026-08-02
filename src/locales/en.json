@@ -1573,6 +1573,7 @@
     "releaseConsole.build.danger": "Danger level",
     "releaseConsole.build.exclusive": "Holds exclusive release lock",
     "releaseConsole.build.launch": "Start command",
+    "releaseConsole.build.preview": "Preview output",
     "releaseConsole.build.confirmationExact": "Type exactly: {{phrase}}",
     "releaseConsole.build.notReady": "Unavailable. Missing environment settings: {{names}}",
     "releaseConsole.common.yes": "Yes",

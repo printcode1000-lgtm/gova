@@ -65,18 +65,8 @@ async function removeReleaseRoot(releaseRoot: string): Promise<void> {
 }
 
 async function ensureDirectory(path: string): Promise<void> {
-  let existingType: "directory" | "file" | null = null;
-  try {
-    existingType = (await Filesystem.stat({ path, directory: Directory.Data }))
-      .type;
-  } catch {
-    // Missing directories are created below.
-  }
-
-  if (existingType === "directory") return;
-  if (existingType === "file")
-    throw new Error(`OTA directory path is occupied by a file: ${path}`);
-
+  // Recursive mkdir is idempotent. Calling stat for every new parent causes
+  // Capacitor Android to emit a native console error for expected misses.
   await Filesystem.mkdir({ path, directory: Directory.Data, recursive: true });
 }
 
