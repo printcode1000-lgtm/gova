@@ -4,6 +4,7 @@ import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { categoryService } from "../src/features/categories";
 import { auditCapacitorDefaultBundle } from "./lib/capacitor-defaults-audit";
 import { scanSourceCapabilityReferences } from "./ota/ota-capability-scan";
@@ -25,6 +26,74 @@ const appInitCommand = "npm run app:init";
 const architectureCheckCommand = "npm run architecture:check";
 const localManifestFileName = "asol-web-manifest.json";
 const diagnostic = process.argv.includes("--diagnostic");
+
+/**
+ * Mirrors the precedence in `next.config.ts`. A static export ships without the
+ * `app/api` routes, so an empty value makes the client fall back to its own
+ * origin — `https://localhost` in the Android WebView — and every API call is
+ * answered by the bundled HTML instead of the server.
+ */
+function resolveStaticApiBaseUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_ASOL_API_BASE_URL?.replace(/\/$/, "") ||
+    process.env.NEXT_PUBLIC_ASOL_API_URL?.replace(/\/$/, "") ||
+    process.env.ASOL_API_BASE_URL?.replace(/\/$/, "") ||
+    CAPACITOR_API_BASE_URL.replace(/\/$/, "")
+  );
+}
+
+/** Fails in seconds on this machine instead of on a user's phone after release. */
+function assertStaticApiBaseUrl(): void {
+  const apiBaseUrl = resolveStaticApiBaseUrl();
+  if (!/^https?:\/\/.+/.test(apiBaseUrl)) {
+    throw new Error(
+      "A static build needs an absolute API base URL, but none resolved. " +
+        "Set NEXT_PUBLIC_ASOL_API_BASE_URL, or fix CAPACITOR_API_BASE_URL in platform/capacitor.defaults.ts.",
+    );
+  }
+  console.log(`Static API base URL: ${apiBaseUrl}`);
+}
+
+/**
+ * Verifies the resolved host actually reached the bundle. Guards against the
+ * derivation changing (or silently emitting an empty value) in a future Next
+ * or config refactor — the failure mode this catches shipped a broken login.
+ */
+function auditStaticApiBaseUrl(outDirectory: string): void {
+  const chunkDirectory = path.join(outDirectory, "_next", "static", "chunks");
+  if (!existsSync(chunkDirectory)) {
+    throw new Error(`Static chunks are missing: ${chunkDirectory}`);
+  }
+
+  let baked = false;
+  const walk = (directory: string): void => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        walk(entryPath);
+        continue;
+      }
+      if (!entry.name.endsWith(".js")) continue;
+      const source = readFileSync(entryPath, "utf8");
+      if (/apiBaseUrl:\s*""/.test(source)) {
+        throw new Error(
+          `Static bundle carries an empty API base URL (${path.relative(outDirectory, entryPath)}). ` +
+            "Every request would target the app's own origin and return HTML.",
+        );
+      }
+      if (/apiBaseUrl:\s*"https?:\/\//.test(source)) baked = true;
+    }
+  };
+  walk(chunkDirectory);
+
+  if (!baked) {
+    throw new Error(
+      "Could not find a baked API base URL in the static bundle. " +
+        "If the build output shape changed, update auditStaticApiBaseUrl in scripts/build-static.ts.",
+    );
+  }
+  console.log("Static API base URL audit passed.");
+}
 
 function stopLiveServer(): void {
   try {
@@ -363,6 +432,7 @@ try {
     env: childEnv,
   });
 
+  assertStaticApiBaseUrl();
   prepareTempBuildDir();
 
   execSync(`"${nextBinary}" build`, {
@@ -382,6 +452,9 @@ try {
     auditGeneratedStaticRoutes();
     auditPharmacyStaticImages();
   }
+  // Always audited, diagnostic builds included: this one guards a shipping bug,
+  // not a content policy.
+  auditStaticApiBaseUrl(rootOutDir);
   auditCapacitorDefaultBundle(rootOutDir);
   writeLocalWebManifest();
 } finally {

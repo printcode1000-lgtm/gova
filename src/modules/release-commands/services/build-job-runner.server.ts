@@ -19,6 +19,10 @@ const JOB_DIR = path.join(process.cwd(), ".backups", "build-jobs");
 const LOCK_PATH = path.join(JOB_DIR, "exclusive.lock");
 const JOB_ID_PATTERN = /^job-\d+-[a-z0-9]{6}$/;
 const JOB_RETENTION = 100;
+const RECORD_RENAME_ATTEMPTS = 5;
+const RECORD_RENAME_RETRY_MS = 20;
+const RECORD_READ_ATTEMPTS = 3;
+const RECORD_READ_RETRY_MS = 15;
 const LOG_CHUNK_BYTES = 256 * 1024;
 const liveProcesses = new Map<string, ChildProcessWithoutNullStreams>();
 let reconciliation: Promise<void> | null = null;
@@ -75,14 +79,66 @@ async function readLock(lockPath: string): Promise<LockRecord | null> {
   try { return JSON.parse(await fs.readFile(lockPath, "utf8")) as LockRecord; } catch { return null; }
 }
 
+/**
+ * Written through a temporary file and renamed into place.
+ *
+ * A running job rewrites its record on every status change while the console
+ * polls the list every few seconds; writing in place lets a reader observe a
+ * half-written file and fail with a JSON syntax error. Rename is atomic, so a
+ * reader always sees either the previous record or the complete new one.
+ */
 async function writeRecord(record: BuildJobRecord): Promise<void> {
   await fs.mkdir(JOB_DIR, { recursive: true });
-  await fs.writeFile(recordPath(record.id), JSON.stringify(record, null, 2), "utf8");
+  const destination = recordPath(record.id);
+  const temporaryPath = `${destination}.${process.pid}.tmp`;
+  await fs.writeFile(temporaryPath, JSON.stringify(record, null, 2), "utf8");
+
+  // Windows refuses to rename over a file a reader currently holds open, so the
+  // rename is retried briefly. If it never wins, the status update matters more
+  // than atomicity — `readAllRecords` tolerates a record it cannot parse.
+  for (let attempt = 0; attempt < RECORD_RENAME_ATTEMPTS; attempt += 1) {
+    try {
+      await fs.rename(temporaryPath, destination);
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      const contended = code === "EPERM" || code === "EBUSY" || code === "EACCES";
+      if (!contended || attempt === RECORD_RENAME_ATTEMPTS - 1) {
+        await removeIfExists(temporaryPath);
+        if (!contended) throw error;
+        await fs.writeFile(destination, JSON.stringify(record, null, 2), "utf8");
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, RECORD_RENAME_RETRY_MS));
+    }
+  }
+}
+
+/**
+ * Reads one record, retrying a torn read.
+ *
+ * Even with the atomic write above, a contended rename can fall back to an
+ * in-place write, so a reader may still catch a partial file. That state lasts
+ * microseconds, and re-reading resolves it — unlike surfacing a JSON syntax
+ * error, which the API layer reports as an `invalidJsonBody` 400.
+ */
+async function readRecordFile(filePath: string): Promise<BuildJobRecord> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < RECORD_READ_ATTEMPTS; attempt += 1) {
+    try { return JSON.parse(await fs.readFile(filePath, "utf8")) as BuildJobRecord; }
+    catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") throw error;
+      if (!(error instanceof SyntaxError)) throw error;
+      lastError = error;
+      await new Promise((resolve) => setTimeout(resolve, RECORD_READ_RETRY_MS));
+    }
+  }
+  throw lastError;
 }
 
 export async function readBuildJobRecord(jobId: string): Promise<BuildJobRecord> {
   assertBuildJobId(jobId);
-  try { return JSON.parse(await fs.readFile(recordPath(jobId), "utf8")) as BuildJobRecord; }
+  try { return await readRecordFile(recordPath(jobId)); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") throw new Error("releaseJobNotFound"); throw error; }
 }
 
@@ -300,8 +356,14 @@ async function pruneRecords(): Promise<void> {
 async function readAllRecords(): Promise<BuildJobRecord[]> {
   await fs.mkdir(JOB_DIR, { recursive: true });
   const files = (await fs.readdir(JOB_DIR)).filter((file) => JOB_ID_PATTERN.test(file.replace(/\.json$/, "")) && file.endsWith(".json"));
-  const jobs = await Promise.all(files.map(async (file) => JSON.parse(await fs.readFile(path.join(JOB_DIR, file), "utf8")) as BuildJobRecord));
-  return jobs.sort((left, right) => right.queuedAt.localeCompare(left.queuedAt));
+  // One unreadable record must not blank the whole console: it is skipped so
+  // the remaining jobs still list. Reading a single job still surfaces its error.
+  const jobs = await Promise.all(files.map(async (file) => {
+    try { return await readRecordFile(path.join(JOB_DIR, file)); }
+    catch { return null; }
+  }));
+  return jobs.filter((job): job is BuildJobRecord => Boolean(job?.queuedAt))
+    .sort((left, right) => right.queuedAt.localeCompare(left.queuedAt));
 }
 
 function setJobStatus(record: BuildJobRecord, next: BuildJobRecord["status"]): void {

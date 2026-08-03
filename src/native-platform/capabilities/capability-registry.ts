@@ -45,24 +45,24 @@ const pluginLoaders: Record<
 > = {
   camera: createLazyPlugin(
     "Camera",
-    async () => (await import("@capacitor/camera")).Camera,
+    async () => await import("@capacitor/camera"),
   ),
   location: createLazyPlugin(
     "Location",
-    async () => (await import("@capacitor/geolocation")).Geolocation,
+    async () => await import("@capacitor/geolocation"),
   ),
   speech: createLazyPlugin(
     "SpeechRecognition",
     async () =>
-      (await import("@capgo/capacitor-speech-recognition")).SpeechRecognition,
+      await import("@capgo/capacitor-speech-recognition"),
   ),
   files: createLazyPlugin(
     "FilePicker",
-    async () => (await import("@capawesome/capacitor-file-picker")).FilePicker,
+    async () => await import("@capawesome/capacitor-file-picker"),
   ),
   share: createLazyPlugin(
     "Share",
-    async () => (await import("@capacitor/share")).Share,
+    async () => await import("@capacitor/share"),
   ),
   shareReceive: createLazyPlugin("ShareReceive", async () => {
     const { Capacitor } = await import("@capacitor/core");
@@ -74,74 +74,74 @@ const pluginLoaders: Record<
   push: createLazyPlugin(
     "PushNotifications",
     async () =>
-      (await import("@capacitor/push-notifications")).PushNotifications,
+      await import("@capacitor/push-notifications"),
   ),
   localNotifications: createLazyPlugin(
     "LocalNotifications",
     async () =>
-      (await import("@capacitor/local-notifications")).LocalNotifications,
+      await import("@capacitor/local-notifications"),
   ),
   barcode: createLazyPlugin(
     "BarcodeScanner",
     async () =>
-      (await import("@capacitor-mlkit/barcode-scanning")).BarcodeScanner,
+      await import("@capacitor-mlkit/barcode-scanning"),
   ),
   browser: createLazyPlugin(
     "Browser",
-    async () => (await import("@capacitor/browser")).Browser,
+    async () => await import("@capacitor/browser"),
   ),
   haptics: createLazyPlugin(
     "Haptics",
-    async () => (await import("@capacitor/haptics")).Haptics,
+    async () => await import("@capacitor/haptics"),
   ),
   network: createLazyPlugin(
     "Network",
-    async () => (await import("@capacitor/network")).Network,
+    async () => await import("@capacitor/network"),
   ),
   device: createLazyPlugin(
     "Device",
-    async () => (await import("@capacitor/device")).Device,
+    async () => await import("@capacitor/device"),
   ),
   clipboard: createLazyPlugin(
     "Clipboard",
-    async () => (await import("@capacitor/clipboard")).Clipboard,
+    async () => await import("@capacitor/clipboard"),
   ),
   statusBar: createLazyPlugin(
     "StatusBar",
-    async () => (await import("@capacitor/status-bar")).StatusBar,
+    async () => await import("@capacitor/status-bar"),
   ),
   keyboard: createLazyPlugin(
     "Keyboard",
-    async () => (await import("@capacitor/keyboard")).Keyboard,
+    async () => await import("@capacitor/keyboard"),
   ),
   splashScreen: createLazyPlugin(
     "SplashScreen",
-    async () => (await import("@capacitor/splash-screen")).SplashScreen,
+    async () => await import("@capacitor/splash-screen"),
   ),
   preferences: createLazyPlugin(
     "Preferences",
-    async () => (await import("@capacitor/preferences")).Preferences,
+    async () => await import("@capacitor/preferences"),
   ),
   screenOrientation: createLazyPlugin(
     "ScreenOrientation",
     async () =>
-      (await import("@capacitor/screen-orientation")).ScreenOrientation,
+      await import("@capacitor/screen-orientation"),
   ),
   dialog: createLazyPlugin(
     "Dialog",
-    async () => (await import("@capacitor/dialog")).Dialog,
+    async () => await import("@capacitor/dialog"),
   ),
   toast: createLazyPlugin(
     "Toast",
-    async () => (await import("@capacitor/toast")).Toast,
+    async () => await import("@capacitor/toast"),
   ),
   actionSheet: createLazyPlugin(
     "ActionSheet",
-    async () => (await import("@capacitor/action-sheet")).ActionSheet,
+    async () => await import("@capacitor/action-sheet"),
   ),
   textZoom: createLazyPlugin(
     "TextZoom",
-    async () => (await import("@capacitor/text-zoom")).TextZoom,
+    async () => await import("@capacitor/text-zoom"),
   ),
   backgroundDownload: createLazyPlugin("BackgroundDownload", async () => {
     const { Capacitor } = await import("@capacitor/core");

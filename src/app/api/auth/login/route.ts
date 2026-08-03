@@ -1,4 +1,4 @@
-import { apiSuccess, mapServiceError } from '@/core/api/api-response';
+import { apiSuccess, mapServiceError, readJsonBody } from '@/core/api/api-response';
 import { authService } from '@/features/auth/services/auth-service.bootstrap.server';
 import type { LoginFormData } from '@/lib/validation/auth';
 import { runTracedBusinessRoute } from '../traced-route';
@@ -6,7 +6,7 @@ import { runTracedBusinessRoute } from '../traced-route';
 export async function POST(request: Request) {
   return runTracedBusinessRoute('POST /api/auth/login', async () => {
     try {
-      const body = (await request.json()) as LoginFormData;
+      const body = await readJsonBody<LoginFormData>(request);
       const result = await authService.login(body);
       return apiSuccess(result);
     } catch (error) {

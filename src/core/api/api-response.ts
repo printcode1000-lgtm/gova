@@ -37,6 +37,30 @@ export function apiError(message: string, status = 400): NextResponse {
   );
 }
 
+/** Raised only by `readJsonBody`, so the 400 below always means the client's body. */
+export class InvalidJsonBodyError extends Error {
+  constructor() {
+    super('invalidJsonBody');
+    this.name = 'InvalidJsonBodyError';
+  }
+}
+
+/**
+ * Parses a request body and marks a malformed one explicitly.
+ *
+ * Prefer this over `request.json()` in routes: the fallback below infers
+ * "invalid body" from any JSON `SyntaxError` reaching `mapServiceError`, which
+ * also catches server-side parsing (reading a state file, for example) and
+ * blames the client with a 400 for what is really a server fault.
+ */
+export async function readJsonBody<T>(request: Request): Promise<T> {
+  try {
+    return (await request.json()) as T;
+  } catch {
+    throw new InvalidJsonBodyError();
+  }
+}
+
 function isJsonBodyParseError(error: unknown): boolean {
   return (
     error instanceof SyntaxError &&
@@ -45,7 +69,7 @@ function isJsonBodyParseError(error: unknown): boolean {
 }
 
 export function mapServiceError(error: unknown): NextResponse {
-  if (isJsonBodyParseError(error)) {
+  if (error instanceof InvalidJsonBodyError || isJsonBodyParseError(error)) {
     return apiError('invalidJsonBody', 400);
   }
 
