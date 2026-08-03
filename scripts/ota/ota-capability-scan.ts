@@ -47,6 +47,19 @@ export function scanBuiltCapabilities(
   return [...new Set<string>(parsed)].sort();
 }
 
+/**
+ * Source tokens that prove a bundle needs a capability.
+ *
+ * Every token must name a method that actually exists on a Native Platform
+ * facade. A token that matches nothing is worse than no token at all: the
+ * capability silently disappears from `requiredCapabilities`, and the client
+ * gate stops protecting it. `assertDetectionCoverage` keeps the map honest by
+ * failing when a capability key has no token at all, and the Native Platform
+ * API tests keep the method names honest.
+ *
+ * A token ending in `.` matches any member access below that prefix; every
+ * other token must be followed by a call.
+ */
 const apiPatterns = new Map<string, string>([
   ["camera.takePhoto", CapabilityKeys.CameraTakePhoto],
   ["camera.pickImage", CapabilityKeys.CameraPickImages],
@@ -54,21 +67,31 @@ const apiPatterns = new Map<string, string>([
   ["location.getCurrentPosition", CapabilityKeys.LocationCurrent],
   ["location.watchPosition", CapabilityKeys.LocationWatch],
   ["speech.startListening", CapabilityKeys.SpeechRecognize],
+  ["speech.transcribeOnce", CapabilityKeys.SpeechRecognize],
   ["speechRecognition.transcribeOnce", CapabilityKeys.SpeechRecognize],
   ["speechRecognition.startListening", CapabilityKeys.SpeechRecognize],
   ["files.user.pickFile", CapabilityKeys.FilesPick],
   ["files.user.pickFiles", CapabilityKeys.FilesPick],
-  ["files.user.saveFile", CapabilityKeys.FilesSave],
-  ["files.user.openFile", CapabilityKeys.FilesOpen],
+  ["files.user.pickImages", CapabilityKeys.FilesPick],
+  ["files.user.pickPdf", CapabilityKeys.FilesPick],
+  ["files.user.pickDocuments", CapabilityKeys.FilesPick],
+  ["files.user.saveToDevice", CapabilityKeys.FilesSave],
+  ["files.user.openExternally", CapabilityKeys.FilesOpen],
   ["files.app.", CapabilityKeys.FilesAppStorage],
   ["share.send", CapabilityKeys.ShareSend],
-  ["share.receive", CapabilityKeys.ShareReceive],
-  ["notifications.push", CapabilityKeys.NotificationsPush],
-  ["notifications.local", CapabilityKeys.NotificationsLocal],
+  ["share.canSend", CapabilityKeys.ShareSend],
+  ["share.initializeReceiving", CapabilityKeys.ShareReceive],
+  ["share.getPendingItems", CapabilityKeys.ShareReceive],
+  ["share.consumeItem", CapabilityKeys.ShareReceive],
+  ["share.consumeAllItems", CapabilityKeys.ShareReceive],
+  ["notifications.push.", CapabilityKeys.NotificationsPush],
+  ["notifications.local.", CapabilityKeys.NotificationsLocal],
   ["pushNotifications.", CapabilityKeys.NotificationsPush],
   ["localNotifications.", CapabilityKeys.NotificationsLocal],
-  ["barcode.scan", CapabilityKeys.BarcodeScan],
+  ["barcode.scanOnce", CapabilityKeys.BarcodeScan],
   ["barcode.startScan", CapabilityKeys.BarcodeScan],
+  ["barcodeScanner.scanOnce", CapabilityKeys.BarcodeScan],
+  ["barcodeScanner.startScan", CapabilityKeys.BarcodeScan],
   ["browser.open", CapabilityKeys.BrowserOpen],
   ["haptics.impact", CapabilityKeys.HapticsImpact],
   ["haptics.notification", CapabilityKeys.HapticsNotification],
@@ -106,7 +129,35 @@ const apiPatterns = new Map<string, string>([
   ["storageCapacity.getFreeSpace", CapabilityKeys.StorageCapacityFreeSpace],
 ]);
 
+/** The capability keys this scanner is able to detect from source. */
+export function detectableCapabilityKeys(): string[] {
+  return [...new Set(apiPatterns.values())].sort();
+}
+
+/**
+ * Fail when a declared capability has no way of being detected.
+ *
+ * An undetectable key never reaches `requiredCapabilities`, so the device-side
+ * gate cannot refuse a bundle that needs it. That is exactly the silent
+ * degradation the golden rule exists to prevent, so it is a build error rather
+ * than a warning.
+ */
+export function assertDetectionCoverage(): void {
+  const detectable = new Set(detectableCapabilityKeys());
+  const undetectable = ALL_CAPABILITY_KEYS.filter(
+    (key) => !detectable.has(key),
+  );
+  if (undetectable.length > 0) {
+    throw new Error(
+      "Capability keys with no detection pattern in ota-capability-scan.ts:\n" +
+        undetectable.map((key) => `  - ${key}`).join("\n") +
+        "\nAdd a token matching the real Native Platform method for each key.",
+    );
+  }
+}
+
 export function scanSourceCapabilityReferences(root: string): string[] {
+  assertDetectionCoverage();
   const required = new Set<string>();
   const visit = (directory: string): void => {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {

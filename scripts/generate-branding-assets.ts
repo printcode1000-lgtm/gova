@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
@@ -28,6 +28,30 @@ const androidForegroundSizes = {
   xxhdpi: 324,
   xxxhdpi: 432,
 } as const;
+
+let rewrittenCount = 0;
+
+/**
+ * Write only when the bytes actually change.
+ *
+ * `build:static` regenerates branding on every run, including every OTA
+ * publication, and it writes into `android/` and `ios/`. An unconditional write
+ * would dirty the native tree on each publish; once committed, the OTA
+ * native-compatibility gate would then refuse the *next* publication because
+ * "the native shell changed" — for nothing but a re-encode of the same icon.
+ * Keeping the write conditional keeps a pure web release a pure web release.
+ */
+function writeIfChanged(filePath: string, bytes: Buffer): void {
+  if (existsSync(filePath)) {
+    try {
+      if (readFileSync(filePath).equals(bytes)) return;
+    } catch {
+      // Unreadable target: fall through and rewrite it.
+    }
+  }
+  writeFileSync(filePath, bytes);
+  rewrittenCount += 1;
+}
 
 async function resizedSource(size: number): Promise<Buffer> {
   return sharp(sourcePath)
@@ -66,7 +90,7 @@ async function androidAdaptiveForeground(size: number): Promise<Buffer> {
 }
 
 async function generateWebAssets(): Promise<void> {
-  copyFileSync(sourcePath, path.join(root, 'public', 'logo.png'));
+  writeIfChanged(path.join(root, 'public', 'logo.png'), readFileSync(sourcePath));
 }
 
 async function generateAndroidAssets(): Promise<void> {
@@ -74,14 +98,16 @@ async function generateAndroidAssets(): Promise<void> {
   for (const [density, size] of Object.entries(androidLegacySizes)) {
     const directory = path.join(resRoot, `mipmap-${density}`);
     mkdirSync(directory, { recursive: true });
-    await sharp(await resizedSource(size)).toFile(path.join(directory, 'ic_launcher.png'));
-    await sharp(await resizedSource(size)).toFile(path.join(directory, 'ic_launcher_round.png'));
+    const icon = await sharp(await resizedSource(size)).png().toBuffer();
+    writeIfChanged(path.join(directory, 'ic_launcher.png'), icon);
+    writeIfChanged(path.join(directory, 'ic_launcher_round.png'), icon);
   }
   for (const [density, size] of Object.entries(androidForegroundSizes)) {
     const directory = path.join(resRoot, `mipmap-${density}`);
     mkdirSync(directory, { recursive: true });
-    await sharp(await androidAdaptiveForeground(size)).toFile(
+    writeIfChanged(
       path.join(directory, 'ic_launcher_foreground.png'),
+      await sharp(await androidAdaptiveForeground(size)).png().toBuffer(),
     );
   }
 
@@ -98,17 +124,18 @@ async function generateIosAssets(): Promise<void> {
   const splashRoot = path.join(assetsRoot, 'Splash.imageset');
   mkdirSync(appIconRoot, { recursive: true });
   mkdirSync(splashRoot, { recursive: true });
-  await sharp(await resizedSource(1024)).toFile(
+  writeIfChanged(
     path.join(appIconRoot, 'AppIcon-512@2x.png'),
+    await sharp(await resizedSource(1024)).png().toBuffer(),
   );
 
-  const launch = await resizedSource(2732);
+  const launch = await sharp(await resizedSource(2732)).png().toBuffer();
   for (const fileName of [
     'splash-2732x2732.png',
     'splash-2732x2732-1.png',
     'splash-2732x2732-2.png',
   ]) {
-    await sharp(launch).toFile(path.join(splashRoot, fileName));
+    writeIfChanged(path.join(splashRoot, fileName), launch);
   }
 }
 
@@ -126,7 +153,11 @@ async function main(): Promise<void> {
   }
 
   await Promise.all([generateWebAssets(), generateAndroidAssets(), generateIosAssets()]);
-  console.log(`Branding assets generated from ${path.relative(root, sourcePath)}`);
+  console.log(
+    rewrittenCount === 0
+      ? `Branding assets already match ${path.relative(root, sourcePath)}; nothing rewritten.`
+      : `Branding assets generated from ${path.relative(root, sourcePath)} (${rewrittenCount} file(s) rewritten).`,
+  );
 }
 
 main().catch((error) => {

@@ -2,6 +2,8 @@
  * Public (client-safe) environment values baked at build time.
  */
 
+import { MINIMUM_SUPPORTED_NATIVE_VERSION } from '@/native-platform/capabilities/shell-capabilities';
+
 const LEGACY_API_URL_KEY = 'NEXT_PUBLIC_ASOL_API_URL';
 
 export const publicEnv = {
@@ -17,7 +19,9 @@ export const publicEnv = {
   otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || '',
   otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || '',
   webBundleVersion: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION || '0.1.0',
-  nativeVersion: process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION || '0.2.0',
+  nativeVersion:
+    process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ||
+    MINIMUM_SUPPORTED_NATIVE_VERSION,
 } as const;
 
 /** Prefix a public asset path with the deployment base path (e.g. `/asol` on GitHub Pages). */

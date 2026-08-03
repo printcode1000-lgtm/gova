@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 import { CAPACITOR_API_BASE_URL } from './platform/capacitor.defaults';
+import { MINIMUM_SUPPORTED_NATIVE_VERSION } from './src/native-platform/capabilities/shell-capabilities';
 
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const repositoryName = process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '';
@@ -39,7 +40,10 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL ?? '',
     NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY ?? '',
     NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION ?? '0.1.0',
-    NEXT_PUBLIC_ASOL_NATIVE_VERSION: process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ?? '1.0.0',
+    // The floor, not an optimistic guess: a higher default would make an
+    // unpinned build claim a shell it cannot prove is installed.
+    NEXT_PUBLIC_ASOL_NATIVE_VERSION:
+      process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ?? MINIMUM_SUPPORTED_NATIVE_VERSION,
   },
 
   // These are Node.js-only packages. Prevent Next.js from bundling them

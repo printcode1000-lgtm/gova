@@ -1,10 +1,17 @@
 import assert from "node:assert/strict";
 
 import {
+  NATIVE_CONTRACT_FILES,
   NATIVE_SURFACE_PATTERNS,
   inspectNativeCompatibility,
+  isNativeSurface,
   resolveNativeBaseline,
 } from "./ota/ota-native-compatibility";
+import {
+  assertDetectionCoverage,
+  detectableCapabilityKeys,
+} from "./ota/ota-capability-scan";
+import { ALL_CAPABILITY_KEYS } from "../src/native-platform/capabilities/capability-keys";
 
 /**
  * The golden rule, as executable checks.
@@ -14,12 +21,16 @@ import {
  * the classifier that decides which side of that line a change falls on.
  */
 
-function matchesNativeSurface(file: string): boolean {
-  return NATIVE_SURFACE_PATTERNS.some((pattern) => pattern.test(file));
+const NATIVE_IMPORTING_FILE = `import { Camera } from "@capacitor/camera";\nexport const x = Camera;\n`;
+const DYNAMIC_IMPORTING_FILE = `export const load = async () => await import("@capacitor/core");\n`;
+const PURE_WEB_FILE = `export interface CameraImage { file: File }\n`;
+
+function classify(file: string, content: string | null = PURE_WEB_FILE) {
+  return isNativeSurface(file, () => content);
 }
 
 // ---------------------------------------------------------------------------
-// Native surfaces must be recognised
+// Native surfaces outside src/ are recognised by path alone
 // ---------------------------------------------------------------------------
 for (const file of [
   "android/app/src/main/AndroidManifest.xml",
@@ -30,13 +41,49 @@ for (const file of [
   "platform/capacitor.defaults.ts",
   "assets/google-play/icon.png",
   "fastlane/Fastfile",
-  "src/native-platform/camera/camera.ts",
-  "src/native-platform/index.ts",
 ]) {
   assert.equal(
-    matchesNativeSurface(file),
+    NATIVE_SURFACE_PATTERNS.some((pattern) => pattern.test(file)),
     true,
     `Native surface was not detected: ${file}`,
+  );
+  assert.equal(classify(file), true, `Native surface was not detected: ${file}`);
+}
+
+// ---------------------------------------------------------------------------
+// Inside src/, a file is native because it binds to a plugin — wherever it sits
+// ---------------------------------------------------------------------------
+for (const file of [
+  "src/native-platform/camera/camera-native-adapter.ts",
+  // The sanctioned Capacitor-import exceptions live outside src/native-platform
+  // and were invisible to the path-only classifier.
+  "src/platform/ota/capacitor-ota-adapter.ts",
+  "src/platform/navigation/capacitor-back-button-adapter.ts",
+  "src/features/ota/services/ota-api-service.ts",
+  "src/features/page-snapshot/hooks/use-page-snapshot.tsx",
+]) {
+  assert.equal(
+    classify(file, NATIVE_IMPORTING_FILE),
+    true,
+    `A plugin binding was not detected as native: ${file}`,
+  );
+}
+
+assert.equal(
+  classify("src/native-platform/capabilities/capability-registry.ts", DYNAMIC_IMPORTING_FILE),
+  true,
+  "A dynamic plugin import must count as a native binding",
+);
+
+// ---------------------------------------------------------------------------
+// Declared native contracts are native even without a plugin import
+// ---------------------------------------------------------------------------
+for (const [file, reason] of NATIVE_CONTRACT_FILES) {
+  assert.ok(reason.length > 0, `Native contract file needs a reason: ${file}`);
+  assert.equal(
+    classify(file, PURE_WEB_FILE),
+    true,
+    `Declared native contract was not detected: ${file}`,
   );
 }
 
@@ -50,22 +97,54 @@ for (const file of [
   "docs/07-mobile-and-release/capacitor/native-platform.md",
   "package-lock.json",
   "src/app/profile/page.tsx",
-  // A file merely mentioning the layer in its path segment must not match.
   "src/features/native-platform-notes.ts",
+  // Pure TypeScript inside the Native Platform layer ships in the web bundle
+  // and must remain OTA-deliverable: a facade, a web adapter, a validator.
+  "src/native-platform/camera/camera.ts",
+  "src/native-platform/camera/camera-web-adapter.ts",
+  "src/native-platform/share/share-validator.ts",
+  "src/native-platform/share/share-queue.ts",
+  "src/native-platform/barcode/duplicate-filter.ts",
+  "src/native-platform/core/errors.ts",
 ]) {
   assert.equal(
-    matchesNativeSurface(file),
+    classify(file),
     false,
     `A web-only change was misclassified as native: ${file}`,
   );
 }
 
+// Tests never reach a device.
+assert.equal(
+  classify("src/native-platform/tests/native-platform-contract.test.ts", NATIVE_IMPORTING_FILE),
+  false,
+  "Test sources must not trip the gate",
+);
+
 // ---------------------------------------------------------------------------
-// A missing baseline is reported, never silently treated as compatible
+// A deleted binding is classified from the baseline copy, not silently dropped
+// ---------------------------------------------------------------------------
+assert.equal(
+  isNativeSurface(
+    "src/native-platform/camera/camera-native-adapter.ts",
+    () => null,
+    () => NATIVE_IMPORTING_FILE,
+  ),
+  true,
+  "Deleting a plugin binding must still be treated as a native change",
+);
+
+// ---------------------------------------------------------------------------
+// A missing baseline fails closed: nothing can be proven compatible
 // ---------------------------------------------------------------------------
 {
   const report = inspectNativeCompatibility("");
-  assert.equal(report.requiresStoreRelease, false);
+  assert.equal(report.baselineMissing, true);
+  assert.equal(
+    report.requiresStoreRelease,
+    true,
+    "Without a baseline the gate must fail closed",
+  );
   assert.deepEqual(report.changedPaths, []);
 }
 
@@ -85,10 +164,23 @@ for (const file of [
 // ---------------------------------------------------------------------------
 {
   const report = inspectNativeCompatibility("HEAD");
-  // HEAD against HEAD is an empty diff.
-  assert.deepEqual(report.changedPaths, []);
+  assert.equal(report.baselineMissing, false);
+  assert.equal(Array.isArray(report.changedPaths), true);
+  assert.equal(Array.isArray(report.changedNativeDependencies), true);
+  // HEAD against a clean working tree carries no native dependency drift.
   assert.deepEqual(report.changedNativeDependencies, []);
-  assert.equal(report.requiresStoreRelease, false);
+}
+
+// ---------------------------------------------------------------------------
+// Every declared capability must be detectable from source
+// ---------------------------------------------------------------------------
+{
+  assertDetectionCoverage();
+  assert.deepEqual(
+    detectableCapabilityKeys(),
+    [...ALL_CAPABILITY_KEYS].sort(),
+    "Every capability key needs a detection pattern, and patterns must not invent keys",
+  );
 }
 
 console.log("OTA native compatibility tests passed.");

@@ -8,6 +8,7 @@ import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { categoryService } from "../src/features/categories";
 import { auditCapacitorDefaultBundle } from "./lib/capacitor-defaults-audit";
 import { scanSourceCapabilityReferences } from "./ota/ota-capability-scan";
+import { MINIMUM_SUPPORTED_NATIVE_VERSION } from "../src/native-platform/capabilities/shell-capabilities";
 
 const rootDir = process.cwd();
 const tempBuildDir = path.join(rootDir, ".tmp-static-build");
@@ -425,7 +426,8 @@ function writeLocalWebManifest(): void {
     size,
     fileCount: Object.keys(files).length,
     minimumNativeVersion:
-      process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ?? "0.2.0",
+      process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ??
+      MINIMUM_SUPPORTED_NATIVE_VERSION,
     requiredCapabilities: JSON.parse(
       readFileSync(
         path.join(rootOutDir, "asol-required-capabilities.json"),

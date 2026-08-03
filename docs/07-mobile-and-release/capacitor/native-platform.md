@@ -589,6 +589,23 @@ cache results for the process session. `shell-capabilities.ts` declares the
 keys compiled into the shell and `NATIVE_CAPABILITY_VERSION` changes whenever
 that set changes. Capability discovery never asks for an OS permission.
 
+**On a device, presence means `Capacitor.isPluginAvailable`, not a successful
+`import()`.** Every plugin's JavaScript ships inside the web bundle, so on
+Android and iOS the import resolves whether or not the installed shell contains
+the matching Java/Swift — it proves only that the bundle contains its own code.
+`pluginNameByFamily` records the name each family is registered under, and the
+registry asks the bridge for that name; `PluginHeaders` is injected by the
+native side for the plugins it actually registered.
+
+`SHELL_CAPABILITIES` is a constant compiled into the web bundle, so an OTA
+release carries its own copy of it. It therefore acts as a **narrowing filter
+only** — it can withdraw a capability, never grant one. Treating it as proof of
+shell contents would let a bundle vouch for itself.
+
+`shell-capabilities.ts` also owns `MINIMUM_SUPPORTED_NATIVE_VERSION`, the floor
+stamped into `manifest.minimumNativeVersion` and the fallback installed-version
+value. Every consumer imports it rather than repeating the literal.
+
 The curated `0.2.0` shell adds Browser, Haptics, Network, Device, Clipboard,
 Status Bar, Keyboard, Splash Screen, Preferences, Screen Orientation, Dialog,
 Toast, Action Sheet, and Text Zoom. Each has `types.ts`, a facade, and a lazy
@@ -610,14 +627,18 @@ entry paths, and verifies every extracted file hash before activation.
 To add a capability:
 
 1. Add one user-visible key to `capability-keys.ts`.
-2. Add a lazy plugin family mapping and platform support decision to
-   `capability-registry.ts`.
-3. Add the key to the shell declaration and bump
+2. Add a plugin family, its registered native name in `pluginNameByFamily`, and
+   a platform support decision to `capability-registry.ts`.
+3. Add a detection token to `apiPatterns` in `scripts/ota/ota-capability-scan.ts`
+   naming the **real** facade method. `assertDetectionCoverage()` fails the
+   build if you skip this, because an undetectable key never reaches
+   `requiredCapabilities` and the device gate would stop protecting it.
+4. Add the key to the shell declaration and bump
    `NATIVE_CAPABILITY_VERSION`.
-4. Expose the operation through a Native Platform facade; permissions remain
+5. Expose the operation through a Native Platform facade; permissions remain
    explicit in the operation, never in capability detection.
-5. Run the Native Platform, OTA delivery, architecture, type, and lint checks.
-6. Publish a store shell and move the `native-v*` baseline tag before relying
+6. Run the Native Platform, OTA delivery, architecture, type, and lint checks.
+7. Publish a store shell and move the `native-v*` baseline tag before relying
    on the key from OTA-delivered UI.
 
 ### Verified vs. not verified
@@ -680,6 +701,11 @@ src/platform/ota/capacitor-ota-adapter.ts
 src/features/ota/services/ota-api-service.ts
 src/features/page-snapshot/hooks/use-page-snapshot.tsx
 ```
+
+These four are plugin bindings that happen to live outside the layer, so the
+OTA publish gate treats them exactly like an adapter: it classifies a `src/`
+file as a native surface by the plugin import it contains, not by its
+directory. A path-prefix rule would have let them ship over OTA unexamined.
 
 **Browser APIs** — one file, listed per-pattern in
 `NATIVE_CAPABILITY_PATTERNS`:

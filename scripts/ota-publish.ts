@@ -5,6 +5,7 @@ import path from "node:path";
 import { zipSync } from "fflate";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { compareOtaCanonicalStrings } from "../src/features/ota/utils/ota-canonical-order";
+import { MINIMUM_SUPPORTED_NATIVE_VERSION } from "../src/native-platform/capabilities/shell-capabilities";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { assertReleaseStaticBundle } from "./assert-release-static-bundle";
 import {
@@ -175,7 +176,7 @@ function assertNativeCompatibility(): string {
   console.log("\nOTA native compatibility");
   console.log(formatReport(report, baseline));
 
-  if (!baseline) {
+  if (report.baselineMissing) {
     throw new Error(
       "Cannot prove OTA native compatibility: no native baseline found.\n" +
         "Tag the commit the current store build was made from, for example:\n" +
@@ -199,7 +200,9 @@ function assertNativeCompatibility(): string {
   // No native surface changed: the bundle runs on any shell that already
   // serves the current release line.
   const resolved =
-    declared || process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION?.trim() || "0.2.0";
+    declared ||
+    process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION?.trim() ||
+    MINIMUM_SUPPORTED_NATIVE_VERSION;
   console.log(
     `minimumNativeVersion: ${resolved}${declared ? " (declared)" : " (inherited)"}\n`,
   );

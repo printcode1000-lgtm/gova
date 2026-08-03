@@ -38,21 +38,77 @@ Two mechanisms enforce the rule:
 
 `ota-update-service.ts` compares `manifest.minimumNativeVersion` against the
 installed version returned at runtime by Capacitor App and skips the release with the
-`ota.nativeUpdateRequired` status when the shell is too old.
+`ota.nativeUpdateRequired` status when the shell is too old. It also asks the
+capability registry, which resolves each key through
+`Capacitor.isPluginAvailable` — see
+[Capability-aware delivery](#capability-aware-delivery).
 
 ### 2. Publish gate — the channel refuses an unsafe upload
 
-`scripts/ota/ota-native-compatibility.ts` compares the working tree against
-the commit the last store build was made from. When any of these changed,
-`npm run ota:publish` **refuses to run**:
+`scripts/ota/ota-native-compatibility.ts` compares the **working tree** against
+the commit the last store build was made from. When any native surface changed,
+`npm run ota:publish` **refuses to run**.
 
-| Surface                             | Why it matters                                  |
-| ----------------------------------- | ----------------------------------------------- |
-| `android/` · `ios/`                 | Manifest, entitlements, native sources          |
-| `capacitor.config.ts` · `platform/` | Shell configuration                             |
-| `assets/` · `fastlane/`             | Bundled resources and release tooling           |
-| `src/native-platform/`              | The binding between web code and native plugins |
-| `@capacitor/*` dependencies         | Native code shipped with a store build          |
+The comparison is deliberately working-tree based, not `baseline..HEAD`: the
+static build compiles the working tree, so a gate that only read commits would
+let an uncommitted edit to `android/` or a plugin adapter ship silently. The
+candidate set is `git diff --name-only <baseline>` plus
+`git ls-files --others --exclude-standard`, which together span committed,
+uncommitted, and untracked changes.
+
+**Outside `src/`, a path is a native surface:**
+
+| Surface                             | Why it matters                        |
+| ----------------------------------- | ------------------------------------- |
+| `android/` · `ios/`                 | Manifest, entitlements, native sources |
+| `capacitor.config.ts` · `platform/` | Shell configuration                   |
+| `assets/` · `fastlane/`             | Bundled resources and release tooling |
+
+**Inside `src/`, a file is a native surface because of what it contains, not
+where it lives.** A file is classified native when it either:
+
+1. imports a native plugin package — `@capacitor/*`, `@capacitor-mlkit/*`,
+   `@capawesome/*`, `@capgo/*` — statically or through `import()`, or
+2. is listed in `NATIVE_CONTRACT_FILES`, each with the native artifact it is
+   coupled to.
+
+This replaces the previous `^src/native-platform/` prefix rule, which was wrong
+in both directions. It under-matched: the four sanctioned Capacitor-import
+exceptions (`src/platform/ota/capacitor-ota-adapter.ts`,
+`src/platform/navigation/capacitor-back-button-adapter.ts`,
+`src/features/ota/services/ota-api-service.ts`,
+`src/features/page-snapshot/hooks/use-page-snapshot.tsx`) sit outside that
+prefix and passed the gate untouched. It also over-matched: facades, web
+adapters, `share-validator.ts`, and `duplicate-filter.ts` are pure TypeScript
+that ships inside the web bundle, and blocking them pushed publishers toward
+routinely declaring an override, which costs more than the risk it removed.
+
+A file the change **deleted** is classified from its baseline content, so
+removing a plugin binding still counts as a native change. Test sources never
+reach a device and never trip the gate.
+
+Files currently declared in `NATIVE_CONTRACT_FILES`:
+
+| File                                                     | Coupled native artifact                                            |
+| -------------------------------------------------------- | ------------------------------------------------------------------ |
+| `capabilities/shell-capabilities.ts`                      | Declares what the compiled shell contains                          |
+| `capabilities/capability-keys.ts`                         | Vocabulary shared by manifests, shells, and bundles                |
+| `capabilities/capability-registry.ts`                     | Maps keys onto the plugin names the shell registers                |
+| `notifications/types.ts`                                  | Channel ids and `DEFAULT_CHANNEL_SOUND` must match `res/raw` and `strings.xml` |
+| `permissions/types.ts`                                    | `PermissionKinds` must match `AndroidManifest.xml` and `Info.plist` |
+
+Do not add a file here to be safe. Add it only when you can name the native
+artifact it would break.
+
+**Native dependencies** are checked from two sources, because either alone
+misses a real change:
+
+| Source              | Catches                                                         |
+| ------------------- | --------------------------------------------------------------- |
+| `package.json`      | A plugin added, removed, or moved to a different semver range    |
+| `package-lock.json` | A resolved-version drift *inside* an unchanged range — different native code from an identical manifest |
+
+Both are read from the working tree and compared against the baseline commit.
 
 To publish anyway, the requirement must be **declared deliberately**:
 
@@ -81,7 +137,10 @@ git tag native-v0.1.52 && git push origin native-v0.1.52
 ```
 
 Or override for one run with `ASOL_OTA_NATIVE_BASELINE=<commit>`. Without a
-baseline the gate fails closed and refuses to publish.
+baseline the gate fails closed: `inspectNativeCompatibility` reports
+`baselineMissing` with `requiresStoreRelease = true`, and `ota:publish` refuses
+to run. The failure is closed in the classifier itself, not only in its caller,
+so no future caller can inherit an open default.
 
 ## Release Approval Gate
 
@@ -278,6 +337,15 @@ There is intentionally no server-side channel rollback. If publication fails bef
 
 `minimumNativeVersion` is **enforced**, not advisory: a device whose native
 version is lower skips the release entirely. See [The Golden Rule](#the-golden-rule).
+
+Its floor comes from one constant, `MINIMUM_SUPPORTED_NATIVE_VERSION` in
+`src/native-platform/capabilities/shell-capabilities.ts`. The publisher, the
+static build, the client bundle, and `next.config.ts` all read it, so the value
+cannot drift between them. `next.config.ts` previously defaulted to `1.0.0`
+while every other consumer used `0.2.0`, which would have made an unpinned
+build claim a shell it could not prove was installed. Raise the constant only
+together with `SHELL_CAPABILITIES` and a store release whose `native-v*`
+baseline tag has moved.
 
 Example schema v2 manifest:
 
@@ -508,6 +576,9 @@ Splash displays technical current/R2 versions, changed/deleted counts, download 
 | `scripts/build-static.ts`                                                    | Static build and local manifest generation                                   |
 | `scripts/ota/ota-config.ts`                                                  | Schema, signing, URLs, and deterministic build environment                   |
 | `scripts/ota/ota-r2.ts`                                                      | R2 list/get/put/delete operations                                            |
+| `scripts/ota/ota-native-compatibility.ts`                                    | Working-tree native-surface classifier and dependency drift check           |
+| `scripts/ota/ota-capability-scan.ts`                                         | Source capability detection and coverage guard                              |
+| `src/native-platform/capabilities/capability-registry.ts`                    | Bridge-backed capability resolution and the native version floor consumers  |
 | `src/features/ota/services/ota-update-service.ts`                            | Runtime comparison, staging, verification, and activation                    |
 | `src/features/ota/services/ota-api-service.ts`                               | Native/browser manifest and file transport                                   |
 | `src/features/ota/services/ota-release-service.server.ts`                    | Server-side manifest verification, access decisions, and approval management |
@@ -521,9 +592,15 @@ Splash displays technical current/R2 versions, changed/deleted counts, download 
 ```powershell
 npm run typecheck
 npm run architecture:check
+npm run test:ota-compatibility
+npm run test:native-platform
 npm run ota:self-test
+npm run ota:check
 npm run cap:build
 ```
+
+`npm run ota:check` is the only safe way to exercise the publish gate: it runs
+the classifier and stops before building or uploading anything.
 
 After adding or changing approval tables, apply/synchronize the schema before deploying the API:
 
@@ -546,6 +623,14 @@ After `cap:build`, R2 must contain exactly `manifest.json` plus the objects unde
 - Recheck approval immediately before activating a pending release.
 - The super-admin is the only approval bypass.
 - Treat the manifest as the complete source of truth for additions, changes, and deletions.
+- Never classify a native surface by path alone inside `src/`; classify it by
+  the plugin binding it contains or the native artifact it is declared against.
+- Never compare only commits in the publish gate; the build compiles the
+  working tree, so the gate must inspect the working tree.
+- Never let a capability be reported present because its JavaScript loaded; ask
+  the bridge.
+- Never duplicate the native version floor; import
+  `MINIMUM_SUPPORTED_NATIVE_VERSION`.
 
 ## Bootstrap Compatibility Note
 
@@ -562,6 +647,41 @@ the sorted list inside the canonical ECDSA-signed payload. The client asks the
 runtime capability registry for missing keys before approval lookup or file
 download. Any missing key produces `ota.nativeUpdateRequired` with the exact
 keys. `minimumNativeVersion` remains as a compatibility floor.
+
+### The registry asks the shell, not the bundle
+
+On a device, `capability-registry.ts` resolves each key through
+`Capacitor.isPluginAvailable(<registered plugin name>)`. That reads
+`PluginHeaders`, which the native bridge injects for the plugins it actually
+registered, so it is a genuine statement about the installed shell.
+
+It does **not** rely on a dynamic `import()` of the plugin package. A plugin's
+JavaScript ships inside the web bundle, so on a native platform the import
+always resolves whether or not the matching Java/Swift exists — the check
+proved only that the bundle contains its own code. `pluginNameByFamily` holds
+the registration name for every family, and the Native Platform tests assert
+that every `CapabilityKey` maps to a family with a name.
+
+`SHELL_CAPABILITIES` still participates, but only as a narrowing filter. It is
+a constant compiled into the web bundle, so an OTA release carries its own
+copy: it can withdraw a capability, never grant one. The bridge check is what
+the decision rests on.
+
+### The source scan must stay honest
+
+`scanSourceCapabilityReferences` recognises a capability by matching call
+tokens against feature source. A token that matches nothing is worse than no
+token: the key silently disappears from `requiredCapabilities` and the device
+gate stops protecting it. Four tokens previously named methods that do not
+exist — `files.user.saveFile`, `files.user.openFile`, `share.receive`, and
+`barcode.scan` — so `files.save`, `files.open`, `share.receive`, and
+`barcode.scan` could never appear in a manifest. The tokens now match the real
+facade methods (`saveToDevice`, `openExternally`, `initializeReceiving`,
+`scanOnce`), and `notifications.push` / `notifications.local` are prefix tokens
+rather than call tokens.
+
+`assertDetectionCoverage()` runs at the start of every scan and fails the build
+when any `CapabilityKey` has no detection token, so the map cannot rot again.
 
 ## Delta, resume, and rollback
 
@@ -616,7 +736,8 @@ compile Swift. Before the store release, verify all of the following in Xcode:
 
 ## What still requires a store release
 
-- Adding or upgrading native plugin code.
+- Adding or upgrading native plugin code, including a resolved-version change
+  inside an unchanged semver range.
 - Adding an Android/iOS permission or changing its purpose text.
 - Adding an Android intent filter, iOS Share Extension, App Group, entitlement,
   background mode, URL scheme, or native privacy manifest entry.
@@ -627,3 +748,47 @@ compile Swift. Before the store release, verify all of the following in Xcode:
 UI, JavaScript business logic, localization, and features that use capabilities
 already reported by the installed shell may use OTA after the compatibility and
 approval gates pass.
+
+### Where the line falls per feature
+
+The question is never "does this feature touch the camera?" but "does this
+change alter something compiled into the store binary?".
+
+| Change                                                                | Delivery       |
+| --------------------------------------------------------------------- | -------------- |
+| Any page, route, component, layout, or style                          | OTA            |
+| Business logic, hooks, client services, validation                    | OTA            |
+| `src/locales/*`, theme, RTL/LTR                                       | OTA            |
+| Notification content, category, routing, dedupe, persistence, badge   | OTA            |
+| Creating or updating Android notification channels at runtime         | OTA            |
+| Calling camera, location, speech, share, or barcode from a new screen | OTA            |
+| Changing capture quality, formats, or picker options                  | OTA            |
+| A new `public/` asset, once classified in `build-static.ts`           | OTA            |
+| Notification tray icon, accent colour, or `custom_notification.mp3`   | Store release  |
+| `default_notification_channel_id`, `google-services.json`, APNs setup | Store release  |
+| `PushNotifications.presentationOptions` or any `capacitor.config.ts` key | Store release |
+| A channel id whose sound file is not already in `res/raw`             | Store release  |
+| A capability the shell does not declare                               | Store release  |
+
+Two traps that are OTA-deliverable but still dangerous:
+
+- **Channel ids are matched by already-installed clients.** Renaming
+  `asol_general_v2` over OTA creates a duplicate channel and silently discards
+  the user's existing preference. `notifications/types.ts` is a declared native
+  contract for exactly this reason.
+- **An OTA bundle replaces the OTA client itself.** A defect in
+  `ota-update-service.ts` can stop future updates; recovery is
+  `npm run ota:revoke`, which returns devices to the store bundle.
+
+### Branding regeneration must not dirty the native tree
+
+`build:static` runs `branding:generate`, which writes into
+`android/app/src/main/res/` and `ios/App/App/Assets.xcassets/`. Those writes are
+now conditional on the bytes actually differing.
+
+An unconditional write dirtied the native tree on every OTA publication; once
+committed, the compatibility gate would refuse the *next* publication because
+"the native shell changed" — for nothing but a re-encode of an unchanged icon.
+That is how a correct gate trains people to bypass it. `writeIfChanged` reports
+`nothing rewritten` on a no-op run, so a pure web release stays a pure web
+release.

@@ -17,6 +17,7 @@ type PluginFamily =
   | "location"
   | "speech"
   | "files"
+  | "appStorage"
   | "share"
   | "shareReceive"
   | "push"
@@ -39,127 +40,47 @@ type PluginFamily =
   | "backgroundDownload"
   | "storageCapacity";
 
-const pluginLoaders: Record<
-  PluginFamily,
-  ReturnType<typeof createLazyPlugin<unknown>>
-> = {
-  camera: createLazyPlugin(
-    "Camera",
-    async () => await import("@capacitor/camera"),
-  ),
-  location: createLazyPlugin(
-    "Location",
-    async () => await import("@capacitor/geolocation"),
-  ),
-  speech: createLazyPlugin(
-    "SpeechRecognition",
-    async () =>
-      await import("@capgo/capacitor-speech-recognition"),
-  ),
-  files: createLazyPlugin(
-    "FilePicker",
-    async () => await import("@capawesome/capacitor-file-picker"),
-  ),
-  share: createLazyPlugin(
-    "Share",
-    async () => await import("@capacitor/share"),
-  ),
-  shareReceive: createLazyPlugin("ShareReceive", async () => {
-    const { Capacitor } = await import("@capacitor/core");
-    if (!Capacitor.isPluginAvailable("ShareReceive")) {
-      throw new Error("ShareReceive is not registered in this shell");
-    }
-    return true;
-  }),
-  push: createLazyPlugin(
-    "PushNotifications",
-    async () =>
-      await import("@capacitor/push-notifications"),
-  ),
-  localNotifications: createLazyPlugin(
-    "LocalNotifications",
-    async () =>
-      await import("@capacitor/local-notifications"),
-  ),
-  barcode: createLazyPlugin(
-    "BarcodeScanner",
-    async () =>
-      await import("@capacitor-mlkit/barcode-scanning"),
-  ),
-  browser: createLazyPlugin(
-    "Browser",
-    async () => await import("@capacitor/browser"),
-  ),
-  haptics: createLazyPlugin(
-    "Haptics",
-    async () => await import("@capacitor/haptics"),
-  ),
-  network: createLazyPlugin(
-    "Network",
-    async () => await import("@capacitor/network"),
-  ),
-  device: createLazyPlugin(
-    "Device",
-    async () => await import("@capacitor/device"),
-  ),
-  clipboard: createLazyPlugin(
-    "Clipboard",
-    async () => await import("@capacitor/clipboard"),
-  ),
-  statusBar: createLazyPlugin(
-    "StatusBar",
-    async () => await import("@capacitor/status-bar"),
-  ),
-  keyboard: createLazyPlugin(
-    "Keyboard",
-    async () => await import("@capacitor/keyboard"),
-  ),
-  splashScreen: createLazyPlugin(
-    "SplashScreen",
-    async () => await import("@capacitor/splash-screen"),
-  ),
-  preferences: createLazyPlugin(
-    "Preferences",
-    async () => await import("@capacitor/preferences"),
-  ),
-  screenOrientation: createLazyPlugin(
-    "ScreenOrientation",
-    async () =>
-      await import("@capacitor/screen-orientation"),
-  ),
-  dialog: createLazyPlugin(
-    "Dialog",
-    async () => await import("@capacitor/dialog"),
-  ),
-  toast: createLazyPlugin(
-    "Toast",
-    async () => await import("@capacitor/toast"),
-  ),
-  actionSheet: createLazyPlugin(
-    "ActionSheet",
-    async () => await import("@capacitor/action-sheet"),
-  ),
-  textZoom: createLazyPlugin(
-    "TextZoom",
-    async () => await import("@capacitor/text-zoom"),
-  ),
-  backgroundDownload: createLazyPlugin("BackgroundDownload", async () => {
-    const { Capacitor } = await import("@capacitor/core");
-    if (!Capacitor.isPluginAvailable("BackgroundDownload")) {
-      throw new Error("BackgroundDownload is not registered in this shell");
-    }
-    return true;
-  }),
-  storageCapacity: createLazyPlugin("StorageCapacity", async () => {
-    const { Capacitor } = await import("@capacitor/core");
-    if (!Capacitor.isPluginAvailable("StorageCapacity")) {
-      throw new Error("StorageCapacity is not registered in this shell");
-    }
-    return true;
-  }),
+/**
+ * The name each family is registered under inside the native shell.
+ *
+ * This is the only honest source for "is the native side present?". A dynamic
+ * `import()` proves nothing on a device: a plugin's JavaScript ships inside the
+ * web bundle, so it always resolves, whether or not the installed shell
+ * contains the matching Java/Swift. `Capacitor.isPluginAvailable` reads
+ * `PluginHeaders`, which the native bridge injects for the plugins it actually
+ * registered, so an OTA bundle cannot talk its way into a capability the
+ * installed shell does not have.
+ */
+export const pluginNameByFamily: Record<PluginFamily, string> = {
+  camera: "Camera",
+  location: "Geolocation",
+  speech: "SpeechRecognition",
+  files: "FilePicker",
+  appStorage: "Filesystem",
+  share: "Share",
+  shareReceive: "ShareReceive",
+  push: "PushNotifications",
+  localNotifications: "LocalNotifications",
+  barcode: "BarcodeScanner",
+  browser: "Browser",
+  haptics: "Haptics",
+  network: "Network",
+  device: "Device",
+  clipboard: "Clipboard",
+  statusBar: "StatusBar",
+  keyboard: "Keyboard",
+  splashScreen: "SplashScreen",
+  preferences: "Preferences",
+  screenOrientation: "ScreenOrientation",
+  dialog: "Dialog",
+  toast: "Toast",
+  actionSheet: "ActionSheet",
+  textZoom: "TextZoom",
+  backgroundDownload: "BackgroundDownload",
+  storageCapacity: "StorageCapacity",
 };
 
-const familyByKey = new Map<CapabilityKey, PluginFamily>([
+export const familyByKey = new Map<CapabilityKey, PluginFamily>([
   [CapabilityKeys.CameraTakePhoto, "camera"],
   [CapabilityKeys.CameraPickImages, "camera"],
   [CapabilityKeys.LocationCurrent, "location"],
@@ -168,6 +89,7 @@ const familyByKey = new Map<CapabilityKey, PluginFamily>([
   [CapabilityKeys.FilesPick, "files"],
   [CapabilityKeys.FilesSave, "files"],
   [CapabilityKeys.FilesOpen, "files"],
+  [CapabilityKeys.FilesAppStorage, "appStorage"],
   [CapabilityKeys.ShareSend, "share"],
   [CapabilityKeys.ShareReceive, "shareReceive"],
   [CapabilityKeys.NotificationsPush, "push"],
@@ -230,14 +152,32 @@ const webCapabilities = new Set<CapabilityKey>([
   CapabilityKeys.ScreenOrientationCurrent,
 ]);
 
+/**
+ * The bridge itself is loaded lazily so capability lookups stay failure
+ * tolerant: if `@capacitor/core` cannot load at all, every native capability
+ * reports absent rather than throwing.
+ */
+const capacitorBridge = createLazyPlugin(
+  "Capacitor",
+  async () => (await import("@capacitor/core")).Capacitor,
+);
+
 async function resolveCapability(key: string): Promise<boolean> {
   if (!ALL_CAPABILITY_KEYS.includes(key as CapabilityKey)) return false;
   const typedKey = key as CapabilityKey;
   if (!isNativePlatform()) return hasDom() && webCapabilities.has(typedKey);
+
+  // The running bundle's own declaration. It is a statement of intent that
+  // travels with the bundle, so it can narrow the answer but never widen it —
+  // the bridge check below is what the decision actually rests on.
   if (!SHELL_CAPABILITIES.includes(typedKey)) return false;
-  if (typedKey === CapabilityKeys.FilesAppStorage) return true;
+
   const family = familyByKey.get(typedKey);
-  return family ? Boolean(await pluginLoaders[family].optional()) : false;
+  if (!family) return false;
+
+  const bridge = await capacitorBridge.optional();
+  if (!bridge) return false;
+  return bridge.isPluginAvailable(pluginNameByFamily[family]);
 }
 
 export class CapabilityRegistry {
