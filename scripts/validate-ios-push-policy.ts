@@ -22,6 +22,12 @@ const appDelegate = read("ios/App/App/AppDelegate.swift");
 const capacitorConfig = read("capacitor.config.ts");
 const envExample = read(".env.example");
 const firebaseConfig = read("ios/App/App/GoogleService-Info.plist");
+const customNotificationSound = path.resolve(
+  "ios",
+  "App",
+  "App",
+  "custom_notification.caf",
+);
 const errors: string[] = [];
 
 function requireText(source: string, value: string, message: string): void {
@@ -58,6 +64,19 @@ requireText(
   "GoogleService-Info.plist in Resources",
   "The Firebase Apple configuration must belong to the App resources target.",
 );
+requireText(
+  project,
+  "custom_notification.caf in Resources",
+  "The custom Apple notification sound must belong to the App resources target.",
+);
+if (!existsSync(customNotificationSound)) {
+  errors.push("The custom Apple notification sound is missing.");
+} else if (
+  readFileSync(customNotificationSound).subarray(0, 4).toString("ascii") !==
+  "caff"
+) {
+  errors.push("The custom Apple notification sound is not a valid CAF file.");
+}
 requireText(
   entitlements,
   "<key>aps-environment</key>",
@@ -131,6 +150,11 @@ requireText(
   fcmProvider,
   "buildApnsConfig",
   "The FCM provider must build an Apple payload for every message.",
+);
+requireText(
+  fcmProvider,
+  'const APPLE_SOUND_FILE = "custom_notification.caf";',
+  "The Apple payload sound must match the CAF file bundled in the App target.",
 );
 requireText(
   fcmProvider,

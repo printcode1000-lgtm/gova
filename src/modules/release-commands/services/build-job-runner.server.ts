@@ -1,6 +1,7 @@
 import "server-only";
 
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -152,9 +153,30 @@ async function appendLog(jobId: string, chunk: string | Buffer): Promise<void> {
   await fs.appendFile(logPath(jobId), chunk);
 }
 
+/**
+ * Non-environment sources a requirement can also be satisfied by, mirroring the
+ * fallbacks the scripts themselves use (see `scripts/ota/ota-config.ts`).
+ * Without this, a project configured the documented way is reported as "not
+ * ready" and its button is disabled even though the command would run fine.
+ */
+const REQUIREMENT_FILE_FALLBACKS: Record<string, string> = {
+  ASOL_OTA_SIGNING_PRIVATE_KEY: path.join(".ota", "private-key.pem"),
+};
+
+/** A requirement may list interchangeable variables separated by `|`. */
+function requirementSatisfied(requirement: string): boolean {
+  const names = requirement.split("|");
+  if (names.some((name) => process.env[name]?.trim())) return true;
+  return names.some((name) => {
+    const fallback = REQUIREMENT_FILE_FALLBACKS[name];
+    return Boolean(fallback) && existsSync(path.resolve(fallback));
+  });
+}
+
 export function commandReadiness(command: BuildCommandCatalogEntry): BuildCommandReadiness {
-  const environment = releaseCommandEnvironment(command.requiredEnv);
-  const missingEnv = command.requiredEnv.filter((name) => !environment[name]);
+  const missingEnv = command.requiredEnv
+    .filter((requirement) => !requirementSatisfied(requirement))
+    .map((requirement) => requirement.split("|")[0] as string);
   return { commandId: command.id, ready: missingEnv.length === 0, missingEnv, reason: missingEnv.length ? "releaseCommandMissingEnvironment" : undefined };
 }
 

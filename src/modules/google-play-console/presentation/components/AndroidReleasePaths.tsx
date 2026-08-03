@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import {
-  CheckCircle2, CloudUpload, ExternalLink, FolderOpen, LoaderCircle, Play, Square, XCircle,
+  CloudUpload, ExternalLink, FolderOpen, LoaderCircle, Play,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { asolApi } from "@/core/api";
-import type { BuildJobRecord, BuildJobStatus } from "@/modules/release-commands/domain/build-job-types";
+import type { BuildCommandReadiness, BuildJobRecord } from "@/modules/release-commands/domain/build-job-types";
+import { latestJobFor, RUNNING_STATUSES, StatusChip, StopButton } from "./ReleaseJobIndicators";
 
 /** Local static preview served by `npm run preview:static`. */
 const STATIC_PREVIEW_URL = "http://127.0.0.1:5500/";
@@ -53,50 +54,23 @@ const PATHS = [
   },
 ] as const;
 
-const RUNNING_STATUSES = new Set<BuildJobStatus>(["queued", "running"]);
-
-/** Latest job for a command — the list arrives newest first. */
-function latestJobFor(jobs: readonly BuildJobRecord[], commandId: string): BuildJobRecord | undefined {
-  return jobs.find((job) => job.commandId === commandId);
-}
-
-function StatusChip({ job, t }: { job: BuildJobRecord; t: (key: string) => string }) {
-  const running = RUNNING_STATUSES.has(job.status);
-  const tone = running ? "bg-muted text-on-surface"
-    : job.status === "succeeded" ? "bg-primary-container text-on-primary-container"
-      : "bg-error-container text-on-error-container";
-  const Icon = running ? LoaderCircle : job.status === "succeeded" ? CheckCircle2 : XCircle;
-  return (
-    <p role="status" className={`mt-2 flex flex-wrap items-center gap-2 rounded-md p-2 text-xs ${tone}`}>
-      <Icon className={`h-4 w-4 shrink-0 ${running ? "animate-spin" : ""}`} />
-      <span className="font-semibold">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
-      <code dir="ltr">{job.id}</code>
-      {job.error ? <span dir="ltr">{job.error}</span> : null}
-    </p>
-  );
-}
-
-/** Stop button — only rendered while that command's own job is in flight. */
-function StopButton({ job, cancel, t }: {
-  job: BuildJobRecord;
-  cancel: (job: BuildJobRecord) => Promise<unknown>;
-  t: (key: string) => string;
-}) {
-  return (
-    <Button variant="destructive" onClick={() => void cancel(job)}
-      title={`${t("releaseConsole.androidPaths.stop")} ${job.id}`}>
-      <Square className="h-4 w-4" />{t("releaseConsole.androidPaths.stop")}
-    </Button>
-  );
-}
-
-export function AndroidReleasePaths({ busy, jobs, start, cancel, t }: {
+export function AndroidReleasePaths({ busy, jobs, readiness, start, cancel, t }: {
   busy: boolean;
   jobs: readonly BuildJobRecord[];
+  readiness: readonly BuildCommandReadiness[];
   start: (input: { commandId: string }) => Promise<unknown>;
   cancel: (job: BuildJobRecord) => Promise<unknown>;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string>) => string;
 }) {
+  // A command whose environment is incomplete must not be offered: the server
+  // rejects it with `releaseCommandMissingEnvironment`, which surfaced as a
+  // console error instead of a visible reason.
+  const readinessFor = (commandId: string) =>
+    readiness.find((item) => item.commandId === commandId);
+  const missingEnvOf = (commandId: string) => {
+    const entry = readinessFor(commandId);
+    return entry && !entry.ready ? entry.missingEnv : [];
+  };
   // Both paths live in one container pinned to the top of the tab, so the two
   // one-click releases are reachable without scrolling to their category.
   const openOutputsJob = latestJobFor(jobs, "android-open-outputs");
@@ -133,18 +107,21 @@ export function AndroidReleasePaths({ busy, jobs, start, cancel, t }: {
         const secondaryJob = secondary ? latestJobFor(jobs, secondary.id) : undefined;
         const running = Boolean(job && RUNNING_STATUSES.has(job.status));
         const secondaryRunning = Boolean(secondaryJob && RUNNING_STATUSES.has(secondaryJob.status));
+        const missingEnv = missingEnvOf(path.id);
         return <article key={path.id} className="rounded-md border bg-surface p-2">
           <h3 className="font-semibold">{t(path.title)}</h3>
           <p className="mt-1 text-sm leading-6 text-on-surface-variant">{t(path.description)}</p>
           <div className="mt-2 flex flex-wrap gap-2">
             <Button variant={"danger" in path && path.danger ? "destructive" : "default"}
-              disabled={busy} onClick={() => void start({ commandId: path.id })}>
+              disabled={busy || missingEnv.length > 0}
+              onClick={() => void start({ commandId: path.id })}>
               {running ? <LoaderCircle className="h-4 w-4 animate-spin" />
                 : "danger" in path && path.danger ? <CloudUpload className="h-4 w-4" /> : <Play className="h-4 w-4" />}
               {running ? t("releaseConsole.jobStatus.running") : t(path.action)}
             </Button>
             {secondary ? (
-              <Button variant="outline" disabled={busy}
+              <Button variant="outline"
+                disabled={busy || missingEnvOf(secondary.id).length > 0}
                 onClick={() => void start({ commandId: secondary.id })}>
                 {secondaryRunning
                   ? <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -156,6 +133,11 @@ export function AndroidReleasePaths({ busy, jobs, start, cancel, t }: {
             {secondaryRunning && secondaryJob
               ? <StopButton job={secondaryJob} cancel={cancel} t={t} /> : null}
           </div>
+          {missingEnv.length > 0 ? (
+            <p className="mt-2 rounded-md bg-muted p-2 text-xs">
+              {t("releaseConsole.build.notReady", { names: missingEnv.join(", ") })}
+            </p>
+          ) : null}
           {job ? <StatusChip job={job} t={t} /> : null}
           {secondaryJob ? <StatusChip job={secondaryJob} t={t} /> : null}
         </article>;

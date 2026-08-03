@@ -43,7 +43,12 @@ export interface BuildCommandCatalogEntry {
 
 const signingEnv = ["ASOL_ANDROID_KEYSTORE_FILE", "ASOL_ANDROID_KEYSTORE_PASSWORD", "ASOL_ANDROID_KEY_ALIAS", "ASOL_ANDROID_KEY_PASSWORD"];
 const playEnv = ["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64"];
-const otaEnv = ["ASOL_OTA_R2_BUCKET_NAME", "ASOL_OTA_SIGNING_PRIVATE_KEY"];
+// Each entry lists interchangeable sources; the runner accepts any of them,
+// matching how scripts/ota/ota-config.ts actually resolves its configuration.
+const otaEnv = [
+  "ASOL_OTA_R2_BUCKET_NAME|PRODUCT_R2_BUCKET_NAME|R2_BUCKET_NAME",
+  "ASOL_OTA_SIGNING_PRIVATE_KEY",
+];
 const notes = { name: "notes", type: "string", flag: "--notes", maxLength: 4000 } as const;
 const mandatory = { name: "mandatory", type: "boolean", flag: "--mandatory" } as const;
 const diagnostic = { name: "diagnostic", type: "boolean", flag: "--diagnostic" } as const;

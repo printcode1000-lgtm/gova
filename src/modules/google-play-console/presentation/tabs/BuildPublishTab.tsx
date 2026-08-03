@@ -32,7 +32,8 @@ export function BuildPublishTab() {
         onConfirm={(overrides) => void jobs.confirmStart(overrides)} onCancel={jobs.dismissStart} />
       <ReleaseJobStopDialog job={jobs.pendingCancel} t={t}
         onConfirm={() => void jobs.confirmCancel()} onCancel={jobs.dismissCancel} />
-      <AndroidReleasePaths busy={locked} jobs={jobs.jobs} start={jobs.start} cancel={jobs.cancel} t={t} />
+      <AndroidReleasePaths busy={locked} jobs={jobs.jobs} readiness={jobs.readiness}
+        start={jobs.start} cancel={jobs.cancel} t={t} />
       {CATEGORIES.map((category) => (
         <section key={category} className="space-y-3">
           <h2 className="font-semibold">{t(`releaseConsole.categories.${category}`)}</h2>

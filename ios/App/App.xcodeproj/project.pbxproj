@@ -22,6 +22,7 @@
 		55F453B195B93562C878E136 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEAE426BEAFAC36887BE5CA /* ShareViewController.swift */; };
 		A4CB1D68BCA3642800983DAD /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4CD0BCF048D9FE343D030C71 /* ShareExtension.appex */; };
 		A50100032E30000100000001 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A50100022E30000100000001 /* GoogleService-Info.plist */; };
+		A50100052E30000100000001 /* custom_notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = A50100042E30000100000001 /* custom_notification.caf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		A50100012E30000100000001 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 		A50100022E30000100000001 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A50100042E30000100000001 /* custom_notification.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = custom_notification.caf; sourceTree = "<group>"; };
 		B32391D6ACA3E34D16509501 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7D340A16E1E1ED1AF08C70A /* ShareReceivePlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareReceivePlugin.swift; sourceTree = "<group>"; };
 		8A5010023B00000100000001 /* BackgroundDownloadPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundDownloadPlugin.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 			children = (
 				A50100012E30000100000001 /* App.entitlements */,
 				A50100022E30000100000001 /* GoogleService-Info.plist */,
+				A50100042E30000100000001 /* custom_notification.caf */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
@@ -250,6 +253,7 @@
 			files = (
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
 				A50100032E30000100000001 /* GoogleService-Info.plist in Resources */,
+				A50100052E30000100000001 /* custom_notification.caf in Resources */,
 				50B271D11FEDC1A000F3C39B /* public in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
 				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,

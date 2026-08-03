@@ -1,4 +1,10 @@
-import { copyFileSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { config as loadEnv } from "dotenv";
 
@@ -30,6 +36,16 @@ const targetSound = path.resolve(
   "raw",
   "custom_notification.mp3",
 );
+const androidStrings = path.resolve(
+  "android",
+  "app",
+  "src",
+  "main",
+  "res",
+  "values",
+  "strings.xml",
+);
+const defaultNotificationChannelId = "asol_general_v2";
 
 interface GoogleServicesConfig {
   project_info?: {
@@ -125,6 +141,16 @@ function readGoogleServices(): { raw: string; config: GoogleServicesConfig } {
 
 function main(): void {
   requireFile(sourceSound);
+  requireFile(androidStrings);
+  if (
+    !readFileSync(androidStrings, "utf8").includes(
+      `<string name="default_notification_channel_id">${defaultNotificationChannelId}</string>`,
+    )
+  ) {
+    throw new Error(
+      `Android default notification channel must be ${defaultNotificationChannelId}.`,
+    );
+  }
   validateIdentityEnvironment();
   const { raw } = readGoogleServices();
   mkdirSync(path.dirname(targetConfig), { recursive: true });
