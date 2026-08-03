@@ -49,7 +49,9 @@ interface GeolocationPluginApi {
 
 const geolocationPlugin = createLazyPlugin(MODULE, async () => {
   const { Geolocation } = await import("@capacitor/geolocation");
-  return Geolocation as unknown as GeolocationPluginApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: Geolocation as unknown as GeolocationPluginApi };
 });
 
 function toFix(position: PluginPosition | GeolocationPosition): LocationFix {
@@ -112,7 +114,7 @@ export class LocationModule {
   /** True when some positioning source exists on this platform. */
   async isAvailable(): Promise<boolean> {
     if (isNativePlatform()) {
-      return Boolean(await geolocationPlugin.optional());
+      return Boolean((await geolocationPlugin.optional())?.plugin ?? null);
     }
     return hasDom() && Boolean(navigator.geolocation);
   }
@@ -144,7 +146,7 @@ export class LocationModule {
     await this.ensurePermission();
 
     if (isNativePlatform()) {
-      const plugin = await geolocationPlugin.required();
+      const plugin = (await geolocationPlugin.required()).plugin;
       try {
         return toFix(await plugin.getCurrentPosition(pluginOptions(options)));
       } catch (error) {
@@ -183,7 +185,7 @@ export class LocationModule {
     await this.ensurePermission();
 
     if (isNativePlatform()) {
-      const plugin = await geolocationPlugin.required();
+      const plugin = (await geolocationPlugin.required()).plugin;
       const id = await plugin.watchPosition(
         pluginOptions(options),
         (position, error) => {

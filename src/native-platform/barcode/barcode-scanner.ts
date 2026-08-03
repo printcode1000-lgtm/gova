@@ -54,7 +54,9 @@ interface BarcodeScannerApi {
 
 const scannerPlugin = createLazyPlugin(MODULE, async () => {
   const { BarcodeScanner } = await import("@capacitor-mlkit/barcode-scanning");
-  return BarcodeScanner as unknown as BarcodeScannerApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: BarcodeScanner as unknown as BarcodeScannerApi };
 });
 
 function toResult(barcode: NativeBarcode): ScanResult | null {
@@ -73,7 +75,7 @@ export class BarcodeScannerModule {
   /** True when the device can scan barcodes. */
   async isAvailable(): Promise<boolean> {
     if (!isNativePlatform()) return false;
-    const plugin = await scannerPlugin.optional();
+    const plugin = (await scannerPlugin.optional())?.plugin ?? null;
     if (!plugin) return false;
     try {
       return (await plugin.isSupported()).supported;
@@ -88,7 +90,7 @@ export class BarcodeScannerModule {
    */
   async scanOnce(options: ScanOptions = {}): Promise<ScanResult> {
     await this.ensureReady();
-    const plugin = await scannerPlugin.required();
+    const plugin = (await scannerPlugin.required()).plugin;
     try {
       const { barcodes } = await plugin.scan({
         formats: options.formats ?? ALL_FORMATS,
@@ -109,7 +111,7 @@ export class BarcodeScannerModule {
     await this.ensureReady();
     await this.stopActiveSession();
 
-    const plugin = await scannerPlugin.required();
+    const plugin = (await scannerPlugin.required()).plugin;
     const scans = createEmitter<ScanResult>("barcode:scan");
     const filter = new DuplicateFilter(
       options.duplicateWindowMs ?? DEFAULT_DUPLICATE_WINDOW_MS,
@@ -201,7 +203,7 @@ export class BarcodeScannerModule {
       );
     }
 
-    const plugin = await scannerPlugin.required();
+    const plugin = (await scannerPlugin.required()).plugin;
     const supported = await plugin.isSupported().catch(() => ({
       supported: false,
     }));

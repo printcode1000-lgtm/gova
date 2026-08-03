@@ -241,10 +241,10 @@ platform :android do
     upload_to_play_store(
       track: options[:track] || ENV.fetch("GOOGLE_PLAY_TRACK", "internal"),
       rollout: options[:rollout],
-      changelog: localized_release_changelog(options),
       **google_play_key_options,
       package_name: ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"),
       aab: "android/app/build/outputs/bundle/release/app-release.aab",
+      skip_upload_apk: true,
       skip_upload_metadata: true,
       skip_upload_changelogs: true,
       skip_upload_images: true,
@@ -258,10 +258,10 @@ platform :android do
     upload_to_play_store(
       track: "production",
       rollout: options[:rollout],
-      changelog: localized_release_changelog(options),
       **google_play_key_options,
       package_name: ENV.fetch("ASOL_ANDROID_PACKAGE_NAME", "hgh.asol.app"),
       aab: "android/app/build/outputs/bundle/release/app-release.aab",
+      skip_upload_apk: true,
       skip_upload_metadata: true,
       skip_upload_changelogs: true,
       skip_upload_images: true,

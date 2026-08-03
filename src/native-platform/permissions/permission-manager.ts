@@ -31,7 +31,9 @@ interface NativeSettingsPlugin {
  */
 const appPlugin = createLazyPlugin("AppSettings", async () => {
   const { App } = await import("@capacitor/app");
-  return App as unknown as NativeSettingsPlugin & Record<string, unknown>;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: App as unknown as NativeSettingsPlugin & Record<string, unknown> };
 });
 
 export class PermissionManager {
@@ -112,7 +114,7 @@ export class PermissionManager {
   async openSettings(): Promise<boolean> {
     if (!isNativePlatform()) return false;
 
-    const app = await appPlugin.optional();
+    const app = (await appPlugin.optional())?.plugin ?? null;
     if (!app) return false;
 
     try {

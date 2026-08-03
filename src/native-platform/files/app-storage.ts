@@ -64,7 +64,7 @@ export function assertSafePath(value: string): string {
 }
 
 async function directoryFor(area: StorageArea) {
-  const plugin = await filesystemPlugin.required();
+  const plugin = (await filesystemPlugin.required());
   return area === StorageAreas.Cache
     ? plugin.Directory.Cache
     : plugin.Directory.Data;
@@ -100,7 +100,7 @@ export class AppStorage {
       return;
     }
 
-    const plugin = await filesystemPlugin.required();
+    const plugin = (await filesystemPlugin.required());
     try {
       await plugin.api.writeFile({
         path: safePath,
@@ -139,7 +139,7 @@ export class AppStorage {
       return entry.bytes;
     }
 
-    const plugin = await filesystemPlugin.required();
+    const plugin = (await filesystemPlugin.required());
     try {
       const result = await plugin.api.readFile({
         path: safePath,
@@ -170,7 +170,7 @@ export class AppStorage {
       return webStore.has(webKey(area, safePath));
     }
 
-    const plugin = await filesystemPlugin.required();
+    const plugin = (await filesystemPlugin.required());
     try {
       await plugin.api.stat({
         path: safePath,
@@ -200,7 +200,7 @@ export class AppStorage {
         : null;
     }
 
-    const plugin = await filesystemPlugin.required();
+    const plugin = (await filesystemPlugin.required());
     try {
       const stat = await plugin.api.stat({
         path: safePath,
@@ -228,7 +228,7 @@ export class AppStorage {
       return;
     }
 
-    const plugin = await filesystemPlugin.required();
+    const plugin = (await filesystemPlugin.required());
     try {
       await plugin.api.deleteFile({
         path: safePath,
@@ -251,7 +251,7 @@ export class AppStorage {
       return;
     }
 
-    const plugin = await filesystemPlugin.required();
+    const plugin = (await filesystemPlugin.required());
     try {
       await plugin.api.rmdir({
         path: "",
@@ -271,7 +271,7 @@ export class AppStorage {
     const safePath = assertSafePath(path);
     if (!isNativePlatform()) return;
 
-    const plugin = await filesystemPlugin.required();
+    const plugin = (await filesystemPlugin.required());
     try {
       await plugin.api.mkdir({
         path: safePath,

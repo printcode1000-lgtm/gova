@@ -57,7 +57,9 @@ const cameraPlugin = createLazyPlugin(MODULE, async () => {
 
 const filesystemPlugin = createLazyPlugin(MODULE, async () => {
   const { Filesystem } = await import("@capacitor/filesystem");
-  return Filesystem as unknown as FilesystemApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: Filesystem as unknown as FilesystemApi };
 });
 
 /**
@@ -67,7 +69,7 @@ const filesystemPlugin = createLazyPlugin(MODULE, async () => {
  */
 async function readImageBase64(result: MediaResult): Promise<string> {
   if (result.uri) {
-    const filesystem = await filesystemPlugin.required();
+    const filesystem = (await filesystemPlugin.required()).plugin;
     const file = await filesystem.readFile({ path: result.uri });
     if (typeof file.data === "string") return stripDataUrlPrefix(file.data);
     return blobToBase64(file.data);
@@ -121,7 +123,7 @@ async function toCameraImage(
 export async function nativeCapturePhoto(
   options: CapturePhotoOptions,
 ): Promise<CameraImage> {
-  const plugin = await cameraPlugin.required();
+  const plugin = (await cameraPlugin.required());
   try {
     const result = await plugin.api.takePhoto({
       cameraDirection:
@@ -144,7 +146,7 @@ export async function nativeCapturePhoto(
 export async function nativePickImages(
   options: PickImageOptions,
 ): Promise<CameraImage[]> {
-  const plugin = await cameraPlugin.required();
+  const plugin = (await cameraPlugin.required());
   try {
     const { results } = await plugin.api.chooseFromGallery({
       allowMultipleSelection: options.multiple ?? false,

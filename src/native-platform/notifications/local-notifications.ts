@@ -32,7 +32,9 @@ interface LocalNotificationsApi {
 
 const localPlugin = createLazyPlugin(MODULE, async () => {
   const { LocalNotifications } = await import("@capacitor/local-notifications");
-  return LocalNotifications as unknown as LocalNotificationsApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: LocalNotifications as unknown as LocalNotificationsApi };
 });
 
 /** Browser timers standing in for OS scheduling. */
@@ -68,7 +70,7 @@ export class LocalNotificationsModule {
     if (!(await this.isPermitted())) return;
 
     if (isNativePlatform()) {
-      const plugin = await localPlugin.required();
+      const plugin = (await localPlugin.required()).plugin;
       try {
         await plugin.schedule({
           notifications: [
@@ -126,7 +128,7 @@ export class LocalNotificationsModule {
   /** Cancel a scheduled notification that has not fired yet. */
   async cancel(id: number): Promise<void> {
     if (isNativePlatform()) {
-      const plugin = await localPlugin.required();
+      const plugin = (await localPlugin.required()).plugin;
       await plugin
         .cancel({ notifications: [{ id }] })
         .catch(() => {
@@ -144,7 +146,7 @@ export class LocalNotificationsModule {
   /** Cancel everything still pending. */
   async cancelAll(): Promise<void> {
     if (isNativePlatform()) {
-      const plugin = await localPlugin.required();
+      const plugin = (await localPlugin.required()).plugin;
       const { notifications } = await plugin.getPending();
       if (notifications.length > 0) {
         await plugin.cancel({ notifications }).catch(() => {
@@ -160,7 +162,7 @@ export class LocalNotificationsModule {
   /** Ids the OS still has scheduled. */
   async getPending(): Promise<number[]> {
     if (isNativePlatform()) {
-      const plugin = await localPlugin.required();
+      const plugin = (await localPlugin.required()).plugin;
       const { notifications } = await plugin.getPending();
       return notifications.map((entry) => entry.id);
     }
@@ -170,7 +172,7 @@ export class LocalNotificationsModule {
   /** Register the Android notification channels. */
   async createChannels(): Promise<void> {
     if (!isAndroid()) return;
-    const plugin = await localPlugin.optional();
+    const plugin = (await localPlugin.optional())?.plugin ?? null;
     if (!plugin?.createChannel) return;
 
     await Promise.all(
@@ -214,7 +216,7 @@ export class LocalNotificationsModule {
   /** Dismiss notifications already showing in the tray. */
   async clearDelivered(): Promise<void> {
     if (!isNativePlatform()) return;
-    const plugin = await localPlugin.required();
+    const plugin = (await localPlugin.required()).plugin;
     await plugin.removeAllDeliveredNotifications().catch(() => {
       // Nothing to clear is a success.
     });

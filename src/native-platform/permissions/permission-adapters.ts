@@ -34,29 +34,39 @@ export interface PermissionAdapter {
 
 const cameraPlugin = createLazyPlugin("Camera", async () => {
   const { Camera } = await import("@capacitor/camera");
-  return Camera as unknown as PermissionCapablePlugin;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: Camera as unknown as PermissionCapablePlugin };
 });
 
 const geolocationPlugin = createLazyPlugin("Location", async () => {
   const { Geolocation } = await import("@capacitor/geolocation");
-  return Geolocation as unknown as PermissionCapablePlugin;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: Geolocation as unknown as PermissionCapablePlugin };
 });
 
 const speechPlugin = createLazyPlugin("SpeechRecognition", async () => {
   const { SpeechRecognition } = await import(
     "@capgo/capacitor-speech-recognition"
   );
-  return SpeechRecognition as unknown as PermissionCapablePlugin;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: SpeechRecognition as unknown as PermissionCapablePlugin };
 });
 
 const pushPlugin = createLazyPlugin("Notifications", async () => {
   const { PushNotifications } = await import("@capacitor/push-notifications");
-  return PushNotifications as unknown as PermissionCapablePlugin;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: PushNotifications as unknown as PermissionCapablePlugin };
 });
 
 const localNotificationPlugin = createLazyPlugin("LocalNotifications", async () => {
   const { LocalNotifications } = await import("@capacitor/local-notifications");
-  return LocalNotifications as unknown as PermissionCapablePlugin;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: LocalNotifications as unknown as PermissionCapablePlugin };
 });
 
 /**
@@ -75,13 +85,13 @@ function readStatus(
 }
 
 function pluginAdapter(
-  plugin: { optional: () => Promise<PermissionCapablePlugin | null> },
+  plugin: { optional: () => Promise<{ plugin: PermissionCapablePlugin } | null> },
   aliases: string[],
   requestOptions?: Record<string, unknown>,
 ): PermissionAdapter {
   return {
     async check() {
-      const instance = await plugin.optional();
+      const instance = (await plugin.optional())?.plugin ?? null;
       if (!instance) return PermissionStates.Unsupported;
       try {
         return readStatus(await instance.checkPermissions(), aliases);
@@ -90,7 +100,7 @@ function pluginAdapter(
       }
     },
     async request() {
-      const instance = await plugin.optional();
+      const instance = (await plugin.optional())?.plugin ?? null;
       if (!instance) return PermissionStates.Unsupported;
       try {
         return readStatus(

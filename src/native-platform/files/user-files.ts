@@ -40,12 +40,16 @@ interface ShareApi {
 
 const filePickerPlugin = createLazyPlugin(MODULE, async () => {
   const { FilePicker } = await import("@capawesome/capacitor-file-picker");
-  return FilePicker as unknown as FilePickerApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: FilePicker as unknown as FilePickerApi };
 });
 
 const sharePlugin = createLazyPlugin(MODULE, async () => {
   const { Share } = await import("@capacitor/share");
-  return Share as unknown as ShareApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: Share as unknown as ShareApi };
 });
 
 async function toPickedFile(result: PickerFileResult): Promise<PickedFile> {
@@ -110,7 +114,7 @@ export class UserFiles {
   /** Pick any file type. */
   async pickFiles(options: PickFilesOptions = {}): Promise<PickedFile[]> {
     if (isNativePlatform()) {
-      const picker = await filePickerPlugin.optional();
+      const picker = (await filePickerPlugin.optional())?.plugin ?? null;
       if (picker) {
         try {
           const { files } = await picker.pickFiles({
@@ -192,7 +196,7 @@ export class UserFiles {
     });
 
     const uri = await this.resolveCacheUri(cachePath);
-    const share = await sharePlugin.required();
+    const share = (await sharePlugin.required()).plugin;
     try {
       await share.share({ title: options.fileName, files: [uri] });
     } catch (error) {
@@ -209,7 +213,7 @@ export class UserFiles {
       );
     }
     const uri = await this.resolveCacheUri(cachePath);
-    const share = await sharePlugin.required();
+    const share = (await sharePlugin.required()).plugin;
     try {
       await share.share({ files: [uri] });
     } catch (error) {

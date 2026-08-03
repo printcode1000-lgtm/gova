@@ -54,7 +54,9 @@ interface PushPluginApi {
 
 const pushPlugin = createLazyPlugin(MODULE, async () => {
   const { PushNotifications } = await import("@capacitor/push-notifications");
-  return PushNotifications as unknown as PushPluginApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: PushNotifications as unknown as PushPluginApi };
 });
 
 function toPayload(
@@ -118,7 +120,7 @@ export class PushNotificationsModule {
       );
     }
 
-    const plugin = await pushPlugin.required();
+    const plugin = (await pushPlugin.required()).plugin;
     await this.ensureListeners();
     if (isAndroid()) await this.createChannels();
 
@@ -155,7 +157,7 @@ export class PushNotificationsModule {
 
   async unregister(): Promise<void> {
     if (!this.isSupported()) return;
-    const plugin = await pushPlugin.required();
+    const plugin = (await pushPlugin.required()).plugin;
     await plugin.unregister().catch((error) => {
       console.warn("[NativePlatform:Push] unregister failed.", error);
     });
@@ -164,14 +166,14 @@ export class PushNotificationsModule {
   /** Notifications the OS has already shown and not yet dismissed. */
   async getDelivered(): Promise<NotificationPayload[]> {
     if (!this.isSupported()) return [];
-    const plugin = await pushPlugin.required();
+    const plugin = (await pushPlugin.required()).plugin;
     const { notifications } = await plugin.getDeliveredNotifications();
     return notifications.map((notification) => toPayload(notification, false));
   }
 
   async removeAllDelivered(): Promise<void> {
     if (!this.isSupported()) return;
-    const plugin = await pushPlugin.required();
+    const plugin = (await pushPlugin.required()).plugin;
     await plugin.removeAllDeliveredNotifications().catch(() => {
       // Nothing to remove is a success.
     });
@@ -197,7 +199,7 @@ export class PushNotificationsModule {
     if (this.listenersReady || !this.isSupported()) return;
     this.listenersReady = true;
 
-    const plugin = await pushPlugin.required();
+    const plugin = (await pushPlugin.required()).plugin;
     this.handles.push(
       await plugin.addListener("registration", ((token: { value: string }) => {
         this.pendingResolve?.(token.value);
@@ -232,7 +234,7 @@ export class PushNotificationsModule {
   /** Create the Android channels this application uses. */
   async createChannels(): Promise<void> {
     if (!isAndroid()) return;
-    const plugin = await pushPlugin.required();
+    const plugin = (await pushPlugin.required()).plugin;
     await Promise.all(
       DEFAULT_CHANNELS.map((channel) =>
         plugin

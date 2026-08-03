@@ -33,11 +33,13 @@ const speechPlugin = createLazyPlugin(MODULE, async () => {
   const { SpeechRecognition } = await import(
     "@capgo/capacitor-speech-recognition"
   );
-  return SpeechRecognition as unknown as SpeechPluginApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: SpeechRecognition as unknown as SpeechPluginApi };
 });
 
 export async function nativeIsAvailable(): Promise<boolean> {
-  const plugin = await speechPlugin.optional();
+  const plugin = (await speechPlugin.optional())?.plugin ?? null;
   if (!plugin) return false;
   try {
     return (await plugin.available()).available;
@@ -59,7 +61,7 @@ function readMatches(data: unknown): string[] {
 export async function nativeStartListening(
   options: SpeechOptions,
 ): Promise<SpeechSession> {
-  const plugin = await speechPlugin.required();
+  const plugin = (await speechPlugin.required()).plugin;
   const results = createEmitter<SpeechResult>("speech:result");
   const ends = createEmitter<void>("speech:end");
   const errors = createEmitter<unknown>("speech:error");

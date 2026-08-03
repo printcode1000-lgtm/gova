@@ -47,12 +47,16 @@ interface ShareReceiveBridge {
 
 const sharePlugin = createLazyPlugin(MODULE, async () => {
   const { Share } = await import("@capacitor/share");
-  return Share as unknown as ShareApi;
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: Share as unknown as ShareApi };
 });
 
 const receiveBridge = createLazyPlugin(MODULE, async () => {
   const { registerPlugin } = await import("@capacitor/core");
-  return registerPlugin<ShareReceiveBridge>("ShareReceive");
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge.
+  return { plugin: registerPlugin<ShareReceiveBridge>("ShareReceive") };
 });
 
 export class ShareModule {
@@ -62,7 +66,7 @@ export class ShareModule {
   /** True when the platform can present a share sheet. */
   async canSend(): Promise<boolean> {
     if (isNativePlatform()) {
-      const plugin = await sharePlugin.optional();
+      const plugin = (await sharePlugin.optional())?.plugin ?? null;
       if (!plugin) return false;
       try {
         return plugin.canShare ? (await plugin.canShare()).value : true;
@@ -86,7 +90,7 @@ export class ShareModule {
     }
 
     if (isNativePlatform()) {
-      const plugin = await sharePlugin.required();
+      const plugin = (await sharePlugin.required()).plugin;
       const fileUris = await this.stageFiles(options.files ?? []);
       try {
         await plugin.share({
@@ -136,7 +140,7 @@ export class ShareModule {
     if (this.initialized || !isNativePlatform()) return;
     this.initialized = true;
 
-    const bridge = await receiveBridge.optional();
+    const bridge = (await receiveBridge.optional())?.plugin ?? null;
     if (!bridge) return;
 
     try {
