@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+import { CAPACITOR_API_BASE_URL } from './platform/capacitor.defaults';
+
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const repositoryName = process.env.GITHUB_REPOSITORY ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}` : '';
 
@@ -8,11 +10,18 @@ const basePath = process.env.ASOL_BASE_PATH?.replace(/\/$/, '') || (isGithubActi
 const assetPrefix = basePath;
 const deterministicBuildId = process.env.ASOL_NEXT_BUILD_ID;
 
+/**
+ * A static export never ships the `app/api` routes (`build-static.ts` strips
+ * them), so an empty base URL makes the client fall back to its own origin —
+ * `https://localhost` inside the Android WebView — and every API call, login
+ * included, is answered by the bundled assets instead of the server. Static
+ * builds therefore fall back to the same host the native shell defaults to.
+ */
 const apiBaseUrl =
   process.env.NEXT_PUBLIC_ASOL_API_BASE_URL?.replace(/\/$/, '') ||
   process.env.NEXT_PUBLIC_ASOL_API_URL?.replace(/\/$/, '') ||
   process.env.ASOL_API_BASE_URL?.replace(/\/$/, '') ||
-  '';
+  (isStatic ? CAPACITOR_API_BASE_URL.replace(/\/$/, '') : '');
 
 const nextConfig: NextConfig = {
   ...(isStatic ? { output: 'export' as const } : {}),

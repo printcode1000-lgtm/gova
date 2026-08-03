@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useReleaseJobs } from "../../hooks/use-release-jobs";
 import { LogViewer } from "../components/LogViewer";
+import { ReleaseJobStopDialog } from "../components/ReleaseJobStopDialog";
 
 export function JobsTab() {
   const { t } = useTranslation();
@@ -13,6 +14,9 @@ export function JobsTab() {
   const selected = jobs.jobs.find((job) => job.id === jobs.selectedJobId) ?? jobs.jobs[0];
   return (
     <section className="grid gap-4 xl:grid-cols-[22rem_1fr]">
+      {/* Cancelling is gated by the same confirmation as the build tab. */}
+      <ReleaseJobStopDialog job={jobs.pendingCancel} t={t}
+        onConfirm={() => void jobs.confirmCancel()} onCancel={jobs.dismissCancel} />
       <div className="space-y-2 rounded-md border bg-surface p-3">
         {jobs.jobs.map((job) => (
           <button key={job.id} type="button" onClick={() => jobs.setSelectedJobId(job.id)}

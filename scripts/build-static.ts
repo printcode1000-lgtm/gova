@@ -196,6 +196,9 @@ function prepareTempBuildDir(): void {
   rmSync(rootOutDir, { recursive: true, force: true });
 
   copyIfExists(path.join(rootDir, "src"), tempSrcDir);
+  // `next.config.ts` reads the native API host from here, so the temp build
+  // needs the folder too — otherwise the config fails to resolve its import.
+  copyIfExists(path.join(rootDir, "platform"), path.join(tempBuildDir, "platform"));
   for (const relativePath of STATIC_ROUTE_IGNORELIST) {
     rmSync(path.join(tempSrcDir, relativePath), {
       recursive: true,
