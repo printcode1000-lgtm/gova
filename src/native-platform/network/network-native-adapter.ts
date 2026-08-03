@@ -8,11 +8,13 @@ import type {
 } from "./types";
 const plugin = createLazyPlugin(
   "Network",
-  async () => (await import("@capacitor/network")).Network,
+  // The namespace is inert; returning the plugin proxy here would make the
+  // promise adopt it and call then() on the native bridge.
+  async () => await import("@capacitor/network"),
 );
 export async function nativeNetworkStatus(): Promise<NetworkState> {
   try {
-    return await (await plugin.required()).getStatus();
+    return await (await plugin.required()).Network.getStatus();
   } catch (error) {
     throw toNativeError("Network", error);
   }
@@ -23,7 +25,7 @@ export async function listenNativeNetwork(
   try {
     const handle = await (
       await plugin.required()
-    ).addListener("networkStatusChange", listener);
+    ).Network.addListener("networkStatusChange", listener);
     return () => handle.remove();
   } catch (error) {
     throw toNativeError("Network", error);

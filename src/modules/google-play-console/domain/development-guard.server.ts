@@ -1,5 +1,6 @@
 import "server-only";
 
+import { existsSync } from "node:fs";
 import path from "node:path";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
@@ -133,4 +134,23 @@ export function resolveNpmCliPath(): string {
 
 export function releaseCommandEnvironment(names: readonly string[]): Record<string, string> {
   return Object.fromEntries(names.map((name) => [name, process.env[name]?.trim() ?? ""]));
+}
+
+/**
+ * Non-environment sources a requirement may also be satisfied by, mirroring the
+ * fallbacks the scripts themselves use (see scripts/ota/ota-config.ts).
+ * Lives here because this module owns environment access for release commands.
+ */
+const REQUIREMENT_FILE_FALLBACKS: Record<string, string> = {
+  ASOL_OTA_SIGNING_PRIVATE_KEY: path.join(".ota", "private-key.pem"),
+};
+
+/** A requirement may list interchangeable variables separated by a pipe. */
+export function releaseRequirementSatisfied(requirement: string): boolean {
+  const names = requirement.split("|");
+  if (names.some((name) => process.env[name]?.trim())) return true;
+  return names.some((name) => {
+    const fallback = REQUIREMENT_FILE_FALLBACKS[name];
+    return Boolean(fallback) && existsSync(path.resolve(fallback));
+  });
 }

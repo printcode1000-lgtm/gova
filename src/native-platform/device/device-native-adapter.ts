@@ -4,11 +4,13 @@ import { toNativeError } from "../core/errors";
 import type { DeviceId, DeviceInfo } from "./types";
 const plugin = createLazyPlugin(
   "Device",
-  async () => (await import("@capacitor/device")).Device,
+  // The namespace is inert; returning the plugin proxy here would make the
+  // promise adopt it and call then() on the native bridge.
+  async () => await import("@capacitor/device"),
 );
 export async function nativeDeviceInfo(): Promise<DeviceInfo> {
   try {
-    const v = await (await plugin.required()).getInfo();
+    const v = await (await plugin.required()).Device.getInfo();
     return {
       platform: v.platform,
       operatingSystem: v.operatingSystem,
@@ -23,7 +25,7 @@ export async function nativeDeviceInfo(): Promise<DeviceInfo> {
 }
 export async function nativeDeviceId(): Promise<DeviceId> {
   try {
-    return await (await plugin.required()).getId();
+    return await (await plugin.required()).Device.getId();
   } catch (error) {
     throw toNativeError("Device", error);
   }

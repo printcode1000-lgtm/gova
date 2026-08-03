@@ -4,11 +4,13 @@ import { toNativeError } from "../core/errors";
 import type { ToastOptions } from "./types";
 const plugin = createLazyPlugin(
   "Toast",
-  async () => (await import("@capacitor/toast")).Toast,
+  // The namespace is inert; returning the plugin proxy here would make the
+  // promise adopt it and call then() on the native bridge.
+  async () => await import("@capacitor/toast"),
 );
 export async function showNativeToast(options: ToastOptions): Promise<void> {
   try {
-    await (await plugin.required()).show(options);
+    await (await plugin.required()).Toast.show(options);
   } catch (error) {
     throw toNativeError("Toast", error);
   }

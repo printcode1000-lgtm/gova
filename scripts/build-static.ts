@@ -95,6 +95,29 @@ function auditStaticApiBaseUrl(outDirectory: string): void {
   console.log("Static API base URL audit passed.");
 }
 
+/**
+ * Windows fails an open with EBUSY/EPERM/UNKNOWN while another process holds
+ * the file — the dev server watches `public/`, so this write can lose a race
+ * that resolves in milliseconds. Retrying beats failing a 40-minute build.
+ */
+function writeFileWithRetry(filePath: string, contents: string, attempts = 8): void {
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      writeFileSync(filePath, contents);
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      const locked =
+        code === "EBUSY" || code === "EPERM" || code === "UNKNOWN" || code === "EACCES";
+      if (!locked || attempt >= attempts - 1) throw error;
+      execSync(
+        process.platform === "win32" ? "ping -n 2 127.0.0.1 >nul" : "sleep 0.3",
+        { stdio: "ignore" },
+      );
+    }
+  }
+}
+
 function stopLiveServer(): void {
   try {
     // Try to kill processes using the out directory
@@ -416,8 +439,8 @@ function writeLocalWebManifest(): void {
   };
 
   const manifestJson = JSON.stringify(manifest, null, 2);
-  writeFileSync(path.join(rootOutDir, localManifestFileName), manifestJson);
-  writeFileSync(path.join(rootPublicDir, localManifestFileName), manifestJson);
+  writeFileWithRetry(path.join(rootOutDir, localManifestFileName), manifestJson);
+  writeFileWithRetry(path.join(rootPublicDir, localManifestFileName), manifestJson);
   console.log(
     `✅ Wrote ${localManifestFileName} (${manifest.fileCount} files, ${Math.ceil(size / 1024)} KB)`,
   );

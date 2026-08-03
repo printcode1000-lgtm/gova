@@ -81,7 +81,10 @@ end
 
 def run_command(command)
   UI.command(command)
-  sh(command)
+  # fastlane runs sh from the fastlane/ directory. npm resolves its own package
+  # root, but raw tools like Capacitor do not: from here they see no android/
+  # platform and abort. Run every command from the repository root instead.
+  Dir.chdir("..") { sh(command) }
 end
 
 def npm_run(script)

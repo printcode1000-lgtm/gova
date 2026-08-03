@@ -8,11 +8,13 @@ import type {
 } from "./types";
 const plugin = createLazyPlugin(
   "Dialog",
-  async () => (await import("@capacitor/dialog")).Dialog,
+  // The namespace is inert; returning the plugin proxy here would make the
+  // promise adopt it and call then() on the native bridge.
+  async () => await import("@capacitor/dialog"),
 );
 export async function nativeAlert(options: DialogOptions): Promise<void> {
   try {
-    await (await plugin.required()).alert(options);
+    await (await plugin.required()).Dialog.alert(options);
   } catch (error) {
     throw toNativeError("Dialog", error);
   }
@@ -21,7 +23,7 @@ export async function nativeConfirm(
   options: DialogOptions,
 ): Promise<DialogConfirmResult> {
   try {
-    return await (await plugin.required()).confirm(options);
+    return await (await plugin.required()).Dialog.confirm(options);
   } catch (error) {
     throw toNativeError("Dialog", error);
   }
@@ -30,7 +32,7 @@ export async function nativePrompt(
   options: DialogOptions,
 ): Promise<DialogPromptResult> {
   try {
-    return await (await plugin.required()).prompt(options);
+    return await (await plugin.required()).Dialog.prompt(options);
   } catch (error) {
     throw toNativeError("Dialog", error);
   }
