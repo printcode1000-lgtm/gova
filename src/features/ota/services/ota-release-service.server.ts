@@ -166,7 +166,7 @@ export const otaReleaseService = {
     const [history, audit, logs] = await Promise.all([
       otaReleaseRepository.list(),
       otaReleaseRepository.listAudit(),
-      persistentSystemLogService.list(1000),
+      persistentSystemLogService.list({ limit: 1000 }),
     ]);
     try {
       const manifest = await fetchCurrentManifest();

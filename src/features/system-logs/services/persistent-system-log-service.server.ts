@@ -1,24 +1,18 @@
 import "server-only";
 
-import type { PersistentSystemLogInput } from "../entities/persistent-system-log.entity";
+import type {
+  PersistentSystemLogInput,
+  PersistentSystemLogListOptions,
+} from "../entities/persistent-system-log.entity";
 import { persistentSystemLogRepository } from "@/modules/data-access/domains/system-logs/index.server";
-
-function redact(value: string | undefined) {
-  if (!value) return "";
-  return value
-    .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "<email>")
-    .replace(/\b01[0-9]{9}\b/g, "<phone>")
-    .replace(/(token|secret|password|authorization)["':=\s]+[^,\s}"']+/gi, "$1:<redacted>");
-}
+import { sanitizePersistentSystemLog } from "../system-log-sanitizer";
 
 export class PersistentSystemLogService {
-  async add(input: PersistentSystemLogInput) {
-    const sanitized = {
-      ...input,
-      message: redact(input.message),
-      stack: redact(input.stack),
-      userAgent: redact(input.userAgent),
-    };
+  async add(
+    input: PersistentSystemLogInput,
+    provenance: "trusted-server" | "untrusted-client" = "trusted-server",
+  ) {
+    const sanitized = sanitizePersistentSystemLog(input, provenance);
     const terminalDetails = {
       source: sanitized.source,
       platform: sanitized.platform,
@@ -30,19 +24,25 @@ export class PersistentSystemLogService {
       message: sanitized.message,
     };
     if (sanitized.level === "warning") {
-      console.warn("[Asol][SystemLog] Operation did not complete", terminalDetails);
+      console.warn(
+        "[Asol][SystemLog] Operation did not complete",
+        terminalDetails,
+      );
     } else if (sanitized.level === "error") {
       console.error("[Asol][SystemLog] Operation failed", terminalDetails);
     }
     return persistentSystemLogRepository.add(sanitized);
   }
 
-  async addBatch(inputs: PersistentSystemLogInput[]) {
-    for (const input of inputs) await this.add(input);
+  async addBatch(
+    inputs: PersistentSystemLogInput[],
+    provenance: "trusted-server" | "untrusted-client" = "trusted-server",
+  ) {
+    for (const input of inputs) await this.add(input, provenance);
   }
 
-  async list(limit?: number) {
-    return persistentSystemLogRepository.list(limit);
+  async list(options?: PersistentSystemLogListOptions) {
+    return persistentSystemLogRepository.list(options);
   }
 
   async clear(level?: string) {

@@ -2,6 +2,7 @@ import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import type {
   PersistentSystemLogEntry,
   PersistentSystemLogInput,
+  PersistentSystemLogListOptions,
 } from "../entities/persistent-system-log.entity";
 
 function notifySystemLogsChanged() {
@@ -30,20 +31,32 @@ export class PersistentSystemLogApiService {
     return result;
   }
 
-  async list(uid: string, phone: string, limit = 300) {
-    const q = new URLSearchParams({ uid, phone, limit: String(limit) });
+  async list(
+    sessionToken: string,
+    options: PersistentSystemLogListOptions = {},
+  ) {
+    const q = new URLSearchParams({ limit: String(options.limit ?? 300) });
+    if (options.origin) q.set("origin", options.origin);
+    if (options.level) q.set("level", options.level);
     return asolApi.get<PersistentSystemLogEntry[]>(
       `${ASOL_API_ROUTES.systemLogs.root}?${q}`,
-      { cache: "no-store", suppressErrorLog: true },
+      {
+        cache: "no-store",
+        suppressErrorLog: true,
+        headers: { "x-asol-session-token": sessionToken },
+      },
     );
   }
 
-  async clear(uid: string, phone: string, level?: string) {
-    const q = new URLSearchParams({ uid, phone });
+  async clear(sessionToken: string, level?: string) {
+    const q = new URLSearchParams();
     if (level) q.set("level", level);
     const result = await asolApi.delete<{ ok: true }>(
       `${ASOL_API_ROUTES.systemLogs.root}?${q}`,
-      { suppressErrorLog: true },
+      {
+        suppressErrorLog: true,
+        headers: { "x-asol-session-token": sessionToken },
+      },
     );
     notifySystemLogsChanged();
     return result;

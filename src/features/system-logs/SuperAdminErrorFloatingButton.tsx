@@ -24,10 +24,13 @@ export function SuperAdminErrorFloatingButton() {
     getSystemLogsSnapshot,
     getSystemLogsSnapshot,
   );
-  const [persistentLogs, setPersistentLogs] = useState<PersistentSystemLogEntry[]>([]);
+  const [persistentLogs, setPersistentLogs] = useState<
+    PersistentSystemLogEntry[]
+  >([]);
 
   useEffect(() => {
-    if (!authorized || !session) {
+    const sessionToken = session?.sessionToken;
+    if (!authorized || !sessionToken) {
       setPersistentLogs([]);
       return;
     }
@@ -35,12 +38,15 @@ export function SuperAdminErrorFloatingButton() {
     let cancelled = false;
     const load = () => {
       void persistentSystemLogApiService
-        .list(session.uid, session.phone, 500)
+        .list(sessionToken, { limit: 500 })
         .then((items) => {
           if (!cancelled) setPersistentLogs(items);
         })
         .catch((error) => {
-          console.warn("[SystemLogs] Failed to load floating error count.", error);
+          console.warn(
+            "[SystemLogs] Failed to load floating error count.",
+            error,
+          );
         });
     };
 

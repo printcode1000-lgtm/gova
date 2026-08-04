@@ -4,7 +4,8 @@ import "server-only";
 import type { IDatabaseClient } from "@/modules/data-access/core/database/database-client.interface";
 import type {
   PersistentSystemLogEntry,
-  PersistentSystemLogInput,
+  PersistentSystemLogListOptions,
+  StoredPersistentSystemLogInput,
 } from "@/features/system-logs/entities/persistent-system-log.entity";
 
 function nowIso() {
@@ -23,8 +24,10 @@ function clip(value: string | undefined, max: number) {
   return value.length > max ? `${value.slice(0, max)}...<truncated>` : value;
 }
 
-function fingerprint(input: PersistentSystemLogInput) {
+function fingerprint(input: StoredPersistentSystemLogInput) {
   return [
+    input.origin,
+    input.trustLevel,
     input.level,
     input.source,
     input.consoleMethod,
@@ -69,9 +72,17 @@ function rowToEntry(row: Record<string, unknown>): PersistentSystemLogEntry {
     appVersion: String(row.app_version ?? "") || undefined,
     nativeVersion: String(row.native_version ?? "") || undefined,
     uid: String(row.uid ?? "") || undefined,
+    origin: row.origin === "cloud" ? "cloud" : "client",
+    trustLevel:
+      row.trust_level === "trusted-server" ||
+      row.trust_level === "untrusted-client"
+        ? row.trust_level
+        : "legacy",
     occurrences: Number(row.occurrences ?? 1),
     firstOccurredAt: String(row.first_occurred_at ?? ""),
     lastOccurredAt: String(row.last_occurred_at ?? ""),
+    messageTruncated: Number(row.message_truncated ?? 0) === 1,
+    stackTruncated: Number(row.stack_truncated ?? 0) === 1,
   };
 }
 
@@ -79,6 +90,24 @@ export class PersistentSystemLogRepository {
   private schemaReady = false;
 
   constructor(private database: IDatabaseClient = profilesDataSource) {}
+
+  private async ensureColumn(name: string, definition: string) {
+    const columns = (await this.database.execute(
+      "PRAGMA table_info(system_logs)",
+    )) as Array<{ name?: string }>;
+    if (columns.some((column) => column.name === name)) return;
+    try {
+      await this.database.execute(
+        `ALTER TABLE system_logs ADD COLUMN ${name} ${definition}`,
+      );
+    } catch (error) {
+      // Two cold server instances may race the same additive migration.
+      const refreshed = (await this.database.execute(
+        "PRAGMA table_info(system_logs)",
+      )) as Array<{ name?: string }>;
+      if (!refreshed.some((column) => column.name === name)) throw error;
+    }
+  }
 
   private async ensureSchema() {
     if (this.schemaReady) return;
@@ -106,11 +135,25 @@ export class PersistentSystemLogRepository {
         app_version text NOT NULL DEFAULT '',
         native_version text NOT NULL DEFAULT '',
         uid text NOT NULL DEFAULT '',
+        origin text NOT NULL DEFAULT 'client',
+        trust_level text NOT NULL DEFAULT 'legacy',
+        message_truncated integer NOT NULL DEFAULT 0,
+        stack_truncated integer NOT NULL DEFAULT 0,
         occurrences integer NOT NULL DEFAULT 1,
         first_occurred_at text NOT NULL,
         last_occurred_at text NOT NULL
       )
     `);
+    await this.ensureColumn("origin", "text NOT NULL DEFAULT 'client'");
+    await this.ensureColumn("trust_level", "text NOT NULL DEFAULT 'legacy'");
+    await this.ensureColumn("message_truncated", "integer NOT NULL DEFAULT 0");
+    await this.ensureColumn("stack_truncated", "integer NOT NULL DEFAULT 0");
+    await this.database.execute(
+      `UPDATE system_logs
+       SET origin = 'cloud'
+       WHERE trust_level = 'legacy'
+         AND (platform = 'server' OR source IN ('server', 'api'))`,
+    );
     await this.database.execute(
       "CREATE INDEX IF NOT EXISTS system_logs_level_time_idx ON system_logs(level, last_occurred_at)",
     );
@@ -120,10 +163,13 @@ export class PersistentSystemLogRepository {
     await this.database.execute(
       "CREATE INDEX IF NOT EXISTS system_logs_feature_idx ON system_logs(feature, operation)",
     );
+    await this.database.execute(
+      "CREATE INDEX IF NOT EXISTS system_logs_origin_time_idx ON system_logs(origin, last_occurred_at)",
+    );
     this.schemaReady = true;
   }
 
-  async add(input: PersistentSystemLogInput) {
+  async add(input: StoredPersistentSystemLogInput) {
     await this.ensureSchema();
     const now = nowIso();
     const key = fingerprint(input);
@@ -144,8 +190,9 @@ export class PersistentSystemLogRepository {
         id, fingerprint, level, source, console_method, message, page, platform,
         error_name, source_file, source_line, source_column, user_agent, feature,
         operation, stack, route_name, status_code, request_method, app_version,
-        native_version, uid, occurrences, first_occurred_at, last_occurred_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)`,
+        native_version, uid, origin, trust_level, message_truncated,
+        stack_truncated, occurrences, first_occurred_at, last_occurred_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)`,
       [
         id,
         key,
@@ -169,6 +216,10 @@ export class PersistentSystemLogRepository {
         clip(input.appVersion, 100),
         clip(input.nativeVersion, 100),
         clip(input.uid, 120),
+        input.origin,
+        input.trustLevel,
+        input.message.length > 8000 ? 1 : 0,
+        (input.stack?.length ?? 0) > 12000 ? 1 : 0,
         now,
         now,
       ],
@@ -176,11 +227,25 @@ export class PersistentSystemLogRepository {
     return id;
   }
 
-  async list(limit = 300): Promise<PersistentSystemLogEntry[]> {
+  async list(
+    options: PersistentSystemLogListOptions = {},
+  ): Promise<PersistentSystemLogEntry[]> {
     await this.ensureSchema();
+    const limit = Math.max(1, Math.min(1000, Math.floor(options.limit ?? 300)));
+    const filters: string[] = [];
+    const params: unknown[] = [];
+    if (options.origin) {
+      filters.push("origin = ?");
+      params.push(options.origin);
+    }
+    if (options.level) {
+      filters.push("level = ?");
+      params.push(options.level);
+    }
+    const where = filters.length ? ` WHERE ${filters.join(" AND ")}` : "";
     const rows = (await this.database.execute(
-      "SELECT * FROM system_logs ORDER BY last_occurred_at DESC LIMIT ?",
-      [Math.max(1, Math.min(1000, Math.floor(limit)))],
+      `SELECT * FROM system_logs${where} ORDER BY last_occurred_at DESC LIMIT ?`,
+      [...params, limit],
     )) as Record<string, unknown>[];
     return rows.map(rowToEntry);
   }

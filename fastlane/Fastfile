@@ -91,6 +91,20 @@ def npm_run(script)
   run_command("npm run #{script}")
 end
 
+# Native web assets already synced in this release run. Set by the release
+# scripts so the aab and apk lanes ship the exact same bundle instead of each
+# rebuilding it — three static builds per release, and a real risk of the two
+# packages being built from different output.
+def native_assets_current?
+  return false unless ENV["ASOL_WEB_BUNDLE_READY"].to_s == "1"
+
+  assets = File.join("android", "app", "src", "main", "assets", "public")
+  manifest = File.join("out", "asol-web-manifest.json")
+  ready = Dir.exist?(assets) && File.exist?(manifest)
+  UI.important("Web bundle is not synced yet; building it.") unless ready
+  ready
+end
+
 def capacitor_sync(platform)
   # Native WebViews do not have a backend at their own localhost origin.
   # Always bake the deployed API origin into the static bundle for phone builds.
@@ -98,6 +112,10 @@ def capacitor_sync(platform)
     "ASOL_CAPACITOR_API_BASE_URL",
     "https://gova-swart.vercel.app"
   )
+  if native_assets_current?
+    UI.success("Reusing the web bundle already synced for this release.")
+    return
+  end
   npm_run("build:static")
   npm_run("android:push:sync-assets") if platform == :android
   run_command("npx cap sync #{platform}")

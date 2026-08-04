@@ -7,6 +7,11 @@ export type PersistentSystemLogSource =
   | "react"
   | "resource"
   | "native";
+export type PersistentSystemLogOrigin = "client" | "cloud";
+export type PersistentSystemLogTrustLevel =
+  | "untrusted-client"
+  | "trusted-server"
+  | "legacy";
 
 export interface PersistentSystemLogInput {
   level: PersistentSystemLogLevel;
@@ -34,7 +39,22 @@ export interface PersistentSystemLogInput {
 export interface PersistentSystemLogEntry extends PersistentSystemLogInput {
   id: string;
   fingerprint: string;
+  origin: PersistentSystemLogOrigin;
+  trustLevel: PersistentSystemLogTrustLevel;
   occurrences: number;
   firstOccurredAt: string;
   lastOccurredAt: string;
+  messageTruncated?: boolean;
+  stackTruncated?: boolean;
+}
+
+export interface StoredPersistentSystemLogInput extends PersistentSystemLogInput {
+  origin: PersistentSystemLogOrigin;
+  trustLevel: PersistentSystemLogTrustLevel;
+}
+
+export interface PersistentSystemLogListOptions {
+  limit?: number;
+  origin?: PersistentSystemLogOrigin;
+  level?: PersistentSystemLogLevel;
 }
