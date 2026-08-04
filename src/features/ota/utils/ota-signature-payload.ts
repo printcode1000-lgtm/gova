@@ -30,6 +30,17 @@ export function canonicalOtaManifestPayload(
           })),
       }
     : undefined;
+  // `undefined` keys are dropped by JSON.stringify. Omitting an empty optional
+  // set therefore reproduces the pre-split payload byte for byte, so a client
+  // built before this field existed still verifies a release that has none.
+  // Once a release actually declares optional capabilities, only clients that
+  // understand the field can verify it — publish the transition release with an
+  // empty set first and let it reach devices.
+  const optionalCapabilities =
+    manifest.optionalCapabilities && manifest.optionalCapabilities.length > 0
+      ? [...manifest.optionalCapabilities].sort(compareOtaCanonicalStrings)
+      : undefined;
+
   return JSON.stringify({
     schemaVersion: manifest.schemaVersion,
     delivery: manifest.delivery,
@@ -41,6 +52,7 @@ export function canonicalOtaManifestPayload(
     fileCount: manifest.fileCount,
     minimumNativeVersion: manifest.minimumNativeVersion,
     requiredCapabilities: [...(manifest.requiredCapabilities ?? [])].sort(compareOtaCanonicalStrings),
+    optionalCapabilities,
     mandatory: manifest.mandatory,
     notes: manifest.notes,
     files: sortedFiles(manifest.files),

@@ -133,6 +133,30 @@ export const otaReleaseAudit = sqliteTable(
   }),
 );
 
+/**
+ * Live kill switch for capability-backed features.
+ *
+ * This is the only control plane that takes effect without publishing an OTA
+ * release or a store build: OTA replaces the bundle, and a store release needs
+ * review. Turning a row off hides the feature on the next flag refresh.
+ */
+export const featureFlags = sqliteTable(
+  'feature_flags',
+  {
+    key: text('key').primaryKey(),
+    enabled: integer('enabled', { mode: 'boolean' }).notNull().default(false),
+    /** Free-text note explaining why the flag is in its current state. */
+    notes: text('notes').notNull().default(''),
+    updatedAt: text('updated_at').notNull(),
+    updatedByUid: text('updated_by_uid'),
+  },
+  (table) => ({
+    enabledIdx: index('feature_flags_enabled_idx').on(table.enabled),
+  }),
+);
+
+export type FeatureFlagEntity = typeof featureFlags.$inferSelect;
+export type NewFeatureFlagEntity = typeof featureFlags.$inferInsert;
 export type UserEntity = typeof users.$inferSelect;
 export type NewUserEntity = typeof users.$inferInsert;
 export type PasswordRecoveryChallengeEntity = typeof passwordRecoveryChallenges.$inferSelect;

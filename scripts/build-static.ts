@@ -7,7 +7,11 @@ import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { categoryService } from "../src/features/categories";
 import { auditCapacitorDefaultBundle } from "./lib/capacitor-defaults-audit";
-import { scanSourceCapabilityReferences } from "./ota/ota-capability-scan";
+import {
+  CAPABILITY_METADATA_FILE,
+  scanSourceCapabilityReferences,
+  splitCapabilityRequirements,
+} from "./ota/ota-capability-scan";
 import { MINIMUM_SUPPORTED_NATIVE_VERSION } from "../src/native-platform/capabilities/shell-capabilities";
 
 const rootDir = process.cwd();
@@ -321,10 +325,12 @@ function prepareTempBuildDir(): void {
   }
 
   prepareStaticPublicDir();
-  const requiredCapabilities = scanSourceCapabilityReferences(tempSrcDir);
+  const capabilityRequirements = splitCapabilityRequirements(
+    scanSourceCapabilityReferences(tempSrcDir),
+  );
   writeFileSync(
-    path.join(tempBuildDir, "public", "asol-required-capabilities.json"),
-    JSON.stringify(requiredCapabilities),
+    path.join(tempBuildDir, "public", CAPABILITY_METADATA_FILE),
+    JSON.stringify(capabilityRequirements),
   );
 }
 
@@ -428,12 +434,16 @@ function writeLocalWebManifest(): void {
     minimumNativeVersion:
       process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ??
       MINIMUM_SUPPORTED_NATIVE_VERSION,
-    requiredCapabilities: JSON.parse(
-      readFileSync(
-        path.join(rootOutDir, "asol-required-capabilities.json"),
-        "utf8",
-      ),
-    ),
+    ...(() => {
+      const { required, optional } = JSON.parse(
+        readFileSync(path.join(rootOutDir, CAPABILITY_METADATA_FILE), "utf8"),
+      ) as { required: string[]; optional: string[] };
+      // Mirror the manifest contract: omit an empty optional set rather than
+      // writing `[]`, so the local manifest matches what gets signed.
+      return optional.length > 0
+        ? { requiredCapabilities: required, optionalCapabilities: optional }
+        : { requiredCapabilities: required };
+    })(),
     mandatory: false,
     notes: "Bundled web assets",
     diagnostic,

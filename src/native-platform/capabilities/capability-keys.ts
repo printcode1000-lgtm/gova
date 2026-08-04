@@ -4,6 +4,10 @@
  */
 
 export const CapabilityKeys = Object.freeze({
+  AppState: "app.state",
+  AppInfo: "app.info",
+  AppDeepLink: "app.deepLink",
+  AppExit: "app.exit",
   CameraTakePhoto: "camera.takePhoto",
   CameraPickImages: "camera.pickImages",
   LocationCurrent: "location.current",

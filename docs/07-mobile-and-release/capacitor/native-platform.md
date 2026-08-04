@@ -97,6 +97,11 @@ src/native-platform/
 │   ├── permission-adapters.ts   # one adapter per kind, per platform
 │   ├── permission-manager.ts    # check / request / requestIfNeeded / openSettings
 │   └── index.ts
+├── app/
+│   ├── types.ts
+│   ├── app-native-adapter.ts
+│   ├── app.ts
+│   └── index.ts
 ├── camera/
 │   ├── types.ts
 │   ├── camera-native-adapter.ts
@@ -157,6 +162,27 @@ import { nativePlatform } from "@/native-platform";
 // or
 import { camera } from "@/native-platform/camera";
 ```
+
+### App
+
+Application lifecycle and identity. Before this module, `@capacitor/app` was
+installed on both platforms but had no facade, so feature code could not reach
+it at all — the contract forbids the direct import and there was no alternative.
+
+```ts
+app.info(): Promise<AppInfo>                                  // name, id, version, build
+app.state(): Promise<AppState>                                // { isActive }
+app.onStateChange(listener): Promise<AppUnsubscribe>
+app.onDeepLink(listener): Promise<AppUnsubscribe>             // custom scheme + app links
+app.exit(): Promise<void>                                     // Android only
+app.canExit(): boolean
+```
+
+The web half is real, not a stub: `visibilitychange` carries the same meaning as
+`appStateChange`, and the bundled manifest carries the same version the shell
+reports. `exit()` throws `Unavailable` off Android — iOS treats a programmatic
+exit as a crash and rejects it in review — and `onDeepLink` never fires in a
+browser.
 
 ### Camera
 
@@ -317,6 +343,9 @@ Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition
 
 | Capability          | Web                      | Android                  | iOS                      |
 | ------------------- | ------------------------ | ------------------------ | ------------------------ |
+| App state           | `visibilitychange`       | `@capacitor/app`         | `@capacitor/app`         |
+| App deep links      | not supported            | `appUrlOpen`             | `appUrlOpen`             |
+| App exit            | not supported            | `App.exitApp()`          | not supported (policy)   |
 | Camera capture      | `<input capture>`        | `@capacitor/camera`      | `@capacitor/camera`      |
 | Gallery pick        | `<input type=file>`      | native picker            | native picker            |
 | Location            | Geolocation API          | Geolocation plugin       | Geolocation plugin       |
@@ -328,7 +357,7 @@ Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition
 | Share (receive)     | not supported            | intent filters           | Share Extension          |
 | Push                | not supported here       | FCM                      | APNs                     |
 | Local notifications | Web Notification + timer | LocalNotifications       | LocalNotifications       |
-| Barcode             | not supported            | ML Kit                   | ML Kit                   |
+| Barcode             | not supported            | ML Kit                   | **not installed**        |
 | Open settings       | not supported            | `App.openSettings()`     | `app-settings:` URL      |
 
 **Notable asymmetries**
@@ -338,7 +367,9 @@ Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition
 - The browser file input has no cancel event; the adapters detect dismissal via
   a window `focus` heuristic, so a cancel resolves ~400 ms later.
 - Android needs the Google ML Kit scanner module, downloaded on demand by
-  `ensureReady()`.
+  `ensureReady()`. iOS has **no** scanner: the plugin is CocoaPods-only and the
+  iOS project is SPM-only, so `barcode.scan` is declared for Android alone and
+  is a platform-optional capability.
 - iOS reports `limited` photo access; the layer maps it to `granted` because
   the picker still works.
 
@@ -589,6 +620,12 @@ cache results for the process session. `shell-capabilities.ts` declares the
 keys compiled into the shell and `NATIVE_CAPABILITY_VERSION` changes whenever
 that set changes. Capability discovery never asks for an OS permission.
 
+The declaration is **per platform**. `SHELL_CAPABILITIES_BY_PLATFORM` names what
+each shell contains; `shellCapabilitiesFor(platform)` reads the running one, and
+`UNIVERSAL_SHELL_CAPABILITIES` / `PLATFORM_OPTIONAL_SHELL_CAPABILITIES` are
+derived from it. A flat list forced both platforms to claim the union, which is
+how `barcode.scan` came to be declared on iOS where it does not exist.
+
 **On a device, presence means `Capacitor.isPluginAvailable`, not a successful
 `import()`.** Every plugin's JavaScript ships inside the web bundle, so on
 Android and iOS the import resolves whether or not the installed shell contains
@@ -633,19 +670,121 @@ To add a capability:
    naming the **real** facade method. `assertDetectionCoverage()` fails the
    build if you skip this, because an undetectable key never reaches
    `requiredCapabilities` and the device gate would stop protecting it.
-4. Add the key to the shell declaration and bump
-   `NATIVE_CAPABILITY_VERSION`.
+4. Add the key to the shell declaration for **each platform that has the
+   plugin**, add its `CAPABILITY_AVAILABILITY` entry (`backedSince` = the shell
+   that has the plugin, `vocabularySince` = the store release adding the key),
+   and bump `NATIVE_CAPABILITY_VERSION`. The compiler rejects a missing
+   availability entry; without it the publisher could list a key installed
+   clients cannot name, which makes them refuse every release.
 5. Expose the operation through a Native Platform facade; permissions remain
    explicit in the operation, never in capability detection.
 6. Run the Native Platform, OTA delivery, architecture, type, and lint checks.
 7. Publish a store shell and move the `native-v*` baseline tag before relying
    on the key from OTA-delivered UI.
 
+### Plugin matrix
+
+`npm run test:native-platform` includes `plugin-matrix.test.ts`, which reads the
+real project files and fails when the picture below stops being true — the npm
+dependency, the Android module in `capacitor.settings.gradle` and
+`capacitor.build.gradle`, the iOS SPM package in `Package.swift`, the custom
+plugins' `registerPlugin` call and `jsName`, and the capability each one backs.
+The matrix is checked, not remembered.
+
+| Plugin | Android | iOS | Capability keys |
+| ------ | :-----: | :-: | --------------- |
+| `@capacitor/app` | ✅ | ✅ | `app.state` · `app.info` · `app.deepLink` · `app.exit` |
+| `@capacitor/action-sheet` | ✅ | ✅ | `actionSheet.show` |
+| `@capacitor/browser` | ✅ | ✅ | `browser.open` |
+| `@capacitor/camera` | ✅ | ✅ | `camera.takePhoto` · `camera.pickImages` |
+| `@capacitor/clipboard` | ✅ | ✅ | `clipboard.read` · `clipboard.write` |
+| `@capacitor/device` | ✅ | ✅ | `device.info` · `device.id` |
+| `@capacitor/dialog` | ✅ | ✅ | `dialog.alert` · `dialog.confirm` · `dialog.prompt` |
+| `@capacitor/filesystem` | ✅ | ✅ | `files.appStorage` |
+| `@capacitor/geolocation` | ✅ | ✅ | `location.current` · `location.watch` |
+| `@capacitor/haptics` | ✅ | ✅ | `haptics.impact` · `haptics.notification` |
+| `@capacitor/keyboard` | ✅ | ✅ | `keyboard.control` · `keyboard.listen` |
+| `@capacitor/local-notifications` | ✅ | ✅ | `notifications.local` |
+| `@capacitor/network` | ✅ | ✅ | `network.status` · `network.listen` |
+| `@capacitor/preferences` | ✅ | ✅ | `preferences.read` · `preferences.write` |
+| `@capacitor/push-notifications` | ✅ | ✅ | `notifications.push` |
+| `@capacitor/screen-orientation` | ✅ | ✅ | `screenOrientation.lock` · `screenOrientation.current` |
+| `@capacitor/share` | ✅ | ✅ | `share.send` · `files.save` · `files.open` |
+| `@capacitor/splash-screen` | ✅ | ✅ | `splashScreen.control` |
+| `@capacitor/status-bar` | ✅ | ✅ | `statusBar.style` · `statusBar.visibility` · `statusBar.backgroundColor` |
+| `@capacitor/text-zoom` | ✅ | ✅ | `textZoom.get` · `textZoom.set` |
+| `@capacitor/toast` | ✅ | ✅ | `toast.show` |
+| `@capawesome/capacitor-file-picker` | ✅ | ✅ | `files.pick` |
+| `@capgo/capacitor-speech-recognition` | ✅ | ✅ | `speech.recognize` |
+| `@capacitor-mlkit/barcode-scanning` | ✅ | ❌ | `barcode.scan` — **platform-optional** |
+| `ShareReceive` (custom) | ✅ | ✅ | `share.receive` |
+| `BackgroundDownload` (custom) | ✅ | ✅ | `backgroundDownload.bundle` |
+| `StorageCapacity` (custom) | ✅ | ✅ | `storageCapacity.freeSpace` |
+
+`files.save` and `files.open` resolve through the **Share** family, not
+FilePicker: `saveToDevice` and `openExternally` stage the file with Filesystem
+and hand it to the system share sheet. Mapping them to the picker reported them
+available on a shell without Share.
+
+#### Barcode scanning is Android only
+
+`@capacitor-mlkit/barcode-scanning` ships a CocoaPods podspec and no
+`Package.swift`, and `ios/App` is an SPM project with no Podfile, so the plugin
+is not compiled into the iOS shell. Three options were considered:
+
+| Option | Verdict |
+| ------ | ------- |
+| Declare it Android-only | **Chosen.** Honest, verifiable on Windows, and the entry point simply stays hidden on iOS. |
+| Add CocoaPods beside SPM | Deferred — a native project change that cannot be compiled or tested from this workstation. |
+| Web `BarcodeDetector` fallback | Rejected — not implemented in WKWebView. |
+
+The plugin-matrix test asserts that a package without SPM support is never
+declared for iOS, so this cannot be undone by accident. Restoring it means
+adding CocoaPods and rebuilding on macOS.
+
+### Live control without a release
+
+`src/features/feature-flags` is the only switch that reaches devices without
+publishing anything. OTA replaces the web bundle; a store release needs review;
+a row in `feature_flags` takes effect on the next refresh.
+
+```
+feature_flags (users DB)
+        │  GET /api/feature-flags
+        ▼
+FeatureFlagController   ← mounted once in the root layout
+        │  refresh on mount, every 15 min, and on foreground
+        ▼
+featureFlags.isEnabled(definition)
+        │
+        └─ remotely enabled  AND  capabilities.has(definition.capability)
+```
+
+The AND is what makes a platform-optional capability safe to ship:
+`barcode.scanner` can be on for everyone and still stay dark on iOS, because the
+capability half of the answer is false there.
+
+Flags are declared once in `definitions.ts`. The server answers **every** declared
+flag, falling back to its `defaultEnabled`, so adding a definition never depends
+on seeding a row. A failed refresh keeps the last known values — a device that
+cannot reach the server behaves as it did a moment ago instead of resetting to
+defaults.
+
+`feature_flags` is created by
+`migrations/0008_feature_flags.sql` and is registered in the users shard in
+`schema-sync.ts`. Apply it before deploying the endpoint:
+
+```powershell
+npx drizzle-kit migrate
+npm run db:schema:sync
+```
+
 ### Verified vs. not verified
 
 | Area                                                             | Status                                                                                  |
 | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | TypeScript layer, contracts, validation, queue, duplicate filter | Unit-tested (`npm run test:native-platform`)                                            |
+| Plugin/shell/capability matrix                                   | Verified against the real Android and iOS projects by `plugin-matrix.test.ts`           |
 | Architecture contract enforcement                                | Verified — the rule was proven to reject a real violation                               |
 | Existing consumers (image picker, voice input, push)             | Migrated; behaviour preserved; existing suites pass                                     |
 | Application migration to the layer                               | Complete — no page uses `navigator.share`, `navigator.geolocation`, or a raw file input |
@@ -687,13 +826,16 @@ All plugins are pinned to the Capacitor 8 line:
 | `@capacitor/action-sheet`             | ^8.1.1  |
 | `@capacitor/text-zoom`                | ^8.0.1  |
 
-Upgrading Capacitor requires upgrading all of them together.
+Upgrading Capacitor requires upgrading all of them together. A resolved-version
+change inside an unchanged range still ships different native code, so the OTA
+publish gate compares `package-lock.json` as well as `package.json`.
 
 ### Sanctioned exceptions to the contract
 
 **Capacitor imports** — four files, listed in `CAPACITOR_IMPORT_ALLOWED_FILES`
 in `scripts/architecture-check.ts`. They cover native concerns outside the
-Native Platform modules: application lifecycle, OTA delivery, and the native HTTP bridge.
+Native Platform modules: OTA delivery, the native HTTP bridge, and two
+lifecycle adapters that predate the App module.
 
 ```
 src/platform/navigation/capacitor-back-button-adapter.ts

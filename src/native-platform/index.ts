@@ -11,6 +11,7 @@
  * instead of breaking the bundle.
  */
 
+import { app } from "./app";
 import { barcodeScanner } from "./barcode";
 import { camera } from "./camera";
 import { files } from "./files";
@@ -38,6 +39,7 @@ import { backgroundDownload } from "./background-download";
 import { storageCapacity } from "./storage-capacity";
 
 export const nativePlatform = {
+  app,
   camera,
   location,
   speech: speechRecognition,
@@ -88,6 +90,7 @@ export type { Unsubscribe } from "./core/listener";
 // Modules
 // ---------------------------------------------------------------------------
 export * from "./permissions";
+export * from "./app";
 export * from "./camera";
 export * from "./location";
 export * from "./speech";

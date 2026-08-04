@@ -19,7 +19,9 @@ export type OtaOutcome =
   | "activation_succeeded"
   | "activation_failed"
   | "rollback_performed"
-  | "revocation_applied";
+  | "revocation_applied"
+  /** The release was accepted while one of its optional capabilities is absent. */
+  | "optional_capabilities_missing";
 
 interface QueuedOutcome {
   key: string;

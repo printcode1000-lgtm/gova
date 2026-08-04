@@ -27,7 +27,7 @@
     "test:image-upload-queue": "npx tsx src/features/storage/tests/image-upload-queue.test.ts",
     "test:data-health": "npx tsx scripts/test-data-health-environment.ts && npx tsx src/modules/data-access/domains/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/modules/data-access/domains/data-health/tests/order-purge.test.ts",
     "test:dev-cloud-backup": "cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts",
-    "test:native-platform": "npx tsx src/native-platform/tests/native-platform-contract.test.ts && npx tsx src/native-platform/tests/capability-registry.test.ts",
+    "test:native-platform": "npx tsx src/native-platform/tests/native-platform-contract.test.ts && npx tsx src/native-platform/tests/capability-registry.test.ts && npx tsx src/native-platform/tests/plugin-matrix.test.ts",
     "test:feature-flags": "npx tsx src/features/feature-flags/tests/feature-flag-service.test.ts",
     "test:ota-delivery": "npx tsx src/features/ota/tests/ota-delivery.test.ts",
     "test:ota-background": "npx tsx src/features/ota/tests/ota-background-delivery.test.ts",

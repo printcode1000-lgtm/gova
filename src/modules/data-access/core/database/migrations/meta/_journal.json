@@ -57,6 +57,13 @@
       "when": 1785643200000,
       "tag": "0007_ota_staged_rollout",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1785788310447,
+      "tag": "0008_feature_flags",
+      "breakpoints": true
     }
   ]
 }

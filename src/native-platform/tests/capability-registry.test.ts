@@ -9,7 +9,7 @@ import {
   ALL_CAPABILITY_KEYS,
   CapabilityKeys,
 } from "../capabilities/capability-keys";
-import { SHELL_CAPABILITIES } from "../capabilities/shell-capabilities";
+import { SHELL_CAPABILITIES_BY_PLATFORM } from "../capabilities/shell-capabilities";
 
 async function main(): Promise<void> {
   let resolutions = 0;
@@ -45,13 +45,21 @@ async function main(): Promise<void> {
     );
   }
 
-  // The shell declaration may only narrow the answer, so every key it claims
-  // must be one the registry knows how to verify against the bridge.
-  for (const key of SHELL_CAPABILITIES) {
-    assert.ok(
-      ALL_CAPABILITY_KEYS.includes(key),
-      `Shell declares an unknown capability: ${key}`,
-    );
+  // The shell declaration may only narrow the answer, so every key any platform
+  // claims must be one the registry knows how to verify against the bridge.
+  for (const [platform, keys] of Object.entries(
+    SHELL_CAPABILITIES_BY_PLATFORM,
+  )) {
+    for (const key of keys) {
+      assert.ok(
+        ALL_CAPABILITY_KEYS.includes(key),
+        `${platform} declares an unknown capability: ${key}`,
+      );
+      assert.ok(
+        familyByKey.has(key),
+        `${platform} declares ${key} with no plugin family to verify it`,
+      );
+    }
   }
 
   console.log("Capability registry tests passed.");

@@ -4,15 +4,16 @@
  */
 
 import { createLazyPlugin } from "../core/lazy-plugin";
-import { hasDom, isNativePlatform } from "../core/platform";
+import { getPlatformName, hasDom, isNativePlatform } from "../core/platform";
 import {
   ALL_CAPABILITY_KEYS,
   CapabilityKeys,
   type CapabilityKey,
 } from "./capability-keys";
-import { SHELL_CAPABILITIES } from "./shell-capabilities";
+import { shellCapabilitiesFor } from "./shell-capabilities";
 
 type PluginFamily =
+  | "app"
   | "camera"
   | "location"
   | "speech"
@@ -52,6 +53,7 @@ type PluginFamily =
  * installed shell does not have.
  */
 export const pluginNameByFamily: Record<PluginFamily, string> = {
+  app: "App",
   camera: "Camera",
   location: "Geolocation",
   speech: "SpeechRecognition",
@@ -81,14 +83,21 @@ export const pluginNameByFamily: Record<PluginFamily, string> = {
 };
 
 export const familyByKey = new Map<CapabilityKey, PluginFamily>([
+  [CapabilityKeys.AppState, "app"],
+  [CapabilityKeys.AppInfo, "app"],
+  [CapabilityKeys.AppDeepLink, "app"],
+  [CapabilityKeys.AppExit, "app"],
   [CapabilityKeys.CameraTakePhoto, "camera"],
   [CapabilityKeys.CameraPickImages, "camera"],
   [CapabilityKeys.LocationCurrent, "location"],
   [CapabilityKeys.LocationWatch, "location"],
   [CapabilityKeys.SpeechRecognize, "speech"],
   [CapabilityKeys.FilesPick, "files"],
-  [CapabilityKeys.FilesSave, "files"],
-  [CapabilityKeys.FilesOpen, "files"],
+  // `saveToDevice` and `openExternally` stage the file with Filesystem and hand
+  // it to the system share sheet — they never touch FilePicker. Mapping them to
+  // the picker would report them available on a shell that lacks Share.
+  [CapabilityKeys.FilesSave, "share"],
+  [CapabilityKeys.FilesOpen, "share"],
   [CapabilityKeys.FilesAppStorage, "appStorage"],
   [CapabilityKeys.ShareSend, "share"],
   [CapabilityKeys.ShareReceive, "shareReceive"],
@@ -126,6 +135,10 @@ export const familyByKey = new Map<CapabilityKey, PluginFamily>([
 ]);
 
 const webCapabilities = new Set<CapabilityKey>([
+  // A browser tab has a real lifecycle and a real bundle identity; it has no
+  // OS deep-link event and cannot close itself.
+  CapabilityKeys.AppState,
+  CapabilityKeys.AppInfo,
   CapabilityKeys.CameraTakePhoto,
   CapabilityKeys.CameraPickImages,
   CapabilityKeys.LocationCurrent,
@@ -167,10 +180,11 @@ async function resolveCapability(key: string): Promise<boolean> {
   const typedKey = key as CapabilityKey;
   if (!isNativePlatform()) return hasDom() && webCapabilities.has(typedKey);
 
-  // The running bundle's own declaration. It is a statement of intent that
-  // travels with the bundle, so it can narrow the answer but never widen it —
-  // the bridge check below is what the decision actually rests on.
-  if (!SHELL_CAPABILITIES.includes(typedKey)) return false;
+  // The running bundle's own declaration, for *this* platform. It is a
+  // statement of intent that travels with the bundle, so it can narrow the
+  // answer but never widen it — the bridge check below is what the decision
+  // actually rests on.
+  if (!shellCapabilitiesFor(getPlatformName()).includes(typedKey)) return false;
 
   const family = familyByKey.get(typedKey);
   if (!family) return false;

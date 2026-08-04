@@ -25,7 +25,20 @@ export interface OtaManifestPayload {
   size: number;
   fileCount: number;
   minimumNativeVersion: string;
+  /**
+   * Capabilities the bundle needs on **every** platform. A device missing one
+   * skips the release entirely.
+   */
   requiredCapabilities: string[];
+  /**
+   * Capabilities the bundle uses that only some platforms provide. A device
+   * missing one still takes the release; the feature behind the capability
+   * must be gated at runtime with `capabilities.has()` or a feature flag.
+   *
+   * Omitted when empty so the canonical signing payload stays byte-identical
+   * to the pre-split schema and already-installed clients keep verifying.
+   */
+  optionalCapabilities?: string[];
   mandatory: boolean;
   notes: string;
   files: Record<string, OtaFileEntry>;
@@ -131,6 +144,8 @@ export interface OtaReleaseSummary {
   size: number;
   fileCount: number;
   minimumNativeVersion: string;
+  requiredCapabilities: string[];
+  optionalCapabilities: string[];
   mandatory: boolean;
   notes: string;
   signature: string;

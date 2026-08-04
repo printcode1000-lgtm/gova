@@ -5,7 +5,10 @@ import path from "node:path";
 import { zipSync } from "fflate";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { compareOtaCanonicalStrings } from "../src/features/ota/utils/ota-canonical-order";
-import { MINIMUM_SUPPORTED_NATIVE_VERSION } from "../src/native-platform/capabilities/shell-capabilities";
+import {
+  MINIMUM_SUPPORTED_NATIVE_VERSION,
+  OPTIONAL_CAPABILITIES_MINIMUM_NATIVE_VERSION,
+} from "../src/native-platform/capabilities/shell-capabilities";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { assertReleaseStaticBundle } from "./assert-release-static-bundle";
 import {
@@ -33,7 +36,10 @@ import {
   otaObjectExists,
   putOtaObject,
 } from "./ota/ota-r2";
-import { scanBuiltCapabilities } from "./ota/ota-capability-scan";
+import {
+  resolveManifestCapabilities,
+  scanBuiltCapabilities,
+} from "./ota/ota-capability-scan";
 import {
   changedPathsFromHistory,
   selectRecentHistoryKeys,
@@ -281,7 +287,32 @@ async function main(): Promise<void> {
   assertReleaseStaticBundle(localManifestPath);
 
   const files = collectFiles(path.resolve("out"));
-  const requiredCapabilities = scanBuiltCapabilities(files);
+  const {
+    required: requiredCapabilities,
+    optional: optionalCapabilities,
+    withheldUnnamed,
+    withheldOptional,
+  } = resolveManifestCapabilities(
+    minimumNativeVersion,
+    scanBuiltCapabilities(files),
+  );
+  if (withheldUnnamed.length > 0) {
+    console.log(
+      `Withholding capabilities the targeted clients cannot name ` +
+        `(${withheldUnnamed.join(", ")}): minimumNativeVersion=${minimumNativeVersion} ` +
+        `predates these keys. Every targeted shell already contains the plugins, ` +
+        `so nothing is left unguarded; listing them would make those clients ` +
+        `refuse the release outright.`,
+    );
+  }
+  if (withheldOptional.length > 0) {
+    console.log(
+      `Withholding optionalCapabilities (${withheldOptional.join(", ")}): ` +
+        `minimumNativeVersion=${minimumNativeVersion} is below ` +
+        `${OPTIONAL_CAPABILITIES_MINIMUM_NATIVE_VERSION}, and clients built before the ` +
+        `field existed cannot verify a manifest that contains it.`,
+    );
+  }
   const publicRoot = getOtaPublicBaseUrl();
   const baseUrl = `${publicRoot}/${filesPrefix}`;
   const isSingleDirectoryLayout =
@@ -383,6 +414,9 @@ async function main(): Promise<void> {
     fileCount: Object.keys(files).length,
     minimumNativeVersion,
     requiredCapabilities,
+    // Omitted when empty so the signing payload stays byte-identical to the
+    // pre-split schema and clients built before this field still verify.
+    ...(optionalCapabilities.length > 0 ? { optionalCapabilities } : {}),
     mandatory,
     notes,
     files: Object.fromEntries(
@@ -464,6 +498,9 @@ async function main(): Promise<void> {
   console.log(`Files: ${payload.fileCount}, total bytes: ${size}`);
   console.log(
     `Required capabilities: ${requiredCapabilities.join(", ") || "none"}`,
+  );
+  console.log(
+    `Optional capabilities (never block a device): ${optionalCapabilities.join(", ") || "none"}`,
   );
 }
 

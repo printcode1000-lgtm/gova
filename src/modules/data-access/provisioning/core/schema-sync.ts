@@ -45,6 +45,7 @@ const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
     'notification_vapid_settings',
     'ota_releases',
     'ota_release_audit',
+    'feature_flags',
   ]),
   advertisements: new Set(['hero_slider', 'featured_marquee', 'trending_ribbon']),
   product: new Set([

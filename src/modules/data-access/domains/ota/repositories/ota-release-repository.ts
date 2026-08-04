@@ -191,8 +191,39 @@ export class OtaReleaseRepository {
 
 export const otaReleaseRepository = new OtaReleaseRepository();
 
+/**
+ * Capability lists come from the retained manifest, not from columns.
+ *
+ * The manifest is the signed source of truth and is stored whole, so mirroring
+ * these into columns would add a migration and a second copy that can disagree
+ * with the signature. A row whose manifest cannot be parsed reports empty lists
+ * rather than failing the whole dashboard.
+ */
+function capabilitiesFromManifest(manifestJson: string): {
+  requiredCapabilities: string[];
+  optionalCapabilities: string[];
+} {
+  try {
+    const manifest = JSON.parse(manifestJson) as {
+      requiredCapabilities?: unknown;
+      optionalCapabilities?: unknown;
+    };
+    const list = (value: unknown): string[] =>
+      Array.isArray(value)
+        ? value.filter((key): key is string => typeof key === 'string')
+        : [];
+    return {
+      requiredCapabilities: list(manifest.requiredCapabilities),
+      optionalCapabilities: list(manifest.optionalCapabilities),
+    };
+  } catch {
+    return { requiredCapabilities: [], optionalCapabilities: [] };
+  }
+}
+
 function toSummary(row: OtaReleaseEntity): OtaReleaseSummary {
   return {
+    ...capabilitiesFromManifest(row.manifestJson),
     releaseId: row.releaseId,
     version: row.version,
     manifestCreatedAt: row.manifestCreatedAt,

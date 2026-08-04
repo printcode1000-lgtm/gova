@@ -24,6 +24,7 @@ import { SuperAdminErrorFloatingButton } from "@/features/system-logs/SuperAdmin
 import { SuperAdminImpersonationBanner } from "@/features/super-admin/components/SuperAdminImpersonationBanner";
 import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
+import { FeatureFlagController } from "@/features/feature-flags";
 import {
   AndroidPushController,
   WebPushController,
@@ -81,6 +82,7 @@ export default function RootLayout({
             <SessionProvider>
               <FavoritesProvider>
                 <SystemLogCollector />
+                <FeatureFlagController />
                 <AndroidPushController />
                 <WebPushController />
                 <SystemLogErrorBoundary>

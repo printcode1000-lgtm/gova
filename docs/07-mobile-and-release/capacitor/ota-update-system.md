@@ -361,6 +361,7 @@ Example schema v2 manifest:
   "fileCount": 373,
   "minimumNativeVersion": "0.0.0",
   "requiredCapabilities": ["camera.takePhoto", "share.send"],
+  "optionalCapabilities": ["barcode.scan"],
   "mandatory": false,
   "notes": "Automatic build - 2026-06-30 09:30:15 Africa/Cairo",
   "files": {
@@ -383,6 +384,8 @@ Example schema v2 manifest:
 
 The manifest is signed with P-256. Capability keys, file entries, and Delta
 metadata are sorted for canonical signing. Every listed path has a SHA-256 and byte size.
+`optionalCapabilities` is absent entirely when empty — see
+[Required and optional capabilities](#required-and-optional-capabilities).
 
 `baseUrl` always points to the non-versioned `app-updates/files` directory.
 
@@ -631,6 +634,14 @@ After `cap:build`, R2 must contain exactly `manifest.json` plus the objects unde
   the bridge.
 - Never duplicate the native version floor; import
   `MINIMUM_SUPPORTED_NATIVE_VERSION`.
+- Never add a field to the canonical signing payload without a withholding rule
+  tied to a native version; an old client cannot verify what it does not know
+  about, and it cannot be fixed over OTA.
+- Never publish a capability key an installed client cannot name; give every new
+  key a `CAPABILITY_AVAILABILITY` entry so the publisher withholds or refuses it
+  deliberately.
+- Never let a capability that exists on one platform only enter
+  `requiredCapabilities`.
 
 ## Bootstrap Compatibility Note
 
@@ -648,6 +659,89 @@ runtime capability registry for missing keys before approval lookup or file
 download. Any missing key produces `ota.nativeUpdateRequired` with the exact
 keys. `minimumNativeVersion` remains as a compatibility floor.
 
+### Required and optional capabilities
+
+`requiredCapabilities` blocks a release. `optionalCapabilities` never does.
+
+The split is **derived**, not hand-kept: `SHELL_CAPABILITIES_BY_PLATFORM`
+declares what each shell contains, a capability present on every platform is
+required, and one present on only some is optional. The publisher prints both
+lists.
+
+| Manifest field         | Device is missing one                                        |
+| ---------------------- | ------------------------------------------------------------ |
+| `requiredCapabilities` | Release skipped with `ota.nativeUpdateRequired`               |
+| `optionalCapabilities` | Release installs; `optional_capabilities_missing` is recorded |
+
+A single list made every capability all-or-nothing. `barcode.scan` exists only
+on Android, so the moment any screen called the scanner, `barcode.scan` would
+enter the required set and **every iOS device would refuse every release** —
+permanently, since no store build can add a plugin that has no SPM support. A
+bundle may use an optional capability only behind `capabilities.has()` or a
+feature flag.
+
+#### A key an installed client cannot name
+
+A shipped client answers `false` for any capability key outside its own
+`ALL_CAPABILITY_KEYS`. Listing a newly added key therefore does **not** make an
+old device cautious — it makes it treat the key as missing and refuse every
+release, permanently, recoverable only from the store. Adding a capability is
+exactly as dangerous as adding a signed field.
+
+`CAPABILITY_AVAILABILITY` records two versions per key, and the compiler rejects
+an incomplete record, so adding a capability forces the question to be answered:
+
+| Field             | Meaning                                             |
+| ----------------- | --------------------------------------------------- |
+| `backedSince`     | First native version whose **shell has the plugin** |
+| `vocabularySince` | First native version whose **client knows the key** |
+
+`resolveManifestCapabilities` then decides per key, against the release's
+`minimumNativeVersion`:
+
+| Targeted version vs the key                     | Result                                                                              |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| at/above `vocabularySince`                        | listed normally                                                                     |
+| below `vocabularySince`, at/above `backedSince`   | **withheld** — every targeted shell has the plugin, so naming it guards nothing more |
+| below `backedSince`                               | **publish refused** — a targeted shell genuinely lacks it, and that is a store release |
+
+The third row is the golden rule and still fails loudly; withholding is only
+ever applied when the capability is provably present.
+
+The `app.*` keys are the current case: `@capacitor/app` has been in the shell
+since 0.2.0, but the keys naming it are new, so a manifest aimed at 0.2.0 omits
+them and one aimed at 0.2.1 carries them.
+
+#### Signing-payload transition
+
+`optionalCapabilities` is part of the **signed** payload. A client built before
+the field existed computes a different canonical string and rejects the release
+as `OTA manifest signature is invalid` — and a device that rejects every release
+can only be recovered from the store. Two rules make the transition safe, and
+neither needs anyone to remember it:
+
+1. **Empty means absent.** An empty set is omitted from the manifest and from
+   the canonical payload, so a release with no platform-specific features signs
+   the exact bytes the pre-split schema signed.
+2. **Below the floor it is withheld.** `OPTIONAL_CAPABILITIES_MINIMUM_NATIVE_VERSION`
+   names the first store shell whose client understands the field. While a
+   release declares a `minimumNativeVersion` below it, the publisher drops the
+   field and prints what it withheld. Optional keys gate nothing, so withholding
+   them changes no device behaviour.
+
+To start using the field: ship a store build containing the split-aware client,
+move the `native-v*` tag, raise
+`OPTIONAL_CAPABILITIES_MINIMUM_NATIVE_VERSION` to that version, and publish with
+a `minimumNativeVersion` at or above it.
+
+`ota-delivery.test.ts` guards the omission, the withholding rule, and the
+byte-equality of the publisher and client payloads.
+
+The publisher no longer keeps its own copy of the canonical payload — it
+delegates to `canonicalOtaManifestPayload`. Two implementations of one
+byte-exact format is a signature outage waiting to happen, and the only recovery
+from one would be a store build.
+
 ### The registry asks the shell, not the bundle
 
 On a device, `capability-registry.ts` resolves each key through
@@ -662,10 +756,11 @@ proved only that the bundle contains its own code. `pluginNameByFamily` holds
 the registration name for every family, and the Native Platform tests assert
 that every `CapabilityKey` maps to a family with a name.
 
-`SHELL_CAPABILITIES` still participates, but only as a narrowing filter. It is
-a constant compiled into the web bundle, so an OTA release carries its own
-copy: it can withdraw a capability, never grant one. The bridge check is what
-the decision rests on.
+The shell declaration still participates, but only as a narrowing filter, and
+it is read **for the running platform** via `shellCapabilitiesFor()`. It is a
+constant compiled into the web bundle, so an OTA release carries its own copy:
+it can withdraw a capability, never grant one. The bridge check is what the
+decision rests on.
 
 ### The source scan must stay honest
 
@@ -749,6 +844,10 @@ UI, JavaScript business logic, localization, and features that use capabilities
 already reported by the installed shell may use OTA after the compatibility and
 approval gates pass.
 
+There is a third, faster lane. Withdrawing a feature does not need OTA at all:
+`feature_flags` in the users database takes effect on the next client refresh.
+See [Live control without a release](./native-platform.md#live-control-without-a-release).
+
 ### Where the line falls per feature
 
 The question is never "does this feature touch the camera?" but "does this
@@ -762,6 +861,8 @@ change alter something compiled into the store binary?".
 | Notification content, category, routing, dedupe, persistence, badge   | OTA            |
 | Creating or updating Android notification channels at runtime         | OTA            |
 | Calling camera, location, speech, share, or barcode from a new screen | OTA            |
+| Application state, deep links, or exit via `nativePlatform.app`       | OTA            |
+| Turning a feature on or off for every device                          | **Neither** — a feature flag, live |
 | Changing capture quality, formats, or picker options                  | OTA            |
 | A new `public/` asset, once classified in `build-static.ts`           | OTA            |
 | Notification tray icon, accent colour, or `custom_notification.mp3`   | Store release  |

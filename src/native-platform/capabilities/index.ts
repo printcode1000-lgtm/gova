@@ -7,6 +7,10 @@ export {
   type CapabilityKey,
 } from "./capability-keys";
 export {
+  MINIMUM_SUPPORTED_NATIVE_VERSION,
   NATIVE_CAPABILITY_VERSION,
-  SHELL_CAPABILITIES,
+  PLATFORM_OPTIONAL_SHELL_CAPABILITIES,
+  SHELL_CAPABILITIES_BY_PLATFORM,
+  UNIVERSAL_SHELL_CAPABILITIES,
+  shellCapabilitiesFor,
 } from "./shell-capabilities";

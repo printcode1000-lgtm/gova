@@ -123,6 +123,13 @@ function validateManifest(manifest: OtaManifest, remote: boolean): void {
     !Array.isArray(manifest.requiredCapabilities) ||
     manifest.requiredCapabilities.some((key) => typeof key !== "string" || !key)
   ) throw new Error("OTA manifest capabilities are invalid");
+  // Absent is valid — a release with no platform-specific features omits the
+  // field so its signing payload matches the pre-split schema.
+  if (
+    manifest.optionalCapabilities !== undefined &&
+    (!Array.isArray(manifest.optionalCapabilities) ||
+      manifest.optionalCapabilities.some((key) => typeof key !== "string" || !key))
+  ) throw new Error("OTA manifest capabilities are invalid");
 
   const entries = Object.entries(manifest.files);
   if (entries.length !== manifest.fileCount) throw new Error("OTA manifest file count mismatch");
@@ -721,11 +728,27 @@ export const otaUpdateService = {
           return null;
         }
         const installedNativeVersion = await capacitorOtaAdapter.nativeVersion();
-        const capabilityDecision = await evaluateOtaCapabilities(remote.requiredCapabilities, capabilities);
+        const capabilityDecision = await evaluateOtaCapabilities(
+          remote.requiredCapabilities,
+          capabilities,
+          remote.optionalCapabilities,
+        );
         if (compareOtaVersions(remote.minimumNativeVersion, installedNativeVersion) > 0 || !capabilityDecision.compatible) {
           state.lastSuccessfulCheckAt = Date.now();
           await updateStatus(state, { progress: 100, statusKey: "ota.nativeUpdateRequired", nativeUpdateRequired: true }, notify);
           return null;
+        }
+        if (capabilityDecision.missingOptionalCapabilities.length > 0) {
+          // Not a failure: the release ships, and the features behind these
+          // keys stay hidden. Recorded so a platform running degraded is
+          // visible in adoption data instead of being invisible.
+          recordOtaOutcome({
+            outcome: "optional_capabilities_missing",
+            localVersion: local.version,
+            targetVersion: remote.version,
+            releaseId: remote.releaseId,
+            reason: capabilityDecision.missingOptionalCapabilities.join(","),
+          });
         }
         const access = await otaApiService.getReleaseAccess({ releaseId: remote.releaseId, version: remote.version, identity });
         if (!access.allowed) {
