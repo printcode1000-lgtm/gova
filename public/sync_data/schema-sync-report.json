@@ -1,17 +1,37 @@
 {
-  "executedAt": "2026-07-31T09:08:56.565Z",
-  "durationMs": 8893,
-  "sqliteSchemaVersion": "81f1699e1bb32813",
-  "tursoSchemaVersionBefore": "81f1699e1bb32813",
-  "tursoSchemaVersionAfter": "81f1699e1bb32813",
-  "operations": [],
-  "tablesModified": 0,
+  "executedAt": "2026-08-04T02:45:08.397Z",
+  "durationMs": 8821,
+  "sqliteSchemaVersion": "7f6ab853f76975cf",
+  "tursoSchemaVersionBefore": "652464bbb938ab38",
+  "tursoSchemaVersionAfter": "0754e43627f3d48c",
+  "operations": [
+    {
+      "type": "CREATE_TABLE",
+      "tableName": "feature_flags",
+      "sql": "CREATE TABLE `feature_flags` (\n\t`key` text PRIMARY KEY NOT NULL,\n\t`enabled` integer DEFAULT false NOT NULL,\n\t`notes` text DEFAULT '' NOT NULL,\n\t`updated_at` text NOT NULL,\n\t`updated_by_uid` text\n)",
+      "description": "Create missing table \"feature_flags\""
+    },
+    {
+      "type": "CREATE_INDEX",
+      "tableName": "feature_flags",
+      "sql": "CREATE INDEX `feature_flags_enabled_idx` ON `feature_flags` (`enabled`);",
+      "description": "Create missing index \"feature_flags_enabled_idx\""
+    }
+  ],
+  "tablesModified": 1,
   "columnsAdded": 0,
-  "indexesAdded": 0,
+  "indexesAdded": 1,
   "viewsAdded": 0,
   "triggersAdded": 0,
-  "sqlExecuted": [],
+  "sqlExecuted": [
+    "CREATE TABLE `feature_flags` (\n\t`key` text PRIMARY KEY NOT NULL,\n\t`enabled` integer DEFAULT false NOT NULL,\n\t`notes` text DEFAULT '' NOT NULL,\n\t`updated_at` text NOT NULL,\n\t`updated_by_uid` text\n)",
+    "CREATE INDEX `feature_flags_enabled_idx` ON `feature_flags` (`enabled`);"
+  ],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "Table \"data_health_factory_reset_plans\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"data_health_factory_reset_locks\" exists on Turso but not in SQLite. Not dropped automatically.",
+    "Table \"data_health_factory_reset_audit\" exists on Turso but not in SQLite. Not dropped automatically."
+  ],
   "skipped": false
 }

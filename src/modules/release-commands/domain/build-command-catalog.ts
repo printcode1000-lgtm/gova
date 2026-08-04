@@ -104,6 +104,14 @@ export const BUILD_COMMAND_CATALOG = [
   // exclusive release lock that the native-android commands hold.
   entry("android-open-outputs", "android:open:outputs", "verification", "safe", [], [], "<1 min", undefined, [], true),
   entry("cap-prepare-android", "cap:prepare:android", "native-android", "destructive", [], ["out/asol-web-manifest.json", "android/app/src/main/assets/public"], "12-25 min", undefined, [], true),
+  // Testing path: rebuilds the web bundle, syncs it, and assembles a debug APK.
+  // No keystore, no R2 write — but it does rewrite the native web assets, so it
+  // takes the same exclusive lock as the other native-android commands.
+  entry("android-build-debug", "android:build:debug", "native-android", "destructive", [], ["android/app/build/outputs/apk/debug/app-debug.apk"], "15-35 min", undefined, [], true),
+  // Verification category: the suite reads the tree and must never wait behind
+  // a release lock it does not need.
+  // Measured at ~2.5 min warm; the upper bound covers a cold tsc/tsx cache.
+  entry("run-test-suite", "verify:all", "verification", "safe", [], [], "3-10 min", undefined, [], true),
   entry("cap-sync", "cap:sync", "native-android", "safe", [], ["android/app/src/main/assets/public"], "3-8 min"),
   entry("cap-copy", "cap:copy", "native-android", "safe", [], ["android/app/src/main/assets/public"], "2-5 min"),
   entry("cap-verify-defaults", "cap:verify-defaults", "verification", "safe", [], [], "1-3 min"),

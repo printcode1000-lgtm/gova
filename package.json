@@ -69,6 +69,8 @@
     "android:backup:validate": "npx tsx scripts/validate-android-backup-policy.ts",
     "android:r8:validate": "npx tsx scripts/validate-android-r8-policy.ts",
     "android:open:outputs": "npx tsx scripts/open-android-outputs.ts",
+    "android:build:debug": "npx tsx scripts/build-android-debug.ts",
+    "verify:all": "npx tsx scripts/verify-all.ts",
     "android:r8:verify-release": "npm run android:push:sync-assets && npm run android:backup:validate && npm run android:r8:validate && npx tsx scripts/verify-android-r8-release.ts",
     "ios:push:validate": "npx tsx scripts/validate-ios-push-policy.ts",
     "ios:spm:normalize": "npx tsx scripts/normalize-capacitor-spm-paths.ts",

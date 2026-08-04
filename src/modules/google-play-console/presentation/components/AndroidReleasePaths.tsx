@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {
-  CloudUpload, ExternalLink, FolderOpen, LoaderCircle, Play,
+  CloudUpload, ExternalLink, FlaskConical, FolderOpen, LoaderCircle, Play,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,20 @@ const PATHS = [
     secondary: {
       id: "cap-open-android",
       label: "releaseConsole.build.openAndroidStudio",
+      icon: "folder",
+    },
+  },
+  {
+    id: "android-build-debug",
+    title: "releaseConsole.androidPaths.debugApk.title",
+    description: "releaseConsole.androidPaths.debugApk.description",
+    action: "releaseConsole.androidPaths.debugApk.action",
+    // The suite is offered beside the build because a debug APK is what you
+    // put on a device *after* the tree is green, not instead of checking it.
+    secondary: {
+      id: "run-test-suite",
+      label: "releaseConsole.androidPaths.debugApk.tests",
+      icon: "tests",
     },
   },
   {
@@ -125,8 +139,10 @@ export function AndroidReleasePaths({ busy, jobs, readiness, start, cancel, t }:
                 onClick={() => void start({ commandId: secondary.id })}>
                 {secondaryRunning
                   ? <LoaderCircle className="h-4 w-4 animate-spin" />
-                  : <FolderOpen className="h-4 w-4" />}
-                {t(secondary.label)}
+                  : secondary.icon === "tests"
+                    ? <FlaskConical className="h-4 w-4" />
+                    : <FolderOpen className="h-4 w-4" />}
+                {secondaryRunning ? t("releaseConsole.jobStatus.running") : t(secondary.label)}
               </Button>
             ) : null}
             {running && job ? <StopButton job={job} cancel={cancel} t={t} /> : null}
