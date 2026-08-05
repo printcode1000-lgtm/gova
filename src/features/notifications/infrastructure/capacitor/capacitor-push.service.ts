@@ -9,6 +9,7 @@ import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/brow
 import { asolNotificationRepository } from "../asol-notification-repository";
 import type { DeviceToken, NotificationEntity } from "../../domain/entities";
 import { resolvePushProvider } from "../../domain/push-token-kind";
+import { readNotificationLocale } from "../../shared/read-notification-locale";
 import {
   NotificationCategories,
   NotificationChannels,
@@ -225,6 +226,7 @@ export class CapacitorPushService {
       provider: resolvePushProvider(platform, tokenValue),
       deviceId,
       token: tokenValue,
+      locale: await readNotificationLocale(),
       deviceLabel: platform === "android" ? "ASOL Android" : "ASOL iOS",
       enabled: true,
       lastSeenAt: now,

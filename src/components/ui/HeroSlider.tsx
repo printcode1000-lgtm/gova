@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { HeroSliderEditor } from "@/components/ui/HeroSliderEditor";
 import { HeroSliderImagesEditor } from "@/components/ui/HeroSliderImagesEditor";
 import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
+import { useTranslation } from "@/lib/i18n";
 
 export type HeroSliderTransition =
   | "Fade"
@@ -50,6 +51,7 @@ export function HeroSlider({
   onSave,
   onCancel,
 }: HeroSliderProps) {
+  const { t } = useTranslation();
   const [draftConfig, setDraftConfig] = useState(config);
   const [current, setCurrent] = useState(0);
   const [previous, setPrevious] = useState<number | null>(null);
@@ -412,8 +414,8 @@ export function HeroSlider({
         {!hasSlides && (
           <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
             {mode !== "view"
-              ? "أضف شريحة من لوحة التعديل لبدء المعاينة."
-              : "لا توجد شرائح متاحة حاليًا."}
+              ? t("heroSlider.addSlide")
+              : t("heroSlider.noSlides")}
           </div>
         )}
 
@@ -486,7 +488,7 @@ export function HeroSlider({
                       />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
-                        Image unavailable
+                        {t("heroSlider.imageUnavailable")}
                       </div>
                     )}
                     {(slide.title || slide.subtitle) && (

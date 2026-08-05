@@ -7,14 +7,21 @@ import { notificationDeviceTokenService } from "../application/device-token-serv
 import { notificationLifecycleService } from "../application/notification-lifecycle-service";
 import { notificationReceiver } from "../application/notification-receiver";
 
-export function AndroidPushController() {
+/**
+ * Native push lifecycle for Android and iOS.
+ *
+ * Mounted once below `SessionProvider`. It attaches the received/tapped
+ * handlers, imports notifications still sitting in the system tray, and
+ * re-registers the token when the signed-in user changes.
+ */
+export function NativePushController() {
   const router = useRouter();
   const { session, isLoading } = useSession();
   const previousUidRef = useRef("");
   const previousPhoneRef = useRef("");
 
   useEffect(() => {
-    if (isLoading || !notificationDeviceTokenService.isAndroid()) return;
+    if (isLoading || !notificationDeviceTokenService.isNativePush()) return;
     const uid = session?.uid ?? "";
     const previousUid = previousUidRef.current;
     const previousPhone = previousPhoneRef.current;

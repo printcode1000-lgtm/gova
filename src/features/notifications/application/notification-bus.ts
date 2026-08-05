@@ -10,7 +10,6 @@ import type {
 import { EventNotificationMapper } from "./event-notification-mapper";
 import { NotificationBuilder } from "./notification-builder";
 import { notificationSender } from "./notification-sender";
-import { notificationApiService } from "../services/notification-api-service";
 
 type Listener = (notification: NotificationEntity) => void;
 
@@ -39,34 +38,6 @@ export class NotificationBus {
     const input = this.mapper.toTemplateInput(event, locale);
     if (!input) return null;
     return this.publishTemplate(input);
-  }
-
-  async publishEventToUsers(
-    event: Omit<NotificationEvent, "uid" | "dedupeKey"> & {
-      uids: string[];
-      dedupeKey: string;
-    },
-    locale: NotificationLocale = "ar",
-  ) {
-    const mapped = this.mapper.toTemplateInput(
-      {
-        ...event,
-        uid: event.uids[0] ?? "",
-        dedupeKey: event.dedupeKey,
-      },
-      locale,
-    );
-    return notificationApiService.sendToUsers({
-      uids: event.uids,
-      templateId: mapped?.templateId,
-      locale,
-      dedupeKey: event.dedupeKey,
-      variables: event.variables,
-      metadata: {
-        ...(event.metadata ?? {}),
-        eventName: event.name,
-      },
-    });
   }
 
   private async publishBuilt(notification: NotificationEntity) {

@@ -107,5 +107,138 @@
     "targets": ["center", "badge"],
     "groupKey": "system",
     "sound": "silent"
+  },
+  "shipping.quoteProposed": {
+    "title": "New shipping quote",
+    "body": "A shipping quote of {{amount}} was sent. Open the order to accept or reject it.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=buyer", "label": "View order" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipping.quoteAccepted": {
+    "title": "Shipping quote accepted",
+    "body": "The buyer accepted the shipping quote of {{amount}}.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipping.quoteRejected": {
+    "title": "Shipping quote rejected",
+    "body": "The buyer rejected the shipping quote of {{amount}}. You can send a revised quote.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.planInvitation": {
+    "title": "Unified delivery request",
+    "body": "A multi-seller order with {{sellerCount}} pickup stops. You can send one quote for the whole delivery.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "View delivery plan"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteProposed": {
+    "title": "New unified delivery quote",
+    "body": "A quote of {{amount}} arrived to collect your order from several sellers in one shipment.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=buyer", "label": "View delivery plan" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteAccepted": {
+    "title": "Unified delivery quote selected",
+    "body": "The buyer accepted your quote of {{amount}}.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "View delivery plan"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteRejected": {
+    "title": "Delivery quote not selected",
+    "body": "The buyer rejected the delivery quote of {{amount}}. You can send a revised quote.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "View delivery plan"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.separateSelected": {
+    "title": "Separate delivery selected",
+    "body": "The buyer chose to keep each seller's delivery independent.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "View delivery plan"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "specialty.request": {
+    "title": "New request: {{specialtyName}}",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "View and reply" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "specialty.replyFromProvider": {
+    "title": "New reply to your request",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "View and reply" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "specialty.messageFromBuyer": {
+    "title": "New message from the buyer",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "View and reply" },
+    "groupKey": "chat",
+    "sound": "default"
   }
 }

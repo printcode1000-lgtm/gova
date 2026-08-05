@@ -3,6 +3,7 @@
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
 import { NotificationPlatforms } from "../domain/enums";
 import { notificationApiService } from "../services/notification-api-service";
+import { readNotificationLocale } from "../shared/read-notification-locale";
 import { permissionManager, PermissionKinds } from "@/native-platform/permissions";
 
 const DEVICE_ID_KEY = "web-push-device-id";
@@ -117,9 +118,34 @@ export class WebPushBrowserService {
       provider: "web_push",
       deviceId,
       token,
+      locale: await readNotificationLocale(),
       deviceLabel: "Browser",
     });
     return { deviceId, subscription };
+  }
+
+  /**
+   * Re-send the existing subscription with the current UI language.
+   *
+   * Never prompts: when there is no active subscription there is nothing to
+   * update, so the user is not asked for a permission they did not request.
+   */
+  async refreshLocale(uid: string, phone: string): Promise<boolean> {
+    if (!this.isSupported()) return false;
+    const registration = await navigator.serviceWorker.getRegistration("/");
+    const subscription = await registration?.pushManager.getSubscription();
+    if (!subscription) return false;
+    await notificationApiService.registerToken({
+      uid,
+      phone,
+      platform: NotificationPlatforms.Web,
+      provider: "web_push",
+      deviceId: await getDeviceId(),
+      token: JSON.stringify(subscription.toJSON()),
+      locale: await readNotificationLocale(),
+      deviceLabel: "Browser",
+    });
+    return true;
   }
 
   async unsubscribe(uid: string, phone: string) {

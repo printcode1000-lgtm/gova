@@ -1,9 +1,43 @@
 "use client";
 
 import { useEffect } from "react";
+import { LOCALE_CHANGED_EVENT } from "@/lib/i18n";
+import { useSession } from "@/features/auth/components/SessionProvider";
 import { NOTIFICATION_CHANGED_EVENT } from "../domain/defaults";
+import { notificationDeviceTokenService } from "../application/device-token-service";
 
+/**
+ * Browser-side notification wiring.
+ *
+ * Forwards service-worker messages into window events, and re-registers the
+ * device token when the UI language changes. The language part runs on every
+ * platform — it is mounted above the preferences tree, so it listens for the
+ * document-locale event rather than reading the preferences context.
+ */
 export function WebPushController() {
+  const { session } = useSession();
+  const uid = session?.uid ?? "";
+  const phone = session?.phone ?? "";
+
+  useEffect(() => {
+    if (!uid || typeof window === "undefined") return;
+    const handleLocaleChange = () => {
+      void notificationDeviceTokenService
+        .refreshLocale(uid, phone)
+        .catch((error) => {
+          // Not fatal: push keeps working, the text just stays in the previous
+          // language until the next registration.
+          console.warn(
+            "[Notifications] Failed to update the device language.",
+            error,
+          );
+        });
+    };
+    window.addEventListener(LOCALE_CHANGED_EVENT, handleLocaleChange);
+    return () =>
+      window.removeEventListener(LOCALE_CHANGED_EVENT, handleLocaleChange);
+  }, [phone, uid]);
+
   useEffect(() => {
     if (
       typeof window === "undefined" ||

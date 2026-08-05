@@ -3,5 +3,5 @@ export type { TranslationKey } from './dictionaries';
 export { dictionaries } from './dictionaries';
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE, isRtlLocale } from './constants';
 export { translate, interpolate } from './translate';
-export { applyDocumentLocale } from './apply-locale';
+export { applyDocumentLocale, LOCALE_CHANGED_EVENT } from './apply-locale';
 export { useTranslation } from './use-translation';

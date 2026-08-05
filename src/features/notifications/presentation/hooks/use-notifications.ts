@@ -87,6 +87,14 @@ export function useNotifications() {
               )
               .catch((error) => {
                 console.warn("[Notifications] Failed to send received receipt.", error);
+                // The sender is waiting on this receipt and the user has no way
+                // to retry it by hand, so it is replayed when the app is online.
+                void notificationSyncService.enqueue(uid, "chat_receipt", receiptKey, {
+                  capability,
+                  targetMessageId,
+                  status: "received",
+                  notificationId: item.id,
+                });
               })
               .finally(() => receiptInFlight.delete(receiptKey));
           }
@@ -99,23 +107,50 @@ export function useNotifications() {
     void refresh();
   }, [refresh]);
 
+  const flushOfflineQueue = React.useCallback(async () => {
+    if (!uid || !session?.sessionToken) return;
+    await notificationSyncService.sync(uid, {
+      sendChatReceipt: async (payload) => {
+        await specialtyChatClient.receipt(session, {
+          capability: payload.capability,
+          targetMessageId: payload.targetMessageId,
+          status: payload.status,
+        });
+        if (payload.status === "received") {
+          const item = await asolNotificationRepository
+            .list(uid)
+            .then((items) => items.find((entry) => entry.id === payload.notificationId));
+          if (item) {
+            await asolNotificationRepository.update(uid, item.id, {
+              metadata: { ...item.metadata, receivedReceiptSent: true },
+            });
+          }
+        }
+      },
+    });
+  }, [session, uid]);
+
   React.useEffect(() => {
     if (!uid || typeof window === "undefined") return;
     const handler = (event: Event) => {
       const detail = (event as CustomEvent<{ uid: string }>).detail;
       if (!detail?.uid || detail.uid === uid) void refresh();
     };
+    const handleOnline = () => {
+      void flushOfflineQueue();
+      void refresh();
+    };
     window.addEventListener(NOTIFICATION_CHANGED_EVENT, handler);
-    window.addEventListener("online", handler);
+    window.addEventListener("online", handleOnline);
     return () => {
       window.removeEventListener(NOTIFICATION_CHANGED_EVENT, handler);
-      window.removeEventListener("online", handler);
+      window.removeEventListener("online", handleOnline);
     };
-  }, [refresh, uid]);
+  }, [flushOfflineQueue, refresh, uid]);
 
   React.useEffect(() => {
-    if (uid) void notificationSyncService.sync(uid);
-  }, [uid]);
+    void flushOfflineQueue();
+  }, [flushOfflineQueue]);
 
   return {
     isLoading: isLoading || loading,

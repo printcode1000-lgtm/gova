@@ -8,20 +8,20 @@
 - Firebase Apple App ID: `1:543298343631:ios:9c65ac6e8871ec7c609dba`
 - Encoded App ID: `app-1-543298343631-ios-9c65ac6e8871ec7c609dba`
 
-The Firebase Apple registration belongs to the same application identity, but
-the current ASOL notification architecture sends to Apple devices directly
-through APNs. Capacitor's Push Notifications plugin returns an APNs device token
-on iOS, the API stores it with provider `apns`, and the server sends it through
-the APNs HTTP/2 provider. Android continues to use FCM.
+The Firebase Apple registration belongs to the same application identity. Until
+the Firebase Messaging iOS SDK is added to the Xcode project, Capacitor's Push
+Notifications plugin returns a raw APNs device token, the API stores it with
+provider `apns`, and delivery goes through the direct APNs HTTP/2 provider —
+which is unconfigured by default. Android uses FCM.
+
+The intended end state is Firebase Admin as the single transport for both
+platforms. Only the Xcode step remains; see "Delivery path" below.
 
 The complete Firebase Apple configuration downloaded from Firebase Console is
 stored at `ios/App/App/GoogleService-Info.plist` and is included in the Xcode App
 target resources. Firebase documents this client configuration as containing
 project and application identifiers rather than server credentials. Keep the
 complete file intact; do not copy it into `public/`, `out/`, or JavaScript env.
-
-Do not add `FirebaseMessaging` or change iOS tokens to provider `fcm` without a
-coordinated client, API, database, and notification-provider migration.
 
 ## Native configuration
 
@@ -68,7 +68,13 @@ silently de-registered.
 
 The routing is **self-correcting**: the moment the Firebase Messaging iOS SDK is
 added, Apple devices begin issuing Firebase tokens and route to Firebase Admin
-with no code change and no data migration.
+with no code change and no data migration. `NotificationTokenService.register`
+accepts `ios`+`apns` and `ios`+`fcm`, `provider` is a free-text column, and the
+registry already sends `fcm` tokens to `FcmNotificationProvider`.
+
+The client lifecycle covers Apple as well: `NativePushController` gates on
+`isNativePush()`, so received and tapped notifications reach the local
+notification center on iOS exactly as they do on Android.
 
 ### Apple payload options
 
@@ -113,9 +119,16 @@ a physical device or distributing a release:
 
 `ApnsNotificationProvider` remains available as an opt-in fallback. It is used
 only when a device registered a raw APNs token, and only if `APNS_TEAM_ID`,
-`APNS_KEY_ID`, `APNS_BUNDLE_ID`, and `APNS_PRIVATE_KEY` are configured.
+`APNS_KEY_ID`, and `APNS_PRIVATE_KEY` are configured (`APNS_BUNDLE_ID` defaults
+to `hgh.asol.app`, and `APNS_PRODUCTION=true` selects the production host).
 Leaving them unset is the supported default and produces a clear error rather
 than a silent failure.
+
+Its payload is deliberately simpler than the Firebase path: alert pushes always
+use `apns-priority: 10`, the system `default` sound rather than
+`custom_notification.caf`, and a fixed badge value of `1`. APNs responses `400`
+and `410` mark the token invalid, and the send service soft-deletes it. The
+ES256 authorization JWT is cached for 50 minutes.
 
 ### Remaining Xcode step
 
@@ -127,6 +140,9 @@ Apple devices cannot issue Firebase tokens until the SDK is present:
    `application(_:didFinishLaunchingWithOptions:)` in `AppDelegate.swift`.
 3. `GoogleService-Info.plist` is already committed and already a member of the
    App target's Resources — no further action needed for it.
+
+Nothing on the API, database, or client side is waiting on this step: an Apple
+device that registers a Firebase token is accepted and routed today.
 
 Until this is done, Apple push registration succeeds, the token is stored with
 provider `apns`, and sends return

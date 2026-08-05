@@ -17,16 +17,19 @@ The notification system is a local-first module that powers the in-app notificat
 - Badge counts include only unread notifications that target `badge`.
 - Notifications persist locally in AsolDB IndexedDB stores.
 - Templates live only in JSON files: Arabic and English.
-- Business modules publish through `NotificationBus`; they do not talk directly to push providers.
-- Event-to-template mapping is available for orders, shipments, returns, chat, payments, offers, and system notices.
+- Client business modules publish through `NotificationBus`; they do not talk directly to push providers.
+- Server business flows (orders, shipping quotes, unified delivery, specialty chat) call `NotificationSendService.sendToUsers` directly with a `templateId`, so their text is resolved per recipient language.
+- Push text follows the device's own language; each token stores the locale it was registered with.
+- Event-to-template mapping exists for orders, shipments, returns, chat, payments, offers, and system notices. Only `orders.created` is published today, from the cart page on the buyer's own device.
 - Deduplication uses `dedupeKey`; duplicate entries are not stored again.
 - Dismissed notifications store their `id` and `dedupeKey` locally so Web Push or Android tray imports do not restore items the user already deleted.
 - Notification lifecycle analytics are stored locally.
 - Optional Capacitor-facing services are isolated behind infrastructure services.
 - Push provider credentials are not present in the client.
 - Device tokens are now stored in the users database in `user_notification_tokens`, locally and in Turso after schema sync.
-- Server APIs support registering/removing a device token and preparing notification delivery to one user or many users.
-- Push delivery now uses a server-side provider interface and registry instead of direct coupling to FCM, APNs, or Web Push.
+- Server APIs support registering/removing a device token and delivering notifications to one user or many users.
+- Push delivery uses a server-side provider interface and registry instead of direct coupling to FCM, APNs, or Web Push.
+- FCM (Android, and Apple once the Firebase iOS SDK is installed) and Web Push are live transports. Direct APNs is an opt-in fallback that stays unconfigured by default.
 
 ## Folder Structure
 
@@ -72,11 +75,28 @@ Dedicated stores:
 
 Templates are intentionally excluded from AsolDB. They are static versioned files inside the app bundle.
 
+Every store is keyed per user and bounded:
+
+| Store | Key | Bound |
+|-------|-----|-------|
+| `notifications` | `user:<uid>:list` | newest 250 notifications |
+| `notificationSettings` | `user:<uid>` | one settings record |
+| `notificationSettings` | `user:<uid>:dismissed` | newest 500 dismissed identities |
+| `notificationBadges` | `user:<uid>` | one badge record |
+| `notificationDeviceTokens` | `user:<uid>:tokens` | unbounded, one entry per device |
+| `notificationAnalytics` | `user:<uid>:analytics` | newest 500 lifecycle events |
+| `notificationOfflineQueue` | `user:<uid>:queue` | cleared when connectivity returns |
+
 The `notificationSettings` store also contains the bounded
 `user:<uid>:dismissed` list. The list stores notification `id` and `dedupeKey`
 values for deleted center items and is used to reject later imports of the same
 notification from Web Push service-worker payloads or Android delivered
 notifications.
+
+The repository also treats an empty `ASOL` card — title `ASOL`, no body, no
+route, no template, no event — as a placeholder. Placeholders are never stored,
+are stripped from existing lists on read, and their identities are added to the
+dismissed list.
 
 ## Users Database Token Storage
 
@@ -90,13 +110,15 @@ user_notification_tokens
 
 Columns:
 
-- `id`
+- `id`: derived as `ntok_<uid>_<platform>_<deviceId>` with unsupported characters replaced
 - `uid`
 - `platform`: `web`, `android`, or `ios`
-- `provider`: `web_push`, `fcm`, `apns`, `capacitor`, or another provider key
+- `provider`: `web_push`, `fcm`, or `apns` — enforced by `NotificationTokenService.register`
 - `device_id`
-- `token`
+- `token`: the FCM/APNs registration token, or the serialized `PushSubscription` JSON for Web Push
+- `locale`: `ar` or `en`, the language this device reads in
 - `enabled`
+- `specialty_requests_enabled`: per-device mirror of the specialty-chat opt-out
 - `last_seen_at`
 - `created_at`
 - `updated_at`
@@ -105,10 +127,33 @@ Columns:
 Indexes:
 
 - `user_notification_tokens_uid_idx`
-- `user_notification_tokens_uid_device_unique`
-- `user_notification_tokens_token_unique`
+- `user_notification_tokens_uid_device_unique` on (`uid`, `device_id`, `platform`)
+- `user_notification_tokens_token_unique` on (`token`)
 
 This table supports multiple devices per user and allows disabling one device without changing the user account.
+
+The authoritative specialty-chat opt-out lives in a second table:
+
+```text
+user_notification_preferences
+```
+
+Columns: `uid` (primary key), `specialty_requests_enabled`, `updated_at`.
+Reads use this table; writes update it and mirror the value onto every token row
+of the same user.
+
+Removing a token is a soft delete: `enabled` becomes false and `deleted_at` is
+set. Rows are never physically deleted.
+
+Because a soft-deleted row keeps both its primary key and its place in the
+`(uid, device_id, platform)` unique index, `upsert` matches deleted rows too and
+revives them. A device that turns notifications off and on again reuses its
+original row and keeps its `specialty_requests_enabled` preference.
+
+If the same token value already exists on another row — a reinstall that
+produced a new device id, or a second account on the same handset — that older
+row is retired with a `revoked:<id>:<timestamp>` tombstone token. This frees the
+`token` unique index without deleting the audit row.
 
 ## Notification Lifecycle
 
@@ -122,15 +167,30 @@ This table supports multiple devices per user and allows disabling one device wi
 
 ## Notification Bus
 
-`NotificationBus` is the only entry point for business modules.
+`NotificationBus` is the only entry point for client business modules. It is a
+local-first publisher: it builds the notification, stores it in AsolDB, and
+refreshes the badge on the current device. It does not send push.
 
 Supported publish methods:
 
-- `publishTemplate(input)`
-- `publishCustom(input)`
-- `publishEvent(event, locale)`
+- `publishTemplate(input)` — build from a template and store locally.
+- `publishCustom(input)` — build from caller-supplied title/body and store locally.
+- `publishEvent(event, locale)` — map a business event to a template, then publish locally. Returns `null` when the event has no mapping.
 
 Every notification must include a stable `dedupeKey`. Optional `notificationId` can be supplied by the caller when an upstream event already has a stable ID.
+
+Current consumers:
+
+| Caller | Method | Template |
+|--------|--------|----------|
+| `src/components/cart/CartPageContent.tsx` | `publishEvent` | `orders.created` |
+
+Server-side flows do not go through the bus, and there is no browser path to
+multi-user delivery: `POST /api/notifications/send` is guarded by a server-only
+secret, so `NotificationApiService` deliberately exposes no send method.
+`src/app/api/orders/**` and
+`src/features/specialty-chat/services/specialty-chat-service.server.ts` call
+`NotificationSendService.sendToUsers` directly with a `templateId`.
 
 ## Event Mapping
 
@@ -150,6 +210,9 @@ Initial mappings:
 | `system.info` | `system.info` |
 
 Business modules should publish events with variables such as `orderId`, `orderNumber`, `status`, `productName`, `sellerName`, `amount`, `chatId`, and `offerId`.
+
+Only `orders.created` is published today. The remaining mappings are defined and
+tested but have no caller yet.
 
 ## Templates
 
@@ -176,16 +239,36 @@ Template format:
     "body": "Your order {{orderNumber}} was created successfully.",
     "category": "orders",
     "priority": "high",
-    "channels": ["in_app"],
-    "targets": ["center", "badge", "popup"],
-    "deepLink": { "href": "/orders/{{orderId}}", "label": "View order" },
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}",
+      "label": "View order"
+    },
     "groupKey": "orders",
     "sound": "default"
   }
 }
 ```
 
-The template loader validates category, priority, channels, targets, and sound at runtime.
+The template loader validates category, priority, channels, targets, and sound at
+runtime. Both locales are parsed and validated when a `NotificationTemplateLoader`
+is constructed — not lazily per template — so an invalid template throws as soon
+as the builder is created rather than at send time.
+
+Shipped template IDs:
+
+| Group | IDs |
+|-------|-----|
+| Orders | `order.created`, `order.updated`, `order.sellerAccepted`, `order.sellerRejected`, `shipment.updated`, `return.requested` |
+| Shipping quotes | `shipping.quoteProposed`, `shipping.quoteAccepted`, `shipping.quoteRejected` |
+| Unified delivery | `delivery.planInvitation`, `delivery.quoteProposed`, `delivery.quoteAccepted`, `delivery.quoteRejected`, `delivery.separateSelected` |
+| Specialty chat | `specialty.request`, `specialty.replyFromProvider`, `specialty.messageFromBuyer` |
+| Other | `message.new`, `payment.received`, `offer.received`, `system.info` |
+
+Specialty-chat templates carry the sender's own text in `{{message}}`. Only the
+title and the deep-link label are translated; message content is never
+rewritten.
 
 ## Localization
 
@@ -217,6 +300,14 @@ Targets describe where the notification appears:
 - `admin_dashboard`
 
 The current UI uses `center`, `badge`, and popup events. Other targets are ready for future dashboards.
+
+`popup` currently emits the `asol:notifications:popup` window event and asks the
+Capacitor local-notification service to display the notification. No popup host
+component listens to that event yet.
+
+The `/notifications` page filters by `all`, `unread`, and every category:
+`orders`, `chat`, `offers`, `payment`, and `system`. Shipping-quote and
+delivery-plan notifications are published under `offers`.
 
 ## Priority
 
@@ -257,37 +348,107 @@ in AsolDB/IndexedDB.
 
 ## Device Token Flow
 
-`DeviceTokenService` owns token registration, listing, and removal.
-
-Current behavior stores a safe pending token placeholder until a real push provider plugin is introduced. The token is saved locally in AsolDB and remotely through:
+`DeviceTokenService` owns native token registration, listing, and removal.
+`WebPushBrowserService` owns the browser subscription path. Both persist through
+the same server APIs:
 
 ```text
-POST /api/notifications/device-token
-DELETE /api/notifications/device-token
+POST   /api/notifications/device-token
+DELETE /api/notifications/device-token?uid=&phone=&deviceId=&tokenId=
 ```
 
-When a real Web Push, FCM, or APNs token is available, the platform adapter should pass the real token into the same registration flow. Server credentials remain outside the client.
+Real tokens are registered, not placeholders:
 
-Logout must unregister the current device before client storage is cleared. The
-logout flow removes locally known device tokens from the server and also asks
+| Platform | Source | Stored `provider` |
+|----------|--------|-------------------|
+| `web` | `PushSubscription` JSON from `PushManager.subscribe` | `web_push` |
+| `android` | Capacitor Push Notifications registration token | `fcm` |
+| `ios` | Capacitor registration token, classified by shape in `domain/push-token-kind.ts` | `apns` for a 64-hex Apple token, `fcm` for a Firebase token |
+
+Registration validation on the server (`NotificationTokenService.register`):
+
+- The supplied `uid` must exist and its stored phone must match `phone`.
+- `deviceId` must be non-empty and at most 200 characters.
+- `token` must be between 20 and 8192 characters.
+- `platform` must be `web`, `android`, or `ios`.
+- The platform/provider pair must be `web`+`web_push`, `android`+`fcm`, `ios`+`apns`, or `ios`+`fcm`. Apple accepts both because the token kind depends on whether the Firebase Messaging iOS SDK is installed, and the registry routes each kind to its own transport.
+- `locale` is narrowed to `ar` or `en`, defaulting to `ar`.
+
+Server credentials remain outside the client.
+
+Unregistering removes locally known device tokens from the server and also asks
 the active Web Push subscription, when supported, to unsubscribe and delete its
-server token by device id. This applies to Web, Android, and future iOS tokens
-stored through the same device-token service.
+server token by device id.
+
+Every path that ends a session unregisters first:
+
+| Path | Notes |
+|------|-------|
+| Disabling notifications in `/settings` | Web Push and native both. |
+| Clear application data in `/settings` | Runs before `clearAllClientStorage`. |
+| Sign out, any platform | `useLogout` unregisters before clearing the session. Failures are swallowed so sign-out itself never blocks. |
+| Switching accounts on a native device | `NativePushController` also unregisters the previous uid when it sees the change. |
+
+Removing the token is what stops delivery: without it the browser or handset
+keeps receiving the previous user's push messages, and the service worker keeps
+writing them into AsolDB under that uid.
+
+## Device Language
+
+Push text is built in the language of the receiving device.
+
+- Each token row stores a `locale` (`ar` or `en`), sent by the client at registration time from the stored app preferences.
+- `NotificationSendService` groups a user's tokens by transport **and** language, then builds one payload per group.
+- Tokens registered before this column existed default to `ar`, and the caller's `locale` is used only when a token has none.
+- Changing the language in the app re-registers the existing token. `WebPushController` listens for the document-locale event and calls `DeviceTokenService.refreshLocale`, which never prompts for permission and does nothing when no subscription exists.
+
+Values that must be formatted per language — money, category names — cannot live
+inside a template. Pass them through `variablesByLocale`, which is merged over
+`variables` for each group:
+
+```ts
+await notificationSendService.sendToUsers({
+  uids,
+  templateId: "shipping.quoteProposed",
+  dedupeKey: `shipping-quote:${quoteId}:pending_buyer`,
+  variables: { orderId },
+  variablesByLocale: moneyVariablesByLocale("amount", amountMinor),
+});
+```
+
+`routeByLocale` does the same for a deep-link label when the template's own
+link is not enough.
 
 ## Multi-User Sending
 
-The backend has an API for preparing delivery to one or many users:
+The backend has an API for delivering to one or many users:
 
 ```text
 POST /api/notifications/send
+Authorization: Bearer <ASOL_NOTIFICATION_INTERNAL_SECRET>
 ```
 
-Input accepts `uids: string[]` plus either `templateId` or custom `title`/`body`, with a stable `dedupeKey`. The service resolves registered tokens per user and returns per-user delivery readiness:
+This route is server-to-server only. It is guarded by a constant-time comparison
+against `ASOL_NOTIFICATION_INTERNAL_SECRET`; the secret must be at least 32
+characters or the route fails closed. Browser clients cannot call it. Internal
+callers inside the same process — order routes, specialty chat, super-admin
+broadcast — call `NotificationSendService.sendToUsers` directly and bypass HTTP.
 
-- `queued`: user has one or more enabled tokens.
-- `no_tokens`: user has no enabled device token yet.
+Input accepts `uids: string[]` plus either `templateId` or custom `title`/`body`,
+with a stable `dedupeKey`. Duplicate and empty uids are removed. The service
+resolves enabled tokens per user, groups them by `provider`, and calls the
+matching provider once per group.
 
-The current implementation prepares delivery and routes tokens through the provider registry. Providers currently queue through safe placeholders until real server credentials and transports are added.
+Per-user status:
+
+- `no_tokens`: user has no enabled device token.
+- `sent`: every provider group reported `sent`.
+- `queued`: at least one group reported `queued` and none failed (Web Push reports `queued`, not `sent`).
+- `partial`: at least one group partially or fully failed while another succeeded.
+- `failed`: every provider group failed.
+
+Tokens reported invalid by a provider (`UNREGISTERED` or `INVALID_ARGUMENT` on
+FCM, HTTP 400/410 on APNs) are soft-deleted in the same request.
 
 ## Notification Provider Interface
 
@@ -308,6 +469,7 @@ src/features/notifications/services/providers/
 ├── notification-provider.interface.ts
 ├── notification-provider-registry.server.ts
 ├── fcm-notification-provider.server.ts
+├── fcm-http-v1.server.ts
 ├── apns-notification-provider.server.ts
 ├── web-push-notification-provider.server.ts
 └── noop-notification-provider.server.ts
@@ -341,6 +503,13 @@ Future push providers must plug into these services or server-side APIs. Firebas
 
 The app saves the notification to AsolDB, updates the badge, emits center refresh events, and can display a browser notification when permission is granted. Badge refresh counts only unread notifications that include the `badge` target.
 
+The foreground path is wired by `NativePushController`, mounted once in
+`src/app/layout.tsx`. It runs on Android and iOS — the gate is `isNativePush()` —
+and owns the received/tapped handlers, the tray import, and unregistering the
+previous uid when the account changes. `WebPushController` is mounted next to it
+and forwards service-worker messages to the window, plus re-registers the token
+after a language switch on every platform.
+
 ### Background
 
 The operating system should display native push notifications. When the app becomes active, Android delivered notifications can be imported into the local center. Imports skip notifications already remembered in `user:<uid>:dismissed`.
@@ -351,7 +520,16 @@ No cloud persistence is used for local notification center state. Native notific
 
 ## Offline Queue
 
-`notificationOfflineQueue` stores operations that cannot be synchronized while offline. The current implementation clears queued local operations once connectivity returns. Future server delivery receipts can reuse the same queue.
+`notificationOfflineQueue` holds operations that could not reach the server.
+
+Specialty-chat receipts are the queued kind today. They are emitted on the
+user's behalf when a card is delivered or opened, so a failure has no manual
+retry — the sender would wait forever on a receipt that never arrives.
+
+- `NotificationSyncService.enqueue` records the operation, keyed so the same receipt is never queued twice.
+- `sync(uid, handlers)` replays it when the device is online. The caller supplies the handler because replay needs the session token, which the service does not own.
+- An operation is dropped after five failed attempts, and an operation whose kind has no handler in the current runtime is dropped rather than kept forever.
+- `useNotifications` flushes the queue on mount and on the browser `online` event.
 
 ## Analytics
 
@@ -366,7 +544,10 @@ Lifecycle events are stored in `notificationAnalytics`:
 - `dismissed`
 - `failed`
 
-Current UI records sent, displayed, opened, and dismissed.
+Recorded today: `sent` and `displayed` on local publish, `received` and
+`displayed` on foreground/native receive, `opened` on mark-as-read, and
+`dismissed` on delete. `delivered`, `clicked`, and `failed` are defined but never
+written. Analytics are local-only and are never uploaded.
 
 ## Deduplication
 
@@ -386,15 +567,19 @@ orders.created:ord_123:buyer:usr_1
 
 ## Grouping
 
-Templates can define `groupKey`. Examples:
+Templates can define `groupKey`. Values used by the shipped templates:
 
 - `orders`
 - `shipments`
 - `returns`
 - `chat`
+- `payments`
 - `offers`
+- `system`
 
-The current notification center displays individual cards. Future UI can collapse cards by `groupKey`.
+`groupKey` also maps to the Android notification group and the Apple
+`thread-id`. The current notification center displays individual cards. Future
+UI can collapse cards by `groupKey`.
 
 ## Sound Support
 
@@ -454,10 +639,19 @@ Browser support is limited; native platform plugins can map these values to nati
 4. Load credentials from server-only configuration.
 5. Return delivery results without leaking provider secrets or raw credential errors.
 
+## Remaining Limitations
+
+These are deliberate boundaries rather than defects.
+
+| Limitation | Effect |
+|------------|--------|
+| Notification-center content is local-only. | History does not follow the user across devices and is lost when application data is cleared. |
+| The offline queue replays receipts only. | Other operations still fail silently while offline; nothing else is queued yet. |
+| Apple devices cannot use Firebase until the Xcode SDK step lands. | Raw APNs tokens require the optional `APNS_*` transport; see [`../07-mobile-and-release/capacitor/ios-push-notifications.md`](../07-mobile-and-release/capacitor/ios-push-notifications.md). |
+| Analytics are never uploaded. | `delivered`, `clicked`, and `failed` remain unwritten, and there is no admin view. |
+
 ## Future Work
 
-- Connect the real APNs transport inside the existing provider adapter.
-- Import native notification-center entries on mobile startup.
 - Add grouped notification views by `groupKey`.
 - Add notification settings UI for channel and target preferences.
 - Add server-side delivery receipts when a cloud push provider is selected.
@@ -476,6 +670,7 @@ src/features/notifications/services/providers/
 |-- notification-provider.interface.ts
 |-- notification-provider-registry.server.ts
 |-- fcm-notification-provider.server.ts
+|-- fcm-http-v1.server.ts
 |-- apns-notification-provider.server.ts
 |-- web-push-notification-provider.server.ts
 `-- noop-notification-provider.server.ts
@@ -499,17 +694,19 @@ Provider responsibilities:
 |------|----------------|
 | `notification-provider.interface.ts` | Defines the provider contract and send payload/result shapes. |
 | `notification-provider-registry.server.ts` | Chooses the provider by token `provider` key. |
-| `fcm-notification-provider.server.ts` | Server-side adapter location for Firebase Cloud Messaging. |
-| `apns-notification-provider.server.ts` | Server-side adapter location for Apple Push Notification service. |
-| `web-push-notification-provider.server.ts` | Server-side adapter location for browser Web Push. |
+| `fcm-notification-provider.server.ts` | Firebase Cloud Messaging over the HTTP v1 endpoint, including the Android channel/sound block and the Apple `apns` block. |
+| `fcm-http-v1.server.ts` | OAuth token exchange and the raw HTTP v1 send call used by the FCM provider. |
+| `apns-notification-provider.server.ts` | Optional direct Apple Push Notification service transport over HTTP/2. |
+| `web-push-notification-provider.server.ts` | Browser Web Push over the stored VAPID key pair. |
 | `noop-notification-provider.server.ts` | Safe fallback for unknown or not-yet-configured providers. |
 
 Current provider behavior:
 
-- FCM uses Firebase Admin on the server and returns real per-batch delivery results.
-- Invalid or unregistered FCM tokens are disabled after Firebase rejects them.
-- APNs uses the HTTP/2 token provider when Apple credentials are configured and returns `apnsNotConfigured` otherwise.
-- Web Push uses the configured VAPID transport.
+- FCM uses the FCM HTTP v1 endpoint with OAuth service-account authentication and returns real per-token delivery results. It sends one message per token, at most 25 requests in flight.
+- Invalid or unregistered FCM tokens are soft-deleted after Firebase rejects them.
+- When Firebase credentials are missing, FCM returns `failed` with `firebaseAdminNotConfigured` and deliberately keeps the tokens — this is a server misconfiguration, not a dead device.
+- APNs uses a direct HTTP/2 connection with an ES256 JWT when `APNS_TEAM_ID`, `APNS_KEY_ID`, and `APNS_PRIVATE_KEY` are configured. Unconfigured, it returns `failed` with `appleTokenNotDeliverable` and keeps the tokens.
+- Web Push uses the configured VAPID transport, and returns `queued` unless every send is rejected.
 - No provider credentials or private keys are stored in client code.
 - Real provider credentials must be added through server-only configuration.
 
@@ -517,22 +714,34 @@ Multi-user send response example:
 
 ```json
 {
-  "requested": 2,
+  "requested": 3,
   "results": [
     {
       "uid": "usr_1",
       "tokenCount": 1,
       "status": "queued",
       "providers": [
-        {
-          "provider": "web_push",
-          "tokenCount": 1,
-          "status": "queued"
-        }
+        { "provider": "web_push", "tokenCount": 1, "status": "queued" }
       ]
     },
     {
       "uid": "usr_2",
+      "tokenCount": 2,
+      "status": "partial",
+      "providers": [
+        {
+          "provider": "fcm",
+          "tokenCount": 2,
+          "status": "partial",
+          "successCount": 1,
+          "failureCount": 1,
+          "invalidTokenIds": ["ntok_usr_2_android_android_9f2c"],
+          "message": "1 FCM deliveries failed."
+        }
+      ]
+    },
+    {
+      "uid": "usr_3",
       "tokenCount": 0,
       "status": "no_tokens"
     }
@@ -643,6 +852,24 @@ The service worker ignores invalid push payloads that do not include a target
 `uid` or any meaningful notification identity/content. This prevents empty
 browser pushes from appearing as blank `ASOL` notifications.
 
+Stored service-worker copies always use `channels: ["in_app", "web_push"]` and
+`targets: ["center", "badge"]`, regardless of the template that produced them.
+The badge value it writes applies the same rule as `BadgeService`: unread items
+that carry the `badge` target.
+
+Specialty-chat receipt pushes are handled before display: they update the
+matching outgoing notification and never call `showNotification`.
+
+The service worker duplicates the AsolDB name, version, and store list from
+`src/modules/data-access/browser/asol-db`, because a static worker cannot import
+the module. `notification-local-storage-contract.test.ts` compares the two and
+fails the build when they drift — opening IndexedDB with a stale version there
+throws and silently drops every browser push.
+
+The worker source is `src/modules/data-access/browser/workers/asol-push-sw.js`.
+`public/asol-push-sw.js` is generated from it by `npm run data-access:sync-public`,
+and the architecture check rejects a hand-edited public copy.
+
 ## Super Admin Broadcast Notifications
 
 The super-admin broadcast page sends one notification message to many users through the same notification provider layer used by normal system notifications.
@@ -676,8 +903,11 @@ Broadcast behavior:
 - A broadcast requires both a title and body.
 - Delivery is delegated to `NotificationSendService`.
 - `NotificationSendService` routes each token to the correct registered `NotificationProvider`, such as Web Push.
-- The broadcast metadata sets `source = super_admin_broadcast` and uses `/notifications` as the default deep link.
-- Broadcast `dedupeKey` is stable for the same title, body, and audience. Sending the exact same message to the same audience will not create duplicate notification-center entries.
+- The broadcast metadata sets `source = super_admin_broadcast`, carries the caller's `requestId`, and uses `/notifications` as the default deep link.
+- Broadcast `dedupeKey` is `broadcast:<sha256(title, body, audience)>` truncated to 24 characters. It is stable for the same title, body, and audience, so resending the identical message to the identical audience will not create duplicate notification-center entries.
+- Selected uids are intersected with the eligible recipient list before sending; unknown or ineligible uids are dropped rather than rejected.
+- A broadcast is push-only on the server. The notification-center row is created on the recipient's device by the Web Push service worker or by the Android tray import, so a user with no reachable device gets no local card.
+- The super-admin identity is supplied in the request body and verified by `NotificationBroadcastService` for both the recipients and send calls.
 
 Security rules:
 

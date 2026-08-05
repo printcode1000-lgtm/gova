@@ -66,13 +66,15 @@ export class SpecialtyChatService {
         const result = await notificationSendService.sendToUsers({
           actorUid: actor.uid,
           uids: [sellerUid],
-          title: `طلب جديد: ${sub.nameAr}`,
-          body: message,
+          templateId: "specialty.request",
           dedupeKey: `${input.requestId}:${sellerUid}`,
-          category: NotificationCategories.Chat,
-          priority: NotificationPriorities.High,
-          sound: NotificationSounds.Default,
-          route: { href: "/notifications", label: "عرض والرد" },
+          // The body is the buyer's own text and is never translated; only the
+          // surrounding title follows the reader's language.
+          variables: { message },
+          variablesByLocale: {
+            ar: { specialtyName: sub.nameAr },
+            en: { specialtyName: sub.nameEn || sub.nameAr },
+          },
           metadata: {
             specialtyChatKind: SPECIALTY_CHAT_KINDS.Request,
             requestId: input.requestId,
@@ -121,13 +123,11 @@ export class SpecialtyChatService {
     const result = await notificationSendService.sendToUsers({
       actorUid: actor.uid,
       uids: [recipientUid],
-      title: actorIsSeller ? "رد جديد على طلبك" : "رسالة جديدة من المشتري",
-      body: message,
+      templateId: actorIsSeller
+        ? "specialty.replyFromProvider"
+        : "specialty.messageFromBuyer",
+      variables: { message },
       dedupeKey: input.messageId,
-      category: NotificationCategories.Chat,
-      priority: NotificationPriorities.High,
-      sound: NotificationSounds.Default,
-      route: { href: "/notifications", label: "عرض والرد" },
       metadata: {
         specialtyChatKind: SPECIALTY_CHAT_KINDS.Message,
         requestId: capability.requestId,

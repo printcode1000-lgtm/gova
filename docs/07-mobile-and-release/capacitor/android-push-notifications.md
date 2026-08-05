@@ -46,7 +46,10 @@ All values are configured for Production, Preview, and Development in the linked
 
 ## Client Lifecycle
 
-`AndroidPushController` is mounted once below `SessionProvider`.
+`NativePushController` is mounted once below `SessionProvider`. It runs on both
+native platforms — the gate is `isNativePush()` — so the lifecycle below applies
+to Android and iOS alike. Android-only steps (channel creation) are guarded
+inside `CapacitorPushService`.
 
 1. After session hydration, it initializes native listeners.
 2. It creates all Android notification channels.
@@ -54,7 +57,8 @@ All values are configured for Production, Preview, and Development in the linked
 4. If the user previously enabled notifications, it re-registers with FCM on startup to refresh the token timestamp.
 5. Foreground notifications are saved to AsolDB and refresh the badge.
 6. Tapping a background or terminated-state notification saves it, marks it read, and opens its validated internal route.
-7. Logout, account deletion, and clearing application data unregister the native token before local storage is erased. Logout also removes any locally known Web, Android, or iOS notification token from the server through the shared device-token service.
+7. Signing out unregisters the token on every platform: `useLogout` calls the shared device-token service before clearing the session, and the controller also unregisters the previous uid when the account changes. Clearing application data unregisters before local storage is erased.
+8. Switching the app language re-registers the token so push text follows the new language.
 
 Dismissed notification identities are remembered locally by `id` and
 `dedupeKey`. Android tray import checks that list before saving delivered
@@ -85,6 +89,14 @@ Channel IDs are versioned because Android does not allow an application to repla
 All ASOL Android channels are intentionally audible and vibrating. FCM payloads
 route to the v2 channels and always use the custom notification sound.
 
+Server-side channel selection, in order:
+
+1. Priority `critical` → `asol_urgent_v2`.
+2. Metadata `source = super_admin_broadcast` → `asol_updates_v2`, so a user can silence announcements from Android settings without silencing their orders.
+3. Category `orders` → `asol_orders_v2`.
+4. Category `chat` → `asol_chat_v2`.
+5. Everything else → `asol_general_v2`.
+
 ## Server Delivery
 
 `FcmNotificationProvider`:
@@ -93,10 +105,11 @@ route to the v2 channels and always use the custom notification sound.
 - Sends notification and data payloads together.
 - Restricts delivery to `hgh.asol.app`.
 - Includes notification ID, dedupe key, route, category, priority, sound, group, and timestamps.
-- Sends at most 500 tokens per Firebase batch.
+- Sends one HTTP v1 message per token; there is no multicast batch.
 - Uses high Android priority only for high or critical ASOL notifications.
 - Returns sent, partial, or failed results.
-- Disables tokens rejected as invalid or unregistered.
+- Soft-deletes tokens rejected as `UNREGISTERED` or `INVALID_ARGUMENT` by setting `enabled = false` and `deleted_at`.
+- Keeps every token when Firebase itself is unconfigured, and returns `firebaseAdminNotConfigured`.
 - Uses the official FCM HTTP v1 endpoint with OAuth service-account authentication.
 - Limits concurrent HTTP v1 requests to 25 to protect the server and Firebase quota.
 - Never logs credentials or raw token values.

@@ -77,7 +77,35 @@ Migrate old public image URLs to the active R2 bucket:
 npm run r2:migrate:images
 ```
 
+## Push notifications
+
+Firebase Cloud Messaging is the delivery transport for Android, and for Apple
+once the Firebase Messaging iOS SDK is installed.
+
+```env
+# Server-only. Lossless base64 of the complete Firebase service-account JSON.
+# The decoded project_id must be asole-73f1f or the server refuses it.
+FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64=
+# Optional inline alternative to the base64 form, same JSON document.
+FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON=
+# Server-only. Lossless base64 of android/app/google-services.json,
+# regenerated into the native project during a Capacitor build.
+FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64=
+# Server-only bearer secret for POST /api/notifications/send. Minimum 32 chars.
+# Also the fallback signing secret when ASOL_SESSION_SIGNING_SECRET is unset.
+ASOL_NOTIFICATION_INTERNAL_SECRET=
+```
+
+Browser Web Push does not use environment variables. Its VAPID key pair is
+generated from `/super-admin/vapid` and stored in the users database table
+`notification_vapid_settings`; only the public key ever reaches a browser.
+
 ## Apple Push Notification service
+
+Optional. Only used for Apple devices that registered a raw APNs token, which
+happens while the Firebase Messaging iOS SDK is absent from the Xcode project.
+Leaving these unset is the supported default and produces an explicit
+`appleTokenNotDeliverable` result instead of a silent failure.
 
 ```env
 # Server-only. Encode PEM line breaks as \\n in hosted environment values.
@@ -90,7 +118,7 @@ APNS_PRODUCTION=false
 
 ## Never expose
 
-`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
+`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `ASOL_NOTIFICATION_INTERNAL_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON`, `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
 
 ## Vercel deploy
 

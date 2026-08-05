@@ -50,6 +50,10 @@ export const userNotificationTokens = sqliteTable(
     provider: text('provider').notNull(),
     deviceId: text('device_id').notNull(),
     token: text('token').notNull(),
+    /** UI language of the device, so push text is built in the reader's language. */
+    locale: text('locale', { enum: ['ar', 'en'] })
+      .notNull()
+      .default('ar'),
     enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
     specialtyRequestsEnabled: integer('specialty_requests_enabled', { mode: 'boolean' })
       .notNull()

@@ -1,10 +1,6 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { createMultiSellerDeliveryDraft } from "@/features/cart/multi-seller-delivery-planner";
 import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
-import {
-  NotificationCategories,
-  NotificationPriorities,
-} from "@/features/notifications/domain/enums";
 import { notificationSendService } from "@/features/notifications/services/notification-service.bootstrap.server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
@@ -340,15 +336,11 @@ export async function POST(request: Request) {
             uids: deliveryDraft.candidates.map(
               (candidate) => candidate.providerId,
             ),
-            title: "طلب عرض توصيل موحّد",
-            body: `طلب متعدد البائعين يضم ${deliveryDraft.sellerCount} محطات استلام. يمكنك إرسال عرض واحد للتوصيل الكامل.`,
-            locale: "ar",
-            category: NotificationCategories.Offers,
-            priority: NotificationPriorities.High,
+            templateId: "delivery.planInvitation",
             dedupeKey: `delivery-plan:${String(plan.id)}:invitation`,
-            route: {
-              href: `/orders/details?orderId=${encodeURIComponent(String(order.id))}&role=service_provider`,
-              label: "عرض خطة التوصيل",
+            variables: {
+              orderId: String(order.id),
+              sellerCount: deliveryDraft.sellerCount,
             },
             metadata: {
               orderId: String(order.id),

@@ -107,5 +107,138 @@
     "targets": ["center", "badge"],
     "groupKey": "system",
     "sound": "silent"
+  },
+  "shipping.quoteProposed": {
+    "title": "عرض شحن جديد",
+    "body": "تم إرسال عرض شحن بقيمة {{amount}}. راجع الطلب للقبول أو الرفض.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=buyer", "label": "عرض الطلب" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipping.quoteAccepted": {
+    "title": "تم قبول عرض الشحن",
+    "body": "وافق المشتري على عرض الشحن بقيمة {{amount}}.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "عرض الطلب" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipping.quoteRejected": {
+    "title": "تم رفض عرض الشحن",
+    "body": "رفض المشتري عرض الشحن بقيمة {{amount}}. يمكنك إرسال عرض معدل.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "عرض الطلب" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.planInvitation": {
+    "title": "طلب عرض توصيل موحّد",
+    "body": "طلب متعدد البائعين يضم {{sellerCount}} محطات استلام. يمكنك إرسال عرض واحد للتوصيل الكامل.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "عرض خطة التوصيل"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteProposed": {
+    "title": "عرض جديد للتوصيل الموحّد",
+    "body": "وصل عرض بقيمة {{amount}} لجمع طلبك من عدة بائعين في شحنة واحدة.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=buyer", "label": "عرض خطة التوصيل" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteAccepted": {
+    "title": "تم اختيار عرض التوصيل الموحّد",
+    "body": "وافق المشتري على عرضك بقيمة {{amount}}.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "عرض خطة التوصيل"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteRejected": {
+    "title": "لم يتم اختيار عرض التوصيل",
+    "body": "رفض المشتري عرض التوصيل بقيمة {{amount}}. يمكنك إرسال عرض معدل.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "عرض خطة التوصيل"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.separateSelected": {
+    "title": "اختيار التوصيل المنفصل",
+    "body": "اختار المشتري العودة إلى توصيل كل بائع بصورة مستقلة.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "عرض خطة التوصيل"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "specialty.request": {
+    "title": "طلب جديد: {{specialtyName}}",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "عرض والرد" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "specialty.replyFromProvider": {
+    "title": "رد جديد على طلبك",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "عرض والرد" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "specialty.messageFromBuyer": {
+    "title": "رسالة جديدة من المشتري",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "عرض والرد" },
+    "groupKey": "chat",
+    "sound": "default"
   }
 }

@@ -26,7 +26,7 @@ import { SnapshotProvider } from "@/features/page-snapshot";
 import { FavoritesProvider } from "@/features/favorites";
 import { FeatureFlagController } from "@/features/feature-flags";
 import {
-  AndroidPushController,
+  NativePushController,
   WebPushController,
 } from "@/features/notifications";
 import dynamic from "next/dynamic";
@@ -83,7 +83,7 @@ export default function RootLayout({
               <FavoritesProvider>
                 <SystemLogCollector />
                 <FeatureFlagController />
-                <AndroidPushController />
+                <NativePushController />
                 <WebPushController />
                 <SystemLogErrorBoundary>
                   <PreferencesProvider>

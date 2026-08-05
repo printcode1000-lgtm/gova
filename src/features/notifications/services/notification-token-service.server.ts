@@ -34,12 +34,24 @@ export class NotificationTokenService {
     if (!["web", "android", "ios"].includes(input.platform)) {
       throw new Error("notificationPlatformInvalid");
     }
+    // Apple devices issue a raw APNs token until the Firebase Messaging iOS SDK
+    // is installed and a Firebase registration token afterwards. Both are valid
+    // registrations for the same platform; the registry routes each one to its
+    // own transport.
     const allowedProvider =
       (input.platform === "android" && input.provider === "fcm") ||
-      (input.platform === "ios" && input.provider === "apns") ||
+      (input.platform === "ios" &&
+        (input.provider === "apns" || input.provider === "fcm")) ||
       (input.platform === "web" && input.provider === "web_push");
     if (!allowedProvider) throw new Error("notificationProviderInvalid");
-    return this.upsertToken.execute({ ...input, uid, phone, token, deviceId });
+    return this.upsertToken.execute({
+      ...input,
+      uid,
+      phone,
+      token,
+      deviceId,
+      locale: input.locale === "en" ? "en" : "ar",
+    });
   }
 
   async remove(input: DeleteNotificationTokenInput): Promise<void> {

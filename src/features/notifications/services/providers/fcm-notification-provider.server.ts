@@ -17,6 +17,11 @@ const APPLE_SOUND_FILE = "custom_notification.caf";
 
 function channelId(input: NotificationProviderSendInput): string {
   if (input.payload.priority === "critical") return "asol_urgent_v2";
+  // Announcements land on their own channel so a user can silence marketing
+  // without silencing their orders.
+  if (input.payload.metadata?.source === "super_admin_broadcast") {
+    return "asol_updates_v2";
+  }
   if (input.payload.category === "orders") return "asol_orders_v2";
   if (input.payload.category === "chat") return "asol_chat_v2";
   return "asol_general_v2";

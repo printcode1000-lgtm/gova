@@ -1,7 +1,7 @@
 import { usersDataSource } from "@/modules/data-access/core";
 import 'server-only';
 
-import { and, eq, inArray, isNull } from 'drizzle-orm';
+import { and, eq, inArray, isNull, ne } from 'drizzle-orm';
 import type { IDatabaseClient } from '@/modules/data-access/core/database/database-client.interface';
 import {
   userNotificationTokens,
@@ -24,6 +24,9 @@ export class UserNotificationTokenRepository {
 
   async upsert(input: RegisterNotificationTokenInput): Promise<RegisteredNotificationToken> {
     const now = new Date().toISOString();
+    // Soft-deleted rows keep their primary key and their (uid, device_id,
+    // platform) unique index, so a device that was unregistered and registers
+    // again must revive its existing row instead of inserting a colliding one.
     const existing = await this.database.db
       .select()
       .from(userNotificationTokens)
@@ -32,12 +35,13 @@ export class UserNotificationTokenRepository {
           eq(userNotificationTokens.uid, input.uid),
           eq(userNotificationTokens.deviceId, input.deviceId),
           eq(userNotificationTokens.platform, input.platform),
-          isNull(userNotificationTokens.deletedAt),
         ),
       )
       .limit(1);
 
     const id = existing[0]?.id ?? makeTokenId(input.uid, input.platform, input.deviceId);
+    const locale = input.locale === 'en' ? 'en' : 'ar';
+    await this.releaseTokenValue(input.token, id, now);
     const row: NewUserNotificationTokenEntity = {
       id,
       uid: input.uid,
@@ -45,6 +49,7 @@ export class UserNotificationTokenRepository {
       provider: input.provider,
       deviceId: input.deviceId,
       token: input.token,
+      locale,
       enabled: true,
       specialtyRequestsEnabled: existing[0]?.specialtyRequestsEnabled ?? true,
       lastSeenAt: now,
@@ -59,6 +64,7 @@ export class UserNotificationTokenRepository {
         .set({
           provider: row.provider,
           token: row.token,
+          locale,
           enabled: true,
           lastSeenAt: now,
           updatedAt: now,
@@ -72,6 +78,33 @@ export class UserNotificationTokenRepository {
     const saved = await this.findById(id);
     if (!saved) throw new Error('notificationTokenSaveFailed');
     return toDomainToken(saved);
+  }
+
+  /**
+   * A push token addresses exactly one installation. When the same value shows
+   * up under a different row — a reinstall that produced a new device id, or a
+   * second account on the same handset — the older row is stale and still holds
+   * the `token` unique index. Retire it with a tombstone value so the index is
+   * free and the audit row survives.
+   */
+  private async releaseTokenValue(token: string, keepId: string, now: string): Promise<void> {
+    const conflicting = await this.database.db
+      .select({ id: userNotificationTokens.id })
+      .from(userNotificationTokens)
+      .where(and(eq(userNotificationTokens.token, token), ne(userNotificationTokens.id, keepId)));
+    await Promise.all(
+      conflicting.map((row: { id: string }) =>
+        this.database.db
+          .update(userNotificationTokens)
+          .set({
+            token: `revoked:${row.id}:${now}`,
+            enabled: false,
+            deletedAt: now,
+            updatedAt: now,
+          })
+          .where(eq(userNotificationTokens.id, row.id)),
+      ),
+    );
   }
 
   async listByUid(uid: string): Promise<RegisteredNotificationToken[]> {
@@ -173,6 +206,7 @@ function toDomainToken(row: UserNotificationTokenEntity): RegisteredNotification
     provider: row.provider,
     deviceId: row.deviceId,
     token: row.token,
+    locale: row.locale === 'en' ? 'en' : 'ar',
     enabled: row.enabled,
     lastSeenAt: row.lastSeenAt ?? undefined,
     createdAt: row.createdAt ?? new Date().toISOString(),

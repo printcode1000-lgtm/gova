@@ -1,6 +1,7 @@
 import "server-only";
 
 import type {
+  NotificationLocale,
   NotificationTokenDeliveryResult,
   RegisteredNotificationToken,
   SendNotificationToUsersInput,
@@ -71,22 +72,29 @@ export class NotificationSendService {
     tokens: RegisteredNotificationToken[],
     input: SendNotificationToUsersInput,
   ) {
-    const tokensByProvider = tokens.reduce<
-      Record<string, RegisteredNotificationToken[]>
+    // Grouped by transport *and* language: one payload is built per group, so
+    // a user reading English and a user reading Arabic each get their own text
+    // from a single send call.
+    const groups = tokens.reduce<
+      Record<string, { provider: string; locale: NotificationLocale; tokens: RegisteredNotificationToken[] }>
     >((acc, token) => {
       const provider = token.provider || "noop";
-      acc[provider] = [...(acc[provider] ?? []), token];
+      const locale = this.resolveLocale(token, input);
+      const key = `${provider}:${locale}`;
+      const group = acc[key] ?? { provider, locale, tokens: [] };
+      group.tokens.push(token);
+      acc[key] = group;
       return acc;
     }, {});
 
-    const payload = this.buildProviderPayload(input);
     const results = await Promise.all(
-      Object.entries(tokensByProvider).map(([providerKey, providerTokens]) =>
-        this.providers.get(providerKey).send({
-          tokens: providerTokens,
-          payload,
-        }),
-      ),
+      Object.values(groups).map(async (group) => {
+        const result = await this.providers.get(group.provider).send({
+          tokens: group.tokens,
+          payload: this.buildProviderPayload(input, group.locale),
+        });
+        return { ...result, locale: group.locale };
+      }),
     );
     const invalidIds = new Set(
       results.flatMap((result) => result.invalidTokenIds ?? []),
@@ -101,10 +109,24 @@ export class NotificationSendService {
     return results;
   }
 
+  /** The device's own language wins; the caller's value is only a fallback. */
+  private resolveLocale(
+    token: RegisteredNotificationToken,
+    input: SendNotificationToUsersInput,
+  ): NotificationLocale {
+    if (token.locale === "ar" || token.locale === "en") return token.locale;
+    return input.locale ?? "ar";
+  }
+
   private buildProviderPayload(
     input: SendNotificationToUsersInput,
+    locale: NotificationLocale,
   ): NotificationProviderPayload {
-    const locale = input.locale ?? "ar";
+    const variables = {
+      ...(input.variables ?? {}),
+      ...(input.variablesByLocale?.[locale] ?? {}),
+    };
+    const route = input.routeByLocale?.[locale] ?? input.route;
     if (input.templateId) {
       const built = this.builder.fromTemplate({
         uid: "server",
@@ -112,7 +134,8 @@ export class NotificationSendService {
         templateId: input.templateId,
         dedupeKey: input.dedupeKey,
         locale,
-        variables: input.variables,
+        variables,
+        route,
         metadata: input.metadata,
       });
       return {
@@ -122,12 +145,12 @@ export class NotificationSendService {
         title: built.title,
         body: built.body,
         category: built.category,
-        priority: built.priority,
+        priority: input.priority ?? built.priority,
         route: built.route,
         groupKey: built.groupKey,
-        sound: built.sound,
+        sound: input.sound ?? built.sound,
         dedupeKey: input.dedupeKey,
-        variables: input.variables,
+        variables,
         metadata: input.metadata,
       };
     }
@@ -138,13 +161,13 @@ export class NotificationSendService {
       body: input.body?.trim() || "",
       category: input.category ?? NotificationCategories.System,
       priority: input.priority ?? NotificationPriorities.Normal,
-      route: input.route ?? {
+      route: route ?? {
         href: String(input.metadata?.href ?? "/notifications"),
         label: locale === "ar" ? "فتح" : "Open",
       },
       sound: input.sound ?? NotificationSounds.Default,
       dedupeKey: input.dedupeKey,
-      variables: input.variables,
+      variables,
       metadata: input.metadata,
     };
   }

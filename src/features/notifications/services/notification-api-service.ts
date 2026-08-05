@@ -10,10 +10,15 @@ import type {
   NotificationVapidPublicConfig,
   RegisterNotificationTokenInput,
   SaveNotificationVapidInput,
-  SendNotificationToUsersInput,
-  SendNotificationToUsersResult,
 } from "../domain/entities";
 
+/**
+ * Browser-side notification API.
+ *
+ * Multi-user delivery is deliberately absent: `POST /api/notifications/send`
+ * is guarded by a server-only bearer secret, so it is reachable from server
+ * code only. Server callers use `NotificationSendService` directly.
+ */
 export class NotificationApiService {
   registerToken(input: RegisterNotificationTokenInput): Promise<DeviceToken> {
     return asolApi.post<DeviceToken>(
@@ -31,15 +36,6 @@ export class NotificationApiService {
     if (input.tokenId) query.set("tokenId", input.tokenId);
     return asolApi.delete<{ deleted: boolean }>(
       `${ASOL_API_ROUTES.notifications.deviceToken}?${query}`,
-    );
-  }
-
-  sendToUsers(
-    input: SendNotificationToUsersInput,
-  ): Promise<SendNotificationToUsersResult> {
-    return asolApi.post<SendNotificationToUsersResult>(
-      ASOL_API_ROUTES.notifications.send,
-      input,
     );
   }
 

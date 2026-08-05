@@ -64,6 +64,13 @@
       "when": 1785788310447,
       "tag": "0008_feature_flags",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1786060800000,
+      "tag": "0009_notification_token_locale",
+      "breakpoints": true
     }
   ]
 }

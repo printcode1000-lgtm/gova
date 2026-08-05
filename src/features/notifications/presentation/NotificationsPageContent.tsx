@@ -10,7 +10,9 @@ import {
   Loader2,
   MessageCircle,
   PackageCheck,
+  Tag,
   Trash2,
+  Wallet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationCategories } from "../domain/enums";
@@ -23,20 +25,26 @@ import { useTranslation } from "@/lib/i18n";
 
 function filters(locale: "ar" | "en"): Array<{ id: "all" | "unread" | NotificationCategory; label: string }> {
   const labels = locale === "ar"
-    ? ["الكل", "غير المقروء", "الطلبات", "المحادثات", "النظام"]
-    : ["All", "Unread", "Orders", "Chats", "System"];
+    ? ["الكل", "غير المقروء", "الطلبات", "المحادثات", "العروض", "المدفوعات", "النظام"]
+    : ["All", "Unread", "Orders", "Chats", "Offers", "Payments", "System"];
   return [
     { id: "all", label: labels[0] },
     { id: "unread", label: labels[1] },
     { id: NotificationCategories.Orders, label: labels[2] },
     { id: NotificationCategories.Chat, label: labels[3] },
-    { id: NotificationCategories.System, label: labels[4] },
+    // Shipping quotes and delivery-plan offers publish under `offers`, so the
+    // category needs its own chip to be reachable without scanning "all".
+    { id: NotificationCategories.Offers, label: labels[4] },
+    { id: NotificationCategories.Payment, label: labels[5] },
+    { id: NotificationCategories.System, label: labels[6] },
   ];
 }
 
 function categoryIcon(category: NotificationCategory) {
   if (category === NotificationCategories.Orders) return PackageCheck;
   if (category === NotificationCategories.Chat) return MessageCircle;
+  if (category === NotificationCategories.Offers) return Tag;
+  if (category === NotificationCategories.Payment) return Wallet;
   return Bell;
 }
 

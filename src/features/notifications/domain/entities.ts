@@ -110,6 +110,8 @@ export interface DeviceToken {
   provider: string;
   deviceId: string;
   token: string;
+  /** UI language of this device; push text is built in it. */
+  locale?: NotificationLocale;
   deviceLabel?: string;
   enabled: boolean;
   lastSeenAt?: string;
@@ -129,6 +131,7 @@ export interface RegisterNotificationTokenInput {
   provider: string;
   deviceId: string;
   token: string;
+  locale?: NotificationLocale;
   deviceLabel?: string;
 }
 
@@ -139,20 +142,34 @@ export interface DeleteNotificationTokenInput {
   tokenId?: string;
 }
 
+export type NotificationVariables = Record<
+  string,
+  string | number | boolean | null
+>;
+
 export interface SendNotificationToUsersInput {
   actorUid?: string;
   uids: string[];
   templateId?: string;
   title?: string;
   body?: string;
+  /** Fallback language for devices that never reported one. */
   locale?: NotificationLocale;
   dedupeKey: string;
-  variables?: Record<string, string | number | boolean | null>;
+  variables?: NotificationVariables;
+  /**
+   * Variables that differ per language — a formatted amount, a category name.
+   * They are merged over `variables` for the language of each device group, so
+   * one send can address Arabic and English readers correctly.
+   */
+  variablesByLocale?: Partial<Record<NotificationLocale, NotificationVariables>>;
   metadata?: Record<string, string | number | boolean | null>;
   category?: NotificationCategory;
   priority?: NotificationPriority;
   sound?: NotificationSound;
   route?: NotificationRoute;
+  /** Per-language override of the deep link label. */
+  routeByLocale?: Partial<Record<NotificationLocale, NotificationRoute>>;
 }
 
 export interface NotificationTokenDeliveryResult {
@@ -161,10 +178,12 @@ export interface NotificationTokenDeliveryResult {
   status: "sent" | "partial" | "queued" | "failed" | "no_tokens";
   providers?: Array<{
     provider: string;
+    locale?: NotificationLocale;
     tokenCount: number;
     status: "sent" | "partial" | "queued" | "failed";
     successCount?: number;
     failureCount?: number;
+    invalidTokenIds?: string[];
     message?: string;
   }>;
 }
@@ -272,9 +291,16 @@ export interface NotificationAnalyticsEvent {
 export interface NotificationOfflineOperation {
   id: string;
   uid: string;
-  kind: "analytics" | "device_token" | "settings";
+  kind: "analytics" | "device_token" | "settings" | "chat_receipt";
   payload: unknown;
   attempts: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface SpecialtyChatReceiptOperation {
+  capability: string;
+  targetMessageId: string;
+  status: "received" | "read";
+  notificationId: string;
 }

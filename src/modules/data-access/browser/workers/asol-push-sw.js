@@ -160,7 +160,14 @@ async function saveNotificationToCenter(payload) {
           putRow(notificationsStore, listKey, next),
           putRow(badgesStore, badgeKey, {
             uid: notification.uid,
-            unreadCount: next.filter((item) => !item.readAt).length,
+            // Same rule as BadgeService: only unread items that ask for the
+            // badge target count, so the tab badge matches the in-app one.
+            unreadCount: next.filter(
+              (item) =>
+                !item.readAt &&
+                Array.isArray(item.targets) &&
+                item.targets.includes('badge'),
+            ).length,
             updatedAt: new Date().toISOString(),
           }),
         ]);

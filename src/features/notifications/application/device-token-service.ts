@@ -19,6 +19,7 @@ export class DeviceTokenService {
         provider: token.provider,
         deviceId: token.deviceId,
         token: token.token,
+        locale: token.locale,
         deviceLabel: token.deviceLabel,
       });
     }
@@ -37,6 +38,25 @@ export class DeviceTokenService {
     if (!(await capacitorPushService.isEnabled())) return;
     const permission = await capacitorPushService.permissionState();
     if (permission === "granted") await this.register(uid, phone);
+  }
+
+  /**
+   * Re-register every token this device owns after a language switch, so the
+   * server keeps building push text in the language the user now reads.
+   * Silent by design: nothing is registered that was not registered already.
+   */
+  async refreshLocale(uid: string, phone: string): Promise<void> {
+    if (!uid) return;
+    if (
+      capacitorPushService.isNativePush() &&
+      (await capacitorPushService.isEnabled()) &&
+      (await capacitorPushService.permissionState()) === "granted"
+    ) {
+      await this.register(uid, phone);
+    }
+    if (webPushBrowserService.isSupported()) {
+      await webPushBrowserService.refreshLocale(uid, phone);
+    }
   }
 
   async unregister(uid: string, phone: string): Promise<void> {

@@ -11,10 +11,7 @@ import {
 } from "../../order-api-helpers";
 import type { ActorRole } from "@/modules/marketplace-orders/domain/enums";
 import { notificationSendService } from "@/features/notifications/services/notification-service.bootstrap.server";
-import {
-  NotificationCategories,
-  NotificationPriorities,
-} from "@/features/notifications/domain/enums";
+import { moneyVariablesByLocale } from "@/features/notifications/shared/notification-money";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 
 interface ActionInput {
@@ -38,60 +35,33 @@ interface ActionInput {
   reason?: string;
 }
 
+const DELIVERY_PLAN_TEMPLATES = {
+  new_quote: "delivery.quoteProposed",
+  accepted: "delivery.quoteAccepted",
+  rejected: "delivery.quoteRejected",
+  separate: "delivery.separateSelected",
+} as const;
+
 async function notifyDeliveryPlan(input: {
   uids: string[];
   orderId: string;
   planId: string;
   quoteId?: string;
-  status: "new_quote" | "accepted" | "rejected" | "separate";
+  status: keyof typeof DELIVERY_PLAN_TEMPLATES;
   amount?: number;
 }) {
   const recipients = Array.from(new Set(input.uids.filter(Boolean)));
   if (recipients.length === 0) return;
-  const amount =
-    typeof input.amount === "number"
-      ? new Intl.NumberFormat("ar-EG", {
-          style: "currency",
-          currency: "EGP",
-        }).format(input.amount / 100)
-      : "";
-  const content =
-    input.status === "new_quote"
-      ? {
-          title: "عرض جديد للتوصيل الموحّد",
-          body: `وصل عرض بقيمة ${amount} لجمع طلبك من عدة بائعين في شحنة واحدة.`,
-          role: "buyer",
-        }
-      : input.status === "accepted"
-        ? {
-            title: "تم اختيار عرض التوصيل الموحّد",
-            body: `وافق المشتري على عرضك بقيمة ${amount}.`,
-            role: "service_provider",
-          }
-        : input.status === "rejected"
-          ? {
-              title: "لم يتم اختيار عرض التوصيل",
-              body: `رفض المشتري عرض التوصيل بقيمة ${amount}. يمكنك إرسال عرض معدل.`,
-              role: "service_provider",
-            }
-          : {
-              title: "اختيار التوصيل المنفصل",
-              body: "اختار المشتري العودة إلى توصيل كل بائع بصورة مستقلة.",
-              role: "service_provider",
-            };
   await notificationSendService
     .sendToUsers({
       uids: recipients,
-      title: content.title,
-      body: content.body,
-      locale: "ar",
-      category: NotificationCategories.Offers,
-      priority: NotificationPriorities.High,
+      templateId: DELIVERY_PLAN_TEMPLATES[input.status],
       dedupeKey: `delivery-plan:${input.planId}:${input.quoteId ?? input.status}:${input.status}`,
-      route: {
-        href: `/orders/details?orderId=${encodeURIComponent(input.orderId)}&role=${content.role}`,
-        label: "عرض خطة التوصيل",
-      },
+      variables: { orderId: input.orderId },
+      variablesByLocale:
+        typeof input.amount === "number"
+          ? moneyVariablesByLocale("amount", input.amount)
+          : undefined,
       metadata: {
         orderId: input.orderId,
         deliveryPlanId: input.planId,
@@ -110,49 +80,28 @@ async function notifyDeliveryPlan(input: {
     );
 }
 
+const SHIPPING_QUOTE_TEMPLATES = {
+  pending_buyer: "shipping.quoteProposed",
+  accepted: "shipping.quoteAccepted",
+  rejected: "shipping.quoteRejected",
+} as const;
+
 async function notifyShippingQuote(input: {
   uids: string[];
   orderId: string;
   quoteId: string;
-  status: "pending_buyer" | "accepted" | "rejected";
+  status: keyof typeof SHIPPING_QUOTE_TEMPLATES;
   amount: number;
 }) {
   const recipients = Array.from(new Set(input.uids.filter(Boolean)));
   if (recipients.length === 0) return;
-  const amount = new Intl.NumberFormat("ar-EG", {
-    style: "currency",
-    currency: "EGP",
-  }).format(input.amount / 100);
-  const content =
-    input.status === "pending_buyer"
-      ? {
-          title: "عرض شحن جديد",
-          body: `تم إرسال عرض شحن بقيمة ${amount}. راجع الطلب للقبول أو الرفض.`,
-        }
-      : input.status === "accepted"
-        ? {
-            title: "تم قبول عرض الشحن",
-            body: `وافق المشتري على عرض الشحن بقيمة ${amount}.`,
-          }
-        : {
-            title: "تم رفض عرض الشحن",
-            body: `رفض المشتري عرض الشحن بقيمة ${amount}. يمكنك إرسال عرض معدل.`,
-          };
   await notificationSendService
     .sendToUsers({
       uids: recipients,
-      title: content.title,
-      body: content.body,
-      locale: "ar",
-      category: NotificationCategories.Offers,
-      priority: NotificationPriorities.High,
+      templateId: SHIPPING_QUOTE_TEMPLATES[input.status],
       dedupeKey: `shipping-quote:${input.quoteId}:${input.status}`,
-      route: {
-        href: `/orders/details?orderId=${encodeURIComponent(input.orderId)}&role=${
-          input.status === "pending_buyer" ? "buyer" : "seller"
-        }`,
-        label: "عرض الطلب",
-      },
+      variables: { orderId: input.orderId },
+      variablesByLocale: moneyVariablesByLocale("amount", input.amount),
       metadata: {
         orderId: input.orderId,
         shippingQuoteId: input.quoteId,

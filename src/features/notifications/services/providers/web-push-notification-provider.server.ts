@@ -31,6 +31,19 @@ function buildPayload(input: NotificationProviderSendInput, token: RegisteredNot
   });
 }
 
+/**
+ * A subscription the push service no longer knows about.
+ *
+ * `404 Not Found` and `410 Gone` are the two responses the Web Push protocol
+ * defines for a subscription that was revoked or expired. Anything else — a
+ * network error, a 429, a 5xx — is a transient failure and must not cost the
+ * user their registration.
+ */
+function isExpiredSubscription(reason: unknown): boolean {
+  const status = (reason as { statusCode?: number } | null)?.statusCode;
+  return status === 404 || status === 410;
+}
+
 export class WebPushNotificationProvider implements NotificationProvider {
   readonly provider = 'web_push';
 
@@ -51,12 +64,22 @@ export class WebPushNotificationProvider implements NotificationProvider {
     const results = await Promise.allSettled(
       input.tokens.map((token) => webpush.sendNotification(JSON.parse(token.token), buildPayload(input, token))),
     );
-    const failures = results.filter((result) => result.status === 'rejected');
+    const failureCount = results.filter((result) => result.status === 'rejected').length;
+    const successCount = results.length - failureCount;
+    const invalidTokenIds = input.tokens
+      .filter((_, index) => {
+        const result = results[index];
+        return result?.status === 'rejected' && isExpiredSubscription(result.reason);
+      })
+      .map((token) => token.id);
     return {
       provider: this.provider,
       tokenCount: input.tokens.length,
-      status: failures.length === input.tokens.length ? 'failed' : 'queued',
-      message: failures.length > 0 ? `${failures.length} web push deliveries failed.` : undefined,
+      status: failureCount === 0 ? 'queued' : successCount > 0 ? 'partial' : 'failed',
+      successCount,
+      failureCount,
+      invalidTokenIds,
+      message: failureCount > 0 ? `${failureCount} web push deliveries failed.` : undefined,
     };
   }
 }

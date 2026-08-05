@@ -26,13 +26,20 @@ The server stores only device push tokens and the per-user `specialty_requests_e
 - A request carries a server-signed bilateral reply capability containing request ID, buyer UID, seller UID, and expiry.
 - Capabilities expire after seven days and cannot be used by a third UID.
 - Request and message IDs are stable deduplication keys.
-- A runtime limit allows at most five send operations per UID per minute per server instance.
+- A runtime limit allows at most five send operations per UID per minute per server instance. The counter is in-process memory, so it resets on redeploy and is not shared across instances.
+- One request resolves at most 500 matching providers.
 - Request text is not written to server logs or databases by the module.
 - The provider opt-out is applied before delivery.
 
 ## Delivery and state
 
 FCM chat payloads use a seven-day TTL and a unique collapse key, so distinct messages do not replace one another. Android uses the existing `asol_chat_v2` channel with sound and vibration. Web Push stores the complete specialty-chat metadata in AsolDB.
+
+Titles come from the `specialty.request`, `specialty.replyFromProvider`, and
+`specialty.messageFromBuyer` templates and are rendered in the recipient device's
+language. The message body is the sender's own text, passed through as a
+variable and never translated or rewritten. The specialty name in a request title
+is sent in both languages so each recipient sees it in theirs.
 
 Accepted, received, and read are separate states:
 
