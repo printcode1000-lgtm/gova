@@ -61,8 +61,9 @@ export const ASOL_API_ROUTES = {
       `/api/orders/${encodeURIComponent(orderId)}/actions`,
   },
   notifications: {
+    // No `send` entry: push fan-out lives only on the notifications service
+    // (services/notifications), reached through NotificationSendService.
     deviceToken: "/api/notifications/device-token",
-    send: "/api/notifications/send",
     broadcastRecipients: "/api/notifications/broadcast/recipients",
     broadcastSend: "/api/notifications/broadcast/send",
     webPushPublicKey: "/api/notifications/web-push/public-key",

@@ -23,7 +23,20 @@ public/sync_data/
 |-- sync_sqlite/                     # local databases and shards
 |-- schema-sync-report.json
 `-- *-schema-sync-report.json
+
+services/
+`-- notifications/                   # independent module, own Vercel account
+    |-- src/app/api/notifications/send/  # the only fan-out route in the system
+    |-- src/app/api/health/
+    |-- generated/                   # mirrored from src/, git-ignored
+    |-- stubs/better-sqlite3.js
+    |-- package.json                 # its own dependencies
+    `-- .vercelignore                # forces generated/ into the upload
 ```
+
+`services/` sits outside `src/` on purpose: it is deployed on its own, and the
+root `tsconfig.json` excludes it so the two module graphs never merge. See
+[Notifications Service Module](../../05-platform-features/notifications-service-module.md).
 
 ## Client and server entry points
 

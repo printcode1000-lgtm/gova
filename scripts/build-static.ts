@@ -4,7 +4,7 @@ import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
-import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
+import { CAPACITOR_API_BASE_URL, CAPACITOR_NOTIFICATIONS_BASE_URL } from "../platform/capacitor.defaults";
 import { categoryService } from "../src/features/categories";
 import { auditCapacitorDefaultBundle } from "./lib/capacitor-defaults-audit";
 import {
@@ -57,6 +57,28 @@ function assertStaticApiBaseUrl(): void {
     );
   }
   console.log(`Static API base URL: ${apiBaseUrl}`);
+}
+
+/**
+ * Same failure mode as the API base URL, one layer over.
+ *
+ * A static or native bundle has no same-origin fallback for the notifications
+ * service either. Without an absolute URL the browser bridge silently delivers
+ * nothing and push stops working on the phone with no error to find.
+ */
+function assertStaticNotificationsBaseUrl(): void {
+  const notificationsBaseUrl =
+    process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL?.replace(/\/$/, "") ||
+    CAPACITOR_NOTIFICATIONS_BASE_URL.replace(/\/$/, "");
+  if (!/^https?:\/\/.+/.test(notificationsBaseUrl)) {
+    throw new Error(
+      "A static build needs an absolute notifications service URL, but none resolved. " +
+        "Set NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL, or fix CAPACITOR_NOTIFICATIONS_BASE_URL " +
+        "in platform/capacitor.defaults.ts.",
+    );
+  }
+  process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL = notificationsBaseUrl;
+  console.log(`Static notifications base URL: ${notificationsBaseUrl}`);
 }
 
 /**
@@ -468,6 +490,7 @@ try {
   });
 
   assertStaticApiBaseUrl();
+  assertStaticNotificationsBaseUrl();
   prepareTempBuildDir();
 
   execSync(`"${nextBinary}" build`, {

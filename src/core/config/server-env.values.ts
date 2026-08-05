@@ -127,17 +127,16 @@ export function getFirebaseAdminServiceAccount(): FirebaseAdminServiceAccountCon
   return { projectId, clientEmail, privateKey };
 }
 
-export function getNotificationInternalSecret(): string {
-  const secret = process.env.ASOL_NOTIFICATION_INTERNAL_SECRET?.trim();
-  if (!secret || secret.length < 32)
-    throw new Error("notificationInternalSecretNotConfigured");
-  return secret;
-}
-
+/**
+ * Session signing.
+ *
+ * It no longer falls back to the notification secret. That link meant rotating
+ * a push credential silently invalidated every signed session, which is a
+ * surprise nobody wants to debug. Set `ASOL_SESSION_SIGNING_SECRET` explicitly.
+ */
 export function getAsolSessionSigningSecret(): string {
   const secret =
     process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ||
-    process.env.ASOL_NOTIFICATION_INTERNAL_SECRET?.trim() ||
     process.env.TURSO_AUTH_TOKEN?.trim() ||
     "";
   if (secret.length < 32) throw new Error("sessionSigningSecretNotConfigured");
@@ -293,17 +292,24 @@ export function getTursoNotificationsRuntimeCredentials(): {
 }
 
 /**
- * Origin of the notifications deployment on its own Vercel account.
+ * Shared trust anchor between the two deployments.
  *
- * Set on the main app only. When present, push fan-out is forwarded there over
- * HTTP instead of running in-process, which is the entire point of the split:
- * the per-token provider requests are billed to the notifications account.
- * Empty means "send in-process", which is what local development does.
+ * The main app signs a notification grant with it; the notifications service
+ * verifies the signature. It is the *only* thing the two share — neither calls
+ * the other, and the browser carries the grant between them. A grant is
+ * therefore worth exactly one pre-authorised send, and a browser holding one
+ * cannot alter who it reaches or what it says.
+ *
+ * Falls back to the session signing secret so a deployment that has not set it
+ * yet still verifies consistently on both sides.
  */
-export function getNotificationsServiceUrl(): string | null {
-  const value = process.env.ASOL_NOTIFICATIONS_SERVICE_URL?.trim();
-  if (!value) return null;
-  return value.replace(/\/+$/, "");
+export function getNotificationGrantSecret(): string {
+  const secret =
+    process.env.ASOL_NOTIFICATION_GRANT_SECRET?.trim() ||
+    process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ||
+    "";
+  if (secret.length < 32) throw new Error("notificationGrantSecretNotConfigured");
+  return secret;
 }
 
 export function getTursoAdvertisementsRuntimeCredentials(): {

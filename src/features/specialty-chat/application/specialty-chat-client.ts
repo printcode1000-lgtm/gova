@@ -86,7 +86,7 @@ export const specialtyChatClient = {
         mainCategoryName: input.mainCategoryName,
         subcategoryName: input.subcategoryName,
         matchedUsers: result.matchedUsers,
-        acceptedUsers: result.acceptedUsers,
+        grantedUsers: result.grantedUsers,
       },
     });
     return result;

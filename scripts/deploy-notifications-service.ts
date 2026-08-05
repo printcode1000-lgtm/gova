@@ -40,14 +40,13 @@ if (!token) {
 const REQUIRED_ENV_KEYS = [
   'TURSO_NOTIFICATIONS_DATABASE_URL',
   'TURSO_NOTIFICATIONS_AUTH_TOKEN',
-  'ASOL_NOTIFICATION_INTERNAL_SECRET',
+  // Verifies the grants the browser delivers. Identical value on both accounts.
+  'ASOL_NOTIFICATION_GRANT_SECRET',
 ] as const;
 
 const OPTIONAL_ENV_KEYS = [
   'FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64',
   'FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON',
-  'ASOL_SESSION_SIGNING_SECRET',
-  'ASOL_CORS_ORIGINS',
   'APNS_TEAM_ID',
   'APNS_KEY_ID',
   'APNS_BUNDLE_ID',
@@ -185,8 +184,8 @@ async function main(): Promise<void> {
     if (value) await upsertEnv(projectId, key, value, teamId);
     else console.log(`  skip ${key} (not set locally)`);
   }
-  // Never set on the service itself: it would forward sends back to itself.
-  console.log('  ASOL_NOTIFICATIONS_SERVICE_URL intentionally not set here');
+  // The service is never told where the main app is: it has no reason to call
+  // it, and a grant carries everything a send needs.
 
   console.log('\nMirroring shared modules into services/notifications/generated...');
   syncSharedSources();
@@ -195,8 +194,8 @@ async function main(): Promise<void> {
   runVercel(['deploy', '--prod', '--yes'], projectId, teamId);
 
   console.log(
-    `\nDone. Set ASOL_NOTIFICATIONS_SERVICE_URL on the main app to this deployment's origin ` +
-      'so push fan-out is billed to the notifications account.',
+    "\nDone. Set NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL on the main app to this deployment's " +
+      'origin so the browser bridge knows where to deliver grants.',
   );
 }
 

@@ -13,7 +13,11 @@ export function GET(): Response {
     ok: true,
     configured: {
       notificationsDatabase: Boolean(process.env.TURSO_NOTIFICATIONS_DATABASE_URL),
-      internalSecret: Boolean(process.env.ASOL_NOTIFICATION_INTERNAL_SECRET),
+      // The only shared value with the main app: it signs grants, this verifies.
+      grantSecret: Boolean(
+        process.env.ASOL_NOTIFICATION_GRANT_SECRET ??
+          process.env.ASOL_SESSION_SIGNING_SECRET,
+      ),
       firebase: Boolean(
         process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64 ??
           process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON,

@@ -22,7 +22,7 @@ The notification system is a local-first module that powers the in-app notificat
 - Notifications persist locally in AsolDB IndexedDB stores.
 - Templates live only in JSON files: Arabic and English.
 - Client business modules publish through `NotificationBus`; they do not talk directly to push providers.
-- Server business flows (orders, shipping quotes, unified delivery, specialty chat) call `NotificationSendService.sendToUsers` directly with a `templateId`, so their text is resolved per recipient language.
+- Server business flows (orders, shipping quotes, unified delivery, specialty chat) issue a signed grant with a `templateId`; the notifications service resolves the text per recipient language when it delivers.
 - Push text follows the device's own language; each token stores the locale it was registered with.
 - Event-to-template mapping exists for orders, shipments, returns, chat, payments, offers, and system notices. Only `orders.created` is published today, from the cart page on the buyer's own device.
 - Deduplication uses `dedupeKey`; duplicate entries are not stored again.
@@ -202,12 +202,14 @@ Current consumers:
 |--------|--------|----------|
 | `src/components/cart/CartPageContent.tsx` | `publishEvent` | `orders.created` |
 
-Server-side flows do not go through the bus, and there is no browser path to
-multi-user delivery: `POST /api/notifications/send` is guarded by a server-only
-secret, so `NotificationApiService` deliberately exposes no send method.
+Server-side flows do not go through the bus. The main app serves no send route at
+all — fan-out lives on the
+[notifications service](notifications-service-module.md) — so
+`NotificationApiService` deliberately exposes no send method.
 `src/app/api/orders/**` and
-`src/features/specialty-chat/services/specialty-chat-service.server.ts` call
-`NotificationSendService.sendToUsers` directly with a `templateId`.
+`src/features/specialty-chat/services/specialty-chat-service.server.ts` issue
+signed grants through `NotificationGrantCollector` and return them in the
+response body; the [browser bridge](notification-bridge-module.md) delivers them.
 
 ## Event Mapping
 
@@ -424,7 +426,7 @@ inside a template. Pass them through `variablesByLocale`, which is merged over
 `variables` for each group:
 
 ```ts
-await notificationSendService.sendToUsers({
+notificationGrants.issue({
   uids,
   templateId: "shipping.quoteProposed",
   dedupeKey: `shipping-quote:${quoteId}:pending_buyer`,
@@ -438,18 +440,29 @@ link is not enough.
 
 ## Multi-User Sending
 
-The backend has an API for delivering to one or many users:
+Delivery to one or many users is served by the
+[notifications service](notifications-service-module.md), on its own Vercel
+account:
 
 ```text
-POST /api/notifications/send
-Authorization: Bearer <ASOL_NOTIFICATION_INTERNAL_SECRET>
+POST https://<notifications-service>/api/notifications/send
+Content-Type: application/json
+
+{ "grants": ["<signed grant>", "…"] }
 ```
 
-This route is server-to-server only. It is guarded by a constant-time comparison
-against `ASOL_NOTIFICATION_INTERNAL_SECRET`; the secret must be at least 32
-characters or the route fails closed. Browser clients cannot call it. Internal
-callers — order routes, specialty chat, super-admin broadcast — call
-`NotificationSendService.sendToUsers`.
+The browser is the caller and the grant is the only authority. There is no
+bearer token: a shared bearer would let anything holding it send anything to
+anyone, while a grant authorises exactly one pre-approved send and expires in
+five minutes. No cookies or credentials are sent, so a permissive CORS origin
+cannot be used to ride on someone's session.
+
+The main app does not serve this path at all. Its routes — orders, specialty
+chat, super-admin broadcast — issue grants through `NotificationGrantCollector`
+and return them; they never address the service.
+
+Each grant is verified independently, so one expired entry fails without losing
+the rest. The response reports `accepted`, `rejected`, and a per-grant result.
 
 Input accepts `uids: string[]` plus either `templateId` or custom `title`/`body`,
 with a stable `dedupeKey`. Duplicate and empty uids are removed. The service
@@ -469,33 +482,51 @@ FCM, HTTP 400/410 on APNs) are soft-deleted in the same request.
 
 ## Where The Fan-Out Runs
 
-`sendToUsers` has two paths, chosen by whether `ASOL_NOTIFICATIONS_SERVICE_URL`
-is set:
+**The two backends never call each other.** The main app has no code path to the
+notifications service and the service has no code path back. The browser is the
+only thing that touches both.
 
 ```text
-ASOL_NOTIFICATIONS_SERVICE_URL set (main app in production)
-  sendToUsers -> RemoteDispatchTransport
-              -> POST <service>/api/notifications/send
-              -> sendToUsersLocally on the notifications deployment
-
-unset (local development, and the notifications deployment itself)
-  sendToUsers -> sendToUsersLocally, in this process
+1. browser ──► main app          "accept this order"
+2.         ◄── order + signed notification grant(s)
+3. browser ──► notifications service   the grant
+4.                                     verify signature, fan out to devices
 ```
 
+A **grant** is the whole send — recipients, template, variables, metadata —
+signed by the main app with `ASOL_NOTIFICATION_GRANT_SECRET` and valid for five
+minutes. Signing the entire payload rather than just the recipients is what
+makes the browser a courier instead of a participant: adding a uid, swapping the
+template, or rewriting the body invalidates the signature.
+
+Only the main app can decide *who* should be notified, because only it holds the
+users and orders databases. Only the service can *deliver*, because only it holds
+the Firebase and APNs credentials. The grant is that decision, in transit.
+
 Fan-out is one provider request per token, up to 25 in flight. On a serverless
-platform billed by wall clock, that is the expensive part of a notification —
-not the route. Forwarding it means the main app pays for one HTTP round trip and
-the burst is billed to the notifications account instead.
+platform billed by wall clock that is the expensive part of a notification, and
+it is billed to the notifications account.
 
-`POST /api/notifications/send` calls `sendToUsersLocally`, never `sendToUsers`.
-Both deployments run the same code, so calling `sendToUsers` there would make
-the service forward to itself forever. That single choice is the loop guard;
-there is no role flag to misconfigure.
+Routes issue grants through `NotificationGrantCollector` and return them in the
+response body under `notificationGrants`. `AsolApiClient.parseResponse` hands
+every response to the [browser bridge](notification-bridge-module.md), so no
+call site has to remember to forward anything.
 
-Only the fan-out moves. Device-token registration, VAPID management, and
-broadcast recipient listing stay on the main app, because they need the users
-database for identity checks and masked contact details. The notifications
-account therefore never receives users, product, or shard credentials.
+### What this costs
+
+Delivery is **best effort**, and that is a deliberate trade, not an oversight.
+The browser must still be alive to carry the grant. A seller who accepts an order
+and closes the tab immediately leaves the buyer unnotified, and there is no
+server-side retry, because the server no longer knows the service exists.
+
+The API response reports what was **granted**, never what a provider accepted —
+`grantedUsers`, and `status: "granted"`. Provider acceptance is not knowable on
+the main app any more, so it is not claimed.
+
+Device-token registration, VAPID management, and broadcast recipient listing stay
+on the main app: they need the users database for identity checks and masked
+contact details. The notifications account never receives users, product, or
+shard credentials.
 
 The notifications deployment is not connected to GitHub. It updates only when
 `npm run notifications:deploy` is run; a push to the repository redeploys the
@@ -730,8 +761,8 @@ src/features/notifications/services/providers/
 Provider flow:
 
 ```text
-POST /api/notifications/send
-  -> NotificationSendService
+POST /api/notifications/send        (on the notifications service)
+  -> NotificationSendService.sendToUsersLocally
   -> ListNotificationTokensQuery
   -> UserNotificationTokenRepository
   -> group tokens by user_notification_tokens.provider

@@ -10,7 +10,8 @@ import {
   moneyMinor,
 } from "../../order-api-helpers";
 import type { ActorRole } from "@/modules/marketplace-orders/domain/enums";
-import { notificationSendService } from "@/features/notifications/services/notification-service.bootstrap.server";
+import { withNotificationGrants } from "@/features/notifications/domain/notification-grant-envelope";
+import { NotificationGrantCollector } from "@/features/notifications/services/notification-grant-collector.server";
 import { moneyVariablesByLocale } from "@/features/notifications/shared/notification-money";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 
@@ -42,42 +43,51 @@ const DELIVERY_PLAN_TEMPLATES = {
   separate: "delivery.separateSelected",
 } as const;
 
-async function notifyDeliveryPlan(input: {
-  uids: string[];
-  orderId: string;
-  planId: string;
-  quoteId?: string;
-  status: keyof typeof DELIVERY_PLAN_TEMPLATES;
-  amount?: number;
-}) {
+/**
+ * Signs the delivery-plan notification instead of sending it.
+ *
+ * This route runs on the main app, which has no path to the notifications
+ * service. It decides who should be told and what they should read — the part
+ * only it can decide — and returns that decision signed. The browser carries it.
+ */
+function grantDeliveryPlan(
+  grants: NotificationGrantCollector,
+  input: {
+    uids: string[];
+    orderId: string;
+    planId: string;
+    quoteId?: string;
+    status: keyof typeof DELIVERY_PLAN_TEMPLATES;
+    amount?: number;
+  },
+): void {
   const recipients = Array.from(new Set(input.uids.filter(Boolean)));
   if (recipients.length === 0) return;
-  await notificationSendService
-    .sendToUsers({
-      uids: recipients,
-      templateId: DELIVERY_PLAN_TEMPLATES[input.status],
-      dedupeKey: `delivery-plan:${input.planId}:${input.quoteId ?? input.status}:${input.status}`,
-      variables: { orderId: input.orderId },
-      variablesByLocale:
-        typeof input.amount === "number"
-          ? moneyVariablesByLocale("amount", input.amount)
-          : undefined,
-      metadata: {
-        orderId: input.orderId,
-        deliveryPlanId: input.planId,
-        deliveryPlanQuoteId: input.quoteId ?? null,
-        deliveryPlanStatus: input.status,
-        amount: input.amount ?? null,
-      },
-    })
-    .catch((error) =>
-      logServerSystemIssue({
-        error,
-        feature: "Orders",
-        operation: "notify-delivery-plan",
-        routeName: "POST /api/orders/:orderId/actions",
-      }).catch(() => undefined),
-    );
+  const issued = grants.issue({
+    uids: recipients,
+    templateId: DELIVERY_PLAN_TEMPLATES[input.status],
+    dedupeKey: `delivery-plan:${input.planId}:${input.quoteId ?? input.status}:${input.status}`,
+    variables: { orderId: input.orderId },
+    variablesByLocale:
+      typeof input.amount === "number"
+        ? moneyVariablesByLocale("amount", input.amount)
+        : undefined,
+    metadata: {
+      orderId: input.orderId,
+      deliveryPlanId: input.planId,
+      deliveryPlanQuoteId: input.quoteId ?? null,
+      deliveryPlanStatus: input.status,
+      amount: input.amount ?? null,
+    },
+  });
+  if (!issued) {
+    void logServerSystemIssue({
+      error: new Error("notificationGrantNotIssued"),
+      feature: "Orders",
+      operation: "notify-delivery-plan",
+      routeName: "POST /api/orders/:orderId/actions",
+    }).catch(() => undefined);
+  }
 }
 
 const SHIPPING_QUOTE_TEMPLATES = {
@@ -86,37 +96,39 @@ const SHIPPING_QUOTE_TEMPLATES = {
   rejected: "shipping.quoteRejected",
 } as const;
 
-async function notifyShippingQuote(input: {
-  uids: string[];
-  orderId: string;
-  quoteId: string;
-  status: keyof typeof SHIPPING_QUOTE_TEMPLATES;
-  amount: number;
-}) {
+function grantShippingQuote(
+  grants: NotificationGrantCollector,
+  input: {
+    uids: string[];
+    orderId: string;
+    quoteId: string;
+    status: keyof typeof SHIPPING_QUOTE_TEMPLATES;
+    amount: number;
+  },
+): void {
   const recipients = Array.from(new Set(input.uids.filter(Boolean)));
   if (recipients.length === 0) return;
-  await notificationSendService
-    .sendToUsers({
-      uids: recipients,
-      templateId: SHIPPING_QUOTE_TEMPLATES[input.status],
-      dedupeKey: `shipping-quote:${input.quoteId}:${input.status}`,
-      variables: { orderId: input.orderId },
-      variablesByLocale: moneyVariablesByLocale("amount", input.amount),
-      metadata: {
-        orderId: input.orderId,
-        shippingQuoteId: input.quoteId,
-        shippingQuoteStatus: input.status,
-        amount: input.amount,
-      },
-    })
-    .catch((error) =>
-      logServerSystemIssue({
-        error,
-        feature: "Orders",
-        operation: "notify-shipping-quote",
-        routeName: "POST /api/orders/:orderId/actions",
-      }).catch(() => undefined),
-    );
+  const issued = grants.issue({
+    uids: recipients,
+    templateId: SHIPPING_QUOTE_TEMPLATES[input.status],
+    dedupeKey: `shipping-quote:${input.quoteId}:${input.status}`,
+    variables: { orderId: input.orderId },
+    variablesByLocale: moneyVariablesByLocale("amount", input.amount),
+    metadata: {
+      orderId: input.orderId,
+      shippingQuoteId: input.quoteId,
+      shippingQuoteStatus: input.status,
+      amount: input.amount,
+    },
+  });
+  if (!issued) {
+    void logServerSystemIssue({
+      error: new Error("notificationGrantNotIssued"),
+      feature: "Orders",
+      operation: "notify-shipping-quote",
+      routeName: "POST /api/orders/:orderId/actions",
+    }).catch(() => undefined);
+  }
 }
 
 export async function POST(
@@ -129,6 +141,7 @@ export async function POST(
       try {
         const { orderId } = await params;
         const body = (await request.json()) as ActionInput;
+        const notificationGrants = new NotificationGrantCollector(body.uid);
         const service = getMarketplaceOrderService();
         const adminCapable = actorFromInput(
           { uid: body.uid, phone: body.phone },
@@ -216,14 +229,14 @@ export async function POST(
               },
               asSeller,
             );
-            await notifyShippingQuote({
+            grantShippingQuote(notificationGrants, {
               uids: [String(quote.buyer_id)],
               orderId,
               quoteId: String(quote.id),
               status: "pending_buyer",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(quote);
+            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
           }
           case "provider_send_unified_delivery_quote": {
             if (!body.deliveryPlanId)
@@ -239,7 +252,7 @@ export async function POST(
             );
             const details =
               await getMarketplaceOrderQueries().getDetails(orderId);
-            await notifyDeliveryPlan({
+            grantDeliveryPlan(notificationGrants, {
               uids: [String(details?.order.buyer_id ?? "")],
               orderId,
               planId: body.deliveryPlanId,
@@ -247,7 +260,7 @@ export async function POST(
               status: "new_quote",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(quote);
+            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
           }
           case "buyer_accept_unified_delivery_quote": {
             if (!body.deliveryPlanQuoteId)
@@ -261,7 +274,7 @@ export async function POST(
             const quote = details?.deliveryPlanQuotes.find(
               (entry) => String(entry.id) === body.deliveryPlanQuoteId,
             );
-            await notifyDeliveryPlan({
+            grantDeliveryPlan(notificationGrants, {
               uids: [String(quote?.provider_id ?? "")],
               orderId,
               planId: String(plan.id),
@@ -269,7 +282,7 @@ export async function POST(
               status: "accepted",
               amount: Number(quote?.total_shipping_price ?? 0),
             });
-            return apiSuccess(plan);
+            return apiSuccess(withNotificationGrants({ ...plan }, notificationGrants.toArray()));
           }
           case "buyer_reject_unified_delivery_quote": {
             if (!body.deliveryPlanQuoteId)
@@ -278,7 +291,7 @@ export async function POST(
               body.deliveryPlanQuoteId,
               asBuyer,
             );
-            await notifyDeliveryPlan({
+            grantDeliveryPlan(notificationGrants, {
               uids: [String(quote.provider_id ?? "")],
               orderId,
               planId: String(quote.plan_id),
@@ -286,7 +299,7 @@ export async function POST(
               status: "rejected",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(quote);
+            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
           }
           case "buyer_choose_separate_delivery": {
             if (!body.deliveryPlanId)
@@ -297,7 +310,7 @@ export async function POST(
             );
             const details =
               await getMarketplaceOrderQueries().getDetails(orderId);
-            await notifyDeliveryPlan({
+            grantDeliveryPlan(notificationGrants, {
               uids:
                 details?.deliveryPlanCandidates.map((candidate) =>
                   String(candidate.provider_id),
@@ -306,7 +319,7 @@ export async function POST(
               planId: body.deliveryPlanId,
               status: "separate",
             });
-            return apiSuccess(plan);
+            return apiSuccess(withNotificationGrants({ ...plan }, notificationGrants.toArray()));
           }
           case "admin_create_unified_delivery_shipment": {
             if (!body.deliveryPlanId)
@@ -325,7 +338,7 @@ export async function POST(
               body.shippingQuoteId,
               asBuyer,
             );
-            await notifyShippingQuote({
+            grantShippingQuote(notificationGrants, {
               uids: [
                 String(quote.proposed_by ?? ""),
                 String(quote.seller_id ?? ""),
@@ -336,7 +349,7 @@ export async function POST(
               status: "accepted",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(quote);
+            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
           }
           case "buyer_reject_shipping_quote": {
             if (!body.shippingQuoteId)
@@ -345,7 +358,7 @@ export async function POST(
               body.shippingQuoteId,
               asBuyer,
             );
-            await notifyShippingQuote({
+            grantShippingQuote(notificationGrants, {
               uids: [
                 String(quote.proposed_by ?? ""),
                 String(quote.seller_id ?? ""),
@@ -356,7 +369,7 @@ export async function POST(
               status: "rejected",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(quote);
+            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
           }
           case "buyer_accept_custom_price":
             if (!body.customItemId) throw new Error("customItemId is required");

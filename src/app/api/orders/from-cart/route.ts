@@ -1,7 +1,8 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { createMultiSellerDeliveryDraft } from "@/features/cart/multi-seller-delivery-planner";
 import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
-import { notificationSendService } from "@/features/notifications/services/notification-service.bootstrap.server";
+import { withNotificationGrants } from "@/features/notifications/domain/notification-grant-envelope";
+import { NotificationGrantCollector } from "@/features/notifications/services/notification-grant-collector.server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
@@ -67,6 +68,7 @@ export async function POST(request: Request) {
         { uid: body.uid, phone: body.phone },
         "buyer",
       );
+      const notificationGrants = new NotificationGrantCollector(body.uid);
       if (!Array.isArray(body.items) || body.items.length === 0) {
         throw new Error("Cart items are required");
       }
@@ -331,32 +333,31 @@ export async function POST(request: Request) {
           },
           actor,
         );
-        await notificationSendService
-          .sendToUsers({
-            uids: deliveryDraft.candidates.map(
-              (candidate) => candidate.providerId,
-            ),
-            templateId: "delivery.planInvitation",
-            dedupeKey: `delivery-plan:${String(plan.id)}:invitation`,
-            variables: {
-              orderId: String(order.id),
-              sellerCount: deliveryDraft.sellerCount,
-            },
-            metadata: {
-              orderId: String(order.id),
-              deliveryPlanId: String(plan.id),
-              sellerCount: deliveryDraft.sellerCount,
-              specialVehicleRequired: deliveryDraft.specialVehicleRequired,
-            },
-          })
-          .catch((error) =>
-            logServerSystemIssue({
-              error,
-              feature: "Orders",
-              operation: "notify-unified-delivery-plan",
-              routeName: "POST /api/orders/from-cart",
-            }).catch(() => undefined),
-          );
+        const issued = notificationGrants.issue({
+          uids: deliveryDraft.candidates.map(
+            (candidate) => candidate.providerId,
+          ),
+          templateId: "delivery.planInvitation",
+          dedupeKey: `delivery-plan:${String(plan.id)}:invitation`,
+          variables: {
+            orderId: String(order.id),
+            sellerCount: deliveryDraft.sellerCount,
+          },
+          metadata: {
+            orderId: String(order.id),
+            deliveryPlanId: String(plan.id),
+            sellerCount: deliveryDraft.sellerCount,
+            specialVehicleRequired: deliveryDraft.specialVehicleRequired,
+          },
+        });
+        if (!issued) {
+          void logServerSystemIssue({
+            error: new Error("notificationGrantNotIssued"),
+            feature: "Orders",
+            operation: "notify-unified-delivery-plan",
+            routeName: "POST /api/orders/from-cart",
+          }).catch(() => undefined);
+        }
       }
 
       await sellerDiscountService.recordAppliedUsages({
@@ -366,10 +367,13 @@ export async function POST(request: Request) {
       });
 
       return apiSuccess(
-        {
-          orderId: String(order.id),
-          unifiedDeliveryPlan: deliveryDraft.enabled,
-        },
+        withNotificationGrants(
+          {
+            orderId: String(order.id),
+            unifiedDeliveryPlan: deliveryDraft.enabled,
+          },
+          notificationGrants.toArray(),
+        ),
         201,
       );
     } catch (error) {

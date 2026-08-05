@@ -8,12 +8,11 @@ import type {
   BroadcastRecipientsResult,
 } from '../domain/entities';
 import { ListBroadcastRecipientsQuery } from '@/modules/data-access/domains/notifications/operations/queries/list-broadcast-recipients.query';
-import { NotificationSendService } from './notification-send-service.server';
+import { NotificationGrantCollector } from './notification-grant-collector.server';
 
 export class NotificationBroadcastService {
   constructor(
     private readonly listRecipientsQuery = new ListBroadcastRecipientsQuery(),
-    private readonly sendService = new NotificationSendService(),
   ) {}
 
   async listRecipients(identity: { uid: string; phone: string }): Promise<BroadcastRecipientsResult> {
@@ -55,7 +54,11 @@ export class NotificationBroadcastService {
       .update(JSON.stringify({ title, body, audienceKey }))
       .digest('hex')
       .slice(0, 24);
-    const result = await this.sendService.sendToUsers({
+    // The main app authorises the broadcast; it does not deliver it. The admin's
+    // browser carries the grant to the notifications service, so the reported
+    // result is what was granted, not what a provider accepted.
+    const grants = new NotificationGrantCollector(input.identity.uid);
+    const issued = grants.issue({
       actorUid: input.identity.uid,
       uids,
       title,
@@ -67,9 +70,12 @@ export class NotificationBroadcastService {
         requestId: input.requestId ?? '',
       },
     });
+    if (!issued) throw new Error('notificationGrantNotIssued');
     return {
-      ...result,
+      requested: uids.length,
+      results: uids.map((uid) => ({ uid, tokenCount: 0, status: 'granted' as const })),
       recipientMode: input.sendToAll ? 'all' : 'selected',
+      notificationGrants: grants.toArray(),
     };
   }
 

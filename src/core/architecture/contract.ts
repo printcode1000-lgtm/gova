@@ -51,18 +51,17 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
 ]);
 
 /**
- * Only dedicated transport modules may call `fetch` directly. The rule exists
- * to keep UI, hooks, and business services off the network, not to ban HTTP
- * from the one file whose whole job is a single hop.
+ * Only dedicated transport modules may call `fetch` directly. The rule keeps
+ * UI, hooks, and business services off the network; it is not a ban on HTTP in
+ * the files whose whole job is a single hop.
  *
- * `remote-dispatch-transport.server.ts` is the server-to-server twin of
- * `asol-http-transport.ts`: it forwards a push send to the notifications
- * deployment on its own Vercel account. It is server-only and carries no
- * business logic.
+ * `notification-bridge.client.ts` is the connector between the two deployments.
+ * Neither backend can reach the other, so the hop happens in the browser: it
+ * carries a signed grant, sends no credentials, and holds no business logic.
  */
 export const ALLOWED_FETCH_FILES = new Set([
   'src/core/api/asol-http-transport.ts',
-  'src/features/notifications/services/providers/remote-dispatch-transport.server.ts',
+  'src/modules/notification-bridge/notification-bridge.client.ts',
 ]);
 
 export const ALLOWED_DRIZZLE_ORM_FILES_PATTERN = [

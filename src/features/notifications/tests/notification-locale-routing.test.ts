@@ -86,7 +86,7 @@ async function main() {
     deleted,
   );
 
-  const result = await service.sendToUsers({
+  const result = await service.sendToUsersLocally({
     uids: ["usr_ar", "usr_en", "usr_legacy"],
     templateId: "shipping.quoteProposed",
     dedupeKey: "shipping-quote:q_1:pending_buyer",
@@ -137,7 +137,7 @@ async function main() {
     { usr_dead: [token("ntok_dead", "usr_dead", "en")] },
     removed,
   );
-  await cleanupService.sendToUsers({
+  await cleanupService.sendToUsersLocally({
     uids: ["usr_dead"],
     title: "Announcement",
     body: "Body",

@@ -5,7 +5,7 @@ import { profileService } from "@/features/profile/services/profile-service.boot
 import { GetNotificationUserIdentityQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-user-identity.query";
 import { GetSpecialtyRequestPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-specialty-request-preference.query";
 import { SetSpecialtyRequestPreferenceCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-specialty-request-preference.command";
-import { notificationSendService } from "@/features/notifications/services/notification-service.bootstrap.server";
+import { NotificationGrantCollector } from "@/features/notifications/services/notification-grant-collector.server";
 import { NotificationCategories, NotificationPriorities, NotificationSounds } from "@/features/notifications/domain/enums";
 import { createSpecialtyChatCapability, verifySpecialtyChatCapability } from "./specialty-chat-capability.server";
 import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity } from "../domain/types";
@@ -60,53 +60,44 @@ export class SpecialtyChatService {
     const candidates = Array.from(new Set(matched.map((item) => item.uid))).filter((uid) => uid !== actor.uid);
     const enabled = await this.getPreferenceQuery.enabledUids(candidates);
 
-    const deliveries = await Promise.all(
-      enabled.map(async (sellerUid) => {
-        const capability = createSpecialtyChatCapability({ requestId: input.requestId, buyerUid: actor.uid, sellerUid });
-        const result = await notificationSendService.sendToUsers({
-          actorUid: actor.uid,
-          uids: [sellerUid],
-          templateId: "specialty.request",
-          dedupeKey: `${input.requestId}:${sellerUid}`,
-          // The body is the buyer's own text and is never translated; only the
-          // surrounding title follows the reader's language.
-          variables: { message },
-          variablesByLocale: {
-            ar: { specialtyName: sub.nameAr },
-            en: { specialtyName: sub.nameEn || sub.nameAr },
-          },
-          metadata: {
-            specialtyChatKind: SPECIALTY_CHAT_KINDS.Request,
-            requestId: input.requestId,
-            senderUid: actor.uid,
-            peerUid: actor.uid,
-            mainCategoryId: main.id,
-            subcategoryId: input.subcategoryId,
-            mainCategoryName: main.nameAr,
-            subcategoryName: sub.nameAr,
-            capability,
-          },
-        });
-        const delivery = result.results[0];
-        return Boolean(
-          delivery &&
-            ["sent", "queued", "partial"].includes(delivery.status) &&
-            delivery.providers?.some(
-              (provider) =>
-                (provider.provider === "fcm" ||
-                  provider.provider === "web_push" ||
-                  provider.provider === "apns") &&
-                provider.status !== "failed",
-            ),
-        );
-      }),
-    );
-    const acceptedUsers = deliveries.filter(Boolean).length;
+    // One grant per provider: each carries its own reply capability and its own
+    // dedupe key, so they cannot be collapsed into a single authorisation.
+    const grants = new NotificationGrantCollector(actor.uid);
+    for (const sellerUid of enabled) {
+      const capability = createSpecialtyChatCapability({ requestId: input.requestId, buyerUid: actor.uid, sellerUid });
+      grants.issue({
+        actorUid: actor.uid,
+        uids: [sellerUid],
+        templateId: "specialty.request",
+        dedupeKey: `${input.requestId}:${sellerUid}`,
+        // The body is the buyer's own text and is never translated; only the
+        // surrounding title follows the reader's language.
+        variables: { message },
+        variablesByLocale: {
+          ar: { specialtyName: sub.nameAr },
+          en: { specialtyName: sub.nameEn || sub.nameAr },
+        },
+        metadata: {
+          specialtyChatKind: SPECIALTY_CHAT_KINDS.Request,
+          requestId: input.requestId,
+          senderUid: actor.uid,
+          peerUid: actor.uid,
+          mainCategoryId: main.id,
+          subcategoryId: input.subcategoryId,
+          mainCategoryName: main.nameAr,
+          subcategoryName: sub.nameAr,
+          capability,
+        },
+      });
+    }
+
+    const grantedUsers = grants.size;
     return {
       requestId: input.requestId,
       matchedUsers: candidates.length,
-      acceptedUsers,
-      unavailableUsers: candidates.length - acceptedUsers,
+      grantedUsers,
+      unavailableUsers: candidates.length - grantedUsers,
+      notificationGrants: grants.toArray(),
     };
   }
 
@@ -120,7 +111,8 @@ export class SpecialtyChatService {
     const actorIsSeller = actor.uid === capability.sellerUid;
     if (!actorIsBuyer && !actorIsSeller) throw new Error("forbidden");
     const recipientUid = actorIsBuyer ? capability.sellerUid : capability.buyerUid;
-    const result = await notificationSendService.sendToUsers({
+    const grants = new NotificationGrantCollector(actor.uid);
+    const issued = grants.issue({
       actorUid: actor.uid,
       uids: [recipientUid],
       templateId: actorIsSeller
@@ -137,7 +129,12 @@ export class SpecialtyChatService {
         capability: input.capability,
       },
     });
-    return { messageId: input.messageId, status: result.results[0]?.status ?? "failed" };
+    // "granted", not "sent": the browser still has to carry it across.
+    return {
+      messageId: input.messageId,
+      status: issued ? "granted" : "failed",
+      notificationGrants: grants.toArray(),
+    };
   }
 
   async getPreference(identity: SpecialtyChatIdentity) {
@@ -163,7 +160,8 @@ export class SpecialtyChatService {
     if (input.status !== "received" && input.status !== "read") throw new Error("specialtyChatReceiptInvalid");
     const recipientUid = actorIsBuyer ? capability.sellerUid : capability.buyerUid;
     const dedupeKey = `receipt:${input.targetMessageId}:${input.status}:${actor.uid}`;
-    const result = await notificationSendService.sendToUsers({
+    const grants = new NotificationGrantCollector(actor.uid);
+    const issued = grants.issue({
       actorUid: actor.uid,
       uids: [recipientUid],
       title: "حالة الرسالة",
@@ -180,7 +178,10 @@ export class SpecialtyChatService {
         dataOnly: true,
       },
     });
-    return { status: result.results[0]?.status ?? "failed" };
+    return {
+      status: issued ? "granted" : "failed",
+      notificationGrants: grants.toArray(),
+    };
   }
 }
 

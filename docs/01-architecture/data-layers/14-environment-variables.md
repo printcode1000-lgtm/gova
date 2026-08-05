@@ -96,22 +96,23 @@ FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON=
 # Server-only. Lossless base64 of android/app/google-services.json,
 # regenerated into the native project during a Capacitor build.
 FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64=
-# Server-only bearer secret for POST /api/notifications/send. Minimum 32 chars.
-# Also the fallback signing secret when ASOL_SESSION_SIGNING_SECRET is unset.
-# Must be identical on the main app and the notifications deployment.
-ASOL_NOTIFICATION_INTERNAL_SECRET=
 ```
 
 ## Notifications service
 
-Push fan-out runs on a separate Vercel account. `ASOL_NOTIFICATIONS_SERVICE_URL`
-is what switches it on, and it is set **on the main app only**.
+Push fan-out runs on a separate Vercel account. The two backends never call each
+other: the main app signs a grant, the browser carries it, the service verifies
+and delivers. See
+[Notification Bridge Module](../../05-platform-features/notification-bridge-module.md).
 
 ```env
-# Origin of the notifications deployment, e.g. https://asol-notifications.vercel.app
-# Empty means fan-out runs in-process, which is correct for local development
-# and for the notifications deployment itself.
-ASOL_NOTIFICATIONS_SERVICE_URL=
+# Client-safe. Where the browser bridge delivers signed grants. Baked into
+# static and Capacitor bundles; build-static.ts asserts it is absolute.
+NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL=https://asol-notifications.vercel.app
+# Server-only. Signs grants on the main app, verifies them on the service.
+# Must be byte-identical on both accounts. Falls back to
+# ASOL_SESSION_SIGNING_SECRET when unset.
+ASOL_NOTIFICATION_GRANT_SECRET=
 # Vercel API token for the notifications account (deploy script only).
 VERCEL_NOTIFICATIONS_TOKEN=
 ```
@@ -121,14 +122,19 @@ Which deployment gets what:
 | Variable | Main app | Notifications service |
 |---|---|---|
 | `TURSO_NOTIFICATIONS_DATABASE_URL` / `_AUTH_TOKEN` | yes — token CRUD, VAPID, recipients | yes — resolves tokens to send |
-| `ASOL_NOTIFICATION_INTERNAL_SECRET` | yes — signs the forwarded call | yes — verifies it |
-| `ASOL_NOTIFICATIONS_SERVICE_URL` | yes | **no** — it is the service |
+| `ASOL_NOTIFICATION_GRANT_SECRET` | yes — signs grants | yes — verifies them |
+| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | yes — client-safe | **no** — it is the service |
 | `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*` | not needed | yes |
 | `TURSO_DATABASE_URL`, product, advertisements, shards | yes | **no** |
 
 The notifications account never receives users, product, or shard credentials.
-`NotificationSendService.sendToUsersLocally` needs only the notifications
-database, so identity checks and recipient enrichment stay on the main app.
+`sendToUsersLocally` needs only the notifications database, so identity checks
+and recipient enrichment stay on the main app.
+
+`ASOL_NOTIFICATION_INTERNAL_SECRET` is gone. It authorised a server-to-server
+send that no longer exists, and it doubled as the session signing fallback,
+which meant rotating a push credential silently invalidated every signed
+session. Set `ASOL_SESSION_SIGNING_SECRET` explicitly instead.
 
 Browser Web Push does not use environment variables. Its VAPID key pair is
 generated from `/super-admin/vapid` and stored in the users database table
@@ -152,7 +158,7 @@ APNS_PRODUCTION=false
 
 ## Never expose
 
-`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_NOTIFICATIONS_API_TOKEN`, `TURSO_NOTIFICATIONS_AUTH_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `ASOL_NOTIFICATION_INTERNAL_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON`, `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
+`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_NOTIFICATIONS_API_TOKEN`, `TURSO_NOTIFICATIONS_AUTH_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `ASOL_NOTIFICATION_GRANT_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON`, `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
 
 ## Vercel deploy
 

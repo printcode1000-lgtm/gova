@@ -37,12 +37,20 @@ The Firebase service-account JSON is server-only, ignored by Git, and must never
 The server requires:
 
 ```text
-FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64
-FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64
-ASOL_NOTIFICATION_INTERNAL_SECRET
+FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64   # notifications account only
+FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64 # main app only, for the native build
+ASOL_NOTIFICATION_GRANT_SECRET          # both accounts, byte-identical
 ```
 
-All values are configured for Production, Preview, and Development in the linked Vercel project. The first two are lossless base64 encodings of the complete server and Android Firebase JSON documents. The third protects the internal multi-user send API. Explicit `FIREBASE_PROJECT_*`, `FIREBASE_FCM_SENDER_ID`, `FIREBASE_ANDROID_*`, and `FIREBASE_STORAGE_BUCKET` variables document and validate the Android Firebase identity without exposing the server private key.
+These live on **different** Vercel accounts.
+`FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` belongs to the notifications service,
+which is the only side that delivers push.
+`FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64` belongs to the main app, which is the
+only side that builds the Android project. `ASOL_NOTIFICATION_GRANT_SECRET` is
+shared: the main app signs a grant with it and the service verifies. See
+[Notifications Service Module](../../05-platform-features/notifications-service-module.md).
+
+The first two are lossless base64 encodings of the complete server and Android Firebase JSON documents. Explicit `FIREBASE_PROJECT_*`, `FIREBASE_FCM_SENDER_ID`, `FIREBASE_ANDROID_*`, and `FIREBASE_STORAGE_BUCKET` variables document and validate the Android Firebase identity without exposing the server private key.
 
 ## Client Lifecycle
 

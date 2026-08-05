@@ -29,14 +29,20 @@ const SHARD_TURSO_KEYS = DATABASE_SHARD_NAMES.flatMap((databaseName) => {
 /**
  * The two halves of the notifications split.
  *
- * `ASOL_NOTIFICATION_INTERNAL_SECRET` must be byte-identical to the value on the
+ * `ASOL_NOTIFICATION_GRANT_SECRET` must be byte-identical to the value on the
  * notifications account — the main app signs the forwarded send with it and the
  * service verifies it — so it is pushed from the same `.env` that
  * `npm run notifications:deploy` reads. Drift here fails every send with a 403.
  */
 const NOTIFICATIONS_SERVICE_KEYS = [
-  'ASOL_NOTIFICATION_INTERNAL_SECRET',
-  'ASOL_NOTIFICATIONS_SERVICE_URL',
+  // Signs the grants the browser carries to the notifications service. Must be
+  // byte-identical on both accounts or every grant is rejected as forged.
+  'ASOL_NOTIFICATION_GRANT_SECRET',
+  // Client-safe origin of the notifications service, baked into the bundle.
+  'NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL',
+  // Explicit, so the notification secrets no longer double as the session
+  // signing key. Without it, rotating one silently signs every user out.
+  'ASOL_SESSION_SIGNING_SECRET',
 ] as const;
 
 const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;

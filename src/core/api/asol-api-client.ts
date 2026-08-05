@@ -2,6 +2,7 @@ import { ApiError, NetworkOfflineError, NetworkUnavailableError } from './api-er
 import { buildAsolApiUrl, buildPublicAssetUrl } from './asol-api-config';
 import { asolHttpFetch } from './asol-http-transport';
 import { trackAsolApiRequest } from '@/core/monitor/asol-api-monitor';
+import { scheduleNotificationGrantDelivery } from '@/modules/notification-bridge';
 
 export interface AsolApiRequestOptions {
   headers?: Record<string, string>;
@@ -106,6 +107,15 @@ export class AsolApiClient {
         response.status,
       );
     }
+
+    // The connector hop. Any Business API response may carry signed notification
+    // grants; the bridge delivers them to the notifications service from the
+    // browser, because the two backends have no path to each other.
+    //
+    // It is called unconditionally and never awaited: a response without grants
+    // is a no-op, and a push that fails to leave the browser must not turn a
+    // successful API call into a failed one.
+    scheduleNotificationGrantDelivery(data);
 
     return data as T;
   }

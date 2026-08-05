@@ -23,8 +23,18 @@ export interface SendSpecialtyRequestInput {
 export interface SendSpecialtyRequestResult {
   requestId: string;
   matchedUsers: number;
-  acceptedUsers: number;
+  /**
+   * Providers this request was authorised for.
+   *
+   * Not "accepted by a push provider": the server no longer sends. It signs one
+   * grant per reachable provider and the browser delivers them, so the highest
+   * claim it can honestly make is how many it authorised. Provider acceptance
+   * is not knowable here any more.
+   */
+  grantedUsers: number;
   unavailableUsers: number;
+  /** Signed grants for the browser bridge to deliver. */
+  notificationGrants?: string[];
 }
 
 export interface SendSpecialtyMessageInput {

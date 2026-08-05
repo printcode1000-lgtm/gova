@@ -16,6 +16,19 @@ export const publicEnv = {
     '',
   buildId: process.env.NEXT_PUBLIC_BUILD_ID ?? 'default',
   r2PublicUrl: process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.replace(/\/$/, '') || '',
+  /**
+   * Origin of the notifications deployment. Client-safe: the browser is the
+   * only thing that calls it, and a signed grant — not this URL — is what
+   * authorises a send.
+   *
+   * No fallback constant here on purpose. A static or native bundle has no
+   * same-origin option, so `build-static.ts` resolves the value from
+   * `CAPACITOR_NOTIFICATIONS_BASE_URL`, asserts it is absolute, and sets it
+   * before the build. Importing that default here instead would pull
+   * `platform/` into `next.config.ts` and break the static build's temp layout.
+   */
+  notificationsUrl:
+    process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL?.replace(/\/$/, '') || '',
   otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || '',
   otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || '',
   webBundleVersion: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION || '0.1.0',
@@ -23,6 +36,14 @@ export const publicEnv = {
     process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ||
     MINIMUM_SUPPORTED_NATIVE_VERSION,
 } as const;
+
+/**
+ * Origin of the notifications deployment, or null when it is not configured —
+ * in which case the browser bridge simply delivers nothing.
+ */
+export function getNotificationsPublicUrl(): string | null {
+  return publicEnv.notificationsUrl || null;
+}
 
 /** Prefix a public asset path with the deployment base path (e.g. `/asol` on GitHub Pages). */
 export function withBasePath(path: string): string {

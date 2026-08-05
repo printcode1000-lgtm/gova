@@ -175,7 +175,12 @@ export interface SendNotificationToUsersInput {
 export interface NotificationTokenDeliveryResult {
   uid: string;
   tokenCount: number;
-  status: "sent" | "partial" | "queued" | "failed" | "no_tokens";
+  /**
+   * `granted` is reported by the main app, which authorises a send without
+   * performing it. Every other value comes from the notifications service,
+   * which is the only side that talks to a provider.
+   */
+  status: "sent" | "partial" | "queued" | "failed" | "no_tokens" | "granted";
   providers?: Array<{
     provider: string;
     locale?: NotificationLocale;
@@ -225,6 +230,8 @@ export interface BroadcastNotificationInput {
 
 export interface BroadcastNotificationResult extends SendNotificationToUsersResult {
   recipientMode: "all" | "selected";
+  /** Signed grant for the admin's browser to deliver. */
+  notificationGrants?: string[];
 }
 
 export interface NotificationVapidPublicConfig {

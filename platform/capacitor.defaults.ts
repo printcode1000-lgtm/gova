@@ -3,3 +3,14 @@
  * Used by scripts/cap-build.ts only.
  */
 export const CAPACITOR_API_BASE_URL = 'https://gova-swart.vercel.app';
+
+/**
+ * Notifications service origin baked into native and static bundles.
+ *
+ * A native shell has no same-origin fallback: without an absolute URL the
+ * browser bridge silently delivers nothing, and push stops working on the phone
+ * with no error anywhere. `build-static.ts` resolves this, asserts it is
+ * absolute, and exports it as `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` before the
+ * build — which is why the runtime config needs no fallback of its own.
+ */
+export const CAPACITOR_NOTIFICATIONS_BASE_URL = 'https://asol-notifications.vercel.app';

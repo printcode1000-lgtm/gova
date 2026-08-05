@@ -41,9 +41,11 @@ language. The message body is the sender's own text, passed through as a
 variable and never translated or rewritten. The specialty name in a request title
 is sent in both languages so each recipient sees it in theirs.
 
-Accepted, received, and read are separate states:
+Granted, received, and read are separate states. A request of 500 providers
+produces 500 grants in one response — one per provider, because each carries its
+own reply capability and dedupe key — and the browser posts them in a batch:
 
-- `acceptedUsers`: FCM/Web Push accepted at least one registered token for that provider.
+- `grantedUsers`: the main app signed a grant authorising that provider. It does not deliver, so provider acceptance is not knowable here — the browser still has to carry the grant across.
 - `received`: the recipient client imported the notification into the local center and emitted an internal data-only receipt.
 - `read`: the recipient opened or marked the notification as read and emitted an internal data-only receipt.
 
@@ -61,6 +63,7 @@ Receipt pushes never appear as cards and do not intentionally contribute to the 
 
 ## Limitations by design
 
+- Delivery depends on the sender's browser staying alive long enough to carry the grants across. Closing the tab immediately after sending leaves providers unnotified, and there is no server-side retry — the main app has no path to the notifications service. See [Notification Bridge Module](notification-bridge-module.md).
 - Push delivery is not guaranteed by FCM, Web Push, APNs, or the operating system.
 - Clearing local data, signing out, uninstalling, or changing devices removes local conversation history.
 - A provider without a valid enabled device token is counted as unavailable.

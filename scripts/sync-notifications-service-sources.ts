@@ -17,7 +17,25 @@ import path from 'path';
 
 const ROOT = process.cwd();
 const SOURCE_ROOT = path.join(ROOT, 'src');
-const TARGET_ROOT = path.join(ROOT, 'services', 'notifications', 'generated', 'src');
+const SERVICE_ROOT = path.join(ROOT, 'services', 'notifications');
+
+/**
+ * Output root, overridable with `--out <dir>`.
+ *
+ * The contract test points it at a throwaway directory so it can detect drift
+ * without repairing it — a check that fixes what it measures would only ever
+ * fail once.
+ */
+function readOutputOverride(): string | null {
+  const index = process.argv.indexOf('--out');
+  if (index === -1) return null;
+  const value = process.argv[index + 1];
+  if (!value) throw new Error('--out requires a directory path');
+  return path.resolve(value);
+}
+
+const OUTPUT_ROOT = readOutputOverride() ?? path.join(SERVICE_ROOT, 'generated');
+const TARGET_ROOT = path.join(OUTPUT_ROOT, 'src');
 
 /**
  * Everything the two API routes import. Anything reachable from here is copied;
@@ -28,6 +46,7 @@ const ENTRY_POINTS = [
   'features/notifications/services/notification-send-service.server.ts',
   'features/notifications/domain/entities.ts',
   'core/config/server-env.ts',
+  'features/notifications/services/notification-grant.server.ts',
 ];
 
 const RESOLVE_EXTENSIONS = ['.ts', '.tsx', '.json', '.js'];
@@ -129,13 +148,14 @@ function main(): void {
     fileCount: files.length,
     files: files.map((file) => path.relative(SOURCE_ROOT, file).split(path.sep).join('/')).sort(),
   };
+  mkdirSync(OUTPUT_ROOT, { recursive: true });
   writeFileSync(
-    path.join(ROOT, 'services', 'notifications', 'generated', 'manifest.json'),
+    path.join(OUTPUT_ROOT, 'manifest.json'),
     `${JSON.stringify(manifest, null, 2)}\n`,
     'utf8',
   );
 
-  console.log(`Synced ${files.length} shared modules into services/notifications/generated/src`);
+  console.log(`Synced ${files.length} shared modules into ${path.relative(ROOT, TARGET_ROOT)}`);
 }
 
 main();

@@ -85,7 +85,7 @@ export function SpecialtyRequestComposer() {
         subcategoryName: locale === "ar" ? sub.nameAr : sub.nameEn,
         message: message.trim(),
       });
-      setResult(copy.sent(sent.acceptedUsers, sent.unavailableUsers));
+      setResult(copy.sent(sent.grantedUsers, sent.unavailableUsers));
       setMessage("");
     } catch (error) {
       setResult(error instanceof Error ? error.message : copy.failure);
