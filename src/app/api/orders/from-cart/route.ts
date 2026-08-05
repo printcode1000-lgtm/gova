@@ -1,4 +1,5 @@
 import { apiSuccess } from "@/core/api/api-response";
+import { resolveCartPrices } from "@/features/cart/services/cart-catalogue-pricing.server";
 import { createMultiSellerDeliveryDraft } from "@/features/cart/multi-seller-delivery-planner";
 import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { withNotificationGrants } from "@/features/notifications/domain/notification-grant-envelope";
@@ -79,6 +80,26 @@ export async function POST(request: Request) {
       if (!buyerPhone || !buyerLocation?.address) {
         throw new Error("Buyer profile phone and address are required");
       }
+
+      // The catalogue decides the price, the seller, and the name — not the
+      // request. Without this a modified client could order any product at any
+      // price, since the only other check is that the number is a non-negative
+      // integer. A stale cart is corrected silently rather than rejected.
+      const catalogue = await resolveCartPrices(
+        body.items.map((item) => item.productId),
+      );
+      body.items = body.items.map((item) => {
+        const authoritative = catalogue.get(item.productId.trim());
+        if (!authoritative) throw new Error("productUnavailable");
+        return {
+          ...item,
+          unitPriceMinor: authoritative.unitPriceMinor,
+          priceLabel: authoritative.priceLabel || item.priceLabel,
+          sellerId: authoritative.sellerId,
+          name: authoritative.name,
+          requiresSpecialVehicle: authoritative.requiresSpecialVehicle,
+        };
+      });
 
       const sellerIds = Array.from(
         new Set(body.items.map((item) => item.sellerId)),

@@ -28,3 +28,29 @@ No calculation uses decimal currency values. Inputs must be non-negative JavaScr
 ## Refunds
 
 Refunds are independent records and may reference a payment, catalog item, custom request item, or return request. `createRefund` verifies that the requested amount does not exceed paid value after previous executed refunds. `executeRefund` records execution, recalculates order totals, and creates an audit event. Multiple refund records provide partial refund support.
+
+## The catalogue is authoritative for cart prices
+
+`POST /api/orders/from-cart` ignores the `unitPriceMinor`, `sellerId`, and
+`name` in the request body. It reads each product from the products database and
+uses the stored values instead.
+
+This is not defensive style — it closes a real hole. The only other check was
+`moneyMinor`, which asserts a non-negative integer and nothing about *which*
+product it belongs to. A modified client could therefore order a 10,000 EGP item
+for 1 EGP, with the seller's acceptance step as the only thing standing in the
+way.
+
+Resolution happens before discounts and delivery are calculated, so those run on
+catalogue numbers rather than on whatever arrived in the request.
+
+| Case | Behaviour |
+|---|---|
+| Price changed since the cart was filled | Corrected silently — the buyer who left a tab open is charged the current price rather than losing the order |
+| Item priced on request (non-empty `price_label`) | Passes through as `0` plus its label, unchanged |
+| Price text blank or malformed | Treated as price-on-request, never as zero |
+| Product archived or missing | Order fails with `productUnavailable` |
+
+Resolver: `src/features/cart/services/cart-catalogue-pricing.server.ts`.
+Enforced by `src/features/cart/tests/cart-catalogue-pricing.test.ts`, which
+fails if the route stops overwriting the client's values.
