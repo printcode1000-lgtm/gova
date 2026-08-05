@@ -17,9 +17,14 @@ PROFILE_CORE_DATABASE_AUTH_TOKEN=
 ORDERS_CORE_DATABASE_URL=          # shard example
 ORDERS_CORE_DATABASE_AUTH_TOKEN=
 
+TURSO_NOTIFICATIONS_DATABASE_URL= # notifications DB — separate Turso account
+TURSO_NOTIFICATIONS_AUTH_TOKEN=
+
 # ── Turso provisioning (build/deploy scripts only) ──
 TURSO_API_TOKEN=
 TURSO_ORGANIZATION=
+TURSO_NOTIFICATIONS_API_TOKEN=     # notifications account only
+TURSO_NOTIFICATIONS_ORGANIZATION=
 
 # ── Server CORS ──
 ASOL_CORS_ORIGINS=
@@ -93,8 +98,37 @@ FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON=
 FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64=
 # Server-only bearer secret for POST /api/notifications/send. Minimum 32 chars.
 # Also the fallback signing secret when ASOL_SESSION_SIGNING_SECRET is unset.
+# Must be identical on the main app and the notifications deployment.
 ASOL_NOTIFICATION_INTERNAL_SECRET=
 ```
+
+## Notifications service
+
+Push fan-out runs on a separate Vercel account. `ASOL_NOTIFICATIONS_SERVICE_URL`
+is what switches it on, and it is set **on the main app only**.
+
+```env
+# Origin of the notifications deployment, e.g. https://asol-notifications.vercel.app
+# Empty means fan-out runs in-process, which is correct for local development
+# and for the notifications deployment itself.
+ASOL_NOTIFICATIONS_SERVICE_URL=
+# Vercel API token for the notifications account (deploy script only).
+VERCEL_NOTIFICATIONS_TOKEN=
+```
+
+Which deployment gets what:
+
+| Variable | Main app | Notifications service |
+|---|---|---|
+| `TURSO_NOTIFICATIONS_DATABASE_URL` / `_AUTH_TOKEN` | yes — token CRUD, VAPID, recipients | yes — resolves tokens to send |
+| `ASOL_NOTIFICATION_INTERNAL_SECRET` | yes — signs the forwarded call | yes — verifies it |
+| `ASOL_NOTIFICATIONS_SERVICE_URL` | yes | **no** — it is the service |
+| `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*` | not needed | yes |
+| `TURSO_DATABASE_URL`, product, advertisements, shards | yes | **no** |
+
+The notifications account never receives users, product, or shard credentials.
+`NotificationSendService.sendToUsersLocally` needs only the notifications
+database, so identity checks and recipient enrichment stay on the main app.
 
 Browser Web Push does not use environment variables. Its VAPID key pair is
 generated from `/super-admin/vapid` and stored in the users database table
@@ -118,17 +152,34 @@ APNS_PRODUCTION=false
 
 ## Never expose
 
-`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `ASOL_NOTIFICATION_INTERNAL_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON`, `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
+`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_NOTIFICATIONS_API_TOKEN`, `TURSO_NOTIFICATIONS_AUTH_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `ASOL_NOTIFICATION_INTERNAL_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON`, `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
 
 ## Vercel deploy
 
-After local provisioning, push users/product/advertisements plus every shard runtime variable:
+Two Vercel accounts, deployed two different ways.
+
+**Main app** — connected to GitHub and redeployed automatically on every push.
+That link must stay as it is. After local provisioning, push users, product,
+advertisements, notifications, plus every shard runtime variable:
 
 ```bash
 npm run db:push:vercel-env
 ```
 
 Then redeploy.
+
+**Notifications service** — deliberately **not** connected to GitHub. A push
+changes nothing there; it only ever updates when this command runs:
+
+```bash
+npm run notifications:deploy
+```
+
+The command creates the project on first run, syncs its environment variables,
+builds locally, and uploads the prebuilt output. Building locally is what keeps
+the users/product/shard credentials off the notifications account: `npm run
+build` runs schema sync, and that needs every database. It snapshots and
+restores `.vercel/project.json`, so the main app's GitHub link is untouched.
 
 ## Moving the backend
 

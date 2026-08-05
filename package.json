@@ -45,6 +45,8 @@
     "db:schema:sync": "cross-env ASOL_PROVISIONING=true npx tsx scripts/schema-sync.ts",
     "db:provision:turso": "cross-env ASOL_PROVISIONING=true npx tsx scripts/provision-turso.ts",
     "db:push:vercel-env": "npx tsx scripts/push-vercel-turso-env.ts",
+    "db:migrate:users": "npx tsx src/modules/data-access/tooling/apply-users-migrations.ts",
+    "notifications:deploy": "npx tsx scripts/deploy-notifications-service.ts",
     "db:sync:users": "npx tsx src/modules/data-access/tooling/sync-users-sqlite-to-turso.ts",
     "db:setup:turso": "npm run db:schema:sync",
     "db:create:sqlite": "npx tsx src/modules/data-access/tooling/create-sqlite-db.ts",

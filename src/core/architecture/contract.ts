@@ -50,7 +50,20 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
 ]);
 
-export const ALLOWED_FETCH_FILES = new Set(['src/core/api/asol-http-transport.ts']);
+/**
+ * Only dedicated transport modules may call `fetch` directly. The rule exists
+ * to keep UI, hooks, and business services off the network, not to ban HTTP
+ * from the one file whose whole job is a single hop.
+ *
+ * `remote-dispatch-transport.server.ts` is the server-to-server twin of
+ * `asol-http-transport.ts`: it forwards a push send to the notifications
+ * deployment on its own Vercel account. It is server-only and carries no
+ * business logic.
+ */
+export const ALLOWED_FETCH_FILES = new Set([
+  'src/core/api/asol-http-transport.ts',
+  'src/features/notifications/services/providers/remote-dispatch-transport.server.ts',
+]);
 
 export const ALLOWED_DRIZZLE_ORM_FILES_PATTERN = [
   /^src\/modules\/data-access\//,

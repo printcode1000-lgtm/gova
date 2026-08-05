@@ -4,6 +4,10 @@
 
 Notification bodies and notification-center rows have no SQLite/Turso table. Device tokens, push-provider credentials, and per-user delivery preferences are server metadata only; actual notification cards, lifecycle analytics, badges, receipts, and conversation messages are persisted exclusively in AsolDB IndexedDB on the current client.
 
+> Server-side notification state and push fan-out live on their own Turso and
+> Vercel accounts. See [Notifications Database Token Storage](#notifications-database-token-storage)
+> and [Where The Fan-Out Runs](#where-the-fan-out-runs).
+
 > Android production setup and operational checks are documented in
 > [`../capacitor/android-push-notifications.md`](../capacitor/android-push-notifications.md).
 
@@ -26,7 +30,7 @@ The notification system is a local-first module that powers the in-app notificat
 - Notification lifecycle analytics are stored locally.
 - Optional Capacitor-facing services are isolated behind infrastructure services.
 - Push provider credentials are not present in the client.
-- Device tokens are now stored in the users database in `user_notification_tokens`, locally and in Turso after schema sync.
+- Device tokens are stored in the dedicated notifications database in `user_notification_tokens`, locally in `notifications.db` and in its own Turso account after schema sync.
 - Server APIs support registering/removing a device token and delivering notifications to one user or many users.
 - Push delivery uses a server-side provider interface and registry instead of direct coupling to FCM, APNs, or Web Push.
 - FCM (Android, and Apple once the Firebase iOS SDK is installed) and Web Push are live transports. Direct APNs is an opt-in fallback that stays unconfigured by default.
@@ -98,9 +102,22 @@ route, no template, no event — as a placeholder. Placeholders are never stored
 are stripped from existing lists on read, and their identities are added to the
 dismissed list.
 
-## Users Database Token Storage
+## Notifications Database Token Storage
 
-Push/device tokens that must be available to the backend are stored in the users database, not in the local notification center stores.
+Push/device tokens that must be available to the backend are stored in the
+**notifications database**, not in the local notification center stores and no
+longer in the users database.
+
+That database lives in its own Turso account (`hesham102`) behind
+`notificationsDataSource` and `TURSO_NOTIFICATIONS_DATABASE_URL` /
+`TURSO_NOTIFICATIONS_AUTH_TOKEN`. Push is the burstiest workload in the system —
+one provider request per token — so isolating it means it can never consume the
+quota that serves logins, products, or orders.
+
+The consequence to remember: `uid` links these tables to `users`, but the two
+databases are on different accounts and **cannot be joined**. Any query needing
+both resolves them separately and merges in memory. See
+[`../01-architecture/data-layers/11-current-databases.md`](../01-architecture/data-layers/11-current-databases.md).
 
 Table:
 
@@ -431,8 +448,8 @@ Authorization: Bearer <ASOL_NOTIFICATION_INTERNAL_SECRET>
 This route is server-to-server only. It is guarded by a constant-time comparison
 against `ASOL_NOTIFICATION_INTERNAL_SECRET`; the secret must be at least 32
 characters or the route fails closed. Browser clients cannot call it. Internal
-callers inside the same process — order routes, specialty chat, super-admin
-broadcast — call `NotificationSendService.sendToUsers` directly and bypass HTTP.
+callers — order routes, specialty chat, super-admin broadcast — call
+`NotificationSendService.sendToUsers`.
 
 Input accepts `uids: string[]` plus either `templateId` or custom `title`/`body`,
 with a stable `dedupeKey`. Duplicate and empty uids are removed. The service
@@ -449,6 +466,40 @@ Per-user status:
 
 Tokens reported invalid by a provider (`UNREGISTERED` or `INVALID_ARGUMENT` on
 FCM, HTTP 400/410 on APNs) are soft-deleted in the same request.
+
+## Where The Fan-Out Runs
+
+`sendToUsers` has two paths, chosen by whether `ASOL_NOTIFICATIONS_SERVICE_URL`
+is set:
+
+```text
+ASOL_NOTIFICATIONS_SERVICE_URL set (main app in production)
+  sendToUsers -> RemoteDispatchTransport
+              -> POST <service>/api/notifications/send
+              -> sendToUsersLocally on the notifications deployment
+
+unset (local development, and the notifications deployment itself)
+  sendToUsers -> sendToUsersLocally, in this process
+```
+
+Fan-out is one provider request per token, up to 25 in flight. On a serverless
+platform billed by wall clock, that is the expensive part of a notification —
+not the route. Forwarding it means the main app pays for one HTTP round trip and
+the burst is billed to the notifications account instead.
+
+`POST /api/notifications/send` calls `sendToUsersLocally`, never `sendToUsers`.
+Both deployments run the same code, so calling `sendToUsers` there would make
+the service forward to itself forever. That single choice is the loop guard;
+there is no role flag to misconfigure.
+
+Only the fan-out moves. Device-token registration, VAPID management, and
+broadcast recipient listing stay on the main app, because they need the users
+database for identity checks and masked contact details. The notifications
+account therefore never receives users, product, or shard credentials.
+
+The notifications deployment is not connected to GitHub. It updates only when
+`npm run notifications:deploy` is run; a push to the repository redeploys the
+main app alone.
 
 ## Notification Provider Interface
 
@@ -799,7 +850,7 @@ Columns:
 Security rules:
 
 - The browser receives only `public_key`.
-- `private_key` stays in the users database and is read only by server code.
+- `private_key` stays in the notifications database and is read only by server code.
 - The super-admin UI shows whether a private key exists, but never displays the private key.
 - Web Push subscriptions are stored in `user_notification_tokens` with `provider = web_push`.
 - The stored web push token is the serialized `PushSubscription` JSON.
@@ -887,8 +938,8 @@ POST /api/notifications/broadcast/send
 
 Recipient source:
 
-- The recipients API reads from the users database.
-- It joins `users` with `user_notification_tokens`.
+- The recipients API reads enabled tokens from the notifications database, then looks up those uids in the users database and merges the two in memory.
+- It cannot join them: they are separate databases on separate accounts. Tokens are read first because that is the narrower side.
 - It returns only users with at least one enabled, non-deleted notification token.
 - Deleted users and deleted tokens are ignored.
 - Raw token values are never returned to the browser.

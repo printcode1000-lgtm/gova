@@ -74,3 +74,10 @@ android/app/src/main/res/raw/custom_notification.mp3
 .env*
 !.env.example
 !fastlane/.env.example
+
+# Notifications service: shared modules are copied in by
+# scripts/sync-notifications-service-sources.ts on every deploy.
+services/notifications/generated/
+services/notifications/.next/
+services/notifications/node_modules/
+services/notifications/.vercel/

@@ -1,4 +1,4 @@
-import { productsDataSource, profilesDataSource, usersDataSource } from "@/modules/data-access/core";
+import { notificationsDataSource, productsDataSource, profilesDataSource, usersDataSource } from "@/modules/data-access/core";
 import "server-only";
 import { createHash } from "node:crypto";
 import { createMarketplaceOrdersDb } from "@/modules/data-access/domains/marketplace-orders/db/client";
@@ -55,9 +55,20 @@ export class AccountDeletionRepository {
     await profilesDataSource.execute("DELETE FROM user_profiles WHERE uid = ?", [uid]);
   }
 
+  /**
+   * Push tokens and delivery preferences live in the notifications database on
+   * a separate account, so this is a second connection rather than part of the
+   * users delete. It runs first and is awaited: if it fails the account is left
+   * intact and the caller retries, which is safer than deleting the user and
+   * orphaning rows that would keep receiving push.
+   */
+  async deleteNotifications(uid: string): Promise<void> {
+    await notificationsDataSource.execute("DELETE FROM user_notification_tokens WHERE uid = ?", [uid]);
+    await notificationsDataSource.execute("DELETE FROM user_notification_preferences WHERE uid = ?", [uid]);
+  }
+
   async deleteMain(uid: string): Promise<void> {
-    await usersDataSource.execute("DELETE FROM user_notification_tokens WHERE uid = ?", [uid]);
-    await usersDataSource.execute("DELETE FROM user_notification_preferences WHERE uid = ?", [uid]);
+    await this.deleteNotifications(uid);
     await usersDataSource.execute("DELETE FROM password_recovery_challenges WHERE uid = ?", [uid]);
     await usersDataSource.execute("UPDATE ota_releases SET approved_by_uid = NULL WHERE approved_by_uid = ?", [uid]);
     await usersDataSource.execute("UPDATE ota_releases SET revoked_by_uid = NULL WHERE revoked_by_uid = ?", [uid]);

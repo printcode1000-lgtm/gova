@@ -7,7 +7,8 @@ export type ServerDataSourceName =
   | "users"
   | "products"
   | "advertisements"
-  | "profiles";
+  | "profiles"
+  | "notifications";
 
 /**
  * The single runtime registry for server database sources.
@@ -44,6 +45,10 @@ class DataSourceRegistry {
           : new (require("./database/advertisements-turso-db-client").AdvertisementsTursoDatabaseClient)();
       case "profiles":
         return new (require("./database/profile-sharded-db-client").ProfileShardedDatabaseClient)();
+      case "notifications":
+        return backend === "sqlite"
+          ? new (require("./database/notifications-sqlite-db-client").NotificationsSQLiteDatabaseClient)()
+          : new (require("./database/notifications-turso-db-client").NotificationsTursoDatabaseClient)();
     }
   }
 }
@@ -67,3 +72,4 @@ export const usersDataSource = lazyDataSource("users");
 export const productsDataSource = lazyDataSource("products");
 export const advertisementsDataSource = lazyDataSource("advertisements");
 export const profilesDataSource = lazyDataSource("profiles");
+export const notificationsDataSource = lazyDataSource("notifications");

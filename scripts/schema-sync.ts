@@ -20,6 +20,7 @@ async function main() {
     users: reports.users,
     advertisements: reports.advertisements,
     product: reports.product,
+    notifications: reports.notifications,
     ...reports.shards,
   };
 
@@ -58,6 +59,9 @@ main().catch((error) => {
     console.error("  TURSO_PRODUCT_DATABASE_URL, TURSO_PRODUCT_AUTH_TOKEN");
     console.error(
       "  TURSO_ADVERTISEMENTS_DATABASE_URL, TURSO_ADVERTISEMENTS_AUTH_TOKEN",
+    );
+    console.error(
+      "  TURSO_NOTIFICATIONS_DATABASE_URL, TURSO_NOTIFICATIONS_AUTH_TOKEN",
     );
     console.error("  plus every *_DATABASE_URL / *_DATABASE_AUTH_TOKEN shard key");
     console.error("Or run locally: npm run db:push:vercel-env");

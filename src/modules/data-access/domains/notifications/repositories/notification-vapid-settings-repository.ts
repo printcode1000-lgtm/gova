@@ -1,4 +1,4 @@
-import { usersDataSource } from "@/modules/data-access/core";
+import { notificationsDataSource } from "@/modules/data-access/core";
 import 'server-only';
 
 import { eq } from 'drizzle-orm';
@@ -7,13 +7,13 @@ import {
   notificationVapidSettings,
   type NewNotificationVapidSettingsEntity,
   type NotificationVapidSettingsEntity,
-} from '@/modules/data-access/core/database/schema';
+} from '@/modules/data-access/core/database/notifications/notifications.schema';
 import type { NotificationVapidSecretConfig } from '@/features/notifications/domain/entities';
 
 const VAPID_SETTINGS_ID = 'web_push_vapid';
 
 export class NotificationVapidSettingsRepository {
-  constructor(private readonly database: IDatabaseClient = usersDataSource) {}
+  constructor(private readonly database: IDatabaseClient = notificationsDataSource) {}
 
   async get(): Promise<NotificationVapidSecretConfig | null> {
     const rows = await this.database.db

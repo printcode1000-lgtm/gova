@@ -15,6 +15,7 @@ npm run db:schema:sync
 | Users and auth | `allusers.db` | Users Turso DB | `usersDataSource` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
 | Products | `product.db` | Product Turso DB | `productsDataSource` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
 | Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDataSource` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
+| Notifications | `notifications.db` | Notifications Turso DB (separate account) | `notificationsDataSource` | `TURSO_NOTIFICATIONS_DATABASE_URL`, `TURSO_NOTIFICATIONS_AUTH_TOKEN` |
 | Profile shards | `profile-*.db`, `system-ops.db` | Matching Turso shards | `profilesDataSource` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 | Marketplace order shards | `orders-*.db` | Matching Turso shards | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
@@ -31,11 +32,13 @@ src/modules/data-access/core/database/schema.ts
 Primary table:
 
 - `users`
-- `user_notification_tokens`
-- `user_notification_preferences` (provider opt-in/out metadata only; no conversation content)
-- `notification_vapid_settings`
+- `password_recovery_challenges`
+- `feature_flags`
 - `ota_releases`
 - `ota_release_audit`
+
+Notification tables are **not** here. They moved to their own database — see
+[6. Notifications](#6-notifications).
 
 ### Layers
 
@@ -174,6 +177,50 @@ Primary tables include:
 | Database client | Marketplace orders DB client |
 
 See [Marketplace Order Management](../marketplace-order-management/README.md).
+
+## 6. Notifications
+
+### Schema
+
+```text
+src/modules/data-access/core/database/notifications/notifications.schema.ts
+src/modules/data-access/core/database/notifications/migrations
+```
+
+Tables:
+
+- `user_notification_tokens`
+- `user_notification_preferences` (delivery opt-in/out metadata only; no conversation content)
+- `notification_vapid_settings`
+
+### Why it is separate
+
+This database lives in its own Turso account (`hesham102`), not alongside the
+others. Push traffic — one provider request per device token — is the burstiest
+workload in the system, and isolating it means it can never consume the quota
+that serves logins, product pages, or orders.
+
+### Layers
+
+| Layer | Files |
+| --- | --- |
+| API | `/api/notifications/*` |
+| Server service | `NotificationTokenService`, `NotificationSendService`, `NotificationVapidService` |
+| Repository | Notification repositories through `notificationsDataSource` |
+
+### The rule that follows from the split
+
+`user_notification_tokens.uid` links logically to `users.uid`, but the two live
+in different databases on different accounts, so **nothing may JOIN them**.
+`BroadcastRecipientRepository` is the worked example: it reads tokens first
+because that is the narrower side, then looks up only those uids in `users` and
+merges in memory. A uid with no live account is dropped, which is what the
+original `innerJoin` did.
+
+The same applies to account deletion. `deleteNotifications` runs against this
+database before the user row is removed, and the two are no longer one atomic
+operation — a failure leaves the account intact rather than orphaning tokens
+that would keep receiving push.
 
 ## Schema Workflows
 

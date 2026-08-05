@@ -260,6 +260,52 @@ export function getTursoProductRuntimeCredentials(): {
   return { url, authToken };
 }
 
+export function writeTursoNotificationsRuntimeCredentials(
+  url: string,
+  authToken: string,
+): void {
+  process.env.TURSO_NOTIFICATIONS_DATABASE_URL = url;
+  process.env.TURSO_NOTIFICATIONS_AUTH_TOKEN = authToken;
+}
+
+/**
+ * The notifications database lives in its own Turso account, so it never falls
+ * back to the users credentials. A missing value is a misconfiguration, not a
+ * reason to write push tokens into the users database.
+ */
+export function getTursoNotificationsRuntimeCredentials(): {
+  url: string;
+  authToken: string;
+} {
+  const url = process.env.TURSO_NOTIFICATIONS_DATABASE_URL;
+  const authToken = process.env.TURSO_NOTIFICATIONS_AUTH_TOKEN;
+
+  if (!url)
+    throw new Error(
+      "TURSO_NOTIFICATIONS_DATABASE_URL environment variable is not set",
+    );
+  if (!authToken)
+    throw new Error(
+      "TURSO_NOTIFICATIONS_AUTH_TOKEN environment variable is not set",
+    );
+
+  return { url, authToken };
+}
+
+/**
+ * Origin of the notifications deployment on its own Vercel account.
+ *
+ * Set on the main app only. When present, push fan-out is forwarded there over
+ * HTTP instead of running in-process, which is the entire point of the split:
+ * the per-token provider requests are billed to the notifications account.
+ * Empty means "send in-process", which is what local development does.
+ */
+export function getNotificationsServiceUrl(): string | null {
+  const value = process.env.ASOL_NOTIFICATIONS_SERVICE_URL?.trim();
+  if (!value) return null;
+  return value.replace(/\/+$/, "");
+}
+
 export function getTursoAdvertisementsRuntimeCredentials(): {
   url: string;
   authToken: string;

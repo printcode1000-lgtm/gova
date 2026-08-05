@@ -1,4 +1,4 @@
-import { usersDataSource } from "@/modules/data-access/core";
+import { notificationsDataSource } from "@/modules/data-access/core";
 import 'server-only';
 
 import { and, eq, inArray, isNull, ne } from 'drizzle-orm';
@@ -8,7 +8,7 @@ import {
   userNotificationPreferences,
   type NewUserNotificationTokenEntity,
   type UserNotificationTokenEntity,
-} from '@/modules/data-access/core/database/schema';
+} from '@/modules/data-access/core/database/notifications/notifications.schema';
 import type {
   DeleteNotificationTokenInput,
   RegisteredNotificationToken,
@@ -20,7 +20,7 @@ function makeTokenId(uid: string, platform: string, deviceId: string): string {
 }
 
 export class UserNotificationTokenRepository {
-  constructor(private readonly database: IDatabaseClient = usersDataSource) {}
+  constructor(private readonly database: IDatabaseClient = notificationsDataSource) {}
 
   async upsert(input: RegisterNotificationTokenInput): Promise<RegisteredNotificationToken> {
     const now = new Date().toISOString();

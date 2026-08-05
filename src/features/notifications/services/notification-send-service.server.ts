@@ -17,6 +17,7 @@ import {
 } from "../domain/enums";
 import { createNotificationId } from "../shared/create-notification-id";
 import { NotificationProviderRegistry } from "./providers/notification-provider-registry.server";
+import { RemoteDispatchTransport } from "./providers/remote-dispatch-transport.server";
 import type { NotificationProviderPayload } from "./providers/notification-provider.interface";
 
 export class NotificationSendService {
@@ -25,9 +26,33 @@ export class NotificationSendService {
     private readonly providers = new NotificationProviderRegistry(),
     private readonly deleteToken = new DeleteNotificationTokenCommand(),
     private readonly builder = new NotificationBuilder(),
+    private readonly remote = new RemoteDispatchTransport(),
   ) {}
 
+  /**
+   * Entry point for business flows.
+   *
+   * When a notifications deployment is configured, the fan-out is forwarded to
+   * it so the provider requests are billed to that account. Otherwise it runs
+   * in-process, which is what local development and single-deployment setups do.
+   */
   async sendToUsers(
+    input: SendNotificationToUsersInput,
+  ): Promise<SendNotificationToUsersResult> {
+    if (this.remote.isConfigured()) {
+      return this.remote.send(input);
+    }
+    return this.sendToUsersLocally(input);
+  }
+
+  /**
+   * Always fans out in this process, never forwarding.
+   *
+   * `POST /api/notifications/send` must call this rather than `sendToUsers`:
+   * the notifications deployment runs the same code, and forwarding there would
+   * make it call itself forever.
+   */
+  async sendToUsersLocally(
     input: SendNotificationToUsersInput,
   ): Promise<SendNotificationToUsersResult> {
     const uids = Array.from(

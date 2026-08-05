@@ -14,6 +14,11 @@ const LEGACY_TURSO_KEYS = [
   'TURSO_PRODUCT_AUTH_TOKEN',
   'TURSO_ADVERTISEMENTS_DATABASE_URL',
   'TURSO_ADVERTISEMENTS_AUTH_TOKEN',
+  // Separate Turso account. The main app still reads and writes device tokens,
+  // preferences, and VAPID settings; only push fan-out moves to the
+  // notifications deployment.
+  'TURSO_NOTIFICATIONS_DATABASE_URL',
+  'TURSO_NOTIFICATIONS_AUTH_TOKEN',
 ] as const;
 
 const SHARD_TURSO_KEYS = DATABASE_SHARD_NAMES.flatMap((databaseName) => {
@@ -21,9 +26,22 @@ const SHARD_TURSO_KEYS = DATABASE_SHARD_NAMES.flatMap((databaseName) => {
   return [`${prefix}_DATABASE_URL`, `${prefix}_DATABASE_AUTH_TOKEN`];
 });
 
+/**
+ * The two halves of the notifications split.
+ *
+ * `ASOL_NOTIFICATION_INTERNAL_SECRET` must be byte-identical to the value on the
+ * notifications account — the main app signs the forwarded send with it and the
+ * service verifies it — so it is pushed from the same `.env` that
+ * `npm run notifications:deploy` reads. Drift here fails every send with a 403.
+ */
+const NOTIFICATIONS_SERVICE_KEYS = [
+  'ASOL_NOTIFICATION_INTERNAL_SECRET',
+  'ASOL_NOTIFICATIONS_SERVICE_URL',
+] as const;
+
 const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;
 
-const OPTIONAL_VERCEL_KEYS = [] as const;
+const OPTIONAL_VERCEL_KEYS = NOTIFICATIONS_SERVICE_KEYS;
 
 async function vercelFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const token = process.env.VERCEL_TOKEN || process.env.VERCEL_ACCESS_TOKEN;

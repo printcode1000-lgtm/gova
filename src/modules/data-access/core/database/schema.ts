@@ -41,56 +41,15 @@ export const passwordRecoveryChallenges = sqliteTable(
   }),
 );
 
-export const userNotificationTokens = sqliteTable(
-  'user_notification_tokens',
-  {
-    id: text('id').primaryKey(),
-    uid: text('uid').notNull(),
-    platform: text('platform', { enum: ['web', 'android', 'ios'] }).notNull(),
-    provider: text('provider').notNull(),
-    deviceId: text('device_id').notNull(),
-    token: text('token').notNull(),
-    /** UI language of the device, so push text is built in the reader's language. */
-    locale: text('locale', { enum: ['ar', 'en'] })
-      .notNull()
-      .default('ar'),
-    enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
-    specialtyRequestsEnabled: integer('specialty_requests_enabled', { mode: 'boolean' })
-      .notNull()
-      .default(true),
-    lastSeenAt: text('last_seen_at'),
-    createdAt: text('created_at').$defaultFn(() => new Date().toISOString()),
-    updatedAt: text('updated_at').$defaultFn(() => new Date().toISOString()),
-    deletedAt: text('deleted_at'),
-  },
-  (table) => ({
-    uidIdx: index('user_notification_tokens_uid_idx').on(table.uid),
-    uidDeviceUnique: uniqueIndex('user_notification_tokens_uid_device_unique').on(
-      table.uid,
-      table.deviceId,
-      table.platform,
-    ),
-    tokenUnique: uniqueIndex('user_notification_tokens_token_unique').on(table.token),
-  }),
-);
-
-export const notificationVapidSettings = sqliteTable('notification_vapid_settings', {
-  id: text('id').primaryKey(),
-  publicKey: text('public_key').notNull(),
-  privateKey: text('private_key').notNull(),
-  subject: text('subject').notNull(),
-  enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
-  createdAt: text('created_at').$defaultFn(() => new Date().toISOString()),
-  updatedAt: text('updated_at').$defaultFn(() => new Date().toISOString()),
-});
-
-export const userNotificationPreferences = sqliteTable('user_notification_preferences', {
-  uid: text('uid').primaryKey(),
-  specialtyRequestsEnabled: integer('specialty_requests_enabled', { mode: 'boolean' })
-    .notNull()
-    .default(true),
-  updatedAt: text('updated_at').notNull(),
-});
+/*
+ * Notification server state — `user_notification_tokens`,
+ * `user_notification_preferences`, and `notification_vapid_settings` — is no
+ * longer part of this database. It moved to its own database on a separate
+ * Turso account so push traffic never shares quota with users/product/orders.
+ *
+ * See `./notifications/notifications.schema.ts`. The two sides are linked only
+ * by the logical `uid`; nothing may JOIN across them.
+ */
 
 export const otaReleases = sqliteTable(
   'ota_releases',
@@ -165,11 +124,6 @@ export type UserEntity = typeof users.$inferSelect;
 export type NewUserEntity = typeof users.$inferInsert;
 export type PasswordRecoveryChallengeEntity = typeof passwordRecoveryChallenges.$inferSelect;
 export type NewPasswordRecoveryChallengeEntity = typeof passwordRecoveryChallenges.$inferInsert;
-export type UserNotificationTokenEntity = typeof userNotificationTokens.$inferSelect;
-export type NewUserNotificationTokenEntity = typeof userNotificationTokens.$inferInsert;
-export type UserNotificationPreferenceEntity = typeof userNotificationPreferences.$inferSelect;
-export type NotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferSelect;
-export type NewNotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferInsert;
 export type OtaReleaseEntity = typeof otaReleases.$inferSelect;
 export type NewOtaReleaseEntity = typeof otaReleases.$inferInsert;
 export type OtaReleaseAuditEntity = typeof otaReleaseAudit.$inferSelect;

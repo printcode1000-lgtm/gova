@@ -9,6 +9,7 @@ import {
   PRIMARY_SQLITE_DB_PATH,
   ADVERTISEMENTS_SQLITE_DB_PATH,
   MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH,
+  NOTIFICATIONS_SQLITE_DB_PATH,
   PRODUCT_SQLITE_DB_PATH,
   PROFILE_SOURCE_SQLITE_DB_PATH,
   SQLITE_DIRECTORY,
@@ -39,6 +40,10 @@ ensureDatabase(
 ensureDatabase(
   MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH,
   "src/modules/data-access/tooling/create-marketplace-orders-sqlite-db.ts",
+);
+ensureDatabase(
+  NOTIFICATIONS_SQLITE_DB_PATH,
+  "src/modules/data-access/tooling/create-notifications-sqlite-db.ts",
 );
 
 const BetterSqlite = require("better-sqlite3") as typeof import("better-sqlite3");

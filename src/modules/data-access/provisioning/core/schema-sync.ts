@@ -4,6 +4,7 @@ import { createClient } from '@libsql/client';
 import {
   SCHEMA_SYNC_REPORT_PATH,
   ADVERTISEMENTS_SQLITE_DB_PATH,
+  NOTIFICATIONS_SQLITE_DB_PATH,
   PRODUCT_SQLITE_DB_PATH,
   SQLITE_DIRECTORY,
 } from '@/modules/data-access/core/database/environment';
@@ -19,7 +20,7 @@ import { readSqliteSchema } from '@/modules/data-access/provisioning/core/sqlite
 import { readTursoSchema } from '@/modules/data-access/provisioning/core/turso-schema-reader';
 import { diffSchemas } from '@/modules/data-access/provisioning/core/schema-diff';
 import { computeSchemaVersion } from '@/modules/data-access/provisioning/core/schema-version';
-import { loadTursoCredentialsFromEnv, loadTursoAdvertisementsCredentialsFromEnv, loadTursoProductCredentialsFromEnv } from '@/modules/data-access/provisioning/core/turso-provisioner';
+import { loadTursoCredentialsFromEnv, loadTursoAdvertisementsCredentialsFromEnv, loadTursoNotificationsCredentialsFromEnv, loadTursoProductCredentialsFromEnv } from '@/modules/data-access/provisioning/core/turso-provisioner';
 import type { SchemaSyncReport } from '@/modules/data-access/provisioning/core/types';
 
 const ADVERTISEMENTS_SCHEMA_SYNC_REPORT_PATH = path.join(
@@ -36,16 +37,25 @@ const PRODUCT_SCHEMA_SYNC_REPORT_PATH = path.join(
   'product-schema-sync-report.json',
 );
 
+const NOTIFICATIONS_SCHEMA_SYNC_REPORT_PATH = path.join(
+  process.cwd(),
+  'public',
+  'sync_data',
+  'notifications-schema-sync-report.json',
+);
+
 const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
   users: new Set([
     'users',
     'password_recovery_challenges',
-    'user_notification_tokens',
-    'user_notification_preferences',
-    'notification_vapid_settings',
     'ota_releases',
     'ota_release_audit',
     'feature_flags',
+  ]),
+  notifications: new Set([
+    'user_notification_tokens',
+    'user_notification_preferences',
+    'notification_vapid_settings',
   ]),
   advertisements: new Set(['hero_slider', 'featured_marquee', 'trending_ribbon']),
   product: new Set([
@@ -138,9 +148,11 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
           ? loadTursoAdvertisementsCredentialsFromEnv()
           : databaseLabel === 'product'
             ? loadTursoProductCredentialsFromEnv()
-            : DATABASE_SHARD_NAMES.includes(databaseLabel as any)
-              ? loadTursoShardCredentialsFromEnv(databaseLabel)
-              : loadTursoCredentialsFromEnv();
+            : databaseLabel === 'notifications'
+              ? loadTursoNotificationsCredentialsFromEnv()
+              : DATABASE_SHARD_NAMES.includes(databaseLabel as any)
+                ? loadTursoShardCredentialsFromEnv(databaseLabel)
+                : loadTursoCredentialsFromEnv();
 
   if (!credentials) {
     const reason =
@@ -148,9 +160,11 @@ export async function runSchemaSync(options: RunSchemaSyncOptions = {}): Promise
           ? 'Turso advertisements credentials not configured (TURSO_ADVERTISEMENTS_DATABASE_URL / TURSO_ADVERTISEMENTS_AUTH_TOKEN)'
           : databaseLabel === 'product'
             ? 'Turso product credentials not configured (TURSO_PRODUCT_DATABASE_URL / TURSO_PRODUCT_AUTH_TOKEN)'
-            : DATABASE_SHARD_NAMES.includes(databaseLabel as any)
-              ? `Turso shard credentials not configured (${envPrefixForShard(databaseLabel as any)}_DATABASE_URL / ${envPrefixForShard(databaseLabel as any)}_DATABASE_AUTH_TOKEN)`
-            : 'Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)';
+            : databaseLabel === 'notifications'
+              ? 'Turso notifications credentials not configured (TURSO_NOTIFICATIONS_DATABASE_URL / TURSO_NOTIFICATIONS_AUTH_TOKEN)'
+              : DATABASE_SHARD_NAMES.includes(databaseLabel as any)
+                ? `Turso shard credentials not configured (${envPrefixForShard(databaseLabel as any)}_DATABASE_URL / ${envPrefixForShard(databaseLabel as any)}_DATABASE_AUTH_TOKEN)`
+                : 'Turso credentials not configured (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN)';
     if (options.skipIfMissingCredentials) {
       const report = buildSkippedReport(reason);
       writeReport(reportPath, report);
@@ -248,6 +262,7 @@ export interface AllSchemaSyncReports {
   users: SchemaSyncReport;
   advertisements: SchemaSyncReport;
   product: SchemaSyncReport;
+  notifications: SchemaSyncReport;
   shards: Record<string, SchemaSyncReport>;
 }
 
@@ -287,6 +302,13 @@ export async function runAllSchemaSyncs(
     databaseLabel: 'product',
   });
 
+  const notifications = await runSchemaSync({
+    ...options,
+    sqlitePath: NOTIFICATIONS_SQLITE_DB_PATH,
+    reportPath: NOTIFICATIONS_SCHEMA_SYNC_REPORT_PATH,
+    databaseLabel: 'notifications',
+  });
+
   const shards: Record<string, SchemaSyncReport> = {};
   for (const databaseName of DATABASE_SHARD_NAMES) {
     shards[databaseName] = await runSchemaSync({
@@ -297,7 +319,7 @@ export async function runAllSchemaSyncs(
     });
   }
 
-  return { users, advertisements, product, shards };
+  return { users, advertisements, product, notifications, shards };
 }
 
 export function getSchemaSyncReportPath(): string {

@@ -1,6 +1,7 @@
 export {
   advertisementsDataSource,
   dataSources,
+  notificationsDataSource,
   productsDataSource,
   profilesDataSource,
   usersDataSource,

@@ -1,53 +1,61 @@
-import { usersDataSource } from "@/modules/data-access/core";
+import { notificationsDataSource, usersDataSource } from "@/modules/data-access/core";
 import 'server-only';
 
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, inArray, isNull } from 'drizzle-orm';
 import type { IDatabaseClient } from '@/modules/data-access/core/database/database-client.interface';
-import { userNotificationTokens, users } from '@/modules/data-access/core/database/schema';
+import { users } from '@/modules/data-access/core/database/schema';
+import { userNotificationTokens } from '@/modules/data-access/core/database/notifications/notifications.schema';
 import type { BroadcastRecipient } from '@/features/notifications/domain/entities';
 import type { NotificationPlatform } from '@/features/notifications/domain/enums';
 
 interface RecipientAccumulator {
   uid: string;
-  phone: string;
-  email: string | null;
   tokenCount: number;
   platforms: Set<NotificationPlatform>;
   providers: Set<string>;
   lastSeenAt?: string;
 }
 
+/** libSQL caps bound parameters per statement; uid lookups are chunked to stay under it. */
+const UID_LOOKUP_CHUNK_SIZE = 400;
+
+/**
+ * Resolves the broadcast audience across two databases.
+ *
+ * Tokens live in the notifications database and identities in the users
+ * database — on different Turso accounts — so this cannot be a JOIN. Tokens are
+ * read first because they are the narrower side: only uids that actually own an
+ * enabled token are looked up in `users`, and a uid whose account is missing or
+ * soft-deleted is dropped, which is exactly what the old `innerJoin` did.
+ */
 export class BroadcastRecipientRepository {
-  constructor(private readonly database: IDatabaseClient = usersDataSource) {}
+  constructor(
+    private readonly notifications: IDatabaseClient = notificationsDataSource,
+    private readonly usersDatabase: IDatabaseClient = usersDataSource,
+  ) {}
 
   async listReceivers(): Promise<BroadcastRecipient[]> {
-    const rows = await this.database.db
+    const tokenRows = await this.notifications.db
       .select({
-        uid: users.uid,
-        phone: users.phone,
-        email: users.email,
+        uid: userNotificationTokens.uid,
         platform: userNotificationTokens.platform,
         provider: userNotificationTokens.provider,
         lastSeenAt: userNotificationTokens.lastSeenAt,
       })
       .from(userNotificationTokens)
-      .innerJoin(users, eq(users.uid, userNotificationTokens.uid))
       .where(
         and(
           eq(userNotificationTokens.enabled, true),
           isNull(userNotificationTokens.deletedAt),
-          isNull(users.deletedAt),
         ),
       );
 
     const grouped = new Map<string, RecipientAccumulator>();
-    for (const row of rows) {
+    for (const row of tokenRows) {
       const current =
         grouped.get(row.uid) ??
         {
           uid: row.uid,
-          phone: row.phone,
-          email: row.email,
           tokenCount: 0,
           platforms: new Set<NotificationPlatform>(),
           providers: new Set<string>(),
@@ -62,17 +70,46 @@ export class BroadcastRecipientRepository {
       grouped.set(row.uid, current);
     }
 
+    if (grouped.size === 0) return [];
+
+    const identities = await this.loadIdentities([...grouped.keys()]);
+
     return [...grouped.values()]
-      .map((item) => ({
-        uid: item.uid,
-        phoneMasked: maskPhone(item.phone),
-        emailMasked: item.email ? maskEmail(item.email) : undefined,
-        tokenCount: item.tokenCount,
-        platforms: [...item.platforms],
-        providers: [...item.providers],
-        lastSeenAt: item.lastSeenAt,
-      }))
+      .flatMap((item) => {
+        const identity = identities.get(item.uid);
+        if (!identity) return [];
+        return [
+          {
+            uid: item.uid,
+            phoneMasked: maskPhone(identity.phone),
+            emailMasked: identity.email ? maskEmail(identity.email) : undefined,
+            tokenCount: item.tokenCount,
+            platforms: [...item.platforms],
+            providers: [...item.providers],
+            lastSeenAt: item.lastSeenAt,
+          },
+        ];
+      })
       .sort((a, b) => b.tokenCount - a.tokenCount || a.uid.localeCompare(b.uid));
+  }
+
+  private async loadIdentities(
+    uids: string[],
+  ): Promise<Map<string, { phone: string; email: string | null }>> {
+    const identities = new Map<string, { phone: string; email: string | null }>();
+
+    for (let index = 0; index < uids.length; index += UID_LOOKUP_CHUNK_SIZE) {
+      const chunk = uids.slice(index, index + UID_LOOKUP_CHUNK_SIZE);
+      const rows = await this.usersDatabase.db
+        .select({ uid: users.uid, phone: users.phone, email: users.email })
+        .from(users)
+        .where(and(inArray(users.uid, chunk), isNull(users.deletedAt)));
+      for (const row of rows) {
+        identities.set(row.uid, { phone: row.phone, email: row.email });
+      }
+    }
+
+    return identities;
   }
 }
 

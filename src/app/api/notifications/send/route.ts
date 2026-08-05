@@ -20,7 +20,9 @@ export async function POST(request: Request) {
     try {
       if (!isAuthorized(request)) throw new Error("forbidden");
       const body = (await request.json()) as SendNotificationToUsersInput;
-      const result = await notificationSendService.sendToUsers(body);
+      // Local, never forwarding: this route is the receiving end of the
+      // notifications deployment, so sendToUsers() here would loop forever.
+      const result = await notificationSendService.sendToUsersLocally(body);
       return apiSuccess(result);
     } catch (error) {
       return mapServiceError(error);

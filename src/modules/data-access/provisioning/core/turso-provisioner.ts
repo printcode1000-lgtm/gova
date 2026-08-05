@@ -199,6 +199,15 @@ export function loadTursoProductCredentialsFromEnv(): { url: string; authToken: 
   return { url, authToken };
 }
 
+/** Notifications live on their own Turso account; there is no users fallback. */
+export function loadTursoNotificationsCredentialsFromEnv(): { url: string; authToken: string } | null {
+  const url = readOptionalEnv('TURSO_NOTIFICATIONS_DATABASE_URL');
+  const authToken = readOptionalEnv('TURSO_NOTIFICATIONS_AUTH_TOKEN');
+
+  if (!url || !authToken) return null;
+  return { url, authToken };
+}
+
 export function ensureSqliteDirectory(): void {
   if (!existsSync(SQLITE_DIRECTORY)) {
     mkdirSync(SQLITE_DIRECTORY, { recursive: true });
