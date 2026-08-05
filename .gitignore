@@ -81,3 +81,11 @@ services/notifications/generated/
 services/notifications/.next/
 services/notifications/node_modules/
 services/notifications/.vercel/
+
+# Products service: shared modules are copied in by
+# scripts/sync-products-service-sources.ts on every deploy.
+services/products/generated/
+services/products/.next/
+services/products/node_modules/
+services/products/.vercel/
+services/products/src/config/

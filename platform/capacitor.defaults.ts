@@ -14,3 +14,12 @@ export const CAPACITOR_API_BASE_URL = 'https://gova-swart.vercel.app';
  * build — which is why the runtime config needs no fallback of its own.
  */
 export const CAPACITOR_NOTIFICATIONS_BASE_URL = 'https://asol-notifications.vercel.app';
+
+/**
+ * Products service origin baked into native and static bundles.
+ *
+ * Same failure mode as the notifications origin: without an absolute URL the
+ * browser bridge falls back to the main app, which no longer serves product
+ * reads once the split is live.
+ */
+export const CAPACITOR_PRODUCTS_BASE_URL = 'https://asol-products.vercel.app';

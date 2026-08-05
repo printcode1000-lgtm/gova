@@ -29,6 +29,14 @@ export const publicEnv = {
    */
   notificationsUrl:
     process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL?.replace(/\/$/, '') || '',
+  /**
+   * Origin of the products deployment. Client-safe: only the browser calls it,
+   * and it serves read-only product data.
+   *
+   * Like the notifications origin, no fallback constant lives here — a static
+   * or native build resolves and asserts it in `build-static.ts`.
+   */
+  productsUrl: process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL?.replace(/\/$/, '') || '',
   otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || '',
   otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || '',
   webBundleVersion: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION || '0.1.0',

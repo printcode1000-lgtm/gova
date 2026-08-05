@@ -7,21 +7,28 @@
 | Static export (GitHub Pages) | `npm run build:static` | Remote via `ASOL_API_BASE_URL` | None (SPA only) |
 | Capacitor (Android / iOS) | `npm run cap:build` | Baked API URL | None (shell over `out/`) |
 | Notifications service | `npm run notifications:deploy` | Own origin, `/api/notifications/send` | Notifications Turso only |
+| Products service | `npm run products:deploy` | Own origin, product read APIs | Product Turso only |
 
 The first four share **identical application code** — only environment
 configuration changes.
 
-## Two Vercel accounts
+## Three Vercel accounts
 
-The notifications service is the one target that is not the main application.
+Two targets are not the main application, and neither of them may be called by
+it: every crossing goes through a browser-only bridge.
 
-| | Main app | Notifications service |
-|---|---|---|
-| Vercel project | `gova` | `asol-notifications` |
-| GitHub | connected — every push redeploys | **not connected** — a push changes nothing |
-| Updated by | pushing to the repository | `npm run notifications:deploy` only |
-| Uploaded files | the repository | `services/notifications/` alone |
-| Serves | everything except push fan-out | push fan-out only |
+| | Main app | Notifications service | Products service |
+|---|---|---|---|
+| Vercel project | `gova` | `asol-notifications` | `asol-products` |
+| GitHub | connected — every push redeploys | **not connected** | **not connected** |
+| Updated by | pushing to the repository | `npm run notifications:deploy` | `npm run products:deploy` |
+| Uploaded files | the repository | `services/notifications/` alone | `services/products/` alone |
+| Serves | everything else | push fan-out only | product reads only |
+| Turso account | `hesham101` | `hesham102` | `hesham103` |
+
+The connectors are documented in
+[Notification Bridge Module](../../05-platform-features/notification-bridge-module.md)
+and [Products Bridge Module](../../05-platform-features/products-bridge-module.md).
 
 Keep the main project's GitHub connection as it is. The deploy command runs the
 CLI with `services/notifications` as its working directory, so it writes that

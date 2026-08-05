@@ -19,6 +19,7 @@ ORDERS_CORE_DATABASE_AUTH_TOKEN=
 
 TURSO_NOTIFICATIONS_DATABASE_URL= # notifications DB — separate Turso account
 TURSO_NOTIFICATIONS_AUTH_TOKEN=
+# TURSO_PRODUCT_* above points at its own Turso account (hesham103) too.
 
 # ── Turso provisioning (build/deploy scripts only) ──
 TURSO_API_TOKEN=
@@ -135,6 +136,37 @@ and recipient enrichment stay on the main app.
 send that no longer exists, and it doubled as the session signing fallback,
 which meant rotating a push credential silently invalidated every signed
 session. Set `ASOL_SESSION_SIGNING_SECRET` explicitly instead.
+
+## Products service
+
+Product reads run on a separate Vercel account. The two backends never call each
+other: the browser bridge sends reads to the products service and everything
+else to the main app. See
+[Products Bridge Module](../../05-platform-features/products-bridge-module.md).
+
+```env
+# Client-safe. Where the browser bridge sends product reads. Baked into static
+# and Capacitor bundles; build-static.ts asserts it is absolute.
+NEXT_PUBLIC_ASOL_PRODUCTS_URL=https://asol-products.vercel.app
+# Turso Platform API for the products account only (provisioning scripts).
+TURSO_PRODUCT_API_TOKEN=
+TURSO_PRODUCT_ORGANIZATION=hesham103
+# Vercel API token for the products account (deploy script only).
+VERCEL_PRODUCTS_TOKEN=
+```
+
+| Variable | Main app | Products service |
+|---|---|---|
+| `TURSO_PRODUCT_DATABASE_URL` / `_AUTH_TOKEN` | yes — writes, deletion, data health, profile counts | yes — reads |
+| `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | yes — client-safe | **no** — it is the service |
+| Users, advertisements, notifications, shard credentials | yes | **no** |
+
+Empty `NEXT_PUBLIC_ASOL_PRODUCTS_URL` is a safe default, not a broken one: every
+request then goes to the main app, which still serves those routes.
+
+`LEGACY_PRODUCT_DATABASE_URL` / `_AUTH_TOKEN` exist only for the one-time
+migration in `npm run db:migrate:product`. Delete them once the new account is
+verified.
 
 Browser Web Push does not use environment variables. Its VAPID key pair is
 generated from `/super-admin/vapid` and stored in the users database table

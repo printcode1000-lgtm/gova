@@ -4,7 +4,11 @@ import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
-import { CAPACITOR_API_BASE_URL, CAPACITOR_NOTIFICATIONS_BASE_URL } from "../platform/capacitor.defaults";
+import {
+  CAPACITOR_API_BASE_URL,
+  CAPACITOR_NOTIFICATIONS_BASE_URL,
+  CAPACITOR_PRODUCTS_BASE_URL,
+} from "../platform/capacitor.defaults";
 import { categoryService } from "../src/features/categories";
 import { auditCapacitorDefaultBundle } from "./lib/capacitor-defaults-audit";
 import {
@@ -79,6 +83,28 @@ function assertStaticNotificationsBaseUrl(): void {
   }
   process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL = notificationsBaseUrl;
   console.log(`Static notifications base URL: ${notificationsBaseUrl}`);
+}
+
+/**
+ * Same failure mode once more, for the products deployment.
+ *
+ * Without an absolute origin the browser bridge falls back to the main app,
+ * which no longer serves product reads — so a native build would ship with an
+ * empty catalogue and no error to point at.
+ */
+function assertStaticProductsBaseUrl(): void {
+  const productsBaseUrl =
+    process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL?.replace(/\/$/, "") ||
+    CAPACITOR_PRODUCTS_BASE_URL.replace(/\/$/, "");
+  if (!/^https?:\/\/.+/.test(productsBaseUrl)) {
+    throw new Error(
+      "A static build needs an absolute products service URL, but none resolved. " +
+        "Set NEXT_PUBLIC_ASOL_PRODUCTS_URL, or fix CAPACITOR_PRODUCTS_BASE_URL " +
+        "in platform/capacitor.defaults.ts.",
+    );
+  }
+  process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL = productsBaseUrl;
+  console.log(`Static products base URL: ${productsBaseUrl}`);
 }
 
 /**
@@ -491,6 +517,7 @@ try {
 
   assertStaticApiBaseUrl();
   assertStaticNotificationsBaseUrl();
+  assertStaticProductsBaseUrl();
   prepareTempBuildDir();
 
   execSync(`"${nextBinary}" build`, {

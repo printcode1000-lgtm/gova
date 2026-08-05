@@ -16,7 +16,7 @@
     "category:validate": "npx tsx scripts/validate-categories.ts",
     "test:categories": "npx tsx scripts/test-categories.ts",
     "test:installation-bootstrap": "npx tsx src/lib/installation/tests/installation-policy.test.ts",
-    "test": "npm run validate:error-logging && npm run test:system-logs && npm run test:categories && npm run test:installation-bootstrap && npm run test:r2-storage && npm run android:backup:validate && npm run android:r8:validate && npm run test:release-commands && npm run test:shipping-pricing && npm run test:delivery-planner && npm run test:seller-discounts && npm run test:marketplace-orders && npm run test:notifications && npm run test:favorites && npm run test:password-recovery && npm run test:image-upload-queue && npm run test:feature-flags && npm run test:native-platform && npm run test:ota-compatibility && npm run test:ota-delivery && npm run test:ota-background && npm run test:ota-hardening && npm run test:data-health",
+    "test": "npm run validate:error-logging && npm run test:system-logs && npm run test:categories && npm run test:installation-bootstrap && npm run test:r2-storage && npm run android:backup:validate && npm run android:r8:validate && npm run test:release-commands && npm run test:shipping-pricing && npm run test:delivery-planner && npm run test:seller-discounts && npm run test:marketplace-orders && npm run test:notifications && npm run test:products-module && npm run test:favorites && npm run test:password-recovery && npm run test:image-upload-queue && npm run test:feature-flags && npm run test:native-platform && npm run test:ota-compatibility && npm run test:ota-delivery && npm run test:ota-background && npm run test:ota-hardening && npm run test:data-health",
     "test:system-logs": "npx tsx src/features/system-logs/tests/system-log-security.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/modules/data-access/domains/system-logs/tests/persistent-system-log-repository.test.ts",
     "test:shipping-pricing": "npx tsx src/features/cart/tests/shipping-pricing.test.ts",
     "test:delivery-planner": "npx tsx src/features/cart/tests/multi-seller-delivery-planner.test.ts",
@@ -104,7 +104,10 @@
     "fastlane:ios:testflight": "node scripts/fastlane-runner.js ios beta",
     "cap:verify-defaults": "npx tsx scripts/audit-capacitor-defaults.ts && npm run android:backup:validate && npm run android:r8:validate && npm run ios:push:validate",
     "cap:run:clean:android": "npx tsx scripts/cap-run-clean.ts android",
-    "cap:run:clean:ios": "npx tsx scripts/cap-run-clean.ts ios"
+    "cap:run:clean:ios": "npx tsx scripts/cap-run-clean.ts ios",
+    "test:products-module": "npx tsx src/features/product/tests/products-service-module-contract.test.ts",
+    "products:deploy": "npx tsx scripts/deploy-products-service.ts",
+    "db:migrate:product": "npx tsx src/modules/data-access/tooling/migrate-product-database.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

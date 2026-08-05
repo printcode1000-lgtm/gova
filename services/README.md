@@ -7,28 +7,42 @@ shared between deployments except source that is mirrored explicitly.
 |---|---|---|---|---|
 | `hesham-101` (`team_uksNmh…`) | `gova` | the repository root — `src/`, `public/`, `platform/`, `scripts/` | the repository, minus `services/` | pushing to GitHub (connected) |
 | `101-0902` (`team_cmIfma…`) | `asol-notifications` | [`services/notifications/`](./notifications) | that folder alone | `npm run notifications:deploy` (no GitHub connection) |
+| products account | `asol-products` | [`services/products/`](./products) | that folder alone | `npm run products:deploy` (no GitHub connection) |
 | *(none — runs in the browser)* | — | `src/modules/notification-bridge/` | ships inside the main app's client bundle | with the main app |
+| *(none — runs in the browser)* | — | `src/modules/products-bridge/` | ships inside the main app's client bundle | with the main app |
 
-## The connector
+Each deployed module also owns its own Turso account: users/profiles/orders on
+`hesham101`, notifications on `hesham102`, products on `hesham103`.
 
-The two deployed modules **never call each other**. Neither holds the other's
-URL and neither has a code path to it. The third module — the notification
-bridge — is the only link, and it is deployed to no account at all: it runs in
-the user's browser.
+## The connectors
+
+The deployed modules **never call each other**. None of them holds another's URL
+and none has a code path to one. Every crossing goes through a bridge module,
+and a bridge is deployed to no account at all: it runs in the user's browser.
 
 ```text
-                    browser (notification-bridge)
-                    ╱                          ╲
-        gova ──────╱                            ╲────── asol-notifications
-   signs a grant                                  verifies it and delivers
+                     browser
+        ╱───────────────┼───────────────╲
+       ╱                │                ╲
+  gova ◄── products-bridge ──► asol-products
+       ╲                │
+        ╲── notification-bridge ──► asol-notifications
 ```
 
-`gova` decides who should be notified — it holds the users and orders data.
-`asol-notifications` delivers — it holds the Firebase and APNs credentials.
-The grant is that decision in transit, signed whole so the browser can carry it
-without being able to change it.
-
+**Notifications.** `gova` decides who should be notified — it holds the users
+and orders data — and signs that decision as a grant. `asol-notifications`
+delivers, holding the Firebase and APNs credentials. The grant is signed whole,
+so the browser can carry it without being able to change it.
 See [Notification Bridge Module](../docs/05-platform-features/notification-bridge-module.md).
+
+**Products.** The browser sends product *reads* to `asol-products` and
+everything else to `gova`. Writes stay on `gova` because they also rewrite
+denormalised counts in the profiles database, which the products account cannot
+reach.
+See [Products Bridge Module](../docs/05-platform-features/products-bridge-module.md).
+
+The two bridges differ in kind: the notification one carries an authorisation
+after a response, the products one only chooses an address before a request.
 
 ## Rules
 

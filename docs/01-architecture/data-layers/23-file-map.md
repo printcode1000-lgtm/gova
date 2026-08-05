@@ -25,13 +25,23 @@ public/sync_data/
 `-- *-schema-sync-report.json
 
 services/
-`-- notifications/                   # independent module, own Vercel account
-    |-- src/app/api/notifications/send/  # the only fan-out route in the system
-    |-- src/app/api/health/
-    |-- generated/                   # mirrored from src/, git-ignored
-    |-- stubs/better-sqlite3.js
-    |-- package.json                 # its own dependencies
-    `-- .vercelignore                # forces generated/ into the upload
+|-- notifications/                   # independent module, own Vercel account
+|   |-- src/app/api/notifications/send/  # the only fan-out route in the system
+|   |-- src/app/api/health/
+|   |-- generated/                   # mirrored from src/, git-ignored
+|   |-- stubs/better-sqlite3.js
+|   |-- package.json                 # its own dependencies
+|   `-- .vercelignore                # forces generated/ into the upload
+`-- products/                        # independent module, own Vercel account
+    |-- src/app/api/products/        # GET only; writes stay on the main app
+    |-- src/app/api/search/          # products + fields (sellers stays behind)
+    |-- src/app/lib/http.ts          # CORS and error mapping
+    |-- src/config/                  # storage-profiles.json, read via fs
+    `-- generated/                   # mirrored from src/ and public/
+
+src/modules/
+|-- notification-bridge/             # browser-only connector
+`-- products-bridge/                 # browser-only connector
 ```
 
 `services/` sits outside `src/` on purpose: it is deployed on its own, and the

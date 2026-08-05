@@ -43,6 +43,8 @@ const NOTIFICATIONS_SERVICE_KEYS = [
   // Explicit, so the notification secrets no longer double as the session
   // signing key. Without it, rotating one silently signs every user out.
   'ASOL_SESSION_SIGNING_SECRET',
+  // Client-safe origin of the products service, baked into the bundle.
+  'NEXT_PUBLIC_ASOL_PRODUCTS_URL',
 ] as const;
 
 const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;

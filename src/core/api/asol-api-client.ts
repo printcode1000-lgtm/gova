@@ -68,7 +68,7 @@ export class AsolApiClient {
 
     try {
       return await trackAsolApiRequest(method, route, true, async () => {
-        const response = await asolHttpFetch(buildAsolApiUrl(route), init);
+        const response = await asolHttpFetch(buildAsolApiUrl(route, method), init);
         const data = await this.parseResponse<T>(response);
         return { data, response };
       });
@@ -144,7 +144,7 @@ export class AsolApiClient {
     this.assertOnline('GET', route, options?.suppressErrorLog);
     try {
       return await trackAsolApiRequest('GET', route, true, async () => {
-        const response = await asolHttpFetch(buildAsolApiUrl(route), {
+        const response = await asolHttpFetch(buildAsolApiUrl(route, 'GET'), {
           method: 'GET',
           headers: { Accept: 'application/zip, application/octet-stream', ...options?.headers },
           credentials: 'omit',
@@ -162,7 +162,7 @@ export class AsolApiClient {
   /** POST multipart/form-data (e.g. file uploads). Does not set Content-Type — browser sets boundary. */
   postForm<T>(route: string, formData: FormData, options?: AsolApiRequestOptions): Promise<T> {
     return trackAsolApiRequest('POST', route, true, async () => {
-      const response = await asolHttpFetch(buildAsolApiUrl(route), {
+      const response = await asolHttpFetch(buildAsolApiUrl(route, 'POST'), {
         method: 'POST',
         body: formData,
         headers: { Accept: 'application/json', ...options?.headers },

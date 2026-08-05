@@ -13,7 +13,7 @@ npm run db:schema:sync
 | Domain | SQLite (dev) | Turso (prod) | Database Client | Env |
 | --- | --- | --- | --- | --- |
 | Users and auth | `allusers.db` | Users Turso DB | `usersDataSource` | `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` |
-| Products | `product.db` | Product Turso DB | `productsDataSource` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
+| Products | `product.db` | Product Turso DB (separate account `hesham103`) | `productsDataSource` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
 | Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDataSource` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
 | Notifications | `notifications.db` | Notifications Turso DB (separate account) | `notificationsDataSource` | `TURSO_NOTIFICATIONS_DATABASE_URL`, `TURSO_NOTIFICATIONS_AUTH_TOKEN` |
 | Profile shards | `profile-*.db`, `system-ops.db` | Matching Turso shards | `profilesDataSource` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
@@ -113,13 +113,31 @@ The only list-style product value currently stored as JSON is:
 
 See [Product Data Model](../product-data-model.md).
 
+### Why it is separate
+
+This database lives in its own Turso account (`hesham103`). Product reads —
+catalogue listing and search — are the highest-volume queries in the system, so
+isolating them means a busy catalogue can never consume the quota that serves
+logins or orders.
+
 ### Layers
 
 | Layer | Files |
 | --- | --- |
-| API | `/api/products`, `/api/products/reviews*`, `/api/pharmacy-profile-catalog` |
+| API (reads) | `/api/products`, `/api/products/reviews`, `/api/search/products`, `/api/search/fields` — served by the [products service](../../05-platform-features/products-service-module.md) |
+| API (writes) | the same paths on the main app, plus `/api/pharmacy-profile-catalog` |
 | Server service | Product and pharmacy catalog services |
 | Repository | Product repositories through `productsDataSource` |
+
+### The rule that follows from the split
+
+Product **writes** also rewrite `profile_category_product_counts` in the profile
+shards, so they cannot move to an account without profile credentials. The
+deployment boundary is therefore by HTTP method: reads on the products account,
+writes on the main app, with the browser choosing between them.
+
+The main app keeps product credentials regardless — account deletion, data
+health, and the profile count refresh all read this database server-side.
 
 ## 4. Advertisements
 
