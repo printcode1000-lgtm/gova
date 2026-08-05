@@ -26,6 +26,9 @@ const PRODUCT_READ_ROUTES = new Set([
   "/api/products/reviews",
   "/api/search/products",
   "/api/search/fields",
+  // Its override tables live in the product database, so the read belongs
+  // there; the writes on the same path stay on the main app.
+  "/api/pharmacy-profile-catalog",
 ]);
 
 function isBrowser(): boolean {

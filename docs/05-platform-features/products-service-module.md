@@ -23,6 +23,7 @@ services/products/
 │       ├── products/reviews/    GET
 │       ├── search/products/     GET
 │       ├── search/fields/       GET
+│       ├── pharmacy-profile-catalog/  GET
 │       └── health/              GET
 ├── src/config/           # storage-profiles.json, read at runtime via fs
 └── generated/            # mirrored from src/ and public/, git-ignored

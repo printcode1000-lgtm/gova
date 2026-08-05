@@ -124,8 +124,8 @@ logins or orders.
 
 | Layer | Files |
 | --- | --- |
-| API (reads) | `/api/products`, `/api/products/reviews`, `/api/search/products`, `/api/search/fields` — served by the [products service](../../05-platform-features/products-service-module.md) |
-| API (writes) | the same paths on the main app, plus `/api/pharmacy-profile-catalog` |
+| API (reads) | `/api/products`, `/api/products/reviews`, `/api/search/products`, `/api/search/fields`, `/api/pharmacy-profile-catalog` — served by the [products service](../../05-platform-features/products-service-module.md) |
+| API (writes) | the same paths on the main app |
 | Server service | Product and pharmacy catalog services |
 | Repository | Product repositories through `productsDataSource` |
 
