@@ -130,15 +130,14 @@ export function getFirebaseAdminServiceAccount(): FirebaseAdminServiceAccountCon
 /**
  * Session signing.
  *
- * It no longer falls back to the notification secret. That link meant rotating
- * a push credential silently invalidated every signed session, which is a
- * surprise nobody wants to debug. Set `ASOL_SESSION_SIGNING_SECRET` explicitly.
+ * One source, no fallbacks. It used to fall back to the notification secret and
+ * then to the database token — so a deployment could sign sessions with a
+ * credential it never meant to use, and rotating that credential would log
+ * everybody out for reasons nobody could trace. Missing configuration now fails
+ * loudly instead.
  */
 export function getAsolSessionSigningSecret(): string {
-  const secret =
-    process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ||
-    process.env.TURSO_AUTH_TOKEN?.trim() ||
-    "";
+  const secret = process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ?? "";
   if (secret.length < 32) throw new Error("sessionSigningSecretNotConfigured");
   return secret;
 }
@@ -300,14 +299,13 @@ export function getTursoNotificationsRuntimeCredentials(): {
  * therefore worth exactly one pre-authorised send, and a browser holding one
  * cannot alter who it reaches or what it says.
  *
- * Falls back to the session signing secret so a deployment that has not set it
- * yet still verifies consistently on both sides.
+ * One source, no fallbacks. Falling back to the session signing secret would
+ * mean the two accounts could silently agree on a *different* key than the one
+ * configured, and a mismatch would then surface as forged-grant rejections with
+ * nothing to point at. Missing configuration fails loudly instead.
  */
 export function getNotificationGrantSecret(): string {
-  const secret =
-    process.env.ASOL_NOTIFICATION_GRANT_SECRET?.trim() ||
-    process.env.ASOL_SESSION_SIGNING_SECRET?.trim() ||
-    "";
+  const secret = process.env.ASOL_NOTIFICATION_GRANT_SECRET?.trim() ?? "";
   if (secret.length < 32) throw new Error("notificationGrantSecretNotConfigured");
   return secret;
 }

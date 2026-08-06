@@ -270,8 +270,8 @@ function NotificationCard({
                   {String(notification.metadata?.subcategoryName ?? "")}
                   {notification.metadata?.outgoing === true
                     ? locale === "ar"
-                      ? ` — أُرسلت إلى ${Number(notification.metadata?.grantedUsers ?? notification.metadata?.acceptedUsers ?? 0)}، وصلت إلى ${Number(notification.metadata?.remoteReceivedCount ?? 0)}، قرأها ${Number(notification.metadata?.remoteReadCount ?? 0)}`
-                      : ` — sent to ${Number(notification.metadata?.grantedUsers ?? notification.metadata?.acceptedUsers ?? 0)}, received by ${Number(notification.metadata?.remoteReceivedCount ?? 0)}, read by ${Number(notification.metadata?.remoteReadCount ?? 0)}`
+                      ? ` — أُرسلت إلى ${Number(notification.metadata?.grantedUsers ?? 0)}، وصلت إلى ${Number(notification.metadata?.remoteReceivedCount ?? 0)}، قرأها ${Number(notification.metadata?.remoteReadCount ?? 0)}`
+                      : ` — sent to ${Number(notification.metadata?.grantedUsers ?? 0)}, received by ${Number(notification.metadata?.remoteReceivedCount ?? 0)}, read by ${Number(notification.metadata?.remoteReadCount ?? 0)}`
                     : ""}
                 </p>
               ) : null}

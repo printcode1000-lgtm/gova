@@ -94,7 +94,7 @@ export async function POST(request: Request) {
         return {
           ...item,
           unitPriceMinor: authoritative.unitPriceMinor,
-          priceLabel: authoritative.priceLabel || item.priceLabel,
+          priceLabel: authoritative.priceLabel,
           sellerId: authoritative.sellerId,
           name: authoritative.name,
           requiresSpecialVehicle: authoritative.requiresSpecialVehicle,
