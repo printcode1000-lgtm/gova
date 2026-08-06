@@ -23,3 +23,13 @@ export const CAPACITOR_NOTIFICATIONS_BASE_URL = 'https://asol-notifications.verc
  * reads once the split is live.
  */
 export const CAPACITOR_PRODUCTS_BASE_URL = 'https://asol-products.vercel.app';
+
+/**
+ * Orders service origin baked into native and static bundles.
+ *
+ * Same failure mode as the others: without an absolute URL the browser bridge
+ * falls back to the main app, which still serves the order list — so this one
+ * degrades rather than breaks, but silently loses the isolation it was set up
+ * for.
+ */
+export const CAPACITOR_ORDERS_BASE_URL = 'https://asol-orders.vercel.app';

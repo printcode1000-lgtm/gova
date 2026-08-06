@@ -41,7 +41,7 @@ services/
 
 src/modules/
 |-- notification-bridge/             # browser-only connector
-`-- products-bridge/                 # browser-only connector
+`-- service-bridge/                 # browser-only connector
 ```
 
 `services/` sits outside `src/` on purpose: it is deployed on its own, and the

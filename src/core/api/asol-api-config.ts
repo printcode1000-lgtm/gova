@@ -1,5 +1,5 @@
 import { publicEnv, withBasePath } from '@/core/config/public-env';
-import { resolveProductsServiceOrigin } from '@/modules/products-bridge';
+import { resolveServiceOrigin } from '@/modules/service-bridge';
 
 /**
  * ASOL API configuration — platform-agnostic.
@@ -18,15 +18,15 @@ export function resolveAsolApiBaseUrl(): string {
 /**
  * Where a request is addressed.
  *
- * Product reads go to the products deployment when the browser bridge says so;
- * everything else goes to the main app. The bridge answers `null` on the server,
- * so a server-rendered request can never be pointed at the products account —
- * the two backends must not call each other.
+ * A read that a service owns goes to that deployment when the browser bridge
+ * says so; everything else goes to the main app. The bridge answers `null` on
+ * the server, so a server-rendered request can never be pointed at another
+ * account — the deployments must not call each other.
  */
 export function buildAsolApiUrl(route: string, method = 'GET'): string {
   const normalizedRoute = route.startsWith('/') ? route : `/${route}`;
-  const productsOrigin = resolveProductsServiceOrigin(method, normalizedRoute);
-  const base = (productsOrigin ?? resolveAsolApiBaseUrl()).replace(/\/$/, '');
+  const serviceOrigin = resolveServiceOrigin(method, normalizedRoute);
+  const base = (serviceOrigin ?? resolveAsolApiBaseUrl()).replace(/\/$/, '');
   return `${base}${normalizedRoute}`;
 }
 

@@ -1,7 +1,8 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { getMarketplaceOrderQueries } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../auth/traced-route";
-import { actorFromInput, mapOrderError } from "./order-api-helpers";
+import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
+import { mapOrderError } from "./order-api-helpers";
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/orders", async () => {

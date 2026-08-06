@@ -47,15 +47,15 @@ shards, not products, so it belongs to the main app. Keeping it out is what let
 
 ## How the main app reaches it
 
-**It does not.** The two backends never call each other.
+**It does not.** The deployments never call each other.
 
 ```text
-browser (products bridge)
+browser (service bridge)
   ├─ GET  /api/products…  ─────► products service
   └─ everything else      ─────► main app
 ```
 
-The [products bridge](products-bridge-module.md) runs in the browser and decides
+The [service bridge](service-bridge-module.md) runs in the browser and decides
 per request which origin should answer. On the server it always answers "main
 app", so a server-rendered request can never be pointed at the products account.
 

@@ -7,6 +7,7 @@ import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import {
   CAPACITOR_API_BASE_URL,
   CAPACITOR_NOTIFICATIONS_BASE_URL,
+  CAPACITOR_ORDERS_BASE_URL,
   CAPACITOR_PRODUCTS_BASE_URL,
 } from "../platform/capacitor.defaults";
 import { categoryService } from "../src/features/categories";
@@ -105,6 +106,28 @@ function assertStaticProductsBaseUrl(): void {
   }
   process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL = productsBaseUrl;
   console.log(`Static products base URL: ${productsBaseUrl}`);
+}
+
+/**
+ * And once more for the orders deployment.
+ *
+ * This one degrades rather than breaks — the main app still serves the order
+ * list — so the assertion exists to stop a native build silently shipping
+ * without the isolation it was configured for.
+ */
+function assertStaticOrdersBaseUrl(): void {
+  const ordersBaseUrl =
+    process.env.NEXT_PUBLIC_ASOL_ORDERS_URL?.replace(/\/$/, "") ||
+    CAPACITOR_ORDERS_BASE_URL.replace(/\/$/, "");
+  if (!/^https?:\/\/.+/.test(ordersBaseUrl)) {
+    throw new Error(
+      "A static build needs an absolute orders service URL, but none resolved. " +
+        "Set NEXT_PUBLIC_ASOL_ORDERS_URL, or fix CAPACITOR_ORDERS_BASE_URL " +
+        "in platform/capacitor.defaults.ts.",
+    );
+  }
+  process.env.NEXT_PUBLIC_ASOL_ORDERS_URL = ordersBaseUrl;
+  console.log(`Static orders base URL: ${ordersBaseUrl}`);
 }
 
 /**
@@ -518,6 +541,7 @@ try {
   assertStaticApiBaseUrl();
   assertStaticNotificationsBaseUrl();
   assertStaticProductsBaseUrl();
+  assertStaticOrdersBaseUrl();
   prepareTempBuildDir();
 
   execSync(`"${nextBinary}" build`, {

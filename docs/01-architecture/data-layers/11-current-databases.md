@@ -17,7 +17,7 @@ npm run db:schema:sync
 | Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDataSource` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
 | Notifications | `notifications.db` | Notifications Turso DB (separate account) | `notificationsDataSource` | `TURSO_NOTIFICATIONS_DATABASE_URL`, `TURSO_NOTIFICATIONS_AUTH_TOKEN` |
 | Profile shards | `profile-*.db`, `system-ops.db` | Matching Turso shards | `profilesDataSource` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
-| Marketplace order shards | `orders-*.db` | Matching Turso shards | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
+| Marketplace order shards | `orders-*.db` | Matching Turso shards (separate account `hesham104`) | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
 Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
 
@@ -208,13 +208,31 @@ Primary tables include:
 - `payments`
 - order audit, cancellation, delivery, return, and dispute tables
 
+### Why they are separate
+
+The nine shards live on their own Turso account (`hesham104`), so order traffic
+can never consume the quota that serves logins, profiles, or the catalogue.
+
 ### Layers
 
 | Layer | Files |
 | --- | --- |
-| API | `/api/orders*` |
+| API (list) | `GET /api/orders` — served by the [orders service](../../05-platform-features/orders-service-module.md) |
+| API (detail + writes) | `GET /api/orders/:id` and every `POST` — main app |
 | Module | `src/modules/marketplace-orders` |
 | Database client | Marketplace orders DB client |
+
+### The rule that follows from the split
+
+Only the list moved. `GET /api/orders/:id` enriches the order with profile
+contacts, fulfilment settings, and store details from the profile shards, and
+every write spans several order shards plus the profile and product databases —
+creating an order writes `orders-core`, then `orders-items`, then
+`seller_orders`. Splitting that across accounts would turn one operation into
+several that can fail half-done, leaving an order with no items.
+
+Both accounts hold the shard credentials: the service to read the list, the main
+app to write and to serve the detail view.
 
 See [Marketplace Order Management](../marketplace-order-management/README.md).
 

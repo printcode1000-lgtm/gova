@@ -1,38 +1,14 @@
 import "server-only";
 
 import { apiError } from "@/core/api/api-response";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
-import type {
-  Actor,
-  MinorUnits,
-} from "@/modules/marketplace-orders/domain/types";
-import type { ActorRole } from "@/modules/marketplace-orders/domain/enums";
+import type { MinorUnits } from "@/modules/marketplace-orders/domain/types";
 
-export interface ClientActorInput {
-  uid?: string;
-  phone?: string;
-  role?: ActorRole;
-}
-
-export function actorFromInput(
-  input: ClientActorInput,
-  fallbackRole: ActorRole,
-): Actor {
-  const uid = input.uid?.trim();
-  if (!uid) throw new Error("userNotFound");
-  if (isSuperAdminIdentity(uid, input.phone ?? "")) {
-    return { id: uid, role: "admin", source: "asol-web" };
-  }
-  const role =
-    input.role === "admin" || input.role === "system"
-      ? fallbackRole
-      : (input.role ?? fallbackRole);
-  return {
-    id: uid,
-    role,
-    source: "asol-web",
-  };
-}
+/**
+ * `actorFromInput` used to live here. It moved to
+ * `@/modules/marketplace-orders/domain/actor-from-input` because the orders
+ * service needs it too, and mirroring app-router files into a deployment that
+ * has no such routes made no sense.
+ */
 
 export function moneyMinor(value: unknown): MinorUnits {
   const amount = Number(value);

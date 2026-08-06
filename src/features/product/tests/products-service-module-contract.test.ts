@@ -83,18 +83,18 @@ assert.ok(
 // ── 4. The bridge must not redirect anything but reads ───────────────────────
 
 const bridge = readFileSync(
-  path.join(root, "src", "modules", "products-bridge", "products-bridge.client.ts"),
+  path.join(root, "src", "modules", "service-bridge", "service-bridge.client.ts"),
   "utf8",
 );
 assert.match(
   stripComments(bridge),
   /method\.toUpperCase\(\)\s*!==\s*["']GET["']/,
-  "The products bridge must redirect GET only; a redirected write would reach an account that cannot serve it.",
+  "The service bridge must redirect GET only; a redirected write would reach an account that cannot serve it.",
 );
 assert.match(
   stripComments(bridge),
   /isBrowser\(\)/,
-  "The products bridge must be browser-only: server-side redirection would make the two backends call each other.",
+  "The service bridge must be browser-only: server-side redirection would make the two backends call each other.",
 );
 
 // ── 5. generated/ must be reproducible from src/ ─────────────────────────────

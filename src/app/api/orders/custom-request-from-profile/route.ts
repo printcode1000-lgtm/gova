@@ -3,7 +3,8 @@ import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { getMarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
-import { actorFromInput, mapOrderError } from "../order-api-helpers";
+import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
+import { mapOrderError } from "../order-api-helpers";
 
 interface CustomRequestImageInput {
   imageKey: string;

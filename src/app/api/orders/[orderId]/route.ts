@@ -4,7 +4,8 @@ import { filterOrderDetailsForActor } from "@/modules/marketplace-orders/domain/
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
-import { actorFromInput, mapOrderError } from "../order-api-helpers";
+import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
+import { mapOrderError } from "../order-api-helpers";
 
 async function profileSnapshot(uid: string) {
   const [contacts, fulfillment, storeDetails] = await Promise.all([

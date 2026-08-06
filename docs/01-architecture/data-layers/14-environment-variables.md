@@ -142,7 +142,7 @@ session. Set `ASOL_SESSION_SIGNING_SECRET` explicitly instead.
 Product reads run on a separate Vercel account. The two backends never call each
 other: the browser bridge sends reads to the products service and everything
 else to the main app. See
-[Products Bridge Module](../../05-platform-features/products-bridge-module.md).
+[Service Bridge Module](../../05-platform-features/service-bridge-module.md).
 
 ```env
 # Client-safe. Where the browser bridge sends product reads. Baked into static

@@ -8,11 +8,12 @@ shared between deployments except source that is mirrored explicitly.
 | `hesham-101` (`team_uksNmh…`) | `gova` | the repository root — `src/`, `public/`, `platform/`, `scripts/` | the repository, minus `services/` | pushing to GitHub (connected) |
 | `101-0902` (`team_cmIfma…`) | `asol-notifications` | [`services/notifications/`](./notifications) | that folder alone | `npm run notifications:deploy` (no GitHub connection) |
 | products account | `asol-products` | [`services/products/`](./products) | that folder alone | `npm run products:deploy` (no GitHub connection) |
+| orders account | `asol-orders` | [`services/orders/`](./orders) | that folder alone | `npm run orders:deploy` (no GitHub connection) |
 | *(none — runs in the browser)* | — | `src/modules/notification-bridge/` | ships inside the main app's client bundle | with the main app |
-| *(none — runs in the browser)* | — | `src/modules/products-bridge/` | ships inside the main app's client bundle | with the main app |
+| *(none — runs in the browser)* | — | `src/modules/service-bridge/` | ships inside the main app's client bundle | with the main app |
 
-Each deployed module also owns its own Turso account: users/profiles/orders on
-`hesham101`, notifications on `hesham102`, products on `hesham103`.
+Each deployed module also owns its own Turso account: users and profiles on `hesham101`,
+notifications on `hesham102`, products on `hesham103`, orders on `hesham104`.
 
 ## The connectors
 
@@ -21,12 +22,12 @@ and none has a code path to one. Every crossing goes through a bridge module,
 and a bridge is deployed to no account at all: it runs in the user's browser.
 
 ```text
-                     browser
-        ╱───────────────┼───────────────╲
-       ╱                │                ╲
-  gova ◄── products-bridge ──► asol-products
-       ╲                │
-        ╲── notification-bridge ──► asol-notifications
+                          browser
+        ╱───────────────────┼───────────────────╲
+       ╱                    │                    ╲
+  gova ◄── service-bridge ──┼──► asol-products
+       ╲                    │    asol-orders
+        ╲─ notification-bridge ─► asol-notifications
 ```
 
 **Notifications.** `gova` decides who should be notified — it holds the users
@@ -35,14 +36,18 @@ delivers, holding the Firebase and APNs credentials. The grant is signed whole,
 so the browser can carry it without being able to change it.
 See [Notification Bridge Module](../docs/05-platform-features/notification-bridge-module.md).
 
-**Products.** The browser sends product *reads* to `asol-products` and
-everything else to `gova`. Writes stay on `gova` because they also rewrite
-denormalised counts in the profiles database, which the products account cannot
-reach.
-See [Products Bridge Module](../docs/05-platform-features/products-bridge-module.md).
+**Products and orders.** The browser sends product *reads* to `asol-products`
+and the order *list* to `asol-orders`; everything else goes to `gova`.
+
+Writes stay on `gova` in both cases, for the same underlying reason: they touch
+data the read account cannot see. A product write rewrites denormalised counts
+in the profile shards; an order write spans several order shards plus the
+profile and product databases. `GET /api/orders/:id` stays too — it enriches the
+order with profile contacts and store details.
+See [Service Bridge Module](../docs/05-platform-features/service-bridge-module.md).
 
 The two bridges differ in kind: the notification one carries an authorisation
-after a response, the products one only chooses an address before a request.
+after a response, the service one only chooses an address before a request.
 
 ## Rules
 

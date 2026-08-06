@@ -89,3 +89,10 @@ services/products/.next/
 services/products/node_modules/
 services/products/.vercel/
 services/products/src/config/
+
+# Orders service: shared modules are copied in by
+# scripts/sync-orders-service-sources.ts on every deploy.
+services/orders/generated/
+services/orders/.next/
+services/orders/node_modules/
+services/orders/.vercel/

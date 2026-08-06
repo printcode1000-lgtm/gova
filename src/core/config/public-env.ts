@@ -37,6 +37,12 @@ export const publicEnv = {
    * or native build resolves and asserts it in `build-static.ts`.
    */
   productsUrl: process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL?.replace(/\/$/, '') || '',
+  /**
+   * Origin of the orders deployment. Client-safe: only the browser calls it,
+   * and it serves the order list only — the detail view stays on the main app,
+   * which is the side that can read profile contacts and store details.
+   */
+  ordersUrl: process.env.NEXT_PUBLIC_ASOL_ORDERS_URL?.replace(/\/$/, '') || '',
   otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || '',
   otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || '',
   webBundleVersion: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION || '0.1.0',

@@ -12,23 +12,23 @@
 The first four share **identical application code** — only environment
 configuration changes.
 
-## Three Vercel accounts
+## Four Vercel accounts
 
 Two targets are not the main application, and neither of them may be called by
 it: every crossing goes through a browser-only bridge.
 
 | | Main app | Notifications service | Products service |
 |---|---|---|---|
-| Vercel project | `gova` | `asol-notifications` | `asol-products` |
-| GitHub | connected — every push redeploys | **not connected** | **not connected** |
-| Updated by | pushing to the repository | `npm run notifications:deploy` | `npm run products:deploy` |
-| Uploaded files | the repository | `services/notifications/` alone | `services/products/` alone |
-| Serves | everything else | push fan-out only | product reads only |
-| Turso account | `hesham101` | `hesham102` | `hesham103` |
+| Vercel project | `gova` | `asol-notifications` | `asol-products` | `asol-orders` |
+| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** |
+| Updated by | pushing to the repository | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` |
+| Uploaded files | the repository | `services/notifications/` | `services/products/` | `services/orders/` |
+| Serves | everything else | push fan-out only | product reads only | the order list only |
+| Turso account | `hesham101` | `hesham102` | `hesham103` | `hesham104` |
 
 The connectors are documented in
 [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md)
-and [Products Bridge Module](../../05-platform-features/products-bridge-module.md).
+and [Service Bridge Module](../../05-platform-features/service-bridge-module.md).
 
 Keep the main project's GitHub connection as it is. The deploy command runs the
 CLI with `services/notifications` as its working directory, so it writes that
