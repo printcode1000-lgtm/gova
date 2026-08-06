@@ -21,6 +21,28 @@ npm run db:schema:sync
 
 Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
 
+## One table, one database
+
+No table exists in more than one database. Verified across all 21 cloud
+databases and all 21 local runtime databases: 70 distinct tables, zero overlap.
+
+Two local files are the exception and are **not** databases the application
+reads:
+
+| File | Role |
+|---|---|
+| `profile.db` | schema source that `db:ensure` splits into the `profile-*` and `system-ops` shards |
+| `marketplace-orders.db` | schema source that `db:ensure` splits into the `orders-*` shards |
+
+They are build inputs. Their tables appear again in the shards by design, they
+are never synced to Turso, and no runtime code opens them. Cloud copies of both
+existed until they were deleted — nothing read them, and they duplicated every
+shard table while holding rows the shards never received.
+
+Adding a table means choosing exactly one database for it. If two domains need
+the same data, one owns it and the other resolves it by `uid` in a second query
+— see the worked example in [6. Notifications](#6-notifications).
+
 ## 1. Users and Auth
 
 ### Schema

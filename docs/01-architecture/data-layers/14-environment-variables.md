@@ -188,6 +188,22 @@ APNS_PRIVATE_KEY=
 APNS_PRODUCTION=false
 ```
 
+## No fallbacks
+
+Every secret has exactly one source and throws when it is missing. The chains
+that used to exist are gone on purpose:
+
+| Variable | It used to fall back to | Why that was removed |
+|---|---|---|
+| `ASOL_SESSION_SIGNING_SECRET` | the notification secret, then `TURSO_AUTH_TOKEN` | Sessions could be signed with a credential nobody chose, and rotating it logged everyone out for no visible reason |
+| `ASOL_NOTIFICATION_GRANT_SECRET` | `ASOL_SESSION_SIGNING_SECRET` | The two accounts could quietly agree on a different key than the configured one; a mismatch surfaced only as forged-grant rejections |
+
+A missing value now fails loudly at the first call rather than producing an
+application that looks like it works.
+
+`TURSO_PROFILE_*` and `MARKETPLACE_ORDERS_DATABASE_*` no longer exist. They
+pointed at un-sharded databases that no code read; both have been deleted.
+
 ## Never expose
 
 `TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_NOTIFICATIONS_API_TOKEN`, `TURSO_NOTIFICATIONS_AUTH_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `ASOL_NOTIFICATION_GRANT_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON`, `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.

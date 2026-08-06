@@ -1,9 +1,9 @@
 {
-  "executedAt": "2026-08-06T14:27:01.412Z",
-  "durationMs": 7290,
+  "executedAt": "2026-08-06T14:47:42.368Z",
+  "durationMs": 6098,
   "sqliteSchemaVersion": "8267c341a7ad57bb",
-  "tursoSchemaVersionBefore": "4d26f91ed7a8b23c",
-  "tursoSchemaVersionAfter": "4d26f91ed7a8b23c",
+  "tursoSchemaVersionBefore": "6ae784bcb19f8071",
+  "tursoSchemaVersionAfter": "6ae784bcb19f8071",
   "operations": [],
   "tablesModified": 0,
   "columnsAdded": 0,
@@ -12,10 +12,6 @@
   "triggersAdded": 0,
   "sqlExecuted": [],
   "errors": [],
-  "warnings": [
-    "Table \"data_health_factory_reset_plans\" exists on Turso but not in SQLite. Not dropped automatically.",
-    "Table \"data_health_factory_reset_locks\" exists on Turso but not in SQLite. Not dropped automatically.",
-    "Table \"data_health_factory_reset_audit\" exists on Turso but not in SQLite. Not dropped automatically."
-  ],
+  "warnings": [],
   "skipped": false
 }
