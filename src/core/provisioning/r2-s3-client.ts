@@ -152,10 +152,12 @@ async function configuredR2ObjectExists(
 }
 
 export async function r2ObjectExists(key: string): Promise<boolean> {
-  const config = getR2Config();
+  // S3 credentials only. An existence check is not an account operation, so it
+  // must not pull in R2_API_TOKEN through the full config — the profiles
+  // deployment resolves avatars and never holds that token.
   return configuredR2ObjectExists(
     createR2S3Client(),
-    config.s3.bucketName,
+    getR2S3Credentials().bucketName,
     key,
   );
 }

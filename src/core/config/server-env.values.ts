@@ -383,6 +383,19 @@ export function getR2S3Credentials(): R2S3Credentials {
   return credentials;
 }
 
+/**
+ * The bucket's public base URL, on its own.
+ *
+ * Turning a stored key into a URL is a pure string operation, and reading an
+ * object needs only the S3 credentials. Neither needs `R2_API_TOKEN`, which is
+ * an account-management credential — bucket creation, CORS policy. Deployments
+ * that only read images therefore never hold it: the profiles service resolves
+ * avatars with nothing but this value and the S3 pair.
+ */
+export function getR2PublicUrl(): string {
+  return requireEnv("R2_PUBLIC_URL");
+}
+
 export function getR2Config(): R2Config {
   const cloudflare = getR2CloudflareCredentials();
   const s3 = getR2S3Credentials();

@@ -77,7 +77,8 @@ and those calls go straight to the shards, not through this service.
 |---|:---:|:---:|
 | The seven `PROFILE_*_DATABASE_URL` / `_AUTH_TOKEN` pairs | yes — writes and server-side reads | yes — the five read routes |
 | `NEXT_PUBLIC_ASOL_PROFILES_URL` | yes — client-safe | **no** — it *is* the service |
-| `R2_*` | yes | yes — avatars are resolved for `users-by-specialty` |
+| `R2_*` (S3 pair + public URL) | yes | yes — avatars are resolved for `users-by-specialty` |
+| `R2_API_TOKEN` | yes | **no** — bucket administration, not reading |
 | Users, product, orders, notifications, `SYSTEM_OPS_*` | yes | **no** |
 
 ## Deploying
@@ -94,6 +95,11 @@ changes nothing here.
 `npm run db:migrate:profiles` copies rows from `LEGACY_PROFILE_*` to the current
 credentials, verifying row counts per table and refusing to finish on a
 mismatch. It skips `system-ops` deliberately.
+
+It has already run — 30 rows across eight tables, every count matching — and the
+old shards were deleted from `hesham101`, so the `LEGACY_PROFILE_*` variables
+are gone from `.env`. The script is kept for the record of how the move was
+done; running it again would need those variables re-added.
 
 ## Verifying a deployment
 

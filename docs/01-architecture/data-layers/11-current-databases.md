@@ -24,8 +24,14 @@ Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. 
 
 ## One table, one database
 
-No table exists in more than one database. Verified across all 21 cloud
-databases and all 21 local runtime databases: 70 distinct tables, zero overlap.
+No application table exists in more than one database. Verified across all 21
+cloud databases on the five accounts and all 21 local runtime databases: 70
+distinct tables, zero overlap.
+
+`__drizzle_migrations` is not one of them. It is drizzle's own record of which
+migrations a database has applied, so each database that runs migrations keeps
+its own copy — four of them do. It holds no application data and is excluded
+from the rule.
 
 Two local files are the exception and are **not** databases the application
 reads:

@@ -55,6 +55,7 @@ R2_CATALOG_URI=https://catalog.cloudflarestorage.com/8486fdbb1c87dc78481f2def0a2
 R2_WAREHOUSE_NAME=8486fdbb1c87dc78481f2def0a23e043_pic1
 
 # Client-safe
+
 NEXT_PUBLIC_R2_PUBLIC_URL=https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev
 
 # Server-only: product images stay on the legacy product R2 bucket
@@ -70,6 +71,14 @@ PRODUCT_R2_PUBLIC_URL=https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev
 PRODUCT_R2_CATALOG_URI=https://catalog.cloudflarestorage.com/166409f3b449d8f1da0dee6d25ed3e08/gova-storage
 PRODUCT_R2_WAREHOUSE_NAME=166409f3b449d8f1da0dee6d25ed3e08_gova-storage
 ```
+
+`R2_API_TOKEN` is a Cloudflare **account** credential — it creates buckets and
+writes CORS policy. Reading an image needs none of that, so the read paths take
+the S3 pair and `R2_PUBLIC_URL` only: `getR2PublicUrl()` for turning a key into
+a URL, `getR2S3Credentials()` for existence checks. `getR2Config()`, which does
+require the token, is left to provisioning. This is what lets the profiles
+deployment resolve avatars without holding a token that could reconfigure the
+bucket.
 
 Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:
 
