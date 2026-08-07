@@ -17,15 +17,18 @@ interface BackgroundDownloadBridge {
   remove(options: { releaseId: string }): Promise<void>;
 }
 
-const plugin = createLazyPlugin("BackgroundDownload", async () =>
-  registerPlugin<BackgroundDownloadBridge>("BackgroundDownload"),
-);
+const plugin = createLazyPlugin("BackgroundDownload", async () => {
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge. See the same note in the storage-capacity and
+  // share adapters — a Capacitor proxy answers every property with a function.
+  return { plugin: registerPlugin<BackgroundDownloadBridge>("BackgroundDownload") };
+});
 
 export async function scheduleNativeBackgroundDownload(
   request: BackgroundDownloadRequest,
 ): Promise<BackgroundDownloadTask> {
   try {
-    return await (await plugin.required()).schedule(request);
+    return await (await plugin.required()).plugin.schedule(request);
   } catch (error) {
     throw toNativeError("BackgroundDownload", error);
   }
@@ -35,7 +38,7 @@ export async function nativeBackgroundDownloadStatus(
   releaseId: string,
 ): Promise<BackgroundDownloadTask> {
   try {
-    return await (await plugin.required()).status({ releaseId });
+    return await (await plugin.required()).plugin.status({ releaseId });
   } catch (error) {
     throw toNativeError("BackgroundDownload", error);
   }
@@ -45,7 +48,7 @@ export async function removeNativeBackgroundDownload(
   releaseId: string,
 ): Promise<void> {
   try {
-    await (await plugin.required()).remove({ releaseId });
+    await (await plugin.required()).plugin.remove({ releaseId });
   } catch (error) {
     throw toNativeError("BackgroundDownload", error);
   }

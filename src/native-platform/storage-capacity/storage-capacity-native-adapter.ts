@@ -9,14 +9,17 @@ interface StorageCapacityPlugin {
   getFreeSpace(): Promise<StorageCapacityInfo>;
 }
 
-const plugin = createLazyPlugin(
-  "StorageCapacity",
-  async () => registerPlugin<StorageCapacityPlugin>("StorageCapacity"),
-);
+const plugin = createLazyPlugin("StorageCapacity", async () => {
+  // Boxed: returning the proxy itself would make this promise call its
+  // then() on the native bridge. A Capacitor proxy answers every property with
+  // a function, so promise resolution reads `then`, finds one, and invokes it —
+  // surfacing as `"StorageCapacity.then()" is not implemented on android`.
+  return { plugin: registerPlugin<StorageCapacityPlugin>("StorageCapacity") };
+});
 
 export async function nativeFreeSpace(): Promise<StorageCapacityInfo> {
   try {
-    const result = await (await plugin.required()).getFreeSpace();
+    const result = await (await plugin.required()).plugin.getFreeSpace();
     if (!Number.isSafeInteger(result.availableBytes) || result.availableBytes < 0) {
       throw new Error("Native free-space result is invalid");
     }
