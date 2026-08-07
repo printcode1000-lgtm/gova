@@ -68,6 +68,8 @@
     "test:ota-compatibility": "npx tsx scripts/test-ota-native-compatibility.ts",
     "test:release-commands": "cross-env NODE_ENV=development NODE_OPTIONS=--conditions=react-server npx tsx src/modules/release-commands/tests/release-commands.test.ts",
     "ota:status": "npx tsx scripts/ota-status.ts",
+    "ota:mirror-legacy": "npx tsx scripts/ota/ota-mirror-legacy-manifest.ts",
+    "ota:mirror-legacy:remove": "npx tsx scripts/ota/ota-mirror-legacy-manifest.ts --remove",
     "ota:self-test": "npx tsx scripts/ota-self-test.ts",
     "android:push:sync-assets": "npx tsx scripts/sync-android-push-assets.ts",
     "android:backup:validate": "npx tsx scripts/validate-android-backup-policy.ts",

@@ -112,6 +112,23 @@ npm run test:r2-separation
    *read* without requiring a `url`. A parser still demanding one drops every
    migrated row and the product renders with no images at all.
 
+## The one exception on the product bucket
+
+Two documents — `app-updates/manifest.json` and `app-updates/revocations.json`
+— are mirrored onto the product bucket on purpose, and they are the only
+non-product objects allowed there.
+
+The manifest URL is inlined into the web bundle at build time, so the Android
+shell installed from the store still asks the old origin. Deleting the OTA
+objects left it with a 404. The mirror is two small JSON files, not a release:
+every file and bundle still downloads from the general account, because the
+client takes those URLs from the manifest's own `baseUrl`.
+
+It is temporary. The mirrored bundle carries the new URL, so a device that
+updates once never asks again — then `npm run ota:mirror-legacy:remove` clears
+it. See
+[Moving the OTA origin](../07-mobile-and-release/capacitor/ota-update-system.md#moving-the-ota-origin).
+
 ## Known limitation
 
 OTA now shares the general account with profile and content images. That is

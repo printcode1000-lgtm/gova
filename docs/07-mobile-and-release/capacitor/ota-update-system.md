@@ -257,6 +257,46 @@ publisher withheld `app.state` from the manifest, along with
 built before it existed computes a different canonical string and rejects the
 manifest outright. Both omissions are announced in the publish output.
 
+## Moving the OTA origin
+
+**The manifest URL is inlined into the web bundle at static build time.** A shell
+already installed on a device asks the origin it was built with, and no server
+setting changes that. Moving OTA to another bucket therefore strands every
+installed copy with a 404 — the release is fine, the address it knows is not.
+This is what happened when OTA was moved off the product account: a store-built
+Android shell reported
+
+```text
+OTA request failed (404): https://pub-e1fa9cec….r2.dev/app-updates/manifest.json
+```
+
+**A store release is not the fix.** The client reads two documents from the
+baked URL — `manifest.json` and its sibling `revocations.json` — and takes every
+file and bundle URL from the manifest's own `baseUrl`. Mirroring those two small
+documents to the old origin is enough:
+
+```bash
+npm run ota:mirror-legacy
+```
+
+It copies them byte for byte, so the signature the device verifies is the one
+the publisher produced. `ASOL_OTA_LEGACY_R2_*` names the old origin explicitly —
+never derived from `PRODUCT_R2_*`, since OTA reading a product variable is the
+coupling that caused the problem in the first place.
+
+**It heals itself.** The mirrored release's bundle has the new URL inlined, so
+once a device installs it, it never asks the legacy origin again. Verified: the
+published 0.1.0 bundle contains zero references to the old origin and one to the
+new. Afterwards:
+
+```bash
+npm run ota:mirror-legacy:remove
+```
+
+While the mirror is live it is a copy, not a source. Re-run `ota:mirror-legacy`
+after any publish or revocation, or the old origin keeps serving the previous
+manifest.
+
 ## OTA storage
 
 OTA reads `ASOL_OTA_R2_*` and nothing else: endpoint, access key, secret,
