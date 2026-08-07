@@ -27,15 +27,17 @@ export function getOtaPrefix(): string {
   );
 }
 
+/**
+ * OTA reads `ASOL_OTA_R2_*` and nothing else.
+ *
+ * These used to fall back to `PRODUCT_R2_*` and then `R2_*`. A fallback that
+ * crosses an account boundary does not fail — it writes somewhere else,
+ * quietly. That is how 3,463 release objects ended up on the products account,
+ * which exists to hold product images and nothing more.
+ */
 export function getOtaPublicBaseUrl(): string {
-  const value =
-    process.env.ASOL_OTA_R2_PUBLIC_URL ??
-    process.env.PRODUCT_R2_PUBLIC_URL ??
-    process.env.R2_PUBLIC_URL;
-  if (!value)
-    throw new Error(
-      "ASOL_OTA_R2_PUBLIC_URL, PRODUCT_R2_PUBLIC_URL, or R2_PUBLIC_URL is required",
-    );
+  const value = process.env.ASOL_OTA_R2_PUBLIC_URL;
+  if (!value) throw new Error("ASOL_OTA_R2_PUBLIC_URL is required");
   return value.replace(/\/$/, "");
 }
 
@@ -44,14 +46,8 @@ export function getOtaManifestUrl(): string {
 }
 
 export function getOtaBucketName(): string {
-  const value =
-    process.env.ASOL_OTA_R2_BUCKET_NAME ??
-    process.env.PRODUCT_R2_BUCKET_NAME ??
-    process.env.R2_BUCKET_NAME;
-  if (!value)
-    throw new Error(
-      "ASOL_OTA_R2_BUCKET_NAME, PRODUCT_R2_BUCKET_NAME, or R2_BUCKET_NAME is required",
-    );
+  const value = process.env.ASOL_OTA_R2_BUCKET_NAME;
+  if (!value) throw new Error("ASOL_OTA_R2_BUCKET_NAME is required");
   return value;
 }
 

@@ -18,6 +18,7 @@ import { imageStorageService } from "@/features/storage/services/image-storage-s
 import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server";
 
 const SAFE_ID = /^[a-z0-9-]+$/i;
+const PRODUCT_STORAGE_PROFILE_ID = "product-default";
 
 function clean(value: unknown, max = 10000) {
   return typeof value === "string" ? value.slice(0, max) : "";
@@ -25,14 +26,12 @@ function clean(value: unknown, max = 10000) {
 
 function normalizeDetails(value: ProductDetails): ProductDetails {
   const details = createEmptyProductDetails(value);
+  // The key is the whole record. Any URL a client sends is ignored — it is
+  // derived from the storage profile on the way out.
   const images = Array.isArray(value?.images)
     ? value.images
-        .filter(
-          (image) =>
-            image &&
-            typeof image.imageKey === "string" &&
-            typeof image.url === "string",
-        )
+        .filter((image) => image && typeof image.imageKey === "string")
+        .map((image) => ({ imageKey: image.imageKey, url: "" }))
         .slice(0, 20)
     : [];
   return createEmptyProductDetails({
@@ -76,7 +75,7 @@ function normalizeStatus(value: ProductStatus | undefined): ProductStatus {
 async function deleteProductImages(imageKeys: string[]): Promise<void> {
   const results = await Promise.allSettled(
     [...new Set(imageKeys)].map((imageKey) =>
-      imageStorageService.deleteImage("product-default", imageKey),
+      imageStorageService.deleteImage(PRODUCT_STORAGE_PROFILE_ID, imageKey),
     ),
   );
   for (const result of results) {
@@ -84,6 +83,26 @@ async function deleteProductImages(imageKeys: string[]): Promise<void> {
       console.error("Product image cleanup failed after database commit:", result.reason);
     }
   }
+}
+
+/**
+ * Fills in the public URL of every image from its key.
+ *
+ * The database holds keys only, so the URL is derived at read time from the
+ * bucket currently configured. Moving the bucket is then an environment change
+ * rather than a rewrite of every product row.
+ */
+function withImageUrls(product: ProductRecord): ProductRecord {
+  return {
+    ...product,
+    images: product.images.map((image) => ({
+      ...image,
+      url: imageStorageService.resolveImageUrl(
+        PRODUCT_STORAGE_PROFILE_ID,
+        image.imageKey,
+      ),
+    })),
+  };
 }
 
 export class ProductService {
@@ -96,7 +115,7 @@ export class ProductService {
     const product = await this.repository.findById(id);
     if (!product || product.status === "archived")
       throw new Error("productNotFound");
-    return product;
+    return withImageUrls(product);
   }
 
   async listByOwnerAndCategory(
@@ -118,10 +137,10 @@ export class ProductService {
       const productIds = new Set(products.map((product) => product.id));
       return [
         ...pharmacyProducts.filter((product) => !productIds.has(product.id)),
-        ...products,
+        ...products.map(withImageUrls),
       ];
     }
-    return products;
+    return products.map(withImageUrls);
   }
 
   async create(input: CreateProductInput): Promise<ProductRecord> {

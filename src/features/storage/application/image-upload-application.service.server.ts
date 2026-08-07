@@ -43,6 +43,16 @@ export class ImageUploadApplicationService {
       () => imageStorageOrchestrator.deleteByKey(storageProfileId, imageKey),
     );
   }
+
+  /**
+   * The public URL of a stored key.
+   *
+   * Callers persist keys and ask for the URL when they need one, so the bucket
+   * a profile points at can change without touching a single stored row.
+   */
+  resolveImageUrl(storageProfileId: string, imageKey: string): string {
+    return imageStorageOrchestrator.resolveUrl(storageProfileId, imageKey);
+  }
 }
 
 export const imageUploadApplicationService =

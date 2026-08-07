@@ -161,16 +161,21 @@ function text(value: string | null | undefined) {
   return typeof value === "string" ? value : "";
 }
 
+/**
+ * Images are stored as keys, never as URLs.
+ *
+ * A stored URL bakes the bucket's public hostname into every row, so moving the
+ * bucket means rewriting the data — which this project has already had to do
+ * once. `url` is left empty here and filled in on read by the product service,
+ * which is the layer that knows about storage providers.
+ */
 function parseImages(value: string): StoredImage[] {
   try {
-    const images = JSON.parse(value) as StoredImage[];
+    const images = JSON.parse(value) as Array<{ imageKey?: unknown }>;
     return Array.isArray(images)
-      ? images.filter(
-          (image) =>
-            image &&
-            typeof image.imageKey === "string" &&
-            typeof image.url === "string",
-        )
+      ? images
+          .filter((image) => image && typeof image.imageKey === "string")
+          .map((image) => ({ imageKey: image.imageKey as string, url: "" }))
       : [];
   } catch {
     return [];
@@ -326,7 +331,7 @@ function rowValues(record: ProductRecord): unknown[] {
     record.rating.enabled ? 1 : 0,
     record.rating.targetEnabled ? 1 : 0,
     record.rating.mode,
-    JSON.stringify(record.images),
+    JSON.stringify(record.images.map((image) => ({ imageKey: image.imageKey }))),
     record.status,
     record.createdAt,
     record.updatedAt,

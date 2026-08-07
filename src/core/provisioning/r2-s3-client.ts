@@ -163,10 +163,10 @@ export async function r2ObjectExists(key: string): Promise<boolean> {
 }
 
 export async function productR2ObjectExists(key: string): Promise<boolean> {
-  const config = getProductR2Config();
+  // S3 credentials only — see r2ObjectExists.
   return configuredR2ObjectExists(
     createProductR2S3Client(),
-    config.s3.bucketName,
+    getProductR2S3Credentials().bucketName,
     key,
   );
 }

@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { getProductR2Config } from '@/core/config/server-env.values';
+import { getProductR2PublicUrl } from '@/core/config/server-env.values';
 import {
   deleteProductR2Object,
   listProductR2Objects,
@@ -31,8 +31,7 @@ export class CloudflareR2ProductsProvider implements IStorageProvider {
   }
 
   resolvePublicUrl(objectPath: string): string {
-    const { publicUrl } = getProductR2Config();
-    return buildR2PublicObjectUrl(publicUrl, objectPath);
+    return buildR2PublicObjectUrl(getProductR2PublicUrl(), objectPath);
   }
 
   async list(prefix: string): Promise<StorageObjectEntry[]> {

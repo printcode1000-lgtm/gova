@@ -25,7 +25,12 @@ Server: Storage Profile → Provider → Persistence
 
 **Development** (`NODE_ENV=development`): `LocalStorageProvider` → `public/sync_data/sync_file/images/...`
 
-**Production / Capacitor / static**: profile provider (Cloudflare R2). The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use the legacy product R2 bucket under `images/products/...`.
+**Production / Capacitor / static**: profile provider (Cloudflare R2). The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use the separate product R2 account under `images/products/...`.
+
+`ProductDefault` is the **only** profile on the product account, and
+`npm run test:r2-separation` asserts that list equals exactly that — the
+separation held in the code while being untrue in the live bucket for a long
+time. See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 `StorageImageManager` performs no provider write during selection or preview preparation. Before a selected preview becomes visible, its `Blob` and metadata are committed to the `imageUploadDrafts` AsolDB store. Upload starts only after the user presses Upload and confirms the localized application dialog. Removal calls the DELETE API and waits for provider success before clearing the UI value.
 

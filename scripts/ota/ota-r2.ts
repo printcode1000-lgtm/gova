@@ -80,10 +80,10 @@ function requireEnv(key: string, ...fallbackKeys: string[]): string {
 export function createOtaR2Client(): S3Client {
   return new S3Client({
     region: 'auto',
-    endpoint: requireEnv('ASOL_OTA_R2_ENDPOINT', 'PRODUCT_R2_ENDPOINT', 'R2_ENDPOINT'),
+    endpoint: requireEnv('ASOL_OTA_R2_ENDPOINT'),
     credentials: {
-      accessKeyId: requireEnv('ASOL_OTA_R2_ACCESS_KEY_ID', 'PRODUCT_R2_ACCESS_KEY_ID', 'R2_ACCESS_KEY_ID'),
-      secretAccessKey: requireEnv('ASOL_OTA_R2_SECRET_ACCESS_KEY', 'PRODUCT_R2_SECRET_ACCESS_KEY', 'R2_SECRET_ACCESS_KEY'),
+      accessKeyId: requireEnv('ASOL_OTA_R2_ACCESS_KEY_ID'),
+      secretAccessKey: requireEnv('ASOL_OTA_R2_SECRET_ACCESS_KEY'),
     },
     forcePathStyle: true,
     maxAttempts: 4,

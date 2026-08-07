@@ -49,6 +49,12 @@ const NOTIFICATIONS_SERVICE_KEYS = [
   'NEXT_PUBLIC_ASOL_ORDERS_URL',
   // Client-safe origin of the profiles service, baked into the bundle.
   'NEXT_PUBLIC_ASOL_PROFILES_URL',
+  // Where OTA releases live. Explicit because the OTA config no longer falls
+  // back to the product or general bucket — a fallback across accounts writes
+  // to the wrong one instead of failing, which is how 3,463 build artefacts
+  // ended up on the product account.
+  'ASOL_OTA_R2_PUBLIC_URL',
+  'ASOL_OTA_R2_PREFIX',
 ] as const;
 
 const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;

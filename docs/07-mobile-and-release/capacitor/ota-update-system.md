@@ -170,7 +170,7 @@ GET  /api/ota/admin/releases/diff
 
 The access endpoint returns only the decision for a release. Admin endpoints require the configured super-admin identity.
 
-The Business API server resolves the manifest from `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL`, or derives it from `ASOL_OTA_R2_PUBLIC_URL` / `R2_PUBLIC_URL` plus `ASOL_OTA_R2_PREFIX`. Signature verification uses `ASOL_OTA_PUBLIC_KEY` (preferred for the deployed API), `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY`, or a local `.ota/public-key.pem`. Development may derive the public key from the existing local `.ota/private-key.pem`; production should configure the public key directly and does not need the signing private key.
+The Business API server resolves the manifest from `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL`, or derives it from `ASOL_OTA_R2_PUBLIC_URL` plus `ASOL_OTA_R2_PREFIX`. It no longer falls back to `PRODUCT_R2_PUBLIC_URL` or `R2_PUBLIC_URL` — see [OTA storage](#ota-storage). Signature verification uses `ASOL_OTA_PUBLIC_KEY` (preferred for the deployed API), `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY`, or a local `.ota/public-key.pem`. Development may derive the public key from the existing local `.ota/private-key.pem`; production should configure the public key directly and does not need the signing private key.
 
 ### Approval Database
 
@@ -212,6 +212,21 @@ The full manifest JSON is retained in `ota_releases` so historical metadata rema
 | Unchanged      | Path and SHA-256 are identical                    |
 
 OTA transfers a modified file in full. Therefore `downloadBytes` is the sum of every added file's current size plus every modified file's current size; it is not a binary patch-size estimate. Historical comparisons are available only for releases whose manifest was discovered and retained by the approval system.
+
+## OTA storage
+
+OTA reads `ASOL_OTA_R2_*` and nothing else: endpoint, access key, secret,
+bucket, public URL, prefix. A missing value throws.
+
+These used to fall back to `PRODUCT_R2_*` and then `R2_*`. **A fallback across
+an account boundary is a silent redirect, not a default.** No `ASOL_OTA_R2_*`
+was ever configured, so every release landed on the Cloudflare account reserved
+for product images — 3,463 objects and 50 MB of build artefacts beside a single
+product image. They were deleted, and OTA now points at the general account.
+
+`npm run test:r2-separation` fails if any OTA accessor names an R2 variable that
+is not its own. See
+[R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 ## R2 Layout
 

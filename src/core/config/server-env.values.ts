@@ -169,13 +169,12 @@ export function getOtaApprovalServerConfig(): {
 } {
   const explicitManifestUrl =
     process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL?.trim();
-  const publicBaseUrl = (
-    process.env.ASOL_OTA_R2_PUBLIC_URL ||
-    process.env.PRODUCT_R2_PUBLIC_URL ||
-    process.env.R2_PUBLIC_URL ||
-    process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
-    ""
-  ).replace(/\/$/, "");
+  // ASOL_OTA_R2_PUBLIC_URL only. Falling back to the product or general bucket
+  // would point clients at a manifest on an account that OTA does not own.
+  const publicBaseUrl = (process.env.ASOL_OTA_R2_PUBLIC_URL || "").replace(
+    /\/$/,
+    "",
+  );
   const prefix = (process.env.ASOL_OTA_R2_PREFIX || "app-updates").replace(
     /^\/+|\/+$/g,
     "",
@@ -441,6 +440,11 @@ export function getProductR2S3Credentials(): R2S3Credentials {
   };
   assertR2StorageTargetFields("products", credentials);
   return credentials;
+}
+
+/** The product bucket's public base URL, on its own — see {@link getR2PublicUrl}. */
+export function getProductR2PublicUrl(): string {
+  return requireEnv("PRODUCT_R2_PUBLIC_URL");
 }
 
 export function getProductR2Config(): R2Config {

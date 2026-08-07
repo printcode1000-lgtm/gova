@@ -72,13 +72,31 @@ PRODUCT_R2_CATALOG_URI=https://catalog.cloudflarestorage.com/166409f3b449d8f1da0
 PRODUCT_R2_WAREHOUSE_NAME=166409f3b449d8f1da0dee6d25ed3e08_gova-storage
 ```
 
-`R2_API_TOKEN` is a Cloudflare **account** credential — it creates buckets and
-writes CORS policy. Reading an image needs none of that, so the read paths take
-the S3 pair and `R2_PUBLIC_URL` only: `getR2PublicUrl()` for turning a key into
-a URL, `getR2S3Credentials()` for existence checks. `getR2Config()`, which does
-require the token, is left to provisioning. This is what lets the profiles
-deployment resolve avatars without holding a token that could reconfigure the
-bucket.
+```env
+# OTA releases. Explicit — never inherited from either image account.
+ASOL_OTA_R2_ENDPOINT=
+ASOL_OTA_R2_ACCESS_KEY_ID=
+ASOL_OTA_R2_SECRET_ACCESS_KEY=
+ASOL_OTA_R2_BUCKET_NAME=pic1
+ASOL_OTA_R2_PUBLIC_URL=https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev
+ASOL_OTA_R2_PREFIX=app-updates
+```
+
+These used to fall back to `PRODUCT_R2_*` and then `R2_*`. **A fallback across
+an account boundary is a silent redirect, not a default** — it writes somewhere
+else instead of failing, which is how 3,463 OTA artefacts accumulated on the
+product account. All three now require their own value and throw without it.
+
+`R2_API_TOKEN` and `PRODUCT_R2_API_TOKEN` are Cloudflare **account** credentials
+— they create buckets and write CORS policy. Reading an image needs none of
+that, so the read paths take the S3 pair and the public URL only:
+`getR2PublicUrl()` / `getProductR2PublicUrl()` for turning a key into a URL,
+`getR2S3Credentials()` / `getProductR2S3Credentials()` for existence checks.
+`getR2Config()`, which does require the token, is left to provisioning. This is
+what lets the read-only deployments resolve images without holding a token that
+could reconfigure the bucket.
+
+See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:
 
