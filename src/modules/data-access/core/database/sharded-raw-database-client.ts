@@ -51,6 +51,15 @@ function extractReferencedTables(
     /\bDELETE\s+FROM\s+["'`]?([A-Za-z_][\w]*)["'`]?/gi,
     /\bCREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?["'`]?([A-Za-z_][\w]*)["'`]?/gi,
     /\bON\s+["'`]?([A-Za-z_][\w]*)["'`]?/gi,
+    // A table-scoped pragma names its table inside parentheses, where none of
+    // the clause patterns above can see it: `PRAGMA table_info(system_logs)`
+    // routed nowhere and threw. It is the shape schema checks use, so the
+    // failure landed on whichever page happened to touch a shard's schema.
+    /\bPRAGMA\s+\w+\s*\(\s*["'`]?([A-Za-z_][\w]*)["'`]?\s*\)/gi,
+    // `ALTER TABLE x ADD COLUMN …` was invisible for the same reason, and the
+    // two run in the same additive-migration helper: fixing only the pragma
+    // moves the failure one line down.
+    /\bALTER\s+TABLE\s+["'`]?([A-Za-z_][\w]*)["'`]?/gi,
   ];
 
   for (const pattern of patterns) {

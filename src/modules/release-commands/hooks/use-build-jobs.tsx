@@ -15,6 +15,23 @@ export function useBuildJobs(headers?: Record<string, string>) {
   const [logOffset, setLogOffset] = React.useState(0);
   const [busy, setBusy] = React.useState(false);
   const [startError, setStartError] = React.useState("");
+  /**
+   * The release console spawns local build processes, so the server refuses it
+   * outside development. That is a permanent answer, not a failure: once seen,
+   * polling stops. It used to retry every five seconds forever, and because
+   * `void promise` discards the value without handling rejection, each attempt
+   * surfaced as an unhandled rejection on the device.
+   */
+  const [unavailable, setUnavailable] = React.useState(false);
+
+  const handle = React.useCallback((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    if (message === "googlePlayConsoleDevelopmentOnly") {
+      setUnavailable(true);
+      return;
+    }
+    console.error(`[useBuildJobs] ${message}`);
+  }, []);
 
   const refresh = React.useCallback(async () => {
     if (!headers) return;
@@ -24,15 +41,20 @@ export function useBuildJobs(headers?: Record<string, string>) {
   }, [headers]);
 
   React.useEffect(() => {
-    if (!headers) return;
-    void buildJobApiService.catalog(headers).then((data) => { setCatalog(data.catalog); setReadiness(data.readiness); });
-  }, [headers]);
+    if (!headers || unavailable) return;
+    buildJobApiService
+      .catalog(headers)
+      .then((data) => { setCatalog(data.catalog); setReadiness(data.readiness); })
+      .catch(handle);
+  }, [headers, unavailable, handle]);
 
   React.useEffect(() => {
-    void refresh();
-    const interval = window.setInterval(() => void refresh(), 5000);
+    if (unavailable) return;
+    const run = () => { refresh().catch(handle); };
+    run();
+    const interval = window.setInterval(run, 5000);
     return () => window.clearInterval(interval);
-  }, [refresh]);
+  }, [refresh, unavailable, handle]);
 
   React.useEffect(() => {
     if (!headers || !selectedJobId) return;
@@ -73,5 +95,5 @@ export function useBuildJobs(headers?: Record<string, string>) {
     await buildJobApiService.cancel(job.id, headers); await refresh();
   }, [headers, refresh]);
 
-  return { catalog, readiness, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, busy, startError, start, cancel, refresh };
+  return { catalog, readiness, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, busy, startError, start, cancel, refresh, unavailable };
 }

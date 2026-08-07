@@ -12,7 +12,11 @@ export const buildJobApiService = {
   catalog(headers?: Record<string, string>) { return asolApi.get<BuildCommandCatalogResponse>(`${BUILD_JOBS_API}/catalog`, { headers, cache: "no-store" }); },
   start(input: StartBuildJobInput, headers?: Record<string, string>) { return asolApi.post<BuildJobRecord>(BUILD_JOBS_API, input, { headers }); },
   cancel(jobId: string, headers?: Record<string, string>) { return asolApi.post<BuildJobRecord>(`${BUILD_JOBS_API}/${jobId}/cancel`, {}, { headers }); },
-  log(jobId: string, offset: number, headers?: Record<string, string>) { return asolApi.get<{ text: string; nextOffset: number; hasMore: boolean }>(`${BUILD_JOBS_API}/${jobId}/log?offset=${offset}`, { headers, cache: "no-store" }); },
+  // Polled twice a second while a job runs, and a queued job has no log file
+  // yet: `releaseJobLogNotFound` is the normal answer for the first seconds,
+  // not a fault. The caller already swallows it, but the client logged every
+  // rejection, so waiting for a job to start filled the log with errors.
+  log(jobId: string, offset: number, headers?: Record<string, string>) { return asolApi.get<{ text: string; nextOffset: number; hasMore: boolean }>(`${BUILD_JOBS_API}/${jobId}/log?offset=${offset}`, { headers, cache: "no-store", suppressErrorLog: true }); },
   artifacts(jobId: string, headers?: Record<string, string>) { return asolApi.get<BuildArtifactDescriptor[]>(`${BUILD_JOBS_API}/${jobId}/artifacts`, { headers, cache: "no-store" }); },
   cachedAnalyses(headers?: Record<string, string>) { return asolApi.get<BundleAnalysis[]>(`${BUILD_JOBS_API}/analysis`, { headers, cache: "no-store" }); },
   analysis(jobId: string, name: string, headers?: Record<string, string>) { return asolApi.get<BundleAnalysis>(`${BUILD_JOBS_API}/${jobId}/artifacts/${encodeURIComponent(name)}/analysis`, { headers, cache: "no-store" }); },
