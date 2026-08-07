@@ -12,9 +12,20 @@
  * one. The bytes are copied verbatim, so the signature the client verifies is
  * the same signature the publisher produced.
  *
- * This heals itself. The mirrored release's bundle has the new URL inlined, so
- * once a device installs it, it never asks the legacy origin again. Delete the
- * mirror afterwards with `--remove`.
+ * A device that installs the mirrored release stops needing this: the new
+ * bundle has the new URL inlined. **That is not a reason to remove the mirror
+ * early.** Installing requires more than a reachable manifest — the release
+ * must also be approved, and the device must be inside the rollout — so the gap
+ * between "mirrored" and "installed" can be long, and removing the mirror
+ * inside it puts every store-installed shell back on a 404. Exactly that
+ * happened once.
+ *
+ * Remove it only when no shell built against the old origin is still in use,
+ * which in practice means after a store release built against the new one has
+ * rolled out.
+ *
+ * `ota:publish` refreshes this automatically whenever a legacy origin is
+ * configured, so the mirror cannot fall behind the live release.
  *
  * Usage:
  *   npx tsx scripts/ota/ota-mirror-legacy-manifest.ts
@@ -38,6 +49,11 @@ function requireEnv(key: string): string {
   const value = process.env[key]?.trim();
   if (!value) throw new Error(`${key} is required`);
   return value;
+}
+
+/** True when a legacy origin is configured at all. */
+export function hasLegacyOtaOrigin(): boolean {
+  return Boolean(process.env.ASOL_OTA_LEGACY_R2_ENDPOINT?.trim());
 }
 
 /**
@@ -65,8 +81,7 @@ function legacyClient(): { client: S3Client; bucket: string; publicUrl: string }
   };
 }
 
-async function main(): Promise<void> {
-  const remove = process.argv.slice(2).includes("--remove");
+export async function mirrorLegacyOtaManifest(remove = false): Promise<void> {
   const { client, bucket, publicUrl } = legacyClient();
   const prefix = getOtaPrefix();
 
@@ -81,8 +96,10 @@ async function main(): Promise<void> {
       }),
     );
     console.log(
-      `Removed the legacy mirror from ${publicUrl}/${prefix}/. Shells still on ` +
-        "the old origin will 404 again — only do this once they have updated.",
+      `Removed the legacy mirror from ${publicUrl}/${prefix}/.\n` +
+        "Every shell built against that origin now gets a 404 on its update check.\n" +
+        "Only correct once a store release built against the current origin has\n" +
+        "rolled out — an installed release, not merely a published one.",
     );
     return;
   }
@@ -121,8 +138,12 @@ async function main(): Promise<void> {
   console.log(
     `\nLegacy origin now answers at ${publicUrl}/${prefix}/manifest.json.\n` +
       "Its baseUrl points at the current origin, so files download from there.\n" +
-      "Remove the mirror with --remove once the installed shells have updated.",
+      "Keep it until a store release built against the current origin has rolled\n" +
+      "out. A published release is not an installed one: the device must also pass\n" +
+      "approval and rollout before its bundle carries the new URL.",
   );
 }
 
-void main();
+if (process.argv[1] && /ota-mirror-legacy-manifest/.test(process.argv[1])) {
+  void mirrorLegacyOtaManifest(process.argv.slice(2).includes("--remove"));
+}

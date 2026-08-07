@@ -124,9 +124,11 @@ objects left it with a 404. The mirror is two small JSON files, not a release:
 every file and bundle still downloads from the general account, because the
 client takes those URLs from the manifest's own `baseUrl`.
 
-It is temporary. The mirrored bundle carries the new URL, so a device that
-updates once never asks again — then `npm run ota:mirror-legacy:remove` clears
-it. See
+It is temporary, but not short-lived: it stays until a store build against the
+new origin has rolled out. A device only stops needing it after it *installs* a
+bundle carrying the new URL, and installing also requires approval and rollout
+eligibility — removing the mirror before then returns every store-installed
+shell to a 404. `ota:publish` refreshes it automatically. See
 [Moving the OTA origin](../07-mobile-and-release/capacitor/ota-update-system.md#moving-the-ota-origin).
 
 ## Known limitation

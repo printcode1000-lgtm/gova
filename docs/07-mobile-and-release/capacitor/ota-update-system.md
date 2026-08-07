@@ -284,18 +284,35 @@ the publisher produced. `ASOL_OTA_LEGACY_R2_*` names the old origin explicitly �
 never derived from `PRODUCT_R2_*`, since OTA reading a product variable is the
 coupling that caused the problem in the first place.
 
-**It heals itself.** The mirrored release's bundle has the new URL inlined, so
-once a device installs it, it never asks the legacy origin again. Verified: the
-published 0.1.0 bundle contains zero references to the old origin and one to the
-new. Afterwards:
+`ota:publish` refreshes the mirror itself whenever `ASOL_OTA_LEGACY_R2_*` is
+configured, so the old origin cannot fall behind the live release.
+
+### When to remove it
 
 ```bash
 npm run ota:mirror-legacy:remove
 ```
 
-While the mirror is live it is a copy, not a source. Re-run `ota:mirror-legacy`
-after any publish or revocation, or the old origin keeps serving the previous
-manifest.
+**Not when the release is published — when a store build against the new origin
+has rolled out.** A device only stops needing the mirror after it *installs* a
+bundle carrying the new URL, and reaching a manifest is merely the first of
+three gates:
+
+| Gate | What blocks it |
+|---|---|
+| Fetch the manifest | the baked origin must answer — this is what the mirror provides |
+| `POST /api/ota/access` | `awaiting_approval` until a super-admin approves the release |
+| Rollout | `rollout_pending` until the device's bucket is inside `rolloutPercentage` |
+
+Removing the mirror between publishing and installing puts every store-installed
+shell straight back on
+
+```text
+OTA request failed (404): …/app-updates/manifest.json
+```
+
+which is exactly what happened once: the mirror was removed while the release
+was still unapproved, so no device had ever been able to install it.
 
 ## OTA storage
 

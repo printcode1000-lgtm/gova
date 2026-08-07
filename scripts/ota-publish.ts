@@ -41,6 +41,10 @@ import {
   scanBuiltCapabilities,
 } from "./ota/ota-capability-scan";
 import {
+  hasLegacyOtaOrigin,
+  mirrorLegacyOtaManifest,
+} from "./ota/ota-mirror-legacy-manifest";
+import {
   changedPathsFromHistory,
   selectRecentHistoryKeys,
   staleBundleKeys,
@@ -519,6 +523,15 @@ async function main(): Promise<void> {
   const legacyKeys = await listOtaObjectKeys(client, `${prefix}/releases/`);
   await deleteOtaObjects(client, legacyKeys);
   console.log(`Removed ${legacyKeys.length} legacy release objects`);
+
+  // A shell built before the origin moved asks its baked URL, so while a legacy
+  // origin is configured the publisher refreshes it here rather than leaving it
+  // to a separate command. Forgetting that command left a store-installed
+  // device on a stale manifest — and, once removed, on a 404.
+  if (hasLegacyOtaOrigin()) {
+    console.log("\nRefreshing the legacy OTA origin:");
+    await mirrorLegacyOtaManifest();
+  }
   console.log(
     `Published ${1 + deltaBundles.length} bundles: full=${fullBundle.byteLength} bytes, ` +
       `deltas=${deltaBundles.map(({ base, bundle }) => `${base.version}:${bundle.byteLength}`).join(", ") || "none"}`,
