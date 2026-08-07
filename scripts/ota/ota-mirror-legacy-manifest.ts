@@ -126,10 +126,12 @@ export async function mirrorLegacyOtaManifest(remove = false): Promise<void> {
         Bucket: bucket,
         Key: `${prefix}/${name}`,
         Body: bytes,
-        // Matches the publisher: CapacitorHttp parses application/json before
-        // honouring arraybuffer, which destroys the bytes the client hashes.
-        ContentType: "application/octet-stream",
-        CacheControl: "no-store",
+        // Exactly what the publisher writes for these two documents. The
+        // octet-stream rule applies to bundle *files*, whose bytes CapacitorHttp
+        // would mangle if it saw JSON; the manifest is fetched as JSON by the
+        // admin dashboard, which could not parse it under the wrong type.
+        ContentType: "application/json",
+        CacheControl: "no-store, max-age=0",
       }),
     );
     console.log(`  ${name.padEnd(18)} mirrored (${bytes.byteLength} bytes)`);
