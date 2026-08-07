@@ -41,6 +41,11 @@ the split exists. The product and order client services are unchanged.
 | `/api/search/fields` | products |
 | `/api/pharmacy-profile-catalog` | products |
 | `/api/orders` | orders |
+| `/api/profile/contacts` | profiles |
+| `/api/profile/store-details` | profiles |
+| `/api/profile/specialties` | profiles |
+| `/api/profile/fulfillment-settings` | profiles |
+| `/api/profile/users-by-specialty` | profiles |
 
 **Exact paths, not prefixes.** Two absences are deliberate, and a prefix rule
 would have swallowed both:
@@ -49,6 +54,8 @@ would have swallowed both:
   fulfilment settings, and store details. The orders account cannot read those.
 - `/api/search/sellers` — despite the name it searches the profile shards, not
   products.
+- `/api/profile/reviews` and `/api/profile/discounts` — both read the product
+  database as well as the profile shards.
 
 ## Rules it follows
 
@@ -73,6 +80,7 @@ every service; a second copy would be a place for the two to drift.
 |---|---|
 | `NEXT_PUBLIC_ASOL_PRODUCTS_URL` | Origin of the products service |
 | `NEXT_PUBLIC_ASOL_ORDERS_URL` | Origin of the orders service |
+| `NEXT_PUBLIC_ASOL_PROFILES_URL` | Origin of the profiles service |
 
 Empty is a safe default, not a broken one: the main app still serves every one
 of these routes, so an unconfigured bridge degrades to pre-split behaviour.
@@ -111,5 +119,6 @@ Enforced by the products and orders module contract tests, which both assert the
 `GET`-only and browser-only guards are present.
 
 See also [Products Service Module](products-service-module.md),
-[Orders Service Module](orders-service-module.md), and
+[Orders Service Module](orders-service-module.md),
+[Profiles Service Module](profiles-service-module.md), and
 [Notification Bridge Module](notification-bridge-module.md).

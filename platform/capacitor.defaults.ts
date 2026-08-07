@@ -33,3 +33,6 @@ export const CAPACITOR_PRODUCTS_BASE_URL = 'https://asol-products.vercel.app';
  * for.
  */
 export const CAPACITOR_ORDERS_BASE_URL = 'https://asol-orders.vercel.app';
+
+/** Profiles service origin baked into native and static bundles. */
+export const CAPACITOR_PROFILES_BASE_URL = 'https://asol-profiles.vercel.app';

@@ -9,11 +9,13 @@ shared between deployments except source that is mirrored explicitly.
 | `101-0902` (`team_cmIfma…`) | `asol-notifications` | [`services/notifications/`](./notifications) | that folder alone | `npm run notifications:deploy` (no GitHub connection) |
 | products account | `asol-products` | [`services/products/`](./products) | that folder alone | `npm run products:deploy` (no GitHub connection) |
 | orders account | `asol-orders` | [`services/orders/`](./orders) | that folder alone | `npm run orders:deploy` (no GitHub connection) |
+| profiles account | `asol-profiles` | [`services/profiles/`](./profiles) | that folder alone | `npm run profiles:deploy` (no GitHub connection) |
 | *(none — runs in the browser)* | — | `src/modules/notification-bridge/` | ships inside the main app's client bundle | with the main app |
 | *(none — runs in the browser)* | — | `src/modules/service-bridge/` | ships inside the main app's client bundle | with the main app |
 
-Each deployed module also owns its own Turso account: users and profiles on `hesham101`,
-notifications on `hesham102`, products on `hesham103`, orders on `hesham104`.
+Each deployed module also owns its own Turso account: users and system operations
+on `hesham101`, notifications on `hesham102`, products on `hesham103`, orders on
+`hesham104`, profiles on `hesham105`.
 
 ## The connectors
 
@@ -27,7 +29,8 @@ and a bridge is deployed to no account at all: it runs in the user's browser.
        ╱                    │                    ╲
   gova ◄── service-bridge ──┼──► asol-products
        ╲                    │    asol-orders
-        ╲─ notification-bridge ─► asol-notifications
+        ╲                   │    asol-profiles
+         ╲── notification-bridge ──► asol-notifications
 ```
 
 **Notifications.** `gova` decides who should be notified — it holds the users
@@ -36,14 +39,17 @@ delivers, holding the Firebase and APNs credentials. The grant is signed whole,
 so the browser can carry it without being able to change it.
 See [Notification Bridge Module](../docs/05-platform-features/notification-bridge-module.md).
 
-**Products and orders.** The browser sends product *reads* to `asol-products`
-and the order *list* to `asol-orders`; everything else goes to `gova`.
+**Products, orders and profiles.** The browser sends product *reads* to
+`asol-products`, the order *list* to `asol-orders`, and five profile *reads* to
+`asol-profiles`; everything else goes to `gova`.
 
-Writes stay on `gova` in both cases, for the same underlying reason: they touch
+Writes stay on `gova` in all three cases, for the same underlying reason: they touch
 data the read account cannot see. A product write rewrites denormalised counts
 in the profile shards; an order write spans several order shards plus the
-profile and product databases. `GET /api/orders/:id` stays too — it enriches the
-order with profile contacts and store details.
+profile and product databases; a profile write goes through image storage.
+`GET /api/orders/:id` stays too — it enriches the order with profile contacts
+and store details, and so do `/api/profile/reviews` and `/api/profile/discounts`,
+which read the product database as well.
 See [Service Bridge Module](../docs/05-platform-features/service-bridge-module.md).
 
 The two bridges differ in kind: the notification one carries an authorisation
@@ -76,4 +82,8 @@ holds the deployments that are genuinely separate from it.
 ## Documentation
 
 - [Notifications Service Module](../docs/05-platform-features/notifications-service-module.md)
+- [Products Service Module](../docs/05-platform-features/products-service-module.md)
+- [Orders Service Module](../docs/05-platform-features/orders-service-module.md)
+- [Profiles Service Module](../docs/05-platform-features/profiles-service-module.md)
+- [Service Bridge Module](../docs/05-platform-features/service-bridge-module.md)
 - [Deployment Targets](../docs/01-architecture/data-layers/16-deployment-targets.md)

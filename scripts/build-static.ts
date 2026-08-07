@@ -9,6 +9,7 @@ import {
   CAPACITOR_NOTIFICATIONS_BASE_URL,
   CAPACITOR_ORDERS_BASE_URL,
   CAPACITOR_PRODUCTS_BASE_URL,
+  CAPACITOR_PROFILES_BASE_URL,
 } from "../platform/capacitor.defaults";
 import { categoryService } from "../src/features/categories";
 import { auditCapacitorDefaultBundle } from "./lib/capacitor-defaults-audit";
@@ -128,6 +129,22 @@ function assertStaticOrdersBaseUrl(): void {
   }
   process.env.NEXT_PUBLIC_ASOL_ORDERS_URL = ordersBaseUrl;
   console.log(`Static orders base URL: ${ordersBaseUrl}`);
+}
+
+/** And for the profiles deployment, which also degrades to the main app. */
+function assertStaticProfilesBaseUrl(): void {
+  const profilesBaseUrl =
+    process.env.NEXT_PUBLIC_ASOL_PROFILES_URL?.replace(/\/$/, "") ||
+    CAPACITOR_PROFILES_BASE_URL.replace(/\/$/, "");
+  if (!/^https?:\/\/.+/.test(profilesBaseUrl)) {
+    throw new Error(
+      "A static build needs an absolute profiles service URL, but none resolved. " +
+        "Set NEXT_PUBLIC_ASOL_PROFILES_URL, or fix CAPACITOR_PROFILES_BASE_URL " +
+        "in platform/capacitor.defaults.ts.",
+    );
+  }
+  process.env.NEXT_PUBLIC_ASOL_PROFILES_URL = profilesBaseUrl;
+  console.log(`Static profiles base URL: ${profilesBaseUrl}`);
 }
 
 /**
@@ -542,6 +559,7 @@ try {
   assertStaticNotificationsBaseUrl();
   assertStaticProductsBaseUrl();
   assertStaticOrdersBaseUrl();
+  assertStaticProfilesBaseUrl();
   prepareTempBuildDir();
 
   execSync(`"${nextBinary}" build`, {

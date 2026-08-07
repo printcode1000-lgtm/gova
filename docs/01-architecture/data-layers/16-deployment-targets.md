@@ -8,23 +8,25 @@
 | Capacitor (Android / iOS) | `npm run cap:build` | Baked API URL | None (shell over `out/`) |
 | Notifications service | `npm run notifications:deploy` | Own origin, `/api/notifications/send` | Notifications Turso only |
 | Products service | `npm run products:deploy` | Own origin, product read APIs | Product Turso only |
+| Orders service | `npm run orders:deploy` | Own origin, `GET /api/orders` | Order shards only |
+| Profiles service | `npm run profiles:deploy` | Own origin, profile read APIs | Profile shards only |
 
 The first four share **identical application code** — only environment
 configuration changes.
 
-## Four Vercel accounts
+## Five Vercel accounts
 
-Two targets are not the main application, and neither of them may be called by
+Four targets are not the main application, and none of them may be called by
 it: every crossing goes through a browser-only bridge.
 
-| | Main app | Notifications service | Products service |
-|---|---|---|---|
-| Vercel project | `gova` | `asol-notifications` | `asol-products` | `asol-orders` |
-| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** |
-| Updated by | pushing to the repository | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` |
-| Uploaded files | the repository | `services/notifications/` | `services/products/` | `services/orders/` |
-| Serves | everything else | push fan-out only | product reads only | the order list only |
-| Turso account | `hesham101` | `hesham102` | `hesham103` | `hesham104` |
+| | Main app | Notifications | Products | Orders | Profiles |
+|---|---|---|---|---|---|
+| Vercel project | `gova` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
+| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** |
+| Updated by | pushing to the repository | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
+| Uploaded files | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |
+| Serves | everything else | push fan-out only | product reads only | the order list only | five profile reads |
+| Turso account | `hesham101` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
 
 The connectors are documented in
 [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md)

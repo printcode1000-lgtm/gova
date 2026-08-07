@@ -16,7 +16,8 @@ npm run db:schema:sync
 | Products | `product.db` | Product Turso DB (separate account `hesham103`) | `productsDataSource` | `TURSO_PRODUCT_DATABASE_URL`, `TURSO_PRODUCT_AUTH_TOKEN` |
 | Advertisements | `advertisements.db` | Advertisements Turso DB | `advertisementsDataSource` | `TURSO_ADVERTISEMENTS_DATABASE_URL`, `TURSO_ADVERTISEMENTS_AUTH_TOKEN` |
 | Notifications | `notifications.db` | Notifications Turso DB (separate account) | `notificationsDataSource` | `TURSO_NOTIFICATIONS_DATABASE_URL`, `TURSO_NOTIFICATIONS_AUTH_TOKEN` |
-| Profile shards | `profile-*.db`, `system-ops.db` | Matching Turso shards | `profilesDataSource` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
+| Profile shards | `profile-*.db` | Matching Turso shards (separate account `hesham105`) | `profilesDataSource` | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
+| System operations | `system-ops.db` | System-ops Turso shard (`hesham101`) | `profilesDataSource` | `SYSTEM_OPS_DATABASE_URL`, `SYSTEM_OPS_DATABASE_AUTH_TOKEN` |
 | Marketplace order shards | `orders-*.db` | Matching Turso shards (separate account `hesham104`) | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
 Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
@@ -94,17 +95,41 @@ Primary tables include:
 - `user_specialties`
 - Profile reviews and profile-related settings tables
 
+### Why they are separate
+
+The seven shards live on their own Turso account (`hesham105`). Profile reads
+back the seller directory, specialty chat, store pages and order enrichment, so
+isolating them means profile traffic can never consume the quota that serves
+logins or the catalogue.
+
+`system-ops` is **not** one of them. It is split out of the same `profile.db`
+source, but it holds `system_logs` and the `data_health_*` tables — operational
+records, not profile data — so it stayed on `hesham101`.
+
 ### Layers
 
 | Layer | Files |
 | --- | --- |
-| API | `/api/profile/*` |
+| API (reads) | `/api/profile/contacts`, `/api/profile/store-details`, `/api/profile/specialties`, `/api/profile/fulfillment-settings`, `/api/profile/users-by-specialty` — served by the [profiles service](../../05-platform-features/profiles-service-module.md) |
+| API (everything else) | the same paths on the main app, plus `/api/profile/reviews`, `/api/profile/discounts`, `/api/profile/store-images`, `/api/profile/editor` |
 | Server service | Profile server services |
 | Repository | Profile repositories through `profilesDataSource` |
 
+### The rule that follows from the split
+
+Profile **writes** go through the image storage orchestrator and touch
+product-derived counts, so they cannot move to an account without those
+credentials. `reviews` and `discounts` read the product database as well, so
+they stayed too. The deployment boundary is by route and HTTP method, with the
+browser choosing between them.
+
+The main app keeps the shard credentials regardless — order creation reads
+fulfilment settings, specialty chat resolves providers, and account deletion
+clears every shard server-side.
+
 ### Notes
 
-`user_profiles.uid` links logically to `users.uid`. Profile data is split across profile shards for core identity, contacts, media, social data, catalog indexes, promotions, fulfillment, and system operations.
+`user_profiles.uid` links logically to `users.uid`. Profile data is split across profile shards for core identity, contacts, media, social data, catalog indexes, promotions, and fulfillment.
 
 ## 3. Products
 

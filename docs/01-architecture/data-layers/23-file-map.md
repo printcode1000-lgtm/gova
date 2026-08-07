@@ -32,16 +32,24 @@ services/
 |   |-- stubs/better-sqlite3.js
 |   |-- package.json                 # its own dependencies
 |   `-- .vercelignore                # forces generated/ into the upload
-`-- products/                        # independent module, own Vercel account
-    |-- src/app/api/products/        # GET only; writes stay on the main app
-    |-- src/app/api/search/          # products + fields (sellers stays behind)
-    |-- src/app/lib/http.ts          # CORS and error mapping
+|-- products/                        # independent module, own Vercel account
+|   |-- src/app/api/products/        # GET only; writes stay on the main app
+|   |-- src/app/api/search/          # products + fields (sellers stays behind)
+|   |-- src/app/lib/http.ts          # CORS and error mapping
+|   |-- src/config/                  # storage-profiles.json, read via fs
+|   `-- generated/                   # mirrored from src/ and public/
+|-- orders/                          # independent module, own Vercel account
+|   |-- src/app/api/orders/          # the list only; /:id and writes stay behind
+|   `-- generated/                   # mirrored from src/
+`-- profiles/                        # independent module, own Vercel account
+    |-- src/app/api/profile/         # contacts, store-details, specialties,
+    |                                # fulfillment-settings, users-by-specialty
     |-- src/config/                  # storage-profiles.json, read via fs
     `-- generated/                   # mirrored from src/ and public/
 
 src/modules/
 |-- notification-bridge/             # browser-only connector
-`-- service-bridge/                 # browser-only connector
+`-- service-bridge/                  # browser-only connector
 ```
 
 `services/` sits outside `src/` on purpose: it is deployed on its own, and the

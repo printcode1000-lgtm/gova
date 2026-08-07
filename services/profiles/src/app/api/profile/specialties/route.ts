@@ -1,0 +1,20 @@
+import { profileService } from '@/features/profile/services/profile-service.bootstrap.server';
+import { corsHeaders, preflight, profileErrorResponse } from '../../../lib/http';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+/** Profile specialties. Writes stay on the main app. */
+export async function GET(request: Request): Promise<Response> {
+  try {
+    const { searchParams } = new URL(request.url);
+    const data = await profileService.getSpecialties(searchParams.get('uid') ?? '');
+    return Response.json(data, { status: 200, headers: corsHeaders(request) });
+  } catch (error) {
+    return profileErrorResponse(request, error);
+  }
+}
+
+export function OPTIONS(request: Request): Response {
+  return preflight(request);
+}

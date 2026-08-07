@@ -43,6 +43,12 @@ export const publicEnv = {
    * which is the side that can read profile contacts and store details.
    */
   ordersUrl: process.env.NEXT_PUBLIC_ASOL_ORDERS_URL?.replace(/\/$/, '') || '',
+  /**
+   * Origin of the profiles deployment. Client-safe: it serves profile reads
+   * only — reviews stay on the main app because they also read the product
+   * database.
+   */
+  profilesUrl: process.env.NEXT_PUBLIC_ASOL_PROFILES_URL?.replace(/\/$/, '') || '',
   otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || '',
   otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || '',
   webBundleVersion: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION || '0.1.0',

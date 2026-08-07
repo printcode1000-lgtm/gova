@@ -96,3 +96,11 @@ services/orders/generated/
 services/orders/.next/
 services/orders/node_modules/
 services/orders/.vercel/
+
+# Profiles service: shared modules are copied in by
+# scripts/sync-profiles-service-sources.ts on every deploy.
+services/profiles/generated/
+services/profiles/.next/
+services/profiles/node_modules/
+services/profiles/.vercel/
+services/profiles/src/config/

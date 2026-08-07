@@ -47,6 +47,8 @@ const NOTIFICATIONS_SERVICE_KEYS = [
   'NEXT_PUBLIC_ASOL_PRODUCTS_URL',
   // Client-safe origin of the orders service, baked into the bundle.
   'NEXT_PUBLIC_ASOL_ORDERS_URL',
+  // Client-safe origin of the profiles service, baked into the bundle.
+  'NEXT_PUBLIC_ASOL_PROFILES_URL',
 ] as const;
 
 const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;

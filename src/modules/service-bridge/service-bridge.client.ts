@@ -16,7 +16,7 @@ import { publicEnv } from "@/core/config/public-env";
  * after a response; this one only chooses an address before a request.
  */
 
-type ServiceKey = "products" | "orders";
+type ServiceKey = "products" | "orders" | "profiles";
 
 /**
  * Read routes each service serves, matched on the exact path.
@@ -26,6 +26,9 @@ type ServiceKey = "products" | "orders";
  * profile contacts and store details, which that account cannot read. A prefix
  * rule would have swept it up. `/api/search/sellers` is absent for the same
  * kind of reason: despite the name it reads the profile shards, not products.
+ *
+ * `/api/profile/reviews` is absent too: it reads the product database as well as
+ * the profile shards, so it stays where both are available.
  */
 const READ_ROUTES: Record<string, ServiceKey> = {
   "/api/products": "products",
@@ -34,11 +37,21 @@ const READ_ROUTES: Record<string, ServiceKey> = {
   "/api/search/fields": "products",
   "/api/pharmacy-profile-catalog": "products",
   "/api/orders": "orders",
+  "/api/profile/contacts": "profiles",
+  "/api/profile/store-details": "profiles",
+  "/api/profile/specialties": "profiles",
+  "/api/profile/fulfillment-settings": "profiles",
+  "/api/profile/users-by-specialty": "profiles",
+};
+
+const ORIGINS: Record<ServiceKey, () => string> = {
+  products: () => publicEnv.productsUrl,
+  orders: () => publicEnv.ordersUrl,
+  profiles: () => publicEnv.profilesUrl,
 };
 
 function originFor(service: ServiceKey): string | null {
-  const value = service === "products" ? publicEnv.productsUrl : publicEnv.ordersUrl;
-  return value || null;
+  return ORIGINS[service]() || null;
 }
 
 function isBrowser(): boolean {
