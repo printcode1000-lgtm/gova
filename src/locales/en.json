@@ -1735,6 +1735,7 @@
     "releaseConsole.parameters.resume": "Resume native build",
     "releaseConsole.parameters.skipOta": "Skip OTA preparation",
     "releaseConsole.parameters.dryRun": "Dry run",
+    "releaseConsole.parameters.minimumNativeVersion": "Minimum native version (optional, e.g. 0.2.0)",
     "releaseConsole.images.backups": "Store asset backups",
     "releaseConsole.images.restore": "Restore",
     "releaseConsole.play.successfulEndpoints": "Available endpoints",

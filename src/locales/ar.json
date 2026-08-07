@@ -1736,6 +1736,7 @@
     "releaseConsole.parameters.resume": "استئناف البناء الأصلي",
     "releaseConsole.parameters.skipOta": "تخطي إعداد OTA",
     "releaseConsole.parameters.dryRun": "محاكاة فقط",
+    "releaseConsole.parameters.minimumNativeVersion": "أقل إصدار أصلي مطلوب (اختياري، مثل 0.2.0)",
     "releaseConsole.images.backups": "نسخ أصول المتجر الاحتياطية",
     "releaseConsole.images.restore": "استعادة",
     "releaseConsole.play.successfulEndpoints": "النقاط المتاحة",

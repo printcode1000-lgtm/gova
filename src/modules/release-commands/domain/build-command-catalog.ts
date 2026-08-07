@@ -9,6 +9,7 @@ export type BuildParameterName =
   | "releaseNotes"
   | "diagnostic"
   | "otaSource"
+  | "minimumNativeVersion"
   | "dryRun";
 
 export type BuildParameterSchema =
@@ -45,13 +46,22 @@ const signingEnv = ["ASOL_ANDROID_KEYSTORE_FILE", "ASOL_ANDROID_KEYSTORE_PASSWOR
 const playEnv = ["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64"];
 // Each entry lists interchangeable sources; the runner accepts any of them,
 // matching how scripts/ota/ota-config.ts actually resolves its configuration.
-const otaEnv = [
-  "ASOL_OTA_R2_BUCKET_NAME|PRODUCT_R2_BUCKET_NAME|R2_BUCKET_NAME",
-  "ASOL_OTA_SIGNING_PRIVATE_KEY",
-];
+// No alternatives. The publisher reads ASOL_OTA_R2_* alone, so accepting a
+// product or general bucket here would report the command ready and then fail
+// inside it — and, before that, would have published to the wrong account.
+const otaEnv = ["ASOL_OTA_R2_BUCKET_NAME", "ASOL_OTA_SIGNING_PRIVATE_KEY"];
 const notes = { name: "notes", type: "string", flag: "--notes", maxLength: 4000 } as const;
 const mandatory = { name: "mandatory", type: "boolean", flag: "--mandatory" } as const;
 const diagnostic = { name: "diagnostic", type: "boolean", flag: "--diagnostic" } as const;
+/**
+ * The declaration the native-compatibility gate asks for when the shell has
+ * changed but the bundle still runs on the installed one.
+ *
+ * Without it the console could only surface the gate's refusal — the message
+ * named an environment variable, which a button cannot set. Optional on
+ * purpose: leaving it empty keeps the gate in force.
+ */
+const minimumNativeVersion = { name: "minimumNativeVersion", type: "string", flag: "--minimum-native-version", maxLength: 32 } as const;
 const otaSource = {
   name: "otaSource",
   type: "enum",
@@ -93,7 +103,7 @@ function artifactMeaningKey(artifact: string): string {
 export const BUILD_COMMAND_CATALOG = [
   entry("build-static", "build:static", "web-static", "safe", [], ["out/asol-web-manifest.json"], "8-15 min", undefined, [diagnostic]),
   entry("ota-check", "ota:check", "ota", "safe", otaEnv, [], "1-3 min"),
-  entry("ota-publish", "ota:publish", "ota", "publishes-live", otaEnv, ["out/asol-web-manifest.json"], "10-20 min", "PUBLISH_OTA", [notes, mandatory]),
+  entry("ota-publish", "ota:publish", "ota", "publishes-live", otaEnv, ["out/asol-web-manifest.json"], "10-20 min", "PUBLISH_OTA", [notes, mandatory, minimumNativeVersion]),
   entry("ota-status", "ota:status", "ota", "safe", otaEnv, [], "30 sec"),
   entry("ota-self-test", "ota:self-test", "verification", "safe", otaEnv, [], "1-3 min"),
   entry("cap-build", "cap:build", "native-android", "destructive", [], ["android/app/src/main/assets/public", "android/app/build/outputs"], "20-45 min", undefined, [otaSource, dryRun, optimization]),

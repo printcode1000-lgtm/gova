@@ -64,6 +64,36 @@ const mandatory = args.includes("--mandatory");
 const notesArguments = args.filter((argument) => argument.startsWith("--notes"));
 if (args.includes("--notes") || notesArguments.length > 1) throw new Error("Release notes must use exactly one --notes=<value> argument.");
 const notesOverride = notesArguments[0]?.slice("--notes=".length);
+
+/**
+ * `--minimum-native-version=<x.y.z>`, the flag form of
+ * `ASOL_OTA_MINIMUM_NATIVE_VERSION`.
+ *
+ * The release console starts commands with flags, not environment variables, so
+ * without this the OTA button could only ever hit the compatibility gate's
+ * refusal — the operator had no way to declare the requirement the message asks
+ * for. Declaring stays deliberate; only the channel is new.
+ */
+const minimumNativeArguments = args.filter((argument) =>
+  argument.startsWith("--minimum-native-version"),
+);
+if (
+  args.includes("--minimum-native-version") ||
+  minimumNativeArguments.length > 1
+) {
+  throw new Error(
+    "The minimum native version must use exactly one --minimum-native-version=<x.y.z> argument.",
+  );
+}
+const minimumNativeOverride = minimumNativeArguments[0]
+  ?.slice("--minimum-native-version=".length)
+  .trim();
+if (minimumNativeOverride !== undefined && !/^\d+\.\d+\.\d+$/.test(minimumNativeOverride)) {
+  throw new Error(
+    `Invalid --minimum-native-version=${minimumNativeOverride}. Expected x.y.z, ` +
+      "matching a native version that has actually shipped.",
+  );
+}
 if (notesArguments.length && (!notesOverride?.trim() || notesOverride.startsWith("--"))) throw new Error("Release notes must be non-empty and cannot begin with --.");
 
 type CollectedFile = {
@@ -177,7 +207,8 @@ function automaticNotes(now: Date): string {
 function assertNativeCompatibility(): string {
   const baseline = resolveNativeBaseline();
   const report = inspectNativeCompatibility(baseline);
-  const declared = process.env.ASOL_OTA_MINIMUM_NATIVE_VERSION?.trim();
+  const declared =
+    minimumNativeOverride || process.env.ASOL_OTA_MINIMUM_NATIVE_VERSION?.trim();
 
   console.log("\nOTA native compatibility");
   console.log(formatReport(report, baseline));
@@ -199,7 +230,9 @@ function assertNativeCompatibility(): string {
         formatReport(report, baseline) +
         "\n\nEither publish a new store build and re-tag the baseline, or, if this\n" +
         "bundle genuinely runs on the older shell, declare the requirement:\n" +
-        "  ASOL_OTA_MINIMUM_NATIVE_VERSION=<version> npm run ota:publish",
+        "  npm run ota:publish -- --minimum-native-version=<x.y.z>\n" +
+        "  ASOL_OTA_MINIMUM_NATIVE_VERSION=<version> npm run ota:publish\n" +
+        "In the release console, fill the command's minimum native version field.",
     );
   }
 

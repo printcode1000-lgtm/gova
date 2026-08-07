@@ -60,6 +60,10 @@ const otaSources = [
   ["scripts", "ota", "ota-r2.ts"],
   ["scripts", "ota", "ota-config.ts"],
   ["src", "core", "config", "server-env.values.ts"],
+  // The readiness catalog is the fourth place the chain lived. It listed
+  // alternatives the publisher no longer accepts, which would have reported the
+  // release console's OTA button ready and then failed inside the command.
+  ["src", "modules", "release-commands", "domain", "build-command-catalog.ts"],
 ] as const;
 
 for (const segments of otaSources) {

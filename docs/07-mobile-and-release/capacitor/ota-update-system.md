@@ -213,6 +213,50 @@ The full manifest JSON is retained in `ota_releases` so historical metadata rema
 
 OTA transfers a modified file in full. Therefore `downloadBytes` is the sum of every added file's current size plus every modified file's current size; it is not a binary patch-size estimate. Historical comparisons are available only for releases whose manifest was discovered and retained by the approval system.
 
+## Declaring the minimum native version
+
+When the compatibility gate finds changed native surfaces it refuses to publish,
+and asks the publisher either to re-tag the baseline or to declare the shell
+this bundle needs. Three channels, one meaning:
+
+```bash
+npm run ota:publish -- --minimum-native-version=0.2.0
+```
+
+```bash
+ASOL_OTA_MINIMUM_NATIVE_VERSION=0.2.0 npm run ota:publish
+```
+
+…or the release console's **minimum native version** field on the OTA publish
+command. The flag exists because the console starts commands with flags, not
+environment variables: before it, the button could only ever reach the gate's
+refusal, whose message named a variable no button can set. Leaving the field
+empty keeps the gate in force.
+
+A declaration is a claim that every targeted shell can run the bundle, and it is
+checked. `CAPABILITY_AVAILABILITY` records, per key, the first shell that
+**contains** the plugin and the first that **knows the key's name**:
+
+| Declared version vs the key | Result |
+| --- | --- |
+| at/above `vocabularySince` | listed in the manifest |
+| below `vocabularySince`, at/above `backedSince` | withheld — the plugin is there, the word for it is not |
+| below `backedSince` | **throws** — that is a store release |
+
+Withholding is not a loophole. A shipped client answers `false` for any key
+outside its vocabulary, so naming a newer key does not make an old device
+cautious — it makes it reject every release permanently, recoverable only from
+the store.
+
+The 0.1.0 release is the worked example. It requires `app.state`, whose
+`@capacitor/app` plugin was compiled into the 0.2.0 shell all along — the
+`native-v0.2.0` tag's `capacitor.build.gradle` already links `capacitor-app` —
+while the key naming it is new. Declaring 0.2.0 was therefore honest, and the
+publisher withheld `app.state` from the manifest, along with
+`optionalCapabilities`: that field is inside the signed payload, so a client
+built before it existed computes a different canonical string and rejects the
+manifest outright. Both omissions are announced in the publish output.
+
 ## OTA storage
 
 OTA reads `ASOL_OTA_R2_*` and nothing else: endpoint, access key, secret,
