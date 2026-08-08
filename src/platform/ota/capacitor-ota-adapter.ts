@@ -62,6 +62,10 @@ async function removeReleaseRoot(releaseRoot: string): Promise<void> {
   } catch {
     // A clean install has no previous release directory.
   }
+  // Whatever was under this root is gone, so the ensure-cache must forget it.
+  // Keeping stale entries would skip a needed mkdir and the next write would
+  // fail with "Missing parent directory" instead.
+  forgetEnsuredUnder(releaseRoot);
 }
 
 /** True when mkdir refused only because the directory was already there. */
@@ -72,7 +76,27 @@ function isDirectoryAlreadyExists(error: unknown): boolean {
   return /already exists/i.test(message);
 }
 
+/**
+ * Directories already created or confirmed during this run.
+ *
+ * `ensureDirectory` is called once per extracted file, for that file's parent,
+ * so a release of 3,458 files asked for the same handful of directories
+ * hundreds of times. Every repeat that found the directory present produced a
+ * native rejection, and Capacitor logs those through `console.error` before any
+ * JavaScript can catch them — which the system-log collector then shipped to
+ * the server. One install filled the cloud log with 602 of 614 rows.
+ */
+const ensuredDirectories = new Set<string>();
+
+/** Drops a deleted subtree from the cache, so it is recreated when next needed. */
+function forgetEnsuredUnder(root: string): void {
+  for (const path of ensuredDirectories) {
+    if (path === root || path.startsWith(`${root}/`)) ensuredDirectories.delete(path);
+  }
+}
+
 async function ensureDirectory(path: string): Promise<void> {
+  if (ensuredDirectories.has(path)) return;
   // `recursive: true` creates missing parents but does NOT make mkdir
   // idempotent: Capacitor Android still rejects when the target directory is
   // already there. This comment used to claim otherwise, and nothing caught the
@@ -83,6 +107,11 @@ async function ensureDirectory(path: string): Promise<void> {
     await Filesystem.mkdir({ path, directory: Directory.Data, recursive: true });
   } catch (error) {
     if (!isDirectoryAlreadyExists(error)) throw error;
+  }
+  ensuredDirectories.add(path);
+  // Recursive creation made the parents too, so they need no second attempt.
+  for (let cut = path.lastIndexOf("/"); cut > 0; cut = path.lastIndexOf("/", cut - 1)) {
+    ensuredDirectories.add(path.slice(0, cut));
   }
 }
 

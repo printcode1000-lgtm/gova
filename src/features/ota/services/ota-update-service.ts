@@ -639,7 +639,13 @@ export const otaUpdateService = {
     activeCheck = (async () => {
       const state = await readOtaState();
       let staleFileRetryUsed = false;
-      while (true) {
+      // Every branch that loops does so after discarding the state that sent
+      // it round, so a handful of passes is already generous. The cap exists
+      // because the alternative to a wrong bound is an unbounded spinner, and
+      // this loop produced exactly that once.
+      let passes = 0;
+      while (passes < 4) {
+       passes += 1;
        try {
         await updateStatus(state, { progress: 0, statusKey: "ota.checking", downloadedBytes: 0, totalBytes: 0 }, notify);
         let prefetchedRemote: OtaManifest | null = null;
@@ -674,6 +680,25 @@ export const otaUpdateService = {
           validateManifest(local, false);
           validateManifest(remote, true);
           if (!(await verifyManifest(remote))) throw new Error("Stored OTA manifest signature is invalid");
+          // A stored download is a snapshot, and the server moves on. The
+          // pending branch above already refuses to resume a superseded
+          // release; this branch did not, so a device that stored 0.1.1 kept
+          // resuming it after 0.1.2 shipped — re-extracting the same tree on
+          // every check, never finishing, and leaving the UI on "checking and
+          // downloading" for good. Discard and restart from the live manifest.
+          const liveRemote = await otaApiService.getManifest(publicEnv.otaManifestUrl);
+          validateManifest(liveRemote, true);
+          if (
+            (await verifyManifest(liveRemote)) &&
+            shouldSupersedePending(remote.version, liveRemote.version)
+          ) {
+            await nativePlatform.backgroundDownload.remove(remote.releaseId);
+            await capacitorOtaAdapter.cleanupTransaction(remote.version);
+            delete state.download;
+            delete state.discovered;
+            await updateStatus(state, { progress: 0, statusKey: "ota.superseded", downloadedBytes: 0, totalBytes: 0 }, notify);
+            continue;
+          }
           recordOtaOutcome({
             outcome: "check_performed",
             localVersion: local.version,
@@ -854,6 +879,11 @@ export const otaUpdateService = {
         throw error;
       }
       }
+      // The cap was reached, which means a branch kept discarding and retrying.
+      // Report no update rather than leaving the caller waiting forever.
+      state.lastStatusKey = "ota.noUpdate";
+      await writeState(state);
+      return null;
     })().finally(() => { activeCheck = null; });
     return activeCheck;
   },
