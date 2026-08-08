@@ -64,10 +64,26 @@ async function removeReleaseRoot(releaseRoot: string): Promise<void> {
   }
 }
 
+/** True when mkdir refused only because the directory was already there. */
+function isDirectoryAlreadyExists(error: unknown): boolean {
+  const code = (error as { code?: unknown } | null)?.code;
+  if (code === "OS-PLUG-FILE-0010") return true;
+  const message = error instanceof Error ? error.message : String(error ?? "");
+  return /already exists/i.test(message);
+}
+
 async function ensureDirectory(path: string): Promise<void> {
-  // Recursive mkdir is idempotent. Calling stat for every new parent causes
-  // Capacitor Android to emit a native console error for expected misses.
-  await Filesystem.mkdir({ path, directory: Directory.Data, recursive: true });
+  // `recursive: true` creates missing parents but does NOT make mkdir
+  // idempotent: Capacitor Android still rejects when the target directory is
+  // already there. This comment used to claim otherwise, and nothing caught the
+  // rejection — so every install after the first aborted with
+  // "Directory at '…/asol-ota/current/' already exists, cannot be overwritten",
+  // which is exactly the normal case for an update.
+  try {
+    await Filesystem.mkdir({ path, directory: Directory.Data, recursive: true });
+  } catch (error) {
+    if (!isDirectoryAlreadyExists(error)) throw error;
+  }
 }
 
 async function exists(path: string): Promise<boolean> {
