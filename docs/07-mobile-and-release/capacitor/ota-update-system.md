@@ -436,7 +436,9 @@ Do not pass `--version` or `--notes`. The command performs this sequence:
 1. Reads the current version from `app-updates/manifest.json`.
 2. Increments the patch component automatically, such as `0.1.7` to `0.1.8`.
 3. Creates notes using the current date and time in `Africa/Cairo`.
-4. Pins the web version, native version, and deterministic Next.js Build ID to the new version.
+4. Pins the next web version and deterministic Next.js Build ID. Separately,
+   it keeps the current native version for web-only changes or increments the
+   native baseline patch when compiled shell code changed.
 5. Runs the static build and generates `out/asol-web-manifest.json`.
 6. Compares the new local file list with the previous R2 manifest.
 7. Creates a full transport bundle and up to three changed-files-only bundles
@@ -446,8 +448,8 @@ Do not pass `--version` or `--notes`. The command performs this sequence:
 10. Signs and publishes `app-updates/manifest.json`, including bundle hashes.
 11. Archives the manifest, republishes revocations, retains three history
     records, removes older bundle directories, and deletes legacy releases.
-12. Updates Android `versionName` and `versionCode`.
-13. Updates iOS `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`.
+12. Updates Android `versionName` and `versionCode` to the native shell version.
+13. Updates iOS `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` to the native shell version.
 14. Compares the local and remote manifests.
 15. Downloads every R2 file and bundle and verifies its byte size and SHA-256.
 16. Runs `npx cap sync` only after all checks pass.
@@ -794,16 +796,27 @@ Android and iOS use native `CapacitorHttp` for R2 requests. R2 CORS also include
 
 ## Version Synchronization
 
-After a successful `cap:build`, all these values must be equal:
+After a successful `cap:build`, version synchronization has two independent
+groups.
+
+The web release group must be equal:
 
 - R2 `manifest.version`.
 - `out/asol-web-manifest.json` version.
 - Android bundled manifest version.
 - iOS bundled manifest version.
+- `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` inside the synchronized assets.
+
+The native shell group must be equal:
+
+- R2 `manifest.minimumNativeVersion` for a newly published full release.
+- `NEXT_PUBLIC_ASOL_NATIVE_VERSION` inside the synchronized assets.
 - Android `versionName`.
 - iOS `MARKETING_VERSION`.
 
-Android `versionCode` and iOS `CURRENT_PROJECT_VERSION` are calculated numerically from the semantic version. For example, `0.1.8` becomes `108`.
+Android `versionCode` and iOS `CURRENT_PROJECT_VERSION` are calculated from the
+native semantic version. For example, native `0.2.1` becomes `201`, while its
+bundled web release may independently be `0.1.8`.
 
 ## Diagnostics
 

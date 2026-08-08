@@ -5,6 +5,7 @@ import path from "node:path";
 import { zipSync } from "fflate";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { compareOtaCanonicalStrings } from "../src/features/ota/utils/ota-canonical-order";
+import { compareOtaVersions } from "../src/features/ota/utils/ota-state";
 import {
   MINIMUM_SUPPORTED_NATIVE_VERSION,
   OPTIONAL_CAPABILITIES_MINIMUM_NATIVE_VERSION,
@@ -14,8 +15,9 @@ import { assertReleaseStaticBundle } from "./assert-release-static-bundle";
 import {
   formatReport,
   inspectNativeCompatibility,
-  isUndeclarableNativeChange,
+  nativeVersionFromBaseline,
   resolveNativeBaseline,
+  undeclarableNativeChanges,
 } from "./ota/ota-native-compatibility";
 import {
   OTA_SCHEMA_VERSION,
@@ -230,14 +232,20 @@ function assertNativeCompatibility(): string {
   // A declaration is a claim about a shell that already shipped. It cannot be
   // made about the shell's own compiled source, because no device carries that
   // edit — see isUndeclarableNativeChange.
-  const undeclarable = report.changedPaths.filter(isUndeclarableNativeChange);
-  if (undeclarable.length > 0 && declared) {
+  const undeclarable = undeclarableNativeChanges(report);
+  const baselineNativeVersion = nativeVersionFromBaseline(baseline);
+  if (
+    undeclarable.length > 0 &&
+    (!declared ||
+      !baselineNativeVersion ||
+      compareOtaVersions(declared, baselineNativeVersion) <= 0)
+  ) {
     throw new Error(
-      "Refusing to publish: a declared minimum native version cannot excuse a\n" +
-        "change to the shell's own compiled source. No shell in the field\n" +
-        "contains these edits, so no version can be claimed for them:\n" +
+      "Refusing to publish: compiled native changes require a newer shell.\n" +
+        `The declared minimum native version must be strictly higher than the ${baselineNativeVersion ?? "unknown"} baseline.\n` +
+        "These changes do not exist in the baseline shell:\n" +
         undeclarable.map((path) => `  - ${path}`).join("\n") +
-        "\n\nBuild and roll out a store release, then re-tag the baseline:\n" +
+        "\n\nBuild and test a shell carrying the higher version, publish it to the store, then re-tag the baseline:\n" +
         "  git tag native-v<version> && git push origin native-v<version>",
     );
   }

@@ -76,9 +76,40 @@ export function isUndeclarableNativeChange(relativePath: string): boolean {
   return /^(?:android|ios)\//.test(relativePath) || relativePath === "capacitor.config.ts";
 }
 
-/** Dependency names that ship native code with a store build. */
-const NATIVE_DEPENDENCY_PATTERN =
-  /^@(?:capacitor|capacitor-mlkit|capawesome|capgo)\//;
+/** Capacitor packages that are build tooling or web bridge code, not native binaries. */
+const NON_COMPILED_CAPACITOR_DEPENDENCIES = new Set([
+  "@capacitor/cli",
+  "@capacitor/core",
+]);
+
+/** Dependency names whose package contents are compiled into a store shell. */
+function isCompiledNativeDependency(name: string): boolean {
+  if (NON_COMPILED_CAPACITOR_DEPENDENCIES.has(name)) return false;
+  return (
+    /^@capacitor\//.test(name) ||
+    /^@(?:capacitor-community|capacitor-mlkit|capawesome|capgo)\//.test(name) ||
+    /^cordova-plugin-/.test(name)
+  );
+}
+
+/**
+ * Changes no minimum-version declaration can excuse.
+ *
+ * A changed native package is as binary-affecting as a changed Java or Swift
+ * file: the package's Android/iOS source is compiled only by the next store
+ * build. Keep it in the same fail-closed decision instead of merely reporting
+ * it and then letting an override waive it.
+ */
+export function undeclarableNativeChanges(
+  report: Pick<NativeCompatibilityReport, "changedPaths" | "changedNativeDependencies">,
+): string[] {
+  return [
+    ...report.changedPaths.filter(isUndeclarableNativeChange),
+    ...report.changedNativeDependencies.map(
+      (dependency) => `native dependency: ${dependency}`,
+    ),
+  ];
+}
 
 /**
  * Importing one of these packages is what binds a web file to native code.
@@ -166,6 +197,17 @@ export function resolveNativeBaseline(): string {
   return tag || "";
 }
 
+/** Native semantic version carried by a conventional `native-v*` baseline. */
+export function nativeVersionFromBaseline(baseline: string): string | null {
+  return /^native-v(\d+\.\d+\.\d+)$/.exec(baseline.trim())?.[1] ?? null;
+}
+
+export function nextNativePatchVersion(version: string): string {
+  const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version.trim());
+  if (!match) throw new Error(`Invalid native version: ${version}`);
+  return `${match[1]}.${match[2]}.${Number(match[3]) + 1}`;
+}
+
 /**
  * Decide whether one changed path is a native surface.
  *
@@ -220,13 +262,13 @@ function lockedNativeVersions(lockfile: string): Record<string, string> {
     const name = key.startsWith("node_modules/")
       ? key.slice(key.lastIndexOf("node_modules/") + "node_modules/".length)
       : "";
-    if (name && NATIVE_DEPENDENCY_PATTERN.test(name) && entry?.version) {
+    if (name && isCompiledNativeDependency(name) && entry?.version) {
       versions[name] = entry.version;
     }
   }
   // npm lockfile v1 keys entries by package name.
   for (const [name, entry] of Object.entries(parsed.dependencies ?? {})) {
-    if (NATIVE_DEPENDENCY_PATTERN.test(name) && entry?.version) {
+    if (isCompiledNativeDependency(name) && entry?.version) {
       versions[name] ??= entry.version;
     }
   }
@@ -251,7 +293,7 @@ function declaredNativeRanges(manifest: string): Record<string, string> {
     ...parsed.dependencies,
     ...parsed.devDependencies,
   })) {
-    if (NATIVE_DEPENDENCY_PATTERN.test(name)) ranges[name] = range;
+    if (isCompiledNativeDependency(name)) ranges[name] = range;
   }
   return ranges;
 }

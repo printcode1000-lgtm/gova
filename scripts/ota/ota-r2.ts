@@ -14,7 +14,7 @@ import {
 
 const R2_MAX_ATTEMPTS = 6;
 
-function retryableR2Error(error: unknown): boolean {
+export function isRetryableR2Error(error: unknown): boolean {
   const value = error as {
     name?: string;
     code?: string;
@@ -23,11 +23,21 @@ function retryableR2Error(error: unknown): boolean {
   };
   const status = value.$metadata?.httpStatusCode;
   if (status === 408 || status === 429 || (status !== undefined && status >= 500)) return true;
-  const code = value.name ?? value.code ?? '';
-  if (['InternalError', 'SlowDown', 'RequestTimeout', 'ServiceUnavailable', 'TimeoutError'].includes(code)) {
+  const codes = [value.name, value.code].filter(Boolean);
+  if (codes.some((code) => [
+    'InternalError',
+    'SlowDown',
+    'RequestTimeout',
+    'ServiceUnavailable',
+    'TimeoutError',
+    'ECONNABORTED',
+    'ECONNRESET',
+    'ECONNREFUSED',
+    'ETIMEDOUT',
+  ].includes(code!))) {
     return true;
   }
-  return /internal error|timed? ?out|econnreset|econnrefused|socket hang up|network/i.test(
+  return /internal error|timed? ?out|econnaborted|econnreset|econnrefused|socket hang up|network/i.test(
     value.message ?? '',
   );
 }
@@ -55,7 +65,7 @@ async function withR2Retry<T>(operation: string, action: () => Promise<T>): Prom
       return await action();
     } catch (error) {
       lastError = error;
-      if (!retryableR2Error(error)) throw error;
+      if (!isRetryableR2Error(error)) throw error;
       if (attempt === R2_MAX_ATTEMPTS) break;
       const delayMs = Math.min(20_000, 500 * 2 ** (attempt - 1)) + Math.floor(Math.random() * 300);
       console.warn(

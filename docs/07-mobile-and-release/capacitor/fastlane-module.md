@@ -1,5 +1,11 @@
 # Fastlane Module
 
+The local full-release shortcuts create their signed AAB and APK through
+`scripts/build-android-signed.ts`. This keeps local artifact creation available
+when Ruby/Fastlane is not installed, validates the signing environment, and
+verifies both produced signatures. Fastlane remains required for Google Play
+uploads; its Windows runner reports a missing Bundler installation explicitly.
+
 Fastlane يمر عبر `scripts/fastlane-runner.js` حتى يعمل Ruby/Bundler بثبات على Windows.
 
 ## Android Lanes

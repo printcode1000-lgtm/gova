@@ -100,13 +100,16 @@ Implemented in `scripts/cap-build.ts`:
 2. Creates release notes from the current Cairo date and time.
 3. Publishes changed/new files and deletes removed files in the single `app-updates/files` directory, plus a signed full ZIP and up to three retained-history delta ZIP transports.
 4. Resolves API URL from `ASOL_CAPACITOR_API_BASE_URL` or `platform/capacitor.defaults.ts` (`https://gova-swart.vercel.app`).
-5. Sets `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION`, `NEXT_PUBLIC_ASOL_NATIVE_VERSION`, and `NEXT_PUBLIC_ASOL_API_BASE_URL`.
+5. Sets the next web version independently from the native shell version. A
+   compiled native change raises the shell above the `native-v*` baseline;
+   web-only releases keep the current shell version.
 6. Runs `npm run build:static` (includes `architecture:check`, the
    fresh-install defaults/privacy audit, and writes
    `asol-web-manifest.json`).
 7. Publishes the signed manifest last and removes legacy release directories.
 8. Downloads and verifies every R2 file by size and SHA-256.
-9. Updates Android and iOS to the automatic version.
+9. Updates Android and iOS to the resolved native shell version, never to the
+   independent OTA/web sequence number.
 10. Runs `npx cap sync` only after Android, iOS, local output, and R2 all match.
 
 Building or publishing replaces application files only. It never packages the

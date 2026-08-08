@@ -14,6 +14,10 @@ import {
   sqliteFileNameForShard,
   type DatabaseShardName,
 } from "@/modules/data-access/core/database/database-shards";
+import {
+  isRetrySafeTursoRead,
+  withTursoReadRetry,
+} from "@/modules/data-access/core/database/turso-read-retry";
 
 const nodeRequire = createRequire(import.meta.url);
 
@@ -177,10 +181,13 @@ export class ShardedRawDatabaseClient {
     sql: string,
     params: unknown[],
   ): Promise<Record<string, unknown>[]> {
-    const result = await this.turso(shard).execute({
+    const execute = () => this.turso(shard).execute({
       sql,
       args: normalizeParams(params) as any[],
     });
+    const result = isRetrySafeTursoRead(sql)
+      ? await withTursoReadRetry(execute)
+      : await execute();
     if (isReadQuery(sql) || result.rows.length > 0) {
       return result.rows as Record<string, unknown>[];
     }

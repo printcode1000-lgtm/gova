@@ -17,8 +17,12 @@ export function apiSuccess<T>(data: T, status = 200): NextResponse {
   return attachDevTraceHeaders(NextResponse.json(data, { status }));
 }
 
-export function apiError(message: string, status = 400): NextResponse {
-  if (status >= 500 && !message.includes('/api/system-logs')) {
+export function apiError(
+  message: string,
+  status = 400,
+  options: { skipPersistence?: boolean } = {},
+): NextResponse {
+  if (status >= 500 && !options.skipPersistence && !message.includes('/api/system-logs')) {
     void logServerSystemIssue({
       error: new Error(message),
       feature: 'BusinessAPI',
@@ -206,15 +210,15 @@ export function mapServiceError(error: unknown): NextResponse {
 
   if (message === 'passwordRecoveryNotConfigured') {
     void logMappedServiceError(error, message, 503);
-    return apiError(message, 503);
+    return apiError(message, 503, { skipPersistence: true });
   }
   if (message === 'sessionSigningSecretNotConfigured') {
     void logMappedServiceError(error, message, 503);
-    return apiError(message, 503);
+    return apiError(message, 503, { skipPersistence: true });
   }
 
   void logMappedServiceError(error, message, 500);
-  return apiError(message, 500);
+  return apiError(message, 500, { skipPersistence: true });
 }
 
 async function logMappedServiceError(

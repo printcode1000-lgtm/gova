@@ -9,13 +9,14 @@ const bundleCandidates =
     ? [
         path.join(rubyBin, "bundle.bat"),
         path.join(rubyBin, "bundle.cmd"),
-        "bundle.cmd",
-        "bundle.bat",
+        ...String(process.env.PATH || "")
+          .split(path.delimiter)
+          .flatMap((directory) => [path.join(directory, "bundle.cmd"), path.join(directory, "bundle.bat")]),
       ]
-    : ["bundle"];
-const bundle = bundleCandidates.find((candidate) =>
-  candidate.includes(path.sep) ? existsSync(candidate) : true,
-);
+    : String(process.env.PATH || "")
+        .split(path.delimiter)
+        .map((directory) => path.join(directory, "bundle"));
+const bundle = bundleCandidates.find((candidate) => existsSync(candidate));
 
 if (!bundle) {
   console.error("Bundler was not found. Install Ruby + Bundler before running fastlane.");

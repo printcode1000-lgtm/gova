@@ -1,4 +1,8 @@
 import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
 import {
   NATIVE_CONTRACT_FILES,
@@ -6,7 +10,10 @@ import {
   inspectNativeCompatibility,
   isNativeSurface,
   isUndeclarableNativeChange,
+  nativeVersionFromBaseline,
+  nextNativePatchVersion,
   resolveNativeBaseline,
+  undeclarableNativeChanges,
 } from "./ota/ota-native-compatibility";
 import {
   assertDetectionCoverage,
@@ -67,6 +74,137 @@ for (const file of [
     false,
     `${file} is not compiled into the store binary and must not force a store release.`,
   );
+}
+
+assert.deepEqual(
+  undeclarableNativeChanges({
+    changedPaths: [
+      "android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java",
+      "src/native-platform/app/app-native-adapter.ts",
+    ],
+    changedNativeDependencies: ["@capacitor/app"],
+  }),
+  [
+    "android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java",
+    "native dependency: @capacitor/app",
+  ],
+  "Compiled package changes and compiled source must be equally undeclarable.",
+);
+assert.equal(nativeVersionFromBaseline("native-v0.2.0"), "0.2.0");
+assert.equal(nativeVersionFromBaseline("deadbeef"), null);
+assert.equal(nextNativePatchVersion("0.2.0"), "0.2.1");
+
+// ---------------------------------------------------------------------------
+// The publisher itself pins both directions in an isolated git repository
+// ---------------------------------------------------------------------------
+// Unit-testing the classifier alone would not catch somebody disconnecting it
+// from ota:publish. These dry runs execute the real CLI and stop before any
+// build or R2 access.
+const publisherPath = path.resolve("scripts/ota-publish.ts");
+const tsxCliPath = path.resolve("node_modules/tsx/dist/cli.mjs");
+
+function writeFixture(root: string, relativePath: string, content: string): void {
+  const absolute = path.join(root, relativePath);
+  mkdirSync(path.dirname(absolute), { recursive: true });
+  writeFileSync(absolute, content, "utf8");
+}
+
+function createPublisherFixture(): string {
+  const root = mkdtempSync(path.join(tmpdir(), "asol-ota-native-gate-"));
+  writeFixture(root, "package.json", JSON.stringify({ name: "fixture", version: "1.0.0" }));
+  writeFixture(
+    root,
+    "package-lock.json",
+    JSON.stringify({ name: "fixture", version: "1.0.0", lockfileVersion: 3, packages: { "": { name: "fixture", version: "1.0.0" } } }),
+  );
+  execFileSync("git", ["init", "--quiet"], { cwd: root });
+  execFileSync("git", ["add", "."], { cwd: root });
+  execFileSync("git", ["-c", "user.name=ASOL Test", "-c", "user.email=asol-test@example.invalid", "commit", "--quiet", "-m", "baseline"], { cwd: root });
+  execFileSync("git", ["tag", "native-v0.2.0"], { cwd: root });
+  return root;
+}
+
+function dryRunPublisher(root: string, minimumNativeVersion = "0.2.0") {
+  return spawnSync(
+    process.execPath,
+    [tsxCliPath, publisherPath, "--dry-run", `--minimum-native-version=${minimumNativeVersion}`],
+    {
+      cwd: root,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        ASOL_OTA_NATIVE_BASELINE: "native-v0.2.0",
+      },
+    },
+  );
+}
+
+function publisherOutput(result: ReturnType<typeof dryRunPublisher>): string {
+  return `${result.stdout ?? ""}\n${result.stderr ?? ""}\n${result.error ?? ""}`;
+}
+
+for (const scenario of [
+  "compiled-source",
+  "native-dependency",
+  "future-native-shell",
+  "web-facade",
+] as const) {
+  const root = createPublisherFixture();
+  try {
+    if (scenario === "compiled-source" || scenario === "future-native-shell") {
+      writeFixture(
+        root,
+        "android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java",
+        "final class BackgroundDownloadPlugin {}\n",
+      );
+    } else if (scenario === "native-dependency") {
+      writeFixture(
+        root,
+        "package.json",
+        JSON.stringify({ name: "fixture", version: "1.0.0", dependencies: { "@capacitor/app": "8.1.0" } }),
+      );
+      writeFixture(
+        root,
+        "package-lock.json",
+        JSON.stringify({
+          name: "fixture",
+          version: "1.0.0",
+          lockfileVersion: 3,
+          packages: {
+            "": { name: "fixture", version: "1.0.0", dependencies: { "@capacitor/app": "8.1.0" } },
+            "node_modules/@capacitor/app": { version: "8.1.0" },
+          },
+        }),
+      );
+    } else {
+      writeFixture(
+        root,
+        "src/native-platform/app/app-native-adapter.ts",
+        'import { App } from "@capacitor/app";\nexport const nativeApp = App;\n',
+      );
+    }
+
+    const result = dryRunPublisher(
+      root,
+      scenario === "future-native-shell" ? "0.2.1" : "0.2.0",
+    );
+    const output = publisherOutput(result);
+    if (scenario === "web-facade" || scenario === "future-native-shell") {
+      assert.equal(result.status, 0, output);
+      assert.match(output, /Dry run: the compatibility gate passed/);
+    } else {
+      assert.notEqual(result.status, 0, output);
+      assert.match(output, /compiled native changes require a newer shell/);
+      assert.match(
+        output,
+        scenario === "compiled-source"
+          ? /BackgroundDownloadPlugin\.java/
+          : /native dependency: @capacitor\/app/,
+      );
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 }
 
 // `platform/` is build-time configuration: capacitor.config.ts does not import

@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
+import { compareOtaVersions } from "../src/features/ota/utils/ota-state";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { assertCapBuildInputBundle } from "./assert-release-static-bundle";
 import {
@@ -17,6 +18,13 @@ import {
   getOtaObjectBytes,
   listOtaObjectKeys,
 } from "./ota/ota-r2";
+import {
+  inspectNativeCompatibility,
+  nativeVersionFromBaseline,
+  nextNativePatchVersion,
+  resolveNativeBaseline,
+  undeclarableNativeChanges,
+} from "./ota/ota-native-compatibility";
 
 const LOCAL_MANIFEST_PATH = path.resolve("out", "asol-web-manifest.json");
 const ANDROID_BUILD_GRADLE = path.resolve("android", "app", "build.gradle");
@@ -32,6 +40,38 @@ function versionCode(version: string): number {
     .split(".")
     .map((part) => Number(part) || 0);
   return major * 10000 + minor * 100 + patch;
+}
+
+function readAndroidVersion(): string {
+  const source = readFileSync(ANDROID_BUILD_GRADLE, "utf8");
+  const version = /versionName\s+"(\d+\.\d+\.\d+)"/.exec(source)?.[1];
+  if (!version) throw new Error("Unable to resolve the current Android native version");
+  return version;
+}
+
+function resolveTargetNativeVersion(): string {
+  const baseline = resolveNativeBaseline();
+  const baselineVersion = nativeVersionFromBaseline(baseline);
+  if (!baselineVersion) {
+    throw new Error(
+      `Cannot derive a native release version from baseline ${baseline || "(none)"}; expected native-v<x.y.z>.`,
+    );
+  }
+
+  const current = readAndroidVersion();
+  const report = inspectNativeCompatibility(baseline);
+  const hasCompiledChanges = undeclarableNativeChanges(report).length > 0;
+  let target =
+    compareOtaVersions(current, baselineVersion) >= 0
+      ? current
+      : baselineVersion;
+  if (hasCompiledChanges && compareOtaVersions(target, baselineVersion) <= 0) {
+    target = nextNativePatchVersion(baselineVersion);
+  }
+  console.log(
+    `Native release plan: baseline=${baselineVersion}, current=${current}, target=${target}, compiledChanges=${hasCompiledChanges}`,
+  );
+  return target;
 }
 
 function updateAndroidVersion(version: string): void {
@@ -91,6 +131,11 @@ function compareManifestFiles(
     errors.push(`fileCount ${local.fileCount} != ${remote.fileCount}`);
   if (local.size !== remote.size)
     errors.push(`size ${local.size} != ${remote.size}`);
+  if (local.minimumNativeVersion !== remote.minimumNativeVersion) {
+    errors.push(
+      `minimumNativeVersion ${local.minimumNativeVersion} != ${remote.minimumNativeVersion}`,
+    );
+  }
 
   for (const [filePath, remoteFile] of Object.entries(remote.files)) {
     const localFile = local.files[filePath];
@@ -187,9 +232,11 @@ async function main(): Promise<void> {
   const apiBaseUrl = (
     process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, "");
+  const plannedNativeVersion = resolveTargetNativeVersion();
   const publishEnv: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
     ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
+    ASOL_OTA_MINIMUM_NATIVE_VERSION: plannedNativeVersion,
   };
 
   if (noR8 && !skipOta && !dryRun) {
@@ -199,12 +246,8 @@ async function main(): Promise<void> {
   }
 
   if (dryRun) {
-    const packageVersion = JSON.parse(readFileSync("package.json", "utf8")) as {
-      version: string;
-    };
-    const resolvedVersion = packageVersion.version;
     console.log("cap-build dry run plan");
-    console.log(`  version: ${resolvedVersion}`);
+    console.log("  web version: next automatic patch from the live R2 manifest");
     console.log(`  Android build type: ${noR8 ? "ReleaseNoR8" : "Release"}`);
     console.log(
       `  OTA action: ${
@@ -212,8 +255,9 @@ async function main(): Promise<void> {
       }`,
     );
     console.log(
-      `  version rewrites: android versionCode=${versionCode(resolvedVersion)}, versionName=${resolvedVersion}; iOS MARKETING_VERSION=${resolvedVersion}`,
+      `  version rewrites: android versionCode=${versionCode(plannedNativeVersion)}, versionName=${plannedNativeVersion}; iOS MARKETING_VERSION=${plannedNativeVersion}`,
     );
+    console.log(`  native compatibility target: ${plannedNativeVersion}`);
     console.log("  cap sync: npm run cap:sync");
     if (noR8) console.log("  Gradle tasks: :app:bundleReleaseNoR8 :app:assembleReleaseNoR8 -Pasol.allowNoR8=true");
     console.log("  mutations: none");
@@ -250,14 +294,26 @@ async function main(): Promise<void> {
   );
   const localManifest = readLocalManifest();
   const version = remoteManifest.version;
+  const nativeVersion = skipOta
+    ? plannedNativeVersion
+    : remoteManifest.minimumNativeVersion;
+  if (
+    !resumePublishedRelease &&
+    !skipOta &&
+    nativeVersion !== plannedNativeVersion
+  ) {
+    throw new Error(
+      `Published minimum native version ${nativeVersion} does not match planned shell ${plannedNativeVersion}`,
+    );
+  }
   const env: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
-    ...otaClientBuildEnv(version),
+    ...otaClientBuildEnv(version, nativeVersion),
     NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
   };
 
-  updateAndroidVersion(version);
-  updateIosVersion(version);
+  updateAndroidVersion(nativeVersion);
+  updateIosVersion(nativeVersion);
 
   const errors = compareManifestFiles(localManifest, remoteManifest);
   if (errors.length > 0) {
@@ -281,7 +337,7 @@ async function main(): Promise<void> {
   }
 
   console.log(
-    `cap-build completed: R2, Android, and iOS are exactly version ${version}`,
+    `cap-build completed: web/R2=${version}, Android/iOS native=${nativeVersion}`,
   );
   console.log(`Automatic notes: ${remoteManifest.notes}`);
 }

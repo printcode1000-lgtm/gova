@@ -53,6 +53,28 @@ for (const command of BUILD_COMMAND_CATALOG) {
   }
 }
 assert.equal(BUILD_COMMAND_CATALOG.filter((item) => item.script === "ota:publish").length, 1);
+const fullAndroidRelease = BUILD_COMMAND_CATALOG.find(
+  (item) => item.id === "release-android-with-ota",
+)!;
+assert.equal(fullAndroidRelease.danger, "publishes-live");
+assert.equal(fullAndroidRelease.confirmationPhrase, "PUBLISH_OTA");
+for (const required of [
+  "ASOL_OTA_R2_BUCKET_NAME",
+  "ASOL_OTA_SIGNING_PRIVATE_KEY",
+  "ASOL_ANDROID_KEYSTORE_FILE",
+]) {
+  assert.ok(fullAndroidRelease.requiredEnv.includes(required));
+}
+assert.match(
+  packageJson.scripts["release:android:with-ota"],
+  /cap:build.*android:build:signed/,
+  "the full-release shortcut must create both signed Android artifacts after OTA publication",
+);
+assert.match(
+  packageJson.scripts["android:build:signed"],
+  /build-android-signed/,
+  "the full-release shortcut must use the checked Gradle builder when Ruby/Fastlane is unavailable",
+);
 
 const r8Sources: AndroidR8PolicySources = {
   buildGradle: `android { buildTypes { release { minifyEnabled true; shrinkResources true; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' } releaseNoR8 { initWith release; minifyEnabled false; versionNameSuffix '-nor8' } } } gradle.taskGraph.whenReady { if (project.findProperty('asol.allowNoR8') != 'true') throw new GradleException() }`,

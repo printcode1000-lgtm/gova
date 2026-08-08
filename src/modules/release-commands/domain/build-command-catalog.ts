@@ -107,8 +107,8 @@ export const BUILD_COMMAND_CATALOG = [
   entry("ota-status", "ota:status", "ota", "safe", otaEnv, [], "30 sec"),
   entry("ota-self-test", "ota:self-test", "verification", "safe", otaEnv, [], "1-3 min"),
   entry("cap-build", "cap:build", "native-android", "destructive", [], ["android/app/src/main/assets/public", "android/app/build/outputs"], "20-45 min", undefined, [otaSource, dryRun, optimization]),
-  entry("release-android-with-ota", "release:android:with-ota", "native-android", "destructive", [], ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "25-50 min", undefined, [], true),
-  entry("release-android-no-ota", "release:android:no-ota", "native-android", "destructive", [...playEnv, ...signingEnv], ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "30-60 min", undefined, [], true),
+  entry("release-android-with-ota", "release:android:with-ota", "native-android", "publishes-live", [...otaEnv, ...signingEnv], ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "25-50 min", "PUBLISH_OTA", [], true),
+  entry("release-android-no-ota", "release:android:no-ota", "native-android", "destructive", signingEnv, ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "30-60 min", undefined, [], true),
   entry("cap-open-android", "cap:open:android", "native-android", "safe", [], [], "<1 min", undefined, [], true),
   // Verification category on purpose: opening a folder must not take the
   // exclusive release lock that the native-android commands hold.

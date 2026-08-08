@@ -101,18 +101,27 @@ That claim is **arguable** for a TypeScript facade over a plugin the shell
 already contains — the plugin is compiled in, only the vocabulary naming it is
 new.
 
-It is **false by construction** for the shell's own compiled source. Editing
-Java, Swift, `AndroidManifest.xml`, a Gradle file, or `capacitor.config.ts`
-changes the binary; no device in the field carries that edit, so no version can
-be claimed for it.
+It is **false by construction** to claim that the existing baseline contains a
+change to the shell's own compiled source. Editing Java, Swift,
+`AndroidManifest.xml`, a Gradle file, or `capacitor.config.ts` changes the
+binary. Such a change may target only a **strictly newer** native version; it can
+never be assigned to the baseline version or anything below it.
 
-`ota:publish` now refuses a declaration that would waive such a change, and
-names the file:
+The same applies when an installed Capacitor/Cordova dependency is added,
+removed, or version-changed: its Android/iOS implementation exists only after a
+new store build. Build-only packages such as `@capacitor/cli` and web bridge code
+such as `@capacitor/core` are excluded so this rule does not recreate the noisy
+gate it replaced.
+
+`ota:publish` now refuses a missing, equal, or lower declaration for such a
+change, and names the file. A higher version is safe to stage because baseline
+devices reject it; that higher shell must still be built, tested, published to
+the store, and tagged before it can reach users:
 
 ```text
-Refusing to publish: a declared minimum native version cannot excuse a
-change to the shell's own compiled source. No shell in the field
-contains these edits, so no version can be claimed for them:
+Refusing to publish: compiled native changes require a newer shell.
+The declared minimum native version must be strictly higher than the 0.2.0 baseline.
+These changes do not exist in the baseline shell:
   - android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java
 ```
 
@@ -127,12 +136,19 @@ That shell carries the **unfixed** plugin. It therefore cannot perform the
 download those bundles depend on. The releases were installable only on a debug
 build that already had the fix.
 
-No user was harmed, and the reason is uncomfortable: a genuine 0.2.0 device
-cannot download any OTA at all, precisely because of the bug being fixed. The
-false claim was invisible because the audience for it was empty.
+No incompatible bundle could be installed through this path: a genuine 0.2.0
+device cannot schedule any OTA download at all, precisely because of the bug
+being fixed. That does **not** prove zero user impact without telemetry; a
+device may still have detected the release and experienced a failed attempt.
+The false compatibility claim was hidden because no affected shell could reach
+the installation stage.
 
-The gate was right and the declaration was wrong. `isUndeclarableNativeChange`
-encodes that so the judgement is not left to whoever is in a hurry.
+The gate was right and the declaration was wrong. The regression test executes
+the real publisher with `--dry-run` in isolated repositories and pins four
+decisions: compiled source at the baseline version is rejected, a compiled
+native dependency at the baseline version is rejected, a strictly newer shell
+version is accepted for staging, and a web facade over an existing plugin
+remains declarable.
 
 ## What is deliberately not done
 
