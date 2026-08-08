@@ -56,6 +56,7 @@ UI → Hook → Client Service → AsolApiClient → Business API
 | File map | [23-file-map.md](./23-file-map.md) |
 | Runtime context | [24-runtime-context.md](./24-runtime-context.md) |
 | Central data access module | [25-central-data-access-module.md](./25-central-data-access-module.md) |
+| Cloud accounts — Vercel, Turso, R2 | [26-cloud-accounts.md](./26-cloud-accounts.md) |
 
 ## Related docs
 
