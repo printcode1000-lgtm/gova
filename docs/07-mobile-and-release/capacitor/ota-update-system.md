@@ -1132,6 +1132,10 @@ Failure of the full bundle remains terminal and is never retried as a delta.
 
 ## How a change is classified as native
 
+The layered scheme this sits inside — what reports, what enforces, and what was
+deliberately left out — is described in
+[Native Surface Protection](./native-surface-protection.md).
+
 The gate decides by **what a file binds to, not where it sits**. Three rules, in
 order:
 

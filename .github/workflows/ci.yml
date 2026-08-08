@@ -12,6 +12,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # The native-surface report compares against the newest `native-v*`
+          # tag. The default shallow clone fetches no tags, so the check would
+          # stay silent in CI and the signal would exist only on a laptop.
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4

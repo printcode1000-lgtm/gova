@@ -1,6 +1,10 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
 import { join, relative } from 'path';
 import {
+  inspectNativeCompatibility,
+  resolveNativeBaseline,
+} from './ota/ota-native-compatibility';
+import {
   ALLOWED_DRIZZLE_ORM_FILES_PATTERN,
   ALLOWED_DB_DRIVER_FILES_PATTERN,
   ALLOWED_FETCH_FILES,
@@ -630,6 +634,44 @@ function printReport(): void {
   }
 }
 
+/**
+ * Tell the developer, at check time, that this change needs a store release.
+ *
+ * Deliberately **reports and never fails**. Touching native code is legitimate
+ * work — the Java plugin fix in this repository's own history is an example —
+ * so failing here would block the change rather than inform it. `ota:publish`
+ * stays the enforcing gate; this only moves the discovery from twenty minutes
+ * into a publish to the check you already run.
+ *
+ * Silent when the baseline cannot be resolved. A shallow CI clone has no
+ * `native-v*` tag, and printing "cannot prove" on every run is the same
+ * cry-wolf noise this classifier was just cleaned of.
+ */
+function reportNativeSurface(): void {
+  let report;
+  try {
+    report = inspectNativeCompatibility(resolveNativeBaseline());
+  } catch {
+    return; // No git, no baseline: nothing can be said, so say nothing.
+  }
+  if (report.baselineMissing) return;
+
+  const changed = [...report.changedPaths, ...report.changedNativeDependencies];
+  if (changed.length === 0) return;
+
+  console.log('\nNative Surface\n');
+  console.log(
+    `${changed.length} native surface(s) changed since the last store release.`,
+  );
+  for (const path of changed) console.log(`  - ${path}`);
+  console.log(
+    '\nThis is not an architecture violation and does not fail the check.\n' +
+      'It means `ota:publish` will refuse until you either ship a store build\n' +
+      'and re-tag the baseline, or declare the minimum native version because\n' +
+      'the plugin is already compiled into the installed shell.\n',
+  );
+}
+
 function main(): void {
   try {
     validateStorageProfilesAtStartup();
@@ -665,6 +707,8 @@ function main(): void {
   }
 
   console.log('All architecture checks passed.\n');
+  // After the verdict, so a passing check still surfaces the store-release cost.
+  reportNativeSurface();
 }
 
 main();
