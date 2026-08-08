@@ -146,9 +146,37 @@ so no future caller can inherit an open default.
 
 Every R2 manifest is identified by the exact pair `releaseId + version`. Approval is server-side and applies to that exact release only.
 
-- Newly discovered releases are inserted with `approved = false`.
+- Newly discovered releases are inserted with `approved = false`. **Approval is
+  per release**, so approving 0.1.2 says nothing about 0.1.3 — every publish
+  starts unapproved again.
 - Guests and ordinary authenticated users cannot download or activate an unapproved release.
-- The super-admin bypasses approval and can download a release immediately for device testing.
+- The super-admin bypasses approval and both downloads **and activates**
+  immediately, for device testing.
+
+### "Not allowed" is not "never allowed"
+
+`POST /api/ota/access` answers with one of four reasons:
+
+| Reason | Meaning | What the client does |
+|---|---|---|
+| `approved` | cleared | install |
+| `super_admin` | cleared, no approval needed | install |
+| `awaiting_approval` | **later** — a super admin has not approved it yet | hold, report `ota.awaitingApproval` |
+| `rollout_pending` | **later** — the device's bucket is outside the percentage | hold, report `ota.ready` |
+
+The two "later" reasons must never destroy a downloaded release. Three call
+sites used to call `discardPending` on any `allowed: false`, which deleted a
+verified, fully extracted tree and recorded it as `ota.revoked` — the update was
+gone, the reason was wrong, and the UI kept spinning with nothing to install.
+
+This also broke the super-admin rule, subtly: `prepareAtSplash` asks for the
+decision at launch, *before the session has hydrated*. The identity is anonymous
+for that moment, the answer is `awaiting_approval`, and destroying the update
+there means the super admin never gets the release they were entitled to install
+without approval. Holding it costs nothing — the next check, with a hydrated
+identity, activates it.
+
+**Only revocation discards**, and that lives in `enforceRevocations`.
 - Approving a release makes it available to the configured rollout cohort on
   its next automatic check; the default 100% preserves the previous behaviour.
 - Each release has a server-side rollout percentage, defaulting to 100%. An
@@ -328,6 +356,31 @@ product image. They were deleted, and OTA now points at the general account.
 `npm run test:r2-separation` fails if any OTA accessor names an R2 variable that
 is not its own. See
 [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
+
+## Directory creation
+
+`recursive: true` creates missing parents but does **not** make `mkdir`
+idempotent on Capacitor Android: the plugin rejects when the target directory
+already exists, with code `OS-PLUG-FILE-0010`. The adapter's comment used to
+claim the opposite and nothing caught the rejection, so every install after the
+first aborted with
+
+```text
+Directory at '…/asol-ota/current/' already exists, cannot be overwritten
+```
+
+— which is the normal state for an update, not an error.
+
+The rejection is now caught by code and swallowed. It is also mostly avoided:
+`ensureDirectory` is called once per extracted file, for that file's parent, so
+a 3,458-file release asked for the same handful of directories hundreds of
+times. Ensured paths are memoised, and `removeReleaseRoot` drops the subtree
+from that memo so a deleted tree is recreated rather than assumed present.
+
+This matters beyond speed. Capacitor logs each native rejection through
+`console.error` before any JavaScript sees it, and the system-log collector
+ships those to the server: one install once produced 602 of 614 rows in the
+cloud log.
 
 ## R2 Layout
 
@@ -525,6 +578,87 @@ The policy is reviewed directly in `scripts/build-static.ts` through `STATIC_PUB
 The development-only `/dev/*` routes and the `/test1` UI test route are removed from the temporary static-build source tree. They remain available during local development but do not generate production HTML, RSC payloads, or JavaScript chunks.
 
 After `cap sync`, Android and iOS receive the same local manifest and static files from `out/`.
+
+## The install is not finished when the download is
+
+An update passes through five stages, and only the last one changes what the
+user sees. Reading a device log, the stage names are the vocabulary:
+
+```text
+check → download → verify → extract → promote → activate
+```
+
+| Stage | Evidence on the device |
+|---|---|
+| download | `BackgroundDownload.schedule`, then `status` transitions `pending → downloading` |
+| verify | `status: "verifying"`, then `completed` with the file path |
+| extract | thousands of `Filesystem.writeFile` calls under `asol-ota/current/` |
+| promote | the tree appears as `asol-ota/active/<version>/` |
+| **activate** | `WebView.setServerBasePath` → that path, persisted in `CapWebViewSettings.xml` |
+
+**Activation happens at the next launch, not when the download ends.** Between
+extract and activate the release is complete on disk and doing nothing. Two
+independent checks tell you which side of that line a device is on:
+
+```bash
+adb shell run-as hgh.asol.app ls files/asol-ota/active
+adb shell run-as hgh.asol.app cat shared_prefs/CapWebViewSettings.xml | grep serverBasePath
+```
+
+If `active/<version>` exists but `serverBasePath` still points at the old
+version, the download succeeded and the activation has not run. That is the
+normal state until relaunch — not a failure, and not something to fix by
+re-downloading.
+
+### What the settings page shows
+
+The page must never leave the user guessing which of the six stages they are in.
+Three rules make that true:
+
+- **The button label is the stage, not a boolean.** It used to read
+  "checking for updates" for the whole of `busy` — check, download *and*
+  extraction, several minutes — so a working update looked hung. It now renders
+  the live status key: downloading, verifying, awaiting approval, and so on.
+- **"Restart now" exists only while there is something to restart for.** It is
+  rendered when `pending.ready` is set, and does not exist otherwise — not
+  disabled, absent. It calls `activatePending` and reloads, so the user never
+  has to know that activation happens at launch.
+- **Holding is a state, not a silence.** A release waiting on approval or
+  rollout reports `ota.awaitingApproval` / `ota.ready` rather than looking
+  identical to "still working".
+
+### How often the app checks
+
+| Who | When |
+|---|---|
+| Ordinary user | automatically once per 24 hours, or on the button |
+| **Super admin** | **every launch** |
+
+The super admin is the person testing a release, and waiting up to a day to see
+a build they just published is not a test loop. `checkDailyAndDownload` treats a
+super-admin identity as always due. This changes only *how often the client
+asks*; the server still decides what may be installed.
+
+### Reading `[object Object]`
+
+The console prints thrown OTA errors as `[object Object]`, so the device log
+alone will not tell you why a check failed. The message is persisted in full:
+
+```sql
+SELECT last_occurred_at, operation, message
+FROM system_logs
+WHERE platform = 'android'
+ORDER BY last_occurred_at DESC;
+```
+
+Every real diagnosis in the on-device test round came from that table, not from
+logcat.
+
+`Filesystem mkdir` rejections with code `OS-PLUG-FILE-0010` are noise: recursive
+mkdir is not idempotent on Capacitor Android, the adapter swallows the
+rejection, and Capacitor logs it natively before any JavaScript sees it. They
+are not errors, and one install used to produce hundreds of them — see
+[Directory creation](#directory-creation).
 
 ## Runtime Update
 

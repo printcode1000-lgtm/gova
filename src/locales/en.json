@@ -1497,6 +1497,7 @@
     "ota.settings.never": "Not checked yet",
     "ota.settings.status": "Status",
     "ota.settings.check": "Check for updates",
+    "ota.settings.restart": "Restart now",
     "ota.settings.checking": "Checking and downloading",
     "ota.current": "App is up to date",
     "ota.ready": "Update ready and will install on next launch",

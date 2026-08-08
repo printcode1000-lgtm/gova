@@ -26,6 +26,8 @@ interface OtaUpdateContextValue {
   busy: boolean;
   error: string | null;
   checkNow: () => Promise<void>;
+  /** Activate a downloaded release now, instead of waiting for the next launch. */
+  applyNow: () => Promise<void>;
 }
 
 const OtaUpdateContext = createContext<OtaUpdateContextValue | null>(null);
@@ -96,9 +98,33 @@ export function OtaUpdateProvider({ children }: { children: ReactNode }) {
     }
   }, [busy, identity, report, sync]);
 
+  /**
+   * Install a release that is already downloaded and verified.
+   *
+   * Activation otherwise waits for the next launch, which the settings page
+   * could only describe, never do — the user had to know to close the app.
+   * `activatePending` switches the served path; reloading then serves it.
+   */
+  const applyNow = useCallback(async () => {
+    if (busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await otaUpdateService.activatePending(identity);
+      window.location.reload();
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : String(failure));
+      reportPreAuthFailure("ota-apply-now", failure);
+      await sync().catch((syncFailure) => {
+        reportPreAuthFailure("ota-state-sync-after-apply", syncFailure);
+      });
+      setBusy(false);
+    }
+  }, [busy, identity, sync]);
+
   const value = useMemo(
-    () => ({ state, progress, busy, error, checkNow }),
-    [state, progress, busy, error, checkNow],
+    () => ({ state, progress, busy, error, checkNow, applyNow }),
+    [state, progress, busy, error, checkNow, applyNow],
   );
   return <OtaUpdateContext.Provider value={value}>{children}</OtaUpdateContext.Provider>;
 }

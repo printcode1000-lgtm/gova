@@ -1,5 +1,6 @@
 /** Single responsibility: securely discover, stage, and activate resumable OTA releases. */
 import { publicEnv } from "@/core/config/public-env";
+import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import { capabilities, nativePlatform } from "@/native-platform";
 import type { BackgroundDownloadTask } from "@/native-platform";
 import { capacitorOtaAdapter } from "@/platform/ota/capacitor-ota-adapter";
@@ -913,13 +914,27 @@ export const otaUpdateService = {
     return activeCheck;
   },
 
+  /**
+   * The automatic check, and the one exception to its interval.
+   *
+   * An ordinary user is checked at most once a day; the manual button is how
+   * they ask sooner. A super admin is checked on **every launch**, because the
+   * super admin is the person testing a release, and waiting up to 24 hours to
+   * see the build they just published is not a test loop.
+   *
+   * `isSuperAdmin` reads the session the client already holds. The server still
+   * decides what a super admin may install — this only decides how often to
+   * ask.
+   */
   async checkDailyAndDownload(
     notify?: (progress: OtaDownloadProgress) => void,
     identity?: OtaIdentity,
     now = Date.now(),
   ): Promise<DownloadedOtaUpdate | null> {
     const state = await readOtaState();
-    const due = isDailyOtaCheckDue(state.lastSuccessfulCheckAt, now);
+    const due =
+      (identity ? isSuperAdminIdentity(identity.uid, identity.phone) : false) ||
+      isDailyOtaCheckDue(state.lastSuccessfulCheckAt, now);
     const clamped = clampFutureOtaCheckTimestamp(state.lastSuccessfulCheckAt, now);
     if (clamped !== state.lastSuccessfulCheckAt) {
       state.lastSuccessfulCheckAt = clamped;

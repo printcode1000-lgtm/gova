@@ -1497,6 +1497,7 @@
     "ota.settings.never": "لم يتم الفحص بعد",
     "ota.settings.status": "الحالة",
     "ota.settings.check": "البحث عن تحديثات",
+    "ota.settings.restart": "إعادة التشغيل الآن",
     "ota.settings.checking": "جارٍ الفحص والتنزيل",
     "ota.current": "التطبيق محدّث",
     "ota.ready": "التحديث جاهز وسيُثبّت عند التشغيل التالي",

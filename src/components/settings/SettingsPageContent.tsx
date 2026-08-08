@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Database, FileText, Globe, Palette, RefreshCw, Shield } from "lucide-react";
+import { Bell, Database, FileText, Globe, Palette, RefreshCw, RotateCcw, Shield } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAdjust,
@@ -701,6 +701,23 @@ export function SettingsPageContent() {
               </div>
             ) : null}
             {ota.error ? <p className="text-sm text-error">{ota.error}</p> : null}
+            <div className="flex flex-wrap items-center gap-2">
+            {/*
+              Shown only while a verified release is sitting on disk waiting for
+              a launch. Outside that one state there is nothing to restart for,
+              so the button does not exist rather than being disabled.
+            */}
+            {ota.state.pending?.ready ? (
+              <button
+                type="button"
+                onClick={() => void ota.applyNow()}
+                disabled={ota.busy}
+                className="asol-control inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-2 text-sm font-semibold text-on-secondary disabled:opacity-60"
+              >
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                {t("ota.settings.restart")}
+              </button>
+            ) : null}
             <button
               type="button"
               onClick={() => void ota.checkNow()}
@@ -708,8 +725,19 @@ export function SettingsPageContent() {
               className="asol-control inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
             >
               <RefreshCw className={`h-4 w-4 ${ota.busy ? "animate-spin" : ""}`} aria-hidden="true" />
-              {ota.busy ? t("ota.settings.checking") : t("ota.settings.check")}
+              {/*
+                The label follows the real stage, not a boolean. `busy` covers
+                the check, the download and the extraction — minutes of work —
+                and labelling all of it "checking" made a working update look
+                hung, which is exactly how it was reported.
+              */}
+              {ota.busy ? t(otaStatusKey, {
+                size: formatOtaBytes(
+                  ota.progress?.requiredFreeBytes ?? ota.state.requiredFreeBytes ?? 0,
+                ),
+              }) : t("ota.settings.check")}
             </button>
+            </div>
           </div>
         </div>
       </section>
