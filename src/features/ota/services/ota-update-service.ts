@@ -46,6 +46,7 @@ import type {
   OtaIdentity,
   OtaManifest,
   OtaManifestPayload,
+  OtaReleaseAccess,
   OtaStoredState,
 } from "../types/ota.types";
 
@@ -587,11 +588,34 @@ export const otaUpdateService = {
     await writeState(state);
   },
 
+  /**
+   * Hold a downloaded release that is not cleared to install yet.
+   *
+   * "Not allowed" is not "never allowed". `awaiting_approval` and
+   * `rollout_pending` both become allowed later — when a super admin approves
+   * the release, or when the device enters the rollout, or simply when the
+   * session finishes hydrating and the identity is a super admin at all. This
+   * used to call `discardPending`, which threw away a verified, fully extracted
+   * tree and reported it as `ota.revoked`: the update was destroyed, the reason
+   * was wrong, and the UI kept spinning with nothing left to install.
+   *
+   * Revocation is handled by `enforceRevocations`, which is where discarding
+   * belongs.
+   */
+  async holdPendingUntilAllowed(
+    state: OtaStoredState,
+    reason: OtaReleaseAccess["reason"],
+  ): Promise<void> {
+    state.lastStatusKey =
+      reason === "rollout_pending" ? "ota.ready" : "ota.awaitingApproval";
+    await writeState(state);
+  },
+
   async reverifyPendingApproval(identity?: OtaIdentity): Promise<void> {
     const state = await readOtaState();
     if (!state.pending) return;
     const access = await otaApiService.getReleaseAccess({ releaseId: state.pending.releaseId, version: state.pending.version, identity });
-    if (!access.allowed) await this.discardPending(state);
+    if (!access.allowed) await this.holdPendingUntilAllowed(state, access.reason);
   },
 
   async activatePending(identity?: OtaIdentity, approvalAlreadyChecked = false): Promise<void> {
@@ -715,10 +739,11 @@ export const otaUpdateService = {
           }
           const access = await otaApiService.getReleaseAccess({ releaseId: remote.releaseId, version: remote.version, identity });
           if (!access.allowed) {
-            await nativePlatform.backgroundDownload.remove(remote.releaseId);
-            delete state.download;
-            delete state.discovered;
-            state.lastStatusKey = "ota.revoked";
+            // Awaiting approval or rollout is a "later", not a "never": keep the
+            // resumable download and say so, instead of deleting it and calling
+            // it revoked.
+            state.lastStatusKey =
+              access.reason === "rollout_pending" ? "ota.noUpdate" : "ota.awaitingApproval";
             await writeState(state);
             return null;
           }
@@ -935,12 +960,14 @@ export const otaUpdateService = {
 
     const controller = new AbortController();
     let approved = true;
+    let accessReason: OtaReleaseAccess["reason"] = "awaiting_approval";
     try {
       const access = await Promise.race([
         otaApiService.getReleaseAccess({ releaseId: state.pending.releaseId, version: state.pending.version, identity }, controller.signal),
         new Promise<never>((_, reject) => window.setTimeout(() => reject(new Error("approval timeout")), APPROVAL_TIMEOUT_MS)),
       ]);
       approved = access.allowed;
+      accessReason = access.reason;
     } catch (error) {
       // Approval was proven before download. Offline/timeout activation is the
       // deliberate bounded gap; the foreground session rechecks revocation.
@@ -948,7 +975,12 @@ export const otaUpdateService = {
     } finally {
       controller.abort();
     }
-    if (!approved) { await this.discardPending(state); return; }
+    if (!approved) {
+      // Keep the tree. The identity may simply not have hydrated yet at splash,
+      // and a super admin is cleared without approval once it has.
+      await this.holdPendingUntilAllowed(state, accessReason);
+      return;
+    }
     await this.activatePending(identity, true);
   },
 };
