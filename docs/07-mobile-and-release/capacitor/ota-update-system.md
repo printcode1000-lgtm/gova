@@ -4,8 +4,9 @@
 
 ASOL uses one forward-only OTA channel. File paths, sizes, and SHA-256 values
 remain the unit of truth, while each native download uses one signed ZIP
-transport object selected from the current release. The device keeps a changed-files-only rollback
-backup during activation. Release approval history is stored in the users
+transport object selected from the current release. The device keeps the previously served
+tree intact during activation so rollback is a path switch followed by removal
+of the failed candidate. Release approval history is stored in the users
 Turso database.
 
 The application downloads or activates an update only when:
@@ -515,7 +516,7 @@ All R2 GET, HEAD, LIST, PUT, and DELETE operations use SDK adaptive retries plus
 
 JSON files below `app-updates/files` are uploaded as `application/octet-stream`, not `application/json`. Android `CapacitorHttp` otherwise parses JSON before honoring `arraybuffer`, which changes the byte representation and prevents SHA-256 verification. JSON OTA objects are therefore refreshed on every publication to guarantee the correct transport metadata; the manifest itself remains `application/json`.
 
-There is intentionally no server-side channel rollback. If publication fails before the new manifest is written, clients continue to see the previous version. A client that reads an old manifest while files are being replaced may reject a checksum and retry on a later launch. This is separate from the device-side changed-file rollback used during activation.
+There is intentionally no server-side channel rollback. If publication fails before the new manifest is written, clients continue to see the previous version. A client that reads an old manifest while files are being replaced may reject a checksum and retry on a later launch. This is separate from the device-side candidate rollback used during activation.
 
 ## Manifest Schema
 
@@ -772,8 +773,8 @@ The deliberate residual gap is that a release revoked after download can still
 activate when the device is offline both at revocation recheck and launch.
 
 After activation, the expected bundle must initialize and confirm itself. If it
-does not, only touched files are restored and the previous WebView path is
-reactivated. A partial download is never activated.
+does not, the previous WebView path is reactivated and the failed complete
+candidate is removed. A partial download is never activated.
 
 Android continues normal DownloadManager work across backgrounding, process
 death, and reboot where the OS permits. Android Force Stop blocks it until the
@@ -877,13 +878,19 @@ npx drizzle-kit migrate
 npm run db:schema:sync
 ```
 
-After `cap:build`, R2 must contain exactly `manifest.json` plus the objects under `files/`, and zero objects under `releases/`.
+After `cap:build`, R2 may contain only `manifest.json`, `revocations.json`, the
+objects under `files/`, the latest three entries under `history/`, and the
+current release's immutable objects under `bundles/<releaseId>/`. It must
+contain zero objects under legacy `releases/`.
 
 ## Rules
 
-- Never create ZIP bundles.
-- Never create versioned R2 directories.
-- Never weaken the changed-files rollback transaction or remove its pre-mutation activation state.
+- Never create ad-hoc or unsigned ZIP bundles; only the publisher creates the
+  signed `full.zip` and retained-history delta transports.
+- Never create versioned copies of the mutable `files/` tree or restore the
+  legacy `releases/` layout. `bundles/<releaseId>/` is the required immutable
+  transport layout.
+- Never weaken the path-switch rollback transaction or remove its pre-mutation activation state.
 - Never publish the manifest before file operations complete.
 - Never update when `remote.version <= local.version`.
 - Never download or activate an unapproved release for a guest or ordinary user.
@@ -1111,16 +1118,67 @@ diagnosed from a string, and the next person will start from the same string.
 | "Checking and downloading" forever, version never moves | no error at all | A stored download was resumed indefinitely: the `download`/`discovered` branch never re-read the live manifest, so a device holding 0.1.1 kept re-extracting it after 0.1.2 shipped. |
 | Update downloads, then silently disappears | log says `ota.revoked`, nothing was revoked | `allowed: false` was treated as "never". `awaiting_approval` and `rollout_pending` mean "later" — see [the access table](#not-allowed-is-not-never-allowed). |
 | Update completes but nothing changes | `active/<version>` exists, `serverBasePath` unchanged | Activation happens at the next launch. Not a failure — use **Restart now**. |
-| Delta refuses to apply | `Unexpected OTA bundle entry: …` | The device's content did not match the published base for its version string. Reproduced by rebuilding locally without changing the version; in production, versions are minted once and never reused. |
+| Delta validation falls back to full | `OTA delta bundle failed; retrying with full bundle` after an entry/hash error | The device's content did not match the published base for its version string. The bad candidate and task are removed, then the signed full bundle is tried once. |
 
-### The gap that is still open
+### Delta mismatch recovery
 
-`selectOtaBundle` picks a delta by **version string alone**. It does not verify
-that the device's content is the base the delta was computed from, and a delta
-that fails aborts the whole check instead of falling back to the full bundle.
-Production mints each version once, so the risk is low — but a device whose tree
-drifted for any reason has no way back except a store release. Falling back to
-the full bundle on delta failure would close it.
+`selectOtaBundle` initially picks a delta by version string. If download,
+transport verification, extraction, entry validation, or per-file verification
+fails, the client removes that native task and incomplete candidate, rechecks
+free space for the larger signed `full.zip`, and retries the same release once
+with the full bundle. The selected full-bundle path is persisted before retry,
+so process death resumes the fallback instead of selecting the bad delta again.
+Failure of the full bundle remains terminal and is never retried as a delta.
+
+## How a change is classified as native
+
+The gate decides by **what a file binds to, not where it sits**. Three rules, in
+order:
+
+| Rule | Result |
+|---|---|
+| Path is `android/`, `ios/`, or `capacitor.config.ts` | native — these *are* the store binary |
+| Path is `fastlane/` or `assets/` | **not native** — CI tooling and source art, never compiled in |
+| Anything under `src/` or `platform/` | native only if its **content** imports a Capacitor plugin, or it is a listed `NATIVE_CONTRACT_FILES` entry |
+
+`platform/` used to be native by path. It is not: `capacitor.config.ts` imports
+nothing from it, and its constants are read by build scripts and baked into the
+web bundle, so they travel over OTA like any other string. The same folder still
+counts the moment a file in it imports a plugin.
+
+### Why the noise was removed rather than tolerated
+
+A gate is only worth what its alarms are believed to mean. One release flagged
+six files:
+
+| Flagged | Actually needed a store release? |
+|---|---|
+| `BackgroundDownloadPlugin.java` | **yes** — Java compiled into the binary |
+| `platform/capacitor.defaults.ts` | no — build-time URL constants |
+| `fastlane/Fastfile` | no — CI tooling |
+| three `src/native-platform/*.ts` | no — TypeScript facades over a plugin already compiled into the shipped shell |
+
+Five of six were false. The publisher's response was to declare
+`ASOL_OTA_MINIMUM_NATIVE_VERSION` five times in a row without re-reading the
+list — which is what an over-reporting gate trains you to do, and it is more
+dangerous than no gate at all, because the one true alarm arrives looking
+exactly like the five false ones.
+
+`scripts/test-ota-native-compatibility.ts` pins both directions: the real
+surfaces must be detected, and `fastlane/`, `assets/`, and a build-time constant
+under `platform/` must stay silent while a plugin import under `platform/` still
+fires.
+
+### The classification that is still coarse
+
+A TypeScript file importing `@capacitor/app` is flagged native even when that
+plugin was already compiled into the installed shell — so the change is
+genuinely OTA-safe. `CAPABILITY_AVAILABILITY` already records this as
+`backedSince`, and the gate does not consult it. Until it does, this class of
+alarm needs the same judgement call described in
+[Declaring the minimum native version](#declaring-the-minimum-native-version):
+check whether the plugin is in the shipped shell before assuming a store
+release.
 
 ## What still requires a store release
 

@@ -33,10 +33,29 @@ export const NATIVE_SURFACE_PATTERNS: RegExp[] = [
   /^android\//,
   /^ios\//,
   /^capacitor\.config\.ts$/,
-  /^platform\//,
-  /^assets\//,
-  /^fastlane\//,
 ];
+
+/**
+ * Paths that look native but are not compiled into the store binary.
+ *
+ * `fastlane/` drives CI. `assets/` holds source art for icon generation. Files
+ * under `platform/` are read by build scripts — `capacitor.config.ts` does not
+ * import any of them — so their values are baked into the web bundle and travel
+ * over OTA like any other constant.
+ *
+ * These were classified as native by path, and the cost was not theoretical:
+ * one release flagged six files of which five were harmless, and the publisher
+ * responded by declaring a minimum native version five times in a row without
+ * re-reading the list. A gate that cries wolf is a gate you have already
+ * stopped believing, so the noise is removed rather than tolerated.
+ *
+ * `platform/` still counts when its content binds to a plugin — the same
+ * content rule already applied to `src/`.
+ */
+const NOT_COMPILED_PATTERN = /^(?:fastlane|assets)\//;
+
+/** Build-time configuration read by scripts, never by the native project. */
+const BUILD_TIME_CONFIG_PATTERN = /^platform\//;
 
 /** Dependency names that ship native code with a store build. */
 const NATIVE_DEPENDENCY_PATTERN =
@@ -145,7 +164,12 @@ export function isNativeSurface(
   if (NATIVE_SURFACE_PATTERNS.some((pattern) => pattern.test(relativePath))) {
     return true;
   }
-  if (!relativePath.startsWith("src/")) return false;
+  if (NOT_COMPILED_PATTERN.test(relativePath)) return false;
+  // `platform/` and `src/` are both judged by what the file binds to, not by
+  // where it sits. A build-time constant is web content; a plugin import is not.
+  const byContent =
+    relativePath.startsWith("src/") || BUILD_TIME_CONFIG_PATTERN.test(relativePath);
+  if (!byContent) return false;
   if (NON_SHIPPED_PATTERN.test(relativePath)) return false;
   if (NATIVE_CONTRACT_FILES.has(relativePath)) return true;
   if (!/\.[cm]?[jt]sx?$/.test(relativePath)) return false;

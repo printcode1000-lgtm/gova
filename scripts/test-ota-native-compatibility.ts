@@ -38,9 +38,6 @@ for (const file of [
   "ios/App/App/Info.plist",
   "ios/ShareExtension/ShareViewController.swift",
   "capacitor.config.ts",
-  "platform/capacitor.defaults.ts",
-  "assets/google-play/icon.png",
-  "fastlane/Fastfile",
 ]) {
   assert.equal(
     NATIVE_SURFACE_PATTERNS.some((pattern) => pattern.test(file)),
@@ -49,6 +46,42 @@ for (const file of [
   );
   assert.equal(classify(file), true, `Native surface was not detected: ${file}`);
 }
+
+// ---------------------------------------------------------------------------
+// Paths that look native but never reach the store binary
+// ---------------------------------------------------------------------------
+// These were classified native by path. One release flagged six files of which
+// five were harmless, and the publisher answered by declaring a minimum native
+// version five times without re-reading the list. A gate that cries wolf stops
+// being read, so each of these must stay quiet unless its content says
+// otherwise.
+for (const file of [
+  "fastlane/Fastfile",
+  "fastlane/Appfile",
+  "assets/google-play/icon.png",
+  "assets/icon.png",
+]) {
+  assert.equal(
+    classify(file),
+    false,
+    `${file} is not compiled into the store binary and must not force a store release.`,
+  );
+}
+
+// `platform/` is build-time configuration: capacitor.config.ts does not import
+// it, and its values are baked into the web bundle, so it travels over OTA.
+assert.equal(
+  classify("platform/capacitor.defaults.ts", "export const CAPACITOR_API_BASE_URL = 'https://x';\n"),
+  false,
+  "A build-time constant under platform/ must not force a store release.",
+);
+
+// …but the same folder is native the moment its content binds to a plugin.
+assert.equal(
+  classify("platform/some-native-shim.ts", NATIVE_IMPORTING_FILE),
+  true,
+  "A plugin import under platform/ is a native binding wherever it sits.",
+);
 
 // ---------------------------------------------------------------------------
 // Inside src/, a file is native because it binds to a plugin — wherever it sits
