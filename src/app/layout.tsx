@@ -35,6 +35,10 @@ import { Suspense } from "react";
 import { isDevelopment, withBasePath } from "@/core/config";
 import { InstallationBootstrap } from "@/lib/installation";
 import { PreAuthFailureMonitor } from "@/features/system-logs/PreAuthFailureMonitor";
+import {
+  PUBLIC_SHARE_ORIGIN,
+  ShareDeepLinkController,
+} from "@/features/sharing";
 
 const DeveloperBadge = isDevelopment
   ? dynamic(() =>
@@ -43,6 +47,7 @@ const DeveloperBadge = isDevelopment
   : () => null;
 
 export const metadata: Metadata = {
+  metadataBase: new URL(PUBLIC_SHARE_ORIGIN),
   title: "Asol",
   description: "Asol — تطبيق Next.js",
   icons: {
@@ -101,6 +106,7 @@ export default function RootLayout({
                         <NetworkStatusBanner />
                         <LoginSuccessToast />
                         <MobileBackButtonController />
+                        <ShareDeepLinkController />
                         <VoiceInputController />
                         <SuperAdminImpersonationBanner />
                         <SuperAdminErrorFloatingButton />

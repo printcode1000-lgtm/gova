@@ -22,7 +22,10 @@ const emptyStoreImages: StoreImagesData = {
   coverUrls: [],
 };
 
-export function useProfileStoreImages(targetUid?: string) {
+export function useProfileStoreImages(
+  targetUid?: string,
+  initialData?: StoreImagesData,
+) {
   const { session } = useSession();
   const uid = targetUid || session?.uid || "";
   const queryClient = useQueryClient();
@@ -31,6 +34,7 @@ export function useProfileStoreImages(targetUid?: string) {
     queryKey: profileStoreImagesQueryKey(uid),
     queryFn: () => profileService.getStoreImages(uid),
     enabled: Boolean(uid),
+    initialData,
     meta: {
       feature: "Profile",
       page: "/profile",

@@ -61,6 +61,23 @@ export function readOptionalEnv(key: string): string | undefined {
   return process.env[key];
 }
 
+export function getAppLinkAssociationConfig(): {
+  androidCertificateFingerprints: string[];
+  iosTeamId: string;
+  iosBundleId: string;
+} {
+  return {
+    androidCertificateFingerprints: (
+      process.env.ASOL_ANDROID_APP_LINK_CERT_SHA256 ?? ""
+    )
+      .split(/[;,]/)
+      .map((value) => value.trim())
+      .filter(Boolean),
+    iosTeamId: process.env.ASOL_IOS_TEAM_ID?.trim() ?? "",
+    iosBundleId: process.env.ASOL_IOS_BUNDLE_ID?.trim() || "hgh.asol.app",
+  };
+}
+
 /**
  * Names of every configured libsql database URL variable.
  * Lets callers cover all databases without hardcoding a list that can drift.
@@ -152,7 +169,9 @@ export function getApnsServerConfig(): {
   const teamId = process.env.APNS_TEAM_ID?.trim() ?? "";
   const keyId = process.env.APNS_KEY_ID?.trim() ?? "";
   const bundleId = process.env.APNS_BUNDLE_ID?.trim() || "hgh.asol.app";
-  const privateKey = (process.env.APNS_PRIVATE_KEY ?? "").replace(/\\n/g, "\n").trim();
+  const privateKey = (process.env.APNS_PRIVATE_KEY ?? "")
+    .replace(/\\n/g, "\n")
+    .trim();
   if (!teamId || !keyId || !privateKey) return null;
   return {
     teamId,
@@ -250,7 +269,9 @@ export function getTursoProductRuntimeCredentials(): {
   const authToken = process.env.TURSO_PRODUCT_AUTH_TOKEN;
 
   if (!url)
-    throw new Error("TURSO_PRODUCT_DATABASE_URL environment variable is not set");
+    throw new Error(
+      "TURSO_PRODUCT_DATABASE_URL environment variable is not set",
+    );
   if (!authToken)
     throw new Error("TURSO_PRODUCT_AUTH_TOKEN environment variable is not set");
 
@@ -305,7 +326,8 @@ export function getTursoNotificationsRuntimeCredentials(): {
  */
 export function getNotificationGrantSecret(): string {
   const secret = process.env.ASOL_NOTIFICATION_GRANT_SECRET?.trim() ?? "";
-  if (secret.length < 32) throw new Error("notificationGrantSecretNotConfigured");
+  if (secret.length < 32)
+    throw new Error("notificationGrantSecretNotConfigured");
   return secret;
 }
 

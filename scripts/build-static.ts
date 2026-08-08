@@ -193,7 +193,11 @@ function auditStaticApiBaseUrl(outDirectory: string): void {
  * the file — the dev server watches `public/`, so this write can lose a race
  * that resolves in milliseconds. Retrying beats failing a 40-minute build.
  */
-function writeFileWithRetry(filePath: string, contents: string, attempts = 8): void {
+function writeFileWithRetry(
+  filePath: string,
+  contents: string,
+  attempts = 8,
+): void {
   for (let attempt = 0; ; attempt += 1) {
     try {
       writeFileSync(filePath, contents);
@@ -201,7 +205,10 @@ function writeFileWithRetry(filePath: string, contents: string, attempts = 8): v
     } catch (error) {
       const code = (error as NodeJS.ErrnoException).code;
       const locked =
-        code === "EBUSY" || code === "EPERM" || code === "UNKNOWN" || code === "EACCES";
+        code === "EBUSY" ||
+        code === "EPERM" ||
+        code === "UNKNOWN" ||
+        code === "EACCES";
       if (!locked || attempt >= attempts - 1) throw error;
       execSync(
         process.platform === "win32" ? "ping -n 2 127.0.0.1 >nul" : "sleep 0.3",
@@ -278,8 +285,10 @@ const STATIC_PUBLIC_IGNORE_DIRECTORIES = ["sync_data"] as const;
 // Next.js routes removed only from the temporary production/static source tree.
 const STATIC_ROUTE_IGNORELIST = [
   "app/api",
+  "app/.well-known",
   "app/dev",
   "app/orders/[orderId]",
+  "app/s",
   "app/test1",
 ] as const;
 
@@ -383,7 +392,10 @@ function prepareTempBuildDir(): void {
   copyIfExists(path.join(rootDir, "src"), tempSrcDir);
   // `next.config.ts` reads the native API host from here, so the temp build
   // needs the folder too — otherwise the config fails to resolve its import.
-  copyIfExists(path.join(rootDir, "platform"), path.join(tempBuildDir, "platform"));
+  copyIfExists(
+    path.join(rootDir, "platform"),
+    path.join(tempBuildDir, "platform"),
+  );
   for (const relativePath of STATIC_ROUTE_IGNORELIST) {
     rmSync(path.join(tempSrcDir, relativePath), {
       recursive: true,
@@ -539,8 +551,14 @@ function writeLocalWebManifest(): void {
   };
 
   const manifestJson = JSON.stringify(manifest, null, 2);
-  writeFileWithRetry(path.join(rootOutDir, localManifestFileName), manifestJson);
-  writeFileWithRetry(path.join(rootPublicDir, localManifestFileName), manifestJson);
+  writeFileWithRetry(
+    path.join(rootOutDir, localManifestFileName),
+    manifestJson,
+  );
+  writeFileWithRetry(
+    path.join(rootPublicDir, localManifestFileName),
+    manifestJson,
+  );
   console.log(
     `✅ Wrote ${localManifestFileName} (${manifest.fileCount} files, ${Math.ceil(size / 1024)} KB)`,
   );

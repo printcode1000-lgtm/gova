@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -39,13 +39,14 @@ import type { ProfileFulfillmentSettings } from "@/features/profile/entities/pro
 import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
 import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
-import { clipboard, isCancelledError } from "@/native-platform";
-import { share } from "@/native-platform/share";
+import {
+  buildProfileShareUrl,
+  OpenInAsolBanner,
+  ShareMenu,
+} from "@/features/sharing";
 import { useTranslation } from "@/lib/i18n";
 import { ProfileProductsPreview } from "./ProfileProductsPreview";
 import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
-
-const PROFILE_SHARE_ORIGIN = "https://gova-swart.vercel.app/";
 
 interface ProfilePreviewContentProps {
   locale: "ar" | "en";
@@ -99,15 +100,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
     !loading.featured;
   const { restoreSnapshot } = usePageSnapshot({ restoreWhen: ready });
   const restoredRef = useRef("");
-  const shareStatusTimerRef = useRef<number | null>(null);
-  const [shareStatus, setShareStatus] = useState("");
-  const shareUrl = useMemo(() => {
-    if (!previewUid) return "";
-    const url = new URL("/profile", PROFILE_SHARE_ORIGIN);
-    url.searchParams.set("mode", "preview");
-    url.searchParams.set("uid", previewUid);
-    return url.toString();
-  }, [previewUid]);
+  const shareUrl = previewUid ? buildProfileShareUrl(previewUid) : "";
 
   useEffect(() => {
     if (!ready || !previewUid || restoredRef.current === previewUid) return;
@@ -117,55 +110,6 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
     }, 220);
     return () => window.clearTimeout(timer);
   }, [previewUid, ready, restoreSnapshot]);
-
-  useEffect(
-    () => () => {
-      if (shareStatusTimerRef.current) {
-        window.clearTimeout(shareStatusTimerRef.current);
-      }
-    },
-    [],
-  );
-
-  const showShareStatus = (message: string) => {
-    setShareStatus(message);
-    if (shareStatusTimerRef.current) {
-      window.clearTimeout(shareStatusTimerRef.current);
-    }
-    shareStatusTimerRef.current = window.setTimeout(() => {
-      setShareStatus("");
-      shareStatusTimerRef.current = null;
-    }, 2200);
-  };
-
-  const shareProfile = async () => {
-    if (!shareUrl) return;
-    const title =
-      storeDetails.storeName ||
-      (t("profilePreview.pageTitle"));
-    try {
-      if (await share.canSend()) {
-        await share.send({
-          title,
-          text: t("profilePreview.shareText"),
-          url: shareUrl,
-        });
-        return;
-      }
-      await clipboard.write(shareUrl);
-      showShareStatus(t("profilePreview.linkCopied"));
-    } catch (error) {
-      // Dismissing the share sheet is not a failure.
-      if (isCancelledError(error)) return;
-      console.warn("[ProfilePreview] Failed to share profile link.", error);
-      try {
-        await clipboard.write(shareUrl);
-        showShareStatus(t("profilePreview.linkCopied"));
-      } catch {
-        showShareStatus(t("profilePreview.shareFailed"));
-      }
-    }
-  };
 
   return (
     <div
@@ -210,24 +154,43 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       isSuperAdmin={props.isSuperAdmin}
                       targetLabel={
                         storeDetails.storeName ||
-                        (t("profilePreview.providerFallback"))
+                        t("profilePreview.providerFallback")
                       }
                     />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className={`${ACTION_TILE_CLASS} border-input hover:bg-accent hover:text-accent-foreground`}
-                      style={ACTION_TILE_STYLE}
-                      title={t("profilePreview.shareAria")}
-                      aria-label={t("profilePreview.shareAria")}
-                      onClick={() => void shareProfile()}
-                    >
-                      <FontAwesomeIcon icon={faShareNodes} className="h-5 w-5" />
-                      <span className={ACTION_TILE_LABEL_CLASS}>
-                        {t("profilePreview.share")}
-                      </span>
-                    </Button>
-                    {storeDetails.profileShowcase?.customRequestEnabled && session?.uid ? (
+                    <ShareMenu
+                      locale={locale}
+                      content={{
+                        kind: "profile",
+                        title:
+                          storeDetails.storeName ||
+                          t("profilePreview.pageTitle"),
+                        text:
+                          storeDetails.storeDescription ||
+                          t("profilePreview.shareText"),
+                        url: shareUrl,
+                        imageUrl: storeImages.avatarUrl || storeImages.coverUrl,
+                      }}
+                      trigger={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className={`${ACTION_TILE_CLASS} border-input hover:bg-accent hover:text-accent-foreground`}
+                          style={ACTION_TILE_STYLE}
+                          title={t("profilePreview.shareAria")}
+                          aria-label={t("profilePreview.shareAria")}
+                        >
+                          <FontAwesomeIcon
+                            icon={faShareNodes}
+                            className="h-5 w-5"
+                          />
+                          <span className={ACTION_TILE_LABEL_CLASS}>
+                            {t("profilePreview.share")}
+                          </span>
+                        </Button>
+                      }
+                    />
+                    {storeDetails.profileShowcase?.customRequestEnabled &&
+                    session?.uid ? (
                       <Button
                         type="button"
                         variant="outline"
@@ -236,13 +199,18 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         title={t("profilePreview.customRequestAria")}
                         aria-label={t("profilePreview.customRequestAria")}
                         onClick={() => {
-                          const customRequestButton = document.querySelector('[data-custom-request-trigger]') as HTMLButtonElement;
+                          const customRequestButton = document.querySelector(
+                            "[data-custom-request-trigger]",
+                          ) as HTMLButtonElement;
                           if (customRequestButton) {
                             customRequestButton.click();
                           }
                         }}
                       >
-                        <FontAwesomeIcon icon={faPaperPlane} className="h-5 w-5" />
+                        <FontAwesomeIcon
+                          icon={faPaperPlane}
+                          className="h-5 w-5"
+                        />
                         <span className={ACTION_TILE_LABEL_CLASS}>
                           {t("profilePreview.customRequest")}
                         </span>
@@ -282,13 +250,10 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
               className="border-0 bg-transparent p-0 shadow-none"
             />
           </div>
-          {shareStatus ? (
-            <p className="text-center text-xs font-semibold text-primary" role="status">
-              {shareStatus}
-            </p>
-          ) : null}
         </section>
       ) : null}
+
+      {previewUid ? <OpenInAsolBanner locale={locale} /> : null}
 
       {/* Hidden custom request button for icon-only trigger */}
       {storeDetails.profileShowcase?.customRequestEnabled && session?.uid ? (
@@ -296,12 +261,10 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           <ProfileCustomRequestButton
             onSubmit={props.onCustomRequest}
             buttonLabel={t("profilePreview.customRequestAria")}
-            title={`${t("profilePreview.customRequestTo")} ${storeDetails.storeName || (t("profilePreview.sellerFallback"))}`}
+            title={`${t("profilePreview.customRequestTo")} ${storeDetails.storeName || t("profilePreview.sellerFallback")}`}
           />
         </div>
       ) : null}
-
-
 
       {previewUid ? (
         <SellerDiscountsPreview sellerUid={previewUid} locale={locale} />
@@ -324,9 +287,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           <SectionHeading
             icon={faBoxOpen}
             title={t("profilePreview.products")}
-            hint={
-              t("profilePreview.productsHint")
-            }
+            hint={t("profilePreview.productsHint")}
           />
           <ProfileProductsPreview uid={previewUid} />
         </section>
@@ -338,9 +299,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
             <SectionHeading
               icon={faClock}
               title={t("profilePreview.workingHours")}
-              hint={
-                t("profilePreview.workingHoursHint")
-              }
+              hint={t("profilePreview.workingHoursHint")}
             />
             <WorkingHoursCard
               mode="preview"
@@ -394,20 +353,14 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
         <section className="rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:p-7">
           <SectionHeading
             icon={faComments}
-            title={
-              t("profilePreview.reviews")
-            }
-            hint={
-              t("profilePreview.reviewsHint")
-            }
+            title={t("profilePreview.reviews")}
+            hint={t("profilePreview.reviewsHint")}
           />
           <ProductReviews
             type="profile"
             targetUid={previewUid}
             ownerUid={previewUid}
-            productName={
-              storeDetails.storeName || (t("profilePreview.profile"))
-            }
+            productName={storeDetails.storeName || t("profilePreview.profile")}
             reviewsEnabled
             targetEnabled
             commentsEnabled={

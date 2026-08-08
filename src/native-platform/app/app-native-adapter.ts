@@ -2,6 +2,7 @@
 import { toNativeError } from "../core/errors";
 import { createLazyPlugin } from "../core/lazy-plugin";
 import type {
+  AppDeepLink,
   AppDeepLinkListener,
   AppInfo,
   AppStateListener,
@@ -29,6 +30,15 @@ export async function nativeAppInfo(): Promise<AppInfo> {
 export async function nativeAppIsActive(): Promise<boolean> {
   try {
     return (await (await plugin.required()).App.getState()).isActive;
+  } catch (error) {
+    throw toNativeError("App", error);
+  }
+}
+
+export async function nativeAppLaunchUrl(): Promise<AppDeepLink | undefined> {
+  try {
+    const result = await (await plugin.required()).App.getLaunchUrl();
+    return result?.url ? { url: result.url } : undefined;
   } catch (error) {
     throw toNativeError("App", error);
   }

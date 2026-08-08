@@ -31,20 +31,22 @@ import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,
 } from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
-import { clipboard, isCancelledError } from "@/native-platform";
-import { share } from "@/native-platform/share";
-
-const PRODUCT_SHARE_ORIGIN = "https://gova-swart.vercel.app/";
+import { clipboard } from "@/native-platform";
+import {
+  buildProductShareUrl,
+  OpenInAsolBanner,
+  ShareMenu,
+} from "@/features/sharing";
 
 interface ProductStyleFile {
   components: ProductStyleComponents;
 }
 
-function setQueryParam(params: URLSearchParams, key: string, value: string) {
-  if (value.trim()) params.set(key, value.trim());
-}
-
-export function ProductPageContent() {
+export function ProductPageContent({
+  initialProduct = null,
+}: {
+  initialProduct?: ProductRecord | null;
+} = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requestedMode = searchParams.get("mode");
@@ -63,16 +65,18 @@ export function ProductPageContent() {
     returnTo === "profile-products" ? "/profile?mode=edit&tab=products" : null;
   const { locale } = useTranslation();
   const { session, isLoggedIn, isLoading: sessionLoading } = useSession();
-  const [product, setProduct] = React.useState<ProductRecord | null>(null);
+  const [product, setProduct] = React.useState<ProductRecord | null>(
+    initialProduct,
+  );
   const [style, setStyle] = React.useState<ProductStyleFile | null>(null);
-  const [details, setDetails] = React.useState<ProductDetails>(
-    createEmptyProductDetails(),
+  const [details, setDetails] = React.useState<ProductDetails>(() =>
+    initialProduct
+      ? toProductDetails(initialProduct)
+      : createEmptyProductDetails(),
   );
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [shareStatus, setShareStatus] = React.useState("");
-  const shareStatusTimerRef = React.useRef<number | null>(null);
 
   const mainCategoryId = product?.mainCategoryId ?? initialMain;
   const subcategoryId = product?.subcategoryId ?? initialSub;
@@ -80,45 +84,8 @@ export function ProductPageContent() {
   const productShareUrl = React.useMemo(() => {
     const id = product?.id || productId;
     if (mode !== "view" || !id) return "";
-    const url = new URL("/product", PRODUCT_SHARE_ORIGIN);
-    url.searchParams.set("mode", "view");
-    url.searchParams.set("productId", id);
-    setQueryParam(url.searchParams, "mainCategoryId", mainCategoryId);
-    setQueryParam(url.searchParams, "subcategoryId", subcategoryId);
-    setQueryParam(
-      url.searchParams,
-      "pharmacyCategoryId",
-      details.pharmacySpecs.pharmacyCategoryId ||
-        details.pharmacyCatalog.categoryId ||
-        initialPharmacyCategory,
-    );
-    setQueryParam(
-      url.searchParams,
-      "pharmacySubcategoryId",
-      details.pharmacySpecs.pharmacySubcategoryId ||
-        details.pharmacyCatalog.subcategoryId ||
-        initialPharmacySubcategory,
-    );
-    setQueryParam(
-      url.searchParams,
-      "fixedProductId",
-      details.pharmacyCatalog.fixedProductId,
-    );
-    return url.toString();
-  }, [
-    details.pharmacyCatalog.categoryId,
-    details.pharmacyCatalog.fixedProductId,
-    details.pharmacyCatalog.subcategoryId,
-    details.pharmacySpecs.pharmacyCategoryId,
-    details.pharmacySpecs.pharmacySubcategoryId,
-    initialPharmacyCategory,
-    initialPharmacySubcategory,
-    mainCategoryId,
-    mode,
-    product?.id,
-    productId,
-    subcategoryId,
-  ]);
+    return buildProductShareUrl(id);
+  }, [mode, product?.id, productId]);
   const ownerAllowed =
     mode === "new" || !product || product.uid === session?.uid;
   const adminCategoryInfo = React.useMemo(() => {
@@ -146,7 +113,10 @@ export function ProductPageContent() {
         let loadedProduct: ProductRecord | null = null;
         if (mode !== "new") {
           if (!productId) throw new Error("يلزم تحديد المنتج.");
-          loadedProduct = await productApiService.get(productId);
+          loadedProduct =
+            initialProduct?.id === productId
+              ? initialProduct
+              : await productApiService.get(productId);
           if (!cancelled) {
             setProduct(loadedProduct);
             setDetails(toProductDetails(loadedProduct));
@@ -178,7 +148,10 @@ export function ProductPageContent() {
           );
         } catch (styleError) {
           if (!(styleError instanceof ApiError) || styleError.status !== 404) {
-            console.error("[ProductPage] Failed to load product style.", styleError);
+            console.error(
+              "[ProductPage] Failed to load product style.",
+              styleError,
+            );
             throw styleError;
           }
           loadedStyle = await asolApi.getPublicJson<ProductStyleFile>(
@@ -206,88 +179,49 @@ export function ProductPageContent() {
     initialPharmacyCategory,
     initialPharmacySubcategory,
     initialSub,
+    initialProduct,
     mode,
     productId,
   ]);
 
-  React.useEffect(
-    () => () => {
-      if (shareStatusTimerRef.current) {
-        window.clearTimeout(shareStatusTimerRef.current);
-      }
-    },
-    [],
-  );
-
-  const showShareStatus = (message: string) => {
-    setShareStatus(message);
-    if (shareStatusTimerRef.current) {
-      window.clearTimeout(shareStatusTimerRef.current);
-    }
-    shareStatusTimerRef.current = window.setTimeout(() => {
-      setShareStatus("");
-      shareStatusTimerRef.current = null;
-    }, 2200);
-  };
-
-  const shareProduct = async () => {
-    if (!productShareUrl) return;
-    const productTitle =
-      details.mainData.name ||
-      (locale === "ar"
-        ? details.pharmacySpecs.nameAr || details.pharmacySpecs.nameEn
-        : details.pharmacySpecs.nameEn || details.pharmacySpecs.nameAr) ||
-      (locale === "ar" ? "منتج على Gova" : "Product on Gova");
-    try {
-      if (await share.canSend()) {
-        await share.send({
-          title: productTitle,
-          text:
-            locale === "ar"
-              ? "رابط المنتج على Gova"
-              : "Product link on Gova",
-          url: productShareUrl,
-        });
-        return;
-      }
-      await clipboard.write(productShareUrl);
-      showShareStatus(locale === "ar" ? "تم نسخ رابط المنتج" : "Product link copied");
-    } catch (shareError) {
-      // Dismissing the share sheet is not a failure.
-      if (isCancelledError(shareError)) return;
-      console.warn("[ProductPage] Failed to share product link.", shareError);
-      try {
-        await clipboard.write(productShareUrl);
-        showShareStatus(locale === "ar" ? "تم نسخ رابط المنتج" : "Product link copied");
-      } catch {
-        showShareStatus(locale === "ar" ? "تعذرت مشاركة الرابط" : "Could not share link");
-      }
-    }
-  };
+  const productShareTitle =
+    details.mainData.name ||
+    (locale === "ar"
+      ? details.pharmacySpecs.nameAr || details.pharmacySpecs.nameEn
+      : details.pharmacySpecs.nameEn || details.pharmacySpecs.nameAr) ||
+    (locale === "ar" ? "منتج على ASOL" : "Product on ASOL");
+  const productShareText =
+    details.mainData.description ||
+    details.price.label ||
+    (locale === "ar"
+      ? "شاهد تفاصيل المنتج على ASOL"
+      : "View product details on ASOL");
 
   const shareAction =
     mode === "view" && productShareUrl ? (
-      <div className="flex flex-col items-stretch gap-1">
-        <Button
-          type="button"
-          variant="outline"
-          className="gap-2"
-          onClick={() => void shareProduct()}
-        >
-          <Share2 className="h-4 w-4" />
-          {locale === "ar" ? "مشاركة المنتج" : "Share product"}
-        </Button>
-        {shareStatus ? (
-          <p className="text-center text-xs font-semibold text-primary" role="status">
-            {shareStatus}
-          </p>
-        ) : null}
-      </div>
+      <ShareMenu
+        locale={locale}
+        content={{
+          kind: "product",
+          title: productShareTitle,
+          text: productShareText,
+          url: productShareUrl,
+          imageUrl: details.images.find((image) => image.url)?.url,
+        }}
+        trigger={
+          <Button type="button" variant="outline" className="gap-2">
+            <Share2 className="h-4 w-4" />
+            {locale === "ar" ? "مشاركة المنتج" : "Share product"}
+          </Button>
+        }
+      />
     ) : null;
   const profileAction =
     mode === "view" && product?.uid ? (
       <Button asChild variant="outline" className="gap-2">
-        <Link href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}>
+        <Link
+          href={`/profile?mode=preview&uid=${encodeURIComponent(product.uid)}`}
+        >
           <UserCircle className="h-4 w-4" />
           {locale === "ar" ? "بروفايل صاحب المنتج" : "Owner profile"}
         </Link>
@@ -382,6 +316,9 @@ export function ProductPageContent() {
         shareAction={shareAction}
         profileAction={profileAction}
       />
+      {mode === "view" && productShareUrl ? (
+        <OpenInAsolBanner locale={locale} />
+      ) : null}
       {error ? (
         <p className="rounded-xl bg-destructive/10 p-3 text-destructive">
           {error}
@@ -423,7 +360,9 @@ export function ProductPageContent() {
               onCopy={copyToClipboard}
             />
             <AdminCopyValue
-              label={locale === "ar" ? "معرف التصنيف الرئيسي" : "Main Category ID"}
+              label={
+                locale === "ar" ? "معرف التصنيف الرئيسي" : "Main Category ID"
+              }
               value={mainCategoryId}
               onCopy={copyToClipboard}
             />

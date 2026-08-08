@@ -17,9 +17,11 @@ import {
   nativeAppExit,
   nativeAppInfo,
   nativeAppIsActive,
+  nativeAppLaunchUrl,
 } from "./app-native-adapter";
 import type {
   AppDeepLinkListener,
+  AppDeepLink,
   AppInfo,
   AppState,
   AppStateListener,
@@ -41,7 +43,9 @@ export class AppModule {
   /** Whether the application is currently in the foreground. */
   async state(): Promise<AppState> {
     if (isNativePlatform()) return { isActive: await nativeAppIsActive() };
-    return { isActive: hasDom() ? document.visibilityState === "visible" : true };
+    return {
+      isActive: hasDom() ? document.visibilityState === "visible" : true,
+    };
   }
 
   async onStateChange(listener: AppStateListener): Promise<AppUnsubscribe> {
@@ -60,6 +64,12 @@ export class AppModule {
   async onDeepLink(listener: AppDeepLinkListener): Promise<AppUnsubscribe> {
     if (isNativePlatform()) return listenNativeAppDeepLink(listener);
     return () => {};
+  }
+
+  /** URL that cold-launched the native container, when one exists. */
+  async launchUrl(): Promise<AppDeepLink | undefined> {
+    if (isNativePlatform()) return nativeAppLaunchUrl();
+    return undefined;
   }
 
   /**

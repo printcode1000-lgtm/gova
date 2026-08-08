@@ -23,8 +23,9 @@ something is the browser.
 returns a service only when **all** of these hold:
 
 1. It is running in a browser.
-2. The method is `GET`.
-3. The path is one that service owns.
+2. It is not a `next dev` development build.
+3. The method is `GET`.
+4. The path is one that service owns.
 
 Otherwise it returns `null`, meaning "leave it alone — the main app answers".
 
@@ -68,6 +69,15 @@ that cannot finish it.
 This is not an optimisation — it is what stops server-side rendering from
 turning into a main-app-to-service call.
 
+**One dataset in local development.** A `next dev` browser stays on the local
+Business API even when service origins exist in `.env`. The local API reads and
+writes the SQLite development databases; redirecting only its reads to a
+deployed service mixes local and cloud data and produces false `notFound`
+responses. Production web, static, and Capacitor builds are unaffected because
+they are production builds. This distinction must use the build mode, not a
+`localhost` hostname check, because a Capacitor WebView commonly has a
+localhost origin too.
+
 **No credentials.** Requests carry `credentials: "omit"`, as all ASOL API calls
 do. These endpoints are public reads.
 
@@ -84,6 +94,10 @@ every service; a second copy would be a place for the two to drift.
 
 Empty is a safe default, not a broken one: the main app still serves every one
 of these routes, so an unconfigured bridge degrades to pre-split behaviour.
+
+Development builds deliberately behave like the empty-origin fallback even
+when these values are configured: all reads remain on the local API so they see
+the same SQLite records as writes.
 
 A static export or native shell has no same-origin fallback, so
 `scripts/build-static.ts` resolves both from `platform/capacitor.defaults.ts`,

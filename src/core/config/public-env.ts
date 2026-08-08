@@ -2,20 +2,26 @@
  * Public (client-safe) environment values baked at build time.
  */
 
-import { MINIMUM_SUPPORTED_NATIVE_VERSION } from '@/native-platform/capabilities/shell-capabilities';
+import { MINIMUM_SUPPORTED_NATIVE_VERSION } from "@/native-platform/capabilities/shell-capabilities";
 
-const LEGACY_API_URL_KEY = 'NEXT_PUBLIC_ASOL_API_URL';
+const LEGACY_API_URL_KEY = "NEXT_PUBLIC_ASOL_API_URL";
 
 export const publicEnv = {
-  basePath: process.env.NEXT_PUBLIC_ASOL_BASE_PATH || '',
-  mode: process.env.NEXT_PUBLIC_ASOL_MODE || '',
+  developmentBuild: process.env.NODE_ENV === "development",
+  basePath: process.env.NEXT_PUBLIC_ASOL_BASE_PATH || "",
+  mode: process.env.NEXT_PUBLIC_ASOL_MODE || "",
   apiBaseUrl:
-    process.env.NEXT_PUBLIC_ASOL_API_BASE_URL?.replace(/\/$/, '') ||
-    process.env[LEGACY_API_URL_KEY]?.replace(/\/$/, '') ||
-    process.env.ASOL_API_BASE_URL?.replace(/\/$/, '') ||
-    '',
-  buildId: process.env.NEXT_PUBLIC_BUILD_ID ?? 'default',
-  r2PublicUrl: process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.replace(/\/$/, '') || '',
+    process.env.NEXT_PUBLIC_ASOL_API_BASE_URL?.replace(/\/$/, "") ||
+    process.env[LEGACY_API_URL_KEY]?.replace(/\/$/, "") ||
+    process.env.ASOL_API_BASE_URL?.replace(/\/$/, "") ||
+    "",
+  publicWebOrigin:
+    process.env.NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN?.replace(/\/$/, "") ||
+    "https://gova-swart.vercel.app",
+  appStoreUrl:
+    process.env.NEXT_PUBLIC_ASOL_APP_STORE_URL?.replace(/\/$/, "") || "",
+  buildId: process.env.NEXT_PUBLIC_BUILD_ID ?? "default",
+  r2PublicUrl: process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.replace(/\/$/, "") || "",
   /**
    * Origin of the notifications deployment. Client-safe: the browser is the
    * only thing that calls it, and a signed grant — not this URL — is what
@@ -28,7 +34,7 @@ export const publicEnv = {
    * `platform/` into `next.config.ts` and break the static build's temp layout.
    */
   notificationsUrl:
-    process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL?.replace(/\/$/, '') || '',
+    process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL?.replace(/\/$/, "") || "",
   /**
    * Origin of the products deployment. Client-safe: only the browser calls it,
    * and it serves read-only product data.
@@ -36,22 +42,24 @@ export const publicEnv = {
    * Like the notifications origin, no fallback constant lives here — a static
    * or native build resolves and asserts it in `build-static.ts`.
    */
-  productsUrl: process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL?.replace(/\/$/, '') || '',
+  productsUrl:
+    process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL?.replace(/\/$/, "") || "",
   /**
    * Origin of the orders deployment. Client-safe: only the browser calls it,
    * and it serves the order list only — the detail view stays on the main app,
    * which is the side that can read profile contacts and store details.
    */
-  ordersUrl: process.env.NEXT_PUBLIC_ASOL_ORDERS_URL?.replace(/\/$/, '') || '',
+  ordersUrl: process.env.NEXT_PUBLIC_ASOL_ORDERS_URL?.replace(/\/$/, "") || "",
   /**
    * Origin of the profiles deployment. Client-safe: it serves profile reads
    * only — reviews stay on the main app because they also read the product
    * database.
    */
-  profilesUrl: process.env.NEXT_PUBLIC_ASOL_PROFILES_URL?.replace(/\/$/, '') || '',
-  otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || '',
-  otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || '',
-  webBundleVersion: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION || '0.1.0',
+  profilesUrl:
+    process.env.NEXT_PUBLIC_ASOL_PROFILES_URL?.replace(/\/$/, "") || "",
+  otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || "",
+  otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || "",
+  webBundleVersion: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION || "0.1.0",
   nativeVersion:
     process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ||
     MINIMUM_SUPPORTED_NATIVE_VERSION,
@@ -67,7 +75,7 @@ export function getNotificationsPublicUrl(): string | null {
 
 /** Prefix a public asset path with the deployment base path (e.g. `/asol` on GitHub Pages). */
 export function withBasePath(path: string): string {
-  const base = publicEnv.basePath.replace(/\/$/, '');
-  const normalized = path.startsWith('/') ? path : `/${path}`;
+  const base = publicEnv.basePath.replace(/\/$/, "");
+  const normalized = path.startsWith("/") ? path : `/${path}`;
   return `${base}${normalized}`;
 }

@@ -12,6 +12,23 @@ import { productReviewApiService } from "@/features/product/services/product-rev
 import { profileApiService } from "@/features/profile/services/profile-api-service";
 
 const PAGE_SIZE = 3;
+function emptyReviewsResult(): ProductReviewsResult {
+  return {
+    average: 0,
+    total: 0,
+    distribution: [5, 4, 3, 2, 1].map((rating) => ({
+      rating,
+      count: 0,
+      percentage: 0,
+    })),
+    reviews: [],
+    offset: 0,
+    limit: PAGE_SIZE,
+    hasMore: false,
+    currentUserReview: null,
+  };
+}
+
 function Stars({ value, size = "text-lg" }: { value: number; size?: string }) {
   return (
     <span className={`inline-flex ${size}`} dir="ltr">
@@ -76,20 +93,7 @@ export function ProductReviews({
     async (offset = 0, append = false) => {
       const targetId = type === "product" ? productId : targetUid;
       if (!targetId) {
-        setResult({
-          average: 0,
-          total: 0,
-          distribution: [5, 4, 3, 2, 1].map((r) => ({
-            rating: r,
-            count: 0,
-            percentage: 0,
-          })),
-          reviews: [],
-          offset: 0,
-          limit: PAGE_SIZE,
-          hasMore: false,
-          currentUserReview: null,
-        });
+        setResult(emptyReviewsResult());
         setLoading(false);
         return;
       }
@@ -116,6 +120,13 @@ export function ProductReviews({
             ? { ...next, reviews: [...current.reviews, ...next.reviews] }
             : next,
         );
+      } catch (error) {
+        console.warn("[ProductReviews] Failed to load public reviews.", {
+          type,
+          targetId,
+          error,
+        });
+        setResult(emptyReviewsResult());
       } finally {
         setLoading(false);
       }

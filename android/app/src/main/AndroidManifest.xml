@@ -36,6 +36,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Verified public product/profile links from Google Play builds. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="gova-swart.vercel.app"
+                    android:path="/s/product" />
+                <data
+                    android:scheme="https"
+                    android:host="gova-swart.vercel.app"
+                    android:path="/s/profile" />
+            </intent-filter>
+
             <!--
                 Share & Receive: place ASOL in the system share sheet.
                 Handled by ShareReceivePlugin and delivered to the web layer

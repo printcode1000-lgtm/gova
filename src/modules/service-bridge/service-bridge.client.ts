@@ -18,6 +18,12 @@ import { publicEnv } from "@/core/config/public-env";
 
 type ServiceKey = "products" | "orders" | "profiles";
 
+interface ServiceBridgeRuntime {
+  browser: boolean;
+  developmentBuild: boolean;
+  origins: Record<ServiceKey, string>;
+}
+
 /**
  * Read routes each service serves, matched on the exact path.
  *
@@ -44,20 +50,20 @@ const READ_ROUTES: Record<string, ServiceKey> = {
   "/api/profile/users-by-specialty": "profiles",
 };
 
-const ORIGINS: Record<ServiceKey, () => string> = {
-  products: () => publicEnv.productsUrl,
-  orders: () => publicEnv.ordersUrl,
-  profiles: () => publicEnv.profilesUrl,
-};
-
-function originFor(service: ServiceKey): string | null {
-  return ORIGINS[service]() || null;
-}
-
 function isBrowser(): boolean {
   return typeof window !== "undefined";
 }
 
+/**
+ * `next dev` reads and writes the local SQLite databases through the local
+ * Business API. Redirecting only its reads to a deployed service mixes two
+ * different datasets: a product can exist locally while the remote service
+ * correctly returns `productNotFound`.
+ *
+ * Static/Capacitor and deployed web builds are production builds, so this guard
+ * does not weaken their service split. It also keeps native static bundles
+ * working even though a Capacitor WebView commonly uses a localhost origin.
+ */
 /** The path part of a route, ignoring any query string. */
 function pathOf(route: string): string {
   const queryIndex = route.indexOf("?");
@@ -83,13 +89,29 @@ function pathOf(route: string): string {
  * An unconfigured origin degrades to the main app, which still serves these
  * routes. That is a safe default, not a broken one.
  */
+export function resolveServiceOriginForRuntime(
+  method: string,
+  route: string,
+  runtime: ServiceBridgeRuntime,
+): string | null {
+  if (!runtime.browser || runtime.developmentBuild) return null;
+  if (method.toUpperCase() !== "GET") return null;
+  const service = READ_ROUTES[pathOf(route)];
+  if (!service) return null;
+  return runtime.origins[service] || null;
+}
+
 export function resolveServiceOrigin(
   method: string,
   route: string,
 ): string | null {
-  if (!isBrowser()) return null;
-  if (method.toUpperCase() !== "GET") return null;
-  const service = READ_ROUTES[pathOf(route)];
-  if (!service) return null;
-  return originFor(service);
+  return resolveServiceOriginForRuntime(method, route, {
+    browser: isBrowser(),
+    developmentBuild: publicEnv.developmentBuild,
+    origins: {
+      products: publicEnv.productsUrl,
+      orders: publicEnv.ordersUrl,
+      profiles: publicEnv.profilesUrl,
+    },
+  });
 }

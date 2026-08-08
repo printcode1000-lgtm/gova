@@ -72,6 +72,7 @@ import type {
 import { PROFILE_SECTION_IDS, PROFILE_SECTIONS } from "./profile-page.types";
 import { useProfileNavigation } from "./use-profile-navigation";
 import { useProfileSave } from "./use-profile-save";
+import type { PublicProfileShareRecord } from "@/features/sharing";
 
 const PROFILE_EDIT_TAB_COLORS: Record<ProfileEditTab, string> = {
   registration: "#7C3AED",
@@ -95,7 +96,11 @@ const PROFILE_EDIT_TAB_ICONS: Record<ProfileEditTab, IconDefinition> = {
   discounts: faPercent,
 };
 
-export function ProfilePageContent() {
+export function ProfilePageContent({
+  initialPublicProfile = null,
+}: {
+  initialPublicProfile?: PublicProfileShareRecord | null;
+} = {}) {
   const { t, locale } = useTranslation();
   const router = useRouter();
   const { session, isLoggedIn, isLoading, setSession } = useSession();
@@ -106,10 +111,18 @@ export function ProfilePageContent() {
   const isViewingOtherProfile = !!uid;
   const showEditCard = mode === "edit" && !isViewingOtherProfile;
   const showPreviewCard = mode !== "edit" || isViewingOtherProfile;
+  const matchingInitialProfile =
+    initialPublicProfile?.uid === uid ? initialPublicProfile : null;
   const { storeImages, isLoading: isLoadingStoreImages } =
-    useProfileStoreImages(isViewingOtherProfile ? uid : undefined);
+    useProfileStoreImages(
+      isViewingOtherProfile ? uid : undefined,
+      matchingInitialProfile?.storeImages,
+    );
   const { details: storeDetails, isLoading: isLoadingStoreDetails } =
-    useStoreDetails(isViewingOtherProfile ? uid : undefined);
+    useStoreDetails(
+      isViewingOtherProfile ? uid : undefined,
+      matchingInitialProfile?.storeDetails,
+    );
   const previewUid = showPreviewCard ? uid || session?.uid || "" : "";
   const isPreviewOwner = Boolean(
     session?.uid && previewUid && session.uid === previewUid,
@@ -215,7 +228,10 @@ export function ProfilePageContent() {
             productApiService
               .get(id, { suppressErrorLog: true })
               .catch((error) => {
-                console.warn("[Profile] Failed to load featured product.", { id, error });
+                console.warn("[Profile] Failed to load featured product.", {
+                  id,
+                  error,
+                });
                 return null;
               }),
           ),
@@ -266,7 +282,9 @@ export function ProfilePageContent() {
       if (!snapshot || cancelled) return;
       const restoreScroll = () => {
         if (cancelled || userInteracted) return;
-        for (const [selector, position] of Object.entries(snapshot.scroll.elements)) {
+        for (const [selector, position] of Object.entries(
+          snapshot.scroll.elements,
+        )) {
           document.querySelector<HTMLElement>(selector)?.scrollTo({
             left: position.x,
             top: position.y,
@@ -294,9 +312,13 @@ export function ProfilePageContent() {
       observer.observe(document.documentElement);
     };
 
-    window.addEventListener("pointerdown", stopAutomaticRestore, { passive: true });
+    window.addEventListener("pointerdown", stopAutomaticRestore, {
+      passive: true,
+    });
     window.addEventListener("wheel", stopAutomaticRestore, { passive: true });
-    window.addEventListener("touchstart", stopAutomaticRestore, { passive: true });
+    window.addEventListener("touchstart", stopAutomaticRestore, {
+      passive: true,
+    });
     window.addEventListener("keydown", stopAutomaticRestore);
     void restore();
 
@@ -426,29 +448,29 @@ export function ProfilePageContent() {
     <div className="container px-3 pb-1 sm:px-5 sm:pb-2 lg:px-6">
       {showPreviewCard ? (
         <div className="pt-0.5 sm:pt-1">
-        <ProfilePreviewContent
-          locale={locale === "ar" ? "ar" : "en"}
-          previewUid={previewUid}
-          session={session}
-          isOwner={isPreviewOwner}
-          isSuperAdmin={superAdmin}
-          storeImages={storeImages}
-          storeDetails={storeDetails}
-          contacts={previewContacts}
-          fulfillment={previewFulfillment}
-          heroConfig={heroSliderConfig}
-          featuredConfig={profileFeaturedConfig}
-          trendingConfig={profileTrendingConfig}
-          hasFeaturedProducts={featuredProducts.length > 0}
-          loading={{
-            images: isLoadingStoreImages,
-            details: isLoadingStoreDetails,
-            contacts: isLoadingPreviewContacts,
-            fulfillment: isLoadingPreviewFulfillment,
-            featured: isLoadingFeaturedProducts,
-          }}
-          onCustomRequest={submitProfileCustomRequest}
-        />
+          <ProfilePreviewContent
+            locale={locale === "ar" ? "ar" : "en"}
+            previewUid={previewUid}
+            session={session}
+            isOwner={isPreviewOwner}
+            isSuperAdmin={superAdmin}
+            storeImages={storeImages}
+            storeDetails={storeDetails}
+            contacts={previewContacts}
+            fulfillment={previewFulfillment}
+            heroConfig={heroSliderConfig}
+            featuredConfig={profileFeaturedConfig}
+            trendingConfig={profileTrendingConfig}
+            hasFeaturedProducts={featuredProducts.length > 0}
+            loading={{
+              images: isLoadingStoreImages,
+              details: isLoadingStoreDetails,
+              contacts: isLoadingPreviewContacts,
+              fulfillment: isLoadingPreviewFulfillment,
+              featured: isLoadingFeaturedProducts,
+            }}
+            onCustomRequest={submitProfileCustomRequest}
+          />
         </div>
       ) : showEditCard ? (
         <div
@@ -471,7 +493,8 @@ export function ProfilePageContent() {
                   products: t("onboarding.storeIdentity.products"),
                   contact: t("onboarding.contactInfo.additionalContact"),
                   store: t("onboarding.storeIdentity.title"),
-                  workingHours: locale === "ar" ? "مواعيد العمل" : "Working hours",
+                  workingHours:
+                    locale === "ar" ? "مواعيد العمل" : "Working hours",
                   fulfillment: locale === "ar" ? "الشحن والإرجاع" : "Shipping",
                   discounts: locale === "ar" ? "العروض" : "Offers",
                 };
@@ -551,72 +574,82 @@ export function ProfilePageContent() {
 
           {dirtySections.length > 0 ? (
             <div className="order-1 rounded-3xl border border-primary/20 bg-surface/90 p-3 shadow-lg shadow-primary/5 backdrop-blur-xl sm:p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex min-w-0 items-start gap-3">
-                <span
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-                    dirtyLabels.length > 0
-                      ? "bg-error/10 text-error"
-                      : "bg-primary/10 text-primary"
-                  }`}
-                >
-                  <FontAwesomeIcon
-                    icon={
-                      isUnifiedSaving
-                        ? faFloppyDisk
-                        : dirtyLabels.length > 0
-                          ? faPenToSquare
-                          : faCircleCheck
-                    }
-                    className="h-5 w-5"
-                  />
-                </span>
-                <div className="min-w-0">
-                  <p className="flex flex-wrap items-center gap-2 text-sm font-bold text-on-surface">
-                    <FontAwesomeIcon icon={faListCheck} className="h-4 w-4 text-primary" />
-                    {locale === "ar" ? "حفظ تعديلات الملف" : "Save profile changes"}
-                    <span className="rounded-full bg-error/10 px-2 py-0.5 text-[11px] font-semibold text-error">
-                      {dirtySections.length}{" "}
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-start gap-3">
+                  <span
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+                      dirtyLabels.length > 0
+                        ? "bg-error/10 text-error"
+                        : "bg-primary/10 text-primary"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={
+                        isUnifiedSaving
+                          ? faFloppyDisk
+                          : dirtyLabels.length > 0
+                            ? faPenToSquare
+                            : faCircleCheck
+                      }
+                      className="h-5 w-5"
+                    />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="flex flex-wrap items-center gap-2 text-sm font-bold text-on-surface">
+                      <FontAwesomeIcon
+                        icon={faListCheck}
+                        className="h-4 w-4 text-primary"
+                      />
                       {locale === "ar"
-                        ? "قسم معدل"
-                        : dirtySections.length === 1
-                          ? "changed section"
-                          : "changed sections"}
-                    </span>
-                  </p>
-                  <p className="mt-1 line-clamp-2 text-xs leading-5 text-on-surface-variant">
-                    {isUnifiedSaving
-                      ? t("profile.saving")
-                      : dirtyLabels.length > 0
-                        ? `${t("profile.saveTargets")}: ${dirtyLabels.join("، ")}`
-                        : locale === "ar"
-                          ? "لا توجد تغييرات غير محفوظة في التبويب الحالي أو باقي التبويبات."
-                          : "There are no unsaved changes in the current tab or other tabs."}
-                  </p>
-                  {saveError ? (
-                    <p className="mt-2 inline-flex items-center gap-2 rounded-xl bg-error/10 px-3 py-1.5 text-xs font-semibold text-error">
-                      <FontAwesomeIcon icon={faTriangleExclamation} className="h-4 w-4" />
-                      {saveError}
+                        ? "حفظ تعديلات الملف"
+                        : "Save profile changes"}
+                      <span className="rounded-full bg-error/10 px-2 py-0.5 text-[11px] font-semibold text-error">
+                        {dirtySections.length}{" "}
+                        {locale === "ar"
+                          ? "قسم معدل"
+                          : dirtySections.length === 1
+                            ? "changed section"
+                            : "changed sections"}
+                      </span>
                     </p>
-                  ) : null}
+                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-on-surface-variant">
+                      {isUnifiedSaving
+                        ? t("profile.saving")
+                        : dirtyLabels.length > 0
+                          ? `${t("profile.saveTargets")}: ${dirtyLabels.join("، ")}`
+                          : locale === "ar"
+                            ? "لا توجد تغييرات غير محفوظة في التبويب الحالي أو باقي التبويبات."
+                            : "There are no unsaved changes in the current tab or other tabs."}
+                    </p>
+                    {saveError ? (
+                      <p className="mt-2 inline-flex items-center gap-2 rounded-xl bg-error/10 px-3 py-1.5 text-xs font-semibold text-error">
+                        <FontAwesomeIcon
+                          icon={faTriangleExclamation}
+                          className="h-4 w-4"
+                        />
+                        {saveError}
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
+                <Button
+                  type="button"
+                  className="h-11 shrink-0 gap-2 rounded-2xl px-5 font-bold shadow-md shadow-primary/15"
+                  onClick={() => void saveProfileChanges()}
+                  disabled={
+                    isUnifiedSaving ||
+                    isSaveBlocked ||
+                    dirtySections.length === 0
+                  }
+                >
+                  {isUnifiedSaving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <FontAwesomeIcon icon={faFloppyDisk} className="h-4 w-4" />
+                  )}
+                  {isUnifiedSaving ? t("profile.saving") : t("profile.save")}
+                </Button>
               </div>
-              <Button
-                type="button"
-                className="h-11 shrink-0 gap-2 rounded-2xl px-5 font-bold shadow-md shadow-primary/15"
-                onClick={() => void saveProfileChanges()}
-                disabled={
-                  isUnifiedSaving || isSaveBlocked || dirtySections.length === 0
-                }
-              >
-                {isUnifiedSaving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <FontAwesomeIcon icon={faFloppyDisk} className="h-4 w-4" />
-                )}
-                {isUnifiedSaving ? t("profile.saving") : t("profile.save")}
-              </Button>
-            </div>
             </div>
           ) : null}
 
@@ -984,46 +1017,46 @@ function ProfileEditSectionFrame({
       style={{ borderColor: `${color}44` }}
     >
       {!hideHeader ? (
-      <div
-        className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl px-3 py-3"
-        style={{ backgroundColor: `${color}10` }}
-      >
-        <div className="flex min-w-0 items-center gap-3">
-          <span
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
-            style={{ backgroundColor: `${color}18`, color }}
-          >
-            <FontAwesomeIcon icon={icon} className="h-5 w-5" />
-          </span>
-          <div className="min-w-0">
-            <h2 className="truncate text-base font-bold text-on-surface">
-              {title}
-            </h2>
-            <p className="mt-0.5 text-xs text-on-surface-variant">
-              {locale === "ar"
-                ? "تابع تعديلات هذا القسم واحفظها من شريط الحفظ."
-                : "Review this section and save it from the save bar."}
-            </p>
-          </div>
-        </div>
-        <span
-          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold ${
-            isSaving
-              ? "bg-primary/10 text-primary"
-              : isDirty
-                ? canSave
-                  ? "bg-error/10 text-error"
-                  : "bg-error-container text-on-error-container"
-                : "bg-primary/10 text-primary"
-          }`}
+        <div
+          className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl px-3 py-3"
+          style={{ backgroundColor: `${color}10` }}
         >
-          <FontAwesomeIcon
-            icon={isDirty ? faPenToSquare : faCircleCheck}
-            className="h-3.5 w-3.5"
-          />
-          {statusText}
-        </span>
-      </div>
+          <div className="flex min-w-0 items-center gap-3">
+            <span
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"
+              style={{ backgroundColor: `${color}18`, color }}
+            >
+              <FontAwesomeIcon icon={icon} className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <h2 className="truncate text-base font-bold text-on-surface">
+                {title}
+              </h2>
+              <p className="mt-0.5 text-xs text-on-surface-variant">
+                {locale === "ar"
+                  ? "تابع تعديلات هذا القسم واحفظها من شريط الحفظ."
+                  : "Review this section and save it from the save bar."}
+              </p>
+            </div>
+          </div>
+          <span
+            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold ${
+              isSaving
+                ? "bg-primary/10 text-primary"
+                : isDirty
+                  ? canSave
+                    ? "bg-error/10 text-error"
+                    : "bg-error-container text-on-error-container"
+                  : "bg-primary/10 text-primary"
+            }`}
+          >
+            <FontAwesomeIcon
+              icon={isDirty ? faPenToSquare : faCircleCheck}
+              className="h-3.5 w-3.5"
+            />
+            {statusText}
+          </span>
+        </div>
       ) : null}
       <div className="[&_.auth-input]:shadow-sm [&_button]:transition-all">
         {children}

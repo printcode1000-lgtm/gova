@@ -1,16 +1,11 @@
-'use client';
+import { Suspense } from "react";
 
-import { Suspense } from 'react';
-
-import { ProfilePageContent } from '@/components/profile/ProfilePageContent';
-import { useTranslation } from '@/lib/i18n';
+import { ProfilePageContent } from "@/components/profile/ProfilePageContent";
 
 function ProfilePageFallback() {
-  const { t } = useTranslation();
-
   return (
     <div className="container px-4 py-8 text-sm text-on-surface-variant">
-      {t('profile.loading')}
+      جار تحميل الصفحة…
     </div>
   );
 }
