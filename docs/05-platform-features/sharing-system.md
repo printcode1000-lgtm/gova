@@ -76,7 +76,7 @@ Shared public URL
      -> generateMetadata() emits Open Graph and Twitter metadata
      -> the normal product/profile page component receives initial server data
      -> browser renders the full public page
-     -> OpenInAsolBanner offers the correct store destination
+     -> OpenInAsolHeaderPrompt offers the correct store destination in AppHeader
 
 Verified App/Universal Link
   -> Android intent filter or iOS associated domain
@@ -98,7 +98,7 @@ Verified App/Universal Link
 | `share-links.ts` | Canonical public origin, public resource URLs, destination URLs, message composition, store URLs, and safe public-to-internal routing. |
 | `share-actions.client.ts` | Browser/native destination actions and fallback policy. Client-only. |
 | `ShareMenu.tsx` | Reusable responsive sharing dialog and status feedback. Client-only. |
-| `OpenInAsolBanner.tsx` | Web-only floating install prompt with OS-aware store selection. Client-only. |
+| `OpenInAsolHeaderPrompt.tsx` | Route-aware web install prompt, OS-aware store selection, and the header presentation model. Client-only. |
 | `ShareDeepLinkController.tsx` | Cold- and warm-launch native deep-link routing. Client-only. |
 | `share-metadata.server.ts` | Server record loading and Open Graph/Twitter metadata generation. Server-only. |
 | `share-location-url.ts` | Central share-or-copy helper for map/location URLs. |
@@ -132,8 +132,9 @@ accidentally importing server services through the normal module barrel.
 
 | File | Integration |
 |---|---|
-| `ProductPageContent.tsx` | Builds `ShareContent` for view mode, supplies the existing trigger, and renders the install banner. |
-| `ProfilePreviewContent.tsx` | Builds profile `ShareContent`, supplies the existing trigger, and renders the install banner. |
+| `ProductPageContent.tsx` | Builds `ShareContent` for view mode and supplies the existing trigger. |
+| `ProfilePreviewContent.tsx` | Builds profile `ShareContent` and supplies the existing trigger. |
+| `AppShell.tsx` / `AppHeader.tsx` | Consume the centralized install-prompt model and render it as a second row inside the fixed application header. |
 | `ProfilePageContent.tsx` | Accepts server-loaded public profile data for hydration. |
 | `use-store-details.ts` | Accepts server `initialData` through TanStack Query. |
 | `use-profile-store-images.ts` | Accepts server `initialData` through TanStack Query. |
@@ -415,9 +416,11 @@ Adding a server dependency directly to the internal `/product` or `/profile`
 page can break the static mobile build. Resource metadata therefore belongs on
 the thin `/s/*` wrappers.
 
-## Install banner
+## Header install prompt
 
-`OpenInAsolBanner` is rendered on public product/profile views.
+`useOpenInAsolHeaderPrompt()` owns route, runtime, and store selection.
+`OpenInAsolHeaderPrompt` is rendered inside `AppHeader` as a second header row
+on product views and profile previews. It is not a floating page overlay.
 
 Behavior:
 
@@ -430,8 +433,9 @@ Behavior:
 | iPhone/iPad web without App Store URL | Hidden; an iOS user is never sent to Google Play. |
 
 iPadOS desktop-mode detection also checks `MacIntel` with touch points. The
-banner is dismissible for the current component lifetime and respects safe-area
-insets. Dismissal is not persisted and creates no tracking state.
+shell sets `--asol-header-install-height` only while the prompt has a valid
+destination, and `--asol-app-header-height` includes that row. Page content
+therefore starts below the expanded header instead of being covered by it.
 
 ## Android App Links
 
@@ -561,7 +565,7 @@ change. In particular, it does not create:
 - click or visit records;
 - seller or sharer attribution;
 - social destination history;
-- cookies, local-storage attribution, or persisted banner dismissal;
+- cookies, local-storage attribution, or persisted prompt state;
 - UTM or referrer query parameters.
 
 The existing product/profile services read only the public information needed
@@ -577,7 +581,7 @@ to control third-party logging.
 | Variable | Required | Default | Purpose |
 |---|---:|---|---|
 | `NEXT_PUBLIC_ASOL_PUBLIC_WEB_ORIGIN` | Recommended | `https://gova-swart.vercel.app` | Absolute public origin used for canonical share URLs and metadata. |
-| `NEXT_PUBLIC_ASOL_APP_STORE_URL` | Required for iOS install banner | Empty | Public ASOL App Store listing. Empty hides the banner on iOS. |
+| `NEXT_PUBLIC_ASOL_APP_STORE_URL` | Required for iOS header prompt | Empty | Public ASOL App Store listing. Empty hides the prompt on iOS. |
 
 These values are embedded in client code and are not secrets.
 
@@ -706,7 +710,7 @@ inspect the merged output for `android:autoVerify`, the host, and both paths.
 | Clipboard/action failure | Keep the menu open and show localized failure feedback. |
 | User cancels share sheet | No error and no forced copy. |
 | Product/profile metadata read fails | Emit generic `noindex,nofollow` metadata. |
-| iOS App Store URL missing | Hide the iOS install banner. |
+| iOS App Store URL missing | Hide the iOS header prompt. |
 | iOS Team ID missing/invalid | Serve an empty AASA `details` list. |
 | Invalid extra Android fingerprint | Ignore it rather than publishing malformed association data. |
 | Untrusted or unsupported deep link | Ignore it. |
@@ -825,7 +829,8 @@ provides the gesture, while native builds use the compiled platform adapter.
 - Social-card refresh timing is controlled by each external platform's cache.
 - iOS Universal Links remain inactive until a valid Team ID is configured and a
   matching native build is shipped.
-- The banner dismissal is intentionally session/component-local.
+- The header prompt is intentionally non-dismissible and remains visible while
+  the user is on an eligible public product/profile surface.
 - The module does not provide short links, QR codes, referral attribution,
   analytics, or share-count reporting.
 

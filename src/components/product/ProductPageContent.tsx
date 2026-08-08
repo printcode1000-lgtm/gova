@@ -34,7 +34,6 @@ import {
 import { clipboard } from "@/native-platform";
 import {
   buildProductShareUrl,
-  OpenInAsolBanner,
   ShareMenu,
 } from "@/features/sharing";
 
@@ -316,9 +315,6 @@ export function ProductPageContent({
         shareAction={shareAction}
         profileAction={profileAction}
       />
-      {mode === "view" && productShareUrl ? (
-        <OpenInAsolBanner locale={locale} />
-      ) : null}
       {error ? (
         <p className="rounded-xl bg-destructive/10 p-3 text-destructive">
           {error}

@@ -41,7 +41,6 @@ import type { StoreImagesData } from "@/features/profile/entities/store-images.e
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
 import {
   buildProfileShareUrl,
-  OpenInAsolBanner,
   ShareMenu,
 } from "@/features/sharing";
 import { useTranslation } from "@/lib/i18n";
@@ -252,8 +251,6 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
           </div>
         </section>
       ) : null}
-
-      {previewUid ? <OpenInAsolBanner locale={locale} /> : null}
 
       {/* Hidden custom request button for icon-only trigger */}
       {storeDetails.profileShowcase?.customRequestEnabled && session?.uid ? (

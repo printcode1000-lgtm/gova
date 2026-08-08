@@ -28,6 +28,8 @@
 
   /* Height of the header's content row — must match AppHeader's inner row. */
   --asol-header-bar-height: 3rem;
+  /* Route-aware web install prompt rendered as a second row inside AppHeader. */
+  --asol-header-install-height: 0px;
   /* Anything pinned above the header (e.g. the impersonation banner) reports
      its own height here; it already includes the top safe area. */
   --asol-top-overlay-height: 0px;
@@ -37,7 +39,8 @@
     var(--asol-top-overlay-height)
   );
   --asol-app-header-height: calc(
-    var(--asol-header-bar-height) + var(--asol-app-header-inset)
+    var(--asol-header-bar-height) + var(--asol-header-install-height) +
+      var(--asol-app-header-inset)
   );
   /* Breathing room between the header and page content. */
   --asol-shell-main-gap: 1rem;

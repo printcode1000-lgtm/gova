@@ -1,6 +1,8 @@
 'use client';
 
-import { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
+
+import { useOpenInAsolHeaderPrompt } from '@/features/sharing';
 
 import { AppHeader } from './AppHeader';
 import { BottomNavBar } from './BottomNavBar';
@@ -14,11 +16,16 @@ interface AppShellProps {
  * App shell for in-app routes (all pages except splash `/`).
  */
 export function AppShell({ children }: AppShellProps) {
+  const installPrompt = useOpenInAsolHeaderPrompt();
+  const shellStyle = {
+    '--asol-header-install-height': installPrompt ? '3rem' : '0px',
+  } as CSSProperties;
+
   // System insets are owned by `SafeAreaController` at the root layout, so the
   // shell only has to consume the resulting CSS variables.
   return (
-    <>
-      <AppHeader />
+    <div style={shellStyle}>
+      <AppHeader installPrompt={installPrompt} />
       <main
         className="asol-canvas asol-shell-main min-h-screen"
         style={{ paddingBottom: BOTTOM_NAV_CLEARANCE }}
@@ -26,6 +33,6 @@ export function AppShell({ children }: AppShellProps) {
         {children}
       </main>
       <BottomNavBar />
-    </>
+    </div>
   );
 }

@@ -9,14 +9,22 @@ import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/features/cart/use-cart';
 import { SpecialtyRequestComposer } from '@/features/specialty-chat';
+import {
+  OpenInAsolHeaderPrompt,
+  type AsolInstallPrompt,
+} from '@/features/sharing';
 
 import { AppSidebar } from './AppSidebar';
 
-export function AppHeader() {
+export function AppHeader({
+  installPrompt,
+}: {
+  installPrompt: AsolInstallPrompt | null;
+}) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { preferences, toggleColorScheme, cycleThemeMode } = useThemePreferences();
   const resolvedScheme = useResolvedColorScheme();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const pathname = usePathname();
   const { totalQuantity, flashToken } = useCart();
   const isSearchActive = pathname === '/search' || pathname.startsWith('/search/');
@@ -135,6 +143,9 @@ export function AppHeader() {
             </Link>
           </div>
         </div>
+        {installPrompt ? (
+          <OpenInAsolHeaderPrompt locale={locale} prompt={installPrompt} />
+        ) : null}
       </header>
 
       <AppSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />

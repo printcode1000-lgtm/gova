@@ -1,4 +1,8 @@
-export { OpenInAsolBanner } from "./OpenInAsolBanner";
+export {
+  OpenInAsolHeaderPrompt,
+  useOpenInAsolHeaderPrompt,
+} from "./OpenInAsolHeaderPrompt";
+export type { AsolInstallPrompt } from "./OpenInAsolHeaderPrompt";
 export { ShareDeepLinkController } from "./ShareDeepLinkController";
 export { ShareMenu } from "./ShareMenu";
 export type {
