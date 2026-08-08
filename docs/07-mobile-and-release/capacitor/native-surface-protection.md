@@ -92,6 +92,48 @@ Verified rather than assumed: after the change, `fastlane/Fastfile` and
 appear in the report. Their absence is evidence, not coincidence — had they been
 identical to the baseline, disappearing would have proved nothing.
 
+## What a declaration may and may not excuse
+
+`ASOL_OTA_MINIMUM_NATIVE_VERSION` (or `--minimum-native-version`) says: *this
+bundle runs on a shell that already shipped*.
+
+That claim is **arguable** for a TypeScript facade over a plugin the shell
+already contains — the plugin is compiled in, only the vocabulary naming it is
+new.
+
+It is **false by construction** for the shell's own compiled source. Editing
+Java, Swift, `AndroidManifest.xml`, a Gradle file, or `capacitor.config.ts`
+changes the binary; no device in the field carries that edit, so no version can
+be claimed for it.
+
+`ota:publish` now refuses a declaration that would waive such a change, and
+names the file:
+
+```text
+Refusing to publish: a declared minimum native version cannot excuse a
+change to the shell's own compiled source. No shell in the field
+contains these edits, so no version can be claimed for them:
+  - android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java
+```
+
+### The incident that produced this rule
+
+A fix to `BackgroundDownloadPlugin.java` — Capacitor's `getLong` returns null
+for any bundle size below ~2.1 GB, so `schedule` rejected every download — was
+waived with `ASOL_OTA_MINIMUM_NATIVE_VERSION=0.2.0`, and four releases were
+published claiming compatibility with the 0.2.0 store shell.
+
+That shell carries the **unfixed** plugin. It therefore cannot perform the
+download those bundles depend on. The releases were installable only on a debug
+build that already had the fix.
+
+No user was harmed, and the reason is uncomfortable: a genuine 0.2.0 device
+cannot download any OTA at all, precisely because of the bug being fixed. The
+false claim was invisible because the audience for it was empty.
+
+The gate was right and the declaration was wrong. `isUndeclarableNativeChange`
+encodes that so the judgement is not left to whoever is in a hurry.
+
 ## What is deliberately not done
 
 **A frozen fingerprint file** (`native-freeze.json` with per-file hashes). It

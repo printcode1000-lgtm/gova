@@ -57,6 +57,25 @@ const NOT_COMPILED_PATTERN = /^(?:fastlane|assets)\//;
 /** Build-time configuration read by scripts, never by the native project. */
 const BUILD_TIME_CONFIG_PATTERN = /^platform\//;
 
+/**
+ * Changes a `minimumNativeVersion` declaration can never excuse.
+ *
+ * Declaring a minimum version says "this bundle runs on a shell that already
+ * shipped". That claim is arguable for a TypeScript facade over a plugin the
+ * shell already contains — and false, always, for the shell's own compiled
+ * source. Editing Java, Swift, a manifest, a Gradle file, or the Capacitor
+ * config changes the binary; no shell in the field contains that edit.
+ *
+ * This rule exists because the mistake was made here. A fix to
+ * `BackgroundDownloadPlugin.java` was waived with
+ * `ASOL_OTA_MINIMUM_NATIVE_VERSION=0.2.0` and four releases were published,
+ * each claiming to run on the 0.2.0 store shell — which carries the unfixed
+ * plugin, and therefore cannot perform the very download those bundles rely on.
+ */
+export function isUndeclarableNativeChange(relativePath: string): boolean {
+  return /^(?:android|ios)\//.test(relativePath) || relativePath === "capacitor.config.ts";
+}
+
 /** Dependency names that ship native code with a store build. */
 const NATIVE_DEPENDENCY_PATTERN =
   /^@(?:capacitor|capacitor-mlkit|capawesome|capgo)\//;

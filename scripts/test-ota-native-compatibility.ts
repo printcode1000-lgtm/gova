@@ -5,6 +5,7 @@ import {
   NATIVE_SURFACE_PATTERNS,
   inspectNativeCompatibility,
   isNativeSurface,
+  isUndeclarableNativeChange,
   resolveNativeBaseline,
 } from "./ota/ota-native-compatibility";
 import {
@@ -217,3 +218,39 @@ assert.equal(
 }
 
 console.log("OTA native compatibility tests passed.");
+
+// ---------------------------------------------------------------------------
+// A minimum-version declaration cannot excuse the shell's own compiled source
+// ---------------------------------------------------------------------------
+// Declaring says "this runs on a shell that already shipped". For Java, Swift,
+// a manifest or the Capacitor config that claim is false by construction: no
+// device carries the edit. This was not hypothetical — a BackgroundDownloadPlugin
+// fix was waived this way and four releases went out claiming 0.2.0 compatibility.
+for (const file of [
+  "android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java",
+  "android/app/src/main/AndroidManifest.xml",
+  "android/app/build.gradle",
+  "ios/App/App/Info.plist",
+  "capacitor.config.ts",
+]) {
+  assert.equal(
+    isUndeclarableNativeChange(file),
+    true,
+    `${file} changes the binary; no shipped shell contains it, so it must not be declarable.`,
+  );
+}
+
+// The escape hatch stays open where the claim can be true: a facade over a
+// plugin the shell already contains.
+for (const file of [
+  "src/native-platform/app/app-native-adapter.ts",
+  "src/native-platform/capabilities/capability-keys.ts",
+  "src/platform/ota/capacitor-ota-adapter.ts",
+  "platform/capacitor.defaults.ts",
+]) {
+  assert.equal(
+    isUndeclarableNativeChange(file),
+    false,
+    `${file} may legitimately run on an existing shell; declaring must remain possible.`,
+  );
+}

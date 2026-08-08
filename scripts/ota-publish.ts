@@ -14,6 +14,7 @@ import { assertReleaseStaticBundle } from "./assert-release-static-bundle";
 import {
   formatReport,
   inspectNativeCompatibility,
+  isUndeclarableNativeChange,
   resolveNativeBaseline,
 } from "./ota/ota-native-compatibility";
 import {
@@ -223,6 +224,21 @@ function assertNativeCompatibility(): string {
         "Tag the commit the current store build was made from, for example:\n" +
         "  git tag native-v1.0.0 && git push origin native-v1.0.0\n" +
         "Or set ASOL_OTA_NATIVE_BASELINE to that commit.",
+    );
+  }
+
+  // A declaration is a claim about a shell that already shipped. It cannot be
+  // made about the shell's own compiled source, because no device carries that
+  // edit — see isUndeclarableNativeChange.
+  const undeclarable = report.changedPaths.filter(isUndeclarableNativeChange);
+  if (undeclarable.length > 0 && declared) {
+    throw new Error(
+      "Refusing to publish: a declared minimum native version cannot excuse a\n" +
+        "change to the shell's own compiled source. No shell in the field\n" +
+        "contains these edits, so no version can be claimed for them:\n" +
+        undeclarable.map((path) => `  - ${path}`).join("\n") +
+        "\n\nBuild and roll out a store release, then re-tag the baseline:\n" +
+        "  git tag native-v<version> && git push origin native-v<version>",
     );
   }
 
