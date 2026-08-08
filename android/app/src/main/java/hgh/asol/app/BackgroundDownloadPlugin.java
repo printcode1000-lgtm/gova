@@ -44,9 +44,13 @@ public class BackgroundDownloadPlugin extends Plugin {
         String releaseId = call.getString("releaseId");
         String url = call.getString("url");
         String sha256 = call.getString("sha256");
-        Long size = call.getLong("size");
+        // `call.getLong` returns its default unless the JSON value is literally a
+        // Long, and a bundle size below ~2.1 GB parses as an Integer — so it
+        // answered null for every realistic release and this method rejected
+        // every download. optLong coerces whatever number arrived.
+        long size = call.getData().optLong("size", -1L);
         if (!validReleaseId(releaseId) || url == null || !url.startsWith("https://") ||
-                sha256 == null || !sha256.matches("(?i)[a-f0-9]{64}") || size == null || size <= 0) {
+                sha256 == null || !sha256.matches("(?i)[a-f0-9]{64}") || size <= 0) {
             call.reject("Invalid background download request");
             return;
         }
