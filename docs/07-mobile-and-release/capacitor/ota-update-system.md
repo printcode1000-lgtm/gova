@@ -21,6 +21,21 @@ An equal or lower remote version is ignored. A missing approval record, a
 revoked release, or an unavailable approval API fails closed: the client
 continues with its running bundle and downloads no OTA files.
 
+**Failing closed means declining to install — not destroying what was already
+downloaded.** A release held for approval or rollout stays on disk and installs
+when it is cleared. Only revocation deletes.
+
+Two facts follow from "an equal or lower remote version is ignored", and both
+have bitten:
+
+- Republishing content under a version a device already has produces no update,
+  and the client is right to say so. If the settings page reports "no update"
+  while you expect one, compare `app_version` on the device with the published
+  `version` before assuming a fault.
+- A version string is a promise that the content is identical everywhere. Deltas
+  are computed against it, so reusing one with different content breaks them —
+  see [the open gap](#the-gap-that-is-still-open).
+
 ## The Golden Rule
 
 > **OTA ships UI and logic that run inside the native capabilities already
@@ -1078,6 +1093,34 @@ compile Swift. Before the store release, verify all of the following in Xcode:
    the temporary-file move into Application Support remains valid.
 5. Run Thread Sanitizer while status, completion, and removal overlap to verify
    `UserDefaults` and session callback coordination.
+
+## Failure modes proven on a device
+
+Every entry below was found by installing a debug build on a real Android phone
+and driving the update by hand. All of them predate the R2 account move; moving
+the origin only caused the OTA path to be exercised end to end for the first
+time. They are recorded with their exact signatures because each one was
+diagnosed from a string, and the next person will start from the same string.
+
+| Symptom on the device | Signature | Cause |
+|---|---|---|
+| Update check fails instantly | `"StorageCapacity.then()" is not implemented on android` | `registerPlugin` returns a Proxy that answers every property with a function, `then` included. Returning it from an `async` function makes promise resolution call `then` on it, which Capacitor forwards to native as a method of that name. Box the proxy: `return { plugin: registerPlugin(...) }`. |
+| Download never starts | `Invalid background download request` | Capacitor's `PluginCall.getLong` returns its default unless the JSON value is literally a `Long`. Any bundle under ~2.1 GB arrives as an `Integer`, so `size` was always null. Use `call.getData().optLong("size", -1)`. |
+| Download and verify succeed, install fails | `Directory at '…/asol-ota/current/' already exists, cannot be overwritten` | `recursive: true` does not make `mkdir` idempotent on Android. See [Directory creation](#directory-creation). |
+| Cloud error log floods | hundreds of `OS-PLUG-FILE-0010` rows | Same rejection, logged natively before JavaScript can catch it, once per file rather than once per directory. |
+| "Checking and downloading" forever, version never moves | no error at all | A stored download was resumed indefinitely: the `download`/`discovered` branch never re-read the live manifest, so a device holding 0.1.1 kept re-extracting it after 0.1.2 shipped. |
+| Update downloads, then silently disappears | log says `ota.revoked`, nothing was revoked | `allowed: false` was treated as "never". `awaiting_approval` and `rollout_pending` mean "later" — see [the access table](#not-allowed-is-not-never-allowed). |
+| Update completes but nothing changes | `active/<version>` exists, `serverBasePath` unchanged | Activation happens at the next launch. Not a failure — use **Restart now**. |
+| Delta refuses to apply | `Unexpected OTA bundle entry: …` | The device's content did not match the published base for its version string. Reproduced by rebuilding locally without changing the version; in production, versions are minted once and never reused. |
+
+### The gap that is still open
+
+`selectOtaBundle` picks a delta by **version string alone**. It does not verify
+that the device's content is the base the delta was computed from, and a delta
+that fails aborts the whole check instead of falling back to the full bundle.
+Production mints each version once, so the risk is low — but a device whose tree
+drifted for any reason has no way back except a store release. Falling back to
+the full bundle on delta failure would close it.
 
 ## What still requires a store release
 
