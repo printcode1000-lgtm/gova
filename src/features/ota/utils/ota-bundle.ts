@@ -43,6 +43,37 @@ export function selectOtaBundle(
   return full ? { kind: "full", entry: full } : null;
 }
 
+/**
+ * Ordered native transport attempts for one release. A matching delta is an
+ * optimization, while the signed full bundle is the recovery path when the
+ * device's local tree does not really match the version string used to select
+ * that delta.
+ */
+export function otaBundleCandidates(
+  manifest: OtaManifest,
+  localVersion: string,
+): SelectedOtaBundle[] {
+  const selected = selectOtaBundle(manifest, localVersion);
+  if (!selected) return [];
+  if (selected.kind === "full") return [selected];
+  const full = manifest.bundles?.full;
+  return full ? [selected, { kind: "full", entry: full }] : [selected];
+}
+
+/** Resume the exact persisted transport; otherwise start with the best one. */
+export function selectOtaBundleAttempt(
+  manifest: OtaManifest,
+  localVersion: string,
+  persistedBundlePath?: string,
+): SelectedOtaBundle | null {
+  const candidates = otaBundleCandidates(manifest, localVersion);
+  return (
+    candidates.find((candidate) => candidate.entry.path === persistedBundlePath) ??
+    candidates[0] ??
+    null
+  );
+}
+
 export function bundleUrl(manifest: OtaManifest, entry: OtaBundleEntry): string {
   if (/^https:\/\//i.test(entry.path)) return entry.path;
   const releaseRoot = manifest.baseUrl.replace(/\/files\/?$/, "");

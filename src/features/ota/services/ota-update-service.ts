@@ -22,6 +22,7 @@ import {
   bundleUrl,
   extractOtaBundle,
   selectOtaBundle,
+  selectOtaBundleAttempt,
 } from "../utils/ota-bundle";
 import {
   pendingDeltaFiles,
@@ -387,105 +388,148 @@ async function downloadNativeBundle(
   deleted: string[],
   state: OtaStoredState,
   notify?: (progress: OtaDownloadProgress) => void,
-): Promise<DownloadedOtaUpdate> {
-  const selected = selectOtaBundle(remote, local.version);
+): Promise<DownloadedOtaUpdate | null> {
+  const selected = selectOtaBundleAttempt(
+    remote,
+    local.version,
+    state.download?.bundlePath,
+  );
   if (!selected) return downloadPerFile(local, remote, changed, deleted, state.download?.totalBytes ?? 0, state, notify);
   const entry = selected.entry;
   if (entry.size > MAX_DOWNLOAD_BYTES) throw new Error("OTA bundle exceeds download limit");
-  const schedule = () => nativePlatform.backgroundDownload.schedule({
+  try {
+    const schedule = () => nativePlatform.backgroundDownload.schedule({
       releaseId: remote.releaseId,
       url: bundleUrl(remote, entry),
       sha256: entry.sha256,
       size: entry.size,
     });
-  let task = await nativePlatform.backgroundDownload.status(remote.releaseId);
-  let rescheduledMissing = false;
-  if (task.status === "failed") {
-    await nativePlatform.backgroundDownload.remove(remote.releaseId);
-    task = await schedule();
-  } else if (task.status === "missing") {
-    task = await schedule();
-    rescheduledMissing = true;
-  }
-  state.download = {
-    releaseId: remote.releaseId,
-    version: remote.version,
-    status: "downloading",
-    downloadedBytes: task.bytesDownloaded,
-    totalBytes: entry.size,
-    nativeTaskId: task.id,
-    expectedSha256: entry.sha256,
-    bundlePath: entry.path,
-  };
-  await writeState(state);
-  const pollingStartedAt = Date.now();
-  let lastPersistedAt = pollingStartedAt;
-  let lastPersistedPercent = Math.round(
-    task.bytesDownloaded / Math.max(entry.size, 1) * 100,
-  );
-  let previousStatus: typeof task.status | null = null;
-  while (true) {
-    if (Date.now() - pollingStartedAt >= NATIVE_DOWNLOAD_TIMEOUT_MS) {
-      throw new Error("OTA background download exceeded the one-hour polling limit");
-    }
-    const action = nativeDownloadPollAction(task.status, rescheduledMissing);
-    if (action === "complete") break;
-    if (action === "fail") {
-      throw new Error(
-        task.status === "missing"
-          ? "Native OTA task is still missing after one reschedule"
-          : task.error ?? "OTA background download failed",
-      );
-    }
-    if (action === "reschedule") {
+    let task = await nativePlatform.backgroundDownload.status(remote.releaseId);
+    let rescheduledMissing = false;
+    if (task.status === "failed") {
+      await nativePlatform.backgroundDownload.remove(remote.releaseId);
+      task = await schedule();
+    } else if (task.status === "missing") {
       task = await schedule();
       rescheduledMissing = true;
-      continue;
     }
-    const verifyingBundle = task.status === "verifying";
-    const progressPercent = Math.round(
-      task.bytesDownloaded / Math.max(entry.size, 1) * 100,
-    );
-    const now = Date.now();
-    const enteredVerifying = verifyingBundle && previousStatus !== "verifying";
-    const persistProgress = enteredVerifying || shouldPersistNativeDownloadProgress(
-      lastPersistedPercent,
-      progressPercent,
-      lastPersistedAt,
-      now,
-    );
-    await updateStatus(state, {
-      progress: progressPercent,
-      statusKey: verifyingBundle ? "ota.bundleVerifying" : "ota.downloading",
+    state.download = {
+      releaseId: remote.releaseId,
+      version: remote.version,
+      status: "downloading",
       downloadedBytes: task.bytesDownloaded,
       totalBytes: entry.size,
-    }, notify, persistProgress);
-    if (persistProgress) {
-      lastPersistedAt = now;
-      lastPersistedPercent = progressPercent;
+      nativeTaskId: task.id,
+      expectedSha256: entry.sha256,
+      bundlePath: entry.path,
+    };
+    await writeState(state);
+    const pollingStartedAt = Date.now();
+    let lastPersistedAt = pollingStartedAt;
+    let lastPersistedPercent = Math.round(
+      task.bytesDownloaded / Math.max(entry.size, 1) * 100,
+    );
+    let previousStatus: typeof task.status | null = null;
+    while (true) {
+      if (Date.now() - pollingStartedAt >= NATIVE_DOWNLOAD_TIMEOUT_MS) {
+        throw new Error("OTA background download exceeded the one-hour polling limit");
+      }
+      const action = nativeDownloadPollAction(task.status, rescheduledMissing);
+      if (action === "complete") break;
+      if (action === "fail") {
+        throw new Error(
+          task.status === "missing"
+            ? "Native OTA task is still missing after one reschedule"
+            : task.error ?? "OTA background download failed",
+        );
+      }
+      if (action === "reschedule") {
+        task = await schedule();
+        rescheduledMissing = true;
+        continue;
+      }
+      const verifyingBundle = task.status === "verifying";
+      const progressPercent = Math.round(
+        task.bytesDownloaded / Math.max(entry.size, 1) * 100,
+      );
+      const now = Date.now();
+      const enteredVerifying = verifyingBundle && previousStatus !== "verifying";
+      const persistProgress = enteredVerifying || shouldPersistNativeDownloadProgress(
+        lastPersistedPercent,
+        progressPercent,
+        lastPersistedAt,
+        now,
+      );
+      await updateStatus(state, {
+        progress: progressPercent,
+        statusKey: verifyingBundle ? "ota.bundleVerifying" : "ota.downloading",
+        downloadedBytes: task.bytesDownloaded,
+        totalBytes: entry.size,
+      }, notify, persistProgress);
+      if (persistProgress) {
+        lastPersistedAt = now;
+        lastPersistedPercent = progressPercent;
+      }
+      previousStatus = task.status;
+      await new Promise((resolve) => window.setTimeout(resolve, NATIVE_DOWNLOAD_POLL_MS));
+      task = await nativePlatform.backgroundDownload.status(remote.releaseId);
+      state.download = reconcileNativeDownloadTask(state.download, task);
     }
-    previousStatus = task.status;
-    await new Promise((resolve) => window.setTimeout(resolve, NATIVE_DOWNLOAD_POLL_MS));
-    task = await nativePlatform.backgroundDownload.status(remote.releaseId);
-    state.download = reconcileNativeDownloadTask(state.download, task);
+    state.download.status = "extracting";
+    await updateStatus(state, { progress: 100, statusKey: "ota.verifying", downloadedBytes: entry.size, totalBytes: entry.size }, notify);
+    await provisionWorkingBaseline(local, state, notify);
+    await capacitorOtaAdapter.prepareRelease(local.version, remote.version);
+    const expected = Object.fromEntries(
+      (selected.kind === "delta" ? changed : Object.keys(remote.files)).map((path) => [path, remote.files[path]!]),
+    );
+    await extractOtaBundle(nativeTaskChunks(task), expected, {
+      begin: (path) => capacitorOtaAdapter.beginReleaseFile(remote.version, path),
+      append: (path, bytes) => capacitorOtaAdapter.appendReleaseFile(remote.version, path, bytes),
+      async verify(path, file) {
+        const bytes = await capacitorOtaAdapter.readReleaseFile(remote.version, path);
+        if ((await sha256(bytes)) !== file.sha256) throw new Error(`OTA extracted file checksum mismatch: ${path}`);
+      },
+    });
+    await nativePlatform.backgroundDownload.remove(remote.releaseId);
+    return finalizePending(local, remote, changed, deleted, entry.size, state, notify);
+  } catch (error) {
+    const full = remote.bundles?.full;
+    if (selected.kind !== "delta" || !full || full.path === selected.entry.path) throw error;
+
+    logWarn("OTA delta bundle failed; retrying with full bundle", error);
+    await nativePlatform.backgroundDownload.remove(remote.releaseId);
+    await capacitorOtaAdapter.cleanupTransaction(remote.version);
+    delete state.resume;
+    state.download = {
+      releaseId: remote.releaseId,
+      version: remote.version,
+      status: "requested",
+      downloadedBytes: 0,
+      totalBytes: full.size,
+      expectedSha256: full.sha256,
+      bundlePath: full.path,
+    };
+    if (state.discovered) state.discovered.totalBytes = full.size;
+    await writeState(state);
+
+    const requiredFreeBytes = requiredOtaFreeBytes(remote.size, full.size);
+    try {
+      const { availableBytes } = await nativePlatform.storageCapacity.getFreeSpace();
+      if (availableBytes < requiredFreeBytes) {
+        await updateStatus(state, {
+          progress: 0,
+          statusKey: "ota.insufficientStorage",
+          downloadedBytes: 0,
+          totalBytes: full.size,
+          requiredFreeBytes,
+        }, notify);
+        return null;
+      }
+    } catch (capacityError) {
+      logWarn("Free-space preflight unavailable before full-bundle fallback; continuing", capacityError);
+    }
+    return downloadNativeBundle(local, remote, changed, deleted, state, notify);
   }
-  state.download.status = "extracting";
-  await updateStatus(state, { progress: 100, statusKey: "ota.verifying", downloadedBytes: entry.size, totalBytes: entry.size }, notify);
-  await provisionWorkingBaseline(local, state, notify);
-  await capacitorOtaAdapter.prepareRelease(local.version, remote.version);
-  const expected = Object.fromEntries(
-    (selected.kind === "delta" ? changed : Object.keys(remote.files)).map((path) => [path, remote.files[path]!]),
-  );
-  await extractOtaBundle(nativeTaskChunks(task), expected, {
-    begin: (path) => capacitorOtaAdapter.beginReleaseFile(remote.version, path),
-    append: (path, bytes) => capacitorOtaAdapter.appendReleaseFile(remote.version, path, bytes),
-    async verify(path, file) {
-      const bytes = await capacitorOtaAdapter.readReleaseFile(remote.version, path);
-      if ((await sha256(bytes)) !== file.sha256) throw new Error(`OTA extracted file checksum mismatch: ${path}`);
-    },
-  });
-  await nativePlatform.backgroundDownload.remove(remote.releaseId);
-  return finalizePending(local, remote, changed, deleted, entry.size, state, notify);
 }
 
 let activeCheck: Promise<DownloadedOtaUpdate | null> | null = null;
@@ -626,7 +670,10 @@ export const otaUpdateService = {
     const baseVersion = pending.baseVersion || publicEnv.webBundleVersion;
     if (!approvalAlreadyChecked) {
       const access = await otaApiService.getReleaseAccess({ releaseId: pending.releaseId, version: pending.version, identity });
-      if (!access.allowed) { await this.discardPending(state); return; }
+      if (!access.allowed) {
+        await this.holdPendingUntilAllowed(state, access.reason);
+        return;
+      }
     }
     state.activation = {
       version: pending.version,

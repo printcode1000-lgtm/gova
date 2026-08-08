@@ -246,6 +246,24 @@ async function main(): Promise<void> {
   const adapterSource = readFileSync("src/platform/ota/capacitor-ota-adapter.ts", "utf8");
   assert.equal(adapterSource.includes('setServerAssetPath({ path: "public" })'), true);
   assert.equal(adapterSource.includes("persistServerBasePath()"), true);
+  const ensureDirectorySource = adapterSource
+    .split("async function createOrConfirmDirectory", 2)[1]!
+    .split("async function ensureDirectory", 1)[0]!;
+  assert.equal(
+    ensureDirectorySource.includes("Filesystem.readdir"),
+    true,
+    "OTA directory creation must inspect the parent instead of logging an expected mkdir rejection",
+  );
+  assert.equal(
+    ensureDirectorySource.includes("recursive: false"),
+    true,
+    "the inspected parent is created first, so mkdir must only create the missing leaf",
+  );
+  assert.equal(
+    adapterSource.includes("ensuringDirectories.get(path)"),
+    true,
+    "concurrent writes must share one directory creation request",
+  );
   // The candidate is cloned once before downloading, so activation copies
   // nothing and peak storage stays at the two trees the free-space check
   // reserves. Copying at activation time would exceed that reservation.

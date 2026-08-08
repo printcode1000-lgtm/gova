@@ -68,7 +68,7 @@ async function removeReleaseRoot(releaseRoot: string): Promise<void> {
   forgetEnsuredUnder(releaseRoot);
 }
 
-/** True when mkdir refused only because the directory was already there. */
+/** True when mkdir lost a race to another request creating the same directory. */
 function isDirectoryAlreadyExists(error: unknown): boolean {
   const code = (error as { code?: unknown } | null)?.code;
   if (code === "OS-PLUG-FILE-0010") return true;
@@ -81,12 +81,14 @@ function isDirectoryAlreadyExists(error: unknown): boolean {
  *
  * `ensureDirectory` is called once per extracted file, for that file's parent,
  * so a release of 3,458 files asked for the same handful of directories
- * hundreds of times. Every repeat that found the directory present produced a
- * native rejection, and Capacitor logs those through `console.error` before any
- * JavaScript can catch them — which the system-log collector then shipped to
- * the server. One install filled the cloud log with 602 of 614 rows.
+ * hundreds of times. Calling `mkdir` and catching its already-exists rejection
+ * is not quiet on Android: Capacitor logs the native rejection through
+ * `console.error` before JavaScript can catch it. A cloned delta candidate also
+ * starts with hundreds of directories that this runtime did not create, so the
+ * cache alone still emitted one error for every unique parent.
  */
 const ensuredDirectories = new Set<string>();
+const ensuringDirectories = new Map<string, Promise<void>>();
 
 /** Drops a deleted subtree from the cache, so it is recreated when next needed. */
 function forgetEnsuredUnder(root: string): void {
@@ -95,24 +97,49 @@ function forgetEnsuredUnder(root: string): void {
   }
 }
 
-async function ensureDirectory(path: string): Promise<void> {
-  if (ensuredDirectories.has(path)) return;
-  // `recursive: true` creates missing parents but does NOT make mkdir
-  // idempotent: Capacitor Android still rejects when the target directory is
-  // already there. This comment used to claim otherwise, and nothing caught the
-  // rejection — so every install after the first aborted with
-  // "Directory at '…/asol-ota/current/' already exists, cannot be overwritten",
-  // which is exactly the normal case for an update.
+async function createOrConfirmDirectory(path: string): Promise<void> {
+  const separator = path.lastIndexOf("/");
+  const parent = separator >= 0 ? path.slice(0, separator) : "";
+  const name = separator >= 0 ? path.slice(separator + 1) : path;
+
+  if (parent) await ensureDirectory(parent);
+
+  // Listing a known-existing parent lets us distinguish an existing directory
+  // without deliberately causing a native rejection. This is important after
+  // `Filesystem.copy` clones a base release: those directories exist on disk
+  // but have not yet been observed by this JavaScript runtime.
+  const listing = await Filesystem.readdir({
+    path: parent,
+    directory: Directory.Data,
+  });
+  const existing = listing.files.find((entry) => entry.name === name);
+  if (existing) {
+    if (existing.type !== "directory") {
+      throw new Error(`OTA path is not a directory: ${path}`);
+    }
+    ensuredDirectories.add(path);
+    return;
+  }
+
   try {
-    await Filesystem.mkdir({ path, directory: Directory.Data, recursive: true });
+    await Filesystem.mkdir({ path, directory: Directory.Data, recursive: false });
   } catch (error) {
+    // A concurrent request can create the directory between readdir and mkdir.
     if (!isDirectoryAlreadyExists(error)) throw error;
   }
   ensuredDirectories.add(path);
-  // Recursive creation made the parents too, so they need no second attempt.
-  for (let cut = path.lastIndexOf("/"); cut > 0; cut = path.lastIndexOf("/", cut - 1)) {
-    ensuredDirectories.add(path.slice(0, cut));
-  }
+}
+
+async function ensureDirectory(path: string): Promise<void> {
+  if (ensuredDirectories.has(path)) return;
+  const pending = ensuringDirectories.get(path);
+  if (pending) return pending;
+
+  const operation = createOrConfirmDirectory(path).finally(() => {
+    ensuringDirectories.delete(path);
+  });
+  ensuringDirectories.set(path, operation);
+  return operation;
 }
 
 async function exists(path: string): Promise<boolean> {

@@ -12,6 +12,7 @@ import { r2BackupRepository } from "../repositories/r2-backup.repository.server"
 
 const original = {
   nodeEnv: process.env.NODE_ENV,
+  mode: process.env.ASOL_MODE,
   nextPhase: process.env.NEXT_PHASE,
   publicMode: process.env.NEXT_PUBLIC_ASOL_MODE,
   vercel: process.env.VERCEL,
@@ -19,6 +20,8 @@ const original = {
 
 function setEnv(values: Partial<typeof original>) {
   process.env.NODE_ENV = values.nodeEnv;
+  if (values.mode === undefined) delete process.env.ASOL_MODE;
+  else process.env.ASOL_MODE = values.mode;
   if (values.nextPhase === undefined) delete process.env.NEXT_PHASE;
   else process.env.NEXT_PHASE = values.nextPhase;
   if (values.publicMode === undefined) delete process.env.NEXT_PUBLIC_ASOL_MODE;
@@ -30,6 +33,7 @@ function setEnv(values: Partial<typeof original>) {
 try {
   setEnv({
     nodeEnv: "development",
+    mode: "development",
     nextPhase: undefined,
     publicMode: undefined,
     vercel: undefined,
@@ -39,6 +43,7 @@ try {
 
   setEnv({
     nodeEnv: "production",
+    mode: "development",
     nextPhase: undefined,
     publicMode: undefined,
     vercel: undefined,
@@ -48,9 +53,28 @@ try {
 
   setEnv({
     nodeEnv: "development",
+    mode: "development",
     nextPhase: undefined,
     publicMode: "static",
     vercel: undefined,
+  });
+  assert.equal(devCloudBackupEnvironment().allowed, false);
+
+  setEnv({
+    nodeEnv: "development",
+    mode: "development",
+    nextPhase: "phase-production-build",
+    publicMode: undefined,
+    vercel: undefined,
+  });
+  assert.equal(devCloudBackupEnvironment().allowed, false);
+
+  setEnv({
+    nodeEnv: "development",
+    mode: "development",
+    nextPhase: undefined,
+    publicMode: undefined,
+    vercel: "1",
   });
   assert.equal(devCloudBackupEnvironment().allowed, false);
 

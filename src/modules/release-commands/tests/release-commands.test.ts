@@ -29,6 +29,16 @@ import { analyzeBundleArtifact, classifyEntry } from "../services/bundle-analyze
 
 async function main() {
 const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { scripts: Record<string, string> };
+const releaseConfirmDialogSource = await readFile(
+  "src/modules/google-play-console/presentation/components/ReleaseCommandConfirmDialog.tsx",
+  "utf8",
+);
+assert.match(releaseConfirmDialogSource, /command\.parameters\.map/,
+  "the shared confirmation dialog must render command parameters for shortcut launchers");
+assert.match(releaseConfirmDialogSource, /parameters:\s*\{\s*\.\.\.\(pending\?\.parameters/,
+  "the shared confirmation dialog must preserve and submit command parameters");
+assert.match(releaseConfirmDialogSource, /!phraseSatisfied \|\| !minimumNativeVersionSatisfied/,
+  "OTA confirmation must stay disabled until the minimum native version is present");
 const locales = await Promise.all(["en", "ar"].map(async (locale) => JSON.parse(
   await readFile(`src/locales/${locale}.json`, "utf8"),
 ) as Record<string, string>));

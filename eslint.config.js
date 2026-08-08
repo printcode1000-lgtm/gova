@@ -6,6 +6,7 @@ module.exports = [
     ignores: [
       'out/**',
       '.next/**',
+      '**/.next/**',
       'node_modules/**',
       'android/**',
       'ios/**',

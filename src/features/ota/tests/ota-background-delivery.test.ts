@@ -6,7 +6,9 @@ import { zipSync } from "fflate";
 
 import {
   extractOtaBundle,
+  otaBundleCandidates,
   selectOtaBundle,
+  selectOtaBundleAttempt,
   type OtaBundleSink,
 } from "../utils/ota-bundle";
 import {
@@ -86,6 +88,25 @@ async function main(): Promise<void> {
   assert.equal(selectOtaBundle(ota, "1.0.0")?.kind, "delta");
   assert.equal(selectOtaBundle(ota, "0.8.0")?.kind, "full");
   assert.equal(selectOtaBundle({ ...ota, bundles: undefined }, "1.0.0"), null);
+  assert.deepEqual(
+    otaBundleCandidates(ota, "1.0.0").map(({ kind }) => kind),
+    ["delta", "full"],
+    "a matching delta always retains the signed full bundle as its fallback",
+  );
+  assert.deepEqual(
+    otaBundleCandidates(ota, "0.8.0").map(({ kind }) => kind),
+    ["full"],
+  );
+  assert.equal(
+    selectOtaBundleAttempt(ota, "1.0.0", ota.bundles!.full.path)?.kind,
+    "full",
+    "process recreation resumes a persisted full-bundle fallback",
+  );
+  assert.equal(
+    selectOtaBundleAttempt(ota, "1.0.0", "bundles/unknown.zip")?.kind,
+    "delta",
+    "an unknown stale path cannot suppress normal delta selection",
+  );
 
   const legacy = { ...ota, bundles: undefined } as OtaManifest & {
     requiredCapabilities?: string[];
@@ -184,6 +205,8 @@ async function main(): Promise<void> {
     .split("async checkAndDownload", 1)[0]!;
   assert.equal(activationSource.includes("isReadyForOtaActivation"), true, "partial releases never activate");
   assert.equal(activationSource.includes("rollbackDelta("), true, "failed activation rolls back");
+  assert.equal(activationSource.includes("holdPendingUntilAllowed"), true, "temporary access denial keeps a ready release");
+  assert.equal(activationSource.includes("discardPending"), false, "activation never labels temporary denial as revocation");
   const hookSource = readFileSync("src/features/ota/hooks/use-ota-update.tsx", "utf8");
   assert.equal(hookSource.includes("setInterval"), false);
   assert.equal(hookSource.includes("checkDailyAndDownload"), true);
@@ -195,6 +218,12 @@ async function main(): Promise<void> {
   assert.equal(failureBlock.includes("lastSuccessfulCheckAt"), false, "a failed check does not consume the interval");
   assert.equal(checkSource.includes("downloadNativeBundle("), true, "discovery immediately starts native delivery");
   assert.equal(checkSource.includes("downloadPerFile("), true, "web keeps the per-file fallback");
+  assert.equal(
+    readFileSync("src/features/ota/services/ota-update-service.ts", "utf8")
+      .includes("OTA delta bundle failed; retrying with full bundle"),
+    true,
+    "a failed delta retries the signed full transport",
+  );
   assert.equal(checkSource.includes("minimumNativeVersion"), true, "native version gates delivery");
   assert.equal(checkSource.includes("capabilityDecision.compatible"), true, "capabilities gate delivery");
 

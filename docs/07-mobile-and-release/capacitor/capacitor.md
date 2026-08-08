@@ -55,7 +55,7 @@ out/                             # Static assets (from build:static)
 | `@capacitor/android`                  | Android platform                                                                |
 | `@capacitor/ios`                      | iOS platform                                                                    |
 | `@capacitor/app`                      | Android system Back events and confirmed application exit                       |
-| `@capacitor/filesystem`               | Private storage for verified file-level OTA releases                            |
+| `@capacitor/filesystem`               | Private storage for verified OTA candidate trees and streamed bundle extraction |
 | `@capacitor/camera`                   | Native one-image gallery selection and camera capture for `StorageImageManager` |
 | `@capgo/capacitor-speech-recognition` | Native Arabic/English speech-to-text for automatic voice-enabled fields         |
 | `@capacitor/geolocation`              | Foreground device location for the Native Platform Location module              |
@@ -98,7 +98,7 @@ Implemented in `scripts/cap-build.ts`:
 
 1. Reads the current R2 version and increments its patch number automatically.
 2. Creates release notes from the current Cairo date and time.
-3. Publishes changed/new files and deletes removed files in the single `app-updates/files` directory.
+3. Publishes changed/new files and deletes removed files in the single `app-updates/files` directory, plus a signed full ZIP and up to three retained-history delta ZIP transports.
 4. Resolves API URL from `ASOL_CAPACITOR_API_BASE_URL` or `platform/capacitor.defaults.ts` (`https://gova-swart.vercel.app`).
 5. Sets `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION`, `NEXT_PUBLIC_ASOL_NATIVE_VERSION`, and `NEXT_PUBLIC_ASOL_API_BASE_URL`.
 6. Runs `npm run build:static` (includes `architecture:check`, the
@@ -232,7 +232,6 @@ Live reload is configured **only in Capacitor config** — no changes to applica
 | ------------------------------------- | --------------------------- | ----------------------------------------------------------- |
 | `CAPACITOR_SERVER_URL`                | `capacitor.config.ts`       | Optional dev server URL for live reload                     |
 | `ASOL_CAPACITOR_API_BASE_URL`         | `scripts/cap-build.ts`      | Override API URL for `cap:build`                            |
-| `ASOL_WEB_BUNDLE_VERSION`             | legacy/manual static builds | `cap:build` derives its version from R2 automatically       |
 | `NEXT_PUBLIC_ASOL_API_BASE_URL`       | Next.js static build        | Baked into client bundle (set automatically by `cap:build`) |
 | `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` | Next.js static build        | Baked into client bundle and local web manifest             |
 | `NEXT_PUBLIC_ASOL_NATIVE_VERSION`     | Next.js static build        | Native version used by OTA minimum-version checks           |
@@ -274,7 +273,9 @@ All native capabilities are reached through the **Native Platform layer**
 
 Capacitor integration must **not**:
 
-- Add imports of `@capacitor/*` outside `src/native-platform` — enforced by the
+- Add imports of `@capacitor/*` outside `src/native-platform` except the four
+  reviewed bindings listed by `CAPACITOR_IMPORT_ALLOWED_FILES` in
+  `scripts/architecture-check.ts`; every other import is rejected by the
   **Native Platform Contract** check in `npm run architecture:check`
 - Add SQLite, Drizzle, Turso, or SQL in the mobile shell
 - Change Architecture Contract exceptions
@@ -308,6 +309,9 @@ Platform-specific settings live in:
 - The app updates only when `remote.version > local.version`.
 - If R2 version is equal or lower, the app logs `No OTA update: remote version is not newer`.
 - Filter Android Logcat by `AsolOTA` for exact skip/failure reasons.
+- If a delta is rejected because the local tree drifted, the client removes it
+  and retries the signed full bundle once; a failure after that fallback is the
+  actionable error.
 
 ### API calls fail (network / CORS)
 
