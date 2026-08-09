@@ -4,6 +4,8 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { asolApi } from "@/core/api";
+import { getOtaApprovalServerConfig } from "@/core/config/server-env";
 import {
   assertGooglePlayConsoleAllowed,
   googlePlayFastlaneEnvironment,
@@ -218,19 +220,14 @@ async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
     snapshot.androidCurrent = /versionName\s+"(\d+\.\d+\.\d+)"/.exec(gradle)?.[1];
   } catch { /* The catalog remains usable when the Android project is absent. */ }
 
-  const publicRoot = process.env.ASOL_OTA_R2_PUBLIC_URL?.replace(/\/$/, "");
-  if (publicRoot) {
-    const prefix = (process.env.ASOL_OTA_R2_PREFIX ?? "app-updates")
-      .replace(/^\/+|\/+$/g, "");
+  const manifestUrl = getOtaApprovalServerConfig().manifestUrl;
+  if (manifestUrl) {
     try {
-      const response = await fetch(`${publicRoot}/${prefix}/manifest.json`, {
-        cache: "no-store",
+      const manifest = await asolApi.getAbsoluteJson<{ version?: unknown }>(manifestUrl, {
+        suppressErrorLog: true,
         signal: AbortSignal.timeout(5_000),
       });
-      if (response.ok) {
-        const manifest = await response.json() as { version?: unknown };
-        if (typeof manifest.version === "string") snapshot.otaCurrent = manifest.version;
-      }
+      if (typeof manifest.version === "string") snapshot.otaCurrent = manifest.version;
     } catch { /* A temporary R2 read failure must not hide the command catalog. */ }
   }
   return snapshot;

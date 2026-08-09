@@ -2,6 +2,13 @@
 
 The development-only release console is available at `/super-admin/google-play-store-assets`. Its state is URL-addressable with `?tab=<id>`. The former Google Play and OTA pages redirect to their matching tabs.
 
+The console is intentionally absent outside local development:
+
+- production web requests receive `404`;
+- its sidebar link is compiled for development and additionally rejected on native runtimes (Capacitor's `localhost` is never treated as proof of development);
+- `build-static.ts` removes the console and its legacy redirect routes from the temporary source tree, then fails the build if any matching route leaks into `out`;
+- all API and job services retain their independent server-side development guard.
+
 ## Tabs
 
 1. `overview`: package, language, environment guard, credentials source, live OTA version, tracks, and build lock state.

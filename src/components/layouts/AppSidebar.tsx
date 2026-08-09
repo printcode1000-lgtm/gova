@@ -94,11 +94,11 @@ export const AppSidebar = React.memo(function AppSidebar({
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
   const [catalogStudioDesktopWeb, setCatalogStudioDesktopWeb] = useState(false);
+  // Capacitor serves production assets from localhost too, so hostname is not
+  // proof of development. A compile-time development build plus a non-native
+  // runtime is the only client-side condition allowed to reveal release tools.
   const showLocalDevelopmentTools =
-    publicEnv.mode === "development" ||
-    (mounted &&
-      typeof window !== "undefined" &&
-      ["localhost", "127.0.0.1"].includes(window.location.hostname));
+    publicEnv.developmentBuild && !isNativePlatform();
   const showCatalogStudio = showLocalDevelopmentTools && catalogStudioDesktopWeb;
   const isProfilePage = pathname === "/profile";
   const [activeProfileMode, setActiveProfileMode] = useState<string | null>(

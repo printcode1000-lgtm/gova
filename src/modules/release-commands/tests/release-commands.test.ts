@@ -29,6 +29,28 @@ import { analyzeBundleArtifact, classifyEntry } from "../services/bundle-analyze
 
 async function main() {
 const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { scripts: Record<string, string> };
+const staticBuilderSource = await readFile("scripts/build-static.ts", "utf8");
+for (const route of [
+  "app/super-admin/google-play-store-assets",
+  "app/super-admin/google-play-console",
+  "app/super-admin/ota-releases",
+]) {
+  assert.ok(staticBuilderSource.includes(`"${route}"`),
+    `${route} must be removed before static/mobile builds`);
+}
+assert.match(staticBuilderSource, /auditCatalogStudioExcluded\(\)/,
+  "static output must audit that development-only release routes are absent");
+const releasePageSource = await readFile(
+  "src/app/super-admin/google-play-store-assets/page.tsx",
+  "utf8",
+);
+assert.match(releasePageSource, /getServerRuntimeContext\(\)\.isDevelopment.*notFound/,
+  "the release console page must return 404 outside server development");
+const sidebarSource = await readFile("src/components/layouts/AppSidebar.tsx", "utf8");
+assert.match(sidebarSource, /publicEnv\.developmentBuild && !isNativePlatform\(\)/,
+  "release tools must stay hidden in native and production clients");
+assert.doesNotMatch(sidebarSource, /window\.location\.hostname/,
+  "localhost cannot identify development because Capacitor also uses it");
 const releaseConfirmDialogSource = await readFile(
   "src/modules/google-play-console/presentation/components/ReleaseCommandConfirmDialog.tsx",
   "utf8",
@@ -92,9 +114,17 @@ for (const required of [
 }
 assert.match(
   packageJson.scripts["release:android:with-ota"],
-  /cap:build.*android:build:signed/,
-  "the full-release shortcut must create both signed Android artifacts after OTA publication",
+  /release-android-with-ota/,
+  "the full-release shortcut must use the argument-preserving release orchestrator",
 );
+const fullReleaseOrchestrator = await readFile("scripts/release-android-with-ota.ts", "utf8");
+assert.match(fullReleaseOrchestrator, /capBuildPath, \.\.\.releaseArguments/,
+  "the full-release orchestrator must pass dialog choices to cap-build");
+assert.ok(fullReleaseOrchestrator.indexOf("capBuildPath")
+  < fullReleaseOrchestrator.lastIndexOf("signedBuildPath"),
+"signed Android artifacts must be built only after OTA/native preparation");
+assert.match(fullReleaseOrchestrator, /releaseArguments\.includes\("--dry-run"\).*process\.exit\(0\)/,
+  "a full-release dry run must stop before signing");
 assert.match(
   packageJson.scripts["android:build:signed"],
   /build-android-signed/,

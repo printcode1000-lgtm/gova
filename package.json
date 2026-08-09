@@ -94,7 +94,7 @@
     "cap:open:android": "npx cap open android",
     "cap:open:ios": "npx cap open ios",
     "cap:build": "npx tsx scripts/cap-build.ts",
-    "release:android:with-ota": "npm run cap:build && cross-env ASOL_WEB_BUNDLE_READY=1 npm run android:build:signed",
+    "release:android:with-ota": "npx tsx scripts/release-android-with-ota.ts",
     "release:android:no-ota": "npm run cap:prepare:android && cross-env ASOL_WEB_BUNDLE_READY=1 npm run android:build:signed",
     "android:build:signed": "npx tsx scripts/build-android-signed.ts",
     "cap:build:resume": "npx tsx scripts/cap-build.ts --resume",

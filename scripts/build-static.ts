@@ -274,6 +274,9 @@ const STATIC_ROUTE_IGNORELIST = [
   "app/.well-known",
   "app/dev",
   "app/super-admin/catalog",
+  "app/super-admin/google-play-store-assets",
+  "app/super-admin/google-play-console",
+  "app/super-admin/ota-releases",
   "app/orders/[orderId]",
   "app/s",
   "app/test1",
@@ -555,15 +558,21 @@ function auditCatalogStudioExcluded(): void {
   const forbiddenPaths = [
     path.join(rootOutDir, "super-admin", "catalog"),
     path.join(rootOutDir, "super-admin", "catalog.html"),
+    path.join(rootOutDir, "super-admin", "google-play-store-assets"),
+    path.join(rootOutDir, "super-admin", "google-play-store-assets.html"),
+    path.join(rootOutDir, "super-admin", "google-play-console"),
+    path.join(rootOutDir, "super-admin", "google-play-console.html"),
+    path.join(rootOutDir, "super-admin", "ota-releases"),
+    path.join(rootOutDir, "super-admin", "ota-releases.html"),
     path.join(rootOutDir, "api", "dev", "catalog-studio"),
   ];
   const leaked = forbiddenPaths.filter((candidate) => existsSync(candidate));
   if (leaked.length > 0) {
     throw new Error(
-      `Development-only Catalog Studio leaked into static output: ${leaked.join(", ")}`,
+      `Development-only route leaked into static output: ${leaked.join(", ")}`,
     );
   }
-  console.log("Catalog Studio exclusion audit passed.");
+  console.log("Development-only route exclusion audit passed.");
 }
 
 try {
