@@ -251,13 +251,10 @@ const STATIC_PUBLIC_ALLOW_FILES = [
   "asol-theme-init.js",
   "logo.png",
   "images/qr-code.png",
-  "catagory/categories.json",
-  "catagory/subcategories.json",
 ] as const;
 
 const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
-  "catagory/cars",
-  "catagory/pharmacy",
+  "catagory",
   "images/mainCategories",
   "images/pharmacy_fixed",
   "images/subCategories",
@@ -266,18 +263,7 @@ const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
 
 // Source/development assets that must never enter out/, R2, Android, or iOS.
 const STATIC_PUBLIC_IGNORE_FILES = [
-  "catagory.db",
   "asol-web-manifest.json",
-  "catagory/active_ingredient_forms.json",
-  "catagory/active_ingredient_strengths.json",
-  "catagory/active_ingredients.json",
-  "catagory/forms.json",
-  "catagory/pharmacy_categories.json",
-  "catagory/pharmacy_subcategories.json",
-  "catagory/product_brands.json",
-  "catagory/setting.json",
-  "catagory/sqlite_sequence.json",
-  "catagory/strengths.json",
 ] as const;
 
 const STATIC_PUBLIC_IGNORE_DIRECTORIES = ["sync_data"] as const;
@@ -287,6 +273,7 @@ const STATIC_ROUTE_IGNORELIST = [
   "app/api",
   "app/.well-known",
   "app/dev",
+  "app/super-admin/catalog",
   "app/orders/[orderId]",
   "app/s",
   "app/test1",
@@ -564,6 +551,21 @@ function writeLocalWebManifest(): void {
   );
 }
 
+function auditCatalogStudioExcluded(): void {
+  const forbiddenPaths = [
+    path.join(rootOutDir, "super-admin", "catalog"),
+    path.join(rootOutDir, "super-admin", "catalog.html"),
+    path.join(rootOutDir, "api", "dev", "catalog-studio"),
+  ];
+  const leaked = forbiddenPaths.filter((candidate) => existsSync(candidate));
+  if (leaked.length > 0) {
+    throw new Error(
+      `Development-only Catalog Studio leaked into static output: ${leaked.join(", ")}`,
+    );
+  }
+  console.log("Catalog Studio exclusion audit passed.");
+}
+
 try {
   const childEnv = withoutVsCodeDebuggerEnv(process.env);
   execSync(appInitCommand, { stdio: "inherit", cwd: rootDir, env: childEnv });
@@ -600,6 +602,7 @@ try {
   // Always audited, diagnostic builds included: this one guards a shipping bug,
   // not a content policy.
   auditStaticApiBaseUrl(rootOutDir);
+  auditCatalogStudioExcluded();
   auditCapacitorDefaultBundle(rootOutDir);
   writeLocalWebManifest();
 } finally {
@@ -617,27 +620,28 @@ function auditPharmacyStaticImages(): void {
     "public",
     "catagory",
     "pharmacy",
-    "active_ingredients.json",
+    "ingredients.json",
   );
-  const items = JSON.parse(readFileSync(catalogPath, "utf8")) as Array<{
-    id: number;
-    image_url?: string;
-  }>;
+  const catalog = JSON.parse(readFileSync(catalogPath, "utf8")) as {
+    schemaVersion: 3;
+    items: Array<{ id: number; imagePath?: string }>;
+  };
+  const items = catalog.items;
   const missing = items
-    .filter((item) => item.image_url)
+    .filter((item) => item.imagePath)
     .filter(
       (item) =>
         !existsSync(
-          path.join(rootOutDir, String(item.image_url).replace(/^\/+/, "")),
+          path.join(rootOutDir, String(item.imagePath).replace(/^\/+/, "")),
         ),
     );
   if (missing.length > 0) {
     throw new Error(
-      `Static pharmacy image audit failed: ${missing.length} files are missing. First: ${missing[0]?.id} ${missing[0]?.image_url}`,
+      `Static pharmacy image audit failed: ${missing.length} files are missing. First: ${missing[0]?.id} ${missing[0]?.imagePath}`,
     );
   }
   console.log(
-    `Static pharmacy image audit passed: ${items.filter((item) => item.image_url).length} images.`,
+    `Static pharmacy image audit passed: ${items.filter((item) => item.imagePath).length} images.`,
   );
 }
 

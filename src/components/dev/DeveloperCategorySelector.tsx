@@ -157,13 +157,13 @@ export function DeveloperCategorySelector() {
           titleAr: category.collectionAr ?? "",
           titleEn: category.collectionEn ?? "",
           isCollection: true,
-          order: category.order,
+          order: category.collectionOrder ?? category.order,
         });
       }
     });
 
     return [...options.values()].sort(
-      (left, right) => (left.order ?? Infinity) - (right.order ?? Infinity),
+      (left, right) => left.order - right.order,
     );
   }, [categories]);
 
@@ -178,18 +178,19 @@ export function DeveloperCategorySelector() {
       return categories
         .filter((category) => category.collection === selectedMainCategory.id)
         .sort(
-          (left, right) => (left.order ?? Infinity) - (right.order ?? Infinity),
+          (left, right) => left.order - right.order,
         )
         .map((category) => ({
           value: category.id.toString(),
           titleAr: category.titleAr,
           titleEn: category.titleEn,
+          order: category.order,
         }));
     }
 
-    const items = subcategories.filter(
-      (subcategory) => subcategory.categoryId === selectedMainCategory.id,
-    );
+    const items = subcategories
+      .filter((subcategory) => subcategory.categoryId === selectedMainCategory.id)
+      .sort((left, right) => left.order - right.order);
 
     if (selectedMainCategory.id === MEDICAL_SERVICES_CATEGORY_ID) {
       const visibleItems = items.filter(
@@ -206,6 +207,11 @@ export function DeveloperCategorySelector() {
                 value: DOCTOR_APPOINTMENT_VALUE,
                 titleAr: "كشف طبي",
                 titleEn: "Doctor Appointment",
+                order: Math.min(
+                  ...items
+                    .filter((subcategory) => subcategory.subCollection === 0)
+                    .map((subcategory) => subcategory.order),
+                ),
               },
             ]
           : []),
@@ -213,14 +219,16 @@ export function DeveloperCategorySelector() {
           value: subcategory.originalId.toString(),
           titleAr: subcategory.titleAr,
           titleEn: subcategory.titleEn,
+          order: subcategory.order,
         })),
-      ];
+      ].sort((left, right) => left.order - right.order);
     }
 
     return items.map((subcategory) => ({
       value: subcategory.originalId.toString(),
       titleAr: subcategory.titleAr,
       titleEn: subcategory.titleEn,
+      order: subcategory.order,
     }));
   }, [categories, selectedMainCategory, subcategories]);
 

@@ -232,14 +232,18 @@ The module supports hierarchical category relationships:
 
 ## Column Name Mapping
 
-Column names are generated using the pattern: `{slug(titleEn)}_{originalId}`
+Column names are assigned explicitly in `public/catagory/core/specialty-columns.json`. Existing
+names retain the historical readable convention, but runtime code never regenerates them from a
+title.
 
 Examples:
 - "Women's Clothing" (originalId=1) → `womens_clothing_1`
 - "Hijab Fashion" (originalId=13) → `hijab_fashion_13`
 - "Obstetrics & Gynaecology" (originalId=300) → `obstetrics_and_gynaecology_300`
 
-**The column resolution is internal to the Repository layer.** Callers (service, query, hook, API) always pass `categoryId` and `subcategoryId` — never raw column names.
+**The column resolution is internal to the Repository layer.** Callers (service, query, hook, API)
+always pass `categoryId` and `subcategoryId`—never raw column names. `npm run catalog:validate`
+requires complete set equality between the mapping file and `profile-core.user_specialties`.
 
 ## Navigation Flow
 

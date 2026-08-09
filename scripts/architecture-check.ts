@@ -459,6 +459,7 @@ function checkGeneratedDataAccessArtifacts(): void {
 
 function checkCategoryModuleContract(fileRel: string, content: string, filePath: string): void {
   const insideCategoryModule = fileRel.startsWith('src/features/categories/');
+  const catalogStudioTooling = fileRel.startsWith('src/features/catalog-studio/');
   const categoryInfrastructure = fileRel.startsWith('src/features/categories/infrastructure/');
   const pharmacyCatalogInfrastructure = fileRel.startsWith('src/features/pharmacy-profile-catalog/infrastructure/');
   const productionContent = content
@@ -480,7 +481,7 @@ function checkCategoryModuleContract(fileRel: string, content: string, filePath:
     ) {
       addViolation('Category Module Contract', filePath, 'Raw category JSON fields leaked outside the module.', 'Use camelCase public projections.');
     }
-    if (!pharmacyCatalogInfrastructure && /categories\.json|subcategories\.json/.test(productionContent)) {
+    if (!pharmacyCatalogInfrastructure && !catalogStudioTooling && /categories\.json|subcategories\.json/.test(productionContent)) {
       addViolation('Category Module Contract', filePath, 'Category JSON accessed outside the category module.', 'Use @/features/categories.');
     }
   }

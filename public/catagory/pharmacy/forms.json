@@ -1,450 +1,837 @@
-[
-  {
-    "id": "form_1",
-    "name_ar": "أقراص",
-    "name_en": "Tablets",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_2",
-    "name_ar": "شراب",
-    "name_en": "Syrup",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_3",
-    "name_ar": "تحاميل",
-    "name_en": "Suppositories",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_4",
-    "name_ar": "فوار",
-    "name_en": "Effervescent",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_5",
-    "name_ar": "كبسولات",
-    "name_en": "Capsules",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_6",
-    "name_ar": "جل",
-    "name_en": "Gel",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_7",
-    "name_ar": "حقن",
-    "name_en": "Injections",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_8",
-    "name_ar": "نقط",
-    "name_en": "Drops",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_9",
-    "name_ar": "معلق",
-    "name_en": "Suspension",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_10",
-    "name_ar": "قطرات أنف",
-    "name_en": "Nasal Drops",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_11",
-    "name_ar": "بخاخ أنف",
-    "name_en": "Nasal Spray",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_12",
-    "name_ar": "قطرات عين",
-    "name_en": "Eye Drops",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_13",
-    "name_ar": "مرهم عين",
-    "name_en": "Eye Ointment",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_14",
-    "name_ar": "كريم",
-    "name_en": "Cream",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_15",
-    "name_ar": "مرهم",
-    "name_en": "Ointment",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_16",
-    "name_ar": "لوشن",
-    "name_en": "Lotion",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_17",
-    "name_ar": "رغوة",
-    "name_en": "Foam",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_18",
-    "name_ar": "فلويد سائل",
-    "name_en": "Fluid",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_19",
-    "name_ar": "سيروم",
-    "name_en": "Serum",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_20",
-    "name_ar": "ماسك",
-    "name_en": "Mask",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_21",
-    "name_ar": "سائل",
-    "name_en": "Liquid",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_22",
-    "name_ar": "شامبو",
-    "name_en": "Shampoo",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_23",
-    "name_ar": "بخاخ",
-    "name_en": "Spray",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_24",
-    "name_ar": "زجاجة زيت",
-    "name_en": "Oil Bottle",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_25",
-    "name_ar": "منتج",
-    "name_en": "Product",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_26",
-    "name_ar": "معجون",
-    "name_en": "Toothpaste",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_27",
-    "name_ar": "غسول فم",
-    "name_en": "Mouthwash",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_28",
-    "name_ar": "رول أون",
-    "name_en": "Roll-on",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_29",
-    "name_ar": "سبراي",
-    "name_en": "Body Spray",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_30",
-    "name_ar": "عبوة",
-    "name_en": "Pack",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_31",
-    "name_ar": "مقاس 1-6",
-    "name_en": "Size 1-6",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_32",
-    "name_ar": "كيلوت",
-    "name_en": "Pants",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_33",
-    "name_ar": "بودرة 400g",
-    "name_en": "Powder 400g",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_34",
-    "name_ar": "عبوة كرتون",
-    "name_en": "Box",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_35",
-    "name_ar": "جهاز",
-    "name_en": "Device",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_36",
-    "name_ar": "زجاجة رضاعة",
-    "name_en": "Feeding Bottle",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_37",
-    "name_ar": "زيت أطفال",
-    "name_en": "Baby Oil",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_38",
-    "name_ar": "مستلزمات",
-    "name_en": "Supplies",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_39",
-    "name_ar": "جهاز يدوي",
-    "name_en": "Manual Device",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_40",
-    "name_ar": "كبسول",
-    "name_en": "Capsules",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_41",
-    "name_ar": "كبسولات جيلاتينية",
-    "name_en": "Softgels",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_42",
-    "name_ar": "كف",
-    "name_en": "Cuff",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_43",
-    "name_ar": "علبة شرائط",
-    "name_en": "Test Strips",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_44",
-    "name_ar": "جهاز قياس",
-    "name_en": "Device",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_45",
-    "name_ar": "جهاز رقمي",
-    "name_en": "Device",
-    "created_at": "2026-06-14 04:03:14",
-    "updated_at": "2026-06-14 04:03:14"
-  },
-  {
-    "id": "form_46",
-    "name_ar": "علبة",
-    "name_en": "Box",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_47",
-    "name_ar": "علبة 50 قطعة",
-    "name_en": "50 Pcs Box",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_48",
-    "name_ar": "KN95",
-    "name_en": "KN95",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_49",
-    "name_ar": "زجاجة سائلة",
-    "name_en": "Liquid Bottle",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_50",
-    "name_ar": "بودرة",
-    "name_en": "Powder",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_51",
-    "name_ar": "سائل ماسكارا",
-    "name_en": "Mascara Liquid",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_52",
-    "name_ar": "قلم",
-    "name_en": "Pencil",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_53",
-    "name_ar": "مرطب",
-    "name_en": "Balm",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_54",
-    "name_ar": "طلاء",
-    "name_en": "Polish",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_55",
-    "name_ar": "علبة 3 قطع",
-    "name_en": "3 Pcs Box",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_56",
-    "name_ar": "علبة 12 قطعة",
-    "name_en": "12 Pcs Box",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_57",
-    "name_ar": "جهاز فحص",
-    "name_en": "Device",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_58",
-    "name_ar": "عبوة حفاضات",
-    "name_en": "Pack",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_59",
-    "name_ar": "عبوة معدنية",
-    "name_en": "Can",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_60",
-    "name_ar": "زجاجة",
-    "name_en": "Bottle",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_61",
-    "name_ar": "قطعة مغلفة",
-    "name_en": "Bar",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_62",
-    "name_ar": "أمبولات موضعية",
-    "name_en": "Spot-on Ampoules",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_63",
-    "name_ar": "علكة",
-    "name_en": "Gum",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  },
-  {
-    "id": "form_64",
-    "name_ar": "زجاجة عطر",
-    "name_en": "Perfume Bottle",
-    "created_at": "2026-06-14 04:03:15",
-    "updated_at": "2026-06-14 04:03:15"
-  }
-]
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "id": "form_1",
+      "name": {
+        "ar": "أقراص",
+        "en": "Tablets"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 10,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_2",
+      "name": {
+        "ar": "شراب",
+        "en": "Syrup"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 20,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_3",
+      "name": {
+        "ar": "تحاميل",
+        "en": "Suppositories"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 30,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_4",
+      "name": {
+        "ar": "فوار",
+        "en": "Effervescent"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 40,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_5",
+      "name": {
+        "ar": "كبسولات",
+        "en": "Capsules"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 50,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_6",
+      "name": {
+        "ar": "جل",
+        "en": "Gel"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 60,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_7",
+      "name": {
+        "ar": "حقن",
+        "en": "Injections"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 70,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_8",
+      "name": {
+        "ar": "نقط",
+        "en": "Drops"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 80,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_9",
+      "name": {
+        "ar": "معلق",
+        "en": "Suspension"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 90,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_10",
+      "name": {
+        "ar": "قطرات أنف",
+        "en": "Nasal Drops"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 100,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_11",
+      "name": {
+        "ar": "بخاخ أنف",
+        "en": "Nasal Spray"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 110,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_12",
+      "name": {
+        "ar": "قطرات عين",
+        "en": "Eye Drops"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 120,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_13",
+      "name": {
+        "ar": "مرهم عين",
+        "en": "Eye Ointment"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 130,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_14",
+      "name": {
+        "ar": "كريم",
+        "en": "Cream"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 140,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_15",
+      "name": {
+        "ar": "مرهم",
+        "en": "Ointment"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 150,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_16",
+      "name": {
+        "ar": "لوشن",
+        "en": "Lotion"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 160,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_17",
+      "name": {
+        "ar": "رغوة",
+        "en": "Foam"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 170,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_18",
+      "name": {
+        "ar": "فلويد سائل",
+        "en": "Fluid"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 180,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_19",
+      "name": {
+        "ar": "سيروم",
+        "en": "Serum"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 190,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_20",
+      "name": {
+        "ar": "ماسك",
+        "en": "Mask"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 200,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_21",
+      "name": {
+        "ar": "سائل",
+        "en": "Liquid"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 210,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_22",
+      "name": {
+        "ar": "شامبو",
+        "en": "Shampoo"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 220,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_23",
+      "name": {
+        "ar": "بخاخ",
+        "en": "Spray"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 230,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_24",
+      "name": {
+        "ar": "زجاجة زيت",
+        "en": "Oil Bottle"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 240,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_25",
+      "name": {
+        "ar": "منتج",
+        "en": "Product"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 250,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_26",
+      "name": {
+        "ar": "معجون",
+        "en": "Toothpaste"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 260,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_27",
+      "name": {
+        "ar": "غسول فم",
+        "en": "Mouthwash"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 270,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_28",
+      "name": {
+        "ar": "رول أون",
+        "en": "Roll-on"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 280,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_29",
+      "name": {
+        "ar": "سبراي",
+        "en": "Body Spray"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 290,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_30",
+      "name": {
+        "ar": "عبوة",
+        "en": "Pack"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 300,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_31",
+      "name": {
+        "ar": "مقاس 1-6",
+        "en": "Size 1-6"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 310,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_32",
+      "name": {
+        "ar": "كيلوت",
+        "en": "Pants"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 320,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_33",
+      "name": {
+        "ar": "بودرة 400g",
+        "en": "Powder 400g"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 330,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_34",
+      "name": {
+        "ar": "عبوة كرتون",
+        "en": "Box"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 340,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_35",
+      "name": {
+        "ar": "جهاز",
+        "en": "Device"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 350,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_36",
+      "name": {
+        "ar": "زجاجة رضاعة",
+        "en": "Feeding Bottle"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 360,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_37",
+      "name": {
+        "ar": "زيت أطفال",
+        "en": "Baby Oil"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 370,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_38",
+      "name": {
+        "ar": "مستلزمات",
+        "en": "Supplies"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 380,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_39",
+      "name": {
+        "ar": "جهاز يدوي",
+        "en": "Manual Device"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 390,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_40",
+      "name": {
+        "ar": "كبسول",
+        "en": "Capsules"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 400,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_41",
+      "name": {
+        "ar": "كبسولات جيلاتينية",
+        "en": "Softgels"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 410,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_42",
+      "name": {
+        "ar": "كف",
+        "en": "Cuff"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 420,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_43",
+      "name": {
+        "ar": "علبة شرائط",
+        "en": "Test Strips"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 430,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_44",
+      "name": {
+        "ar": "جهاز قياس",
+        "en": "Device"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 440,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_45",
+      "name": {
+        "ar": "جهاز رقمي",
+        "en": "Device"
+      },
+      "createdAt": "2026-06-14 04:03:14",
+      "updatedAt": "2026-06-14 04:03:14",
+      "display": {
+        "order": 450,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_46",
+      "name": {
+        "ar": "علبة",
+        "en": "Box"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 460,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_47",
+      "name": {
+        "ar": "علبة 50 قطعة",
+        "en": "50 Pcs Box"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 470,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_48",
+      "name": {
+        "ar": "KN95",
+        "en": "KN95"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 480,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_49",
+      "name": {
+        "ar": "زجاجة سائلة",
+        "en": "Liquid Bottle"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 490,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_50",
+      "name": {
+        "ar": "بودرة",
+        "en": "Powder"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 500,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_51",
+      "name": {
+        "ar": "سائل ماسكارا",
+        "en": "Mascara Liquid"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 510,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_52",
+      "name": {
+        "ar": "قلم",
+        "en": "Pencil"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 520,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_53",
+      "name": {
+        "ar": "مرطب",
+        "en": "Balm"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 530,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_54",
+      "name": {
+        "ar": "طلاء",
+        "en": "Polish"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 540,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_55",
+      "name": {
+        "ar": "علبة 3 قطع",
+        "en": "3 Pcs Box"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 550,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_56",
+      "name": {
+        "ar": "علبة 12 قطعة",
+        "en": "12 Pcs Box"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 560,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_57",
+      "name": {
+        "ar": "جهاز فحص",
+        "en": "Device"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 570,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_58",
+      "name": {
+        "ar": "عبوة حفاضات",
+        "en": "Pack"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 580,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_59",
+      "name": {
+        "ar": "عبوة معدنية",
+        "en": "Can"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 590,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_60",
+      "name": {
+        "ar": "زجاجة",
+        "en": "Bottle"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 600,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_61",
+      "name": {
+        "ar": "قطعة مغلفة",
+        "en": "Bar"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 610,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_62",
+      "name": {
+        "ar": "أمبولات موضعية",
+        "en": "Spot-on Ampoules"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 620,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_63",
+      "name": {
+        "ar": "علكة",
+        "en": "Gum"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 630,
+        "hidden": false
+      }
+    },
+    {
+      "id": "form_64",
+      "name": {
+        "ar": "زجاجة عطر",
+        "en": "Perfume Bottle"
+      },
+      "createdAt": "2026-06-14 04:03:15",
+      "updatedAt": "2026-06-14 04:03:15",
+      "display": {
+        "order": 640,
+        "hidden": false
+      }
+    }
+  ]
+}

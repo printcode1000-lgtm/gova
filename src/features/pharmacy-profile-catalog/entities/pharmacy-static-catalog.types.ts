@@ -1,8 +1,11 @@
+import type { CatalogDisplay } from "@/features/catalog-data/types/catalog-v3.types";
+
 export interface PharmacyCatalogCategory {
   id: number;
   nameAr: string;
   nameEn: string;
   icon: string;
+  display: CatalogDisplay;
 }
 
 export interface PharmacyCatalogSubcategory {
@@ -11,6 +14,7 @@ export interface PharmacyCatalogSubcategory {
   originalId: number;
   nameAr: string;
   nameEn: string;
+  display: CatalogDisplay;
 }
 
 export interface PharmacyCatalogActiveIngredient {
@@ -21,25 +25,20 @@ export interface PharmacyCatalogActiveIngredient {
   nameEn: string;
   imageUrl: string;
   prescriptionRequired: boolean;
+  formIds: readonly string[];
+  strengthIds: readonly string[];
+  display: CatalogDisplay;
 }
 
 export interface PharmacyCatalogForm {
   id: string;
   nameAr: string;
   nameEn: string;
+  display: CatalogDisplay;
 }
 
 export interface PharmacyCatalogStrength {
   id: string;
   value: string;
-}
-
-export interface PharmacyIngredientFormLink {
-  activeIngredientId: number;
-  formId: string;
-}
-
-export interface PharmacyIngredientStrengthLink {
-  activeIngredientId: number;
-  strengthId: string;
+  display: CatalogDisplay;
 }

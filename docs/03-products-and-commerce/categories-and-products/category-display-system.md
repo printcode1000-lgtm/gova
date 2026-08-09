@@ -4,6 +4,16 @@
 
 All display surfaces depend on `@/features/categories`. Components do not read JSON or form collections or Doctor Appointment themselves.
 
+## Global order and visibility
+
+`display.order` controls an item's position among siblings on every surface. `display.hidden: true`
+removes it globally. The shared catalog policy sorts by order and then stable identity, and parent
+visibility cascades to descendants. IDs are never changed to reorder content.
+
+The initial Home order remains Clothing, Food, Technology, Beauty Store, Home, Education and the
+remaining existing entries. Moving Home before Beauty Store requires changing only their
+`display.order` values while keeping sibling orders unique.
+
 ## Surfaces
 
 - Splash and Home receive `CategoryDisplay[]` from the server page and use the ready `imageUrl`.
@@ -47,4 +57,6 @@ The sellers pages use the User Specialties Module to query users by specialty:
 
 ## Static export
 
-`generateStaticParams` takes categories and collections from the module. `scripts/build-static.ts` copies `public/catagory` files as assets only; it does not interpret their content or use them as a secondary source of truth.
+`generateStaticParams` takes categories and collections from the module. `scripts/build-static.ts`
+copies the versioned `public/catagory` catalog as one reviewed runtime directory; it does not
+interpret its contents or create a secondary source of truth.

@@ -28,7 +28,7 @@ Build exits with code 1 during `npm run architecture:check` (runs before `next b
 `CategoriesGrid.tsx` loaded category JSON with a raw browser `fetch()`:
 
 ```typescript
-const response = await fetch('/catagory/categories.json');
+const response = await fetch('/catagory/core/categories.json');
 const data: Category[] = await response.json();
 ```
 
@@ -45,7 +45,7 @@ Replace direct `fetch` with `asolApi.getPublicJson()` — same pattern as `TopMa
 ```typescript
 import { asolApi } from '@/core/api';
 
-const data = await asolApi.getPublicJson<Category[]>('/catagory/categories.json');
+const data = await asolApi.getPublicJson<Category[]>('/catagory/core/categories.json');
 ```
 
 > Current architecture: this historical workaround has been superseded. UI code must import typed projections from `@/features/categories`; only the category module may import the canonical JSON files.

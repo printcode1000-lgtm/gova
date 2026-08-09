@@ -25,6 +25,7 @@ export function getSpecialtyChatSubOptions(main: CategoryDisplay): readonly Subc
       image: main.image,
       imageUrl: main.imageUrl,
       selectable: true,
+      order: main.order,
     }];
   }
   return standard;

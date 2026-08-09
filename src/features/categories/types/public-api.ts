@@ -8,7 +8,7 @@ export interface CategoryDisplay {
   nameEn: string;
   image: string;
   imageUrl: string;
-  order: number | null;
+  order: number;
   isCollection: boolean;
 }
 
@@ -22,6 +22,7 @@ export interface SubcategoryDisplay {
   image: string;
   imageUrl: string;
   selectable: boolean;
+  order: number;
   isDoctorAppointmentGroup?: boolean;
 }
 
@@ -32,7 +33,7 @@ export interface CollectionDisplay {
   nameEn: string;
   image: string;
   imageUrl: string;
-  order: number | null;
+  order: number;
   items: CategoryDisplay[];
 }
 
@@ -42,7 +43,7 @@ export interface MainCategoryOption {
   titleAr: string;
   titleEn: string;
   isCollection: boolean;
-  order: number | null;
+  order: number;
 }
 
 export interface SubcategoryOption {
@@ -52,6 +53,7 @@ export interface SubcategoryOption {
   titleAr: string;
   titleEn: string;
   selectable?: boolean;
+  order: number;
 }
 
 export interface CategoryTree {
@@ -70,7 +72,7 @@ export interface DeveloperCategoryDetail {
   nameEn: string;
   image: string;
   imageUrl: string;
-  order?: number | null;
+  order?: number;
   memberIds?: number[];
 }
 
@@ -83,7 +85,8 @@ export interface DeveloperCatalogCategory {
   collectionAr: string | null;
   collectionEn: string | null;
   collectionImage: string | null;
-  order: number | null;
+  collectionOrder: number | null;
+  order: number;
 }
 
 export interface DeveloperCatalogSubcategory {
@@ -94,6 +97,7 @@ export interface DeveloperCatalogSubcategory {
   titleEn: string;
   image: string;
   subCollection: number | null;
+  order: number;
 }
 
 export interface DeveloperCatalog {
@@ -105,6 +109,8 @@ export interface SpecialtyColumnItem {
   categoryId: number;
   originalId: number;
   titleEn: string;
+  column: string;
+  kind: "subcategory" | "doctor-specialty" | "collection-member" | "direct-category";
 }
 
 

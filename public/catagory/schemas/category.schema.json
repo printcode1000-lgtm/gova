@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 3
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "id": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "name": {
+            "type": "object",
+            "properties": {
+              "ar": {
+                "type": "string",
+                "minLength": 1
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "ar",
+              "en"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "icon": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!.*\\.\\.)[^/\\\\]+$"
+          },
+          "display": {
+            "type": "object",
+            "properties": {
+              "order": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "hidden": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "order",
+              "hidden"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "createdAt",
+          "updatedAt",
+          "id",
+          "name",
+          "icon",
+          "image",
+          "display"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "items"
+  ],
+  "additionalProperties": false
+}

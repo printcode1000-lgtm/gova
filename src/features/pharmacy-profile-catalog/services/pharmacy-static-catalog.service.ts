@@ -2,8 +2,6 @@ import {
   loadPharmacyActiveIngredients,
   loadPharmacyCategories,
   loadPharmacyForms,
-  loadPharmacyIngredientFormLinks,
-  loadPharmacyIngredientStrengthLinks,
   loadPharmacyStrengths,
   loadPharmacySubcategories,
 } from "../infrastructure/pharmacy-static-catalog.loader";
@@ -14,54 +12,85 @@ import type {
   PharmacyCatalogStrength,
   PharmacyCatalogSubcategory,
 } from "../entities/pharmacy-static-catalog.types";
+import {
+  isCatalogItemVisible,
+  visibleCatalogItems,
+} from "@/features/catalog-data/utils/catalog-display";
 
 const categories = Object.freeze(loadPharmacyCategories());
 const subcategories = Object.freeze(loadPharmacySubcategories());
 const activeIngredients = Object.freeze(loadPharmacyActiveIngredients());
 const forms = Object.freeze(loadPharmacyForms());
 const strengths = Object.freeze(loadPharmacyStrengths());
-const ingredientFormLinks = Object.freeze(loadPharmacyIngredientFormLinks());
-const ingredientStrengthLinks = Object.freeze(loadPharmacyIngredientStrengthLinks());
+const activeIngredientById = new Map(activeIngredients.map((ingredient) => [ingredient.id, ingredient]));
 const formById = new Map(forms.map((form) => [form.id, form]));
 const strengthById = new Map(strengths.map((strength) => [strength.id, strength]));
+const categoryById = new Map(categories.map((category) => [category.id, category]));
+const subcategoryById = new Map(subcategories.map((subcategory) => [subcategory.id, subcategory]));
+
+function isSubcategoryAvailable(item: PharmacyCatalogSubcategory): boolean {
+  const parent = categoryById.get(item.categoryId);
+  return parent ? isCatalogItemVisible(item, parent) : false;
+}
+
+function isIngredientAvailable(item: PharmacyCatalogActiveIngredient): boolean {
+  const parent = subcategoryById.get(item.subcategoryId);
+  if (!parent) return false;
+  const category = categoryById.get(parent.categoryId);
+  return category ? isCatalogItemVisible(item, parent, category) : false;
+}
 
 export class PharmacyStaticCatalogService {
   getCategories(): readonly PharmacyCatalogCategory[] {
-    return categories;
+    return visibleCatalogItems(categories, (item) => item.id);
   }
 
   getSubcategories(categoryId: number): readonly PharmacyCatalogSubcategory[] {
-    return subcategories
-      .filter((item) => item.categoryId === categoryId)
-      .sort((left, right) => left.id - right.id);
+    const category = categoryById.get(categoryId);
+    if (!category || !isCatalogItemVisible(category)) return [];
+    return visibleCatalogItems(
+      subcategories.filter((item) => item.categoryId === categoryId),
+      (item) => item.id,
+    );
   }
 
   getActiveIngredients(subcategoryId: number): readonly PharmacyCatalogActiveIngredient[] {
-    return activeIngredients
-      .filter((item) => item.subcategoryId === subcategoryId)
-      .sort((left, right) => left.originalId - right.originalId);
+    const subcategory = subcategoryById.get(subcategoryId);
+    if (!subcategory || !isSubcategoryAvailable(subcategory)) return [];
+    return visibleCatalogItems(
+      activeIngredients.filter((item) => item.subcategoryId === subcategoryId),
+      (item) => item.id,
+    );
   }
 
   getForms(): readonly PharmacyCatalogForm[] {
-    return forms;
+    return visibleCatalogItems(forms, (item) => item.id);
   }
 
   getStrengths(): readonly PharmacyCatalogStrength[] {
-    return strengths;
+    return visibleCatalogItems(strengths, (item) => item.id);
   }
 
   getFormsForActiveIngredient(activeIngredientId: number): readonly PharmacyCatalogForm[] {
-    return ingredientFormLinks
-      .filter((item) => item.activeIngredientId === activeIngredientId)
-      .map((item) => formById.get(item.formId))
-      .filter((item): item is PharmacyCatalogForm => Boolean(item));
+    const ingredient = activeIngredientById.get(activeIngredientId);
+    if (!ingredient || !isIngredientAvailable(ingredient)) return [];
+    return visibleCatalogItems(
+      ingredient.formIds
+      .map((formId) => formById.get(formId))
+      .filter((item): item is PharmacyCatalogForm => Boolean(item)),
+      (item) => item.id,
+    );
   }
 
   getStrengthsForActiveIngredient(activeIngredientId: number): readonly PharmacyCatalogStrength[] {
-    return ingredientStrengthLinks
-      .filter((item) => item.activeIngredientId === activeIngredientId)
-      .map((item) => strengthById.get(item.strengthId))
-      .filter((item): item is PharmacyCatalogStrength => Boolean(item));
+    const ingredient = activeIngredientById.get(activeIngredientId);
+    if (!ingredient || !isIngredientAvailable(ingredient)) return [];
+    return visibleCatalogItems(
+      ingredient.strengthIds
+      .map((strengthId) => strengthById.get(strengthId))
+      .filter((item): item is PharmacyCatalogStrength => Boolean(item)),
+      (item) => item.id,
+    );
   }
 }
 

@@ -33,8 +33,6 @@ Filtering never deletes files from the original `src/` or `public/` directories.
 | `asol-push-sw.js`             | Web Push service worker registered by the notifications feature                   |
 | `asol-theme-init.js`          | Blocking theme initialization before React starts                                 |
 | `logo.png`                    | Layout metadata and the shared `AppIcon` component                                |
-| `catagory/categories.json`    | Canonical category source owned and imported only by `src/features/categories`    |
-| `catagory/subcategories.json` | Canonical subcategory source owned and imported only by `src/features/categories` |
 
 Missing allowlisted files fail the build with `Required static asset not found`.
 
@@ -44,8 +42,7 @@ Missing allowlisted files fail the build with `Required static asset not found`.
 
 | Directory               | Runtime ownership                                                                    |
 | ----------------------- | ------------------------------------------------------------------------------------ |
-| `catagory/cars`         | Vehicle option JSON and vehicle/brand images loaded by product components            |
-| `catagory/pharmacy`     | Pharmacy catalog JSON imported by the pharmacy static catalog loader                 |
+| `catagory`              | Complete versioned Catalog v3: manifest, schemas, core, pharmacy and vehicle datasets |
 | `images/mainCategories` | Complete main-category image catalog, including categories supplied by external data |
 | `images/pharmacy_fixed` | Pharmacy category images referenced by the pharmacy catalog                          |
 | `images/subCategories`  | Complete subcategory image catalog                                                   |
@@ -59,20 +56,10 @@ Adding a directory permits every current and future file below it. Use a directo
 
 | Path                                        | Reason                                                     |
 | ------------------------------------------- | ---------------------------------------------------------- |
-| `catagory.db`                               | SQLite source used by the JSON export script               |
 | `asol-web-manifest.json`                    | Previous generated manifest; each build writes a fresh one |
-| `catagory/active_ingredient_forms.json`     | Source export not requested by static runtime              |
-| `catagory/active_ingredient_strengths.json` | Source export not requested by static runtime              |
-| `catagory/active_ingredients.json`          | Source export not requested by static runtime              |
-| `catagory/forms.json`                       | Source export not requested by static runtime              |
-| `catagory/pharmacy_categories.json`         | Source export not requested by static runtime              |
-| `catagory/pharmacy_subcategories.json`      | Source export not requested by static runtime              |
-| `catagory/product_brands.json`              | Source export not requested by static runtime              |
-| `catagory/setting.json`                     | SQLite export metadata                                     |
-| `catagory/sqlite_sequence.json`             | SQLite internal metadata                                   |
-| `catagory/strengths.json`                   | Source export not requested by static runtime              |
 
-Ignored files stay available to local tools but are not copied to static output.
+Ignored files stay available to local tools but are not copied to static output. The maintained
+JSON catalogs are the canonical source files and are no longer generated from a database export.
 
 ## Ignored Directories
 
@@ -88,14 +75,19 @@ Nothing below these directories may enter `out/`, R2, Android, or iOS.
 
 `STATIC_ROUTE_IGNORELIST` removes routes only from the temporary static source:
 
-| Source path            | Result                         | Reason                                                                                               |
-| ---------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `app/api`              | No static API route output     | Static hosts cannot execute Next.js server routes                                                    |
-| `app/dev`              | No `/dev/*` output             | Development diagnostics are not production pages                                                     |
-| `app/orders/[orderId]` | No dynamic order-detail output | Static clients use `/orders/details?orderId=...`; the dynamic route remains for hosted compatibility |
-| `app/test1`            | No `/test1` output             | UI test page is not a production page                                                                |
+| Source path                 | Result                         | Reason                                                                                               |
+| --------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `app/api`                   | No static API route output     | Static hosts cannot execute Next.js server routes                                                    |
+| `app/dev`                   | No `/dev/*` output             | Development diagnostics are not production pages                                                    |
+| `app/super-admin/catalog`   | No Catalog Studio output       | Filesystem editor is desktop web development tooling only                                            |
+| `app/orders/[orderId]`      | No dynamic order-detail output | Static clients use `/orders/details?orderId=...`; the dynamic route remains for hosted compatibility |
+| `app/test1`                 | No `/test1` output             | UI test page is not a production page                                                                |
 
 The original routes remain available during local development.
+
+After compilation, `auditCatalogStudioExcluded()` also fails if the final output contains the
+Catalog Studio page or development API. This is a second guard in addition to removal from the
+temporary source tree.
 
 ## Hidden Files
 
@@ -198,10 +190,7 @@ asol-app-init.js
 asol-push-sw.js
 asol-theme-init.js
 logo.png
-catagory/categories.json
-catagory/subcategories.json
-catagory/cars/**
-catagory/pharmacy/**
+catagory/**
 images/mainCategories/**
 images/pharmacy_fixed/**
 images/subCategories/**

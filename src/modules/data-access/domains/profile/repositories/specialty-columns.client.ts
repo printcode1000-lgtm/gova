@@ -1,27 +1,24 @@
 import { categoryService } from "@/features/categories";
 
-function slug(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/['']/g, "")
-    .replace(/&/g, " and ")
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_+|_+$/g, "");
-}
-
 const items = categoryService.getSpecialtyColumnItems();
 const doctorAppointmentItems = categoryService.getDoctorAppointmentItems();
+const doctorColumns = new Map(
+  items
+    .filter((item) => item.kind === "doctor-specialty")
+    .map((item) => [item.originalId, item.column]),
+);
 
 export const columnBySelection = new Map(
   items.map((item) => [
     `${item.categoryId}:${item.originalId}`,
-    `${slug(item.titleEn)}_${item.originalId}`,
+    item.column,
   ]),
 );
 
 export const columnByDoctorAppointment = new Map(
-  doctorAppointmentItems.map((item) => [
-    item.originalId,
-    `${slug(item.nameEn)}_${item.originalId}`,
-  ]),
+  doctorAppointmentItems.flatMap((item) => {
+    const originalId = item.originalId;
+    const column = originalId === undefined ? undefined : doctorColumns.get(originalId);
+    return originalId === undefined || !column ? [] : ([[originalId, column]] as const);
+  }),
 );

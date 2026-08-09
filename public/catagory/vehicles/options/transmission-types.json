@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "id": "automatic",
+      "name": {
+        "ar": "أتوماتيك",
+        "en": "Automatic"
+      },
+      "image": null,
+      "isDefault": false,
+      "display": {
+        "order": 10,
+        "hidden": false
+      }
+    },
+    {
+      "id": "manual",
+      "name": {
+        "ar": "مانيوال",
+        "en": "Manual"
+      },
+      "image": null,
+      "isDefault": false,
+      "display": {
+        "order": 20,
+        "hidden": false
+      }
+    }
+  ]
+}

@@ -42,6 +42,11 @@ import {
   columnByDoctorAppointment,
 } from "@/modules/data-access/domains/profile/repositories/specialty-columns.server";
 
+const DELIVERY_SERVICES_SPECIALTY_COLUMN = columnBySelection.get("46:46");
+if (!DELIVERY_SERVICES_SPECIALTY_COLUMN) {
+  throw new Error("Delivery Services specialty column mapping is missing");
+}
+
 const DAY_TO_INDEX = new Map<WorkingDayId, number>(
   WORKING_DAY_LABELS.map((day, index) => [day.id, index]),
 );
@@ -628,7 +633,7 @@ export class ProfileRepository implements IProfileRepository {
     if (uniqueUids.length === 0) return [];
     const placeholders = uniqueUids.map(() => "?").join(", ");
     const rows = (await this.database.execute(
-      `SELECT uid FROM user_specialties WHERE uid IN (${placeholders}) AND delivery_services_46 = 1`,
+      `SELECT uid FROM user_specialties WHERE uid IN (${placeholders}) AND \`${DELIVERY_SERVICES_SPECIALTY_COLUMN}\` = 1`,
       uniqueUids,
     )) as Array<{ uid: string }>;
     return rows.map((row: { uid: string }) => row.uid);
@@ -891,10 +896,8 @@ export class ProfileRepository implements IProfileRepository {
         categoryId,
         subcategoryId: categoryId,
         specialtyColumn:
-          categoryId === 46
-            ? "delivery_services_46"
-            : (columnBySelection.get(`${categoryId}:${categoryId}`) ??
-              `main_category_${categoryId}`),
+          columnBySelection.get(`${categoryId}:${categoryId}`) ??
+          `main_category_${categoryId}`,
         source: "main",
         isEnabled: true,
         updatedAt: timestamp,

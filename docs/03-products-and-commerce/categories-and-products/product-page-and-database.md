@@ -79,7 +79,9 @@ The products database does not duplicate category titles or category images. All
 
 ## User Specialties
 
-The `user_specialties` table stores user specialty selections as boolean columns. Each specialty has a corresponding column in the format `{slug(titleEn)}_{originalId}`.
+The `user_specialties` table stores user specialty selections as boolean columns. The stable
+selection-to-column contract is explicit in `public/catagory/core/specialty-columns.json`; display
+titles are not used to generate column names at runtime.
 
 The table is separate from the products table and is used for:
 

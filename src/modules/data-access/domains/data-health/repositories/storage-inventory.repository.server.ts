@@ -390,16 +390,16 @@ export class StorageInventoryRepository {
       readFileSync(
         path.join(
           process.cwd(),
-          "public/catagory/pharmacy/active_ingredients.json",
+          "public/catagory/pharmacy/ingredients.json",
         ),
         "utf8",
       ),
-    ) as Array<{ id: number; image_url?: string }>;
-    const pharmacyAssets = pharmacyCatalog
-      .filter((item) => item.image_url)
+    ) as { schemaVersion: 3; items: Array<{ id: number; imagePath?: string }> };
+    const pharmacyAssets = pharmacyCatalog.items
+      .filter((item) => item.imagePath)
       .map((item) => ({
         id: String(item.id),
-        path: String(item.image_url).replace(/^\/+/, ""),
+        path: String(item.imagePath).replace(/^\/+/, ""),
       }));
     const missingStaticAssets = pharmacyAssets.filter(
       (asset) => !existsSync(path.join(process.cwd(), "public", asset.path)),

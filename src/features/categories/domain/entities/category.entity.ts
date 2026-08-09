@@ -1,3 +1,5 @@
+import type { CatalogDisplay } from "@/features/catalog-data/types/catalog-v3.types";
+
 export interface Category {
   id: number;
   titleAr: string;
@@ -6,9 +8,5 @@ export interface Category {
   image: string;
   createdAt: string;
   updatedAt: string;
-  collection: number | null;
-  collectionAr: string | null;
-  collectionEn: string | null;
-  collectionImage: string | null;
-  order: number | null;
+  display: CatalogDisplay;
 }

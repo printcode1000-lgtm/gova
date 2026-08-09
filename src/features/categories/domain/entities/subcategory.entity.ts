@@ -1,3 +1,5 @@
+import type { CatalogDisplay } from "@/features/catalog-data/types/catalog-v3.types";
+
 export interface Subcategory {
   id: number;
   categoryId: number;
@@ -8,5 +10,6 @@ export interface Subcategory {
   image: string;
   createdAt: string;
   updatedAt: string;
-  subCollection: number | null;
+  groupKey: "doctor-appointment" | null;
+  display: CatalogDisplay;
 }

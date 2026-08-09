@@ -2,7 +2,8 @@
 
 ## Architectural Contract
 
-`src/features/categories` is the sole owner of category data. No component, service, or repository may read or import `categories.json` or `subcategories.json` directly. The only public import allowed is:
+`src/features/categories` is the sole runtime owner of the core category datasets. No component,
+service, or repository may import the core JSON directly. The only public import allowed is:
 
 ```ts
 import { categoryService, type CategoryDisplay } from "@/features/categories";
@@ -10,25 +11,34 @@ import { categoryService, type CategoryDisplay } from "@/features/categories";
 
 The official source files are:
 
-- `public/catagory/categories.json`
-- `public/catagory/subcategories.json`
+- `public/catagory/core/categories.json`
+- `public/catagory/core/subcategories.json`
+- `public/catagory/core/collections.json`
+- `public/catagory/core/specialty-columns.json`
 
-The name `catagory` remains temporary for compatibility with existing static bundles and OTA. There is no second data copy under `src/data`.
+`public/catagory/manifest.json` declares every dataset and asset root. JSON Schema 2020-12
+contracts live under `public/catagory/schemas`. The name `catagory` remains for compatibility
+with existing static bundles and OTA. There is no second data copy under `src/data`.
 
 ## Data Path
 
 ```text
-canonical JSON
-  -> infrastructure/raw-data.loader.ts
-  -> RawCategory / RawSubcategory
-  -> runtime validation
-  -> mapRawCategory / mapRawSubcategory
+versioned canonical JSON (schemaVersion 3)
+  -> infrastructure/catalog-data.loader.ts
+  -> normalized domain Category / Subcategory / Collection
   -> domain Category / Subcategory
   -> CategoryService projections
   -> application consumers
 ```
 
-snake_case fields are confined to `infrastructure`. Everything exiting the module uses camelCase and explicit types.
+All canonical fields use camelCase. Localized names use `{ ar, en, ...futureLocales }`. Collection
+membership and specialty-column mappings are explicit relationships rather than duplicated or
+derived metadata.
+
+Every category, collection and subcategory has `display.order` and `display.hidden`. The service
+applies the shared display policy before producing Home, route, profile, developer-selector,
+specialty or random-item projections. A hidden parent makes its descendants unavailable without
+deleting their rows or relationships.
 
 ## Identity
 
@@ -62,7 +72,8 @@ The CategoryService provides specialty column mapping for the User Specialties M
 - `getDoctorAppointmentItems()`: Returns medical specialty items for doctor-appointment mapping
 - `getCollection(collectionId)`: Returns collection data for hierarchical specialty support
 
-Column names follow the pattern: `{slug(titleEn)}_{originalId}`
+Column names are stored explicitly in `core/specialty-columns.json`; changing a display title can
+never silently rename a database column.
 
 The module supports hierarchical relationships where selecting a collection member automatically includes all its subcategories in the user specialties.
 
@@ -87,4 +98,7 @@ npm run architecture:check
 npm run typecheck
 ```
 
-The validation engine checks structure, duplicate IDs, parent relationship, composite `originalId`, collection metadata, required fields, and image paths. The architecture check prevents direct JSON access, raw fields, or module detail imports.
+`npm run catalog:validate` validates every JSON Schema, ID, parent relation, collection member,
+pharmacy reference, vehicle option/image, and the exact mapping to `profile-core.user_specialties`.
+The category validator additionally checks category display images and required virtual-group rules.
+The architecture check prevents direct core JSON access or module-detail imports.

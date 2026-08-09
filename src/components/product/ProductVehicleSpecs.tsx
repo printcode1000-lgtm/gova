@@ -1,44 +1,22 @@
 "use client";
 
 import * as React from "react";
-import { asolApi } from "@/core/api";
+import {
+  vehicleCatalogService,
+  type VehicleCatalog,
+  type VehicleCatalogOption,
+} from "@/features/vehicle-catalog";
 import type { ProductVehicleSpecsData } from "@/features/product/entities/product.entity";
 import type {
   ProductMode,
   ProductComponentConfig,
 } from "./product-component.types";
 
-interface CarOption {
-  id: string;
-  name: string;
-  name_ar: string;
-  image?: string;
-}
-
-interface CarGroup {
-  key: string;
-  label: string;
-  file: string;
-}
-
-const GROUPS: CarGroup[] = [
-  { key: "brand", label: "ماركة السيارة", file: "brands.json" },
-  { key: "bodyType", label: "نوع الهيكل", file: "body_types.json" },
-  { key: "fuel", label: "نوع الوقود", file: "fuel_types.json" },
-  {
-    key: "transmission",
-    label: "ناقل الحركة",
-    file: "transmission_types.json",
-  },
-  { key: "special", label: "تصنيفات خاصة", file: "special_types.json" },
-];
-
 const FALLBACK_IMAGE = "/images/subCategories/Cars for Sale.webp";
-const IMAGE_GROUPS = new Set(["brand", "bodyType"]);
 
-function optionImage(option: CarOption) {
+function optionImage(option: VehicleCatalogOption, imageRoot: string) {
   return option.image
-    ? `/catagory/cars/${option.image.replace(/^\//, "")}`
+    ? `${imageRoot}/${option.image.replace(/^\//, "")}`
     : FALLBACK_IMAGE;
 }
 
@@ -53,24 +31,18 @@ export function ProductVehicleSpecs({
   specs: ProductVehicleSpecsData;
   onChange: (specs: ProductVehicleSpecsData) => void;
 }) {
-  const [options, setOptions] = React.useState<Record<string, CarOption[]>>({});
+  const [catalog, setCatalog] = React.useState<VehicleCatalog | null>(null);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     let active = true;
-    Promise.all(
-      GROUPS.map(async (group) => {
-        const items = await asolApi.getPublicJson<CarOption[]>(
-          `/catagory/cars/data/${group.file}`,
-        );
-        return [group.key, items] as const;
-      }),
-    )
-      .then((entries) => {
-        if (active) setOptions(Object.fromEntries(entries));
+    vehicleCatalogService
+      .load()
+      .then((loadedCatalog) => {
+        if (active) setCatalog(loadedCatalog);
       })
       .catch(() => {
-        if (active) setOptions({});
+        if (active) setCatalog(null);
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -80,7 +52,8 @@ export function ProductVehicleSpecs({
     };
   }, []);
 
-  const enabledGroups = GROUPS.filter((group) => config[group.key] !== false);
+  const enabledGroups = (catalog?.groups ?? []).filter((group) => config[group.key] !== false);
+  const options = catalog?.optionsByGroup ?? {};
 
   if (loading)
     return (
@@ -92,6 +65,7 @@ export function ProductVehicleSpecs({
       const value = specs[group.key as keyof ProductVehicleSpecsData];
       if (!value) return [];
       const option = options[group.key]?.find((item) => item.id === value);
+      if (!option) return [];
       return [{ group, value, option }];
     });
     if (selected.length === 0)
@@ -105,20 +79,20 @@ export function ProductVehicleSpecs({
             key={group.key}
             className="flex items-center gap-3 rounded-xl border bg-muted/20 p-3"
           >
-            {IMAGE_GROUPS.has(group.key) ? (
+            {group.supportsImage ? (
               <img
-                src={option ? optionImage(option) : FALLBACK_IMAGE}
+                src={option && catalog ? optionImage(option, catalog.imageRoot) : FALLBACK_IMAGE}
                 alt=""
                 loading="lazy"
                 className="h-16 w-16 shrink-0 rounded-lg object-contain bg-background"
               />
             ) : null}
             <div className="min-w-0">
-              <p className="text-xs text-muted-foreground">{group.label}</p>
-              <p className="mt-1 font-semibold">{option?.name_ar || value}</p>
-              {option?.name ? (
+              <p className="text-xs text-muted-foreground">{group.name.ar}</p>
+              <p className="mt-1 font-semibold">{option?.name.ar || value}</p>
+              {option?.name.en ? (
                 <p className="truncate text-xs text-muted-foreground" dir="ltr">
-                  {option.name}
+                  {option.name.en}
                 </p>
               ) : null}
             </div>
@@ -133,6 +107,7 @@ export function ProductVehicleSpecs({
       {enabledGroups.map((group) => {
         const selectedId =
           specs[group.key as keyof ProductVehicleSpecsData] ?? "";
+        const selectedOption = options[group.key]?.find((item) => item.id === selectedId);
         return (
           <details
             key={group.key}
@@ -140,12 +115,11 @@ export function ProductVehicleSpecs({
             open={false}
           >
             <summary className="cursor-pointer px-4 py-3 font-semibold">
-              {group.label}
-              {selectedId ? (
+              {group.name.ar}
+              {selectedOption ? (
                 <span className="mr-2 text-sm font-normal text-primary">
                   (
-                  {options[group.key]?.find((item) => item.id === selectedId)
-                    ?.name_ar || selectedId}
+                  {selectedOption.name.ar}
                   )
                 </span>
               ) : null}
@@ -170,16 +144,16 @@ export function ProductVehicleSpecs({
                         : "border-border bg-background"
                     }`}
                   >
-                    {IMAGE_GROUPS.has(group.key) ? (
+                    {group.supportsImage ? (
                       <img
-                        src={optionImage(option)}
+                        src={catalog ? optionImage(option, catalog.imageRoot) : FALLBACK_IMAGE}
                         alt=""
                         loading="lazy"
                         className="mx-auto h-16 w-full rounded-lg object-contain"
                       />
                     ) : null}
                     <span className="mt-2 block text-sm font-medium">
-                      {option.name_ar}
+                      {option.name.ar}
                     </span>
                   </button>
                 );

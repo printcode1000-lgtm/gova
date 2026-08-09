@@ -172,13 +172,6 @@
       "detail": "السماح بتشغيل سكربتات PowerShell للمستخدم الحالي عند منع أوامر npm على ويندوز."
     },
     {
-      "label": "DB Export - تصدير JSON",
-      "type": "npm",
-      "script": "db:export",
-      "problemMatcher": [],
-      "detail": "تصدير بيانات قواعد المشروع إلى ملفات JSON لاستخدامها في النسخ أو المراجعة."
-    },
-    {
       "label": "DB Sync - SQLite/Turso",
       "type": "npm",
       "script": "db:schema:sync",

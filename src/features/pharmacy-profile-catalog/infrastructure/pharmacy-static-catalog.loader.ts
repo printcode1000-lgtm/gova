@@ -1,143 +1,81 @@
-import pharmacyActiveIngredientsJson from "../../../../public/catagory/pharmacy/active_ingredients.json";
-import pharmacyIngredientFormsJson from "../../../../public/catagory/pharmacy/active_ingredient_forms.json";
-import pharmacyIngredientStrengthsJson from "../../../../public/catagory/pharmacy/active_ingredient_strengths.json";
+import pharmacyCategoriesJson from "../../../../public/catagory/pharmacy/categories.json";
 import pharmacyFormsJson from "../../../../public/catagory/pharmacy/forms.json";
-import pharmacyCategoriesJson from "../../../../public/catagory/pharmacy/pharmacy_categories.json";
-import pharmacySubcategoriesJson from "../../../../public/catagory/pharmacy/pharmacy_subcategories.json";
+import pharmacyIngredientsJson from "../../../../public/catagory/pharmacy/ingredients.json";
 import pharmacyStrengthsJson from "../../../../public/catagory/pharmacy/strengths.json";
+import pharmacySubcategoriesJson from "../../../../public/catagory/pharmacy/subcategories.json";
 
+import type {
+  PharmacyCatalogCategoryV3,
+  PharmacyCatalogFormV3,
+  PharmacyCatalogIngredientV3,
+  PharmacyCatalogStrengthV3,
+  PharmacyCatalogSubcategoryV3,
+} from "@/features/catalog-data/types/catalog-v3.types";
 import type {
   PharmacyCatalogActiveIngredient,
   PharmacyCatalogCategory,
   PharmacyCatalogForm,
   PharmacyCatalogStrength,
   PharmacyCatalogSubcategory,
-  PharmacyIngredientFormLink,
-  PharmacyIngredientStrengthLink,
 } from "../entities/pharmacy-static-catalog.types";
 
-interface RawPharmacyCategory {
-  id: number;
-  title_ar: string;
-  title_en: string;
-  icon: string;
-}
+type VersionedItems<T> = { schemaVersion: 3; items: T[] };
 
-interface RawPharmacySubcategory {
-  id: number;
-  pharmacy_category_id: number;
-  original_id: number;
-  title_ar: string;
-  title_en: string;
-}
-
-interface RawPharmacyActiveIngredient {
-  id: number;
-  pharmacy_subcategory_id: number;
-  original_id: number;
-  name_ar: string;
-  name_en: string;
-  image_url: string;
-  is_prescription_required: 0 | 1;
-}
-
-interface RawPharmacyForm {
-  id: string;
-  name_ar: string;
-  name_en: string;
-}
-
-interface RawPharmacyStrength {
-  id: string;
-  value: string;
-}
-
-interface RawPharmacyIngredientFormLink {
-  active_ingredient_id: number;
-  form_id: string;
-}
-
-interface RawPharmacyIngredientStrengthLink {
-  active_ingredient_id: number;
-  strength_id: string;
-}
-
-const rawPharmacyCategories = Object.freeze(
-  pharmacyCategoriesJson as RawPharmacyCategory[],
-);
-const rawPharmacySubcategories = Object.freeze(
-  pharmacySubcategoriesJson as RawPharmacySubcategory[],
-);
-const rawPharmacyActiveIngredients = Object.freeze(
-  pharmacyActiveIngredientsJson as RawPharmacyActiveIngredient[],
-);
-const rawPharmacyForms = Object.freeze(pharmacyFormsJson as RawPharmacyForm[]);
-const rawPharmacyStrengths = Object.freeze(
-  pharmacyStrengthsJson as RawPharmacyStrength[],
-);
-const rawPharmacyIngredientForms = Object.freeze(
-  pharmacyIngredientFormsJson as RawPharmacyIngredientFormLink[],
-);
-const rawPharmacyIngredientStrengths = Object.freeze(
-  pharmacyIngredientStrengthsJson as RawPharmacyIngredientStrengthLink[],
-);
+const categoryFile = pharmacyCategoriesJson as VersionedItems<PharmacyCatalogCategoryV3>;
+const subcategoryFile = pharmacySubcategoriesJson as VersionedItems<PharmacyCatalogSubcategoryV3>;
+const ingredientFile = pharmacyIngredientsJson as VersionedItems<PharmacyCatalogIngredientV3>;
+const formFile = pharmacyFormsJson as VersionedItems<PharmacyCatalogFormV3>;
+const strengthFile = pharmacyStrengthsJson as VersionedItems<PharmacyCatalogStrengthV3>;
 
 export function loadPharmacyCategories(): readonly PharmacyCatalogCategory[] {
-  return rawPharmacyCategories.map((category) => ({
+  return categoryFile.items.map((category) => ({
     id: category.id,
-    nameAr: category.title_ar,
-    nameEn: category.title_en,
+    nameAr: category.name.ar,
+    nameEn: category.name.en,
     icon: category.icon,
+    display: Object.freeze({ ...category.display }),
   }));
 }
 
 export function loadPharmacySubcategories(): readonly PharmacyCatalogSubcategory[] {
-  return rawPharmacySubcategories.map((subcategory) => ({
+  return subcategoryFile.items.map((subcategory) => ({
     id: subcategory.id,
-    categoryId: subcategory.pharmacy_category_id,
-    originalId: subcategory.original_id,
-    nameAr: subcategory.title_ar,
-    nameEn: subcategory.title_en,
+    categoryId: subcategory.categoryId,
+    originalId: subcategory.originalId,
+    nameAr: subcategory.name.ar,
+    nameEn: subcategory.name.en,
+    display: Object.freeze({ ...subcategory.display }),
   }));
 }
 
 export function loadPharmacyActiveIngredients(): readonly PharmacyCatalogActiveIngredient[] {
-  return rawPharmacyActiveIngredients.map((activeIngredient) => ({
-    id: activeIngredient.id,
-    subcategoryId: activeIngredient.pharmacy_subcategory_id,
-    originalId: activeIngredient.original_id,
-    nameAr: activeIngredient.name_ar,
-    nameEn: activeIngredient.name_en,
-    imageUrl: activeIngredient.image_url,
-    prescriptionRequired: activeIngredient.is_prescription_required === 1,
+  return ingredientFile.items.map((ingredient) => ({
+    id: ingredient.id,
+    subcategoryId: ingredient.subcategoryId,
+    originalId: ingredient.originalId,
+    nameAr: ingredient.name.ar,
+    nameEn: ingredient.name.en,
+    imageUrl: ingredient.imagePath,
+    prescriptionRequired: ingredient.prescriptionRequired,
+    formIds: Object.freeze([...ingredient.formIds]),
+    strengthIds: Object.freeze([...ingredient.strengthIds]),
+    display: Object.freeze({ ...ingredient.display }),
   }));
 }
 
 export function loadPharmacyForms(): readonly PharmacyCatalogForm[] {
-  return rawPharmacyForms.map((form) => ({
+  return formFile.items.map((form) => ({
     id: form.id,
-    nameAr: form.name_ar,
-    nameEn: form.name_en,
+    nameAr: form.name.ar,
+    nameEn: form.name.en,
+    display: Object.freeze({ ...form.display }),
   }));
 }
 
 export function loadPharmacyStrengths(): readonly PharmacyCatalogStrength[] {
-  return rawPharmacyStrengths.map((strength) => ({
+  return strengthFile.items.map((strength) => ({
     id: strength.id,
     value: strength.value,
-  }));
-}
-
-export function loadPharmacyIngredientFormLinks(): readonly PharmacyIngredientFormLink[] {
-  return rawPharmacyIngredientForms.map((item) => ({
-    activeIngredientId: item.active_ingredient_id,
-    formId: item.form_id,
-  }));
-}
-
-export function loadPharmacyIngredientStrengthLinks(): readonly PharmacyIngredientStrengthLink[] {
-  return rawPharmacyIngredientStrengths.map((item) => ({
-    activeIngredientId: item.active_ingredient_id,
-    strengthId: item.strength_id,
+    display: Object.freeze({ ...strength.display }),
   }));
 }

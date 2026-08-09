@@ -13,19 +13,26 @@ Every fixed active ingredient is treated as an orderable product, even when pric
 
 The default catalog is read from the pharmacy category dataset:
 
-- `public/catagory/pharmacy/pharmacy_categories.json`
-- `public/catagory/pharmacy/pharmacy_subcategories.json`
-- `public/catagory/pharmacy/active_ingredients.json`
+- `public/catagory/pharmacy/categories.json`
+- `public/catagory/pharmacy/subcategories.json`
+- `public/catagory/pharmacy/ingredients.json`
 - `public/catagory/pharmacy/forms.json`
 - `public/catagory/pharmacy/strengths.json`
-- `public/catagory/pharmacy/active_ingredient_forms.json`
-- `public/catagory/pharmacy/active_ingredient_strengths.json`
+
+Each ingredient stores its `formIds` and `strengthIds` directly. The former database-export link
+files no longer exist. All files use `schemaVersion: 3`, camelCase fields, localized name objects
+and mandatory `display.order` / `display.hidden` metadata.
 
 Images are served from:
 
 - `public/images/pharmacy_fixed`
 
 Raw pharmacy JSON is owned by `src/features/pharmacy-profile-catalog`. UI, product code, and the general category module do not read the raw pharmacy files directly. Consumers use camelCase projections from `pharmacyStaticCatalogService`.
+
+Global Catalog visibility is applied before seller overrides. A globally hidden category hides its
+subcategories and ingredients everywhere; a globally hidden form, strength or vehicle option is
+also omitted from every selector. Source rows remain intact and seller data cannot restore a
+globally hidden item.
 
 ## Module Location
 
@@ -129,7 +136,9 @@ Available actions:
 - Hide or restore any fixed or custom subcategory
 - Hide or restore products shown for the selected subcategory
 
-All lists are sorted by source `id` or stored `sortOrder`. Hidden rows remain visible in edit mode and are omitted in preview mode.
+Fixed source lists are sorted by Catalog `display.order`. Seller-created and seller-overridden rows
+continue to use their stored `sortOrder`. Seller-hidden rows remain visible in seller edit mode and
+are omitted in preview mode; this does not override the Catalog-wide `display.hidden` rule.
 
 ## Ordering
 

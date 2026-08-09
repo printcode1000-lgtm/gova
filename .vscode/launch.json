@@ -302,19 +302,6 @@
       }
     },
     {
-      "name": "DB Export - تصدير JSON",
-      "request": "launch",
-      "type": "node",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "db:export"],
-      "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}",
-      "presentation": {
-        "group": "ASOL Database",
-        "order": 2
-      }
-    },
-    {
       "name": "OTA Publish - نشر تحديث",
       "request": "launch",
       "type": "node",

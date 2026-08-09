@@ -104,3 +104,4 @@ services/profiles/.next/
 services/profiles/node_modules/
 services/profiles/.vercel/
 services/profiles/src/config/
+.catalog-studio/

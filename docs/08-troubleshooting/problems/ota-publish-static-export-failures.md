@@ -15,12 +15,13 @@ The final successful publication was OTA version `0.1.21`.
 ### Symptom
 
 ```text
-Cannot find module '../../../../public/catagory/subcategories.json'
+Cannot find module '../../../../public/catagory/core/subcategories.json'
 ```
 
 ### Cause
 
-The static policy excluded `public/catagory/subcategories.json`, but server-only profile schema code imported that exact file while Next.js type-checked the temporary build tree.
+The static policy excluded `public/catagory/core/subcategories.json`, but category code imported that
+exact file while Next.js type-checked the temporary build tree.
 
 ### Solution
 
@@ -65,8 +66,8 @@ VS Code/Devin injected `NODE_OPTIONS` and `VSCODE_INSPECTOR_OPTIONS`. Every nest
 
 ```text
 Unclassified public assets. Add each path to the static allowlist or ignorelist:
-catagory/cars/data/body_types.json
-catagory/cars/imgs/...
+catagory/vehicles/groups.json
+catagory/vehicles/images/...
 product/style/index.json
 ```
 
@@ -78,7 +79,7 @@ The static policy deliberately rejects new public files until they are reviewed.
 
 Both directories are runtime-owned:
 
-- `ProductVehicleSpecs.tsx` loads `catagory/cars/data/*.json` and `catagory/cars/imgs/*`.
+- `vehicleCatalogService` loads manifest-declared `catagory/vehicles/options/*.json` and images.
 - `ProductPageContent.tsx` loads `product/style/<main>__<sub>.json`.
 
 ### Solution
@@ -86,7 +87,7 @@ Both directories are runtime-owned:
 These directories were added to `STATIC_PUBLIC_ALLOW_DIRECTORIES`:
 
 ```text
-catagory/cars
+catagory
 product/style
 ```
 
@@ -108,7 +109,8 @@ Next.js `output: export` cannot produce an arbitrary dynamic route. Supported pa
 
 ### Solution
 
-`src/app/categories/[categoryId]/page.tsx` now exports `generateStaticParams()` from the public API of `src/features/categories`; only that module imports `public/catagory/categories.json`.
+`src/app/categories/[categoryId]/page.tsx` exports `generateStaticParams()` from the public API of
+`src/features/categories`; only that module owns `public/catagory/core/categories.json`.
 
 ### Prevention
 

@@ -201,15 +201,15 @@ assert.deepEqual(
 
 const pharmacyItems = JSON.parse(
   readFileSync(
-    path.join(root, "public/catagory/pharmacy/active_ingredients.json"),
+    path.join(root, "public/catagory/pharmacy/ingredients.json"),
     "utf8",
   ),
-) as Array<{ id: number; image_url?: string }>;
-for (const item of pharmacyItems) {
-  if (!item.image_url) continue;
+) as { schemaVersion: 3; items: Array<{ id: number; imagePath?: string }> };
+for (const item of pharmacyItems.items) {
+  if (!item.imagePath) continue;
   assert.ok(
-    existsSync(path.join(root, "public", item.image_url)),
-    `Missing pharmacy static image ${item.id}: ${item.image_url}`,
+    existsSync(path.join(root, "public", item.imagePath.replace(/^\/+/, ""))),
+    `Missing pharmacy static image ${item.id}: ${item.imagePath}`,
   );
 }
 

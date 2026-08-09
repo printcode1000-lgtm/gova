@@ -18,4 +18,6 @@ Using `category_id`, `original_id`, or `sub_collection` or reading JSON files in
 
 The developer selector does not directly interact with the User Specialties Module. User specialties are managed through the profile interface, which uses the CategoryService's specialty column projections to map user selections to database columns.
 
-The specialty column mapping follows the pattern `{slug(titleEn)}_{originalId}` and supports hierarchical relationships for collection members.
+Specialty columns are resolved from the explicit, stable mappings in
+`public/catagory/core/specialty-columns.json`. The mapping supports hierarchical collection members
+and does not change when a display title is edited.

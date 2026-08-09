@@ -43,6 +43,7 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/public-env.ts',
   'src/core/config/server-env.ts',
   'src/core/config/server-env.values.ts',
+  'src/core/config/catalog-studio.server.ts',
   'src/instrumentation.ts',
   'src/modules/data-access/domains/marketplace-orders/db/config.ts',
   'src/modules/dev-cloud-backup/domain/development-guard.server.ts',
