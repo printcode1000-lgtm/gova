@@ -105,3 +105,10 @@ services/profiles/node_modules/
 services/profiles/.vercel/
 services/profiles/src/config/
 .catalog-studio/
+
+# Scratch and logs. These were tracked once: 25MB of agent build logs, dev-server
+# output, and screenshots that no code or document references. They stay on disk
+# and out of the repository.
+tmp/
+.codex-logs/
+.dev-server.*.log
