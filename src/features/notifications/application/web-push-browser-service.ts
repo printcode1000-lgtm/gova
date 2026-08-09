@@ -2,6 +2,7 @@
 
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
 import { NotificationPlatforms } from "../domain/enums";
+import { WEB_PUSH_VAPID_PUBLIC_KEY } from "../domain/web-push-config";
 import { notificationApiService } from "../services/notification-api-service";
 import { readNotificationLocale } from "../shared/read-notification-locale";
 import { permissionManager, PermissionKinds } from "@/native-platform/permissions";
@@ -87,9 +88,6 @@ export class WebPushBrowserService {
 
   async subscribe(uid: string, phone: string) {
     if (!this.isSupported()) throw new Error("webPushUnsupported");
-    const vapid = await notificationApiService.getWebPushPublicKey();
-    if (!vapid.enabled || !vapid.publicKey)
-      throw new Error("webPushNotConfigured");
     // Routed through the Native Platform Permission Manager so every
     // notification permission in the application follows one policy.
     const permission = await permissionManager.requestIfNeeded(
@@ -107,7 +105,7 @@ export class WebPushBrowserService {
       existing ??
       (await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapid.publicKey),
+        applicationServerKey: urlBase64ToUint8Array(WEB_PUSH_VAPID_PUBLIC_KEY),
       }));
     const deviceId = await getDeviceId();
     const token = JSON.stringify(subscription.toJSON());

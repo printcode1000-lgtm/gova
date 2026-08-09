@@ -149,10 +149,10 @@ Which deployment gets what:
 
 | Variable | Main app | Notifications service |
 |---|---|---|
-| `TURSO_NOTIFICATIONS_DATABASE_URL` / `_AUTH_TOKEN` | yes — token CRUD, VAPID, recipients | yes — resolves tokens to send |
+| `TURSO_NOTIFICATIONS_DATABASE_URL` / `_AUTH_TOKEN` | yes — token CRUD, recipients | yes — resolves tokens to send |
 | `ASOL_NOTIFICATION_GRANT_SECRET` | yes — signs grants | yes — verifies them |
 | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | yes — client-safe | **no** — it is the service |
-| `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*` | not needed | yes |
+| `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*`, `WEB_PUSH_VAPID_PRIVATE_KEY` | not needed | yes |
 | `TURSO_DATABASE_URL`, product, advertisements, shards | yes | **no** |
 
 The notifications account never receives users, product, or shard credentials.
@@ -195,9 +195,21 @@ request then goes to the main app, which still serves those routes.
 migration in `npm run db:migrate:product`. Delete them once the new account is
 verified.
 
-Browser Web Push does not use environment variables. Its VAPID key pair is
-generated from `/super-admin/vapid` and stored in the users database table
-`notification_vapid_settings`; only the public key ever reaches a browser.
+## Browser Web Push
+
+| Variable | Where | Notes |
+|---|---|---|
+| `WEB_PUSH_VAPID_PRIVATE_KEY` | notifications service, server-only | Signs the VAPID JWT. Required by `npm run notifications:deploy`: browsers are the one transport that needs no store account and no native build, so a deployment without it silently loses the channel it always has. |
+
+The public key and the `mailto:` subject are **not** environment variables. They
+are constants in `src/features/notifications/domain/web-push-config.ts`, because
+every subscribing browser receives the public key anyway — it is
+`applicationServerKey`. Keeping it in the bundle also lets a static export and
+the native shell subscribe with no server call.
+
+Rotating the pair invalidates every existing `PushSubscription`, so it is
+deliberately a code change plus an env change, never an admin action. Change
+both halves together.
 
 ## Apple Push Notification service
 

@@ -1,7 +1,6 @@
 import 'server-only';
 
 import { NotificationTokenService } from './notification-token-service.server';
-import { NotificationVapidService } from './notification-vapid-service.server';
 import { NotificationBroadcastService } from './notification-broadcast-service.server';
 
 /**
@@ -13,5 +12,4 @@ import { NotificationBroadcastService } from './notification-broadcast-service.s
  * The notifications service constructs its own instance in its route.
  */
 export const notificationTokenService = new NotificationTokenService();
-export const notificationVapidService = new NotificationVapidService();
 export const notificationBroadcastService = new NotificationBroadcastService();

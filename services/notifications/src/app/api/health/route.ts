@@ -23,6 +23,9 @@ export function GET(): Response {
           process.env.FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON,
       ),
       apns: Boolean(process.env.APNS_TEAM_ID && process.env.APNS_KEY_ID && process.env.APNS_PRIVATE_KEY),
+      // Only the private half is configuration; the public key and subject are
+      // constants in the bundle, so there is nothing else here to be missing.
+      webPush: Boolean(process.env.WEB_PUSH_VAPID_PRIVATE_KEY),
     },
   });
 }

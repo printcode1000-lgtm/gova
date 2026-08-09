@@ -84,9 +84,8 @@ data.
 
 ### hesham102 — notifications
 
-`asol-notifications` · 4 tables — `user_notification_tokens`,
-`user_notification_preferences`, `notification_vapid_settings`, plus drizzle
-bookkeeping.
+`asol-notifications` · 3 tables — `user_notification_tokens`,
+`user_notification_preferences`, plus drizzle bookkeeping.
 
 Push traffic is one provider request per device token — the burstiest workload
 in the system, isolated so it can never consume the quota that serves logins.

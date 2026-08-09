@@ -8,13 +8,16 @@ import type { NotificationProviderPayload } from "../services/providers/notifica
  * provider module is loaded, so the test exercises the result mapping only.
  */
 const sent: string[] = [];
+const vapidDetails: Array<[string, string, string]> = [];
 let nextRejection: (() => unknown) | null = null;
 
 const originalRequire = Module.prototype.require;
 Module.prototype.require = function patchedRequire(this: unknown, id: string) {
   if (id === "web-push") {
     return {
-      setVapidDetails: () => undefined,
+      setVapidDetails: (subject: string, publicKey: string, privateKey: string) => {
+        vapidDetails.push([subject, publicKey, privateKey]);
+      },
       sendNotification: async (subscription: { endpoint: string }) => {
         sent.push(subscription.endpoint);
         const rejection = nextRejection?.();
@@ -40,14 +43,6 @@ function token(id: string, endpoint: string): RegisteredNotificationToken {
   };
 }
 
-const vapidService = {
-  getPrivateForProvider: async () => ({
-    subject: "mailto:admin@asol.local",
-    publicKey: "public",
-    privateKey: "private",
-  }),
-};
-
 const payload: NotificationProviderPayload = {
   notificationId: "notification_1",
   locale: "ar",
@@ -63,11 +58,12 @@ async function main() {
   const { WebPushNotificationProvider } = await import(
     "../services/providers/web-push-notification-provider.server"
   );
-  const provider = new WebPushNotificationProvider(
-    vapidService as unknown as ConstructorParameters<
-      typeof WebPushNotificationProvider
-    >[0],
+  const { WEB_PUSH_VAPID_PUBLIC_KEY, WEB_PUSH_VAPID_SUBJECT } = await import(
+    "../domain/web-push-config"
   );
+  const provider = new WebPushNotificationProvider(() => ({
+    privateKey: "private",
+  }));
 
   const delivered = await provider.send({
     tokens: [token("ntok_live", "https://push.example/live")],
@@ -98,6 +94,37 @@ async function main() {
 
   nextRejection = null;
   assert.equal(sent.length, 3);
+
+  // The pair handed to the transport is the constant plus the configured
+  // secret. A public key that does not match what the browser subscribed with
+  // is rejected by the push service, so it is asserted rather than assumed.
+  assert.deepEqual(vapidDetails[0], [
+    WEB_PUSH_VAPID_SUBJECT,
+    WEB_PUSH_VAPID_PUBLIC_KEY,
+    "private",
+  ]);
+  assert.match(
+    WEB_PUSH_VAPID_SUBJECT,
+    /^mailto:.+@.+\..+$/,
+    "RFC 8292 requires a contact a push service can actually reach.",
+  );
+  assert.equal(
+    WEB_PUSH_VAPID_PUBLIC_KEY.length,
+    87,
+    "An uncompressed P-256 public key is 87 base64url characters.",
+  );
+  assert.match(WEB_PUSH_VAPID_PUBLIC_KEY, /^[A-Za-z0-9_-]+$/);
+
+  // Without the secret the transport must report a named failure and keep the
+  // tokens: the subscriptions are healthy, the server is not configured.
+  const unconfigured = await new WebPushNotificationProvider(() => null).send({
+    tokens: [token("ntok_unconfigured", "https://push.example/unconfigured")],
+    payload,
+  });
+  assert.equal(unconfigured.status, "failed");
+  assert.match(unconfigured.message ?? "", /webPushNotConfigured/);
+  assert.deepEqual(unconfigured.invalidTokenIds ?? [], []);
+  assert.equal(sent.length, 3, "An unconfigured provider must not send.");
 
   console.log("Web push provider tests passed.");
 }

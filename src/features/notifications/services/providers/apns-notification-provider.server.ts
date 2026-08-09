@@ -9,6 +9,7 @@ import type {
   NotificationProviderSendResult,
 } from "./notification-provider.interface";
 import type { RegisteredNotificationToken } from "../../domain/entities";
+import { appleSoundFile } from "../../domain/notification-sound";
 
 interface ApnsResult {
   success: boolean;
@@ -112,11 +113,15 @@ async function sendOne(
       request.close();
       finish({ success: false, invalid: false });
     });
+    // The same bundled file the Firebase path uses. This transport used to send
+    // the system sound, which meant a device sounded different depending on
+    // which provider happened to serve it.
+    const sound = appleSoundFile(input.payload.sound);
     const aps = dataOnly
       ? { "content-available": 1 }
       : {
           alert: { title: input.payload.title ?? "ASOL", body: input.payload.body ?? "" },
-          sound: "default",
+          ...(sound ? { sound } : {}),
           badge: 1,
           "thread-id": input.payload.groupKey ?? input.payload.category,
         };

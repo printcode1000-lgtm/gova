@@ -14,9 +14,8 @@ const LEGACY_TURSO_KEYS = [
   'TURSO_PRODUCT_AUTH_TOKEN',
   'TURSO_ADVERTISEMENTS_DATABASE_URL',
   'TURSO_ADVERTISEMENTS_AUTH_TOKEN',
-  // Separate Turso account. The main app still reads and writes device tokens,
-  // preferences, and VAPID settings; only push fan-out moves to the
-  // notifications deployment.
+  // Separate Turso account. The main app still reads and writes device tokens
+  // and preferences; only push fan-out moves to the notifications deployment.
   'TURSO_NOTIFICATIONS_DATABASE_URL',
   'TURSO_NOTIFICATIONS_AUTH_TOKEN',
 ] as const;

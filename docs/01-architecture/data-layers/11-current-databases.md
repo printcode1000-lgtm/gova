@@ -280,7 +280,11 @@ Tables:
 
 - `user_notification_tokens`
 - `user_notification_preferences` (delivery opt-in/out metadata only; no conversation content)
-- `notification_vapid_settings`
+
+The Web Push VAPID pair is not a table. Its public half is a constant in
+`src/features/notifications/domain/web-push-config.ts` and its private half is
+`WEB_PUSH_VAPID_PRIVATE_KEY`, matching how the Firebase and APNs credentials
+are held.
 
 ### Why it is separate
 
@@ -294,7 +298,7 @@ that serves logins, product pages, or orders.
 | Layer | Files |
 | --- | --- |
 | API | `/api/notifications/*` |
-| Server service | `NotificationTokenService`, `NotificationSendService`, `NotificationVapidService` |
+| Server service | `NotificationTokenService`, `NotificationSendService` |
 | Repository | Notification repositories through `notificationsDataSource` |
 
 ### The rule that follows from the split

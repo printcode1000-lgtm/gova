@@ -49,10 +49,10 @@ services/notifications/
 | `POST /api/notifications/send` | Fan-out. Body is `{ grants: [...] }`; each grant is signature-verified and expiry-checked. No bearer token, no cookies. |
 | `GET /api/health` | Reports whether each credential is *present*, never its value. Safe to call publicly, and makes a misconfigured deployment visible without sending a real push. |
 
-Everything else stays on the main app. Device-token registration, VAPID
-management, and broadcast recipient listing all need the users database for
-identity checks and masked contact details, so moving them would have forced the
-notifications account to hold users credentials — the opposite of the point.
+Everything else stays on the main app. Device-token registration and broadcast
+recipient listing both need the users database for identity checks and masked
+contact details, so moving them would have forced the notifications account to
+hold users credentials — the opposite of the point.
 
 ## How the main app reaches it
 
@@ -135,10 +135,11 @@ the main app and changes nothing here.
 
 | Variable | Main app | Service |
 |---|:---:|:---:|
-| `TURSO_NOTIFICATIONS_DATABASE_URL` / `_AUTH_TOKEN` | ✅ token CRUD, VAPID, recipients | ✅ resolves tokens to send |
+| `TURSO_NOTIFICATIONS_DATABASE_URL` / `_AUTH_TOKEN` | ✅ token CRUD, recipients | ✅ resolves tokens to send |
 | `ASOL_NOTIFICATION_GRANT_SECRET` | ✅ signs grants | ✅ verifies them |
 | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | ✅ client-safe, tells the browser where to deliver | ✖ it *is* the service |
 | `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*` | ✖ | ✅ |
+| `WEB_PUSH_VAPID_PRIVATE_KEY` | ✖ | ✅ required — the public half is a constant in the bundle |
 | Users, product, advertisements, shard credentials | ✅ | ✖ |
 
 The grant secret must be byte-identical on both sides — the main app signs with

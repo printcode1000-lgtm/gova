@@ -63,8 +63,8 @@ inside `CapacitorPushService`.
 2. It creates all Android notification channels.
 3. It imports notifications still present in the Android notification tray, except notifications the user already dismissed locally and empty `ASOL` placeholders with no body or payload.
 4. If the user previously enabled notifications, it re-registers with FCM on startup to refresh the token timestamp.
-5. Foreground notifications are saved to AsolDB and refresh the badge.
-6. Tapping a background or terminated-state notification saves it, marks it read, and opens its validated internal route.
+5. Foreground notifications are saved to AsolDB, refresh the badge, and are displayed as a local notification on the resolved channel — Firebase shows nothing itself while the app is visible, so without this step a foreground push on Android is silent and invisible. Data-only deliveries, specialty-chat receipts, and locally dismissed identities are skipped. iOS is excluded because the OS already presents it from `presentationOptions`.
+6. Tapping a background or terminated-state notification saves it, marks it read, and opens its validated internal route. A notification the device displayed itself arrives through the local-notification listener instead and takes the same path, so its deep link is not lost.
 7. Signing out unregisters the token on every platform: `useLogout` calls the shared device-token service before clearing the session, and the controller also unregisters the previous uid when the account changes. Clearing application data unregisters before local storage is erased.
 8. Switching the app language re-registers the token so push text follows the new language.
 
@@ -85,25 +85,32 @@ Permission is requested only after an explicit user action. Android 13 and newer
 
 ## Channels
 
-| Channel | Purpose | Sound | Vibration |
-| --- | --- | --- | --- |
-| `asol_general_v2` | General and system notifications | `custom_notification.mp3` | Yes |
-| `asol_orders_v2` | Orders, shipping, and returns | `custom_notification.mp3` | Yes |
-| `asol_chat_v2` | Chat and messages | `custom_notification.mp3` | Yes |
-| `asol_urgent_v2` | Critical notifications | `custom_notification.mp3` | Yes |
-| `asol_updates_v2` | General update notifications | `custom_notification.mp3` | Yes |
+| Channel | Purpose | Importance | Sound | Vibration |
+| --- | --- | --- | --- | --- |
+| `asol_general_v2` | General and system notifications | 4 | `custom_notification.mp3` | Yes |
+| `asol_orders_v2` | Orders, shipping, and returns | 4 | `custom_notification.mp3` | Yes |
+| `asol_chat_v2` | Chat and messages | 4 | `custom_notification.mp3` | Yes |
+| `asol_urgent_v2` | Critical and urgent notifications | 5 | `custom_notification.mp3` | Yes |
+| `asol_updates_v2` | General update notifications | 4 | `custom_notification.mp3` | Yes |
+| `asol_silent_v2` | Notifications declared `sound: "silent"` | 2 | none | No |
 
 Channel IDs are versioned because Android does not allow an application to replace the sound configuration of an already-created channel. Users can still override channel behavior from Android system settings.
-All ASOL Android channels are intentionally audible and vibrating. FCM payloads
-route to the v2 channels and always use the custom notification sound.
 
-Server-side channel selection, in order:
+Importance is what makes the silent channel silent. Android plays a channel's
+sound from importance 3 upward, and a channel created *without* a sound still
+inherits the system sound — omitting the file is not enough on its own.
 
-1. Priority `critical` → `asol_urgent_v2`.
-2. Metadata `source = super_admin_broadcast` → `asol_updates_v2`, so a user can silence announcements from Android settings without silencing their orders.
-3. Category `orders` → `asol_orders_v2`.
-4. Category `chat` → `asol_chat_v2`.
-5. Everything else → `asol_general_v2`.
+Channel selection lives in
+[`src/features/notifications/domain/notification-sound.ts`](../../../src/features/notifications/domain/notification-sound.ts)
+and is shared by the server FCM provider and the on-device local notification,
+so a notification sounds the same whichever displayed it. In order:
+
+1. Sound `silent` → `asol_silent_v2`. It wins over everything: a low-importance channel is the only way to deliver without a sound.
+2. Priority `critical` or sound `urgent` → `asol_urgent_v2`. There is one sound asset, so `urgent` cannot mean a different file; it means the channel that interrupts.
+3. Metadata `source = super_admin_broadcast` → `asol_updates_v2`, so a user can silence announcements from Android settings without silencing their orders.
+4. Category `orders` → `asol_orders_v2`.
+5. Category `chat` → `asol_chat_v2`.
+6. Everything else → `asol_general_v2`.
 
 ## Server Delivery
 
@@ -111,6 +118,7 @@ Server-side channel selection, in order:
 
 - Resolves Arabic or English templates before delivery.
 - Sends notification and data payloads together.
+- Sends `sound` as the extensionless resource name (`custom_notification`). FCM resolves a raw resource by base name; sending the extension makes the lookup fail and Android falls back to the system sound with no error anywhere. The field is consulted only below Android 8 — from 8 upward the channel owns the sound — and is omitted for a `silent` notification so old devices stay silent too.
 - Restricts delivery to `hgh.asol.app`.
 - Includes notification ID, dedupe key, route, category, priority, sound, group, and timestamps.
 - Sends one HTTP v1 message per token; there is no multicast batch.

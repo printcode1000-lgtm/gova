@@ -182,6 +182,23 @@ export function getApnsServerConfig(): {
   };
 }
 
+/**
+ * Web Push sending credential.
+ *
+ * Only the private half is configuration. The public key and the subject are
+ * constants in `features/notifications/domain/web-push-config.ts`, because a
+ * browser receives them anyway; splitting them means the secret is the only
+ * thing a deployment has to hold, and the pair can never half-drift.
+ *
+ * `null` when unset, like APNs: an unconfigured transport reports a named
+ * failure rather than throwing inside a send.
+ */
+export function getWebPushServerConfig(): { privateKey: string } | null {
+  const privateKey = process.env.WEB_PUSH_VAPID_PRIVATE_KEY?.trim() ?? "";
+  if (!privateKey) return null;
+  return { privateKey };
+}
+
 export function getOtaApprovalServerConfig(): {
   manifestUrl: string;
   publicKey: string;

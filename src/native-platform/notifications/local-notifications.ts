@@ -9,6 +9,11 @@
  */
 
 import { toNativeError } from "../core/errors";
+import {
+  createEmitter,
+  removeHandles,
+  type PluginHandle,
+} from "../core/listener";
 import { createLazyPlugin } from "../core/lazy-plugin";
 import { hasDom, isAndroid, isNativePlatform } from "../core/platform";
 import { localNotificationAdapter } from "../permissions/permission-adapters";
@@ -18,9 +23,18 @@ import {
   DEFAULT_CHANNEL_ID,
   DEFAULT_CHANNELS,
   type LocalNotificationSchedule,
+  type NotificationActionListener,
+  type NotificationPayload,
 } from "./types";
 
 const MODULE = "LocalNotifications";
+
+interface NativeLocalNotification {
+  id?: number;
+  title?: string;
+  body?: string;
+  extra?: Record<string, unknown> | null;
+}
 
 interface LocalNotificationsApi {
   schedule: (options: Record<string, unknown>) => Promise<unknown>;
@@ -28,6 +42,30 @@ interface LocalNotificationsApi {
   removeAllDeliveredNotifications: () => Promise<void>;
   getPending: () => Promise<{ notifications: Array<{ id: number }> }>;
   createChannel?: (channel: Record<string, unknown>) => Promise<void>;
+  addListener?: (
+    event: string,
+    callback: (data: never) => void,
+  ) => Promise<PluginHandle>;
+}
+
+/**
+ * Normalized to the same shape a push payload uses, so a caller can read a
+ * tapped local notification with the same code that reads a tapped push.
+ */
+function toPayload(native: NativeLocalNotification): NotificationPayload {
+  const extra = (native.extra ?? {}) as Record<string, unknown>;
+  const data = Object.fromEntries(
+    Object.entries(extra).map(([key, value]) => [key, String(value ?? "")]),
+  );
+  return {
+    id: data.notificationId || String(native.id ?? ""),
+    title: native.title ?? "",
+    body: native.body ?? "",
+    data,
+    // The application was showing when it was scheduled, but the tap is a
+    // deliberate action taken later — same meaning as a tapped push.
+    foreground: false,
+  };
 }
 
 const localPlugin = createLazyPlugin(MODULE, async () => {
@@ -41,6 +79,11 @@ const localPlugin = createLazyPlugin(MODULE, async () => {
 const webTimers = new Map<number, ReturnType<typeof setTimeout>>();
 
 export class LocalNotificationsModule {
+  private handles: PluginHandle[] = [];
+  private listenersReady = false;
+  private readonly actions =
+    createEmitter<NotificationPayload>("local:action");
+
   /** Ask for permission. Call only when the user opts in. */
   requestPermission(): Promise<PermissionResult> {
     return permissionManager.requestLocalNotificationsIfNeeded();
@@ -167,6 +210,39 @@ export class LocalNotificationsModule {
       return notifications.map((entry) => entry.id);
     }
     return [...webTimers.keys()];
+  }
+
+  /**
+   * The user tapped a notification this device displayed itself.
+   *
+   * Without this the tap only brings the application forward and the
+   * notification's deep link is lost, which is indistinguishable from a broken
+   * notification.
+   */
+  onAction(listener: NotificationActionListener): () => void {
+    return this.actions.add(listener);
+  }
+
+  /** Attach the plugin listener once per application lifetime. */
+  async ensureListeners(): Promise<void> {
+    if (this.listenersReady || !isNativePlatform()) return;
+    this.listenersReady = true;
+    const plugin = (await localPlugin.optional())?.plugin ?? null;
+    if (!plugin?.addListener) return;
+    this.handles.push(
+      await plugin.addListener("localNotificationActionPerformed", ((action: {
+        notification: NativeLocalNotification;
+      }) => {
+        this.actions.emit(toPayload(action.notification));
+      }) as (data: never) => void),
+    );
+  }
+
+  async dispose(): Promise<void> {
+    await removeHandles(this.handles);
+    this.handles = [];
+    this.listenersReady = false;
+    this.actions.clear();
   }
 
   /** Register the Android notification channels. */

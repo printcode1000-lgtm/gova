@@ -153,14 +153,32 @@ requireText(
 );
 requireText(
   fcmProvider,
-  'const APPLE_SOUND_FILE = "custom_notification.caf";',
-  "The Apple payload sound must match the CAF file bundled in the App target.",
-);
-requireText(
-  fcmProvider,
   "firebaseAdminNotConfigured",
   "A missing Firebase Admin credential must produce a clear, named error.",
 );
+
+// The sound is declared once and read by both Apple transports. Firebase is the
+// normal path and direct APNs the opt-in fallback, so a device must not sound
+// different depending on which one happened to serve it.
+const soundDomain = read("src/features/notifications/domain/notification-sound.ts");
+const apnsProvider = read(
+  "src/features/notifications/services/providers/apns-notification-provider.server.ts",
+);
+requireText(
+  soundDomain,
+  'export const APPLE_SOUND_FILE = "custom_notification.caf";',
+  "The Apple payload sound must match the CAF file bundled in the App target.",
+);
+for (const [name, source] of [
+  ["FCM", fcmProvider],
+  ["direct APNs", apnsProvider],
+] as const) {
+  requireText(
+    source,
+    "appleSoundFile",
+    `The ${name} provider must resolve its Apple sound from the shared domain module.`,
+  );
+}
 
 // The APNs authentication key is a private signing key for the whole team
 // account and must never be committed. Match a live rule, not a commented one.

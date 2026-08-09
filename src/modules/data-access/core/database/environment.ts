@@ -64,8 +64,8 @@ export const ADVERTISEMENTS_SQLITE_DB_PATH = path.join(
 );
 
 /**
- * Device tokens, delivery preferences, and the VAPID key pair. Separate from
- * allusers.db because the production copy lives in its own Turso account.
+ * Device tokens and delivery preferences. Separate from allusers.db because the
+ * production copy lives in its own Turso account.
  */
 export const NOTIFICATIONS_SQLITE_DB_PATH = path.join(
   SQLITE_DIRECTORY,

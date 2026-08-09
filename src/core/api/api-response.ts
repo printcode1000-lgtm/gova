@@ -97,8 +97,6 @@ export function mapServiceError(error: unknown): NextResponse {
     'notificationDedupeKeyRequired',
     'notificationContentRequired',
     'notificationBroadcastForbidden',
-    'vapidSaveFailed',
-    'vapidNotConfigured',
     'webPushNotConfigured',
     'invalidFollowTarget',
     'followLoginRequired',

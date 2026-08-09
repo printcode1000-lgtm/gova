@@ -523,10 +523,9 @@ The API response reports what was **granted**, never what a provider accepted �
 `grantedUsers`, and `status: "granted"`. Provider acceptance is not knowable on
 the main app any more, so it is not claimed.
 
-Device-token registration, VAPID management, and broadcast recipient listing stay
-on the main app: they need the users database for identity checks and masked
-contact details. The notifications account never receives users, product, or
-shard credentials.
+Device-token registration and broadcast recipient listing stay on the main app:
+they need the users database for identity checks and masked contact details.
+The notifications account never receives users, product, or shard credentials.
 
 The notifications deployment is not connected to GitHub. It updates only when
 `npm run notifications:deploy` is run; a push to the repository redeploys the
@@ -584,6 +583,28 @@ Future push providers must plug into these services or server-side APIs. Firebas
 ### Foreground
 
 The app saves the notification to AsolDB, updates the badge, emits center refresh events, and can display a browser notification when permission is granted. Badge refresh counts only unread notifications that include the `badge` target.
+
+The two native platforms present a foreground push differently, and the module
+compensates so they behave the same:
+
+| Platform | Who presents it |
+|----------|-----------------|
+| iOS | The OS, from `PushNotifications.presentationOptions` in `capacitor.config.ts` (`badge`, `sound`, `banner`, `list`). The payload's `aps.sound` plays. |
+| Android | Nobody. Firebase suppresses its own tray notification while the app is visible and hands the message straight to JavaScript. |
+
+So `CapacitorPushService.presentForeground` schedules a local notification on
+**Android only** — doing it on iOS would show the same notification twice. It is
+skipped for data-only deliveries and specialty-chat receipts, which carry no
+user-facing text, and for notifications whose identity is in the local dismissed
+list, matching the tray import and the service worker.
+
+The tray import at startup does not go through this path: those notifications
+were already displayed, with sound, by the system.
+
+A local notification carries the same flat payload a push does, so tapping one
+is handled by `LocalNotifications.onAction` and routes through exactly the same
+handler as a tapped push. Without that listener the deep link of anything the
+device displayed itself would be lost.
 
 The foreground path is wired by `NativePushController`, mounted once in
 `src/app/layout.tsx`. It runs on Android and iOS — the gate is `isNativePush()` —
@@ -671,7 +692,46 @@ Supported sound values:
 - `silent`
 - `urgent`
 
-Browser support is limited; native platform plugins can map these values to native channel sounds later.
+A single asset carries the sound on every audible path:
+`assets/google-play/custom_notification.mp3` on Android and
+`ios/App/App/custom_notification.caf` on Apple (4.35s LPCM, under the 30s limit
+above which iOS silently substitutes the system sound).
+
+Because Android reads a notification's sound from its **channel** on API 26 and
+above, "which sound" and "which channel" are one question. It is answered in one
+place — `src/features/notifications/domain/notification-sound.ts` — and read by
+all three senders: the FCM provider, the direct APNs provider, and the on-device
+local notification.
+
+| Value | Android | Apple | Browser |
+|-------|---------|-------|---------|
+| `default` | category channel, custom sound | `aps.sound = custom_notification.caf` | browser default |
+| `urgent` | `asol_urgent_v2` (importance 5) | same file, `apns-priority: 10` when the priority is high | browser default |
+| `silent` | `asol_silent_v2`, importance 2 | no `sound` key, `interruption-level: passive` | `silent: true` |
+
+There is one sound asset, so `urgent` cannot mean a different file. It means the
+channel that interrupts — the same one `priority: critical` uses.
+
+Silence is a channel, not a missing field: a channel created without a sound
+still inherits the *system* sound, and Android only stops playing a channel's
+sound below importance 3. Omitting `sound` from the payload is not enough.
+
+`notification-sound-contract.test.ts` compares the constants against the asset
+files on disk, the channels registered in the Native Platform module, and the
+manifest's default channel. Every mismatch between them is silent at runtime —
+Android and iOS both fall back to the system sound rather than reporting an
+error — so the build fails instead.
+
+Known bounds:
+
+- The browser cannot play a custom sound. The Notification API has no sound
+  option; only `silent` is expressible.
+- A local notification on Android 7 (`minSdkVersion` is 24) declared `silent`
+  still makes the system sound: the Capacitor plugin calls `setDefaults(ALL)`
+  when no sound is given, and pre-Oreo has no channel to override it.
+- A `silent` push that arrives before the app has ever created its channels
+  falls back to the manifest default channel and is audible once. Channels are
+  created on every `initialize()` and `register()`, so this self-heals.
 
 ## How To Add A Template
 
@@ -779,7 +839,7 @@ Provider responsibilities:
 | `fcm-notification-provider.server.ts` | Firebase Cloud Messaging over the HTTP v1 endpoint, including the Android channel/sound block and the Apple `apns` block. |
 | `fcm-http-v1.server.ts` | OAuth token exchange and the raw HTTP v1 send call used by the FCM provider. |
 | `apns-notification-provider.server.ts` | Optional direct Apple Push Notification service transport over HTTP/2. |
-| `web-push-notification-provider.server.ts` | Browser Web Push over the stored VAPID key pair. |
+| `web-push-notification-provider.server.ts` | Browser Web Push over the constant public key and `WEB_PUSH_VAPID_PRIVATE_KEY`. |
 | `noop-notification-provider.server.ts` | Safe fallback for unknown or not-yet-configured providers. |
 
 Current provider behavior:
@@ -788,7 +848,7 @@ Current provider behavior:
 - Invalid or unregistered FCM tokens are soft-deleted after Firebase rejects them.
 - When Firebase credentials are missing, FCM returns `failed` with `firebaseAdminNotConfigured` and deliberately keeps the tokens — this is a server misconfiguration, not a dead device.
 - APNs uses a direct HTTP/2 connection with an ES256 JWT when `APNS_TEAM_ID`, `APNS_KEY_ID`, and `APNS_PRIVATE_KEY` are configured. Unconfigured, it returns `failed` with `appleTokenNotDeliverable` and keeps the tokens.
-- Web Push uses the configured VAPID transport, and returns `queued` unless every send is rejected.
+- Web Push signs with `WEB_PUSH_VAPID_PRIVATE_KEY` and returns `queued` unless every send is rejected. Unconfigured, it returns `webPushNotConfigured` and keeps the tokens. Only `404` and `410` — the two Web Push responses for a revoked subscription — mark a token invalid; a 429 or 5xx must never cost a user their registration.
 - No provider credentials or private keys are stored in client code.
 - Real provider credentials must be added through server-only configuration.
 
@@ -844,45 +904,35 @@ Rules for adding a real push transport:
 
 ## Browser Web Push And VAPID
 
-Browser push notifications use Web Push with VAPID keys. This is separate from FCM and APNs.
+Browser push notifications use Web Push with a VAPID key pair. This is separate
+from FCM and APNs.
+
+**The pair is not server state.** It is split by what it actually is:
+
+| Half | Where | Why |
+|------|-------|-----|
+| Public key, subject | `src/features/notifications/domain/web-push-config.ts` | Handed to every browser that subscribes — it *is* `applicationServerKey`. A database row and an authenticated API protected nothing and cost a round trip before every subscription. |
+| Private key | `WEB_PUSH_VAPID_PRIVATE_KEY`, notifications account only | A real secret, held exactly like `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` and `APNS_PRIVATE_KEY`. |
+
+There is no `/super-admin/vapid` page, no `notification_vapid_settings` table,
+and no `web-push` API route. There is nothing to administer: a VAPID pair is
+generated once and read forever.
+
+**Rotation is a deploy, not a button.** A browser binds each `PushSubscription`
+to the key it subscribed with, so replacing the pair silently invalidates every
+existing subscription — the sends then fail and `NotificationSendService`
+soft-deletes the tokens as dead devices. An admin page offering a "generate"
+button offered a one-click way to do that. Change both halves together and
+expect every browser to re-subscribe.
 
 Runtime pages:
 
 - User device settings: `/settings`
-- Super-admin VAPID management: `/super-admin/vapid`
-
-Server APIs:
-
-```text
-GET  /api/notifications/web-push/public-key
-GET  /api/notifications/web-push/vapid?uid=...&phone=...
-POST /api/notifications/web-push/vapid
-PUT  /api/notifications/web-push/vapid
-```
-
-The public-key API is available to browser clients so they can create a `PushSubscription`. Admin APIs require the super-admin identity.
-
-Database table:
-
-```text
-notification_vapid_settings
-```
-
-Columns:
-
-- `id`
-- `public_key`
-- `private_key`
-- `subject`
-- `enabled`
-- `created_at`
-- `updated_at`
 
 Security rules:
 
-- The browser receives only `public_key`.
-- `private_key` stays in the notifications database and is read only by server code.
-- The super-admin UI shows whether a private key exists, but never displays the private key.
+- The private key never leaves the notifications account and is never imported by client code.
+- The public key is deliberately in the client bundle; publishing it is what it is for.
 - Web Push subscriptions are stored in `user_notification_tokens` with `provider = web_push`.
 - The stored web push token is the serialized `PushSubscription` JSON.
 
@@ -892,30 +942,34 @@ Browser subscription flow:
 /settings
   -> request Notification permission
   -> register /asol-push-sw.js
-  -> PushManager.subscribe(public VAPID key)
+  -> PushManager.subscribe(WEB_PUSH_VAPID_PUBLIC_KEY)   no server call
   -> POST /api/notifications/device-token
   -> user_notification_tokens(provider = web_push)
 ```
 
-Super-admin VAPID flow:
-
-```text
-/super-admin/vapid
-  -> generate VAPID public/private key pair
-  -> save subject and enabled state
-  -> private key remains server-side
-```
+Reading the key from the bundle rather than an endpoint is also what lets a
+static export and the native shell subscribe: neither has a server to ask
+before the user is signed in.
 
 Delivery flow:
 
 ```text
-NotificationSendService
+NotificationSendService                    (notifications service)
   -> token provider = web_push
   -> WebPushNotificationProvider
-  -> VAPID settings
+  -> WEB_PUSH_VAPID_PRIVATE_KEY + the public constant
   -> web-push transport
   -> browser service worker
 ```
+
+An unset private key returns `webPushNotConfigured` and **keeps** the tokens:
+the subscriptions are healthy, the server is not configured. `GET /api/health`
+on the notifications service reports whether it is present.
+
+`web-push-provider.test.ts` asserts that the pair handed to the transport is the
+constant plus the configured secret, that the public key is 87 base64url
+characters (an uncompressed P-256 point), and that the subject is a reachable
+`mailto:` as RFC 8292 requires.
 
 Service worker:
 

@@ -42,10 +42,10 @@ export const passwordRecoveryChallenges = sqliteTable(
 );
 
 /*
- * Notification server state — `user_notification_tokens`,
- * `user_notification_preferences`, and `notification_vapid_settings` — is no
- * longer part of this database. It moved to its own database on a separate
- * Turso account so push traffic never shares quota with users/product/orders.
+ * Notification server state — `user_notification_tokens` and
+ * `user_notification_preferences` — is no longer part of this database. It
+ * moved to its own database on a separate Turso account so push traffic never
+ * shares quota with users/product/orders.
  *
  * See `./notifications/notifications.schema.ts`. The two sides are linked only
  * by the logical `uid`; nothing may JOIN across them.

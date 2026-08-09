@@ -4,7 +4,11 @@ import type {
   NotificationProviderSendResult,
 } from './notification-provider.interface';
 import webpush from 'web-push';
-import { NotificationVapidService } from '../notification-vapid-service.server';
+import { getWebPushServerConfig } from '@/core/config/server-env';
+import {
+  WEB_PUSH_VAPID_PUBLIC_KEY,
+  WEB_PUSH_VAPID_SUBJECT,
+} from '../../domain/web-push-config';
 import type { RegisteredNotificationToken } from '../../domain/entities';
 
 function buildPayload(input: NotificationProviderSendInput, token: RegisteredNotificationToken): string {
@@ -47,20 +51,26 @@ function isExpiredSubscription(reason: unknown): boolean {
 export class WebPushNotificationProvider implements NotificationProvider {
   readonly provider = 'web_push';
 
-  constructor(private readonly vapidService = new NotificationVapidService()) {}
+  constructor(private readonly readConfig = getWebPushServerConfig) {}
 
   async send(input: NotificationProviderSendInput): Promise<NotificationProviderSendResult> {
-    const vapid = await this.vapidService.getPrivateForProvider();
-    if (!vapid) {
+    const config = this.readConfig();
+    if (!config) {
+      // The tokens are kept: a missing server credential is not a dead
+      // subscription, and de-registering here would cost real devices.
       return {
         provider: this.provider,
         tokenCount: input.tokens.length,
         status: 'failed',
-        message: 'webPushNotConfigured',
+        message: 'webPushNotConfigured: set WEB_PUSH_VAPID_PRIVATE_KEY.',
       };
     }
 
-    webpush.setVapidDetails(vapid.subject, vapid.publicKey, vapid.privateKey);
+    webpush.setVapidDetails(
+      WEB_PUSH_VAPID_SUBJECT,
+      WEB_PUSH_VAPID_PUBLIC_KEY,
+      config.privateKey,
+    );
     const results = await Promise.allSettled(
       input.tokens.map((token) => webpush.sendNotification(JSON.parse(token.token), buildPayload(input, token))),
     );

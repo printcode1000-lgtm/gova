@@ -55,7 +55,6 @@ const LOGICAL_DATABASE_TABLES: Record<string, Set<string>> = {
   notifications: new Set([
     'user_notification_tokens',
     'user_notification_preferences',
-    'notification_vapid_settings',
   ]),
   advertisements: new Set(['hero_slider', 'featured_marquee', 'trending_ribbon']),
   product: new Set([

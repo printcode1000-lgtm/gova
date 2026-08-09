@@ -61,6 +61,11 @@ export const DEFAULT_CHANNEL_SOUND = "custom_notification.mp3";
  * Names and ids are user-visible in Android system settings and are matched
  * by already-installed clients — changing them creates a duplicate channel
  * and silently drops the user's existing preference.
+ *
+ * The ids are restated in `features/notifications/domain/notification-sound.ts`,
+ * which decides *which* of them a notification uses; this module only creates
+ * them. `notification-sound-contract.test.ts` fails the build if the two
+ * lists drift.
  */
 export const DEFAULT_CHANNELS: NotificationChannel[] = [
   {
@@ -102,6 +107,17 @@ export const DEFAULT_CHANNELS: NotificationChannel[] = [
     importance: 4,
     vibration: true,
     sound: DEFAULT_CHANNEL_SOUND,
+  },
+  {
+    // Importance 2 (LOW) is what makes this channel silent: Android plays a
+    // channel's sound from importance 3 upward, and a channel created without
+    // an explicit sound still inherits the *system* sound — omitting the file
+    // is not enough on its own.
+    id: "asol_silent_v2",
+    name: "ASOL - بدون صوت",
+    description: "الإشعارات التي تصل بدون صوت أو اهتزاز",
+    importance: 2,
+    vibration: false,
   },
 ];
 

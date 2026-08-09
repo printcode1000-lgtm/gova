@@ -1,13 +1,17 @@
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 /**
- * Notification server state — device tokens, per-user delivery preferences, and
- * the Web Push VAPID key pair.
+ * Notification server state — device tokens and per-user delivery preferences.
  *
  * These tables live in their own database on a separate Turso account so push
  * traffic never shares quota with users/product/orders. Nothing here stores
  * notification bodies or conversation content: those remain local-only in
  * AsolDB on the receiving device.
+ *
+ * The Web Push VAPID pair is not here either. Its public half is a constant in
+ * `features/notifications/domain/web-push-config.ts` and its private half is
+ * `WEB_PUSH_VAPID_PRIVATE_KEY`, matching how every other push credential in
+ * the system is held.
  *
  * There is no foreign key to `users`. The link is the logical `uid`, and any
  * query that needs both sides resolves them separately and merges in memory —
@@ -47,16 +51,6 @@ export const userNotificationTokens = sqliteTable(
   }),
 );
 
-export const notificationVapidSettings = sqliteTable('notification_vapid_settings', {
-  id: text('id').primaryKey(),
-  publicKey: text('public_key').notNull(),
-  privateKey: text('private_key').notNull(),
-  subject: text('subject').notNull(),
-  enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
-  createdAt: text('created_at').$defaultFn(() => new Date().toISOString()),
-  updatedAt: text('updated_at').$defaultFn(() => new Date().toISOString()),
-});
-
 export const userNotificationPreferences = sqliteTable('user_notification_preferences', {
   uid: text('uid').primaryKey(),
   specialtyRequestsEnabled: integer('specialty_requests_enabled', { mode: 'boolean' })
@@ -68,5 +62,3 @@ export const userNotificationPreferences = sqliteTable('user_notification_prefer
 export type UserNotificationTokenEntity = typeof userNotificationTokens.$inferSelect;
 export type NewUserNotificationTokenEntity = typeof userNotificationTokens.$inferInsert;
 export type UserNotificationPreferenceEntity = typeof userNotificationPreferences.$inferSelect;
-export type NotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferSelect;
-export type NewNotificationVapidSettingsEntity = typeof notificationVapidSettings.$inferInsert;

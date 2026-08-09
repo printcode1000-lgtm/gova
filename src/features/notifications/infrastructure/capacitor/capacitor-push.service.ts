@@ -1,12 +1,15 @@
 "use client";
 
 import {
+  localNotifications,
   pushNotifications,
   type NotificationPayload,
 } from "@/native-platform/notifications";
 import type { Unsubscribe } from "@/native-platform";
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
+import { SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat/domain/types";
 import { asolNotificationRepository } from "../asol-notification-repository";
+import { capacitorLocalNotificationService } from "./capacitor-local-notification.service";
 import type { DeviceToken, NotificationEntity } from "../../domain/entities";
 import { resolvePushProvider } from "../../domain/push-token-kind";
 import { readNotificationLocale } from "../../shared/read-notification-locale";
@@ -66,6 +69,25 @@ function fallbackNotificationKey(native: NotificationPayload): string {
   const body = native.body || dataString(data, "body");
   const route = dataString(data, "routeHref");
   return `push:${title}:${body}:${route}`;
+}
+
+/**
+ * Deliveries that must never become a banner.
+ *
+ * Specialty-chat receipts and every other data-only signal carry no
+ * user-facing text: they exist to update a card that is already stored. Giving
+ * one a sound would ring the sender's phone every time a recipient opened
+ * their message.
+ */
+function isInvisibleDelivery(entity: NotificationEntity): boolean {
+  const metadata = entity.metadata ?? {};
+  if (String(metadata.dataOnly ?? "") === "true") return true;
+  if (
+    String(metadata.specialtyChatKind ?? "") === SPECIALTY_CHAT_KINDS.Receipt
+  ) {
+    return true;
+  }
+  return !entity.title.trim() && !entity.body.trim();
 }
 
 function isEmptySystemPlaceholder(native: NotificationPayload): boolean {
@@ -273,12 +295,11 @@ export class CapacitorPushService {
     if (this.listenersReady) return;
     this.listenersReady = true;
     await pushNotifications.ensureListeners();
+    await localNotifications.ensureListeners();
     this.listeners.push(
       pushNotifications.onReceived((native) => {
         if (!this.currentUid) return;
-        void this.receivedHandler?.(
-          toNotificationEntity(this.currentUid, native),
-        );
+        void this.handleReceived(toNotificationEntity(this.currentUid, native));
       }),
       pushNotifications.onAction((native) => {
         if (!this.currentUid) return;
@@ -286,7 +307,50 @@ export class CapacitorPushService {
           toNotificationEntity(this.currentUid, native),
         );
       }),
+      // A notification this device displayed itself is tapped through the
+      // local plugin, not the push plugin. Both carry the same flat payload,
+      // so both route identically.
+      localNotifications.onAction((native) => {
+        if (!this.currentUid) return;
+        void this.actionHandler?.(
+          toNotificationEntity(this.currentUid, native),
+        );
+      }),
     );
+  }
+
+  private async handleReceived(entity: NotificationEntity): Promise<void> {
+    await this.receivedHandler?.(entity);
+    await this.presentForeground(entity);
+  }
+
+  /**
+   * Show a foreground push on Android.
+   *
+   * Firebase suppresses its own tray notification while the application is
+   * visible and hands the message straight to JavaScript, so without this
+   * an Android user gets no banner and no sound for anything that arrives
+   * while the app is open. iOS presents it itself from the configured
+   * `presentationOptions`, so doing it there too would show it twice.
+   *
+   * Failures are swallowed: a missing banner must never break the stored
+   * notification, which the receive handler has already committed.
+   */
+  private async presentForeground(entity: NotificationEntity): Promise<void> {
+    if (!this.isAndroid()) return;
+    if (isInvisibleDelivery(entity)) return;
+    try {
+      // The same rule the tray import and the service worker follow: a
+      // notification the user deleted is not brought back by a re-delivery of
+      // the event that produced it.
+      const dismissed = new Set(
+        await asolNotificationRepository.listDismissed(entity.uid),
+      );
+      if (dismissed.has(entity.id) || dismissed.has(entity.dedupeKey)) return;
+      await capacitorLocalNotificationService.display(entity);
+    } catch (error) {
+      console.warn("[Notifications] Foreground display failed.", error);
+    }
   }
 
   /**

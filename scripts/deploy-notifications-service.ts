@@ -42,6 +42,10 @@ const REQUIRED_ENV_KEYS = [
   'TURSO_NOTIFICATIONS_AUTH_TOKEN',
   // Verifies the grants the browser delivers. Identical value on both accounts.
   'ASOL_NOTIFICATION_GRANT_SECRET',
+  // Web Push sending key. Required, not optional: browsers are the one
+  // transport that works with no store account and no native build, so a
+  // deployment without it silently loses the only channel it always has.
+  'WEB_PUSH_VAPID_PRIVATE_KEY',
 ] as const;
 
 const OPTIONAL_ENV_KEYS = [

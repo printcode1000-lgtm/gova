@@ -7,6 +7,7 @@ import {
   Edit,
   Eye,
   Image as ImageIcon,
+  LibraryBig,
   LogIn,
   LogOut,
   MessagesSquare,
@@ -14,7 +15,6 @@ import {
   ScrollText,
   Settings,
   ShieldCheck,
-  KeyRound,
   Sliders,
   Sparkles,
   TrendingUp,
@@ -62,6 +62,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { publicEnv } from "@/core/config";
 import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
+import { isNativePlatform } from "@/native-platform/core/platform";
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -92,11 +93,13 @@ export const AppSidebar = React.memo(function AppSidebar({
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
+  const [catalogStudioDesktopWeb, setCatalogStudioDesktopWeb] = useState(false);
   const showLocalDevelopmentTools =
     publicEnv.mode === "development" ||
     (mounted &&
       typeof window !== "undefined" &&
       ["localhost", "127.0.0.1"].includes(window.location.hostname));
+  const showCatalogStudio = showLocalDevelopmentTools && catalogStudioDesktopWeb;
   const isProfilePage = pathname === "/profile";
   const [activeProfileMode, setActiveProfileMode] = useState<string | null>(
     null,
@@ -126,6 +129,17 @@ export const AppSidebar = React.memo(function AppSidebar({
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const update = () => {
+      setCatalogStudioDesktopWeb(
+        !isNativePlatform() && window.matchMedia("(min-width: 1024px)").matches,
+      );
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
   useEffect(() => {
@@ -280,16 +294,14 @@ export const AppSidebar = React.memo(function AppSidebar({
     if (
       pathname.includes("/data-health") ||
       pathname.includes("/dev-cloud-backup") ||
+      pathname.includes("/catalog") ||
       pathname.includes("/google-play-store-assets")
     ) {
       setSuperAdminGroupsOpen((current) => ({ ...current, data: true }));
       return;
     }
 
-    if (
-      pathname.includes("/notifications-broadcast") ||
-      pathname.includes("/vapid")
-    ) {
+    if (pathname.includes("/notifications-broadcast")) {
       setSuperAdminGroupsOpen((current) => ({
         ...current,
         notifications: true,
@@ -414,6 +426,21 @@ export const AppSidebar = React.memo(function AppSidebar({
                     <DatabaseBackup className={sidebarSmallIconClass} />
                     نسخ سحابة التطوير
                   </Link>
+                  {showCatalogStudio ? (
+                    <Link
+                      href="/super-admin/catalog"
+                      onClick={onClose}
+                      className={itemClass}
+                    >
+                      <LibraryBig className={sidebarSmallIconClass} />
+                      <span className="min-w-0 flex-1">
+                        {t("sidebar.catalogStudio")}
+                      </span>
+                      <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-800">
+                        DEV
+                      </span>
+                    </Link>
+                  ) : null}
                   {showLocalDevelopmentTools ? (
                     <Link
                       href="/super-admin/google-play-store-assets"
@@ -453,14 +480,6 @@ export const AppSidebar = React.memo(function AppSidebar({
                   >
                     <Megaphone className={sidebarSmallIconClass} />
                     إرسال إشعار جماعي
-                  </Link>
-                  <Link
-                    href="/super-admin/vapid"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <KeyRound className={sidebarSmallIconClass} />
-                    إدارة VAPID
                   </Link>
                 </div>
               )}
@@ -510,6 +529,7 @@ export const AppSidebar = React.memo(function AppSidebar({
   }, [
     showSuperAdmin,
     showLocalDevelopmentTools,
+    showCatalogStudio,
     superAdminOpen,
     superAdminGroupsOpen,
     handleSuperAdminToggle,

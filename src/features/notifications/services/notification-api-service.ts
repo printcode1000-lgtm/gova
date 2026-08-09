@@ -5,19 +5,18 @@ import type {
   BroadcastNotificationInput,
   BroadcastNotificationResult,
   BroadcastRecipientsResult,
-  GenerateNotificationVapidInput,
-  NotificationVapidAdminConfig,
-  NotificationVapidPublicConfig,
   RegisterNotificationTokenInput,
-  SaveNotificationVapidInput,
 } from "../domain/entities";
 
 /**
  * Browser-side notification API.
  *
- * Multi-user delivery is deliberately absent: `POST /api/notifications/send`
- * is guarded by a server-only bearer secret, so it is reachable from server
- * code only. Server callers use `NotificationSendService` directly.
+ * Multi-user delivery is deliberately absent: fan-out lives on the notifications
+ * service and is reached through a signed grant, never from here.
+ *
+ * So is the Web Push VAPID key. The public half is a constant in
+ * `domain/web-push-config.ts` — a browser receives it anyway — so subscribing
+ * needs no round trip, and there is nothing about it for an admin to edit.
  */
 export class NotificationApiService {
   registerToken(input: RegisterNotificationTokenInput): Promise<DeviceToken> {
@@ -62,44 +61,6 @@ export class NotificationApiService {
     );
   }
 
-  getWebPushPublicKey(): Promise<NotificationVapidPublicConfig> {
-    return asolApi.get<NotificationVapidPublicConfig>(
-      ASOL_API_ROUTES.notifications.webPushPublicKey,
-      { cache: "no-store" },
-    );
-  }
-
-  getVapidAdmin(identity: {
-    uid: string;
-    phone: string;
-  }): Promise<NotificationVapidAdminConfig> {
-    const query = new URLSearchParams({
-      uid: identity.uid,
-      phone: identity.phone,
-    });
-    return asolApi.get<NotificationVapidAdminConfig>(
-      `${ASOL_API_ROUTES.notifications.webPushVapid}?${query}`,
-      { cache: "no-store" },
-    );
-  }
-
-  generateVapid(
-    input: GenerateNotificationVapidInput,
-  ): Promise<NotificationVapidAdminConfig> {
-    return asolApi.post<NotificationVapidAdminConfig>(
-      ASOL_API_ROUTES.notifications.webPushVapid,
-      input,
-    );
-  }
-
-  saveVapid(
-    input: SaveNotificationVapidInput,
-  ): Promise<NotificationVapidAdminConfig> {
-    return asolApi.put<NotificationVapidAdminConfig>(
-      ASOL_API_ROUTES.notifications.webPushVapid,
-      input,
-    );
-  }
 }
 
 export const notificationApiService = new NotificationApiService();

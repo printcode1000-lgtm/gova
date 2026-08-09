@@ -255,6 +255,10 @@ self.addEventListener('push', (event) => {
     icon: '/icons/icon-192.png',
     badge: '/icons/icon-192.png',
     tag: payload.dedupeKey || payload.notificationId || 'asol-notification',
+    // A browser cannot play the bundled ASOL sound — the Notification API has
+    // no sound option — but it can be told to stay quiet, so a notification
+    // declared silent is silent here too.
+    silent: normalizeSound(payload.sound) === 'silent',
     data: {
       href: payload.href || '/notifications',
     },

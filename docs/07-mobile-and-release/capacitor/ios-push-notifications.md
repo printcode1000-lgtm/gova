@@ -86,9 +86,14 @@ and silent delivery are expressed in the `apns` block built by
 |---|---|---|
 | `apns-push-type` | `alert` | `background` |
 | `apns-priority` | `10` when high/critical, else `5` | `5` (APNs rejects `10`) |
-| `aps.sound` | `custom_notification.caf` | omitted |
+| `aps.sound` | `custom_notification.caf`, omitted when the notification is `silent` | omitted |
 | `aps.content-available` | omitted | `1` |
-| `interruption-level` | `time-sensitive` when critical | omitted |
+| `interruption-level` | `time-sensitive` when critical, `passive` when silent, else `active` | omitted |
+
+On Apple there is no silent flag: the absence of a `sound` key *is* the silent
+banner. The file name is declared once in
+`src/features/notifications/domain/notification-sound.ts` and read by both Apple
+transports, and `npm run ios:push:validate` fails if either stops using it.
 
 ## External Apple configuration still required
 
@@ -125,10 +130,12 @@ Leaving them unset is the supported default and produces a clear error rather
 than a silent failure.
 
 Its payload is deliberately simpler than the Firebase path: alert pushes always
-use `apns-priority: 10`, the system `default` sound rather than
-`custom_notification.caf`, and a fixed badge value of `1`. APNs responses `400`
-and `410` mark the token invalid, and the send service soft-deletes it. The
-ES256 authorization JWT is cached for 50 minutes.
+use `apns-priority: 10` and a fixed badge value of `1`. The **sound is the same**
+`custom_notification.caf` the Firebase path uses — it used to send the system
+sound, which meant a device sounded different depending on which provider
+happened to serve it. APNs responses `400` and `410` mark the token invalid, and
+the send service soft-deletes it. The ES256 authorization JWT is cached for 50
+minutes.
 
 ### Remaining Xcode step
 

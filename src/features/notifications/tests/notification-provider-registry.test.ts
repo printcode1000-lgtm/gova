@@ -159,6 +159,115 @@ async function main() {
   assert.equal(silent?.payload.aps.alert, undefined);
 
   // -------------------------------------------------------------------------
+  // The template's `sound` decides the delivery, not just the stored card
+  // -------------------------------------------------------------------------
+  // `silent` used to be carried in the payload and then ignored by both
+  // transports, so a notification declared silent still rang the phone.
+  let silentAlert: FcmHttpV1Message | null = null;
+  await new FcmNotificationProvider(() => ({
+    send: async (message) => {
+      silentAlert = message;
+      return { success: true };
+    },
+  })).send({
+    tokens: [token],
+    payload: {
+      locale: "ar",
+      notificationId: "notification_silent",
+      dedupeKey: "system.info:silent",
+      title: "Notice",
+      body: "Quiet",
+      category: "system",
+      priority: "low",
+      sound: "silent",
+    },
+  });
+  const silentMessage = silentAlert as unknown as FcmHttpV1Message;
+  // Android plays a channel's sound, so silence needs its own low-importance
+  // channel — omitting the payload field is not enough on Android 8+.
+  assert.equal(
+    silentMessage.message.android.notification?.channel_id,
+    "asol_silent_v2",
+  );
+  assert.equal(silentMessage.message.android.notification?.sound, undefined);
+  // On Apple, no `sound` key is the silent banner.
+  assert.equal(silentMessage.message.apns?.payload.aps.sound, undefined);
+  assert.equal(
+    silentMessage.message.apns?.payload.aps["interruption-level"],
+    "passive",
+  );
+  // It is still a visible notification, unlike the data-only receipt above.
+  assert.ok(silentMessage.message.notification);
+
+  // `urgent` cannot mean a different file — there is one sound asset — so it
+  // means the channel that interrupts.
+  let urgentSound: FcmHttpV1Message | null = null;
+  await new FcmNotificationProvider(() => ({
+    send: async (message) => {
+      urgentSound = message;
+      return { success: true };
+    },
+  })).send({
+    tokens: [token],
+    payload: {
+      locale: "ar",
+      notificationId: "notification_seller_rejected",
+      dedupeKey: "order.sellerRejected:ord_1",
+      title: "Rejected",
+      body: "Seller rejected the order",
+      category: "orders",
+      priority: "high",
+      sound: "urgent",
+    },
+  });
+  const urgentMessage = urgentSound as unknown as FcmHttpV1Message;
+  assert.equal(
+    urgentMessage.message.android.notification?.channel_id,
+    "asol_urgent_v2",
+  );
+  assert.equal(
+    urgentMessage.message.android.notification?.sound,
+    "custom_notification",
+  );
+  assert.equal(
+    urgentMessage.message.apns?.payload.aps.sound,
+    "custom_notification.caf",
+  );
+
+  // A super-admin announcement keeps its own channel so it can be silenced
+  // from Android settings without silencing orders.
+  let broadcastMessage: FcmHttpV1Message | null = null;
+  await new FcmNotificationProvider(() => ({
+    send: async (message) => {
+      broadcastMessage = message;
+      return { success: true };
+    },
+  })).send({
+    tokens: [token],
+    payload: {
+      locale: "ar",
+      notificationId: "notification_broadcast",
+      dedupeKey: "broadcast:abc",
+      title: "Announcement",
+      body: "Body",
+      category: "system",
+      priority: "normal",
+      sound: "default",
+      metadata: { source: "super_admin_broadcast" },
+    },
+  });
+  assert.equal(
+    (broadcastMessage as unknown as FcmHttpV1Message).message.android.notification
+      ?.channel_id,
+    "asol_updates_v2",
+  );
+  assert.equal(
+    (broadcastMessage as unknown as FcmHttpV1Message).message.android.notification
+      ?.sound,
+    "custom_notification",
+  );
+
+  // -------------------------------------------------------------------------
   // Missing Firebase Admin credentials
   // -------------------------------------------------------------------------
   const unconfigured = await new FcmNotificationProvider(() => {

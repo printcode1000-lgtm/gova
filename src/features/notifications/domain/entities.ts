@@ -234,39 +234,6 @@ export interface BroadcastNotificationResult extends SendNotificationToUsersResu
   notificationGrants?: string[];
 }
 
-export interface NotificationVapidPublicConfig {
-  enabled: boolean;
-  publicKey: string;
-}
-
-export interface NotificationVapidAdminConfig extends NotificationVapidPublicConfig {
-  subject: string;
-  hasPrivateKey: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface NotificationVapidSecretConfig extends NotificationVapidAdminConfig {
-  privateKey: string;
-}
-
-export interface SaveNotificationVapidInput {
-  identity: {
-    uid: string;
-    phone: string;
-  };
-  enabled: boolean;
-  subject: string;
-}
-
-export interface GenerateNotificationVapidInput {
-  identity: {
-    uid: string;
-    phone: string;
-  };
-  subject: string;
-}
-
 export interface NotificationSettings {
   uid: string;
   locale: NotificationLocale;

@@ -4,6 +4,11 @@ import type {
   NotificationProviderSendResult,
 } from "./notification-provider.interface";
 import type { RegisteredNotificationToken } from "../../domain/entities";
+import {
+  appleSoundFile,
+  fcmSoundResource,
+  resolveAndroidChannelId,
+} from "../../domain/notification-sound";
 import type {
   FcmApnsConfig,
   FcmHttpV1Client,
@@ -12,19 +17,13 @@ import type {
 
 const MAX_PARALLEL_SENDS = 25;
 
-/** Bundled in the Apple app; Android uses the extensionless resource name. */
-const APPLE_SOUND_FILE = "custom_notification.caf";
-
 function channelId(input: NotificationProviderSendInput): string {
-  if (input.payload.priority === "critical") return "asol_urgent_v2";
-  // Announcements land on their own channel so a user can silence marketing
-  // without silencing their orders.
-  if (input.payload.metadata?.source === "super_admin_broadcast") {
-    return "asol_updates_v2";
-  }
-  if (input.payload.category === "orders") return "asol_orders_v2";
-  if (input.payload.category === "chat") return "asol_chat_v2";
-  return "asol_general_v2";
+  return resolveAndroidChannelId({
+    category: input.payload.category,
+    priority: input.payload.priority,
+    sound: input.payload.sound,
+    source: input.payload.metadata?.source,
+  });
 }
 
 function cleanData(input: NotificationProviderSendInput): Record<string, string> {
@@ -52,6 +51,10 @@ function isHighPriority(input: NotificationProviderSendInput): boolean {
   return (
     input.payload.priority === "high" || input.payload.priority === "critical"
   );
+}
+
+function isSilent(input: NotificationProviderSendInput): boolean {
+  return fcmSoundResource(input.payload.sound) === undefined;
 }
 
 /**
@@ -91,11 +94,18 @@ function buildApnsConfig(
           title: input.payload.title ?? "ASOL",
           body: input.payload.body ?? "",
         },
-        // iOS expects the file name with its extension.
-        sound: APPLE_SOUND_FILE,
+        // iOS expects the file name with its extension. Omitted for a silent
+        // notification: on Apple, no `sound` key *is* the silent banner.
+        ...(appleSoundFile(input.payload.sound)
+          ? { sound: appleSoundFile(input.payload.sound) }
+          : {}),
         "thread-id": input.payload.groupKey || input.payload.category,
         "interruption-level":
-          input.payload.priority === "critical" ? "time-sensitive" : "active",
+          input.payload.priority === "critical"
+            ? "time-sensitive"
+            : isSilent(input)
+              ? "passive"
+              : "active",
       },
     },
   };
@@ -105,7 +115,7 @@ function buildMessage(
   input: NotificationProviderSendInput,
   token: RegisteredNotificationToken,
 ): FcmHttpV1Message {
-  const sound = "custom_notification";
+  const sound = fcmSoundResource(input.payload.sound);
   const dataOnly = input.payload.metadata?.dataOnly === true;
   return {
     message: {
@@ -124,7 +134,9 @@ function buildMessage(
           channel_id: channelId(input),
           icon: "ic_stat_asol_notification",
           color: "#006C4C",
-          sound,
+          // Only consulted below Android 8; from 8 upward the channel owns the
+          // sound. Omitted when silent so old devices stay silent too.
+          ...(sound ? { sound } : {}),
           tag: input.payload.dedupeKey.slice(0, 64),
           visibility: "PRIVATE",
         },
