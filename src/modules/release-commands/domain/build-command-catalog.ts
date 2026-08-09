@@ -9,6 +9,7 @@ export type BuildParameterName =
   | "releaseNotes"
   | "diagnostic"
   | "otaSource"
+  | "nativeVersionAction"
   | "minimumNativeVersion"
   | "dryRun";
 
@@ -68,6 +69,18 @@ const otaSource = {
   flag: "--ota-source",
   values: ["publish-new", "resume-published", "skip-ota"],
 } as const;
+const fullReleaseOtaSource = {
+  ...otaSource,
+  required: true,
+  values: ["publish-new", "resume-published"],
+} as const;
+const nativeVersionAction = {
+  name: "nativeVersionAction",
+  type: "enum",
+  flag: "--native-version",
+  values: ["keep-current", "increment-patch"],
+  required: true,
+} as const;
 const dryRun = { name: "dryRun", type: "boolean", flag: "--dry-run" } as const;
 const track = { name: "track", type: "enum", flag: "track", values: ["internal", "alpha", "beta", "production"] } as const;
 const rollout = { name: "rollout", type: "number", flag: "rollout", min: 0, max: 1 } as const;
@@ -107,7 +120,7 @@ export const BUILD_COMMAND_CATALOG = [
   entry("ota-status", "ota:status", "ota", "safe", otaEnv, [], "30 sec"),
   entry("ota-self-test", "ota:self-test", "verification", "safe", otaEnv, [], "1-3 min"),
   entry("cap-build", "cap:build", "native-android", "destructive", [], ["android/app/src/main/assets/public", "android/app/build/outputs"], "20-45 min", undefined, [otaSource, dryRun, optimization]),
-  entry("release-android-with-ota", "release:android:with-ota", "native-android", "publishes-live", [...otaEnv, ...signingEnv], ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "25-50 min", "PUBLISH_OTA", [], true),
+  entry("release-android-with-ota", "release:android:with-ota", "native-android", "publishes-live", [...otaEnv, ...signingEnv], ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "25-50 min", "PUBLISH_OTA", [nativeVersionAction, fullReleaseOtaSource, notes, mandatory], true),
   entry("release-android-no-ota", "release:android:no-ota", "native-android", "destructive", signingEnv, ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "30-60 min", undefined, [], true),
   entry("cap-open-android", "cap:open:android", "native-android", "safe", [], [], "<1 min", undefined, [], true),
   // Verification category on purpose: opening a folder must not take the
@@ -172,6 +185,10 @@ export function materializeBuildCommandParameters(command: BuildCommandCatalogEn
       else if (schema.name === "otaSource") {
         if (value === "resume-published") argv.push("--resume");
         if (value === "skip-ota") argv.push("--skip-ota");
+      }
+      else if (schema.name === "nativeVersionAction") {
+        if (value === "keep-current") argv.push("--native-version=current");
+        if (value === "increment-patch") argv.push("--native-version=next-patch");
       }
       else argv.push(`${schema.flag}:${value}`);
     } else if (schema.type === "number") {

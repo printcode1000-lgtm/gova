@@ -3,12 +3,13 @@
 import * as React from "react";
 
 import type { BuildCommandCatalogEntry } from "../domain/build-command-catalog";
-import type { BuildCommandReadiness, BuildJobRecord, StartBuildJobInput } from "../domain/build-job-types";
+import type { BuildCommandReadiness, BuildJobRecord, ReleaseVersionSnapshot, StartBuildJobInput } from "../domain/build-job-types";
 import { buildJobApiService } from "../services/build-job-api-service";
 
 export function useBuildJobs(headers?: Record<string, string>) {
   const [catalog, setCatalog] = React.useState<readonly BuildCommandCatalogEntry[]>([]);
   const [readiness, setReadiness] = React.useState<BuildCommandReadiness[]>([]);
+  const [versions, setVersions] = React.useState<ReleaseVersionSnapshot>({});
   const [jobs, setJobs] = React.useState<BuildJobRecord[]>([]);
   const [selectedJobId, setSelectedJobId] = React.useState("");
   const [log, setLog] = React.useState("");
@@ -44,7 +45,11 @@ export function useBuildJobs(headers?: Record<string, string>) {
     if (!headers || unavailable) return;
     buildJobApiService
       .catalog(headers)
-      .then((data) => { setCatalog(data.catalog); setReadiness(data.readiness); })
+      .then((data) => {
+        setCatalog(data.catalog);
+        setReadiness(data.readiness);
+        setVersions(data.versions);
+      })
       .catch(handle);
   }, [headers, unavailable, handle]);
 
@@ -95,5 +100,5 @@ export function useBuildJobs(headers?: Record<string, string>) {
     await buildJobApiService.cancel(job.id, headers); await refresh();
   }, [headers, refresh]);
 
-  return { catalog, readiness, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, busy, startError, start, cancel, refresh, unavailable };
+  return { catalog, readiness, versions, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, busy, startError, start, cancel, refresh, unavailable };
 }

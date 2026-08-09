@@ -39,6 +39,11 @@ export interface BuildCommandReadiness {
   reason?: string;
 }
 
+export interface ReleaseVersionSnapshot {
+  androidCurrent?: string;
+  otaCurrent?: string;
+}
+
 export interface PaginatedBuildJobs {
   jobs: BuildJobRecord[];
   page: number;

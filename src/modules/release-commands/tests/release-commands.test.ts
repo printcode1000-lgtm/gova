@@ -37,8 +37,9 @@ assert.match(releaseConfirmDialogSource, /command\.parameters\.map/,
   "the shared confirmation dialog must render command parameters for shortcut launchers");
 assert.match(releaseConfirmDialogSource, /parameters:\s*\{\s*\.\.\.\(pending\?\.parameters/,
   "the shared confirmation dialog must preserve and submit command parameters");
-assert.match(releaseConfirmDialogSource, /!phraseSatisfied \|\| !minimumNativeVersionSatisfied/,
-  "OTA confirmation must stay disabled until the minimum native version is present");
+assert.match(releaseConfirmDialogSource,
+  /!phraseSatisfied\s*\|\|\s*!minimumNativeVersionSatisfied\s*\|\|\s*!requiredParametersSatisfied/,
+  "release confirmation must stay disabled until all safety-critical parameters are present");
 const locales = await Promise.all(["en", "ar"].map(async (locale) => JSON.parse(
   await readFile(`src/locales/${locale}.json`, "utf8"),
 ) as Record<string, string>));
@@ -58,6 +59,30 @@ const fullAndroidRelease = BUILD_COMMAND_CATALOG.find(
 )!;
 assert.equal(fullAndroidRelease.danger, "publishes-live");
 assert.equal(fullAndroidRelease.confirmationPhrase, "PUBLISH_OTA");
+assert.deepEqual(
+  fullAndroidRelease.parameters.map((parameter) => parameter.name),
+  ["nativeVersionAction", "otaSource", "notes", "mandatory"],
+);
+assert.deepEqual(
+  materializeBuildCommandParameters(fullAndroidRelease, {
+    nativeVersionAction: "increment-patch",
+    otaSource: "publish-new",
+    notes: "Full Android release",
+    mandatory: true,
+  }),
+  ["--native-version=next-patch", "--notes=Full Android release", "--mandatory"],
+);
+assert.deepEqual(
+  materializeBuildCommandParameters(fullAndroidRelease, {
+    nativeVersionAction: "keep-current",
+    otaSource: "resume-published",
+  }),
+  ["--native-version=current", "--resume"],
+);
+assert.throws(
+  () => materializeBuildCommandParameters(fullAndroidRelease, { otaSource: "publish-new" }),
+  /ParameterRequired:nativeVersionAction/,
+);
 for (const required of [
   "ASOL_OTA_R2_BUCKET_NAME",
   "ASOL_OTA_SIGNING_PRIVATE_KEY",

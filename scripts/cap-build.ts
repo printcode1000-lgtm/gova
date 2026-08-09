@@ -49,7 +49,9 @@ function readAndroidVersion(): string {
   return version;
 }
 
-function resolveTargetNativeVersion(): string {
+type NativeVersionAction = "auto" | "current" | "next-patch";
+
+function resolveTargetNativeVersion(action: NativeVersionAction): string {
   const baseline = resolveNativeBaseline();
   const baselineVersion = nativeVersionFromBaseline(baseline);
   if (!baselineVersion) {
@@ -61,15 +63,30 @@ function resolveTargetNativeVersion(): string {
   const current = readAndroidVersion();
   const report = inspectNativeCompatibility(baseline);
   const hasCompiledChanges = undeclarableNativeChanges(report).length > 0;
-  let target =
+  const automaticTarget =
     compareOtaVersions(current, baselineVersion) >= 0
       ? current
       : baselineVersion;
+  let target = action === "next-patch"
+    ? nextNativePatchVersion(automaticTarget)
+    : action === "current"
+      ? current
+      : automaticTarget;
+  if (action === "current" && compareOtaVersions(current, baselineVersion) < 0) {
+    throw new Error(
+      `Current Android version ${current} is below native baseline ${baselineVersion}; choose a new patch version.`,
+    );
+  }
   if (hasCompiledChanges && compareOtaVersions(target, baselineVersion) <= 0) {
+    if (action === "current") {
+      throw new Error(
+        `Native changes require a version newer than ${baselineVersion}; choose a new Android patch version.`,
+      );
+    }
     target = nextNativePatchVersion(baselineVersion);
   }
   console.log(
-    `Native release plan: baseline=${baselineVersion}, current=${current}, target=${target}, compiledChanges=${hasCompiledChanges}`,
+    `Native release plan: baseline=${baselineVersion}, current=${current}, target=${target}, action=${action}, compiledChanges=${hasCompiledChanges}`,
   );
   return target;
 }
@@ -229,10 +246,29 @@ async function main(): Promise<void> {
   const noR8 = args.includes("--no-r8");
   const skipOta = args.includes("--skip-ota");
   const dryRun = args.includes("--dry-run");
+  const nativeVersionArguments = args.filter((argument) =>
+    argument.startsWith("--native-version="),
+  );
+  if (nativeVersionArguments.length > 1) {
+    throw new Error("Choose exactly one Android native version action.");
+  }
+  const requestedNativeVersion = nativeVersionArguments[0]?.slice("--native-version=".length);
+  if (requestedNativeVersion !== undefined
+    && requestedNativeVersion !== "current"
+    && requestedNativeVersion !== "next-patch") {
+    throw new Error(`Invalid Android native version action: ${requestedNativeVersion}`);
+  }
+  const nativeVersionAction: NativeVersionAction = requestedNativeVersion ?? "auto";
+  const otaNotesArguments = args.filter((argument) => argument.startsWith("--notes="));
+  const mandatoryOta = args.includes("--mandatory");
+  if (otaNotesArguments.length > 1) throw new Error("Use exactly one OTA release notes value.");
+  if ((resumePublishedRelease || skipOta) && (otaNotesArguments.length > 0 || mandatoryOta)) {
+    throw new Error("OTA notes and mandatory mode can only be set while publishing a new OTA.");
+  }
   const apiBaseUrl = (
     process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
   ).replace(/\/$/, "");
-  const plannedNativeVersion = resolveTargetNativeVersion();
+  const plannedNativeVersion = resolveTargetNativeVersion(nativeVersionAction);
   const publishEnv: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
     ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
@@ -282,7 +318,16 @@ async function main(): Promise<void> {
     console.log(
       "Publishing the next automatic OTA version to the single R2 directory...",
     );
-    execSync("npm run ota:publish", { stdio: "inherit", env: publishEnv });
+    const tsxCliPath = path.resolve("node_modules", "tsx", "dist", "cli.mjs");
+    const publisherPath = path.resolve("scripts", "ota-publish.ts");
+    const publisherArgs = [
+      ...otaNotesArguments,
+      ...(mandatoryOta ? ["--mandatory"] : []),
+    ];
+    execFileSync(process.execPath, [tsxCliPath, publisherPath, ...publisherArgs], {
+      stdio: "inherit",
+      env: publishEnv,
+    });
   }
 
   assertCapBuildInputBundle({ resume: resumePublishedRelease, skipOta, dryRun });

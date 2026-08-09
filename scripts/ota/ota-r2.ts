@@ -33,11 +33,14 @@ export function isRetryableR2Error(error: unknown): boolean {
     'ECONNABORTED',
     'ECONNRESET',
     'ECONNREFUSED',
+    'ENOTFOUND',
+    'EAI_AGAIN',
+    'EAI_FAIL',
     'ETIMEDOUT',
   ].includes(code!))) {
     return true;
   }
-  return /internal error|timed? ?out|econnaborted|econnreset|econnrefused|socket hang up|network/i.test(
+  return /internal error|timed? ?out|econnaborted|econnreset|econnrefused|socket hang up|network|getaddrinfo|dns/i.test(
     value.message ?? '',
   );
 }

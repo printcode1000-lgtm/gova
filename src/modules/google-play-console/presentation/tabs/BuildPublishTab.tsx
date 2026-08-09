@@ -28,7 +28,8 @@ export function BuildPublishTab() {
   };
   return (
     <section className="space-y-5">
-      <ReleaseCommandConfirmDialog pending={jobs.pending} catalog={jobs.catalog} locked={locked} t={t}
+      <ReleaseCommandConfirmDialog pending={jobs.pending} catalog={jobs.catalog}
+        versions={jobs.versions} locked={locked} t={t}
         onConfirm={(overrides) => void jobs.confirmStart(overrides)} onCancel={jobs.dismissStart} />
       <ReleaseJobStopDialog job={jobs.pendingCancel} t={t}
         onConfirm={() => void jobs.confirmCancel()} onCancel={jobs.dismissCancel} />

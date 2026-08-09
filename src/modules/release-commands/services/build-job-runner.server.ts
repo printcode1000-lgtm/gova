@@ -12,7 +12,7 @@ import {
 } from "@/modules/google-play-console/domain/development-guard.server";
 
 import { BUILD_COMMAND_CATALOG, findBuildCommand, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
-import { assertBuildJobTransition, type BuildCommandReadiness, type BuildJobRecord, type PaginatedBuildJobs, type StartBuildJobInput } from "../domain/build-job-types";
+import { assertBuildJobTransition, type BuildCommandReadiness, type BuildJobRecord, type PaginatedBuildJobs, type ReleaseVersionSnapshot, type StartBuildJobInput } from "../domain/build-job-types";
 import { changedBuildArtifacts, snapshotBuildOutputs } from "./build-job-artifacts.server";
 
 const JOB_DIR = path.join(process.cwd(), ".backups", "build-jobs");
@@ -208,10 +208,46 @@ export async function listBuildJobs(page = 1, pageSize = 20): Promise<PaginatedB
   return { jobs: jobs.slice(start, start + safeSize), page: safePage, pageSize: safeSize, total: jobs.length, hasMore: start + safeSize < jobs.length };
 }
 
-export async function buildCommandCatalogPayload(): Promise<{ catalog: readonly BuildCommandCatalogEntry[]; readiness: BuildCommandReadiness[] }> {
+async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
+  const snapshot: ReleaseVersionSnapshot = {};
+  try {
+    const gradle = await fs.readFile(
+      path.join(process.cwd(), "android", "app", "build.gradle"),
+      "utf8",
+    );
+    snapshot.androidCurrent = /versionName\s+"(\d+\.\d+\.\d+)"/.exec(gradle)?.[1];
+  } catch { /* The catalog remains usable when the Android project is absent. */ }
+
+  const publicRoot = process.env.ASOL_OTA_R2_PUBLIC_URL?.replace(/\/$/, "");
+  if (publicRoot) {
+    const prefix = (process.env.ASOL_OTA_R2_PREFIX ?? "app-updates")
+      .replace(/^\/+|\/+$/g, "");
+    try {
+      const response = await fetch(`${publicRoot}/${prefix}/manifest.json`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(5_000),
+      });
+      if (response.ok) {
+        const manifest = await response.json() as { version?: unknown };
+        if (typeof manifest.version === "string") snapshot.otaCurrent = manifest.version;
+      }
+    } catch { /* A temporary R2 read failure must not hide the command catalog. */ }
+  }
+  return snapshot;
+}
+
+export async function buildCommandCatalogPayload(): Promise<{
+  catalog: readonly BuildCommandCatalogEntry[];
+  readiness: BuildCommandReadiness[];
+  versions: ReleaseVersionSnapshot;
+}> {
   assertGooglePlayConsoleAllowed();
   await ensureReconciled();
-  return { catalog: BUILD_COMMAND_CATALOG, readiness: BUILD_COMMAND_CATALOG.map(commandReadiness) };
+  return {
+    catalog: BUILD_COMMAND_CATALOG,
+    readiness: BUILD_COMMAND_CATALOG.map(commandReadiness),
+    versions: await releaseVersionSnapshot(),
+  };
 }
 
 export async function cancelBuildJob(jobId: string): Promise<BuildJobRecord> {

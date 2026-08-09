@@ -18,15 +18,26 @@ import type {
   BuildParameterName,
 } from "@/modules/release-commands/domain/build-command-catalog";
 import type { StartBuildJobInput } from "@/modules/release-commands/domain/build-job-types";
+import type { ReleaseVersionSnapshot } from "@/modules/release-commands/domain/build-job-types";
 import { Parameter } from "./CommandParameterFields";
 
 /**
  * Single confirmation step shared by every command button on the console.
  * Nothing runs until the user confirms here.
  */
-export function ReleaseCommandConfirmDialog({ pending, catalog, locked, t, onConfirm, onCancel }: {
+function nextPatch(version?: string): string | undefined {
+  if (!version) return undefined;
+  const parts = version.split(".").map(Number);
+  if (parts.length !== 3 || parts.some((part) => !Number.isSafeInteger(part))) return undefined;
+  return `${parts[0]}.${parts[1]}.${parts[2]! + 1}`;
+}
+
+export function ReleaseCommandConfirmDialog({
+  pending, catalog, versions, locked, t, onConfirm, onCancel,
+}: {
   pending: StartBuildJobInput | null;
   catalog: readonly BuildCommandCatalogEntry[];
+  versions: ReleaseVersionSnapshot;
   locked: boolean;
   t: (key: string) => string;
   onConfirm: (overrides?: Partial<StartBuildJobInput>) => void;
@@ -34,6 +45,9 @@ export function ReleaseCommandConfirmDialog({ pending, catalog, locked, t, onCon
 }) {
   const command = catalog.find((item) => item.id === pending?.commandId);
   const title = command ? t(command.documentation.titleKey) : pending?.commandId ?? "";
+  const fullAndroidRelease = command?.id === "release-android-with-ota";
+  const nextAndroidVersion = nextPatch(versions.androidCurrent);
+  const nextOtaVersion = nextPatch(versions.otaCurrent);
   const [phrase, setPhrase] = React.useState("");
   const [parameters, setParameters] = React.useState<Record<string, unknown>>({});
   const requiredPhrase = command?.confirmationPhrase ?? "";
@@ -41,6 +55,11 @@ export function ReleaseCommandConfirmDialog({ pending, catalog, locked, t, onCon
   const minimumNativeVersionSatisfied = !minimumNativeVersionRequired
     || (typeof parameters.minimumNativeVersion === "string"
       && parameters.minimumNativeVersion.trim().length > 0);
+  const requiredParametersSatisfied = !command || command.parameters.every((schema) => {
+    if (!("required" in schema) || !schema.required) return true;
+    const value = parameters[schema.name];
+    return value !== undefined && value !== "" && value !== null;
+  });
   // A phrase already typed on the command card counts; otherwise ask here.
   const phraseSatisfied = !requiredPhrase
     || pending?.confirmationPhrase === requiredPhrase
@@ -77,6 +96,31 @@ export function ReleaseCommandConfirmDialog({ pending, catalog, locked, t, onCon
           {command ? (
             <code className="block text-xs" dir="ltr">npm run {command.script}</code>
           ) : null}
+          {fullAndroidRelease ? (
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div className="rounded-lg border bg-muted/40 p-3">
+                <p className="text-xs text-on-surface-variant">
+                  {t("releaseConsole.confirmRun.currentAndroidVersion")}
+                </p>
+                <code className="mt-1 block text-base font-semibold" dir="ltr">
+                  {versions.androidCurrent ?? t("releaseConsole.confirmRun.versionUnavailable")}
+                </code>
+                {nextAndroidVersion ? (
+                  <p className="mt-1 text-xs text-on-surface-variant">
+                    {t("releaseConsole.confirmRun.nextAndroidVersion")}: {nextAndroidVersion}
+                  </p>
+                ) : null}
+              </div>
+              <div className="rounded-lg border bg-muted/40 p-3">
+                <p className="text-xs text-on-surface-variant">
+                  {t("releaseConsole.confirmRun.currentOtaVersion")}
+                </p>
+                <code className="mt-1 block text-base font-semibold" dir="ltr">
+                  {versions.otaCurrent ?? t("releaseConsole.confirmRun.versionUnavailable")}
+                </code>
+              </div>
+            </div>
+          ) : null}
           {command?.danger !== "safe" ? (
             <p className="flex items-center gap-2 rounded-md bg-error-container p-2 text-on-error-container">
               <AlertTriangle className="h-4 w-4 shrink-0" />
@@ -91,9 +135,38 @@ export function ReleaseCommandConfirmDialog({ pending, catalog, locked, t, onCon
               ))}
             </div>
           ) : null}
+          {fullAndroidRelease
+            && parameters.nativeVersionAction === "increment-patch"
+            && nextAndroidVersion ? (
+              <div role="status" className="rounded-lg border border-primary bg-primary/10 p-3">
+                <p className="text-xs text-on-surface-variant">
+                  {t("releaseConsole.confirmRun.selectedNewAndroidVersion")}
+                </p>
+                <code className="mt-1 block text-lg font-semibold" dir="ltr">
+                  {nextAndroidVersion}
+                </code>
+              </div>
+            ) : null}
+          {fullAndroidRelease
+            && parameters.otaSource === "publish-new"
+            && nextOtaVersion ? (
+              <div role="status" className="rounded-lg border border-primary bg-primary/10 p-3">
+                <p className="text-xs text-on-surface-variant">
+                  {t("releaseConsole.confirmRun.selectedNewOtaVersion")}
+                </p>
+                <code className="mt-1 block text-lg font-semibold" dir="ltr">
+                  {nextOtaVersion}
+                </code>
+              </div>
+            ) : null}
           {minimumNativeVersionRequired && !minimumNativeVersionSatisfied ? (
             <p role="alert" className="rounded-md bg-error-container p-2 text-on-error-container">
               {t("releaseConsole.confirmRun.minimumNativeVersionRequired")}
+            </p>
+          ) : null}
+          {!requiredParametersSatisfied ? (
+            <p role="alert" className="rounded-md bg-error-container p-2 text-on-error-container">
+              {t("releaseConsole.confirmRun.requiredParametersMissing")}
             </p>
           ) : null}
           {requiredPhrase && pending?.confirmationPhrase !== requiredPhrase ? (
@@ -111,7 +184,8 @@ export function ReleaseCommandConfirmDialog({ pending, catalog, locked, t, onCon
           <Button variant="outline" onClick={onCancel}>{t("releaseConsole.confirmRun.cancel")}</Button>
           {/* Disabled while another job holds the page, so confirming late
               cannot start a second command. */}
-          <Button disabled={locked || !phraseSatisfied || !minimumNativeVersionSatisfied}
+          <Button disabled={locked || !phraseSatisfied
+            || !minimumNativeVersionSatisfied || !requiredParametersSatisfied}
             onClick={() => onConfirm({
               parameters: { ...(pending?.parameters ?? {}), ...parameters },
               ...(requiredPhrase ? { confirmationPhrase: requiredPhrase } : {}),

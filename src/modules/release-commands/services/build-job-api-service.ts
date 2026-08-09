@@ -2,10 +2,14 @@ import { asolApi } from "@/core/api";
 
 import type { BuildCommandCatalogEntry } from "../domain/build-command-catalog";
 import type { BundleAnalysis, BundleAnalysisComparison } from "../domain/bundle-analysis-types";
-import type { BuildArtifactDescriptor, BuildCommandReadiness, BuildJobRecord, PaginatedBuildJobs, StartBuildJobInput } from "../domain/build-job-types";
+import type { BuildArtifactDescriptor, BuildCommandReadiness, BuildJobRecord, PaginatedBuildJobs, ReleaseVersionSnapshot, StartBuildJobInput } from "../domain/build-job-types";
 
 export const BUILD_JOBS_API = "/api/super-admin/build-jobs";
-export interface BuildCommandCatalogResponse { catalog: readonly BuildCommandCatalogEntry[]; readiness: BuildCommandReadiness[] }
+export interface BuildCommandCatalogResponse {
+  catalog: readonly BuildCommandCatalogEntry[];
+  readiness: BuildCommandReadiness[];
+  versions: ReleaseVersionSnapshot;
+}
 
 export const buildJobApiService = {
   list(page = 1, headers?: Record<string, string>) { return asolApi.get<PaginatedBuildJobs>(`${BUILD_JOBS_API}?page=${page}&pageSize=20`, { headers, cache: "no-store" }); },

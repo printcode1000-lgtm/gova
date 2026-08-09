@@ -30,7 +30,7 @@ export function Parameter({ command, schema, value, t, onChange }: {
   t: (key: string) => string;
   onChange: (id: string, name: BuildParameterName, value: unknown) => void;
 }) {
-  const help = command.id === "cap-build" ? (
+  const help = command.id === "cap-build" || command.id === "release-android-with-ota" ? (
     <p className="text-xs leading-5 text-on-surface-variant">
       {t(`releaseConsole.capBuild.${schema.name}`)}
     </p>
@@ -48,6 +48,28 @@ export function Parameter({ command, schema, value, t, onChange }: {
   if (schema.type === "string") return <Textarea value={String(value ?? "")}
     placeholder={t(`releaseConsole.parameters.${schema.name}`)}
     onChange={(event) => onChange(command.id, schema.name, event.target.value)} />;
+  if (schema.type === "enum" && schema.name === "nativeVersionAction") return (
+    <fieldset className="space-y-2">
+      <legend className="font-medium">{t("releaseConsole.parameters.nativeVersionAction")}</legend>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {schema.values.map((item) => {
+          const selected = value === item;
+          return <label key={item}
+            className={`cursor-pointer rounded-lg border p-3 transition-colors ${selected
+              ? "border-primary bg-primary/10 ring-1 ring-primary"
+              : "bg-surface hover:bg-muted/60"}`}>
+            <span className="flex items-start gap-2">
+              <input type="radio" name={`${command.id}-${schema.name}`}
+                value={item} checked={selected}
+                onChange={() => onChange(command.id, schema.name, item)} />
+              <span className="font-medium">{t(`releaseConsole.parameterValues.${item}`)}</span>
+            </span>
+          </label>;
+        })}
+      </div>
+      {help}
+    </fieldset>
+  );
   if (schema.type === "enum") return (
     <div className="space-y-1">
       <label className="block font-medium" htmlFor={`${command.id}-${schema.name}`}>
@@ -55,12 +77,14 @@ export function Parameter({ command, schema, value, t, onChange }: {
       </label>
       <select id={`${command.id}-${schema.name}`}
         className="h-10 w-full rounded-md border bg-background px-3"
-        value={String(schema.name === "otaSource" ? value ?? "publish-new" : value ?? "")}
+        value={String(value ?? "")}
         onChange={(event) => onChange(command.id, schema.name, event.target.value)}>
-        {schema.name !== "otaSource"
-          ? <option value="">{t(`releaseConsole.parameters.${schema.name}`)}</option>
-          : null}
-        {schema.values.map((item) => <option key={item}>{t(`releaseConsole.parameterValues.${item}`)}</option>)}
+        <option value="">{t(`releaseConsole.parameters.${schema.name}`)}</option>
+        {schema.values.map((item) => (
+          <option key={item} value={item}>
+            {t(`releaseConsole.parameterValues.${item}`)}
+          </option>
+        ))}
       </select>
       {help}
     </div>
