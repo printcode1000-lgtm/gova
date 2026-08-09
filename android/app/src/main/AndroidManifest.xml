@@ -127,7 +127,10 @@
     <!-- Speech Recognition (voice-to-text only; no audio is recorded or stored) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- Camera and Barcode Scanner -->
+    <!--
+      Required by the in-app ML Kit barcode scanner. Because it is declared,
+      Capacitor Camera also requests this alias before opening the camera app.
+    -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Location: foreground only. Background location is not requested. -->
@@ -139,12 +142,6 @@
 
     <!-- Local notification scheduling across reboots -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- Media selection on Android 13+; legacy read for older releases. -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
 
     <!-- Camera is optional: the app must install on devices without one. -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />

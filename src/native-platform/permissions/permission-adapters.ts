@@ -7,6 +7,7 @@
  */
 
 import { createLazyPlugin } from "../core/lazy-plugin";
+import { toNativeError } from "../core/errors";
 import { hasDom, isNativePlatform } from "../core/platform";
 import {
   fromCapacitorState,
@@ -95,8 +96,8 @@ function pluginAdapter(
       if (!instance) return PermissionStates.Unsupported;
       try {
         return readStatus(await instance.checkPermissions(), aliases);
-      } catch {
-        return PermissionStates.Unsupported;
+      } catch (error) {
+        throw toNativeError("Permissions", error);
       }
     },
     async request() {
@@ -107,8 +108,8 @@ function pluginAdapter(
           await instance.requestPermissions(requestOptions),
           aliases,
         );
-      } catch {
-        return PermissionStates.Denied;
+      } catch (error) {
+        throw toNativeError("Permissions", error);
       }
     },
   };
@@ -208,9 +209,29 @@ const unsupported: PermissionAdapter = {
   request: async () => PermissionStates.Unsupported,
 };
 
+/**
+ * Capacitor Camera accepts an explicit alias list. Requesting only the alias
+ * behind the action avoids mixing camera and legacy storage permissions.
+ */
+export function nativePermissionRequestOptions(
+  kind: PermissionKind,
+): Record<string, unknown> | undefined {
+  if (kind === PermissionKinds.Camera) return { permissions: ["camera"] };
+  if (kind === PermissionKinds.Photos) return { permissions: ["photos"] };
+  return undefined;
+}
+
 const NATIVE_ADAPTERS: Record<PermissionKind, PermissionAdapter> = {
-  [PermissionKinds.Camera]: pluginAdapter(cameraPlugin, ["camera"]),
-  [PermissionKinds.Photos]: pluginAdapter(cameraPlugin, ["photos"]),
+  [PermissionKinds.Camera]: pluginAdapter(
+    cameraPlugin,
+    ["camera"],
+    nativePermissionRequestOptions(PermissionKinds.Camera),
+  ),
+  [PermissionKinds.Photos]: pluginAdapter(
+    cameraPlugin,
+    ["photos"],
+    nativePermissionRequestOptions(PermissionKinds.Photos),
+  ),
   [PermissionKinds.Location]: pluginAdapter(geolocationPlugin, [
     "location",
     "coarseLocation",

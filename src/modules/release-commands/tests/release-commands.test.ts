@@ -125,6 +125,8 @@ assert.ok(fullReleaseOrchestrator.indexOf("capBuildPath")
 "signed Android artifacts must be built only after OTA/native preparation");
 assert.match(fullReleaseOrchestrator, /releaseArguments\.includes\("--dry-run"\).*process\.exit\(0\)/,
   "a full-release dry run must stop before signing");
+assert.match(fullReleaseOrchestrator, /ASOL_WEB_BUNDLE_READY:\s*"1"/,
+  "the signed build must receive proof that cap-build prepared the web bundle");
 assert.match(
   packageJson.scripts["android:build:signed"],
   /build-android-signed/,

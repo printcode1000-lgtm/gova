@@ -16,6 +16,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(ShareReceivePlugin.class);
         registerPlugin(BackgroundDownloadPlugin.class);
         registerPlugin(StorageCapacityPlugin.class);
+        registerPlugin(AppSettingsPlugin.class);
         super.onCreate(savedInstanceState);
     }
 

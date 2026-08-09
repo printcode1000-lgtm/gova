@@ -24,5 +24,5 @@ if (releaseArguments.includes("--dry-run")) process.exit(0);
 // Signing starts only after the complete OTA/native preparation succeeds.
 execFileSync(process.execPath, [tsxCliPath, signedBuildPath], {
   stdio: "inherit",
-  env: environment,
+  env: { ...environment, ASOL_WEB_BUNDLE_READY: "1" },
 });

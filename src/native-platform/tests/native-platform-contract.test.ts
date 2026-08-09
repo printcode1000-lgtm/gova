@@ -11,10 +11,13 @@ import assert from "node:assert/strict";
 import { DuplicateFilter } from "../barcode/duplicate-filter";
 import {
   NativeErrorCodes,
+  NativeErrorRecoveries,
   NativePlatformError,
   isCancelledError,
+  isPermissionDeniedError,
   looksCancelled,
   looksPermissionDenied,
+  permissionErrorRequiresSettings,
   toNativeError,
 } from "../core/errors";
 import { createEmitter } from "../core/listener";
@@ -24,6 +27,7 @@ import {
   fromCapacitorState,
   toPermissionResult,
 } from "../permissions/types";
+import { nativePermissionRequestOptions } from "../permissions/permission-adapters";
 import { ShareQueue } from "../share/share-queue";
 import { isSafeUrl, validatePayload } from "../share/share-validator";
 
@@ -35,6 +39,19 @@ import { isSafeUrl, validatePayload } from "../share/share-validator";
   assert.equal(cancelled.code, NativeErrorCodes.Cancelled);
   assert.equal(isCancelledError(cancelled), true);
   assert.equal(isCancelledError(new Error("nope")), false);
+
+  const permissionDenied = NativePlatformError.permissionDenied("Camera");
+  assert.equal(isPermissionDeniedError(permissionDenied), true);
+  assert.equal(isPermissionDeniedError(cancelled), false);
+  assert.equal(isPermissionDeniedError(new Error("Permission denied")), false);
+
+  const settingsPermission = NativePlatformError.permissionDenied(
+    "Camera",
+    undefined,
+    NativeErrorRecoveries.OpenSettings,
+  );
+  assert.equal(permissionErrorRequiresSettings(settingsPermission), true);
+  assert.equal(permissionErrorRequiresSettings(permissionDenied), false);
 
   // Raw plugin errors are classified, not leaked.
   assert.equal(looksCancelled({ code: "USER_CANCELLED" }), true);
@@ -80,6 +97,14 @@ import { isSafeUrl, validatePayload } from "../share/share-validator";
   const granted = toPermissionResult("camera", PermissionStates.Granted);
   assert.equal(granted.granted, true);
   assert.equal(granted.requiresSettings, false);
+
+  assert.deepEqual(nativePermissionRequestOptions("camera"), {
+    permissions: ["camera"],
+  });
+  assert.deepEqual(nativePermissionRequestOptions("photos"), {
+    permissions: ["photos"],
+  });
+  assert.equal(nativePermissionRequestOptions("notifications"), undefined);
 }
 
 // ---------------------------------------------------------------------------

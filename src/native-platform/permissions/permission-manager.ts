@@ -22,18 +22,16 @@ import {
 } from "./types";
 
 interface NativeSettingsPlugin {
-  openSettings: (options?: Record<string, unknown>) => Promise<unknown>;
+  open: () => Promise<void>;
 }
 
 /**
- * Opening the OS settings screen is provided by the App plugin on Android and
- * by a URL scheme on iOS; both are optional and degrade to `false`.
+ * Android uses the narrow in-house AppSettings plugin. It only opens ASOL's
+ * own application-details screen and exposes no arbitrary intent surface.
  */
 const appPlugin = createLazyPlugin("AppSettings", async () => {
-  const { App } = await import("@capacitor/app");
-  // Boxed: returning the proxy itself would make this promise call its
-  // then() on the native bridge.
-  return { plugin: App as unknown as NativeSettingsPlugin & Record<string, unknown> };
+  const { registerPlugin } = await import("@capacitor/core");
+  return { plugin: registerPlugin<NativeSettingsPlugin>("AppSettings") };
 });
 
 export class PermissionManager {
@@ -118,20 +116,13 @@ export class PermissionManager {
     if (!app) return false;
 
     try {
-      if (isAndroid() && typeof app.openSettings === "function") {
-        await app.openSettings();
+      if (isAndroid() && typeof app.open === "function") {
+        await app.open();
         return true;
       }
-      if (isIos()) {
-        // iOS exposes the app settings page through a URL scheme.
-        const openUrl = (app as unknown as {
-          openUrl?: (options: { url: string }) => Promise<unknown>;
-        }).openUrl;
-        if (typeof openUrl === "function") {
-          await openUrl({ url: "app-settings:" });
-          return true;
-        }
-      }
+      // The Android shell currently owns this plugin. iOS degrades cleanly
+      // until its native implementation is shipped.
+      if (isIos()) return false;
     } catch (error) {
       console.warn("[NativePlatform:Permissions] openSettings failed.", error);
     }

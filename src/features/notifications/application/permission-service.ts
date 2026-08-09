@@ -10,6 +10,18 @@ export class PermissionService {
   current() {
     return capacitorPermissionService.getCurrent();
   }
+
+  checkResult() {
+    return capacitorPermissionService.checkResult();
+  }
+
+  requestResult() {
+    return capacitorPermissionService.requestResult();
+  }
+
+  openSettings() {
+    return capacitorPermissionService.openSettings();
+  }
 }
 
 export const notificationPermissionService = new PermissionService();

@@ -10,10 +10,20 @@ import { capacitorPlatformService } from "./capacitor-platform.service";
  * Capacitor plugin directly.
  */
 export class CapacitorPermissionService {
+  checkResult() {
+    return permissionManager.check(PermissionKinds.Notifications);
+  }
+
+  requestResult() {
+    return permissionManager.requestIfNeeded(PermissionKinds.Notifications);
+  }
+
+  openSettings() {
+    return permissionManager.openSettings();
+  }
+
   async request(): Promise<NotificationPermission | "unsupported"> {
-    const result = await permissionManager.requestIfNeeded(
-      PermissionKinds.Notifications,
-    );
+    const result = await this.requestResult();
     if (result.state === "unsupported") return "unsupported";
     if (result.granted) return "granted";
     // A blocked permission is a denial the user can only undo in settings.

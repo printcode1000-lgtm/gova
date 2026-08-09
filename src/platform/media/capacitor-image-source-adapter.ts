@@ -8,11 +8,32 @@
  */
 
 import { camera } from "@/native-platform/camera";
-import { isCancelledError } from "@/native-platform/core/errors";
+import {
+  isCancelledError,
+  isPermissionDeniedError,
+  permissionErrorRequiresSettings,
+} from "@/native-platform/core/errors";
 import { isNativePlatform } from "@/native-platform/core/platform";
+import { permissionManager } from "@/native-platform/permissions";
 
 export function canUseNativeImageSource(): boolean {
   return isNativePlatform();
+}
+
+/**
+ * Permission refusal is an expected user decision, not an image-source crash.
+ * The UI uses this boundary to show guidance without reporting console errors.
+ */
+export function isImageSourcePermissionDenied(error: unknown): boolean {
+  return isPermissionDeniedError(error);
+}
+
+export function imageSourcePermissionRequiresSettings(error: unknown): boolean {
+  return permissionErrorRequiresSettings(error);
+}
+
+export function openImageSourceSettings(): Promise<boolean> {
+  return permissionManager.openSettings();
 }
 
 /** @returns The captured image, or `null` when unavailable or cancelled. */

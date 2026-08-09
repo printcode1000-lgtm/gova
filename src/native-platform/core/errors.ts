@@ -25,23 +25,33 @@ export const NativeErrorCodes = {
 export type NativeErrorCode =
   (typeof NativeErrorCodes)[keyof typeof NativeErrorCodes];
 
+export const NativeErrorRecoveries = {
+  OpenSettings: "open-settings",
+} as const;
+
+export type NativeErrorRecovery =
+  (typeof NativeErrorRecoveries)[keyof typeof NativeErrorRecoveries];
+
 /** The only error type the Native Platform layer throws. */
 export class NativePlatformError extends Error {
   readonly code: NativeErrorCode;
   readonly module: string;
   readonly cause?: unknown;
+  readonly recovery?: NativeErrorRecovery;
 
   constructor(
     code: NativeErrorCode,
     module: string,
     message: string,
     cause?: unknown,
+    recovery?: NativeErrorRecovery,
   ) {
     super(message);
     this.name = "NativePlatformError";
     this.code = code;
     this.module = module;
     this.cause = cause;
+    this.recovery = recovery;
   }
 
   static unavailable(module: string, detail?: string): NativePlatformError {
@@ -55,11 +65,14 @@ export class NativePlatformError extends Error {
   static permissionDenied(
     module: string,
     detail?: string,
+    recovery?: NativeErrorRecovery,
   ): NativePlatformError {
     return new NativePlatformError(
       NativeErrorCodes.PermissionDenied,
       module,
       detail ?? `${module} permission was not granted.`,
+      undefined,
+      recovery,
     );
   }
 
@@ -116,6 +129,24 @@ export function isNativePlatformError(
 export function isCancelledError(value: unknown): boolean {
   return (
     isNativePlatformError(value) && value.code === NativeErrorCodes.Cancelled
+  );
+}
+
+/** True when the platform operation stopped because the user denied access. */
+export function isPermissionDeniedError(
+  value: unknown,
+): value is NativePlatformError {
+  return (
+    isNativePlatformError(value) &&
+    value.code === NativeErrorCodes.PermissionDenied
+  );
+}
+
+/** True when the only useful recovery is the application's OS settings. */
+export function permissionErrorRequiresSettings(value: unknown): boolean {
+  return (
+    isPermissionDeniedError(value) &&
+    value.recovery === NativeErrorRecoveries.OpenSettings
   );
 }
 

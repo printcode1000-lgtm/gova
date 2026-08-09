@@ -358,7 +358,7 @@ Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition
 | Push                | not supported here       | FCM                      | APNs                     |
 | Local notifications | Web Notification + timer | LocalNotifications       | LocalNotifications       |
 | Barcode             | not supported            | ML Kit                   | **not installed**        |
-| Open settings       | not supported            | `App.openSettings()`     | `app-settings:` URL      |
+| Open settings       | not supported            | in-house `AppSettings`   | not shipped yet          |
 
 **Notable asymmetries**
 
@@ -404,9 +404,20 @@ Caller                Module facade         Permission Manager      Adapter
 offer `permissionManager.openSettings()` rather than a button that silently
 does nothing.
 
-**Notification permission is never requested implicitly.** `push.register()`
-throws if permission is absent; the caller must invoke `requestPermission()`
-at the moment the user asks for notifications.
+On Android, `openSettings()` is backed by the narrow in-house `AppSettings`
+plugin. It opens `ACTION_APPLICATION_DETAILS_SETTINGS` for `hgh.asol.app` and
+cannot launch an arbitrary intent or another package. The unsupported iOS path
+returns `false` until an iOS implementation is shipped.
+
+Camera and photo requests pass explicit Capacitor aliases. Camera uses
+`{ permissions: ["camera"] }`; Photo Picker uses
+`{ permissions: ["photos"] }`. A rejected bridge call is propagated as a real
+native-platform error instead of being disguised as `unsupported` or `denied`.
+
+**Notification permission is never requested implicitly.** After an
+interactive login, ASOL explains the benefit in its own dialog. Only pressing
+the enable action invokes `requestPermission()`; `push.register()` still
+throws if permission is absent. Session hydration never opens the prompt.
 
 ---
 

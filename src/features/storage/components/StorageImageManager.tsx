@@ -35,6 +35,9 @@ import {
   canUseNativeImageSource,
   captureSingleImage,
   chooseSingleImage,
+  imageSourcePermissionRequiresSettings,
+  isImageSourcePermissionDenied,
+  openImageSourceSettings,
 } from "@/platform/media/capacitor-image-source-adapter";
 
 type StorageImageAspectRatio = "square" | "landscape" | "portrait" | "wide";
@@ -91,12 +94,20 @@ type ManagerStage =
   | "loadingImage"
   | "deleting";
 
-type DialogState = {
-  kind: "confirm" | "error";
-  title: string;
-  message: string;
-  onConfirm?: () => void;
-} | null;
+type DialogState =
+  | {
+      kind: "confirm" | "permission";
+      title: string;
+      message: string;
+      actionLabel?: string;
+      onConfirm: () => void;
+    }
+  | {
+      kind: "error";
+      title: string;
+      message: string;
+    }
+  | null;
 
 function StorageManagerDialog({
   state,
@@ -128,7 +139,7 @@ function StorageManagerDialog({
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">{state.message}</p>
         <div className="mt-5 flex justify-end gap-2">
-          {state.kind === "confirm" ? (
+          {state.kind !== "error" ? (
             <>
               <Button type="button" variant="secondary" onClick={onClose}>
                 {cancelLabel}
@@ -138,10 +149,10 @@ function StorageManagerDialog({
                 onClick={() => {
                   const action = state.onConfirm;
                   onClose();
-                  action?.();
+                  action();
                 }}
               >
-                {confirmLabel}
+                {state.actionLabel ?? confirmLabel}
               </Button>
             </>
           ) : (
@@ -612,9 +623,9 @@ function StorageImageSlot({
     setDialog({
       kind: "error",
       title: t("storage.imageManager.errorTitle"),
-      message: t("storage.imageManager.operationError"),
+      message: sourceError ?? t("storage.imageManager.operationError"),
     });
-  }, [displayError, selectedFile, t]);
+  }, [displayError, selectedFile, sourceError, t]);
 
   const uploadCandidate = async (file: File) => {
     if (!selectedDraftId) return false;
@@ -766,11 +777,31 @@ function StorageImageSlot({
       if (file) await processFile(file);
       else setStage("idle");
     } catch (sourceSelectionError) {
-      console.error(
-        "[StorageImageManager] Unable to choose an image.",
-        sourceSelectionError,
-      );
-      setSourceError(t("storage.imageSource.error"));
+      if (isImageSourcePermissionDenied(sourceSelectionError)) {
+        if (imageSourcePermissionRequiresSettings(sourceSelectionError)) {
+          setDialog({
+            kind: "permission",
+            title: t("storage.imageSource.photoPermissionTitle"),
+            message: t("storage.imageSource.photoPermissionSettings"),
+            actionLabel: t("storage.imageSource.openSettings"),
+            onConfirm: () => {
+              void openImageSourceSettings().then((opened) => {
+                if (!opened) {
+                  setSourceError(t("storage.imageSource.error"));
+                }
+              });
+            },
+          });
+        } else {
+          setSourceError(t("storage.imageSource.photoPermissionDenied"));
+        }
+      } else {
+        console.error(
+          "[StorageImageManager] Unable to choose an image.",
+          sourceSelectionError,
+        );
+        setSourceError(t("storage.imageSource.error"));
+      }
       setStage("idle");
     } finally {
       setIsChoosingSource(false);
@@ -813,11 +844,31 @@ function StorageImageSlot({
       if (file) await processFile(file);
       else setStage("idle");
     } catch (cameraError) {
-      console.error(
-        "[StorageImageManager] Unable to capture an image.",
-        cameraError,
-      );
-      setSourceError(t("storage.imageSource.cameraError"));
+      if (isImageSourcePermissionDenied(cameraError)) {
+        if (imageSourcePermissionRequiresSettings(cameraError)) {
+          setDialog({
+            kind: "permission",
+            title: t("storage.imageSource.cameraPermissionTitle"),
+            message: t("storage.imageSource.cameraPermissionSettings"),
+            actionLabel: t("storage.imageSource.openSettings"),
+            onConfirm: () => {
+              void openImageSourceSettings().then((opened) => {
+                if (!opened) {
+                  setSourceError(t("storage.imageSource.cameraError"));
+                }
+              });
+            },
+          });
+        } else {
+          setSourceError(t("storage.imageSource.cameraPermissionDenied"));
+        }
+      } else {
+        console.error(
+          "[StorageImageManager] Unable to capture an image.",
+          cameraError,
+        );
+        setSourceError(t("storage.imageSource.cameraError"));
+      }
       setStage("idle");
     } finally {
       setIsChoosingSource(false);

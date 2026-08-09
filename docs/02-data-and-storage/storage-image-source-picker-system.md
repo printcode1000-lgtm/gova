@@ -50,7 +50,10 @@ Native source behavior:
 - Camera capture uses the rear camera by default.
 - The selected native image is read through Capacitor Filesystem and converted to a `File`.
 - User cancellation returns `null` silently and does not show an error.
-- Real permission or plugin failures are surfaced through localized UI errors.
+- Permission refusal is surfaced as localized guidance, but is not reported as
+  `console.error` because it is an expected user decision.
+- Plugin, bridge, and image-conversion failures remain localized UI errors and
+  are still reported for diagnosis.
 
 ## Web fallback behavior
 
@@ -81,7 +84,20 @@ The app only requests camera or photo access when the user explicitly chooses on
 
 ## Android notes
 
-The picker uses the Capacitor Camera plugin. Because the current flow does not save captured photos to the gallery (`saveToGallery: false`), no extra Android storage permission is required for this feature.
+The picker uses the Capacitor Camera plugin. `CAMERA` remains declared because
+the in-app ML Kit barcode scanner uses the physical camera. Consequently, the
+Camera plugin also requires that alias before opening the external camera app.
+
+When the user selects **Take a photo**, the Permission Manager checks the
+`camera` alias and requests only `{ permissions: ["camera"] }`. This produces
+the Android runtime prompt on first use from Android 6 onward without mixing in
+legacy media permissions. A denial is localized; a blocked permission offers
+an Android-native button that opens ASOL's own application settings page.
+
+Gallery selection requests only the Camera plugin's virtual `photos` alias.
+Android uses Photo Picker or the system document picker, so ASOL declares
+neither `READ_MEDIA_IMAGES` nor legacy `READ_EXTERNAL_STORAGE`. Because capture
+also uses `saveToGallery: false`, no storage permission is needed.
 
 ## Architecture contract
 

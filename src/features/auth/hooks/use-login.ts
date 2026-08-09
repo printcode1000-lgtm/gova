@@ -16,6 +16,7 @@ import { startNewFlow } from '@/core/monitor/monitor-store';
 import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 import { queueLoginSuccessToast } from '@/features/auth/components/LoginSuccessToast';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { announceAuthLoginCompleted } from '../application/auth-lifecycle-events';
 
 export function useLogin() {
   const { t } = useTranslation();
@@ -52,6 +53,7 @@ export function useLogin() {
       try {
         endGuestSession();
         setSession(session);
+        announceAuthLoginCompleted({ uid: session.uid, phone: session.phone });
         queueLoginSuccessToast();
         router.replace('/home');
       } catch (error) {

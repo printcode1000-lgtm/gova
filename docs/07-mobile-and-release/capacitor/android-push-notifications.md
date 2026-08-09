@@ -81,7 +81,24 @@ The web push path mirrors the same center behavior through
 badge, and notify open app windows so `/notifications` updates immediately.
 The service worker also checks the same local dismissed list before storing.
 
-Permission is requested only after an explicit user action. Android 13 and newer use the native `POST_NOTIFICATIONS` permission through the Capacitor plugin.
+After a fresh interactive login, native builds show an ASOL explanation dialog
+when this device is not registered. Restoring an existing session does not show
+the dialog. Pressing **Enable notifications** is the explicit user action that
+starts the platform flow:
+
+- Android 13 and newer request `POST_NOTIFICATIONS`, then register with FCM only
+  after the system returns `granted`.
+- Android 12 and older report notification permission as already granted, so
+  the same ASOL button registers the device without a nonexistent OS prompt.
+- A denied or blocked permission changes the primary action to **Open app
+  settings**. Returning with permission granted completes registration.
+- **Not now** closes the dialog without registering a token. It never turns a
+  refusal into an application error.
+- A device already enabled with granted permission is not prompted again.
+
+The prompt listens to the explicit login-completed event, not merely to
+`SessionProvider` hydration. It is delayed until the login-success toast has
+finished so the two accessible surfaces never overlap.
 
 ## Channels
 

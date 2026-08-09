@@ -6,7 +6,10 @@
  * no byte handling.
  */
 
-import { NativePlatformError } from "../core/errors";
+import {
+  NativeErrorRecoveries,
+  NativePlatformError,
+} from "../core/errors";
 import { isNativePlatform } from "../core/platform";
 import { permissionManager } from "../permissions/permission-manager";
 import { PermissionKinds } from "../permissions/types";
@@ -43,6 +46,9 @@ export class CameraModule {
           permission.requiresSettings
             ? "Camera access is blocked. Enable it from the application settings."
             : "Camera access was not granted.",
+          permission.requiresSettings
+            ? NativeErrorRecoveries.OpenSettings
+            : undefined,
         );
       }
       return nativeCapturePhoto(options);
@@ -70,6 +76,9 @@ export class CameraModule {
           permission.requiresSettings
             ? "Photo access is blocked. Enable it from the application settings."
             : "Photo access was not granted.",
+          permission.requiresSettings
+            ? NativeErrorRecoveries.OpenSettings
+            : undefined,
         );
       }
       return nativePickImages(options);
