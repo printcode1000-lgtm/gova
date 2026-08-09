@@ -25,8 +25,10 @@ export default async function ProductSharePage({
   const params = await searchParams;
   const productId =
     typeof params.productId === "string" ? params.productId : "";
+  // The loader logs its own failures and returns null, so a shared link still
+  // opens on the client-side path.
   const initialProduct = productId
-    ? await loadPublicProductShareRecord(productId).catch(() => null)
+    ? await loadPublicProductShareRecord(productId)
     : null;
   return (
     <Suspense fallback={null}>

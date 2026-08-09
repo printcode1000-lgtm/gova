@@ -24,8 +24,10 @@ export default async function ProfileSharePage({
 }: ProfileSharePageProps) {
   const params = await searchParams;
   const uid = typeof params.uid === "string" ? params.uid : "";
+  // The loader logs its own failures and returns null, so a shared link still
+  // opens on the client-side path.
   const initialPublicProfile = uid
-    ? await loadPublicProfileShareRecord(uid).catch(() => null)
+    ? await loadPublicProfileShareRecord(uid)
     : null;
   return (
     <Suspense fallback={null}>

@@ -3,6 +3,7 @@ import { cache } from "react";
 
 import { productService } from "@/features/product/services/product-service.server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import {
   buildProductShareUrl,
@@ -14,18 +15,46 @@ import type { PublicProfileShareRecord } from "./share-content";
 const DEFAULT_DESCRIPTION = "اكتشف المنتجات والمتاجر والخدمات على تطبيق ASOL.";
 const DEFAULT_IMAGE = `${PUBLIC_SHARE_ORIGIN}/logo.png`;
 
+/**
+ * A share landing page must open even when the prefetch fails: falling back to
+ * a client-side load is the degradation, not an error page. The failure is
+ * absorbed *here* rather than at the page, because a page is UI and may not
+ * reach a server service — and because silently serving the slow path is
+ * otherwise indistinguishable from working.
+ */
+async function withoutFailing<T>(
+  operation: string,
+  load: () => Promise<T>,
+): Promise<T | null> {
+  try {
+    return await load();
+  } catch (error) {
+    await logServerSystemIssue({
+      error,
+      feature: "Sharing",
+      operation,
+    }).catch(() => undefined);
+    return null;
+  }
+}
+
 export const loadPublicProductShareRecord = cache((productId: string) =>
-  productService.get(productId),
+  withoutFailing("load-public-product-share-record", () =>
+    productService.get(productId),
+  ),
 );
 
-export const loadPublicProfileShareRecord = cache(
-  async (uid: string): Promise<PublicProfileShareRecord> => {
-    const [storeDetails, storeImages] = await Promise.all([
-      profileService.getStoreDetails(uid),
-      profileService.getStoreImages(uid),
-    ]);
-    return { uid, storeDetails, storeImages };
-  },
+export const loadPublicProfileShareRecord = cache((uid: string) =>
+  withoutFailing<PublicProfileShareRecord>(
+    "load-public-profile-share-record",
+    async () => {
+      const [storeDetails, storeImages] = await Promise.all([
+        profileService.getStoreDetails(uid),
+        profileService.getStoreImages(uid),
+      ]);
+      return { uid, storeDetails, storeImages };
+    },
+  ),
 );
 
 function compact(value: string, maxLength: number): string {
@@ -89,19 +118,8 @@ export async function productShareMetadata(
   productId: string,
 ): Promise<Metadata> {
   if (!productId.trim()) return {};
-  try {
-    const product = await loadPublicProductShareRecord(productId);
-    return shareMetadata({
-      title: productTitle(product),
-      description:
-        product.mainData.description ||
-        product.price.label ||
-        DEFAULT_DESCRIPTION,
-      url: buildProductShareUrl(product.id),
-      imageUrl: product.images.find((image) => image.url)?.url,
-      index: product.status === "active",
-    });
-  } catch {
+  const product = await loadPublicProductShareRecord(productId);
+  if (!product) {
     return shareMetadata({
       title: "المنتج غير متاح — ASOL",
       description: DEFAULT_DESCRIPTION,
@@ -109,21 +127,22 @@ export async function productShareMetadata(
       index: false,
     });
   }
+  return shareMetadata({
+    title: productTitle(product),
+    description:
+      product.mainData.description ||
+      product.price.label ||
+      DEFAULT_DESCRIPTION,
+    url: buildProductShareUrl(product.id),
+    imageUrl: product.images.find((image) => image.url)?.url,
+    index: product.status === "active",
+  });
 }
 
 export async function profileShareMetadata(uid: string): Promise<Metadata> {
   if (!uid.trim()) return {};
-  try {
-    const { storeDetails, storeImages } =
-      await loadPublicProfileShareRecord(uid);
-    const title = compact(storeDetails.storeName || "صفحة على ASOL", 100);
-    return shareMetadata({
-      title,
-      description: storeDetails.storeDescription || DEFAULT_DESCRIPTION,
-      url: buildProfileShareUrl(uid),
-      imageUrl: storeImages.coverUrl || storeImages.avatarUrl,
-    });
-  } catch {
+  const record = await loadPublicProfileShareRecord(uid);
+  if (!record) {
     return shareMetadata({
       title: "صفحة على ASOL",
       description: DEFAULT_DESCRIPTION,
@@ -131,4 +150,11 @@ export async function profileShareMetadata(uid: string): Promise<Metadata> {
       index: false,
     });
   }
+  const { storeDetails, storeImages } = record;
+  return shareMetadata({
+    title: compact(storeDetails.storeName || "صفحة على ASOL", 100),
+    description: storeDetails.storeDescription || DEFAULT_DESCRIPTION,
+    url: buildProfileShareUrl(uid),
+    imageUrl: storeImages.coverUrl || storeImages.avatarUrl,
+  });
 }
