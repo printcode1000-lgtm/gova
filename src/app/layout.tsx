@@ -86,12 +86,12 @@ export default function RootLayout({
           <AppQueryProvider>
             <SessionProvider>
               <FavoritesProvider>
-                <SystemLogCollector />
-                <FeatureFlagController />
-                <NativePushController />
-                <WebPushController />
-                <SystemLogErrorBoundary>
-                  <PreferencesProvider>
+                <PreferencesProvider>
+                  <SystemLogCollector />
+                  <FeatureFlagController />
+                  <NativePushController />
+                  <WebPushController />
+                  <SystemLogErrorBoundary>
                     <NetworkStatusProvider>
                       <OtaUpdateProvider>
                         {/* Owns the system insets for every route, shell or not. */}
@@ -113,8 +113,8 @@ export default function RootLayout({
                         <DeveloperBadge />
                       </OtaUpdateProvider>
                     </NetworkStatusProvider>
-                  </PreferencesProvider>
-                </SystemLogErrorBoundary>
+                  </SystemLogErrorBoundary>
+                </PreferencesProvider>
               </FavoritesProvider>
             </SessionProvider>
           </AppQueryProvider>
