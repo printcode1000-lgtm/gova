@@ -86,6 +86,18 @@ export class WebPushBrowserService {
       : "default";
   }
 
+  /**
+   * Whether this browser already holds a push subscription.
+   *
+   * The web counterpart of the native "device enabled" flag, so the post-login
+   * opt-in dialog can skip a browser that already opted in. Never prompts.
+   */
+  async hasSubscription(): Promise<boolean> {
+    if (!this.isSupported()) return false;
+    const registration = await navigator.serviceWorker.getRegistration("/");
+    return Boolean(await registration?.pushManager.getSubscription());
+  }
+
   async subscribe(uid: string, phone: string) {
     if (!this.isSupported()) throw new Error("webPushUnsupported");
     // Routed through the Native Platform Permission Manager so every

@@ -81,6 +81,40 @@ export class DeviceTokenService {
     return capacitorPushService.isNativePush();
   }
 
+  /**
+   * Whether this platform can deliver push at all — native FCM/APNs, or Web
+   * Push in a secure browser context. The post-login opt-in dialog is shown on
+   * every platform that answers `true`.
+   */
+  isPushSupported(): boolean {
+    return (
+      capacitorPushService.isNativePush() || webPushBrowserService.isSupported()
+    );
+  }
+
+  /**
+   * Whether this device already opted in: the stored native flag, or an active
+   * browser subscription. Platform-agnostic counterpart of `isNativeEnabled`.
+   */
+  async isDeviceEnabled(): Promise<boolean> {
+    if (capacitorPushService.isNativePush()) {
+      return capacitorPushService.isEnabled();
+    }
+    return webPushBrowserService.hasSubscription();
+  }
+
+  /**
+   * Opt this device in on whichever transport the platform supports.
+   * Native registers an FCM/APNs token; the browser subscribes to Web Push.
+   */
+  async enable(uid: string, phone: string): Promise<void> {
+    if (capacitorPushService.isNativePush()) {
+      await this.register(uid, phone);
+      return;
+    }
+    await webPushBrowserService.subscribe(uid, phone);
+  }
+
   getPlatform(): "android" | "ios" | "web" {
     return capacitorPushService.getPlatform();
   }

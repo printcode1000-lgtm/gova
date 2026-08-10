@@ -59,7 +59,7 @@ The module follows a layered structure:
 - `domain`: typed entities, enums, defaults, and contracts.
 - `application`: use-case services such as the bus, builder, sender, receiver, router, sync, lifecycle, permissions, tokens, and analytics.
 - `infrastructure`: local AsolDB persistence and platform adapters.
-- `presentation`: React page and hooks.
+- `presentation`: React page, hooks, the opt-in dialog, and the three lifecycle controllers mounted in `src/app/layout.tsx`.
 - `config`: notification templates in JSON.
 - `shared`: small reusable helpers.
 - `tests`: module-level contract checks.
@@ -365,6 +365,85 @@ only a transport signal: authoritative plan and quote state lives in the
 marketplace-orders database, while notification-center copies remain local-only
 in AsolDB/IndexedDB.
 
+## Post-Login Opt-In Dialog
+
+Nothing is registered until the user agrees. `NotificationOptInController` owns
+that moment and runs on **every platform** — Android, iOS, and the browser. It
+is the only one of the three notification controllers in `src/app/layout.tsx`
+that renders UI; the other two render `null`.
+
+| Controller | Platforms | Renders |
+|------------|-----------|---------|
+| `NotificationOptInController` | all | the opt-in dialog |
+| `NativePushController` | Android, iOS | nothing |
+| `WebPushController` | all | nothing |
+
+### When it appears
+
+It listens for `AUTH_LOGIN_COMPLETED_EVENT`, dispatched by `useLogin` after a
+fresh interactive login. Session hydration does not dispatch it, so a returning
+user is never interrupted on an ordinary page load.
+
+The dialog is delayed `4200 ms` so it does not collide with the post-login
+redirect and the success toast, and the pending timer is dropped if the user
+signs out or switches account before it fires.
+
+### What it shows
+
+One pure function, `resolveNotificationPromptAction`, decides — so login
+hydration, blocked permissions, browsers without Web Push, and old Android all
+agree:
+
+| State | Action |
+|-------|--------|
+| Not authenticated | `hidden` |
+| No push transport on this platform (`pushSupported === false`) | `hidden` |
+| Permission `unsupported` | `hidden` |
+| Device already enabled **and** permission granted | `hidden` |
+| Permission `denied` or `blocked` | `open-settings` |
+| Anything else | `request` |
+
+### How the platforms differ
+
+They mostly do not. `DeviceTokenService` hides the split behind three methods,
+so the controller never branches on the platform itself:
+
+| Method | Native | Browser |
+|--------|--------|---------|
+| `isPushSupported()` | `isNativePush()` | `WebPushBrowserService.isSupported()` — service worker, `PushManager`, and a secure context |
+| `isDeviceEnabled()` | stored per-platform enabled flag | an active `PushSubscription` |
+| `enable(uid, phone)` | registers the FCM/APNs token | subscribes to Web Push |
+
+The one place the platform still shows through is the blocked state, because
+only the Android shell can deep-link to its own settings screen. The dialog
+therefore takes `canOpenSettings`, read from
+`PermissionManager.canOpenSettings()` rather than inferred from "is this
+native" — `openSettings` is unimplemented on iOS and impossible in a browser,
+so both would otherwise get a button that always resolves `false`:
+
+| | Android | iOS and browser |
+|---|---------|-----------------|
+| `canOpenSettings()` | `true` | `false` |
+| Blocked copy | `permissionPrompt.denied` | `permissionPrompt.deniedManual` |
+| Primary button | open app settings | re-check |
+| Recovery | `visibilitychange` re-checks on return from settings | the user re-checks after changing the permission themselves |
+
+The `visibilitychange` listener is harmless where it cannot fire usefully, so it
+stays attached for any blocked state.
+
+A browser with no Web Push support at all — an insecure origin, or no service
+worker — resolves to `hidden`, because a dialog that cannot enable anything is a
+dead end. Those users still have the manual toggle in `/settings`.
+
+### Files
+
+```text
+presentation/NotificationOptInController.tsx      the dialog's states and effects
+presentation/NotificationPermissionPrompt.tsx     the dialog itself
+application/notification-permission-prompt-policy.ts   the pure decision
+tests/notification-permission-prompt-policy.test.ts    its contract
+```
+
 ## Device Token Flow
 
 `DeviceTokenService` owns native token registration, listing, and removal.
@@ -609,9 +688,9 @@ device displayed itself would be lost.
 The foreground path is wired by `NativePushController`, mounted once in
 `src/app/layout.tsx`. It runs on Android and iOS — the gate is `isNativePush()` —
 and owns the received/tapped handlers, the tray import, and unregistering the
-previous uid when the account changes. `WebPushController` is mounted next to it
-and forwards service-worker messages to the window, plus re-registers the token
-after a language switch on every platform.
+previous uid when the account changes. It renders nothing. `WebPushController`
+is mounted next to it and forwards service-worker messages to the window, plus
+re-registers the token after a language switch on every platform.
 
 ### Background
 
@@ -939,13 +1018,18 @@ Security rules:
 Browser subscription flow:
 
 ```text
-/settings
+post-login opt-in dialog, or the /settings toggle
   -> request Notification permission
   -> register /asol-push-sw.js
   -> PushManager.subscribe(WEB_PUSH_VAPID_PUBLIC_KEY)   no server call
   -> POST /api/notifications/device-token
   -> user_notification_tokens(provider = web_push)
 ```
+
+Both entry points converge on `WebPushBrowserService.subscribe`, so a browser
+that opted in from the dialog and one that used the toggle are indistinguishable
+afterwards. See
+[Post-Login Opt-In Dialog](#post-login-opt-in-dialog).
 
 Reading the key from the bundle rather than an endpoint is also what lets a
 static export and the native shell subscribe: neither has a server to ask

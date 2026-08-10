@@ -9,3 +9,4 @@ export * from "./presentation/hooks/use-notifications";
 export * from "./presentation/NotificationsPageContent";
 export * from "./presentation/NativePushController";
 export * from "./presentation/WebPushController";
+export * from "./presentation/NotificationOptInController";

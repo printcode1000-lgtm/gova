@@ -76,6 +76,15 @@ The client lifecycle covers Apple as well: `NativePushController` gates on
 `isNativePush()`, so received and tapped notifications reach the local
 notification center on iOS exactly as they do on Android.
 
+The post-login opt-in dialog is separate and platform-agnostic — it lives in
+`NotificationOptInController` and offers the same opt-in on iOS.
+
+One difference: when the permission is blocked, iOS shows the re-check recovery
+rather than an "open settings" button, because `PermissionManager.openSettings`
+is implemented by the Android shell only and reports `canOpenSettings() === false`
+on Apple. Shipping the iOS side of that plugin is what would flip it. See
+[Post-Login Opt-In Dialog](../../05-platform-features/notification-system.md#post-login-opt-in-dialog).
+
 ### Apple payload options
 
 FCM ignores the `android` block for Apple tokens, so sound, priority, grouping,

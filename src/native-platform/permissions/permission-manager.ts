@@ -106,6 +106,17 @@ export class PermissionManager {
   }
 
   /**
+   * Whether `openSettings` can actually reach a settings screen here.
+   *
+   * Only the Android shell owns that plugin today: iOS and the browser have no
+   * route. Callers use this to offer a different recovery — guidance, a
+   * re-check — instead of a button that resolves `false` every time.
+   */
+  canOpenSettings(): boolean {
+    return isNativePlatform() && isAndroid();
+  }
+
+  /**
    * Open the application settings screen.
    * @returns `false` when the platform offers no way to do this.
    */

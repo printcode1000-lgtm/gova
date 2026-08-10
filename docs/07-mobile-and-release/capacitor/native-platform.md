@@ -331,8 +331,15 @@ permissionManager.requestIfNeeded(kind): Promise<PermissionResult>
 permissionManager.checkAll(kinds): Promise<Record<string, PermissionResult>>
 permissionManager.requestAllIfNeeded(kinds): Promise<boolean>
 permissionManager.requestLocalNotificationsIfNeeded(): Promise<PermissionResult>
+permissionManager.canOpenSettings(): boolean
 permissionManager.openSettings(): Promise<boolean>
 ```
+
+`canOpenSettings()` answers *before* trying, so a caller can choose a different
+recovery instead of rendering a button that always resolves `false`. It is
+`true` on Android only — the in-house `AppSettings` plugin lives in the Android
+shell; iOS has no implementation yet and a browser has no route at all. Ask it
+rather than testing `isNativePlatform()`, which would wrongly include iOS.
 
 Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition` ·
 `notifications`.

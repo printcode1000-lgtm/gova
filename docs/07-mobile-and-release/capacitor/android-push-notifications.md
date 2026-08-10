@@ -59,6 +59,11 @@ native platforms — the gate is `isNativePush()` — so the lifecycle below app
 to Android and iOS alike. Android-only steps (channel creation) are guarded
 inside `CapacitorPushService`.
 
+The post-login opt-in dialog is **not** part of this controller. It lives in
+`NotificationOptInController`, which runs on every platform including the
+browser. See
+[Post-Login Opt-In Dialog](../../05-platform-features/notification-system.md#post-login-opt-in-dialog).
+
 1. After session hydration, it initializes native listeners.
 2. It creates all Android notification channels.
 3. It imports notifications still present in the Android notification tray, except notifications the user already dismissed locally and empty `ASOL` placeholders with no body or payload.

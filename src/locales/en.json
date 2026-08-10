@@ -196,6 +196,8 @@
     "nav.notifications":  "Notifications",
     "notifications.permissionPrompt.control":  "You can turn notifications off or change them at any time in Settings.",
     "notifications.permissionPrompt.denied":  "Notifications are currently blocked. Open the app settings to enable them.",
+    "notifications.permissionPrompt.deniedManual":  "Notifications are currently blocked. Allow them in your system or browser settings, then try again.",
+    "notifications.permissionPrompt.recheck":  "Try again",
     "notifications.permissionPrompt.description":  "Allow ASOL to send important updates to this device after you approve.",
     "notifications.permissionPrompt.enable":  "Enable notifications",
     "notifications.permissionPrompt.failed":  "Notifications could not be enabled now. Check your connection and try again.",

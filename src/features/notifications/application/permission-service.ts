@@ -19,6 +19,10 @@ export class PermissionService {
     return capacitorPermissionService.requestResult();
   }
 
+  canOpenSettings() {
+    return capacitorPermissionService.canOpenSettings();
+  }
+
   openSettings() {
     return capacitorPermissionService.openSettings();
   }

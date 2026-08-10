@@ -18,6 +18,10 @@ export class CapacitorPermissionService {
     return permissionManager.requestIfNeeded(PermissionKinds.Notifications);
   }
 
+  canOpenSettings() {
+    return permissionManager.canOpenSettings();
+  }
+
   openSettings() {
     return permissionManager.openSettings();
   }

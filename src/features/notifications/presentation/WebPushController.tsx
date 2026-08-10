@@ -11,8 +11,12 @@ import { notificationDeviceTokenService } from "../application/device-token-serv
  *
  * Forwards service-worker messages into window events, and re-registers the
  * device token when the UI language changes. The language part runs on every
- * platform — it is mounted above the preferences tree, so it listens for the
- * document-locale event rather than reading the preferences context.
+ * platform and listens for the document-locale event rather than reading the
+ * preferences context, so it stays independent of where it is mounted.
+ *
+ * This controller never prompts. The post-login opt-in dialog is shared by
+ * every platform and lives in `NotificationOptInController`; `/settings` keeps
+ * its manual toggle for turning the browser subscription on and off later.
  */
 export function WebPushController() {
   const { session } = useSession();

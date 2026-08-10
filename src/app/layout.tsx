@@ -27,6 +27,7 @@ import { FavoritesProvider } from "@/features/favorites";
 import { FeatureFlagController } from "@/features/feature-flags";
 import {
   NativePushController,
+  NotificationOptInController,
   WebPushController,
 } from "@/features/notifications";
 import dynamic from "next/dynamic";
@@ -91,6 +92,7 @@ export default function RootLayout({
                   <FeatureFlagController />
                   <NativePushController />
                   <WebPushController />
+                  <NotificationOptInController />
                   <SystemLogErrorBoundary>
                     <NetworkStatusProvider>
                       <OtaUpdateProvider>

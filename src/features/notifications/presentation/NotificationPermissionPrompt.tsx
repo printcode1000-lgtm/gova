@@ -5,6 +5,7 @@ import {
   Loader2,
   MessageCircleMore,
   PackageCheck,
+  RefreshCw,
   Settings2,
   ShieldCheck,
 } from "lucide-react";
@@ -19,29 +20,38 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useTranslation } from "@/lib/i18n";
-import type { NativeNotificationPromptAction } from "../application/native-notification-permission-policy";
+import type { NotificationPromptAction } from "../application/notification-permission-prompt-policy";
 
-interface NativeNotificationPermissionPromptProps {
+interface NotificationPermissionPromptProps {
   open: boolean;
-  action: NativeNotificationPromptAction;
+  action: NotificationPromptAction;
   busy: boolean;
   failed: boolean;
   permissionDenied: boolean;
+  /**
+   * Whether the platform can open its own settings screen — the Android shell
+   * only. Elsewhere a blocked permission can be undone by the user alone, so
+   * the dialog says so and offers a re-check instead of a dead button.
+   */
+  canOpenSettings: boolean;
   onPrimary: () => void;
   onLater: () => void;
 }
 
-export function NativeNotificationPermissionPrompt({
+export function NotificationPermissionPrompt({
   open,
   action,
   busy,
   failed,
   permissionDenied,
+  canOpenSettings,
   onPrimary,
   onLater,
-}: NativeNotificationPermissionPromptProps) {
+}: NotificationPermissionPromptProps) {
   const { t } = useTranslation();
-  const opensSettings = action === "open-settings";
+  const blocked = action === "open-settings";
+  const opensSettings = blocked && canOpenSettings;
+  const rechecks = blocked && !canOpenSettings;
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && !busy && onLater()}>
@@ -83,7 +93,11 @@ export function NativeNotificationPermissionPrompt({
 
           {permissionDenied ? (
             <p className="rounded-xl bg-warning/15 px-3 py-2 text-sm text-on-surface" role="status">
-              {t("notifications.permissionPrompt.denied")}
+              {t(
+                canOpenSettings
+                  ? "notifications.permissionPrompt.denied"
+                  : "notifications.permissionPrompt.deniedManual",
+              )}
             </p>
           ) : null}
           {failed ? (
@@ -105,13 +119,17 @@ export function NativeNotificationPermissionPrompt({
               <Loader2 className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
             ) : opensSettings ? (
               <Settings2 className="me-2 h-4 w-4" aria-hidden="true" />
+            ) : rechecks ? (
+              <RefreshCw className="me-2 h-4 w-4" aria-hidden="true" />
             ) : (
               <BellRing className="me-2 h-4 w-4" aria-hidden="true" />
             )}
             {t(
               opensSettings
                 ? "notifications.permissionPrompt.openSettings"
-                : "notifications.permissionPrompt.enable",
+                : rechecks
+                  ? "notifications.permissionPrompt.recheck"
+                  : "notifications.permissionPrompt.enable",
             )}
           </Button>
           <Button
