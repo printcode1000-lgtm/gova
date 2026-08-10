@@ -94,10 +94,67 @@ the Android runtime prompt on first use from Android 6 onward without mixing in
 legacy media permissions. A denial is localized; a blocked permission offers
 an Android-native button that opens ASOL's own application settings page.
 
-Gallery selection requests only the Camera plugin's virtual `photos` alias.
-Android uses Photo Picker or the system document picker, so ASOL declares
-neither `READ_MEDIA_IMAGES` nor legacy `READ_EXTERNAL_STORAGE`. Because capture
-also uses `saveToGallery: false`, no storage permission is needed.
+### Gallery selection uses the Android Photo Picker
+
+Google Play rejects broad media access when image selection is one-off or
+infrequent, which is exactly ASOL's usage. Gallery selection therefore never
+reads the media store directly.
+
+`chooseSingleImage()` calls `Camera.chooseFromGallery()`, which Capacitor
+Camera 8 routes to `IONCAMROpenPhotoPickerActivity` in `ioncamera-android`.
+That activity launches the **Android Photo Picker**. On releases that predate
+the platform picker, the library's `ModuleDependencies` service entry
+(`photopicker_activity:0:required`) makes Play Services install the backported
+picker module, so the same user-selected, scoped `content://` URI is returned
+on every supported API level.
+
+Because the picker hands back a scoped URI, **no media permission is required
+at any API level**. The Camera plugin agrees: its `photos` alias maps to an
+empty permission array and `getPermissionStates()` always reports it as
+granted, so requesting `{ permissions: ["photos"] }` never produces a runtime
+prompt. Capture uses `saveToGallery: false`, so it needs no storage write
+either.
+
+### Manifest guards against regression
+
+`android/app/src/main/AndroidManifest.xml` declares none of the media or
+storage permissions. To stop a library upgrade or a future `npx cap sync` from
+silently reintroducing them, the manifest also carries merger directives that
+strip them from the merged output:
+
+```text
+READ_MEDIA_IMAGES
+READ_MEDIA_VIDEO
+READ_MEDIA_VISUAL_USER_SELECTED
+READ_EXTERNAL_STORAGE
+WRITE_EXTERNAL_STORAGE
+```
+
+Each is declared as `tools:node="remove"`, so it grants nothing and instead
+deletes any matching entry contributed by a dependency. The `<application>`
+element additionally carries `tools:remove="android:requestLegacyExternalStorage"`,
+which drops the legacy-storage flag injected by `ioncamera-android`. That flag
+only changes how *shared* external storage is scoped, and shared storage is
+unreachable without a storage permission, so removing it changes no behavior.
+
+None of these guards touch `CAMERA`, the `android.hardware.camera` features, or
+how the camera is invoked.
+
+Verify the shipped permission set after any dependency change:
+
+```bash
+cd android && ./gradlew :app:processReleaseMainManifest
+```
+
+Then confirm no match in:
+
+```text
+android/app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml
+```
+
+The blame report at
+`android/app/build/outputs/logs/manifest-merger-release-report.txt` names the
+dependency behind any entry that reappears.
 
 ## Architecture contract
 

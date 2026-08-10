@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup,android:dataExtractionRules,android:fullBackupContent">
+        tools:replace="android:allowBackup,android:dataExtractionRules,android:fullBackupContent"
+        tools:remove="android:requestLegacyExternalStorage">
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -142,6 +143,34 @@
 
     <!-- Local notification scheduling across reboots -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!--
+      Google Play policy: broad media access is not allowed for one-off image
+      selection. ASOL picks images through the Android Photo Picker
+      (Capacitor Camera 8 -> IONCAMROpenPhotoPickerActivity, backported to
+      older releases by the Play Services photopicker module), which returns a
+      scoped content URI and therefore needs no media permission at all.
+
+      These entries declare nothing. They are merger directives that strip the
+      permission if any library or a future `npx cap sync` reintroduces it, so
+      the shipped AAB can never regain broad media access by accident.
+      Verify with: android/app/build/outputs/logs/manifest-merger-release-report.txt
+    -->
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VIDEO"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:node="remove" />
 
     <!-- Camera is optional: the app must install on devices without one. -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />

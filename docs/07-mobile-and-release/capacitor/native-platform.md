@@ -337,6 +337,15 @@ permissionManager.openSettings(): Promise<boolean>
 Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition` ·
 `notifications`.
 
+`photos` is a no-op on Android by design. Gallery selection goes through the
+Android Photo Picker, which returns a scoped `content://` URI, so ASOL declares
+no media permission and the alias always reports `granted` without prompting.
+The manifest actively strips `READ_MEDIA_IMAGES`, `READ_MEDIA_VIDEO`,
+`READ_MEDIA_VISUAL_USER_SELECTED`, and the legacy external-storage permissions
+from the merged output so a dependency cannot reintroduce broad media access.
+See [Storage Image Source Picker System](../../02-data-and-storage/storage-image-source-picker-system.md#gallery-selection-uses-the-android-photo-picker).
+`camera` is unaffected and still prompts normally.
+
 ---
 
 ## Platform differences
@@ -347,7 +356,7 @@ Kinds: `camera` · `photos` · `location` · `microphone` · `speech-recognition
 | App deep links      | not supported            | `appUrlOpen`             | `appUrlOpen`             |
 | App exit            | not supported            | `App.exitApp()`          | not supported (policy)   |
 | Camera capture      | `<input capture>`        | `@capacitor/camera`      | `@capacitor/camera`      |
-| Gallery pick        | `<input type=file>`      | native picker            | native picker            |
+| Gallery pick        | `<input type=file>`      | Android Photo Picker     | native picker            |
 | Location            | Geolocation API          | Geolocation plugin       | Geolocation plugin       |
 | Speech              | Web Speech API           | plugin (partial results) | plugin (partial results) |
 | App storage         | in-memory, page lifetime | Filesystem Data/Cache    | Filesystem Data/Cache    |
