@@ -20,4 +20,5 @@ export {
   scheduleNotificationGrantDelivery,
   summarizeNotificationSendResponse,
   type NotificationBridgeResult,
+  type NotificationBridgeRecipientResult,
 } from "./notification-bridge.client";

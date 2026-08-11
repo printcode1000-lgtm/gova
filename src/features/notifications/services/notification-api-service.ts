@@ -1,4 +1,8 @@
 import { asolApi, ASOL_API_ROUTES } from "@/core/api";
+import {
+  deliverNotificationGrants,
+  type NotificationBridgeRecipientResult,
+} from "@/modules/notification-bridge";
 import type {
   DeleteNotificationTokenInput,
   DeviceToken,
@@ -52,15 +56,37 @@ export class NotificationApiService {
     );
   }
 
-  sendBroadcast(
+  async sendBroadcast(
     input: BroadcastNotificationInput,
   ): Promise<BroadcastNotificationResult> {
-    return asolApi.post<BroadcastNotificationResult>(
+    const granted = await asolApi.post<BroadcastNotificationResult>(
       ASOL_API_ROUTES.notifications.broadcastSend,
       input,
+      { notificationGrantDelivery: "manual" },
     );
+    const delivery = await deliverNotificationGrants(granted);
+    return mergeBroadcastDeliveryResult(granted, delivery.recipientResults);
   }
 
 }
 
 export const notificationApiService = new NotificationApiService();
+
+/** Replace grant placeholders with the notifications service's real outcomes. */
+export function mergeBroadcastDeliveryResult(
+  granted: BroadcastNotificationResult,
+  delivered: NotificationBridgeRecipientResult[],
+): BroadcastNotificationResult {
+  const byUid = new Map(delivered.map((result) => [result.uid, result]));
+  return {
+    ...granted,
+    results: granted.results.map((placeholder) => {
+      const actual = byUid.get(placeholder.uid);
+      return actual ?? {
+        uid: placeholder.uid,
+        tokenCount: 0,
+        status: "failed" as const,
+      };
+    }),
+  };
+}

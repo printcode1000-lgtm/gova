@@ -1130,6 +1130,8 @@ Broadcast behavior:
 - The UI asks for confirmation before sending.
 - The UI blocks duplicate in-flight send clicks.
 - A broadcast requires both a title and body.
+- The page waits for the notifications service response and never presents the main app's `granted` placeholders as a successful send.
+- The result panel reports `sent`, `queued`, `partial`, `failed`, and `no_tokens` per recipient. A recipient missing from the service response is shown as failed.
 - Delivery is delegated to `NotificationSendService`.
 - `NotificationSendService` routes each token to the correct registered `NotificationProvider`, such as Web Push.
 - The broadcast metadata sets `source = super_admin_broadcast`, carries the caller's `requestId`, and uses `/notifications` as the default deep link.

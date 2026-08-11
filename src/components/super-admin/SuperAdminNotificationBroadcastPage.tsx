@@ -116,7 +116,15 @@ export function SuperAdminNotificationBroadcastPage() {
         uids: sendToAll ? undefined : [...selected],
       });
       setResult(next);
-      setMessage("تم تنفيذ الإرسال.");
+      const accepted = next.results.filter((item) =>
+        ["sent", "queued", "partial"].includes(item.status),
+      ).length;
+      const unavailable = next.requested - accepted;
+      setMessage(
+        accepted > 0
+          ? `تم قبول الإرسال إلى ${accepted} من ${next.requested} مستخدم. غير المتاح: ${unavailable}.`
+          : `لم تقبل خدمة الإشعارات الإرسال إلى أي مستخدم من أصل ${next.requested}.`,
+      );
     } catch (error) {
       setMessage(
         error instanceof Error ? error.message : "تعذر إرسال الإشعار الجماعي.",
@@ -256,6 +264,15 @@ export function SuperAdminNotificationBroadcastPage() {
               <strong>
                 {
                   result.results.filter((item) => item.status === "partial")
+                    .length
+                }
+              </strong>
+            </p>
+            <p>
+              في الانتظار:{" "}
+              <strong>
+                {
+                  result.results.filter((item) => item.status === "queued")
                     .length
                 }
               </strong>

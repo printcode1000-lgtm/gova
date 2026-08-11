@@ -31,19 +31,42 @@ export interface NotificationBridgeResult {
   delivered: number;
   /** Recipients with no token or only failed transports. */
   unavailable: number;
+  /** Per-recipient provider outcome returned by the notifications service. */
+  recipientResults: NotificationBridgeRecipientResult[];
+}
+
+export interface NotificationBridgeRecipientResult {
+  uid: string;
+  tokenCount: number;
+  status: "sent" | "partial" | "queued" | "failed" | "no_tokens";
+  providers?: Array<{
+    provider: string;
+    locale?: "ar" | "en";
+    tokenCount: number;
+    status: "sent" | "partial" | "queued" | "failed";
+    successCount?: number;
+    failureCount?: number;
+    invalidTokenIds?: string[];
+    message?: string;
+  }>;
 }
 
 interface NotificationServiceResponse {
   accepted?: number;
   results?: Array<{
-    results?: Array<{ status?: string }>;
+    results?: NotificationBridgeRecipientResult[];
   } | { error?: string }>;
 }
+
+type NotificationBridgeDeliverySummary = Pick<
+  NotificationBridgeResult,
+  "delivered" | "unavailable" | "recipientResults"
+>;
 
 /** Convert the notifications service response into honest recipient counts. */
 export function summarizeNotificationSendResponse(
   body: unknown,
-): Pick<NotificationBridgeResult, "delivered" | "unavailable"> {
+): NotificationBridgeDeliverySummary {
   const response = body as NotificationServiceResponse | null;
   const recipients = Array.isArray(response?.results)
     ? response.results.flatMap((result) =>
@@ -58,6 +81,7 @@ export function summarizeNotificationSendResponse(
   return {
     delivered,
     unavailable: Math.max(0, recipients.length - delivered),
+    recipientResults: recipients,
   };
 }
 
@@ -67,7 +91,7 @@ export function summarizeNotificationSendResponse(
 async function deliverGrant(
   baseUrl: string,
   grant: string,
-): Promise<Pick<NotificationBridgeResult, "delivered" | "unavailable">> {
+): Promise<NotificationBridgeDeliverySummary> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
@@ -82,10 +106,12 @@ async function deliverGrant(
       // No cookies or credentials: the grant is the only authority.
       credentials: "omit",
     });
-    if (!response.ok) return { delivered: 0, unavailable: 1 };
+    if (!response.ok) {
+      return { delivered: 0, unavailable: 1, recipientResults: [] };
+    }
     return summarizeNotificationSendResponse(await response.json());
   } catch {
-    return { delivered: 0, unavailable: 1 };
+    return { delivered: 0, unavailable: 1, recipientResults: [] };
   } finally {
     clearTimeout(timeout);
   }
@@ -100,16 +126,23 @@ async function deliverGrant(
 export async function deliverNotificationGrants(
   body: unknown,
 ): Promise<NotificationBridgeResult> {
-  if (!isBrowser()) return { attempted: 0, delivered: 0, unavailable: 0 };
+  if (!isBrowser()) {
+    return { attempted: 0, delivered: 0, unavailable: 0, recipientResults: [] };
+  }
 
   const grants = readNotificationGrants(body);
   if (grants.length === 0) {
-    return { attempted: 0, delivered: 0, unavailable: 0 };
+    return { attempted: 0, delivered: 0, unavailable: 0, recipientResults: [] };
   }
 
   const baseUrl = getNotificationsPublicUrl();
   if (!baseUrl) {
-    return { attempted: grants.length, delivered: 0, unavailable: grants.length };
+    return {
+      attempted: grants.length,
+      delivered: 0,
+      unavailable: grants.length,
+      recipientResults: [],
+    };
   }
 
   const results = await Promise.all(
@@ -122,6 +155,7 @@ export async function deliverNotificationGrants(
       (total, result) => total + result.unavailable,
       0,
     ),
+    recipientResults: results.flatMap((result) => result.recipientResults),
   };
 }
 
@@ -138,14 +172,14 @@ export function scheduleNotificationGrantDelivery(body: unknown): void {
 
   void deliverNotificationGrants(body).then(
     (result) => {
-      if (result.delivered < result.attempted) {
+      if (result.unavailable > 0 || result.delivered === 0) {
         // Visible rather than silent: this is the one place a notification can
         // be lost without any server ever knowing. Console output is picked up
         // by the client log pipeline, so it reaches the same place as other
         // client faults — importing the log service directly would create a
         // cycle, since the API client imports this module.
         console.warn(
-          `[Asol][NotificationBridge] delivered ${result.delivered}/${result.attempted} grants`,
+          `[Asol][NotificationBridge] grants=${result.attempted}, deliveredRecipients=${result.delivered}, unavailableRecipients=${result.unavailable}`,
         );
       }
     },

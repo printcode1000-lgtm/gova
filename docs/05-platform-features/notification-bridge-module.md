@@ -35,10 +35,11 @@ remember to forward anything. Adding a grant to a response is enough.
 
 ## Rules it follows
 
-**Fire and forget.** The API response has already been handed to the caller by
-the time delivery is attempted. A push that fails to leave the browser must never
-turn a successful order into a failed one, so the bridge never rejects and never
-blocks.
+**Background by default.** Ordinary business APIs hand the response to the
+caller before delivery is attempted. A push that fails to leave the browser must
+never turn a successful order into a failed one, so that default path never
+rejects and never blocks. Features whose visible outcome is the notification
+itself may opt into manual delivery and inspect the recipient results.
 
 **No credentials.** It sends `credentials: "omit"` and no bearer token. The grant
 is the only authority. This is why the service can accept a permissive CORS
@@ -73,11 +74,12 @@ This is the direct consequence of forbidding backend-to-backend calls. It is
 recorded here rather than hidden so the trade is visible when someone asks why a
 notification did not arrive.
 
-Specialty-chat request, reply, and receipt actions are the deliberate exception
-to the fire-and-forget UI contract: they await this browser hop and inspect the
-notifications service's per-recipient result before reporting success. This
-prevents `no_tokens` and failed providers from appearing as successful sends;
-it does not turn push into guaranteed operating-system delivery.
+Specialty-chat request, reply, and receipt actions, plus super-admin broadcasts,
+are the deliberate exceptions to the fire-and-forget UI contract: they await
+this browser hop and inspect the notifications service's per-recipient result
+before reporting success. This prevents `no_tokens` and failed providers from
+appearing as successful sends; it does not turn push into guaranteed
+operating-system delivery.
 
 Because of it, API responses report what was **granted**, not what was
 delivered: `grantedUsers` and `status: "granted"`. Claiming provider acceptance
