@@ -173,26 +173,19 @@ export class PersistentSystemLogRepository {
     await this.ensureSchema();
     const now = nowIso();
     const key = fingerprint(input);
-    const existing = (await this.database.execute(
-      "SELECT id, occurrences FROM system_logs WHERE fingerprint = ? LIMIT 1",
-      [key],
-    )) as Array<{ id: string; occurrences: number }>;
-    if (existing[0]) {
-      await this.database.execute(
-        "UPDATE system_logs SET occurrences = ?, last_occurred_at = ? WHERE id = ?",
-        [Number(existing[0].occurrences ?? 1) + 1, now, existing[0].id],
-      );
-      return existing[0].id;
-    }
     const id = createId();
-    await this.database.execute(
+    const rows = (await this.database.execute(
       `INSERT INTO system_logs (
         id, fingerprint, level, source, console_method, message, page, platform,
         error_name, source_file, source_line, source_column, user_agent, feature,
         operation, stack, route_name, status_code, request_method, app_version,
         native_version, uid, origin, trust_level, message_truncated,
         stack_truncated, occurrences, first_occurred_at, last_occurred_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
+      ON CONFLICT(fingerprint) DO UPDATE SET
+        occurrences = system_logs.occurrences + 1,
+        last_occurred_at = excluded.last_occurred_at
+      RETURNING id`,
       [
         id,
         key,
@@ -223,8 +216,8 @@ export class PersistentSystemLogRepository {
         now,
         now,
       ],
-    );
-    return id;
+    )) as Array<{ id: string }>;
+    return rows[0]?.id ?? id;
   }
 
   async list(

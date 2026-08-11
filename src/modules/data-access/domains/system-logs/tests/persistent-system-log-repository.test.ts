@@ -129,6 +129,32 @@ async function main() {
   assert.equal(client[0]?.platform, "web");
   assert.equal(client[0]?.trustLevel, "untrusted-client");
 
+  const repeatedInput = sanitizePersistentSystemLog(
+    {
+      level: "error",
+      source: "api",
+      consoleMethod: "server.error",
+      message: "concurrent failure",
+      page: "/api/concurrent",
+      platform: "server",
+      feature: "BusinessAPI",
+      operation: "mapped-service-error",
+    },
+    "trusted-server",
+  );
+  const repeatedIds = await Promise.all(
+    Array.from({ length: 20 }, () => repository.add(repeatedInput)),
+  );
+  assert.equal(
+    new Set(repeatedIds).size,
+    1,
+    "concurrent duplicate logs must resolve to the same row",
+  );
+  const repeated = (await repository.list({ origin: "cloud" })).find(
+    (entry) => entry.id === repeatedIds[0],
+  );
+  assert.equal(repeated?.occurrences, 20);
+
   database.db.close();
   console.log("persistent system-log repository tests passed");
 }
