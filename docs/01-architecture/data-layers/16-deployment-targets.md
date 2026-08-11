@@ -36,6 +36,28 @@ Keep the main project's GitHub connection as it is. The deploy command runs the
 CLI with `services/notifications` as its working directory, so it writes that
 folder's `.vercel`, never the repository root's link.
 
+## One-command production deployment
+
+GitHub Actions is intentionally unused. Run this command from a clean `main`
+working tree:
+
+```bash
+npm run deploy:all
+```
+
+`scripts/deploy-all.ts` first creates or verifies the encrypted secret backup,
+then stages the complete working tree and creates a deployment commit whose
+message contains the current ISO date and time. It pushes `main` to GitHub,
+which lets the existing Vercel integration update `gova`. After the push
+succeeds, it starts the notifications, products, orders, and profiles production
+deploy commands in parallel and waits for all four. It performs no tests and
+does not build a static bundle or APK.
+
+The command refuses a non-`main` branch and verifies that the new commit leaves
+the working tree clean, so every Vercel account receives the same revision. Each
+service continues to read its dedicated Vercel token and required environment
+values from `.env.local` or `.env`.
+
 ## Static export
 
 - Output: `out/` — no Next.js server

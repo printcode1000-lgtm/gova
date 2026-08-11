@@ -5,6 +5,9 @@ node_modules
 .next
 out/
 .backups/
+.private-backups/
+.secret-archive/
+asol-secrets-manifest.json
 
 
 # Debug logs
@@ -60,6 +63,7 @@ assets/google-play/google-services.json
 assets/google-play/*.json
 assets/google-play/*.jks
 android/app/google-services.json
+ios/App/App/GoogleService-Info.plist
 android/app/src/main/res/raw/custom_notification.mp3
 
 # Apple signing and push credentials.

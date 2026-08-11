@@ -2,6 +2,58 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Secrets Key Init - تهيئة مفتاح النسخ المشفر",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "secrets:key:init"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Security",
+        "order": 1
+      }
+    },
+    {
+      "name": "Secrets Backup - إنشاء نسخة أسرار مشفرة",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "secrets:backup"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Security",
+        "order": 2
+      }
+    },
+    {
+      "name": "Secrets Restore - استعادة أحدث نسخة مشفرة",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "secrets:restore"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Security",
+        "order": 3
+      }
+    },
+    {
+      "name": "Deploy All - نشر جميع حسابات Vercel",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "deploy:all"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Deployment",
+        "order": 1
+      }
+    },
+    {
       "name": "Dev Server - تشغيل التطوير",
       "request": "launch",
       "type": "node",
