@@ -145,7 +145,7 @@ async function upsertEnv(projectId: string, key: string, value: string, teamId?:
 }
 
 function runVercel(args: string[], projectId: string, teamId?: string): void {
-  execFileSync('npx', ['vercel', ...args, '--token', token!], {
+  execFileSync('npx', ['vercel', ...args], {
     stdio: 'inherit',
     shell: process.platform === 'win32',
     // Everything the CLI reads and writes stays inside the service folder.

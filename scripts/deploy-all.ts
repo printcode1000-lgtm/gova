@@ -88,14 +88,16 @@ async function main(): Promise<void> {
     "[deploy:all] GitHub push completed; the existing Vercel integration will update gova.",
   );
 
-  const results = await Promise.allSettled(
-    SERVICE_DEPLOYS.map((script) => runNpmScript(script)),
-  );
-  const failures = results.flatMap((result, index) =>
-    result.status === "rejected"
-      ? [`${SERVICE_DEPLOYS[index]}: ${result.reason instanceof Error ? result.reason.message : String(result.reason)}`]
-      : [],
-  );
+  const failures: string[] = [];
+  for (const script of SERVICE_DEPLOYS) {
+    try {
+      await runNpmScript(script);
+    } catch (error) {
+      failures.push(
+        `${script}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
 
   if (failures.length > 0) {
     throw new Error(`One or more deployments failed:\n- ${failures.join("\n- ")}`);

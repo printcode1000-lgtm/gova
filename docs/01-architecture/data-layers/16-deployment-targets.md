@@ -50,7 +50,8 @@ then stages the complete working tree and creates a deployment commit whose
 message contains the current ISO date and time. It pushes `main` to GitHub,
 which lets the existing Vercel integration update `gova`. After the push
 succeeds, it starts the notifications, products, orders, and profiles production
-deploy commands in parallel and waits for all four. It performs no tests and
+deploy commands sequentially and waits for all four. This avoids concurrent
+Vercel CLI downloads sharing one npm cache. It performs no tests and
 does not build a static bundle or APK.
 
 The command refuses a non-`main` branch and verifies that the new commit leaves
