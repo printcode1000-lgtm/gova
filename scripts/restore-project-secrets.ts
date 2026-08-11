@@ -1,16 +1,14 @@
-import { readFile, readdir, stat } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { unzipSync } from "fflate";
 
 import {
-  BACKUP_DIRECTORY,
   MANIFEST_FILE_NAME,
   type SecretArchiveManifest,
   createRestoreDirectory,
-  findSevenZip,
-  listArchivePaths,
   removeTemporaryPath,
+  resolveRestoreArchivePath,
   restoreManifestFiles,
-  runSevenZip,
   writeLastBackupState,
 } from "./secret-archive-utils";
 import {
@@ -18,23 +16,11 @@ import {
   promptHidden,
 } from "./secret-archive-crypto";
 
-async function latestArchive(): Promise<string> {
-  const entries = await readdir(BACKUP_DIRECTORY, { withFileTypes: true });
-  const archives = await Promise.all(
-    entries
-      .filter((entry) => entry.isFile() && entry.name.endsWith(".zip.enc"))
-      .map(async (entry) => {
-        const absolutePath = path.join(BACKUP_DIRECTORY, entry.name);
-        return { absolutePath, modifiedAt: (await stat(absolutePath)).mtimeMs };
-      }),
-  );
-  const latest = archives.sort((a, b) => b.modifiedAt - a.modifiedAt)[0];
-  if (!latest) throw new Error("No secret archive exists in .private-backups.");
-  return latest.absolutePath;
-}
-
-function assertSafeArchiveEntries(entries: string[]): void {
-  for (const entry of entries) {
+async function extractZipSafely(zipPath: string, destinationRoot: string): Promise<void> {
+  const entries = unzipSync(await readFile(zipPath));
+  const root = path.resolve(destinationRoot);
+  const rootPrefix = `${root}${path.sep}`;
+  for (const [entry, contents] of Object.entries(entries)) {
     const normalized = entry.replace(/\\/g, "/");
     if (
       normalized.startsWith("/") ||
@@ -43,6 +29,13 @@ function assertSafeArchiveEntries(entries: string[]): void {
     ) {
       throw new Error(`Unsafe path found in archive: ${entry}`);
     }
+    if (!normalized || normalized.endsWith("/")) continue;
+    const destination = path.resolve(root, ...normalized.split("/"));
+    if (!destination.startsWith(rootPrefix)) {
+      throw new Error(`Archive path escapes the restore directory: ${entry}`);
+    }
+    await mkdir(path.dirname(destination), { recursive: true });
+    await writeFile(destination, contents);
   }
 }
 
@@ -50,12 +43,11 @@ async function main(): Promise<void> {
   const archiveArgument = process.argv[2];
   const archivePath = archiveArgument
     ? path.resolve(archiveArgument)
-    : await latestArchive();
+    : await resolveRestoreArchivePath();
   if (!archivePath.toLowerCase().endsWith(".zip.enc")) {
     throw new Error("The restore source must be an ASOL .zip.enc archive.");
   }
 
-  const sevenZip = findSevenZip();
   const restoreDirectory = await createRestoreDirectory();
   const decryptedZipPath = path.join(restoreDirectory, "secrets.zip");
 
@@ -63,8 +55,7 @@ async function main(): Promise<void> {
     console.log(`Restoring from: ${archivePath}`);
     const password = await promptHidden("Private-key password: ");
     await decryptArchiveToZip(archivePath, decryptedZipPath, password);
-    assertSafeArchiveEntries(listArchivePaths(sevenZip, decryptedZipPath));
-    runSevenZip(sevenZip, ["x", decryptedZipPath, `-o${restoreDirectory}`, "-y"]);
+    await extractZipSafely(decryptedZipPath, restoreDirectory);
     const manifestPath = path.join(restoreDirectory, MANIFEST_FILE_NAME);
     const manifest = JSON.parse(
       await readFile(manifestPath, "utf8"),

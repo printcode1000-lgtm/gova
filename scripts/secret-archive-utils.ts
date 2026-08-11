@@ -19,6 +19,12 @@ import { spawnSync } from "node:child_process";
 export const WORKSPACE_ROOT = process.cwd();
 export const BACKUP_DIRECTORY = path.join(WORKSPACE_ROOT, ".private-backups");
 export const MANIFEST_FILE_NAME = "asol-secrets-manifest.json";
+export const PORTABLE_ARCHIVE_PATH = path.join(
+  WORKSPACE_ROOT,
+  "config",
+  "secret-archive-latest.zip.enc",
+);
+export const PORTABLE_RECOVERY_KEY_PATH = `${PORTABLE_ARCHIVE_PATH}.private-key.pem`;
 export const BACKUP_STATE_PATH = path.join(
   WORKSPACE_ROOT,
   ".secret-archive",
@@ -97,7 +103,11 @@ async function loadConfig(): Promise<SecretPathConfig> {
 function matchesConfig(relativePath: string, config: SecretPathConfig): boolean {
   const normalized = toPosix(relativePath);
   const fileName = path.posix.basename(normalized);
-  if (normalized === "config/secret-archive-public.pem") return false;
+  if (
+    normalized === "config/secret-archive-public.pem" ||
+    normalized === "config/secret-archive-latest.zip.enc" ||
+    normalized === "config/secret-archive-latest.zip.enc.private-key.pem"
+  ) return false;
   if (fileName === ".env.example" || fileName.endsWith(".env.example")) {
     return false;
   }
@@ -153,6 +163,29 @@ export async function collectIgnoredSecretFiles(): Promise<{
 
 export async function sha256File(filePath: string): Promise<string> {
   return createHash("sha256").update(await readFile(filePath)).digest("hex");
+}
+
+export async function resolveRestoreArchivePath(
+  localBackupDirectory = BACKUP_DIRECTORY,
+  portableArchivePath = PORTABLE_ARCHIVE_PATH,
+): Promise<string> {
+  const entries = existsSync(localBackupDirectory)
+    ? await readdir(localBackupDirectory, { withFileTypes: true })
+    : [];
+  const archives = await Promise.all(
+    entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".zip.enc"))
+      .map(async (entry) => {
+        const absolutePath = path.join(localBackupDirectory, entry.name);
+        return { absolutePath, modifiedAt: (await stat(absolutePath)).mtimeMs };
+      }),
+  );
+  const latest = archives.sort((a, b) => b.modifiedAt - a.modifiedAt)[0];
+  if (latest) return latest.absolutePath;
+  if (existsSync(portableArchivePath)) return portableArchivePath;
+  throw new Error(
+    "No secret archive exists locally or in config/secret-archive-latest.zip.enc.",
+  );
 }
 
 export async function createManifest(
