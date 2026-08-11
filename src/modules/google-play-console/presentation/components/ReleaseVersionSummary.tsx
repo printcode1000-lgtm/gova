@@ -13,53 +13,63 @@ export function ReleaseCurrentVersions({ versions, t }: {
   versions: ReleaseVersionSnapshot;
   t: (key: string) => string;
 }) {
-  const nextAndroidVersion = nextPatch(versions.androidCurrent);
-  return <div className="grid gap-2 sm:grid-cols-2">
-    <div className="rounded-lg border bg-muted/40 p-3">
-      <p className="text-xs text-on-surface-variant">
-        {t("releaseConsole.confirmRun.currentAndroidVersion")}
-      </p>
-      <code className="mt-1 block text-base font-semibold" dir="ltr">
-        {versions.androidCurrent ?? t("releaseConsole.confirmRun.versionUnavailable")}
-      </code>
-      {nextAndroidVersion ? <p className="mt-1 text-xs text-on-surface-variant">
-        {t("releaseConsole.confirmRun.nextAndroidVersion")}: {nextAndroidVersion}
-      </p> : null}
+  const unavailable = t("releaseConsole.confirmRun.versionUnavailable");
+  return <section className="space-y-2" aria-label={t("releaseConsole.confirmRun.versionSummaryTitle")}>
+    <h3 className="font-semibold">{t("releaseConsole.confirmRun.versionSummaryTitle")}</h3>
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+      <VersionCard label={t("releaseConsole.confirmRun.currentAppVersion")}
+        value={versions.androidCurrent ?? unavailable} />
+      <VersionCard label={t("releaseConsole.confirmRun.currentContentVersion")}
+        value={versions.contentCurrent ?? unavailable} />
+      <VersionCard label={t("releaseConsole.confirmRun.currentOtaVersion")}
+        value={versions.otaCurrent ?? unavailable} />
     </div>
-    <div className="rounded-lg border bg-muted/40 p-3">
-      <p className="text-xs text-on-surface-variant">
-        {t("releaseConsole.confirmRun.currentOtaVersion")}
-      </p>
-      <code className="mt-1 block text-base font-semibold" dir="ltr">
-        {versions.otaCurrent ?? t("releaseConsole.confirmRun.versionUnavailable")}
-      </code>
-    </div>
-  </div>;
+  </section>;
 }
 
-export function ReleaseSelectedVersions({ versions, parameters, t }: {
+export function ReleaseSelectedVersions({ commandId, versions, parameters, t }: {
+  commandId: string;
   versions: ReleaseVersionSnapshot;
   parameters: Record<string, unknown>;
   t: (key: string) => string;
 }) {
   const selected = [
-    parameters.nativeVersionAction === "increment-patch"
+    commandId === "release-android-with-ota"
+      && parameters.nativeVersionAction === "increment-patch"
       ? ["selectedNewAndroidVersion", nextPatch(versions.androidCurrent)]
       : null,
-    parameters.otaSource === "publish-new"
+    commandId === "ota-publish"
+      || (commandId === "release-android-with-ota" && parameters.otaSource === "publish-new")
       ? ["selectedNewOtaVersion", nextPatch(versions.otaCurrent)]
+      : null,
+    ["build-static", "cap-prepare-android", "android-build-debug"].includes(commandId)
+      ? ["selectedContentBuildVersion", versions.contentCurrent]
+      : null,
+    commandId === "release-android-no-ota"
+      ? ["selectedAndroidBuildVersion", versions.androidCurrent]
       : null,
   ].filter((item): item is [string, string] => Boolean(item?.[1]));
   if (selected.length === 0) return null;
-  return <div className="grid gap-2 sm:grid-cols-2">
-    {selected.map(([label, version]) => (
-      <div key={label} role="status"
-        className="rounded-lg border border-primary bg-primary/10 p-3">
-        <p className="text-xs text-on-surface-variant">
-          {t(`releaseConsole.confirmRun.${label}`)}
-        </p>
-        <code className="mt-1 block text-lg font-semibold" dir="ltr">{version}</code>
-      </div>
-    ))}
+  return <section className="space-y-2" aria-label={t("releaseConsole.confirmRun.planSummaryTitle")}>
+    <h3 className="font-semibold">{t("releaseConsole.confirmRun.planSummaryTitle")}</h3>
+    <div className="grid gap-2 sm:grid-cols-2">
+      {selected.map(([label, version]) => (
+        <VersionCard key={label} label={t(`releaseConsole.confirmRun.${label}`)}
+          value={version} emphasized />
+      ))}
+    </div>
+  </section>;
+}
+
+function VersionCard({ label, value, emphasized = false }: {
+  label: string;
+  value: string;
+  emphasized?: boolean;
+}) {
+  return <div role="status" className={`rounded-lg border p-3 ${emphasized
+    ? "border-primary bg-primary/10"
+    : "bg-muted/40"}`}>
+    <p className="text-xs leading-5 text-on-surface-variant">{label}</p>
+    <code className="mt-1 block text-lg font-bold" dir="ltr">{value}</code>
   </div>;
 }

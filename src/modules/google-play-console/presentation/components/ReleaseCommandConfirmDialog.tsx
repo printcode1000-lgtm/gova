@@ -39,7 +39,6 @@ export function ReleaseCommandConfirmDialog({
 }) {
   const command = catalog.find((item) => item.id === pending?.commandId);
   const title = command ? t(command.documentation.titleKey) : pending?.commandId ?? "";
-  const fullAndroidRelease = command?.id === "release-android-with-ota";
   const [phrase, setPhrase] = React.useState("");
   const [parameters, setParameters] = React.useState<Record<string, unknown>>({});
   const requiredPhrase = command?.confirmationPhrase ?? "";
@@ -84,12 +83,24 @@ export function ReleaseCommandConfirmDialog({
           <DialogTitle>{t("releaseConsole.confirmRun.title")}</DialogTitle>
           <DialogDescription>{t("releaseConsole.confirmRun.body")}</DialogDescription>
         </DialogHeader>
-        <div className="min-h-0 space-y-2 overflow-y-auto overscroll-contain pe-1 text-sm">
-          <p className="font-semibold">{title}</p>
-          {command ? (
-            <code className="block text-xs" dir="ltr">npm run {command.script}</code>
-          ) : null}
-          {fullAndroidRelease ? <ReleaseCurrentVersions versions={versions} t={t} /> : null}
+        <div className="min-h-0 space-y-4 overflow-y-auto overscroll-contain pe-1 text-sm">
+          <section className="space-y-2 rounded-lg border bg-surface-container-low p-3">
+            <p className="text-base font-bold">{title}</p>
+            {command ? <>
+              <p className="leading-6 text-on-surface-variant">
+                {t(command.documentation.descriptionKey)}
+              </p>
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <code className="rounded-md bg-muted px-2 py-1" dir="ltr">
+                  npm run {command.script}
+                </code>
+                <span className="rounded-md bg-muted px-2 py-1">
+                  {t("releaseConsole.confirmRun.estimatedDuration")}: {command.estimatedDuration}
+                </span>
+              </div>
+            </> : null}
+          </section>
+          <ReleaseCurrentVersions versions={versions} t={t} />
           {command?.danger !== "safe" ? (
             <p className="flex items-center gap-2 rounded-md bg-error-container p-2 text-on-error-container">
               <AlertTriangle className="h-4 w-4 shrink-0" />
@@ -104,9 +115,8 @@ export function ReleaseCommandConfirmDialog({
               ))}
             </div>
           ) : null}
-          {fullAndroidRelease ? (
-            <ReleaseSelectedVersions versions={versions} parameters={parameters} t={t} />
-          ) : null}
+          {command ? <ReleaseSelectedVersions commandId={command.id}
+            versions={versions} parameters={parameters} t={t} /> : null}
           {minimumNativeVersionRequired && !minimumNativeVersionSatisfied ? (
             <p role="alert" className="rounded-md bg-error-container p-2 text-on-error-container">
               {t("releaseConsole.confirmRun.minimumNativeVersionRequired")}

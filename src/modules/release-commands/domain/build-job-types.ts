@@ -41,6 +41,7 @@ export interface BuildCommandReadiness {
 
 export interface ReleaseVersionSnapshot {
   androidCurrent?: string;
+  contentCurrent?: string;
   otaCurrent?: string;
 }
 

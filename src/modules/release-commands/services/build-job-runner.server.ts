@@ -5,6 +5,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { asolApi } from "@/core/api";
+import { CURRENT_WEB_CONTENT_VERSION } from "@/core/config/app-version";
 import { getOtaApprovalServerConfig } from "@/core/config/server-env";
 import {
   assertGooglePlayConsoleAllowed,
@@ -211,7 +212,9 @@ export async function listBuildJobs(page = 1, pageSize = 20): Promise<PaginatedB
 }
 
 async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
-  const snapshot: ReleaseVersionSnapshot = {};
+  const snapshot: ReleaseVersionSnapshot = {
+    contentCurrent: CURRENT_WEB_CONTENT_VERSION,
+  };
   try {
     const gradle = await fs.readFile(
       path.join(process.cwd(), "android", "app", "build.gradle"),
