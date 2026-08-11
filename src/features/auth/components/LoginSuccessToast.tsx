@@ -8,10 +8,14 @@ import { useTranslation } from "@/lib/i18n";
 export const LOGIN_SUCCESS_TOAST_EVENT = "asol-login-success-toast";
 const LOGIN_SUCCESS_TOAST_STORAGE_KEY = "asol-login-success-toast";
 const LOGIN_SUCCESS_TOAST_DURATION_MS = 4000;
-type AuthToastKind = "login" | "logout";
+type AuthToastKind = "login" | "registration" | "logout";
 
 export function queueLoginSuccessToast() {
   queueAuthSuccessToast("login");
+}
+
+export function queueRegistrationSuccessToast() {
+  queueAuthSuccessToast("registration");
 }
 
 export function queueLogoutSuccessToast() {
@@ -37,7 +41,11 @@ export function LoginSuccessToast() {
     const showToast = () => {
       try {
         const storedKind = sessionStorage.getItem(LOGIN_SUCCESS_TOAST_STORAGE_KEY);
-        if (storedKind === "login" || storedKind === "logout") {
+        if (
+          storedKind === "login" ||
+          storedKind === "registration" ||
+          storedKind === "logout"
+        ) {
           setKind(storedKind);
           sessionStorage.removeItem(LOGIN_SUCCESS_TOAST_STORAGE_KEY);
         }
@@ -56,7 +64,11 @@ export function LoginSuccessToast() {
 
     try {
       const storedKind = sessionStorage.getItem(LOGIN_SUCCESS_TOAST_STORAGE_KEY);
-      if (storedKind === "login" || storedKind === "logout") {
+      if (
+        storedKind === "login" ||
+        storedKind === "registration" ||
+        storedKind === "logout"
+      ) {
         setKind(storedKind);
         showToast();
       }
@@ -75,11 +87,15 @@ export function LoginSuccessToast() {
 
   if (!visible) return null;
 
-  const title =
-    kind === "logout" ? t("auth.logout.successTitle") : t("auth.login.welcomeBack");
-  const message =
-    kind === "logout"
-      ? t("auth.logout.successMessage")
+  const title = kind === "logout"
+    ? t("auth.logout.successTitle")
+    : kind === "registration"
+      ? t("auth.registration.ready")
+      : t("auth.login.welcomeBack");
+  const message = kind === "logout"
+    ? t("auth.logout.successMessage")
+    : kind === "registration"
+      ? t("auth.registration.successMessage")
       : t("auth.login.successMessage");
 
   return (

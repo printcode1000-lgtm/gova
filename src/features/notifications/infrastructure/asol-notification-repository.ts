@@ -135,6 +135,27 @@ export class AsolNotificationRepository {
     );
   }
 
+  async markManyRead(uid: string, notificationIds: readonly string[]): Promise<void> {
+    const ids = new Set(notificationIds);
+    if (ids.size === 0) return;
+    const now = new Date().toISOString();
+    const current = await this.list(uid);
+    await asolDbSet(
+      ASOL_DB_STORES.NOTIFICATIONS,
+      listKey(uid),
+      current.map((item) =>
+        ids.has(item.id)
+          ? {
+              ...item,
+              readAt: item.readAt ?? now,
+              openedAt: item.openedAt ?? now,
+              updatedAt: now,
+            }
+          : item,
+      ),
+    );
+  }
+
   async delete(uid: string, notificationId: string): Promise<void> {
     const current = await this.list(uid);
     const deleted = current.find((item) => item.id === notificationId);

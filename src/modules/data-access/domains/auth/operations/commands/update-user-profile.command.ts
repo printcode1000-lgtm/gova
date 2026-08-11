@@ -3,6 +3,7 @@ import type { UserProfile, UpdateProfileInput } from '@/features/auth/entities/p
 import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 import { normalizeAuthPhone } from '@/features/auth/utils/phone-normalization';
 import { hashPassword } from '@/features/auth/utils/password-hash.server';
+import { normalizeAuthEmail } from '@/features/auth/utils/email-normalization';
 
 export class UpdateUserProfileCommand {
   constructor(private userRepository: IUserRepository) {}
@@ -22,6 +23,7 @@ export class UpdateUserProfileCommand {
       }
 
       const phone = normalizeAuthPhone(input.phone);
+      const email = normalizeAuthEmail(input.email);
 
       if (phone !== user.phone) {
         const existing = await this.userRepository.getByPhone(phone);
@@ -30,15 +32,33 @@ export class UpdateUserProfileCommand {
         }
       }
 
-      await this.userRepository.update(input.uid, {
-        phone,
-        email: input.email.trim() || null,
-      });
+      if (email !== user.email && email) {
+        const existing = await this.userRepository.getByEmail(email);
+        if (existing && existing.uid !== input.uid) {
+          throw new Error('emailAlreadyRegistered');
+        }
+      }
+
+      try {
+        await this.userRepository.update(input.uid, { phone, email });
+      } catch (error) {
+        if (email) {
+          const existing = await this.userRepository.getByEmail(email);
+          if (existing && existing.uid !== input.uid) {
+            throw new Error('emailAlreadyRegistered');
+          }
+        }
+        const existing = await this.userRepository.getByPhone(phone);
+        if (existing && existing.uid !== input.uid) {
+          throw new Error('phoneAlreadyRegistered');
+        }
+        throw error;
+      }
 
       return {
         uid: input.uid,
         phone,
-        email: input.email.trim() || null,
+        email,
       };
     });
   }

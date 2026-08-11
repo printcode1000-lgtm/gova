@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -17,9 +18,12 @@ import { authMonitorMeta } from './auth-monitor-meta';
 import { startNewFlow } from '@/core/monitor/monitor-store';
 import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { queueRegistrationSuccessToast } from '@/features/auth/components/LoginSuccessToast';
+import { announceAuthLoginCompleted } from '../application/auth-lifecycle-events';
 
 export function useRegister() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
 
@@ -59,7 +63,7 @@ export function useRegister() {
       return sessionService.saveSession({
         uid: loginResult.uid || uid,
         phone: data.phone,
-        email: data.email?.trim() || loginResult.email || undefined,
+        email: loginResult.email || undefined,
         specialties: loginResult.specialties,
         sessionToken: loginResult.sessionToken,
       });
@@ -75,21 +79,25 @@ export function useRegister() {
       try {
         endGuestSession();
         setSession(session);
+        announceAuthLoginCompleted({ uid: session.uid, phone: session.phone });
+        queueRegistrationSuccessToast();
+        router.replace('/home');
       } catch (error) {
         reportPreAuthFailure('complete-registration', error);
       }
     },
     onError: (error) => {
-      const expectedPhoneConflict =
-        error instanceof Error && error.message === 'phoneAlreadyRegistered';
+      const expectedConflict =
+        error instanceof Error &&
+        ['phoneAlreadyRegistered', 'emailAlreadyRegistered'].includes(error.message);
       reportPreAuthFailure(
-        expectedPhoneConflict ? 'registration-phone-rejected' : 'register-and-create-session',
+        expectedConflict ? 'registration-identity-rejected' : 'register-and-create-session',
         error,
         {},
-        expectedPhoneConflict ? 'warn' : 'error',
+        expectedConflict ? 'warn' : 'error',
       );
       reportSystemIssue({
-        level: expectedPhoneConflict ? 'warning' : 'error',
+        level: expectedConflict ? 'warning' : 'error',
         feature: 'Authentication',
         operation: 'register-and-create-session',
         error,
@@ -103,6 +111,8 @@ export function useRegister() {
     const msg = (mutation.error as Error).message;
     if (msg === 'phoneAlreadyRegistered')
       return t('auth.validation.phoneAlreadyRegistered');
+    if (msg === 'emailAlreadyRegistered')
+      return t('auth.validation.emailAlreadyRegistered');
     return msg;
   }, [mutation.error, t]);
 
@@ -125,7 +135,6 @@ export function useRegister() {
     form,
     isSubmitting: mutation.isPending,
     error,
-    submitted: mutation.isSuccess,
     password,
     phoneVerified,
     onSubmit,

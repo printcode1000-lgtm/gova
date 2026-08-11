@@ -4,7 +4,8 @@ export const users = sqliteTable('users', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   uid: text('uid').notNull().unique(),
   phone: text('phone').notNull().unique(),
-  email: text('email'),
+  // All writes normalize email to lowercase; UNIQUE allows multiple NULL values.
+  email: text('email').unique(),
   password: text('password').notNull(),
   lastLoginAt: text('last_login_at'),
   createdAt: text('created_at').$defaultFn(() => new Date().toISOString()),

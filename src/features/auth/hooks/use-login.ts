@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,8 +23,6 @@ export function useLogin() {
   const router = useRouter();
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
-  const [showPassword, setShowPassword] = useState(false);
-
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
 
   const form = useForm<LoginFormData>({
@@ -108,9 +106,6 @@ export function useLogin() {
     form,
     isSubmitting: mutation.isPending,
     error,
-    submitted: mutation.isSuccess,
-    showPassword,
-    setShowPassword,
     onSubmit,
   };
 }

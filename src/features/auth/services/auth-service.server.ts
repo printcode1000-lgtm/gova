@@ -17,6 +17,7 @@ import { traceServerLayer } from '@/core/monitor/trace-server-layer';
 import type { GetProfileSpecialtiesQuery } from '@/modules/data-access/domains/profile/operations/queries/get-profile-specialties.query';
 import { createSignedSessionToken } from './signed-session-token.server';
 import { normalizeAuthPhone } from '../utils/phone-normalization';
+import { normalizeAuthEmail } from '../utils/email-normalization';
 import { hashPassword } from '../utils/password-hash.server';
 
 export class AuthService implements IAuthService {
@@ -40,7 +41,7 @@ export class AuthService implements IAuthService {
         await this.createUserCommand.execute({
           uid,
           phone,
-          email: formData.email || null,
+          email: normalizeAuthEmail(formData.email),
           password: hashedPassword,
           last_login_at: null,
           created_at: new Date().toISOString(),

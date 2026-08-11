@@ -83,6 +83,7 @@ export function mapServiceError(error: unknown): NextResponse {
     'userNotFound',
     'invalidPassword',
     'phoneAlreadyRegistered',
+    'emailAlreadyRegistered',
     'invalidCurrentPassword',
     'currentPasswordRequired',
     'invalidStoreDetails',

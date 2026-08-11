@@ -1,23 +1,20 @@
 "use client";
 
-import { Store } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
+import {
+  categoryGridClassName,
+  categoryTileClassName,
+  categoryTileImageClassName,
+  categoryTileTitleClassName,
+} from "@/components/categories/category-grid-styles";
 import { useTranslation } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
 import {
   CATEGORY_CONSTANTS,
   type CategoryDisplay,
 } from "@/features/categories";
-
-const CATEGORY_RINGS = [
-  "asol-ring-primary",
-  "asol-ring-secondary",
-  "asol-ring-tertiary",
-  "asol-ring-error",
-] as const;
 
 function getCategoryHref(cat: CategoryDisplay): string {
   if (cat.id === CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID) {
@@ -35,7 +32,7 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
 
   return (
     <section>
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 pb-2">
+      <div className={categoryGridClassName}>
         {displayCategories.map((cat, index) => {
           const name = locale === "ar" ? cat.nameAr : cat.nameEn;
           const imgSrc = cat.imageUrl;
@@ -43,25 +40,19 @@ export function CategoriesGrid({ displayCategories }: CategoriesGridProps) {
             <Link
               key={cat.id}
               href={getCategoryHref(cat)}
-              className="flex flex-col gap-2 group transition-transform duration-200 active:scale-95"
+              className={categoryTileClassName}
               aria-label={name}
             >
-              <div
-                className={cn(
-                  "rounded-2xl overflow-hidden border-2 border-transparent p-0 transition-all w-full aspect-[4/3.5] relative shadow-sm hover:shadow-md",
-                )}
-              >
-                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-surface-bright group-hover:opacity-90 transition-opacity">
-                  <Image
-                    src={imgSrc}
-                    alt={name}
-                    fill
-                    sizes="(max-width: 640px) 33vw, 220px"
-                    className="object-cover"
-                  />
-                </div>
+              <div className={categoryTileImageClassName}>
+                <Image
+                  src={imgSrc}
+                  alt={name}
+                  fill
+                  sizes="(max-width: 640px) 33vw, 220px"
+                  className="object-cover"
+                />
               </div>
-              <span className="text-[11px] font-semibold leading-3 truncate text-center text-primary">
+              <span className={categoryTileTitleClassName}>
                 {name}
               </span>
             </Link>

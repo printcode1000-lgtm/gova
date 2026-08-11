@@ -279,6 +279,9 @@ export function useProfileSave({
       } else if (message === "phoneAlreadyRegistered") {
         setActiveTab("registration");
         setSaveError(t("auth.validation.phoneAlreadyRegistered"));
+      } else if (message === "emailAlreadyRegistered") {
+        setActiveTab("registration");
+        setSaveError(t("auth.validation.emailAlreadyRegistered"));
       } else {
         setSaveError(message);
         setSaveDialog({

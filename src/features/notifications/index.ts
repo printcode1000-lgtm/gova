@@ -7,6 +7,7 @@ export * from "./application/event-notification-mapper";
 export * from "./application/notification-template-loader";
 export * from "./presentation/hooks/use-notifications";
 export * from "./presentation/NotificationsPageContent";
+export * from "./presentation/ChatThreadPageContent";
 export * from "./presentation/NativePushController";
 export * from "./presentation/WebPushController";
 export * from "./presentation/NotificationOptInController";

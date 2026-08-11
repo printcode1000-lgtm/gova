@@ -2,11 +2,13 @@
 
 import * as React from 'react';
 import { useTranslation } from '@/lib/i18n';
-import { isDevelopment } from '@/core/config';
+import { publicEnv } from '@/core/config';
 import { asolApi, ASOL_API_ROUTES } from '@/core/api';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { shouldBypassPhoneVerification } from '@/features/auth/utils/phone-verification-policy';
 
 const RESEND_COUNTDOWN = 60;
+const bypassPhoneVerification = shouldBypassPhoneVerification(publicEnv);
 
 export function usePhoneVerification() {
   const { t } = useTranslation();
@@ -26,7 +28,7 @@ export function usePhoneVerification() {
   }, [countdown]);
 
   const generateOtp = (): string => {
-    if (isDevelopment) {
+    if (bypassPhoneVerification) {
       return '0000';
     }
     const digits = Array.from({ length: 4 }, () => 
@@ -48,13 +50,25 @@ export function usePhoneVerification() {
     console.log(`[WhatsApp Link] Done Attempt : ${waUrl}`);
   };
 
-  const handleSendOtp = async (phone: string) => {
+  const handleSendOtp = async (phone: string, onDevelopmentVerified?: () => void) => {
     if (!phone || phone.length < 10) return;
 
     setIsSending(true);
     setOtpError('');
 
-    // Check if the phone number is already registered in both development and production
+    // Development bypass must happen before network and external-app work.
+    // Registration still enforces unique phone ownership on the server.
+    if (bypassPhoneVerification) {
+      setGeneratedOtp('0000');
+      setOtp('');
+      setOtpSent(false);
+      setCountdown(0);
+      onDevelopmentVerified?.();
+      setIsSending(false);
+      return;
+    }
+
+    // In production, reject an already-owned phone before sending the code.
     try {
       const response = await asolApi.get<{ exists: boolean }>(
         `${ASOL_API_ROUTES.auth.checkPhone}?phone=${encodeURIComponent(phone)}`
@@ -82,9 +96,7 @@ export function usePhoneVerification() {
 
     // إرسال عبر واتساب في بيئة الإنتاج
     try {
-      if (!isDevelopment) {
-        await sendWhatsappVerificationCode(phone, newOtp);
-      }
+      await sendWhatsappVerificationCode(phone, newOtp);
 
     // محاكاة وقت الإرسال
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -93,10 +105,6 @@ export function usePhoneVerification() {
     setCountdown(RESEND_COUNTDOWN);
 
     // في وضع التطوير، تعيين OTP تلقائياً
-    if (isDevelopment) {
-      setOtp(newOtp);
-      await new Promise((resolve) => setTimeout(resolve, 300));
-    }
     } catch (error) {
       reportPreAuthFailure('send-phone-verification-code', error);
       setOtpError('An error occurred. Please try again.');

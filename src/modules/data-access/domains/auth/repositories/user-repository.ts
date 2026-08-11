@@ -7,6 +7,7 @@ import { users } from '@/modules/data-access/core/database/schema';
 import type { User } from '@/features/auth/entities/user.entity';
 import type { IUserRepository } from '@/modules/data-access/domains/auth/repositories/user-repository.interface';
 import { authPhoneCandidates, normalizeAuthPhone } from '@/features/auth/utils/phone-normalization';
+import { normalizeAuthEmail } from '@/features/auth/utils/email-normalization';
 
 export class UserRepository implements IUserRepository {
   constructor(private database: IDatabaseClient = usersDataSource) {}
@@ -15,7 +16,7 @@ export class UserRepository implements IUserRepository {
     await this.database.db.insert(users).values({
       uid: user.uid,
       phone: normalizeAuthPhone(user.phone),
-      email: user.email || null,
+      email: normalizeAuthEmail(user.email),
       password: user.password || '',
       lastLoginAt: user.last_login_at || null,
       createdAt: user.created_at || new Date().toISOString(),
@@ -39,6 +40,33 @@ export class UserRepository implements IUserRepository {
     
     if (rows.length === 0) return null;
     
+    const row = rows[0];
+    return {
+      id: row.id,
+      uid: row.uid,
+      phone: row.phone,
+      email: row.email,
+      password: row.password,
+      last_login_at: row.lastLoginAt,
+      created_at: row.createdAt,
+      updated_at: row.updatedAt,
+      deleted_at: row.deletedAt,
+    };
+  }
+
+  async getByEmail(email: string): Promise<User | null> {
+    const normalizedEmail = normalizeAuthEmail(email);
+    if (!normalizedEmail) return null;
+
+    const rows = await this.database.db
+      .select()
+      .from(users)
+      // Email ownership is permanent, matching the database UNIQUE constraint.
+      .where(eq(users.email, normalizedEmail))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+
     const row = rows[0];
     return {
       id: row.id,
@@ -83,7 +111,7 @@ export class UserRepository implements IUserRepository {
     const updateData: any = {};
     
     if (fields.phone !== undefined) updateData.phone = normalizeAuthPhone(fields.phone);
-    if (fields.email !== undefined) updateData.email = fields.email;
+    if (fields.email !== undefined) updateData.email = normalizeAuthEmail(fields.email);
     if (fields.password !== undefined) updateData.password = fields.password;
     if (fields.last_login_at !== undefined) updateData.lastLoginAt = fields.last_login_at;
     if (fields.deleted_at !== undefined) updateData.deletedAt = fields.deleted_at;

@@ -16,7 +16,25 @@ export class CreateUserCommand {
         throw new Error('phoneAlreadyRegistered');
       }
 
-      await this.userRepository.create(user);
+      if (user.email) {
+        const existingEmail = await this.userRepository.getByEmail(user.email);
+        if (existingEmail) {
+          throw new Error('emailAlreadyRegistered');
+        }
+      }
+
+      try {
+        await this.userRepository.create(user);
+      } catch (error) {
+        // Preserve domain errors when two registrations race past the pre-checks.
+        if (user.email && await this.userRepository.getByEmail(user.email)) {
+          throw new Error('emailAlreadyRegistered');
+        }
+        if (await this.userRepository.getByPhone(user.phone)) {
+          throw new Error('phoneAlreadyRegistered');
+        }
+        throw error;
+      }
     });
   }
 }

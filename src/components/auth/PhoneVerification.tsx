@@ -59,6 +59,14 @@ export function PhoneVerification({
     handleEditPhone,
   } = usePhoneVerification();
 
+  const markVerified = () => {
+    if (isFormMode && formSetValue) {
+      formSetValue('phoneVerified', true, { shouldValidate: true });
+    } else if (onVerifiedChange) {
+      onVerifiedChange(true);
+    }
+  };
+
   const handleSendOtpWrapper = async () => {
     try {
       if (isFormMode && formTrigger) {
@@ -73,22 +81,15 @@ export function PhoneVerification({
           return;
         }
       }
-      await handleSendOtp(phone);
+      await handleSendOtp(phone, markVerified);
     } catch (error) {
       reportPreAuthFailure('start-phone-verification', error);
     }
   };
 
   const handleVerifyOtpWrapper = async () => {
-    const onVerified = () => {
-      if (isFormMode && formSetValue) {
-        formSetValue('phoneVerified', true, { shouldValidate: true });
-      } else if (onVerifiedChange) {
-        onVerifiedChange(true);
-      }
-    };
     try {
-      await handleVerifyOtp(otp, onVerified);
+      await handleVerifyOtp(otp, markVerified);
     } catch (error) {
       reportPreAuthFailure('complete-phone-verification', error);
     }

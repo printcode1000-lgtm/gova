@@ -187,6 +187,43 @@ export function useNotifications() {
       }
       await refresh();
     },
+    markManyRead: async (notificationIds: readonly string[]) => {
+      if (!uid) return;
+      const ids = new Set(notificationIds);
+      const items = notifications.filter(
+        (candidate) => ids.has(candidate.id) && !candidate.readAt,
+      );
+      if (items.length === 0) return;
+      await notificationLifecycleService.markManyRead(
+        uid,
+        items.map((item) => item.id),
+      );
+      if (session?.sessionToken) {
+        for (const item of items) {
+          const kind = item.metadata?.specialtyChatKind;
+          const capability = String(item.metadata?.capability ?? "");
+          const targetMessageId = String(
+            kind === SPECIALTY_CHAT_KINDS.Request
+              ? item.metadata?.requestId ?? ""
+              : item.metadata?.messageId ?? "",
+          );
+          if (
+            capability &&
+            targetMessageId &&
+            item.metadata?.outgoing !== true &&
+            (kind === SPECIALTY_CHAT_KINDS.Request ||
+              kind === SPECIALTY_CHAT_KINDS.Message)
+          ) {
+            void specialtyChatClient.receipt(session, {
+              capability,
+              targetMessageId,
+              status: "read",
+            });
+          }
+        }
+      }
+      await refresh();
+    },
     markAllRead: async () => {
       if (!uid) return;
       await notificationLifecycleService.markAllRead(uid);

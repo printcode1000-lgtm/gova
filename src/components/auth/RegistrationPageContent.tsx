@@ -1,9 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight, CheckCircle2, Loader2, Shield } from 'lucide-react';
+import { ArrowRight, Loader2, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -21,44 +20,16 @@ import { createRegistrationSchema, type RegistrationFormData } from '@/lib/valid
 import { useRegister } from '@/features/auth/hooks/use-register';
 
 export function RegistrationPageContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const { t, isRTL } = useTranslation();
 
   const {
     form,
     isSubmitting,
     error,
-    submitted,
     password,
     phoneVerified,
     onSubmit,
   } = useRegister();
-
-  const handleContinue = () => {
-    const redirect = searchParams.get('redirect');
-    router.push(redirect ?? '/home');
-  };
-
-  if (submitted) {
-    return (
-      <div className="auth-page flex items-center justify-center px-4">
-        <div className="auth-card w-full max-w-md text-center space-y-6">
-          <div className="mx-auto w-20 h-20 rounded-full bg-success/15 flex items-center justify-center">
-            <CheckCircle2 className="h-10 w-10 text-success" />
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-on-surface">{t('auth.registration.ready')}</h2>
-            <p className="text-base text-on-surface-variant">{t('auth.registration.successMessage')}</p>
-          </div>
-          <button type="button" onClick={handleContinue} className="w-full auth-cta h-12">
-            {t('auth.registration.continueToApp')}
-            <ArrowRight className="h-4 w-4 ms-2" />
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="auth-page">

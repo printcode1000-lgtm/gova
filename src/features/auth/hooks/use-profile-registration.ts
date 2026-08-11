@@ -111,6 +111,8 @@ export function useProfileRegistration() {
       return t('profile.validation.invalidCurrentPassword');
     if (msg === 'phoneAlreadyRegistered')
       return t('auth.validation.phoneAlreadyRegistered');
+    if (msg === 'emailAlreadyRegistered')
+      return t('auth.validation.emailAlreadyRegistered');
     if (msg === 'currentPasswordRequired')
       return t('profile.validation.currentPasswordRequired');
     return msg;
