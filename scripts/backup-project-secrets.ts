@@ -4,7 +4,6 @@ import { existsSync } from "node:fs";
 import { copyFile, mkdir } from "node:fs/promises";
 
 import {
-  BACKUP_DIRECTORY,
   MANIFEST_FILE_NAME,
   PORTABLE_ARCHIVE_PATH,
   PORTABLE_RECOVERY_KEY_PATH,
@@ -16,7 +15,6 @@ import {
   readLastBackupState,
   removeTemporaryPath,
   runSevenZip,
-  sha256File,
   writeLastBackupState,
   writeTemporaryManifest,
 } from "./secret-archive-utils";
@@ -34,23 +32,6 @@ async function publishPortableEncryptedBackup(archivePath: string): Promise<void
   await copyFile(archivePath, PORTABLE_ARCHIVE_PATH);
   await copyFile(recoveryKeyPath, PORTABLE_RECOVERY_KEY_PATH);
   console.log(`Portable encrypted backup synchronized: ${PORTABLE_ARCHIVE_PATH}`);
-}
-
-async function portableBackupMatches(archivePath: string): Promise<boolean> {
-  const recoveryKeyPath = `${archivePath}.private-key.pem`;
-  if (
-    !existsSync(PORTABLE_ARCHIVE_PATH) ||
-    !existsSync(PORTABLE_RECOVERY_KEY_PATH) ||
-    !existsSync(archivePath) ||
-    !existsSync(recoveryKeyPath)
-  ) return false;
-  const [sourceArchive, portableArchive, sourceKey, portableKey] = await Promise.all([
-    sha256File(archivePath),
-    sha256File(PORTABLE_ARCHIVE_PATH),
-    sha256File(recoveryKeyPath),
-    sha256File(PORTABLE_RECOVERY_KEY_PATH),
-  ]);
-  return sourceArchive === portableArchive && sourceKey === portableKey;
 }
 
 function archiveTimestamp(): string {
@@ -74,15 +55,13 @@ async function main(): Promise<void> {
   const previousState = await readLastBackupState();
   if (
     previousState &&
-    existsSync(previousState.archivePath) &&
-    existsSync(`${previousState.archivePath}.private-key.pem`) &&
+    existsSync(PORTABLE_ARCHIVE_PATH) &&
+    existsSync(PORTABLE_RECOVERY_KEY_PATH) &&
     manifestsContainSameFiles(manifest, previousState.manifest)
   ) {
-    if (!(await portableBackupMatches(previousState.archivePath))) {
-      await publishPortableEncryptedBackup(previousState.archivePath);
-    }
+    await writeLastBackupState(manifest, PORTABLE_ARCHIVE_PATH);
     console.log(
-      `No changes detected in ${included.length} secret file(s); no archive was created.`,
+      `No changes detected in ${included.length} secret file(s); the current encrypted backup was kept.`,
     );
     return;
   }
@@ -92,7 +71,7 @@ async function main(): Promise<void> {
     MANIFEST_FILE_NAME,
   ]);
   const encryptedArchivePath = path.join(
-    BACKUP_DIRECTORY,
+    os.tmpdir(),
     `asol-secrets-${archiveTimestamp()}.zip.enc`,
   );
   const temporaryZipPath = path.join(
@@ -111,17 +90,19 @@ async function main(): Promise<void> {
       `@${listPath}`,
     ]);
     await encryptZipWithPublicKey(temporaryZipPath, encryptedArchivePath);
-    const recoveryKey = await copyRecoveryKeyBesideArchive(encryptedArchivePath);
+    await copyRecoveryKeyBesideArchive(encryptedArchivePath);
     await publishPortableEncryptedBackup(encryptedArchivePath);
-    await writeLastBackupState(manifest, encryptedArchivePath);
-    console.log(`Encrypted secret archive created: ${encryptedArchivePath}`);
-    console.log(`Encrypted recovery key copied beside it: ${recoveryKey}`);
+    await writeLastBackupState(manifest, PORTABLE_ARCHIVE_PATH);
+    console.log(`Current encrypted secret backup updated: ${PORTABLE_ARCHIVE_PATH}`);
+    console.log(`Current encrypted recovery key updated: ${PORTABLE_RECOVERY_KEY_PATH}`);
   } catch (error) {
     await removeTemporaryPath(encryptedArchivePath);
     await removeTemporaryPath(`${encryptedArchivePath}.private-key.pem`);
     throw error;
   } finally {
     await removeTemporaryPath(temporaryZipPath);
+    await removeTemporaryPath(encryptedArchivePath);
+    await removeTemporaryPath(`${encryptedArchivePath}.private-key.pem`);
     await removeTemporaryPath(manifestPath);
     await removeTemporaryPath(listPath);
   }

@@ -17,7 +17,6 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 
 export const WORKSPACE_ROOT = process.cwd();
-export const BACKUP_DIRECTORY = path.join(WORKSPACE_ROOT, ".private-backups");
 export const MANIFEST_FILE_NAME = "asol-secrets-manifest.json";
 export const PORTABLE_ARCHIVE_PATH = path.join(
   WORKSPACE_ROOT,
@@ -166,25 +165,11 @@ export async function sha256File(filePath: string): Promise<string> {
 }
 
 export async function resolveRestoreArchivePath(
-  localBackupDirectory = BACKUP_DIRECTORY,
   portableArchivePath = PORTABLE_ARCHIVE_PATH,
 ): Promise<string> {
-  const entries = existsSync(localBackupDirectory)
-    ? await readdir(localBackupDirectory, { withFileTypes: true })
-    : [];
-  const archives = await Promise.all(
-    entries
-      .filter((entry) => entry.isFile() && entry.name.endsWith(".zip.enc"))
-      .map(async (entry) => {
-        const absolutePath = path.join(localBackupDirectory, entry.name);
-        return { absolutePath, modifiedAt: (await stat(absolutePath)).mtimeMs };
-      }),
-  );
-  const latest = archives.sort((a, b) => b.modifiedAt - a.modifiedAt)[0];
-  if (latest) return latest.absolutePath;
   if (existsSync(portableArchivePath)) return portableArchivePath;
   throw new Error(
-    "No secret archive exists locally or in config/secret-archive-latest.zip.enc.",
+    "No current secret archive exists in config/secret-archive-latest.zip.enc.",
   );
 }
 
@@ -348,8 +333,7 @@ export async function writeTemporaryManifest(
 }
 
 export async function createTemporaryListFile(entries: string[]): Promise<string> {
-  await mkdir(BACKUP_DIRECTORY, { recursive: true });
-  const listPath = path.join(BACKUP_DIRECTORY, `.files-${randomUUID()}.txt`);
+  const listPath = path.join(os.tmpdir(), `asol-secret-files-${randomUUID()}.txt`);
   await writeFile(listPath, `${entries.join("\n")}\n`, "utf8");
   return listPath;
 }
