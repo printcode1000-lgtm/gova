@@ -800,6 +800,15 @@ Android and iOS use native `CapacitorHttp` for R2 requests. R2 CORS also include
 
 ## Version Synchronization
 
+The repository defaults live in
+`src/core/config/app-version.ts`. `CURRENT_NATIVE_APP_VERSION` identifies the
+compiled shell and `CURRENT_WEB_CONTENT_VERSION` identifies the bundled web
+content. Release environment variables may pin a build explicitly, but an
+ordinary development/static build must fall back to these current versions,
+not to the older minimum-supported native baseline. Run
+`npm run version:validate` to compare the constants, package metadata, Android,
+iOS, `.env.example`, and every generated manifest currently present.
+
 After a successful `cap:build`, version synchronization has two independent
 groups.
 

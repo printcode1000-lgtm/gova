@@ -18,7 +18,10 @@ import {
   scanSourceCapabilityReferences,
   splitCapabilityRequirements,
 } from "./ota/ota-capability-scan";
-import { MINIMUM_SUPPORTED_NATIVE_VERSION } from "../src/native-platform/capabilities/shell-capabilities";
+import {
+  CURRENT_NATIVE_APP_VERSION,
+  CURRENT_WEB_CONTENT_VERSION,
+} from "../src/core/config/app-version";
 
 const rootDir = process.cwd();
 const tempBuildDir = path.join(rootDir, ".tmp-static-build");
@@ -515,15 +518,17 @@ function writeLocalWebManifest(): void {
   const manifest = {
     schemaVersion: 2,
     delivery: "files",
-    releaseId: `${process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION ?? "0.1.0"}-local`,
-    version: process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION ?? "0.1.0",
+    releaseId: `${process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION ?? CURRENT_WEB_CONTENT_VERSION}-local`,
+    version:
+      process.env.NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION ??
+      CURRENT_WEB_CONTENT_VERSION,
     createdAt: new Date().toISOString(),
     baseUrl: "",
     size,
     fileCount: Object.keys(files).length,
     minimumNativeVersion:
       process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ??
-      MINIMUM_SUPPORTED_NATIVE_VERSION,
+      CURRENT_NATIVE_APP_VERSION,
     ...(() => {
       const { required, optional } = JSON.parse(
         readFileSync(path.join(rootOutDir, CAPABILITY_METADATA_FILE), "utf8"),

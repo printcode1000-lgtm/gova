@@ -428,6 +428,15 @@ so both would otherwise get a button that always resolves `false`:
 | Primary button | open app settings | re-check |
 | Recovery | `visibilitychange` re-checks on return from settings | the user re-checks after changing the permission themselves |
 
+In a browser, `Notification.permission === "denied"` is an origin-level block:
+the application cannot show the native permission prompt again or turn the
+permission back on. The dialog and the `/settings` action therefore explain
+that the user must open the site's controls beside the address bar, change
+Notifications to **Allow**, and select **Try again**. The retry first reads the
+permission again and only creates/registers the Web Push subscription after it
+is granted; it never exposes the internal `notificationPermissionDenied` error
+to the user.
+
 The `visibilitychange` listener is harmless where it cannot fire usefully, so it
 stays attached for any blocked state.
 

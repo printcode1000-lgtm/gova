@@ -220,12 +220,26 @@ export function SettingsPageContent() {
     setWebPushBusy(true);
     setWebPushStatus("");
     try {
+      // Browsers never allow a site to reverse a denied notification
+      // permission. Re-check first so this button becomes the recovery path
+      // after the user changes the site's permission from the address bar,
+      // without calling subscribe() and exposing a technical error string.
+      const currentPermission = await webPushBrowserService.getPermission();
+      setWebPushPermission(currentPermission);
+      if (currentPermission === "denied") {
+        setWebPushStatus(
+          t("notifications.permissionPrompt.deniedManual"),
+        );
+        return;
+      }
       await webPushBrowserService.subscribe(session.uid, session.phone);
       setWebPushPermission(await webPushBrowserService.getPermission());
       setWebPushStatus("تم تفعيل إشعارات المتصفح لهذا الجهاز.");
     } catch (error) {
       setWebPushStatus(
-        error instanceof Error ? error.message : "تعذر تفعيل إشعارات المتصفح.",
+        error instanceof Error && error.message === "notificationPermissionDenied"
+          ? t("notifications.permissionPrompt.deniedManual")
+          : "تعذر تفعيل إشعارات المتصفح.",
       );
     } finally {
       setWebPushBusy(false);
@@ -532,7 +546,9 @@ export function SettingsPageContent() {
                       onClick={() => void enableWebPush()}
                       className="asol-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
                     >
-                      تفعيل إشعارات المتصفح
+                      {webPushPermission === "denied"
+                        ? t("notifications.permissionPrompt.recheck")
+                        : "تفعيل إشعارات المتصفح"}
                     </button>
                     <button
                       type="button"

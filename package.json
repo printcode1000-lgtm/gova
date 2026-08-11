@@ -1,6 +1,6 @@
 {
   "name": "asol",
-  "version": "0.1.0",
+  "version": "0.1.12",
   "private": true,
   "scripts": {
     "dev": "npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --port 3000",
@@ -85,6 +85,7 @@
     "android:open:outputs": "npx tsx scripts/open-android-outputs.ts",
     "android:build:debug": "npx tsx scripts/build-android-debug.ts",
     "verify:all": "npx tsx scripts/verify-all.ts",
+    "version:validate": "npx tsx scripts/validate-app-versions.ts",
     "android:r8:verify-release": "npm run android:push:sync-assets && npm run android:backup:validate && npm run android:r8:validate && npx tsx scripts/verify-android-r8-release.ts",
     "ios:push:validate": "npx tsx scripts/validate-ios-push-policy.ts",
     "ios:spm:normalize": "npx tsx scripts/normalize-capacitor-spm-paths.ts",

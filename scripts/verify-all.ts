@@ -31,6 +31,7 @@ const STEPS: readonly Step[] = [
   { script: "architecture:check" },
   { script: "validate-storage-profiles" },
   { script: "validate:error-logging" },
+  { script: "version:validate" },
 
   // Native container policy. These read committed project files only.
   { script: "android:backup:validate" },

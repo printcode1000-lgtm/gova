@@ -196,7 +196,7 @@
     "nav.notifications":  "الإشعارات",
     "notifications.permissionPrompt.control":  "يمكنك إيقاف الإشعارات أو تغييرها في أي وقت من الإعدادات.",
     "notifications.permissionPrompt.denied":  "الإشعارات محظورة حالياً. افتح إعدادات التطبيق لتفعيلها.",
-    "notifications.permissionPrompt.deniedManual":  "الإشعارات محظورة حالياً. فعّلها من إعدادات النظام أو المتصفح ثم أعد المحاولة.",
+    "notifications.permissionPrompt.deniedManual":  "الإشعارات محظورة لهذا الموقع. افتح إعدادات الموقع من الرمز بجوار شريط العنوان، وغيّر الإشعارات إلى «سماح»، ثم اضغط «أعد المحاولة».",
     "notifications.permissionPrompt.recheck":  "أعد المحاولة",
     "notifications.permissionPrompt.description":  "اسمح لـ ASOL بإرسال التنبيهات المهمة إلى هذا الجهاز بعد موافقتك.",
     "notifications.permissionPrompt.enable":  "تفعيل الإشعارات",
