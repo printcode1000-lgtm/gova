@@ -1703,6 +1703,7 @@
     "releaseConsole.jobStage.publishing-manifest": "Committing the new release manifest",
     "releaseConsole.jobStage.mirroring": "Updating the legacy OTA origin",
     "releaseConsole.jobStage.verifying": "Verifying the published release",
+    "releaseConsole.jobStage.finalizing-results": "Collecting task results and outputs",
     "releaseConsole.jobStage.completed": "All stages completed",
     "releaseConsole.analysis.title": "Bundle composition",
     "releaseConsole.analysis.units": "Sizes use binary units (1 MB = 1,048,576 bytes)",

@@ -3,7 +3,7 @@ import type { BuildJobStage } from "./build-job-types";
 const STAGE_ORDER: readonly BuildJobStage[] = [
   "queued", "starting", "checking-compatibility", "testing", "building-web",
   "preparing-artifacts", "syncing-native", "building-android", "optimizing",
-  "uploading", "publishing-manifest", "mirroring", "verifying", "completed",
+  "uploading", "publishing-manifest", "mirroring", "verifying", "finalizing-results", "completed",
 ];
 
 const STAGE_PATTERNS: readonly [BuildJobStage, RegExp][] = [

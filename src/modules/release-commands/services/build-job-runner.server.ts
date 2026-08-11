@@ -195,7 +195,7 @@ export async function startBuildJob(input: StartBuildJobInput): Promise<BuildJob
         }
       } finally { if (command.exclusive) await releaseBuildJobLock(id); }
     });
-    return record;
+    return buildJobForClient(record);
   } catch (error) {
     if (command.exclusive) await releaseBuildJobLock(id);
     throw error;
@@ -210,7 +210,11 @@ export async function listBuildJobs(page = 1, pageSize = 20): Promise<PaginatedB
   await pruneRecords();
   const jobs = await readAllRecords();
   const start = (safePage - 1) * safeSize;
-  return { jobs: jobs.slice(start, start + safeSize), page: safePage, pageSize: safeSize, total: jobs.length, hasMore: start + safeSize < jobs.length };
+  return {
+    jobs: jobs.slice(start, start + safeSize).map(buildJobForClient),
+    page: safePage, pageSize: safeSize, total: jobs.length,
+    hasMore: start + safeSize < jobs.length,
+  };
 }
 
 async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
@@ -274,7 +278,7 @@ export async function cancelBuildJob(jobId: string): Promise<BuildJobRecord> {
   liveProcesses.delete(jobId);
   await writeRecord(record);
   await releaseBuildJobLock(jobId);
-  return record;
+  return buildJobForClient(record);
 }
 
 export async function terminateProcessTree(
@@ -356,13 +360,20 @@ async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry)
     if (finalized) return; finalized = true;
     liveProcesses.delete(record.id);
     try {
-      const current = await readBuildJobRecord(record.id);
+      let current = await readBuildJobRecord(record.id);
       if (current.status !== "cancelled") {
-        setJobStatus(current, status); current.exitCode = code; current.finishedAt = now(); current.error = error;
-        if (status === "succeeded") current.stage = "completed";
-        current.artifacts = await changedBuildArtifacts(current.artifactSnapshot ?? {});
-        delete current.artifactSnapshot;
+        current.stage = "finalizing-results";
         await writeRecord(current);
+        const snapshot = current.artifactSnapshot ?? {};
+        const artifacts = await changedBuildArtifacts(snapshot);
+        current = await readBuildJobRecord(record.id);
+        if (current.status !== "cancelled") {
+          setJobStatus(current, status); current.exitCode = code; current.finishedAt = now(); current.error = error;
+          if (status === "succeeded") current.stage = "completed";
+          current.artifacts = artifacts;
+          delete current.artifactSnapshot;
+          await writeRecord(current);
+        }
       }
     } finally { if (command.exclusive) await releaseBuildJobLock(record.id); }
   };
@@ -416,6 +427,12 @@ async function readAllRecords(): Promise<BuildJobRecord[]> {
   }));
   return jobs.filter((job): job is BuildJobRecord => Boolean(job?.queuedAt))
     .sort((left, right) => right.queuedAt.localeCompare(left.queuedAt));
+}
+
+/** Internal output snapshots can contain thousands of paths and never belong in API responses. */
+export function buildJobForClient(record: BuildJobRecord): BuildJobRecord {
+  const { artifactSnapshot: _artifactSnapshot, ...clientRecord } = record;
+  return clientRecord;
 }
 
 function setJobStatus(record: BuildJobRecord, next: BuildJobRecord["status"]): void {

@@ -1704,6 +1704,7 @@
     "releaseConsole.jobStage.publishing-manifest": "تثبيت بيان الإصدار الجديد",
     "releaseConsole.jobStage.mirroring": "تحديث مسار OTA القديم",
     "releaseConsole.jobStage.verifying": "التحقق من الإصدار المنشور",
+    "releaseConsole.jobStage.finalizing-results": "جمع نتائج المهمة والمخرجات",
     "releaseConsole.jobStage.completed": "اكتملت جميع المراحل",
     "releaseConsole.analysis.title": "تكوين الحزمة",
     "releaseConsole.analysis.units": "تستخدم الأحجام وحدات ثنائية (1 MB = 1,048,576 بايت)",

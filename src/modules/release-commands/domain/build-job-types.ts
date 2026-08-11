@@ -15,6 +15,7 @@ export type BuildJobStage =
   | "publishing-manifest"
   | "mirroring"
   | "verifying"
+  | "finalizing-results"
   | "completed";
 
 export interface BuildArtifactDescriptor {
