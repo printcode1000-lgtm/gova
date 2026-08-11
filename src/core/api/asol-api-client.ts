@@ -9,6 +9,8 @@ export interface AsolApiRequestOptions {
   signal?: AbortSignal;
   cache?: RequestCache;
   suppressErrorLog?: boolean;
+  /** Let a feature await and inspect notification delivery itself. */
+  notificationGrantDelivery?: 'background' | 'manual';
 }
 
 /**
@@ -69,7 +71,10 @@ export class AsolApiClient {
     try {
       return await trackAsolApiRequest(method, route, true, async () => {
         const response = await asolHttpFetch(buildAsolApiUrl(route, method), init);
-        const data = await this.parseResponse<T>(response);
+        const data = await this.parseResponse<T>(
+          response,
+          options.notificationGrantDelivery,
+        );
         return { data, response };
       });
     } catch (error) {
@@ -77,7 +82,10 @@ export class AsolApiClient {
     }
   }
 
-  private async parseResponse<T>(response: Response): Promise<T> {
+  private async parseResponse<T>(
+    response: Response,
+    notificationGrantDelivery: 'background' | 'manual' = 'background',
+  ): Promise<T> {
     const text = await response.text();
     let data: unknown = null;
     const contentType = response.headers.get('content-type')?.toLowerCase() ?? '';
@@ -112,10 +120,13 @@ export class AsolApiClient {
     // grants; the bridge delivers them to the notifications service from the
     // browser, because the two backends have no path to each other.
     //
-    // It is called unconditionally and never awaited: a response without grants
-    // is a no-op, and a push that fails to leave the browser must not turn a
-    // successful API call into a failed one.
-    scheduleNotificationGrantDelivery(data);
+    // Background is the default: a response without grants is a no-op, and a
+    // normal business push cannot turn a successful operation into a failure.
+    // Conversation features opt into manual mode and await the bridge so their
+    // UI can report real recipient outcomes.
+    if (notificationGrantDelivery === 'background') {
+      scheduleNotificationGrantDelivery(data);
+    }
 
     return data as T;
   }

@@ -32,6 +32,8 @@ export interface SendSpecialtyRequestResult {
    * is not knowable here any more.
    */
   grantedUsers: number;
+  /** Providers whose notification reached or was queued by a push transport. */
+  deliveredUsers?: number;
   unavailableUsers: number;
   /** Signed grants for the browser bridge to deliver. */
   notificationGrants?: string[];

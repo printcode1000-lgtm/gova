@@ -82,6 +82,23 @@ export function NotificationsPageContent() {
     dismiss,
   } = useNotifications();
   const [filter, setFilter] = React.useState<(ReturnType<typeof filters>)[number]["id"]>("all");
+  const [focusId, setFocusId] = React.useState("");
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("filter") === "chat") {
+      setFilter(NotificationCategories.Chat);
+    }
+    setFocusId(params.get("focus") ?? "");
+  }, []);
+
+  React.useEffect(() => {
+    if (!focusId || isLoading) return;
+    const element = document.getElementById(`notification-${focusId}`);
+    if (!element) return;
+    element.scrollIntoView({ behavior: "smooth", block: "center" });
+    element.focus({ preventScroll: true });
+  }, [focusId, isLoading, notifications]);
 
   const visible = React.useMemo(() => {
     if (filter === "all") return notifications;
@@ -181,6 +198,7 @@ export function NotificationsPageContent() {
               key={notification.id}
               notification={notification}
               locale={locale}
+              focused={notification.id === focusId}
               onOpen={() => void openNotification(notification)}
               onDismiss={() => void dismiss(notification.id)}
             />
@@ -194,11 +212,13 @@ export function NotificationsPageContent() {
 function NotificationCard({
   notification,
   locale,
+  focused,
   onOpen,
   onDismiss,
 }: {
   notification: NotificationEntity;
   locale: "ar" | "en";
+  focused: boolean;
   onOpen: () => void;
   onDismiss: () => void;
 }) {
@@ -236,16 +256,33 @@ function NotificationCard({
       setReply("");
       setReplyStatus(locale === "ar" ? "تم إرسال الرد بصورة خاصة." : "Private reply sent.");
     } catch (error) {
-      setReplyStatus(error instanceof Error ? error.message : locale === "ar" ? "تعذر إرسال الرد." : "Unable to send reply.");
+      const recipientUnavailable =
+        error instanceof Error &&
+        error.message === "specialtyChatRecipientUnavailable";
+      setReplyStatus(
+        recipientUnavailable
+          ? locale === "ar"
+            ? "تعذر الوصول إلى جهاز الطرف الآخر حاليًا. لم يُحتسب الرد كمرسل."
+            : "The other device is currently unreachable. The reply was not counted as sent."
+          : locale === "ar"
+            ? "تعذر إرسال الرد. حاول مرة أخرى."
+            : "Unable to send the reply. Try again.",
+      );
     } finally {
       setReplying(false);
     }
   };
   return (
     <article
+      id={`notification-${notification.id}`}
+      tabIndex={-1}
       className={cn(
         "rounded-xl border bg-surface p-4 shadow-sm transition",
-        unread ? "border-primary/50" : "border-outline-variant",
+        focused
+          ? "border-primary ring-2 ring-primary/30"
+          : unread
+            ? "border-primary/50"
+            : "border-outline-variant",
       )}
     >
       <div className="flex gap-3">
@@ -270,8 +307,8 @@ function NotificationCard({
                   {String(notification.metadata?.subcategoryName ?? "")}
                   {notification.metadata?.outgoing === true
                     ? locale === "ar"
-                      ? ` — أُرسلت إلى ${Number(notification.metadata?.grantedUsers ?? 0)}، وصلت إلى ${Number(notification.metadata?.remoteReceivedCount ?? 0)}، قرأها ${Number(notification.metadata?.remoteReadCount ?? 0)}`
-                      : ` — sent to ${Number(notification.metadata?.grantedUsers ?? 0)}, received by ${Number(notification.metadata?.remoteReceivedCount ?? 0)}, read by ${Number(notification.metadata?.remoteReadCount ?? 0)}`
+                      ? ` — أُرسلت إلى ${Number(notification.metadata?.deliveredUsers ?? notification.metadata?.grantedUsers ?? 0)}، وصلت إلى ${Number(notification.metadata?.remoteReceivedCount ?? 0)}، قرأها ${Number(notification.metadata?.remoteReadCount ?? 0)}`
+                      : ` — sent to ${Number(notification.metadata?.deliveredUsers ?? notification.metadata?.grantedUsers ?? 0)}, received by ${Number(notification.metadata?.remoteReceivedCount ?? 0)}, read by ${Number(notification.metadata?.remoteReadCount ?? 0)}`
                     : ""}
                 </p>
               ) : null}

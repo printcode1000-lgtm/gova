@@ -10,11 +10,10 @@ import { getNotificationsPublicUrl } from "@/core/config/public-env";
  * them is this module — it takes the signed grants a Business API response
  * carries and delivers them to the notifications service.
  *
- * It is deliberately fire-and-forget. The main app's response has already been
- * handed to the caller by the time delivery is attempted, so a failure here
- * must never turn a successful order into a failed one. The consequence is
- * stated plainly rather than hidden: delivery is best effort, and a browser
- * that closes before the hop completes sends nothing.
+ * Ordinary business notifications use the fire-and-forget entry point so push
+ * cannot turn a successful order into a failed one. Conversation actions call
+ * `deliverNotificationGrants` directly and await its recipient outcomes,
+ * because their visible success state is the delivery itself.
  */
 
 const SEND_PATH = "/api/notifications/send";
@@ -28,13 +27,47 @@ function isBrowser(): boolean {
 
 export interface NotificationBridgeResult {
   attempted: number;
+  /** Recipients with at least one sent, queued, or partially sent transport. */
   delivered: number;
+  /** Recipients with no token or only failed transports. */
+  unavailable: number;
+}
+
+interface NotificationServiceResponse {
+  accepted?: number;
+  results?: Array<{
+    results?: Array<{ status?: string }>;
+  } | { error?: string }>;
+}
+
+/** Convert the notifications service response into honest recipient counts. */
+export function summarizeNotificationSendResponse(
+  body: unknown,
+): Pick<NotificationBridgeResult, "delivered" | "unavailable"> {
+  const response = body as NotificationServiceResponse | null;
+  const recipients = Array.isArray(response?.results)
+    ? response.results.flatMap((result) =>
+        "results" in result && Array.isArray(result.results)
+          ? result.results
+          : [],
+      )
+    : [];
+  const delivered = recipients.filter((recipient) =>
+    ["sent", "queued", "partial"].includes(String(recipient.status ?? "")),
+  ).length;
+  return {
+    delivered,
+    unavailable: Math.max(0, recipients.length - delivered),
+  };
 }
 
 /**
  * Delivers one grant. Resolves either way — callers treat this as best effort.
  */
-async function deliverGrant(baseUrl: string, grant: string): Promise<boolean> {
+async function deliverGrant(
+  baseUrl: string,
+  grant: string,
+): Promise<Pick<NotificationBridgeResult, "delivered" | "unavailable">> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
@@ -49,9 +82,10 @@ async function deliverGrant(baseUrl: string, grant: string): Promise<boolean> {
       // No cookies or credentials: the grant is the only authority.
       credentials: "omit",
     });
-    return response.ok;
+    if (!response.ok) return { delivered: 0, unavailable: 1 };
+    return summarizeNotificationSendResponse(await response.json());
   } catch {
-    return false;
+    return { delivered: 0, unavailable: 1 };
   } finally {
     clearTimeout(timeout);
   }
@@ -66,20 +100,28 @@ async function deliverGrant(baseUrl: string, grant: string): Promise<boolean> {
 export async function deliverNotificationGrants(
   body: unknown,
 ): Promise<NotificationBridgeResult> {
-  if (!isBrowser()) return { attempted: 0, delivered: 0 };
+  if (!isBrowser()) return { attempted: 0, delivered: 0, unavailable: 0 };
 
   const grants = readNotificationGrants(body);
-  if (grants.length === 0) return { attempted: 0, delivered: 0 };
+  if (grants.length === 0) {
+    return { attempted: 0, delivered: 0, unavailable: 0 };
+  }
 
   const baseUrl = getNotificationsPublicUrl();
-  if (!baseUrl) return { attempted: grants.length, delivered: 0 };
+  if (!baseUrl) {
+    return { attempted: grants.length, delivered: 0, unavailable: grants.length };
+  }
 
   const results = await Promise.all(
     grants.map((grant) => deliverGrant(baseUrl, grant)),
   );
   return {
     attempted: grants.length,
-    delivered: results.filter(Boolean).length,
+    delivered: results.reduce((total, result) => total + result.delivered, 0),
+    unavailable: results.reduce(
+      (total, result) => total + result.unavailable,
+      0,
+    ),
   };
 }
 

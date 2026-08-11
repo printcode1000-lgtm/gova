@@ -12,13 +12,22 @@ The server stores only device push tokens and the per-user `specialty_requests_e
 
 ## User flow
 
-1. A logged-in buyer opens the paper-plane action in the application header.
+1. A logged-in buyer opens the paper-plane action in the application header,
+   which navigates to the full `/specialty-request` page.
 2. The buyer selects exactly one main category and one selectable child specialty.
 3. The buyer enters text of 1–800 characters. Images and attachments are not supported.
 4. The server resolves profiles indexed for that exact pair, excludes the buyer and opted-out providers, and attempts one private push per provider.
-5. The response reports matched, provider-accepted, and unavailable user counts. Provider accepted does not guarantee operating-system delivery.
-6. Each provider replies from that notification in `/notifications`.
-7. Replies go only to the buyer. The buyer can continue the same private exchange from the received reply.
+5. The browser waits for the notifications service and counts only recipients
+   with a `sent`, `queued`, or `partial` provider outcome. `no_tokens`, failed
+   transports, and opted-out matches are reported as unavailable.
+6. When at least one provider is reached, the page shows the exact counts for
+   three seconds, then opens the chat filter in `/notifications` and focuses the
+   outgoing request card.
+7. Each provider replies from that notification in `/notifications`. A reply is
+   shown as sent only after the notifications service reports a reachable
+   transport for the buyer.
+8. Replies go only to the buyer. The buyer can continue the private exchange
+   using the same signed bilateral capability.
 
 ## Security and privacy
 
@@ -41,11 +50,14 @@ language. The message body is the sender's own text, passed through as a
 variable and never translated or rewritten. The specialty name in a request title
 is sent in both languages so each recipient sees it in theirs.
 
-Granted, received, and read are separate states. A request of 500 providers
+Granted, transport-delivered, received, and read are separate states. A request of 500 providers
 produces 500 grants in one response — one per provider, because each carries its
 own reply capability and dedupe key — and the browser posts them in a batch:
 
 - `grantedUsers`: the main app signed a grant authorising that provider. It does not deliver, so provider acceptance is not knowable here — the browser still has to carry the grant across.
+- `deliveredUsers`: the notifications service found a usable transport and the
+  provider returned `sent`, `queued`, or `partial`. This is the count displayed
+  by the request page, but it still does not prove OS display.
 - `received`: the recipient client imported the notification into the local center and emitted an internal data-only receipt.
 - `read`: the recipient opened or marked the notification as read and emitted an internal data-only receipt.
 
@@ -63,7 +75,10 @@ Receipt pushes never appear as cards and do not intentionally contribute to the 
 
 ## Limitations by design
 
-- Delivery depends on the sender's browser staying alive long enough to carry the grants across. Closing the tab immediately after sending leaves providers unnotified, and there is no server-side retry — the main app has no path to the notifications service. See [Notification Bridge Module](notification-bridge-module.md).
+- Request, reply, and receipt actions await the browser bridge, so the UI does
+  not report success while the grant hop is pending. There is still no
+  server-side retry after the notifications service accepts the push. See
+  [Notification Bridge Module](notification-bridge-module.md).
 - Push delivery is not guaranteed by FCM, Web Push, APNs, or the operating system.
 - Clearing local data, signing out, uninstalling, or changing devices removes local conversation history.
 - A provider without a valid enabled device token is counted as unavailable.

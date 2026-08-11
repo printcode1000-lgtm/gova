@@ -73,6 +73,12 @@ This is the direct consequence of forbidding backend-to-backend calls. It is
 recorded here rather than hidden so the trade is visible when someone asks why a
 notification did not arrive.
 
+Specialty-chat request, reply, and receipt actions are the deliberate exception
+to the fire-and-forget UI contract: they await this browser hop and inspect the
+notifications service's per-recipient result before reporting success. This
+prevents `no_tokens` and failed providers from appearing as successful sends;
+it does not turn push into guaranteed operating-system delivery.
+
 Because of it, API responses report what was **granted**, not what was
 delivered: `grantedUsers` and `status: "granted"`. Claiming provider acceptance
 would be a claim the main app cannot support.
