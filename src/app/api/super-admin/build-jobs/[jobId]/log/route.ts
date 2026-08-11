@@ -14,6 +14,10 @@ export async function GET(
       const offset = Number(new URL(request.url).searchParams.get("offset") || 0);
       return apiSuccess(await readBuildJobLog(jobId, offset));
     } catch (error) {
+      if (error instanceof Error && error.message === "releaseJobLogNotFound") {
+        const offset = Number(new URL(request.url).searchParams.get("offset") || 0);
+        return apiSuccess({ text: "", nextOffset: offset, hasMore: false });
+      }
       return mapServiceError(error);
     }
   });

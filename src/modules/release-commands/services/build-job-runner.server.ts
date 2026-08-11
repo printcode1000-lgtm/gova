@@ -15,6 +15,7 @@ import {
 } from "@/modules/google-play-console/domain/development-guard.server";
 
 import { BUILD_COMMAND_CATALOG, findBuildCommand, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
+import { nextBuildJobStage } from "../domain/build-job-progress";
 import { assertBuildJobTransition, type BuildCommandReadiness, type BuildJobRecord, type PaginatedBuildJobs, type ReleaseVersionSnapshot, type StartBuildJobInput } from "../domain/build-job-types";
 import { changedBuildArtifacts, snapshotBuildOutputs } from "./build-job-artifacts.server";
 
@@ -181,7 +182,8 @@ export async function startBuildJob(input: StartBuildJobInput): Promise<BuildJob
     const record: BuildJobRecord = {
       id, commandId: command.id,
       command: { id: command.id, script: command.script, argv: [...command.argv, ...parameterArgv], category: command.category, danger: command.danger },
-      status: "queued", queuedAt: now(), logPath: path.relative(process.cwd(), logPath(id)).replace(/\\/g, "/"),
+      status: "queued", stage: "queued", queuedAt: now(),
+      logPath: path.relative(process.cwd(), logPath(id)).replace(/\\/g, "/"),
       artifactSnapshot: await snapshotBuildOutputs(),
     };
     await writeRecord(record);
@@ -323,7 +325,7 @@ export async function artifactsForJob(jobId: string) {
 async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry): Promise<void> {
   const latest = await readBuildJobRecord(record.id);
   if (latest.status === "cancelled") { await releaseBuildJobLock(record.id); return; }
-  setJobStatus(latest, "running"); latest.startedAt = now();
+  setJobStatus(latest, "running"); latest.stage = "starting"; latest.startedAt = now();
   await writeRecord(latest);
   await appendLog(record.id, `> npm run ${command.script} -- ${latest.command.argv.join(" ")}\n`);
   const child = spawn(
@@ -335,8 +337,20 @@ async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry)
   await writeRecord(latest);
   if (child.pid && command.exclusive) await updateLockPid(record.id, child.pid);
   trackBuildJobProcess(record.id, child);
-  child.stdout.on("data", (chunk) => void appendLog(record.id, chunk));
-  child.stderr.on("data", (chunk) => void appendLog(record.id, chunk));
+  let recentOutput = "";
+  let stageWrites = Promise.resolve();
+  const captureOutput = (chunk: string | Buffer) => {
+    void appendLog(record.id, chunk);
+    recentOutput = `${recentOutput}${chunk.toString()}`.slice(-4_096);
+    stageWrites = stageWrites.then(async () => {
+      const current = await readBuildJobRecord(record.id);
+      if (current.status !== "running") return;
+      const nextStage = nextBuildJobStage(current.stage ?? "starting", recentOutput);
+      if (nextStage !== current.stage) { current.stage = nextStage; await writeRecord(current); }
+    });
+  };
+  child.stdout.on("data", captureOutput);
+  child.stderr.on("data", captureOutput);
   let finalized = false;
   const finalize = async (status: "succeeded" | "failed", code: number | null, error?: string) => {
     if (finalized) return; finalized = true;
@@ -345,14 +359,15 @@ async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry)
       const current = await readBuildJobRecord(record.id);
       if (current.status !== "cancelled") {
         setJobStatus(current, status); current.exitCode = code; current.finishedAt = now(); current.error = error;
+        if (status === "succeeded") current.stage = "completed";
         current.artifacts = await changedBuildArtifacts(current.artifactSnapshot ?? {});
         delete current.artifactSnapshot;
         await writeRecord(current);
       }
     } finally { if (command.exclusive) await releaseBuildJobLock(record.id); }
   };
-  child.once("error", (error) => void finalize("failed", null, error.message));
-  child.once("close", (code) => void finalize(code === 0 ? "succeeded" : "failed", code));
+  child.once("error", (error) => void stageWrites.then(() => finalize("failed", null, error.message)));
+  child.once("close", (code) => void stageWrites.then(() => finalize(code === 0 ? "succeeded" : "failed", code)));
 }
 
 async function ensureReconciled(): Promise<void> {

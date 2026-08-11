@@ -269,7 +269,7 @@ export function NotificationsPageContent() {
               onOpen={async () => {
                 await markManyRead(group.items.map((item) => item.id));
                 if (group.category === NotificationCategories.Chat) {
-                  router.push(`/notifications/chat/${encodeURIComponent(group.key)}`);
+                  router.push(`/notifications/chat?conversationId=${encodeURIComponent(group.key)}`);
                 } else if (group.latest.route?.href) {
                   router.push(group.latest.route.href);
                 }
@@ -319,7 +319,7 @@ function ChatConversationList({
         return (
           <Link
             key={conversation.key}
-            href={`/notifications/chat/${encodeURIComponent(conversation.key)}`}
+            href={`/notifications/chat?conversationId=${encodeURIComponent(conversation.key)}`}
             className={cn(
               "flex min-w-0 items-center gap-3 p-4 transition hover:bg-surface-container",
               index > 0 && "border-t border-outline-variant/70",

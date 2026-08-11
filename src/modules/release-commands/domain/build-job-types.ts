@@ -1,6 +1,21 @@
 import type { BuildCommandCatalogEntry } from "./build-command-catalog";
 
 export type BuildJobStatus = "queued" | "running" | "succeeded" | "failed" | "cancelled" | "interrupted";
+export type BuildJobStage =
+  | "queued"
+  | "starting"
+  | "checking-compatibility"
+  | "building-web"
+  | "preparing-artifacts"
+  | "syncing-native"
+  | "building-android"
+  | "optimizing"
+  | "testing"
+  | "uploading"
+  | "publishing-manifest"
+  | "mirroring"
+  | "verifying"
+  | "completed";
 
 export interface BuildArtifactDescriptor {
   name: string;
@@ -15,6 +30,7 @@ export interface BuildJobRecord {
   commandId: string;
   command: Pick<BuildCommandCatalogEntry, "id" | "script" | "argv" | "category" | "danger">;
   status: BuildJobStatus;
+  stage?: BuildJobStage;
   queuedAt: string;
   startedAt?: string;
   finishedAt?: string;

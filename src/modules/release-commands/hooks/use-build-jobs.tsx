@@ -24,6 +24,8 @@ export function useBuildJobs(headers?: Record<string, string>) {
    * surfaced as an unhandled rejection on the device.
    */
   const [unavailable, setUnavailable] = React.useState(false);
+  const refreshSequence = React.useRef(0);
+  const appliedRefreshSequence = React.useRef(0);
 
   const handle = React.useCallback((error: unknown) => {
     const message = error instanceof Error ? error.message : String(error);
@@ -31,12 +33,16 @@ export function useBuildJobs(headers?: Record<string, string>) {
       setUnavailable(true);
       return;
     }
-    console.error(`[useBuildJobs] ${message}`);
+    // The API client already records unexpected responses. Polling retries here
+    // without duplicating the same issue in the system log.
   }, []);
 
   const refresh = React.useCallback(async () => {
     if (!headers) return;
+    const sequence = ++refreshSequence.current;
     const nextJobs = (await buildJobApiService.list(1, headers)).jobs;
+    if (sequence < appliedRefreshSequence.current) return;
+    appliedRefreshSequence.current = sequence;
     setJobs(nextJobs);
     setSelectedJobId((current) => current || nextJobs[0]?.id || "");
   }, [headers]);
@@ -53,13 +59,18 @@ export function useBuildJobs(headers?: Record<string, string>) {
       .catch(handle);
   }, [headers, unavailable, handle]);
 
+  const active = jobs.some((job) => job.status === "queued" || job.status === "running");
   React.useEffect(() => {
     if (unavailable) return;
-    const run = () => { refresh().catch(handle); };
-    run();
-    const interval = window.setInterval(run, 5000);
-    return () => window.clearInterval(interval);
-  }, [refresh, unavailable, handle]);
+    let cancelled = false;
+    let timer = 0;
+    const run = async () => {
+      try { await refresh(); } catch (error) { handle(error); }
+      if (!cancelled) timer = window.setTimeout(run, active ? 1_000 : 5_000);
+    };
+    void run();
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [refresh, unavailable, handle, active]);
 
   React.useEffect(() => {
     if (!headers || !selectedJobId) return;

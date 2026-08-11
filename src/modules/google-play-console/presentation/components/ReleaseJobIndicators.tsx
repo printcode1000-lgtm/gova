@@ -12,7 +12,10 @@ export function latestJobFor(jobs: readonly BuildJobRecord[], commandId: string)
   return jobs.find((job) => job.commandId === commandId);
 }
 
-export function StatusChip({ job, t }: { job: BuildJobRecord; t: (key: string) => string }) {
+export function StatusChip({ job, t }: {
+  job: BuildJobRecord;
+  t: (key: string, params?: Record<string, string>) => string;
+}) {
   const running = RUNNING_STATUSES.has(job.status);
   const tone = running ? "bg-muted text-on-surface"
     : job.status === "succeeded" ? "bg-primary-container text-on-primary-container"
@@ -22,6 +25,12 @@ export function StatusChip({ job, t }: { job: BuildJobRecord; t: (key: string) =
     <p role="status" className={`mt-2 flex flex-wrap items-center gap-2 rounded-md p-2 text-xs ${tone}`}>
       <Icon className={`h-4 w-4 shrink-0 ${running ? "animate-spin" : ""}`} />
       <span className="font-semibold">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
+      {job.stage ? <span>{t(
+        job.status === "failed"
+          ? "releaseConsole.jobProgress.failedAt"
+          : "releaseConsole.jobProgress.stage",
+        { stage: t(`releaseConsole.jobStage.${job.stage}`) },
+      )}</span> : null}
       <code dir="ltr">{job.id}</code>
       {job.error ? <span dir="ltr">{job.error}</span> : null}
     </p>
@@ -41,4 +50,3 @@ export function StopButton({ job, cancel, t }: {
     </Button>
   );
 }
-
