@@ -1255,7 +1255,7 @@ change alter something compiled into the store binary?".
 Two traps that are OTA-deliverable but still dangerous:
 
 - **Channel ids are matched by already-installed clients.** Renaming
-  `asol_general_v2` over OTA creates a duplicate channel and silently discards
+  `asol_general_v3` over OTA creates a duplicate channel and silently discards
   the user's existing preference. `notifications/types.ts` is a declared native
   contract for exactly this reason.
 - **An OTA bundle replaces the OTA client itself.** A defect in

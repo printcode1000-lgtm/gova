@@ -18,6 +18,11 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(StorageCapacityPlugin.class);
         registerPlugin(AppSettingsPlugin.class);
         super.onCreate(savedInstanceState);
+        // Create every notification channel before the WebView, session, or
+        // push registration starts. FCM can then resolve its channel even when
+        // the process is later killed, and the explicit R.raw reference keeps
+        // the custom sound in resource-shrunk Release builds.
+        AsolNotificationChannels.ensureCreated(this);
     }
 
     /**

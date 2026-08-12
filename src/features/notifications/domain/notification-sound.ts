@@ -40,18 +40,18 @@ export const FCM_SOUND_RESOURCE = "custom_notification";
 /**
  * Android channel ids.
  *
- * Versioned (`_v2`) because Android refuses to change the sound of a channel
+ * Versioned (`_v3`) because Android refuses to change the sound of a channel
  * that already exists on a device: a new sound needs a new id. The ids and the
  * channels registered in `src/native-platform/notifications/types.ts` are
  * verified against each other by `notification-sound-contract.test.ts`.
  */
 export const NotificationChannelIds = {
-  General: "asol_general_v2",
-  Orders: "asol_orders_v2",
-  Chat: "asol_chat_v2",
-  Urgent: "asol_urgent_v2",
-  Updates: "asol_updates_v2",
-  Silent: "asol_silent_v2",
+  General: "asol_general_v3",
+  Orders: "asol_orders_v3",
+  Chat: "asol_chat_v3",
+  Urgent: "asol_urgent_v3",
+  Updates: "asol_updates_v3",
+  Silent: "asol_silent_v3",
 } as const;
 
 export type NotificationChannelId =

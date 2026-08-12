@@ -159,6 +159,34 @@ assert.ok(
   existsSync(androidSource),
   `The Android sound source ${ANDROID_SOUND_FILE} is missing; cap:sync copies it into res/raw.`,
 );
+const androidBootstrap = readFileSync(
+  path.resolve(
+    "android",
+    "app",
+    "src",
+    "main",
+    "java",
+    "hgh",
+    "asol",
+    "app",
+    "AsolNotificationChannels.java",
+  ),
+  "utf8",
+);
+for (const id of audibleChannels) {
+  assert.ok(
+    androidBootstrap.includes(`\"${id}\"`),
+    `The native startup bootstrap must create audible channel ${id}.`,
+  );
+}
+assert.ok(
+  androidBootstrap.includes("R.raw.custom_notification"),
+  "Release resource shrinking must see a native reference to the custom sound.",
+);
+assert.ok(
+  androidBootstrap.includes("/raw/\" + SOUND_RESOURCE_NAME"),
+  "The startup channel sound URI must address the bundled raw resource.",
+);
 
 const appleSound = path.resolve("ios", "App", "App", APPLE_SOUND_FILE);
 assert.ok(existsSync(appleSound), `The Apple sound ${APPLE_SOUND_FILE} is missing.`);
@@ -220,5 +248,32 @@ assert.ok(
   audibleChannels.has(declared[1]),
   `The manifest default channel ${declared[1]} must be one of the audible ASOL channels.`,
 );
+
+// 9. Every template that can reach Android is audible. Data-only receipts are
+// intentionally not templates and never become a visible notification.
+for (const locale of ["ar", "en"] as const) {
+  const templates = JSON.parse(
+    readFileSync(
+      path.resolve(
+        "src",
+        "features",
+        "notifications",
+        "config",
+        "templates",
+        `notifications.${locale}.json`,
+      ),
+      "utf8",
+    ),
+  ) as Record<string, { channels?: string[]; sound?: string }>;
+  for (const [templateId, template] of Object.entries(templates)) {
+    if (template.channels?.includes("android_push")) {
+      assert.notEqual(
+        template.sound,
+        NotificationSounds.Silent,
+        `${locale}:${templateId} reaches Android and must use the custom sound.`,
+      );
+    }
+  }
+}
 
 console.log("Notification sound contract passed.");

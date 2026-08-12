@@ -794,8 +794,8 @@ local notification.
 | Value | Android | Apple | Browser |
 |-------|---------|-------|---------|
 | `default` | category channel, custom sound | `aps.sound = custom_notification.caf` | browser default |
-| `urgent` | `asol_urgent_v2` (importance 5) | same file, `apns-priority: 10` when the priority is high | browser default |
-| `silent` | `asol_silent_v2`, importance 2 | no `sound` key, `interruption-level: passive` | `silent: true` |
+| `urgent` | `asol_urgent_v3` (importance 5) | same file, `apns-priority: 10` when the priority is high | browser default |
+| `silent` | `asol_silent_v3`, importance 2 | no `sound` key, `interruption-level: passive` | `silent: true` |
 
 There is one sound asset, so `urgent` cannot mean a different file. It means the
 channel that interrupts — the same one `priority: critical` uses.

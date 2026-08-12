@@ -69,7 +69,7 @@ export const DEFAULT_CHANNEL_SOUND = "custom_notification.mp3";
  */
 export const DEFAULT_CHANNELS: NotificationChannel[] = [
   {
-    id: "asol_general_v2",
+    id: "asol_general_v3",
     name: "ASOL - الإشعارات العامة",
     description: "الإشعارات العامة من أصول",
     importance: 4,
@@ -77,7 +77,7 @@ export const DEFAULT_CHANNELS: NotificationChannel[] = [
     sound: DEFAULT_CHANNEL_SOUND,
   },
   {
-    id: "asol_orders_v2",
+    id: "asol_orders_v3",
     name: "ASOL - الطلبات",
     description: "تحديثات الطلبات والشحن والإرجاع",
     importance: 4,
@@ -85,7 +85,7 @@ export const DEFAULT_CHANNELS: NotificationChannel[] = [
     sound: DEFAULT_CHANNEL_SOUND,
   },
   {
-    id: "asol_chat_v2",
+    id: "asol_chat_v3",
     name: "ASOL - المحادثات",
     description: "الرسائل والمحادثات الجديدة",
     importance: 4,
@@ -93,7 +93,7 @@ export const DEFAULT_CHANNELS: NotificationChannel[] = [
     sound: DEFAULT_CHANNEL_SOUND,
   },
   {
-    id: "asol_urgent_v2",
+    id: "asol_urgent_v3",
     name: "ASOL - التنبيهات المهمة",
     description: "التنبيهات العاجلة والمهمة",
     importance: 5,
@@ -101,7 +101,7 @@ export const DEFAULT_CHANNELS: NotificationChannel[] = [
     sound: DEFAULT_CHANNEL_SOUND,
   },
   {
-    id: "asol_updates_v2",
+    id: "asol_updates_v3",
     name: "ASOL - التحديثات",
     description: "إشعارات التحديثات العامة من أصول",
     importance: 4,
@@ -113,7 +113,7 @@ export const DEFAULT_CHANNELS: NotificationChannel[] = [
     // channel's sound from importance 3 upward, and a channel created without
     // an explicit sound still inherits the *system* sound — omitting the file
     // is not enough on its own.
-    id: "asol_silent_v2",
+    id: "asol_silent_v3",
     name: "ASOL - بدون صوت",
     description: "الإشعارات التي تصل بدون صوت أو اهتزاز",
     importance: 2,
@@ -121,4 +121,4 @@ export const DEFAULT_CHANNELS: NotificationChannel[] = [
   },
 ];
 
-export const DEFAULT_CHANNEL_ID = "asol_general_v2";
+export const DEFAULT_CHANNEL_ID = "asol_general_v3";

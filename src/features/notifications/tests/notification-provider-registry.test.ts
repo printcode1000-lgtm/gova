@@ -44,7 +44,7 @@ async function main() {
   assert.equal(result.status, "sent");
   assert.equal(result.tokenCount, 1);
   assert.equal(sentMessage?.message.android.restricted_package_name, "hgh.asol.app");
-  assert.equal(sentMessage?.message.android.notification.channel_id, "asol_general_v2");
+  assert.equal(sentMessage?.message.android.notification.channel_id, "asol_general_v3");
   assert.equal(sentMessage?.message.android.notification.sound, "custom_notification");
   assert.equal(sentMessage?.message.data.dedupeKey, "system.info:test");
   assert.equal(sentMessage?.message.data.uid, "usr_1");
@@ -187,7 +187,7 @@ async function main() {
   // channel — omitting the payload field is not enough on Android 8+.
   assert.equal(
     silentMessage.message.android.notification?.channel_id,
-    "asol_silent_v2",
+    "asol_silent_v3",
   );
   assert.equal(silentMessage.message.android.notification?.sound, undefined);
   // On Apple, no `sound` key is the silent banner.
@@ -223,7 +223,7 @@ async function main() {
   const urgentMessage = urgentSound as unknown as FcmHttpV1Message;
   assert.equal(
     urgentMessage.message.android.notification?.channel_id,
-    "asol_urgent_v2",
+    "asol_urgent_v3",
   );
   assert.equal(
     urgentMessage.message.android.notification?.sound,
@@ -259,7 +259,7 @@ async function main() {
   assert.equal(
     (broadcastMessage as unknown as FcmHttpV1Message).message.android.notification
       ?.channel_id,
-    "asol_updates_v2",
+    "asol_updates_v3",
   );
   assert.equal(
     (broadcastMessage as unknown as FcmHttpV1Message).message.android.notification
