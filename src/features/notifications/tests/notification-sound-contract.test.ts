@@ -210,8 +210,8 @@ assert.ok(
   "Release resource shrinking must see a native reference to the custom sound.",
 );
 assert.ok(
-  androidBootstrap.includes("/raw/\" + SOUND_RESOURCE_NAME"),
-  "The startup channel sound URI must address the bundled raw resource.",
+  androidBootstrap.includes('context.getPackageName() + "/" + retainedResource'),
+  "The native channel sound URI must use the OEM-safe numeric raw resource id.",
 );
 
 const appleSound = path.resolve("ios", "App", "App", APPLE_SOUND_FILE);

@@ -40,7 +40,7 @@ public final class AsolNotificationChannels {
         }
         return Uri.parse(
             ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-            context.getPackageName() + "/raw/" + SOUND_RESOURCE_NAME
+            context.getPackageName() + "/" + retainedResource
         );
     }
 

@@ -10,6 +10,13 @@ const controller = readFileSync(path.join(root, "src/features/notifications/pres
 
 assert.match(activity, /registerPlugin\(AsolNotificationInboxPlugin\.class\)/);
 assert.match(java, /getActiveNotifications\(\)/);
+assert.match(java, /ensureChannels\(PluginCall call\)/);
+assert.match(push, /notificationInboxPlugin\.ensureChannels\(\)/);
+assert.doesNotMatch(
+  push,
+  /plugin\s*\.createChannel\(/,
+  "Android channels must use the application-owned R.raw bridge.",
+);
 assert.match(java, /notification\.getChannelId\(\)/);
 assert.match(java, /status\.getTag\(\)/);
 for (const channel of ["ORDERS", "CHAT", "UPDATES", "URGENT", "SILENT"]) {

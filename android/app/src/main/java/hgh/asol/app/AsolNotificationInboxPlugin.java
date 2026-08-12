@@ -17,6 +17,12 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 @CapacitorPlugin(name = "AsolNotificationInbox")
 public class AsolNotificationInboxPlugin extends Plugin {
     @PluginMethod
+    public void ensureChannels(PluginCall call) {
+        AsolNotificationChannels.ensureCreated(getContext());
+        call.resolve();
+    }
+
+    @PluginMethod
     public void getDelivered(PluginCall call) {
         JSArray items = new JSArray();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {

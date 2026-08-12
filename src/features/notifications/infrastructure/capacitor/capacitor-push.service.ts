@@ -109,7 +109,6 @@ export class CapacitorPushService {
     if (platform !== "android" && platform !== "ios") return null;
     this.currentUid = assertUid(uid);
     await this.ensureListeners();
-    await this.createChannels();
 
     const permission = await pushNotifications.checkPermission();
     if (!permission.granted) {
@@ -118,6 +117,7 @@ export class CapacitorPushService {
         "notificationPermissionDenied",
       );
     }
+    await this.createChannels();
 
     // The Native Platform module owns the registration handshake and its
     // timeout. The provider's own error text is never surfaced: it can carry a
@@ -193,6 +193,10 @@ export class CapacitorPushService {
    */
   async createChannels(): Promise<void> {
     if (!this.isAndroid()) return;
+    // On affected Android/OEM builds a channel created before the runtime
+    // notification grant is persisted with sound=null. Sound is immutable, so
+    // a later call cannot repair it; defer creation until after explicit opt-in.
+    if ((await this.permissionState()) !== "granted") return;
     await pushNotifications.createChannels();
   }
 

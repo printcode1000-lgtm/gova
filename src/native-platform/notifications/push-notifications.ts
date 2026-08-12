@@ -22,7 +22,6 @@ import { permissionManager } from "../permissions/permission-manager";
 import { PermissionKinds, type PermissionResult } from "../permissions/types";
 import { isNotificationWebViewForeground } from "./delivery-visibility";
 import {
-  DEFAULT_CHANNELS,
   type NotificationActionListener,
   type NotificationListener,
   type NotificationPayload,
@@ -43,6 +42,7 @@ interface NativeNotification {
 }
 
 interface NotificationInboxPluginApi {
+  ensureChannels: () => Promise<void>;
   getDelivered: () => Promise<{ notifications: NativeNotification[] }>;
 }
 
@@ -256,27 +256,10 @@ export class PushNotificationsModule {
   /** Create the Android channels this application uses. */
   async createChannels(): Promise<void> {
     if (!isAndroid()) return;
-    const plugin = (await pushPlugin.required()).plugin;
-    await Promise.all(
-      DEFAULT_CHANNELS.map((channel) =>
-        plugin
-          .createChannel({
-            id: channel.id,
-            name: channel.name,
-            description: channel.description,
-            importance: channel.importance,
-            visibility: 0,
-            vibration: channel.vibration ?? true,
-            ...(channel.sound ? { sound: channel.sound } : {}),
-          })
-          .catch((error) => {
-            console.warn(
-              `[NativePlatform:Push] channel ${channel.id} failed.`,
-              error,
-            );
-          }),
-      ),
-    );
+    // The application-owned native plugin uses a direct R.raw reference.
+    // Capacitor's string-based channel API is rejected by some OEM Android
+    // builds and silently persists sound=null, which cannot be repaired later.
+    await notificationInboxPlugin.ensureChannels();
   }
 
   async dispose(): Promise<void> {

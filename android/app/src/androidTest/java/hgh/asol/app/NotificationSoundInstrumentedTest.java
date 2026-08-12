@@ -50,7 +50,7 @@ public class NotificationSoundInstrumentedTest {
         NotificationManager manager = context.getSystemService(NotificationManager.class);
         assertNotNull(manager);
         for (String id : AUDIBLE_CHANNELS) {
-            NotificationChannel channel = manager.getNotificationChannel(id);
+            NotificationChannel channel = awaitAudibleChannel(manager, id);
             assertNotNull("Missing channel " + id, channel);
             assertTrue("Audible channel has low importance: " + id,
                 channel.getImportance() >= NotificationManager.IMPORTANCE_DEFAULT);
@@ -69,6 +69,22 @@ public class NotificationSoundInstrumentedTest {
         NotificationChannel silent = manager.getNotificationChannel(AsolNotificationChannels.SILENT);
         assertNotNull(silent);
         assertNull(silent.getSound());
+    }
+
+    private NotificationChannel awaitAudibleChannel(
+        NotificationManager manager,
+        String id
+    ) throws InterruptedException {
+        NotificationChannel channel = null;
+        // ColorOS persists channel sound asynchronously: the first immediate
+        // read can return null even though dumpsys contains the sound moments
+        // later. Poll the observable OS state instead of racing its writer.
+        for (int attempt = 0; attempt < 20; attempt += 1) {
+            channel = manager.getNotificationChannel(id);
+            if (channel != null && channel.getSound() != null) return channel;
+            Thread.sleep(100);
+        }
+        return channel;
     }
 
     @Test

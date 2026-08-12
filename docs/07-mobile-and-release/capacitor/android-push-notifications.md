@@ -73,6 +73,18 @@ browser. See
 7. Signing out unregisters the token on every platform: `useLogout` calls the shared device-token service before clearing the session, and the controller also unregisters the previous uid when the account changes. Clearing application data unregisters before local storage is erased.
 8. Switching the app language re-registers the token so push text follows the new language.
 
+Channel creation is deferred until `POST_NOTIFICATIONS` is granted. It must not
+run from `MainActivity` or from pre-opt-in initialization: some Android/OEM
+builds persist a channel created before permission with `sound = null`, and the
+application cannot repair that immutable field later. Registration creates the
+complete v4 channel set immediately after the grant and before registering with
+FCM.
+
+The channel set is created by the application-owned native bridge with a direct
+`R.raw.custom_notification` resource id. Do not replace this with Capacitor's
+string-based `createChannel`: the connected ColorOS device accepted that call
+but persisted `sound = null`, permanently silencing the channel id.
+
 `AsolNotificationInbox` is application-owned and compiled into
 `MainActivity`, so its Capacitor proxy is registered synchronously. It must not
 be loaded through the optional dynamic-plugin cache: an early WebView/native

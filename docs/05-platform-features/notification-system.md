@@ -979,6 +979,14 @@ skipped for data-only deliveries and specialty-chat receipts, which carry no
 user-facing text, and for notifications whose identity is in the local dismissed
 list, matching the tray import and the service worker.
 
+On Android, channels are created only after notification permission is granted.
+Creating them during activity startup or session initialization is unsafe on
+OEM builds that persist a pre-permission channel with a null sound; because the
+sound field is immutable, no later `createChannel` call can repair it.
+The application-owned Android bridge creates the channels from the numeric
+`R.raw.custom_notification` resource reference; this avoids OEM builds that
+silently turn Capacitor's string-based sound URI into `null`.
+
 The tray import at startup does not go through this path: those notifications
 were already displayed, with sound, by the system.
 
