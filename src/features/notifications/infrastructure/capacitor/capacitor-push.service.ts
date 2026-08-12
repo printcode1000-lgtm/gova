@@ -212,6 +212,12 @@ export class CapacitorPushService {
     await this.importDeliveredNotifications();
   }
 
+  /** Import notifications the OS displayed while this WebView was inactive. */
+  async syncDeliveredNotifications(): Promise<void> {
+    if (!this.isNativePush()) return;
+    await this.importDeliveredNotifications();
+  }
+
   async register(uid: string): Promise<DeviceToken | null> {
     if (!this.isNativePush()) return null;
     const platform = capacitorPlatformService.getPlatform();

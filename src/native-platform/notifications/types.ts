@@ -17,6 +17,10 @@ export interface NotificationPayload {
   data: Record<string, string>;
   /** True when the app was in the foreground at delivery time. */
   foreground: boolean;
+  /** Android tray tag, preserved so startup import keeps the push identity. */
+  tag?: string;
+  /** Android channel used by the OS, preserved for faithful tray import. */
+  channelId?: string;
 }
 
 export type PushTokenListener = (token: PushToken) => void;

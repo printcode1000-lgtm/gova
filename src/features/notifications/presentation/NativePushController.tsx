@@ -6,6 +6,7 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { notificationDeviceTokenService } from "../application/device-token-service";
 import { notificationLifecycleService } from "../application/notification-lifecycle-service";
 import { notificationReceiver } from "../application/notification-receiver";
+import { nativePlatform } from "@/native-platform";
 
 /**
  * Native push lifecycle for Android and iOS.
@@ -55,6 +56,18 @@ export function NativePushController() {
         console.error("[Notifications] Native push initialization failed.", error);
       });
   }, [isLoading, router, session?.phone, session?.uid]);
+
+  useEffect(() => {
+    if (isLoading || !session?.uid || !notificationDeviceTokenService.isNativePush()) return;
+    let unsubscribe: (() => void) | undefined;
+    void nativePlatform.app.onStateChange(({ isActive }) => {
+      if (!isActive) return;
+      void notificationDeviceTokenService.syncDeliveredNotifications().catch((error) => {
+        console.error("[Notifications] Tray synchronization failed.", error);
+      });
+    }).then((remove) => { unsubscribe = remove; });
+    return () => unsubscribe?.();
+  }, [isLoading, session?.uid]);
 
   return null;
 }

@@ -33,10 +33,21 @@ const REGISTRATION_TIMEOUT_MS = 20_000;
 
 interface NativeNotification {
   id?: string;
+  tag?: string;
+  channelId?: string;
   title?: string;
   body?: string;
   data?: Record<string, unknown>;
 }
+
+interface NotificationInboxPluginApi {
+  getDelivered: () => Promise<{ notifications: NativeNotification[] }>;
+}
+
+const notificationInboxPlugin = createLazyPlugin("AsolNotificationInbox", async () => {
+  const { registerPlugin } = await import("@capacitor/core");
+  return { plugin: registerPlugin<NotificationInboxPluginApi>("AsolNotificationInbox") };
+});
 
 interface PushPluginApi {
   register: () => Promise<void>;
@@ -65,13 +76,15 @@ function toPayload(
 ): NotificationPayload {
   const rawData = native.data ?? {};
   return {
-    id: native.id ?? `push_${Date.now()}`,
+    id: native.tag || native.id || `push_${Date.now()}`,
     title: native.title ?? "",
     body: native.body ?? "",
     data: Object.fromEntries(
       Object.entries(rawData).map(([key, value]) => [key, String(value ?? "")]),
     ),
     foreground,
+    tag: native.tag,
+    channelId: native.channelId,
   };
 }
 
@@ -166,8 +179,12 @@ export class PushNotificationsModule {
   /** Notifications the OS has already shown and not yet dismissed. */
   async getDelivered(): Promise<NotificationPayload[]> {
     if (!this.isSupported()) return [];
-    const plugin = (await pushPlugin.required()).plugin;
-    const { notifications } = await plugin.getDeliveredNotifications();
+    const plugin = isAndroid()
+      ? (await notificationInboxPlugin.required()).plugin
+      : (await pushPlugin.required()).plugin;
+    const { notifications } = await ("getDelivered" in plugin
+      ? plugin.getDelivered()
+      : plugin.getDeliveredNotifications());
     return notifications.map((notification) => toPayload(notification, false));
   }
 

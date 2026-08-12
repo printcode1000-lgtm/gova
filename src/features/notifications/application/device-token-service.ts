@@ -40,6 +40,10 @@ export class DeviceTokenService {
     if (permission === "granted") await this.register(uid, phone);
   }
 
+  syncDeliveredNotifications(): Promise<void> {
+    return capacitorPushService.syncDeliveredNotifications();
+  }
+
   /**
    * Re-register every token this device owns after a language switch, so the
    * server keeps building push text in the language the user now reads.

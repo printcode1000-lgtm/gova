@@ -25,22 +25,30 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
 import { notificationPermissionService } from "@/features/notifications/application/permission-service";
+import { notificationSender } from "@/features/notifications/application/notification-sender";
 import type {
   BroadcastRecipient,
   NotificationTestResult,
 } from "@/features/notifications/domain/entities";
+import {
+  NotificationChannels,
+  NotificationContentSources,
+  NotificationDeliveryStatuses,
+  NotificationSyncStates,
+  NotificationTargets,
+  NotificationTypes,
+} from "@/features/notifications/domain/enums";
 import {
   getNotificationTestScenario,
   NOTIFICATION_TEST_SCENARIOS,
   NotificationTestScenarioIds,
   type NotificationTestScenarioId,
 } from "@/features/notifications/domain/notification-test-scenarios";
-import { localNotificationSoundFile } from "@/features/notifications/domain/notification-sound";
+import { asolNotificationRepository } from "@/features/notifications/infrastructure/asol-notification-repository";
 import { notificationApiService } from "@/features/notifications/services/notification-api-service";
 import {
   DEFAULT_CHANNELS,
   getPlatformName,
-  localNotifications,
 } from "@/native-platform";
 
 type TestMode = "local" | "push";
@@ -51,6 +59,7 @@ interface RuntimeStatus {
   pushSupported: boolean;
   deviceEnabled: boolean;
   recipient: BroadcastRecipient | null;
+  centerTestCount: number;
 }
 
 interface TestHistoryEntry {
@@ -61,6 +70,7 @@ interface TestHistoryEntry {
   channelId: string;
   status: string;
   tokenCount: number;
+  centerStatus: "saved" | "pending" | "missing";
 }
 
 const delayOptions = [0, 5, 10, 30] as const;
@@ -69,10 +79,6 @@ function createRequestId(): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
     : `${Date.now()}:${Math.random().toString(36).slice(2)}`;
-}
-
-function localNumericId(): number {
-  return Math.max(1, Date.now() % 2_000_000_000);
 }
 
 function wait(milliseconds: number): Promise<void> {
@@ -116,10 +122,11 @@ export function SuperAdminNotificationTestsPage() {
     setStatusBusy(true);
     setMessage("");
     try {
-      const [permissionResult, enabled, recipients] = await Promise.all([
+      const [permissionResult, enabled, recipients, centerItems] = await Promise.all([
         notificationPermissionService.checkResult(),
         notificationDeviceTokenService.isDeviceEnabled(),
         notificationApiService.getBroadcastRecipients(session),
+        asolNotificationRepository.list(session.uid),
       ]);
       setStatus({
         platform: getPlatformName(),
@@ -128,6 +135,9 @@ export function SuperAdminNotificationTestsPage() {
         deviceEnabled: enabled,
         recipient:
           recipients.recipients.find((item) => item.uid === session.uid) ?? null,
+        centerTestCount: centerItems.filter(
+          (item) => item.metadata?.notificationTest === true || item.metadata?.notificationTest === "true",
+        ).length,
       });
     } catch (error) {
       setMessage(
@@ -160,6 +170,20 @@ export function SuperAdminNotificationTestsPage() {
       await refreshStatus();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "تعذر تفعيل الإشعارات.");
+    } finally {
+      setStatusBusy(false);
+    }
+  };
+
+  const syncNotificationCenter = async () => {
+    if (!session) return;
+    setStatusBusy(true);
+    try {
+      await notificationDeviceTokenService.syncDeliveredNotifications();
+      await refreshStatus();
+      setMessage("تمت مزامنة إشعارات Android الموجودة في الشريط مع صفحة الإشعارات.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "تعذرت مزامنة مركز الإشعارات.");
     } finally {
       setStatusBusy(false);
     }
@@ -206,32 +230,42 @@ export function SuperAdminNotificationTestsPage() {
         if (!permission.granted) {
           throw new Error("فعّل إذن الإشعارات قبل إجراء الاختبار المحلي.");
         }
-        await localNotifications.createChannels();
-        await localNotifications.schedule({
-          id: localNumericId(),
+        const notificationId = `local-test:${createRequestId()}`;
+        const now = new Date().toISOString();
+        const saved = await notificationSender.send({
+          id: notificationId,
+          uid: session.uid,
+          type: NotificationTypes.Custom,
+          source: NotificationContentSources.Custom,
           title: title.trim(),
           body: body.trim(),
-          channelId: scenario.channelId,
-          sound: localNotificationSoundFile(
-            getPlatformName(),
-            scenario.sound,
-          ),
-          data: {
-            notificationId: `local-test:${createRequestId()}`,
-            routeHref,
-            category: scenario.category,
-            priority: scenario.priority,
-            sound: scenario.sound,
-            meta_source: scenario.source,
-            meta_notificationTest: "true",
+          category: scenario.category,
+          priority: scenario.priority,
+          channels: [NotificationChannels.InApp, NotificationChannels.AndroidPush],
+          targets: [NotificationTargets.Center, NotificationTargets.Badge, NotificationTargets.Popup],
+          route: { href: routeHref },
+          dedupeKey: notificationId,
+          sound: scenario.sound,
+          status: NotificationDeliveryStatuses.Pending,
+          syncState: NotificationSyncStates.Synced,
+          createdAt: now,
+          updatedAt: now,
+          metadata: {
+            source: scenario.source,
+            notificationTest: true,
+            notificationTestScenario: scenario.id,
+            androidChannelId: scenario.channelId,
           },
         });
+        const centerSaved = (await asolNotificationRepository.list(session.uid))
+          .some((item) => item.id === saved.id);
         addHistory({
           mode,
           scenarioId: scenario.id,
           channelId: scenario.channelId,
-          status: "تمت الجدولة على الجهاز",
+          status: centerSaved ? "تم العرض والحفظ" : "عُرض ولم يُحفظ",
           tokenCount: 0,
+          centerStatus: centerSaved ? "saved" : "missing",
         });
         setMessage(
           scenario.audible
@@ -256,15 +290,19 @@ export function SuperAdminNotificationTestsPage() {
         });
         setRemoteResult(result);
         const delivery = result.results[0];
+        await wait(1_200);
+        const centerSaved = (await asolNotificationRepository.list(session.uid))
+          .some((item) => item.dedupeKey === result.dedupeKey);
         addHistory({
           mode,
           scenarioId: scenario.id,
           channelId: result.channelId,
           status: delivery?.status ?? "failed",
           tokenCount: delivery?.tokenCount ?? 0,
+          centerStatus: centerSaved ? "saved" : "pending",
         });
         setMessage(
-          delivery?.status === "sent" || delivery?.status === "partial"
+          delivery?.status === "sent" || delivery?.status === "partial" || delivery?.status === "queued"
             ? "قبل مزود الإرسال اختبار Push الحقيقي. راقب الجهاز والنغمة."
             : delivery?.status === "no_tokens"
               ? "لا يوجد رمز Push مسجل لحساب السوبر أدمن. فعّل الجهاز أولًا."
@@ -280,6 +318,7 @@ export function SuperAdminNotificationTestsPage() {
         channelId: scenario.channelId,
         status: "failed",
         tokenCount: 0,
+        centerStatus: "missing",
       });
     } finally {
       setBusy(false);
@@ -326,12 +365,13 @@ export function SuperAdminNotificationTestsPage() {
             تحديث الحالة
           </Button>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
           <StatusCard label="المنصة" value={status?.platform ?? "—"} ok={status?.platform === "android" || status?.platform === "ios"} />
           <StatusCard label="إذن الإشعارات" value={status?.permission ?? "—"} ok={status?.permission === "granted"} />
           <StatusCard label="Push مدعوم" value={status?.pushSupported ? "نعم" : "لا"} ok={Boolean(status?.pushSupported)} />
           <StatusCard label="الجهاز مفعّل" value={status?.deviceEnabled ? "نعم" : "لا"} ok={Boolean(status?.deviceEnabled)} />
           <StatusCard label="رموز الحساب" value={String(status?.recipient?.tokenCount ?? 0)} ok={Boolean(status?.recipient?.tokenCount)} />
+          <StatusCard label="اختبارات محفوظة" value={String(status?.centerTestCount ?? 0)} ok={Boolean(status?.centerTestCount)} />
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
           <Button onClick={() => void enableNotifications()} disabled={statusBusy}>
@@ -341,6 +381,10 @@ export function SuperAdminNotificationTestsPage() {
           <Button variant="outline" onClick={() => void notificationPermissionService.openSettings()}>
             <ExternalLink className="me-2 h-4 w-4" />
             فتح إعدادات التطبيق
+          </Button>
+          <Button variant="outline" onClick={() => void syncNotificationCenter()} disabled={statusBusy}>
+            <RefreshCw className="me-2 h-4 w-4" />
+            مزامنة الشريط مع صفحة الإشعارات
           </Button>
         </div>
         {status?.recipient ? (
@@ -435,8 +479,8 @@ export function SuperAdminNotificationTestsPage() {
         {history.length === 0 ? <p className="text-sm text-muted-foreground">لم يُجرَ أي اختبار بعد.</p> : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[680px] text-sm">
-              <thead><tr className="border-b text-muted-foreground"><th className="p-2 text-start">الوقت</th><th className="p-2 text-start">النوع</th><th className="p-2 text-start">السيناريو</th><th className="p-2 text-start">القناة</th><th className="p-2 text-start">النتيجة</th><th className="p-2 text-start">الرموز</th></tr></thead>
-              <tbody>{history.map((item) => <tr key={item.id} className="border-b last:border-0"><td className="p-2">{item.at}</td><td className="p-2">{item.mode === "local" ? "محلي" : "Push"}</td><td className="p-2">{getNotificationTestScenario(item.scenarioId)?.label}</td><td className="p-2 font-mono text-xs" dir="ltr">{item.channelId}</td><td className="p-2">{item.status}</td><td className="p-2">{item.tokenCount}</td></tr>)}</tbody>
+              <thead><tr className="border-b text-muted-foreground"><th className="p-2 text-start">الوقت</th><th className="p-2 text-start">النوع</th><th className="p-2 text-start">السيناريو</th><th className="p-2 text-start">القناة</th><th className="p-2 text-start">النتيجة</th><th className="p-2 text-start">المركز</th><th className="p-2 text-start">الرموز</th></tr></thead>
+              <tbody>{history.map((item) => <tr key={item.id} className="border-b last:border-0"><td className="p-2">{item.at}</td><td className="p-2">{item.mode === "local" ? "محلي" : "Push"}</td><td className="p-2">{getNotificationTestScenario(item.scenarioId)?.label}</td><td className="p-2 font-mono text-xs" dir="ltr">{item.channelId}</td><td className="p-2">{item.status}</td><td className="p-2">{item.centerStatus === "saved" ? "محفوظ" : item.centerStatus === "pending" ? "ينتظر المزامنة" : "مفقود"}</td><td className="p-2">{item.tokenCount}</td></tr>)}</tbody>
             </table>
           </div>
         )}

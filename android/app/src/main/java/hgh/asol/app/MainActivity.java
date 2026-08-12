@@ -17,6 +17,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(BackgroundDownloadPlugin.class);
         registerPlugin(StorageCapacityPlugin.class);
         registerPlugin(AppSettingsPlugin.class);
+        registerPlugin(AsolNotificationInboxPlugin.class);
         super.onCreate(savedInstanceState);
         // Create every notification channel before the WebView, session, or
         // push registration starts. FCM can then resolve its channel even when

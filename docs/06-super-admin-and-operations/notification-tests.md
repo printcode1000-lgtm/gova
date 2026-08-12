@@ -24,8 +24,10 @@ broadcast page.
 ### Local
 
 The page creates Android channels and schedules a local notification through
-the Native Platform facade. This isolates packaging, permission, channel, and
-custom-sound problems from the remote provider.
+the production local notification sender. The same operation also writes the
+item to the local notification center and reports that verification in the
+history table. This isolates packaging, permission, channel, sound, and local
+center persistence problems from the remote provider.
 
 ### Real Push
 
@@ -61,3 +63,9 @@ the screen. The page must remain alive until its countdown finishes; it does
 not pretend to be a durable server scheduler. After the send has started, a
 real Push test can be observed with the application foregrounded, backgrounded,
 or terminated.
+
+Android tray notifications are synchronized both at cold start and whenever
+the app returns to the foreground. The Android inbox bridge preserves the tray
+tag and channel id, allowing imported orders, chat, urgent, and silent items to
+retain their category, priority, sound, and dedupe identity in the center. The
+page also exposes a manual **Sync tray with notification center** diagnostic.
