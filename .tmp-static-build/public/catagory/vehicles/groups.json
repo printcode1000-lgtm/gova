@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "key": "brand",
+      "name": {
+        "ar": "ماركة السيارة",
+        "en": "Vehicle Brand"
+      },
+      "optionFile": "vehicles/options/brands.json",
+      "supportsImage": true,
+      "display": {
+        "order": 10,
+        "hidden": false
+      }
+    },
+    {
+      "key": "bodyType",
+      "name": {
+        "ar": "نوع الهيكل",
+        "en": "Body Type"
+      },
+      "optionFile": "vehicles/options/body-types.json",
+      "supportsImage": true,
+      "display": {
+        "order": 20,
+        "hidden": false
+      }
+    },
+    {
+      "key": "fuel",
+      "name": {
+        "ar": "نوع الوقود",
+        "en": "Fuel Type"
+      },
+      "optionFile": "vehicles/options/fuel-types.json",
+      "supportsImage": false,
+      "display": {
+        "order": 30,
+        "hidden": false
+      }
+    },
+    {
+      "key": "transmission",
+      "name": {
+        "ar": "ناقل الحركة",
+        "en": "Transmission"
+      },
+      "optionFile": "vehicles/options/transmission-types.json",
+      "supportsImage": false,
+      "display": {
+        "order": 40,
+        "hidden": false
+      }
+    },
+    {
+      "key": "special",
+      "name": {
+        "ar": "تصنيفات خاصة",
+        "en": "Special Types"
+      },
+      "optionFile": "vehicles/options/special-types.json",
+      "supportsImage": false,
+      "display": {
+        "order": 50,
+        "hidden": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,1045 @@
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "id": "mercedes-benz",
+      "name": {
+        "ar": "مرسيدس بنز",
+        "en": "Mercedes-Benz"
+      },
+      "image": "mercedes_benz.png",
+      "isDefault": false,
+      "display": {
+        "order": 10,
+        "hidden": false
+      }
+    },
+    {
+      "id": "hyundai",
+      "name": {
+        "ar": "هيونداي",
+        "en": "Hyundai"
+      },
+      "image": "hyundai.png",
+      "isDefault": false,
+      "display": {
+        "order": 20,
+        "hidden": false
+      }
+    },
+    {
+      "id": "fiat",
+      "name": {
+        "ar": "فيات",
+        "en": "Fiat"
+      },
+      "image": "fiat.png",
+      "isDefault": false,
+      "display": {
+        "order": 30,
+        "hidden": false
+      }
+    },
+    {
+      "id": "bmw",
+      "name": {
+        "ar": "بي إم دبليو",
+        "en": "BMW"
+      },
+      "image": "bmw.png",
+      "isDefault": false,
+      "display": {
+        "order": 40,
+        "hidden": false
+      }
+    },
+    {
+      "id": "renault",
+      "name": {
+        "ar": "رينو",
+        "en": "Renault"
+      },
+      "image": "renault.png",
+      "isDefault": false,
+      "display": {
+        "order": 50,
+        "hidden": false
+      }
+    },
+    {
+      "id": "chevrolet",
+      "name": {
+        "ar": "شيفروليه",
+        "en": "Chevrolet"
+      },
+      "image": "chevrolet.png",
+      "isDefault": false,
+      "display": {
+        "order": 60,
+        "hidden": false
+      }
+    },
+    {
+      "id": "kia",
+      "name": {
+        "ar": "كيا",
+        "en": "Kia"
+      },
+      "image": "kia.png",
+      "isDefault": false,
+      "display": {
+        "order": 70,
+        "hidden": false
+      }
+    },
+    {
+      "id": "daewoo",
+      "name": {
+        "ar": "دايو",
+        "en": "Daewoo"
+      },
+      "image": "daewoo.png",
+      "isDefault": false,
+      "display": {
+        "order": 80,
+        "hidden": false
+      }
+    },
+    {
+      "id": "opel",
+      "name": {
+        "ar": "أوبل",
+        "en": "Opel"
+      },
+      "image": "opel.png",
+      "isDefault": false,
+      "display": {
+        "order": 90,
+        "hidden": false
+      }
+    },
+    {
+      "id": "peugeot",
+      "name": {
+        "ar": "بيجو",
+        "en": "Peugeot"
+      },
+      "image": "peugeot.png",
+      "isDefault": false,
+      "display": {
+        "order": 100,
+        "hidden": false
+      }
+    },
+    {
+      "id": "volkswagen",
+      "name": {
+        "ar": "فولكس فاجن",
+        "en": "Volkswagen"
+      },
+      "image": "volkswagen.png",
+      "isDefault": false,
+      "display": {
+        "order": 110,
+        "hidden": false
+      }
+    },
+    {
+      "id": "nissan",
+      "name": {
+        "ar": "نيسان",
+        "en": "Nissan"
+      },
+      "image": "nissan.png",
+      "isDefault": false,
+      "display": {
+        "order": 120,
+        "hidden": false
+      }
+    },
+    {
+      "id": "skoda",
+      "name": {
+        "ar": "سكودا",
+        "en": "Skoda"
+      },
+      "image": "skoda.png",
+      "isDefault": false,
+      "display": {
+        "order": 130,
+        "hidden": false
+      }
+    },
+    {
+      "id": "toyota",
+      "name": {
+        "ar": "تويوتا",
+        "en": "Toyota"
+      },
+      "image": "toyota.png",
+      "isDefault": false,
+      "display": {
+        "order": 140,
+        "hidden": false
+      }
+    },
+    {
+      "id": "mg",
+      "name": {
+        "ar": "إم جي",
+        "en": "MG"
+      },
+      "image": "mg.png",
+      "isDefault": false,
+      "display": {
+        "order": 150,
+        "hidden": false
+      }
+    },
+    {
+      "id": "chery",
+      "name": {
+        "ar": "شيري",
+        "en": "Chery"
+      },
+      "image": "chery.png",
+      "isDefault": false,
+      "display": {
+        "order": 160,
+        "hidden": false
+      }
+    },
+    {
+      "id": "suzuki",
+      "name": {
+        "ar": "سوزوكي",
+        "en": "Suzuki"
+      },
+      "image": "suzuki.png",
+      "isDefault": false,
+      "display": {
+        "order": 170,
+        "hidden": false
+      }
+    },
+    {
+      "id": "speranza",
+      "name": {
+        "ar": "اسبرانزا",
+        "en": "Speranza"
+      },
+      "image": "speranza.png",
+      "isDefault": false,
+      "display": {
+        "order": 180,
+        "hidden": false
+      }
+    },
+    {
+      "id": "jeep",
+      "name": {
+        "ar": "جيب",
+        "en": "Jeep"
+      },
+      "image": "jeep.png",
+      "isDefault": false,
+      "display": {
+        "order": 190,
+        "hidden": false
+      }
+    },
+    {
+      "id": "land-rover",
+      "name": {
+        "ar": "لاند روفر",
+        "en": "Land Rover"
+      },
+      "image": "land_rover.png",
+      "isDefault": false,
+      "display": {
+        "order": 200,
+        "hidden": false
+      }
+    },
+    {
+      "id": "mitsubishi",
+      "name": {
+        "ar": "ميتسوبيشي",
+        "en": "Mitsubishi"
+      },
+      "image": "mitsubishi.png",
+      "isDefault": false,
+      "display": {
+        "order": 210,
+        "hidden": false
+      }
+    },
+    {
+      "id": "seat",
+      "name": {
+        "ar": "سيات",
+        "en": "Seat"
+      },
+      "image": "seat.png",
+      "isDefault": false,
+      "display": {
+        "order": 220,
+        "hidden": false
+      }
+    },
+    {
+      "id": "audi",
+      "name": {
+        "ar": "أودي",
+        "en": "Audi"
+      },
+      "image": "audi.png",
+      "isDefault": false,
+      "display": {
+        "order": 230,
+        "hidden": false
+      }
+    },
+    {
+      "id": "geely",
+      "name": {
+        "ar": "جيلي",
+        "en": "Geely"
+      },
+      "image": "geely.png",
+      "isDefault": false,
+      "display": {
+        "order": 240,
+        "hidden": false
+      }
+    },
+    {
+      "id": "byd",
+      "name": {
+        "ar": "بي واي دي",
+        "en": "BYD"
+      },
+      "image": "byd.png",
+      "isDefault": false,
+      "display": {
+        "order": 250,
+        "hidden": false
+      }
+    },
+    {
+      "id": "lada",
+      "name": {
+        "ar": "لادا",
+        "en": "Lada"
+      },
+      "image": "lada.png",
+      "isDefault": false,
+      "display": {
+        "order": 260,
+        "hidden": false
+      }
+    },
+    {
+      "id": "cupra",
+      "name": {
+        "ar": "كوبرا",
+        "en": "Cupra"
+      },
+      "image": "cupra.png",
+      "isDefault": false,
+      "display": {
+        "order": 270,
+        "hidden": false
+      }
+    },
+    {
+      "id": "porsche",
+      "name": {
+        "ar": "بورش",
+        "en": "Porsche"
+      },
+      "image": "porsche.png",
+      "isDefault": false,
+      "display": {
+        "order": 280,
+        "hidden": false
+      }
+    },
+    {
+      "id": "ford",
+      "name": {
+        "ar": "فورد",
+        "en": "Ford"
+      },
+      "image": "ford.png",
+      "isDefault": false,
+      "display": {
+        "order": 290,
+        "hidden": false
+      }
+    },
+    {
+      "id": "jetour",
+      "name": {
+        "ar": "جيتور",
+        "en": "Jetour"
+      },
+      "image": "jetour.png",
+      "isDefault": false,
+      "display": {
+        "order": 300,
+        "hidden": false
+      }
+    },
+    {
+      "id": "citroen",
+      "name": {
+        "ar": "ستروين",
+        "en": "Citroen"
+      },
+      "image": "citroen.png",
+      "isDefault": false,
+      "display": {
+        "order": 310,
+        "hidden": false
+      }
+    },
+    {
+      "id": "mazda",
+      "name": {
+        "ar": "مازدا",
+        "en": "Mazda"
+      },
+      "image": "mazda.png",
+      "isDefault": false,
+      "display": {
+        "order": 320,
+        "hidden": false
+      }
+    },
+    {
+      "id": "honda",
+      "name": {
+        "ar": "هوندا",
+        "en": "Honda"
+      },
+      "image": "honda.png",
+      "isDefault": false,
+      "display": {
+        "order": 330,
+        "hidden": false
+      }
+    },
+    {
+      "id": "proton",
+      "name": {
+        "ar": "بروتون",
+        "en": "Proton"
+      },
+      "image": "proton.png",
+      "isDefault": false,
+      "display": {
+        "order": 340,
+        "hidden": false
+      }
+    },
+    {
+      "id": "brilliance",
+      "name": {
+        "ar": "بريليانس",
+        "en": "Brilliance"
+      },
+      "image": "brilliance.png",
+      "isDefault": false,
+      "display": {
+        "order": 350,
+        "hidden": false
+      }
+    },
+    {
+      "id": "changan",
+      "name": {
+        "ar": "شانجان",
+        "en": "Changan"
+      },
+      "image": "changan.png",
+      "isDefault": false,
+      "display": {
+        "order": 360,
+        "hidden": false
+      }
+    },
+    {
+      "id": "daihatsu",
+      "name": {
+        "ar": "ديهاتسو",
+        "en": "Daihatsu"
+      },
+      "image": "daihatsu.png",
+      "isDefault": false,
+      "display": {
+        "order": 370,
+        "hidden": false
+      }
+    },
+    {
+      "id": "soueast",
+      "name": {
+        "ar": "ساوإيست",
+        "en": "Soueast"
+      },
+      "image": "soueast.png",
+      "isDefault": false,
+      "display": {
+        "order": 380,
+        "hidden": false
+      }
+    },
+    {
+      "id": "mini",
+      "name": {
+        "ar": "ميني",
+        "en": "MINI"
+      },
+      "image": "mini.png",
+      "isDefault": false,
+      "display": {
+        "order": 390,
+        "hidden": false
+      }
+    },
+    {
+      "id": "xiaomi",
+      "name": {
+        "ar": "شاومي",
+        "en": "Xiaomi"
+      },
+      "image": "xiaomi.png",
+      "isDefault": false,
+      "display": {
+        "order": 400,
+        "hidden": false
+      }
+    },
+    {
+      "id": "baic",
+      "name": {
+        "ar": "بايك",
+        "en": "Baic"
+      },
+      "image": "baic.png",
+      "isDefault": false,
+      "display": {
+        "order": 410,
+        "hidden": false
+      }
+    },
+    {
+      "id": "volvo",
+      "name": {
+        "ar": "فولفو",
+        "en": "Volvo"
+      },
+      "image": "volvo.png",
+      "isDefault": false,
+      "display": {
+        "order": 420,
+        "hidden": false
+      }
+    },
+    {
+      "id": "cadillac",
+      "name": {
+        "ar": "كاديلاك",
+        "en": "Cadillac"
+      },
+      "image": "cadillac.png",
+      "isDefault": false,
+      "display": {
+        "order": 430,
+        "hidden": false
+      }
+    },
+    {
+      "id": "jac",
+      "name": {
+        "ar": "جاك",
+        "en": "Jac"
+      },
+      "image": "jac.png",
+      "isDefault": false,
+      "display": {
+        "order": 440,
+        "hidden": false
+      }
+    },
+    {
+      "id": "tesla",
+      "name": {
+        "ar": "تسلا",
+        "en": "Tesla"
+      },
+      "image": "tesla.png",
+      "isDefault": false,
+      "display": {
+        "order": 450,
+        "hidden": false
+      }
+    },
+    {
+      "id": "jaguar",
+      "name": {
+        "ar": "جاكوار",
+        "en": "Jaguar"
+      },
+      "image": "jaguar.png",
+      "isDefault": false,
+      "display": {
+        "order": 460,
+        "hidden": false
+      }
+    },
+    {
+      "id": "gmc",
+      "name": {
+        "ar": "جي إم سي",
+        "en": "GMC"
+      },
+      "image": "gmc.png",
+      "isDefault": false,
+      "display": {
+        "order": 470,
+        "hidden": false
+      }
+    },
+    {
+      "id": "avatr",
+      "name": {
+        "ar": "أفاتر",
+        "en": "Avatr"
+      },
+      "image": "avatr.png",
+      "isDefault": false,
+      "display": {
+        "order": 480,
+        "hidden": false
+      }
+    },
+    {
+      "id": "subaru",
+      "name": {
+        "ar": "سوبارو",
+        "en": "Subaru"
+      },
+      "image": "subaru.png",
+      "isDefault": false,
+      "display": {
+        "order": 490,
+        "hidden": false
+      }
+    },
+    {
+      "id": "rox",
+      "name": {
+        "ar": "روكس",
+        "en": "ROX"
+      },
+      "image": "rox.png",
+      "isDefault": false,
+      "display": {
+        "order": 500,
+        "hidden": false
+      }
+    },
+    {
+      "id": "kaiyi",
+      "name": {
+        "ar": "كايي",
+        "en": "Kaiyi"
+      },
+      "image": "kaiyi.png",
+      "isDefault": false,
+      "display": {
+        "order": 510,
+        "hidden": false
+      }
+    },
+    {
+      "id": "saipa",
+      "name": {
+        "ar": "سايبا",
+        "en": "Saipa"
+      },
+      "image": "saipa.png",
+      "isDefault": false,
+      "display": {
+        "order": 520,
+        "hidden": false
+      }
+    },
+    {
+      "id": "haval",
+      "name": {
+        "ar": "هافال",
+        "en": "Haval"
+      },
+      "image": "haval.png",
+      "isDefault": false,
+      "display": {
+        "order": 530,
+        "hidden": false
+      }
+    },
+    {
+      "id": "dongfeng",
+      "name": {
+        "ar": "دونج فينج",
+        "en": "Dongfeng"
+      },
+      "image": "dongfeng.png",
+      "isDefault": false,
+      "display": {
+        "order": 540,
+        "hidden": false
+      }
+    },
+    {
+      "id": "alfa-romeo",
+      "name": {
+        "ar": "ألفا روميو",
+        "en": "Alfa Romeo"
+      },
+      "image": "alfa_romeo.png",
+      "isDefault": false,
+      "display": {
+        "order": 550,
+        "hidden": false
+      }
+    },
+    {
+      "id": "zotye",
+      "name": {
+        "ar": "زوتي",
+        "en": "Zotye"
+      },
+      "image": "zotye.png",
+      "isDefault": false,
+      "display": {
+        "order": 560,
+        "hidden": false
+      }
+    },
+    {
+      "id": "chana",
+      "name": {
+        "ar": "شانا",
+        "en": "Chana"
+      },
+      "image": "chana.png",
+      "isDefault": false,
+      "display": {
+        "order": 570,
+        "hidden": false
+      }
+    },
+    {
+      "id": "zeekr",
+      "name": {
+        "ar": "زيكر",
+        "en": "Zeekr"
+      },
+      "image": "zeekr.png",
+      "isDefault": false,
+      "display": {
+        "order": 580,
+        "hidden": false
+      }
+    },
+    {
+      "id": "dodge",
+      "name": {
+        "ar": "دودج",
+        "en": "Dodge"
+      },
+      "image": "dodge.png",
+      "isDefault": false,
+      "display": {
+        "order": 590,
+        "hidden": false
+      }
+    },
+    {
+      "id": "chrysler",
+      "name": {
+        "ar": "كرايسلر",
+        "en": "Chrysler"
+      },
+      "image": "chrysler.png",
+      "isDefault": false,
+      "display": {
+        "order": 600,
+        "hidden": false
+      }
+    },
+    {
+      "id": "ssang-yong",
+      "name": {
+        "ar": "سانج يونج",
+        "en": "Ssang Yong"
+      },
+      "image": "ssang_yong.png",
+      "isDefault": false,
+      "display": {
+        "order": 610,
+        "hidden": false
+      }
+    },
+    {
+      "id": "lynk-co",
+      "name": {
+        "ar": "لينك أند كو",
+        "en": "Lynk & Co"
+      },
+      "image": "lynk___co.png",
+      "isDefault": false,
+      "display": {
+        "order": 620,
+        "hidden": false
+      }
+    },
+    {
+      "id": "forthing",
+      "name": {
+        "ar": "فورثينج",
+        "en": "Forthing"
+      },
+      "image": "forthing.png",
+      "isDefault": false,
+      "display": {
+        "order": 630,
+        "hidden": false
+      }
+    },
+    {
+      "id": "maserati",
+      "name": {
+        "ar": "مازيراتي",
+        "en": "Maserati"
+      },
+      "image": "maserati.png",
+      "isDefault": false,
+      "display": {
+        "order": 640,
+        "hidden": false
+      }
+    },
+    {
+      "id": "isuzu",
+      "name": {
+        "ar": "ايسوزو",
+        "en": "Isuzu"
+      },
+      "image": "isuzu.png",
+      "isDefault": false,
+      "display": {
+        "order": 650,
+        "hidden": false
+      }
+    },
+    {
+      "id": "senova",
+      "name": {
+        "ar": "سينوفا",
+        "en": "Senova"
+      },
+      "image": "senova.png",
+      "isDefault": false,
+      "display": {
+        "order": 660,
+        "hidden": false
+      }
+    },
+    {
+      "id": "deepal",
+      "name": {
+        "ar": "ديبال",
+        "en": "Deepal"
+      },
+      "image": "deepal.png",
+      "isDefault": false,
+      "display": {
+        "order": 670,
+        "hidden": false
+      }
+    },
+    {
+      "id": "gac",
+      "name": {
+        "ar": "جاك",
+        "en": "GAC"
+      },
+      "image": "gac.png",
+      "isDefault": false,
+      "display": {
+        "order": 680,
+        "hidden": false
+      }
+    },
+    {
+      "id": "other-make",
+      "name": {
+        "ar": "ماركات أخرى",
+        "en": "Other make"
+      },
+      "image": "other_make.png",
+      "isDefault": false,
+      "display": {
+        "order": 690,
+        "hidden": false
+      }
+    },
+    {
+      "id": "great-wall",
+      "name": {
+        "ar": "جريت وول",
+        "en": "Great Wall"
+      },
+      "image": "great_wall.png",
+      "isDefault": false,
+      "display": {
+        "order": 700,
+        "hidden": false
+      }
+    },
+    {
+      "id": "changhe",
+      "name": {
+        "ar": "تشانجي",
+        "en": "Changhe"
+      },
+      "image": "changhe.png",
+      "isDefault": false,
+      "display": {
+        "order": 710,
+        "hidden": false
+      }
+    },
+    {
+      "id": "hummer",
+      "name": {
+        "ar": "هامر",
+        "en": "Hummer"
+      },
+      "image": "hummer.png",
+      "isDefault": false,
+      "display": {
+        "order": 720,
+        "hidden": false
+      }
+    },
+    {
+      "id": "lotus",
+      "name": {
+        "ar": "لوتس",
+        "en": "Lotus"
+      },
+      "image": "lotus.png",
+      "isDefault": false,
+      "display": {
+        "order": 730,
+        "hidden": false
+      }
+    },
+    {
+      "id": "dfsk",
+      "name": {
+        "ar": "دي في إس كي",
+        "en": "DFSK"
+      },
+      "image": "dfsk.png",
+      "isDefault": false,
+      "display": {
+        "order": 740,
+        "hidden": false
+      }
+    },
+    {
+      "id": "lifan",
+      "name": {
+        "ar": "ليفان",
+        "en": "Lifan"
+      },
+      "image": "lifan.png",
+      "isDefault": false,
+      "display": {
+        "order": 750,
+        "hidden": false
+      }
+    },
+    {
+      "id": "kyc",
+      "name": {
+        "ar": "كي واي سي",
+        "en": "KYC"
+      },
+      "image": "kyc.png",
+      "isDefault": false,
+      "display": {
+        "order": 760,
+        "hidden": false
+      }
+    },
+    {
+      "id": "xpeng",
+      "name": {
+        "ar": "إكس بينج",
+        "en": "XPeng"
+      },
+      "image": "xpeng.png",
+      "isDefault": false,
+      "display": {
+        "order": 770,
+        "hidden": false
+      }
+    },
+    {
+      "id": "lancia",
+      "name": {
+        "ar": "لانسيا",
+        "en": "Lancia"
+      },
+      "image": "lancia.png",
+      "isDefault": false,
+      "display": {
+        "order": 780,
+        "hidden": false
+      }
+    },
+    {
+      "id": "bentley",
+      "name": {
+        "ar": "بنتلي",
+        "en": "Bentley"
+      },
+      "image": "bentley.png",
+      "isDefault": false,
+      "display": {
+        "order": 790,
+        "hidden": false
+      }
+    },
+    {
+      "id": "bestune",
+      "name": {
+        "ar": "بيستون",
+        "en": "Bestune"
+      },
+      "image": "bestune.png",
+      "isDefault": false,
+      "display": {
+        "order": 800,
+        "hidden": false
+      }
+    }
+  ]
+}

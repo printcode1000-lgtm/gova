@@ -42,7 +42,7 @@ The server stores only device push tokens and the per-user `specialty_requests_e
 
 ## Delivery and state
 
-FCM chat payloads use a seven-day TTL and a unique collapse key, so distinct messages do not replace one another. Android uses the `asol_chat_v3` channel with the bundled custom sound and vibration. Web Push stores the complete specialty-chat metadata in AsolDB.
+FCM chat payloads use a seven-day TTL and a unique collapse key, so distinct messages do not replace one another. Android uses the `asol_chat_v4` channel with the bundled custom sound and vibration. Web Push stores the complete specialty-chat metadata in AsolDB.
 
 Titles come from the `specialty.request`, `specialty.replyFromProvider`, and
 `specialty.messageFromBuyer` templates and are rendered in the recipient device's

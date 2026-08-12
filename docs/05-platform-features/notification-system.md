@@ -1006,6 +1006,12 @@ The operating system displays the notification. The WebView is not running, so
 nothing in the module executes. Whatever the tray holds is imported when the app
 next becomes active — see Resumed.
 
+On Android the native receive callback may still be delivered briefly while
+the activity is transitioning out. The adapter therefore reads the document's
+current visibility instead of assuming every callback is foreground. A hidden
+WebView never creates a local copy of a notification the operating system has
+already displayed; this prevents duplicate tray entries and duplicate sound.
+
 ### Resumed
 
 `NativePushController` listens for the app becoming active and calls
@@ -1123,8 +1129,8 @@ local notification.
 | Value | Android | Apple | Browser |
 |-------|---------|-------|---------|
 | `default` | category channel, custom sound | `aps.sound = custom_notification.caf` | browser default |
-| `urgent` | `asol_urgent_v3` (importance 5) | same file, `apns-priority: 10` when the priority is high | browser default |
-| `silent` | `asol_silent_v3`, importance 2 | no `sound` key, `interruption-level: passive` | `silent: true` |
+| `urgent` | `asol_urgent_v4` (importance 5) | same file, `apns-priority: 10` when the priority is high | browser default |
+| `silent` | `asol_silent_v4`, importance 2 | no `sound` key, `interruption-level: passive` | `silent: true` |
 
 There is one sound asset, so `urgent` cannot mean a different file. It means the
 channel that interrupts — the same one `priority: critical` uses.
@@ -1283,13 +1289,13 @@ artefact.
 
 ## Android Channel Policy
 
-Channel ids are `asol_<name>_v3` and are declared once in
+Channel ids are `asol_<name>_v4` and are declared once in
 `domain/notification-sound.ts`, mirrored by the Native Platform module and the
 Android manifest.
 
 **A new channel generation is never a workaround for an application bug.** Sound,
 importance, and vibration are immutable once a channel exists on a device, so
-bumping `_v3` to `_v4` is the only way to change them — and it silently discards
+bumping `_v4` to a new generation is the only way to change them — and it silently discards
 every per-channel preference the user has set, on every installed device.
 
 A new generation is justified only when *all* of the following hold, with

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "id": "benzine",
+      "name": {
+        "ar": "بنزين",
+        "en": "Benzine"
+      },
+      "image": null,
+      "isDefault": false,
+      "display": {
+        "order": 10,
+        "hidden": false
+      }
+    },
+    {
+      "id": "electric",
+      "name": {
+        "ar": "كهرباء",
+        "en": "Electric"
+      },
+      "image": null,
+      "isDefault": false,
+      "display": {
+        "order": 20,
+        "hidden": false
+      }
+    },
+    {
+      "id": "diesel",
+      "name": {
+        "ar": "ديزل",
+        "en": "Diesel"
+      },
+      "image": null,
+      "isDefault": false,
+      "display": {
+        "order": 30,
+        "hidden": false
+      }
+    },
+    {
+      "id": "natural-gas",
+      "name": {
+        "ar": "غاز طبيعي",
+        "en": "Natural Gas"
+      },
+      "image": null,
+      "isDefault": false,
+      "display": {
+        "order": 40,
+        "hidden": false
+      }
+    },
+    {
+      "id": "hybrid",
+      "name": {
+        "ar": "هجين",
+        "en": "Hybrid"
+      },
+      "image": null,
+      "isDefault": false,
+      "display": {
+        "order": 50,
+        "hidden": false
+      }
+    }
+  ]
+}

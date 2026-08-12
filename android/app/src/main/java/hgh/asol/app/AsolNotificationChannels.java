@@ -14,18 +14,18 @@ import java.util.List;
 /**
  * Creates the Android notification channels before JavaScript is available.
  *
- * Channel sound is immutable after a channel is first created. The v3 ids are
- * therefore a deliberate migration away from any v2 channel that Android may
+ * Channel sound is immutable after a channel is first created. The v4 ids are
+ * therefore a deliberate migration away from any older channel that Android may
  * have persisted without the custom sound. Keep these ids synchronized with
  * src/native-platform/notifications/types.ts and notification-sound.ts.
  */
 public final class AsolNotificationChannels {
-    public static final String GENERAL = "asol_general_v3";
-    public static final String ORDERS = "asol_orders_v3";
-    public static final String CHAT = "asol_chat_v3";
-    public static final String URGENT = "asol_urgent_v3";
-    public static final String UPDATES = "asol_updates_v3";
-    public static final String SILENT = "asol_silent_v3";
+    public static final String GENERAL = "asol_general_v4";
+    public static final String ORDERS = "asol_orders_v4";
+    public static final String CHAT = "asol_chat_v4";
+    public static final String URGENT = "asol_urgent_v4";
+    public static final String UPDATES = "asol_updates_v4";
+    public static final String SILENT = "asol_silent_v4";
     public static final String SOUND_RESOURCE_NAME = "custom_notification";
 
     private AsolNotificationChannels() {}
@@ -61,15 +61,15 @@ public final class AsolNotificationChannels {
             .build();
 
         List<NotificationChannel> channels = new ArrayList<>();
-        channels.add(audible(GENERAL, "ASOL - الإشعارات العامة", "الإشعارات العامة من أصول", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
-        channels.add(audible(ORDERS, "ASOL - الطلبات", "تحديثات الطلبات والشحن والإرجاع", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
-        channels.add(audible(CHAT, "ASOL - المحادثات", "الرسائل والمحادثات الجديدة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
-        channels.add(audible(URGENT, "ASOL - التنبيهات المهمة", "التنبيهات العاجلة والمهمة", NotificationManager.IMPORTANCE_MAX, sound, attributes));
-        channels.add(audible(UPDATES, "ASOL - التحديثات", "إشعارات التحديثات العامة من أصول", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
+        channels.add(audible(GENERAL, "أصول - الإشعارات العامة (نغمة مخصصة)", "الإشعارات العامة من أصول بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
+        channels.add(audible(ORDERS, "أصول - الطلبات (نغمة مخصصة)", "تحديثات الطلبات والشحن والإرجاع بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
+        channels.add(audible(CHAT, "أصول - المحادثات (نغمة مخصصة)", "الرسائل والمحادثات الجديدة بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
+        channels.add(audible(URGENT, "أصول - التنبيهات العاجلة (نغمة مخصصة)", "التنبيهات العاجلة والمهمة بالنغمة المخصصة", NotificationManager.IMPORTANCE_MAX, sound, attributes));
+        channels.add(audible(UPDATES, "أصول - التحديثات (نغمة مخصصة)", "إشعارات التحديثات العامة من أصول بالنغمة المخصصة", NotificationManager.IMPORTANCE_HIGH, sound, attributes));
 
         NotificationChannel silent = new NotificationChannel(
             SILENT,
-            "ASOL - بدون صوت",
+            "أصول - إشعارات صامتة",
             NotificationManager.IMPORTANCE_LOW
         );
         silent.setDescription("الإشعارات الداخلية غير المرئية التي تصل بدون صوت أو اهتزاز");

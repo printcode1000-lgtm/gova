@@ -2,6 +2,7 @@ package hgh.asol.app;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
@@ -53,6 +54,16 @@ public class NotificationSoundInstrumentedTest {
             assertNotNull("Missing channel " + id, channel);
             assertTrue("Audible channel has low importance: " + id,
                 channel.getImportance() >= NotificationManager.IMPORTANCE_DEFAULT);
+            assertEquals(
+                "Audible channel points at the wrong sound: " + id,
+                AsolNotificationChannels.customSoundUri(context),
+                channel.getSound()
+            );
+            assertTrue(
+                "Audible channel name must identify the custom tone: " + id,
+                channel.getName().toString().contains("نغمة مخصصة")
+            );
+            assertTrue("Audible channel must vibrate: " + id, channel.shouldVibrate());
         }
 
         NotificationChannel silent = manager.getNotificationChannel(AsolNotificationChannels.SILENT);

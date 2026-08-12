@@ -1,0 +1,90 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "0",
+      "when": 1750953600000,
+      "tag": "0000_user_profiles",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "0",
+      "when": 1750953700000,
+      "tag": "0001_store_image_keys",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "0",
+      "when": 1782604800000,
+      "tag": "0002_cover_image_keys",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "0",
+      "when": 1782777600000,
+      "tag": "0003_store_details_json",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "0",
+      "when": 1782885600000,
+      "tag": "0004_profile_specialties",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "1782960000",
+      "when": 1782960000000,
+      "tag": "0005_location_json",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "1783737600",
+      "when": 1783737600000,
+      "tag": "0006_rating_settings_json",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "1783737660",
+      "when": 1783737660000,
+      "tag": "0007_profile_reviews",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "1783737720",
+      "when": 1783737720000,
+      "tag": "0008_fulfillment_settings_json",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "1784073600",
+      "when": 1784073600000,
+      "tag": "0009_follows",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "1784073660",
+      "when": 1784073660000,
+      "tag": "0010_profile_structured_search",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "1784332800",
+      "when": 1784332800000,
+      "tag": "0011_drop_social_handle",
+      "breakpoints": true
+    }
+  ]
+}

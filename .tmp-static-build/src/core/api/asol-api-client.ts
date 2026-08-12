@@ -1,0 +1,276 @@
+import { ApiError, NetworkOfflineError, NetworkUnavailableError } from './api-error';
+import { buildAsolApiUrl, buildPublicAssetUrl } from './asol-api-config';
+import { asolHttpFetch } from './asol-http-transport';
+import { trackAsolApiRequest } from '@/core/monitor/asol-api-monitor';
+import { scheduleNotificationGrantDelivery } from '@/modules/notification-bridge';
+
+export interface AsolApiRequestOptions {
+  headers?: Record<string, string>;
+  signal?: AbortSignal;
+  cache?: RequestCache;
+  suppressErrorLog?: boolean;
+  /** Let a feature await and inspect notification delivery itself. */
+  notificationGrantDelivery?: 'background' | 'manual';
+}
+
+/**
+ * AsolApiClient — the single HTTP gateway between ASOL clients and the ASOL backend.
+ */
+export class AsolApiClient {
+  private assertOnline(method: string, route: string, suppressErrorLog = false): void {
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      const error = new NetworkOfflineError();
+      if (!suppressErrorLog) {
+        console.error(`[AsolApiClient] ${method} ${route} failed: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  private normalizeNetworkError(error: unknown): unknown {
+    if (error instanceof DOMException && error.name === 'AbortError') return error;
+    return error instanceof TypeError ? new NetworkUnavailableError() : error;
+  }
+
+  private logAndThrow(method: string, route: string, error: unknown, suppressErrorLog = false): never {
+    const normalizedError = this.normalizeNetworkError(error);
+    const message =
+      normalizedError instanceof Error ? normalizedError.message : String(normalizedError);
+    if (!suppressErrorLog) {
+      console.error(`[AsolApiClient] ${method} ${route} failed: ${message}`);
+    }
+    throw normalizedError;
+  }
+
+  private async request<T>(
+    method: string,
+    route: string,
+    body?: unknown,
+    options: AsolApiRequestOptions = {}
+  ): Promise<T> {
+    this.assertOnline(method, route, options.suppressErrorLog);
+
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+      ...options.headers,
+    };
+
+    const init: RequestInit = {
+      method,
+      headers,
+      credentials: 'omit',
+      signal: options.signal,
+      cache: options.cache,
+    };
+
+    if (body !== undefined) {
+      headers['Content-Type'] = 'application/json';
+      init.body = JSON.stringify(body);
+    }
+
+    try {
+      return await trackAsolApiRequest(method, route, true, async () => {
+        const response = await asolHttpFetch(buildAsolApiUrl(route, method), init);
+        const data = await this.parseResponse<T>(
+          response,
+          options.notificationGrantDelivery,
+        );
+        return { data, response };
+      });
+    } catch (error) {
+      this.logAndThrow(method, route, error, options.suppressErrorLog);
+    }
+  }
+
+  private async parseResponse<T>(
+    response: Response,
+    notificationGrantDelivery: 'background' | 'manual' = 'background',
+  ): Promise<T> {
+    const text = await response.text();
+    let data: unknown = null;
+    const contentType = response.headers.get('content-type')?.toLowerCase() ?? '';
+
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = text;
+      }
+    }
+
+    if (!response.ok) {
+      const message =
+        typeof data === 'object' &&
+        data !== null &&
+        'error' in data &&
+        typeof (data as { error: unknown }).error === 'string'
+          ? (data as { error: string }).error
+          : `Request failed (${response.status})`;
+      throw new ApiError(message, response.status);
+    }
+
+    if (text && !contentType.includes('application/json')) {
+      throw new ApiError(
+        `Expected JSON response but received ${contentType || 'an unknown content type'}`,
+        response.status,
+      );
+    }
+
+    // The connector hop. Any Business API response may carry signed notification
+    // grants; the bridge delivers them to the notifications service from the
+    // browser, because the two backends have no path to each other.
+    //
+    // Background is the default: a response without grants is a no-op, and a
+    // normal business push cannot turn a successful operation into a failure.
+    // Conversation features opt into manual mode and await the bridge so their
+    // UI can report real recipient outcomes.
+    if (notificationGrantDelivery === 'background') {
+      scheduleNotificationGrantDelivery(data);
+    }
+
+    return data as T;
+  }
+
+  get<T>(route: string, options?: AsolApiRequestOptions): Promise<T> {
+    return this.request<T>('GET', route, undefined, options);
+  }
+
+  post<T>(route: string, body: unknown, options?: AsolApiRequestOptions): Promise<T> {
+    return this.request<T>('POST', route, body, options);
+  }
+
+  put<T>(route: string, body: unknown, options?: AsolApiRequestOptions): Promise<T> {
+    return this.request<T>('PUT', route, body, options);
+  }
+
+  patch<T>(route: string, body: unknown, options?: AsolApiRequestOptions): Promise<T> {
+    return this.request<T>('PATCH', route, body, options);
+  }
+
+  delete<T>(route: string, options?: AsolApiRequestOptions): Promise<T> {
+    return this.request<T>('DELETE', route, undefined, options);
+  }
+
+  async getBinary(route: string, options?: AsolApiRequestOptions): Promise<ArrayBuffer> {
+    this.assertOnline('GET', route, options?.suppressErrorLog);
+    try {
+      return await trackAsolApiRequest('GET', route, true, async () => {
+        const response = await asolHttpFetch(buildAsolApiUrl(route, 'GET'), {
+          method: 'GET',
+          headers: { Accept: 'application/zip, application/octet-stream', ...options?.headers },
+          credentials: 'omit',
+          signal: options?.signal,
+          cache: options?.cache ?? 'no-store',
+        });
+        if (!response.ok) await this.parseResponse<never>(response);
+        return { data: await response.arrayBuffer(), response };
+      });
+    } catch (error) {
+      this.logAndThrow('GET', route, error, options?.suppressErrorLog);
+    }
+  }
+
+  /** POST multipart/form-data (e.g. file uploads). Does not set Content-Type — browser sets boundary. */
+  postForm<T>(route: string, formData: FormData, options?: AsolApiRequestOptions): Promise<T> {
+    return trackAsolApiRequest('POST', route, true, async () => {
+      const response = await asolHttpFetch(buildAsolApiUrl(route, 'POST'), {
+        method: 'POST',
+        body: formData,
+        headers: { Accept: 'application/json', ...options?.headers },
+        credentials: 'omit',
+        signal: options?.signal,
+        cache: options?.cache,
+      });
+      const data = await this.parseResponse<T>(response);
+      return { data, response };
+    }).catch((error) =>
+      this.logAndThrow('POST', route, error, options?.suppressErrorLog),
+    );
+  }
+
+  /** Load a static JSON file from the public folder (not a Business API call). */
+  async getPublicJson<T>(assetPath: string, options?: AsolApiRequestOptions): Promise<T> {
+    return trackAsolApiRequest('GET', assetPath, false, async () => {
+      const response = await asolHttpFetch(buildPublicAssetUrl(assetPath), {
+        method: 'GET',
+        headers: { Accept: 'application/json', ...options?.headers },
+        credentials: 'omit',
+        signal: options?.signal,
+        cache: options?.cache ?? 'no-store',
+      });
+      const data = await this.parseResponse<T>(response);
+      return { data, response };
+    }).catch((error) =>
+      this.logAndThrow('GET', assetPath, error, options?.suppressErrorLog),
+    );
+  }
+
+  /** Load a static binary file from the currently served public app assets. */
+  async getPublicBinary(assetPath: string, options?: AsolApiRequestOptions): Promise<ArrayBuffer> {
+    return trackAsolApiRequest('GET', assetPath, false, async () => {
+      const response = await asolHttpFetch(buildPublicAssetUrl(assetPath), {
+        method: 'GET',
+        headers: { Accept: 'application/octet-stream, */*', ...options?.headers },
+        credentials: 'omit',
+        signal: options?.signal,
+        cache: options?.cache ?? 'no-store',
+      });
+      if (!response.ok) await this.parseResponse<never>(response);
+      return { data: await response.arrayBuffer(), response };
+    }).catch((error) =>
+      this.logAndThrow('GET', assetPath, error, options?.suppressErrorLog),
+    );
+  }
+
+  /** Load JSON from an explicit HTTP(S) URL (for signed platform manifests). */
+  async getAbsoluteJson<T>(url: string, options: AsolApiRequestOptions = {}): Promise<T> {
+    this.assertOnline('GET', url, options.suppressErrorLog);
+    const parsedUrl = new URL(url);
+    if (!['https:', 'http:'].includes(parsedUrl.protocol)) {
+      throw new Error(`Unsupported URL protocol: ${parsedUrl.protocol}`);
+    }
+
+    try {
+      return await trackAsolApiRequest('GET', url, false, async () => {
+        const response = await asolHttpFetch(parsedUrl, {
+          method: 'GET',
+          headers: { Accept: 'application/json', ...options.headers },
+          credentials: 'omit',
+          signal: options.signal,
+          cache: options.cache ?? 'no-store',
+        });
+        const data = await this.parseResponse<T>(response);
+        return { data, response };
+      });
+    } catch (error) {
+      this.logAndThrow('GET', url, error, options.suppressErrorLog);
+    }
+  }
+
+  /** Load binary data from an explicit HTTP(S) URL through the HTTP gateway. */
+  async getAbsoluteBinary(url: string, options: AsolApiRequestOptions = {}): Promise<ArrayBuffer> {
+    this.assertOnline('GET', url, options.suppressErrorLog);
+    const parsedUrl = new URL(url);
+    if (!['https:', 'http:'].includes(parsedUrl.protocol)) {
+      throw new Error(`Unsupported URL protocol: ${parsedUrl.protocol}`);
+    }
+
+    try {
+      return await trackAsolApiRequest('GET', url, false, async () => {
+        const response = await asolHttpFetch(parsedUrl, {
+          method: 'GET',
+          headers: { Accept: 'application/zip, application/octet-stream', ...options.headers },
+          credentials: 'omit',
+          signal: options.signal,
+          cache: options.cache ?? 'no-store',
+        });
+        if (!response.ok) await this.parseResponse<never>(response);
+        return { data: await response.arrayBuffer(), response };
+      });
+    } catch (error) {
+      this.logAndThrow('GET', url, error, options.suppressErrorLog);
+    }
+  }
+}
+
+export const asolApi = new AsolApiClient();

@@ -45,7 +45,7 @@ const androidStrings = path.resolve(
   "values",
   "strings.xml",
 );
-const defaultNotificationChannelId = "asol_general_v3";
+const defaultNotificationChannelId = "asol_general_v4";
 
 interface GoogleServicesConfig {
   project_info?: {

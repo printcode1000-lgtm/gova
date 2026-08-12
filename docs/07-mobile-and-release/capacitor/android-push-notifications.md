@@ -73,6 +73,13 @@ browser. See
 7. Signing out unregisters the token on every platform: `useLogout` calls the shared device-token service before clearing the session, and the controller also unregisters the previous uid when the account changes. Clearing application data unregisters before local storage is erased.
 8. Switching the app language re-registers the token so push text follows the new language.
 
+`AsolNotificationInbox` is application-owned and compiled into
+`MainActivity`, so its Capacitor proxy is registered synchronously. It must not
+be loaded through the optional dynamic-plugin cache: an early WebView/native
+bridge race would otherwise make tray import appear unavailable for the rest
+of that process. Optional plugin imports retry after a transient loader
+rejection instead of caching that rejection permanently.
+
 Dismissed notification identities are remembered locally by `id` and
 `dedupeKey`. Android tray import checks that list before saving delivered
 notifications, so deleting an item from `/notifications` prevents it from
@@ -109,14 +116,14 @@ finished so the two accessible surfaces never overlap.
 
 | Channel | Purpose | Importance | Sound | Vibration |
 | --- | --- | --- | --- | --- |
-| `asol_general_v3` | General and system notifications | 4 | `custom_notification.mp3` | Yes |
-| `asol_orders_v3` | Orders, shipping, and returns | 4 | `custom_notification.mp3` | Yes |
-| `asol_chat_v3` | Chat and messages | 4 | `custom_notification.mp3` | Yes |
-| `asol_urgent_v3` | Critical and urgent notifications | 5 | `custom_notification.mp3` | Yes |
-| `asol_updates_v3` | General update notifications | 4 | `custom_notification.mp3` | Yes |
-| `asol_silent_v3` | Internal data-only deliveries declared `sound: "silent"` | 2 | none | No |
+| `asol_general_v4` | General and system notifications | 4 | `custom_notification.mp3` | Yes |
+| `asol_orders_v4` | Orders, shipping, and returns | 4 | `custom_notification.mp3` | Yes |
+| `asol_chat_v4` | Chat and messages | 4 | `custom_notification.mp3` | Yes |
+| `asol_urgent_v4` | Critical and urgent notifications | 5 | `custom_notification.mp3` | Yes |
+| `asol_updates_v4` | General update notifications | 4 | `custom_notification.mp3` | Yes |
+| `asol_silent_v4` | Internal data-only deliveries declared `sound: "silent"` | 2 | none | No |
 
-Channel IDs are versioned because Android does not allow an application to replace the sound configuration of an already-created channel. The v3 generation deliberately replaces v2 after the sound audit. Users can still override channel behavior from Android system settings.
+Channel IDs are versioned because Android does not allow an application to replace the sound configuration of an already-created channel. The v4 generation deliberately replaces all older channel state after the device sound audit, and its user-visible names explicitly identify the custom-tone channels. Users can still override channel behavior from Android system settings.
 
 `AsolNotificationChannels.ensureCreated()` creates the complete channel set in
 `MainActivity.onCreate`, before the WebView or an authenticated session exists.
@@ -134,12 +141,12 @@ Channel selection lives in
 and is shared by the server FCM provider and the on-device local notification,
 so a notification sounds the same whichever displayed it. In order:
 
-1. Sound `silent` → `asol_silent_v3`. It is reserved for invisible data-only signals such as receipts; a low-importance channel is the only way to deliver without a sound.
-2. Priority `critical` or sound `urgent` → `asol_urgent_v3`. There is one sound asset, so `urgent` cannot mean a different file; it means the channel that interrupts.
-3. Metadata `source = super_admin_broadcast` → `asol_updates_v3`, so a user can silence announcements from Android settings without silencing their orders.
-4. Category `orders` → `asol_orders_v3`.
-5. Category `chat` → `asol_chat_v3`.
-6. Everything else → `asol_general_v3`.
+1. Sound `silent` → `asol_silent_v4`. It is reserved for invisible data-only signals such as receipts; a low-importance channel is the only way to deliver without a sound.
+2. Priority `critical` or sound `urgent` → `asol_urgent_v4`. There is one sound asset, so `urgent` cannot mean a different file; it means the channel that interrupts.
+3. Metadata `source = super_admin_broadcast` → `asol_updates_v4`, so a user can silence announcements from Android settings without silencing their orders.
+4. Category `orders` → `asol_orders_v4`.
+5. Category `chat` → `asol_chat_v4`.
+6. Everything else → `asol_general_v4`.
 
 ## Server Delivery
 

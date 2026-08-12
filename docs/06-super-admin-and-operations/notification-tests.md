@@ -44,12 +44,12 @@ investigate permission, channel settings, and the packaged sound resource.
 
 | Scenario | Android channel | Expected sound |
 | --- | --- | --- |
-| General | `asol_general_v3` | `custom_notification.mp3` |
-| Orders | `asol_orders_v3` | `custom_notification.mp3` |
-| Chat | `asol_chat_v3` | `custom_notification.mp3` |
-| Updates | `asol_updates_v3` | `custom_notification.mp3` |
-| Urgent | `asol_urgent_v3` | `custom_notification.mp3` |
-| Silent control | `asol_silent_v3` | none |
+| General | `asol_general_v4` | `custom_notification.mp3` |
+| Orders | `asol_orders_v4` | `custom_notification.mp3` |
+| Chat | `asol_chat_v4` | `custom_notification.mp3` |
+| Updates | `asol_updates_v4` | `custom_notification.mp3` |
+| Urgent | `asol_urgent_v4` | `custom_notification.mp3` |
+| Silent control | `asol_silent_v4` | none |
 
 The shared definitions live in
 `src/features/notifications/domain/notification-test-scenarios.ts`. Contract
@@ -69,3 +69,6 @@ the app returns to the foreground. The Android inbox bridge preserves the tray
 tag and channel id, allowing imported orders, chat, urgent, and silent items to
 retain their category, priority, sound, and dedupe identity in the center. The
 page also exposes a manual **Sync tray with notification center** diagnostic.
+The inbox bridge is registered synchronously because it is bundled in the
+application; a transient startup import failure must never disable this
+diagnostic or resume synchronization for the process lifetime.
