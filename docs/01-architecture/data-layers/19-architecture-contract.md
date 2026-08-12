@@ -61,19 +61,44 @@ Success = 100% score, all layer checks pass.
   `src/modules/data-access/provisioning` and `src/modules/data-access/tooling`.
 - There are no per-feature SQL or driver waivers outside the module.
 
-## CI
+## Where the checks actually run
 
-| Workflow | When | Checks |
-|----------|------|--------|
-| `.github/workflows/ci.yml` | PR / push to `main` | `architecture:check`, `typecheck`, `lint` |
-| `.github/workflows/nextjs.yml` | Pages deploy | `architecture:check` before `build:static` |
-| `npm run build` | Local / Vercel | `architecture:check` before Next.js build |
+**There are no GitHub Actions workflows in this repository.** `.github/workflows`
+exists but is empty, and
+[`16-deployment-targets.md`](16-deployment-targets.md) states the reason:
+Actions is intentionally unused. Earlier revisions of this page listed
+`ci.yml` and `nextjs.yml`; those files have never existed and the claim is
+removed rather than reinstated.
+
+Enforcement is therefore in the npm scripts, which is what Vercel runs on a
+push and what a developer runs locally:
+
+| Gate | Command | Notification checks included |
+|------|---------|------------------------------|
+| Application build | `npm run build` | `architecture:check`, then `test:notifications` |
+| Static / mobile bundle | `npm run build:static` | `verify:notifications` (architecture + all notification suites) |
+| Repository verification | `npm run verify:all` | `architecture:check` and `test:notifications` as steps |
+| Focused notification gate | `npm run verify:notifications` | everything, in ~50 s, with no side effects |
+
+Every one of those exits non-zero on a boundary or behaviour regression, so a
+build cannot proceed past a broken notification contract.
+
+`verify:notifications` writes nothing: it reads the working tree, mirrors the
+service sources into a temporary directory, and touches no database, no remote,
+and no generated artefact. It is safe to run in a loop.
+
+If GitHub Actions is adopted later, the workflow is one job running
+`npm run verify:notifications` — no new configuration in this repository is
+needed for the checks themselves.
 
 ## Source files
 
 | File | Role |
 |------|------|
 | `src/core/architecture/contract.ts` | Layer definitions, import matrix |
+| `src/core/architecture/notification-contract.ts` | Notification module boundary, entry points, layer matrix, transport ownership |
 | `scripts/architecture-check.ts` | Project scanner |
+| `scripts/architecture-check/architecture-check.notification-contract.ts` | Notification boundary checker |
 
-To change rules, edit `contract.ts` — that is an explicit architectural decision.
+To change rules, edit the contract file — that is an explicit architectural
+decision.

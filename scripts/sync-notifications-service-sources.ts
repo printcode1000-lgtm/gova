@@ -43,10 +43,11 @@ const TARGET_ROOT = path.join(OUTPUT_ROOT, 'src');
  * and product data-access code out of the notifications deployment.
  */
 const ENTRY_POINTS = [
-  'features/notifications/services/notification-send-service.server.ts',
-  'features/notifications/domain/entities.ts',
+  // The one notification path this deployment may import. Everything the send
+  // route needs is reachable from it, and nothing else is — which is what keeps
+  // the users and product data-access code off the notifications account.
+  'features/notifications/service-runtime.ts',
   'core/config/server-env.ts',
-  'features/notifications/services/notification-grant.server.ts',
 ];
 
 const RESOLVE_EXTENSIONS = ['.ts', '.tsx', '.json', '.js'];

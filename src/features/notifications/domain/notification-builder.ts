@@ -16,7 +16,7 @@ import type {
   NotificationTemplate,
   TemplateNotificationInput,
 } from "../domain/entities";
-import { createNotificationId } from "../shared/create-notification-id";
+import { createNotificationId } from "./create-notification-id";
 import { NotificationTemplateLoader } from "./notification-template-loader";
 
 function interpolate(text: string, variables: Record<string, string | number | boolean | null> = {}) {

@@ -71,17 +71,47 @@ function stripComments(source: string): string {
   return source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
 }
 
+/**
+ * The route owns HTTP; delivery lives behind the service-runtime entry point.
+ *
+ * The rule being checked has not changed — this deployment must call the local
+ * sender, never the forwarding one — only the file it is checked in. The route
+ * may reach exactly one notification path, and that path is the one restricted
+ * by the import mirror to files this account may hold.
+ */
 const sendRouteCode = stripComments(sendRoute);
 assert.match(
   sendRouteCode,
-  /sendToUsersLocally\s*\(/,
-  "The service route must call sendToUsersLocally; sendToUsers would forward to itself.",
+  /from\s+['"]@\/features\/notifications\/service-runtime['"]/,
+  "The service route must import @/features/notifications/service-runtime and nothing else from the module.",
 );
 assert.doesNotMatch(
   sendRouteCode,
-  /\bsendToUsers\s*\(/,
-  "The service route must never call sendToUsers: that is the forwarding entry point.",
+  /@\/features\/notifications\/(?!service-runtime)/,
+  "The service route must not reach any other notification path: its imports are its deployment surface.",
 );
+
+const serviceRuntime = stripComments(
+  readFileSync(
+    path.join(root, "src", "features", "notifications", "service-runtime.ts"),
+    "utf8",
+  ),
+);
+assert.match(
+  serviceRuntime,
+  /sendToUsersLocally\s*\(/,
+  "The service runtime must call sendToUsersLocally; sendToUsers would forward to itself.",
+);
+for (const [label, code] of [
+  ["route", sendRouteCode],
+  ["service runtime", serviceRuntime],
+] as const) {
+  assert.doesNotMatch(
+    code,
+    /\bsendToUsers\s*\(/,
+    `The ${label} must never call sendToUsers: that is the forwarding entry point.`,
+  );
+}
 
 // ── 3. The main app must own no fan-out route ────────────────────────────────
 

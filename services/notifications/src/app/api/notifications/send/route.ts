@@ -1,6 +1,8 @@
-import { NotificationSendService } from '@/features/notifications/services/notification-send-service.server';
-import { verifyNotificationGrant } from '@/features/notifications/services/notification-grant.server';
-import type { SendNotificationToUsersResult } from '@/features/notifications/domain/entities';
+import {
+  deliverNotificationGrants,
+  readGrantsFromRequestBody,
+  MAX_GRANTS_PER_REQUEST,
+} from '@/features/notifications/service-runtime';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -17,20 +19,17 @@ export const dynamic = 'force-dynamic';
  * There is no bearer-token path. A shared bearer would let anything holding it
  * send anything to anyone; a grant authorises exactly one pre-approved send.
  *
+ * The route owns HTTP and nothing else. Verification and fan-out live behind
+ * `@/features/notifications/service-runtime`, which is the only notification
+ * path this deployment may import: reaching further would pull the users
+ * repository onto an account that must never hold it, and the build's import
+ * mirror would carry it there.
+ *
  * Responses are plain `Response.json` rather than the main app's `apiSuccess`
  * helper on purpose: that helper reaches into system logging and tracing, which
  * would pull half the application's module graph into a service that only needs
  * to send push.
  */
-const sendService = new NotificationSendService();
-
-/** One browser request may carry several grants; this caps the work per call. */
-const MAX_GRANTS_PER_REQUEST = 100;
-
-interface SendRequestBody {
-  grant?: string;
-  grants?: string[];
-}
 
 function corsHeaders(request: Request): Record<string, string> {
   // The browser is the only caller, and the grant — not the origin — is the
@@ -46,20 +45,12 @@ function corsHeaders(request: Request): Record<string, string> {
   };
 }
 
-function readGrants(body: SendRequestBody): string[] {
-  const values = [
-    ...(typeof body.grant === 'string' ? [body.grant] : []),
-    ...(Array.isArray(body.grants) ? body.grants : []),
-  ].filter((value): value is string => typeof value === 'string' && value.length > 0);
-  return values.slice(0, MAX_GRANTS_PER_REQUEST);
-}
-
 export async function POST(request: Request): Promise<Response> {
   const headers = { ...corsHeaders(request), 'Content-Type': 'application/json' };
 
   let grants: string[];
   try {
-    grants = readGrants((await request.json()) as SendRequestBody);
+    grants = readGrantsFromRequestBody(await request.json()).slice(0, MAX_GRANTS_PER_REQUEST);
   } catch {
     return Response.json({ error: 'invalidJsonBody' }, { status: 400, headers });
   }
@@ -68,39 +59,10 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ error: 'notificationGrantRequired' }, { status: 400, headers });
   }
 
-  const results: Array<SendNotificationToUsersResult | { error: string }> = [];
-  let accepted = 0;
-  let rejected = 0;
-
-  for (const grant of grants) {
-    let payload;
-    try {
-      payload = verifyNotificationGrant(grant);
-    } catch (error) {
-      // An expired or forged grant is the browser's problem, not a server fault.
-      // Reporting it per grant lets one bad entry fail without losing the rest.
-      rejected += 1;
-      results.push({
-        error: error instanceof Error ? error.message : 'notificationGrantInvalid',
-      });
-      continue;
-    }
-
-    try {
-      results.push(await sendService.sendToUsersLocally(payload.send));
-      accepted += 1;
-    } catch (error) {
-      rejected += 1;
-      results.push({
-        error: error instanceof Error ? error.message : 'notificationSendFailed',
-      });
-    }
-  }
-
   // 200 even with rejections: the request itself was well formed, and the
   // per-grant outcome is in the body. The browser cannot act on a 4xx here
   // anyway — the grants are already spent.
-  return Response.json({ accepted, rejected, results }, { status: 200, headers });
+  return Response.json(await deliverNotificationGrants(grants), { status: 200, headers });
 }
 
 export async function OPTIONS(request: Request): Promise<Response> {

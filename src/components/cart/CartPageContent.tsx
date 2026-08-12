@@ -27,7 +27,7 @@ import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { useCart } from "@/features/cart/use-cart";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useTranslation } from "@/lib/i18n";
-import { notificationBus } from "@/features/notifications";
+import { notifications } from "@/features/notifications";
 import { useCartDiscountQuote } from "@/features/seller-discounts";
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
@@ -240,8 +240,8 @@ export function CartPageContent() {
         },
         { suppressErrorLog: true },
       );
-      await notificationBus.publishEvent(
-        {
+      await notifications.publishEvent({
+        event: {
           name: "orders.created",
           uid: session.uid,
           dedupeKey: `orders.created:${result.orderId}:buyer:${session.uid}`,
@@ -250,8 +250,8 @@ export function CartPageContent() {
             orderNumber: result.orderId,
           },
         },
-        "ar",
-      );
+        locale: "ar",
+      });
       await clearCart();
       router.push(
         `/orders/details?orderId=${encodeURIComponent(result.orderId)}`,

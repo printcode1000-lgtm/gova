@@ -29,7 +29,8 @@ import {
   NativePushController,
   NotificationOptInController,
   WebPushController,
-} from "@/features/notifications";
+} from "@/features/notifications/ui";
+import { SpecialtyChatNotificationsController } from "@/features/specialty-chat";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
@@ -93,6 +94,7 @@ export default function RootLayout({
                   <NativePushController />
                   <WebPushController />
                   <NotificationOptInController />
+                  <SpecialtyChatNotificationsController />
                   <SystemLogErrorBoundary>
                     <NetworkStatusProvider>
                       <OtaUpdateProvider>

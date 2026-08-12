@@ -15,6 +15,7 @@ import {
   type NotificationPromptAction,
 } from "../application/notification-permission-prompt-policy";
 import { NotificationPermissionPrompt } from "./NotificationPermissionPrompt";
+import { notificationLog } from "../domain/notification-redaction";
 
 const POST_LOGIN_PROMPT_DELAY_MS = 4_200;
 
@@ -100,8 +101,8 @@ export function NotificationOptInController() {
           });
         }, POST_LOGIN_PROMPT_DELAY_MS);
       } catch (error) {
-        console.error(
-          "[Notifications] Unable to inspect the post-login permission state.",
+        notificationLog.error(
+          "Unable to inspect the post-login permission state.",
           error,
         );
       }
@@ -141,8 +142,8 @@ export function NotificationOptInController() {
     try {
       await enablePromptDevice(current);
     } catch (error) {
-      console.error(
-        "[Notifications] Device registration after settings failed.",
+      notificationLog.error(
+        "Device registration after settings failed.",
         error,
       );
       setPermissionPrompt((value) =>
@@ -205,7 +206,7 @@ export function NotificationOptInController() {
       }
       await enablePromptDevice(current);
     } catch (error) {
-      console.error("[Notifications] Push opt-in failed.", error);
+      notificationLog.error("Push opt-in failed.", error);
       setPermissionPrompt((value) =>
         value ? { ...value, busy: false, failed: true } : value,
       );

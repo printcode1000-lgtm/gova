@@ -34,7 +34,8 @@ import {
 import { validateStorageProfilesAtStartup } from "../src/core/storage/profiles/storage-profile-validator";
 import { validationEngine as categoryValidationEngine } from "../src/features/categories/infrastructure/validation.engine";
 
-import { SRC, SCRIPTS, violations, walk, rel } from "./architecture-check/architecture-check.architecture-types";
+import { ROOT, SRC, SCRIPTS, violations, walk, rel } from "./architecture-check/architecture-check.architecture-types";
+import { checkNotificationModuleContract } from "./architecture-check/architecture-check.notification-contract";
 import { checkFile, checkExternalDataAccessOwnership, checkGeneratedDataAccessArtifacts } from "./architecture-check/architecture-check.native-contract";
 import { printReport, reportNativeSurface } from "./architecture-check/architecture-check.file-analysis";
 
@@ -65,6 +66,17 @@ function main(): void {
     checkExternalDataAccessOwnership(file);
   }
   checkGeneratedDataAccessArtifacts();
+
+  // The notifications microservice is a second tree with its own tsconfig and
+  // its own `@/` root. Its import surface is also its deployment surface, so it
+  // is held to the notification boundary exactly like `src` is — the generated
+  // mirror underneath it is output, not source, and is skipped.
+  const notificationsService = join(ROOT, 'services', 'notifications', 'src');
+  if (existsSync(notificationsService)) {
+    for (const file of walk(notificationsService)) {
+      checkNotificationModuleContract(file, readFileSync(file, 'utf8'));
+    }
+  }
 
   printReport();
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
-import { NotificationPlatforms } from "../domain/enums";
-import { WEB_PUSH_VAPID_PUBLIC_KEY } from "../domain/web-push-config";
-import { notificationApiService } from "../services/notification-api-service";
-import { readNotificationLocale } from "../shared/read-notification-locale";
+import { NotificationPlatforms } from "../../domain/enums";
+import { WEB_PUSH_VAPID_PUBLIC_KEY } from "../../domain/web-push-config";
+import { notificationApiService } from "../../services/notification-api-service";
+import { readNotificationLocale } from "../../shared/read-notification-locale";
 import { permissionManager, PermissionKinds } from "@/native-platform/permissions";
 
 const DEVICE_ID_KEY = "web-push-device-id";

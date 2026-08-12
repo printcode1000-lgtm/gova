@@ -1,4 +1,4 @@
-import { readNotificationGrants } from "@/features/notifications/domain/notification-grant-envelope";
+import { readNotificationGrants } from "@/features/notifications";
 import { getNotificationsPublicUrl } from "@/core/config/public-env";
 
 /**

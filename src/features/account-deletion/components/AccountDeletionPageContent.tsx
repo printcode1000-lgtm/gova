@@ -16,7 +16,7 @@ import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useTranslation } from "@/lib/i18n";
 import { accountDeletionApiService } from "../services/account-deletion-api-service";
 import { ACCOUNT_DELETION_PHRASE } from "../types";
-import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
+import { notifications } from "@/features/notifications";
 
 const COPY = {
   ar: {
@@ -84,7 +84,7 @@ export function AccountDeletionPageContent() {
     }
     setState("deleting");
     try {
-      await notificationDeviceTokenService.unregister(session.uid, session.phone);
+      await notifications.unregisterDevice({ uid: session.uid, phone: session.phone });
       await accountDeletionApiService.delete({
         uid: session.uid,
         currentPassword: password,

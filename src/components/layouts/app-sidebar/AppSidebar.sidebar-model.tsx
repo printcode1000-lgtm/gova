@@ -49,7 +49,6 @@ import {
   specialtyChatClient,
 } from "@/features/specialty-chat";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
 import {
   Dialog,
   DialogContent,

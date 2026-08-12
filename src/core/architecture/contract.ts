@@ -164,6 +164,10 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   ) {
     return 'server-services';
   }
+  // A feature's server entry point — `src/features/<name>/server.ts` — is the
+  // server half of that module's public API, not a shared utility. Without this
+  // it falls through to `shared`, where importing `server-only` is forbidden.
+  if (/^src\/features\/[^/]+\/server\.ts$/.test(p)) return 'server-services';
   if (p.includes('/repositories/')) return 'repository';
   if (p.includes('/operations/')) return 'operations';
   if (

@@ -7,12 +7,17 @@ import { runTracedBusinessRoute } from "../../../auth/traced-route";
 import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
 import { mapOrderError, moneyMinor } from "../../order-api-helpers";
 import type { ActorRole } from "@/modules/marketplace-orders/domain/enums";
-import { withNotificationGrants } from "@/features/notifications/domain/notification-grant-envelope";
-import { NotificationGrantCollector } from "@/features/notifications/services/notification-grant-collector.server";
-import { moneyVariablesByLocale } from "@/features/notifications/shared/notification-money";
+import {
+  notificationsServer,
+  moneyVariablesByLocale,
+} from "@/features/notifications/server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 
-import { ActionInput, grantDeliveryPlan, grantShippingQuote } from "./route-parts/route.action-grants";
+import {
+  ActionInput,
+  grantDeliveryPlan,
+  grantShippingQuote,
+} from "./route-parts/route.action-grants";
 
 export async function POST(
   request: Request,
@@ -24,7 +29,9 @@ export async function POST(
       try {
         const { orderId } = await params;
         const body = (await request.json()) as ActionInput;
-        const notificationGrants = new NotificationGrantCollector(body.uid);
+        const notificationGrants = notificationsServer.createGrantIssuer(
+          body.uid,
+        );
         const service = getMarketplaceOrderService();
         const adminCapable = actorFromInput(
           { uid: body.uid, phone: body.phone },
@@ -119,7 +126,12 @@ export async function POST(
               status: "pending_buyer",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
+            return apiSuccess(
+              notificationsServer.attachGrants(
+                { ...quote },
+                notificationGrants.toArray(),
+              ),
+            );
           }
           case "provider_send_unified_delivery_quote": {
             if (!body.deliveryPlanId)
@@ -143,7 +155,12 @@ export async function POST(
               status: "new_quote",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
+            return apiSuccess(
+              notificationsServer.attachGrants(
+                { ...quote },
+                notificationGrants.toArray(),
+              ),
+            );
           }
           case "buyer_accept_unified_delivery_quote": {
             if (!body.deliveryPlanQuoteId)
@@ -165,7 +182,12 @@ export async function POST(
               status: "accepted",
               amount: Number(quote?.total_shipping_price ?? 0),
             });
-            return apiSuccess(withNotificationGrants({ ...plan }, notificationGrants.toArray()));
+            return apiSuccess(
+              notificationsServer.attachGrants(
+                { ...plan },
+                notificationGrants.toArray(),
+              ),
+            );
           }
           case "buyer_reject_unified_delivery_quote": {
             if (!body.deliveryPlanQuoteId)
@@ -182,7 +204,12 @@ export async function POST(
               status: "rejected",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
+            return apiSuccess(
+              notificationsServer.attachGrants(
+                { ...quote },
+                notificationGrants.toArray(),
+              ),
+            );
           }
           case "buyer_choose_separate_delivery": {
             if (!body.deliveryPlanId)
@@ -202,7 +229,12 @@ export async function POST(
               planId: body.deliveryPlanId,
               status: "separate",
             });
-            return apiSuccess(withNotificationGrants({ ...plan }, notificationGrants.toArray()));
+            return apiSuccess(
+              notificationsServer.attachGrants(
+                { ...plan },
+                notificationGrants.toArray(),
+              ),
+            );
           }
           case "admin_create_unified_delivery_shipment": {
             if (!body.deliveryPlanId)
@@ -232,7 +264,12 @@ export async function POST(
               status: "accepted",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
+            return apiSuccess(
+              notificationsServer.attachGrants(
+                { ...quote },
+                notificationGrants.toArray(),
+              ),
+            );
           }
           case "buyer_reject_shipping_quote": {
             if (!body.shippingQuoteId)
@@ -252,7 +289,12 @@ export async function POST(
               status: "rejected",
               amount: Number(quote.total_shipping_price),
             });
-            return apiSuccess(withNotificationGrants({ ...quote }, notificationGrants.toArray()));
+            return apiSuccess(
+              notificationsServer.attachGrants(
+                { ...quote },
+                notificationGrants.toArray(),
+              ),
+            );
           }
           case "buyer_accept_custom_price":
             if (!body.customItemId) throw new Error("customItemId is required");

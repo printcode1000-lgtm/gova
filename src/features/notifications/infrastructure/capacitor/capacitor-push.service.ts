@@ -6,182 +6,69 @@ import {
   type NotificationPayload,
 } from "@/native-platform/notifications";
 import type { Unsubscribe } from "@/native-platform";
-import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
-import { SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat/domain/types";
-import { asolNotificationRepository } from "../asol-notification-repository";
-import { capacitorLocalNotificationService } from "./capacitor-local-notification.service";
 import type { DeviceToken, NotificationEntity } from "../../domain/entities";
-import { resolvePushProvider } from "../../domain/push-token-kind";
-import { readNotificationLocale } from "../../shared/read-notification-locale";
 import {
-  NotificationCategories,
-  NotificationChannels,
-  NotificationContentSources,
-  NotificationDeliveryStatuses,
-  NotificationPriorities,
-  NotificationSounds,
-  NotificationSyncStates,
-  NotificationTargets,
-  NotificationTypes,
-  type NotificationCategory,
-  type NotificationPriority,
-  type NotificationSound,
-} from "../../domain/enums";
+  isEmptySystemPlaceholderPayload,
+  mapInboundPushToNotification,
+} from "../../domain/inbound-notification-mapper";
+import { NotificationError, NotificationErrorCodes } from "../../domain/notification-error";
+import { notificationLog } from "../../domain/notification-redaction";
+import { isDataOnlyDelivery } from "../../domain/notification-visibility";
+import { resolvePushProvider } from "../../domain/push-token-kind";
+import { assertUid } from "../../domain/notification-validation";
+import { readNotificationLocale } from "../../shared/read-notification-locale";
+import { SingleFlight } from "../../shared/keyed-mutex";
+import { asolNotificationRepository } from "../asol-notification-repository";
+import { pushDeviceStore } from "../push-device-store";
+import { capacitorLocalNotificationService } from "./capacitor-local-notification.service";
 import { capacitorPlatformService } from "./capacitor-platform.service";
 
-const LEGACY_ANDROID_DEVICE_ID_KEY = "android-push-device-id";
-const LEGACY_ANDROID_ENABLED_KEY = "android-push-enabled";
-const deviceIdKey = (platform: "android" | "ios") => `${platform}-push-device-id`;
-const enabledKey = (platform: "android" | "ios") => `${platform}-push-enabled`;
-
-type ReceivedHandler = (
-  notification: NotificationEntity,
-) => Promise<void> | void;
-type ActionHandler = (notification: NotificationEntity) => Promise<void> | void;
-
-function isCategory(value: unknown): value is NotificationCategory {
-  return Object.values(NotificationCategories).includes(
-    value as NotificationCategory,
-  );
-}
-
-function isPriority(value: unknown): value is NotificationPriority {
-  return Object.values(NotificationPriorities).includes(
-    value as NotificationPriority,
-  );
-}
-
-function isSound(value: unknown): value is NotificationSound {
-  return Object.values(NotificationSounds).includes(value as NotificationSound);
-}
-
-function dataString(data: Record<string, unknown>, key: string): string {
-  return typeof data[key] === "string" ? data[key].trim() : "";
-}
-
-function safeInternalRoute(value: string): string | undefined {
-  return value.startsWith("/") && !value.startsWith("//") ? value : undefined;
-}
-
-function fallbackNotificationKey(native: NotificationPayload): string {
-  const data = (native.data ?? {}) as Record<string, unknown>;
-  const title = native.title || dataString(data, "title") || "ASOL";
-  const body = native.body || dataString(data, "body");
-  const route = dataString(data, "routeHref");
-  return `push:${title}:${body}:${route}`;
-}
+/**
+ * The FCM/APNs adapter.
+ *
+ * It owns the plugin: listeners, registration, channels, and the delivered-tray
+ * inbox. It does not decide what a notification means or where it is stored —
+ * it maps a payload through the domain mapper and hands the result to the
+ * callbacks the application layer installed.
+ *
+ * Imports are single-flight per user. `initialize` and the resume listener both
+ * import the tray, and on a cold start from a notification tap they fire in the
+ * same tick; without coalescing the same delivered notification is mapped and
+ * offered twice, and the exactly-once guarantee would rest on storage dedupe
+ * alone rather than on not doing the work twice.
+ */
 
 /**
- * Deliveries that must never become a banner.
+ * What the application layer does with an inbound notification.
  *
- * Specialty-chat receipts and every other data-only signal carry no
- * user-facing text: they exist to update a card that is already stored. Giving
- * one a sound would ring the sender's phone every time a recipient opened
- * their message.
+ * @returns whether this call stored a new notification. The adapter presents a
+ * banner only for a `true`: Firebase re-delivers, and a duplicate that is not
+ * stored a second time must not ring a second time either.
  */
-function isInvisibleDelivery(entity: NotificationEntity): boolean {
-  const metadata = entity.metadata ?? {};
-  if (String(metadata.dataOnly ?? "") === "true") return true;
-  if (
-    String(metadata.specialtyChatKind ?? "") === SPECIALTY_CHAT_KINDS.Receipt
-  ) {
-    return true;
-  }
-  return !entity.title.trim() && !entity.body.trim();
-}
+export type ReceivedHandler = (
+  notification: NotificationEntity,
+) => Promise<boolean> | boolean;
 
-function isEmptySystemPlaceholder(native: NotificationPayload): boolean {
-  const data = (native.data ?? {}) as Record<string, unknown>;
-  const hasData = Object.values(data).some(
-    (value) => value !== null && value !== undefined && String(value).trim(),
-  );
-  const title = native.title || dataString(data, "title") || "";
-  const body = native.body || dataString(data, "body");
-  return !hasData && title.toUpperCase() === "ASOL" && !body;
-}
-
-function toNotificationEntity(
+/** A batch from the tray. Returns what was newly stored, for acknowledgement. */
+export type BatchReceivedHandler = (
   uid: string,
-  native: NotificationPayload,
-): NotificationEntity {
-  const data = (native.data ?? {}) as Record<string, unknown>;
-  const now = new Date().toISOString();
-  const id =
-    dataString(data, "notificationId") || native.id || fallbackNotificationKey(native);
-  const routeHref = safeInternalRoute(dataString(data, "routeHref"));
-  const categoryValue = dataString(data, "category");
-  const priorityValue = dataString(data, "priority");
-  const soundValue = dataString(data, "sound");
-  return {
-    id,
-    uid,
-    type: dataString(data, "templateId")
-      ? NotificationTypes.Template
-      : NotificationTypes.Custom,
-    source: NotificationContentSources.Custom,
-    templateId: dataString(data, "templateId") || undefined,
-    title: native.title || dataString(data, "title") || "ASOL",
-    body: native.body || dataString(data, "body"),
-    category: isCategory(categoryValue)
-      ? categoryValue
-      : NotificationCategories.System,
-    priority: isPriority(priorityValue)
-      ? priorityValue
-      : NotificationPriorities.Normal,
-    channels: [NotificationChannels.InApp, NotificationChannels.AndroidPush],
-    targets: [NotificationTargets.Center, NotificationTargets.Badge],
-    route: routeHref
-      ? {
-          href: routeHref,
-          label: dataString(data, "routeLabel") || undefined,
-        }
-      : undefined,
-    groupKey: dataString(data, "groupKey") || undefined,
-    dedupeKey: dataString(data, "dedupeKey") || id,
-    sound: isSound(soundValue) ? soundValue : NotificationSounds.Default,
-    status: NotificationDeliveryStatuses.Delivered,
-    syncState: NotificationSyncStates.Synced,
-    displayedAt: now,
-    createdAt: dataString(data, "createdAt") || now,
-    updatedAt: now,
-    metadata: Object.fromEntries(
-      Object.entries(data)
-        .filter(([key]) => key.startsWith("meta_"))
-        .map(([key, value]) => [key.slice(5), String(value)]),
-    ),
-  };
-}
+  notifications: readonly NotificationEntity[],
+) => Promise<readonly NotificationEntity[]> | readonly NotificationEntity[];
 
-async function getDeviceId(): Promise<string> {
-  const platform = capacitorPlatformService.getPlatform();
-  if (platform !== "android" && platform !== "ios") return "";
-  const existing = await asolDbGet<string>(
-    ASOL_DB_STORES.APP_SETTINGS,
-    deviceIdKey(platform),
-  );
-  if (existing) return existing;
-  if (platform === "android") {
-    const legacy = await asolDbGet<string>(ASOL_DB_STORES.APP_SETTINGS, LEGACY_ANDROID_DEVICE_ID_KEY);
-    if (legacy) {
-      await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, deviceIdKey(platform), legacy);
-      return legacy;
-    }
-  }
-  const randomId =
-    typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? crypto.randomUUID()
-      : `${Date.now()}:${Math.random().toString(36).slice(2)}`;
-  const generated = `${platform}:${randomId}`;
-  await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, deviceIdKey(platform), generated);
-  return generated;
+export type ActionHandler = (notification: NotificationEntity) => Promise<void> | void;
+
+export interface CapacitorPushHandlers {
+  onReceived: ReceivedHandler;
+  onBatchReceived: BatchReceivedHandler;
+  onAction: ActionHandler;
 }
 
 export class CapacitorPushService {
   private currentUid = "";
   private listenersReady = false;
   private listeners: Unsubscribe[] = [];
-  private receivedHandler: ReceivedHandler | null = null;
-  private actionHandler: ActionHandler | null = null;
+  private handlers: CapacitorPushHandlers | null = null;
+  private readonly imports = new SingleFlight();
 
   isAndroid(): boolean {
     return (
@@ -192,50 +79,57 @@ export class CapacitorPushService {
 
   isNativePush(): boolean {
     const platform = capacitorPlatformService.getPlatform();
-    return capacitorPlatformService.isNative() && (platform === "android" || platform === "ios");
+    return (
+      capacitorPlatformService.isNative() && (platform === "android" || platform === "ios")
+    );
   }
 
   getPlatform(): "android" | "ios" | "web" {
     return capacitorPlatformService.getPlatform();
   }
 
-  async initialize(
-    uid: string,
-    handlers: { onReceived: ReceivedHandler; onAction: ActionHandler },
-  ): Promise<void> {
+  async initialize(uid: string, handlers: CapacitorPushHandlers): Promise<void> {
     if (!this.isNativePush()) return;
-    this.currentUid = uid;
-    this.receivedHandler = handlers.onReceived;
-    this.actionHandler = handlers.onAction;
+    this.currentUid = assertUid(uid);
+    this.handlers = handlers;
     await this.ensureListeners();
-    if (this.isAndroid()) await this.createChannels();
-    await this.importDeliveredNotifications();
+    await this.createChannels();
+    await this.importDelivered();
   }
 
   /** Import notifications the OS displayed while this WebView was inactive. */
   async syncDeliveredNotifications(): Promise<void> {
     if (!this.isNativePush()) return;
-    await this.importDeliveredNotifications();
+    await this.importDelivered();
   }
 
   async register(uid: string): Promise<DeviceToken | null> {
     if (!this.isNativePush()) return null;
     const platform = capacitorPlatformService.getPlatform();
     if (platform !== "android" && platform !== "ios") return null;
-    this.currentUid = uid;
+    this.currentUid = assertUid(uid);
     await this.ensureListeners();
-    if (this.isAndroid()) await this.createChannels();
+    await this.createChannels();
+
     const permission = await pushNotifications.checkPermission();
-    if (!permission.granted) throw new Error("notificationPermissionDenied");
+    if (!permission.granted) {
+      throw new NotificationError(
+        NotificationErrorCodes.PermissionDenied,
+        "notificationPermissionDenied",
+      );
+    }
 
     // The Native Platform module owns the registration handshake and its
-    // timeout; failures surface as the historical error identifiers.
+    // timeout. The provider's own error text is never surfaced: it can carry a
+    // token or a credential hint.
     const tokenValue = await pushNotifications
       .register()
       .then((token) => token.value)
       .catch((error: unknown) => {
-        const message = error instanceof Error ? error.message : String(error);
-        throw new Error(
+        const message = error instanceof Error ? error.message : "";
+        notificationLog.warn("Push registration failed.", error);
+        throw new NotificationError(
+          NotificationErrorCodes.DeliveryFailed,
           message.includes("timed out")
             ? "notificationRegistrationTimeout"
             : "notificationPermissionDenied",
@@ -243,11 +137,11 @@ export class CapacitorPushService {
       });
 
     const now = new Date().toISOString();
-    const deviceId = await getDeviceId();
-    await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, enabledKey(platform), true);
+    const deviceId = await pushDeviceStore.deviceId(platform);
+    await pushDeviceStore.setEnabled(platform, true);
     return {
-      id: `ntok_${uid}_${platform}_${deviceId}`.replace(/[^a-zA-Z0-9_:-]/g, "_"),
-      uid,
+      id: `ntok_${this.currentUid}_${platform}_${deviceId}`.replace(/[^a-zA-Z0-9_:-]/g, "_"),
+      uid: this.currentUid,
       platform,
       // Classified from the token itself: Apple yields an FCM token once the
       // Firebase iOS SDK is installed, and a raw APNs token until then.
@@ -267,34 +161,39 @@ export class CapacitorPushService {
     if (!this.isNativePush()) return false;
     const platform = capacitorPlatformService.getPlatform();
     if (platform !== "android" && platform !== "ios") return false;
-    const current = await asolDbGet<boolean>(ASOL_DB_STORES.APP_SETTINGS, enabledKey(platform));
-    if (current === true) return true;
-    return platform === "android" &&
-      (await asolDbGet<boolean>(ASOL_DB_STORES.APP_SETTINGS, LEGACY_ANDROID_ENABLED_KEY)) === true;
+    return pushDeviceStore.isEnabled(platform);
   }
 
   async unregister(): Promise<void> {
     if (!this.isNativePush()) return;
     const platform = capacitorPlatformService.getPlatform();
     if (platform !== "android" && platform !== "ios") return;
+    // The user is signing out or opting out, so the tray is cleared too: those
+    // notifications belong to a session that no longer exists.
     await pushNotifications.unregister();
     await pushNotifications.removeAllDelivered();
-    await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, enabledKey(platform), false);
-    if (platform === "android") {
-      await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, LEGACY_ANDROID_ENABLED_KEY, false);
-    }
+    await pushDeviceStore.setEnabled(platform, false);
+    this.currentUid = "";
   }
 
-  async permissionState(): Promise<
-    "granted" | "denied" | "prompt" | "unsupported"
-  > {
+  async permissionState(): Promise<"granted" | "denied" | "prompt" | "unsupported"> {
     if (!this.isNativePush()) return "unsupported";
     const result = await pushNotifications.checkPermission();
     if (result.state === "unsupported") return "unsupported";
     if (result.granted) return "granted";
-    return result.state === "denied" || result.state === "blocked"
-      ? "denied"
-      : "prompt";
+    return result.state === "denied" || result.state === "blocked" ? "denied" : "prompt";
+  }
+
+  /**
+   * Android channels are declared once in the Native Platform module so the ids,
+   * names, and sound stay identical to already-installed clients.
+   *
+   * Safe to call repeatedly and on every platform: creating a channel that
+   * exists is a no-op, and nothing happens off Android.
+   */
+  async createChannels(): Promise<void> {
+    if (!this.isAndroid()) return;
+    await pushNotifications.createChannels();
   }
 
   private async ensureListeners(): Promise<void> {
@@ -302,83 +201,115 @@ export class CapacitorPushService {
     this.listenersReady = true;
     await pushNotifications.ensureListeners();
     await localNotifications.ensureListeners();
+
     this.listeners.push(
       pushNotifications.onReceived((native) => {
-        if (!this.currentUid) return;
-        void this.handleReceived(toNotificationEntity(this.currentUid, native));
+        void this.handleReceived(native);
       }),
       pushNotifications.onAction((native) => {
-        if (!this.currentUid) return;
-        void this.actionHandler?.(
-          toNotificationEntity(this.currentUid, native),
-        );
+        void this.handleAction(native);
       }),
-      // A notification this device displayed itself is tapped through the
-      // local plugin, not the push plugin. Both carry the same flat payload,
-      // so both route identically.
+      // A notification this device displayed itself is tapped through the local
+      // plugin, not the push plugin. Both carry the same flat payload, so both
+      // route identically.
       localNotifications.onAction((native) => {
-        if (!this.currentUid) return;
-        void this.actionHandler?.(
-          toNotificationEntity(this.currentUid, native),
-        );
+        void this.handleAction(native);
       }),
     );
   }
 
-  private async handleReceived(entity: NotificationEntity): Promise<void> {
-    await this.receivedHandler?.(entity);
-    await this.presentForeground(entity);
+  private mapForCurrentUser(native: NotificationPayload): NotificationEntity | null {
+    if (!this.currentUid) return null;
+    return mapInboundPushToNotification(this.currentUid, native);
+  }
+
+  private async handleReceived(native: NotificationPayload): Promise<void> {
+    const entity = this.mapForCurrentUser(native);
+    if (!entity) return;
+    try {
+      const stored = await this.handlers?.onReceived(entity);
+      // Presentation follows persistence. A duplicate delivery stores nothing,
+      // so it shows nothing — that is what makes "exactly one banner" true for
+      // a push Firebase sends twice.
+      if (stored) await this.presentForeground(entity);
+    } catch (error) {
+      notificationLog.error("Foreground receive failed.", error);
+    }
+  }
+
+  private async handleAction(native: NotificationPayload): Promise<void> {
+    const entity = this.mapForCurrentUser(native);
+    if (!entity) return;
+    try {
+      await this.handlers?.onAction(entity);
+    } catch (error) {
+      notificationLog.error("Notification tap handling failed.", error);
+    }
   }
 
   /**
    * Show a foreground push on Android.
    *
    * Firebase suppresses its own tray notification while the application is
-   * visible and hands the message straight to JavaScript, so without this
-   * an Android user gets no banner and no sound for anything that arrives
-   * while the app is open. iOS presents it itself from the configured
-   * `presentationOptions`, so doing it there too would show it twice.
+   * visible and hands the message straight to JavaScript, so without this an
+   * Android user gets no banner and no sound for anything arriving while the app
+   * is open. iOS presents it itself from the configured `presentationOptions`,
+   * so doing it there too would show it twice.
    *
    * Failures are swallowed: a missing banner must never break the stored
    * notification, which the receive handler has already committed.
    */
   private async presentForeground(entity: NotificationEntity): Promise<void> {
     if (!this.isAndroid()) return;
-    if (isInvisibleDelivery(entity)) return;
+    if (isDataOnlyDelivery(entity)) return;
     try {
       // The same rule the tray import and the service worker follow: a
       // notification the user deleted is not brought back by a re-delivery of
       // the event that produced it.
-      const dismissed = new Set(
-        await asolNotificationRepository.listDismissed(entity.uid),
-      );
+      const dismissed = new Set(await asolNotificationRepository.listDismissed(entity.uid));
       if (dismissed.has(entity.id) || dismissed.has(entity.dedupeKey)) return;
       await capacitorLocalNotificationService.display(entity);
     } catch (error) {
-      console.warn("[Notifications] Foreground display failed.", error);
+      notificationLog.warn("Foreground display failed.", error);
     }
   }
 
   /**
-   * Android channels are declared once in the Native Platform module so the
-   * ids, names, and sound stay identical to already-installed clients.
+   * Read the delivered tray and hand everything usable to the batch handler.
+   *
+   * Single-flight per user: `initialize` and the resume listener both call this,
+   * and a cold start from a tap fires them together.
    */
-  private async createChannels(): Promise<void> {
-    await pushNotifications.createChannels();
-  }
+  private async importDelivered(): Promise<void> {
+    const uid = this.currentUid;
+    const handlers = this.handlers;
+    if (!uid || !handlers) return;
 
-  private async importDeliveredNotifications(): Promise<void> {
-    if (!this.currentUid || !this.receivedHandler) return;
-    const delivered = await pushNotifications.getDelivered();
-    const dismissed = new Set(
-      await asolNotificationRepository.listDismissed(this.currentUid),
-    );
-    for (const notification of delivered) {
-      if (isEmptySystemPlaceholder(notification)) continue;
-      const entity = toNotificationEntity(this.currentUid, notification);
-      if (dismissed.has(entity.id) || dismissed.has(entity.dedupeKey)) continue;
-      await this.receivedHandler(entity);
-    }
+    await this.imports.run(`import:${uid}`, async () => {
+      let delivered: NotificationPayload[];
+      try {
+        delivered = await pushNotifications.getDelivered();
+      } catch (error) {
+        // A plugin that is unavailable — an old shell, a platform without the
+        // inbox — must not break startup.
+        notificationLog.warn("Delivered-notification inbox is unavailable.", error);
+        return;
+      }
+
+      const entities: NotificationEntity[] = [];
+      for (const payload of delivered) {
+        if (isEmptySystemPlaceholderPayload(payload)) continue;
+        const entity = mapInboundPushToNotification(uid, payload);
+        if (entity) entities.push(entity);
+      }
+      if (entities.length === 0) return;
+
+      // The batch handler persists and reports what was actually new. Nothing is
+      // acknowledged here on its own: the durable record of "already imported"
+      // is the stored notification and the dismissed list, both written before
+      // this returns.
+      await handlers.onBatchReceived(uid, entities);
+    });
   }
 }
 

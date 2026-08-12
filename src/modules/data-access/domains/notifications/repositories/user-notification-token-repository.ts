@@ -13,7 +13,7 @@ import type {
   DeleteNotificationTokenInput,
   RegisteredNotificationToken,
   RegisterNotificationTokenInput,
-} from '@/features/notifications/domain/entities';
+} from '@/features/notifications/contracts';
 
 function makeTokenId(uid: string, platform: string, deviceId: string): string {
   return `ntok_${uid}_${platform}_${deviceId}`.replace(/[^a-zA-Z0-9_:-]/g, '_');

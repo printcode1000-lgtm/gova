@@ -8,7 +8,7 @@ import { useLayoutEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { useResolvedColorScheme } from '@/lib/preferences';
-import { useNotificationBadge } from '@/features/notifications';
+import { useNotificationBadge } from '@/features/notifications/ui';
 import { useFavorites } from '@/features/favorites';
 
 export function BottomNavBar() {

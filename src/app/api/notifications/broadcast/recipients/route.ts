@@ -1,5 +1,5 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import { notificationBroadcastService } from '@/features/notifications/services/notification-service.bootstrap.server';
+import { notificationsServer } from '@/features/notifications/server';
 import { runTracedBusinessRoute } from '../../../auth/traced-route';
 
 export async function GET(request: Request) {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     try {
       const url = new URL(request.url);
       return apiSuccess(
-        await notificationBroadcastService.listRecipients({
+        await notificationsServer.listBroadcastRecipients({
           uid: url.searchParams.get('uid') ?? '',
           phone: url.searchParams.get('phone') ?? '',
         }),

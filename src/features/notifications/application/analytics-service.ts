@@ -3,7 +3,7 @@
 import type { NotificationAnalyticsEvent } from "../domain/entities";
 import type { NotificationLifecycleEvent } from "../domain/enums";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
-import { createNotificationId } from "../shared/create-notification-id";
+import { createNotificationId } from "../domain/create-notification-id";
 
 export class AnalyticsService {
   async track(input: {

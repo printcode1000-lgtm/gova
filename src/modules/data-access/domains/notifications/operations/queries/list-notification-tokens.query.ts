@@ -1,6 +1,6 @@
 import 'server-only';
 
-import type { RegisteredNotificationToken } from '@/features/notifications/domain/entities';
+import type { RegisteredNotificationToken } from '@/features/notifications/contracts';
 import { userNotificationTokenRepository } from '@/modules/data-access/domains/notifications/repositories/user-notification-token-repository';
 
 export class ListNotificationTokensQuery {

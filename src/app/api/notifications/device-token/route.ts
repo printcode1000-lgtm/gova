@@ -1,9 +1,9 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { notificationTokenService } from "@/features/notifications/services/notification-service.bootstrap.server";
-import type {
-  DeleteNotificationTokenInput,
-  RegisterNotificationTokenInput,
-} from "@/features/notifications/domain/entities";
+import {
+  notificationsServer,
+  type DeleteNotificationTokenInput,
+  type RegisterNotificationTokenInput,
+} from "@/features/notifications/server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 
 export async function POST(request: Request) {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     async () => {
       try {
         const body = (await request.json()) as RegisterNotificationTokenInput;
-        const token = await notificationTokenService.register(body);
+        const token = await notificationsServer.registerDeviceToken(body);
         return apiSuccess(token);
       } catch (error) {
         return mapServiceError(error);
@@ -33,7 +33,7 @@ export async function DELETE(request: Request) {
           deviceId: searchParams.get("deviceId") ?? undefined,
           tokenId: searchParams.get("tokenId") ?? undefined,
         };
-        await notificationTokenService.remove(input);
+        await notificationsServer.removeDeviceToken(input);
         return apiSuccess({ deleted: true });
       } catch (error) {
         return mapServiceError(error);

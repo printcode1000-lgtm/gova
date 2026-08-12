@@ -6,7 +6,7 @@ import { authApiService } from '../services/auth-api-service';
 import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
 import { clearImageUploadClientState } from '@/features/storage/services/image-upload-client-lifecycle';
-import { notificationDeviceTokenService } from '@/features/notifications/application/device-token-service';
+import { notifications } from '@/features/notifications';
 
 /** Clears session in IndexedDB and updates in-memory session state. */
 export function useLogout() {
@@ -20,10 +20,10 @@ export function useLogout() {
       // only where a native push controller observes the uid change.
       if (session?.uid) {
         try {
-          await notificationDeviceTokenService.unregister(
-            session.uid,
-            session.phone ?? '',
-          );
+          await notifications.unregisterDevice({
+            uid: session.uid,
+            phone: session.phone ?? '',
+          });
         } catch {
           // Never block sign-out on a push cleanup failure.
         }

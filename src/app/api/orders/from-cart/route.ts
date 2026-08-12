@@ -2,8 +2,7 @@ import { apiSuccess } from "@/core/api/api-response";
 import { resolveCartPrices } from "@/features/cart/services/cart-catalogue-pricing.server";
 import { createMultiSellerDeliveryDraft } from "@/features/cart/multi-seller-delivery-planner";
 import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
-import { withNotificationGrants } from "@/features/notifications/domain/notification-grant-envelope";
-import { NotificationGrantCollector } from "@/features/notifications/services/notification-grant-collector.server";
+import { notificationsServer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
@@ -66,7 +65,9 @@ export async function POST(request: Request) {
         { uid: body.uid, phone: body.phone },
         "buyer",
       );
-      const notificationGrants = new NotificationGrantCollector(body.uid);
+      const notificationGrants = notificationsServer.createGrantIssuer(
+        body.uid,
+      );
       if (!Array.isArray(body.items) || body.items.length === 0) {
         throw new Error("Cart items are required");
       }
@@ -385,7 +386,7 @@ export async function POST(request: Request) {
       });
 
       return apiSuccess(
-        withNotificationGrants(
+        notificationsServer.attachGrants(
           {
             orderId: String(order.id),
             unifiedDeliveryPlan: deliveryDraft.enabled,

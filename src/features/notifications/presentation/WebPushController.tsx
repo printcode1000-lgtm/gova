@@ -5,6 +5,7 @@ import { LOCALE_CHANGED_EVENT } from "@/lib/i18n";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { NOTIFICATION_CHANGED_EVENT } from "../domain/defaults";
 import { notificationDeviceTokenService } from "../application/device-token-service";
+import { notificationLog } from "../domain/notification-redaction";
 
 /**
  * Browser-side notification wiring.
@@ -31,8 +32,8 @@ export function WebPushController() {
         .catch((error) => {
           // Not fatal: push keeps working, the text just stays in the previous
           // language until the next registration.
-          console.warn(
-            "[Notifications] Failed to update the device language.",
+          notificationLog.warn(
+            "Failed to update the device language.",
             error,
           );
         });

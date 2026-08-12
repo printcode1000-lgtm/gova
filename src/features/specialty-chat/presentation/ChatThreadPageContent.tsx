@@ -14,16 +14,14 @@ import {
 import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import {
-  SPECIALTY_CHAT_KINDS,
-  specialtyChatClient,
-} from "@/features/specialty-chat";
-import { useTranslation } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
-import { useNotifications } from "./hooks/use-notifications";
-import {
   conversationMessages,
   findLocalChatConversation,
-} from "./notification-center-model";
+  useNotifications,
+} from "@/features/notifications/ui";
+import { useTranslation } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
+import { specialtyChatClient } from "../application/specialty-chat-client";
+import { SPECIALTY_CHAT_KINDS } from "../domain/types";
 
 function formatMessageTime(value: string, locale: "ar" | "en") {
   return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-EG", {

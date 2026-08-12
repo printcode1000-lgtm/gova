@@ -1,6 +1,8 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import type { NotificationTestInput } from "@/features/notifications/domain/entities";
-import { notificationBroadcastService } from "@/features/notifications/services/notification-service.bootstrap.server";
+import {
+  notificationsServer,
+  type NotificationTestInput,
+} from "@/features/notifications/server";
 import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
 import { runTracedBusinessRoute } from "../../../auth/traced-route";
 
@@ -14,7 +16,7 @@ export async function POST(request: Request) {
         const claims = assertSuperAdminRequest(request);
         const body = (await request.json()) as NotificationTestInput;
         return apiSuccess(
-          await notificationBroadcastService.sendTest({
+          await notificationsServer.sendTestNotification({
             ...body,
             identity: { uid: claims.uid, phone: claims.phone },
           }),

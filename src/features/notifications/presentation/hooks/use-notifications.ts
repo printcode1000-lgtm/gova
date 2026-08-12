@@ -4,23 +4,25 @@ import * as React from "react";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { NOTIFICATION_CHANGED_EVENT } from "../../domain/defaults";
 import type { NotificationEntity } from "../../domain/entities";
-import { NotificationTargets } from "../../domain/enums";
-import { asolNotificationRepository } from "../../infrastructure/asol-notification-repository";
-import { notificationLifecycleService } from "../../application/notification-lifecycle-service";
-import { notificationBadgeService } from "../../application/badge-service";
-import { notificationPermissionService } from "../../application/permission-service";
-import { notificationSyncService } from "../../application/notification-sync-service";
-import { notificationDeviceTokenService } from "../../application/device-token-service";
-import { SPECIALTY_CHAT_KINDS, specialtyChatClient } from "@/features/specialty-chat";
+import { notificationsFacade } from "../../public/notification-facade";
 
-const receiptInFlight = new Set<string>();
-
+/**
+ * The notification centre, as React state.
+ *
+ * Its one job is keeping a rendered list in step with stored notifications: it
+ * loads, it listens for change and for the network coming back, and it exposes
+ * the read/dismiss operations a list needs.
+ *
+ * It knows nothing about what any notification is *for*. Behaviour that belongs
+ * to another feature — turning a chat receipt into a delivery mark, replaying a
+ * receipt the device could not send — arrives through
+ * `notifications.registerCenterExtension`, so the hook never imports a consumer
+ * and the two features do not import each other.
+ */
 export function useNotifications() {
   const { session, isLoading } = useSession();
   const uid = session?.uid ?? "";
-  const [notifications, setNotifications] = React.useState<
-    NotificationEntity[]
-  >([]);
+  const [notifications, setNotifications] = React.useState<NotificationEntity[]>([]);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
 
@@ -32,125 +34,31 @@ export function useNotifications() {
       return;
     }
     setLoading(true);
-    let items = await asolNotificationRepository.list(uid);
-    const receipts = items.filter(
-      (item) => item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Receipt,
-    );
-    if (receipts.length > 0) {
-      for (const receipt of receipts) {
-        const target = String(receipt.metadata?.targetMessageId ?? "");
-        const status = receipt.metadata?.receiptStatus;
-        if (target && (status === "received" || status === "read")) {
-          await asolNotificationRepository.applyMessageReceipt(
-            uid,
-            target,
-            status,
-            String(receipt.metadata?.receiptFromUid ?? ""),
-          );
-        }
-        await asolNotificationRepository.delete(uid, receipt.id);
-      }
-      items = await asolNotificationRepository.list(uid);
-    }
-    const badgeCount = items.filter(
-      (item) => !item.readAt && item.targets.includes(NotificationTargets.Badge),
-    ).length;
-    setNotifications(items);
-    setUnreadCount(badgeCount);
-    await notificationBadgeService.refresh(uid);
+    const snapshot = await notificationsFacade.synchronizeNotificationCenter({ uid });
+    setNotifications(snapshot.notifications);
+    setUnreadCount(snapshot.unreadCount);
     setLoading(false);
-    if (session?.sessionToken) {
-      for (const item of items) {
-        const kind = item.metadata?.specialtyChatKind;
-        const capability = String(item.metadata?.capability ?? "");
-        const targetMessageId = String(
-          kind === SPECIALTY_CHAT_KINDS.Request
-            ? item.metadata?.requestId ?? ""
-            : item.metadata?.messageId ?? "",
-        );
-        if (
-          item.metadata?.outgoing !== true &&
-          item.metadata?.receivedReceiptSent !== true &&
-          capability &&
-          targetMessageId &&
-          (kind === SPECIALTY_CHAT_KINDS.Request || kind === SPECIALTY_CHAT_KINDS.Message)
-        ) {
-          const receiptKey = `${uid}:${item.id}:received`;
-          if (!receiptInFlight.has(receiptKey)) {
-            receiptInFlight.add(receiptKey);
-            void specialtyChatClient
-              .receipt(session, { capability, targetMessageId, status: "received" })
-              .then(() =>
-                asolNotificationRepository.update(uid, item.id, {
-                  metadata: { ...item.metadata, receivedReceiptSent: true },
-                }),
-              )
-              .catch((error) => {
-                console.warn("[Notifications] Failed to send received receipt.", error);
-                // The sender is waiting on this receipt and the user has no way
-                // to retry it by hand, so it is replayed when the app is online.
-                void notificationSyncService.enqueue(uid, "chat_receipt", receiptKey, {
-                  capability,
-                  targetMessageId,
-                  status: "received",
-                  notificationId: item.id,
-                });
-              })
-              .finally(() => receiptInFlight.delete(receiptKey));
-          }
-        }
-      }
-    }
-  }, [session, uid]);
+  }, [uid]);
 
   React.useEffect(() => {
     void refresh();
   }, [refresh]);
 
-  const flushOfflineQueue = React.useCallback(async () => {
-    if (!uid || !session?.sessionToken) return;
-    await notificationSyncService.sync(uid, {
-      sendChatReceipt: async (payload) => {
-        await specialtyChatClient.receipt(session, {
-          capability: payload.capability,
-          targetMessageId: payload.targetMessageId,
-          status: payload.status,
-        });
-        if (payload.status === "received") {
-          const item = await asolNotificationRepository
-            .list(uid)
-            .then((items) => items.find((entry) => entry.id === payload.notificationId));
-          if (item) {
-            await asolNotificationRepository.update(uid, item.id, {
-              metadata: { ...item.metadata, receivedReceiptSent: true },
-            });
-          }
-        }
-      },
-    });
-  }, [session, uid]);
-
   React.useEffect(() => {
     if (!uid || typeof window === "undefined") return;
-    const handler = (event: Event) => {
+    const handleChanged = (event: Event) => {
       const detail = (event as CustomEvent<{ uid: string }>).detail;
       if (!detail?.uid || detail.uid === uid) void refresh();
     };
-    const handleOnline = () => {
-      void flushOfflineQueue();
-      void refresh();
-    };
-    window.addEventListener(NOTIFICATION_CHANGED_EVENT, handler);
-    window.addEventListener("online", handleOnline);
+    // Coming back online is the moment the retry queue can drain, which
+    // `refresh` does on its way to reloading the list.
+    window.addEventListener(NOTIFICATION_CHANGED_EVENT, handleChanged);
+    window.addEventListener("online", handleChanged);
     return () => {
-      window.removeEventListener(NOTIFICATION_CHANGED_EVENT, handler);
-      window.removeEventListener("online", handleOnline);
+      window.removeEventListener(NOTIFICATION_CHANGED_EVENT, handleChanged);
+      window.removeEventListener("online", handleChanged);
     };
-  }, [flushOfflineQueue, refresh, uid]);
-
-  React.useEffect(() => {
-    void flushOfflineQueue();
-  }, [flushOfflineQueue]);
+  }, [refresh, uid]);
 
   return {
     isLoading: isLoading || loading,
@@ -158,97 +66,26 @@ export function useNotifications() {
     notifications,
     unreadCount,
     refresh,
-    requestPermission: async () => {
-      const permission = await notificationPermissionService.request();
-      if (uid && (permission === "granted" || permission === "unsupported")) {
-        await notificationDeviceTokenService.register(
-          uid,
-          session?.phone ?? "",
-        );
-      }
-      return permission;
-    },
+    requestPermission: () =>
+      notificationsFacade.requestPermission({ uid, phone: session?.phone ?? "" }),
     markRead: async (notificationId: string) => {
       if (!uid) return;
-      const item = notifications.find((candidate) => candidate.id === notificationId);
-      await notificationLifecycleService.markRead(uid, notificationId);
-      const kind = item?.metadata?.specialtyChatKind;
-      const capability = String(item?.metadata?.capability ?? "");
-      const targetMessageId = String(
-        kind === SPECIALTY_CHAT_KINDS.Request
-          ? item?.metadata?.requestId ?? ""
-          : item?.metadata?.messageId ?? "",
-      );
-      if (
-        session?.sessionToken && capability && targetMessageId && item?.metadata?.outgoing !== true &&
-        (kind === SPECIALTY_CHAT_KINDS.Request || kind === SPECIALTY_CHAT_KINDS.Message)
-      ) {
-        void specialtyChatClient.receipt(session, { capability, targetMessageId, status: "read" });
-      }
+      await notificationsFacade.markRead({ uid, notificationId });
       await refresh();
     },
     markManyRead: async (notificationIds: readonly string[]) => {
       if (!uid) return;
-      const ids = new Set(notificationIds);
-      const items = notifications.filter(
-        (candidate) => ids.has(candidate.id) && !candidate.readAt,
-      );
-      if (items.length === 0) return;
-      await notificationLifecycleService.markManyRead(
-        uid,
-        items.map((item) => item.id),
-      );
-      if (session?.sessionToken) {
-        for (const item of items) {
-          const kind = item.metadata?.specialtyChatKind;
-          const capability = String(item.metadata?.capability ?? "");
-          const targetMessageId = String(
-            kind === SPECIALTY_CHAT_KINDS.Request
-              ? item.metadata?.requestId ?? ""
-              : item.metadata?.messageId ?? "",
-          );
-          if (
-            capability &&
-            targetMessageId &&
-            item.metadata?.outgoing !== true &&
-            (kind === SPECIALTY_CHAT_KINDS.Request ||
-              kind === SPECIALTY_CHAT_KINDS.Message)
-          ) {
-            void specialtyChatClient.receipt(session, {
-              capability,
-              targetMessageId,
-              status: "read",
-            });
-          }
-        }
-      }
+      await notificationsFacade.markManyRead({ uid, notificationIds });
       await refresh();
     },
     markAllRead: async () => {
       if (!uid) return;
-      await notificationLifecycleService.markAllRead(uid);
-      if (session?.sessionToken) {
-        for (const item of notifications.filter((candidate) => !candidate.readAt)) {
-          const kind = item.metadata?.specialtyChatKind;
-          const capability = String(item.metadata?.capability ?? "");
-          const targetMessageId = String(
-            kind === SPECIALTY_CHAT_KINDS.Request
-              ? item.metadata?.requestId ?? ""
-              : item.metadata?.messageId ?? "",
-          );
-          if (
-            capability && targetMessageId && item.metadata?.outgoing !== true &&
-            (kind === SPECIALTY_CHAT_KINDS.Request || kind === SPECIALTY_CHAT_KINDS.Message)
-          ) {
-            void specialtyChatClient.receipt(session, { capability, targetMessageId, status: "read" });
-          }
-        }
-      }
+      await notificationsFacade.markAllRead({ uid });
       await refresh();
     },
     dismiss: async (notificationId: string) => {
       if (!uid) return;
-      await notificationLifecycleService.dismiss(uid, notificationId);
+      await notificationsFacade.dismiss({ uid, notificationId });
       await refresh();
     },
   };

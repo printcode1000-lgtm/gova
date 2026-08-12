@@ -3,17 +3,22 @@
 import { asolApi } from "@/core/api/asol-api-client";
 import type { UserSession } from "@/features/auth/entities/session.entity";
 import { sessionService } from "@/features/auth/services/session-service";
-import { asolNotificationRepository } from "@/features/notifications/infrastructure/asol-notification-repository";
-import { NOTIFICATION_CHANGED_EVENT } from "@/features/notifications/domain/defaults";
-import type { NotificationEntity } from "@/features/notifications/domain/entities";
-import { NotificationCategories, NotificationChannels, NotificationContentSources, NotificationDeliveryStatuses, NotificationPriorities, NotificationSounds, NotificationSyncStates, NotificationTargets, NotificationTypes } from "@/features/notifications/domain/enums";
+import {
+  notifications,
+  NotificationCategories,
+  NotificationChannels,
+  NotificationContentSources,
+  NotificationDeliveryStatuses,
+  NotificationPriorities,
+  NotificationSounds,
+  NotificationSyncStates,
+  NotificationTargets,
+  NotificationTypes,
+  type NotificationEntity,
+} from "@/features/notifications";
 import type { SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialtyRequestResult, SpecialtyChatPreferenceResult } from "../domain/types";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
 import { deliverNotificationGrants } from "@/modules/notification-bridge";
-
-function notifyChanged(uid: string) {
-  window.dispatchEvent(new CustomEvent(NOTIFICATION_CHANGED_EVENT, { detail: { uid } }));
-}
 
 function identity(session: UserSession) {
   if (!session.sessionToken) throw new Error("specialtyChatLoginRefreshRequired");
@@ -41,7 +46,9 @@ async function saveOutgoing(input: {
   metadata: NotificationEntity["metadata"];
 }) {
   const now = new Date().toISOString();
-  await asolNotificationRepository.save({
+  // Stored through the notification module's public API: it persists the card,
+  // counts it, and tells the centre to reload.
+  await notifications.sendLocal({
     id: input.id,
     uid: input.uid,
     type: NotificationTypes.Custom,
@@ -62,7 +69,6 @@ async function saveOutgoing(input: {
     updatedAt: now,
     metadata: { ...input.metadata, outgoing: true },
   });
-  notifyChanged(input.uid);
 }
 
 export const specialtyChatClient = {

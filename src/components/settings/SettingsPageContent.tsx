@@ -19,9 +19,10 @@ import {
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useOtaUpdate } from "@/features/ota/hooks/use-ota-update";
 import { publicEnv } from "@/core/config/public-env";
-import { webPushBrowserService } from "@/features/notifications/application/web-push-browser-service";
-import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
-import { notificationPermissionService } from "@/features/notifications/application/permission-service";
+import {
+  notifications,
+  type NotificationPermissionStateName,
+} from "@/features/notifications";
 import {
   isSpecialtyChatSessionTokenFailure,
   specialtyChatClient,
@@ -79,9 +80,9 @@ export function SettingsPageContent() {
   const [statusText, setStatusText] = React.useState("");
   const [webPushStatus, setWebPushStatus] = React.useState("");
   const [webPushBusy, setWebPushBusy] = React.useState(false);
-  const [webPushPermission, setWebPushPermission] = React.useState<
-    NotificationPermission | "unsupported"
-  >("unsupported");
+  const [webPushPermission, setWebPushPermission] =
+    React.useState<NotificationPermissionStateName>("unsupported");
+  const [pushSupported, setPushSupported] = React.useState(false);
   const [androidPushEnabled, setAndroidPushEnabled] = React.useState(false);
   const [androidPushPermission, setAndroidPushPermission] =
     React.useState<string>("unsupported");
@@ -106,23 +107,22 @@ export function SettingsPageContent() {
     setTempFontSize(themePrefs.fontSize);
   }, [themePrefs.fontSize]);
 
-  React.useEffect(() => {
-    setNotificationPlatform(notificationDeviceTokenService.getPlatform());
+  // One read of the module's diagnostics answers every question this screen
+  // asks about the device: which platform it is, whether push can work here,
+  // whether this device already opted in, and what the OS currently permits.
+  const loadNotificationState = React.useCallback(async () => {
+    const diagnostics = await notifications.getDiagnostics();
+    setNotificationPlatform(diagnostics.platform);
+    setPushSupported(diagnostics.pushSupported);
+    setWebPushPermission(diagnostics.permission.state);
+    setAndroidPushEnabled(diagnostics.deviceEnabled);
+    setAndroidPushPermission(diagnostics.permission.state);
     setNotificationRuntimeReady(true);
   }, []);
 
   React.useEffect(() => {
-    void webPushBrowserService.getPermission().then(setWebPushPermission);
-    if (isAndroidNotifications || isIosNotifications) {
-      void Promise.all([
-        notificationDeviceTokenService.isNativeEnabled(),
-        notificationDeviceTokenService.getAndroidPermission(),
-      ]).then(([enabled, permission]) => {
-        setAndroidPushEnabled(enabled);
-        setAndroidPushPermission(permission);
-      });
-    }
-  }, [isAndroidNotifications, isIosNotifications]);
+    void loadNotificationState();
+  }, [loadNotificationState]);
 
   React.useEffect(() => {
     if (!session?.sessionToken) return;
@@ -187,7 +187,10 @@ export function SettingsPageContent() {
         });
       }
       if (session) {
-        await notificationDeviceTokenService.unregister(session.uid, session.phone);
+        await notifications.unregisterDevice({
+          uid: session.uid,
+          phone: session.phone,
+        });
       }
       resetTheme();
       resetApp();
@@ -224,16 +227,16 @@ export function SettingsPageContent() {
       // permission. Re-check first so this button becomes the recovery path
       // after the user changes the site's permission from the address bar,
       // without calling subscribe() and exposing a technical error string.
-      const currentPermission = await webPushBrowserService.getPermission();
+      const currentPermission = (await notifications.getPermissionState()).state;
       setWebPushPermission(currentPermission);
-      if (currentPermission === "denied") {
+      if (currentPermission === "denied" || currentPermission === "blocked") {
         setWebPushStatus(
           t("notifications.permissionPrompt.deniedManual"),
         );
         return;
       }
-      await webPushBrowserService.subscribe(session.uid, session.phone);
-      setWebPushPermission(await webPushBrowserService.getPermission());
+      await notifications.enableDevice({ uid: session.uid, phone: session.phone });
+      await loadNotificationState();
       setWebPushStatus("تم تفعيل إشعارات المتصفح لهذا الجهاز.");
     } catch (error) {
       setWebPushStatus(
@@ -251,8 +254,11 @@ export function SettingsPageContent() {
     setWebPushBusy(true);
     setWebPushStatus("");
     try {
-      await webPushBrowserService.unsubscribe(session.uid, session.phone);
-      setWebPushPermission(await webPushBrowserService.getPermission());
+      await notifications.unregisterDevice({
+        uid: session.uid,
+        phone: session.phone,
+      });
+      await loadNotificationState();
       setWebPushStatus("تم إلغاء اشتراك هذا الجهاز.");
     } catch (error) {
       setWebPushStatus(
@@ -273,11 +279,14 @@ export function SettingsPageContent() {
     setWebPushBusy(true);
     setWebPushStatus("");
     try {
-      const permission = await notificationPermissionService.request();
+      const permission = await notifications.requestPermission();
       setAndroidPushPermission(permission);
       if (permission !== "granted")
         throw new Error("لم يتم منح إذن الإشعارات.");
-      await notificationDeviceTokenService.register(session.uid, session.phone);
+      await notifications.registerDevice({
+        uid: session.uid,
+        phone: session.phone,
+      });
       setAndroidPushEnabled(true);
       setWebPushStatus(
         isIosNotifications
@@ -300,10 +309,10 @@ export function SettingsPageContent() {
     setWebPushBusy(true);
     setWebPushStatus("");
     try {
-      await notificationDeviceTokenService.unregister(
-        session.uid,
-        session.phone,
-      );
+      await notifications.unregisterDevice({
+        uid: session.uid,
+        phone: session.phone,
+      });
       setAndroidPushEnabled(false);
       setWebPushStatus(`تم إلغاء إشعارات ${isIosNotifications ? "iOS" : "Android"} لهذا الجهاز.`);
     } catch (error) {
@@ -497,7 +506,10 @@ export function SettingsPageContent() {
                           ? androidPushPermission
                           : isIosNotifications
                             ? androidPushPermission
-                          : webPushPermission) === "denied"
+                          : webPushPermission) === "denied" ||
+                        (isAndroidNotifications || isIosNotifications
+                          ? androidPushPermission
+                          : webPushPermission) === "blocked"
                       ? "مرفوض من إعدادات النظام"
                       : (isAndroidNotifications
                             ? androidPushPermission
@@ -541,12 +553,13 @@ export function SettingsPageContent() {
                       disabled={
                         webPushBusy ||
                         !notificationRuntimeReady ||
-                        !webPushBrowserService.isSupported()
+                        !pushSupported
                       }
                       onClick={() => void enableWebPush()}
                       className="asol-control rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary disabled:opacity-60"
                     >
-                      {webPushPermission === "denied"
+                      {webPushPermission === "denied" ||
+                      webPushPermission === "blocked"
                         ? t("notifications.permissionPrompt.recheck")
                         : "تفعيل إشعارات المتصفح"}
                     </button>

@@ -14,6 +14,34 @@ import type {
   NotificationOfflineOperation,
   NotificationSettings,
 } from "../domain/entities";
+import {
+  sanitizeNotificationEntity,
+  sanitizeRetryOperation,
+} from "../domain/notification-validation";
+import { KeyedMutex } from "../shared/keyed-mutex";
+
+/**
+ * The notification centre's storage.
+ *
+ * Two invariants this file exists to hold, both of which the previous
+ * read-then-write version could not:
+ *
+ * 1. **No lost writes.** IndexedDB has no compare-and-swap, and every list
+ *    operation here is read-modify-write. A push arriving while the tray import
+ *    is running used to read the same list, and whichever wrote second erased
+ *    the other's notification. Every mutation now runs inside a per-user lock.
+ * 2. **Nothing unvalidated comes back out.** Records may have been written by an
+ *    older version of the app or by the service worker, so they are sanitized on
+ *    read; a record too broken to repair is dropped rather than rendered.
+ *
+ * Locks are per key, and the two key spaces are deliberately separate: the
+ * dismissed-identity list is written from inside a notification-list mutation,
+ * so sharing one lock would deadlock.
+ */
+
+const MAX_STORED_NOTIFICATIONS = 250;
+const MAX_DISMISSED_IDENTITIES = 500;
+const MAX_ANALYTICS_EVENTS = 500;
 
 const listKey = (uid: string) => `user:${uid}:list`;
 const settingsKey = (uid: string) => `user:${uid}`;
@@ -23,6 +51,19 @@ const analyticsListKey = (uid: string) => `user:${uid}:analytics`;
 const offlineQueueKey = (uid: string) => `user:${uid}:queue`;
 const dismissedKey = (uid: string) => `user:${uid}:dismissed`;
 
+const listLock = (uid: string) => `notifications:${uid}`;
+const dismissedLock = (uid: string) => `dismissed:${uid}`;
+const tokensLock = (uid: string) => `tokens:${uid}`;
+const queueLock = (uid: string) => `queue:${uid}`;
+const analyticsLock = (uid: string) => `analytics:${uid}`;
+
+/**
+ * An `ASOL` card with no body, route, template, or event.
+ *
+ * Some Android system paths deliver one when a data-only push has no
+ * displayable content. It carries nothing, so it is never stored, and its
+ * identity is remembered so a later re-delivery is not stored either.
+ */
 function isEmptyPlaceholder(notification: NotificationEntity): boolean {
   return (
     notification.title.trim().toUpperCase() === "ASOL" &&
@@ -33,239 +74,403 @@ function isEmptyPlaceholder(notification: NotificationEntity): boolean {
   );
 }
 
+/** Why a save did not add a row. Callers use this to decide what to acknowledge. */
+export type NotificationSaveOutcome =
+  | { stored: true; notification: NotificationEntity }
+  | {
+      stored: false;
+      notification: NotificationEntity;
+      reason: "duplicate" | "dismissed" | "placeholder" | "invalid";
+    };
+
 export class AsolNotificationRepository {
-  async list(uid: string): Promise<NotificationEntity[]> {
-    const current = (await asolDbGet<NotificationEntity[]>(
+  private readonly mutex = new KeyedMutex();
+
+  // ---- notification list ---------------------------------------------------
+
+  /**
+   * Read and repair, without taking the lock.
+   *
+   * Callers that already hold the list lock use this; the public `list` wraps it
+   * so an external reader still sees a consistent snapshot.
+   */
+  private async readList(uid: string): Promise<{
+    items: NotificationEntity[];
+    dropped: NotificationEntity[];
+    changed: boolean;
+  }> {
+    const raw = (await asolDbGet<unknown[]>(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid))) ?? [];
+    const items: NotificationEntity[] = [];
+    const dropped: NotificationEntity[] = [];
+    let changed = false;
+
+    for (const record of Array.isArray(raw) ? raw : []) {
+      const sanitized = sanitizeNotificationEntity(record);
+      if (!sanitized) {
+        // Unrepairable: no identity, so it can never be shown or deduplicated.
+        changed = true;
+        continue;
+      }
+      if (sanitized.uid !== uid) {
+        // A record filed under the wrong user is never returned to this one.
+        changed = true;
+        continue;
+      }
+      if (isEmptyPlaceholder(sanitized)) {
+        dropped.push(sanitized);
+        changed = true;
+        continue;
+      }
+      items.push(sanitized);
+    }
+    return { items, dropped, changed };
+  }
+
+  private writeList(uid: string, items: NotificationEntity[]): Promise<void> {
+    return asolDbSet(
       ASOL_DB_STORES.NOTIFICATIONS,
       listKey(uid),
-    )) ?? [];
-    const cleaned = current.filter((item) => !isEmptyPlaceholder(item));
-    if (cleaned.length !== current.length) {
-      await asolDbSet(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid), cleaned);
-      await this.rememberDismissedMany(current.filter(isEmptyPlaceholder));
-    }
-    return cleaned;
-  }
-
-  async save(notification: NotificationEntity): Promise<NotificationEntity> {
-    if (isEmptyPlaceholder(notification)) {
-      await this.rememberDismissed(notification);
-      return notification;
-    }
-    const dismissed = await this.listDismissed(notification.uid);
-    if (
-      dismissed.some(
-        (item) =>
-          item === notification.dedupeKey ||
-          item === notification.id,
-      )
-    ) {
-      return notification;
-    }
-    const current = await this.list(notification.uid);
-    if (current.some((item) => item.dedupeKey === notification.dedupeKey)) {
-      return current.find((item) => item.dedupeKey === notification.dedupeKey) ?? notification;
-    }
-    const next = [notification, ...current].slice(0, 250);
-    await asolDbSet(ASOL_DB_STORES.NOTIFICATIONS, listKey(notification.uid), next);
-    return notification;
-  }
-
-  async update(uid: string, notificationId: string, patch: Partial<NotificationEntity>) {
-    const current = await this.list(uid);
-    const next = current.map((item) =>
-      item.id === notificationId
-        ? { ...item, ...patch, updatedAt: new Date().toISOString() }
-        : item,
+      items.slice(0, MAX_STORED_NOTIFICATIONS),
     );
-    await asolDbSet(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid), next);
   }
 
-  async applyMessageReceipt(
-    uid: string,
-    targetMessageId: string,
-    status: "received" | "read",
-    receiptFromUid = "",
-  ): Promise<void> {
-    const current = await this.list(uid);
-    const now = new Date().toISOString();
-    const next = current.map((item) => {
-      const kind = item.metadata?.specialtyChatKind;
-      const matches = targetMessageId.startsWith("req_")
-        ? item.id === targetMessageId ||
-          (kind === "specialty_request" && item.metadata?.requestId === targetMessageId)
-        : item.id === targetMessageId || item.metadata?.messageId === targetMessageId;
-      if (!matches || item.metadata?.outgoing !== true) return item;
-      const receivedBy = new Set(
-        String(item.metadata?.remoteReceivedBy ?? "").split(",").filter(Boolean),
-      );
-      const readBy = new Set(
-        String(item.metadata?.remoteReadBy ?? "").split(",").filter(Boolean),
-      );
-      if (receiptFromUid) receivedBy.add(receiptFromUid);
-      if (status === "read" && receiptFromUid) readBy.add(receiptFromUid);
-      return {
-        ...item,
-        updatedAt: now,
-        metadata: {
-          ...item.metadata,
-          remoteReceivedAt: item.metadata?.remoteReceivedAt ?? now,
-          remoteReceivedBy: [...receivedBy].join(","),
-          remoteReceivedCount: receivedBy.size,
-          ...(status === "read"
-            ? {
-                remoteReadAt: now,
-                remoteReadBy: [...readBy].join(","),
-                remoteReadCount: readBy.size,
-              }
-            : {}),
-        },
-      };
+  async list(uid: string): Promise<NotificationEntity[]> {
+    if (!uid) return [];
+    return this.mutex.run(listLock(uid), async () => {
+      const { items, dropped, changed } = await this.readList(uid);
+      if (changed) {
+        await this.writeList(uid, items);
+        if (dropped.length > 0) await this.rememberDismissedMany(dropped);
+      }
+      return items;
     });
-    await asolDbSet(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid), next);
+  }
+
+  /**
+   * Store one notification if it is new.
+   *
+   * The whole check-then-write sequence is inside the lock, which is what makes
+   * "exactly once" true rather than merely likely: two concurrent deliveries of
+   * the same push both see the same list, and the second sees the first's row.
+   */
+  async save(notification: NotificationEntity): Promise<NotificationSaveOutcome> {
+    const sanitized = sanitizeNotificationEntity(notification);
+    if (!sanitized) {
+      return { stored: false, notification, reason: "invalid" };
+    }
+    if (isEmptyPlaceholder(sanitized)) {
+      await this.rememberDismissedMany([sanitized]);
+      return { stored: false, notification: sanitized, reason: "placeholder" };
+    }
+
+    return this.mutex.run(listLock(sanitized.uid), async () => {
+      const dismissed = new Set(await this.listDismissed(sanitized.uid));
+      if (dismissed.has(sanitized.id) || dismissed.has(sanitized.dedupeKey)) {
+        return { stored: false, notification: sanitized, reason: "dismissed" as const };
+      }
+      const { items } = await this.readList(sanitized.uid);
+      const existing = items.find((item) => item.dedupeKey === sanitized.dedupeKey);
+      if (existing) {
+        return { stored: false, notification: existing, reason: "duplicate" as const };
+      }
+      await this.writeList(sanitized.uid, [sanitized, ...items]);
+      return { stored: true, notification: sanitized as NotificationEntity };
+    });
+  }
+
+  /**
+   * Store a batch under a single lock acquisition.
+   *
+   * The tray import needs this: importing one at a time would take and release
+   * the lock per notification, letting a concurrent import interleave and see a
+   * partially written list.
+   */
+  async saveMany(uid: string, notifications: readonly NotificationEntity[]): Promise<{
+    stored: NotificationEntity[];
+    skipped: NotificationEntity[];
+  }> {
+    if (!uid || notifications.length === 0) return { stored: [], skipped: [] };
+    return this.mutex.run(listLock(uid), async () => {
+      const dismissed = new Set(await this.listDismissed(uid));
+      const { items } = await this.readList(uid);
+      const byDedupeKey = new Set(items.map((item) => item.dedupeKey));
+      const stored: NotificationEntity[] = [];
+      const skipped: NotificationEntity[] = [];
+      const placeholders: NotificationEntity[] = [];
+
+      for (const candidate of notifications) {
+        const sanitized = sanitizeNotificationEntity(candidate);
+        if (!sanitized || sanitized.uid !== uid) {
+          if (sanitized) skipped.push(sanitized);
+          continue;
+        }
+        if (isEmptyPlaceholder(sanitized)) {
+          placeholders.push(sanitized);
+          skipped.push(sanitized);
+          continue;
+        }
+        if (
+          dismissed.has(sanitized.id) ||
+          dismissed.has(sanitized.dedupeKey) ||
+          byDedupeKey.has(sanitized.dedupeKey)
+        ) {
+          skipped.push(sanitized);
+          continue;
+        }
+        byDedupeKey.add(sanitized.dedupeKey);
+        stored.push(sanitized);
+      }
+
+      if (stored.length > 0) await this.writeList(uid, [...stored, ...items]);
+      if (placeholders.length > 0) await this.rememberDismissedMany(placeholders);
+      return { stored, skipped };
+    });
+  }
+
+  async update(
+    uid: string,
+    notificationId: string,
+    patch: Partial<NotificationEntity>,
+  ): Promise<void> {
+    if (!uid || !notificationId) return;
+    await this.mutex.run(listLock(uid), async () => {
+      const { items } = await this.readList(uid);
+      // Identity is never patchable: allowing it would let a metadata update
+      // rewrite the dedupe key and resurrect a dismissed notification.
+      const { id: _id, uid: _uid, dedupeKey: _dedupeKey, ...safePatch } = patch;
+      void _id;
+      void _uid;
+      void _dedupeKey;
+      await this.writeList(
+        uid,
+        items.map((item) =>
+          item.id === notificationId
+            ? { ...item, ...safePatch, updatedAt: new Date().toISOString() }
+            : item,
+        ),
+      );
+    });
   }
 
   async markAllRead(uid: string): Promise<void> {
-    const now = new Date().toISOString();
-    const current = await this.list(uid);
-    await asolDbSet(
-      ASOL_DB_STORES.NOTIFICATIONS,
-      listKey(uid),
-      current.map((item) => ({ ...item, readAt: item.readAt ?? now, updatedAt: now })),
-    );
+    if (!uid) return;
+    await this.mutex.run(listLock(uid), async () => {
+      const now = new Date().toISOString();
+      const { items } = await this.readList(uid);
+      await this.writeList(
+        uid,
+        items.map((item) => ({ ...item, readAt: item.readAt ?? now, updatedAt: now })),
+      );
+    });
   }
 
   async markManyRead(uid: string, notificationIds: readonly string[]): Promise<void> {
     const ids = new Set(notificationIds);
-    if (ids.size === 0) return;
-    const now = new Date().toISOString();
-    const current = await this.list(uid);
-    await asolDbSet(
-      ASOL_DB_STORES.NOTIFICATIONS,
-      listKey(uid),
-      current.map((item) =>
-        ids.has(item.id)
-          ? {
-              ...item,
-              readAt: item.readAt ?? now,
-              openedAt: item.openedAt ?? now,
-              updatedAt: now,
-            }
-          : item,
-      ),
-    );
+    if (!uid || ids.size === 0) return;
+    await this.mutex.run(listLock(uid), async () => {
+      const now = new Date().toISOString();
+      const { items } = await this.readList(uid);
+      await this.writeList(
+        uid,
+        items.map((item) =>
+          ids.has(item.id)
+            ? {
+                ...item,
+                readAt: item.readAt ?? now,
+                openedAt: item.openedAt ?? now,
+                updatedAt: now,
+              }
+            : item,
+        ),
+      );
+    });
   }
 
   async delete(uid: string, notificationId: string): Promise<void> {
-    const current = await this.list(uid);
-    const deleted = current.find((item) => item.id === notificationId);
-    await asolDbSet(
-      ASOL_DB_STORES.NOTIFICATIONS,
-      listKey(uid),
-      current.filter((item) => item.id !== notificationId),
-    );
-    if (deleted) await this.rememberDismissed(deleted);
+    if (!uid || !notificationId) return;
+    await this.mutex.run(listLock(uid), async () => {
+      const { items } = await this.readList(uid);
+      const deleted = items.find((item) => item.id === notificationId);
+      await this.writeList(
+        uid,
+        items.filter((item) => item.id !== notificationId),
+      );
+      if (deleted) await this.rememberDismissedMany([deleted]);
+    });
   }
 
   async clear(uid: string): Promise<void> {
-    const current = await this.list(uid);
-    await this.rememberDismissedMany(current);
-    await asolDbDelete(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid));
+    if (!uid) return;
+    await this.mutex.run(listLock(uid), async () => {
+      const { items } = await this.readList(uid);
+      await this.rememberDismissedMany(items);
+      await asolDbDelete(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid));
+    });
   }
 
+  // ---- dismissed identities ------------------------------------------------
+
   async listDismissed(uid: string): Promise<string[]> {
-    return (await asolDbGet<string[]>(
-      ASOL_DB_STORES.NOTIFICATION_SETTINGS,
-      dismissedKey(uid),
-    )) ?? [];
+    if (!uid) return [];
+    const raw = await asolDbGet<unknown[]>(ASOL_DB_STORES.NOTIFICATION_SETTINGS, dismissedKey(uid));
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((item): item is string => typeof item === "string" && item.length > 0);
   }
 
   async rememberDismissed(notification: NotificationEntity): Promise<void> {
     await this.rememberDismissedMany([notification]);
   }
 
-  async rememberDismissedMany(notifications: NotificationEntity[]): Promise<void> {
-    const uid = notifications[0]?.uid;
+  /**
+   * Remember what the user deleted, so a re-delivery cannot restore it.
+   *
+   * Locked on its own key: this runs from inside a notification-list mutation,
+   * and a shared lock would deadlock the caller against itself.
+   */
+  async rememberDismissedMany(notifications: readonly NotificationEntity[]): Promise<void> {
+    const uid = notifications.find((item) => item.uid)?.uid;
     if (!uid) return;
-    const current = await this.listDismissed(uid);
-    const next = new Set(current);
-    for (const notification of notifications) {
-      if (notification.id) next.add(notification.id);
-      if (notification.dedupeKey) next.add(notification.dedupeKey);
-    }
-    await asolDbSet(
-      ASOL_DB_STORES.NOTIFICATION_SETTINGS,
-      dismissedKey(uid),
-      Array.from(next).slice(-500),
-    );
+    await this.mutex.run(dismissedLock(uid), async () => {
+      const next = new Set(await this.listDismissed(uid));
+      for (const notification of notifications) {
+        if (notification.uid !== uid) continue;
+        if (notification.id) next.add(notification.id);
+        if (notification.dedupeKey) next.add(notification.dedupeKey);
+      }
+      await asolDbSet(
+        ASOL_DB_STORES.NOTIFICATION_SETTINGS,
+        dismissedKey(uid),
+        Array.from(next).slice(-MAX_DISMISSED_IDENTITIES),
+      );
+    });
   }
 
+  // ---- settings and badge --------------------------------------------------
+
   async getSettings(uid: string): Promise<NotificationSettings | null> {
-    return asolDbGet<NotificationSettings>(
-      ASOL_DB_STORES.NOTIFICATION_SETTINGS,
-      settingsKey(uid),
-    );
+    if (!uid) return null;
+    return asolDbGet<NotificationSettings>(ASOL_DB_STORES.NOTIFICATION_SETTINGS, settingsKey(uid));
   }
 
   async saveSettings(settings: NotificationSettings): Promise<void> {
+    if (!settings.uid) return;
     await asolDbSet(ASOL_DB_STORES.NOTIFICATION_SETTINGS, settingsKey(settings.uid), settings);
   }
 
   async getBadge(uid: string): Promise<NotificationBadgeState | null> {
-    return asolDbGet<NotificationBadgeState>(
+    if (!uid) return null;
+    const raw = await asolDbGet<NotificationBadgeState>(
       ASOL_DB_STORES.NOTIFICATION_BADGES,
       badgeKey(uid),
     );
+    if (!raw || typeof raw.unreadCount !== "number" || !Number.isFinite(raw.unreadCount)) {
+      return null;
+    }
+    return { ...raw, unreadCount: Math.max(0, Math.trunc(raw.unreadCount)) };
   }
 
   async saveBadge(state: NotificationBadgeState): Promise<void> {
-    await asolDbSet(ASOL_DB_STORES.NOTIFICATION_BADGES, badgeKey(state.uid), state);
+    if (!state.uid) return;
+    await asolDbSet(ASOL_DB_STORES.NOTIFICATION_BADGES, badgeKey(state.uid), {
+      ...state,
+      unreadCount: Math.max(0, Math.trunc(state.unreadCount)),
+    });
   }
 
+  // ---- device tokens -------------------------------------------------------
+
   async listDeviceTokens(uid: string): Promise<DeviceToken[]> {
-    return (await asolDbGet<DeviceToken[]>(
+    if (!uid) return [];
+    const raw = await asolDbGet<unknown[]>(
       ASOL_DB_STORES.NOTIFICATION_DEVICE_TOKENS,
       tokenListKey(uid),
-    )) ?? [];
+    );
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((item): item is DeviceToken => {
+      const candidate = item as Partial<DeviceToken> | null;
+      return Boolean(
+        candidate &&
+          typeof candidate.id === "string" &&
+          typeof candidate.uid === "string" &&
+          typeof candidate.token === "string",
+      );
+    });
   }
 
   async saveDeviceToken(token: DeviceToken): Promise<void> {
-    const current = await this.listDeviceTokens(token.uid);
-    const next = [token, ...current.filter((item) => item.id !== token.id)];
-    await asolDbSet(ASOL_DB_STORES.NOTIFICATION_DEVICE_TOKENS, tokenListKey(token.uid), next);
+    if (!token.uid || !token.id) return;
+    await this.mutex.run(tokensLock(token.uid), async () => {
+      const current = await this.listDeviceTokens(token.uid);
+      await asolDbSet(ASOL_DB_STORES.NOTIFICATION_DEVICE_TOKENS, tokenListKey(token.uid), [
+        token,
+        ...current.filter((item) => item.id !== token.id),
+      ]);
+    });
   }
 
   async removeDeviceToken(uid: string, tokenId: string): Promise<void> {
-    const current = await this.listDeviceTokens(uid);
-    await asolDbSet(
-      ASOL_DB_STORES.NOTIFICATION_DEVICE_TOKENS,
-      tokenListKey(uid),
-      current.filter((item) => item.id !== tokenId),
-    );
+    if (!uid || !tokenId) return;
+    await this.mutex.run(tokensLock(uid), async () => {
+      const current = await this.listDeviceTokens(uid);
+      await asolDbSet(
+        ASOL_DB_STORES.NOTIFICATION_DEVICE_TOKENS,
+        tokenListKey(uid),
+        current.filter((item) => item.id !== tokenId),
+      );
+    });
   }
+
+  // ---- analytics -----------------------------------------------------------
 
   async addAnalyticsEvent(event: NotificationAnalyticsEvent): Promise<void> {
-    const current =
-      (await asolDbGet<NotificationAnalyticsEvent[]>(
+    if (!event.uid) return;
+    await this.mutex.run(analyticsLock(event.uid), async () => {
+      const current =
+        (await asolDbGet<NotificationAnalyticsEvent[]>(
+          ASOL_DB_STORES.NOTIFICATION_ANALYTICS,
+          analyticsListKey(event.uid),
+        )) ?? [];
+      await asolDbSet(
         ASOL_DB_STORES.NOTIFICATION_ANALYTICS,
         analyticsListKey(event.uid),
-      )) ?? [];
-    await asolDbSet(
-      ASOL_DB_STORES.NOTIFICATION_ANALYTICS,
-      analyticsListKey(event.uid),
-      [event, ...current].slice(0, 500),
-    );
+        [event, ...(Array.isArray(current) ? current : [])].slice(0, MAX_ANALYTICS_EVENTS),
+      );
+    });
   }
+
+  // ---- retry queue ---------------------------------------------------------
 
   async listOfflineQueue(uid: string): Promise<NotificationOfflineOperation[]> {
-    return (await asolDbGet<NotificationOfflineOperation[]>(
+    if (!uid) return [];
+    const raw = await asolDbGet<unknown[]>(
       ASOL_DB_STORES.NOTIFICATION_OFFLINE_QUEUE,
       offlineQueueKey(uid),
-    )) ?? [];
+    );
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((record) => sanitizeRetryOperation(record))
+      .filter((record): record is NotificationOfflineOperation => record !== null && record.uid === uid);
   }
 
-  async saveOfflineQueue(uid: string, queue: NotificationOfflineOperation[]): Promise<void> {
-    await asolDbSet(ASOL_DB_STORES.NOTIFICATION_OFFLINE_QUEUE, offlineQueueKey(uid), queue);
+  /**
+   * Replace the queue under the lock.
+   *
+   * `mutateOfflineQueue` is the only safe way to change it: a read outside the
+   * lock followed by a write inside one would still drop an entry enqueued in
+   * between.
+   */
+  async mutateOfflineQueue(
+    uid: string,
+    change: (
+      queue: NotificationOfflineOperation[],
+    ) => NotificationOfflineOperation[] | Promise<NotificationOfflineOperation[]>,
+  ): Promise<NotificationOfflineOperation[]> {
+    if (!uid) return [];
+    return this.mutex.run(queueLock(uid), async () => {
+      const next = await change(await this.listOfflineQueue(uid));
+      await asolDbSet(ASOL_DB_STORES.NOTIFICATION_OFFLINE_QUEUE, offlineQueueKey(uid), next);
+      return next;
+    });
   }
 }
 

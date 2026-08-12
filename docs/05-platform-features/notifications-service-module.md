@@ -88,7 +88,20 @@ Three rules keep the boundary honest, all enforced by
 The service cannot import from `../../src`: only its own folder is uploaded.
 Rather than maintain a second copy of the send logic by hand,
 `scripts/sync-notifications-service-sources.ts` walks the real import graph from
-the route's entry points and mirrors exactly the files it reaches.
+one entry point and mirrors exactly the files it reaches.
+
+**That entry point is `src/features/notifications/service-runtime.ts`, and it is
+the only notification path this deployment may import.** The route reaches it and
+nothing else; `architecture:check` and the module boundary test both reject any
+other notification import in `services/notifications`.
+
+The restriction is not stylistic. Because the mirror is built by walking imports,
+the service's import surface *is* its file surface: a route that reached
+`@/features/notifications/server` would pull the broadcast service, the token
+service, and the users repository onto an account that must never hold them —
+silently, and only visible as a larger `generated/` tree. `service-runtime.ts`
+exports two things, verify a grant and deliver a grant, so there is no path from
+it to the users data.
 
 It follows `require("...")` as well as `import`, which matters:
 `data-source-registry.ts` picks its database client through a lazy `require`, so

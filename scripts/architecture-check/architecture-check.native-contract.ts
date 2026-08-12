@@ -36,6 +36,7 @@ import { validationEngine as categoryValidationEngine } from "../../src/features
 
 import { PUBLIC_PUSH_WORKER, PUSH_WORKER_SOURCE, STRUCTURED_CATEGORY_COLUMN_FILES, rel, addViolation, checkNativePlatformContract, matchesAny, extractImports } from "./architecture-check.architecture-types";
 import { checkImageStorageContract, getAllowedHint } from "./architecture-check.file-analysis";
+import { checkNotificationModuleContract } from "./architecture-check.notification-contract";
 
 export function checkFile(filePath: string): void {
   const content = readFileSync(filePath, 'utf8');
@@ -48,6 +49,7 @@ export function checkFile(filePath: string): void {
     fileRel.startsWith('src/core/config/server-env/');
 
   checkCategoryModuleContract(fileRel, content, filePath);
+  checkNotificationModuleContract(filePath, content);
 
   if (
     content.includes('process.env') &&

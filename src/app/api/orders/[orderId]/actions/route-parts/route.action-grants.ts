@@ -7,9 +7,11 @@ import { runTracedBusinessRoute } from "../../../../auth/traced-route";
 import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
 import { mapOrderError, moneyMinor } from "../../../order-api-helpers";
 import type { ActorRole } from "@/modules/marketplace-orders/domain/enums";
-import { withNotificationGrants } from "@/features/notifications/domain/notification-grant-envelope";
-import { NotificationGrantCollector } from "@/features/notifications/services/notification-grant-collector.server";
-import { moneyVariablesByLocale } from "@/features/notifications/shared/notification-money";
+import {
+  notificationsServer,
+  moneyVariablesByLocale,
+  type NotificationGrantIssuer,
+} from "@/features/notifications/server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 
 export interface ActionInput {
@@ -41,7 +43,7 @@ export const DELIVERY_PLAN_TEMPLATES = {
 } as const;
 
 export function grantDeliveryPlan(
-  grants: NotificationGrantCollector,
+  grants: NotificationGrantIssuer,
   input: {
     uids: string[];
     orderId: string;
@@ -87,7 +89,7 @@ export const SHIPPING_QUOTE_TEMPLATES = {
 } as const;
 
 export function grantShippingQuote(
-  grants: NotificationGrantCollector,
+  grants: NotificationGrantIssuer,
   input: {
     uids: string[];
     orderId: string;

@@ -9,13 +9,13 @@ import type {
 } from "../domain/entities";
 import { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
 import { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
-import { NotificationBuilder } from "../application/notification-builder";
+import { NotificationBuilder } from "../domain/notification-builder";
 import {
   NotificationCategories,
   NotificationPriorities,
   NotificationSounds,
 } from "../domain/enums";
-import { createNotificationId } from "../shared/create-notification-id";
+import { createNotificationId } from "../domain/create-notification-id";
 import { NotificationProviderRegistry } from "./providers/notification-provider-registry.server";
 import type { NotificationProviderPayload } from "./providers/notification-provider.interface";
 

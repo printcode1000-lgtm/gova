@@ -8,7 +8,7 @@ import type {
   TemplateNotificationInput,
 } from "../domain/entities";
 import { EventNotificationMapper } from "./event-notification-mapper";
-import { NotificationBuilder } from "./notification-builder";
+import { NotificationBuilder } from "../domain/notification-builder";
 import { notificationSender } from "./notification-sender";
 
 type Listener = (notification: NotificationEntity) => void;

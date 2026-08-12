@@ -23,33 +23,22 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
-import { notificationPermissionService } from "@/features/notifications/application/permission-service";
-import { notificationSender } from "@/features/notifications/application/notification-sender";
-import type {
-  BroadcastRecipient,
-  NotificationTestResult,
-} from "@/features/notifications/domain/entities";
 import {
+  notifications,
+  getNotificationTestScenario,
+  NOTIFICATION_TEST_SCENARIOS,
   NotificationChannels,
   NotificationContentSources,
   NotificationDeliveryStatuses,
   NotificationSyncStates,
   NotificationTargets,
-  NotificationTypes,
-} from "@/features/notifications/domain/enums";
-import {
-  getNotificationTestScenario,
-  NOTIFICATION_TEST_SCENARIOS,
   NotificationTestScenarioIds,
+  NotificationTypes,
+  type BroadcastRecipient,
+  type NotificationTestResult,
   type NotificationTestScenarioId,
-} from "@/features/notifications/domain/notification-test-scenarios";
-import { asolNotificationRepository } from "@/features/notifications/infrastructure/asol-notification-repository";
-import { notificationApiService } from "@/features/notifications/services/notification-api-service";
-import {
-  DEFAULT_CHANNELS,
-  getPlatformName,
-} from "@/native-platform";
+} from "@/features/notifications";
+import { DEFAULT_CHANNELS } from "@/native-platform";
 
 type TestMode = "local" | "push";
 
@@ -122,17 +111,16 @@ export function SuperAdminNotificationTestsPage() {
     setStatusBusy(true);
     setMessage("");
     try {
-      const [permissionResult, enabled, recipients, centerItems] = await Promise.all([
-        notificationPermissionService.checkResult(),
-        notificationDeviceTokenService.isDeviceEnabled(),
-        notificationApiService.getBroadcastRecipients(session),
-        asolNotificationRepository.list(session.uid),
+      const [diagnostics, recipients, centerItems] = await Promise.all([
+        notifications.getDiagnostics({ uid: session.uid }),
+        notifications.listPushRecipients(session),
+        notifications.list({ uid: session.uid }),
       ]);
       setStatus({
-        platform: getPlatformName(),
-        permission: permissionResult.state,
-        pushSupported: notificationDeviceTokenService.isPushSupported(),
-        deviceEnabled: enabled,
+        platform: diagnostics.platform,
+        permission: diagnostics.permission.state,
+        pushSupported: diagnostics.pushSupported,
+        deviceEnabled: diagnostics.deviceEnabled,
         recipient:
           recipients.recipients.find((item) => item.uid === session.uid) ?? null,
         centerTestCount: centerItems.filter(
@@ -160,12 +148,12 @@ export function SuperAdminNotificationTestsPage() {
     setStatusBusy(true);
     setMessage("");
     try {
-      const permission = await notificationPermissionService.request();
+      const permission = await notifications.requestPermission();
       if (permission !== "granted") {
         setMessage("لم يمنح النظام إذن الإشعارات. افتح إعدادات التطبيق لتفعيله.");
         return;
       }
-      await notificationDeviceTokenService.enable(session.uid, session.phone);
+      await notifications.enableDevice({ uid: session.uid, phone: session.phone });
       setMessage("تم تفعيل الإشعارات وتحديث تسجيل هذا الجهاز.");
       await refreshStatus();
     } catch (error) {
@@ -179,7 +167,7 @@ export function SuperAdminNotificationTestsPage() {
     if (!session) return;
     setStatusBusy(true);
     try {
-      await notificationDeviceTokenService.syncDeliveredNotifications();
+      await notifications.importDelivered();
       await refreshStatus();
       setMessage("تمت مزامنة إشعارات Android الموجودة في الشريط مع صفحة الإشعارات.");
     } catch (error) {
@@ -226,13 +214,13 @@ export function SuperAdminNotificationTestsPage() {
       setCountdown(null);
 
       if (mode === "local") {
-        const permission = await notificationPermissionService.checkResult();
+        const permission = await notifications.getPermissionState();
         if (!permission.granted) {
           throw new Error("فعّل إذن الإشعارات قبل إجراء الاختبار المحلي.");
         }
         const notificationId = `local-test:${createRequestId()}`;
         const now = new Date().toISOString();
-        const saved = await notificationSender.send({
+        const saved = await notifications.sendLocal({
           id: notificationId,
           uid: session.uid,
           type: NotificationTypes.Custom,
@@ -257,7 +245,7 @@ export function SuperAdminNotificationTestsPage() {
             androidChannelId: scenario.channelId,
           },
         });
-        const centerSaved = (await asolNotificationRepository.list(session.uid))
+        const centerSaved = (await notifications.list({ uid: session.uid }))
           .some((item) => item.id === saved.id);
         addHistory({
           mode,
@@ -276,7 +264,7 @@ export function SuperAdminNotificationTestsPage() {
         if (!session.sessionToken) {
           throw new Error("انتهت جلسة الدخول الآمنة. سجّل الخروج ثم ادخل مرة أخرى.");
         }
-        const result = await notificationApiService.sendTest({
+        const result = await notifications.executeTestScenario({
           identity: {
             uid: session.uid,
             phone: session.phone,
@@ -291,7 +279,7 @@ export function SuperAdminNotificationTestsPage() {
         setRemoteResult(result);
         const delivery = result.results[0];
         await wait(1_200);
-        const centerSaved = (await asolNotificationRepository.list(session.uid))
+        const centerSaved = (await notifications.list({ uid: session.uid }))
           .some((item) => item.dedupeKey === result.dedupeKey);
         addHistory({
           mode,
@@ -378,7 +366,7 @@ export function SuperAdminNotificationTestsPage() {
             <ShieldCheck className="me-2 h-4 w-4" />
             تفعيل أو إعادة تسجيل الجهاز
           </Button>
-          <Button variant="outline" onClick={() => void notificationPermissionService.openSettings()}>
+          <Button variant="outline" onClick={() => void notifications.openPermissionSettings()}>
             <ExternalLink className="me-2 h-4 w-4" />
             فتح إعدادات التطبيق
           </Button>

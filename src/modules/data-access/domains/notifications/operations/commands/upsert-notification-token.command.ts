@@ -3,7 +3,7 @@ import 'server-only';
 import type {
   RegisteredNotificationToken,
   RegisterNotificationTokenInput,
-} from '@/features/notifications/domain/entities';
+} from '@/features/notifications/contracts';
 import { userNotificationTokenRepository } from '@/modules/data-access/domains/notifications/repositories/user-notification-token-repository';
 
 export class UpsertNotificationTokenCommand {

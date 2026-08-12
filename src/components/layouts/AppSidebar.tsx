@@ -50,7 +50,7 @@ import {
   specialtyChatClient,
 } from "@/features/specialty-chat";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { notificationDeviceTokenService } from "@/features/notifications/application/device-token-service";
+import { notifications } from "@/features/notifications";
 import {
   Dialog,
   DialogContent,
@@ -222,10 +222,10 @@ export const AppSidebar = React.memo(function AppSidebar({
                   );
                 }
               });
-            await notificationDeviceTokenService.unregister(
-              exitingSession.uid,
-              exitingSession.phone,
-            );
+            await notifications.unregisterDevice({
+              uid: exitingSession.uid,
+              phone: exitingSession.phone,
+            });
           } catch (error) {
             console.warn(
               "[AppSidebar] Failed to unregister notification device during logout.",

@@ -5,8 +5,10 @@ import { and, eq, inArray, isNull } from 'drizzle-orm';
 import type { IDatabaseClient } from '@/modules/data-access/core/database/database-client.interface';
 import { users } from '@/modules/data-access/core/database/schema';
 import { userNotificationTokens } from '@/modules/data-access/core/database/notifications/notifications.schema';
-import type { BroadcastRecipient } from '@/features/notifications/domain/entities';
-import type { NotificationPlatform } from '@/features/notifications/domain/enums';
+import type {
+  BroadcastRecipient,
+  NotificationPlatform,
+} from '@/features/notifications/contracts';
 
 interface RecipientAccumulator {
   uid: string;

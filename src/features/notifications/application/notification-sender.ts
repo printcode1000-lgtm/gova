@@ -11,29 +11,46 @@ import {
   NotificationSyncStates,
   NotificationTargets,
 } from "../domain/enums";
+import { assertNotificationEntity } from "../domain/notification-validation";
+import { notificationLog } from "../domain/notification-redaction";
 import { capacitorLocalNotificationService } from "../infrastructure/capacitor/capacitor-local-notification.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 import { notificationRouter } from "./notification-router";
 
-function emitChanged(uid: string) {
+function emitChanged(uid: string): void {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new CustomEvent(NOTIFICATION_CHANGED_EVENT, { detail: { uid } }));
 }
 
+/**
+ * Creates a notification on this device.
+ *
+ * The input is a caller in this codebase, so it is asserted rather than
+ * sanitized: a malformed local notification is a bug to fix, not a payload to
+ * salvage.
+ */
 export class NotificationSender {
-  async send(notification: NotificationEntity): Promise<NotificationEntity> {
+  async send(notification: unknown): Promise<NotificationEntity> {
+    const validated = assertNotificationEntity(notification);
+    const now = new Date().toISOString();
     const routed: NotificationEntity = {
-      ...notification,
-      channels: notificationRouter.resolveChannels(notification.channels, notification.priority),
-      targets: notificationRouter.resolveTargets(notification.targets, notification.priority),
+      ...validated,
+      channels: notificationRouter.resolveChannels(validated.channels, validated.priority),
+      targets: notificationRouter.resolveTargets(validated.targets, validated.priority),
       status: NotificationDeliveryStatuses.Delivered,
       syncState: NotificationSyncStates.Synced,
-      displayedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      displayedAt: now,
+      updatedAt: now,
     };
-    const saved = await asolNotificationRepository.save(routed);
+
+    const outcome = await asolNotificationRepository.save(routed);
+    // A duplicate is not an error and not a second notification: the caller gets
+    // the row that already exists, and nothing is presented again.
+    if (!outcome.stored) return outcome.notification;
+
+    const saved = outcome.notification;
     await notificationAnalyticsService.track({
       uid: saved.uid,
       notificationId: saved.id,
@@ -45,11 +62,18 @@ export class NotificationSender {
       event: NotificationLifecycleEvents.Displayed,
     });
     await notificationBadgeService.refresh(saved.uid);
+
     if (saved.targets.includes(NotificationTargets.Popup)) {
       if (typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent(NOTIFICATION_POPUP_EVENT, { detail: saved }));
       }
-      await capacitorLocalNotificationService.display(saved);
+      try {
+        await capacitorLocalNotificationService.display(saved);
+      } catch (error) {
+        // A missing banner must never lose the stored notification, which is
+        // already committed at this point.
+        notificationLog.warn("Local presentation failed.", error);
+      }
     }
     emitChanged(saved.uid);
     return saved;

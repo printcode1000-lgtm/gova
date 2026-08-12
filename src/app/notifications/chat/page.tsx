@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-import { ChatThreadPageContent } from "@/features/notifications/presentation/ChatThreadPageContent";
+import { ChatThreadPageContent } from "@/features/specialty-chat";
 
 function NotificationChatThreadContent() {
   const conversationKey = useSearchParams().get("conversationId")?.trim() ?? "";

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { NotificationBuilder } from "../application/notification-builder";
+import { NotificationBuilder } from "../domain/notification-builder";
 import { EventNotificationMapper } from "../application/event-notification-mapper";
 import { NotificationCategories, NotificationTargets } from "../domain/enums";
 

@@ -39,30 +39,305 @@ The notification system is a local-first module that powers the in-app notificat
 
 ```text
 src/features/notifications/
+├── index.ts              entry point — behaviour (client/application)
+├── ui.ts                 entry point — React components and hooks
+├── server.ts             entry point — server use cases (server-only)
+├── contracts.ts          entry point — types only
+├── service-runtime.ts    entry point — the notifications microservice
 ├── application/
 ├── config/
 │   └── templates/
 ├── domain/
 ├── infrastructure/
-│   └── capacitor/
+│   ├── capacitor/
+│   └── web-push/
 ├── presentation/
 │   └── hooks/
+├── public/               the facade, the command map, the extension port
 ├── shared/
-├── tests/
-└── index.ts
+└── tests/
+    └── integration/
 ```
 
 ## Architecture
 
 The module follows a layered structure:
 
-- `domain`: typed entities, enums, defaults, and contracts.
-- `application`: use-case services such as the bus, builder, sender, receiver, router, sync, lifecycle, permissions, tokens, and analytics.
-- `infrastructure`: local AsolDB persistence and platform adapters.
-- `presentation`: React page, hooks, the opt-in dialog, and the three lifecycle controllers mounted in `src/app/layout.tsx`.
+- `domain`: entities, enums, defaults, validation, redaction, typed errors, the
+  notification builder and template loader, and the inbound payload mapper.
+  Depends on nothing but `config`.
+- `application`: use cases — the bus, sender, receiver, router, sync, lifecycle,
+  permissions, device tokens, analytics, badge.
+- `infrastructure`: AsolDB persistence and the platform adapters
+  (`capacitor/`, `web-push/`, the push-device store).
+- `services`: outbound transports — the browser API client and the server-side
+  provider implementations.
+- `public`: the facade, the command union and result map, the extension port.
+- `presentation`: the React page, hooks, the opt-in dialog, and the lifecycle
+  controllers mounted in `src/app/layout.tsx`.
 - `config`: notification templates in JSON.
-- `shared`: small reusable helpers.
-- `tests`: module-level contract checks.
+- `shared`: small reusable helpers, including the concurrency primitives.
+- `tests`: boundary, contract, and integration suites.
+
+### Layer dependency matrix
+
+Enforced by `src/core/architecture/notification-contract.ts`. Read each row as
+"may depend on":
+
+| Layer | May import |
+|-------|-----------|
+| `config` | nothing |
+| `domain` | `config` |
+| `shared` | `domain`, `config` |
+| `services` | `domain`, `shared`, `config` |
+| `infrastructure` | `domain`, `shared`, `config`, `services` |
+| `application` | `domain`, `shared`, `config`, `services`, `infrastructure` |
+| `public` | everything except `presentation` |
+| `presentation` | `domain`, `shared`, `config`, `application`, `public` |
+| entry points | everything |
+
+Two directions look wrong at a glance and are deliberate:
+
+- **`infrastructure` → `services`.** `services/` is not "application services";
+  it holds the module's *outbound transports*. The Web Push adapter calling the
+  device-token API client is one adapter calling another — sideways, not upward.
+- **`application` → `infrastructure`.** Use cases drive adapters. That is the
+  normal direction; inversion would only be needed if the domain had to name an
+  adapter, and it never does.
+
+The direction that is genuinely forbidden, and the layer cycle this matrix was
+written to close, is **`services` → `application`**. The server send service
+needed the notification builder, so the builder moved to `domain`, where both
+sides can reach it.
+
+## Public Entry Points
+
+Five, and each exists because it cannot be merged into another. Importing
+anything else fails `npm run architecture:check` **and**
+`npm run test:notifications`.
+
+| Entry point | For | Why separate |
+|---|---|---|
+| `@/features/notifications` | client/application behaviour | Exports exactly **one** runtime object, `notifications`. |
+| `@/features/notifications/ui` | React components and hooks | In the root barrel these would pull the presentation tree — and React — into every route that only wants a type. |
+| `@/features/notifications/server` | route handlers, server services | Everything behind it imports `server-only`, which is a build error inside a client component. |
+| `@/features/notifications/contracts` | data-access repositories | Types only. A repository reaching `server.ts` would drag the broadcast and users code into the microservice's import mirror. |
+| `@/features/notifications/service-runtime` | `services/notifications` only | That deployment is built by walking imports, so its import surface *is* its file surface. Restricted to grant verification and fan-out. |
+
+`services/notifications` may import **only** `service-runtime`. The architecture
+guard checks both trees and rejects a src-only entry point used there.
+
+### The client API
+
+```ts
+import { notifications } from "@/features/notifications";
+
+await notifications.execute({ type: "markAllRead", payload: { uid } });
+await notifications.markAllRead({ uid });      // the same use case
+```
+
+`execute` is the command form: one entry point that takes the whole operation as
+data. The named methods are the same use cases spelled out. Both route through
+the same facade, so there is one implementation of each behaviour.
+
+An unknown command **fails closed** with `notifications/unknown-command`; it is
+never ignored.
+
+### Command and result map
+
+| Command | Result |
+|---------|--------|
+| `initialize` | `void` |
+| `registerDevice` | `DeviceToken \| null` |
+| `enableDevice` | `void` |
+| `unregisterDevice` | `void` |
+| `refreshDeviceLocale` | `void` |
+| `listDevices` | `DeviceToken[]` |
+| `requestPermission` | `NotificationPermission \| "unsupported"` |
+| `getPermissionState` | `NotificationPermissionState` |
+| `openPermissionSettings` | `boolean` |
+| `sendLocal` | `NotificationEntity` |
+| `publishTemplate` | `NotificationEntity` |
+| `publishCustom` | `NotificationEntity` |
+| `publishEvent` | `NotificationEntity \| null` |
+| `sendPush` | `BroadcastNotificationResult` |
+| `listPushRecipients` | `BroadcastRecipientsResult` |
+| `receive` | `NotificationReceiveOutcome` |
+| `importDelivered` | `void` |
+| `createChannels` | `void` |
+| `synchronizeNotificationCenter` | `NotificationCenterSnapshot` |
+| `list` | `NotificationEntity[]` |
+| `getUnreadCount` | `number` |
+| `markRead` / `markManyRead` / `markAllRead` | `void` |
+| `dismiss` | `void` |
+| `openNotification` | `OpenNotificationResult` |
+| `patchMetadata` | `void` |
+| `enqueueRetry` | `void` |
+| `registerCenterExtension` | `() => void` |
+| `executeTestScenario` | `NotificationTestResult` |
+| `getDiagnostics` | `NotificationDiagnostics` |
+
+The union and the result map are proved complete against each other at compile
+time (`CommandResultMapIsComplete`, `CommandListIsComplete`), and each command is
+routed by a mapped-type handler table, so a handler returning the wrong shape or
+a command with no handler does not compile.
+
+### The server API
+
+```ts
+import { notificationsServer } from "@/features/notifications/server";
+
+const token = await notificationsServer.registerDeviceToken(body);
+const grants = notificationsServer.createGrantIssuer(actorUid);
+return apiSuccess(notificationsServer.attachGrants(body, grants.toArray()));
+```
+
+It exports **no service instance**. Commands: `registerDeviceToken`,
+`removeDeviceToken`, `listBroadcastRecipients`, `sendBroadcast`,
+`sendTestNotification`. `createGrantIssuer` returns the one stateful object,
+because a route accumulates grants across branches before responding.
+
+## Validation And Typed Errors
+
+Every value entering the module is checked before it can reach persistence,
+navigation, a native plugin, a provider, a log, or the screen. Two strictnesses,
+and the difference is the whole design:
+
+| | `assert*` | `sanitize*` |
+|---|---|---|
+| Used for | values a caller in this codebase supplied | anything from outside the process — a provider, a plugin, a service worker, an older record |
+| On bad input | throws `NotificationError` | drops the field and keeps the notification |
+| Why | a bug should be loud and fixed at the call site | one malformed key must not cost the user the message |
+
+What is validated: command type and payload; uid, notification id, dedupe key,
+device id, token, phone, locale; notification type, source, priority, category,
+channels, targets, sound, status, sync state; timestamps (parseable and
+plausible); title and body lengths; route safety; metadata shape, key count, key
+length, value types and serialized size; retry-queue envelopes; extension
+registration; permission and platform values.
+
+### Route safety
+
+A deep link may be navigated to only when it is a same-origin absolute path.
+Rejected: `//host`, `https://…`, `javascript:`, `data:`, backslash variants
+(`/\host`), encoded double slashes, and `..` traversal. A notification is
+attacker-influenced input on every platform — anyone who can get a message
+accepted chooses this string — so an unsafe route is dropped and the
+notification is still stored.
+
+### Error codes
+
+`NotificationError` carries a stable `code` and a message that names *what* was
+wrong, never *what the value was*.
+
+`notifications/unknown-command`, `invalid-command-payload`, `missing-field`,
+`invalid-field`, `unsupported-value`, `unsafe-route`, `invalid-metadata`,
+`invalid-record`, `permission-denied`, `unsupported-platform`, `delivery-failed`.
+
+## Secret Redaction
+
+`domain/notification-redaction.ts` is the module's only logger and its single
+redaction point. It matches secrets two ways, because either alone misses real
+cases:
+
+1. **By key** — `sessionToken`, `authorization`, `vapid…`: the name says it is a
+   secret whatever the value looks like.
+2. **By value shape** — JWTs, `Bearer …`, 64-hex APNs tokens, serialized
+   `PushSubscription`s, PEM blocks, FCM registration tokens. A provider can
+   return these under any key, including one nobody has seen.
+
+Embedded secrets are cut out of longer strings too, which is the case that
+actually bites: a provider does not return a bare token, it returns
+`FCM rejected {"authorization":"Bearer ya29…"}` and that sentence becomes an
+error message.
+
+Protected surfaces: diagnostics, console logging, typed errors, **persisted
+notification metadata**, and the retry queue. `notificationLog` is the only
+permitted caller of `console` inside the module; the architecture guard rejects
+any other.
+
+## Concurrency And Exactly-Once
+
+Notification work is triggered by things that fire together and are outside the
+application's control: a push arriving while the resume listener imports the
+tray, two `visibilitychange` events in one tick, a service worker and a
+foreground handler writing the same list.
+
+Two primitives, in `shared/keyed-mutex.ts`, and they are not interchangeable:
+
+- **`KeyedMutex` serializes.** Two different saves must both happen. Every
+  read-modify-write against a stored list runs inside a per-user lock, because
+  IndexedDB has no compare-and-swap and interleaved reads silently drop the
+  write that finished first.
+- **`SingleFlight` coalesces.** Two concurrent requests to import the tray are
+  the same request; the second joins the first.
+
+Where each applies:
+
+| Operation | Protection |
+|-----------|-----------|
+| Notification list read/write, dismissal list, device tokens, analytics, retry queue | `KeyedMutex`, per user and per key space |
+| Tray import | `SingleFlight` per user, inside the adapter |
+| `initialize`, `registerDevice` | `SingleFlight` per user |
+| `synchronizeNotificationCenter` | `SingleFlight` per user |
+| Retry replay | `SingleFlight` per user; the queue is rewritten by identity so an entry enqueued during a replay survives |
+
+**Acknowledgement follows persistence.** `receive` returns
+`{ notification, stored, reason? }`, and `stored` is the acknowledgement signal.
+The Android adapter presents a banner only when `stored` is true, which is what
+makes "exactly one banner" true for a push Firebase delivers twice. A crash
+between persistence and acknowledgement leaves the tray item to be re-imported
+rather than silently lost; the durable record of "already imported" is the
+stored notification plus the dismissed list.
+
+The dismissed list is the second half of exactly-once: a notification the user
+deleted is never restored by a re-delivery, on any path.
+
+## Extension Registration
+
+Another feature attaches behaviour to the notification centre through one port,
+so the module never imports a consumer:
+
+```ts
+notifications.registerCenterExtension({
+  id: "specialty-chat",
+  reconcile(context) { /* returns true when stored notifications changed */ },
+  onRead(context) { /* the user read these */ },
+  replayQueuedOperation(operation) { /* return true when this kind is ours */ },
+});
+```
+
+Rules:
+
+- Every hook is optional and best-effort. An extension that throws is logged and
+  skipped; it can never stop the centre rendering.
+- Registering the same `id` twice replaces the first. Registration returns an
+  unsubscribe function.
+- A queued operation no extension claims is dropped rather than queued forever.
+- Specialty chat registers through `SpecialtyChatNotificationsController`,
+  mounted in `src/app/layout.tsx`. Registration is explicit rather than an import
+  side effect so the wiring is visible in the layout.
+
+This port is why `notifications` and `specialty-chat` no longer import each
+other. The chat screen itself now lives in `src/features/specialty-chat`, not in
+the notification module.
+
+## Import Restrictions
+
+Outside the module, these are rejected by the architecture guard and by
+`test:notifications`:
+
+- any path under `domain/`, `application/`, `infrastructure/`, `services/`,
+  `presentation/`, `public/`, `shared/`, `config/`, `tests/`
+- an entry point the importing tree is not allowed to use
+- inside the module: reaching Capacitor plugins, the Native Platform
+  notification plugins, IndexedDB/AsolDB, the service worker, `web-push`,
+  Firebase/`google-auth-library`, APNs credentials, or the VAPID private key
+  from anywhere but the owning adapter
+- inside the module: `console.*` anywhere but the redactor
+- inside the module: importing another feature's entry point
+
+Violations report file, line, and remediation.
 
 ## AsolDB Storage
 
@@ -182,30 +457,40 @@ row is retired with a `revoked:<id>:<timestamp>` tombstone token. This frees the
 6. Opening, marking all as read, or dismissing a notification updates badge state and emits a UI refresh event so `/notifications` and the bottom bar stay in sync.
 7. Dismissing a notification also remembers its `id` and `dedupeKey`; repeated Web Push or Android tray imports with the same identity are ignored.
 
-## Notification Bus
+## Publishing Locally
 
-`NotificationBus` is the only entry point for client business modules. It is a
-local-first publisher: it builds the notification, stores it in AsolDB, and
-refreshes the badge on the current device. It does not send push.
+Client business modules publish through the public API. `NotificationBus` still
+exists inside the module but is no longer exported: a caller that could hold it
+could also hold its listener set and its builder.
 
-Supported publish methods:
+```ts
+await notifications.publishEvent({
+  event: { name: "orders.created", uid, dedupeKey, variables },
+  locale: "ar",
+});
+```
+
+Three publish operations, all local-first — they build the notification, store
+it in AsolDB, and refresh the badge on this device. None of them sends push:
 
 - `publishTemplate(input)` — build from a template and store locally.
-- `publishCustom(input)` — build from caller-supplied title/body and store locally.
-- `publishEvent(event, locale)` — map a business event to a template, then publish locally. Returns `null` when the event has no mapping.
+- `publishCustom(input)` — build from caller-supplied title/body.
+- `publishEvent({ event, locale })` — map a business event to a template, then
+  publish. Resolves `null` when the event has no mapping.
 
-Every notification must include a stable `dedupeKey`. Optional `notificationId` can be supplied by the caller when an upstream event already has a stable ID.
+Every notification must include a stable `dedupeKey`. An optional
+`notificationId` may be supplied when an upstream event already has a stable ID.
 
 Current consumers:
 
-| Caller | Method | Template |
-|--------|--------|----------|
-| `src/components/cart/CartPageContent.tsx` | `publishEvent` | `orders.created` |
+| Caller | Operation | Template |
+|--------|-----------|----------|
+| `src/components/cart/CartPageContent.tsx` | `notifications.publishEvent` | `orders.created` |
 
 Server-side flows do not go through the bus. The main app serves no send route at
 all — fan-out lives on the
 [notifications service](notifications-service-module.md) — so
-`NotificationApiService` deliberately exposes no send method.
+the public API deliberately exposes no server-side send.
 `src/app/api/orders/**` and
 `src/features/specialty-chat/services/specialty-chat-service.server.ts` issue
 signed grants through `NotificationGrantCollector` and return them in the
@@ -405,12 +690,12 @@ agree:
 
 ### How the platforms differ
 
-They mostly do not. `DeviceTokenService` hides the split behind three methods,
+They mostly do not. The device-token service hides the split behind three operations,
 so the controller never branches on the platform itself:
 
 | Method | Native | Browser |
 |--------|--------|---------|
-| `isPushSupported()` | `isNativePush()` | `WebPushBrowserService.isSupported()` — service worker, `PushManager`, and a secure context |
+| `isPushSupported()` | `isNativePush()` | the Web Push adapter — service worker, `PushManager`, and a secure context |
 | `isDeviceEnabled()` | stored per-platform enabled flag | an active `PushSubscription` |
 | `enable(uid, phone)` | registers the FCM/APNs token | subscribes to Web Push |
 
@@ -450,12 +735,13 @@ dead end. Those users still have the manual toggle in `/settings`.
 presentation/NotificationOptInController.tsx      the dialog's states and effects
 presentation/NotificationPermissionPrompt.tsx     the dialog itself
 application/notification-permission-prompt-policy.ts   the pure decision
+public/notification-facade.ts                     the use cases behind it
 tests/notification-permission-prompt-policy.test.ts    its contract
 ```
 
 ## Device Token Flow
 
-`DeviceTokenService` owns native token registration, listing, and removal.
+The internal device-token service owns native token registration, listing, and removal; callers reach it through `notifications.registerDevice`, `listDevices`, and `unregisterDevice`.
 `WebPushBrowserService` owns the browser subscription path. Both persist through
 the same server APIs:
 
@@ -507,7 +793,7 @@ Push text is built in the language of the receiving device.
 - Each token row stores a `locale` (`ar` or `en`), sent by the client at registration time from the stored app preferences.
 - `NotificationSendService` groups a user's tokens by transport **and** language, then builds one payload per group.
 - Tokens registered before this column existed default to `ar`, and the caller's `locale` is used only when a token has none.
-- Changing the language in the app re-registers the existing token. `WebPushController` listens for the document-locale event and calls `DeviceTokenService.refreshLocale`, which never prompts for permission and does nothing when no subscription exists.
+- Changing the language in the app re-registers the existing token. `WebPushController` listens for the document-locale event and calls `notifications.refreshDeviceLocale`, which never prompts for permission and does nothing when no subscription exists.
 
 Values that must be formatted per language — money, category names — cannot live
 inside a template. Pass them through `variablesByLocale`, which is merged over
@@ -655,16 +941,23 @@ Rules:
 
 ## Push Flow
 
-Push is intentionally behind interfaces:
+Push is intentionally behind adapters, all under `infrastructure/`:
 
-- `CapacitorPushService`
-- `CapacitorPermissionService`
-- `CapacitorLocalNotificationService`
-- `CapacitorBadgeService`
-- `CapacitorPlatformService`
-- `CapacitorAppStateService`
+| Adapter | Owns |
+|---------|------|
+| `capacitor/capacitor-push.service.ts` | FCM/APNs listeners, registration, channels, the delivered-tray import |
+| `capacitor/capacitor-permission.service.ts` | The notification permission, via the Native Platform Permission Manager |
+| `capacitor/capacitor-local-notification.service.ts` | On-device display of a notification the app produced |
+| `capacitor/capacitor-badge.service.ts` | The application badge |
+| `capacitor/capacitor-platform.service.ts` | Which platform this is |
+| `web-push/web-push-browser.service.ts` | Service-worker registration, `PushManager` subscription, browser permission |
+| `push-device-store.ts` | This device's push id and opt-in flag |
+| `asol-notification-repository.ts` | Everything stored in AsolDB |
 
-Future push providers must plug into these services or server-side APIs. Firebase or APNs server credentials must remain server-side only.
+Each is the only file allowed to touch its transport; the architecture guard
+rejects the same call anywhere else. Future push providers plug in behind these
+adapters or behind the server-side provider interface. Firebase and APNs
+credentials remain server-side only.
 
 ## Application States
 
@@ -694,20 +987,46 @@ is handled by `LocalNotifications.onAction` and routes through exactly the same
 handler as a tapped push. Without that listener the deep link of anything the
 device displayed itself would be lost.
 
+A duplicate delivery presents nothing. The adapter shows a banner only when the
+receive handler reports that a **new** notification was stored, so a push
+Firebase delivers twice produces one row and one banner.
+
 The foreground path is wired by `NativePushController`, mounted once in
-`src/app/layout.tsx`. It runs on Android and iOS — the gate is `isNativePush()` —
-and owns the received/tapped handlers, the tray import, and unregistering the
-previous uid when the account changes. It renders nothing. `WebPushController`
-is mounted next to it and forwards service-worker messages to the window, plus
-re-registers the token after a language switch on every platform.
+`src/app/layout.tsx`. It gates on `getDiagnostics().nativePush`, drives the
+module through `notifications.initialize`, and owns nothing but the deep-link
+navigation and the resume listener — persistence, dedupe, read-marking, and
+presentation all happen before its handlers run. It renders nothing.
+`WebPushController` is mounted next to it, forwards service-worker messages to
+the window, and re-registers the token after a language switch on every
+platform.
 
 ### Background
 
-The operating system should display native push notifications. When the app becomes active, Android delivered notifications can be imported into the local center. Imports skip notifications already remembered in `user:<uid>:dismissed`.
+The operating system displays the notification. The WebView is not running, so
+nothing in the module executes. Whatever the tray holds is imported when the app
+next becomes active — see Resumed.
+
+### Resumed
+
+`NativePushController` listens for the app becoming active and calls
+`notifications.importDelivered()`. This is the only way a notification that
+arrived while the app was hidden reaches the centre without a restart.
+
+The import is single-flight per user, so a resume that coincides with startup
+does the work once. Imports skip empty `ASOL` placeholders and anything already
+remembered in `user:<uid>:dismissed`, and the batch is written under one storage
+lock so a concurrent live delivery cannot be lost.
 
 ### Terminated
 
-No cloud persistence is used for local notification center state. Native notification centers keep received notifications while the app is terminated. Android startup import reads delivered tray notifications through the Capacitor adapter, skips empty `ASOL` placeholders, and ignores locally dismissed notification identities.
+No cloud persistence is used for notification-centre state. The native
+notification centre keeps received notifications while the app is terminated, and
+`initialize` imports the tray at startup. A tap that cold-starts the app stores
+the notification first — that tap is the only delivery of it this device will
+ever see — then marks it read and hands the route to the shell.
+
+A restart re-imports the same tray contents; storage dedupe and the dismissed
+list make that a no-op rather than a duplicate.
 
 ## Offline Queue
 
@@ -717,10 +1036,20 @@ Specialty-chat receipts are the queued kind today. They are emitted on the
 user's behalf when a card is delivered or opened, so a failure has no manual
 retry — the sender would wait forever on a receipt that never arrives.
 
-- `NotificationSyncService.enqueue` records the operation, keyed so the same receipt is never queued twice.
-- `sync(uid, handlers)` replays it when the device is online. The caller supplies the handler because replay needs the session token, which the service does not own.
-- An operation is dropped after five failed attempts, and an operation whose kind has no handler in the current runtime is dropped rather than kept forever.
-- `useNotifications` flushes the queue on mount and on the browser `online` event.
+- `notifications.enqueueRetry({ uid, kind, id, payload })` records the operation,
+  keyed so the same receipt is never queued twice.
+- `synchronizeNotificationCenter` replays the queue when the device is online.
+  Replay is offered to the registered extensions — the service never interprets a
+  payload, because only the feature that enqueued it knows the shape.
+- An operation is dropped after five failed attempts. One no extension claims is
+  dropped rather than kept forever.
+- Every queue change goes through `mutateOfflineQueue`, so an enqueue racing a
+  sync cannot be erased by the sync's rewrite. The replay itself runs outside the
+  storage lock — it makes network calls — and the outcome is applied by identity
+  afterwards.
+- Sync is single-flight per user. `useNotifications` triggers it on mount, on
+  every change event, and when the network returns; in a burst those are one
+  request.
 
 ## Analytics
 
@@ -868,6 +1197,154 @@ Known bounds:
 3. Store its provider key in `user_notification_tokens.provider`.
 4. Load credentials from server-only configuration.
 5. Return delivery results without leaking provider secrets or raw credential errors.
+
+## Testing Matrix
+
+Source-text checks are kept where they guard a *contract* that cannot be
+observed at runtime (a Java channel id, an asset on disk, the service-worker
+mirror). They are not treated as proof of behaviour. Behaviour is tested by
+driving real flows.
+
+### Suites
+
+| Suite | What it proves |
+|-------|----------------|
+| `tests/notification-module-boundary.test.ts` | Entry points, import restrictions in both trees, the root barrel exports one runtime object, every command is routed, unknown commands fail closed, compile-time command/result types |
+| `tests/integration/notification-flow.integration.test.ts` | 36 behavioural scenarios through the public API |
+| `tests/notification-builder.test.ts` | Template resolution and variable interpolation |
+| `tests/notification-sound-contract.test.ts` | Sound constants against assets, Native Platform channels, manifest default |
+| `tests/android-notification-inbox-contract.test.ts` | Android inbox plugin, resume-sync wiring |
+| `tests/notification-local-storage-contract.test.ts` | No server table for content; service worker matches AsolDB |
+| `tests/notification-center-model.test.ts` | Grouping, preservation, chat ordering |
+| `tests/notifications-service-module-contract.test.ts` | The microservice is self-contained and its mirror is reproducible |
+| `tests/notification-provider-registry.test.ts`, `web-push-provider.test.ts`, `notification-grant.test.ts`, `notification-test-service.test.ts`, `notification-locale-routing.test.ts`, `notification-broadcast-delivery.test.ts`, `push-token-kind.test.ts`, `notification-permission-prompt-policy.test.ts` | Server-side provider, grant, locale, and policy contracts |
+
+### The integration harness
+
+`tests/integration/notification-harness.ts` replaces every external edge with a
+deterministic fake — IndexedDB, the push plugin, the local-notification plugin,
+the permission manager, the platform, the HTTP client, the grant bridge — and
+leaves everything inside the module real. Fakes are installed into the module
+cache before the graph loads, and the graph is purged between scenarios so the
+locks and listener registries start fresh; leaking them would hide exactly the
+concurrency bugs the tests exist to catch.
+
+No scenario calls the repository to arrange a state the flow under test should
+have produced.
+
+### Scenario coverage
+
+| Scenario | Covered by |
+|----------|-----------|
+| Android foreground: exactly one visible local notification | integration |
+| iOS foreground: no duplicate banner | integration |
+| Background / terminated delivery imported at next start | integration |
+| Resume without tap re-imports the tray | integration |
+| Cold start from a tap: stored, marked read, route returned | integration |
+| Tap routing, push and local plugin | integration |
+| Duplicate delivery: one row, one banner | integration |
+| Concurrent deliveries: none lost, badge correct | integration |
+| Concurrent tray imports: exactly once | integration |
+| Process restart: no duplicate import | integration |
+| Relaunch persistence, including read state | integration |
+| Dismissal survives re-delivery | integration |
+| Notification for a different user rejected | integration |
+| Data-only delivery stored, never presented | integration |
+| Malformed payload: unsafe route, prototype key, bad enum, bad timestamp, empty placeholder | integration |
+| Permission denied and revoked | integration |
+| Token refresh | integration |
+| Plugin unavailable | integration |
+| Unsupported Web Push environment | integration |
+| Logout / user change | integration |
+| Offline receipt queued, replayed once, kept on failure, dropped when unclaimed | integration |
+| Secrets absent from diagnostics, metadata, and logs | integration |
+| Unknown command fails closed | integration + boundary |
+| Import boundaries in `src` and `services/notifications` | boundary + `architecture:check` |
+| Audible sound on a real handset | **not automatable — manual** |
+
+## Build And CI Enforcement
+
+There are **no GitHub Actions workflows in this repository**; `.github/workflows`
+is empty and
+[`16-deployment-targets.md`](../01-architecture/data-layers/16-deployment-targets.md)
+records that Actions is intentionally unused. Enforcement lives in the npm
+scripts, which is what Vercel runs on a push:
+
+| Gate | Command | Notification checks |
+|------|---------|---------------------|
+| Application build | `npm run build` | `architecture:check`, then `test:notifications` |
+| Static / mobile bundle | `npm run build:static` | `verify:notifications` |
+| Repository verification | `npm run verify:all` | `architecture:check`, `test:notifications` |
+| Focused gate | `npm run verify:notifications` | everything, ~50 s, no side effects |
+
+`verify:notifications` reads the working tree, mirrors service sources into a
+temporary directory, and touches no database, no remote, and no generated
+artefact.
+
+## Android Channel Policy
+
+Channel ids are `asol_<name>_v3` and are declared once in
+`domain/notification-sound.ts`, mirrored by the Native Platform module and the
+Android manifest.
+
+**A new channel generation is never a workaround for an application bug.** Sound,
+importance, and vibration are immutable once a channel exists on a device, so
+bumping `_v3` to `_v4` is the only way to change them — and it silently discards
+every per-channel preference the user has set, on every installed device.
+
+A new generation is justified only when *all* of the following hold, with
+evidence:
+
+1. An immutable channel property must change — sound file, importance,
+   vibration, or lockscreen visibility.
+2. The current value is demonstrably wrong on a real device, not merely
+   suspected. `adb shell dumpsys notification` output showing the live channel
+   is the evidence.
+3. The behaviour cannot be fixed in the payload, the local-notification call, or
+   the module.
+
+If a generation is genuinely required: change the id in
+`domain/notification-sound.ts`, the Native Platform channel list, and the
+manifest default together — `notification-sound-contract.test.ts` fails if they
+drift — document the reason and the discarded preferences in this file, and ship
+it with a store build. **Never publish a channel change during development
+verification.**
+
+## Verifying On A Connected Android Device
+
+Local, debug-only, and reversible. Nothing here publishes.
+
+**Prohibited during verification:** creating or publishing an OTA update,
+creating a release build or production package, deploying anything, changing
+`versionName`, `versionCode`, the native version, the web version, or any release
+manifest, and mutating live OTA or production data. `npm run build:static`
+rewrites `public/asol-web-manifest.json` with release identifiers — if a step
+requires it, restore that file afterwards.
+
+Procedure:
+
+1. `adb devices -l` — confirm exactly one device.
+2. Record the baseline: `git status --porcelain > before.txt`.
+3. Build and install a **debug** build only. Never a signed or release variant.
+4. **Prove the device runs the working tree.** A channel dump or a passing test
+   proves nothing about *which build* is installed. Compare the installed
+   build's fingerprint against the one just produced — for example a marker
+   string or build id compiled into the debug bundle, read back with
+   `adb shell dumpsys package <id>` or from `adb logcat`. Without that, device
+   observations describe the previously installed build and must be reported as
+   such.
+5. Exercise: foreground, background, terminated, resume, tap, duplicate
+   delivery, and offline receipt with later retry.
+6. Capture evidence, and keep the four kinds separate:
+   - **channel configuration** — `adb shell dumpsys notification` (proves ids,
+     importance, and sound *URI*; proves nothing about delivery)
+   - **delivery** — notification shade, `adb logcat`
+   - **persistence** — the notification centre and the badge in the app
+   - **audible sound** — **not objectively confirmable over adb.** A channel
+     configured with a sound URI is not proof that a sound played. State that
+     manual human confirmation is required.
+7. Restore: `git status --porcelain` and revert every incidental generated
+   change your commands produced.
 
 ## Remaining Limitations
 

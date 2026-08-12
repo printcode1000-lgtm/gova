@@ -19,12 +19,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import type {
-  BroadcastNotificationResult,
-  BroadcastRecipient,
-  BroadcastRecipientsResult,
-} from "@/features/notifications/domain/entities";
-import { notificationApiService } from "@/features/notifications/services/notification-api-service";
+import {
+  notifications,
+  type BroadcastNotificationResult,
+  type BroadcastRecipient,
+  type BroadcastRecipientsResult,
+} from "@/features/notifications";
 
 export function SuperAdminNotificationBroadcastPage() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export function SuperAdminNotificationBroadcastPage() {
     setBusy(true);
     setMessage("");
     try {
-      const next = await notificationApiService.getBroadcastRecipients(session);
+      const next = await notifications.listPushRecipients(session);
       setData(next);
       setSelected(new Set(next.recipients.map((recipient) => recipient.uid)));
     } catch (error) {
@@ -107,7 +107,7 @@ export function SuperAdminNotificationBroadcastPage() {
         typeof crypto !== "undefined" && "randomUUID" in crypto
           ? crypto.randomUUID()
           : `${Date.now()}:${Math.random().toString(36).slice(2)}`;
-      const next = await notificationApiService.sendBroadcast({
+      const next = await notifications.sendPush({
         identity: session,
         requestId,
         title,

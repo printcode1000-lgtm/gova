@@ -17,7 +17,14 @@ for (const channel of ["ORDERS", "CHAT", "UPDATES", "URGENT", "SILENT"]) {
 }
 assert.match(push, /AsolNotificationInbox/);
 assert.match(push, /id: native\.tag \|\| native\.id/);
+// Resume-sync: a notification delivered while the app was backgrounded or
+// terminated reaches the centre only because the controller re-imports the tray
+// when the app becomes active again.
 assert.match(controller, /onStateChange/);
-assert.match(controller, /syncDeliveredNotifications/);
+assert.match(controller, /importDelivered/);
+// The controller drives the module through its facade, never a service beneath
+// it, so the tray import cannot be reached around the public API.
+assert.match(controller, /notificationsFacade/);
+assert.doesNotMatch(controller, /application\/device-token-service/);
 
 console.log("Android notification inbox and resume-sync contract passed.");
