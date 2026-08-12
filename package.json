@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --webpack --port 3000",
-    "build": "npm run branding:generate && npm run app:init && npm run catalog:validate && npm run test:catalog-studio && npm run architecture:check && npm run test:notifications && npm run db:ensure && npm run db:schema:sync && next build",
+    "build": "npm run branding:generate && npm run app:init && npm run catalog:validate && npm run test:catalog-studio && npm run architecture:check && npx tsx scripts/sync-notifications-service-sources.ts && npm run test:notifications && npm run db:ensure && npm run db:schema:sync && next build",
     "build:static": "npm run branding:generate && npm run catalog:validate && npm run test:catalog-studio && npm run verify:notifications && npx tsx scripts/build-static.ts",
     "build:static:local": "cross-env NEXT_PUBLIC_ASOL_API_BASE_URL=https://gova-swart.vercel.app npm run build:static",
     "preview:static": "npx tsx scripts/serve-static.ts",
