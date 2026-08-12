@@ -9,6 +9,7 @@ import type {
   BroadcastNotificationInput,
   BroadcastNotificationResult,
   BroadcastRecipientsResult,
+  AuthenticatedNotificationTestInput,
   NotificationTestInput,
   NotificationTestResult,
   RegisterNotificationTokenInput,
@@ -70,11 +71,17 @@ export class NotificationApiService {
     return mergeBroadcastDeliveryResult(granted, delivery.recipientResults);
   }
 
-  async sendTest(input: NotificationTestInput): Promise<NotificationTestResult> {
+  async sendTest(
+    input: AuthenticatedNotificationTestInput,
+  ): Promise<NotificationTestResult> {
+    const request = prepareNotificationTestRequest(input);
     const granted = await asolApi.post<NotificationTestResult>(
       ASOL_API_ROUTES.notifications.testSend,
-      input,
-      { notificationGrantDelivery: "manual" },
+      request.body,
+      {
+        headers: request.headers,
+        notificationGrantDelivery: "manual",
+      },
     );
     const delivery = await deliverNotificationGrants(granted);
     return mergeNotificationTestDeliveryResult(
@@ -103,6 +110,20 @@ export function mergeBroadcastDeliveryResult(
         status: "failed" as const,
       };
     }),
+  };
+}
+
+export function prepareNotificationTestRequest(
+  input: AuthenticatedNotificationTestInput,
+): {
+  body: NotificationTestInput;
+  headers: Record<string, string>;
+} {
+  const { sessionToken, ...identity } = input.identity;
+  if (!sessionToken.trim()) throw new Error("sessionTokenInvalid");
+  return {
+    body: { ...input, identity },
+    headers: { "x-asol-session-token": sessionToken },
   };
 }
 

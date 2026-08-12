@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   mergeBroadcastDeliveryResult,
   mergeNotificationTestDeliveryResult,
+  prepareNotificationTestRequest,
 } from "../services/notification-api-service";
 
 const granted = {
@@ -57,5 +58,26 @@ assert.deepEqual(testMerged.results, [
 ]);
 assert.equal(testMerged.channelId, "asol_orders_v3");
 assert.equal(testMerged.dedupeKey, "notification-test:one");
+
+const prepared = prepareNotificationTestRequest({
+  identity: {
+    uid: "admin",
+    phone: "01000000000",
+    sessionToken: "signed-session-token",
+  },
+  scenarioId: "general",
+  title: "test",
+  body: "body",
+});
+assert.equal(
+  prepared.headers["x-asol-session-token"],
+  "signed-session-token",
+  "The signed Super Admin session must be sent in the verification header.",
+);
+assert.equal(
+  "sessionToken" in prepared.body.identity,
+  false,
+  "The session token must never be serialized in the request body.",
+);
 
 console.log("Notification broadcast delivery tests passed.");

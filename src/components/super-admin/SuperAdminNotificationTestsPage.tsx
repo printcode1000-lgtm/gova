@@ -239,8 +239,15 @@ export function SuperAdminNotificationTestsPage() {
             : "تم إنشاء إشعار الاختبار الصامت، ولا ينبغي أن يصدر صوتًا.",
         );
       } else {
+        if (!session.sessionToken) {
+          throw new Error("انتهت جلسة الدخول الآمنة. سجّل الخروج ثم ادخل مرة أخرى.");
+        }
         const result = await notificationApiService.sendTest({
-          identity: session,
+          identity: {
+            uid: session.uid,
+            phone: session.phone,
+            sessionToken: session.sessionToken,
+          },
           requestId: createRequestId(),
           scenarioId: scenario.id,
           title: title.trim(),

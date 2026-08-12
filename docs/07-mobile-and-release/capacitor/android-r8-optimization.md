@@ -7,6 +7,16 @@ The permanent `release` build type remains optimized:
 - `proguard-android-optimize.txt`
 - `proguard-rules.pro`
 
+## debugR8
+
+`debugR8` is the installable device-diagnostics variant. It inherits the debug
+signing key and remains debuggable, while running R8 code shrinking, resource
+shrinking, and the same ProGuard inputs used by release. Android intentionally
+disables R8 optimization and obfuscation for debuggable variants, so this build
+is useful for diagnosing shrinking/resource failures without losing debugger
+support. Build it with `:app:assembleDebugR8`; its APK is written under
+`android/app/build/outputs/apk/debugR8/`.
+
 ## releaseNoR8
 
 `android/app/build.gradle` also defines `releaseNoR8` using `initWith release`, then disables minification and resource shrinking:

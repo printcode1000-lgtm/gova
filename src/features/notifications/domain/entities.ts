@@ -247,6 +247,14 @@ export interface NotificationTestInput {
   routeHref?: string;
 }
 
+export interface AuthenticatedNotificationTestInput
+  extends Omit<NotificationTestInput, "identity"> {
+  identity: NotificationTestInput["identity"] & {
+    /** Used only as the signed request header; never serialized in the body. */
+    sessionToken: string;
+  };
+}
+
 export interface NotificationTestResult extends SendNotificationToUsersResult {
   notificationGrants?: string[];
   scenarioId: NotificationTestScenarioId;
