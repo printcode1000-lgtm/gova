@@ -63,6 +63,7 @@ interface TestHistoryEntry {
 }
 
 const delayOptions = [0, 5, 10, 30] as const;
+const batchSizeOptions = [1, 5] as const;
 
 function createRequestId(): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -92,6 +93,7 @@ export function SuperAdminNotificationTestsPage() {
   );
   const [routeHref, setRouteHref] = useState("/notifications");
   const [delaySeconds, setDelaySeconds] = useState<number>(0);
+  const [batchSize, setBatchSize] = useState<number>(1);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [remoteResult, setRemoteResult] =
     useState<NotificationTestResult | null>(null);
@@ -187,7 +189,7 @@ export function SuperAdminNotificationTestsPage() {
         at: new Date().toLocaleTimeString("ar-EG"),
       },
       ...current,
-    ].slice(0, 12));
+    ].slice(0, 100));
   };
 
   const runTest = async () => {
@@ -218,83 +220,101 @@ export function SuperAdminNotificationTestsPage() {
         if (!permission.granted) {
           throw new Error("فعّل إذن الإشعارات قبل إجراء الاختبار المحلي.");
         }
-        const notificationId = `local-test:${createRequestId()}`;
-        const now = new Date().toISOString();
-        const saved = await notifications.sendLocal({
-          id: notificationId,
-          uid: session.uid,
-          type: NotificationTypes.Custom,
-          source: NotificationContentSources.Custom,
-          title: title.trim(),
-          body: body.trim(),
-          category: scenario.category,
-          priority: scenario.priority,
-          channels: [NotificationChannels.InApp, NotificationChannels.AndroidPush],
-          targets: [NotificationTargets.Center, NotificationTargets.Badge, NotificationTargets.Popup],
-          route: { href: routeHref },
-          dedupeKey: notificationId,
-          sound: scenario.sound,
-          status: NotificationDeliveryStatuses.Pending,
-          syncState: NotificationSyncStates.Synced,
-          createdAt: now,
-          updatedAt: now,
-          metadata: {
-            source: scenario.source,
-            notificationTest: true,
-            notificationTestScenario: scenario.id,
-            androidChannelId: scenario.channelId,
-          },
-        });
-        const centerSaved = (await notifications.list({ uid: session.uid }))
-          .some((item) => item.id === saved.id);
-        addHistory({
-          mode,
-          scenarioId: scenario.id,
-          channelId: scenario.channelId,
-          status: centerSaved ? "تم العرض والحفظ" : "عُرض ولم يُحفظ",
-          tokenCount: 0,
-          centerStatus: centerSaved ? "saved" : "missing",
-        });
+        let savedCount = 0;
+        for (let index = 1; index <= batchSize; index += 1) {
+          const notificationId = `local-test:${createRequestId()}`;
+          const now = new Date().toISOString();
+          const suffix = batchSize > 1 ? ` (${index}/${batchSize})` : "";
+          const saved = await notifications.sendLocal({
+            id: notificationId,
+            uid: session.uid,
+            type: NotificationTypes.Custom,
+            source: NotificationContentSources.Custom,
+            title: `${title.trim()}${suffix}`,
+            body: body.trim(),
+            category: scenario.category,
+            priority: scenario.priority,
+            channels: [NotificationChannels.InApp, NotificationChannels.AndroidPush],
+            targets: [NotificationTargets.Center, NotificationTargets.Badge, NotificationTargets.Popup],
+            route: { href: routeHref },
+            dedupeKey: notificationId,
+            sound: scenario.sound,
+            status: NotificationDeliveryStatuses.Pending,
+            syncState: NotificationSyncStates.Synced,
+            createdAt: now,
+            updatedAt: now,
+            metadata: {
+              source: scenario.source,
+              notificationTest: true,
+              notificationTestScenario: scenario.id,
+              notificationTestBatchIndex: index,
+              notificationTestBatchSize: batchSize,
+              androidChannelId: scenario.channelId,
+            },
+          });
+          const centerSaved = (await notifications.list({ uid: session.uid }))
+            .some((item) => item.id === saved.id);
+          if (centerSaved) savedCount += 1;
+          addHistory({
+            mode,
+            scenarioId: scenario.id,
+            channelId: scenario.channelId,
+            status: centerSaved ? `saved ${index}/${batchSize}` : `missing ${index}/${batchSize}`,
+            tokenCount: 0,
+            centerStatus: centerSaved ? "saved" : "missing",
+          });
+        }
         setMessage(
-          scenario.audible
-            ? "تم إنشاء الإشعار المحلي. يجب أن تسمع النغمة المخصصة."
-            : "تم إنشاء إشعار الاختبار الصامت، ولا ينبغي أن يصدر صوتًا.",
+          savedCount !== batchSize
+            ? `فشل حفظ ${batchSize - savedCount} من ${batchSize} إشعارات محلية في صفحة الإشعارات.`
+            : scenario.audible
+              ? `تم إنشاء وحفظ ${batchSize} من ${batchSize}. يجب سماع النغمة المخصصة.`
+              : `تم إنشاء وحفظ ${batchSize} من ${batchSize} إشعارات صامتة دون صوت.`,
         );
       } else {
         if (!session.sessionToken) {
           throw new Error("انتهت جلسة الدخول الآمنة. سجّل الخروج ثم ادخل مرة أخرى.");
         }
-        const result = await notifications.executeTestScenario({
-          identity: {
-            uid: session.uid,
-            phone: session.phone,
-            sessionToken: session.sessionToken,
-          },
-          requestId: createRequestId(),
-          scenarioId: scenario.id,
-          title: title.trim(),
-          body: body.trim(),
-          routeHref,
-        });
-        setRemoteResult(result);
-        const delivery = result.results[0];
-        await wait(1_200);
-        const centerSaved = (await notifications.list({ uid: session.uid }))
-          .some((item) => item.dedupeKey === result.dedupeKey);
-        addHistory({
-          mode,
-          scenarioId: scenario.id,
-          channelId: result.channelId,
-          status: delivery?.status ?? "failed",
-          tokenCount: delivery?.tokenCount ?? 0,
-          centerStatus: centerSaved ? "saved" : "pending",
-        });
+        let acceptedCount = 0;
+        let centerCount = 0;
+        let lastStatus = "failed";
+        for (let index = 1; index <= batchSize; index += 1) {
+          const suffix = batchSize > 1 ? ` (${index}/${batchSize})` : "";
+          const result = await notifications.executeTestScenario({
+            identity: {
+              uid: session.uid,
+              phone: session.phone,
+              sessionToken: session.sessionToken,
+            },
+            requestId: createRequestId(),
+            scenarioId: scenario.id,
+            title: `${title.trim()}${suffix}`,
+            body: body.trim(),
+            routeHref,
+          });
+          setRemoteResult(result);
+          const delivery = result.results[0];
+          lastStatus = delivery?.status ?? "failed";
+          if (["sent", "partial", "queued"].includes(lastStatus)) acceptedCount += 1;
+          await wait(1_200);
+          const centerSaved = (await notifications.list({ uid: session.uid }))
+            .some((item) => item.dedupeKey === result.dedupeKey);
+          if (centerSaved) centerCount += 1;
+          addHistory({
+            mode,
+            scenarioId: scenario.id,
+            channelId: result.channelId,
+            status: `${lastStatus} ${index}/${batchSize}`,
+            tokenCount: delivery?.tokenCount ?? 0,
+            centerStatus: centerSaved ? "saved" : "pending",
+          });
+        }
         setMessage(
-          delivery?.status === "sent" || delivery?.status === "partial" || delivery?.status === "queued"
-            ? "قبل مزود الإرسال اختبار Push الحقيقي. راقب الجهاز والنغمة."
-            : delivery?.status === "no_tokens"
+          acceptedCount === batchSize && centerCount === batchSize
+            ? `تم قبول وحفظ ${batchSize} من ${batchSize} إشعارات Push متتالية.`
+            : lastStatus === "no_tokens"
               ? "لا يوجد رمز Push مسجل لحساب السوبر أدمن. فعّل الجهاز أولًا."
-              : `نتيجة الإرسال: ${delivery?.status ?? "failed"}`,
+              : `اكتملت الدفعة جزئيًا: قُبل ${acceptedCount}/${batchSize} وحُفظ ${centerCount}/${batchSize}.`,
         );
       }
     } catch (error) {
@@ -426,6 +446,12 @@ export function SuperAdminNotificationTestsPage() {
             <div className="space-y-2">
               <Label htmlFor="notification-test-route">الرابط الداخلي</Label>
               <Input id="notification-test-route" value={routeHref} dir="ltr" onChange={(event) => setRouteHref(event.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="notification-test-batch-size">عدد الإشعارات المتتالية</Label>
+              <select id="notification-test-batch-size" className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={batchSize} onChange={(event) => setBatchSize(Number(event.target.value))}>
+                {batchSizeOptions.map((count) => <option key={count} value={count}>{count === 1 ? "إشعار واحد" : `${count} إشعارات متتالية`}</option>)}
+              </select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="notification-test-delay">التأخير</Label>

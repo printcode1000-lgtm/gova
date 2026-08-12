@@ -19,4 +19,3 @@ ios/
 .ota/
 assets/google-play/*firebase-adminsdk*.json
 assets/google-play/google-services.json
-assets/google-play/custom_notification.mp3
