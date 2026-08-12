@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   Sliders,
   Sparkles,
+  TestTube2,
   TrendingUp,
   X,
   User,
@@ -297,7 +298,10 @@ export const AppSidebar = React.memo(function AppSidebar({
       return;
     }
 
-    if (pathname.includes("/notifications-broadcast")) {
+    if (
+      pathname.includes("/notifications-broadcast") ||
+      pathname.includes("/notification-tests")
+    ) {
       setSuperAdminGroupsOpen((current) => ({
         ...current,
         notifications: true,
@@ -469,6 +473,14 @@ export const AppSidebar = React.memo(function AppSidebar({
               </button>
               {superAdminGroupsOpen.notifications && (
                 <div className={groupPanelClass}>
+                  <Link
+                    href="/super-admin/notification-tests"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
+                    <TestTube2 className={sidebarSmallIconClass} />
+                    اختبارات الإشعارات
+                  </Link>
                   <Link
                     href="/super-admin/notifications-broadcast"
                     onClick={onClose}

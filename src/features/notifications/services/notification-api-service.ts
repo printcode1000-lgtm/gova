@@ -9,6 +9,8 @@ import type {
   BroadcastNotificationInput,
   BroadcastNotificationResult,
   BroadcastRecipientsResult,
+  NotificationTestInput,
+  NotificationTestResult,
   RegisterNotificationTokenInput,
 } from "../domain/entities";
 
@@ -68,6 +70,19 @@ export class NotificationApiService {
     return mergeBroadcastDeliveryResult(granted, delivery.recipientResults);
   }
 
+  async sendTest(input: NotificationTestInput): Promise<NotificationTestResult> {
+    const granted = await asolApi.post<NotificationTestResult>(
+      ASOL_API_ROUTES.notifications.testSend,
+      input,
+      { notificationGrantDelivery: "manual" },
+    );
+    const delivery = await deliverNotificationGrants(granted);
+    return mergeNotificationTestDeliveryResult(
+      granted,
+      delivery.recipientResults,
+    );
+  }
+
 }
 
 export const notificationApiService = new NotificationApiService();
@@ -88,5 +103,23 @@ export function mergeBroadcastDeliveryResult(
         status: "failed" as const,
       };
     }),
+  };
+}
+
+export function mergeNotificationTestDeliveryResult(
+  granted: NotificationTestResult,
+  delivered: NotificationBridgeRecipientResult[],
+): NotificationTestResult {
+  const expectedUid = granted.results[0]?.uid;
+  const actual = delivered.find((result) => result.uid === expectedUid);
+  return {
+    ...granted,
+    results: actual
+      ? [actual]
+      : granted.results.map((placeholder) => ({
+          uid: placeholder.uid,
+          tokenCount: 0,
+          status: "failed" as const,
+        })),
   };
 }

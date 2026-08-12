@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 
-import { mergeBroadcastDeliveryResult } from "../services/notification-api-service";
+import {
+  mergeBroadcastDeliveryResult,
+  mergeNotificationTestDeliveryResult,
+} from "../services/notification-api-service";
 
 const granted = {
   requested: 3,
@@ -31,5 +34,28 @@ assert.deepEqual(
 );
 assert.equal(merged.requested, 3);
 assert.equal(merged.recipientMode, "selected");
+
+const testMerged = mergeNotificationTestDeliveryResult(
+  {
+    requested: 1,
+    notificationGrants: ["signed-test"],
+    scenarioId: "orders",
+    channelId: "asol_orders_v3",
+    dedupeKey: "notification-test:one",
+    results: [
+      { uid: "admin", tokenCount: 0, status: "granted" as const },
+    ],
+  },
+  [
+    { uid: "admin", tokenCount: 1, status: "sent" },
+    { uid: "unexpected", tokenCount: 4, status: "sent" },
+  ],
+);
+
+assert.deepEqual(testMerged.results, [
+  { uid: "admin", tokenCount: 1, status: "sent" },
+]);
+assert.equal(testMerged.channelId, "asol_orders_v3");
+assert.equal(testMerged.dedupeKey, "notification-test:one");
 
 console.log("Notification broadcast delivery tests passed.");

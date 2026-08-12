@@ -1,12 +1,15 @@
 import 'server-only';
 
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
 import type {
   BroadcastNotificationInput,
   BroadcastNotificationResult,
   BroadcastRecipientsResult,
+  NotificationTestInput,
+  NotificationTestResult,
 } from '../domain/entities';
+import { getNotificationTestScenario } from '../domain/notification-test-scenarios';
 import { ListBroadcastRecipientsQuery } from '@/modules/data-access/domains/notifications/operations/queries/list-broadcast-recipients.query';
 import { NotificationGrantCollector } from './notification-grant-collector.server';
 
@@ -76,6 +79,57 @@ export class NotificationBroadcastService {
       results: uids.map((uid) => ({ uid, tokenCount: 0, status: 'granted' as const })),
       recipientMode: input.sendToAll ? 'all' : 'selected',
       notificationGrants: grants.toArray(),
+    };
+  }
+
+  async sendTest(input: NotificationTestInput): Promise<NotificationTestResult> {
+    this.assertAdmin(input.identity);
+    const scenario = getNotificationTestScenario(input.scenarioId);
+    if (!scenario) throw new Error('notificationTestScenarioInvalid');
+
+    const title = input.title.trim();
+    const body = input.body.trim();
+    if (!title || !body) throw new Error('notificationContentRequired');
+    if (title.length > 120 || body.length > 1_000) {
+      throw new Error('notificationContentTooLong');
+    }
+
+    const routeHref = input.routeHref?.trim() || '/notifications';
+    if (!routeHref.startsWith('/') || routeHref.startsWith('//') || routeHref.length > 500) {
+      throw new Error('notificationRouteInvalid');
+    }
+
+    const requestId = input.requestId?.trim() || randomUUID();
+    const dedupeKey = `notification-test:${requestId.slice(0, 100)}`;
+    const grants = new NotificationGrantCollector(input.identity.uid);
+    const issued = grants.issue({
+      actorUid: input.identity.uid,
+      uids: [input.identity.uid],
+      title,
+      body,
+      dedupeKey,
+      category: scenario.category,
+      priority: scenario.priority,
+      sound: scenario.sound,
+      route: { href: routeHref },
+      metadata: {
+        source: scenario.source,
+        notificationTest: true,
+        notificationTestScenario: scenario.id,
+        requestId,
+      },
+    });
+    if (!issued) throw new Error('notificationGrantNotIssued');
+
+    return {
+      requested: 1,
+      results: [
+        { uid: input.identity.uid, tokenCount: 0, status: 'granted' as const },
+      ],
+      notificationGrants: grants.toArray(),
+      scenarioId: scenario.id,
+      channelId: scenario.channelId,
+      dedupeKey,
     };
   }
 

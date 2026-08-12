@@ -19,6 +19,7 @@ import {
   NotificationPriorities,
   NotificationSounds,
 } from "../domain/enums";
+import { NOTIFICATION_TEST_SCENARIOS } from "../domain/notification-test-scenarios";
 
 /**
  * The custom sound reaches a device through four independent things that must
@@ -113,6 +114,26 @@ assert.equal(
   }),
   NotificationChannelIds.Silent,
 );
+
+// Every Super Admin diagnostic preset must resolve to the channel displayed by
+// the test page. This catches a misleading green UI before it reaches a device.
+for (const scenario of NOTIFICATION_TEST_SCENARIOS) {
+  assert.equal(
+    resolveAndroidChannelId({
+      category: scenario.category,
+      priority: scenario.priority,
+      sound: scenario.sound,
+      source: scenario.source,
+    }),
+    scenario.channelId,
+    `Notification test scenario ${scenario.id} resolves to the wrong channel.`,
+  );
+  assert.equal(
+    scenario.audible,
+    !isSilentNotification(scenario.sound),
+    `Notification test scenario ${scenario.id} has a misleading sound label.`,
+  );
+}
 
 // 4. Per-transport sound values.
 assert.equal(fcmSoundResource(NotificationSounds.Default), FCM_SOUND_RESOURCE);

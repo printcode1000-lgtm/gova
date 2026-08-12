@@ -11,6 +11,7 @@ import type {
   NotificationTarget,
   NotificationType,
 } from "./enums";
+import type { NotificationTestScenarioId } from "./notification-test-scenarios";
 
 export type NotificationLocale = "ar" | "en";
 
@@ -232,6 +233,25 @@ export interface BroadcastNotificationResult extends SendNotificationToUsersResu
   recipientMode: "all" | "selected";
   /** Signed grant for the admin's browser to deliver. */
   notificationGrants?: string[];
+}
+
+export interface NotificationTestInput {
+  identity: {
+    uid: string;
+    phone: string;
+  };
+  requestId?: string;
+  scenarioId: NotificationTestScenarioId;
+  title: string;
+  body: string;
+  routeHref?: string;
+}
+
+export interface NotificationTestResult extends SendNotificationToUsersResult {
+  notificationGrants?: string[];
+  scenarioId: NotificationTestScenarioId;
+  channelId: string;
+  dedupeKey: string;
 }
 
 export interface NotificationSettings {

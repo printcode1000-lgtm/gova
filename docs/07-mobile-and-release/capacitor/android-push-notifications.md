@@ -187,3 +187,7 @@ After installing the debug or release build on a physical Android device:
 6. Swipe the app away from recent apps, send another, and tap it from the system tray.
 7. Confirm the custom sound, notification-center entry, unread badge, and deep link.
 8. Delete the notification from `/notifications`, leave the page, return, and confirm it does not reappear and the bottom badge count is updated.
+
+The Super Admin can run channel-by-channel local and real FCM checks from
+`/super-admin/notification-tests`. See
+[`notification-tests.md`](../../06-super-admin-and-operations/notification-tests.md).

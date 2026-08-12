@@ -66,6 +66,7 @@ export const ASOL_API_ROUTES = {
     deviceToken: "/api/notifications/device-token",
     broadcastRecipients: "/api/notifications/broadcast/recipients",
     broadcastSend: "/api/notifications/broadcast/send",
+    testSend: "/api/notifications/test/send",
     // No web-push entries: the VAPID public key is a constant in the bundle
     // (features/notifications/domain/web-push-config.ts), so subscribing needs
     // no server call and there is nothing for an admin API to edit.
