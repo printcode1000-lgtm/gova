@@ -10,9 +10,14 @@ out/
 coverage/
 *.apk
 
-# Native projects are built locally and are not part of the Vercel server.
-android/
-ios/
+# Native source is required by notification contract tests during CI. Exclude
+# only generated native build state; tracked manifests, channels, and sound
+# assets remain available to the build.
+android/.gradle/
+android/build/
+android/app/build/
+ios/App/DerivedData/
+ios/App/build/
 
 # Credentials and machine-local environment files must never be uploaded.
 .env*
