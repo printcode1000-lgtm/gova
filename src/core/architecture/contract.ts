@@ -166,7 +166,12 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   }
   if (p.includes('/repositories/')) return 'repository';
   if (p.includes('/operations/')) return 'operations';
-  if (p.includes('-service.server.') || (p.endsWith('.server.ts') && p.includes('/services/'))) {
+  if (
+    p.includes('-service.server.') ||
+    p.includes('-service-parts/') ||
+    (p.includes('/services/') && p.includes('-service/')) ||
+    (p.endsWith('.server.ts') && p.includes('/services/'))
+  ) {
     return 'server-services';
   }
   if (p.includes('/services/') && (p.endsWith('-api-service.ts') || p.endsWith('/auth-service.ts') || p.endsWith('/session-service.ts'))) {

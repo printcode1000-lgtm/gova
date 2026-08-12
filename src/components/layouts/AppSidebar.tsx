@@ -33,7 +33,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FocusTrap } from "focus-trap-react";
 import { useQueryClient } from "@tanstack/react-query";
-
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
 import {
@@ -64,10 +63,7 @@ import { publicEnv } from "@/core/config";
 import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
 import { isNativePlatform } from "@/native-platform/core/platform";
 
-interface AppSidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { AppSidebarProps } from "./app-sidebar/AppSidebar.sidebar-model";
 
 export const AppSidebar = React.memo(function AppSidebar({
   isOpen,

@@ -96,6 +96,10 @@ const sidebarSource = fs.readFileSync(
   "utf8",
 );
 const staticBuilderSource = fs.readFileSync(path.join(root, "scripts", "build-static.ts"), "utf8");
+const staticBuilderConfigSource = fs.readFileSync(
+  path.join(root, "scripts", "build-static", "build-static.runtime-config.ts"),
+  "utf8",
+);
 assert(pageSource.includes("if (!isDevelopment) notFound()"));
 assert(apiSource.includes("if (!isDevelopment)"));
 assert(apiSource.includes("assertSuperAdminRequest(request)"));
@@ -106,7 +110,7 @@ assert(imageApiSource.includes("apiError(message, 401)"));
 assert(sidebarSource.includes('href="/super-admin/catalog"'));
 assert(sidebarSource.includes("!isNativePlatform()"));
 assert(sidebarSource.includes('(min-width: 1024px)'));
-assert(staticBuilderSource.includes('"app/super-admin/catalog"'));
+assert(staticBuilderConfigSource.includes('"app/super-admin/catalog"'));
 assert(staticBuilderSource.includes("auditCatalogStudioExcluded()"));
 
 console.log("Catalog Studio safety, validation and development-only contract passed.");

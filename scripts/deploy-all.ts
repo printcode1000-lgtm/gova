@@ -1,7 +1,11 @@
 import { execFileSync, spawn, type ChildProcess } from "node:child_process";
+import { existsSync, statSync, unlinkSync } from "node:fs";
+import path from "node:path";
 
 const ROOT = process.cwd();
 const MAIN_BRANCH = "main";
+const GIT_INDEX_LOCK = path.join(ROOT, ".git", "index.lock");
+const STALE_GIT_LOCK_AGE_MS = 2 * 60 * 1000;
 const SERVICE_DEPLOYS = [
   "notifications:deploy",
   "products:deploy",
@@ -25,6 +29,43 @@ function assertMainBranch(): void {
     );
   }
 
+}
+
+function hasRunningGitProcess(): boolean {
+  try {
+    if (process.platform === "win32") {
+      const output = execFileSync(
+        "tasklist",
+        ["/FI", "IMAGENAME eq git.exe", "/FO", "CSV", "/NH"],
+        { encoding: "utf8", windowsHide: true },
+      );
+      return /"git\.exe"/i.test(output);
+    }
+    const output = execFileSync("pgrep", ["-x", "git"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    return output.trim().length > 0;
+  } catch {
+    return false;
+  }
+}
+
+/** Remove only an abandoned Git lock; a fresh or actively owned lock stops deployment. */
+function clearStaleGitIndexLock(): void {
+  if (!existsSync(GIT_INDEX_LOCK)) return;
+
+  const ageMs = Date.now() - statSync(GIT_INDEX_LOCK).mtimeMs;
+  if (ageMs < STALE_GIT_LOCK_AGE_MS || hasRunningGitProcess()) {
+    throw new Error(
+      "Git index.lock is active. Close the other Git operation and run deploy:all again.",
+    );
+  }
+
+  unlinkSync(GIT_INDEX_LOCK);
+  console.log(
+    `[deploy:all] Removed abandoned .git/index.lock (${Math.round(ageMs / 1000)} seconds old).`,
+  );
 }
 
 function runNpmScript(script: string): Promise<void> {
@@ -65,6 +106,7 @@ async function main(): Promise<void> {
   await runNpmScript("secrets:backup");
 
   assertMainBranch();
+  clearStaleGitIndexLock();
 
   const commitMessage = `deploy: ${new Date().toISOString()}`;
   console.log(`[deploy:all] Creating deployment commit: ${commitMessage}`);

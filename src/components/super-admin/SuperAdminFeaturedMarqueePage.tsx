@@ -14,7 +14,6 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
 import { FeaturedMarquee } from "@/components/ui/FeaturedMarquee";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,33 +30,7 @@ import { productApiService } from "@/features/product/services/product-api-servi
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 import { ASOL_DB_STORES, asolDbDelete } from "@/modules/data-access/browser/asol-db";
 
-interface ResolvedItem {
-  productId: string;
-  product: ProductRecord | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-function getProductName(product: ProductRecord): string {
-  return product.mainData.name || "منتج بدون اسم";
-}
-
-function getProductPrice(product: ProductRecord): string {
-  return product.price.current || product.price.label || "";
-}
-
-function getProductImage(product: ProductRecord): string {
-  return product.images[0]?.url ?? "";
-}
-
-function buildProductAction(product: ProductRecord): string {
-  return [
-    "mode=view",
-    `productId=${encodeURIComponent(product.id)}`,
-    `mainCategoryId=${encodeURIComponent(product.mainCategoryId)}`,
-    `subcategoryId=${encodeURIComponent(product.subcategoryId)}`,
-  ].join("&");
-}
+import { ResolvedItem, getProductName, getProductPrice, getProductImage, buildProductAction } from "./featured-marquee/SuperAdminFeaturedMarqueePage.product-display";
 
 export function SuperAdminFeaturedMarqueePage() {
   const router = useRouter();

@@ -30,12 +30,16 @@ import { analyzeBundleArtifact, classifyEntry } from "../services/bundle-analyze
 async function main() {
 const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { scripts: Record<string, string> };
 const staticBuilderSource = await readFile("scripts/build-static.ts", "utf8");
+const staticBuilderConfigSource = await readFile(
+  "scripts/build-static/build-static.runtime-config.ts",
+  "utf8",
+);
 for (const route of [
   "app/super-admin/google-play-store-assets",
   "app/super-admin/google-play-console",
   "app/super-admin/ota-releases",
 ]) {
-  assert.ok(staticBuilderSource.includes(`"${route}"`),
+  assert.ok(staticBuilderConfigSource.includes(`"${route}"`),
     `${route} must be removed before static/mobile builds`);
 }
 assert.match(staticBuilderSource, /auditCatalogStudioExcluded\(\)/,

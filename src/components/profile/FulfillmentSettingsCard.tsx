@@ -1,9 +1,8 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Search, Truck } from "lucide-react";
-
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,9 +30,7 @@ import type {
   ProfileSectionStatus,
 } from "./profile-save-controller";
 
-interface FulfillmentSettingsCardProps {
-  onStatusChange?: (status: ProfileSectionStatus) => void;
-}
+import { FulfillmentSettingsCardProps } from "./fulfillment-settings/FulfillmentSettingsCard.fulfillment-types";
 
 export const FulfillmentSettingsCard = React.forwardRef<
   ProfileFulfillmentController,
