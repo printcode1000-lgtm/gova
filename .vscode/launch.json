@@ -165,6 +165,19 @@
       "cwd": "${workspaceFolder}",
       "presentation": {
         "group": "ASOL Capacitor",
+        "order": 2
+      }
+    },
+    {
+      "name": "Android Full Local Release - إصدار Android كامل محلي",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "release:android"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
         "order": 1
       }
     },
@@ -178,7 +191,7 @@
       "cwd": "${workspaceFolder}",
       "presentation": {
         "group": "ASOL Capacitor",
-        "order": 2
+        "order": 3
       }
     },
     {
