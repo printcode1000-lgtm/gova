@@ -93,7 +93,15 @@ export class CapacitorPushService {
     this.currentUid = assertUid(uid);
     this.handlers = handlers;
     await this.ensureListeners();
-    await this.createChannels();
+    // Retried here after the activity's own attempt at startup. A failure is
+    // reported but does not stop initialization: the tray import and the live
+    // listeners still work, and `register` is where a missing channel set
+    // actually blocks something.
+    try {
+      await this.createChannels();
+    } catch (error) {
+      notificationLog.error("Notification channels could not be created.", error);
+    }
     await this.importDelivered();
   }
 
@@ -109,6 +117,21 @@ export class CapacitorPushService {
     if (platform !== "android" && platform !== "ios") return null;
     this.currentUid = assertUid(uid);
     await this.ensureListeners();
+    // Channels first, and unconditionally: a device that refuses the grant still
+    // keeps the channel set, so a later opt-in has nothing left to set up.
+    //
+    // This one is not tolerated. Registering a device whose channels are missing
+    // buys pushes that Android drops onto a system fallback channel with the
+    // wrong sound — and the sound of a channel cannot be corrected afterwards.
+    try {
+      await this.createChannels();
+    } catch (error) {
+      notificationLog.error("Notification channels could not be created.", error);
+      throw new NotificationError(
+        NotificationErrorCodes.DeliveryFailed,
+        "notificationChannelsUnavailable",
+      );
+    }
 
     const permission = await pushNotifications.checkPermission();
     if (!permission.granted) {
@@ -117,7 +140,6 @@ export class CapacitorPushService {
         "notificationPermissionDenied",
       );
     }
-    await this.createChannels();
 
     // The Native Platform module owns the registration handshake and its
     // timeout. The provider's own error text is never surfaced: it can carry a
@@ -188,15 +210,15 @@ export class CapacitorPushService {
    * Android channels are declared once in the Native Platform module so the ids,
    * names, and sound stay identical to already-installed clients.
    *
+   * Channels are independent of `POST_NOTIFICATIONS`: they are the descriptions
+   * the system settings screen shows, so they must exist before the user is
+   * asked anything. Nothing is posted by creating one.
+   *
    * Safe to call repeatedly and on every platform: creating a channel that
    * exists is a no-op, and nothing happens off Android.
    */
   async createChannels(): Promise<void> {
     if (!this.isAndroid()) return;
-    // On affected Android/OEM builds a channel created before the runtime
-    // notification grant is persisted with sound=null. Sound is immutable, so
-    // a later call cannot repair it; defer creation until after explicit opt-in.
-    if ((await this.permissionState()) !== "granted") return;
     await pushNotifications.createChannels();
   }
 

@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
@@ -16,9 +17,22 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 /** Returns Android tray notifications without dropping their tag or channel. */
 @CapacitorPlugin(name = "AsolNotificationInbox")
 public class AsolNotificationInboxPlugin extends Plugin {
+    private static final String TAG = "AsolNotifications";
+
+    /**
+     * Create the channel set. Rejects when it could not be ensured, so the web
+     * layer can refuse to register a device whose channels are missing rather
+     * than registering for pushes it cannot present correctly.
+     */
     @PluginMethod
     public void ensureChannels(PluginCall call) {
-        AsolNotificationChannels.ensureCreated(getContext());
+        try {
+            AsolNotificationChannels.ensureCreated(getContext());
+        } catch (RuntimeException error) {
+            Log.e(TAG, "Notification channels could not be created.", error);
+            call.reject("Notification channels could not be created.", error);
+            return;
+        }
         call.resolve();
     }
 

@@ -9,8 +9,10 @@ import static org.junit.Assume.assumeTrue;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.res.AssetFileDescriptor;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
@@ -47,6 +49,23 @@ public class NotificationSoundInstrumentedTest {
             return;
         }
 
+        // The URI must name the resource, not its build-generated numeric id: a
+        // channel outlives the install that created it, and its sound cannot be
+        // corrected afterwards.
+        Uri expectedSound = AsolNotificationChannels.customSoundUri(context);
+        assertEquals(
+            "android.resource://" + context.getPackageName() + "/raw/"
+                + AsolNotificationChannels.SOUND_RESOURCE_NAME,
+            expectedSound.toString()
+        );
+        try (AssetFileDescriptor descriptor =
+                 context.getContentResolver().openAssetFileDescriptor(expectedSound, "r")) {
+            assertNotNull(
+                "The stable sound URI does not resolve to the packaged asset",
+                descriptor
+            );
+        }
+
         NotificationManager manager = context.getSystemService(NotificationManager.class);
         assertNotNull(manager);
         for (String id : AUDIBLE_CHANNELS) {
@@ -55,8 +74,10 @@ public class NotificationSoundInstrumentedTest {
             assertTrue("Audible channel has low importance: " + id,
                 channel.getImportance() >= NotificationManager.IMPORTANCE_DEFAULT);
             assertEquals(
-                "Audible channel points at the wrong sound: " + id,
-                AsolNotificationChannels.customSoundUri(context),
+                "Audible channel points at the wrong sound: " + id
+                    + ". A channel created by an earlier build keeps the sound it was "
+                    + "created with; reinstall the application to re-create it.",
+                expectedSound,
                 channel.getSound()
             );
             assertTrue(
@@ -76,9 +97,9 @@ public class NotificationSoundInstrumentedTest {
         String id
     ) throws InterruptedException {
         NotificationChannel channel = null;
-        // ColorOS persists channel sound asynchronously: the first immediate
-        // read can return null even though dumpsys contains the sound moments
-        // later. Poll the observable OS state instead of racing its writer.
+        // Channel state is persisted asynchronously on some devices, so the
+        // first immediate read can return a channel whose sound is not visible
+        // yet. Poll the observable OS state instead of racing its writer.
         for (int attempt = 0; attempt < 20; attempt += 1) {
             channel = manager.getNotificationChannel(id);
             if (channel != null && channel.getSound() != null) return channel;

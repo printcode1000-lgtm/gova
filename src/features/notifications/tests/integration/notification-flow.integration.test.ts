@@ -456,16 +456,142 @@ scenario("execute and the named method are the same use case", async () => {
 // Permission, platform, and degradation
 // ---------------------------------------------------------------------------
 
-scenario("a denied permission blocks registration and reports honestly", async () => {
+scenario("android initialization creates the channels before permission is asked", async () => {
+  resetHarnessCompletely();
+  // The device has never answered the runtime prompt.
+  harnessState.permission = "prompt";
+  const { notifications } = loadNotificationModule();
+
+  await notifications.initialize({ uid: UID, phone: PHONE });
+  await flushMicrotasks();
+
+  assert.ok(
+    harnessState.createdChannels > 0,
+    "channels must exist before the user is asked; they are what the settings screen lists",
+  );
+  assert.equal(
+    harnessState.registerCalls,
+    0,
+    "initialization must not register a device that has not opted in",
+  );
+});
+
+scenario("a denied permission keeps the channels and blocks registration", async () => {
   resetHarnessCompletely();
   harnessState.permission = "denied";
   const { notifications } = loadNotificationModule();
+
+  await notifications.initialize({ uid: UID, phone: PHONE });
+  await flushMicrotasks();
+  const channelsAfterInitialize = harnessState.createdChannels;
+  assert.ok(
+    channelsAfterInitialize > 0,
+    "a refused grant must not stop channel creation",
+  );
 
   const diagnostics = await notifications.getDiagnostics({ uid: UID });
   assert.equal(diagnostics.permission.granted, false);
   assert.equal(diagnostics.permission.state, "denied");
   assert.equal(diagnostics.deviceTokenCount, 0);
   await assert.rejects(() => notifications.registerDevice({ uid: UID, phone: PHONE }));
+  assert.equal(
+    harnessState.registerCalls,
+    0,
+    "a denied device must never reach the push provider",
+  );
+  assert.ok(
+    harnessState.createdChannels >= channelsAfterInitialize,
+    "the refused registration must still have left the channels in place",
+  );
+});
+
+scenario("granting permission registers the device as usual", async () => {
+  resetHarnessCompletely();
+  const { notifications } = await startAndroidSession();
+
+  assert.ok(harnessState.createdChannels > 0);
+  const token = await notifications.registerDevice({ uid: UID, phone: PHONE });
+  assert.ok(token, "a granted device must register");
+  assert.equal(token.provider, "fcm");
+  assert.ok(harnessState.registerCalls > 0);
+  assert.equal(harnessState.serverRegisteredTokens.length > 0, true);
+});
+
+scenario("repeated channel creation is idempotent and never throws", async () => {
+  resetHarnessCompletely();
+  harnessState.permission = "prompt";
+  const { notifications } = loadNotificationModule();
+
+  await notifications.initialize({ uid: UID, phone: PHONE });
+  await notifications.createChannels();
+  await notifications.createChannels();
+  await flushMicrotasks();
+
+  // Creating a channel that exists is a no-op on the device, so the only thing
+  // worth asserting is that the module keeps asking without failing.
+  assert.ok(
+    harnessState.createdChannels >= 3,
+    "every call must reach the single native creator",
+  );
+  assert.equal((await notifications.list({ uid: UID })).length, 0);
+});
+
+scenario("a device whose channels failed is never registered with the provider", async () => {
+  resetHarnessCompletely();
+  harnessState.channelCreationError = new Error("Notification channels could not be created.");
+  const { notifications } = loadNotificationModule();
+
+  // Initialization survives it: the tray import and the live listeners still
+  // work, and the failure is reported rather than swallowed.
+  await notifications.initialize({ uid: UID, phone: PHONE });
+  await flushMicrotasks();
+  assert.ok(
+    harnessState.loggedLines.some(
+      (line) => line.level === "error" && line.message.includes("channels"),
+    ),
+    "a failed channel creation must be observable in the log",
+  );
+
+  // Registration is not: a token for a device with no channels buys pushes
+  // Android would present on a fallback channel with the wrong sound.
+  await assert.rejects(
+    () => notifications.registerDevice({ uid: UID, phone: PHONE }),
+    (error: unknown) => {
+      assert.equal((error as { code?: string }).code, "notifications/delivery-failed");
+      return true;
+    },
+  );
+  assert.equal(
+    harnessState.registerCalls,
+    0,
+    "the push provider must not be reached without channels",
+  );
+  assert.equal(harnessState.serverRegisteredTokens.length, 0);
+
+  // Once the device can create them again, registration proceeds normally.
+  harnessState.channelCreationError = null;
+  const token = await notifications.registerDevice({ uid: UID, phone: PHONE });
+  assert.ok(token, "the retry must register once the channels exist");
+  assert.ok(harnessState.createdChannels > 0);
+});
+
+scenario("ios never creates android channels", async () => {
+  resetHarnessCompletely();
+  harnessState.platform = "ios";
+  const { notifications } = loadNotificationModule();
+
+  await notifications.initialize({ uid: UID, phone: PHONE });
+  await notifications.createChannels();
+  await flushMicrotasks();
+
+  assert.equal(
+    harnessState.createdChannels,
+    0,
+    "channels are an Android concept; iOS must be untouched",
+  );
+  const token = await notifications.registerDevice({ uid: UID, phone: PHONE });
+  assert.ok(token, "iOS registration must be unaffected");
+  assert.equal(token.platform, "ios");
 });
 
 scenario("a revoked permission does not lose already stored notifications", async () => {

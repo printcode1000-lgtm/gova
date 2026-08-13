@@ -19,9 +19,9 @@ import { hasDom, isAndroid, isNativePlatform } from "../core/platform";
 import { localNotificationAdapter } from "../permissions/permission-adapters";
 import { permissionManager } from "../permissions/permission-manager";
 import type { PermissionResult } from "../permissions/types";
+import { pushNotifications } from "./push-notifications";
 import {
   DEFAULT_CHANNEL_ID,
-  DEFAULT_CHANNELS,
   type LocalNotificationSchedule,
   type NotificationActionListener,
   type NotificationPayload,
@@ -41,7 +41,6 @@ interface LocalNotificationsApi {
   cancel: (options: { notifications: Array<{ id: number }> }) => Promise<void>;
   removeAllDeliveredNotifications: () => Promise<void>;
   getPending: () => Promise<{ notifications: Array<{ id: number }> }>;
-  createChannel?: (channel: Record<string, unknown>) => Promise<void>;
   addListener?: (
     event: string,
     callback: (data: never) => void,
@@ -245,29 +244,18 @@ export class LocalNotificationsModule {
     this.actions.clear();
   }
 
-  /** Register the Android notification channels. */
+  /**
+   * Register the Android notification channels.
+   *
+   * Delegated, not reimplemented. Sound is fixed at first creation, so whichever
+   * call happens to run first on a device decides it forever — two creators
+   * would be two chances to persist the wrong sound. The application-owned
+   * native bridge is the single one, and it addresses the sound by a stable
+   * resource-name URI that a string channel API cannot express.
+   */
   async createChannels(): Promise<void> {
     if (!isAndroid()) return;
-    const plugin = (await localPlugin.optional())?.plugin ?? null;
-    if (!plugin?.createChannel) return;
-
-    await Promise.all(
-      DEFAULT_CHANNELS.map((channel) =>
-        plugin
-          .createChannel?.({
-            id: channel.id,
-            name: channel.name,
-            description: channel.description,
-            importance: channel.importance,
-            visibility: 0,
-            vibration: channel.vibration ?? true,
-            ...(channel.sound ? { sound: channel.sound } : {}),
-          })
-          .catch(() => {
-            // A channel that already exists is fine.
-          }),
-      ),
-    );
+    await pushNotifications.createChannels();
   }
 
   /** Set the application badge count. */

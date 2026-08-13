@@ -55,6 +55,9 @@ export interface HarnessState {
   registrationError: Error | null;
   /** Set to make the delivered-inbox plugin unavailable. */
   inboxUnavailable: boolean;
+  /** Set to make the native channel bridge reject, as it does when a channel
+   * could not be ensured. */
+  channelCreationError: Error | null;
 
   // Recordings
   createdChannels: number;
@@ -79,6 +82,7 @@ function freshState(): HarnessState {
     registrationToken: "fcm-token-aaaaaaaaaaaaaaaaaaaaaaaa:APA91bTESTTESTTESTTESTTEST",
     registrationError: null,
     inboxUnavailable: false,
+    channelCreationError: null,
     createdChannels: 0,
     registerCalls: 0,
     unregisterCalls: 0,
@@ -152,6 +156,9 @@ class FakePushPlugin {
   }
 
   async createChannels(): Promise<void> {
+    // The native bridge rejects when the channel set could not be ensured; the
+    // count records only the calls that actually created it.
+    if (harnessState.channelCreationError) throw harnessState.channelCreationError;
     harnessState.createdChannels += 1;
   }
 

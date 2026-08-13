@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import { execSync } from 'child_process';
 
-const PORTS = [3000];
+const PORTS = [3001];
 
 function killPortWindows(port: number): void {
   try {

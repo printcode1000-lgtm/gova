@@ -147,7 +147,7 @@
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "env": {
-        "ASOL_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3000",
+        "ASOL_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3001",
         "PORT": "5500"
       },
       "presentation": {
@@ -325,7 +325,7 @@
       }
     },
     {
-      "name": "Stop Dev - إيقاف 3000",
+      "name": "Stop Dev - إيقاف 3001",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",

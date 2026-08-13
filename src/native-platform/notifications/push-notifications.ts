@@ -128,6 +128,10 @@ export class PushNotificationsModule {
       throw toNativeError(MODULE, new Error("Push is not supported here."));
     }
 
+    // Channel creation does not depend on the grant, so it happens before the
+    // check: a denied device keeps its channels and registers nothing.
+    if (isAndroid()) await this.createChannels();
+
     const permission = await this.checkPermission();
     if (!permission.granted) {
       throw toNativeError(
@@ -138,7 +142,6 @@ export class PushNotificationsModule {
 
     const plugin = (await pushPlugin.required()).plugin;
     await this.ensureListeners();
-    if (isAndroid()) await this.createChannels();
 
     const value = await new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -253,12 +256,19 @@ export class PushNotificationsModule {
     );
   }
 
-  /** Create the Android channels this application uses. */
+  /**
+   * Create the Android channels this application uses.
+   *
+   * Independent of the notification permission: a channel is a declaration, not
+   * a notification, and the same native bridge runs it at activity startup.
+   *
+   * The single creator on Android. The native side sets the sound from a stable
+   * `android.resource://<package>/raw/custom_notification` URI, which a
+   * string-based channel API cannot express, and rejects when the channel set
+   * could not be ensured — so this rejects too rather than reporting success.
+   */
   async createChannels(): Promise<void> {
     if (!isAndroid()) return;
-    // The application-owned native plugin uses a direct R.raw reference.
-    // Capacitor's string-based channel API is rejected by some OEM Android
-    // builds and silently persists sound=null, which cannot be repaired later.
     await notificationInboxPlugin.ensureChannels();
   }
 

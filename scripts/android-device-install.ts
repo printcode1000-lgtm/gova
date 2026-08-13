@@ -17,20 +17,28 @@ import { reportStage } from "./release-stage";
  * rather than quietly starting a twenty-minute build nobody asked for.
  *
  * `--device=<serial>` picks one when several are attached.
+ * `--without-permissions` leaves runtime permissions ungranted so the
+ * notification-channel startup test can observe the real pre-opt-in state.
  */
 function main(): void {
-  const requestedSerial = readDeviceArgument(process.argv.slice(2));
+  const args = process.argv.slice(2);
+  const requestedSerial = readDeviceArgument(args);
+  const withoutPermissions = args.includes("--without-permissions");
 
   assertTestApkExists();
   console.log(`Installing ${describeTestApk()}`);
 
   const { adb, device } = detectDevice(requestedSerial);
   wipeProjectPackages(adb, device.serial);
-  installApk(adb, device.serial, TEST_APK_PATH);
+  installApk(adb, device.serial, TEST_APK_PATH, {
+    grantPermissions: !withoutPermissions,
+  });
 
   reportStage("finalizing-results");
   console.log(
-    `\nThe device now carries only this build. Run the connected-device tests to exercise it.`,
+    withoutPermissions
+      ? "\nThe device now carries only this build with runtime permissions ungranted. Run the startup channel test before granting notifications."
+      : "\nThe device now carries only this build. Run the connected-device tests to exercise it.",
   );
 }
 

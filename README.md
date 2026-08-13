@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-التطبيق يعمل على: http://localhost:3000
+التطبيق يعمل على: http://localhost:3001
 
 ## أوامر مهمة
 
@@ -19,7 +19,7 @@ npm run dev
 | `npm run build` | بناء إنتاج |
 | `npm run build:static` | تصدير ثابت (`out/`) |
 | `npm run typecheck` | فحص الأنواع |
-| `npm run server:stop` | إيقاف السيرفر على المنفذ 3000 |
+| `npm run server:stop` | إيقاف السيرفر على المنفذ 3001 |
 
 ## autofill التطويري
 

@@ -51,22 +51,24 @@ function runGradle(tasks: string[], env: NodeJS.ProcessEnv): void {
  * like success from the exit code alone — the one outcome that must never be
  * read as a green run.
  */
-function reportResults(): number {
+function reportResults(): { total: number; skipped: number } {
   const files = collectXmlResults(RESULTS_DIRECTORY);
   if (files.length === 0) {
     console.log("No instrumented test result files were produced.");
-    return 0;
+    return { total: 0, skipped: 0 };
   }
   let total = 0;
+  let skipped = 0;
   for (const file of files) {
     const xml = readFileSync(file, "utf8");
+    skipped += [...xml.matchAll(/<skipped\b/g)].length;
     for (const match of xml.matchAll(/<testcase\s+[^>]*name="([^"]+)"[^>]*classname="([^"]+)"/g)) {
       const [, name, className] = match;
       console.log(`  ${className!.split(".").pop()}.${name}`);
       total += 1;
     }
   }
-  return total;
+  return { total, skipped };
 }
 
 function collectXmlResults(directory: string): string[] {
@@ -101,14 +103,16 @@ function main(): void {
   reportStage("finalizing-results");
   reportStep("collecting device test results");
   console.log("\nTests executed on the device:");
-  const total = reportResults();
+  const { total, skipped } = reportResults();
   if (total === 0) {
     throw new Error(
       "The instrumented run reported success without running a single test. " +
         "Treating that as a pass would hide an empty or unbuilt androidTest source set.",
     );
   }
-  console.log(`\n${total} instrumented test(s) passed on ${device.serial}.`);
+  console.log(
+    `\n${total - skipped} instrumented test(s) passed and ${skipped} skipped on ${device.serial}.`,
+  );
 }
 
 try {

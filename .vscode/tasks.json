@@ -6,7 +6,7 @@
       "type": "npm",
       "script": "dev",
       "problemMatcher": [],
-      "detail": "تشغيل خادم التطوير على المنفذ 3000 بعد تجهيز ملفات العلامة التجارية وتهيئة التطبيق."
+      "detail": "تشغيل خادم التطوير على المنفذ 3001 بعد تجهيز ملفات العلامة التجارية وتهيئة التطبيق."
     },
     {
       "label": "Build - إنتاج كامل",
@@ -56,7 +56,7 @@
       "problemMatcher": [],
       "options": {
         "env": {
-          "ASOL_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3000",
+          "ASOL_STATIC_PREVIEW_API_BASE_URL": "http://localhost:3001",
           "PORT": "5500"
         }
       },
@@ -154,11 +154,11 @@
       "detail": "فحص التزام المشروع بطبقات المعمارية ومنع الاستيرادات أو الاستخدامات المخالفة."
     },
     {
-      "label": "Stop Dev - إيقاف 3000",
+      "label": "Stop Dev - إيقاف 3001",
       "type": "npm",
       "script": "server:stop",
       "problemMatcher": [],
-      "detail": "إيقاف خادم التطوير المحلي العامل على المنفذ 3000 عند الحاجة."
+      "detail": "إيقاف خادم التطوير المحلي العامل على المنفذ 3001 عند الحاجة."
     },
     {
       "label": "PowerShell Scripts - تفعيل التشغيل",

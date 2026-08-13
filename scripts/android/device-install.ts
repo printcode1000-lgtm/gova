@@ -214,7 +214,12 @@ function assertDeviceIsClean(adb: string, serial: string, userIds: readonly stri
   }
 }
 
-export function installApk(adb: string, serial: string, apkPath: string): void {
+export function installApk(
+  adb: string,
+  serial: string,
+  apkPath: string,
+  options: { grantPermissions?: boolean } = {},
+): void {
   reportStage("installing-device");
   reportStep(`installing ${apkPath}`);
   console.log(`Installing ${apkPath} on ${serial}...`);
@@ -222,7 +227,13 @@ export function installApk(adb: string, serial: string, apkPath: string): void {
   // mask a failed uninstall instead of surfacing it.
   adbInherit(adb, ["install", apkPath], serial);
   console.log("Install completed.");
-  grantRuntimePermissions(adb, serial);
+  if (options.grantPermissions !== false) {
+    grantRuntimePermissions(adb, serial);
+  } else {
+    console.log(
+      "Runtime permissions were intentionally left ungranted for fresh-install verification.",
+    );
+  }
 }
 
 /**
