@@ -23,8 +23,11 @@ import { PermissionKinds, type PermissionResult } from "../permissions/types";
 import { isNotificationWebViewForeground } from "./delivery-visibility";
 import {
   type NotificationActionListener,
+  type NotificationInboxRecord,
+  type NotificationInboxTap,
   type NotificationListener,
   type NotificationPayload,
+  type NotificationTapListener,
   type PushToken,
   type PushTokenListener,
 } from "./types";
@@ -41,14 +44,46 @@ interface NativeNotification {
   data?: Record<string, unknown>;
 }
 
+interface NativeInboxRecord {
+  recordId?: string;
+  uid?: string;
+  notificationId?: string;
+  dedupeKey?: string;
+  channelId?: string;
+  createdAt?: string;
+  receivedAt?: number;
+  payload?: NativeNotification;
+}
+
 interface NotificationInboxPluginApi {
   ensureChannels: () => Promise<void>;
   getDelivered: () => Promise<{ notifications: NativeNotification[] }>;
+  /** Records the native service persisted before displaying, for one uid. */
+  listPending: (options: { uid: string }) => Promise<{ records: NativeInboxRecord[] }>;
+  /** Delete records the web layer has committed to IndexedDB. */
+  acknowledge: (options: {
+    uid: string;
+    recordIds: string[];
+  }) => Promise<{ acknowledged: number }>;
+  /** Erase every pending record. Account deletion / clear-all-local-data only. */
+  clearPending: () => Promise<void>;
+  getPendingCount: () => Promise<{ count: number }>;
+  getPendingTap: () => Promise<{
+    recordId?: string;
+    uid?: string;
+    notificationId?: string;
+    record?: NativeInboxRecord;
+  }>;
+  clearPendingTap: () => Promise<void>;
+  addListener: (
+    event: string,
+    callback: (data: never) => void,
+  ) => Promise<PluginHandle>;
 }
 
 // This is an application-owned plugin that is compiled into MainActivity, not
 // an optional npm dependency. Register its proxy synchronously so startup
-// cannot permanently lose the Android tray inbox to a dynamic-import race.
+// cannot permanently lose the Android native inbox to a dynamic-import race.
 const notificationInboxPlugin =
   registerPlugin<NotificationInboxPluginApi>("AsolNotificationInbox");
 
@@ -91,13 +126,32 @@ function toPayload(
   };
 }
 
+function toInboxRecord(native: NativeInboxRecord): NotificationInboxRecord | null {
+  const recordId = typeof native.recordId === "string" ? native.recordId.trim() : "";
+  if (!recordId) return null;
+  return {
+    recordId,
+    uid: typeof native.uid === "string" ? native.uid.trim() : "",
+    notificationId: typeof native.notificationId === "string" ? native.notificationId : "",
+    dedupeKey: typeof native.dedupeKey === "string" ? native.dedupeKey : "",
+    channelId: typeof native.channelId === "string" ? native.channelId : "",
+    createdAt: typeof native.createdAt === "string" ? native.createdAt : "",
+    receivedAt: typeof native.receivedAt === "number" ? native.receivedAt : 0,
+    // Never foreground: a record exists precisely because the WebView was not
+    // running when the message arrived.
+    payload: toPayload(native.payload ?? {}, false),
+  };
+}
+
 export class PushNotificationsModule {
   private handles: PluginHandle[] = [];
   private listenersReady = false;
+  private tapListenerReady = false;
 
   private readonly tokens = createEmitter<PushToken>("push:token");
   private readonly received = createEmitter<NotificationPayload>("push:received");
   private readonly actions = createEmitter<NotificationPayload>("push:action");
+  private readonly taps = createEmitter<NotificationInboxTap>("push:tap");
 
   private pendingResolve: ((token: string) => void) | null = null;
   private pendingReject: ((error: Error) => void) | null = null;
@@ -194,6 +248,123 @@ export class PushNotificationsModule {
     return notifications.map((notification) => toPayload(notification, false));
   }
 
+  // ---- the device-local inbox ----------------------------------------------
+
+  /**
+   * Notifications the native service persisted while JavaScript could not run.
+   *
+   * This is the durable path, and the only one that is reliable: the record was
+   * written to application-private storage (encrypted when AndroidKeyStore is
+   * available) *before* the system
+   * notification was posted, so it survives the tray being cleared, the
+   * notification being tapped away, and the process being killed.
+   *
+   * Android only. Everything else returns nothing rather than throwing, because
+   * iOS and the browser have their own delivery guarantees and no such gap.
+   */
+  async listPendingInbox(uid: string): Promise<NotificationInboxRecord[]> {
+    if (!isAndroid() || !uid) return [];
+    const { records } = await notificationInboxPlugin.listPending({ uid });
+    return records
+      .map((record) => toInboxRecord(record))
+      .filter((record): record is NotificationInboxRecord => record !== null);
+  }
+
+  /**
+   * Delete records the caller has durably stored.
+   *
+   * Call this only *after* the notification is in IndexedDB. The whole point of
+   * the split is that a crash between the two leaves the record to be imported
+   * again — a duplicate import is free, a lost notification is not.
+   *
+   * @returns how many records the native side actually removed.
+   */
+  async acknowledgeInbox(uid: string, recordIds: readonly string[]): Promise<number> {
+    if (!isAndroid() || !uid || recordIds.length === 0) return 0;
+    const { acknowledged } = await notificationInboxPlugin.acknowledge({
+      uid,
+      recordIds: [...recordIds],
+    });
+    return typeof acknowledged === "number" ? acknowledged : 0;
+  }
+
+  /** Erase the device-local inbox. Account deletion and local-data wipe only. */
+  async clearInbox(): Promise<void> {
+    if (!isAndroid()) return;
+    await notificationInboxPlugin.clearPending();
+  }
+
+  /** Pending record count, for diagnostics. Carries no notification content. */
+  async pendingInboxCount(): Promise<number> {
+    if (!isAndroid()) return 0;
+    const { count } = await notificationInboxPlugin.getPendingCount();
+    return typeof count === "number" ? count : 0;
+  }
+
+  /**
+   * The tap this process was launched or resumed with, if any.
+   *
+   * Read, never consumed: `clearInboxTap` is separate so the caller can verify
+   * the owning user and finish storing the notification before the pointer is
+   * given up. A tap for a user who is not signed in yet stays pending.
+   */
+  async getInboxTap(): Promise<NotificationInboxTap | null> {
+    if (!isAndroid()) return null;
+    const tap = await notificationInboxPlugin.getPendingTap();
+    const recordId = typeof tap.recordId === "string" ? tap.recordId.trim() : "";
+    if (!recordId) return null;
+    const record = tap.record ? toInboxRecord(tap.record) : null;
+    const notificationId =
+      typeof tap.notificationId === "string" && tap.notificationId.trim()
+        ? tap.notificationId.trim()
+        : (record?.notificationId ?? "");
+    return {
+      recordId,
+      uid: typeof tap.uid === "string" ? tap.uid.trim() : "",
+      notificationId,
+      ...(record ? { record } : {}),
+    };
+  }
+
+  async clearInboxTap(): Promise<void> {
+    if (!isAndroid()) return;
+    await notificationInboxPlugin.clearPendingTap();
+  }
+
+  /** A notification tapped while this process was already running. */
+  onInboxTap(listener: NotificationTapListener): () => void {
+    return this.taps.add(listener);
+  }
+
+  /**
+   * Attach the tap listener.
+   *
+   * Separate from `ensureListeners`, and independent of it: the push plugin's
+   * own listeners need the plugin to have loaded, while this one belongs to the
+   * application's own bridge and must be reachable even when push registration
+   * never happened.
+   */
+  async ensureInboxTapListener(): Promise<void> {
+    if (this.tapListenerReady || !isAndroid()) return;
+    this.tapListenerReady = true;
+    this.handles.push(
+      await notificationInboxPlugin.addListener("notificationTapped", ((tap: {
+        recordId?: string;
+        uid?: string;
+        notificationId?: string;
+      }) => {
+        const recordId = typeof tap?.recordId === "string" ? tap.recordId.trim() : "";
+        if (!recordId) return;
+        this.taps.emit({
+          recordId,
+          uid: typeof tap.uid === "string" ? tap.uid.trim() : "",
+          notificationId:
+            typeof tap.notificationId === "string" ? tap.notificationId.trim() : "",
+        });
+      }) as (data: never) => void),
+    );
+  }
+
   async removeAllDelivered(): Promise<void> {
     if (!this.isSupported()) return;
     const plugin = (await pushPlugin.required()).plugin;
@@ -276,9 +447,11 @@ export class PushNotificationsModule {
     await removeHandles(this.handles);
     this.handles = [];
     this.listenersReady = false;
+    this.tapListenerReady = false;
     this.tokens.clear();
     this.received.clear();
     this.actions.clear();
+    this.taps.clear();
   }
 }
 

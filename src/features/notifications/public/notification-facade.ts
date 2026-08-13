@@ -14,6 +14,7 @@ import type {
 } from "../domain/entities";
 import { NotificationTargets } from "../domain/enums";
 import { NotificationError, NotificationErrorCodes } from "../domain/notification-error";
+import { notificationLog } from "../domain/notification-redaction";
 import {
   assertDedupeKey,
   assertExtensionRegistration,
@@ -30,6 +31,7 @@ import { notificationBadgeService } from "../application/badge-service";
 import { notificationBus } from "../application/notification-bus";
 import { notificationDeviceTokenService } from "../application/device-token-service";
 import { notificationLifecycleService } from "../application/notification-lifecycle-service";
+import { nativeInboxService } from "../application/native-inbox-service";
 import { notificationPermissionService } from "../application/permission-service";
 import { notificationReceiver } from "../application/notification-receiver";
 import { notificationSender } from "../application/notification-sender";
@@ -77,8 +79,18 @@ export class NotificationsFacade {
   // ---- lifecycle -----------------------------------------------------------
 
   /**
-   * Attach this device to the running session: listeners, Android channels, a
-   * tray import, and a token when permission already exists.
+   * Attach this device to the running session.
+   *
+   * The order here is the durability contract, and it is not interchangeable:
+   *
+   * 1. install the live listeners and the Android channels;
+   * 2. drain the **device-local native inbox** — every push that arrived while
+   *    the WebView could not run — into IndexedDB, acknowledging each record
+   *    only after it is stored;
+   * 3. sweep the Android tray, as a secondary net for notifications posted by
+   *    a build that predates the inbox;
+   * 4. honour a pending tap, which by now refers to a notification that is
+   *    already in the centre.
    *
    * The handlers this installs already have persistence done by the time they
    * run, so a consumer only decides what to do about it — navigate, refresh —
@@ -97,6 +109,10 @@ export class NotificationsFacade {
       onReceived: async (notification) => {
         const outcome = await notificationReceiver.receiveForeground(notification);
         if (outcome.stored) await handlers.onReceived?.(outcome.notification);
+        // The native service persisted this message before handing it to the
+        // WebView, so its record is still pending. Retiring it here keeps a busy
+        // foreground session from accumulating records it has already stored.
+        void nativeInboxService.importPending(uid).catch(() => undefined);
         return outcome.stored;
       },
       onBatchReceived: async (batchUid, notifications) => {
@@ -114,6 +130,53 @@ export class NotificationsFacade {
         await handlers.onOpened?.(target);
       },
     });
+
+    // Taps arriving while this session is live run the identical protocol as a
+    // cold-start tap: import everything, then mark only the tapped one read.
+    await nativeInboxService.onTap(() => {
+      void this.consumeNotificationTap({ uid, handlers });
+    });
+
+    await this.importNativeInbox(uid);
+    // Secondary compatibility net for notifications posted by a shell that
+    // predates the durable inbox. New inbox-owned tray entries are excluded by
+    // the native bridge, so this cannot reconstruct a lossy duplicate.
+    await notificationDeviceTokenService.syncDeliveredNotifications();
+    await this.consumeNotificationTap({ uid, handlers });
+  }
+
+  /**
+   * Drain the device-local native inbox into IndexedDB.
+   *
+   * Errors are contained: an unavailable bridge, an old shell, or a platform
+   * without an inbox must not stop a session from starting. What must never
+   * happen is a record being acknowledged without being stored, and that
+   * ordering lives in the inbox service.
+   */
+  private async importNativeInbox(uid: string): Promise<void> {
+    try {
+      await nativeInboxService.importPending(uid);
+    } catch (error) {
+      notificationLog.error("The device-local notification inbox could not be imported.", error);
+    }
+  }
+
+  /**
+   * Honour a pending notification tap for this session.
+   *
+   * A tap that belongs to a different account is left alone — it waits for its
+   * own user rather than being applied to whoever is signed in now.
+   */
+  private async consumeNotificationTap(input: {
+    uid: string;
+    handlers: ReceiveHandlers;
+  }): Promise<void> {
+    try {
+      const opened = await nativeInboxService.consumePendingTap(input.uid);
+      if (opened) await input.handlers.onOpened?.(opened);
+    } catch (error) {
+      notificationLog.error("A tapped notification could not be opened.", error);
+    }
   }
 
   // ---- device registration -------------------------------------------------
@@ -270,13 +333,38 @@ export class NotificationsFacade {
     };
   }
 
-  /** Import what the OS displayed while this WebView was not running. */
-  importDelivered(): Promise<void> {
-    return notificationDeviceTokenService.syncDeliveredNotifications();
+  /**
+   * Import everything that arrived while this WebView was not running.
+   *
+   * The device-local native inbox first, because it is the reliable source: its
+   * records were written before the notification was even displayed. The Android
+   * tray sweep runs after it as a secondary net, and the repository's dedupe
+   * makes the overlap free.
+   *
+   * @param input.uid the signed-in user. Omitted, only the tray is swept — a
+   * native record is never imported without knowing who it belongs to.
+   */
+  async importDelivered(input: { uid?: string } = {}): Promise<void> {
+    const uid = input?.uid ? assertUid(input.uid) : "";
+    if (uid) await this.importNativeInbox(uid);
+    await notificationDeviceTokenService.syncDeliveredNotifications();
   }
 
   createChannels(): Promise<void> {
     return notificationDeviceTokenService.createChannels();
+  }
+
+  /**
+   * Erase the device-local native inbox.
+   *
+   * For account deletion and the explicit "clear all local data" action, which
+   * must leave nothing of the previous user behind. Signing out deliberately
+   * does **not** call this: a pending notification belongs to the user it was
+   * addressed to and waits, uid-scoped, for that user to sign in again — it is
+   * never handed to the next account.
+   */
+  clearLocalInbox(): Promise<void> {
+    return nativeInboxService.clear();
   }
 
   // ---- notification centre -------------------------------------------------
@@ -440,12 +528,14 @@ export class NotificationsFacade {
    */
   async getDiagnostics(input: { uid?: string } = {}): Promise<NotificationDiagnostics> {
     const uid = input?.uid ? assertUid(input.uid) : "";
-    const [permission, deviceEnabled, tokens, stored] = await Promise.all([
-      this.getPermissionState(),
-      notificationDeviceTokenService.isDeviceEnabled(),
-      uid ? notificationDeviceTokenService.list(uid) : Promise.resolve([]),
-      uid ? asolNotificationRepository.list(uid) : Promise.resolve([]),
-    ]);
+    const [permission, deviceEnabled, tokens, stored, pendingNativeInboxCount] =
+      await Promise.all([
+        this.getPermissionState(),
+        notificationDeviceTokenService.isDeviceEnabled(),
+        uid ? notificationDeviceTokenService.list(uid) : Promise.resolve([]),
+        uid ? asolNotificationRepository.list(uid) : Promise.resolve([]),
+        nativeInboxService.pendingCount(),
+      ]);
     return {
       platform: notificationDeviceTokenService.getPlatform(),
       pushSupported: notificationDeviceTokenService.isPushSupported(),
@@ -458,6 +548,7 @@ export class NotificationsFacade {
         (item) => !item.readAt && item.targets.includes(NotificationTargets.Badge),
       ).length,
       pendingRetryCount: uid ? (await notificationSyncService.listPending(uid)).length : 0,
+      pendingNativeInboxCount,
     };
   }
 }

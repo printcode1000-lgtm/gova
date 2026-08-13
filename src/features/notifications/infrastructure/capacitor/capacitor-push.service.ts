@@ -26,13 +26,13 @@ import { capacitorPlatformService } from "./capacitor-platform.service";
 /**
  * The FCM/APNs adapter.
  *
- * It owns the plugin: listeners, registration, channels, and the delivered-tray
- * inbox. It does not decide what a notification means or where it is stored —
+ * It owns the plugin: listeners, registration, channels, and the legacy
+ * delivered-tray sweep. It does not decide what a notification means or where it is stored —
  * it maps a payload through the domain mapper and hands the result to the
  * callbacks the application layer installed.
  *
- * Imports are single-flight per user. `initialize` and the resume listener both
- * import the tray, and on a cold start from a notification tap they fire in the
+ * Tray imports are single-flight. Startup and the resume listener can both
+ * request the sweep, and on a cold start from a notification tap they fire in the
  * same tick; without coalescing the same delivered notification is mapped and
  * offered twice, and the exactly-once guarantee would rest on storage dedupe
  * alone rather than on not doing the work twice.
@@ -102,7 +102,8 @@ export class CapacitorPushService {
     } catch (error) {
       notificationLog.error("Notification channels could not be created.", error);
     }
-    await this.importDelivered();
+    // Import ordering is owned by NotificationsFacade: durable native inbox
+    // first, then this tray scan as a legacy fallback, then the pending tap.
   }
 
   /** Import notifications the OS displayed while this WebView was inactive. */
@@ -246,6 +247,11 @@ export class CapacitorPushService {
 
   private mapForCurrentUser(native: NotificationPayload): NotificationEntity | null {
     if (!this.currentUid) return null;
+    const payloadUid = native.data?.uid?.trim();
+    // Android's durable receiver can deliver a delayed message after the user
+    // has switched accounts. Keep that record in its native owner partition;
+    // never mirror it into the currently active user's IndexedDB partition.
+    if (payloadUid && payloadUid !== this.currentUid) return null;
     return mapInboundPushToNotification(this.currentUid, native);
   }
 

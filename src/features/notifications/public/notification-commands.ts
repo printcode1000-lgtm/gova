@@ -49,8 +49,9 @@ export type NotificationCommand =
   | { type: "sendPush"; payload: BroadcastNotificationInput }
   | { type: "listPushRecipients"; payload: { uid: string; phone: string } }
   | { type: "receive"; payload: unknown }
-  | { type: "importDelivered" }
+  | { type: "importDelivered"; payload?: { uid?: string } }
   | { type: "createChannels" }
+  | { type: "clearLocalInbox" }
   | { type: "synchronizeNotificationCenter"; payload: { uid: string } }
   | { type: "list"; payload: { uid: string } }
   | { type: "getUnreadCount"; payload: { uid: string } }
@@ -103,6 +104,7 @@ export interface NotificationCommandResults {
   receive: NotificationReceiveOutcome;
   importDelivered: void;
   createChannels: void;
+  clearLocalInbox: void;
   synchronizeNotificationCenter: NotificationCenterSnapshot;
   list: NotificationEntity[];
   getUnreadCount: number;
@@ -156,6 +158,7 @@ export const NOTIFICATION_COMMAND_TYPES = [
   "receive",
   "importDelivered",
   "createChannels",
+  "clearLocalInbox",
   "synchronizeNotificationCenter",
   "list",
   "getUnreadCount",

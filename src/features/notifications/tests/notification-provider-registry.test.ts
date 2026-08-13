@@ -17,6 +17,24 @@ const token: RegisteredNotificationToken = {
   updatedAt: new Date().toISOString(),
 };
 
+/**
+ * The same registration on Apple.
+ *
+ * Android delivery is application-owned — the payload is data-only so the app's
+ * own FirebaseMessagingService receives every message and can persist it before
+ * displaying it — while Apple keeps the alert payload it always had. The two
+ * shapes have to be asserted against a token of each platform, because that is
+ * the only thing the provider branches on.
+ */
+const appleToken: RegisteredNotificationToken = {
+  ...token,
+  id: "ntok_2",
+  platform: NotificationPlatforms.Ios,
+  provider: "apns",
+  deviceId: "device_2",
+  token: "token_2",
+};
+
 async function main() {
   let sentMessage: FcmHttpV1Message | null = null;
   const provider = new FcmNotificationProvider(() => ({
@@ -44,10 +62,63 @@ async function main() {
   assert.equal(result.status, "sent");
   assert.equal(result.tokenCount, 1);
   assert.equal(sentMessage?.message.android.restricted_package_name, "hgh.asol.app");
-  assert.equal(sentMessage?.message.android.notification.channel_id, "asol_general_v4");
-  assert.equal(sentMessage?.message.android.notification.sound, "custom_notification");
+  // Android delivery is data-only. A `notification` block would be displayed by
+  // the Firebase SDK itself while the app is backgrounded or dead, and
+  // `onMessageReceived` would never run — which is precisely how notifications
+  // were being lost, because nothing could persist them before the tray entry
+  // disappeared under the user's own tap.
+  assert.equal(
+    sentMessage?.message.notification,
+    undefined,
+    "An Android token must not receive an auto-displayed notification block.",
+  );
+  assert.equal(
+    sentMessage?.message.android.notification,
+    undefined,
+    "An Android token must not receive an android.notification block either.",
+  );
+  // The channel travels in the data map instead, so the native service posts on
+  // the same channel — and therefore with the same custom sound — the server
+  // resolved.
+  assert.equal(sentMessage?.message.data.androidChannelId, "asol_general_v4");
+  // A data message has to wake a dozing app before anything can be shown.
+  assert.equal(sentMessage?.message.android.priority, "HIGH");
+  // Title and body live in the data map, which is what the native service and
+  // the live JavaScript listener both read — so a background delivery and a
+  // foreground one produce the same stored notification.
+  assert.equal(sentMessage?.message.data.title, "ASOL");
   assert.equal(sentMessage?.message.data.dedupeKey, "system.info:test");
   assert.equal(sentMessage?.message.data.uid, "usr_1");
+
+  // Apple is untouched by the Android change and still gets its alert payload.
+  let appleMessage: FcmHttpV1Message | null = null;
+  await new FcmNotificationProvider(() => ({
+    send: async (message) => {
+      appleMessage = message;
+      return { success: true };
+    },
+  })).send({
+    tokens: [appleToken],
+    payload: {
+      locale: "ar",
+      notificationId: "notification_apple",
+      templateId: "system.info",
+      dedupeKey: "system.info:apple",
+      title: "Apple",
+      body: "Body",
+      category: "system",
+      priority: "normal",
+      sound: "default",
+    },
+  });
+  const apnsAlert = appleMessage as unknown as FcmHttpV1Message;
+  assert.equal(
+    apnsAlert.message.notification?.title,
+    "Apple",
+    "iOS delivery must keep the notification block it always had.",
+  );
+  assert.equal(apnsAlert.message.apns?.payload.aps.alert?.title, "Apple");
+  assert.equal(apnsAlert.message.apns?.payload.aps.sound, "custom_notification.caf");
 
   let receiptMessage: FcmHttpV1Message | null = null;
   const receiptProvider = new FcmNotificationProvider(() => ({
@@ -185,19 +256,19 @@ async function main() {
   const silentMessage = silentAlert as unknown as FcmHttpV1Message;
   // Android plays a channel's sound, so silence needs its own low-importance
   // channel — omitting the payload field is not enough on Android 8+.
-  assert.equal(
-    silentMessage.message.android.notification?.channel_id,
-    "asol_silent_v4",
-  );
-  assert.equal(silentMessage.message.android.notification?.sound, undefined);
+  assert.equal(silentMessage.message.data.androidChannelId, "asol_silent_v4");
+  assert.equal(silentMessage.message.data.sound, "silent");
   // On Apple, no `sound` key is the silent banner.
   assert.equal(silentMessage.message.apns?.payload.aps.sound, undefined);
   assert.equal(
     silentMessage.message.apns?.payload.aps["interruption-level"],
     "passive",
   );
-  // It is still a visible notification, unlike the data-only receipt above.
-  assert.ok(silentMessage.message.notification);
+  // It is still a visible notification, unlike the data-only receipt above: it
+  // carries text for a reader, and Apple gets an alert rather than a background
+  // push.
+  assert.ok(silentMessage.message.data.body);
+  assert.equal(silentMessage.message.apns?.headers?.["apns-push-type"], "alert");
 
   // `urgent` cannot mean a different file — there is one sound asset — so it
   // means the channel that interrupts.
@@ -221,14 +292,8 @@ async function main() {
     },
   });
   const urgentMessage = urgentSound as unknown as FcmHttpV1Message;
-  assert.equal(
-    urgentMessage.message.android.notification?.channel_id,
-    "asol_urgent_v4",
-  );
-  assert.equal(
-    urgentMessage.message.android.notification?.sound,
-    "custom_notification",
-  );
+  assert.equal(urgentMessage.message.data.androidChannelId, "asol_urgent_v4");
+  assert.equal(urgentMessage.message.data.sound, "urgent");
   assert.equal(
     urgentMessage.message.apns?.payload.aps.sound,
     "custom_notification.caf",
@@ -257,14 +322,12 @@ async function main() {
     },
   });
   assert.equal(
-    (broadcastMessage as unknown as FcmHttpV1Message).message.android.notification
-      ?.channel_id,
+    (broadcastMessage as unknown as FcmHttpV1Message).message.data.androidChannelId,
     "asol_updates_v4",
   );
   assert.equal(
-    (broadcastMessage as unknown as FcmHttpV1Message).message.android.notification
-      ?.sound,
-    "custom_notification",
+    (broadcastMessage as unknown as FcmHttpV1Message).message.data.meta_source,
+    "super_admin_broadcast",
   );
 
   // -------------------------------------------------------------------------

@@ -27,8 +27,11 @@ export {
   type LocalNotificationSchedule,
   type NotificationActionListener,
   type NotificationChannel,
+  type NotificationInboxRecord,
+  type NotificationInboxTap,
   type NotificationListener,
   type NotificationPayload,
+  type NotificationTapListener,
   type PushToken,
   type PushTokenListener,
 } from "./types";

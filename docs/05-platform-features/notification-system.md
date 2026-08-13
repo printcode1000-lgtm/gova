@@ -2,14 +2,24 @@
 
 > Specialty-based buyer/provider conversations are documented in [`specialty-notification-chat.md`](specialty-notification-chat.md). They use notifications as their sole transport and keep message content only in the local notification center.
 
-Notification bodies and notification-center rows have no SQLite/Turso table. Device tokens, push-provider credentials, and per-user delivery preferences are server metadata only; actual notification cards, lifecycle analytics, badges, receipts, and conversation messages are persisted exclusively in AsolDB IndexedDB on the current client.
+Notification bodies and notification-center rows have no SQLite/Turso table. Device tokens, push-provider credentials, and per-user delivery preferences are server metadata only; the permanent application copy of notification cards, lifecycle analytics, badges, receipts, and conversation messages is exclusively in AsolDB IndexedDB on the current client.
+
+> **The one on-device exception, and it is not cloud storage.** While
+> JavaScript and IndexedDB cannot run at all — the app backgrounded with its
+> process reclaimed, swiped away, or not yet started — Android temporarily
+> retains the inbound payload in an *application-owned, device-local, private*
+> inbox, encrypted with AndroidKeyStore when available and otherwise kept in the
+> same app-private file. It is a handoff buffer, not a history: every record is
+> uid-scoped, bounded by count and age, never leaves the device, and is deleted
+> the moment the notification is confirmed present in IndexedDB. See
+> [The Android Device-Local Notification Inbox](#the-android-device-local-notification-inbox).
 
 > Server-side notification state and push fan-out live on their own Turso and
 > Vercel accounts. See [Notifications Database Token Storage](#notifications-database-token-storage)
 > and [Where The Fan-Out Runs](#where-the-fan-out-runs).
 
 > Android production setup and operational checks are documented in
-> [`../capacitor/android-push-notifications.md`](../capacitor/android-push-notifications.md).
+> [`../07-mobile-and-release/capacitor/android-push-notifications.md`](../07-mobile-and-release/capacitor/android-push-notifications.md).
 
 The notification system is a local-first module that powers the in-app notification center, badge count, template rendering, event mapping, device-token storage, and future push integrations for Web, Android, and iOS.
 
@@ -34,6 +44,8 @@ The notification system is a local-first module that powers the in-app notificat
 - Server APIs support registering/removing a device token and delivering notifications to one user or many users.
 - Push delivery uses a server-side provider interface and registry instead of direct coupling to FCM, APNs, or Web Push.
 - FCM (Android, and Apple once the Firebase iOS SDK is installed) and Web Push are live transports. Direct APNs is an opt-in fallback that stays unconfigured by default.
+- Android delivery is application-owned: the payload is data-only, `AsolPushMessagingService` persists it to the app-private native inbox (AndroidKeyStore-encrypted when available) before displaying it, and the record is deleted only after IndexedDB has it. iOS/APNs and Web Push are unchanged.
+- A notification tap opens `/notifications`; the business deep link stays on the stored notification and is followed when the card is opened.
 
 ## Folder Structure
 
@@ -974,7 +986,8 @@ Push is intentionally behind adapters, all under `infrastructure/`:
 
 | Adapter | Owns |
 |---------|------|
-| `capacitor/capacitor-push.service.ts` | FCM/APNs listeners, registration, channels, the delivered-tray import |
+| `capacitor/capacitor-push.service.ts` | FCM/APNs listeners, registration, channels, the delivered-tray sweep |
+| `capacitor/capacitor-native-inbox.service.ts` | The Android device-local notification inbox: list, acknowledge, clear, tap |
 | `capacitor/capacitor-permission.service.ts` | The notification permission, via the Native Platform Permission Manager |
 | `capacitor/capacitor-local-notification.service.ts` | On-device display of a notification the app produced |
 | `capacitor/capacitor-badge.service.ts` | The application badge |
@@ -1000,7 +1013,7 @@ compensates so they behave the same:
 | Platform | Who presents it |
 |----------|-----------------|
 | iOS | The OS, from `PushNotifications.presentationOptions` in `capacitor.config.ts` (`badge`, `sound`, `banner`, `list`). The payload's `aps.sound` plays. |
-| Android | Nobody. Firebase suppresses its own tray notification while the app is visible and hands the message straight to JavaScript. |
+| Android | Nobody by default. The message is data-only, and `AsolPushMessagingService` deliberately stays quiet while the Activity is resumed — it persists the payload and forwards it to JavaScript, and the WebView presents the banner. |
 
 So `CapacitorPushService.presentForeground` schedules a local notification on
 **Android only** — doing it on iOS would show the same notification twice. It is
@@ -1019,8 +1032,10 @@ from the stable resource-name URI
 `R.raw.custom_notification` reference is kept in code purely so Release resource
 shrinking cannot remove the asset.
 
-The tray import at startup does not go through this path: those notifications
-were already displayed, with sound, by the system.
+The legacy tray sweep at startup does not go through this path: those
+notifications were already displayed, with sound, by the system. New
+application-owned notifications are marked and excluded from that sweep because
+their complete payload is imported from the native inbox instead.
 
 A local notification carries the same flat payload a push does, so tapping one
 is handled by `LocalNotifications.onAction` and routes through exactly the same
@@ -1042,9 +1057,19 @@ platform.
 
 ### Background
 
-The operating system displays the notification. The WebView is not running, so
-nothing in the module executes. Whatever the tray holds is imported when the app
-next becomes active — see Resumed.
+On Android the app's own `AsolPushMessagingService` receives the message,
+persists it to the device-local inbox, and only then posts the notification. If
+the durable write fails, no tray notification is posted because its tap would
+have nothing recoverable to import. The WebView
+is not running, so nothing in the JavaScript module executes; the pending record
+is imported when the app next becomes active — see Resumed.
+
+Only a genuinely foreground activity receives Capacitor's live callback.
+Background and dead-process deliveries use the native inbox exclusively; they
+are not forwarded into Capacitor's retained `lastMessage`, which would replay at
+the next launch and could produce a second banner. The live mapper also rejects
+a payload whose owning uid differs from the active session, so a delayed push
+for a previous account cannot cross the IndexedDB partition boundary.
 
 On Android the native receive callback may still be delivered briefly while
 the activity is transitioning out. The adapter therefore reads the document's
@@ -1055,8 +1080,9 @@ already displayed; this prevents duplicate tray entries and duplicate sound.
 ### Resumed
 
 `NativePushController` listens for the app becoming active and calls
-`notifications.importDelivered()`. This is the only way a notification that
-arrived while the app was hidden reaches the centre without a restart.
+`notifications.importDelivered({ uid })`, which drains the device-local inbox
+and then sweeps the tray. This is how a notification that arrived while the app
+was hidden reaches the centre without a restart.
 
 The import is single-flight per user, so a resume that coincides with startup
 does the work once. Imports skip empty `ASOL` placeholders and anything already
@@ -1065,14 +1091,236 @@ lock so a concurrent live delivery cannot be lost.
 
 ### Terminated
 
-No cloud persistence is used for notification-centre state. The native
-notification centre keeps received notifications while the app is terminated, and
-`initialize` imports the tray at startup. A tap that cold-starts the app stores
-the notification first — that tap is the only delivery of it this device will
-ever see — then marks it read and hands the route to the shell.
+No cloud persistence is used for notification-centre state, and none is added by
+any of this. While the app is terminated, Android keeps the pending payload in
+the application-private device-local inbox described in the next section, and
+`initialize` imports it at the next start. A tap that cold-starts the app is a
+durable pointer into that inbox rather than a retained callback: it survives an
+Activity recreation, is replayed if the start is interrupted, and is discarded
+only after the notification is in IndexedDB.
 
-A restart re-imports the same tray contents; storage dedupe and the dismissed
-list make that a no-op rather than a duplicate.
+A restart re-imports the same records; storage dedupe and the dismissed list
+make that a no-op rather than a duplicate.
+
+## The Android Device-Local Notification Inbox
+
+### Why it exists
+
+The notification centre is IndexedDB, and IndexedDB lives inside the WebView. A
+WebView cannot execute while the app is backgrounded with its process reclaimed,
+swiped away, or not yet started — which is when most pushes arrive. Four things
+compounded into lost notifications:
+
+1. **IndexedDB is unreachable while the process is dead.** Nothing could record
+   an inbound push at the moment it arrived.
+2. **Recovery read `NotificationManager.getActiveNotifications()`.** The tray is
+   not a durable store.
+3. **A tapped `autoCancel` notification leaves the tray before anything reads
+   it.** The single most important case — the user opening the app *by* tapping
+   the notification — was the case where the tray was already empty.
+4. **The cold-start tap relied on Capacitor's retained callback**, with no
+   application-owned acknowledgement, so an interrupted start lost it.
+5. **The tray-derived record was a reconstruction.** Title, body, and channel
+   were all it could recover; metadata, template id, group key, and the business
+   route were gone.
+6. **Android auto-displayed the message.** A payload carrying a `notification`
+   block is rendered by the Firebase SDK itself when the app is backgrounded or
+   dead, and `onMessageReceived` is never called — so no application code ran at
+   all.
+
+### The lifecycle
+
+```
+FCM receipt
+  → AsolPushMessagingService validates and normalizes the complete payload
+  → persists it into the local, private native inbox           (before display)
+  → posts the notification on the existing ASOL channel/sound
+  → app or session start
+  → read pending records for the authenticated uid
+  → persist them into IndexedDB exactly once
+  → refresh the notification centre and the badge
+  → acknowledge, deleting the native records
+```
+
+**Persist before display, save before acknowledge.** Everything after the write
+can fail — the post, the tap, the launch, the WebView — and the notification is
+still recoverable. Nothing before it can be.
+
+### What it is not
+
+It is a **temporary handoff buffer**, not a notification history:
+
+- Notification bodies and notification history are **never** stored in Turso, in
+  a cloud database, on a server, or in any remote notification table. Nothing in
+  this path sends a notification anywhere.
+- **IndexedDB/AsolDB is the permanent notification centre.** It is the only
+  durable home for a notification.
+- The native inbox exists **only** for the window in which IndexedDB is
+  unavailable, and a record is deleted the moment — and only the moment — the
+  notification is confirmed present in IndexedDB.
+- Server-side storage continues to hold **device tokens and preferences only**,
+  never notification bodies and never notification history.
+
+### Where it is stored
+
+| Property | Value |
+|----------|-------|
+| Location | `getFilesDir()/asol_notification_inbox/inbox.bin` |
+| Visibility | Application-private; unreachable by other applications |
+| Encryption | AES-256-GCM under an AndroidKeyStore key that never leaves the keystore |
+| Fallback | Application-private plaintext, recorded in the file header, when the keystore cannot provide a key — a working inbox beats a lost notification |
+| Writes | Android `AtomicFile`; `openRead()` restores the previous complete value after an interrupted write, and an unreadable existing inbox makes enqueue fail rather than overwrite pending records |
+| Backup | Excluded: `allowBackup=false` covers the whole application |
+
+### What a record keeps
+
+The **complete original FCM data map**, untouched, plus the normalized fields
+the native display path needs: owning uid, notificationId, dedupeKey, title,
+body, route href and label, category, priority, sound, groupKey, templateId,
+metadata (`meta_*`), creation timestamp, channel id, receive timestamp, and the
+system notification id and tag it was posted under.
+
+The web layer maps that data map through **the same domain mapper a live
+foreground push goes through**, so a notification delivered while the process
+was dead produces identical stored fields to one delivered while it was running.
+There is no second definition of what a notification is.
+
+### UID isolation
+
+Every record carries the uid the push was addressed to, and every read and every
+acknowledgement is scoped to it — natively in the store, and again in the web
+adapter. Consequences, all of them deliberate:
+
+- A record is **never** imported under a different authenticated user.
+- A record whose owner is not signed in **waits**; it is not discarded.
+- **Signing out deletes nothing.** Pending notifications belong to the user they
+  were addressed to and are never handed to the next account on the device.
+- **Account deletion and "clear all local data" clear it completely**, through
+  `notifications.clearLocalInbox()`, called from `clearAllClientStorage`.
+
+### Deduplication
+
+The record id is derived from `uid + notificationId`, so an FCM redelivery
+replaces its record rather than stacking a second. In IndexedDB, dedupe is by
+`dedupeKey` under a per-user lock. Together they mean that live receive, the
+native inbox, the tray sweep, a tap callback, a restart, and a repeated import
+produce **exactly one** row.
+
+Acknowledgement policy — only outcomes that mean IndexedDB durably knows the
+notification:
+
+| Outcome | Acknowledged | Why |
+|---------|--------------|-----|
+| stored | yes | the row exists |
+| duplicate | yes | an identical row already exists |
+| dismissed | yes | the user deleted it; re-importing would resurrect it |
+| unmappable | yes | no payload can ever produce a row, so retrying is a loop |
+| the batch threw | **no** | nothing is known, so every record is retried |
+
+An import never clears the Android tray.
+
+### Retention
+
+Bounded and deterministic, applied in this order:
+
+1. **Age:** records older than **14 days** are dropped.
+2. **Count:** at most **200** records; the oldest are dropped first.
+
+Age before count, so an eviction never removes a recent unacknowledged record in
+order to keep a stale one.
+
+### Cold-start tap routing
+
+The launch Intent carries the record id, the owning uid, and the notification
+id, under an immutable `PendingIntent` with `FLAG_UPDATE_CURRENT` and a stable
+request code. `MainActivity#onCreate` synchronously commits this payload-free
+pointer to application-private `SharedPreferences` before the bridge exists. It
+therefore survives both Activity recreation and complete process death while
+the native inbox retains the actual notification content.
+
+A tap then runs one protocol, identical whether the process already existed:
+
+1. read the tap;
+2. verify it belongs to the authenticated user — a tap for another account is
+   left pending, never applied to whoever is signed in now;
+3. import **everything** pending, so untapped notifications reach the centre too;
+4. mark **only** the tapped notification read;
+5. clear the tap **last**, so an interruption anywhere above replays it;
+6. open `/notifications`.
+
+If the target is absent after import but its native record still exists, the tap
+is retained for the next launch rather than cleared. A stale tap is cleared only
+when neither IndexedDB nor the native inbox contains its target.
+
+The tap opens the notification centre, not the business deep link. The route is
+preserved on the stored notification and is followed when the user opens that
+card — so a cold start always lands somewhere that shows every notification that
+arrived, rather than jumping into one order and hiding the rest.
+
+### Badge refresh
+
+The badge is derived from IndexedDB, so it is correct as soon as the import
+lands: `receiveBatch` refreshes the badge and emits the change event, which
+`useNotifications` — and through it `BottomNavBar` — listens for. Untapped
+imported notifications stay unread and count immediately.
+
+### Android delivery is application-owned
+
+The FCM provider sends **Android tokens a data-only message**: no top-level
+`notification` block and no `android.notification` block, so Firebase always
+calls `AsolPushMessagingService`. The resolved channel travels in the data map
+as `androidChannelId`, and the native side falls back to resolving it locally
+with the same rule when the value names a channel this build does not have.
+Visible Android messages are sent at `HIGH` priority, because a data message has
+to wake a dozing app before anything can be shown.
+
+**iOS/APNs and Web Push are untouched.** Apple tokens keep the alert payload and
+the `apns` block they always had; Web Push has its own provider entirely.
+
+Exactly one service may claim `com.google.firebase.MESSAGING_EVENT`: Firebase
+delivers to one, chosen by manifest resolution order. The Capacitor plugin's
+`MessagingService` is therefore removed with `tools:node="remove"` and replaced
+by `AsolPushMessagingService`, which forwards to
+`PushNotificationsPlugin.sendRemoteMessage` and `onNewToken` so the live
+JavaScript listener and token cardinality are unchanged.
+
+While the Activity is resumed the native service does **not** post: the WebView
+presents the foreground banner as it always has, with the dismissed check and
+the data-only suppression. `AsolAppLifecycle` carries that flag, and a fresh
+process starts with the correct answer, `false`.
+
+### The Android force-stop limitation
+
+If the user force-stops the application from Android system settings — or a
+manufacturer's aggressive battery manager does it for them — the package enters
+a **stopped state** and Android delivers it no broadcasts at all, including
+FCM's. This is an operating-system policy and no application can opt out of it.
+
+Consequences, stated accurately:
+
+- While force-stopped, pushes are **not delivered** and therefore **not
+  persisted**. They are not lost by the inbox; they never reach the device.
+- Delivery resumes once the user **manually reopens** the app.
+- FCM redelivers a message that is still within its TTL, so a push sent during
+  the stopped window may arrive after the app is reopened. One sent outside its
+  TTL will not.
+- Normal swipe-away is **not** force-stop. The process is reclaimed, the app is
+  not stopped, and delivery works exactly as described above — which is the case
+  the inbox is built for.
+
+### Files
+
+| File | Role |
+|------|------|
+| `android/.../AsolPushMessagingService.java` | Receives the FCM message, persists, then posts |
+| `android/.../AsolNotificationInboxStore.java` | The encrypted, app-private, bounded store |
+| `android/.../AsolNotificationRecord.java` | The record, keeping the complete payload |
+| `android/.../AsolNotificationTapProtocol.java` | The application-owned tap handshake |
+| `android/.../AsolNotificationInboxPlugin.java` | The bridge: list, acknowledge, clear, tap, tray sweep |
+| `android/.../AsolAppLifecycle.java` | Whether the Activity is in front, so nothing rings twice |
+| `native-platform/notifications/push-notifications.ts` | The typed bridge |
+| `notifications/infrastructure/capacitor/capacitor-native-inbox.service.ts` | The adapter |
+| `notifications/application/native-inbox-service.ts` | Import, acknowledge, and tap orchestration |
 
 ## Offline Queue
 
@@ -1192,10 +1440,11 @@ Known bounds:
 - A local notification on Android 7 (`minSdkVersion` is 24) declared `silent`
   still makes the system sound: the Capacitor plugin calls `setDefaults(ALL)`
   when no sound is given, and pre-Oreo has no channel to override it.
-- A `silent` push that arrives before the app has ever created its channels
-  falls back to the manifest default channel and is audible once. Channels are
-  created in `MainActivity.onCreate` and on every `initialize()` and
-  `register()`, so this self-heals.
+- A `silent` push can no longer arrive before the channels exist on Android.
+  `AsolPushMessagingService` ensures the channel set before it posts anything,
+  in addition to `MainActivity.onCreate`, every `initialize()`, and every
+  `register()`. Creating a channel that exists is a no-op and cannot change its
+  sound, so the extra call is free.
 
 ## How To Add A Template
 
@@ -1257,10 +1506,11 @@ driving real flows.
 | Suite | What it proves |
 |-------|----------------|
 | `tests/notification-module-boundary.test.ts` | Entry points, import restrictions in both trees, the root barrel exports one runtime object, every command is routed, unknown commands fail closed, compile-time command/result types |
-| `tests/integration/notification-flow.integration.test.ts` | 36 behavioural scenarios through the public API |
+| `tests/integration/notification-flow.integration.test.ts` | 57 behavioural scenarios through the public API |
 | `tests/notification-builder.test.ts` | Template resolution and variable interpolation |
 | `tests/notification-sound-contract.test.ts` | Sound constants against assets, Native Platform channels, manifest default |
-| `tests/android-notification-inbox-contract.test.ts` | Android inbox plugin, resume-sync wiring |
+| `tests/android-notification-inbox-contract.test.ts` | The application-owned Android delivery path: data-only FCM payload, one messaging service, persist-before-display, private/encrypted/bounded storage, uid-scoped acknowledgement, tap protocol, save-before-acknowledge, `/notifications` routing |
+| `androidTest/.../NotificationInboxInstrumentedTest.java` | The device-only properties: real storage location, real encryption, Activity recreation, retention, launch-Intent tap identity, multi-record import |
 | `tests/notification-local-storage-contract.test.ts` | No server table for content; service worker matches AsolDB |
 | `tests/notification-center-model.test.ts` | Grouping, preservation, chat ordering |
 | `tests/notifications-service-module-contract.test.ts` | The microservice is self-contained and its mirror is reproducible |
@@ -1285,9 +1535,24 @@ have produced.
 |----------|-----------|
 | Android foreground: exactly one visible local notification | integration |
 | iOS foreground: no duplicate banner | integration |
+| Push received and persisted natively while no WebView exists | integration + instrumented |
 | Background / terminated delivery imported at next start | integration |
-| Resume without tap re-imports the tray | integration |
-| Cold start from a tap: stored, marked read, route returned | integration |
+| Resume without tap re-imports the inbox and the tray | integration |
+| Normal launch imports multiple pending records | integration |
+| Activity / process recreation preserves pending records | integration + instrumented |
+| Cold start from a tap: all imported, only the tapped one read | integration |
+| Cold-start tap identity comes from the launch Intent, before any JavaScript | instrumented |
+| IndexedDB failure leaves the record for a retry | integration |
+| Cold-start tap survives an IndexedDB failure and replays after recovery | integration |
+| A successful retry acknowledges only what it persisted | integration |
+| Tray + native inbox + tap + live + repeated import: one row | integration |
+| Full payload fields survive native persistence and bridge serialization | integration + instrumented |
+| Wrong-user records never imported; pending records wait for their user | integration + instrumented |
+| Badge counts untapped imports after startup | integration |
+| Stored notification keeps its original business deep link | integration |
+| Retention limits and expiry | instrumented |
+| Explicit local-data clearing clears the native inbox | integration |
+| Storage is application-private and encrypted at rest | instrumented |
 | Tap routing, push and local plugin | integration |
 | Duplicate delivery: one row, one banner | integration |
 | Concurrent deliveries: none lost, badge correct | integration |
@@ -1308,6 +1573,8 @@ have produced.
 | Unknown command fails closed | integration + boundary |
 | Import boundaries in `src` and `services/notifications` | boundary + `architecture:check` |
 | Audible sound on a real handset | **not automatable — manual** |
+| End-to-end FCM delivery to a backgrounded, swiped-away handset | **not automatable — manual** |
+| Behaviour after an explicit Android force-stop | **not automatable — manual**, and bounded by the OS limitation above |
 
 ## Build And CI Enforcement
 
@@ -1707,7 +1974,7 @@ Broadcast behavior:
 - The broadcast metadata sets `source = super_admin_broadcast`, carries the caller's `requestId`, and uses `/notifications` as the default deep link.
 - Broadcast `dedupeKey` is `broadcast:<sha256(title, body, audience)>` truncated to 24 characters. It is stable for the same title, body, and audience, so resending the identical message to the identical audience will not create duplicate notification-center entries.
 - Selected uids are intersected with the eligible recipient list before sending; unknown or ineligible uids are dropped rather than rejected.
-- A broadcast is push-only on the server. The notification-center row is created on the recipient's device by the Web Push service worker or by the Android tray import, so a user with no reachable device gets no local card.
+- A broadcast is push-only on the server. The notification-center row is created on the recipient's device by the Web Push service worker or by importing Android's device-local native inbox; the tray sweep is only a compatibility fallback for older shells. A user with no reachable device gets no local card.
 - The super-admin identity is supplied in the request body and verified by `NotificationBroadcastService` for both the recipients and send calls.
 
 Security rules:

@@ -62,8 +62,9 @@ const handlers: NotificationCommandHandlers = {
   sendPush: (command) => notificationsFacade.sendPush(command.payload),
   listPushRecipients: (command) => notificationsFacade.listPushRecipients(command.payload),
   receive: (command) => notificationsFacade.receive(command.payload),
-  importDelivered: () => notificationsFacade.importDelivered(),
+  importDelivered: (command) => notificationsFacade.importDelivered(command.payload ?? {}),
   createChannels: () => notificationsFacade.createChannels(),
+  clearLocalInbox: () => notificationsFacade.clearLocalInbox(),
   synchronizeNotificationCenter: (command) =>
     notificationsFacade.synchronizeNotificationCenter(command.payload),
   list: (command) => notificationsFacade.list(command.payload),

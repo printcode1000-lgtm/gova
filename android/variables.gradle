@@ -9,6 +9,14 @@ ext {
     androidxFragmentVersion = '1.8.9'
     coreSplashScreenVersion = '1.2.0'
     androidxWebkitVersion = '1.14.0'
+    // Declared here so the app module and the Capacitor push plugin resolve the
+    // same Firebase Messaging artifact. The app needs it on its own compile
+    // classpath because AsolPushMessagingService — the application-owned
+    // FirebaseMessagingService that persists a push before displaying it —
+    // lives in the app module, and the plugin exposes the library only as an
+    // `implementation` dependency. Keep in step with the plugin's default in
+    // node_modules/@capacitor/push-notifications/android/build.gradle.
+    firebaseMessagingVersion = '25.0.1'
     junitVersion = '4.13.2'
     androidxJunitVersion = '1.3.0'
     androidxEspressoCoreVersion = '3.7.0'

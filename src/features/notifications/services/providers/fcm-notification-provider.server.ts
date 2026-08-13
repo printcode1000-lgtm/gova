@@ -36,6 +36,15 @@ function cleanData(input: NotificationProviderSendInput): Record<string, string>
     priority: input.payload.priority,
     sound: input.payload.sound,
     createdAt: new Date().toISOString(),
+    // The channel, on the wire.
+    //
+    // Android no longer receives an auto-displayed `notification` block, so the
+    // channel is not something FCM applies for us any more — the app's own
+    // service posts the notification. It resolves the channel with the same
+    // rule this uses, but sending the answer as well makes the contract
+    // explicit and inspectable instead of two implementations that are merely
+    // believed to agree.
+    androidChannelId: channelId(input),
   };
   if (input.payload.templateId) data.templateId = input.payload.templateId;
   if (input.payload.route?.href) data.routeHref = input.payload.route.href;
@@ -111,26 +120,59 @@ function buildApnsConfig(
   };
 }
 
+/**
+ * Android delivery is data-only, deliberately.
+ *
+ * A message carrying a `notification` block is displayed by the Firebase SDK
+ * itself whenever the app is backgrounded or dead, and the app's
+ * `onMessageReceived` is never called. That is why notifications were being
+ * lost: the only code that could have recorded them did not run, and the
+ * evidence — a tray entry — is already gone once the user taps it.
+ *
+ * Removing the `notification` blocks makes Firebase hand every Android message
+ * to `AsolPushMessagingService`, which persists the complete payload to the
+ * device-local private inbox (encrypted when AndroidKeyStore is available)
+ * *before* posting the notification on the
+ * existing ASOL channel with the existing custom sound. Nothing about the
+ * notification is stored anywhere off the device by this change; the payload
+ * still travels as the same `data` map it always did.
+ *
+ * `channelId` and `fcmSoundResource` are still computed for Android, because
+ * they are the contract the native side reproduces — the same domain function
+ * answers "which channel" on both sides, and the sound contract test fails the
+ * build if they drift.
+ */
+function isAndroidToken(token: RegisteredNotificationToken): boolean {
+  return token.platform === "android";
+}
+
 function buildMessage(
   input: NotificationProviderSendInput,
   token: RegisteredNotificationToken,
 ): FcmHttpV1Message {
   const sound = fcmSoundResource(input.payload.sound);
   const dataOnly = input.payload.metadata?.dataOnly === true;
+  const android = isAndroidToken(token);
   return {
     message: {
       token: token.token,
-      notification: dataOnly ? undefined : {
+      // Apple keeps its alert payload exactly as before. Android gets none, so
+      // the application's own service is always the one that receives it.
+      notification: dataOnly || android ? undefined : {
         title: input.payload.title ?? "ASOL",
         body: input.payload.body ?? "",
       },
       data: { ...cleanData(input), uid: token.uid },
       android: {
-        priority: isHighPriority(input) ? "HIGH" : "NORMAL",
+        // A data message has to wake a possibly-dozing app before it can be
+        // shown, and only a high-priority message does. Silent internal signals
+        // keep normal priority: they have nothing to show and nothing to wake
+        // the device for.
+        priority: isHighPriority(input) || (android && !dataOnly) ? "HIGH" : "NORMAL",
         ttl: input.payload.category === "chat" ? "604800s" : "86400s",
         restricted_package_name: "hgh.asol.app",
         collapse_key: input.payload.dedupeKey.slice(0, 64),
-        notification: dataOnly ? undefined : {
+        notification: dataOnly || android ? undefined : {
           channel_id: channelId(input),
           icon: "ic_stat_asol_notification",
           color: "#006C4C",

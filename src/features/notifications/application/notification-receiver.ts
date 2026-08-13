@@ -12,8 +12,8 @@ import { notificationBadgeService } from "./badge-service";
  * What happened to an inbound notification.
  *
  * `stored` is the acknowledgement signal. A caller that must tell a source the
- * notification was handled — the Android tray importer removing a delivered
- * item, an extension acknowledging a receipt — may only do so when persistence
+ * notification was handled — the Android native inbox deleting a handoff
+ * record, an extension acknowledging a receipt — may only do so when persistence
  * actually succeeded, so a crash between the two leaves the item to be
  * re-imported rather than silently lost.
  */
@@ -70,7 +70,7 @@ export class NotificationReceiver {
   }
 
   /**
-   * Take a batch — a tray import — under one storage lock.
+   * Take a batch — a native-inbox or legacy-tray import — under one storage lock.
    *
    * Returns only what was newly stored, which is what the importer acknowledges.
    */

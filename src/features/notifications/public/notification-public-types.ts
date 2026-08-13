@@ -69,4 +69,13 @@ export interface NotificationDiagnostics {
   storedCount: number;
   unreadCount: number;
   pendingRetryCount: number;
+  /**
+   * Records waiting in the Android device-local inbox.
+   *
+   * A count only, never content. A non-zero value on a running session means
+   * notifications arrived while the WebView could not run and have not been
+   * confirmed into IndexedDB yet — which is the one thing a bug report about a
+   * missing notification actually needs to know.
+   */
+  pendingNativeInboxCount: number;
 }

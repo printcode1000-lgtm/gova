@@ -126,6 +126,39 @@ public final class AsolNotificationChannels {
         return Arrays.asList(GENERAL, ORDERS, CHAT, URGENT, UPDATES, SILENT);
     }
 
+    /** `metadata.source` marking a super-admin announcement. */
+    public static final String SUPER_ADMIN_BROADCAST_SOURCE = "super_admin_broadcast";
+
+    /**
+     * Which channel carries a notification.
+     *
+     * A deliberate mirror of `resolveAndroidChannelId` in
+     * `features/notifications/domain/notification-sound.ts`, including the order
+     * of its rules, because the native receive path has to answer the same
+     * question with no JavaScript available. `notification-sound-contract.test.ts`
+     * fails the build if the two drift apart.
+     *
+     * 1. `silent` wins over everything: a low-importance channel is the only way
+     *    Android delivers without a sound.
+     * 2. `critical` priority and the `urgent` sound share the urgent channel.
+     * 3. Announcements get their own channel, so a user can silence marketing
+     *    from Android settings without silencing their orders.
+     * 4. Then category.
+     */
+    public static String resolveChannelId(
+        String category,
+        String priority,
+        String sound,
+        String metadataSource
+    ) {
+        if ("silent".equals(sound)) return SILENT;
+        if ("critical".equals(priority) || "urgent".equals(sound)) return URGENT;
+        if (SUPER_ADMIN_BROADCAST_SOURCE.equals(metadataSource)) return UPDATES;
+        if ("orders".equals(category)) return ORDERS;
+        if ("chat".equals(category)) return CHAT;
+        return GENERAL;
+    }
+
     private static NotificationChannel audible(
         String id,
         String name,

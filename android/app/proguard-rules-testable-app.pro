@@ -15,6 +15,15 @@
 # tests assert against.
 -keep class hgh.asol.app.AsolNotificationChannels { *; }
 
+# The device-local notification inbox. The instrumented suite drives the store,
+# the record, and the tap protocol by name — including package-private members
+# such as `applyRetention`, which is where the retention policy is decided and
+# therefore the one part of it worth asserting on a device.
+-keep class hgh.asol.app.AsolNotificationInboxStore { *; }
+-keep class hgh.asol.app.AsolNotificationRecord { *; }
+-keep class hgh.asol.app.AsolNotificationTapProtocol { *; }
+-keep class hgh.asol.app.AsolAppLifecycle { *; }
+
 # Resource identifiers the tests resolve (the packaged notification sound and
 # the status bar icon).
 -keep class hgh.asol.app.R$raw { *; }

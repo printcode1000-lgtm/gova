@@ -4,6 +4,7 @@ import {
   asolDbClearAll,
   clearBrowserDatabases,
 } from '@/modules/data-access/browser';
+import { notifications } from '@/features/notifications';
 
 function clearCookies(): void {
   if (typeof document === 'undefined') return;
@@ -47,7 +48,25 @@ async function clearCacheStorage(): Promise<void> {
 export const CLEAR_STORAGE_WARNING =
   'سيتم إلغاء اشتراك إشعارات هذا الجهاز وحذف رمزه من الخادم، ثم مسح كل البيانات المحلية وإعادة الإعدادات الافتراضية وتحميل الصفحة من جديد. هل تريد المتابعة؟';
 
+/**
+ * Notifications the Android shell is holding outside the browser storage APIs.
+ *
+ * The device-local notification inbox is an application-private file, not an
+ * IndexedDB store, so nothing above reaches it. Clearing local data — and
+ * deleting an account — must leave no notification behind, and a record that
+ * survived a wipe would remain available when its owner signs in again. The
+ * Android bridge is a no-op off Android, while a genuine native deletion
+ * failure is allowed to abort the wipe instead of falsely reporting success.
+ */
+async function clearNativeNotificationInbox(): Promise<void> {
+  await notifications.clearLocalInbox();
+}
+
 export async function clearAllClientStorage(): Promise<void> {
+  // The native deletion is the only part that deliberately rejects on failure.
+  // Run it before mutating browser state so a failed bridge call cannot leave a
+  // half-cleared session while reporting that the overall wipe was aborted.
+  await clearNativeNotificationInbox();
   clearCookies();
   clearWebStorage();
   await asolDbClearAll();

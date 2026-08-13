@@ -169,7 +169,7 @@ export function SuperAdminNotificationTestsPage() {
     if (!session) return;
     setStatusBusy(true);
     try {
-      await notifications.importDelivered();
+      await notifications.importDelivered({ uid: session.uid });
       await refreshStatus();
       setMessage("تمت مزامنة إشعارات Android الموجودة في الشريط مع صفحة الإشعارات.");
     } catch (error) {

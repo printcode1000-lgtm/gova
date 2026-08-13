@@ -24,6 +24,38 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
+        <!--
+            Android notification delivery is application-owned.
+
+            The Capacitor plugin's MessagingService is removed and replaced by
+            AsolPushMessagingService. The reason is not preference: a message
+            Firebase displays itself never reaches onMessageReceived, so nothing
+            can record it while the app is backgrounded or dead — which is
+            exactly when a notification most needs recording. ASOL therefore
+            sends Android a data-only message and does the display itself, after
+            persisting the payload to the local app-private inbox (encrypted
+            with AndroidKeyStore when the keystore is available).
+
+            Two services must never both claim MESSAGING_EVENT: Firebase
+            delivers to exactly one, chosen by manifest resolution order, so
+            leaving both declared makes delivery depend on merge order.
+
+            iOS/APNs and Web Push are untouched by this and keep their normal
+            alert payloads.
+        -->
+        <service
+            android:name="com.capacitorjs.plugins.pushnotifications.MessagingService"
+            tools:node="remove" />
+
+        <service
+            android:name=".AsolPushMessagingService"
+            android:exported="false"
+            android:directBootAware="false">
+            <intent-filter android:priority="1">
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"

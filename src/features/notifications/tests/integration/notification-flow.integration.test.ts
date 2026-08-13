@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import {
+  deliverNativePush,
   emitForegroundPush,
   emitLocalNotificationTap,
+  emitNativeTapEvent,
   emitNotificationTap,
   flushMicrotasks,
   harnessState,
@@ -9,7 +11,9 @@ import {
   pushPayload,
   resetHarnessCompletely,
   resetHarnessKeepingStorage,
+  tapNativeNotification,
 } from "./notification-harness";
+import type { NotificationEntity } from "../../domain/entities";
 
 /**
  * The notification module, driven the way the application drives it.
@@ -40,6 +44,29 @@ async function startAndroidSession(): Promise<
   await loaded.notifications.initialize({ uid: UID, phone: PHONE });
   await flushMicrotasks();
   return loaded;
+}
+
+/**
+ * Start a session and record what the shell was told to open.
+ *
+ * `onOpened` is the module's whole contribution to routing: it hands back a
+ * notification that is already stored and already marked read, and the shell
+ * decides where to go. Capturing it here is how a cold-start tap is asserted
+ * without rendering a router.
+ */
+async function startAndroidSessionCapturingOpens(uid = UID): Promise<{
+  loaded: ReturnType<typeof loadNotificationModule>;
+  opened: NotificationEntity[];
+}> {
+  const loaded = loadNotificationModule();
+  const opened: NotificationEntity[] = [];
+  await loaded.notifications.initialize({
+    uid,
+    phone: PHONE,
+    handlers: { onOpened: (notification) => { opened.push(notification); } },
+  });
+  await flushMicrotasks();
+  return { loaded, opened };
 }
 
 // ---------------------------------------------------------------------------
@@ -1090,6 +1117,434 @@ scenario("a logged provider error is redacted", async () => {
     !logged.includes("LEAKED"),
     `a credential reached a log line: ${logged}`,
   );
+});
+
+// ---------------------------------------------------------------------------
+// The device-local native inbox
+// ---------------------------------------------------------------------------
+//
+// These are the scenarios the previous design could not survive. Each one
+// starts from a state no running module produced — a push that arrived while
+// the process was dead — which is only expressible because the native inbox is
+// a real store rather than a queue held in memory by a module that was not
+// loaded.
+
+scenario(
+  "a push received while no WebView exists is persisted natively",
+  async () => {
+    resetHarnessCompletely();
+
+    // No module is loaded, no listener is attached, no session exists. This is
+    // the app after a swipe-away: the native service is the only thing running.
+    deliverNativePush(UID, pushPayload());
+
+    assert.equal(
+      harnessState.nativeInbox.length,
+      1,
+      "the push was not persisted natively",
+    );
+    assert.equal(
+      harnessState.db.size,
+      0,
+      "nothing can reach IndexedDB while the WebView is dead",
+    );
+    // And the whole payload is there, not a reconstruction from the tray.
+    assert.equal(
+      harnessState.nativeInbox[0].payload.data?.routeHref,
+      "/orders/ord_1",
+    );
+  },
+);
+
+scenario(
+  "a normal launch imports every notification that arrived while closed",
+  async () => {
+    resetHarnessCompletely();
+    deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_1", dedupeKey: "d1" } }));
+    deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_2", dedupeKey: "d2" } }));
+    deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_3", dedupeKey: "d3" } }));
+
+    const { notifications } = await startAndroidSession();
+
+    const stored = await notifications.list({ uid: UID });
+    assert.equal(stored.length, 3, "not every pending notification was imported");
+    assert.equal(
+      stored.filter((item) => !item.readAt).length,
+      3,
+      "an imported notification the user never tapped must stay unread",
+    );
+    assert.equal(
+      await notifications.getUnreadCount({ uid: UID }),
+      3,
+      "the bottom-navigation badge must count untapped imports",
+    );
+    assert.equal(
+      harnessState.nativeInbox.length,
+      0,
+      "records must be acknowledged once they are in IndexedDB",
+    );
+    assert.equal(harnessState.acknowledgedRecordIds.length, 3);
+  },
+);
+
+scenario(
+  "native pending records survive an activity and process recreation",
+  async () => {
+    resetHarnessCompletely();
+    deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_survive", dedupeKey: "ds" } }));
+
+    // The process dies before anything could import it. Storage — IndexedDB and
+    // the application-private inbox file — is all that survives.
+    resetHarnessKeepingStorage();
+    assert.equal(
+      harnessState.nativeInbox.length,
+      1,
+      "the record did not survive the process death",
+    );
+
+    const { notifications } = await startAndroidSession();
+    assert.equal((await notifications.list({ uid: UID })).length, 1);
+  },
+);
+
+scenario(
+  "a cold start from a tap imports every pending notification and reads only the tapped one",
+  async () => {
+    resetHarnessCompletely();
+    deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_a", dedupeKey: "da" } }));
+    const tapped = deliverNativePush(
+      UID,
+      pushPayload({ data: { notificationId: "ntf_b", dedupeKey: "db" } }),
+    );
+    deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_c", dedupeKey: "dc" } }));
+
+    // A genuine cold start: the tap exists *before* any JavaScript listener and
+    // before the session is initialized, which is what a launch Intent is. A
+    // test that emits a tap after the module has booted is testing a resume.
+    tapNativeNotification(UID, tapped);
+
+    const { loaded, opened } = await startAndroidSessionCapturingOpens();
+    const stored = await loaded.notifications.list({ uid: UID });
+
+    assert.equal(stored.length, 3, "the untapped notifications were lost");
+    const read = stored.filter((item) => item.readAt);
+    assert.equal(read.length, 1, "exactly one notification must be read");
+    assert.equal(read[0].id, "ntf_b", "the wrong notification was marked read");
+    assert.equal(
+      await loaded.notifications.getUnreadCount({ uid: UID }),
+      2,
+      "the two untapped notifications must still count towards the badge",
+    );
+
+    // The shell is handed the tapped notification, and it is on the page.
+    assert.equal(opened.length, 1);
+    assert.equal(opened[0].id, "ntf_b");
+    assert.ok(
+      stored.some((item) => item.id === "ntf_b"),
+      "the tapped notification must remain visible in the centre",
+    );
+    // Its business route is preserved on the entity, so opening the card from
+    // /notifications still navigates to the order.
+    assert.equal(opened[0].route?.href, "/orders/ord_1");
+    assert.equal(harnessState.nativeTap, null, "the handled tap was not cleared");
+  },
+);
+
+scenario(
+  "a storage failure before acknowledgement leaves the record for a retry",
+  async () => {
+    resetHarnessCompletely();
+    deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_retry", dedupeKey: "dr" } }));
+    harnessState.dbWriteError = new Error("QuotaExceededError");
+
+    const { notifications } = await startAndroidSession();
+
+    assert.equal(
+      (await notifications.list({ uid: UID })).length,
+      0,
+      "nothing could have been stored",
+    );
+    assert.equal(
+      harnessState.nativeInbox.length,
+      1,
+      "a record must never be acknowledged before it is stored",
+    );
+    assert.deepEqual(harnessState.acknowledgedRecordIds, []);
+
+    // The store recovers and the app is opened again.
+    harnessState.dbWriteError = null;
+    resetHarnessKeepingStorage();
+    const restarted = await startAndroidSession();
+
+    assert.equal((await restarted.notifications.list({ uid: UID })).length, 1);
+    assert.equal(
+      harnessState.nativeInbox.length,
+      0,
+      "the retry must acknowledge what it managed to store",
+    );
+  },
+);
+
+scenario(
+  "a cold-start tap remains pending when IndexedDB fails and replays after recovery",
+  async () => {
+    resetHarnessCompletely();
+    const recordId = deliverNativePush(
+      UID,
+      pushPayload({ data: { notificationId: "ntf_tap_retry", dedupeKey: "tap-retry" } }),
+    );
+    tapNativeNotification(UID, recordId);
+    harnessState.dbWriteError = new Error("QuotaExceededError");
+
+    const failed = await startAndroidSessionCapturingOpens();
+    assert.equal(failed.opened.length, 0, "navigation ran before the tap was durable in IndexedDB");
+    assert.ok(harnessState.nativeTap, "the tap pointer was cleared after a failed import");
+    assert.equal(harnessState.nativeInbox.length, 1, "the tapped record was acknowledged after a failed import");
+
+    resetHarnessKeepingStorage();
+    const retried = await startAndroidSessionCapturingOpens();
+    const [stored] = await retried.loaded.notifications.list({ uid: UID });
+    assert.equal(retried.opened.length, 1, "the durable tap did not replay after storage recovered");
+    assert.equal(stored.id, "ntf_tap_retry");
+    assert.ok(stored.readAt, "the replayed tap did not mark its notification read");
+    assert.equal(harnessState.nativeTap, null, "the successfully consumed tap was not cleared");
+    assert.equal(harnessState.nativeInbox.length, 0, "the successfully imported record was not acknowledged");
+  },
+);
+
+scenario(
+  "a successful retry acknowledges only the records it persisted",
+  async () => {
+    resetHarnessCompletely();
+    const first = deliverNativePush(
+      UID,
+      pushPayload({ data: { notificationId: "ntf_one", dedupeKey: "d-one" } }),
+    );
+    // A record belonging to somebody else, which no import for this user may
+    // ever store — or acknowledge.
+    deliverNativePush("user-2", pushPayload({ data: { notificationId: "ntf_two", dedupeKey: "d-two" } }));
+
+    const { notifications } = await startAndroidSession();
+
+    assert.deepEqual(
+      harnessState.acknowledgedRecordIds,
+      [first],
+      "only this user's stored record may be acknowledged",
+    );
+    assert.equal(
+      harnessState.nativeInbox.length,
+      1,
+      "the other user's record must still be pending",
+    );
+    assert.equal((await notifications.list({ uid: UID })).length, 1);
+  },
+);
+
+scenario(
+  "a record for a different user is never imported under the active one",
+  async () => {
+    resetHarnessCompletely();
+    deliverNativePush("user-2", pushPayload({ data: { notificationId: "ntf_other", dedupeKey: "d-other" } }));
+
+    const { notifications } = await startAndroidSession();
+
+    assert.equal(
+      (await notifications.list({ uid: UID })).length,
+      0,
+      "another account's notification reached this user's centre",
+    );
+    assert.equal(await notifications.getUnreadCount({ uid: UID }), 0);
+    assert.equal(
+      harnessState.nativeInbox.length,
+      1,
+      "the record must wait for its own user, not be discarded",
+    );
+  },
+);
+
+scenario(
+  "a pending record waits safely until its own user signs in",
+  async () => {
+    resetHarnessCompletely();
+    deliverNativePush("user-2", pushPayload({ data: { notificationId: "ntf_wait", dedupeKey: "d-wait" } }));
+
+    // Someone else uses the device first. Signing out must not hand their
+    // pending notification to the next account.
+    const first = await startAndroidSession();
+    await first.notifications.unregisterDevice({ uid: UID, phone: PHONE });
+    await flushMicrotasks();
+    assert.equal(
+      harnessState.nativeInbox.length,
+      1,
+      "sign-out must not delete another user's pending notification",
+    );
+    assert.equal(
+      harnessState.nativeInboxClearedCount,
+      0,
+      "sign-out must not wipe the device-local inbox",
+    );
+
+    // Now the owner signs in.
+    resetHarnessKeepingStorage();
+    const loaded = loadNotificationModule();
+    await loaded.notifications.initialize({ uid: "user-2", phone: PHONE });
+    await flushMicrotasks();
+
+    assert.equal((await loaded.notifications.list({ uid: "user-2" })).length, 1);
+    assert.equal((await loaded.notifications.list({ uid: UID })).length, 0);
+    assert.equal(harnessState.nativeInbox.length, 0);
+  },
+);
+
+scenario(
+  "the tray, the native inbox, and a tap together produce exactly one row",
+  async () => {
+    resetHarnessCompletely();
+    const payload = pushPayload({
+      data: { notificationId: "ntf_dupe", dedupeKey: "orders.created:ord_9" },
+    });
+    // The same notification, reachable four different ways at once.
+    const recordId = deliverNativePush(UID, payload);
+    harnessState.deliveredTray = [payload];
+    tapNativeNotification(UID, recordId);
+
+    const { notifications } = await startAndroidSession();
+    // And once more, live, plus a repeated import for good measure.
+    await emitForegroundPush(payload);
+    await notifications.importDelivered({ uid: UID });
+    await flushMicrotasks();
+
+    const stored = await notifications.list({ uid: UID });
+    assert.equal(
+      stored.length,
+      1,
+      `five delivery paths produced ${stored.length} notifications`,
+    );
+    assert.equal(await notifications.getUnreadCount({ uid: UID }), 0, "the tapped one is read");
+  },
+);
+
+scenario(
+  "every payload field survives native persistence and bridge serialization",
+  async () => {
+    resetHarnessCompletely();
+    deliverNativePush(
+      UID,
+      pushPayload({
+        title: "Order accepted",
+        body: "Your order was accepted.",
+        data: {
+          notificationId: "ntf_full",
+          dedupeKey: "orders.created:ord_full:buyer:user-1",
+          templateId: "orders.created",
+          category: "orders",
+          priority: "high",
+          sound: "urgent",
+          groupKey: "ord_full",
+          routeHref: "/orders/ord_full",
+          routeLabel: "عرض الطلب",
+          createdAt: "2026-08-01T10:00:00.000Z",
+          androidChannelId: "asol_urgent_v4",
+          meta_source: "orders_service",
+          meta_orderId: "ord_full",
+        },
+      }),
+    );
+
+    const { notifications } = await startAndroidSession();
+    const [stored] = await notifications.list({ uid: UID });
+
+    assert.ok(stored, "the record was not imported");
+    assert.equal(stored.id, "ntf_full");
+    assert.equal(stored.uid, UID);
+    assert.equal(stored.dedupeKey, "orders.created:ord_full:buyer:user-1");
+    assert.equal(stored.title, "Order accepted");
+    assert.equal(stored.body, "Your order was accepted.");
+    assert.equal(stored.route?.href, "/orders/ord_full");
+    assert.equal(stored.route?.label, "عرض الطلب");
+    assert.equal(stored.category, "orders");
+    assert.equal(stored.priority, "high");
+    assert.equal(stored.sound, "urgent");
+    assert.equal(stored.groupKey, "ord_full");
+    assert.equal(stored.templateId, "orders.created");
+    assert.equal(stored.createdAt, "2026-08-01T10:00:00.000Z");
+    assert.equal(stored.metadata?.orderId, "ord_full");
+    assert.equal(stored.metadata?.source, "orders_service");
+  },
+);
+
+scenario(
+  "a tap arriving while the session is live runs the same protocol",
+  async () => {
+    resetHarnessCompletely();
+    const { loaded, opened } = await startAndroidSessionCapturingOpens();
+
+    // The app is already running; a push lands and the user taps it.
+    const recordId = deliverNativePush(
+      UID,
+      pushPayload({ data: { notificationId: "ntf_warm", dedupeKey: "d-warm" } }),
+    );
+    tapNativeNotification(UID, recordId);
+    await emitNativeTapEvent();
+    await flushMicrotasks();
+
+    const stored = await loaded.notifications.list({ uid: UID });
+    assert.equal(stored.length, 1, "the warm tap did not store the notification");
+    assert.ok(stored[0].readAt, "the tapped notification must be read");
+    assert.equal(opened.length, 1);
+    assert.equal(harnessState.nativeInbox.length, 0);
+  },
+);
+
+scenario(
+  "an unavailable native inbox never breaks a session start",
+  async () => {
+    resetHarnessCompletely();
+    // An older shell, whose bridge has no inbox at all.
+    harnessState.nativeInboxUnavailable = true;
+    harnessState.deliveredTray = [pushPayload()];
+
+    const { notifications } = await startAndroidSession();
+
+    // The tray sweep still runs, so nothing regresses for a shell that predates
+    // the inbox.
+    assert.equal((await notifications.list({ uid: UID })).length, 1);
+  },
+);
+
+scenario(
+  "clearing all local data also clears the device-local inbox",
+  async () => {
+    resetHarnessCompletely();
+    deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_wipe", dedupeKey: "d-wipe" } }));
+    const { notifications } = loadNotificationModule();
+
+    await notifications.clearLocalInbox();
+
+    assert.equal(
+      harnessState.nativeInbox.length,
+      0,
+      "an explicit local-data wipe must leave no pending notification behind",
+    );
+    assert.equal(harnessState.nativeInboxClearedCount, 1);
+  },
+);
+
+scenario("diagnostics report the pending native inbox depth", async () => {
+  resetHarnessCompletely();
+  harnessState.dbWriteError = new Error("QuotaExceededError");
+  deliverNativePush(UID, pushPayload({ data: { notificationId: "ntf_diag", dedupeKey: "d-diag" } }));
+
+  const { notifications } = await startAndroidSession();
+  harnessState.dbWriteError = null;
+
+  const diagnostics = await notifications.getDiagnostics({ uid: UID });
+  assert.equal(
+    diagnostics.pendingNativeInboxCount,
+    1,
+    "a notification stuck outside IndexedDB must be visible in diagnostics",
+  );
+  assert.equal(diagnostics.storedCount, 0);
 });
 
 // ---------------------------------------------------------------------------

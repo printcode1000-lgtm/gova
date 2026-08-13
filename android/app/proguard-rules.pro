@@ -18,6 +18,16 @@
     @android.webkit.JavascriptInterface <methods>;
 }
 
+# The application-owned Firebase message handler.
+#
+# It is instantiated by the framework from its manifest <service> declaration,
+# never by a direct Java call. AGP already keeps manifest-declared components,
+# so this rule is a guard against that entry disappearing in a future merge
+# rather than the only thing holding the class in — losing it would mean every
+# background push is dropped in silence, which no test that runs without a
+# device would notice. Narrow on purpose: one class, not a package.
+-keep class hgh.asol.app.AsolPushMessagingService { *; }
+
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:

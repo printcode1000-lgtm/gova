@@ -18,15 +18,21 @@ import { notificationLog } from "../domain/notification-redaction";
  * so the four application states are handled in one place:
  *
  * - foreground: `onReceived` fires; the facade stores and counts it.
- * - background / terminated: the OS shows the notification and the WebView is
- *   not running, so nothing fires. Whatever the tray holds is imported by
- *   `initialize` on the next start.
- * - resumed: the app-state listener below imports the tray again, which is the
- *   only way a notification that arrived while the app was hidden reaches the
- *   centre without a restart.
+ * - background / terminated: the WebView is not running, so nothing fires. The
+ *   native push service persisted the payload to the application-private
+ *   device-local inbox before it displayed anything, and `initialize` drains
+ *   that inbox into IndexedDB on the next start.
+ * - resumed: the app-state listener below drains it again, which is how a
+ *   notification that arrived while the app was hidden reaches the centre
+ *   without a restart.
  * - tapped, from any state: `onOpened` fires with the notification already
- *   marked read; this controller only follows its deep link, because routing is
- *   the shell's job and not the module's.
+ *   stored and marked read.
+ *
+ * A tap opens the notification centre, not the notification's own deep link.
+ * The link is preserved on the stored notification and is followed when the
+ * user opens that card — so a cold start from a tap always lands somewhere that
+ * shows every notification that arrived, including the ones not tapped, rather
+ * than jumping straight into one order and hiding the rest.
  *
  * It renders nothing. The post-login opt-in dialog is platform-agnostic and
  * lives in `NotificationOptInController`.
@@ -69,8 +75,10 @@ export function NativePushController() {
         uid,
         phone: session?.phone ?? "",
         handlers: {
-          onOpened: (notification) => {
-            if (notification.route?.href) router.push(notification.route.href);
+          // The centre, never the business route. The notification keeps its
+          // own `route` and the card follows it when opened from the list.
+          onOpened: () => {
+            router.push("/notifications");
           },
         },
       })
@@ -81,12 +89,15 @@ export function NativePushController() {
 
   useEffect(() => {
     if (isLoading || !isNativePush || !session?.uid) return;
+    const uid = session.uid;
     let unsubscribe: (() => void) | undefined;
     void nativePlatform.app
       .onStateChange(({ isActive }) => {
         if (!isActive) return;
-        void notificationsFacade.importDelivered().catch((error) => {
-          notificationLog.error("Tray synchronization failed.", error);
+        // The uid is required: a device-local record is never imported without
+        // knowing which account it belongs to.
+        void notificationsFacade.importDelivered({ uid }).catch((error) => {
+          notificationLog.error("Delivered-notification synchronization failed.", error);
         });
       })
       .then((remove) => {

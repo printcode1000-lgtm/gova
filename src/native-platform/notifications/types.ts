@@ -23,6 +23,55 @@ export interface NotificationPayload {
   channelId?: string;
 }
 
+/**
+ * One record from the Android device-local notification inbox.
+ *
+ * The inbox is an application-private, encrypted, on-device buffer that the
+ * native push service writes to *before* it posts a system notification, for
+ * the window in which the WebView — and therefore IndexedDB — cannot run at
+ * all. It is a handoff, never a history: a record is deleted the moment the web
+ * layer confirms it reached IndexedDB, and nothing about it is ever sent
+ * anywhere.
+ *
+ * `payload` is the complete original message, shaped exactly like a live push,
+ * so the same mapper handles both and a background delivery cannot lose fields
+ * a foreground one keeps.
+ */
+export interface NotificationInboxRecord {
+  /** Stable, opaque id. The unit of acknowledgement. */
+  recordId: string;
+  /** The user this push was addressed to. */
+  uid: string;
+  notificationId: string;
+  dedupeKey: string;
+  channelId: string;
+  /** Sender-declared creation time, ISO-8601. */
+  createdAt: string;
+  /** When the device received it, epoch milliseconds. */
+  receivedAt: number;
+  payload: NotificationPayload;
+}
+
+/** A notification tap the process was launched or resumed with. */
+export interface NotificationInboxTap {
+  /** Empty when there is no pending tap. */
+  recordId: string;
+  /** The uid the tapped record belongs to. */
+  uid: string;
+  /**
+   * The stored notification the tap refers to.
+   *
+   * Carried by the launch Intent rather than read from the record, so a tap on
+   * a tray entry whose record was already imported and acknowledged still
+   * identifies which notification to mark read.
+   */
+  notificationId: string;
+  /** The record itself, when it is still pending. */
+  record?: NotificationInboxRecord;
+}
+
+export type NotificationTapListener = (tap: NotificationInboxTap) => void;
+
 export type PushTokenListener = (token: PushToken) => void;
 export type NotificationListener = (payload: NotificationPayload) => void;
 export type NotificationActionListener = (

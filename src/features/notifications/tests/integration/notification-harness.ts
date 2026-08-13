@@ -40,6 +40,26 @@ export interface InboundPayload {
 
 export type FakePermissionState = "granted" | "denied" | "prompt" | "blocked" | "unsupported";
 
+/**
+ * One record in the fake Android device-local inbox.
+ *
+ * The real one is an application-private, encrypted file that the native push
+ * service writes *before* it posts a notification — so it exists even when no
+ * WebView, and usually no process, was ever running. This models exactly that:
+ * `deliverNativePush` writes a record without touching a single listener,
+ * which is what makes "a push received while the app was dead" testable at all.
+ */
+export interface NativeInboxRecordFixture {
+  recordId: string;
+  uid: string;
+  notificationId: string;
+  dedupeKey: string;
+  channelId: string;
+  createdAt: string;
+  receivedAt: number;
+  payload: InboundPayload;
+}
+
 export interface HarnessState {
   /** Every AsolDB record, keyed `store:key`. Survives a simulated relaunch. */
   db: Map<string, unknown>;
@@ -50,6 +70,24 @@ export interface HarnessState {
 
   /** Notifications the OS is currently showing. */
   deliveredTray: InboundPayload[];
+
+  /**
+   * The device-local native inbox. On disk, so it survives a relaunch.
+   *
+   * Reset only by `resetHarnessCompletely`, exactly like the AsolDB map: a
+   * process restart does not erase application-private storage, and a test that
+   * pretended otherwise would prove the opposite of what it claims.
+   */
+  nativeInbox: NativeInboxRecordFixture[];
+  /** Set to make the native inbox bridge unavailable, as an old shell is. */
+  nativeInboxUnavailable: boolean;
+  /** The pending launch tap, as the native tap protocol reports it. */
+  nativeTap: { recordId: string; uid: string; notificationId: string } | null;
+  /** Records the web layer acknowledged, in order. */
+  acknowledgedRecordIds: string[];
+  /** Set to make every IndexedDB write fail, as a full or blocked store does. */
+  dbWriteError: Error | null;
+  nativeInboxClearedCount: number;
   /** What the push plugin will answer `register()` with. */
   registrationToken: string;
   registrationError: Error | null;
@@ -79,6 +117,12 @@ function freshState(): HarnessState {
     permission: "granted",
     online: true,
     deliveredTray: [],
+    nativeInbox: [],
+    nativeInboxUnavailable: false,
+    nativeTap: null,
+    acknowledgedRecordIds: [],
+    dbWriteError: null,
+    nativeInboxClearedCount: 0,
     registrationToken: "fcm-token-aaaaaaaaaaaaaaaaaaaaaaaa:APA91bTESTTESTTESTTESTTEST",
     registrationError: null,
     inboxUnavailable: false,
@@ -98,10 +142,20 @@ function freshState(): HarnessState {
 /** The one mutable state object every fake reads. */
 export const harnessState: HarnessState = freshState();
 
-/** Keep the stored records, drop everything else. Models a process restart. */
+/**
+ * Keep the stored records, drop everything else. Models a process restart.
+ *
+ * Both durable stores survive: IndexedDB, and the device-local native inbox —
+ * which is an application-private file and is precisely the thing that has to
+ * outlive a process death for any of this to work. The pending tap survives
+ * too: the real pointer is synchronously committed to app-private preferences
+ * from the launch Intent, so it outlives both Activity and process recreation.
+ */
 export function resetHarnessKeepingStorage(): void {
   const db = harnessState.db;
-  Object.assign(harnessState, freshState(), { db });
+  const nativeInbox = harnessState.nativeInbox;
+  const nativeTap = harnessState.nativeTap;
+  Object.assign(harnessState, freshState(), { db, nativeInbox, nativeTap });
 }
 
 export function resetHarnessCompletely(): void {
@@ -153,6 +207,69 @@ class FakePushPlugin {
   async removeAllDelivered(): Promise<void> {
     harnessState.removeAllDeliveredCalls += 1;
     harnessState.deliveredTray = [];
+  }
+
+  // ---- the device-local native inbox ---------------------------------------
+
+  readonly taps = new Set<Listener<{ recordId: string; uid: string; notificationId: string }>>();
+
+  async listPendingInbox(uid: string): Promise<NativeInboxRecordFixture[]> {
+    if (harnessState.nativeInboxUnavailable) throw new Error("inbox unavailable");
+    // Scoped natively, exactly as the store is: another user's record is not
+    // merely filtered later, it is never handed over.
+    return harnessState.nativeInbox
+      .filter((record) => record.uid === uid)
+      .sort((left, right) => left.receivedAt - right.receivedAt)
+      .map((record) => ({ ...record, payload: { ...record.payload } }));
+  }
+
+  async acknowledgeInbox(uid: string, recordIds: readonly string[]): Promise<number> {
+    if (harnessState.nativeInboxUnavailable) throw new Error("inbox unavailable");
+    const wanted = new Set(recordIds);
+    const before = harnessState.nativeInbox.length;
+    harnessState.nativeInbox = harnessState.nativeInbox.filter((record) => {
+      const remove = record.uid === uid && wanted.has(record.recordId);
+      if (remove) harnessState.acknowledgedRecordIds.push(record.recordId);
+      return !remove;
+    });
+    return before - harnessState.nativeInbox.length;
+  }
+
+  async clearInbox(): Promise<void> {
+    harnessState.nativeInboxClearedCount += 1;
+    harnessState.nativeInbox = [];
+    harnessState.nativeTap = null;
+  }
+
+  async pendingInboxCount(): Promise<number> {
+    return harnessState.nativeInbox.length;
+  }
+
+  async getInboxTap() {
+    const tap = harnessState.nativeTap;
+    if (!tap) return null;
+    const record = harnessState.nativeInbox.find(
+      (entry) => entry.recordId === tap.recordId,
+    );
+    return {
+      recordId: tap.recordId,
+      uid: tap.uid,
+      notificationId: tap.notificationId,
+      ...(record ? { record } : {}),
+    };
+  }
+
+  async clearInboxTap(): Promise<void> {
+    harnessState.nativeTap = null;
+  }
+
+  async ensureInboxTapListener(): Promise<void> {}
+
+  onInboxTap(
+    listener: Listener<{ recordId: string; uid: string; notificationId: string }>,
+  ): () => void {
+    this.taps.add(listener);
+    return () => this.taps.delete(listener);
   }
 
   async createChannels(): Promise<void> {
@@ -207,6 +324,69 @@ class FakeLocalPlugin {
 
 const fakePush = new FakePushPlugin();
 const fakeLocal = new FakeLocalPlugin();
+
+/**
+ * A push arriving while no WebView exists.
+ *
+ * Nothing is emitted, because nothing could be: the process is dead and there
+ * are no listeners. The native service normalizes the payload and writes the
+ * record, and that record is all the evidence the next app start will have.
+ * This is the scenario the whole design exists for, and it is deliberately
+ * expressible without touching a listener or a running module.
+ *
+ * @returns the record id, which is what a tap points at.
+ */
+export function deliverNativePush(
+  uid: string,
+  payload: InboundPayload,
+  options: { receivedAt?: number } = {},
+): string {
+  const data = payload.data ?? {};
+  const notificationId = String(data.notificationId ?? payload.id ?? "");
+  const dedupeKey = String(data.dedupeKey ?? notificationId);
+  const recordId = `rec_${uid}_${notificationId}`;
+  const receivedAt = options.receivedAt ?? Date.now();
+  const record: NativeInboxRecordFixture = {
+    recordId,
+    uid,
+    notificationId,
+    dedupeKey,
+    channelId: String(data.androidChannelId ?? "asol_general_v4"),
+    createdAt: String(data.createdAt ?? new Date(receivedAt).toISOString()),
+    receivedAt,
+    // The complete payload, exactly as the sender wrote it. The native record
+    // keeps the whole data map rather than a reconstruction, so a background
+    // delivery cannot lose a field a foreground delivery keeps.
+    payload: { ...payload, data: { ...data, uid } },
+  };
+  // A redelivery of the same message replaces its record instead of stacking a
+  // second copy, because the id is derived from the identity.
+  harnessState.nativeInbox = [
+    ...harnessState.nativeInbox.filter((entry) => entry.recordId !== recordId),
+    record,
+  ];
+  return recordId;
+}
+
+/** The user taps a notification whose record is in the native inbox. */
+export function tapNativeNotification(uid: string, recordId: string): void {
+  const record = harnessState.nativeInbox.find((entry) => entry.recordId === recordId);
+  harnessState.nativeTap = {
+    recordId,
+    uid,
+    // Carried by the launch Intent, so it identifies the notification even
+    // after the record itself has been imported and acknowledged.
+    notificationId: record?.notificationId ?? "",
+  };
+}
+
+/** A tap delivered to an already-running process, through onNewIntent. */
+export async function emitNativeTapEvent(): Promise<void> {
+  const tap = harnessState.nativeTap;
+  if (!tap) return;
+  for (const listener of [...fakePush.taps]) listener(tap);
+  await flushMicrotasks();
+}
 
 /** Deliver a push to a running application. */
 export async function emitForegroundPush(payload: InboundPayload): Promise<void> {
@@ -288,6 +468,9 @@ function installFakes(): void {
     },
     asolDbGet: async (store: string, key: string) => harnessState.db.get(`${store}:${key}`),
     asolDbSet: async (store: string, key: string, value: unknown) => {
+      // A store that refuses writes. Real, and the case the acknowledgement
+      // ordering exists for: the native record must survive it.
+      if (harnessState.dbWriteError) throw harnessState.dbWriteError;
       // Structured-clone semantics: storing keeps a copy, so a later mutation of
       // the caller's object cannot silently change what is "persisted".
       harnessState.db.set(`${store}:${key}`, JSON.parse(JSON.stringify(value)));
@@ -397,6 +580,7 @@ export function loadNotificationModule(): {
 
   fakePush.received.clear();
   fakePush.actions.clear();
+  fakePush.taps.clear();
   fakeLocal.actions.clear();
 
   const api = requireFromHere("../../index") as typeof import("../../index");

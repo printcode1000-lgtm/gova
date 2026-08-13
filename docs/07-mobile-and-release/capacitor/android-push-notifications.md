@@ -64,13 +64,13 @@ The post-login opt-in dialog is **not** part of this controller. It lives in
 browser. See
 [Post-Login Opt-In Dialog](../../05-platform-features/notification-system.md#post-login-opt-in-dialog).
 
-1. After session hydration, it initializes native listeners.
-2. It creates all Android notification channels.
-3. It imports notifications still present in the Android notification tray, except notifications the user already dismissed locally and empty `ASOL` placeholders with no body or payload.
-4. If the user previously enabled notifications, it re-registers with FCM on startup to refresh the token timestamp.
-5. Foreground notifications are saved to AsolDB, refresh the badge, and are displayed as a local notification on the resolved channel — Firebase shows nothing itself while the app is visible, so without this step a foreground push on Android is silent and invisible. Data-only deliveries, specialty-chat receipts, and locally dismissed identities are skipped. iOS is excluded because the OS already presents it from `presentationOptions`.
-6. Tapping a background or terminated-state notification saves it, marks it read, and opens its validated internal route. A notification the device displayed itself arrives through the local-notification listener instead and takes the same path, so its deep link is not lost.
-7. Signing out unregisters the token on every platform: `useLogout` calls the shared device-token service before clearing the session, and the controller also unregisters the previous uid when the account changes. Clearing application data unregisters before local storage is erased.
+1. After session hydration, it initializes native listeners and ensures every Android channel exists.
+2. It drains the application-owned, uid-scoped native inbox into IndexedDB and acknowledges each native record only after IndexedDB durably accepts it.
+3. It then sweeps notifications still present in the Android tray only as a compatibility fallback for older shells. New inbox-owned tray entries carry a native marker and are excluded from this lossy reconstruction path.
+4. It consumes a pending tap last, marks only its stored notification read, and opens `/notifications`. The business route stays on the card for the user to open from the centre.
+5. If the user previously enabled notifications, it re-registers with FCM on startup to refresh the token timestamp.
+6. Foreground notifications are saved to AsolDB, refresh the badge, and are displayed as a local notification on the resolved channel. The custom native receiver does not post in the foreground, so there is one banner and one sound. iOS remains on the platform presentation path.
+7. Signing out unregisters the token on every platform: `useLogout` calls the shared device-token service before clearing the session, and the controller also unregisters the previous uid when the account changes. It does not delete another user's pending native records; account deletion and explicit local-data clearing do.
 8. Switching the app language re-registers the token so push text follows the new language.
 
 The order, end to end:
@@ -122,7 +122,7 @@ not be ensured — registration refuses to continue on that answer.
 `AsolNotificationInbox` is application-owned and compiled into
 `MainActivity`, so its Capacitor proxy is registered synchronously. It must not
 be loaded through the optional dynamic-plugin cache: an early WebView/native
-bridge race would otherwise make tray import appear unavailable for the rest
+bridge race would otherwise make native inbox import appear unavailable for the rest
 of that process. Optional plugin imports retry after a transient loader
 rejection instead of caching that rejection permanently.
 
@@ -133,7 +133,8 @@ an unimplemented fallback and prevent background or terminated notifications
 from reaching the notification centre.
 
 Dismissed notification identities are remembered locally by `id` and
-`dedupeKey`. Android tray import checks that list before saving delivered
+`dedupeKey`. Both the native-inbox import and legacy Android tray import check
+that list before saving delivered
 notifications, so deleting an item from `/notifications` prevents it from
 appearing again when the app resumes. If an Android payload does not provide a
 stable id, the adapter derives a stable fallback from the title, body, and route
@@ -163,6 +164,58 @@ starts the platform flow:
 The prompt listens to the explicit login-completed event, not merely to
 `SessionProvider` hydration. It is delayed until the login-success toast has
 finished so the two accessible surfaces never overlap.
+
+## Background and Terminated-State Durability
+
+Android tokens receive an FCM **data-only** payload. This guarantees that the
+application-owned `AsolPushMessagingService` runs instead of Firebase silently
+auto-displaying a top-level `notification` payload. The receiver requires an
+owning `uid`, normalizes the complete data map, and performs this sequence:
+
+```text
+FCM receipt
+  → write the uid-scoped record to the app-private native inbox
+  → only after a successful write, post the system notification
+  → on startup/resume, import the native inbox into AsolDB IndexedDB
+  → refresh the centre and bottom-bar unread badge
+  → acknowledge and delete only records IndexedDB accepted
+  → process a pending tap and open /notifications
+```
+
+The native inbox is an on-device handoff buffer, not notification history and
+not cloud storage. It lives under the application's private files directory,
+uses AES-256-GCM with an AndroidKeyStore key when available (with a documented
+app-private plaintext fallback), retains at most 200 records for at most 14
+days, and uses Android `AtomicFile` for interrupted-write recovery. An unreadable
+existing inbox fails a new enqueue rather than being overwritten. Notification
+bodies and notification-centre history are never stored in Turso or any remote
+notification table; IndexedDB remains the permanent centre.
+
+Reads and acknowledgements are scoped to the authenticated uid on both sides of
+the native bridge. A record for another account waits for that account and is
+never imported into the active user's IndexedDB partition. Signing out removes
+the registered token but deliberately keeps uid-owned pending records; account
+deletion and explicit local-data clearing erase the native inbox and propagate a
+clear failure instead of reporting false success.
+
+The launch Intent carries only a record id, uid, and notification id. The
+pointer is synchronously committed to application-private `SharedPreferences`
+before the WebView starts, so it survives Activity recreation and full process
+death. The actual content remains in the native inbox. A tap is cleared only
+after its target exists in IndexedDB and is marked read; if import fails while
+the native record still exists, the tap remains pending for the next launch.
+
+Background deliveries are never forwarded into Capacitor's retained
+`lastMessage`; the native inbox is their only handoff. This prevents a
+dead-process message from replaying as a new foreground delivery and posting a
+second banner. Application-owned tray notifications also carry a marker that
+the legacy tray sweep skips, preventing a truncated Android tag from creating a
+second, metadata-poor notification-centre row.
+
+Normal swipe-away is covered by this path. Android force-stop is different:
+the operating system does not deliver FCM until the user manually opens the app,
+so nothing can be persisted until delivery resumes. Messages still inside their
+FCM TTL may arrive after that reopen.
 
 ## Channels
 
