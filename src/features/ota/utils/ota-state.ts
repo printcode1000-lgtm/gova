@@ -49,6 +49,21 @@ export function shouldPersistNativeDownloadProgress(
   );
 }
 
+/**
+ * A content version: `major.minor.patch`, optionally followed by the counter
+ * of the shell line it belongs to (`0.2.3.1`), optionally pre-release tagged.
+ *
+ * The fourth component is what lets a store release restart the counter
+ * without the version ever ranking below what devices already carry — see
+ * `release-commands/domain/content-version.ts`. Three-part versions published
+ * before that scheme stay valid and compare equal to their `.0` form.
+ */
+export const OTA_VERSION_PATTERN = /^\d+\.\d+\.\d+(?:\.\d+)?(?:-[0-9A-Za-z.-]+)?$/;
+
+export function isOtaVersion(value: unknown): value is string {
+  return typeof value === "string" && OTA_VERSION_PATTERN.test(value);
+}
+
 export function compareOtaVersions(left: string, right: string): number {
   const parse = (value: string) =>
     value.split("-")[0]!.split(".").map((part) => Number(part) || 0);

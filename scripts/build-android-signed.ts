@@ -4,6 +4,8 @@ import path from "node:path";
 
 import dotenv from "dotenv";
 
+import { reportStage } from "./release-stage";
+
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });
 
@@ -99,6 +101,7 @@ function main(): void {
     } : {}),
   };
 
+  reportStage("building-android");
   console.log(`Building signed Android AAB and APK${javaHome ? ` with Java at ${javaHome}` : ""}...`);
   run(
     process.platform === "win32" ? "gradlew.bat" : "./gradlew",
@@ -119,6 +122,7 @@ function main(): void {
   // expected trust-chain shape as exit code 4 even when the archive signature
   // is cryptographically valid, so verify the JAR signature without requiring
   // a public-CA chain.
+  reportStage("signing");
   run(jarSigner, ["-verify", aab], root, env);
   run(resolveApkSigner(), ["verify", "--verbose", "--print-certs", apk], root, env);
   console.log(`Signed AAB ready: ${aab} (${statSync(aab).size} bytes)`);

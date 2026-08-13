@@ -10,8 +10,16 @@ import { zipSync } from "fflate";
 import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@/modules/google-play-console/domain/image-validation";
 import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "../../../../scripts/assert-release-static-bundle";
 import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "../../../../scripts/validate-android-r8-policy";
+import { compareOtaVersions } from "@/features/ota/utils/ota-state";
 import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
 import { assertBuildJobTransition } from "../domain/build-job-types";
+import { nextBuildJobActivity, nextBuildJobStage } from "../domain/build-job-progress";
+import {
+  assertContentVersionAdvances,
+  nextContentVersion,
+  parseContentVersion,
+  releaseContentVersion,
+} from "../domain/content-version";
 import {
   acquireBuildJobLock,
   assertBuildJobId,
@@ -80,57 +88,73 @@ for (const command of BUILD_COMMAND_CATALOG) {
   }
 }
 assert.equal(BUILD_COMMAND_CATALOG.filter((item) => item.script === "ota:publish").length, 1);
+// One merged full-release path. It publishes nothing, so it needs no OTA
+// credentials and no confirmation phrase: the shell it builds carries its own
+// complete bundle, and OTA publication is `ota-publish` on its own button.
+assert.equal(
+  BUILD_COMMAND_CATALOG.filter((item) => item.script.startsWith("release:android")).length,
+  1,
+  "there must be exactly one Android release path",
+);
 const fullAndroidRelease = BUILD_COMMAND_CATALOG.find(
-  (item) => item.id === "release-android-with-ota",
+  (item) => item.id === "release-android",
 )!;
-assert.equal(fullAndroidRelease.danger, "publishes-live");
-assert.equal(fullAndroidRelease.confirmationPhrase, "PUBLISH_OTA");
+assert.equal(fullAndroidRelease.danger, "destructive");
+assert.equal(fullAndroidRelease.confirmationPhrase, undefined);
 assert.deepEqual(
   fullAndroidRelease.parameters.map((parameter) => parameter.name),
-  ["nativeVersionAction", "otaSource", "notes", "mandatory"],
+  ["nativeVersionAction"],
 );
+assert.deepEqual(fullAndroidRelease.requiredEnv, [
+  "ASOL_ANDROID_KEYSTORE_FILE",
+  "ASOL_ANDROID_KEYSTORE_PASSWORD",
+  "ASOL_ANDROID_KEY_ALIAS",
+  "ASOL_ANDROID_KEY_PASSWORD",
+], "a path that never reaches R2 must not demand OTA credentials");
 assert.deepEqual(
   materializeBuildCommandParameters(fullAndroidRelease, {
     nativeVersionAction: "increment-patch",
-    otaSource: "publish-new",
-    notes: "Full Android release",
-    mandatory: true,
   }),
-  ["--native-version=next-patch", "--notes=Full Android release", "--mandatory"],
+  ["--native-version=next-patch"],
 );
 assert.deepEqual(
   materializeBuildCommandParameters(fullAndroidRelease, {
     nativeVersionAction: "keep-current",
-    otaSource: "resume-published",
   }),
-  ["--native-version=current", "--resume"],
+  ["--native-version=current"],
+);
+assert.throws(
+  () => materializeBuildCommandParameters(fullAndroidRelease, {}),
+  /ParameterRequired:nativeVersionAction/,
 );
 assert.throws(
   () => materializeBuildCommandParameters(fullAndroidRelease, { otaSource: "publish-new" }),
-  /ParameterRequired:nativeVersionAction/,
+  /ParameterUnknown:otaSource/,
+  "the release path must not expose an OTA choice at all",
 );
-for (const required of [
-  "ASOL_OTA_R2_BUCKET_NAME",
-  "ASOL_OTA_SIGNING_PRIVATE_KEY",
-  "ASOL_ANDROID_KEYSTORE_FILE",
-]) {
-  assert.ok(fullAndroidRelease.requiredEnv.includes(required));
-}
 assert.match(
-  packageJson.scripts["release:android:with-ota"],
-  /release-android-with-ota/,
+  packageJson.scripts["release:android"],
+  /release-android/,
   "the full-release shortcut must use the argument-preserving release orchestrator",
 );
-const fullReleaseOrchestrator = await readFile("scripts/release-android-with-ota.ts", "utf8");
-assert.match(fullReleaseOrchestrator, /capBuildPath, \.\.\.releaseArguments/,
-  "the full-release orchestrator must pass dialog choices to cap-build");
+const fullReleaseOrchestrator = await readFile("scripts/release-android.ts", "utf8");
+assert.match(fullReleaseOrchestrator, /capBuildPath, "--no-ota", \.\.\.releaseArguments/,
+  "the release orchestrator must build without OTA and pass dialog choices to cap-build");
 assert.ok(fullReleaseOrchestrator.indexOf("capBuildPath")
   < fullReleaseOrchestrator.lastIndexOf("signedBuildPath"),
-"signed Android artifacts must be built only after OTA/native preparation");
+"signed Android artifacts must be built only after web/native preparation");
 assert.match(fullReleaseOrchestrator, /releaseArguments\.includes\("--dry-run"\).*process\.exit\(0\)/,
   "a full-release dry run must stop before signing");
 assert.match(fullReleaseOrchestrator, /ASOL_WEB_BUNDLE_READY:\s*"1"/,
   "the signed build must receive proof that cap-build prepared the web bundle");
+const capBuildSource = await readFile("scripts/cap-build.ts", "utf8");
+assert.match(capBuildSource, /if \(noOta\) \{\s*await buildStoreRelease/,
+  "the no-OTA path must return before any R2 client is created");
+const storeReleaseSource = capBuildSource.slice(capBuildSource.indexOf("async function buildStoreRelease"));
+assert.ok(storeReleaseSource, "cap-build must expose the store-release path as its own function");
+assert.doesNotMatch(storeReleaseSource,
+  /createOtaR2Client|getOtaManifestObject|getOtaObjectBytes|listOtaObjectKeys|verifyR2Files|compareManifestFiles/,
+  "the release path must not read or verify anything on R2");
 assert.match(
   packageJson.scripts["android:build:signed"],
   /build-android-signed/,
@@ -190,6 +214,96 @@ try {
   assert.throws(() => assertCapBuildInputBundle({ resume: false, skipOta: true, dryRun: false }, diagnosticManifest), /diagnostic static build/);
   await writeFile(diagnosticManifest, JSON.stringify({ diagnostic: false }));
   assert.doesNotThrow(() => assertReleaseStaticBundle(diagnosticManifest));
+
+  // A store release opens its own content line; every OTA afterwards advances
+  // the counter alone, and the next shell restarts it without ever ranking
+  // below what devices already carry.
+  assert.equal(releaseContentVersion("0.2.3"), "0.2.3.0");
+  assert.throws(() => releaseContentVersion("0.2.3.0"), /Invalid native shell version/);
+  assert.deepEqual(parseContentVersion("0.2.3.7"), { nativeVersion: "0.2.3", counter: 7 });
+  assert.equal(parseContentVersion("0.1.15"), null, "a legacy version belongs to no line");
+  assert.equal(nextContentVersion("0.2.3.0", "0.2.3"), "0.2.3.1");
+  assert.equal(nextContentVersion("0.2.3.9", "0.2.3"), "0.2.3.10");
+  assert.equal(nextContentVersion(null, "0.2.3"), "0.2.3.1");
+  assert.equal(nextContentVersion("0.1.15", "0.2.3"), "0.2.3.1",
+    "publishing onto a new shell restarts the counter above the shell's own .0");
+  assert.equal(nextContentVersion("0.2.3.4", "0.2.4"), "0.2.4.1",
+    "a newer shell opens its own line rather than continuing the old one");
+  assert.equal(compareOtaVersions("0.2.4.0", "0.2.3.9") > 0, true,
+    "a restarted counter must still outrank the whole previous line");
+  assert.equal(compareOtaVersions("0.2.3", "0.2.3.0"), 0,
+    "a legacy three-part version and its .0 form must compare equal");
+  // The one ordering an installed bundle cannot recover from: a published
+  // version that does not advance reads as "no update" forever.
+  assert.throws(() => nextContentVersion("0.3.0.2", "0.2.3"), /does not outrank/);
+  assert.throws(() => assertContentVersionAdvances("0.2.3.0", "0.2.3.0"), /does not outrank/);
+  assert.doesNotThrow(() => assertContentVersionAdvances("0.2.3.0", null));
+
+  // Stages announced by a script are authoritative: the real order differs per
+  // path, so ranking them against one fixed sequence hid steps that ran.
+  assert.equal(nextBuildJobStage("starting", "[stage] building-web"), "building-web");
+  assert.equal(nextBuildJobStage("verifying", "[stage] syncing-native"), "syncing-native",
+    "publishing verifies R2 before syncing Capacitor");
+  assert.equal(nextBuildJobStage("starting", "[stage] not-a-stage"), "starting");
+  assert.equal(nextBuildJobStage("building-web", "[stage] syncing-native\n[stage] building-android"),
+    "building-android", "the last announcement in a chunk wins");
+  assert.equal(nextBuildJobStage("starting", "> next build"), "building-web",
+    "output without announcements still falls back to the heuristics");
+  assert.equal(nextBuildJobStage("building-android", "Signing the AAB"), "signing");
+
+  // The step names the individual check inside a stage. Thirty checks under one
+  // "testing" stage are indistinguishable from a hang without it.
+  assert.equal(nextBuildJobActivity(undefined, "[step] 3/31 test:notifications"), "3/31 test:notifications");
+  assert.equal(nextBuildJobActivity("old", "nothing announced here"), "old",
+    "a chunk without a step keeps the one already showing");
+  assert.equal(nextBuildJobActivity("old", "[step] first\n[step] second"), "second",
+    "the last step in a chunk wins");
+  assert.equal(nextBuildJobActivity(undefined, `[step] ${"x".repeat(200)}`)!.length, 80,
+    "a step is capped so it cannot overflow the button it renders in");
+
+  // The device path: one card builds and installs, a separate button tests.
+  const deviceTests = BUILD_COMMAND_CATALOG.find((item) => item.id === "run-device-tests")!;
+  const hostTests = BUILD_COMMAND_CATALOG.find((item) => item.id === "run-test-suite")!;
+  assert.equal(deviceTests.script, "android:device:tests");
+  assert.equal(hostTests.script, "verify:all", "the host suite keeps its own button and script");
+  // Verification category on both: neither may wait behind the release lock.
+  assert.equal(deviceTests.exclusive, false);
+  assert.equal(hostTests.exclusive, false);
+  assert.deepEqual(deviceTests.parameters.map((parameter) => parameter.name), ["device"]);
+  assert.deepEqual(
+    materializeBuildCommandParameters(deviceTests, { device: "R58N12ABCDE" }),
+    ["--device=R58N12ABCDE"],
+  );
+  assert.deepEqual(materializeBuildCommandParameters(deviceTests, {}), [],
+    "one connected device needs no serial");
+  const debugCard = BUILD_COMMAND_CATALOG.find((item) => item.id === "android-build-debug")!;
+  assert.ok(
+    debugCard.expectedArtifacts.some((artifact) => artifact.includes("debugR8")),
+    "the testing package must be the R8-optimized variant",
+  );
+  const debugBuilderSource = await readFile("scripts/build-android-debug.ts", "utf8");
+  assert.match(debugBuilderSource, /assembleDebugR8/,
+    "the testing build must assemble the R8 variant, not plain debug");
+  // Building must never wipe a phone as a side effect of checking a compile
+  // error, and installing must never start a twenty-minute build.
+  assert.doesNotMatch(debugBuilderSource, /wipeProjectPackages|installApk/,
+    "the build step must not touch a connected device");
+  const deviceInstaller = BUILD_COMMAND_CATALOG.find((item) => item.id === "android-device-install")!;
+  assert.equal(deviceInstaller.script, "android:device:install");
+  assert.equal(deviceInstaller.danger, "destructive");
+  assert.deepEqual(deviceInstaller.parameters.map((parameter) => parameter.name), ["device"]);
+  const deviceInstallerSource = await readFile("scripts/android-device-install.ts", "utf8");
+  assert.doesNotMatch(deviceInstallerSource, /assembleDebugR8|cap:prepare:android/,
+    "the install step must build nothing");
+  assert.match(deviceInstallerSource, /assertTestApkExists/,
+    "installing must stop with a clear message when nothing has been built");
+  const deviceInstallSource = await readFile("scripts/android/device-install.ts", "utf8");
+  assert.match(deviceInstallSource, /pm uninstall/,
+    "the device must be wiped by uninstalling, not by clearing data alone");
+  assert.match(deviceInstallSource, /assertDeviceIsClean/,
+    "the wipe must be verified against the device rather than assumed");
+  assert.doesNotMatch(deviceInstallSource, /adbInherit\(adb, \["install", "-r"/,
+    "reinstalling over a previous copy would mask a failed uninstall");
 
   const archivePath = path.join(temp, "app-debug.apk");
   const fixtureEntries: Record<string, Uint8Array> = {

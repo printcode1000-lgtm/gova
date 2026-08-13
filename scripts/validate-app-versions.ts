@@ -6,6 +6,8 @@ import {
   CURRENT_NATIVE_APP_VERSION,
   CURRENT_WEB_CONTENT_VERSION,
 } from "../src/core/config/app-version";
+import { isOtaVersion } from "../src/features/ota/utils/ota-state";
+import { parseContentVersion } from "../src/modules/release-commands/domain/content-version";
 
 const root = process.cwd();
 const read = (file: string) => readFileSync(path.join(root, file), "utf8");
@@ -14,16 +16,30 @@ const expectedBuildNumber = CURRENT_NATIVE_APP_VERSION.split(".").reduce(
   0,
 );
 
-assert.equal(
-  JSON.parse(read("package.json")).version,
-  CURRENT_WEB_CONTENT_VERSION,
-  "package.json must identify the current web content release",
-);
+// The content version is a release-line coordinate, not an npm version: once a
+// release opens a line it gains a fourth component (`0.2.3.0`), which npm
+// rejects outright. package.json keeps its own semver and is only held to
+// agreeing with its lock file.
 assert.equal(
   JSON.parse(read("package-lock.json")).version,
-  CURRENT_WEB_CONTENT_VERSION,
+  JSON.parse(read("package.json")).version,
   "package-lock.json root version must match package.json",
 );
+assert.ok(
+  isOtaVersion(CURRENT_WEB_CONTENT_VERSION),
+  `Invalid current web content version: ${CURRENT_WEB_CONTENT_VERSION}`,
+);
+// A three-part value predates the scheme and is left alone. Once a release has
+// opened a line, the content version must stay on the shell actually built —
+// a mismatch means one of the two was bumped without the other.
+const contentLine = parseContentVersion(CURRENT_WEB_CONTENT_VERSION);
+if (contentLine) {
+  assert.equal(
+    contentLine.nativeVersion,
+    CURRENT_NATIVE_APP_VERSION,
+    "the content line must follow the native shell version",
+  );
+}
 
 const gradle = read("android/app/build.gradle");
 assert.match(

@@ -2,13 +2,15 @@
 
 import * as React from "react";
 import {
-  CloudUpload, ExternalLink, FlaskConical, FolderOpen, LoaderCircle, Play,
+  CloudUpload, ExternalLink, FolderOpen, LoaderCircle, Play,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { asolApi } from "@/core/api";
 import type { BuildCommandReadiness, BuildJobRecord } from "@/modules/release-commands/domain/build-job-types";
-import { latestJobFor, RUNNING_STATUSES, StatusChip, StopButton } from "./ReleaseJobIndicators";
+import {
+  latestJobFor, runningLabel, RUNNING_STATUSES, SecondaryAction, StatusChip, StopButton,
+} from "./ReleaseJobIndicators";
 
 /** Local static preview served by `npm run preview:static`. */
 const STATIC_PREVIEW_URL = "http://127.0.0.1:5500/";
@@ -16,16 +18,10 @@ const PREVIEW_PROBE_TIMEOUT_MS = 2500;
 
 const PATHS = [
   {
-    id: "release-android-with-ota",
-    title: "releaseConsole.androidPaths.withOta.title",
-    description: "releaseConsole.androidPaths.withOta.description",
-    action: "releaseConsole.androidPaths.withOta.action",
-  },
-  {
-    id: "release-android-no-ota",
-    title: "releaseConsole.androidPaths.noOta.title",
-    description: "releaseConsole.androidPaths.noOta.description",
-    action: "releaseConsole.androidPaths.noOta.action",
+    id: "release-android",
+    title: "releaseConsole.androidPaths.release.title",
+    description: "releaseConsole.androidPaths.release.description",
+    action: "releaseConsole.androidPaths.release.action",
   },
   {
     id: "build-static",
@@ -39,24 +35,25 @@ const PATHS = [
     description: "releaseConsole.androidPaths.prepare.description",
     action: "releaseConsole.androidPaths.prepare.action",
     // Secondary action on the same card: open the synced project in the IDE.
-    secondary: {
-      id: "cap-open-android",
-      label: "releaseConsole.build.openAndroidStudio",
-      icon: "folder",
-    },
+    secondaries: [
+      { id: "cap-open-android", label: "releaseConsole.build.openAndroidStudio", icon: "folder" },
+    ],
   },
   {
     id: "android-build-debug",
     title: "releaseConsole.androidPaths.debugApk.title",
     description: "releaseConsole.androidPaths.debugApk.description",
     action: "releaseConsole.androidPaths.debugApk.action",
-    // The suite is offered beside the build because a debug APK is what you
-    // put on a device *after* the tree is green, not instead of checking it.
-    secondary: {
-      id: "run-test-suite",
-      label: "releaseConsole.androidPaths.debugApk.tests",
-      icon: "tests",
-    },
+    // Four separate actions, on purpose. Building is slow and safe; installing
+    // is fast and wipes the phone. Keeping them apart means a rebuild never
+    // erases a device, and a reinstall never waits on a build. The two suites
+    // answer different questions — one about this tree, one about the device —
+    // so merging them would hide which half failed.
+    secondaries: [
+      { id: "android-device-install", label: "releaseConsole.androidPaths.debugApk.install", icon: "install" },
+      { id: "run-test-suite", label: "releaseConsole.androidPaths.debugApk.tests", icon: "tests" },
+      { id: "run-device-tests", label: "releaseConsole.androidPaths.debugApk.deviceTests", icon: "device" },
+    ],
   },
   {
     id: "ota-publish",
@@ -114,13 +111,15 @@ export function AndroidReleasePaths({ busy, jobs, readiness, start, cancel, t }:
     <h2 className="font-semibold">{t("releaseConsole.androidPaths.groupTitle")}</h2>
     <div className="mt-2 grid gap-2 lg:grid-cols-2">
       {PATHS.map((path) => {
-        const secondary = "secondary" in path ? path.secondary : undefined;
+        const secondaries = "secondaries" in path ? path.secondaries : [];
         // Each card reports its own command's outcome, so "running" is shown on
         // the card that is actually running — the rest are only disabled.
         const job = latestJobFor(jobs, path.id);
-        const secondaryJob = secondary ? latestJobFor(jobs, secondary.id) : undefined;
+        const secondaryJobs = secondaries.map((secondary) => ({
+          secondary,
+          job: latestJobFor(jobs, secondary.id),
+        }));
         const running = Boolean(job && RUNNING_STATUSES.has(job.status));
-        const secondaryRunning = Boolean(secondaryJob && RUNNING_STATUSES.has(secondaryJob.status));
         const missingEnv = missingEnvOf(path.id);
         return <article key={path.id} className="rounded-md border bg-surface p-2">
           <h3 className="font-semibold">{t(path.title)}</h3>
@@ -131,23 +130,18 @@ export function AndroidReleasePaths({ busy, jobs, readiness, start, cancel, t }:
               onClick={() => void start({ commandId: path.id })}>
               {running ? <LoaderCircle className="h-4 w-4 animate-spin" />
                 : "danger" in path && path.danger ? <CloudUpload className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              {running ? t("releaseConsole.jobStatus.running") : t(path.action)}
+              {/* A release runs for the best part of an hour. "Running" alone
+                  cannot be told apart from a stall, so the button carries the
+                  stage the job reported last. */}
+              {running ? runningLabel(job, t) : t(path.action)}
             </Button>
-            {secondary ? (
-              <Button variant="outline"
+            {secondaryJobs.map(({ secondary, job: secondaryJob }) => (
+              <SecondaryAction key={secondary.id} id={secondary.id} label={secondary.label}
+                icon={secondary.icon} job={secondaryJob}
                 disabled={busy || missingEnvOf(secondary.id).length > 0}
-                onClick={() => void start({ commandId: secondary.id })}>
-                {secondaryRunning
-                  ? <LoaderCircle className="h-4 w-4 animate-spin" />
-                  : secondary.icon === "tests"
-                    ? <FlaskConical className="h-4 w-4" />
-                    : <FolderOpen className="h-4 w-4" />}
-                {secondaryRunning ? t("releaseConsole.jobStatus.running") : t(secondary.label)}
-              </Button>
-            ) : null}
+                start={start} cancel={cancel} t={t} />
+            ))}
             {running && job ? <StopButton job={job} cancel={cancel} t={t} /> : null}
-            {secondaryRunning && secondaryJob
-              ? <StopButton job={secondaryJob} cancel={cancel} t={t} /> : null}
           </div>
           {missingEnv.length > 0 ? (
             <p className="mt-2 rounded-md bg-muted p-2 text-xs">
@@ -155,7 +149,9 @@ export function AndroidReleasePaths({ busy, jobs, readiness, start, cancel, t }:
             </p>
           ) : null}
           {job ? <StatusChip job={job} t={t} /> : null}
-          {secondaryJob ? <StatusChip job={secondaryJob} t={t} /> : null}
+          {secondaryJobs.map(({ secondary, job: secondaryJob }) => (
+            secondaryJob ? <StatusChip key={secondary.id} job={secondaryJob} t={t} /> : null
+          ))}
         </article>;
       })}
     </div>

@@ -32,6 +32,11 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // Instrumented tests run against the variant the test device actually
+    // carries. Android generates androidTest tasks for this build type alone,
+    // so without it there is no `connectedDebugR8AndroidTest` and the suite
+    // would silently exercise unminified code the app never ships.
+    testBuildType "debugR8"
     buildTypes {
         debugR8 {
             initWith debug
@@ -40,7 +45,12 @@ android {
             shrinkResources true
             signingConfig signingConfigs.debug
             matchingFallbacks = ['debug']
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // The release rules, plus the few keeps the instrumented tests need
+            // to reach app types by name. Release itself keeps nothing extra.
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules-testable-app.pro'
+            // Applied to the instrumentation APK, which AGP must also minify
+            // because it links against this obfuscated app.
+            testProguardFiles 'proguard-rules-test-apk.pro'
         }
         release {
             minifyEnabled true

@@ -15,7 +15,7 @@ import {
 } from "@/modules/google-play-console/domain/development-guard.server";
 
 import { BUILD_COMMAND_CATALOG, findBuildCommand, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
-import { nextBuildJobStage } from "../domain/build-job-progress";
+import { nextBuildJobActivity, nextBuildJobStage } from "../domain/build-job-progress";
 import { assertBuildJobTransition, type BuildCommandReadiness, type BuildJobRecord, type PaginatedBuildJobs, type ReleaseVersionSnapshot, type StartBuildJobInput } from "../domain/build-job-types";
 import { changedBuildArtifacts, snapshotBuildOutputs } from "./build-job-artifacts.server";
 
@@ -350,7 +350,12 @@ async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry)
       const current = await readBuildJobRecord(record.id);
       if (current.status !== "running") return;
       const nextStage = nextBuildJobStage(current.stage ?? "starting", recentOutput);
-      if (nextStage !== current.stage) { current.stage = nextStage; await writeRecord(current); }
+      const nextActivity = nextBuildJobActivity(current.activity, recentOutput);
+      if (nextStage !== current.stage || nextActivity !== current.activity) {
+        current.stage = nextStage;
+        current.activity = nextActivity;
+        await writeRecord(current);
+      }
     });
   };
   child.stdout.on("data", captureOutput);
@@ -370,6 +375,9 @@ async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry)
         if (current.status !== "cancelled") {
           setJobStatus(current, status); current.exitCode = code; current.finishedAt = now(); current.error = error;
           if (status === "succeeded") current.stage = "completed";
+          // On failure the last step is the most useful thing on the card: it
+          // names what was running when it broke. On success it is noise.
+          if (status === "succeeded") delete current.activity;
           current.artifacts = artifacts;
           delete current.artifactSnapshot;
           await writeRecord(current);
@@ -392,7 +400,20 @@ export async function reconcileBuildJobs(jobDir = JOB_DIR, alive = isProcessAliv
   const lock = await readLock(path.join(jobDir, "exclusive.lock"));
   for (const file of files) {
     const fullPath = path.join(jobDir, file);
-    const record = JSON.parse(await fs.readFile(fullPath, "utf8")) as BuildJobRecord;
+    // Reconciliation runs before every listing, so a single record caught
+    // mid-write took the whole job list down with `Unexpected end of JSON
+    // input` — the page went blank while nothing was actually wrong. Use the
+    // same retrying reader as every other read, and skip a file that still
+    // will not parse: one damaged record must not hide the rest.
+    let record: BuildJobRecord;
+    try {
+      record = await readRecordFile(fullPath);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+        console.warn(`Skipping unreadable build job record ${file}: ${error instanceof Error ? error.message : error}`);
+      }
+      continue;
+    }
     const ownedQueuedJob = record.status === "queued" && lock?.jobId === record.id && alive(lock.pid);
     if ((record.status === "running" || record.status === "queued") && !ownedQueuedJob && (!record.pid || !alive(record.pid))) {
       setJobStatus(record, "interrupted"); record.finishedAt = now(); record.error = "releaseCommandInterrupted";

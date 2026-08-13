@@ -1,12 +1,41 @@
 "use client";
 
 import type { ReleaseVersionSnapshot } from "@/modules/release-commands/domain/build-job-types";
+import {
+  isNativeVersion,
+  nextContentVersion,
+  releaseContentVersion,
+} from "@/modules/release-commands/domain/content-version";
 
 function nextPatch(version?: string): string | undefined {
   if (!version) return undefined;
   const parts = version.split(".").map(Number);
   if (parts.length !== 3 || parts.some((part) => !Number.isSafeInteger(part))) return undefined;
   return `${parts[0]}.${parts[1]}.${parts[2]! + 1}`;
+}
+
+/** The shell this run will produce, before any content number is derived. */
+function targetNativeVersion(
+  versions: ReleaseVersionSnapshot,
+  parameters: Record<string, unknown>,
+): string | undefined {
+  const target = parameters.nativeVersionAction === "increment-patch"
+    ? nextPatch(versions.androidCurrent)
+    : versions.androidCurrent;
+  return target && isNativeVersion(target) ? target : undefined;
+}
+
+/**
+ * Previews are best-effort: the snapshot can be missing or, until the first
+ * release on the new scheme, hold a legacy version the rules reject. A card
+ * that cannot be derived is left out rather than shown as a guess.
+ */
+function previewOrUndefined(derive: () => string): string | undefined {
+  try {
+    return derive();
+  } catch {
+    return undefined;
+  }
 }
 
 export function ReleaseCurrentVersions({ versions, t }: {
@@ -33,20 +62,30 @@ export function ReleaseSelectedVersions({ commandId, versions, parameters, t }: 
   parameters: Record<string, unknown>;
   t: (key: string) => string;
 }) {
+  const target = targetNativeVersion(versions, parameters);
   const selected = [
-    commandId === "release-android-with-ota"
-      && parameters.nativeVersionAction === "increment-patch"
-      ? ["selectedNewAndroidVersion", nextPatch(versions.androidCurrent)]
+    commandId === "release-android"
+      ? [
+        parameters.nativeVersionAction === "increment-patch"
+          ? "selectedNewAndroidVersion"
+          : "selectedAndroidBuildVersion",
+        versions.androidCurrent && parameters.nativeVersionAction === "increment-patch"
+          ? nextPatch(versions.androidCurrent)
+          : versions.androidCurrent,
+      ]
       : null,
-    commandId === "ota-publish"
-      || (commandId === "release-android-with-ota" && parameters.otaSource === "publish-new")
-      ? ["selectedNewOtaVersion", nextPatch(versions.otaCurrent)]
+    // The release opens the shell's own content line; nothing is published for
+    // it, so the number comes from the shell rather than from R2.
+    commandId === "release-android" && target
+      ? ["selectedNewContentVersion", previewOrUndefined(() => releaseContentVersion(target))]
+      : null,
+    commandId === "ota-publish" && versions.androidCurrent && isNativeVersion(versions.androidCurrent)
+      ? ["selectedNewOtaVersion", previewOrUndefined(
+        () => nextContentVersion(versions.otaCurrent ?? null, versions.androidCurrent!),
+      )]
       : null,
     ["build-static", "cap-prepare-android", "android-build-debug"].includes(commandId)
       ? ["selectedContentBuildVersion", versions.contentCurrent]
-      : null,
-    commandId === "release-android-no-ota"
-      ? ["selectedAndroidBuildVersion", versions.androidCurrent]
       : null,
   ].filter((item): item is [string, string] => Boolean(item?.[1]));
   if (selected.length === 0) return null;

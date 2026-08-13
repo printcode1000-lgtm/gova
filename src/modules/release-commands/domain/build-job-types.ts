@@ -10,7 +10,12 @@ export type BuildJobStage =
   | "syncing-native"
   | "building-android"
   | "optimizing"
+  | "signing"
   | "testing"
+  | "detecting-device"
+  | "wiping-device"
+  | "installing-device"
+  | "testing-on-device"
   | "uploading"
   | "publishing-manifest"
   | "mirroring"
@@ -32,6 +37,12 @@ export interface BuildJobRecord {
   command: Pick<BuildCommandCatalogEntry, "id" | "script" | "argv" | "category" | "danger">;
   status: BuildJobStatus;
   stage?: BuildJobStage;
+  /**
+   * The specific work running inside `stage` — which check, which test, which
+   * package. Free text reported by the script itself; absent for commands that
+   * do not announce their steps.
+   */
+  activity?: string;
   queuedAt: string;
   startedAt?: string;
   finishedAt?: string;

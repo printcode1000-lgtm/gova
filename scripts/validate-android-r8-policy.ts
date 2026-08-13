@@ -62,6 +62,26 @@ export function validateAndroidR8PolicySources(sources: AndroidR8PolicySources):
   requireMatch(releaseBlock, /shrinkResources\s*(?:=\s*)?true/, "The Android release build must enable shrinkResources true.");
   requireMatch(releaseBlock, /getDefaultProguardFile\(['\"]proguard-android-optimize\.txt['\"]\)/, "The Android release build must use proguard-android-optimize.txt.");
   requireMatch(releaseBlock, /['\"]proguard-rules\.pro['\"]/, "The Android release build must include the app ProGuard rules.");
+  // The testing variant exists so a device runs the same shrunk, obfuscated
+  // code a release ships. A `debugR8` that quietly stopped minifying would
+  // still build, still install, and still pass — while testing nothing R8 does.
+  const debugR8Block = buildTypesBlock ? findGradleBlock(buildTypesBlock, "debugR8") : null;
+  if (debugR8Block) {
+    requireMatch(debugR8Block, /minifyEnabled\s*(?:=\s*)?true/, "The debugR8 build type must enable R8 with minifyEnabled true; it exists to test the optimized code on a device.");
+    requireMatch(debugR8Block, /shrinkResources\s*(?:=\s*)?true/, "The debugR8 build type must enable shrinkResources true.");
+    requireMatch(debugR8Block, /getDefaultProguardFile\(['\"]proguard-android-optimize\.txt['\"]\)/, "The debugR8 build type must use proguard-android-optimize.txt, like release.");
+    requireMatch(debugR8Block, /['\"]proguard-rules\.pro['\"]/, "The debugR8 build type must include the app ProGuard rules, like release.");
+    // Debuggable and debug-signed on purpose: WebView inspection and the
+    // instrumentation runner both need it, and the debug key must never be
+    // confused for the release one.
+    requireMatch(debugR8Block, /debuggable\s*(?:=\s*)?true/, "The debugR8 build type must stay debuggable for WebView inspection and instrumented tests.");
+    requireMatch(debugR8Block, /signingConfig\s+signingConfigs\.debug/, "The debugR8 build type must be signed with the debug key, never the release keystore.");
+    // The instrumentation APK is minified too, because it links against this
+    // obfuscated app. Its rules keep the reflectively discovered test classes;
+    // without them the suite shrinks away and reports a green run that
+    // executed nothing.
+    requireMatch(debugR8Block, /testProguardFiles\s+['\"]proguard-rules-test-apk\.pro['\"]/, "The debugR8 build type must apply the test-APK R8 rules, or the instrumented suite is shrunk away.");
+  }
   if (releaseNoR8Block) {
     requireMatch(releaseNoR8Block, /versionNameSuffix\s*(?:=)?\s*['\"][^'\"]*-nor8[^'\"]*['\"]/, "releaseNoR8 must declare a versionNameSuffix containing -nor8.");
     if (/minifyEnabled\s*(?:=\s*)?true/.test(releaseNoR8Block)) throw new Error("releaseNoR8 must not set minifyEnabled true.");

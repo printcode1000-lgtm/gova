@@ -8,8 +8,9 @@
 - `npx tsx scripts/ota-publish.ts --notes "text"`: يستبدل release notes التلقائية.
 - `npx tsx scripts/ota-publish.ts --mandatory`: يوقع manifest وفيه `mandatory: true`.
 - `npx tsx scripts/cap-build.ts --dry-run`: يطبع الخطة كاملة ولا يغير الملفات ولا ينشر.
-- `npx tsx scripts/cap-build.ts --skip-ota`: يتجاوز نشر OTA ويستخدم manifest محلي موجود.
-- `npx tsx scripts/cap-build.ts --no-r8 --skip-ota`: يستخدم مسار `ReleaseNoR8` التشخيصي، ولا يسمح بالدمج مع أي خطوة نشر.
+- `npx tsx scripts/cap-build.ts --skip-ota`: يتجاوز نشر OTA ويستخدم manifest محلي موجود. ما زال يقرأ manifest الحي على R2 ويطابق الناتج المحلي به، فهو للتشخيص لا للإصدار.
+- `npx tsx scripts/cap-build.ts --no-ota`: مسار الإصدار للمتجر. يبني ناتج ويب جديداً بنفسه، ويفتح خط محتوى جديداً على رقم الشِل (`0.2.3` تصبح `0.2.3.0`)، **ولا يتصل بـ R2 إطلاقاً** — لا قراءة ولا كتابة ولا حاجة لمفاتيح OTA. لا يجتمع مع `--skip-ota` أو `--resume`.
+- `npx tsx scripts/cap-build.ts --no-r8 --skip-ota`: يستخدم مسار `ReleaseNoR8` التشخيصي، ولا يسمح بالدمج مع أي خطوة نشر. يقبل `--no-ota` كذلك.
 
 ## Safety
 

@@ -9,6 +9,7 @@ import { otaReleaseRepository } from "@/modules/data-access/domains/ota/index.se
 import { compareOtaManifests } from "../utils/ota-release-diff";
 import { compareOtaCanonicalStrings } from "../utils/ota-canonical-order";
 import { isOtaRolloutEligible } from "../utils/ota-rollout";
+import { isOtaVersion } from "../utils/ota-state";
 import { summarizeOtaAdoption } from "../utils/ota-adoption";
 import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
 import {
@@ -27,10 +28,7 @@ import type {
 function assertManifest(manifest: OtaManifest): void {
   if (manifest.schemaVersion !== 2 || manifest.delivery !== "files")
     throw new Error("otaManifestInvalid");
-  if (
-    !manifest.releaseId ||
-    !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(manifest.version)
-  ) {
+  if (!manifest.releaseId || !isOtaVersion(manifest.version)) {
     throw new Error("otaManifestInvalid");
   }
   if (

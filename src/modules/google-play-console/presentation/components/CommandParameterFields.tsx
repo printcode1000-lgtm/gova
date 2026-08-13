@@ -30,7 +30,7 @@ export function Parameter({ command, schema, value, t, onChange }: {
   t: (key: string) => string;
   onChange: (id: string, name: BuildParameterName, value: unknown) => void;
 }) {
-  const help = command.id === "cap-build" || command.id === "release-android-with-ota" ? (
+  const help = command.id === "cap-build" || command.id === "release-android" ? (
     <p className="text-xs leading-5 text-on-surface-variant">
       {t(`releaseConsole.capBuild.${schema.name}`)}
     </p>

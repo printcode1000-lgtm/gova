@@ -10,6 +10,7 @@ export interface OtaRevocationDocument extends OtaRevocationDocumentPayload {
 }
 
 import { compareOtaCanonicalStrings } from "./ota-canonical-order";
+import { isOtaVersion } from "./ota-state";
 
 export function canonicalOtaRevocationPayload(
   payload: OtaRevocationDocumentPayload,
@@ -44,8 +45,7 @@ export function isValidOtaRevocationDocument(
     !Array.isArray(document.revokedVersions)
   ) return false;
   const versions = document.revokedVersions;
-  if (versions.some((version) => typeof version !== "string" || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)))
-    return false;
+  if (versions.some((version) => !isOtaVersion(version))) return false;
   return versions.every(
     (version, index) =>
       index === 0 || compareOtaCanonicalStrings(versions[index - 1]!, version) < 0,

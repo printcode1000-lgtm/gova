@@ -11,7 +11,8 @@ export type BuildParameterName =
   | "otaSource"
   | "nativeVersionAction"
   | "minimumNativeVersion"
-  | "dryRun";
+  | "dryRun"
+  | "device";
 
 export type BuildParameterSchema =
   | { name: BuildParameterName; type: "boolean"; flag: string }
@@ -63,16 +64,14 @@ const diagnostic = { name: "diagnostic", type: "boolean", flag: "--diagnostic" }
  * purpose: leaving it empty keeps the gate in force.
  */
 const minimumNativeVersion = { name: "minimumNativeVersion", type: "string", flag: "--minimum-native-version", maxLength: 32 } as const;
+// `skip-ota` reuses the existing local bundle and still proves it against the
+// live manifest; `no-ota` builds a fresh bundle on a new content line and
+// never reaches R2. They are different actions, not two names for one.
 const otaSource = {
   name: "otaSource",
   type: "enum",
   flag: "--ota-source",
-  values: ["publish-new", "resume-published", "skip-ota"],
-} as const;
-const fullReleaseOtaSource = {
-  ...otaSource,
-  required: true,
-  values: ["publish-new", "resume-published"],
+  values: ["publish-new", "resume-published", "skip-ota", "no-ota"],
 } as const;
 const nativeVersionAction = {
   name: "nativeVersionAction",
@@ -82,6 +81,11 @@ const nativeVersionAction = {
   required: true,
 } as const;
 const dryRun = { name: "dryRun", type: "boolean", flag: "--dry-run" } as const;
+/**
+ * Which attached device to act on. Optional: one connected device is chosen
+ * automatically, and the scripts refuse rather than guess when several are.
+ */
+const device = { name: "device", type: "string", flag: "--device", maxLength: 64 } as const;
 const track = { name: "track", type: "enum", flag: "track", values: ["internal", "alpha", "beta", "production"] } as const;
 const rollout = { name: "rollout", type: "number", flag: "rollout", min: 0, max: 1 } as const;
 const releaseNotes = { name: "releaseNotes", type: "localized-text", flag: "release_notes_b64", maxLanguages: 20, maxLength: 500 } as const;
@@ -120,21 +124,33 @@ export const BUILD_COMMAND_CATALOG = [
   entry("ota-status", "ota:status", "ota", "safe", otaEnv, [], "30 sec"),
   entry("ota-self-test", "ota:self-test", "verification", "safe", otaEnv, [], "1-3 min"),
   entry("cap-build", "cap:build", "native-android", "destructive", [], ["android/app/src/main/assets/public", "android/app/build/outputs"], "20-45 min", undefined, [otaSource, dryRun, optimization]),
-  entry("release-android-with-ota", "release:android:with-ota", "native-android", "publishes-live", [...otaEnv, ...signingEnv], ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "25-50 min", "PUBLISH_OTA", [nativeVersionAction, fullReleaseOtaSource, notes, mandatory], true),
-  entry("release-android-no-ota", "release:android:no-ota", "native-android", "destructive", signingEnv, ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "30-60 min", undefined, [], true),
+  // The single full-release path. It publishes nothing: the shell it builds
+  // carries its own complete, current bundle, so it needs neither OTA
+  // credentials nor a confirmation phrase. Publishing an OTA onto that shell
+  // afterwards is `ota-publish`, on its own button.
+  entry("release-android", "release:android", "native-android", "destructive", signingEnv, ["android/app/build/outputs/bundle/release/app-release.aab", "android/app/build/outputs/apk/release/app-release.apk"], "30-60 min", undefined, [nativeVersionAction], true),
   entry("cap-open-android", "cap:open:android", "native-android", "safe", [], [], "<1 min", undefined, [], true),
   // Verification category on purpose: opening a folder must not take the
   // exclusive release lock that the native-android commands hold.
   entry("android-open-outputs", "android:open:outputs", "verification", "safe", [], [], "<1 min", undefined, [], true),
   entry("cap-prepare-android", "cap:prepare:android", "native-android", "destructive", [], ["out/asol-web-manifest.json", "android/app/src/main/assets/public"], "12-25 min", undefined, [], true),
-  // Testing path: rebuilds the web bundle, syncs it, and assembles a debug APK.
-  // No keystore, no R2 write — but it does rewrite the native web assets, so it
-  // takes the same exclusive lock as the other native-android commands.
-  entry("android-build-debug", "android:build:debug", "native-android", "destructive", [], ["android/app/build/outputs/apk/debug/app-debug.apk"], "15-35 min", undefined, [], true),
-  // Verification category: the suite reads the tree and must never wait behind
-  // a release lock it does not need.
+  // Testing path: rebuilds the web bundle, syncs it, assembles the R8-optimized
+  // debug-signed APK, then wipes every project package off the connected device
+  // and installs it. No keystore, no R2 write — but it rewrites the native web
+  // assets, so it takes the same exclusive lock as the other native-android
+  // commands. It erases that app's data on the device by design: an install
+  // over yesterday's state is not a test of today's build.
+  entry("android-build-debug", "android:build:debug", "native-android", "destructive", [], ["android/app/build/outputs/apk/debugR8/app-debugR8.apk"], "15-35 min", undefined, [], true),
+  // Installing is its own command because it is the irreversible half. It
+  // builds nothing, so a rebuild never wipes a phone as a side effect, and a
+  // reinstall never waits on a twenty-minute build.
+  entry("android-device-install", "android:device:install", "native-android", "destructive", [], [], "1-3 min", undefined, [device], true),
+  // Verification category: neither suite takes the release lock. The host suite
+  // reads the working tree; the device suite drives an attached device. They
+  // answer different questions and are deliberately separate buttons.
   // Measured at ~2.5 min warm; the upper bound covers a cold tsc/tsx cache.
   entry("run-test-suite", "verify:all", "verification", "safe", [], [], "3-10 min", undefined, [], true),
+  entry("run-device-tests", "android:device:tests", "verification", "safe", [], [], "5-15 min", undefined, [device], true),
   entry("cap-sync", "cap:sync", "native-android", "safe", [], ["android/app/src/main/assets/public"], "3-8 min"),
   entry("cap-copy", "cap:copy", "native-android", "safe", [], ["android/app/src/main/assets/public"], "2-5 min"),
   entry("cap-verify-defaults", "cap:verify-defaults", "verification", "safe", [], [], "1-3 min"),
@@ -185,6 +201,7 @@ export function materializeBuildCommandParameters(command: BuildCommandCatalogEn
       else if (schema.name === "otaSource") {
         if (value === "resume-published") argv.push("--resume");
         if (value === "skip-ota") argv.push("--skip-ota");
+        if (value === "no-ota") argv.push("--no-ota");
       }
       else if (schema.name === "nativeVersionAction") {
         if (value === "keep-current") argv.push("--native-version=current");

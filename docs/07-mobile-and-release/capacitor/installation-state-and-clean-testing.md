@@ -99,6 +99,40 @@ npx tsx scripts/cap-run-clean.ts ios --target=SIMULATOR_ID
 On a physical iOS device, uninstall the test application through the device or
 Xcode because `simctl` applies only to simulators.
 
+## The Android testing package
+
+The release console's testing card does the same thing for Android, harder and
+without being asked twice. Building and installing are separate commands, so a
+rebuild never wipes a phone as a side effect:
+
+```bash
+npm run android:build:debug     # builds only; touches no device
+npm run android:device:install  # wipes the device and installs what was built
+```
+
+The build produces the `debugR8` variant — R8-shrunk like a release, still
+`debuggable` and signed with the debug key. The install detects the connected device and removes
+**every** package under `hgh.asol.app` for **every** user profile on it, along
+with the app-scoped directories under `/sdcard/Android/{data,media,obb}` that
+outlive a partial uninstall. Data, settings, databases, WebView storage and
+notification channels all live inside the package's own records, so the system
+drops them with it.
+
+It then asks the device again and refuses to continue if anything is left. A
+wipe that quietly found nothing looks exactly like one that worked, which is
+why the check exists and why the log names each package before removing it.
+
+Uninstalling rather than clearing is not fussiness: a package whose signer
+differs from the installed one is refused with
+`INSTALL_FAILED_UPDATE_INCOMPATIBLE`, and no amount of `pm clear` changes that.
+A left-over instrumentation package is the other trap — it runs yesterday's
+tests against today's build.
+
+`--device=<serial>` selects a device; with several attached and no serial, the
+script refuses rather than guesses. Installing builds nothing: with no package
+built yet it stops and says so, instead of starting a long build nobody asked
+for.
+
 ## Verification
 
 ```bash

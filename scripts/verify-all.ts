@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { reportStage, reportStep } from "./release-stage";
 
 /**
  * Run every check this repository can run on its own.
@@ -86,13 +87,17 @@ function main(): void {
   const env = withoutVsCodeDebuggerEnv(process.env);
   const results: Array<{ script: string; outcome: Outcome; detail?: string; ms: number }> = [];
 
-  for (const step of STEPS) {
+  reportStage("testing");
+  for (const [index, step] of STEPS.entries()) {
     if (step.skipUnless && !existsSync(path.resolve(step.skipUnless.path))) {
       console.log(`\n=== SKIP ${step.script} — ${step.skipUnless.reason} ===`);
       results.push({ script: step.script, outcome: "skipped", detail: step.skipUnless.reason, ms: 0 });
       continue;
     }
 
+    // The console shows this on the button: thirty checks under one stage are
+    // indistinguishable from a hang unless each one says its own name.
+    reportStep(`${index + 1}/${STEPS.length} ${step.script}`);
     console.log(`\n=== RUN ${step.script} ===`);
     const startedAt = Date.now();
     try {

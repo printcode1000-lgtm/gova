@@ -92,6 +92,12 @@ bridge race would otherwise make tray import appear unavailable for the rest
 of that process. Optional plugin imports retry after a transient loader
 rejection instead of caching that rejection permanently.
 
+Android must call `AsolNotificationInbox.getDelivered()` explicitly. Do not
+feature-detect this Capacitor proxy with JavaScript's `in` operator: native
+methods are not ordinary proxy properties, so the check can incorrectly select
+an unimplemented fallback and prevent background or terminated notifications
+from reaching the notification centre.
+
 Dismissed notification identities are remembered locally by `id` and
 `dedupeKey`. Android tray import checks that list before saving delivered
 notifications, so deleting an item from `/notifications` prevents it from

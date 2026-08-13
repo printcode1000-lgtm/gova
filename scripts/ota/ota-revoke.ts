@@ -15,13 +15,14 @@ import {
   writeTrackedRevokedVersions,
 } from "./ota-revocation";
 import { readVerifiedLiveRevocationDocument } from "./ota-live-revocation";
+import { isOtaVersion } from "../../src/features/ota/utils/ota-state";
 
 async function main(): Promise<void> {
   loadOtaEnvironment();
   const args = process.argv.slice(2);
   const restore = args[0] === "--restore";
   const version = args[restore ? 1 : 0];
-  if (!version || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
+  if (!isOtaVersion(version)) {
     throw new Error("Usage: npm run ota:revoke -- <version> | npm run ota:revoke -- --restore <version>");
   }
 

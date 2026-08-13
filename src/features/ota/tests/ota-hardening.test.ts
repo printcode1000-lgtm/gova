@@ -23,10 +23,13 @@ import {
   type PersistedOtaRevocationState,
 } from "../utils/ota-revocation-state";
 import {
+  compareOtaVersions,
+  isOtaVersion,
   nativeDownloadPollAction,
   shouldPersistNativeDownloadProgress,
   shouldSupersedePending,
 } from "../utils/ota-state";
+import { safeBundlePath, selectOtaBundle } from "../utils/ota-bundle";
 import {
   mergeRevokedVersions,
   verifySignedRevocationDocument,
@@ -308,6 +311,52 @@ async function main(): Promise<void> {
   const iosSource = readFileSync("ios/App/App/BackgroundDownloadPlugin.swift", "utf8");
   assert.equal(iosSource.includes("var hasher = SHA256()"), true);
   assert.equal(iosSource.includes('defaults.set("verifying"'), true);
+
+  // Composite content versions (`<shell>.<counter>`) travel through every one
+  // of these surfaces. Each was a place a three-part assumption could have
+  // survived unnoticed until a release stopped reaching devices.
+  for (const version of ["0.2.3.0", "0.2.3.10", "0.1.15", "0.2.3.1-rc.1"]) {
+    assert.equal(isOtaVersion(version), true, `valid OTA version rejected: ${version}`);
+  }
+  for (const invalid of ["0.2", "0.2.3.4.5", "0.2.3.", "0.2.3.a", ""]) {
+    assert.equal(isOtaVersion(invalid), false, `invalid OTA version accepted: ${invalid}`);
+  }
+  // The ordering the client's update decision depends on. A restarted counter
+  // must still outrank the entire previous line, or an old shell is told it is
+  // up to date and never routed to the native-version gate.
+  assert.equal(compareOtaVersions("0.2.4.0", "0.2.3.9") > 0, true);
+  assert.equal(compareOtaVersions("0.2.3.1", "0.1.15") > 0, true);
+  assert.equal(compareOtaVersions("0.2.3", "0.2.3.0"), 0);
+  assert.equal(shouldSupersedePending("0.2.3.1", "0.2.3.2"), true);
+  assert.equal(shouldSupersedePending("0.2.3.2", "0.2.3.1"), false);
+  // Retention orders numerically: lexically, 0.2.3.10 sorts below 0.2.3.2.
+  const compositeHistory = ["0.2.3.1", "0.2.3.10", "0.2.3.2", "0.2.4.0"]
+    .map((version) => `history/${version}.json`);
+  assert.deepEqual(
+    selectRecentHistoryKeys(compositeHistory, "history", 3),
+    ["history/0.2.4.0.json", "history/0.2.3.10.json", "history/0.2.3.2.json"],
+  );
+  // A delta is chosen by exact version string, and its object path carries the
+  // extra dot through path-safety normalization.
+  const compositeManifest = {
+    bundles: {
+      full: { path: "bundles/full.zip", size: 10, sha256: "a" },
+      deltas: [{ path: "bundles/from-0.2.3.0.zip", fromVersion: "0.2.3.0", size: 5, sha256: "b" }],
+    },
+  } as unknown as OtaManifest;
+  assert.equal(selectOtaBundle(compositeManifest, "0.2.3.0")?.entry.path, "bundles/from-0.2.3.0.zip");
+  assert.equal(selectOtaBundle(compositeManifest, "0.1.15")?.kind, "full");
+  assert.equal(safeBundlePath("bundles/from-0.2.3.0.zip"), "bundles/from-0.2.3.0.zip");
+  // Revocation is signed over a canonical payload; composite versions must
+  // survive that round trip or an emergency revocation cannot be published.
+  const compositeRevocation = createSignedRevocationDocument(
+    ["0.2.3.1", "0.2.3.10", "0.2.4.0"],
+    new Date().toISOString(),
+    privateKey,
+  );
+  assert.equal(isValidOtaRevocationDocument(compositeRevocation), true);
+  assert.ok(verifySignedRevocationDocument(compositeRevocation, privateKey));
+
   console.log("OTA hardening tests passed.");
 }
 

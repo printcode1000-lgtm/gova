@@ -37,6 +37,83 @@ have bitten:
   are computed against it, so reusing one with different content breaks them —
   see [the open gap](#the-gap-that-is-still-open).
 
+## Content Versions Follow The Shell
+
+A content version is `<native shell version>.<counter>`: shell `0.2.3` carries
+content `0.2.3.0`, OTAs published on top of it are `0.2.3.1`, `0.2.3.2`, and
+the next shell opens `0.2.4.0`.
+
+A store release ships a complete, current web bundle inside the shell, so it
+opens its line at counter zero and publishes nothing. Whoever installs that
+build already holds the content; there is no update to hand them. The counter
+therefore restarts with every shell, and the numbering says plainly which shell
+a bundle belongs to.
+
+**The counter restarts, the version never dips.** The native triple leads the
+comparison, so `0.2.4.0` outranks the whole of the `0.2.3` line. This is not
+cosmetic. Each device runs the comparison that shipped inside its own bundle —
+code no update can fix, because that update is the one being rejected. A
+version that dipped would answer an old shell with "you are up to date"
+instead of routing it to the native-version gate, and that shell would never
+be told to update again.
+
+`src/modules/release-commands/domain/content-version.ts` holds the rules;
+`assertContentVersionAdvances` refuses any version that fails to outrank the
+one it replaces, and names the way out: raise the Android version first. The
+rules live in the domain rather than in `scripts/` because the release console
+previews the same numbers before a build starts, and a preview derived from a
+second implementation is a preview that can lie.
+
+`compareOtaVersions` pads missing components with zero, so a legacy three-part
+version and its `.0` form compare equal and pre-existing manifests keep their
+meaning without a migration step.
+
+### Where a content version travels
+
+Every surface below accepts the composite form. `isOtaVersion` in
+`ota-state.ts` is the one pattern they share; a second copy of that regex is
+how a three-part assumption survives unnoticed until a release stops reaching
+devices.
+
+| Surface | What it does with the version |
+|---|---|
+| `ota-update-service.validateManifest` | rejects a malformed version before the update decision — **runs on the device** |
+| `ota-release-service.assertManifest` | same check server-side, before a release is stored or approved |
+| `ota-revocation-document` | signed revocation lists, sorted canonically |
+| `ota-bundle.selectOtaBundle` | matches a delta by exact `fromVersion` string |
+| `ota-bundle-history` | parses `history/<version>.json` and retains three, ordered numerically |
+| `ota_releases` table | free `text` column and index — no format constraint |
+| `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` | baked into the bundle at build time; the device's `local.version` |
+| `ASOL_NEXT_BUILD_ID` | `asol-<version>`, the deterministic Next.js build id |
+| `app-version.ts` constants | the committed fallback for web and dev builds |
+
+Two surfaces deliberately keep the three-part native shape: the Android
+`versionName` / `versionCode` pair with its iOS equivalents, and
+`minimumNativeVersion`. Those describe a shell, not content.
+
+**`package.json` is not the content version.** It once was, and
+`validate-app-versions` enforced the equality. npm rejects a four-component
+version outright, so the two are now separate: package.json keeps its own
+semver, and the validator instead checks that the content line's native prefix
+matches the shell actually committed.
+
+`cap-build` rewrites `app-version.ts` and `.env.example` alongside the Android
+and iOS project files, so a release cannot leave a stale constant behind for
+`validate-app-versions` to fail on later.
+
+### The one thing composite versions cannot fix
+
+A device whose shell predates this scheme runs the manifest validator that
+shipped inside its own bundle, and that validator only accepts three
+components. Once a four-part OTA is published, such a device reports an
+invalid-manifest error instead of the clean `ota.nativeUpdateRequired` status.
+
+It could not have received that release either way — `minimumNativeVersion`
+gates it out — so nothing installable is lost. The cost is the status it shows
+until its owner installs a store build. No published version format avoids
+this, because the code doing the rejecting is exactly the code an update would
+have to replace.
+
 ## The Golden Rule
 
 > **OTA ships UI and logic that run inside the native capabilities already
@@ -434,7 +511,8 @@ npm run cap:build
 Do not pass `--version` or `--notes`. The command performs this sequence:
 
 1. Reads the current version from `app-updates/manifest.json`.
-2. Increments the patch component automatically, such as `0.1.7` to `0.1.8`.
+2. Advances the counter on the current shell's content line, such as `0.2.3.7`
+   to `0.2.3.8` — see [Content Versions Follow The Shell](#content-versions-follow-the-shell).
 3. Creates notes using the current date and time in `Africa/Cairo`.
 4. Pins the next web version and deterministic Next.js Build ID. Separately,
    it keeps the current native version for web-only changes or increments the
@@ -456,7 +534,25 @@ Do not pass `--version` or `--notes`. The command performs this sequence:
 
 No APK or IPA is created. The command prepares the Android Studio and Xcode projects.
 
-If R2 has no manifest yet, the initial version comes from `package.json`. Every later execution increments the R2 patch version.
+If R2 has no manifest yet, or holds a legacy three-part version, publication
+restarts the counter at one on the current shell's line — one above the `.0`
+the shell itself carries.
+
+### Releasing without OTA
+
+`cap:build --no-ota` is the store-release path, and the one the release console
+uses. It drops steps 1 and 6-11, 14 and 15 — everything that reads or writes R2
+— and instead builds the web bundle itself, stamps it with
+`<native>.0`, and syncs it. It needs no OTA credentials and no network, because
+the release publishes nothing: the shell carries its own content.
+
+The ordering guard it can still apply offline compares against the previous
+local build in `out/asol-web-manifest.json`. The authoritative check against
+the live manifest happens later, when an OTA is published onto the new line.
+
+`--no-ota` is not `--skip-ota`. `--skip-ota` reuses an existing local bundle and
+still proves it against the live manifest, which makes it a diagnostic aid;
+`--no-ota` builds a fresh bundle and never reaches R2 at all.
 
 ## Publish-Only Command
 

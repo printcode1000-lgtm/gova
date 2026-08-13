@@ -182,12 +182,12 @@ export class PushNotificationsModule {
   /** Notifications the OS has already shown and not yet dismissed. */
   async getDelivered(): Promise<NotificationPayload[]> {
     if (!this.isSupported()) return [];
-    const plugin = isAndroid()
-      ? notificationInboxPlugin
-      : (await pushPlugin.required()).plugin;
-    const { notifications } = await ("getDelivered" in plugin
-      ? plugin.getDelivered()
-      : plugin.getDeliveredNotifications());
+    // Capacitor plugins are Proxies. The `in` operator is not a reliable
+    // capability check on that proxy and can report a registered native method
+    // as absent. Select the platform API explicitly instead.
+    const { notifications } = isAndroid()
+      ? await notificationInboxPlugin.getDelivered()
+      : await (await pushPlugin.required()).plugin.getDeliveredNotifications();
     return notifications.map((notification) => toPayload(notification, false));
   }
 

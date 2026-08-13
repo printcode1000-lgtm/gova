@@ -161,12 +161,6 @@ export function contentTypeFor(filePath: string): string {
   return "application/octet-stream";
 }
 
-export function nextPatchVersion(current: string): string {
-  const match = /^(\d+)\.(\d+)\.(\d+)(?:-[0-9A-Za-z.-]+)?$/.exec(current);
-  if (!match) throw new Error(`R2 manifest has an invalid version: ${current}`);
-  return `${match[1]}.${match[2]}.${Number(match[3]) + 1}`;
-}
-
 export function automaticNotes(now: Date): string {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Africa/Cairo",

@@ -1,6 +1,7 @@
 /** Single responsibility: select the retained OTA history and stale R2 bundle objects. */
 import type { OtaManifest } from "./ota-config";
 import { compareOtaCanonicalStrings } from "../../src/features/ota/utils/ota-canonical-order";
+import { isOtaVersion } from "../../src/features/ota/utils/ota-state";
 
 function compareVersions(left: string, right: string): number {
   const parse = (value: string) => value.split("-")[0]!.split(".").map(Number);
@@ -16,7 +17,7 @@ function compareVersions(left: string, right: string): number {
 export function historyVersion(key: string, historyPrefix: string): string | null {
   if (!key.startsWith(`${historyPrefix}/`) || !key.endsWith(".json")) return null;
   const version = key.slice(historyPrefix.length + 1, -5);
-  return /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version) ? version : null;
+  return isOtaVersion(version) ? version : null;
 }
 
 export function selectRecentHistoryKeys(

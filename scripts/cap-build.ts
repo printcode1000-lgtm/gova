@@ -5,7 +5,8 @@ import path from "node:path";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
 import { compareOtaVersions } from "../src/features/ota/utils/ota-state";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
-import { assertCapBuildInputBundle } from "./assert-release-static-bundle";
+import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "./assert-release-static-bundle";
+import { reportStage } from "./release-stage";
 import {
   getOtaPrefix,
   loadOtaEnvironment,
@@ -25,6 +26,11 @@ import {
   resolveNativeBaseline,
   undeclarableNativeChanges,
 } from "./ota/ota-native-compatibility";
+import {
+  assertContentVersionAdvances,
+  readAndroidNativeVersion,
+  releaseContentVersion,
+} from "./ota/ota-release-line";
 
 const LOCAL_MANIFEST_PATH = path.resolve("out", "asol-web-manifest.json");
 const ANDROID_BUILD_GRADLE = path.resolve("android", "app", "build.gradle");
@@ -42,13 +48,6 @@ function versionCode(version: string): number {
   return major * 10000 + minor * 100 + patch;
 }
 
-function readAndroidVersion(): string {
-  const source = readFileSync(ANDROID_BUILD_GRADLE, "utf8");
-  const version = /versionName\s+"(\d+\.\d+\.\d+)"/.exec(source)?.[1];
-  if (!version) throw new Error("Unable to resolve the current Android native version");
-  return version;
-}
-
 type NativeVersionAction = "auto" | "current" | "next-patch";
 
 function resolveTargetNativeVersion(action: NativeVersionAction): string {
@@ -60,7 +59,7 @@ function resolveTargetNativeVersion(action: NativeVersionAction): string {
     );
   }
 
-  const current = readAndroidVersion();
+  const current = readAndroidNativeVersion();
   const report = inspectNativeCompatibility(baseline);
   const hasCompiledChanges = undeclarableNativeChanges(report).length > 0;
   const automaticTarget =
@@ -120,6 +119,38 @@ function updateIosVersion(version: string): void {
   console.log(
     `iOS MARKETING_VERSION=${version}, CURRENT_PROJECT_VERSION=${buildNumber}`,
   );
+}
+
+/**
+ * The versions committed in the repository, kept in step with the ones just
+ * built.
+ *
+ * `validate-app-versions` holds these constants, `.env.example`, the native
+ * projects and every `asol-web-manifest.json` to one another. Rewriting the
+ * native projects while leaving these behind would make that check fail on the
+ * very commit a release produces — and, worse, would leave ordinary web and
+ * dev builds reporting a version that no longer exists.
+ */
+function updateCommittedVersionConstants(
+  contentVersion: string,
+  nativeVersion: string,
+): void {
+  const constantsPath = path.resolve("src", "core", "config", "app-version.ts");
+  const before = readFileSync(constantsPath, "utf8");
+  const after = before
+    .replace(/CURRENT_NATIVE_APP_VERSION = "[^"]+"/, `CURRENT_NATIVE_APP_VERSION = "${nativeVersion}"`)
+    .replace(/CURRENT_WEB_CONTENT_VERSION = "[^"]+"/, `CURRENT_WEB_CONTENT_VERSION = "${contentVersion}"`);
+  if (before !== after) writeFileSync(constantsPath, after);
+
+  const examplePath = path.resolve(".env.example");
+  if (existsSync(examplePath)) {
+    const exampleBefore = readFileSync(examplePath, "utf8");
+    const exampleAfter = exampleBefore
+      .replace(/^NEXT_PUBLIC_ASOL_NATIVE_VERSION=.*$/m, `NEXT_PUBLIC_ASOL_NATIVE_VERSION=${nativeVersion}`)
+      .replace(/^NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION=.*$/m, `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION=${contentVersion}`);
+    if (exampleBefore !== exampleAfter) writeFileSync(examplePath, exampleAfter);
+  }
+  console.log(`Committed versions: content=${contentVersion}, native=${nativeVersion}`);
 }
 
 function readLocalManifest(): OtaManifest {
@@ -245,7 +276,14 @@ async function main(): Promise<void> {
   const resumePublishedRelease = args.includes("--resume");
   const noR8 = args.includes("--no-r8");
   const skipOta = args.includes("--skip-ota");
+  // `--skip-ota` reuses the existing local bundle and still proves it against
+  // the live manifest. `--no-ota` is the store-release path: it builds its own
+  // bundle, opens a new content line, and never reaches R2 at all.
+  const noOta = args.includes("--no-ota");
   const dryRun = args.includes("--dry-run");
+  if (noOta && (skipOta || resumePublishedRelease)) {
+    throw new Error("--no-ota cannot be combined with --skip-ota or --resume; choose one OTA action.");
+  }
   const nativeVersionArguments = args.filter((argument) =>
     argument.startsWith("--native-version="),
   );
@@ -262,7 +300,7 @@ async function main(): Promise<void> {
   const otaNotesArguments = args.filter((argument) => argument.startsWith("--notes="));
   const mandatoryOta = args.includes("--mandatory");
   if (otaNotesArguments.length > 1) throw new Error("Use exactly one OTA release notes value.");
-  if ((resumePublishedRelease || skipOta) && (otaNotesArguments.length > 0 || mandatoryOta)) {
+  if ((resumePublishedRelease || skipOta || noOta) && (otaNotesArguments.length > 0 || mandatoryOta)) {
     throw new Error("OTA notes and mandatory mode can only be set while publishing a new OTA.");
   }
   const apiBaseUrl = (
@@ -275,19 +313,31 @@ async function main(): Promise<void> {
     ASOL_OTA_MINIMUM_NATIVE_VERSION: plannedNativeVersion,
   };
 
-  if (noR8 && !skipOta && !dryRun) {
+  if (noR8 && !skipOta && !noOta && !dryRun) {
     throw new Error(
-      "--no-r8 is only allowed with --skip-ota or --dry-run; releaseNoR8 builds must never be part of publishing.",
+      "--no-r8 is only allowed with --skip-ota, --no-ota or --dry-run; releaseNoR8 builds must never be part of publishing.",
     );
   }
 
   if (dryRun) {
     console.log("cap-build dry run plan");
-    console.log("  web version: next automatic patch from the live R2 manifest");
+    console.log(
+      `  web version: ${
+        noOta
+          ? `${releaseContentVersion(plannedNativeVersion)} (new content line, derived locally)`
+          : "next automatic patch from the live R2 manifest"
+      }`,
+    );
     console.log(`  Android build type: ${noR8 ? "ReleaseNoR8" : "Release"}`);
     console.log(
       `  OTA action: ${
-        skipOta ? "skip" : resumePublishedRelease ? "resume existing manifest" : "publish next OTA"
+        noOta
+          ? "none: the shell carries its own bundle"
+          : skipOta
+            ? "skip"
+            : resumePublishedRelease
+              ? "resume existing manifest"
+              : "publish next OTA"
       }`,
     );
     console.log(
@@ -300,6 +350,7 @@ async function main(): Promise<void> {
     return;
   }
 
+  reportStage("checking-compatibility");
   console.log(
     "Validating Android backup and R8 release policies before any OTA publication...",
   );
@@ -307,6 +358,11 @@ async function main(): Promise<void> {
     stdio: "inherit",
     env: publishEnv,
   });
+
+  if (noOta) {
+    await buildStoreRelease({ plannedNativeVersion, apiBaseUrl, noR8 });
+    return;
+  }
 
   if (resumePublishedRelease) {
     console.log(
@@ -359,6 +415,7 @@ async function main(): Promise<void> {
 
   updateAndroidVersion(nativeVersion);
   updateIosVersion(nativeVersion);
+  updateCommittedVersionConstants(version, nativeVersion);
 
   const errors = compareManifestFiles(localManifest, remoteManifest);
   if (errors.length > 0) {
@@ -367,24 +424,84 @@ async function main(): Promise<void> {
     );
   }
 
+  reportStage("verifying");
   console.log("Verifying every R2 file by size and SHA-256...");
   await verifyR2Files(remoteManifest);
+  reportStage("syncing-native");
   execSync("npm run cap:sync", { stdio: "inherit", env });
 
-  if (noR8) {
-    const androidDirectory = path.resolve("android");
-    const tasks = [":app:bundleReleaseNoR8", ":app:assembleReleaseNoR8", "-Pasol.allowNoR8=true"];
-    if (process.platform === "win32") {
-      execFileSync(process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe", ["/d", "/c", "gradlew.bat", ...tasks], { cwd: androidDirectory, stdio: "inherit", env });
-    } else {
-      execFileSync(path.join(androidDirectory, "gradlew"), tasks, { cwd: androidDirectory, stdio: "inherit", env });
-    }
-  }
+  if (noR8) assembleNoR8(env);
 
+  // Not "completed": a full release continues into the signed Android build.
+  // The runner stamps completion itself once the process exits successfully.
+  reportStage("finalizing-results");
   console.log(
     `cap-build completed: web/R2=${version}, Android/iOS native=${nativeVersion}`,
   );
   console.log(`Automatic notes: ${remoteManifest.notes}`);
+}
+
+function assembleNoR8(env: NodeJS.ProcessEnv): void {
+  reportStage("building-android");
+  const androidDirectory = path.resolve("android");
+  const tasks = [":app:bundleReleaseNoR8", ":app:assembleReleaseNoR8", "-Pasol.allowNoR8=true"];
+  if (process.platform === "win32") {
+    execFileSync(process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe", ["/d", "/c", "gradlew.bat", ...tasks], { cwd: androidDirectory, stdio: "inherit", env });
+  } else {
+    execFileSync(path.join(androidDirectory, "gradlew"), tasks, { cwd: androidDirectory, stdio: "inherit", env });
+  }
+}
+
+/**
+ * The store-release path: the shell is built to carry its own complete bundle,
+ * so there is no OTA to publish and nothing on R2 to prove the bundle against.
+ *
+ * It opens a new content line at `<native>.0` derived entirely from the local
+ * Android version, which is what lets this run without R2 credentials or a
+ * network. The guard against the previous local build is the one ordering
+ * check still available offline; the publisher applies the authoritative one
+ * against the live manifest when an OTA is later published on this line.
+ */
+async function buildStoreRelease({ plannedNativeVersion, apiBaseUrl, noR8 }: {
+  plannedNativeVersion: string;
+  apiBaseUrl: string;
+  noR8: boolean;
+}): Promise<void> {
+  const previousLocalVersion = existsSync(LOCAL_MANIFEST_PATH)
+    ? readLocalManifest().version
+    : null;
+  const version = releaseContentVersion(plannedNativeVersion);
+  assertContentVersionAdvances(version, previousLocalVersion);
+  console.log(
+    `Store release without OTA: content ${previousLocalVersion ?? "(none)"} -> ${version}, ` +
+      `native shell ${plannedNativeVersion}. R2 is not read or written.`,
+  );
+
+  const env: NodeJS.ProcessEnv = {
+    ...withoutVsCodeDebuggerEnv(process.env),
+    ...otaClientBuildEnv(version, plannedNativeVersion),
+    NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
+  };
+
+  // Before the build, so the bundle is compiled against the versions it ships.
+  updateAndroidVersion(plannedNativeVersion);
+  updateIosVersion(plannedNativeVersion);
+  updateCommittedVersionConstants(version, plannedNativeVersion);
+
+  reportStage("building-web");
+  execSync("npm run build:static", { stdio: "inherit", env });
+  // A diagnostic bundle skips the slow audits; it must never reach a shell.
+  assertReleaseStaticBundle(LOCAL_MANIFEST_PATH);
+
+  reportStage("syncing-native");
+  execSync("npm run cap:sync", { stdio: "inherit", env });
+
+  if (noR8) assembleNoR8(env);
+
+  reportStage("finalizing-results");
+  console.log(
+    `cap-build completed without OTA: web content=${version}, Android/iOS native=${plannedNativeVersion}`,
+  );
 }
 
 main().catch((error) => {

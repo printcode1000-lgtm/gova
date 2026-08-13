@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 import { createHash, sign } from "node:crypto";
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { zipSync } from "fflate";
 import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
@@ -60,7 +60,8 @@ import {
 } from "./ota/ota-revocation";
 import { readVerifiedLiveRevocationDocument } from "./ota/ota-live-revocation";
 
-import { LOCAL_MANIFEST_FILE, args, dryRun, mandatory, notesArguments, notesOverride, minimumNativeArguments, minimumNativeOverride, collectFiles, uploadFilesConcurrently, contentTypeFor, nextPatchVersion, automaticNotes, assertNativeCompatibility } from "./ota-publish/ota-publish.publish-types";
+import { LOCAL_MANIFEST_FILE, args, dryRun, mandatory, notesArguments, notesOverride, minimumNativeArguments, minimumNativeOverride, collectFiles, uploadFilesConcurrently, contentTypeFor, automaticNotes, assertNativeCompatibility } from "./ota-publish/ota-publish.publish-types";
+import { nextContentVersion, readAndroidNativeVersion } from "./ota/ota-release-line";
 
 if (args.includes("--notes") || notesArguments.length > 1) throw new Error("Release notes must use exactly one --notes=<value> argument.");
 
@@ -126,12 +127,12 @@ async function main(): Promise<void> {
   const previousManifest = (await otaObjectExists(client, manifestKey))
     ? await getOtaManifestObject(client, manifestKey)
     : null;
-  const packageVersion = (
-    JSON.parse(readFileSync("package.json", "utf8")) as { version: string }
-  ).version;
-  const version = previousManifest
-    ? nextPatchVersion(previousManifest.version)
-    : packageVersion;
+  // The content line follows the shell the project currently builds, not the
+  // declared minimum: an OTA that also runs on older shells still belongs to
+  // the newest line, and borrowing the lower number would move the published
+  // version backwards.
+  const nativeLine = readAndroidNativeVersion();
+  const version = nextContentVersion(previousManifest?.version ?? null, nativeLine);
   const now = new Date();
   const notes = notesOverride ?? automaticNotes(now);
   const apiBaseUrl = (

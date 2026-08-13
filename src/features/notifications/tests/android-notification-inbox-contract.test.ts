@@ -24,6 +24,16 @@ for (const channel of ["ORDERS", "CHAT", "UPDATES", "URGENT", "SILENT"]) {
 }
 assert.match(push, /AsolNotificationInbox/);
 assert.match(push, /registerPlugin<NotificationInboxPluginApi>/);
+assert.match(
+  push,
+  /isAndroid\(\)\s*\?\s*await notificationInboxPlugin\.getDelivered\(\)/,
+  "Android must call its application-owned inbox method explicitly.",
+);
+assert.doesNotMatch(
+  push,
+  /["']getDelivered["']\s+in\s+plugin/,
+  "Capacitor plugin proxies must not be feature-detected with the in operator.",
+);
 assert.doesNotMatch(
   push,
   /createLazyPlugin\("AsolNotificationInbox"/,

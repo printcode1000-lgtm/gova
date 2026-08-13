@@ -33,6 +33,7 @@ import {
   clampFutureOtaCheckTimestamp,
   compareOtaVersions,
   isDailyOtaCheckDue,
+  isOtaVersion,
   isReadyForOtaActivation,
   migrateOtaState,
   nativeDownloadPollAction,
@@ -113,7 +114,7 @@ function safeFilePath(value: string): string {
 function validateManifest(manifest: OtaManifest, remote: boolean): void {
   if (manifest.schemaVersion !== 2 || manifest.delivery !== "files")
     throw new Error("Unsupported OTA manifest contract");
-  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(manifest.version))
+  if (!isOtaVersion(manifest.version))
     throw new Error(`Invalid OTA version: ${manifest.version}`);
   if (!manifest.releaseId || (remote && !manifest.baseUrl.startsWith("https://")))
     throw new Error("Invalid OTA release metadata");

@@ -10,6 +10,7 @@ import {
   type OtaRevocationDocumentPayload,
 } from "../../src/features/ota/utils/ota-revocation-document";
 import { compareOtaCanonicalStrings } from "../../src/features/ota/utils/ota-canonical-order";
+import { isOtaVersion } from "../../src/features/ota/utils/ota-state";
 
 export const OTA_REVOCATIONS_FILE = path.resolve(
   "scripts",
@@ -20,7 +21,7 @@ export const OTA_REVOCATIONS_FILE = path.resolve(
 export function normalizeRevokedVersions(value: unknown): string[] {
   if (!Array.isArray(value)) throw new Error("OTA revocations file must contain an array");
   const versions = value.map(String);
-  if (versions.some((version) => !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)))
+  if (versions.some((version) => !isOtaVersion(version)))
     throw new Error("OTA revocations file contains an invalid version");
   return [...new Set(versions)].sort(compareOtaCanonicalStrings);
 }
