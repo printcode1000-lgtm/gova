@@ -19,6 +19,7 @@ import {
   getOtaObjectBytes,
   listOtaObjectKeys,
 } from "./ota/ota-r2";
+import { runGradle } from "./android/gradle";
 import {
   inspectNativeCompatibility,
   nativeVersionFromBaseline,
@@ -445,11 +446,7 @@ function assembleNoR8(env: NodeJS.ProcessEnv): void {
   reportStage("building-android");
   const androidDirectory = path.resolve("android");
   const tasks = [":app:bundleReleaseNoR8", ":app:assembleReleaseNoR8", "-Pasol.allowNoR8=true"];
-  if (process.platform === "win32") {
-    execFileSync(process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe", ["/d", "/c", "gradlew.bat", ...tasks], { cwd: androidDirectory, stdio: "inherit", env });
-  } else {
-    execFileSync(path.join(androidDirectory, "gradlew"), tasks, { cwd: androidDirectory, stdio: "inherit", env });
-  }
+  runGradle(tasks, env, androidDirectory);
 }
 
 /**

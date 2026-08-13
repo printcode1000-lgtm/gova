@@ -26,7 +26,7 @@ const resourcesPath = path.join(mappingDirectory, "resources.txt");
 if (process.platform === "win32") {
   execFileSync(
     process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe",
-    ["/d", "/c", "gradlew.bat", ":app:minifyReleaseWithR8"],
+    ["/d", "/c", gradlePath, ":app:minifyReleaseWithR8"],
     {
       cwd: androidDirectory,
       env: withoutVsCodeDebuggerEnv(process.env),

@@ -99,7 +99,11 @@ export class AsolNotificationRepository {
     dropped: NotificationEntity[];
     changed: boolean;
   }> {
-    const raw = (await asolDbGet<unknown[]>(ASOL_DB_STORES.NOTIFICATIONS, listKey(uid))) ?? [];
+    const raw =
+      (await asolDbGet<unknown[]>(
+        ASOL_DB_STORES.NOTIFICATIONS,
+        listKey(uid),
+      )) ?? [];
     const items: NotificationEntity[] = [];
     const dropped: NotificationEntity[] = [];
     let changed = false;
@@ -153,7 +157,9 @@ export class AsolNotificationRepository {
    * "exactly once" true rather than merely likely: two concurrent deliveries of
    * the same push both see the same list, and the second sees the first's row.
    */
-  async save(notification: NotificationEntity): Promise<NotificationSaveOutcome> {
+  async save(
+    notification: NotificationEntity,
+  ): Promise<NotificationSaveOutcome> {
     const sanitized = sanitizeNotificationEntity(notification);
     if (!sanitized) {
       return { stored: false, notification, reason: "invalid" };
@@ -166,12 +172,22 @@ export class AsolNotificationRepository {
     return this.mutex.run(listLock(sanitized.uid), async () => {
       const dismissed = new Set(await this.listDismissed(sanitized.uid));
       if (dismissed.has(sanitized.id) || dismissed.has(sanitized.dedupeKey)) {
-        return { stored: false, notification: sanitized, reason: "dismissed" as const };
+        return {
+          stored: false,
+          notification: sanitized,
+          reason: "dismissed" as const,
+        };
       }
       const { items } = await this.readList(sanitized.uid);
-      const existing = items.find((item) => item.dedupeKey === sanitized.dedupeKey);
+      const existing = items.find(
+        (item) => item.dedupeKey === sanitized.dedupeKey,
+      );
       if (existing) {
-        return { stored: false, notification: existing, reason: "duplicate" as const };
+        return {
+          stored: false,
+          notification: existing,
+          reason: "duplicate" as const,
+        };
       }
       await this.writeList(sanitized.uid, [sanitized, ...items]);
       return { stored: true, notification: sanitized as NotificationEntity };
@@ -185,7 +201,10 @@ export class AsolNotificationRepository {
    * the lock per notification, letting a concurrent import interleave and see a
    * partially written list.
    */
-  async saveMany(uid: string, notifications: readonly NotificationEntity[]): Promise<{
+  async saveMany(
+    uid: string,
+    notifications: readonly NotificationEntity[],
+  ): Promise<{
     stored: NotificationEntity[];
     skipped: NotificationEntity[];
   }> {
@@ -222,7 +241,8 @@ export class AsolNotificationRepository {
       }
 
       if (stored.length > 0) await this.writeList(uid, [...stored, ...items]);
-      if (placeholders.length > 0) await this.rememberDismissedMany(placeholders);
+      if (placeholders.length > 0)
+        await this.rememberDismissedMany(placeholders);
       return { stored, skipped };
     });
   }
@@ -259,12 +279,19 @@ export class AsolNotificationRepository {
       const { items } = await this.readList(uid);
       await this.writeList(
         uid,
-        items.map((item) => ({ ...item, readAt: item.readAt ?? now, updatedAt: now })),
+        items.map((item) => ({
+          ...item,
+          readAt: item.readAt ?? now,
+          updatedAt: now,
+        })),
       );
     });
   }
 
-  async markManyRead(uid: string, notificationIds: readonly string[]): Promise<void> {
+  async markManyRead(
+    uid: string,
+    notificationIds: readonly string[],
+  ): Promise<void> {
     const ids = new Set(notificationIds);
     if (!uid || ids.size === 0) return;
     await this.mutex.run(listLock(uid), async () => {
@@ -312,9 +339,14 @@ export class AsolNotificationRepository {
 
   async listDismissed(uid: string): Promise<string[]> {
     if (!uid) return [];
-    const raw = await asolDbGet<unknown[]>(ASOL_DB_STORES.NOTIFICATION_SETTINGS, dismissedKey(uid));
+    const raw = await asolDbGet<unknown[]>(
+      ASOL_DB_STORES.NOTIFICATION_SETTINGS,
+      dismissedKey(uid),
+    );
     if (!Array.isArray(raw)) return [];
-    return raw.filter((item): item is string => typeof item === "string" && item.length > 0);
+    return raw.filter(
+      (item): item is string => typeof item === "string" && item.length > 0,
+    );
   }
 
   async rememberDismissed(notification: NotificationEntity): Promise<void> {
@@ -327,7 +359,9 @@ export class AsolNotificationRepository {
    * Locked on its own key: this runs from inside a notification-list mutation,
    * and a shared lock would deadlock the caller against itself.
    */
-  async rememberDismissedMany(notifications: readonly NotificationEntity[]): Promise<void> {
+  async rememberDismissedMany(
+    notifications: readonly NotificationEntity[],
+  ): Promise<void> {
     const uid = notifications.find((item) => item.uid)?.uid;
     if (!uid) return;
     await this.mutex.run(dismissedLock(uid), async () => {
@@ -349,12 +383,19 @@ export class AsolNotificationRepository {
 
   async getSettings(uid: string): Promise<NotificationSettings | null> {
     if (!uid) return null;
-    return asolDbGet<NotificationSettings>(ASOL_DB_STORES.NOTIFICATION_SETTINGS, settingsKey(uid));
+    return asolDbGet<NotificationSettings>(
+      ASOL_DB_STORES.NOTIFICATION_SETTINGS,
+      settingsKey(uid),
+    );
   }
 
   async saveSettings(settings: NotificationSettings): Promise<void> {
     if (!settings.uid) return;
-    await asolDbSet(ASOL_DB_STORES.NOTIFICATION_SETTINGS, settingsKey(settings.uid), settings);
+    await asolDbSet(
+      ASOL_DB_STORES.NOTIFICATION_SETTINGS,
+      settingsKey(settings.uid),
+      settings,
+    );
   }
 
   async getBadge(uid: string): Promise<NotificationBadgeState | null> {
@@ -363,7 +404,11 @@ export class AsolNotificationRepository {
       ASOL_DB_STORES.NOTIFICATION_BADGES,
       badgeKey(uid),
     );
-    if (!raw || typeof raw.unreadCount !== "number" || !Number.isFinite(raw.unreadCount)) {
+    if (
+      !raw ||
+      typeof raw.unreadCount !== "number" ||
+      !Number.isFinite(raw.unreadCount)
+    ) {
       return null;
     }
     return { ...raw, unreadCount: Math.max(0, Math.trunc(raw.unreadCount)) };
@@ -390,9 +435,9 @@ export class AsolNotificationRepository {
       const candidate = item as Partial<DeviceToken> | null;
       return Boolean(
         candidate &&
-          typeof candidate.id === "string" &&
-          typeof candidate.uid === "string" &&
-          typeof candidate.token === "string",
+        typeof candidate.id === "string" &&
+        typeof candidate.uid === "string" &&
+        typeof candidate.token === "string",
       );
     });
   }
@@ -401,10 +446,11 @@ export class AsolNotificationRepository {
     if (!token.uid || !token.id) return;
     await this.mutex.run(tokensLock(token.uid), async () => {
       const current = await this.listDeviceTokens(token.uid);
-      await asolDbSet(ASOL_DB_STORES.NOTIFICATION_DEVICE_TOKENS, tokenListKey(token.uid), [
-        token,
-        ...current.filter((item) => item.id !== token.id),
-      ]);
+      await asolDbSet(
+        ASOL_DB_STORES.NOTIFICATION_DEVICE_TOKENS,
+        tokenListKey(token.uid),
+        [token, ...current.filter((item) => item.platform !== token.platform)],
+      );
     });
   }
 
@@ -433,7 +479,10 @@ export class AsolNotificationRepository {
       await asolDbSet(
         ASOL_DB_STORES.NOTIFICATION_ANALYTICS,
         analyticsListKey(event.uid),
-        [event, ...(Array.isArray(current) ? current : [])].slice(0, MAX_ANALYTICS_EVENTS),
+        [event, ...(Array.isArray(current) ? current : [])].slice(
+          0,
+          MAX_ANALYTICS_EVENTS,
+        ),
       );
     });
   }
@@ -449,7 +498,10 @@ export class AsolNotificationRepository {
     if (!Array.isArray(raw)) return [];
     return raw
       .map((record) => sanitizeRetryOperation(record))
-      .filter((record): record is NotificationOfflineOperation => record !== null && record.uid === uid);
+      .filter(
+        (record): record is NotificationOfflineOperation =>
+          record !== null && record.uid === uid,
+      );
   }
 
   /**
@@ -463,12 +515,18 @@ export class AsolNotificationRepository {
     uid: string,
     change: (
       queue: NotificationOfflineOperation[],
-    ) => NotificationOfflineOperation[] | Promise<NotificationOfflineOperation[]>,
+    ) =>
+      | NotificationOfflineOperation[]
+      | Promise<NotificationOfflineOperation[]>,
   ): Promise<NotificationOfflineOperation[]> {
     if (!uid) return [];
     return this.mutex.run(queueLock(uid), async () => {
       const next = await change(await this.listOfflineQueue(uid));
-      await asolDbSet(ASOL_DB_STORES.NOTIFICATION_OFFLINE_QUEUE, offlineQueueKey(uid), next);
+      await asolDbSet(
+        ASOL_DB_STORES.NOTIFICATION_OFFLINE_QUEUE,
+        offlineQueueKey(uid),
+        next,
+      );
       return next;
     });
   }

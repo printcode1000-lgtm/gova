@@ -3,6 +3,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { runGradle } from "./android/gradle";
 import { readDeviceArgument } from "./android/adb";
 import { detectDevice, grantRuntimePermissions } from "./android/device-install";
 import { reportStage, reportStep } from "./release-stage";
@@ -27,22 +28,6 @@ const ANDROID_DIRECTORY = path.resolve("android");
 const RESULTS_DIRECTORY = path.join(
   ANDROID_DIRECTORY, "app", "build", "outputs", "androidTest-results", "connected",
 );
-
-function runGradle(tasks: string[], env: NodeJS.ProcessEnv): void {
-  if (process.platform === "win32") {
-    execFileSync(
-      process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe",
-      ["/d", "/c", "gradlew.bat", ...tasks],
-      { cwd: ANDROID_DIRECTORY, stdio: "inherit", env },
-    );
-    return;
-  }
-  execFileSync(path.join(ANDROID_DIRECTORY, "gradlew"), tasks, {
-    cwd: ANDROID_DIRECTORY,
-    stdio: "inherit",
-    env,
-  });
-}
 
 /**
  * Name every test the device actually ran.

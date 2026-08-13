@@ -33,7 +33,9 @@ function scenario(name: string, run: () => Promise<void>): void {
   scenarios.push({ name, run });
 }
 
-async function startAndroidSession(): Promise<ReturnType<typeof loadNotificationModule>> {
+async function startAndroidSession(): Promise<
+  ReturnType<typeof loadNotificationModule>
+> {
   const loaded = loadNotificationModule();
   await loaded.notifications.initialize({ uid: UID, phone: PHONE });
   await flushMicrotasks();
@@ -44,22 +46,33 @@ async function startAndroidSession(): Promise<ReturnType<typeof loadNotification
 // Foreground
 // ---------------------------------------------------------------------------
 
-scenario("android foreground push is stored, counted, and shown exactly once", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
+scenario(
+  "android foreground push is stored, counted, and shown exactly once",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
 
-  await emitForegroundPush(pushPayload());
+    await emitForegroundPush(pushPayload());
 
-  const stored = await notifications.list({ uid: UID });
-  assert.equal(stored.length, 1, "the push did not reach the notification centre");
-  assert.equal(stored[0].route?.href, "/orders/ord_1");
-  assert.equal(await notifications.getUnreadCount({ uid: UID }), 1, "badge did not count it");
-  assert.equal(
-    harnessState.localDisplays.length,
-    1,
-    "Android foreground must produce exactly one local notification",
-  );
-});
+    const stored = await notifications.list({ uid: UID });
+    assert.equal(
+      stored.length,
+      1,
+      "the push did not reach the notification centre",
+    );
+    assert.equal(stored[0].route?.href, "/orders/ord_1");
+    assert.equal(
+      await notifications.getUnreadCount({ uid: UID }),
+      1,
+      "badge did not count it",
+    );
+    assert.equal(
+      harnessState.localDisplays.length,
+      1,
+      "Android foreground must produce exactly one local notification",
+    );
+  },
+);
 
 scenario("ios foreground push is stored but never re-presented", async () => {
   resetHarnessCompletely();
@@ -94,28 +107,39 @@ scenario("a data-only delivery is stored but never presented", async () => {
     }),
   );
 
-  assert.equal((await notifications.list({ uid: UID })).length, 1, "the signal was not stored");
-  assert.equal(harnessState.localDisplays.length, 0, "a data-only signal must not ring");
+  assert.equal(
+    (await notifications.list({ uid: UID })).length,
+    1,
+    "the signal was not stored",
+  );
+  assert.equal(
+    harnessState.localDisplays.length,
+    0,
+    "a data-only signal must not ring",
+  );
 });
 
 // ---------------------------------------------------------------------------
 // Duplicates and exactly-once
 // ---------------------------------------------------------------------------
 
-scenario("a re-delivered push does not create a second notification", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
+scenario(
+  "a re-delivered push does not create a second notification",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
 
-  await emitForegroundPush(pushPayload());
-  await emitForegroundPush(pushPayload());
+    await emitForegroundPush(pushPayload());
+    await emitForegroundPush(pushPayload());
 
-  assert.equal((await notifications.list({ uid: UID })).length, 1);
-  assert.equal(
-    harnessState.localDisplays.length,
-    1,
-    "a duplicate must not be presented a second time",
-  );
-});
+    assert.equal((await notifications.list({ uid: UID })).length, 1);
+    assert.equal(
+      harnessState.localDisplays.length,
+      1,
+      "a duplicate must not be presented a second time",
+    );
+  },
+);
 
 scenario("concurrent deliveries of different pushes all survive", async () => {
   resetHarnessCompletely();
@@ -128,7 +152,10 @@ scenario("concurrent deliveries of different pushes all survive", async () => {
       emitForegroundPush(
         pushPayload({
           id: `push-${index}`,
-          data: { notificationId: `ntf_${index}`, dedupeKey: `dedupe-${index}` },
+          data: {
+            notificationId: `ntf_${index}`,
+            dedupeKey: `dedupe-${index}`,
+          },
         }),
       ),
     ),
@@ -136,7 +163,11 @@ scenario("concurrent deliveries of different pushes all survive", async () => {
   await flushMicrotasks();
 
   const stored = await notifications.list({ uid: UID });
-  assert.equal(stored.length, 12, `concurrent writes lost records: kept ${stored.length}/12`);
+  assert.equal(
+    stored.length,
+    12,
+    `concurrent writes lost records: kept ${stored.length}/12`,
+  );
   assert.equal(
     await notifications.getUnreadCount({ uid: UID }),
     12,
@@ -149,7 +180,10 @@ scenario("concurrent tray imports import each notification once", async () => {
   harnessState.deliveredTray = Array.from({ length: 5 }, (_, index) =>
     pushPayload({
       id: `tray-${index}`,
-      data: { notificationId: `tray_${index}`, dedupeKey: `tray-dedupe-${index}` },
+      data: {
+        notificationId: `tray_${index}`,
+        dedupeKey: `tray-dedupe-${index}`,
+      },
     }),
   );
   const { notifications } = await startAndroidSession();
@@ -162,42 +196,61 @@ scenario("concurrent tray imports import each notification once", async () => {
   await flushMicrotasks();
 
   const stored = await notifications.list({ uid: UID });
-  assert.equal(stored.length, 5, `tray import was not exactly-once: ${stored.length} rows`);
+  assert.equal(
+    stored.length,
+    5,
+    `tray import was not exactly-once: ${stored.length} rows`,
+  );
 });
 
 // ---------------------------------------------------------------------------
 // Background, terminated, resume, tap
 // ---------------------------------------------------------------------------
 
-scenario("notifications delivered while terminated are imported on next start", async () => {
-  resetHarnessCompletely();
-  harnessState.deliveredTray = [
-    pushPayload({ id: "bg-1", data: { notificationId: "bg_1", dedupeKey: "bg-1" } }),
-    pushPayload({ id: "bg-2", data: { notificationId: "bg_2", dedupeKey: "bg-2" } }),
-  ];
+scenario(
+  "notifications delivered while terminated are imported on next start",
+  async () => {
+    resetHarnessCompletely();
+    harnessState.deliveredTray = [
+      pushPayload({
+        id: "bg-1",
+        data: { notificationId: "bg_1", dedupeKey: "bg-1" },
+      }),
+      pushPayload({
+        id: "bg-2",
+        data: { notificationId: "bg_2", dedupeKey: "bg-2" },
+      }),
+    ];
 
-  const { notifications } = await startAndroidSession();
+    const { notifications } = await startAndroidSession();
 
-  const stored = await notifications.list({ uid: UID });
-  assert.equal(stored.length, 2, "the tray was not imported at startup");
-  assert.equal(
-    harnessState.localDisplays.length,
-    0,
-    "tray notifications were already shown by the OS and must not be shown again",
-  );
-});
+    const stored = await notifications.list({ uid: UID });
+    assert.equal(stored.length, 2, "the tray was not imported at startup");
+    assert.equal(
+      harnessState.localDisplays.length,
+      0,
+      "tray notifications were already shown by the OS and must not be shown again",
+    );
+  },
+);
 
 scenario("a resume re-import after a restart does not duplicate", async () => {
   resetHarnessCompletely();
   harnessState.deliveredTray = [
-    pushPayload({ id: "bg-1", data: { notificationId: "bg_1", dedupeKey: "bg-1" } }),
+    pushPayload({
+      id: "bg-1",
+      data: { notificationId: "bg_1", dedupeKey: "bg-1" },
+    }),
   ];
   await startAndroidSession();
 
   // The process restarts; storage survives, module state does not.
   resetHarnessKeepingStorage();
   harnessState.deliveredTray = [
-    pushPayload({ id: "bg-1", data: { notificationId: "bg_1", dedupeKey: "bg-1" } }),
+    pushPayload({
+      id: "bg-1",
+      data: { notificationId: "bg_1", dedupeKey: "bg-1" },
+    }),
   ];
   const restarted = await startAndroidSession();
   await restarted.notifications.importDelivered();
@@ -210,43 +263,59 @@ scenario("a resume re-import after a restart does not duplicate", async () => {
   );
 });
 
-scenario("a cold-start tap stores, marks read, and yields the route", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
+scenario(
+  "a cold-start tap stores, marks read, and yields the route",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
 
-  await emitNotificationTap(pushPayload());
+    await emitNotificationTap(pushPayload());
 
-  const stored = await notifications.list({ uid: UID });
-  assert.equal(stored.length, 1, "a tapped notification must still be stored");
-  assert.ok(stored[0].readAt, "a tapped notification must be marked read");
-  assert.equal(
-    await notifications.getUnreadCount({ uid: UID }),
-    0,
-    "badge must not count a notification the user opened",
-  );
-});
+    const stored = await notifications.list({ uid: UID });
+    assert.equal(
+      stored.length,
+      1,
+      "a tapped notification must still be stored",
+    );
+    assert.ok(stored[0].readAt, "a tapped notification must be marked read");
+    assert.equal(
+      await notifications.getUnreadCount({ uid: UID }),
+      0,
+      "badge must not count a notification the user opened",
+    );
+  },
+);
 
-scenario("a tap on a locally displayed notification routes identically", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
+scenario(
+  "a tap on a locally displayed notification routes identically",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
 
-  await emitLocalNotificationTap(pushPayload());
+    await emitLocalNotificationTap(pushPayload());
 
-  const stored = await notifications.list({ uid: UID });
-  assert.equal(stored.length, 1);
-  assert.ok(stored[0].readAt);
-});
+    const stored = await notifications.list({ uid: UID });
+    assert.equal(stored.length, 1);
+    assert.ok(stored[0].readAt);
+  },
+);
 
-scenario("openNotification returns the deep link and marks it read", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
-  await emitForegroundPush(pushPayload());
+scenario(
+  "openNotification returns the deep link and marks it read",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+    await emitForegroundPush(pushPayload());
 
-  const result = await notifications.openNotification({ uid: UID, notificationId: "ntf_1" });
+    const result = await notifications.openNotification({
+      uid: UID,
+      notificationId: "ntf_1",
+    });
 
-  assert.equal(result.route?.href, "/orders/ord_1");
-  assert.equal(await notifications.getUnreadCount({ uid: UID }), 0);
-});
+    assert.equal(result.route?.href, "/orders/ord_1");
+    assert.equal(await notifications.getUnreadCount({ uid: UID }), 0);
+  },
+);
 
 // ---------------------------------------------------------------------------
 // Persistence
@@ -267,115 +336,141 @@ scenario("the centre and its read state survive a relaunch", async () => {
   assert.equal(await second.notifications.getUnreadCount({ uid: UID }), 0);
 });
 
-scenario("a dismissed notification is not restored by a re-delivery", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
-  await emitForegroundPush(pushPayload());
-  await notifications.dismiss({ uid: UID, notificationId: "ntf_1" });
+scenario(
+  "a dismissed notification is not restored by a re-delivery",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+    await emitForegroundPush(pushPayload());
+    await notifications.dismiss({ uid: UID, notificationId: "ntf_1" });
 
-  await emitForegroundPush(pushPayload());
+    await emitForegroundPush(pushPayload());
 
-  assert.equal(
-    (await notifications.list({ uid: UID })).length,
-    0,
-    "a deleted notification came back",
-  );
-});
+    assert.equal(
+      (await notifications.list({ uid: UID })).length,
+      0,
+      "a deleted notification came back",
+    );
+  },
+);
 
-scenario("a notification for a different user never appears in this centre", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
-  await emitForegroundPush(pushPayload());
+scenario(
+  "a notification for a different user never appears in this centre",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+    await emitForegroundPush(pushPayload());
 
-  assert.equal((await notifications.list({ uid: "someone-else" })).length, 0);
-  assert.equal((await notifications.list({ uid: UID })).length, 1);
-});
+    assert.equal((await notifications.list({ uid: "someone-else" })).length, 0);
+    assert.equal((await notifications.list({ uid: UID })).length, 1);
+  },
+);
 
 // ---------------------------------------------------------------------------
 // Malformed and hostile input
 // ---------------------------------------------------------------------------
 
-scenario("an unsafe deep link is dropped, and the notification is still stored", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
+scenario(
+  "an unsafe deep link is dropped, and the notification is still stored",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
 
-  for (const href of [
-    "//evil.test/steal",
-    "https://evil.test",
-    "javascript:alert(1)",
-    "/\\evil.test",
-    "/orders/../../admin",
-  ]) {
+    for (const href of [
+      "//evil.test/steal",
+      "https://evil.test",
+      "javascript:alert(1)",
+      "/\\evil.test",
+      "/orders/../../admin",
+    ]) {
+      await emitForegroundPush(
+        pushPayload({
+          id: `unsafe-${href}`,
+          data: {
+            notificationId: `ntf_${href}`,
+            dedupeKey: `dedupe-${href}`,
+            routeHref: href,
+          },
+        }),
+      );
+    }
+
+    const stored = await notifications.list({ uid: UID });
+    assert.equal(
+      stored.length,
+      5,
+      "notifications with a bad route must still be stored",
+    );
+    for (const item of stored) {
+      assert.equal(
+        item.route,
+        undefined,
+        `unsafe route survived: ${String(item.route?.href)}`,
+      );
+    }
+  },
+);
+
+scenario(
+  "a prototype-polluting metadata key never reaches storage",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+
     await emitForegroundPush(
       pushPayload({
-        id: `unsafe-${href}`,
         data: {
-          notificationId: `ntf_${href}`,
-          dedupeKey: `dedupe-${href}`,
-          routeHref: href,
+          notificationId: "ntf_proto",
+          dedupeKey: "proto",
+          meta___proto__: '{"polluted":true}',
+          meta_constructor: "x",
+          meta_safe: "kept",
         },
       }),
     );
-  }
 
-  const stored = await notifications.list({ uid: UID });
-  assert.equal(stored.length, 5, "notifications with a bad route must still be stored");
-  for (const item of stored) {
-    assert.equal(item.route, undefined, `unsafe route survived: ${String(item.route?.href)}`);
-  }
-});
+    const stored = await notifications.list({ uid: UID });
+    assert.equal(stored.length, 1);
+    assert.equal(stored[0].metadata?.safe, "kept");
+    assert.equal(
+      ({} as Record<string, unknown>).polluted,
+      undefined,
+      "Object.prototype was polluted",
+    );
+    assert.ok(
+      !Object.prototype.hasOwnProperty.call(
+        stored[0].metadata ?? {},
+        "__proto__",
+      ),
+      "a forbidden metadata key was stored",
+    );
+  },
+);
 
-scenario("a prototype-polluting metadata key never reaches storage", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
+scenario(
+  "an unsupported enum value falls back instead of being stored raw",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
 
-  await emitForegroundPush(
-    pushPayload({
-      data: {
-        notificationId: "ntf_proto",
-        dedupeKey: "proto",
-        meta___proto__: '{"polluted":true}',
-        meta_constructor: "x",
-        meta_safe: "kept",
-      },
-    }),
-  );
+    await emitForegroundPush(
+      pushPayload({
+        data: {
+          notificationId: "ntf_enum",
+          dedupeKey: "enum",
+          category: "not-a-category",
+          priority: "ultra",
+          sound: "airhorn",
+        },
+      }),
+    );
 
-  const stored = await notifications.list({ uid: UID });
-  assert.equal(stored.length, 1);
-  assert.equal(stored[0].metadata?.safe, "kept");
-  assert.equal(
-    ({} as Record<string, unknown>).polluted,
-    undefined,
-    "Object.prototype was polluted",
-  );
-  assert.ok(
-    !Object.prototype.hasOwnProperty.call(stored[0].metadata ?? {}, "__proto__"),
-    "a forbidden metadata key was stored",
-  );
-});
-
-scenario("an unsupported enum value falls back instead of being stored raw", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
-
-  await emitForegroundPush(
-    pushPayload({
-      data: {
-        notificationId: "ntf_enum",
-        dedupeKey: "enum",
-        category: "not-a-category",
-        priority: "ultra",
-        sound: "airhorn",
-      },
-    }),
-  );
-
-  const [stored] = await notifications.list({ uid: UID });
-  assert.equal(stored.category, "system");
-  assert.equal(stored.priority, "normal");
-  assert.equal(stored.sound, "default");
-});
+    const [stored] = await notifications.list({ uid: UID });
+    assert.equal(stored.category, "system");
+    assert.equal(stored.priority, "normal");
+    assert.equal(stored.sound, "default");
+  },
+);
 
 scenario("an implausible timestamp is replaced, not stored", async () => {
   resetHarnessCompletely();
@@ -383,7 +478,11 @@ scenario("an implausible timestamp is replaced, not stored", async () => {
 
   await emitForegroundPush(
     pushPayload({
-      data: { notificationId: "ntf_time", dedupeKey: "time", createdAt: "not-a-date" },
+      data: {
+        notificationId: "ntf_time",
+        dedupeKey: "time",
+        createdAt: "not-a-date",
+      },
     }),
   );
 
@@ -398,7 +497,12 @@ scenario("an empty ASOL placeholder never reaches the centre", async () => {
   resetHarnessCompletely();
   const { notifications } = await startAndroidSession();
 
-  await emitForegroundPush({ id: "placeholder", title: "ASOL", body: "", data: {} });
+  await emitForegroundPush({
+    id: "placeholder",
+    title: "ASOL",
+    body: "",
+    data: {},
+  });
 
   assert.equal((await notifications.list({ uid: UID })).length, 0);
   assert.equal(harnessState.localDisplays.length, 0);
@@ -414,7 +518,11 @@ scenario("an unknown command fails closed", async () => {
 
   await assert.rejects(
     () =>
-      (notifications.execute as unknown as (command: unknown) => Promise<unknown>)({
+      (
+        notifications.execute as unknown as (
+          command: unknown,
+        ) => Promise<unknown>
+      )({
         type: "deleteEverything",
         payload: {},
       }),
@@ -424,30 +532,37 @@ scenario("an unknown command fails closed", async () => {
   );
 });
 
-scenario("a malformed command payload is rejected before it reaches storage", async () => {
-  resetHarnessCompletely();
-  const { notifications } = loadNotificationModule();
+scenario(
+  "a malformed command payload is rejected before it reaches storage",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = loadNotificationModule();
 
-  await assert.rejects(
-    () => notifications.execute({ type: "markAllRead", payload: { uid: "" } }),
-    (error: unknown) => typeof (error as { code?: string }).code === "string",
-  );
-  await assert.rejects(
-    () =>
-      notifications.execute({
-        type: "openNotification",
-        payload: { uid: UID, notificationId: "" },
-      }),
-    (error: unknown) => typeof (error as { code?: string }).code === "string",
-  );
-});
+    await assert.rejects(
+      () =>
+        notifications.execute({ type: "markAllRead", payload: { uid: "" } }),
+      (error: unknown) => typeof (error as { code?: string }).code === "string",
+    );
+    await assert.rejects(
+      () =>
+        notifications.execute({
+          type: "openNotification",
+          payload: { uid: UID, notificationId: "" },
+        }),
+      (error: unknown) => typeof (error as { code?: string }).code === "string",
+    );
+  },
+);
 
 scenario("execute and the named method are the same use case", async () => {
   resetHarnessCompletely();
   const { notifications } = await startAndroidSession();
   await emitForegroundPush(pushPayload());
 
-  const viaCommand = await notifications.execute({ type: "list", payload: { uid: UID } });
+  const viaCommand = await notifications.execute({
+    type: "list",
+    payload: { uid: UID },
+  });
   const viaMethod = await notifications.list({ uid: UID });
   assert.deepEqual(viaCommand, viaMethod);
 });
@@ -456,54 +571,62 @@ scenario("execute and the named method are the same use case", async () => {
 // Permission, platform, and degradation
 // ---------------------------------------------------------------------------
 
-scenario("android initialization creates the channels before permission is asked", async () => {
-  resetHarnessCompletely();
-  // The device has never answered the runtime prompt.
-  harnessState.permission = "prompt";
-  const { notifications } = loadNotificationModule();
+scenario(
+  "android initialization creates the channels before permission is asked",
+  async () => {
+    resetHarnessCompletely();
+    // The device has never answered the runtime prompt.
+    harnessState.permission = "prompt";
+    const { notifications } = loadNotificationModule();
 
-  await notifications.initialize({ uid: UID, phone: PHONE });
-  await flushMicrotasks();
+    await notifications.initialize({ uid: UID, phone: PHONE });
+    await flushMicrotasks();
 
-  assert.ok(
-    harnessState.createdChannels > 0,
-    "channels must exist before the user is asked; they are what the settings screen lists",
-  );
-  assert.equal(
-    harnessState.registerCalls,
-    0,
-    "initialization must not register a device that has not opted in",
-  );
-});
+    assert.ok(
+      harnessState.createdChannels > 0,
+      "channels must exist before the user is asked; they are what the settings screen lists",
+    );
+    assert.equal(
+      harnessState.registerCalls,
+      0,
+      "initialization must not register a device that has not opted in",
+    );
+  },
+);
 
-scenario("a denied permission keeps the channels and blocks registration", async () => {
-  resetHarnessCompletely();
-  harnessState.permission = "denied";
-  const { notifications } = loadNotificationModule();
+scenario(
+  "a denied permission keeps the channels and blocks registration",
+  async () => {
+    resetHarnessCompletely();
+    harnessState.permission = "denied";
+    const { notifications } = loadNotificationModule();
 
-  await notifications.initialize({ uid: UID, phone: PHONE });
-  await flushMicrotasks();
-  const channelsAfterInitialize = harnessState.createdChannels;
-  assert.ok(
-    channelsAfterInitialize > 0,
-    "a refused grant must not stop channel creation",
-  );
+    await notifications.initialize({ uid: UID, phone: PHONE });
+    await flushMicrotasks();
+    const channelsAfterInitialize = harnessState.createdChannels;
+    assert.ok(
+      channelsAfterInitialize > 0,
+      "a refused grant must not stop channel creation",
+    );
 
-  const diagnostics = await notifications.getDiagnostics({ uid: UID });
-  assert.equal(diagnostics.permission.granted, false);
-  assert.equal(diagnostics.permission.state, "denied");
-  assert.equal(diagnostics.deviceTokenCount, 0);
-  await assert.rejects(() => notifications.registerDevice({ uid: UID, phone: PHONE }));
-  assert.equal(
-    harnessState.registerCalls,
-    0,
-    "a denied device must never reach the push provider",
-  );
-  assert.ok(
-    harnessState.createdChannels >= channelsAfterInitialize,
-    "the refused registration must still have left the channels in place",
-  );
-});
+    const diagnostics = await notifications.getDiagnostics({ uid: UID });
+    assert.equal(diagnostics.permission.granted, false);
+    assert.equal(diagnostics.permission.state, "denied");
+    assert.equal(diagnostics.deviceTokenCount, 0);
+    await assert.rejects(() =>
+      notifications.registerDevice({ uid: UID, phone: PHONE }),
+    );
+    assert.equal(
+      harnessState.registerCalls,
+      0,
+      "a denied device must never reach the push provider",
+    );
+    assert.ok(
+      harnessState.createdChannels >= channelsAfterInitialize,
+      "the refused registration must still have left the channels in place",
+    );
+  },
+);
 
 scenario("granting permission registers the device as usual", async () => {
   resetHarnessCompletely();
@@ -517,63 +640,77 @@ scenario("granting permission registers the device as usual", async () => {
   assert.equal(harnessState.serverRegisteredTokens.length > 0, true);
 });
 
-scenario("repeated channel creation is idempotent and never throws", async () => {
-  resetHarnessCompletely();
-  harnessState.permission = "prompt";
-  const { notifications } = loadNotificationModule();
+scenario(
+  "repeated channel creation is idempotent and never throws",
+  async () => {
+    resetHarnessCompletely();
+    harnessState.permission = "prompt";
+    const { notifications } = loadNotificationModule();
 
-  await notifications.initialize({ uid: UID, phone: PHONE });
-  await notifications.createChannels();
-  await notifications.createChannels();
-  await flushMicrotasks();
+    await notifications.initialize({ uid: UID, phone: PHONE });
+    await notifications.createChannels();
+    await notifications.createChannels();
+    await flushMicrotasks();
 
-  // Creating a channel that exists is a no-op on the device, so the only thing
-  // worth asserting is that the module keeps asking without failing.
-  assert.ok(
-    harnessState.createdChannels >= 3,
-    "every call must reach the single native creator",
-  );
-  assert.equal((await notifications.list({ uid: UID })).length, 0);
-});
+    // Creating a channel that exists is a no-op on the device, so the only thing
+    // worth asserting is that the module keeps asking without failing.
+    assert.ok(
+      harnessState.createdChannels >= 3,
+      "every call must reach the single native creator",
+    );
+    assert.equal((await notifications.list({ uid: UID })).length, 0);
+  },
+);
 
-scenario("a device whose channels failed is never registered with the provider", async () => {
-  resetHarnessCompletely();
-  harnessState.channelCreationError = new Error("Notification channels could not be created.");
-  const { notifications } = loadNotificationModule();
+scenario(
+  "a device whose channels failed is never registered with the provider",
+  async () => {
+    resetHarnessCompletely();
+    harnessState.channelCreationError = new Error(
+      "Notification channels could not be created.",
+    );
+    const { notifications } = loadNotificationModule();
 
-  // Initialization survives it: the tray import and the live listeners still
-  // work, and the failure is reported rather than swallowed.
-  await notifications.initialize({ uid: UID, phone: PHONE });
-  await flushMicrotasks();
-  assert.ok(
-    harnessState.loggedLines.some(
-      (line) => line.level === "error" && line.message.includes("channels"),
-    ),
-    "a failed channel creation must be observable in the log",
-  );
+    // Initialization survives it: the tray import and the live listeners still
+    // work, and the failure is reported rather than swallowed.
+    await notifications.initialize({ uid: UID, phone: PHONE });
+    await flushMicrotasks();
+    assert.ok(
+      harnessState.loggedLines.some(
+        (line) => line.level === "error" && line.message.includes("channels"),
+      ),
+      "a failed channel creation must be observable in the log",
+    );
 
-  // Registration is not: a token for a device with no channels buys pushes
-  // Android would present on a fallback channel with the wrong sound.
-  await assert.rejects(
-    () => notifications.registerDevice({ uid: UID, phone: PHONE }),
-    (error: unknown) => {
-      assert.equal((error as { code?: string }).code, "notifications/delivery-failed");
-      return true;
-    },
-  );
-  assert.equal(
-    harnessState.registerCalls,
-    0,
-    "the push provider must not be reached without channels",
-  );
-  assert.equal(harnessState.serverRegisteredTokens.length, 0);
+    // Registration is not: a token for a device with no channels buys pushes
+    // Android would present on a fallback channel with the wrong sound.
+    await assert.rejects(
+      () => notifications.registerDevice({ uid: UID, phone: PHONE }),
+      (error: unknown) => {
+        assert.equal(
+          (error as { code?: string }).code,
+          "notifications/delivery-failed",
+        );
+        return true;
+      },
+    );
+    assert.equal(
+      harnessState.registerCalls,
+      0,
+      "the push provider must not be reached without channels",
+    );
+    assert.equal(harnessState.serverRegisteredTokens.length, 0);
 
-  // Once the device can create them again, registration proceeds normally.
-  harnessState.channelCreationError = null;
-  const token = await notifications.registerDevice({ uid: UID, phone: PHONE });
-  assert.ok(token, "the retry must register once the channels exist");
-  assert.ok(harnessState.createdChannels > 0);
-});
+    // Once the device can create them again, registration proceeds normally.
+    harnessState.channelCreationError = null;
+    const token = await notifications.registerDevice({
+      uid: UID,
+      phone: PHONE,
+    });
+    assert.ok(token, "the retry must register once the channels exist");
+    assert.ok(harnessState.createdChannels > 0);
+  },
+);
 
 scenario("ios never creates android channels", async () => {
   resetHarnessCompletely();
@@ -594,17 +731,20 @@ scenario("ios never creates android channels", async () => {
   assert.equal(token.platform, "ios");
 });
 
-scenario("a revoked permission does not lose already stored notifications", async () => {
-  resetHarnessCompletely();
-  const first = await startAndroidSession();
-  await emitForegroundPush(pushPayload());
+scenario(
+  "a revoked permission does not lose already stored notifications",
+  async () => {
+    resetHarnessCompletely();
+    const first = await startAndroidSession();
+    await emitForegroundPush(pushPayload());
 
-  harnessState.permission = "blocked";
-  const diagnostics = await first.notifications.getDiagnostics({ uid: UID });
+    harnessState.permission = "blocked";
+    const diagnostics = await first.notifications.getDiagnostics({ uid: UID });
 
-  assert.equal(diagnostics.permission.state, "blocked");
-  assert.equal((await first.notifications.list({ uid: UID })).length, 1);
-});
+    assert.equal(diagnostics.permission.state, "blocked");
+    assert.equal((await first.notifications.list({ uid: UID })).length, 1);
+  },
+);
 
 scenario("web without push support degrades safely", async () => {
   resetHarnessCompletely();
@@ -615,7 +755,11 @@ scenario("web without push support degrades safely", async () => {
   const diagnostics = await notifications.getDiagnostics({ uid: UID });
   assert.equal(diagnostics.platform, "web");
   assert.equal(diagnostics.nativePush, false);
-  assert.equal(diagnostics.pushSupported, false, "no service worker here, so no Web Push");
+  assert.equal(
+    diagnostics.pushSupported,
+    false,
+    "no service worker here, so no Web Push",
+  );
 
   // Nothing throws; the module simply does nothing it cannot do.
   await notifications.initialize({ uid: UID, phone: PHONE });
@@ -638,36 +782,107 @@ scenario("an unavailable inbox plugin does not break startup", async () => {
   );
 });
 
-scenario("a failed registration surfaces a typed error, not the provider's text", async () => {
-  resetHarnessCompletely();
-  harnessState.registrationError = new Error(
-    "FCM rejected Bearer ya29.SECRETSECRETSECRETSECRET",
-  );
-  const { notifications } = loadNotificationModule();
+scenario(
+  "a failed registration surfaces a typed error, not the provider's text",
+  async () => {
+    resetHarnessCompletely();
+    harnessState.registrationError = new Error(
+      "FCM rejected Bearer ya29.SECRETSECRETSECRETSECRET",
+    );
+    const { notifications } = loadNotificationModule();
 
-  await assert.rejects(
-    () => notifications.registerDevice({ uid: UID, phone: PHONE }),
-    (error: unknown) => {
-      const message = (error as Error).message;
-      assert.ok(!message.includes("SECRET"), `provider text leaked: ${message}`);
-      assert.equal((error as { code?: string }).code, "notifications/delivery-failed");
-      return true;
-    },
-  );
-});
+    await assert.rejects(
+      () => notifications.registerDevice({ uid: UID, phone: PHONE }),
+      (error: unknown) => {
+        const message = (error as Error).message;
+        assert.ok(
+          !message.includes("SECRET"),
+          `provider text leaked: ${message}`,
+        );
+        assert.equal(
+          (error as { code?: string }).code,
+          "notifications/delivery-failed",
+        );
+        return true;
+      },
+    );
+  },
+);
 
-scenario("a token refresh re-registers without duplicating the device", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
+scenario(
+  "a token refresh re-registers without duplicating the device",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
 
-  await notifications.registerDevice({ uid: UID, phone: PHONE });
-  harnessState.registrationToken = "fcm-token-bbbbbbbbbbbbbbbbbbbbbbbb:APA91bNEWNEWNEWNEWNEWNEW";
-  await notifications.registerDevice({ uid: UID, phone: PHONE });
+    await notifications.registerDevice({ uid: UID, phone: PHONE });
+    harnessState.registrationToken =
+      "fcm-token-bbbbbbbbbbbbbbbbbbbbbbbb:APA91bNEWNEWNEWNEWNEWNEW";
+    await notifications.registerDevice({ uid: UID, phone: PHONE });
 
-  const devices = await notifications.listDevices({ uid: UID });
-  assert.equal(devices.length, 1, "a token refresh must replace the device row, not add one");
-  assert.ok(devices[0].token.includes("NEW"));
-});
+    const devices = await notifications.listDevices({ uid: UID });
+    assert.equal(
+      devices.length,
+      1,
+      "a token refresh must replace the device row, not add one",
+    );
+    assert.ok(devices[0].token.includes("NEW"));
+  },
+);
+
+scenario(
+  "local token storage keeps one token per user and platform",
+  async () => {
+    resetHarnessCompletely();
+    const { repository } = loadNotificationModule();
+    const now = new Date().toISOString();
+
+    await repository.saveDeviceToken({
+      id: "android-old",
+      uid: UID,
+      platform: "android",
+      provider: "fcm",
+      deviceId: "device-old",
+      token: "fcm-token-old-aaaaaaaaaaaaaaaaaaaa",
+      enabled: true,
+      createdAt: now,
+      updatedAt: now,
+    });
+    await repository.saveDeviceToken({
+      id: "android-new",
+      uid: UID,
+      platform: "android",
+      provider: "fcm",
+      deviceId: "device-new",
+      token: "fcm-token-new-bbbbbbbbbbbbbbbbbbbb",
+      enabled: true,
+      createdAt: now,
+      updatedAt: now,
+    });
+    await repository.saveDeviceToken({
+      id: "web-current",
+      uid: UID,
+      platform: "web",
+      provider: "web_push",
+      deviceId: "browser-current",
+      token: "web-token-cccccccccccccccccccccccc",
+      enabled: true,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    const tokens = await repository.listDeviceTokens(UID);
+    assert.equal(
+      tokens.filter((token) => token.platform === "android").length,
+      1,
+    );
+    assert.equal(
+      tokens.find((token) => token.platform === "android")?.id,
+      "android-new",
+    );
+    assert.equal(tokens.filter((token) => token.platform === "web").length, 1);
+  },
+);
 
 scenario("signing out unregisters the device and clears the tray", async () => {
   resetHarnessCompletely();
@@ -685,30 +900,39 @@ scenario("signing out unregisters the device and clears the tray", async () => {
 // Extensions and the retry queue
 // ---------------------------------------------------------------------------
 
-scenario("an extension reconciles, and a throwing extension cannot break the centre", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
-  await emitForegroundPush(pushPayload());
+scenario(
+  "an extension reconciles, and a throwing extension cannot break the centre",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+    await emitForegroundPush(pushPayload());
 
-  let reconciled = 0;
-  notifications.registerCenterExtension({
-    id: "counting",
-    reconcile: () => {
-      reconciled += 1;
-      return false;
-    },
-  });
-  notifications.registerCenterExtension({
-    id: "throwing",
-    reconcile: () => {
-      throw new Error("extension exploded");
-    },
-  });
+    let reconciled = 0;
+    notifications.registerCenterExtension({
+      id: "counting",
+      reconcile: () => {
+        reconciled += 1;
+        return false;
+      },
+    });
+    notifications.registerCenterExtension({
+      id: "throwing",
+      reconcile: () => {
+        throw new Error("extension exploded");
+      },
+    });
 
-  const snapshot = await notifications.synchronizeNotificationCenter({ uid: UID });
-  assert.equal(snapshot.notifications.length, 1, "a throwing extension broke the centre");
-  assert.equal(reconciled, 1);
-});
+    const snapshot = await notifications.synchronizeNotificationCenter({
+      uid: UID,
+    });
+    assert.equal(
+      snapshot.notifications.length,
+      1,
+      "a throwing extension broke the centre",
+    );
+    assert.equal(reconciled, 1);
+  },
+);
 
 scenario("a queued retry replays once and leaves the queue clean", async () => {
   resetHarnessCompletely();
@@ -735,7 +959,10 @@ scenario("a queued retry replays once and leaves the queue clean", async () => {
   await notifications.synchronizeNotificationCenter({ uid: UID });
 
   assert.equal(replays, 1, "a settled retry was replayed twice");
-  assert.equal((await notifications.getDiagnostics({ uid: UID })).pendingRetryCount, 0);
+  assert.equal(
+    (await notifications.getDiagnostics({ uid: UID })).pendingRetryCount,
+    0,
+  );
 });
 
 scenario("a failing retry stays queued and is not lost", async () => {
@@ -764,19 +991,30 @@ scenario("a failing retry stays queued and is not lost", async () => {
   );
 });
 
-scenario("an unclaimed retry is dropped rather than queued forever", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
-  await notifications.enqueueRetry({ uid: UID, kind: "settings", id: "orphan", payload: {} });
+scenario(
+  "an unclaimed retry is dropped rather than queued forever",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+    await notifications.enqueueRetry({
+      uid: UID,
+      kind: "settings",
+      id: "orphan",
+      payload: {},
+    });
 
-  notifications.registerCenterExtension({
-    id: "claims-nothing",
-    replayQueuedOperation: () => false,
-  });
-  await notifications.synchronizeNotificationCenter({ uid: UID });
+    notifications.registerCenterExtension({
+      id: "claims-nothing",
+      replayQueuedOperation: () => false,
+    });
+    await notifications.synchronizeNotificationCenter({ uid: UID });
 
-  assert.equal((await notifications.getDiagnostics({ uid: UID })).pendingRetryCount, 0);
-});
+    assert.equal(
+      (await notifications.getDiagnostics({ uid: UID })).pendingRetryCount,
+      0,
+    );
+  },
+);
 
 // ---------------------------------------------------------------------------
 // Secrets
@@ -795,30 +1033,37 @@ scenario("diagnostics carry counts, never credentials", async () => {
     !serialized.includes(harnessState.registrationToken),
     "the device token appeared in diagnostics",
   );
-  assert.ok(!/APA91/.test(serialized), "an FCM token shape appeared in diagnostics");
-});
-
-scenario("a secret in metadata never reaches the notification centre", async () => {
-  resetHarnessCompletely();
-  const { notifications } = await startAndroidSession();
-
-  await emitForegroundPush(
-    pushPayload({
-      data: {
-        notificationId: "ntf_secret",
-        dedupeKey: "secret",
-        meta_sessionToken: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SIGNATUREVALUEHERE",
-      },
-    }),
-  );
-
-  const [stored] = await notifications.list({ uid: UID });
-  const serialized = JSON.stringify(stored);
   assert.ok(
-    !serialized.includes("SIGNATUREVALUEHERE"),
-    "a signed token was stored in the notification centre",
+    !/APA91/.test(serialized),
+    "an FCM token shape appeared in diagnostics",
   );
 });
+
+scenario(
+  "a secret in metadata never reaches the notification centre",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+
+    await emitForegroundPush(
+      pushPayload({
+        data: {
+          notificationId: "ntf_secret",
+          dedupeKey: "secret",
+          meta_sessionToken:
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.SIGNATUREVALUEHERE",
+        },
+      }),
+    );
+
+    const [stored] = await notifications.list({ uid: UID });
+    const serialized = JSON.stringify(stored);
+    assert.ok(
+      !serialized.includes("SIGNATUREVALUEHERE"),
+      "a signed token was stored in the notification centre",
+    );
+  },
+);
 
 scenario("a logged provider error is redacted", async () => {
   resetHarnessCompletely();
@@ -833,12 +1078,18 @@ scenario("a logged provider error is redacted", async () => {
   } catch (error) {
     registrationFailure = error;
   }
-  assert.ok(registrationFailure instanceof Error, "registration unexpectedly succeeded");
+  assert.ok(
+    registrationFailure instanceof Error,
+    "registration unexpectedly succeeded",
+  );
   await flushMicrotasks();
 
   const logged = JSON.stringify(harnessState.loggedLines);
   assert.ok(logged.length > 0, "the failure was not logged at all");
-  assert.ok(!logged.includes("LEAKED"), `a credential reached a log line: ${logged}`);
+  assert.ok(
+    !logged.includes("LEAKED"),
+    `a credential reached a log line: ${logged}`,
+  );
 });
 
 // ---------------------------------------------------------------------------
@@ -865,13 +1116,19 @@ async function main(): Promise<void> {
     } catch (error) {
       failures += 1;
       report(`  FAIL ${name}`);
-      report(`       ${error instanceof Error ? error.message : String(error)}`);
+      report(
+        `       ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
   if (failures > 0) {
-    throw new Error(`${failures} of ${scenarios.length} notification scenarios failed.`);
+    throw new Error(
+      `${failures} of ${scenarios.length} notification scenarios failed.`,
+    );
   }
-  report(`Notification integration flow: ${scenarios.length} scenarios passed.`);
+  report(
+    `Notification integration flow: ${scenarios.length} scenarios passed.`,
+  );
 }
 
 void main().catch((error) => {

@@ -4,6 +4,7 @@ import path from "node:path";
 
 import dotenv from "dotenv";
 
+import { gradleWrapperPath } from "./android/gradle";
 import { reportStage } from "./release-stage";
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
@@ -103,8 +104,11 @@ function main(): void {
 
   reportStage("building-android");
   console.log(`Building signed Android AAB and APK${javaHome ? ` with Java at ${javaHome}` : ""}...`);
+  // Absolute: `cmd` resolves a bare batch-file name against PATH only, so a
+  // shell started with `NoDefaultCurrentDirectoryInExePath` set (Visual Studio,
+  // the VS Code terminal) never finds a wrapper named by `cwd` alone.
   run(
-    process.platform === "win32" ? "gradlew.bat" : "./gradlew",
+    gradleWrapperPath(androidDirectory),
     [":app:bundleRelease", ":app:assembleRelease"],
     androidDirectory,
     env,

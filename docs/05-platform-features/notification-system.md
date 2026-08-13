@@ -402,7 +402,7 @@ user_notification_tokens
 
 Columns:
 
-- `id`: derived as `ntok_<uid>_<platform>_<deviceId>` with unsupported characters replaced
+- `id`: new rows derive it as `ntok_<uid>_<platform>` with unsupported characters replaced
 - `uid`
 - `platform`: `web`, `android`, or `ios`
 - `provider`: `web_push`, `fcm`, or `apns` — enforced by `NotificationTokenService.register`
@@ -419,10 +419,35 @@ Columns:
 Indexes:
 
 - `user_notification_tokens_uid_idx`
-- `user_notification_tokens_uid_device_unique` on (`uid`, `device_id`, `platform`)
+- `user_notification_tokens_uid_platform_unique` on (`uid`, `platform`)
 - `user_notification_tokens_token_unique` on (`token`)
 
-This table supports multiple devices per user and allows disabling one device without changing the user account.
+The table permits exactly one row per user and platform. A user may therefore
+have at most one Web, one Android, and one iOS registration. Signing in from a
+new device, refreshing a provider token, or enabling notifications again
+replaces the row for that platform, including its `device_id` and token.
+
+This is a hard database invariant, not only an application convention. The
+unique index on (`uid`, `platform`) is the conflict target of one atomic
+`INSERT ... ON CONFLICT DO UPDATE`, so concurrent registration attempts cannot
+create two Android, two iOS, or two Web rows for the same user. The local
+IndexedDB token list applies the same rule by replacing the existing entry for
+the token's platform.
+
+Registration and replacement entry points:
+
+- Android/iOS login or session change: `NativePushController` calls
+  `initialize`; when notifications are already enabled and permission is
+  granted, the current FCM/APNs token is registered and replaces that user's
+  row for the native platform.
+- Web login or session change: `WebPushController` re-sends an existing browser
+  subscription without prompting. The server replaces that user's Web row and,
+  because a provider token has one owner, removes any stale row that held the
+  same subscription for another account.
+- Settings and the post-login opt-in: `DeviceTokenService.enable` routes to
+  native registration or Web Push subscription. A granted/re-enabled device
+  therefore replaces the existing row for its platform instead of adding a
+  second one.
 
 The authoritative specialty-chat opt-out lives in a second table:
 
@@ -434,18 +459,22 @@ Columns: `uid` (primary key), `specialty_requests_enabled`, `updated_at`.
 Reads use this table; writes update it and mirror the value onto every token row
 of the same user.
 
-Removing a token is a soft delete: `enabled` becomes false and `deleted_at` is
-set. Rows are never physically deleted.
+Normal device removal is a soft delete: `enabled` becomes false and
+`deleted_at` is set. A stale conflicting row is physically deleted only when
+the same provider token moves to its current user, and the cardinality migration
+physically removes historical duplicate rows before creating the unique index.
 
 Because a soft-deleted row keeps both its primary key and its place in the
-`(uid, device_id, platform)` unique index, `upsert` matches deleted rows too and
-revives them. A device that turns notifications off and on again reuses its
-original row and keeps its `specialty_requests_enabled` preference.
+`(uid, platform)` unique index, `upsert` matches deleted rows too and revives
+the platform registration with the newest device id, provider token, and
+locale. The authoritative specialty-request preference remains in
+`user_notification_preferences`.
 
-If the same token value already exists on another row — a reinstall that
-produced a new device id, or a second account on the same handset — that older
-row is retired with a `revoked:<id>:<timestamp>` tombstone token. This frees the
-`token` unique index without deleting the audit row.
+If the same provider token already belongs to another user/platform row, that
+stale row is deleted before the token moves to its single current owner. The
+database migration also deletes older duplicate `(uid, platform)` rows before
+creating the unique index, preferring an active row and then the most recently
+seen or updated row.
 
 ## Notification Lifecycle
 

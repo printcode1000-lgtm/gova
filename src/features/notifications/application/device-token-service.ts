@@ -3,7 +3,10 @@
 import type { DeviceToken } from "../domain/entities";
 import { assertPhone, assertUid } from "../domain/notification-validation";
 import { notificationLog } from "../domain/notification-redaction";
-import { capacitorPushService, type CapacitorPushHandlers } from "../infrastructure/capacitor/capacitor-push.service";
+import {
+  capacitorPushService,
+  type CapacitorPushHandlers,
+} from "../infrastructure/capacitor/capacitor-push.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { webPushBrowserService } from "../infrastructure/web-push/web-push-browser.service";
 import { notificationApiService } from "../services/notification-api-service";
@@ -104,7 +107,7 @@ export class DeviceTokenService {
           await notificationApiService.removeToken({
             uid: safeUid,
             phone: safePhone,
-            tokenId: token.id,
+            deviceId: token.deviceId,
           });
         } catch (error) {
           // Sign-out must never be blocked by a failed server call; the local
@@ -129,7 +132,9 @@ export class DeviceTokenService {
    * in a secure browser context.
    */
   isPushSupported(): boolean {
-    return capacitorPushService.isNativePush() || webPushBrowserService.isSupported();
+    return (
+      capacitorPushService.isNativePush() || webPushBrowserService.isSupported()
+    );
   }
 
   /**
@@ -137,7 +142,8 @@ export class DeviceTokenService {
    * browser subscription.
    */
   async isDeviceEnabled(): Promise<boolean> {
-    if (capacitorPushService.isNativePush()) return capacitorPushService.isEnabled();
+    if (capacitorPushService.isNativePush())
+      return capacitorPushService.isEnabled();
     return webPushBrowserService.hasSubscription();
   }
 

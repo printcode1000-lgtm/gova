@@ -26,6 +26,19 @@ export function WebPushController() {
 
   useEffect(() => {
     if (!uid || typeof window === "undefined") return;
+    // A browser subscription survives sessions. Re-attach it whenever an
+    // authenticated user arrives so the server atomically replaces this
+    // user's Web row (and releases the token from any previous account)
+    // without showing another permission prompt.
+    void notificationDeviceTokenService
+      .refreshLocale(uid, phone)
+      .catch((error) => {
+        notificationLog.warn(
+          "Failed to attach the existing Web Push subscription.",
+          error,
+        );
+      });
+
     const handleLocaleChange = () => {
       void notificationDeviceTokenService
         .refreshLocale(uid, phone)

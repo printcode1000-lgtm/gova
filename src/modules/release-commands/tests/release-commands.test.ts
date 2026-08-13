@@ -35,6 +35,7 @@ import {
   trackBuildJobProcess,
 } from "../services/build-job-runner.server";
 import { analyzeBundleArtifact, classifyEntry } from "../services/bundle-analyzer.server";
+import { changedBuildArtifacts, snapshotBuildOutputs } from "../services/build-job-artifacts.server";
 
 async function main() {
 const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { scripts: Record<string, string> };
@@ -363,6 +364,7 @@ try {
 await verifyPresentationStructure(locales);
 await verifyRealRunnerSmokeTest();
 await verifyCancellationPaths();
+await verifyArtifactCollection();
 
 const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0, 0x49, 0x48, 0x44, 0x52, 0, 0, 2, 0, 0, 0, 2, 0]);
 const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xff, 0xc0, 0x00, 0x11, 0x08, 0x02, 0xd0, 0x05, 0x00, 0x03, 1, 0x11, 0, 2, 0x11, 0, 3, 0x11, 0, 0xff, 0xd9]);
@@ -464,6 +466,76 @@ async function verifyCancellationPaths() {
   const second = await readBuildJobLog(logId, first.nextOffset);
   assert.equal(second.hasMore, false);
   await rm(path.join(jobDir, `${logId}.log`), { force: true });
+}
+
+/**
+ * Collecting a job's artifacts must stay proportional to what a build produces.
+ *
+ * A full web export drops thousands of `.json` and `.txt` files into `out/`.
+ * Treating each one as an artifact — hashing it, and rewriting the whole
+ * descriptor cache around it — left finished builds sitting in
+ * `finalizing-results` with the APK already on disk.
+ */
+async function verifyArtifactCollection() {
+  const scanned = Object.keys(await snapshotBuildOutputs());
+  const fromExport = scanned.filter((file) => file.startsWith("out/"));
+  assert.ok(
+    fromExport.every((file) => file === "out/asol-web-manifest.json"),
+    `only the web manifest is an artifact under out/, found: ${fromExport.slice(0, 5).join(", ")}`,
+  );
+
+  // A file that appears is reported once, and hashing it writes the cache a
+  // single time rather than once per file.
+  const probeDirectory = path.resolve("android", "app", "build", "outputs", "apk");
+  await mkdir(probeDirectory, { recursive: true });
+  const probe = path.join(probeDirectory, "asol-artifact-collection-probe.json");
+  const before = await snapshotBuildOutputs();
+  await writeFile(probe, JSON.stringify({ probe: true }), "utf8");
+  try {
+    const changed = await changedBuildArtifacts(before);
+    const descriptor = changed.find((artifact) => artifact.path.endsWith("asol-artifact-collection-probe.json"));
+    assert.ok(descriptor, "a new build output must be reported as a changed artifact");
+    assert.match(descriptor.sha256, /^[a-f0-9]{64}$/);
+
+    // Cached on the second pass: the same file is not hashed again.
+    const again = await changedBuildArtifacts(before);
+    assert.deepEqual(
+      again.find((artifact) => artifact.path === descriptor.path),
+      descriptor,
+    );
+  } finally {
+    await rm(probe, { force: true });
+  }
+
+  // The build writes and deletes as it runs, so a path can disappear between
+  // being listed and being measured. That must not throw: the throw escaped
+  // `finalize`, where nothing catches it, and froze the record on `running`.
+  const vanished = await changedBuildArtifacts({
+    ...before,
+    "android/app/build/outputs/apk/asol-never-existed.json": { size: 1, mtimeMs: 1 },
+  });
+  assert.ok(Array.isArray(vanished));
+
+  const source = await readFile("src/modules/release-commands/services/build-job-artifacts.server.ts", "utf8");
+  const describeBody = source.slice(
+    source.indexOf("async function describeFile"),
+    source.indexOf("async function statOrNull"),
+  );
+  assert.ok(describeBody.length > 0, "describeFile and statOrNull must both exist");
+  assert.doesNotMatch(
+    describeBody,
+    /writeFile\(cachePath|writeCache\(/,
+    "the descriptor cache must be written once per job, not once per artifact",
+  );
+  const changedBody = source.slice(
+    source.indexOf("export async function changedBuildArtifacts"),
+    source.indexOf("export async function resolveStoredArtifact"),
+  );
+  assert.equal(
+    changedBody.match(/writeCache\(/g)?.length,
+    1,
+    "changedBuildArtifacts must write the descriptor cache exactly once",
+  );
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });

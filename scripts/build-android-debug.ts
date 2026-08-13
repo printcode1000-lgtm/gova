@@ -1,8 +1,8 @@
-import { execFileSync, execSync } from "node:child_process";
+import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import path from "node:path";
 
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { runGradle } from "./android/gradle";
 import { describeTestApk, TEST_APK_PATH } from "./android/test-apk";
 import { reportStage, reportStep } from "./release-stage";
 
@@ -24,24 +24,6 @@ import { reportStage, reportStep } from "./release-stage";
  * It touches no device. Wiping a device and installing onto it is its own
  * command, so a rebuild never silently erases what is on a phone.
  */
-const ANDROID_DIRECTORY = path.resolve("android");
-
-function runGradle(tasks: string[], env: NodeJS.ProcessEnv): void {
-  if (process.platform === "win32") {
-    execFileSync(
-      process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe",
-      ["/d", "/c", "gradlew.bat", ...tasks],
-      { cwd: ANDROID_DIRECTORY, stdio: "inherit", env },
-    );
-    return;
-  }
-  execFileSync(path.join(ANDROID_DIRECTORY, "gradlew"), tasks, {
-    cwd: ANDROID_DIRECTORY,
-    stdio: "inherit",
-    env,
-  });
-}
-
 function main(): void {
   const env = withoutVsCodeDebuggerEnv(process.env);
 
