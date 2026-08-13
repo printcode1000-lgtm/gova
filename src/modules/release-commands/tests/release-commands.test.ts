@@ -26,6 +26,7 @@ import {
   assertCommandReadiness,
   cancelBuildJob,
   commandReadiness,
+  lastMeaningfulLine,
   readBuildJobLog,
   readBuildJobRecord,
   reconcileBuildJobs,
@@ -297,6 +298,33 @@ try {
     "the install step must build nothing");
   assert.match(deviceInstallerSource, /assertTestApkExists/,
     "installing must stop with a clear message when nothing has been built");
+
+  // A failed job used to show a red chip carrying a job id and nothing else,
+  // stamped with the one stage that had nothing to do with the failure.
+  assert.equal(
+    lastMeaningfulLine([
+      "[stage] detecting-device",
+      "Connected devices: none",
+      "",
+      "Device install failed: No Android device is connected.",
+      "",
+    ].join("\n")),
+    "Device install failed: No Android device is connected.",
+  );
+  assert.equal(
+    lastMeaningfulLine("real failure here\nnpm ERR! code 1\nnpm ERR! path C:\\x"),
+    "real failure here",
+    "npm's exit noise must not bury the sentence that explains the failure",
+  );
+  assert.equal(lastMeaningfulLine("[stage] testing\n[step] 1/2 lint\n"), undefined,
+    "markers alone say nothing a reader can act on");
+  assert.equal(lastMeaningfulLine(`x${"y".repeat(400)}`)!.length, 300,
+    "a runaway line must not overflow the chip");
+  const runnerSource = await readFile(
+    "src/modules/release-commands/services/build-job-runner.server.ts", "utf8",
+  );
+  assert.match(runnerSource, /const stageAtExit = current\.stage/,
+    "a failed job must keep the stage it actually stopped at");
   const deviceInstallSource = await readFile("scripts/android/device-install.ts", "utf8");
   assert.match(deviceInstallSource, /pm uninstall/,
     "the device must be wiped by uninstalling, not by clearing data alone");

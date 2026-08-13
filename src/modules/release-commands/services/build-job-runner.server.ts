@@ -156,6 +156,28 @@ async function appendLog(jobId: string, chunk: string | Buffer): Promise<void> {
   await fs.appendFile(logPath(jobId), chunk);
 }
 
+/**
+ * The last line of output worth showing on a failed job's chip.
+ *
+ * Scripts here end with a plain sentence explaining the failure. Stage and step
+ * markers, blank lines and npm's own exit noise are skipped: they are true but
+ * say nothing, and the one line that helps is usually just above them.
+ */
+export function lastMeaningfulLine(output: string): string | undefined {
+  const line = output
+    .split(/\r?\n/)
+    .map((candidate) => candidate.trim())
+    .filter((candidate) =>
+      candidate
+      && !candidate.startsWith("[stage]")
+      && !candidate.startsWith("[step]")
+      && !/^npm (?:ERR|WARN|notice)/.test(candidate)
+      && !/^>/.test(candidate))
+    .pop();
+  if (!line) return undefined;
+  return line.length > 300 ? `${line.slice(0, 299)}…` : line;
+}
+
 export function commandReadiness(command: BuildCommandCatalogEntry): BuildCommandReadiness {
   const missingEnv = command.requiredEnv
     .filter((requirement) => !releaseRequirementSatisfied(requirement))
@@ -208,13 +230,71 @@ export async function listBuildJobs(page = 1, pageSize = 20): Promise<PaginatedB
   const safePage = Math.max(1, Math.floor(page));
   const safeSize = Math.max(1, Math.min(50, Math.floor(pageSize)));
   await pruneRecords();
-  const jobs = await readAllRecords();
+  const jobs = await interruptDeadJobs(await readAllRecords());
   const start = (safePage - 1) * safeSize;
   return {
     jobs: jobs.slice(start, start + safeSize).map(buildJobForClient),
     page: safePage, pageSize: safeSize, total: jobs.length,
     hasMore: start + safeSize < jobs.length,
   };
+}
+
+/**
+ * Mark jobs whose process is gone as interrupted, and free the lock they hold.
+ *
+ * `ensureReconciled` recovers jobs orphaned *before* this process started, and
+ * it runs exactly once because that is a startup concern. Nothing covered a
+ * job that died afterwards — and one does every time the dev server hot-reloads
+ * while a build is running, because the reload drops the `close` handler that
+ * would have finalized it. The record then stays `running` forever, keeps the
+ * exclusive lock, and disables every button on the page until someone restarts
+ * the server.
+ *
+ * This runs on the records the listing already read, so it costs no extra I/O.
+ * A job this process is still running is never touched, and neither is a queued
+ * job whose owner holds the lock and is alive — it simply has no pid yet.
+ */
+async function interruptDeadJobs(jobs: BuildJobRecord[]): Promise<BuildJobRecord[]> {
+  const lock = await readLock(path.join(JOB_DIR, "exclusive.lock"));
+  const recovered: BuildJobRecord[] = [];
+  for (const job of jobs) {
+    if (job.status !== "running" && job.status !== "queued") { recovered.push(job); continue; }
+    if (liveProcesses.has(job.id)) { recovered.push(job); continue; }
+    const ownedQueuedJob = job.status === "queued" && lock?.jobId === job.id && isProcessAlive(lock.pid);
+    if (ownedQueuedJob || (job.pid && isProcessAlive(job.pid))) { recovered.push(job); continue; }
+    // A job whose record was written moments ago is not abandoned, whatever its
+    // process id says: it is either still reporting progress, or its runner is
+    // inside the finalize window, where the child is already gone and the
+    // result is not written yet. `liveProcesses` alone cannot be trusted for
+    // this — the dev server can serve a request from a different module
+    // instance, whose map is empty — so the freshness of the record on disk is
+    // what decides. Claiming such a job strands it as `interrupted` and throws
+    // away the outcome it was about to record.
+    if (await writtenRecently(job.id)) { recovered.push(job); continue; }
+    setJobStatus(job, "interrupted");
+    job.finishedAt = now();
+    job.error = job.error ?? "releaseCommandInterrupted";
+    await writeRecord(job);
+    await releaseBuildJobLock(job.id);
+    recovered.push(job);
+  }
+  return recovered;
+}
+
+/**
+ * Long enough to cover finalizing a release: hashing every changed artifact
+ * includes SHA-256 over a multi-hundred-megabyte AAB. Short enough that a
+ * genuinely abandoned job frees its lock without anyone waiting on it.
+ */
+const ABANDONED_RECORD_GRACE_MS = 120_000;
+
+async function writtenRecently(jobId: string): Promise<boolean> {
+  try {
+    const stat = await fs.stat(recordPath(jobId));
+    return Date.now() - stat.mtimeMs < ABANDONED_RECORD_GRACE_MS;
+  } catch {
+    return false;
+  }
 }
 
 async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
@@ -356,37 +436,64 @@ async function runJob(record: BuildJobRecord, command: BuildCommandCatalogEntry)
         current.activity = nextActivity;
         await writeRecord(current);
       }
-    });
+      // A rejection here would poison the chain, and `close` waits on that same
+      // chain before finalizing — so one failed progress write meant the job
+      // never recorded its result at all. Progress is the least important thing
+      // this runner does; it must never be able to lose the outcome.
+    }).catch(() => {});
   };
   child.stdout.on("data", captureOutput);
   child.stderr.on("data", captureOutput);
   let finalized = false;
   const finalize = async (status: "succeeded" | "failed", code: number | null, error?: string) => {
     if (finalized) return; finalized = true;
-    liveProcesses.delete(record.id);
+    // Ownership is released in the `finally`, not here. Finalizing hashes every
+    // changed artifact — SHA-256 over a 38 MB APK is not instant — and during
+    // that window the child is already dead while the record still says
+    // `running`. Dropping ownership first let the liveness sweep declare a job
+    // interrupted moments before it wrote its real result.
     try {
       let current = await readBuildJobRecord(record.id);
       if (current.status !== "cancelled") {
+        // Where the command actually stopped. Collecting artifacts is a step
+        // this runner performs afterwards, so overwriting the stage with it
+        // told every failed job it "failed at finalizing-results" — the one
+        // stage that had nothing to do with the failure.
+        const stageAtExit = current.stage;
         current.stage = "finalizing-results";
         await writeRecord(current);
         const snapshot = current.artifactSnapshot ?? {};
         const artifacts = await changedBuildArtifacts(snapshot);
         current = await readBuildJobRecord(record.id);
-        if (current.status !== "cancelled") {
-          setJobStatus(current, status); current.exitCode = code; current.finishedAt = now(); current.error = error;
+        // Anything terminal reached while artifacts were being hashed wins:
+        // a cancellation the user asked for, or a recovery that beat us to it.
+        // Forcing a transition out of a terminal status throws, and the throw
+        // would leave the record frozen in whatever state stole it.
+        if (current.status === "running" || current.status === "queued") {
+          setJobStatus(current, status); current.exitCode = code; current.finishedAt = now();
+          // A command that exits non-zero has usually already said why. Losing
+          // that sentence leaves a red chip with a job id and no reason, and
+          // sends the reader to the log for something the card could have said.
+          current.error = error ?? (status === "failed" ? lastMeaningfulLine(recentOutput) : undefined);
           if (status === "succeeded") current.stage = "completed";
-          // On failure the last step is the most useful thing on the card: it
-          // names what was running when it broke. On success it is noise.
+          // On failure the last stage and step are the most useful things on
+          // the card: together they name what was running when it broke.
+          else current.stage = stageAtExit;
           if (status === "succeeded") delete current.activity;
           current.artifacts = artifacts;
           delete current.artifactSnapshot;
           await writeRecord(current);
         }
       }
-    } finally { if (command.exclusive) await releaseBuildJobLock(record.id); }
+    } finally {
+      liveProcesses.delete(record.id);
+      if (command.exclusive) await releaseBuildJobLock(record.id);
+    }
   };
-  child.once("error", (error) => void stageWrites.then(() => finalize("failed", null, error.message)));
-  child.once("close", (code) => void stageWrites.then(() => finalize(code === 0 ? "succeeded" : "failed", code)));
+  // `catch` before `then` on both: the outcome must be recorded even if every
+  // progress write failed.
+  child.once("error", (error) => void stageWrites.catch(() => {}).then(() => finalize("failed", null, error.message)));
+  child.once("close", (code) => void stageWrites.catch(() => {}).then(() => finalize(code === 0 ? "succeeded" : "failed", code)));
 }
 
 async function ensureReconciled(): Promise<void> {

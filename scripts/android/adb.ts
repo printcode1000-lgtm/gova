@@ -41,10 +41,18 @@ export function resolveAdb(): string {
   }
 }
 
+/**
+ * `stderr` is captured rather than inherited: several of these commands are
+ * expected to fail on some devices — clearing data, granting permissions — and
+ * the Android shell answers with a forty-line Java trace. Letting that reach
+ * the job log makes a successful wipe look like a catastrophe. The caller
+ * decides what, if anything, is worth printing.
+ */
 export function adbText(adb: string, args: string[], serial?: string): string {
   return execFileSync(adb, [...(serial ? ["-s", serial] : []), ...args], {
     encoding: "utf8",
     maxBuffer: 32 * 1024 * 1024,
+    stdio: ["ignore", "pipe", "pipe"],
   });
 }
 

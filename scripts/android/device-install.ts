@@ -72,11 +72,18 @@ function packagesForUser(adb: string, serial: string, userId: string): string[] 
   }
 }
 
+/**
+ * Run a device shell command and return what it said, whether it succeeded or
+ * not. `pm` reports some failures on stdout with a zero exit and others by
+ * throwing, so the two are flattened into one string the caller can inspect.
+ */
 function shellText(adb: string, serial: string, command: string): string {
   try {
     return adbText(adb, ["shell", command], serial).trim();
   } catch (error) {
-    return error instanceof Error ? error.message : String(error);
+    const failure = error as { stderr?: string | Buffer; stdout?: string | Buffer; message?: string };
+    const output = `${failure.stdout?.toString() ?? ""}\n${failure.stderr?.toString() ?? ""}`.trim();
+    return output || failure.message || String(error);
   }
 }
 
@@ -111,8 +118,11 @@ export function wipeProjectPackages(adb: string, serial: string): string[] {
   for (const name of installed) {
     reportStep(`uninstalling ${name}`);
     for (const userId of userIds) {
-      // Clearing first drops data even when an uninstall is later refused for
-      // a profile this shell cannot touch.
+      // Best effort. Clearing first drops data even when an uninstall is later
+      // refused for a profile this shell cannot touch — but plenty of vendor
+      // ROMs deny CLEAR_APP_USER_DATA to the adb user, and it does not matter:
+      // the uninstall below removes the data regardless. The refusal is
+      // deliberately not reported, because it is not a problem.
       shellText(adb, serial, `pm clear --user ${userId} ${name}`);
     }
     // Without `--user`, `pm uninstall` removes a non-system package for every
@@ -231,6 +241,27 @@ export function grantRuntimePermissions(adb: string, serial: string): void {
   for (const permission of permissions) {
     reportStep(`granting ${permission}`);
     const result = shellText(adb, serial, `pm grant ${ASOL_APPLICATION_ID} ${permission}`);
-    if (result && !/^\s*$/.test(result)) console.log(`  ${permission}: ${result}`);
+    if (!result.trim()) {
+      console.log(`  ${permission}: granted`);
+      continue;
+    }
+    // Several vendor ROMs (ColorOS among them) refuse GRANT_RUNTIME_PERMISSIONS
+    // to the adb shell user. Nothing here can work around that, and printing a
+    // forty-line Java trace hides the one thing the reader has to do — so say
+    // it in a sentence instead. Not fatal: the install itself succeeded, and
+    // the checks that need the permission skip themselves loudly.
+    if (/GRANT_RUNTIME_PERMISSIONS|SecurityException/.test(result)) {
+      console.warn(
+        `  ${permission}: this device refuses permission grants over adb.\n` +
+          `  Grant notifications to ${ASOL_APPLICATION_ID} by hand in Settings, or the\n` +
+          "  notification checks in the connected-device suite will skip instead of run.",
+      );
+      continue;
+    }
+    console.log(`  ${permission}: ${firstLine(result)}`);
   }
+}
+
+function firstLine(value: string): string {
+  return value.split(/\r?\n/).find((line) => line.trim()) ?? value;
 }
