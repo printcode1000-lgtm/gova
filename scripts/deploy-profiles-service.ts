@@ -2,6 +2,7 @@ import { execFileSync } from 'child_process';
 import { existsSync } from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
+import { printDeploymentReport, vercelDeploymentMetadata, waitForVercelProductionDeployment } from './lib/vercel-deployment-monitor';
 
 /**
  * Deploys the profiles service to its own Vercel account.
@@ -142,9 +143,16 @@ async function upsertEnv(projectId: string, key: string, value: string, teamId?:
 }
 
 function runVercel(args: string[], projectId: string, teamId?: string): void {
-  execFileSync('npx', ['--yes', '--package=vercel@59.0.0', 'vercel', ...args], {
+  const npxCli = process.env.npm_execpath
+    ? path.join(path.dirname(process.env.npm_execpath), 'npx-cli.js')
+    : null;
+  const command = npxCli ? process.execPath : 'npx';
+  const commandArgs = npxCli
+    ? [npxCli, '--yes', '--package=vercel@59.0.0', 'vercel', ...args]
+    : ['--yes', '--package=vercel@59.0.0', 'vercel', ...args];
+  execFileSync(command, commandArgs, {
     stdio: 'inherit',
-    shell: process.platform === 'win32',
+    shell: false,
     // Everything the CLI reads and writes stays inside the service folder.
     cwd: SERVICE_DIR,
     env: {
@@ -191,7 +199,16 @@ async function main(): Promise<void> {
   syncSharedSources();
 
   console.log('\nUploading services/profiles and building remotely...');
-  runVercel(['deploy', '--prod', '--yes'], projectId, teamId);
+  const runId = process.env.ASOL_DEPLOYMENT_RUN_ID?.trim() || `profiles-${Date.now()}`;
+  const revision = process.env.ASOL_DEPLOYMENT_REVISION?.trim() || 'standalone';
+  const comment = process.env.ASOL_DEPLOYMENT_COMMENT?.trim() || `profiles production deploy ${new Date().toISOString()}`;
+  runVercel(['deploy', '--prod', '--yes', ...vercelDeploymentMetadata({ target: 'profiles', comment, runId, revision })], projectId, teamId);
+  const report = await waitForVercelProductionDeployment({
+    token, project: PROJECT_NAME, target: 'profiles', account: teamId ?? 'personal',
+    comment, teamId, runId,
+  });
+  printDeploymentReport(report);
+  if (report.state !== 'READY') throw new Error(`Vercel verification failed: ${report.message}`);
 
   console.log(
     "\nDone. Set NEXT_PUBLIC_ASOL_PROFILES_URL on the main app to this deployment's " +

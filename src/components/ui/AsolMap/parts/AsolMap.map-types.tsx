@@ -1,6 +1,6 @@
 "use client";
 
-import maplibregl, {
+import {
   GeoJSONSource,
   Map as MapLibreMap,
   MapMouseEvent,

@@ -1,6 +1,16 @@
 "use client";
 
-import { Gift, PackagePlus, Percent, Ticket, Truck } from "lucide-react";
+import {
+  CalendarDays,
+  Gift,
+  PackagePlus,
+  Percent,
+  Repeat2,
+  ShoppingBag,
+  Ticket,
+  Truck,
+  Users,
+} from "lucide-react";
 import { useSellerDiscounts } from "../hooks/use-seller-discounts";
 import {
   formatMinorCurrency,
@@ -70,12 +80,12 @@ function OfferCard({
             ? PackagePlus
             : Percent;
   return (
-    <article className="rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3">
+    <article className="rounded-2xl border border-outline-variant bg-surface-container-low/40 p-3 sm:p-4">
       <div className="flex items-start gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
           <Icon className="h-5 w-5" />
         </span>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h3 className="break-words text-sm font-bold text-on-surface">
             {discount.title || (ar ? "عرض متاح" : "Available offer")}
           </h3>
@@ -87,10 +97,100 @@ function OfferCard({
               {discount.couponCode}
             </code>
           ) : null}
+          {discount.description ? (
+            <p className="mt-2 break-words text-xs leading-5 text-on-surface-variant">
+              {discount.description}
+            </p>
+          ) : null}
+          <div className="mt-3 grid gap-2 border-t border-outline-variant/70 pt-3 text-[11px] leading-5 text-on-surface-variant sm:grid-cols-2">
+            <Detail icon={Users} text={describeAudience(discount, locale)} />
+            <Detail icon={ShoppingBag} text={describeScope(discount, locale)} />
+            <Detail icon={CalendarDays} text={describeValidity(discount, locale)} />
+            <Detail icon={Repeat2} text={describeUsage(discount, locale)} />
+          </div>
         </div>
       </div>
     </article>
   );
+}
+
+function Detail({
+  icon: Icon,
+  text,
+}: {
+  icon: typeof Users;
+  text: string;
+}) {
+  return (
+    <span className="flex items-start gap-1.5 rounded-lg bg-surface px-2 py-1.5">
+      <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+      <span>{text}</span>
+    </span>
+  );
+}
+
+function describeAudience(discount: SellerDiscountRule, locale: "ar" | "en") {
+  const ar = locale === "ar";
+  const audiences = [
+    discount.conditions.followersOnly ? (ar ? "المتابعون" : "Followers") : "",
+    discount.conditions.firstOrderOnly ? (ar ? "الطلب الأول" : "First order") : "",
+    discount.conditions.appOnly ? (ar ? "مستخدمو التطبيق" : "App users") : "",
+  ].filter(Boolean);
+  return audiences.length > 0
+    ? `${ar ? "مخصص لـ" : "For"}: ${audiences.join(ar ? "، " : ", ")}`
+    : ar
+      ? "متاح لجميع العملاء المؤهلين"
+      : "Available to all eligible customers";
+}
+
+function describeScope(discount: SellerDiscountRule, locale: "ar" | "en") {
+  const ar = locale === "ar";
+  const parts: string[] = [];
+  if (discount.scope.productIds.length > 0) {
+    parts.push(ar ? `${discount.scope.productIds.length} منتج محدد` : `${discount.scope.productIds.length} selected products`);
+  }
+  if (discount.scope.categoryIds.length > 0) {
+    parts.push(ar ? `${discount.scope.categoryIds.length} فئة` : `${discount.scope.categoryIds.length} categories`);
+  }
+  if (discount.conditions.minQuantity > 0) {
+    parts.push(ar ? `حد أدنى ${discount.conditions.minQuantity} قطع` : `minimum ${discount.conditions.minQuantity} items`);
+  }
+  if (discount.scope.excludedProductIds.length > 0) {
+    parts.push(ar ? `يستثني ${discount.scope.excludedProductIds.length} منتج` : `excludes ${discount.scope.excludedProductIds.length} products`);
+  }
+  return parts.length > 0
+    ? parts.join(ar ? "، " : ", ")
+    : ar
+      ? "يشمل منتجات المتجر المؤهلة"
+      : "Covers eligible store products";
+}
+
+function describeValidity(discount: SellerDiscountRule, locale: "ar" | "en") {
+  const ar = locale === "ar";
+  const formatter = new Intl.DateTimeFormat(ar ? "ar-EG" : "en-US", { dateStyle: "medium" });
+  const start = discount.startsAt ? formatter.format(new Date(discount.startsAt)) : "";
+  const end = discount.endsAt ? formatter.format(new Date(discount.endsAt)) : "";
+  if (start && end) return ar ? `من ${start} إلى ${end}` : `${start} to ${end}`;
+  if (end) return ar ? `متاح حتى ${end}` : `Available until ${end}`;
+  if (start) return ar ? `يبدأ في ${start}` : `Starts ${start}`;
+  return ar ? "متاح دون تاريخ انتهاء محدد" : "No specified end date";
+}
+
+function describeUsage(discount: SellerDiscountRule, locale: "ar" | "en") {
+  const ar = locale === "ar";
+  const limits: string[] = [];
+  if (discount.usageLimits.perBuyer > 0) {
+    limits.push(ar ? `${discount.usageLimits.perBuyer} مرة لكل عميل` : `${discount.usageLimits.perBuyer} per customer`);
+  }
+  if (discount.usageLimits.total > 0) {
+    limits.push(ar ? `${discount.usageLimits.total} استخدام إجمالي` : `${discount.usageLimits.total} total uses`);
+  }
+  limits.push(
+    discount.combinable
+      ? ar ? "يقبل الدمج مع عروض أخرى" : "Can combine with other offers"
+      : ar ? "لا يدمج مع عروض أخرى" : "Cannot combine with other offers",
+  );
+  return limits.join(ar ? "، " : ", ");
 }
 
 function describe(discount: SellerDiscountRule, locale: "ar" | "en") {

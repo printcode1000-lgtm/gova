@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bell, Heart, Loader2, Users } from "lucide-react";
+import { Bell, CheckCircle2, Heart, Loader2, Send, Users, XCircle } from "lucide-react";
 
 import {
   ACTION_TILE_CLASS,
@@ -12,13 +12,17 @@ import {
 import { cn } from "@/lib/utils";
 import { followApiService, type FollowStatus, type FollowTargetType } from "@/features/follow";
 import { useTranslation } from "@/lib/i18n";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useSession } from "@/features/auth/components/SessionProvider";
 
 type DialogMode =
   | "login_required"
   | "confirm_follow"
   | "confirm_unfollow"
   | "owner_actions"
-  | "coming_soon"
+  | "notify_followers"
   | "error"
   | "success";
 
@@ -75,11 +79,11 @@ function dialogText(mode: DialogMode, label: string, t: (key: string, params?: R
         body: t("follow.dialog.ownerActions.body", { label }),
         action: t("follow.dialog.ownerActions.action"),
       };
-    case "coming_soon":
+    case "notify_followers":
       return {
-        title: t("follow.dialog.comingSoon.title"),
-        body: t("follow.dialog.comingSoon.body"),
-        action: t("follow.dialog.comingSoon.action"),
+        title: t("follow.dialog.notification.title"),
+        body: t("follow.dialog.notification.body", { label }),
+        action: t("follow.dialog.notification.send"),
       };
     case "success":
       return {
@@ -108,11 +112,19 @@ export function FollowButton({
   className,
 }: FollowButtonProps) {
   const { t, locale } = useTranslation();
+  const { session } = useSession();
   const label = targetLabel || (locale === "ar" ? targetLabels[targetType] : targetLabelsEn[targetType]);
   const [status, setStatus] = React.useState<FollowStatus | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isMutating, setIsMutating] = React.useState(false);
   const [dialogMode, setDialogMode] = React.useState<DialogMode | null>(null);
+  const [notificationTitle, setNotificationTitle] = React.useState("");
+  const [notificationBody, setNotificationBody] = React.useState("");
+  const [notificationResult, setNotificationResult] = React.useState<{
+    requested: number;
+    delivered: number;
+    unavailable: number;
+  } | null>(null);
 
   const canManage =
     isOwner ||
@@ -196,6 +208,40 @@ export function FollowButton({
     }
   };
 
+  const sendFollowerNotification = async () => {
+    if (!session?.sessionToken || isMutating) {
+      setDialogMode("error");
+      return;
+    }
+    setIsMutating(true);
+    setNotificationResult(null);
+    try {
+      const requestId =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `${Date.now()}:${Math.random().toString(36).slice(2)}`;
+      const result = await followApiService.notifyFollowers({
+        identity: { uid: session.uid, phone: session.phone },
+        sessionToken: session.sessionToken,
+        targetType,
+        targetId,
+        targetOwnerUid,
+        title: notificationTitle,
+        body: notificationBody,
+        requestId,
+      });
+      setNotificationResult({
+        requested: result.requested,
+        delivered: result.delivered,
+        unavailable: result.unavailable,
+      });
+    } catch {
+      setDialogMode("error");
+    } finally {
+      setIsMutating(false);
+    }
+  };
+
   const textForDialog = dialogMode ? dialogText(dialogMode, label, t) : null;
 
   return (
@@ -222,7 +268,7 @@ export function FollowButton({
           <div className="w-full max-w-sm rounded-xl bg-surface p-4 shadow-xl">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                {dialogMode === "coming_soon" ? (
+                {dialogMode === "notify_followers" ? (
                   <Bell className="h-5 w-5" />
                 ) : canManage ? (
                   <Users className="h-5 w-5" />
@@ -252,20 +298,91 @@ export function FollowButton({
                   type="button"
                   variant="outline"
                   className="w-full justify-start gap-2"
-                  onClick={() => setDialogMode("coming_soon")}
+                  onClick={() => {
+                    setNotificationResult(null);
+                    setDialogMode("notify_followers");
+                  }}
                 >
                   <Bell className="h-4 w-4" />
                   {t("follow.dialog.notifyFollowers")}
                   <span className="ms-auto text-xs text-on-surface-variant">
-                    {t("follow.dialog.comingSoonBadge")}
+                    {t("follow.dialog.notification.availableBadge")}
                   </span>
                 </Button>
+                <p className="px-1 text-[11px] leading-5 text-on-surface-variant">
+                  {t("follow.dialog.notification.deliveryHint")}
+                </p>
+              </div>
+            ) : null}
+
+            {dialogMode === "notify_followers" ? (
+              <div className="mt-4 space-y-3">
+                <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                  <div className="rounded-lg border border-outline-variant bg-surface-container-low p-2">
+                    <span className="block text-on-surface-variant">
+                      {t("follow.dialog.followerCount")}
+                    </span>
+                    <strong className="mt-1 block text-base text-on-surface">
+                      {formatCount(count, locale)}
+                    </strong>
+                  </div>
+                  <div className="rounded-lg border border-outline-variant bg-surface-container-low p-2">
+                    <span className="block text-on-surface-variant">
+                      {t("follow.dialog.notification.channel")}
+                    </span>
+                    <strong className="mt-1 block text-sm text-on-surface">
+                      {t("follow.dialog.notification.pushAndCenter")}
+                    </strong>
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor={`follower-notification-title-${targetId}`}>
+                    {t("follow.dialog.notification.titleLabel")}
+                  </Label>
+                  <Input
+                    id={`follower-notification-title-${targetId}`}
+                    value={notificationTitle}
+                    maxLength={120}
+                    onChange={(event) => setNotificationTitle(event.target.value)}
+                    placeholder={t("follow.dialog.notification.titlePlaceholder")}
+                  />
+                  <p className="text-end text-[10px] text-on-surface-variant">
+                    {notificationTitle.length}/120
+                  </p>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor={`follower-notification-body-${targetId}`}>
+                    {t("follow.dialog.notification.messageLabel")}
+                  </Label>
+                  <Textarea
+                    id={`follower-notification-body-${targetId}`}
+                    value={notificationBody}
+                    maxLength={1000}
+                    rows={4}
+                    onChange={(event) => setNotificationBody(event.target.value)}
+                    placeholder={t("follow.dialog.notification.messagePlaceholder")}
+                  />
+                  <p className="text-end text-[10px] text-on-surface-variant">
+                    {notificationBody.length}/1000
+                  </p>
+                </div>
+                {notificationResult ? (
+                  <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3 text-xs">
+                    <p className="mb-2 font-semibold text-on-surface">
+                      {t("follow.dialog.notification.resultTitle")}
+                    </p>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <span>{t("follow.dialog.notification.requested")}<strong className="block text-sm">{notificationResult.requested}</strong></span>
+                      <span className="text-success"><CheckCircle2 className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.delivered")}<strong className="block text-sm">{notificationResult.delivered}</strong></span>
+                      <span className="text-error"><XCircle className="mx-auto mb-1 h-4 w-4" />{t("follow.dialog.notification.unavailable")}<strong className="block text-sm">{notificationResult.unavailable}</strong></span>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : null}
 
             <div className="mt-4 flex justify-end gap-2">
-              {dialogMode === "confirm_follow" ||
-              dialogMode === "confirm_unfollow" ? (
+              {dialogMode === "confirm_follow" || dialogMode === "confirm_unfollow" ? (
                 <>
                   <Button
                     type="button"
@@ -284,6 +401,32 @@ export function FollowButton({
                     {isMutating ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : null}
+                    {textForDialog.action}
+                  </Button>
+                </>
+              ) : dialogMode === "notify_followers" ? (
+                <>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setDialogMode("owner_actions")}
+                    disabled={isMutating}
+                  >
+                    {t("follow.dialog.notification.back")}
+                  </Button>
+                  <Button
+                    type="button"
+                    className="gap-2"
+                    onClick={() => void sendFollowerNotification()}
+                    disabled={
+                      isMutating ||
+                      !session?.sessionToken ||
+                      !notificationTitle.trim() ||
+                      !notificationBody.trim() ||
+                      count === 0
+                    }
+                  >
+                    {isMutating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                     {textForDialog.action}
                   </Button>
                 </>

@@ -2,6 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Environment Doctor - متطلبات الجهاز لكل السيناريوهات",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "doctor:environment"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Tools",
+        "order": 1
+      }
+    },
+    {
       "name": "Secrets Key Init - تهيئة مفتاح النسخ المشفر",
       "request": "launch",
       "type": "node",

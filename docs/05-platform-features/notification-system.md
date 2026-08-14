@@ -46,6 +46,10 @@ The notification system is a local-first module that powers the in-app notificat
 - FCM (Android, and Apple once the Firebase iOS SDK is installed) and Web Push are live transports. Direct APNs is an opt-in fallback that stays unconfigured by default.
 - Android delivery is application-owned: the payload is data-only, `AsolPushMessagingService` persists it to the app-private native inbox (AndroidKeyStore-encrypted when available) before displaying it, and the record is deleted only after IndexedDB has it. iOS/APNs and Web Push are unchanged.
 - A notification tap opens `/notifications`; the business deep link stays on the stored notification and is followed when the card is opened.
+- Store owners can compose a follower broadcast from their profile preview.
+  The main app verifies the signed owner session and resolves the current
+  follower audience, then the browser carries a signed grant to the isolated
+  notifications service and reports the real per-recipient delivery outcome.
 
 ## Folder Structure
 

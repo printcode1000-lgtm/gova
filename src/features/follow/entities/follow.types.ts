@@ -34,3 +34,29 @@ export interface FollowAudience {
   targetId: string;
   followerUids: string[];
 }
+
+export interface FollowerNotificationIdentity {
+  uid: string;
+  phone: string;
+}
+
+export interface SendFollowerNotificationInput extends FollowTarget {
+  identity: FollowerNotificationIdentity;
+  title: string;
+  body: string;
+  requestId: string;
+}
+
+export interface FollowerNotificationRecipientResult {
+  uid: string;
+  tokenCount: number;
+  status: "sent" | "partial" | "queued" | "failed" | "no_tokens" | "granted";
+}
+
+export interface SendFollowerNotificationResult {
+  requested: number;
+  delivered: number;
+  unavailable: number;
+  results: FollowerNotificationRecipientResult[];
+  notificationGrants?: string[];
+}

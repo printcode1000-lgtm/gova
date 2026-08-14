@@ -52,6 +52,11 @@ Route:
 
 The public profile renders `SellerDiscountsPreview` after profile metrics. It
 shows only active seller offers, including coupon codes and readable conditions.
+Each card also states who can benefit (all eligible customers, followers,
+first-order buyers, app users, or a combination), product/category scope,
+minimum quantity and exclusions, validity dates, usage limits, combinability,
+and the seller-written description. Counts are shown instead of internal ids,
+and monetary values are converted from minor units to Egyptian pounds.
 The preview is informational; the source of truth remains the pricing engine.
 
 ## Cart and order flow

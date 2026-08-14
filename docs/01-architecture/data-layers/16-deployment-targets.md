@@ -46,21 +46,33 @@ npm run deploy:all
 ```
 
 `scripts/deploy-all.ts` first creates or verifies the encrypted secret backup,
-then stages the complete working tree and creates a deployment commit whose
-message contains the current ISO date and time. It pushes `main` to GitHub,
-which lets the existing Vercel integration update `gova`. After the push
-succeeds, it starts the notifications, products, orders, and profiles production
-deploy commands sequentially and waits for all four. This avoids concurrent
-Vercel CLI downloads sharing one npm cache. It performs no tests and
-does not build a static bundle or APK.
+then stages the complete working tree and creates a main deployment commit named
+`deploy(main): <ISO timestamp>`. It pushes `main` to GitHub, which lets the one
+existing GitHub integration update `gova`. The other four projects remain
+disconnected from GitHub and deploy sequentially through their dedicated
+tokens. Each account receives its own visible comment, for example
+`deploy(products): <timestamp> @ <revision>`, plus target/run/revision metadata.
+This avoids ambiguous CLI deployments and concurrent downloads sharing one npm
+cache. The command performs no tests and does not build a static bundle or APK.
 
 The command refuses a non-`main` branch and verifies that the new commit leaves
-the working tree clean, so every Vercel account receives the same revision. Each
-service continues to read its dedicated Vercel token and required environment
-values from `.env.local` or `.env`.
+the working tree clean, so every Vercel account receives the same revision. A
+zero exit code from the upload process is not considered success. Every service
+polls the Vercel API for the deployment tagged with this exact run id until it is
+`READY`, `ERROR`, `CANCELED`, or times out; alias failures turn an otherwise
+ready build into an error. The main GitHub-triggered deployment is independently
+matched by commit SHA and monitored the same way. The final console table always
+shows target, account, project, unique comment, state, URL, and Vercel error.
+`deploy:all` exits non-zero if any of the five production targets is not verified
+`READY`.
+
+Each service continues to read its dedicated Vercel token and required
+environment values from `.env.local` or `.env`. `VERCEL_TOKEN` and the root
+`.vercel/project.json` are additionally required to verify the GitHub-linked
+main deployment. The root link is never rewritten by a service command.
 
 The Vercel CLI is intentionally not a project dependency. Each isolated service
-deployment invokes the pinned CLI as an ephemeral `npx --package` tool, keeping
+deployment invokes `vercel@59.0.0` as an ephemeral `npx --package` tool, keeping
 its large framework-builder dependency graph out of the application lockfile
 and deployed runtime. Update the identical pin in all four deploy scripts
 together after verifying the CLI.

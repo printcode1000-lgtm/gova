@@ -106,7 +106,23 @@ function writeReport(reportPath: string, report: SchemaSyncReport): void {
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
   }
-  writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf8');
+  const contents = JSON.stringify(report, null, 2);
+  const retryableWindowsErrors = new Set(['EBUSY', 'EACCES', 'EPERM', 'UNKNOWN']);
+  for (let attempt = 1; attempt <= 5; attempt += 1) {
+    try {
+      writeFileSync(reportPath, contents, 'utf8');
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (process.platform !== 'win32' || !code || !retryableWindowsErrors.has(code) || attempt === 5) {
+        throw error;
+      }
+      // Virus scanners and indexing services can hold freshly rewritten JSON
+      // reports briefly on Windows. Keep schema sync deterministic instead of
+      // failing an otherwise valid production build on that transient lock.
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, attempt * 100);
+    }
+  }
 }
 
 function buildSkippedReport(reason: string): SchemaSyncReport {

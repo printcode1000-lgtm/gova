@@ -41,6 +41,7 @@ export const ASOL_API_ROUTES = {
   follow: {
     root: "/api/follow",
     status: "/api/follow/status",
+    notifications: "/api/follow/notifications",
   },
   storage: {
     upload: "/api/storage/images/upload",

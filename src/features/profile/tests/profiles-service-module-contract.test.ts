@@ -129,9 +129,9 @@ assert.notEqual(
 const probe = mkdtempSync(path.join(tmpdir(), "asol-profiles-sync-"));
 try {
   execFileSync(
-    "npx",
-    ["tsx", "scripts/sync-profiles-service-sources.ts", "--out", probe],
-    { cwd: root, stdio: "pipe", shell: process.platform === "win32" },
+    process.execPath,
+    [path.join(root, "node_modules", "tsx", "dist", "cli.mjs"), "scripts/sync-profiles-service-sources.ts", "--out", probe],
+    { cwd: root, stdio: "pipe", shell: false },
   );
   assert.equal(
     committed,

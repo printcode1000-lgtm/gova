@@ -97,3 +97,20 @@ sequenceDiagram
     DatabaseClient-->>Hook: JSON response
     Hook->>AsolDB: optional cache/session
 ```
+# Machine readiness
+
+`npm run doctor:environment` is the read-only onboarding and upgrade report used
+from the **Environment Doctor** entry in `.vscode/launch.json`. It covers all
+scenarios or accepts `--scenario=development|web|production|android|ios` when
+running the TypeScript script directly. It reports:
+
+- Node/npm/Git versions and lockfile-to-`node_modules` consistency;
+- compatible npm updates separately from major-version review items;
+- the one GitHub-linked Vercel project, five account tokens, and the ephemeral
+  Vercel CLI policy;
+- JDK 21, Android SDK 36, ADB, and the checked-in Gradle wrapper;
+- Xcode requirements on macOS and an explicit not-applicable result elsewhere.
+
+The doctor does not install packages, rewrite configuration, or print secret
+values. A missing/update/configure result produces a non-zero exit code, making
+it suitable for onboarding and CI diagnostics.

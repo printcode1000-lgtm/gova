@@ -2,6 +2,11 @@
   "name": "asol",
   "version": "0.1.15",
   "private": true,
+  "packageManager": "npm@11.19.0",
+  "engines": {
+    "node": ">=22 <25",
+    "npm": ">=11 <12"
+  },
   "scripts": {
     "dev": "npm run server:stop && npm run branding:generate && npm run app:init && npm run catalog:validate && next dev --turbo --port 3001",
     "build": "npm run branding:generate && npm run app:init && npm run catalog:validate && npm run test:catalog-studio && npm run architecture:check && npx tsx scripts/sync-notifications-service-sources.ts && npm run test:notifications && npm run db:ensure && npm run db:schema:sync && next build",
@@ -35,6 +40,8 @@
     "verify:notifications": "npm run architecture:check && npm run test:notifications",
     "test:notifications": "npx tsx src/features/notifications/tests/notification-module-boundary.test.ts && npx tsx src/features/notifications/tests/integration/notification-flow.integration.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/notifications/tests/notification-token-cardinality.test.ts && npx tsx src/features/notifications/tests/notification-builder.test.ts && npx tsx src/features/notifications/tests/notification-sound-contract.test.ts && npx tsx src/features/notifications/tests/android-notification-inbox-contract.test.ts && npx tsx src/features/notifications/tests/notification-provider-registry.test.ts && npx tsx src/features/notifications/tests/push-token-kind.test.ts && npx tsx src/features/notifications/tests/notification-permission-prompt-policy.test.ts && npx tsx src/features/notifications/tests/notification-local-storage-contract.test.ts && npx tsx src/features/notifications/tests/notification-center-model.test.ts && npx tsx src/features/notifications/tests/notifications-service-module-contract.test.ts && npx tsx src/modules/notification-bridge/tests/notification-bridge.test.ts && npx tsx src/features/notifications/tests/notification-broadcast-delivery.test.ts && cross-env NODE_OPTIONS=--conditions=react-server ASOL_NOTIFICATION_GRANT_SECRET=grant-test-secret-0123456789abcdef NEXT_PUBLIC_SUPER_ADMIN_UID=super-admin-test NEXT_PUBLIC_SUPER_ADMIN_PHONE=+201000000000 npx tsx src/features/notifications/tests/notification-test-service.test.ts && cross-env NODE_OPTIONS=--conditions=react-server ASOL_NOTIFICATION_GRANT_SECRET=grant-test-secret-0123456789abcdef npx tsx src/features/notifications/tests/notification-grant.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/notifications/tests/notification-locale-routing.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/features/notifications/tests/web-push-provider.test.ts && cross-env NODE_OPTIONS=--conditions=react-server ASOL_SESSION_SIGNING_SECRET=audit-only-secret-0123456789abcdef npx tsx src/features/specialty-chat/tests/specialty-chat-signatures.test.ts",
     "test:favorites": "npx tsx src/features/favorites/tests/favorites.test.ts && npx tsx src/features/favorites/tests/favorites-local-storage-contract.test.ts",
+    "test:follow": "cross-env NODE_OPTIONS=--conditions=react-server ASOL_SESSION_SIGNING_SECRET=follow-session-test-secret-0123456789abcdef ASOL_NOTIFICATION_GRANT_SECRET=follow-grant-test-secret-0123456789abcdef npx tsx src/features/follow/tests/follower-notification.test.ts",
+    "test:deployment-tools": "npx tsx scripts/tests/vercel-deployment-monitor.test.ts",
     "test:password-recovery": "npx tsx src/features/password-recovery/tests/password-recovery-policy.test.ts",
     "test:image-upload-queue": "npx tsx src/features/storage/tests/image-upload-queue.test.ts",
     "test:data-health": "npx tsx scripts/test-data-health-environment.ts && npx tsx src/modules/data-access/domains/data-health/tests/data-health-policy.test.ts && cross-env NODE_OPTIONS=--conditions=react-server npx tsx src/modules/data-access/domains/data-health/tests/order-purge.test.ts",
@@ -63,6 +70,7 @@
     "notifications:deploy": "npx tsx scripts/deploy-notifications-service.ts",
     "notifications:tokens:dedupe": "npx tsx src/modules/data-access/tooling/enforce-notification-token-cardinality.ts",
     "deploy:all": "npx tsx scripts/deploy-all.ts",
+    "doctor:environment": "npx tsx scripts/check-environment-requirements.ts --scenario=all",
     "secrets:backup": "npx tsx scripts/backup-project-secrets.ts",
     "secrets:restore": "npx tsx scripts/restore-project-secrets.ts",
     "secrets:key:init": "npx tsx scripts/initialize-secret-archive-key.ts",
@@ -194,7 +202,7 @@
     "@tanstack/react-query": "^5.101.1",
     "@tanstack/react-query-persist-client": "^5.101.1",
     "@types/web-push": "^3.6.4",
-    "better-sqlite3": "^12.11.1",
+    "better-sqlite3": "13.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.4.2",
@@ -202,18 +210,18 @@
     "drizzle-zod": "^0.8.3",
     "fflate": "^0.8.3",
     "focus-trap-react": "^12.0.3",
-    "google-auth-library": "^10.9.0",
+    "google-auth-library": "11.0.2",
     "heic-to": "^1.5.2",
     "lucide-react": "^1.21.0",
-    "maplibre-gl": "^5.24.0",
+    "maplibre-gl": "6.3.0",
     "next": "16.3.1",
     "nodemailer": "^9.0.3",
     "qrcode": "^1.5.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "react-hook-form": "^7.79.0",
     "server-only": "^0.0.1",
-    "supercluster": "^8.0.1",
+    "supercluster": "9.0.0",
     "tailwind-merge": "^3.6.0",
     "tw-animate-css": "^1.4.0",
     "web-push": "^3.6.7",
@@ -222,16 +230,16 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.1",
-    "@types/better-sqlite3": "^7.6.13",
+    "@types/better-sqlite3": "9.6.0",
     "@types/geojson": "^7946.0.16",
-    "@types/node": "^20.19.43",
+    "@types/node": "24.13.3",
     "@types/nodemailer": "^8.0.1",
     "@types/qrcode": "^1.5.6",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
     "@types/supercluster": "^7.1.3",
-    "cross-env": "^7.0.3",
-    "eslint": "^9.39.4",
+    "cross-env": "10.1.0",
+    "eslint": "10.8.1",
     "eslint-config-next": "16.3.1",
     "prettier": "^3.8.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
@@ -240,6 +248,12 @@
     "typescript": "5.x"
   },
   "overrides": {
-    "postcss": "8.5.25"
+    "postcss": "8.5.25",
+    "uuid": "11.1.1"
+  },
+  "allowScripts": {
+    "better-sqlite3@13.0.3": true,
+    "esbuild@0.28.2": true,
+    "unrs-resolver@1.12.2": true
   }
 }

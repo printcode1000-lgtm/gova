@@ -98,7 +98,8 @@ It supports:
 - Follow confirmation dialog.
 - Unfollow confirmation dialog.
 - Owner or super-admin actions dialog.
-- Disabled "Send notification to followers" action marked as coming soon.
+- Follower-notification composer with title/body limits, audience count, real
+  push/notification-center delivery, and delivered/unavailable results.
 
 Example:
 
@@ -116,11 +117,29 @@ Example:
 
 ## Notifications
 
-The system is prepared for follower notifications, but it does not send follower notifications yet.
+Follower broadcasts are live for store owners and super-admins:
 
-`FollowService.listFollowerUids(targetType, targetId)` returns the follower uid audience. Future notification flows should pass that audience into the Notification System rather than coupling UI code directly to notification providers.
+```text
+FollowButton composer
+  -> followApiService.notifyFollowers
+  -> POST /api/follow/notifications + signed session header
+  -> FollowService verifies actor/ownership and reloads follower uids
+  -> NotificationGrantCollector signs the exact audience and content
+  -> browser notification bridge
+  -> isolated notifications Vercel service
+  -> Web Push / FCM and the local notification center
+```
 
-The current profile owner/super-admin action list shows "Send notification to followers" as a disabled future action through a dialog message.
+The audience is read on the server at send time; the browser never supplies the
+follower list. The signed session must match the identity and the store owner,
+unless the actor is the configured super-admin. Title and body are limited to
+120 and 1,000 characters, request ids are validated, duplicate follower ids are
+removed, and one actor may send at most three follower broadcasts per minute.
+
+The UI does not claim that an issued grant was delivered. It awaits the browser
+bridge and shows requested, actually delivered, and unavailable recipient
+counts. A follower without a current notification token is reported as
+unavailable. The notification links back to the store preview.
 
 ## Security Rules
 
@@ -128,10 +147,11 @@ The current profile owner/super-admin action list shows "Send notification to fo
 - Guests cannot follow until they sign in.
 - A user cannot follow their own target when `targetOwnerUid` matches `viewerUid`.
 - Super-admin and owners see management actions instead of the normal follow/unfollow action.
+- Notification sends require the signed session token in
+  `x-asol-session-token`; an actor cannot target another owner's follower list.
 
 ## Future Extensions
 
-- Enable follower notification sending through `src/features/notifications`.
 - Add follower management pages.
 - Add product and category follow buttons.
 - Add follower analytics.

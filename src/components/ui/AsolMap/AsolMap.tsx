@@ -1,6 +1,6 @@
 "use client";
 
-import maplibregl, {
+import {
   GeoJSONSource,
   Map as MapLibreMap,
   MapMouseEvent,
@@ -112,7 +112,7 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
           longitude: 32.5498,
           zoom: 9.5,
         };
-        const map = new maplibregl.Map({
+        const map = new MapLibreMap({
           container: containerRef.current,
           style,
           center: [initial.longitude, initial.latitude],
@@ -173,7 +173,7 @@ export const AsolMap = forwardRef<AsolMapHandle, AsolMapProps>(
             ) {
               const element = document.createElement("div");
               element.className = "asol-map__popup";
-              const popup = new maplibregl.Popup({
+              const popup = new Popup({
                 closeButton: true,
                 closeOnClick: true,
               })
