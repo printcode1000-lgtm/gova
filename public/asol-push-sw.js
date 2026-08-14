@@ -204,7 +204,7 @@ async function applySpecialtyChatReceipt(payload) {
       const next = current.map((item) => {
         const itemMetadata = item.metadata || {};
         const matches = targetMessageId.startsWith('req_')
-          ? item.id === targetMessageId || (itemMetadata.specialtyChatKind === 'specialty_request' && itemMetadata.requestId === targetMessageId)
+          ? item.id === targetMessageId || ((itemMetadata.specialtyChatKind === 'specialty_request' || itemMetadata.specialtyChatKind === 'product_conversation_request') && itemMetadata.requestId === targetMessageId)
           : item.id === targetMessageId || itemMetadata.messageId === targetMessageId;
         if (!matches || itemMetadata.outgoing !== true) return item;
         const receiptFromUid = String(metadata.receiptFromUid || '');

@@ -8,7 +8,6 @@ export type { UserProfileRow };
 
 export interface ProfileImageKeys {
   avatarImageKey: string | null;
-  coverImageKey: string | null;
   coverImageKeys: string[];
 }
 

@@ -21,7 +21,7 @@ export async function GET(request: Request): Promise<Response> {
     if (
       !SAFE_ID.test(mainCategoryId) ||
       !SAFE_ID.test(subcategoryId) ||
-      !categoryService.resolveLegacyProductSelection(mainCategoryId, subcategoryId).valid
+      !categoryService.resolveProductSelection(mainCategoryId, subcategoryId).valid
     ) {
       return Response.json(
         { error: 'invalidSearchCategory' },

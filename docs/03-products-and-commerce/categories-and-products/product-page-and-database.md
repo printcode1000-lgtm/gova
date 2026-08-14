@@ -27,7 +27,7 @@ The products table keeps the category selection in two text columns:
 - `main_category_id`
 - `subcategory_id`
 
-These values remain compatible with Product Style filenames. Before creating a product, `ProductService` validates them through `categoryService.resolveLegacyProductSelection`.
+These values are the canonical Product Style filename identities. Before creating a product, `ProductService` validates them through `categoryService.resolveProductSelection`.
 
 ## Validity Rules
 

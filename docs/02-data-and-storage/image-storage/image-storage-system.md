@@ -104,7 +104,7 @@ StorageProfiles.SpicialOrder;
 
 ## Persistence
 
-`user_profiles.avatar_image_key`, `user_profiles.cover_image_key`
+Profile logo and storefront references are canonical rows in `profile_images` (`image_type`, `image_key`, `sort_order`). Product references remain in the product record's validated image collection.
 
 Any feature (Onboarding, Dashboard, Admin) uses `StorageProfiles.ProductDefault` + `StoredImage` — not onboarding-specific types.
 

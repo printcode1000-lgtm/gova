@@ -84,6 +84,7 @@ export const StoreIdentityCard = React.forwardRef<
   const sectionDirty = isDirty || imagesDirty;
 
   const prepareImagesForSave = React.useCallback(async () => {
+    if (!imagesDirty) return true;
     if (logoManagerRef.current?.hasPending()) {
       if (!(await logoManagerRef.current.uploadPending())) return false;
     }
@@ -92,19 +93,36 @@ export const StoreIdentityCard = React.forwardRef<
     }
     const logo = logoImageRef.current;
     const hero = heroConfigRef.current;
-    const coverImageKeys = (hero?.slides ?? [])
-      .map((slide) => slide.imageKey)
-      .filter((imageKey): imageKey is string => Boolean(imageKey))
-      .slice(0, 3);
-    if (logo?.isUploading || logo?.error || (logo?.url && !logo.imageKey)) return false;
+    const avatarImageKey = logoTouched
+      ? (logo?.imageKey ?? null)
+      : storeImages.avatarImageKey;
+    const coverImageKeys = heroTouched
+      ? (hero?.slides ?? [])
+          .map((slide) => slide.imageKey)
+          .filter((imageKey): imageKey is string => Boolean(imageKey))
+          .slice(0, 3)
+      : storeImages.coverImageKeys;
+    if (
+      logoTouched &&
+      (logo?.isUploading || logo?.error || (logo?.url && !logo.imageKey))
+    ) {
+      return false;
+    }
     await saveStoreImagesAsync({
-      avatarImageKey: logo?.imageKey ?? null,
+      avatarImageKey,
       coverImageKeys,
     });
     setLogoTouched(false);
     setHeroTouched(false);
     return true;
-  }, [saveStoreImagesAsync]);
+  }, [
+    heroTouched,
+    imagesDirty,
+    logoTouched,
+    saveStoreImagesAsync,
+    storeImages.avatarImageKey,
+    storeImages.coverImageKeys,
+  ]);
 
   React.useImperativeHandle(
     ref,

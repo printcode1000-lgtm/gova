@@ -101,8 +101,8 @@ const providerTwoReply = notification(
   },
   "req_12345678",
 );
-const legacyChat = notification(
-  "legacy-chat",
+const invalidChat = notification(
+  "invalid-chat",
   NotificationCategories.Chat,
   "2026-08-11T09:00:00.000Z",
 );
@@ -134,7 +134,7 @@ const source = [
   providerOneReply,
   buyerReply,
   providerTwoReply,
-  legacyChat,
+  invalidChat,
   orderCreated,
   orderUpdated,
   systemOne,
@@ -168,10 +168,17 @@ const directConversationIds = conversations.flatMap((group) =>
 );
 assert.deepEqual(
   [...directConversationIds].sort(),
-  [request, providerOneReply, buyerReply, providerTwoReply, legacyChat]
+  [request, providerOneReply, buyerReply, providerTwoReply]
     .map((item) => item.id)
     .sort(),
-  "chat grouping must preserve every locally stored chat item exactly once",
+  "only notifications matching the final chat contract may become conversations",
+);
+assert.equal(
+  conversations.some((conversation) =>
+    conversation.items.some((item) => item.id === invalidChat.id),
+  ),
+  false,
+  "an unstructured chat notification must not enter a compatibility thread",
 );
 const providerOne = conversations.find(
   (item) => item.requestId === "req_12345678" && item.peerUid === "provider-1",

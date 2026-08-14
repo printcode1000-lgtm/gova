@@ -14,6 +14,8 @@ The initial Home order remains Clothing, Food, Technology, Beauty Store, Home, E
 remaining existing entries. Moving Home before Beauty Store requires changing only their
 `display.order` values while keeping sibling orders unique.
 
+Collection member pages use the same shared tonal section and category tile classes as Home; Beauty Store children are not rendered by a separate visual implementation. In Medical Services, the canonical sibling order begins with the virtual Doctor Appointment card and then Pharmacies. The catalog validator and category tests enforce both rules.
+
 ## Surfaces
 
 - Splash and Home receive `CategoryDisplay[]` from the server page and use the ready `imageUrl`.

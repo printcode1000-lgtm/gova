@@ -39,6 +39,10 @@ Removed profile JSON columns:
 - `rating_settings_json`
 - `fulfillment_settings_json`
 
+These names describe removed migration-era storage only. Runtime code must not
+read, write, or fall back to any of them. Store images have one canonical
+contract: ordered rows in `profile_images` (`avatar` or `cover`).
+
 ## Structured Tables
 
 | Table | Purpose |

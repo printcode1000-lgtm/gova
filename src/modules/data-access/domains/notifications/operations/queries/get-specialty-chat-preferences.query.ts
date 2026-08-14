@@ -2,12 +2,12 @@ import "server-only";
 
 import { userNotificationTokenRepository } from "@/modules/data-access/domains/notifications/repositories/user-notification-token-repository";
 
-export class GetSpecialtyRequestPreferenceQuery {
-  execute(uid: string): Promise<boolean> {
-    return userNotificationTokenRepository.specialtyRequestsEnabled(uid);
+export class GetSpecialtyChatPreferencesQuery {
+  execute(uid: string) {
+    return userNotificationTokenRepository.chatPreferences(uid);
   }
 
-  enabledUids(uids: string[]): Promise<string[]> {
+  specialtyRequestEnabledUids(uids: string[]) {
     return userNotificationTokenRepository.filterSpecialtyRequestsEnabled(uids);
   }
 }

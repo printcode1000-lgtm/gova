@@ -11,6 +11,8 @@ import {
 } from "@/modules/data-access/core/database/notifications/notifications.schema";
 import type {
   DeleteNotificationTokenInput,
+  NotificationChatPreferenceChanges,
+  NotificationChatPreferences,
   RegisteredNotificationToken,
   RegisterNotificationTokenInput,
 } from "@/features/notifications/contracts";
@@ -45,7 +47,6 @@ export class UserNotificationTokenRepository {
       token: input.token,
       locale,
       enabled: true,
-      specialtyRequestsEnabled: true,
       lastSeenAt: now,
       createdAt: now,
       updatedAt: now,
@@ -127,52 +128,57 @@ export class UserNotificationTokenRepository {
     return Object.fromEntries(pairs);
   }
 
-  async setSpecialtyRequestsEnabled(
+  async setChatPreferences(
     uid: string,
-    enabled: boolean,
-  ): Promise<void> {
+    changes: NotificationChatPreferenceChanges,
+  ): Promise<NotificationChatPreferences> {
     const updatedAt = new Date().toISOString();
-    await this.database.execute(
-      `INSERT INTO user_notification_preferences (uid, specialty_requests_enabled, updated_at)
-       VALUES (?, ?, ?)
-       ON CONFLICT(uid) DO UPDATE SET specialty_requests_enabled = excluded.specialty_requests_enabled, updated_at = excluded.updated_at`,
-      [uid, enabled ? 1 : 0, updatedAt],
-    );
-    await this.database.db
-      .update(userNotificationTokens)
-      .set({ specialtyRequestsEnabled: enabled, updatedAt })
-      .where(eq(userNotificationTokens.uid, uid));
-  }
-
-  async setProductConversationsEnabled(
-    uid: string,
-    enabled: boolean,
-  ): Promise<void> {
-    const updatedAt = new Date().toISOString();
+    const specialtyRequestsEnabled =
+      typeof changes.specialtyRequestsEnabled === "boolean"
+        ? changes.specialtyRequestsEnabled
+          ? 1
+          : 0
+        : null;
+    const productConversationsEnabled =
+      typeof changes.productConversationsEnabled === "boolean"
+        ? changes.productConversationsEnabled
+          ? 1
+          : 0
+        : null;
     await this.database.execute(
       `INSERT INTO user_notification_preferences (uid, specialty_requests_enabled, product_conversations_enabled, updated_at)
-       VALUES (?, 1, ?, ?)
-       ON CONFLICT(uid) DO UPDATE SET product_conversations_enabled = excluded.product_conversations_enabled, updated_at = excluded.updated_at`,
-      [uid, enabled ? 1 : 0, updatedAt],
+       VALUES (?, COALESCE(?, 1), COALESCE(?, 1), ?)
+       ON CONFLICT(uid) DO UPDATE SET
+         specialty_requests_enabled = COALESCE(?, specialty_requests_enabled),
+         product_conversations_enabled = COALESCE(?, product_conversations_enabled),
+         updated_at = excluded.updated_at`,
+      [
+        uid,
+        specialtyRequestsEnabled,
+        productConversationsEnabled,
+        updatedAt,
+        specialtyRequestsEnabled,
+        productConversationsEnabled,
+      ],
     );
+    return this.chatPreferences(uid);
   }
 
-  async specialtyRequestsEnabled(uid: string): Promise<boolean> {
+  async chatPreferences(uid: string): Promise<NotificationChatPreferences> {
     const rows = await this.database.db
-      .select({ enabled: userNotificationPreferences.specialtyRequestsEnabled })
+      .select({
+        specialtyRequestsEnabled:
+          userNotificationPreferences.specialtyRequestsEnabled,
+        productConversationsEnabled:
+          userNotificationPreferences.productConversationsEnabled,
+      })
       .from(userNotificationPreferences)
       .where(eq(userNotificationPreferences.uid, uid))
       .limit(1);
-    return rows[0]?.enabled ?? true;
-  }
-
-  async productConversationsEnabled(uid: string): Promise<boolean> {
-    const rows = await this.database.db
-      .select({ enabled: userNotificationPreferences.productConversationsEnabled })
-      .from(userNotificationPreferences)
-      .where(eq(userNotificationPreferences.uid, uid))
-      .limit(1);
-    return rows[0]?.enabled ?? true;
+    return rows[0] ?? {
+      specialtyRequestsEnabled: true,
+      productConversationsEnabled: true,
+    };
   }
 
   async filterSpecialtyRequestsEnabled(uids: string[]): Promise<string[]> {
@@ -259,6 +265,5 @@ function toDomainToken(
     createdAt: row.createdAt ?? new Date().toISOString(),
     updatedAt: row.updatedAt ?? new Date().toISOString(),
     deletedAt: row.deletedAt,
-    specialtyRequestsEnabled: row.specialtyRequestsEnabled,
   };
 }

@@ -178,6 +178,17 @@ async function main() {
   assert.match(managerSource, /uploadPending:\s*async/);
   assert.match(productSource, /await imageUploadRef\.current\?\.uploadPending\(\)/);
   assert.match(profileSource, /prepareForSave:\s*prepareImagesForSave/);
+  assert.match(profileSource, /if \(!imagesDirty\) return true/);
+  assert.match(
+    profileSource,
+    /logoTouched[\s\S]{0,120}storeImages\.avatarImageKey/,
+    "saving cover changes must preserve an untouched avatar",
+  );
+  assert.match(
+    profileSource,
+    /heroTouched[\s\S]{0,220}storeImages\.coverImageKeys/,
+    "saving avatar changes must preserve untouched covers",
+  );
   assert.doesNotMatch(
     managerSource,
     /DropdownMenuTrigger asChild>[\s\S]{0,200}<button[^>]+className="absolute inset-0/,

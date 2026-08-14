@@ -104,6 +104,8 @@ The implementation normalizes and stable-serializes params and query values, so 
 5. It restores registered component state.
 6. It restores form values.
 7. It restores element scroll containers marked with `data-snapshot-scroll`.
+
+Profile edit navigation and its product main/subcategory strips use stable `data-snapshot-id` values. Selecting a section scrolls only the relevant horizontal container; it never calls document-level scrolling. The edit workspace retains the largest measured panel height for that mounted session so switching to a shorter panel cannot shrink the document and clamp the page's vertical position.
 8. It restores window scroll.
 9. It restores focus when the element is safe and still exists.
 

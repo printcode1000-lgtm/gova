@@ -88,7 +88,13 @@ export const ProductsCard = React.forwardRef<
     setIsLoadingFeaturedProducts(true);
     void Promise.all(
       ids.map((id) =>
-        productApiService.get(id, { suppressErrorLog: true }).catch(() => null),
+        productApiService.get(id, { suppressErrorLog: true }).catch((error) => {
+          console.warn("[ProductsCard] Featured product could not be loaded", {
+            productId: id,
+            error,
+          });
+          return null;
+        }),
       ),
     ).then((items) => {
       if (!cancelled) {

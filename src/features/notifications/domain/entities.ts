@@ -122,8 +122,15 @@ export interface DeviceToken {
 
 export interface RegisteredNotificationToken extends DeviceToken {
   deletedAt?: string | null;
-  specialtyRequestsEnabled?: boolean;
 }
+
+export interface NotificationChatPreferences {
+  specialtyRequestsEnabled: boolean;
+  productConversationsEnabled: boolean;
+}
+
+export type NotificationChatPreferenceChanges =
+  Partial<NotificationChatPreferences>;
 
 export interface RegisterNotificationTokenInput {
   uid: string;

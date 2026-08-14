@@ -15,7 +15,6 @@ const profileStoreImagesQueryKey = (uid: string) =>
 
 const emptyStoreImages: StoreImagesData = {
   avatarImageKey: null,
-  coverImageKey: null,
   coverImageKeys: [],
   avatarUrl: null,
   coverUrl: null,

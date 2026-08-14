@@ -492,19 +492,6 @@ export const SpecialtiesCard = React.forwardRef<
       }
     }
 
-    // Final fallback: try the service's getDoctorAppointmentItems directly
-    if (category.id === MEDICAL_SERVICES_CATEGORY_ID) {
-      const doctorItems = categoryService.getDoctorAppointmentItems();
-      const doctorSub = doctorItems.find(
-        (sub) =>
-          sub.originalId?.toString() === subcategoryId ||
-          sub.id.toString() === subcategoryId,
-      );
-      if (doctorSub) {
-        return locale === "ar" ? doctorSub.nameAr : doctorSub.nameEn;
-      }
-    }
-
     return subcategoryId;
   };
 

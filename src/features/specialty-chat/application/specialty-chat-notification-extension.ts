@@ -44,14 +44,19 @@ function acknowledgeable(item: NotificationEntity): {
   targetMessageId: string;
 } | null {
   const kind = item.metadata?.specialtyChatKind;
-  if (kind !== SPECIALTY_CHAT_KINDS.Request && kind !== SPECIALTY_CHAT_KINDS.Message) {
+  if (
+    kind !== SPECIALTY_CHAT_KINDS.Request &&
+    kind !== SPECIALTY_CHAT_KINDS.ProductRequest &&
+    kind !== SPECIALTY_CHAT_KINDS.Message
+  ) {
     return null;
   }
   // A card this device sent is not one this device receives.
   if (item.metadata?.outgoing === true) return null;
   const capability = String(item.metadata?.capability ?? "");
   const targetMessageId = String(
-    kind === SPECIALTY_CHAT_KINDS.Request
+    kind === SPECIALTY_CHAT_KINDS.Request ||
+    kind === SPECIALTY_CHAT_KINDS.ProductRequest
       ? item.metadata?.requestId ?? ""
       : item.metadata?.messageId ?? "",
   );
@@ -64,7 +69,8 @@ function isReceiptSubject(item: NotificationEntity, targetMessageId: string): bo
   if (item.metadata?.outgoing !== true) return false;
   if (item.id === targetMessageId) return true;
   return targetMessageId.startsWith("req_")
-    ? item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Request &&
+    ? (item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Request ||
+        item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.ProductRequest) &&
         item.metadata?.requestId === targetMessageId
     : item.metadata?.messageId === targetMessageId;
 }

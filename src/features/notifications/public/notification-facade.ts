@@ -112,7 +112,9 @@ export class NotificationsFacade {
         // The native service persisted this message before handing it to the
         // WebView, so its record is still pending. Retiring it here keeps a busy
         // foreground session from accumulating records it has already stored.
-        void nativeInboxService.importPending(uid).catch(() => undefined);
+        void nativeInboxService.importPending(uid).catch((error) => {
+          notificationLog.warn("Foreground native inbox reconciliation failed", error);
+        });
         return outcome.stored;
       },
       onBatchReceived: async (batchUid, notifications) => {

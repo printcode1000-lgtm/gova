@@ -8,7 +8,7 @@ This module lets a buyer send one text request to sellers or service providers w
 
 Notification delivery is the only conversation transport. The server does not create a conversation or message table and does not persist request or reply text. Received and outgoing messages are kept locally in the existing AsolDB `notifications` store. Consequently, conversation history does not synchronize between devices and is lost when local application data is cleared or the app is removed.
 
-The server stores only device push tokens and two per-user delivery preferences: `specialty_requests_enabled` for specialty broadcasts and `product_conversations_enabled` for new product conversations. It stores no request body, reply body, conversation history, or attachments.
+The server stores only device push tokens and one per-user preference record containing `specialty_requests_enabled` for specialty broadcasts and `product_conversations_enabled` for new product conversations. It stores no request body, reply body, conversation history, or attachments. Preferences use one final `/api/specialty-chat/preferences` contract; there are no scope-specific or compatibility endpoints.
 
 ## User flow
 
@@ -40,6 +40,9 @@ The server stores only device push tokens and two per-user delivery preferences:
 - Request text is not written to server logs or databases by the module.
 - The provider opt-out is applied before delivery.
 - Product owners have a separate settings opt-out for new conversations started by the product-page `مراسلة صاحب المنتج` action. Disabling it does not change the specialty-request preference and does not delete local history.
+- Product conversations use the explicit `product_conversation_request` notification kind. They are not disguised as specialty broadcasts; both kinds share only the signed bilateral messaging and receipt transport.
+- Chat preferences are account-level cloud settings. Signing out, unregistering a device, or clearing local application data never resets them.
+- A local chat card must contain the final signed-chat identity (`requestId` plus `peerUid`, or a valid outgoing specialty broadcast). Unstructured pre-contract chat cards are not converted into compatibility threads.
 
 ## Delivery and state
 
@@ -70,8 +73,7 @@ Receipt pushes never appear as cards and do not intentionally contribute to the 
 - `src/app/api/specialty-chat/requests/route.ts` — specialty broadcast relay.
 - `src/app/api/specialty-chat/messages/route.ts` — bilateral private replies.
 - `src/app/api/specialty-chat/receipts/route.ts` — received/read receipts.
-- `src/app/api/specialty-chat/preference/route.ts` — provider opt-out.
-- `src/app/api/specialty-chat/product-preference/route.ts` — product-conversation opt-out.
+- `src/app/api/specialty-chat/preferences/route.ts` — reads or atomically patches both independent chat preferences.
 - `src/features/notifications/presentation/NotificationsPageContent.tsx` — local conversation cards and reply field.
 - `public/asol-push-sw.js` — Web Push persistence and invisible receipt handling.
 
@@ -85,3 +87,7 @@ Receipt pushes never appear as cards and do not intentionally contribute to the 
 - Clearing local data, signing out, uninstalling, or changing devices removes local conversation history.
 - A provider without a valid enabled device token is counted as unavailable.
 - APNs delivery requires the server-only Apple signing variables documented in `data-layers/14-environment-variables.md`; an unconfigured provider returns failure and is never counted as accepted.
+
+## Schema source of truth
+
+The notifications database is still pre-release and has a single squashed baseline migration. `0000_notifications_init.sql` creates the final token and preference tables directly. Device tokens contain delivery registration only; chat preferences never duplicate onto token rows. SQLite is the schema source used by the cloud schema synchronizer, so local and Turso deployments expose the same two preference columns.

@@ -16,7 +16,7 @@ import {
   NotificationTypes,
   type NotificationEntity,
 } from "@/features/notifications";
-import type { ProductConversationPreferenceResult, SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialtyRequestResult, SpecialtyChatPreferenceResult, StartProductConversationInput, StartProductConversationResult } from "../domain/types";
+import type { SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialtyRequestResult, SpecialtyChatPreferenceChanges, SpecialtyChatPreferences, StartProductConversationInput, StartProductConversationResult } from "../domain/types";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
 import { deliverNotificationGrants } from "@/modules/notification-bridge";
 
@@ -91,7 +91,7 @@ export const specialtyChatClient = {
       title: `محادثة حول ${input.productName}`,
       body: input.message,
       metadata: {
-        specialtyChatKind: SPECIALTY_CHAT_KINDS.Request,
+        specialtyChatKind: SPECIALTY_CHAT_KINDS.ProductRequest,
         requestId: input.requestId,
         peerUid: input.sellerUid,
         capability: result.capability,
@@ -179,28 +179,16 @@ export const specialtyChatClient = {
     return result;
   },
 
-  async preference(session: UserSession, enabled?: boolean) {
-    try {
-      return await asolApi.post<SpecialtyChatPreferenceResult>("/api/specialty-chat/preference", {
-        identity: identity(session),
-        ...(typeof enabled === "boolean" ? { enabled } : {}),
-      }, { suppressErrorLog: true });
-    } catch (error) {
-      await clearInvalidSession(error);
-      throw error;
-    }
-  },
-
-  async productConversationPreference(
+  async preferences(
     session: UserSession,
-    enabled?: boolean,
+    changes?: SpecialtyChatPreferenceChanges,
   ) {
     try {
-      return await asolApi.post<ProductConversationPreferenceResult>(
-        "/api/specialty-chat/product-preference",
+      return await asolApi.post<SpecialtyChatPreferences>(
+        "/api/specialty-chat/preferences",
         {
           identity: identity(session),
-          ...(typeof enabled === "boolean" ? { enabled } : {}),
+          ...(changes ? { changes } : {}),
         },
         { suppressErrorLog: true },
       );

@@ -127,7 +127,7 @@ export class ProductService {
       !uid ||
       !SAFE_ID.test(mainCategoryId) ||
       !SAFE_ID.test(subcategoryId) ||
-      !categoryService.resolveLegacyProductSelection(mainCategoryId, subcategoryId).valid
+      !categoryService.resolveProductSelection(mainCategoryId, subcategoryId).valid
     ) {
       throw new Error("invalidProduct");
     }
@@ -150,7 +150,7 @@ export class ProductService {
       !SAFE_ID.test(input.subcategoryId)
     )
       throw new Error("invalidProduct");
-    const categorySelection = categoryService.resolveLegacyProductSelection(
+    const categorySelection = categoryService.resolveProductSelection(
       input.mainCategoryId,
       input.subcategoryId,
     );

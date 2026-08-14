@@ -13,7 +13,7 @@ export interface NotificationActivityGroup {
   unreadCount: number;
 }
 
-export type ChatConversationKind = "conversation" | "broadcast" | "legacy";
+export type ChatConversationKind = "conversation" | "broadcast";
 
 export interface LocalChatConversation extends NotificationActivityGroup {
   kind: ChatConversationKind;
@@ -121,7 +121,7 @@ function chatIdentity(notification: NotificationEntity): {
   kind: ChatConversationKind;
   requestId: string;
   peerUid: string;
-} {
+} | null {
   const specialtyKind = metadataText(notification, "specialtyChatKind");
   const requestId = metadataText(notification, "requestId");
   const peerUid = metadataText(notification, "peerUid", "senderUid");
@@ -138,39 +138,33 @@ function chatIdentity(notification: NotificationEntity): {
   if (requestId && peerUid) {
     return { kind: "conversation", requestId, peerUid };
   }
-  return {
-    kind: "legacy",
-    requestId: requestId || notification.groupKey?.trim() || notification.id,
-    peerUid: peerUid || "",
-  };
+  return null;
 }
 
 function chatKey(notification: NotificationEntity): string {
   const identity = chatIdentity(notification);
+  if (!identity) return `chat:notification:${notification.id}`;
   if (identity.kind === "broadcast") return `chat:broadcast:${identity.requestId}`;
-  if (identity.kind === "conversation") {
-    return `chat:conversation:${identity.requestId}:${identity.peerUid}`;
-  }
-  const legacyGroup = notification.groupKey?.trim();
-  return legacyGroup
-    ? `chat:legacy:${legacyGroup}`
-    : `chat:legacy:${notification.id}`;
+  return `chat:conversation:${identity.requestId}:${identity.peerUid}`;
 }
 
 export function buildLocalChatConversations(
   notifications: readonly NotificationEntity[],
 ): LocalChatConversation[] {
   const chatItems = notifications.filter(
-    (item) => item.category === NotificationCategories.Chat,
+    (item) =>
+      item.category === NotificationCategories.Chat && chatIdentity(item) !== null,
   );
   const outgoingRequests = new Map<string, NotificationEntity>();
   for (const item of chatItems) {
     const identity = chatIdentity(item);
+    if (!identity) continue;
     if (identity.kind === "broadcast") outgoingRequests.set(identity.requestId, item);
   }
 
   return buildActivityGroups(chatItems).map((group) => {
     const identity = chatIdentity(group.latest);
+    if (!identity) throw new Error("invalidSpecialtyChatNotification");
     const contextItem =
       identity.kind === "conversation"
         ? outgoingRequests.get(identity.requestId)

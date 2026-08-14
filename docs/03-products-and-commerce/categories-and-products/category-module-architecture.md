@@ -79,7 +79,7 @@ The module supports hierarchical relationships where selecting a collection memb
 
 ## Public API
 
-`CategoryService` provides Typed projections for the home page, trees, collections, profile, developer selector, specialty columns, and random choices. It also provides `resolveSelection` and `resolveLegacyProductSelection` to verify parent-child relationships before saving products or their design settings.
+`CategoryService` provides typed projections for the home page, trees, collections, profile, developer selector, specialty columns, and random choices. It also provides `resolveSelection` and the canonical `resolveProductSelection` boundary to verify parent-child relationships before saving products or their design settings. No legacy product-selection resolver exists.
 
 The public API does not return Raw DTOs and does not contain `getAllForSpecialties`.
 

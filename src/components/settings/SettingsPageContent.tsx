@@ -109,7 +109,7 @@ export function SettingsPageContent() {
   const [specialtyRequestsEnabled, setSpecialtyRequestsEnabled] = React.useState(true);
   const [productConversationsEnabled, setProductConversationsEnabled] = React.useState(true);
   const [specialtyPreferenceBusy, setSpecialtyPreferenceBusy] = React.useState(false);
-  const [productConversationPreferenceBusy, setProductConversationPreferenceBusy] = React.useState(false);
+  const [productConversationsBusy, setProductConversationsBusy] = React.useState(false);
 
   const themeLabels: Record<SettingsThemeMode, string> = {
     light: t("theme.light"),
@@ -145,13 +145,11 @@ export function SettingsPageContent() {
 
   React.useEffect(() => {
     if (!session?.sessionToken) return;
-    void Promise.all([
-      specialtyChatClient.preference(session),
-      specialtyChatClient.productConversationPreference(session),
-    ])
-      .then(([specialtyPreference, productPreference]) => {
-        setSpecialtyRequestsEnabled(specialtyPreference.enabled);
-        setProductConversationsEnabled(productPreference.enabled);
+    void specialtyChatClient
+      .preferences(session)
+      .then((preferences) => {
+        setSpecialtyRequestsEnabled(preferences.specialtyRequestsEnabled);
+        setProductConversationsEnabled(preferences.productConversationsEnabled);
       })
       .catch((error) => {
         if (isSpecialtyChatSessionTokenFailure(error)) return;
@@ -163,9 +161,11 @@ export function SettingsPageContent() {
     if (!session?.sessionToken || specialtyPreferenceBusy) return;
     setSpecialtyPreferenceBusy(true);
     try {
-      const value = await specialtyChatClient.preference(session, enabled);
-      setSpecialtyRequestsEnabled(value.enabled);
-      showStatus(value.enabled ? "تم تفعيل استقبال طلبات التخصص." : "تم إيقاف استقبال طلبات التخصص.");
+      const value = await specialtyChatClient.preferences(session, {
+        specialtyRequestsEnabled: enabled,
+      });
+      setSpecialtyRequestsEnabled(value.specialtyRequestsEnabled);
+      showStatus(value.specialtyRequestsEnabled ? "تم تفعيل استقبال طلبات التخصص." : "تم إيقاف استقبال طلبات التخصص.");
     } catch (error) {
       showStatus(error instanceof Error ? error.message : "تعذر حفظ إعداد طلبات التخصص.");
     } finally {
@@ -174,16 +174,15 @@ export function SettingsPageContent() {
   };
 
   const updateProductConversations = async (enabled: boolean) => {
-    if (!session?.sessionToken || productConversationPreferenceBusy) return;
-    setProductConversationPreferenceBusy(true);
+    if (!session?.sessionToken || productConversationsBusy) return;
+    setProductConversationsBusy(true);
     try {
-      const value = await specialtyChatClient.productConversationPreference(
-        session,
-        enabled,
-      );
-      setProductConversationsEnabled(value.enabled);
+      const value = await specialtyChatClient.preferences(session, {
+        productConversationsEnabled: enabled,
+      });
+      setProductConversationsEnabled(value.productConversationsEnabled);
       showStatus(
-        value.enabled
+        value.productConversationsEnabled
           ? "تم السماح بمراسلتك بخصوص منتجاتك."
           : "تم منع بدء محادثات جديدة بخصوص منتجاتك.",
       );
@@ -194,7 +193,7 @@ export function SettingsPageContent() {
           : "تعذر حفظ إعداد محادثات المنتجات.",
       );
     } finally {
-      setProductConversationPreferenceBusy(false);
+      setProductConversationsBusy(false);
     }
   };
 
@@ -229,15 +228,6 @@ export function SettingsPageContent() {
     setShowClearDialog(false);
     setClearing(true);
     try {
-      if (session?.sessionToken) {
-        await Promise.all([
-          specialtyChatClient.preference(session, true),
-          specialtyChatClient.productConversationPreference(session, true),
-        ]).catch((error) => {
-          if (isSpecialtyChatSessionTokenFailure(error)) return;
-          console.warn("[Settings] Failed to reset chat preferences.", error);
-        });
-      }
       if (session) {
         await notifications.unregisterDevice({
           uid: session.uid,
@@ -655,7 +645,7 @@ export function SettingsPageContent() {
                     checked={productConversationsEnabled}
                     onChange={(enabled) => void updateProductConversations(enabled)}
                     label="السماح بمراسلة صاحب المنتج"
-                    disabled={productConversationPreferenceBusy}
+                    disabled={productConversationsBusy}
                   />
                 </div>
               </div>

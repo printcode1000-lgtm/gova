@@ -163,7 +163,7 @@ function normalizeSpecialties(
         new Set(ids.filter(Number.isInteger)),
       ).filter((id) => {
         if (allowedIds.has(id)) return true;
-        return categoryService.resolveLegacyProductSelection(
+        return categoryService.resolveProductSelection(
           categoryId,
           String(id),
         ).valid;
@@ -245,13 +245,6 @@ export class ProfileService implements IProfileService {
         const coverImageKeys = normalizeCoverImageKeys(
           keys?.coverImageKeys ?? [],
         );
-        const coverImageKey = coverImageKeys[0] ?? keys?.coverImageKey ?? null;
-        const normalizedCoverImageKeys =
-          coverImageKeys.length > 0
-            ? coverImageKeys
-            : coverImageKey
-              ? [coverImageKey]
-              : [];
         const avatarExists = avatarImageKey
           ? await imageStorageOrchestrator.existsByKey(
               AVATAR_PROFILE_ID,
@@ -260,7 +253,7 @@ export class ProfileService implements IProfileService {
           : false;
         const existingCoverImageKeys = (
           await Promise.all(
-            normalizedCoverImageKeys.map(async (key) => ({
+            coverImageKeys.map(async (key) => ({
               key,
               exists: await imageStorageOrchestrator.existsByKey(
                 COVER_PROFILE_ID,
@@ -275,7 +268,6 @@ export class ProfileService implements IProfileService {
 
         return {
           avatarImageKey,
-          coverImageKey: existingCoverImageKey,
           coverImageKeys: existingCoverImageKeys,
           avatarUrl:
             avatarImageKey && avatarExists
@@ -309,18 +301,13 @@ export class ProfileService implements IProfileService {
         const nextCoverImageKeys =
           input.coverImageKeys !== undefined
             ? normalizeCoverImageKeys(input.coverImageKeys)
-            : input.coverImageKey !== undefined
-              ? normalizeCoverImageKeys(
-                  input.coverImageKey ? [input.coverImageKey] : [],
-                )
-              : normalizeCoverImageKeys(existing?.coverImageKeys ?? []);
+            : normalizeCoverImageKeys(existing?.coverImageKeys ?? []);
 
         await this.upsertProfileImageKeysCommand.execute(input.uid, {
           avatarImageKey:
             input.avatarImageKey !== undefined
               ? input.avatarImageKey
               : (existing?.avatarImageKey ?? null),
-          coverImageKey: nextCoverImageKeys[0] ?? null,
           coverImageKeys: nextCoverImageKeys,
         });
 

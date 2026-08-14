@@ -17,7 +17,6 @@ sqlite.exec(`
     token TEXT NOT NULL,
     locale TEXT DEFAULT 'ar' NOT NULL,
     enabled INTEGER DEFAULT 1 NOT NULL,
-    specialty_requests_enabled INTEGER DEFAULT 1 NOT NULL,
     last_seen_at TEXT,
     created_at TEXT,
     updated_at TEXT,
@@ -136,20 +135,30 @@ async function main(): Promise<void> {
       .get() as { count: number };
     assert.equal(duplicateGroups.count, 0);
 
-    assert.equal(await repository.specialtyRequestsEnabled(base.uid), true);
-    assert.equal(await repository.productConversationsEnabled(base.uid), true);
-    await repository.setProductConversationsEnabled(base.uid, false);
-    assert.equal(await repository.productConversationsEnabled(base.uid), false);
-    assert.equal(
-      await repository.specialtyRequestsEnabled(base.uid),
-      true,
+    assert.deepEqual(await repository.chatPreferences(base.uid), {
+      specialtyRequestsEnabled: true,
+      productConversationsEnabled: true,
+    });
+    await repository.setChatPreferences(base.uid, {
+      productConversationsEnabled: false,
+    });
+    assert.deepEqual(
+      await repository.chatPreferences(base.uid),
+      {
+        specialtyRequestsEnabled: true,
+        productConversationsEnabled: false,
+      },
       "product chat opt-out must not disable specialty requests",
     );
-    await repository.setSpecialtyRequestsEnabled(base.uid, false);
-    assert.equal(await repository.specialtyRequestsEnabled(base.uid), false);
-    assert.equal(
-      await repository.productConversationsEnabled(base.uid),
-      false,
+    await repository.setChatPreferences(base.uid, {
+      specialtyRequestsEnabled: false,
+    });
+    assert.deepEqual(
+      await repository.chatPreferences(base.uid),
+      {
+        specialtyRequestsEnabled: false,
+        productConversationsEnabled: false,
+      },
       "specialty request changes must not overwrite product chat preference",
     );
   } finally {

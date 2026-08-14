@@ -45,10 +45,6 @@ import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { queueLogoutSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { useLogout } from "@/features/auth/hooks/use-logout";
-import {
-  isSpecialtyChatSessionTokenFailure,
-  specialtyChatClient,
-} from "@/features/specialty-chat";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { notifications } from "@/features/notifications";
 import {
@@ -212,16 +208,6 @@ export const AppSidebar = React.memo(function AppSidebar({
       try {
         if (exitingSession) {
           try {
-            await specialtyChatClient
-              .preference(exitingSession, true)
-              .catch((error) => {
-                if (!isSpecialtyChatSessionTokenFailure(error)) {
-                  console.warn(
-                    "[AppSidebar] Failed to reset specialty chat preference during logout.",
-                    error,
-                  );
-                }
-              });
             await notifications.unregisterDevice({
               uid: exitingSession.uid,
               phone: exitingSession.phone,

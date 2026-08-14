@@ -44,10 +44,6 @@ import { clearAllClientStorage } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { queueLogoutSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { useLogout } from "@/features/auth/hooks/use-logout";
-import {
-  isSpecialtyChatSessionTokenFailure,
-  specialtyChatClient,
-} from "@/features/specialty-chat";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import {
   Dialog,

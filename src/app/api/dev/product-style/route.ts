@@ -109,7 +109,7 @@ function isSafeSelectionId(value: string) {
 }
 
 function isValidCategorySelection(mainCategoryId: string, subcategoryId: string) {
-  return categoryService.resolveLegacyProductSelection(mainCategoryId, subcategoryId).valid;
+  return categoryService.resolveProductSelection(mainCategoryId, subcategoryId).valid;
 }
 
 function getStylePath(mainCategoryId: string, subcategoryId: string) {

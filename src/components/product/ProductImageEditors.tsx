@@ -12,7 +12,10 @@ function normalizeProductImages(images: Array<StoredImage | null | undefined>, m
   return images
     .filter(
       (image): image is StoredImage =>
-        Boolean(image && (image.url || image.isUploading || image.error)),
+        Boolean(
+          image &&
+            (image.imageKey || image.url || image.isUploading || image.error),
+        ),
     )
     .slice(0, maxImages);
 }

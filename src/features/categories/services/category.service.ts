@@ -458,7 +458,7 @@ export class CategoryService {
     return { valid: false, code: "INVALID_RELATION" };
   }
 
-  resolveLegacyProductSelection(
+  resolveProductSelection(
     mainCategoryId: string,
     subcategoryId: string,
   ): CategorySelectionResult {

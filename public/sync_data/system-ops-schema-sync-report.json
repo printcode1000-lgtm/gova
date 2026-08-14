@@ -1,7 +1,7 @@
 {
-  "executedAt": "2026-08-12T16:27:43.808Z",
-  "durationMs": 6763,
-  "sqliteSchemaVersion": "f514cdeafdb4fdb6",
+  "executedAt": "2026-08-14T10:07:31.067Z",
+  "durationMs": 6608,
+  "sqliteSchemaVersion": "03694ef095bbea07",
   "tursoSchemaVersionBefore": "03694ef095bbea07",
   "tursoSchemaVersionAfter": "03694ef095bbea07",
   "operations": [],
@@ -12,11 +12,6 @@
   "triggersAdded": 0,
   "sqlExecuted": [],
   "errors": [],
-  "warnings": [
-    "Column \"system_logs.origin\" exists on Turso but not in SQLite. Not removed automatically.",
-    "Column \"system_logs.trust_level\" exists on Turso but not in SQLite. Not removed automatically.",
-    "Column \"system_logs.message_truncated\" exists on Turso but not in SQLite. Not removed automatically.",
-    "Column \"system_logs.stack_truncated\" exists on Turso but not in SQLite. Not removed automatically."
-  ],
+  "warnings": [],
   "skipped": false
 }

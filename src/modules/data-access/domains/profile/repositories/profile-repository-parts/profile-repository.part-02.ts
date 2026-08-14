@@ -281,7 +281,6 @@ export abstract class ProfilePart2 extends ProfilePart1 {
     if (!avatar && coverImageKeys.length === 0) return null;
     return {
       avatarImageKey: avatar,
-      coverImageKey: coverImageKeys[0] ?? null,
       coverImageKeys,
     };
   }

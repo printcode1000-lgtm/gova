@@ -65,12 +65,12 @@ assert(
 );
 
 const regular = medical.doctorAppointmentItems[0]!;
-const valid = categoryService.resolveLegacyProductSelection(
+const valid = categoryService.resolveProductSelection(
   String(CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID),
   String(regular.originalId),
 );
 assert.equal(valid.valid, true);
-const invalid = categoryService.resolveLegacyProductSelection("1", "999999");
+const invalid = categoryService.resolveProductSelection("1", "999999");
 assert.equal(invalid.valid, false);
 
 const collection = categoryService.getCollections()[0];
@@ -95,14 +95,14 @@ assert(
   "the product category projection must expose selected collection members as parents",
 );
 assert.equal(
-  categoryService.resolveLegacyProductSelection(String(collection.id), String(member.id)).valid,
+  categoryService.resolveProductSelection(String(collection.id), String(member.id)).valid,
   false,
   "a collection member is a product-category parent, not a final product selection",
 );
 const memberSubcategory = categoryService.getCategoryTree(member.id)?.subcategories[0];
 assert(memberSubcategory?.originalId, "collection member must expose product subcategories");
 assert.equal(
-  categoryService.resolveLegacyProductSelection(
+  categoryService.resolveProductSelection(
     String(member.id),
     String(memberSubcategory.originalId),
   ).valid,

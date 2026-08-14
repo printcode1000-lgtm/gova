@@ -3,10 +3,8 @@ import "server-only";
 import { categoryService } from "@/features/categories";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { GetNotificationUserIdentityQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-user-identity.query";
-import { GetSpecialtyRequestPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-specialty-request-preference.query";
-import { SetSpecialtyRequestPreferenceCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-specialty-request-preference.command";
-import { GetProductConversationPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-product-conversation-preference.query";
-import { SetProductConversationPreferenceCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-product-conversation-preference.command";
+import { GetSpecialtyChatPreferencesQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-specialty-chat-preferences.query";
+import { SetSpecialtyChatPreferencesCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-specialty-chat-preferences.command";
 import {
   notificationsServer,
   NotificationCategories,
@@ -14,7 +12,7 @@ import {
   NotificationSounds,
 } from "@/features/notifications/server";
 import { createSpecialtyChatCapability, verifySpecialtyChatCapability } from "./specialty-chat-capability.server";
-import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity, type StartProductConversationInput, type StartProductConversationResult } from "../domain/types";
+import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity, type SpecialtyChatPreferenceChanges, type StartProductConversationInput, type StartProductConversationResult } from "../domain/types";
 import { getSpecialtyChatSubOptions } from "../domain/specialty-options";
 import { verifySignedSessionToken } from "@/features/auth/services/signed-session-token.server";
 import { productService } from "@/features/product/services/product-service.server";
@@ -38,10 +36,8 @@ function rateLimit(uid: string): void {
 
 export class SpecialtyChatService {
   private readonly identities = new GetNotificationUserIdentityQuery();
-  private readonly getPreferenceQuery = new GetSpecialtyRequestPreferenceQuery();
-  private readonly setPreferenceCommand = new SetSpecialtyRequestPreferenceCommand();
-  private readonly getProductConversationPreferenceQuery = new GetProductConversationPreferenceQuery();
-  private readonly setProductConversationPreferenceCommand = new SetProductConversationPreferenceCommand();
+  private readonly getPreferencesQuery = new GetSpecialtyChatPreferencesQuery();
+  private readonly setPreferencesCommand = new SetSpecialtyChatPreferencesCommand();
 
   private async assertIdentity(identity: SpecialtyChatIdentity) {
     const claims = verifySignedSessionToken(identity.sessionToken?.trim() ?? "");
@@ -67,7 +63,7 @@ export class SpecialtyChatService {
 
     const matched = await profileService.getUsersBySpecialty(main.id, input.subcategoryId, 0, MAX_RECIPIENTS);
     const candidates = Array.from(new Set(matched.map((item) => item.uid))).filter((uid) => uid !== actor.uid);
-    const enabled = await this.getPreferenceQuery.enabledUids(candidates);
+    const enabled = await this.getPreferencesQuery.specialtyRequestEnabledUids(candidates);
 
     // One grant per provider: each carries its own reply capability and its own
     // dedupe key, so they cannot be collapsed into a single authorisation.
@@ -130,10 +126,10 @@ export class SpecialtyChatService {
       product.id
     ).slice(0, 200);
     const seller = await this.identities.execute(sellerUid);
-    const productConversationsEnabled = seller
-      ? await this.getProductConversationPreferenceQuery.execute(sellerUid)
-      : false;
-    if (!seller || !productConversationsEnabled) {
+    const sellerPreferences = seller
+      ? await this.getPreferencesQuery.execute(sellerUid)
+      : null;
+    if (!seller || !sellerPreferences?.productConversationsEnabled) {
       throw new Error("specialtyChatRecipientUnavailable");
     }
     const capability = createSpecialtyChatCapability({
@@ -149,7 +145,7 @@ export class SpecialtyChatService {
       variables: { message },
       dedupeKey: `${input.requestId}:${sellerUid}`,
       metadata: {
-        specialtyChatKind: SPECIALTY_CHAT_KINDS.Request,
+        specialtyChatKind: SPECIALTY_CHAT_KINDS.ProductRequest,
         requestId: input.requestId,
         senderUid: actor.uid,
         peerUid: actor.uid,
@@ -204,31 +200,17 @@ export class SpecialtyChatService {
     };
   }
 
-  async getPreference(identity: SpecialtyChatIdentity) {
+  async getPreferences(identity: SpecialtyChatIdentity) {
     const actor = await this.assertIdentity(identity);
-    return { enabled: await this.getPreferenceQuery.execute(actor.uid) };
+    return this.getPreferencesQuery.execute(actor.uid);
   }
 
-  async setPreference(identity: SpecialtyChatIdentity, enabled: boolean) {
-    const actor = await this.assertIdentity(identity);
-    await this.setPreferenceCommand.execute(actor.uid, enabled);
-    return { enabled };
-  }
-
-  async getProductConversationPreference(identity: SpecialtyChatIdentity) {
-    const actor = await this.assertIdentity(identity);
-    return {
-      enabled: await this.getProductConversationPreferenceQuery.execute(actor.uid),
-    };
-  }
-
-  async setProductConversationPreference(
+  async setPreferences(
     identity: SpecialtyChatIdentity,
-    enabled: boolean,
+    changes: SpecialtyChatPreferenceChanges,
   ) {
     const actor = await this.assertIdentity(identity);
-    await this.setProductConversationPreferenceCommand.execute(actor.uid, enabled);
-    return { enabled };
+    return this.setPreferencesCommand.execute(actor.uid, changes);
   }
 
   async sendReceipt(input: SendSpecialtyReceiptInput) {

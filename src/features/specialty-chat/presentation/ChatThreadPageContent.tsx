@@ -103,6 +103,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
         (item) =>
           String(item.metadata?.capability ?? "") &&
           (item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Request ||
+            item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.ProductRequest ||
             item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Message),
       ),
     [conversation],
@@ -278,8 +279,8 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                   ? "ستظهر محادثة مستقلة هنا عند وصول رد من أحد مقدمي الخدمة."
                   : "A separate conversation will appear when a provider replies."
                 : locale === "ar"
-                  ? "الرد غير متاح لهذا الإشعار القديم."
-                  : "Reply is unavailable for this legacy notification."}
+                  ? "لا تتوفر صلاحية الرد لهذه المحادثة."
+                  : "Reply permission is unavailable for this conversation."}
             </p>
           )}
         </div>

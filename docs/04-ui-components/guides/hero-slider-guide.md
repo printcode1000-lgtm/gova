@@ -338,7 +338,7 @@ If the user has no storefront images, the reusable slider displays its empty sta
 - “Profile image” manages the store logo/avatar.
 - “Storefront images” renders `HeroSlider` in `images-edit` mode.
 
-The image-only editor exposes three slots and returns updated slide image keys through `onChange`. `StoreIdentityCard` persists only the first three keys using `saveStoreImages`.
+The image-only editor exposes three slots and returns updated slide image keys through `onChange`. Selecting an image marks the unified Profile save bar dirty. That save action uploads every pending logo/storefront image first, rejects the save if any upload fails, and then persists only the first three canonical cover keys through `saveStoreImages`. Untouched logo or cover fields are preserved rather than overwritten.
 
 The three slots are defined in one versioned configuration document:
 
@@ -366,8 +366,11 @@ Profile image references are stored in the profile shards:
 | Column                  | Purpose                                                          |
 | ----------------------- | ---------------------------------------------------------------- |
 | `avatar_image_key`      | Store logo/profile image object key.                             |
-| `cover_image_key`       | First storefront image key retained for legacy compatibility.    |
-| `cover_image_keys_json` | Ordered JSON array containing up to three storefront image keys. |
+| `profile_images.image_key` | Canonical image object key. |
+| `profile_images.image_type` | `avatar` or `cover`. |
+| `profile_images.sort_order` | Canonical order of up to three storefront images. |
+
+There is no singular cover-key write contract or fallback column. The API exposes `coverImageKeys` as the only persisted cover-key collection and derives `coverUrl` from its first item solely as a display convenience.
 
 The profile service resolves those keys into `avatarUrl`, `coverUrl`, and `coverUrls` before returning data to the client.
 
@@ -404,7 +407,7 @@ These profiles are also declared in `src/config/storage-profiles.json`.
 | Public Home slider              | `view`        | Current `home-hero-slider` record plus IndexedDB cache | `home-hero-slider` |
 | Super-admin Home editor         | `admin-edit`  | Single current JSON record in `advertisements.db`      | `home-hero-slider` |
 | Profile preview                 | `view`        | Image keys in the profile media/core shards            | `cover`            |
-| Profile storefront-image editor | `images-edit` | `user_profiles.cover_image_keys_json`                  | `cover`            |
+| Profile storefront-image editor | `images-edit` | Ordered `profile_images` rows with `image_type = 'cover'` | `cover`            |
 
 Do not connect Profile to the advertisements database. Do not use `images-edit` for Home administration because it intentionally discards non-image slide fields when rebuilding slides. Do not expose `admin-edit` to profile owners.
 

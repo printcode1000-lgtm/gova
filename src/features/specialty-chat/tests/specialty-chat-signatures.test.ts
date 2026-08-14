@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import {
   createSignedSessionToken,
@@ -51,13 +51,31 @@ const notificationSchemaSource = readFileSync(
   ),
   "utf8",
 );
+const unifiedPreferenceRoute = path.join(
+  process.cwd(),
+  "src/app/api/specialty-chat/preferences/route.ts",
+);
 assert.match(serviceSource, /productService\.get\(input\.productId\.trim\(\)\)/);
 assert.match(serviceSource, /product\.uid !== sellerUid/);
 assert.match(serviceSource, /createSpecialtyChatCapability\(/);
 assert.match(clientSource, /conversationKey: `chat:conversation:/);
 assert.match(clientSource, /await saveOutgoing\(/);
-assert.match(serviceSource, /getProductConversationPreferenceQuery\.execute\(sellerUid\)/);
-assert.match(clientSource, /productConversationPreference/);
+assert.match(serviceSource, /sellerPreferences\?\.productConversationsEnabled/);
+assert.match(serviceSource, /SPECIALTY_CHAT_KINDS\.ProductRequest/);
+assert.match(clientSource, /SPECIALTY_CHAT_KINDS\.ProductRequest/);
+assert.match(clientSource, /\/api\/specialty-chat\/preferences/);
+assert.doesNotMatch(clientSource, /productConversationPreference|\.preference\(/);
+assert.equal(existsSync(unifiedPreferenceRoute), true);
+assert.equal(
+  existsSync(path.join(process.cwd(), "src/app/api/specialty-chat/preference/route.ts")),
+  false,
+);
+assert.equal(
+  existsSync(
+    path.join(process.cwd(), "src/app/api/specialty-chat/product-preference/route.ts"),
+  ),
+  false,
+);
 assert.match(settingsSource, /مراسلة صاحب المنتج/);
 assert.match(settingsSource, /updateProductConversations/);
 assert.match(notificationSchemaSource, /productConversationsEnabled/);

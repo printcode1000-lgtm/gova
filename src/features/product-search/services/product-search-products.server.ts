@@ -27,7 +27,7 @@ export function requireCategoryPair(mainCategoryId: string, subcategoryId: strin
   if (
     !SAFE_ID.test(mainCategoryId) ||
     !SAFE_ID.test(subcategoryId) ||
-    !categoryService.resolveLegacyProductSelection(mainCategoryId, subcategoryId).valid
+    !categoryService.resolveProductSelection(mainCategoryId, subcategoryId).valid
   ) {
     throw new Error("invalidSearchCategory");
   }

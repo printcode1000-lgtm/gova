@@ -1,5 +1,6 @@
 export const SPECIALTY_CHAT_KINDS = {
   Request: "specialty_request",
+  ProductRequest: "product_conversation_request",
   Message: "specialty_message",
   Receipt: "specialty_receipt",
 } as const;
@@ -62,13 +63,12 @@ export interface SendSpecialtyMessageInput {
   message: string;
 }
 
-export interface SpecialtyChatPreferenceResult {
-  enabled: boolean;
+export interface SpecialtyChatPreferences {
+  specialtyRequestsEnabled: boolean;
+  productConversationsEnabled: boolean;
 }
 
-export interface ProductConversationPreferenceResult {
-  enabled: boolean;
-}
+export type SpecialtyChatPreferenceChanges = Partial<SpecialtyChatPreferences>;
 
 export interface SendSpecialtyReceiptInput {
   identity: SpecialtyChatIdentity;
