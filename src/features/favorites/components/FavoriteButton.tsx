@@ -11,9 +11,10 @@ import { useFavorites } from "../hooks/FavoritesProvider";
 interface FavoriteButtonProps {
   item: FavoriteItemInput;
   className?: string;
+  label?: React.ReactNode;
 }
 
-export function FavoriteButton({ item, className }: FavoriteButtonProps) {
+export function FavoriteButton({ item, className, label }: FavoriteButtonProps) {
   const { isFavorite, isLoading, toggleFavorite } = useFavorites();
   const [isMutating, setIsMutating] = React.useState(false);
   const active = isFavorite(item.type, item.targetId);
@@ -47,6 +48,7 @@ export function FavoriteButton({ item, className }: FavoriteButtonProps) {
       ) : (
         <Heart className={cn("h-5 w-5", active && "fill-current")} />
       )}
+      {label ? <span>{label}</span> : null}
     </button>
   );
 }

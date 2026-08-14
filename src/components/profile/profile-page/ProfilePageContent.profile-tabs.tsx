@@ -3,10 +3,8 @@
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
 faBuilding,
-faCircleCheck,
 faClock,
 faComments,
-faPenToSquare,
 faPercent,
 faStar,
 faTags,
@@ -46,8 +44,6 @@ export function ProfileEditSectionFrame({
   children,
   icon,
   title,
-  status,
-  locale,
   color,
   hideHeader = false,
 }: {
@@ -59,25 +55,6 @@ export function ProfileEditSectionFrame({
   color: string;
   hideHeader?: boolean;
 }) {
-  const isDirty = Boolean(status?.isDirty);
-  const isSaving = Boolean(status?.isSaving);
-  const canSave = status?.canSave !== false;
-  const statusText = isSaving
-    ? locale === "ar"
-      ? "جاري الحفظ"
-      : "Saving"
-    : isDirty
-      ? canSave
-        ? locale === "ar"
-          ? "غير محفوظ"
-          : "Unsaved"
-        : locale === "ar"
-          ? "يحتاج مراجعة"
-          : "Needs review"
-      : locale === "ar"
-        ? "مستقر"
-        : "Stable";
-
   return (
     <section
       className="rounded-3xl border bg-surface/90 p-3 shadow-lg shadow-primary/5 sm:p-4"
@@ -99,30 +76,8 @@ export function ProfileEditSectionFrame({
               <h2 className="truncate text-base font-bold text-on-surface">
                 {title}
               </h2>
-              <p className="mt-0.5 text-xs text-on-surface-variant">
-                {locale === "ar"
-                  ? "تابع تعديلات هذا القسم واحفظها من شريط الحفظ."
-                  : "Review this section and save it from the save bar."}
-              </p>
             </div>
           </div>
-          <span
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold ${
-              isSaving
-                ? "bg-primary/10 text-primary"
-                : isDirty
-                  ? canSave
-                    ? "bg-error/10 text-error"
-                    : "bg-error-container text-on-error-container"
-                  : "bg-primary/10 text-primary"
-            }`}
-          >
-            <FontAwesomeIcon
-              icon={isDirty ? faPenToSquare : faCircleCheck}
-              className="h-3.5 w-3.5"
-            />
-            {statusText}
-          </span>
         </div>
       ) : null}
       <div className="[&_.auth-input]:shadow-sm [&_button]:transition-all">

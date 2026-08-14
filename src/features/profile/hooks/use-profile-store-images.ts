@@ -98,5 +98,6 @@ export function useProfileStoreImages(
     isSaving: saveMutation.isPending,
     error,
     saveStoreImages: saveMutation.mutate,
+    saveStoreImagesAsync: saveMutation.mutateAsync,
   };
 }

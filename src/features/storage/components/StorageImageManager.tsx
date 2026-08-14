@@ -61,7 +61,15 @@ interface StorageImageManagerProps {
   className?: string;
   label?: React.ReactNode;
   hint?: React.ReactNode;
+  onPendingChange?: (pending: boolean) => void;
 }
+
+export interface StorageImageManagerHandle {
+  hasPending: () => boolean;
+  uploadPending: () => Promise<boolean>;
+}
+
+interface StorageImageSlotHandle extends StorageImageManagerHandle {}
 
 const storageProfileIds = new Set<string>(Object.values(StorageProfiles));
 const aspectRatioIds = new Set<string>([
@@ -365,7 +373,19 @@ function replaceAt(
   return next.filter(Boolean);
 }
 
-function StorageImageSlot({
+const StorageImageSlot = React.forwardRef<
+  StorageImageSlotHandle,
+  {
+    config: StorageImageManagerConfig;
+    image: StoredImage | null;
+    index: number;
+    draftOwnerId: string | null;
+    draftPageKey: string | null;
+    onUploaded: (index: number, image: StoredImage) => void;
+    onRemoved: (index: number) => void;
+    onPendingChange: (index: number, pending: boolean) => void;
+  }
+>(function StorageImageSlot({
   config,
   image,
   index,
@@ -373,15 +393,8 @@ function StorageImageSlot({
   draftPageKey,
   onUploaded,
   onRemoved,
-}: {
-  config: StorageImageManagerConfig;
-  image: StoredImage | null;
-  index: number;
-  draftOwnerId: string | null;
-  draftPageKey: string | null;
-  onUploaded: (index: number, image: StoredImage) => void;
-  onRemoved: (index: number) => void;
-}) {
+  onPendingChange,
+}, ref) {
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const cameraInputRef = React.useRef<HTMLInputElement>(null);
@@ -407,11 +420,16 @@ function StorageImageSlot({
   const [draftQueuePosition, setDraftQueuePosition] = React.useState(0);
   const draftReadSequenceRef = React.useRef(0);
   const activeUploadDraftIdRef = React.useRef<string | null>(null);
+  const activeUploadPromiseRef = React.useRef<Promise<boolean> | null>(null);
   const hydratedDraftIdRef = React.useRef<string | null>(null);
   const onUploadedRef = React.useRef(onUploaded);
+  const onPendingChangeRef = React.useRef(onPendingChange);
   React.useEffect(() => {
     onUploadedRef.current = onUploaded;
   }, [onUploaded]);
+  React.useEffect(() => {
+    onPendingChangeRef.current = onPendingChange;
+  }, [onPendingChange]);
 
   const draftKey = React.useMemo(
     () =>
@@ -627,7 +645,7 @@ function StorageImageSlot({
     });
   }, [displayError, selectedFile, sourceError, t]);
 
-  const uploadCandidate = async (file: File) => {
+  const runUploadCandidate = async (file: File) => {
     if (!selectedDraftId) return false;
     const uploadingDraftId = selectedDraftId;
     activeUploadDraftIdRef.current = uploadingDraftId;
@@ -656,6 +674,47 @@ function StorageImageSlot({
       }
     }
   };
+
+  const uploadCandidate = React.useCallback(
+    (file: File) => {
+      if (activeUploadPromiseRef.current) return activeUploadPromiseRef.current;
+      const promise = runUploadCandidate(file).finally(() => {
+        if (activeUploadPromiseRef.current === promise) {
+          activeUploadPromiseRef.current = null;
+        }
+      });
+      activeUploadPromiseRef.current = promise;
+      return promise;
+    },
+    [runUploadCandidate],
+  );
+
+  const pending = Boolean(
+    selectedFile ||
+      selectedDraftId ||
+      draftStatus === "queued" ||
+      draftStatus === "uploading",
+  );
+
+  React.useEffect(() => {
+    onPendingChangeRef.current(index, pending);
+    return () => onPendingChangeRef.current(index, false);
+  }, [index, pending]);
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      hasPending: () => pending,
+      uploadPending: async () => {
+        if (activeUploadPromiseRef.current) {
+          return activeUploadPromiseRef.current;
+        }
+        if (!selectedFile) return !pending;
+        return uploadCandidate(selectedFile);
+      },
+    }),
+    [pending, selectedFile, uploadCandidate],
+  );
 
   React.useEffect(() => {
     if (
@@ -1012,28 +1071,32 @@ function StorageImageSlot({
         </>
       ) : (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              disabled={busy}
-              aria-label={t("storage.imageSource.open")}
-              title={t("storage.imageSource.open")}
-              className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg px-4 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <span className="rounded-full bg-muted p-3">
-                {showProgress ? (
-                  <LoadingSpinner size="sm" />
-                ) : (
-                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
-                )}
-              </span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg px-4">
+            <span className="rounded-full bg-muted p-3">
+              {showProgress ? (
+                <LoadingSpinner size="sm" />
+              ) : (
+                <ImageIcon className="h-6 w-6 text-muted-foreground" />
+              )}
+            </span>
+            {showProgress ? (
               <span className="text-sm font-medium text-primary">
-                {showProgress
-                  ? stageLabels[stage]
-                  : t("storage.imageSource.open")}
+                {stageLabels[stage]}
               </span>
-            </button>
-          </DropdownMenuTrigger>
+            ) : (
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  disabled={busy}
+                  aria-label={t("storage.imageSource.open")}
+                  title={t("storage.imageSource.open")}
+                  className="rounded-lg px-3 py-1.5 text-sm font-medium text-primary transition hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {t("storage.imageSource.open")}
+                </button>
+              </DropdownMenuTrigger>
+            )}
+          </div>
           <DropdownMenuContent align="center" className="min-w-56">
             <DropdownMenuLabel>
               {t("storage.imageSource.title")}
@@ -1106,16 +1169,20 @@ function StorageImageSlot({
       />
     </div>
   );
-}
+});
 
-export function StorageImageManager({
+export const StorageImageManager = React.forwardRef<
+  StorageImageManagerHandle,
+  StorageImageManagerProps
+>(function StorageImageManager({
   config,
   value,
   onChange,
   className,
   label,
   hint,
-}: StorageImageManagerProps) {
+  onPendingChange,
+}, ref) {
   const { session, isLoading: isSessionLoading } = useSession();
   const [draftPageKey, setDraftPageKey] = React.useState<string | null>(null);
   React.useEffect(() => {
@@ -1125,9 +1192,39 @@ export function StorageImageManager({
   const parsedConfig = parseStorageImageManagerConfig(config);
   const maxItems = Math.max(1, parsedConfig.maxItems);
   const images = normalizeImages(value, maxItems);
+  const slotRefs = React.useRef<Array<StorageImageSlotHandle | null>>([]);
+  const [pendingSlots, setPendingSlots] = React.useState<Set<number>>(
+    () => new Set(),
+  );
   const slots = Array.from(
     { length: maxItems },
     (_, index) => images[index] ?? null,
+  );
+
+  const hasPending = pendingSlots.size > 0;
+  const onPendingChangeRef = React.useRef(onPendingChange);
+  React.useEffect(() => {
+    onPendingChangeRef.current = onPendingChange;
+  }, [onPendingChange]);
+  React.useEffect(() => {
+    onPendingChangeRef.current?.(hasPending);
+  }, [hasPending]);
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      hasPending: () => slotRefs.current.some((slot) => slot?.hasPending()),
+      uploadPending: async () => {
+        const pendingManagers = slotRefs.current.filter(
+          (slot): slot is StorageImageSlotHandle => Boolean(slot?.hasPending()),
+        );
+        for (const manager of pendingManagers) {
+          if (!(await manager.uploadPending())) return false;
+        }
+        return true;
+      },
+    }),
+    [],
   );
 
   return (
@@ -1145,6 +1242,9 @@ export function StorageImageManager({
       >
         {slots.map((image, index) => (
           <StorageImageSlot
+            ref={(handle) => {
+              slotRefs.current[index] = handle;
+            }}
             key={`${parsedConfig.id}-${index}`}
             config={parsedConfig}
             image={image}
@@ -1162,10 +1262,19 @@ export function StorageImageManager({
             onRemoved={(itemIndex) => {
               onChange(normalizeImages(removeAt(images, itemIndex), maxItems));
             }}
+            onPendingChange={(itemIndex, pending) => {
+              setPendingSlots((current) => {
+                if (current.has(itemIndex) === pending) return current;
+                const next = new Set(current);
+                if (pending) next.add(itemIndex);
+                else next.delete(itemIndex);
+                return next;
+              });
+            }}
           />
         ))}
       </div>
       {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
     </div>
   );
-}
+});

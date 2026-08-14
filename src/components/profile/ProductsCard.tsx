@@ -54,6 +54,8 @@ export const ProductsCard = React.forwardRef<
   const [pendingDelete, setPendingDelete] = React.useState<ProductRecord | null>(null);
   const [isDeletingProduct, setIsDeletingProduct] = React.useState(false);
   const [newTrendingText, setNewTrendingText] = React.useState('');
+  const [featuredProducts, setFeaturedProducts] = React.useState<ProductRecord[]>([]);
+  const [isLoadingFeaturedProducts, setIsLoadingFeaturedProducts] = React.useState(false);
   const { details: storeDetails } = useStoreDetails();
   const label = t('onboarding.storeIdentity.products');
   const productsTabs = useProfileProductsTabs({
@@ -74,6 +76,34 @@ export const ProductsCard = React.forwardRef<
     setShowcase(next);
     setSavedShowcase(next);
   }, [storeDetails.profileShowcase]);
+
+  React.useEffect(() => {
+    const ids = showcase.featuredProductIds;
+    if (ids.length === 0) {
+      setFeaturedProducts([]);
+      setIsLoadingFeaturedProducts(false);
+      return;
+    }
+    let cancelled = false;
+    setIsLoadingFeaturedProducts(true);
+    void Promise.all(
+      ids.map((id) =>
+        productApiService.get(id, { suppressErrorLog: true }).catch(() => null),
+      ),
+    ).then((items) => {
+      if (!cancelled) {
+        setFeaturedProducts(
+          items.filter(
+            (item): item is ProductRecord => Boolean(item && item.uid === uid),
+          ),
+        );
+        setIsLoadingFeaturedProducts(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [showcase.featuredProductIds, uid]);
 
   React.useImperativeHandle(
     ref,
@@ -210,11 +240,14 @@ export const ProductsCard = React.forwardRef<
         activeSubTab={productsTabs.activeSubTab}
         filters={productsTabs.filters}
         featuredProductIds={showcase.featuredProductIds}
+        featuredProducts={featuredProducts}
+        isLoadingFeaturedProducts={isLoadingFeaturedProducts}
         isLoadingTabs={productsTabs.isLoadingTabs}
         isLoadingProducts={productsTabs.isLoadingProducts}
         labels={{
           title: t('onboarding.storeIdentity.products'),
           hint: t('onboarding.storeIdentity.productsHint'),
+          searchTitle: locale === 'ar' ? 'البحث في منتجاتك' : 'Search your products',
           searchPlaceholder: locale === 'ar' ? 'ابحث داخل المنتجات' : 'Search products',
           emptySpecialties:
             locale === 'ar'
@@ -233,6 +266,7 @@ export const ProductsCard = React.forwardRef<
           sortNewest: locale === 'ar' ? 'الأحدث' : 'Newest',
           sortOldest: locale === 'ar' ? 'الأقدم' : 'Oldest',
           sortName: locale === 'ar' ? 'الاسم' : 'Name',
+          featuredOnly: locale === 'ar' ? 'المميزة فقط' : 'Featured only',
         }}
         onSelectMain={productsTabs.selectMain}
         onSelectSub={productsTabs.selectSub}
@@ -254,27 +288,10 @@ export const ProductsCard = React.forwardRef<
               </h4>
               <p className="text-xs text-on-surface-variant">
                 {locale === 'ar'
-                  ? 'اختر المنتجات المميزة ونصوص الأكثر رواجًا وزر الطلب الخاص.'
-                  : 'Choose featured products, trending texts, and custom request button.'}
+                  ? 'اختر المنتجات المميزة ونصوص الأكثر رواجًا التي تظهر للزوار.'
+                  : 'Choose featured products and trending texts shown to visitors.'}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={toggleCustomRequest}
-              className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
-                showcase.customRequestEnabled
-                  ? 'bg-primary text-on-primary'
-                  : 'border border-outline-variant bg-surface text-on-surface'
-              }`}
-            >
-              {showcase.customRequestEnabled
-                ? locale === 'ar'
-                  ? 'الطلب الخاص مفعل'
-                  : 'Custom request enabled'
-                : locale === 'ar'
-                  ? 'تفعيل الطلب الخاص'
-                  : 'Enable custom request'}
-            </button>
           </div>
 
           <div className="mt-4 grid gap-3">
@@ -340,6 +357,30 @@ export const ProductsCard = React.forwardRef<
                 : `Featured products selected: ${showcase.featuredProductIds.length}`}
             </p>
           </div>
+        </section>
+      ) : null}
+
+      {!readOnly ? (
+        <section className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+          <label className="flex cursor-pointer items-center justify-between gap-4">
+            <span className="min-w-0">
+              <span className="block text-sm font-semibold text-on-surface">
+                {locale === 'ar' ? 'الطلب الخاص' : 'Custom requests'}
+              </span>
+              <span className="mt-1 block text-xs leading-5 text-on-surface-variant">
+                {locale === 'ar'
+                  ? 'يسمح للعميل بإرسال وصف وصور لطلب غير موجود ضمن منتجاتك، لتراجعه وترد عليه من الطلبات.'
+                  : 'Lets customers send a description and images for an item not listed in your products.'}
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              className="peer sr-only"
+              checked={showcase.customRequestEnabled}
+              onChange={toggleCustomRequest}
+            />
+            <span className="relative h-7 w-12 shrink-0 rounded-full bg-outline-variant transition peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 after:absolute after:start-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5" />
+          </label>
         </section>
       ) : null}
 

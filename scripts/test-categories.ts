@@ -44,6 +44,19 @@ assert.equal(doctorGroup?.canonicalKey, "virtual:doctor-appointment");
 assert.equal(doctorGroup?.selectable, false);
 assert(medical.doctorAppointmentItems.length > 0);
 assert(medical.doctorAppointmentItems.every((item) => typeof item.originalId === "number"));
+assert.deepEqual(
+  medical.subcategories.map((item) => item.canonicalKey),
+  [
+    "virtual:doctor-appointment",
+    "subcategory:20:204",
+    "subcategory:20:202",
+    "subcategory:20:203",
+    "subcategory:20:205",
+    "subcategory:20:208",
+    "subcategory:20:11",
+  ],
+  "medical services must show Doctor Appointment first and Pharmacies second",
+);
 assert(
   medical.subcategories.every(
     (item, index) => index === 0 || medical.subcategories[index - 1]!.order < item.order,
@@ -63,7 +76,44 @@ assert.equal(invalid.valid, false);
 const collection = categoryService.getCollections()[0];
 assert(collection, "at least one collection must exist");
 const member = collection.items[0]!;
-assert.equal(categoryService.resolveLegacyProductSelection(String(collection.id), String(member.id)).valid, true);
+assert(
+  categoryService.getHomeCategories().some((item) => item.id === collection.id && item.isCollection),
+  "collections must remain main items on Home",
+);
+assert(
+  categoryService.getProfileMainOptions().some(
+    (item) => item.id === collection.id && item.isCollection,
+  ),
+  "collections must remain main items in profile Specialties",
+);
+assert(
+  !categoryService.getDeveloperMainOptions().some((item) => item.id === collection.id),
+  "the product category projection must not expose the collection label",
+);
+assert(
+  categoryService.getDeveloperMainOptions().some((item) => item.id === member.id),
+  "the product category projection must expose selected collection members as parents",
+);
+assert.equal(
+  categoryService.resolveLegacyProductSelection(String(collection.id), String(member.id)).valid,
+  false,
+  "a collection member is a product-category parent, not a final product selection",
+);
+const memberSubcategory = categoryService.getCategoryTree(member.id)?.subcategories[0];
+assert(memberSubcategory?.originalId, "collection member must expose product subcategories");
+assert.equal(
+  categoryService.resolveLegacyProductSelection(
+    String(member.id),
+    String(memberSubcategory.originalId),
+  ).valid,
+  true,
+  "a collection member and its real subcategory must be a valid product selection",
+);
+assert.equal(
+  categoryService.getDeveloperDetail(member.id, false)?.id,
+  member.id,
+  "product tools must resolve a collection member as a product-category parent",
+);
 
 assert(categoryService.getSpecialtyColumnItems().length > 0);
 assert.deepEqual(

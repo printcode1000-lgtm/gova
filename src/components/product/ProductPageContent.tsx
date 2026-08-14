@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Copy, Share2, UserCircle } from "lucide-react";
+import { Copy, MessageCircle, Share2, UserCircle } from "lucide-react";
 
 import { ApiError, asolApi } from "@/core/api";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,10 @@ import {
   toProductDetails,
 } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
+import { createProductCardViewModel } from "@/features/product-card";
+import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
+import { specialtyChatClient } from "@/features/specialty-chat";
+import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
 import { ProductComponentsRenderer } from "./ProductComponentsRenderer";
 import type {
   ProductMode,
@@ -75,7 +79,19 @@ export function ProductPageContent({
   );
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
+  const [openingConversation, setOpeningConversation] = React.useState(false);
   const [error, setError] = React.useState("");
+  const detailsRef = React.useRef(details);
+  const imageUploadRef = React.useRef<StorageImageManagerHandle | null>(null);
+
+  const updateDetails = React.useCallback((next: ProductDetails) => {
+    detailsRef.current = next;
+    setDetails(next);
+  }, []);
+
+  React.useEffect(() => {
+    detailsRef.current = details;
+  }, [details]);
 
   const mainCategoryId = product?.mainCategoryId ?? initialMain;
   const subcategoryId = product?.subcategoryId ?? initialSub;
@@ -226,25 +242,122 @@ export function ProductPageContent({
         </Link>
       </Button>
     ) : null;
+  const favoriteAction =
+    mode === "view" && product ? (
+      <FavoriteButton
+        item={favoriteFromProductCard(createProductCardViewModel(product))}
+        label={locale === "ar" ? "المفضلة" : "Favorite"}
+        className="h-10 w-auto gap-2 rounded-xl px-4"
+      />
+    ) : null;
+
+  const openSellerConversation = async () => {
+    if (!product?.uid || !product.id) return;
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+    if (session.uid === product.uid) {
+      setError(
+        locale === "ar"
+          ? "لا يمكن بدء محادثة مع حسابك نفسه."
+          : "You cannot start a conversation with your own account.",
+      );
+      return;
+    }
+    setOpeningConversation(true);
+    setError("");
+    try {
+      const requestId = `req_${crypto.randomUUID().replace(/-/g, "")}`;
+      const productName = productShareTitle;
+      const result = await specialtyChatClient.startProductConversation(
+        session,
+        {
+          requestId,
+          sellerUid: product.uid,
+          productId: product.id,
+          productName,
+          message:
+            locale === "ar"
+              ? `أرغب في الاستفسار عن المنتج: ${productName}`
+              : `I would like to ask about: ${productName}`,
+        },
+      );
+      router.push(
+        `/notifications/chat?conversationId=${encodeURIComponent(result.conversationKey)}`,
+      );
+    } catch (conversationError) {
+      setError(
+        conversationError instanceof Error &&
+          conversationError.message === "specialtyChatRecipientUnavailable"
+          ? locale === "ar"
+            ? "لا يمكن الوصول إلى صاحب المنتج حاليًا."
+            : "The product owner is currently unavailable."
+          : locale === "ar"
+            ? "تعذر فتح المحادثة. حاول مرة أخرى."
+            : "Unable to open the conversation. Try again.",
+      );
+    } finally {
+      setOpeningConversation(false);
+    }
+  };
+  const contactAction = mode === "view" && product?.uid ? (
+    <Button
+      type="button"
+      variant="outline"
+      className="gap-2"
+      disabled={openingConversation}
+      onClick={() => void openSellerConversation()}
+    >
+      <MessageCircle className="h-4 w-4" />
+      {openingConversation
+        ? locale === "ar"
+          ? "جار فتح المحادثة..."
+          : "Opening chat..."
+        : locale === "ar"
+          ? "مراسلة صاحب المنتج"
+          : "Message seller"}
+    </Button>
+  ) : null;
 
   const save = async () => {
     if (!session?.uid || !ownerAllowed) return;
     setSaving(true);
     setError("");
     try {
+      const imagesUploaded = await imageUploadRef.current?.uploadPending();
+      if (imagesUploaded === false) {
+        throw new Error(
+          locale === "ar"
+            ? "تعذر رفع إحدى الصور. أعد المحاولة قبل الحفظ."
+            : "An image could not be uploaded. Retry before saving.",
+        );
+      }
+      const currentDetails = detailsRef.current;
+      if (
+        currentDetails.images.some(
+          (image) => !image.imageKey || image.isUploading || image.error,
+        )
+      ) {
+        throw new Error(
+          locale === "ar"
+            ? "لم يكتمل رفع جميع الصور."
+            : "Not all images have finished uploading.",
+        );
+      }
       const saved =
         mode === "new"
           ? await productApiService.create({
               uid: session.uid,
               mainCategoryId,
               subcategoryId,
-              ...details,
+              ...currentDetails,
               status: "active",
             })
           : await productApiService.update({
               id: productId,
               uid: session.uid,
-              ...details,
+              ...currentDetails,
               status: product?.status,
             });
       if (returnUrl) {
@@ -308,12 +421,15 @@ export function ProductPageContent({
         mode={mode}
         components={style?.components ?? {}}
         product={details}
-        onProductChange={setDetails}
+        onProductChange={updateDetails}
         productId={product?.id ?? ""}
         ownerUid={product?.uid ?? session?.uid ?? ""}
         mainCategoryId={mainCategoryId}
         shareAction={shareAction}
         profileAction={profileAction}
+        favoriteAction={favoriteAction}
+        contactAction={contactAction}
+        imageUploadRef={imageUploadRef}
       />
       {error ? (
         <p className="rounded-xl bg-destructive/10 p-3 text-destructive">

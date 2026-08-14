@@ -2,13 +2,14 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { HeroSliderEditor } from "@/components/ui/HeroSliderEditor";
 import { HeroSliderImagesEditor } from "@/components/ui/HeroSliderImagesEditor";
 import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
 import { useTranslation } from "@/lib/i18n";
+import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
 
 export type HeroSliderTransition =
   | "Fade"
@@ -42,6 +43,8 @@ export interface HeroSliderProps {
   onChange?: (config: HeroSliderConfig) => void;
   onSave?: (config: HeroSliderConfig) => void;
   onCancel?: () => void;
+  imageUploadRef?: RefObject<StorageImageManagerHandle | null>;
+  onImagesPendingChange?: (pending: boolean) => void;
 }
 
 export function HeroSlider({
@@ -50,6 +53,8 @@ export function HeroSlider({
   onChange,
   onSave,
   onCancel,
+  imageUploadRef,
+  onImagesPendingChange,
 }: HeroSliderProps) {
   const { t } = useTranslation();
   const [draftConfig, setDraftConfig] = useState(config);
@@ -387,8 +392,10 @@ export function HeroSlider({
   if (mode === "images-edit") {
     return (
       <HeroSliderImagesEditor
+        ref={imageUploadRef}
         value={draftConfig}
         onChange={handleConfigChange}
+        onPendingChange={onImagesPendingChange}
       />
     );
   }

@@ -49,6 +49,7 @@ Favorites are deliberately separate from the Follow System. A seller favorite is
 
 - The bottom-navigation heart is filled whenever the active local collection contains at least one item, regardless of the current route.
 - Product favorites appear on public search and profile-preview cards. Featured-marquee cards intentionally hide the favorite control.
+- The product detail order section uses the same local favorite button and collection as product cards.
 - Seller favorites appear on public search, category-seller, and doctor-seller cards.
 - Favorites are hidden from product management, compact cards, and linked-provider selection cards.
 - The favorite control is a sibling of the card's open button, never a nested interactive element.
@@ -64,6 +65,7 @@ Favorites are deliberately separate from the Follow System. A seller favorite is
 - `src/features/favorites/hooks/FavoritesProvider.tsx`
 - `src/features/favorites/components/FavoriteButton.tsx`
 - `src/features/favorites/tests/favorites.test.ts`
+- `src/features/favorites/tests/favorites-local-storage-contract.test.ts`
 - `src/app/favorites/page.tsx`
 
 ## Verification

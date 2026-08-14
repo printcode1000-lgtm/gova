@@ -7,6 +7,7 @@ import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import {
   parseStorageImageManagerConfig,
   StorageImageManager,
+  type StorageImageManagerHandle,
 } from "@/features/storage/components/StorageImageManager";
 import storefrontImagesConfig from "@/components/profile/image-configs/storefront-images.image.json";
 import type { HeroSliderConfig, HeroSliderSlide } from "./HeroSlider";
@@ -19,6 +20,7 @@ const MAX_PROFILE_SLIDES = storefrontSlots.length;
 interface HeroSliderImagesEditorProps {
   value: HeroSliderConfig;
   onChange: (config: HeroSliderConfig) => void;
+  onPendingChange?: (pending: boolean) => void;
 }
 
 function createSlide(image: StoredImage, index: number): HeroSliderSlide {
@@ -33,10 +35,28 @@ function createSlide(image: StoredImage, index: number): HeroSliderSlide {
   };
 }
 
-export function HeroSliderImagesEditor({
+export const HeroSliderImagesEditor = React.forwardRef<
+  StorageImageManagerHandle,
+  HeroSliderImagesEditorProps
+>(function HeroSliderImagesEditor({
   value,
   onChange,
-}: HeroSliderImagesEditorProps) {
+  onPendingChange,
+}, ref) {
+  const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
+  const [pendingSlots, setPendingSlots] = React.useState<Set<number>>(() => new Set());
+  React.useEffect(() => {
+    onPendingChange?.(pendingSlots.size > 0);
+  }, [onPendingChange, pendingSlots]);
+  React.useImperativeHandle(ref, () => ({
+    hasPending: () => managerRefs.current.some((manager) => manager?.hasPending()),
+    uploadPending: async () => {
+      for (const manager of managerRefs.current) {
+        if (manager?.hasPending() && !(await manager.uploadPending())) return false;
+      }
+      return true;
+    },
+  }), []);
   const savedImages = React.useMemo(
     () =>
       value.slides
@@ -94,13 +114,24 @@ export function HeroSliderImagesEditor({
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {storefrontSlots.map((slotConfig, index) => (
           <StorageImageManager
+            ref={(manager) => {
+              managerRefs.current[index] = manager;
+            }}
             key={slotConfig.id}
             config={slotConfig}
             value={slotImages[index] ? [slotImages[index]!] : []}
             onChange={(nextSlotImages) => updateSlot(index, nextSlotImages)}
+            onPendingChange={(pending) => {
+              setPendingSlots((current) => {
+                const next = new Set(current);
+                if (pending) next.add(index);
+                else next.delete(index);
+                return next;
+              });
+            }}
           />
         ))}
       </div>
     </section>
   );
-}
+});

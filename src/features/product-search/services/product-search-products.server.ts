@@ -7,6 +7,7 @@ import type {
 } from "../entities/product-search.types";
 import { productSearchRepository } from "@/modules/data-access/domains/product-search/index.server";
 import { getEnabledProductSearchFieldKeys } from "./product-search-fields.server";
+import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 
 /**
  * Product search, split out from the seller search that used to sit beside it.
@@ -40,5 +41,18 @@ export async function searchProducts(
     request.mainCategoryId,
     request.subcategoryId,
   );
-  return productSearchRepository.search({ ...request, allowedFieldKeys });
+  const result = await productSearchRepository.search({ ...request, allowedFieldKeys });
+  return {
+    ...result,
+    items: result.items.map((product) => ({
+      ...product,
+      images: product.images.map((image) => ({
+        ...image,
+        url: imageStorageService.resolveImageUrl(
+          "product-default",
+          image.imageKey,
+        ),
+      })),
+    })),
+  };
 }

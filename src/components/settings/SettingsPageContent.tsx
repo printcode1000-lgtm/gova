@@ -38,19 +38,36 @@ function ToggleSwitch({
   checked,
   onChange,
   label,
+  disabled = false,
 }: {
   checked: boolean;
   onChange: (next: boolean) => void;
   label: string;
+  disabled?: boolean;
 }) {
   return (
-    <input
-      type="checkbox"
-      checked={checked}
-      onChange={(e) => onChange(e.target.checked)}
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
       aria-label={label}
-      className="h-8 w-14 shrink-0 rounded-full accent-primary cursor-pointer"
-    />
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className={cn(
+        "relative h-8 w-14 shrink-0 rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60",
+        checked
+          ? "border-primary bg-primary"
+          : "border-outline-variant bg-surface-variant",
+      )}
+    >
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute top-1 h-6 w-6 rounded-full bg-white shadow-sm transition-[inset-inline-start]",
+          checked ? "start-7" : "start-1",
+        )}
+      />
+    </button>
   );
 }
 
@@ -90,7 +107,9 @@ export function SettingsPageContent() {
   const [tempFontSize, setTempFontSize] = React.useState(themePrefs.fontSize);
   const [showClearDialog, setShowClearDialog] = React.useState(false);
   const [specialtyRequestsEnabled, setSpecialtyRequestsEnabled] = React.useState(true);
+  const [productConversationsEnabled, setProductConversationsEnabled] = React.useState(true);
   const [specialtyPreferenceBusy, setSpecialtyPreferenceBusy] = React.useState(false);
+  const [productConversationPreferenceBusy, setProductConversationPreferenceBusy] = React.useState(false);
 
   const themeLabels: Record<SettingsThemeMode, string> = {
     light: t("theme.light"),
@@ -126,12 +145,17 @@ export function SettingsPageContent() {
 
   React.useEffect(() => {
     if (!session?.sessionToken) return;
-    void specialtyChatClient
-      .preference(session)
-      .then((value) => setSpecialtyRequestsEnabled(value.enabled))
+    void Promise.all([
+      specialtyChatClient.preference(session),
+      specialtyChatClient.productConversationPreference(session),
+    ])
+      .then(([specialtyPreference, productPreference]) => {
+        setSpecialtyRequestsEnabled(specialtyPreference.enabled);
+        setProductConversationsEnabled(productPreference.enabled);
+      })
       .catch((error) => {
         if (isSpecialtyChatSessionTokenFailure(error)) return;
-        console.warn("[Settings] Failed to load specialty chat preference.", error);
+        console.warn("[Settings] Failed to load chat preferences.", error);
       });
   }, [session]);
 
@@ -146,6 +170,31 @@ export function SettingsPageContent() {
       showStatus(error instanceof Error ? error.message : "تعذر حفظ إعداد طلبات التخصص.");
     } finally {
       setSpecialtyPreferenceBusy(false);
+    }
+  };
+
+  const updateProductConversations = async (enabled: boolean) => {
+    if (!session?.sessionToken || productConversationPreferenceBusy) return;
+    setProductConversationPreferenceBusy(true);
+    try {
+      const value = await specialtyChatClient.productConversationPreference(
+        session,
+        enabled,
+      );
+      setProductConversationsEnabled(value.enabled);
+      showStatus(
+        value.enabled
+          ? "تم السماح بمراسلتك بخصوص منتجاتك."
+          : "تم منع بدء محادثات جديدة بخصوص منتجاتك.",
+      );
+    } catch (error) {
+      showStatus(
+        error instanceof Error
+          ? error.message
+          : "تعذر حفظ إعداد محادثات المنتجات.",
+      );
+    } finally {
+      setProductConversationPreferenceBusy(false);
     }
   };
 
@@ -181,9 +230,12 @@ export function SettingsPageContent() {
     setClearing(true);
     try {
       if (session?.sessionToken) {
-        await specialtyChatClient.preference(session, true).catch((error) => {
+        await Promise.all([
+          specialtyChatClient.preference(session, true),
+          specialtyChatClient.productConversationPreference(session, true),
+        ]).catch((error) => {
           if (isSpecialtyChatSessionTokenFailure(error)) return;
-          console.warn("[Settings] Failed to reset specialty chat preference.", error);
+          console.warn("[Settings] Failed to reset chat preferences.", error);
         });
       }
       if (session) {
@@ -581,16 +633,31 @@ export function SettingsPageContent() {
               </p>
             ) : null}
             {session?.sessionToken ? (
-              <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface p-4">
-                <div>
-                  <p className="text-sm font-semibold text-on-surface">طلبات المشترين حسب التخصص</p>
-                  <p className="mt-1 text-xs text-on-surface-variant">السماح للمشترين بإرسال طلبات نصية إلى تخصصاتك. الردود خاصة ولا يراها بقية مقدمي الخدمة.</p>
+              <div className="mt-4 grid gap-3">
+                <div className="flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface p-4">
+                  <div>
+                    <p className="text-sm font-semibold text-on-surface">طلبات المشترين حسب التخصص</p>
+                    <p className="mt-1 text-xs text-on-surface-variant">السماح للمشترين بإرسال طلبات نصية إلى تخصصاتك. الردود خاصة ولا يراها بقية مقدمي الخدمة.</p>
+                  </div>
+                  <ToggleSwitch
+                    checked={specialtyRequestsEnabled}
+                    onChange={(enabled) => void updateSpecialtyRequests(enabled)}
+                    label="استقبال طلبات المشترين حسب التخصص"
+                    disabled={specialtyPreferenceBusy}
+                  />
                 </div>
-                <ToggleSwitch
-                  checked={specialtyRequestsEnabled}
-                  onChange={(enabled) => void updateSpecialtyRequests(enabled)}
-                  label="استقبال طلبات المشترين حسب التخصص"
-                />
+                <div className="flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface p-4">
+                  <div>
+                    <p className="text-sm font-semibold text-on-surface">مراسلة صاحب المنتج</p>
+                    <p className="mt-1 text-xs text-on-surface-variant">السماح للمستخدمين ببدء محادثة خاصة معك من صفحة أحد منتجاتك. عند الإيقاف لن تبدأ محادثات منتجات جديدة.</p>
+                  </div>
+                  <ToggleSwitch
+                    checked={productConversationsEnabled}
+                    onChange={(enabled) => void updateProductConversations(enabled)}
+                    label="السماح بمراسلة صاحب المنتج"
+                    disabled={productConversationPreferenceBusy}
+                  />
+                </div>
               </div>
             ) : null}
           </div>

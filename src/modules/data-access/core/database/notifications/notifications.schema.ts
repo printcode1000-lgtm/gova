@@ -68,6 +68,11 @@ export const userNotificationPreferences = sqliteTable(
     })
       .notNull()
       .default(true),
+    productConversationsEnabled: integer("product_conversations_enabled", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(true),
     updatedAt: text("updated_at").notNull(),
   },
 );

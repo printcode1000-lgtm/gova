@@ -530,15 +530,6 @@ export const SpecialtiesCard = React.forwardRef<
   return (
     <>
       <div className="space-y-4">
-        <div>
-          <h3 className="text-sm font-semibold text-on-surface mb-2">
-            {t("onboarding.storeIdentity.specialties")}
-          </h3>
-          <p className="text-xs text-on-surface-variant mb-4">
-            {t("onboarding.storeIdentity.specialtiesHint")}
-          </p>
-        </div>
-
         <div className="grid grid-cols-4 gap-2 sm:gap-3 sm:grid-cols-6">
           {displayCategories.map((category) => {
             const categoryId = category.id.toString();

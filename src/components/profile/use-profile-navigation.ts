@@ -71,17 +71,22 @@ export function useProfileNavigation({
   const programmaticScrollClearTimerRef = React.useRef<number | null>(null);
   const appliedRequestedTabRef = React.useRef<string | null>(null);
 
-  const scrollElementIntoViewWithoutSmooth = React.useCallback((element: HTMLElement | null) => {
+  const scrollElementHorizontally = React.useCallback((
+    element: HTMLElement | null,
+    behavior: ScrollBehavior = "auto",
+  ) => {
     if (!element?.parentElement) return;
     const parent = element.parentElement;
-    const previousScrollBehavior = parent.style.scrollBehavior;
-    parent.style.scrollBehavior = "auto";
-    element.scrollIntoView({
-      behavior: "auto",
-      block: "nearest",
-      inline: "center",
+    const parentRect = parent.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    const horizontalOffset =
+      elementRect.left + elementRect.width / 2 -
+      (parentRect.left + parentRect.width / 2);
+
+    parent.scrollBy({
+      left: horizontalOffset,
+      behavior,
     });
-    parent.style.scrollBehavior = previousScrollBehavior;
   }, []);
 
   const scrollToSection = React.useCallback((section: ProfileEditTab) => {
@@ -95,15 +100,15 @@ export function useProfileNavigation({
       window.clearTimeout(programmaticScrollClearTimerRef.current);
     }
 
-    scrollElementIntoViewWithoutSmooth(panelRefs.current[section]);
-    scrollElementIntoViewWithoutSmooth(navButtonRefs.current[section]);
+    scrollElementHorizontally(panelRefs.current[section]);
+    scrollElementHorizontally(navButtonRefs.current[section]);
 
     programmaticScrollClearTimerRef.current = window.setTimeout(() => {
       if (programmaticScrollTargetRef.current === section) {
         programmaticScrollTargetRef.current = null;
       }
     }, 350);
-  }, [scrollElementIntoViewWithoutSmooth]);
+  }, [scrollElementHorizontally]);
 
   const selectSection = (section: ProfileEditTab) => {
     setActiveTab(section);
@@ -159,11 +164,7 @@ export function useProfileNavigation({
       }
       if (closest !== resolvedActiveTab) {
         setActiveTab(closest);
-        navButtonRefs.current[closest]?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        });
+        scrollElementHorizontally(navButtonRefs.current[closest], "smooth");
       }
     });
   };
@@ -182,7 +183,12 @@ export function useProfileNavigation({
     const panel = panelRefs.current[resolvedActiveTab];
     if (!panel) return;
     let frame: number | null = null;
-    const updateHeight = () => setCarouselHeight(panel.offsetHeight);
+    // Keep the workspace from shrinking when moving to a shorter panel. A
+    // shrinking document can clamp window.scrollY and jump the whole page.
+    const updateHeight = () =>
+      setCarouselHeight((currentHeight) =>
+        Math.max(currentHeight ?? 0, panel.offsetHeight),
+      );
     const scheduleUpdateHeight = () => {
       if (frame !== null) cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {

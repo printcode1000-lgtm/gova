@@ -136,36 +136,8 @@ export function DeveloperCategorySelector() {
   }, [previewMode, mainCategoryId, subcategoryId]);
 
   const mainCategoryOptions = React.useMemo<MainCategoryOption[]>(() => {
-    const options = new Map<string, MainCategoryOption>();
-
-    categories.forEach((category) => {
-      if (category.collection === null) {
-        options.set(`category-${category.id}`, {
-          id: category.id,
-          titleAr: category.titleAr,
-          titleEn: category.titleEn,
-          isCollection: false,
-          order: category.order,
-        });
-        return;
-      }
-
-      const key = `collection-${category.collection}`;
-      if (!options.has(key)) {
-        options.set(key, {
-          id: category.collection,
-          titleAr: category.collectionAr ?? "",
-          titleEn: category.collectionEn ?? "",
-          isCollection: true,
-          order: category.collectionOrder ?? category.order,
-        });
-      }
-    });
-
-    return [...options.values()].sort(
-      (left, right) => left.order - right.order,
-    );
-  }, [categories]);
+    return [...categoryService.getDeveloperMainOptions()];
+  }, []);
 
   const selectedMainCategory = mainCategoryOptions.find(
     (category) => category.id.toString() === mainCategoryId,
@@ -173,72 +145,20 @@ export function DeveloperCategorySelector() {
 
   const subcategoryOptions = React.useMemo<SubcategoryOption[]>(() => {
     if (!selectedMainCategory) return [];
-
-    if (selectedMainCategory.isCollection) {
-      return categories
-        .filter((category) => category.collection === selectedMainCategory.id)
-        .sort(
-          (left, right) => left.order - right.order,
-        )
-        .map((category) => ({
-          value: category.id.toString(),
-          titleAr: category.titleAr,
-          titleEn: category.titleEn,
-          order: category.order,
-        }));
-    }
-
-    const items = subcategories
-      .filter((subcategory) => subcategory.categoryId === selectedMainCategory.id)
-      .sort((left, right) => left.order - right.order);
-
-    if (selectedMainCategory.id === MEDICAL_SERVICES_CATEGORY_ID) {
-      const visibleItems = items.filter(
-        (subcategory) => subcategory.subCollection !== 0,
-      );
-      const hasDoctorAppointmentItems = items.some(
-        (subcategory) => subcategory.subCollection === 0,
-      );
-
-      return [
-        ...(hasDoctorAppointmentItems
-          ? [
-              {
-                value: DOCTOR_APPOINTMENT_VALUE,
-                titleAr: "كشف طبي",
-                titleEn: "Doctor Appointment",
-                order: Math.min(
-                  ...items
-                    .filter((subcategory) => subcategory.subCollection === 0)
-                    .map((subcategory) => subcategory.order),
-                ),
-              },
-            ]
-          : []),
-        ...visibleItems.map((subcategory) => ({
-          value: subcategory.originalId.toString(),
-          titleAr: subcategory.titleAr,
-          titleEn: subcategory.titleEn,
-          order: subcategory.order,
-        })),
-      ].sort((left, right) => left.order - right.order);
-    }
-
-    return items.map((subcategory) => ({
-      value: subcategory.originalId.toString(),
-      titleAr: subcategory.titleAr,
-      titleEn: subcategory.titleEn,
-      order: subcategory.order,
-    }));
-  }, [categories, selectedMainCategory, subcategories]);
+    return categoryService
+      .getDeveloperSubOptions(
+        selectedMainCategory.id,
+        selectedMainCategory.isCollection,
+      )
+      .filter((item) => item.selectable !== false);
+  }, [selectedMainCategory]);
 
   const selectedMainDetails = React.useMemo<DetailRecord | null>(() => {
     if (!selectedMainCategory) return null;
 
     if (!selectedMainCategory.isCollection) {
       const category = categories.find(
-        (item) =>
-          item.id === selectedMainCategory.id && item.collection === null,
+        (item) => item.id === selectedMainCategory.id,
       );
       return category ? (category as unknown as DetailRecord) : null;
     }
@@ -579,6 +499,7 @@ export function DeveloperCategorySelector() {
                     key={`${mainCategoryId}-${subcategoryId}-${previewMode}`}
                     className="mt-5 space-y-4 rounded-xl bg-muted/20 p-3 sm:p-5"
                   >
+                    {/* Omit productId so the non-persisted preview never queries the reviews API. */}
                     <ProductComponentsRenderer
                       mode={previewMode}
                       components={previewStyleComponents}
@@ -586,7 +507,6 @@ export function DeveloperCategorySelector() {
                       onProductChange={setPreviewDetails}
                       mainCategoryId={mainCategoryId}
                       ownerUid="demo-owner"
-                      productId="demo-product"
                       shareAction={
                         <button
                           type="button"

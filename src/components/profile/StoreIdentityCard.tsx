@@ -15,6 +15,7 @@ import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import {
   StorageImageManager,
   parseStorageImageManagerConfig,
+  type StorageImageManagerHandle,
 } from "@/features/storage/components/StorageImageManager";
 import type {
   ProfileSectionStatus,
@@ -40,7 +41,7 @@ export const StoreIdentityCard = React.forwardRef<
     isLoading: isImagesLoading,
     isSaving: isSavingImages,
     error: imagesError,
-    saveStoreImages,
+    saveStoreImagesAsync,
   } = useProfileStoreImages();
   const {
     details,
@@ -55,38 +56,90 @@ export const StoreIdentityCard = React.forwardRef<
   } = useStoreDetails();
   const [imageTab, setImageTab] = React.useState<"logo" | "hero">("logo");
   const [logoImage, setLogoImage] = React.useState<StoredImage | null>(null);
+  const [heroConfig, setHeroConfig] = React.useState<HeroSliderConfig | null>(null);
+  const [logoPending, setLogoPending] = React.useState(false);
+  const [heroPending, setHeroPending] = React.useState(false);
+  const [logoTouched, setLogoTouched] = React.useState(false);
+  const [heroTouched, setHeroTouched] = React.useState(false);
+  const logoManagerRef = React.useRef<StorageImageManagerHandle | null>(null);
+  const heroManagerRef = React.useRef<StorageImageManagerHandle | null>(null);
+  const logoImageRef = React.useRef<StoredImage | null>(null);
+  const heroConfigRef = React.useRef<HeroSliderConfig | null>(null);
   const label = t("onboarding.storeIdentity.title");
+
+  const savedLogoKey = storeImages.avatarImageKey ?? "";
+  const savedCoverKeys = storeImages.coverImageKeys;
+  const currentCoverKeys = heroTouched
+    ? (heroConfig?.slides ?? [])
+        .map((slide) => slide.imageKey ?? "")
+        .filter(Boolean)
+        .slice(0, 3)
+    : savedCoverKeys;
+  const currentLogoKey = logoTouched ? (logoImage?.imageKey ?? "") : savedLogoKey;
+  const imagesDirty =
+    logoPending ||
+    heroPending ||
+    currentLogoKey !== savedLogoKey ||
+    JSON.stringify(currentCoverKeys) !== JSON.stringify(savedCoverKeys);
+  const sectionDirty = isDirty || imagesDirty;
+
+  const prepareImagesForSave = React.useCallback(async () => {
+    if (logoManagerRef.current?.hasPending()) {
+      if (!(await logoManagerRef.current.uploadPending())) return false;
+    }
+    if (heroManagerRef.current?.hasPending()) {
+      if (!(await heroManagerRef.current.uploadPending())) return false;
+    }
+    const logo = logoImageRef.current;
+    const hero = heroConfigRef.current;
+    const coverImageKeys = (hero?.slides ?? [])
+      .map((slide) => slide.imageKey)
+      .filter((imageKey): imageKey is string => Boolean(imageKey))
+      .slice(0, 3);
+    if (logo?.isUploading || logo?.error || (logo?.url && !logo.imageKey)) return false;
+    await saveStoreImagesAsync({
+      avatarImageKey: logo?.imageKey ?? null,
+      coverImageKeys,
+    });
+    setLogoTouched(false);
+    setHeroTouched(false);
+    return true;
+  }, [saveStoreImagesAsync]);
 
   React.useImperativeHandle(
     ref,
     () => ({
-      isDirty,
+      isDirty: sectionDirty,
       isSaving,
       canSave: true,
       label,
       save: saveAsync,
       getSnapshot: () => details,
       applySaved,
+      prepareForSave: prepareImagesForSave,
     }),
-    [applySaved, details, isDirty, isSaving, label, saveAsync],
+    [applySaved, details, isSaving, label, prepareImagesForSave, saveAsync, sectionDirty],
   );
 
   React.useEffect(() => {
-    onStatusChange?.({ isDirty, isSaving, canSave: true, label });
-  }, [isDirty, isSaving, label, onStatusChange]);
+    onStatusChange?.({ isDirty: sectionDirty, isSaving, canSave: true, label });
+  }, [isSaving, label, onStatusChange, sectionDirty]);
 
   React.useEffect(() => {
     const nextLogoImage =
       storeImages.avatarUrl && storeImages.avatarImageKey
         ? { imageKey: storeImages.avatarImageKey, url: storeImages.avatarUrl }
         : null;
+    if (logoTouched) return;
     setLogoImage(nextLogoImage);
-  }, [storeImages]);
+    logoImageRef.current = nextLogoImage;
+  }, [logoTouched, storeImages.avatarImageKey, storeImages.avatarUrl]);
 
   const handleLogoImagesChange = (images: StoredImage[]) => {
     const image = images[0] ?? null;
+    setLogoTouched(true);
     setLogoImage(image);
-    saveStoreImages({ avatarImageKey: image?.imageKey ?? null });
+    logoImageRef.current = image;
   };
 
   const profileHeroConfig = React.useMemo<HeroSliderConfig>(
@@ -108,13 +161,16 @@ export const StoreIdentityCard = React.forwardRef<
     [storeImages.coverImageKeys, storeImages.coverUrls],
   );
 
+  React.useEffect(() => {
+    if (heroPending || heroTouched) return;
+    setHeroConfig(profileHeroConfig);
+    heroConfigRef.current = profileHeroConfig;
+  }, [heroPending, heroTouched, profileHeroConfig]);
+
   const handleHeroImagesChange = (config: HeroSliderConfig) => {
-    saveStoreImages({
-      coverImageKeys: config.slides
-        .map((slide) => slide.imageKey)
-        .filter((imageKey): imageKey is string => Boolean(imageKey))
-        .slice(0, 3),
-    });
+    setHeroTouched(true);
+    setHeroConfig(config);
+    heroConfigRef.current = config;
   };
 
   if (isLoading) {
@@ -171,17 +227,21 @@ export const StoreIdentityCard = React.forwardRef<
             <div className="inline-block rounded-lg border-2 border-primary/20 bg-primary/5 p-2 sm:p-3">
               <div className="h-[120px] w-[120px] sm:h-[150px] sm:w-[150px]">
                 <StorageImageManager
+                  ref={logoManagerRef}
                   config={storeLogoConfig}
                   value={logoImage ? [logoImage] : []}
                   onChange={handleLogoImagesChange}
+                  onPendingChange={setLogoPending}
                 />
               </div>
             </div>
           ) : (
             <HeroSlider
               mode="images-edit"
-              config={profileHeroConfig}
+              config={heroConfig ?? profileHeroConfig}
               onChange={handleHeroImagesChange}
+              imageUploadRef={heroManagerRef}
+              onImagesPendingChange={setHeroPending}
             />
           )}
 

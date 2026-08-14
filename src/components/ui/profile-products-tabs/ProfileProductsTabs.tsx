@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Package, Plus } from "lucide-react";
+import { ChevronDown, Package, Plus, Search, Star } from "lucide-react";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { ProductCard } from "@/components/ui/product-card";
 import { ProductSearchPanel } from "@/components/ui/product-search";
@@ -25,6 +25,7 @@ import type {
 export interface ProfileProductsTabsLabels {
   title: string;
   hint?: string;
+  searchTitle: string;
   searchPlaceholder: string;
   emptySpecialties: string;
   emptyProducts: string;
@@ -37,6 +38,7 @@ export interface ProfileProductsTabsLabels {
   sortNewest: string;
   sortOldest: string;
   sortName: string;
+  featuredOnly: string;
 }
 
 interface ProfileProductsTabsProps {
@@ -49,6 +51,8 @@ interface ProfileProductsTabsProps {
   activeSubTab: ProfileProductsSubTab | null;
   filters: ProfileProductsFilters;
   featuredProductIds?: string[];
+  featuredProducts?: ProductRecord[];
+  isLoadingFeaturedProducts?: boolean;
   isLoadingTabs?: boolean;
   isLoadingProducts?: boolean;
   labels: ProfileProductsTabsLabels;
@@ -73,6 +77,8 @@ export function ProfileProductsTabs({
   activeSubTab,
   filters,
   featuredProductIds = [],
+  featuredProducts = [],
+  isLoadingFeaturedProducts = false,
   isLoadingTabs = false,
   isLoadingProducts = false,
   labels,
@@ -93,6 +99,8 @@ export function ProfileProductsTabs({
     React.useState<ProductRecord[]>(products);
   const [searchFilteredProducts, setSearchFilteredProducts] =
     React.useState<ProductRecord[]>(products);
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [showFeaturedOnly, setShowFeaturedOnly] = React.useState(false);
 
   React.useEffect(() => {
     if (!isPharmacyBucket) {
@@ -104,10 +112,19 @@ export function ProfileProductsTabs({
     setSearchFilteredProducts(products);
   }, [products, activeSubTab?.id]);
 
-  const sourceProducts = searchFilteredProducts;
-  const visibleProducts = isPharmacyBucket
-    ? pharmacyFilteredProducts
-    : sourceProducts;
+  React.useEffect(() => {
+    setIsSearchOpen(false);
+  }, [activeSubTab?.id]);
+
+  const sourceProducts = showFeaturedOnly
+    ? featuredProducts
+    : searchFilteredProducts;
+  const visibleProducts =
+    isPharmacyBucket && !showFeaturedOnly
+      ? pharmacyFilteredProducts
+      : sourceProducts;
+  const productsLoading =
+    isLoadingProducts || (showFeaturedOnly && isLoadingFeaturedProducts);
 
   if (isLoadingTabs) {
     return (
@@ -120,17 +137,6 @@ export function ProfileProductsTabs({
   if (tabs.length === 0) {
     return (
       <section className="space-y-3">
-        <div>
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-on-surface">
-            <Package className="h-4 w-4" />
-            {labels.title}
-          </h3>
-          {labels.hint ? (
-            <p className="mt-1 text-xs text-on-surface-variant">
-              {labels.hint}
-            </p>
-          ) : null}
-        </div>
         <div className="rounded-lg border border-dashed border-outline-variant py-8 text-center">
           <Package className="mx-auto mb-2 h-8 w-8 text-on-surface-variant" />
           <p className="text-sm text-on-surface-variant">
@@ -143,35 +149,6 @@ export function ProfileProductsTabs({
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-on-surface">
-            <Package className="h-4 w-4" />
-            {labels.title}
-          </h3>
-          {labels.hint ? (
-            <p className="mt-1 text-xs text-on-surface-variant">
-              {labels.hint}
-            </p>
-          ) : null}
-        </div>
-        {showManagement && activeSubTab && onAddProduct ? (
-          <button
-            type="button"
-            onClick={() =>
-              onAddProduct(
-                activeSubTab.categoryId,
-                activeSubTab.productSubcategoryId,
-              )
-            }
-            className="inline-flex h-9 items-center gap-2 rounded-lg bg-primary px-3 text-xs font-semibold text-on-primary transition hover:bg-primary/90"
-          >
-            <Plus className="h-4 w-4" />
-            {labels.addProduct}
-          </button>
-        ) : null}
-      </div>
-
       <div
         data-snapshot-scroll
         data-snapshot-id={`profile-products-main-${mode}-${ownerUid}`}
@@ -242,15 +219,55 @@ export function ProfileProductsTabs({
       ) : null}
 
       {activeSubTab ? (
-        <ProductSearchPanel
-          variant="compact"
-          ownerUid={ownerUid}
-          fixedMainCategoryId={activeSubTab.categoryId}
-          fixedSubcategoryId={activeSubTab.productSubcategoryId}
-          includeDrafts={mode === "edit"}
-          locale={labels.searchPlaceholder.includes("Search") ? "en" : "ar"}
-          onProductsChange={setSearchFilteredProducts}
-        />
+        <section className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low/30">
+          <button
+            type="button"
+            aria-expanded={isSearchOpen}
+            onClick={() => setIsSearchOpen((current) => !current)}
+            className="flex w-full items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-on-surface"
+          >
+            <span className="inline-flex items-center gap-2">
+              <Search className="h-4 w-4 text-primary" />
+              {labels.searchTitle}
+            </span>
+            <ChevronDown
+              className={`h-4 w-4 transition-transform ${isSearchOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+          {isSearchOpen ? (
+            <div className="border-t border-outline-variant p-3">
+              <ProductSearchPanel
+                variant="compact"
+                ownerUid={ownerUid}
+                fixedMainCategoryId={activeSubTab.categoryId}
+                fixedSubcategoryId={activeSubTab.productSubcategoryId}
+                includeDrafts={mode === "edit"}
+                locale={labels.searchPlaceholder.includes("Search") ? "en" : "ar"}
+                onProductsChange={setSearchFilteredProducts}
+              />
+            </div>
+          ) : null}
+          {showManagement ? (
+            <div className="border-t border-outline-variant px-3 py-2">
+              <button
+                type="button"
+                aria-pressed={showFeaturedOnly}
+                onClick={() => setShowFeaturedOnly((current) => !current)}
+                className={`inline-flex h-9 items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition ${
+                  showFeaturedOnly
+                    ? "border-tertiary bg-tertiary text-on-tertiary"
+                    : "border-outline-variant bg-surface text-on-surface hover:border-tertiary/60"
+                }`}
+              >
+                <Star className={`h-4 w-4 ${showFeaturedOnly ? "fill-current" : ""}`} />
+                {labels.featuredOnly}
+                <span className="rounded-full bg-black/10 px-1.5 text-[10px]">
+                  {featuredProductIds.length}
+                </span>
+              </button>
+            </div>
+          ) : null}
+        </section>
       ) : null}
 
       {isPharmacyBucket && ownerUid ? (
@@ -264,7 +281,7 @@ export function ProfileProductsTabs({
       ) : null}
 
       <div className="min-h-[160px]">
-        {isLoadingProducts ? (
+        {productsLoading ? (
           <div className="flex justify-center py-8">
             <LoadingSpinner size="sm" />
           </div>
@@ -280,13 +297,7 @@ export function ProfileProductsTabs({
             {visibleProducts.map((product) => {
               const featured = featuredProductIds.includes(product.id);
               const card = createProductCardViewModel(product);
-              const actions: ProductCardAction[] = [
-                {
-                  kind: "view",
-                  label: labels.view,
-                  onClick: () => onViewProduct(product),
-                },
-              ];
+              const actions: ProductCardAction[] = [];
               if (showManagement && onToggleFeatured) {
                 actions.push({
                   kind: "toggleFeatured",
@@ -324,6 +335,24 @@ export function ProfileProductsTabs({
           </div>
         )}
       </div>
+
+      {showManagement && activeSubTab && onAddProduct ? (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={() =>
+              onAddProduct(
+                activeSubTab.categoryId,
+                activeSubTab.productSubcategoryId,
+              )
+            }
+            className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary transition hover:bg-primary/90"
+          >
+            <Plus className="h-4 w-4" />
+            {labels.addProduct}
+          </button>
+        </div>
+      ) : null}
     </section>
   );
 }

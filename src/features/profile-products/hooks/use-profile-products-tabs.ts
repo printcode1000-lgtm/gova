@@ -162,50 +162,84 @@ export function useProfileProductsTabs({
 
   const tabs = React.useMemo<ProfileProductsMainTab[]>(() => {
     const mainOptions = categoryService.getProfileMainOptions();
-    return selection.main
-      .map(String)
-      .map((categoryId) => {
-        const category = mainOptions.find(
-          (item) => String(item.id) === categoryId,
-        );
-        if (!category) return null;
-        const subIds = (selection.sub[categoryId] ?? [])
-          .map(String)
-          .filter(
-            (subId) =>
-              includeDoctorAppointmentItems ||
-              categoryId !== String(CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID) ||
-              !doctorAppointmentIds.has(subId),
+    const selectedMainIds = new Set(selection.main.map(String));
+
+    return mainOptions
+      .filter((category) => selectedMainIds.has(String(category.id)))
+      .flatMap((category): ProfileProductsMainTab[] => {
+        const categoryId = String(category.id);
+
+        if (category.isCollection) {
+          const selectedMemberIds = new Set(
+            (selection.sub[categoryId] ?? []).map(String),
           );
-        const subTabs = subIds
-          .map((subId): ProfileProductsSubTab | null => {
-            const sub = categoryService
-              .getProfileSubOptions(category.id, category.isCollection)
-              .find(
-                (item) =>
-                  subProductId(item) === subId || String(item.id) === subId,
-              );
-            if (!sub) return null;
-            return {
-              id: bucketKey(categoryId, subProductId(sub)),
-              categoryId,
-              productSubcategoryId: subProductId(sub),
-              label: locale === "ar" ? sub.nameAr : sub.nameEn,
-              imageUrl: sub.imageUrl,
-              productCount:
-                productsByBucket[bucketKey(categoryId, subProductId(sub))]
-                  ?.length,
-            };
-          })
-          .filter((item): item is ProfileProductsSubTab => Boolean(item));
-        return {
+          return (categoryService.getCollection(category.id)?.items ?? [])
+            .filter((member) => selectedMemberIds.has(String(member.id)))
+            .map((member) => {
+              const memberId = String(member.id);
+              const subTabs = (
+                categoryService.getCategoryTree(member.id)?.subcategories ?? []
+              )
+                .filter(
+                  (sub) =>
+                    sub.kind === "subcategory" &&
+                    sub.selectable !== false &&
+                    typeof sub.originalId === "number",
+                )
+                .map((sub): ProfileProductsSubTab => ({
+                  id: bucketKey(memberId, subProductId(sub)),
+                  categoryId: memberId,
+                  productSubcategoryId: subProductId(sub),
+                  label: locale === "ar" ? sub.nameAr : sub.nameEn,
+                  imageUrl: sub.imageUrl,
+                  productCount:
+                    productsByBucket[bucketKey(memberId, subProductId(sub))]
+                      ?.length,
+                }));
+              return {
+                id: memberId,
+                label: locale === "ar" ? member.nameAr : member.nameEn,
+                imageUrl: member.imageUrl,
+                subTabs,
+              };
+            });
+        }
+
+        const selectedSubIds = new Set(
+          (selection.sub[categoryId] ?? [])
+            .map(String)
+            .filter(
+              (subId) =>
+                includeDoctorAppointmentItems ||
+                categoryId !== String(CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID) ||
+                !doctorAppointmentIds.has(subId),
+            ),
+        );
+        const subTabs = categoryService
+          .getProfileSubOptions(category.id, false)
+          .filter(
+            (sub) =>
+              selectedSubIds.has(subProductId(sub)) &&
+              sub.kind === "subcategory" &&
+              sub.selectable !== false,
+          )
+          .map((sub): ProfileProductsSubTab => ({
+            id: bucketKey(categoryId, subProductId(sub)),
+            categoryId,
+            productSubcategoryId: subProductId(sub),
+            label: locale === "ar" ? sub.nameAr : sub.nameEn,
+            imageUrl: sub.imageUrl,
+            productCount:
+              productsByBucket[bucketKey(categoryId, subProductId(sub))]
+                ?.length,
+          }));
+        return [{
           id: categoryId,
           label: locale === "ar" ? category.nameAr : category.nameEn,
           imageUrl: category.imageUrl,
           subTabs,
-        };
-      })
-      .filter((item): item is ProfileProductsMainTab => Boolean(item));
+        }];
+      });
   }, [
     doctorAppointmentIds,
     includeDoctorAppointmentItems,
@@ -215,7 +249,12 @@ export function useProfileProductsTabs({
   ]);
 
   React.useEffect(() => {
-    if (tabs.length === 0) return;
+    if (isLoadingTabs) return;
+    if (tabs.length === 0) {
+      if (selectedMainId) setSelectedMainId("");
+      if (selectedSubId) setSelectedSubId("");
+      return;
+    }
     const selectedMain =
       tabs.find((tab) => tab.id === selectedMainId) ?? tabs[0];
     if (selectedMain.id !== selectedMainId) setSelectedMainId(selectedMain.id);
@@ -223,9 +262,10 @@ export function useProfileProductsTabs({
       selectedMain.subTabs.find((tab) => tab.id === selectedSubId) ??
       selectedMain.subTabs[0] ??
       null;
-    if (selectedSub && selectedSub.id !== selectedSubId)
-      setSelectedSubId(selectedSub.id);
+    const nextSubId = selectedSub?.id ?? "";
+    if (nextSubId !== selectedSubId) setSelectedSubId(nextSubId);
   }, [
+    isLoadingTabs,
     selectedMainId,
     selectedSubId,
     setSelectedMainId,

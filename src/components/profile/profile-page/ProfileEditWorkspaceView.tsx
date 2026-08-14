@@ -48,7 +48,7 @@ return (
           id="edit-profile-card"
           className="mx-auto flex w-full max-w-4xl flex-col gap-3 pt-1 sm:gap-4 sm:pt-2"
         >
-          <div className="order-2 w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
+          <div className="order-2 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
             <div
               data-snapshot-scroll
               data-snapshot-id="profile-edit-tabs-scroll"
@@ -144,7 +144,7 @@ return (
           </div>
 
           {dirtySections.length > 0 ? (
-            <div className="order-1 rounded-3xl border border-primary/20 bg-surface/90 p-3 shadow-lg shadow-primary/5 backdrop-blur-xl sm:p-4">
+            <div className="order-1 w-full max-w-full overflow-hidden rounded-3xl border border-primary/20 bg-surface/90 p-3 shadow-lg shadow-primary/5 backdrop-blur-xl sm:p-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex min-w-0 items-start gap-3">
                   <span
@@ -224,7 +224,7 @@ return (
             </div>
           ) : null}
 
-          <Card className="order-3 overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
+          <Card className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
             <CardContent className="p-0">
               <div className="relative">
                 <div
@@ -245,7 +245,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "registration"}
                     inert={activeTab !== "registration"}
-                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faUserCircle}
@@ -269,7 +269,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "specialties"}
                     inert={activeTab !== "specialties"}
-                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faStar}
@@ -295,7 +295,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "products"}
                     inert={activeTab !== "products"}
-                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faTags}
@@ -320,7 +320,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "contact"}
                     inert={activeTab !== "contact"}
-                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faComments}
@@ -345,7 +345,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "store"}
                     inert={activeTab !== "store"}
-                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faBuilding}
@@ -369,7 +369,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "workingHours"}
                     inert={activeTab !== "workingHours"}
-                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faClock}
@@ -392,7 +392,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "fulfillment"}
                     inert={activeTab !== "fulfillment"}
-                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faTruckFast}
@@ -415,7 +415,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "discounts"}
                     inert={activeTab !== "discounts"}
-                    className="min-w-full snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faPercent}

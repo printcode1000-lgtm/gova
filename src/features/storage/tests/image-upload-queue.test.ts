@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import {
   DuplicateImageUploadError,
   ImageUploadCancelledError,
@@ -160,6 +162,27 @@ async function main() {
   await testFailureDoesNotStopQueue();
   await testQueuedCancellationAndDeduplication();
   testDraftIdentityAndFileRestoration();
+  const root = process.cwd();
+  const managerSource = readFileSync(
+    path.join(root, "src/features/storage/components/StorageImageManager.tsx"),
+    "utf8",
+  );
+  const productSource = readFileSync(
+    path.join(root, "src/components/product/ProductPageContent.tsx"),
+    "utf8",
+  );
+  const profileSource = readFileSync(
+    path.join(root, "src/components/profile/StoreIdentityCard.tsx"),
+    "utf8",
+  );
+  assert.match(managerSource, /uploadPending:\s*async/);
+  assert.match(productSource, /await imageUploadRef\.current\?\.uploadPending\(\)/);
+  assert.match(profileSource, /prepareForSave:\s*prepareImagesForSave/);
+  assert.doesNotMatch(
+    managerSource,
+    /DropdownMenuTrigger asChild>[\s\S]{0,200}<button[^>]+className="absolute inset-0/,
+    "the entire empty image card must not open the source picker",
+  );
   console.log("Image upload queue tests passed.");
 }
 

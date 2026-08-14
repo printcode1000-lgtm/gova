@@ -15,6 +15,7 @@ export interface ProfileSectionStatus {
 
 export interface ProfileSectionController extends ProfileSectionStatus {
   save: () => Promise<boolean>;
+  prepareForSave?: () => Promise<boolean>;
 }
 
 export interface ProfileRegistrationController extends ProfileSectionController {

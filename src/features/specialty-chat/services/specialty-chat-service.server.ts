@@ -5,6 +5,8 @@ import { profileService } from "@/features/profile/services/profile-service.boot
 import { GetNotificationUserIdentityQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-user-identity.query";
 import { GetSpecialtyRequestPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-specialty-request-preference.query";
 import { SetSpecialtyRequestPreferenceCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-specialty-request-preference.command";
+import { GetProductConversationPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-product-conversation-preference.query";
+import { SetProductConversationPreferenceCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-product-conversation-preference.command";
 import {
   notificationsServer,
   NotificationCategories,
@@ -12,9 +14,10 @@ import {
   NotificationSounds,
 } from "@/features/notifications/server";
 import { createSpecialtyChatCapability, verifySpecialtyChatCapability } from "./specialty-chat-capability.server";
-import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity } from "../domain/types";
+import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity, type StartProductConversationInput, type StartProductConversationResult } from "../domain/types";
 import { getSpecialtyChatSubOptions } from "../domain/specialty-options";
 import { verifySignedSessionToken } from "@/features/auth/services/signed-session-token.server";
+import { productService } from "@/features/product/services/product-service.server";
 
 const MAX_MESSAGE_LENGTH = 800;
 const MAX_RECIPIENTS = 500;
@@ -37,6 +40,8 @@ export class SpecialtyChatService {
   private readonly identities = new GetNotificationUserIdentityQuery();
   private readonly getPreferenceQuery = new GetSpecialtyRequestPreferenceQuery();
   private readonly setPreferenceCommand = new SetSpecialtyRequestPreferenceCommand();
+  private readonly getProductConversationPreferenceQuery = new GetProductConversationPreferenceQuery();
+  private readonly setProductConversationPreferenceCommand = new SetProductConversationPreferenceCommand();
 
   private async assertIdentity(identity: SpecialtyChatIdentity) {
     const claims = verifySignedSessionToken(identity.sessionToken?.trim() ?? "");
@@ -105,6 +110,64 @@ export class SpecialtyChatService {
     };
   }
 
+  async startProductConversation(
+    input: StartProductConversationInput,
+  ): Promise<StartProductConversationResult> {
+    const actor = await this.assertIdentity(input.identity);
+    rateLimit(actor.uid);
+    const message = validateMessage(input.message);
+    const sellerUid = input.sellerUid.trim();
+    if (!sellerUid || sellerUid === actor.uid) throw new Error("specialtyChatRecipientInvalid");
+    if (!/^req_[a-zA-Z0-9_-]{8,100}$/.test(input.requestId)) {
+      throw new Error("specialtyChatRequestInvalid");
+    }
+    const product = await productService.get(input.productId.trim());
+    if (product.uid !== sellerUid) throw new Error("specialtyChatRecipientInvalid");
+    const productName = (
+      product.mainData.name ||
+      product.pharmacySpecs.nameAr ||
+      product.pharmacySpecs.nameEn ||
+      product.id
+    ).slice(0, 200);
+    const seller = await this.identities.execute(sellerUid);
+    const productConversationsEnabled = seller
+      ? await this.getProductConversationPreferenceQuery.execute(sellerUid)
+      : false;
+    if (!seller || !productConversationsEnabled) {
+      throw new Error("specialtyChatRecipientUnavailable");
+    }
+    const capability = createSpecialtyChatCapability({
+      requestId: input.requestId,
+      buyerUid: actor.uid,
+      sellerUid,
+    });
+    const grants = notificationsServer.createGrantIssuer(actor.uid);
+    const issued = grants.issue({
+      actorUid: actor.uid,
+      uids: [sellerUid],
+      templateId: "specialty.messageFromBuyer",
+      variables: { message },
+      dedupeKey: `${input.requestId}:${sellerUid}`,
+      metadata: {
+        specialtyChatKind: SPECIALTY_CHAT_KINDS.Request,
+        requestId: input.requestId,
+        senderUid: actor.uid,
+        peerUid: actor.uid,
+        productId: input.productId.trim(),
+        productName,
+        subcategoryName: productName,
+        capability,
+      },
+    });
+    if (!issued) throw new Error("specialtyChatRecipientUnavailable");
+    return {
+      requestId: input.requestId,
+      sellerUid,
+      capability,
+      notificationGrants: grants.toArray(),
+    };
+  }
+
   async sendMessage(input: SendSpecialtyMessageInput) {
     const actor = await this.assertIdentity(input.identity);
     rateLimit(actor.uid);
@@ -149,6 +212,22 @@ export class SpecialtyChatService {
   async setPreference(identity: SpecialtyChatIdentity, enabled: boolean) {
     const actor = await this.assertIdentity(identity);
     await this.setPreferenceCommand.execute(actor.uid, enabled);
+    return { enabled };
+  }
+
+  async getProductConversationPreference(identity: SpecialtyChatIdentity) {
+    const actor = await this.assertIdentity(identity);
+    return {
+      enabled: await this.getProductConversationPreferenceQuery.execute(actor.uid),
+    };
+  }
+
+  async setProductConversationPreference(
+    identity: SpecialtyChatIdentity,
+    enabled: boolean,
+  ) {
+    const actor = await this.assertIdentity(identity);
+    await this.setProductConversationPreferenceCommand.execute(actor.uid, enabled);
     return { enabled };
   }
 

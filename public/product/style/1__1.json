@@ -16,7 +16,7 @@
       "visible": true,
       "current": true,
       "beforeDiscount": true,
-      "needsCar": true,
+      "needsCar": false,
       "order": 3
     },
     "order": {
@@ -32,7 +32,7 @@
       "visible": true,
       "name": true,
       "brand": true,
-      "manufacturer": true,
+      "manufacturer": false,
       "available": true,
       "description": true,
       "order": 5
@@ -40,11 +40,11 @@
     "specifications": {
       "visible": true,
       "color": true,
-      "dimensions": true,
-      "condition": true,
+      "dimensions": false,
+      "condition": false,
       "size": true,
-      "weight": true,
-      "year": true,
+      "weight": false,
+      "year": false,
       "order": 6
     },
     "vehicleSpecs": {
@@ -57,7 +57,7 @@
       "order": 7
     },
     "propertySpecs": {
-      "visible": true,
+      "visible": false,
       "area": true,
       "rooms": true,
       "bathrooms": true,
@@ -83,14 +83,14 @@
       "mainData": {
         "name": true,
         "brand": true,
-        "manufacturer": true,
+        "manufacturer": false,
         "available": false,
         "description": true
       },
       "price": {
-        "current": false,
+        "current": true,
         "beforeDiscount": false,
-        "label": true,
+        "label": false,
         "needsCar": false
       },
       "rating": {
@@ -98,11 +98,11 @@
       },
       "specifications": {
         "color": true,
-        "dimensions": true,
-        "condition": true,
+        "dimensions": false,
+        "condition": false,
         "size": true,
-        "weight": true,
-        "year": true
+        "weight": false,
+        "year": false
       },
       "vehicleSpecs": {
         "brand": true,

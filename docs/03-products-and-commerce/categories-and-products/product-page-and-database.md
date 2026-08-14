@@ -32,7 +32,9 @@ These values remain compatible with Product Style filenames. Before creating a p
 ## Validity Rules
 
 - Subcategory must belong to the main category.
-- Collection member must belong to the collection.
+- A collection label is not a product category and cannot be saved directly.
+- A selected collection member (for example, My Way) becomes the product main category, and one
+  of that member's real subcategories becomes the product subcategory.
 - Unknown ID or wrong relationship is rejected with `invalidCategorySelection`.
 - The default Doctor Appointment does not represent a valid product choice.
 - Delivery Services has a valid subcategory for Product Style customization.
@@ -56,6 +58,15 @@ Product Style controls which components appear. It does not define database stor
 
 Create and edit use the same typed `ProductDetails` shape. Saving calls `/api/products` with the grouped product sections, not a `data` payload.
 
+Create/update is also the image commit boundary: any locally selected image is
+uploaded first, the action waits for every upload, and the product write is
+blocked if an image fails. Product descriptions are stored with their newline
+characters and rendered with preserved line breaks.
+
+The public order section uses the device-local Favorites module. Its seller
+contact action creates a private product conversation and opens that thread
+under `/notifications/chat`; notification/chat content remains device-local.
+
 The server persists the values through `ProductRepository`, which writes the explicit `products` columns.
 
 ## Display in Profile
@@ -72,6 +83,14 @@ The product card displays:
 - Price from `product.price.current` or `product.price.label`
 
 After creating a product from the profile, the page returns to `/profile?mode=edit&tab=products`.
+
+For collection-backed profile specialties, the products tab expands the collection into the
+selected members. For example, Beauty Store is not rendered as a product tab; My Way is rendered
+as a main tab and Men's/Women's Perfumes, Cosmetics, Household Cleaners and Canned Food are its
+product sub-tabs.
+
+This expansion is limited to product-management surfaces. Beauty Store remains a main item on
+Home and in the profile Specialties selector; those public catalog projections are unchanged.
 
 ## Source of Category Names
 

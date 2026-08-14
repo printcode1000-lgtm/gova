@@ -58,7 +58,7 @@ export function ProductField({
     return (
       <div className="rounded-xl bg-muted/40 px-3 py-2.5">
         <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="mt-1 font-medium">{value || "—"}</p>
+        <p className="mt-1 whitespace-pre-wrap break-words font-medium">{value || "—"}</p>
       </div>
     );
   }

@@ -16,7 +16,7 @@ import {
   NotificationTypes,
   type NotificationEntity,
 } from "@/features/notifications";
-import type { SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialtyRequestResult, SpecialtyChatPreferenceResult } from "../domain/types";
+import type { ProductConversationPreferenceResult, SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialtyRequestResult, SpecialtyChatPreferenceResult, StartProductConversationInput, StartProductConversationResult } from "../domain/types";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
 import { deliverNotificationGrants } from "@/modules/notification-bridge";
 
@@ -72,6 +72,39 @@ async function saveOutgoing(input: {
 }
 
 export const specialtyChatClient = {
+  async startProductConversation(
+    session: UserSession,
+    input: Omit<StartProductConversationInput, "identity">,
+  ): Promise<{ conversationKey: string }> {
+    const result = await asolApi.post<StartProductConversationResult>(
+      "/api/specialty-chat/product-conversations",
+      { ...input, identity: identity(session) },
+      { notificationGrantDelivery: "manual" },
+    );
+    const delivery = await deliverNotificationGrants(result);
+    if (delivery.delivered < 1) {
+      throw new Error("specialtyChatRecipientUnavailable");
+    }
+    await saveOutgoing({
+      uid: session.uid,
+      id: input.requestId,
+      title: `محادثة حول ${input.productName}`,
+      body: input.message,
+      metadata: {
+        specialtyChatKind: SPECIALTY_CHAT_KINDS.Request,
+        requestId: input.requestId,
+        peerUid: input.sellerUid,
+        capability: result.capability,
+        productId: input.productId,
+        productName: input.productName,
+        subcategoryName: input.productName,
+      },
+    });
+    return {
+      conversationKey: `chat:conversation:${input.requestId}:${input.sellerUid}`,
+    };
+  },
+
   async sendRequest(
     session: UserSession,
     input: Omit<SendSpecialtyRequestInput, "identity">,
@@ -152,6 +185,25 @@ export const specialtyChatClient = {
         identity: identity(session),
         ...(typeof enabled === "boolean" ? { enabled } : {}),
       }, { suppressErrorLog: true });
+    } catch (error) {
+      await clearInvalidSession(error);
+      throw error;
+    }
+  },
+
+  async productConversationPreference(
+    session: UserSession,
+    enabled?: boolean,
+  ) {
+    try {
+      return await asolApi.post<ProductConversationPreferenceResult>(
+        "/api/specialty-chat/product-preference",
+        {
+          identity: identity(session),
+          ...(typeof enabled === "boolean" ? { enabled } : {}),
+        },
+        { suppressErrorLog: true },
+      );
     } catch (error) {
       await clearInvalidSession(error);
       throw error;

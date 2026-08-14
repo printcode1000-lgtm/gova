@@ -226,14 +226,26 @@ export class CategoryService {
   }
 
   getDeveloperMainOptions(): readonly MainCategoryOption[] {
-    return this.getAllDisplayCategories().map((item) => ({
+    const regular = this.getMainCategories().map((item) => ({
       id: item.id,
       canonicalKey: item.canonicalKey,
       titleAr: item.nameAr,
       titleEn: item.nameEn,
-      isCollection: item.kind === "collection",
+      isCollection: false,
       order: item.order,
     }));
+    const collectionMembers = this.getCollections().flatMap((collection) =>
+      collection.items.map((item, index) => ({
+        id: item.id,
+        canonicalKey: item.canonicalKey,
+        titleAr: item.nameAr,
+        titleEn: item.nameEn,
+        isCollection: false,
+        // Keep members together at the collection's canonical position.
+        order: collection.order + (index + 1) / 1000,
+      })),
+    );
+    return [...regular, ...collectionMembers].sort(byOrder);
   }
 
   getDeveloperSubOptions(mainId: number, isCollection: boolean): readonly SubcategoryOption[] {
@@ -268,9 +280,11 @@ export class CategoryService {
     childValue?: string,
   ): DeveloperCategoryDetail | null {
     if (!childValue) {
-      const main = this.getAllDisplayCategories().find(
-        (item) => item.id === mainId && item.isCollection === isCollection,
-      );
+      const main = isCollection
+        ? this.getAllDisplayCategories().find(
+            (item) => item.id === mainId && item.isCollection,
+          )
+        : this.getCategoryTree(mainId)?.category;
       if (!main) return null;
       const collection = isCollection ? this.getCollection(mainId) : null;
       return {
@@ -412,7 +426,7 @@ export class CategoryService {
   resolveSelection(input: CategorySelectionInput): CategorySelectionResult {
     if (input.main.kind === "category" && input.child.kind === "subcategory") {
       const main = categoryById.get(input.main.id);
-      if (!main || !isCategoryAvailable(main) || memberCategoryIds.has(input.main.id)) {
+      if (!main || !isCategoryAvailable(main)) {
         return { valid: false, code: "MAIN_NOT_FOUND" };
       }
       if (!visibleSubcategoryItems(subcategories).some((item) => item.originalId === input.child.id)) {
@@ -453,17 +467,13 @@ export class CategoryService {
     if (!Number.isInteger(mainId) || !Number.isInteger(childId)) {
       return { valid: false, code: "INVALID_RELATION" };
     }
-    return this.resolveSelection(
-      collectionById.has(mainId)
-        ? {
-            main: { kind: "collection", id: mainId },
-            child: { kind: "collection-member", id: childId },
-          }
-        : {
-            main: { kind: "category", id: mainId },
-            child: { kind: "subcategory", id: childId },
-          },
-    );
+    if (collectionById.has(mainId)) {
+      return { valid: false, code: "INVALID_RELATION" };
+    }
+    return this.resolveSelection({
+      main: { kind: "category", id: mainId },
+      child: { kind: "subcategory", id: childId },
+    });
   }
 }
 

@@ -52,6 +52,7 @@ export function ProfileProductsPreview({ uid }: ProfileProductsPreviewProps) {
           locale === 'ar'
             ? 'تصفح المنتجات حسب تخصصات البائع'
             : 'Browse products by seller specialty',
+        searchTitle: locale === 'ar' ? 'البحث في المنتجات' : 'Search products',
         searchPlaceholder: locale === 'ar' ? 'ابحث داخل المنتجات' : 'Search products',
         emptySpecialties:
           locale === 'ar' ? 'لا توجد تخصصات متاحة للعرض' : 'No specialties available',
@@ -68,6 +69,7 @@ export function ProfileProductsPreview({ uid }: ProfileProductsPreviewProps) {
         sortNewest: locale === 'ar' ? 'الأحدث' : 'Newest',
         sortOldest: locale === 'ar' ? 'الأقدم' : 'Oldest',
         sortName: locale === 'ar' ? 'الاسم' : 'Name',
+        featuredOnly: locale === 'ar' ? 'المميزة فقط' : 'Featured only',
       }}
       onSelectMain={productsTabs.selectMain}
       onSelectSub={productsTabs.selectSub}

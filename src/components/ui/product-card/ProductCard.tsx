@@ -93,8 +93,7 @@ export function ProductCard({
   const showFavorite =
     (favoriteEnabled ??
       (variant === "search" ||
-        variant === "profile-preview" ||
-        variant === "featured-marquee")) &&
+        variant === "profile-preview")) &&
     Boolean(card.id);
 
   return (

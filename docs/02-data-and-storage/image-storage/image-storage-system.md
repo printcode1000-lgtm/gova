@@ -34,6 +34,8 @@ time. See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.m
 
 `StorageImageManager` performs no provider write during selection or preview preparation. Before a selected preview becomes visible, its `Blob` and metadata are committed to the `imageUploadDrafts` AsolDB store. Upload starts only after the user presses Upload and confirms the localized application dialog. Removal calls the DELETE API and waits for provider success before clearing the UI value.
 
+Product creation and unified profile saving are commit boundaries. If a user has selected images but has not pressed the per-image upload control, the commit asks every visible image manager to upload its pending draft, waits for the FIFO queue, and saves data only after every upload succeeds. A failed image blocks the commit and remains locally available for retry. Clicking an empty image card does nothing; the source menu opens only from its explicit **Add image** text action.
+
 ## Upload queue
 
 All `StorageImageManager` instances share the FIFO queue in

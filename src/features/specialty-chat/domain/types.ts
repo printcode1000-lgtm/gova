@@ -39,6 +39,22 @@ export interface SendSpecialtyRequestResult {
   notificationGrants?: string[];
 }
 
+export interface StartProductConversationInput {
+  identity: SpecialtyChatIdentity;
+  requestId: string;
+  sellerUid: string;
+  productId: string;
+  productName: string;
+  message: string;
+}
+
+export interface StartProductConversationResult {
+  requestId: string;
+  sellerUid: string;
+  capability: string;
+  notificationGrants?: string[];
+}
+
 export interface SendSpecialtyMessageInput {
   identity: SpecialtyChatIdentity;
   messageId: string;
@@ -47,6 +63,10 @@ export interface SendSpecialtyMessageInput {
 }
 
 export interface SpecialtyChatPreferenceResult {
+  enabled: boolean;
+}
+
+export interface ProductConversationPreferenceResult {
   enabled: boolean;
 }
 

@@ -8,7 +8,7 @@ This module lets a buyer send one text request to sellers or service providers w
 
 Notification delivery is the only conversation transport. The server does not create a conversation or message table and does not persist request or reply text. Received and outgoing messages are kept locally in the existing AsolDB `notifications` store. Consequently, conversation history does not synchronize between devices and is lost when local application data is cleared or the app is removed.
 
-The server stores only device push tokens and the per-user `specialty_requests_enabled` preference. It stores no request body, reply body, conversation history, or attachments.
+The server stores only device push tokens and two per-user delivery preferences: `specialty_requests_enabled` for specialty broadcasts and `product_conversations_enabled` for new product conversations. It stores no request body, reply body, conversation history, or attachments.
 
 ## User flow
 
@@ -39,6 +39,7 @@ The server stores only device push tokens and the per-user `specialty_requests_e
 - One request resolves at most 500 matching providers.
 - Request text is not written to server logs or databases by the module.
 - The provider opt-out is applied before delivery.
+- Product owners have a separate settings opt-out for new conversations started by the product-page `مراسلة صاحب المنتج` action. Disabling it does not change the specialty-request preference and does not delete local history.
 
 ## Delivery and state
 
@@ -70,6 +71,7 @@ Receipt pushes never appear as cards and do not intentionally contribute to the 
 - `src/app/api/specialty-chat/messages/route.ts` — bilateral private replies.
 - `src/app/api/specialty-chat/receipts/route.ts` — received/read receipts.
 - `src/app/api/specialty-chat/preference/route.ts` — provider opt-out.
+- `src/app/api/specialty-chat/product-preference/route.ts` — product-conversation opt-out.
 - `src/features/notifications/presentation/NotificationsPageContent.tsx` — local conversation cards and reply field.
 - `public/asol-push-sw.js` — Web Push persistence and invisible receipt handling.
 

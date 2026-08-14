@@ -144,9 +144,31 @@ export class UserNotificationTokenRepository {
       .where(eq(userNotificationTokens.uid, uid));
   }
 
+  async setProductConversationsEnabled(
+    uid: string,
+    enabled: boolean,
+  ): Promise<void> {
+    const updatedAt = new Date().toISOString();
+    await this.database.execute(
+      `INSERT INTO user_notification_preferences (uid, specialty_requests_enabled, product_conversations_enabled, updated_at)
+       VALUES (?, 1, ?, ?)
+       ON CONFLICT(uid) DO UPDATE SET product_conversations_enabled = excluded.product_conversations_enabled, updated_at = excluded.updated_at`,
+      [uid, enabled ? 1 : 0, updatedAt],
+    );
+  }
+
   async specialtyRequestsEnabled(uid: string): Promise<boolean> {
     const rows = await this.database.db
       .select({ enabled: userNotificationPreferences.specialtyRequestsEnabled })
+      .from(userNotificationPreferences)
+      .where(eq(userNotificationPreferences.uid, uid))
+      .limit(1);
+    return rows[0]?.enabled ?? true;
+  }
+
+  async productConversationsEnabled(uid: string): Promise<boolean> {
+    const rows = await this.database.db
+      .select({ enabled: userNotificationPreferences.productConversationsEnabled })
       .from(userNotificationPreferences)
       .where(eq(userNotificationPreferences.uid, uid))
       .limit(1);

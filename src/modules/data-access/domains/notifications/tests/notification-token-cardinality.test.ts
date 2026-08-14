@@ -30,12 +30,17 @@ sqlite.exec(`
   CREATE TABLE user_notification_preferences (
     uid TEXT PRIMARY KEY NOT NULL,
     specialty_requests_enabled INTEGER DEFAULT 1 NOT NULL,
+    product_conversations_enabled INTEGER DEFAULT 1 NOT NULL,
     updated_at TEXT NOT NULL
   );
 `);
 
 const database = {
   db: drizzle(sqlite),
+  execute: async (sql: string, params: unknown[] = []) => {
+    sqlite.prepare(sql).run(...params);
+    return [];
+  },
 } as IDatabaseClient;
 const repository = new UserNotificationTokenRepository(database);
 
@@ -130,6 +135,23 @@ async function main(): Promise<void> {
       )
       .get() as { count: number };
     assert.equal(duplicateGroups.count, 0);
+
+    assert.equal(await repository.specialtyRequestsEnabled(base.uid), true);
+    assert.equal(await repository.productConversationsEnabled(base.uid), true);
+    await repository.setProductConversationsEnabled(base.uid, false);
+    assert.equal(await repository.productConversationsEnabled(base.uid), false);
+    assert.equal(
+      await repository.specialtyRequestsEnabled(base.uid),
+      true,
+      "product chat opt-out must not disable specialty requests",
+    );
+    await repository.setSpecialtyRequestsEnabled(base.uid, false);
+    assert.equal(await repository.specialtyRequestsEnabled(base.uid), false);
+    assert.equal(
+      await repository.productConversationsEnabled(base.uid),
+      false,
+      "specialty request changes must not overwrite product chat preference",
+    );
   } finally {
     sqlite.close();
   }

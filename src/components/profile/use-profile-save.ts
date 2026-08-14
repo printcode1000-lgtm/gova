@@ -213,6 +213,17 @@ export function useProfileSave({
 
     try {
       setIsUnifiedSaving(true);
+      if (
+        changedSections.includes("store") &&
+        storeController.prepareForSave &&
+        !(await storeController.prepareForSave())
+      ) {
+        throw new Error(
+          locale === "ar"
+            ? "تعذر رفع صور التعريف. أعد المحاولة قبل الحفظ."
+            : "Profile images could not be uploaded. Retry before saving.",
+        );
+      }
       if (editorSections.length > 0) {
         const saved = await profileService.saveEditor({
           uid: session.uid,

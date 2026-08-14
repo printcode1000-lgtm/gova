@@ -7,6 +7,12 @@ import * as React from "react";
 
 import { useTranslation } from "@/lib/i18n";
 import type { CollectionDisplay } from "@/features/categories";
+import {
+  categoryGridClassName,
+  categoryTileClassName,
+  categoryTileImageClassName,
+  categoryTileTitleClassName,
+} from "@/components/categories/category-grid-styles";
 
 interface CollectionSubcategoriesPageProps {
   collection: CollectionDisplay;
@@ -79,7 +85,8 @@ export function CollectionSubcategoriesPage({
             : "No matching results"}
         </p>
       ) : (
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-3 md:grid-cols-5">
+        <div className="asol-section-tonal asol-section-tonal-primary">
+          <div className={categoryGridClassName}>
           {filteredItems.map((item) => {
             const name = locale === "ar" ? item.nameAr : item.nameEn;
             const imageSrc = item.imageUrl;
@@ -89,27 +96,22 @@ export function CollectionSubcategoriesPage({
               <Link
                 key={item.id}
                 href={`/categories/${item.id}`}
-                className="group flex flex-col gap-2 text-start transition-transform duration-200 active:scale-95"
+                className={categoryTileClassName}
                 aria-label={altText}
               >
-                <div className="relative aspect-[4/3.5] overflow-hidden rounded-2xl bg-surface-bright shadow-sm">
+                <div className={categoryTileImageClassName}>
                   <Image
                     src={imageSrc}
                     alt={altText}
                     fill
                     className="object-cover transition-opacity group-hover:opacity-90"
                   />
-                  <span
-                    className={`absolute bottom-2 max-w-[calc(100%-1rem)] truncate rounded-md bg-black/50 px-2 py-1 text-[11px] font-normal leading-3 text-white ${
-                      isRTL ? "right-2" : "left-2"
-                    }`}
-                  >
-                    {name}
-                  </span>
                 </div>
+                <span className={categoryTileTitleClassName}>{name}</span>
               </Link>
             );
           })}
+          </div>
         </div>
       )}
     </div>

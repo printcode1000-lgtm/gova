@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 import type { StoredImage } from "@/core/storage/types/stored-image.types";
 import {
   createEmptyProductDetails,
@@ -22,6 +22,7 @@ import type {
   ProductStyleComponents,
 } from "./product-component.types";
 import { ProductVehicleSpecs } from "./ProductVehicleSpecs";
+import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
 
 type BasicFieldKind = "text" | "number" | "textarea" | "boolean";
 
@@ -190,6 +191,9 @@ export function ProductComponentsRenderer({
   mainCategoryId = "",
   shareAction = null,
   profileAction = null,
+  favoriteAction = null,
+  contactAction = null,
+  imageUploadRef,
 }: {
   mode: ProductMode;
   components: ProductStyleComponents;
@@ -200,6 +204,9 @@ export function ProductComponentsRenderer({
   mainCategoryId?: string;
   shareAction?: ReactNode;
   profileAction?: ReactNode;
+  favoriteAction?: ReactNode;
+  contactAction?: ReactNode;
+  imageUploadRef?: RefObject<StorageImageManagerHandle | null>;
 }) {
   const visible = Object.entries(components)
     .filter(([, config]) => config.visible)
@@ -225,6 +232,7 @@ export function ProductComponentsRenderer({
                 />
               ) : (
                 <ProductImageEditors
+                  ref={imageUploadRef}
                   maxImages={Number(config.count || 1)}
                   mainCategoryId={mainCategoryId}
                   images={product.images}
@@ -282,14 +290,10 @@ export function ProductComponentsRenderer({
                   />
                 ) : null}
                 {config.favorite ? (
-                  <button type="button" className="rounded-xl border px-4 py-2">
-                    المفضلة
-                  </button>
+                  favoriteAction
                 ) : null}
                 {config.contact ? (
-                  <button type="button" className="rounded-xl border px-4 py-2">
-                    تواصل
-                  </button>
+                  contactAction
                 ) : null}
                 {showShare ? shareAction : null}
                 {showProfile ? profileAction : null}
