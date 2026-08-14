@@ -31,6 +31,13 @@ install, update, or configuration actions without modifying the machine.
 | Fastlane | `2.237.0` from `Gemfile.lock` | Android/iOS release automation |
 | Xcode | Current stable Xcode and iOS SDK on macOS | iOS build/signing; detected rather than fabricated or globally pinned on Windows/Linux |
 
+The isolated `notifications`, `products`, `orders`, and `profiles` Vercel
+services each carry their own `package.json` and `package-lock.json`. All four
+pin Node `>=22 <25`, npm `11.19.0`, Next.js `16.3.1`, React/React DOM `19.2.8`,
+TypeScript `5.9.3`, and the matching type packages. The environment doctor
+compares every service lockfile with the root runtime so a service cannot
+silently remain on an older framework release.
+
 ## Direct production packages
 
 | Package | Exact verified version |

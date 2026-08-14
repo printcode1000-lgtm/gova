@@ -211,6 +211,39 @@ function checkWeb(): void {
   const envFile = existsSync(path.join(ROOT, ".env")) || existsSync(path.join(ROOT, ".env.local"));
   add({ scenario: "development", item: "Environment file", level: envFile ? "OK" : "CONFIGURE", installed: envFile ? ".env and/or .env.local" : undefined, required: "Copy .env.example and fill only the selected scenario", action: envFile ? "No action." : "Copy .env.example to an ignored local environment file; never commit secrets." });
   add({ scenario: "web", item: "Web toolchain", level: "OK", installed: "Next.js/React/TypeScript from package-lock.json", required: "npm ci", action: "Run npm run dev for development or npm run build for production." });
+
+  const expected = {
+    next: lock.packages?.["node_modules/next"]?.version,
+    react: lock.packages?.["node_modules/react"]?.version,
+    "react-dom": lock.packages?.["node_modules/react-dom"]?.version,
+    typescript: lock.packages?.["node_modules/typescript"]?.version,
+  };
+  const serviceNames = ["notifications", "products", "orders", "profiles"];
+  const drift: string[] = [];
+  for (const serviceName of serviceNames) {
+    const serviceLockPath = path.join(ROOT, "services", serviceName, "package-lock.json");
+    if (!existsSync(serviceLockPath)) {
+      drift.push(`${serviceName}: missing package-lock.json`);
+      continue;
+    }
+    const serviceLock = JSON.parse(readFileSync(serviceLockPath, "utf8")) as {
+      packages?: Record<string, { version?: string }>;
+    };
+    for (const [dependency, version] of Object.entries(expected)) {
+      const serviceVersion = serviceLock.packages?.[`node_modules/${dependency}`]?.version;
+      if (!version || serviceVersion !== version) {
+        drift.push(`${serviceName}/${dependency}: ${serviceVersion ?? "missing"} -> ${version ?? "root missing"}`);
+      }
+    }
+  }
+  add({
+    scenario: "web",
+    item: "Isolated service runtimes",
+    level: drift.length ? "UPDATE" : "OK",
+    installed: drift.length ? `${drift.length} mismatch(es)` : `4/4 services match Next ${expected.next}, React ${expected.react}, TypeScript ${expected.typescript}`,
+    required: "The four Vercel services must use the same tested Next/React/TypeScript runtime as the main application",
+    action: drift.length ? `Update each service package and lockfile: ${drift.slice(0, 8).join(", ")}.` : "No action.",
+  });
 }
 
 function checkProduction(): void {
