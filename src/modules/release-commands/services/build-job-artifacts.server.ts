@@ -7,19 +7,20 @@ import path from "node:path";
 
 import type { BuildArtifactDescriptor, BuildJobRecord } from "../domain/build-job-types";
 
-const workspaceRoot = path.resolve(process.cwd());
+const workspaceRoot = path.resolve(/* turbopackIgnore: true */ process.cwd());
 const cachePath = path.join(workspaceRoot, ".backups", "build-jobs", "artifact-descriptors.json");
+const staticExportRoot = path.join(/* turbopackIgnore: true */ workspaceRoot, "out");
 
 /** Roots an artifact may be served from. Also the download path guard. */
 export const artifactRoots = [
   path.join(workspaceRoot, "android", "app", "build", "outputs", "bundle"),
   path.join(workspaceRoot, "android", "app", "build", "outputs", "apk"),
   path.join(workspaceRoot, "android", "app", "build", "outputs", "mapping"),
-  path.join(workspaceRoot, "out"),
+  staticExportRoot,
 ];
 
 /** Trees walked when looking for what a job produced. */
-const scannedRoots = artifactRoots.filter((root) => root !== path.join(workspaceRoot, "out"));
+const scannedRoots = artifactRoots.filter((root) => root !== staticExportRoot);
 
 /**
  * The only file under `out/` that is an artifact.
@@ -31,7 +32,7 @@ const scannedRoots = artifactRoots.filter((root) => root !== path.join(workspace
  * `finalizing-results` long after the APK was on disk. Only the manifest is
  * named by a command's `expectedArtifacts`, so only the manifest is collected.
  */
-const webManifestPath = path.join(workspaceRoot, "out", "asol-web-manifest.json");
+const webManifestPath = path.join(staticExportRoot, "asol-web-manifest.json");
 
 type ArtifactSnapshot = Record<string, { size: number; mtimeMs: number }>;
 type DescriptorCache = Record<string, BuildArtifactDescriptor>;
@@ -79,7 +80,7 @@ export async function changedBuildArtifacts(before: ArtifactSnapshot): Promise<B
 export async function resolveStoredArtifact(record: BuildJobRecord, name: string): Promise<{ descriptor: BuildArtifactDescriptor; fullPath: string } | null> {
   const descriptor = record.artifacts?.find((artifact) => artifact.name === name);
   if (!descriptor) return null;
-  const fullPath = path.resolve(workspaceRoot, descriptor.path);
+  const fullPath = path.resolve(/* turbopackIgnore: true */ workspaceRoot, descriptor.path);
   if (!isInsideAllowedRoot(fullPath)) throw new Error("releaseArtifactPathInvalid");
   let stat;
   try { stat = await fs.stat(fullPath); }

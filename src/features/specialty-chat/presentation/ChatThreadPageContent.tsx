@@ -104,6 +104,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
           String(item.metadata?.capability ?? "") &&
           (item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Request ||
             item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.ProductRequest ||
+            item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.ProfileRequest ||
             item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Message),
       ),
     [conversation],

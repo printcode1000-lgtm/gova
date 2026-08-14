@@ -12,7 +12,7 @@ import {
   NotificationSounds,
 } from "@/features/notifications/server";
 import { createSpecialtyChatCapability, verifySpecialtyChatCapability } from "./specialty-chat-capability.server";
-import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity, type SpecialtyChatPreferenceChanges, type StartProductConversationInput, type StartProductConversationResult } from "../domain/types";
+import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity, type SpecialtyChatPreferenceChanges, type StartProductConversationInput, type StartProductConversationResult, type StartProfileConversationInput, type StartProfileConversationResult } from "../domain/types";
 import { getSpecialtyChatSubOptions } from "../domain/specialty-options";
 import { verifySignedSessionToken } from "@/features/auth/services/signed-session-token.server";
 import { productService } from "@/features/product/services/product-service.server";
@@ -152,6 +152,62 @@ export class SpecialtyChatService {
         productId: input.productId.trim(),
         productName,
         subcategoryName: productName,
+        capability,
+      },
+    });
+    if (!issued) throw new Error("specialtyChatRecipientUnavailable");
+    return {
+      requestId: input.requestId,
+      sellerUid,
+      capability,
+      notificationGrants: grants.toArray(),
+    };
+  }
+
+  async startProfileConversation(
+    input: StartProfileConversationInput,
+  ): Promise<StartProfileConversationResult> {
+    const actor = await this.assertIdentity(input.identity);
+    rateLimit(actor.uid);
+    const message = validateMessage(input.message);
+    const sellerUid = input.sellerUid.trim();
+    if (!sellerUid || sellerUid === actor.uid) {
+      throw new Error("specialtyChatRecipientInvalid");
+    }
+    if (!/^req_[a-zA-Z0-9_-]{8,100}$/.test(input.requestId)) {
+      throw new Error("specialtyChatRequestInvalid");
+    }
+
+    const seller = await this.identities.execute(sellerUid);
+    const sellerPreferences = seller
+      ? await this.getPreferencesQuery.execute(sellerUid)
+      : null;
+    if (!seller || !sellerPreferences?.productConversationsEnabled) {
+      throw new Error("specialtyChatRecipientUnavailable");
+    }
+
+    const details = await profileService.getStoreDetails(sellerUid);
+    const storeName = (details.storeName || sellerUid).slice(0, 200);
+    const capability = createSpecialtyChatCapability({
+      requestId: input.requestId,
+      buyerUid: actor.uid,
+      sellerUid,
+    });
+    const grants = notificationsServer.createGrantIssuer(actor.uid);
+    const issued = grants.issue({
+      actorUid: actor.uid,
+      uids: [sellerUid],
+      templateId: "specialty.messageFromBuyer",
+      variables: { message },
+      dedupeKey: `${input.requestId}:${sellerUid}`,
+      metadata: {
+        specialtyChatKind: SPECIALTY_CHAT_KINDS.ProfileRequest,
+        requestId: input.requestId,
+        senderUid: actor.uid,
+        peerUid: actor.uid,
+        profileUid: sellerUid,
+        storeName,
+        subcategoryName: storeName,
         capability,
       },
     });

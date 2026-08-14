@@ -44,6 +44,8 @@ export const HeroSliderImagesEditor = React.forwardRef<
   onPendingChange,
 }, ref) {
   const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
   const [pendingSlots, setPendingSlots] = React.useState<Set<number>>(() => new Set());
   React.useEffect(() => {
     onPendingChange?.(pendingSlots.size > 0);
@@ -68,33 +70,42 @@ export const HeroSliderImagesEditor = React.forwardRef<
   const [slotImages, setSlotImages] = React.useState<Array<StoredImage | null>>(
     () => Array.from({ length: MAX_PROFILE_SLIDES }, (_, index) => savedImages[index] ?? null),
   );
+  const slotImagesRef = React.useRef(slotImages);
+  slotImagesRef.current = slotImages;
 
   React.useEffect(() => {
-    setSlotImages((current) =>
-      Array.from({ length: MAX_PROFILE_SLIDES }, (_, index) => {
+    setSlotImages((current) => {
+      const next = Array.from({ length: MAX_PROFILE_SLIDES }, (_, index) => {
         const currentImage = current[index] ?? null;
         if (currentImage?.isUploading || currentImage?.error) return currentImage;
         return savedImages[index] ?? null;
-      }),
-    );
+      });
+      slotImagesRef.current = next;
+      return next;
+    });
   }, [savedImages]);
 
   const updateSlot = (index: number, nextSlotValue: StoredImage[]) => {
-    const nextImages = [...slotImages];
+    const nextImages = [...slotImagesRef.current];
     const image = nextSlotValue[0] ?? null;
     if (image) nextImages[index] = image;
     else nextImages[index] = null;
-    setSlotImages(
-      Array.from({ length: MAX_PROFILE_SLIDES }, (_, itemIndex) => nextImages[itemIndex] ?? null),
+    const normalizedSlots = Array.from(
+      { length: MAX_PROFILE_SLIDES },
+      (_, itemIndex) => nextImages[itemIndex] ?? null,
     );
+    slotImagesRef.current = normalizedSlots;
+    setSlotImages(normalizedSlots);
     if (image && !image.url) return;
     const compact = nextImages
       .filter((item): item is StoredImage => Boolean(item?.url && !item.isUploading))
       .slice(0, MAX_PROFILE_SLIDES);
-    onChange({
-      ...value,
+    const nextValue = {
+      ...valueRef.current,
       slides: compact.map(createSlide),
-    });
+    };
+    valueRef.current = nextValue;
+    onChange(nextValue);
   };
 
   return (

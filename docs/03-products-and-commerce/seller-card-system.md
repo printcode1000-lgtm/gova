@@ -91,7 +91,8 @@ interface SellerCardViewModel {
 
 The presenter safely derives:
 
-- `title` from `storeDetailsJson.storeName`, falling back to `uid`.
+- `title` from the structured `storeName` field. A UID is never presented as a
+  store name; cards omit the title when the profile has no store name.
 - `description` from store description or story.
 - `avatarUrl` from available avatar URL fields when present.
 - `initials` from the display name when no image exists.
@@ -136,7 +137,7 @@ The system is currently used by:
 The seller-card feature module is responsible for:
 
 - Safe JSON parsing.
-- Store/provider name fallback.
+- Store/provider name presentation without exposing UID as display text.
 - Avatar fallback.
 - Canonical profile URL.
 - Optional badges.

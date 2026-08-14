@@ -40,7 +40,7 @@ function ratingValue(row: UserProfileRow): number | null {
 }
 
 export function sellerCardTitle(row: UserProfileRow): string {
-  return text(row.storeName) || row.uid;
+  return text(row.storeName);
 }
 
 export function sellerCardAvatar(row: UserProfileRow): string {

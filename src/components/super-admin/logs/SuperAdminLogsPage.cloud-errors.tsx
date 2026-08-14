@@ -154,7 +154,7 @@ export function CloudErrorsContainer({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="ابحث في الرسالة أو المسار أو Stack..."
-            className="h-10 w-full rounded-md border bg-background ps-10 pe-3 text-sm"
+            className="asol-input-decorated-start h-10 w-full rounded-md border bg-background pe-3 text-sm"
           />
         </label>
         <select

@@ -277,10 +277,14 @@ user cancels share sheet       -> return "cancelled"; do nothing else
 Application UI must not import Capacitor directly. Native access remains behind
 `src/native-platform`.
 
-### Copy link
+### Clipboard fallback and visible QR action
 
 `copyShareLink()` writes only the canonical public URL through the Native
-Platform Clipboard abstraction. It does not append attribution.
+Platform Clipboard abstraction. It remains an internal fallback for system and
+Instagram sharing and does not append attribution. The share menu no longer
+shows a standalone copy-link button; its full-width action generates the
+canonical URL as a printable PNG through the shared QR Code module and hands it
+to the cross-platform user-file save flow.
 
 ### Map/location links
 
@@ -831,7 +835,8 @@ provides the gesture, while native builds use the compiled platform adapter.
   matching native build is shipped.
 - The header prompt is intentionally non-dismissible and remains visible while
   the user is on an eligible public product/profile surface.
-- The module does not provide short links, QR codes, referral attribution,
-  analytics, or share-count reporting.
+- The module does not provide short links, referral attribution, analytics, or
+  share-count reporting. Printable PNG QR codes are provided by the independent
+  [QR Code System](qr-code-system.md).
 
 These are explicit product boundaries, not missing database work.

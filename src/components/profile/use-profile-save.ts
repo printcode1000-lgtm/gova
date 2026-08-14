@@ -214,7 +214,6 @@ export function useProfileSave({
     try {
       setIsUnifiedSaving(true);
       if (
-        changedSections.includes("store") &&
         storeController.prepareForSave &&
         !(await storeController.prepareForSave())
       ) {

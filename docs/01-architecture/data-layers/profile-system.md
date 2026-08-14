@@ -77,6 +77,15 @@ Profile UI
 
 Basic registration credentials stay in the users/auth database. Profile display, search, contacts, locations, shipping, returns, working hours, follows, and seller category indexes stay in the profile database.
 
+The fulfillment editor searches delivery providers by store name and never
+renders a UID as a provider title. Its carrier badge and duplicate linked-list
+label are intentionally omitted. The return-policy enabled state uses the same
+accessible switch control as notification preferences, keeps the switch beside
+its label, and changes the label between available and unavailable with state.
+The public fulfillment preview follows the same identity rule: it renders a
+linked provider only after a non-empty store name resolves and never falls back
+to a UID while loading or when profile data is incomplete.
+
 Shipping mode `by_location` stores no estimated numeric location value. It starts the buyer-approved quote flow in the marketplace-orders database. Special-vehicle fees are evaluated per seller cart group and apply only when at least one included product requires a transport vehicle.
 
 ## Store Details
@@ -84,6 +93,11 @@ Shipping mode `by_location` stores no estimated numeric location value. It start
 Store details are split across real columns and tables. Store name, description, story, rating settings, custom request state, and trending label live directly on `user_profiles`. Featured products, trending items, and working hours live in dedicated tables.
 
 Working hours are normalized by `src/features/profile-working-hours` and saved through the regular profile editor flow. They are stored in `profile_working_hours` and do not have a separate save button.
+
+The working-hours editor deliberately shows the day and period controls only;
+its surrounding profile tab owns the section title. The former duplicate inner
+title, explanatory sentence, and copy-first-day shortcut are not part of the
+editor surface.
 
 ## Search
 

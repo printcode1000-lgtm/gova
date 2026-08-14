@@ -1,6 +1,7 @@
 export const SPECIALTY_CHAT_KINDS = {
   Request: "specialty_request",
   ProductRequest: "product_conversation_request",
+  ProfileRequest: "profile_conversation_request",
   Message: "specialty_message",
   Receipt: "specialty_receipt",
 } as const;
@@ -55,6 +56,16 @@ export interface StartProductConversationResult {
   capability: string;
   notificationGrants?: string[];
 }
+
+export interface StartProfileConversationInput {
+  identity: SpecialtyChatIdentity;
+  requestId: string;
+  sellerUid: string;
+  storeName: string;
+  message: string;
+}
+
+export type StartProfileConversationResult = StartProductConversationResult;
 
 export interface SendSpecialtyMessageInput {
   identity: SpecialtyChatIdentity;

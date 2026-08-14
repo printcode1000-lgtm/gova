@@ -59,6 +59,12 @@ the working tree clean, so every Vercel account receives the same revision. Each
 service continues to read its dedicated Vercel token and required environment
 values from `.env.local` or `.env`.
 
+The Vercel CLI is intentionally not a project dependency. Each isolated service
+deployment invokes the pinned CLI as an ephemeral `npx --package` tool, keeping
+its large framework-builder dependency graph out of the application lockfile
+and deployed runtime. Update the identical pin in all four deploy scripts
+together after verifying the CLI.
+
 ## Static export
 
 - Output: `out/` — no Next.js server

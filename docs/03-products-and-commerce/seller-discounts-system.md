@@ -35,6 +35,13 @@ The profile carousel includes a new `discounts` tab labelled "العروض". It 
   app users.
 - Save changes through the existing unified profile save bar.
 
+All offer fields include localized examples and concise explanations. Monetary
+fields are entered and displayed as Egyptian pounds (including two decimal
+places) while the domain model and database continue to store integer minor
+units; the editor performs the conversion at its boundary. Zero-value numeric
+fields render empty so their examples remain visible until the seller enters a
+constraint.
+
 ## Buyer preview
 
 Route:

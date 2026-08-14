@@ -338,7 +338,7 @@ If the user has no storefront images, the reusable slider displays its empty sta
 - “Profile image” manages the store logo/avatar.
 - “Storefront images” renders `HeroSlider` in `images-edit` mode.
 
-The image-only editor exposes three slots and returns updated slide image keys through `onChange`. Selecting an image marks the unified Profile save bar dirty. That save action uploads every pending logo/storefront image first, rejects the save if any upload fails, and then persists only the first three canonical cover keys through `saveStoreImages`. Untouched logo or cover fields are preserved rather than overwritten.
+The image-only editor exposes three slots and returns updated slide image keys through `onChange`. Selecting an image marks the unified Profile save bar dirty. The logo and storefront managers stay mounted while their visual tabs change, so a locally staged draft keeps its live upload handle. Every unified Profile save attempts the pending-image preparation step first and treats that save gesture as upload confirmation; the per-image confirmation dialog is only for the manual upload button. Upload callbacks update synchronous touched/image refs before the commit reads keys, preventing the same render from persisting a stale pre-upload key. A failed upload blocks the save. The commit persists only the first three canonical cover keys through `saveStoreImages`, while untouched logo or cover fields are preserved rather than overwritten.
 
 The three slots are defined in one versioned configuration document:
 

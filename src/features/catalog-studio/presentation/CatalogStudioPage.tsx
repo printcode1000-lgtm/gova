@@ -864,8 +864,8 @@ export function CatalogStudioPage() {
               <div className="overflow-hidden rounded-2xl border bg-card">
                 <div className="flex flex-wrap items-center gap-2 border-b p-3">
                   <div className="relative min-w-56 flex-1">
-                    <Search className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="بحث بالاسم أو ID أو أي حقل" className="w-full rounded-lg border bg-background py-2 pe-3 ps-9 text-sm" />
+                    <Search className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="بحث بالاسم أو ID أو أي حقل" className="asol-input-decorated-start w-full rounded-lg border bg-background py-2 pe-3 text-sm" />
                   </div>
                   <Button size="sm" variant="outline" onClick={addItem}><Plus className="me-1 h-4 w-4" />إضافة</Button>
                 </div>
@@ -1003,7 +1003,7 @@ export function CatalogStudioPage() {
       {snapshot && section === "assets" ? (
         <section className="space-y-4">
           <div className="grid gap-4 rounded-2xl border bg-card p-4 xl:grid-cols-[1fr_auto_auto_auto]">
-            <div className="relative"><Search className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" /><input value={imageSearch} onChange={(event) => setImageSearch(event.target.value)} placeholder="بحث في مسار الصورة" className="w-full rounded-lg border bg-background py-2 pe-3 ps-9" /></div>
+            <div className="relative"><Search className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" /><input value={imageSearch} onChange={(event) => setImageSearch(event.target.value)} placeholder="بحث في مسار الصورة" className="asol-input-decorated-start w-full rounded-lg border bg-background py-2 pe-3" /></div>
             <select value={imageRootFilter} onChange={(event) => setImageRootFilter(event.target.value as typeof imageRootFilter)} className="rounded-lg border bg-background px-3 py-2"><option value="all">كل المجلدات</option>{Object.entries(imageRootLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
             <label className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm"><Switch checked={onlyUnreferenced} onCheckedChange={setOnlyUnreferenced} /> غير المستخدمة فقط</label>
             <span className="self-center text-sm text-muted-foreground">{filteredImages.length} صورة</span>

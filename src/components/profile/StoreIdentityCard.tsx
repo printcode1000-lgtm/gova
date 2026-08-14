@@ -65,6 +65,8 @@ export const StoreIdentityCard = React.forwardRef<
   const heroManagerRef = React.useRef<StorageImageManagerHandle | null>(null);
   const logoImageRef = React.useRef<StoredImage | null>(null);
   const heroConfigRef = React.useRef<HeroSliderConfig | null>(null);
+  const logoTouchedRef = React.useRef(false);
+  const heroTouchedRef = React.useRef(false);
   const label = t("onboarding.storeIdentity.title");
 
   const savedLogoKey = storeImages.avatarImageKey ?? "";
@@ -93,17 +95,17 @@ export const StoreIdentityCard = React.forwardRef<
     }
     const logo = logoImageRef.current;
     const hero = heroConfigRef.current;
-    const avatarImageKey = logoTouched
+    const avatarImageKey = logoTouchedRef.current
       ? (logo?.imageKey ?? null)
       : storeImages.avatarImageKey;
-    const coverImageKeys = heroTouched
+    const coverImageKeys = heroTouchedRef.current
       ? (hero?.slides ?? [])
           .map((slide) => slide.imageKey)
           .filter((imageKey): imageKey is string => Boolean(imageKey))
           .slice(0, 3)
       : storeImages.coverImageKeys;
     if (
-      logoTouched &&
+      logoTouchedRef.current &&
       (logo?.isUploading || logo?.error || (logo?.url && !logo.imageKey))
     ) {
       return false;
@@ -112,6 +114,8 @@ export const StoreIdentityCard = React.forwardRef<
       avatarImageKey,
       coverImageKeys,
     });
+    logoTouchedRef.current = false;
+    heroTouchedRef.current = false;
     setLogoTouched(false);
     setHeroTouched(false);
     return true;
@@ -155,6 +159,7 @@ export const StoreIdentityCard = React.forwardRef<
 
   const handleLogoImagesChange = (images: StoredImage[]) => {
     const image = images[0] ?? null;
+    logoTouchedRef.current = true;
     setLogoTouched(true);
     setLogoImage(image);
     logoImageRef.current = image;
@@ -186,6 +191,7 @@ export const StoreIdentityCard = React.forwardRef<
   }, [heroPending, heroTouched, profileHeroConfig]);
 
   const handleHeroImagesChange = (config: HeroSliderConfig) => {
+    heroTouchedRef.current = true;
     setHeroTouched(true);
     setHeroConfig(config);
     heroConfigRef.current = config;
@@ -241,8 +247,13 @@ export const StoreIdentityCard = React.forwardRef<
             </button>
           </div>
 
-          {imageTab === "logo" ? (
-            <div className="inline-block rounded-lg border-2 border-primary/20 bg-primary/5 p-2 sm:p-3">
+          <div
+            className={
+              imageTab === "logo"
+                ? "inline-block rounded-lg border-2 border-primary/20 bg-primary/5 p-2 sm:p-3"
+                : "hidden"
+            }
+          >
               <div className="h-[120px] w-[120px] sm:h-[150px] sm:w-[150px]">
                 <StorageImageManager
                   ref={logoManagerRef}
@@ -252,8 +263,8 @@ export const StoreIdentityCard = React.forwardRef<
                   onPendingChange={setLogoPending}
                 />
               </div>
-            </div>
-          ) : (
+          </div>
+          <div className={imageTab === "hero" ? "block" : "hidden"}>
             <HeroSlider
               mode="images-edit"
               config={heroConfig ?? profileHeroConfig}
@@ -261,7 +272,7 @@ export const StoreIdentityCard = React.forwardRef<
               imageUploadRef={heroManagerRef}
               onImagesPendingChange={setHeroPending}
             />
-          )}
+          </div>
 
           {(isImagesLoading || isSavingImages) && (
             <p className="text-xs text-muted-foreground">

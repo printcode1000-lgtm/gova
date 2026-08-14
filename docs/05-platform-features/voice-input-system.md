@@ -148,6 +148,12 @@ The microphone button is positioned absolute inside the parent host container. I
 
 The input field receives dynamic physical padding (`padding-left` or `padding-right`) calculated as: `original computed padding + button size (40px) + edge gap (6px)`. This ensures that existing input decorators (like country code prefixes, clear buttons, or eye toggles) shift automatically and never overlap with the microphone button or the entered text.
 
+Search and other fields with a leading visual icon use the shared
+`asol-input-decorated-start` class. It reserves logical start padding with
+higher specificity than the density control shorthand, so the placeholder and
+typed text cannot overlap the icon in either RTL or LTR. The voice scanner then
+reads and preserves that computed padding.
+
 ## User interaction and feedback
 
 To provide a premium and accessible user experience, the system implements:
@@ -226,4 +232,3 @@ Manual test checklist:
 Browser speech recognition availability depends on the browser, operating system, network, and browser permission policy. If the browser exposes neither `SpeechRecognition` nor `webkitSpeechRecognition`, the system deliberately leaves fields unchanged.
 
 Native Android and iOS builds use the Capacitor plugin and are not dependent on this browser API.
-

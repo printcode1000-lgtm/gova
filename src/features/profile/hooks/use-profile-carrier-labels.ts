@@ -13,8 +13,8 @@ export function useProfileCarrierLabels(uids: string[]) {
     })),
   });
 
-  return uniqueUids.map((uid, index) => ({
-    uid,
-    label: queries[index]?.data?.storeName || uid,
-  }));
+  return uniqueUids.flatMap((uid, index) => {
+    const label = queries[index]?.data?.storeName?.trim();
+    return label ? [{ uid, label }] : [];
+  });
 }

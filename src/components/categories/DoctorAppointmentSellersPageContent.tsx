@@ -23,7 +23,7 @@ export function DoctorAppointmentSellersPageContent({
   specialtyName,
   specialtyImage,
 }: DoctorAppointmentSellersPageContentProps) {
-  const { t, locale, isRTL } = useTranslation();
+  const { t, locale } = useTranslation();
   const router = useRouter();
   const [offset, setOffset] = React.useState(0);
   const [searchText, setSearchText] = React.useState("");
@@ -84,9 +84,7 @@ export function DoctorAppointmentSellersPageContent({
           </h1>
           <div className="relative">
             <Search
-              className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant ${
-                isRTL ? "right-4" : "left-4"
-              }`}
+              className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
               aria-hidden
             />
             <input
@@ -94,9 +92,7 @@ export function DoctorAppointmentSellersPageContent({
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
               placeholder={locale === "ar" ? "ابحث في الأطباء" : "Search doctors"}
-              className={`w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary ${
-                isRTL ? "pr-12" : "pl-12"
-              }`}
+              className="asol-input-decorated-start w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary"
             />
           </div>
         </div>

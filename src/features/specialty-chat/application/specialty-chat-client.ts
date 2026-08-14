@@ -16,7 +16,7 @@ import {
   NotificationTypes,
   type NotificationEntity,
 } from "@/features/notifications";
-import type { SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialtyRequestResult, SpecialtyChatPreferenceChanges, SpecialtyChatPreferences, StartProductConversationInput, StartProductConversationResult } from "../domain/types";
+import type { SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialtyRequestResult, SpecialtyChatPreferenceChanges, SpecialtyChatPreferences, StartProductConversationInput, StartProductConversationResult, StartProfileConversationInput, StartProfileConversationResult } from "../domain/types";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
 import { deliverNotificationGrants } from "@/modules/notification-bridge";
 
@@ -72,6 +72,39 @@ async function saveOutgoing(input: {
 }
 
 export const specialtyChatClient = {
+  async startProfileConversation(
+    session: UserSession,
+    input: Omit<StartProfileConversationInput, "identity">,
+  ): Promise<{ conversationKey: string }> {
+    const result = await asolApi.post<StartProfileConversationResult>(
+      "/api/specialty-chat/profile-conversations",
+      { ...input, identity: identity(session) },
+      { notificationGrantDelivery: "manual" },
+    );
+    const delivery = await deliverNotificationGrants(result);
+    if (delivery.delivered < 1) {
+      throw new Error("specialtyChatRecipientUnavailable");
+    }
+    await saveOutgoing({
+      uid: session.uid,
+      id: input.requestId,
+      title: `محادثة مع ${input.storeName}`,
+      body: input.message,
+      metadata: {
+        specialtyChatKind: SPECIALTY_CHAT_KINDS.ProfileRequest,
+        requestId: input.requestId,
+        peerUid: input.sellerUid,
+        capability: result.capability,
+        profileUid: input.sellerUid,
+        storeName: input.storeName,
+        subcategoryName: input.storeName,
+      },
+    });
+    return {
+      conversationKey: `chat:conversation:${input.requestId}:${input.sellerUid}`,
+    };
+  },
+
   async startProductConversation(
     session: UserSession,
     input: Omit<StartProductConversationInput, "identity">,

@@ -5,6 +5,16 @@ import {
   type DiscountCartItem,
   type SellerDiscountRule,
 } from "@/features/seller-discounts";
+import {
+  majorCurrencyInputToMinor,
+  minorCurrencyToInputValue,
+} from "@/features/seller-discounts/components/discount-editor/seller-discount-currency";
+
+assert.equal(minorCurrencyToInputValue(0), "");
+assert.equal(minorCurrencyToInputValue(25_050), "250.5");
+assert.equal(majorCurrencyInputToMinor("250.50"), 25_050);
+assert.equal(majorCurrencyInputToMinor("0.009"), 1);
+assert.equal(majorCurrencyInputToMinor("-20"), 0);
 
 const items: DiscountCartItem[] = [
   {

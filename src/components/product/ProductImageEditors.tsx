@@ -37,6 +37,8 @@ export const ProductImageEditors = React.forwardRef<
   deferStorageDeletion = false,
 }, ref) {
   const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
+  const imagesRef = React.useRef(images);
+  imagesRef.current = images;
   React.useImperativeHandle(ref, () => ({
     hasPending: () => managerRefs.current.some((manager) => manager?.hasPending()),
     uploadPending: async () => {
@@ -68,10 +70,12 @@ export const ProductImageEditors = React.forwardRef<
           }}
           value={images[index] ? [images[index]] : []}
           onChange={(slot) => {
-            const next: Array<StoredImage | null> = [...images];
+            const next: Array<StoredImage | null> = [...imagesRef.current];
             if (slot[0]) next[index] = slot[0];
             else next[index] = null;
-            onChange(normalizeProductImages(next, maxImages));
+            const normalized = normalizeProductImages(next, maxImages);
+            imagesRef.current = normalized;
+            onChange(normalized);
           }}
         />
       ))}

@@ -55,6 +55,10 @@ const unifiedPreferenceRoute = path.join(
   process.cwd(),
   "src/app/api/specialty-chat/preferences/route.ts",
 );
+const profileConversationRoute = path.join(
+  process.cwd(),
+  "src/app/api/specialty-chat/profile-conversations/route.ts",
+);
 assert.match(serviceSource, /productService\.get\(input\.productId\.trim\(\)\)/);
 assert.match(serviceSource, /product\.uid !== sellerUid/);
 assert.match(serviceSource, /createSpecialtyChatCapability\(/);
@@ -63,6 +67,10 @@ assert.match(clientSource, /await saveOutgoing\(/);
 assert.match(serviceSource, /sellerPreferences\?\.productConversationsEnabled/);
 assert.match(serviceSource, /SPECIALTY_CHAT_KINDS\.ProductRequest/);
 assert.match(clientSource, /SPECIALTY_CHAT_KINDS\.ProductRequest/);
+assert.match(serviceSource, /startProfileConversation/);
+assert.match(serviceSource, /SPECIALTY_CHAT_KINDS\.ProfileRequest/);
+assert.match(clientSource, /SPECIALTY_CHAT_KINDS\.ProfileRequest/);
+assert.equal(existsSync(profileConversationRoute), true);
 assert.match(clientSource, /\/api\/specialty-chat\/preferences/);
 assert.doesNotMatch(clientSource, /productConversationPreference|\.preference\(/);
 assert.equal(existsSync(unifiedPreferenceRoute), true);
@@ -76,7 +84,7 @@ assert.equal(
   ),
   false,
 );
-assert.match(settingsSource, /مراسلة صاحب المنتج/);
+assert.match(settingsSource, /مراسلة صاحب الصفحة والمنتج/);
 assert.match(settingsSource, /updateProductConversations/);
 assert.match(notificationSchemaSource, /productConversationsEnabled/);
 

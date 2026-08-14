@@ -60,7 +60,9 @@ Create and edit use the same typed `ProductDetails` shape. Saving calls `/api/pr
 
 Create/update is also the image commit boundary: any locally selected image is
 uploaded first, the action waits for every upload, and the product write is
-blocked if an image fails. Product descriptions are stored with their newline
+blocked if an image fails. The multi-slot editor updates a synchronous image
+reference after every completed slot so sequential uploads accumulate instead
+of replacing one another through stale render state. Product descriptions are stored with their newline
 characters and rendered with preserved line breaks.
 
 The public order section uses the device-local Favorites module. Its seller

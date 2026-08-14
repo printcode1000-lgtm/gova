@@ -52,6 +52,14 @@ html[data-density='spacious'] {
   gap: var(--asol-control-gap);
 }
 
+/* Logical spacing for inputs with an icon at the text-start edge. The extra
+ * specificity intentionally wins over the density shorthand above in both
+ * RTL and LTR layouts, and is preserved by the global voice-input scanner. */
+.asol-control.asol-input-decorated-start,
+input.asol-input-decorated-start {
+  padding-inline-start: 2.5rem;
+}
+
 .asol-control-icon {
   width: calc(var(--asol-control-min-height) * var(--asol-density-scale));
   height: calc(var(--asol-control-min-height) * var(--asol-density-scale));

@@ -179,6 +179,8 @@ Draft keys include the authenticated `uid` (or `guest`), current pathname, manag
 
 If confirmation is declined, the selected preview remains visible and the upload button can retry the same file.
 
+An owning page may call the manager handle's `uploadPending()` at its save/commit boundary. This path is itself the user's upload confirmation and therefore does not open the optional manual-upload confirmation dialog. Pages with several independent managers must keep a synchronous ref to the latest combined image collection while awaiting managers sequentially; relying only on a render-captured array can cause a later upload callback to overwrite an earlier uploaded key.
+
 There is no Replace button after upload. The user deletes the stored image and then selects a new one. Confirmation and error messages use translated application dialogs; browser `alert`/`confirm` messages are forbidden in this component.
 
 ## Removal

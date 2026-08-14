@@ -47,6 +47,7 @@ function acknowledgeable(item: NotificationEntity): {
   if (
     kind !== SPECIALTY_CHAT_KINDS.Request &&
     kind !== SPECIALTY_CHAT_KINDS.ProductRequest &&
+    kind !== SPECIALTY_CHAT_KINDS.ProfileRequest &&
     kind !== SPECIALTY_CHAT_KINDS.Message
   ) {
     return null;
@@ -56,7 +57,8 @@ function acknowledgeable(item: NotificationEntity): {
   const capability = String(item.metadata?.capability ?? "");
   const targetMessageId = String(
     kind === SPECIALTY_CHAT_KINDS.Request ||
-    kind === SPECIALTY_CHAT_KINDS.ProductRequest
+    kind === SPECIALTY_CHAT_KINDS.ProductRequest ||
+    kind === SPECIALTY_CHAT_KINDS.ProfileRequest
       ? item.metadata?.requestId ?? ""
       : item.metadata?.messageId ?? "",
   );
@@ -69,8 +71,9 @@ function isReceiptSubject(item: NotificationEntity, targetMessageId: string): bo
   if (item.metadata?.outgoing !== true) return false;
   if (item.id === targetMessageId) return true;
   return targetMessageId.startsWith("req_")
-    ? (item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Request ||
-        item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.ProductRequest) &&
+      ? (item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.Request ||
+        item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.ProductRequest ||
+        item.metadata?.specialtyChatKind === SPECIALTY_CHAT_KINDS.ProfileRequest) &&
         item.metadata?.requestId === targetMessageId
     : item.metadata?.messageId === targetMessageId;
 }

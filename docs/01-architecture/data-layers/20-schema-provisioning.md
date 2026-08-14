@@ -27,7 +27,7 @@ During dev, **all** CRUD runs on SQLite only. Turso is never contacted at dev ru
 Workflow:
 
 1. Edit schema file(s)
-2. `npx drizzle-kit generate` (or `--config drizzle.profile.config.ts`)
+2. `npm run db:drizzle -- generate` (or add `--config drizzle.profile.config.ts`)
 3. Migrations apply on first API request in dev (`ensureDevMigrations`)
 4. `npm run build` runs schema sync → Turso
 
@@ -73,7 +73,14 @@ Schema sync runs automatically in `npm run build`.
 
 1. `drizzle.config.ts` → `src/modules/data-access/core/database/schema.ts`
 2. Output: `src/modules/data-access/core/database/migrations/`
-3. Generate: `npx drizzle-kit generate`
+3. Generate: `npm run db:drizzle -- generate`
+
+The three root Drizzle config files export plain configuration objects and do
+not import `drizzle-kit`. The `db:drizzle` runner installs CLI `0.31.10` without
+saving it or changing the lockfile, executes the requested command, and always
+prunes the temporary tool afterward. This keeps the schema CLI out of the
+application dependency graph and allows the normal TypeScript check and full
+dependency audit to run without it installed.
 4. Apply (dev): `ensureDevMigrations()` on first connection
 
 ## Migration pipeline (profile/order shards)

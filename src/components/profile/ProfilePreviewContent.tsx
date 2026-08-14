@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -39,6 +40,7 @@ import type { ProfileFulfillmentSettings } from "@/features/profile/entities/pro
 import type { StoreDetailsData } from "@/features/profile/entities/store-details.entity";
 import type { StoreImagesData } from "@/features/profile/entities/store-images.entity";
 import { usePageSnapshot, useSnapshotState } from "@/features/page-snapshot";
+import { specialtyChatClient } from "@/features/specialty-chat";
 import {
   buildProfileShareUrl,
   ShareMenu,
@@ -76,6 +78,7 @@ interface ProfilePreviewContentProps {
 }
 
 export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
+  const router = useRouter();
   const {
     locale,
     previewUid,
@@ -100,6 +103,48 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
   const { restoreSnapshot } = usePageSnapshot({ restoreWhen: ready });
   const restoredRef = useRef("");
   const shareUrl = previewUid ? buildProfileShareUrl(previewUid) : "";
+  const [openingConversation, setOpeningConversation] = useState(false);
+  const [conversationError, setConversationError] = useState("");
+
+  const openProfileConversation = async () => {
+    if (!previewUid || props.isOwner || openingConversation) return;
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+    setOpeningConversation(true);
+    setConversationError("");
+    const storeName =
+      storeDetails.storeName || t("profilePreview.providerFallback");
+    try {
+      const requestId = `req_${crypto.randomUUID().replace(/-/g, "")}`;
+      const result = await specialtyChatClient.startProfileConversation(session, {
+        requestId,
+        sellerUid: previewUid,
+        storeName,
+        message:
+          locale === "ar"
+            ? `أرغب في التواصل مع ${storeName}`
+            : `I would like to contact ${storeName}`,
+      });
+      router.push(
+        `/notifications/chat?conversationId=${encodeURIComponent(result.conversationKey)}`,
+      );
+    } catch (error) {
+      setConversationError(
+        error instanceof Error &&
+          error.message === "specialtyChatRecipientUnavailable"
+          ? locale === "ar"
+            ? "لا يمكن الوصول إلى صاحب الصفحة حاليًا."
+            : "The page owner is currently unavailable."
+          : locale === "ar"
+            ? "تعذر فتح المحادثة. حاول مرة أخرى."
+            : "Unable to open the conversation. Try again.",
+      );
+    } finally {
+      setOpeningConversation(false);
+    }
+  };
 
   useEffect(() => {
     if (!ready || !previewUid || restoredRef.current === previewUid) return;
@@ -188,6 +233,37 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         </Button>
                       }
                     />
+                    {!props.isOwner ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className={`${ACTION_TILE_CLASS} border-input hover:bg-accent hover:text-accent-foreground`}
+                        style={ACTION_TILE_STYLE}
+                        title={
+                          locale === "ar"
+                            ? "مراسلة صاحب الصفحة"
+                            : "Message page owner"
+                        }
+                        aria-label={
+                          locale === "ar"
+                            ? "مراسلة صاحب الصفحة"
+                            : "Message page owner"
+                        }
+                        disabled={openingConversation}
+                        onClick={() => void openProfileConversation()}
+                      >
+                        <FontAwesomeIcon icon={faComments} className="h-5 w-5" />
+                        <span className={ACTION_TILE_LABEL_CLASS}>
+                          {openingConversation
+                            ? locale === "ar"
+                              ? "جارٍ الفتح"
+                              : "Opening"
+                            : locale === "ar"
+                              ? "دردشة"
+                              : "Chat"}
+                        </span>
+                      </Button>
+                    ) : null}
                     {storeDetails.profileShowcase?.customRequestEnabled &&
                     session?.uid ? (
                       <Button
@@ -216,6 +292,11 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       </Button>
                     ) : null}
                   </div>
+                ) : null}
+                {conversationError ? (
+                  <p className="mt-2 text-xs font-medium text-error" role="alert">
+                    {conversationError}
+                  </p>
                 ) : null}
               </div>
             </div>

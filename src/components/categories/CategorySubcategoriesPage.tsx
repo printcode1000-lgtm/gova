@@ -21,7 +21,7 @@ interface CategorySubcategoriesPageProps {
 export function CategorySubcategoriesPage({
   categoryTree,
 }: CategorySubcategoriesPageProps) {
-  const { locale, isRTL } = useTranslation();
+  const { locale } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -98,9 +98,7 @@ export function CategorySubcategoriesPage({
         </div>
         <div className="relative">
           <Search
-            className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant ${
-              isRTL ? "right-4" : "left-4"
-            }`}
+            className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
             aria-hidden
           />
           <input
@@ -112,9 +110,7 @@ export function CategorySubcategoriesPage({
                 ? "\u0627\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u062a\u0635\u0646\u064a\u0641\u0627\u062a \u0627\u0644\u0641\u0631\u0639\u064a\u0629"
                 : "Search subcategories"
             }
-            className={`w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary ${
-              isRTL ? "pr-12" : "pl-12"
-            }`}
+            className="asol-input-decorated-start w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary"
           />
         </div>
       </div>

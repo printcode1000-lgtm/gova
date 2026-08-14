@@ -151,7 +151,7 @@ async function main() {
     console.log(`📋 Summary:`);
     console.log(`   - Project: ${PROJECT_NAME}`);
     console.log(`   - Turso env vars synced to production + preview`);
-    console.log(`\n🚀 Next step: Deploy with "npx vercel deploy --prod" or push to GitHub to trigger Actions.`);
+    console.log(`\n🚀 Next step: Deploy with "npx --yes --package=vercel@59.0.0 vercel deploy --prod" or push to GitHub.`);
   } catch (error) {
     console.error('❌ Error during Vercel configuration:', error);
     process.exit(1);

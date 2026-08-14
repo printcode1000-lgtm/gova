@@ -303,7 +303,7 @@ export function ProfileProductsTabs({
                   kind: "toggleFeatured",
                   label: featured ? labels.removeFeatured : labels.addFeatured,
                   active: featured,
-                  tone: "tertiary",
+                  tone: featured ? "tertiary" : undefined,
                   onClick: () => onToggleFeatured(product),
                 });
               }

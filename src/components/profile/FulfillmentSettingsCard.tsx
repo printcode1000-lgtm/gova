@@ -3,9 +3,9 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Search, Truck } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { SellerCard } from "@/components/ui/seller-card";
 import {
   Select,
@@ -59,13 +59,12 @@ export const FulfillmentSettingsCard = React.forwardRef<
         ? "يجب اختيار مقدمي توصيل لديهم تخصص خدمات التوصيل."
         : "Selected carriers must have the delivery services specialty.",
     saved: locale === "ar" ? "تم الحفظ" : "Saved",
-    shippingMethods: locale === "ar" ? "طرق الشحن" : "Shipping methods",
-    linkedProviders:
+    shippingMethods:
       locale === "ar"
-        ? "مقدمو خدمات التوصيل المرتبطون"
-        : "Linked delivery providers",
+        ? "اختر مقدمي خدمة التوصيل"
+        : "Choose delivery providers",
     searchPlaceholder:
-      locale === "ar" ? "ابحث بالاسم أو uid" : "Search by name or uid",
+      locale === "ar" ? "ابحث باسم المتجر" : "Search by store name",
     search: locale === "ar" ? "بحث" : "Search",
     loadingProviders:
       locale === "ar"
@@ -107,6 +106,8 @@ export const FulfillmentSettingsCard = React.forwardRef<
         : "Example: final shipping may vary by address or order size.",
     returnsAvailable:
       locale === "ar" ? "الإرجاع متاح" : "Returns are available",
+    returnsUnavailable:
+      locale === "ar" ? "الإرجاع غير متاح" : "Returns are unavailable",
     returnWindowDays:
       locale === "ar" ? "عدد أيام الإرجاع" : "Return window days",
     returnShippingPayer:
@@ -204,7 +205,6 @@ export const FulfillmentSettingsCard = React.forwardRef<
         </div>
 
         <div className="space-y-3">
-          <Label htmlFor="deliveryProviderSearch">{text.linkedProviders}</Label>
           <form
             className="flex gap-2"
             onSubmit={(event) => {
@@ -219,7 +219,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}
                 placeholder={text.searchPlaceholder}
-                className="ps-9"
+                className="asol-input-decorated-start"
               />
             </div>
             <button
@@ -242,9 +242,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
             <div className="grid gap-3 sm:grid-cols-2">
               {displayedUsers.map((user) => {
                 const isSelected = selected.has(user.uid);
-                const card = createSellerCardViewModel(user, {
-                  badge: locale === "ar" ? "خدمة توصيل" : "Delivery provider",
-                });
+                const card = createSellerCardViewModel(user);
                 const actions: SellerCardAction[] = [
                   {
                     kind: "view",
@@ -420,20 +418,26 @@ export const FulfillmentSettingsCard = React.forwardRef<
       <section className="space-y-4 rounded-xl border border-outline-variant p-4">
         <h3 className="text-sm font-bold">{text.returnPolicy}</h3>
 
-        <div className="flex items-center gap-2">
-          <Checkbox
-            id="returnsEnabled"
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium leading-none">
+            {settings.returns.enabled
+              ? text.returnsAvailable
+              : text.returnsUnavailable}
+          </span>
+          <ToggleSwitch
             checked={settings.returns.enabled}
-            onCheckedChange={(checked) =>
+            onChange={(checked) =>
               updateSettings((current) => ({
                 ...current,
-                returns: { ...current.returns, enabled: checked === true },
+                returns: { ...current.returns, enabled: checked },
               }))
             }
+            label={
+              settings.returns.enabled
+                ? text.returnsAvailable
+                : text.returnsUnavailable
+            }
           />
-          <Label htmlFor="returnsEnabled" className="cursor-pointer">
-            {text.returnsAvailable}
-          </Label>
         </div>
 
         <div className="space-y-2">

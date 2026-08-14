@@ -802,7 +802,7 @@ defaults.
 `schema-sync.ts`. Apply it before deploying the endpoint:
 
 ```powershell
-npx drizzle-kit migrate
+npm run db:drizzle -- migrate
 npm run db:schema:sync
 ```
 

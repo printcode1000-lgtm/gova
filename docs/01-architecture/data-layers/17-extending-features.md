@@ -5,7 +5,7 @@ Example: adding a `Product` feature with a new table.
 ## Server
 
 1. **Entity** — `src/features/product/entities/product.entity.ts`
-2. **Schema** — table in `src/modules/data-access/core/database/` (or dedicated `.db`), `npx drizzle-kit generate`
+2. **Schema** — table in `src/modules/data-access/core/database/` (or dedicated `.db`), `npm run db:drizzle -- generate`
 3. **Repository** — `src/modules/data-access/domains/product/repositories/` (server-only)
 4. **Operations** — `commands/`, `queries/`, `instances.ts`
 5. **Server Service** — `product-service.server.ts` + `product-service.bootstrap.server.ts`

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CalendarClock, Copy, Plus, Trash2 } from "lucide-react";
+import { CalendarClock, Plus, Trash2 } from "lucide-react";
 
 import type {
   ProfileWorkingHours,
@@ -53,20 +53,12 @@ export function WorkingHoursCard({
   const isEdit = mode === "edit";
   const text = {
     title: locale === "ar" ? "مواعيد العمل" : "Working hours",
-    hint:
-      locale === "ar"
-        ? "حدد الأيام وساعات العمل التفصيلية."
-        : "Set detailed opening days and hours.",
     open: locale === "ar" ? "مفتوح" : "Open",
     closed: locale === "ar" ? "مغلق" : "Closed",
     openNow: locale === "ar" ? "مفتوح الآن" : "Open now",
     closedNow: locale === "ar" ? "مغلق الآن" : "Closed now",
     notSet: locale === "ar" ? "لم يتم تحديد مواعيد العمل." : "Working hours are not set.",
     addPeriod: locale === "ar" ? "إضافة فترة" : "Add period",
-    copyFirst:
-      locale === "ar"
-        ? "نسخ أول يوم مفتوح لباقي الأيام"
-        : "Copy first open day to all days",
     note: locale === "ar" ? "ملاحظة" : "Note",
     notePlaceholder:
       locale === "ar"
@@ -93,64 +85,34 @@ export function WorkingHoursCard({
     );
   };
 
-  const copyFirstOpenDay = () => {
-    const source = value.days.find((day) => day.open && day.periods.length > 0);
-    if (!source) return;
-    setValue({
-      ...value,
-      days: value.days.map((day) => ({
-        ...day,
-        open: true,
-        periods: source.periods.map((period, index) => ({
-          ...period,
-          id: `${day.day}-${index + 1}`,
-        })),
-      })),
-    });
-  };
-
   if (!isEdit && !hasAnyHours) return null;
 
   return (
     <section className="space-y-4 rounded-xl border border-outline-variant bg-surface p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="flex items-center gap-2 text-sm font-bold text-on-surface">
-            <CalendarClock className="h-5 w-5 text-primary" />
-            {text.title}
-          </h3>
-          {isEdit ? (
-            <p className="mt-1 text-xs text-on-surface-variant">{text.hint}</p>
+      {!isEdit ? (
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="flex items-center gap-2 text-sm font-bold text-on-surface">
+              <CalendarClock className="h-5 w-5 text-primary" />
+              {text.title}
+            </h3>
+          </div>
+          {hasAnyHours ? (
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                currentStatus === "open"
+                  ? "bg-success/15 text-success"
+                  : "bg-surface-container-high text-on-surface-variant"
+              }`}
+            >
+              {currentStatus === "open" ? text.openNow : text.closedNow}
+            </span>
           ) : null}
         </div>
-        {!isEdit && hasAnyHours ? (
-          <span
-            className={`rounded-full px-3 py-1 text-xs font-semibold ${
-              currentStatus === "open"
-                ? "bg-success/15 text-success"
-                : "bg-surface-container-high text-on-surface-variant"
-            }`}
-          >
-            {currentStatus === "open" ? text.openNow : text.closedNow}
-          </span>
-        ) : null}
-      </div>
+      ) : null}
 
       {!isEdit && !hasAnyHours ? (
         <p className="text-sm text-on-surface-variant">{text.notSet}</p>
-      ) : null}
-
-      {isEdit ? (
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={copyFirstOpenDay}
-            className="inline-flex h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
-          >
-            <Copy className="h-4 w-4" />
-            {text.copyFirst}
-          </button>
-        </div>
       ) : null}
 
       <div className="space-y-3">

@@ -24,20 +24,49 @@ import {
   type SellerDiscountValueType,
 } from "../../entities/seller-discount.entity";
 import { useSellerDiscounts } from "../../hooks/use-seller-discounts";
+import {
+  majorCurrencyInputToMinor,
+  minorCurrencyToInputValue,
+} from "./seller-discount-currency";
 
 export function NumberInput({
   value,
   onChange,
+  placeholder,
 }: {
   value: number;
   onChange: (value: number) => void;
+  placeholder: string;
 }) {
   return (
     <Input
       type="number"
       min={0}
-      value={String(value)}
+      value={value === 0 ? "" : String(value)}
+      placeholder={placeholder}
       onChange={(event) => onChange(Math.max(0, Number(event.target.value) || 0))}
+    />
+  );
+}
+
+export function MinorCurrencyInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  placeholder: string;
+}) {
+  return (
+    <Input
+      type="number"
+      min={0}
+      step="0.01"
+      inputMode="decimal"
+      value={minorCurrencyToInputValue(value)}
+      placeholder={placeholder}
+      onChange={(event) => onChange(majorCurrencyInputToMinor(event.target.value))}
     />
   );
 }

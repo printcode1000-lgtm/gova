@@ -8,7 +8,7 @@ This module lets a buyer send one text request to sellers or service providers w
 
 Notification delivery is the only conversation transport. The server does not create a conversation or message table and does not persist request or reply text. Received and outgoing messages are kept locally in the existing AsolDB `notifications` store. Consequently, conversation history does not synchronize between devices and is lost when local application data is cleared or the app is removed.
 
-The server stores only device push tokens and one per-user preference record containing `specialty_requests_enabled` for specialty broadcasts and `product_conversations_enabled` for new product conversations. It stores no request body, reply body, conversation history, or attachments. Preferences use one final `/api/specialty-chat/preferences` contract; there are no scope-specific or compatibility endpoints.
+The server stores only device push tokens and one per-user preference record containing `specialty_requests_enabled` for specialty broadcasts and `product_conversations_enabled` for new direct conversations started from either a profile or product page. It stores no request body, reply body, conversation history, or attachments. Preferences use one final `/api/specialty-chat/preferences` contract; there are no scope-specific or compatibility preference endpoints.
 
 ## User flow
 
@@ -39,8 +39,8 @@ The server stores only device push tokens and one per-user preference record con
 - One request resolves at most 500 matching providers.
 - Request text is not written to server logs or databases by the module.
 - The provider opt-out is applied before delivery.
-- Product owners have a separate settings opt-out for new conversations started by the product-page `مراسلة صاحب المنتج` action. Disabling it does not change the specialty-request preference and does not delete local history.
-- Product conversations use the explicit `product_conversation_request` notification kind. They are not disguised as specialty broadcasts; both kinds share only the signed bilateral messaging and receipt transport.
+- Profile and product owners have a separate settings opt-out for new direct conversations started by the profile-page chat action or the product-page `مراسلة صاحب المنتج` action. Disabling it does not change the specialty-request preference and does not delete local history.
+- Product conversations use the explicit `product_conversation_request` notification kind and profile conversations use `profile_conversation_request`. They are not disguised as specialty broadcasts; all kinds share only the signed bilateral messaging and receipt transport.
 - Chat preferences are account-level cloud settings. Signing out, unregistering a device, or clearing local application data never resets them.
 - A local chat card must contain the final signed-chat identity (`requestId` plus `peerUid`, or a valid outgoing specialty broadcast). Unstructured pre-contract chat cards are not converted into compatibility threads.
 
@@ -72,6 +72,8 @@ Receipt pushes never appear as cards and do not intentionally contribute to the 
 - `src/features/specialty-chat/` — domain, client, server, and composer UI.
 - `src/app/api/specialty-chat/requests/route.ts` — specialty broadcast relay.
 - `src/app/api/specialty-chat/messages/route.ts` — bilateral private replies.
+- `src/app/api/specialty-chat/product-conversations/route.ts` — starts a product-owner conversation after checking product ownership.
+- `src/app/api/specialty-chat/profile-conversations/route.ts` — starts a profile-owner conversation using the same signed bilateral chat transport.
 - `src/app/api/specialty-chat/receipts/route.ts` — received/read receipts.
 - `src/app/api/specialty-chat/preferences/route.ts` — reads or atomically patches both independent chat preferences.
 - `src/features/notifications/presentation/NotificationsPageContent.tsx` — local conversation cards and reply field.

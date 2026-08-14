@@ -101,7 +101,7 @@ export function SellerCard({
         className={`w-full text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
           horizontal ? "flex items-center gap-3" : "block"
         }`}
-        aria-label={card.title}
+        aria-label={card.title || card.href}
       >
         <div
           className={`relative shrink-0 overflow-hidden bg-surface-bright ${avatarClass[variant]}`}
@@ -122,9 +122,11 @@ export function SellerCard({
           )}
         </div>
         <div className={horizontal ? "min-w-0 flex-1" : "mt-3 min-w-0"}>
-          <p className="line-clamp-2 text-sm font-semibold text-on-surface">
-            {card.title}
-          </p>
+          {card.title ? (
+            <p className="line-clamp-2 text-sm font-semibold text-on-surface">
+              {card.title}
+            </p>
+          ) : null}
           {card.subtitle ? (
             <p className="mt-1 truncate text-[11px] text-on-surface-variant">
               {card.subtitle}

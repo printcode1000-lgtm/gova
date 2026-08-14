@@ -192,14 +192,25 @@ export function ProductCard({
               key={`${action.kind}-${action.label}`}
               type="button"
               disabled={action.disabled}
+              aria-pressed={
+                action.kind === "toggleFeatured" ? Boolean(action.active) : undefined
+              }
               onClick={action.onClick}
-              className={`flex h-8 items-center justify-center rounded-md transition disabled:opacity-50 ${actionClass(
+              className={`flex h-8 items-center justify-center transition disabled:opacity-50 ${
+                action.kind === "toggleFeatured" && action.active
+                  ? "rounded-full ring-2 ring-tertiary/30"
+                  : "rounded-md"
+              } ${actionClass(
                 action,
               )}`}
               title={action.label}
               aria-label={action.label}
             >
-              {actionIcon(action.kind)}
+              {action.kind === "toggleFeatured" ? (
+                <Star className={`h-4 w-4 ${action.active ? "fill-current" : ""}`} />
+              ) : (
+                actionIcon(action.kind)
+              )}
             </button>
           ))}
         </div>

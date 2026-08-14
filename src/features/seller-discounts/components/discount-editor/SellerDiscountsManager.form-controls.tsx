@@ -25,7 +25,11 @@ import {
 } from "../../entities/seller-discount.entity";
 import { useSellerDiscounts } from "../../hooks/use-seller-discounts";
 
-import { NumberInput, Toggle } from "./SellerDiscountsManager.section-03";
+import {
+  MinorCurrencyInput,
+  NumberInput,
+  Toggle,
+} from "./SellerDiscountsManager.section-03";
 
 export function DiscountEditor({
   discount,
@@ -128,20 +132,22 @@ export function DiscountEditor({
       </div>
 
       <div className="mt-4 grid gap-3 md:grid-cols-2">
-        <Field label={ar ? "عنوان العرض" : "Title"}>
+        <Field label={ar ? "عنوان العرض" : "Title"} description={ar ? "اسم واضح وقصير يراه العميل." : "A clear, short name customers will see."}>
           <Input
             value={discount.title}
             onChange={(event) => set("title", event.target.value)}
             maxLength={90}
+            placeholder={ar ? "مثال: خصم نهاية الأسبوع" : "Example: Weekend discount"}
           />
         </Field>
-        <Field label={ar ? "الأولوية" : "Priority"}>
+        <Field label={ar ? "الأولوية" : "Priority"} description={ar ? "العرض ذو الرقم الأعلى يُفحص أولًا." : "Higher numbers are evaluated first."}>
           <NumberInput
             value={discount.priority}
             onChange={(value) => set("priority", value)}
+            placeholder={ar ? "مثال: 100" : "Example: 100"}
           />
         </Field>
-        <Field label={ar ? "نوع القيمة" : "Value type"}>
+        <Field label={ar ? "نوع القيمة" : "Value type"} description={ar ? "حدد كيف تُحسب فائدة العرض." : "Choose how the offer benefit is calculated."}>
           <select
             value={discount.valueType}
             onChange={(event) =>
@@ -157,50 +163,59 @@ export function DiscountEditor({
           </select>
         </Field>
         <Field
+          description={ar ? "أدخل النسبة أو المبلغ بالجنيه حسب النوع المختار." : "Enter the percentage or EGP amount for the selected type."}
           label={
             discount.valueType === "percentage"
               ? ar
                 ? "النسبة %"
                 : "Percent"
               : ar
-                ? "القيمة بالقروش"
-                : "Value in minor units"
+                ? "القيمة بالجنيهات"
+                : "Value in EGP"
           }
         >
-          <NumberInput value={discount.value} onChange={(value) => set("value", value)} />
+          {discount.valueType === "percentage" ? (
+            <NumberInput value={discount.value} onChange={(value) => set("value", value)} placeholder={ar ? "مثال: 10" : "Example: 10"} />
+          ) : (
+            <MinorCurrencyInput value={discount.value} onChange={(value) => set("value", value)} placeholder={ar ? "مثال: 50.00" : "Example: 50.00"} />
+          )}
         </Field>
-        <Field label={ar ? "حد أدنى للمشتريات بالقروش" : "Min subtotal minor"}>
-          <NumberInput
+        <Field label={ar ? "حد أدنى للمشتريات بالجنيهات" : "Minimum purchases in EGP"} description={ar ? "أقل إجمالي مشتريات مطلوب لتطبيق العرض؛ اتركه فارغًا لعدم التقييد." : "Minimum cart subtotal required; leave empty for no minimum."}>
+          <MinorCurrencyInput
             value={discount.conditions.minSubtotalMinor}
             onChange={(value) => setCondition("minSubtotalMinor", value)}
+            placeholder={ar ? "مثال: 250.00" : "Example: 250.00"}
           />
         </Field>
-        <Field label={ar ? "حد أقصى للخصم بالقروش" : "Max discount minor"}>
-          <NumberInput
+        <Field label={ar ? "حد أقصى للخصم بالجنيهات" : "Maximum discount in EGP"} description={ar ? "سقف قيمة الخصم؛ اتركه فارغًا لعدم وضع سقف." : "Discount ceiling; leave empty for no cap."}>
+          <MinorCurrencyInput
             value={discount.maxDiscountMinor}
             onChange={(value) => set("maxDiscountMinor", value)}
+            placeholder={ar ? "مثال: 100.00" : "Example: 100.00"}
           />
         </Field>
-        <Field label={ar ? "حد أدنى للكمية" : "Min quantity"}>
+        <Field label={ar ? "حد أدنى للكمية" : "Minimum quantity"} description={ar ? "عدد القطع اللازم حتى يصبح العرض مؤهلًا." : "Number of items required before the offer qualifies."}>
           <NumberInput
             value={discount.conditions.minQuantity}
             onChange={(value) => setCondition("minQuantity", value)}
+            placeholder={ar ? "مثال: 2" : "Example: 2"}
           />
         </Field>
-        <Field label={ar ? "كمية الشراء لخصم الكمية" : "Buy quantity"}>
+        <Field label={ar ? "كمية الشراء لخصم الكمية" : "Buy quantity"} description={ar ? "عدد القطع التي يبدأ عندها خصم الكمية." : "Item count at which the quantity discount starts."}>
           <NumberInput
             value={discount.conditions.buyQuantity}
             onChange={(value) => setCondition("buyQuantity", value)}
+            placeholder={ar ? "مثال: 3" : "Example: 3"}
           />
         </Field>
-        <Field label={ar ? "كود الكوبون" : "Coupon code"}>
+        <Field label={ar ? "كود الكوبون" : "Coupon code"} description={ar ? "الكود الذي يدخله العميل للاستفادة من العرض." : "Code customers enter to redeem the offer."}>
           <Input
             value={discount.couponCode}
             onChange={(event) => set("couponCode", event.target.value)}
-            placeholder="WELCOME10"
+            placeholder={ar ? "مثال: WELCOME10" : "Example: WELCOME10"}
           />
         </Field>
-        <Field label={ar ? "منتج الهدية" : "Gift product id"}>
+        <Field label={ar ? "منتج الهدية" : "Gift product ID"} description={ar ? "معرّف المنتج الذي سيُضاف مجانًا." : "ID of the product added as a free gift."}>
           <Input
             value={discount.scope.giftProductId}
             onChange={(event) =>
@@ -209,60 +224,69 @@ export function DiscountEditor({
                 scope: { ...current.scope, giftProductId: event.target.value.trim() },
               }))
             }
+            placeholder={ar ? "أدخل معرّف منتج الهدية" : "Enter gift product ID"}
           />
         </Field>
-        <Field label={ar ? "منتجات محددة، مفصولة بفواصل" : "Product ids"}>
+        <Field label={ar ? "منتجات محددة" : "Product IDs"} description={ar ? "معرّفات المنتجات المشمولة، مفصولة بفواصل." : "Included product IDs, separated by commas."}>
           <Input
             value={discount.scope.productIds.join(", ")}
             onChange={(event) => setScopeText("productIds", event.target.value)}
+            placeholder={ar ? "مثال: product-1, product-2" : "Example: product-1, product-2"}
           />
         </Field>
-        <Field label={ar ? "تصنيفات محددة، مفصولة بفواصل" : "Category ids"}>
+        <Field label={ar ? "تصنيفات محددة" : "Category IDs"} description={ar ? "معرّفات التصنيفات المشمولة، مفصولة بفواصل." : "Included category IDs, separated by commas."}>
           <Input
             value={discount.scope.categoryIds.join(", ")}
             onChange={(event) => setScopeText("categoryIds", event.target.value)}
+            placeholder={ar ? "مثال: category-1, category-2" : "Example: category-1, category-2"}
           />
         </Field>
-        <Field label={ar ? "منتجات الباقة" : "Bundle product ids"}>
+        <Field label={ar ? "منتجات الباقة" : "Bundle product IDs"} description={ar ? "معرّفات المنتجات التي يجب شراؤها معًا." : "Product IDs that must be purchased together."}>
           <Input
             value={discount.scope.bundleProductIds.join(", ")}
             onChange={(event) =>
               setScopeText("bundleProductIds", event.target.value)
             }
+            placeholder={ar ? "مثال: product-1, product-2" : "Example: product-1, product-2"}
           />
         </Field>
-        <Field label={ar ? "منتجات مستثناة" : "Excluded product ids"}>
+        <Field label={ar ? "منتجات مستثناة" : "Excluded product IDs"} description={ar ? "منتجات لا ينطبق عليها العرض، مفصولة بفواصل." : "Products excluded from the offer, separated by commas."}>
           <Input
             value={discount.scope.excludedProductIds.join(", ")}
             onChange={(event) =>
               setScopeText("excludedProductIds", event.target.value)
             }
+            placeholder={ar ? "مثال: product-3, product-4" : "Example: product-3, product-4"}
           />
         </Field>
-        <Field label={ar ? "بداية العرض" : "Starts at"}>
+        <Field label={ar ? "بداية العرض" : "Starts at"} description={ar ? "التاريخ والوقت اللذان يبدأ عندهما العرض." : "Date and time when the offer begins."}>
           <Input
             type="datetime-local"
             value={discount.startsAt.slice(0, 16)}
             onChange={(event) => set("startsAt", event.target.value)}
+            placeholder={ar ? "اختر تاريخ ووقت البداية" : "Choose start date and time"}
           />
         </Field>
-        <Field label={ar ? "نهاية العرض" : "Ends at"}>
+        <Field label={ar ? "نهاية العرض" : "Ends at"} description={ar ? "التاريخ والوقت اللذان يتوقف عندهما العرض." : "Date and time when the offer ends."}>
           <Input
             type="datetime-local"
             value={discount.endsAt.slice(0, 16)}
             onChange={(event) => set("endsAt", event.target.value)}
+            placeholder={ar ? "اختر تاريخ ووقت النهاية" : "Choose end date and time"}
           />
         </Field>
-        <Field label={ar ? "حد الاستخدام الكلي" : "Total usage limit"}>
+        <Field label={ar ? "حد الاستخدام الكلي" : "Total usage limit"} description={ar ? "أقصى عدد مرات لاستخدام العرض من جميع العملاء." : "Maximum redemptions across all customers."}>
           <NumberInput
             value={discount.usageLimits.total}
             onChange={(value) => setUsage("total", value)}
+            placeholder={ar ? "مثال: 100" : "Example: 100"}
           />
         </Field>
-        <Field label={ar ? "حد الاستخدام لكل مشتري" : "Per buyer limit"}>
+        <Field label={ar ? "حد الاستخدام لكل مشتري" : "Per-buyer limit"} description={ar ? "أقصى عدد مرات مسموح بها لكل عميل." : "Maximum redemptions allowed for each customer."}>
           <NumberInput
             value={discount.usageLimits.perBuyer}
             onChange={(value) => setUsage("perBuyer", value)}
+            placeholder={ar ? "مثال: 1" : "Example: 1"}
           />
         </Field>
       </div>
@@ -316,14 +340,17 @@ export function DiscountEditor({
 
 export function Field({
   label,
+  description,
   children,
 }: {
   label: string;
+  description: string;
   children: React.ReactNode;
 }) {
   return (
     <label className="space-y-1.5 text-xs font-semibold text-on-surface">
-      <span>{label}</span>
+      <span className="block">{label}</span>
+      <span className="block font-normal leading-5 text-on-surface-variant">{description}</span>
       {children}
     </label>
   );

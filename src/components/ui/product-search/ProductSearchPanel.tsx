@@ -285,7 +285,7 @@ export function ProductSearchPanel({
                 ? "ابحث بعد اختيار الفئة"
                 : "Search after selecting category"
             }
-            className="ps-9"
+            className="asol-input-decorated-start"
           />
           {query ? (
             <button

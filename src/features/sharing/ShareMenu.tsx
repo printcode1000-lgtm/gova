@@ -8,7 +8,7 @@ import {
   faInstagram,
   faWhatsapp,
 } from "@fortawesome/free-brands-svg-icons";
-import { Copy, Share2 } from "lucide-react";
+import { QrCode, Share2 } from "lucide-react";
 
 import {
   Dialog,
@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { saveQrCodePng } from "@/features/qr-code";
 import type { ShareContent, ShareDestination } from "./share-content";
 import {
   copyShareLink,
@@ -46,6 +47,7 @@ const destinationStyles: Record<ShareDestination, string> = {
 export function ShareMenu({ content, locale, trigger }: ShareMenuProps) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState("");
+  const [savingQrCode, setSavingQrCode] = useState(false);
   const ar = locale === "ar";
 
   const finish = (message = "") => {
@@ -93,6 +95,28 @@ export function ShareMenu({ content, locale, trigger }: ShareMenuProps) {
       setStatus(
         ar ? "تعذرت المشاركة. حاول مرة أخرى." : "Sharing failed. Try again.",
       );
+    }
+  };
+
+  const saveQrCode = async () => {
+    if (savingQrCode) return;
+    setSavingQrCode(true);
+    setStatus("");
+    try {
+      await saveQrCodePng({
+        value: content.url,
+        fileName: `asol-${content.kind}-${content.title}`,
+      });
+      finish(ar ? "تم إنشاء رمز QR وحفظه" : "QR code created and saved");
+    } catch (error) {
+      console.warn("[Sharing] QR code save failed.", error);
+      setStatus(
+        ar
+          ? "تعذر إنشاء رمز QR أو حفظه. حاول مرة أخرى."
+          : "Unable to create or save the QR code. Try again.",
+      );
+    } finally {
+      setSavingQrCode(false);
     }
   };
 
@@ -178,11 +202,18 @@ export function ShareMenu({ content, locale, trigger }: ShareMenuProps) {
 
         <button
           type="button"
-          onClick={() => void run("copy")}
+          onClick={() => void saveQrCode()}
+          disabled={savingQrCode}
           className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline-variant/70 bg-surface-container-low px-4 text-sm font-bold text-on-surface transition hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
-          <Copy className="h-4 w-4" />
-          {ar ? "نسخ الرابط" : "Copy link"}
+          <QrCode className="h-5 w-5" />
+          {savingQrCode
+            ? ar
+              ? "جارٍ إنشاء رمز QR..."
+              : "Creating QR code..."
+            : ar
+              ? "إنشاء وحفظ رمز QR"
+              : "Create and save QR code"}
         </button>
 
         <p

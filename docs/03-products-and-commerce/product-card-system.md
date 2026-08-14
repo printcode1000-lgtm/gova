@@ -106,6 +106,11 @@ Supported action kinds:
 - `favorite`
 - `custom`
 
+For `toggleFeatured`, the host passes `active: true` only when the product is
+currently featured. The shared card renders that state as a filled star,
+filled tertiary action, rounded active control, and `aria-pressed="true"`;
+the inactive action keeps the neutral surface style.
+
 Example:
 
 ```ts

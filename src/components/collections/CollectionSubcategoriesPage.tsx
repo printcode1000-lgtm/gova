@@ -21,7 +21,7 @@ interface CollectionSubcategoriesPageProps {
 export function CollectionSubcategoriesPage({
   collection,
 }: CollectionSubcategoriesPageProps) {
-  const { locale, isRTL } = useTranslation();
+  const { locale } = useTranslation();
   const [searchText, setSearchText] = React.useState("");
 
   const title = locale === "ar" ? collection.nameAr : collection.nameEn;
@@ -57,9 +57,7 @@ export function CollectionSubcategoriesPage({
         </div>
         <div className="relative">
           <Search
-            className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant ${
-              isRTL ? "right-4" : "left-4"
-            }`}
+            className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
             aria-hidden
           />
           <input
@@ -71,9 +69,7 @@ export function CollectionSubcategoriesPage({
                 ? "\u0627\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u0645\u062c\u0645\u0648\u0639\u0629"
                 : "Search collection"
             }
-            className={`w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary ${
-              isRTL ? "pr-12" : "pl-12"
-            }`}
+            className="asol-input-decorated-start w-full rounded-2xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant focus:border-primary"
           />
         </div>
       </div>

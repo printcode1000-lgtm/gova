@@ -15,8 +15,8 @@ npm run architecture:check
 npm run typecheck
 
 # Schema & database
-npx drizzle-kit generate
-npx drizzle-kit generate --config drizzle.profile.config.ts
+npm run db:drizzle -- generate
+npm run db:drizzle -- generate --config drizzle.profile.config.ts
 npm run db:ensure
 npm run db:schema:sync
 npm run db:provision:turso
@@ -31,7 +31,7 @@ npm run r2:sync:cors
 
 ```bash
 # 1. Edit src/modules/data-access/core/database/schema.ts
-npx drizzle-kit generate
+npm run db:drizzle -- generate
 npm run dev                    # migrations on first API call
 npm run build                  # sync DDL to Turso
 git push

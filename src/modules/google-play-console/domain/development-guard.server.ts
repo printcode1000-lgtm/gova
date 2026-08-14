@@ -38,6 +38,7 @@ export function resolveGooglePlayConsoleConfig(): Pick<
       process.env.GOOGLE_PLAY_PACKAGE_NAME?.trim() ||
       DEFAULT_PACKAGE_NAME,
     keyFilePath: path.resolve(
+      /* turbopackIgnore: true */
       process.cwd(),
       process.env.GOOGLE_PLAY_JSON_KEY_FILE?.trim() || DEFAULT_KEY_FILE,
     ),
@@ -151,6 +152,9 @@ export function releaseRequirementSatisfied(requirement: string): boolean {
   if (names.some((name) => process.env[name]?.trim())) return true;
   return names.some((name) => {
     const fallback = REQUIREMENT_FILE_FALLBACKS[name];
-    return Boolean(fallback) && existsSync(path.resolve(fallback));
+    return (
+      Boolean(fallback) &&
+      existsSync(/* turbopackIgnore: true */ path.resolve(/* turbopackIgnore: true */ fallback))
+    );
   });
 }

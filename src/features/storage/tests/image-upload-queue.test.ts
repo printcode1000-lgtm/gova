@@ -171,13 +171,50 @@ async function main() {
     path.join(root, "src/components/product/ProductPageContent.tsx"),
     "utf8",
   );
+  const productEditorsSource = readFileSync(
+    path.join(root, "src/components/product/ProductImageEditors.tsx"),
+    "utf8",
+  );
+  const heroEditorsSource = readFileSync(
+    path.join(root, "src/components/ui/HeroSliderImagesEditor.tsx"),
+    "utf8",
+  );
   const profileSource = readFileSync(
     path.join(root, "src/components/profile/StoreIdentityCard.tsx"),
     "utf8",
   );
+  const profileSaveSource = readFileSync(
+    path.join(root, "src/components/profile/use-profile-save.ts"),
+    "utf8",
+  );
   assert.match(managerSource, /uploadPending:\s*async/);
   assert.match(productSource, /await imageUploadRef\.current\?\.uploadPending\(\)/);
+  assert.match(productEditorsSource, /const imagesRef = React\.useRef\(images\)/);
+  assert.match(productEditorsSource, /const next:[^=]+= \[\.\.\.imagesRef\.current\]/);
+  assert.match(productEditorsSource, /imagesRef\.current = normalized/);
+  assert.match(heroEditorsSource, /const slotImagesRef = React\.useRef\(slotImages\)/);
+  assert.match(heroEditorsSource, /const nextImages = \[\.\.\.slotImagesRef\.current\]/);
+  assert.match(heroEditorsSource, /slotImagesRef\.current = normalizedSlots/);
   assert.match(profileSource, /prepareForSave:\s*prepareImagesForSave/);
+  assert.match(profileSource, /logoTouchedRef\.current = true/);
+  assert.match(profileSource, /heroTouchedRef\.current = true/);
+  assert.match(
+    profileSource,
+    /const avatarImageKey = logoTouchedRef\.current/,
+    "profile save must read the upload callback's current logo state",
+  );
+  assert.match(
+    profileSource,
+    /const coverImageKeys = heroTouchedRef\.current/,
+    "profile save must read the upload callback's current cover state",
+  );
+  assert.match(profileSource, /imageTab === "logo"[\s\S]{0,500}: "hidden"/);
+  assert.match(profileSource, /imageTab === "hero" \? "block" : "hidden"/);
+  assert.match(
+    profileSaveSource,
+    /storeController\.prepareForSave &&[\s\S]{0,120}await storeController\.prepareForSave\(\)/,
+    "unified profile save must always flush pending profile image drafts",
+  );
   assert.match(profileSource, /if \(!imagesDirty\) return true/);
   assert.match(
     profileSource,

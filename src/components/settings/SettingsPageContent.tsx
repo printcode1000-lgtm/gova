@@ -12,6 +12,7 @@ import * as React from "react";
 import { useAppPreferences, useThemePreferences } from "@/lib/preferences";
 import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import {
   CLEAR_STORAGE_WARNING,
   clearAllClientStorage,
@@ -33,43 +34,6 @@ import {
   type SettingsLocale,
   type SettingsThemeMode,
 } from "./settings-types";
-
-function ToggleSwitch({
-  checked,
-  onChange,
-  label,
-  disabled = false,
-}: {
-  checked: boolean;
-  onChange: (next: boolean) => void;
-  label: string;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      aria-label={label}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className={cn(
-        "relative h-8 w-14 shrink-0 rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60",
-        checked
-          ? "border-primary bg-primary"
-          : "border-outline-variant bg-surface-variant",
-      )}
-    >
-      <span
-        aria-hidden="true"
-        className={cn(
-          "absolute top-1 h-6 w-6 rounded-full bg-white shadow-sm transition-[inset-inline-start]",
-          checked ? "start-7" : "start-1",
-        )}
-      />
-    </button>
-  );
-}
 
 export function SettingsPageContent() {
   const { t } = useTranslation();
@@ -183,14 +147,14 @@ export function SettingsPageContent() {
       setProductConversationsEnabled(value.productConversationsEnabled);
       showStatus(
         value.productConversationsEnabled
-          ? "تم السماح بمراسلتك بخصوص منتجاتك."
-          : "تم منع بدء محادثات جديدة بخصوص منتجاتك.",
+          ? "تم السماح بمراسلتك من صفحات ملفك ومنتجاتك."
+          : "تم منع بدء محادثات جديدة من صفحات ملفك ومنتجاتك.",
       );
     } catch (error) {
       showStatus(
         error instanceof Error
           ? error.message
-          : "تعذر حفظ إعداد محادثات المنتجات.",
+          : "تعذر حفظ إعداد المحادثات المباشرة.",
       );
     } finally {
       setProductConversationsBusy(false);
@@ -638,13 +602,13 @@ export function SettingsPageContent() {
                 </div>
                 <div className="flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-surface p-4">
                   <div>
-                    <p className="text-sm font-semibold text-on-surface">مراسلة صاحب المنتج</p>
-                    <p className="mt-1 text-xs text-on-surface-variant">السماح للمستخدمين ببدء محادثة خاصة معك من صفحة أحد منتجاتك. عند الإيقاف لن تبدأ محادثات منتجات جديدة.</p>
+                    <p className="text-sm font-semibold text-on-surface">مراسلة صاحب الصفحة والمنتج</p>
+                    <p className="mt-1 text-xs text-on-surface-variant">السماح للمستخدمين ببدء محادثة خاصة معك من صفحة ملفك أو من صفحة أحد منتجاتك. عند الإيقاف لن تبدأ محادثات مباشرة جديدة.</p>
                   </div>
                   <ToggleSwitch
                     checked={productConversationsEnabled}
                     onChange={(enabled) => void updateProductConversations(enabled)}
-                    label="السماح بمراسلة صاحب المنتج"
+                    label="السماح بمراسلة صاحب الصفحة والمنتج"
                     disabled={productConversationsBusy}
                   />
                 </div>
