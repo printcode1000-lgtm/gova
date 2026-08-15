@@ -1,12 +1,12 @@
 import { Dialog } from "@capacitor/dialog";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { AlertOptions, ConfirmOptions, ConfirmResult, PromptOptions, PromptResult } from "../domain/dialog/types";
 
 const MODULE = "Dialog";
 
 const dialogPlugin = createLazyPlugin(MODULE, async () => {
-  return Dialog;
+  return sanitizePlugin(Dialog);
 });
 
 export const dialogAdapter = {

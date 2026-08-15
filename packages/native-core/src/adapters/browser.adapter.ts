@@ -1,12 +1,12 @@
 import { Browser } from "@capacitor/browser";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { OpenBrowserOptions } from "../domain/browser/types";
 
 const MODULE = "Browser";
 
 const browserPlugin = createLazyPlugin(MODULE, async () => {
-  return Browser;
+  return sanitizePlugin(Browser);
 });
 
 export const browserAdapter = {

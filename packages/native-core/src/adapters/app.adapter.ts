@@ -1,5 +1,5 @@
 import { App } from "@capacitor/app";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { AppInfo, AppState, AppLaunchUrl, AppRestoredResult } from "../domain/app/types";
 import type { Unsubscribe } from "../domain/listener";
@@ -7,8 +7,9 @@ import type { Unsubscribe } from "../domain/listener";
 const MODULE = "App";
 
 const appPlugin = createLazyPlugin(MODULE, async () => {
-  return App;
+  return sanitizePlugin(App);
 });
+
 
 export const appAdapter = {
   async getInfo(): Promise<AppInfo> {

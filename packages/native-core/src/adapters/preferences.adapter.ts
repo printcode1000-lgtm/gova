@@ -1,12 +1,12 @@
 import { Preferences } from "@capacitor/preferences";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { PreferenceGetResult, PreferenceKeysResult } from "../domain/preferences/types";
 
 const MODULE = "Preferences";
 
 const preferencesPlugin = createLazyPlugin(MODULE, async () => {
-  return Preferences;
+  return sanitizePlugin(Preferences);
 });
 
 export const preferencesAdapter = {

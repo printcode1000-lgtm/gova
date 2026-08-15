@@ -43,3 +43,6 @@ jobs:
 
       - name: Validate versions
         run: npm run version:validate
+
+      - name: OTA core tests
+        run: npm run test:ota-core

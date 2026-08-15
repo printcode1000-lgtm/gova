@@ -11,6 +11,7 @@ import "./contract/native-core-ast-boundary.test";
 import "./unit/share-validator.test";
 import "./unit/share-queue.test";
 import "./unit/schemas.test";
+import "./unit/lazy-plugin.test";
 import "./integration/share-receive-flow.test";
 import "./integration/native-core-host-behaviour.test";
 

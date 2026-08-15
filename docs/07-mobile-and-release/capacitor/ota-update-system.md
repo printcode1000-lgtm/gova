@@ -167,9 +167,9 @@ where it lives.** A file is classified native when it either:
 
 This replaces the previous legacy directory-prefix rule, which was wrong
 in both directions. It under-matched: the four sanctioned Capacitor-import
-exceptions (`src/platform/ota/capacitor-ota-adapter.ts`,
-`src/platform/navigation/capacitor-back-button-adapter.ts`,
-`src/features/ota/services/ota-api-service.ts`,
+exceptions (`packages/ota-core/src/adapters/ota.adapter.ts`,
+`packages/ota-core/src/adapters/back-button.adapter.ts`,
+`packages/ota-core/src/runtime/api-service.ts`,
 `src/features/page-snapshot/hooks/use-page-snapshot.tsx`) sit outside that
 prefix and passed the gate untouched. It also over-matched: facades, web
 adapters, `share-validator.ts`, and `duplicate-filter.ts` are pure TypeScript
@@ -213,7 +213,7 @@ ASOL_OTA_MINIMUM_NATIVE_VERSION=<version> npm run ota:publish
 
 ```bash
 npm run ota:check              # runs the gate only — builds nothing, uploads nothing
-npm run test:ota-compatibility # unit tests for the surface classifier
+npm run test:ota-core # unit tests for the surface classifier
 ```
 
 **Never run `npm run ota:publish` to test the gate.** Passing the gate
@@ -1158,15 +1158,15 @@ Splash displays technical current/R2 versions, changed/deleted counts, download 
 | File                                                                         | Responsibility                                                               |
 | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | `scripts/cap-build.ts`                                                       | Publish, full R2 verification, native versioning, and Capacitor sync         |
-| `scripts/ota-publish.ts`                                                     | Automatic version and single-directory delta publication                     |
-| `scripts/build-static.ts`                                                    | Static build and local manifest generation                                   |
-| `scripts/ota/ota-config.ts`                                                  | Schema, signing, URLs, and deterministic build environment                   |
-| `scripts/ota/ota-r2.ts`                                                      | R2 list/get/put/delete operations                                            |
-| `scripts/ota/ota-capability-scan.ts`                                         | Source capability detection and coverage guard                              |
+| `packages/ota-core/scripts/ota-publish.ts`                                   | Automatic version and single-directory delta publication                     |
+| `packages/ota-core/scripts/build-out.ts`                                     | Static build and local manifest generation                                   |
+| `packages/ota-core/src/publishing/config/ota-config.ts`                      | Schema, signing, URLs, and deterministic build environment                   |
+| `packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts`            | R2 list/get/put/delete operations                                            |
+| `packages/ota-core/src/publishing/release/capability-scan.ts`                | Source capability detection and coverage guard                              |
 | `packages/native-core/src/capabilities/capability-registry.ts`              | Bridge-backed capability resolution and the native version floor consumers  |
-| `src/features/ota/services/ota-update-service.ts`                            | Runtime comparison, staging, verification, and activation                    |
-| `src/features/ota/services/ota-api-service.ts`                               | Native/browser manifest and file transport                                   |
-| `src/features/ota/services/ota-release-service.server.ts`                    | Server-side manifest verification, access decisions, and approval management |
+| `packages/ota-core/src/runtime/update-service.ts`                            | Runtime comparison, staging, verification, and activation                    |
+| `packages/ota-core/src/runtime/api-service.ts`                               | Native/browser manifest and file transport                                   |
+| `packages/ota-core/src/runtime/release-service.server.ts`                    | Server-side manifest verification, access decisions, and approval management |
 | `src/modules/data-access/domains/ota/repositories/ota-release-repository.ts` | Release state and audit persistence                                          |
 | `packages/native-core/src/adapters/ota.adapter.ts`                           | Private storage and WebView activation                                       |
 | `src/components/splash/SplashInitializer.tsx`                                | Startup execution and progress details                                       |
@@ -1177,7 +1177,7 @@ Splash displays technical current/R2 versions, changed/deleted counts, download 
 ```powershell
 npm run typecheck
 npm run architecture:check
-npm run test:ota-compatibility
+npm run test:ota-core
 npm run test:native-core
 npm run ota:self-test
 npm run ota:check

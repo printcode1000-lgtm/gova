@@ -95,9 +95,9 @@ const sidebarSource = fs.readFileSync(
   path.join(root, "src", "components", "layouts", "AppSidebar.tsx"),
   "utf8",
 );
-const staticBuilderSource = fs.readFileSync(path.join(root, "scripts", "build-static.ts"), "utf8");
+const staticBuilderSource = fs.readFileSync(path.join(root, "packages", "ota-core", "src", "publishing", "build", "build-out.ts"), "utf8");
 const staticBuilderConfigSource = fs.readFileSync(
-  path.join(root, "scripts", "build-static", "build-static.runtime-config.ts"),
+  path.join(root, "packages", "ota-core", "src", "publishing", "build", "out-runtime-config.ts"),
   "utf8",
 );
 assert(pageSource.includes("if (!isDevelopment) notFound()"));

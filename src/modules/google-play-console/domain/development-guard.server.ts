@@ -139,7 +139,7 @@ export function releaseCommandEnvironment(names: readonly string[]): Record<stri
 
 /**
  * Non-environment sources a requirement may also be satisfied by, mirroring the
- * fallbacks the scripts themselves use (see scripts/ota/ota-config.ts).
+ * fallbacks the scripts themselves use (see packages/ota-core/src/publishing/config/ota-config.ts).
  * Lives here because this module owns environment access for release commands.
  */
 const REQUIREMENT_FILE_FALLBACKS: Record<string, string> = {

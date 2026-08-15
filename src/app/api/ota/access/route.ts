@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import { otaReleaseService } from '@/features/ota/services/ota-release-service.server';
-import type { OtaIdentity } from '@/features/ota/types/ota.types';
+import { otaReleaseService } from '@asol/ota-core/server';
+import type { OtaIdentity } from '@asol/ota-core';
 import { runTracedBusinessRoute } from '../../auth/traced-route';
 
 interface OtaAccessBody {

@@ -31,7 +31,7 @@ discovery** instead.
 | Classifier | `scripts/ota/ota-native-compatibility.ts` | — |
 | Report at check time | `npm run architecture:check` | **No** |
 | Enforcement at publish time | `npm run ota:publish` | **Yes** |
-| Regression test | `npm run test:ota-compatibility` | Yes |
+| Regression test | `npm run test:ota-core` | Yes |
 
 ### The classifier
 

@@ -10,8 +10,6 @@ Ctrl + Shift + P
 ابحث عن:
 Simple Browser: Show
 أدخل الرابط التالي:
-http://localhost:3000
-http://127.0.0.1:55679/home
 http://localhost:3001
 
 لعرض احداث المتصفح في IDE

@@ -1,5 +1,5 @@
 import { StatusBar, Style as CapStyle, Animation as CapAnimation } from "@capacitor/status-bar";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { SetStatusBarAnimationOptions, SetStatusBarBackgroundColorOptions, SetStatusBarStyleOptions, StatusBarInfo, StatusBarStyle } from "../domain/status-bar/types";
 import type { Unsubscribe } from "../domain/listener";
@@ -7,7 +7,7 @@ import type { Unsubscribe } from "../domain/listener";
 const MODULE = "StatusBar";
 
 const statusBarPlugin = createLazyPlugin(MODULE, async () => {
-  return StatusBar;
+  return sanitizePlugin(StatusBar);
 });
 
 export const statusBarAdapter = {

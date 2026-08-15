@@ -1,5 +1,5 @@
 import { Geolocation } from "@capacitor/geolocation";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError, NativeCoreError } from "../errors/native-core-error";
 import type { LocationFix, LocationOptions, LocationWatchCallback } from "../domain/location/types";
 import type { Unsubscribe } from "../domain/listener";
@@ -7,7 +7,7 @@ import type { Unsubscribe } from "../domain/listener";
 const MODULE = "Location";
 
 const locationPlugin = createLazyPlugin(MODULE, async () => {
-  return Geolocation;
+  return sanitizePlugin(Geolocation);
 });
 
 export const locationAdapter = {

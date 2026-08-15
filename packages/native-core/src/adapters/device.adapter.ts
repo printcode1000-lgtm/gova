@@ -1,12 +1,12 @@
 import { Device } from "@capacitor/device";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { DeviceInfo, DeviceBatteryInfo, DeviceId } from "../domain/device/types";
 
 const MODULE = "Device";
 
 const devicePlugin = createLazyPlugin(MODULE, async () => {
-  return Device;
+  return sanitizePlugin(Device);
 });
 
 export const deviceAdapter = {

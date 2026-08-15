@@ -8,18 +8,20 @@ import path from "node:path";
 import { zipSync } from "fflate";
 
 import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@/modules/google-play-console/domain/image-validation";
-import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "../../../../scripts/assert-release-static-bundle";
+import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "@asol/ota-core/publishing";
 import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "../../../../packages/native-core/scripts/validate-android-r8-policy";
-import { compareOtaVersions } from "@/features/ota/utils/ota-state";
-import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
-import { assertBuildJobTransition } from "../domain/build-job-types";
-import { nextBuildJobActivity, nextBuildJobStage } from "../domain/build-job-progress";
 import {
   assertContentVersionAdvances,
+  compareOtaVersions,
+  isNativeVersion,
+  isOtaVersion,
   nextContentVersion,
   parseContentVersion,
   releaseContentVersion,
-} from "../domain/content-version";
+} from "@asol/ota-core";
+import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
+import { assertBuildJobTransition } from "../domain/build-job-types";
+import { nextBuildJobActivity, nextBuildJobStage } from "../domain/build-job-progress";
 import {
   acquireBuildJobLock,
   assertBuildJobId,
@@ -39,9 +41,9 @@ import { changedBuildArtifacts, snapshotBuildOutputs } from "../services/build-j
 
 async function main() {
 const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { scripts: Record<string, string> };
-const staticBuilderSource = await readFile("scripts/build-static.ts", "utf8");
+const staticBuilderSource = await readFile("packages/ota-core/src/publishing/build/build-out.ts", "utf8");
 const staticBuilderConfigSource = await readFile(
-  "scripts/build-static/build-static.runtime-config.ts",
+  "packages/ota-core/src/publishing/build/out-runtime-config.ts",
   "utf8",
 );
 for (const route of [

@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import { otaReleaseService } from '@/features/ota/services/ota-release-service.server';
-import type { SetOtaReleaseApprovalInput } from '@/features/ota/types/ota.types';
+import { otaReleaseService } from '@asol/ota-core/server';
+import type { SetOtaReleaseApprovalInput } from '@asol/ota-core';
 import { runTracedBusinessRoute } from '../../../auth/traced-route';
 
 export async function GET(request: Request) {

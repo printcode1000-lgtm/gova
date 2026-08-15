@@ -1,12 +1,12 @@
 import { TextZoom } from "@capacitor/text-zoom";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { SetTextZoomOptions, TextZoomResult } from "../domain/text-zoom/types";
 
 const MODULE = "TextZoom";
 
 const textZoomPlugin = createLazyPlugin(MODULE, async () => {
-  return TextZoom;
+  return sanitizePlugin(TextZoom);
 });
 
 export const textZoomAdapter = {

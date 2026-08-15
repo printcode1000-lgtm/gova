@@ -15,7 +15,7 @@ import { SessionProvider } from "@/features/auth/components/SessionProvider";
 import { LoginSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { NetworkStatusProvider } from "@/features/network/hooks/use-network-status";
 import { NetworkStatusBanner } from "@/components/network/NetworkStatusBanner";
-import { OtaUpdateProvider } from "@/features/ota/hooks/use-ota-update";
+import { OtaUpdateProvider } from "@asol/ota-core";
 import { MobileBackButtonController } from "@/components/navigation/MobileBackButtonController";
 import { VoiceInputController } from "@/components/voice-input/VoiceInputController";
 import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";

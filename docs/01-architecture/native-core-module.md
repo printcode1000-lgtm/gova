@@ -47,13 +47,18 @@ The `paths` entry in the root `tsconfig.json` deliberately maps only the bare sp
    - `adapters/lazy-plugin.ts` therefore refuses to touch a plugin unless `isNativePlatform() || hasDom()`. The check is re-evaluated on every call, never cached, because the DOM appears partway through a server-rendered page's life.
    - The guarantee this preserves: **every public method settles, and settles as a `Result`**, on every host. `tests/integration/native-core-host-behaviour.test.ts` enforces it, including a settle-time budget so a method can never hang a screen behind a spinner with no error to show.
 
+5. **A plugin proxy must never be mistaken for a promise**:
+   - A Capacitor plugin with no web implementation returns a callable for *any* property read, `then` included. Resolving a promise with such an object makes the runtime read `.then`, find a function, and call it — surfacing in the browser as `"<Plugin>.then() is not implemented on web"` from code that never mentioned `then`.
+   - `sanitizePlugin()` in `adapters/lazy-plugin.ts` returns `undefined` for that one key, making the object a plain value again.
+   - **Ordering is the whole point.** An `async` loader that returns the raw plugin has already resolved a promise with it, so the throw happens inside the loader — sanitizing after the `await` is too late. Every loader must therefore return `sanitizePlugin(x)` or a boxed `{ plugin: x }`, never a bare plugin identifier. `tests/unit/lazy-plugin.test.ts` scans every adapter and fails if one regresses, because this failure appears only in a real browser and no test here can reach it otherwise.
+
 ---
 
 ## 4b. Capabilities and OTA gating
 
-`domain/capabilities/capability-keys.ts` names every native capability; `shell-capabilities.ts` records the shell version each was shipped in. `scripts/ota/ota-capability-scan.ts` maps a public `NativeCore.*` method to each key and scans application source for call sites, so `ota:publish` can refuse to ship a web bundle to a shell that predates a capability it uses.
+`domain/capabilities/capability-keys.ts` names every native capability; `shell-capabilities.ts` records the shell version each was shipped in. `packages/ota-core/src/publishing/release/capability-scan.ts` maps a public `NativeCore.*` method to each key and scans application source for call sites, so `ota:publish` can refuse to ship a web bundle to a shell that predates a capability it uses.
 
-Two rules follow, and both are enforced by `npm run test:ota-compatibility`:
+Two rules follow, and both are enforced by `npm run test:ota-core`:
 
 1. **Every capability key needs a matching `apiPatterns` token.** `assertDetectionCoverage()` fails the build when a key has no pattern.
 2. **A key declared shipped must keep a real public method behind it.** If a refactor drops the method, the correct repair is to restore the method — never to delete the key. Installed shells were promised that capability, and removing the key lets an OTA bundle assume a contract those shells cannot honour. `files.open` / `NativeCore.openFileExternally` is the worked example: the method was lost in a refactor and the scanner caught it.
@@ -97,6 +102,7 @@ To upgrade Capacitor or any plugin:
 | Unit | `unit/schemas.test.ts` | Every validation schema, including hostile input |
 | Unit | `unit/share-validator.test.ts` | MIME allow-list, size caps, URL safety |
 | Unit | `unit/share-queue.test.ts` | Bounded depth, oldest-first eviction, deliver-once |
+| Unit | `unit/lazy-plugin.test.ts` | Every plugin loader sanitizes before returning (see below) |
 | Integration | `integration/share-receive-flow.test.ts` | Validator and queue together, including a share arriving **before** any listener attaches |
 | Integration | `integration/native-core-host-behaviour.test.ts` | Every public method settles as a `Result` on a host with no native shell |
 

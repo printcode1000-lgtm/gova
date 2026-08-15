@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["../../src/*"],
+      "@asol/native-core": ["../native-core/src/index.ts"],
+      "@asol/ota-core": ["./src/index.ts"],
+      "@asol/ota-core/publishing": ["./src/publishing.ts"],
+      "@asol/ota-core/server": ["./src/server.ts"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "scripts/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

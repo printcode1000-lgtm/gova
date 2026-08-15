@@ -16,7 +16,7 @@ import type {
   OtaManifest,
   OtaReleaseAuditEntry,
   OtaReleaseSummary,
-} from '@/features/ota/types/ota.types';
+} from '@asol/ota-core';
 
 export class OtaReleaseRepository {
   constructor(private readonly database: IDatabaseClient = usersDataSource) {}
@@ -255,3 +255,4 @@ function toAuditEntry(row: OtaReleaseAuditEntity): OtaReleaseAuditEntry {
     createdAt: row.createdAt,
   };
 }
+

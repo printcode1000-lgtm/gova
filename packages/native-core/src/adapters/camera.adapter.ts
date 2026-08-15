@@ -1,6 +1,6 @@
 import { Camera, CameraDirection, CameraResultType, CameraSource } from "@capacitor/camera";
 import { Filesystem } from "@capacitor/filesystem";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError, NativeCoreError, isCancelledError, isPermissionDeniedError } from "../errors/native-core-error";
 import { isNativePlatform } from "./platform.adapter";
 import { permissionsAdapter } from "./permissions.adapter";
@@ -10,7 +10,7 @@ import type { CameraImage, PhotoOptions, PickImagesOptions } from "../domain/cam
 const MODULE = "Camera";
 
 const cameraPlugin = createLazyPlugin(MODULE, async () => {
-  return Camera;
+  return sanitizePlugin(Camera);
 });
 
 const QUALITY_MAP: Record<string, number> = {

@@ -57,8 +57,8 @@ for (const profile of profiles) {
 // ── 2. OTA may not inherit either account's credentials ──────────────────────
 
 const otaSources = [
-  ["scripts", "ota", "ota-r2.ts"],
-  ["scripts", "ota", "ota-config.ts"],
+  ["packages", "ota-core", "src", "publishing", "adapters", "r2-storage.adapter.ts"],
+  ["packages", "ota-core", "src", "publishing", "config", "ota-config.ts"],
   ["src", "core", "config", "server-env.values.ts"],
   // The readiness catalog is the fourth place the chain lived. It listed
   // alternatives the publisher no longer accepts, which would have reported the
@@ -88,11 +88,11 @@ for (const segments of otaSources) {
 
 // Same rule stated the other way: the OTA config module may name no R2 variable
 // that is not its own, on any line.
-const otaConfig = stripComments(read("scripts", "ota", "ota-config.ts"));
+const otaConfig = stripComments(read("packages", "ota-core", "src", "publishing", "config", "ota-config.ts"));
 for (const name of otaConfig.match(/(?<![A-Z0-9_])[A-Z][A-Z0-9_]*_R2_[A-Z0-9_]+/g) ?? []) {
   assert.ok(
     name.startsWith("ASOL_OTA_R2_"),
-    `scripts/ota/ota-config.ts reads ${name}. OTA has its own ASOL_OTA_R2_* credentials.`,
+    `ota-config.ts reads ${name}. OTA has its own ASOL_OTA_R2_* credentials.`,
   );
 }
 

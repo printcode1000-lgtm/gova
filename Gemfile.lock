@@ -239,6 +239,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane (~> 2.229)
+  xcodeproj (~> 1.27)
 
 BUNDLED WITH
    2.5.22

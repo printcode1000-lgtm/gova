@@ -1,12 +1,12 @@
 import { Clipboard } from "@capacitor/clipboard";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { ClipboardReadResult, ClipboardWriteOptions } from "../domain/clipboard/types";
 
 const MODULE = "Clipboard";
 
 const clipboardPlugin = createLazyPlugin(MODULE, async () => {
-  return Clipboard;
+  return sanitizePlugin(Clipboard);
 });
 
 export const clipboardAdapter = {

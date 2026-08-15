@@ -1,12 +1,12 @@
 import { Haptics, ImpactStyle as CapImpactStyle, NotificationType as CapNotificationType } from "@capacitor/haptics";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { ImpactOptions, NotificationOptions, VibrateOptions } from "../domain/haptics/types";
 
 const MODULE = "Haptics";
 
 const hapticsPlugin = createLazyPlugin(MODULE, async () => {
-  return Haptics;
+  return sanitizePlugin(Haptics);
 });
 
 export const hapticsAdapter = {

@@ -5,7 +5,7 @@ import {
   isNativeVersion,
   nextContentVersion,
   releaseContentVersion,
-} from "@/modules/release-commands/domain/content-version";
+} from "@asol/ota-core";
 
 function nextPatch(version?: string): string | undefined {
   if (!version) return undefined;

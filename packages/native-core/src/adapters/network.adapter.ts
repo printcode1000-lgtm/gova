@@ -1,5 +1,5 @@
 import { Network } from "@capacitor/network";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { ConnectionType, NetworkStatus } from "../domain/network/types";
 import type { Unsubscribe } from "../domain/listener";
@@ -7,7 +7,7 @@ import type { Unsubscribe } from "../domain/listener";
 const MODULE = "Network";
 
 const networkPlugin = createLazyPlugin(MODULE, async () => {
-  return Network;
+  return sanitizePlugin(Network);
 });
 
 export const networkAdapter = {

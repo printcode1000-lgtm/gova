@@ -11,7 +11,7 @@ import {
 import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
-} from "./ota/ota-native-compatibility";
+} from "@asol/ota-core/publishing";
 
 dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });

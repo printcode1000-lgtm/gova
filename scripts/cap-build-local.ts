@@ -4,7 +4,8 @@ import path from "node:path";
 import { API_BASE_URL } from '@asol/native-core';
 import { CURRENT_WEB_CONTENT_VERSION } from "../src/core/config/app-version";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
-import { loadOtaEnvironment, otaClientBuildEnv } from "./ota/ota-config";
+import { loadOtaEnvironment, otaClientBuildEnv } from "@asol/ota-core/publishing";
+
 
 const ANDROID_BUILD_GRADLE = path.resolve("android", "app", "build.gradle");
 
@@ -43,7 +44,7 @@ function main(): void {
     stdio: "inherit",
     env,
   });
-  execSync("npx tsx scripts/build-static.ts", { stdio: "inherit", env });
+  execSync("npx tsx packages/ota-core/scripts/build-out.ts", { stdio: "inherit", env });
   execSync("npm run cap:sync", { stdio: "inherit", env });
 
   console.log(

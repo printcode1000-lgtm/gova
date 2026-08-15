@@ -3,35 +3,36 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { API_BASE_URL } from '@asol/native-core';
-import { compareOtaVersions } from "../src/features/ota/utils/ota-state";
-import { withoutVsCodeDebuggerEnv } from "./child-process-env";
-import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "./assert-release-static-bundle";
-import { reportStage } from "./release-stage";
 import {
+  compareOtaVersions,
+  assertContentVersionAdvances,
+  releaseContentVersion,
+  nextNativePatchVersion,
+  androidVersionCodeFor,
+  type OtaManifest,
+} from "@asol/ota-core";
+import {
+  assertCapBuildInputBundle,
+  assertReleaseStaticBundle,
   getOtaPrefix,
   loadOtaEnvironment,
   otaClientBuildEnv,
-  type OtaManifest,
-} from "./ota/ota-config";
-import {
   createOtaR2Client,
   getOtaManifestObject,
   getOtaObjectBytes,
   listOtaObjectKeys,
-} from "./ota/ota-r2";
-import { runGradle } from "./android/gradle";
-import {
   inspectNativeCompatibility,
   nativeVersionFromBaseline,
-  nextNativePatchVersion,
   resolveNativeBaseline,
-  undeclarableNativeChanges,
-} from "./ota/ota-native-compatibility";
-import {
-  assertContentVersionAdvances,
-  readAndroidNativeVersion,
-  releaseContentVersion,
-} from "./ota/ota-release-line";
+  isUndeclarableNativeChange,
+  readCurrentVersions,
+  updateAndroidGradleVersion,
+  updateIosProjectVersion,
+  updateCommittedVersionConstants,
+} from "@asol/ota-core/publishing";
+import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { reportStage } from "./release-stage";
+import { runGradle } from "./android/gradle";
 
 const LOCAL_MANIFEST_PATH = path.resolve("out", "asol-web-manifest.json");
 const ANDROID_BUILD_GRADLE = path.resolve("android", "app", "build.gradle");
@@ -60,9 +61,12 @@ function resolveTargetNativeVersion(action: NativeVersionAction): string {
     );
   }
 
-  const current = readAndroidNativeVersion();
+  const versionsRes = readFileSync(ANDROID_BUILD_GRADLE, "utf8");
+  const match = /versionName\s+"([^"]+)"/.exec(versionsRes);
+  const current = match ? match[1]! : "0.2.4";
+
   const report = inspectNativeCompatibility(baseline);
-  const hasCompiledChanges = undeclarableNativeChanges(report).length > 0;
+  const hasCompiledChanges = report.requiresStoreRelease;
   const automaticTarget =
     compareOtaVersions(current, baselineVersion) >= 0
       ? current
@@ -92,66 +96,15 @@ function resolveTargetNativeVersion(action: NativeVersionAction): string {
 }
 
 function updateAndroidVersion(version: string): void {
-  if (!existsSync(ANDROID_BUILD_GRADLE)) {
-    throw new Error(`Android build file not found: ${ANDROID_BUILD_GRADLE}`);
-  }
-  const code = versionCode(version);
-  const before = readFileSync(ANDROID_BUILD_GRADLE, "utf8");
-  const after = before
-    .replace(/versionCode\s+\d+/, `versionCode ${code}`)
-    .replace(/versionName\s+"[^"]+"/, `versionName "${version}"`);
-  if (before !== after) writeFileSync(ANDROID_BUILD_GRADLE, after);
-  console.log(`Android versionName=${version}, versionCode=${code}`);
+  updateAndroidGradleVersion(version);
+  console.log(`Android versionName=${version}, versionCode=${androidVersionCodeFor(version)}`);
 }
 
 function updateIosVersion(version: string): void {
-  if (!existsSync(IOS_PROJECT_FILE)) {
-    throw new Error(`iOS project file not found: ${IOS_PROJECT_FILE}`);
-  }
-  const buildNumber = versionCode(version);
-  const before = readFileSync(IOS_PROJECT_FILE, "utf8");
-  const after = before
-    .replace(
-      /CURRENT_PROJECT_VERSION = [^;]+;/g,
-      `CURRENT_PROJECT_VERSION = ${buildNumber};`,
-    )
-    .replace(/MARKETING_VERSION = [^;]+;/g, `MARKETING_VERSION = ${version};`);
-  if (before !== after) writeFileSync(IOS_PROJECT_FILE, after);
+  updateIosProjectVersion(version);
   console.log(
-    `iOS MARKETING_VERSION=${version}, CURRENT_PROJECT_VERSION=${buildNumber}`,
+    `iOS MARKETING_VERSION=${version}, CURRENT_PROJECT_VERSION=${androidVersionCodeFor(version)}`,
   );
-}
-
-/**
- * The versions committed in the repository, kept in step with the ones just
- * built.
- *
- * `validate-app-versions` holds these constants, `.env.example`, the native
- * projects and every `asol-web-manifest.json` to one another. Rewriting the
- * native projects while leaving these behind would make that check fail on the
- * very commit a release produces — and, worse, would leave ordinary web and
- * dev builds reporting a version that no longer exists.
- */
-function updateCommittedVersionConstants(
-  contentVersion: string,
-  nativeVersion: string,
-): void {
-  const constantsPath = path.resolve("src", "core", "config", "app-version.ts");
-  const before = readFileSync(constantsPath, "utf8");
-  const after = before
-    .replace(/CURRENT_NATIVE_APP_VERSION = "[^"]+"/, `CURRENT_NATIVE_APP_VERSION = "${nativeVersion}"`)
-    .replace(/CURRENT_WEB_CONTENT_VERSION = "[^"]+"/, `CURRENT_WEB_CONTENT_VERSION = "${contentVersion}"`);
-  if (before !== after) writeFileSync(constantsPath, after);
-
-  const examplePath = path.resolve(".env.example");
-  if (existsSync(examplePath)) {
-    const exampleBefore = readFileSync(examplePath, "utf8");
-    const exampleAfter = exampleBefore
-      .replace(/^NEXT_PUBLIC_ASOL_NATIVE_VERSION=.*$/m, `NEXT_PUBLIC_ASOL_NATIVE_VERSION=${nativeVersion}`)
-      .replace(/^NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION=.*$/m, `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION=${contentVersion}`);
-    if (exampleBefore !== exampleAfter) writeFileSync(examplePath, exampleAfter);
-  }
-  console.log(`Committed versions: content=${contentVersion}, native=${nativeVersion}`);
 }
 
 function readLocalManifest(): OtaManifest {

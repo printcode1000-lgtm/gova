@@ -1,7 +1,7 @@
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { FilePicker } from "@capawesome/capacitor-file-picker";
 import { Share } from "@capacitor/share";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError, NativeCoreError, isCancelledError } from "../errors/native-core-error";
 import { base64ToBytes, bytesToBase64, blobToBase64 } from "../domain/binary/binary";
 import { isNativePlatform, hasDom } from "./platform.adapter";
@@ -10,15 +10,15 @@ import type { PickFilesOptions, PickedFile, SaveFileOptions, SaveFileResult, Rea
 const MODULE = "Files";
 
 const filePickerPlugin = createLazyPlugin(MODULE, async () => {
-  return FilePicker;
+  return sanitizePlugin(FilePicker);
 });
 
 const filesystemPlugin = createLazyPlugin(MODULE, async () => {
-  return Filesystem;
+  return sanitizePlugin(Filesystem);
 });
 
 const sharePlugin = createLazyPlugin(MODULE, async () => {
-  return Share;
+  return sanitizePlugin(Share);
 });
 
 function resolveDirectory(dir?: string): Directory {

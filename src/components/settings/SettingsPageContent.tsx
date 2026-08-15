@@ -13,7 +13,7 @@ import {
 } from "@/lib/storage/client-storage";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { useOtaUpdate } from "@/features/ota/hooks/use-ota-update";
+import { useOtaUpdate } from "@asol/ota-core";
 import { publicEnv } from "@/core/config/public-env";
 import { notifications } from "@/features/notifications";
 

@@ -1,5 +1,5 @@
 import { ScreenOrientation, OrientationLockType as CapOrientationLockType } from "@capacitor/screen-orientation";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { LockOrientationOptions, OrientationLockType, OrientationType, ScreenOrientationResult } from "../domain/screen-orientation/types";
 import type { Unsubscribe } from "../domain/listener";
@@ -7,7 +7,7 @@ import type { Unsubscribe } from "../domain/listener";
 const MODULE = "ScreenOrientation";
 
 const orientationPlugin = createLazyPlugin(MODULE, async () => {
-  return ScreenOrientation;
+  return sanitizePlugin(ScreenOrientation);
 });
 
 export const screenOrientationAdapter = {

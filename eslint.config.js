@@ -111,6 +111,102 @@ module.exports = [
               message:
                 'Import from @asol/native-core only (root), not from sub-paths.',
             },
+            {
+              group: [
+                '@/features/ota',
+                '@/features/ota/**',
+                'scripts/ota',
+                'scripts/ota/**',
+                'scripts/ota-publish',
+                'scripts/ota-publish/**',
+                'scripts/build-static',
+                'scripts/build-static/**',
+                '@/modules/release-commands/domain/content-version',
+              ],
+              message:
+                'OTA has been consolidated into @asol/ota-core. Import from @asol/ota-core or @asol/ota-core/publishing.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  // ── @asol/ota-core runtime sealing ────────────────────────────────────────
+  // Runtime domain & client services must NOT import Node builtins or publishing half.
+  {
+    files: [
+      'packages/ota-core/src/domain/**/*.{ts,tsx}',
+      'packages/ota-core/src/errors/**/*.{ts,tsx}',
+      'packages/ota-core/src/validation/**/*.{ts,tsx}',
+      'packages/ota-core/src/runtime/**/*.{ts,tsx}',
+      'packages/ota-core/src/index.ts',
+    ],
+    ignores: [
+      'packages/ota-core/src/runtime/release-service.server.ts',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            { name: 'fs', message: 'Browser/runtime OTA code must not import fs.' },
+            { name: 'node:fs', message: 'Browser/runtime OTA code must not import node:fs.' },
+            { name: 'path', message: 'Browser/runtime OTA code must not import path.' },
+            { name: 'node:path', message: 'Browser/runtime OTA code must not import node:path.' },
+            { name: 'child_process', message: 'Browser/runtime OTA code must not import child_process.' },
+            { name: 'node:child_process', message: 'Browser/runtime OTA code must not import node:child_process.' },
+            { name: '@asol/ota-core/publishing', message: 'Browser/runtime OTA code must not import publishing half.' },
+          ],
+          patterns: [
+            {
+              group: ['node:*'],
+              message: 'Browser/runtime OTA code must not import Node builtins.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  // ── @asol/ota-core adapter sealing ───────────────────────────────────────
+  // @aws-sdk/* and google-auth-library are Node-only, heavy dependencies.
+  // They belong exclusively in the ota-core adapters layer.
+  // Narrow exceptions:
+  //   - src/core/provisioning/r2-s3-client.ts: general-purpose R2 client for non-OTA storage
+  //   - src/features/notifications/services/providers/fcm-http-v1.server.ts: FCM HTTP v1 auth
+  //   - src/modules/google-play-console/services/google-play-console-service.server.ts:
+  //     uses GoogleAuth as HTTP client only; credential resolution is via @asol/ota-core/publishing
+  {
+    files: [
+      'src/**/*.{ts,tsx}',
+      'scripts/**/*.ts',
+      'services/**/*.{ts,tsx}',
+    ],
+    ignores: [
+      'packages/ota-core/src/publishing/adapters/**',
+      'src/core/provisioning/r2-s3-client.ts',
+      'src/features/notifications/services/providers/fcm-http-v1.server.ts',
+      'src/modules/google-play-console/services/google-play-console-service.server.ts',
+      // Same pattern as the console service above: GoogleAuth is the HTTP client,
+      // while the credentials themselves come from @asol/ota-core/publishing.
+      'src/modules/google-play-console/services/google-play-store-assets-service.server.ts',
+      // Generated mirrors of the exempt sources above. `sync-*-service-sources.ts`
+      // copies them verbatim into each service tree, so linting the copy re-reports
+      // a violation already answered at its source. They are gitignored output.
+      'services/*/generated/**',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@aws-sdk/*', '@aws-sdk'],
+              message: '@aws-sdk belongs exclusively to packages/ota-core/src/publishing/adapters. Use @asol/ota-core/publishing for OTA storage operations.',
+            },
+            {
+              group: ['google-auth-library'],
+              message: 'google-auth-library belongs to packages/ota-core/src/publishing/adapters. Use resolveGooglePlayCredentials from @asol/ota-core/publishing.',
+            },
           ],
         },
       ],

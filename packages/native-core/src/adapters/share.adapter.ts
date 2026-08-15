@@ -1,6 +1,6 @@
 import { Share } from "@capacitor/share";
 import { registerPlugin } from "@capacitor/core";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import { isNativePlatform, hasDom } from "./platform.adapter";
 import type { ShareOptions, ShareResult } from "../domain/share/types";
@@ -15,7 +15,7 @@ import type { Unsubscribe } from "../domain/listener";
 const MODULE = "Share";
 
 const sharePlugin = createLazyPlugin(MODULE, async () => {
-  return Share;
+  return sanitizePlugin(Share);
 });
 
 interface ShareReceivePluginApi {

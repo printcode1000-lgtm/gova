@@ -1,12 +1,12 @@
 import { SplashScreen } from "@capacitor/splash-screen";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { HideSplashOptions, ShowSplashOptions } from "../domain/splash-screen/types";
 
 const MODULE = "SplashScreen";
 
 const splashPlugin = createLazyPlugin(MODULE, async () => {
-  return SplashScreen;
+  return sanitizePlugin(SplashScreen);
 });
 
 export const splashScreenAdapter = {

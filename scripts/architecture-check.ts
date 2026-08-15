@@ -3,7 +3,7 @@ import { join, relative } from 'path';
 import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
-} from "./ota/ota-native-compatibility";
+} from "@asol/ota-core/publishing";
 import {
   ALLOWED_DRIZZLE_ORM_FILES_PATTERN,
   ALLOWED_DB_DRIVER_FILES_PATTERN,

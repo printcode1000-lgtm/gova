@@ -1,12 +1,12 @@
 import { Toast } from "@capacitor/toast";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { ShowToastOptions } from "../domain/toast/types";
 
 const MODULE = "Toast";
 
 const toastPlugin = createLazyPlugin(MODULE, async () => {
-  return Toast;
+  return sanitizePlugin(Toast);
 });
 
 export const toastAdapter = {

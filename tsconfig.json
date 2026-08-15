@@ -28,6 +28,15 @@
       ],
       "@asol/native-core": [
         "./packages/native-core/src/index.ts"
+      ],
+      "@asol/ota-core": [
+        "./packages/ota-core/src/index.ts"
+      ],
+      "@asol/ota-core/publishing": [
+        "./packages/ota-core/src/publishing.ts"
+      ],
+      "@asol/ota-core/server": [
+        "./packages/ota-core/src/server.ts"
       ]
     }
   },

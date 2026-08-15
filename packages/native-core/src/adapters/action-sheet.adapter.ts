@@ -1,12 +1,12 @@
 import { ActionSheet } from "@capacitor/action-sheet";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { ShowActionSheetOptions, ShowActionSheetResult } from "../domain/action-sheet/types";
 
 const MODULE = "ActionSheet";
 
 const actionSheetPlugin = createLazyPlugin(MODULE, async () => {
-  return ActionSheet;
+  return sanitizePlugin(ActionSheet);
 });
 
 export const actionSheetAdapter = {

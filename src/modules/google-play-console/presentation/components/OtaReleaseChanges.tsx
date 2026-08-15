@@ -1,4 +1,4 @@
-import type { OtaReleaseDiff, OtaReleaseSummary } from "@/features/ota/types/ota.types";
+import type { OtaReleaseDiff, OtaReleaseSummary } from "@asol/ota-core";
 
 import { DeltaTable } from "./DeltaTable";
 

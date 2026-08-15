@@ -1,5 +1,5 @@
 import { Keyboard, KeyboardResize as CapKeyboardResize } from "@capacitor/keyboard";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError } from "../errors/native-core-error";
 import type { KeyboardInfo, SetKeyboardResizeOptions } from "../domain/keyboard/types";
 import type { Unsubscribe } from "../domain/listener";
@@ -7,7 +7,7 @@ import type { Unsubscribe } from "../domain/listener";
 const MODULE = "Keyboard";
 
 const keyboardPlugin = createLazyPlugin(MODULE, async () => {
-  return Keyboard;
+  return sanitizePlugin(Keyboard);
 });
 
 export const keyboardAdapter = {

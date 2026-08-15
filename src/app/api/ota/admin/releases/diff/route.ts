@@ -1,5 +1,5 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
-import { otaReleaseService } from '@/features/ota/services/ota-release-service.server';
+import { otaReleaseService } from '@asol/ota-core/server';
 import { runTracedBusinessRoute } from '../../../../auth/traced-route';
 
 export async function GET(request: Request) {

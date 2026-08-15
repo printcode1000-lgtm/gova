@@ -47,7 +47,7 @@ export interface BuildCommandCatalogEntry {
 const signingEnv = ["ASOL_ANDROID_KEYSTORE_FILE", "ASOL_ANDROID_KEYSTORE_PASSWORD", "ASOL_ANDROID_KEY_ALIAS", "ASOL_ANDROID_KEY_PASSWORD"];
 const playEnv = ["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64"];
 // Each entry lists interchangeable sources; the runner accepts any of them,
-// matching how scripts/ota/ota-config.ts actually resolves its configuration.
+// matching how packages/ota-core/src/publishing/config/ota-config.ts actually resolves its configuration.
 // No alternatives. The publisher reads ASOL_OTA_R2_* alone, so accepting a
 // product or general bucket here would report the command ready and then fail
 // inside it — and, before that, would have published to the wrong account.
@@ -157,7 +157,10 @@ export const BUILD_COMMAND_CATALOG = [
   entry("android-backup-validate", "android:backup:validate", "verification", "safe", [], [], "30 sec"),
   entry("android-r8-validate", "android:r8:validate", "verification", "safe", [], [], "30 sec"),
   entry("android-r8-verify-release", "android:r8:verify-release", "verification", "safe", [], ["android/app/build/outputs/mapping/release/*.txt"], "10-25 min"),
-  entry("test-ota-compatibility", "test:ota-compatibility", "verification", "safe", [], [], "1-3 min"),
+  // The former test:ota-compatibility, test:ota-delivery, test:ota-background,
+  // test:ota-hardening, and test:ota-r2-retry suites were folded into the single
+  // @asol/ota-core suite when OTA was consolidated into that package.
+  entry("test-ota-core", "test:ota-core", "verification", "safe", [], [], "1-3 min"),
   entry("fastlane-android-doctor", "fastlane:android:doctor", "fastlane", "safe", [...playEnv, ...signingEnv], [], "1 min"),
   entry("fastlane-android-build", "fastlane:android:build", "fastlane", "destructive", [...playEnv, ...signingEnv], ["android/app/build/outputs/bundle/release/*.aab"], "20-45 min"),
   entry("fastlane-android-aab-signed", "fastlane:android:aab:signed", "fastlane", "destructive", [...playEnv, ...signingEnv], ["android/app/build/outputs/bundle/release/*.aab"], "20-45 min"),

@@ -4,6 +4,41 @@ import { hasDom, isNativePlatform } from "./platform.adapter";
 type Loader<T> = () => Promise<T>;
 
 /**
+ * Stop a Capacitor plugin proxy from being mistaken for a promise.
+ *
+ * A Capacitor plugin with no web implementation returns a callable for *any*
+ * property read, `then` included. Resolving a promise with such an object makes
+ * the JS runtime read `.then`, find a function, and call it — surfacing as
+ * "<Plugin>.then() is not implemented on web" from code that never mentioned
+ * `then`. Returning `undefined` for that one key makes the object a plain value
+ * again.
+ *
+ * **This must be applied inside the loader, before the value is returned.**
+ * Returning a raw plugin from an `async` loader already resolves a promise with
+ * it, so the throw happens before any caller can intervene — sanitizing after
+ * the `await` is too late to help. `lazy-plugin.test.ts` pins that ordering.
+ */
+export function sanitizePlugin<T>(plugin: T): T {
+  if (!plugin || (typeof plugin !== "object" && typeof plugin !== "function")) {
+    return plugin;
+  }
+  return new Proxy(plugin as object, {
+    get(target, prop, receiver) {
+      if (prop === "then") return undefined;
+      const value = Reflect.get(target, prop, receiver);
+      if (typeof value === "function") {
+        return value.bind(target);
+      }
+      return value;
+    },
+    has(target, prop) {
+      if (prop === "then") return false;
+      return Reflect.has(target, prop);
+    },
+  }) as T;
+}
+
+/**
  * Whether a Capacitor plugin may be touched at all on this host.
  *
  * Several Capacitor web implementations register DOM listeners in their
@@ -39,9 +74,10 @@ export function createLazyPlugin<T>(
     if (cached !== undefined) return cached;
     if (inFlight) return inFlight;
 
-    inFlight = loader()
-      .then((plugin) => {
-        cached = plugin ?? null;
+    inFlight = Promise.resolve()
+      .then(async () => {
+        const loaded = await loader();
+        cached = loaded ? sanitizePlugin(loaded) : null;
         return cached;
       })
       .catch(() => {
@@ -70,3 +106,4 @@ export function createLazyPlugin<T>(
     isLoaded: () => Boolean(cached),
   };
 }
+

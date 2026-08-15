@@ -3,9 +3,13 @@
 import * as React from "react";
 
 import { useSession } from "@/features/auth/components/SessionProvider";
-import { otaApiService } from "@/features/ota/services/ota-api-service";
-import { otaUpdateService } from "@/features/ota/services/ota-update-service";
-import type { OtaAdminDashboard, OtaDownloadProgress, OtaReleaseDiff } from "@/features/ota/types/ota.types";
+import {
+  otaApiService,
+  otaUpdateService,
+  type OtaAdminDashboard,
+  type OtaDownloadProgress,
+  type OtaReleaseDiff,
+} from "@asol/ota-core";
 import { NativeCore } from "@asol/native-core";
 
 export function useOtaAdmin() {

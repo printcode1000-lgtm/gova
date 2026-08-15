@@ -15,7 +15,6 @@ const preAuthCriticalFiles = new Set([
   "src/features/auth/hooks/use-register.ts",
   "src/features/favorites/hooks/FavoritesProvider.tsx",
   "src/features/network/hooks/use-network-status.tsx",
-  "src/features/ota/hooks/use-ota-update.tsx",
   "src/features/system-logs/PreAuthFailureMonitor.tsx",
   "src/hooks/use-guest-session.ts",
   "src/hooks/use-phone-verification.ts",

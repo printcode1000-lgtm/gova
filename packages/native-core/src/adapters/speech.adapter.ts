@@ -1,5 +1,5 @@
 import { SpeechRecognition } from "@capgo/capacitor-speech-recognition";
-import { createLazyPlugin } from "./lazy-plugin";
+import { createLazyPlugin, sanitizePlugin } from "./lazy-plugin";
 import { toNativeCoreError, NativeCoreError } from "../errors/native-core-error";
 import { isNativePlatform, hasDom } from "./platform.adapter";
 import type { SpeechOptions, SpeechRecognitionResult, SpeechRecognitionLanguage } from "../domain/speech/types";
@@ -7,7 +7,7 @@ import type { SpeechOptions, SpeechRecognitionResult, SpeechRecognitionLanguage 
 const MODULE = "SpeechRecognition";
 
 const speechPlugin = createLazyPlugin(MODULE, async () => {
-  return SpeechRecognition;
+  return sanitizePlugin(SpeechRecognition);
 });
 
 export const speechAdapter = {
