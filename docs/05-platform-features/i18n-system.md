@@ -174,4 +174,4 @@ Stored in AsolDB (`IndexedDB`) under the `appSettings` store with the key `app-p
 |------|------|
 | `src/lib/preferences/PreferencesProvider.tsx` | Wraps theme + app preferences |
 | `src/lib/app-init/build-app-init-script.ts` | Blocking locale + theme restore |
-| `src/components/settings/SettingsPageContent.tsx` | Language picker UI |
+| `src/components/layouts/AppSidebar.tsx` | Language toggle UI (collapsible "Settings" group in the sidebar) |

@@ -40,8 +40,14 @@ const clientSource = readFileSync(
   path.join(process.cwd(), "src/features/specialty-chat/application/specialty-chat-client.ts"),
   "utf8",
 );
+// The chat preferences live beside this device's notification state, which is
+// its own page now — `/settings/notifications` — rather than a section of the
+// general settings screen.
 const settingsSource = readFileSync(
-  path.join(process.cwd(), "src/components/settings/SettingsPageContent.tsx"),
+  path.join(
+    process.cwd(),
+    "src/components/settings/NotificationDeviceSettingsCard.tsx",
+  ),
   "utf8",
 );
 const notificationSchemaSource = readFileSync(
@@ -49,6 +55,12 @@ const notificationSchemaSource = readFileSync(
     process.cwd(),
     "src/modules/data-access/core/database/notifications/notifications.schema.ts",
   ),
+  "utf8",
+);
+// The card's own strings are i18n keys, not literal Arabic text; the Arabic
+// dictionary is the source of truth for what they say.
+const arabicDictionarySource = readFileSync(
+  path.join(process.cwd(), "src/locales/ar.json"),
   "utf8",
 );
 const unifiedPreferenceRoute = path.join(
@@ -84,7 +96,8 @@ assert.equal(
   ),
   false,
 );
-assert.match(settingsSource, /مراسلة صاحب الصفحة والمنتج/);
+assert.match(settingsSource, /notifications\.deviceCard\.productConversationsTitle/);
+assert.match(arabicDictionarySource, /"notifications\.deviceCard\.productConversationsTitle":\s*"مراسلة صاحب الصفحة والمنتج"/);
 assert.match(settingsSource, /updateProductConversations/);
 assert.match(notificationSchemaSource, /productConversationsEnabled/);
 

@@ -8,8 +8,10 @@ import {
   Bell,
   CheckCheck,
   ChevronDown,
+  CircleDot,
   Clock3,
   ExternalLink,
+  Inbox,
   Loader2,
   MessageCircle,
   PackageCheck,
@@ -60,12 +62,40 @@ function categoryIcon(category: NotificationCategory) {
   return Bell;
 }
 
+function filterIcon(filterValue: NotificationFilter) {
+  if (filterValue === "all") return Inbox;
+  if (filterValue === "unread") return CircleDot;
+  return categoryIcon(filterValue);
+}
+
+/**
+ * One hue per tab, mirroring how the profile edit navigation colours its
+ * sections (`PROFILE_EDIT_TAB_COLORS`). Literal hex rather than theme tokens
+ * because the tab gradients, borders, and glows compose each value with alpha
+ * suffixes, which `var(--token)` cannot do.
+ */
+const FILTER_COLORS: Record<NotificationFilter, string> = {
+  all: "#4F46E5",
+  unread: "#DB2777",
+  [NotificationCategories.Orders]: "#2563EB",
+  [NotificationCategories.Chat]: "#16A34A",
+  [NotificationCategories.Offers]: "#D97706",
+  [NotificationCategories.Payment]: "#0891B2",
+  [NotificationCategories.System]: "#7C3AED",
+};
+
+/**
+ * The project's palette has exactly four hues — primary, secondary, tertiary,
+ * error (`docs/04-ui-components/theme-system.md`) — so every category maps
+ * onto one of those tonal containers instead of an ad-hoc Tailwind color that
+ * would not track theme or dark-mode changes.
+ */
 function categoryTone(category: NotificationCategory): string {
-  if (category === NotificationCategories.Orders) return "bg-blue-500/10 text-blue-700 dark:text-blue-300";
-  if (category === NotificationCategories.Chat) return "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
-  if (category === NotificationCategories.Offers) return "bg-amber-500/10 text-amber-700 dark:text-amber-300";
-  if (category === NotificationCategories.Payment) return "bg-violet-500/10 text-violet-700 dark:text-violet-300";
-  return "bg-primary/10 text-primary";
+  if (category === NotificationCategories.Orders) return "bg-primary-container text-on-primary-container";
+  if (category === NotificationCategories.Chat) return "bg-secondary-container text-on-secondary-container";
+  if (category === NotificationCategories.Offers) return "bg-tertiary-container text-on-tertiary-container";
+  if (category === NotificationCategories.Payment) return "bg-error-container text-on-error-container";
+  return "bg-primary-container text-on-primary-container";
 }
 
 function formatDate(value: string, locale: "ar" | "en") {
@@ -85,6 +115,53 @@ function amountLabel(notification: NotificationEntity, locale: "ar" | "en") {
     currency,
     maximumFractionDigits: 2,
   }).format(amount);
+}
+
+/**
+ * The header subtitle names the tab's own content, not a generic unread count
+ * — "3 order updates" under Orders, "no conversations" under Chats — so it
+ * still means something once a category tab is selected.
+ */
+function filterSummary(
+  filterValue: NotificationFilter,
+  count: number,
+  locale: "ar" | "en",
+): string {
+  const templates: Record<
+    NotificationFilter,
+    { ar: (n: number) => string; en: (n: number) => string }
+  > = {
+    all: {
+      ar: (n) => (n > 0 ? `${n} إشعار` : "لا توجد إشعارات"),
+      en: (n) => (n > 0 ? `${n} notification${n === 1 ? "" : "s"}` : "No notifications"),
+    },
+    unread: {
+      ar: (n) => (n > 0 ? `${n} إشعار غير مقروء` : "لا توجد إشعارات غير مقروءة"),
+      en: (n) =>
+        n > 0 ? `${n} unread notification${n === 1 ? "" : "s"}` : "No unread notifications",
+    },
+    [NotificationCategories.Orders]: {
+      ar: (n) => (n > 0 ? `${n} تحديث على طلباتك` : "لا توجد تحديثات على طلباتك"),
+      en: (n) => (n > 0 ? `${n} order update${n === 1 ? "" : "s"}` : "No order updates"),
+    },
+    [NotificationCategories.Chat]: {
+      ar: (n) => (n > 0 ? `${n} محادثة` : "لا توجد محادثات"),
+      en: (n) => (n > 0 ? `${n} conversation${n === 1 ? "" : "s"}` : "No conversations"),
+    },
+    [NotificationCategories.Offers]: {
+      ar: (n) => (n > 0 ? `${n} عرض جديد` : "لا توجد عروض جديدة"),
+      en: (n) => (n > 0 ? `${n} new offer${n === 1 ? "" : "s"}` : "No new offers"),
+    },
+    [NotificationCategories.Payment]: {
+      ar: (n) => (n > 0 ? `${n} تحديث على مدفوعاتك` : "لا توجد تحديثات على المدفوعات"),
+      en: (n) => (n > 0 ? `${n} payment update${n === 1 ? "" : "s"}` : "No payment updates"),
+    },
+    [NotificationCategories.System]: {
+      ar: (n) => (n > 0 ? `${n} إشعار من النظام` : "لا توجد إشعارات من النظام"),
+      en: (n) => (n > 0 ? `${n} system notification${n === 1 ? "" : "s"}` : "No system notifications"),
+    },
+  };
+  return templates[filterValue][locale](count);
 }
 
 function filterFromQuery(value: string | null): NotificationFilter {
@@ -113,10 +190,6 @@ export function NotificationsPageContent() {
           title: "الإشعارات",
           login: "سجل الدخول لعرض مركز الإشعارات الخاص بك.",
           signIn: "تسجيل الدخول",
-          unread: (count: number) => `${count} إشعار غير مقروء`,
-          noUnread: "لا توجد إشعارات غير مقروءة",
-          enable: "تفعيل التنبيهات",
-          markAll: "قراءة الكل",
           emptyTitle: "لا توجد عناصر في هذا التبويب",
           emptyText: "ستظهر العناصر هنا عند وصولها.",
         }
@@ -124,10 +197,6 @@ export function NotificationsPageContent() {
           title: "Notifications",
           login: "Sign in to view your notification center.",
           signIn: "Sign in",
-          unread: (count: number) => `${count} unread notification${count === 1 ? "" : "s"}`,
-          noUnread: "No unread notifications",
-          enable: "Enable alerts",
-          markAll: "Read all",
           emptyTitle: "Nothing in this tab",
           emptyText: "Items will appear here when they arrive.",
         };
@@ -135,10 +204,8 @@ export function NotificationsPageContent() {
   const {
     uid,
     notifications,
-    unreadCount,
     isLoading,
     markManyRead,
-    markAllRead,
     dismiss,
   } = useNotifications();
   const [filter, setFilter] = React.useState<NotificationFilter>("all");
@@ -200,9 +267,9 @@ export function NotificationsPageContent() {
   if (!uid) {
     return (
       <main className="mx-auto max-w-4xl px-4 py-10 text-center">
-        <Bell className="mx-auto h-10 w-10 text-muted-foreground" />
+        <Bell className="mx-auto h-10 w-10 text-on-surface-variant" />
         <h1 className="mt-4 text-2xl font-bold">{copy.title}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{copy.login}</p>
+        <p className="mt-2 text-sm text-on-surface-variant">{copy.login}</p>
         <Link href="/login" className="mt-5 inline-flex rounded-xl bg-primary px-5 py-2.5 font-semibold text-on-primary">
           {copy.signIn}
         </Link>
@@ -214,39 +281,95 @@ export function NotificationsPageContent() {
     <main className="mx-auto w-full max-w-5xl px-3 py-5 sm:px-6">
       <header className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
-          <h1 className="text-2xl font-bold">{copy.title}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {unreadCount > 0 ? copy.unread(unreadCount) : copy.noUnread}
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
+            <Bell className="h-6 w-6 text-primary" aria-hidden="true" />
+            {copy.title}
+          </h1>
+          <p className="mt-1 text-sm text-on-surface-variant">
+            {filterSummary(filter, filteredNotifications.length, locale)}
           </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link href="/settings" className="inline-flex items-center gap-2 rounded-xl border border-outline-variant px-3 py-2 text-sm font-semibold">
-            <Bell className="h-4 w-4" />
-            {copy.enable}
-          </Link>
-          <button type="button" onClick={() => void markAllRead()} disabled={unreadCount === 0} className="inline-flex items-center gap-2 rounded-xl bg-primary px-3 py-2 text-sm font-semibold text-on-primary disabled:opacity-50">
-            <CheckCheck className="h-4 w-4" />
-            {copy.markAll}
-          </button>
         </div>
       </header>
 
-      <nav className="mb-5 flex gap-2 overflow-x-auto pb-1" aria-label={copy.title}>
-        {availableFilters.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => selectFilter(item.id)}
-            className={cn(
-              "shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition",
-              filter === item.id
-                ? "border-primary bg-primary text-on-primary"
-                : "border-outline-variant text-muted-foreground hover:border-primary hover:text-primary",
-            )}
-          >
-            {item.label}
-          </button>
-        ))}
+      {/*
+        Same navigation treatment as the profile edit workspace
+        (`ProfileEditWorkspaceView`): one coloured square per tab inside a
+        tonal, horizontally snapping strip, with the active tab pulsing behind
+        its icon.
+      */}
+      <nav
+        className="mb-5 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl"
+        aria-label={copy.title}
+      >
+        <div
+          data-snapshot-scroll
+          data-snapshot-id="notifications-filter-tabs-scroll"
+          className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {availableFilters.map((item) => {
+            const Icon = filterIcon(item.id);
+            const color = FILTER_COLORS[item.id];
+            const active = filter === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => selectFilter(item.id)}
+                aria-pressed={active}
+                className="group relative flex h-16 w-16 shrink-0 snap-center flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 hover:border-opacity-100 hover:shadow-md active:scale-95"
+                style={{
+                  paddingInline: "0.0625rem",
+                  paddingBlock: "0.0625rem",
+                  background: active
+                    ? `linear-gradient(135deg, ${color}26, ${color}10)`
+                    : `linear-gradient(135deg, ${color}14, ${color}06)`,
+                  borderColor: active ? `${color}AA` : `${color}55`,
+                }}
+              >
+                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center">
+                  {active ? (
+                    <>
+                      <span
+                        className="asol-profile-tab-wave pointer-events-none absolute inset-0 rounded-full"
+                        style={{
+                          color: `${color}80`,
+                          borderColor: `${color}B8`,
+                          backgroundColor: `${color}20`,
+                        }}
+                      />
+                      <span
+                        className="asol-profile-tab-wave asol-profile-tab-wave--delayed pointer-events-none absolute inset-0 rounded-full"
+                        style={{
+                          color: `${color}66`,
+                          borderColor: `${color}9E`,
+                          backgroundColor: `${color}18`,
+                        }}
+                      />
+                    </>
+                  ) : null}
+                  <Icon
+                    aria-hidden="true"
+                    className="relative z-10 shrink-0 transition-transform duration-300 group-hover:scale-105"
+                    style={{
+                      color,
+                      width: "2rem",
+                      height: "2rem",
+                      filter: active
+                        ? `drop-shadow(0 0 0.35rem ${color}55)`
+                        : undefined,
+                    }}
+                  />
+                </span>
+                <span
+                  className="line-clamp-2 block w-full text-center font-semibold tracking-tight text-on-surface-variant"
+                  style={{ fontSize: "0.5rem", lineHeight: "0.6rem" }}
+                >
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </nav>
 
       {filteredNotifications.length === 0 ? (
@@ -286,9 +409,9 @@ export function NotificationsPageContent() {
 function EmptyState({ title, text }: { title: string; text: string }) {
   return (
     <section className="rounded-2xl border border-dashed border-outline-variant p-10 text-center">
-      <Bell className="mx-auto h-10 w-10 text-muted-foreground" />
+      <Bell className="mx-auto h-10 w-10 text-on-surface-variant" />
       <h2 className="mt-4 text-lg font-bold">{title}</h2>
-      <p className="mt-2 text-sm text-muted-foreground">{text}</p>
+      <p className="mt-2 text-sm text-on-surface-variant">{text}</p>
     </section>
   );
 }
@@ -325,19 +448,19 @@ function ChatConversationList({
               index > 0 && "border-t border-outline-variant/70",
             )}
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+            <span className={cn("flex h-12 w-12 shrink-0 items-center justify-center rounded-full", categoryTone(NotificationCategories.Chat))}>
               <MessageCircle className="h-6 w-6" />
             </span>
             <span className="min-w-0 flex-1">
               <span className="flex items-center justify-between gap-3">
                 <strong className="truncate text-sm text-on-surface">{title}</strong>
-                <time className="shrink-0 text-[11px] text-muted-foreground">
+                <time className="shrink-0 text-[11px] text-on-surface-variant">
                   {formatDate(conversation.latest.createdAt, locale)}
                 </time>
               </span>
               {specialty ? <span className="mt-0.5 block truncate text-xs font-semibold text-primary">{specialty}</span> : null}
               <span className="mt-1 flex items-center justify-between gap-2">
-                <span className="truncate text-sm text-muted-foreground">
+                <span className="truncate text-sm text-on-surface-variant">
                   {outgoing ? (locale === "ar" ? "أنت: " : "You: ") : ""}
                   {conversation.latest.body}
                 </span>
@@ -397,7 +520,7 @@ function NotificationGroupCard({
             <div className="min-w-0">
               {paymentAmount ? <p className="mb-1 text-xl font-bold text-on-surface">{paymentAmount}</p> : null}
               <h2 className="truncate font-bold text-on-surface">{group.latest.title}</h2>
-              <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">{group.latest.body}</p>
+              <p className="mt-1 line-clamp-2 text-sm leading-6 text-on-surface-variant">{group.latest.body}</p>
             </div>
             {group.unreadCount > 0 ? (
               <span className="shrink-0 rounded-full bg-error px-2 py-1 text-xs font-bold text-on-error">
@@ -406,7 +529,7 @@ function NotificationGroupCard({
             ) : null}
           </div>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <p className="flex items-center gap-1.5 text-xs text-on-surface-variant">
               <Clock3 className="h-3.5 w-3.5" />
               {formatDate(group.latest.createdAt, locale)}
             </p>
@@ -424,7 +547,7 @@ function NotificationGroupCard({
                 </button>
               ) : null}
               {canArchive ? (
-                <button type="button" onClick={onDismiss} className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-muted-foreground">
+                <button type="button" onClick={onDismiss} className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface-variant">
                   <Archive className="h-4 w-4" />
                   {locale === "ar" ? "أرشفة" : "Archive"}
                 </button>
@@ -449,8 +572,8 @@ function NotificationGroupCard({
               <li key={item.id} className="relative border-s border-outline-variant pb-4 ps-4 last:pb-0">
                 <span className={cn("absolute -start-1.5 top-1 h-3 w-3 rounded-full", index === 0 ? "bg-primary" : "bg-outline-variant")} />
                 <p className="text-sm font-semibold text-on-surface">{item.title}</p>
-                <p className="mt-0.5 text-sm text-muted-foreground">{item.body}</p>
-                <time className="mt-1 block text-[11px] text-muted-foreground">{formatDate(item.createdAt, locale)}</time>
+                <p className="mt-0.5 text-sm text-on-surface-variant">{item.body}</p>
+                <time className="mt-1 block text-[11px] text-on-surface-variant">{formatDate(item.createdAt, locale)}</time>
               </li>
             ))}
           </ol>

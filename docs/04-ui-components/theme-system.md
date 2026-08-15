@@ -219,9 +219,10 @@ This rule applies to floating actions, save bars, toasts, network banners, and n
 
 ## Settings UI
 
-Users change theme options in **Settings** (`src/components/settings/SettingsPageContent.tsx`):
+Theme mode (light / dark) is toggled from the collapsible "Settings" group in the sidebar (`src/components/layouts/AppSidebar.tsx`), next to the language toggle.
 
-- Theme mode (light / dark / system)
+Remaining theme options are in **Settings** (`src/components/settings/SettingsPageContent.tsx`):
+
 - Font size slider
 - Density chips
 - High contrast toggle

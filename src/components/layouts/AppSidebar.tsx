@@ -1,22 +1,29 @@
 "use client";
 
 import {
+  Bell,
   ChevronDown,
+  Cloud,
   DatabaseBackup,
   DatabaseZap,
   Edit,
   Eye,
+  FileText,
   Image as ImageIcon,
+  Info,
+  Languages,
   LibraryBig,
   LogIn,
   LogOut,
   MessagesSquare,
   Megaphone,
+  Moon,
   ScrollText,
-  Settings,
+  Settings2,
   ShieldCheck,
   Sliders,
   Sparkles,
+  Sun,
   TestTube2,
   TrendingUp,
   X,
@@ -52,14 +59,6 @@ import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
 import { notifications } from "@/features/notifications";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { publicEnv } from "@/core/config";
 import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
@@ -74,8 +73,16 @@ export const AppSidebar = React.memo(function AppSidebar({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { t, isRTL } = useTranslation();
   const resolvedScheme = useResolvedColorScheme();
-  const { resetPreferences: resetThemePreferences } = useThemePreferences();
-  const { resetPreferences: resetAppPreferences } = useAppPreferences();
+  const {
+    preferences: themePreferences,
+    updatePreferences: updateThemePreferences,
+    resetPreferences: resetThemePreferences,
+  } = useThemePreferences();
+  const {
+    preferences: appPreferences,
+    updatePreferences: updateAppPreferences,
+    resetPreferences: resetAppPreferences,
+  } = useAppPreferences();
   const { isLoggedIn, session, setSession } = useSession();
   const { details: storeDetails } = useStoreDetails();
   const { storeImages } = useProfileStoreImages();
@@ -93,6 +100,7 @@ export const AppSidebar = React.memo(function AppSidebar({
     notifications: false,
     system: false,
   });
+  const [settingsGroupOpen, setSettingsGroupOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
@@ -257,6 +265,22 @@ export const AppSidebar = React.memo(function AppSidebar({
     setSession,
   ]);
 
+  const handleSettingsGroupToggle = useCallback(() => {
+    setSettingsGroupOpen((open) => !open);
+  }, []);
+
+  const handleToggleLanguage = useCallback(() => {
+    updateAppPreferences({
+      locale: appPreferences.locale === "ar" ? "en" : "ar",
+    });
+  }, [appPreferences.locale, updateAppPreferences]);
+
+  const handleToggleTheme = useCallback(() => {
+    updateThemePreferences({
+      themeMode: themePreferences.themeMode === "dark" ? "light" : "dark",
+    });
+  }, [themePreferences.themeMode, updateThemePreferences]);
+
   const handleSuperAdminToggle = useCallback(() => {
     setSuperAdminOpen((open) => !open);
   }, []);
@@ -288,7 +312,8 @@ export const AppSidebar = React.memo(function AppSidebar({
       pathname.includes("/data-health") ||
       pathname.includes("/dev-cloud-backup") ||
       pathname.includes("/catalog") ||
-      pathname.includes("/google-play-store-assets")
+      pathname.includes("/google-play-store-assets") ||
+      pathname.includes("/cloud-accounts")
     ) {
       setSuperAdminGroupsOpen((current) => ({ ...current, data: true }));
       return;
@@ -421,6 +446,14 @@ export const AppSidebar = React.memo(function AppSidebar({
                   >
                     <DatabaseBackup className={sidebarSmallIconClass} />
                     نسخ سحابة التطوير
+                  </Link>
+                  <Link
+                    href="/super-admin/cloud-accounts"
+                    onClick={onClose}
+                    className={itemClass}
+                  >
+                    <Cloud className={sidebarSmallIconClass} />
+                    الحسابات السحابية
                   </Link>
                   {showCatalogStudio ? (
                     <Link
@@ -718,16 +751,103 @@ export const AppSidebar = React.memo(function AppSidebar({
                 </Link>
               )}
 
-              <Link href="/settings" onClick={onClose}>
-                <button type="button" className={sidebarControlClass}>
-                  <Settings className={sidebarIconClass} />
+              <div
+                className={cn(
+                  "asol-control overflow-hidden rounded-2xl border shadow-sm",
+                  resolvedScheme === "dark"
+                    ? "border-outline-variant/30"
+                    : "border-outline-variant/20",
+                  sidebarSurface,
+                )}
+              >
+                <button
+                  type="button"
+                  onClick={handleSettingsGroupToggle}
+                  aria-expanded={settingsGroupOpen}
+                  className={cn(sidebarControlClass, "rounded-none")}
+                >
+                  <Settings2 className={sidebarIconClass} />
                   {t("sidebar.settings")}
+                  <ChevronDown
+                    className={cn(
+                      "ms-auto h-4 w-4 transition-transform",
+                      settingsGroupOpen && "rotate-180",
+                    )}
+                  />
                 </button>
-              </Link>
+                {settingsGroupOpen && (
+                  <div className="flex flex-wrap justify-center gap-2 px-2 pb-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={handleToggleLanguage}
+                      aria-label={t("settings.languageLabel")}
+                      className={cn(
+                        "flex w-fit min-w-0 flex-col items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-medium leading-5",
+                        sidebarTone,
+                        sidebarHoverSurface,
+                      )}
+                    >
+                      <Languages className={sidebarIconClass} />
+                      <span>
+                        {appPreferences.locale === "ar"
+                          ? t("common.arabic")
+                          : t("common.english")}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleToggleTheme}
+                      aria-label={t("settings.visualTheme")}
+                      className={cn(
+                        "flex w-fit min-w-0 flex-col items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-medium leading-5",
+                        sidebarTone,
+                        sidebarHoverSurface,
+                      )}
+                    >
+                      {themePreferences.themeMode === "dark" ? (
+                        <Moon className={sidebarIconClass} />
+                      ) : (
+                        <Sun className={sidebarIconClass} />
+                      )}
+                      <span>
+                        {themePreferences.themeMode === "dark"
+                          ? t("theme.dark")
+                          : t("theme.light")}
+                      </span>
+                    </button>
+                    <Link
+                      href="/settings/notifications"
+                      onClick={onClose}
+                      aria-label={t("sidebar.browserNotifications")}
+                      className={cn(
+                        "flex w-fit min-w-0 flex-col items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-medium leading-5",
+                        sidebarTone,
+                        sidebarHoverSurface,
+                      )}
+                    >
+                      <Bell className={sidebarIconClass} />
+                      <span>{t("sidebar.browserNotifications")}</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
               <Link href="/contact-us" onClick={onClose}>
                 <button type="button" className={sidebarControlClass}>
                   <MessagesSquare className={sidebarIconClass} />
                   {t("sidebar.contactUs")}
+                </button>
+              </Link>
+              <Link href="/privacy-policy" onClick={onClose}>
+                <button type="button" className={sidebarControlClass}>
+                  <FileText className={sidebarIconClass} />
+                  {t("sidebar.privacyPolicy")}
+                </button>
+              </Link>
+              <Link href="/settings" onClick={onClose}>
+                <button type="button" className={sidebarControlClass}>
+                  <Info className={sidebarIconClass} />
+                  {t("sidebar.about")}
                 </button>
               </Link>
             </div>

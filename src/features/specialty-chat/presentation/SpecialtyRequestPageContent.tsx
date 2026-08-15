@@ -44,7 +44,7 @@ export function SpecialtyRequestPageContent() {
   }, []);
 
   const copy = locale === "ar" ? {
-    title: "طلب من مقدمي الخدمات",
+    title: "ارسال طلب الي مقدمي الخدمات",
     subtitle: "اختر تخصصًا واحدًا. سيصل طلبك فقط إلى مقدمي الخدمة المتاحين، وسيكون كل رد خاصًا بك.",
     main: "التخصص الرئيسي", sub: "التخصص الفرعي", message: "نص الطلب",
     placeholder: "اكتب ما تحتاجه بوضوح...", submit: "إرسال الطلب",

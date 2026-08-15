@@ -760,19 +760,37 @@ so both would otherwise get a button that always resolves `false`:
 
 In a browser, `Notification.permission === "denied"` is an origin-level block:
 the application cannot show the native permission prompt again or turn the
-permission back on. The dialog and the `/settings` action therefore explain
-that the user must open the site's controls beside the address bar, change
-Notifications to **Allow**, and select **Try again**. The retry first reads the
-permission again and only creates/registers the Web Push subscription after it
-is granted; it never exposes the internal `notificationPermissionDenied` error
-to the user.
+permission back on. The dialog and the `/settings/notifications` action
+therefore explain that the user must open the site's controls beside the address
+bar, change Notifications to **Allow**, and select **Try again**. The retry
+first reads the permission again and only creates/registers the Web Push
+subscription after it is granted; it never exposes the internal
+`notificationPermissionDenied` error to the user.
 
 The `visibilitychange` listener is harmless where it cannot fire usefully, so it
 stays attached for any blocked state.
 
 A browser with no Web Push support at all — an insecure origin, or no service
 worker — resolves to `hidden`, because a dialog that cannot enable anything is a
-dead end. Those users still have the manual toggle in `/settings`.
+dead end. Those users still have the manual toggle in `/settings/notifications`.
+
+### The settings page follows the same contract
+
+`/settings/notifications` is the second surface for this state, so it obeys the
+same three rules rather than restating them:
+
+1. The **open app settings** button renders only where
+   `permission.canOpenSettings` is true — read from the diagnostics snapshot,
+   not inferred from "is this native". On iOS and in a browser the primary
+   action becomes **re-check** instead, because `openSettings()` there resolves
+   `false` every time.
+2. A blocked permission replaces the enable action with a re-check on every
+   platform. The app cannot re-prompt once blocked, so an enable button would be
+   a dead control.
+3. Granting is not the end of the flow. Both the re-check and the
+   `visibilitychange` return call `enableDevice`, which registers the FCM/APNs
+   token or creates the Web Push subscription — a granted permission with no
+   transport delivers nothing.
 
 ### Files
 
@@ -782,6 +800,43 @@ presentation/NotificationPermissionPrompt.tsx     the dialog itself
 application/notification-permission-prompt-policy.ts   the pure decision
 public/notification-facade.ts                     the use cases behind it
 tests/notification-permission-prompt-policy.test.ts    its contract
+```
+
+### The push switch is per device, not per account
+
+Two different things can stop a push arriving, and the settings page exposes
+only the first:
+
+| | Device switch (`enableDevice` / `unregisterDevice`) | Account mute (`pushEnabled`) |
+|---|---|---|
+| Scope | this device alone | every device on the account |
+| Stored in | `user_notification_tokens` row + the native enabled flag / Web Push subscription | `user_notification_preferences.push_enabled` |
+| Off means | this device's token is deleted and its subscription dropped; other devices keep receiving | the server skips the send for this uid before it ever looks up a token |
+| Re-enabling | re-registers this device | needs no re-registration anywhere |
+| Has a control | **yes** — the switch on `/settings/notifications` | **no** |
+
+The device switch is safe to describe as "this device only" because
+`DeviceTokenService.unregister` reads the token list from this device's own
+AsolDB store and deletes the server rows **by `deviceId`**. It can never reach
+another device's registration.
+
+The account mute has no UI: silencing every device at once was not the
+behaviour users expected from a switch on a device's own settings page. The
+column and its server gate remain, so `notifications.setPushPreference` is still
+the way to mute an account programmatically. Because an account could have been
+left muted by the previous UI, enabling a device repairs a stored `false` back
+to `true` — otherwise a user would register a device and still receive nothing,
+with no control left to explain why.
+
+### Files
+
+The settings surface lives outside the module, because it also renders account
+preferences the notifications module does not own:
+
+```text
+src/app/settings/notifications/page.tsx                       the route
+src/components/settings/NotificationsSettingsPageContent.tsx  the page shell
+src/components/settings/NotificationDeviceSettingsCard.tsx    device + chat state
 ```
 
 ## Device Token Flow
@@ -822,7 +877,7 @@ Every path that ends a session unregisters first:
 
 | Path | Notes |
 |------|-------|
-| Disabling notifications in `/settings` | Web Push and native both. |
+| Turning the device switch off in `/settings/notifications` | Web Push and native both. This device only — the tokens are deleted by `deviceId`. |
 | Clear application data in `/settings` | Runs before `clearAllClientStorage`. |
 | Sign out, any platform | `useLogout` unregisters before clearing the session. Failures are swallowed so sign-out itself never blocks. |
 | Switching accounts on a native device | `NativePushController` also unregisters the previous uid when it sees the change. |
@@ -1856,7 +1911,7 @@ expect every browser to re-subscribe.
 
 Runtime pages:
 
-- User device settings: `/settings`
+- User device settings: `/settings/notifications`
 
 Security rules:
 
@@ -1868,7 +1923,7 @@ Security rules:
 Browser subscription flow:
 
 ```text
-post-login opt-in dialog, or the /settings toggle
+post-login opt-in dialog, or the /settings/notifications toggle
   -> request Notification permission
   -> register /asol-push-sw.js
   -> PushManager.subscribe(WEB_PUSH_VAPID_PUBLIC_KEY)   no server call
