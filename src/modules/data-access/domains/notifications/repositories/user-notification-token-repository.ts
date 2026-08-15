@@ -13,6 +13,7 @@ import type {
   DeleteNotificationTokenInput,
   NotificationChatPreferenceChanges,
   NotificationChatPreferences,
+  NotificationDeliveryPreference,
   RegisteredNotificationToken,
   RegisterNotificationTokenInput,
 } from "@/features/notifications/contracts";
@@ -194,6 +195,55 @@ export class UserNotificationTokenRepository {
     const disabled = new Set(
       rows
         .filter((row: { uid: string; enabled: boolean }) => !row.enabled)
+        .map((row: { uid: string }) => row.uid),
+    );
+    return unique.filter((uid) => !disabled.has(uid));
+  }
+
+  async getPushEnabled(uid: string): Promise<NotificationDeliveryPreference> {
+    const rows = await this.database.db
+      .select({ pushEnabled: userNotificationPreferences.pushEnabled })
+      .from(userNotificationPreferences)
+      .where(eq(userNotificationPreferences.uid, uid))
+      .limit(1);
+    return { pushEnabled: rows[0]?.pushEnabled ?? true };
+  }
+
+  async setPushEnabled(
+    uid: string,
+    pushEnabled: boolean,
+  ): Promise<NotificationDeliveryPreference> {
+    const updatedAt = new Date().toISOString();
+    await this.database.execute(
+      `INSERT INTO user_notification_preferences (uid, push_enabled, updated_at)
+       VALUES (?, ?, ?)
+       ON CONFLICT(uid) DO UPDATE SET
+         push_enabled = excluded.push_enabled,
+         updated_at = excluded.updated_at`,
+      [uid, pushEnabled ? 1 : 0, updatedAt],
+    );
+    return { pushEnabled };
+  }
+
+  /**
+   * Which of these uids currently accept a push — the master-switch gate every
+   * send passes through in `NotificationSendService.sendToUsersLocally`,
+   * regardless of notification kind. A uid with no preference row has never
+   * touched the switch and defaults to enabled.
+   */
+  async filterPushEnabled(uids: string[]): Promise<string[]> {
+    const unique = Array.from(new Set(uids.filter(Boolean)));
+    if (unique.length === 0) return [];
+    const rows = await this.database.db
+      .select({
+        uid: userNotificationPreferences.uid,
+        pushEnabled: userNotificationPreferences.pushEnabled,
+      })
+      .from(userNotificationPreferences)
+      .where(inArray(userNotificationPreferences.uid, unique));
+    const disabled = new Set(
+      rows
+        .filter((row: { uid: string; pushEnabled: boolean }) => !row.pushEnabled)
         .map((row: { uid: string }) => row.uid),
     );
     return unique.filter((uid) => !disabled.has(uid));

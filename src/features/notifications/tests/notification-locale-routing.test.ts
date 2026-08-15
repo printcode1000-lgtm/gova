@@ -11,6 +11,7 @@ import { NotificationPlatforms } from "../domain/enums";
 import { moneyVariablesByLocale } from "../shared/notification-money";
 import type { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
 import type { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
+import type { GetNotificationPushPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-push-preference.query";
 
 function token(
   id: string,
@@ -56,6 +57,7 @@ function buildService(
   provider: CapturingProvider,
   tokensByUid: Record<string, RegisteredNotificationToken[]>,
   deleted: string[],
+  mutedUids: readonly string[] = [],
 ) {
   const listTokens = {
     byUids: async () => tokensByUid,
@@ -65,10 +67,16 @@ function buildService(
       deleted.push(input.tokenId);
     },
   } as unknown as DeleteNotificationTokenCommand;
+  const muted = new Set(mutedUids);
+  const pushPreference = {
+    pushEnabledUids: async (uids: string[]) => uids.filter((uid) => !muted.has(uid)),
+  } as unknown as GetNotificationPushPreferenceQuery;
   return new NotificationSendService(
     listTokens,
     new NotificationProviderRegistry([provider]),
     deleteToken,
+    undefined,
+    pushPreference,
   );
 }
 
@@ -144,6 +152,38 @@ async function main() {
     dedupeKey: "broadcast:test",
   });
   assert.deepEqual(removed, ["ntok_dead"]);
+
+  // A muted uid gets no provider call at all, even though it holds a live
+  // token — the master switch is checked before tokens are even resolved.
+  const mutedProvider = new CapturingProvider();
+  const mutedService = buildService(
+    mutedProvider,
+    {
+      usr_muted: [token("ntok_muted", "usr_muted", "en")],
+      usr_active: [token("ntok_active", "usr_active", "en")],
+    },
+    [],
+    ["usr_muted"],
+  );
+  const mutedResult = await mutedService.sendToUsersLocally({
+    uids: ["usr_muted", "usr_active"],
+    title: "Announcement",
+    body: "Body",
+    dedupeKey: "broadcast:mute-test",
+  });
+  assert.deepEqual(
+    mutedResult.results.find((result) => result.uid === "usr_muted"),
+    { uid: "usr_muted", tokenCount: 0, status: "muted" },
+  );
+  assert.equal(
+    mutedResult.results.find((result) => result.uid === "usr_active")?.status,
+    "queued",
+  );
+  assert.equal(
+    mutedProvider.calls.flatMap((call) => call.tokens.map((item) => item.id)).includes("ntok_muted"),
+    false,
+    "A muted uid's token must never reach a provider.",
+  );
 
   console.log("Notification locale routing tests passed.");
 }

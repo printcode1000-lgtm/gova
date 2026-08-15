@@ -24,6 +24,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import NextImage from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import React from "react";
@@ -46,6 +47,10 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { queueLogoutSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { formatSessionPhone } from "@/features/auth/entities/session.entity";
+import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
+import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
+import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
 import { notifications } from "@/features/notifications";
 import {
   Dialog,
@@ -72,6 +77,11 @@ export const AppSidebar = React.memo(function AppSidebar({
   const { resetPreferences: resetThemePreferences } = useThemePreferences();
   const { resetPreferences: resetAppPreferences } = useAppPreferences();
   const { isLoggedIn, session, setSession } = useSession();
+  const { details: storeDetails } = useStoreDetails();
+  const { storeImages } = useProfileStoreImages();
+  const profileIdentityLabel = isLoggedIn
+    ? storeDetails.storeName.trim() || formatSessionPhone(session?.phone ?? "")
+    : "";
   const router = useRouter();
   const queryClient = useQueryClient();
   const pathname = usePathname();
@@ -601,23 +611,57 @@ export const AppSidebar = React.memo(function AppSidebar({
 
                   <div
                     className={cn(
-                      "asol-control rounded-lg p-2",
+                      "asol-control space-y-2 rounded-2xl border p-2.5 shadow-sm",
+                      resolvedScheme === "dark"
+                        ? "border-outline-variant/30"
+                        : "border-outline-variant/20",
                       sidebarSurface,
                     )}
                   >
                     <div
                       className={cn(
-                        "px-2 py-1 text-xs font-semibold flex items-center gap-2",
+                        "px-1.5 py-1 text-xs font-semibold flex items-center gap-2",
                         sidebarTone,
                       )}
                     >
-                      <User className={sidebarSmallIconClass} />
-                      {t("nav.profile")}
+                      <span
+                        className={cn(
+                          "relative flex shrink-0 items-center justify-center overflow-hidden rounded-full",
+                          storeImages.avatarUrl ? "h-14 w-14" : "h-7 w-7",
+                          resolvedScheme === "dark"
+                            ? "bg-primary/15 text-primary"
+                            : "bg-primary-container text-on-primary-container",
+                        )}
+                      >
+                        {storeImages.avatarUrl ? (
+                          <NextImage
+                            src={storeImages.avatarUrl}
+                            alt=""
+                            fill
+                            sizes="56px"
+                            className="object-cover"
+                            unoptimized={shouldUseUnoptimizedImage(storeImages.avatarUrl)}
+                          />
+                        ) : (
+                          <User className={sidebarSmallIconClass} />
+                        )}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p>{t("nav.profile")}</p>
+                        {profileIdentityLabel ? (
+                          <p
+                            dir="auto"
+                            className="truncate text-start font-normal opacity-70"
+                          >
+                            {profileIdentityLabel}
+                          </p>
+                        ) : null}
+                      </div>
                     </div>
-                    <div className="flex gap-1 px-2 py-1">
+                    <div className="flex gap-1 px-1.5 py-1">
                       <div
                         className={cn(
-                          "flex w-full rounded-lg p-1",
+                          "flex w-full rounded-xl p-1",
                           resolvedScheme === "dark"
                             ? "bg-surface-container-high"
                             : "bg-blue-50",
@@ -631,7 +675,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                           <button
                             type="button"
                             className={cn(
-                              "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
+                              "w-full flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-sm font-medium transition-all",
                               isProfilePreviewActive
                                 ? sidebarActiveTone
                                 : cn(sidebarTone, sidebarHoverSurface),
@@ -649,7 +693,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                           <button
                             type="button"
                             className={cn(
-                              "w-full flex items-center justify-center gap-2 rounded-md py-2 px-3 text-sm font-medium transition-all",
+                              "w-full flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-sm font-medium transition-all",
                               isProfileEditActive
                                 ? sidebarActiveTone
                                 : cn(sidebarTone, sidebarHoverSurface),

@@ -7,6 +7,7 @@ import type {
   AuthenticatedNotificationTestInput,
   CustomNotificationInput,
   DeviceToken,
+  NotificationDeliveryPreference,
   NotificationEntity,
   NotificationEvent,
   NotificationTestResult,
@@ -247,6 +248,34 @@ export class NotificationsFacade {
   /** @returns `false` when the platform offers no settings screen to open. */
   openPermissionSettings(): Promise<boolean> {
     return notificationPermissionService.openSettings();
+  }
+
+  /** The account-wide master switch — server state, not a local device flag. */
+  getPushPreference(identity: {
+    uid: string;
+    phone: string;
+  }): Promise<NotificationDeliveryPreference> {
+    return notificationApiService.getPushPreference({
+      uid: assertUid(identity.uid),
+      phone: assertPhone(identity.phone),
+    });
+  }
+
+  /**
+   * Mutes or unmutes every notification this account would otherwise receive.
+   * Never touches a device's registration or token — see
+   * `NotificationDeliveryPreference` for why that distinction matters.
+   */
+  setPushPreference(input: {
+    uid: string;
+    phone: string;
+    pushEnabled: boolean;
+  }): Promise<NotificationDeliveryPreference> {
+    return notificationApiService.setPushPreference({
+      uid: assertUid(input.uid),
+      phone: assertPhone(input.phone),
+      pushEnabled: input.pushEnabled,
+    });
   }
 
   // ---- creating notifications ----------------------------------------------

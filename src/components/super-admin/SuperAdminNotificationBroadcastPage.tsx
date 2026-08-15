@@ -295,6 +295,15 @@ export function SuperAdminNotificationBroadcastPage() {
                 }
               </strong>
             </p>
+            <p>
+              أوقف كل الإشعارات:{" "}
+              <strong>
+                {
+                  result.results.filter((item) => item.status === "muted")
+                    .length
+                }
+              </strong>
+            </p>
           </div>
         </section>
       ) : null}

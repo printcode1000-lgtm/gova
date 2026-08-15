@@ -6,6 +6,7 @@ import type {
   BroadcastRecipientsResult,
   DeleteNotificationTokenInput,
   DeviceToken,
+  NotificationDeliveryPreference,
   NotificationTestInput,
   NotificationTestResult,
   RegisterNotificationTokenInput,
@@ -133,6 +134,26 @@ export const notificationsServer = {
 
   removeDeviceToken(input: DeleteNotificationTokenInput): Promise<void> {
     return notificationTokenService.remove(input);
+  },
+
+  getPushPreference(identity: {
+    uid: string;
+    phone: string;
+  }): Promise<NotificationDeliveryPreference> {
+    return notificationTokenService.getPushPreference(identity.uid, identity.phone);
+  },
+
+  /** The account-wide mute switch. Registrations and tokens are untouched. */
+  setPushPreference(input: {
+    uid: string;
+    phone: string;
+    pushEnabled: boolean;
+  }): Promise<NotificationDeliveryPreference> {
+    return notificationTokenService.setPushPreference(
+      input.uid,
+      input.phone,
+      input.pushEnabled,
+    );
   },
 
   listBroadcastRecipients(identity: {

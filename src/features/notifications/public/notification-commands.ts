@@ -5,6 +5,7 @@ import type {
   BroadcastRecipientsResult,
   CustomNotificationInput,
   DeviceToken,
+  NotificationDeliveryPreference,
   NotificationEntity,
   NotificationEvent,
   NotificationTestResult,
@@ -42,6 +43,11 @@ export type NotificationCommand =
   | { type: "requestPermission"; payload?: { uid?: string; phone?: string } }
   | { type: "getPermissionState" }
   | { type: "openPermissionSettings" }
+  | { type: "getPushPreference"; payload: { uid: string; phone: string } }
+  | {
+      type: "setPushPreference";
+      payload: { uid: string; phone: string; pushEnabled: boolean };
+    }
   | { type: "sendLocal"; payload: NotificationEntity }
   | { type: "publishTemplate"; payload: TemplateNotificationInput }
   | { type: "publishCustom"; payload: CustomNotificationInput }
@@ -95,6 +101,8 @@ export interface NotificationCommandResults {
   requestPermission: NotificationPermission | "unsupported";
   getPermissionState: NotificationPermissionState;
   openPermissionSettings: boolean;
+  getPushPreference: NotificationDeliveryPreference;
+  setPushPreference: NotificationDeliveryPreference;
   sendLocal: NotificationEntity;
   publishTemplate: NotificationEntity;
   publishCustom: NotificationEntity;
@@ -149,6 +157,8 @@ export const NOTIFICATION_COMMAND_TYPES = [
   "requestPermission",
   "getPermissionState",
   "openPermissionSettings",
+  "getPushPreference",
+  "setPushPreference",
   "sendLocal",
   "publishTemplate",
   "publishCustom",

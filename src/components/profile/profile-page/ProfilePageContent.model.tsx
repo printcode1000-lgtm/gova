@@ -3,7 +3,6 @@
 import type { FeaturedMarqueeConfig } from "@/components/ui/FeaturedMarquee";
 import type { HeroSliderConfig } from "@/components/ui/HeroSlider";
 import type { TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
-import { ASOL_API_ROUTES,asolApi } from "@/core/api";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { usePageSnapshot } from "@/features/page-snapshot";
@@ -340,33 +339,6 @@ const profileTrendingConfig = useMemo<TrendingRibbonConfig>(
     [storeDetails.profileShowcase?.trending],
   );
 
-const submitProfileCustomRequest = async (input: {
-    title: string;
-    description: string;
-    images: { imageKey: string; url: string }[];
-  }) => {
-    if (!session?.uid || !previewUid)
-      throw new Error("يجب تسجيل الدخول لإرسال الطلب.");
-    const result = await asolApi.post<{ orderId: string }>(
-      ASOL_API_ROUTES.orders.customRequestFromProfile,
-      {
-        uid: session.uid,
-        phone: session.phone,
-        sellerUid: previewUid,
-        title: input.title,
-        description: input.description,
-        images: input.images.map((image) => ({
-          imageKey: image.imageKey,
-          url: image.url,
-        })),
-      },
-      { suppressErrorLog: true },
-    );
-    router.push(
-      `/orders/details?orderId=${encodeURIComponent(result.orderId)}&role=buyer`,
-    );
-  };
-
 const dirtySections = (
     Object.entries(sectionStatuses) as Array<
       [ProfileEditTab, ProfileSectionStatus | null]
@@ -411,7 +383,7 @@ const earlyView = isLoading ? (
       </div>
     ) : null;
 
-return { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving, saveDialog, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections, setSaveDialog, editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, submitProfileCustomRequest, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView };
+return { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving, saveDialog, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections, setSaveDialog, editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView };
 }
 
 

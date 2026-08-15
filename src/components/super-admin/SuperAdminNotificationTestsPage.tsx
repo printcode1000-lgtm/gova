@@ -314,7 +314,9 @@ export function SuperAdminNotificationTestsPage() {
             ? `تم قبول وحفظ ${batchSize} من ${batchSize} إشعارات Push متتالية.`
             : lastStatus === "no_tokens"
               ? "لا يوجد رمز Push مسجل لحساب السوبر أدمن. فعّل الجهاز أولًا."
-              : `اكتملت الدفعة جزئيًا: قُبل ${acceptedCount}/${batchSize} وحُفظ ${centerCount}/${batchSize}.`,
+              : lastStatus === "muted"
+                ? "حساب السوبر أدمن أوقف كل الإشعارات من الإعدادات. فعّلها أولًا."
+                : `اكتملت الدفعة جزئيًا: قُبل ${acceptedCount}/${batchSize} وحُفظ ${centerCount}/${batchSize}.`,
         );
       }
     } catch (error) {

@@ -132,6 +132,18 @@ export interface NotificationChatPreferences {
 export type NotificationChatPreferenceChanges =
   Partial<NotificationChatPreferences>;
 
+/**
+ * The account-wide master switch. Distinct from `NotificationChatPreferences`
+ * on purpose: those gate whether other users may start a specialty request or
+ * a conversation, while this gates every send this account would otherwise
+ * receive, of any kind. `false` never removes a registration or a token — it
+ * is checked at fan-out time, in `NotificationSendService.sendToUsersLocally`,
+ * so re-enabling needs no device to re-register anything.
+ */
+export interface NotificationDeliveryPreference {
+  pushEnabled: boolean;
+}
+
 export interface RegisterNotificationTokenInput {
   uid: string;
   phone: string;
@@ -188,7 +200,14 @@ export interface NotificationTokenDeliveryResult {
    * performing it. Every other value comes from the notifications service,
    * which is the only side that talks to a provider.
    */
-  status: "sent" | "partial" | "queued" | "failed" | "no_tokens" | "granted";
+  status:
+    | "sent"
+    | "partial"
+    | "queued"
+    | "failed"
+    | "no_tokens"
+    | "granted"
+    | "muted";
   providers?: Array<{
     provider: string;
     locale?: NotificationLocale;

@@ -10,6 +10,7 @@ import type {
   BroadcastNotificationResult,
   BroadcastRecipientsResult,
   AuthenticatedNotificationTestInput,
+  NotificationDeliveryPreference,
   NotificationTestInput,
   NotificationTestResult,
   RegisterNotificationTokenInput,
@@ -42,6 +43,31 @@ export class NotificationApiService {
     if (input.tokenId) query.set("tokenId", input.tokenId);
     return asolApi.delete<{ deleted: boolean }>(
       `${ASOL_API_ROUTES.notifications.deviceToken}?${query}`,
+    );
+  }
+
+  getPushPreference(identity: {
+    uid: string;
+    phone: string;
+  }): Promise<NotificationDeliveryPreference> {
+    const query = new URLSearchParams({
+      uid: identity.uid,
+      phone: identity.phone,
+    });
+    return asolApi.get<NotificationDeliveryPreference>(
+      `${ASOL_API_ROUTES.notifications.preferences}?${query}`,
+      { cache: "no-store" },
+    );
+  }
+
+  setPushPreference(input: {
+    uid: string;
+    phone: string;
+    pushEnabled: boolean;
+  }): Promise<NotificationDeliveryPreference> {
+    return asolApi.post<NotificationDeliveryPreference>(
+      ASOL_API_ROUTES.notifications.preferences,
+      input,
     );
   }
 

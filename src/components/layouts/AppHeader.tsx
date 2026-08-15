@@ -1,10 +1,10 @@
 'use client';
 
-import { Menu, Moon, Search, ShoppingCart, Sun } from 'lucide-react';
+import { Menu, Search, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { useResolvedColorScheme, useThemePreferences } from '@/lib/preferences';
+import { useResolvedColorScheme } from '@/lib/preferences';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/features/cart/use-cart';
@@ -22,7 +22,6 @@ export function AppHeader({
   installPrompt: AsolInstallPrompt | null;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { preferences, toggleColorScheme, cycleThemeMode } = useThemePreferences();
   const resolvedScheme = useResolvedColorScheme();
   const { t, locale } = useTranslation();
   const pathname = usePathname();
@@ -40,11 +39,6 @@ export function AppHeader({
     e.preventDefault();
     setIsSidebarOpen((prev) => !prev);
   };
-
-  const themeLabel =
-    preferences.themeMode === 'dark'
-      ? `${t('header.theme')}: ${t('theme.dark')}`
-      : `${t('header.theme')}: ${t('theme.light')}`;
 
   return (
     <>
@@ -77,29 +71,6 @@ export function AppHeader({
 
           <div className="flex items-center gap-2">
             <SpecialtyRequestComposer />
-            <button
-              type="button"
-              id="header-theme-button"
-              className={cn(
-                "asol-control-icon flex items-center justify-center rounded-full transition-all duration-200",
-                resolvedScheme === 'dark'
-                  ? 'text-primary hover:bg-surface-container-high active:bg-surface-variant'
-                  : 'text-blue-900 hover:bg-blue-100/70 active:bg-blue-200'
-              )}
-              aria-label={themeLabel}
-              title={themeLabel}
-              onClick={toggleColorScheme}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                cycleThemeMode();
-              }}
-            >
-              {resolvedScheme === 'dark' ? (
-                <Sun className="w-5 h-5" aria-hidden />
-              ) : (
-                <Moon className="w-5 h-5" aria-hidden />
-              )}
-            </button>
 
             <Link
               href="/search"

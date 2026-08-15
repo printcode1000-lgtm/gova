@@ -50,7 +50,7 @@ export interface SendFollowerNotificationInput extends FollowTarget {
 export interface FollowerNotificationRecipientResult {
   uid: string;
   tokenCount: number;
-  status: "sent" | "partial" | "queued" | "failed" | "no_tokens" | "granted";
+  status: "sent" | "partial" | "queued" | "failed" | "no_tokens" | "granted" | "muted";
 }
 
 export interface SendFollowerNotificationResult {

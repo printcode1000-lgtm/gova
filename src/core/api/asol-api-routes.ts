@@ -65,6 +65,7 @@ export const ASOL_API_ROUTES = {
     // No `send` entry: push fan-out lives only on the notifications service
     // (services/notifications), reached through NotificationSendService.
     deviceToken: "/api/notifications/device-token",
+    preferences: "/api/notifications/preferences",
     broadcastRecipients: "/api/notifications/broadcast/recipients",
     broadcastSend: "/api/notifications/broadcast/send",
     testSend: "/api/notifications/test/send",

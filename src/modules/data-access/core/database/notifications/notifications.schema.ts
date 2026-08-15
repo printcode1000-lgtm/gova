@@ -68,6 +68,18 @@ export const userNotificationPreferences = sqliteTable(
     })
       .notNull()
       .default(true),
+    /**
+     * Master switch for the whole account. `false` means every send this
+     * account would otherwise receive — orders, chat, broadcasts, anything —
+     * is skipped before it reaches a provider. It never touches
+     * `user_notification_tokens`: the registration and its token stay exactly
+     * as they were, so re-enabling needs no re-registration on any device.
+     */
+    pushEnabled: integer("push_enabled", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(true),
     updatedAt: text("updated_at").notNull(),
   },
 );

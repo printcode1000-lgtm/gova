@@ -38,7 +38,7 @@ export interface NotificationBridgeResult {
 export interface NotificationBridgeRecipientResult {
   uid: string;
   tokenCount: number;
-  status: "sent" | "partial" | "queued" | "failed" | "no_tokens";
+  status: "sent" | "partial" | "queued" | "failed" | "no_tokens" | "granted" | "muted";
   providers?: Array<{
     provider: string;
     locale?: "ar" | "en";

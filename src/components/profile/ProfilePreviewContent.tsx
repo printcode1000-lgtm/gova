@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/FeaturedMarquee";
 import { FollowButton } from "@/components/ui/follow";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
-import { ProfileCustomRequestButton } from "@/components/ui/profile-custom-request-button";
 import {
   TrendingRibbon,
   type TrendingRibbonConfig,
@@ -70,11 +69,6 @@ interface ProfilePreviewContentProps {
     fulfillment: boolean;
     featured: boolean;
   };
-  onCustomRequest: (input: {
-    title: string;
-    description: string;
-    images: { imageKey: string; url: string }[];
-  }) => Promise<void>;
 }
 
 export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
@@ -265,7 +259,8 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       </Button>
                     ) : null}
                     {storeDetails.profileShowcase?.customRequestEnabled &&
-                    session?.uid ? (
+                    session?.uid &&
+                    (!props.isOwner || props.isSuperAdmin) ? (
                       <Button
                         type="button"
                         variant="outline"
@@ -273,14 +268,11 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         style={ACTION_TILE_STYLE}
                         title={t("profilePreview.customRequestAria")}
                         aria-label={t("profilePreview.customRequestAria")}
-                        onClick={() => {
-                          const customRequestButton = document.querySelector(
-                            "[data-custom-request-trigger]",
-                          ) as HTMLButtonElement;
-                          if (customRequestButton) {
-                            customRequestButton.click();
-                          }
-                        }}
+                        onClick={() =>
+                          router.push(
+                            `/custom-request?sellerUid=${encodeURIComponent(previewUid)}`,
+                          )
+                        }
                       >
                         <FontAwesomeIcon
                           icon={faPaperPlane}
@@ -331,17 +323,6 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
             />
           </div>
         </section>
-      ) : null}
-
-      {/* Hidden custom request button for icon-only trigger */}
-      {storeDetails.profileShowcase?.customRequestEnabled && session?.uid ? (
-        <div className="hidden">
-          <ProfileCustomRequestButton
-            onSubmit={props.onCustomRequest}
-            buttonLabel={t("profilePreview.customRequestAria")}
-            title={`${t("profilePreview.customRequestTo")} ${storeDetails.storeName || t("profilePreview.sellerFallback")}`}
-          />
-        </div>
       ) : null}
 
       {previewUid ? (

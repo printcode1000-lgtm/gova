@@ -8,6 +8,7 @@ import type {
   SendNotificationToUsersResult,
 } from "../domain/entities";
 import { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
+import { GetNotificationPushPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-push-preference.query";
 import { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
 import { NotificationBuilder } from "../domain/notification-builder";
 import {
@@ -25,6 +26,7 @@ export class NotificationSendService {
     private readonly providers = new NotificationProviderRegistry(),
     private readonly deleteToken = new DeleteNotificationTokenCommand(),
     private readonly builder = new NotificationBuilder(),
+    private readonly pushPreference = new GetNotificationPushPreferenceQuery(),
   ) {}
 
   /**
@@ -49,9 +51,17 @@ export class NotificationSendService {
       throw new Error("notificationContentRequired");
     }
 
+    // Checked before any token lookup: a muted account gets no send of any
+    // kind, and the registration underneath is never touched by this switch.
+    const pushEnabledUids = new Set(
+      await this.pushPreference.pushEnabledUids(uids),
+    );
     const tokensByUid = await this.listTokens.byUids(uids);
     const results = await Promise.all(
       uids.map(async (uid): Promise<NotificationTokenDeliveryResult> => {
+        if (!pushEnabledUids.has(uid)) {
+          return { uid, tokenCount: 0, status: "muted" };
+        }
         const tokens = tokensByUid[uid] ?? [];
         if (tokens.length === 0) {
           return { uid, tokenCount: 0, status: "no_tokens" };
