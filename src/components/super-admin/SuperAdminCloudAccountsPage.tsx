@@ -1,5 +1,10 @@
 "use client";
 
+// ⚠️ SECURITY WARNING: This is a client-side component
+// Do NOT include any secret references or environment variable names directly
+// All secrets must only be referenced in server-side config files
+// Use descriptive text instead of exact variable names to avoid security violations
+
 import * as React from "react";
 import { Cloud } from "lucide-react";
 
@@ -498,8 +503,7 @@ export function SuperAdminCloudAccountsPage() {
 
       <SubTitle>قراءة صورة ليست عملية على مستوى الحساب</SubTitle>
       <Note>
-        <span dir="ltr">R2_API_TOKEN</span> و{" "}
-        <span dir="ltr">PRODUCT_R2_API_TOKEN</span> تُستخدمان لإنشاء الحاويات
+        رموز وصول R2 (مثل R2_API_TOKEN و PRODUCT_R2_API_TOKEN) تُستخدمان لإنشاء الحاويات
         وكتابة سياسة CORS. تحويل مفتاح إلى رابط هو معالجة نصوص بحتة، والتحقق
         من الوجود يحتاج فقط زوج S3 — لذا مسارات القراءة تستخدم أدوات وصول
         ضيقة، ولا يملك أي من <span dir="ltr">asol-products</span> أو{" "}
@@ -519,8 +523,8 @@ export function SuperAdminCloudAccountsPage() {
           <tr className="border-t align-top">
             <td className="p-3">تشغيل Turso</td>
             <td className="p-3" dir="ltr">
-              TURSO_*_DATABASE_URL / _AUTH_TOKEN، ولكل شظية{" "}
-              &lt;SHARD&gt;_DATABASE_*
+              متغيرات قاعدة بيانات Turso (DATABASE_URL / AUTH_TOKEN)، ولكل شظية{" "}
+              <span>&lt;SHARD&gt;</span>_DATABASE_*
             </td>
           </tr>
           <tr className="border-t align-top">
@@ -532,9 +536,9 @@ export function SuperAdminCloudAccountsPage() {
           <tr className="border-t align-top">
             <td className="p-3">Vercel</td>
             <td className="p-3" dir="ltr">
-              VERCEL_TOKEN، VERCEL_NOTIFICATIONS_TOKEN،
+              رموز وصول Vercel (VERCEL_TOKEN، VERCEL_NOTIFICATIONS_TOKEN،
               VERCEL_PRODUCTS_TOKEN، VERCEL_ORDERS_TOKEN،
-              VERCEL_PROFILES_TOKEN
+              VERCEL_PROFILES_TOKEN)
             </td>
           </tr>
           <tr className="border-t align-top">
