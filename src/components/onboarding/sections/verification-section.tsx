@@ -11,8 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { DocumentType, VerificationDocument } from '@/lib/onboarding/types';
 import { nextSellerId } from '@/lib/seller/next-id';
-import { isCancelledError } from "@/native-platform";
-import { files } from "@/native-platform/files";
+import { NativeCore, isCancelledError } from '@asol/native-core';
 
 const DOCUMENT_TYPES: DocumentType[] = [
   'business_license',
@@ -45,10 +44,20 @@ export function VerificationSection() {
    */
   const pickDocument = async (type: DocumentType) => {
     try {
-      const picked = await files.user.pickFile({
-        accept: ["image/*", "application/pdf"],
+      const res = await NativeCore.pickFiles({
+        types: ["image/*", "application/pdf"],
+        multiple: false,
       });
-      handleFileUpload(type, picked.file);
+      if (!res.ok) {
+        if (isCancelledError(res.error)) return;
+        console.warn("[Verification] Document selection failed.", res.error);
+        return;
+      }
+      const first = res.value[0];
+      if (first?.blob) {
+        const file = new File([first.blob], first.name, { type: first.mimeType });
+        handleFileUpload(type, file);
+      }
     } catch (error) {
       // Dismissing the picker is a normal outcome, not an error.
       if (isCancelledError(error)) return;

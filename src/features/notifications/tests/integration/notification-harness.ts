@@ -324,6 +324,7 @@ class FakeLocalPlugin {
 
 const fakePush = new FakePushPlugin();
 const fakeLocal = new FakeLocalPlugin();
+const fakeTokenListeners = new Set<Listener<{ value: string; platform: string; provider: string }>>();
 
 /**
  * A push arriving while no WebView exists.
@@ -487,20 +488,150 @@ function installFakes(): void {
     }),
   });
 
-  inject("@/native-platform/notifications", {
+  inject("@asol/native-core", {
     pushNotifications: fakePush,
     localNotifications: fakeLocal,
-    DEFAULT_CHANNELS: [],
-  });
-
-  inject("@/native-platform", {
-    nativePlatform: { app: { onStateChange: async () => () => undefined } },
+    NativeCore: {
+      isPushSupported: () => harnessState.platform === "android" || harnessState.platform === "ios",
+      registerForPushNotifications: async () => {
+        try {
+          const token = await fakePush.register();
+          setTimeout(() => {
+            for (const l of [...fakeTokenListeners]) l(token);
+          }, 0);
+          return { ok: true, value: undefined };
+        } catch (error: any) {
+          return {
+            ok: false,
+            error: {
+              message: error?.message || "registration failed",
+              code: "notifications/delivery-failed",
+            },
+          };
+        }
+      },
+      checkPermission: async () => ({
+        ok: true,
+        value: {
+          kind: "notifications",
+          state: harnessState.permission,
+          granted: harnessState.permission === "granted",
+          canRequest: harnessState.permission !== "blocked" && harnessState.permission !== "denied",
+        },
+      }),
+      requestPermission: async () => ({
+        ok: true,
+        value: {
+          kind: "notifications",
+          state: harnessState.permission,
+          granted: harnessState.permission === "granted",
+          canRequest: harnessState.permission !== "blocked" && harnessState.permission !== "denied",
+        },
+      }),
+      ensureNotificationChannels: async () => {
+        try {
+          await fakePush.createChannels();
+          return { ok: true, value: undefined };
+        } catch (e: any) {
+          return { ok: false, error: e };
+        }
+      },
+      unregisterForPushNotifications: async () => {
+        await fakePush.unregister();
+        return { ok: true, value: undefined };
+      },
+      scheduleLocalNotification: async (schedule: any) => {
+        await fakeLocal.schedule(schedule);
+        return { ok: true, value: undefined };
+      },
+      listPendingInbox: async (uid: string) => {
+        try {
+          const records = await fakePush.listPendingInbox(uid);
+          return { ok: true, value: records };
+        } catch (e: any) {
+          return { ok: false, error: { message: e?.message || "inbox unavailable", code: "notifications/unavailable" } };
+        }
+      },
+      acknowledgeInbox: async (uid: string, recordIds: readonly string[]) => {
+        try {
+          const acked = await fakePush.acknowledgeInbox(uid, recordIds);
+          return { ok: true, value: acked };
+        } catch (e: any) {
+          return { ok: false, error: { message: e?.message || "inbox unavailable", code: "notifications/unavailable" } };
+        }
+      },
+      clearInbox: async () => {
+        await fakePush.clearInbox();
+        return { ok: true, value: undefined };
+      },
+      getPendingInboxCount: async () => ({ ok: true, value: await fakePush.pendingInboxCount() }),
+      getPendingInboxTap: async () => {
+        try {
+          const tap = await fakePush.getInboxTap();
+          return { ok: true, value: tap };
+        } catch (e: any) {
+          return { ok: false, error: { message: e?.message || "inbox tap unavailable", code: "notifications/unavailable" } };
+        }
+      },
+      clearPendingInboxTap: async () => {
+        await fakePush.clearInboxTap();
+        return { ok: true, value: undefined };
+      },
+      onInboxTap: (listener: any) => {
+        const unsub = fakePush.onInboxTap(listener);
+        return Promise.resolve({ ok: true, value: unsub });
+      },
+      onPushToken: (listener: any) => {
+        fakeTokenListeners.add(listener);
+        return Promise.resolve({ ok: true, value: () => fakeTokenListeners.delete(listener) });
+      },
+      onPushNotificationReceived: (listener: any) => {
+        const unsub = fakePush.onReceived(listener);
+        return Promise.resolve({ ok: true, value: unsub });
+      },
+      onPushNotificationActionPerformed: (listener: any) => {
+        const unsub1 = fakePush.onAction(listener);
+        const unsub2 = fakeLocal.onAction(listener);
+        return Promise.resolve({ ok: true, value: () => { unsub1(); unsub2(); } });
+      },
+      getDeliveredNotifications: async () => {
+        try {
+          const delivered = await fakePush.getDelivered();
+          return { ok: true, value: delivered };
+        } catch (e: any) {
+          return { ok: false, error: { message: e?.message || "unavailable", code: "notifications/unavailable" } };
+        }
+      },
+      removeAllDeliveredNotifications: async () => {
+        await fakePush.removeAllDelivered();
+        return { ok: true, value: undefined };
+      },
+      onAppStateChange: (listener: any) => {
+        return Promise.resolve({ ok: true, value: () => {} });
+      },
+    },
     getPlatformName: () => harnessState.platform,
+    isNativePlatform: () => harnessState.isNative,
+    isAndroid: () => harnessState.platform === "android",
+    isIos: () => harnessState.platform === "ios",
     DEFAULT_CHANNELS: [],
-  });
-
-  inject("@/native-platform/permissions", {
-    PermissionKinds: { Notifications: "notifications" },
+    DEFAULT_CHANNEL_ID: "asol_general_v4",
+    DEFAULT_CHANNEL_SOUND: "custom_notification.mp3",
+    PermissionKinds: {
+      Camera: "camera",
+      Photos: "photos",
+      Location: "location",
+      Microphone: "microphone",
+      SpeechRecognition: "speech-recognition",
+      Notifications: "notifications",
+    },
+    PermissionStates: {
+      Granted: "granted",
+      Denied: "denied",
+      Prompt: "prompt",
+      Blocked: "blocked",
+      Unsupported: "unsupported",
+    },
     permissionManager: {
       check: async () => ({
         kind: "notifications",

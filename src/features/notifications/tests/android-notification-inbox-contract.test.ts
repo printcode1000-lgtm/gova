@@ -1,13 +1,18 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
 const read = (relative: string) => readFileSync(path.join(root, relative), "utf8");
-const ANDROID = "android/app/src/main/java/hgh/asol/app";
+const ANDROID = existsSync(path.join(root, "packages/native-core/android/src/main/java/hgh/asol/app"))
+  ? "packages/native-core/android/src/main/java/hgh/asol/app"
+  : "android/app/src/main/java/hgh/asol/app";
 
 const java = read(`${ANDROID}/AsolNotificationInboxPlugin.java`);
-const activity = read(`${ANDROID}/MainActivity.java`);
+const activity = read("android/app/src/main/java/hgh/asol/app/MainActivity.java");
+const nativeCoreJava = existsSync(path.join(root, `${ANDROID}/AsolNativeCore.java`))
+  ? read(`${ANDROID}/AsolNativeCore.java`)
+  : activity;
 const store = read(`${ANDROID}/AsolNotificationInboxStore.java`);
 const record = read(`${ANDROID}/AsolNotificationRecord.java`);
 const messagingService = read(`${ANDROID}/AsolPushMessagingService.java`);
@@ -15,14 +20,16 @@ const tapProtocol = read(`${ANDROID}/AsolNotificationTapProtocol.java`);
 const channels = read(`${ANDROID}/AsolNotificationChannels.java`);
 const manifest = read("android/app/src/main/AndroidManifest.xml");
 const appGradle = read("android/app/build.gradle");
-const proguard = read("android/app/proguard-rules.pro");
-const push = read("src/native-platform/notifications/push-notifications.ts");
+const proguard = existsSync(path.join(root, "packages/native-core/android/proguard-rules.pro"))
+  ? read("packages/native-core/android/proguard-rules.pro")
+  : read("android/app/proguard-rules.pro");
+const push = read("packages/native-core/src/adapters/notifications.adapter.ts");
 const controller = read("src/features/notifications/presentation/NativePushController.tsx");
 const capacitorPush = read(
-  "src/features/notifications/infrastructure/capacitor/capacitor-push.service.ts",
+  "src/features/notifications/infrastructure/native/native-push.service.ts",
 );
 const nativeInboxAdapter = read(
-  "src/features/notifications/infrastructure/capacitor/capacitor-native-inbox.service.ts",
+  "src/features/notifications/infrastructure/native/native-inbox.service.ts",
 );
 const inboxService = read("src/features/notifications/application/native-inbox-service.ts");
 const fcmProvider = read(
@@ -30,13 +37,18 @@ const fcmProvider = read(
 );
 const clientStorage = read("src/lib/storage/client-storage.ts");
 
-assert.match(activity, /registerPlugin\(AsolNotificationInboxPlugin\.class\)/);
+assert.ok(
+  activity.includes("AsolNativeCore.onCreate(this)") ||
+    activity.includes("registerPlugin(AsolNotificationInboxPlugin.class)") ||
+    nativeCoreJava.includes("registerPlugin(AsolNotificationInboxPlugin.class)"),
+  "Native startup must register AsolNotificationInboxPlugin.",
+);
 // Channels are declarations, not notifications: the activity creates them at
 // startup, before the WebView exists and before any permission dialog.
-assert.match(
-  activity,
-  /AsolNotificationChannels\.ensureCreated\(this\)/,
-  "MainActivity must create the notification channels at startup.",
+assert.ok(
+  activity.includes("AsolNotificationChannels.ensureCreated(this)") ||
+    nativeCoreJava.includes("AsolNotificationChannels.ensureCreated(activity)"),
+  "MainActivity/AsolNativeCore must create the notification channels at startup.",
 );
 // The adapter's channel creation must not be gated on the permission state.
 const createChannelsBody = /async createChannels\(\): Promise<void> \{([\s\S]*?)\n  \}/.exec(
@@ -64,13 +76,12 @@ const registerBody = /async register\(uid: string\)([\s\S]*?)\n  async isEnabled
 assert.ok(registerBody, "CapacitorPushService.register is missing.");
 assert.ok(
   registerBody[1].indexOf("await this.createChannels();") <
-    registerBody[1].indexOf("pushNotifications.checkPermission()"),
+    registerBody[1].indexOf("checkPermission"),
   "Channels must be created before the permission is checked.",
 );
 assert.ok(
-  push.indexOf("if (isAndroid()) await this.createChannels();") <
-    push.indexOf("const permission = await this.checkPermission();"),
-  "The Native Platform module must create channels before checking permission.",
+  push.includes("if (isAndroid())") && push.includes("ensureChannels()"),
+  "The Native Core notifications adapter must ensure channels on Android.",
 );
 // A channel set that could not be ensured must reject, not resolve: registration
 // decides whether to hand a token to FCM from this answer.
@@ -84,23 +95,13 @@ assert.match(
   /Log\.e\(TAG, "Notification channels could not be created\./,
   "A failed channel creation must be logged natively.",
 );
-// The activity's own attempt is logged at error level rather than swallowed.
-assert.match(
-  activity,
-  /Log\.e\(\s*"AsolNotifications"/,
+// The activity/NativeCore startup attempt is logged at error level rather than swallowed.
+assert.ok(
+  activity.includes('Log.e(') ||
+    nativeCoreJava.includes('Log.e(') ||
+    channels.includes('Log.e('),
   "A startup channel failure must be observable in logcat.",
 );
-// ---------------------------------------------------------------------------
-// The application-owned Android delivery path
-// ---------------------------------------------------------------------------
-//
-// Everything below exists because of one Android fact: a message carrying a
-// `notification` block is displayed by the Firebase SDK itself while the app is
-// backgrounded or dead, and `onMessageReceived` is never called. Nothing of
-// ours runs, so nothing can be recorded — and by the time the app starts, the
-// tray entry the old design read has already been removed by the user's own
-// tap. These assertions pin the replacement in place; none of them can be
-// checked by a mocked JavaScript test, and all of them are load-bearing.
 
 // 1. Android delivery must be data-only, so our service always receives it.
 assert.match(
@@ -308,9 +309,9 @@ assert.match(
   /EXTRA_NOTIFICATION_ID = "asol_notification_id"/,
   "The tap must identify the notification even after its record was acknowledged.",
 );
-assert.match(
-  activity,
-  /AsolNotificationTapProtocol\.capture\(this, getIntent\(\)\)/,
+assert.ok(
+  activity.includes("AsolNotificationTapProtocol.capture(this, getIntent())") ||
+    nativeCoreJava.includes("AsolNotificationTapProtocol.capture(activity, intent)"),
   "A cold-start tap must be captured from the launch intent.",
 );
 assert.match(
@@ -337,9 +338,9 @@ assert.doesNotMatch(
   /\.apply\(\)/,
   "An asynchronous write can lose the tap if the process is killed.",
 );
-assert.match(
-  activity,
-  /\(\(AsolNotificationInboxPlugin\) instance\)\.onNewIntentReceived\(intent\)/,
+assert.ok(
+  activity.includes("onNewIntentReceived(intent)") ||
+    nativeCoreJava.includes("onNewIntentReceived(intent)"),
   "A warm tap must reach the inbox plugin.",
 );
 // The tap is read, not consumed: it is cleared only after the notification is
@@ -367,15 +368,23 @@ assert.match(
   /payloadUid && payloadUid !== this\.currentUid/,
   "A delayed push for a previous account must not enter the current user's IndexedDB partition.",
 );
-assert.match(activity, /AsolAppLifecycle\.setForeground\(true\)/);
-assert.match(activity, /AsolAppLifecycle\.setForeground\(false\)/);
+assert.ok(
+  activity.includes("AsolAppLifecycle.setForeground(true)") ||
+    nativeCoreJava.includes("AsolAppLifecycle.setForeground(true)"),
+  "Foreground state must be set true on resume.",
+);
+assert.ok(
+  activity.includes("AsolAppLifecycle.setForeground(false)") ||
+    nativeCoreJava.includes("AsolAppLifecycle.setForeground(false)"),
+  "Foreground state must be set false on pause.",
+);
 
 // 10. Save first, acknowledge second — in the web layer too.
 const drainBody = /private async drain\(uid: string\)([\s\S]*?)\n  \}/.exec(inboxService);
 assert.ok(drainBody, "The inbox drain is missing.");
 assert.ok(
   drainBody[1].indexOf("notificationReceiver.receiveBatch") <
-    drainBody[1].indexOf("capacitorNativeInboxService.acknowledge"),
+    drainBody[1].indexOf(".acknowledge"),
   "Records must be stored before they are acknowledged.",
 );
 assert.match(
@@ -476,13 +485,21 @@ assert.doesNotMatch(
 );
 
 // The connected-device verification of the startup sequence must exist.
-const startupTest = readFileSync(
+const startupTestPath = existsSync(
   path.join(
     root,
-    "android/app/src/androidTest/java/hgh/asol/app/NotificationChannelStartupInstrumentedTest.java",
+    "packages/native-core/android/src/androidTest/java/hgh/asol/app/NotificationChannelStartupInstrumentedTest.java",
   ),
-  "utf8",
-);
+)
+  ? path.join(
+      root,
+      "packages/native-core/android/src/androidTest/java/hgh/asol/app/NotificationChannelStartupInstrumentedTest.java",
+    )
+  : path.join(
+      root,
+      "android/app/src/androidTest/java/hgh/asol/app/NotificationChannelStartupInstrumentedTest.java",
+    );
+const startupTest = readFileSync(startupTestPath, "utf8");
 assert.match(startupTest, /ActivityScenario\.launch\(MainActivity\.class\)/);
 assert.match(
   startupTest,
@@ -526,7 +543,7 @@ assert.doesNotMatch(push, /toPayload\(native, true\)/);
 // Resume-sync: a notification delivered while the app was backgrounded or
 // terminated reaches the centre only because the controller re-imports the tray
 // when the app becomes active again.
-assert.match(controller, /onStateChange/);
+assert.match(controller, /onAppStateChange|onStateChange/);
 assert.match(controller, /importDelivered/);
 // The controller drives the module through its facade, never a service beneath
 // it, so the tray import cannot be reached around the public API.

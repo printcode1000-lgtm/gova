@@ -1,8 +1,7 @@
 import {
-  createSpeechRecognitionAdapter,
-  type SpeechRecognitionAdapter,
+  NativeCore,
   type SpeechRecognitionLanguage,
-} from '@/platform/speech/speech-recognition-adapter';
+} from '@asol/native-core';
 
 type VoiceField = HTMLInputElement | HTMLTextAreaElement;
 
@@ -70,7 +69,6 @@ function playTone(frequency: number, type: OscillatorType, duration: number): vo
 }
 
 export class VoiceInputScanner {
-  private readonly adapter: SpeechRecognitionAdapter;
   private readonly bindings = new Map<VoiceField, VoiceBinding>();
   private readonly passwordFields = new WeakSet<HTMLInputElement>();
   private observer: MutationObserver | null = null;
@@ -80,7 +78,6 @@ export class VoiceInputScanner {
 
   constructor(options: VoiceInputScannerOptions) {
     this.options = options;
-    this.adapter = createSpeechRecognitionAdapter();
   }
 
   async start(): Promise<void> {
@@ -88,7 +85,8 @@ export class VoiceInputScanner {
 
     let available = false;
     try {
-      available = await this.adapter.isAvailable();
+      const res = await NativeCore.isSpeechRecognitionAvailable();
+      available = res.ok ? res.value : false;
     } catch (error) {
       console.error('[VoiceInput] Availability check failed.', error);
     }
@@ -132,7 +130,7 @@ export class VoiceInputScanner {
     this.sessionId += 1;
 
     try {
-      await this.adapter.stop();
+      await NativeCore.stopSpeechRecognition();
     } catch (error) {
       console.warn('[VoiceInput] Failed to stop recognizer during cleanup.', error);
     }
@@ -237,7 +235,7 @@ export class VoiceInputScanner {
       this.restorePlaceholder(binding.field);
       playTone(440, 'sine', 0.15);
       try {
-        await this.adapter.stop();
+        await NativeCore.stopSpeechRecognition();
       } catch (error) {
         console.error('[VoiceInput] Failed to stop speech recognition.', error);
       }
@@ -249,7 +247,7 @@ export class VoiceInputScanner {
       this.restorePlaceholder(this.activeBinding.field);
       this.activeBinding = null;
       try {
-        await this.adapter.stop();
+        await NativeCore.stopSpeechRecognition();
       } catch (error) {
         console.warn('[VoiceInput] Failed to stop previous recognizer session.', error);
       }
@@ -262,7 +260,10 @@ export class VoiceInputScanner {
     playTone(880, 'sine', 0.12);
 
     try {
-      const transcript = await this.adapter.start(this.options.language);
+      const res = await NativeCore.startSpeechRecognition({
+        language: this.options.language,
+      });
+      const transcript = res.ok ? res.value.matches?.[0] : "";
       if (currentSession === this.sessionId && transcript && binding.field.isConnected) {
         this.insertTranscript(binding.field, transcript);
         playTone(660, 'sine', 0.15);
@@ -400,9 +401,8 @@ export class VoiceInputScanner {
     if (this.activeBinding === binding) {
       this.sessionId += 1;
       this.activeBinding = null;
-      void this.adapter
-        .stop()
-        .catch((error) => console.warn('[VoiceInput] Failed to stop removed binding.', error));
+      void NativeCore.stopSpeechRecognition()
+        .catch((error: unknown) => console.warn('[VoiceInput] Failed to stop removed binding.', error));
     }
 
     binding.resizeObserver?.disconnect();

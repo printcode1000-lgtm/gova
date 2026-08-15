@@ -1,7 +1,7 @@
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
+import { API_BASE_URL } from '@asol/native-core';
 import { CURRENT_WEB_CONTENT_VERSION } from "../src/core/config/app-version";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { loadOtaEnvironment, otaClientBuildEnv } from "./ota/ota-config";
@@ -23,12 +23,12 @@ function main(): void {
   loadOtaEnvironment();
   const version = readCurrentNativeVersion();
   const apiBaseUrl = (
-    process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
+    process.env.ASOL_API_BASE_URL ?? API_BASE_URL
   ).replace(/\/$/, "");
   const env: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
     ...otaClientBuildEnv(CURRENT_WEB_CONTENT_VERSION, version),
-    ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
+    ASOL_API_BASE_URL: apiBaseUrl,
     NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
   };
 

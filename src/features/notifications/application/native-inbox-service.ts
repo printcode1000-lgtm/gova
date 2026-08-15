@@ -3,9 +3,9 @@
 import type { NotificationEntity } from "../domain/entities";
 import { notificationLog } from "../domain/notification-redaction";
 import {
-  capacitorNativeInboxService,
+  nativeInboxService as nativeInboxInfraService,
   type MappedInboxRecord,
-} from "../infrastructure/capacitor/capacitor-native-inbox.service";
+} from "../infrastructure/native/native-inbox.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { SingleFlight } from "../shared/keyed-mutex";
 import { notificationLifecycleService } from "./notification-lifecycle-service";
@@ -79,7 +79,7 @@ export class NativeInboxService {
   private tapSubscription: Promise<() => void> | null = null;
 
   isSupported(): boolean {
-    return capacitorNativeInboxService.isSupported();
+    return nativeInboxInfraService.isSupported();
   }
 
   /**
@@ -96,7 +96,7 @@ export class NativeInboxService {
   }
 
   private async drain(uid: string): Promise<InboxImportSummary> {
-    const records = await capacitorNativeInboxService.listPending(uid);
+    const records = await nativeInboxInfraService.listPending(uid);
     if (records.length === 0) return EMPTY_SUMMARY;
 
     const storable = records.filter(
@@ -135,7 +135,7 @@ export class NativeInboxService {
         acknowledgeable.push(record.recordId);
       }
 
-      const acknowledged = await capacitorNativeInboxService.acknowledge(uid, acknowledgeable);
+      const acknowledged = await nativeInboxInfraService.acknowledge(uid, acknowledgeable);
       return {
         imported,
         acknowledged,
@@ -143,7 +143,7 @@ export class NativeInboxService {
       };
     }
 
-    const acknowledged = await capacitorNativeInboxService.acknowledge(uid, acknowledgeable);
+    const acknowledged = await nativeInboxInfraService.acknowledge(uid, acknowledgeable);
     return { imported: [], acknowledged, retained: records.length - acknowledged };
   }
 
@@ -173,7 +173,7 @@ export class NativeInboxService {
   private async consumePendingTapOnce(
     uid: string,
   ): Promise<NotificationEntity | null> {
-    const tap = await capacitorNativeInboxService.readPendingTap();
+    const tap = await nativeInboxInfraService.readPendingTap();
     if (!tap) return null;
     if (tap.uid && tap.uid !== uid) {
       // Someone else's notification. It stays pending for its own user.
@@ -203,15 +203,15 @@ export class NativeInboxService {
       // durable outcome). Keep the tap so the next launch retries it. When the
       // record is gone, the notification was already acknowledged/dismissed and
       // this is only a stale tray tap, which is safe to retire.
-      const pendingAfterImport = await capacitorNativeInboxService.readPendingTap();
+      const pendingAfterImport = await nativeInboxInfraService.readPendingTap();
       if (pendingAfterImport?.record) return null;
-      await capacitorNativeInboxService.clearPendingTap();
+      await nativeInboxInfraService.clearPendingTap();
       return null;
     }
 
     // Last, and only now: everything above is durable, so an interruption
     // before this point costs a replay rather than a lost notification.
-    await capacitorNativeInboxService.clearPendingTap();
+    await nativeInboxInfraService.clearPendingTap();
     // Re-read, so the caller receives the notification with its read state and
     // its original business route exactly as the centre will render it.
     const refreshed = await asolNotificationRepository.list(uid);
@@ -228,7 +228,7 @@ export class NativeInboxService {
    */
   async onTap(listener: () => void): Promise<() => void> {
     this.tapHandler = listener;
-    this.tapSubscription ??= capacitorNativeInboxService.onTap(() => {
+    this.tapSubscription ??= nativeInboxInfraService.onTap(() => {
       this.tapHandler?.();
     });
     await this.tapSubscription;
@@ -239,11 +239,11 @@ export class NativeInboxService {
 
   /** Erase the inbox. Account deletion and explicit local-data wipe only. */
   clear(): Promise<void> {
-    return capacitorNativeInboxService.clear();
+    return nativeInboxInfraService.clear();
   }
 
   pendingCount(): Promise<number> {
-    return capacitorNativeInboxService.pendingCount();
+    return nativeInboxInfraService.pendingCount();
   }
 }
 

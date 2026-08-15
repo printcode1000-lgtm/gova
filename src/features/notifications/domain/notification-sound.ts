@@ -42,7 +42,7 @@ export const FCM_SOUND_RESOURCE = "custom_notification";
  *
  * Versioned (`_v4`) because Android refuses to change the sound of a channel
  * that already exists on a device: a new sound needs a new id. The ids and the
- * channels registered in `src/native-platform/notifications/types.ts` are
+ * channels registered in `packages/native-core/src/domain/notifications/channel-constants.ts` are
  * verified against each other by `notification-sound-contract.test.ts`.
  */
 export const NotificationChannelIds = {

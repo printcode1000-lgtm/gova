@@ -22,7 +22,7 @@ import path from "node:path";
  * 2. Inside `src/`, a file is a native surface because of **what it contains**,
  *    not where it lives. Any file that binds to a native plugin is a native
  *    surface wherever it sits; a pure-TypeScript facade under
- *    `src/native-platform/` is not.
+ *    `packages/native-core/` is not.
  */
 
 /**
@@ -32,6 +32,9 @@ import path from "node:path";
 export const NATIVE_SURFACE_PATTERNS: RegExp[] = [
   /^android\//,
   /^ios\//,
+  /^packages\/native-core\/android\//,
+  /^packages\/native-core\/ios\//,
+  /^packages\/native-core\/src\/adapters\//,
   /^capacitor\.config\.ts$/,
 ];
 
@@ -73,7 +76,11 @@ const BUILD_TIME_CONFIG_PATTERN = /^platform\//;
  * plugin, and therefore cannot perform the very download those bundles rely on.
  */
 export function isUndeclarableNativeChange(relativePath: string): boolean {
-  return /^(?:android|ios)\//.test(relativePath) || relativePath === "capacitor.config.ts";
+  return (
+    /^(?:android|ios|packages\/native-core\/android|packages\/native-core\/ios)\//.test(
+      relativePath,
+    ) || relativePath === "capacitor.config.ts"
+  );
 }
 
 /** Capacitor packages that are build tooling or web bridge code, not native binaries. */
@@ -120,7 +127,7 @@ const NATIVE_IMPORT_PATTERN =
   /(?:from\s*|import\s*\(\s*|require\s*\(\s*)['"]@(?:capacitor|capacitor-mlkit|capawesome|capgo)\//;
 
 /**
- * Files under `src/` that are a native contract without importing a plugin.
+ * Files that are a native contract without importing a plugin.
  *
  * Each entry must name the native artifact it is coupled to. Do not add a file
  * here to be safe — an over-broad gate pushes publishers to bypass it, which
@@ -128,23 +135,23 @@ const NATIVE_IMPORT_PATTERN =
  */
 export const NATIVE_CONTRACT_FILES: ReadonlyMap<string, string> = new Map([
   [
-    "src/native-platform/capabilities/shell-capabilities.ts",
+    "packages/native-core/src/capabilities/shell-capabilities.ts",
     "Declares what the compiled shell contains; the OTA compatibility decision reads it.",
   ],
   [
-    "src/native-platform/capabilities/capability-keys.ts",
+    "packages/native-core/src/capabilities/capability-keys.ts",
     "The capability vocabulary shared by manifests, shells, and published bundles.",
   ],
   [
-    "src/native-platform/capabilities/capability-registry.ts",
+    "packages/native-core/src/capabilities/capability-registry.ts",
     "Maps capability keys onto the plugin names registered by the shell.",
   ],
   [
-    "src/native-platform/notifications/types.ts",
+    "packages/native-core/src/domain/notifications/channel-constants.ts",
     "Android channel ids and DEFAULT_CHANNEL_SOUND must match res/raw and strings.xml.",
   ],
   [
-    "src/native-platform/permissions/types.ts",
+    "packages/native-core/src/domain/permissions/permission-kinds.ts",
     "PermissionKinds must match the OS strings declared in AndroidManifest.xml and Info.plist.",
   ],
 ]);
@@ -229,7 +236,9 @@ export function isNativeSurface(
   // `platform/` and `src/` are both judged by what the file binds to, not by
   // where it sits. A build-time constant is web content; a plugin import is not.
   const byContent =
-    relativePath.startsWith("src/") || BUILD_TIME_CONFIG_PATTERN.test(relativePath);
+    relativePath.startsWith("src/") ||
+    relativePath.startsWith("packages/native-core/") ||
+    BUILD_TIME_CONFIG_PATTERN.test(relativePath);
   if (!byContent) return false;
   if (NON_SHIPPED_PATTERN.test(relativePath)) return false;
   if (NATIVE_CONTRACT_FILES.has(relativePath)) return true;
@@ -313,8 +322,12 @@ function changedNativeDependencies(baseline: string, root: string): string[] {
 
   const before = {
     ...declaredNativeRanges(git(`git show ${baseline}:package.json`)),
+    ...declaredNativeRanges(git(`git show ${baseline}:packages/native-core/package.json`)),
   };
-  const after = { ...declaredNativeRanges(readWorkingFile("package.json")) };
+  const after = {
+    ...declaredNativeRanges(readWorkingFile("package.json")),
+    ...declaredNativeRanges(readWorkingFile("packages/native-core/package.json")),
+  };
 
   const beforeLocked = lockedNativeVersions(
     git(`git show ${baseline}:package-lock.json`),

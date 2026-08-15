@@ -5,12 +5,12 @@ import { readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { withoutVsCodeDebuggerEnv } from "../child-process-env";
 import {
-  CAPACITOR_API_BASE_URL,
-  CAPACITOR_NOTIFICATIONS_BASE_URL,
-  CAPACITOR_ORDERS_BASE_URL,
-  CAPACITOR_PRODUCTS_BASE_URL,
-  CAPACITOR_PROFILES_BASE_URL,
-} from "../../platform/capacitor.defaults";
+  API_BASE_URL,
+  NOTIFICATIONS_BASE_URL,
+  ORDERS_BASE_URL,
+  PRODUCTS_BASE_URL,
+  PROFILES_BASE_URL,
+} from "@asol/native-core";
 import { categoryService } from "../../src/features/categories";
 import { auditCapacitorDefaultBundle } from "../lib/capacitor-defaults-audit";
 import {

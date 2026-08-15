@@ -44,7 +44,7 @@ import { Switch } from "@/components/ui/switch";
 import { asolApi } from "@/core/api";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { isNativePlatform } from "@/native-platform/core/platform";
+import { isNativePlatform } from '@asol/native-core';
 import { cn } from "@/lib/utils";
 
 import {

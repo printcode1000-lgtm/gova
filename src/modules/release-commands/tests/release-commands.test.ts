@@ -9,7 +9,7 @@ import { zipSync } from "fflate";
 
 import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@/modules/google-play-console/domain/image-validation";
 import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "../../../../scripts/assert-release-static-bundle";
-import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "../../../../scripts/validate-android-r8-policy";
+import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "../../../../packages/native-core/scripts/validate-android-r8-policy";
 import { compareOtaVersions } from "@/features/ota/utils/ota-state";
 import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
 import { assertBuildJobTransition } from "../domain/build-job-types";
@@ -294,7 +294,7 @@ try {
   assert.equal(deviceInstaller.script, "android:device:install");
   assert.equal(deviceInstaller.danger, "destructive");
   assert.deepEqual(deviceInstaller.parameters.map((parameter) => parameter.name), ["device"]);
-  const deviceInstallerSource = await readFile("scripts/android-device-install.ts", "utf8");
+  const deviceInstallerSource = await readFile("packages/native-core/scripts/android-device-install.ts", "utf8");
   assert.doesNotMatch(deviceInstallerSource, /assembleDebugR8|cap:prepare:android/,
     "the install step must build nothing");
   assert.match(deviceInstallerSource, /assertTestApkExists/,
@@ -326,7 +326,7 @@ try {
   );
   assert.match(runnerSource, /const stageAtExit = current\.stage/,
     "a failed job must keep the stage it actually stopped at");
-  const deviceInstallSource = await readFile("scripts/android/device-install.ts", "utf8");
+  const deviceInstallSource = await readFile("packages/native-core/scripts/android/device-install.ts", "utf8");
   assert.match(deviceInstallSource, /pm uninstall/,
     "the device must be wiped by uninstalling, not by clearing data alone");
   assert.match(deviceInstallSource, /assertDeviceIsClean/,

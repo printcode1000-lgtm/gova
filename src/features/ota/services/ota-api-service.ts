@@ -1,6 +1,5 @@
 import { asolApi, ASOL_API_ROUTES } from '@/core/api';
-import { Capacitor, CapacitorHttp } from '@capacitor/core';
-import { nativePlatform } from '@/native-platform';
+import { NativeCore, isNativePlatform } from '@asol/native-core';
 
 import type {
   OtaAdminDashboard,
@@ -10,21 +9,6 @@ import type {
   OtaReleaseDiff,
   SetOtaReleaseApprovalInput,
 } from '../types/ota.types';
-
-function assertSuccessfulResponse(status: number, url: string): void {
-  if (status < 200 || status >= 300) {
-    throw new Error(`OTA request failed (${status}): ${url}`);
-  }
-}
-
-function decodeBase64(value: string): ArrayBuffer {
-  const binary = atob(value);
-  const bytes = new Uint8Array(binary.length);
-  for (let index = 0; index < binary.length; index += 1) {
-    bytes[index] = binary.charCodeAt(index);
-  }
-  return bytes.buffer;
-}
 
 export class OtaApiService {
   private cachedInstallationId: string | null = null;
@@ -41,14 +25,15 @@ export class OtaApiService {
     const key = 'asol-ota-rollout-installation-id';
     let value: string | null = null;
     try {
-      value = (await nativePlatform.preferences.get(key)).value;
+      const res = await NativeCore.getPreference(key);
+      if (res.ok) value = res.value.value;
     } catch {
       // An unavailable preference store must not disable rollout eligibility.
     }
     if (!value) {
       value = crypto.randomUUID();
       try {
-        await nativePlatform.preferences.set(key, value);
+        await NativeCore.setPreference(key, value);
       } catch {
         // Persisting failed; the in-memory id still keeps this session stable.
       }
@@ -56,6 +41,7 @@ export class OtaApiService {
     this.cachedInstallationId = value;
     return value;
   }
+
   getLocalManifest(signal?: AbortSignal): Promise<OtaManifest> {
     return asolApi.getPublicJson<OtaManifest>('/asol-web-manifest.json', {
       signal,
@@ -65,17 +51,18 @@ export class OtaApiService {
   }
 
   private async getRemoteJson<T>(url: string, signal?: AbortSignal): Promise<T> {
-    if (Capacitor.isNativePlatform()) {
+    if (isNativePlatform()) {
       if (signal?.aborted) throw new DOMException('The operation was aborted', 'AbortError');
-      const response = await CapacitorHttp.get({
+      const res = await NativeCore.httpGetJson<T>({
         url,
         headers: { Accept: 'application/json' },
-        responseType: 'json',
         connectTimeout: 15_000,
         readTimeout: 30_000,
       });
-      assertSuccessfulResponse(response.status, url);
-      return (typeof response.data === 'string' ? JSON.parse(response.data) : response.data) as T;
+      if (!res.ok) {
+        throw new Error(`OTA request failed: ${res.error.message}`);
+      }
+      return res.value;
     }
 
     return asolApi.getAbsoluteJson<T>(url, {
@@ -94,20 +81,18 @@ export class OtaApiService {
   }
 
   async getFile(url: string, signal?: AbortSignal): Promise<ArrayBuffer> {
-    if (Capacitor.isNativePlatform()) {
+    if (isNativePlatform()) {
       if (signal?.aborted) throw new DOMException('The operation was aborted', 'AbortError');
-      const response = await CapacitorHttp.get({
+      const res = await NativeCore.httpGetBinary({
         url,
         headers: { Accept: 'application/octet-stream, */*' },
-        responseType: 'arraybuffer',
         connectTimeout: 15_000,
         readTimeout: 60_000,
       });
-      assertSuccessfulResponse(response.status, url);
-      if (typeof response.data !== 'string') {
-        throw new Error(`OTA binary response is invalid: ${url}`);
+      if (!res.ok) {
+        throw new Error(`OTA binary response is invalid: ${res.error.message}`);
       }
-      return decodeBase64(response.data);
+      return res.value;
     }
 
     return asolApi.getAbsoluteBinary(url, {

@@ -120,7 +120,7 @@ In Xcode (for both `App` target and `ShareExtension` target):
 ```bash
 # Run all relevant contract & architecture tests
 npm run architecture:check
-npm run test:native-platform
+npm run test:native-core
 npm run test:notifications
 npm run test:ota-compatibility
 npm run test:ota-background

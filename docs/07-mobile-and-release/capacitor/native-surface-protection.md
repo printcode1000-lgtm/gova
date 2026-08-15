@@ -75,7 +75,7 @@ One release flagged six files:
 | `BackgroundDownloadPlugin.java` | **yes** — Java compiled into the binary |
 | `platform/capacitor.defaults.ts` | no — build-time URL constants |
 | `fastlane/Fastfile` | no — CI tooling |
-| three `src/native-platform/*.ts` | no — TypeScript facades over a plugin already compiled into the shipped shell |
+| three `packages/native-core/*.ts` | no — TypeScript facades over a plugin already compiled into the shipped shell |
 
 Five of six were false, and the response was to declare
 `ASOL_OTA_MINIMUM_NATIVE_VERSION` **five times in a row** without re-reading the
@@ -171,7 +171,7 @@ adopting them anyway would produce ceremony that gets bypassed.
 A TypeScript file importing `@capacitor/app` is flagged native even when that
 plugin is **already compiled into the installed shell** — so the change is
 genuinely OTA-safe. This is not hypothetical: it is exactly the case behind the
-three `src/native-platform/*.ts` false positives above.
+three `packages/native-core/*.ts` false positives above.
 
 The information needed to decide is already in the repository.
 `CAPABILITY_AVAILABILITY` records `backedSince` — the first shell that contains

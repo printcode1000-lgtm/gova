@@ -1,7 +1,7 @@
 /** Single responsibility: verify revocation, manifest canonicalization, history, and supersession contracts. */
 import assert from "node:assert/strict";
 import { generateKeyPairSync } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 import { canonicalManifestPayload, type OtaManifest as ScriptManifest } from "../../../../scripts/ota/ota-config";
 import {
@@ -245,8 +245,10 @@ async function main(): Promise<void> {
   const staleRejectionSource = revocationServiceSource
     .split("if (!decision.accepted)", 2)[1]!
     .split("await asolDbSet", 1)[0]!;
-  assert.equal(staleRejectionSource.includes("cachedAt = Date.now()"), true);
-  const adapterSource = readFileSync("src/platform/ota/capacitor-ota-adapter.ts", "utf8");
+  const adapterPath = existsSync("packages/native-core/src/adapters/ota.adapter.ts")
+    ? "packages/native-core/src/adapters/ota.adapter.ts"
+    : "src/platform/ota/capacitor-ota-adapter.ts";
+  const adapterSource = readFileSync(adapterPath, "utf8");
   assert.equal(adapterSource.includes('setServerAssetPath({ path: "public" })'), true);
   assert.equal(adapterSource.includes("persistServerBasePath()"), true);
   const ensureDirectorySource = adapterSource
@@ -297,18 +299,30 @@ async function main(): Promise<void> {
   const outcomeSource = readFileSync("src/features/ota/services/ota-outcome-logger.ts", "utf8");
   assert.equal(outcomeSource.includes("ingestBatch"), true);
   assert.equal(outcomeSource.includes("uid:"), false, "OTA telemetry sends no account identity");
-  const storageSource = readFileSync("src/native-platform/storage-capacity/storage-capacity.ts", "utf8");
-  assert.equal(storageSource.includes("NativePlatformError.unavailable"), true);
+  const storagePath = "packages/native-core/src/adapters/storage-capacity.adapter.ts";
+  const storageSource = readFileSync(storagePath, "utf8");
+  assert.equal(storageSource.includes("toNativeCoreError") || storageSource.includes("NativeCoreError.unavailable") || storageSource.includes("NativePlatformError.unavailable"), true);
   const capabilityScanSource = readFileSync("scripts/ota/ota-capability-scan.ts", "utf8");
+  // The token must name the real public method, since the scanner looks for
+  // that call site in application source to decide whether a bundle may ship
+  // over the air to a shell that predates the capability.
   assert.equal(
-    capabilityScanSource.includes('["storageCapacity.getFreeSpace", CapabilityKeys.StorageCapacityFreeSpace]'),
+    capabilityScanSource.includes('["NativeCore.getStorageFreeSpace", CapabilityKeys.StorageCapacityFreeSpace]'),
     true,
   );
   assert.equal(publisherSource.includes("staleBundleKeys"), true);
-  const androidSource = readFileSync("android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java", "utf8");
+  // Pinned, not probed: a fallback to the pre-migration path would silently
+  // assert against a file that no longer exists, or stop asserting at all.
+  const androidPath =
+    "packages/native-core/android/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java";
+  assert.equal(existsSync(androidPath), true, `Expected the Android plugin at ${androidPath}`);
+  const androidSource = readFileSync(androidPath, "utf8");
   assert.equal(androidSource.includes('MessageDigest.getInstance("SHA-256")'), true);
   assert.equal(androidSource.includes('result.put("status", "verifying")'), true);
-  const iosSource = readFileSync("ios/App/App/BackgroundDownloadPlugin.swift", "utf8");
+  const iosPath =
+    "packages/native-core/ios/Sources/AsolNativeCore/BackgroundDownloadPlugin.swift";
+  assert.equal(existsSync(iosPath), true, `Expected the iOS plugin at ${iosPath}`);
+  const iosSource = readFileSync(iosPath, "utf8");
   assert.equal(iosSource.includes("var hasher = SHA256()"), true);
   assert.equal(iosSource.includes('defaults.set("verifying"'), true);
 

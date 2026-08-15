@@ -45,18 +45,58 @@ working tree:
 npm run deploy:all
 ```
 
-`scripts/deploy-all.ts` first creates or verifies the encrypted secret backup,
-then stages the complete working tree and creates a main deployment commit named
+`scripts/deploy-all.ts` runs a **preflight gate before its first git write**,
+because the push is what makes a release public and nothing after it may be the
+first place a problem is discovered. In order, the preflight:
+
+1. refuses a non-`main` branch;
+2. requires `VERCEL_TOKEN` and the root `.vercel/project.json` up front, rather
+   than at the end after the push and four service deployments;
+3. runs `lint`, `typecheck`, `architecture:check`, `test`, and `build:static` —
+   the release build, which also re-runs the architecture and test gates;
+4. refuses to publish scratch files (`__probe*`, `*.log`, `*.tmp`, `*.bak`,
+   scratchpad paths), since `git add -A` stages whatever is in the tree;
+5. refuses a downgrade of `releaseId`, `version`, or `minimumNativeVersion` in
+   `public/asol-web-manifest.json` — what a verification-only `build:static`
+   produces when the release environment variables are unset;
+6. refuses an empty run whose `HEAD` already matches `origin/main`.
+
+Only then does it create or verify the encrypted secret backup, stage the
+complete working tree, and create a main deployment commit named
 `deploy(main): <ISO timestamp>`. It pushes `main` to GitHub, which lets the one
 existing GitHub integration update `gova`. The other four projects remain
 disconnected from GitHub and deploy sequentially through their dedicated
 tokens. Each account receives its own visible comment, for example
 `deploy(products): <timestamp> @ <revision>`, plus target/run/revision metadata.
 This avoids ambiguous CLI deployments and concurrent downloads sharing one npm
-cache. The command performs no tests and does not build a static bundle or APK.
+cache.
 
-The command refuses a non-`main` branch and verifies that the new commit leaves
-the working tree clean, so every Vercel account receives the same revision. A
+### Escape hatches
+
+Each is opt-in, and none is the default:
+
+| Flag | Effect |
+| :-- | :-- |
+| `--skip-preflight` | Skips step 3. Prints every skipped check and records the shortcut in the commit message body, so it stays visible in history. |
+| `--allow-scratch-files` | Publishes files matching the scratch patterns. |
+| `--allow-manifest-downgrade` | Publishes a lower release manifest. |
+| `--allow-empty` | Redeploys the current commit with nothing to change. |
+
+An unrecognised option aborts rather than being ignored, so a mistyped
+`--skip-preflght` can never be read as something more permissive.
+
+After the deployment table, the run reports whether the native surface has
+changed since the last store release. `ota:publish` refuses while it has, so the
+operator learns here instead of at the next OTA attempt; the baseline is
+reported only and never re-tagged automatically. If a deployment fails after the
+push, the exact `git revert` and Vercel rollback steps are printed.
+
+`scripts/tests/deploy-all.test.ts` covers the refusals, including that importing
+the module does not deploy — the entrypoint is guarded so `npm test` can never
+become a release.
+
+The command verifies that the new commit leaves the working tree clean, so every
+Vercel account receives the same revision. A
 zero exit code from the upload process is not considered success. Every service
 polls the Vercel API for the deployment tagged with this exact run id until it is
 `READY`, `ERROR`, `CANCELED`, or times out; alias failures turn an otherwise

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { nativePlatform } from "@/native-platform";
+import { NativeCore } from "@asol/native-core";
 import { featureFlags } from "./feature-flag-service";
 import { featureFlagApiService } from "./services/feature-flag-api-service";
 
@@ -39,13 +39,14 @@ export function FeatureFlagController() {
     const timer = setInterval(refresh, REFRESH_INTERVAL_MS);
 
     let unsubscribe: (() => void) | undefined;
-    void nativePlatform.app
-      .onStateChange(({ isActive }) => {
-        if (isActive) refresh();
-      })
-      .then((stop) => {
-        if (cancelled) stop();
-        else unsubscribe = stop;
+    void NativeCore.onAppStateChange(({ isActive }) => {
+      if (isActive) refresh();
+    })
+      .then((res) => {
+        if (res.ok) {
+          if (cancelled) res.value();
+          else unsubscribe = res.value;
+        }
       })
       .catch(() => {
         // Lifecycle events are an optimisation, never a requirement.

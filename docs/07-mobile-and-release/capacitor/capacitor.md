@@ -271,15 +271,13 @@ All targets share **identical** `src/` application code.
 
 ## Architecture contract
 
-All native capabilities are reached through the **Native Platform layer**
-(`src/native-platform`). See [native-platform.md](./native-platform.md).
+All native capabilities are reached through the **Native Core layer**
+(`@asol/native-core`). See [native-platform.md](./native-platform.md).
 
 Capacitor integration must **not**:
 
-- Add imports of `@capacitor/*` outside `src/native-platform` except the four
-  reviewed bindings listed by `CAPACITOR_IMPORT_ALLOWED_FILES` in
-  `scripts/architecture-check.ts`; every other import is rejected by the
-  **Native Platform Contract** check in `npm run architecture:check`
+- Add imports of `@capacitor/*` outside `packages/native-core/src/adapters/`; every other import is rejected by the
+  **Native Core Contract** check in `npm run architecture:check`
 - Add SQLite, Drizzle, Turso, or SQL in the mobile shell
 - Change Architecture Contract exceptions
 - Hardcode API URLs inside `src/` (use build-time env only)
@@ -287,7 +285,7 @@ Capacitor integration must **not**:
 Platform-specific settings live in:
 
 - `capacitor.config.ts`
-- `platform/capacitor.defaults.ts`
+- `packages/native-core/src/domain/config/capacitor.defaults.ts`
 - `scripts/cap-build.ts`
 - `android/` · `ios/` (generated)
 

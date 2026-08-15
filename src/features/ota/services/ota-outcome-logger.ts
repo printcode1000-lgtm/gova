@@ -6,7 +6,7 @@ import {
   asolDbSet,
   ASOL_DB_STORES,
 } from "@/modules/data-access/browser/asol-db";
-import { getPlatformName } from "@/native-platform";
+import { getPlatformName } from '@asol/native-core';
 import type { PersistentSystemLogInput } from "@/features/system-logs/entities/persistent-system-log.entity";
 import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
 

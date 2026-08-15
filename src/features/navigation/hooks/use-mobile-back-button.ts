@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
-import { capacitorBackButtonAdapter } from '@/platform/navigation/capacitor-back-button-adapter';
+import { NativeCore, isNativePlatform } from "@asol/native-core";
 
-const HOME_ROUTE = '/home';
+const HOME_ROUTE = "/home";
 const EXIT_CONFIRMATION_WINDOW_MS = 2_000;
 
 export function useMobileBackButton() {
@@ -16,12 +16,12 @@ export function useMobileBackButton() {
   const hideTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!capacitorBackButtonAdapter.isAvailable()) return;
+    if (!isNativePlatform()) return;
 
     let disposed = false;
-    let removeListener: (() => Promise<void>) | null = null;
+    let removeListener: (() => void) | null = null;
 
-    void capacitorBackButtonAdapter.subscribe((event) => {
+    void NativeCore.onBackButton((event: { canGoBack: boolean }) => {
       if (event.canGoBack) {
         setShowExitHint(false);
         lastExitPress.current = 0;
@@ -38,7 +38,7 @@ export function useMobileBackButton() {
 
       const now = Date.now();
       if (now - lastExitPress.current <= EXIT_CONFIRMATION_WINDOW_MS) {
-        void capacitorBackButtonAdapter.exitApp();
+        void NativeCore.exitApp();
         return;
       }
 
@@ -49,9 +49,11 @@ export function useMobileBackButton() {
         setShowExitHint(false);
         lastExitPress.current = 0;
       }, EXIT_CONFIRMATION_WINDOW_MS);
-    }).then((handle) => {
-      if (disposed) void handle.remove();
-      else removeListener = () => handle.remove();
+    }).then((res) => {
+      if (res.ok) {
+        if (disposed) void res.value();
+        else removeListener = res.value;
+      }
     });
 
     return () => {

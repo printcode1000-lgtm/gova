@@ -16,8 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from '@/lib/i18n';
-import { isCancelledError } from "@/native-platform";
-import { files } from "@/native-platform/files";
+import { NativeCore, isCancelledError } from '@asol/native-core';
 
 interface FormFieldProps {
   label: string;
@@ -197,10 +196,20 @@ export function BlobImageUpload({
    */
   const openPicker = async () => {
     try {
-      const picked = await files.user.pickFile({
-        accept: accept.split(",").map((entry) => entry.trim()).filter(Boolean),
+      const res = await NativeCore.pickFiles({
+        types: accept.split(",").map((entry) => entry.trim()).filter(Boolean),
+        multiple: false,
       });
-      processFile(picked.file);
+      if (!res.ok) {
+        if (isCancelledError(res.error)) return;
+        setLocalError(res.error.message);
+        return;
+      }
+      const first = res.value[0];
+      if (first?.blob) {
+        const file = new File([first.blob], first.name, { type: first.mimeType });
+        processFile(file);
+      }
     } catch (error) {
       // Dismissing the picker is a normal outcome, not an error.
       if (isCancelledError(error)) return;

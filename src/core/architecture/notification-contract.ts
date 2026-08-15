@@ -94,6 +94,7 @@ export const NOTIFICATION_INTERNAL_SEGMENTS = [
 export const NOTIFICATION_INTERNAL_IMPORT_EXEMPT = new Set<string>([
   "scripts/sync-notifications-service-sources.ts",
   "scripts/validate-ios-push-policy.ts",
+  "packages/native-core/scripts/validate-ios-push-policy.ts",
   "scripts/test-ota-native-compatibility.ts",
   "src/features/auth/tests/registration-success-flow.test.ts",
 ]);
@@ -201,13 +202,17 @@ export const NOTIFICATION_TRANSPORT_RULES: ReadonlyArray<{
     transport: "Capacitor plugins",
     pattern: /from\s+['"]@(?:capacitor|capacitor-mlkit|capawesome|capgo)\//,
     owners: [],
-    use: "the Native Platform module, through infrastructure/capacitor/",
+    use: "the Native Core package (@asol/native-core), through infrastructure/native/",
   },
   {
-    transport: "the Native Platform notification plugins",
-    pattern: /from\s+['"][^'"]*native-platform\/notifications['"]/,
-    owners: ["src/features/notifications/infrastructure/"],
-    use: "the Capacitor adapters in infrastructure/capacitor/",
+    transport: "the Native Core notification module",
+    pattern: /from\s+['"]@asol\/native-core['"]/,
+    owners: [
+      "src/features/notifications/infrastructure/native/",
+      "src/features/notifications/presentation/NativePushController.tsx",
+      "src/features/notifications/tests/",
+    ],
+    use: "the native services in infrastructure/native/",
   },
   {
     transport: "the Web Push server library",

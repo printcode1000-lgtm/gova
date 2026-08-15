@@ -3,7 +3,7 @@ import type { OtaStoredState } from "../types/ota.types";
 import type {
   BackgroundDownloadStatus,
   BackgroundDownloadTask,
-} from "@/native-platform";
+} from '@asol/native-core';
 
 export const OTA_DAILY_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 export const OTA_FREE_SPACE_MARGIN = 1.2;
@@ -26,6 +26,8 @@ export function nativeDownloadPollAction(
     case "completed":
       return "complete";
     case "failed":
+    case "cancelled":
+    case "paused":
       return "fail";
     case "missing":
       return alreadyRescheduledMissing ? "fail" : "reschedule";

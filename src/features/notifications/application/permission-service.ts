@@ -1,30 +1,28 @@
-"use client";
-
-import { capacitorPermissionService } from "../infrastructure/capacitor/capacitor-permission.service";
+import { nativePermissionService } from "../infrastructure/native/native-permission.service";
 
 export class PermissionService {
   request() {
-    return capacitorPermissionService.request();
+    return nativePermissionService.request();
   }
 
   current() {
-    return capacitorPermissionService.getCurrent();
+    return nativePermissionService.getCurrent();
   }
 
   checkResult() {
-    return capacitorPermissionService.checkResult();
+    return nativePermissionService.checkResult();
   }
 
   requestResult() {
-    return capacitorPermissionService.requestResult();
+    return nativePermissionService.requestResult();
   }
 
   canOpenSettings() {
-    return capacitorPermissionService.canOpenSettings();
+    return nativePermissionService.canOpenSettings();
   }
 
   openSettings() {
-    return capacitorPermissionService.openSettings();
+    return nativePermissionService.openSettings();
   }
 }
 

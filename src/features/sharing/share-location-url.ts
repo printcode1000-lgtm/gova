@@ -6,8 +6,7 @@
  * has to reach for `navigator.share` itself.
  */
 
-import { clipboard, isCancelledError } from "@/native-platform";
-import { share } from "@/native-platform/share";
+import { NativeCore, isCancelledError } from "@asol/native-core";
 
 /**
  * @param url Absolute URL to share.
@@ -22,18 +21,28 @@ export async function shareLocationUrl(
   onFailed?: () => void,
 ): Promise<void> {
   try {
-    if (await share.canSend()) {
-      await share.send({ title, url });
-      return;
+    const canShareRes = await NativeCore.canShare();
+    if (canShareRes.ok && canShareRes.value) {
+      const shareRes = await NativeCore.share({ title, url });
+      if (shareRes.ok) return;
+      if (isCancelledError(shareRes.error)) return;
     }
-    await clipboard.write(url);
-    onCopied?.();
+    const clipRes = await NativeCore.writeClipboard({ string: url });
+    if (clipRes.ok) {
+      onCopied?.();
+    } else {
+      onFailed?.();
+    }
   } catch (error) {
     // Dismissing the share sheet is a normal outcome, not a failure.
     if (isCancelledError(error)) return;
     try {
-      await clipboard.write(url);
-      onCopied?.();
+      const clipRes = await NativeCore.writeClipboard({ string: url });
+      if (clipRes.ok) {
+        onCopied?.();
+      } else {
+        onFailed?.();
+      }
     } catch {
       onFailed?.();
     }

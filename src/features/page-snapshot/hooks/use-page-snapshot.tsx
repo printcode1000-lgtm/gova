@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { App as CapacitorApp } from '@capacitor/app';
+import { NativeCore } from '@asol/native-core';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useSession } from '@/features/auth/components/SessionProvider';
 import {
@@ -267,16 +267,16 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     let cancelled = false;
     let remove: (() => void) | undefined;
-    void CapacitorApp.addListener('appStateChange', ({ isActive }) => {
+    void NativeCore.onAppStateChange(({ isActive }) => {
       if (!isActive) flushSave();
-    }).then((handle) => {
-      if (cancelled) {
-        void handle.remove();
-        return;
+    }).then((res) => {
+      if (res.ok) {
+        if (cancelled) {
+          res.value();
+          return;
+        }
+        remove = res.value;
       }
-      remove = () => {
-        void handle.remove();
-      };
     }).catch((error) => {
       console.warn('[PageSnapshot] Failed to install app state listener.', error);
     });

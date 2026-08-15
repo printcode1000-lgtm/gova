@@ -1,25 +1,23 @@
 /**
  * Map GPS provider backed by the Native Platform Location module.
  *
- * Single responsibility: adapt `nativePlatform.location` to the map's
+ * Single responsibility: adapt `NativeCore.getCurrentPosition` / `NativeCore.watchPosition` to the map's
  * `GpsProvider` shape. It is the default provider for every ASOL map, so the
  * map never talks to `navigator.geolocation` and inherits permission handling,
  * GPS-disabled detection, and the unified error taxonomy for free.
  */
 
-import { location } from "@/native-platform/location";
-import type { LocationFix, LocationOptions } from "@/native-platform/location";
+import { NativeCore, isNativePlatform } from "@asol/native-core";
+import type { LocationFix, LocationOptions } from "@asol/native-core";
 import type { AsolMapLocation, GpsProvider } from "./types";
 
 function toMapLocation(fix: LocationFix): AsolMapLocation {
   return {
     latitude: fix.latitude,
     longitude: fix.longitude,
-    // The map contract requires a number; the platform reports null when the
-    // device gives no accuracy estimate.
     accuracy: fix.accuracy ?? 0,
-    heading: fix.heading,
-    speed: fix.speed,
+    heading: fix.heading ?? null,
+    speed: fix.speed ?? null,
     timestamp: fix.timestamp,
     source: "capacitor",
   };
@@ -28,11 +26,9 @@ function toMapLocation(fix: LocationFix): AsolMapLocation {
 /** Translate the browser `PositionOptions` the map passes into module options. */
 function toLocationOptions(options?: PositionOptions): LocationOptions {
   return {
-    accuracy: options?.enableHighAccuracy ? "high" : "balanced",
+    enableHighAccuracy: options?.enableHighAccuracy ?? true,
     ...(options?.timeout !== undefined ? { timeout: options.timeout } : {}),
-    ...(options?.maximumAge !== undefined
-      ? { maximumAge: options.maximumAge }
-      : {}),
+    ...(options?.maximumAge !== undefined ? { maximumAge: options.maximumAge } : {}),
   };
 }
 
@@ -40,22 +36,35 @@ export function createNativePlatformGpsProvider(): GpsProvider {
   return {
     id: "native-platform",
 
-    isAvailable: () => location.isAvailable(),
+    isAvailable: () => isNativePlatform() || (typeof navigator !== "undefined" && "geolocation" in navigator),
 
     async getCurrentPosition(options) {
-      return toMapLocation(
-        await location.getCurrentPosition(toLocationOptions(options)),
-      );
+      const res = await NativeCore.getCurrentPosition(toLocationOptions(options));
+      if (!res.ok) {
+        throw res.error;
+      }
+      return toMapLocation(res.value);
     },
 
     async watchPosition(onLocation, onError, options) {
-      const handle = await location.watchPosition(
-        (fix) => onLocation(toMapLocation(fix)),
+      const res = await NativeCore.watchPosition(
         toLocationOptions(options),
-        onError,
+        (fix: LocationFix | null, err?: Error) => {
+          if (err) {
+            onError?.(err);
+            return;
+          }
+          if (fix) {
+            onLocation(toMapLocation(fix));
+          }
+        },
       );
+      if (!res.ok) {
+        onError?.(res.error);
+        return () => {};
+      }
       return () => {
-        void handle.stop();
+        void res.value();
       };
     },
   };

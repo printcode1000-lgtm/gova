@@ -1,0 +1,45 @@
+name: native-core
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint check
+        run: npm run lint
+
+      - name: TypeScript typecheck
+        run: npm run typecheck
+
+      - name: Architecture invariants check
+        run: npm run architecture:check
+
+      - name: Native core boundary tests
+        run: npm run test:native-core
+
+      - name: Notifications suite tests
+        run: npm run test:notifications
+
+      - name: Validate versions
+        run: npm run version:validate

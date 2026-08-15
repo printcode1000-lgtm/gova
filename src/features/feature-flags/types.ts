@@ -1,5 +1,5 @@
 /** Single responsibility: describe remote flags guarded by native capabilities. */
-import type { CapabilityKey } from "@/native-platform";
+import type { CapabilityKey } from '@asol/native-core';
 export interface FeatureFlagDefinition {
   key: string;
   capability?: CapabilityKey;

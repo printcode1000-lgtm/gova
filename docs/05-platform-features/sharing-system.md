@@ -124,8 +124,8 @@ accidentally importing server services through the normal module barrel.
 |---|---|
 | `android/app/src/main/AndroidManifest.xml` | Verified HTTPS intent filters for the two public paths. |
 | `ios/App/App/App.entitlements` | iOS `applinks:` associated-domain entitlement. |
-| `src/native-platform/app/app-native-adapter.ts` | Thin Capacitor `App.getLaunchUrl()` adapter. |
-| `src/native-platform/app/app.ts` | Platform-neutral `app.launchUrl()` and `app.onDeepLink()` API. |
+| `packages/native-core/src/adapters/app.adapter.ts` | Thin Capacitor `App.getLaunchUrl()` adapter. |
+| `packages/native-core/src/api/native-core.api.ts` | Platform-neutral `NativeCore.onAppUrlOpen()` API. |
 | `src/app/layout.tsx` | Global controller mount and public metadata base. |
 
 ### Feature integration points
@@ -275,7 +275,7 @@ user cancels share sheet       -> return "cancelled"; do nothing else
 ```
 
 Application UI must not import Capacitor directly. Native access remains behind
-`src/native-platform`.
+`@asol/native-core`.
 
 ### Clipboard fallback and visible QR action
 
@@ -659,6 +659,7 @@ The focused test verifies:
 - rejection of an untrusted origin;
 - rejection of an unsupported path.
 
+
 The focused test is included in the full `npm test` chain.
 
 ### Required surrounding checks
@@ -666,7 +667,7 @@ The focused test is included in the full `npm test` chain.
 ```bash
 npm run typecheck
 npm run architecture:check
-npm run test:native-platform
+npm run test:native-core
 npm run test:sharing
 npm run build:static
 npx next build
@@ -750,7 +751,7 @@ Do not add destination code directly to the new feature page. Use this sequence:
    Links, and both well-known association responses together.
 10. Add the server route to the static-build exclusion contract.
 11. Extend focused tests with accepted and rejected cases.
-12. Run web, static, native-platform, and real-device verification.
+12. Run web, static, Native Core, and real-device verification.
 
 Adding a new social destination follows a different rule: add its action once
 in `share-actions.client.ts`, add the destination vocabulary in

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { NativeCore } from "@asol/native-core";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -33,10 +34,19 @@ import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/p
 import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
 import { redactSystemLogText } from "@/features/system-logs/system-log-sanitizer";
 import { cn } from "@/lib/utils";
-import { clipboard } from "@/native-platform";
 
 import { sections, formatForCopy, formatEntryForCopy } from "./logs/SuperAdminLogsPage.log-formatters";
 import { CloudErrorsContainer } from "./logs/SuperAdminLogsPage.cloud-errors";
+
+// Clipboard access belongs to Native Core, which picks the native or web
+// implementation. It returns a Result rather than throwing, so a copy button on
+// a platform without clipboard access stays silent instead of breaking the page.
+const clipboard = {
+  write: async (text: string): Promise<void> => {
+    if (!text) return;
+    await NativeCore.writeClipboard({ string: text });
+  },
+};
 
 export function SuperAdminLogsPage() {
   const router = useRouter();

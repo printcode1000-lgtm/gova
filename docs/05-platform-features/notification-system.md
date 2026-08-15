@@ -1377,8 +1377,8 @@ Consequences, stated accurately:
 | `android/.../AsolNotificationTapProtocol.java` | The application-owned tap handshake |
 | `android/.../AsolNotificationInboxPlugin.java` | The bridge: list, acknowledge, clear, tap, tray sweep |
 | `android/.../AsolAppLifecycle.java` | Whether the Activity is in front, so nothing rings twice |
-| `native-platform/notifications/push-notifications.ts` | The typed bridge |
-| `notifications/infrastructure/capacitor/capacitor-native-inbox.service.ts` | The adapter |
+| `packages/native-core/src/adapters/notifications.adapter.ts` | The typed bridge |
+| `notifications/infrastructure/native/native-inbox.service.ts` | The adapter |
 | `notifications/application/native-inbox-service.ts` | Import, acknowledge, and tap orchestration |
 
 ## Offline Queue

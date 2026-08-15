@@ -19,7 +19,7 @@ import {
   assertDetectionCoverage,
   detectableCapabilityKeys,
 } from "./ota/ota-capability-scan";
-import { ALL_CAPABILITY_KEYS } from "../src/native-platform/capabilities/capability-keys";
+import { ALL_CAPABILITY_KEYS } from "@asol/native-core";
 
 /**
  * The golden rule, as executable checks.
@@ -45,6 +45,9 @@ for (const file of [
   "android/app/build.gradle",
   "ios/App/App/Info.plist",
   "ios/ShareExtension/ShareViewController.swift",
+  "packages/native-core/android/build.gradle",
+  "packages/native-core/ios/Package.swift",
+  "packages/native-core/src/adapters/camera.adapter.ts",
   "capacitor.config.ts",
 ]) {
   assert.equal(
@@ -58,11 +61,6 @@ for (const file of [
 // ---------------------------------------------------------------------------
 // Paths that look native but never reach the store binary
 // ---------------------------------------------------------------------------
-// These were classified native by path. One release flagged six files of which
-// five were harmless, and the publisher answered by declaring a minimum native
-// version five times without re-reading the list. A gate that cries wolf stops
-// being read, so each of these must stay quiet unless its content says
-// otherwise.
 for (const file of [
   "fastlane/Fastfile",
   "fastlane/Appfile",
@@ -80,7 +78,7 @@ assert.deepEqual(
   undeclarableNativeChanges({
     changedPaths: [
       "android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java",
-      "src/native-platform/app/app-native-adapter.ts",
+      "packages/native-core/src/adapters/app.adapter.ts",
     ],
     changedNativeDependencies: ["@capacitor/app"],
   }),
@@ -97,11 +95,9 @@ assert.equal(nextNativePatchVersion("0.2.0"), "0.2.1");
 // ---------------------------------------------------------------------------
 // The publisher itself pins both directions in an isolated git repository
 // ---------------------------------------------------------------------------
-// Unit-testing the classifier alone would not catch somebody disconnecting it
-// from ota:publish. These dry runs execute the real CLI and stop before any
-// build or R2 access.
 const publisherPath = path.resolve("scripts/ota-publish.ts");
 const tsxCliPath = path.resolve("node_modules/tsx/dist/cli.mjs");
+const tsconfigPath = path.resolve("tsconfig.json");
 
 function writeFixture(root: string, relativePath: string, content: string): void {
   const absolute = path.join(root, relativePath);
@@ -127,7 +123,7 @@ function createPublisherFixture(): string {
 function dryRunPublisher(root: string, minimumNativeVersion = "0.2.0") {
   return spawnSync(
     process.execPath,
-    [tsxCliPath, publisherPath, "--dry-run", `--minimum-native-version=${minimumNativeVersion}`],
+    [tsxCliPath, "--tsconfig", tsconfigPath, publisherPath, "--dry-run", `--minimum-native-version=${minimumNativeVersion}`],
     {
       cwd: root,
       encoding: "utf8",
@@ -179,7 +175,7 @@ for (const scenario of [
     } else {
       writeFixture(
         root,
-        "src/native-platform/app/app-native-adapter.ts",
+        "packages/native-core/src/adapters/app.adapter.ts",
         'import { App } from "@capacitor/app";\nexport const nativeApp = App;\n',
       );
     }
@@ -207,30 +203,13 @@ for (const scenario of [
   }
 }
 
-// `platform/` is build-time configuration: capacitor.config.ts does not import
-// it, and its values are baked into the web bundle, so it travels over OTA.
-assert.equal(
-  classify("platform/capacitor.defaults.ts", "export const CAPACITOR_API_BASE_URL = 'https://x';\n"),
-  false,
-  "A build-time constant under platform/ must not force a store release.",
-);
-
-// …but the same folder is native the moment its content binds to a plugin.
-assert.equal(
-  classify("platform/some-native-shim.ts", NATIVE_IMPORTING_FILE),
-  true,
-  "A plugin import under platform/ is a native binding wherever it sits.",
-);
-
 // ---------------------------------------------------------------------------
-// Inside src/, a file is native because it binds to a plugin — wherever it sits
+// Inside src/ or packages/, a file is native because it binds to a plugin
 // ---------------------------------------------------------------------------
 for (const file of [
-  "src/native-platform/camera/camera-native-adapter.ts",
-  // The sanctioned Capacitor-import exceptions live outside src/native-platform
-  // and were invisible to the path-only classifier.
-  "src/platform/ota/capacitor-ota-adapter.ts",
-  "src/platform/navigation/capacitor-back-button-adapter.ts",
+  "packages/native-core/src/adapters/camera.adapter.ts",
+  "packages/native-core/src/adapters/ota.adapter.ts",
+  "packages/native-core/src/adapters/back-button.adapter.ts",
   "src/features/ota/services/ota-api-service.ts",
   "src/features/page-snapshot/hooks/use-page-snapshot.tsx",
 ]) {
@@ -242,7 +221,7 @@ for (const file of [
 }
 
 assert.equal(
-  classify("src/native-platform/capabilities/capability-registry.ts", DYNAMIC_IMPORTING_FILE),
+  classify("packages/native-core/src/capabilities/capability-registry.ts", DYNAMIC_IMPORTING_FILE),
   true,
   "A dynamic plugin import must count as a native binding",
 );
@@ -269,15 +248,9 @@ for (const file of [
   "docs/07-mobile-and-release/capacitor/native-platform.md",
   "package-lock.json",
   "src/app/profile/page.tsx",
-  "src/features/native-platform-notes.ts",
-  // Pure TypeScript inside the Native Platform layer ships in the web bundle
-  // and must remain OTA-deliverable: a facade, a web adapter, a validator.
-  "src/native-platform/camera/camera.ts",
-  "src/native-platform/camera/camera-web-adapter.ts",
-  "src/native-platform/share/share-validator.ts",
-  "src/native-platform/share/share-queue.ts",
-  "src/native-platform/barcode/duplicate-filter.ts",
-  "src/native-platform/core/errors.ts",
+  "packages/native-core/src/domain/camera/types.ts",
+  "packages/native-core/src/validation/schemas.ts",
+  "packages/native-core/src/errors/native-core-error.ts",
 ]) {
   assert.equal(
     classify(file),
@@ -288,7 +261,7 @@ for (const file of [
 
 // Tests never reach a device.
 assert.equal(
-  classify("src/native-platform/tests/native-platform-contract.test.ts", NATIVE_IMPORTING_FILE),
+  classify("packages/native-core/src/tests/contract/native-core-boundary.test.ts", NATIVE_IMPORTING_FILE),
   false,
   "Test sources must not trip the gate",
 );
@@ -298,7 +271,7 @@ assert.equal(
 // ---------------------------------------------------------------------------
 assert.equal(
   isNativeSurface(
-    "src/native-platform/camera/camera-native-adapter.ts",
+    "packages/native-core/src/adapters/camera.adapter.ts",
     () => null,
     () => NATIVE_IMPORTING_FILE,
   ),
@@ -339,7 +312,6 @@ assert.equal(
   assert.equal(report.baselineMissing, false);
   assert.equal(Array.isArray(report.changedPaths), true);
   assert.equal(Array.isArray(report.changedNativeDependencies), true);
-  // HEAD against a clean working tree carries no native dependency drift.
   assert.deepEqual(report.changedNativeDependencies, []);
 }
 
@@ -360,15 +332,13 @@ console.log("OTA native compatibility tests passed.");
 // ---------------------------------------------------------------------------
 // A minimum-version declaration cannot excuse the shell's own compiled source
 // ---------------------------------------------------------------------------
-// Declaring says "this runs on a shell that already shipped". For Java, Swift,
-// a manifest or the Capacitor config that claim is false by construction: no
-// device carries the edit. This was not hypothetical — a BackgroundDownloadPlugin
-// fix was waived this way and four releases went out claiming 0.2.0 compatibility.
 for (const file of [
   "android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java",
   "android/app/src/main/AndroidManifest.xml",
   "android/app/build.gradle",
   "ios/App/App/Info.plist",
+  "packages/native-core/android/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java",
+  "packages/native-core/ios/Sources/AsolNativeCore/BackgroundDownloadPlugin.swift",
   "capacitor.config.ts",
 ]) {
   assert.equal(
@@ -381,10 +351,9 @@ for (const file of [
 // The escape hatch stays open where the claim can be true: a facade over a
 // plugin the shell already contains.
 for (const file of [
-  "src/native-platform/app/app-native-adapter.ts",
-  "src/native-platform/capabilities/capability-keys.ts",
-  "src/platform/ota/capacitor-ota-adapter.ts",
-  "platform/capacitor.defaults.ts",
+  "packages/native-core/src/adapters/app.adapter.ts",
+  "packages/native-core/src/capabilities/capability-keys.ts",
+  "packages/native-core/src/adapters/ota.adapter.ts",
 ]) {
   assert.equal(
     isUndeclarableNativeChange(file),

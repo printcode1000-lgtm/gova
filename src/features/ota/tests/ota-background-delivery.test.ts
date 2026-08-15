@@ -1,7 +1,7 @@
 /** Single responsibility: verify daily scheduling, bundle safety, and durable task state. */
 import assert from "node:assert/strict";
 import { createHash, generateKeyPairSync, sign, verify } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { zipSync } from "fflate";
 
 import {
@@ -227,10 +227,16 @@ async function main(): Promise<void> {
   assert.equal(checkSource.includes("minimumNativeVersion"), true, "native version gates delivery");
   assert.equal(checkSource.includes("capabilityDecision.compatible"), true, "capabilities gate delivery");
 
-  const androidSource = readFileSync("android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java", "utf8");
+  const androidPath = existsSync("packages/native-core/android/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java")
+    ? "packages/native-core/android/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java"
+    : "android/app/src/main/java/hgh/asol/app/BackgroundDownloadPlugin.java";
+  const androidSource = readFileSync(androidPath, "utf8");
   assert.equal(androidSource.includes("ACTIVE_RELEASE"), true, "Android enforces one bundle task");
   assert.equal(androidSource.includes("clearRelease(prefs, releaseId, false)"), true, "Android replaces stale persisted task ids");
-  const iosSource = readFileSync("ios/App/App/BackgroundDownloadPlugin.swift", "utf8");
+  const iosPath = existsSync("packages/native-core/ios/Sources/AsolNativeCore/BackgroundDownloadPlugin.swift")
+    ? "packages/native-core/ios/Sources/AsolNativeCore/BackgroundDownloadPlugin.swift"
+    : "ios/App/App/BackgroundDownloadPlugin.swift";
+  const iosSource = readFileSync(iosPath, "utf8");
   assert.equal(iosSource.includes("tasks.filter { $0.taskDescription != releaseId }.forEach { $0.cancel() }"), true, "iOS enforces one bundle task");
   console.log("OTA background delivery tests passed.");
 }

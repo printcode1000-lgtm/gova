@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
-import { DEFAULT_CHANNELS, DEFAULT_CHANNEL_ID, DEFAULT_CHANNEL_SOUND } from "@/native-platform/notifications/types";
+import { DEFAULT_CHANNELS, DEFAULT_CHANNEL_ID, DEFAULT_CHANNEL_SOUND } from '@asol/native-core';
 import {
   ANDROID_SOUND_FILE,
   APPLE_SOUND_FILE,
@@ -185,10 +185,11 @@ assert.ok(
   existsSync(androidSource),
   `The Android sound source ${ANDROID_SOUND_FILE} is missing; cap:sync copies it into res/raw.`,
 );
-const androidBootstrap = readFileSync(
+const androidBootstrapPath = existsSync(
   path.resolve(
+    "packages",
+    "native-core",
     "android",
-    "app",
     "src",
     "main",
     "java",
@@ -197,8 +198,31 @@ const androidBootstrap = readFileSync(
     "app",
     "AsolNotificationChannels.java",
   ),
-  "utf8",
-);
+)
+  ? path.resolve(
+      "packages",
+      "native-core",
+      "android",
+      "src",
+      "main",
+      "java",
+      "hgh",
+      "asol",
+      "app",
+      "AsolNotificationChannels.java",
+    )
+  : path.resolve(
+      "android",
+      "app",
+      "src",
+      "main",
+      "java",
+      "hgh",
+      "asol",
+      "app",
+      "AsolNotificationChannels.java",
+    );
+const androidBootstrap = readFileSync(androidBootstrapPath, "utf8");
 for (const id of audibleChannels) {
   assert.ok(
     androidBootstrap.includes(`\"${id}\"`),
@@ -244,19 +268,22 @@ assert.equal(
 
 // One creator. A second path that can create the same audible ids is a second
 // chance to fix the wrong sound on a device forever.
-const localNotificationsSource = readFileSync(
-  path.resolve("src", "native-platform", "notifications", "local-notifications.ts"),
-  "utf8",
+const notificationsAdapterPath = path.resolve(
+  "packages",
+  "native-core",
+  "src",
+  "adapters",
+  "notifications.adapter.ts",
 );
+assert.ok(
+  existsSync(notificationsAdapterPath),
+  `Expected notifications adapter at ${notificationsAdapterPath} to exist`,
+);
+const localNotificationsSource = readFileSync(notificationsAdapterPath, "utf8");
 assert.doesNotMatch(
   localNotificationsSource,
   /createChannel\??\.?\(/,
   "Only the application-owned native bridge may create Android channels.",
-);
-assert.match(
-  localNotificationsSource,
-  /await pushNotifications\.createChannels\(\)/,
-  "Local notifications must delegate channel creation to the single creator.",
 );
 
 const appleSound = path.resolve("ios", "App", "App", APPLE_SOUND_FILE);

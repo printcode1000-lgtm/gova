@@ -12,7 +12,7 @@ import type {
   ProductComponentConfig,
   ProductMode,
 } from "./product-component.types";
-import { isCancelledError } from "@/native-platform";
+import { isCancelledError } from '@asol/native-core';
 import { shareLocationUrl } from "@/features/sharing/share-location-url";
 
 const DEFAULT_LOCATION = {

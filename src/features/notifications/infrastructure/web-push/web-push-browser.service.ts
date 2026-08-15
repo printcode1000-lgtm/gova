@@ -5,7 +5,7 @@ import { NotificationPlatforms } from "../../domain/enums";
 import { WEB_PUSH_VAPID_PUBLIC_KEY } from "../../domain/web-push-config";
 import { notificationApiService } from "../../services/notification-api-service";
 import { readNotificationLocale } from "../../shared/read-notification-locale";
-import { permissionManager, PermissionKinds } from "@/native-platform/permissions";
+import { nativePermissionService } from "../native/native-permission.service";
 
 const DEVICE_ID_KEY = "web-push-device-id";
 
@@ -78,7 +78,7 @@ export class WebPushBrowserService {
    * so existing callers do not change.
    */
   async getPermission(): Promise<NotificationPermission | "unsupported"> {
-    const result = await permissionManager.check(PermissionKinds.Notifications);
+    const result = await nativePermissionService.checkResult();
     if (result.state === "unsupported") return "unsupported";
     if (result.granted) return "granted";
     return result.state === "denied" || result.state === "blocked"
@@ -100,11 +100,10 @@ export class WebPushBrowserService {
 
   async subscribe(uid: string, phone: string) {
     if (!this.isSupported()) throw new Error("webPushUnsupported");
-    // Routed through the Native Platform Permission Manager so every
-    // notification permission in the application follows one policy.
-    const permission = await permissionManager.requestIfNeeded(
-      PermissionKinds.Notifications,
-    );
+    // Routed through the notifications feature's native permission service so
+    // every notification permission in the application follows one policy, and
+    // the Native Core module is reached only through its owning adapter.
+    const permission = await nativePermissionService.requestResult();
     if (!permission.granted) throw new Error("notificationPermissionDenied");
 
     const registration = await waitForActiveServiceWorker(

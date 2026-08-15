@@ -5,7 +5,7 @@ import type { NotificationPlatform } from "../domain/enums";
  * Types the public API is allowed to hand out.
  *
  * Everything here is owned by this module or by its domain. No Capacitor,
- * Firebase, APNs, Web Push, IndexedDB, repository, or native-platform type
+ * Firebase, APNs, Web Push, IndexedDB, repository, or Native Core type
  * appears in a public signature — a consumer must never have to import an
  * adapter's vocabulary to call a use case.
  */

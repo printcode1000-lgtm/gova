@@ -29,11 +29,9 @@ import {
   type SystemLogEntry,
   type SystemLogLevel,
 } from "@/features/system-logs/system-log-store";
-import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
-import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
-import { redactSystemLogText } from "@/features/system-logs/system-log-sanitizer";
 import { cn } from "@/lib/utils";
-import { clipboard } from "@/native-platform";
+import { redactSystemLogText } from "@/features/system-logs/system-log-sanitizer";
+import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
 
 export const sections: Array<{
   level: SystemLogLevel;

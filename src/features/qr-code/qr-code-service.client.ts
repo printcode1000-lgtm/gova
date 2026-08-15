@@ -2,7 +2,7 @@
 
 import QRCode from "qrcode";
 
-import { nativePlatform } from "@/native-platform";
+import { NativeCore } from "@asol/native-core";
 import type { QrCodePngArtifact, QrCodePngOptions } from "./types";
 
 const PNG_MIME = "image/png" as const;
@@ -66,7 +66,9 @@ export async function saveQrCodePng(
   options: QrCodePngOptions,
 ): Promise<QrCodePngArtifact> {
   const artifact = await createQrCodePng(options);
-  await nativePlatform.files.user.saveToDevice(artifact.blob, {
+  const buffer = await artifact.blob.arrayBuffer();
+  await NativeCore.saveFile({
+    data: new Uint8Array(buffer),
     fileName: artifact.fileName,
     mimeType: artifact.mimeType,
   });

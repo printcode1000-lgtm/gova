@@ -6,7 +6,7 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { otaApiService } from "@/features/ota/services/ota-api-service";
 import { otaUpdateService } from "@/features/ota/services/ota-update-service";
 import type { OtaAdminDashboard, OtaDownloadProgress, OtaReleaseDiff } from "@/features/ota/types/ota.types";
-import { clipboard } from "@/native-platform";
+import { NativeCore } from "@asol/native-core";
 
 export function useOtaAdmin() {
   const { session } = useSession();
@@ -54,7 +54,7 @@ export function useOtaAdmin() {
   };
   const copyManifest = async () => {
     if (dashboard?.current.manifest)
-      await clipboard.write(JSON.stringify(dashboard.current.manifest, null, 2));
+      await NativeCore.writeClipboard({ string: JSON.stringify(dashboard.current.manifest, null, 2) });
   };
   return {
     dashboard, diff, baseReleaseId, setBaseReleaseId, progress, rollout, setRollout,

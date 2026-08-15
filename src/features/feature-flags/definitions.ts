@@ -10,7 +10,7 @@
  * capability safe to ship — `barcode.scan` exists only on Android, so the flag
  * stays dark on iOS no matter what the server says.
  */
-import { CapabilityKeys } from "@/native-platform";
+import { CapabilityKeys } from '@asol/native-core';
 import type { FeatureFlagDefinition } from "./types";
 
 export interface FeatureFlagCatalogEntry extends FeatureFlagDefinition {

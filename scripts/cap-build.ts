@@ -2,7 +2,7 @@ import { execFileSync, execSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { CAPACITOR_API_BASE_URL } from "../platform/capacitor.defaults";
+import { API_BASE_URL } from '@asol/native-core';
 import { compareOtaVersions } from "../src/features/ota/utils/ota-state";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "./assert-release-static-bundle";
@@ -305,12 +305,12 @@ async function main(): Promise<void> {
     throw new Error("OTA notes and mandatory mode can only be set while publishing a new OTA.");
   }
   const apiBaseUrl = (
-    process.env.ASOL_CAPACITOR_API_BASE_URL ?? CAPACITOR_API_BASE_URL
+    process.env.ASOL_API_BASE_URL ?? API_BASE_URL
   ).replace(/\/$/, "");
   const plannedNativeVersion = resolveTargetNativeVersion(nativeVersionAction);
   const publishEnv: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
-    ASOL_CAPACITOR_API_BASE_URL: apiBaseUrl,
+    ASOL_API_BASE_URL: apiBaseUrl,
     ASOL_OTA_MINIMUM_NATIVE_VERSION: plannedNativeVersion,
   };
 

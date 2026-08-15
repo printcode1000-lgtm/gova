@@ -4,9 +4,9 @@ import type { DeviceToken } from "../domain/entities";
 import { assertPhone, assertUid } from "../domain/notification-validation";
 import { notificationLog } from "../domain/notification-redaction";
 import {
-  capacitorPushService,
-  type CapacitorPushHandlers,
-} from "../infrastructure/capacitor/capacitor-push.service";
+  nativePushService,
+  type NativePushHandlers,
+} from "../infrastructure/native/native-push.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { webPushBrowserService } from "../infrastructure/web-push/web-push-browser.service";
 import { notificationApiService } from "../services/notification-api-service";
@@ -28,7 +28,7 @@ export class DeviceTokenService {
     // Coalesced: the opt-in dialog, the settings toggle, and a resume can all
     // ask at once, and each extra call is a redundant provider round trip.
     return this.flights.run(`register:${safeUid}`, async () => {
-      const token = await capacitorPushService.register(safeUid);
+      const token = await nativePushService.register(safeUid);
       if (!token) return null;
       await asolNotificationRepository.saveDeviceToken(token);
       await notificationApiService.registerToken({
@@ -55,25 +55,25 @@ export class DeviceTokenService {
   async initialize(
     uid: string,
     phone: string,
-    handlers: CapacitorPushHandlers,
+    handlers: NativePushHandlers,
   ): Promise<void> {
     const safeUid = assertUid(uid);
     const safePhone = assertPhone(phone);
     await this.flights.run(`initialize:${safeUid}`, async () => {
-      await capacitorPushService.initialize(safeUid, handlers);
-      if (!(await capacitorPushService.isEnabled())) return;
-      if ((await capacitorPushService.permissionState()) !== "granted") return;
+      await nativePushService.initialize(safeUid, handlers);
+      if (!(await nativePushService.isEnabled())) return;
+      if ((await nativePushService.permissionState()) !== "granted") return;
       await this.register(safeUid, safePhone);
     });
   }
 
   syncDeliveredNotifications(): Promise<void> {
-    return capacitorPushService.syncDeliveredNotifications();
+    return nativePushService.syncDeliveredNotifications();
   }
 
   /** Declare the Android notification channels. No-op elsewhere. */
   createChannels(): Promise<void> {
-    return capacitorPushService.createChannels();
+    return nativePushService.createChannels();
   }
 
   /**
@@ -86,9 +86,9 @@ export class DeviceTokenService {
     const safeUid = assertUid(uid);
     const safePhone = assertPhone(phone);
     if (
-      capacitorPushService.isNativePush() &&
-      (await capacitorPushService.isEnabled()) &&
-      (await capacitorPushService.permissionState()) === "granted"
+      nativePushService.isNativePush() &&
+      (await nativePushService.isEnabled()) &&
+      (await nativePushService.permissionState()) === "granted"
     ) {
       await this.register(safeUid, safePhone);
     }
@@ -120,11 +120,11 @@ export class DeviceTokenService {
     if (webPushBrowserService.isSupported()) {
       await webPushBrowserService.unsubscribe(safeUid, safePhone);
     }
-    await capacitorPushService.unregister();
+    await nativePushService.unregister();
   }
 
   isNativePush(): boolean {
-    return capacitorPushService.isNativePush();
+    return nativePushService.isNativePush();
   }
 
   /**
@@ -133,7 +133,7 @@ export class DeviceTokenService {
    */
   isPushSupported(): boolean {
     return (
-      capacitorPushService.isNativePush() || webPushBrowserService.isSupported()
+      nativePushService.isNativePush() || webPushBrowserService.isSupported()
     );
   }
 
@@ -142,8 +142,8 @@ export class DeviceTokenService {
    * browser subscription.
    */
   async isDeviceEnabled(): Promise<boolean> {
-    if (capacitorPushService.isNativePush())
-      return capacitorPushService.isEnabled();
+    if (nativePushService.isNativePush())
+      return nativePushService.isEnabled();
     return webPushBrowserService.hasSubscription();
   }
 
@@ -154,7 +154,7 @@ export class DeviceTokenService {
   async enable(uid: string, phone: string): Promise<void> {
     const safeUid = assertUid(uid);
     const safePhone = assertPhone(phone);
-    if (capacitorPushService.isNativePush()) {
+    if (nativePushService.isNativePush()) {
       await this.register(safeUid, safePhone);
       return;
     }
@@ -162,7 +162,7 @@ export class DeviceTokenService {
   }
 
   getPlatform(): "android" | "ios" | "web" {
-    return capacitorPushService.getPlatform();
+    return nativePushService.getPlatform();
   }
 
   list(uid: string): Promise<DeviceToken[]> {

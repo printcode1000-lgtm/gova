@@ -3,7 +3,7 @@ import { request as httpsRequest } from 'node:https';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { extname, join, resolve, normalize } from 'node:path';
-import { CAPACITOR_API_BASE_URL } from '../platform/capacitor.defaults';
+import { API_BASE_URL } from '@asol/native-core';
 
 const rootDir = resolve('out');
 const port = Number(process.env.PORT ?? 5500);
@@ -11,7 +11,7 @@ const host = process.env.HOST ?? '127.0.0.1';
 const apiBaseUrl = (
   process.env.ASOL_STATIC_PREVIEW_API_BASE_URL ??
   process.env.NEXT_PUBLIC_ASOL_API_BASE_URL ??
-  CAPACITOR_API_BASE_URL
+  API_BASE_URL
 ).replace(/\/$/, '');
 
 const mimeTypes: Record<string, string> = {

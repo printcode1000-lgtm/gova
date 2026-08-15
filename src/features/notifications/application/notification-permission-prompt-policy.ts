@@ -1,4 +1,9 @@
-import type { PermissionState } from "@/native-platform/permissions";
+export type NotificationPermissionState =
+  | "granted"
+  | "denied"
+  | "prompt"
+  | "blocked"
+  | "unsupported";
 
 export const NotificationPromptActions = {
   Hidden: "hidden",
@@ -14,7 +19,7 @@ export interface NotificationPromptContext {
   /** Native FCM/APNs, or Web Push in a secure browser context. */
   pushSupported: boolean;
   deviceEnabled: boolean;
-  permissionState: PermissionState;
+  permissionState: NotificationPermissionState;
 }
 
 /**

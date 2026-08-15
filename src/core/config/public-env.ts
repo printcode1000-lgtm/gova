@@ -32,7 +32,7 @@ export const publicEnv = {
    *
    * No fallback constant here on purpose. A static or native bundle has no
    * same-origin option, so `build-static.ts` resolves the value from
-   * `CAPACITOR_NOTIFICATIONS_BASE_URL`, asserts it is absolute, and sets it
+   * `NOTIFICATIONS_BASE_URL`, asserts it is absolute, and sets it
    * before the build. Importing that default here instead would pull
    * `platform/` into `next.config.ts` and break the static build's temp layout.
    */

@@ -81,5 +81,39 @@ module.exports = [
         { name: 'indexedDB', message: 'Use the central browser adapter in src/modules/data-access/browser.' },
       ],
     },
-  }
+  },
+  // ── @asol/native-core architecture sealing ────────────────────────────────
+  // All Capacitor imports are banned in app code. Only the adapters layer
+  // inside packages/native-core may import them directly.
+  {
+    files: [
+      'src/**/*.{ts,tsx,js,jsx}',
+      'services/**/*.{ts,tsx,js,jsx}',
+      'scripts/**/*.ts',
+    ],
+    ignores: [
+      'packages/native-core/src/adapters/**',
+      'packages/native-core/scripts/**',
+      'scripts/architecture-check.ts',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@capacitor/*', '@capawesome/*', '@capgo/*', '@capacitor-mlkit/*'],
+              message:
+                'Direct Capacitor imports are forbidden in app code. Use @asol/native-core instead.',
+            },
+            {
+              group: ['@asol/native-core/*'],
+              message:
+                'Import from @asol/native-core only (root), not from sub-paths.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];

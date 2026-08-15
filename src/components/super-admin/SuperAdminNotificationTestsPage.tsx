@@ -38,7 +38,7 @@ import {
   type NotificationTestResult,
   type NotificationTestScenarioId,
 } from "@/features/notifications";
-import { DEFAULT_CHANNELS } from "@/native-platform";
+import { DEFAULT_CHANNELS } from '@asol/native-core';
 
 type TestMode = "local" | "push";
 

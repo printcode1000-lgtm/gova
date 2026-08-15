@@ -5,12 +5,12 @@ import { readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { withoutVsCodeDebuggerEnv } from "../child-process-env";
 import {
-  CAPACITOR_API_BASE_URL,
-  CAPACITOR_NOTIFICATIONS_BASE_URL,
-  CAPACITOR_ORDERS_BASE_URL,
-  CAPACITOR_PRODUCTS_BASE_URL,
-  CAPACITOR_PROFILES_BASE_URL,
-} from "../../platform/capacitor.defaults";
+  API_BASE_URL,
+  NOTIFICATIONS_BASE_URL,
+  ORDERS_BASE_URL,
+  PRODUCTS_BASE_URL,
+  PROFILES_BASE_URL,
+} from "@asol/native-core";
 import { categoryService } from "../../src/features/categories";
 import { auditCapacitorDefaultBundle } from "../lib/capacitor-defaults-audit";
 import {
@@ -55,7 +55,7 @@ export function resolveStaticApiBaseUrl(): string {
     process.env.NEXT_PUBLIC_ASOL_API_BASE_URL?.replace(/\/$/, "") ||
     process.env.NEXT_PUBLIC_ASOL_API_URL?.replace(/\/$/, "") ||
     process.env.ASOL_API_BASE_URL?.replace(/\/$/, "") ||
-    CAPACITOR_API_BASE_URL.replace(/\/$/, "")
+    API_BASE_URL.replace(/\/$/, "")
   );
 }
 
@@ -64,7 +64,7 @@ export function assertStaticApiBaseUrl(): void {
   if (!/^https?:\/\/.+/.test(apiBaseUrl)) {
     throw new Error(
       "A static build needs an absolute API base URL, but none resolved. " +
-        "Set NEXT_PUBLIC_ASOL_API_BASE_URL, or fix CAPACITOR_API_BASE_URL in platform/capacitor.defaults.ts.",
+        "Set NEXT_PUBLIC_ASOL_API_BASE_URL, or fix API_BASE_URL in packages/native-core/src/domain/defaults/platform-defaults.ts.",
     );
   }
   console.log(`Static API base URL: ${apiBaseUrl}`);
@@ -73,12 +73,12 @@ export function assertStaticApiBaseUrl(): void {
 export function assertStaticNotificationsBaseUrl(): void {
   const notificationsBaseUrl =
     process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL?.replace(/\/$/, "") ||
-    CAPACITOR_NOTIFICATIONS_BASE_URL.replace(/\/$/, "");
+    NOTIFICATIONS_BASE_URL.replace(/\/$/, "");
   if (!/^https?:\/\/.+/.test(notificationsBaseUrl)) {
     throw new Error(
       "A static build needs an absolute notifications service URL, but none resolved. " +
-        "Set NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL, or fix CAPACITOR_NOTIFICATIONS_BASE_URL " +
-        "in platform/capacitor.defaults.ts.",
+        "Set NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL, or fix NOTIFICATIONS_BASE_URL " +
+        "in packages/native-core/src/domain/defaults/platform-defaults.ts.",
     );
   }
   process.env.NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL = notificationsBaseUrl;
@@ -88,12 +88,12 @@ export function assertStaticNotificationsBaseUrl(): void {
 export function assertStaticProductsBaseUrl(): void {
   const productsBaseUrl =
     process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL?.replace(/\/$/, "") ||
-    CAPACITOR_PRODUCTS_BASE_URL.replace(/\/$/, "");
+    PRODUCTS_BASE_URL.replace(/\/$/, "");
   if (!/^https?:\/\/.+/.test(productsBaseUrl)) {
     throw new Error(
       "A static build needs an absolute products service URL, but none resolved. " +
-        "Set NEXT_PUBLIC_ASOL_PRODUCTS_URL, or fix CAPACITOR_PRODUCTS_BASE_URL " +
-        "in platform/capacitor.defaults.ts.",
+        "Set NEXT_PUBLIC_ASOL_PRODUCTS_URL, or fix PRODUCTS_BASE_URL " +
+        "in packages/native-core/src/domain/defaults/platform-defaults.ts.",
     );
   }
   process.env.NEXT_PUBLIC_ASOL_PRODUCTS_URL = productsBaseUrl;
@@ -103,12 +103,12 @@ export function assertStaticProductsBaseUrl(): void {
 export function assertStaticOrdersBaseUrl(): void {
   const ordersBaseUrl =
     process.env.NEXT_PUBLIC_ASOL_ORDERS_URL?.replace(/\/$/, "") ||
-    CAPACITOR_ORDERS_BASE_URL.replace(/\/$/, "");
+    ORDERS_BASE_URL.replace(/\/$/, "");
   if (!/^https?:\/\/.+/.test(ordersBaseUrl)) {
     throw new Error(
       "A static build needs an absolute orders service URL, but none resolved. " +
-        "Set NEXT_PUBLIC_ASOL_ORDERS_URL, or fix CAPACITOR_ORDERS_BASE_URL " +
-        "in platform/capacitor.defaults.ts.",
+        "Set NEXT_PUBLIC_ASOL_ORDERS_URL, or fix ORDERS_BASE_URL " +
+        "in packages/native-core/src/domain/defaults/platform-defaults.ts.",
     );
   }
   process.env.NEXT_PUBLIC_ASOL_ORDERS_URL = ordersBaseUrl;
@@ -118,12 +118,12 @@ export function assertStaticOrdersBaseUrl(): void {
 export function assertStaticProfilesBaseUrl(): void {
   const profilesBaseUrl =
     process.env.NEXT_PUBLIC_ASOL_PROFILES_URL?.replace(/\/$/, "") ||
-    CAPACITOR_PROFILES_BASE_URL.replace(/\/$/, "");
+    PROFILES_BASE_URL.replace(/\/$/, "");
   if (!/^https?:\/\/.+/.test(profilesBaseUrl)) {
     throw new Error(
       "A static build needs an absolute profiles service URL, but none resolved. " +
-        "Set NEXT_PUBLIC_ASOL_PROFILES_URL, or fix CAPACITOR_PROFILES_BASE_URL " +
-        "in platform/capacitor.defaults.ts.",
+        "Set NEXT_PUBLIC_ASOL_PROFILES_URL, or fix PROFILES_BASE_URL " +
+        "in packages/native-core/src/domain/defaults/platform-defaults.ts.",
     );
   }
   process.env.NEXT_PUBLIC_ASOL_PROFILES_URL = profilesBaseUrl;

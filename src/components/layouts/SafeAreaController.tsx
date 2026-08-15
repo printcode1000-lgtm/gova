@@ -3,8 +3,7 @@
 import { useEffect } from 'react';
 
 import { useResolvedColorScheme } from '@/lib/preferences';
-import { isNativePlatform } from '@/native-platform/core/platform';
-import { statusBar, type StatusBarInfo } from '@/native-platform/status-bar';
+import { NativeCore, isNativePlatform, type StatusBarInfo } from '@asol/native-core';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 const STATUS_BAR_HEIGHT_VAR = '--asol-native-status-bar-height';
@@ -31,7 +30,6 @@ export function SafeAreaController() {
     let reading = false;
     let rereadPending = false;
     let settleTimer: ReturnType<typeof setTimeout> | null = null;
-    let unsubscribe: (() => void) | null = null;
 
     const applyInset = (info: StatusBarInfo) => {
       // A hidden or non-overlaying status bar sits outside the WebView already,
@@ -42,8 +40,8 @@ export function SafeAreaController() {
 
     const readInset = async (): Promise<void> => {
       try {
-        const info = await statusBar.getInfo();
-        if (!disposed) applyInset(info);
+        const res = await NativeCore.getStatusBarInfo();
+        if (!disposed && res.ok) applyInset(res.value);
       } catch (error) {
         reportPreAuthFailure('read-native-status-bar-inset', error, {}, 'warn');
         // Plugin unavailable: fall back to env(safe-area-inset-top) alone.
@@ -89,21 +87,6 @@ export function SafeAreaController() {
 
     scheduleRead();
 
-    // The plugin's own events are the only signal for a status bar that is
-    // shown or hidden without any viewport resize.
-    void statusBar
-      .onChange((info) => {
-        if (!disposed) applyInset(info);
-      })
-      .then((remove) => {
-        if (disposed) remove();
-        else unsubscribe = remove;
-      })
-      .catch((error) => {
-        reportPreAuthFailure('subscribe-native-status-bar', error, {}, 'warn');
-        // Listener support is optional; the polled reads still cover rotation.
-      });
-
     const orientation = window.screen?.orientation;
     orientation?.addEventListener('change', handleRotation);
     window.addEventListener('orientationchange', handleRotation);
@@ -116,7 +99,6 @@ export function SafeAreaController() {
       window.removeEventListener('orientationchange', handleRotation);
       window.removeEventListener('resize', scheduleRead);
       document.removeEventListener('visibilitychange', handleVisibility);
-      unsubscribe?.();
       if (settleTimer !== null) clearTimeout(settleTimer);
       root.style.removeProperty(STATUS_BAR_HEIGHT_VAR);
     };
@@ -125,12 +107,13 @@ export function SafeAreaController() {
   useEffect(() => {
     if (!isNativePlatform()) return;
     // `dark` means light glyphs (for a dark background) and vice versa.
-    void statusBar
-      .setStyle(colorScheme === 'dark' ? 'dark' : 'light')
-      .catch((error) => {
-        reportPreAuthFailure('set-native-status-bar-style', error, {}, 'warn');
-        // Appearance is cosmetic; never break rendering over it.
-      });
+    void NativeCore.setStatusBarStyle({
+      style: colorScheme === 'dark' ? 'dark' : 'light',
+    }).then((res) => {
+      if (!res.ok) {
+        reportPreAuthFailure('set-native-status-bar-style', res.error, {}, 'warn');
+      }
+    });
   }, [colorScheme]);
 
   return null;

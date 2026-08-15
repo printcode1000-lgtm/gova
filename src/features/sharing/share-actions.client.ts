@@ -1,7 +1,6 @@
 "use client";
 
-import { clipboard, isCancelledError } from "@/native-platform";
-import { share } from "@/native-platform/share";
+import { NativeCore, isCancelledError } from "@asol/native-core";
 import type { ShareContent } from "./share-content";
 import {
   buildFacebookShareUrl,
@@ -37,14 +36,14 @@ export async function shareToInstagram(
   content: ShareContent,
 ): Promise<ShareActionResult> {
   openExternal(INSTAGRAM_HOME_URL);
-  await clipboard.write(buildShareMessage(content));
+  await NativeCore.writeClipboard({ string: buildShareMessage(content) });
   return "copied";
 }
 
 export async function copyShareLink(
   content: ShareContent,
 ): Promise<ShareActionResult> {
-  await clipboard.write(content.url);
+  await NativeCore.writeClipboard({ string: content.url });
   return "copied";
 }
 
@@ -52,13 +51,17 @@ export async function shareThroughSystem(
   content: ShareContent,
 ): Promise<ShareActionResult> {
   try {
-    if (await share.canSend()) {
-      await share.send({
+    const canShareRes = await NativeCore.canShare();
+    if (canShareRes.ok && canShareRes.value) {
+      const shareRes = await NativeCore.share({
         title: content.title,
         text: content.text,
         url: content.url,
       });
-      return "shared";
+      if (shareRes.ok) {
+        return "shared";
+      }
+      if (isCancelledError(shareRes.error)) return "cancelled";
     }
     return copyShareLink(content);
   } catch (error) {

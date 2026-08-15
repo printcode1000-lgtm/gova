@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { app } from "@/native-platform/app";
+import { NativeCore } from "@asol/native-core";
 import { internalRouteFromPublicShareUrl } from "./share-links";
 
 export function ShareDeepLinkController() {
@@ -19,13 +19,18 @@ export function ShareDeepLinkController() {
       if (route) router.replace(route);
     };
 
-    void app.launchUrl().then((value) => navigate(value?.url));
-    void app
-      .onDeepLink(({ url }) => navigate(url))
-      .then((remove) => {
-        if (disposed) remove();
-        else unsubscribe = remove;
-      });
+    void NativeCore.getLaunchUrl().then((res) => {
+      if (res.ok && res.value) {
+        navigate(res.value.url);
+      }
+    });
+
+    void NativeCore.onAppUrlOpen(({ url }) => navigate(url)).then((res) => {
+      if (res.ok) {
+        if (disposed) res.value();
+        else unsubscribe = res.value;
+      }
+    });
 
     return () => {
       disposed = true;

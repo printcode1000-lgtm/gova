@@ -1,0 +1,45 @@
+{
+  "name": "@asol/native-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "npx tsx src/tests/index.test.ts"
+  },
+  "dependencies": {
+    "@capacitor-mlkit/barcode-scanning": "^8.1.0",
+    "@capacitor/action-sheet": "^8.1.1",
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/browser": "^8.0.4",
+    "@capacitor/camera": "^8.2.0",
+    "@capacitor/cli": "^8.4.1",
+    "@capacitor/clipboard": "^8.0.1",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/device": "^8.0.3",
+    "@capacitor/dialog": "^8.0.1",
+    "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/geolocation": "^8.2.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.4.1",
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/local-notifications": "^8.2.1",
+    "@capacitor/network": "^8.0.1",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/push-notifications": "^8.1.2",
+    "@capacitor/screen-orientation": "^8.0.1",
+    "@capacitor/share": "^8.0.1",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
+    "@capacitor/text-zoom": "^8.0.1",
+    "@capacitor/toast": "^8.0.1",
+    "@capawesome/capacitor-file-picker": "^8.0.3",
+    "@capgo/capacitor-speech-recognition": "^8.1.7",
+    "zod": "^4.4.3"
+  }
+}

@@ -2,8 +2,8 @@
  * Single responsibility: combine remotely controlled values with native-shell
  * capability checks, keeping unreleased UI dark by default.
  */
-import { capabilities } from "@/native-platform";
-import type { CapabilityKey } from "@/native-platform";
+import { capabilities } from '@asol/native-core';
+import type { CapabilityKey } from '@asol/native-core';
 import type {
   FeatureFlagDefinition,
   RemoteFeatureFlagProvider,

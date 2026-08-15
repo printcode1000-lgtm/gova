@@ -1,6 +1,6 @@
 /** Single responsibility: verify remote feature flags remain capability-safe and isolated. */
 import assert from "node:assert/strict";
-import { CapabilityKeys, type CapabilityKey } from "@/native-platform";
+import { CapabilityKeys, type CapabilityKey } from '@asol/native-core';
 import { FeatureFlagService } from "../feature-flag-service";
 
 async function main(): Promise<void> {

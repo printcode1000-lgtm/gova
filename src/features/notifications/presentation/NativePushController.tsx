@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/features/auth/components/SessionProvider";
-import { nativePlatform } from "@/native-platform";
+import { NativeCore } from "@asol/native-core";
 import { notificationsFacade } from "../public/notification-facade";
 import { notificationLog } from "../domain/notification-redaction";
 
@@ -42,9 +42,6 @@ export function NativePushController() {
   const { session, isLoading } = useSession();
   const previousUidRef = useRef("");
   const previousPhoneRef = useRef("");
-  // Asked once: this controller owns FCM/APNs only. The browser is driven by
-  // `WebPushController`, and running both against one session would unregister
-  // a web subscription every time the signed-in user changed.
   const [isNativePush, setIsNativePush] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -55,7 +52,8 @@ export function NativePushController() {
   }, []);
 
   useEffect(() => {
-    if (isLoading || !isNativePush) return;
+    if (isLoading || isNativePush !== true) return;
+
     const uid = session?.uid ?? "";
     const previousUid = previousUidRef.current;
     const previousPhone = previousPhoneRef.current;
@@ -75,34 +73,30 @@ export function NativePushController() {
         uid,
         phone: session?.phone ?? "",
         handlers: {
-          // The centre, never the business route. The notification keeps its
-          // own `route` and the card follows it when opened from the list.
           onOpened: () => {
             router.push("/notifications");
           },
         },
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         notificationLog.error("Native push initialization failed.", error);
       });
   }, [isLoading, isNativePush, router, session?.phone, session?.uid]);
 
   useEffect(() => {
-    if (isLoading || !isNativePush || !session?.uid) return;
+    if (isLoading || isNativePush !== true || !session?.uid) return;
     const uid = session.uid;
     let unsubscribe: (() => void) | undefined;
-    void nativePlatform.app
-      .onStateChange(({ isActive }) => {
-        if (!isActive) return;
-        // The uid is required: a device-local record is never imported without
-        // knowing which account it belongs to.
-        void notificationsFacade.importDelivered({ uid }).catch((error) => {
-          notificationLog.error("Delivered-notification synchronization failed.", error);
-        });
-      })
-      .then((remove) => {
-        unsubscribe = remove;
+    void NativeCore.onAppStateChange(({ isActive }) => {
+      if (!isActive) return;
+      void notificationsFacade.importDelivered({ uid }).catch((error: unknown) => {
+        notificationLog.error("Delivered-notification synchronization failed.", error);
       });
+    }).then((res) => {
+      if (res.ok) {
+        unsubscribe = res.value;
+      }
+    });
     return () => unsubscribe?.();
   }, [isLoading, isNativePush, session?.uid]);
 

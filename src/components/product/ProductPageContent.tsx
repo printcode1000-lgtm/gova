@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Copy, MessageCircle, Share2, UserCircle } from "lucide-react";
 
+import { NativeCore } from "@asol/native-core";
 import { ApiError, asolApi } from "@/core/api";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
@@ -35,11 +36,20 @@ import {
   PHARMACY_MAIN_CATEGORY_ID,
   PHARMACY_SUBCATEGORY_ID,
 } from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
-import { clipboard } from "@/native-platform";
 import {
   buildProductShareUrl,
   ShareMenu,
 } from "@/features/sharing";
+
+// Clipboard access belongs to Native Core, which picks the native or web
+// implementation. It returns a Result rather than throwing, so a copy button on
+// a platform without clipboard access stays silent instead of breaking the page.
+const clipboard = {
+  write: async (text: string): Promise<void> => {
+    if (!text) return;
+    await NativeCore.writeClipboard({ string: text });
+  },
+};
 
 interface ProductStyleFile {
   components: ProductStyleComponents;

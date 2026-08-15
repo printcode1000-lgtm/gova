@@ -10,13 +10,11 @@ import {
   ALL_CAPABILITY_KEYS,
   CapabilityKeys,
   type CapabilityKey,
-} from "../../src/native-platform/capabilities/capability-keys";
-import {
   CAPABILITY_AVAILABILITY,
   OPTIONAL_CAPABILITIES_MINIMUM_NATIVE_VERSION,
   PLATFORM_OPTIONAL_SHELL_CAPABILITIES,
   type CapabilityAvailability,
-} from "../../src/native-platform/capabilities/shell-capabilities";
+} from "@asol/native-core";
 import { compareOtaVersions } from "../../src/features/ota/utils/ota-state";
 
 export interface ScannableBuiltFile {
@@ -201,89 +199,110 @@ export function scanBuiltCapabilities(
 /**
  * Source tokens that prove a bundle needs a capability.
  *
- * Every token must name a method that actually exists on a Native Platform
- * facade. A token that matches nothing is worse than no token at all: the
- * capability silently disappears from `requiredCapabilities`, and the client
- * gate stops protecting it. `assertDetectionCoverage` keeps the map honest by
- * failing when a capability key has no token at all, and the Native Platform
- * API tests keep the method names honest.
- *
- * A token ending in `.` matches any member access below that prefix; every
- * other token must be followed by a call.
+ * Every token must name a method that actually exists on NativeCore or domain vocabulary.
+ * `assertDetectionCoverage` keeps the map honest by failing when a capability key
+ * has no token at all.
  */
 const apiPatterns = new Map<string, string>([
-  ["app.state", CapabilityKeys.AppState],
-  ["app.onStateChange", CapabilityKeys.AppState],
-  ["app.info", CapabilityKeys.AppInfo],
-  ["app.onDeepLink", CapabilityKeys.AppDeepLink],
-  ["app.exit", CapabilityKeys.AppExit],
-  ["app.canExit", CapabilityKeys.AppExit],
-  ["camera.takePhoto", CapabilityKeys.CameraTakePhoto],
-  ["camera.pickImage", CapabilityKeys.CameraPickImages],
-  ["camera.pickImages", CapabilityKeys.CameraPickImages],
-  ["location.getCurrentPosition", CapabilityKeys.LocationCurrent],
-  ["location.watchPosition", CapabilityKeys.LocationWatch],
-  ["speech.startListening", CapabilityKeys.SpeechRecognize],
-  ["speech.transcribeOnce", CapabilityKeys.SpeechRecognize],
-  ["speechRecognition.transcribeOnce", CapabilityKeys.SpeechRecognize],
-  ["speechRecognition.startListening", CapabilityKeys.SpeechRecognize],
-  ["files.user.pickFile", CapabilityKeys.FilesPick],
-  ["files.user.pickFiles", CapabilityKeys.FilesPick],
-  ["files.user.pickImages", CapabilityKeys.FilesPick],
-  ["files.user.pickPdf", CapabilityKeys.FilesPick],
-  ["files.user.pickDocuments", CapabilityKeys.FilesPick],
-  ["files.user.saveToDevice", CapabilityKeys.FilesSave],
-  ["files.user.openExternally", CapabilityKeys.FilesOpen],
-  ["files.app.", CapabilityKeys.FilesAppStorage],
-  ["share.send", CapabilityKeys.ShareSend],
-  ["share.canSend", CapabilityKeys.ShareSend],
-  ["share.initializeReceiving", CapabilityKeys.ShareReceive],
-  ["share.getPendingItems", CapabilityKeys.ShareReceive],
-  ["share.consumeItem", CapabilityKeys.ShareReceive],
-  ["share.consumeAllItems", CapabilityKeys.ShareReceive],
-  ["notifications.push.", CapabilityKeys.NotificationsPush],
-  ["notifications.local.", CapabilityKeys.NotificationsLocal],
-  ["pushNotifications.", CapabilityKeys.NotificationsPush],
-  ["localNotifications.", CapabilityKeys.NotificationsLocal],
-  ["barcode.scanOnce", CapabilityKeys.BarcodeScan],
-  ["barcode.startScan", CapabilityKeys.BarcodeScan],
-  ["barcodeScanner.scanOnce", CapabilityKeys.BarcodeScan],
-  ["barcodeScanner.startScan", CapabilityKeys.BarcodeScan],
-  ["browser.open", CapabilityKeys.BrowserOpen],
-  ["haptics.impact", CapabilityKeys.HapticsImpact],
-  ["haptics.notification", CapabilityKeys.HapticsNotification],
-  ["network.getStatus", CapabilityKeys.NetworkStatus],
-  ["network.addListener", CapabilityKeys.NetworkListen],
-  ["device.getInfo", CapabilityKeys.DeviceInfo],
-  ["device.getId", CapabilityKeys.DeviceId],
-  ["clipboard.read", CapabilityKeys.ClipboardRead],
-  ["clipboard.write", CapabilityKeys.ClipboardWrite],
-  ["statusBar.setStyle", CapabilityKeys.StatusBarStyle],
-  ["statusBar.setVisible", CapabilityKeys.StatusBarVisibility],
-  ["statusBar.setBackgroundColor", CapabilityKeys.StatusBarBackgroundColor],
-  ["keyboard.show", CapabilityKeys.KeyboardControl],
-  ["keyboard.hide", CapabilityKeys.KeyboardControl],
-  ["keyboard.onWillShow", CapabilityKeys.KeyboardListen],
-  ["keyboard.onWillHide", CapabilityKeys.KeyboardListen],
-  ["splashScreen.show", CapabilityKeys.SplashScreenControl],
-  ["splashScreen.hide", CapabilityKeys.SplashScreenControl],
-  ["preferences.get", CapabilityKeys.PreferencesRead],
-  ["preferences.set", CapabilityKeys.PreferencesWrite],
-  ["preferences.remove", CapabilityKeys.PreferencesWrite],
-  ["screenOrientation.current", CapabilityKeys.ScreenOrientationCurrent],
-  ["screenOrientation.lock", CapabilityKeys.ScreenOrientationLock],
-  ["screenOrientation.unlock", CapabilityKeys.ScreenOrientationLock],
-  ["dialog.alert", CapabilityKeys.DialogAlert],
-  ["dialog.confirm", CapabilityKeys.DialogConfirm],
-  ["dialog.prompt", CapabilityKeys.DialogPrompt],
-  ["toast.show", CapabilityKeys.ToastShow],
-  ["actionSheet.show", CapabilityKeys.ActionSheetShow],
-  ["textZoom.get", CapabilityKeys.TextZoomGet],
-  ["textZoom.set", CapabilityKeys.TextZoomSet],
-  ["backgroundDownload.schedule", CapabilityKeys.BackgroundDownloadBundle],
-  ["backgroundDownload.status", CapabilityKeys.BackgroundDownloadBundle],
-  ["backgroundDownload.read", CapabilityKeys.BackgroundDownloadBundle],
-  ["storageCapacity.getFreeSpace", CapabilityKeys.StorageCapacityFreeSpace],
+  // Unified facade NativeCore.*
+  ["NativeCore.getAppState", CapabilityKeys.AppState],
+  ["NativeCore.onAppStateChange", CapabilityKeys.AppState],
+  ["NativeCore.getAppInfo", CapabilityKeys.AppInfo],
+  ["NativeCore.onAppUrlOpen", CapabilityKeys.AppDeepLink],
+  ["NativeCore.exitApp", CapabilityKeys.AppExit],
+  ["NativeCore.minimizeApp", CapabilityKeys.AppExit],
+  ["NativeCore.takePhoto", CapabilityKeys.CameraTakePhoto],
+  ["NativeCore.pickImages", CapabilityKeys.CameraPickImages],
+  ["NativeCore.getCurrentPosition", CapabilityKeys.LocationCurrent],
+  ["NativeCore.watchPosition", CapabilityKeys.LocationWatch],
+  ["NativeCore.clearWatch", CapabilityKeys.LocationWatch],
+  ["NativeCore.startSpeechRecognition", CapabilityKeys.SpeechRecognize],
+  ["NativeCore.stopSpeechRecognition", CapabilityKeys.SpeechRecognize],
+  ["NativeCore.isSpeechRecognitionAvailable", CapabilityKeys.SpeechRecognize],
+  ["NativeCore.pickFiles", CapabilityKeys.FilesPick],
+  ["NativeCore.saveFile", CapabilityKeys.FilesSave],
+  ["NativeCore.readFile", CapabilityKeys.FilesAppStorage],
+  ["NativeCore.writeFile", CapabilityKeys.FilesAppStorage],
+  ["NativeCore.deleteFile", CapabilityKeys.FilesAppStorage],
+  ["NativeCore.openFileExternally", CapabilityKeys.FilesOpen],
+  ["NativeCore.share", CapabilityKeys.ShareSend],
+  ["NativeCore.canShare", CapabilityKeys.ShareSend],
+  ["NativeCore.onShareReceived", CapabilityKeys.ShareReceive],
+  ["NativeCore.getPendingShareItems", CapabilityKeys.ShareReceive],
+  ["NativeCore.registerForPushNotifications", CapabilityKeys.NotificationsPush],
+  ["NativeCore.onPushToken", CapabilityKeys.NotificationsPush],
+  ["NativeCore.onPushNotificationReceived", CapabilityKeys.NotificationsPush],
+  ["NativeCore.onPushNotificationActionPerformed", CapabilityKeys.NotificationsPush],
+  ["NativeCore.getDeliveredNotifications", CapabilityKeys.NotificationsPush],
+  ["NativeCore.removeDeliveredNotifications", CapabilityKeys.NotificationsPush],
+  ["NativeCore.removeAllDeliveredNotifications", CapabilityKeys.NotificationsPush],
+  ["NativeCore.listPendingInbox", CapabilityKeys.NotificationsPush],
+  ["NativeCore.acknowledgeInbox", CapabilityKeys.NotificationsPush],
+  ["NativeCore.clearInbox", CapabilityKeys.NotificationsPush],
+  ["NativeCore.getPendingInboxCount", CapabilityKeys.NotificationsPush],
+  ["NativeCore.getPendingInboxTap", CapabilityKeys.NotificationsPush],
+  ["NativeCore.clearPendingInboxTap", CapabilityKeys.NotificationsPush],
+  ["NativeCore.onInboxTap", CapabilityKeys.NotificationsPush],
+  ["NativeCore.scheduleLocalNotification", CapabilityKeys.NotificationsLocal],
+  ["NativeCore.scanBarcode", CapabilityKeys.BarcodeScan],
+  ["NativeCore.openBrowser", CapabilityKeys.BrowserOpen],
+  ["NativeCore.closeBrowser", CapabilityKeys.BrowserOpen],
+  ["NativeCore.hapticsImpact", CapabilityKeys.HapticsImpact],
+  ["NativeCore.hapticsNotification", CapabilityKeys.HapticsNotification],
+  ["NativeCore.hapticsVibrate", CapabilityKeys.HapticsNotification],
+  ["NativeCore.hapticsSelectionStart", CapabilityKeys.HapticsNotification],
+  ["NativeCore.hapticsSelectionChanged", CapabilityKeys.HapticsNotification],
+  ["NativeCore.hapticsSelectionEnd", CapabilityKeys.HapticsNotification],
+  ["NativeCore.getNetworkStatus", CapabilityKeys.NetworkStatus],
+  ["NativeCore.onNetworkStatusChange", CapabilityKeys.NetworkListen],
+  ["NativeCore.getDeviceInfo", CapabilityKeys.DeviceInfo],
+  ["NativeCore.getDeviceId", CapabilityKeys.DeviceId],
+  ["NativeCore.getDeviceBatteryInfo", CapabilityKeys.DeviceInfo],
+  ["NativeCore.readClipboard", CapabilityKeys.ClipboardRead],
+  ["NativeCore.writeClipboard", CapabilityKeys.ClipboardWrite],
+  ["NativeCore.setStatusBarStyle", CapabilityKeys.StatusBarStyle],
+  ["NativeCore.getStatusBarInfo", CapabilityKeys.StatusBarStyle],
+  ["NativeCore.showStatusBar", CapabilityKeys.StatusBarVisibility],
+  ["NativeCore.hideStatusBar", CapabilityKeys.StatusBarVisibility],
+  ["NativeCore.setStatusBarBackgroundColor", CapabilityKeys.StatusBarBackgroundColor],
+  ["NativeCore.setStatusBarOverlaysWebView", CapabilityKeys.StatusBarStyle],
+  ["NativeCore.showKeyboard", CapabilityKeys.KeyboardControl],
+  ["NativeCore.hideKeyboard", CapabilityKeys.KeyboardControl],
+  ["NativeCore.setKeyboardResize", CapabilityKeys.KeyboardControl],
+  ["NativeCore.getKeyboardResize", CapabilityKeys.KeyboardControl],
+  ["NativeCore.setKeyboardAccessoryBarVisible", CapabilityKeys.KeyboardControl],
+  ["NativeCore.onKeyboardWillShow", CapabilityKeys.KeyboardListen],
+  ["NativeCore.onKeyboardDidShow", CapabilityKeys.KeyboardListen],
+  ["NativeCore.onKeyboardWillHide", CapabilityKeys.KeyboardListen],
+  ["NativeCore.onKeyboardDidHide", CapabilityKeys.KeyboardListen],
+  ["NativeCore.showSplashScreen", CapabilityKeys.SplashScreenControl],
+  ["NativeCore.hideSplashScreen", CapabilityKeys.SplashScreenControl],
+  ["NativeCore.getPreference", CapabilityKeys.PreferencesRead],
+  ["NativeCore.getPreferenceKeys", CapabilityKeys.PreferencesRead],
+  ["NativeCore.setPreference", CapabilityKeys.PreferencesWrite],
+  ["NativeCore.removePreference", CapabilityKeys.PreferencesWrite],
+  ["NativeCore.clearPreferences", CapabilityKeys.PreferencesWrite],
+  ["NativeCore.getScreenOrientation", CapabilityKeys.ScreenOrientationCurrent],
+  ["NativeCore.lockScreenOrientation", CapabilityKeys.ScreenOrientationLock],
+  ["NativeCore.unlockScreenOrientation", CapabilityKeys.ScreenOrientationLock],
+  ["NativeCore.alert", CapabilityKeys.DialogAlert],
+  ["NativeCore.confirm", CapabilityKeys.DialogConfirm],
+  ["NativeCore.prompt", CapabilityKeys.DialogPrompt],
+  ["NativeCore.showToast", CapabilityKeys.ToastShow],
+  ["NativeCore.showActionSheet", CapabilityKeys.ActionSheetShow],
+  ["NativeCore.getTextZoom", CapabilityKeys.TextZoomGet],
+  ["NativeCore.setTextZoom", CapabilityKeys.TextZoomSet],
+  ["NativeCore.startDownload", CapabilityKeys.BackgroundDownloadBundle],
+  ["NativeCore.getDownloadStatus", CapabilityKeys.BackgroundDownloadBundle],
+  ["NativeCore.cancelDownload", CapabilityKeys.BackgroundDownloadBundle],
+  ["NativeCore.getStorageFreeSpace", CapabilityKeys.StorageCapacityFreeSpace],
+  ["NativeCore.onBackButton", CapabilityKeys.AppExit],
+  ["NativeCore.checkPermission", CapabilityKeys.AppState],
+  ["NativeCore.requestPermission", CapabilityKeys.AppState],
+  ["NativeCore.otaGetCurrentVersion", CapabilityKeys.AppState],
+  ["NativeCore.otaActivate", CapabilityKeys.AppState],
+  ["NativeCore.otaReset", CapabilityKeys.AppState],
+  ["NativeCore.otaDownload", CapabilityKeys.AppState],
 ]);
 
 /** The capability keys this scanner is able to detect from source. */
@@ -293,11 +312,6 @@ export function detectableCapabilityKeys(): string[] {
 
 /**
  * Fail when a declared capability has no way of being detected.
- *
- * An undetectable key never reaches `requiredCapabilities`, so the device-side
- * gate cannot refuse a bundle that needs it. That is exactly the silent
- * degradation the golden rule exists to prevent, so it is a build error rather
- * than a warning.
  */
 export function assertDetectionCoverage(): void {
   const detectable = new Set(detectableCapabilityKeys());
@@ -308,7 +322,7 @@ export function assertDetectionCoverage(): void {
     throw new Error(
       "Capability keys with no detection pattern in ota-capability-scan.ts:\n" +
         undetectable.map((key) => `  - ${key}`).join("\n") +
-        "\nAdd a token matching the real Native Platform method for each key.",
+        "\nAdd a token matching the real NativeCore method for each key.",
     );
   }
 }
@@ -320,9 +334,12 @@ export function scanSourceCapabilityReferences(root: string): string[] {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       const fullPath = path.join(directory, entry.name);
       if (entry.isDirectory()) {
+        const normalized = fullPath.replace(/\\/g, "/");
         if (
-          fullPath.replace(/\\/g, "/").endsWith("/native-platform") ||
-          entry.name === "tests"
+          normalized.includes("/packages/native-core") ||
+          normalized.endsWith("/tests") ||
+          entry.name === "node_modules" ||
+          entry.name === ".next"
         )
           continue;
         visit(fullPath);

@@ -31,14 +31,7 @@ import {
   type ImageUploadDraft,
   type ImageUploadDraftStatus,
 } from "@/features/storage/services/image-upload-draft-service";
-import {
-  canUseNativeImageSource,
-  captureSingleImage,
-  chooseSingleImage,
-  imageSourcePermissionRequiresSettings,
-  isImageSourcePermissionDenied,
-  openImageSourceSettings,
-} from "@/platform/media/capacitor-image-source-adapter";
+import { NativeCore } from "@asol/native-core";
 
 type StorageImageAspectRatio = "square" | "landscape" | "portrait" | "wide";
 
@@ -807,7 +800,7 @@ const StorageImageSlot = React.forwardRef<
       index,
       busy,
       canChoose,
-      native: canUseNativeImageSource(),
+      native: NativeCore.isNative(),
     });
     if (busy || !canChoose) {
       traceStorageImageManager(config.id, "device-source-blocked", {
@@ -819,7 +812,7 @@ const StorageImageSlot = React.forwardRef<
     }
     setSourceError(null);
 
-    if (!canUseNativeImageSource()) {
+    if (!NativeCore.isNative()) {
       inputRef.current?.click();
       traceStorageImageManager(config.id, "web-file-picker-opened", { index });
       return;
@@ -828,39 +821,42 @@ const StorageImageSlot = React.forwardRef<
     setStage("selecting");
     setIsChoosingSource(true);
     try {
-      const file = await chooseSingleImage();
-      traceStorageImageManager(config.id, "native-file-picker-returned", {
-        index,
-        selected: Boolean(file),
-      });
-      if (file) await processFile(file);
-      else setStage("idle");
-    } catch (sourceSelectionError) {
-      if (isImageSourcePermissionDenied(sourceSelectionError)) {
-        if (imageSourcePermissionRequiresSettings(sourceSelectionError)) {
+      const res = await NativeCore.pickImages({ limit: 1 });
+      if (res.ok) {
+        const image = res.value[0];
+        traceStorageImageManager(config.id, "native-file-picker-returned", {
+          index,
+          selected: Boolean(image?.file),
+        });
+        if (image?.file) await processFile(image.file);
+        else setStage("idle");
+      } else {
+        if (res.error.isPermissionDenied()) {
           setDialog({
             kind: "permission",
             title: t("storage.imageSource.photoPermissionTitle"),
             message: t("storage.imageSource.photoPermissionSettings"),
             actionLabel: t("storage.imageSource.openSettings"),
             onConfirm: () => {
-              void openImageSourceSettings().then((opened) => {
-                if (!opened) {
+              void NativeCore.openAppSettings().then((openRes: { ok: boolean }) => {
+                if (!openRes.ok) {
                   setSourceError(t("storage.imageSource.error"));
                 }
               });
             },
           });
+        } else if (res.error.isCancelled()) {
+          setStage("idle");
         } else {
-          setSourceError(t("storage.imageSource.photoPermissionDenied"));
+          setSourceError(t("storage.imageSource.error"));
         }
-      } else {
-        console.error(
-          "[StorageImageManager] Unable to choose an image.",
-          sourceSelectionError,
-        );
-        setSourceError(t("storage.imageSource.error"));
       }
+    } catch (sourceSelectionError) {
+      console.error(
+        "[StorageImageManager] Unable to choose an image.",
+        sourceSelectionError,
+      );
+      setSourceError(t("storage.imageSource.error"));
       setStage("idle");
     } finally {
       setIsChoosingSource(false);
@@ -872,7 +868,7 @@ const StorageImageSlot = React.forwardRef<
       index,
       busy,
       canChoose,
-      native: canUseNativeImageSource(),
+      native: NativeCore.isNative(),
     });
     if (busy || !canChoose) {
       traceStorageImageManager(config.id, "camera-source-blocked", {
@@ -884,7 +880,7 @@ const StorageImageSlot = React.forwardRef<
     }
     setSourceError(null);
 
-    if (!canUseNativeImageSource()) {
+    if (!NativeCore.isNative()) {
       cameraInputRef.current?.click();
       traceStorageImageManager(config.id, "web-camera-picker-opened", {
         index,
@@ -895,39 +891,42 @@ const StorageImageSlot = React.forwardRef<
     setStage("selecting");
     setIsChoosingSource(true);
     try {
-      const file = await captureSingleImage();
-      traceStorageImageManager(config.id, "native-camera-returned", {
-        index,
-        selected: Boolean(file),
-      });
-      if (file) await processFile(file);
-      else setStage("idle");
-    } catch (cameraError) {
-      if (isImageSourcePermissionDenied(cameraError)) {
-        if (imageSourcePermissionRequiresSettings(cameraError)) {
+      const res = await NativeCore.takePhoto({});
+      if (res.ok) {
+        const image = res.value;
+        traceStorageImageManager(config.id, "native-camera-returned", {
+          index,
+          selected: Boolean(image?.file),
+        });
+        if (image?.file) await processFile(image.file);
+        else setStage("idle");
+      } else {
+        if (res.error.isPermissionDenied()) {
           setDialog({
             kind: "permission",
             title: t("storage.imageSource.cameraPermissionTitle"),
             message: t("storage.imageSource.cameraPermissionSettings"),
             actionLabel: t("storage.imageSource.openSettings"),
             onConfirm: () => {
-              void openImageSourceSettings().then((opened) => {
-                if (!opened) {
+              void NativeCore.openAppSettings().then((openRes: { ok: boolean }) => {
+                if (!openRes.ok) {
                   setSourceError(t("storage.imageSource.cameraError"));
                 }
               });
             },
           });
+        } else if (res.error.isCancelled()) {
+          setStage("idle");
         } else {
-          setSourceError(t("storage.imageSource.cameraPermissionDenied"));
+          setSourceError(t("storage.imageSource.cameraError"));
         }
-      } else {
-        console.error(
-          "[StorageImageManager] Unable to capture an image.",
-          cameraError,
-        );
-        setSourceError(t("storage.imageSource.cameraError"));
       }
+    } catch (cameraError) {
+      console.error(
+        "[StorageImageManager] Unable to capture an image.",
+        cameraError,
+      );
+      setSourceError(t("storage.imageSource.cameraError"));
       setStage("idle");
     } finally {
       setIsChoosingSource(false);

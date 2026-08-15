@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next';
 
-import { CAPACITOR_API_BASE_URL } from './platform/capacitor.defaults';
+import { API_BASE_URL } from '@asol/native-core';
 import {
   CURRENT_NATIVE_APP_VERSION,
   CURRENT_WEB_CONTENT_VERSION,
@@ -25,7 +25,7 @@ const apiBaseUrl =
   process.env.NEXT_PUBLIC_ASOL_API_BASE_URL?.replace(/\/$/, '') ||
   process.env.NEXT_PUBLIC_ASOL_API_URL?.replace(/\/$/, '') ||
   process.env.ASOL_API_BASE_URL?.replace(/\/$/, '') ||
-  (isStatic ? CAPACITOR_API_BASE_URL.replace(/\/$/, '') : '');
+  (isStatic ? API_BASE_URL.replace(/\/$/, '') : '');
 
 const nextConfig: NextConfig = {
   ...(isStatic ? { output: 'export' as const } : {}),

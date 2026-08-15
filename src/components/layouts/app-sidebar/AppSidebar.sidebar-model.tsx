@@ -56,7 +56,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { publicEnv } from "@/core/config";
 import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
-import { isNativePlatform } from "@/native-platform/core/platform";
+import { isNativePlatform } from '@asol/native-core';
 
 export interface AppSidebarProps {
   isOpen: boolean;

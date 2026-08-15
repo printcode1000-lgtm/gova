@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import AsolNativeCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -7,16 +8,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        AsolNativeCore.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         return true
     }
 
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
-        if identifier == AsolBackgroundDownloadCoordinator.sessionIdentifier {
-            // iOS resumes normal system-terminated transfers here. A user Force
-            // Quit cancels them; ASOL reconnects and retries after next launch.
-            AsolBackgroundDownloadCoordinator.shared.attach(completionHandler: completionHandler)
-        } else {
+        if !AsolNativeCore.shared.handleEventsForBackgroundURLSession(identifier: identifier, completionHandler: completionHandler) {
             completionHandler()
         }
     }

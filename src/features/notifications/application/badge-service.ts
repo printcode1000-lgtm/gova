@@ -2,7 +2,7 @@
 
 import { NotificationTargets } from "../domain/enums";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
-import { capacitorBadgeService } from "../infrastructure/capacitor/capacitor-badge.service";
+import { nativeBadgeService } from "../infrastructure/native/native-badge.service";
 
 export class BadgeService {
   async refresh(uid: string): Promise<number> {
@@ -15,8 +15,8 @@ export class BadgeService {
       unreadCount,
       updatedAt: new Date().toISOString(),
     });
-    if (unreadCount > 0) await capacitorBadgeService.set(unreadCount);
-    else await capacitorBadgeService.clear();
+    if (unreadCount > 0) await nativeBadgeService.set(unreadCount);
+    else await nativeBadgeService.clear();
     return unreadCount;
   }
 

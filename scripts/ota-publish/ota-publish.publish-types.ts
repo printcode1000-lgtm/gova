@@ -3,13 +3,12 @@ import { createHash, sign } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { zipSync } from "fflate";
-import { CAPACITOR_API_BASE_URL } from "../../platform/capacitor.defaults";
-import { compareOtaCanonicalStrings } from "../../src/features/ota/utils/ota-canonical-order";
-import { compareOtaVersions } from "../../src/features/ota/utils/ota-state";
 import {
+  API_BASE_URL,
   MINIMUM_SUPPORTED_NATIVE_VERSION,
   OPTIONAL_CAPABILITIES_MINIMUM_NATIVE_VERSION,
-} from "../../src/native-platform/capabilities/shell-capabilities";
+} from "@asol/native-core";
+import { compareOtaVersions } from "../../src/features/ota/utils/ota-state";
 import { withoutVsCodeDebuggerEnv } from "../child-process-env";
 import { assertReleaseStaticBundle } from "../assert-release-static-bundle";
 import {

@@ -13,7 +13,7 @@ import {
 } from "../domain/enums";
 import { assertNotificationEntity } from "../domain/notification-validation";
 import { notificationLog } from "../domain/notification-redaction";
-import { capacitorLocalNotificationService } from "../infrastructure/capacitor/capacitor-local-notification.service";
+import { nativeLocalNotificationService } from "../infrastructure/native/native-local-notification.service";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
@@ -68,7 +68,7 @@ export class NotificationSender {
         window.dispatchEvent(new CustomEvent(NOTIFICATION_POPUP_EVENT, { detail: saved }));
       }
       try {
-        await capacitorLocalNotificationService.display(saved);
+        await nativeLocalNotificationService.display(saved);
       } catch (error) {
         // A missing banner must never lose the stored notification, which is
         // already committed at this point.

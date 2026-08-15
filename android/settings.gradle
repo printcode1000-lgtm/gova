@@ -5,4 +5,7 @@ include ':app'
 include ':capacitor-cordova-android-plugins'
 project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
 
+include ':native-core'
+project(':native-core').projectDir = new File('../packages/native-core/android')
+
 apply from: 'capacitor.settings.gradle'

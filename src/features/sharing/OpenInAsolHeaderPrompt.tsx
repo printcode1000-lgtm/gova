@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Download } from "lucide-react";
 
-import { isNativePlatform } from "@/native-platform";
+import { isNativePlatform } from '@asol/native-core';
 import {
   APPLE_APP_STORE_INSTALL_URL,
   GOOGLE_PLAY_INSTALL_URL,
