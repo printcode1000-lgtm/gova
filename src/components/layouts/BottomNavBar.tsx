@@ -66,7 +66,7 @@ export function BottomNavBar() {
             id={`nav-item-${href.slice(1)}`}
             href={href}
             className={cn(
-              'relative flex min-w-[3.35rem] flex-col items-center justify-center rounded-2xl px-3 py-1.5 no-underline transition-all duration-200 active:scale-90',
+              'relative flex min-w-[2.2rem] flex-col items-center justify-center rounded-2xl px-2 py-0.5 no-underline transition-all duration-200 active:scale-90',
               isActive
                 ? 'asol-nav-pill-active shadow-sm ring-1 ring-primary/20'
                 : resolvedScheme === 'dark'
