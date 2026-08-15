@@ -32,6 +32,14 @@ Diagnostic no-R8 lanes الجديدة لا ترفع إلى Google Play أبدا:
 
 لوحة الإصدار تستطيع قراءة وتحديث tracks: `internal`, `alpha`, `beta`, و`production`. يمكن ضبط staged rollout عبر `userFraction`، إيقاف rollout بالحالة `halted`، استئنافه، أو إكماله بالحالة `completed`. كما يمكن إرفاق release notes لكل لغة وترقية `versionCode` موجود من مسار لآخر بدون build جديد.
 
+## iOS Lanes (Requires macOS)
+
+- `doctor`: Validate iOS publishing prerequisites (`ASOL_IOS_TEAM_ID`, `FASTLANE_USER`).
+- `build`: Build and export signed iOS application archive (`ASOL.ipa`).
+- `beta`: Build and upload application archive directly to TestFlight.
+
+For complete Mac/iOS setup and automated agent instructions, see [ios-mac-execution-agent-prompt.md](./ios-mac-execution-agent-prompt.md).
+
 ## Safety
 
 أي lane يستخدم `upload_to_play_store` يجب أن يبقى على `Release` فقط. validator `npm run android:r8:validate` يفشل إذا ظهر `ReleaseNoR8` أو `no_r8` داخل lane ينشر إلى Play.

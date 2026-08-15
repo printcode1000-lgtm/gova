@@ -288,11 +288,31 @@ platform :android do
   end
 end
 
+def ensure_ios_auth!
+  has_api_key = !ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"].to_s.strip.empty? &&
+                !ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"].to_s.strip.empty?
+  has_user = !ENV["FASTLANE_USER"].to_s.strip.empty?
+
+  unless has_api_key || has_user
+    UI.user_error!("iOS authentication missing: configure APP_STORE_CONNECT_API_KEY_* (recommended) or FASTLANE_USER")
+  end
+
+  if has_api_key
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_KEY_FILEPATH"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_KEY_BASE64"] ? Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_KEY_BASE64"]) : nil,
+      duration: 1200,
+      in_house: false
+    )
+  end
+end
+
 platform :ios do
   desc "Validate iOS publishing prerequisites"
   lane :doctor do
-    missing = %w[ASOL_IOS_TEAM_ID FASTLANE_USER].select { |key| ENV[key].to_s.strip.empty? }
-    UI.user_error!("iOS publishing is missing: #{missing.join(", ")}") unless missing.empty?
+    ensure_ios_auth!
     UI.success("iOS publishing environment is present")
   end
 
@@ -311,6 +331,7 @@ platform :ios do
 
   desc "Upload iOS build to TestFlight. Requires macOS/Xcode and App Store Connect auth."
   lane :beta do
+    ensure_ios_auth!
     build
     upload_to_testflight(
       ipa: "ios/build/fastlane/ASOL.ipa",
