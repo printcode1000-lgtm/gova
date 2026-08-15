@@ -1,4 +1,4 @@
-# Autonomous Agent Prompt: Complete iOS Setup, Build, Verification & Zero-Mac Independence Guide
+# Autonomous Agent Prompt: iOS Setup, Build, Verification & Zero-Mac Independence Guide
 
 > **Usage Instructions:**
 > When opening this repository on a **macOS** machine, copy and provide the prompt below to your AI Agent (e.g. Claude Code, Antigravity, Devin, or Cursor).
@@ -177,8 +177,8 @@ Once this setup is completed and committed to Git, you **do not need a Mac compu
    
 2. **Native iOS Binary Updates (Cloud CI via GitHub Actions):**
    - When native code or Capacitor core changes in the future, trigger the cloud macOS runner:
-     - Navigate to GitHub Repository > **Actions** > **iOS Native Build & TestFlight Release** > **Run workflow**.
-     - GitHub's cloud Mac machines automatically build the `.ipa` and publish to TestFlight using Fastlane and your App Store Connect API Key secrets.
+     - Fastlane is configured to run headless in CI/CD using `APP_STORE_CONNECT_API_KEY` or standard secrets.
+     - Cloud Mac machines (such as GitHub Actions macOS runners) automatically build the `.ipa` and publish to TestFlight without needing a local Mac.
 
 ---
 
