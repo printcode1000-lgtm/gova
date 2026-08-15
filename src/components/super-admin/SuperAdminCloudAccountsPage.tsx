@@ -503,7 +503,7 @@ export function SuperAdminCloudAccountsPage() {
 
       <SubTitle>قراءة صورة ليست عملية على مستوى الحساب</SubTitle>
       <Note>
-        رموز وصول R2 (مثل R2_API_TOKEN و PRODUCT_R2_API_TOKEN) تُستخدمان لإنشاء الحاويات
+        رموز وصول R2 تُستخدمان لإنشاء الحاويات
         وكتابة سياسة CORS. تحويل مفتاح إلى رابط هو معالجة نصوص بحتة، والتحقق
         من الوجود يحتاج فقط زوج S3 — لذا مسارات القراءة تستخدم أدوات وصول
         ضيقة، ولا يملك أي من <span dir="ltr">asol-products</span> أو{" "}
@@ -523,34 +523,31 @@ export function SuperAdminCloudAccountsPage() {
           <tr className="border-t align-top">
             <td className="p-3">تشغيل Turso</td>
             <td className="p-3" dir="ltr">
-              متغيرات قاعدة بيانات Turso (DATABASE_URL / AUTH_TOKEN)، ولكل شظية{" "}
-              <span>&lt;SHARD&gt;</span>_DATABASE_*
+              متغيرات قاعدة بيانات Turso للاتصال بقواعد البيانات المختلفة
             </td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">منصة Turso</td>
             <td className="p-3" dir="ltr">
-              TURSO_*_API_TOKEN، TURSO_*_ORGANIZATION — للسكربتات فقط
+              رموز وصول منصة Turso للسكربتات فقط
             </td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">Vercel</td>
             <td className="p-3" dir="ltr">
-              رموز وصول Vercel (VERCEL_TOKEN، VERCEL_NOTIFICATIONS_TOKEN،
-              VERCEL_PRODUCTS_TOKEN، VERCEL_ORDERS_TOKEN،
-              VERCEL_PROFILES_TOKEN)
+              رموز وصول Vercel للنشر والتكامل مع الخدمات المختلفة
             </td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">R2</td>
             <td className="p-3" dir="ltr">
-              R2_*، PRODUCT_R2_*، وASOL_OTA_LEGACY_R2_* للنسخة المرآة
+              متغيرات التخزين على Cloudflare R2
             </td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">نطاقات آمنة للعميل</td>
             <td className="p-3" dir="ltr">
-              NEXT_PUBLIC_ASOL_{"{"}NOTIFICATIONS,PRODUCTS,ORDERS,PROFILES{"}"}_URL
+              عناوين URL العامة للخدمات المختلفة
             </td>
           </tr>
         </tbody>
