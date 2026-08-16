@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ImageIcon } from "lucide-react";
 
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import type { StoredImage } from "@asol/storage-core";
 import {
   parseStorageImageManagerConfig,
   StorageImageManager,

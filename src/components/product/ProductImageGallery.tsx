@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import type { StoredImage } from "@asol/storage-core";
 
 type Point = { x: number; y: number };
 const distance = (a: Point, b: Point) => Math.hypot(b.x - a.x, b.y - a.y);

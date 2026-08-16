@@ -1,14 +1,14 @@
 import "server-only";
 
-import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
-import {
-  toStorageProfileClientView,
-  getStorageProfileById,
-} from "@/core/storage/profiles/storage-profile-loader.server";
 import type {
   ImageUploadResult,
   StorageProfileClientView,
-} from "@/core/storage/types/storage-profile.types";
+} from "@asol/storage-core";
+import {
+  imageStorageOrchestrator,
+  toStorageProfileClientView,
+  getStorageProfileById,
+} from "@asol/storage-core/server";
 import { traceServerLayer } from "@/core/monitor/trace-server-layer";
 
 export interface UploadImageCommand {

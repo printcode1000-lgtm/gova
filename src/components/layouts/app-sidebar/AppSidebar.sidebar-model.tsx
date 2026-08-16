@@ -54,7 +54,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { publicEnv } from "@/core/config";
+import { publicEnv } from "@/core/config/public-env";
 import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
 import { isNativePlatform } from '@asol/native-core';
 

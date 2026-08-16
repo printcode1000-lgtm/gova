@@ -34,7 +34,8 @@ import { SpecialtyChatNotificationsController } from "@/features/specialty-chat"
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
-import { isDevelopment, withBasePath } from "@/core/config";
+import { isDevelopment } from "@/core/config";
+import { withBasePath } from "@/core/config/public-env";
 import { InstallationBootstrap } from "@/lib/installation";
 import { PreAuthFailureMonitor } from "@/features/system-logs/PreAuthFailureMonitor";
 import {

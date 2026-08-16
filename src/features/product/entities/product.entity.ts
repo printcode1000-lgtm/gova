@@ -1,4 +1,4 @@
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import type { StoredImage } from "@asol/storage-core";
 
 export type ProductStatus = "draft" | "active" | "archived";
 export type ProductRatingMode = "" | "stars" | "stars-comments";

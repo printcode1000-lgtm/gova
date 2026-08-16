@@ -11,7 +11,7 @@ import {
   imageUploadDraftToFile,
   type ImageUploadDraft,
 } from "../services/image-upload-draft-service";
-import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
+import { StorageProfiles } from "@asol/storage-core";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;

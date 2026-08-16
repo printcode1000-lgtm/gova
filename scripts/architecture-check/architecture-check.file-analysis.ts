@@ -31,7 +31,7 @@ import {
   R2_S3_CLIENT_ALLOWED_IMPORTERS,
   R2_S3_CLIENT_MODULE,
 } from "../../src/core/architecture/image-storage-contract";
-import { validateStorageProfilesAtStartup } from "../../src/core/storage/profiles/storage-profile-validator";
+import { validateStorageProfilesAtStartup } from "@asol/storage-core/server";
 import { validationEngine as categoryValidationEngine } from "../../src/features/categories/infrastructure/validation.engine";
 
 import { violations, addViolation } from "./architecture-check.architecture-types";

@@ -2,7 +2,7 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 
-import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
+import { imageStorageOrchestrator } from "@asol/storage-core/server";
 import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
 
 import { resolveDataHealthExecutionContext } from "../domain/execution-context.server";

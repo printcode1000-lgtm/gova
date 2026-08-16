@@ -1,6 +1,6 @@
 'use client';
 
-import { publicEnv } from '@/core/config';
+import { publicEnv } from '@/core/config/public-env';
 
 import { submitPersistentClientLog } from './persistent-client-log';
 

@@ -28,5 +28,8 @@ This package provides two distinct sealed entrypoints:
 - **Local Refresh (TEST intent)**: Rebuilds `out` at the current content version without bumping numbers and without contacting or uploading to R2.
 - **Publish (PUBLISH intent)**: Advances the counter strictly by one step on the current native line and publishes signed bundles to R2 with the manifest written last.
 
+## Notice on CORS Payload Shape
+The Cloudflare CORS policy payload shape is defined locally within `packages/ota-core` and duplicated in `@asol/storage-core`. This intentional duplication maintains complete zero-dependency package independence between `@asol/ota-core` and `@asol/storage-core`.
+
 ## Notice on `google-auth-library`
 `google-auth-library` is strictly isolated within `packages/ota-core/src/publishing/adapters/google-play.adapter.ts`. The only permitted legacy exception repo-wide is `src/features/notifications/services/providers/fcm-http-v1.server.ts` for FCM push delivery.

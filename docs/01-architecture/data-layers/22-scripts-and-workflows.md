@@ -8,11 +8,15 @@ npm run dev
 npm run db:create:sqlite
 npm run db:create:profile
 
-# Build
+# Build & Test Packages
 npm run build
 npm run build:static
 npm run architecture:check
 npm run typecheck
+npm run test:vercel-deploy-core
+npm run test:service-mirror-core
+npm run test:account-bridge
+npm run test:compositions
 
 # Schema & database
 npm run db:drizzle -- generate

@@ -2,8 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import profiles from "@/config/storage-profiles.json";
-import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
-import { buildObjectPath } from "@/core/storage/storage/image-path";
+import { StorageProfiles, buildObjectPath } from "@asol/storage-core";
 import { validateImageAttachment } from "@/modules/marketplace-orders/validators";
 
 function main() {

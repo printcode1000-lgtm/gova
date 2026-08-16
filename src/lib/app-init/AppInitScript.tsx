@@ -1,4 +1,4 @@
-import { withBasePath } from '@/core/config';
+import { withBasePath } from '@/core/config/public-env';
 
 /** Blocking app init — static file in `public/asol-app-init.js` (see scripts/generate-app-init-public.ts). */
 export function AppInitScript() {

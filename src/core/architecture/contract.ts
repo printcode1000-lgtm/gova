@@ -125,8 +125,8 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p === 'src/core/api/asol-api-client.ts') return 'asol-api-client';
   if (p.startsWith('src/core/api/')) return 'api-shared';
   if (p.startsWith('src/core/config/')) return 'configuration';
-  if (p.startsWith('src/core/provisioning/')) return 'provisioning';
   if (p.startsWith('src/modules/data-access/tooling/')) return 'provisioning';
+  if (p.startsWith('src/modules/data-access/provisioning/core/')) return 'provisioning';
   if (p.startsWith('src/modules/data-access/domains/') && p.includes('/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/data-access/domains/') && p.includes('/application/')) return 'server-services';
   if (p.startsWith('src/modules/data-access/core/')) return 'database-client';
@@ -147,23 +147,7 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/modules/google-play-console/services/')) return 'server-services';
   if (p.startsWith('src/modules/dev-cloud-backup/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/marketplace-orders/api/') || p.startsWith('src/modules/marketplace-orders/services/')) return 'server-services';
-  if (p.startsWith('src/modules/data-access/provisioning/core/')) return 'provisioning';
   if (p.includes('/application/') && p.includes('/features/storage/')) return 'server-services';
-  if (
-    p === 'src/core/storage/output-format.registry.ts' ||
-    p.endsWith('/output-format.registry')
-  ) {
-    return 'shared';
-  }
-  if (
-    p.startsWith('src/core/storage/') &&
-    !p.includes('.client.') &&
-    !p.includes('/rules/') &&
-    !p.includes('/types/') &&
-    !p.includes('/constants/')
-  ) {
-    return 'server-services';
-  }
   // A feature's server entry point — `src/features/<name>/server.ts` — is the
   // server half of that module's public API, not a shared utility. Without this
   // it falls through to `shared`, where importing `server-only` is forbidden.
@@ -308,29 +292,7 @@ export function getForbiddenImportViolation(
 
   if (importerLayer === 'server-services' && target === 'operations') return null;
   if (importerLayer === 'server-services' && target === 'server-services') return null;
-  if (
-    importerLayer === 'server-services' &&
-    target === 'provisioning' &&
-    (importPath.includes('/core/provisioning/r2') || importPath.includes('/core/provisioning/r2-'))
-  ) {
-    return null;
-  }
   if (importerLayer === 'operations' && target === 'repository') return null;
-  if (
-    importerLayer === 'repository' &&
-    target === 'server-services' &&
-    (importPath.includes('/core/storage/storage/') ||
-      importPath.includes('/core/storage/profiles/'))
-  ) {
-    return null;
-  }
-  if (
-    importerLayer === 'repository' &&
-    target === 'provisioning' &&
-    importPath.includes('/core/provisioning/r2-s3-client')
-  ) {
-    return null;
-  }
   if (importerLayer === 'business-api' && target === 'server-services') return null;
   if (importerLayer === 'hooks' && target === 'client-services') return null;
   if (importerLayer === 'ui' && target === 'hooks') return null;

@@ -83,7 +83,7 @@ assert.ok(
 // ── 4. The bridge must not redirect anything but reads ───────────────────────
 
 const bridge = readFileSync(
-  path.join(root, "src", "modules", "service-bridge", "service-bridge.client.ts"),
+  path.join(root, "packages", "account-bridge", "src", "index.ts"),
   "utf8",
 );
 assert.match(

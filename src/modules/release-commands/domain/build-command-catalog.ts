@@ -120,6 +120,7 @@ function artifactMeaningKey(artifact: string): string {
 export const BUILD_COMMAND_CATALOG = [
   entry("build-static", "build:static", "web-static", "safe", [], ["out/asol-web-manifest.json"], "8-15 min", undefined, [diagnostic]),
   entry("ota-check", "ota:check", "ota", "safe", otaEnv, [], "1-3 min"),
+  entry("ota-sync-cors", "ota:sync:cors", "ota", "safe", otaEnv, [], "1-2 min"),
   entry("ota-publish", "ota:publish", "ota", "publishes-live", otaEnv, ["out/asol-web-manifest.json"], "10-20 min", "PUBLISH_OTA", [notes, mandatory, minimumNativeVersion]),
   entry("ota-status", "ota:status", "ota", "safe", otaEnv, [], "30 sec"),
   entry("ota-self-test", "ota:self-test", "verification", "safe", otaEnv, [], "1-3 min"),

@@ -113,6 +113,31 @@ module.exports = [
             },
             {
               group: [
+                '@asol/vercel-deploy-core/*',
+                '@asol/service-mirror-core/*',
+                '@asol/account-bridge/src/**',
+                '@asol/*-composition/*',
+              ],
+              message:
+                'Deep import into sealed capability package is forbidden. Import from declared package root or doors.',
+            },
+            {
+              group: [
+                '**/packages/vercel-deploy-core/**',
+                '**/packages/service-mirror-core/**',
+                '**/packages/account-bridge/**',
+                '**/packages/*-composition/**',
+              ],
+              message:
+                'Relative path traversal into packages/ is forbidden. Use package specifier @asol/<package>.',
+            },
+            {
+              group: ['@asol/storage-core/src/**', '@asol/storage-core/src', '@asol/storage-core/server/**'],
+              message:
+                'Import from @asol/storage-core or @asol/storage-core/server only, not from deep sub-paths.',
+            },
+            {
+              group: [
                 '@/features/ota',
                 '@/features/ota/**',
                 'scripts/ota',
@@ -167,14 +192,8 @@ module.exports = [
       ],
     },
   },
-  // ── @asol/ota-core adapter sealing ───────────────────────────────────────
-  // @aws-sdk/* and google-auth-library are Node-only, heavy dependencies.
-  // They belong exclusively in the ota-core adapters layer.
-  // Narrow exceptions:
-  //   - src/core/provisioning/r2-s3-client.ts: general-purpose R2 client for non-OTA storage
-  //   - src/features/notifications/services/providers/fcm-http-v1.server.ts: FCM HTTP v1 auth
-  //   - src/modules/google-play-console/services/google-play-console-service.server.ts:
-  //     uses GoogleAuth as HTTP client only; credential resolution is via @asol/ota-core/publishing
+  // ── @aws-sdk / google-auth-library adapter sealing ────────────────────────
+  // @aws-sdk/* and google-auth-library belong exclusively in adapter layers.
   {
     files: [
       'src/**/*.{ts,tsx}',
@@ -182,16 +201,11 @@ module.exports = [
       'services/**/*.{ts,tsx}',
     ],
     ignores: [
+      'packages/storage-core/src/adapters/**',
       'packages/ota-core/src/publishing/adapters/**',
-      'src/core/provisioning/r2-s3-client.ts',
       'src/features/notifications/services/providers/fcm-http-v1.server.ts',
       'src/modules/google-play-console/services/google-play-console-service.server.ts',
-      // Same pattern as the console service above: GoogleAuth is the HTTP client,
-      // while the credentials themselves come from @asol/ota-core/publishing.
       'src/modules/google-play-console/services/google-play-store-assets-service.server.ts',
-      // Generated mirrors of the exempt sources above. `sync-*-service-sources.ts`
-      // copies them verbatim into each service tree, so linting the copy re-reports
-      // a violation already answered at its source. They are gitignored output.
       'services/*/generated/**',
     ],
     rules: {
@@ -201,7 +215,7 @@ module.exports = [
           patterns: [
             {
               group: ['@aws-sdk/*', '@aws-sdk'],
-              message: '@aws-sdk belongs exclusively to packages/ota-core/src/publishing/adapters. Use @asol/ota-core/publishing for OTA storage operations.',
+              message: '@aws-sdk belongs exclusively to packages/storage-core/src/adapters and packages/ota-core/src/publishing/adapters.',
             },
             {
               group: ['google-auth-library'],

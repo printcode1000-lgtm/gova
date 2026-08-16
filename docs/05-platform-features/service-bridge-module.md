@@ -1,8 +1,9 @@
 # Service Bridge Module
 
 The connector between the main app and the read-only service deployments. It
-lives in `src/modules/service-bridge/`, ships in the browser bundle, and runs
-nowhere else.
+is implemented in `@asol/account-bridge` (door `.`), re-exported via
+`src/modules/service-bridge/`, ships in the browser bundle, and runs nowhere
+else.
 
 ## Why it exists
 

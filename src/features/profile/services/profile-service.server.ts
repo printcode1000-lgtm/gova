@@ -40,8 +40,8 @@ import type {
   SaveProfileFulfillmentSettingsInput,
 } from "../entities/profile-fulfillment-settings.entity";
 import { traceServerLayer } from "@/core/monitor/trace-server-layer";
-import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
-import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
+import { StorageProfiles } from "@asol/storage-core";
+import { imageStorageOrchestrator } from "@asol/storage-core/server";
 import { categoryService, CATEGORY_CONSTANTS } from "@/features/categories";
 
 const AVATAR_PROFILE_ID = StorageProfiles.Avatar;

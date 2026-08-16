@@ -1,10 +1,10 @@
 import { asolApi, ASOL_API_ROUTES } from "@/core/api";
-import type {
-  ImageUploadResult,
-  StorageOutputFormat,
-  StorageProfileClientView,
-} from "@/core/storage/types/storage-profile.types";
-import { buildUploadFilename } from "@/core/storage/output-format.registry";
+import {
+  type ImageUploadResult,
+  type StorageOutputFormat,
+  type StorageProfileClientView,
+  buildUploadFilename,
+} from "@asol/storage-core";
 import type { IImageStorageApiAdapter } from "./image-storage-api-service.interface";
 
 /** HTTP adapter — ImageStorageService → API only. */

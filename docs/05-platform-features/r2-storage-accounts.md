@@ -100,23 +100,23 @@ is idempotent and was run against both the local and Turso product databases.
 
 ## Operations & Scripts
 
-- `npm run r2:sync:cors`: Synchronizes CORS on the **General account (`pic1`) only** via `R2_ACCOUNT_ID`, `R2_API_TOKEN`, and `R2_BUCKET_NAME`. The products bucket (`gova-storage`) has no CORS sync command.
-- `npm run r2:sync:cors:ota`: Synchronizes CORS on the **dedicated OTA account (`ota`)** via `ASOL_OTA_R2_ACCOUNT_ID`, `ASOL_OTA_R2_API_TOKEN`, and `ASOL_OTA_R2_BUCKET_NAME`.
-- `npm run test:r2-storage`: Asserts non-secret target topology and microservice copy alignment.
-- `npm run test:r2-separation`: Runs offline static architecture contract checks.
+- `npm run r2:sync:cors`: Synchronizes CORS on general (`pic1`) and product (`gova-storage`) buckets via `@asol/storage-core`.
+- `npm run ota:sync:cors`: Synchronizes CORS on the **dedicated OTA account (`ota`)** via `@asol/ota-core`.
+- `npm run test:r2-storage`: Asserts non-secret target topology and profile alignment.
+- `npm run test:storage-core`: Runs offline static architecture contract checks and account separation tests.
 - `npm run ota:publish -- --confirm-upload --minimum-native-version=<version>`: Builds, signs, and uploads release artefacts to the dedicated OTA account.
 - `npm run ota:status`: Reads live manifest status from the dedicated OTA account.
 
 ## Enforcement
 
 ```bash
-npm run test:r2-separation
+npm run test:storage-core
 ```
 
-`src/core/storage/tests/r2-account-separation.test.ts` asserts, offline:
+`packages/storage-core/src/tests/r2-account-separation.test.ts` asserts, offline:
 
-1. `product-default` is the only profile on the product account (`["product-default"]`).
-2. No line naming an `ASOL_OTA_R2_*` variable names any other `*_R2_*` credential — stated as a rule, not a blocklist, ensuring zero fallbacks across account boundaries.
+1. `productDefault` is the only profile on the product account (`["productDefault"]`).
+2. No line naming an `ASOL_OTA_R2_*` variable names any other `*_R2_*` credential — ensuring zero fallbacks across account boundaries.
 3. No existence check or URL resolution reaches for the full config (narrow accessors only).
 4. `images_json` is written as keys, and — the half that fails silently — is *read* without requiring a `url`. A parser still demanding one drops every migrated row and the product renders with no images at all.
 5. `R2_STORAGE_TARGETS` contains exactly three distinct isolated targets (`general`, `products`, `ota`) with non-overlapping account IDs, endpoints, bucket names, and public URLs.

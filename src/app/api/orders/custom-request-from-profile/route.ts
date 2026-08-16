@@ -1,5 +1,5 @@
 import { apiSuccess } from "@/core/api/api-response";
-import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
+import { StorageProfiles } from "@asol/storage-core";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { getMarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";

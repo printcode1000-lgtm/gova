@@ -1,7 +1,7 @@
 import type {
   ImageUploadResult,
   StorageProfileClientView,
-} from "@/core/storage/types/storage-profile.types";
+} from "@asol/storage-core";
 
 export type ImageUploadProgressStage =
   | "profile"

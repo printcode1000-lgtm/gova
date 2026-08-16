@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useTranslation } from '@/lib/i18n';
-import { publicEnv } from '@/core/config';
+import { publicEnv } from '@/core/config/public-env';
 import { asolApi, ASOL_API_ROUTES } from '@/core/api';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 import { shouldBypassPhoneVerification } from '@/features/auth/utils/phone-verification-policy';

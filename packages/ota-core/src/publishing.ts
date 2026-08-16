@@ -95,6 +95,15 @@ export {
   DEFAULT_OTA_PREFIX,
   DEFAULT_NATIVE_VERSION,
 } from "./publishing/config/ota-config";
+export {
+  OTA_R2_STORAGE_TARGET,
+  assertOtaR2TargetFields,
+  getOtaR2CloudflareCredentials,
+  getOtaR2S3Credentials,
+  getOtaR2PublicUrl,
+  getOtaR2Config,
+  getOtaApprovalServerConfig,
+} from "./publishing/config/ota-r2-target";
 
 // ── Manifest Guard ─────────────────────────────────────────────────────────
 export {

@@ -1,6 +1,7 @@
 # Notification Bridge Module
 
-The connector between the two backend deployments. It lives in
+The connector between the two backend deployments. It is implemented in
+`@asol/account-bridge` (door `./notifications`), re-exported via
 `src/modules/notification-bridge/`, ships in the browser bundle, and runs
 nowhere else.
 

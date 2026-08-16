@@ -5,8 +5,7 @@ import {
   StorageImageManager,
   type StorageImageManagerHandle,
 } from "@/features/storage/components/StorageImageManager";
-import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import { StorageProfiles, type StoredImage } from "@asol/storage-core";
 
 function normalizeProductImages(images: Array<StoredImage | null | undefined>, maxImages: number): StoredImage[] {
   return images
@@ -38,47 +37,65 @@ export const ProductImageEditors = React.forwardRef<
 }, ref) {
   const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
   const imagesRef = React.useRef(images);
-  imagesRef.current = images;
+  const normalized = React.useMemo(
+    () => normalizeProductImages(images, maxImages),
+    [images, maxImages],
+  );
+  imagesRef.current = normalized;
+
   React.useImperativeHandle(ref, () => ({
-    hasPending: () => managerRefs.current.some((manager) => manager?.hasPending()),
+    hasPending: () =>
+      managerRefs.current.some((item) => item?.hasPending() ?? false),
     uploadPending: async () => {
-      for (const manager of managerRefs.current) {
-        if (manager?.hasPending() && !(await manager.uploadPending())) return false;
-      }
-      return true;
+      const results = await Promise.all(
+        managerRefs.current.map((item) => item?.uploadPending() ?? Promise.resolve(true)),
+      );
+      return results.every(Boolean);
     },
-  }), []);
+  }));
+
+  const slots = React.useMemo(
+    () => Array.from({ length: maxImages }, (_, index) => index),
+    [maxImages],
+  );
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: maxImages }, (_, index) => (
-        <StorageImageManager
-          ref={(manager) => {
-            managerRefs.current[index] = manager;
-          }}
-          key={index}
-          config={{
-            id: `product-image-${index + 1}`,
-            storageProfileId: StorageProfiles.ProductDefault,
-            storageScope: mainCategoryId,
-            maxItems: 1,
-            aspectRatio: "square",
-            allowReplace: true,
-            confirmUpload: false,
-            confirmRemove: true,
-            deleteFromStorageOnRemove: !deferStorageDeletion,
-          }}
-          value={images[index] ? [images[index]] : []}
-          onChange={(slot) => {
-            const next: Array<StoredImage | null> = [...imagesRef.current];
-            if (slot[0]) next[index] = slot[0];
-            else next[index] = null;
-            const normalized = normalizeProductImages(next, maxImages);
-            imagesRef.current = normalized;
-            onChange(normalized);
-          }}
-        />
-      ))}
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {slots.map((index) => {
+        const slotImage = normalized[index] ?? null;
+        return (
+          <StorageImageManager
+            key={index}
+            ref={(element) => {
+              managerRefs.current[index] = element;
+            }}
+            config={{
+              id: `product-image-${index}`,
+              storageProfileId: StorageProfiles.ProductDefault,
+              storageScope: mainCategoryId,
+              maxItems: 1,
+              aspectRatio: "square",
+              allowReplace: true,
+              confirmUpload: true,
+              confirmRemove: true,
+              deleteFromStorageOnRemove: !deferStorageDeletion,
+            }}
+            value={slotImage ? [slotImage] : []}
+            onChange={(nextSlotImages) => {
+              const nextSlotImage = nextSlotImages[0] ?? null;
+              const next: StoredImage[] = [...imagesRef.current];
+              if (nextSlotImage) {
+                next[index] = nextSlotImage;
+              } else {
+                next.splice(index, 1);
+              }
+              const updated = normalizeProductImages(next, maxImages);
+              imagesRef.current = updated;
+              onChange(updated);
+            }}
+          />
+        );
+      })}
     </div>
   );
 });

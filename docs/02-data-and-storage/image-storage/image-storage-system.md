@@ -28,7 +28,7 @@ Server: Storage Profile → Provider → Persistence
 **Production / Capacitor / static**: profile provider (Cloudflare R2). The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use the separate product R2 account under `images/products/...`.
 
 `ProductDefault` is the **only** profile on the product account, and
-`npm run test:r2-separation` asserts that list equals exactly that — the
+`npm run test:storage-core` asserts that list equals exactly that — the
 separation held in the code while being untrue in the live bucket for a long
 time. See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
@@ -51,18 +51,18 @@ after the uploaded image is delivered to the owning feature; failed drafts stay
 available for retry while the next queue item continues. Logout aborts the
 in-memory queue and clears every image draft on Web, Android, and iOS.
 
-`product-default` declares `folderStrategy: "main-category"`. Its local base folder is `images/products`, and its cloud base folder remains `images/products` on the legacy product R2 bucket/account; callers provide only a validated main-category ID as `storageScope`. The server creates `<mainCategoryId>/<uuid>.webp` as the image key, so upload, URL resolution, replacement, and deletion all address the correct provider object without exposing folder construction to the UI.
+`product-default` declares `folderStrategy: "main-category"`. Its local base folder is `images/products`, and its cloud base folder remains `images/products` on the product R2 account (`gova-storage`); callers provide only a validated main-category ID as `storageScope`. The server creates `<mainCategoryId>/<uuid>.webp` as the image key, so upload, URL resolution, replacement, and deletion all address the correct provider object without exposing folder construction to the UI.
 
 ## Layers
 
 | Layer               | Location                                                        |
 | ------------------- | --------------------------------------------------------------- |
-| Profiles            | `src/core/storage/profiles/`                                    |
-| ImageKeyGenerator   | `src/core/storage/storage/image-key-generator.ts`               |
-| Rules               | `src/core/storage/rules/`                                       |
+| Profiles            | `packages/storage-core/src/domain/profiles/`                    |
+| ImageKeyGenerator   | `packages/storage-core/src/domain/images/image-key-generator.ts` |
+| Rules               | `packages/storage-core/src/domain/images/image-rules.ts`       |
 | Processing (Canvas) | `src/features/storage/processing/`                              |
-| Providers           | `src/core/storage/providers/`                                   |
-| Orchestrator        | `src/core/storage/storage/`                                     |
+| Providers           | `packages/storage-core/src/server/providers/`                  |
+| Orchestrator        | `packages/storage-core/src/server/storage/`                    |
 | **Client service**  | `src/features/storage/services/image-storage-service.ts`        |
 | Draft persistence   | `src/features/storage/services/image-upload-draft-service.ts`    |
 | API adapter         | `src/features/storage/services/image-storage-api-service.ts`    |
@@ -94,7 +94,7 @@ in-memory queue and clears every image draft on Web, Android, and iOS.
 Use constants — never string literals in pages:
 
 ```typescript
-import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
+import { StorageProfiles } from "@asol/storage-core";
 
 StorageProfiles.Avatar;
 StorageProfiles.Cover;

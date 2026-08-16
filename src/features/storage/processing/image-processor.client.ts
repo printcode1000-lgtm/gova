@@ -3,9 +3,9 @@
 import {
   validateImageForProfile,
   validateImageMimeType,
-} from "@/core/storage/rules/image-rules";
-import { getMimeTypeForOutputFormat } from "@/core/storage/output-format.registry";
-import type { StorageProfileClientView } from "@/core/storage/types/storage-profile.types";
+  getMimeTypeForOutputFormat,
+  type StorageProfileClientView,
+} from "@asol/storage-core";
 
 const INITIAL_QUALITY = 0.86;
 const MIN_QUALITY = 0.1;

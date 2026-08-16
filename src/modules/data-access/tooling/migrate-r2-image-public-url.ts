@@ -58,8 +58,11 @@ let uploadR2ObjectRef:
 
 async function uploadToNewR2(key: string, body: Buffer, contentType: string): Promise<void> {
   if (!uploadR2ObjectRef) {
-    const r2ClientModule = await import("@/core/provisioning/r2-s3-client");
-    uploadR2ObjectRef = r2ClientModule.uploadR2Object;
+    const r2ClientModule = await import("@asol/storage-core/server");
+    uploadR2ObjectRef = async (key, body, contentType) => {
+      const url = await r2ClientModule.uploadR2Object(key, body, contentType);
+      return { publicUrl: url };
+    };
   }
   await uploadR2ObjectRef(key, body, contentType);
 }

@@ -60,7 +60,7 @@ import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-stor
 import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
 import { notifications } from "@/features/notifications";
 import { Button } from "@/components/ui/button";
-import { publicEnv } from "@/core/config";
+import { publicEnv } from "@/core/config/public-env";
 import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
 import { isNativePlatform } from '@asol/native-core';
 

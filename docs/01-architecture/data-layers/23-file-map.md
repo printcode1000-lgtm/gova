@@ -47,9 +47,21 @@ services/
     |-- src/config/                  # storage-profiles.json, read via fs
     `-- generated/                   # mirrored from src/ and public/
 
+packages/
+|-- vercel-deploy-core/              # account registry, GitHub-free project creation, CLI runner
+|-- service-mirror-core/             # shared mirror graph walker
+|-- account-bridge/                  # device-only Rule 0 inter-account channel (doors . and ./notifications)
+|-- notifications-composition/       # notifications composition layer
+|-- products-composition/            # products composition layer
+|-- orders-composition/              # orders composition layer
+|-- profiles-composition/            # profiles composition layer
+|-- native-core/                     # sealed native capability boundary
+|-- ota-core/                        # sealed OTA updates & release gate boundary
+`-- storage-core/                    # central binary & R2 image storage boundary
+
 src/modules/
-|-- notification-bridge/             # browser-only connector
-`-- service-bridge/                  # browser-only connector
+|-- notification-bridge/             # re-exports @asol/account-bridge/notifications
+`-- service-bridge/                  # re-exports @asol/account-bridge
 ```
 
 `services/` sits outside `src/` on purpose: it is deployed on its own, and the

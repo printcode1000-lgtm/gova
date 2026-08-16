@@ -31,12 +31,13 @@ import {
   R2_S3_CLIENT_ALLOWED_IMPORTERS,
   R2_S3_CLIENT_MODULE,
 } from "../../src/core/architecture/image-storage-contract";
-import { validateStorageProfilesAtStartup } from "../../src/core/storage/profiles/storage-profile-validator";
+import { validateStorageProfilesAtStartup } from "@asol/storage-core/server";
 import { validationEngine as categoryValidationEngine } from "../../src/features/categories/infrastructure/validation.engine";
 
 import { PUBLIC_PUSH_WORKER, PUSH_WORKER_SOURCE, STRUCTURED_CATEGORY_COLUMN_FILES, rel, addViolation, checkNativePlatformContract, matchesAny, extractImports } from "./architecture-check.architecture-types";
 import { checkImageStorageContract, getAllowedHint } from "./architecture-check.file-analysis";
 import { checkNotificationModuleContract } from "./architecture-check.notification-contract";
+import { checkAccountBridgeContract } from "./architecture-check.account-bridge-contract";
 
 export function checkFile(filePath: string): void {
   const content = readFileSync(filePath, 'utf8');
@@ -50,6 +51,7 @@ export function checkFile(filePath: string): void {
 
   checkCategoryModuleContract(fileRel, content, filePath);
   checkNotificationModuleContract(filePath, content);
+  checkAccountBridgeContract(filePath, content);
 
   if (
     content.includes('process.env') &&

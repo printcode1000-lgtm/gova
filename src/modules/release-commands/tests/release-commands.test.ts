@@ -9,7 +9,7 @@ import { zipSync } from "fflate";
 
 import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@/modules/google-play-console/domain/image-validation";
 import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "@asol/ota-core/publishing";
-import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "../../../../packages/native-core/scripts/validate-android-r8-policy";
+import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "@asol/native-core/scripts/validate-android-r8-policy";
 import {
   assertContentVersionAdvances,
   compareOtaVersions,

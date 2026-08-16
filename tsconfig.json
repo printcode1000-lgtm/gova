@@ -37,6 +37,36 @@
       ],
       "@asol/ota-core/server": [
         "./packages/ota-core/src/server.ts"
+      ],
+      "@asol/storage-core": [
+        "./packages/storage-core/src/index.ts"
+      ],
+      "@asol/storage-core/server": [
+        "./packages/storage-core/src/server.ts"
+      ],
+      "@asol/account-bridge": [
+        "./packages/account-bridge/src/index.ts"
+      ],
+      "@asol/account-bridge/notifications": [
+        "./packages/account-bridge/src/notifications.ts"
+      ],
+      "@asol/vercel-deploy-core": [
+        "./packages/vercel-deploy-core/src/index.ts"
+      ],
+      "@asol/service-mirror-core": [
+        "./packages/service-mirror-core/src/index.ts"
+      ],
+      "@asol/notifications-composition": [
+        "./packages/notifications-composition/src/index.ts"
+      ],
+      "@asol/orders-composition": [
+        "./packages/orders-composition/src/index.ts"
+      ],
+      "@asol/products-composition": [
+        "./packages/products-composition/src/index.ts"
+      ],
+      "@asol/profiles-composition": [
+        "./packages/profiles-composition/src/index.ts"
       ]
     }
   },

@@ -47,7 +47,7 @@ let r2Module: R2Module | null = null;
 
 async function r2(): Promise<R2Module> {
   if (!r2Module) {
-    r2Module = await import("@/core/provisioning/r2-s3-client");
+    r2Module = await import("@asol/storage-core/server") as unknown as R2Module;
   }
   return r2Module;
 }

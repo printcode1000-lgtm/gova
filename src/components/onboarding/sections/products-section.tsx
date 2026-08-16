@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { StorageImageManager } from '@/features/storage/components/StorageImageManager';
-import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
+import { StorageProfiles } from '@asol/storage-core';
 import type { Product, ProductVariant } from '@/lib/onboarding/types';
 import { nextSellerId } from '@/lib/seller/next-id';
 

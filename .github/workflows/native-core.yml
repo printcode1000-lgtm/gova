@@ -46,3 +46,6 @@ jobs:
 
       - name: OTA core tests
         run: npm run test:ota-core
+
+      - name: Storage core tests
+        run: npm run test:storage-core

@@ -13,8 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { StorageProfiles } from "@/core/storage/constants/storage-profiles";
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import { StorageProfiles, type StoredImage } from "@asol/storage-core";
 import { StorageImageManager } from "@/features/storage/components/StorageImageManager";
 import type {
   HeroSliderConfig,

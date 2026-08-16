@@ -31,12 +31,14 @@ import {
   R2_S3_CLIENT_ALLOWED_IMPORTERS,
   R2_S3_CLIENT_MODULE,
 } from "../src/core/architecture/image-storage-contract";
-import { validateStorageProfilesAtStartup } from "../src/core/storage/profiles/storage-profile-validator";
+import { validateStorageProfilesAtStartup } from "@asol/storage-core/server";
 import { validationEngine as categoryValidationEngine } from "../src/features/categories/infrastructure/validation.engine";
 
 import { ROOT, SRC, SCRIPTS, violations, walk, rel } from "./architecture-check/architecture-check.architecture-types";
 import { checkNotificationModuleContract } from "./architecture-check/architecture-check.notification-contract";
+import { checkDeadContractRules } from "./architecture-check/architecture-check.storage-core-contract";
 import { checkFile, checkExternalDataAccessOwnership, checkGeneratedDataAccessArtifacts } from "./architecture-check/architecture-check.native-contract";
+import { checkAccountBridgeContract } from "./architecture-check/architecture-check.account-bridge-contract";
 import { printReport, reportNativeSurface } from "./architecture-check/architecture-check.file-analysis";
 
 function main(): void {
@@ -64,17 +66,28 @@ function main(): void {
   for (const file of walk(SCRIPTS)) {
     if (rel(file) === 'scripts/architecture-check.ts') continue;
     checkExternalDataAccessOwnership(file);
+    checkAccountBridgeContract(file, readFileSync(file, 'utf8'));
   }
   checkGeneratedDataAccessArtifacts();
 
-  // The notifications microservice is a second tree with its own tsconfig and
-  // its own `@/` root. Its import surface is also its deployment surface, so it
-  // is held to the notification boundary exactly like `src` is — the generated
-  // mirror underneath it is output, not source, and is skipped.
-  const notificationsService = join(ROOT, 'services', 'notifications', 'src');
-  if (existsSync(notificationsService)) {
-    for (const file of walk(notificationsService)) {
-      checkNotificationModuleContract(file, readFileSync(file, 'utf8'));
+  const fileContents = new Map<string, string>();
+  for (const file of walk(SRC)) {
+    fileContents.set(file, readFileSync(file, 'utf8'));
+  }
+  for (const file of walk(SCRIPTS)) {
+    fileContents.set(file, readFileSync(file, 'utf8'));
+  }
+  checkDeadContractRules(fileContents);
+
+  const servicesDir = join(ROOT, 'services');
+  if (existsSync(servicesDir)) {
+    for (const file of walk(servicesDir)) {
+      if (file.includes('node_modules')) continue;
+      const content = readFileSync(file, 'utf8');
+      checkAccountBridgeContract(file, content);
+      if (file.includes('services/notifications/src')) {
+        checkNotificationModuleContract(file, content);
+      }
     }
   }
 

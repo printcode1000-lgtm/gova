@@ -14,15 +14,16 @@ export const IMAGE_STORAGE_APPLICATION_LAYER =
 
 /** Modules allowed to import R2 S3 operations (Provider Layer only). */
 export const R2_S3_CLIENT_ALLOWED_IMPORTERS = new Set([
-  'src/core/storage/providers/cloudflare-r2.provider.server.ts',
-  'src/core/storage/providers/cloudflare-r2-products.provider.server.ts',
+  'packages/storage-core/src/adapters/s3-client.adapter.ts',
+  'packages/storage-core/src/server/transport/r2-object-store.ts',
+  'packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts',
   'src/modules/dev-cloud-backup/repositories/r2-backup.repository.server.ts',
   'src/modules/data-access/tooling/migrate-r2-image-public-url.ts',
   'src/modules/data-access/tooling/migrate-r2-cloud-folders.ts',
 ]);
 
-/** R2 client module — forbidden patterns allowed here only. */
-export const R2_S3_CLIENT_MODULE = 'src/core/provisioning/r2-s3-client.ts';
+/** R2 client module — adapter in storage-core. */
+export const R2_S3_CLIENT_MODULE = 'packages/storage-core/src/adapters/s3-client.adapter.ts';
 
 /** Only module allowed to import image-storage-api-service. */
 export const IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS = new Set([
@@ -33,10 +34,11 @@ export const IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS = new Set([
 /** Files exempt from forbidden-pattern scan (definitions / providers). */
 export const IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT = new Set([
   R2_S3_CLIENT_MODULE,
-  'src/core/storage/providers/cloudflare-r2.provider.server.ts',
-  'src/core/storage/providers/cloudflare-r2-products.provider.server.ts',
-  'src/core/storage/providers/local-storage.provider.server.ts',
-  'src/core/storage/storage/image-key-generator.ts',
+  'packages/storage-core/src/server/providers/r2-account.provider.ts',
+  'packages/storage-core/src/server/providers/local-storage.provider.ts',
+  'packages/storage-core/src/server/transport/r2-object-store.ts',
+  'packages/storage-core/src/domain/images/image-key-generator.ts',
+  'packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts',
   'src/modules/dev-cloud-backup/repositories/r2-backup.repository.server.ts',
   'src/modules/data-access/tooling/migrate-r2-image-public-url.ts',
   'src/modules/data-access/tooling/migrate-r2-cloud-folders.ts',
@@ -56,7 +58,7 @@ export const IMAGE_STORAGE_API_ADAPTER = 'image-storage-api-service';
 export const IMAGE_STORAGE_FORBIDDEN_PATTERNS: Array<{ pattern: RegExp; message: string }> = [
   { pattern: /uploadR2Object\s*\(/, message: 'Direct R2 upload outside Provider Layer' },
   { pattern: /deleteR2Object\s*\(/, message: 'Direct R2 delete outside Provider Layer' },
-  { pattern: /new\s+CloudflareR2Provider\s*\(/, message: 'Direct Provider instantiation forbidden' },
+  { pattern: /new\s+R2AccountProvider\s*\(/, message: 'Direct Provider instantiation forbidden' },
   { pattern: /new\s+LocalStorageProvider\s*\(/, message: 'Direct Provider instantiation forbidden' },
   { pattern: /randomUUID\s*\(\).*\.webp/, message: 'ImageKey must use ImageKeyGenerator only' },
 ];

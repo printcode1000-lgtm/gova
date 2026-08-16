@@ -8,8 +8,8 @@ import {
   MARKETPLACE_ORDER_TABLE_TO_DATABASE,
 } from "@/modules/data-access/core/database/database-shards";
 import { ShardedRawDatabaseClient } from "@/modules/data-access/core/database/sharded-raw-database-client";
-import { getAllStorageProfiles } from "@/core/storage/profiles/storage-profile-loader.server";
-import { storageFolderCandidates } from "@/core/storage/storage/storage-profile-path";
+import { getAllStorageProfiles } from "@asol/storage-core/server";
+import { storageFolderCandidates } from "@asol/storage-core";
 import { createMarketplaceOrdersDb } from "@/modules/data-access/domains/marketplace-orders/db/client";
 import {
   DATA_HEALTH_POLICY,

@@ -98,7 +98,7 @@ Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS
 
 ```bash
 npm run r2:sync:cors       # General (pic1) and Products (gova-storage)
-npm run r2:sync:cors:ota   # Dedicated OTA (ota)
+npm run ota:sync:cors      # Dedicated OTA (ota)
 ```
 
 Migrate old public image URLs to the active R2 bucket:

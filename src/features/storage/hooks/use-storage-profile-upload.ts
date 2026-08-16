@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
-import type { StorageProfileId } from "@/core/storage/constants/storage-profiles";
+import type { StoredImage, StorageProfileId } from "@asol/storage-core";
 import { imageStorageService } from "../services/image-storage-service";
 import type { ImageUploadProgressStage } from "../services/image-storage-service.interface";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";

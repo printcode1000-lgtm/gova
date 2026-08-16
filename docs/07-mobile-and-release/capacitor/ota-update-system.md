@@ -391,14 +391,14 @@ Public Base URL: https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev
 
 OTA reads `ASOL_OTA_R2_*` environment variables exclusively: endpoint, access key ID, secret access key, bucket, public URL, and prefix. A missing value throws an immediate error.
 
-**A fallback across an account boundary is a silent redirect, not a default.** OTA never inherits credentials from `PRODUCT_R2_*` or `R2_*`. `npm run test:r2-separation` guarantees offline that OTA credentials and configurations remain strictly isolated.
+**A fallback across an account boundary is a silent redirect, not a default.** OTA never inherits credentials from `PRODUCT_R2_*` or `R2_*`. `npm run test:storage-core` guarantees offline that OTA credentials and configurations remain strictly isolated.
 
 ### CORS Configuration
 
 The dedicated OTA bucket is configured with browser CORS using:
 
 ```bash
-npm run r2:sync:cors:ota
+npm run ota:sync:cors
 ```
 [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 

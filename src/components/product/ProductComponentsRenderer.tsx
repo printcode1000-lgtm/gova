@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode, RefObject } from "react";
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import type { StoredImage } from "@asol/storage-core";
 import {
   createEmptyProductDetails,
   type ProductDetails,

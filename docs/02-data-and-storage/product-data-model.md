@@ -174,7 +174,7 @@ Two consequences worth knowing:
 - A `url` sent by a client on write is ignored. The key is the whole record.
 - The read path must not require a stored `url`. A parser that does drops every
   row and the product renders with no images — a silent failure, which is why
-  `npm run test:r2-separation` asserts against it.
+  `npm run test:storage-core` asserts against it.
 
 The storage component does not write to the product database. Product persistence remains the responsibility of the product feature.
 

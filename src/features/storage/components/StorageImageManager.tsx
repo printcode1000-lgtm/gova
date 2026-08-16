@@ -16,8 +16,8 @@ import { useTranslation } from "@/lib/i18n";
 import {
   StorageProfiles,
   type StorageProfileId,
-} from "@/core/storage/constants/storage-profiles";
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+  type StoredImage,
+} from "@asol/storage-core";
 import { useStorageProfileUpload } from "@/features/storage/hooks/use-storage-profile-upload";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { imageUploadQueue } from "@/features/storage/services/image-upload-queue";

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
+import { imageStorageOrchestrator } from "@asol/storage-core/server";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import type {
   HomeHeroConfig,

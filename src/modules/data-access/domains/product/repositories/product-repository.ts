@@ -1,7 +1,7 @@
 import { productsDataSource, profilesDataSource } from "@/modules/data-access/core";
 import "server-only";
 
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import type { StoredImage } from "@asol/storage-core";
 import type {
   ProductDetails,
   ProductRatingMode,

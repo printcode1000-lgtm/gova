@@ -1,19 +1,12 @@
 import "server-only";
 
 import {
-  getProductR2S3Credentials,
-  getR2S3Credentials,
-} from "@/core/config/server-env.values";
-import {
-  deleteProductR2Object,
-  deleteR2Object,
-  downloadProductR2Object,
-  downloadR2Object,
-  listProductR2Objects,
-  listR2Objects,
-  uploadProductR2Object,
+  getAccountS3Credentials,
   uploadR2Object,
-} from "@/core/provisioning/r2-s3-client";
+  deleteR2Object,
+  downloadR2Object,
+  listR2Objects,
+} from "@asol/storage-core/server";
 
 import type { DevCloudBackupR2ObjectManifest } from "../domain/types";
 
@@ -29,29 +22,20 @@ type R2Storage = "primary" | "products";
 
 interface R2StorageOperations {
   storage: R2Storage;
+  accountId: string;
   bucketName: () => string;
-  list: typeof listR2Objects;
-  download: typeof downloadR2Object;
-  upload: typeof uploadR2Object;
-  remove: typeof deleteR2Object;
 }
 
 const R2_STORAGES: R2StorageOperations[] = [
   {
     storage: "primary",
-    bucketName: () => getR2S3Credentials().bucketName,
-    list: listR2Objects,
-    download: downloadR2Object,
-    upload: uploadR2Object,
-    remove: deleteR2Object,
+    accountId: "general",
+    bucketName: () => getAccountS3Credentials("general").bucketName,
   },
   {
     storage: "products",
-    bucketName: () => getProductR2S3Credentials().bucketName,
-    list: listProductR2Objects,
-    download: downloadProductR2Object,
-    upload: uploadProductR2Object,
-    remove: deleteProductR2Object,
+    accountId: "products",
+    bucketName: () => getAccountS3Credentials("products").bucketName,
   },
 ];
 
@@ -68,14 +52,11 @@ async function listAll(
   operations: R2StorageOperations,
   prefix: string,
 ): Promise<Array<{ path: string; updatedAt?: string }>> {
-  const objects: Array<{ path: string; updatedAt?: string }> = [];
-  let token: string | undefined;
-  do {
-    const page = await operations.list(prefix, 1000, token);
-    objects.push(...page.objects);
-    token = page.continuationToken;
-  } while (token);
-  return objects;
+  const items = await listR2Objects(prefix, operations.accountId);
+  return items.map((item) => ({
+    path: item.key,
+    updatedAt: item.lastModified?.toISOString(),
+  }));
 }
 
 /** Every object in every bucket. The backup admits no prefix exclusions. */
@@ -101,19 +82,18 @@ export class R2BackupRepository {
           const identity = `${operations.storage}:${item.path}`;
           if (seen.has(identity)) continue;
           seen.add(identity);
-          const downloaded = await operations.download(item.path);
+          const downloaded = await downloadR2Object(item.path, operations.accountId);
           const file = r2FileForKey(operations.storage, item.path);
-          files[file] = downloaded.body;
-          const size = downloaded.size ?? downloaded.body.byteLength;
+          files[file] = downloaded;
+          const size = downloaded.byteLength;
           totalBytes += size;
           objects.push({
             storage: operations.storage,
             key: item.path,
             file,
             size,
-            contentType: downloaded.contentType,
-            lastModified: downloaded.lastModified ?? item.updatedAt,
-            etag: downloaded.etag,
+            contentType: "application/octet-stream",
+            lastModified: item.updatedAt,
           });
         }
       }
@@ -142,7 +122,7 @@ export class R2BackupRepository {
       if (!operations) throw new Error(`Unknown R2 storage in backup: ${object.storage}`);
       const body = files[object.file] ?? files[r2FileForKey(object.storage, object.key)];
       if (!body) throw new Error(`Missing R2 object in backup: ${object.key}`);
-      await operations.upload(object.key, body, object.contentType);
+      await uploadR2Object(object.key, Buffer.from(body), object.contentType ?? "application/octet-stream", operations.accountId);
       uploaded += 1;
     }
 
@@ -151,7 +131,7 @@ export class R2BackupRepository {
         for (const prefix of FULL_BUCKET_PREFIXES) {
           for (const object of await listAll(operations, prefix)) {
             if (!backupKeys.has(`${operations.storage}:${object.path}`)) {
-              await operations.remove(object.path);
+              await deleteR2Object(object.path, operations.accountId);
               deleted += 1;
             }
           }

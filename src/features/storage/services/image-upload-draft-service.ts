@@ -1,7 +1,6 @@
 "use client";
 
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
-import type { StorageProfileId } from "@/core/storage/constants/storage-profiles";
+import type { StoredImage, StorageProfileId } from "@asol/storage-core";
 import {
   ASOL_DB_STORES,
   asolDbClearStore,

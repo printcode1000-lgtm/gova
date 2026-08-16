@@ -9,9 +9,8 @@ import {
 } from "@/modules/data-access/core/database/database-shards";
 import type { IDatabaseClient } from "@/modules/data-access/core/database/database-client.interface";
 import { ShardedRawDatabaseClient } from "@/modules/data-access/core/database/sharded-raw-database-client";
-import { getAllStorageProfiles } from "@/core/storage/profiles/storage-profile-loader.server";
-import { imageStorageOrchestrator } from "@/core/storage/storage/image-storage-orchestrator.server";
-import { storageFolderCandidates } from "@/core/storage/storage/storage-profile-path";
+import { getAllStorageProfiles, imageStorageOrchestrator } from "@asol/storage-core/server";
+import { storageFolderCandidates } from "@asol/storage-core";
 import { createMarketplaceOrdersDb } from "@/modules/data-access/domains/marketplace-orders/db/client";
 export interface StorageReference {
   storageProfileId: string;

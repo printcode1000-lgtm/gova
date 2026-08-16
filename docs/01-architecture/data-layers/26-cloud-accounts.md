@@ -42,14 +42,28 @@ to no account at all — it runs in the user's browser:
         ╱───────────────────┼───────────────────╲
        ╱                    │                    ╲
   gova ◄── service-bridge ──┼──► asol-products
-       ╲                    │    asol-orders
-        ╲                   │    asol-profiles
+       ╲  (@asol/account    │    asol-orders
+        ╲  -bridge)         │    asol-profiles
          ╲── notification-bridge ──► asol-notifications
 ```
 
 Only `gova` is connected to GitHub. The other four are updated exclusively by a
 terminal command that uploads one folder — `services/<name>/` — and nothing
 else in the repository leaves the machine.
+
+### Sealed Capability Packages
+
+The 5 Vercel account architecture is enforced and driven by 6 sealed capability packages under `packages/`:
+
+1. **`@asol/vercel-deploy-core`** (`packages/vercel-deploy-core/`): Central account declaration registry (`GOVA_DECLARATION`, `NOTIFICATIONS_DECLARATION`, `PRODUCTS_DECLARATION`, `ORDERS_DECLARATION`, `PROFILES_DECLARATION`), GitHub-free project creation (`POST /v10/projects`), credential upserting, ephemeral Vercel CLI runner (`vercel@59.0.0`), and account deployment orchestrator.
+2. **`@asol/service-mirror-core`** (`packages/service-mirror-core/`): Shared import-graph mirror walker that builds `generated/src` and `generated/public` for the four read-only microservices while keeping baseline files byte-identical.
+3. **`@asol/account-bridge`** (`packages/account-bridge/`): Device-only inter-account channel (Rule 0) exported through exactly two doors:
+   - `.` -> `src/index.ts` (11-entry exact-match route table)
+   - `./notifications` -> `src/notifications.ts` (signed grant delivery)
+4. **`@asol/notifications-composition`** (`packages/notifications-composition/`): Composition layer re-exporting entry points for `asol-notifications`.
+5. **`@asol/products-composition`** (`packages/products-composition/`): Composition layer re-exporting entry points for `asol-products`.
+6. **`@asol/orders-composition`** (`packages/orders-composition/`): Composition layer re-exporting entry points for `asol-orders`.
+7. **`@asol/profiles-composition`** (`packages/profiles-composition/`): Composition layer re-exporting entry points for `asol-profiles`.
 
 See [16. Deployment Targets](./16-deployment-targets.md),
 [Service Bridge Module](../../05-platform-features/service-bridge-module.md),

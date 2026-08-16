@@ -1,9 +1,9 @@
-import type {
-  ImageUploadResult,
-  StorageOutputFormat,
-  StorageProfileClientView,
-} from "@/core/storage/types/storage-profile.types";
-import { buildUploadFilename } from "@/core/storage/output-format.registry";
+import {
+  type ImageUploadResult,
+  type StorageOutputFormat,
+  type StorageProfileClientView,
+  buildUploadFilename,
+} from "@asol/storage-core";
 
 /** Low-level HTTP adapter contract for image storage APIs. */
 export interface IImageStorageApiAdapter {

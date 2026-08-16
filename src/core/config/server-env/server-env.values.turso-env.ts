@@ -1,10 +1,7 @@
 import { createPublicKey } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import {
-  assertR2StorageTarget,
-  assertR2StorageTargetFields,
-} from "../r2-storage-topology";
+
 
 export function getTursoRuntimeCredentials(): {
   url: string;
@@ -168,61 +165,6 @@ export function getWebPushServerConfig(): { privateKey: string } | null {
   const privateKey = process.env.WEB_PUSH_VAPID_PRIVATE_KEY?.trim() ?? "";
   if (!privateKey) return null;
   return { privateKey };
-}
-
-export function getOtaApprovalServerConfig(): {
-  manifestUrl: string;
-  publicKey: string;
-} {
-  const explicitManifestUrl =
-    process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL?.trim();
-  // ASOL_OTA_R2_PUBLIC_URL only. Falling back to the product or general bucket
-  // would point clients at a manifest on an account that OTA does not own.
-  const publicBaseUrl = (process.env.ASOL_OTA_R2_PUBLIC_URL || "").replace(
-    /\/$/,
-    "",
-  );
-  const prefix = (process.env.ASOL_OTA_R2_PREFIX || "app-updates").replace(
-    /^\/+|\/+$/g,
-    "",
-  );
-  const manifestUrl =
-    explicitManifestUrl ||
-    (publicBaseUrl ? `${publicBaseUrl}/${prefix}/manifest.json` : "");
-
-  let publicKey = (
-    process.env.ASOL_OTA_PUBLIC_KEY ||
-    process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY ||
-    ""
-  ).trim();
-  if (!publicKey) {
-    const localPublicKeyPath = path.resolve(".ota", "public-key.pem");
-    if (existsSync(localPublicKeyPath)) {
-      publicKey = createPublicKey(readFileSync(localPublicKeyPath))
-        .export({ format: "der", type: "spki" })
-        .toString("base64");
-    }
-  }
-  if (!publicKey) {
-    const privateKey = process.env.ASOL_OTA_SIGNING_PRIVATE_KEY?.replace(
-      /\\n/g,
-      "\n",
-    );
-    const localPrivateKeyPath = path.resolve(".ota", "private-key.pem");
-    const source =
-      privateKey ||
-      (existsSync(localPrivateKeyPath)
-        ? readFileSync(localPrivateKeyPath)
-        : null);
-    if (source) {
-      publicKey = createPublicKey(source)
-        .export({ format: "der", type: "spki" })
-        .toString("base64");
-    }
-  }
-
-  if (!manifestUrl || !publicKey) throw new Error("otaNotConfigured");
-  return { manifestUrl, publicKey };
 }
 
 export function writeTursoRuntimeCredentials(

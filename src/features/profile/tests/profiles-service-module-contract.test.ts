@@ -88,7 +88,7 @@ for (const absent of ["reviews", "store-images", "discounts", "editor"]) {
 
 const bridge = stripComments(
   readFileSync(
-    path.join(root, "src", "modules", "service-bridge", "service-bridge.client.ts"),
+    path.join(root, "packages", "account-bridge", "src", "index.ts"),
     "utf8",
   ),
 );

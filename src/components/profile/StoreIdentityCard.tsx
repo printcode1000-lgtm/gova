@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { Image as ImageIcon, LayoutTemplate } from "lucide-react";
@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { RatingSettingsEditor } from "@/components/ui/rating/RatingSettingsEditor";
 import { useTranslation } from "@/lib/i18n";
-import type { StoredImage } from "@/core/storage/types/stored-image.types";
+import type { StoredImage } from "@asol/storage-core";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import {

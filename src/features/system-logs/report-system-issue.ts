@@ -4,7 +4,7 @@ import {
   addSystemLog,
   type SystemLogLevel,
 } from "@/features/system-logs/system-log-store";
-import { publicEnv } from "@/core/config";
+import { publicEnv } from "@/core/config/public-env";
 import { submitPersistentClientLog } from "./persistent-client-log";
 
 export interface SystemIssueContext {

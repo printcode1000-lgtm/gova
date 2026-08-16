@@ -4,7 +4,7 @@ Non-negotiable rules for every developer, AI agent, feature, page, API, service,
 
 Violations must be rejected. Enforced by `npm run architecture:check` and startup validation.
 
-See implementation: `src/core/architecture/image-storage-contract.ts`, `src/core/storage/profiles/storage-profile-validator.ts`.
+See implementation: `src/core/architecture/image-storage-contract.ts`, `packages/storage-core/src/domain/profiles/storage-profile-validator.ts`.
 
 ---
 

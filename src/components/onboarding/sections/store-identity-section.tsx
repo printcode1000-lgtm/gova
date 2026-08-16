@@ -7,8 +7,7 @@ import { FormField, FormInput, FormTextarea, FormSelect, MultiSelect } from '../
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StorageImageManager } from '@/features/storage/components/StorageImageManager';
-import { StorageProfiles } from '@/core/storage/constants/storage-profiles';
-import type { StoredImage } from '@/core/storage/types/stored-image.types';
+import { StorageProfiles, type StoredImage } from '@asol/storage-core';
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
   "Women's Fashion": 'womensFashion',

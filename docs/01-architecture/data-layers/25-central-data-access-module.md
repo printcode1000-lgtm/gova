@@ -49,7 +49,7 @@ Capacitor clients still use `AsolApiClient` to reach the hosted backend.
 | `tooling/` | Database creation, migration, verification, export, and maintenance executables |
 
 Cloudflare R2 is intentionally not part of this database module. Its clients
-remain under `src/core/provisioning` and `src/core/storage` because object
+live under `@asol/storage-core` (`packages/storage-core`) because object
 storage has a separate lifecycle and contract.
 
 ## Runtime source registry

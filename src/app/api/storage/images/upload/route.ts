@@ -1,5 +1,5 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
-import { getMimeTypeForOutputFormat } from "@/core/storage/output-format.registry";
+import { getMimeTypeForOutputFormat } from "@asol/storage-core/server";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 import { runTracedBusinessRoute } from "../../../auth/traced-route";
 

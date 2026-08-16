@@ -28,6 +28,7 @@ it: every crossing goes through a browser-only bridge.
 | Serves | everything else | push fan-out only | product reads only | the order list only | five profile reads |
 | Turso account | `hesham101` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
 
+The connectors are driven by seven sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, and `@asol/profiles-composition`. See [26-cloud-accounts.md](./26-cloud-accounts.md).
 The connectors are documented in
 [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md)
 and [Service Bridge Module](../../05-platform-features/service-bridge-module.md).

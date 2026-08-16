@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { publicEnv } from "@/core/config";
+import { publicEnv } from "@/core/config/public-env";
 import {
   addSystemLog,
   setSystemLogCollectorAuthorized,

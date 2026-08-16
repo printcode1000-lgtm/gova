@@ -12,7 +12,7 @@ import type {
   Collection,
   FashionCategory,
 } from './types';
-import type { StoredImage } from '@/core/storage/types/stored-image.types';
+import type { StoredImage } from '@asol/storage-core';
 import { constants } from './schemas';
 
 const initialStoreIdentity: OnboardingData['storeIdentity'] = {

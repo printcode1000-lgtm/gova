@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { withBasePath } from '@/core/config';
+import { withBasePath } from '@/core/config/public-env';
 
 type AppIconSize = 'sm' | 'md' | 'lg';
 
