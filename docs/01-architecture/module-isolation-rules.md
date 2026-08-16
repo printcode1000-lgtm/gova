@@ -98,13 +98,24 @@ Eleven sealed packages, arranged in four layers. The layering is not decoration 
 | 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 6 | CODEOWNERS + protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 7 | Independent package | ✅ | ✅ 5 edges, all designated | ⚠️ 1 app edge | ✅ zero imports | ✅ | ✅ | ✅ 3 edges, pinned | ⚠️ app edges |
+| 7 | Independent package | ✅ | ✅ 5 designated edges, pinned | ✅ 1 designated edge | ✅ zero imports | ✅ | ✅ | ✅ 3 edges, pinned | ✅ by design — see below |
 | 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 Rule 6 is enforced repository-wide: branch protection blocks force-pushes and deletions, requires a
-pull request, and requires the `verify` status check. Only code-owner review remains off, and that is
-blocked by repository membership rather than by code — see below. Rule 7's warnings are the app edges described
-under [Rule 7 runs both ways](#rule-7-runs-both-ways).
+pull request, requires linear history and resolved conversations, and requires the `verify` status
+check. Only code-owner review remains off, and that is blocked by repository membership rather than by
+code — see below.
+
+**Rule 7 for the compositions is a different question, not a weaker answer.** Layer 2 exists to wire
+application services into an account's runtime; reaching `@/features/*` is its whole job, and a
+composition that imported nothing from the app would compose nothing. What rule 7 forbids there is
+the *reverse* — the app reaching into a composition's internals — and the single declared door plus
+the seal contract cover that. The edges that matter for layer 2 are the ones a capability-closure test
+watches: `orders` reaching image storage, `notifications` reaching product data. Those are asserted
+per account, and they fail red.
+
+The edges worth budgeting are on layer 1 packages, described under
+[Rule 7 runs both ways](#rule-7-runs-both-ways).
 
 ### The four layers
 
@@ -117,8 +128,29 @@ the contract rather than a matter of taste.
   layer 3  @asol/account-declarations    pure data: project, token var, env keys, entry points
   layer 2  @asol/*-composition           the only place that knows an account uses db AND images
   layer 1  vercel-deploy-core, service-mirror-core, storage-core, ota-core, native-core
-                                         capability logic, held once, never importing each other
+                                         capability logic, held once
 ```
+
+Measured dependencies, rather than intended ones:
+
+| Package | Imports |
+| :-- | :-- |
+| `account-declarations` | **nothing** — asserted by its own test |
+| `native-core`, `storage-core`, `service-mirror-core` | nothing |
+| `vercel-deploy-core` | `account-declarations` |
+| the four `*-composition` | `account-declarations` |
+| `ota-core`, `account-bridge` | `native-core` |
+
+Two of these look like layer violations and are not:
+
+**Layer 1 reading layer 3** (`vercel-deploy-core` → `account-declarations`) is safe precisely
+because layer 3 imports nothing. Data carries nothing with it, so the direction that matters — a
+composition dragging the deploy engine into a deployment — cannot happen through it.
+
+**`ota-core` and `account-bridge` reading `native-core`** is rule 9 working as intended, not being
+broken. Platform identity is owned once; upgrading Capacitor touches `native-core` alone, and its
+consumers see an unchanged API. A second platform detector inside the channel would be a second
+source of truth, and the two would disagree the first time either changed.
 
 **Layer 3 must stay out of layer 1.** The compositions once read `DECLARATION.project` from
 `@asol/vercel-deploy-core`, which contains `child_process`, `fs` and the Vercel token handling. That
@@ -248,3 +280,23 @@ without the list being updated, so the list cannot rot into decoration. `@asol/a
 the same guard (T1b) over three edges.
 
 **These lists should only ever shrink.**
+
+---
+
+## Standing weakness: a guard that measures nothing
+
+Three guards in this repository have, at some point, passed while checking nothing. It is the most
+expensive failure mode here, because a green check is taken as evidence.
+
+| Guard | How it was empty | How it is anchored now |
+| :-- | :-- | :-- |
+| Rule 0's `T1` | Named itself a "module graph" test but scanned only the channel's own two files. A node builtin one hop away — through `@asol/native-core` or `@/core/config/*`, both of which it imports — would have passed | Walks the real graph (119 files) and asserts it **reached `native-core` specifically**, not merely "more files than we started with" |
+| `T1`'s own anchor | The first fix stopped after 4 hops because `@asol/native-core` contains the scope slash, so the door was computed as `"./"` and resolved to nothing. The anchor `visited.size > entryFiles.length` was `6 > 2` — it passed | Anchored on a named package and a floor of 50 files |
+| OTA port registration | Registered in one component; the splash uses the OTA runtime at app start, so the ports stayed at their safe defaults and the super-admin predicate returned `false` for a real super admin | A contract test requires every OTA runtime consumer to import the seam **and** call it |
+
+The pattern: **an existence check is not a coverage check.** `size > 0`, `matches.length > previous`,
+"the file mentions the symbol" — each passes while the thing being measured is absent. Anchor a guard
+on something specific that must be present, and assert a floor that a broken walk cannot clear.
+
+Both the OTA edge budget and the port-registration test also fail when a *declared* item disappears,
+so neither list can rot into decoration while still reporting green.
