@@ -1,5 +1,4 @@
-import { categoryService } from '@/features/categories';
-import { getEnabledProductSearchFields } from '@/features/product-search/services/product-search-fields.server';
+import { assertProductsEnv, createProductsRuntime } from '@asol/products-composition';
 import { corsHeaders, preflight, searchErrorResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
@@ -15,20 +14,25 @@ const SAFE_ID = /^\d+$/;
  */
 export async function GET(request: Request): Promise<Response> {
   try {
+    // Layer 2. Built per request, never at module scope: module scope runs during
+    // `next build`, where no account credential exists.
+    const api = createProductsRuntime();
+    assertProductsEnv();
+
     const q = new URL(request.url).searchParams;
     const mainCategoryId = q.get('mainCategoryId') ?? '';
     const subcategoryId = q.get('subcategoryId') ?? '';
     if (
       !SAFE_ID.test(mainCategoryId) ||
       !SAFE_ID.test(subcategoryId) ||
-      !categoryService.resolveProductSelection(mainCategoryId, subcategoryId).valid
+      !api.categories.resolveProductSelection(mainCategoryId, subcategoryId).valid
     ) {
       return Response.json(
         { error: 'invalidSearchCategory' },
         { status: 400, headers: corsHeaders(request) },
       );
     }
-    const fields = await getEnabledProductSearchFields(mainCategoryId, subcategoryId);
+    const fields = await api.getEnabledProductSearchFields(mainCategoryId, subcategoryId);
     return Response.json({ fields }, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return searchErrorResponse(request, error);

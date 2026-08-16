@@ -1,7 +1,7 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import path from 'path';
 import { PRODUCTS_DECLARATION } from '@asol/account-declarations/products';
-import { createProductsRuntime, type ProductsRuntime } from '../index';
+import { assertProductsEnv, createProductsRuntime, type ProductsRuntime } from '../index';
 
 function assert(condition: boolean, message: string): void {
   if (!condition) throw new Error(`Assertion failed: ${message}`);
@@ -50,11 +50,12 @@ function runTests(): void {
   // Test 1: Factory creates valid runtime
   const runtime: ProductsRuntime = createProductsRuntime();
   assert(runtime.accountName === PRODUCTS_DECLARATION.project, 'Runtime account name matches declaration');
-  assert(typeof runtime.products === 'object', 'Products module bound');
-  assert(typeof runtime.reviews === 'object', 'Product reviews module bound');
-  assert(typeof runtime.searchProducts === 'object', 'Product search module bound');
-  assert(typeof runtime.searchFields === 'object', 'Search fields module bound');
-  assert(typeof runtime.categories === 'object', 'Categories module bound');
+  assert(typeof runtime.products === 'object', 'products bound');
+  assert(typeof runtime.reviews === 'object', 'reviews bound');
+  assert(typeof runtime.searchProducts === 'function', 'searchProducts bound');
+  assert(typeof runtime.getEnabledProductSearchFields === 'function', 'getEnabledProductSearchFields bound');
+  assert(typeof runtime.categories === 'object', 'categories bound');
+  assert(typeof runtime.pharmacyProfileCatalog === 'object', 'pharmacyProfileCatalog bound');
   console.log('  ✔ createProductsRuntime factory creates valid runtime object.');
 
   // Test 2: C1 Transitive capability graph isolation
@@ -62,25 +63,32 @@ function runTests(): void {
   checkProductsTransitiveGraph(productsServiceDir);
   console.log('  ✔ C1: Products transitive graph contains zero orders/profile/notification credential code.');
 
-  // Test 3: D5 Missing required database config throws in production
-  const origEnv = process.env.NODE_ENV;
+  // Test 3: D5 — a missing required env key fails before any work.
+  //
+  // Asserted against PRODUCTS_DECLARATION.requiredEnv rather than a hard-coded name. An earlier
+  // version checked variable names this account does not hold, and the test passed
+  // because it pinned the same invented name. Code and test being wrong together is the
+  // failure mode this shape avoids.
+  let threw = false;
   try {
-    process.env.NODE_ENV = 'production';
-    let threw = false;
-    try {
-      createProductsRuntime({ databaseUrl: '' });
-    } catch (e) {
-      threw = true;
+    assertProductsEnv({});
+  } catch (error) {
+    threw = true;
+    for (const key of PRODUCTS_DECLARATION.requiredEnv) {
       assert(
-        e instanceof Error && e.message.includes('Missing required database configuration'),
-        'D5: Error message explicitly identifies missing required database configuration',
+        error instanceof Error && error.message.includes(key),
+        `D5: error names the missing required key ${key}`,
       );
     }
-    assert(threw, 'D5: Missing required database key exits non-zero / throws in production before network call');
-    console.log('  ✔ D5: Missing required database key exits before network call.');
-  } finally {
-    process.env.NODE_ENV = origEnv;
   }
+  assert(threw, 'D5: an empty environment throws before any work');
+
+  // And it must pass with the declared keys present — a validator that always throws
+  // would satisfy the assertion above while breaking the deployment.
+  const complete: NodeJS.ProcessEnv = {};
+  for (const key of PRODUCTS_DECLARATION.requiredEnv) complete[key] = 'set-for-test';
+  assertProductsEnv(complete);
+  console.log('  ✔ D5: missing required keys throw and name themselves; complete env passes.');
 
   console.log('✅ @asol/products-composition tests passed!\n');
 }

@@ -1,4 +1,4 @@
-import { productService } from '@/features/product/services/product-service.server';
+import { assertProductsEnv, createProductsRuntime } from '@asol/products-composition';
 import { corsHeaders, errorResponse, preflight } from '../../lib/http';
 
 export const runtime = 'nodejs';
@@ -15,11 +15,16 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: Request): Promise<Response> {
   try {
+    // Layer 2. Built per request, never at module scope: module scope runs during
+    // `next build`, where no account credential exists.
+    const api = createProductsRuntime();
+    assertProductsEnv();
+
     const searchParams = new URL(request.url).searchParams;
     const id = searchParams.get('id');
     const data = id
-      ? await productService.get(id)
-      : await productService.listByOwnerAndCategory(
+      ? await api.products.get(id)
+      : await api.products.listByOwnerAndCategory(
           searchParams.get('uid') ?? '',
           searchParams.get('mainCategoryId') ?? '',
           searchParams.get('subcategoryId') ?? '',

@@ -1,8 +1,4 @@
-import {
-  deliverNotificationGrants,
-  readGrantsFromRequestBody,
-  MAX_GRANTS_PER_REQUEST,
-} from '@/features/notifications/service-runtime';
+import { assertNotificationsEnv, createNotificationsRuntime } from '@asol/notifications-composition';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -50,7 +46,11 @@ export async function POST(request: Request): Promise<Response> {
 
   let grants: string[];
   try {
-    grants = readGrantsFromRequestBody(await request.json()).slice(0, MAX_GRANTS_PER_REQUEST);
+    // Layer 2. Built per request, never at module scope: module scope runs during
+    // `next build`, where no account credential exists.
+    const api = createNotificationsRuntime();
+    assertNotificationsEnv();
+    grants = api.readGrantsFromRequestBody(await request.json()).slice(0, api.MAX_GRANTS_PER_REQUEST);
   } catch {
     return Response.json({ error: 'invalidJsonBody' }, { status: 400, headers });
   }
@@ -62,7 +62,7 @@ export async function POST(request: Request): Promise<Response> {
   // 200 even with rejections: the request itself was well formed, and the
   // per-grant outcome is in the body. The browser cannot act on a 4xx here
   // anyway — the grants are already spent.
-  return Response.json(await deliverNotificationGrants(grants), { status: 200, headers });
+  return Response.json(await createNotificationsRuntime().deliverNotificationGrants(grants), { status: 200, headers });
 }
 
 export async function OPTIONS(request: Request): Promise<Response> {

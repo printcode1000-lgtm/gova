@@ -1,7 +1,7 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import path from 'path';
 import { PROFILES_DECLARATION } from '@asol/account-declarations/profiles';
-import { createProfilesRuntime, type ProfilesRuntime } from '../index';
+import { assertProfilesEnv, createProfilesRuntime, type ProfilesRuntime } from '../index';
 
 function assert(condition: boolean, message: string): void {
   if (!condition) throw new Error(`Assertion failed: ${message}`);
@@ -50,7 +50,7 @@ function runTests(): void {
   // Test 1: Factory creates valid runtime
   const runtime: ProfilesRuntime = createProfilesRuntime();
   assert(runtime.accountName === PROFILES_DECLARATION.project, 'Runtime account name matches declaration');
-  assert(typeof runtime.bootstrap === 'object', 'Profile bootstrap service bound');
+  assert(typeof runtime.profiles === 'object', 'profiles service bound');
   console.log('  ✔ createProfilesRuntime factory creates valid runtime object.');
 
   // Test 2: C1 Transitive capability graph isolation
@@ -58,25 +58,32 @@ function runTests(): void {
   checkProfilesTransitiveGraph(profilesServiceDir);
   console.log('  ✔ C1: Profiles transitive graph contains zero orders/products/notification credential code.');
 
-  // Test 3: D5 Missing required database config throws in production
-  const origEnv = process.env.NODE_ENV;
+  // Test 3: D5 — a missing required env key fails before any work.
+  //
+  // Asserted against PROFILES_DECLARATION.requiredEnv rather than a hard-coded name. An earlier
+  // version checked variable names this account does not hold, and the test passed
+  // because it pinned the same invented name. Code and test being wrong together is the
+  // failure mode this shape avoids.
+  let threw = false;
   try {
-    process.env.NODE_ENV = 'production';
-    let threw = false;
-    try {
-      createProfilesRuntime({ databaseUrl: '' });
-    } catch (e) {
-      threw = true;
+    assertProfilesEnv({});
+  } catch (error) {
+    threw = true;
+    for (const key of PROFILES_DECLARATION.requiredEnv) {
       assert(
-        e instanceof Error && e.message.includes('Missing required database configuration'),
-        'D5: Error message explicitly identifies missing required database configuration',
+        error instanceof Error && error.message.includes(key),
+        `D5: error names the missing required key ${key}`,
       );
     }
-    assert(threw, 'D5: Missing required database key exits non-zero / throws in production before network call');
-    console.log('  ✔ D5: Missing required database key exits before network call.');
-  } finally {
-    process.env.NODE_ENV = origEnv;
   }
+  assert(threw, 'D5: an empty environment throws before any work');
+
+  // And it must pass with the declared keys present — a validator that always throws
+  // would satisfy the assertion above while breaking the deployment.
+  const complete: NodeJS.ProcessEnv = {};
+  for (const key of PROFILES_DECLARATION.requiredEnv) complete[key] = 'set-for-test';
+  assertProfilesEnv(complete);
+  console.log('  ✔ D5: missing required keys throw and name themselves; complete env passes.');
 
   console.log('✅ @asol/profiles-composition tests passed!\n');
 }

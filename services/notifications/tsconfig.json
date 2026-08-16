@@ -25,6 +25,27 @@
     "paths": {
       "@/*": [
         "./generated/src/*"
+      ],
+      "@asol/account-declarations": [
+        "./generated/packages/account-declarations/src/index.ts"
+      ],
+      "@asol/account-declarations/gova": [
+        "./generated/packages/account-declarations/src/accounts/gova.ts"
+      ],
+      "@asol/account-declarations/notifications": [
+        "./generated/packages/account-declarations/src/accounts/notifications.ts"
+      ],
+      "@asol/account-declarations/products": [
+        "./generated/packages/account-declarations/src/accounts/products.ts"
+      ],
+      "@asol/account-declarations/orders": [
+        "./generated/packages/account-declarations/src/accounts/orders.ts"
+      ],
+      "@asol/account-declarations/profiles": [
+        "./generated/packages/account-declarations/src/accounts/profiles.ts"
+      ],
+      "@asol/notifications-composition": [
+        "./generated/packages/notifications-composition/src/index.ts"
       ]
     }
   },

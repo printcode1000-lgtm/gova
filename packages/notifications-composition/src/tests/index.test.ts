@@ -1,7 +1,7 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import path from 'path';
 import { NOTIFICATIONS_DECLARATION } from '@asol/account-declarations/notifications';
-import { createNotificationsRuntime, type NotificationsRuntime } from '../index';
+import { assertNotificationsEnv, createNotificationsRuntime, type NotificationsRuntime } from '../index';
 
 function assert(condition: boolean, message: string): void {
   if (!condition) throw new Error(`Assertion failed: ${message}`);
@@ -51,7 +51,9 @@ function runTests(): void {
   // Test 1: Factory creates valid runtime
   const runtime: NotificationsRuntime = createNotificationsRuntime();
   assert(runtime.accountName === NOTIFICATIONS_DECLARATION.project, 'Runtime account name matches declaration');
-  assert(typeof runtime.runtime === 'object', 'Notifications service runtime bound');
+  assert(typeof runtime.deliverNotificationGrants === 'function', 'deliverNotificationGrants bound');
+  assert(typeof runtime.readGrantsFromRequestBody === 'function', 'readGrantsFromRequestBody bound');
+  assert(typeof runtime.MAX_GRANTS_PER_REQUEST === 'number', 'MAX_GRANTS_PER_REQUEST bound');
   console.log('  ✔ createNotificationsRuntime factory creates valid runtime object.');
 
   // Test 2: C1 Transitive capability graph isolation (Notifications reaches no orders/products/profile DB code)
@@ -59,25 +61,32 @@ function runTests(): void {
   checkNotificationsTransitiveGraph(notificationsServiceDir);
   console.log('  ✔ C1: Notifications transitive graph contains zero product/order/profile data-access code.');
 
-  // Test 3: D5 Missing required grant secret throws in production
-  const origEnv = process.env.NODE_ENV;
+  // Test 3: D5 — a missing required env key fails before any work.
+  //
+  // Asserted against NOTIFICATIONS_DECLARATION.requiredEnv rather than a hard-coded name. An earlier
+  // version checked variable names this account does not hold, and the test passed
+  // because it pinned the same invented name. Code and test being wrong together is the
+  // failure mode this shape avoids.
+  let threw = false;
   try {
-    process.env.NODE_ENV = 'production';
-    let threw = false;
-    try {
-      createNotificationsRuntime({ grantSecret: '' });
-    } catch (e) {
-      threw = true;
+    assertNotificationsEnv({});
+  } catch (error) {
+    threw = true;
+    for (const key of NOTIFICATIONS_DECLARATION.requiredEnv) {
       assert(
-        e instanceof Error && e.message.includes('Missing required ASOL_NOTIFICATION_GRANT_SECRET'),
-        'D5: Error message explicitly identifies missing required grant secret',
+        error instanceof Error && error.message.includes(key),
+        `D5: error names the missing required key ${key}`,
       );
     }
-    assert(threw, 'D5: Missing required grant secret exits non-zero / throws in production before network call');
-    console.log('  ✔ D5: Missing required grant secret key exits before network call.');
-  } finally {
-    process.env.NODE_ENV = origEnv;
   }
+  assert(threw, 'D5: an empty environment throws before any work');
+
+  // And it must pass with the declared keys present — a validator that always throws
+  // would satisfy the assertion above while breaking the deployment.
+  const complete: NodeJS.ProcessEnv = {};
+  for (const key of NOTIFICATIONS_DECLARATION.requiredEnv) complete[key] = 'set-for-test';
+  assertNotificationsEnv(complete);
+  console.log('  ✔ D5: missing required keys throw and name themselves; complete env passes.');
 
   console.log('✅ @asol/notifications-composition tests passed!\n');
 }

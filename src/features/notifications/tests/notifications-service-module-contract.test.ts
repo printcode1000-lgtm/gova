@@ -74,21 +74,43 @@ function stripComments(source: string): string {
 /**
  * The route owns HTTP; delivery lives behind the service-runtime entry point.
  *
- * The rule being checked has not changed — this deployment must call the local
- * sender, never the forwarding one — only the file it is checked in. The route
- * may reach exactly one notification path, and that path is the one restricted
- * by the import mirror to files this account may hold.
+ * The rule has not changed — this deployment must call the local sender, never the
+ * forwarding one, and may reach exactly one notification path. What changed is where the
+ * rule is enforced. The route now goes through layer 2
+ * (`@asol/notifications-composition`), which is the only module that imports
+ * `service-runtime` and which re-exports exactly three named things. The route therefore
+ * cannot widen its surface by adding an import: there is nothing else to import from.
+ *
+ * So the assertion moved down a level rather than being relaxed. The route must reach
+ * **no** notification path directly, and the composition must reach exactly one.
  */
 const sendRouteCode = stripComments(sendRoute);
 assert.match(
   sendRouteCode,
-  /from\s+['"]@\/features\/notifications\/service-runtime['"]/,
-  "The service route must import @/features/notifications/service-runtime and nothing else from the module.",
+  /from\s+['"]@asol\/notifications-composition['"]/,
+  "The service route must go through @asol/notifications-composition (layer 2).",
 );
 assert.doesNotMatch(
   sendRouteCode,
+  /@\/features\/notifications\//,
+  "The service route must not reach a notification path directly: that is layer 2's job.",
+);
+
+const compositionCode = stripComments(
+  readFileSync(
+    path.join(root, "packages", "notifications-composition", "src", "index.ts"),
+    "utf8",
+  ),
+);
+assert.match(
+  compositionCode,
+  /from\s+['"]@\/features\/notifications\/service-runtime['"]/,
+  "The composition must import @/features/notifications/service-runtime.",
+);
+assert.doesNotMatch(
+  compositionCode,
   /@\/features\/notifications\/(?!service-runtime)/,
-  "The service route must not reach any other notification path: its imports are its deployment surface.",
+  "The composition must reach no other notification path: its imports are the deployment surface.",
 );
 
 const serviceRuntime = stripComments(

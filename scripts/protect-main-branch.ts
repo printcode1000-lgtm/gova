@@ -42,7 +42,12 @@ function resolveRepository(): string {
  * never reports blocks every merge forever, which is a worse failure than no protection
  * at all. Verify the names against a recent run before adding to this list.
  */
-const REQUIRED_STATUS_CHECKS: string[] = [];
+const REQUIRED_STATUS_CHECKS: string[] = [
+  // The `native-core` workflow's single job. Confirmed against a real green run
+  // (commit 251ef3ce) before being listed here — GitHub matches on the check-run name it
+  // actually reports, and a name that never reports blocks every merge permanently.
+  'verify',
+];
 
 interface ProtectionPayload {
   required_status_checks: { strict: boolean; contexts: string[] } | null;

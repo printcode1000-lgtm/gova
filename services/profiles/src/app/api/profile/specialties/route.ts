@@ -1,4 +1,4 @@
-import { profileService } from '@/features/profile/services/profile-service.bootstrap.server';
+import { assertProfilesEnv, createProfilesRuntime } from '@asol/profiles-composition';
 import { corsHeaders, preflight, profileErrorResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
@@ -7,8 +7,14 @@ export const dynamic = 'force-dynamic';
 /** Profile specialties. Writes stay on the main app. */
 export async function GET(request: Request): Promise<Response> {
   try {
+    // Layer 2. The composition is the only thing that knows which capabilities this
+    // account owns. Built per request, never at module scope: module scope runs during
+    // `next build`, where no account credential exists.
+    const { profiles } = createProfilesRuntime();
+    assertProfilesEnv();
+
     const { searchParams } = new URL(request.url);
-    const data = await profileService.getSpecialties(searchParams.get('uid') ?? '');
+    const data = await profiles.getSpecialties(searchParams.get('uid') ?? '');
     return Response.json(data, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return profileErrorResponse(request, error);
