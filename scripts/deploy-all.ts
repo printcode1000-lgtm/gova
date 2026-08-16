@@ -225,6 +225,11 @@ const PREFLIGHT_STEPS = [
   "architecture:check",
   "test",
   "build:static",
+  // Added after every one of these passed and all four service accounts still failed
+  // their remote build. Each service is uploaded alone and installed against its own
+  // `package.json`; nothing above exercises that. This is the only step that builds a
+  // service the way Vercel does.
+  "services:build",
 ] as const;
 
 async function preflight(flags: DeployFlags): Promise<void> {

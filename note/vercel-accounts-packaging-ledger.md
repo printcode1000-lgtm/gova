@@ -60,6 +60,52 @@ exit 1 with `zod (first seen in schemas.ts)`. Restored, and all four services bu
 | orders | OK |
 | profiles | OK |
 
+## Phase R7 — closing both open gaps
+
+**Gap 1 — the preflight did not build the services.** `scripts/build-all-services.ts` now refreshes
+the mirrors and runs `next build` in all four service folders, wired into `PREFLIGHT_STEPS` as
+`services:build`. It is the only check that exercises what Vercel actually runs: each folder is
+uploaded alone and installed against its own `package.json`, and nothing at the repository root sees
+that difference. All three earlier failures would have been caught here, before the push.
+
+**Gap 2 — layer 2 was not load-bearing, and could not safely be made so.** Every `*-composition`
+imported `@asol/vercel-deploy-core` — `child_process`, `fs`, and the Vercel token handling — to read
+one string, `DECLARATION.project`. Wiring a route through a composition would therefore have mirrored
+the entire deploy engine into that deployment. The gap was not laziness; it was blocked by a layering
+mistake: **layer 3 had been merged into layer 1**.
+
+Fixed in order:
+
+1. **`@asol/account-declarations` extracted** — pure data, and `src/tests/index.test.ts` enforces
+   that literally: no import may leave the package, and no node capability may be referenced. It also
+   pins the env-key counts (11 / 8 / 18 / 21), asserts no declaration names another account, and
+   fails if any composition imports the deploy engine again. Demonstrated red: pointing
+   `orders-composition` back at `@asol/vercel-deploy-core` fails the suite with the reason.
+2. **Per-account doors** (`@asol/account-declarations/orders`, …). The first wiring attempt mirrored
+   all five declarations into `services/orders`, so the orders deployment carried the products
+   account's `PRODUCT_R2_*` key names — a Rule 0 violation, caught by the C1 test rather than by
+   review. With per-account doors the orders mirror carries `accounts/orders.ts` and nothing else.
+3. **The walker now also walks the service's own `src/`.** Those files are uploaded verbatim and were
+   therefore never walked — a blind spot in which a route importing `@asol/*` produced a green sync
+   and a failed remote build. They are walked for what they reach and still never copied.
+4. **`services/orders/src/app/api/orders/route.ts` now goes through `createOrdersRuntime()`.** Layer
+   2 is load-bearing for the first time.
+
+Two real bugs surfaced only because the route was finally wired:
+
+- The composition validated `MARKETPLACE_ORDERS_DATABASE_URL` and `TURSO_DATABASE_URL` — **neither of
+  which this account holds**. Its keys are `ORDERS_CORE_DATABASE_*`. The D5 test passed because it
+  pinned the same invented name. Validation now reads `ORDERS_DECLARATION.requiredEnv`, so the check
+  cannot disagree with what the deploy pushes, and the test asserts against the declaration too.
+- The runtime was built at module scope, which runs during `next build` where no account credential
+  exists. It is now built per request.
+
+### Remaining, and stated plainly
+
+Only `orders` is wired. `products`, `profiles` and `notifications` still have compositions that are
+built and tested but not on the request path. The blocker is gone and the pattern is proven end to
+end; each remaining account is the same four steps, and each deserves its own verified deploy.
+
 ## Note on the first five rows
 
 The `PASSED` claims for phases 3, 4 and 5 were disproved by an independent review: layer 2 was a set

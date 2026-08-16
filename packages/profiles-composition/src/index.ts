@@ -1,4 +1,4 @@
-import { PROFILES_DECLARATION } from '@asol/vercel-deploy-core';
+import { PROFILES_DECLARATION } from '@asol/account-declarations/profiles';
 import * as serverEnv from '@/core/config/server-env';
 import * as profileBootstrap from '@/features/profile/services/profile-service.bootstrap.server';
 

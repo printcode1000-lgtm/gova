@@ -1,6 +1,6 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import path from 'path';
-import { PROFILES_DECLARATION } from '@asol/vercel-deploy-core';
+import { PROFILES_DECLARATION } from '@asol/account-declarations/profiles';
 import { createProfilesRuntime, type ProfilesRuntime } from '../index';
 
 function assert(condition: boolean, message: string): void {

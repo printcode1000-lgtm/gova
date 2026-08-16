@@ -1,4 +1,4 @@
-import { NOTIFICATIONS_DECLARATION } from '@asol/vercel-deploy-core';
+import { NOTIFICATIONS_DECLARATION } from '@asol/account-declarations/notifications';
 import * as serverEnv from '@/core/config/server-env';
 import * as notificationRuntime from '@/features/notifications/service-runtime';
 

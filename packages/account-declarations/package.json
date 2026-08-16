@@ -1,0 +1,37 @@
+{
+  "name": "@asol/account-declarations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./gova": {
+      "types": "./src/accounts/gova.ts",
+      "default": "./src/accounts/gova.ts"
+    },
+    "./notifications": {
+      "types": "./src/accounts/notifications.ts",
+      "default": "./src/accounts/notifications.ts"
+    },
+    "./products": {
+      "types": "./src/accounts/products.ts",
+      "default": "./src/accounts/products.ts"
+    },
+    "./orders": {
+      "types": "./src/accounts/orders.ts",
+      "default": "./src/accounts/orders.ts"
+    },
+    "./profiles": {
+      "types": "./src/accounts/profiles.ts",
+      "default": "./src/accounts/profiles.ts"
+    }
+  },
+  "scripts": {
+    "test": "npx tsx src/tests/index.test.ts"
+  }
+}

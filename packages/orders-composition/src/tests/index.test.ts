@@ -1,7 +1,7 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import path from 'path';
-import { ORDERS_DECLARATION } from '@asol/vercel-deploy-core';
-import { createOrdersRuntime, type OrdersRuntime } from '../index';
+import { ORDERS_DECLARATION } from '@asol/account-declarations/orders';
+import { assertOrdersEnv, createOrdersRuntime, type OrdersRuntime } from '../index';
 
 function assert(condition: boolean, message: string): void {
   if (!condition) throw new Error(`Assertion failed: ${message}`);
@@ -63,25 +63,33 @@ function runTests(): void {
   checkOrdersTransitiveGraph(ordersServiceDir);
   console.log('  ✔ C1: Orders transitive graph contains zero image-storage capability code.');
 
-  // Test 3: D5 Missing required database config throws in production
-  const origEnv = process.env.NODE_ENV;
+  // Test 3: D5 — a missing required env key fails before any database work.
+  //
+  // Asserted against ORDERS_DECLARATION.requiredEnv rather than a hard-coded name. An
+  // earlier version of this composition checked MARKETPLACE_ORDERS_DATABASE_URL and
+  // TURSO_DATABASE_URL — neither of which this account holds — and the test passed
+  // because it pinned that same invented name. A test and the code being wrong together
+  // is the failure mode this assertion is shaped to avoid.
+  let threw = false;
   try {
-    process.env.NODE_ENV = 'production';
-    let threw = false;
-    try {
-      createOrdersRuntime({ databaseUrl: '' });
-    } catch (e) {
-      threw = true;
+    assertOrdersEnv({});
+  } catch (error) {
+    threw = true;
+    for (const key of ORDERS_DECLARATION.requiredEnv) {
       assert(
-        e instanceof Error && e.message.includes('Missing required database configuration'),
-        'D5: Error message explicitly identifies missing required database configuration',
+        error instanceof Error && error.message.includes(key),
+        `D5: error names the missing required key ${key}`,
       );
     }
-    assert(threw, 'D5: Missing required database key exits non-zero / throws in production before network call');
-    console.log('  ✔ D5: Missing required database key exits before network call.');
-  } finally {
-    process.env.NODE_ENV = origEnv;
   }
+  assert(threw, 'D5: an empty environment throws before any database work');
+
+  // And it must pass once the declared keys are present — a validator that always throws
+  // would satisfy the assertion above while breaking the deployment.
+  const complete: NodeJS.ProcessEnv = {};
+  for (const key of ORDERS_DECLARATION.requiredEnv) complete[key] = 'set-for-test';
+  assertOrdersEnv(complete);
+  console.log('  ✔ D5: missing required keys throw and name themselves; complete env passes.');
 
   console.log('✅ @asol/orders-composition tests passed!\n');
 }

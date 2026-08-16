@@ -1,6 +1,6 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import path from 'path';
-import { NOTIFICATIONS_DECLARATION } from '@asol/vercel-deploy-core';
+import { NOTIFICATIONS_DECLARATION } from '@asol/account-declarations/notifications';
 import { createNotificationsRuntime, type NotificationsRuntime } from '../index';
 
 function assert(condition: boolean, message: string): void {

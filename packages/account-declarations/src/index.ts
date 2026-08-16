@@ -1,3 +1,19 @@
+/**
+ * Layer 3 — the five Vercel account declarations. Pure data, and nothing else.
+ *
+ * This package exists separately from `@asol/vercel-deploy-core` because the two are
+ * different layers with different reasons to change: a declaration changes when an
+ * account's environment does, the deploy engine changes when Vercel's API does.
+ *
+ * The separation is also load-bearing rather than tidy. The engine imports
+ * `child_process`, `fs` and the Vercel token handling. While the four
+ * `*-composition` packages read their account's name from the engine's barrel, wiring a
+ * service route through a composition would have mirrored the entire deploy engine —
+ * credential handling included — into that service's deployment, to obtain one string.
+ *
+ * Nothing in this file may import anything. That is the whole contract, and
+ * `src/tests/index.test.ts` enforces it.
+ */
 import { GOVA_DECLARATION } from './accounts/gova';
 import { NOTIFICATIONS_DECLARATION } from './accounts/notifications';
 import { PRODUCTS_DECLARATION } from './accounts/products';

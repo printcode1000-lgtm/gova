@@ -1,13 +1,15 @@
 import { execFileSync } from 'child_process';
 import path from 'path';
-import type { AccountDeclaration } from './declarations';
+import type { AccountDeclaration } from '@asol/account-declarations';
 import {
   printDeploymentReport,
   vercelDeploymentMetadata,
   waitForVercelProductionDeployment,
 } from './vercel-deployment-monitor';
 
-export * from './declarations';
+// Re-exported so deploy and sync scripts keep one import. The declarations themselves
+// live in their own package: see @asol/account-declarations for why that matters.
+export * from '@asol/account-declarations';
 export * from './vercel-deployment-monitor';
 
 export interface VercelHeaders {

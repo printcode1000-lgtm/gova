@@ -1,6 +1,6 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import path from 'path';
-import { PRODUCTS_DECLARATION } from '@asol/vercel-deploy-core';
+import { PRODUCTS_DECLARATION } from '@asol/account-declarations/products';
 import { createProductsRuntime, type ProductsRuntime } from '../index';
 
 function assert(condition: boolean, message: string): void {

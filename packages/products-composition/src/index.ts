@@ -1,4 +1,4 @@
-import { PRODUCTS_DECLARATION } from '@asol/vercel-deploy-core';
+import { PRODUCTS_DECLARATION } from '@asol/account-declarations/products';
 import * as serverEnv from '@/core/config/server-env';
 import * as productService from '@/features/product/services/product-service.server';
 import * as productReviewService from '@/features/product/services/product-review-service.server';

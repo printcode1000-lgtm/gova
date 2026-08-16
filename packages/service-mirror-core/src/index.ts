@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'fs';
 import path from 'path';
 import { builtinModules } from 'module';
 
@@ -108,12 +108,26 @@ export function resolveModule(
   return null;
 }
 
+/** Every `.ts`/`.tsx` file under the service's own, hand-written `src/`. */
+export function collectServiceSourceFiles(serviceSrc: string): string[] {
+  if (!existsSync(serviceSrc)) return [];
+  const out: string[] = [];
+  for (const entry of readdirSync(serviceSrc, { withFileTypes: true })) {
+    const full = path.join(serviceSrc, entry.name);
+    if (entry.isDirectory()) out.push(...collectServiceSourceFiles(full));
+    else if (/\.tsx?$/.test(entry.name)) out.push(full);
+  }
+  return out;
+}
+
 export function walkGraph(
   entryPoints: readonly string[],
   root: string,
   sourceRoot: string,
   publicRoot: string,
   packagesRoot?: string,
+  serviceOwnFiles: readonly string[] = [],
+  serviceSrcRoot?: string,
 ): Set<string> {
   const visited = new Set<string>();
   const queue: string[] = [];
@@ -125,6 +139,10 @@ export function walkGraph(
     }
     queue.push(absolute);
   }
+
+  // Walked for what they reach, never copied: they are already inside the uploaded folder.
+  const serviceOwn = new Set(serviceOwnFiles);
+  queue.push(...serviceOwnFiles);
 
   while (queue.length > 0) {
     const current = queue.pop()!;
@@ -140,7 +158,9 @@ export function walkGraph(
       const insideAllowedRoot =
         resolved.startsWith(sourceRoot) ||
         resolved.startsWith(publicRoot) ||
-        (packagesRoot !== undefined && resolved.startsWith(packagesRoot));
+        (packagesRoot !== undefined && resolved.startsWith(packagesRoot)) ||
+        // The service's own src/ — reachable from its routes, already inside the upload.
+        (serviceSrcRoot !== undefined && resolved.startsWith(serviceSrcRoot));
       if (!insideAllowedRoot) {
         throw new Error(
           `${path.relative(root, current)} imports outside src/, public/ and packages/: ${specifier}`,
@@ -150,6 +170,7 @@ export function walkGraph(
     }
   }
 
+  for (const own of serviceOwn) visited.delete(own);
   return visited;
 }
 
@@ -321,7 +342,23 @@ export function syncServiceMirror(options: ServiceMirrorOptions): { fileCount: n
     assetCount++;
   }
 
-  const files = [...walkGraph(options.entryPoints, root, sourceRoot, publicRoot, packagesRoot)].sort();
+  // The service's own `src/` is uploaded verbatim, so it was never mirrored — and was
+  // therefore never walked either. That blind spot meant a route importing `@asol/*`
+  // produced a green sync and a failed remote build. Its route files are entry points
+  // too: they are not copied, but what they reach must be.
+  const serviceOwnFiles = collectServiceSourceFiles(path.join(serviceDir, 'src'));
+
+  const files = [
+    ...walkGraph(
+      options.entryPoints,
+      root,
+      sourceRoot,
+      publicRoot,
+      packagesRoot,
+      serviceOwnFiles,
+      path.join(serviceDir, 'src'),
+    ),
+  ].sort();
   const mirroredPackages = new Set<string>();
   for (const file of files) {
     let destination: string;

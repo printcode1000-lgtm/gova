@@ -4,6 +4,7 @@
 packages/native-core/**             @OWNER
 packages/ota-core/**                @OWNER
 packages/storage-core/**            @OWNER
+packages/account-declarations/**      @OWNER
 packages/vercel-deploy-core/**     @OWNER
 packages/service-mirror-core/**    @OWNER
 packages/account-bridge/**          @OWNER

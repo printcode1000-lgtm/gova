@@ -1,5 +1,4 @@
-import { getMarketplaceOrderQueries } from '@/modules/data-access/domains/marketplace-orders/index.server';
-import { actorFromInput } from '@/modules/marketplace-orders/domain/actor-from-input';
+import { assertOrdersEnv, createOrdersRuntime } from '@asol/orders-composition';
 import { corsHeaders, orderErrorResponse, preflight } from '../../lib/http';
 
 export const runtime = 'nodejs';
@@ -19,8 +18,20 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: Request): Promise<Response> {
   try {
+    /**
+     * Layer 2. The composition is the only thing that knows which capabilities this
+     * account owns, and it is built so this route cannot reach one the account has no
+     * credentials for.
+     *
+     * Built per request, not at module scope: module scope runs during `next build`,
+     * where no account credential exists, so an eager build turned a missing runtime
+     * secret into a failed deployment.
+     */
+    const orders = createOrdersRuntime();
+    assertOrdersEnv();
+
     const url = new URL(request.url);
-    const actor = actorFromInput(
+    const actor = orders.actorFromInput(
       {
         uid: url.searchParams.get('uid') ?? '',
         phone: url.searchParams.get('phone') ?? '',
@@ -28,7 +39,7 @@ export async function GET(request: Request): Promise<Response> {
       },
       'buyer',
     );
-    const data = await getMarketplaceOrderQueries().listForActor(actor);
+    const data = await orders.listOrdersForActor(actor);
     return Response.json(data, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return orderErrorResponse(request, error);
