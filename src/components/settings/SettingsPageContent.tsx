@@ -14,8 +14,15 @@ import {
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { useOtaUpdate } from "@asol/ota-core";
+import { registerOtaCorePorts } from "@/features/ota/ota-core-ports";
 import { publicEnv } from "@/core/config/public-env";
 import { notifications } from "@/features/notifications";
+
+// `ota-core` names ports; the application supplies them. Registered at module load so
+// the hook below has telemetry and the super-admin predicate before its first render.
+// Unregistered is safe rather than fatal — telemetry no-ops and the predicate fails
+// closed — which is why this is a one-line seam and not a bootstrap requirement.
+registerOtaCorePorts();
 
 export function SettingsPageContent() {
   const { t } = useTranslation();

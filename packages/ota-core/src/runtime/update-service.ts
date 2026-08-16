@@ -1,5 +1,5 @@
 import { publicEnv } from "@/core/config/public-env";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
+import { otaIdentity } from "../ports";
 import {
   NativeCore,
   capabilities,
@@ -1122,7 +1122,7 @@ export const otaUpdateService = {
   ): Promise<DownloadedOtaUpdate | null> {
     const state = await readOtaState();
     const due =
-      (identity ? isSuperAdminIdentity(identity.uid, identity.phone) : false) ||
+      (identity ? otaIdentity().isSuperAdmin(identity.uid, identity.phone) : false) ||
       isDailyOtaCheckDue(state.lastSuccessfulCheckAt, now);
     const clamped = clampFutureOtaCheckTimestamp(state.lastSuccessfulCheckAt, now);
     if (clamped !== state.lastSuccessfulCheckAt) {

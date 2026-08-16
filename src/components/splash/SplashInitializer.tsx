@@ -11,6 +11,14 @@ import { runInitialization } from '@/lib/initialization/initialization';
 import { otaUpdateService } from '@asol/ota-core';
 
 import ProgressIndicator from './ProgressIndicator';
+import { registerOtaCorePorts } from "@/features/ota/ota-core-ports";
+
+// `ota-core` names ports; the application supplies them. Registered at module load in
+// every module that touches the OTA runtime, because there is no single client
+// bootstrap they all pass through: the splash prepares an update long before the
+// settings page mounts. `configureOtaCore` merges and is idempotent, so registering
+// more than once is free. A contract test enforces that this stays true.
+registerOtaCorePorts();
 
 const SPLASH_NAV_TOGGLE_KEY = 'asol-dev-splash-nav-toggle';
 

@@ -1,4 +1,5 @@
 import { runAppEdgeTests } from './contract/app-edges.test';
+import { runPortRegistrationTests } from './contract/port-registration.test';
 import { runVersionOrderingTests } from "./version-ordering.test";
 import { runContentVersionTests } from "./content-version.test";
 import { runCanonicalOrderTests } from "./canonical-order.test";
@@ -52,6 +53,7 @@ async function main(): Promise<void> {
   await runRuntimeSealingTests();
   await runPublishingExportsTests();
   await runAppEdgeTests();
+  await runPortRegistrationTests();
 
   console.log("\n✅ All @asol/ota-core test suites passed!\n");
 }

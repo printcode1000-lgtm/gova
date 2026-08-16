@@ -7,8 +7,7 @@ import {
   ASOL_DB_STORES,
 } from "@/modules/data-access/browser/asol-db";
 import { getPlatformName } from '@asol/native-core';
-import type { PersistentSystemLogInput } from "@/features/system-logs/entities/persistent-system-log.entity";
-import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
+import { otaTelemetry, type OtaLogEntry } from "../ports";
 
 export type OtaOutcome =
   | "check_performed"
@@ -55,7 +54,7 @@ async function readQueue(): Promise<OtaOutcomeQueue> {
   }
 }
 
-function persistentInput(event: QueuedOutcome): PersistentSystemLogInput {
+function persistentInput(event: QueuedOutcome): OtaLogEntry {
   const failure = event.outcome.endsWith("failed");
   return {
     level: failure ? "warning" : "normal",
@@ -76,7 +75,7 @@ async function enqueueAndFlush(event: QueuedOutcome): Promise<void> {
   queue.pending.push(event);
   await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, QUEUE_KEY, queue);
   try {
-    await persistentSystemLogApiService.ingestBatch(queue.pending.map(persistentInput));
+    await otaTelemetry().ingestBatch(queue.pending.map(persistentInput));
     queue.sent = [...queue.sent, ...queue.pending.map((item) => item.key)].slice(-500);
     queue.pending = [];
     await asolDbSet(ASOL_DB_STORES.APP_SETTINGS, QUEUE_KEY, queue);

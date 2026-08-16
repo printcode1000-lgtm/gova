@@ -60,7 +60,23 @@ interface ProtectionPayload {
   restrictions: null;
   allow_force_pushes: boolean;
   allow_deletions: boolean;
+  required_linear_history: boolean;
+  required_conversation_resolution: boolean;
 }
+
+/**
+ * Two settings are deliberately absent, and both would look like improvements.
+ *
+ * `required_signatures` — `deploy:all` creates unsigned commits. Requiring signatures
+ * would reject the only supported release path, and the first sign of it would be a
+ * failed production deploy.
+ *
+ * `enforce_admins: true` — same reason, more directly: it would apply the pull-request
+ * requirement to the owner's own direct pushes, which is exactly what `deploy:all` does.
+ *
+ * A protection rule that blocks releases is not stricter, it is broken. Both belong to a
+ * future where releases go through pull requests.
+ */
 
 function buildPayload(): ProtectionPayload {
   return {
@@ -83,6 +99,12 @@ function buildPayload(): ProtectionPayload {
     restrictions: null,
     allow_force_pushes: false,
     allow_deletions: false,
+    // Both are safe for the release path: they constrain how a *pull request* may land,
+    // and `deploy:all` pushes a single commit directly. They are also the strongest
+    // guarantees available on a single-owner repository, where no second person exists to
+    // satisfy a review requirement.
+    required_linear_history: true,
+    required_conversation_resolution: true,
   };
 }
 
@@ -160,14 +182,34 @@ async function main(): Promise<void> {
     allow_force_pushes?: { enabled: boolean };
     allow_deletions?: { enabled: boolean };
     required_pull_request_reviews?: { require_code_owner_reviews?: boolean };
+    required_status_checks?: { contexts?: string[] };
+    required_linear_history?: { enabled: boolean };
+    required_conversation_resolution?: { enabled: boolean };
   };
 
-  console.log(`  force pushes blocked : ${live.allow_force_pushes?.enabled === false}`);
-  console.log(`  deletions blocked    : ${live.allow_deletions?.enabled === false}`);
+  console.log(`  force pushes blocked   : ${live.allow_force_pushes?.enabled === false}`);
+  console.log(`  deletions blocked      : ${live.allow_deletions?.enabled === false}`);
+  console.log(`  linear history         : ${live.required_linear_history?.enabled === true}`);
   console.log(
-    `  code-owner review    : ${live.required_pull_request_reviews?.require_code_owner_reviews === true}`,
+    `  conversations resolved : ${live.required_conversation_resolution?.enabled === true}`,
   );
-  console.log('\nRule 6 is now enforcement rather than documentation.');
+  console.log(
+    `  required checks        : ${JSON.stringify(live.required_status_checks?.contexts ?? [])}`,
+  );
+  console.log(
+    `  code-owner review      : ${live.required_pull_request_reviews?.require_code_owner_reviews === true}`,
+  );
+
+  if (!WITH_CODEOWNER_REVIEW) {
+    console.log(
+      '\nEverything enforceable without a second person is on. Code-owner review is not a\n' +
+        'permissions problem and no token can grant it: GitHub refuses a review from the\n' +
+        'author, and this repository has exactly one collaborator. It needs a second\n' +
+        'GitHub account with write access (then add it to CODEOWNERS), or moving the\n' +
+        'repository into an organisation so a team can own `packages/**`.',
+    );
+  }
+  console.log('\nRule 6 is enforcement rather than documentation.');
 }
 
 main().catch((error) => {

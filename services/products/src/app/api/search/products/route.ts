@@ -1,8 +1,9 @@
-import type {
-  ProductSearchFilters,
-  ProductSearchRequest,
-} from '@/features/product-search/entities/product-search.types';
-import { assertProductsEnv, createProductsRuntime } from '@asol/products-composition';
+import {
+  assertProductsEnv,
+  createProductsRuntime,
+  type ProductSearchFilters,
+  type ProductSearchRequest,
+} from '@asol/products-composition';
 import { corsHeaders, preflight, searchErrorResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';

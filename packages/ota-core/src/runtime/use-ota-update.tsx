@@ -17,7 +17,7 @@ import {
   otaUpdateService,
 } from "./update-service";
 import type { OtaDownloadProgress, OtaStoredState, OtaIdentity } from "../domain/release/manifest-types";
-import { reportPreAuthFailure } from "@/features/system-logs/pre-auth-failure-reporter";
+import { otaTelemetry } from "../ports";
 
 export interface OtaUpdateContextValue {
   state: OtaStoredState;
@@ -62,9 +62,9 @@ export function OtaUpdateProvider({
       await otaUpdateService.checkDailyAndDownload(report, identity);
       await sync();
     } catch (failure) {
-      reportPreAuthFailure("ota-daily-check", failure, {}, "warn");
+      otaTelemetry().reportFailure("ota-daily-check", failure, {}, "warn");
       await sync().catch((syncFailure) => {
-        reportPreAuthFailure("ota-state-sync-after-failure", syncFailure);
+        otaTelemetry().reportFailure("ota-state-sync-after-failure", syncFailure);
       });
     } finally {
       setBusy(false);
@@ -80,10 +80,10 @@ export function OtaUpdateProvider({
     window.addEventListener(OTA_STATE_EVENT, handleState);
     document.addEventListener("visibilitychange", handleVisibility);
     void sync().catch((failure) => {
-      reportPreAuthFailure("ota-initial-state-sync", failure);
+      otaTelemetry().reportFailure("ota-initial-state-sync", failure);
     });
     void runDaily().catch((failure) => {
-      reportPreAuthFailure("ota-initial-daily-check", failure);
+      otaTelemetry().reportFailure("ota-initial-daily-check", failure);
     });
     return () => {
       window.removeEventListener(OTA_STATE_EVENT, handleState);
@@ -98,11 +98,11 @@ export function OtaUpdateProvider({
     try {
       await otaUpdateService.checkAndDownload(report, identity);
     } catch (failure) {
-      reportPreAuthFailure("ota-manual-check", failure);
+      otaTelemetry().reportFailure("ota-manual-check", failure);
       setError(failure instanceof Error ? failure.message : String(failure));
     } finally {
       await sync().catch((failure) => {
-        reportPreAuthFailure("ota-state-sync-after-manual-check", failure);
+        otaTelemetry().reportFailure("ota-state-sync-after-manual-check", failure);
       });
       setBusy(false);
     }
@@ -117,9 +117,9 @@ export function OtaUpdateProvider({
       window.location.reload();
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : String(failure));
-      reportPreAuthFailure("ota-apply-now", failure);
+      otaTelemetry().reportFailure("ota-apply-now", failure);
       await sync().catch((syncFailure) => {
-        reportPreAuthFailure("ota-state-sync-after-apply", syncFailure);
+        otaTelemetry().reportFailure("ota-state-sync-after-apply", syncFailure);
       });
       setBusy(false);
     }

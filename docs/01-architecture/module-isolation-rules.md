@@ -97,13 +97,14 @@ Eleven sealed packages, arranged in four layers. The layering is not decoration 
 | 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 6 | CODEOWNERS + protection | ✅ partial | ✅ partial | ✅ partial | ✅ partial | ✅ partial | ✅ partial | ✅ partial | ✅ partial |
-| 7 | Independent package | ✅ | ⚠️ 10 app edges | ⚠️ 1 app edge | ✅ zero imports | ✅ | ✅ | ⚠️ 3 app edges | ⚠️ app edges |
+| 6 | CODEOWNERS + protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 7 | Independent package | ✅ | ✅ 5 edges, all designated | ⚠️ 1 app edge | ✅ zero imports | ✅ | ✅ | ✅ 3 edges, pinned | ⚠️ app edges |
 | 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-Rule 6 is "partial" for every package for the same two reasons, neither of which is per-package: no
-second repository member, and no required status check. Rule 7's warnings are the app edges described
-under [Standing weakness: rule 7 runs both ways](#standing-weakness-rule-7-runs-both-ways).
+Rule 6 is enforced repository-wide: branch protection blocks force-pushes and deletions, requires a
+pull request, and requires the `verify` status check. Only code-owner review remains off, and that is
+blocked by repository membership rather than by code — see below. Rule 7's warnings are the app edges described
+under [Rule 7 runs both ways](#rule-7-runs-both-ways).
 
 ### The four layers
 
@@ -206,13 +207,44 @@ weeks because the real cause was stored in the error's `details` and never print
 does not explain itself costs more than the bug.** `packages/ota-core/scripts/ota-publish.ts` now
 prints the cause and its stack.
 
-## Standing weakness: rule 7 runs both ways
+## Rule 7 runs both ways
 
 Rule 7 says other modules know nothing of a package's internals. The reverse — a package knowing the
-application — is equally binding and is where this repository is weakest. `ota-core` reaches into
-`@/` in ten distinct modules (database, auth, system logs, API client).
+application — is equally binding.
 
-Inverting those dependencies is real work. In the meantime the edges are **budgeted, not fixed**:
-`packages/ota-core/src/tests/contract/app-edges.test.ts` lists every one and fails if a new edge
-appears *or* if a listed one disappears without the list being updated. `@asol/account-bridge` has
-the same guard (T1b) over three edges. **These lists should only ever shrink.**
+`ota-core` reached into `@/` in ten places. **Five were inverted**: it now declares ports in
+`packages/ota-core/src/ports/` for system-log telemetry and the super-admin predicate, and the
+application registers implementations through `src/features/ota/ota-core-ports.ts` (browser) and
+`src/features/ota/server.ts` (server). Those two files are the seam, and they are the only modules
+allowed to know both sides.
+
+The inversion is safe to ship to a live OTA runtime because **every port defaults safely**:
+telemetry no-ops and the identity predicate returns `false`. A forgotten registration costs log
+lines or admin access — never updates. That property is asserted by the contract test, not assumed.
+
+### The five edges that remain, and why
+
+| Edge | Why it is layering rather than a violation |
+| :-- | :-- |
+| `@/modules/data-access/browser/asol-db` | The central data-access module is where database code is required to live |
+| `@/modules/data-access/domains/ota/index.server` | Same layer. Moving it into the package would break `ALLOWED_DRIZZLE_ORM_FILES_PATTERN` — trading one edge for a broken rule |
+| `@/core/api` | The designated HTTP transport, itself governed by `ALLOWED_FETCH_FILES` |
+| `@/core/config/public-env` | A config leaf |
+| `@/features/categories` | Build-time only, in `publishing/build/out-public-assets.ts` |
+
+`@/features/categories` is the judgement call. It could be a port, but a port needs a safe default,
+and the safe default for build-time asset generation is an **empty** asset set — a silently wrong
+build artifact. An import that fails loudly beats a default that fails quietly.
+
+**Driving the count to zero was not the goal; naming which edges are real is.** Four of the original
+ten were never violations, and treating them as such would have produced worse architecture.
+
+### The budget
+
+`packages/ota-core/src/tests/contract/app-edges.test.ts` pins the five remaining edges, and
+separately names the five that were inverted so re-importing one fails with *"this was deliberately
+inverted into a port"* rather than a generic message. It also fails if a listed edge disappears
+without the list being updated, so the list cannot rot into decoration. `@asol/account-bridge` has
+the same guard (T1b) over three edges.
+
+**These lists should only ever shrink.**

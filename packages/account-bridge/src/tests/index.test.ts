@@ -39,21 +39,100 @@ function runRule0Tests(): void {
   const packageDir = path.join(process.cwd(), 'packages/account-bridge');
 
   // ---------------------------------------------------------------- T1: Device-only module graph
+  //
+  // A real transitive walk, not a scan of this package's own files.
+  //
+  // The earlier version read only `packages/account-bridge/src/**` and called itself a
+  // module-graph test. It could not see through `@asol/native-core` or `@/core/config/*`,
+  // so a node builtin one hop away would have passed silently — and this channel imports
+  // both. Rule 0 is about what the graph *reaches*, so the test has to follow it.
   const bridgeFiles = getAllFiles(path.join(packageDir, 'src'), ['.ts', '.js']).filter(
     (f) => !f.replace(/\\/g, '/').includes('/tests/'),
   );
   const forbiddenImports = ['node:', 'fs', 'path', 'child_process', '@aws-sdk', 'google-auth-library', '@libsql'];
-  for (const file of bridgeFiles) {
-    const content = readFileSync(file, 'utf-8');
-    for (const forbidden of forbiddenImports) {
-      assert(
-        !content.includes(`from '${forbidden}`) && !content.includes(`from "${forbidden}`),
-        `T1: ${file} imports forbidden module ${forbidden}`,
-      );
+  const repoRoot = process.cwd();
+
+  /** Resolves a specifier the way the bundler will: workspace doors, `@/`, and relative. */
+  function resolveSpecifier(specifier: string, importer: string): string | null {
+    if (specifier.startsWith('@asol/')) {
+      const name = specifier.slice('@asol/'.length).split('/')[0];
+      const manifestPath = path.join(repoRoot, 'packages', name, 'package.json');
+      if (!existsSync(manifestPath)) return null;
+      const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8')) as {
+        exports?: Record<string, string | { default?: string; types?: string }>;
+      };
+      // The scope separator is a slash too: `@asol/native-core` has no subpath, and
+      // treating it as one produced the door `"./"`, which matches nothing. The walk then
+      // resolved to null and silently stopped at this package's own edge — a graph test
+      // that had quietly stopped walking the graph.
+      const withoutScope = specifier.slice('@asol/'.length);
+      const slash = withoutScope.indexOf('/');
+      const door = slash === -1 ? '.' : `./${withoutScope.slice(slash + 1)}`;
+      const entry = manifest.exports?.[door];
+      const target = typeof entry === 'string' ? entry : entry?.default ?? entry?.types;
+      return target ? path.join(repoRoot, 'packages', name, target) : null;
     }
-    assert(!file.endsWith('.server.ts'), `T1: ${file} is a server-only module`);
+    if (!specifier.startsWith('.') && !specifier.startsWith('@/')) return null;
+    const base = specifier.startsWith('@/')
+      ? path.join(repoRoot, 'src', specifier.slice(2))
+      : path.resolve(path.dirname(importer), specifier);
+    for (const candidate of [base, `${base}.ts`, `${base}.tsx`, path.join(base, 'index.ts')]) {
+      if (existsSync(candidate)) return candidate;
+    }
+    return null;
   }
-  console.log('  ✔ T1: Device-only module graph verified (no node/server imports).');
+
+  const visited = new Set<string>();
+  const queue = [...bridgeFiles];
+  while (queue.length > 0) {
+    const file = queue.pop()!;
+    if (visited.has(file)) continue;
+    visited.add(file);
+
+    assert(
+      !file.endsWith('.server.ts'),
+      `T1: ${path.relative(repoRoot, file)} is a server-only module, reached from the channel`,
+    );
+
+    let content: string;
+    try {
+      content = readFileSync(file, 'utf-8');
+    } catch {
+      continue;
+    }
+
+    for (const match of content.matchAll(/\bfrom\s+['"]([^'"]+)['"]/g)) {
+      const specifier = match[1];
+      for (const forbidden of forbiddenImports) {
+        assert(
+          !(specifier === forbidden || specifier.startsWith(forbidden)),
+          `T1: ${path.relative(repoRoot, file)} reaches forbidden module "${specifier}". ` +
+            `The channel runs on the device; nothing in its graph may need a server.`,
+        );
+      }
+      const resolved = resolveSpecifier(specifier, file);
+      if (resolved && !visited.has(resolved)) queue.push(resolved);
+    }
+  }
+  // A size check alone was too weak: the walk stopped after four hops and still satisfied
+  // `visited.size > bridgeFiles.length`. Assert on the specific thing that must be
+  // reachable — the workspace package the channel imports — so a resolution bug fails
+  // instead of shrinking the graph quietly.
+  const reachedWorkspacePackage = [...visited].some((file) =>
+    file.replace(/\\/g, '/').includes('/packages/native-core/'),
+  );
+  assert(
+    reachedWorkspacePackage,
+    'T1: the walk never reached @asol/native-core, which this channel imports. ' +
+      'Specifier resolution is broken, and a graph test that walks nothing passes for ' +
+      'the wrong reason.',
+  );
+  assert(
+    visited.size > 50,
+    `T1: only ${visited.size} files reachable — far below the real graph. The walk is ` +
+      'terminating early.',
+  );
+  console.log(`  ✔ T1: device-only graph verified across ${visited.size} reachable files.`);
 
   // ------------------------------------------------- T1b: the edges into the app are pinned
   //

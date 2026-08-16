@@ -7,6 +7,15 @@ import { getEnabledProductSearchFields } from '@/features/product-search/service
 import { categoryService } from '@/features/categories';
 import { pharmacyProfileCatalogService } from '@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server';
 
+/**
+ * Re-exported so a route has exactly one door, types included. A type-only import costs
+ * nothing at runtime, but two doors is still two places to change when a shape moves.
+ */
+export type {
+  ProductSearchFilters,
+  ProductSearchRequest,
+} from '@/features/product-search/entities/product-search.types';
+
 export interface ProductsRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */
   env?: NodeJS.ProcessEnv;

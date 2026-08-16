@@ -6,14 +6,13 @@ import { asolApi } from "@/core/api";
 // its own code, and the re-export that made it work is what leaked `@asol/ota-core/publishing`
 // into all four service mirrors and broke their builds.
 import { getOtaApprovalServerConfig } from "../publishing/config/ota-r2-target";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import { otaReleaseRepository } from "@/modules/data-access/domains/ota/index.server";
 import { compareOtaManifests } from "../domain/release/release-diff";
 import { compareOtaCanonicalStrings } from "../domain/release/canonical-order";
 import { isOtaRolloutEligible } from "../domain/release/rollout";
 import { isOtaVersion } from "../domain/versioning/version-ordering";
 import { summarizeOtaAdoption } from "../domain/release/adoption";
-import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
+import { otaIdentity, otaTelemetry } from "../ports";
 import {
   canonicalOtaManifestPayload,
   legacyOtaManifestPayload,
@@ -108,7 +107,7 @@ function adminManifestIssue(error: unknown): OtaAdminDashboard["current"]["issue
 }
 
 function assertAdmin(identity: OtaIdentity): void {
-  if (!isSuperAdminIdentity(identity.uid, identity.phone))
+  if (!otaIdentity().isSuperAdmin(identity.uid, identity.phone))
     throw new Error("forbidden");
 }
 
@@ -123,7 +122,7 @@ export const otaReleaseService = {
       throw new Error("otaReleaseIdentityRequired");
     const superAdmin = Boolean(
       input.identity &&
-      isSuperAdminIdentity(input.identity.uid, input.identity.phone),
+      otaIdentity().isSuperAdmin(input.identity.uid, input.identity.phone),
     );
     if (superAdmin) {
       return {
@@ -166,7 +165,7 @@ export const otaReleaseService = {
     const [history, audit, logs] = await Promise.all([
       otaReleaseRepository.list(),
       otaReleaseRepository.listAudit(),
-      persistentSystemLogService.list({ limit: 1000 }),
+      otaTelemetry().list({ limit: 1000 }),
     ]);
     try {
       const manifest = await fetchCurrentManifest();
