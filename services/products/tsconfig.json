@@ -27,10 +27,10 @@
         "./generated/src/*"
       ],
       "@asol/storage-core": [
-        "./../../../../AppData/Local/Temp/asol-products-sync-uJpjNd/packages/storage-core/src/index.ts"
+        "./generated/packages/storage-core/src/index.ts"
       ],
       "@asol/storage-core/server": [
-        "./../../../../AppData/Local/Temp/asol-products-sync-uJpjNd/packages/storage-core/src/server.ts"
+        "./generated/packages/storage-core/src/server.ts"
       ]
     }
   },

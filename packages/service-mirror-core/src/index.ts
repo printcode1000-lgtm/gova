@@ -347,7 +347,12 @@ export function syncServiceMirror(options: ServiceMirrorOptions): { fileCount: n
     copyFileSync(manifestSource, manifestDestination);
   }
 
-  writeWorkspacePackagePaths(serviceDir, outputRoot, packagesRoot, mirroredPackages);
+  // Only a real sync may touch the service folder. Under `--out <throwaway>` this is the
+  // drift check, and a check that writes to what it measures fails exactly once — it would
+  // have stamped the throwaway temp path into the tracked tsconfig. It did, once.
+  if (outOverride === null) {
+    writeWorkspacePackagePaths(serviceDir, outputRoot, packagesRoot, mirroredPackages);
+  }
   assertBareSpecifiersAreDeclared(serviceDir, files, packagesRoot);
 
   const useSourceRelativeManifest = options.serviceName === 'notifications';
