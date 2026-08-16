@@ -159,7 +159,8 @@
     "profiles:deploy": "npx tsx scripts/deploy-profiles-service.ts",
     "test:profiles-module": "npx tsx src/features/profile/tests/profiles-service-module-contract.test.ts",
     "services:build": "npx tsx scripts/build-all-services.ts",
-    "test:account-declarations": "npx tsx packages/account-declarations/src/tests/index.test.ts"
+    "test:account-declarations": "npx tsx packages/account-declarations/src/tests/index.test.ts",
+    "github:protect": "npx tsx scripts/protect-main-branch.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

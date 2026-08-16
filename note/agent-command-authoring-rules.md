@@ -175,7 +175,7 @@ The agent's design choices are unreliable. Specify:
 - **Exact test file names** and which invariant each protects.
 - **One error convention**, applied uniformly — not "pick one".
 
-Where a rule from `note/module-isolation-rules.md` applies, cite it by number instead of restating it.
+Where a rule from `docs/01-architecture/module-isolation-rules.md` applies, cite it by number instead of restating it.
 
 ---
 

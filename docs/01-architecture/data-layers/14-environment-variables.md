@@ -278,3 +278,63 @@ Change one client variable:
 ```env
 NEXT_PUBLIC_ASOL_API_BASE_URL=https://api.your-domain.com
 ```
+
+## GitHub repository administration
+
+```env
+GITHUB_ADMIN_TOKEN=
+GITHUB_REPOSITORY=printcode1000-lgtm/gova
+```
+
+Server-only, and `.env.local` only — never `.env.example`, which is committed.
+`GITHUB_REPOSITORY` is optional; the script reads the `origin` remote when it is
+unset.
+
+Used by `npm run github:protect` (`scripts/protect-main-branch.ts`) to configure
+branch protection on `main`. This is rule 6 of
+[the module isolation rules](../module-isolation-rules.md) — the one
+rule that cannot be satisfied from the repository tree, because the enforcement
+lives in GitHub's settings rather than in a file.
+
+### What the current token can do
+
+The token in use is described by its owner as a **full repository management
+token for the Gova project**, covering code and branch management, repository
+settings and branch protection, pull requests and merges, GitHub Actions and
+workflows, deployments, secrets and variables, security features, webhooks,
+releases, and related administrative operations.
+
+Read that as written: **it can change anything in this repository**, including
+the branch protection it is used to apply, the Actions workflows that gate
+merges, and the repository's own secrets. It is scoped to `printcode1000-lgtm/gova`
+alone and carries no user permissions, so its blast radius stops at this
+repository — but inside this repository there is nothing it cannot do.
+
+### What is actually required
+
+`scripts/protect-main-branch.ts` calls exactly one endpoint,
+`PUT /repos/{repo}/branches/main/protection`. That needs **`Administration:
+Read and write`** and nothing else; `Contents: Read-only` is enough for
+everything else the script reads.
+
+A replacement should be a fine-grained token limited to this repository with
+those two permissions and a real expiry date. Every additional permission is
+capability the project never exercises and would lose if the token leaked.
+
+There is also a structural reason to keep it narrow. Rule 6 exists to make
+`packages/**` hard to change without review. A token that can rewrite branch
+protection, workflows, and secrets, sitting in the same working tree as the code
+it guards, can undo that in one call — the lock does not protect much when the
+key is kept beside it.
+
+### Where it is stored, and where it spreads
+
+`.env.local` is git-ignored (`.gitignore` line 78), so the value never enters a
+commit. Note that `npm run secrets:backup` collects git-ignored secret files into
+its encrypted archive, so the token is copied into every backup taken after it is
+added. A long-lived token therefore accumulates copies; a short-lived one does
+not.
+
+Create replacements at
+`github.com/settings/personal-access-tokens/new` → *Only select repositories* →
+`gova`.

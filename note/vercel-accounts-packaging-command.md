@@ -57,7 +57,7 @@ verify your work:
 
 ### Required reading before Phase 1
 
-1. `note/module-isolation-rules.md` — the eight rules
+1. `docs/01-architecture/module-isolation-rules.md` — the eight rules
 2. `note/vercel-accounts-backup-inventory.md` — the frozen baseline, **in full**
 3. `CLAUDE.md` — working rules
 4. `docs/01-architecture/data-layers/26-cloud-accounts.md`
@@ -523,7 +523,7 @@ protection require the repository owner — record what is still needed, do not 
 `docs/01-architecture/data-layers/23-file-map.md`,
 `docs/05-platform-features/service-bridge-module.md`,
 `docs/05-platform-features/notification-bridge-module.md`.
-Update the status table in `note/module-isolation-rules.md` with a column per new package.
+Update the status table in `docs/01-architecture/module-isolation-rules.md` with a column per new package.
 
 5.6 Address the known gaps from the inventory. For each: fixed, or deliberately left with a reason.
 

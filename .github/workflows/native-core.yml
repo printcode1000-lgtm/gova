@@ -26,6 +26,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # `services/*/generated/` is git-ignored, so a clean checkout has no mirrors at
+      # all. Locally they are always on disk, which is why every check passed here and
+      # this workflow still failed on every push: the notifications contract test
+      # asserts the mirror is non-empty, and on CI it was empty every time.
+      - name: Mirror service sources
+        run: npm run services:sync
+
       - name: Lint check
         run: npm run lint
 
@@ -49,3 +56,21 @@ jobs:
 
       - name: Storage core tests
         run: npm run test:storage-core
+
+      - name: Account declarations tests
+        run: npm run test:account-declarations
+
+      - name: Inter-account channel tests (Rule 0)
+        run: npm run test:account-bridge
+
+      - name: Vercel deploy and service mirror tests
+        run: npm run test:vercel-deploy-core && npm run test:service-mirror-core
+
+      - name: Composition layer tests
+        run: npm run test:compositions
+
+      # The check that would have caught three production failures. Each service folder
+      # is uploaded to Vercel alone and installed against its own package.json, so
+      # nothing above exercises what Vercel actually builds.
+      - name: Build all four service deployments
+        run: npm run services:build

@@ -162,7 +162,7 @@ script clean; `typecheck` 0, `lint` 0 errors, `architecture:check` 0, `npm test`
 ### Phase R5 — Documentation & Handover (Fixing D6)
 - **CODEOWNERS Updated:** All 7 sealed packages added to `.github/CODEOWNERS`.
 - **Docs Updated:** `16-deployment-targets.md`, `22-scripts-and-workflows.md`, `23-file-map.md`, `26-cloud-accounts.md`, `service-bridge-module.md`, `notification-bridge-module.md`.
-- **Module Isolation Rules Updated:** Status table in `note/module-isolation-rules.md` extended with all 7 packages.
+- **Module Isolation Rules Updated:** Status table in `docs/01-architecture/module-isolation-rules.md` extended with all 7 packages.
 
 ---
 
