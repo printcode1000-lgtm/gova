@@ -1,4 +1,19 @@
-import { readNotificationGrants } from '@/features/notifications';
+/**
+ * Two edges into the application, both deliberately narrow and both leaves.
+ *
+ * `readNotificationGrants` used to be imported from `@/features/notifications` — a
+ * 98-line barrel exporting fifteen things — which pulled the whole notifications feature
+ * into this package's graph for one pure function. The direct module imports nothing at
+ * all, so the channel's graph gains exactly one file.
+ *
+ * `public-env` is the one place that legitimately knows every sibling deployment's
+ * origin, which is the knowledge this package exists to own. Its own graph is just
+ * `app-version`.
+ *
+ * Anything wider than this belongs behind an injected parameter, not an import: a channel
+ * that transitively reaches the application is a channel whose seal is decoration.
+ */
+import { readNotificationGrants } from '@/features/notifications/domain/notification-grant-envelope';
 import { getNotificationsPublicUrl } from '@/core/config/public-env';
 
 const SEND_PATH = '/api/notifications/send';

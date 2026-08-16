@@ -55,6 +55,32 @@ function runRule0Tests(): void {
   }
   console.log('  ✔ T1: Device-only module graph verified (no node/server imports).');
 
+  // ------------------------------------------------- T1b: the edges into the app are pinned
+  //
+  // T1 proves the channel reaches no node capability. It says nothing about reaching the
+  // *application*, and the channel was importing `@/features/notifications` — a 98-line
+  // barrel exporting fifteen things — for one pure function. A channel that transitively
+  // reaches the app is a channel whose seal is decoration.
+  //
+  // Every `@/` edge must be on this list, and every module on it must be a leaf or close
+  // to one. Widening an edge means changing this list, deliberately.
+  const ALLOWED_APP_EDGES = new Set([
+    '@/core/config/public-env',
+    '@/core/config/runtime-context',
+    '@/features/notifications/domain/notification-grant-envelope',
+  ]);
+  for (const file of bridgeFiles) {
+    const content = readFileSync(file, 'utf-8');
+    for (const match of content.matchAll(/\bfrom\s+['"](@\/[^'"]+)['"]/g)) {
+      assert(
+        ALLOWED_APP_EDGES.has(match[1]),
+        `T1b: ${path.basename(file)} imports "${match[1]}", which is not a declared app edge. ` +
+          `Narrow it to a leaf module, inject it as a parameter, or add it here on purpose.`,
+      );
+    }
+  }
+  console.log(`  ✔ T1b: app edges pinned to the ${ALLOWED_APP_EDGES.size} declared leaves.`);
+
   // ---------------------------------------------------------------- T2: No account credential
   const forbiddenTokens = ['VERCEL_', 'TURSO_', '_AUTH_TOKEN', 'R2_ACCESS_KEY', '_SECRET', '_PRIVATE_KEY'];
   for (const file of bridgeFiles) {

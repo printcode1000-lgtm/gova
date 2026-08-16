@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { summarizeNotificationSendResponse } from "../notification-bridge.client";
+import { summarizeNotificationSendResponse } from "@asol/account-bridge/notifications";
 
 assert.deepEqual(
   summarizeNotificationSendResponse({

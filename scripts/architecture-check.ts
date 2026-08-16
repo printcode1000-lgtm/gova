@@ -39,6 +39,7 @@ import { checkNotificationModuleContract } from "./architecture-check/architectu
 import { checkDeadContractRules } from "./architecture-check/architecture-check.storage-core-contract";
 import { checkFile, checkExternalDataAccessOwnership, checkGeneratedDataAccessArtifacts } from "./architecture-check/architecture-check.native-contract";
 import { checkAccountBridgeContract } from "./architecture-check/architecture-check.account-bridge-contract";
+import { checkPackageSealContract } from "./architecture-check/architecture-check.package-seal-contract";
 import { printReport, reportNativeSurface } from "./architecture-check/architecture-check.file-analysis";
 
 function main(): void {
@@ -61,12 +62,25 @@ function main(): void {
   for (const file of files) {
     if (normalizePath(file).includes('/architecture/contract.ts')) continue;
     checkFile(file);
+    checkPackageSealContract(file, readFileSync(file, 'utf8'));
+  }
+
+  // `packages/` was never walked by this check. Every sealed package's own source was
+  // therefore exempt from the repository-wide scan that rule 5 relies on — which is how
+  // one package came to reach another by relative path without anything noticing.
+  const packagesDir = join(ROOT, 'packages');
+  if (existsSync(packagesDir)) {
+    for (const file of walk(packagesDir)) {
+      if (file.includes('node_modules')) continue;
+      checkPackageSealContract(file, readFileSync(file, 'utf8'));
+    }
   }
 
   for (const file of walk(SCRIPTS)) {
     if (rel(file) === 'scripts/architecture-check.ts') continue;
     checkExternalDataAccessOwnership(file);
     checkAccountBridgeContract(file, readFileSync(file, 'utf8'));
+    checkPackageSealContract(file, readFileSync(file, 'utf8'));
   }
   checkGeneratedDataAccessArtifacts();
 
@@ -85,6 +99,7 @@ function main(): void {
       if (file.includes('node_modules')) continue;
       const content = readFileSync(file, 'utf8');
       checkAccountBridgeContract(file, content);
+      checkPackageSealContract(file, content);
       if (file.includes('services/notifications/src')) {
         checkNotificationModuleContract(file, content);
       }

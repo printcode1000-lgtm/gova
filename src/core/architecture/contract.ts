@@ -56,13 +56,16 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
  * UI, hooks, and business services off the network; it is not a ban on HTTP in
  * the files whose whole job is a single hop.
  *
- * `notification-bridge.client.ts` is the connector between the two deployments.
- * Neither backend can reach the other, so the hop happens in the browser: it
+ * The inter-account channel is the connector between deployments. It now lives in
+ * `@asol/account-bridge`. A duplicate copy under `src/modules/notification-bridge/` was
+ * deleted once the module there became a re-export shim: two implementations of the same
+ * connector can only drift, and the test was still guarding the dead one.
+ * Neither backend can reach the other, so the hop happens on the device: it
  * carries a signed grant, sends no credentials, and holds no business logic.
  */
 export const ALLOWED_FETCH_FILES = new Set([
   'src/core/api/asol-http-transport.ts',
-  'src/modules/notification-bridge/notification-bridge.client.ts',
+  'packages/account-bridge/src/notifications.ts',
 ]);
 
 export const ALLOWED_DRIZZLE_ORM_FILES_PATTERN = [

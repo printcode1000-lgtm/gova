@@ -106,6 +106,35 @@ Only `orders` is wired. `products`, `profiles` and `notifications` still have co
 built and tested but not on the request path. The blocker is gone and the pattern is proven end to
 end; each remaining account is the same four steps, and each deserves its own verified deploy.
 
+## Phase R8 — the seven remaining gaps
+
+Found by auditing rather than by recall, after the deploy was already green.
+
+| # | Gap | Fix |
+| :-- | :-- | :-- |
+| 1 | **A second live copy of the notifications channel.** `src/modules/notification-bridge/notification-bridge.client.ts` — 193 lines, three exported functions, the same three as `@asol/account-bridge/notifications`. `index.ts` had become a re-export shim, so the copy was off the request path but still present, its test still imported it directly, and `src/core/architecture/contract.ts` still named it the official channel. The `service-bridge` twin had been deleted; this one had not. | Deleted; test and fetch-allowlist repointed at the package |
+| 2 | **The channel imported the application.** `@asol/account-bridge` reached `@/features/notifications` — a 98-line barrel exporting fifteen things — for one pure function. T1 proved the channel touches no node capability but said nothing about touching the app. | Narrowed to the leaf module; **T1b** now pins all three app edges. Demonstrated red by widening it back |
+| 3 | **`build` and `build:static` mirrored only `notifications`.** Recorded in the original inventory and never fixed. | Both chains now run `services:sync` |
+| 4 | **Six test suites gated nothing** — `runtime-context`, `dev-cloud-backup`, `follow`, `auth-email-uniqueness`, `phone-verification-policy`, `registration-success-flow`. Rule 3, again. | All six added to the `test` chain; all six pass |
+| 5 | **Eight of eleven packages had no architecture contract**, so rule 5's repository-wide layer covered only three. Worse, **`packages/` was never walked by `architecture:check` at all** — every package's own source was exempt from the scan. | One `architecture-check.package-seal-contract.ts` driven by each package's own `exports`; `packages/` now walked. Catches both undeclared doors and relative reaches into `packages/`. Both demonstrated red |
+| 6 | **`ota-core` reaches into the app in 10 distinct modules** — database, auth, system logs, API client. Rule 7 runs both ways. | **Not fixed — budgeted.** See below |
+| 7 | **`scripts/deploy-vercel-env.ts` was orphaned and dangerous**: referenced by nothing, targeted a project named `asol` rather than `gova`, and would have *created* that project if missing — a stray sixth Vercel project. | Deleted |
+
+### Gap 6 is budgeted, not closed — and the distinction matters
+
+Inverting `ota-core`'s dependencies means injecting ports for storage, auth and logging through
+the whole OTA runtime, and it has to be verified against a real release. `ota:publish` is currently
+refused anyway (the native surface has changed since the last store build), so it could not be
+verified now even if written.
+
+`packages/ota-core/src/tests/contract/app-edges.test.ts` pins all ten edges instead. Adding one
+fails the suite; removing one without updating the list also fails it, so the list cannot drift into
+being decorative. **The list should only ever shrink.** It is a budget, not a fix, and it is written
+in the file as such.
+
+Worth noting: the pinning test immediately found a tenth edge in a `.tsx` file that the manual audit
+had missed, because the audit only grepped `.ts`.
+
 ## Note on the first five rows
 
 The `PASSED` claims for phases 3, 4 and 5 were disproved by an independent review: layer 2 was a set
