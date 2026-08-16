@@ -25,6 +25,12 @@
     "paths": {
       "@/*": [
         "./generated/src/*"
+      ],
+      "@asol/storage-core": [
+        "./../../../../AppData/Local/Temp/asol-profiles-sync-HDCEq7/packages/storage-core/src/index.ts"
+      ],
+      "@asol/storage-core/server": [
+        "./../../../../AppData/Local/Temp/asol-profiles-sync-HDCEq7/packages/storage-core/src/server.ts"
       ]
     }
   },

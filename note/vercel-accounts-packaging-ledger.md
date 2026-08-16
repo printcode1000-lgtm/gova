@@ -14,6 +14,52 @@
 | **Phase R4 — T10 Latent Cross-Account Leak (D4)** | `PASSED` | 2026-08-16T17:52Z | `RESULT: PASS` | Agent correctly stopped for owner approval. Completed by the reviewer with a narrower fix — the barrel re-export in `src/core/config/index.ts`, not `public-env.ts` itself. `public-env.ts` now absent from all four mirrors. See the report's R4 section for the declared mirror delta. |
 | **Phase R5 — Documentation & Handover (D6)** | `PASSED` | 2026-08-16T17:29:46Z | `RESULT: PASS` | CODEOWNERS updated, 3 required architecture docs updated, status table extended, report written |
 
+## Phase R6 — the deploy that failed, and what it exposed
+
+The first `deploy:all` run pushed commit `9ad02aa` and deployed `main` to `READY`, then **all four
+service accounts failed their remote build**. Cause, reproduced locally:
+
+```text
+./generated/src/core/config/server-env.values.ts:24
+Module not found: Can't resolve '@asol/ota-core/publishing'
+```
+
+Two separate pre-existing leaks, neither introduced by the packaging work, both invisible until a
+remote build ran:
+
+1. **`server-env.values.ts` re-exported `@asol/ota-core/publishing`.** That barrel is reached by the
+   sharded database clients, which are mirrored into all four services. The mirror walker treated
+   bare specifiers as npm packages and skipped them, so the uploaded folder referenced a module that
+   was not in it. Fixed by removing the re-export and pointing the one real consumer
+   (`build-job-runner.server.ts`) at the package directly.
+2. **`packages/ota-core/src/runtime/release-service.server.ts` imported `getOtaApprovalServerConfig`
+   from `@/core/config/server-env.values`** — a round trip through the application for a function
+   `ota-core` itself defines. That round trip is what made the re-export in (1) necessary. Fixed by
+   importing it from the package's own `publishing/config/ota-r2-target`.
+3. **`@asol/storage-core` is genuinely used by `products` and `profiles`.** It could not simply be
+   removed, so the walker now resolves `@asol/*` through the target package's `exports` map, mirrors
+   it into `generated/packages/<name>/`, and writes matching `paths` into the service tsconfig.
+   Resolution goes through `exports` deliberately: mirroring must not become the side door rule 5
+   exists to prevent. `zod` was added to both service manifests — storage-core needs it and the
+   uploaded folder installs against its own `package.json` alone.
+
+### The guard that makes this class of failure impossible to ship again
+
+`assertBareSpecifiersAreDeclared` now fails `services:sync` when a mirrored file imports an npm
+package the service does not declare. Node builtins come from `module.builtinModules` rather than a
+hand-written list, and `next.config.ts` aliases (`turbopack.resolveAlias`, `serverExternalPackages`)
+count as declared — `better-sqlite3` is stubbed that way on purpose.
+
+Demonstrated red before green: removing `zod` from `services/products/package.json` makes the sync
+exit 1 with `zod (first seen in schemas.ts)`. Restored, and all four services build locally.
+
+| Service | local `next build` |
+| :-- | :-- |
+| notifications | OK |
+| products | OK |
+| orders | OK |
+| profiles | OK |
+
 ## Note on the first five rows
 
 The `PASSED` claims for phases 3, 4 and 5 were disproved by an independent review: layer 2 was a set

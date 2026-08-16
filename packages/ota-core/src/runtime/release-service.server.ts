@@ -1,7 +1,11 @@
 import { createPublicKey, verify } from "node:crypto";
 
 import { asolApi } from "@/core/api";
-import { getOtaApprovalServerConfig } from "@/core/config/server-env.values";
+// Own it directly. This used to reach back into the app's `@/core/config/server-env.values`
+// for a function this package itself defines — a round trip through the application for
+// its own code, and the re-export that made it work is what leaked `@asol/ota-core/publishing`
+// into all four service mirrors and broke their builds.
+import { getOtaApprovalServerConfig } from "../publishing/config/ota-r2-target";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import { otaReleaseRepository } from "@/modules/data-access/domains/ota/index.server";
 import { compareOtaManifests } from "../domain/release/release-diff";

@@ -6,7 +6,7 @@ import path from "node:path";
 
 import { asolApi } from "@/core/api";
 import { CURRENT_WEB_CONTENT_VERSION } from "@/core/config/app-version";
-import { getOtaApprovalServerConfig } from "@/core/config/server-env";
+import { getOtaApprovalServerConfig } from "@asol/ota-core/publishing";
 import {
   assertGooglePlayConsoleAllowed,
   googlePlayFastlaneEnvironment,
