@@ -23,6 +23,20 @@ async function main(): Promise<void> {
 
   if (!result.ok) {
     console.error(`❌ OTA publish failed: ${result.error.message}`);
+
+    // `OtaCoreError.internal("OTA publish failed", error)` keeps the real cause in
+    // `details` and the top-level message says nothing on its own. Printing only the
+    // message left a CI failure reading "OTA publish failed: OTA publish failed" with no
+    // way to tell what actually broke — the failure has to explain itself, especially on
+    // a machine nobody can attach a debugger to.
+    const details = (result.error as { details?: unknown }).details;
+    if (details instanceof Error) {
+      console.error(`   cause: ${details.message}`);
+      if (details.stack) console.error(details.stack);
+    } else if (details !== undefined) {
+      console.error(`   cause: ${JSON.stringify(details, null, 2)}`);
+    }
+
     process.exit(1);
   }
 

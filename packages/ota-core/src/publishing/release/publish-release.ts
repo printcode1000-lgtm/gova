@@ -187,12 +187,27 @@ export async function publishOtaRelease(
     const minimumNativeVersion = options.minimumNativeVersion ?? nativeLine;
 
     if (options.dryRun) {
+      // A dry run verifies the native-compatibility gate and uploads nothing, so it must
+      // not require upload configuration. `getOtaManifestUrl()` throws when
+      // `ASOL_OTA_R2_PUBLIC_URL` is unset, which made `--dry-run` fail on any machine
+      // without the production OTA credentials — including CI, where it failed on every
+      // push while passing on every developer's machine.
+      //
+      // Reported as "" rather than throwing: the caller is being told what a dry run can
+      // know, and a dry run cannot know the manifest URL of a release it did not publish.
+      let manifestUrl = "";
+      try {
+        manifestUrl = getOtaManifestUrl();
+      } catch {
+        manifestUrl = "";
+      }
+
       return ok({
         version: `${nativeLine}.0`,
         releaseId: "dry-run",
         fileCount: 0,
         totalBytes: 0,
-        manifestUrl: getOtaManifestUrl(),
+        manifestUrl,
         minimumNativeVersion,
         requiredCapabilities: [],
         optionalCapabilities: [],
