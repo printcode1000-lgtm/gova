@@ -30,18 +30,23 @@ export class DeviceTokenService {
     return this.flights.run(`register:${safeUid}`, async () => {
       const token = await nativePushService.register(safeUid);
       if (!token) return null;
-      await asolNotificationRepository.saveDeviceToken(token);
-      await notificationApiService.registerToken({
-        uid: token.uid,
-        phone: safePhone,
-        platform: token.platform,
-        provider: token.provider,
-        deviceId: token.deviceId,
-        token: token.token,
-        locale: token.locale,
-        deviceLabel: token.deviceLabel,
-      });
+      await this.persist(token, safePhone);
       return token;
+    });
+  }
+
+  /** Store this device's token locally and register it with the server. */
+  private async persist(token: DeviceToken, phone: string): Promise<void> {
+    await asolNotificationRepository.saveDeviceToken(token);
+    await notificationApiService.registerToken({
+      uid: token.uid,
+      phone,
+      platform: token.platform,
+      provider: token.provider,
+      deviceId: token.deviceId,
+      token: token.token,
+      locale: token.locale,
+      deviceLabel: token.deviceLabel,
     });
   }
 
@@ -60,7 +65,22 @@ export class DeviceTokenService {
     const safeUid = assertUid(uid);
     const safePhone = assertPhone(phone);
     await this.flights.run(`initialize:${safeUid}`, async () => {
-      await nativePushService.initialize(safeUid, handlers);
+      // The caller supplies notification handling; rotation is this layer's
+      // business, because only it knows a registration is local storage plus a
+      // server call. Injecting it keeps infrastructure from reaching upward.
+      await nativePushService.initialize(safeUid, {
+        ...handlers,
+        onTokenRefresh: async (token) => {
+          try {
+            await this.persist(token, safePhone);
+          } catch (error) {
+            notificationLog.warn(
+              "Push token rotation could not be registered with the server.",
+              error,
+            );
+          }
+        },
+      });
       if (!(await nativePushService.isEnabled())) return;
       if ((await nativePushService.permissionState()) !== "granted") return;
       await this.register(safeUid, safePhone);

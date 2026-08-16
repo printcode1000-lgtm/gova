@@ -26,6 +26,15 @@ export const R2_STORAGE_TARGETS = {
     location: "WEUR",
     jurisdiction: "default",
   },
+  ota: {
+    accountId: "21fce63d15897aaa0b68fae1360a1810",
+    endpoint:
+      "https://21fce63d15897aaa0b68fae1360a1810.r2.cloudflarestorage.com",
+    bucketName: "ota",
+    publicUrl: "https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev",
+    location: "WEUR",
+    jurisdiction: "default",
+  },
 } as const satisfies Record<string, R2StorageTarget>;
 
 function normalizeUrl(value: string): string {

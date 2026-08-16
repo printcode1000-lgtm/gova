@@ -35,7 +35,7 @@ have bitten:
   `version` before assuming a fault.
 - A version string is a promise that the content is identical everywhere. Deltas
   are computed against it, so reusing one with different content breaks them —
-  see [the open gap](#the-gap-that-is-still-open).
+  see [Delta mismatch recovery](#delta-mismatch-recovery).
 
 ## Content Versions Follow The Shell
 
@@ -291,7 +291,7 @@ GET  /api/ota/admin/releases/diff
 
 The access endpoint returns only the decision for a release. Admin endpoints require the configured super-admin identity.
 
-The Business API server resolves the manifest from `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL`, or derives it from `ASOL_OTA_R2_PUBLIC_URL` plus `ASOL_OTA_R2_PREFIX`. It no longer falls back to `PRODUCT_R2_PUBLIC_URL` or `R2_PUBLIC_URL` — see [OTA storage](#ota-storage). Signature verification uses `ASOL_OTA_PUBLIC_KEY` (preferred for the deployed API), `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY`, or a local `.ota/public-key.pem`. Development may derive the public key from the existing local `.ota/private-key.pem`; production should configure the public key directly and does not need the signing private key.
+The Business API server resolves the manifest from `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL`, or derives it from `ASOL_OTA_R2_PUBLIC_URL` plus `ASOL_OTA_R2_PREFIX`. It no longer falls back to `PRODUCT_R2_PUBLIC_URL` or `R2_PUBLIC_URL` — see [Dedicated OTA Storage & Architecture](#dedicated-ota-storage--architecture). Signature verification uses `ASOL_OTA_PUBLIC_KEY` (preferred for the deployed API), `NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY`, or a local `.ota/public-key.pem`. Development may derive the public key from the existing local `.ota/private-key.pem`; production should configure the public key directly and does not need the signing private key.
 
 ### Approval Database
 
@@ -378,76 +378,28 @@ publisher withheld `app.state` from the manifest, along with
 built before it existed computes a different canonical string and rejects the
 manifest outright. Both omissions are announced in the publish output.
 
-## Moving the OTA origin
+## Dedicated OTA Storage & Architecture
 
-**The manifest URL is inlined into the web bundle at static build time.** A shell
-already installed on a device asks the origin it was built with, and no server
-setting changes that. Moving OTA to another bucket therefore strands every
-installed copy with a 404 — the release is fine, the address it knows is not.
-This is what happened when OTA was moved off the product account: a store-built
-Android shell reported
+OTA releases live on their own dedicated Cloudflare R2 account (`21fce63d15897aaa0b68fae1360a1810`), bucket `ota`, under the prefix `app-updates/`.
 
 ```text
-OTA request failed (404): https://pub-e1fa9cec….r2.dev/app-updates/manifest.json
+Manifest URL: https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev/app-updates/manifest.json
+Public Base URL: https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev
 ```
 
-**A store release is not the fix.** The client reads two documents from the
-baked URL — `manifest.json` and its sibling `revocations.json` — and takes every
-file and bundle URL from the manifest's own `baseUrl`. Mirroring those two small
-documents to the old origin is enough:
+### Zero-Fallback Policy
+
+OTA reads `ASOL_OTA_R2_*` environment variables exclusively: endpoint, access key ID, secret access key, bucket, public URL, and prefix. A missing value throws an immediate error.
+
+**A fallback across an account boundary is a silent redirect, not a default.** OTA never inherits credentials from `PRODUCT_R2_*` or `R2_*`. `npm run test:r2-separation` guarantees offline that OTA credentials and configurations remain strictly isolated.
+
+### CORS Configuration
+
+The dedicated OTA bucket is configured with browser CORS using:
 
 ```bash
-npm run ota:mirror-legacy
+npm run r2:sync:cors:ota
 ```
-
-It copies them byte for byte, so the signature the device verifies is the one
-the publisher produced. `ASOL_OTA_LEGACY_R2_*` names the old origin explicitly —
-never derived from `PRODUCT_R2_*`, since OTA reading a product variable is the
-coupling that caused the problem in the first place.
-
-`ota:publish` refreshes the mirror itself whenever `ASOL_OTA_LEGACY_R2_*` is
-configured, so the old origin cannot fall behind the live release.
-
-### When to remove it
-
-```bash
-npm run ota:mirror-legacy:remove
-```
-
-**Not when the release is published — when a store build against the new origin
-has rolled out.** A device only stops needing the mirror after it *installs* a
-bundle carrying the new URL, and reaching a manifest is merely the first of
-three gates:
-
-| Gate | What blocks it |
-|---|---|
-| Fetch the manifest | the baked origin must answer — this is what the mirror provides |
-| `POST /api/ota/access` | `awaiting_approval` until a super-admin approves the release |
-| Rollout | `rollout_pending` until the device's bucket is inside `rolloutPercentage` |
-
-Removing the mirror between publishing and installing puts every store-installed
-shell straight back on
-
-```text
-OTA request failed (404): …/app-updates/manifest.json
-```
-
-which is exactly what happened once: the mirror was removed while the release
-was still unapproved, so no device had ever been able to install it.
-
-## OTA storage
-
-OTA reads `ASOL_OTA_R2_*` and nothing else: endpoint, access key, secret,
-bucket, public URL, prefix. A missing value throws.
-
-These used to fall back to `PRODUCT_R2_*` and then `R2_*`. **A fallback across
-an account boundary is a silent redirect, not a default.** No `ASOL_OTA_R2_*`
-was ever configured, so every release landed on the Cloudflare account reserved
-for product images — 3,463 objects and 50 MB of build artefacts beside a single
-product image. They were deleted, and OTA now points at the general account.
-
-`npm run test:r2-separation` fails if any OTA accessor names an R2 variable that
-is not its own. See
 [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 ## Directory creation
@@ -767,201 +719,6 @@ SELECT last_occurred_at, operation, message
 FROM system_logs
 WHERE platform = 'android'
 ORDER BY last_occurred_at DESC;
-```
-
-Every real diagnosis in the on-device test round came from that table, not from
-logcat.
-
-`Filesystem mkdir` rejections with code `OS-PLUG-FILE-0010` are noise: recursive
-mkdir is not idempotent on Capacitor Android, the adapter swallows the
-rejection, and Capacitor logs it natively before any JavaScript sees it. They
-are not errors, and one install used to produce hundreds of them — see
-[Directory creation](#directory-creation).
-
-## Runtime Update
-
-After the interactive UI opens, the application checks silently at most once
-per 24 hours. A successful discovery starts downloading immediately. Manual
-checks bypass the interval. Failed discovery does not advance the successful
-check timestamp. Native Android uses one `DownloadManager` task and iOS uses
-one background `URLSession` task; task identity is persisted and reattached
-after normal process recreation. Web falls back to verified per-file transfer.
-
-Before creating a native download, the shell measures free bytes on the app's
-data volume. Atomic activation needs one complete candidate, up to one complete
-staged payload, and the transport; required free space is therefore
-`(2 * manifest.size + transport.size) * 1.20`. The 20% margin covers filesystem
-metadata and temporary I/O. Insufficient space is retryable, not a failed
-release. If measurement is unavailable, OTA proceeds with its integrity checks.
-
-A successful daily timestamp that lies in the device's future is immediately
-due and is clamped to the current wall clock. This self-heals manual clock
-changes, dead-RTC boots, factory resets, and backwards time jumps.
-
-Every foreground entry also fetches the compact signed `revocations.json` with
-a three-second bound independent of the daily interval. Successfully verified
-documents and their highest accepted `issuedAt` are persisted together in
-AsolDB. Offline, timed-out, invalid, or tampered responses fall back to that
-persisted document and are never cached as successful fetches. A correctly
-signed document older than the persisted high-water mark is rejected as a
-replay. A revoked pending release is discarded. A revoked running OTA returns
-to Capacitor's bundled `public` assets and clears OTA staging and transaction
-state. This never runs on splash, so emergency rollback applies on the first
-foreground session, using either a fresh verified document or the last verified
-offline copy.
-
-The web application is outside this kill switch by design: `isEnabled()` is
-false without the Capacitor adapter, and web deployments are served fresh from
-the host. During an incident, do not interpret web behavior as proof that native
-clients have received or applied a revocation.
-
-Emergency revocation does not build the project and uploads only the compact
-control document:
-
-```bash
-npm run ota:revoke -- 0.2.4
-npm run ota:revoke -- --restore 0.2.4
-```
-
-The command updates `scripts/ota/ota-revocations.json`, signs it with the OTA
-key, and writes `app-updates/revocations.json` with `no-store, max-age=0`.
-Normal publication republishes the tracked list.
-
-Never reuse a revoked version number. Revocation identifies the version string,
-not the release ID, so republishing a fixed build under the same version remains
-revoked. Publish the fix with a higher version.
-
-### Escalation ladder — pick the lowest rung that covers the blast radius
-
-The rollout percentage is **not** a brake: it can only be raised, never lowered
-(`otaRolloutCannotDecrease`), because lowering it would strand devices that were
-already told they were eligible. Stopping a bad release uses these three rungs
-instead, in order:
-
-| Rung | Command | Stops | Does not stop |
-| --- | --- | --- | --- |
-| 1. Withdraw approval | super-admin page, set the release unapproved | New downloads, immediately | Anything already downloaded or activated |
-| 2. Withdraw approval, then wait one launch | as above | Staged releases — `reverifyPendingApproval` discards them at splash | Devices that already activated |
-| 3. Revoke | `npm run ota:revoke -- <version>` | Everything, including activated devices, which revert to the store bundle | Offline devices, until their first connected foreground session |
-
-Rung 1 is the default response and needs no build. Escalate to rung 3 only when
-the release is already running on devices — it forces every one of them back to
-the store-bundled version, which is disruptive but always safe.
-
-### Emergency revocation runbook
-
-1. Record the current tracked and live `revokedVersions` lists.
-2. Run `npm run ota:revoke -- <version>` and confirm the command reports the
-   version while changing only `revocations.json` and the tracked list.
-3. Bring a test device online, foreground the installed app, and confirm it
-   returns to the store-bundled version. The check is not performed on splash.
-4. Confirm pending devices refuse the version and offline devices continue to
-   enforce it after one successful foreground fetch.
-5. Publish the repaired application under a new version. Restore the old entry
-   only when deliberately required with
-   `npm run ota:revoke -- --restore <version>`, then repeat the live/tracked
-   comparison.
-
-A ready pending release no longer blocks discovery. If the signed remote
-manifest is newer, its staged payload and native task are cleaned, status moves
-through `ota.superseded`, and normal download continues for the newer release.
-The automatic 24-hour gate remains unchanged; manual checks still bypass it.
-
-Splash performs no discovery and no download. A fully ready release receives
-one approval request bounded to two seconds. Explicit revocation discards it;
-approval activates it; timeout/offline failure activates using the approval
-proven at download time. The next foreground session rechecks pending approval.
-The deliberate residual gap is that a release revoked after download can still
-activate when the device is offline both at revocation recheck and launch.
-
-After activation, the expected bundle must initialize and confirm itself. If it
-does not, the previous WebView path is reactivated and the failed complete
-candidate is removed. A partial download is never activated.
-
-Android continues normal DownloadManager work across backgrounding, process
-death, and reboot where the OS permits. Android Force Stop blocks it until the
-next launch. iOS background URLSession survives suspension and normal system
-termination, but user Force Quit cancels transfers; ASOL resumes on next launch.
-These limitations are OS policy and are not represented as stronger guarantees.
-
-AOSP restricts `DOWNLOAD_WITHOUT_NOTIFICATION` to platform-signed/system apps.
-ASOL requests hidden DownloadManager visibility only when an OEM has granted
-that permission; ordinary Play installations show Android's running download
-notification so the transfer remains functional and policy-compliant. Silent
-refers to discovery and in-app prompts, not suppression of mandatory OS UI.
-
-Files absent from the remote manifest are absent from the staged release, so deletion propagates to the application.
-
-Android and iOS use native `CapacitorHttp` for R2 requests. R2 CORS also includes `https://localhost` for older bootstrap compatibility.
-
-## Version Synchronization
-
-The repository defaults live in
-`src/core/config/app-version.ts`. `CURRENT_NATIVE_APP_VERSION` identifies the
-compiled shell and `CURRENT_WEB_CONTENT_VERSION` identifies the bundled web
-content. Release environment variables may pin a build explicitly, but an
-ordinary development/static build must fall back to these current versions,
-not to the older minimum-supported native baseline. Run
-`npm run version:validate` to compare the constants, package metadata, Android,
-iOS, `.env.example`, and every generated manifest currently present.
-
-After a successful `cap:build`, version synchronization has two independent
-groups.
-
-The web release group must be equal:
-
-- R2 `manifest.version`.
-- `out/asol-web-manifest.json` version.
-- Android bundled manifest version.
-- iOS bundled manifest version.
-- `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION` inside the synchronized assets.
-
-The native shell group must be equal:
-
-- R2 `manifest.minimumNativeVersion` for a newly published full release.
-- `NEXT_PUBLIC_ASOL_NATIVE_VERSION` inside the synchronized assets.
-- Android `versionName`.
-- iOS `MARKETING_VERSION`.
-
-Android `versionCode` and iOS `CURRENT_PROJECT_VERSION` are calculated from the
-native semantic version. For example, native `0.2.1` becomes `201`, while its
-bundled web release may independently be `0.1.8`.
-
-## Diagnostics
-
-OTA lifecycle outcomes use the existing `system_logs` ingestion path. Devices
-queue and batch check, discovery, download, verification, activation, rollback,
-and revocation outcomes in AsolDB; logging failure never blocks OTA. Payloads
-contain only local/target versions, outcome/reason codes, and platform. Each
-installation sends a terminal release outcome once, so the server's deduplicated
-`occurrences` count is displayed as an adoption count on the super-admin OTA
-page without transmitting account or device identity.
-
-Splash displays technical current/R2 versions, changed/deleted counts, download size, and failure details only to the super-admin. Other users see a loading spinner. Android Studio Logcat messages use `[AsolOTA]`.
-
-| Message                                      | Meaning                                                       |
-| -------------------------------------------- | ------------------------------------------------------------- |
-| `OTA disabled`                               | OTA URL/key is missing or the app is not running in Capacitor |
-| `No OTA update: remote version is not newer` | R2 is equal to or older than the running bundle               |
-| `OTA release awaiting approval`              | A newer release exists but is not approved for ordinary users |
-| `Unsupported OTA manifest schema`            | The installed bootstrap predates schema v2                    |
-| `OTA manifest signature is invalid`          | The manifest does not match the embedded public key           |
-| `checksum mismatch`                          | A downloaded or copied file differs from the manifest         |
-| `R2 object content mismatch`                 | `cap:build` found a remote size or SHA-256 mismatch           |
-
-### PowerShell / PSReadLine rendering failure
-
-`Microsoft.PowerShell.PSConsoleReadLine.ReallyRender` with `Actual value was -1` is a terminal rendering bug, not an OTA or Node.js failure. It is commonly triggered by the very long debugger bootstrap command injected into an old PSReadLine integrated terminal.
-
-- The VS Code `Capacitor Build`, `Capacitor Build Local`, and `OTA Publish` launch configurations use the Debug Console instead of the integrated PowerShell terminal.
-- Prefer `Terminal > Run Task > Capacitor Build` when debugging is unnecessary.
-- Running `npm run cap:build` directly from a fresh terminal also avoids the injected debugger command.
-- If the terminal still reports the rendering exception, restart the terminal or update PSReadLine; do not treat the rendering stack trace as a build failure. The actual build result begins at the npm command output.
-
-## Main Files
-
-| File                                                                         | Responsibility                                                               |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 ```
 
 Every real diagnosis in the on-device test round came from that table, not from

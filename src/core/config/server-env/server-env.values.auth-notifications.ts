@@ -132,3 +132,54 @@ export function getProductR2Config(): R2Config {
   });
   return config;
 }
+
+export function getOtaR2CloudflareCredentials(): R2CloudflareCredentials {
+  const credentials = {
+    accountId: requireEnv("ASOL_OTA_R2_ACCOUNT_ID"),
+    apiToken: requireEnv("ASOL_OTA_R2_API_TOKEN"),
+  };
+  assertR2StorageTargetFields("ota", {
+    accountId: credentials.accountId,
+  });
+  return credentials;
+}
+
+export function getOtaR2S3Credentials(): R2S3Credentials {
+  const jurisdiction = (readOptionalEnv("ASOL_OTA_R2_JURISDICTION") ??
+    "default") as R2S3Credentials["jurisdiction"];
+  const credentials = {
+    accessKeyId: requireEnv("ASOL_OTA_R2_ACCESS_KEY_ID"),
+    secretAccessKey: requireEnv("ASOL_OTA_R2_SECRET_ACCESS_KEY"),
+    endpoint: requireEnv("ASOL_OTA_R2_ENDPOINT"),
+    bucketName: requireEnv("ASOL_OTA_R2_BUCKET_NAME"),
+    location: readOptionalEnv("ASOL_OTA_R2_LOCATION") ?? "WEUR",
+    jurisdiction,
+  };
+  assertR2StorageTargetFields("ota", credentials);
+  return credentials;
+}
+
+export function getOtaR2PublicUrl(): string {
+  return requireEnv("ASOL_OTA_R2_PUBLIC_URL");
+}
+
+export function getOtaR2Config(): R2Config {
+  const cloudflare = getOtaR2CloudflareCredentials();
+  const s3 = getOtaR2S3Credentials();
+  const config = {
+    cloudflare,
+    s3,
+    publicUrl: requireEnv("ASOL_OTA_R2_PUBLIC_URL"),
+    catalogUri: readOptionalEnv("ASOL_OTA_R2_CATALOG_URI") ?? "",
+    warehouseName: readOptionalEnv("ASOL_OTA_R2_WAREHOUSE_NAME") ?? "",
+  };
+  assertR2StorageTarget("ota", {
+    accountId: cloudflare.accountId,
+    endpoint: s3.endpoint,
+    bucketName: s3.bucketName,
+    publicUrl: config.publicUrl,
+    location: s3.location,
+    jurisdiction: s3.jurisdiction,
+  });
+  return config;
+}

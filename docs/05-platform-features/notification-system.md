@@ -43,7 +43,7 @@ The notification system is a local-first module that powers the in-app notificat
 - Device tokens are stored in the dedicated notifications database in `user_notification_tokens`, locally in `notifications.db` and in its own Turso account after schema sync.
 - Server APIs support registering/removing a device token and delivering notifications to one user or many users.
 - Push delivery uses a server-side provider interface and registry instead of direct coupling to FCM, APNs, or Web Push.
-- FCM (Android, and Apple once the Firebase iOS SDK is installed) and Web Push are live transports. Direct APNs is an opt-in fallback that stays unconfigured by default.
+- FCM (Android, and Apple with the Firebase Messaging iOS SDK configured in Xcode SPM) and Web Push are live transports. Direct APNs is an opt-in fallback that stays unconfigured by default.
 - Android delivery is application-owned: the payload is data-only, `AsolPushMessagingService` persists it to the app-private native inbox (AndroidKeyStore-encrypted when available) before displaying it, and the record is deleted only after IndexedDB has it. iOS/APNs and Web Push are unchanged.
 - A notification tap opens `/notifications`; the business deep link stays on the stored notification and is followed when the card is opened.
 - Store owners can compose a follower broadcast from their profile preview.
@@ -886,6 +886,38 @@ Removing the token is what stops delivery: without it the browser or handset
 keeps receiving the previous user's push messages, and the service worker keeps
 writing them into AsolDB under that uid.
 
+### Token rotation
+
+The push provider may replace a device's token at any time without any action
+by the user or the application. `NativePushService` keeps a permanent
+`onPushToken` subscriber registered in `ensureListeners()`, alongside the
+received and action listeners. `DeviceTokenService` injects the handler that
+stores the new token locally and re-registers it with the server, so only the
+application layer performs persistence — `infrastructure/` never reaches up into
+`application/`.
+
+The permanent listener stands down while `register()` is in flight (guarded by
+`registering = true`) and ignores a value it has already reported
+(`lastTokenValue`), so one rotation produces exactly one server registration.
+A failed rotation is logged at `warn` level and not retried; the device
+automatically re-registers on the next sign-in, language switch, or settings
+toggle.
+
+**A rotation never opts a device in.** The handler returns early unless the
+stored per-platform enabled flag is already true. This is not a redundant check:
+`initialize()` sets the active uid and attaches these listeners on every start,
+*before* it knows whether push is enabled, and Android delivers `onNewToken`
+regardless. Without it, a rotation arriving on a device whose owner had turned
+the switch off would flip the flag back to true and re-register the device with
+the server — a setting silently reversed with no user action behind it.
+
+Native callback that feeds the rotation event:
+
+| Platform | Native callback |
+|----------|-----------------|
+| Android | `AsolPushMessagingService.onNewToken` (Firebase Messaging) |
+| iOS | `messaging(_:didReceiveRegistrationToken:)` in `AppDelegate.swift` |
+
 ## Device Language
 
 Push text is built in the language of the receiving device.
@@ -893,7 +925,7 @@ Push text is built in the language of the receiving device.
 - Each token row stores a `locale` (`ar` or `en`), sent by the client at registration time from the stored app preferences.
 - `NotificationSendService` groups a user's tokens by transport **and** language, then builds one payload per group.
 - Tokens registered before this column existed default to `ar`, and the caller's `locale` is used only when a token has none.
-- Changing the language in the app re-registers the existing token. `WebPushController` listens for the document-locale event and calls `notifications.refreshDeviceLocale`, which never prompts for permission and does nothing when no subscription exists.
+- Changing the language in the app, signing in again, or receiving a spontaneous token rotation all re-register the token with the current locale. `WebPushController` listens for the document-locale event and calls `notifications.refreshDeviceLocale`, which never prompts for permission and does nothing when no subscription exists.
 
 Values that must be formatted per language — money, category names — cannot live
 inside a template. Pass them through `variablesByLocale`, which is merged over
@@ -1565,7 +1597,7 @@ driving real flows.
 | Suite | What it proves |
 |-------|----------------|
 | `tests/notification-module-boundary.test.ts` | Entry points, import restrictions in both trees, the root barrel exports one runtime object, every command is routed, unknown commands fail closed, compile-time command/result types |
-| `tests/integration/notification-flow.integration.test.ts` | 57 behavioural scenarios through the public API |
+| `tests/integration/notification-flow.integration.test.ts` | 61 behavioural scenarios through the public API |
 | `tests/notification-builder.test.ts` | Template resolution and variable interpolation |
 | `tests/notification-sound-contract.test.ts` | Sound constants against assets, Native Platform channels, manifest default |
 | `tests/android-notification-inbox-contract.test.ts` | The application-owned Android delivery path: data-only FCM payload, one messaging service, persist-before-display, private/encrypted/bounded storage, uid-scoped acknowledgement, tap protocol, save-before-acknowledge, `/notifications` routing |
@@ -1624,6 +1656,8 @@ have produced.
 | Malformed payload: unsafe route, prototype key, bad enum, bad timestamp, empty placeholder | integration |
 | Permission denied and revoked | integration |
 | Token refresh | integration |
+| Push-token rotation re-registers without a second device row | integration |
+| A rotation on a switched-off device neither registers nor re-enables it | integration |
 | Plugin unavailable | integration |
 | Unsupported Web Push environment | integration |
 | Logout / user change | integration |
@@ -1773,7 +1807,7 @@ These are deliberate boundaries rather than defects.
 |------------|--------|
 | Notification-center content is local-only. | History does not follow the user across devices and is lost when application data is cleared. |
 | The offline queue replays receipts only. | Other operations still fail silently while offline; nothing else is queued yet. |
-| Apple devices cannot use Firebase until the Xcode SDK step lands. | Raw APNs tokens require the optional `APNS_*` transport; see [`../07-mobile-and-release/capacitor/ios-push-notifications.md`](../07-mobile-and-release/capacitor/ios-push-notifications.md). |
+| Direct APNs transport requires opt-in credentials. | Apple devices issue FCM registration tokens via the Xcode SPM Firebase Messaging SDK (pinned at `12.17.0`) and route to Firebase Admin. Raw APNs tokens remain an opt-in fallback if `APNS_*` credentials are configured; see [`../07-mobile-and-release/capacitor/ios-push-notifications.md`](../07-mobile-and-release/capacitor/ios-push-notifications.md). |
 | Analytics are never uploaded. | `delivered`, `clicked`, and `failed` remain unwritten, and there is no admin view. |
 
 ## Future Work

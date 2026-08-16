@@ -35,14 +35,29 @@ export type BatchReceivedHandler = (
 
 export type ActionHandler = (notification: NotificationEntity) => Promise<void> | void;
 
+export type TokenRefreshHandler = (token: DeviceToken) => Promise<void> | void;
+
 export interface NativePushHandlers {
   onReceived: ReceivedHandler;
   onBatchReceived: BatchReceivedHandler;
   onAction: ActionHandler;
+  /**
+   * A token this device did not ask for right now — the provider rotated it.
+   * Optional so a caller that only consumes notifications is unaffected.
+   */
+  onTokenRefresh?: TokenRefreshHandler;
 }
 
 export class NativePushService {
   private currentUid = "";
+  /** The last token value this device has already reported. */
+  private lastTokenValue = "";
+  /**
+   * True while `register()` is in flight. The rotation listener stands down then:
+   * `register()` is already going to persist and post whatever token arrives, and
+   * both listeners see the same emission.
+   */
+  private registering = false;
   private listenersReady = false;
   private listeners: Unsubscribe[] = [];
   private handlers: NativePushHandlers | null = null;
@@ -90,85 +105,82 @@ export class NativePushService {
     this.currentUid = assertUid(uid);
     await this.ensureListeners();
 
+    this.registering = true;
     try {
-      await this.createChannels();
-    } catch (error) {
-      notificationLog.error("Notification channels could not be created.", error);
-      throw new NotificationError(
-        NotificationErrorCodes.DeliveryFailed,
-        "notificationChannelsUnavailable",
-      );
-    }
+      try {
+        await this.createChannels();
+      } catch (error) {
+        notificationLog.error("Notification channels could not be created.", error);
+        throw new NotificationError(
+          NotificationErrorCodes.DeliveryFailed,
+          "notificationChannelsUnavailable",
+        );
+      }
 
-    const permRes = await NativeCore.checkPermission(PermissionKinds.Notifications);
-    if (!permRes.ok || !permRes.value.granted) {
-      throw new NotificationError(
-        NotificationErrorCodes.PermissionDenied,
-        "notificationPermissionDenied",
-      );
-    }
+      const permRes = await NativeCore.checkPermission(PermissionKinds.Notifications);
+      if (!permRes.ok || !permRes.value.granted) {
+        throw new NotificationError(
+          NotificationErrorCodes.PermissionDenied,
+          "notificationPermissionDenied",
+        );
+      }
 
-    let tokenValue = "";
-    let timeout: NodeJS.Timeout | null = null;
-    const tokenPromise = new Promise<string>((resolve, reject) => {
-      timeout = setTimeout(() => {
-        reject(new Error("timed out waiting for push registration token"));
-      }, 20_000);
+      let tokenValue = "";
+      let timeout: NodeJS.Timeout | null = null;
+      const tokenUnsub = { fn: null as (() => void) | null };
+      const tokenPromise = new Promise<string>((resolve, reject) => {
+        timeout = setTimeout(() => {
+          reject(new Error("timed out waiting for push registration token"));
+        }, 20_000);
 
-      void NativeCore.onPushToken((token: PushToken) => {
-        if (timeout) clearTimeout(timeout);
-        resolve(token.value);
-      }).then((unsubRes) => {
-        if (!unsubRes.ok) {
+        void NativeCore.onPushToken((token: PushToken) => {
           if (timeout) clearTimeout(timeout);
-          reject(new Error(unsubRes.error.message));
-        }
+          tokenUnsub.fn?.();
+          resolve(token.value);
+        }).then((unsubRes) => {
+          if (unsubRes.ok) {
+            tokenUnsub.fn = unsubRes.value;
+          } else {
+            if (timeout) clearTimeout(timeout);
+            reject(new Error(unsubRes.error.message));
+          }
+        });
       });
-    });
 
-    const regRes = await NativeCore.registerForPushNotifications();
-    if (!regRes.ok) {
-      if (timeout) clearTimeout(timeout);
-      notificationLog.warn("Push registration failed.", regRes.error);
-      throw new NotificationError(
-        NotificationErrorCodes.DeliveryFailed,
-        regRes.error.message.includes("timed out")
-          ? "notificationRegistrationTimeout"
-          : "notificationPermissionDenied",
-      );
+      const regRes = await NativeCore.registerForPushNotifications();
+      if (!regRes.ok) {
+        if (timeout) clearTimeout(timeout);
+        tokenUnsub.fn?.();
+        notificationLog.warn("Push registration failed.", regRes.error);
+        throw new NotificationError(
+          NotificationErrorCodes.DeliveryFailed,
+          regRes.error.message.includes("timed out")
+            ? "notificationRegistrationTimeout"
+            : "notificationPermissionDenied",
+        );
+      }
+
+      try {
+        tokenValue = await tokenPromise;
+      } catch (error: unknown) {
+        if (timeout) clearTimeout(timeout);
+        tokenUnsub.fn?.();
+        const message = error instanceof Error ? error.message : "";
+        notificationLog.warn("Push registration token resolution failed.", error);
+        throw new NotificationError(
+          NotificationErrorCodes.DeliveryFailed,
+          message.includes("timed out")
+            ? "notificationRegistrationTimeout"
+            : "notificationPermissionDenied",
+        );
+      }
+
+      const token = await this.buildDeviceToken(platform, tokenValue);
+      this.lastTokenValue = tokenValue;
+      return token;
+    } finally {
+      this.registering = false;
     }
-
-    try {
-      tokenValue = await tokenPromise;
-    } catch (error: unknown) {
-      if (timeout) clearTimeout(timeout);
-      const message = error instanceof Error ? error.message : "";
-      notificationLog.warn("Push registration token resolution failed.", error);
-      throw new NotificationError(
-        NotificationErrorCodes.DeliveryFailed,
-        message.includes("timed out")
-          ? "notificationRegistrationTimeout"
-          : "notificationPermissionDenied",
-      );
-    }
-
-    const now = new Date().toISOString();
-    const deviceId = await pushDeviceStore.deviceId(platform);
-    await pushDeviceStore.setEnabled(platform, true);
-    return {
-      id: `ntok_${this.currentUid}_${platform}_${deviceId}`.replace(/[^a-zA-Z0-9_:-]/g, "_"),
-      uid: this.currentUid,
-      platform,
-      provider: resolvePushProvider(platform, tokenValue),
-      deviceId,
-      token: tokenValue,
-      locale: await readNotificationLocale(),
-      deviceLabel: platform === "android" ? "ASOL Android" : "ASOL iOS",
-      enabled: true,
-      lastSeenAt: now,
-      createdAt: now,
-      updatedAt: now,
-    };
   }
 
   async isEnabled(): Promise<boolean> {
@@ -186,6 +198,7 @@ export class NativePushService {
     await NativeCore.removeAllDeliveredNotifications();
     await pushDeviceStore.setEnabled(platform, false);
     this.currentUid = "";
+    this.lastTokenValue = "";
   }
 
   async permissionState(): Promise<"granted" | "denied" | "prompt" | "unsupported"> {
@@ -217,6 +230,13 @@ export class NativePushService {
       void this.handleAction(native);
     });
     if (r2.ok) this.listeners.push(r2.value);
+
+    // A rotation the user did not trigger. Without this the provider silently
+    // replaces the token and the server keeps sending to the dead one.
+    const r3 = await NativeCore.onPushToken((token: PushToken) => {
+      void this.handleTokenRefresh(token.value);
+    });
+    if (r3.ok) this.listeners.push(r3.value);
   }
 
   private mapForCurrentUser(native: NotificationPayload): NotificationEntity | null {
@@ -245,6 +265,67 @@ export class NativePushService {
     } catch (error) {
       notificationLog.error("Notification tap handling failed.", error);
     }
+  }
+
+  /**
+   * A token arriving outside a registration call.
+   *
+   * Four reasons to do nothing, in order: `register()` is already handling this
+   * emission; no user is attached, so there is nothing to register against; the
+   * value is one this device has already reported; or this device is not opted
+   * in.
+   *
+   * That last check is the one that is easy to miss. `initialize()` sets
+   * `currentUid` and attaches these listeners on every start, before it knows
+   * whether push is enabled — so on a device where the user turned the switch
+   * off, the listeners are live and Android still delivers `onNewToken`.
+   * Without the check, `buildDeviceToken` would flip the stored enabled flag
+   * back to true and re-register the device with the server: a switch the user
+   * set to off, silently back on, with no UI action behind it.
+   */
+  private async handleTokenRefresh(value: string): Promise<void> {
+    const tokenValue = (value ?? "").trim();
+    if (!tokenValue) return;
+    if (this.registering) return;
+    if (!this.currentUid) return;
+    if (tokenValue === this.lastTokenValue) return;
+
+    const platform = nativePlatformService.getPlatform();
+    if (platform !== "android" && platform !== "ios") return;
+    if (!(await pushDeviceStore.isEnabled(platform))) return;
+
+    try {
+      const token = await this.buildDeviceToken(platform, tokenValue);
+      this.lastTokenValue = tokenValue;
+      await this.handlers?.onTokenRefresh?.(token);
+    } catch (error) {
+      // Best effort: a failed rotation must never break the session. The device
+      // re-registers on the next sign-in, language switch, or settings toggle.
+      notificationLog.warn("A rotated push token could not be registered.", error);
+    }
+  }
+
+  private async buildDeviceToken(
+    platform: "android" | "ios",
+    tokenValue: string,
+  ): Promise<DeviceToken> {
+    const now = new Date().toISOString();
+    const deviceId = await pushDeviceStore.deviceId(platform);
+    await pushDeviceStore.setEnabled(platform, true);
+    return {
+      id: `ntok_${this.currentUid}_${platform}_${deviceId}`.replace(/[^a-zA-Z0-9_:-]/g, "_"),
+      uid: this.currentUid,
+      platform,
+      provider: resolvePushProvider(platform, tokenValue),
+      deviceId,
+      token: tokenValue,
+      locale: await readNotificationLocale(),
+      deviceLabel: platform === "android" ? "ASOL Android" : "ASOL iOS",
+      enabled: true,
+      lastSeenAt: now,
+      createdAt: now,
+      updatedAt: now,
+    };
   }
 
   private async presentForeground(entity: NotificationEntity): Promise<void> {

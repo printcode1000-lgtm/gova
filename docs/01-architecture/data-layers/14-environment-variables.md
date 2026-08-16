@@ -73,35 +73,32 @@ PRODUCT_R2_WAREHOUSE_NAME=166409f3b449d8f1da0dee6d25ed3e08_gova-storage
 ```
 
 ```env
-# OTA releases. Explicit — never inherited from either image account.
-ASOL_OTA_R2_ENDPOINT=
+# Dedicated OTA release storage (isolated Cloudflare R2 account & bucket)
+ASOL_OTA_R2_ACCOUNT_ID=
+ASOL_OTA_R2_API_TOKEN=
 ASOL_OTA_R2_ACCESS_KEY_ID=
 ASOL_OTA_R2_SECRET_ACCESS_KEY=
-ASOL_OTA_R2_BUCKET_NAME=pic1
-ASOL_OTA_R2_PUBLIC_URL=https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev
+ASOL_OTA_R2_ENDPOINT=https://21fce63d15897aaa0b68fae1360a1810.r2.cloudflarestorage.com
+ASOL_OTA_R2_BUCKET_NAME=ota
+ASOL_OTA_R2_LOCATION=WEUR
+ASOL_OTA_R2_JURISDICTION=default
+ASOL_OTA_R2_PUBLIC_URL=https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev
+ASOL_OTA_R2_CATALOG_URI=https://catalog.cloudflarestorage.com/21fce63d15897aaa0b68fae1360a1810/ota
+ASOL_OTA_R2_WAREHOUSE_NAME=21fce63d15897aaa0b68fae1360a1810_ota
 ASOL_OTA_R2_PREFIX=app-updates
 ```
 
-These used to fall back to `PRODUCT_R2_*` and then `R2_*`. **A fallback across
-an account boundary is a silent redirect, not a default** — it writes somewhere
-else instead of failing, which is how 3,463 OTA artefacts accumulated on the
-product account. All three now require their own value and throw without it.
+These never fall back to `PRODUCT_R2_*` or `R2_*`. **A fallback across an account boundary is a silent redirect, not a default** — it writes somewhere else instead of failing. Every target requires its own values and throws without them.
 
-`R2_API_TOKEN` and `PRODUCT_R2_API_TOKEN` are Cloudflare **account** credentials
-— they create buckets and write CORS policy. Reading an image needs none of
-that, so the read paths take the S3 pair and the public URL only:
-`getR2PublicUrl()` / `getProductR2PublicUrl()` for turning a key into a URL,
-`getR2S3Credentials()` / `getProductR2S3Credentials()` for existence checks.
-`getR2Config()`, which does require the token, is left to provisioning. This is
-what lets the read-only deployments resolve images without holding a token that
-could reconfigure the bucket.
+`R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` are Cloudflare **account** credentials — they create buckets and manage CORS policy. Reading an image needs none of that, so read paths take the S3 pair and the public URL only: `getR2PublicUrl()` / `getProductR2PublicUrl()` / `getOtaR2PublicUrl()`.
 
 See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
 Sync full browser-upload CORS (GET/PUT/POST/DELETE/HEAD) from `ASOL_CORS_ORIGINS`:
 
 ```bash
-npm run r2:sync:cors
+npm run r2:sync:cors       # General (pic1) and Products (gova-storage)
+npm run r2:sync:cors:ota   # Dedicated OTA (ota)
 ```
 
 Migrate old public image URLs to the active R2 bucket:

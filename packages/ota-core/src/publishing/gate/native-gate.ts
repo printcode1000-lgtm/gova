@@ -228,6 +228,22 @@ export function inspectNativeCompatibility(
     };
   }
 
+  // `git` swallows every failure and returns an empty string, so a baseline
+  // whose blobs cannot be read — no git binary, a shallow or blobless clone, a
+  // tag that never arrived — is indistinguishable from a baseline that simply
+  // declared no native dependencies. The second reading is the dangerous one:
+  // it reports every installed Capacitor plugin as newly added. Probing the one
+  // file the comparison cannot work without separates the two, and an
+  // unreadable baseline is a missing baseline, which fails closed.
+  if (!git(`git show ${baseline}:package.json`)) {
+    return {
+      changedPaths: [],
+      changedNativeDependencies: [],
+      baselineMissing: true,
+      requiresStoreRelease: true,
+    };
+  }
+
   const readWorkingTree = (file: string): string | null => {
     const absolute = path.join(root, file);
     if (!existsSync(absolute)) return null;

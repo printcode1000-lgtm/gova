@@ -102,8 +102,8 @@ export function SuperAdminCloudAccountsPage() {
           </tr>
           <tr className="border-t">
             <td className="p-3">Cloudflare R2</td>
-            <td className="p-3">2</td>
-            <td className="p-3">2 buckets (حاويات تخزين)</td>
+            <td className="p-3">3</td>
+            <td className="p-3">3 حاويات منفصلة تماماً</td>
           </tr>
         </tbody>
       </TableWrap>
@@ -370,13 +370,14 @@ export function SuperAdminCloudAccountsPage() {
         المطبّقة، لا يحمل أي بيانات تطبيق، ومستثنى من هذه القاعدة بالتصميم.
       </Note>
 
-      <SectionTitle>Cloudflare R2 — حسابان</SectionTitle>
+      <SectionTitle>Cloudflare R2 — 3 حسابات</SectionTitle>
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
             <th className="p-3 text-start"> </th>
             <th className="p-3 text-start">عام</th>
             <th className="p-3 text-start">المنتجات</th>
+            <th className="p-3 text-start">تحديثات OTA</th>
           </tr>
         </thead>
         <tbody>
@@ -384,39 +385,50 @@ export function SuperAdminCloudAccountsPage() {
             <td className="p-3">المتغيرات</td>
             <td className="p-3" dir="ltr">R2_*</td>
             <td className="p-3" dir="ltr">PRODUCT_R2_*</td>
-          </tr>
-          <tr className="border-t align-top">
-            <td className="p-3">البريد الإلكتروني</td>
-            <td className="p-3" dir="ltr">print.code.1000@gmail.com</td>
-            <td className="p-3" dir="ltr">bids.stories@gmail.com</td>
+            <td className="p-3" dir="ltr">ASOL_OTA_R2_*</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">الحساب</td>
             <td className="p-3" dir="ltr">8486fdbb…3e043</td>
             <td className="p-3" dir="ltr">166409f3…d3e08</td>
+            <td className="p-3" dir="ltr">21fce63d…1810</td>
+          </tr>
+          <tr className="border-t align-top">
+            <td className="p-3">البريد الإلكتروني</td>
+            <td className="p-3" dir="ltr">print.code.1000@gmail.com</td>
+            <td className="p-3" dir="ltr">bids.stories@gmail.com</td>
+            <td className="p-3" dir="ltr">tenderx.engineer100@gmail.com</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">الحاوية (Bucket)</td>
             <td className="p-3" dir="ltr">pic1</td>
             <td className="p-3" dir="ltr">gova-storage</td>
+            <td className="p-3" dir="ltr">ota</td>
           </tr>
           <tr className="border-t align-top">
-            <td className="p-3">معرّف المزوّد</td>
+            <td className="p-3">معرّف المزوّد / الهدف</td>
             <td className="p-3" dir="ltr">CloudflareR2</td>
             <td className="p-3" dir="ltr">CloudflareR2Products</td>
+            <td className="p-3" dir="ltr">ota (R2_STORAGE_TARGETS)</td>
+          </tr>
+          <tr className="border-t align-top">
+            <td className="p-3">العنوان العام</td>
+            <td className="p-3" dir="ltr">pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev</td>
+            <td className="p-3" dir="ltr">pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev</td>
+            <td className="p-3" dir="ltr">pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev</td>
           </tr>
         </tbody>
       </TableWrap>
 
       <SubTitle>ما الذي يحدد وجهة كل ملف</SubTitle>
       <Note>
-        <span dir="ltr">src/config/storage-profiles.json</span>، ولا شيء
-        آخر:
+        <span dir="ltr">src/config/storage-profiles.json</span> لملفات الوسائط، ووحدة{" "}
+        <span dir="ltr">@asol/ota-core</span> لإصدارات OTA:
       </Note>
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
-            <th className="p-3 text-start">الملف الشخصي (Profile)</th>
+            <th className="p-3 text-start">الملف الشخصي (Profile) / الوحدة</th>
             <th className="p-3 text-start">الحساب</th>
             <th className="p-3 text-start">مجلد السحابة</th>
           </tr>
@@ -449,26 +461,31 @@ export function SuperAdminCloudAccountsPage() {
             </td>
             <td className="p-3" dir="ltr">images/products</td>
           </tr>
+          <tr className="border-t align-top">
+            <td className="p-3" dir="ltr">@asol/ota-core</td>
+            <td className="p-3">
+              <strong>تحديثات OTA</strong>
+            </td>
+            <td className="p-3" dir="ltr">app-updates/</td>
+          </tr>
         </tbody>
       </TableWrap>
       <Note>
-        ملف تعريف واحد بالضبط يشير إلى حساب المنتجات، واختبار تعاقدي (contract
-        test) يتحقق أن تلك القائمة{" "}
-        <strong>تساوي</strong> <span dir="ltr">["product-default"]</span> بالضبط.
+        ملف تعريف واحد فقط لصور المنتجات، وحساب مخصص ومعزول بالكامل لتحديثات
+        OTA دون أي تداخل أو وراثة ضمنية.
       </Note>
       <Note>
-        في بيئة التطوير لا يُستخدم أي من الحسابين: دالة{" "}
+        في بيئة التطوير لا يُستخدم أي من حسابات الوسائط: دالة{" "}
         <span dir="ltr">resolveStorageProvider</span> تُرجع{" "}
         <span dir="ltr">LocalStorage</span> بغض النظر عن الملف الشخصي.
       </Note>
 
-      <SubTitle>المحتوى الحالي</SubTitle>
+      <SubTitle>المحتوى الحالي للحاويات</SubTitle>
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
             <th className="p-3 text-start">الحاوية</th>
-            <th className="p-3 text-start">العناصر</th>
-            <th className="p-3 text-start">الحجم</th>
+            <th className="p-3 text-start">الاستخدام</th>
           </tr>
         </thead>
         <tbody>
@@ -476,30 +493,22 @@ export function SuperAdminCloudAccountsPage() {
             <td className="p-3">
               <span dir="ltr">pic1</span> (عام)
             </td>
-            <td className="p-3">3,467 صورة OTA وبروفايل</td>
-            <td className="p-3" dir="ltr">~61 MB</td>
+            <td className="p-3">صور المستخدمين (أفاتار، غلاف) والإعلانات والطلبات الخاصة</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3">
               <span dir="ltr">gova-storage</span> (منتجات)
             </td>
-            <td className="p-3">4</td>
-            <td className="p-3" dir="ltr">0.63 MB</td>
+            <td className="p-3">صور منتجات المتجر فقط</td>
+          </tr>
+          <tr className="border-t align-top">
+            <td className="p-3">
+              <span dir="ltr">ota</span> (تحديثات التطبيق)
+            </td>
+            <td className="p-3">بيان الإصدار (manifest.json) وشجرة الملفات وحزم التحديثات وحالات الإلغاء</td>
           </tr>
         </tbody>
       </TableWrap>
-      <Note>
-        الحاوية العامة تحمل أيضًا إصدارات OTA: البيان الحالي وشجرة الملفات،
-        ثلاث نسخ سابقة، وحزم نقل الإصدار الحالي.
-      </Note>
-      <Note>
-        حاوية المنتجات تحمل صور المنتجات <strong>بالإضافة إلى استثناءين
-        متعمدين</strong> — <span dir="ltr">app-updates/manifest.json</span>{" "}
-        و <span dir="ltr">app-updates/revocations.json</span>. نسخة المتجر
-        المبنية تحمل رابط البيان القديم مُدمجًا فيها، لذا تُنسخ هاتان
-        الوثيقتان هناك حتى يصدر إصدار متجر مبني على النطاق الحالي وينتشر بين
-        المستخدمين. كل شيء آخر ما زال يُحمَّل من الحساب العام.
-      </Note>
 
       <SubTitle>قراءة صورة ليست عملية على مستوى الحساب</SubTitle>
       <Note>

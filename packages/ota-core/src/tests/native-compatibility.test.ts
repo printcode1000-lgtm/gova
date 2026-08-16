@@ -307,12 +307,30 @@ assert.equal(
 // ---------------------------------------------------------------------------
 // Against a real commit, the classifier returns a coherent report
 // ---------------------------------------------------------------------------
+// The comparison needs the baseline's own `package.json`, and not every
+// checkout can hand it over: a CI image without git, or a shallow or blobless
+// clone, resolves `HEAD` and still yields nothing for its blobs. Probing that
+// here — not through the code under test — keeps the real assertion honest
+// where git works, and asserts the fail-closed shape where it does not.
 {
+  const baselineReadable =
+    spawnSync("git", ["show", "HEAD:package.json"], { encoding: "utf8" }).status === 0;
   const report = inspectNativeCompatibility("HEAD");
-  assert.equal(report.baselineMissing, false);
   assert.equal(Array.isArray(report.changedPaths), true);
   assert.equal(Array.isArray(report.changedNativeDependencies), true);
-  assert.deepEqual(report.changedNativeDependencies, []);
+  if (baselineReadable) {
+    assert.equal(report.baselineMissing, false);
+    assert.deepEqual(report.changedNativeDependencies, []);
+  } else {
+    assert.equal(
+      report.baselineMissing,
+      true,
+      "An unreadable baseline must be reported as missing, never as a baseline " +
+        "that declared no native dependencies — that reading marks every " +
+        "installed plugin as newly added.",
+    );
+    assert.equal(report.requiresStoreRelease, true);
+  }
 }
 
 // ---------------------------------------------------------------------------

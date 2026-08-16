@@ -33,10 +33,6 @@ import {
   scanBuiltCapabilities,
 } from "./capability-scan";
 import {
-  hasLegacyOtaOrigin,
-  mirrorLegacyOtaManifest,
-} from "./mirror-legacy-manifest";
-import {
   changedPathsFromHistory,
   selectRecentHistoryKeys,
   staleBundleKeys,
@@ -408,10 +404,6 @@ export async function publishOtaRelease(
 
     const legacyKeys = await listOtaObjectKeys(client, `${prefix}/releases/`);
     await deleteOtaObjects(client, legacyKeys);
-
-    if (hasLegacyOtaOrigin()) {
-      await mirrorLegacyOtaManifest();
-    }
 
     return ok({
       version,

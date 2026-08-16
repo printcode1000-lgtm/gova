@@ -54,6 +54,13 @@ const NOTIFICATIONS_SERVICE_KEYS = [
   // ended up on the product account.
   'ASOL_OTA_R2_PUBLIC_URL',
   'ASOL_OTA_R2_PREFIX',
+  // The explicit manifest URL wins over the derived one in
+  // `getOtaApprovalServerConfig`, so leaving it out of this list does not make
+  // it unused — it makes it stale. It was still pointing at the retired mirror
+  // on the product account after OTA moved to its own account, which answers
+  // 404: the approval API could not read the manifest, and failing closed means
+  // nobody could install anything.
+  'NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL',
 ] as const;
 
 const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;

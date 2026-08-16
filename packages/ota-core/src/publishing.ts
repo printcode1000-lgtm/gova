@@ -132,10 +132,6 @@ export {
   type CollectedFileEntry,
 } from "./publishing/release/manifest-assembly";
 export {
-  hasLegacyOtaOrigin,
-  mirrorLegacyOtaManifest,
-} from "./publishing/release/mirror-legacy-manifest";
-export {
   readTrackedRevokedVersions,
   writeTrackedRevokedVersions,
   mergeRevokedVersions,

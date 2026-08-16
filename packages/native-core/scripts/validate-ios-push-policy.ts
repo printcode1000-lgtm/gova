@@ -19,6 +19,8 @@ function read(relativePath: string): string {
 const project = read("ios/App/App.xcodeproj/project.pbxproj");
 const entitlements = read("ios/App/App/App.entitlements");
 const appDelegate = read("ios/App/App/AppDelegate.swift");
+const infoPlist = read("ios/App/App/Info.plist");
+const capAppSpm = read("ios/App/CapApp-SPM/Package.swift");
 const capacitorConfig = read("capacitor.config.ts");
 const envExample = read(".env.example");
 const firebaseConfig = read("ios/App/App/GoogleService-Info.plist");
@@ -32,6 +34,76 @@ const errors: string[] = [];
 
 function requireText(source: string, value: string, message: string): void {
   if (!source.includes(value)) errors.push(message);
+}
+
+// Xcode project SPM dependency checks for Firebase Messaging
+requireText(
+  project,
+  'repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";',
+  "project.pbxproj must contain the firebase-ios-sdk repository URL.",
+);
+requireText(
+  project,
+  "kind = exactVersion;",
+  "project.pbxproj must pin firebase-ios-sdk using exactVersion.",
+);
+requireText(
+  project,
+  "productName = FirebaseMessaging;",
+  "project.pbxproj must declare the FirebaseMessaging product dependency for the App target.",
+);
+
+// AppDelegate Firebase initialization and token handling checks
+requireText(
+  appDelegate,
+  "FirebaseApp.configure()",
+  "AppDelegate must call FirebaseApp.configure() in didFinishLaunchingWithOptions.",
+);
+requireText(
+  appDelegate,
+  "import FirebaseMessaging",
+  "AppDelegate must import FirebaseMessaging.",
+);
+requireText(
+  appDelegate,
+  "Messaging.messaging().apnsToken = deviceToken",
+  "AppDelegate must hand the raw APNs device token to Messaging.messaging().apnsToken.",
+);
+requireText(
+  appDelegate,
+  "Messaging.messaging().token {",
+  "AppDelegate must request the FCM token inside didRegisterForRemoteNotificationsWithDeviceToken: NativePushService.register() waits 20s for a token event, and Firebase's own didReceiveRegistrationToken fires before any listener exists.",
+);
+requireText(
+  appDelegate,
+  "didReceiveRegistrationToken",
+  "AppDelegate must implement messaging(_:didReceiveRegistrationToken:) to forward FCM tokens to Capacitor.",
+);
+if (appDelegate.includes("object: deviceToken")) {
+  errors.push(
+    "AppDelegate must no longer post raw Data deviceToken to Capacitor; it must hand APNs token to FirebaseMessaging and post the FCM token String.",
+  );
+}
+
+// Info.plist swizzling configuration check
+requireText(
+  infoPlist,
+  "<key>FirebaseAppDelegateProxyEnabled</key>",
+  "Info.plist must declare FirebaseAppDelegateProxyEnabled.",
+);
+// The key alone proves nothing: Info.plist contains several unrelated <false/>
+// values, so the pair has to be matched together.
+if (!/<key>FirebaseAppDelegateProxyEnabled<\/key>\s*<false\/>/.test(infoPlist)) {
+  errors.push(
+    "Info.plist must set FirebaseAppDelegateProxyEnabled to <false/>; the app forwards APNs and FCM tokens explicitly and must not also be swizzled.",
+  );
+}
+
+// CapApp-SPM regression check (Capacitor sync erases additions there)
+if (capAppSpm.includes("Firebase") || capAppSpm.includes("firebase-ios-sdk")) {
+  errors.push(
+    "ios/App/CapApp-SPM/Package.swift must not contain Firebase dependencies; Capacitor CLI sync will erase them.",
+  );
 }
 
 requireText(
@@ -208,6 +280,6 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `iOS push policy passed: ${expected.bundleId} delivers through Firebase Cloud Messaging ` +
-    `(app ${expected.firebaseAppId}); the APNs key stays in Firebase Console and out of git.`,
+  `iOS push policy passed: ${expected.bundleId} configures Firebase Messaging iOS SDK ` +
+    `(app ${expected.firebaseAppId}) via Xcode SPM; AppDelegate explicitly forwards FCM registration tokens and swizzling is disabled.`,
 );

@@ -17,8 +17,13 @@ import { runRuntimeSealingTests } from "./runtime-sealing.test";
 import { runPublishingExportsTests } from "./publishing-exports.test";
 import { runNativeCompatibilityTests } from "./native-compatibility.test";
 import { runR2RetryTests } from "./r2-retry.test";
+import { loadOtaEnvironment } from "../publishing";
 
 async function main(): Promise<void> {
+  // Removing the legacy mirror eliminated an import-time dotenv side effect.
+  // We load the environment explicitly so tests running subprocesses in temp
+  // fixture directories (e.g. native compatibility dry-runs) inherit the OTA configuration.
+  loadOtaEnvironment();
   console.log("\n🧪 Running @asol/ota-core Test Suites...\n");
 
   console.log("1. Unit Tests:");

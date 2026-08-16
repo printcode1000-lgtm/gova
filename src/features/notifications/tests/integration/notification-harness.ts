@@ -407,6 +407,18 @@ export async function emitLocalNotificationTap(payload: InboundPayload): Promise
   await flushMicrotasks();
 }
 
+/** A token the provider rotated on its own, with no registration call. */
+export async function emitPushTokenRefresh(value: string): Promise<void> {
+  harnessState.registrationToken = value;
+  const token = {
+    value,
+    platform: harnessState.platform,
+    provider: harnessState.platform === "ios" ? "apns" : "fcm",
+  };
+  for (const listener of [...fakeTokenListeners]) listener(token as never);
+  await flushMicrotasks();
+}
+
 /** Let every queued promise settle. Handlers are fired without awaiting. */
 export async function flushMicrotasks(rounds = 12): Promise<void> {
   for (let index = 0; index < rounds; index += 1) await Promise.resolve();
@@ -713,6 +725,7 @@ export function loadNotificationModule(): {
   fakePush.actions.clear();
   fakePush.taps.clear();
   fakeLocal.actions.clear();
+  fakeTokenListeners.clear();
 
   const api = requireFromHere("../../index") as typeof import("../../index");
   const repositoryModule = requireFromHere(

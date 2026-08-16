@@ -1,4 +1,4 @@
-﻿# `@asol/ota-core` — Architecture Reference
+# `@asol/ota-core` — Architecture Reference
 
 > **Canonical path**: `packages/ota-core/`  
 > **Package name**: `@asol/ota-core`
@@ -174,7 +174,6 @@ before any work begins — never a default, never inferred.
 | `ota:keygen` | Generate a new OTA signing keypair |
 | `ota:revoke` | Revoke a published OTA release |
 | `ota:self-test` | Self-test the OTA pipeline without uploading |
-| `ota:mirror-legacy` | Mirror a release to the legacy manifest path |
 | `build:static` | Full static export pipeline (gate + Next build + audits) |
 | `serve:out` / `preview:static` | Serve the `out/` directory locally |
 | `version:validate` | Validate that all version files are consistent |

@@ -1,15 +1,14 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
+import { R2_STORAGE_TARGETS } from "../../config/r2-storage-topology";
 
 /**
- * Guards the two-account R2 split.
+ * Guards the three-account R2 split.
  *
- * One account holds product images; the other holds everything else. That was
- * the intent from the start, and it silently stopped being true: OTA release
- * publishing fell back from `ASOL_OTA_R2_*` to `PRODUCT_R2_*`, and 3,463 build
- * artefacts — 50 MB — accumulated on the product account, outnumbering the one
- * product image on it by three orders of magnitude.
+ * Account 1 (products): holds product images and nothing else.
+ * Account 2 (general): holds profile images, covers, advertisements, and special orders.
+ * Account 3 (ota): holds OTA release manifests, file trees, history, and transport bundles.
  *
  * A fallback across an account boundary is the failure mode: it does not error,
  * it writes somewhere else. These assertions are about shape, not about live
@@ -60,6 +59,7 @@ const otaSources = [
   ["packages", "ota-core", "src", "publishing", "adapters", "r2-storage.adapter.ts"],
   ["packages", "ota-core", "src", "publishing", "config", "ota-config.ts"],
   ["src", "core", "config", "server-env.values.ts"],
+  ["src", "core", "config", "server-env", "server-env.values.auth-notifications.ts"],
   // The readiness catalog is the fourth place the chain lived. It listed
   // alternatives the publisher no longer accepts, which would have reported the
   // release console's OTA button ready and then failed inside the command.
@@ -157,6 +157,61 @@ assert.doesNotMatch(
   /image\.url/,
   "parseImages requires a stored `url`. Rows hold keys only, so every image " +
     "would be filtered away and products would render with none.",
+);
+
+// ── 5. R2_STORAGE_TARGETS contains three distinct isolated targets ───────────
+
+const targetKeys = Object.keys(R2_STORAGE_TARGETS).sort();
+assert.deepEqual(
+  targetKeys,
+  ["general", "ota", "products"],
+  "R2_STORAGE_TARGETS must contain exactly three distinct targets: general, ota, products.",
+);
+
+const { general, products, ota } = R2_STORAGE_TARGETS;
+assert.notEqual(ota.accountId, general.accountId, "OTA accountId must not match general");
+assert.notEqual(ota.accountId, products.accountId, "OTA accountId must not match products");
+assert.notEqual(ota.endpoint, general.endpoint, "OTA endpoint must not match general");
+assert.notEqual(ota.endpoint, products.endpoint, "OTA endpoint must not match products");
+assert.notEqual(ota.bucketName, general.bucketName, "OTA bucketName must not match general");
+assert.notEqual(ota.bucketName, products.bucketName, "OTA bucketName must not match products");
+assert.notEqual(ota.publicUrl, general.publicUrl, "OTA publicUrl must not match general");
+assert.notEqual(ota.publicUrl, products.publicUrl, "OTA publicUrl must not match products");
+
+// ── 6. No reference to ASOL_OTA_LEGACY_R2_ in codebase ────────────────────────
+
+const LEGACY_TOKEN = ["ASOL", "OTA", "LEGACY", "R2"].join("_");
+
+function scanForLegacyOta(dir: string): string[] {
+  const violations: string[] = [];
+  const entries = readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      violations.push(...scanForLegacyOta(fullPath));
+    } else if (/\.(ts|tsx|js|mjs)$/.test(entry.name)) {
+      if (fullPath === path.join(root, "src", "core", "storage", "tests", "r2-account-separation.test.ts")) {
+        continue;
+      }
+      const content = readFileSync(fullPath, "utf8");
+      if (content.includes(LEGACY_TOKEN)) {
+        violations.push(path.relative(root, fullPath));
+      }
+    }
+  }
+  return violations;
+}
+
+const legacyViolations = [
+  ...scanForLegacyOta(path.join(root, "packages", "ota-core", "src")),
+  ...scanForLegacyOta(path.join(root, "src")),
+  ...scanForLegacyOta(path.join(root, "scripts")),
+];
+assert.deepEqual(
+  legacyViolations,
+  [],
+  `Found references to ASOL_OTA_LEGACY_R2_ in: ${legacyViolations.join(", ")}. ` +
+    "The legacy mirror is completely removed; reintroducing it would silently republish to an account OTA no longer owns.",
 );
 
 console.log("R2 account separation contract passed.");

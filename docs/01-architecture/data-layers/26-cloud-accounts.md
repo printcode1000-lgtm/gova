@@ -13,7 +13,7 @@ variable carries what.
 |---|---:|---|
 | Vercel | 5 | one deployment each |
 | Turso | 5 | 21 databases, 70 application tables |
-| Cloudflare R2 | 2 | 2 buckets |
+| Cloudflare R2 | 3 | 3 buckets |
 
 The number five is not a coincidence: **one Vercel account per deployment, and
 its data on its own Turso account.** A busy catalogue cannot consume the quota
@@ -78,72 +78,61 @@ domains. Each read-only deployment holds **only** the shards it serves.
 | `advertisements` | 4 | hero slider, featured marquee, trending ribbon |
 | `system-ops` | 9 | `system_logs`, `data_health_*` |
 
-`system-ops` is split out of the same `profile.db` source as the profile shards
-but **did not move to hesham105**: it holds operational records, not profile
-data.
-
 ### hesham102 — notifications
 
 `asol-notifications` · 3 tables — `user_notification_tokens`,
 `user_notification_preferences`, plus drizzle bookkeeping.
-
-Push traffic is one provider request per device token — the burstiest workload
-in the system, isolated so it can never consume the quota that serves logins.
-
-`user_notification_tokens.uid` links logically to `users.uid`, but they sit on
-different accounts, so **nothing may JOIN them**. `BroadcastRecipientRepository`
-reads tokens first, then looks up only those uids and merges in memory.
 
 ### hesham103 — products
 
 `asol-products` · 8 tables — `products`, product reviews and replies, pharmacy
 profile overrides.
 
-Catalogue listing and search are the highest-volume queries in the system.
+### hesham104 — 9 marketplace order shards
 
-### hesham104 — 9 order shards
+`asol-orders` · 17 tables across 9 databases.
 
-`orders-core` (2) · `orders-items` (3) · `orders-fulfillment` (2) ·
-`orders-delivery-plans` (7) · `orders-shipping-quotes` (1) · `orders-payments`
-(1) · `orders-refunds` (1) · `orders-after-sales` (6) · `orders-disputes-audit`
-(3).
-
-Only `GET /api/orders` moved to the service. The detail view enriches an order
-with profile contacts and store details, and a write spans several shards plus
-the profile and product databases — splitting that across accounts would turn
-one operation into several that can fail half-done.
+| Shard | Tables | Contents |
+|---|---:|---|
+| `orders-core` | 1 | `orders` |
+| `orders-items` | 1 | `order_items` |
+| `orders-fulfillment` | 1 | `order_fulfillment` |
+| `orders-delivery-plans` | 1 | `order_delivery_plans` |
+| `orders-shipping-quotes` | 1 | `order_shipping_quotes` |
+| `orders-payments` | 1 | `order_payments` |
+| `orders-refunds` | 1 | `order_refunds` |
+| `orders-after-sales` | 1 | `order_after_sales` |
+| `orders-disputes-audit` | 1 | `order_disputes_audit` |
 
 ### hesham105 — 7 profile shards
 
-`profile-core` (2) · `profile-contact` (3) · `profile-media` (1) ·
-`profile-social` (4) · `profile-catalog` (4) · `profile-promotions` (2) ·
-`profile-fulfillment` (1).
+`asol-profiles` · 33 tables across 7 databases.
 
-### One table, one database
-
-**No application table exists in more than one database.** Verified across all
-21: 70 distinct application tables, zero overlap.
-
-`__drizzle_migrations` is the one name appearing in four databases. It is
-drizzle's own record of applied migrations, holds no application data, and is
-excluded from the rule by design.
-
-See [11. Current Databases](./11-current-databases.md).
+| Shard | Tables | Contents |
+|---|---:|---|
+| `profile-core` | 7 | profiles, ratings, verification |
+| `profile-contact` | 7 | phones, emails, addresses |
+| `profile-media` | 3 | galleries, avatars, covers |
+| `profile-social` | 4 | links, handles, platforms |
+| `profile-catalog` | 4 | services, categories |
+| `profile-promotions` | 4 | offers, discounts, coupons |
+| `profile-fulfillment` | 4 | delivery zones, working hours |
 
 ---
 
-## Cloudflare R2 — two accounts
+## Cloudflare R2 — three accounts
 
-| | General | Products |
-|---|---|---|
-| Variables | `R2_*` | `PRODUCT_R2_*` |
-| Account | `8486fdbb…3e043` | `166409f3…d3e08` |
-| Bucket | `pic1` | `gova-storage` |
-| Provider id | `CloudflareR2` | `CloudflareR2Products` |
+| | General | Products | OTA Updates |
+|---|---|---|---|
+| Variables | `R2_*` | `PRODUCT_R2_*` | `ASOL_OTA_R2_*` |
+| Account ID | `8486fdbb…3e043` | `166409f3…d3e08` | `21fce63d…1810` |
+| Bucket | `pic1` | `gova-storage` | `ota` |
+| Target / Provider | `CloudflareR2` | `CloudflareR2Products` | `ota` (in `R2_STORAGE_TARGETS`) |
+| Public Base URL | `https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev` | `https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev` | `https://pub-ee70bc6c84c54d9b8a8ba44c6f7820a9.r2.dev` |
 
 ### What decides where a file goes
 
-`src/config/storage-profiles.json`, and nothing else:
+`src/config/storage-profiles.json` routes application images:
 
 | Profile | Account | Cloud folder |
 |---|---|---|
@@ -153,34 +142,21 @@ See [11. Current Databases](./11-current-databases.md).
 | `spicialOrder` | general | `images/content/spicialOrder` |
 | `product-default` | **products** | `images/products` |
 
-Exactly one profile may point at the product account, and a contract test
-asserts that list **equals** `["product-default"]`.
-
-In development neither account is used: `resolveStorageProvider` returns
-`LocalStorage` regardless of the profile.
+OTA release storage is governed solely by `@asol/ota-core` targeting the dedicated `ota` bucket (`ASOL_OTA_R2_*`).
 
 ### Current contents
 
-| Bucket | Objects | Size |
-|---|---:|---:|
-| `pic1` (general) | 3,467 OTA + profile images | ~61 MB |
-| `gova-storage` (products) | 4 | 0.63 MB |
+| Bucket | Objects | Size | Contents |
+|---|---:|---:|---|
+| `pic1` (general) | 8 | 0.82 MB | Profile images (avatars, covers), advertising banners, special orders |
+| `gova-storage` (products) | 2 | 0.05 MB | Product catalog images only (`images/products/...`) |
+| `ota` (OTA releases) | 2,251 | 54.15 MB | Live release `0.2.4.1` (`manifest.json`, file tree, transport bundle) |
 
-The general bucket also carries OTA releases: the current manifest and file
-tree, three history entries, and the current release's transport bundles.
-
-The products bucket holds product images **plus two deliberate exceptions** —
-`app-updates/manifest.json` and `app-updates/revocations.json`. The store-built
-shell has the old manifest URL compiled in, so those two documents are mirrored
-there until a store release built against the current origin has rolled out.
-Everything else still downloads from the general account.
+The general and product buckets hold zero OTA objects; `images/` objects in both buckets remain 100% intact. OTA release artefacts are completely isolated in the `ota` bucket.
 
 ### Reading an image is not an account operation
 
-`R2_API_TOKEN` and `PRODUCT_R2_API_TOKEN` create buckets and write CORS policy.
-Turning a key into a URL is string work and an existence check needs only the S3
-pair, so the read paths take the narrow accessors — and neither `asol-products`
-nor `asol-profiles` holds an API token.
+`R2_API_TOKEN`, `PRODUCT_R2_API_TOKEN`, and `ASOL_OTA_R2_API_TOKEN` create buckets and manage CORS policy. Turning a key into a URL is string work and an existence check needs only the S3 pair, so the read paths take the narrow accessors — and neither `asol-products` nor `asol-profiles` holds an API token.
 
 See [R2 Storage Accounts](../../05-platform-features/r2-storage-accounts.md).
 
@@ -195,13 +171,9 @@ Nothing here is a secret store. Every value is an environment variable:
 | Turso runtime | `TURSO_*_DATABASE_URL` / `_AUTH_TOKEN`, per-shard `<SHARD>_DATABASE_*` |
 | Turso platform | `TURSO_*_API_TOKEN`, `TURSO_*_ORGANIZATION` — scripts only |
 | Vercel | `VERCEL_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, `VERCEL_PRODUCTS_TOKEN`, `VERCEL_ORDERS_TOKEN`, `VERCEL_PROFILES_TOKEN` |
-| R2 | `R2_*`, `PRODUCT_R2_*`, and `ASOL_OTA_LEGACY_R2_*` for the mirror |
-| Client-safe origins | `NEXT_PUBLIC_ASOL_{NOTIFICATIONS,PRODUCTS,ORDERS,PROFILES}_URL` |
+| R2 | `R2_*`, `PRODUCT_R2_*`, and `ASOL_OTA_R2_*` for dedicated OTA storage |
+| Client-safe origins | `NEXT_PUBLIC_ASOL_{NOTIFICATIONS,PRODUCTS,ORDERS,PROFILES}_URL`, `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` |
 
-`npm run db:push:vercel-env` pushes the server-side set to the `gova` project.
-Each service deploy script pushes only what that account needs.
+`npm run db:push:vercel-env` pushes the server-side set to the `gova` project. Each service deploy script pushes only what that account needs.
 
-**A fallback that crosses an account boundary is not a default — it is a silent
-redirect.** OTA once fell back from `ASOL_OTA_R2_*` to `PRODUCT_R2_*`, and 3,463
-release objects accumulated on the account reserved for product images. Every
-such chain has been removed; a missing value now fails loudly.
+**A fallback that crosses an account boundary is not a default — it is a silent redirect.** OTA operations read `ASOL_OTA_R2_*` directly with zero fallbacks. Every fallback chain across accounts has been removed.

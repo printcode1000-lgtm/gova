@@ -4,8 +4,15 @@
  */
 
 import { asolHttpFetch } from '@/core/api/asol-http-transport';
-import { getR2CloudflareCredentials, getR2S3Credentials } from '@/core/config/server-env.values';
+import {
+  getR2CloudflareCredentials,
+  getR2S3Credentials,
+  getOtaR2CloudflareCredentials,
+  getOtaR2S3Credentials,
+} from '@/core/config/server-env.values';
 import type { R2CorsPolicy, R2CorsRule } from './r2.types';
+
+export type R2PlatformAccount = 'general' | 'ota';
 
 const CF_API_BASE = 'https://api.cloudflare.com/client/v4';
 
@@ -24,26 +31,43 @@ class CloudflareR2ApiError extends Error {
   }
 }
 
-function getCloudflareHeaders(): HeadersInit {
-  const { apiToken } = getR2CloudflareCredentials();
+function resolveCredentials(account: R2PlatformAccount) {
+  if (account === 'ota') {
+    return {
+      cloudflare: getOtaR2CloudflareCredentials(),
+      s3: getOtaR2S3Credentials(),
+    };
+  }
   return {
-    Authorization: `Bearer ${apiToken}`,
+    cloudflare: getR2CloudflareCredentials(),
+    s3: getR2S3Credentials(),
+  };
+}
+
+function getCloudflareHeaders(account: R2PlatformAccount): HeadersInit {
+  const { cloudflare } = resolveCredentials(account);
+  return {
+    Authorization: `Bearer ${cloudflare.apiToken}`,
     'Content-Type': 'application/json',
   };
 }
 
-function getJurisdictionHeader(): HeadersInit {
-  const { jurisdiction } = getR2S3Credentials();
-  if (jurisdiction === 'default') return {};
-  return { 'cf-r2-jurisdiction': jurisdiction };
+function getJurisdictionHeader(account: R2PlatformAccount): HeadersInit {
+  const { s3 } = resolveCredentials(account);
+  if (s3.jurisdiction === 'default') return {};
+  return { 'cf-r2-jurisdiction': s3.jurisdiction };
 }
 
-async function cloudflareFetch<T>(path: string, init?: RequestInit): Promise<T> {
+async function cloudflareFetch<T>(
+  path: string,
+  init?: RequestInit,
+  account: R2PlatformAccount = 'general',
+): Promise<T> {
   const response = await asolHttpFetch(`${CF_API_BASE}${path}`, {
     ...init,
     headers: {
-      ...getCloudflareHeaders(),
-      ...getJurisdictionHeader(),
+      ...getCloudflareHeaders(account),
+      ...getJurisdictionHeader(account),
       ...(init?.headers ?? {}),
     },
   });
@@ -61,13 +85,18 @@ async function cloudflareFetch<T>(path: string, init?: RequestInit): Promise<T> 
   return body.result;
 }
 
-export async function getR2BucketCors(bucketName?: string): Promise<R2CorsRule[]> {
-  const { accountId } = getR2CloudflareCredentials();
-  const bucket = bucketName ?? getR2S3Credentials().bucketName;
+export async function getR2BucketCors(
+  bucketName?: string,
+  account: R2PlatformAccount = 'general',
+): Promise<R2CorsRule[]> {
+  const { cloudflare, s3 } = resolveCredentials(account);
+  const bucket = bucketName ?? s3.bucketName;
   let result: { rules?: R2CorsRule[] };
   try {
     result = await cloudflareFetch<{ rules?: R2CorsRule[] }>(
-      `/accounts/${accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
+      `/accounts/${cloudflare.accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
+      undefined,
+      account,
     );
   } catch (error) {
     if (error instanceof CloudflareR2ApiError && error.status === 404) {
@@ -78,33 +107,44 @@ export async function getR2BucketCors(bucketName?: string): Promise<R2CorsRule[]
   return result.rules ?? [];
 }
 
-export async function putR2BucketCors(rules: R2CorsRule[], bucketName?: string): Promise<R2CorsRule[]> {
-  const { accountId } = getR2CloudflareCredentials();
-  const bucket = bucketName ?? getR2S3Credentials().bucketName;
+export async function putR2BucketCors(
+  rules: R2CorsRule[],
+  bucketName?: string,
+  account: R2PlatformAccount = 'general',
+): Promise<R2CorsRule[]> {
+  const { cloudflare, s3 } = resolveCredentials(account);
+  const bucket = bucketName ?? s3.bucketName;
   const result = await cloudflareFetch<{ rules?: R2CorsRule[] }>(
-    `/accounts/${accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
+    `/accounts/${cloudflare.accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
     {
       method: 'PUT',
       body: JSON.stringify({ rules } satisfies R2CorsPolicy),
-    }
+    },
+    account,
   );
   return result.rules ?? rules;
 }
 
-export async function deleteR2BucketCors(bucketName?: string): Promise<void> {
-  const { accountId } = getR2CloudflareCredentials();
-  const bucket = bucketName ?? getR2S3Credentials().bucketName;
+export async function deleteR2BucketCors(
+  bucketName?: string,
+  account: R2PlatformAccount = 'general',
+): Promise<void> {
+  const { cloudflare, s3 } = resolveCredentials(account);
+  const bucket = bucketName ?? s3.bucketName;
   await cloudflareFetch<null>(
-    `/accounts/${accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
-    { method: 'DELETE' }
+    `/accounts/${cloudflare.accountId}/r2/buckets/${encodeURIComponent(bucket)}/cors`,
+    { method: 'DELETE' },
+    account,
   );
 }
 
-export async function verifyCloudflareApiToken(): Promise<boolean> {
-  const { accountId, apiToken } = getR2CloudflareCredentials();
+export async function verifyCloudflareApiToken(
+  account: R2PlatformAccount = 'general',
+): Promise<boolean> {
+  const { cloudflare } = resolveCredentials(account);
   const response = await asolHttpFetch(
-    `${CF_API_BASE}/accounts/${accountId}/tokens/verify`,
-    { headers: { Authorization: `Bearer ${apiToken}` } }
+    `${CF_API_BASE}/accounts/${cloudflare.accountId}/tokens/verify`,
+    { headers: { Authorization: `Bearer ${cloudflare.apiToken}` } }
   );
   const body = (await response.json()) as { success: boolean; result?: { status: string } };
   return response.ok && body.success && body.result?.status === 'active';

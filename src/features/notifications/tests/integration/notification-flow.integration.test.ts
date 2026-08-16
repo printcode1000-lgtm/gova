@@ -5,6 +5,7 @@ import {
   emitLocalNotificationTap,
   emitNativeTapEvent,
   emitNotificationTap,
+  emitPushTokenRefresh,
   flushMicrotasks,
   harnessState,
   loadNotificationModule,
@@ -854,6 +855,103 @@ scenario(
       "a token refresh must replace the device row, not add one",
     );
     assert.ok(devices[0].token.includes("NEW"));
+  },
+);
+
+scenario(
+  "a rotated token is registered with the server without a second device row",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+
+    await notifications.registerDevice({ uid: UID, phone: PHONE });
+    const baseline = harnessState.serverRegisteredTokens.length;
+
+    await emitPushTokenRefresh("fcm-token-rotated-cccccccccccc:APA91bROTATED");
+
+    assert.equal(
+      harnessState.serverRegisteredTokens.length,
+      baseline + 1,
+      "rotation must register one new token with the server",
+    );
+    assert.equal(
+      harnessState.serverRegisteredTokens[harnessState.serverRegisteredTokens.length - 1]?.token,
+      "fcm-token-rotated-cccccccccccc:APA91bROTATED",
+      "last server registration must carry the rotated token value",
+    );
+    assert.equal(
+      (await notifications.listDevices({ uid: UID })).length,
+      1,
+      "rotation must not add a second device row",
+    );
+  },
+);
+
+scenario(
+  "a registration does not also fire the rotation path",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+
+    await notifications.registerDevice({ uid: UID, phone: PHONE });
+    await flushMicrotasks();
+
+    assert.equal(
+      harnessState.serverRegisteredTokens.length,
+      1,
+      "the registering flag must suppress the permanent listener during register()",
+    );
+  },
+);
+
+scenario(
+  "the same rotated token is not registered twice",
+  async () => {
+    resetHarnessCompletely();
+    const { notifications } = await startAndroidSession();
+
+    await notifications.registerDevice({ uid: UID, phone: PHONE });
+    const baseline = harnessState.serverRegisteredTokens.length;
+
+    await emitPushTokenRefresh("fcm-token-rotated-dddddddddddd:APA91bDEDUP");
+    await emitPushTokenRefresh("fcm-token-rotated-dddddddddddd:APA91bDEDUP");
+
+    assert.equal(
+      harnessState.serverRegisteredTokens.length,
+      baseline + 1,
+      "the same rotated token must only be registered once",
+    );
+  },
+);
+
+scenario(
+  "a rotation on a switched-off device does not turn push back on",
+  async () => {
+    resetHarnessCompletely();
+    const first = await startAndroidSession();
+    await first.notifications.registerDevice({ uid: UID, phone: PHONE });
+    // The settings switch, turned off.
+    await first.notifications.unregisterDevice({ uid: UID, phone: PHONE });
+
+    // A later app start: initialize() attaches the token listeners and sets the
+    // active uid before it knows push is disabled, which is exactly the window
+    // a provider rotation can land in.
+    resetHarnessKeepingStorage();
+    const { notifications } = await startAndroidSession();
+    const baseline = harnessState.serverRegisteredTokens.length;
+
+    await emitPushTokenRefresh("fcm-token-rotated-eeeeeeeeeeee:APA91bOFFDEVICE");
+
+    assert.equal(
+      harnessState.serverRegisteredTokens.length,
+      baseline,
+      "a rotation must not register a device the user switched off",
+    );
+    assert.equal(
+      (await notifications.getDiagnostics({ uid: UID })).deviceEnabled,
+      false,
+      "a rotation must not flip the device switch back on",
+    );
   },
 );
 

@@ -8,14 +8,14 @@
 - Firebase Apple App ID: `1:543298343631:ios:9c65ac6e8871ec7c609dba`
 - Encoded App ID: `app-1-543298343631-ios-9c65ac6e8871ec7c609dba`
 
-The Firebase Apple registration belongs to the same application identity. Until
-the Firebase Messaging iOS SDK is added to the Xcode project, Capacitor's Push
-Notifications plugin returns a raw APNs device token, the API stores it with
-provider `apns`, and delivery goes through the direct APNs HTTP/2 provider —
-which is unconfigured by default. Android uses FCM.
+The Firebase Apple registration belongs to the same application identity. The
+Firebase Messaging iOS SDK (`firebase-ios-sdk` pinned to exact version `12.17.0`)
+is configured via Swift Package Manager in the App target of `project.pbxproj`.
+Apple devices obtain an FCM registration token from Firebase Messaging, which is
+forwarded via `AppDelegate.swift` to Capacitor, stored with provider `fcm`, and
+delivered through the unified Firebase Admin transport.
 
-The intended end state is Firebase Admin as the single transport for both
-platforms. Only the Xcode step remains; see "Delivery path" below.
+Firebase Admin is the single push transport for both Android and Apple platforms.
 
 The complete Firebase Apple configuration downloaded from Firebase Console is
 stored at `ios/App/App/GoogleService-Info.plist` and is included in the Xcode App
@@ -28,13 +28,18 @@ complete file intact; do not copy it into `public/`, `out/`, or JavaScript env.
 - `App/App.entitlements` enables `aps-environment`.
 - Debug signs for the APNs development environment.
 - Release signs for the APNs production environment.
-- `AppDelegate.swift` forwards successful and failed remote-notification
-  registration to Capacitor.
+- `Info.plist` sets `FirebaseAppDelegateProxyEnabled` to `false`. Swizzling is
+  disabled so `AppDelegate.swift` explicitly and deterministically manages APNs
+  token handover and FCM token forwarding.
+- `AppDelegate.swift` calls `FirebaseApp.configure()`, sets `Messaging.messaging().delegate`,
+  hands the raw APNs device token to `Messaging.messaging().apnsToken`, and forwards
+  the FCM token string Firebase returns for it to Capacitor, and forwards APNs registration
+  failures unchanged.
 - Foreground presentation uses badge, sound, banner, and notification-list
   options supported by Capacitor 8.
 
-Run `npm run ios:push:validate` to verify that these settings and all registered
-identities remain aligned.
+Run `npm run ios:push:validate` to verify that these settings, SPM dependencies,
+swizzling flags, and registered identities remain aligned.
 
 ## Delivery path: Firebase Cloud Messaging
 
@@ -52,13 +57,13 @@ Server ──► Firebase Admin (FCM HTTP v1) ──┬──► Android device
 
 ### Provider selection is decided by the token, not the platform
 
-`@capacitor/push-notifications` returns different tokens on Apple depending on
+`@capacitor/push-notifications` receives different tokens on Apple depending on
 what is installed in the Xcode project:
 
 | Xcode state | Token issued | Provider | Outcome |
 |---|---|---|---|
-| Firebase Messaging iOS SDK **installed** | Firebase registration token | `fcm` | Delivered through Firebase Admin |
-| Firebase Messaging iOS SDK **absent** | Raw APNs device token (64 hex chars) | `apns` | Clear, actionable error |
+| Firebase Messaging iOS SDK **configured** (current state) | Firebase registration token | `fcm` | Delivered through Firebase Admin |
+| Firebase Messaging iOS SDK **absent** | Raw APNs device token (64 hex chars) | `apns` | Opt-in fallback if `APNS_*` configured; clear error if omitted |
 
 `src/features/notifications/domain/push-token-kind.ts` classifies the token by
 shape. This matters: a raw APNs token sent to FCM is rejected as
@@ -66,9 +71,9 @@ shape. This matters: a raw APNs token sent to FCM is rejected as
 deletes the registration. Classifying first prevents Apple devices from being
 silently de-registered.
 
-The routing is **self-correcting**: the moment the Firebase Messaging iOS SDK is
-added, Apple devices begin issuing Firebase tokens and route to Firebase Admin
-with no code change and no data migration. `NotificationTokenService.register`
+The routing is **self-correcting**: with the Firebase Messaging iOS SDK configured,
+Apple devices issue Firebase registration tokens and route to Firebase Admin with
+no code change and no data migration. `NotificationTokenService.register`
 accepts `ios`+`apns` and `ios`+`fcm`, `provider` is a free-text column, and the
 registry already sends `fcm` tokens to `FcmNotificationProvider`.
 
@@ -124,8 +129,8 @@ a physical device or distributing a release:
    **The `.p8` key must never be committed to this repository.** It is a private
    signing key valid for every application under the Apple team account.
 
-4. Install the Firebase Messaging iOS SDK in the Xcode project so Apple devices
-   issue Firebase registration tokens (see the checklist below).
+4. Build the iOS application on macOS so SPM resolves `firebase-ios-sdk` version `12.17.0`
+   and generates `Package.resolved`.
 5. Test remote push on a physical device; the iOS simulator is not the release
    verification target for APNs registration.
 
@@ -146,23 +151,56 @@ happened to serve it. APNs responses `400` and `410` mark the token invalid, and
 the send service soft-deletes it. The ES256 authorization JWT is cached for 50
 minutes.
 
-### Remaining Xcode step
+### Xcode SPM integration and token handover details
 
-Apple devices cannot issue Firebase tokens until the SDK is present:
+The Xcode integration is configured deterministically as follows:
 
-1. In Xcode, add the `firebase-ios-sdk` Swift Package and select the
-   **FirebaseMessaging** product for the App target.
-2. Call `FirebaseApp.configure()` at the top of
-   `application(_:didFinishLaunchingWithOptions:)` in `AppDelegate.swift`.
-3. `GoogleService-Info.plist` is already committed and already a member of the
-   App target's Resources — no further action needed for it.
+1. **SPM Dependency**: `ios/App/App.xcodeproj/project.pbxproj` declares an
+   `XCRemoteSwiftPackageReference` to `https://github.com/firebase/firebase-ios-sdk.git`
+   pinned to exact version `12.17.0`. The tag was confirmed present upstream on 2026-08-16
+   with `git ls-remote --tags`, it is the newest stable release, and its own `Package.swift`
+   declares `.iOS(.v15)` — the same floor as `IPHONEOS_DEPLOYMENT_TARGET = 15.0` here, so it
+   is the newest version this project can take. The pin is exact for reproducible resolution,
+   matching how `capacitor-swift-pm` is pinned. The `FirebaseMessaging` product
+   dependency is linked strictly to the **App target** (excluding `ShareExtension`).
 
-Nothing on the API, database, or client side is waiting on this step: an Apple
-device that registers a Firebase token is accepted and routed today.
+   Raising the pin later means re-checking that floor first: a Firebase major that moves to
+   iOS 16 cannot be adopted without also raising the app's deployment target, which is a
+   separate decision about which devices the app still supports.
+2. **Swizzling Disabled**: `Info.plist` contains `<key>FirebaseAppDelegateProxyEnabled</key><false/>`.
+   Disabling swizzling prevents dual-ownership race conditions between Firebase auto-swizzling
+   and explicit `AppDelegate` callbacks. Because swizzling is disabled, Firebase's `appDidReceiveMessage`
+   is never called, so Firebase's own delivery analytics are not recorded — delivery itself is
+   unaffected because it runs through APNs and `UNUserNotificationCenter`, which Capacitor owns.
+3. **AppDelegate Handover**:
+   - `didRegisterForRemoteNotificationsWithDeviceToken`: Hands the raw `Data` device token
+     to `Messaging.messaging().apnsToken = deviceToken`. Does **not** post raw `Data` to Capacitor.
+   - `messaging(_:didReceiveRegistrationToken:)`: Guards against nil/empty tokens and posts
+     the **FCM token String** to `NotificationCenter.default` under `.capacitorDidRegisterForRemoteNotifications`.
+   - Token rotation: Firebase invokes `didReceiveRegistrationToken` when a token rotates, and
+     the AppDelegate forwards it. `NativePushService.ensureListeners()` keeps a permanent
+     `onPushToken` subscriber; `DeviceTokenService.initialize()` injects the handler that
+     stores the new token locally and re-registers it with the server. The handler stands
+     down while `register()` is in flight, ignores a value it has already reported, and does
+     nothing at all on a device whose push switch is off — so one rotation produces exactly
+     one server registration, and never opts a device back in. Rotation is handled on both
+     Android (via `AsolPushMessagingService.onNewToken`) and iOS (via
+     `messaging(_:didReceiveRegistrationToken:)`).
 
-Until this is done, Apple push registration succeeds, the token is stored with
-provider `apns`, and sends return
-`appleTokenNotDeliverable` explaining exactly what is missing.
+### Physical Apple Device Verification Checklist
+
+To verify compilation and delivery on a physical iOS device:
+
+1. **macOS Xcode Build**: Open `ios/App/App.xcworkspace` in Xcode on macOS, allow SPM to resolve `firebase-ios-sdk@12.17.0` (which generates `Package.resolved`), and build to a physical Apple device.
+2. **Token Inspection**: Trigger push registration on the device and verify that the registered token string is an FCM registration token (not 64 hex characters).
+3. **Database Verification**: Check the database row in `user_notification_tokens` for the target `uid`: confirm `platform = ios` and `provider = fcm`.
+4. **Real Push Test**: Navigate to `/super-admin/notification-tests` in the web application, select Real Push mode, and trigger a test notification to the test user.
+5. **Application States**: Verify push delivery across all three application states:
+   - **Foreground**: Banner, badge, and notification-center entry update while the app is active.
+   - **Background**: Banner notification appears while the app is minimized.
+   - **Terminated**: Banner notification appears after the app process is swiped away.
+6. **Custom Sound**: Verify that the alert push plays `custom_notification.caf`.
+   *Note: Audible sound cannot be objectively confirmed programmatically; manual human verification listening to device output is required.*
 
 ## Known SPM compatibility boundary
 

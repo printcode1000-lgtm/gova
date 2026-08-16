@@ -21,6 +21,7 @@
 		A4CB1D68BCA3642800983DAD /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4CD0BCF048D9FE343D030C71 /* ShareExtension.appex */; };
 		A50100032E30000100000001 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A50100022E30000100000001 /* GoogleService-Info.plist */; };
 		A50100052E30000100000001 /* custom_notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = A50100042E30000100000001 /* custom_notification.caf */; };
+		A50100122E30000100000001 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A50100112E30000100000001 /* FirebaseMessaging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */,
+				A50100122E30000100000001 /* FirebaseMessaging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +193,7 @@
 			name = App;
 			packageProductDependencies = (
 				4D22ABE82AF431CB00220026 /* CapApp-SPM */,
+				A50100112E30000100000001 /* FirebaseMessaging */,
 			);
 			productName = App;
 			productReference = 504EC3041FED79650016851F /* App.app */;
@@ -228,6 +231,7 @@
 			mainGroup = 504EC2FB1FED79650016851F;
 			packageReferences = (
 				D4C12C0A2AAA248700AAC8A2 /* XCLocalSwiftPackageReference "CapApp-SPM" */,
+				A50100102E30000100000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 504EC3051FED79650016851F /* Products */;
 			projectDirPath = "";
@@ -549,11 +553,27 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		A50100102E30000100000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = exactVersion;
+				version = 12.17.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		4D22ABE82AF431CB00220026 /* CapApp-SPM */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D4C12C0A2AAA248700AAC8A2 /* XCLocalSwiftPackageReference "CapApp-SPM" */;
 			productName = "CapApp-SPM";
+		};
+		A50100112E30000100000001 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A50100102E30000100000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
