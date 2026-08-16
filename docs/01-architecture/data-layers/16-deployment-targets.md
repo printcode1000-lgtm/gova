@@ -53,8 +53,16 @@ first place a problem is discovered. In order, the preflight:
 1. refuses a non-`main` branch;
 2. requires `VERCEL_TOKEN` and the root `.vercel/project.json` up front, rather
    than at the end after the push and four service deployments;
-3. runs `lint`, `typecheck`, `architecture:check`, `test`, and `build:static` —
-   the release build, which also re-runs the architecture and test gates;
+3. runs `lint`, `typecheck`, `architecture:check`, `test`, `build:static` — the
+   release build, which also re-runs the architecture and test gates — and
+   `services:build`, which runs `next build` inside all four service folders.
+
+   `services:build` was added after every other check in this list passed, the
+   release commit was pushed, `main` went `READY`, and **all four service
+   accounts then failed their remote build**. Each service is uploaded alone and
+   installed against its own `package.json`, so nothing that runs at the
+   repository root exercises it. It is the only step here that builds what
+   Vercel builds;
 4. refuses to publish scratch files (`__probe*`, `*.log`, `*.tmp`, `*.bak`,
    scratchpad paths), since `git add -A` stages whatever is in the tree;
 5. refuses a downgrade of `releaseId`, `version`, or `minimumNativeVersion` in

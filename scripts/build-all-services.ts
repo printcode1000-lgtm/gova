@@ -42,6 +42,16 @@ function main(): void {
 
     console.log(`\n[services:build] Building ${service} the way Vercel builds it...`);
     try {
+      // Each service is its own project, not a workspace of the root: a root `npm ci`
+      // installs nothing for it. Locally these folders already have `node_modules` from
+      // an earlier install, which is why this step passed here and failed on CI with
+      // "Next.js package not found". Installing here is also what Vercel does — it
+      // installs the uploaded folder against its own package.json and lockfile.
+      if (!existsSync(path.join(serviceDir, 'node_modules'))) {
+        console.log(`[services:build] ${service}: installing dependencies...`);
+        run('npm', ['ci', '--no-audit', '--no-fund'], serviceDir);
+      }
+
       run('npx', ['next', 'build'], serviceDir);
       console.log(`[services:build] ${service}: OK`);
     } catch {

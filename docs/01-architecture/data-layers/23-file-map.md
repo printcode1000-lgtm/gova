@@ -47,7 +47,9 @@ services/
     |-- src/config/                  # storage-profiles.json, read via fs
     `-- generated/                   # mirrored from src/ and public/
 
-packages/
+packages/                            # four layers - see ../module-isolation-rules.md
+|-- account-declarations/            # layer 3: pure data, imports nothing.
+|                                    # doors: "." plus one per account
 |-- vercel-deploy-core/              # account registry, GitHub-free project creation, CLI runner
 |-- service-mirror-core/             # shared mirror graph walker
 |-- account-bridge/                  # device-only Rule 0 inter-account channel (doors . and ./notifications)

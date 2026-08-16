@@ -183,13 +183,28 @@ run.
 
 ## Standing weakness: local green is not CI green
 
-The `native-core` workflow failed on every push for a long stretch while every local gate passed. The
-cause: `services/*/generated/` is git-ignored, so a clean checkout has no mirrors, and the
-notifications contract test asserts the mirror is non-empty. Locally the mirrors are always on disk.
+The `native-core` workflow failed on every push from 2026-08-15 onward while every local gate passed.
+Three separate causes, each invisible to a developer machine, each found only by reading CI logs:
 
-The workflow now runs `npm run services:sync` before anything else. The general lesson is worth
-keeping: **any check that depends on git-ignored generated state passes locally and fails on a clean
-checkout**, and the repository will not tell you — the workflow has to.
+| Cause | Why it could not fail locally |
+| :-- | :-- |
+| The notifications contract test asserts `generated/src` is non-empty | `services/*/generated/` is git-ignored, so a clean checkout has no mirrors; locally they are always on disk |
+| `ota:publish --dry-run` required `ASOL_OTA_R2_PUBLIC_URL` | The dry-run branch called `getOtaManifestUrl()` for a release it never publishes; developer machines have the variable, CI does not |
+| `services:build` could not find Next.js | Each `services/<name>/` is its own project, not a workspace member, so a root `npm ci` installs nothing for it; locally those folders already had `node_modules` |
+
+Fixes: the workflow runs `npm run services:sync` first; the dry run no longer demands upload
+configuration; and `scripts/build-all-services.ts` installs each service's dependencies when they are
+absent, which is also what Vercel does.
+
+The pattern behind all three: **anything that depends on state a clean checkout does not have will
+pass locally and fail in CI.** Git-ignored generated files, `.env.local` values, and per-directory
+`node_modules` are the three shapes it takes here. A local gate cannot detect any of them; only a
+clean-checkout run can.
+
+A related lesson about diagnostics: the OTA failure read `OTA publish failed: OTA publish failed` for
+weeks because the real cause was stored in the error's `details` and never printed. **A failure that
+does not explain itself costs more than the bug.** `packages/ota-core/scripts/ota-publish.ts` now
+prints the cause and its stack.
 
 ## Standing weakness: rule 7 runs both ways
 

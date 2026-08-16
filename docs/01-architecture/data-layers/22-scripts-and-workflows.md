@@ -17,6 +17,15 @@ npm run test:vercel-deploy-core
 npm run test:service-mirror-core
 npm run test:account-bridge
 npm run test:compositions
+npm run test:account-declarations
+
+# Service deployments — the only check that builds what Vercel builds
+npm run services:sync            # refresh the four generated/ mirrors
+npm run services:build           # next build in all four service folders
+
+# GitHub repository administration (rule 6)
+npm run github:protect -- --dry-run
+npm run github:protect
 
 # Schema & database
 npm run db:drizzle -- generate
@@ -118,3 +127,35 @@ running the TypeScript script directly. It reports:
 The doctor does not install packages, rewrite configuration, or print secret
 values. A missing/update/configure result produces a non-zero exit code, making
 it suitable for onboarding and CI diagnostics.
+
+## Service deployment checks
+
+`npm run services:build` (`scripts/build-all-services.ts`) refreshes the four
+mirrors and then runs `next build` inside every `services/<name>/` folder,
+installing that folder's dependencies first when they are missing.
+
+It is part of `deploy:all`'s preflight, and it is the **only** check in the
+repository that exercises what Vercel actually builds. Every other gate runs at
+the repository root, where the root's `node_modules` and module graph are
+present; a service is uploaded alone and installed against its own
+`package.json`. Three production failures reached Vercel through that gap before
+this step existed — see
+[the module isolation rules](../module-isolation-rules.md#standing-weakness-local-green-is-not-ci-green).
+
+If it reports a missing npm package, the fix is to add the package to that
+service's `package.json`, not to the root's. `npm run services:sync` fails the
+same way, earlier, through `assertBareSpecifiersAreDeclared`.
+
+## Branch protection
+
+`npm run github:protect` (`scripts/protect-main-branch.ts`) applies branch
+protection to `main` and then reads it back to verify, rather than trusting the
+response code. `--dry-run` prints the full payload and sends nothing.
+
+It needs `GITHUB_ADMIN_TOKEN` in `.env.local` — see
+[14. Environment Variables](./14-environment-variables.md#github-repository-administration)
+for the token's scope, what it can currently do, and what it should be narrowed
+to.
+
+`enforce_admins` is deliberately off: `deploy:all` pushes to `main` directly and
+is the only supported release path.
