@@ -39,7 +39,9 @@ complete file intact; do not copy it into `public/`, `out/`, or JavaScript env.
   options supported by Capacitor 8.
 
 Run `npm run ios:push:validate` to verify that these settings, SPM dependencies,
-swizzling flags, and registered identities remain aligned.
+swizzling flags, and registered identities remain aligned. On Vercel (`VERCEL=1`)
+the script exits immediately because `GoogleService-Info.plist` is gitignored;
+`deploy:all` preflight runs the full validation locally before push.
 
 ## Delivery path: Firebase Cloud Messaging
 

@@ -1,6 +1,13 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
+if (process.env.VERCEL === "1") {
+  console.log(
+    "Skipping iOS push policy validation on Vercel: gitignored iOS credentials and Firebase plist files are not uploaded.",
+  );
+  process.exit(0);
+}
+
 const expected = {
   bundleId: "hgh.asol.app",
   firebaseProjectId: "asole-73f1f",

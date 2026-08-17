@@ -151,6 +151,9 @@ Schema sync requires Turso env vars on CI/Vercel — see [20-schema-provisioning
 The root `.vercelignore` excludes `.env*` but explicitly re-includes `!.env.example`.
 `npm run build` runs `ios:push:validate`, which reads Firebase identity keys from that
 committed template; omitting it from the Vercel upload breaks the main deployment.
+On Vercel (`VERCEL=1`), `ios:push:validate` exits immediately because
+`GoogleService-Info.plist` is gitignored and never uploaded; `deploy:all` preflight
+already runs the full check locally before push.
 
 Every database in the sync set needs its credentials present, the notifications
 database included. A missing `TURSO_NOTIFICATIONS_*` pair fails the whole build,
