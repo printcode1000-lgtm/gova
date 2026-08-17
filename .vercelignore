@@ -21,6 +21,7 @@ ios/App/build/
 
 # Credentials and machine-local environment files must never be uploaded.
 .env*
+!.env.example
 .ota/
 assets/google-play/*firebase-adminsdk*.json
 assets/google-play/google-services.json
