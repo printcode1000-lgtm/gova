@@ -135,6 +135,9 @@ export class ProfileApiService implements IProfileService {
     return asolApi.put<SaveProfileEditorResult>(
       ASOL_API_ROUTES.profile.editor,
       input,
+      {
+        headers: { 'x-asol-session-token': input.sessionToken },
+      },
     );
   }
 

@@ -10,7 +10,7 @@ import com.getcapacitor.PluginHandle;
 
 /**
  * Single entry point for native Android lifecycle delegates.
- * Keeps MainActivity as a thin coordinator while encapsulating
+ * Keeps the host BridgeActivity as a thin coordinator while encapsulating
  * startup channel setup, plugin registration, tap capture, and lifecycle events.
  */
 public final class AsolNativeCore {

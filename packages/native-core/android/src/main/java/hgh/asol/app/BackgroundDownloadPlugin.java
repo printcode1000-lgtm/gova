@@ -1,5 +1,7 @@
 package hgh.asol.app;
 
+import hgh.asol.app.nativecore.R;
+
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.SharedPreferences;

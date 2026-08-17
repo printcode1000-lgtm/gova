@@ -1,6 +1,8 @@
 import 'server-only';
 
-import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
+import { createHmac, randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
+import { hashPassword } from '@asol/auth-core/server';
+import { MIN_PASSWORD_LENGTH } from '@asol/auth-core';
 import { getPasswordRecoveryConfig } from '@/core/config/server-env';
 import { PasswordRecoveryOperations } from '@/modules/data-access/domains/password-recovery/operations/password-recovery.operations';
 import {
@@ -109,7 +111,7 @@ export class PasswordRecoveryService {
 
   async resetPassword(input: RecoveryResetInput): Promise<RecoveryResetResult> {
     const phone = normalizeRecoveryPhone(input.phone);
-    if (typeof input.password !== 'string' || input.password.length < 4) {
+    if (typeof input.password !== 'string' || input.password.length < MIN_PASSWORD_LENGTH) {
       throw new Error('passwordRecoveryWeakPassword');
     }
     if (input.password !== input.confirmPassword) throw new Error('passwordRecoveryPasswordMismatch');
@@ -125,7 +127,7 @@ export class PasswordRecoveryService {
     );
     if (!challenge?.uid || !challenge.verifiedAt) throw new Error('passwordRecoveryInvalidToken');
 
-    const password = createHash('sha256').update(input.password).digest('hex');
+    const password = await hashPassword(input.password);
     await this.operations.updatePasswordAndConsume(
       challenge.uid,
       password,

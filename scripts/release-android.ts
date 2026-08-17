@@ -25,6 +25,30 @@ const environment = withoutVsCodeDebuggerEnv(process.env);
  * as an argument or asked for at the prompt, and a run that can do neither is refused.
  */
 async function main(): Promise<void> {
+  // Every artifact this command produces is signed and R8-processed. Signing is already
+  // unavoidable — `build-android-signed.ts` refuses when any keystore variable is missing —
+  // but R8 was not: `cap-build` permits `--no-r8` alongside `--no-ota`, and `--no-ota` is
+  // exactly what this path passes. So `release:android --no-r8` would have assembled
+  // `releaseNoR8` artifacts with `minifyEnabled false`, then signed a separate `release`
+  // build on top, leaving two different outputs from one release run.
+  //
+  // `--no-r8` stays available where it belongs: local diagnostics through
+  // `cap-build --skip-ota --no-r8`, which produces nothing anyone can ship.
+  if (releaseArguments.includes("--no-r8")) {
+    throw new Error(
+      [
+        "release:android does not accept --no-r8.",
+        "",
+        "Every package this command produces is signed and R8-processed: an unminified",
+        "shell is not a release candidate, and Google Play would receive something no",
+        "local test exercised.",
+        "",
+        "For an unminified diagnostic build, use cap-build directly:",
+        "  npx tsx scripts/cap-build.ts --skip-ota --no-r8",
+      ].join("\n"),
+    );
+  }
+
   const nativeVersionAction = await resolveNativeVersionAction(releaseArguments);
 
   // The resolved action replaces any copy that arrived in argv, so `cap-build` cannot

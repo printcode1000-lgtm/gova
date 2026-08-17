@@ -1,116 +1,315 @@
 # Release Command Center
 
-مركز أوامر الإصدار يعيش في `src/modules/release-commands`.
+The release command center lives in `src/modules/release-commands`.
 
 ## Catalog
 
-`domain/build-command-catalog.ts` هو SSOT لكل أمر. كل entry يحدد:
+`domain/build-command-catalog.ts` is the single source of truth for every command. Each
+entry declares:
 
 - command id
 - npm script
 - argv
 - category: `web-static`, `ota`, `native-android`, `verification`, `fastlane`
 - danger: `safe`, `destructive`, `publishes-live`
-- confirmation phrase لل live publishing
+- confirmation phrase for live publishing
 - required env vars
 - expected artifact paths
 - estimated duration
 
 ## Job Runner
 
-`services/build-job-runner.server.ts` يشغل الأوامر عبر async `spawn`، لا يستخدم `spawnSync`. stdout وstderr يكتبان إلى:
+`services/build-job-runner.server.ts` runs commands through async `spawn`, never
+`spawnSync`. stdout and stderr are written to:
 
 `.backups/build-jobs/<jobId>.log`
 
-Metadata تكتب إلى:
+Metadata is written to:
 
 `.backups/build-jobs/<jobId>.json`
 
 ## Single Flight
 
-يوجد lock واحد للأوامر من categories: `native-android`, `ota`, و`fastlane`. لا يمكن تشغيل أكثر من job من هذه الفئات في نفس الوقت.
+One lock covers the `native-android`, `ota` and `fastlane` categories. No two jobs from
+those categories can run at the same time.
 
 ## Cancellation
 
-الإلغاء يقتل شجرة العملية على Windows عبر `taskkill /T /F`، ويحدث metadata إلى `cancelled`.
+Cancelling kills the process tree — on Windows through `taskkill /T /F` — and updates the
+metadata to `cancelled`.
 
 ## Artifacts
 
-بعد انتهاء job يتم فحص:
+When a job finishes, these paths are inspected:
 
 - `android/app/build/outputs/bundle/{release,releaseNoR8}/*.aab`
 - `android/app/build/outputs/apk/{release,releaseNoR8}/*.apk`
 - `android/app/build/outputs/mapping/release/*.txt`
 - `out/asol-web-manifest.json`
 
-كل artifact يعرض الاسم والحجم وmtime وSHA-256 ويمكن تنزيله من route محمي ومتاح في التطوير فقط.
+Each artifact shows its name, size, mtime and SHA-256, and can be downloaded from a
+protected route available in development only.
 
-وصول الخادم إلى مسارات artifacts ومفاتيح أدوات التطوير ديناميكي عمدًا، لذلك تحمل
-نقاط `path.resolve` و`existsSync` الخاصة بها علامة `turbopackIgnore`. هذه
-العلامة تمنع Next من تتبع مساحة العمل كاملة وإدخالها في حزمة الخادم، ولا تلغي
-تحقق الجذر المسموح أو قيود التطوير وقت التشغيل.
+Server access to artifact paths and dev-tool keys is dynamic on purpose, so its
+`path.resolve` and `existsSync` sites carry `turbopackIgnore`. That marker stops Next from
+tracing the whole workspace into the server bundle; it does not disable the allowed-root
+check or the runtime development guard.
 
 ## Confirmation Model
 
-أي command خطره `publishes-live` يتطلب عبارة تأكيد من catalog. الخادم يتحقق منها قبل spawn ولا يثق في العميل.
+Any command whose danger is `publishes-live` requires the catalog's confirmation phrase.
+The server verifies it before spawning and does not trust the client.
 
-زر `release-android` هو مسار الإصدار الكامل الوحيد، ولا يبدأ قبل اختيار رقم الشِل داخل نافذة التأكيد:
+The `release-android` button is the only full-release path, and it does not start until a
+shell version is chosen in the confirmation dialog:
 
-- رقم Android الحالي ورقم المحتوى الحالي ورقم OTA الفعّال، مع رقم Patch التالي المقترح.
-- إعادة بناء القشرة برقم Android الحالي، أو رفع `versionName` و`versionCode` إلى Patch جديد.
-- خط المحتوى الجديد الذي يفتحه الإصدار يظهر فوراً قبل التأكيد، مشتقاً من رقم الشِل المختار.
+- the current Android version, the current content version, and the live OTA version, with
+  the suggested next patch;
+- rebuild the shell at the current Android version, or raise `versionName` and
+  `versionCode` to a new patch;
+- the new content line the release will open appears before confirming, derived from the
+  chosen shell version.
 
-هذا المسار **لا ينشر شيئاً**. الحزمة التي يبنيها تحمل محتواها كاملاً ومحدثاً بداخلها، فمن يثبّتها يملك كل التحديثات أصلاً ولا معنى لنشر OTA في اللحظة نفسها. لذلك لا يطلب مفاتيح OTA ولا عبارة تأكيد، ولا يقرأ R2 ولا يكتب فيه. نشر OTA فوق الإصدار الجديد فعل لاحق ومستقل عبر زر `ota-publish`، وخيار الاستكمال يخص ذلك الزر وحده.
+This path **publishes nothing**. The package it builds carries its own complete, current
+content, so whoever installs it already holds every update and publishing an OTA at the
+same moment would mean nothing. That is why it asks for no OTA credentials and no
+confirmation phrase, and neither reads nor writes R2. Publishing an OTA on top of the new
+release is a separate, later act through the `ota-publish` button, and the resume option
+belongs to that button alone.
 
-عمليات R2 — في المسارات التي تصل إليه — تعيد تلقائياً أخطاء الشبكة وDNS العابرة، بما فيها `ENOTFOUND` و`EAI_AGAIN`، قبل اعتبار المهمة فاشلة.
+R2 operations — on the paths that reach it — automatically retry transient network and DNS
+errors, including `ENOTFOUND` and `EAI_AGAIN`, before treating a job as failed.
 
-`scripts/release-android.ts` هو منسق الإصدار. يمرر خيار الشِل إلى `cap-build.ts` مع `--no-ota` أولاً، ولا يبدأ `build-android-signed.ts` إلا بعد نجاح بناء الويب وفتح خط المحتوى ومزامنة Capacitor. لا تستخدم سلسلة npm مركبة لهذا المسار لأن معاملات المشغل ستلتصق بالأمر الأخير بدلاً من مخطط الإصدار.
+`scripts/release-android.ts` is the release orchestrator. It passes the shell choice to
+`cap-build.ts` with `--no-ota` first, and starts `build-android-signed.ts` only after the
+web build, the content line and the Capacitor sync succeed. Do not use a compound npm
+chain for this path: the launcher's parameters would attach to the last command instead of
+to the release planner.
 
-بعد نجاح `cap-build.ts` يمرر المنسق `ASOL_WEB_BUNDLE_READY=1` إلى بناء Android الموقّع. لا تُضبط هذه العلامة قبل ذلك، لأنها إثبات أن مخطط الإصدار بنى الحزمة وختمها بالأرقام التي ستشحن معها وزامنها مع المشروع الأصلي. في مسار النشر (`cap:build` بلا `--no-ota`) تعني إضافةً أن الحزمة طابقت manifest المنشور وتحقق محتواها على R2.
+After `cap-build.ts` succeeds, the orchestrator passes `ASOL_WEB_BUNDLE_READY=1` to the
+signed Android build. The flag is never set earlier, because it is the proof that the
+release planner built the bundle, stamped it with the versions it ships with, and synced it
+into the native project. On the publishing path (`cap:build` without `--no-ota`) it
+additionally means the bundle matched the published manifest and its content was verified
+on R2.
+
+### The command and the button are one thing
+
+`npm run release:android` and the "start full release" button are not parallel paths. The
+button collects the choice, `build-command-catalog` turns it into `--native-version=`, and
+`build-job-runner` then spawns **the same command**:
+
+```js
+spawn(npmCli, ["run", "release:android", "--", ...argv])
+```
+
+Because the command was also launched from `.vscode/launch.json` with no arguments,
+`cap-build` fell through to `auto` — a third behaviour the dialog never offers and nobody
+asked for. Now:
+
+- if `--native-version=` is passed, it is used as given;
+- otherwise, with an interactive terminal, **the dialog's own question** is asked with the
+  same two answers;
+- otherwise — which is the button's case, since `build-job-runner` spawns with
+  `stdio: "pipe"` to write the job log — the run is **refused**, and nothing is assumed.
+
+Prompting is conditional on a terminal for a practical reason: without one, a question is
+not a question but a hang, the question itself is buried in a log file, and the exclusive
+release lock stays held until the job is killed by hand.
+
+**All terminal output is English only.** Mixed-script lines reorder themselves around
+option numbers and flag values in most shells, misleading about which key selects what. The
+wording is the English side of the same `releaseConsole.parameterValues.*` keys the dialog
+renders, so the two surfaces cannot drift apart while describing one choice.
+
+### What each choice does
+
+| Choice | Argument | Effect |
+| :-- | :-- | :-- |
+| Rebuild with the current Android version | `--native-version=current` | Fresh packages carrying **the published version numbers** — native and content line alike — with the newest `out/` inside. Nothing is uploaded to R2 |
+| Create a new Android patch version | `--native-version=next-patch` | Raises `versionName` and `versionCode`, and opens a new content line at `<native>.0`. Nothing is uploaded to R2 |
+
+An example of the first: Google Play is published at `0.2.3`, R2 carries OTA `0.2.3.1`, and
+the fresh local package carries `0.2.3.0` with the newest content for hands-on testing.
+Publishing a higher OTA such as `0.2.3.2` is a separate, later act.
+
+`<native>.0` is the shell's own version. It is **never published to R2 and uploads no
+files** — it only declares the start of a new line. Whoever installs `0.2.5` from Google
+Play already holds the newest content, and needs an OTA only for later updates on that
+line, such as `0.2.5.1`.
+
+### "Keep the current version" is refused when native changed
+
+If the build contains compiled native changes, `cap-build` refuses that choice outright and
+requires a new patch version. A native change means a different shell, and keeping the
+version would give two different binaries one identity: Google Play rejects the duplicate
+`versionCode`, and no device could tell them apart.
+
+This guard used to be conditional on the target not outranking the baseline, so a shell
+already ahead of the last store tag — the normal state between releases — kept its version
+while carrying new native code. The condition is now
+`hasCompiledChanges && action === "current"`, with no exception.
+
+Web-only changes are unaffected: a fresh `out/` bundle at the published version numbers is
+exactly what that choice is for.
+
+### Content-line ordering on the release path
+
+The release path uses `assertContentLineDoesNotRegress`, not
+`assertContentVersionAdvances`. The second rule belongs to publishing, where a version that
+does not advance reads as "no update" and reaches nobody. Here nothing is published, and
+the shell stamps `<native>.0`, which is **always the lowest value on its line** — every OTA
+above it is `.1` and upward. So a counter comparison rejected the normal case:
+
+```text
+published OTA        0.2.3.1
+shell being rebuilt  0.2.3.0   ← lower counter, same line, not a regression
+```
+
+What is refused is a regression of the **line**: dropping the shell from `0.2.5` to `0.2.4`
+would ship older native content as if it were current.
+
+### Every package is signed and R8-processed
+
+`build-android-signed.ts` runs `:app:bundleRelease` and `:app:assembleRelease`, and the
+`release` build type in [android/app/build.gradle](../../../android/app/build.gradle) keeps
+`minifyEnabled true`, `shrinkResources true` and `signingConfig signingConfigs.release`.
+The script refuses when any of the four keystore variables is missing rather than emitting
+an unsigned artifact.
+
+And `release:android` **refuses `--no-r8`**. `cap-build` permits that flag alongside
+`--no-ota` — which is exactly what this path passes — so `release:android --no-r8` would
+have assembled unminified `releaseNoR8` artifacts and **then** signed a separate `release`
+build on top: two different outputs from one release run. For an unminified diagnostic
+build use `cap-build` directly with `--skip-ota --no-r8`; its output ships nowhere.
+
+This path **never contacts Google Play** — no fastlane, no `androidpublisher`. It produces
+`app-release.aab` and `app-release.apk` locally, and publishing to the store is a separate
+manual decision after hands-on testing is finished.
+
+### Three breaks this path had never exercised
+
+The release failed four times in a row before producing anything, and none of the three
+causes was a regression: each was a defect that had existed since the change that
+introduced it, in a path no repository gate opened. They are recorded because the shape
+repeats.
+
+**1. `npx cap sync` erased 25 plugin registrations.** Capacitor discovers plugins by
+reading the **root** `package.json` dependencies, and every Capacitor plugin is declared by
+`@asol/native-core` instead — rule 9: upgrading Capacitor must touch one module. So sync
+found zero plugins, regenerated `android/capacitor.settings.gradle` with none of them, and
+the native compile failed with "package com.capacitorjs.plugins.pushnotifications does not
+exist". The fix is `includePlugins` in [capacitor.config.ts](../../../capacitor.config.ts),
+Capacitor's own override for discovery, derived from native-core's dependencies so there is
+still one source of truth and adding a plugin needs no second edit.
+
+**2. The `:native-core` Gradle module had never compiled.** It was added on 2026-08-15,
+after the last successful Android build, so no build had opened it. Two defects:
+
+- Its Java extends `PushNotificationsPlugin`, but `build.gradle` did not depend on
+  `:capacitor-push-notifications`.
+- The module namespace is `hgh.asol.app.nativecore` while its sources sit in package
+  `hgh.asol.app`, so unqualified `R` resolved to a nonexistent `hgh.asol.app.R`. The three
+  files now import `hgh.asol.app.nativecore.R` explicitly.
+- `AsolPushMessagingService` named `MainActivity` directly. That activity lives in the
+  **application** module, and a library cannot depend on the app that consumes it. The tap
+  intent is now resolved with `getLaunchIntentForPackage`, which is what a tap should open
+  anyway and leaves the module independent of the app's entry-point name.
+
+**3. The iOS push-policy validator pointed at moved files.** Extracting notifications into
+`@asol/notifications-core` left `packages/native-core/scripts/validate-ios-push-policy.ts`
+reading four paths under `src/features/notifications/`. It was also wired into no gate, so
+nothing reported it; `ios:push:validate` now runs inside `test`, `build` and `build:static`.
+
+The common thread: **a gate that never opens a directory reports green about it.** The
+Capacitor sync, the Gradle module and the iOS validator were each verified by their own
+existence, not by being run.
 
 ## Testing On A Real Device
 
-بطاقة الاختبار مسار مستقل عن مسار الإصدار. تبني `debugR8` — مصغّرة بـ R8 كالإصدار، لكنها تبقى `debuggable` وموقّعة بمفتاح debug — فيجري الاختبار على الشيفرة المحسّنة نفسها التي تشحن، لا على نسخة غير مصغّرة لا يراها مستخدم قط. `testBuildType "debugR8"` في [android/app/build.gradle](../../../android/app/build.gradle) هو ما يجعل Android يولّد مهام `androidTest` لهذه النسخة؛ من دونه لا وجود لـ `connectedDebugR8AndroidTest` أصلاً.
+The testing card is a path of its own, separate from the release path. It builds `debugR8`
+— minified by R8 like the release, but still `debuggable` and signed with the debug key —
+so testing runs against the same optimized code that ships, not an unminified variant no
+user ever sees. `testBuildType "debugR8"` in
+[android/app/build.gradle](../../../android/app/build.gradle) is what makes Android
+generate `androidTest` tasks for that variant; without it `connectedDebugR8AndroidTest`
+does not exist at all.
 
-ملفا قواعد R8 إضافيان، كلاهما مقصور على `debugR8` ولا يمس الإصدار:
+Two extra R8 rule files, both scoped to `debugR8` and touching the release not at all:
 
-- `proguard-rules-testable-app.pro` يُطبَّق على **التطبيق** ويحتفظ بالأسماء القليلة التي تشير إليها الاختبارات المُجهَّزة. من دونه تفشل الاختبارات بـ `NoClassDefFoundError` بينما التطبيق يعمل تماماً — إنذار كاذب أغلى بكثير من البايتات التي يوفّرها. الإصدار لا يحتفظ بشيء إضافي، فالفارق بين النسختين هو هذه الأسماء ولا شيء غيرها.
-- `proguard-rules-test-apk.pro` يُطبَّق عبر `testProguardFiles` على **حزمة الاختبارات** نفسها، التي يضطر AGP لتصغيرها لأنها ترتبط بتطبيق مبهَم. مكتبات AndroidX للاختبار تشير إلى أصناف اختيارية غير موجودة على مسار الصنف (`ViewCapture` تطلب `SuspendToFutureAdapter`)، وR8 يعتبر ذلك خطأً قاتلاً فيتوقف البناء. القاعدة تُسكِت هذا التحذير لحزمة لا تغادر جهاز اختبار قط. وتحتفظ كذلك بأصناف الاختبارات وطرقها الموسومة، لأن المشغّل يكتشفها بالانعكاس ولا يراها التحليل الساكن — وتصغيرها كان سينتج تشغيلاً أخضر لم ينفّذ شيئاً.
+- `proguard-rules-testable-app.pro` applies to the **app** and keeps the few names the
+  instrumented tests refer to. Without it the tests fail with `NoClassDefFoundError` while
+  the app works perfectly — a false alarm far more expensive than the bytes it saves. The
+  release keeps nothing extra, so those names are the only difference between the variants.
+- `proguard-rules-test-apk.pro` applies through `testProguardFiles` to the **test APK**
+  itself, which AGP must minify because it links against an obfuscated app. AndroidX test
+  libraries reference optional classes that are not on the classpath (`ViewCapture` wants
+  `SuspendToFutureAdapter`), and R8 treats that as fatal, stopping the build. The rule
+  silences that warning for a package that never leaves a test device. It also keeps test
+  classes and their annotated methods, because the runner discovers them by reflection
+  where static analysis cannot see them — minifying them away would have produced a green
+  run that executed nothing.
 
-البطاقة أربعة أزرار مستقلة، والفصل مقصود:
+The card has four independent buttons, and the separation is deliberate:
 
-| الزر | الأمر | ما يفعله |
-|---|---|---|
-| بناء الحزمة | `android:build:debug` | ويب جديد ← مزامنة ← `assembleDebugR8` ومعها حزمة الاختبارات. **لا يلمس أي جهاز** |
-| مسح الجهاز وتثبيت الحزمة | `android:device:install` | اكتشاف ← مسح كامل ومُتحقَّق منه ← تثبيت ← منح الأذونات. **لا يبني شيئاً** |
-| اختبارات الكمبيوتر | `verify:all` | فحوص المستودع على هذا الجهاز |
-| اختبارات الجهاز المتصل | `android:device:tests` | `androidTest` على الهاتف |
+| Button | Command | What it does |
+| :-- | :-- | :-- |
+| Build the package | `android:build:debug` | Fresh web → sync → `assembleDebugR8` plus the test package. **Touches no device** |
+| Wipe the device and install | `android:device:install` | Detect → full verified wipe → install → grant permissions. **Builds nothing** |
+| Host tests | `verify:all` | Repository checks on this machine |
+| Connected-device tests | `android:device:tests` | `androidTest` on the phone |
 
-البناء بطيء وآمن، والتثبيت سريع ولا رجعة فيه. دمجهما كان يعني أن من يعيد البناء لمجرد فحص خطأ ترجمة يمسح هاتفه كأثر جانبي، وأن من يريد إعادة تثبيت ينتظر بناءً كاملاً. ولأن التثبيت لا يبني، فهو يتوقف برسالة واضحة إن لم تكن هناك حزمة مبنية بدل أن يبدأ بناءً لم يطلبه أحد.
+Building is slow and safe; installing is fast and irreversible. Merging them would mean
+that rebuilding just to check a compile error wipes your phone as a side effect, and that
+wanting a reinstall costs a full build. And because installing builds nothing, it stops
+with a clear message when no built package exists instead of starting a build nobody asked
+for.
 
-تفاصيل المسح وضمانه في [installation-state-and-clean-testing.md](./installation-state-and-clean-testing.md).
+Wipe details and its guarantees are in
+[installation-state-and-clean-testing.md](./installation-state-and-clean-testing.md).
 
-منح `POST_NOTIFICATIONS` تلقائياً بعد التثبيت مقصود: من دونه تتخطى اختبارات الإشعارات نفسها بدل أن تفشل، ومجموعة تتخطى طريقها إلى اللون الأخضر أسوأ من مجموعة تفشل.
+Granting `POST_NOTIFICATIONS` automatically after install is deliberate: without it the
+notification tests skip themselves instead of failing, and a suite that skips its way to
+green is worse than one that fails.
 
-### زرّان للاختبارات، عن قصد
+### Two test buttons, on purpose
 
-| الزر | الأمر | أين يجري | ما يجيب عنه |
-|---|---|---|---|
-| اختبارات الكمبيوتر | `verify:all` | هذا الجهاز | الأنواع، التدقيق، عقد المعمارية، وكل مجموعات الاختبار |
-| اختبارات الجهاز المتصل | `android:device:tests` | الهاتف | قنوات الإشعارات وأذونها ووصولها فعلاً، وحزمة الويب كما دخلت الحزمة |
+| Button | Command | Where it runs | What it answers |
+| :-- | :-- | :-- | :-- |
+| Host tests | `verify:all` | This machine | Types, lint, architecture contracts, and every test suite |
+| Connected-device tests | `android:device:tests` | The phone | Whether notification channels, their permissions and their delivery actually work, and the web bundle as it entered the package |
 
-الفصل ليس تفضيلاً في التنظيم. `verify:all` يشغّل `tsc` و`eslint` وعشرات سكربتات tsx التي تقرأ شجرة الملفات — لا معنى لتشغيلها داخل هاتف ولا بيئة Node عليه. والمقابل صحيح: قناة إشعار سجّلها النظام فعلاً لا يمكن لأي فحص على الكمبيوتر أن يراها. أيهما وحده يترك نصف الصورة، ودمجهما في زر واحد يخفي أي نصف سقط.
+The separation is not an organizational preference. `verify:all` runs `tsc`, `eslint` and
+dozens of tsx scripts that read the file tree — there is no sense running those inside a
+phone, and no Node environment on it. The converse holds too: a notification channel the
+system actually registered cannot be seen by any check on the host. Either one alone leaves
+half the picture, and merging them into a single button hides which half fell out.
 
-`android:device:tests` يرفض اعتبار تشغيل بلا اختبارات نجاحاً: صفر اختبار يعني مجموعة فارغة أو غير مبنية، لا نتيجة خضراء.
+`android:device:tests` refuses to treat a run with no tests as success: zero tests means an
+empty or unbuilt suite, not a green result.
 
 ## Stage Reporting
 
-المهمة الواحدة قد تستغرق قرابة الساعة، وكلمة «قيد التشغيل» وحدها لا تُميّز التقدم من التوقف. لذلك تعلن سكربتات الإصدار مراحلها بنفسها عبر `reportStage` في `scripts/release-stage.ts`، الذي يطبع سطراً بالصيغة `[stage] <id>`.
+A single job can take close to an hour, and "running" alone does not distinguish progress
+from a hang. So the release scripts announce their own stages through `reportStage` in
+`scripts/release-stage.ts`, which prints a line shaped `[stage] <id>`.
 
-`nextBuildJobStage` يثق بالمرحلة المعلنة ويقدمها على الاستنتاج من نص المخرجات، ولا يُخضعها لترتيب `STAGE_ORDER` الثابت: ترتيب الخطوات يختلف بين المسارات — النشر يتحقق من R2 قبل مزامنة Capacitor، وإصدار المتجر لا يتحقق من شيء — وترتيبها بتسلسل واحد كان يُخفي خطوات تنفَّذ فعلاً. الاستنتاج النصي يبقى احتياطياً للأوامر التي لا تعلن مراحلها.
+`nextBuildJobStage` trusts the announced stage over any inference from output text, and
+does not subject it to a fixed `STAGE_ORDER`: step order differs between paths — publishing
+verifies R2 before syncing Capacitor, a store release verifies nothing — and ranking them
+against one sequence hid steps that actually ran. Text inference remains the fallback for
+commands that announce no stages.
 
-المرحلة تظهر على زر الأمر نفسه وفي شريط الحالة، حتى `completed` التي يختمها المشغل عند نجاح العملية.
+The stage appears on the command's own button and in the status bar, including the
+`completed` stage the runner stamps when the operation succeeds.
 
-المرحلة وحدها لا تكفي حين تضم عشرات الخطوات: `verify:all` يقضي تشغيله كله تحت مرحلة `testing`، فلا يميّز القارئ التقدّم من التوقف. لذلك تعلن السكربتات أيضاً **الخطوة** الجارية عبر `reportStep` بالصيغة `[step] <نص>` — أي فحص يُنفَّذ، أي اختبار يجري، أي حزمة تُحذف — ويحفظها المشغل في الحقل `activity`.
+A stage alone is not enough when it covers dozens of steps: `verify:all` spends its entire
+run under the `testing` stage, so a reader cannot tell progress from a hang. The scripts
+therefore also announce the current **step** through `reportStep`, shaped `[step] <text>` —
+which check is running, which test, which package is being removed — and the runner stores
+it in the `activity` field.
 
-الخطوة نص حر لا قائمة ثابتة: مجموعة الفحوص تتغير، وأي تعداد كان سيحتاج تعديلاً مع كل إضافة. تُقصّ عند 80 حرفاً لأنها تُعرض داخل زر. وعند الفشل تبقى ظاهرة لأنها تسمّي ما كان يعمل لحظة الانهيار؛ وعند النجاح تُمحى لأنها تصبح ضجيجاً.
+A step is free text rather than a fixed list: the set of checks changes, and any enum would
+need editing with every addition. It is truncated at 80 characters because it renders inside
+a button. On failure it stays visible because it names what was running at the moment of the
+crash; on success it is cleared, because then it is only noise.

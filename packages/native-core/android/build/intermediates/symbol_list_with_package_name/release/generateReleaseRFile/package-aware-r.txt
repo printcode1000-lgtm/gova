@@ -1,0 +1,4 @@
+hgh.asol.app.nativecore
+color notification_accent
+drawable ic_stat_asol_notification
+raw custom_notification

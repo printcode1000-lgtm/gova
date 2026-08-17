@@ -115,8 +115,8 @@ Example:
 
 ```ts
 const actions = [
-  { kind: "view", label: "عرض", onClick: () => onViewProduct(product) },
-  { kind: "edit", label: "تعديل", onClick: () => onEditProduct(product) },
+  { kind: "view", label: "View", onClick: () => onViewProduct(product) },
+  { kind: "edit", label: "Edit", onClick: () => onEditProduct(product) },
 ];
 ```
 

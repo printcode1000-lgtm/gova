@@ -26,6 +26,12 @@ dependencies {
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
     implementation project(':capacitor-android')
+    // This module's own Java extends the push-notifications plugin, so the plugin project
+    // must be on its compile classpath. Registering it for the app module alone left
+    // :native-core failing with "package com.capacitorjs.plugins.pushnotifications does not
+    // exist" — this module was added after the last successful release build, so it had
+    // never compiled.
+    implementation project(':capacitor-push-notifications')
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"

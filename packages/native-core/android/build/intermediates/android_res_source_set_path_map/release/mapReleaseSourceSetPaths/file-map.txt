@@ -1,0 +1,10 @@
+hgh.asol.app.nativecore.native-core-pngs-0 C:\Users\hesham\Desktop\gova\packages\native-core\android\build\generated\res\pngs\release
+hgh.asol.app.nativecore.native-core-resValues-1 C:\Users\hesham\Desktop\gova\packages\native-core\android\build\generated\res\resValues\release
+hgh.asol.app.nativecore.native-core-updated_navigation_xml-2 C:\Users\hesham\Desktop\gova\packages\native-core\android\build\generated\updated_navigation_xml\release
+hgh.asol.app.nativecore.native-core-mergeReleaseResources-3 C:\Users\hesham\Desktop\gova\packages\native-core\android\build\intermediates\incremental\release\mergeReleaseResources\merged.dir
+hgh.asol.app.nativecore.native-core-mergeReleaseResources-4 C:\Users\hesham\Desktop\gova\packages\native-core\android\build\intermediates\incremental\release\mergeReleaseResources\stripped.dir
+hgh.asol.app.nativecore.native-core-release-5 C:\Users\hesham\Desktop\gova\packages\native-core\android\build\intermediates\merged_res\release\mergeReleaseResources
+hgh.asol.app.nativecore.native-core-release-6 C:\Users\hesham\Desktop\gova\packages\native-core\android\build\intermediates\packaged_res\release\packageReleaseResources
+hgh.asol.app.nativecore.native-core-main-7 C:\Users\hesham\Desktop\gova\packages\native-core\android\src\main\res
+hgh.asol.app.nativecore.native-core-release-8 C:\Users\hesham\Desktop\gova\packages\native-core\android\src\release\res
+gradleHome-0 C:\Users\hesham\.gradle

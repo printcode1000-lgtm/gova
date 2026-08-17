@@ -1,5 +1,7 @@
 package hgh.asol.app;
 
+import hgh.asol.app.nativecore.R;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -149,7 +151,21 @@ public class AsolPushMessagingService extends FirebaseMessagingService {
         NotificationManager manager = context.getSystemService(NotificationManager.class);
         if (manager == null) return;
 
-        Intent launch = new Intent(context, MainActivity.class);
+        // Resolved through the package manager rather than naming the host activity class.
+        //
+        // This is a library module: the activity lives in the application module, and a
+        // library cannot depend on the app that consumes it. Referencing the activity class
+        // directly left `:native-core:compileReleaseJavaWithJavac` failing with "cannot find
+        // symbol: class <HostActivity>", which is why this module had never compiled since it
+        // was added.
+        //
+        // The launcher intent is what a tap should open anyway, and asking the system for it
+        // keeps this module independent of whatever the app calls its entry point.
+        Intent launch = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        if (launch == null) {
+            Log.e(TAG, "No launcher activity for " + context.getPackageName() + "; notification not posted.");
+            return;
+        }
         launch.setAction(Intent.ACTION_MAIN);
         launch.addCategory(Intent.CATEGORY_LAUNCHER);
         // The Activity is singleTask: a running task is reused and the Intent

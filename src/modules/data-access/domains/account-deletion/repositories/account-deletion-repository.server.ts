@@ -2,20 +2,65 @@ import { notificationsDataSource, productsDataSource, profilesDataSource, usersD
 import "server-only";
 import { createHash } from "node:crypto";
 import { createMarketplaceOrdersDb } from "@/modules/data-access/domains/marketplace-orders/db/client";
-
-export interface DeletionImage { profileId: "avatar"|"cover"|"product-default"|"spicialOrder"; key: string }
+import type { DeletionImage } from "@asol/auth-core/server";
 
 export class AccountDeletionRepository {
-  async getUser(uid: string) { return (await usersDataSource.execute("SELECT uid, phone, password FROM users WHERE uid = ? AND deleted_at IS NULL LIMIT 1", [uid]))[0] as {uid:string;phone:string;password:string}|undefined; }
+  async getUser(uid: string) {
+    return (await usersDataSource.execute(
+      "SELECT uid, phone, password FROM users WHERE uid = ? AND deleted_at IS NULL LIMIT 1",
+      [uid],
+    ))[0] as { uid: string; phone: string; password: string } | undefined;
+  }
 
   async collectImages(uid: string): Promise<DeletionImage[]> {
-    const profileRows = await profilesDataSource.execute("SELECT image_key, image_type FROM profile_images WHERE uid = ?", [uid]) as {image_key:string;image_type:string}[];
-    const productRows = await productsDataSource.execute("SELECT images_json FROM products WHERE uid = ?", [uid]) as {images_json:string}[];
-    const result: DeletionImage[] = profileRows.map((row) => ({ profileId: row.image_type === "avatar" ? "avatar" : "cover", key: row.image_key }));
-    for (const row of productRows) { try { const images = JSON.parse(row.images_json) as {imageKey?:string}[]; for (const image of images) if (image.imageKey) result.push({ profileId: "product-default", key: image.imageKey }); } catch { /* malformed legacy image data must not block deletion */ } }
+    const profileRows = await profilesDataSource.execute(
+      "SELECT image_key, image_type FROM profile_images WHERE uid = ?",
+      [uid],
+    ) as { image_key: string; image_type: string }[];
+    const productRows = await productsDataSource.execute(
+      "SELECT images_json FROM products WHERE uid = ?",
+      [uid],
+    ) as { images_json: string }[];
+    const pharmacyRows = await productsDataSource.execute(
+      "SELECT image_key FROM pharmacy_profile_product_overrides WHERE uid = ? AND image_key IS NOT NULL AND image_key != ''",
+      [uid],
+    ) as { image_key: string }[];
+
+    const result: DeletionImage[] = profileRows.map((row) => ({
+      profileId: row.image_type === "avatar" ? "avatar" : "cover",
+      key: row.image_key,
+    }));
+
+    for (const row of productRows) {
+      try {
+        const images = JSON.parse(row.images_json) as { imageKey?: string }[];
+        for (const image of images) {
+          if (image.imageKey) {
+            result.push({ profileId: "product-default", key: image.imageKey });
+          }
+        }
+      } catch {
+        // malformed legacy image data must not block deletion
+      }
+    }
+
+    for (const row of pharmacyRows) {
+      if (typeof row.image_key === "string" && row.image_key && !row.image_key.startsWith("pharmacy-fixed/")) {
+        result.push({ profileId: "product-default", key: row.image_key });
+      }
+    }
+
     const orders = createMarketplaceOrdersDb();
-    const customImages = await orders.execute("SELECT image_key FROM custom_request_images WHERE uploaded_by = ?", [uid]);
-    for (const row of customImages) if (typeof row.image_key === "string" && row.image_key) result.push({ profileId: "spicialOrder", key: row.image_key });
+    const customImages = await orders.execute(
+      "SELECT image_key FROM custom_request_images WHERE uploaded_by = ?",
+      [uid],
+    );
+    for (const row of customImages) {
+      if (typeof row.image_key === "string" && row.image_key) {
+        result.push({ profileId: "spicialOrder", key: row.image_key });
+      }
+    }
+
     return result;
   }
 
@@ -24,22 +69,66 @@ export class AccountDeletionRepository {
     const anon = `deleted_${createHash("sha256").update(uid).digest("hex").slice(0, 24)}`;
     const ownedProducts = await productsDataSource.execute("SELECT id FROM products WHERE uid = ?", [uid]);
     await db.transaction(async (tx) => {
-      const replacements: [string,string][] = [
-        ["orders","buyer_id"], ["seller_orders","seller_id"], ["seller_orders","service_provider_id"], ["order_items","seller_id"],
-        ["custom_request_items","seller_id"], ["custom_request_items","service_provider_id"], ["custom_request_images","uploaded_by"],
-        ["shipments","carrier_id"], ["shipment_items","seller_id"], ["shipment_items","service_provider_id"], ["payments","buyer_id"],
-        ["cancellations","cancelled_by"], ["return_requests","buyer_id"], ["return_requests","carrier_id"], ["replacement_requests","buyer_id"],
-        ["disputes","opened_by"], ["dispute_messages","sender_id"], ["audit_trail","performed_by"],
+      const replacements: [string, string][] = [
+        ["orders", "buyer_id"],
+        ["seller_orders", "seller_id"],
+        ["seller_orders", "service_provider_id"],
+        ["order_items", "seller_id"],
+        ["custom_request_items", "seller_id"],
+        ["custom_request_items", "service_provider_id"],
+        ["custom_request_images", "uploaded_by"],
+        ["shipments", "carrier_id"],
+        ["shipment_items", "seller_id"],
+        ["shipment_items", "service_provider_id"],
+        ["payments", "buyer_id"],
+        ["cancellations", "cancelled_by"],
+        ["return_requests", "buyer_id"],
+        ["return_requests", "carrier_id"],
+        ["replacement_requests", "buyer_id"],
+        ["disputes", "opened_by"],
+        ["dispute_messages", "sender_id"],
+        ["audit_trail", "performed_by"],
       ];
-      for (const [table,column] of replacements) await tx.execute(`UPDATE ${table} SET ${column} = ? WHERE ${column} = ?`, [anon, uid]);
-      await tx.execute("UPDATE orders SET delivery_address_snapshot_json = '{}', notes = NULL WHERE buyer_id = ?", [anon]);
+      for (const [table, column] of replacements) {
+        await tx.execute(`UPDATE ${table} SET ${column} = ? WHERE ${column} = ?`, [anon, uid]);
+      }
+      await tx.execute(
+        "UPDATE orders SET delivery_address_snapshot_json = '{}', notes = NULL WHERE buyer_id = ?",
+        [anon],
+      );
       await tx.execute("UPDATE payments SET transaction_data_json = NULL WHERE buyer_id = ?", [anon]);
-      await tx.execute("UPDATE custom_request_images SET image_url = '', image_key = ?, file_name = NULL, image_description = NULL WHERE uploaded_by = ?", [`removed-${anon}`, anon]);
-      for (const row of ownedProducts) if (typeof row.id === "string") await tx.execute("UPDATE order_items SET product_id = ? WHERE product_id = ?", [`removed-${anon}`, row.id]);
+      await tx.execute(
+        "UPDATE custom_request_images SET image_url = '', image_key = ?, file_name = NULL, image_description = NULL WHERE uploaded_by = ?",
+        [`removed-${anon}`, anon],
+      );
+      await tx.execute(
+        "UPDATE seller_discount_usages SET buyer_uid = ? WHERE buyer_uid = ?",
+        [anon, uid],
+      );
+      for (const row of ownedProducts) {
+        if (typeof row.id === "string") {
+          await tx.execute("UPDATE order_items SET product_id = ? WHERE product_id = ?", [
+            `removed-${anon}`,
+            row.id,
+          ]);
+        }
+      }
     });
   }
 
   async deleteProducts(uid: string): Promise<void> {
+    await productsDataSource.execute(
+      "DELETE FROM pharmacy_profile_product_overrides WHERE uid = ?",
+      [uid],
+    );
+    await productsDataSource.execute(
+      "DELETE FROM pharmacy_profile_subcategory_overrides WHERE uid = ?",
+      [uid],
+    );
+    await productsDataSource.execute(
+      "DELETE FROM pharmacy_profile_category_overrides WHERE uid = ?",
+      [uid],
+    );
     await productsDataSource.execute("DELETE FROM product_review_helpful WHERE uid = ?", [uid]);
     await productsDataSource.execute("DELETE FROM product_review_replies WHERE seller_uid = ?", [uid]);
     await productsDataSource.execute("DELETE FROM product_reviews WHERE uid = ?", [uid]);
@@ -47,33 +136,52 @@ export class AccountDeletionRepository {
   }
 
   async deleteProfile(uid: string): Promise<void> {
+    await profilesDataSource.execute("DELETE FROM seller_discounts WHERE seller_uid = ?", [uid]);
     await profilesDataSource.execute("DELETE FROM profile_review_helpful WHERE uid = ?", [uid]);
     await profilesDataSource.execute("DELETE FROM profile_review_replies WHERE seller_uid = ?", [uid]);
-    await profilesDataSource.execute("DELETE FROM profile_reviews WHERE uid = ? OR target_uid = ?", [uid, uid]);
-    await profilesDataSource.execute("DELETE FROM follows WHERE follower_uid = ? OR target_owner_uid = ? OR target_id = ?", [uid, uid, uid]);
-    await profilesDataSource.execute("DELETE FROM profile_delivery_carriers WHERE carrier_uid = ?", [uid]);
+    await profilesDataSource.execute(
+      "DELETE FROM profile_reviews WHERE uid = ? OR target_uid = ?",
+      [uid, uid],
+    );
+    await profilesDataSource.execute(
+      "DELETE FROM follows WHERE follower_uid = ? OR target_owner_uid = ? OR target_id = ?",
+      [uid, uid, uid],
+    );
+    await profilesDataSource.execute(
+      "DELETE FROM profile_delivery_carriers WHERE carrier_uid = ? OR seller_uid = ?",
+      [uid, uid],
+    );
     await profilesDataSource.execute("DELETE FROM user_profiles WHERE uid = ?", [uid]);
   }
 
-  /**
-   * Push tokens and delivery preferences live in the notifications database on
-   * a separate account, so this is a second connection rather than part of the
-   * users delete. It runs first and is awaited: if it fails the account is left
-   * intact and the caller retries, which is safer than deleting the user and
-   * orphaning rows that would keep receiving push.
-   */
   async deleteNotifications(uid: string): Promise<void> {
-    await notificationsDataSource.execute("DELETE FROM user_notification_tokens WHERE uid = ?", [uid]);
-    await notificationsDataSource.execute("DELETE FROM user_notification_preferences WHERE uid = ?", [uid]);
+    await notificationsDataSource.execute(
+      "DELETE FROM user_notification_tokens WHERE uid = ?",
+      [uid],
+    );
+    await notificationsDataSource.execute(
+      "DELETE FROM user_notification_preferences WHERE uid = ?",
+      [uid],
+    );
   }
 
   async deleteMain(uid: string): Promise<void> {
     await this.deleteNotifications(uid);
     await usersDataSource.execute("DELETE FROM password_recovery_challenges WHERE uid = ?", [uid]);
-    await usersDataSource.execute("UPDATE ota_releases SET approved_by_uid = NULL WHERE approved_by_uid = ?", [uid]);
-    await usersDataSource.execute("UPDATE ota_releases SET revoked_by_uid = NULL WHERE revoked_by_uid = ?", [uid]);
-    await usersDataSource.execute("UPDATE ota_release_audit SET actor_uid = NULL WHERE actor_uid = ?", [uid]);
+    await usersDataSource.execute(
+      "UPDATE ota_releases SET approved_by_uid = NULL WHERE approved_by_uid = ?",
+      [uid],
+    );
+    await usersDataSource.execute(
+      "UPDATE ota_releases SET revoked_by_uid = NULL WHERE revoked_by_uid = ?",
+      [uid],
+    );
+    await usersDataSource.execute(
+      "UPDATE ota_release_audit SET actor_uid = NULL WHERE actor_uid = ?",
+      [uid],
+    );
     await usersDataSource.execute("DELETE FROM users WHERE uid = ?", [uid]);
   }
 }
+
 export const accountDeletionRepository = new AccountDeletionRepository();

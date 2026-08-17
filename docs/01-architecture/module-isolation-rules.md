@@ -73,6 +73,15 @@ Every file inside the module has exactly one reason to change and one clear job.
 SDK, the Android Gradle Plugin, the iOS SPM deps — must require changes **only inside the module**, and
 zero changes anywhere else. Every boundary is designed against this test.
 
+**The cost this rule carries: tooling that discovers by reading the root `package.json`.** Capacitor
+is one. Moving every plugin dependency into `native-core` means `npx cap sync` finds none of them, and
+it does not warn — it regenerates `android/capacitor.settings.gradle` with zero `include` lines, so 25
+registrations vanish and the failure surfaces much later as a Java compile error naming a plugin
+package that "does not exist". The answer is `includePlugins` in `capacitor.config.ts`, an explicit
+allowlist that overrides discovery, derived from `native-core`'s own dependencies so the module stays
+the single source of truth. Before relocating a dependency under this rule, check whether any tool
+resolves it by scanning the root manifest, and give that tool an explicit list.
+
 ---
 
 ## How the eight are enforced in practice
@@ -106,7 +115,7 @@ it for any package.
 
 ## Current status
 
-Twelve sealed packages, arranged in four layers. The layering is not decoration — see
+Fourteen sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
 Doors and app-edge counts below are measured, not intended. Re-measure with:
@@ -115,16 +124,16 @@ Doors and app-edge counts below are measured, not intended. Re-measure with:
 node -e "for(const p of require('fs').readdirSync('packages')) try{console.log(p, Object.keys(require('./packages/'+p+'/package.json').exports||{}).join(' '))}catch{}"
 ```
 
-| # | Rule | native-core | ota-core | storage-core | notifications-core | account-declarations | vercel-deploy-core | service-mirror-core | account-bridge | the four `*-composition` |
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| 1 | Core Module | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 2 | Single public API | ✅ 2 doors | ✅ 3 doors | ✅ 2 doors | ✅ 4 doors, each earned | ✅ 1 + per-account | ✅ 1 | ✅ 1 | ✅ 2 doors | ✅ 1 each |
-| 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 7 | Independent package | ✅ 0 edges | ✅ 5, designated + pinned | ✅ 1, designated | ✅ 4, designated + pinned | ✅ 0 imports | ✅ 0 edges | ✅ 0 edges | ✅ 3, pinned | ✅ by design — see below |
-| 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| # | Rule | native-core | ota-core | storage-core | notifications-core | account-declarations | vercel-deploy-core | service-mirror-core | account-bridge | the four `*-composition` | auth-core | catalog-core |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| 1 | Core Module | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 2 | Single public API | ✅ 2 doors | ✅ 3 doors | ✅ 2 doors | ✅ 4 doors, each earned | ✅ 1 + per-account | ✅ 1 | ✅ 1 | ✅ 2 doors | ✅ 1 each | ✅ 2 doors | ✅ 2 doors |
+| 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 7 | Independent package | ✅ 0 edges | ✅ 5, designated + pinned | ✅ 1, designated | ✅ 4, designated + pinned | ✅ 0 imports | ✅ 0 edges | ✅ 0 edges | ✅ 3, pinned | ✅ by design — see below | ✅ 0 edges | ✅ 0 edges |
+| 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 Rule 2 counts doors rather than asserting one. `native-core`'s second door is a validation script
 the release console runs; the rest are justified where they appear. **A package with more doors than
@@ -157,7 +166,7 @@ the contract rather than a matter of taste.
   layer 3  @asol/account-declarations    pure data: project, token var, env keys, entry points
   layer 2  @asol/*-composition           the only place that knows an account uses db AND images
   layer 1  vercel-deploy-core, service-mirror-core, storage-core, ota-core,
-           native-core, notifications-core
+           native-core, notifications-core, auth-core, catalog-core
                                          capability logic, held once
 ```
 
@@ -166,7 +175,7 @@ Measured dependencies, rather than intended ones:
 | Package | Imports |
 | :-- | :-- |
 | `account-declarations` | **nothing** — asserted by its own test |
-| `native-core`, `storage-core`, `service-mirror-core`, `notifications-core` | nothing |
+| `native-core`, `storage-core`, `service-mirror-core`, `notifications-core`, `auth-core` | nothing |
 | `vercel-deploy-core` | `account-declarations` |
 | `orders-`, `products-`, `profiles-composition` | `account-declarations` |
 | `notifications-composition` | `account-declarations`, `notifications-core` |
@@ -481,6 +490,67 @@ library.
 
 The transport is now injected through the constructor. **A stub that stops stubbing without failing
 is worse than no stub** — the test kept passing its assertions while exercising something else.
+
+---
+
+## `@asol/auth-core` — what was sealed, and what was not
+
+Auth logic was spread across `src/features/auth/` utilities, validation modules, and a separate
+`src/features/account-deletion/` feature folder. The sealed package holds domain rules that must
+not drift between client and server:
+
+| Concern | In `@asol/auth-core` | Stays in the app |
+| :-- | :-- | :-- |
+| Password hashing (scrypt) | yes | — |
+| Session token sign/verify | yes | — |
+| Registration/login/profile Zod schemas | yes (browser door) | — |
+| `AuthOperationsService` / `AccountDeletionService` | yes (server door) | — |
+| IndexedDB session persistence | — | `session-api-service.ts` |
+| Turso repositories / SQL deletion | — | `data-access` domains + bootstrap |
+| UI (login, profile, deletion page) | — | `src/features/auth/` |
+
+Two doors: `@asol/auth-core` (browser-safe) and `@asol/auth-core/server`. Full file map and
+security notes: [auth-core-module.md](./auth-core-module.md).
+
+### Two doors, same pattern as `storage-core`
+
+- **`.`** — constants, entities, and Zod schemas safe for client bundles (`createLoginSchema`,
+  `createProfileSchema`, deletion phrase helpers).
+- **`./server`** — scrypt password hashing, HMAC session tokens, `AuthOperationsService`,
+  `AccountDeletionService`, and normalization helpers. App repositories are wired through ports in
+  `auth-core-bootstrap.server.ts`.
+
+Measured rule 7: **0 import edges** into other `@asol/*` packages. `test:auth-core` gates `build`,
+`build:static`, and `test`.
+
+---
+
+## `@asol/catalog-core` — what was sealed, and what was not
+
+Catalog v3 contracts lived in `src/features/catalog-data/` and the full-tree validator lived in
+`scripts/validate-catalog.ts`. The sealed package holds everything that must stay identical across
+Catalog Studio, CI, and runtime consumers:
+
+| Concern | In `@asol/catalog-core` | Stays in the app |
+| :-- | :-- | :-- |
+| Catalog v3 TypeScript types | yes | — |
+| Zod schemas + JSON Schema sources | yes (browser door) | — |
+| Display visibility helpers | yes (browser door) | — |
+| `validateCatalogV3` + `resolveCatalogRoots` | yes (server door) | — |
+| `categoryService` projections | — | `src/features/categories/` |
+| Catalog Studio UI + filesystem writes | — | `src/features/catalog-studio/` |
+| JSON files under `public/catagory/` | — | static data (read/written by studio) |
+| `user_specialties` Drizzle schema | — | `data-access` (columns passed into validator) |
+
+Two doors: `@asol/catalog-core` and `@asol/catalog-core/server`. `src/features/catalog-data` is now a
+thin re-export shim. Full map: [catalog-core-module.md](./catalog-core-module.md).
+
+### Two doors, same pattern as `storage-core`
+
+- **`.`** — types, Zod contracts, `isCatalogItemVisible`, `visibleCatalogItems`.
+- **`./server`** — `validateCatalogV3`, `resolveCatalogRoots`. Node `fs` only; no app imports.
+
+Measured rule 7: **0 import edges**. `test:catalog-core` gates `build`, `build:static`, and `test`.
 
 ---
 

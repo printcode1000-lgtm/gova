@@ -201,7 +201,7 @@ The `SpecialtiesCard` component (`src/components/profile/SpecialtiesCard.tsx`) e
 | Regular user | **Max 3** main specialties |
 | Super Admin | **Unlimited** |
 
-- Exceeding the limit shows a toast: `"لا يمكن اختيار أكثر من 3 تخصصات رئيسية"` / `"Cannot select more than 3 main categories"`.
+- Exceeding the limit shows a toast: `"Cannot select more than 3 main categories"`.
 - The `unlimited` prop is passed as `true` by `ProfilePageContent` when `isSuperAdmin(session)` returns `true`.
 - No limit is applied to subcategories under an already-selected main specialty.
 

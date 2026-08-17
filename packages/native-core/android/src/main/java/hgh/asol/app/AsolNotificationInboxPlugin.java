@@ -65,7 +65,7 @@ public class AsolNotificationInboxPlugin extends Plugin {
     /**
      * A tap that arrived while this process was already running.
      *
-     * Forwarded from MainActivity#onNewIntent. The event is a convenience for a
+     * Forwarded from the host activity's onNewIntent. The event is a convenience for a
      * running session; correctness does not depend on it, because the same tap
      * is also readable through {@code getPendingTap} and the record itself is
      * still in the inbox either way.

@@ -3,12 +3,15 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import {
   createSignedSessionToken,
+  registerSessionSigningSecret,
   verifySignedSessionToken,
-} from "@/features/auth/services/signed-session-token.server";
+} from "@asol/auth-core/server";
 import {
   createSpecialtyChatCapability,
   verifySpecialtyChatCapability,
 } from "../services/specialty-chat-capability.server";
+
+registerSessionSigningSecret(() => "audit-only-secret-0123456789abcdef");
 
 const session = createSignedSessionToken("buyer", "01000000000");
 assert.equal(verifySignedSessionToken(session).uid, "buyer");

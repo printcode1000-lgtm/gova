@@ -14,7 +14,7 @@ import {
 import { createSpecialtyChatCapability, verifySpecialtyChatCapability } from "./specialty-chat-capability.server";
 import { SPECIALTY_CHAT_KINDS, type SendSpecialtyMessageInput, type SendSpecialtyReceiptInput, type SendSpecialtyRequestInput, type SendSpecialtyRequestResult, type SpecialtyChatIdentity, type SpecialtyChatPreferenceChanges, type StartProductConversationInput, type StartProductConversationResult, type StartProfileConversationInput, type StartProfileConversationResult } from "../domain/types";
 import { getSpecialtyChatSubOptions } from "../domain/specialty-options";
-import { verifySignedSessionToken } from "@/features/auth/services/signed-session-token.server";
+import { verifySignedSessionToken } from "@asol/auth-core/server";
 import { productService } from "@/features/product/services/product-service.server";
 
 const MAX_MESSAGE_LENGTH = 800;

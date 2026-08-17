@@ -43,7 +43,7 @@ public class ShareReceivePlugin extends Plugin {
         handleIntent(getActivity().getIntent());
     }
 
-    /** Called by MainActivity when the app is already running. */
+    /** Called by the host activity when the app is already running. */
     public void onNewIntentReceived(Intent intent) {
         handleIntent(intent);
     }

@@ -142,9 +142,10 @@ export function useProfileSave({
     discountsController: ProfileDiscountsController | null
   ) => {
     setSaveError(null);
-    
+
     if (
       !session?.uid ||
+      !session.sessionToken ||
       !registrationController ||
       !contactsController ||
       !storeController ||
@@ -226,6 +227,7 @@ export function useProfileSave({
       if (editorSections.length > 0) {
         const saved = await profileService.saveEditor({
           uid: session.uid,
+          sessionToken: session.sessionToken,
           changedSections: editorSections,
           registration,
           contacts,

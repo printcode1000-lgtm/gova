@@ -1,13 +1,18 @@
-import "server-only";
+import 'server-only';
 
-import { verifySignedSessionToken } from "@/features/auth/services/signed-session-token.server";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
+import '@/features/auth/server/auth-core-ports.server';
+import {
+  extractSessionToken,
+  isSuperAdminIdentity,
+  verifySignedSessionToken,
+  type SignedSessionClaims,
+} from '@asol/auth-core/server';
 
-export function assertSuperAdminRequest(request: Request) {
-  const token = request.headers.get("x-asol-session-token")?.trim() ?? "";
+export function assertSuperAdminRequest(request: Request): SignedSessionClaims {
+  const token = extractSessionToken(request);
   const claims = verifySignedSessionToken(token);
   if (!isSuperAdminIdentity(claims.uid, claims.phone)) {
-    throw new Error("forbidden");
+    throw new Error('forbidden');
   }
   return claims;
 }

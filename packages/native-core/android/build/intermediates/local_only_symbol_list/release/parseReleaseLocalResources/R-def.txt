@@ -1,0 +1,5 @@
+R_DEF: Internal format may change without notice
+local
+color notification_accent
+drawable ic_stat_asol_notification
+raw custom_notification

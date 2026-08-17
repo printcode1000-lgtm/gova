@@ -1,6 +1,7 @@
-import "server-only";
+import 'server-only';
 
-import { createSignedSessionToken } from "@/features/auth/services/signed-session-token.server";
+import '@/features/auth/server/auth-core-ports.server';
+import { createSignedSessionToken } from '@asol/auth-core/server';
 import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
 import {
   superAdminUserSearchRepository,

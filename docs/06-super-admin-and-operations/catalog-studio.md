@@ -81,7 +81,7 @@ removed.
   validation, transactions, recovery, images and audit.
 - `src/app/api/dev/catalog-studio` contains thin authenticated development-only adapters.
 - `src/app/super-admin/catalog/page.tsx` is only the route guard and feature entry point.
-- `src/features/catalog-data` remains the runtime Catalog v3 contract; Catalog Studio does not
+- `src/features/catalog-data` is a thin re-export shim over `@asol/catalog-core`; Catalog Studio does not
   replace normal runtime loaders.
 
 ## Verification

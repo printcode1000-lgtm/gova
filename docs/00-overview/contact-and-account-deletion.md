@@ -1,33 +1,39 @@
-# التواصل وحذف الحساب
+# Contact Us and Account Deletion
 
-## صفحة التواصل
+## Contact Us Page
 
-- المسار العام: `/contact-us`.
-- أعيد بناء الصفحة داخل React وNext.js لتتوافق مع تصميم أصول واللغتين العربية والإنجليزية واتجاهي RTL وLTR.
-- تحتفظ الصفحة بأرقام الهاتف والبريد وروابط Facebook وInstagram وTikTok ومواعيد العمل ورمز QR المعتمد في الصفحة القديمة.
-- يرسل النموذج إلى `suezbazaar@gmail.com` من حساب Gmail المهيأ في متغيرات استعادة كلمة المرور، ويضع بريد المرسل في `Reply-To`.
-- يتحقق الخادم من الاسم والبريد ونوع الخدمة ونص الرسالة، ويسمح بثلاث محاولات لكل عنوان شبكة خلال 15 دقيقة لكل نسخة خادم.
-- نقطة الربط: `POST /api/contact`.
+- Public Route: `/contact-us`.
+- Rebuilt within React and Next.js to align with Asol design, supporting both Arabic and English languages as well as RTL and LTR layouts.
+- Retains phone numbers, email, Facebook, Instagram, and TikTok links, working hours, and the approved QR code from the legacy page.
+- Sends the contact form submission to `suezbazaar@gmail.com` using the configured Gmail account from password recovery environment variables, setting the sender's email in `Reply-To`.
+- Server validates name, email, service type, and message content, allowing up to 3 attempts per IP address per 15-minute window for each server instance.
+- Endpoint: `POST /api/contact`.
 
-## صفحة حذف الحساب
+## Account Deletion Page
 
-- المسار العام: `/delete-account`، ويمكن الوصول إليه من صفحة التواصل.
-- يلزم تسجيل الدخول، ثم إدخال كلمة المرور الحالية وعبارة التأكيد المطابقة `DELETE ASOL ACCOUNT` والموافقة على التحذير النهائي.
-- لا يمكن حذف حساب السوبر أدمن من هذه الصفحة.
-- نقطة الربط: `POST /api/account/delete`.
+- Public Route: `/delete-account`, accessible from the Contact Us page.
+- UI lives in `src/features/auth/components/AccountDeletionPageContent.tsx`.
+- Core deletion logic lives in `@asol/auth-core/server` (`AccountDeletionService`).
+- Requires authentication, a signed `sessionToken` header, current password, exact confirmation text matching either `DELETE ASOL ACCOUNT` or `احذف حساب أصول نهائيا`, and approval of the final warning.
+- Super Admin account cannot be deleted from this page.
+- Endpoint: `POST /api/account/delete`.
 
-### البيانات التي تحذف نهائيًا
+### Permanently Deleted Data
 
-- سجل المستخدم وكلمة المرور وتحديات استعادة كلمة المرور ورموز إشعارات الأجهزة.
-- الملف الشخصي ووسائل التواصل والعناوين والصور والتخصصات ومواعيد العمل والإعدادات المرتبطة.
-- المنتجات وصورها، والمراجعات والتفاعلات والمتابعات التي يملكها المستخدم.
-- صور الطلبات المخصصة التي رفعها المستخدم من التخزين، مع إزالة مراجعها الشخصية من سجل الطلب.
-- بعد نجاح الخادم تمسح الصفحة بيانات الجهاز المحلية، ومنها الجلسة والسلة والمفضلة وقواعد IndexedDB وملفات الارتباط.
+- User record, password (scrypt), password recovery challenges, and device notification tokens.
+- Profile, social links, addresses, photos, specialties, seller discounts, pharmacy catalog overrides, working hours, and associated settings.
+- Products, product images, reviews, interactions, and followings owned by the user.
+- Custom order images uploaded by the user from storage, with personal references scrubbed from the order record.
+- Upon successful server response, the client clears local device data including session, cart, favorites, IndexedDB databases, and cookies.
 
-### السجلات المشتركة التي لا تحذف
+### Retained Shared Records
 
-الطلبات والمدفوعات والمرتجعات والنزاعات وسجل التدقيق قد تخص أكثر من طرف، لذلك لا تحذف. يستبدل معرّف المستخدم فيها بمعرّف مجهول ثابت مشتق من بصمة UID، وتزال عناوينه وملاحظاته وبيانات الدفع الشخصية. يحافظ ذلك على سلامة الحسابات وحقوق بقية الأطراف دون إبقاء هوية الحساب المحذوف.
+Orders, payments, returns, disputes, and audit logs involve multiple parties and are therefore retained. The user ID is replaced with a static anonymous identifier derived from the UID hash, and personal addresses, notes, and payment details are stripped. This preserves accounting integrity and legal compliance without retaining deleted account identities.
 
-### ملاحظة تشغيلية
+### Operational Note
 
-عملية الحذف موزعة على قواعد بيانات المستخدم والملف الشخصي والمنتجات والطلبات إضافة إلى تخزين الصور. تنفذ إزالة البيانات الأساسية بترتيب يمنع بقاء حساب قابل للدخول، وتتعامل إزالة الصور مع فشل كل ملف بصورة مستقلة وتسجل الخطأ للمراجعة التشغيلية.
+The deletion process spans user, profile, product, and order databases as well as image storage. Core data deletion executes in a sequential order that prevents active logins, while image removal handles per-file failures independently and logs errors for operational auditing.
+
+### Implementation Reference
+
+Auth and deletion orchestration live in `@asol/auth-core`. See [auth-core-module.md](../01-architecture/auth-core-module.md) for package boundaries, security model, and file map.

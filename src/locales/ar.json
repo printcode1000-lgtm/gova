@@ -119,7 +119,7 @@
     "auth.validation.confirmPasswordRequired":  "يرجى تأكيد كلمة المرور",
     "auth.validation.emailInvalid":  "يرجى إدخال عنوان بريد إلكتروني صحيح",
     "auth.validation.passwordMatch":  "كلمتا المرور غير متطابقتين",
-    "auth.validation.passwordMinLength":  "كلمة المرور يجب أن تكون 4 أحرف على الأقل",
+    "auth.validation.passwordMinLength":  "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
     "auth.validation.passwordRequired":  "كلمة المرور مطلوبة",
     "auth.validation.phoneLength":  "رقم الهاتف يجب أن يتكون من 11 رقمًا",
     "auth.validation.phonePrefix":  "رقم الهاتف يجب أن يبدأ بـ 010، 011، 012 أو 015",

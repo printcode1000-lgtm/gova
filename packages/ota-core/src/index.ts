@@ -20,6 +20,7 @@ export {
   releaseContentVersion,
   nextContentVersion,
   assertContentVersionAdvances,
+  assertContentLineDoesNotRegress,
   type ContentVersionParts,
 } from "./domain/versioning/content-version";
 

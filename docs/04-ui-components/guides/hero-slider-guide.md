@@ -74,7 +74,7 @@ const [config, setConfig] = useState<HeroSliderConfig>(initialConfig);
 <HeroSlider mode="admin-edit" config={config} onChange={setConfig} />;
 ```
 
-The super-admin page has one "حفظ" button next to the check interval inputs. It replaces the current Home configuration directly; there are no draft, publish, restore, or history actions.
+The super-admin page has one "Save" button next to the check interval inputs. It replaces the current Home configuration directly; there are no draft, publish, restore, or history actions.
 
 ### `images-edit`
 

@@ -4,11 +4,11 @@ Client login state in ASOL is local-first and cryptographically verifiable for p
 
 - **Logged in** → `UserSession` in Asol IndexedDB (`auth` store, key `current`)
 - **Not logged in** → no row in `auth/current` (`null`)
-- **Guest browsing** → separate `guestSessions` store via `useGuestSession()` (“متابعة كضيف”)
+- **Guest browsing** → separate `guestSessions` store via `useGuestSession()` ("Continue as Guest")
 
 The login response includes a 30-day HMAC-signed `sessionToken`. It is persisted only in AsolDB with the local session, is removed on logout/reset, and has no server session table.
 
-See [data-layers/README.md](./data-layers/README.md) for full layer architecture.
+See [data-layers/README.md](../01-architecture/data-layers/README.md) for full layer architecture.
 
 ---
 
@@ -109,6 +109,10 @@ Mounted in root `layout.tsx` inside `AppQueryProvider`.
 
 The token is signed server-side after password verification. The server validates its signature and expiry without storing a cloud session row. Sessions created before this feature remain usable for ordinary browsing, but specialty-chat mutations require one fresh login.
 
+`PUT /api/auth/profile` and `POST /api/account/delete` require the same signed `sessionToken` via the `x-asol-session-token` header.
+
+Passwords are stored with scrypt (`scrypt$...`) via `@asol/auth-core/server`. Minimum length is 8 characters.
+
 ---
 
 ## Profile
@@ -121,19 +125,23 @@ Saving profile updates server (`PUT /api/auth/profile`) and rewrites IDB via `sa
 ## File map
 
 ```
+packages/auth-core/
 src/features/auth/
-├── entities/session.entity.ts       # UserSession, isLoggedIn, parseStoredSession
-├── services/session-api-service.ts  # IDB owner
-├── services/session-service.ts
-├── components/SessionProvider.tsx   # useSession()
+├── entities/session.entity.ts
+├── services/session-api-service.ts
+├── services/account-deletion-api-service.ts
+├── components/AccountDeletionPageContent.tsx
+├── server/auth-core-ports.server.ts
+├── server/auth-core-bootstrap.server.ts
+├── components/SessionProvider.tsx
 └── hooks/
     ├── use-login.ts
     ├── use-register.ts
     ├── use-logout.ts
     └── use-profile-registration.ts
 
-src/hooks/use-guest-session.ts       # guestSessions (separate)
-src/modules/data-access/browser/asol-db/index.ts             # low-level IDB helpers
+src/hooks/use-guest-session.ts
+src/modules/data-access/browser/asol-db/index.ts
 ```
 
 ---
@@ -151,5 +159,6 @@ src/modules/data-access/browser/asol-db/index.ts             # low-level IDB hel
 
 ## Related
 
-- [data-layers/README.md](./data-layers/README.md)
-- [capacitor.md](./capacitor.md)
+- [auth-core-module.md](../01-architecture/auth-core-module.md)
+- [data-layers/README.md](../01-architecture/data-layers/README.md)
+- [contact-and-account-deletion.md](../00-overview/contact-and-account-deletion.md)

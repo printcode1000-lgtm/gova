@@ -155,6 +155,7 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   // server half of that module's public API, not a shared utility. Without this
   // it falls through to `shared`, where importing `server-only` is forbidden.
   if (/^src\/features\/[^/]+\/server\.ts$/.test(p)) return 'server-services';
+  if (/^src\/features\/[^/]+\/server\//.test(p)) return 'server-services';
   if (p.includes('/repositories/')) return 'repository';
   if (p.includes('/operations/')) return 'operations';
   if (

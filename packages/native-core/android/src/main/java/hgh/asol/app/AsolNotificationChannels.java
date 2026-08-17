@@ -1,5 +1,7 @@
 package hgh.asol.app;
 
+import hgh.asol.app.nativecore.R;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ContentResolver;

@@ -1,146 +1,119 @@
-# موديول سلامة البيانات
+# Data Health Module
 
-## الهدف
+## Objective
 
-الموديول `src/modules/data-health` هو مركز مستقل لفحص سلامة بيانات المشروع،
-مقارنة بنية قواعد البيانات، إدارة الحجر الصحي، وتنفيذ عمليات تنظيف محددة وقابلة
-للتدقيق من صفحة `/super-admin/data-health`.
+The `src/modules/data-health` module serves as a standalone center for inspecting project data integrity, comparing database schemas, managing quarantines, and executing specific, auditable cleanup operations directly from `/super-admin/data-health`.
 
-ملفات Next.js الموجودة تحت `src/app` مداخل رفيعة فقط. منطق العمل والواجهة
-والسياسات والمستودعات موجودة داخل الموديول لتسهيل إضافة قواعد فحص جديدة دون
-تضخيم صفحة السوبر أدمن.
+Next.js files under `src/app` are thin entry points. Business logic, UI, policies, and repositories reside within the module to facilitate adding new health check rules without bloating the Super Admin page.
 
-## حدود البيئة
+## Environment Boundaries
 
-- في التطوير تُفحص قواعد SQLite والتخزين المحلي.
-- في الإنتاج تُفحص قواعد Turso وCloudflare R2.
-- مقارنة بنية SQLite مع Turso تعمل في التطوير فقط، وتُحمّل عند فتح تبويب مقارنة البنية حتى يبقى الفحص الرئيسي سريعًا.
-- مقارنة البنية للقراءة فقط، ولا تنفذ DDL أو مزامنة أو حذفًا.
-- إذا لم تتوفر بيانات اتصال Turso في التطوير تظهر القاعدة بحالة `غير متاح`.
+- In development, local SQLite databases and local storage are checked.
+- In production, Turso databases and Cloudflare R2 storage are checked.
+- Comparing SQLite schema with Turso operates in development only, loading when opening the schema comparison tab to keep main health checks fast.
+- Schema comparison is read-only and does not execute DDL, synchronization, or deletions.
+- If Turso connection credentials are missing in development, the database status displays as `unavailable`.
 
-## مكونات الموديول
+## Module Components
 
-- `domain`: الأنواع، البصمات، مدد الاحتفاظ، وسياسة التأكيد.
-- `db`: بنية جداول سجل الفحوصات والخطط والتدقيق والحجر والأقفال.
-- `repositories`: قراءة القواعد، جرد الصور، مقارنة البنية، وتطبيق تغييرات محددة.
-- `services`: إنشاء الخطط، التحقق من صلاحيتها، القفل، وإدارة الحجر.
-- `presentation`: واجهة السوبر أدمن.
-- `tests`: عقود السياسة والبصمات وبنية جداول الموديول.
+- `domain`: Types, signatures, retention periods, and confirmation policies.
+- `db`: Schema definitions for health checks log, plans, audit trails, quarantines, and locks.
+- `repositories`: Database readers, storage inventories, schema comparators, and specific change applicators.
+- `services`: Plan creation, plan validation, locking, and quarantine management.
+- `presentation`: Super Admin interface.
+- `tests`: Policy contracts, signatures, and module table schema tests.
 
-## ما يتم فحصه
+## Inspection Scope
 
-- المنتجات والبروفايلات التي لا تملك مستخدمًا نشطًا.
-- صور البروفايل والمنتجات والصيدلية والطلبات المخصصة والإعلانات.
-- مرجع صورة بلا ملف، وملف تخزين بلا أي مرجع.
-- المنتجات المميزة والمتابعات وناقلات التوصيل.
-- تقييمات البروفايل والمنتجات وردودها وتصويتاتها.
-- استخدامات الخصومات المرتبطة بمستخدم أو طلب مفقود.
-- رؤوس الطلبات، طلبات البائع، الطلبات المخصصة، العناصر، الشحنات، المدفوعات،
-  المرتجعات والاستبدالات.
-- سلامة SQLite/Turso بواسطة `quick_check` و`foreign_key_check`.
-- الجداول والأعمدة والأنواع والقيم الافتراضية والمفاتيح الخارجية والفهارس
-  وواجهات العرض وTriggers عند مقارنة البنية.
+- Products and profiles lacking an active user.
+- Profile, product, pharmacy, custom order, and advertisement images.
+- Image references missing files, and stored files lacking any database reference.
+- Featured products, user followings, and delivery fulfillment channels.
+- Profile and product reviews, replies, and votes.
+- Discount usage records linked to a missing user or order.
+- Order headers, seller orders, custom orders, items, shipments, payments, refunds, and replacements.
+- SQLite/Turso integrity checks via `quick_check` and `foreign_key_check`.
+- Tables, columns, data types, default values, foreign keys, indexes, views, and triggers during schema comparison.
 
-## خريطة التشغيل في الصفحة
+## In-Page Execution Map
 
-تعرض `/super-admin/data-health` خريطة حية ناتجة من عملية الفحص نفسها، وليست
-قائمة أسماء ثابتة. لكل قاعدة يظهر اسمها، جداولها، وحالة اتصالها. يشمل ذلك كل
-قواعد التشغيل الحالية:
+The `/super-admin/data-health` page displays a live execution map generated dynamically by the inspection process itself, rather than a static list of names. Each database displays its name, tables, and connection status. This covers all current operational databases:
 
-- قواعد النظام الأساسية: `users` و`product` و`advertisements`.
-- قواعد ملفات التعريف الثماني: `profile-core` و`profile-contact` و`profile-media`
-  و`profile-social` و`profile-catalog` و`profile-promotions` و`profile-fulfillment`
-  و`system-ops`.
-- قواعد الطلبات التسع: `orders-core` و`orders-items` و`orders-fulfillment`
-  و`orders-delivery-plans` و`orders-shipping-quotes` و`orders-payments`
-  و`orders-refunds` و`orders-after-sales` و`orders-disputes-audit`.
+- Core System Databases: `users`, `product`, and `advertisements`.
+- Eight Profile Databases: `profile-core`, `profile-contact`, `profile-media`, `profile-social`, `profile-catalog`, `profile-promotions`, `profile-fulfillment`, and `system-ops`.
+- Nine Order Databases: `orders-core`, `orders-items`, `orders-fulfillment`, `orders-delivery-plans`, `orders-shipping-quotes`, `orders-payments`, `orders-refunds`, `orders-after-sales`, and `orders-disputes-audit`.
 
-ينفذ الفحص `quick_check` و`foreign_key_check` لكل واحدة من هذه القواعد بشكل
-مستقل. إذا لم يدعم مصدر التشغيل أحد فحوص SQLite، تسجل الصفحة تحذيرا باسم
-القاعدة بدلا من إسقاط الفحص أو إسناد النتيجة إلى قاعدة أخرى.
+The inspection executes `quick_check` and `foreign_key_check` independently for each database. If the runtime driver does not support a specific SQLite check, the page logs a warning with the database name instead of dropping the check or attributing the result to another database.
 
-تعرض الخريطة أيضا كل مصادر الصور المسجلة في
-`src/modules/data-health/domain/source-registry.ts` مع الجداول والحقول ونوع
-الملكية. ويشمل ذلك الصور المملوكة، لقطات الصور المشتركة، الصور الثابتة، ومهام
-حذف التخزين. لذلك لا يقتصر العرض على الصور الموجودة في R2 فقط.
+The map also renders all registered image sources defined in `src/modules/data-health/domain/source-registry.ts` alongside tables, fields, and ownership types. This encompasses owned images, shared image snapshots, fixed assets, and storage cleanup tasks (not limited to files in R2).
 
-### مخازن الصور
+### Image Storage Targets
 
-تظهر ثلاثة أهداف تخزين منفصلة:
+Displays three distinct storage targets:
 
-- `r2-primary`: مخزن R2 الجديد للصور الشخصية (`avatar` و`cover`)، شريط الصفحة
-  الرئيسية (`home-hero-slider`)، وصور الطلبات الخاصة (`spicialOrder`).
-- `r2-products`: مخزن R2 القديم للمنتجات (`product-default`) فقط.
-- `local-sync-mirror`: النسخة المحلية الموحدة تحت
-  `public/sync_data/sync_file/images/...`، وتكون خارج نطاق التشغيل السحابي.
+- `r2-primary`: New R2 bucket for profile images (`avatar` and `cover`), home hero slider (`home-hero-slider`), and custom order images (`spicialOrder`).
+- `r2-products`: Legacy R2 bucket for product images (`product-default`) exclusively.
+- `local-sync-mirror`: Local unified mirror located under `public/sync_data/sync_file/images/...`, excluded from cloud operations.
 
-يعتمد توزيع المخازن والمجلدات على `src/config/storage-profiles.json`. لا تعرض
-الواجهة عناوين الحسابات أو المفاتيح أو بيانات الوصول.
+Storage bucket distribution and directory paths depend on `src/config/storage-profiles.json`. Account credentials, keys, and secret access tokens are never exposed on the user interface.
 
-عناصر الطلب التاريخية لا تُعتبر تالفة بسبب حذف المنتج الحالي إذا بقيت لقطة
-الاسم أو الصورة محفوظة. السجلات المالية والنزاعات لا تُحذف آليًا.
+Historical order items are not treated as corrupted simply because the active product was deleted, provided the name/image snapshot remains preserved. Financial and dispute records are never deleted automatically.
 
-## دورة الفحص
+## Inspection Cycle
 
-1. ينشأ سجل `running` بمعرف مستقل.
-2. تُقرأ القواعد بالتوازي حيث يكون ذلك آمنًا.
-3. تجمع قواعد الفحص نتائج موحدة ذات بصمة ثابتة وبصمة لحالة السجل.
-4. يجري جرد التخزين على كل الصفحات، وليس أول 1000 ملف فقط.
-5. تحفظ النتائج ووقت أول وآخر ظهور.
-6. يتحول سجل الفحص إلى `completed` أو `failed`.
+1. Creates a `running` record with a unique execution ID.
+2. Reads databases in parallel where safe.
+3. Health check rules aggregate standardized results with stable issue signatures and record state signatures.
+4. Performs storage inventory across all pages (not limited to the first 1000 files).
+5. Persists issue results alongside first-seen and last-seen timestamps.
+6. Updates inspection log status to `completed` or `failed`.
 
-الحالات المتاحة: جديدة، متكررة، في الحجر، ومتجاهلة. التقارير قابلة للتصدير
-بصيغة JSON وCSV، ويحتفظ النظام بآخر 30 فحصًا في واجهة السجل.
+Available statuses: New, Recurrent, Quarantined, and Ignored. Reports are exportable in JSON and CSV formats, and the system retains the last 30 inspection runs in the log view.
 
-## التنظيف الآمن
+## Safe Cleanup
 
-- لا يتم تحديد أي نتيجة تلقائيًا.
-- الخادم يرفض القائمة الفارغة أو أكثر من 250 عنصرًا.
-- إنشاء الخطة يعيد الفحص ويقبل العناصر التي ما زالت قابلة للتنظيف فقط.
-- الخطة صالحة 10 دقائق، مرتبطة بالمسؤول والبيئة، وتستخدم مرة واحدة.
-- لكل عنصر بصمة حالة تمنع تنظيف سجل تغير بعد إنشاء الخطة.
-- يوجد قفل لمدة 5 دقائق يمنع عمليتي تنظيف متزامنتين.
-- تأكيد الإنتاج يتضمن عدد العناصر وكلمة `الإنتاج`.
-- كل نتيجة تحفظ في سجل تدقيق دائم، بما في ذلك العناصر المتجاوزة وسبب التجاوز.
+- No inspection result is selected by default.
+- The server rejects empty requests or lists containing more than 250 items.
+- Plan creation re-runs inspection and accepts only items that remain valid for cleanup.
+- Plans are valid for 10 minutes, scoped to the admin session and environment, and single-use only.
+- Each item carries a state signature to prevent cleaning records modified after plan generation.
+- A 5-minute concurrency lock prevents simultaneous execution of multiple cleanup operations.
+- Production confirmation requires entering the total item count and the confirmation keyword (`production`).
+- Every result is recorded in a permanent audit log, including skipped items and skip reasons.
 
-الإجراءات الآلية المباشرة مقتصرة على أرشفة المنتج، أرشفة الطلب بعد مدة الاحتفاظ،
-وحذف العلاقات المرجعية المكسورة غير المالية. البروفايلات والصور والسجلات الحساسة
-تدخل الحجر بدل حذفها.
+Direct automated actions are strictly limited to archiving products, archiving orders after retention periods, and removing broken non-financial reference relations. Profiles, images, and sensitive records enter quarantine instead of immediate deletion.
 
-## الحجر وحذف الصور
+## Quarantine & Image Deletion
 
-- مدة الحجر الافتراضية 30 يومًا.
-- يمكن للسوبر أدمن إخراج العنصر من الحجر في أي وقت.
-- زر الحذف الفعلي يظهر لملف الصورة بعد انتهاء المدة فقط.
-- قبل حذف الملف يعاد الفحص، ويجب أن يظل بلا مرجع في أي قاعدة.
-- الحذف يستخدم ملف التخزين الصحيح، ثم يسجل في سجل التدقيق.
-- لا يوجد حذف آلي لملفات R2 أو الملفات المحلية.
-- زر `تنظيف الحجر` هو أمر يدوي شامل ومؤكد. يحذف كل العناصر المحجورة النشطة
-  وملفات الصور المقابلة من R2 أو التخزين المحلي، ثم يحذف السجلات الأصلية
-  المرتبطة بها. أي عنصر يفشل حذفه يبقى في الحجر مع سجل تدقيق يوضح السبب.
-- تبويب النتائج يعرض العنصر المحجور كحالة للقراءة فقط؛ لا يمكن تحديده مرة أخرى
-  أو إعادة بدء مدة الحجر من خطة تنظيف جديدة.
+- Default quarantine duration is 30 days.
+- Super Admin can release an item from quarantine at any time.
+- The actual file deletion button appears for an image file only after the quarantine period expires.
+- Before deleting a file, inspection re-runs and requires zero references across all databases.
+- Deletion targets the correct storage profile before writing to the audit log.
+- Automated deletion of R2 files or local files does not exist.
+- The `Clean Quarantine` button is a manual, explicit, and confirmed operation. It deletes all active quarantined items and corresponding image files from R2 or local storage, then removes the associated primary records. Any failed file deletion remains in quarantine with an audit log detailing the cause.
+- The results tab presents quarantined items in a read-only state; they cannot be re-selected or have quarantine restarted from a new cleanup plan.
 
-## سياسة الطلبات
+## Order Policy
 
-- الطلب الذي فقد المشتري يُؤرشف ولا يُحذف.
-- الطلب المغلق يصبح قابلًا للأرشفة بعد 90 يومًا.
-- المدفوعات والمرتجعات والاستبدالات والسجلات التاريخية محمية من التنظيف الآلي.
-- فقد المنتج الحالي لا يبطل عنصر الطلب إذا كانت اللقطة التاريخية مكتملة.
+- Orders with a deleted buyer are archived rather than deleted.
+- Closed orders become eligible for archiving after 90 days.
+- Payments, refunds, replacements, and historical logs are protected from automated cleanup.
+- Deletion of an active product does not invalidate an order item if its historical snapshot is complete.
 
-## إضافة قاعدة فحص
+## Adding a Health Check Rule
 
-أضف القاعدة داخل المستودع المناسب وأرجع `DataHealthIssue` باستخدام `makeIssue`.
-يجب أن تحتوي النتيجة على دليل منظم، إجراء معروف، نمط تنظيف، وهوية مستقرة للسجل.
-أي إجراء تنظيف جديد يحتاج:
+Add the rule inside the appropriate repository and return `DataHealthIssue` using `makeIssue`.
+The result must contain structured evidence, a known action, a cleanup pattern, and a stable record identity.
+Any new cleanup action requires:
 
-1. نوعًا جديدًا في `DataHealthCleanupAction`.
-2. تطبيقًا مشروطًا يتحقق من أن السجل لم يتغير.
-3. تسمية عربية في الواجهة.
-4. اختبار سياسة أو تكامل.
-5. توثيق أثره على البيانات وإمكانية الاسترداد.
+1. A new action type in `DataHealthCleanupAction`.
+2. A conditional execution handler confirming the record state has not changed.
+3. UI labels and descriptions in English.
+4. Policy or integration test coverage.
+5. Documentation detailing data impact and recoverability.
 
-## التشغيل والتحقق
+## Execution and Verification
 
 ```text
 npm run db:ensure
@@ -150,61 +123,38 @@ npm run architecture:check
 npm run build
 ```
 
-`db:ensure` ينشئ جداول الموديول في shard `system-ops` باستخدام أوامر متكررة وآمنة.
-أثناء بناء الإنتاج تقرأ مزامنة البنية قاعدة SQLite وتضيف الجداول المفقودة إلى
-Turso ضمن مسار مزامنة المشروع المعتاد.
+`db:ensure` creates module tables in the `system-ops` shard using idempotent operations.
+During production builds, schema synchronization reads the SQLite database and adds missing tables to Turso within standard project sync workflows.
 
-## عقد البيئات ومصادر البيانات
+## Environment Contracts & Data Sources
 
-قرار مصدر البيانات موحد من خلال `isDevRuntime` و
-`resolveDataHealthExecutionContext`:
+Data source resolution is standardized via `isDevRuntime` and `resolveDataHealthExecutionContext`:
 
-| وقت التشغيل         | قواعد التشغيل      | الصور                            | مقارنة البنية                 |
-| ------------------- | ------------------ | -------------------------------- | ----------------------------- |
-| خادم التطوير المحلي | SQLite فقط         | `public/sync_data/sync_file` فقط | SQLite مقابل Turso، قراءة فقط |
-| خادم الإنتاج        | Turso فقط          | Cloudflare R2 فقط                | غير متاحة                     |
-| واجهة `static out`  | تستدعي API الإنتاج | يفحص الخادم R2                   | غير متاحة                     |
+| Runtime             | Operational Databases | Images                             | Schema Comparison             |
+| ------------------- | --------------------- | ---------------------------------- | ----------------------------- |
+| Local Dev Server    | SQLite only           | `public/sync_data/sync_file` only  | SQLite vs Turso (Read-only)   |
+| Production Server   | Turso only            | Cloudflare R2 only                 | Unavailable                   |
+| `static out` client | Calls Production API  | Server inspects R2                 | Unavailable                   |
 
-وجود بيانات اتصال Turso في ملفات بيئة التطوير لا يحول التطبيق إلى المصدر
-السحابي؛ تستخدم هذه البيانات في مقارنة البنية فقط. سياق Vercel أو
-`ASOL_DATA_SOURCE=cloud` يفرض المصدر السحابي. ويمكن فرض المصدر المحلي صراحة
-باستخدام `ASOL_DATA_SOURCE=local` خارج Vercel.
+Presence of Turso credentials in development env files does not switch local runtime to cloud; those credentials are used solely for schema comparison. Vercel environment or `ASOL_DATA_SOURCE=cloud` forces cloud source. Local source can be explicitly forced using `ASOL_DATA_SOURCE=local` outside Vercel.
 
-نسخة `static out` لا تحتوي أسرار قواعد البيانات ولا تتصل بـTurso أو R2
-مباشرة. يجب ضبط `NEXT_PUBLIC_ASOL_API_BASE_URL` على خادم الإنتاج، وترفض صفحة
-سلامة البيانات تقريرًا صادرًا من خادم محلي عند تشغيلها في الوضع الثابت.
+The `static out` build contains no database secrets and does not connect directly to Turso or R2. `NEXT_PUBLIC_ASOL_API_BASE_URL` must point to the production server; the data health page rejects reports originating from local servers when running in static mode.
 
-## عقد مصادر الصور
+## Image Source Contracts
 
-يحتوي `domain/source-registry.ts` على سجل كل جدول أو manifest يحفظ صورة أو
-لقطة صورة. اختبار `test:data-health` يقرأ بنية SQLite ويتوقف إذا ظهر حقل صور
-جديد غير مسجل. كما يتحقق من أن كل ملف تخزين سحابي مفعل يستخدم R2 وأن ملفات
-صور الصيدلية الثابتة موجودة.
+`domain/source-registry.ts` maintains a registry of every table or manifest storing images or image snapshots. The `test:data-health` suite reads SQLite schema and fails if an unregistered image field is detected. It also verifies that all enabled cloud storage files utilize R2 and that fixed pharmacy image assets exist.
 
-جرد ملفات التخزين لا يحتوي قائمة ثابتة لملفات التخزين؛ يقرأ جميع الملفات
-المفعلة من `storage-profiles.json` تلقائيًا. قارئ JSON يلتقط
-`imageKey` و`image_key` و`storageProfileId` و`storage_profile_id` في أي عمق،
-مع دعم الملف الافتراضي للبيانات القديمة.
+Storage inventory does not hardcode storage file lists; it dynamically reads all enabled profiles from `storage-profiles.json`. The JSON reader extracts `imageKey`, `image_key`, `storageProfileId`, and `storage_profile_id` at any nesting depth, supporting fallback defaults for legacy data.
 
-لا تُصنف ملفات التخزين الحديثة كصور يتيمة قبل مرور 24 ساعة. بعد ذلك يلزم
-إنشاء خطة وإعادة فحص قبل الحجر، ثم إعادة فحص أخرى بعد مدة الحجر وقبل الحذف
-الفعلي.
+Recently uploaded storage files are not classified as orphan images before 24 hours elapse. Thereafter, plan creation and re-inspection are required prior to quarantine, followed by another re-inspection after quarantine expiry before actual deletion.
 
-بناء `static out` يفحص جميع مراجع `pharmacy/ingredients.json` ويتوقف إذا لم
-توجد الصورة المقابلة داخل `out/images/pharmacy_fixed`.
+The `static out` build verifies all `pharmacy/ingredients.json` references and halts if the corresponding image is missing from `out/images/pharmacy_fixed`.
 
-## حذف جميع الطلبات
+## Delete All Orders
 
-قسم الخطر في الصفحة يوفر معاينة حذف كل الطلبات العادية والمخصصة والمختلطة.
-المعاينة تكتشف تلقائيًا الجداول التابعة لـ`orders` من المفاتيح الخارجية
-وحقول `order_id`، ثم تعرض عدد الصفوف في كل جدول وعدد صور الطلبات المخصصة.
+The hazard section on the page provides a dry-run preview for deleting all standard, custom, and hybrid orders.
+The preview automatically detects child tables dependent on `orders` via foreign keys and `order_id` fields, displaying row counts per table and custom order image counts.
 
-الخطة صالحة عشر دقائق ومرتبطة بالسوبر أدمن والبيئة وبصمة الأعداد والصور،
-وتتطلب كتابة عبارة تأكيد تتضمن العدد والبيئة. قبل التنفيذ يعاد استخراج
-البصمة، ويمنع قفل مستقل تشغيل عمليتي حذف متزامنتين.
+The plan is valid for 10 minutes, bound to the Super Admin session, environment, and record/image count hash, requiring typing a confirmation string that includes the count and environment name. Re-extracting the hash occurs before execution, and an independent concurrency lock prevents running two deletion jobs simultaneously.
 
-تحذف صفوف الطلبات داخل transaction واحدة وبترتيب التبعيات. بعد نجاح
-المعاملة تحذف صور الطلبات المخصصة من LocalStorage أو R2 حسب البيئة. أي حذف
-صورة يفشل يحفظ في `data_health_storage_deletion_tasks` ويمكن إعادة محاولته
-من الصفحة. سجل العملية الإداري يحفظ خارج قاعدة الطلبات، ولذلك يبقى بعد حذف
-سجل التدقيق الداخلي للطلب.
+Order rows are deleted within a single database transaction in dependency order. Upon transaction success, custom order images are deleted from LocalStorage or R2 depending on the environment. Any image deletion failure is logged in `data_health_storage_deletion_tasks` for retry from the page. Administrative operation logs are persisted outside the orders database, ensuring they persist after deleting internal order audit trails.

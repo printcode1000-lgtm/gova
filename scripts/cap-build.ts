@@ -5,7 +5,7 @@ import path from "node:path";
 import { API_BASE_URL } from '@asol/native-core';
 import {
   compareOtaVersions,
-  assertContentVersionAdvances,
+  assertContentLineDoesNotRegress,
   releaseContentVersion,
   nextNativePatchVersion,
   androidVersionCodeFor,
@@ -81,12 +81,38 @@ function resolveTargetNativeVersion(action: NativeVersionAction): string {
       `Current Android version ${current} is below native baseline ${baselineVersion}; choose a new patch version.`,
     );
   }
+  // Keeping the version is only honest when the shell binary is unchanged.
+  //
+  // A compiled native change produces a different shell. Reusing its versionName and
+  // versionCode would give two different binaries one identity: Google Play rejects the
+  // duplicate versionCode, and on a device there is no way to tell which of the two is
+  // installed. So a native change makes "keep the current version" refuse outright rather
+  // than quietly build something unidentifiable.
+  //
+  // This guard used to fire only when the target did not outrank the baseline, so a shell
+  // already ahead of the last store tag — the normal state between releases — kept its
+  // version while carrying new native code.
+  //
+  // Web-only changes are unaffected: a fresh `out/` bundle at the published version
+  // numbers is exactly what this choice is for.
+  if (hasCompiledChanges && action === "current") {
+    throw new Error(
+      [
+        `Refusing to keep Android version ${current}: this build contains compiled native changes.`,
+        "",
+        "A native change makes a different shell. Keeping the version would give two",
+        "different binaries the same identity — Google Play rejects the duplicate",
+        "versionCode, and no device could tell them apart.",
+        "",
+        "Choose a new Android patch version instead:",
+        "  --native-version=next-patch",
+        "",
+        `Native surface changed since baseline ${baselineVersion}. Run`,
+        "`npm run cap:verify-defaults` to see what changed.",
+      ].join("\n"),
+    );
+  }
   if (hasCompiledChanges && compareOtaVersions(target, baselineVersion) <= 0) {
-    if (action === "current") {
-      throw new Error(
-        `Native changes require a version newer than ${baselineVersion}; choose a new Android patch version.`,
-      );
-    }
     target = nextNativePatchVersion(baselineVersion);
   }
   console.log(
@@ -421,7 +447,12 @@ async function buildStoreRelease({ plannedNativeVersion, apiBaseUrl, noR8 }: {
     ? readLocalManifest().version
     : null;
   const version = releaseContentVersion(plannedNativeVersion);
-  assertContentVersionAdvances(version, previousLocalVersion);
+  // Refuses a lower version, allows an equal one. The content version here is derived as
+  // `<native>.0`, so rebuilding the same unreleased shell to pick up the latest changes
+  // produces the same string by design — which is exactly what the "keep the current
+  // version" choice is for. Requiring it to advance made that choice impossible: the
+  // release console offered a button that always failed.
+  assertContentLineDoesNotRegress(version, previousLocalVersion);
   console.log(
     `Store release without OTA: content ${previousLocalVersion ?? "(none)"} -> ${version}, ` +
       `native shell ${plannedNativeVersion}. R2 is not read or written.`,

@@ -138,7 +138,7 @@ The system is prepared for category-specific filters, but fields remain hidden u
 The system normalizes Arabic search input and selected text columns by:
 
 - Removing diacritics from the query.
-- Normalizing `أ`, `إ`, and `آ` to `ا`.
+- Normalizing Arabic alef variants (alef with hamza above/below and alef madda) to standard alef.
 - Normalizing spaces.
 - Lower-casing text.
 

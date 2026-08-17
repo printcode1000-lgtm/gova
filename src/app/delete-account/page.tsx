@@ -1,3 +1,5 @@
-import { AccountDeletionPageContent } from "@/features/account-deletion/components/AccountDeletionPageContent";
+import { AccountDeletionPageContent } from "@/features/auth/components/AccountDeletionPageContent";
 
-export default function DeleteAccountPage() { return <AccountDeletionPageContent />; }
+export default function DeleteAccountPage() {
+  return <AccountDeletionPageContent />;
+}

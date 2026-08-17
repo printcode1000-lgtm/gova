@@ -12,7 +12,7 @@ import type { GetUsersBySpecialtyQuery } from "@/modules/data-access/domains/pro
 import type { GetProfileFulfillmentSettingsQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-fulfillment-settings.query";
 import type { UpsertProfileFulfillmentSettingsCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-fulfillment-settings.command";
 import type { GetUserByUidQuery } from "@/modules/data-access/domains/auth/operations/queries/get-user-by-uid.query";
-import type { UpdateUserProfileCommand } from "@/modules/data-access/domains/auth/operations/commands/update-user-profile.command";
+import { authOperationsService } from "@/features/auth/server/auth-core-bootstrap.server";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import type {
   ProfileContactsData,
@@ -203,7 +203,6 @@ export class ProfileService implements IProfileService {
     private getProfileFulfillmentSettingsQuery: GetProfileFulfillmentSettingsQuery,
     private upsertProfileFulfillmentSettingsCommand: UpsertProfileFulfillmentSettingsCommand,
     private getUserByUidQuery: GetUserByUidQuery,
-    private updateUserProfileCommand: UpdateUserProfileCommand,
   ) {}
 
   async getContacts(uid: string): Promise<ProfileContactsData> {
@@ -433,7 +432,7 @@ export class ProfileService implements IProfileService {
             throw new Error("invalidProfileEditor");
           }
 
-          registration = await this.updateUserProfileCommand.execute({
+          registration = await authOperationsService.updateProfile({
             uid: input.uid,
             phone: input.registration.phone,
             email: input.registration.email,
@@ -441,6 +440,7 @@ export class ProfileService implements IProfileService {
               ? input.registration.currentPassword
               : undefined,
             newPassword: input.registration.newPassword || undefined,
+            sessionToken: input.sessionToken,
           });
         }
 

@@ -10,7 +10,7 @@ import type {
   FollowTargetType,
 } from "../entities/follow.types";
 import { FollowRepository } from "@/modules/data-access/domains/follow/index.server";
-import { verifySignedSessionToken } from "@/features/auth/services/signed-session-token.server";
+import { verifySignedSessionToken } from "@asol/auth-core/server";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import { notificationsServer } from "@/features/notifications/server";
 import type { SendFollowerNotificationInput, SendFollowerNotificationResult } from "../entities/follow.types";

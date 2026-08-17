@@ -207,10 +207,10 @@ for (const [key, value] of [
 // so the FCM message builder must carry an Apple payload block. Without it,
 // iOS notifications arrive with no sound, priority, or silent-push support.
 const fcmMessage = read(
-  "src/features/notifications/services/providers/fcm-http-v1.server.ts",
+  "packages/notifications-core/src/services/providers/fcm-http-v1.server.ts",
 );
 const fcmProvider = read(
-  "src/features/notifications/services/providers/fcm-notification-provider.server.ts",
+  "packages/notifications-core/src/services/providers/fcm-notification-provider.server.ts",
 );
 
 requireText(
@@ -232,9 +232,9 @@ requireText(
 // The sound is declared once and read by both Apple transports. Firebase is the
 // normal path and direct APNs the opt-in fallback, so a device must not sound
 // different depending on which one happened to serve it.
-const soundDomain = read("src/features/notifications/domain/notification-sound.ts");
+const soundDomain = read("packages/notifications-core/src/domain/notification-sound.ts");
 const apnsProvider = read(
-  "src/features/notifications/services/providers/apns-notification-provider.server.ts",
+  "packages/notifications-core/src/services/providers/apns-notification-provider.server.ts",
 );
 requireText(
   soundDomain,

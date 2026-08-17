@@ -8,6 +8,12 @@ import { normalizeAuthEmail } from '@/features/auth/utils/email-normalization';
 import { CreateUserCommand } from '@/modules/data-access/domains/auth/operations/commands/create-user.command';
 import { UpdateUserProfileCommand } from '@/modules/data-access/domains/auth/operations/commands/update-user-profile.command';
 import type { IUserRepository } from '@/modules/data-access/domains/auth/repositories/user-repository.interface';
+import {
+  createSignedSessionToken,
+  registerSessionSigningSecret,
+} from '@asol/auth-core/server';
+
+registerSessionSigningSecret(() => 'email-uniqueness-test-secret-0123456789abcdef');
 
 class MemoryUsers implements IUserRepository {
   users: Array<Omit<User, 'id'>> = [];
@@ -36,7 +42,7 @@ class MemoryUsers implements IUserRepository {
 }
 
 function registration(uid: string, phone: string, email?: string | null): Omit<User, 'id'> {
-  return { uid, phone, email, password: 'hashed-password' };
+  return { uid, phone, email, password: 'scrypt$test$test' };
 }
 
 async function rejectsWithCode(action: () => Promise<unknown>, code: string) {
@@ -62,12 +68,15 @@ async function main() {
   assert.equal(users.users.length, 3, 'optional empty emails may be reused as NULL');
 
   users.users.push(registration('usr_profile', '01022222222', 'profile@example.com'));
+  const sessionToken = createSignedSessionToken('usr_profile', '01022222222');
   await rejectsWithCode(
-    () => new UpdateUserProfileCommand(users).execute({
-      uid: 'usr_profile',
-      phone: '01022222222',
-      email: ' OWNER@EXAMPLE.COM ',
-    }),
+    () =>
+      new UpdateUserProfileCommand(users).execute({
+        uid: 'usr_profile',
+        phone: '01022222222',
+        email: ' OWNER@EXAMPLE.COM ',
+        sessionToken,
+      }),
     'emailAlreadyRegistered',
   );
   assert.equal(
@@ -89,9 +98,10 @@ async function main() {
     throw new Error('UNIQUE constraint failed: users.email');
   };
   await rejectsWithCode(
-    () => new CreateUserCommand(racingUsers).execute(
-      registration('usr_loser', '01111111111', 'race@example.com'),
-    ),
+    () =>
+      new CreateUserCommand(racingUsers).execute(
+        registration('usr_loser', '01111111111', 'race@example.com'),
+      ),
     'emailAlreadyRegistered',
   );
 

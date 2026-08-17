@@ -101,8 +101,8 @@ Numeric mode is enabled for:
 In numeric mode, the system removes every non-digit character. Arabic-Indic and Persian digits are converted to ASCII digits first:
 
 ```text
-١٢٣ -> 123
-۱۲۳ -> 123
+Eastern Arabic digits -> 123
+Perso-Arabic digits -> 123
 ```
 
 The system extracts recognized digit characters; it does not interpret arbitrary written number words as mathematical values.
@@ -158,7 +158,7 @@ reads and preserves that computed padding.
 
 To provide a premium and accessible user experience, the system implements:
 
-- **Listening Placeholder**: The input field's placeholder dynamically changes to "Listening... Speak now" (or "جاري الاستماع... تحدث الآن") during active recording, restoring the original placeholder once speech recognition concludes.
+- **Listening Placeholder**: The input field's placeholder dynamically changes to "Listening... Speak now" (or localized equivalent) during active recording, restoring the original placeholder once speech recognition concludes.
 - **Error Shake Feedback**: Upon a permission denial or technical error, the microphone button flashes red and shakes horizontally using a CSS keyframe animation.
 - **Audio Chime Tones**: Precise, gentle synthesized tone feedback plays using the browser Web Audio API on recording start (high sine chirp), stop (neutral sine tone), and error (low sawtooth buzz).
 

@@ -674,7 +674,7 @@ Critical notifications are routed to all push channels and popup target by `Noti
 Each notification can include a route:
 
 ```ts
-route: { href: "/orders/ord_123", label: "عرض الطلب" }
+route: { href: "/orders/ord_123", label: "View Order" }
 ```
 
 The notification center marks the item as read before navigating.

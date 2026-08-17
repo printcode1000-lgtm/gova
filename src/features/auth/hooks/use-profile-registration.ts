@@ -82,12 +82,14 @@ export function useProfileRegistration() {
   const saveMutation = useMutation({
     mutationFn: async (data: ProfileFormData) => {
       if (!uid) throw new Error('userNotFound');
+      if (!session?.sessionToken) throw new Error('sessionTokenInvalid');
       return authService.updateProfile({
         uid,
         phone: data.phone,
         email: data.email ?? '',
         currentPassword: data.newPassword ? data.currentPassword : undefined,
         newPassword: data.newPassword || undefined,
+        sessionToken: session.sessionToken,
       });
     },
     meta: authMonitorMeta(
@@ -115,6 +117,9 @@ export function useProfileRegistration() {
       return t('auth.validation.emailAlreadyRegistered');
     if (msg === 'currentPasswordRequired')
       return t('profile.validation.currentPasswordRequired');
+    if (msg === 'sessionTokenInvalid' || msg === 'sessionTokenExpired') {
+      return t('auth.validation.invalidPassword');
+    }
     return msg;
   }, [saveMutation.error, t]);
 

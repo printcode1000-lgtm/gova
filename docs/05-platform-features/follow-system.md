@@ -111,7 +111,7 @@ Example:
   viewerUid={session?.uid}
   isOwner={session?.uid === sellerUid}
   isSuperAdmin={isSuperAdmin(session)}
-  targetLabel="مقدم الخدمة"
+  targetLabel="Service Provider"
 />
 ```
 

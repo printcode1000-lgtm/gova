@@ -21,6 +21,7 @@ export interface ProfileRegistrationSnapshot {
 
 export interface SaveProfileEditorInput {
   uid: string;
+  sessionToken: string;
   changedSections: ProfileEditorSection[];
   registration: ProfileRegistrationSnapshot;
   contacts: ProfileContactsData;

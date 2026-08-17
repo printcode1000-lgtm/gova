@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 
 async function main() {
-const { createSignedSessionToken } = await import(
-  "@/features/auth/services/signed-session-token.server"
+const { createSignedSessionToken, registerSessionSigningSecret } = await import(
+  "@asol/auth-core/server"
 );
+registerSessionSigningSecret(() => "follow-session-test-secret-0123456789abcdef");
 const { FollowService } = await import("../services/follow-service.server");
 
 const repository = {

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
 import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -12,6 +13,7 @@ import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "@asol/ota-
 import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "@asol/native-core/scripts/validate-android-r8-policy";
 import {
   assertContentVersionAdvances,
+  assertContentLineDoesNotRegress,
   compareOtaVersions,
   isNativeVersion,
   isOtaVersion,
@@ -179,6 +181,117 @@ assert.match(fullReleaseOrchestrator, /forwarded\.includes\("--dry-run"\)\)\s*re
   "a full-release dry run must stop before signing");
 assert.match(fullReleaseOrchestrator, /ASOL_WEB_BUNDLE_READY:\s*"1"/,
   "the signed build must receive proof that cap-build prepared the web bundle");
+
+// Every artifact from this command is signed and R8-processed.
+//
+// Signing was already enforced by build-android-signed, which refuses when a keystore
+// variable is missing. R8 was not: cap-build permits --no-r8 alongside --no-ota, and
+// --no-ota is exactly what this path passes — so `release:android --no-r8` would have
+// assembled releaseNoR8 artifacts with minifyEnabled false and then signed a separate
+// release build on top, leaving two different outputs from one release run.
+assert.match(fullReleaseOrchestrator, /includes\("--no-r8"\)/,
+  "release:android must refuse --no-r8: every package it produces is R8-processed");
+const signedBuild = await readFile("scripts/build-android-signed.ts", "utf8");
+assert.match(signedBuild, /:app:bundleRelease", ":app:assembleRelease/,
+  "the signed build must assemble the R8 release build type, not releaseNoR8");
+assert.match(signedBuild, /Android signing is missing/,
+  "the signed build must refuse rather than emit an unsigned artifact");
+const androidGradle = await readFile("android/app/build.gradle", "utf8");
+const releaseBuildType = androidGradle.slice(
+  androidGradle.indexOf("        release {"),
+  androidGradle.indexOf("        releaseNoR8 {"),
+);
+for (const setting of [
+  "minifyEnabled true",
+  "shrinkResources true",
+  "signingConfig signingConfigs.release",
+]) {
+  assert.ok(releaseBuildType.includes(setting),
+    `the release build type must keep "${setting}": it is what makes the shipped shell minified and signed`);
+}
+
+// Capacitor plugin registration must survive `cap sync`.
+//
+// Capacitor discovers plugins from the **root** package.json, and every plugin here is
+// declared by @asol/native-core instead (rule 9). So `npx cap sync` found none and
+// regenerated android/capacitor.settings.gradle with 1 entry instead of 25 — the native
+// compile then failed with "package com.capacitorjs.plugins.pushnotifications does not
+// exist". `includePlugins` overrides discovery, and deriving it from native-core keeps one
+// source of truth.
+const capacitorConfig = await readFile("capacitor.config.ts", "utf8");
+assert.match(capacitorConfig, /includePlugins/,
+  "capacitor.config.ts must declare includePlugins: plugin discovery cannot see native-core");
+assert.match(capacitorConfig, /native-core\/package\.json/,
+  "includePlugins must be derived from native-core so the two lists cannot drift");
+const nativeCoreDeps = Object.keys(
+  (JSON.parse(await readFile("packages/native-core/package.json", "utf8")) as {
+    dependencies: Record<string, string>;
+  }).dependencies,
+).filter((name) =>
+  /^(@capacitor|@capacitor-mlkit|@capawesome|@capgo)\//.test(name) &&
+  !["@capacitor/android", "@capacitor/ios", "@capacitor/cli", "@capacitor/core"].includes(name));
+const settingsGradle = await readFile("android/capacitor.settings.gradle", "utf8");
+for (const plugin of nativeCoreDeps) {
+  // The generated file points at the package's own android/ folder under node_modules,
+  // so the scoped name appears verbatim.
+  assert.ok(settingsGradle.includes(`node_modules/${plugin}/android`),
+    `android/capacitor.settings.gradle must register ${plugin}; run npm run cap:sync`);
+}
+
+// The `:native-core` Gradle library module must stay compilable.
+//
+// It was added on 2026-08-15, after the last successful Android build, so nothing had
+// opened it and it failed `:native-core:compileReleaseJavaWithJavac` three times over. All
+// three defects are mechanically detectable, which is what these assertions are for. A Java
+// compile cannot run here, so each one pins the specific mistake rather than the outcome.
+const nativeCoreGradle = await readFile("packages/native-core/android/build.gradle", "utf8");
+const nativeCoreJavaDir = "packages/native-core/android/src/main/java/hgh/asol/app";
+const nativeCoreJavaNames = (await readdir(nativeCoreJavaDir)).filter((name) => name.endsWith(".java"));
+assert.ok(nativeCoreJavaNames.length > 0, `${nativeCoreJavaDir} must contain the module's Java sources`);
+
+// The module's namespace differs from its Java package, so an unqualified `R` resolves to a
+// nonexistent hgh.asol.app.R. Any file using R must import the module's own R explicitly.
+const nativeCoreNamespace = /namespace\s+["']([^"']+)["']/.exec(nativeCoreGradle)?.[1];
+assert.equal(nativeCoreNamespace, "hgh.asol.app.nativecore",
+  "packages/native-core/android/build.gradle must declare its own namespace");
+for (const name of nativeCoreJavaNames) {
+  const source = await readFile(`${nativeCoreJavaDir}/${name}`, "utf8");
+
+  if (/\bR\.(drawable|color|raw|string|layout)\./.test(source)) {
+    assert.match(source, new RegExp(`import ${nativeCoreNamespace.replace(/\./g, "\\.")}\\.R;`),
+      `${name} uses R but does not import ${nativeCoreNamespace}.R; unqualified R resolves to hgh.asol.app.R, which does not exist`);
+  }
+
+  // MainActivity lives in the application module. A library cannot depend on the app that
+  // consumes it, so naming that class here does not compile — the launcher intent must be
+  // resolved through the package manager instead.
+  assert.doesNotMatch(source, /\bMainActivity\b/,
+    `${name} must not reference MainActivity: :native-core is a library module and cannot see the app's classes. Resolve the intent with getLaunchIntentForPackage`);
+
+  // Extending a plugin's class requires that plugin project on the compile classpath.
+  const extendedPlugin = /class\s+\w+\s+extends\s+(\w*Plugin\w*)/.exec(source)?.[1];
+  if (extendedPlugin === "PushNotificationsPlugin" || /PushNotificationsPlugin\./.test(source)) {
+    assert.match(nativeCoreGradle, /project\(':capacitor-push-notifications'\)/,
+      `${name} uses PushNotificationsPlugin, so packages/native-core/android/build.gradle must depend on project(':capacitor-push-notifications')`);
+  }
+}
+
+// The iOS push-policy validator reads notification sources by path, and extracting
+// @asol/notifications-core moved every one of them. It was wired into no gate, so nothing
+// reported it: the paths it names must exist, and the gates must run it.
+const iosPushValidator = await readFile("packages/native-core/scripts/validate-ios-push-policy.ts", "utf8");
+for (const [, quoted] of iosPushValidator.matchAll(/["'`](packages\/[^"'`]+\.tsx?)["'`]/g)) {
+  assert.ok(existsSync(quoted),
+    `validate-ios-push-policy.ts reads ${quoted}, which does not exist`);
+}
+const rootPackageScripts = (JSON.parse(await readFile("package.json", "utf8")) as {
+  scripts: Record<string, string>;
+}).scripts;
+for (const gate of ["test", "build", "build:static"]) {
+  assert.match(rootPackageScripts[gate] ?? "", /ios:push:validate/,
+    `the ${gate} script must run ios:push:validate; a validator no gate runs reports nothing`);
+}
+
 const capBuildSource = await readFile("scripts/cap-build.ts", "utf8");
 assert.match(capBuildSource, /if \(noOta\) \{\s*await buildStoreRelease/,
   "the no-OTA path must return before any R2 client is created");
@@ -270,6 +383,56 @@ try {
   assert.throws(() => nextContentVersion("0.3.0.2", "0.2.3"), /does not outrank/);
   assert.throws(() => assertContentVersionAdvances("0.2.3.0", "0.2.3.0"), /does not outrank/);
   assert.doesNotThrow(() => assertContentVersionAdvances("0.2.3.0", null));
+
+  // The store-release rule compares content **lines**, not counters.
+  //
+  // The shell always stamps `<native>.0`, which is structurally the lowest value on its
+  // line: every OTA published onto that shell is `.1` and upward. So the normal state of a
+  // store rebuild looks like a regression to a counter comparison —
+  //
+  //   Google Play published   0.2.3
+  //   OTA on R2               0.2.3.1
+  //   local package rebuilt   0.2.3.0   ← newest out/ bundle, same line, not a regression
+  //
+  // and that is exactly the case the "keep the current version" choice exists to serve:
+  // fresh packages carrying every latest change, at the published version numbers, with
+  // nothing written to R2. The higher OTA version comes later, deliberately, as 0.2.3.2.
+  assert.doesNotThrow(() => assertContentLineDoesNotRegress("0.2.3.0", "0.2.3.1"),
+    "a store rebuild must be allowed while a higher OTA exists on the same line");
+  assert.doesNotThrow(() => assertContentLineDoesNotRegress("0.2.4.0", "0.2.4.0"),
+    "rebuilding the same unreleased shell must be allowed: nothing is published");
+  assert.doesNotThrow(() => assertContentLineDoesNotRegress("0.2.5.0", "0.2.4.9"),
+    "advancing the line must remain allowed regardless of the old counter");
+  assert.doesNotThrow(() => assertContentLineDoesNotRegress("0.2.4.0", null),
+    "a first local build has nothing to compare against");
+  // Moving the line backwards is still refused: older native content shipped as current.
+  assert.throws(() => assertContentLineDoesNotRegress("0.2.4.0", "0.2.5.1"), /is older than/,
+    "a store release must never move the content line backwards");
+
+  // The publish rule keeps its strictness, where it belongs.
+  assert.throws(() => assertContentVersionAdvances("0.2.3.0", "0.2.3.1"), /does not outrank/,
+    "publishing must still refuse a version that does not advance");
+
+  // And the store-release path must use the line rule, not the publish one — otherwise the
+  // keep-current button regresses to always failing.
+  const capBuild = await readFile("scripts/cap-build.ts", "utf8");
+  assert.match(capBuild, /assertContentLineDoesNotRegress\(version, previousLocalVersion\)/,
+    "the store-release path must allow rebuilding on the same content line");
+  assert.doesNotMatch(capBuild, /assertContentVersionAdvances/,
+    "the publish-only ordering rule must not be applied to a build that publishes nothing");
+
+  // Keeping the version is refused outright when the build carries compiled native
+  // changes. A native change makes a different shell, and reusing its versionName and
+  // versionCode gives two different binaries one identity: Play rejects the duplicate
+  // versionCode, and no device can tell them apart.
+  //
+  // The guard used to be conditional on the target not outranking the baseline, so a shell
+  // already ahead of the last store tag — the normal state between releases — kept its
+  // version while carrying new native code.
+  assert.match(capBuild, /hasCompiledChanges && action === "current"/,
+    "keep-current must refuse whenever the build contains compiled native changes");
+  assert.match(capBuild, /Refusing to keep Android version/,
+    "the refusal must name the reason and point at --native-version=next-patch");
 
   // Stages announced by a script are authoritative: the real order differs per
   // path, so ranking them against one fixed sequence hid steps that ran.

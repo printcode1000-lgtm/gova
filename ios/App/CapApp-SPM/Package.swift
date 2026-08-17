@@ -34,8 +34,7 @@ let package = Package(
         .package(name: "CapacitorTextZoom", path: "../../../node_modules/@capacitor/text-zoom"),
         .package(name: "CapacitorToast", path: "../../../node_modules/@capacitor/toast"),
         .package(name: "CapawesomeCapacitorFilePicker", path: "../../../node_modules/@capawesome/capacitor-file-picker"),
-        .package(name: "CapgoCapacitorSpeechRecognition", path: "../../../node_modules/@capgo/capacitor-speech-recognition"),
-        .package(name: "AsolNativeCore", path: "../../../packages/native-core/ios")
+        .package(name: "CapgoCapacitorSpeechRecognition", path: "../../../node_modules/@capgo/capacitor-speech-recognition")
     ],
     targets: [
         .target(
@@ -65,8 +64,7 @@ let package = Package(
                 .product(name: "CapacitorTextZoom", package: "CapacitorTextZoom"),
                 .product(name: "CapacitorToast", package: "CapacitorToast"),
                 .product(name: "CapawesomeCapacitorFilePicker", package: "CapawesomeCapacitorFilePicker"),
-                .product(name: "CapgoCapacitorSpeechRecognition", package: "CapgoCapacitorSpeechRecognition"),
-                .product(name: "AsolNativeCore", package: "AsolNativeCore")
+                .product(name: "CapgoCapacitorSpeechRecognition", package: "CapgoCapacitorSpeechRecognition")
             ]
         )
     ]

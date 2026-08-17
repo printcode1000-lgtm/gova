@@ -25,8 +25,8 @@ support. Build it with `:app:assembleDebugR8`; its APK is written under
 - `shrinkResources false`
 - `versionNameSuffix "-nor8"`
 
-هذا build type تشخيصي فقط. suffix `-nor8` يجعل النسخة واضحة، والـ validator يمنع أي publishing lane من الإشارة إلى `ReleaseNoR8` أو `no_r8`.
+This build type is diagnostic only. The `-nor8` suffix makes the version clear, and the validator prevents any publishing lane from pointing to `ReleaseNoR8` or `no_r8`.
 
 ## Validator Assertions
 
-`npm run android:r8:validate` يؤكد أن release لا يزال يستخدم R8 وresource shrinking، وأن `releaseNoR8` لا يعيد تفعيل minify، وأن lanes التي تنشر إلى Google Play لا تبني no-R8 artifacts.
+`npm run android:r8:validate` verifies that release still uses R8 and resource shrinking, that `releaseNoR8` does not re-enable minify, and that lanes publishing to Google Play do not build no-R8 artifacts.

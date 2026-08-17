@@ -13,11 +13,11 @@ Hydration failed because the server rendered text didn't match the client. As a 
         <main className="asol-splas..." dir="rtl">
           <TopMarquee displayCategories={[...]}>
             ...
-              <MarqueeCard label="التقنية وا..." image={"/images/..."} isCenter={false}>
+              <MarqueeCard label="Tech & Elec..." image={"/images/..."} isCenter={false}>
                 ...
                   <img
-+                   alt="التقنية والالكترونيات"
--                   alt="الحيوانات الأليفة"
++                   alt="Technology & Electronics"
+-                   alt="Pets"
 ```
 
 ---

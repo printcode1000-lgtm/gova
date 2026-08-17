@@ -39,7 +39,7 @@ The server stores only device push tokens and one per-user preference record con
 - One request resolves at most 500 matching providers.
 - Request text is not written to server logs or databases by the module.
 - The provider opt-out is applied before delivery.
-- Profile and product owners have a separate settings opt-out for new direct conversations started by the profile-page chat action or the product-page `مراسلة صاحب المنتج` action. Disabling it does not change the specialty-request preference and does not delete local history.
+- Profile and product owners have a separate settings opt-out for new direct conversations started by the profile-page chat action or the product-page "Contact Product Owner" action. Disabling it does not change the specialty-request preference and does not delete local history.
 - Product conversations use the explicit `product_conversation_request` notification kind and profile conversations use `profile_conversation_request`. They are not disguised as specialty broadcasts; all kinds share only the signed bilateral messaging and receipt transport.
 - Chat preferences are account-level cloud settings. Signing out, unregistering a device, or clearing local application data never resets them.
 - A local chat card must contain the final signed-chat identity (`requestId` plus `peerUid`, or a valid outgoing specialty broadcast). Unstructured pre-contract chat cards are not converted into compatibility threads.

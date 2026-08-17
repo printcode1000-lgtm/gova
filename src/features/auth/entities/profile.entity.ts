@@ -10,4 +10,5 @@ export interface UpdateProfileInput {
   email: string;
   currentPassword?: string;
   newPassword?: string;
+  sessionToken: string;
 }

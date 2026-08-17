@@ -213,57 +213,16 @@ export const AppSidebar = React.memo(function AppSidebar({
   const confirmLogout = useCallback(() => {
     if (logout.isPending) return;
 
-    const exitingSession = session;
-    void clearImageUploadClientState();
     setLogoutDialogOpen(false);
     onClose();
     queueLogoutSuccessToast();
     router.replace("/home");
-    setSession(null);
     queryClient.clear();
 
-    void (async () => {
-      try {
-        if (exitingSession) {
-          try {
-            await notifications.unregisterDevice({
-              uid: exitingSession.uid,
-              phone: exitingSession.phone,
-            });
-          } catch (error) {
-            console.warn(
-              "[AppSidebar] Failed to unregister notification device during logout.",
-              error,
-            );
-          }
-        }
-
-        await logout.mutateAsync();
-        resetThemePreferences();
-        resetAppPreferences();
-        await clearAllClientStorage();
-      } catch (error) {
-        console.warn("[AppSidebar] Logout cleanup failed.", error);
-        try {
-          await clearAllClientStorage();
-        } catch (cleanupError) {
-          console.warn(
-            "[AppSidebar] Local logout cleanup failed.",
-            cleanupError,
-          );
-        }
-      }
-    })();
-  }, [
-    logout,
-    onClose,
-    queryClient,
-    resetAppPreferences,
-    resetThemePreferences,
-    router,
-    session,
-    setSession,
-  ]);
+    void logout.mutateAsync().catch((error) => {
+      console.warn("[AppSidebar] Logout failed.", error);
+    });
+  }, [logout, onClose, queryClient, router]);
 
   const handleSettingsGroupToggle = useCallback(() => {
     setSettingsGroupOpen((open) => !open);

@@ -1,5 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
+import nativeCorePackage from "./packages/native-core/package.json";
+
 /**
  * Capacitor platform configuration — runtime shell only.
  *
@@ -11,10 +13,36 @@ import type { CapacitorConfig } from "@capacitor/cli";
  */
 const liveReloadUrl = process.env.CAPACITOR_SERVER_URL?.replace(/\/$/, "");
 
+/**
+ * The plugin allowlist, read from the package that owns the plugins.
+ *
+ * Capacitor discovers plugins by reading the **root** `package.json` dependencies. Every
+ * Capacitor plugin here is declared by `@asol/native-core` instead — rule 9 of
+ * `docs/01-architecture/module-isolation-rules.md`: upgrading Capacitor must touch one
+ * module. So `npx cap sync` found zero plugins and regenerated
+ * `android/capacitor.settings.gradle` with none of them, dropping 25 registrations and
+ * failing the native compile with "package com.capacitorjs.plugins.pushnotifications does
+ * not exist".
+ *
+ * `includePlugins` is Capacitor's own answer: an explicit allowlist that overrides
+ * discovery. Deriving it from native-core's dependencies keeps one source of truth, so
+ * adding a plugin there is enough and this file needs no edit.
+ */
+const nativeCoreDependencies = nativeCorePackage.dependencies;
+const includePlugins = Object.keys(nativeCoreDependencies).filter(
+  (name) =>
+    /^(@capacitor|@capacitor-mlkit|@capawesome|@capgo)\//.test(name) &&
+    // Platforms, the CLI and the runtime are not plugins.
+    !["@capacitor/android", "@capacitor/ios", "@capacitor/cli", "@capacitor/core"].includes(
+      name,
+    ),
+);
+
 const config: CapacitorConfig = {
   appId: "hgh.asol.app",
   appName: "ASOL",
   webDir: "out",
+  includePlugins,
   android: {
     allowMixedContent: true,
   },

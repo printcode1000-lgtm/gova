@@ -118,8 +118,8 @@ Example:
 
 ```ts
 const actions = [
-  { kind: "view", label: "عرض البروفايل", onClick: openProfile },
-  { kind: "select", label: "تحديد", tone: "primary", onClick: selectProvider },
+  { kind: "view", label: "View Profile", onClick: openProfile },
+  { kind: "select", label: "Select", tone: "primary", onClick: selectProvider },
 ];
 ```
 

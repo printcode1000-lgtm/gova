@@ -14,10 +14,7 @@ import {
   getProfileFulfillmentSettingsQuery,
   upsertProfileFulfillmentSettingsCommand,
 } from "@/modules/data-access/domains/profile/operations/instances";
-import {
-  getUserByUidQuery,
-  updateUserProfileCommand,
-} from "@/modules/data-access/domains/auth/operations/instances";
+import { getUserByUidQuery } from "@/modules/data-access/domains/auth/operations/instances";
 
 export const profileService = new ProfileService(
   getProfileContactsQuery,
@@ -32,5 +29,4 @@ export const profileService = new ProfileService(
   getProfileFulfillmentSettingsQuery,
   upsertProfileFulfillmentSettingsCommand,
   getUserByUidQuery,
-  updateUserProfileCommand,
 );

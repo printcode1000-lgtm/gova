@@ -74,9 +74,56 @@ export function nextContentVersion(
 }
 
 /**
+ * The store-release ordering rule: compare **content lines**, not counters.
+ *
+ * A shell stamps its content version as `<native>.0`, which is structurally the lowest
+ * value on its line — every OTA published onto that shell is `.1`, `.2`, and upward. So
+ * comparing a shell build against the previous *local* build is comparing two different
+ * things the moment any OTA has been built locally, and the comparison is guaranteed to
+ * look like a regression:
+ *
+ * ```text
+ * published OTA        0.2.3.1
+ * shell being rebuilt  0.2.3.0   ← lower counter, same line, not a regression
+ * ```
+ *
+ * That is the normal state of a store rebuild. Google Play is published at `0.2.3`, R2
+ * carries OTA `0.2.3.1`, and a fresh local package for testing carries the newest `out/`
+ * bundle stamped `0.2.3.0`. Nothing is published, so no installed bundle compares
+ * anything.
+ *
+ * What must not regress is the **line**: dropping the shell from `0.2.5` back to `0.2.4`
+ * would ship older native content as if it were current. The counter within a line is the
+ * publisher's concern, and `assertContentVersionAdvances` enforces it there.
+ *
+ * Applying the publish rule here made the "keep the current version" choice impossible —
+ * the release console offered a button that always failed with "does not outrank".
+ */
+export function assertContentLineDoesNotRegress(
+  next: string,
+  previous: string | null,
+): void {
+  if (!previous) return;
+  // A legacy three-part version belongs to no line, so it *is* its own line. Falling back
+  // to the raw string keeps the comparison meaningful instead of throwing on old output.
+  const nextLine = parseContentVersion(next)?.nativeVersion ?? next;
+  const previousLine = parseContentVersion(previous)?.nativeVersion ?? previous;
+  if (compareOtaVersions(nextLine, previousLine) >= 0) return;
+  throw new Error(
+    `Refusing to build content line ${nextLine}: it is older than ${previousLine}.\n` +
+      "A store rebuild may reuse its own line — the shell's `.0` is always below any OTA\n" +
+      "published onto it — but it must never move the line backwards, which would ship\n" +
+      "older native content as if it were current.\n" +
+      `Raise the Android version to at least ${previousLine}.`,
+  );
+}
+
+/**
  * A published version that does not outrank the one it replaces is read as
  * "no update" by every installed bundle, which is indistinguishable from a
  * release that never shipped. Refuse, and name the way out.
+ *
+ * For a build that publishes nothing, use `assertContentLineDoesNotRegress` instead.
  */
 export function assertContentVersionAdvances(
   next: string,

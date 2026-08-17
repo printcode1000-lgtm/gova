@@ -24,7 +24,7 @@ Route:
 /profile?mode=edit
 ```
 
-The profile carousel includes a new `discounts` tab labelled "العروض". It renders
+The profile carousel includes a new `discounts` tab labelled "Offers". It renders
 `SellerDiscountsManager`, which lets the seller:
 
 - Create all supported discount types.

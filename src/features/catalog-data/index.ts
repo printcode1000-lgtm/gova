@@ -12,13 +12,13 @@ export type {
   VehicleCatalogGroup,
   VehicleCatalogOption,
   CatalogDisplay,
-} from "./types/catalog-v3.types";
+} from '@asol/catalog-core';
 
 export {
   catalogManifestSchema,
   vehicleGroupCatalogFileSchema,
   vehicleOptionCatalogFileSchema,
   catalogDisplaySchema,
-} from "./contracts/catalog-v3.contract";
+} from '@asol/catalog-core';
 
-export { isCatalogItemVisible, visibleCatalogItems } from "./utils/catalog-display";
+export { isCatalogItemVisible, visibleCatalogItems } from '@asol/catalog-core';

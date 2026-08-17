@@ -3,10 +3,10 @@ import type { RegistrationFormData, LoginFormData } from '@/lib/validation/auth'
 import type { UpdateProfileInput, UserProfile } from '../entities/profile.entity';
 import type { IAuthService, LoginResult } from './auth-service.interface';
 
-/**
- * Client-side auth adapter — delegates to AsolApiClient only.
- * Session persistence is owned by SessionService.
- */
+function sessionHeaders(sessionToken: string): Record<string, string> {
+  return { 'x-asol-session-token': sessionToken };
+}
+
 export class AuthApiService implements IAuthService {
   async register(formData: RegistrationFormData): Promise<{ uid: string }> {
     return asolApi.post<{ uid: string }>(ASOL_API_ROUTES.auth.register, formData);
@@ -19,7 +19,9 @@ export class AuthApiService implements IAuthService {
   }
 
   async updateProfile(input: UpdateProfileInput): Promise<UserProfile> {
-    return asolApi.put<UserProfile>(ASOL_API_ROUTES.auth.profile, input);
+    return asolApi.put<UserProfile>(ASOL_API_ROUTES.auth.profile, input, {
+      headers: sessionHeaders(input.sessionToken),
+    });
   }
 
   async logout(): Promise<void> {
@@ -28,7 +30,7 @@ export class AuthApiService implements IAuthService {
 
   async checkPhone(phone: string): Promise<{ exists: boolean }> {
     return asolApi.get<{ exists: boolean }>(
-      `${ASOL_API_ROUTES.auth.checkPhone}?phone=${encodeURIComponent(phone)}`
+      `${ASOL_API_ROUTES.auth.checkPhone}?phone=${encodeURIComponent(phone)}`,
     );
   }
 }

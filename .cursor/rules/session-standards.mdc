@@ -1,0 +1,36 @@
+---
+description: Core session rules — no browser, Arabic replies, English docs only in docs/
+alwaysApply: true
+---
+
+# Session Standards (always binding)
+
+These rules apply to **every session and every task** in this project. Do not skip them.
+
+## 1. No browser — code only
+
+- **Never** use browser, preview, or computer-use tools to test or verify the app.
+- **Never** open URLs, take screenshots, or automate the UI for validation.
+- Focus on writing correct code: read source, run tests/typecheck/lint via terminal when needed, and reason from the codebase.
+
+## 2. Arabic communication, English documentation
+
+### User-facing messages
+
+- **Always** reply to the user in **Arabic** (chat, summaries, explanations, questions).
+- Code identifiers, file paths, commands, and commit messages stay as they are in the repo (often English).
+
+### Project documentation
+
+- **All** project documentation lives **only** under `docs/`.
+- Documentation in `docs/` must be written in **English**.
+- Do **not** add or update documentation in other locations (README fragments, inline doc files outside `docs/`, Arabic docs in the repo) unless the user explicitly asks.
+- Before changing behavior, read relevant `docs/` files. When behavior changes (not a trivial bug fix), update the matching `docs/` file in the same change.
+
+## Quick checklist
+
+| Do | Don't |
+|---|---|
+| Reply in Arabic | Use browser/preview for verification |
+| Write docs in `docs/` in English | Put project docs outside `docs/` |
+| Read `docs/` before editing an area | Write Arabic in `docs/` |
