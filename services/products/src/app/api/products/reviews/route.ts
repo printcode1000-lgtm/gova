@@ -13,12 +13,12 @@ export async function GET(request: Request): Promise<Response> {
   try {
     // Layer 2. Built per request, never at module scope: module scope runs during
     // `next build`, where no account credential exists.
-    const api = createProductsRuntime();
+    const { database } = createProductsRuntime();
     assertProductsEnv();
 
     const q = new URL(request.url).searchParams;
     const sort = q.get('sort');
-    const data = await api.reviews.list(
+    const data = await database.reviews.list(
       q.get('productId') ?? '',
       sort === 'highest' || sort === 'lowest' ? sort : 'newest',
       Number(q.get('offset') || 0),

@@ -53,9 +53,12 @@ function runTests(): void {
   // Test 1: Factory creates valid runtime
   const runtime: OrdersRuntime = createOrdersRuntime();
   assert(runtime.accountName === ORDERS_DECLARATION.project, 'Runtime account name matches declaration');
-  assert(typeof runtime.orders === 'object', 'Orders module domain bound');
-  assert(typeof runtime.actorFromInput === 'function', 'actorFromInput bound');
-  assert(typeof runtime.serverEnv === 'object', 'Server env bound');
+  assert(typeof runtime.database.listForActor === 'function', 'database task bound');
+  assert(typeof runtime.database.actorFromInput === 'function', 'actorFromInput bound');
+  assert(typeof runtime.config.serverEnv === 'object', 'config task bound');
+  // An absent task is a capability this account cannot reach — the point of the split.
+  assert(!('images' in runtime), 'orders must expose no images task');
+  assert(!('crypto' in runtime), 'orders must expose no crypto task');
   console.log('  ✔ createOrdersRuntime factory creates valid runtime object.');
 
   // Test 2: C1 Transitive capability graph isolation (Orders reaches no image-storage code)

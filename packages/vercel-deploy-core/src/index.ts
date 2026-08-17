@@ -62,6 +62,90 @@ export async function ensureProject(token: string, projectName: string, teamId?:
   return data.id;
 }
 
+/**
+ * Finds an existing project by name. **Never creates one.**
+ *
+ * Deliberately separate from `ensureProject`: the four service accounts are meant to be
+ * created on first deploy, but a script that only pushes environment variables must not
+ * conjure a project because a name was mistyped. An orphaned Vercel project created by a
+ * typo is quiet, billable, and easy to miss.
+ */
+export async function findProject(
+  token: string,
+  projectName: string,
+  teamId?: string,
+): Promise<string | null> {
+  const response = await fetch(
+    withTeam(`https://api.vercel.com/v9/projects/${encodeURIComponent(projectName)}`, teamId),
+    { headers: buildHeaders(token) },
+  );
+  if (!response.ok) return null;
+  const data = (await response.json()) as { id: string };
+  return data.id;
+}
+
+export type EnvUpsertResult = 'created' | 'updated';
+
+/**
+ * Writes one environment variable, reporting whether it existed.
+ *
+ * `PATCH` on an existing variable rather than delete-then-create: it keeps the variable's
+ * id stable, and it means a failure mid-run cannot leave the project with the value
+ * missing entirely. `upsertEnv` below is the delete-then-create form used by the service
+ * deploys, where the project may have been created moments earlier and there is nothing
+ * to preserve.
+ */
+export async function writeProjectEnv(
+  token: string,
+  projectId: string,
+  key: string,
+  value: string,
+  existing: ReadonlyArray<{ id: string; key: string }>,
+  teamId?: string,
+): Promise<EnvUpsertResult> {
+  const target = ['production', 'preview', 'development'];
+  const match = existing.find((item) => item.key === key);
+
+  const response = match
+    ? await fetch(
+        withTeam(`https://api.vercel.com/v9/projects/${projectId}/env/${match.id}`, teamId),
+        {
+          method: 'PATCH',
+          headers: buildHeaders(token),
+          body: JSON.stringify({ value, target, type: 'encrypted' }),
+        },
+      )
+    : await fetch(withTeam(`https://api.vercel.com/v10/projects/${projectId}/env`, teamId), {
+        method: 'POST',
+        headers: buildHeaders(token),
+        body: JSON.stringify({ key, value, target, type: 'encrypted' }),
+      });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to ${match ? 'update' : 'create'} ${key}: ${response.status} ${await response.text()}`,
+    );
+  }
+  return match ? 'updated' : 'created';
+}
+
+/** Lists a project's environment variables. */
+export async function listProjectEnv(
+  token: string,
+  projectId: string,
+  teamId?: string,
+): Promise<Array<{ id: string; key: string }>> {
+  const response = await fetch(
+    withTeam(`https://api.vercel.com/v9/projects/${projectId}/env`, teamId),
+    { headers: buildHeaders(token) },
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to list environment variables: ${response.status}`);
+  }
+  const data = (await response.json()) as { envs?: Array<{ id: string; key: string }> };
+  return data.envs ?? [];
+}
+
 export async function upsertEnv(
   token: string,
   projectId: string,

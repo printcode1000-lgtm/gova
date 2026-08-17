@@ -7,27 +7,46 @@ export interface ProfilesRuntimeConfig {
   env?: NodeJS.ProcessEnv;
 }
 
-export interface ProfilesRuntime {
-  accountName: string;
-  /**
-   * The five profile reads this account serves, and nothing else.
-   *
-   * `/api/profile/reviews` is deliberately absent: it reads the product database as well
-   * as the profile shards, and this account holds no product credentials. Exposing only
-   * what the account can serve puts that boundary in the type rather than in a comment.
-   */
+/**
+ * Profile reads across the seven profile shards.
+ *
+ * `/api/profile/reviews` is deliberately absent: it reads the product database as well as
+ * the profile shards, and this account holds no product credentials.
+ */
+export interface ProfilesDatabaseTask {
   profiles: typeof profileService;
+}
+
+/**
+ * Image handling for this account is **key-to-URL string work only**.
+ *
+ * `asol-profiles` holds `R2_*` but no `R2_API_TOKEN`: it can turn a stored key into a
+ * public URL, and it cannot create buckets, change CORS, or upload. Uploads stay on the
+ * main app. Naming the task here records that it is narrow on purpose rather than
+ * incomplete.
+ */
+export interface ProfilesImageTask {
+  readonly writeAccess: false;
+}
+
+export interface ProfilesConfigTask {
   serverEnv: typeof serverEnv;
 }
 
 /**
- * Rule 4 — the composition validates its own inputs, against the account declaration
- * rather than against names typed here.
+ * The profiles account runtime, divided by task.
  *
- * Hand-written variable names drift from the declaration silently, and the drift only
- * appears as a runtime failure on the deployed account. Reading `requiredEnv` means this
- * check cannot disagree with what the deploy actually pushes.
+ * An absent key is a capability the account cannot reach: there is no `crypto` task
+ * because this account signs nothing.
  */
+export interface ProfilesRuntime {
+  accountName: string;
+  database: ProfilesDatabaseTask;
+  images: ProfilesImageTask;
+  config: ProfilesConfigTask;
+}
+
+/** Rule 4 — validated against the declaration, never against names typed here. */
 export function assertProfilesEnv(env: NodeJS.ProcessEnv = process.env): void {
   const missing = PROFILES_DECLARATION.requiredEnv.filter((key) => !env[key]);
   if (missing.length > 0) {
@@ -38,17 +57,12 @@ export function assertProfilesEnv(env: NodeJS.ProcessEnv = process.env): void {
   }
 }
 
-/**
- * Layer 2 for the profiles account.
- *
- * Validation is not performed here: this runs during `next build` as well as per request,
- * and build time has no account credentials. Routes call `assertProfilesEnv()` when a
- * request arrives, which is the only moment the credentials are supposed to exist.
- */
+/** Layer 2 for the profiles account — the connector between its tasks. */
 export function createProfilesRuntime(_config?: ProfilesRuntimeConfig): ProfilesRuntime {
   return {
     accountName: PROFILES_DECLARATION.project,
-    profiles: profileService,
-    serverEnv,
+    database: { profiles: profileService },
+    images: { writeAccess: false },
+    config: { serverEnv },
   };
 }

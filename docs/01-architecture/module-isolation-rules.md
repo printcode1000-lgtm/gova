@@ -182,6 +182,37 @@ nothing at all.
 declarations into that deployment, which put the products account's `PRODUCT_R2_*` key names inside
 the orders deployment — caught by a capability-closure test, not by review.
 
+### Inside an account: divided by task
+
+Layer 2 does not return a flat bag of services. Each account's runtime is grouped by **task**, and
+the composition is the connector between those tasks:
+
+| Account | Tasks |
+| :-- | :-- |
+| `orders` | `database` · `config` |
+| `products` | `database` · `catalog` · `images` · `config` |
+| `profiles` | `database` · `images` · `config` |
+| `notifications` | **`crypto`** · `delivery` · `config` |
+
+**An absent key is a capability the account cannot reach.** `orders` exposes no `images` and no
+`crypto` because it holds neither an R2 credential nor a signing secret — so there is nothing to
+call, rather than a rule saying do not call it. The composition tests assert the *absence*
+(`assert(!('images' in runtime))`), not only the presence.
+
+Two groupings are worth the explanation they carry:
+
+- **`catalog` is separate from `database`** in `products`. Categories come from JSON inside the
+  bundle, not from Turso. Filing them under `database` would imply a query that never happens, and
+  would make a missing database credential look like it should break them.
+- **`images` is marked `writeAccess: false`** in `products` and `profiles`. Both hold `R2_*` but no
+  `R2_API_TOKEN`: they can turn a stored key into a public URL and cannot create buckets, change
+  CORS, or upload. The task is named so the narrowness reads as deliberate rather than unfinished.
+
+`notifications` is the only account with a `crypto` task, and it is the reason that account exists:
+a grant is a decision the main app already signed, and verifying it *is* the whole authorisation
+step. There is deliberately no bearer-token path — a shared bearer would let anything holding it
+send anything to anyone, while a grant authorises exactly one pre-approved send.
+
 ### Where two doors are correct rather than a violation of rule 2
 
 `ota-core` and `storage-core` each expose two entry points because their halves run in different
@@ -318,3 +349,39 @@ on something specific that must be present, and assert a floor that a broken wal
 
 Both the OTA edge budget and the port-registration test also fail when a *declared* item disappears,
 so neither list can rot into decoration while still reporting green.
+
+---
+
+## Verifying a split against the state before it
+
+The packaging work moved every account's environment keys out of four deploy scripts and into
+`@asol/account-declarations`. Those keys *are* the credential-isolation boundary, so "did anything
+get lost?" is the question that matters most, and it has an exact answer rather than an opinion.
+
+Git holds the reference copy. Commit `805de997` is the last state before the split began:
+
+```bash
+git show 805de997:scripts/deploy-orders-service.ts
+```
+
+Compare the `REQUIRED_ENV_KEYS` / `OPTIONAL_ENV_KEYS` arrays there against `requiredEnv` /
+`optionalEnv` in `packages/account-declarations/src/accounts/<account>.ts`. The measured result at
+the time of writing:
+
+| Account | required | optional |
+| :-- | :-- | :-- |
+| notifications | 4 → 4 identical | 7 → 7 identical |
+| products | 2 → 2 identical | 6 → 6 identical |
+| orders | 2 → 2 identical | 16 → 16 identical |
+| profiles | 2 → 2 identical | 19 → 19 identical |
+
+Nothing lost, nothing added, and nothing moved between required and optional — a key crossing that
+line silently changes whether a deploy aborts or continues.
+
+**Compare the arrays, not the whole file.** A first attempt matched every capitalised string and
+reported `DELETE` and `READY` as differences; they are HTTP method and state names in the old
+script. A comparison that reports noise trains you to ignore it.
+
+Three guards keep this true without re-running the comparison: `C2` pins the counts (11 / 8 / 18 /
+21), each `assert<Account>Env` reads `requiredEnv` so validation cannot disagree with what the
+deploy pushes, and `C4` asserts no mirror carries another account's token name.

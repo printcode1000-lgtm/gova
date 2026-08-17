@@ -27,11 +27,11 @@ export async function GET(request: Request): Promise<Response> {
      * where no account credential exists, so an eager build turned a missing runtime
      * secret into a failed deployment.
      */
-    const orders = createOrdersRuntime();
+    const { database } = createOrdersRuntime();
     assertOrdersEnv();
 
     const url = new URL(request.url);
-    const actor = orders.actorFromInput(
+    const actor = database.actorFromInput(
       {
         uid: url.searchParams.get('uid') ?? '',
         phone: url.searchParams.get('phone') ?? '',
@@ -39,7 +39,7 @@ export async function GET(request: Request): Promise<Response> {
       },
       'buyer',
     );
-    const data = await orders.listOrdersForActor(actor);
+    const data = await database.listForActor(actor);
     return Response.json(data, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return orderErrorResponse(request, error);

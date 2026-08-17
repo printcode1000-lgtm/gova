@@ -51,9 +51,11 @@ function runTests(): void {
   // Test 1: Factory creates valid runtime
   const runtime: NotificationsRuntime = createNotificationsRuntime();
   assert(runtime.accountName === NOTIFICATIONS_DECLARATION.project, 'Runtime account name matches declaration');
-  assert(typeof runtime.deliverNotificationGrants === 'function', 'deliverNotificationGrants bound');
-  assert(typeof runtime.readGrantsFromRequestBody === 'function', 'readGrantsFromRequestBody bound');
-  assert(typeof runtime.MAX_GRANTS_PER_REQUEST === 'number', 'MAX_GRANTS_PER_REQUEST bound');
+  assert(typeof runtime.crypto.readGrants === 'function', 'crypto task bound');
+  assert(typeof runtime.crypto.maxGrantsPerRequest === 'number', 'grant batch bound');
+  assert(typeof runtime.delivery.deliverGrants === 'function', 'delivery task bound');
+  // The only account with a crypto task, and the only one with no images task.
+  assert(!('images' in runtime), 'notifications must expose no images task');
   console.log('  ✔ createNotificationsRuntime factory creates valid runtime object.');
 
   // Test 2: C1 Transitive capability graph isolation (Notifications reaches no orders/products/profile DB code)

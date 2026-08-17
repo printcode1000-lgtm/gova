@@ -15,7 +15,7 @@ export async function GET(request: Request): Promise<Response> {
   try {
     // Layer 2. Built per request, never at module scope: module scope runs during
     // `next build`, where no account credential exists.
-    const api = createProductsRuntime();
+    const { database } = createProductsRuntime();
     assertProductsEnv();
 
     const uid = (new URL(request.url).searchParams.get('uid') ?? '').trim().slice(0, 200);
@@ -26,7 +26,7 @@ export async function GET(request: Request): Promise<Response> {
       );
     }
     const includeHidden = new URL(request.url).searchParams.get('includeHidden') === 'true';
-    const data = await api.pharmacyProfileCatalog.getCatalogView(uid, includeHidden);
+    const data = await database.pharmacyProfileCatalog.getCatalogView(uid, includeHidden);
     return Response.json(data, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return searchErrorResponse(request, error);

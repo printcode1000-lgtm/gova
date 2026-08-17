@@ -10,11 +10,11 @@ export async function GET(request: Request): Promise<Response> {
     // Layer 2. The composition is the only thing that knows which capabilities this
     // account owns. Built per request, never at module scope: module scope runs during
     // `next build`, where no account credential exists.
-    const { profiles } = createProfilesRuntime();
+    const { database } = createProfilesRuntime();
     assertProfilesEnv();
 
     const { searchParams } = new URL(request.url);
-    const data = await profiles.getSpecialties(searchParams.get('uid') ?? '');
+    const data = await database.profiles.getSpecialties(searchParams.get('uid') ?? '');
     return Response.json(data, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return profileErrorResponse(request, error);

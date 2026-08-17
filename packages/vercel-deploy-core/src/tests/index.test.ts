@@ -75,3 +75,50 @@ runTests().catch((err) => {
   console.error('❌ vercel-deploy-core test failed:', err);
   process.exit(1);
 });
+
+// ── D9: the Vercel API lives in this package and nowhere else ────────────────
+//
+// `scripts/push-vercel-turso-env.ts` carried its own `vercelFetch`, project lookup and
+// env upsert — about a hundred lines duplicating this package. It was missed in the first
+// audit because it was filed under "environment variables" rather than "deployment", and
+// a second copy of the API layer is exactly what rule 1 exists to prevent.
+{
+  const { readdirSync: readDir, readFileSync: readFile, statSync: stat } = await import('fs');
+  const nodePath = (await import('path')).default;
+  const repoRoot = process.cwd();
+  const packageRoot = nodePath.join(repoRoot, 'packages/vercel-deploy-core');
+
+  const walk = (dir: string): string[] => {
+    const out: string[] = [];
+    for (const name of readDir(dir)) {
+      const full = nodePath.join(dir, name);
+      if (name === 'node_modules' || name === 'generated' || name === '.next') continue;
+      if (stat(full).isDirectory()) out.push(...walk(full));
+      else if (/\.tsx?$/.test(name)) out.push(full);
+    }
+    return out;
+  };
+
+  const offenders: string[] = [];
+  for (const dir of ['src', 'scripts', 'services', 'packages']) {
+    const full = nodePath.join(repoRoot, dir);
+    try {
+      stat(full);
+    } catch {
+      continue;
+    }
+    for (const file of walk(full)) {
+      if (file.startsWith(packageRoot)) continue;
+      if (readFile(file, 'utf8').includes('api.vercel.com')) {
+        offenders.push(nodePath.relative(repoRoot, file));
+      }
+    }
+  }
+
+  assert(
+    offenders.length === 0,
+    `D9: api.vercel.com is called outside @asol/vercel-deploy-core:\n  ${offenders.join('\n  ')}\n` +
+      'Import findProject / listProjectEnv / writeProjectEnv / upsertEnv from the package instead.',
+  );
+  console.log('  ✔ D9: the Vercel API is called only from @asol/vercel-deploy-core.');
+}

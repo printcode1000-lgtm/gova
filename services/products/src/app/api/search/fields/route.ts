@@ -16,7 +16,7 @@ export async function GET(request: Request): Promise<Response> {
   try {
     // Layer 2. Built per request, never at module scope: module scope runs during
     // `next build`, where no account credential exists.
-    const api = createProductsRuntime();
+    const { database, catalog } = createProductsRuntime();
     assertProductsEnv();
 
     const q = new URL(request.url).searchParams;
@@ -25,14 +25,14 @@ export async function GET(request: Request): Promise<Response> {
     if (
       !SAFE_ID.test(mainCategoryId) ||
       !SAFE_ID.test(subcategoryId) ||
-      !api.categories.resolveProductSelection(mainCategoryId, subcategoryId).valid
+      !catalog.categories.resolveProductSelection(mainCategoryId, subcategoryId).valid
     ) {
       return Response.json(
         { error: 'invalidSearchCategory' },
         { status: 400, headers: corsHeaders(request) },
       );
     }
-    const fields = await api.getEnabledProductSearchFields(mainCategoryId, subcategoryId);
+    const fields = await database.searchFields(mainCategoryId, subcategoryId);
     return Response.json({ fields }, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return searchErrorResponse(request, error);

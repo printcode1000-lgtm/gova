@@ -21,22 +21,54 @@ export interface ProductsRuntimeConfig {
   env?: NodeJS.ProcessEnv;
 }
 
-export interface ProductsRuntime {
-  accountName: string;
+/** Product reads. This account holds only the product Turso database. */
+export interface ProductsDatabaseTask {
   products: typeof productService;
   reviews: typeof productReviewService;
-  searchProducts: typeof searchProducts;
-  getEnabledProductSearchFields: typeof getEnabledProductSearchFields;
-  categories: typeof categoryService;
+  search: typeof searchProducts;
+  searchFields: typeof getEnabledProductSearchFields;
   pharmacyProfileCatalog: typeof pharmacyProfileCatalogService;
+}
+
+/**
+ * Categories are a separate task from the database: they come from JSON inside the
+ * bundle, not from Turso. Grouping them under `database` would imply a query that never
+ * happens, and a missing database credential would look like it should break them.
+ */
+export interface ProductsCatalogTask {
+  categories: typeof categoryService;
+}
+
+/**
+ * Image handling here is **key-to-URL string work only**.
+ *
+ * `asol-products` holds `PRODUCT_R2_*` but no `PRODUCT_R2_API_TOKEN`: it can turn a
+ * stored key into a public URL, and it cannot create buckets, change CORS, or upload.
+ * Uploads stay on the main app.
+ */
+export interface ProductsImageTask {
+  readonly writeAccess: false;
+}
+
+export interface ProductsConfigTask {
   serverEnv: typeof serverEnv;
 }
 
 /**
- * Rule 4 — validates against `PRODUCTS_DECLARATION.requiredEnv`, not against names typed
- * here. A hand-written name drifts from the declaration silently and only surfaces as a
- * runtime failure on the deployed account.
+ * The products account runtime, divided by task.
+ *
+ * An absent key is a capability the account cannot reach: there is no `crypto` task
+ * because this account signs nothing.
  */
+export interface ProductsRuntime {
+  accountName: string;
+  database: ProductsDatabaseTask;
+  catalog: ProductsCatalogTask;
+  images: ProductsImageTask;
+  config: ProductsConfigTask;
+}
+
+/** Rule 4 — validated against the declaration, never against names typed here. */
 export function assertProductsEnv(env: NodeJS.ProcessEnv = process.env): void {
   const missing = PRODUCTS_DECLARATION.requiredEnv.filter((key) => !env[key]);
   if (missing.length > 0) {
@@ -47,26 +79,19 @@ export function assertProductsEnv(env: NodeJS.ProcessEnv = process.env): void {
   }
 }
 
-/**
- * Layer 2 for the products account.
- *
- * This account does reach image storage — product images live on the legacy product R2
- * bucket — but it holds no `PRODUCT_R2_API_TOKEN`: turning a key into a URL is string
- * work and needs only the narrow accessors. That is why the R2 variables are optional in
- * the declaration and are not checked here.
- *
- * Validation is not performed in this factory: it runs during `next build` as well as per
- * request, and build time has no account credentials.
- */
+/** Layer 2 for the products account — the connector between its tasks. */
 export function createProductsRuntime(_config?: ProductsRuntimeConfig): ProductsRuntime {
   return {
     accountName: PRODUCTS_DECLARATION.project,
-    products: productService,
-    reviews: productReviewService,
-    searchProducts,
-    getEnabledProductSearchFields,
-    categories: categoryService,
-    pharmacyProfileCatalog: pharmacyProfileCatalogService,
-    serverEnv,
+    database: {
+      products: productService,
+      reviews: productReviewService,
+      search: searchProducts,
+      searchFields: getEnabledProductSearchFields,
+      pharmacyProfileCatalog: pharmacyProfileCatalogService,
+    },
+    catalog: { categories: categoryService },
+    images: { writeAccess: false },
+    config: { serverEnv },
   };
 }

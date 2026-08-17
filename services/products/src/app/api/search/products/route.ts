@@ -14,7 +14,7 @@ export async function GET(request: Request): Promise<Response> {
   try {
     // Layer 2. Built per request, never at module scope: module scope runs during
     // `next build`, where no account credential exists.
-    const api = createProductsRuntime();
+    const { database } = createProductsRuntime();
     assertProductsEnv();
 
     const q = new URL(request.url).searchParams;
@@ -35,7 +35,7 @@ export async function GET(request: Request): Promise<Response> {
         minRating: (q.get('minRating') as ProductSearchFilters['minRating']) ?? '',
       },
     };
-    const data = await api.searchProducts(payload);
+    const data = await database.search(payload);
     return Response.json(data, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return searchErrorResponse(request, error);

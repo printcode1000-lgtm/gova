@@ -1,6 +1,11 @@
 import { existsSync, readFileSync } from 'fs';
 import dotenv from 'dotenv';
 import { DATABASE_SHARD_NAMES, envPrefixForShard } from '../src/modules/data-access/core/database/database-shards';
+import {
+  findProject,
+  listProjectEnv,
+  writeProjectEnv,
+} from '@asol/vercel-deploy-core';
 
 if (existsSync('.env.local')) {
   dotenv.config({ path: '.env.local' });
@@ -67,99 +72,41 @@ const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;
 
 const OPTIONAL_VERCEL_KEYS = NOTIFICATIONS_SERVICE_KEYS;
 
-async function vercelFetch(path: string, init: RequestInit = {}): Promise<Response> {
+/**
+ * The Vercel API layer lives in `@asol/vercel-deploy-core`, not here.
+ *
+ * This script used to carry its own `vercelFetch`, project lookup and env upsert — about
+ * a hundred lines duplicating what the package already owns. Rule 1: one module holds the
+ * logic in full. Two copies meant a change to Vercel's API, or to how tokens are handled,
+ * had to be found in two places.
+ */
+function requireToken(): string {
   const token = process.env.VERCEL_TOKEN || process.env.VERCEL_ACCESS_TOKEN;
   if (!token) {
     throw new Error('VERCEL_TOKEN or VERCEL_ACCESS_TOKEN is required in .env.local');
   }
-
-  const teamId = process.env.VERCEL_ORG_ID || process.env.VERCEL_TEAM_ID;
-  const url = new URL(`https://api.vercel.com${path}`);
-  if (teamId) url.searchParams.set('teamId', teamId);
-
-  return fetch(url, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      ...init.headers,
-    },
-  });
+  return token;
 }
 
-async function resolveProjectId(): Promise<string> {
+/** Team scope comes from the environment here; the service deploys resolve it from the API. */
+function teamScope(): string | undefined {
+  return process.env.VERCEL_ORG_ID || process.env.VERCEL_TEAM_ID || undefined;
+}
+
+async function resolveProjectId(token: string, teamId?: string): Promise<string> {
   const fromEnv = process.env.VERCEL_PROJECT_ID;
   if (fromEnv) return fromEnv;
 
   const projectName = process.env.VERCEL_PROJECT_NAME || 'gova';
-  const response = await vercelFetch('/v9/projects');
-  if (!response.ok) {
-    throw new Error(`Failed to list Vercel projects (${response.status})`);
+  // `findProject`, never `ensureProject`: pushing environment variables must not create a
+  // project because a name was mistyped.
+  const projectId = await findProject(token, projectName, teamId);
+  if (!projectId) {
+    throw new Error(
+      `Vercel project "${projectName}" not found. Set VERCEL_PROJECT_NAME or VERCEL_PROJECT_ID.`,
+    );
   }
-
-  const data = (await response.json()) as { projects: Array<{ id: string; name: string }> };
-  const project = data.projects.find((p) => p.name === projectName);
-  if (!project) {
-    const names = data.projects.map((p) => p.name).join(', ');
-    throw new Error(`Project "${projectName}" not found. Available: ${names}`);
-  }
-
-  return project.id;
-}
-
-async function listProjectEnv(projectId: string): Promise<Array<{ id: string; key: string; target: string[] }>> {
-  const response = await vercelFetch(`/v9/projects/${projectId}/env`);
-  if (!response.ok) {
-    throw new Error(`Failed to list env vars (${response.status})`);
-  }
-
-  const data = (await response.json()) as { envs: Array<{ id: string; key: string; target: string[] }> };
-  return data.envs;
-}
-
-async function upsertEnvVar(
-  projectId: string,
-  key: string,
-  value: string,
-  existing: Array<{ id: string; key: string; target: string[] }>
-): Promise<'created' | 'updated' | 'unchanged'> {
-  const targets = ['production', 'preview', 'development'] as const;
-  const match = existing.find((env) => env.key === key);
-
-  if (match) {
-    const response = await vercelFetch(`/v9/projects/${projectId}/env/${match.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        value,
-        target: [...targets],
-        type: 'encrypted',
-      }),
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Failed to update ${key} (${response.status}): ${text}`);
-    }
-
-    return 'updated';
-  }
-
-  const response = await vercelFetch(`/v10/projects/${projectId}/env`, {
-    method: 'POST',
-    body: JSON.stringify({
-      key,
-      value,
-      type: 'encrypted',
-      target: [...targets],
-    }),
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Failed to create ${key} (${response.status}): ${text}`);
-  }
-
-  return 'created';
+  return projectId;
 }
 
 async function main() {
@@ -175,14 +122,14 @@ async function main() {
 
   for (const key of VERCEL_KEYS) {
     const value = process.env[key]!.trim();
-    const result = await upsertEnvVar(projectId, key, value, existing);
+    const result = await writeProjectEnv(token, projectId, key, value, existing, teamId);
     console.log(`✅ ${key}: ${result}`);
   }
 
   for (const key of OPTIONAL_VERCEL_KEYS) {
     const value = process.env[key]?.trim();
     if (value) {
-      const result = await upsertEnvVar(projectId, key, value, existing);
+      const result = await writeProjectEnv(token, projectId, key, value, existing, teamId);
       console.log(`✅ ${key} (Optional): ${result}`);
     }
   }

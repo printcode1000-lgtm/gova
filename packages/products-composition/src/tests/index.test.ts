@@ -50,12 +50,10 @@ function runTests(): void {
   // Test 1: Factory creates valid runtime
   const runtime: ProductsRuntime = createProductsRuntime();
   assert(runtime.accountName === PRODUCTS_DECLARATION.project, 'Runtime account name matches declaration');
-  assert(typeof runtime.products === 'object', 'products bound');
-  assert(typeof runtime.reviews === 'object', 'reviews bound');
-  assert(typeof runtime.searchProducts === 'function', 'searchProducts bound');
-  assert(typeof runtime.getEnabledProductSearchFields === 'function', 'getEnabledProductSearchFields bound');
-  assert(typeof runtime.categories === 'object', 'categories bound');
-  assert(typeof runtime.pharmacyProfileCatalog === 'object', 'pharmacyProfileCatalog bound');
+  assert(typeof runtime.database.products === 'object', 'database task bound');
+  assert(typeof runtime.catalog.categories === 'object', 'catalog task bound');
+  assert(runtime.images.writeAccess === false, 'products image task is read-only');
+  assert(!('crypto' in runtime), 'products must expose no crypto task');
   console.log('  ✔ createProductsRuntime factory creates valid runtime object.');
 
   // Test 2: C1 Transitive capability graph isolation

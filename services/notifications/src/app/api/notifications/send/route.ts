@@ -48,9 +48,9 @@ export async function POST(request: Request): Promise<Response> {
   try {
     // Layer 2. Built per request, never at module scope: module scope runs during
     // `next build`, where no account credential exists.
-    const api = createNotificationsRuntime();
+    const { crypto } = createNotificationsRuntime();
     assertNotificationsEnv();
-    grants = api.readGrantsFromRequestBody(await request.json()).slice(0, api.MAX_GRANTS_PER_REQUEST);
+    grants = crypto.readGrants(await request.json()).slice(0, crypto.maxGrantsPerRequest);
   } catch {
     return Response.json({ error: 'invalidJsonBody' }, { status: 400, headers });
   }
@@ -62,7 +62,7 @@ export async function POST(request: Request): Promise<Response> {
   // 200 even with rejections: the request itself was well formed, and the
   // per-grant outcome is in the body. The browser cannot act on a 4xx here
   // anyway — the grants are already spent.
-  return Response.json(await createNotificationsRuntime().deliverNotificationGrants(grants), { status: 200, headers });
+  return Response.json(await createNotificationsRuntime().delivery.deliverGrants(grants), { status: 200, headers });
 }
 
 export async function OPTIONS(request: Request): Promise<Response> {

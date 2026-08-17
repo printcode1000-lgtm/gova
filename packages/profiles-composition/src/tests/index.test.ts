@@ -50,7 +50,9 @@ function runTests(): void {
   // Test 1: Factory creates valid runtime
   const runtime: ProfilesRuntime = createProfilesRuntime();
   assert(runtime.accountName === PROFILES_DECLARATION.project, 'Runtime account name matches declaration');
-  assert(typeof runtime.profiles === 'object', 'profiles service bound');
+  assert(typeof runtime.database.profiles === 'object', 'database task bound');
+  assert(runtime.images.writeAccess === false, 'profiles image task is read-only');
+  assert(!('crypto' in runtime), 'profiles must expose no crypto task');
   console.log('  ✔ createProfilesRuntime factory creates valid runtime object.');
 
   // Test 2: C1 Transitive capability graph isolation
