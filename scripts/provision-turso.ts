@@ -6,7 +6,7 @@ import {
   provisionTursoProductDatabase,
 } from "../src/modules/data-access/provisioning/core/turso-provisioner";
 import { runAllSchemaSyncs } from "../src/modules/data-access/provisioning/core/schema-sync";
-import { provisionDatabaseShards } from "./provision-database-shards";
+import { provisionDatabaseShards } from "@/modules/data-access/tooling/provision-database-shards";
 
 process.env.ASOL_PROVISIONING = "true";
 

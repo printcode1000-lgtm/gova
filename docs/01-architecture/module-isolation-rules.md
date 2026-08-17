@@ -109,16 +109,27 @@ it for any package.
 Twelve sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
-| # | Rule | native-core | ota-core | storage-core | account-declarations | vercel-deploy-core | service-mirror-core | account-bridge | the four `*-composition` |
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| 1 | Core Module | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 2 | Single public API | ✅ | ✅ two doors | ✅ two doors | ✅ one + per-account doors | ✅ | ✅ | ✅ two doors | ✅ |
-| 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 7 | Independent package | ✅ | ✅ 5 designated edges, pinned | ✅ 1 designated edge | ✅ zero imports | ✅ | ✅ | ✅ 3 edges, pinned | ✅ by design — see below |
-| 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+Doors and app-edge counts below are measured, not intended. Re-measure with:
+
+```bash
+node -e "for(const p of require('fs').readdirSync('packages')) try{console.log(p, Object.keys(require('./packages/'+p+'/package.json').exports||{}).join(' '))}catch{}"
+```
+
+| # | Rule | native-core | ota-core | storage-core | notifications-core | account-declarations | vercel-deploy-core | service-mirror-core | account-bridge | the four `*-composition` |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| 1 | Core Module | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 2 | Single public API | ✅ 2 doors | ✅ 3 doors | ✅ 2 doors | ✅ 4 doors, each earned | ✅ 1 + per-account | ✅ 1 | ✅ 1 | ✅ 2 doors | ✅ 1 each |
+| 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 7 | Independent package | ✅ 0 edges | ✅ 5, designated + pinned | ✅ 1, designated | ✅ 4, designated + pinned | ✅ 0 imports | ✅ 0 edges | ✅ 0 edges | ✅ 3, pinned | ✅ by design — see below |
+| 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+Rule 2 counts doors rather than asserting one. `native-core`'s second door is a validation script
+the release console runs; the rest are justified where they appear. **A package with more doors than
+its neighbours is not automatically worse** — what rule 2 forbids is an undeclared door, and every
+door here is in an `exports` map that `architecture:check` reads.
 
 Rule 6 is enforced repository-wide and applies to the whole branch, not per package: branch
 protection blocks force-pushes and deletions, requires a pull request, requires linear history and
@@ -155,12 +166,19 @@ Measured dependencies, rather than intended ones:
 | Package | Imports |
 | :-- | :-- |
 | `account-declarations` | **nothing** — asserted by its own test |
-| `native-core`, `storage-core`, `service-mirror-core` | nothing |
+| `native-core`, `storage-core`, `service-mirror-core`, `notifications-core` | nothing |
 | `vercel-deploy-core` | `account-declarations` |
-| the four `*-composition` | `account-declarations` |
+| `orders-`, `products-`, `profiles-composition` | `account-declarations` |
+| `notifications-composition` | `account-declarations`, `notifications-core` |
 | `ota-core`, `account-bridge` | `native-core` |
 
-Two of these look like layer violations and are not:
+Regenerate this table rather than editing it by hand:
+
+```bash
+for d in packages/*/; do p=$(basename $d); echo "$p -> $(find $d/src -name '*.ts' | grep -v /tests/ | xargs grep -hoE "from ['\"]@asol/[a-z-]+" 2>/dev/null | sed "s|from ['\"]||" | sort -u | grep -v "^@asol/$p$" | tr '\n' ' ')"; done
+```
+
+Three of these look like layer violations and are not:
 
 **Layer 1 reading layer 3** (`vercel-deploy-core` → `account-declarations`) is safe precisely
 because layer 3 imports nothing. Data carries nothing with it, so the direction that matters — a
@@ -170,6 +188,17 @@ composition dragging the deploy engine into a deployment — cannot happen throu
 broken. Platform identity is owned once; upgrading Capacitor touches `native-core` alone, and its
 consumers see an unchanged API. A second platform detector inside the channel would be a second
 source of truth, and the two would disagree the first time either changed.
+
+**Layer 2 reading layer 1** (`notifications-composition` → `notifications-core`) is what layer 2 is
+*for*. A composition exists to wire capability packages into one account's runtime; a composition
+that imported no capability would compose nothing. The direction that would be wrong is the reverse —
+`notifications-core` reaching a composition — and it imports nothing at all.
+
+Note that `notifications-composition` is the only composition holding a capability edge. The other
+three reach their capabilities through the application's data-access layer rather than a package,
+which is not an inconsistency: notification delivery was extractable into a sealed package, and
+product, order and profile reads were not. See
+[`@asol/notifications-core` — what was sealed](#asolnotifications-core-what-was-sealed-and-what-was-not).
 
 **Layer 3 must stay out of layer 1.** The compositions once read `DECLARATION.project` from
 `@asol/vercel-deploy-core`, which contains `child_process`, `fs` and the Vercel token handling. That
@@ -214,17 +243,27 @@ a grant is a decision the main app already signed, and verifying it *is* the who
 step. There is deliberately no bearer-token path — a shared bearer would let anything holding it
 send anything to anyone, while a grant authorises exactly one pre-approved send.
 
-### Where two doors are correct rather than a violation of rule 2
+### Where more than one door is correct rather than a violation of rule 2
 
-`ota-core` and `storage-core` each expose two entry points because their halves run in different
-worlds:
+Rule 2 asks for **a small set of explicitly named doors**, not for exactly one. What it forbids is an
+undeclared door — a deep path that resolves. Every door in this repository is in an `exports` map
+that `architecture:check` reads, and the seal is the same whether a package has one or four: a fixed
+number of declared entries, no deep imports, and a contract test pinning each entry's module graph.
 
-- the runtime/browser entry, which must never transitively reach a node builtin;
-- the publishing/server entry, which may use `@aws-sdk/*`, `google-auth-library`, and `node:*`.
+The recurring reason for a second door is that a package's halves run in different worlds:
 
-A single door would bundle the node-only half into the shipped web bundle. The seal is unchanged: a
-fixed number of declared doors, no deep imports, and a contract test proving the runtime entry's module
-graph stays clean.
+- a runtime/browser entry, which must never transitively reach a node builtin;
+- a publishing/server entry, which may use `@aws-sdk/*`, `google-auth-library`, and `node:*`.
+
+A single door would bundle the node-only half into the shipped web bundle. `storage-core` splits on
+exactly that line, and `ota-core` adds a third for publishing, which needs neither of the others.
+
+`notifications-core` has four, and each was added because merging it produced a concrete failure
+rather than a preference — see [Four doors, each earned by a failure](#four-doors-each-earned-by-a-failure).
+The pattern worth taking from it: **a door count is evidence of how many distinct load-time
+contracts a package has**, not of how disciplined it is. Two of its four exist because the modules
+behind them read credentials at import time, and one exists because a consumer's own barrel has a
+stricter rule than the package's.
 
 ---
 
@@ -442,3 +481,35 @@ library.
 
 The transport is now injected through the constructor. **A stub that stops stubbing without failing
 is worse than no stub** — the test kept passing its assertions while exercising something else.
+
+---
+
+## Standing weakness: `scripts/` was not typechecked
+
+`tsconfig.json` listed `scripts` in `exclude`, so **73 script files had no type checking at all** —
+`deploy-all`, `cap-build`, every deploy and sync script, and every `architecture-check` contract
+file. `npm run typecheck` reported zero errors while never reading them.
+
+It hid a live break. `scripts/cap-build.ts` imports `nativeVersionFromBaseline` from
+`@asol/ota-core/publishing`, and that door never exported it: `native-gate` imported the function
+and did not forward it. So the **full Android release failed before building anything** — both the
+console's "start full release" button and `npm run release:android` — with
+`nativeVersionFromBaseline is not a function`. The export is now made from the module that defines
+it, `domain/versioning/native-version`.
+
+Removing the exclusion surfaced 17 errors in 7 files, every one a real defect rather than a typing
+nicety:
+
+| Kind | Example |
+| :-- | :-- |
+| Imports of deleted modules | `../ota/ota-native-compatibility`, `./provision-database-shards` — both moved in earlier migrations |
+| Wrong value shape | `architecture-check.storage-core-contract.ts` pushed **strings** into the shared `Violation[]`; the report renders `.layer`/`.file`/`.violation`, so any violation it raised would have printed as blanks |
+| Over-strict parameter type | `runNpmScript`'s `env` was typed `NodeJS.ProcessEnv`, which demanded `NODE_ENV` from callers adding three deployment variables — and Next marks it readonly, so they could not supply it |
+| Unsupported syntax | a regex `s` (dotAll) flag against an ES2017 target |
+
+**The lesson is the same one this document keeps recording**: a gate that excludes a directory
+reports green about a directory it never opened. `scripts/` is where releases and deploys live —
+the least safe place in the repository to leave unchecked.
+
+Keep `scripts` out of `exclude`. A new script that does not typecheck is a release path that does
+not work yet.

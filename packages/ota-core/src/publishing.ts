@@ -22,6 +22,21 @@ export {
 } from "./publishing/gate/native-gate";
 export { formatNativeSurfaceReport } from "./publishing/gate/gate-report";
 
+/**
+ * The native version helpers, exported from where they are defined.
+ *
+ * `scripts/cap-build.ts` plans the release version with these. They were imported by
+ * `native-gate` and never forwarded through this door, so cap-build resolved
+ * `nativeVersionFromBaseline` to undefined and the full-release path — the button and
+ * `npm run release:android` alike — died with "is not a function" before building anything.
+ *
+ * The type checker could not catch it: `scripts` was listed in tsconfig `exclude`.
+ */
+export {
+  nativeVersionFromBaseline,
+  nextNativePatchVersion,
+} from "./domain/versioning/native-version";
+
 // ── The Build & Release Orchestrator ───────────────────────────────────────
 export {
   buildStaticOut,

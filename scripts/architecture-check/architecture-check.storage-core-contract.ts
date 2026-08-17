@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
-import { violations } from './architecture-check.architecture-types';
+import { addViolation } from './architecture-check.architecture-types';
 import {
   R2_S3_CLIENT_ALLOWED_IMPORTERS,
   IMAGE_STORAGE_CLIENT_ENTRY,
@@ -18,8 +18,11 @@ export function checkStorageCoreContract(file: string, content: string): void {
     content.includes(IMAGE_STORAGE_API_ADAPTER) &&
     !IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS.has(file)
   ) {
-    violations.push(
-      `${file}: Direct import of ${IMAGE_STORAGE_API_ADAPTER} is forbidden outside feature storage service`,
+    addViolation(
+      'Storage Core Contract',
+      file,
+      `Direct import of ${IMAGE_STORAGE_API_ADAPTER} is forbidden outside the feature storage service.`,
+      `Allowed importers: ${[...IMAGE_STORAGE_API_ADAPTER_ALLOWED_IMPORTERS].join(', ')}`,
     );
   }
 
@@ -27,7 +30,7 @@ export function checkStorageCoreContract(file: string, content: string): void {
   if (!IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT.has(file) && !file.startsWith('packages/storage-core/')) {
     for (const rule of IMAGE_STORAGE_FORBIDDEN_PATTERNS) {
       if (rule.pattern.test(content)) {
-        violations.push(`${file}: ${rule.message}`);
+        addViolation('Storage Core Contract', file, rule.message);
       }
     }
   }
@@ -54,8 +57,11 @@ export function checkDeadContractRules(allFileContents: Map<string, string>): vo
       }
     }
     if (matchCount === 0) {
-      violations.push(
-        `Dead contract rule detected in contract.ts: importPath.includes('${pattern}') matches 0 files in repo`,
+      addViolation(
+        'Storage Core Contract',
+        'src/core/architecture/contract.ts',
+        `Dead contract rule: importPath.includes('${pattern}') matches no file in the repository.`,
+        'Remove the rule or fix the pattern — a rule that matches nothing protects nothing.',
       );
     }
   }

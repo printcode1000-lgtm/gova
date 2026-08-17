@@ -115,10 +115,12 @@ async function main() {
     throw new Error(`Missing local values for: ${missing.join(', ')}. Run npm run db:provision:turso first.`);
   }
 
-  const projectId = await resolveProjectId();
-  const existing = await listProjectEnv(projectId);
+  const token = requireToken();
+  const teamId = teamScope();
+  const projectId = await resolveProjectId(token, teamId);
+  const existing = await listProjectEnv(token, projectId, teamId);
 
-  console.log(`📦 Vercel project: ${projectId}`);
+  console.log(`Vercel project: ${projectId}`);
 
   for (const key of VERCEL_KEYS) {
     const value = process.env[key]!.trim();

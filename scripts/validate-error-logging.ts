@@ -77,7 +77,10 @@ for (const file of files) {
     if (!hasTracing && !hasCatch) {
       violations.push(`${relative}: API route has no tracing wrapper or catch block`);
     }
-    if (/catch\s*\([^)]*\)\s*\{[^}]*apiError\([^)]*searchFailed[^)]*\)/s.test(content)) {
+    // `[\s\S]` in place of the `s` (dotAll) flag: dotAll requires an ES2018 target and
+    // this project targets ES2017. Same match, without moving the whole project's target
+    // for one regex. The flag was invisible until `scripts` left tsconfig's exclude list.
+    if (/catch\s*\([^)]*\)\s*\{[\s\S]*?apiError\([^)]*searchFailed[^)]*\)/.test(content)) {
       violations.push(`${relative}: caught search errors must use mapServiceError`);
     }
   }

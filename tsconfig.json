@@ -111,7 +111,6 @@
     "node_modules",
     "out",
     ".next/dev/types/**/*.ts",
-    "scripts",
     "packages/native-core/scripts",
     "**/__tests__/*",
     "**/*.test.ts",

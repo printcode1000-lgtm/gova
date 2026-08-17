@@ -18,7 +18,10 @@ const original = Object.fromEntries(
 
 try {
   for (const key of keys) delete process.env[key];
-  process.env.NODE_ENV = "development";
+  // Next's ambient ProcessEnv marks NODE_ENV readonly. This script exists to compare
+  // behaviour across environments, so it writes through Object.assign instead of widening
+  // the global type — the restriction is right everywhere else.
+  Object.assign(process.env, { NODE_ENV: "development" });
   process.env.TURSO_DATABASE_URL = "libsql://comparison-only";
   assert.equal(
     isDevRuntime(),
@@ -40,7 +43,7 @@ try {
   for (const key of keys) {
     const value = original[key];
     if (value === undefined) delete process.env[key];
-    else process.env[key] = value;
+    else Object.assign(process.env, { [key]: value });
   }
 }
 

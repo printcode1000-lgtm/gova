@@ -142,12 +142,40 @@ assert.match(
   "the full-release shortcut must use the argument-preserving release orchestrator",
 );
 const fullReleaseOrchestrator = await readFile("scripts/release-android.ts", "utf8");
-assert.match(fullReleaseOrchestrator, /capBuildPath, "--no-ota", \.\.\.releaseArguments/,
-  "the release orchestrator must build without OTA and pass dialog choices to cap-build");
+assert.match(fullReleaseOrchestrator, /capBuildPath, "--no-ota", \.\.\.forwarded/,
+  "the release orchestrator must build without OTA and pass the resolved choices to cap-build");
+
+// The version action is resolved before cap-build runs, so `cap-build`'s `auto` fallback is
+// unreachable from this path. The console's dialog never offers `auto`, and a full release
+// picking its own version number silently is the mistake this path exists to prevent.
+assert.match(fullReleaseOrchestrator, /resolveNativeVersionAction\(releaseArguments\)/,
+  "the release orchestrator must resolve the Android version action before building");
+assert.match(fullReleaseOrchestrator, /\$\{NATIVE_VERSION_FLAG\}\$\{nativeVersionAction\}/,
+  "the resolved action must be forwarded to cap-build as --native-version=");
+
+const versionChoice = await readFile("scripts/release-android-version-choice.ts", "utf8");
+// The two answers must be exactly the two the dialog offers, mapped to the two values
+// `cap-build` accepts. A third value here would be a behaviour the console cannot produce.
+for (const value of ["current", "next-patch"]) {
+  assert.match(versionChoice, new RegExp(`value: "${value}"`),
+    `the terminal prompt must offer the ${value} action, matching the console dialog`);
+}
+assert.doesNotMatch(versionChoice, /"auto"/,
+  "auto must not be selectable from the terminal: the console dialog does not offer it");
+assert.match(versionChoice, /process\.stdin\.isTTY/,
+  "the prompt must detect a terminal: the console spawns this script with piped stdio and " +
+  "would hang forever on a question nobody can answer");
+// English only. A mixed-script prompt reorders around option numbers and flag values in
+// most shells, which misleads about which key selects what.
+assert.doesNotMatch(versionChoice, /[؀-ۿ]/,
+  "terminal output must be English only");
 assert.ok(fullReleaseOrchestrator.indexOf("capBuildPath")
   < fullReleaseOrchestrator.lastIndexOf("signedBuildPath"),
 "signed Android artifacts must be built only after web/native preparation");
-assert.match(fullReleaseOrchestrator, /releaseArguments\.includes\("--dry-run"\).*process\.exit\(0\)/,
+// Checked against `forwarded` rather than the raw argv: the orchestrator now resolves the
+// version action first and rebuilds the argument list, and `return` replaces `process.exit`
+// so the async entry point can reject through its own catch instead of exiting mid-promise.
+assert.match(fullReleaseOrchestrator, /forwarded\.includes\("--dry-run"\)\)\s*return/,
   "a full-release dry run must stop before signing");
 assert.match(fullReleaseOrchestrator, /ASOL_WEB_BUNDLE_READY:\s*"1"/,
   "the signed build must receive proof that cap-build prepared the web bundle");

@@ -3,7 +3,7 @@ import { join, relative } from 'path';
 import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
-} from "../ota/ota-native-compatibility";
+} from "@asol/ota-core/publishing";
 import {
   ALLOWED_DRIZZLE_ORM_FILES_PATTERN,
   ALLOWED_DB_DRIVER_FILES_PATTERN,
@@ -198,6 +198,11 @@ export function checkFile(filePath: string): void {
 
   for (const imp of extractImports(content)) {
     const target = importTargetLayer(imp);
+    // `external` means an npm package that no layer rule governs — the layer graph has
+    // nothing to say about it. Both `getForbiddenImportViolation` and `getAllowedHint`
+    // narrow it out of their parameter types, so skipping here is the check the types
+    // were already describing.
+    if (target === 'external') continue;
     const violation = getForbiddenImportViolation(layer, target, imp);
     if (violation) {
       addViolation(layer, filePath, violation, getAllowedHint(layer, target));

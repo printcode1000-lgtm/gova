@@ -100,7 +100,10 @@ function parseReport(output: string): VercelDeploymentReport | undefined {
 
 function runNpmScript(
   script: string,
-  options: { env?: NodeJS.ProcessEnv; captureReport?: boolean } = {},
+  // `env` is an overlay spread onto `process.env` below, not a complete environment.
+  // Typed as ProcessEnv it required NODE_ENV from callers that only add deployment
+  // metadata — and Next's ProcessEnv marks NODE_ENV readonly, so they could not supply it.
+  options: { env?: Record<string, string>; captureReport?: boolean } = {},
 ): Promise<VercelDeploymentReport | undefined> {
   const npmCli = process.env.npm_execpath;
   const command = npmCli
