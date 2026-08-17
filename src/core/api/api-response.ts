@@ -3,6 +3,7 @@ import { isDevelopment } from '@/core/config';
 import { DEV_TRACE_HEADER } from '@/core/monitor/dev-trace-types';
 import { getDevTrace, serializeDevTrace } from '@/core/monitor/server-trace';
 import { logServerSystemIssue } from '@/features/system-logs/services/persistent-system-log-service.server';
+import { isErrorAlreadyLogged } from '@asol/system-logs-core/server';
 
 function attachDevTraceHeaders(response: NextResponse): NextResponse {
   if (!isDevelopment) return response;
@@ -153,6 +154,7 @@ export function mapServiceError(error: unknown): NextResponse {
     'dataHealthOrderPurgeBusy',
     'dataHealthOrderPurgeSelectionChanged',
     'dataHealthOrderPurgeIncomplete',
+    'dataHealthDevelopmentOnly',
     'devCloudBackupDevelopmentOnly',
     'devCloudBackupFileRequired',
     'devCloudBackupFileInvalid',
@@ -229,6 +231,7 @@ async function logMappedServiceError(
   statusCode: number,
 ) {
   if (typeof message === 'string' && message.includes('/api/system-logs')) return;
+  if (isErrorAlreadyLogged(error)) return;
   await logServerSystemIssue({
     error,
     feature: 'BusinessAPI',

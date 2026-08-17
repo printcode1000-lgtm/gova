@@ -17,6 +17,7 @@ import { runRevocationFlowTests } from "./revocation-flow.test";
 import { runRuntimeUpdateServiceTests } from "./runtime-update-service.test";
 import { runRuntimeSealingTests } from "./runtime-sealing.test";
 import { runPublishingExportsTests } from "./publishing-exports.test";
+import { runPlatformVersionTruthTests } from "./platform-version-truth.test";
 import { runNativeCompatibilityTests } from "./native-compatibility.test";
 import { runR2RetryTests } from "./r2-retry.test";
 import { loadOtaEnvironment } from "../publishing";
@@ -31,6 +32,7 @@ async function main(): Promise<void> {
   console.log("1. Unit Tests:");
   await runVersionOrderingTests();
   await runContentVersionTests();
+  runPlatformVersionTruthTests();
   await runCanonicalOrderTests();
   await runSignaturePayloadTests();
   await runCapabilityGateTests();

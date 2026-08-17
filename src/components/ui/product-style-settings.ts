@@ -1,5 +1,27 @@
-import type { ProductStyleComponents } from "@/components/product/product-component.types";
+export type {
+  RatingMode,
+  ProductImagesStyleSettings,
+  ProductRatingStyleSettings,
+  ProductPriceStyleSettings,
+  ProductOrderStyleSettings,
+  ProductMainDataStyleSettings,
+  ProductSpecificationsStyleSettings,
+  ProductVehicleSpecsStyleSettings,
+  ProductPropertySpecsStyleSettings,
+  ProductPharmacySpecsStyleSettings,
+  ProductSearchColumnSettings,
+  ProductStyleSettingsComponents,
+  ProductStyleSettings,
+  ProductComponentConfig,
+  ProductStyleComponents,
+} from "@asol/product-style-core";
 
-export { DEFAULT_PRODUCT_STYLE_COMPONENTS, createDefaultProductStyleComponents } from "./product-style-settings/product-style-settings.style-types";
-export type { RatingMode, ProductImagesStyleSettings, ProductRatingStyleSettings, ProductPriceStyleSettings, ProductOrderStyleSettings, ProductMainDataStyleSettings, ProductSpecificationsStyleSettings, ProductVehicleSpecsStyleSettings, ProductPropertySpecsStyleSettings, ProductPharmacySpecsStyleSettings, ProductSearchColumnSettings, ProductStyleSettingsComponents, ProductStyleSettings } from "./product-style-settings/product-style-settings.style-types";
-export { normalizeProductStyleComponents, toProductStyleComponents } from "./product-style-settings/product-style-settings.style-defaults";
+export {
+  DEFAULT_PRODUCT_STYLE_COMPONENTS,
+  createDefaultProductStyleComponents,
+  normalizeProductStyleComponents,
+  toProductStyleComponents,
+  parseProductStyleSettings,
+  isValidProductStyleSettings,
+  productStylePublicPath,
+} from "@asol/product-style-core";

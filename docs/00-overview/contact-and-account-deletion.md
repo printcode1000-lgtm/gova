@@ -32,7 +32,21 @@ Orders, payments, returns, disputes, and audit logs involve multiple parties and
 
 ### Operational Note
 
-The deletion process spans user, profile, product, and order databases as well as image storage. Core data deletion executes in a sequential order that prevents active logins, while image removal handles per-file failures independently and logs errors for operational auditing.
+The deletion process spans user, profile, product, and order databases as well as image storage. Core data deletion executes in a fixed step order defined by `ACCOUNT_DELETION_STEP_ORDER` in `@asol/auth-core`. Image removal runs after database cleanup with up to three retry attempts per file; failures are returned in the API response under `imagesFailed` and logged server-side.
+
+### Deletion Registry and Contract Test
+
+- Authoritative table and image-source manifest: `packages/auth-core/src/domain/account-deletion-registry.ts`.
+- `npm run test:account-deletion-registry` scans SQL migrations for user-owned tables and fails if any table is not covered by the registry, an exempt list, or a documented `ON DELETE CASCADE` child of `user_profiles`.
+- When adding migrations that store per-user data, update the registry in the same change.
+
+### API Response Fields
+
+Successful deletion returns:
+
+- `stepsCompleted` — ordered step ids executed on the server.
+- `imagesAttempted`, `imagesDeleted` — storage cleanup counts.
+- `imagesFailed` — per-key failures after retries (`profileId`, `key`, `attempts`, `error`).
 
 ### Implementation Reference
 

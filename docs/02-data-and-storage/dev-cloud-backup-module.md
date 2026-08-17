@@ -29,9 +29,9 @@ The module refuses to run unless all these conditions are true:
 - `VERCEL` is not set
 - the request is authenticated as super-admin
 
-This keeps the tool out of production and static output. The page may render in
-other environments, but every server action returns
-`devCloudBackupDevelopmentOnly`.
+This keeps the tool out of production and static output. Outside development the page
+returns `404` and every server action returns `devCloudBackupDevelopmentOnly`. The
+sidebar hides the link in production builds and native clients.
 
 ## Zip Layout
 

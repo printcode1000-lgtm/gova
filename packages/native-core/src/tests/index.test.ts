@@ -12,6 +12,7 @@ import "./unit/share-validator.test";
 import "./unit/share-queue.test";
 import "./unit/schemas.test";
 import "./unit/lazy-plugin.test";
+import "./unit/native-crash-payload.test";
 import "./integration/share-receive-flow.test";
 import "./integration/native-core-host-behaviour.test";
 

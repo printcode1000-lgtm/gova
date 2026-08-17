@@ -52,6 +52,8 @@ const ingestRoute = read("src/app/api/system-logs/ingest/route.ts");
 const apiService = read(
   "src/features/system-logs/services/persistent-system-log-api-service.ts",
 );
+const globalError = read("src/app/global-error.tsx");
+const collector = read("src/features/system-logs/SystemLogCollector.tsx");
 
 assert.equal(listRoute.includes("assertSuperAdminRequest(request)"), true);
 assert.equal(listRoute.includes('searchParams.get("uid")'), false);
@@ -60,10 +62,12 @@ assert.equal(
   ingestRoute.includes('addBatch(inputs, "untrusted-client")'),
   true,
 );
-assert.equal(ingestRoute.includes("values.length > 25"), true);
-assert.equal(ingestRoute.includes("isRateLimited(request)"), true);
+assert.equal(ingestRoute.includes("validateIngestBatchSize"), true);
+assert.equal(ingestRoute.includes("isIngestRateLimited(request)"), true);
 assert.equal(ingestRoute.includes("systemLogRateLimited"), true);
 assert.equal(listRoute.includes("sessionTokenInvalid"), true);
 assert.equal(listRoute.includes("invalidSystemLogLevel"), true);
+assert.equal(globalError.includes("reportSystemIssue"), true);
+assert.equal(collector.includes("installGlobalCapture"), true);
 
 console.log("System log security tests passed.");

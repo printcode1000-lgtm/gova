@@ -217,12 +217,13 @@ export const STATIC_ROUTE_IGNORELIST = [
   "app/.well-known",
   "app/dev",
   "app/super-admin/catalog",
+  "app/super-admin/data-health",
+  "app/super-admin/dev-cloud-backup",
   "app/super-admin/google-play-store-assets",
   "app/super-admin/google-play-console",
   "app/super-admin/ota-releases",
   "app/orders/[orderId]",
   "app/s",
-  "app/test1",
 ] as const;
 
 export function copyIfExists(source: string, destination: string): void {

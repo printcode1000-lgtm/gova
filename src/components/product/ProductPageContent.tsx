@@ -31,6 +31,7 @@ import type {
   ProductMode,
   ProductStyleComponents,
 } from "./product-component.types";
+import { createDefaultProductStyleComponents } from "@/components/ui/product-style-settings";
 import { createPharmacyInitialDetails } from "@/features/pharmacy-profile-catalog/utils/pharmacy-initial-fields";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
@@ -429,7 +430,7 @@ export function ProductPageContent({
     <main className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6">
       <ProductComponentsRenderer
         mode={mode}
-        components={style?.components ?? {}}
+        components={style?.components ?? createDefaultProductStyleComponents()}
         product={details}
         onProductChange={updateDetails}
         productId={product?.id ?? ""}

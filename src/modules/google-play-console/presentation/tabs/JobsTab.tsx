@@ -3,13 +3,13 @@
 import { Download, Square } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { useReleaseJobs } from "../../hooks/use-release-jobs";
 import { LogViewer } from "../components/LogViewer";
 import { ReleaseJobStopDialog } from "../components/ReleaseJobStopDialog";
 
 export function JobsTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const jobs = useReleaseJobs();
   const selected = jobs.jobs.find((job) => job.id === jobs.selectedJobId) ?? jobs.jobs[0];
   return (

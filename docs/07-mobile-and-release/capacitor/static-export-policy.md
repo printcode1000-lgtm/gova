@@ -81,7 +81,6 @@ Nothing below these directories may enter `out/`, R2, Android, or iOS.
 | `app/dev`                   | No `/dev/*` output             | Development diagnostics are not production pages                                                    |
 | `app/super-admin/catalog`   | No Catalog Studio output       | Filesystem editor is desktop web development tooling only                                            |
 | `app/orders/[orderId]`      | No dynamic order-detail output | Static clients use `/orders/details?orderId=...`; the dynamic route remains for hosted compatibility |
-| `app/test1`                 | No `/test1` output             | UI test page is not a production page                                                                |
 
 The original routes remain available during local development.
 

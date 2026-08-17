@@ -20,9 +20,12 @@ src/
 `-- app/api/                         # Business API routes
 
 public/sync_data/
-|-- sync_sqlite/                     # local databases and shards
+|-- sync_sqlite/                     # local databases and shards (@asol/dev-core paths)
+|-- sync_file/images/                # local image files (@asol/dev-core paths)
 |-- schema-sync-report.json
 `-- *-schema-sync-report.json
+
+Local development path contract: [dev-core-module.md](../dev-core-module.md).
 
 services/
 |-- notifications/                   # independent module, own Vercel account
@@ -59,7 +62,8 @@ packages/                            # four layers - see ../module-isolation-rul
 |-- profiles-composition/            # profiles composition layer
 |-- native-core/                     # sealed native capability boundary
 |-- ota-core/                        # sealed OTA updates & release gate boundary
-`-- storage-core/                    # central binary & R2 image storage boundary
+|-- storage-core/                    # central binary & R2 image storage boundary
+`-- dev-core/                        # sealed local development path contract
 
 src/modules/
 |-- notification-bridge/             # re-exports @asol/account-bridge/notifications

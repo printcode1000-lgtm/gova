@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { isDevelopment } from "@/core/config";
-import { CatalogStudioPage } from "@/features/catalog-studio";
 
-export default function CatalogStudioRoute() {
+export default function SuperAdminCatalogStudioRedirect() {
   if (!isDevelopment) notFound();
-  return <CatalogStudioPage />;
+  redirect("/dev/catalog-studio");
 }

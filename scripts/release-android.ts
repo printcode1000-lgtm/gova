@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { loadReleaseEnvironment } from "./load-release-env";
 import { reportStage } from "./release-stage";
 import {
   NATIVE_VERSION_FLAG,
@@ -12,6 +13,7 @@ const tsxCliPath = path.resolve("node_modules", "tsx", "dist", "cli.mjs");
 const capBuildPath = path.resolve("scripts", "cap-build.ts");
 const signedBuildPath = path.resolve("scripts", "build-android-signed.ts");
 const releaseArguments = process.argv.slice(2);
+loadReleaseEnvironment();
 const environment = withoutVsCodeDebuggerEnv(process.env);
 
 /**

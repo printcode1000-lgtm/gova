@@ -44,11 +44,14 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/server-env.ts',
   'src/core/config/server-env.values.ts',
   'src/core/config/catalog-studio.server.ts',
+  'src/core/config/system-logs.server.ts',
   'src/instrumentation.ts',
   'src/modules/data-access/domains/marketplace-orders/db/config.ts',
+  'src/modules/data-health/domain/development-guard.server.ts',
   'src/modules/dev-cloud-backup/domain/development-guard.server.ts',
   'src/modules/google-play-console/domain/development-guard.server.ts',
   'src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
+  'src/modules/data-health/tests/development-guard.test.ts',
 ]);
 
 /**
@@ -140,6 +143,7 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/modules/data-access/domains/') && p.includes('/commands/')) return 'operations';
   if (p.startsWith('src/modules/data-access/domains/') && p.includes('/queries/')) return 'operations';
   if (p === 'src/modules/data-health/domain/execution-context.server.ts') return 'configuration';
+  if (p === 'src/modules/data-health/domain/development-guard.server.ts') return 'configuration';
   if (p === 'src/modules/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
   if (p === 'src/modules/google-play-console/domain/development-guard.server.ts') return 'configuration';
   if (p.startsWith('src/modules/release-commands/tests/')) return 'dev-tools';
@@ -148,6 +152,7 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/modules/data-health/services/')) return 'server-services';
   if (p.startsWith('src/modules/dev-cloud-backup/services/')) return 'server-services';
   if (p.startsWith('src/modules/google-play-console/services/')) return 'server-services';
+  if (p.startsWith('src/modules/data-health/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/dev-cloud-backup/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/marketplace-orders/api/') || p.startsWith('src/modules/marketplace-orders/services/')) return 'server-services';
   if (p.includes('/application/') && p.includes('/features/storage/')) return 'server-services';

@@ -3,14 +3,14 @@
 import { RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { usePlayConsoleSnapshot } from "../../hooks/use-play-console-snapshot";
 import { EndpointCard } from "../components/EndpointCard";
 import { InfoRow } from "../components/InfoRow";
 import { Metric } from "../components/Metric";
 
 export function PlayConsoleTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const { snapshot, busy, error, refresh } = usePlayConsoleSnapshot();
   return (
     <section className="space-y-4">

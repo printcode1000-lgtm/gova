@@ -104,13 +104,25 @@ and `cap-build.ts` both call it from `@asol/ota-core`.
 
 | Truth | Source | Function |
 | :-- | :-- | :-- |
-| Current native + content version | Working tree (`build.gradle` is authoritative) | `readCurrentVersions()` |
+| Published Android native version | **Google Play `production` track only** | `requireGooglePlayProductionNativeVersion()` |
+| Published iOS native version | **App Store Connect `READY_FOR_SALE`** | `requireIosProductionNativeVersion()` |
 | Live OTA manifest on R2 | Read-only GET of `app-updates/manifest.json` | `readLiveOtaRelease()` |
-| Google Play track versions | `androidpublisher.googleapis.com` API | `readLivePlayRelease(track)` |
+| Native change detection | Git `native-v*` baseline + working tree diff | `inspectNativeCompatibility()` |
 
-No fastlane calls for reading versions. No second Play client. Credential resolution lives in
-`publishing/adapters/google-play.adapter.ts`; `google-play-credentials.server.ts` re-exports from
-there.
+**Build ≠ Release.** Version numbers advance only after actual publication on the
+platform store (Android/iOS) or on R2 (OTA). Local `build.gradle`, git tags, and
+repeated builds must never advance targets. When local numbers drift, release
+planning corrects them from live truth and fails closed if truth cannot be read.
+
+`versionCode = major * 10000 + minor * 100 + patch` is the only Android mapping.
+`androidVersionNameFromCode()` inverts it when reading Google Play production.
+
+Android and iOS native versions are independent. A store release updates Android
+project files only; iOS is updated only through its own iOS release path.
+
+No fastlane calls for reading versions. Credential resolution lives in
+`publishing/adapters/google-play.adapter.ts` and
+`publishing/adapters/app-store-connect.adapter.ts`.
 
 ---
 

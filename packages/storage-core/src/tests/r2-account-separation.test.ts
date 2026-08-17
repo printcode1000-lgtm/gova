@@ -111,6 +111,29 @@ export async function runR2AccountSeparationTest() {
 
   // ── 4. Product images are stored as keys, never as URLs ──────────────────────
 
+  const productRowModule = stripComments(
+    read('packages', 'product-core', 'src', 'server', 'product-row.ts'),
+  );
+  const serializeImages = /export function serializeProductImages\([\s\S]*?\n}/.exec(
+    productRowModule,
+  );
+  assert.ok(serializeImages, 'serializeProductImages not found in @asol/product-core/server');
+  assert.match(
+    serializeImages[0],
+    /JSON\.stringify\(\s*images\.map\(\(image\) => \(\{ imageKey: image\.imageKey \}\)\)/,
+    'products.images_json must persist keys only.',
+  );
+
+  const parseProductImages = /export function parseProductImages\([\s\S]*?\n}/.exec(
+    productRowModule,
+  );
+  assert.ok(parseProductImages, 'parseProductImages not found in @asol/product-core/server');
+  assert.doesNotMatch(
+    parseProductImages[0],
+    /url:\s*image\.url/,
+    'parseProductImages must not require a stored `url`. Rows hold keys only.',
+  );
+
   const repository = stripComments(
     read(
       'src',
@@ -124,16 +147,8 @@ export async function runR2AccountSeparationTest() {
   );
   assert.match(
     repository,
-    /JSON\.stringify\(\s*record\.images\.map\(\(image\) => \(\{ imageKey: image\.imageKey \}\)\)/,
-    'products.images_json must persist keys only.',
-  );
-
-  const parseImages = /function parseImages\([\s\S]*?\n}/.exec(repository);
-  assert.ok(parseImages, 'parseImages not found in product-repository.ts');
-  assert.doesNotMatch(
-    parseImages[0],
-    /image\.url/,
-    'parseImages requires a stored `url`. Rows hold keys only.',
+    /productRowValues/,
+    'product-repository must persist rows through @asol/product-core/server row mapping.',
   );
 
   // ── 5. R2 Storage Accounts distinctness ───────────────────────────

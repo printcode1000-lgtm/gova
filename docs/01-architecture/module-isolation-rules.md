@@ -115,25 +115,56 @@ it for any package.
 
 ## Current status
 
-Fourteen sealed packages, arranged in four layers. The layering is not decoration — see
+Eighteen sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
 Doors and app-edge counts below are measured, not intended. Re-measure with:
 
 ```bash
-node -e "for(const p of require('fs').readdirSync('packages')) try{console.log(p, Object.keys(require('./packages/'+p+'/package.json').exports||{}).join(' '))}catch{}"
+node -e "for(const p of require('fs').readdirSync('packages')) try{const m=require('./packages/'+p+'/package.json'); if(m.name?.startsWith('@asol/')) console.log(m.name, Object.keys(m.exports||{}).join(' '))}catch{}"
 ```
 
-| # | Rule | native-core | ota-core | storage-core | notifications-core | account-declarations | vercel-deploy-core | service-mirror-core | account-bridge | the four `*-composition` | auth-core | catalog-core |
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| 1 | Core Module | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 2 | Single public API | ✅ 2 doors | ✅ 3 doors | ✅ 2 doors | ✅ 4 doors, each earned | ✅ 1 + per-account | ✅ 1 | ✅ 1 | ✅ 2 doors | ✅ 1 each | ✅ 2 doors | ✅ 2 doors |
-| 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 7 | Independent package | ✅ 0 edges | ✅ 5, designated + pinned | ✅ 1, designated | ✅ 4, designated + pinned | ✅ 0 imports | ✅ 0 edges | ✅ 0 edges | ✅ 3, pinned | ✅ by design — see below | ✅ 0 edges | ✅ 0 edges |
-| 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+### Full inventory (18 packages)
+
+| Package | Layer | Doors | `test:*-core` gate |
+| :-- | :-- | :-- | :-- |
+| `account-bridge` | 4 | `.` · `./notifications` | — |
+| `account-declarations` | 3 | `.` · per-account | — |
+| `orders-composition` | 2 | `.` | `test:compositions` |
+| `products-composition` | 2 | `.` | `test:compositions` |
+| `profiles-composition` | 2 | `.` | `test:compositions` |
+| `notifications-composition` | 2 | `.` | `test:compositions` |
+| `native-core` | 1 | `.` · `./scripts/validate-android-r8-policy` | `test:native-core` |
+| `ota-core` | 1 | `.` · `./publishing` · `./server` | `test:ota-core` |
+| `storage-core` | 1 | `.` · `./server` | `test:storage-core` |
+| `notifications-core` | 1 | `.` · `./server` · `./builder` · `./providers` | `test:notifications-core` |
+| `auth-core` | 1 | `.` · `./server` | `test:auth-core` |
+| `catalog-core` | 1 | `.` · `./server` | `test:catalog-core` |
+| `product-style-core` | 1 | `.` · `./server` | `test:product-style-core` |
+| `product-core` | 1 | `.` · `./server` | `test:product-core` |
+| `dev-core` | 1 | `.` · `./server` | `test:dev-core` |
+| `system-logs-core` | 1 | `.` · `./server` | `test:system-logs-core` |
+| `vercel-deploy-core` | 1 | `.` | `test:vercel-deploy-core` |
+| `service-mirror-core` | 1 | `.` | `test:service-mirror-core` |
+
+Compositions are gated collectively by `test:compositions`, not individual `test:*-core` scripts.
+
+### Rule matrix (layer-1 capability packages)
+
+| # | Rule | native-core | ota-core | storage-core | notifications-core | auth-core | catalog-core | product-style-core | product-core | dev-core | system-logs-core | vercel-deploy-core | service-mirror-core |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| 1 | Core Module | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 2 | Single public API | ✅ 2 doors | ✅ 3 doors | ✅ 2 doors | ✅ 4 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 1 | ✅ 1 |
+| 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 7 | Independent package | ✅ 0 edges | ✅ 5, designated + pinned | ✅ 1 → dev-core | ✅ 4, designated + pinned | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges |
+| 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+Other sealed packages (`account-declarations`, `account-bridge`, the four `*-composition` packages)
+follow the same eight rules; their shapes differ (data-only declarations, device bridge, layer-2
+wiring) and are documented in their own sections below rather than duplicated in this matrix.
 
 Rule 2 counts doors rather than asserting one. `native-core`'s second door is a validation script
 the release console runs; the rest are justified where they appear. **A package with more doors than
@@ -166,7 +197,8 @@ the contract rather than a matter of taste.
   layer 3  @asol/account-declarations    pure data: project, token var, env keys, entry points
   layer 2  @asol/*-composition           the only place that knows an account uses db AND images
   layer 1  vercel-deploy-core, service-mirror-core, storage-core, ota-core,
-           native-core, notifications-core, auth-core, catalog-core
+           native-core, notifications-core, auth-core, catalog-core,
+           product-style-core, product-core, dev-core, system-logs-core
                                          capability logic, held once
 ```
 
@@ -175,7 +207,8 @@ Measured dependencies, rather than intended ones:
 | Package | Imports |
 | :-- | :-- |
 | `account-declarations` | **nothing** — asserted by its own test |
-| `native-core`, `storage-core`, `service-mirror-core`, `notifications-core`, `auth-core` | nothing |
+| `native-core`, `service-mirror-core`, `notifications-core`, `auth-core`, `catalog-core`, `product-style-core`, `product-core`, `dev-core`, `system-logs-core` | nothing |
+| `storage-core` | `dev-core` (local path contract for `LocalStorageProvider`) |
 | `vercel-deploy-core` | `account-declarations` |
 | `orders-`, `products-`, `profiles-composition` | `account-declarations` |
 | `notifications-composition` | `account-declarations`, `notifications-core` |
@@ -243,6 +276,11 @@ Two groupings are worth the explanation they carry:
 - **`catalog` is separate from `database`** in `products`. Categories come from JSON inside the
   bundle, not from Turso. Filing them under `database` would imply a query that never happens, and
   would make a missing database credential look like it should break them.
+- **Product Style and product domain contracts** (`@asol/product-style-core`, `@asol/product-core`)
+  are layer-1 packages with zero `@asol/*` edges. The `products` account's `catalog` task still
+  reaches `categoryService` in the app; Product Style JSON under `public/product/style/` is read
+  through `@asol/product-style-core/server` by search and by `/product?mode`, and is edited from
+  `/dev/category-selector` through the dev API wrapper.
 - **`images` is marked `writeAccess: false`** in `products` and `profiles`. Both hold `R2_*` but no
   `R2_API_TOKEN`: they can turn a stored key into a public URL and cannot create buckets, change
   CORS, or upload. The task is named so the narrowness reads as deliberate rather than unfinished.
@@ -551,6 +589,103 @@ thin re-export shim. Full map: [catalog-core-module.md](./catalog-core-module.md
 - **`./server`** — `validateCatalogV3`, `resolveCatalogRoots`. Node `fs` only; no app imports.
 
 Measured rule 7: **0 import edges**. `test:catalog-core` gates `build`, `build:static`, and `test`.
+
+---
+
+## `@asol/product-style-core` — what was sealed, and what was not
+
+Product Style types, normalization, JSON persistence, and search-column resolution were split
+across UI helpers, a dev API route, and `product-search-fields.server.ts`.
+
+| Concern | In `@asol/product-style-core` | Stays in the app |
+| :-- | :-- | :-- |
+| Product Style types + defaults | yes | — |
+| `normalizeProductStyleComponents` | yes | — |
+| Style JSON read/write + `index.json` rebuild | yes (`/server`) | — |
+| Search-column filtering helper | yes (`/server`) | — |
+| `DeveloperCategorySelector` + style editors | — | `src/components/` |
+| `api/dev/product-style/route.ts` | — | thin dev wrapper |
+| `public/product/style/*.json` | — | static data |
+| `categoryService.resolveProductSelection` | — | `src/features/categories/` |
+
+Two doors: `@asol/product-style-core` and `@asol/product-style-core/server`. Full map:
+[product-style-core-module.md](./product-style-core-module.md).
+
+Measured rule 7: **0 import edges**. `test:product-style-core` gates `build`, `build:static`, and `test`.
+
+---
+
+## `@asol/product-core` — what was sealed, and what was not
+
+The product entity, normalization, and row mapping lived in `features/product` and
+`data-access/domains/product`.
+
+| Concern | In `@asol/product-core` | Stays in the app |
+| :-- | :-- | :-- |
+| `ProductDetails` / `ProductRecord` types | yes | — |
+| `createEmptyProductDetails`, `normalizeProductDetails` | yes | — |
+| `PRODUCT_COLUMNS`, `mapProductRow`, `productRowValues` | yes (`/server`) | — |
+| `ProductService` orchestration | — | `features/product/services` |
+| SQL execution + profile counts | — | `product-repository.ts` |
+| Product page UI | — | `src/components/product/` |
+
+Two doors: `@asol/product-core` and `@asol/product-core/server`. Full map:
+[product-core-module.md](./product-core-module.md).
+
+Measured rule 7: **0 import edges**. `test:product-core` gates `build`, `build:static`, and `test`.
+
+---
+
+## `@asol/dev-core` — what was sealed, and what was not
+
+Local development paths and guards were duplicated across `environment.ts`, storage providers,
+tooling scripts, and per-module `development-guard.server.ts` files. The sealed package holds the
+contract only:
+
+| Concern | In `@asol/dev-core` | Stays in the app |
+| :-- | :-- | :-- |
+| `public/sync_data` path segments | yes | — |
+| SQLite filename constants | yes | — |
+| `sqliteFileNameForShard()` | yes | — |
+| Development predicates + shared guards | yes | — |
+| Absolute path resolvers | yes (`/server`) | — |
+| `getServerRuntimeContext()` | — | `core/config` |
+| SQLite DB clients | — | `data-access` |
+| `LocalStorageProvider` | — | `@asol/storage-core` (imports paths from here) |
+| `db:ensure` / shard tooling | — | `data-access/tooling` |
+| Dev UI and backup modules | — | `src/app/dev`, `src/modules/*` |
+
+Two doors: `@asol/dev-core` and `@asol/dev-core/server`. Full map:
+[dev-core-module.md](./dev-core-module.md).
+
+Measured rule 7: **0 import edges** into other packages. `test:dev-core` gates `build`,
+`build:static`, and `test`.
+
+---
+
+## `@asol/system-logs-core` — zero silent failures
+
+Central error telemetry was spread across `src/features/system-logs/`, API routes, and
+`data-access` repositories. The sealed package holds everything that must stay identical across
+Web, Android WebView, iOS WebView, and server:
+
+| Concern | In `@asol/system-logs-core` | Stays in the app |
+| :-- | :-- | :-- |
+| Unified global capture + dedupe | yes | — |
+| Memory store (Super Admin live view) | yes | — |
+| Fingerprinting, sanitization, correlation IDs | yes | — |
+| SQLite repository + retention + alerts | yes (server door) | — |
+| Ingest validation + rate limiting | yes (server door) | — |
+| SSE stream hub | yes (server door) | — |
+| Super Admin UI | — | `SuperAdminLogsPage.tsx` |
+| Port wiring (DB, monitor, native crash) | — | `system-logs-core-bootstrap*.ts` |
+
+Two doors: `@asol/system-logs-core` and `@asol/system-logs-core/server`. The application registers
+database and monitor ports through bootstrap modules — the same inversion pattern as `ota-core`.
+
+Measured rule 7: **0 import edges** into other `@asol/*` packages. `test:system-logs-core` gates
+`build`, `build:static`, and `test`. A scenario-coverage test asserts every capture surface file
+exists so a removed handler cannot pass CI silently.
 
 ---
 

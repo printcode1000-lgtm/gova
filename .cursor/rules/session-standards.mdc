@@ -25,12 +25,26 @@ These rules apply to **every session and every task** in this project. Do not sk
 - **All** project documentation lives **only** under `docs/`.
 - Documentation in `docs/` must be written in **English**.
 - Do **not** add or update documentation in other locations (README fragments, inline doc files outside `docs/`, Arabic docs in the repo) unless the user explicitly asks.
-- Before changing behavior, read relevant `docs/` files. When behavior changes (not a trivial bug fix), update the matching `docs/` file in the same change.
+
+### Docs-first workflow (mandatory)
+
+Before changing **any** part of the project:
+
+1. **Search `docs/`** for files relevant to that area (feature, package, API, module).
+2. **Read and understand** them — current behavior, constraints, architecture, and contracts.
+3. Only then start editing code.
+
+When making **any** modification to an area:
+
+- **Update the matching `docs/` files in the same change** whenever the edit affects behavior, APIs, data contracts, architecture, configuration, or operational steps for that area.
+- A pure typo or comment-only fix with zero behavioral impact does not require a doc update.
+- If no doc exists yet for that area and the change is non-trivial, add or extend the appropriate file under `docs/`.
 
 ## Quick checklist
 
 | Do | Don't |
 |---|---|
 | Reply in Arabic | Use browser/preview for verification |
-| Write docs in `docs/` in English | Put project docs outside `docs/` |
-| Read `docs/` before editing an area | Write Arabic in `docs/` |
+| Read `docs/` for the area **before** editing | Start coding without reading relevant docs |
+| Update matching `docs/` in the same change | Leave docs stale after a behavior change |
+| Write docs in `docs/` in English | Put project docs outside `docs/` or write Arabic in `docs/` |

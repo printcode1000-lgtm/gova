@@ -1,0 +1,53 @@
+---
+description: Mandatory zero-silent-failure system logs compliance for all code changes
+alwaysApply: true
+---
+
+# System Logs Compliance (always binding)
+
+Every change in this repository must preserve the **zero silent failure** contract.
+No error, break, or gap may disappear without a registration path.
+
+## Before editing any feature
+
+1. Read `docs/06-super-admin-and-operations/super-admin-live-logs.md`.
+2. Read `docs/01-architecture/module-isolation-rules.md` (`@asol/system-logs-core` section).
+
+## Mandatory capture rules
+
+| Situation | Required action |
+|-----------|-----------------|
+| Caught failure in business logic | `reportSystemIssue()` or `reportPreAuthFailure()` |
+| Pre-auth critical file (`validate:error-logging` list) | `reportPreAuthFailure()` in every catch |
+| API route | `runTracedBusinessRoute()` wrapper **or** catch + `mapServiceError()` |
+| React render failure | `RouteErrorFallback` or error boundary |
+| New global failure surface | wire into `@asol/system-logs-core` capture |
+
+## Forbidden patterns
+
+- Empty `catch {}` blocks (except approved generated bootstrap scripts)
+- `.catch(() => undefined)` / `.catch(() => null)` without logging context
+- Direct imports of legacy `persistent-system-log-repository` or internal sanitizer paths
+- Deep imports of `@asol/system-logs-core/*` (use declared doors only)
+- Removing `SystemLogCollector`, `SystemLogErrorBoundary`, or bootstrap registration from root layout
+
+## Package boundaries
+
+- Browser code: `@asol/system-logs-core`
+- Server code: `@asol/system-logs-core/server`
+- Port wiring only in `src/features/system-logs/system-logs-core-bootstrap*.ts`
+- Native crashes: `asol:native-crash` via `NativeCrashPlugin` in `@asol/native-core`
+
+## CI gates (must stay green)
+
+```text
+npm run validate:error-logging
+npm run test:system-logs-core
+npm run architecture:check
+```
+
+Any change that breaks these gates is incomplete.
+
+## Docs
+
+When behavior, APIs, capture paths, or operational steps change, update matching files under `docs/` in the same change (English only).

@@ -4,13 +4,13 @@ import * as React from "react";
 import { Plus, Save, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { useStoreAssets } from "../../hooks/use-store-assets";
 import type { GooglePlayStoreListing } from "../../domain/store-assets-types";
 import { Field } from "../components/Field";
 
 export function StoreTextTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const store = useStoreAssets();
   const [acknowledged, setAcknowledged] = React.useState(false);
   if (!store.snapshot) return <div className="p-4 text-sm">{t("releaseConsole.loading")}</div>;

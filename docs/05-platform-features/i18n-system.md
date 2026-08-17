@@ -9,16 +9,20 @@ Asol uses a **lightweight custom i18n layer** — no `next-intl` dependency. All
 ```
 src/
 ├── locales/
-│   ├── ar.json          # Arabic dictionary (source of truth for keys)
-│   └── en.json          # English dictionary (must match ar.json keys)
+│   ├── ar.json          # Arabic dictionary (source of truth for public UI keys)
+│   ├── en.json          # English dictionary (must match ar.json keys)
+│   └── admin-ar.json    # Arabic-only copy for /super-admin and /dev surfaces
 └── lib/i18n/
     ├── index.ts         # Public API
     ├── types.ts         # Locale, TranslationParams
     ├── constants.ts     # DEFAULT_LOCALE, SUPPORTED_LOCALES, isRtlLocale()
     ├── dictionaries.ts  # Loads JSON files, exports TranslationKey type
+    ├── admin-ar.ts      # Arabic-only admin/dev translator
+    ├── arabic-only-routes.ts  # Route + source-root guards
     ├── translate.ts     # translate(), interpolate(), dev missing-key warnings
     ├── apply-locale.ts  # Sets <html lang dir data-locale>
-    └── use-translation.ts  # React hook
+    ├── use-translation.ts  # React hook for public UI
+    └── use-admin-arabic.ts # React hook for admin/dev UI
 ```
 
 **App preferences** (`src/lib/preferences/`) store the active locale in AsolDB (`IndexedDB`) under the `appSettings` store with the key `app-preferences` as `locale` (`'ar' | 'en'`).
@@ -116,6 +120,27 @@ Because preferences are loaded asynchronously from AsolDB, rendering the page im
 | CSS reveals `body` with a smooth 150ms transition once both flags are `"true"` | `globals.css` |
 
 See [`doc/problems/english-locale-hydration-flash.md`](../problems/english-locale-hydration-flash.md) for the full root-cause analysis.
+
+---
+
+## Arabic-only admin surfaces
+
+`/super-admin/*` and `/dev/*` are **not** part of the public bilingual dictionaries.
+
+| Surface | Copy source | Hook |
+|---------|-------------|------|
+| Super Admin pages | Hardcoded Arabic in components, or `src/locales/admin-ar.json` | `useAdminArabic()` |
+| Dev tools (`/dev/*`) | Same | `useAdminArabic()` or hardcoded Arabic |
+| Super Admin sidebar labels | Hardcoded Arabic in `AppSidebar.tsx` | none |
+
+Rules:
+
+1. Never add `releaseConsole.*` or other admin-only keys to `ar.json` / `en.json`.
+2. Put admin/dev UI strings in `src/locales/admin-ar.json` (Arabic only) or inline in the component.
+3. Use `useAdminArabic()` instead of `useTranslation()` under the guarded source roots listed in `src/lib/i18n/arabic-only-routes.ts`.
+4. `useTranslation()` still forces `locale = 'ar'` on `/super-admin/*` and `/dev/*` as a safety net, but new code must not rely on that.
+5. `npm run test:i18n-arabic-only-routes` fails if guarded files import `@/lib/i18n` or call `useTranslation()`.
+6. Admin/dev UI copy is hardcoded Arabic in components (for example the operation monitor and super-admin log panels) or loaded from `admin-ar.json` — never from `ar.json` / `en.json`.
 
 ---
 

@@ -1,1 +1,5 @@
-export * from "./repositories/persistent-system-log-repository";
+export {
+  persistentSystemLogService,
+  logServerSystemIssue,
+  systemLogsRepository,
+} from '@asol/system-logs-core/server';

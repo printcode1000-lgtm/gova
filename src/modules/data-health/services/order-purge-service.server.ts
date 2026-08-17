@@ -6,6 +6,7 @@ import { imageStorageOrchestrator } from "@asol/storage-core/server";
 import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
 
 import { resolveDataHealthExecutionContext } from "../domain/execution-context.server";
+import { assertDataHealthAllowed } from "../domain/development-guard.server";
 import { DATA_HEALTH_POLICY } from "../domain/policy";
 import type {
   DataHealthOrderPurgePlan,
@@ -38,6 +39,7 @@ function confirmationText(
 
 export class OrderPurgeService {
   async createPlan(adminUid: string): Promise<DataHealthOrderPurgePlan> {
+    assertDataHealthAllowed();
     const execution = resolveDataHealthExecutionContext();
     const snapshot = await orderPurgeRepository.snapshot();
     if (snapshot.orderCount === 0) throw new Error("dataHealthNoOrdersToPurge");
@@ -77,6 +79,7 @@ export class OrderPurgeService {
     planId: string;
     confirmationText: string;
   }): Promise<DataHealthOrderPurgeResult> {
+    assertDataHealthAllowed();
     const execution = resolveDataHealthExecutionContext();
     const plan = await orderPurgeRepository.getPlan(input.planId);
     if (!plan || text(plan.admin_uid) !== input.adminUid) {
@@ -163,7 +166,7 @@ export class OrderPurgeService {
         source: "server",
         consoleMethod: "server.info",
         message: `Order purge ${input.planId}: orders=${result.deletedOrders}, images=${result.deletedImages}, pending=${result.pendingImages}`,
-        page: "/super-admin/data-health",
+        page: "/dev/data-health",
         platform: "server",
         feature: "DataHealth",
         operation: "purge-all-orders",
@@ -196,6 +199,7 @@ export class OrderPurgeService {
   }
 
   async retryPendingImages(): Promise<{ deleted: number; pending: number }> {
+    assertDataHealthAllowed();
     await this.reconcilePreparedImages();
     return this.processPendingImages();
   }

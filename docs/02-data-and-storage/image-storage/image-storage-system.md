@@ -23,7 +23,7 @@ UI → ImageStorageService → API
 Server: Storage Profile → Provider → Persistence
 ```
 
-**Development** (`NODE_ENV=development`): `LocalStorageProvider` → `public/sync_data/sync_file/images/...`
+**Development** (`NODE_ENV=development`): `LocalStorageProvider` → paths from `@asol/dev-core` under `public/sync_data/sync_file/images/...`
 
 **Production / Capacitor / static**: profile provider (Cloudflare R2). The general R2 bucket uses `images/profile/...` for avatar/cover and `images/content/...` for advertisements and order images. Product images use the separate product R2 account under `images/products/...`.
 

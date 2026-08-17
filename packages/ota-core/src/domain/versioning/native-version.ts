@@ -18,3 +18,21 @@ export function androidVersionCodeFor(version: string): number {
     .map((part) => Number(part) || 0);
   return major * 10000 + minor * 100 + patch;
 }
+
+/** Inverse of `androidVersionCodeFor` using the project formula. */
+export function androidVersionNameFromCode(versionCode: number): string {
+  if (!Number.isInteger(versionCode) || versionCode < 0) {
+    throw new Error(`Invalid Android versionCode: ${versionCode}`);
+  }
+  const major = Math.floor(versionCode / 10000);
+  const remainder = versionCode % 10000;
+  const minor = Math.floor(remainder / 100);
+  const patch = remainder % 100;
+  const versionName = `${major}.${minor}.${patch}`;
+  if (androidVersionCodeFor(versionName) !== versionCode) {
+    throw new Error(
+      `Android versionCode ${versionCode} does not map to a canonical versionName`,
+    );
+  }
+  return versionName;
+}

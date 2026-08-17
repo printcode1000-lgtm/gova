@@ -16,7 +16,7 @@ public final class AsolNativeCore {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) {
-        // Initialization hook for native core plugins on launch
+        NativeCrashReporter.install()
     }
 
     public func handleEventsForBackgroundURLSession(

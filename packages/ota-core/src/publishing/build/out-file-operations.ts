@@ -202,6 +202,10 @@ export function auditCatalogStudioExcluded(): void {
   const forbiddenPaths = [
     path.join(rootOutDir, "super-admin", "catalog"),
     path.join(rootOutDir, "super-admin", "catalog.html"),
+    path.join(rootOutDir, "super-admin", "data-health"),
+    path.join(rootOutDir, "super-admin", "data-health.html"),
+    path.join(rootOutDir, "super-admin", "dev-cloud-backup"),
+    path.join(rootOutDir, "super-admin", "dev-cloud-backup.html"),
     path.join(rootOutDir, "super-admin", "google-play-store-assets"),
     path.join(rootOutDir, "super-admin", "google-play-store-assets.html"),
     path.join(rootOutDir, "super-admin", "google-play-console"),

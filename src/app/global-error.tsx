@@ -1,17 +1,35 @@
 "use client";
 
+import { useEffect } from "react";
+import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { registerSystemLogsCoreBrowserPorts } from "@/features/system-logs/system-logs-core-bootstrap";
+
 export default function GlobalError({
+  error,
   reset,
 }: {
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    registerSystemLogsCoreBrowserPorts();
+    const enriched = new Error(
+      error.digest ? `${error.message} (digest: ${error.digest})` : error.message,
+    );
+    enriched.name = error.name || "NextGlobalError";
+    enriched.stack = error.stack;
+    void reportSystemIssue({
+      feature: "NextJS",
+      operation: "global-error",
+      error: enriched,
+    });
+  }, [error]);
+
   return (
     <html lang="ar" dir="rtl">
       <body>
         <main className="container mx-auto max-w-lg px-4 py-12 text-center">
-          <h1 className="text-xl font-bold text-error">
-            حدث خطأ غير متوقع
-          </h1>
+          <h1 className="text-xl font-bold text-error">حدث خطأ غير متوقع</h1>
           <p className="mt-2 text-sm text-on-surface-variant">
             تم تسجيل تفاصيل الخطأ في سجل النظام.
           </p>

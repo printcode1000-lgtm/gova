@@ -105,5 +105,23 @@ To upgrade Capacitor or any plugin:
 | Unit | `unit/lazy-plugin.test.ts` | Every plugin loader sanitizes before returning (see below) |
 | Integration | `integration/share-receive-flow.test.ts` | Validator and queue together, including a share arriving **before** any listener attaches |
 | Integration | `integration/native-core-host-behaviour.test.ts` | Every public method settles as a `Result` on a host with no native shell |
+| Unit | `unit/native-crash-payload.test.ts` | `asol:native-crash` CustomEvent payload shape |
+
+### Native crash bridge (`NativeCrashPlugin`)
+
+Uncaught native exceptions on Android and iOS are captured before the process
+terminates, buffered if the WebView is not ready, and dispatched to JavaScript as:
+
+```javascript
+window.dispatchEvent(new CustomEvent('asol:native-crash', { detail: { name, message, operation, stack } }));
+```
+
+`@asol/system-logs-core` listens through the native crash port registered in
+`system-logs-core-bootstrap.ts` and forwards the record to persistent ingest.
+
+Android: `NativeCrashPlugin.java`, `NativeCrashReporter.java`, registered in
+`AsolNativeCore.onPreCreate`.
+
+iOS: `NativeCrashPlugin.swift`, handler installed in `AsolNativeCore.application`.
 
 This suite runs inside `build`, `build:static`, `npm test`, and the `native-core` GitHub workflow, so a breaking edit fails the release path rather than surfacing on a device.

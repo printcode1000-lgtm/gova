@@ -7,11 +7,13 @@ import { ok, err, type Result } from "../../errors/result";
 import { OtaCoreError } from "../../errors/ota-core-error";
 import { compareOtaCanonicalStrings } from "../../domain/release/canonical-order";
 import { compareOtaVersions } from "../../domain/versioning/version-ordering";
-import { nextContentVersion } from "../../domain/versioning/content-version";
+import { reconcileOtaTargetWithR2 } from "../../domain/versioning/platform-version-truth";
+import { nextNativePatchVersion } from "../../domain/versioning/native-version";
 import {
   evaluateReleaseGate,
   type GateDecision,
 } from "../gate/native-gate";
+import { requireGooglePlayProductionNativeVersion } from "../adapters/google-play.adapter";
 import {
   getOtaManifestUrl,
   getOtaPrefix,
@@ -172,19 +174,17 @@ export async function publishOtaRelease(
   try {
     loadOtaEnvironment();
 
+    const nativeLine = options.minimumNativeVersion?.trim()
+      ? options.minimumNativeVersion.trim()
+      : await requireGooglePlayProductionNativeVersion();
+
     if (!options.skipGate) {
-      const gateRes = await evaluateReleaseGate(options.minimumNativeVersion);
+      const gateRes = await evaluateReleaseGate(nativeLine);
       if (!gateRes.ok) return gateRes;
       if (gateRes.value.state === "blocked") {
         return err(OtaCoreError.gateBlocked(gateRes.value.reason));
       }
     }
-
-    const versionsRes = await readCurrentVersions();
-    if (!versionsRes.ok) return versionsRes;
-    const nativeLine = versionsRes.value.nativeVersion;
-
-    const minimumNativeVersion = options.minimumNativeVersion ?? nativeLine;
 
     if (options.dryRun) {
       // A dry run verifies the native-compatibility gate and uploads nothing, so it must
@@ -208,7 +208,7 @@ export async function publishOtaRelease(
         fileCount: 0,
         totalBytes: 0,
         manifestUrl,
-        minimumNativeVersion,
+        minimumNativeVersion: nativeLine,
         requiredCapabilities: [],
         optionalCapabilities: [],
       });
@@ -250,7 +250,22 @@ export async function publishOtaRelease(
       ? await getOtaManifestObject(client, manifestKey)
       : null;
 
-    const version = nextContentVersion(previousManifest?.version ?? null, nativeLine);
+    const localVersions = await readCurrentVersions();
+    const localContentVersion = localVersions.ok ? localVersions.value.contentVersion : null;
+    const otaReconcile = reconcileOtaTargetWithR2(
+      previousManifest?.version ?? null,
+      nativeLine,
+      localContentVersion,
+    );
+    const version = otaReconcile.target;
+    if (otaReconcile.correctedFromLocal) {
+      console.log(
+        `Correcting phantom local OTA ${localContentVersion} -> ${version} ` +
+          `(R2 last published ${previousManifest?.version ?? "(none)"}).`,
+      );
+    }
+
+    const minimumNativeVersion = nativeLine;
     const now = new Date();
     const notes = options.notes ?? `OTA Release ${version} (${now.toISOString().slice(0, 10)})`;
 
@@ -441,17 +456,14 @@ export async function cutNativeRelease(
   options: CutNativeReleaseOptions = {},
 ): Promise<Result<CutNativeReleaseResult, OtaCoreError>> {
   try {
-    const currentVersions = await readCurrentVersions();
-    if (!currentVersions.ok) return currentVersions;
+    const productionVersion = await requireGooglePlayProductionNativeVersion();
 
     let targetVersion = options.nativeVersion;
     if (!targetVersion) {
-      if (options.action === "patch") {
-        const parts = currentVersions.value.nativeVersion.split(".").map(Number);
-        targetVersion = `${parts[0]}.${parts[1]}.${(parts[2] ?? 0) + 1}`;
-      } else {
-        targetVersion = currentVersions.value.nativeVersion;
-      }
+      targetVersion =
+        options.action === "patch"
+          ? nextNativePatchVersion(productionVersion)
+          : productionVersion;
     }
 
     const writeRes = writeTreeVersions({
@@ -461,7 +473,7 @@ export async function cutNativeRelease(
     if (!writeRes.ok) return writeRes;
 
     return ok({
-      nativeVersion: writeRes.value.nativeVersion,
+      nativeVersion: writeRes.value.androidNativeVersion,
       contentVersion: writeRes.value.contentVersion,
       androidVersionCode: writeRes.value.androidVersionCode,
       filesModified: writeRes.value.filesModified,

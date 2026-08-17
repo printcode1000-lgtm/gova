@@ -6,9 +6,8 @@ import { API_BASE_URL } from '@asol/native-core';
 import {
   compareOtaVersions,
   assertContentLineDoesNotRegress,
+  parseContentVersion,
   releaseContentVersion,
-  nextNativePatchVersion,
-  androidVersionCodeFor,
   type OtaManifest,
 } from "@asol/ota-core";
 import {
@@ -22,15 +21,13 @@ import {
   getOtaObjectBytes,
   listOtaObjectKeys,
   inspectNativeCompatibility,
-  nativeVersionFromBaseline,
   resolveNativeBaseline,
-  isUndeclarableNativeChange,
-  readCurrentVersions,
-  updateAndroidGradleVersion,
-  updateIosProjectVersion,
-  updateCommittedVersionConstants,
+  requireGooglePlayProductionNativeVersion,
+  syncAndroidProjectVersions,
+  planAndroidNativeVersion,
 } from "@asol/ota-core/publishing";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
+import { loadReleaseEnvironment } from "./load-release-env";
 import { reportStage } from "./release-stage";
 import { runGradle } from "./android/gradle";
 
@@ -52,85 +49,48 @@ function versionCode(version: string): number {
 
 type NativeVersionAction = "auto" | "current" | "next-patch";
 
-function resolveTargetNativeVersion(action: NativeVersionAction): string {
+function readLocalAndroidVersionName(): string | null {
+  if (!existsSync(ANDROID_BUILD_GRADLE)) return null;
+  const match = /versionName\s+"([^"]+)"/.exec(readFileSync(ANDROID_BUILD_GRADLE, "utf8"));
+  return match?.[1] ?? null;
+}
+
+async function resolveTargetNativeVersion(action: NativeVersionAction): Promise<string> {
+  const productionVersion = await requireGooglePlayProductionNativeVersion();
   const baseline = resolveNativeBaseline();
-  const baselineVersion = nativeVersionFromBaseline(baseline);
-  if (!baselineVersion) {
-    throw new Error(
-      `Cannot derive a native release version from baseline ${baseline || "(none)"}; expected native-v<x.y.z>.`,
+  const hasCompiledChanges = inspectNativeCompatibility(baseline).requiresStoreRelease;
+
+  if (action === "auto") {
+    console.log(
+      `Native release plan: production=${productionVersion}, action=auto (Play production line), compiledChanges=${hasCompiledChanges}`,
     );
+    return productionVersion;
   }
 
-  const versionsRes = readFileSync(ANDROID_BUILD_GRADLE, "utf8");
-  const match = /versionName\s+"([^"]+)"/.exec(versionsRes);
-  const current = match ? match[1]! : "0.2.4";
+  if (action !== "current" && action !== "next-patch") {
+    throw new Error(`Invalid Android native version action: ${action}`);
+  }
 
-  const report = inspectNativeCompatibility(baseline);
-  const hasCompiledChanges = report.requiresStoreRelease;
-  const automaticTarget =
-    compareOtaVersions(current, baselineVersion) >= 0
-      ? current
-      : baselineVersion;
-  let target = action === "next-patch"
-    ? nextNativePatchVersion(automaticTarget)
-    : action === "current"
-      ? current
-      : automaticTarget;
-  if (action === "current" && compareOtaVersions(current, baselineVersion) < 0) {
-    throw new Error(
-      `Current Android version ${current} is below native baseline ${baselineVersion}; choose a new patch version.`,
-    );
-  }
-  // Keeping the version is only honest when the shell binary is unchanged.
-  //
-  // A compiled native change produces a different shell. Reusing its versionName and
-  // versionCode would give two different binaries one identity: Google Play rejects the
-  // duplicate versionCode, and on a device there is no way to tell which of the two is
-  // installed. So a native change makes "keep the current version" refuse outright rather
-  // than quietly build something unidentifiable.
-  //
-  // This guard used to fire only when the target did not outrank the baseline, so a shell
-  // already ahead of the last store tag — the normal state between releases — kept its
-  // version while carrying new native code.
-  //
-  // Web-only changes are unaffected: a fresh `out/` bundle at the published version
-  // numbers is exactly what this choice is for.
-  if (hasCompiledChanges && action === "current") {
-    throw new Error(
-      [
-        `Refusing to keep Android version ${current}: this build contains compiled native changes.`,
-        "",
-        "A native change makes a different shell. Keeping the version would give two",
-        "different binaries the same identity — Google Play rejects the duplicate",
-        "versionCode, and no device could tell them apart.",
-        "",
-        "Choose a new Android patch version instead:",
-        "  --native-version=next-patch",
-        "",
-        `Native surface changed since baseline ${baselineVersion}. Run`,
-        "`npm run cap:verify-defaults` to see what changed.",
-      ].join("\n"),
-    );
-  }
-  if (hasCompiledChanges && compareOtaVersions(target, baselineVersion) <= 0) {
-    target = nextNativePatchVersion(baselineVersion);
-  }
-  console.log(
-    `Native release plan: baseline=${baselineVersion}, current=${current}, target=${target}, action=${action}, compiledChanges=${hasCompiledChanges}`,
+  const localVersion = readLocalAndroidVersionName();
+  const plan = planAndroidNativeVersion(
+    productionVersion,
+    action,
+    hasCompiledChanges,
+    localVersion,
   );
-  return target;
-}
 
-function updateAndroidVersion(version: string): void {
-  updateAndroidGradleVersion(version);
-  console.log(`Android versionName=${version}, versionCode=${androidVersionCodeFor(version)}`);
-}
+  if (plan.correctedFromLocal) {
+    console.log(
+      `Correcting local Android version ${plan.correctedFromLocal} -> ${plan.targetVersion} ` +
+        `(Google Play Production is ${productionVersion}).`,
+    );
+  }
 
-function updateIosVersion(version: string): void {
-  updateIosProjectVersion(version);
   console.log(
-    `iOS MARKETING_VERSION=${version}, CURRENT_PROJECT_VERSION=${androidVersionCodeFor(version)}`,
+    `Native release plan: production=${productionVersion}, local=${localVersion ?? "(none)"}, ` +
+      `target=${plan.targetVersion}, action=${action}, compiledChanges=${hasCompiledChanges}`,
   );
+  return plan.targetVersion;
 }
 
 function readLocalManifest(): OtaManifest {
@@ -251,6 +211,7 @@ async function verifyR2Files(manifest: OtaManifest): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  loadReleaseEnvironment();
   loadOtaEnvironment();
   const args = process.argv.slice(2);
   const resumePublishedRelease = args.includes("--resume");
@@ -286,7 +247,7 @@ async function main(): Promise<void> {
   const apiBaseUrl = (
     process.env.ASOL_API_BASE_URL ?? API_BASE_URL
   ).replace(/\/$/, "");
-  const plannedNativeVersion = resolveTargetNativeVersion(nativeVersionAction);
+  const plannedNativeVersion = await resolveTargetNativeVersion(nativeVersionAction);
   const publishEnv: NodeJS.ProcessEnv = {
     ...withoutVsCodeDebuggerEnv(process.env),
     ASOL_API_BASE_URL: apiBaseUrl,
@@ -321,7 +282,7 @@ async function main(): Promise<void> {
       }`,
     );
     console.log(
-      `  version rewrites: android versionCode=${versionCode(plannedNativeVersion)}, versionName=${plannedNativeVersion}; iOS MARKETING_VERSION=${plannedNativeVersion}`,
+      `  version rewrites: android versionName=${plannedNativeVersion} only (iOS is independent and not changed here)`,
     );
     console.log(`  native compatibility target: ${plannedNativeVersion}`);
     console.log("  cap sync: npm run cap:sync");
@@ -393,9 +354,7 @@ async function main(): Promise<void> {
     NEXT_PUBLIC_ASOL_API_BASE_URL: apiBaseUrl,
   };
 
-  updateAndroidVersion(nativeVersion);
-  updateIosVersion(nativeVersion);
-  updateCommittedVersionConstants(version, nativeVersion);
+  updateAndroidProjectVersions(version, nativeVersion);
 
   const errors = compareManifestFiles(localManifest, remoteManifest);
   if (errors.length > 0) {
@@ -447,12 +406,11 @@ async function buildStoreRelease({ plannedNativeVersion, apiBaseUrl, noR8 }: {
     ? readLocalManifest().version
     : null;
   const version = releaseContentVersion(plannedNativeVersion);
-  // Refuses a lower version, allows an equal one. The content version here is derived as
-  // `<native>.0`, so rebuilding the same unreleased shell to pick up the latest changes
-  // produces the same string by design — which is exactly what the "keep the current
-  // version" choice is for. Requiring it to advance made that choice impossible: the
-  // release console offered a button that always failed.
-  assertContentLineDoesNotRegress(version, previousLocalVersion);
+  const regressionBaseline = regressionBaselineFromLocalManifest(
+    previousLocalVersion,
+    plannedNativeVersion,
+  );
+  assertContentLineDoesNotRegress(version, regressionBaseline);
   console.log(
     `Store release without OTA: content ${previousLocalVersion ?? "(none)"} -> ${version}, ` +
       `native shell ${plannedNativeVersion}. R2 is not read or written.`,
@@ -465,9 +423,7 @@ async function buildStoreRelease({ plannedNativeVersion, apiBaseUrl, noR8 }: {
   };
 
   // Before the build, so the bundle is compiled against the versions it ships.
-  updateAndroidVersion(plannedNativeVersion);
-  updateIosVersion(plannedNativeVersion);
-  updateCommittedVersionConstants(version, plannedNativeVersion);
+  updateAndroidProjectVersions(version, plannedNativeVersion);
 
   reportStage("building-web");
   execSync("npm run build:static", { stdio: "inherit", env });
@@ -481,8 +437,32 @@ async function buildStoreRelease({ plannedNativeVersion, apiBaseUrl, noR8 }: {
 
   reportStage("finalizing-results");
   console.log(
-    `cap-build completed without OTA: web content=${version}, Android/iOS native=${plannedNativeVersion}`,
+    `cap-build completed without OTA: web content=${version}, Android native=${plannedNativeVersion}`,
   );
+}
+
+function updateAndroidProjectVersions(contentVersion: string, androidVersion: string): void {
+  syncAndroidProjectVersions({
+    androidVersion,
+    contentVersion,
+  });
+  console.log(`Android version synced to ${androidVersion}; content ${contentVersion}`);
+}
+
+function regressionBaselineFromLocalManifest(
+  previousLocalVersion: string | null,
+  plannedNativeVersion: string,
+): string | null {
+  if (!previousLocalVersion) return null;
+  const parsed = parseContentVersion(previousLocalVersion);
+  const previousLine = parsed?.nativeVersion ?? previousLocalVersion;
+  if (compareOtaVersions(previousLine, plannedNativeVersion) > 0) {
+    console.log(
+      `Ignoring phantom local content line ${previousLine} while building Play-derived shell ${plannedNativeVersion}.`,
+    );
+    return null;
+  }
+  return previousLocalVersion;
 }
 
 main().catch((error) => {

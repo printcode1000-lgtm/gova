@@ -8,10 +8,12 @@ Next.js files under `src/app` are thin entry points. Business logic, UI, policie
 
 ## Environment Boundaries
 
+- The `/super-admin/data-health` page and its API routes are available in local development only.
+- Outside development the page returns `404` and every API call returns `dataHealthDevelopmentOnly`.
+- The sidebar hides the link in production builds and native clients.
+- Static/mobile builds exclude this route from the export output.
 - In development, local SQLite databases and local storage are checked.
-- In production, Turso databases and Cloudflare R2 storage are checked.
-- Comparing SQLite schema with Turso operates in development only, loading when opening the schema comparison tab to keep main health checks fast.
-- Schema comparison is read-only and does not execute DDL, synchronization, or deletions.
+- Schema comparison is read-only, development-only, and loads when opening the schema comparison tab.
 - If Turso connection credentials are missing in development, the database status displays as `unavailable`.
 
 ## Module Components

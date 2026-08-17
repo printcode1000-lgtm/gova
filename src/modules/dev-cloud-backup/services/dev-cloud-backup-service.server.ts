@@ -122,8 +122,8 @@ export class DevCloudBackupService {
   }
 
   async list(): Promise<{ environment: ReturnType<typeof devCloudBackupEnvironment>; backups: DevCloudBackupListItem[] }> {
+    assertDevCloudBackupAllowed();
     const environment = devCloudBackupEnvironment();
-    if (!environment.allowed) return { environment, backups: [] };
     await mkdir(BACKUP_DIR, { recursive: true });
     const entries = await readdir(BACKUP_DIR);
     const backups: DevCloudBackupListItem[] = [];

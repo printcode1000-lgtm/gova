@@ -62,6 +62,24 @@
       "@asol/catalog-core/server": [
         "./packages/catalog-core/src/server.ts"
       ],
+      "@asol/product-style-core": [
+        "./packages/product-style-core/src/index.ts"
+      ],
+      "@asol/product-style-core/server": [
+        "./packages/product-style-core/src/server.ts"
+      ],
+      "@asol/product-core": [
+        "./packages/product-core/src/index.ts"
+      ],
+      "@asol/product-core/server": [
+        "./packages/product-core/src/server.ts"
+      ],
+      "@asol/dev-core": [
+        "./packages/dev-core/src/index.ts"
+      ],
+      "@asol/dev-core/server": [
+        "./packages/dev-core/src/server.ts"
+      ],
       "@asol/native-core": [
         "./packages/native-core/src/index.ts"
       ],
@@ -106,6 +124,12 @@
       ],
       "@asol/storage-core/server": [
         "./packages/storage-core/src/server.ts"
+      ],
+      "@asol/system-logs-core": [
+        "./packages/system-logs-core/src/index.ts"
+      ],
+      "@asol/system-logs-core/server": [
+        "./packages/system-logs-core/src/server.ts"
       ],
       "@asol/vercel-deploy-core": [
         "./packages/vercel-deploy-core/src/index.ts"

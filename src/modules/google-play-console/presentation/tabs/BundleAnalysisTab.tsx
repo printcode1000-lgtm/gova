@@ -4,14 +4,14 @@ import * as React from "react";
 import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { useBundleAnalysis } from "../../hooks/use-bundle-analysis";
 import { CategoryTree } from "../components/CategoryTree";
 import { DeltaTable } from "../components/DeltaTable";
 import { Metric } from "../components/Metric";
 
 export function BundleAnalysisTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const bundle = useBundleAnalysis();
   const artifacts = bundle.jobs.flatMap((job) => (job.artifacts ?? [])
     .filter((artifact) => /\.(?:apk|aab)$/i.test(artifact.name))

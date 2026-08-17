@@ -3,6 +3,7 @@ import 'server-only';
 import { isDevelopment } from '@/core/config';
 import { createDrizzleDevLogger } from '@/core/monitor/drizzle-dev-logger';
 import { AbstractDatabaseClient } from '@/modules/data-access/core/database/abstract-database-client';
+import { PRIMARY_SQLITE_DB_PATH } from '@/modules/data-access/core/database/environment';
 
 export class SQLiteDatabaseClient extends AbstractDatabaseClient {
   private _db: any = null;
@@ -12,9 +13,7 @@ export class SQLiteDatabaseClient extends AbstractDatabaseClient {
 
     const { drizzle } = require('drizzle-orm/better-sqlite3');
     const Database = require('better-sqlite3');
-    const path = require('path');
-    const dbPath = path.join(process.cwd(), 'public', 'sync_data', 'sync_sqlite', 'allusers.db');
-    const sqlite = new Database(dbPath);
+    const sqlite = new Database(PRIMARY_SQLITE_DB_PATH);
     this._db = drizzle(sqlite, isDevelopment ? { logger: createDrizzleDevLogger() } : undefined);
 
     const { ensureDevMigrations } = require('./ensure-migrations');
@@ -25,9 +24,7 @@ export class SQLiteDatabaseClient extends AbstractDatabaseClient {
 
   async rawExecute(sql: string, params: any[] = []): Promise<any[]> {
     const Database = require('better-sqlite3');
-    const path = require('path');
-    const dbPath = path.join(process.cwd(), 'public', 'sync_data', 'sync_sqlite', 'allusers.db');
-    const db = new Database(dbPath);
+    const db = new Database(PRIMARY_SQLITE_DB_PATH);
 
     try {
       const stmt = db.prepare(sql);

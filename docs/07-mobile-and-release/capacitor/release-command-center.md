@@ -126,8 +126,8 @@ renders, so the two surfaces cannot drift apart while describing one choice.
 
 | Choice | Argument | Effect |
 | :-- | :-- | :-- |
-| Rebuild with the current Android version | `--native-version=current` | Fresh packages carrying **the published version numbers** — native and content line alike — with the newest `out/` inside. Nothing is uploaded to R2 |
-| Create a new Android patch version | `--native-version=next-patch` | Raises `versionName` and `versionCode`, and opens a new content line at `<native>.0`. Nothing is uploaded to R2 |
+| Rebuild with the current Android version | `--native-version=current` | Rebuilds at **Google Play Production** `versionName` with fresh `out/` inside. Refuses when compiled native changes exist. Nothing is uploaded to R2 |
+| Create a new Android patch version | `--native-version=next-patch` | Target is **Production + 1 patch** (stable across repeated builds until Play publishes it). Local `build.gradle` numbers are corrected to match. Nothing is uploaded to R2 |
 
 An example of the first: Google Play is published at `0.2.3`, R2 carries OTA `0.2.3.1`, and
 the fresh local package carries `0.2.3.0` with the newest content for hands-on testing.
@@ -168,6 +168,11 @@ shell being rebuilt  0.2.3.0   ← lower counter, same line, not a regression
 
 What is refused is a regression of the **line**: dropping the shell from `0.2.5` to `0.2.4`
 would ship older native content as if it were current.
+
+When the local `out/` manifest sits on a **phantom** line ahead of the Play-derived target
+(for example local `0.2.6.0` while Production is `0.2.2` and the next shell is `0.2.3.0`),
+`cap-build` ignores that local baseline instead of blocking the store rebuild. Phantom
+accumulation must never override Google Play Production truth.
 
 ### Every package is signed and R8-processed
 
@@ -255,6 +260,9 @@ The card has four independent buttons, and the separation is deliberate:
 | Button | Command | What it does |
 | :-- | :-- | :-- |
 | Build the package | `android:build:debug` | Fresh web → sync → `assembleDebugR8` plus the test package. **Touches no device** |
+
+The same command is available from VS Code as **Android Debug R8 - بناء حزمة الاختبار** in
+`.vscode/launch.json` (group **ASOL Capacitor**).
 | Wipe the device and install | `android:device:install` | Detect → full verified wipe → install → grant permissions. **Builds nothing** |
 | Host tests | `verify:all` | Repository checks on this machine |
 | Connected-device tests | `android:device:tests` | `androidTest` on the phone |

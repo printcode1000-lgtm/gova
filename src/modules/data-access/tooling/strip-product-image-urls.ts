@@ -10,7 +10,7 @@
  * local SQLite database and the Turso product database.
  */
 import { existsSync } from "node:fs";
-import path from "node:path";
+import { resolveProductSqlitePath } from "@asol/dev-core/server";
 import Database from "better-sqlite3";
 import dotenv from "dotenv";
 import { createClient, type Client } from "@libsql/client";
@@ -18,7 +18,7 @@ import { createClient, type Client } from "@libsql/client";
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });
 
-const LOCAL_PATH = path.join("public", "sync_data", "sync_sqlite", "product.db");
+const LOCAL_PATH = resolveProductSqlitePath();
 
 interface Row {
   id: string;

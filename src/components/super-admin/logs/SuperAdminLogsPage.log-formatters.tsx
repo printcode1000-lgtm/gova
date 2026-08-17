@@ -30,7 +30,7 @@ import {
   type SystemLogLevel,
 } from "@/features/system-logs/system-log-store";
 import { cn } from "@/lib/utils";
-import { redactSystemLogText } from "@/features/system-logs/system-log-sanitizer";
+import { redactSystemLogText } from "@asol/system-logs-core";
 import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
 
 export const sections: Array<{
@@ -82,11 +82,11 @@ export function formatEntryForCopy(entry: SystemLogEntry) {
       `أول ظهور: ${entry.firstOccurredAt}`,
       `آخر ظهور: ${entry.lastOccurredAt}`,
       `عدد مرات التكرار: ${entry.occurrences}`,
-      `User Agent: ${entry.userAgent}`,
-      `Feature: ${entry.feature ?? "غير محدد"}`,
-      `Operation: ${entry.operation ?? "غير محددة"}`,
+      `وكيل المستخدم: ${entry.userAgent}`,
+      `الميزة: ${entry.feature ?? "غير محدد"}`,
+      `العملية: ${entry.operation ?? "غير محددة"}`,
       `الرسالة:\n${entry.message}`,
-      entry.stack ? `Stack trace:\n${entry.stack}` : "",
+      entry.stack ? `تتبع المكدس:\n${entry.stack}` : "",
     ]
       .filter(Boolean)
       .join("\n"),
@@ -103,40 +103,40 @@ export function formatCloudEntryForCopy(entry: PersistentSystemLogEntry) {
     : "غير متاح";
   return redactSystemLogText(
     [
-      "Cloud Error Report",
+      "تقرير خطأ سحابي",
       "==================",
-      `ID: ${entry.id}`,
-      `Fingerprint: ${entry.fingerprint}`,
-      `Origin: ${entry.origin}`,
-      `Trust: ${entry.trustLevel}`,
-      `Level: ${entry.level}`,
-      `Source: ${entry.source}`,
-      `Platform: ${entry.platform}`,
-      `Console method: ${entry.consoleMethod}`,
-      `Method: ${entry.requestMethod ?? "غير محدد"}`,
-      `Status: ${entry.statusCode ?? "غير محدد"}`,
-      `Route: ${cloudSource(entry)}`,
-      `Page: ${entry.page}`,
-      `Feature: ${entry.feature ?? "غير محدد"}`,
-      `Operation: ${entry.operation ?? "غير محددة"}`,
-      `Error: ${entry.errorName ?? "غير محدد"}`,
-      `Occurrences: ${entry.occurrences}`,
-      `First occurred: ${entry.firstOccurredAt}`,
-      `Last occurred: ${entry.lastOccurredAt}`,
-      `App version: ${entry.appVersion ?? "غير محدد"}`,
-      `Native version: ${entry.nativeVersion ?? "غير محدد"}`,
+      `المعرّف: ${entry.id}`,
+      `البصمة: ${entry.fingerprint}`,
+      `المصدر: ${entry.origin}`,
+      `الثقة: ${entry.trustLevel}`,
+      `المستوى: ${entry.level}`,
+      `المصدر التقني: ${entry.source}`,
+      `المنصة: ${entry.platform}`,
+      `طريقة وحدة التحكم: ${entry.consoleMethod}`,
+      `الطريقة: ${entry.requestMethod ?? "غير محدد"}`,
+      `الحالة: ${entry.statusCode ?? "غير محدد"}`,
+      `المسار: ${cloudSource(entry)}`,
+      `الصفحة: ${entry.page}`,
+      `الميزة: ${entry.feature ?? "غير محدد"}`,
+      `العملية: ${entry.operation ?? "غير محددة"}`,
+      `الخطأ: ${entry.errorName ?? "غير محدد"}`,
+      `عدد مرات التكرار: ${entry.occurrences}`,
+      `أول ظهور: ${entry.firstOccurredAt}`,
+      `آخر ظهور: ${entry.lastOccurredAt}`,
+      `إصدار التطبيق: ${entry.appVersion ?? "غير محدد"}`,
+      `الإصدار الأصلي: ${entry.nativeVersion ?? "غير محدد"}`,
       `UID: ${entry.uid ?? "غير محدد"}`,
-      `User agent: ${entry.userAgent ?? "غير محدد"}`,
-      `Source location: ${source}`,
+      `وكيل المستخدم: ${entry.userAgent ?? "غير محدد"}`,
+      `موقع المصدر: ${source}`,
       entry.messageTruncated
-        ? "Message truncated: yes"
-        : "Message truncated: no",
-      entry.stackTruncated ? "Stack truncated: yes" : "Stack truncated: no",
+        ? "الرسالة مقصوصة: نعم"
+        : "الرسالة مقصوصة: لا",
+      entry.stackTruncated ? "التتبع مقصوص: نعم" : "التتبع مقصوص: لا",
       "",
-      "Message:",
+      "الرسالة:",
       entry.message,
       "",
-      "Stack trace:",
+      "تتبع المكدس:",
       entry.stack || "غير متاح",
     ].join("\n"),
   );

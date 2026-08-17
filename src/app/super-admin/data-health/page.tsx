@@ -1,5 +1,8 @@
-import { DataHealthPage } from "@/modules/data-health";
+import { notFound, redirect } from "next/navigation";
 
-export default function Page() {
-  return <DataHealthPage />;
+import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
+
+export default function SuperAdminDataHealthRedirect() {
+  if (!getServerRuntimeContext().isDevelopment) notFound();
+  redirect("/dev/data-health");
 }

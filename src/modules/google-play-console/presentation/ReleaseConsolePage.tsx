@@ -5,11 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { RELEASE_CONSOLE_TABS } from "./tabs/tab-registry";
 
 export function ReleaseConsolePage() {
-  const { t, isRTL } = useTranslation();
+  const { t, isRTL } = useAdminArabic();
   const { session, isLoading } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();

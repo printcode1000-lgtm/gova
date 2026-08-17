@@ -13,10 +13,29 @@ export type {
   ProfileSpecialtiesSelection,
   DeleteAccountInput,
   DeleteAccountResult,
+  DeleteAccountImageFailure,
   RegistrationInput,
   LoginInput,
   SignedSessionClaims,
 } from './domain/entities';
+
+export {
+  ACCOUNT_DELETION_REGISTRY_VERSION,
+  ACCOUNT_DELETION_STEP_ORDER,
+  ACCOUNT_DELETION_STEPS,
+  ACCOUNT_DELETION_TABLE_REGISTRY,
+  ACCOUNT_DELETION_IMAGE_SOURCES,
+  ACCOUNT_DELETION_REGISTRY_EXEMPT_TABLES,
+  ACCOUNT_DELETION_IMAGE_RETRY_DEFAULTS,
+  type AccountDeletionDatabase,
+  type AccountDeletionStepId,
+  type DeletionTableAction,
+  type DeletionTableRegistryEntry,
+  type DeletionImageSource,
+  type DeletionRegistryExemptTable,
+  type FailedDeletionImage,
+  type DeletionImageCleanupResult,
+} from './domain/account-deletion-registry';
 
 export type {
   AuthUserRecord,
@@ -45,3 +64,4 @@ export {
 
 export { AuthOperationsService } from './server/auth-operations-service';
 export { AccountDeletionService } from './server/account-deletion-service';
+export { deleteImagesWithRetry } from './server/delete-images-with-retry';

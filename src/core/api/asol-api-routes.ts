@@ -37,6 +37,8 @@ export const ASOL_API_ROUTES = {
   systemLogs: {
     root: "/api/system-logs",
     ingest: "/api/system-logs/ingest",
+    summary: "/api/system-logs/summary",
+    stream: "/api/system-logs/stream",
   },
   follow: {
     root: "/api/follow",

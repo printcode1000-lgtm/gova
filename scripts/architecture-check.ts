@@ -40,6 +40,10 @@ import { checkDeadContractRules } from "./architecture-check/architecture-check.
 import { checkFile, checkExternalDataAccessOwnership, checkGeneratedDataAccessArtifacts } from "./architecture-check/architecture-check.native-contract";
 import { checkAccountBridgeContract } from "./architecture-check/architecture-check.account-bridge-contract";
 import { checkPackageSealContract } from "./architecture-check/architecture-check.package-seal-contract";
+import {
+  checkSystemLogsBootstrapContract,
+  checkSystemLogsContract,
+} from "./architecture-check/architecture-check.system-logs-contract";
 import { printReport, reportNativeSurface } from "./architecture-check/architecture-check.file-analysis";
 
 function main(): void {
@@ -61,8 +65,10 @@ function main(): void {
   const files = walk(SRC);
   for (const file of files) {
     if (normalizePath(file).includes('/architecture/contract.ts')) continue;
+    const content = readFileSync(file, 'utf8');
     checkFile(file);
-    checkPackageSealContract(file, readFileSync(file, 'utf8'));
+    checkPackageSealContract(file, content);
+    checkSystemLogsContract(file, content);
   }
 
   // `packages/` was never walked by this check. Every sealed package's own source was
@@ -83,6 +89,7 @@ function main(): void {
     checkPackageSealContract(file, readFileSync(file, 'utf8'));
   }
   checkGeneratedDataAccessArtifacts();
+  checkSystemLogsBootstrapContract();
 
   const fileContents = new Map<string, string>();
   for (const file of walk(SRC)) {

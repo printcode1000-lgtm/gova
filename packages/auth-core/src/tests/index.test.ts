@@ -43,10 +43,35 @@ export function runSessionTokenTest() {
 export function runPublicSurfaceTest() {
   assert.equal(typeof runtimeApi.createLoginSchema, 'function');
   assert.equal(typeof runtimeApi.isAccountDeletionPhraseValid, 'function');
+  assert.equal(typeof runtimeApi.ACCOUNT_DELETION_TABLE_REGISTRY, 'object');
   assert.equal(typeof serverApi.AuthOperationsService, 'function');
   assert.equal(typeof serverApi.AccountDeletionService, 'function');
+  assert.equal(typeof serverApi.deleteImagesWithRetry, 'function');
   assert.equal(typeof serverApi.hashPassword, 'function');
   console.log('✅ auth-core public surface test passed');
+}
+
+export async function runImageDeletionRetryTest() {
+  let attempts = 0;
+  const storage = {
+    async deleteImage() {
+      attempts += 1;
+      if (attempts < 2) {
+        throw new Error('transient');
+      }
+    },
+  };
+
+  const result = await serverApi.deleteImagesWithRetry(
+    [{ profileId: 'avatar', key: 'img-1' }],
+    storage,
+    { maxAttempts: 3, delayMs: 0 },
+  );
+
+  assert.equal(result.attempted, 1);
+  assert.equal(result.deleted, 1);
+  assert.deepEqual(result.failed, []);
+  console.log('✅ auth-core image deletion retry test passed');
 }
 
 async function main() {
@@ -55,6 +80,7 @@ async function main() {
   await runPasswordTest();
   runSessionTokenTest();
   runPublicSurfaceTest();
+  await runImageDeletionRetryTest();
   console.log('\n🎉 All @asol/auth-core tests passed successfully!');
 }
 

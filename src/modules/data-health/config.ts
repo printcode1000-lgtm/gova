@@ -1,4 +1,4 @@
-export const DATA_HEALTH_ROUTE = "/super-admin/data-health";
+export const DATA_HEALTH_ROUTE = "/dev/data-health";
 
 export const DATA_HEALTH_API = {
   scan: "/api/super-admin/data-health",

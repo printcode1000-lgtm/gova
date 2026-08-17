@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { resolveSqliteDirectory } from "@asol/dev-core/server";
 import Database from "better-sqlite3";
 import dotenv from "dotenv";
 import { createClient, type Client, type InStatement } from "@libsql/client";
@@ -127,7 +128,7 @@ function sqliteTableExists(db: Database.Database, table: string): boolean {
 async function updateSqliteReferences(): Promise<number> {
   let updates = 0;
   for (const target of dbTargets) {
-    const dbPath = path.join(process.cwd(), "public", "sync_data", "sync_sqlite", target.sqliteFile);
+    const dbPath = path.join(resolveSqliteDirectory(), target.sqliteFile);
     if (!existsSync(dbPath)) continue;
     const db = new Database(dbPath);
     try {

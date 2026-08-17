@@ -33,9 +33,20 @@ export interface DeleteAccountInput {
   sessionToken: string;
 }
 
+export interface DeleteAccountImageFailure {
+  profileId: string;
+  key: string;
+  attempts: number;
+  error: string;
+}
+
 export interface DeleteAccountResult {
   deleted: true;
   anonymizedOrderRecords: boolean;
+  stepsCompleted: string[];
+  imagesAttempted: number;
+  imagesDeleted: number;
+  imagesFailed: DeleteAccountImageFailure[];
 }
 
 export interface RegistrationInput {

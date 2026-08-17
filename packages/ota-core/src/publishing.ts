@@ -35,7 +35,18 @@ export { formatNativeSurfaceReport } from "./publishing/gate/gate-report";
 export {
   nativeVersionFromBaseline,
   nextNativePatchVersion,
+  androidVersionCodeFor,
+  androidVersionNameFromCode,
 } from "./domain/versioning/native-version";
+
+export {
+  planAndroidNativeTarget,
+  planAndroidNativeVersion,
+  planOtaTargetVersion,
+  reconcileOtaTargetWithR2,
+  type AndroidNativeVersionAction,
+  type AndroidNativeVersionPlan,
+} from "./domain/versioning/platform-version-truth";
 
 // ── The Build & Release Orchestrator ───────────────────────────────────────
 export {
@@ -67,6 +78,15 @@ export {
   type LivePlayRelease,
 } from "./publishing/truth/live-play-release";
 export {
+  resolveGooglePlayCredentials,
+  readLiveTrackVersionCodes,
+  readLiveTrackVersionCodesStrict,
+  requireGooglePlayProductionNativeVersion,
+  type GooglePlayCredentialStatus,
+  type LivePlayRelease as GooglePlayLiveRelease,
+} from "./publishing/adapters/google-play.adapter";
+export { requireIosProductionNativeVersion } from "./publishing/adapters/app-store-connect.adapter";
+export {
   readCurrentVersions,
   type CurrentVersions,
 } from "./publishing/versioning/version-reader";
@@ -77,6 +97,8 @@ export {
   updateAndroidGradleVersion,
   updateIosProjectVersion,
   updateCommittedVersionConstants,
+  syncAndroidProjectVersions,
+  syncIosProjectVersion,
   type VersionWriteResult,
 } from "./publishing/versioning/version-writer";
 
@@ -128,13 +150,6 @@ export {
   assertReleaseStaticBundle,
   assertCapBuildInputBundle,
 } from "./publishing/build/release-bundle-guard";
-
-// ── Credential Resolution ──────────────────────────────────────────────────
-export {
-  resolveGooglePlayCredentials,
-  readLiveTrackVersionCodes,
-  type GooglePlayCredentialStatus,
-} from "./publishing/adapters/google-play.adapter";
 
 // ── Capability Scanning & Manifest Assembly ────────────────────────────────
 export {

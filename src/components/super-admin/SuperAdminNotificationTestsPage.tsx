@@ -65,6 +65,47 @@ interface TestHistoryEntry {
 const delayOptions = [0, 5, 10, 30] as const;
 const batchSizeOptions = [1, 5] as const;
 
+const TEST_RESULT_STATUS_LABELS: Record<string, string> = {
+  saved: "محفوظ",
+  missing: "مفقود",
+  failed: "فشل",
+  sent: "أُرسل",
+  partial: "جزئي",
+  queued: "في الانتظار",
+  no_tokens: "بدون رموز",
+  muted: "مكتوم",
+};
+
+const NOTIFICATION_PERMISSION_LABELS: Record<string, string> = {
+  granted: "مسموح",
+  denied: "مرفوض",
+  default: "افتراضي",
+  prompt: "بانتظار الطلب",
+};
+
+function formatTestResultStatus(
+  code: string,
+  index?: number,
+  total?: number,
+): string {
+  const label = TEST_RESULT_STATUS_LABELS[code] ?? code;
+  if (index != null && total != null) {
+    return `${label} ${index}/${total}`;
+  }
+  return label;
+}
+
+function formatStoredTestResultStatus(status: string): string {
+  const match = status.match(/^([a-z_]+)(?:\s+(\d+)\/(\d+))?$/i);
+  if (!match) return status;
+  const [, code, index, total] = match;
+  return formatTestResultStatus(
+    code,
+    index ? Number(index) : undefined,
+    total ? Number(total) : undefined,
+  );
+}
+
 function createRequestId(): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
@@ -259,7 +300,11 @@ export function SuperAdminNotificationTestsPage() {
             mode,
             scenarioId: scenario.id,
             channelId: scenario.channelId,
-            status: centerSaved ? `saved ${index}/${batchSize}` : `missing ${index}/${batchSize}`,
+            status: formatTestResultStatus(
+              centerSaved ? "saved" : "missing",
+              index,
+              batchSize,
+            ),
             tokenCount: 0,
             centerStatus: centerSaved ? "saved" : "missing",
           });
@@ -304,7 +349,7 @@ export function SuperAdminNotificationTestsPage() {
             mode,
             scenarioId: scenario.id,
             channelId: result.channelId,
-            status: `${lastStatus} ${index}/${batchSize}`,
+            status: formatTestResultStatus(lastStatus, index, batchSize),
             tokenCount: delivery?.tokenCount ?? 0,
             centerStatus: centerSaved ? "saved" : "pending",
           });
@@ -326,7 +371,7 @@ export function SuperAdminNotificationTestsPage() {
         mode,
         scenarioId: scenario.id,
         channelId: scenario.channelId,
-        status: "failed",
+        status: formatTestResultStatus("failed"),
         tokenCount: 0,
         centerStatus: "missing",
       });
@@ -377,7 +422,7 @@ export function SuperAdminNotificationTestsPage() {
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
           <StatusCard label="المنصة" value={status?.platform ?? "—"} ok={status?.platform === "android" || status?.platform === "ios"} />
-          <StatusCard label="إذن الإشعارات" value={status?.permission ?? "—"} ok={status?.permission === "granted"} />
+          <StatusCard label="إذن الإشعارات" value={NOTIFICATION_PERMISSION_LABELS[status?.permission ?? ""] ?? status?.permission ?? "—"} ok={status?.permission === "granted"} />
           <StatusCard label="Push مدعوم" value={status?.pushSupported ? "نعم" : "لا"} ok={Boolean(status?.pushSupported)} />
           <StatusCard label="الجهاز مفعّل" value={status?.deviceEnabled ? "نعم" : "لا"} ok={Boolean(status?.deviceEnabled)} />
           <StatusCard label="رموز الحساب" value={String(status?.recipient?.tokenCount ?? 0)} ok={Boolean(status?.recipient?.tokenCount)} />
@@ -482,7 +527,7 @@ export function SuperAdminNotificationTestsPage() {
           {remoteResult ? (
             <div className="mt-5 rounded-lg border bg-muted/40 p-3 text-sm">
               <p className="flex items-center gap-2 font-semibold"><CheckCircle2 className="h-4 w-4 text-primary" />نتيجة Push</p>
-              <p className="mt-2">الحالة: <strong>{remoteResult.results[0]?.status ?? "failed"}</strong></p>
+              <p className="mt-2">الحالة: <strong>{formatTestResultStatus(remoteResult.results[0]?.status ?? "failed")}</strong></p>
               <p>الرموز: <strong>{remoteResult.results[0]?.tokenCount ?? 0}</strong></p>
               <p className="break-all" dir="ltr">{remoteResult.dedupeKey}</p>
             </div>
@@ -496,7 +541,7 @@ export function SuperAdminNotificationTestsPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[680px] text-sm">
               <thead><tr className="border-b text-muted-foreground"><th className="p-2 text-start">الوقت</th><th className="p-2 text-start">النوع</th><th className="p-2 text-start">السيناريو</th><th className="p-2 text-start">القناة</th><th className="p-2 text-start">النتيجة</th><th className="p-2 text-start">المركز</th><th className="p-2 text-start">الرموز</th></tr></thead>
-              <tbody>{history.map((item) => <tr key={item.id} className="border-b last:border-0"><td className="p-2">{item.at}</td><td className="p-2">{item.mode === "local" ? "محلي" : "Push"}</td><td className="p-2">{getNotificationTestScenario(item.scenarioId)?.label}</td><td className="p-2 font-mono text-xs" dir="ltr">{item.channelId}</td><td className="p-2">{item.status}</td><td className="p-2">{item.centerStatus === "saved" ? "محفوظ" : item.centerStatus === "pending" ? "ينتظر المزامنة" : "مفقود"}</td><td className="p-2">{item.tokenCount}</td></tr>)}</tbody>
+              <tbody>{history.map((item) => <tr key={item.id} className="border-b last:border-0"><td className="p-2">{item.at}</td><td className="p-2">{item.mode === "local" ? "محلي" : "Push"}</td><td className="p-2">{getNotificationTestScenario(item.scenarioId)?.label}</td><td className="p-2 font-mono text-xs" dir="ltr">{item.channelId}</td><td className="p-2">{formatStoredTestResultStatus(item.status)}</td><td className="p-2">{item.centerStatus === "saved" ? "محفوظ" : item.centerStatus === "pending" ? "ينتظر المزامنة" : "مفقود"}</td><td className="p-2">{item.tokenCount}</td></tr>)}</tbody>
             </table>
           </div>
         )}

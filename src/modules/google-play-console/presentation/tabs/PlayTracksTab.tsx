@@ -6,14 +6,14 @@ import { ArrowRight, FileUp, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import type { GooglePlayTrackName } from "../../domain/store-assets-types";
 import { usePlayTracks } from "../../hooks/use-play-tracks";
 
 const TRACKS: GooglePlayTrackName[] = ["internal", "alpha", "beta", "production"];
 
 export function PlayTracksTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const tracks = usePlayTracks();
   const [track, setTrack] = React.useState<GooglePlayTrackName>("internal");
   const [fromTrack, setFromTrack] = React.useState<GooglePlayTrackName>("internal");

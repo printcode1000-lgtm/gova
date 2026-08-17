@@ -1,14 +1,15 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import type {
-  CreateProductInput,
-  ProductDetails,
-  ProductRecord,
-  ProductStatus,
-  UpdateProductInput,
-} from "../entities/product.entity";
-import { createEmptyProductDetails } from "../entities/product.entity";
+import {
+  createEmptyProductDetails,
+  isSafeProductId,
+  normalizeProductDetails,
+  normalizeProductStatus,
+  type CreateProductInput,
+  type ProductRecord,
+  type UpdateProductInput,
+} from "@asol/product-core";
 import {
   productRepository,
   type ProductRepository,
@@ -17,60 +18,7 @@ import { categoryService } from "@/features/categories";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server";
 
-const SAFE_ID = /^[a-z0-9-]+$/i;
 const PRODUCT_STORAGE_PROFILE_ID = "product-default";
-
-function clean(value: unknown, max = 10000) {
-  return typeof value === "string" ? value.slice(0, max) : "";
-}
-
-function normalizeDetails(value: ProductDetails): ProductDetails {
-  const details = createEmptyProductDetails(value);
-  // The key is the whole record. Any URL a client sends is ignored — it is
-  // derived from the storage profile on the way out.
-  const images = Array.isArray(value?.images)
-    ? value.images
-        .filter((image) => image && typeof image.imageKey === "string")
-        .map((image) => ({ imageKey: image.imageKey, url: "" }))
-        .slice(0, 20)
-    : [];
-  return createEmptyProductDetails({
-    ...details,
-    mainData: {
-      name: clean(details.mainData.name),
-      brand: clean(details.mainData.brand),
-      manufacturer: clean(details.mainData.manufacturer),
-      available: details.mainData.available === true,
-      description: clean(details.mainData.description),
-    },
-    price: {
-      current: clean(details.price.current, 120),
-      beforeDiscount: clean(details.price.beforeDiscount, 120),
-      label: clean(details.price.label, 500),
-      needsCar: details.price.needsCar === true,
-    },
-    pharmacySpecs: {
-      ...details.pharmacySpecs,
-      prescriptionRequired: details.pharmacySpecs.prescriptionRequired === true,
-    },
-    rating: {
-      rating: clean(details.rating.rating, 120),
-      comment: clean(details.rating.comment),
-      enabled: details.rating.enabled !== false,
-      targetEnabled: details.rating.targetEnabled !== false,
-      mode:
-        details.rating.mode === "stars" ||
-        details.rating.mode === "stars-comments"
-          ? details.rating.mode
-          : "",
-    },
-    images,
-  });
-}
-
-function normalizeStatus(value: ProductStatus | undefined): ProductStatus {
-  return value === "draft" || value === "archived" ? value : "active";
-}
 
 async function deleteProductImages(imageKeys: string[]): Promise<void> {
   const results = await Promise.allSettled(
@@ -85,13 +33,6 @@ async function deleteProductImages(imageKeys: string[]): Promise<void> {
   }
 }
 
-/**
- * Fills in the public URL of every image from its key.
- *
- * The database holds keys only, so the URL is derived at read time from the
- * bucket currently configured. Moving the bucket is then an environment change
- * rather than a rewrite of every product row.
- */
 function withImageUrls(product: ProductRecord): ProductRecord {
   return {
     ...product,
@@ -111,7 +52,7 @@ export class ProductService {
   async get(id: string): Promise<ProductRecord> {
     const pharmacyProduct = await pharmacyProfileCatalogService.getProduct(id);
     if (pharmacyProduct) return pharmacyProduct;
-    if (!SAFE_ID.test(id)) throw new Error("invalidProduct");
+    if (!isSafeProductId(id)) throw new Error("invalidProduct");
     const product = await this.repository.findById(id);
     if (!product || product.status === "archived")
       throw new Error("productNotFound");
@@ -125,8 +66,8 @@ export class ProductService {
   ): Promise<ProductRecord[]> {
     if (
       !uid ||
-      !SAFE_ID.test(mainCategoryId) ||
-      !SAFE_ID.test(subcategoryId) ||
+      !isSafeProductId(mainCategoryId) ||
+      !isSafeProductId(subcategoryId) ||
       !categoryService.resolveProductSelection(mainCategoryId, subcategoryId).valid
     ) {
       throw new Error("invalidProduct");
@@ -146,8 +87,8 @@ export class ProductService {
   async create(input: CreateProductInput): Promise<ProductRecord> {
     if (
       !input.uid ||
-      !SAFE_ID.test(input.mainCategoryId) ||
-      !SAFE_ID.test(input.subcategoryId)
+      !isSafeProductId(input.mainCategoryId) ||
+      !isSafeProductId(input.subcategoryId)
     )
       throw new Error("invalidProduct");
     const categorySelection = categoryService.resolveProductSelection(
@@ -156,14 +97,14 @@ export class ProductService {
     );
     if (!categorySelection.valid) throw new Error("invalidCategorySelection");
     const now = new Date().toISOString();
-    const normalizedDetails = normalizeDetails(input);
+    const normalizedDetails = normalizeProductDetails(input);
     return this.repository.create({
       id: randomUUID(),
       uid: input.uid,
       mainCategoryId: input.mainCategoryId,
       subcategoryId: input.subcategoryId,
       ...normalizedDetails,
-      status: normalizeStatus(input.status),
+      status: normalizeProductStatus(input.status),
       createdAt: now,
       updatedAt: now,
     });
@@ -173,18 +114,18 @@ export class ProductService {
     const fixedPharmacyProduct = await pharmacyProfileCatalogService.updateFixedProduct(
       input.id,
       input.uid,
-      normalizeDetails(input),
+      normalizeProductDetails(input),
     );
     if (fixedPharmacyProduct) return fixedPharmacyProduct;
     const existing = await this.get(input.id);
     if (!input.uid || existing.uid !== input.uid)
       throw new Error("productForbidden");
-    const normalizedDetails = normalizeDetails(input);
+    const normalizedDetails = normalizeProductDetails(input);
     const updated = await this.repository.update(
       input.id,
       input.uid,
       normalizedDetails,
-      normalizeStatus(input.status ?? existing.status),
+      normalizeProductStatus(input.status ?? existing.status),
       new Date().toISOString(),
     );
     if (!updated) throw new Error("productNotFound");

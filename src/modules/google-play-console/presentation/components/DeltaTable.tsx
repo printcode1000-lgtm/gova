@@ -1,10 +1,10 @@
 "use client";
 
 import type { BundleAnalysisDelta } from "@/modules/release-commands/domain/bundle-analysis-types";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 
 export function DeltaTable({ rows, emptyText }: { rows: BundleAnalysisDelta[]; emptyText: string }) {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   return (
     <div className="overflow-auto rounded-md border">
       <table className="w-full min-w-[40rem] text-sm" dir="ltr">

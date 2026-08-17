@@ -4,25 +4,21 @@ import type { ReleaseVersionSnapshot } from "@/modules/release-commands/domain/b
 import {
   isNativeVersion,
   nextContentVersion,
+  nextNativePatchVersion,
   releaseContentVersion,
 } from "@asol/ota-core";
-
-function nextPatch(version?: string): string | undefined {
-  if (!version) return undefined;
-  const parts = version.split(".").map(Number);
-  if (parts.length !== 3 || parts.some((part) => !Number.isSafeInteger(part))) return undefined;
-  return `${parts[0]}.${parts[1]}.${parts[2]! + 1}`;
-}
 
 /** The shell this run will produce, before any content number is derived. */
 function targetNativeVersion(
   versions: ReleaseVersionSnapshot,
   parameters: Record<string, unknown>,
 ): string | undefined {
+  const production = versions.androidProduction;
+  if (!production || !isNativeVersion(production)) return undefined;
   const target = parameters.nativeVersionAction === "increment-patch"
-    ? nextPatch(versions.androidCurrent)
-    : versions.androidCurrent;
-  return target && isNativeVersion(target) ? target : undefined;
+    ? nextNativePatchVersion(production)
+    : production;
+  return isNativeVersion(target) ? target : undefined;
 }
 
 /**
@@ -45,14 +41,19 @@ export function ReleaseCurrentVersions({ versions, t }: {
   const unavailable = t("releaseConsole.confirmRun.versionUnavailable");
   return <section className="space-y-2" aria-label={t("releaseConsole.confirmRun.versionSummaryTitle")}>
     <h3 className="font-semibold">{t("releaseConsole.confirmRun.versionSummaryTitle")}</h3>
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
       <VersionCard label={t("releaseConsole.confirmRun.currentAppVersion")}
+        value={versions.androidProduction ?? unavailable} />
+      <VersionCard label={t("releaseConsole.confirmRun.currentAndroidVersion")}
         value={versions.androidCurrent ?? unavailable} />
       <VersionCard label={t("releaseConsole.confirmRun.currentContentVersion")}
         value={versions.contentCurrent ?? unavailable} />
       <VersionCard label={t("releaseConsole.confirmRun.currentOtaVersion")}
         value={versions.otaCurrent ?? unavailable} />
     </div>
+    {versions.platformTruthError ? (
+      <p className="text-sm text-destructive">{versions.platformTruthError}</p>
+    ) : null}
   </section>;
 }
 
@@ -63,15 +64,16 @@ export function ReleaseSelectedVersions({ commandId, versions, parameters, t }: 
   t: (key: string) => string;
 }) {
   const target = targetNativeVersion(versions, parameters);
+  const production = versions.androidProduction;
   const selected = [
     commandId === "release-android"
       ? [
         parameters.nativeVersionAction === "increment-patch"
           ? "selectedNewAndroidVersion"
           : "selectedAndroidBuildVersion",
-        versions.androidCurrent && parameters.nativeVersionAction === "increment-patch"
-          ? nextPatch(versions.androidCurrent)
-          : versions.androidCurrent,
+        production && parameters.nativeVersionAction === "increment-patch"
+          ? nextNativePatchVersion(production)
+          : production,
       ]
       : null,
     // The release opens the shell's own content line; nothing is published for
@@ -79,9 +81,9 @@ export function ReleaseSelectedVersions({ commandId, versions, parameters, t }: 
     commandId === "release-android" && target
       ? ["selectedNewContentVersion", previewOrUndefined(() => releaseContentVersion(target))]
       : null,
-    commandId === "ota-publish" && versions.androidCurrent && isNativeVersion(versions.androidCurrent)
+    commandId === "ota-publish" && production && isNativeVersion(production)
       ? ["selectedNewOtaVersion", previewOrUndefined(
-        () => nextContentVersion(versions.otaCurrent ?? null, versions.androidCurrent!),
+        () => nextContentVersion(versions.otaCurrent ?? null, production),
       )]
       : null,
     ["build-static", "cap-prepare-android", "android-build-debug"].includes(commandId)

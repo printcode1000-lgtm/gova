@@ -127,9 +127,7 @@ export const MARKETPLACE_ORDER_SHARD_DATABASE_NAMES = Object.keys(
 ) as MarketplaceOrderShardName[];
 export const DATABASE_SHARD_NAMES = Object.keys(DATABASE_SHARDS) as DatabaseShardName[];
 
-export function sqliteFileNameForShard(databaseName: DatabaseShardName): string {
-  return `${databaseName}.db`;
-}
+export { sqliteFileNameForShard } from "@asol/dev-core";
 
 export function envPrefixForShard(databaseName: DatabaseShardName): string {
   return databaseName.toUpperCase().replace(/-/g, "_");

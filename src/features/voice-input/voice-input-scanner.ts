@@ -177,7 +177,7 @@ export class VoiceInputScanner {
     if (field instanceof HTMLInputElement) {
       if (this.passwordFields.has(field)) return false;
       if (UNSUPPORTED_INPUT_TYPES.has(field.type)) return false;
-      const identity = `${field.id} ${field.name} ${field.autocomplete} ${field.getAttribute('data-asol-autofill') || ''}`.toLowerCase();
+      const identity = `${field.id} ${field.name} ${field.autocomplete}`.toLowerCase();
       if (identity.includes('password') || identity.includes('passcode')) return false;
     }
 

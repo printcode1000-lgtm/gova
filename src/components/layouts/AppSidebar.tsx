@@ -4,15 +4,12 @@ import {
   Bell,
   ChevronDown,
   Cloud,
-  DatabaseBackup,
   DatabaseZap,
   Edit,
   Eye,
   FileText,
-  Image as ImageIcon,
   Info,
   Languages,
-  LibraryBig,
   LogIn,
   LogOut,
   MessagesSquare,
@@ -60,9 +57,7 @@ import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-stor
 import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
 import { notifications } from "@/features/notifications";
 import { Button } from "@/components/ui/button";
-import { publicEnv } from "@/core/config/public-env";
 import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
-import { isNativePlatform } from '@asol/native-core';
 
 import { AppSidebarProps } from "./app-sidebar/AppSidebar.sidebar-model";
 
@@ -104,13 +99,6 @@ export const AppSidebar = React.memo(function AppSidebar({
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const logout = useLogout();
   const [mounted, setMounted] = useState(false);
-  const [catalogStudioDesktopWeb, setCatalogStudioDesktopWeb] = useState(false);
-  // Capacitor serves production assets from localhost too, so hostname is not
-  // proof of development. A compile-time development build plus a non-native
-  // runtime is the only client-side condition allowed to reveal release tools.
-  const showLocalDevelopmentTools =
-    publicEnv.developmentBuild && !isNativePlatform();
-  const showCatalogStudio = showLocalDevelopmentTools && catalogStudioDesktopWeb;
   const isProfilePage = pathname === "/profile";
   const [activeProfileMode, setActiveProfileMode] = useState<string | null>(
     null,
@@ -140,17 +128,6 @@ export const AppSidebar = React.memo(function AppSidebar({
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const update = () => {
-      setCatalogStudioDesktopWeb(
-        !isNativePlatform() && window.matchMedia("(min-width: 1024px)").matches,
-      );
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
   }, []);
 
   useEffect(() => {
@@ -267,13 +244,7 @@ export const AppSidebar = React.memo(function AppSidebar({
       return;
     }
 
-    if (
-      pathname.includes("/data-health") ||
-      pathname.includes("/dev-cloud-backup") ||
-      pathname.includes("/catalog") ||
-      pathname.includes("/google-play-store-assets") ||
-      pathname.includes("/cloud-accounts")
-    ) {
+    if (pathname.includes("/cloud-accounts")) {
       setSuperAdminGroupsOpen((current) => ({ ...current, data: true }));
       return;
     }
@@ -316,7 +287,7 @@ export const AppSidebar = React.memo(function AppSidebar({
           className={sidebarControlClass}
         >
           <ShieldCheck className={sidebarIconClass} />
-          {t("sidebar.superAdmin")}
+          منطقة السوبر أدمن
           <ChevronDown
             className={cn(
               "ms-auto h-4 w-4 transition-transform",
@@ -350,7 +321,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <Sliders className={sidebarSmallIconClass} />
-                    {t("sidebar.heroSlider")}
+                    شريط العرض الرئيسي
                   </Link>
                   <Link
                     href="/super-admin/featured-marquee"
@@ -358,7 +329,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <Sparkles className={sidebarSmallIconClass} />
-                    {t("sidebar.featuredMarquee")}
+                    الشريط المميز
                   </Link>
                   <Link
                     href="/super-admin/trending-ribbon"
@@ -366,7 +337,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <TrendingUp className={sidebarSmallIconClass} />
-                    {t("sidebar.trendingRibbon")}
+                    شريط الأخبار/النصوص
                   </Link>
                 </div>
               )}
@@ -391,22 +362,6 @@ export const AppSidebar = React.memo(function AppSidebar({
               {superAdminGroupsOpen.data && (
                 <div className={groupPanelClass}>
                   <Link
-                    href="/super-admin/data-health"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <DatabaseZap className={sidebarSmallIconClass} />
-                    فحص سلامة البيانات
-                  </Link>
-                  <Link
-                    href="/super-admin/dev-cloud-backup"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <DatabaseBackup className={sidebarSmallIconClass} />
-                    نسخ سحابة التطوير
-                  </Link>
-                  <Link
                     href="/super-admin/cloud-accounts"
                     onClick={onClose}
                     className={itemClass}
@@ -414,31 +369,6 @@ export const AppSidebar = React.memo(function AppSidebar({
                     <Cloud className={sidebarSmallIconClass} />
                     الحسابات السحابية
                   </Link>
-                  {showCatalogStudio ? (
-                    <Link
-                      href="/super-admin/catalog"
-                      onClick={onClose}
-                      className={itemClass}
-                    >
-                      <LibraryBig className={sidebarSmallIconClass} />
-                      <span className="min-w-0 flex-1">
-                        {t("sidebar.catalogStudio")}
-                      </span>
-                      <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-800">
-                        DEV
-                      </span>
-                    </Link>
-                  ) : null}
-                  {showLocalDevelopmentTools ? (
-                    <Link
-                      href="/super-admin/google-play-store-assets"
-                      onClick={onClose}
-                      className={itemClass}
-                    >
-                      <ImageIcon className={sidebarSmallIconClass} />
-                      {t("releaseConsole.title")}
-                    </Link>
-                  ) : null}
                 </div>
               )}
             </div>
@@ -524,8 +454,6 @@ export const AppSidebar = React.memo(function AppSidebar({
     );
   }, [
     showSuperAdmin,
-    showLocalDevelopmentTools,
-    showCatalogStudio,
     superAdminOpen,
     superAdminGroupsOpen,
     handleSuperAdminToggle,

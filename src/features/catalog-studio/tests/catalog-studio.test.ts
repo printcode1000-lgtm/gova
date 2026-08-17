@@ -107,9 +107,7 @@ assert(apiSource.includes('message === "sessionTokenInvalid"'));
 assert(apiSource.includes("apiError(message, 401)"));
 assert(imageApiSource.includes('message === "sessionTokenInvalid"'));
 assert(imageApiSource.includes("apiError(message, 401)"));
-assert(sidebarSource.includes('href="/super-admin/catalog"'));
-assert(sidebarSource.includes("!isNativePlatform()"));
-assert(sidebarSource.includes('(min-width: 1024px)'));
+assert.doesNotMatch(sidebarSource, /href="\/dev\/catalog-studio"/);
 assert(staticBuilderConfigSource.includes('"app/super-admin/catalog"'));
 assert(staticBuilderSource.includes("auditCatalogStudioExcluded()"));
 

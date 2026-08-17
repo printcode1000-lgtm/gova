@@ -15,7 +15,8 @@
     "paths": {
       "@/*": ["../../src/*"],
       "@asol/storage-core": ["./src/index.ts"],
-      "@asol/storage-core/server": ["./src/server.ts"]
+      "@asol/storage-core/server": ["./src/server.ts"],
+      "@asol/dev-core/server": ["../dev-core/src/server.ts"]
     }
   },
   "include": [

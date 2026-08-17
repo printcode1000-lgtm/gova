@@ -14,24 +14,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { isDevelopment } from '@/core/config';
-import { fillLoginForm } from '@/lib/autofill/login-autofill';
-import { fillRegistrationForm } from '@/lib/autofill/registration-autofill';
 import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
 
 const pages = [
-  { path: '/', name: 'Splash' },
-  { path: '/home', name: 'Home' },
-  { path: '/login', name: 'Login' },
-  { path: '/registration', name: 'Registration' },
-  { path: '/forgot-password', name: 'Forgot Password' },
-  { path: '/profile', name: 'Profile' },
-  { path: '/settings', name: 'Settings' },
-  { path: '/favorites', name: 'Favorites' },
-  { path: '/notifications', name: 'Notifications' },
-  { path: '/orders', name: 'Orders' },
-  { path: '/test1', name: 'Test1' },
-  { path: '/dev/category-selector', name: 'Category Selector' },
-  { path: '/dev/monitor', name: 'Operation Monitor' },
+  { path: '/', name: 'شاشة البداية' },
+  { path: '/dev/category-selector', name: 'محدد الأقسام' },
+  { path: '/dev/monitor', name: 'مراقب العمليات' },
+  { path: '/dev/catalog-studio', name: 'استوديو الكتالوج' },
+  { path: '/dev/data-health', name: 'صحة البيانات' },
+  { path: '/dev/dev-cloud-backup', name: 'النسخ السحابي للتطوير' },
+  { path: '/dev/release-console', name: 'وحدة الإصدار' },
 ];
 
 const SPLASH_NAV_TOGGLE_KEY = 'asol-dev-splash-nav-toggle';
@@ -105,22 +97,6 @@ export function DeveloperBadge() {
     );
   };
 
-  const handleAutofill = async () => {
-    if (pathname === '/registration') {
-      const result = await fillRegistrationForm();
-      console.log('[Autofill Registration]:', result);
-      return;
-    }
-
-    if (pathname === '/login') {
-      const result = await fillLoginForm();
-      console.log('[Autofill Login]:', result);
-      return;
-    }
-
-    console.log('[Autofill] Not available on this page');
-  };
-
   const handleMouseDown = (event: React.MouseEvent) => {
     setIsDragging(true);
     dragStartRef.current = {
@@ -181,10 +157,6 @@ export function DeveloperBadge() {
               )}
             </div>
           ))}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => void handleAutofill()}>
-            ملء النموذج تلقائيًا
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -3,6 +3,7 @@
 import { Bug, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { mergeLiveAndPersistentCounts } from "@asol/system-logs-core";
 
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -38,7 +39,7 @@ export function SuperAdminErrorFloatingButton() {
     let cancelled = false;
     const load = () => {
       void persistentSystemLogApiService
-        .list(sessionToken, { limit: 500 })
+        .list(sessionToken, { limit: 500, level: "error" })
         .then((items) => {
           if (!cancelled) setPersistentLogs(items);
         })
@@ -63,13 +64,19 @@ export function SuperAdminErrorFloatingButton() {
   }, [authorized, session]);
 
   const errorCount = useMemo(() => {
-    const liveErrors = liveLogs
+    const liveErrorCount = liveLogs
       .filter((entry) => entry.level === "error")
       .reduce((sum, entry) => sum + Math.max(1, entry.occurrences), 0);
-    const persistentErrors = persistentLogs
-      .filter((entry) => entry.level === "error")
-      .reduce((sum, entry) => sum + Math.max(1, entry.occurrences), 0);
-    return liveErrors + persistentErrors;
+    const liveFingerprints = new Set(
+      liveLogs
+        .filter((entry) => entry.level === "error")
+        .map((entry) => entry.fingerprint),
+    );
+    return mergeLiveAndPersistentCounts(
+      liveErrorCount,
+      persistentLogs,
+      liveFingerprints,
+    );
   }, [liveLogs, persistentLogs]);
 
   if (!authorized || errorCount === 0) return null;

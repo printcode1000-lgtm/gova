@@ -22,8 +22,6 @@ import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
 import { useLogin } from '@/features/auth/hooks/use-login';
-import { LOGIN_AUTOFILL_EVENT } from '@/lib/autofill/dom-input';
-import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export function LoginPageContent() {
   const router = useRouter();
@@ -32,16 +30,6 @@ export function LoginPageContent() {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const { form, isSubmitting, error, onSubmit } = useLogin();
-
-  React.useEffect(() => {
-    const syncAfterAutofill = () => {
-      void form.trigger(['phone', 'password']).catch((error) => {
-        reportPreAuthFailure('validate-login-autofill', error);
-      });
-    };
-    window.addEventListener(LOGIN_AUTOFILL_EVENT, syncAfterAutofill);
-    return () => window.removeEventListener(LOGIN_AUTOFILL_EVENT, syncAfterAutofill);
-  }, [form]);
 
   return (
     <div className="auth-page">
@@ -86,7 +74,6 @@ export function LoginPageContent() {
                           inputMode="tel"
                           maxLength={11}
                           placeholder={t('auth.login.phonePlaceholder')}
-                          data-asol-autofill="login-phone"
                           className={cn('auth-input ps-12 w-full', fieldState.error && 'border-error')}
                           value={field.value}
                           onChange={(e) =>
@@ -124,7 +111,6 @@ export function LoginPageContent() {
                           autoComplete="current-password"
                           type={showPassword ? 'text' : 'password'}
                           placeholder={t('auth.login.passwordPlaceholder')}
-                          data-asol-autofill="login-password"
                           className={cn('auth-input pe-10 w-full', fieldState.error && 'border-error')}
                           value={field.value}
                           onChange={field.onChange}

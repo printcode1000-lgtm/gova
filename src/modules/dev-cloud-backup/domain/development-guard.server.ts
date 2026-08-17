@@ -1,24 +1,26 @@
 import "server-only";
+
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
+import {
+  assertStrictLocalDevelopmentAllowed,
+  buildLocalDevelopmentEnvironment,
+  isStrictLocalDevelopmentRuntime,
+  readLocalDevelopmentRuntimeFromProcess,
+} from "@asol/dev-core/server";
+
+function readRuntimeInput() {
+  return readLocalDevelopmentRuntimeFromProcess(getServerRuntimeContext());
+}
 
 function isDevCloudBackupRuntimeAllowed(): boolean {
-  const runtime = getServerRuntimeContext();
-  const publicMode = (process.env.NEXT_PUBLIC_ASOL_MODE ?? "")
-    .trim()
-    .toLowerCase();
-  return (
-    process.env.NODE_ENV === "development" &&
-    runtime.isDevelopment &&
-    process.env.NEXT_PHASE !== "phase-production-build" &&
-    publicMode !== "static" &&
-    !process.env.VERCEL
-  );
+  return isStrictLocalDevelopmentRuntime(readRuntimeInput());
 }
 
 export function assertDevCloudBackupAllowed(): void {
-  if (!isDevCloudBackupRuntimeAllowed()) {
-    throw new Error("devCloudBackupDevelopmentOnly");
-  }
+  assertStrictLocalDevelopmentAllowed(
+    readRuntimeInput(),
+    "devCloudBackupDevelopmentOnly",
+  );
 }
 
 export function devCloudBackupEnvironment() {

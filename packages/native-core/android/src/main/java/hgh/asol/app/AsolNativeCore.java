@@ -26,6 +26,8 @@ public final class AsolNativeCore {
         activity.registerPlugin(StorageCapacityPlugin.class);
         activity.registerPlugin(AppSettingsPlugin.class);
         activity.registerPlugin(AsolNotificationInboxPlugin.class);
+        activity.registerPlugin(NativeCrashPlugin.class);
+        NativeCrashReporter.install();
     }
 
     public static void onPostCreate(AppCompatActivity activity, Intent intent) {

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "paths": {
+      "@asol/dev-core": ["./src/index.ts"],
+      "@asol/dev-core/server": ["./src/server.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

@@ -2,12 +2,12 @@
 
 import { Activity, LockKeyhole, Package, Radio, ShieldCheck } from "lucide-react";
 
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { useReleaseOverview } from "../../hooks/use-release-overview";
 import { Metric } from "../components/Metric";
 
 export function OverviewTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const { snapshot, jobs } = useReleaseOverview();
   if (!snapshot) return <div className="p-4 text-sm text-on-surface-variant">{t("releaseConsole.loading")}</div>;
   const activeTracks = (snapshot.tracks ?? []).filter((track) => track.releases.length);

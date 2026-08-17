@@ -21,7 +21,15 @@ export function registerOtaCoreServerPorts(): void {
       reportFailure: () => {
         /* server-side failures go through the log service directly */
       },
-      list: (input) => persistentSystemLogService.list(input),
+      list: async (input) => {
+        const page = await persistentSystemLogService.list({ limit: input.limit });
+        return page.items.map((entry) => ({
+          feature: entry.feature,
+          operation: entry.operation,
+          message: entry.message,
+          occurrences: entry.occurrences,
+        }));
+      },
     },
     identity: { isSuperAdmin: isSuperAdminIdentity },
   });

@@ -2,7 +2,6 @@ import { execFileSync, spawn, type ChildProcess } from "node:child_process";
 import { existsSync, readFileSync, statSync, unlinkSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import dotenv from "dotenv";
 
 import {
   type VercelDeploymentReport,
@@ -12,9 +11,9 @@ import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
 } from "@asol/ota-core/publishing";
+import { loadReleaseEnvironment } from "./load-release-env";
 
-dotenv.config({ path: ".env.local", quiet: true });
-dotenv.config({ path: ".env", quiet: true });
+loadReleaseEnvironment();
 
 const ROOT = process.cwd();
 const MAIN_BRANCH = "main";

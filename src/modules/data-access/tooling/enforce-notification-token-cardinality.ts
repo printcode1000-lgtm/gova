@@ -1,18 +1,13 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { resolveNotificationsSqlitePath } from "@asol/dev-core/server";
 import dotenv from "dotenv";
 
 import { createClient } from "@libsql/client";
 import Database from "better-sqlite3";
 
 const root = process.cwd();
-const localPath = path.join(
-  root,
-  "public",
-  "sync_data",
-  "sync_sqlite",
-  "notifications.db",
-);
+const localPath = resolveNotificationsSqlitePath();
 const migrationPath = path.join(
   root,
   "src",

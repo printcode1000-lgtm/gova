@@ -73,9 +73,10 @@ Searchable field definitions are configured in:
 
 `src/features/product-search/config/product-search-fields.ts`
 
-Field availability per category is controlled by product style settings saved from:
-
-`/dev/category-selector`
+Field availability per category is controlled by product style settings saved from
+`/dev/category-selector`. Runtime resolution of enabled columns uses
+`@asol/product-style-core/server` (`readNormalizedStyleComponents`,
+`filterSearchFieldsByStyle`).
 
 Inside "component settings", the developer can enable or disable each searchable column per component. A field is available only when:
 

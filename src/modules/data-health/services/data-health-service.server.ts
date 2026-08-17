@@ -6,6 +6,7 @@ import { persistentSystemLogService } from "@/features/system-logs/services/pers
 import { imageStorageOrchestrator } from "@asol/storage-core/server";
 
 import { cleanupConfirmationText, DATA_HEALTH_POLICY } from "../domain/policy";
+import { assertDataHealthAllowed } from "../domain/development-guard.server";
 import { resolveDataHealthExecutionContext } from "../domain/execution-context.server";
 import type {
   DataHealthCleanupPlan,
@@ -33,14 +34,17 @@ function quarantineEntryResourceType(entry: Record<string, unknown>) {
 
 export class DataHealthService {
   scan(): Promise<DataHealthReport> {
+    assertDataHealthAllowed();
     return dataHealthRepository.scan();
   }
 
   history() {
+    assertDataHealthAllowed();
     return dataHealthRepository.history();
   }
 
   compareSchema(): Promise<DataHealthSchemaComparison> {
+    assertDataHealthAllowed();
     return schemaComparisonRepository.compare();
   }
 
@@ -48,6 +52,7 @@ export class DataHealthService {
     adminUid: string;
     quarantineId: string;
   }) {
+    assertDataHealthAllowed();
     const entry = await dataHealthRepository.getQuarantineEntry(
       input.quarantineId,
     );
@@ -86,6 +91,7 @@ export class DataHealthService {
   }
 
   async releaseQuarantine(input: { adminUid: string; quarantineId: string }) {
+    assertDataHealthAllowed();
     const entry = await dataHealthRepository.getQuarantineEntry(
       input.quarantineId,
     );
@@ -105,6 +111,7 @@ export class DataHealthService {
   }
 
   async clearQuarantine(input: { adminUid: string; confirm: string }) {
+    assertDataHealthAllowed();
     if (input.confirm !== "CLEAR_DATA_HEALTH_QUARANTINE") {
       throw new Error("dataHealthCleanupConfirmationRequired");
     }
@@ -179,7 +186,7 @@ export class DataHealthService {
       source: "server",
       consoleMethod: "server.info",
       message: `Data health quarantine cleared: cleared=${cleared}, storage=${deletedStorageObjects}, records=${deletedRecords}, skipped=${skipped.length}`,
-      page: "/super-admin/data-health",
+      page: "/dev/data-health",
       platform: "server",
       feature: "DataHealth",
       operation: "clear-quarantine",
@@ -197,6 +204,7 @@ export class DataHealthService {
   }
 
   async clearRunHistory(input: { adminUid: string; confirm: string }) {
+    assertDataHealthAllowed();
     if (input.confirm !== "CLEAR_DATA_HEALTH_RUN_HISTORY") {
       throw new Error("dataHealthCleanupConfirmationRequired");
     }
@@ -207,7 +215,7 @@ export class DataHealthService {
       source: "server",
       consoleMethod: "server.info",
       message: `Data health run history cleared: runs=${result.runs}, findings=${result.findings}`,
-      page: "/super-admin/data-health",
+      page: "/dev/data-health",
       platform: "server",
       feature: "DataHealth",
       operation: "clear-run-history",
@@ -219,6 +227,7 @@ export class DataHealthService {
   }
 
   async clearCleanupAudit(input: { adminUid: string; confirm: string }) {
+    assertDataHealthAllowed();
     if (input.confirm !== "CLEAR_DATA_HEALTH_CLEANUP_AUDIT") {
       throw new Error("dataHealthCleanupConfirmationRequired");
     }
@@ -229,7 +238,7 @@ export class DataHealthService {
       source: "server",
       consoleMethod: "server.info",
       message: `Data health cleanup audit cleared: audit=${result.audit}`,
-      page: "/super-admin/data-health",
+      page: "/dev/data-health",
       platform: "server",
       feature: "DataHealth",
       operation: "clear-cleanup-audit",
@@ -244,6 +253,7 @@ export class DataHealthService {
     adminUid: string;
     issueIds: string[];
   }): Promise<DataHealthCleanupPlan> {
+    assertDataHealthAllowed();
     const issueIds = [
       ...new Set(input.issueIds.map((id) => id.trim()).filter(Boolean)),
     ];
@@ -305,6 +315,7 @@ export class DataHealthService {
     planId: string;
     confirmationText: string;
   }): Promise<DataHealthCleanupResult> {
+    assertDataHealthAllowed();
     const plan = await dataHealthRepository.getCleanupPlan(input.planId);
     if (!plan || text(plan.admin_uid) !== input.adminUid) {
       throw new Error("dataHealthPlanInvalid");
@@ -348,7 +359,7 @@ export class DataHealthService {
         consoleMethod:
           result.skipped.length > 0 ? "server.warn" : "server.info",
         message: `Data health cleanup plan ${input.planId}: cleaned=${result.cleaned.length}, skipped=${result.skipped.length}`,
-        page: "/super-admin/data-health",
+        page: "/dev/data-health",
         platform: "server",
         feature: "DataHealth",
         operation: "cleanup",

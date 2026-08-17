@@ -52,6 +52,8 @@ for (const route of [
   "app/super-admin/google-play-store-assets",
   "app/super-admin/google-play-console",
   "app/super-admin/ota-releases",
+  "app/super-admin/data-health",
+  "app/super-admin/dev-cloud-backup",
 ]) {
   assert.ok(staticBuilderConfigSource.includes(`"${route}"`),
     `${route} must be removed before static/mobile builds`);
@@ -64,9 +66,19 @@ const releasePageSource = await readFile(
 );
 assert.match(releasePageSource, /getServerRuntimeContext\(\)\.isDevelopment.*notFound/,
   "the release console page must return 404 outside server development");
+for (const pagePath of [
+  "src/app/super-admin/data-health/page.tsx",
+  "src/app/super-admin/dev-cloud-backup/page.tsx",
+]) {
+  const pageSource = await readFile(pagePath, "utf8");
+  assert.match(pageSource, /getServerRuntimeContext\(\)\.isDevelopment.*notFound/,
+    `${pagePath} must return 404 outside server development`);
+}
 const sidebarSource = await readFile("src/components/layouts/AppSidebar.tsx", "utf8");
-assert.match(sidebarSource, /publicEnv\.developmentBuild && !isNativePlatform\(\)/,
-  "release tools must stay hidden in native and production clients");
+assert.doesNotMatch(sidebarSource, /href="\/dev\/data-health"/,
+  "data health belongs under /dev and must not appear in the sidebar");
+assert.doesNotMatch(sidebarSource, /href="\/dev\/dev-cloud-backup"/,
+  "dev cloud backup belongs under /dev and must not appear in the sidebar");
 assert.doesNotMatch(sidebarSource, /window\.location\.hostname/,
   "localhost cannot identify development because Capacitor also uses it");
 const releaseConfirmDialogSource = await readFile(
@@ -80,9 +92,9 @@ assert.match(releaseConfirmDialogSource, /parameters:\s*\{\s*\.\.\.\(pending\?\.
 assert.match(releaseConfirmDialogSource,
   /!phraseSatisfied\s*\|\|\s*!minimumNativeVersionSatisfied\s*\|\|\s*!requiredParametersSatisfied/,
   "release confirmation must stay disabled until all safety-critical parameters are present");
-const locales = await Promise.all(["en", "ar"].map(async (locale) => JSON.parse(
-  await readFile(`src/locales/${locale}.json`, "utf8"),
-) as Record<string, string>));
+const adminAr = JSON.parse(
+  await readFile("src/locales/admin-ar.json", "utf8"),
+) as Record<string, string>;
 for (const command of BUILD_COMMAND_CATALOG) {
   assert.ok(packageJson.scripts[command.script], `Catalog command ${command.id} references missing script ${command.script}`);
   assert.ok(command.documentation.descriptionKey && command.documentation.producesKey && command.documentation.mutatesKey && command.documentation.prerequisitesKey);
@@ -90,7 +102,7 @@ for (const command of BUILD_COMMAND_CATALOG) {
   assert.deepEqual(command.argv, [], `${command.id} must express options through its parameter schema`);
   for (const field of ["title", "description", "produces", "mutates", "prerequisites"] as const) {
     const key = `releaseConsole.commandDocs.${command.id}.${field}`;
-    for (const locale of locales) assert.ok(locale[key]?.trim(), `missing localized command documentation: ${key}`);
+    assert.ok(adminAr[key]?.trim(), `missing Arabic command documentation: ${key}`);
   }
 }
 assert.equal(BUILD_COMMAND_CATALOG.filter((item) => item.script === "ota:publish").length, 1);
@@ -416,8 +428,10 @@ try {
   // And the store-release path must use the line rule, not the publish one — otherwise the
   // keep-current button regresses to always failing.
   const capBuild = await readFile("scripts/cap-build.ts", "utf8");
-  assert.match(capBuild, /assertContentLineDoesNotRegress\(version, previousLocalVersion\)/,
+  assert.match(capBuild, /regressionBaselineFromLocalManifest/,
     "the store-release path must allow rebuilding on the same content line");
+  assert.match(capBuild, /assertContentLineDoesNotRegress\(version, regressionBaseline\)/,
+    "the store-release path must compare against a phantom-safe baseline");
   assert.doesNotMatch(capBuild, /assertContentVersionAdvances/,
     "the publish-only ordering rule must not be applied to a build that publishes nothing");
 
@@ -429,10 +443,16 @@ try {
   // The guard used to be conditional on the target not outranking the baseline, so a shell
   // already ahead of the last store tag — the normal state between releases — kept its
   // version while carrying new native code.
-  assert.match(capBuild, /hasCompiledChanges && action === "current"/,
+  const platformTruth = await readFile(
+    "packages/ota-core/src/domain/versioning/platform-version-truth.ts",
+    "utf8",
+  );
+  assert.match(platformTruth, /if \(action === "current"\)[\s\S]*hasNativeChanges/,
     "keep-current must refuse whenever the build contains compiled native changes");
-  assert.match(capBuild, /Refusing to keep Android version/,
-    "the refusal must name the reason and point at --native-version=next-patch");
+  assert.match(platformTruth, /Refusing to keep Android version/,
+    "the refusal must name the reason");
+  assert.match(capBuild, /requireGooglePlayProductionNativeVersion/,
+    "cap-build must read Google Play Production before planning Android versions");
 
   // Stages announced by a script are authoritative: the real order differs per
   // path, so ranking them against one fixed sequence hid steps that ran.
@@ -554,7 +574,7 @@ try {
   await assert.rejects(analyzeBundleArtifact(unknownPath), /UnclassifiedEntries/);
 } finally { await rm(temp, { recursive: true, force: true }); }
 
-await verifyPresentationStructure(locales);
+await verifyPresentationStructure([adminAr]);
 await verifyRealRunnerSmokeTest();
 await verifyCancellationPaths();
 await verifyArtifactCollection();

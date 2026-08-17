@@ -7,28 +7,53 @@
 - Live in-memory logs for the current Super Admin session.
 - Persisted central logs collected from Web, Android, iOS, and server/API code.
 
-The goal is that application errors do not disappear silently. Browser runtime
-errors, React errors, failed resources, failed API calls, mapped server errors,
-and unhandled API route exceptions all have a registration path.
+The goal is that **no error, break, or gap can remain silent** across operating
+systems and scenarios. Browser runtime errors, React errors, failed resources,
+failed API calls, mapped server errors, pre-auth bootstrap failures, and
+unhandled API route exceptions all have a registration path.
+
+## Sealed package
+
+Core logic lives in `@asol/system-logs-core` (see
+[module-isolation-rules.md](../01-architecture/module-isolation-rules.md)).
+The application wires ports through:
+
+```text
+src/features/system-logs/system-logs-core-bootstrap.ts        (browser)
+src/features/system-logs/system-logs-core-bootstrap.server.ts (server)
+```
+
+Doors:
+
+- `@asol/system-logs-core` — browser-safe capture, memory store, sanitization
+- `@asol/system-logs-core/server` — persistence, ingest validation, retention, SSE
+
+`test:system-logs-core` gates `build`, `build:static`, and `test`.
 
 ## Client coverage
 
-`SystemLogCollector` is mounted in the root layout. It wraps:
+`SystemLogCollector` mounts in the root layout and calls `installGlobalCapture()`
+from the package. One coordinator deduplicates submissions and covers:
 
-- `console.warn`
-- `console.error`
+- `console.warn` / `console.error` (and other console levels for live view)
 - `window.error`
 - `unhandledrejection`
-- resource load failures for images, scripts, iframes, and links
+- resource load failures (images, scripts, iframes, links)
+- native crash bridge via `asol:native-crash` custom events
 
-The live in-memory store is visible only when the current session is Super Admin.
-Persisted warning/error telemetry is submitted for all users through:
+The live in-memory store is visible only when the current session is Super Admin
+(max 2,000 entries). Persisted warning/error telemetry is submitted for all
+users through:
 
 ```text
 POST /api/system-logs/ingest
 ```
 
 Normal console messages stay local and are not persisted.
+
+Explicit `reportPreAuthFailure()` and `reportSystemIssue()` calls in catch
+blocks remain required for failures that are caught before they reach global
+handlers.
 
 ## React and Next.js coverage
 
@@ -44,12 +69,12 @@ Several important routes also keep local `error.tsx` files using
 ## API and server coverage
 
 Business API routes use `runTracedBusinessRoute`. Unhandled route failures are
-persisted with route name and execution context.
+persisted with route name and execution context. Errors already logged by the
+tracer are marked so `mapServiceError` does not double-persist them.
 
-Most API route catch blocks return `mapServiceError(error)`. That function now
-also records the mapped error centrally before returning a JSON error response.
-This closes the common gap where a server error is intentionally caught and
-therefore never reaches `console.error`.
+Most API route catch blocks return `mapServiceError(error)`. That function
+records the mapped error centrally before returning a JSON error response unless
+the error was already logged.
 
 The system intentionally does not log the system-log API recursively.
 
@@ -69,95 +94,100 @@ It is also part of `npm test`. The guard fails when it finds:
 - API routes without a tracing wrapper or a catch block
 - search API catch blocks that return generic errors instead of
   `mapServiceError(error)`
+- pre-auth critical files without `reportPreAuthFailure` or `reportSystemIssue`
 
 The only approved rejection suppression is the final fallback around the logging
 call itself, for example `logServerSystemIssue(...).catch(() => undefined)`.
-That prevents recursive failures if the central logging route or database is the
-thing currently failing.
 
-Non-critical client fallbacks, such as failed page snapshots, push cleanup,
-notification receipts, logout cleanup, and profile preview helper loads, now
-write `console.warn` or `console.error`. Because the root collector captures
-warnings and errors on Web, Android WebView, and iOS WebView, these are no
-longer silent.
+Package tests include a scenario-coverage check that asserts every capture
+surface file exists (collector, boundary, global-error, traced-route, etc.).
 
 ## Storage
 
-Persistent logs are stored in the profile database:
+Persistent logs are stored in the profile database table `system_logs`. The
+package repository creates or migrates the schema on first use, including
+correlation columns:
 
-```text
-system_logs
-```
+- `correlation_id`
+- `request_flow_id`
+- `session_id`
+- `monitor_trace_id`
 
-Migration:
+Retention runs on write (`SYSTEM_LOGS_RETENTION_DAYS`, default 90).
 
-```text
-src/modules/data-access/core/database/profile/migrations/0013_system_logs.sql
-```
+## Super Admin APIs
 
-The repository also creates the table on first use so existing local SQLite
-databases are healed without requiring a manual reset.
+| Route | Purpose |
+|-------|---------|
+| `GET /api/system-logs` | Paginated list (`cursor`, `query`, `platform`, `feature`, …) |
+| `GET /api/system-logs/summary` | Dashboard totals and top features |
+| `GET /api/system-logs/stream` | SSE live feed for Super Admin |
+| `POST /api/system-logs/ingest` | Client/server telemetry ingest |
+| `DELETE /api/system-logs` | Clear by level or all |
+
+Only the configured Super Admin identity can list, stream, or clear persisted
+logs.
 
 ## Super Admin page
 
-`/super-admin/logs` loads persisted logs through:
+`/super-admin/logs` shows:
 
-```text
-GET /api/system-logs?uid=&phone=&limit=
-```
+- summary cards (total errors, last hour, top features)
+- search and platform filters
+- cloud error panel with HTTP/feature filters
+- live sections: normal / warning / error
+- SSE refresh plus 20s polling fallback
 
-Only the configured Super Admin identity can list or clear persisted logs.
-
-The page groups logs by:
-
-- normal
-- warning
-- error
-
-Persisted entries are marked as saved. The clear-all and clear-section actions
-clear both the live local store and the persisted store.
+Persisted entries are marked as saved. The floating error button deduplicates
+live and persisted counts by fingerprint.
 
 ## Platforms
 
-Client logs mark platform as:
+| Platform | Capture path |
+|----------|----------------|
+| `web` | Global capture + ingest |
+| `android` | Capacitor WebView + ingest |
+| `ios` | Capacitor WebView + ingest |
+| `server` | `logServerSystemIssue` + trusted ingest |
 
-- `web`
-- `android`
-- `ios`
-
-Server logs mark platform as:
-
-- `server`
-
-Capacitor WebView errors are captured at the JavaScript/WebView layer. Native
-crashes that terminate the app before JavaScript can run still require a native
-crash reporter or a platform bridge, but JavaScript, WebView, API, and server
-errors now have a central logging path.
+Native crashes before JavaScript loads are captured by `NativeCrashPlugin` in
+`@asol/native-core`, which dispatches `asol:native-crash` to the WebView. The
+system-logs bootstrap forwards those records to ingest automatically.
 
 ## Privacy and safety
 
-The server redacts common sensitive values before storage:
+The server redacts common sensitive values before storage. Client submissions
+are deduplicated for 15 seconds before sending. Server storage deduplicates by
+fingerprint and increments `occurrences`.
 
-- email addresses
-- Egyptian mobile phone patterns
-- token, secret, password, and authorization-like values
+Optional alert webhook (`SYSTEM_LOGS_ALERT_WEBHOOK_URL`) fires when the same
+fingerprint exceeds the threshold within the alert window.
 
-Client submissions are deduplicated for a short window before sending. Server
-storage deduplicates by fingerprint and increments `occurrences`.
+## Environment variables
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `SYSTEM_LOGS_RETENTION_DAYS` | `90` | Prune logs older than N days |
+| `SYSTEM_LOGS_ALERT_THRESHOLD` | `10` | Occurrences before webhook |
+| `SYSTEM_LOGS_ALERT_WINDOW_MS` | `3600000` | Alert window (1 hour) |
+| `SYSTEM_LOGS_ALERT_WEBHOOK_URL` | — | Optional POST target |
 
 ## Source map
 
 ```text
+packages/system-logs-core/
+  src/index.ts
+  src/server.ts
+  src/browser/global-capture.ts
+  src/browser/capture-coordinator.ts
+  src/server/repository.ts
+  src/server/persistent-log-service.ts
+  src/tests/scenario-coverage.test.ts
+
 src/features/system-logs/
   SystemLogCollector.tsx
-  SystemLogErrorBoundary.tsx
-  RouteErrorFallback.tsx
-  report-system-issue.ts
-  persistent-client-log.ts
-  entities/persistent-system-log.entity.ts
-  repositories/persistent-system-log-repository.ts
-  services/persistent-system-log-service.server.ts
-  services/persistent-system-log-api-service.ts
+  system-logs-core-bootstrap.ts
+  system-logs-core-bootstrap.server.ts
 
 src/app/api/system-logs/
 src/app/global-error.tsx

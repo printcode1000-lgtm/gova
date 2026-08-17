@@ -56,6 +56,12 @@
       "@asol/catalog-core/server": [
         "./generated/packages/catalog-core/src/server.ts"
       ],
+      "@asol/dev-core": [
+        "./generated/packages/dev-core/src/index.ts"
+      ],
+      "@asol/dev-core/server": [
+        "./generated/packages/dev-core/src/server.ts"
+      ],
       "@asol/profiles-composition": [
         "./generated/packages/profiles-composition/src/index.ts"
       ],

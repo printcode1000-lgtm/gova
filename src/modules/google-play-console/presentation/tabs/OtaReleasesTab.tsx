@@ -4,13 +4,13 @@ import { Ban, CheckCircle2, ClipboardCopy, CloudDownload, RefreshCw, Save } from
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { useOtaAdmin } from "../../hooks/use-ota-admin";
 import { Metric } from "../components/Metric";
 import { OtaReleaseChanges } from "../components/OtaReleaseChanges";
 
 export function OtaReleasesTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const ota = useOtaAdmin();
   const current = ota.dashboard?.current;
   const release = current?.release;

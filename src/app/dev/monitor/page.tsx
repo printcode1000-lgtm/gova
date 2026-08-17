@@ -51,6 +51,17 @@ function diffLines(prevStr: string, currStr: string) {
   return result;
 }
 
+const MONITOR_TABS = [
+  { id: 'dashboard', label: 'لوحة المتابعة' },
+  { id: 'operations', label: 'العمليات' },
+  { id: 'timeline', label: 'الخط الزمني' },
+  { id: 'call-graph', label: 'مخطط الاستدعاء' },
+  { id: 'dependency', label: 'التبعيات' },
+  { id: 'analytics', label: 'التحليلات' },
+  { id: 'schema-sync', label: 'مزامنة المخطط' },
+  { id: 'pinned', label: 'المثبتة' },
+] as const;
+
 // ─── Component ───────────────────────────────────────────────────────────────
 export default function MonitorPage() {
   const {
@@ -191,7 +202,7 @@ export default function MonitorPage() {
   }, [operations]);
 
   return (
-    <div className="monitor-container">
+    <div className="monitor-container" dir="rtl">
       {/* Dynamic Theme Styles */}
       <style dangerouslySetInnerHTML={{ __html: `
         :root[data-monitor-theme="dark"] {
@@ -715,40 +726,40 @@ export default function MonitorPage() {
       {/* ─── HEADER ─── */}
       <header className="header no-print">
         <div className="header-title">
-          <h1>ASOL Operation Monitor</h1>
-          {isLive && <span className="badge-live">LIVE MONITORING</span>}
+          <h1>مراقب عمليات ASOL</h1>
+          {isLive && <span className="badge-live">مراقبة مباشرة</span>}
         </div>
         <div className="header-actions">
           <button className="btn" onClick={toggleTheme}>
-            {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+            {theme === 'dark' ? '☀️ الوضع الفاتح' : '🌙 الوضع الداكن'}
           </button>
           <button className="btn" onClick={toggleLive}>
-            {isLive ? '⏸️ Pause Stream' : '▶️ Resume Stream'}
+            {isLive ? '⏸️ إيقاف البث' : '▶️ استئناف البث'}
           </button>
           <button className="btn" onClick={clear}>
-            🗑️ Clear logs
+            🗑️ مسح السجلات
           </button>
           <button className="btn" onClick={exportJSON}>
-            📥 Export JSON
+            📥 تصدير JSON
           </button>
           <button className="btn" onClick={exportHTML}>
-            📄 Export HTML
+            📄 تصدير HTML
           </button>
           <button className="btn" onClick={exportPDF}>
-            🖨️ Print PDF
+            🖨️ طباعة PDF
           </button>
         </div>
       </header>
 
       {/* ─── TABS ─── */}
       <nav className="tabs no-print">
-        {['dashboard', 'operations', 'timeline', 'call-graph', 'dependency', 'analytics', 'schema-sync', 'pinned'].map((t) => (
+        {MONITOR_TABS.map((tab) => (
           <button
-            key={t}
-            className={`tab-btn ${activeTab === t ? 'active' : ''}`}
-            onClick={() => setActiveTab(t)}
+            key={tab.id}
+            className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
           >
-            {t.toUpperCase()}
+            {tab.label}
           </button>
         ))}
       </nav>
@@ -757,121 +768,121 @@ export default function MonitorPage() {
       <div className="filters-panel no-print">
         <div className="filters-grid">
           <div className="filter-group">
-            <label>Feature</label>
+            <label>الميزة</label>
             <select
               className="filter-input"
               value={filter.feature}
               onChange={(e) => setFilter({ feature: e.target.value })}
             >
-              <option value="">All Features</option>
+              <option value="">كل الميزات</option>
               {filterOptions.features.map((f) => <option key={f} value={f}>{f}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Page</label>
+            <label>الصفحة</label>
             <select
               className="filter-input"
               value={filter.page}
               onChange={(e) => setFilter({ page: e.target.value })}
             >
-              <option value="">All Pages</option>
+              <option value="">كل الصفحات</option>
               {filterOptions.pages.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Component</label>
+            <label>المكوّن</label>
             <select
               className="filter-input"
               value={filter.component}
               onChange={(e) => setFilter({ component: e.target.value })}
             >
-              <option value="">All Components</option>
+              <option value="">كل المكوّنات</option>
               {filterOptions.components.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Hook</label>
+            <label>الخطاف</label>
             <select
               className="filter-input"
               value={filter.hook}
               onChange={(e) => setFilter({ hook: e.target.value })}
             >
-              <option value="">All Hooks</option>
+              <option value="">كل الخطافات</option>
               {filterOptions.hooks.map((h) => <option key={h} value={h}>{h}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Service</label>
+            <label>الخدمة</label>
             <select
               className="filter-input"
               value={filter.service}
               onChange={(e) => setFilter({ service: e.target.value })}
             >
-              <option value="">All Services</option>
+              <option value="">كل الخدمات</option>
               {filterOptions.services.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Repository</label>
+            <label>المستودع</label>
             <select
               className="filter-input"
               value={filter.repository}
               onChange={(e) => setFilter({ repository: e.target.value })}
             >
-              <option value="">All Repositories</option>
+              <option value="">كل المستودعات</option>
               {filterOptions.repositories.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Table</label>
+            <label>الجدول</label>
             <select
               className="filter-input"
               value={filter.table}
               onChange={(e) => setFilter({ table: e.target.value })}
             >
-              <option value="">All Tables</option>
+              <option value="">كل الجداول</option>
               {filterOptions.tables.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Entity</label>
+            <label>الكيان</label>
             <select
               className="filter-input"
               value={filter.entity}
               onChange={(e) => setFilter({ entity: e.target.value })}
             >
-              <option value="">All Entities</option>
+              <option value="">كل الكيانات</option>
               {filterOptions.entities.map((ent) => <option key={ent} value={ent}>{ent}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Query Key</label>
+            <label>مفتاح الاستعلام</label>
             <select
               className="filter-input"
               value={filter.queryKey}
               onChange={(e) => setFilter({ queryKey: e.target.value })}
             >
-              <option value="">All Query Keys</option>
+              <option value="">كل مفاتيح الاستعلام</option>
               {filterOptions.queryKeys.map((qk) => <option key={qk} value={qk}>{qk}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Op Type</label>
+            <label>نوع العملية</label>
             <select
               className="filter-input"
               value={filter.operationType}
               onChange={(e) => setFilter({ operationType: e.target.value })}
             >
-              <option value="">All Types</option>
+              <option value="">كل الأنواع</option>
               <option value="SELECT">SELECT</option>
               <option value="INSERT">INSERT</option>
               <option value="UPDATE">UPDATE</option>
@@ -880,44 +891,44 @@ export default function MonitorPage() {
           </div>
 
           <div className="filter-group">
-            <label>Status</label>
+            <label>الحالة</label>
             <select
               className="filter-input"
               value={filter.status}
               onChange={(e) => setFilter({ status: e.target.value })}
             >
-              <option value="">All Statuses</option>
-              <option value="success">Success</option>
-              <option value="pending">Pending</option>
-              <option value="error">Error</option>
+              <option value="">كل الحالات</option>
+              <option value="success">نجاح</option>
+              <option value="pending">قيد التنفيذ</option>
+              <option value="error">خطأ</option>
             </select>
           </div>
 
           <div className="filter-group">
-            <label>DB Driver</label>
+            <label>محرك قاعدة البيانات</label>
             <select
               className="filter-input"
               value={filter.dbDriver}
               onChange={(e) => setFilter({ dbDriver: e.target.value })}
             >
-              <option value="">All Drivers</option>
-              <option value="SQLite-Dev">SQLite Dev</option>
-              <option value="Turso-Production">Turso Production</option>
+              <option value="">كل المحركات</option>
+              <option value="SQLite-Dev">SQLite للتطوير</option>
+              <option value="Turso-Production">Turso للإنتاج</option>
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Cache Source</label>
+            <label>مصدر الذاكرة المؤقتة</label>
             <select
               className="filter-input"
               value={filter.cacheSource}
               onChange={(e) => setFilter({ cacheSource: e.target.value })}
             >
-              <option value="">All Cache Sources</option>
-              <option value="Memory">Memory Cache</option>
+              <option value="">كل مصادر الذاكرة المؤقتة</option>
+              <option value="Memory">ذاكرة مؤقتة RAM</option>
               <option value="IndexedDB">IndexedDB</option>
               <option value="HTTP">HTTP (AsolApiClient)</option>
-              <option value="Database">Database Source</option>
+              <option value="Database">مصدر قاعدة البيانات</option>
             </select>
           </div>
         </div>
@@ -925,11 +936,11 @@ export default function MonitorPage() {
         <div className="search-bar">
           <input
             className="filter-input search-input"
-            placeholder="Type features, SQL, hooks, query keys, error messages to search..."
+            placeholder="ابحث في الميزات أو SQL أو الخطافات أو مفاتيح الاستعلام أو رسائل الخطأ..."
             value={filter.search}
             onChange={(e) => setFilter({ search: e.target.value })}
           />
-          <button className="btn" onClick={resetFilter}>Reset Filters</button>
+          <button className="btn" onClick={resetFilter}>إعادة ضبط الفلاتر</button>
         </div>
       </div>
 
@@ -938,72 +949,72 @@ export default function MonitorPage() {
         <section>
           <div className="stats-grid">
             <div className="stat-card">
-              <span className="stat-title">Total Operations</span>
+              <span className="stat-title">إجمالي العمليات</span>
               <span className="stat-value">{filteredOps.length}</span>
               <div className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Reads (SELECT)</span>
+              <span className="stat-title">قراءات (SELECT)</span>
               <span className="stat-value">{stats.totalReads}</span>
               <div className="card-accent" style={{ '--accent': '#22c55e' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Writes (MUTATIONS)</span>
+              <span className="stat-title">كتابات (MUTATIONS)</span>
               <span className="stat-value">{stats.totalWrites}</span>
               <div className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Total DB Calls</span>
+              <span className="stat-title">إجمالي استدعاءات قاعدة البيانات</span>
               <span className="stat-value">{stats.totalDbCalls}</span>
               <div className="card-accent" style={{ '--accent': '#a855f7' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Cache Hits</span>
+              <span className="stat-title">إصابات الذاكرة المؤقتة</span>
               <span className="stat-value">{stats.totalCacheHits}</span>
               <div className="card-accent" style={{ '--accent': '#eab308' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Cache Misses</span>
+              <span className="stat-title">إخفاقات الذاكرة المؤقتة</span>
               <span className="stat-value">{stats.totalCacheMisses}</span>
               <div className="card-accent" style={{ '--accent': '#a855f7' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Cache Hit Rate</span>
+              <span className="stat-title">نسبة إصابة الذاكرة المؤقتة</span>
               <span className="stat-value">{stats.cacheHitRate}%</span>
               <div className="card-accent" style={{ '--accent': '#eab308' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Active Queries</span>
+              <span className="stat-title">استعلامات نشطة</span>
               <span className="stat-value">{stats.activeQueries}</span>
               <div className="card-accent" style={{ '--accent': '#06b6d4' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Active Mutations</span>
+              <span className="stat-title">تعديلات نشطة</span>
               <span className="stat-value">{stats.activeMutations}</span>
               <div className="card-accent" style={{ '--accent': '#f97316' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Offline Reads</span>
+              <span className="stat-title">قراءات دون اتصال</span>
               <span className="stat-value">{stats.offlineReads}</span>
               <div className="card-accent" style={{ '--accent': '#64748b' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Online Reads</span>
+              <span className="stat-title">قراءات متصلة</span>
               <span className="stat-value">{stats.onlineReads}</span>
               <div className="card-accent" style={{ '--accent': '#3b82f6' } as any} />
             </div>
             <div className="stat-card">
-              <span className="stat-title">Avg DB Time</span>
+              <span className="stat-title">متوسط زمن قاعدة البيانات</span>
               <span className="stat-value">{stats.avgExecutionTime} ms</span>
               <div className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
             <div className="stat-card alert">
-              <span className="stat-title">N+1 Query Alerts</span>
+              <span className="stat-title">تنبيهات N+1</span>
               <span className="stat-value" style={{ color: '#f97316' }}>{stats.n1Alerts}</span>
               <div className="card-accent" style={{ '--accent': '#f97316' } as any} />
             </div>
             <div className="stat-card error">
-              <span className="stat-title">Duplicate Queries</span>
+              <span className="stat-title">استعلامات مكررة</span>
               <span className="stat-value" style={{ color: '#ef4444' }}>{stats.duplicateAlerts}</span>
               <div className="card-accent" style={{ '--accent': '#ef4444' } as any} />
             </div>
@@ -1011,16 +1022,16 @@ export default function MonitorPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             <div className="detail-section">
-              <div className="detail-section-title">Slowest DB Operations</div>
+              <div className="detail-section-title">أبطأ عمليات قاعدة البيانات</div>
               {stats.slowestOps.length === 0 ? (
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>No database queries recorded.</div>
+                <div style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد استعلامات مسجّلة.</div>
               ) : (
                 <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--border)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                      <th style={{ padding: '6px' }}>Table</th>
-                      <th style={{ padding: '6px' }}>Op</th>
-                      <th style={{ padding: '6px', textAlign: 'right' }}>Time (ms)</th>
+                      <th style={{ padding: '6px' }}>الجدول</th>
+                      <th style={{ padding: '6px' }}>العملية</th>
+                      <th style={{ padding: '6px', textAlign: 'right' }}>المدة (ms)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1037,20 +1048,20 @@ export default function MonitorPage() {
             </div>
 
             <div className="detail-section">
-              <div className="detail-section-title">N+1 / Duplicate Warnings</div>
+              <div className="detail-section-title">تحذيرات N+1 / التكرار</div>
               <div style={{ maxHeight: '200px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {filteredOps.filter(o => o.isDuplicate || o.isN1).length === 0 ? (
-                  <div style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>All clear! No N+1 or duplicates flagged.</div>
+                  <div style={{ fontSize: '13px', color: 'var(--text-muted)', padding: '8px' }}>لا توجد مشاكل N+1 أو تكرار.</div>
                 ) : (
                   filteredOps.filter(o => o.isDuplicate || o.isN1).map((op) => (
                     <div key={op.id} className="tree-node-row" onClick={() => selectOperation(op.id)} style={{ borderLeft: op.isDuplicate ? '3px solid #ef4444' : '3px solid #f97316', paddingLeft: '8px' }}>
                       <div>
-                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Flow: {op.requestFlowId.slice(0, 8)}…</div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>التدفق: {op.requestFlowId.slice(0, 8)}…</div>
                         <div style={{ fontWeight: 600 }}>{op.operationType} {op.table}</div>
                       </div>
                       <div style={{ display: 'flex', gap: '4px' }}>
-                        {op.isDuplicate && <span style={{ background: '#ef4444', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>DUPLICATE</span>}
-                        {op.isN1 && <span style={{ background: '#f97316', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>N+1 ALERT</span>}
+                        {op.isDuplicate && <span style={{ background: '#ef4444', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>مكرر</span>}
+                        {op.isN1 && <span style={{ background: '#f97316', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>تنبيه N+1</span>}
                       </div>
                     </div>
                   ))
@@ -1066,7 +1077,7 @@ export default function MonitorPage() {
         <section className="ops-panel">
           <div className="operations-list-card">
             <div className="card-header">
-              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>Operations Trace (Flow Tree)</h2>
+              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>تتبع العمليات (شجرة التدفق)</h2>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <label style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
                   <input
@@ -1074,11 +1085,11 @@ export default function MonitorPage() {
                     checked={autoScroll}
                     onChange={(e) => setAutoScroll(e.target.checked)}
                   />
-                  📌 Auto-scroll
+                  📌 تمرير تلقائي
                 </label>
                 {!autoScroll && (
                   <button className="btn" style={{ padding: '4px 8px', fontSize: '11px' }} onClick={() => setAutoScroll(true)}>
-                    Re-enable Auto-Scroll
+                    إعادة تفعيل التمرير التلقائي
                   </button>
                 )}
               </div>
@@ -1087,7 +1098,7 @@ export default function MonitorPage() {
             <div className="scrollable-area" ref={listContainerRef} onScroll={handleScroll}>
               {treeData.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
-                  No operations recorded. Trigger some queries or click around.
+                  لا توجد عمليات مسجّلة. نفّذ استعلامات أو تصفّح التطبيق لإظهارها.
                 </div>
               ) : (
                 treeData.map((node) => <TreeItem key={node.key} node={node} onSelect={selectOperation} selectedId={selectedOperationId} />)
@@ -1097,12 +1108,12 @@ export default function MonitorPage() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div className="detail-section">
-              <div className="detail-section-title">How to Trigger Tracking</div>
+              <div className="detail-section-title">كيفية تفعيل التتبع</div>
               <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
                 <ol style={{ paddingLeft: '16px', margin: '4px 0' }}>
-                  <li>Go to auth pages (Login or Register).</li>
-                  <li>Click buttons or fill forms to trigger database and query cache calls.</li>
-                  <li>Operations will dynamically populate this feed in real-time.</li>
+                  <li>انتقل إلى صفحات المصادقة (تسجيل الدخول أو التسجيل).</li>
+                  <li>اضغط الأزرار أو املأ النماذج لتفعيل استدعاءات قاعدة البيانات والذاكرة المؤقتة.</li>
+                  <li>ستظهر العمليات هنا مباشرة في الوقت الفعلي.</li>
                 </ol>
               </div>
             </div>
@@ -1114,7 +1125,7 @@ export default function MonitorPage() {
       {activeTab === 'timeline' && (
         <section>
           <div className="detail-section" style={{ marginBottom: '16px' }}>
-            <label style={{ fontSize: '13px', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Select Request Flow to View Timeline:</label>
+            <label style={{ fontSize: '13px', fontWeight: 600, display: 'block', marginBottom: '6px' }}>اختر تدفق الطلب لعرض الخط الزمني:</label>
             <select
               className="filter-input"
               style={{ width: '100%', maxWidth: '400px' }}
@@ -1123,7 +1134,7 @@ export default function MonitorPage() {
             >
               {flows.map((f) => (
                 <option key={f.id} value={f.id}>
-                  Flow {f.id.slice(0, 8)}… ({f.feature}) — {new Date(f.timestamp).toLocaleTimeString()}
+                  تدفق {f.id.slice(0, 8)}… ({f.feature}) — {new Date(f.timestamp).toLocaleTimeString('ar-EG')}
                 </option>
               ))}
             </select>
@@ -1133,7 +1144,7 @@ export default function MonitorPage() {
             <div>
               <div className="flame-chart-container">
                 <div style={{ fontSize: '14px', fontWeight: 700, borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
-                  Flame Chart (Layer Gantt Trace)
+                  Flame Chart (مخطط جانت للطبقات)
                 </div>
                 <div className="flame-chart">
                   {/* We group flowOps by layers to construct rows */}
@@ -1179,9 +1190,9 @@ export default function MonitorPage() {
               {/* Step-by-Step Timeline Replay Scrub Bar */}
               <div className="detail-section">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <div style={{ fontSize: '14px', fontWeight: 700 }}>Scrub Timeline Replay</div>
+                  <div style={{ fontSize: '14px', fontWeight: 700 }}>إعادة تشغيل الخط الزمني</div>
                   <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                    Step {replayIndex} of {flowOps.length}
+                    الخطوة {replayIndex} من {flowOps.length}
                   </div>
                 </div>
 
@@ -1215,7 +1226,7 @@ export default function MonitorPage() {
               </div>
             </div>
           ) : (
-            <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>No request flows found.</div>
+            <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>لا توجد تدفقات طلب.</div>
           )}
         </section>
       )}
@@ -1224,10 +1235,10 @@ export default function MonitorPage() {
       {activeTab === 'call-graph' && (
         <section>
           <div className="svg-card">
-            <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>Directed Call Chain Graph (SVG)</div>
+            <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>مخطط سلسلة الاستدعاءات (SVG)</div>
             {callGraph.nodes.length === 0 ? (
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                No active nodes in current query filter to draw Call Graph.
+                لا توجد عقد في الفلتر الحالي لرسم مخطط الاستدعاء.
               </div>
             ) : (
               <div style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
@@ -1315,10 +1326,10 @@ export default function MonitorPage() {
       {activeTab === 'dependency' && (
         <section>
           <div className="svg-card">
-            <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>Service ➔ Repository ➔ Query Architecture Map</div>
+            <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '12px' }}>خريطة البنية: خدمة ➔ مستودع ➔ استعلام</div>
             {dependencyGraph.nodes.length === 0 ? (
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                No operations to map dependencies. Run some requests.
+                لا توجد عمليات لرسم التبعيات. نفّذ بعض الطلبات أولاً.
               </div>
             ) : (
               <div style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
@@ -1375,7 +1386,7 @@ export default function MonitorPage() {
                                 {node.label.slice(0, 22)}
                               </text>
                               <text x="75" y="40" textAnchor="middle" fill="var(--text-muted)" fontSize="8">
-                                count: {node.count}
+                                العدد: {node.count}
                               </text>
                             </g>
                           );
@@ -1394,41 +1405,41 @@ export default function MonitorPage() {
       {activeTab === 'analytics' && (
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
           <div className="detail-section">
-            <div className="detail-section-title">Most Active Features</div>
+            <div className="detail-section-title">أكثر الميزات نشاطاً</div>
             {stats.mostActiveFeatures.map((f, i) => (
               <div key={f.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                 <span>{i+1}. {f.name}</span>
-                <span style={{ fontWeight: 'bold' }}>{f.count} ops</span>
+                <span style={{ fontWeight: 'bold' }}>{f.count} عملية</span>
               </div>
             ))}
           </div>
 
           <div className="detail-section">
-            <div className="detail-section-title">Most Active Pages</div>
+            <div className="detail-section-title">أكثر الصفحات نشاطاً</div>
             {stats.mostActivePages.map((p, i) => (
               <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                 <span>{i+1}. {p.name}</span>
-                <span style={{ fontWeight: 'bold' }}>{p.count} ops</span>
+                <span style={{ fontWeight: 'bold' }}>{p.count} عملية</span>
               </div>
             ))}
           </div>
 
           <div className="detail-section">
-            <div className="detail-section-title">Most Active Tables</div>
+            <div className="detail-section-title">أكثر الجداول نشاطاً</div>
             {stats.mostActiveTables.map((t, i) => (
               <div key={t.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                 <span>{i+1}. {t.name}</span>
-                <span style={{ fontWeight: 'bold' }}>{t.count} ops</span>
+                <span style={{ fontWeight: 'bold' }}>{t.count} عملية</span>
               </div>
             ))}
           </div>
 
           <div className="detail-section">
-            <div className="detail-section-title">Most Active Repositories</div>
+            <div className="detail-section-title">أكثر المستودعات نشاطاً</div>
             {stats.mostActiveRepositories.map((r, i) => (
               <div key={r.name} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                 <span>{i+1}. {r.name}</span>
-                <span style={{ fontWeight: 'bold' }}>{r.count} ops</span>
+                <span style={{ fontWeight: 'bold' }}>{r.count} عملية</span>
               </div>
             ))}
           </div>
@@ -1447,12 +1458,12 @@ export default function MonitorPage() {
         <section>
           <div className="operations-list-card" style={{ height: 'auto', minHeight: '300px' }}>
             <div className="card-header">
-              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>📌 Pinned Operations</h2>
+              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>📌 العمليات المثبتة</h2>
             </div>
             <div className="scrollable-area">
               {operations.filter((o) => o.pinned).length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
-                  No pinned operations. Hover over an item in the trace view and click the ⭐ to pin.
+                  لا توجد عمليات مثبتة. مرّر فوق عنصر في التتبع واضغط ⭐ للتثبيت.
                 </div>
               ) : (
                 operations.filter((o) => o.pinned).map((op) => (
@@ -1470,7 +1481,7 @@ export default function MonitorPage() {
                         togglePin(op.id);
                       }}
                     >
-                      ⭐ Unpin
+                      ⭐ إلغاء التثبيت
                     </button>
                   </div>
                 ))
@@ -1483,8 +1494,8 @@ export default function MonitorPage() {
       {/* ─── OPERATION DETAILS DRAWER ─── */}
       <div className={`drawer ${activeOp ? 'open' : ''}`}>
         <div className="drawer-header">
-          <span className="drawer-title">Operation Details</span>
-          <button className="btn" onClick={() => selectOperation(null)}>✕ Close</button>
+          <span className="drawer-title">تفاصيل العملية</span>
+          <button className="btn" onClick={() => selectOperation(null)}>✕ إغلاق</button>
         </div>
 
         {activeOp && (
@@ -1492,48 +1503,48 @@ export default function MonitorPage() {
             <div className="detail-section">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '14px', fontWeight: 'bold' }}>
-                  {activeOp.table ? `${activeOp.operationType} ${activeOp.table}` : activeOp.queryKey || 'Query'}
+                  {activeOp.table ? `${activeOp.operationType} ${activeOp.table}` : activeOp.queryKey || 'استعلام'}
                 </span>
                 <button
                   className="btn"
                   style={{ padding: '4px 10px', fontSize: '12px' }}
                   onClick={() => togglePin(activeOp.id)}
                 >
-                  {activeOp.pinned ? '⭐ Pinned' : '☆ Pin to Top'}
+                  {activeOp.pinned ? '⭐ مثبّت' : '☆ تثبيت في الأعلى'}
                 </button>
               </div>
             </div>
 
             <div className="detail-section">
-              <div className="detail-section-title">Trace Information</div>
+              <div className="detail-section-title">معلومات التتبع</div>
               <div className="info-grid">
-                <span className="info-label">Correlation ID:</span>
+                <span className="info-label">معرّف الارتباط:</span>
                 <span className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.correlationId.slice(0, 16)}</span>
 
-                <span className="info-label">Flow ID:</span>
+                <span className="info-label">معرّف التدفق:</span>
                 <span className="info-value" style={{ fontFamily: 'monospace' }}>{activeOp.requestFlowId.slice(0, 16)}</span>
 
-                <span className="info-label">Feature:</span>
+                <span className="info-label">الميزة:</span>
                 <span className="info-value">{activeOp.feature}</span>
 
-                <span className="info-label">Page Route:</span>
+                <span className="info-label">مسار الصفحة:</span>
                 <span className="info-value">{activeOp.page}</span>
 
-                <span className="info-label">Hook:</span>
+                <span className="info-label">الخطاف:</span>
                 <span className="info-value">{activeOp.hook}</span>
 
-                <span className="info-label">Service:</span>
+                <span className="info-label">الخدمة:</span>
                 <span className="info-value">{activeOp.service}</span>
 
-                <span className="info-label">Repository:</span>
+                <span className="info-label">المستودع:</span>
                 <span className="info-value">{activeOp.repository}</span>
 
-                <span className="info-label">DB Driver:</span>
+                <span className="info-label">محرك قاعدة البيانات:</span>
                 <span className="info-value" style={{ color: activeOp.dbDriver === 'Turso-Production' ? '#ef4444' : '#22c55e' }}>
                   {activeOp.dbDriver}
                 </span>
 
-                <span className="info-label">Status:</span>
+                <span className="info-label">الحالة:</span>
                 <span className="info-value" style={{ color: STATUS_COLORS[activeOp.status] }}>
                   {activeOp.status.toUpperCase()}
                 </span>
@@ -1541,42 +1552,42 @@ export default function MonitorPage() {
             </div>
 
             <div className="detail-section">
-              <div className="detail-section-title">Performance Metrics</div>
+              <div className="detail-section-title">مقاييس الأداء</div>
               <div className="info-grid">
-                <span className="info-label">Execution Duration:</span>
+                <span className="info-label">مدة التنفيذ:</span>
                 <span className="info-value" style={{ color: activeOp.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : '#22c55e', fontWeight: 800 }}>
                   {activeOp.executionTime} ms
                 </span>
 
-                <span className="info-label">Memory Delta:</span>
+                <span className="info-label">فرق الذاكرة:</span>
                 <span className="info-value">
                   {activeOp.memoryDelta != null
                     ? `${(activeOp.memoryDelta / 1024).toFixed(2)} KB`
-                    : 'N/A (Performance.memory disabled)'}
+                    : 'غير متاح (Performance.memory معطّل)'}
                 </span>
 
-                <span className="info-label">Rows Read:</span>
+                <span className="info-label">صفوف مقروءة:</span>
                 <span className="info-value">{activeOp.rowsRead}</span>
 
-                <span className="info-label">Rows Written:</span>
+                <span className="info-label">صفوف مكتوبة:</span>
                 <span className="info-value">{activeOp.rowsWritten}</span>
               </div>
             </div>
 
             {activeOp.httpRoute && (
               <div className="detail-section">
-                <div className="detail-section-title">HTTP Request (AsolApiClient)</div>
+                <div className="detail-section-title">طلب HTTP (AsolApiClient)</div>
                 <pre className="code-block">{`${activeOp.httpMethod ?? 'GET'} ${activeOp.httpRoute}`}</pre>
               </div>
             )}
 
             {activeOp.sql && (
               <div className="detail-section">
-                <div className="detail-section-title">Raw Executed SQL</div>
+                <div className="detail-section-title">SQL المنفّذ</div>
                 <pre className="code-block">{activeOp.sql}</pre>
                 {activeOp.params && activeOp.params.length > 0 && (
                   <div style={{ marginTop: '8px' }}>
-                    <div className="detail-section-title">Query Parameters</div>
+                    <div className="detail-section-title">معاملات الاستعلام</div>
                     <pre className="code-block">{JSON.stringify(activeOp.params, null, 2)}</pre>
                   </div>
                 )}
@@ -1585,7 +1596,7 @@ export default function MonitorPage() {
 
             {diffResult && (
               <div className="detail-section">
-                <div className="detail-section-title">Query Result Diff (Before ➔ After)</div>
+                <div className="detail-section-title">فرق نتيجة الاستعلام (قبل ➔ بعد)</div>
                 <div style={{ background: '#0f172a', padding: '10px', borderRadius: '6px', overflowX: 'auto', maxHeight: '250px' }}>
                   {diffResult.map((line, idx) => (
                     <span
@@ -1601,11 +1612,11 @@ export default function MonitorPage() {
 
             {activeOp.errorMessage && (
               <div className="detail-section" style={{ borderColor: '#ef4444' }}>
-                <div className="detail-section-title" style={{ color: '#ef4444' }}>Error Message</div>
+                <div className="detail-section-title" style={{ color: '#ef4444' }}>رسالة الخطأ</div>
                 <div style={{ color: '#f87171', fontSize: '13px', fontWeight: 600 }}>{activeOp.errorMessage}</div>
                 {activeOp.executionStack && (
                   <div style={{ marginTop: '8px' }}>
-                    <div className="detail-section-title" style={{ color: '#ef4444' }}>Execution Stack Trace</div>
+                    <div className="detail-section-title" style={{ color: '#ef4444' }}>تتبع تنفيذ الخطأ</div>
                     <pre className="code-block" style={{ color: '#f87171', background: '#181111' }}>{activeOp.executionStack}</pre>
                   </div>
                 )}

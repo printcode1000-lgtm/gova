@@ -42,7 +42,10 @@ These values are the canonical Product Style filename identities. Before creatin
 
 ## Product Style
 
-The developer API path applies the same validation on GET and PUT. Style files are not read or written for invalid category relationships. The filename format `<mainId>__<subcategoryId>.json` continues to preserve existing files.
+Product Style contracts live in `@asol/product-style-core`. The developer API path applies
+the same validation on GET and PUT through `@asol/product-style-core/server`. Style files are
+not read or written for invalid category relationships. The filename format
+`<mainId>__<subcategoryId>.json` continues to preserve existing files.
 
 If the custom file does not exist, the create, view, and edit pages use `public/product/style/default.json`. The default design displays images, rating, price, order, main data, and general specifications, and hides pharmacy, vehicle, and real estate components.
 

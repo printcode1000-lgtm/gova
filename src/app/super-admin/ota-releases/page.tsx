@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
 
-export default function OtaReleasesAdminPage() {
+export default function SuperAdminOtaReleasesRedirect() {
   if (!getServerRuntimeContext().isDevelopment) notFound();
-  redirect("/super-admin/google-play-store-assets?tab=ota-releases");
+  redirect("/dev/release-console?tab=ota-releases");
 }

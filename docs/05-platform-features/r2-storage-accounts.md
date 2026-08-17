@@ -118,7 +118,7 @@ npm run test:storage-core
 1. `productDefault` is the only profile on the product account (`["productDefault"]`).
 2. No line naming an `ASOL_OTA_R2_*` variable names any other `*_R2_*` credential — ensuring zero fallbacks across account boundaries.
 3. No existence check or URL resolution reaches for the full config (narrow accessors only).
-4. `images_json` is written as keys, and — the half that fails silently — is *read* without requiring a `url`. A parser still demanding one drops every migrated row and the product renders with no images at all.
+4. `images_json` is written as keys via `@asol/product-core/server` (`serializeProductImages`), and — the half that fails silently — is *read* without requiring a stored `url` (`parseProductImages`). A parser still demanding one drops every migrated row and the product renders with no images at all.
 5. `R2_STORAGE_TARGETS` contains exactly three distinct isolated targets (`general`, `products`, `ota`) with non-overlapping account IDs, endpoints, bucket names, and public URLs.
 6. No reference to `ASOL_OTA_LEGACY_R2_` anywhere in `packages/ota-core/src`, `src`, or `scripts`.
 

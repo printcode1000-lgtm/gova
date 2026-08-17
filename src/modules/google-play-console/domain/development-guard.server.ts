@@ -4,6 +4,10 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
+import {
+  buildLocalDevelopmentEnvironment,
+  readLocalDevelopmentRuntimeFromProcess,
+} from "@asol/dev-core/server";
 
 import type {
   GooglePlayConsoleConfigStatus,
@@ -13,13 +17,12 @@ import type {
 const DEFAULT_PACKAGE_NAME = "hgh.asol.app";
 const DEFAULT_KEY_FILE = "assets/google-play/asole-73f1f-dc494a4b5159.json";
 
+function readRuntimeInput() {
+  return readLocalDevelopmentRuntimeFromProcess(getServerRuntimeContext());
+}
+
 export function googlePlayConsoleEnvironment(): GooglePlayConsoleEnvironment {
-  return {
-    allowed: getServerRuntimeContext().isDevelopment,
-    nodeEnv: getServerRuntimeContext().isDevelopment ? "development" : "production",
-    publicMode: getServerRuntimeContext().deployment,
-    vercel: getServerRuntimeContext().deployment === "web-production",
-  };
+  return buildLocalDevelopmentEnvironment(readRuntimeInput());
 }
 
 export function assertGooglePlayConsoleAllowed(): void {

@@ -1,11 +1,5 @@
-export type ProductMode = "view" | "edit" | "new";
-
-export type ProductComponentConfig = Record<
-  string,
-  boolean | number | string
-> & {
-  visible: boolean;
-  order: number;
-};
-
-export type ProductStyleComponents = Record<string, ProductComponentConfig>;
+export type { ProductMode } from "./product-mode";
+export type {
+  ProductComponentConfig,
+  ProductStyleComponents,
+} from "@asol/product-style-core";

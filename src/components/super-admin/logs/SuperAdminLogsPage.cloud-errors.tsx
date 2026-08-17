@@ -32,7 +32,7 @@ import {
 } from "@/features/system-logs/system-log-store";
 import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
 import { cn } from "@/lib/utils";
-import { redactSystemLogText } from "@/features/system-logs/system-log-sanitizer";
+import { redactSystemLogText } from "@asol/system-logs-core";
 import { cloudSource, formatCloudEntryForCopy } from "./SuperAdminLogsPage.log-formatters";
 
 // Clipboard access belongs to Native Core, which picks the native or web
@@ -269,37 +269,37 @@ export function CloudErrorsContainer({
                     dir="ltr"
                   >
                     <div>
-                      <dt className="text-muted-foreground">Feature</dt>
+                      <dt className="text-muted-foreground">الميزة</dt>
                       <dd className="font-mono">
-                        {entry.feature ?? "Not specified"}
+                        {entry.feature ?? "غير محدد"}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-muted-foreground">Operation</dt>
+                      <dt className="text-muted-foreground">العملية</dt>
                       <dd className="font-mono">
-                        {entry.operation ?? "Not specified"}
+                        {entry.operation ?? "غير محددة"}
                       </dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">
-                        First occurrence
+                        أول ظهور
                       </dt>
                       <dd>{entry.firstOccurredAt}</dd>
                     </div>
                     <div>
-                      <dt className="text-muted-foreground">Last occurrence</dt>
+                      <dt className="text-muted-foreground">آخر ظهور</dt>
                       <dd>{entry.lastOccurredAt}</dd>
                     </div>
                     <div>
-                      <dt className="text-muted-foreground">App version</dt>
-                      <dd>{entry.appVersion ?? "Not specified"}</dd>
+                      <dt className="text-muted-foreground">إصدار التطبيق</dt>
+                      <dd>{entry.appVersion ?? "غير محدد"}</dd>
                     </div>
                     <div>
-                      <dt className="text-muted-foreground">Native version</dt>
-                      <dd>{entry.nativeVersion ?? "Not specified"}</dd>
+                      <dt className="text-muted-foreground">الإصدار الأصلي</dt>
+                      <dd>{entry.nativeVersion ?? "غير محدد"}</dd>
                     </div>
                     <div className="sm:col-span-2">
-                      <dt className="text-muted-foreground">Fingerprint</dt>
+                      <dt className="text-muted-foreground">البصمة</dt>
                       <dd className="break-all font-mono">
                         {entry.fingerprint}
                       </dd>

@@ -2,8 +2,10 @@ export const GOOGLE_PLAY_CONSOLE_API = {
   snapshot: "/api/super-admin/google-play-console",
 } as const;
 
-export const GOOGLE_PLAY_STORE_ASSETS_ROUTE =
-  "/super-admin/google-play-store-assets";
+export const RELEASE_CONSOLE_ROUTE = "/dev/release-console";
+
+/** @deprecated Use RELEASE_CONSOLE_ROUTE. Kept for legacy imports during transition. */
+export const GOOGLE_PLAY_STORE_ASSETS_ROUTE = RELEASE_CONSOLE_ROUTE;
 
 export const GOOGLE_PLAY_STORE_ASSETS_API = {
   snapshot: "/api/super-admin/google-play-store-assets",

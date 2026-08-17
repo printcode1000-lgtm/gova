@@ -147,7 +147,6 @@ export function PhoneVerification({
                     maxLength={11}
                     disabled={phoneVerified}
                     placeholder={t('auth.phone.placeholder')}
-                    data-asol-autofill="registration-phone"
                     className={cn(
                       'auth-input ps-12 w-full',
                       phoneVerified && 'asol-field-surface',
@@ -165,26 +164,11 @@ export function PhoneVerification({
                         void handleSendOtpWrapper();
                       }
                     }}
-                    onAnimationStart={(e) => {
-                      if (e.animationName === 'onAutoFillStart') {
-                        const target = e.currentTarget;
-                        setTimeout(() => {
-                          const raw = target.value.replace(/\D/g, '').slice(0, 11);
-                          if (raw.length >= 10) {
-                            field.onChange(raw);
-                            if (!phoneVerified && !otpSent) {
-                              void handleSendOtpWrapper();
-                            }
-                          }
-                        }, 100);
-                      }
-                    }}
                   />
                 </div>
                 {!phoneVerified && (
                   <button
                     type="button"
-                    data-asol-autofill="registration-verify-phone"
                     onClick={() => void handleSendOtpWrapper()}
                     disabled={isSending || !phone || phone.length < 10}
                     className="asol-control shrink-0 rounded-lg border border-outline asol-surface-neutral text-primary text-sm font-semibold disabled:opacity-50"
@@ -238,7 +222,6 @@ export function PhoneVerification({
             <div className="flex items-center gap-3 w-full">
               <button
                 type="button"
-                data-asol-autofill="registration-verify-otp"
                 onClick={() => void handleVerifyOtpWrapper()}
                 disabled={otp.length !== 4 || isVerifying}
                 className="flex-1 auth-cta h-10 text-sm"

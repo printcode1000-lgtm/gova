@@ -135,20 +135,20 @@ export const useMonitorStore = create<MonitorState>((set, get) => ({
   exportHTML: () => {
     const ops = get().operations;
     const html = `<!DOCTYPE html>
-<html lang="en">
-<head><meta charset="UTF-8"><title>ASOL Monitor Export</title>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><title>تصدير مراقب ASOL</title>
 <style>
 body{font-family:monospace;background:#0f172a;color:#e2e8f0;padding:16px}
 table{border-collapse:collapse;width:100%}
-th,td{border:1px solid #334155;padding:6px 10px;text-align:left;font-size:12px}
+th,td{border:1px solid #334155;padding:6px 10px;text-align:right;font-size:12px}
 th{background:#1e293b;color:#94a3b8}
 tr:nth-child(even){background:#1e293b}
 .success{color:#22c55e}.error{color:#ef4444}.pending{color:#94a3b8}
 </style></head><body>
-<h2>ASOL Operation Monitor Export — ${new Date().toISOString()}</h2>
-<p>Total Operations: ${ops.length}</p>
+<h2>تصدير مراقب عمليات ASOL — ${new Date().toISOString()}</h2>
+<p>إجمالي العمليات: ${ops.length}</p>
 <table>
-<tr><th>Timestamp</th><th>Feature</th><th>Page</th><th>Table</th><th>Op</th><th>Status</th><th>Time (ms)</th><th>Cache</th><th>Driver</th></tr>
+<tr><th>الوقت</th><th>الميزة</th><th>الصفحة</th><th>الجدول</th><th>العملية</th><th>الحالة</th><th>المدة (ms)</th><th>الذاكرة المؤقتة</th><th>المحرك</th></tr>
 ${ops.map((o) => `<tr>
 <td>${o.timestamp}</td>
 <td>${o.feature}</td>

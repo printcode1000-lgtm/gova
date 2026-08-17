@@ -5,7 +5,7 @@ import { ChevronDown, ExternalLink, FolderOpen, LoaderCircle, LockKeyhole, Play 
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import type { BuildParameterName } from "@/modules/release-commands/domain/build-command-catalog";
 import { AndroidReleasePaths } from "../components/AndroidReleasePaths";
 import { CapBuildGuide, Doc, Parameter } from "../components/CommandParameterFields";
@@ -16,7 +16,7 @@ import { useReleaseJobs } from "../../hooks/use-release-jobs";
 const CATEGORIES = ["web-static", "ota", "native-android", "verification", "fastlane"] as const;
 
 export function BuildPublishTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const jobs = useReleaseJobs();
   const [values, setValues] = React.useState<Record<string, Record<string, unknown>>>({});
   const [confirmations, setConfirmations] = React.useState<Record<string, string>>({});

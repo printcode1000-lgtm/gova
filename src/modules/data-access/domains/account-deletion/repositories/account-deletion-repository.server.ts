@@ -17,6 +17,14 @@ export class AccountDeletionRepository {
       "SELECT image_key, image_type FROM profile_images WHERE uid = ?",
       [uid],
     ) as { image_key: string; image_type: string }[];
+    const profileKeyRows = await profilesDataSource.execute(
+      "SELECT avatar_image_key, cover_image_key, cover_image_keys_json FROM user_profiles WHERE uid = ? LIMIT 1",
+      [uid],
+    ) as {
+      avatar_image_key: string | null;
+      cover_image_key: string | null;
+      cover_image_keys_json: string | null;
+    }[];
     const productRows = await productsDataSource.execute(
       "SELECT images_json FROM products WHERE uid = ?",
       [uid],
@@ -30,6 +38,28 @@ export class AccountDeletionRepository {
       profileId: row.image_type === "avatar" ? "avatar" : "cover",
       key: row.image_key,
     }));
+
+    const profileKeys = profileKeyRows[0];
+    if (profileKeys) {
+      if (profileKeys.avatar_image_key) {
+        result.push({ profileId: "avatar", key: profileKeys.avatar_image_key });
+      }
+      if (profileKeys.cover_image_key) {
+        result.push({ profileId: "cover", key: profileKeys.cover_image_key });
+      }
+      if (profileKeys.cover_image_keys_json) {
+        try {
+          const keys = JSON.parse(profileKeys.cover_image_keys_json) as string[];
+          for (const key of keys) {
+            if (typeof key === "string" && key) {
+              result.push({ profileId: "cover", key });
+            }
+          }
+        } catch {
+          // malformed legacy cover keys must not block deletion
+        }
+      }
+    }
 
     for (const row of productRows) {
       try {
@@ -88,6 +118,16 @@ export class AccountDeletionRepository {
         ["disputes", "opened_by"],
         ["dispute_messages", "sender_id"],
         ["audit_trail", "performed_by"],
+        ["shipping_quotes", "seller_id"],
+        ["shipping_quotes", "service_provider_id"],
+        ["shipping_quotes", "buyer_id"],
+        ["shipping_quotes", "proposed_by"],
+        ["delivery_plans", "buyer_id"],
+        ["delivery_plan_stops", "seller_id"],
+        ["delivery_plan_stops", "original_carrier_id"],
+        ["delivery_plan_candidates", "provider_id"],
+        ["delivery_plan_candidate_stops", "provider_id"],
+        ["delivery_plan_quotes", "provider_id"],
       ];
       for (const [table, column] of replacements) {
         await tx.execute(`UPDATE ${table} SET ${column} = ? WHERE ${column} = ?`, [anon, uid]);
@@ -100,10 +140,6 @@ export class AccountDeletionRepository {
       await tx.execute(
         "UPDATE custom_request_images SET image_url = '', image_key = ?, file_name = NULL, image_description = NULL WHERE uploaded_by = ?",
         [`removed-${anon}`, anon],
-      );
-      await tx.execute(
-        "UPDATE seller_discount_usages SET buyer_uid = ? WHERE buyer_uid = ?",
-        [anon, uid],
       );
       for (const row of ownedProducts) {
         if (typeof row.id === "string") {
@@ -136,6 +172,11 @@ export class AccountDeletionRepository {
   }
 
   async deleteProfile(uid: string): Promise<void> {
+    const anon = `deleted_${createHash("sha256").update(uid).digest("hex").slice(0, 24)}`;
+    await profilesDataSource.execute(
+      "UPDATE seller_discount_usages SET buyer_uid = ? WHERE buyer_uid = ?",
+      [anon, uid],
+    );
     await profilesDataSource.execute("DELETE FROM seller_discounts WHERE seller_uid = ?", [uid]);
     await profilesDataSource.execute("DELETE FROM profile_review_helpful WHERE uid = ?", [uid]);
     await profilesDataSource.execute("DELETE FROM profile_review_replies WHERE seller_uid = ?", [uid]);
@@ -151,6 +192,7 @@ export class AccountDeletionRepository {
       "DELETE FROM profile_delivery_carriers WHERE carrier_uid = ? OR seller_uid = ?",
       [uid, uid],
     );
+    await profilesDataSource.execute("DELETE FROM user_specialties WHERE uid = ?", [uid]);
     await profilesDataSource.execute("DELETE FROM user_profiles WHERE uid = ?", [uid]);
   }
 

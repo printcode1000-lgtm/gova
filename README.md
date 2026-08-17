@@ -21,14 +21,6 @@ npm run dev
 | `npm run typecheck` | فحص الأنواع |
 | `npm run server:stop` | إيقاف السيرفر على المنفذ 3001 |
 
-## autofill التطويري
-
-في وضع التطوير، استخدم زر **ASOL DEV** → **ملء النموذج تلقائياً** لملء النماذج:
-
-- **صفحة /registration**: يملأ email, phone, password
-- **صفحة /login**: يملأ phone, password
-- **صفحة /addseller**: يملء نموذج إضافة البائع
-
 ## التوثيق
 
 - [note/i18n-system.md](./note/i18n-system.md) — نظام الترجمة (English)

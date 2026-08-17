@@ -4,17 +4,16 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import {
-  CURRENT_NATIVE_APP_VERSION,
+  CURRENT_ANDROID_NATIVE_VERSION,
+  CURRENT_IOS_NATIVE_VERSION,
   CURRENT_WEB_CONTENT_VERSION,
 } from "@/core/config/app-version";
-import { isOtaVersion, parseContentVersion } from "../src";
+import { androidVersionCodeFor, isOtaVersion, parseContentVersion } from "../src";
 
 const root = process.cwd();
 const read = (file: string) => readFileSync(path.join(root, file), "utf8");
-const expectedBuildNumber = CURRENT_NATIVE_APP_VERSION.split(".").reduce(
-  (value, part, index) => value + Number(part) * [10_000, 100, 1][index],
-  0,
-);
+const expectedAndroidBuildNumber = androidVersionCodeFor(CURRENT_ANDROID_NATIVE_VERSION);
+const expectedIosBuildNumber = androidVersionCodeFor(CURRENT_IOS_NATIVE_VERSION);
 
 assert.equal(
   JSON.parse(read("package-lock.json")).version,
@@ -30,21 +29,21 @@ const contentLine = parseContentVersion(CURRENT_WEB_CONTENT_VERSION);
 if (contentLine) {
   assert.equal(
     contentLine.nativeVersion,
-    CURRENT_NATIVE_APP_VERSION,
-    "the content line must follow the native shell version",
+    CURRENT_ANDROID_NATIVE_VERSION,
+    "the Android content line must follow the Android native shell version",
   );
 }
 
 const gradle = read("android/app/build.gradle");
 assert.match(
   gradle,
-  new RegExp(`versionName\\s+"${CURRENT_NATIVE_APP_VERSION.replaceAll(".", "\\.")}"`),
-  "Android versionName must match the current native app version",
+  new RegExp(`versionName\\s+"${CURRENT_ANDROID_NATIVE_VERSION.replaceAll(".", "\\.")}"`),
+  "Android versionName must match CURRENT_ANDROID_NATIVE_VERSION",
 );
 assert.match(
   gradle,
-  new RegExp(`versionCode\\s+${expectedBuildNumber}\\b`),
-  "Android versionCode must be derived from the native semantic version",
+  new RegExp(`versionCode\\s+${expectedAndroidBuildNumber}\\b`),
+  "Android versionCode must be derived from the Android semantic version",
 );
 
 const xcode = read("ios/App/App.xcodeproj/project.pbxproj");
@@ -58,19 +57,19 @@ assert.ok(marketingVersions.length > 0, "No iOS MARKETING_VERSION values found")
 assert.ok(buildNumbers.length > 0, "No iOS CURRENT_PROJECT_VERSION values found");
 assert.deepEqual(
   [...new Set(marketingVersions)],
-  [CURRENT_NATIVE_APP_VERSION],
-  "Every iOS target must share the native app version",
+  [CURRENT_IOS_NATIVE_VERSION],
+  "Every iOS target must share CURRENT_IOS_NATIVE_VERSION",
 );
 assert.deepEqual(
   [...new Set(buildNumbers)],
-  [String(expectedBuildNumber)],
-  "Every iOS target must share the derived build number",
+  [String(expectedIosBuildNumber)],
+  "Every iOS target must share the iOS derived build number",
 );
 
 const envExample = read(".env.example");
 assert.match(
   envExample,
-  new RegExp(`^NEXT_PUBLIC_ASOL_NATIVE_VERSION=${CURRENT_NATIVE_APP_VERSION.replaceAll(".", "\\.")}$`, "m"),
+  new RegExp(`^NEXT_PUBLIC_ASOL_NATIVE_VERSION=${CURRENT_ANDROID_NATIVE_VERSION.replaceAll(".", "\\.")}$`, "m"),
 );
 assert.match(
   envExample,
@@ -96,11 +95,12 @@ for (const manifestPath of manifestPaths) {
   );
   assert.equal(
     manifest.minimumNativeVersion,
-    CURRENT_NATIVE_APP_VERSION,
-    `${manifestPath} native version is stale`,
+    CURRENT_ANDROID_NATIVE_VERSION,
+    `${manifestPath} Android native version is stale`,
   );
 }
 
 console.log(
-  `App versions are synchronized: native ${CURRENT_NATIVE_APP_VERSION} (${expectedBuildNumber}), content ${CURRENT_WEB_CONTENT_VERSION}.`,
+  `App versions are synchronized: Android ${CURRENT_ANDROID_NATIVE_VERSION} (${expectedAndroidBuildNumber}), ` +
+    `iOS ${CURRENT_IOS_NATIVE_VERSION} (${expectedIosBuildNumber}), content ${CURRENT_WEB_CONTENT_VERSION}.`,
 );

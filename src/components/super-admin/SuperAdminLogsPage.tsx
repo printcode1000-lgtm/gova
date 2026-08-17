@@ -32,7 +32,7 @@ import {
 } from "@/features/system-logs/system-log-store";
 import type { PersistentSystemLogEntry } from "@/features/system-logs/entities/persistent-system-log.entity";
 import { persistentSystemLogApiService } from "@/features/system-logs/services/persistent-system-log-api-service";
-import { redactSystemLogText } from "@/features/system-logs/system-log-sanitizer";
+import { redactSystemLogText } from "@asol/system-logs-core";
 import { cn } from "@/lib/utils";
 
 import { sections, formatForCopy, formatEntryForCopy } from "./logs/SuperAdminLogsPage.log-formatters";
@@ -73,6 +73,13 @@ export function SuperAdminLogsPage() {
   >("loading");
   const [cloudLastUpdatedAt, setCloudLastUpdatedAt] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
+  const [query, setQuery] = useState("");
+  const [platform, setPlatform] = useState("all");
+  const [summary, setSummary] = useState<{
+    totalErrors: number;
+    lastHourErrors: number;
+    topFeatures: Array<{ feature: string; count: number }>;
+  } | null>(null);
 
   useEffect(() => {
     if (!isLoading && !authorized) router.replace(session ? "/home" : "/login");
@@ -85,13 +92,21 @@ export function SuperAdminLogsPage() {
     const load = () => {
       setCloudLoadState("loading");
       void Promise.allSettled([
-        persistentSystemLogApiService.list(sessionToken, { limit: 500 }),
+        persistentSystemLogApiService.list(sessionToken, {
+          limit: 500,
+          query: query || undefined,
+          platform:
+            platform === "all"
+              ? undefined
+              : (platform as "web" | "android" | "ios" | "server"),
+        }),
         persistentSystemLogApiService.list(sessionToken, {
           limit: 1000,
           origin: "cloud",
           level: "error",
         }),
-      ]).then(([allResult, cloudResult]) => {
+        persistentSystemLogApiService.summary(sessionToken),
+      ]).then(([allResult, cloudResult, summaryResult]) => {
         if (cancelled) return;
         if (allResult.status === "fulfilled") {
           setPersistentLogs(allResult.value);
@@ -112,15 +127,27 @@ export function SuperAdminLogsPage() {
             cloudResult.reason,
           );
         }
+        if (summaryResult.status === "fulfilled") {
+          setSummary(summaryResult.value);
+        }
       });
     };
     load();
     const timer = window.setInterval(load, 20_000);
+    let stream: EventSource | null = null;
+    if (sessionToken) {
+      stream = persistentSystemLogApiService.openStream(
+        sessionToken,
+        new Date(Date.now() - 60 * 60 * 1_000).toISOString(),
+      );
+      stream.addEventListener("log", () => load());
+    }
     return () => {
       cancelled = true;
       window.clearInterval(timer);
+      stream?.close();
     };
-  }, [authorized, refreshKey, session]);
+  }, [authorized, platform, query, refreshKey, session]);
 
   const allLogs = useMemo<SystemLogEntry[]>(
     () => [
@@ -129,6 +156,7 @@ export function SuperAdminLogsPage() {
         id: -1 - index,
         fingerprint: `persistent:${entry.fingerprint}`,
         level: entry.level,
+        source: entry.source,
         consoleMethod: entry.consoleMethod || entry.source,
         message: entry.message,
         firstOccurredAt: entry.firstOccurredAt,
@@ -241,6 +269,54 @@ export function SuperAdminLogsPage() {
         </div>
       </header>
 
+      {summary && (
+        <section className="mb-6 grid gap-3 sm:grid-cols-3">
+          <article className="rounded-xl border bg-card p-4">
+            <p className="text-xs text-muted-foreground">إجمالي الأخطاء المحفوظة</p>
+            <p className="text-2xl font-bold">{summary.totalErrors}</p>
+          </article>
+          <article className="rounded-xl border bg-card p-4">
+            <p className="text-xs text-muted-foreground">أخطاء آخر ساعة</p>
+            <p className="text-2xl font-bold text-destructive">
+              {summary.lastHourErrors}
+            </p>
+          </article>
+          <article className="rounded-xl border bg-card p-4">
+            <p className="text-xs text-muted-foreground">أكثر الميزات تأثرًا</p>
+            <p className="mt-1 text-sm font-mono" dir="ltr">
+              {summary.topFeatures.length
+                ? summary.topFeatures
+                    .map((item) => `${item.feature} (${item.count})`)
+                    .join(" · ")
+                : "لا توجد بيانات"}
+            </p>
+          </article>
+        </section>
+      )}
+
+      <div className="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_180px]">
+        <label className="relative">
+          <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="ابحث في الرسائل والمسارات والميزات..."
+            className="asol-input-decorated-start h-10 w-full rounded-md border bg-background pe-3 text-sm"
+          />
+        </label>
+        <select
+          value={platform}
+          onChange={(event) => setPlatform(event.target.value)}
+          className="h-10 rounded-md border bg-background px-3 text-sm"
+        >
+          <option value="all">كل المنصات</option>
+          <option value="web">Web</option>
+          <option value="android">Android</option>
+          <option value="ios">iOS</option>
+          <option value="server">Server</option>
+        </select>
+      </div>
+
       <CloudErrorsContainer
         logs={cloudLogs}
         loadState={cloudLoadState}
@@ -345,7 +421,7 @@ export function SuperAdminLogsPage() {
                       <span>{entry.platform}</span>
                       <code>{entry.consoleMethod}</code>
                       <code>{entry.page}</code>
-                      {entry.id < 0 && (
+                      {typeof entry.id === "number" && entry.id < 0 && (
                         <span className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">
                           محفوظ
                         </span>
@@ -382,30 +458,30 @@ export function SuperAdminLogsPage() {
                       dir="ltr"
                     >
                       <div>
-                        <dt className="text-muted-foreground">Type</dt>
+                        <dt className="text-muted-foreground">النوع</dt>
                         <dd className="font-mono">
-                          {entry.errorName ?? "Not specified"}
+                          {entry.errorName ?? "غير محدد"}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Occurrences</dt>
+                        <dt className="text-muted-foreground">عدد التكرار</dt>
                         <dd>{entry.occurrences}</dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Feature</dt>
+                        <dt className="text-muted-foreground">الميزة</dt>
                         <dd className="font-mono">
-                          {entry.feature ?? "Not specified"}
+                          {entry.feature ?? "غير محدد"}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Operation</dt>
+                        <dt className="text-muted-foreground">العملية</dt>
                         <dd className="font-mono">
-                          {entry.operation ?? "Not specified"}
+                          {entry.operation ?? "غير محددة"}
                         </dd>
                       </div>
                       <div>
                         <dt className="text-muted-foreground">
-                          First occurrence
+                          أول ظهور
                         </dt>
                         <dd>
                           {new Date(entry.firstOccurredAt).toLocaleString(
@@ -415,7 +491,7 @@ export function SuperAdminLogsPage() {
                       </div>
                       <div>
                         <dt className="text-muted-foreground">
-                          Last occurrence
+                          آخر ظهور
                         </dt>
                         <dd>
                           {new Date(entry.lastOccurredAt).toLocaleString(
@@ -424,7 +500,7 @@ export function SuperAdminLogsPage() {
                         </dd>
                       </div>
                       <div className="sm:col-span-2">
-                        <dt className="text-muted-foreground">Source</dt>
+                        <dt className="text-muted-foreground">المصدر</dt>
                         <dd className="break-all font-mono">
                           {entry.sourceFile
                             ? `${entry.sourceFile}:${entry.sourceLine ?? "?"}:${entry.sourceColumn ?? "?"}`
@@ -432,7 +508,7 @@ export function SuperAdminLogsPage() {
                         </dd>
                       </div>
                       <div className="sm:col-span-2">
-                        <dt className="text-muted-foreground">User Agent</dt>
+                        <dt className="text-muted-foreground">وكيل المستخدم</dt>
                         <dd className="break-all font-mono">
                           {entry.userAgent}
                         </dd>
@@ -442,7 +518,7 @@ export function SuperAdminLogsPage() {
                   {entry.stack && (
                     <details className="mt-2">
                       <summary className="cursor-pointer text-xs font-medium text-primary">
-                        Stack trace
+                        تتبع المكدس
                       </summary>
                       <pre
                         className="mt-2 whitespace-pre-wrap break-words border-t pt-2 font-mono text-xs"

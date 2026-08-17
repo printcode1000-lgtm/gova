@@ -6,6 +6,10 @@ import path from "node:path";
 
 import { asolApi } from "@/core/api";
 import { CURRENT_WEB_CONTENT_VERSION } from "@/core/config/app-version";
+import {
+  requireGooglePlayProductionNativeVersion,
+  requireIosProductionNativeVersion,
+} from "@asol/ota-core/publishing";
 import { getOtaApprovalServerConfig } from "@asol/ota-core/publishing";
 import {
   assertGooglePlayConsoleAllowed,
@@ -308,6 +312,20 @@ async function releaseVersionSnapshot(): Promise<ReleaseVersionSnapshot> {
     );
     snapshot.androidCurrent = /versionName\s+"(\d+\.\d+\.\d+)"/.exec(gradle)?.[1];
   } catch { /* The catalog remains usable when the Android project is absent. */ }
+
+  try {
+    snapshot.androidProduction = await requireGooglePlayProductionNativeVersion();
+  } catch (error) {
+    snapshot.platformTruthError =
+      error instanceof Error ? error.message : String(error);
+  }
+  try {
+    snapshot.iosProduction = await requireIosProductionNativeVersion();
+  } catch (error) {
+    snapshot.platformTruthError =
+      snapshot.platformTruthError ??
+      (error instanceof Error ? error.message : String(error));
+  }
 
   const manifestUrl = getOtaApprovalServerConfig().manifestUrl;
   if (manifestUrl) {

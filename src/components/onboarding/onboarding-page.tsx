@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { OnboardingDevAutofillBridgeLoader } from '@/dev/OnboardingDevAutofillBridgeLoader';
 import { useOnboardingStore, stepOrder } from '@/lib/onboarding';
 import { useTranslation } from '@/lib/i18n';
 import { OnboardingSidebar, OnboardingProgress, MobileOnboardingNav, useStepConfig } from './index';
@@ -148,7 +147,6 @@ export function OnboardingPage() {
 
   return (
     <div className="asol-onboarding-shell">
-      <OnboardingDevAutofillBridgeLoader />
       <div className="hidden lg:block">
         <div className="flex">
           <aside className="w-80 min-h-screen border-r asol-onboarding-sidebar p-6 sticky top-0">

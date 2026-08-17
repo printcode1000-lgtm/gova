@@ -73,6 +73,8 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 - Requires current password + matching `sessionToken` + final UI warning.
 - Super Admin identity cannot be deleted from the public deletion page.
 - On success, client runs `clearAllClientStorage()` (session, cart, favorites, IndexedDB, cookies). Normal logout does **not** clear all client storage.
+- Deletion registry: `packages/auth-core/src/domain/account-deletion-registry.ts` (`ACCOUNT_DELETION_TABLE_REGISTRY`, `ACCOUNT_DELETION_IMAGE_SOURCES`).
+- Contract test: `npm run test:account-deletion-registry` — migrations must stay in sync with the registry.
 
 See [contact-and-account-deletion.md](../00-overview/contact-and-account-deletion.md) for the full deletion data inventory.
 
@@ -86,12 +88,12 @@ Handles registration, login, profile update, and email/phone normalization. Depe
 
 ### `AccountDeletionService`
 
-Orchestrates pre-checks (password, phrase, super-admin block, session match) then calls:
+Orchestrates pre-checks (password, phrase, super-admin block, session match) then executes `ACCOUNT_DELETION_STEP_ORDER`:
 
-- `AccountDeletionRepositoryPort` — sequential DB cleanup across user, profile, product, and order domains.
-- `ImageDeletionPort` — removes stored images; per-file failures are logged without aborting the whole deletion.
+- `AccountDeletionRepositoryPort` — DB cleanup across user, profile, product, and order domains.
+- `ImageDeletionPort` — removes stored images with retry (default 3 attempts); failures are returned in `imagesFailed` and logged.
 
-Repository expansion in this migration includes: pharmacy catalog overrides, `seller_discounts`, anonymized `seller_discount_usages.buyer_uid`, and broader `profile_delivery_carriers` cleanup.
+Repository implementation: `src/modules/data-access/domains/account-deletion/repositories/account-deletion-repository.server.ts`.
 
 ---
 

@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
 
-export default function SuperAdminGooglePlayConsoleRoute() {
+export default function SuperAdminGooglePlayConsoleRedirect() {
   if (!getServerRuntimeContext().isDevelopment) notFound();
-  redirect("/super-admin/google-play-store-assets?tab=play-console");
+  redirect("/dev/release-console?tab=play-console");
 }

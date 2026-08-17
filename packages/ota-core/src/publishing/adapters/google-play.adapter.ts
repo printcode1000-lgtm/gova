@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { GoogleAuth, type JWTInput } from "google-auth-library";
+import { androidVersionNameFromCode } from "../../domain/versioning/native-version";
 
 const DEFAULT_PACKAGE_NAME = "hgh.asol.app";
 const DEFAULT_KEY_FILE = "assets/google-play/asole-73f1f-dc494a4b5159.json";
@@ -137,8 +138,25 @@ export async function resolveGooglePlayCredentials() {
 export async function readLiveTrackVersionCodes(
   track: string,
 ): Promise<LivePlayRelease | null> {
+  try {
+    return await readLiveTrackVersionCodesStrict(track);
+  } catch {
+    return null;
+  }
+}
+
+export async function readLiveTrackVersionCodesStrict(
+  track: string,
+): Promise<LivePlayRelease> {
   const credentialResolution = await resolveGooglePlayCredentials();
-  if (!credentialResolution.credentials) return null;
+  if (!credentialResolution.credentials) {
+    throw new Error(
+      [
+        "Google Play credentials are required to read live track versions.",
+        "Configure GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64 or GOOGLE_PLAY_JSON_KEY_FILE.",
+      ].join("\n"),
+    );
+  }
 
   const auth = new GoogleAuth({
     credentials: credentialResolution.credentials,
@@ -155,7 +173,9 @@ export async function readLiveTrackVersionCodes(
       url: `${API_ROOT}/applications/${packageName}/edits`,
     });
     editId = edit.data.id ?? null;
-    if (!editId) return null;
+    if (!editId) {
+      throw new Error("Google Play edits API returned no edit id.");
+    }
 
     const response = await client.request<{
       releases?: Array<{
@@ -178,7 +198,11 @@ export async function readLiveTrackVersionCodes(
       }
     }
 
-    if (versionCodes.length === 0) return null;
+    if (versionCodes.length === 0) {
+      throw new Error(
+        `Google Play track "${track}" returned no version codes for ${config.packageName}.`,
+      );
+    }
     versionCodes.sort((a, b) => a - b);
     const highestVersionCode = versionCodes[versionCodes.length - 1]!;
     return {
@@ -186,8 +210,11 @@ export async function readLiveTrackVersionCodes(
       versionCodes,
       highestVersionCode,
     };
-  } catch {
-    return null;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Failed to read Google Play track "${track}" for ${config.packageName}: ${message}`,
+    );
   } finally {
     if (editId) {
       try {
@@ -200,4 +227,10 @@ export async function readLiveTrackVersionCodes(
       }
     }
   }
+}
+
+/** Google Play Production is the single source of truth for published Android native versions. */
+export async function requireGooglePlayProductionNativeVersion(): Promise<string> {
+  const release = await readLiveTrackVersionCodesStrict("production");
+  return androidVersionNameFromCode(release.highestVersionCode);
 }

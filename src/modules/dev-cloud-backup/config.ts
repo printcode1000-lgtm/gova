@@ -1,4 +1,4 @@
-export const DEV_CLOUD_BACKUP_ROUTE = "/super-admin/dev-cloud-backup";
+export const DEV_CLOUD_BACKUP_ROUTE = "/dev/dev-cloud-backup";
 
 export const DEV_CLOUD_BACKUP_API = {
   list: "/api/super-admin/dev-cloud-backup",

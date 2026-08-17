@@ -4,12 +4,12 @@ import { RotateCcw, Trash2, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { GOOGLE_PLAY_IMAGE_TYPES, type GooglePlayImageType } from "../../domain/store-assets-types";
 import { useStoreAssets } from "../../hooks/use-store-assets";
 
 export function StoreImagesTab() {
-  const { t } = useTranslation();
+  const { t } = useAdminArabic();
   const store = useStoreAssets();
   if (!store.snapshot) return <div className="p-4 text-sm">{t("releaseConsole.loading")}</div>;
   return (

@@ -195,6 +195,19 @@
       }
     },
     {
+      "name": "Android Debug R8 - بناء حزمة الاختبار",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "android:build:debug"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Capacitor",
+        "order": 2
+      }
+    },
+    {
       "name": "Cap Local - بناء محلي",
       "request": "launch",
       "type": "node",

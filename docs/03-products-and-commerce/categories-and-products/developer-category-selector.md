@@ -1,6 +1,7 @@
 # Developer Category Selector
 
-The developer selector is a consumer of the public API in `@/features/categories`.
+The developer selector is a consumer of the public API in `@/features/categories` and
+`@asol/product-style-core` for Product Style types, normalization, and persistence.
 
 ## Flow
 

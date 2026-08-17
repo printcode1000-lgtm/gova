@@ -7,6 +7,10 @@ import {
   statSync,
 } from 'fs';
 import path from 'path';
+import {
+  buildLocalSyncFilePublicUrl,
+  resolveSyncFileRoot,
+} from '@asol/dev-core/server';
 import { assertPathUnderImagesRoot } from '../../domain/images/image-path';
 import type {
   IStorageProvider,
@@ -14,7 +18,7 @@ import type {
 } from './storage-provider.interface';
 
 /** Local dev root — all files live under sync_file/images/... */
-const LOCAL_SYNC_ROOT = path.join(process.cwd(), 'public', 'sync_data', 'sync_file');
+const LOCAL_SYNC_ROOT = resolveSyncFileRoot();
 
 /**
  * Development-only provider — mirrors cloud folder layout under public/sync_data/sync_file.
@@ -47,8 +51,7 @@ export class LocalStorageProvider implements IStorageProvider {
 
   resolvePublicUrl(objectPath: string): string {
     const base = (process.env.NEXT_PUBLIC_BASE_PATH ?? '').replace(/\/$/, '');
-    const normalized = objectPath.replace(/^\/+/, '');
-    return `${base}/sync_data/sync_file/${normalized}`;
+    return buildLocalSyncFilePublicUrl(objectPath, base);
   }
 
   list(prefix: string): Promise<StorageObjectEntry[]> {

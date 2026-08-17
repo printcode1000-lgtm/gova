@@ -6,7 +6,8 @@ import { androidVersionCodeFor } from "../../domain/versioning/native-version";
 import { assertNativeVersion, releaseContentVersion } from "../../domain/versioning/content-version";
 
 export interface VersionWriteResult {
-  nativeVersion: string;
+  androidNativeVersion: string;
+  iosNativeVersion?: string;
   contentVersion: string;
   androidVersionCode: number;
   filesModified: string[];
@@ -61,24 +62,36 @@ export function updateIosProjectVersion(
   return projectPath;
 }
 
-export function updateCommittedVersionConstants(
-  contentVersion: string,
-  nativeVersion: string,
-  root = process.cwd(),
-): string[] {
+export function updateCommittedVersionConstants(options: {
+  androidVersion: string;
+  iosVersion?: string;
+  contentVersion: string;
+  root?: string;
+}): string[] {
   const modified: string[] = [];
+  const root = options.root ?? process.cwd();
   const constantsPath = path.join(root, "src", "core", "config", "app-version.ts");
   if (existsSync(constantsPath)) {
     const before = readFileSync(constantsPath, "utf8");
-    const after = before
+    let after = before
       .replace(
-        /CURRENT_NATIVE_APP_VERSION = "[^"]+"/,
-        `CURRENT_NATIVE_APP_VERSION = "${nativeVersion}"`,
+        /CURRENT_ANDROID_NATIVE_VERSION = "[^"]+"/,
+        `CURRENT_ANDROID_NATIVE_VERSION = "${options.androidVersion}"`,
       )
       .replace(
         /CURRENT_WEB_CONTENT_VERSION = "[^"]+"/,
-        `CURRENT_WEB_CONTENT_VERSION = "${contentVersion}"`,
+        `CURRENT_WEB_CONTENT_VERSION = "${options.contentVersion}"`,
+      )
+      .replace(
+        /CURRENT_NATIVE_APP_VERSION = "[^"]+"/,
+        `CURRENT_NATIVE_APP_VERSION = "${options.androidVersion}"`,
       );
+    if (options.iosVersion) {
+      after = after.replace(
+        /CURRENT_IOS_NATIVE_VERSION = "[^"]+"/,
+        `CURRENT_IOS_NATIVE_VERSION = "${options.iosVersion}"`,
+      );
+    }
     if (before !== after) {
       writeFileSync(constantsPath, after);
       modified.push(constantsPath);
@@ -91,11 +104,11 @@ export function updateCommittedVersionConstants(
     const exampleAfter = exampleBefore
       .replace(
         /^NEXT_PUBLIC_ASOL_NATIVE_VERSION=.*$/m,
-        `NEXT_PUBLIC_ASOL_NATIVE_VERSION=${nativeVersion}`,
+        `NEXT_PUBLIC_ASOL_NATIVE_VERSION=${options.androidVersion}`,
       )
       .replace(
         /^NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION=.*$/m,
-        `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION=${contentVersion}`,
+        `NEXT_PUBLIC_ASOL_WEB_BUNDLE_VERSION=${options.contentVersion}`,
       );
     if (exampleBefore !== exampleAfter) {
       writeFileSync(examplePath, exampleAfter);
@@ -104,6 +117,54 @@ export function updateCommittedVersionConstants(
   }
 
   return modified;
+}
+
+export function syncAndroidProjectVersions(options: {
+  androidVersion: string;
+  contentVersion: string;
+  root?: string;
+}): string[] {
+  const root = options.root ?? process.cwd();
+  const filesModified = [
+    updateAndroidGradleVersion(options.androidVersion, root),
+    ...updateCommittedVersionConstants({
+      androidVersion: options.androidVersion,
+      contentVersion: options.contentVersion,
+      root,
+    }),
+  ];
+  return filesModified;
+}
+
+export function syncIosProjectVersion(options: {
+  iosVersion: string;
+  root?: string;
+}): string[] {
+  const root = options.root ?? process.cwd();
+  const filesModified = [
+    updateIosProjectVersion(options.iosVersion, root),
+    ...updateCommittedVersionConstants({
+      androidVersion: readAndroidVersionFromConstants(root) ?? options.iosVersion,
+      iosVersion: options.iosVersion,
+      contentVersion: readContentVersionFromConstants(root) ?? releaseContentVersion(options.iosVersion),
+      root,
+    }),
+  ];
+  return filesModified;
+}
+
+function readAndroidVersionFromConstants(root: string): string | null {
+  const constantsPath = path.join(root, "src", "core", "config", "app-version.ts");
+  if (!existsSync(constantsPath)) return null;
+  const content = readFileSync(constantsPath, "utf8");
+  return /CURRENT_ANDROID_NATIVE_VERSION = "([^"]+)"/.exec(content)?.[1] ?? null;
+}
+
+function readContentVersionFromConstants(root: string): string | null {
+  const constantsPath = path.join(root, "src", "core", "config", "app-version.ts");
+  if (!existsSync(constantsPath)) return null;
+  const content = readFileSync(constantsPath, "utf8");
+  return /CURRENT_WEB_CONTENT_VERSION = "([^"]+)"/.exec(content)?.[1] ?? null;
 }
 
 export function writeTreeVersions(options: {
@@ -128,20 +189,14 @@ export function writeTreeVersions(options: {
       options.contentVersion ?? releaseContentVersion(options.nativeVersion);
     const androidVersionCode = androidVersionCodeFor(options.nativeVersion);
 
-    const filesModified: string[] = [];
-    const gradle = updateAndroidGradleVersion(options.nativeVersion, root);
-    filesModified.push(gradle);
-    const ios = updateIosProjectVersion(options.nativeVersion, root);
-    filesModified.push(ios);
-    const constants = updateCommittedVersionConstants(
+    const filesModified = syncAndroidProjectVersions({
+      androidVersion: options.nativeVersion,
       contentVersion,
-      options.nativeVersion,
       root,
-    );
-    filesModified.push(...constants);
+    });
 
     return ok({
-      nativeVersion: options.nativeVersion,
+      androidNativeVersion: options.nativeVersion,
       contentVersion,
       androidVersionCode,
       filesModified,

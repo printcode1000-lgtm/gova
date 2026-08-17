@@ -69,8 +69,11 @@ export interface BuildCommandReadiness {
 
 export interface ReleaseVersionSnapshot {
   androidCurrent?: string;
+  androidProduction?: string;
+  iosProduction?: string;
   contentCurrent?: string;
   otaCurrent?: string;
+  platformTruthError?: string;
 }
 
 export interface PaginatedBuildJobs {

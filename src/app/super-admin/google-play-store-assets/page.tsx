@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
-import { ReleaseConsolePage } from "@/modules/google-play-console";
 
-export default function SuperAdminGooglePlayStoreAssetsRoute() {
+export default function SuperAdminReleaseConsoleRedirect() {
   if (!getServerRuntimeContext().isDevelopment) notFound();
-  return <ReleaseConsolePage />;
+  redirect("/dev/release-console");
 }

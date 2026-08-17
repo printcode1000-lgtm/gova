@@ -85,7 +85,7 @@ const sectionLabels: Record<StudioSection, string> = {
   pharmacy: "الصيدلية",
   vehicles: "المركبات",
   assets: "الصور",
-  schemas: "Schemas",
+  schemas: "المخططات",
   audit: "التحقق والسجل",
 };
 
@@ -712,7 +712,7 @@ export function CatalogStudioPage() {
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-bold">استوديو الكتالوج</h1>
               <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-800">DEVELOPMENT ONLY</span>
-              {snapshot ? <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-800">Catalog v{snapshot.stats.schemaVersion}</span> : null}
+              {snapshot ? <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-800">كتالوج إصدار {snapshot.stats.schemaVersion}</span> : null}
             </div>
             <p className="mt-2 text-sm text-muted-foreground">تحرير ملفات Catalog والصور والعلاقات دون قراءة أو تعديل سجلات المستخدمين.</p>
           </div>
@@ -753,7 +753,7 @@ export function CatalogStudioPage() {
                 ["العناصر المخفية", snapshot.stats.hiddenItems],
                 ["الصور", snapshot.stats.images],
                 ["صور غير مستخدمة", snapshot.stats.unreferencedImages],
-                ["Specialty mappings", snapshot.stats.specialtyMappings],
+                ["ربط التخصصات", snapshot.stats.specialtyMappings],
                 ["أعمدة user_specialties", snapshot.stats.specialtyColumns],
                 ["ملفات Schema", snapshot.stats.schemaFiles],
               ].map(([label, value]) => (
@@ -801,7 +801,7 @@ export function CatalogStudioPage() {
               className="w-full rounded-2xl border bg-card p-5 text-start hover:border-primary"
             >
               <Database className="mb-2 h-6 w-6 text-primary" />
-              <span className="block font-bold">Manifest</span>
+              <span className="block font-bold">البيان الوصفي</span>
               <span className="text-sm text-muted-foreground">الإصدار {snapshot.stats.catalogVersion}</span>
             </button>
           </aside>
@@ -850,7 +850,7 @@ export function CatalogStudioPage() {
                       onClick={() => setMode(editorMode)}
                       className={cn("rounded-lg px-3 py-1.5 text-xs font-semibold", mode === editorMode ? "bg-primary text-primary-foreground" : "bg-muted")}
                     >
-                      {editorMode === "structured" ? "عرض منظم" : editorMode === "raw" ? "JSON خام" : editorMode === "relations" ? "العلاقات" : "Diff"}
+                      {editorMode === "structured" ? "عرض منظم" : editorMode === "raw" ? "JSON خام" : editorMode === "relations" ? "العلاقات" : "الفرق"}
                     </button>
                   ))}
                   {selectedFile && drafts[selectedFile.path] ? (
@@ -877,7 +877,7 @@ export function CatalogStudioPage() {
                         <th className="p-2 text-start">الترتيب</th>
                         <th className="p-2 text-start">ID</th>
                         <th className="p-2 text-start">العربي</th>
-                        <th className="p-2 text-start">English</th>
+                        <th className="p-2 text-start">الإنجليزية</th>
                         <th className="p-2 text-center">مخفي</th>
                         <th className="p-2 text-start">الصورة/العلاقة</th>
                         <th className="p-2 text-center">إجراءات</th>
@@ -967,7 +967,7 @@ export function CatalogStudioPage() {
                 {currentItem.name && typeof currentItem.name === "object" ? (
                   <div className="grid gap-3">
                     <label className="text-sm"><span className="mb-1 block font-semibold">الاسم العربي</span><input value={nameFor(currentItem, "ar")} onChange={(event) => updateName("ar", event.target.value)} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
-                    <label className="text-sm"><span className="mb-1 block font-semibold">English name</span><input dir="ltr" value={nameFor(currentItem, "en")} onChange={(event) => updateName("en", event.target.value)} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
+                    <label className="text-sm"><span className="mb-1 block font-semibold">الاسم بالإنجليزية</span><input dir="ltr" value={nameFor(currentItem, "en")} onChange={(event) => updateName("en", event.target.value)} className="w-full rounded-lg border bg-background px-3 py-2" /></label>
                   </div>
                 ) : null}
                 {displayFor(currentItem) ? (
@@ -1045,7 +1045,7 @@ export function CatalogStudioPage() {
                   <div className="flex flex-wrap items-center justify-between gap-2"><span className="font-mono text-xs">{entry.action}</span><time className="text-xs text-muted-foreground">{new Date(entry.at).toLocaleString("ar-EG")}</time></div>
                   <p className="mt-2 text-sm">{entry.details}</p>
                   <p className="mt-2 break-all font-mono text-xs" dir="ltr">{entry.files.join(", ")}</p>
-                  {entry.recoveryPath ? <p className="mt-1 break-all text-xs text-amber-700" dir="ltr">Recovery: {entry.recoveryPath}</p> : null}
+                  {entry.recoveryPath ? <p className="mt-1 break-all text-xs text-amber-700" dir="ltr">مسار الاسترجاع: {entry.recoveryPath}</p> : null}
                 </div>
               ))}
             </div>
