@@ -1,5 +1,5 @@
-import type { NotificationEntity, NotificationRoute } from "../domain/entities";
-import type { NotificationPlatform } from "../domain/enums";
+import type { NotificationEntity, NotificationRoute } from "@asol/notifications-core";
+import type { NotificationPlatform } from "@asol/notifications-core";
 
 /**
  * Types the public API is allowed to hand out.

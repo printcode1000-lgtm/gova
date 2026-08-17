@@ -8,8 +8,8 @@ import type {
   BroadcastRecipientsResult,
   NotificationTestInput,
   NotificationTestResult,
-} from '../domain/entities';
-import { getNotificationTestScenario } from '../domain/notification-test-scenarios';
+} from '@asol/notifications-core';
+import { getNotificationTestScenario } from '@asol/notifications-core';
 import { ListBroadcastRecipientsQuery } from '@/modules/data-access/domains/notifications/operations/queries/list-broadcast-recipients.query';
 import { NotificationGrantCollector } from './notification-grant-collector.server';
 

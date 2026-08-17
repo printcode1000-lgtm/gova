@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { useSession } from "@/features/auth/components/SessionProvider";
-import { NOTIFICATION_CHANGED_EVENT } from "../../domain/defaults";
-import type { NotificationEntity } from "../../domain/entities";
+import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
+import type { NotificationEntity } from "@asol/notifications-core";
 import { notificationsFacade } from "../../public/notification-facade";
 
 /**

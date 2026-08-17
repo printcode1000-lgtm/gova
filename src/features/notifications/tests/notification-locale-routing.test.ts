@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
-import { NotificationSendService } from "../services/notification-send-service.server";
-import { NotificationProviderRegistry } from "../services/providers/notification-provider-registry.server";
+import { NotificationSendService } from "@asol/notifications-core/server";
+import { NotificationProviderRegistry } from "@asol/notifications-core/server";
 import type {
   NotificationProvider,
   NotificationProviderSendInput,
   NotificationProviderSendResult,
-} from "../services/providers/notification-provider.interface";
-import type { RegisteredNotificationToken } from "../domain/entities";
-import { NotificationPlatforms } from "../domain/enums";
+} from "@asol/notifications-core/server";
+import type { RegisteredNotificationToken } from "@asol/notifications-core";
+import { NotificationPlatforms } from "@asol/notifications-core";
 import { moneyVariablesByLocale } from "../shared/notification-money";
 import type { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
 import type { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";

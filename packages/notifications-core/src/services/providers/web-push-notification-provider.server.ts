@@ -4,7 +4,7 @@ import type {
   NotificationProviderSendResult,
 } from './notification-provider.interface';
 import webpush from 'web-push';
-import { getWebPushServerConfig } from '@/core/config/server-env';
+import { getWebPushServerConfig } from '@/core/config/server-env/server-env.values.turso-env';
 import {
   WEB_PUSH_VAPID_PUBLIC_KEY,
   WEB_PUSH_VAPID_SUBJECT,
@@ -51,7 +51,21 @@ function isExpiredSubscription(reason: unknown): boolean {
 export class WebPushNotificationProvider implements NotificationProvider {
   readonly provider = 'web_push';
 
-  constructor(private readonly readConfig = getWebPushServerConfig) {}
+  /**
+   * The transport is injected, defaulting to the real `web-push` client.
+   *
+   * It used to be reached through the module import alone, and the contract test replaced
+   * it by monkey-patching `Module.prototype.require`. That worked while this file was
+   * compiled to CommonJS under `src/`; once it moved into a package declaring
+   * `"type": "module"`, the import became a real ESM binding and the patch stopped
+   * applying — the test started opening `setVapidDetails` against the live library.
+   *
+   * Injection removes the dependency on how the module system happens to load this file.
+   */
+  constructor(
+    private readonly readConfig = getWebPushServerConfig,
+    private readonly client: Pick<typeof webpush, 'setVapidDetails' | 'sendNotification'> = webpush,
+  ) {}
 
   async send(input: NotificationProviderSendInput): Promise<NotificationProviderSendResult> {
     const config = this.readConfig();
@@ -66,13 +80,13 @@ export class WebPushNotificationProvider implements NotificationProvider {
       };
     }
 
-    webpush.setVapidDetails(
+    this.client.setVapidDetails(
       WEB_PUSH_VAPID_SUBJECT,
       WEB_PUSH_VAPID_PUBLIC_KEY,
       config.privateKey,
     );
     const results = await Promise.allSettled(
-      input.tokens.map((token) => webpush.sendNotification(JSON.parse(token.token), buildPayload(input, token))),
+      input.tokens.map((token) => this.client.sendNotification(JSON.parse(token.token), buildPayload(input, token))),
     );
     const failureCount = results.filter((result) => result.status === 'rejected').length;
     const successCount = results.length - failureCount;

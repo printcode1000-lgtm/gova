@@ -5,7 +5,7 @@ import {
   type NotificationChannel,
   type NotificationPriority,
   type NotificationTarget,
-} from "../domain/enums";
+} from "@asol/notifications-core";
 
 export class NotificationRouter {
   resolveChannels(channels: NotificationChannel[], priority: NotificationPriority) {

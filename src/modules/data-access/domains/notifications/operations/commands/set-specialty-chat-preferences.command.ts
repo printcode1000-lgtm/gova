@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { NotificationChatPreferenceChanges } from "@/features/notifications/contracts";
+import type { NotificationChatPreferenceChanges } from "@asol/notifications-core";
 import { userNotificationTokenRepository } from "@/modules/data-access/domains/notifications/repositories/user-notification-token-repository";
 
 export class SetSpecialtyChatPreferencesCommand {

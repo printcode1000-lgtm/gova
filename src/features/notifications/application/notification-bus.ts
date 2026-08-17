@@ -6,9 +6,9 @@ import type {
   NotificationEvent,
   NotificationLocale,
   TemplateNotificationInput,
-} from "../domain/entities";
+} from "@asol/notifications-core";
 import { EventNotificationMapper } from "./event-notification-mapper";
-import { NotificationBuilder } from "../domain/notification-builder";
+import { NotificationBuilder } from "@asol/notifications-core/builder";
 import { notificationSender } from "./notification-sender";
 
 type Listener = (notification: NotificationEntity) => void;

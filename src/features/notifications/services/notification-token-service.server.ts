@@ -5,7 +5,7 @@ import type {
   NotificationDeliveryPreference,
   RegisteredNotificationToken,
   RegisterNotificationTokenInput,
-} from "../domain/entities";
+} from "@asol/notifications-core";
 import { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
 import { UpsertNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/upsert-notification-token.command";
 import { SetNotificationPushPreferenceCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-notification-push-preference.command";

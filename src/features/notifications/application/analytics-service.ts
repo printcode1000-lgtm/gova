@@ -1,9 +1,9 @@
 "use client";
 
-import type { NotificationAnalyticsEvent } from "../domain/entities";
-import type { NotificationLifecycleEvent } from "../domain/enums";
+import type { NotificationAnalyticsEvent } from "@asol/notifications-core";
+import type { NotificationLifecycleEvent } from "@asol/notifications-core";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
-import { createNotificationId } from "../domain/create-notification-id";
+import { createNotificationId } from "@asol/notifications-core";
 
 export class AnalyticsService {
   async track(input: {

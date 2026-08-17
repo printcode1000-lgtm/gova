@@ -14,7 +14,7 @@ import type {
   NotificationTestInput,
   NotificationTestResult,
   RegisterNotificationTokenInput,
-} from "../domain/entities";
+} from "@asol/notifications-core";
 
 /**
  * Browser-side notification API.

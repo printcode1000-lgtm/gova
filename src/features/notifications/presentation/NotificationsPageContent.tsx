@@ -23,8 +23,8 @@ import {
   NotificationCategories,
   NotificationPriorities,
   type NotificationCategory,
-} from "../domain/enums";
-import type { NotificationEntity } from "../domain/entities";
+} from "@asol/notifications-core";
+import type { NotificationEntity } from "@asol/notifications-core";
 import { useNotifications } from "./hooks/use-notifications";
 import { useTranslation } from "@/lib/i18n";
 import {

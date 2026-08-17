@@ -3,7 +3,7 @@ import 'server-only';
 import type {
   RegisteredNotificationToken,
   RegisterNotificationTokenInput,
-} from '@/features/notifications/contracts';
+} from '@asol/notifications-core';
 import { userNotificationTokenRepository } from '@/modules/data-access/domains/notifications/repositories/user-notification-token-repository';
 
 export class UpsertNotificationTokenCommand {

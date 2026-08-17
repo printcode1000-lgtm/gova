@@ -106,7 +106,7 @@ it for any package.
 
 ## Current status
 
-Eleven sealed packages, arranged in four layers. The layering is not decoration — see
+Twelve sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
 | # | Rule | native-core | ota-core | storage-core | account-declarations | vercel-deploy-core | service-mirror-core | account-bridge | the four `*-composition` |
@@ -145,7 +145,8 @@ the contract rather than a matter of taste.
                                          runs on the device, never on a server (Rule 0)
   layer 3  @asol/account-declarations    pure data: project, token var, env keys, entry points
   layer 2  @asol/*-composition           the only place that knows an account uses db AND images
-  layer 1  vercel-deploy-core, service-mirror-core, storage-core, ota-core, native-core
+  layer 1  vercel-deploy-core, service-mirror-core, storage-core, ota-core,
+           native-core, notifications-core
                                          capability logic, held once
 ```
 
@@ -385,3 +386,59 @@ script. A comparison that reports noise trains you to ignore it.
 Three guards keep this true without re-running the comparison: `C2` pins the counts (11 / 8 / 18 /
 21), each `assert<Account>Env` reads `requiredEnv` so validation cannot disagree with what the
 deploy pushes, and `C4` asserts no mirror carries another account's token name.
+
+---
+
+## `@asol/notifications-core` — what was sealed, and what was not
+
+The notifications feature was 73 files in `src/features/notifications`. Only 22 of them moved
+into a package, and the split was decided by measurement rather than by folder name.
+
+| Door reached | Files reachable | Edges into the app | Sealable? |
+| :-- | --: | --: | :-- |
+| `service-runtime` (delivery) | 38 | **16**, all `data-access` + `core/config` | yes |
+| `server` (broadcast, admin) | 44 | 30 — adds `auth`, `profile` | no |
+| `index` (UI, hooks) | 98 | **50** — theme, i18n, monitor, preferences, components | no |
+
+The delivery path's edges land entirely on designated layers, which is the same standard applied to
+`ota-core`. The UI half reaches the theme and component trees by nature; a package that dragged
+those in would satisfy rule 7 on paper and break it in fact. **A folder move is not an isolation.**
+
+So `@asol/notifications-core` holds the domain vocabulary and the push fan-out — FCM, APNs, Web
+Push — plus the grant protocol. That is exactly what the `asol-notifications` Vercel account runs.
+The UI, hooks, badges, native inbox and analytics stayed in `src/features/notifications`, which now
+consumes the package.
+
+### Android channel creation stays in `native-core`
+
+`ensureNotificationChannels`, `registerForPushNotifications` and the channel constants belong to
+`@asol/native-core`, and the notifications package has a test asserting it imports no `@capacitor/*`
+module and creates no channel. Rule 9: upgrading a Capacitor plugin must touch one package.
+
+This was already true before the extraction — the feature had zero direct Capacitor imports — and
+the test exists so it stays true.
+
+### Four doors, each earned by a failure
+
+Rule 2 asks for a small fixed set, not for one. Every door here was added because merging it caused
+a concrete breakage:
+
+- **`.`** — vocabulary. The app's own barrel re-exports it wholesale, so it must carry no
+  implementation object.
+- **`./builder`** — `NotificationBuilder` and the template loader. Both halves construct
+  notifications, but placing them on `.` leaked an implementation object into the app barrel and its
+  boundary test failed.
+- **`./server`** — delivery and grants. Pulls `google-auth-library`, `node:http2`, the provider SDKs.
+- **`./providers`** — APNs and Web Push, which read credentials **at module load**. Re-exporting
+  them from `./server` made that door unopenable without a valid VAPID pair, and every test touching
+  it failed with *"Vapid private key should be 32 bytes long"*.
+
+### A stub that stopped stubbing
+
+The web-push contract test replaced the transport by patching `Module.prototype.require`, which only
+intercepts CommonJS. Once the provider moved into a package declaring `"type": "module"`, the import
+became a real ESM binding, the patch silently stopped applying, and the test began calling the live
+library.
+
+The transport is now injected through the constructor. **A stub that stops stubbing without failing
+is worse than no stub** — the test kept passing its assertions while exercising something else.

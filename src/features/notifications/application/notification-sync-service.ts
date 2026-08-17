@@ -1,6 +1,6 @@
 "use client";
 
-import type { NotificationOfflineOperation } from "../domain/entities";
+import type { NotificationOfflineOperation } from "@asol/notifications-core";
 import { notificationLog } from "../domain/notification-redaction";
 import { assertRetryKind, assertString, assertUid } from "../domain/notification-validation";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";

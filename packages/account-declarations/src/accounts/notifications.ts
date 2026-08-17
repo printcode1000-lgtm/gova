@@ -23,7 +23,6 @@ export const NOTIFICATIONS_DECLARATION = {
   requiredEnv: REQUIRED_ENV_KEYS,
   optionalEnv: OPTIONAL_ENV_KEYS,
   mirrorEntryPoints: [
-    'features/notifications/service-runtime.ts',
     'core/config/server-env.ts',
   ],
   runtimeAssets: [],

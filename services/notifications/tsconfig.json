@@ -46,6 +46,18 @@
       ],
       "@asol/notifications-composition": [
         "./generated/packages/notifications-composition/src/index.ts"
+      ],
+      "@asol/notifications-core": [
+        "./generated/packages/notifications-core/src/index.ts"
+      ],
+      "@asol/notifications-core/server": [
+        "./generated/packages/notifications-core/src/server.ts"
+      ],
+      "@asol/notifications-core/builder": [
+        "./generated/packages/notifications-core/src/builder.ts"
+      ],
+      "@asol/notifications-core/providers": [
+        "./generated/packages/notifications-core/src/providers.ts"
       ]
     }
   },

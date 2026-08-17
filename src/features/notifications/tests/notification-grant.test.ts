@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import {
   createNotificationGrant,
   verifyNotificationGrant,
-} from "../services/notification-grant.server";
+} from "@asol/notifications-core/server";
 
 // The signing secret is supplied by the npm script, not set here: touching the
 // environment outside the Configuration layer is an architecture violation, and

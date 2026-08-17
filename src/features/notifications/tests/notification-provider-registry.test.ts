@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { FcmNotificationProvider } from "../services/providers/fcm-notification-provider.server";
-import { NoopNotificationProvider } from "../services/providers/noop-notification-provider.server";
-import type { RegisteredNotificationToken } from "../domain/entities";
-import { NotificationPlatforms } from "../domain/enums";
-import type { FcmHttpV1Message } from "../services/providers/fcm-http-v1.server";
+import { FcmNotificationProvider } from "@asol/notifications-core/server";
+import { NoopNotificationProvider } from "@asol/notifications-core/server";
+import type { RegisteredNotificationToken } from "@asol/notifications-core";
+import { NotificationPlatforms } from "@asol/notifications-core";
+import type { FcmHttpV1Message } from "@asol/notifications-core/server";
 
 const token: RegisteredNotificationToken = {
   id: "ntok_1",

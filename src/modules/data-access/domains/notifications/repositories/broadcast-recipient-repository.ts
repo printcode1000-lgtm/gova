@@ -8,7 +8,7 @@ import { userNotificationTokens } from '@/modules/data-access/core/database/noti
 import type {
   BroadcastRecipient,
   NotificationPlatform,
-} from '@/features/notifications/contracts';
+} from '@asol/notifications-core';
 
 interface RecipientAccumulator {
   uid: string;

@@ -12,8 +12,8 @@ import type {
   NotificationEvent,
   NotificationTestResult,
   TemplateNotificationInput,
-} from "../domain/entities";
-import { NotificationTargets } from "../domain/enums";
+} from "@asol/notifications-core";
+import { NotificationTargets } from "@asol/notifications-core";
 import { NotificationError, NotificationErrorCodes } from "../domain/notification-error";
 import { notificationLog } from "../domain/notification-redaction";
 import {

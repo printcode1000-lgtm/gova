@@ -7,7 +7,7 @@ import {
   type PushToken,
 } from "@asol/native-core";
 import type { Unsubscribe } from "@asol/native-core";
-import type { DeviceToken, NotificationEntity } from "../../domain/entities";
+import type { DeviceToken, NotificationEntity } from "@asol/notifications-core";
 import {
   isEmptySystemPlaceholderPayload,
   mapInboundPushToNotification,

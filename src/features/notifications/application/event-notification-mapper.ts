@@ -1,4 +1,4 @@
-import type { NotificationEvent, NotificationLocale, TemplateNotificationInput } from "../domain/entities";
+import type { NotificationEvent, NotificationLocale, TemplateNotificationInput } from "@asol/notifications-core";
 
 const EVENT_TEMPLATE_MAP: Record<string, string> = {
   "orders.created": "order.created",

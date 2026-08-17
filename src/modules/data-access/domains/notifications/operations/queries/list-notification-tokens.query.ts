@@ -1,6 +1,6 @@
 import 'server-only';
 
-import type { RegisteredNotificationToken } from '@/features/notifications/contracts';
+import type { RegisteredNotificationToken } from '@asol/notifications-core';
 import { userNotificationTokenRepository } from '@/modules/data-access/domains/notifications/repositories/user-notification-token-repository';
 
 export class ListNotificationTokensQuery {

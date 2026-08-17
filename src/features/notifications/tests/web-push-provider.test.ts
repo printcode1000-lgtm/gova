@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
-import Module from "node:module";
-import type { RegisteredNotificationToken } from "../domain/entities";
-import type { NotificationProviderPayload } from "../services/providers/notification-provider.interface";
+import type { RegisteredNotificationToken } from "@asol/notifications-core";
+import type { NotificationProviderPayload } from "@asol/notifications-core";
 
 /**
  * `web-push` opens no connection here: the transport is replaced before the
@@ -11,23 +10,28 @@ const sent: string[] = [];
 const vapidDetails: Array<[string, string, string]> = [];
 let nextRejection: (() => unknown) | null = null;
 
-const originalRequire = Module.prototype.require;
-Module.prototype.require = function patchedRequire(this: unknown, id: string) {
-  if (id === "web-push") {
-    return {
-      setVapidDetails: (subject: string, publicKey: string, privateKey: string) => {
-        vapidDetails.push([subject, publicKey, privateKey]);
-      },
-      sendNotification: async (subscription: { endpoint: string }) => {
-        sent.push(subscription.endpoint);
-        const rejection = nextRejection?.();
-        if (rejection) throw rejection;
-        return { statusCode: 201 };
-      },
-    };
-  }
-  return originalRequire.call(this, id);
-} as typeof Module.prototype.require;
+/**
+ * The transport, injected rather than monkey-patched.
+ *
+ * This used to replace `web-push` by patching `Module.prototype.require`, which only
+ * intercepts CommonJS. When the provider moved into `@asol/notifications-core` — a package
+ * declaring `"type": "module"` — the import became a real ESM binding, the patch silently
+ * stopped applying, and the test began calling the live library.
+ *
+ * A stub that stops stubbing without failing is worse than no stub: the test kept passing
+ * its assertions while exercising something else entirely.
+ */
+const fakeWebPush = {
+  setVapidDetails: (subject: string, publicKey: string, privateKey: string) => {
+    vapidDetails.push([subject, publicKey, privateKey]);
+  },
+  sendNotification: async (subscription: { endpoint: string }) => {
+    sent.push(subscription.endpoint);
+    const rejection = nextRejection?.();
+    if (rejection) throw rejection;
+    return { statusCode: 201 };
+  },
+} as unknown as ConstructorParameters<typeof WebPushNotificationProvider>[1];
 
 function token(id: string, endpoint: string): RegisteredNotificationToken {
   return {
@@ -56,14 +60,15 @@ const payload: NotificationProviderPayload = {
 
 async function main() {
   const { WebPushNotificationProvider } = await import(
-    "../services/providers/web-push-notification-provider.server"
+    "@asol/notifications-core/providers"
   );
   const { WEB_PUSH_VAPID_PUBLIC_KEY, WEB_PUSH_VAPID_SUBJECT } = await import(
-    "../domain/web-push-config"
+    "@asol/notifications-core"
   );
-  const provider = new WebPushNotificationProvider(() => ({
-    privateKey: "private",
-  }));
+  const provider = new WebPushNotificationProvider(
+    () => ({ privateKey: "private" }),
+    fakeWebPush,
+  );
 
   const delivered = await provider.send({
     tokens: [token("ntok_live", "https://push.example/live")],
@@ -117,7 +122,7 @@ async function main() {
 
   // Without the secret the transport must report a named failure and keep the
   // tokens: the subscriptions are healthy, the server is not configured.
-  const unconfigured = await new WebPushNotificationProvider(() => null).send({
+  const unconfigured = await new WebPushNotificationProvider(() => null, fakeWebPush).send({
     tokens: [token("ntok_unconfigured", "https://push.example/unconfigured")],
     payload,
   });

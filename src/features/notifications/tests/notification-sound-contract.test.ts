@@ -13,13 +13,13 @@ import {
   isSilentNotification,
   localNotificationSoundFile,
   resolveAndroidChannelId,
-} from "../domain/notification-sound";
+} from "@asol/notifications-core";
 import {
   NotificationCategories,
   NotificationPriorities,
   NotificationSounds,
-} from "../domain/enums";
-import { NOTIFICATION_TEST_SCENARIOS } from "../domain/notification-test-scenarios";
+} from "@asol/notifications-core";
+import { NOTIFICATION_TEST_SCENARIOS } from "@asol/notifications-core";
 
 /**
  * The custom sound reaches a device through four independent things that must
@@ -353,9 +353,9 @@ for (const locale of ["ar", "en"] as const) {
   const templates = JSON.parse(
     readFileSync(
       path.resolve(
+        "packages",
+        "notifications-core",
         "src",
-        "features",
-        "notifications",
         "config",
         "templates",
         `notifications.${locale}.json`,

@@ -104,18 +104,19 @@ const compositionCode = stripComments(
 );
 assert.match(
   compositionCode,
-  /from\s+['"]@\/features\/notifications\/service-runtime['"]/,
-  "The composition must import @/features/notifications/service-runtime.",
+  /from\s+['"]@asol\/notifications-core\/server['"]/,
+  "The composition must import @asol/notifications-core/server.",
 );
 assert.doesNotMatch(
   compositionCode,
-  /@\/features\/notifications\/(?!service-runtime)/,
-  "The composition must reach no other notification path: its imports are the deployment surface.",
+  /@\/features\/notifications\//,
+  "The composition must not reach the application's notifications feature. The delivery " +
+    "core is a sealed package now, and its import surface is this deployment's file surface.",
 );
 
 const serviceRuntime = stripComments(
   readFileSync(
-    path.join(root, "src", "features", "notifications", "service-runtime.ts"),
+    path.join(root, "packages", "notifications-core", "src", "service-runtime.ts"),
     "utf8",
   ),
 );

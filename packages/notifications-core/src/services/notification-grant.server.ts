@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { getNotificationGrantSecret } from "@/core/config/server-env";
+import { getNotificationGrantSecret } from "@/core/config/server-env/server-env.values.turso-env";
 import type { SendNotificationToUsersInput } from "../domain/entities";
 
 /**

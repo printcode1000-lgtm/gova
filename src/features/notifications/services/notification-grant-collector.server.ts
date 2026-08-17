@@ -1,7 +1,7 @@
 import "server-only";
 
-import type { SendNotificationToUsersInput } from "../domain/entities";
-import { createNotificationGrant } from "./notification-grant.server";
+import type { SendNotificationToUsersInput } from "@asol/notifications-core";
+import { createNotificationGrant } from "@asol/notifications-core/server";
 
 /**
  * Collects the notification grants a Business API route wants to hand back.

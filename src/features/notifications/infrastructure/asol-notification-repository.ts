@@ -13,7 +13,7 @@ import type {
   NotificationEntity,
   NotificationOfflineOperation,
   NotificationSettings,
-} from "../domain/entities";
+} from "@asol/notifications-core";
 import {
   sanitizeNotificationEntity,
   sanitizeRetryOperation,

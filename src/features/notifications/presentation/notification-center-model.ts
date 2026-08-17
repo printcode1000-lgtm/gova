@@ -1,8 +1,8 @@
-import type { NotificationEntity } from "../domain/entities";
+import type { NotificationEntity } from "@asol/notifications-core";
 import {
   NotificationCategories,
   type NotificationCategory,
-} from "../domain/enums";
+} from "@asol/notifications-core";
 import { SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat/domain/types";
 
 export interface NotificationActivityGroup {

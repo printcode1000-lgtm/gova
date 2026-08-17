@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import type { NotificationEntity } from "../domain/entities";
+import type { NotificationEntity } from "@asol/notifications-core";
 import {
   NotificationCategories,
   NotificationChannels,
@@ -10,7 +10,7 @@ import {
   NotificationSyncStates,
   NotificationTargets,
   NotificationTypes,
-} from "../domain/enums";
+} from "@asol/notifications-core";
 import { SPECIALTY_CHAT_KINDS } from "@/features/specialty-chat/domain/types";
 import {
   buildActivityGroups,

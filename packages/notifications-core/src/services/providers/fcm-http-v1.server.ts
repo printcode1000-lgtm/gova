@@ -1,7 +1,7 @@
 import "server-only";
 
 import { GoogleAuth } from "google-auth-library";
-import { getFirebaseAdminServiceAccount } from "@/core/config/server-env";
+import { getFirebaseAdminServiceAccount } from "@/core/config/server-env/server-env.values.turso-env";
 
 /**
  * Apple-specific delivery options.

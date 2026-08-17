@@ -4,7 +4,7 @@ import {
   deliverNotificationGrants,
   readGrantsFromRequestBody,
   MAX_GRANTS_PER_REQUEST,
-} from '@/features/notifications/service-runtime';
+} from '@asol/notifications-core/server';
 
 export interface NotificationsRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */

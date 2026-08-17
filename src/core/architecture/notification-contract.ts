@@ -33,24 +33,27 @@ export const NOTIFICATION_GUARDED_TREES = ["src/", "services/notifications/src/"
  * | `index.ts` | The behaviour. Exports exactly one runtime object. |
  * | `ui.ts` | React components and hooks. In `index.ts` they would pull the presentation tree — and React — into every route that wants a type. |
  * | `server.ts` | Everything behind it imports `server-only`, which is a build error inside a client component. |
- * | `contracts.ts` | Types only, for persistence code that needs the vocabulary without the behaviour. A repository reaching `server.ts` would drag the broadcast and users code into the microservice's import mirror. |
- * | `service-runtime.ts` | The microservice's only path. Its import surface *is* that deployment's file surface. |
+ *
+ * `contracts.ts` and `service-runtime.ts` are no longer here. They moved into
+ * `@asol/notifications-core`, whose two doors replace them: `.` carries the domain
+ * vocabulary that persistence code needs without the behaviour, and `./server` is the
+ * microservice's only path — its import surface *is* that deployment's file surface.
  */
 export const NOTIFICATION_PUBLIC_ENTRY_POINTS = [
   "src/features/notifications/index.ts",
   "src/features/notifications/ui.ts",
   "src/features/notifications/server.ts",
-  "src/features/notifications/contracts.ts",
-  "src/features/notifications/service-runtime.ts",
 ] as const;
 
 /** The importable specifiers that resolve to those entry points. */
 export const NOTIFICATION_PUBLIC_SPECIFIERS = [
+  "@asol/notifications-core",
+  "@asol/notifications-core/server",
   "@/features/notifications",
   "@/features/notifications/ui",
   "@/features/notifications/server",
-  "@/features/notifications/contracts",
-  "@/features/notifications/service-runtime",
+  "@asol/notifications-core",
+  "@asol/notifications-core/server",
 ] as const;
 
 /**
@@ -67,9 +70,9 @@ export const NOTIFICATION_ENTRY_POINTS_BY_TREE: Readonly<
     "@/features/notifications",
     "@/features/notifications/ui",
     "@/features/notifications/server",
-    "@/features/notifications/contracts",
+    "@asol/notifications-core",
   ],
-  "services/notifications/src/": ["@/features/notifications/service-runtime"],
+  "services/notifications/src/": ["@asol/notifications-core/server"],
 };
 
 /** Internal folders no outside file may reach into. */
@@ -217,26 +220,26 @@ export const NOTIFICATION_TRANSPORT_RULES: ReadonlyArray<{
   {
     transport: "the Web Push server library",
     pattern: /from\s+['"]web-push['"]|\bwebpush\s*\./,
-    owners: ["src/features/notifications/services/providers/"],
+    owners: ["packages/notifications-core/src/services/providers/"],
     use: "the provider registry in services/providers/",
   },
   {
     transport: "Firebase / FCM credentials",
     pattern:
       /from\s+['"]google-auth-library['"]|from\s+['"]firebase(?:-admin)?['"]|\bFIREBASE_ADMIN_SERVICE_ACCOUNT|\bfcm\.googleapis\.com\b/,
-    owners: ["src/features/notifications/services/providers/"],
+    owners: ["packages/notifications-core/src/services/providers/"],
     use: "the FCM provider in services/providers/",
   },
   {
     transport: "APNs credentials or endpoints",
     pattern: /\bAPNS_(?:TEAM_ID|KEY_ID|PRIVATE_KEY)\b|\bapi\.push\.apple\.com\b/,
-    owners: ["src/features/notifications/services/providers/"],
+    owners: ["packages/notifications-core/src/services/providers/"],
     use: "the APNs provider in services/providers/",
   },
   {
     transport: "the Web Push VAPID key material",
     pattern: /\bWEB_PUSH_VAPID_PRIVATE_KEY\b/,
-    owners: ["src/features/notifications/services/providers/"],
+    owners: ["packages/notifications-core/src/services/providers/"],
     use: "the Web Push provider in services/providers/",
   },
   {

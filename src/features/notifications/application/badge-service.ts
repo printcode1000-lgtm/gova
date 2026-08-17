@@ -1,6 +1,6 @@
 "use client";
 
-import { NotificationTargets } from "../domain/enums";
+import { NotificationTargets } from "@asol/notifications-core";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { nativeBadgeService } from "../infrastructure/native/native-badge.service";
 

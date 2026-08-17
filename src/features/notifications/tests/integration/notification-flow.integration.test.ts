@@ -14,7 +14,7 @@ import {
   resetHarnessKeepingStorage,
   tapNativeNotification,
 } from "./notification-harness";
-import type { NotificationEntity } from "../../domain/entities";
+import type { NotificationEntity } from "@asol/notifications-core";
 
 /**
  * The notification module, driven the way the application drives it.

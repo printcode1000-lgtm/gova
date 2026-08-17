@@ -25,9 +25,9 @@
  * | `@/features/notifications` | The client/application behaviour. |
  * | `@/features/notifications/ui` | React components and hooks. Importing them here would drag the whole presentation tree — and React itself — into every server route that only wants a type. |
  * | `@/features/notifications/server` | Everything behind it imports `server-only`; pulling that into a client component is a build error, not a preference. |
- * | `@/features/notifications/contracts` | Types only. The data-access repositories need the vocabulary without the behaviour, and the notifications microservice is built by walking imports — a repository that reached `server.ts` would drag the broadcast and users code into a deployment that must not contain them. |
+ * | `@asol/notifications-core` | Types only. The data-access repositories need the vocabulary without the behaviour, and the notifications microservice is built by walking imports — a repository that reached `server.ts` would drag the broadcast and users code into a deployment that must not contain them. |
  *
- * A fifth path, `@/features/notifications/service-runtime`, exists for the
+ * A fifth path, `@asol/notifications-core/server`, exists for the
  * notifications microservice alone and is not importable from `src`.
  *
  * Importing anything else — `domain/*`, `application/*`, `infrastructure/*`,
@@ -73,8 +73,19 @@ export type {
 // ---- the vocabulary --------------------------------------------------------
 // Domain types and their constant enums. No adapter, repository, or transport
 // type appears here, and nothing exported is mutable state.
-export * from "./domain/enums";
-export * from "./domain/entities";
+/**
+ * The domain vocabulary, re-exported selectively from `@asol/notifications-core`.
+ *
+ * Deliberately not `export *`. The package's own door carries implementation objects its
+ * consumers legitimately need — `notification-bus` constructs a `NotificationBuilder` —
+ * but this barrel has a stricter contract: no service, repository, adapter, transport,
+ * bus, builder or template loader may be reachable from it.
+ *
+ * Two boundaries, each enforced where it belongs. A blanket re-export collapsed them into
+ * one and leaked `NotificationBuilder` into the root entry point; the boundary test caught
+ * it.
+ */
+export * from "@asol/notifications-core";
 export type { RetryOperationKind } from "./domain/notification-validation";
 export {
   NOTIFICATION_TEST_SCENARIOS,
@@ -82,7 +93,7 @@ export {
   getNotificationTestScenario,
   type NotificationTestScenario,
   type NotificationTestScenarioId,
-} from "./domain/notification-test-scenarios";
+} from "@asol/notifications-core";
 
 /**
  * The grant envelope.

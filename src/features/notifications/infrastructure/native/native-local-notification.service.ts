@@ -1,11 +1,11 @@
 "use client";
 
 import { NativeCore } from "@asol/native-core";
-import type { NotificationEntity } from "../../domain/entities";
+import type { NotificationEntity } from "@asol/notifications-core";
 import {
   localNotificationSoundFile,
   resolveAndroidChannelId,
-} from "../../domain/notification-sound";
+} from "@asol/notifications-core";
 import { nativePlatformService } from "./native-platform.service";
 
 /**

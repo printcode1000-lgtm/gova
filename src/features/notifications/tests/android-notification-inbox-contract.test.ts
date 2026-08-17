@@ -33,7 +33,7 @@ const nativeInboxAdapter = read(
 );
 const inboxService = read("src/features/notifications/application/native-inbox-service.ts");
 const fcmProvider = read(
-  "src/features/notifications/services/providers/fcm-notification-provider.server.ts",
+  "packages/notifications-core/src/services/providers/fcm-notification-provider.server.ts",
 );
 const clientStorage = read("src/lib/storage/client-storage.ts");
 

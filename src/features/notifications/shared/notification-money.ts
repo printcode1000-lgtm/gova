@@ -1,7 +1,7 @@
 import type {
   NotificationLocale,
   NotificationVariables,
-} from "../domain/entities";
+} from "@asol/notifications-core";
 
 const INTL_LOCALES: Record<NotificationLocale, string> = {
   ar: "ar-EG",

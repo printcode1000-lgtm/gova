@@ -1,4 +1,4 @@
-import type { NotificationEntity } from "./entities";
+import type { NotificationEntity } from "@asol/notifications-core";
 
 /**
  * Which deliveries must never become a banner.

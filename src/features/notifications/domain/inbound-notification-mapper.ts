@@ -1,4 +1,4 @@
-import type { NotificationEntity } from "./entities";
+import type { NotificationEntity } from "@asol/notifications-core";
 import {
   NotificationCategories,
   NotificationChannels,
@@ -12,7 +12,7 @@ import {
   type NotificationCategory,
   type NotificationPriority,
   type NotificationSound,
-} from "./enums";
+} from "@asol/notifications-core";
 import {
   NOTIFICATION_LIMITS,
   sanitizeMetadata,

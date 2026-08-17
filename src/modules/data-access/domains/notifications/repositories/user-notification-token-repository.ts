@@ -16,7 +16,7 @@ import type {
   NotificationDeliveryPreference,
   RegisteredNotificationToken,
   RegisterNotificationTokenInput,
-} from "@/features/notifications/contracts";
+} from "@asol/notifications-core";
 
 function makeTokenId(
   uid: string,

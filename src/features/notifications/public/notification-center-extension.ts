@@ -1,6 +1,6 @@
 "use client";
 
-import type { NotificationEntity } from "../domain/entities";
+import type { NotificationEntity } from "@asol/notifications-core";
 import { notificationLog } from "../domain/notification-redaction";
 
 /**

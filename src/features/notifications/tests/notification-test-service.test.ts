@@ -5,7 +5,7 @@ import {
   SUPER_ADMIN_UID,
 } from "@/features/auth/utils/super-admin";
 import { NotificationBroadcastService } from "../services/notification-broadcast-service.server";
-import { verifyNotificationGrant } from "../services/notification-grant.server";
+import { verifyNotificationGrant } from "@asol/notifications-core/server";
 
 const identity = {
   uid: SUPER_ADMIN_UID,

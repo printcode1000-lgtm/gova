@@ -10,7 +10,7 @@ import type {
   NotificationEvent,
   NotificationTestResult,
   TemplateNotificationInput,
-} from "../domain/entities";
+} from "@asol/notifications-core";
 import type { RetryOperationKind } from "../domain/notification-validation";
 import type { NotificationCenterExtension } from "./notification-center-extension";
 import type {

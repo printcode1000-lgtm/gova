@@ -3,14 +3,14 @@
 import {
   NOTIFICATION_CHANGED_EVENT,
   NOTIFICATION_POPUP_EVENT,
-} from "../domain/defaults";
-import type { NotificationEntity } from "../domain/entities";
+} from "@asol/notifications-core";
+import type { NotificationEntity } from "@asol/notifications-core";
 import {
   NotificationDeliveryStatuses,
   NotificationLifecycleEvents,
   NotificationSyncStates,
   NotificationTargets,
-} from "../domain/enums";
+} from "@asol/notifications-core";
 import { assertNotificationEntity } from "../domain/notification-validation";
 import { notificationLog } from "../domain/notification-redaction";
 import { nativeLocalNotificationService } from "../infrastructure/native/native-local-notification.service";

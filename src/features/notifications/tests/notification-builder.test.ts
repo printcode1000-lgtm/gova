@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { NotificationBuilder } from "../domain/notification-builder";
+import { NotificationBuilder } from "@asol/notifications-core/builder";
 import { EventNotificationMapper } from "../application/event-notification-mapper";
-import { NotificationCategories, NotificationTargets } from "../domain/enums";
+import { NotificationCategories, NotificationTargets } from "@asol/notifications-core";
 
 const builder = new NotificationBuilder();
 

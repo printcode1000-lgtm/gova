@@ -11,7 +11,7 @@ import type {
   NotificationTestResult,
   RegisterNotificationTokenInput,
   SendNotificationToUsersInput,
-} from "./domain/entities";
+} from "@asol/notifications-core";
 import { withNotificationGrants } from "./domain/notification-grant-envelope";
 import { NotificationGrantCollector } from "./services/notification-grant-collector.server";
 import {
@@ -198,12 +198,12 @@ export {
   isNotificationError,
   type NotificationErrorCode,
 } from "./domain/notification-error";
-export * from "./domain/enums";
-export * from "./domain/entities";
+export * from "@asol/notifications-core";
+export * from "@asol/notifications-core";
 export {
   NOTIFICATION_TEST_SCENARIOS,
   NotificationTestScenarioIds,
   getNotificationTestScenario,
   type NotificationTestScenario,
   type NotificationTestScenarioId,
-} from "./domain/notification-test-scenarios";
+} from "@asol/notifications-core";

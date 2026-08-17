@@ -1,6 +1,6 @@
 "use client";
 
-import type { DeviceToken } from "../domain/entities";
+import type { DeviceToken } from "@asol/notifications-core";
 import { assertPhone, assertUid } from "../domain/notification-validation";
 import { notificationLog } from "../domain/notification-redaction";
 import {

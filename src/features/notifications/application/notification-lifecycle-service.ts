@@ -1,7 +1,7 @@
 "use client";
 
-import { NotificationLifecycleEvents } from "../domain/enums";
-import { NOTIFICATION_CHANGED_EVENT } from "../domain/defaults";
+import { NotificationLifecycleEvents } from "@asol/notifications-core";
+import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";

@@ -20,7 +20,7 @@ import type {
   NotificationEntity,
   NotificationLocale,
   NotificationRoute,
-} from "./entities";
+} from "@asol/notifications-core";
 import {
   NotificationCategories,
   NotificationChannels,
@@ -38,7 +38,7 @@ import {
   type NotificationPriority,
   type NotificationSound,
   type NotificationTarget,
-} from "./enums";
+} from "@asol/notifications-core";
 import {
   NotificationError,
   NotificationErrorCodes,

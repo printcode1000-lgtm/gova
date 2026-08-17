@@ -1,8 +1,8 @@
 "use client";
 
-import type { NotificationEntity } from "../domain/entities";
-import { NOTIFICATION_CHANGED_EVENT } from "../domain/defaults";
-import { NotificationLifecycleEvents } from "../domain/enums";
+import type { NotificationEntity } from "@asol/notifications-core";
+import { NOTIFICATION_CHANGED_EVENT } from "@asol/notifications-core";
+import { NotificationLifecycleEvents } from "@asol/notifications-core";
 import { sanitizeNotificationEntity } from "../domain/notification-validation";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationAnalyticsService } from "./analytics-service";

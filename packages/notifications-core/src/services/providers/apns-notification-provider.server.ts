@@ -2,7 +2,7 @@ import "server-only";
 
 import { sign } from "node:crypto";
 import { connect } from "node:http2";
-import { getApnsServerConfig } from "@/core/config/server-env";
+import { getApnsServerConfig } from "@/core/config/server-env/server-env.values.turso-env";
 import type {
   NotificationProvider,
   NotificationProviderSendInput,

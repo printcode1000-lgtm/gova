@@ -1,7 +1,7 @@
 "use client";
 
 import { readAppPreferencesFromDb } from "@/lib/preferences/app-preferences-storage";
-import type { NotificationLocale } from "../domain/entities";
+import type { NotificationLocale } from "@asol/notifications-core";
 
 /**
  * The language this device reads in, for code that runs outside React.

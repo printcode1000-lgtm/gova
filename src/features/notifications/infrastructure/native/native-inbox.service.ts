@@ -6,7 +6,7 @@ import {
   type NotificationInboxTap,
   type Unsubscribe,
 } from "@asol/native-core";
-import type { NotificationEntity } from "../../domain/entities";
+import type { NotificationEntity } from "@asol/notifications-core";
 import {
   isEmptySystemPlaceholderPayload,
   mapInboundPushToNotification,
