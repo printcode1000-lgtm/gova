@@ -62,27 +62,20 @@ function main() {
   assert.ok(!tsConfigText.includes('"@asol/*/*"'), 'S3 Violation: tsconfig.json contains forbidden @asol/*/* wildcard path');
   console.log('  ✔ S3: Zero @asol/*/* wildcards in tsconfig.json.');
 
-  // ── S5: CODEOWNERS covers all packages ───────────────────────────────────
-  const codeownersPath = path.join(root, '.github/CODEOWNERS');
-  if (existsSync(codeownersPath)) {
-    const codeownersContent = readFileSync(codeownersPath, 'utf8');
-    const newPackages = [
-      'vercel-deploy-core',
-      'service-mirror-core',
-      'account-bridge',
-      'notifications-composition',
-      'products-composition',
-      'orders-composition',
-      'profiles-composition',
-    ];
-    for (const p of newPackages) {
-      assert.ok(
-        codeownersContent.includes(`packages/${p}/`),
-        `S5 Violation: .github/CODEOWNERS missing entry for packages/${p}/`,
-      );
-    }
-  }
-  console.log('  ✔ S5: .github/CODEOWNERS contains entries for all 7 new capability packages.');
+  // ── S5: removed with CODEOWNERS ────────────────────────────────────────────
+  //
+  // Rule 6's ownership half was dropped: this is a single-developer repository, GitHub
+  // refuses a review from the author of a pull request, and releases go out through
+  // "deploy:all" pushing directly to main rather than through pull requests. A CODEOWNERS
+  // file here declared ownership that nothing could ever act on.
+  //
+  // The test is deleted rather than kept and skipped. It was already guarded by an
+  // existsSync check, so with the file gone it would have printed a green S5 line while
+  // asserting nothing — the exact empty-guard pattern documented in
+  // docs/01-architecture/module-isolation-rules.md.
+  //
+  // Rule 6's enforcement half is unaffected and still verified: branch protection is
+  // applied and read back by "npm run github:protect".
 
   // ── C3: runVercel child env overrides VERCEL_TOKEN ─────────────────────────
   const vercelDeployCoreIndex = readFileSync(path.join(packagesDir, 'vercel-deploy-core/src/index.ts'), 'utf8');

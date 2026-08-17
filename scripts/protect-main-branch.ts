@@ -5,10 +5,13 @@ import dotenv from 'dotenv';
 /**
  * Configures branch protection on `main` — rule 6 of docs/01-architecture/module-isolation-rules.md.
  *
- * Rule 6 was the one rule that could not be satisfied from code: `.github/CODEOWNERS`
- * declares ownership, but nothing enforces it until the repository itself requires
- * review and blocks force-pushes. That configuration lives on GitHub, not in the tree,
- * so it needs a credential.
+ * Rule 6 was the one rule that could not be satisfied from the tree: the configuration
+ * lives in GitHub's settings, so it needs a credential.
+ *
+ * Its ownership half no longer exists. CODEOWNERS was removed deliberately — one
+ * developer, and releases push straight to main rather than through pull requests, so a
+ * required code-owner review could never be satisfied and never fired. What remains is
+ * the half that does work on a solo repository, and it is applied and read back here.
  *
  * The credential is never held by this project: `GITHUB_ADMIN_TOKEN` is read from
  * `.env.local`, which is git-ignored, exactly as every Vercel and Turso token already is.
@@ -23,7 +26,6 @@ if (existsSync('.env.local')) dotenv.config({ path: '.env.local', quiet: true })
 dotenv.config({ path: '.env', quiet: true });
 
 const DRY_RUN = process.argv.includes('--dry-run');
-const WITH_CODEOWNER_REVIEW = process.argv.includes('--require-codeowner-review');
 
 function resolveRepository(): string {
   const configured = process.env.GITHUB_REPOSITORY?.trim();
@@ -53,7 +55,6 @@ interface ProtectionPayload {
   required_status_checks: { strict: boolean; contexts: string[] } | null;
   enforce_admins: boolean;
   required_pull_request_reviews: {
-    require_code_owner_reviews: boolean;
     required_approving_review_count: number;
     dismiss_stale_reviews: boolean;
   } | null;
@@ -89,11 +90,10 @@ function buildPayload(): ProtectionPayload {
     // protection on admins would break the only supported release path.
     enforce_admins: false,
     required_pull_request_reviews: {
-      // On a single-owner repository this blocks the owner's own pull requests: GitHub
-      // will not accept a review from the author. Opt in with
-      // --require-codeowner-review once the repository has a second member.
-      require_code_owner_reviews: WITH_CODEOWNER_REVIEW,
-      required_approving_review_count: WITH_CODEOWNER_REVIEW ? 1 : 0,
+      // No approval count: GitHub will not accept a review from the author, and there is
+      // exactly one developer. Requiring one would block every pull request permanently —
+      // the same failure as a required status check that never reports.
+      required_approving_review_count: 0,
       dismiss_stale_reviews: true,
     },
     restrictions: null,
@@ -114,14 +114,6 @@ async function main(): Promise<void> {
 
   console.log(`Repository : ${repository}`);
   console.log(`Branch     : main`);
-  console.log(`Code-owner review required: ${WITH_CODEOWNER_REVIEW ? 'yes' : 'no'}`);
-  if (!WITH_CODEOWNER_REVIEW) {
-    console.log(
-      '  (single-owner repositories cannot satisfy it — GitHub rejects a review from the\n' +
-        '   pull request author. Re-run with --require-codeowner-review once a second\n' +
-        '   member exists.)',
-    );
-  }
   if (REQUIRED_STATUS_CHECKS.length === 0) {
     console.log(
       'Required status checks: none configured. Add the workflow check names to\n' +
@@ -181,7 +173,6 @@ async function main(): Promise<void> {
   const live = (await verify.json()) as {
     allow_force_pushes?: { enabled: boolean };
     allow_deletions?: { enabled: boolean };
-    required_pull_request_reviews?: { require_code_owner_reviews?: boolean };
     required_status_checks?: { contexts?: string[] };
     required_linear_history?: { enabled: boolean };
     required_conversation_resolution?: { enabled: boolean };
@@ -196,19 +187,13 @@ async function main(): Promise<void> {
   console.log(
     `  required checks        : ${JSON.stringify(live.required_status_checks?.contexts ?? [])}`,
   );
-  console.log(
-    `  code-owner review      : ${live.required_pull_request_reviews?.require_code_owner_reviews === true}`,
-  );
 
-  if (!WITH_CODEOWNER_REVIEW) {
-    console.log(
-      '\nEverything enforceable without a second person is on. Code-owner review is not a\n' +
-        'permissions problem and no token can grant it: GitHub refuses a review from the\n' +
-        'author, and this repository has exactly one collaborator. It needs a second\n' +
-        'GitHub account with write access (then add it to CODEOWNERS), or moving the\n' +
-        'repository into an organisation so a team can own `packages/**`.',
-    );
-  }
+  console.log(
+    '\nEverything a single-developer repository can enforce is on. Code-owner review is\n' +
+      'deliberately absent, not pending: CODEOWNERS was removed because GitHub refuses a\n' +
+      'review from the author, and releases push directly to main rather than through\n' +
+      'pull requests. The required status check is the reviewer here.',
+  );
   console.log('\nRule 6 is enforcement rather than documentation.');
 }
 

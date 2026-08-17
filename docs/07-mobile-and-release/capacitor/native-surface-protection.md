@@ -156,8 +156,14 @@ remains declarable.
 needs a manual update on every legitimate change, and with a single developer
 reviewing their own work it decays into a ritual.
 
-**CODEOWNERS and branch protection.** Both need a second reviewer to mean
-anything.
+**CODEOWNERS.** It needs a second reviewer to mean anything, so it was deleted
+outright — see rule 6 in
+[the module isolation rules](../../01-architecture/module-isolation-rules.md#6-branch-protection).
+
+Branch protection is the exception on this list: it *is* applied, because its
+value here does not come from review. Force-pushes and deletions are blocked and
+the `verify` status check is required, and a status check is a reviewer that
+works with one developer.
 
 **A `pre-commit` hook.** It slows every commit for protection that
 `--no-verify` removes without thought. The check-time report gives the same

@@ -32,10 +32,29 @@ it treats anything crossing an external boundary as hostile.
 
 Only `index.ts` / the declared public API is importable. Enforced mechanically, not by convention.
 
-## 6. CODEOWNERS + Branch Protection
+## 6. Branch Protection
 
-Ownership declared in `.github/CODEOWNERS`, and branch protection configured so the module's files
-cannot be merged without review.
+Branch protection configured so `main` cannot be rewritten, and so no change lands without the
+release checks passing.
+
+**Amended 2026-08-17: the CODEOWNERS half was removed.** The rule originally read
+"CODEOWNERS + Branch Protection" and required review from code owners on any pull request touching
+`packages/**`. That half is not achievable here and never was:
+
+- the repository has one developer, and GitHub refuses a review from the author of a pull request,
+  so a required code-owner review would have blocked every pull request permanently;
+- releases do not go through pull requests at all — `deploy:all` pushes directly to `main` — so the
+  rule governed a path nothing uses.
+
+A `.github/CODEOWNERS` file under those conditions declares ownership that nothing can act on, and
+its guarding test was written as `if (existsSync(codeownersPath))`, so it would have reported green
+while asserting nothing. Both were deleted rather than left as decoration.
+
+What replaces it on a single-developer repository is the check that actually gates every change:
+**a required status check**. That is the reviewer here, and unlike a human it cannot be skipped.
+
+Restore the ownership half the day a second developer joins: recreate `.github/CODEOWNERS`, then add
+`require_code_owner_reviews` and an approval count of 1 to `scripts/protect-main-branch.ts`.
 
 ## 7. An independent package inside the monorepo
 
@@ -97,14 +116,13 @@ Eleven sealed packages, arranged in four layers. The layering is not decoration 
 | 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 6 | CODEOWNERS + protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 7 | Independent package | ✅ | ✅ 5 designated edges, pinned | ✅ 1 designated edge | ✅ zero imports | ✅ | ✅ | ✅ 3 edges, pinned | ✅ by design — see below |
 | 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-Rule 6 is enforced repository-wide: branch protection blocks force-pushes and deletions, requires a
-pull request, requires linear history and resolved conversations, and requires the `verify` status
-check. Only code-owner review remains off, and that is blocked by repository membership rather than by
-code — see below.
+Rule 6 is enforced repository-wide and applies to the whole branch, not per package: branch
+protection blocks force-pushes and deletions, requires a pull request, requires linear history and
+resolved conversations, and requires the `verify` status check.
 
 **Rule 7 for the compositions is a different question, not a weaker answer.** Layer 2 exists to wire
 application services into an account's runtime; reaching `@/features/*` is its whole job, and a
@@ -187,30 +205,30 @@ module did not fail a release build. A test that does not gate the release does 
 A guard now exists for this: a test asserting that every `test:*-core` script in `package.json` also
 appears in the `build`, `build:static`, and `test` chains. Keep it.
 
-**Rule 6 is now enforcement, with one part still open.** `.github/CODEOWNERS` names a real owner, and
-branch protection on `main` is applied and verified by `npm run github:protect`
-(`scripts/protect-main-branch.ts`), which reads `GITHUB_ADMIN_TOKEN` from `.env.local`. See
-[14. Environment Variables](./data-layers/14-environment-variables.md) for that token's scope and why
-it should be narrower than it currently is.
+**Rule 6 is fully enforced.** Branch protection on `main` is applied and read back by
+`npm run github:protect` (`scripts/protect-main-branch.ts`), which reads `GITHUB_ADMIN_TOKEN` from
+`.env.local`. See [14. Environment Variables](./data-layers/14-environment-variables.md) for that
+token's scope and why it should be narrower than it currently is.
 
 | Setting | State |
 | :-- | :-- |
 | Force-push to `main` blocked | ✅ |
 | Branch deletion blocked | ✅ |
 | Pull request required | ✅ |
+| Linear history required | ✅ |
+| Conversations must be resolved | ✅ |
+| Required status check `verify` | ✅ |
 | `enforce_admins` | deliberately **off** — `deploy:all` pushes to `main` directly and is the only supported release path |
-| Review from CODEOWNERS on `packages/**` | ❌ **impossible today** |
-| Required status checks | ❌ not yet set |
+| Code-owner review | **removed** — see [rule 6](#6-branch-protection) |
 
-**Why code-owner review cannot be turned on.** The repository has a single owner, and GitHub will not
-accept a review from the author of a pull request. Enabling it would block every pull request the
-owner opens. `npm run github:protect -- --require-codeowner-review` turns it on the day a second
-member exists; until then rule 6's review half is blocked by repository membership, not by code.
+**The required status check is the reviewer here.** It was added only after `verify` was confirmed
+on a real green run: GitHub matches on the check-run name it actually reports, and a name that never
+reports blocks every merge permanently — a worse failure than no protection at all. Confirm any new
+check name against a real run before adding it to `REQUIRED_STATUS_CHECKS`.
 
-**Required status checks are left empty on purpose.** A required check whose name never reports
-blocks every merge permanently — a worse failure than no protection at all. Add the real check name
-to `REQUIRED_STATUS_CHECKS` in `scripts/protect-main-branch.ts` only after confirming it on a green
-run.
+**Two settings stay off on purpose.** `required_signatures` and `enforce_admins` would each reject
+`deploy:all`'s direct unsigned push to `main`, which is the only supported release path. A protection
+rule that blocks releases is not stricter — it is broken.
 
 ---
 
