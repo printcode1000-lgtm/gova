@@ -12,7 +12,7 @@
 import assert from "node:assert/strict";
 import { __testables } from "../deploy-all";
 
-const { parseFlags, compareVersions, SCRATCH_FILE_PATTERNS, PREFLIGHT_STEPS, RELEASE_MANIFEST } =
+const { parseFlags, compareVersions, SCRATCH_FILE_PATTERNS, PREFLIGHT_STEPS, RELEASE_MANIFEST, formatSuccessLine, FAIL_PREFIX } =
   __testables;
 
 // ── 1. Importing the module must not have deployed ─────────────────────────
@@ -98,5 +98,17 @@ assert.equal(
   "public/asol-web-manifest.json",
   "The release manifest guard must watch the file build:static rewrites.",
 );
+
+assert.match(
+  formatSuccessLine(false),
+  /^\[deploy:all\] SUCCESS — preflight passed/,
+  "Success line must state preflight passed.",
+);
+assert.match(
+  formatSuccessLine(true),
+  /preflight skipped/,
+  "Success line must record when preflight was skipped.",
+);
+assert.equal(FAIL_PREFIX, "[deploy:all] FAILED —", "Failure prefix must be stable.");
 
 console.log("deploy:all guard tests passed.");

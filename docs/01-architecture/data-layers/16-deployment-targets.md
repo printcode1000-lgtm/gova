@@ -103,6 +103,13 @@ operator learns here instead of at the next OTA attempt; the baseline is
 reported only and never re-tagged automatically. If a deployment fails after the
 push, the exact `git revert` and Vercel rollback steps are printed.
 
+The final console line is always explicit:
+
+- success: `[deploy:all] SUCCESS — preflight passed, secrets backup completed, GitHub push completed, and all 5 Vercel production targets are READY.`
+- success with `--skip-preflight`: `preflight skipped` appears in the same line.
+- failure: `[deploy:all] FAILED — <reason>` (with `git revert` guidance when the
+  push already landed).
+
 `scripts/tests/deploy-all.test.ts` covers the refusals, including that importing
 the module does not deploy — the entrypoint is guarded so `npm test` can never
 become a release.
@@ -111,13 +118,17 @@ become a release.
 
 `scripts/deploy-push.ts` skips every preflight gate. At startup it asks which
 isolated Vercel **service** account(s) to deploy (or accepts `--vercel-target=`
-on the command line). **GitHub push to `main` and main (`gova`) Vercel
-verification are always mandatory.**
+on the command line). These three steps are **always mandatory**:
 
-Interactive choices (services only):
+1. `secrets:backup`
+2. GitHub push to `main` with `origin/main` verification
+3. main (`gova`) Vercel verification until `READY`
+
+Interactive choices:
 
 | Key | Target |
 | :-- | :-- |
+| 0 | GitHub + main only — no service deploys |
 | 1 | `notifications` |
 | 2 | `products` |
 | 3 | `orders` |
@@ -127,25 +138,19 @@ Interactive choices (services only):
 Non-interactive examples:
 
 ```bash
+npm run deploy:push -- --vercel-target=main
+npm run deploy:push -- --vercel-target=none
 npm run deploy:push -- --vercel-target=notifications
-npm run deploy:push -- --vercel-target=products,orders
 npm run deploy:push -- --vercel-target=all
 ```
 
-`--vercel-target=main` alone is refused; `main` is included in every run
-automatically after GitHub push.
+`--vercel-target=main` and `--vercel-target=none` skip the four isolated service
+deploy scripts. Any other choice still runs the mandatory steps above, then
+deploys and verifies only the selected service account(s).
 
-It then runs:
-
-1. `secrets:backup`;
-2. `git add -A`, a `deploy(push): <ISO timestamp>` commit (`--allow-empty` when
-   the tree is clean), and `git push origin main`;
-3. `git fetch` + verification that `origin/main` matches the pushed commit;
-4. the selected isolated service deploy scripts, stopping on the first failure;
-5. Vercel API polling until the GitHub-linked `main` project is `READY`.
-
-When a single service is chosen, success requires GitHub verification, that
-service's Vercel `READY` state, and **main** `READY` on Vercel.
+When no service is chosen, success requires secrets backup, GitHub verification,
+and main `READY` on Vercel. When a service is also chosen, that account must
+reach `READY` as well.
 
 `VERCEL_TOKEN` and the root `.vercel/project.json` are always required for main
 verification. Service accounts use their own tokens from `.env.local` / `.env`.
@@ -155,7 +160,8 @@ not report native/OTA surface status.
 
 The final console line is always explicit:
 
-- success: `[deploy:push] SUCCESS — GitHub push completed; main and <service(s)> Vercel production targets are READY.`
+- main only: `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified, and main Vercel production target is READY.`
+- with services: `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and <service(s)> Vercel production targets are READY.`
 - failure: `[deploy:push] FAILED — <reason>` (with `git revert` guidance when the
   push already landed).
 

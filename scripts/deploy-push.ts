@@ -193,12 +193,13 @@ function printRollbackGuidance(revision: string): void {
 }
 
 function formatSuccessLine(serviceTargets: ServiceDeployTarget[]): string {
-  const verified = ["main", ...serviceTargets];
-  const vercelPart =
-    verified.length === 2
-      ? `main and ${serviceTargets[0]} Vercel production targets are READY`
-      : `main and ${serviceTargets.length} selected service Vercel production targets are READY`;
-  return `[deploy:push] SUCCESS — GitHub push completed; ${vercelPart}.`;
+  if (serviceTargets.length === 0) {
+    return "[deploy:push] SUCCESS — secrets backup completed, GitHub push verified, and main Vercel production target is READY.";
+  }
+  if (serviceTargets.length === 1) {
+    return `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and ${serviceTargets[0]} Vercel production targets are READY.`;
+  }
+  return `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and ${serviceTargets.length} selected service Vercel production targets are READY.`;
 }
 
 async function verifyMainDeployment(input: {

@@ -20,6 +20,7 @@ const MAIN_BRANCH = "main";
 const GIT_INDEX_LOCK = path.join(ROOT, ".git", "index.lock");
 const ROOT_VERCEL_LINK = path.join(ROOT, ".vercel", "project.json");
 const STALE_GIT_LOCK_AGE_MS = 2 * 60 * 1000;
+const FAIL_PREFIX = "[deploy:all] FAILED —";
 const SERVICE_DEPLOYS = [
   { target: "notifications", script: "notifications:deploy" },
   { target: "products", script: "products:deploy" },
@@ -410,6 +411,17 @@ function printRollbackGuidance(revision: string): void {
   );
 }
 
+function formatSuccessLine(skipPreflight: boolean): string {
+  const preflight = skipPreflight ? "preflight skipped" : "preflight passed";
+  return `[deploy:all] SUCCESS — ${preflight}, secrets backup completed, GitHub push completed, and all 5 Vercel production targets are READY.`;
+}
+
+function fail(message: string, revision?: string): void {
+  if (revision) printRollbackGuidance(revision);
+  console.error(`${FAIL_PREFIX} ${message}`);
+  process.exitCode = 1;
+}
+
 async function verifyMainDeployment(input: {
   revision: string;
   comment: string;
@@ -523,10 +535,17 @@ async function main(): Promise<void> {
   printFinalSummary(reports);
   reportNativeSurfaceStatus();
   if (failures.length > 0 || reports.some((report) => report.state !== "READY")) {
-    printRollbackGuidance(revision);
-    throw new Error(`One or more deployments failed verification:\n- ${failures.join("\n- ")}`);
+    const detail =
+      failures.length > 0
+        ? failures.join("; ")
+        : reports
+            .filter((report) => report.state !== "READY")
+            .map((report) => `${report.target}: ${report.state}`)
+            .join("; ");
+    fail(`deployment verification failed — ${detail}`, revision);
+    return;
   }
-  console.log("\n[deploy:all] GitHub and all five Vercel production targets are verified READY.");
+  console.log(formatSuccessLine(flags.skipPreflight));
 }
 
 /**
@@ -569,6 +588,8 @@ export const __testables = {
   SCRATCH_FILE_PATTERNS,
   PREFLIGHT_STEPS,
   RELEASE_MANIFEST,
+  formatSuccessLine,
+  FAIL_PREFIX,
 };
 
 /**
@@ -583,10 +604,7 @@ const invokedDirectly = process.argv[1]
 
 if (invokedDirectly) {
   main().catch((error) => {
-    console.error(
-      "\n[deploy:all] Deployment stopped:",
-      error instanceof Error ? error.message : error,
-    );
-    process.exitCode = 1;
+    const message = error instanceof Error ? error.message : String(error);
+    fail(message);
   });
 }

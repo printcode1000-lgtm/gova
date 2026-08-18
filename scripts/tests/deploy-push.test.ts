@@ -18,6 +18,9 @@ assert.deepEqual(
   ["products"],
 );
 assert.equal(parseProvidedTargets(["--vercel-target=all"]), "all");
+assert.equal(parseProvidedTargets(["--vercel-target=main"]), "none");
+assert.equal(parseProvidedTargets(["--vercel-target=none"]), "none");
+assert.deepEqual(expandSelection("none"), []);
 assert.deepEqual(expandSelection("all"), [
   "notifications",
   "products",
@@ -31,8 +34,8 @@ assert.throws(
   /Pass --vercel-target=all alone/,
 );
 assert.throws(
-  () => parseProvidedTargets(["--vercel-target=main"]),
-  /At least one service target is required/,
+  () => parseProvidedTargets(["--vercel-target=none", "--vercel-target=main"]),
+  /Pass --vercel-target=none alone/,
 );
 
 console.log("deploy:push guard tests passed.");

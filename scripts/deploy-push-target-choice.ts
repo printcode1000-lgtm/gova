@@ -13,6 +13,11 @@ export const ALL_SERVICE_TARGETS: readonly ServiceDeployTarget[] = [
 export const VERCEL_TARGET_FLAG = "--vercel-target=";
 
 const CHOICES = [
+  {
+    key: "0",
+    target: "none" as const,
+    label: "GitHub + main only (no service account deploys)",
+  },
   { key: "1", target: "notifications" as const, label: "Notifications (asol-notifications)" },
   { key: "2", target: "products" as const, label: "Products (asol-products)" },
   { key: "3", target: "orders" as const, label: "Orders (asol-orders)" },
@@ -30,7 +35,9 @@ function ask(question: string): Promise<string> {
   });
 }
 
-function parseProvidedTargets(args: readonly string[]): ServiceDeployTarget[] | "all" | null {
+function parseProvidedTargets(
+  args: readonly string[],
+): ServiceDeployTarget[] | "all" | "none" | null {
   const provided = args.filter((argument) => argument.startsWith(VERCEL_TARGET_FLAG));
   if (provided.length === 0) return null;
 
@@ -53,33 +60,53 @@ function parseProvidedTargets(args: readonly string[]): ServiceDeployTarget[] | 
     return "all";
   }
 
+  if (values.includes("none")) {
+    if (values.length > 1) {
+      throw new Error("Pass --vercel-target=none alone, not with other targets.");
+    }
+    return "none";
+  }
+
   const unknown = values.filter(
     (value) =>
       value !== "main" && !ALL_SERVICE_TARGETS.includes(value as ServiceDeployTarget),
   );
   if (unknown.length > 0) {
     throw new Error(
-      `Unknown Vercel target(s): ${unknown.join(", ")}. Expected: ${ALL_SERVICE_TARGETS.join(", ")}, main (ignored — always verified), or all.`,
+      `Unknown Vercel target(s): ${unknown.join(", ")}. Expected: ${ALL_SERVICE_TARGETS.join(", ")}, main, none, or all.`,
     );
   }
 
   const services = values.filter((value) => value !== "main") as ServiceDeployTarget[];
-  if (services.length === 0) {
-    throw new Error(
-      "At least one service target is required besides main. Main (gova) is always verified after GitHub push.",
-    );
-  }
+  if (services.length === 0) return "none";
 
   return [...new Set(services)];
 }
 
-function expandSelection(selection: ServiceDeployTarget[] | "all"): ServiceDeployTarget[] {
-  return selection === "all" ? [...ALL_SERVICE_TARGETS] : selection;
+function expandSelection(
+  selection: ServiceDeployTarget[] | "all" | "none",
+): ServiceDeployTarget[] {
+  if (selection === "all") return [...ALL_SERVICE_TARGETS];
+  if (selection === "none") return [];
+  return selection;
+}
+
+function logResolvedTargets(source: string, targets: ServiceDeployTarget[]): void {
+  if (targets.length === 0) {
+    console.log(
+      `[deploy:push] Service targets: none — secrets backup, GitHub push, and main verification only (${source}).`,
+    );
+    return;
+  }
+  console.log(
+    `[deploy:push] Service targets: ${targets.join(", ")}; main is always verified (${source}).`,
+  );
 }
 
 /**
  * Resolves which isolated Vercel service accounts `deploy:push` should deploy.
- * GitHub push and main (`gova`) Vercel verification are always mandatory.
+ * An empty result means GitHub push + main verification only.
+ * `secrets:backup` is always run by the caller before publish steps.
  */
 export async function resolveServiceDeployTargets(
   args: readonly string[],
@@ -87,30 +114,31 @@ export async function resolveServiceDeployTargets(
   const provided = parseProvidedTargets(args);
   if (provided !== null) {
     const targets = expandSelection(provided);
-    console.log(
-      `[deploy:push] Service targets: ${targets.join(", ")}; main is always verified (from --vercel-target)`,
-    );
+    logResolvedTargets("from --vercel-target", targets);
     return targets;
   }
 
   if (!process.stdin.isTTY) {
     throw new Error(
       [
-        "deploy:push needs a service Vercel target and there is no terminal to ask.",
+        "deploy:push needs a deployment scope and there is no terminal to ask.",
         "",
         "Pass one explicitly, for example:",
+        "  --vercel-target=main          GitHub + main only",
+        "  --vercel-target=none          same as main",
         "  --vercel-target=notifications",
-        "  --vercel-target=products,orders",
         "  --vercel-target=all",
         "",
-        `Accepted values: ${ALL_SERVICE_TARGETS.join(", ")}, or all.`,
-        "Main (gova) is always verified after GitHub push; do not pass main alone.",
+        `Service values: ${ALL_SERVICE_TARGETS.join(", ")}, all, main, or none.`,
+        "secrets:backup, GitHub push, and main Vercel verification always run.",
       ].join("\n"),
     );
   }
 
   console.log("\n[deploy:push] Choose Vercel service account(s) to deploy.");
-  console.log("GitHub push and main (gova) Vercel verification are always performed.\n");
+  console.log(
+    "secrets:backup, GitHub push, and main (gova) Vercel verification are always performed.\n",
+  );
   for (const choice of CHOICES) {
     console.log(`  ${choice.key}) ${choice.label}`);
   }
@@ -122,14 +150,17 @@ export async function resolveServiceDeployTargets(
       (choice) => choice.key === answer || choice.target === answer,
     );
     if (!chosen) {
-      console.log("Not one of the choices. Answer 1–5, or press Ctrl+C to stop.");
+      console.log("Not one of the choices. Answer 0–5, or press Ctrl+C to stop.");
       continue;
     }
     const targets =
-      chosen.target === "all" ? [...ALL_SERVICE_TARGETS] : [chosen.target];
-    console.log(
-      `\n[deploy:push] Service targets: ${targets.join(", ")}; main will be verified after push.\n`,
-    );
+      chosen.target === "all"
+        ? [...ALL_SERVICE_TARGETS]
+        : chosen.target === "none"
+          ? []
+          : [chosen.target];
+    logResolvedTargets("from prompt", targets);
+    console.log("");
     return targets;
   }
 }
