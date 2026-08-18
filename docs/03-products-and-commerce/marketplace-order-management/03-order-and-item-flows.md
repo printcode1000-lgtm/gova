@@ -23,6 +23,11 @@ When the buyer has no saved location, the delivery snapshot stores an empty
 address and null coordinates. Location-based shipping quotes can still be
 requested later from the order details page.
 
+Cart submission does not require the seller to have a linked delivery carrier.
+When a carrier exists in fulfillment settings it is assigned automatically;
+otherwise `service_provider_id` stays null until delivery is arranged later
+(same behaviour as profile-origin custom requests).
+
 ## Catalog order flow
 
 1. Call `createProductOrder` with currency, delivery snapshot, and the authenticated buyer actor.

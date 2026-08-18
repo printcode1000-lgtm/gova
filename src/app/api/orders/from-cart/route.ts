@@ -188,17 +188,6 @@ export async function POST(request: Request) {
         }),
         qualifiedProviders.map((provider) => String(provider.uid)),
       );
-      if (!deliveryDraft.enabled) {
-        const sellerWithoutCarrier = sellerIds.find(
-          (sellerId) => !carrierBySeller.get(sellerId),
-        );
-        if (sellerWithoutCarrier) {
-          throw new Error(
-            `Delivery carrier required for seller ${sellerWithoutCarrier}`,
-          );
-        }
-      }
-
       const service = getMarketplaceOrderService();
       const order = await service.createProductOrder(
         {
@@ -267,13 +256,14 @@ export async function POST(request: Request) {
         }
         let shippingAssigned = false;
         let sellerOrderId = "";
+        const carrierUid = carrierBySeller.get(sellerId) || "";
         for (const item of sellerItems) {
           const assignShipping = !deliveryDraft.enabled && !shippingAssigned;
           const createdItem = await service.addOrderItem(
             String(order.id),
             {
               sellerId,
-              serviceProviderId: carrierBySeller.get(sellerId),
+              ...(carrierUid ? { serviceProviderId: carrierUid } : {}),
               productId: item.productId,
               productName: item.name,
               productDescription:
@@ -294,7 +284,7 @@ export async function POST(request: Request) {
                 assignShipping && hasFreeShippingDiscount
                   ? sellerShipping.confirmedShipping
                   : 0,
-              shippingNotes: `carrier:${carrierBySeller.get(sellerId)}`,
+              ...(carrierUid ? { shippingNotes: `carrier:${carrierUid}` } : {}),
               requiresSpecialVehicle: item.requiresSpecialVehicle === true,
             },
             actor,
@@ -314,7 +304,7 @@ export async function POST(request: Request) {
             String(order.id),
             {
               sellerId,
-              serviceProviderId: carrierBySeller.get(sellerId),
+              ...(carrierUid ? { serviceProviderId: carrierUid } : {}),
               productId: giftProductId,
               productName: "هدية مجانية",
               productDescription: "تمت إضافتها تلقائيًا من عرض المتجر.",
@@ -332,7 +322,7 @@ export async function POST(request: Request) {
           planStops.push({
             sellerOrderId,
             sellerId,
-            originalCarrierId: carrierBySeller.get(sellerId) || null,
+            originalCarrierId: carrierUid || null,
             pickupAddress: pickupBySeller.get(sellerId),
             requiresLocationQuote: sellerShipping.quoteRequired,
             fallbackShippingPrice: sellerShipping.confirmedShipping,
