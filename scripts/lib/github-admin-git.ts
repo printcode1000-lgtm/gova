@@ -412,17 +412,23 @@ function gitHttpsUrl(repository: string): string {
 
 function runGitNetwork(cwd: string, gitArgs: string[]): void {
   ensureDeployGitHubAuth();
-  const token = readGitHubToken();
+  const env = isolatedGitEnv();
+  // `gh` is on PATH in `env`; use the short helper name so Windows does not
+  // break a quoted path with spaces inside git's `!` credential helper shell.
   execFileSync(resolveGitExecutable(), [
     "-c",
     "credential.helper=",
     "-c",
-    `http.extraHeader=AUTHORIZATION: bearer ${token}`,
+    "credential.helper=!gh auth git-credential",
+    "-c",
+    "credential.useHttpPath=true",
+    "-c",
+    "credential.interactive=never",
     ...gitArgs,
   ], {
     cwd,
     stdio: "inherit",
-    env: isolatedGitEnv(),
+    env,
     windowsHide: true,
   });
 }
