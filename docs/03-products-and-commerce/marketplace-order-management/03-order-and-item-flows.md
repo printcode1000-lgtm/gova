@@ -28,6 +28,10 @@ When a carrier exists in fulfillment settings it is assigned automatically;
 otherwise `service_provider_id` stays null until delivery is arranged later
 (same behaviour as profile-origin custom requests).
 
+On successful submission, the route issues signed `order.received` notification
+grants for every seller in the cart. The buyer's client delivers those grants
+through the notification bridge so each seller is notified on their own devices.
+
 ## Catalog order flow
 
 1. Call `createProductOrder` with currency, delivery snapshot, and the authenticated buyer actor.

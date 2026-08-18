@@ -530,7 +530,9 @@ Current consumers:
 
 | Caller | Operation | Template |
 |--------|-----------|----------|
-| `src/components/cart/CartPageContent.tsx` | `notifications.publishEvent` | `orders.created` |
+| `src/components/cart/CartPageContent.tsx` | `notifications.publishEvent` | `orders.created` (buyer, local) |
+| `src/app/api/orders/from-cart` | signed grant | `order.received` (each seller) |
+| `src/app/api/orders/custom-request-from-profile` | signed grant | `order.received` (seller) |
 
 Server-side flows do not go through the bus. The main app serves no send route at
 all — fan-out lives on the
@@ -609,7 +611,7 @@ Shipped template IDs:
 
 | Group | IDs |
 |-------|-----|
-| Orders | `order.created`, `order.updated`, `order.sellerAccepted`, `order.sellerRejected`, `shipment.updated`, `return.requested` |
+| Orders | `order.created`, `order.received`, `order.updated`, `order.sellerAccepted`, `order.sellerRejected`, `shipment.updated`, `return.requested` |
 | Shipping quotes | `shipping.quoteProposed`, `shipping.quoteAccepted`, `shipping.quoteRejected` |
 | Unified delivery | `delivery.planInvitation`, `delivery.quoteProposed`, `delivery.quoteAccepted`, `delivery.quoteRejected`, `delivery.separateSelected` |
 | Specialty chat | `specialty.request`, `specialty.replyFromProvider`, `specialty.messageFromBuyer` |

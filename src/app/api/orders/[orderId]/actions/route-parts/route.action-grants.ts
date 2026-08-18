@@ -88,6 +88,45 @@ export const SHIPPING_QUOTE_TEMPLATES = {
   rejected: "shipping.quoteRejected",
 } as const;
 
+export const ORDER_RECEIVED_SELLER_TEMPLATE = "order.received" as const;
+
+export function grantSellerOrderCreated(
+  grants: NotificationGrantIssuer,
+  input: {
+    sellerUids: string[];
+    orderId: string;
+    source?: string;
+    routeName: string;
+  },
+): void {
+  const recipients = Array.from(new Set(input.sellerUids.filter(Boolean)));
+  if (recipients.length === 0) return;
+  for (const sellerUid of recipients) {
+    const issued = grants.issue({
+      uids: [sellerUid],
+      templateId: ORDER_RECEIVED_SELLER_TEMPLATE,
+      dedupeKey: `order.received:${input.orderId}:seller:${sellerUid}`,
+      variables: {
+        orderId: input.orderId,
+        orderNumber: input.orderId,
+      },
+      metadata: {
+        orderId: input.orderId,
+        source: input.source ?? null,
+        recipientRole: "seller",
+      },
+    });
+    if (!issued) {
+      void logServerSystemIssue({
+        error: new Error("notificationGrantNotIssued"),
+        feature: "Orders",
+        operation: "notify-seller-order-created",
+        routeName: input.routeName,
+      }).catch(() => undefined);
+    }
+  }
+}
+
 export function grantShippingQuote(
   grants: NotificationGrantIssuer,
   input: {

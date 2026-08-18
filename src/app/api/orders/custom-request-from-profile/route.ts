@@ -1,11 +1,13 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { StorageProfiles } from "@asol/storage-core";
 import { authService } from "@/features/auth/services/auth-service.bootstrap.server";
+import { notificationsServer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { getMarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
 import { mapOrderError } from "../order-api-helpers";
+import { grantSellerOrderCreated } from "../[orderId]/actions/route-parts/route.action-grants";
 
 interface CustomRequestImageInput {
   imageKey: string;
@@ -30,6 +32,7 @@ export async function POST(request: Request) {
     try {
       const body = (await request.json()) as CustomRequestFromProfileInput;
       const actor = actorFromInput({ uid: body.uid, phone: body.phone }, "buyer");
+      const notificationGrants = notificationsServer.createGrantIssuer(body.uid);
       const sellerUid = body.sellerUid?.trim();
       const description = body.description?.trim();
       const images = Array.isArray(body.images) ? body.images.slice(0, 4) : [];
@@ -106,7 +109,20 @@ export async function POST(request: Request) {
         );
       }
 
-      return apiSuccess({ orderId: String(order.id), itemId: String(item.id) }, 201);
+      grantSellerOrderCreated(notificationGrants, {
+        sellerUids: [sellerUid],
+        orderId: String(order.id),
+        source: "profile_custom_request",
+        routeName: "POST /api/orders/custom-request-from-profile",
+      });
+
+      return apiSuccess(
+        notificationsServer.attachGrants(
+          { orderId: String(order.id), itemId: String(item.id) },
+          notificationGrants.toArray(),
+        ),
+        201,
+      );
     } catch (error) {
       return mapOrderError(error);
     }

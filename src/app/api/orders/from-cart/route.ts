@@ -11,6 +11,7 @@ import { getMarketplaceOrderService } from "@/modules/data-access/domains/market
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
 import { mapOrderError, moneyMinor } from "../order-api-helpers";
+import { grantSellerOrderCreated } from "../[orderId]/actions/route-parts/route.action-grants";
 
 interface CartOrderItemInput {
   productId: string;
@@ -381,6 +382,13 @@ export async function POST(request: Request) {
         buyerUid: body.uid,
         orderId: String(order.id),
         applied: appliedDiscountUsages,
+      });
+
+      grantSellerOrderCreated(notificationGrants, {
+        sellerUids: sellerIds,
+        orderId: String(order.id),
+        source: "cart",
+        routeName: "POST /api/orders/from-cart",
       });
 
       return apiSuccess(
