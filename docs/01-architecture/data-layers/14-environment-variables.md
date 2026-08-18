@@ -290,23 +290,17 @@ Server-only, and `.env.local` only — never `.env.example`, which is committed.
 `GITHUB_REPOSITORY` is optional; the script reads the `origin` remote when it is
 unset.
 
-Used by:
+Used by `npm run github:protect` (`scripts/protect-main-branch.ts`) to configure
+branch protection on `main`.
 
-- `npm run github:protect` (`scripts/protect-main-branch.ts`) to configure branch
-  protection on `main`;
-- `npm run deploy:all` and `npm run deploy:push` (`scripts/lib/github-admin-git.ts`)
-  to `git push` and `git fetch` over HTTPS.
-
-Deploy git authentication order:
-
-1. `GITHUB_ADMIN_TOKEN` from `.env.local` / `.env` when set.
-2. Otherwise **GitHub CLI browser login** (`gh auth login -w`) — opens the browser
-   once, then reuses the stored session. Install `gh` from https://cli.github.com/.
-
-Deploy commands never use machine SSH keys, Credential Manager, or `origin`
-remote credentials. `git commit` uses an explicit deploy identity (`gh api user`
-or `GITHUB_DEPLOY_GIT_NAME` / `GITHUB_DEPLOY_GIT_EMAIL`) so Git never prompts
-for user.name / user.email.
+`npm run deploy:all` and `npm run deploy:push` authenticate **git push / fetch**
+only through **GitHub CLI browser login** (`gh auth login -w`) — not through
+`GITHUB_ADMIN_TOKEN`, machine SSH keys, Credential Manager dialogs, or `origin`
+remote credentials. Install `gh` from https://cli.github.com/. Deploy git ignores
+global/system git config (`GIT_CONFIG_GLOBAL` / `GIT_CONFIG_SYSTEM` cleared) and
+sets `GCM_INTERACTIVE=Never` so Windows never opens a username/password dialog.
+`git commit` uses an explicit deploy identity so Git never prompts for
+user.name / user.email.
 
 This is rule 6 of
 [the module isolation rules](../module-isolation-rules.md) — the one
@@ -334,9 +328,8 @@ repository — but inside this repository there is nothing it cannot do.
 Read and write`** and nothing else; `Contents: Read-only` is enough for
 everything else the script reads.
 
-`deploy:all` and `deploy:push` push `main` with `GITHUB_ADMIN_TOKEN` when set,
-or with a GitHub CLI browser session otherwise. They need **`Contents: Read and
-write`** (or broader admin scope on a classic token).
+`deploy:all` and `deploy:push` use GitHub CLI browser auth (`gh`) for `git push`
+and `git fetch`, not `GITHUB_ADMIN_TOKEN`.
 
 A replacement should be a fine-grained token limited to this repository with
 those two permissions and a real expiry date. Every additional permission is

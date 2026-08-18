@@ -13,6 +13,7 @@ import {
 } from "@asol/ota-core/publishing";
 import { loadReleaseEnvironment } from "./load-release-env";
 import {
+  ensureDeployGitAvailable,
   ensureDeployGitHubAuth,
   fetchBranchWithAdminToken,
   pushBranchWithAdminToken,
@@ -411,7 +412,7 @@ function printRollbackGuidance(revision: string): void {
       `  git revert ${revision}\n` +
       `  git push origin ${MAIN_BRANCH}\n` +
       "Or promote the previous production deployment from the Vercel dashboard.\n" +
-      "To push the revert, run deploy:push or deploy:all (GITHUB_ADMIN_TOKEN is used, not local git credentials).",
+      "To push the revert, run deploy:push or deploy:all (GitHub CLI browser auth via gh).",
   );
 }
 
@@ -458,6 +459,7 @@ async function main(): Promise<void> {
   // Everything that can refuse the deployment runs before the first git write.
   // The push is what makes a release public and is the point of no return, so
   // nothing below it may be the first place a problem is discovered.
+  ensureDeployGitAvailable();
   assertMainBranch();
   assertDeploymentCredentials();
   ensureDeployGitHubAuth();

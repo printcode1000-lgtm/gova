@@ -119,8 +119,8 @@ running the TypeScript script directly. It reports:
 
 - Node/npm/Git versions and lockfile-to-`node_modules` consistency;
 - compatible npm updates separately from major-version review items;
-- the one GitHub-linked Vercel project, five account tokens, and the ephemeral
-  Vercel CLI policy;
+- the one GitHub-linked Vercel project, five account tokens, GitHub CLI (`gh`)
+  with a browser session for deploy git auth, and the ephemeral Vercel CLI policy;
 - JDK 21, Android SDK 36, ADB, and the checked-in Gradle wrapper;
 - Xcode requirements on macOS and an explicit not-applicable result elsewhere.
 

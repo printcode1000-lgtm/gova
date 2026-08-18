@@ -6,11 +6,11 @@ import assert from "node:assert/strict";
 
 import {
   __testables,
-  readGitHubToken,
   readGitLocal,
 } from "../lib/github-admin-git";
 
-const { gitHttpsUrl, resolveGitIdentity } = __testables;
+const { gitHttpsUrl, resolveGitIdentity, ghCredentialHelperConfig, resolveGhExecutable, ghInstalled } =
+  __testables;
 
 assert.equal(
   gitHttpsUrl("printcode1000-lgtm/gova"),
@@ -21,23 +21,13 @@ const identity = resolveGitIdentity();
 assert.ok(identity.name.length > 0, "Deploy git identity must include a name.");
 assert.ok(identity.email.includes("@"), "Deploy git identity must include an email.");
 
-const previousToken = process.env.GITHUB_ADMIN_TOKEN;
-process.env.GITHUB_ADMIN_TOKEN = "test-token-for-deploy-git";
-try {
-  assert.equal(readGitHubToken(), "test-token-for-deploy-git");
-} finally {
-  if (previousToken !== undefined) {
-    process.env.GITHUB_ADMIN_TOKEN = previousToken;
-  } else {
-    delete process.env.GITHUB_ADMIN_TOKEN;
-  }
-}
+assert.ok(
+  ghCredentialHelperConfig().includes("auth git-credential"),
+  "Credential helper must invoke gh auth git-credential.",
+);
 
-delete process.env.GITHUB_ADMIN_TOKEN;
-try {
-  assert.throws(() => readGitHubToken(), /GitHub CLI|GITHUB_ADMIN_TOKEN|browser/);
-} finally {
-  if (previousToken !== undefined) process.env.GITHUB_ADMIN_TOKEN = previousToken;
+if (ghInstalled()) {
+  assert.ok(resolveGhExecutable().length > 0);
 }
 
 try {

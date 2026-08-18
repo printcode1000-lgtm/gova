@@ -13,6 +13,7 @@ import {
 } from "./lib/vercel-deployment-monitor";
 import { loadReleaseEnvironment } from "./load-release-env";
 import {
+  ensureDeployGitAvailable,
   ensureDeployGitHubAuth,
   fetchBranchWithAdminToken,
   pushBranchWithAdminToken,
@@ -192,7 +193,7 @@ function printRollbackGuidance(revision: string): void {
       `  git revert ${revision}\n` +
       `  git push origin ${MAIN_BRANCH}\n` +
       "Or promote the previous production deployment from the Vercel dashboard.\n" +
-      "To push the revert, run deploy:push again (GITHUB_ADMIN_TOKEN is used, not local git credentials).",
+      "To push the revert, run deploy:push again (GitHub CLI browser auth via gh).",
   );
 }
 
@@ -255,6 +256,7 @@ function fail(message: string, revision?: string): void {
 async function main(): Promise<void> {
   const serviceTargets = await resolveServiceDeployTargets(process.argv.slice(2));
 
+  ensureDeployGitAvailable();
   assertMainBranch();
   assertMainDeploymentCredentials();
   ensureDeployGitHubAuth();
