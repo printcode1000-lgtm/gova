@@ -32,6 +32,7 @@ npm run db:drizzle -- generate
 npm run db:drizzle -- generate --config drizzle.profile.config.ts
 npm run db:ensure
 npm run db:schema:sync
+npm run db:schema:sync:release   # required credentials; used by deploy:all preflight
 npm run db:provision:turso
 npm run provision:mobile-push   # native outbound push credentials → .env.local
 npm run db:push:vercel-env      # Turso + bridge URLs + ASOL_MOBILE_PUSH_* when provisioned

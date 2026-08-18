@@ -56,9 +56,13 @@ first place a problem is discovered. In order, the preflight:
 1. refuses a non-`main` branch;
 2. requires `VERCEL_TOKEN` and the root `.vercel/project.json` up front, rather
    than at the end after the push and four service deployments;
-3. runs `lint`, `typecheck`, `architecture:check`, `test`, `build:static` — the
-   release build, which also re-runs the architecture and test gates — and
-   `services:build`, which runs `next build` inside all four service folders.
+3. runs `lint`, `typecheck`, `architecture:check`, `test`, then `db:ensure` and
+   `db:schema:sync:release` so every SQLite source has pending migrations applied
+   and every Turso database (users, product, advertisements, notifications, and
+   all profile/order shards) is synchronized **before** `build:static` or any git
+   write, then `build:static` — the release build, which also re-runs the
+   architecture and test gates — and `services:build`, which runs `next build`
+   inside all four service folders.
 
    `services:build` was added after every other check in this list passed, the
    release commit was pushed, `main` went `READY`, and **all four service

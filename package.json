@@ -82,6 +82,7 @@
     "branding:generate": "npx tsx scripts/generate-branding-assets.ts",
     "server:stop": "npx tsx scripts/stop-dev-server.ts",
     "db:schema:sync": "cross-env ASOL_PROVISIONING=true npx tsx scripts/schema-sync.ts",
+    "db:schema:sync:release": "cross-env ASOL_PROVISIONING=true ASOL_SCHEMA_SYNC_REQUIRED=true npx tsx scripts/schema-sync.ts",
     "db:drizzle": "npx tsx scripts/run-drizzle-kit.ts",
     "db:provision:turso": "cross-env ASOL_PROVISIONING=true npx tsx scripts/provision-turso.ts",
     "db:push:vercel-env": "npx tsx scripts/push-vercel-turso-env.ts",

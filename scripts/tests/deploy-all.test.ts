@@ -47,7 +47,16 @@ assert.throws(
 assert.throws(() => parseFlags(["--force"]), /Unknown option/);
 
 // ── 5. Preflight must cover the release path ───────────────────────────────
-for (const required of ["lint", "typecheck", "architecture:check", "test", "build:static"]) {
+for (const required of [
+  "lint",
+  "typecheck",
+  "architecture:check",
+  "test",
+  "db:ensure",
+  "db:schema:sync:release",
+  "build:static",
+  "services:build",
+]) {
   assert.ok(
     (PREFLIGHT_STEPS as readonly string[]).includes(required),
     `Preflight must run "${required}" before publishing.`,

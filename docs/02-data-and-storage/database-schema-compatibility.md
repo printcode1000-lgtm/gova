@@ -25,6 +25,20 @@ npm run db:schema:sync
 This creates missing tables, columns, indexes, views, and triggers in Turso from
 the local SQLite schema. It does not copy row data.
 
+### Release schema sync (`deploy:all` preflight)
+
+```bash
+npm run db:schema:sync:release
+```
+
+Same as `db:schema:sync`, but Turso credentials are **required** for every
+database pair (users, product, advertisements, notifications, and every
+profile/order shard). Any skipped database aborts with a non-zero exit code.
+
+`deploy:all` runs `db:ensure` then `db:schema:sync:release` after `npm test` and
+before `build:static`, so production DDL is brought in line with the working
+tree before any release commit is created.
+
 ## Exact Schema Cleanup
 
 ```bash

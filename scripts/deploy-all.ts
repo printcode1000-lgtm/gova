@@ -158,6 +158,11 @@ const PREFLIGHT_STEPS = [
   "typecheck",
   "architecture:check",
   "test",
+  // Apply local migrations to every SQLite source, refresh profile/order shards,
+  // then push DDL to every Turso database before any release build or git write.
+  // Without this gate, code that expects new columns can reach production first.
+  "db:ensure",
+  "db:schema:sync:release",
   "build:static",
   // Added after every one of these passed and all four service accounts still failed
   // their remote build. Each service is uploaded alone and installed against its own
