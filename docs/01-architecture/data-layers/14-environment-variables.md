@@ -291,18 +291,7 @@ Server-only, and `.env.local` only — never `.env.example`, which is committed.
 unset.
 
 Used by `npm run github:protect` (`scripts/protect-main-branch.ts`) to configure
-branch protection on `main`.
-
-`npm run deploy:all` and `npm run deploy:push` authenticate **git push / fetch**
-only through **GitHub CLI browser login** (`gh auth login -w`) — not through
-`GITHUB_ADMIN_TOKEN`, machine SSH keys, Credential Manager dialogs, or `origin`
-remote credentials. Install `gh` from https://cli.github.com/. Deploy git ignores
-global/system git config (`GIT_CONFIG_GLOBAL` / `GIT_CONFIG_SYSTEM` cleared) and
-sets `GCM_INTERACTIVE=Never` so Windows never opens a username/password dialog.
-`git commit` uses an explicit deploy identity so Git never prompts for
-user.name / user.email.
-
-This is rule 6 of
+branch protection on `main`. This is rule 6 of
 [the module isolation rules](../module-isolation-rules.md) — the one
 rule that cannot be satisfied from the repository tree, because the enforcement
 lives in GitHub's settings rather than in a file.
@@ -327,9 +316,6 @@ repository — but inside this repository there is nothing it cannot do.
 `PUT /repos/{repo}/branches/main/protection`. That needs **`Administration:
 Read and write`** and nothing else; `Contents: Read-only` is enough for
 everything else the script reads.
-
-`deploy:all` and `deploy:push` use GitHub CLI browser auth (`gh`) for `git push`
-and `git fetch`, not `GITHUB_ADMIN_TOKEN`.
 
 A replacement should be a fine-grained token limited to this repository with
 those two permissions and a real expiry date. Every additional permission is

@@ -4,8 +4,6 @@ import { homedir, platform, release } from "node:os";
 import path from "node:path";
 import dotenv from "dotenv";
 
-import { ghInstalled, resolveGhExecutable, resolveGitExecutable } from "./lib/github-admin-git";
-
 dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });
 
@@ -110,16 +108,14 @@ function checkCommon(): void {
           : "Install npm with Node.js.",
   });
 
-  const gitVersion = commandVersionAt(resolveGitExecutable(), ["--version"]);
+  const gitVersion = commandVersion("git", ["--version"]);
   add({
     scenario: "common",
     item: "Git",
     level: gitVersion ? "OK" : "INSTALL",
-    installed: gitVersion ? `${gitVersion} (${resolveGitExecutable()})` : undefined,
+    installed: gitVersion ?? undefined,
     required: "Git 2.40 or newer",
-    action: gitVersion
-      ? "No action."
-      : "Install Git for Windows and restart VS Code — typical path: C:\\Program Files\\Git\\cmd\\git.exe",
+    action: gitVersion ? "No action." : "Install Git and make it available on PATH.",
   });
 
   const missing: string[] = [];
@@ -250,78 +246,12 @@ function checkWeb(): void {
   });
 }
 
-function commandVersionAt(executable: string, args: string[]): string | null {
-  if (!existsSync(executable) && !executable.includes(path.sep)) {
-    return commandVersion(executable, args);
-  }
-  const result = spawnSync(executable, args, {
-    cwd: ROOT,
-    encoding: "utf8",
-    windowsHide: true,
-    shell: false,
-    timeout: 10_000,
-  });
-  if (result.error || result.status !== 0) return null;
-  return `${result.stdout || result.stderr}`.trim().split(/\r?\n/)[0] ?? null;
-}
-
-function ghAuthOk(): boolean {
-  if (!ghInstalled()) return false;
-  const result = spawnSync(resolveGhExecutable(), ["auth", "status", "-h", "github.com"], {
-    cwd: ROOT,
-    stdio: "ignore",
-    windowsHide: true,
-    shell: false,
-    timeout: 10_000,
-  });
-  return !result.error && result.status === 0;
-}
-
-function checkGhCli(): void {
-  if (!ghInstalled()) {
-    add({
-      scenario: "production",
-      item: "GitHub CLI (gh)",
-      level: "INSTALL",
-      required: "GitHub CLI 2.40+",
-      action:
-        "Install with winget install GitHub.cli, then restart VS Code or open a new terminal. deploy:all and deploy:push authenticate git through gh.",
-    });
-    return;
-  }
-
-  const ghPath = resolveGhExecutable();
-  const ghVersion = commandVersionAt(ghPath, ["--version"]);
-  add({
-    scenario: "production",
-    item: "GitHub CLI (gh)",
-    level: ghVersion ? "OK" : "INSTALL",
-    installed: ghVersion ? `${ghVersion} (${ghPath})` : ghPath,
-    required: "GitHub CLI 2.40+",
-    action: ghVersion
-      ? "No action."
-      : "Reinstall GitHub CLI — typical path: C:\\Program Files\\GitHub CLI\\gh.exe",
-  });
-
-  add({
-    scenario: "production",
-    item: "GitHub CLI browser session",
-    level: ghAuthOk() ? "OK" : "CONFIGURE",
-    installed: ghAuthOk() ? "signed in to github.com" : "not signed in",
-    required: "gh auth login -w -s repo for deploy git push/fetch",
-    action: ghAuthOk()
-      ? "No action."
-      : "Run gh auth login -w -s repo (browser opens). Deploy commands do not use machine SSH or Credential Manager.",
-  });
-}
-
 function checkProduction(): void {
   const link = existsSync(path.join(ROOT, ".vercel", "project.json"));
   add({ scenario: "production", item: "Main Vercel project link", level: link ? "OK" : "CONFIGURE", installed: link ? ".vercel/project.json" : undefined, required: "One GitHub-linked main Vercel project", action: link ? "No action." : "Run vercel link only for the main gova project." });
   const keys = ["VERCEL_TOKEN", "VERCEL_NOTIFICATIONS_TOKEN", "VERCEL_PRODUCTS_TOKEN", "VERCEL_ORDERS_TOKEN", "VERCEL_PROFILES_TOKEN"];
   const missing = keys.filter((key) => !envConfigured(key));
   add({ scenario: "production", item: "Vercel account tokens", level: missing.length ? "CONFIGURE" : "OK", installed: `${keys.length - missing.length}/${keys.length} configured`, required: keys.join(", "), action: missing.length ? `Configure without committing: ${missing.join(", ")}.` : "No action." });
-  checkGhCli();
   add({ scenario: "production", item: "Vercel CLI", level: "INFO", installed: "ephemeral", required: "vercel@59.0.0", action: "No global install. Deployment scripts download the pinned CLI through npx." });
   const databaseKeys = [
     "TURSO_DATABASE_URL", "TURSO_AUTH_TOKEN",

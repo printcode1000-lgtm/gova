@@ -12,14 +12,6 @@ import {
   resolveNativeBaseline,
 } from "@asol/ota-core/publishing";
 import { loadReleaseEnvironment } from "./load-release-env";
-import {
-  ensureDeployGitAvailable,
-  ensureDeployGitHubAuth,
-  fetchBranchWithAdminToken,
-  pushBranchWithAdminToken,
-  readGitLocal,
-  runGitLocal,
-} from "./lib/github-admin-git";
 
 loadReleaseEnvironment();
 
@@ -43,7 +35,11 @@ class DeploymentScriptError extends Error {
 }
 
 function git(args: string[]): string {
-  return readGitLocal(ROOT, args);
+  return execFileSync("git", args, {
+    cwd: ROOT,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "inherit"],
+  }).trim();
 }
 
 function assertMainBranch(): void {
@@ -411,8 +407,7 @@ function printRollbackGuidance(revision: string): void {
     "\n[deploy:all] The commit is already on GitHub. To roll back:\n" +
       `  git revert ${revision}\n` +
       `  git push origin ${MAIN_BRANCH}\n` +
-      "Or promote the previous production deployment from the Vercel dashboard.\n" +
-      "To push the revert, run deploy:push or deploy:all (GitHub CLI browser auth via gh).",
+      "Or promote the previous production deployment from the Vercel dashboard.",
   );
 }
 
@@ -459,10 +454,8 @@ async function main(): Promise<void> {
   // Everything that can refuse the deployment runs before the first git write.
   // The push is what makes a release public and is the point of no return, so
   // nothing below it may be the first place a problem is discovered.
-  ensureDeployGitAvailable();
   assertMainBranch();
   assertDeploymentCredentials();
-  ensureDeployGitHubAuth();
   await preflight(flags);
   assertNoScratchFiles(flags);
   assertReleaseManifestNotDowngraded(flags);
@@ -476,7 +469,7 @@ async function main(): Promise<void> {
   const timestamp = new Date().toISOString();
   const mainComment = `deploy(main): ${timestamp}`;
   console.log(`[deploy:all] Creating deployment commit: ${mainComment}`);
-  runGitLocal(ROOT, ["add", "-A"]);
+  execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
   const commitArgs = ["commit", "--allow-empty", "-m", mainComment];
   if (flags.skipPreflight) {
     // Recorded in history so a shortcut taken under pressure stays visible.
@@ -485,7 +478,10 @@ async function main(): Promise<void> {
       `Preflight skipped via --skip-preflight. Not verified: ${PREFLIGHT_STEPS.join(", ")}.`,
     );
   }
-  runGitLocal(ROOT, commitArgs);
+  execFileSync("git", commitArgs, {
+    cwd: ROOT,
+    stdio: "inherit",
+  });
   if (git(["status", "--porcelain"])) {
     throw new Error(
       "The working tree changed while creating the deployment commit; refusing to push inconsistent source.",
@@ -495,7 +491,10 @@ async function main(): Promise<void> {
   const revision = git(["rev-parse", "HEAD"]);
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
   console.log("[deploy:all] Pushing main to GitHub...");
-  pushBranchWithAdminToken({ cwd: ROOT, branch: MAIN_BRANCH });
+  execFileSync("git", ["push", "origin", MAIN_BRANCH], {
+    cwd: ROOT,
+    stdio: "inherit",
+  });
   console.log(
     "[deploy:all] GitHub push completed; only the existing GitHub-linked main Vercel project will auto-deploy.",
   );

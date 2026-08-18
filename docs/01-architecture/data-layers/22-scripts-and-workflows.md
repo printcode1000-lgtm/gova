@@ -119,8 +119,8 @@ running the TypeScript script directly. It reports:
 
 - Node/npm/Git versions and lockfile-to-`node_modules` consistency;
 - compatible npm updates separately from major-version review items;
-- the one GitHub-linked Vercel project, five account tokens, GitHub CLI (`gh`)
-  with a browser session for deploy git auth, and the ephemeral Vercel CLI policy;
+- the one GitHub-linked Vercel project, five account tokens, and the ephemeral
+  Vercel CLI policy;
 - JDK 21, Android SDK 36, ADB, and the checked-in Gradle wrapper;
 - Xcode requirements on macOS and an explicit not-applicable result elsewhere.
 
@@ -155,8 +155,7 @@ response code. `--dry-run` prints the full payload and sends nothing.
 It needs `GITHUB_ADMIN_TOKEN` in `.env.local` — see
 [14. Environment Variables](./14-environment-variables.md#github-repository-administration)
 for the token's scope, what it can currently do, and what it should be narrowed
-to. The same token is also required by `deploy:all` and `deploy:push` for
-`git push` / `git fetch` over HTTPS.
+to.
 
 `enforce_admins` is deliberately off: `deploy:all` and `deploy:push` push to
 `main` directly and are the supported release paths.

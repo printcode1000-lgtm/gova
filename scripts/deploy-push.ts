@@ -12,14 +12,6 @@ import {
   waitForVercelProductionDeployment,
 } from "./lib/vercel-deployment-monitor";
 import { loadReleaseEnvironment } from "./load-release-env";
-import {
-  ensureDeployGitAvailable,
-  ensureDeployGitHubAuth,
-  fetchBranchWithAdminToken,
-  pushBranchWithAdminToken,
-  readGitLocal,
-  runGitLocal,
-} from "./lib/github-admin-git";
 
 loadReleaseEnvironment();
 
@@ -47,7 +39,11 @@ class DeploymentScriptError extends Error {
 }
 
 function git(args: string[]): string {
-  return readGitLocal(ROOT, args);
+  return execFileSync("git", args, {
+    cwd: ROOT,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "inherit"],
+  }).trim();
 }
 
 function assertMainBranch(): void {
@@ -192,8 +188,7 @@ function printRollbackGuidance(revision: string): void {
     "\n[deploy:push] The commit is already on GitHub. To roll back:\n" +
       `  git revert ${revision}\n` +
       `  git push origin ${MAIN_BRANCH}\n` +
-      "Or promote the previous production deployment from the Vercel dashboard.\n" +
-      "To push the revert, run deploy:push again (GitHub CLI browser auth via gh).",
+      "Or promote the previous production deployment from the Vercel dashboard.",
   );
 }
 
@@ -237,7 +232,10 @@ async function verifyMainDeployment(input: {
 
 function verifyGitHubPush(revision: string): void {
   console.log("[deploy:push] Verifying origin/main matches the pushed commit...");
-  fetchBranchWithAdminToken({ cwd: ROOT, branch: MAIN_BRANCH });
+  execFileSync("git", ["fetch", "origin", MAIN_BRANCH], {
+    cwd: ROOT,
+    stdio: "inherit",
+  });
   const remoteRevision = git(["rev-parse", `origin/${MAIN_BRANCH}`]);
   if (remoteRevision !== revision) {
     throw new Error(
@@ -256,10 +254,8 @@ function fail(message: string, revision?: string): void {
 async function main(): Promise<void> {
   const serviceTargets = await resolveServiceDeployTargets(process.argv.slice(2));
 
-  ensureDeployGitAvailable();
   assertMainBranch();
   assertMainDeploymentCredentials();
-  ensureDeployGitHubAuth();
 
   try {
     await runNpmScript("secrets:backup");
@@ -276,8 +272,11 @@ async function main(): Promise<void> {
   console.log(`[deploy:push] Creating deployment commit: ${mainComment}`);
 
   try {
-    runGitLocal(ROOT, ["add", "-A"]);
-    runGitLocal(ROOT, ["commit", "--allow-empty", "-m", mainComment]);
+    execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
+    execFileSync("git", ["commit", "--allow-empty", "-m", mainComment], {
+      cwd: ROOT,
+      stdio: "inherit",
+    });
     if (git(["status", "--porcelain"])) {
       throw new Error(
         "The working tree changed while creating the deployment commit; refusing to push inconsistent source.",
@@ -294,7 +293,10 @@ async function main(): Promise<void> {
 
   console.log("[deploy:push] Pushing main to GitHub...");
   try {
-    pushBranchWithAdminToken({ cwd: ROOT, branch: MAIN_BRANCH });
+    execFileSync("git", ["push", "origin", MAIN_BRANCH], {
+      cwd: ROOT,
+      stdio: "inherit",
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     fail(`git push to origin/${MAIN_BRANCH} did not complete: ${message}`);
