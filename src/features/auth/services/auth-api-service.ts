@@ -21,6 +21,7 @@ export class AuthApiService implements IAuthService {
   async updateProfile(input: UpdateProfileInput): Promise<UserProfile> {
     return asolApi.put<UserProfile>(ASOL_API_ROUTES.auth.profile, input, {
       headers: sessionHeaders(input.sessionToken),
+      suppressErrorLog: true,
     });
   }
 

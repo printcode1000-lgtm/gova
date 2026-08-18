@@ -2,6 +2,10 @@ import * as React from "react";
 import { profileService } from "@/features/profile/services/profile-service";
 import { sessionService } from "@/features/auth/services/session-service";
 import { mergePrimaryContacts } from "@/features/profile/utils/merge-primary-contacts";
+import {
+  getErrorMessage,
+  isExpectedProfileSaveRejection,
+} from "@/core/api/expected-business-error-codes";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 import type { ProfileEditTab } from "./profile-page.types";
 import type {
@@ -276,12 +280,14 @@ export function useProfileSave({
         message: locale === 'ar' ? 'تم حفظ التغييرات بنجاح' : 'Changes saved successfully'
       });
     } catch (error) {
-      reportSystemIssue({
-        feature: "Profile",
-        operation: `save-editor:${changedSections.join(",") || "unknown"}`,
-        error,
-      });
-      const message = (error as Error).message;
+      if (!isExpectedProfileSaveRejection(error)) {
+        reportSystemIssue({
+          feature: "Profile",
+          operation: `save-editor:${changedSections.join(",") || "unknown"}`,
+          error,
+        });
+      }
+      const message = getErrorMessage(error);
       if (message === "phoneVerificationRequired") {
         setActiveTab("registration");
         setSaveError(t("auth.registration.phoneVerificationRequired"));

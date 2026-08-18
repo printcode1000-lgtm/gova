@@ -8,6 +8,21 @@
 
 The service prevents adding an incompatible item type to a product-only or custom-only order.
 
+## Cart submission buyer contact
+
+`POST /api/orders/from-cart` and `POST /api/orders/custom-request-from-profile`
+require a buyer phone but not a saved delivery address.
+
+Phone resolution order:
+
+1. First profile contact phone.
+2. Session phone from the request body.
+3. Auth account phone from the users database.
+
+When the buyer has no saved location, the delivery snapshot stores an empty
+address and null coordinates. Location-based shipping quotes can still be
+requested later from the order details page.
+
 ## Catalog order flow
 
 1. Call `createProductOrder` with currency, delivery snapshot, and the authenticated buyer actor.

@@ -78,6 +78,20 @@ the error was already logged.
 
 The system intentionally does not log the system-log API recursively.
 
+## Expected business rejections (not system faults)
+
+Known 4xx codes that represent normal user/input rejection — wrong password,
+duplicate phone, expired session, and similar — must **not** be persisted as
+central system errors. The canonical list lives in
+`src/core/api/expected-business-error-codes.ts`:
+
+- `mapServiceError()` skips persistence for `QUIET_MAPPED_SERVICE_ERROR_CODES`
+- Profile save hooks skip `reportSystemIssue()` for expected profile rejections
+- Auth/profile API clients use `suppressErrorLog: true` on routes where 400
+  responses are part of normal UX (login, profile update, profile editor save)
+
+Unexpected failures on those routes still log normally.
+
 ## Silent error guard
 
 The project includes a validation guard:

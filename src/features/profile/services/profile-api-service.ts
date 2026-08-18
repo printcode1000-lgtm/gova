@@ -137,6 +137,7 @@ export class ProfileApiService implements IProfileService {
       input,
       {
         headers: { 'x-asol-session-token': input.sessionToken },
+        suppressErrorLog: true,
       },
     );
   }

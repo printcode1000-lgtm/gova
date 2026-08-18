@@ -1,6 +1,7 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { StorageProfiles } from "@asol/storage-core";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { getUserByUidQuery } from "@/modules/data-access/domains/auth/operations/instances";
 import { getMarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
@@ -37,11 +38,18 @@ export async function POST(request: Request) {
         throw new Error("Description or image is required");
       }
 
-      const buyerContacts = await profileService.getContacts(body.uid);
-      const buyerPhone = buyerContacts.phones[0]?.number ?? body.phone ?? "";
+      const [buyerContacts, authUser] = await Promise.all([
+        profileService.getContacts(body.uid),
+        getUserByUidQuery.execute(body.uid),
+      ]);
+      const buyerPhone =
+        buyerContacts.phones[0]?.number?.trim() ||
+        body.phone?.trim() ||
+        authUser?.phone?.trim() ||
+        "";
       const buyerLocation = buyerContacts.locations[0] ?? null;
-      if (!buyerPhone || !buyerLocation?.address) {
-        throw new Error("Buyer profile phone and address are required");
+      if (!buyerPhone) {
+        throw new Error("Buyer phone is required");
       }
 
       const sellerFulfillment = await profileService.getFulfillmentSettings(sellerUid);
@@ -55,9 +63,9 @@ export async function POST(request: Request) {
           deliveryAddress: {
             buyerUid: body.uid,
             phone: buyerPhone,
-            address: buyerLocation.address,
-            latitude: buyerLocation.latitude,
-            longitude: buyerLocation.longitude,
+            address: buyerLocation?.address ?? "",
+            latitude: buyerLocation?.latitude ?? null,
+            longitude: buyerLocation?.longitude ?? null,
             paymentMethod: "cash_on_delivery",
           },
           notes: "profile_custom_request",

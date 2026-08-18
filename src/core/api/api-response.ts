@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { isDevelopment } from '@/core/config';
 import { DEV_TRACE_HEADER } from '@/core/monitor/dev-trace-types';
 import { getDevTrace, serializeDevTrace } from '@/core/monitor/server-trace';
+import { isQuietMappedServiceError } from '@/core/api/expected-business-error-codes';
 import { logServerSystemIssue } from '@/features/system-logs/services/persistent-system-log-service.server';
 import { isErrorAlreadyLogged } from '@asol/system-logs-core/server';
 
@@ -174,17 +175,8 @@ export function mapServiceError(error: unknown): NextResponse {
     'googlePlayFastlaneActionRequired',
     'googlePlayProductionConfirmationRequired',
   ];
-  const quietKnownCodes = new Set([
-    'userNotFound',
-    'invalidPassword',
-    'dataHealthNoOrdersToPurge',
-    'devCloudBackupFileRequired',
-    'sessionTokenInvalid',
-    'sessionTokenExpired',
-  ]);
-
   if (knownCodes.includes(message)) {
-    if (!quietKnownCodes.has(message)) {
+    if (!isQuietMappedServiceError(message)) {
       void logMappedServiceError(error, message, 400);
     }
     return apiError(message, 400);

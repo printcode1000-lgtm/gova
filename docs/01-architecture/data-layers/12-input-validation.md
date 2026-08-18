@@ -30,6 +30,10 @@ return baseSchema.pick({ phone: true, password: true, email: true }).extend({
 
 - Server Service and Commands enforce domain rules (e.g. duplicate phone, password hash)
 - Business API returns known error codes via `mapServiceError()`
+- Expected rejections (wrong password, duplicate identity, etc.) return `400` with a
+  known code but are **not** persisted to system logs — see
+  `src/core/api/expected-business-error-codes.ts` and
+  [super-admin-live-logs.md](../../06-super-admin-and-operations/super-admin-live-logs.md)
 
 ## Rule
 
