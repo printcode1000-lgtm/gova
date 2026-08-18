@@ -113,6 +113,8 @@ export function useRegister() {
       return t('auth.validation.phoneAlreadyRegistered');
     if (msg === 'emailAlreadyRegistered')
       return t('auth.validation.emailAlreadyRegistered');
+    if (msg === 'passwordTooShort')
+      return t('auth.validation.passwordMinLength');
     return msg;
   }, [mutation.error, t]);
 

@@ -157,5 +157,5 @@ It needs `GITHUB_ADMIN_TOKEN` in `.env.local` — see
 for the token's scope, what it can currently do, and what it should be narrowed
 to.
 
-`enforce_admins` is deliberately off: `deploy:all` pushes to `main` directly and
-is the only supported release path.
+`enforce_admins` is deliberately off: `deploy:all` and `deploy:push` push to
+`main` directly and are the supported release paths.

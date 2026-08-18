@@ -83,6 +83,7 @@ export function mapServiceError(error: unknown): NextResponse {
   const knownCodes = [
     'userNotFound',
     'invalidPassword',
+    'passwordTooShort',
     'phoneAlreadyRegistered',
     'emailAlreadyRegistered',
     'invalidCurrentPassword',

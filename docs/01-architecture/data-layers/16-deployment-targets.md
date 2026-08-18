@@ -39,12 +39,15 @@ folder's `.vercel`, never the repository root's link.
 
 ## One-command production deployment
 
-GitHub Actions is intentionally unused. Run this command from a clean `main`
-working tree:
+GitHub Actions is intentionally unused. Two commands push `main` to production
+from a local `main` working tree:
 
 ```bash
-npm run deploy:all
+npm run deploy:all    # full preflight, then publish
+npm run deploy:push   # publish only — no lint/build/test gates
 ```
+
+### `deploy:all` — full release gate
 
 `scripts/deploy-all.ts` runs a **preflight gate before its first git write**,
 because the push is what makes a release public and nothing after it may be the
@@ -103,6 +106,61 @@ push, the exact `git revert` and Vercel rollback steps are printed.
 `scripts/tests/deploy-all.test.ts` covers the refusals, including that importing
 the module does not deploy — the entrypoint is guarded so `npm test` can never
 become a release.
+
+### `deploy:push` — publish and verify only
+
+`scripts/deploy-push.ts` skips every preflight gate. At startup it asks which
+isolated Vercel **service** account(s) to deploy (or accepts `--vercel-target=`
+on the command line). **GitHub push to `main` and main (`gova`) Vercel
+verification are always mandatory.**
+
+Interactive choices (services only):
+
+| Key | Target |
+| :-- | :-- |
+| 1 | `notifications` |
+| 2 | `products` |
+| 3 | `orders` |
+| 4 | `profiles` |
+| 5 | all four services |
+
+Non-interactive examples:
+
+```bash
+npm run deploy:push -- --vercel-target=notifications
+npm run deploy:push -- --vercel-target=products,orders
+npm run deploy:push -- --vercel-target=all
+```
+
+`--vercel-target=main` alone is refused; `main` is included in every run
+automatically after GitHub push.
+
+It then runs:
+
+1. `secrets:backup`;
+2. `git add -A`, a `deploy(push): <ISO timestamp>` commit (`--allow-empty` when
+   the tree is clean), and `git push origin main`;
+3. `git fetch` + verification that `origin/main` matches the pushed commit;
+4. the selected isolated service deploy scripts, stopping on the first failure;
+5. Vercel API polling until the GitHub-linked `main` project is `READY`.
+
+When a single service is chosen, success requires GitHub verification, that
+service's Vercel `READY` state, and **main** `READY` on Vercel.
+
+`VERCEL_TOKEN` and the root `.vercel/project.json` are always required for main
+verification. Service accounts use their own tokens from `.env.local` / `.env`.
+
+It does not refuse scratch files, manifest downgrades, or empty runs, and it does
+not report native/OTA surface status.
+
+The final console line is always explicit:
+
+- success: `[deploy:push] SUCCESS — GitHub push completed; main and <service(s)> Vercel production targets are READY.`
+- failure: `[deploy:push] FAILED — <reason>` (with `git revert` guidance when the
+  push already landed).
+
+`scripts/tests/deploy-push.test.ts` asserts target parsing and that importing the
+module does not deploy.
 
 The command verifies that the new commit leaves the working tree clean, so every
 Vercel account receives the same revision. A

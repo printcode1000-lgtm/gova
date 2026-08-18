@@ -6,6 +6,11 @@ export {
   isAccountDeletionPhraseValid,
 } from './domain/constants';
 
+export {
+  readPasswordInput,
+  assertPasswordMeetsMinimum,
+} from './domain/password-input';
+
 export type {
   UserProfile,
   UpdateProfileInput,

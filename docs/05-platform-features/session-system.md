@@ -111,7 +111,7 @@ The token is signed server-side after password verification. The server validate
 
 `PUT /api/auth/profile` and `POST /api/account/delete` require the same signed `sessionToken` via the `x-asol-session-token` header.
 
-Passwords are stored with scrypt (`scrypt$...`) via `@asol/auth-core/server`. Minimum length is 8 characters.
+Passwords are stored with scrypt (`scrypt$...`) via `@asol/auth-core/server`. Minimum length is 4 characters.
 
 ---
 

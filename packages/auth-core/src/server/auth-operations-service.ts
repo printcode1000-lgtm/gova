@@ -7,6 +7,7 @@ import type {
   UserProfile,
 } from '../domain/entities';
 import type { AuthUserRepositoryPort, ProfileSpecialtiesPort } from '../ports/auth-repository.port';
+import { assertPasswordMeetsMinimum } from '../domain/password-input';
 import { normalizeAuthEmail, normalizeAuthPhone } from './normalize';
 import { hashPassword, verifyPassword } from './password';
 import { assertSessionMatchesUid } from './session-auth';
@@ -19,7 +20,8 @@ export class AuthOperationsService {
   ) {}
 
   async register(formData: RegistrationInput): Promise<{ uid: string }> {
-    const hashedPassword = await hashPassword(formData.password);
+    const password = assertPasswordMeetsMinimum(formData.password);
+    const hashedPassword = await hashPassword(password);
     const phone = normalizeAuthPhone(formData.phone);
     const email = normalizeAuthEmail(formData.email);
     const uid = `usr_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
@@ -72,8 +74,9 @@ export class AuthOperationsService {
       if (!input.currentPassword) throw new Error('currentPasswordRequired');
       const currentValid = await verifyPassword(input.currentPassword, user.password);
       if (!currentValid) throw new Error('invalidCurrentPassword');
+      const newPassword = assertPasswordMeetsMinimum(input.newPassword);
       await this.users.update(input.uid, {
-        password: await hashPassword(input.newPassword),
+        password: await hashPassword(newPassword),
       });
     }
 

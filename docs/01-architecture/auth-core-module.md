@@ -6,7 +6,7 @@
 
 Located at `packages/auth-core/`, it replaces scattered auth utilities that previously lived under `src/features/auth/` and `src/features/account-deletion/`. The app wires concrete repositories and storage ports through `src/features/auth/server/auth-core-bootstrap.server.ts`.
 
-This migration was done without backward compatibility: legacy SHA-256 password hashes are rejected, minimum password length is **8**, and sensitive mutations require a fresh HMAC `sessionToken`.
+This migration was done without backward compatibility: legacy SHA-256 password hashes are rejected, minimum password length is **4**, and sensitive mutations require a fresh HMAC `sessionToken`.
 
 ---
 
@@ -53,7 +53,8 @@ This migration was done without backward compatibility: legacy SHA-256 password 
 
 - Format: `scrypt$<salt>$<hash>` (Node `scrypt` with project parameters).
 - No migration path from older SHA-256 hashes. Existing accounts must reset password (recovery flow or manual DB update).
-- `MIN_PASSWORD_LENGTH` = **8** (enforced in schemas and server services).
+- `MIN_PASSWORD_LENGTH` = **4** (enforced in schemas and server services).
+- `readPasswordInput` / `assertPasswordMeetsMinimum` reject non-string API payloads so leading zeros in values such as `0258` are preserved.
 
 ### Session tokens
 

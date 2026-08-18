@@ -3,7 +3,10 @@ import {
   ACCOUNT_DELETION_PHRASE_AR,
   ACCOUNT_DELETION_PHRASE_EN,
   MIN_PASSWORD_LENGTH,
+  assertPasswordMeetsMinimum,
+  createRegistrationSchema,
   isAccountDeletionPhraseValid,
+  readPasswordInput,
 } from '../index';
 import * as runtimeApi from '../index';
 import * as serverApi from '../server';
@@ -16,11 +19,34 @@ import {
 } from '../server';
 
 export function runConstantsTest() {
-  assert.equal(MIN_PASSWORD_LENGTH, 8);
+  assert.equal(MIN_PASSWORD_LENGTH, 4);
   assert.equal(isAccountDeletionPhraseValid(ACCOUNT_DELETION_PHRASE_EN), true);
   assert.equal(isAccountDeletionPhraseValid(ACCOUNT_DELETION_PHRASE_AR), true);
   assert.equal(isAccountDeletionPhraseValid('wrong phrase'), false);
   console.log('✅ auth-core constants test passed');
+}
+
+export function runPasswordInputTest() {
+  assert.equal(readPasswordInput('0258'), '0258');
+  assert.equal(readPasswordInput('0258')?.length, 4);
+  assert.equal(assertPasswordMeetsMinimum('0258'), '0258');
+  assert.throws(() => assertPasswordMeetsMinimum(258), /passwordTooShort/);
+  assert.throws(() => assertPasswordMeetsMinimum('258'), /passwordTooShort/);
+  assert.throws(() => assertPasswordMeetsMinimum('123'), /passwordTooShort/);
+
+  const schema = createRegistrationSchema((key) => key);
+  assert.equal(
+    schema.safeParse({
+      phone: '01026546550',
+      password: '0258',
+      confirmPassword: '0258',
+      email: '',
+      phoneVerified: true,
+    }).success,
+    true,
+  );
+
+  console.log('✅ auth-core password input test passed');
 }
 
 export async function runPasswordTest() {
@@ -77,6 +103,7 @@ export async function runImageDeletionRetryTest() {
 async function main() {
   console.log('🚀 Running @asol/auth-core test suite...\n');
   runConstantsTest();
+  runPasswordInputTest();
   await runPasswordTest();
   runSessionTokenTest();
   runPublicSurfaceTest();

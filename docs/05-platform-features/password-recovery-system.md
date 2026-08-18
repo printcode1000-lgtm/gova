@@ -23,7 +23,7 @@ The `src/features/password-recovery` module provides an independent password rec
 - Verification codes, phone numbers, and IP addresses are never stored in plain text in the recovery table.
 - Stored values utilize HMAC-SHA-256 with a server secret.
 - Password reset token is a 256-bit random value, with only its hash stored.
-- New passwords are hashed with scrypt (`scrypt$...`) via `@asol/auth-core/server`. Minimum length is 8 characters (`MIN_PASSWORD_LENGTH`).
+- New passwords are hashed with scrypt (`scrypt$...`) via `@asol/auth-core/server`. Minimum length is 4 characters (`MIN_PASSWORD_LENGTH`).
 - Error messages for invalid or expired codes are standardized.
 
 > Masked email display and the "no email linked" status are UX requirements; therefore, they may reveal that a phone number is registered. Unregistered phone numbers do not return a `userNotFound` error code.

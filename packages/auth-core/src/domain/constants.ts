@@ -1,5 +1,5 @@
 /** Minimum password length for registration, login, profile change, and recovery. */
-export const MIN_PASSWORD_LENGTH = 8;
+export const MIN_PASSWORD_LENGTH = 4;
 
 export const ACCOUNT_DELETION_PHRASE_EN = 'DELETE ASOL ACCOUNT';
 export const ACCOUNT_DELETION_PHRASE_AR = 'احذف حساب أصول نهائيا';

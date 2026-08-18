@@ -54,7 +54,7 @@
       }
     },
     {
-      "name": "Deploy All - نشر جميع حسابات Vercel",
+      "name": "Deploy All - نشر كامل مع فحوصات",
       "request": "launch",
       "type": "node",
       "runtimeExecutable": "npm",
@@ -64,6 +64,19 @@
       "presentation": {
         "group": "ASOL Deployment",
         "order": 1
+      }
+    },
+    {
+      "name": "Deploy Push - دفع ونشر بدون فحوصات",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "deploy:push"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Deployment",
+        "order": 2
       }
     },
     {
