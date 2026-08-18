@@ -155,7 +155,8 @@ response code. `--dry-run` prints the full payload and sends nothing.
 It needs `GITHUB_ADMIN_TOKEN` in `.env.local` — see
 [14. Environment Variables](./14-environment-variables.md#github-repository-administration)
 for the token's scope, what it can currently do, and what it should be narrowed
-to.
+to. The same token is also required by `deploy:all` and `deploy:push` for
+`git push` / `git fetch` over HTTPS.
 
 `enforce_admins` is deliberately off: `deploy:all` and `deploy:push` push to
 `main` directly and are the supported release paths.

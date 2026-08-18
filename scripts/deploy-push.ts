@@ -12,6 +12,11 @@ import {
   waitForVercelProductionDeployment,
 } from "./lib/vercel-deployment-monitor";
 import { loadReleaseEnvironment } from "./load-release-env";
+import {
+  fetchBranchWithAdminToken,
+  pushBranchWithAdminToken,
+  readGitHubAdminToken,
+} from "./lib/github-admin-git";
 
 loadReleaseEnvironment();
 
@@ -188,7 +193,8 @@ function printRollbackGuidance(revision: string): void {
     "\n[deploy:push] The commit is already on GitHub. To roll back:\n" +
       `  git revert ${revision}\n` +
       `  git push origin ${MAIN_BRANCH}\n` +
-      "Or promote the previous production deployment from the Vercel dashboard.",
+      "Or promote the previous production deployment from the Vercel dashboard.\n" +
+      "To push the revert, run deploy:push again (GITHUB_ADMIN_TOKEN is used, not local git credentials).",
   );
 }
 
@@ -232,10 +238,7 @@ async function verifyMainDeployment(input: {
 
 function verifyGitHubPush(revision: string): void {
   console.log("[deploy:push] Verifying origin/main matches the pushed commit...");
-  execFileSync("git", ["fetch", "origin", MAIN_BRANCH], {
-    cwd: ROOT,
-    stdio: "inherit",
-  });
+  fetchBranchWithAdminToken({ cwd: ROOT, branch: MAIN_BRANCH });
   const remoteRevision = git(["rev-parse", `origin/${MAIN_BRANCH}`]);
   if (remoteRevision !== revision) {
     throw new Error(
@@ -256,6 +259,7 @@ async function main(): Promise<void> {
 
   assertMainBranch();
   assertMainDeploymentCredentials();
+  readGitHubAdminToken();
 
   try {
     await runNpmScript("secrets:backup");
@@ -291,12 +295,9 @@ async function main(): Promise<void> {
   const revision = git(["rev-parse", "HEAD"]);
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
 
-  console.log("[deploy:push] Pushing main to GitHub...");
+  console.log("[deploy:push] Pushing main to GitHub via GITHUB_ADMIN_TOKEN...");
   try {
-    execFileSync("git", ["push", "origin", MAIN_BRANCH], {
-      cwd: ROOT,
-      stdio: "inherit",
-    });
+    pushBranchWithAdminToken({ cwd: ROOT, branch: MAIN_BRANCH });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     fail(`git push to origin/${MAIN_BRANCH} did not complete: ${message}`);

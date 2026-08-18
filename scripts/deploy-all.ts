@@ -12,6 +12,11 @@ import {
   resolveNativeBaseline,
 } from "@asol/ota-core/publishing";
 import { loadReleaseEnvironment } from "./load-release-env";
+import {
+  fetchBranchWithAdminToken,
+  pushBranchWithAdminToken,
+  readGitHubAdminToken,
+} from "./lib/github-admin-git";
 
 loadReleaseEnvironment();
 
@@ -407,7 +412,8 @@ function printRollbackGuidance(revision: string): void {
     "\n[deploy:all] The commit is already on GitHub. To roll back:\n" +
       `  git revert ${revision}\n` +
       `  git push origin ${MAIN_BRANCH}\n` +
-      "Or promote the previous production deployment from the Vercel dashboard.",
+      "Or promote the previous production deployment from the Vercel dashboard.\n" +
+      "To push the revert, run deploy:push or deploy:all (GITHUB_ADMIN_TOKEN is used, not local git credentials).",
   );
 }
 
@@ -456,6 +462,7 @@ async function main(): Promise<void> {
   // nothing below it may be the first place a problem is discovered.
   assertMainBranch();
   assertDeploymentCredentials();
+  readGitHubAdminToken();
   await preflight(flags);
   assertNoScratchFiles(flags);
   assertReleaseManifestNotDowngraded(flags);
@@ -490,11 +497,8 @@ async function main(): Promise<void> {
 
   const revision = git(["rev-parse", "HEAD"]);
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
-  console.log("[deploy:all] Pushing main to GitHub...");
-  execFileSync("git", ["push", "origin", MAIN_BRANCH], {
-    cwd: ROOT,
-    stdio: "inherit",
-  });
+  console.log("[deploy:all] Pushing main to GitHub via GITHUB_ADMIN_TOKEN...");
+  pushBranchWithAdminToken({ cwd: ROOT, branch: MAIN_BRANCH });
   console.log(
     "[deploy:all] GitHub push completed; only the existing GitHub-linked main Vercel project will auto-deploy.",
   );
