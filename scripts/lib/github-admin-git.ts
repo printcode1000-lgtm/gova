@@ -412,10 +412,18 @@ function gitHttpsUrl(repository: string): string {
 
 function runGitNetwork(cwd: string, gitArgs: string[]): void {
   ensureDeployGitHubAuth();
-  execFileSync(resolveGitExecutable(), [...networkGitConfigArgs(), ...gitArgs], {
+  const token = readGitHubToken();
+  execFileSync(resolveGitExecutable(), [
+    "-c",
+    "credential.helper=",
+    "-c",
+    `http.extraHeader=AUTHORIZATION: bearer ${token}`,
+    ...gitArgs,
+  ], {
     cwd,
     stdio: "inherit",
     env: isolatedGitEnv(),
+    windowsHide: true,
   });
 }
 

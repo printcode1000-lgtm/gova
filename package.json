@@ -89,6 +89,7 @@
     "notifications:tokens:dedupe": "npx tsx src/modules/data-access/tooling/enforce-notification-token-cardinality.ts",
     "deploy:all": "npx tsx scripts/deploy-all.ts",
     "deploy:push": "npx tsx scripts/deploy-push.ts",
+    "deploy:push:main": "npx tsx scripts/deploy-push.ts --vercel-target=none",
     "doctor:environment": "npx tsx scripts/check-environment-requirements.ts --scenario=all",
     "secrets:backup": "npx tsx scripts/backup-project-secrets.ts",
     "secrets:restore": "npx tsx scripts/restore-project-secrets.ts",
