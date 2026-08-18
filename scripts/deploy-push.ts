@@ -1,4 +1,4 @@
-import { execFileSync, spawn, type ChildProcess } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, statSync, unlinkSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -7,6 +7,10 @@ import {
   type ServiceDeployTarget,
   resolveServiceDeployTargets,
 } from "./deploy-push-target-choice";
+import {
+  DeploymentNpmScriptError,
+  runDeploymentNpmScript,
+} from "./lib/run-deployment-npm-script";
 import {
   type VercelDeploymentReport,
   waitForVercelProductionDeployment,
@@ -31,12 +35,6 @@ const SERVICE_DEPLOYS: Record<
   orders: { target: "orders", script: "orders:deploy" },
   profiles: { target: "profiles", script: "profiles:deploy" },
 };
-
-class DeploymentScriptError extends Error {
-  constructor(message: string, readonly report?: VercelDeploymentReport) {
-    super(message);
-  }
-}
 
 function git(args: string[]): string {
   return execFileSync("git", args, {
@@ -100,70 +98,6 @@ function assertMainDeploymentCredentials(): void {
       ".vercel/project.json is required to identify the GitHub-linked main project.",
     );
   }
-}
-
-function parseReport(output: string): VercelDeploymentReport | undefined {
-  const lines = output.split(/\r?\n/).reverse();
-  const marker = "[ASOL_DEPLOY_REPORT] ";
-  const line = lines.find((candidate) => candidate.startsWith(marker));
-  if (!line) return undefined;
-  try {
-    return JSON.parse(line.slice(marker.length)) as VercelDeploymentReport;
-  } catch {
-    return undefined;
-  }
-}
-
-function runNpmScript(
-  script: string,
-  options: { env?: Record<string, string>; captureReport?: boolean } = {},
-): Promise<VercelDeploymentReport | undefined> {
-  const npmCli = process.env.npm_execpath;
-  const command = npmCli
-    ? process.execPath
-    : process.platform === "win32"
-      ? "npm.cmd"
-      : "npm";
-  const args = npmCli ? [npmCli, "run", script] : ["run", script];
-  return new Promise((resolve, reject) => {
-    console.log(`\n[deploy:push] Starting ${script}...`);
-    const capture = options.captureReport === true;
-    let output = "";
-    const child: ChildProcess = spawn(command, args, {
-      cwd: ROOT,
-      env: { ...process.env, ...options.env },
-      stdio: capture ? ["ignore", "pipe", "pipe"] : "inherit",
-      shell: false,
-      windowsHide: true,
-    });
-
-    if (capture) {
-      child.stdout?.on("data", (chunk: Buffer) => {
-        const text = chunk.toString();
-        output += text;
-        process.stdout.write(text);
-      });
-      child.stderr?.on("data", (chunk: Buffer) => {
-        process.stderr.write(chunk);
-      });
-    }
-
-    child.once("error", reject);
-    child.once("exit", (code, signal) => {
-      const report = parseReport(output);
-      if (code === 0 && (!capture || report?.state === "READY")) {
-        console.log(`[deploy:push] Completed ${script}.`);
-        resolve(report);
-        return;
-      }
-      reject(
-        new DeploymentScriptError(
-          `${script} failed${signal ? ` with signal ${signal}` : ` with exit code ${code ?? "unknown"}`}${capture && !report ? "; no verified Vercel report was returned" : ""}.`,
-          report,
-        ),
-      );
-    });
-  });
 }
 
 function printFinalSummary(reports: VercelDeploymentReport[]): void {
@@ -258,7 +192,7 @@ async function main(): Promise<void> {
   assertMainDeploymentCredentials();
 
   try {
-    await runNpmScript("secrets:backup");
+    await runDeploymentNpmScript("secrets:backup", { logPrefix: "deploy:push" });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     fail(`secrets:backup did not complete: ${message}`);
@@ -317,7 +251,8 @@ async function main(): Promise<void> {
     const deployment = SERVICE_DEPLOYS[serviceTarget];
     const comment = `deploy(${deployment.target}): ${timestamp} @ ${revision.slice(0, 12)}`;
     try {
-      const report = await runNpmScript(deployment.script, {
+      const report = await runDeploymentNpmScript(deployment.script, {
+        logPrefix: "deploy:push",
         captureReport: true,
         env: {
           ASOL_DEPLOYMENT_RUN_ID: `${runId}-${deployment.target}`,
@@ -331,7 +266,7 @@ async function main(): Promise<void> {
       }
       reports.push(report);
     } catch (error) {
-      const report = error instanceof DeploymentScriptError ? error.report : undefined;
+      const report = error instanceof DeploymentNpmScriptError ? error.report : undefined;
       const message = error instanceof Error ? error.message : String(error);
       if (report) reports.push(report);
       if (reports.length > 0) printFinalSummary(reports);

@@ -1,8 +1,12 @@
-import { execFileSync, spawn, type ChildProcess } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, statSync, unlinkSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {
+  DeploymentNpmScriptError,
+  runDeploymentNpmScript,
+} from "./lib/run-deployment-npm-script";
 import {
   type VercelDeploymentReport,
   waitForVercelProductionDeployment,
@@ -27,12 +31,6 @@ const SERVICE_DEPLOYS = [
   { target: "orders", script: "orders:deploy" },
   { target: "profiles", script: "profiles:deploy" },
 ] as const;
-
-class DeploymentScriptError extends Error {
-  constructor(message: string, readonly report?: VercelDeploymentReport) {
-    super(message);
-  }
-}
 
 function git(args: string[]): string {
   return execFileSync("git", args, {
@@ -84,73 +82,6 @@ function clearStaleGitIndexLock(): void {
   console.log(
     `[deploy:all] Removed abandoned .git/index.lock (${Math.round(ageMs / 1000)} seconds old).`,
   );
-}
-
-function parseReport(output: string): VercelDeploymentReport | undefined {
-  const lines = output.split(/\r?\n/).reverse();
-  const marker = "[ASOL_DEPLOY_REPORT] ";
-  const line = lines.find((candidate) => candidate.startsWith(marker));
-  if (!line) return undefined;
-  try {
-    return JSON.parse(line.slice(marker.length)) as VercelDeploymentReport;
-  } catch {
-    return undefined;
-  }
-}
-
-function runNpmScript(
-  script: string,
-  // `env` is an overlay spread onto `process.env` below, not a complete environment.
-  // Typed as ProcessEnv it required NODE_ENV from callers that only add deployment
-  // metadata — and Next's ProcessEnv marks NODE_ENV readonly, so they could not supply it.
-  options: { env?: Record<string, string>; captureReport?: boolean } = {},
-): Promise<VercelDeploymentReport | undefined> {
-  const npmCli = process.env.npm_execpath;
-  const command = npmCli
-    ? process.execPath
-    : process.platform === "win32"
-      ? "npm.cmd"
-      : "npm";
-  const args = npmCli ? [npmCli, "run", script] : ["run", script];
-  return new Promise((resolve, reject) => {
-    console.log(`\n[deploy:all] Starting ${script}...`);
-    const capture = options.captureReport === true;
-    let output = "";
-    const child: ChildProcess = spawn(command, args, {
-      cwd: ROOT,
-      env: { ...process.env, ...options.env },
-      stdio: capture ? ["ignore", "pipe", "pipe"] : "inherit",
-      shell: false,
-      windowsHide: true,
-    });
-
-    if (capture) {
-      child.stdout?.on("data", (chunk: Buffer) => {
-        const text = chunk.toString();
-        output += text;
-        process.stdout.write(text);
-      });
-      child.stderr?.on("data", (chunk: Buffer) => {
-        process.stderr.write(chunk);
-      });
-    }
-
-    child.once("error", reject);
-    child.once("exit", (code, signal) => {
-      const report = parseReport(output);
-      if (code === 0 && (!capture || report?.state === "READY")) {
-        console.log(`[deploy:all] Completed ${script}.`);
-        resolve(report);
-        return;
-      }
-      reject(
-        new DeploymentScriptError(
-          `${script} failed${signal ? ` with signal ${signal}` : ` with exit code ${code ?? "unknown"}`}${capture && !report ? "; no verified Vercel report was returned" : ""}.`,
-          report,
-        ),
-      );
-    });
-  });
 }
 
 function failedReport(
@@ -250,7 +181,7 @@ async function preflight(flags: DeployFlags): Promise<void> {
   );
   for (const step of PREFLIGHT_STEPS) {
     try {
-      await runNpmScript(step);
+      await runDeploymentNpmScript(step, { logPrefix: "deploy:all" });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(
@@ -462,7 +393,7 @@ async function main(): Promise<void> {
   assertSomethingToDeploy(flags);
 
   console.log("[deploy:all] Creating or verifying the encrypted secrets backup...");
-  await runNpmScript("secrets:backup");
+  await runDeploymentNpmScript("secrets:backup", { logPrefix: "deploy:all" });
 
   clearStaleGitIndexLock();
 
@@ -504,7 +435,8 @@ async function main(): Promise<void> {
   for (const deployment of SERVICE_DEPLOYS) {
     const comment = `deploy(${deployment.target}): ${timestamp} @ ${revision.slice(0, 12)}`;
     try {
-      const report = await runNpmScript(deployment.script, {
+      const report = await runDeploymentNpmScript(deployment.script, {
+        logPrefix: "deploy:all",
         captureReport: true,
         env: {
           ASOL_DEPLOYMENT_RUN_ID: `${runId}-${deployment.target}`,
@@ -515,7 +447,7 @@ async function main(): Promise<void> {
       if (!report) throw new Error("The service returned no deployment report.");
       reports.push(report);
     } catch (error) {
-      const report = error instanceof DeploymentScriptError ? error.report : undefined;
+      const report = error instanceof DeploymentNpmScriptError ? error.report : undefined;
       const message = error instanceof Error ? error.message : String(error);
       reports.push(report ?? failedReport(deployment.target, comment, message));
       failures.push(`${deployment.script}: ${message}`);

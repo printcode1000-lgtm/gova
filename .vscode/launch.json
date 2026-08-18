@@ -57,8 +57,9 @@
       "name": "Deploy All - نشر كامل مع فحوصات",
       "request": "launch",
       "type": "node",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "deploy:all"],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "scripts/deploy-all.ts"],
+      "autoAttachChildProcesses": false,
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "presentation": {
@@ -70,13 +71,28 @@
       "name": "Deploy Push - دفع ونشر بدون فحوصات",
       "request": "launch",
       "type": "node",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "deploy:push"],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "scripts/deploy-push.ts"],
+      "autoAttachChildProcesses": false,
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "presentation": {
         "group": "ASOL Deployment",
         "order": 2
+      }
+    },
+    {
+      "name": "Deploy Push Main - GitHub و main فقط",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "scripts/deploy-push.ts", "--vercel-target=none"],
+      "autoAttachChildProcesses": false,
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "ASOL Deployment",
+        "order": 3
       }
     },
     {

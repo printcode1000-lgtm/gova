@@ -138,11 +138,24 @@ Interactive choices:
 Non-interactive examples:
 
 ```bash
+npm run deploy:push:main
+npm run deploy:push:all
 npm run deploy:push -- --vercel-target=main
 npm run deploy:push -- --vercel-target=none
 npm run deploy:push -- --vercel-target=notifications
 npm run deploy:push -- --vercel-target=all
 ```
+
+On Windows, `npm run deploy:push -- --vercel-target=...` may not forward args;
+use `deploy:push:main` / `deploy:push:all` or `npx tsx scripts/deploy-push.ts
+--vercel-target=...` directly.
+
+Service deploy scripts emit `[ASOL_DEPLOY_REPORT]` on stdout. `deploy:push` and
+`deploy:all` capture that line from the child npm process (stdout and stderr,
+after streams close) via `scripts/lib/run-deployment-npm-script.ts`. Child
+processes run without `NODE_OPTIONS` / VS Code inspector hooks so nested
+`npx tsx` deploy scripts keep piped output reliable. VS Code launch configs for
+deploy run `npx tsx scripts/deploy-*.ts` with `autoAttachChildProcesses: false`.
 
 `--vercel-target=main` and `--vercel-target=none` skip the four isolated service
 deploy scripts. Any other choice still runs the mandatory steps above, then
