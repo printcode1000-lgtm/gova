@@ -13,9 +13,11 @@ import {
 } from "@asol/ota-core/publishing";
 import { loadReleaseEnvironment } from "./load-release-env";
 import {
+  ensureDeployGitHubAuth,
   fetchBranchWithAdminToken,
   pushBranchWithAdminToken,
-  readGitHubAdminToken,
+  readGitLocal,
+  runGitLocal,
 } from "./lib/github-admin-git";
 
 loadReleaseEnvironment();
@@ -40,11 +42,7 @@ class DeploymentScriptError extends Error {
 }
 
 function git(args: string[]): string {
-  return execFileSync("git", args, {
-    cwd: ROOT,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "inherit"],
-  }).trim();
+  return readGitLocal(ROOT, args);
 }
 
 function assertMainBranch(): void {
@@ -462,7 +460,7 @@ async function main(): Promise<void> {
   // nothing below it may be the first place a problem is discovered.
   assertMainBranch();
   assertDeploymentCredentials();
-  readGitHubAdminToken();
+  ensureDeployGitHubAuth();
   await preflight(flags);
   assertNoScratchFiles(flags);
   assertReleaseManifestNotDowngraded(flags);
@@ -476,7 +474,7 @@ async function main(): Promise<void> {
   const timestamp = new Date().toISOString();
   const mainComment = `deploy(main): ${timestamp}`;
   console.log(`[deploy:all] Creating deployment commit: ${mainComment}`);
-  execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
+  runGitLocal(ROOT, ["add", "-A"]);
   const commitArgs = ["commit", "--allow-empty", "-m", mainComment];
   if (flags.skipPreflight) {
     // Recorded in history so a shortcut taken under pressure stays visible.
@@ -485,10 +483,7 @@ async function main(): Promise<void> {
       `Preflight skipped via --skip-preflight. Not verified: ${PREFLIGHT_STEPS.join(", ")}.`,
     );
   }
-  execFileSync("git", commitArgs, {
-    cwd: ROOT,
-    stdio: "inherit",
-  });
+  runGitLocal(ROOT, commitArgs);
   if (git(["status", "--porcelain"])) {
     throw new Error(
       "The working tree changed while creating the deployment commit; refusing to push inconsistent source.",
@@ -497,7 +492,7 @@ async function main(): Promise<void> {
 
   const revision = git(["rev-parse", "HEAD"]);
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
-  console.log("[deploy:all] Pushing main to GitHub via GITHUB_ADMIN_TOKEN...");
+  console.log("[deploy:all] Pushing main to GitHub...");
   pushBranchWithAdminToken({ cwd: ROOT, branch: MAIN_BRANCH });
   console.log(
     "[deploy:all] GitHub push completed; only the existing GitHub-linked main Vercel project will auto-deploy.",

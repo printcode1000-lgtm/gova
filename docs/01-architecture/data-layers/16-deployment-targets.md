@@ -182,9 +182,9 @@ shows target, account, project, unique comment, state, URL, and Vercel error.
 Each service continues to read its dedicated Vercel token and required
 environment values from `.env.local` or `.env`. `VERCEL_TOKEN` and the root
 `.vercel/project.json` are additionally required to verify the GitHub-linked
-main deployment. `GITHUB_ADMIN_TOKEN` is required for every `git push` and
-`git fetch` verification step — deploy commands do not use machine SSH keys or
-local `origin` credentials. The root link is never rewritten by a service command.
+main deployment. GitHub git uses `GITHUB_ADMIN_TOKEN` when set, otherwise GitHub
+CLI browser login (`gh`) — not machine SSH keys or local `origin` credentials.
+The root link is never rewritten by a service command.
 
 The Vercel CLI is intentionally not a project dependency. Each isolated service
 deployment invokes `vercel@59.0.0` as an ephemeral `npx --package` tool, keeping

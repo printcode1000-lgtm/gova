@@ -13,9 +13,11 @@ import {
 } from "./lib/vercel-deployment-monitor";
 import { loadReleaseEnvironment } from "./load-release-env";
 import {
+  ensureDeployGitHubAuth,
   fetchBranchWithAdminToken,
   pushBranchWithAdminToken,
-  readGitHubAdminToken,
+  readGitLocal,
+  runGitLocal,
 } from "./lib/github-admin-git";
 
 loadReleaseEnvironment();
@@ -44,11 +46,7 @@ class DeploymentScriptError extends Error {
 }
 
 function git(args: string[]): string {
-  return execFileSync("git", args, {
-    cwd: ROOT,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "inherit"],
-  }).trim();
+  return readGitLocal(ROOT, args);
 }
 
 function assertMainBranch(): void {
@@ -259,7 +257,7 @@ async function main(): Promise<void> {
 
   assertMainBranch();
   assertMainDeploymentCredentials();
-  readGitHubAdminToken();
+  ensureDeployGitHubAuth();
 
   try {
     await runNpmScript("secrets:backup");
@@ -276,11 +274,8 @@ async function main(): Promise<void> {
   console.log(`[deploy:push] Creating deployment commit: ${mainComment}`);
 
   try {
-    execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
-    execFileSync("git", ["commit", "--allow-empty", "-m", mainComment], {
-      cwd: ROOT,
-      stdio: "inherit",
-    });
+    runGitLocal(ROOT, ["add", "-A"]);
+    runGitLocal(ROOT, ["commit", "--allow-empty", "-m", mainComment]);
     if (git(["status", "--porcelain"])) {
       throw new Error(
         "The working tree changed while creating the deployment commit; refusing to push inconsistent source.",
@@ -295,7 +290,7 @@ async function main(): Promise<void> {
   const revision = git(["rev-parse", "HEAD"]);
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
 
-  console.log("[deploy:push] Pushing main to GitHub via GITHUB_ADMIN_TOKEN...");
+  console.log("[deploy:push] Pushing main to GitHub...");
   try {
     pushBranchWithAdminToken({ cwd: ROOT, branch: MAIN_BRANCH });
   } catch (error) {

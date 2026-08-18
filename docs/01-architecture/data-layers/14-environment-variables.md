@@ -295,13 +295,18 @@ Used by:
 - `npm run github:protect` (`scripts/protect-main-branch.ts`) to configure branch
   protection on `main`;
 - `npm run deploy:all` and `npm run deploy:push` (`scripts/lib/github-admin-git.ts`)
-  to `git push` and `git fetch` over HTTPS without machine SSH keys or Credential
-  Manager.
+  to `git push` and `git fetch` over HTTPS.
 
-Deploy commands refuse to start without this token. Git push uses
-`http.extraHeader=AUTHORIZATION: bearer <token>` against
-`https://github.com/<owner>/<repo>.git` and does not read `origin` remote
-credentials.
+Deploy git authentication order:
+
+1. `GITHUB_ADMIN_TOKEN` from `.env.local` / `.env` when set.
+2. Otherwise **GitHub CLI browser login** (`gh auth login -w`) — opens the browser
+   once, then reuses the stored session. Install `gh` from https://cli.github.com/.
+
+Deploy commands never use machine SSH keys, Credential Manager, or `origin`
+remote credentials. `git commit` uses an explicit deploy identity (`gh api user`
+or `GITHUB_DEPLOY_GIT_NAME` / `GITHUB_DEPLOY_GIT_EMAIL`) so Git never prompts
+for user.name / user.email.
 
 This is rule 6 of
 [the module isolation rules](../module-isolation-rules.md) — the one
@@ -329,8 +334,9 @@ repository — but inside this repository there is nothing it cannot do.
 Read and write`** and nothing else; `Contents: Read-only` is enough for
 everything else the script reads.
 
-`deploy:all` and `deploy:push` push `main` with the same token and need
-**`Contents: Read and write`** (or broader admin scope on a classic token).
+`deploy:all` and `deploy:push` push `main` with `GITHUB_ADMIN_TOKEN` when set,
+or with a GitHub CLI browser session otherwise. They need **`Contents: Read and
+write`** (or broader admin scope on a classic token).
 
 A replacement should be a fine-grained token limited to this repository with
 those two permissions and a real expiry date. Every additional permission is
