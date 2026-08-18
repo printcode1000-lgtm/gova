@@ -5,8 +5,8 @@ import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { notificationsServer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
+import { authService } from "@/features/auth/services/auth-service.bootstrap.server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
-import { getUserByUidQuery } from "@/modules/data-access/domains/auth/operations/instances";
 import { getMarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
@@ -73,14 +73,14 @@ export async function POST(request: Request) {
         throw new Error("Cart items are required");
       }
 
-      const [buyerContacts, authUser] = await Promise.all([
+      const [buyerContacts, authPhone] = await Promise.all([
         profileService.getContacts(body.uid),
-        getUserByUidQuery.execute(body.uid),
+        authService.getUserPhone(body.uid),
       ]);
       const buyerPhone =
         buyerContacts.phones[0]?.number?.trim() ||
         body.phone?.trim() ||
-        authUser?.phone?.trim() ||
+        authPhone ||
         "";
       const buyerLocation = buyerContacts.locations[0] ?? null;
       if (!buyerPhone) {

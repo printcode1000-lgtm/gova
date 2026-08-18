@@ -107,6 +107,12 @@ export class AuthOperationsService {
 
     return { uid: input.uid, phone, email };
   }
+
+  async getUserPhone(uid: string): Promise<string | null> {
+    const user = await this.users.getByUid(uid);
+    const phone = user?.phone?.trim();
+    return phone || null;
+  }
 }
 
 export type { ProfileSpecialtiesSelection };

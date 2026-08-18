@@ -36,4 +36,10 @@ export class AuthService implements IAuthService {
       // Session is client-side (IndexedDB). Server has no session state to clear.
     });
   }
+
+  async getUserPhone(uid: string): Promise<string | null> {
+    return traceServerLayer('server-service', 'AuthService.getUserPhone', () =>
+      authOperationsService.getUserPhone(uid),
+    );
+  }
 }
