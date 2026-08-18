@@ -145,6 +145,7 @@ const {
     t,
     setActiveTab: selectSection,
     setSession,
+    returnTo: searchParams.get("returnTo"),
   });
 
 const editSnapshotReady = showEditCard && !isLoading && isLoggedIn;

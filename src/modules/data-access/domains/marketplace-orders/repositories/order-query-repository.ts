@@ -4,6 +4,24 @@ import type { MarketplaceDb } from "@/modules/data-access/domains/marketplace-or
 
 type Row = Record<string, unknown>;
 
+export type OrderViewerRole = "buyer" | "seller" | "service_provider";
+
+export interface OrderListEntry {
+  order: Row;
+  viewerRoles: OrderViewerRole[];
+}
+
+export interface OrderListPage {
+  items: OrderListEntry[];
+  hasMore: boolean;
+}
+
+const VIEWER_ROLE_ORDER: OrderViewerRole[] = [
+  "buyer",
+  "seller",
+  "service_provider",
+];
+
 function placeholders(values: unknown[]): string {
   return values.map(() => "?").join(",");
 }
@@ -14,6 +32,111 @@ function uniqueStrings(values: unknown[]): string[] {
 
 export class OrderQueryRepository {
   constructor(private db: MarketplaceDb) {}
+
+  async listForUser(
+    userId: string,
+    options: { limit?: number; offset?: number; isAdmin?: boolean } = {},
+  ): Promise<OrderListPage> {
+    const limit = Math.min(Math.max(Number(options.limit) || 5, 1), 50);
+    const offset = Math.max(Number(options.offset) || 0, 0);
+    const fetchLimit = limit + 1;
+
+    const orders = options.isAdmin
+      ? await this.db.execute(
+          "SELECT * FROM orders ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?",
+          [fetchLimit, offset],
+        )
+      : await this.db.execute(
+          `SELECT o.* FROM orders o
+           WHERE o.buyer_id=?
+           OR EXISTS (
+             SELECT 1 FROM seller_orders so
+             WHERE so.order_id=o.id AND (so.seller_id=? OR so.service_provider_id=?)
+           )
+           OR EXISTS (
+             SELECT 1 FROM delivery_plans dp
+             INNER JOIN delivery_plan_candidates dpc ON dpc.plan_id=dp.id
+             WHERE dp.order_id=o.id AND dpc.provider_id=?
+           )
+           OR EXISTS (
+             SELECT 1 FROM shipments s
+             WHERE s.order_id=o.id AND s.carrier_id=?
+           )
+           ORDER BY o.created_at DESC, o.id DESC
+           LIMIT ? OFFSET ?`,
+          [userId, userId, userId, userId, userId, fetchLimit, offset],
+        );
+
+    const hasMore = orders.length > limit;
+    const page = hasMore ? orders.slice(0, limit) : orders;
+    const roleMap = options.isAdmin
+      ? new Map<string, OrderViewerRole[]>()
+      : await this.resolveViewerRolesForOrders(userId, page);
+
+    return {
+      items: page.map((order) => ({
+        order,
+        viewerRoles: roleMap.get(String(order.id)) ?? [],
+      })),
+      hasMore,
+    };
+  }
+
+  private async resolveViewerRolesForOrders(userId: string, orders: Row[]) {
+    const orderIds = uniqueStrings(orders.map((order) => order.id));
+    const roleSets = new Map<string, Set<OrderViewerRole>>();
+    const addRole = (orderId: string, role: OrderViewerRole) => {
+      const roles = roleSets.get(orderId) ?? new Set<OrderViewerRole>();
+      roles.add(role);
+      roleSets.set(orderId, roles);
+    };
+
+    for (const order of orders) {
+      if (String(order.buyer_id ?? "") === userId) {
+        addRole(String(order.id), "buyer");
+      }
+    }
+    if (orderIds.length === 0) return new Map<string, OrderViewerRole[]>();
+
+    const sellerRows = await this.db.execute(
+      `SELECT order_id,seller_id,service_provider_id FROM seller_orders
+       WHERE order_id IN (${placeholders(orderIds)})`,
+      orderIds,
+    );
+    for (const row of sellerRows) {
+      const orderId = String(row.order_id);
+      if (String(row.seller_id ?? "") === userId) addRole(orderId, "seller");
+      if (String(row.service_provider_id ?? "") === userId) {
+        addRole(orderId, "service_provider");
+      }
+    }
+
+    const planRows = await this.db.execute(
+      `SELECT dp.order_id FROM delivery_plans dp
+       INNER JOIN delivery_plan_candidates dpc ON dpc.plan_id=dp.id
+       WHERE dp.order_id IN (${placeholders(orderIds)}) AND dpc.provider_id=?`,
+      [...orderIds, userId],
+    );
+    for (const row of planRows) {
+      addRole(String(row.order_id), "service_provider");
+    }
+
+    const shipmentRows = await this.db.execute(
+      `SELECT DISTINCT order_id FROM shipments
+       WHERE order_id IN (${placeholders(orderIds)}) AND carrier_id=?`,
+      [...orderIds, userId],
+    );
+    for (const row of shipmentRows) {
+      addRole(String(row.order_id), "service_provider");
+    }
+
+    return new Map(
+      [...roleSets.entries()].map(([orderId, roles]) => [
+        orderId,
+        VIEWER_ROLE_ORDER.filter((role) => roles.has(role)),
+      ]),
+    );
+  }
 
   async listForActor(actor: { id: string; role: string }) {
     if (actor.role === "admin") {

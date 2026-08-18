@@ -31,6 +31,19 @@ orders domain touches neither profiles nor products.
 
 `GET /api/orders` reads the shards and nothing else, so it moves cleanly.
 
+Query parameters:
+
+| Param | Default | Meaning |
+|---|---|---|
+| `uid`, `phone` | required | Actor identity (admin is inferred from super-admin uid/phone) |
+| `limit` | `5` | Page size (max 50) |
+| `offset` | `0` | Rows to skip for pagination |
+
+The response is `{ items: [{ order, viewerRoles }], hasMore }`. Each row merges
+every role the user holds on that order (buyer, seller, service_provider) so the
+list no longer needs a `role` filter. Super-admin listing returns all orders with
+empty `viewerRoles` and uses `role=admin` on the detail link.
+
 **`GET /api/orders/<id>` stays on the main app.** The detail view enriches the
 order with the buyer's and seller's profile contacts, fulfilment settings, and
 store details — all in the profile shards, which this account has no credentials

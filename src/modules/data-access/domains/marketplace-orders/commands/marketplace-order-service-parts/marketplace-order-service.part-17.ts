@@ -23,6 +23,12 @@ import {
   validateRefund,
 } from "@/modules/marketplace-orders/validators";
 import { MarketplaceOrderPart16 } from "./marketplace-order-service.part-16";
+import {
+  parseSellerFulfillmentSnapshot,
+  serializeSellerFulfillmentSnapshot,
+  type SellerFulfillmentSnapshot,
+} from "@/modules/marketplace-orders/domain/fulfillment-snapshot";
+import { calculateSellerShippingFromSnapshot } from "@/modules/marketplace-orders/calculators/seller-shipping-calculator";
 const now = () => new Date().toISOString(),
   id = () => randomUUID();
 type Row = Record<string, any>;
@@ -181,5 +187,315 @@ export class MarketplaceOrderPart17 extends MarketplaceOrderPart16 {
       await this.recalculateShipmentStatus(String(x.id), actor);
     await this.recalculateOrderPricing(orderId, actor);
     await this.recalculateOrderStatus(orderId, actor);
+  }
+
+  async assignSellerOrderCarrier(
+    sellerOrderId: string,
+    carrierUid: string,
+    actor: Actor,
+  ) {
+    const so = await this.one("SELECT * FROM seller_orders WHERE id=?", [
+      sellerOrderId,
+    ]);
+    if (!so) throw new Error("Seller order not found");
+    if (
+      actor.role !== "admin" &&
+      (actor.role !== "seller" || actor.id !== so.seller_id)
+    ) {
+      throw new Error("Forbidden");
+    }
+    if (so.service_provider_id) {
+      throw new Error("Seller order already has a carrier");
+    }
+    const deliveryStop = await this.one(
+      "SELECT plan_id FROM delivery_plan_stops WHERE seller_order_id=? LIMIT 1",
+      [sellerOrderId],
+    );
+    if (deliveryStop) {
+      const plan = await this.one(
+        "SELECT status FROM delivery_plans WHERE id=? LIMIT 1",
+        [deliveryStop.plan_id],
+      );
+      if (
+        plan &&
+        !["separate_selected", "cancelled"].includes(String(plan.status))
+      ) {
+        throw new Error("Use the unified delivery plan for this seller order");
+      }
+    }
+    const carrier = String(carrierUid ?? "").trim();
+    if (!carrier) throw new Error("carrierUid is required");
+    const ts = now();
+    await this.db.execute(
+      "UPDATE seller_orders SET service_provider_id=?,updated_at=? WHERE id=?",
+      [carrier, ts, sellerOrderId],
+    );
+    await this.db.execute(
+      "UPDATE order_items SET service_provider_id=?,shipping_notes=?,updated_at=? WHERE seller_order_id=?",
+      [carrier, `carrier:${carrier}`, ts, sellerOrderId],
+    );
+    await this.db.execute(
+      "UPDATE custom_request_items SET service_provider_id=?,shipping_notes=?,updated_at=? WHERE seller_order_id=?",
+      [carrier, `carrier:${carrier}`, ts, sellerOrderId],
+    );
+    await this.db.execute(
+      "UPDATE shipping_quotes SET service_provider_id=?,updated_at=? WHERE seller_order_id=? AND status IN ('requested','pending_buyer','rejected','expired')",
+      [carrier, ts, sellerOrderId],
+    );
+    await this.audit(
+      so.order_id,
+      "seller_order",
+      sellerOrderId,
+      "updated",
+      actor,
+      so.status,
+      so.status,
+      { serviceProviderId: carrier, action: "assign_carrier" },
+    );
+    await this.recalculateAll(so.order_id, actor);
+    return this.one("SELECT * FROM seller_orders WHERE id=?", [sellerOrderId]);
+  }
+
+  async buyerUpdateDeliveryAddress(
+    orderId: string,
+    deliveryAddress: Record<string, unknown>,
+    actor: Actor,
+  ) {
+    const order = await this.requireBuyerOrder(orderId, actor);
+    const address = String(deliveryAddress.address ?? "").trim();
+    if (!address) throw new Error("Delivery address is required");
+    const snapshot = {
+      buyerUid: order.buyer_id,
+      phone: String(deliveryAddress.phone ?? "").trim(),
+      address,
+      latitude:
+        typeof deliveryAddress.latitude === "number"
+          ? deliveryAddress.latitude
+          : deliveryAddress.latitude
+            ? Number(deliveryAddress.latitude)
+            : null,
+      longitude:
+        typeof deliveryAddress.longitude === "number"
+          ? deliveryAddress.longitude
+          : deliveryAddress.longitude
+            ? Number(deliveryAddress.longitude)
+            : null,
+      paymentMethod: String(deliveryAddress.paymentMethod ?? "cash_on_delivery"),
+    };
+    const ts = now();
+    await this.db.execute(
+      "UPDATE orders SET delivery_address_snapshot_json=?,updated_at=? WHERE id=?",
+      [JSON.stringify(snapshot), ts, orderId],
+    );
+    await this.audit(
+      orderId,
+      "order",
+      orderId,
+      "updated",
+      actor,
+      order.calculated_status,
+      order.calculated_status,
+      { deliveryAddressUpdated: true, action: "buyer_address_applied" },
+    );
+    return this.one("SELECT * FROM orders WHERE id=?", [orderId]);
+  }
+
+  async stampSellerOrderFulfillmentSnapshot(
+    sellerOrderId: string,
+    snapshot: SellerFulfillmentSnapshot,
+    actor: Actor,
+  ) {
+    const sellerOrder = await this.one(
+      "SELECT order_id,status FROM seller_orders WHERE id=?",
+      [sellerOrderId],
+    );
+    if (!sellerOrder) throw new Error("Seller order not found");
+    const ts = now();
+    await this.db.execute(
+      "UPDATE seller_orders SET fulfillment_snapshot_json=?,updated_at=? WHERE id=?",
+      [serializeSellerFulfillmentSnapshot(snapshot), ts, sellerOrderId],
+    );
+    await this.audit(
+      String(sellerOrder.order_id),
+      "seller_order",
+      sellerOrderId,
+      "updated",
+      actor,
+      sellerOrder.status,
+      sellerOrder.status,
+      { fulfillmentSnapshotUpdated: true },
+    );
+  }
+
+  protected async isSellerOrderShippingLocked(sellerOrderId: string) {
+    const acceptedQuote = await this.one(
+      "SELECT id FROM shipping_quotes WHERE seller_order_id=? AND status='accepted' LIMIT 1",
+      [sellerOrderId],
+    );
+    if (acceptedQuote) return true;
+    const unifiedAccepted = await this.one(
+      `SELECT dp.id FROM delivery_plans dp
+       JOIN delivery_plan_stops dps ON dps.plan_id=dp.id
+       WHERE dps.seller_order_id=? AND dp.status IN ('accepted','completed') LIMIT 1`,
+      [sellerOrderId],
+    );
+    if (unifiedAccepted) return true;
+    const lockedItem = await this.one(
+      `SELECT id FROM order_items WHERE seller_order_id=? AND status IN (
+        'assigned_to_shipment','received_by_carrier','rejected_by_carrier','in_transit',
+        'at_distribution_center','out_for_delivery','delivered','delivery_rejected','delivery_failed'
+      ) LIMIT 1`,
+      [sellerOrderId],
+    );
+    return Boolean(lockedItem);
+  }
+
+  protected async applyMutableSellerShipping(
+    sellerOrderId: string,
+    shippingMinor: number,
+    actor: Actor,
+  ) {
+    const item = await this.one(
+      "SELECT * FROM order_items WHERE seller_order_id=? AND status NOT IN ('seller_rejected','buyer_cancelled','admin_cancelled','closed') ORDER BY created_at ASC,id ASC LIMIT 1",
+      [sellerOrderId],
+    );
+    if (!item) return;
+    await this.setOrderItemShipping(item, shippingMinor);
+    await this.recalculateAll(String(item.order_id), actor);
+  }
+
+  protected async cancelPendingShippingQuotes(sellerOrderId: string, actor: Actor) {
+    const ts = now();
+    await this.db.execute(
+      "UPDATE shipping_quotes SET status='cancelled',responded_at=?,updated_at=? WHERE seller_order_id=? AND status IN ('requested','pending_buyer','rejected','expired')",
+      [ts, ts, sellerOrderId],
+    );
+    const orderId = (
+      await this.one("SELECT order_id FROM seller_orders WHERE id=?", [
+        sellerOrderId,
+      ])
+    )?.order_id;
+    if (orderId) {
+      await this.audit(
+        String(orderId),
+        "shipping_quote",
+        sellerOrderId,
+        "cancelled",
+        actor,
+        "pending",
+        "cancelled",
+        { reason: "fulfillment_reprice" },
+      );
+    }
+  }
+
+  async syncSellerFulfillmentToOpenOrders(
+    sellerUid: string,
+    snapshot: SellerFulfillmentSnapshot,
+    actor: Actor,
+  ) {
+    const sellerOrders = await this.db.execute(
+      `SELECT so.*, o.buyer_id, o.delivery_address_snapshot_json
+       FROM seller_orders so
+       JOIN orders o ON o.id=so.order_id
+       WHERE so.seller_id=?
+       AND o.calculated_status NOT IN ('fully_cancelled','closed','archived')
+       AND so.status NOT IN ('cancelled','closed','fully_fulfilled')
+       AND so.closed_at IS NULL`,
+      [sellerUid],
+    );
+    const orderIds = new Set<string>();
+    const buyerNotifyOrderIds: string[] = [];
+    const buyerUidByOrder = new Map<string, string>();
+
+    for (const sellerOrder of sellerOrders) {
+      const sellerOrderId = String(sellerOrder.id);
+      const orderId = String(sellerOrder.order_id);
+      orderIds.add(orderId);
+      buyerUidByOrder.set(orderId, String(sellerOrder.buyer_id ?? ""));
+
+      await this.stampSellerOrderFulfillmentSnapshot(
+        sellerOrderId,
+        snapshot,
+        actor,
+      );
+      if (await this.isSellerOrderShippingLocked(sellerOrderId)) continue;
+
+      const items = await this.db.execute(
+        "SELECT * FROM order_items WHERE seller_order_id=? AND status NOT IN ('seller_rejected','buyer_cancelled','admin_cancelled','closed')",
+        [sellerOrderId],
+      );
+      const subtotalMinor = items.reduce(
+        (total, item) =>
+          total +
+          Number(item.unit_price ?? 0) * Number(item.quantity ?? 0),
+        0,
+      );
+      const shipping = calculateSellerShippingFromSnapshot(
+        snapshot.shippingPricing,
+        subtotalMinor,
+        items.some((item) => Number(item.requires_special_vehicle) > 0),
+      );
+
+      const stop = await this.one(
+        "SELECT id,plan_id FROM delivery_plan_stops WHERE seller_order_id=? AND status<>'cancelled' LIMIT 1",
+        [sellerOrderId],
+      );
+      if (stop) {
+        await this.db.execute(
+          "UPDATE delivery_plan_stops SET requires_location_quote=?,fallback_shipping_price=?,fallback_special_vehicle_fee=?,updated_at=? WHERE id=?",
+          [
+            shipping.quoteRequired ? 1 : 0,
+            shipping.confirmedShippingMinor,
+            shipping.specialVehicleFeeMinor,
+            now(),
+            stop.id,
+          ],
+        );
+      }
+
+      await this.cancelPendingShippingQuotes(sellerOrderId, actor);
+
+      let address = "";
+      try {
+        const raw = JSON.parse(
+          String(sellerOrder.delivery_address_snapshot_json || "{}"),
+        ) as { address?: string };
+        address = String(raw.address ?? "").trim();
+      } catch {
+        address = "";
+      }
+
+      if (shipping.quoteRequired) {
+        await this.applyMutableSellerShipping(sellerOrderId, 0, actor);
+        if (address) {
+          const existing = await this.one(
+            "SELECT id FROM shipping_quotes WHERE seller_order_id=? LIMIT 1",
+            [sellerOrderId],
+          );
+          if (!existing) {
+            await this.requestShippingQuote(
+              orderId,
+              sellerOrderId,
+              shipping.specialVehicleFeeMinor,
+              { id: "system", role: "admin" },
+            );
+          }
+        }
+      } else {
+        await this.applyMutableSellerShipping(
+          sellerOrderId,
+          shipping.confirmedShippingMinor,
+          actor,
+        );
+      }
+      buyerNotifyOrderIds.push(orderId);
+    }
+
+    return {
+      orderIds: Array.from(orderIds),
+      buyerNotifyOrderIds: Array.from(new Set(buyerNotifyOrderIds)),
+      buyerUidByOrder,
+    };
   }
 }

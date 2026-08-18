@@ -19,6 +19,7 @@ import type {
 } from "./profile-save-controller";
 import type { ProfileEditorSection } from "@/features/profile/entities/profile-editor.entity";
 import type { UserSession } from "@/features/auth/entities/session.entity";
+import { useRouter } from "next/navigation";
 
 interface UseProfileSaveProps {
   session: Pick<UserSession, "uid" | "sessionToken"> | null;
@@ -26,6 +27,11 @@ interface UseProfileSaveProps {
   t: (key: string) => string;
   setActiveTab: (tab: ProfileEditTab) => void;
   setSession: (session: any) => void;
+  returnTo?: string | null;
+}
+
+function isSafeInternalReturnPath(path: string): boolean {
+  return path.startsWith("/") && !path.startsWith("//");
 }
 
 interface UseProfileSaveReturn {
@@ -61,7 +67,9 @@ export function useProfileSave({
   t,
   setActiveTab,
   setSession,
+  returnTo = null,
 }: UseProfileSaveProps): UseProfileSaveReturn {
+  const router = useRouter();
   const [sectionStatuses, setSectionStatuses] = React.useState<
     Record<ProfileEditTab, ProfileSectionStatus | null>
   >({
@@ -274,6 +282,10 @@ export function useProfileSave({
       }
       if (changedSections.includes("discounts")) {
         await discountsController.save();
+      }
+      if (returnTo && isSafeInternalReturnPath(returnTo)) {
+        router.push(returnTo);
+        return;
       }
       setSaveDialog({
         type: 'success',

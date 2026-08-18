@@ -9,74 +9,97 @@ import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { useTranslation } from "@/lib/i18n";
+import { useOrdersListAutoRefresh } from "./OrderNotificationsController";
 import {
   formatMoney,
-  queryWithActor,
+  formatOrderDate,
+  primaryViewerRole,
+  queryForOrderList,
   statusLabel,
+  viewerRoleLabel,
 } from "./order-labels";
-import type { DbRow, OrderRole } from "./order-types";
+import type { OrderListItem, OrderListResponse } from "./order-types";
+
+const PAGE_SIZE = 5;
 
 export function OrdersPageContent() {
   const { session, isLoading: sessionLoading } = useSession();
   const { locale } = useTranslation();
   const copy = locale === "ar"
     ? {
-        title: "الطلبات", login: "يجب تسجيل الدخول لعرض الطلبات المرتبطة بك.",
-        description: "متابعة الطلبات حسب دورك داخل الطلب: مشتري، بائع، أو مقدم توصيل.",
-        admin: "تحكم السوبر أدمن", emptyTitle: "لا توجد طلبات",
-        emptyDescription: "عند إنشاء طلب أو ارتباطك بطلب كبائع أو مقدم توصيل سيظهر هنا.",
-        orderNumber: "رقم الطلب", total: "الإجمالي", remaining: "المتبقي عند الاستلام",
+        title: "الطلبات",
+        login: "يجب تسجيل الدخول لعرض الطلبات المرتبطة بك.",
+        description: "أحدث الطلبات المرتبطة بحسابك بكل الأدوار.",
+        admin: "تحكم السوبر أدمن",
+        emptyTitle: "لا توجد طلبات",
+        emptyDescription:
+          "عند إنشاء طلب أو ارتباطك بطلب كبائع أو مقدم توصيل سيظهر هنا.",
+        orderNumber: "رقم الطلب",
+        orderDate: "تاريخ الطلب",
+        yourRole: "دورك في الطلب",
+        total: "الإجمالي",
+        remaining: "المتبقي عند الاستلام",
         loadFailed: "تعذر تحميل الطلبات.",
-        roles: { buyer: "كمشتري", seller: "كبائع", service_provider: "كمقدم توصيل" },
+        loadMore: "جلب المزيد",
+        loadingMore: "جاري التحميل...",
       }
     : {
-        title: "Orders", login: "Sign in to view orders associated with you.",
-        description: "Track orders by your role: buyer, seller, or delivery provider.",
-        admin: "Super admin control", emptyTitle: "No orders",
-        emptyDescription: "Orders you create or join as a seller or delivery provider will appear here.",
-        orderNumber: "Order number", total: "Total", remaining: "Remaining on delivery",
+        title: "Orders",
+        login: "Sign in to view orders associated with you.",
+        description: "Your latest orders across every role.",
+        admin: "Super admin control",
+        emptyTitle: "No orders",
+        emptyDescription:
+          "Orders you create or join as a seller or delivery provider will appear here.",
+        orderNumber: "Order number",
+        orderDate: "Order date",
+        yourRole: "Your role",
+        total: "Total",
+        remaining: "Remaining on delivery",
         loadFailed: "Unable to load orders.",
-        roles: { buyer: "As buyer", seller: "As seller", service_provider: "As delivery provider" },
+        loadMore: "Load more",
+        loadingMore: "Loading...",
       };
-  const roleTabs: { role: OrderRole; label: string }[] = [
-    { role: "buyer", label: copy.roles.buyer },
-    { role: "seller", label: copy.roles.seller },
-    { role: "service_provider", label: copy.roles.service_provider },
-  ];
   const admin = isSuperAdmin(session);
-  const [role, setRole] = React.useState<OrderRole>("buyer");
-  const activeRole: OrderRole = admin ? "admin" : role;
-  const [orders, setOrders] = React.useState<DbRow[]>([]);
+  const [items, setItems] = React.useState<OrderListItem[]>([]);
+  const [hasMore, setHasMore] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [loadingMore, setLoadingMore] = React.useState(false);
   const [error, setError] = React.useState("");
+  const itemsLengthRef = React.useRef(0);
+  itemsLengthRef.current = items.length;
 
-  React.useEffect(() => {
-    if (!session?.uid) return;
-    let cancelled = false;
-    const load = async () => {
-      setLoading(true);
+  const loadOrders = React.useCallback(
+    async (reset = false) => {
+      if (!session?.uid) return;
+      const offset = reset ? 0 : itemsLengthRef.current;
+      if (reset) setLoading(true);
+      else setLoadingMore(true);
       setError("");
       try {
-        const route = `${ASOL_API_ROUTES.orders.root}?${queryWithActor(
+        const route = `${ASOL_API_ROUTES.orders.root}?${queryForOrderList(
           session.uid,
           session.phone,
-          activeRole,
+          { limit: PAGE_SIZE, offset },
         )}`;
-        const data = await asolApi.get<DbRow[]>(route);
-        if (!cancelled) setOrders(data);
+        const data = await asolApi.get<OrderListResponse>(route);
+        setItems((current) => (reset ? data.items : [...current, ...data.items]));
+        setHasMore(data.hasMore);
       } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : copy.loadFailed);
-        }
+        setError(err instanceof Error ? err.message : copy.loadFailed);
       } finally {
-        if (!cancelled) setLoading(false);
+        setLoading(false);
+        setLoadingMore(false);
       }
-    };
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [activeRole, copy.loadFailed, session?.phone, session?.uid]);
+    },
+    [copy.loadFailed, session?.phone, session?.uid],
+  );
+
+  React.useEffect(() => {
+    void loadOrders(true);
+  }, [loadOrders]);
+
+  useOrdersListAutoRefresh(() => loadOrders(true), session?.uid);
 
   if (sessionLoading) {
     return (
@@ -90,9 +113,7 @@ export function OrdersPageContent() {
     return (
       <main className="mx-auto max-w-4xl px-4 py-10 text-center">
         <h1 className="text-2xl font-bold">{copy.title}</h1>
-        <p className="mt-3 text-muted-foreground">
-          {copy.login}
-        </p>
+        <p className="mt-3 text-muted-foreground">{copy.login}</p>
       </main>
     );
   }
@@ -102,33 +123,14 @@ export function OrdersPageContent() {
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
           <h1 className="text-2xl font-bold">{copy.title}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {copy.description}
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">{copy.description}</p>
         </div>
         {admin ? (
           <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
             <ShieldCheck className="h-4 w-4" />
             {copy.admin}
           </span>
-        ) : (
-          <div className="inline-flex overflow-hidden rounded-xl border border-outline-variant bg-surface">
-            {roleTabs.map((tab) => (
-              <button
-                key={tab.role}
-                type="button"
-                onClick={() => setRole(tab.role)}
-                className={`px-4 py-2 text-sm font-semibold transition ${
-                  role === tab.role
-                    ? "bg-primary text-on-primary"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        )}
+        ) : null}
       </div>
 
       {error ? (
@@ -141,7 +143,7 @@ export function OrdersPageContent() {
         <div className="flex min-h-[30vh] items-center justify-center">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
-      ) : orders.length === 0 ? (
+      ) : items.length === 0 ? (
         <section className="rounded-xl border border-dashed border-outline-variant p-10 text-center">
           <ClipboardList className="mx-auto h-10 w-10 text-muted-foreground" />
           <h2 className="mt-4 text-lg font-bold">{copy.emptyTitle}</h2>
@@ -150,42 +152,95 @@ export function OrdersPageContent() {
           </p>
         </section>
       ) : (
-        <section className="grid gap-4 md:grid-cols-2">
-          {orders.map((order) => {
-            const id = String(order.id);
-            return (
-              <Link
-                key={id}
-                href={`/orders/details?orderId=${encodeURIComponent(id)}&role=${activeRole}`}
-                className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition hover:border-primary"
+        <>
+          <section className="grid gap-4 md:grid-cols-2">
+            {items.map(({ order, viewerRoles }) => {
+              const id = String(order.id);
+              const detailRole = primaryViewerRole(viewerRoles, admin);
+              return (
+                <Link
+                  key={id}
+                  href={`/orders/details?orderId=${encodeURIComponent(id)}&role=${detailRole}`}
+                  className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition hover:border-primary"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs text-muted-foreground">{copy.orderNumber}</p>
+                      <h2 className="font-bold">
+                        {String(order.order_number ?? id)}
+                      </h2>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {copy.orderDate}: {formatOrderDate(order.created_at, locale)}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold">
+                      {statusLabel(order.calculated_status, locale)}
+                    </span>
+                  </div>
+
+                  {viewerRoles.length > 0 ? (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <span className="text-xs text-muted-foreground">
+                        {copy.yourRole}:
+                      </span>
+                      {viewerRoles.map((role) => (
+                        <span
+                          key={`${id}-${role}`}
+                          className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary"
+                        >
+                          {viewerRoleLabel(role, locale)}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">{copy.total}</p>
+                      <p className="font-bold">
+                        {formatMoney(
+                          order.grand_total,
+                          String(order.currency ?? "EGP"),
+                          locale,
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">{copy.remaining}</p>
+                      <p className="font-bold">
+                        {formatMoney(
+                          order.remaining_total,
+                          String(order.currency ?? "EGP"),
+                          locale,
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </section>
+
+          {hasMore ? (
+            <div className="mt-6 flex justify-center">
+              <button
+                type="button"
+                onClick={() => void loadOrders()}
+                disabled={loadingMore}
+                className="inline-flex min-w-40 items-center justify-center gap-2 rounded-xl border border-outline-variant bg-surface px-5 py-2.5 text-sm font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs text-muted-foreground">{copy.orderNumber}</p>
-                    <h2 className="font-bold">{String(order.order_number ?? id)}</h2>
-                  </div>
-                  <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold">
-                    {statusLabel(order.calculated_status, locale)}
-                  </span>
-                </div>
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <p className="text-muted-foreground">{copy.total}</p>
-                    <p className="font-bold">
-                      {formatMoney(order.grand_total, String(order.currency ?? "EGP"), locale)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">{copy.remaining}</p>
-                    <p className="font-bold">
-                      {formatMoney(order.remaining_total, String(order.currency ?? "EGP"), locale)}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </section>
+                {loadingMore ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {copy.loadingMore}
+                  </>
+                ) : (
+                  copy.loadMore
+                )}
+              </button>
+            </div>
+          ) : null}
+        </>
       )}
     </main>
   );

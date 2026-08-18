@@ -12,6 +12,7 @@ import {
   Loader2,
   MapPin,
   PackageCheck,
+  RotateCcw,
   Route,
   Send,
   ShieldCheck,
@@ -34,9 +35,12 @@ import {
   canRequestReturnStatus,
   carrierFromSellerOrder,
   formatMoney,
-  profileAddress,
+  parseSellerOrderFulfillmentSnapshot,
+  profileFulfillmentSectionHref,
   profileName,
   queryWithActor,
+  sellerFulfillmentReturnsSummary,
+  sellerFulfillmentShippingSummary,
   statusLabel,
 } from "../order-labels";
 import type { DbRow, OrderDetails, OrderRole } from "../order-types";
@@ -44,6 +48,116 @@ import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 import { RunAction, text, isPendingSellerResponse } from "./OrderDetailsPageContent.navigation-summary";
 import { ShippingQuotePanel, CustomRequestRow } from "./OrderDetailsPageContent.shipping-quotes";
 import { ProfileLinks, OrderItemRow } from "./OrderDetailsPageContent.order-items";
+import { useProfileFulfillmentSettings } from "@/features/profile/hooks/use-profile-fulfillment-settings";
+import { useProfileCarrierLabels } from "@/features/profile/hooks/use-profile-carrier-labels";
+
+function SellerCarrierLinkPanel({
+  orderId,
+  sellerOrderId,
+  busyAction,
+  runAction,
+}: {
+  orderId: string;
+  sellerOrderId: string;
+  busyAction: string;
+  runAction: RunAction;
+}) {
+  const { settings: fulfillmentSettings, isLoading: loadingFulfillment } =
+    useProfileFulfillmentSettings();
+  const carrierUids = fulfillmentSettings.carrierUids.filter(Boolean);
+  const [selectedCarrierUid, setSelectedCarrierUid] = React.useState(
+    carrierUids[0] ?? "",
+  );
+  React.useEffect(() => {
+    if (carrierUids.length > 0 && !carrierUids.includes(selectedCarrierUid)) {
+      setSelectedCarrierUid(carrierUids[0]);
+    }
+  }, [carrierUids, selectedCarrierUid]);
+  const carrierLabels = useProfileCarrierLabels(carrierUids);
+  const labelForUid = (uid: string) =>
+    carrierLabels.find((entry) => entry.uid === uid)?.label ?? uid;
+  const profileHref = `/profile?mode=edit&tab=fulfillment&returnTo=${encodeURIComponent(
+    `/orders/details?orderId=${orderId}&role=seller`,
+  )}`;
+
+  if (loadingFulfillment) {
+    return (
+      <div className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm text-muted-foreground">
+        جاري تحميل إعدادات الشحن...
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-3 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
+      <p className="leading-6 text-on-surface">{text.noCarrierSellerHint}</p>
+      {carrierUids.length > 1 ? (
+        <label className="mt-3 block space-y-1.5">
+          <span className="text-xs font-semibold text-muted-foreground">
+            مقدم التوصيل
+          </span>
+          <select
+            value={selectedCarrierUid}
+            onChange={(event) => setSelectedCarrierUid(event.target.value)}
+            className="h-10 w-full rounded-lg border border-outline-variant bg-surface px-3 text-sm"
+          >
+            {carrierUids.map((uid) => (
+              <option key={uid} value={uid}>
+                {labelForUid(uid)}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Link
+          href={profileHref}
+          className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
+        >
+          <Truck className="h-4 w-4" />
+          {text.linkCarrierInProfile}
+        </Link>
+        {selectedCarrierUid ? (
+          <OrderActionButton
+            action="seller_assign_delivery_carrier"
+            busyAction={busyAction}
+            id={sellerOrderId}
+            onClick={() =>
+              runAction("seller_assign_delivery_carrier", {
+                sellerOrderId,
+                carrierUid: selectedCarrierUid,
+              })
+            }
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function SellerFulfillmentEditPanel({ orderId }: { orderId: string }) {
+  return (
+    <div className="mt-3 rounded-lg border border-outline-variant bg-muted/20 p-3 text-sm">
+      <p className="leading-6 text-on-surface">{text.sellerFulfillmentHint}</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Link
+          href={profileFulfillmentSectionHref(orderId, "shipping")}
+          className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
+        >
+          <CircleDollarSign className="h-4 w-4" />
+          {text.editShippingPricing}
+        </Link>
+        <Link
+          href={profileFulfillmentSectionHref(orderId, "returns")}
+          className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
+        >
+          <RotateCcw className="h-4 w-4" />
+          {text.editReturnPolicy}
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 export function deliveryStopAddress(snapshot: unknown) {
   try {
@@ -107,6 +221,11 @@ export function SellerOrderCard({
   const canRejectSellerDelivery = [...sellerItems, ...customItems].some(
     (item) => canRejectDeliveryStatus(item.status),
   );
+  const needsCarrierLink = isSeller && !carrierId && !unifiedPlanActive;
+  const showFulfillmentEdit =
+    isSeller && !["cancelled", "closed"].includes(String(sellerOrder.status));
+  const orderId = String(details.order.id ?? sellerOrder.order_id ?? "");
+  const fulfillmentSnapshot = parseSellerOrderFulfillmentSnapshot(sellerOrder);
 
   return (
     <article className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm">
@@ -125,6 +244,28 @@ export function SellerOrderCard({
           )}
         </div>
         <ProfileLinks sellerId={sellerId} carrierId={carrierId} />
+      </div>
+
+      {needsCarrierLink ? (
+        <SellerCarrierLinkPanel
+          orderId={orderId}
+          sellerOrderId={String(sellerOrder.id)}
+          busyAction={busyAction}
+          runAction={runAction}
+        />
+      ) : null}
+
+      {showFulfillmentEdit ? <SellerFulfillmentEditPanel orderId={orderId} /> : null}
+
+      <div className="mt-3 rounded-lg border border-outline-variant bg-muted/10 p-3 text-sm">
+        <p className="text-xs font-semibold text-muted-foreground">تسعير الشحن على الطلب</p>
+        <p className="mt-1 leading-6 text-on-surface">
+          {sellerFulfillmentShippingSummary(fulfillmentSnapshot)}
+        </p>
+        <p className="mt-3 text-xs font-semibold text-muted-foreground">سياسة الإرجاع على الطلب</p>
+        <p className="mt-1 leading-6 text-on-surface">
+          {sellerFulfillmentReturnsSummary(fulfillmentSnapshot)}
+        </p>
       </div>
 
       {hasPendingItems ? (

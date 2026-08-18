@@ -34,9 +34,9 @@ import {
   canRequestReturnStatus,
   carrierFromSellerOrder,
   formatMoney,
-  profileAddress,
   profileName,
   queryWithActor,
+  resolveBuyerDeliveryDisplay,
   statusLabel,
 } from "./order-labels";
 import type { DbRow, OrderDetails, OrderRole } from "./order-types";
@@ -46,6 +46,8 @@ import { UnifiedDeliveryPlanPanel } from "./order-details/OrderDetailsPageConten
 import { SellerOrderCard } from "./order-details/OrderDetailsPageContent.seller-orders";
 import { OrderLevelActions, ShipmentsPanel } from "./order-details/OrderDetailsPageContent.shipments";
 import { ReturnsPanel } from "./order-details/OrderDetailsPageContent.returns";
+import { BuyerDeliveryAddressPanel } from "./order-details/OrderDetailsPageContent.buyer-delivery";
+import { useOrderDetailsAutoRefresh } from "./OrderNotificationsController";
 
 export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
   const { session, isLoading: sessionLoading } = useSession();
@@ -79,6 +81,8 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
   React.useEffect(() => {
     void load();
   }, [load]);
+
+  useOrderDetailsAutoRefresh(orderId, load, session?.uid);
 
   const runAction: RunAction = async (action, payload) => {
     if (!session?.uid) return;
@@ -139,7 +143,7 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
   const order = details.order;
   const buyerId = String(order.buyer_id ?? "");
   const buyer = details.profiles[buyerId];
-  const buyerLocation = profileAddress(buyer);
+  const buyerLocation = resolveBuyerDeliveryDisplay(order, buyer);
   const currency = String(order.currency ?? "EGP");
   const isBuyer = admin || session.uid === buyerId;
   const canRejectAnyDelivery = [
@@ -171,6 +175,15 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
         <p className="mb-4 rounded-lg bg-error/15 px-3 py-2 text-sm text-error">
           {error}
         </p>
+      ) : null}
+
+      {isBuyer ? (
+        <BuyerDeliveryAddressPanel
+          order={order}
+          orderId={orderId}
+          busyAction={busyAction}
+          runAction={runAction}
+        />
       ) : null}
 
       <OrderSummary

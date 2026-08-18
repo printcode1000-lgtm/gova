@@ -182,3 +182,63 @@ export async function waitForVercelProductionDeployment(input: {
 export function printDeploymentReport(report: VercelDeploymentReport): void {
   console.log(`[ASOL_DEPLOY_REPORT] ${JSON.stringify(report)}`);
 }
+
+export async function redeployLatestProduction(input: {
+  token: string;
+  projectName: string;
+  projectId?: string;
+  teamId?: string;
+}): Promise<{ url?: string; deploymentId?: string }> {
+  let projectId = input.projectId?.trim() ?? "";
+  if (!projectId) {
+    const projectResponse = await fetch(
+      withTeam(
+        `https://api.vercel.com/v9/projects/${encodeURIComponent(input.projectName)}`,
+        input.teamId,
+      ),
+      { headers: headers(input.token), cache: 'no-store' },
+    );
+    if (!projectResponse.ok) {
+      throw new Error(`Vercel project "${input.projectName}" not found (${projectResponse.status}).`);
+    }
+    const project = (await projectResponse.json()) as { id: string };
+    projectId = project.id;
+  }
+
+  const listUrl = withTeam(
+    `https://api.vercel.com/v6/deployments?projectId=${encodeURIComponent(projectId)}&limit=1&target=production`,
+    input.teamId,
+  );
+  const listResponse = await fetch(listUrl, {
+    headers: headers(input.token),
+    cache: 'no-store',
+  });
+  if (!listResponse.ok) {
+    throw new Error(`Vercel deployment lookup failed (${listResponse.status}).`);
+  }
+  const list = (await listResponse.json()) as { deployments?: VercelDeploymentRecord[] };
+  const latest = list.deployments?.[0];
+  const deploymentId = latest?.uid ?? latest?.id;
+  if (!deploymentId) {
+    throw new Error('No production deployment found to redeploy.');
+  }
+
+  const redeployResponse = await fetch(withTeam('https://api.vercel.com/v13/deployments', input.teamId), {
+    method: 'POST',
+    headers: headers(input.token),
+    body: JSON.stringify({
+      name: input.projectName,
+      deploymentId,
+      target: 'production',
+    }),
+  });
+  const body = await redeployResponse.text();
+  if (!redeployResponse.ok) {
+    throw new Error(`Vercel redeploy failed (${redeployResponse.status}): ${body}`);
+  }
+  const created = JSON.parse(body) as { url?: string; id?: string };
+  return {
+    url: created.url ? `https://${created.url}` : undefined,
+    deploymentId: created.id,
+  };
+}

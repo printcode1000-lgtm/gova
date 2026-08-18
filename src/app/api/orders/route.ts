@@ -16,8 +16,16 @@ export async function GET(request: Request) {
         },
         "buyer",
       );
+      const limit = Number(url.searchParams.get("limit") ?? "5");
+      const offset = Number(url.searchParams.get("offset") ?? "0");
       const repo = getMarketplaceOrderQueries();
-      return apiSuccess(await repo.listForActor(actor));
+      return apiSuccess(
+        await repo.listForUser(actor.id, {
+          limit,
+          offset,
+          isAdmin: actor.role === "admin",
+        }),
+      );
     } catch (error) {
       return mapOrderError(error);
     }

@@ -110,6 +110,63 @@ export function assertStaticProfilesBaseUrl(): void {
   console.log(`Static profiles base URL: ${profilesBaseUrl}`);
 }
 
+export function assertStaticMobilePushCredentialBlob(): void {
+  const blob =
+    process.env.NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB?.trim() ||
+    process.env.ASOL_MOBILE_PUSH_CREDENTIAL_BLOB?.trim() ||
+    "";
+  if (blob.length < 40) {
+    throw new Error(
+      "A static/native build needs an embedded mobile push credential blob. " +
+        "Set ASOL_MOBILE_PUSH_CREDENTIAL_BLOB (and bake NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB).",
+    );
+  }
+  process.env.NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB = blob;
+  console.log("Static mobile push credential blob resolved.");
+}
+
+export function auditStaticMobilePushSecurity(outDirectory: string): void {
+  const chunkDirectory = path.join(outDirectory, "_next", "static", "chunks");
+  if (!existsSync(chunkDirectory)) return;
+
+  let blobBaked = false;
+  const forbidden = [
+    /ASOL_MOBILE_PUSH_UNLOCK_KEY/,
+    /firebase-adminsdk@[a-z0-9-]+\.iam\.gserviceaccount\.com/,
+    /-----BEGIN PRIVATE KEY-----\r?\nMII[A-Za-z0-9+/=]{32,}/,
+  ];
+
+  const walk = (directory: string): void => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        walk(entryPath);
+        continue;
+      }
+      if (!entry.name.endsWith(".js")) continue;
+      const source = readFileSync(entryPath, "utf8");
+      if (/mobilePushCredentialBlob:\s*"[A-Za-z0-9+/=]{40,}"/.test(source)) {
+        blobBaked = true;
+      }
+      for (const pattern of forbidden) {
+        if (pattern.test(source)) {
+          throw new Error(
+            `Static bundle exposes a mobile push secret (${path.relative(outDirectory, entryPath)}).`,
+          );
+        }
+      }
+    }
+  };
+  walk(chunkDirectory);
+
+  if (!blobBaked) {
+    throw new Error(
+      "Could not find a baked mobile push credential blob in the static bundle.",
+    );
+  }
+  console.log("Static mobile push security audit passed.");
+}
+
 export function auditStaticApiBaseUrl(outDirectory: string): void {
   const chunkDirectory = path.join(outDirectory, "_next", "static", "chunks");
   if (!existsSync(chunkDirectory)) {

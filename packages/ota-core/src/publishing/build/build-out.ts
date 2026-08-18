@@ -11,7 +11,9 @@ import {
   assertStaticOrdersBaseUrl,
   assertStaticProductsBaseUrl,
   assertStaticProfilesBaseUrl,
+  assertStaticMobilePushCredentialBlob,
   auditStaticApiBaseUrl,
+  auditStaticMobilePushSecurity,
   nextBinary,
   rootDir,
   rootOutDir,
@@ -160,6 +162,7 @@ export async function buildStaticOut(
     assertStaticProductsBaseUrl();
     assertStaticOrdersBaseUrl();
     assertStaticProfilesBaseUrl();
+    assertStaticMobilePushCredentialBlob();
     prepareTempBuildDir();
 
     try {
@@ -183,6 +186,7 @@ export async function buildStaticOut(
       }
 
       auditStaticApiBaseUrl(rootOutDir);
+      auditStaticMobilePushSecurity(rootOutDir);
       auditCatalogStudioExcluded();
       auditCapacitorDefaultBundle(rootOutDir);
       await writeLocalWebManifest(options.diagnostic ?? false);

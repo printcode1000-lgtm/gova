@@ -33,7 +33,9 @@ npm run db:drizzle -- generate --config drizzle.profile.config.ts
 npm run db:ensure
 npm run db:schema:sync
 npm run db:provision:turso
-npm run db:push:vercel-env
+npm run provision:mobile-push   # native outbound push credentials → .env.local
+npm run db:push:vercel-env      # Turso + bridge URLs + ASOL_MOBILE_PUSH_* when provisioned
+npm run deploy:redeploy-main    # pick up new env vars on the GitHub-linked main app
 npm run data-access:sync-public
 
 # Cloudflare R2

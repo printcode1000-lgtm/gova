@@ -32,6 +32,40 @@ On successful submission, the route issues signed `order.received` notification
 grants for every seller in the cart. The buyer's client delivers those grants
 through the notification bridge so each seller is notified on their own devices.
 
+When a seller order has no `service_provider_id`, the seller sees a link to
+`/profile?mode=edit&tab=fulfillment` (with `returnTo` back to the order) and can
+call `seller_assign_delivery_carrier` after linking a provider in profile
+fulfillment settings. The action copies the chosen carrier onto the seller order
+and its items.
+
+While the seller order is still open, the seller order card also shows links to
+`/profile?mode=edit&tab=fulfillment&section=shipping` and
+`section=returns` (each with `returnTo` back to the order) so shipping pricing
+and return policy can be edited in place. Saving fulfillment settings from
+profile propagates those changes to active orders and re-runs the same shipping
+reprice path used at order creation when the seller order is not yet locked.
+
+## Natural-path snapshots
+
+Late changes (buyer address, carrier link, fulfillment edits) must behave as if
+the data existed at order creation — not as a one-off patch on top of stale UI.
+
+| Data | Snapshot column | Natural-path rule |
+|------|-----------------|-------------------|
+| Buyer delivery | `orders.delivery_address_snapshot_json` | Written on create when available; `buyer_apply_delivery_address` overwrites the snapshot and re-bootstraps location quotes. UI reads the snapshot, not the live buyer profile. |
+| Seller shipping/returns | `seller_orders.fulfillment_snapshot_json` | Stamped on cart/custom-request create and on profile fulfillment save (`syncSellerFulfillmentToOpenOrders`). Order cards display this snapshot; profile edits update open orders then reprice. |
+| Carrier | `seller_orders.service_provider_id` + item `shipping_notes` | Assigned at create when configured; `seller_assign_delivery_carrier` copies the chosen provider and may request location quotes when an address snapshot exists. |
+
+Order-related notifications dispatch `asol:orders:data-refresh` so open order
+list and detail pages reload party-visible data after any notified change.
+
+Every order mutation route issues signed notification grants to the other
+parties (never the actor). Templates live in
+`packages/notifications-core/src/config/templates/` with expressive emoji
+prefixes in titles. Coverage includes item accept/reject, custom pricing,
+cancellations, returns, shipment progress, shipping quotes, delivery plans,
+address/carrier linking, fulfillment sync, and order creation acknowledgements.
+
 ## Catalog order flow
 
 1. Call `createProductOrder` with currency, delivery snapshot, and the authenticated buyer actor.

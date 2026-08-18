@@ -110,7 +110,7 @@ async function main() {
   assert.ok(arabic, "Arabic devices must receive their own payload.");
   assert.ok(english, "English devices must receive their own payload.");
 
-  assert.equal(arabic.payload.title, "عرض شحن جديد");
+  assert.equal(arabic.payload.title, "💸 عرض شحن جديد");
   assert.equal(english.payload.title, "New shipping quote");
   assert.match(arabic.payload.body ?? "", /راجع الطلب/);
   assert.match(english.payload.body ?? "", /Open the order/);

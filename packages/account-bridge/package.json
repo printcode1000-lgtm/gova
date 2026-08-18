@@ -16,6 +16,6 @@
     }
   },
   "scripts": {
-    "test": "npx tsx src/tests/index.test.ts"
+    "test": "npx tsx src/tests/index.test.ts && npx tsx src/tests/mobile-push.test.ts"
   }
 }

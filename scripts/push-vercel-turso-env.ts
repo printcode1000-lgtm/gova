@@ -66,6 +66,11 @@ const NOTIFICATIONS_SERVICE_KEYS = [
   // 404: the approval API could not read the manifest, and failing closed means
   // nobody could install anything.
   'NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL',
+  // Native outbound push: unlock key (server only) and encrypted Firebase blob.
+  // Provision locally with `npm run provision:mobile-push`.
+  'ASOL_MOBILE_PUSH_UNLOCK_KEY',
+  'ASOL_MOBILE_PUSH_CREDENTIAL_BLOB',
+  'NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB',
 ] as const;
 
 const VERCEL_KEYS = [...LEGACY_TURSO_KEYS, ...SHARD_TURSO_KEYS] as const;

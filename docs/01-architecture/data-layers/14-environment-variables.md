@@ -138,6 +138,14 @@ NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL=https://asol-notifications.vercel.app
 # Must be byte-identical on both accounts. Falls back to
 # ASOL_SESSION_SIGNING_SECRET when unset.
 ASOL_NOTIFICATION_GRANT_SECRET=
+# Server-only. Native shells unlock Firebase credentials once per device.
+# Generate locally: npm run provision:mobile-push
+# ASOL_MOBILE_PUSH_UNLOCK_KEY: 32-byte AES key (hex). Main app server only — never NEXT_PUBLIC.
+# ASOL_MOBILE_PUSH_CREDENTIAL_BLOB: encrypted Firebase service account (server copy for mismatch checks).
+# NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB: same ciphertext baked into native/static bundles.
+ASOL_MOBILE_PUSH_UNLOCK_KEY=
+ASOL_MOBILE_PUSH_CREDENTIAL_BLOB=
+NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB=
 # Vercel API token for the notifications account (deploy script only).
 VERCEL_NOTIFICATIONS_TOKEN=
 ```
@@ -149,12 +157,21 @@ Which deployment gets what:
 | `TURSO_NOTIFICATIONS_DATABASE_URL` / `_AUTH_TOKEN` | yes — token CRUD, recipients | yes — resolves tokens to send |
 | `ASOL_NOTIFICATION_GRANT_SECRET` | yes — signs grants | yes — verifies them |
 | `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | yes — client-safe | **no** — it is the service |
-| `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*`, `WEB_PUSH_VAPID_PRIVATE_KEY` | not needed | yes |
+| `ASOL_MOBILE_PUSH_UNLOCK_KEY` | yes — server only, unlock route | **no** |
+| `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | yes — server mismatch guard | **no** |
+| `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | yes — baked into static/Capacitor bundles | **no** |
+| `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `APNS_*`, `WEB_PUSH_VAPID_PRIVATE_KEY` | not needed for web bridge; source for `provision:mobile-push` | yes — web fan-out |
 | `TURSO_DATABASE_URL`, product, advertisements, shards | yes | **no** |
 
 The notifications account never receives users, product, or shard credentials.
 `sendToUsersLocally` needs only the notifications database, so identity checks
 and recipient enrichment stay on the main app.
+
+**Native mobile push credentials** are provisioned on the main app only. Run
+`npm run provision:mobile-push` locally (requires `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`
+in `.env.local`), then copy the three `ASOL_MOBILE_PUSH_*` / `NEXT_PUBLIC_*` values
+to the main app Vercel project. Static builds assert the public blob is present
+(`assertStaticMobilePushCredentialBlob` in `packages/ota-core/src/publishing/build/out-runtime-config.ts`).
 
 `ASOL_NOTIFICATION_INTERNAL_SECRET` is gone. It authorised a server-to-server
 send that no longer exists, and it doubled as the session signing fallback,
@@ -250,13 +267,16 @@ Two Vercel accounts, deployed two different ways.
 
 **Main app** — connected to GitHub and redeployed automatically on every push.
 That link must stay as it is. After local provisioning, push users, product,
-advertisements, notifications, plus every shard runtime variable:
+advertisements, notifications, every shard runtime variable, and native mobile
+push credentials (`ASOL_MOBILE_PUSH_*`, `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`):
 
 ```bash
+npm run provision:mobile-push   # once, after FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64 is set locally
 npm run db:push:vercel-env
+npm run deploy:redeploy-main    # or push to GitHub if you prefer the normal pipeline
 ```
 
-Then redeploy.
+Then wait for the deployment to finish.
 
 **Notifications service** — deliberately **not** connected to GitHub. A push
 changes nothing there; it only ever updates when this command runs:

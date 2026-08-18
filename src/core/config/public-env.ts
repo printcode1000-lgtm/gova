@@ -68,6 +68,13 @@ export const publicEnv = {
   nativeVersion:
     process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ||
     CURRENT_NATIVE_APP_VERSION,
+  /**
+   * AES-256-GCM encrypted Firebase service-account blob for native shells.
+   * Client-safe: useless without the server-only unlock key.
+   * Baked into static/Capacitor bundles by `build-out.ts`.
+   */
+  mobilePushCredentialBlob:
+    process.env.NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB?.trim() || "",
 } as const;
 
 /**
@@ -76,6 +83,11 @@ export const publicEnv = {
  */
 export function getNotificationsPublicUrl(): string | null {
   return publicEnv.notificationsUrl || null;
+}
+
+export function getMobilePushCredentialBlob(): string | null {
+  const blob = publicEnv.mobilePushCredentialBlob.trim();
+  return blob.length > 0 ? blob : null;
 }
 
 /** Prefix a public asset path with the deployment base path (e.g. `/asol` on GitHub Pages). */

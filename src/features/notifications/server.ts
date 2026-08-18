@@ -18,6 +18,8 @@ import {
   notificationBroadcastService,
   notificationTokenService,
 } from "./services/notification-service.bootstrap.server";
+import { notificationRecipientTokensService } from "./services/notification-recipient-tokens.service.server";
+import { mobilePushUnlockService } from "./services/mobile-push-unlock.service.server";
 
 /**
  * Notifications — the server entry point.
@@ -178,6 +180,18 @@ export const notificationsServer = {
 
   /** Attach collected grants to a response body, omitting the key when empty. */
   attachGrants: withNotificationGrants,
+
+  resolveRecipientTokensForGrants(
+    input: Parameters<typeof notificationRecipientTokensService.resolve>[0],
+  ) {
+    return notificationRecipientTokensService.resolve(input);
+  },
+
+  unlockMobilePushCredentials(
+    input: Parameters<typeof mobilePushUnlockService.unlock>[0],
+  ) {
+    return mobilePushUnlockService.unlock(input);
+  },
 } as const;
 
 // ---------------------------------------------------------------------------

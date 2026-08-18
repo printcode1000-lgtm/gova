@@ -18,6 +18,7 @@ export interface OrdersRuntimeConfig {
  */
 export interface OrdersDatabaseTask {
   listForActor: ReturnType<typeof marketplaceOrders.getMarketplaceOrderQueries>['listForActor'];
+  listForUser: ReturnType<typeof marketplaceOrders.getMarketplaceOrderQueries>['listForUser'];
   actorFromInput: typeof actorFromInput;
 }
 
@@ -65,6 +66,8 @@ export function createOrdersRuntime(_config?: OrdersRuntimeConfig): OrdersRuntim
     accountName: ORDERS_DECLARATION.project,
     database: {
       listForActor: (actor) => marketplaceOrders.getMarketplaceOrderQueries().listForActor(actor),
+      listForUser: (userId, options) =>
+        marketplaceOrders.getMarketplaceOrderQueries().listForUser(userId, options),
       actorFromInput,
     },
     config: { serverEnv },

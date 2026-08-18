@@ -52,6 +52,8 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/modules/google-play-console/domain/development-guard.server.ts',
   'src/modules/dev-cloud-backup/tests/dev-cloud-backup-policy.test.ts',
   'src/modules/data-health/tests/development-guard.test.ts',
+  'src/features/notifications/tests/mobile-push-crypto.test.ts',
+  'src/features/notifications/tests/mobile-push-unlock.service.test.ts',
 ]);
 
 /**

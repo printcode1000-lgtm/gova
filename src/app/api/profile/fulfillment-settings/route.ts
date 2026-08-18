@@ -1,7 +1,10 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
+import { notificationsServer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { getMarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/index.server";
 import type { SaveProfileFulfillmentSettingsInput } from "@/features/profile/entities/profile-fulfillment-settings.entity";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
+import { syncSellerFulfillmentToOpenOrders } from "@/features/orders/services/order-progression.server";
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute(
@@ -25,7 +28,21 @@ export async function PUT(request: Request) {
       try {
         const body =
           (await request.json()) as SaveProfileFulfillmentSettingsInput;
-        return apiSuccess(await profileService.saveFulfillmentSettings(body));
+        const saved = await profileService.saveFulfillmentSettings(body);
+        const notificationGrants = notificationsServer.createGrantIssuer(
+          body.uid,
+        );
+        await syncSellerFulfillmentToOpenOrders(
+          body.uid,
+          getMarketplaceOrderService(),
+          notificationGrants,
+        );
+        return apiSuccess(
+          notificationsServer.attachGrants(
+            saved,
+            notificationGrants.toArray(),
+          ),
+        );
       } catch (error) {
         return mapServiceError(error);
       }

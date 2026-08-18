@@ -14,6 +14,7 @@ import { isLoggedIn, type UserSession } from '../entities/session.entity';
 import { sessionService } from '../services/session-service';
 import { clearImageUploadClientState } from '@/features/storage/services/image-upload-client-lifecycle';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { setNotificationGrantDeliveryIdentity } from '@/features/notifications';
 
 interface SessionContextValue {
   session: UserSession | null;
@@ -66,6 +67,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const setSession = useCallback((next: UserSession | null) => {
     setSessionState(next);
   }, []);
+
+  useEffect(() => {
+    if (session !== null && isLoggedIn(session)) {
+      setNotificationGrantDeliveryIdentity({
+        uid: session.uid,
+        phone: session.phone,
+      });
+      return;
+    }
+    setNotificationGrantDeliveryIdentity(null);
+  }, [session]);
 
   const value = useMemo(
     () => ({

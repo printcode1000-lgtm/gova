@@ -852,6 +852,16 @@ POST   /api/notifications/device-token
 DELETE /api/notifications/device-token?uid=&phone=&deviceId=&tokenId=
 ```
 
+Native outbound push (Capacitor only) uses two additional main-app routes:
+
+```text
+POST /api/notifications/recipient-tokens   # verify grants; return FCM tokens + send payload
+POST /api/notifications/mobile-push/unlock # verify identity; decrypt embedded Firebase credentials
+```
+
+See [Notification Bridge Module](notification-bridge-module.md) for provisioning
+(`npm run provision:mobile-push`) and the encrypted credential blob contract.
+
 Real tokens are registered, not placeholders:
 
 | Platform | Source | Stored `provider` |
@@ -990,9 +1000,9 @@ FCM, HTTP 400/410 on APNs) are soft-deleted in the same request.
 
 ## Where The Fan-Out Runs
 
-**The two backends never call each other.** The main app has no code path to the
+**The two backends never call each other on web.** The main app has no code path to the
 notifications service and the service has no code path back. The browser is the
-only thing that touches both.
+only thing that touches both on web.
 
 ```text
 1. browser ──► main app          "accept this order"
@@ -1000,6 +1010,32 @@ only thing that touches both.
 3. browser ──► notifications service   the grant
 4.                                     verify signature, fan out to devices
 ```
+
+### Native installed shells (Capacitor)
+
+On Android and iOS the notifications service is **not** in the delivery path.
+The [notification bridge](notification-bridge-module.md) native branch:
+
+1. Ensures Android notification channels exist (`NativeCore.ensureNotificationChannels`).
+2. Resolves recipient FCM tokens through `POST /api/notifications/recipient-tokens`
+   (grant verification on the main app).
+3. Builds template text with `NotificationBuilder` and resolves the Android channel
+   with the same `resolveAndroidChannelId` rule as the server FCM provider.
+4. Sends via FCM HTTP v1 using credentials unlocked once through
+   `POST /api/notifications/mobile-push/unlock`.
+
+The main app never holds plaintext Firebase credentials in environment variables
+for this path — only the unlock key and an encrypted blob. The blob is also baked
+into the bundle as `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`. Provision with
+`npm run provision:mobile-push`.
+
+```text
+1. device  ──► main app          business action + grant in response
+2. device  ──► main app          recipient-tokens (verify grant → tokens)
+3. device  ──► FCM HTTP v1       direct send (after one-time unlock)
+```
+
+Web behaviour is unchanged.
 
 A **grant** is the whole send — recipients, template, variables, metadata —
 signed by the main app with `ASOL_NOTIFICATION_GRANT_SECRET` and valid for five
@@ -1602,6 +1638,8 @@ driving real flows.
 | `tests/integration/notification-flow.integration.test.ts` | 61 behavioural scenarios through the public API |
 | `tests/notification-builder.test.ts` | Template resolution and variable interpolation |
 | `tests/notification-sound-contract.test.ts` | Sound constants against assets, Native Platform channels, manifest default |
+| `tests/notification-channel-parity.test.ts` | `resolveAndroidChannelId` matches native Java across all categories/priorities/sounds, every `android_push` template, and mobile-push FCM payloads |
+| `tests/mobile-push-*.test.ts`, `packages/account-bridge/src/tests/mobile-push.test.ts` | Encrypted credential provisioning contract, unlock API, no server secrets in the native send graph |
 | `tests/android-notification-inbox-contract.test.ts` | The application-owned Android delivery path: data-only FCM payload, one messaging service, persist-before-display, private/encrypted/bounded storage, uid-scoped acknowledgement, tap protocol, save-before-acknowledge, `/notifications` routing |
 | `androidTest/.../NotificationInboxInstrumentedTest.java` | The device-only properties: real storage location, real encryption, Activity recreation, retention, launch-Intent tap identity, multi-record import |
 | `tests/notification-local-storage-contract.test.ts` | No server table for content; service worker matches AsolDB |

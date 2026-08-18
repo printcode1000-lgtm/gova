@@ -16,7 +16,7 @@ const notification = builder.fromTemplate({
   },
 });
 
-assert.equal(notification.title, "تم إنشاء الطلب");
+assert.equal(notification.title, "🛒 تم إنشاء الطلب");
 assert.equal(notification.body, "تم إنشاء طلبك ASOL-1 بنجاح.");
 assert.equal(notification.route?.href, "/orders/details?orderId=ord_1");
 assert.equal(notification.category, NotificationCategories.Orders);

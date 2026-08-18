@@ -7,6 +7,8 @@ import { sanitizeNotificationEntity } from "../domain/notification-validation";
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
+import { notificationRouter } from "./notification-router";
+import { notifyOrderDataRefreshFromNotification } from "@/lib/order-data-refresh";
 
 /**
  * What happened to an inbound notification.
@@ -25,9 +27,13 @@ export interface NotificationReceiveResult {
   reason?: "duplicate" | "dismissed" | "placeholder" | "invalid";
 }
 
-function emitChanged(uid: string): void {
+function emitChanged(uid: string, notificationId?: string): void {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent(NOTIFICATION_CHANGED_EVENT, { detail: { uid } }));
+  window.dispatchEvent(
+    new CustomEvent(NOTIFICATION_CHANGED_EVENT, {
+      detail: { uid, notificationId },
+    }),
+  );
 }
 
 export class NotificationReceiver {
@@ -65,7 +71,8 @@ export class NotificationReceiver {
       event: NotificationLifecycleEvents.Displayed,
     });
     await notificationBadgeService.refresh(outcome.notification.uid);
-    emitChanged(outcome.notification.uid);
+    notifyOrderDataRefreshFromNotification(outcome.notification);
+    emitChanged(outcome.notification.uid, outcome.notification.id);
     return { notification: outcome.notification, stored: true };
   }
 
@@ -99,6 +106,9 @@ export class NotificationReceiver {
     }
     if (stored.length > 0) {
       await notificationBadgeService.refresh(uid);
+      for (const notification of stored) {
+        notifyOrderDataRefreshFromNotification(notification);
+      }
       emitChanged(uid);
     }
     const storedIds = new Set(stored.map((item) => item.id));

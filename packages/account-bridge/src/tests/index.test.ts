@@ -147,6 +147,7 @@ function runRule0Tests(): void {
     '@/core/config/public-env',
     '@/core/config/runtime-context',
     '@/features/notifications/domain/notification-grant-envelope',
+    '@/features/notifications/domain/notification-grant-delivery-context',
   ]);
   for (const file of bridgeFiles) {
     const content = readFileSync(file, 'utf-8');

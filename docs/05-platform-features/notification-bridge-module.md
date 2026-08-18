@@ -8,22 +8,25 @@ nowhere else.
 ## Why it exists
 
 The main app and the notifications service are deployed to two different Vercel
-accounts, and neither may call the other. Something still has to connect them.
-That something is the browser.
+accounts, and neither may call each other. Something still has to connect them.
+That something is the client.
 
 ```text
-                     browser (this module)
+                     client (this module)
                      ╱                    ╲
         main app ───╱                      ╲─── notifications service
-   issues signed grants                     verifies and delivers
+   issues signed grants                     verifies and delivers (web only)
 ```
 
 The main app knows *who* should be notified — it holds the users and orders
-databases. The notifications service knows *how* to deliver — it holds the
-Firebase and APNs credentials. Neither holds both, and neither has a route to
-the other. The bridge carries a signed decision from one to the other.
+databases. The notifications service knows *how* to deliver on **web** — it
+holds the Firebase and APNs credentials for the browser hop. On **native**
+installed shells the device delivers push directly; the main app still authorises
+recipients through signed grants and short-lived unlock of encrypted credentials.
 
 ## What it does
+
+### Web
 
 1. Every Business API response passes through `AsolApiClient.parseResponse`,
    which calls `scheduleNotificationGrantDelivery(body)`.
@@ -31,8 +34,83 @@ the other. The bridge carries a signed decision from one to the other.
    grants to `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL/api/notifications/send`.
 3. If it does not — which is almost every response — the call is a no-op.
 
+### Native (Capacitor)
+
+On Android and iOS the bridge **does not** call the notifications service. The
+installed shell delivers push directly:
+
+1. `SessionProvider` registers the signed-in `uid`/`phone` in
+   `notification-grant-delivery-context.ts` so the bridge knows who is carrying
+   grants.
+2. On Android, `deliverNotificationGrantsFromNative` calls
+   `NativeCore.ensureNotificationChannels()` before any send so every payload
+   targets a channel that already exists natively.
+3. For each grant batch the bridge calls
+   `POST /api/notifications/recipient-tokens` on the **main app**. The server
+   verifies every grant signature, checks `actorUid` against the caller, and
+   returns FCM registration tokens for the recipients (push-enabled accounts
+   only).
+4. The device builds notification text from `@asol/notifications-core/builder`
+   templates — the same vocabulary the notifications service uses — resolves
+   the Android channel with `resolveAndroidChannelId` (identical to the server
+   FCM provider and to `AsolNotificationChannels.resolveChannelId` in Java),
+   and sends through FCM HTTP v1 with credentials unlocked once via
+   `POST /api/notifications/mobile-push/unlock`.
+
+Credential handling:
+
+| Stage | What is stored | Where |
+|---|---|---|
+| App bundle | AES-256-GCM blob of the Firebase service account | `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` (client-safe ciphertext only) |
+| Unlock | Server decrypts after `uid`/`phone` identity check | `ASOL_MOBILE_PUSH_UNLOCK_KEY` (server only, never in bundles) |
+| After unlock | Re-encrypted credential bundle | Capacitor Preferences under a device-local AES-GCM key |
+
+The web path is unchanged. Native delivery is an additional branch inside
+`deliverNotificationGrants`; it never removes or replaces the notifications
+service hop on web.
+
+```text
+Web:     main app ──grant──► browser ──grant──► notifications service ──► FCM/APNs/WebPush
+Native:  main app ──grant──► device ──tokens──► main app
+                              └── FCM HTTP v1 (credentials unlocked once)
+```
+
 Hooking the transport rather than each caller means no route or component has to
 remember to forward anything. Adding a grant to a response is enough.
+
+## Main-app APIs (native only)
+
+| Route | Purpose |
+|---|---|
+| `POST /api/notifications/recipient-tokens` | Verify grants; return recipient FCM tokens and the verified send payload |
+| `POST /api/notifications/mobile-push/unlock` | Verify identity; decrypt the embedded blob; return the Firebase service-account bundle once per device enrollment |
+
+The notifications service does **not** expose these routes.
+
+## Provisioning credentials
+
+From a machine that has `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` in `.env.local`:
+
+```bash
+npm run provision:mobile-push
+```
+
+This script (`scripts/provision-mobile-push-credentials.ts`):
+
+1. Reads the Firebase service-account JSON from `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`.
+2. Generates or preserves `ASOL_MOBILE_PUSH_UNLOCK_KEY` (32-byte hex).
+3. Encrypts `{ projectId, clientEmail, privateKey }` into an AES-256-GCM blob.
+4. Writes `ASOL_MOBILE_PUSH_UNLOCK_KEY`, `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`, and
+   `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` into `.env.local`.
+
+Set the same three values on the **main app** Vercel project. The unlock key must
+never appear in `NEXT_PUBLIC_*` or in static/Capacitor bundles.
+
+For a one-off blob from a JSON file:
+
+```bash
+npx tsx scripts/encrypt-mobile-push-credential-blob.ts <unlock-key-hex-64> path/to/service-account.json
+```
 
 ## Rules it follows
 
@@ -42,72 +120,103 @@ never turn a successful order into a failed one, so that default path never
 rejects and never blocks. Features whose visible outcome is the notification
 itself may opt into manual delivery and inspect the recipient results.
 
-**No credentials.** It sends `credentials: "omit"` and no bearer token. The grant
-is the only authority. This is why the service can accept a permissive CORS
-origin safely: there is no ambient session to ride on.
+**No session on the web hop.** The web bridge sends `credentials: "omit"` and no
+bearer token. The grant is the only authority for the notifications service.
 
-**Browser only.** Every entry point returns early when `window` is undefined, so
-importing it during SSR or a static export is harmless.
+**Browser only for scheduling.** Every entry point returns early when `window`
+is undefined, so importing it during SSR or a static export is harmless.
 
-**No business logic.** It reads an opaque string out of one response and posts it
-to one URL. It cannot construct a grant, and it cannot alter one — the payload is
-signed whole, so any edit invalidates the signature.
+**Grants are opaque on web.** The web path reads a signed string and posts it
+unchanged. Native delivery additionally parses the verified send payload returned
+by `recipient-tokens`; it cannot forge grants because it does not hold
+`ASOL_NOTIFICATION_GRANT_SECRET`.
 
 ## Configuration
 
 | Variable | Where | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | main app, client-safe | Origin of the notifications service. Empty means the bridge delivers nothing. |
+| `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` | main app, client-safe | Origin of the notifications service. Empty means the **web** bridge delivers nothing. |
+| `ASOL_MOBILE_PUSH_UNLOCK_KEY` | main app server only | 32-byte AES key (hex or base64). Decrypts the embedded blob at unlock. **Never** baked into client bundles. |
+| `ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app server | Same ciphertext as the public blob; optional mismatch guard on unlock. |
+| `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB` | main app, client-safe | AES-256-GCM blob baked into static/Capacitor bundles. Useless without the unlock key. |
 
-A static export or native shell has no same-origin fallback, so
-`scripts/build-static.ts` resolves this from `CAPACITOR_NOTIFICATIONS_BASE_URL`,
-asserts it is absolute, and bakes it in. Without that assertion a native release
-would ship with push silently disabled and no error anywhere to find it.
+A static export or native shell has no same-origin fallback. `packages/ota-core`
+`build-out.ts` calls `assertStaticMobilePushCredentialBlob()` before the Next
+build and `auditStaticMobilePushSecurity()` on `out/` — the blob must be present
+and the bundle must not contain a private key or the unlock key. The audit matches
+**plaintext** PEM bodies and env names, not PEM header strings used by `fcm-auth.ts`
+for parsing; see
+[static-mobile-push-pem-audit-false-positive.md](../../08-troubleshooting/problems/static-mobile-push-pem-audit-false-positive.md).
+
+## Android channel compatibility
+
+Every outbound native FCM message carries `androidChannelId` in the data map,
+computed by `resolveAndroidChannelId` in `@asol/notifications-core`. The same
+rule runs in:
+
+- the notifications-service FCM provider (web path),
+- `packages/account-bridge/src/mobile-push/fcm-message.ts` (native send path),
+- `AsolNotificationChannels.resolveChannelId` (native receive/display path).
+
+Channels themselves are created only in native code — `AsolNotificationChannels.ensureCreated`
+at activity startup and through `NativeCore.ensureNotificationChannels()` during
+push initialization. Capacitor's `PushNotifications.createChannel` is **not**
+used.
+
+`notification-channel-parity.test.ts` and `notification-sound-contract.test.ts`
+fail the build if any of the three implementations drift.
 
 ## The cost this design accepts
 
-Delivery is **best effort**. The browser must still be alive to carry the grant.
-A seller who accepts an order and closes the tab immediately leaves the buyer
-unnotified, and there is no server-side retry, because the server no longer knows
-the service exists.
-
-This is the direct consequence of forbidding backend-to-backend calls. It is
-recorded here rather than hidden so the trade is visible when someone asks why a
-notification did not arrive.
+Delivery is **best effort**. The client must still be alive to carry the grant.
+A seller who accepts an order and closes the app immediately may leave the buyer
+unnotified, and there is no server-side retry from the main app.
 
 Specialty-chat request, reply, and receipt actions, plus super-admin broadcasts,
-are the deliberate exceptions to the fire-and-forget UI contract: they await
-this browser hop and inspect the notifications service's per-recipient result
-before reporting success. This prevents `no_tokens` and failed providers from
-appearing as successful sends; it does not turn push into guaranteed
-operating-system delivery.
+are the deliberate exceptions to the fire-and-forget UI contract on **web**: they
+await the bridge hop and inspect per-recipient results. On native, the same
+features still issue grants; delivery runs through the native branch above.
 
 Because of it, API responses report what was **granted**, not what was
-delivered: `grantedUsers` and `status: "granted"`. Claiming provider acceptance
-would be a claim the main app cannot support.
+delivered: `grantedUsers` and `status: "granted"`. Provider acceptance is not
+knowable on the main app.
 
 ## Enforcement
 
-`notifications-service-module-contract.test.ts` asserts the boundary holds:
-
-- The main app serves no `/api/notifications/send` route.
-- The service route calls `sendToUsersLocally`, never a forwarding entry point.
-- Nothing under `services/notifications` imports outside its own folder.
+| Suite | What it proves |
+|---|---|
+| `notifications-service-module-contract.test.ts` | Main app has no `/api/notifications/send`; service is self-contained |
+| `packages/account-bridge/src/tests/mobile-push.test.ts` | No server secrets in the channel graph; local credential encryption round-trip |
+| `mobile-push-unlock.service.test.ts` | Server unlock verifies identity and blob |
+| `mobile-push-contract.test.ts` | APIs and native branch wired |
+| `notification-channel-parity.test.ts` | Channel resolution matches Java across all templates and test scenarios |
+| `notification-sound-contract.test.ts` | Channel ids, assets, and native bootstrap agree |
 
 `architecture-check.ts` allows `fetch` in exactly two files — the client HTTP
 transport and this bridge — so no other module can open a second path between
-the deployments.
+the deployments on web.
 
 ## Files
 
 ```text
-src/modules/notification-bridge/
-├── index.ts                        # public surface
-└── notification-bridge.client.ts   # delivery, browser-guarded
+packages/account-bridge/
+├── src/notifications.ts              # deliverNotificationGrants, schedule*, enrollment exports
+└── src/mobile-push/
+    ├── deliver.ts                    # native grant fan-out
+    ├── enrollment.ts                 # unlock + credential cache
+    ├── embedded-blob.ts              # reads NEXT_PUBLIC blob
+    ├── credential-store-crypto.ts    # device-local AES-GCM
+    ├── fcm-auth.ts                   # Web Crypto JWT → FCM access token
+    ├── fcm-message.ts                # FCM HTTP v1 payload (channels + data map)
+    └── provider-payload.ts             # NotificationBuilder for templates
 
-src/features/notifications/domain/notification-grant-envelope.ts   # shared shape
-src/features/notifications/services/notification-grant.server.ts   # sign / verify
-src/features/notifications/services/notification-grant-collector.server.ts
+src/modules/notification-bridge/      # re-exports @asol/account-bridge/notifications
+src/app/api/notifications/
+├── recipient-tokens/route.ts
+└── mobile-push/unlock/route.ts
+src/features/notifications/domain/
+├── notification-grant-envelope.ts
+└── notification-grant-delivery-context.ts
 ```
 
 See also [Notification System](notification-system.md) and

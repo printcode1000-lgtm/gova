@@ -65,6 +65,17 @@ export const text = {
   sellerStatus: "حالة البائع",
   carrier: "مقدم التوصيل",
   noCarrier: "لا يوجد مقدم توصيل مرتبط بهذا البائع.",
+  noCarrierSellerHint:
+    "لإكمال التوصيل، اربط مقدم خدمة من قسم الشحن والإرجاع في بروفايلك ثم أضِفه لهذا الطلب.",
+  linkCarrierInProfile: "إعداد الشحن والإرجاع",
+  applyCarrierToOrder: "ربط مقدم التوصيل بالطلب",
+  sellerFulfillmentHint:
+    "تغيير تسعير الشحن أو سياسة الإرجاع يُحدّث هذا الطلب تلقائياً بعد الحفظ في البروفايل.",
+  editShippingPricing: "تعديل تسعير الشحن",
+  editReturnPolicy: "تعديل سياسة الإرجاع",
+  buyerAddressHint:
+    "أضف عنوان التوصيل في بروفايلك ثم طبّقه على الطلب ليُعامل كأنه كان مرفقاً منذ الإنشاء.",
+  editBuyerAddressInProfile: "تعديل العنوان في البروفايل",
   sellerProfile: "بروفايل البائع",
   carrierProfile: "بروفايل التوصيل",
   product: "منتج",

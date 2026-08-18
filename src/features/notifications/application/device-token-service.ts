@@ -10,6 +10,7 @@ import {
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { webPushBrowserService } from "../infrastructure/web-push/web-push-browser.service";
 import { notificationApiService } from "../services/notification-api-service";
+import { ensureMobilePushCredentials } from "@/modules/notification-bridge";
 import { SingleFlight } from "../shared/keyed-mutex";
 
 /**
@@ -48,6 +49,16 @@ export class DeviceTokenService {
       locale: token.locale,
       deviceLabel: token.deviceLabel,
     });
+    if (nativePushService.isNativePush()) {
+      try {
+        await ensureMobilePushCredentials({ uid: token.uid, phone });
+      } catch (error) {
+        notificationLog.warn(
+          "Mobile push credentials could not be unlocked for this device.",
+          error,
+        );
+      }
+    }
   }
 
   /**
@@ -141,6 +152,12 @@ export class DeviceTokenService {
       await webPushBrowserService.unsubscribe(safeUid, safePhone);
     }
     await nativePushService.unregister();
+    try {
+      const { clearMobilePushCredentials } = await import('@/modules/notification-bridge');
+      await clearMobilePushCredentials();
+    } catch (error) {
+      notificationLog.warn('Mobile push credentials could not be cleared.', error);
+    }
   }
 
   isNativePush(): boolean {

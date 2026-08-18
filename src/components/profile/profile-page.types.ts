@@ -28,6 +28,16 @@ export const PROFILE_SECTION_IDS: Record<ProfileEditTab, string> = {
   discounts: "profile-discounts-panel",
 };
 
+export type ProfileFulfillmentSection = "shipping" | "returns";
+
+export const PROFILE_FULFILLMENT_SECTION_IDS: Record<
+  ProfileFulfillmentSection,
+  string
+> = {
+  shipping: "profile-fulfillment-shipping",
+  returns: "profile-fulfillment-returns",
+};
+
 export const PROFILE_SECTIONS: ProfileEditTab[] = [
   "registration",
   "specialties",

@@ -54,6 +54,7 @@ function runTests(): void {
   const runtime: OrdersRuntime = createOrdersRuntime();
   assert(runtime.accountName === ORDERS_DECLARATION.project, 'Runtime account name matches declaration');
   assert(typeof runtime.database.listForActor === 'function', 'database task bound');
+  assert(typeof runtime.database.listForUser === 'function', 'listForUser bound');
   assert(typeof runtime.database.actorFromInput === 'function', 'actorFromInput bound');
   assert(typeof runtime.config.serverEnv === 'object', 'config task bound');
   // An absent task is a capability this account cannot reach — the point of the split.

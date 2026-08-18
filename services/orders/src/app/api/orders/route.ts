@@ -39,7 +39,13 @@ export async function GET(request: Request): Promise<Response> {
       },
       'buyer',
     );
-    const data = await database.listForActor(actor);
+    const limit = Number(url.searchParams.get('limit') ?? '5');
+    const offset = Number(url.searchParams.get('offset') ?? '0');
+    const data = await database.listForUser(actor.id, {
+      limit,
+      offset,
+      isAdmin: actor.role === 'admin',
+    });
     return Response.json(data, { status: 200, headers: corsHeaders(request) });
   } catch (error) {
     return orderErrorResponse(request, error);

@@ -18,10 +18,15 @@ import { asolNotificationRepository } from "../infrastructure/asol-notification-
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 import { notificationRouter } from "./notification-router";
+import { notifyOrderDataRefreshFromNotification } from "@/lib/order-data-refresh";
 
-function emitChanged(uid: string): void {
+function emitChanged(uid: string, notificationId?: string): void {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent(NOTIFICATION_CHANGED_EVENT, { detail: { uid } }));
+  window.dispatchEvent(
+    new CustomEvent(NOTIFICATION_CHANGED_EVENT, {
+      detail: { uid, notificationId },
+    }),
+  );
 }
 
 /**
@@ -62,6 +67,7 @@ export class NotificationSender {
       event: NotificationLifecycleEvents.Displayed,
     });
     await notificationBadgeService.refresh(saved.uid);
+    notifyOrderDataRefreshFromNotification(saved);
 
     if (saved.targets.includes(NotificationTargets.Popup)) {
       if (typeof window !== "undefined") {
@@ -75,7 +81,7 @@ export class NotificationSender {
         notificationLog.warn("Local presentation failed.", error);
       }
     }
-    emitChanged(saved.uid);
+    emitChanged(saved.uid, saved.id);
     return saved;
   }
 }

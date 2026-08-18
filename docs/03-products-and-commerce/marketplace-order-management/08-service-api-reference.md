@@ -16,6 +16,7 @@ store directly.
 - `sellerAcceptCustomRequest`, `sellerRejectCustomRequest`
 - `sellerSendPriceOfferForCustomRequest`
 - `buyerAcceptCustomRequestPrice`, `buyerRejectCustomRequestPrice`
+- `assignSellerOrderCarrier`
 
 ## Location shipping quote operations
 

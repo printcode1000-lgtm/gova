@@ -213,6 +213,21 @@ export function mapServiceError(error: unknown): NextResponse {
     void logMappedServiceError(error, message, 503);
     return apiError(message, 503, { skipPersistence: true });
   }
+  if (
+    message === 'mobilePushUnlockNotConfigured' ||
+    message === 'mobilePushCredentialBlobMissing'
+  ) {
+    void logMappedServiceError(error, message, 503);
+    return apiError(message, 503, { skipPersistence: true });
+  }
+  if (message === 'mobilePushCredentialBlobInvalid') {
+    void logMappedServiceError(error, message, 400);
+    return apiError(message, 400);
+  }
+  if (message === 'mobilePushCredentialBlobMismatch') {
+    void logMappedServiceError(error, message, 403);
+    return apiError(message, 403);
+  }
 
   void logMappedServiceError(error, message, 500);
   return apiError(message, 500, { skipPersistence: true });

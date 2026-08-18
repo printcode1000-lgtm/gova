@@ -37,20 +37,44 @@ The Firebase service-account JSON is server-only, ignored by Git, and must never
 The server requires:
 
 ```text
-FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64   # notifications account only
-FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64 # main app only, for the native build
+FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64   # notifications account — web fan-out
+FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64 # main app — native Android build
 ASOL_NOTIFICATION_GRANT_SECRET          # both accounts, byte-identical
+ASOL_MOBILE_PUSH_UNLOCK_KEY             # main app only — native outbound push unlock
+ASOL_MOBILE_PUSH_CREDENTIAL_BLOB        # main app server — optional mismatch guard
+NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB  # main app — baked into static/Capacitor bundles
 ```
 
-These live on **different** Vercel accounts.
+Provision the last three locally with `npm run provision:mobile-push` after
+`FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` is set in `.env.local`.
+
+These live on **different** Vercel accounts where noted.
 `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` belongs to the notifications service,
-which is the only side that delivers push.
-`FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64` belongs to the main app, which is the
-only side that builds the Android project. `ASOL_NOTIFICATION_GRANT_SECRET` is
-shared: the main app signs a grant with it and the service verifies. See
-[Notifications Service Module](../../05-platform-features/notifications-service-module.md).
+which delivers push on **web**.
+`FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64` belongs to the main app, which builds
+the Android project. `ASOL_NOTIFICATION_GRANT_SECRET` is shared: the main app
+signs a grant with it and the service (or the main app's `recipient-tokens` route
+on native) verifies it. See
+[Notifications Service Module](../../05-platform-features/notifications-service-module.md)
+and [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md).
 
 The first two are lossless base64 encodings of the complete server and Android Firebase JSON documents. Explicit `FIREBASE_PROJECT_*`, `FIREBASE_FCM_SENDER_ID`, `FIREBASE_ANDROID_*`, and `FIREBASE_STORAGE_BUCKET` variables document and validate the Android Firebase identity without exposing the server private key.
+
+## Native outbound push (installed shells)
+
+On Capacitor, the device that triggered a business action may **send** push to
+other users' devices directly via FCM HTTP v1. The main app:
+
+- verifies grants and returns recipient tokens (`/api/notifications/recipient-tokens`);
+- decrypts the embedded credential blob after identity check (`/api/notifications/mobile-push/unlock`).
+
+The device stores unlocked credentials re-encrypted under a device-local key.
+Sign-out clears them (`clearMobilePushCredentials`).
+
+Every outbound Android payload includes `androidChannelId` from
+`resolveAndroidChannelId`, matching the server FCM provider and the native
+receive path. Channels are created in `AsolNotificationChannels` before send and
+at activity startup — see [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md#android-channel-compatibility).
 
 ## Client Lifecycle
 

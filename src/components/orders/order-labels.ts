@@ -1,6 +1,10 @@
 "use client";
 
-import type { DbRow, OrderRole } from "./order-types";
+import type { DbRow, OrderRole, OrderViewerRole } from "./order-types";
+import {
+  parseSellerFulfillmentSnapshot,
+  type SellerFulfillmentSnapshot,
+} from "@/modules/marketplace-orders/domain/fulfillment-snapshot";
 
 export function formatMoney(minor: unknown, currency = "EGP", locale = "ar") {
   return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-EG", {
@@ -133,6 +137,8 @@ export function commandLabel(action: string) {
     seller_reject_custom_request: "رفض الطلب الخاص",
     seller_send_custom_price_offer: "إرسال عرض السعر",
     seller_send_shipping_quote: "إرسال عرض الشحن",
+    seller_assign_delivery_carrier: "ربط مقدم التوصيل بالطلب",
+    buyer_apply_delivery_address: "تطبيق العنوان على الطلب",
     buyer_accept_shipping_quote: "قبول عرض الشحن",
     buyer_reject_shipping_quote: "رفض عرض الشحن",
     provider_send_unified_delivery_quote: "إرسال عرض التوصيل الموحّد",
@@ -194,8 +200,185 @@ export function profileAddress(profile: unknown) {
   };
 }
 
+export function parseSellerOrderFulfillmentSnapshot(
+  sellerOrder: DbRow,
+): SellerFulfillmentSnapshot {
+  return parseSellerFulfillmentSnapshot(sellerOrder.fulfillment_snapshot_json);
+}
+
+export function sellerFulfillmentShippingSummary(
+  snapshot: SellerFulfillmentSnapshot,
+  locale = "ar",
+) {
+  const { mode, flatRate, freeShippingThreshold, notes } = snapshot.shippingPricing;
+  if (locale !== "ar") {
+    if (mode === "free") return "Free shipping";
+    if (mode === "flat") {
+      const threshold =
+        freeShippingThreshold > 0
+          ? ` (free over ${formatMoney(freeShippingThreshold, "EGP", locale)})`
+          : "";
+      return `Flat rate ${formatMoney(flatRate, "EGP", locale)}${threshold}`;
+    }
+    const note = notes.trim() ? ` — ${notes.trim()}` : "";
+    return `Location-based quote${note}`;
+  }
+  if (mode === "free") return "شحن مجاني";
+  if (mode === "flat") {
+    const threshold =
+      freeShippingThreshold > 0
+        ? ` (مجاني فوق ${formatMoney(freeShippingThreshold, "EGP", locale)})`
+        : "";
+    return `سعر ثابت ${formatMoney(flatRate, "EGP", locale)}${threshold}`;
+  }
+  const note = notes.trim() ? ` — ${notes.trim()}` : "";
+  return `تسعير حسب الموقع${note}`;
+}
+
+export function sellerFulfillmentReturnsSummary(
+  snapshot: SellerFulfillmentSnapshot,
+  locale = "ar",
+) {
+  const { enabled, returnWindowDays, returnShippingPayer, policyText } =
+    snapshot.returns;
+  if (!enabled) {
+    return locale === "ar" ? "الإرجاع غير متاح" : "Returns not available";
+  }
+  const payerLabelsAr: Record<string, string> = {
+    buyer: "المشتري",
+    seller: "البائع",
+    case_by_case: "حسب الحالة",
+  };
+  const payerLabelsEn: Record<string, string> = {
+    buyer: "buyer",
+    seller: "seller",
+    case_by_case: "case by case",
+  };
+  const payer =
+    locale === "ar"
+      ? payerLabelsAr[returnShippingPayer] ?? returnShippingPayer
+      : payerLabelsEn[returnShippingPayer] ?? returnShippingPayer;
+  const base =
+    locale === "ar"
+      ? `إرجاع خلال ${returnWindowDays} يوم — شحن الإرجاع: ${payer}`
+      : `Returns within ${returnWindowDays} days — return shipping: ${payer}`;
+  const policy = policyText.trim();
+  return policy ? `${base} — ${policy}` : base;
+}
+
 export function queryWithActor(uid: string, phone: string, role: OrderRole) {
   return `uid=${encodeURIComponent(uid)}&phone=${encodeURIComponent(phone)}&role=${encodeURIComponent(role)}`;
+}
+
+export function queryForOrderList(
+  uid: string,
+  phone: string,
+  pagination: { limit: number; offset: number },
+) {
+  const params = new URLSearchParams({
+    uid,
+    phone,
+    limit: String(pagination.limit),
+    offset: String(pagination.offset),
+  });
+  return params.toString();
+}
+
+export function formatOrderDate(value: unknown, locale = "ar") {
+  const date = new Date(String(value ?? ""));
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-EG", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
+}
+
+export function viewerRoleLabel(role: OrderViewerRole, locale = "ar") {
+  if (locale !== "ar") {
+    const labels: Record<OrderViewerRole, string> = {
+      buyer: "Buyer",
+      seller: "Seller",
+      service_provider: "Delivery",
+    };
+    return labels[role];
+  }
+  const labels: Record<OrderViewerRole, string> = {
+    buyer: "مشتري",
+    seller: "بائع",
+    service_provider: "توصيل",
+  };
+  return labels[role];
+}
+
+export function primaryViewerRole(
+  viewerRoles: OrderViewerRole[],
+  admin = false,
+): OrderRole {
+  if (admin) return "admin";
+  if (viewerRoles.includes("buyer")) return "buyer";
+  if (viewerRoles.includes("seller")) return "seller";
+  return "service_provider";
+}
+
+export type ProfileFulfillmentSection = "shipping" | "returns";
+
+export function profileFulfillmentSectionHref(
+  orderId: string,
+  section: ProfileFulfillmentSection,
+  role: OrderRole = "seller",
+) {
+  const returnTo = `/orders/details?orderId=${orderId}&role=${role}`;
+  return `/profile?mode=edit&tab=fulfillment&section=${section}&returnTo=${encodeURIComponent(returnTo)}`;
+}
+
+export interface OrderDeliveryAddress {
+  address: string;
+  phone: string;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export function parseOrderDeliveryAddress(order: DbRow): OrderDeliveryAddress {
+  try {
+    const raw =
+      typeof order.delivery_address_snapshot_json === "string"
+        ? (JSON.parse(order.delivery_address_snapshot_json) as Record<
+            string,
+            unknown
+          >)
+        : ((order.delivery_address_snapshot_json as Record<string, unknown>) ??
+          {});
+    return {
+      address: String(raw.address ?? "").trim(),
+      phone: String(raw.phone ?? "").trim(),
+      latitude:
+        typeof raw.latitude === "number" ? raw.latitude : Number(raw.latitude) || null,
+      longitude:
+        typeof raw.longitude === "number"
+          ? raw.longitude
+          : Number(raw.longitude) || null,
+    };
+  } catch {
+    return { address: "", phone: "", latitude: null, longitude: null };
+  }
+}
+
+export function hasOrderDeliveryAddress(order: DbRow) {
+  return Boolean(parseOrderDeliveryAddress(order).address);
+}
+
+export function resolveBuyerDeliveryDisplay(
+  order: DbRow,
+  profile: unknown,
+): OrderDeliveryAddress {
+  const snapshot = parseOrderDeliveryAddress(order);
+  const fromProfile = profileAddress(profile);
+  return {
+    address: snapshot.address || fromProfile.address,
+    phone: snapshot.phone || fromProfile.phone,
+    latitude: snapshot.latitude,
+    longitude: snapshot.longitude,
+  };
 }
 
 export function carrierFromSellerOrder(sellerOrder: DbRow, items: DbRow[]) {

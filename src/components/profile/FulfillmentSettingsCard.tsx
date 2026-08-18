@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Truck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +31,10 @@ import type {
 } from "./profile-save-controller";
 
 import { FulfillmentSettingsCardProps } from "./fulfillment-settings/FulfillmentSettingsCard.fulfillment-types";
+import {
+  PROFILE_FULFILLMENT_SECTION_IDS,
+  type ProfileFulfillmentSection,
+} from "./profile-page.types";
 
 export const FulfillmentSettingsCard = React.forwardRef<
   ProfileFulfillmentController,
@@ -38,6 +42,10 @@ export const FulfillmentSettingsCard = React.forwardRef<
 >(function FulfillmentSettingsCard({ onStatusChange }, ref) {
   const { locale } = useTranslation();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const fulfillmentSection = searchParams.get("section");
+  const shippingSectionRef = React.useRef<HTMLElement>(null);
+  const returnsSectionRef = React.useRef<HTMLElement>(null);
   const {
     settings,
     updateSettings,
@@ -148,6 +156,24 @@ export const FulfillmentSettingsCard = React.forwardRef<
   React.useEffect(() => {
     onStatusChange?.({ isDirty, isSaving, canSave: true, label });
   }, [isDirty, isSaving, label, onStatusChange]);
+
+  React.useEffect(() => {
+    if (isLoading) return;
+    const section = fulfillmentSection as ProfileFulfillmentSection | null;
+    if (section === "shipping") {
+      shippingSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      return;
+    }
+    if (section === "returns") {
+      returnsSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [fulfillmentSection, isLoading]);
 
   const users = (deliveryUsers ?? []) as UserProfileRow[];
   const safeSettings = normalizeProfileFulfillmentSettings(settings);
@@ -283,7 +309,11 @@ export const FulfillmentSettingsCard = React.forwardRef<
         </div>
       </section>
 
-      <section className="space-y-4 rounded-xl border border-outline-variant p-4">
+      <section
+        ref={shippingSectionRef}
+        id={PROFILE_FULFILLMENT_SECTION_IDS.shipping}
+        className="space-y-4 rounded-xl border border-outline-variant p-4"
+      >
         <h3 className="text-sm font-bold">{text.shippingPricing}</h3>
 
         <div className="space-y-2">
@@ -415,7 +445,11 @@ export const FulfillmentSettingsCard = React.forwardRef<
         </div>
       </section>
 
-      <section className="space-y-4 rounded-xl border border-outline-variant p-4">
+      <section
+        ref={returnsSectionRef}
+        id={PROFILE_FULFILLMENT_SECTION_IDS.returns}
+        className="space-y-4 rounded-xl border border-outline-variant p-4"
+      >
         <h3 className="text-sm font-bold">{text.returnPolicy}</h3>
 
         <div className="flex items-center gap-3">

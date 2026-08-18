@@ -4,6 +4,7 @@ import { createMultiSellerDeliveryDraft } from "@/features/cart/multi-seller-del
 import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { notificationsServer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
+import { fulfillmentSettingsToSnapshot } from "@/modules/marketplace-orders/domain/fulfillment-snapshot";
 import { sellerDiscountService } from "@/features/seller-discounts/services/seller-discount-service.server";
 import { authService } from "@/features/auth/services/auth-service.bootstrap.server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
@@ -11,7 +12,7 @@ import { getMarketplaceOrderService } from "@/modules/data-access/domains/market
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
 import { mapOrderError, moneyMinor } from "../order-api-helpers";
-import { grantSellerOrderCreated } from "../[orderId]/actions/route-parts/route.action-grants";
+import { grantBuyerOrderCreated, grantSellerOrderCreated } from "../[orderId]/actions/route-parts/route.action-grants";
 
 interface CartOrderItemInput {
   productId: string;
@@ -293,6 +294,16 @@ export async function POST(request: Request) {
           sellerOrderId = String(createdItem.seller_order_id ?? sellerOrderId);
           shippingAssigned = true;
         }
+        if (sellerOrderId) {
+          const sellerSettings = fulfillmentBySeller.get(sellerId);
+          if (sellerSettings) {
+            await service.stampSellerOrderFulfillmentSnapshot(
+              sellerOrderId,
+              fulfillmentSettingsToSnapshot(sellerSettings),
+              actor,
+            );
+          }
+        }
         const giftProductIds = Array.from(
           new Set(
             sellerQuote?.applied
@@ -388,6 +399,11 @@ export async function POST(request: Request) {
         sellerUids: sellerIds,
         orderId: String(order.id),
         source: "cart",
+        routeName: "POST /api/orders/from-cart",
+      });
+      grantBuyerOrderCreated(notificationGrants, {
+        buyerUid: body.uid,
+        orderId: String(order.id),
         routeName: "POST /api/orders/from-cart",
       });
 

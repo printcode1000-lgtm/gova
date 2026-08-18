@@ -1,6 +1,6 @@
 {
   "order.created": {
-    "title": "تم إنشاء الطلب",
+    "title": "🛒 تم إنشاء الطلب",
     "body": "تم إنشاء طلبك {{orderNumber}} بنجاح.",
     "category": "orders",
     "priority": "high",
@@ -11,7 +11,7 @@
     "sound": "default"
   },
   "order.received": {
-    "title": "طلب جديد",
+    "title": "🆕 طلب جديد",
     "body": "وصلك طلب جديد رقم {{orderNumber}}.",
     "category": "orders",
     "priority": "high",
@@ -21,8 +21,52 @@
     "groupKey": "orders",
     "sound": "default"
   },
+  "order.buyerAddressReady": {
+    "title": "📍 عنوان التوصيل جاهز",
+    "body": "أضاف المشتري عنوان التوصيل للطلب {{orderNumber}}. يمكنك متابعة الشحن.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.buyerAddressProvider": {
+    "title": "📍 عنوان التوصيل متوفر",
+    "body": "أضاف المشتري عنوان التوصيل للطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=service_provider", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.carrierLinkedBuyer": {
+    "title": "🔗 تم ربط مقدم التوصيل",
+    "body": "ربط البائع مقدم خدمة توصيل بالطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.carrierLinked": {
+    "title": "🚚 تم ربطك بالطلب",
+    "body": "تم ربطك كمقدم توصيل للطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=service_provider", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
   "order.updated": {
-    "title": "تحديث على الطلب",
+    "title": "🔔 تحديث على الطلب",
     "body": "تغيرت حالة الطلب {{orderNumber}} إلى {{status}}.",
     "category": "orders",
     "priority": "normal",
@@ -33,7 +77,7 @@
     "sound": "default"
   },
   "shipment.updated": {
-    "title": "تحديث الشحن",
+    "title": "🚛 تحديث الشحن",
     "body": "الشحنة الخاصة بالطلب {{orderNumber}} أصبحت: {{status}}.",
     "category": "orders",
     "priority": "high",
@@ -44,19 +88,19 @@
     "sound": "default"
   },
   "order.sellerAccepted": {
-    "title": "قبول من البائع",
-    "body": "قبل البائع {{sellerName}} المنتج {{productName}} داخل الطلب {{orderNumber}}.",
+    "title": "✅ قبول من البائع",
+    "body": "قبل البائع المنتج {{productName}} في الطلب {{orderNumber}}.",
     "category": "orders",
-    "priority": "normal",
-    "channels": ["in_app"],
-    "targets": ["center", "badge", "orders"],
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
     "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
     "groupKey": "orders",
     "sound": "default"
   },
   "order.sellerRejected": {
-    "title": "رفض من البائع",
-    "body": "رفض البائع {{sellerName}} المنتج {{productName}} داخل الطلب {{orderNumber}}.",
+    "title": "❌ رفض من البائع",
+    "body": "رفض البائع المنتج {{productName}} في الطلب {{orderNumber}}.",
     "category": "orders",
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
@@ -66,7 +110,7 @@
     "sound": "urgent"
   },
   "return.requested": {
-    "title": "طلب إرجاع جديد",
+    "title": "↩️ طلب إرجاع جديد",
     "body": "تم إرسال طلب إرجاع للمنتج {{productName}}.",
     "category": "orders",
     "priority": "high",
@@ -74,6 +118,182 @@
     "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
     "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "مراجعة الإرجاع" },
     "groupKey": "returns",
+    "sound": "default"
+  },
+  "order.fulfillmentUpdated": {
+    "title": "⚙️ تحديث الشحن والإرجاع",
+    "body": "حدّث البائع تسعير الشحن أو سياسة الإرجاع للطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.customPriceOffered": {
+    "title": "💰 عرض سعر جديد",
+    "body": "أرسل البائع عرض سعر {{amount}} للمنتج {{productName}} في الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.customPriceAccepted": {
+    "title": "✅ قبول السعر",
+    "body": "وافق المشتري على سعر {{productName}} في الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.customPriceRejected": {
+    "title": "❌ رفض السعر",
+    "body": "رفض المشتري سعر {{productName}} في الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.itemPreparing": {
+    "title": "📦 جاري التجهيز",
+    "body": "البائع يجهّز {{productName}} في الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.itemReady": {
+    "title": "🚚 جاهز للشحن",
+    "body": "أصبح {{productName}} جاهزاً للشحن في الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.cancelled": {
+    "title": "🛑 تم الإلغاء",
+    "body": "تم إلغاء {{productName}} في الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.deliveryRejected": {
+    "title": "📭 رفض الاستلام",
+    "body": "رفض المشتري استلام {{productName}} في الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "عرض الطلب" },
+    "groupKey": "orders",
+    "sound": "urgent"
+  },
+  "order.returnApproved": {
+    "title": "↩️ قبول الإرجاع",
+    "body": "وافق البائع على طلب الإرجاع للطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "returns",
+    "sound": "default"
+  },
+  "order.returnRejected": {
+    "title": "⛔ رفض الإرجاع",
+    "body": "رفض البائع طلب الإرجاع للطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "returns",
+    "sound": "default"
+  },
+  "order.shipmentCreated": {
+    "title": "📋 شحنة جديدة",
+    "body": "تم إنشاء شحنة للطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "متابعة الشحنة" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipment.receivedByCarrier": {
+    "title": "📥 استلام الشحنة",
+    "body": "استلمت شركة التوصيل شحنة الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "متابعة الشحنة" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipment.rejectedByCarrier": {
+    "title": "🚫 رفض استلام الشحنة",
+    "body": "رفضت شركة التوصيل استلام شحنة الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "متابعة الشحنة" },
+    "groupKey": "shipments",
+    "sound": "urgent"
+  },
+  "shipment.inTransit": {
+    "title": "🚛 في الطريق",
+    "body": "شحنة الطلب {{orderNumber}} في الطريق إليك.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "متابعة الشحنة" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipment.outForDelivery": {
+    "title": "🏃 خارج للتسليم",
+    "body": "شحنة الطلب {{orderNumber}} خرجت للتسليم الآن.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "متابعة الشحنة" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipment.delivered": {
+    "title": "✅ تم التسليم",
+    "body": "تم تسليم شحنة الطلب {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "عرض الطلب" },
+    "groupKey": "shipments",
     "sound": "default"
   },
   "message.new": {
@@ -119,8 +339,19 @@
     "groupKey": "system",
     "sound": "silent"
   },
+  "shipping.quoteRequested": {
+    "title": "📦 طلب عرض شحن",
+    "body": "الطلب {{orderNumber}} يحتاج عرض شحن حسب المكان.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "عرض الطلب" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
   "shipping.quoteProposed": {
-    "title": "عرض شحن جديد",
+    "title": "💸 عرض شحن جديد",
     "body": "تم إرسال عرض شحن بقيمة {{amount}}. راجع الطلب للقبول أو الرفض.",
     "category": "offers",
     "priority": "high",
@@ -131,7 +362,7 @@
     "sound": "default"
   },
   "shipping.quoteAccepted": {
-    "title": "تم قبول عرض الشحن",
+    "title": "✅ تم قبول عرض الشحن",
     "body": "وافق المشتري على عرض الشحن بقيمة {{amount}}.",
     "category": "offers",
     "priority": "high",
@@ -142,7 +373,7 @@
     "sound": "default"
   },
   "shipping.quoteRejected": {
-    "title": "تم رفض عرض الشحن",
+    "title": "❌ تم رفض عرض الشحن",
     "body": "رفض المشتري عرض الشحن بقيمة {{amount}}. يمكنك إرسال عرض معدل.",
     "category": "offers",
     "priority": "high",

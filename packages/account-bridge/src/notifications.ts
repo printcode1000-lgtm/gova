@@ -15,6 +15,13 @@
  */
 import { readNotificationGrants } from '@/features/notifications/domain/notification-grant-envelope';
 import { getNotificationsPublicUrl } from '@/core/config/public-env';
+import { isNativePlatform } from '@asol/native-core';
+import { deliverNotificationGrantsFromNative } from './mobile-push/deliver';
+
+export {
+  ensureMobilePushCredentials,
+  clearMobilePushCredentials,
+} from './mobile-push/enrollment';
 
 const SEND_PATH = '/api/notifications/send';
 const TIMEOUT_MS = 10_000;
@@ -115,6 +122,16 @@ export async function deliverNotificationGrants(
   const grants = readNotificationGrants(body);
   if (grants.length === 0) {
     return { attempted: 0, delivered: 0, unavailable: 0, recipientResults: [] };
+  }
+
+  if (isNativePlatform()) {
+    const nativeResult = await deliverNotificationGrantsFromNative(grants);
+    return {
+      attempted: grants.length,
+      delivered: nativeResult.delivered,
+      unavailable: nativeResult.unavailable,
+      recipientResults: nativeResult.recipientResults,
+    };
   }
 
   const baseUrl = getNotificationsPublicUrl();

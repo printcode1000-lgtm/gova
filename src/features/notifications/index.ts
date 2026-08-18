@@ -107,3 +107,15 @@ export {
   NOTIFICATION_GRANTS_KEY,
   type NotificationGrantCarrier,
 } from "./domain/notification-grant-envelope";
+
+/**
+ * Native grant-delivery identity.
+ *
+ * Auth sets who is carrying grants on this device; the account-bridge reads it
+ * without importing the auth graph.
+ */
+export {
+  getNotificationGrantDeliveryIdentity,
+  setNotificationGrantDeliveryIdentity,
+  type NotificationGrantDeliveryIdentity,
+} from "./domain/notification-grant-delivery-context";

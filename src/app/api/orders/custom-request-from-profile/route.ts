@@ -7,7 +7,8 @@ import { getMarketplaceOrderService } from "@/modules/data-access/domains/market
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
 import { mapOrderError } from "../order-api-helpers";
-import { grantSellerOrderCreated } from "../[orderId]/actions/route-parts/route.action-grants";
+import { fulfillmentSettingsToSnapshot } from "@/modules/marketplace-orders/domain/fulfillment-snapshot";
+import { grantBuyerOrderCreated, grantSellerOrderCreated } from "../[orderId]/actions/route-parts/route.action-grants";
 
 interface CustomRequestImageInput {
   imageKey: string;
@@ -109,10 +110,24 @@ export async function POST(request: Request) {
         );
       }
 
+      const sellerOrderId = String(item.seller_order_id ?? "");
+      if (sellerOrderId) {
+        await service.stampSellerOrderFulfillmentSnapshot(
+          sellerOrderId,
+          fulfillmentSettingsToSnapshot(sellerFulfillment),
+          actor,
+        );
+      }
+
       grantSellerOrderCreated(notificationGrants, {
         sellerUids: [sellerUid],
         orderId: String(order.id),
         source: "profile_custom_request",
+        routeName: "POST /api/orders/custom-request-from-profile",
+      });
+      grantBuyerOrderCreated(notificationGrants, {
+        buyerUid: body.uid,
+        orderId: String(order.id),
         routeName: "POST /api/orders/custom-request-from-profile",
       });
 
