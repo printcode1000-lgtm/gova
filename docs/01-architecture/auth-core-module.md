@@ -85,7 +85,7 @@ See [contact-and-account-deletion.md](../00-overview/contact-and-account-deletio
 
 ### `AuthOperationsService`
 
-Handles registration, login, profile update, email/phone normalization, and `getUserPhone(uid)` for server routes that need the auth record phone without importing query instances. Depends on `AuthUserRepositoryPort` and optional `ProfileSpecialtiesPort` (injected in bootstrap).
+Handles registration, login, profile update, email/phone normalization, and `getUserPhone(uid)` (server-only via `AuthService`, not the client `IAuthService` facade). Depends on `AuthUserRepositoryPort` and optional `ProfileSpecialtiesPort` (injected in bootstrap).
 
 ### `AccountDeletionService`
 

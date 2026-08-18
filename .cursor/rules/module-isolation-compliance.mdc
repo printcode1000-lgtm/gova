@@ -1,0 +1,58 @@
+---
+description: Mandatory module isolation compliance — respect sealed package boundaries on every change
+alwaysApply: true
+---
+
+# Module Isolation Compliance (always binding)
+
+Every change must respect `docs/01-architecture/module-isolation-rules.md`.
+Violations cause silent breaks, seal bypasses, and CI gaps.
+
+## Before editing
+
+1. Read `docs/01-architecture/module-isolation-rules.md` (full contract).
+2. If the change touches a sealed `@asol/*` package, read that package's section in the same doc.
+3. Identify which declared door(s) the call site may use — never reach internals.
+
+## The eight rules (summary)
+
+| # | Rule |
+|---|------|
+| 1 | Sensitive logic stays inside the core module |
+| 2 | Interact only through declared public API doors |
+| 3 | Unit + integration tests must gate the build |
+| 4 | Modules validate their own inputs at boundaries |
+| 5 | No deep imports of internal files |
+| 6 | Branch protection + required CI checks stay green |
+| 7 | Packages are independent (`packages/<name>`) |
+| 8 | Single responsibility per file |
+| 9 | Dependency upgrades stay inside the owning module |
+
+## Forbidden patterns
+
+- Deep imports: `@asol/<pkg>/src/...`, `@asol/<pkg>/internal/...`, or any path not in `exports`
+- Relative imports into `packages/` from `src/` (e.g. `../packages/foo/src/index`)
+- Wildcard `exports` (`"./*"`) or `tsconfig` `"@asol/<name>/*"` path aliases
+- Wiring app code directly to another package's internals instead of its door
+- Adding a new public surface without updating `package.json` `exports` and contract tests
+
+## Package boundaries
+
+- Import only through doors listed in each package's `package.json` `exports` map.
+- Browser vs server: use the correct door (e.g. `@asol/storage-core` vs `@asol/storage-core/server`).
+- Composition packages (`*-composition`) wire ports; capability packages (`*-core`) own logic.
+- When unsure which door to use, search the doc section for that package before coding.
+
+## CI gates (must stay green)
+
+```text
+npm run architecture:check
+```
+
+Run the relevant `test:*-core` or `test:compositions` script for any package you touch.
+Any change that breaks these gates is incomplete.
+
+## Docs
+
+When a change affects package doors, boundaries, or enforcement, update
+`docs/01-architecture/module-isolation-rules.md` in the same change (English only).

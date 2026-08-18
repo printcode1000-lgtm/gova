@@ -7,8 +7,8 @@ const REPORT_MARKER = "[ASOL_DEPLOY_REPORT] ";
 /** Strip debugger hooks so nested npm/tsx children do not lose piped stdout. */
 export function childProcessEnvForDeployment(
   overlay: Record<string, string> = {},
-): Record<string, string> {
-  const env = { ...process.env, ...overlay } as Record<string, string>;
+): NodeJS.ProcessEnv {
+  const env = { ...process.env, ...overlay };
   delete env.NODE_OPTIONS;
   delete env.VSCODE_INSPECTOR_OPTIONS;
   delete env.VSCODE_NODE_CWD;
