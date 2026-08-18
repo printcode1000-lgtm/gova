@@ -3,6 +3,10 @@ import { isDevelopment } from '@/core/config';
 import { DEV_TRACE_HEADER } from '@/core/monitor/dev-trace-types';
 import { getDevTrace, serializeDevTrace } from '@/core/monitor/server-trace';
 import { isQuietMappedServiceError } from '@/core/api/expected-business-error-codes';
+import {
+  KNOWN_BUSINESS_API_ERROR_CODES,
+  sanitizeApiErrorCodeForClient,
+} from '@/core/api/business-api-error-codes';
 import { logServerSystemIssue } from '@/features/system-logs/services/persistent-system-log-service.server';
 import { isErrorAlreadyLogged } from '@asol/system-logs-core/server';
 
@@ -24,7 +28,12 @@ export function apiError(
   status = 400,
   options: { skipPersistence?: boolean } = {},
 ): NextResponse {
-  if (status >= 500 && !options.skipPersistence && !message.includes('/api/system-logs')) {
+  const clientMessage = sanitizeApiErrorCodeForClient(message, status);
+  if (
+    status >= 500 &&
+    !options.skipPersistence &&
+    !message.includes('/api/system-logs')
+  ) {
     void logServerSystemIssue({
       error: new Error(message),
       feature: 'BusinessAPI',
@@ -39,7 +48,7 @@ export function apiError(
     });
   }
   return attachDevTraceHeaders(
-    NextResponse.json({ error: message }, { status }),
+    NextResponse.json({ error: clientMessage }, { status }),
   );
 }
 
@@ -81,101 +90,11 @@ export function mapServiceError(error: unknown): NextResponse {
 
   const message =
     error instanceof Error ? error.message : 'Internal Server Error';
-  const knownCodes = [
-    'userNotFound',
-    'invalidPassword',
-    'passwordTooShort',
-    'phoneAlreadyRegistered',
-    'emailAlreadyRegistered',
-    'invalidCurrentPassword',
-    'currentPasswordRequired',
-    'invalidStoreDetails',
-    'invalidProfileContacts',
-    'invalidProfileEditor',
-    'invalidDeliveryCarrier',
-    'phoneVerificationRequired',
-    'invalidNotificationToken',
-    'notificationTokenSaveFailed',
-    'notificationTokenIdentifierRequired',
-    'notificationRecipientsRequired',
-    'notificationDedupeKeyRequired',
-    'notificationContentRequired',
-    'notificationContentTooLong',
-    'notificationRouteInvalid',
-    'notificationTestScenarioInvalid',
-    'notificationBroadcastForbidden',
-    'webPushNotConfigured',
-    'invalidFollowTarget',
-    'followLoginRequired',
-    'followSelfNotAllowed',
-    'otaReleaseIdentityRequired',
-    'otaReleaseNotFound',
-    'otaReleaseNotCurrent',
-    'otaReleaseSaveFailed',
-    'otaManifestInvalid',
-    'otaManifestUnavailable',
-    'otaManifestSignatureInvalid',
-    'otaNotConfigured',
-    'otaBaseReleaseRequired',
-    'otaBaseReleaseMatchesCurrent',
-    'otaStoredManifestInvalid',
-    'passwordRecoveryInvalidPhone',
-    'passwordRecoveryInvalidCode',
-    'passwordRecoveryWeakPassword',
-    'passwordRecoveryPasswordMismatch',
-    'passwordRecoveryInvalidToken',
-    'invalidContactMessage',
-    'accountDeletionConfirmationInvalid',
-    'specialtyChatMessageInvalid',
-    'specialtyChatRequestInvalid',
-    'specialtyChatSelectionInvalid',
-    'specialtyChatCapabilityInvalid',
-    'specialtyChatCapabilityExpired',
-    'specialtyChatReceiptInvalid',
-    'sessionTokenInvalid',
-    'sessionTokenExpired',
-    'specialtyChatLoginRefreshRequired',
-    'invalidImpersonationTarget',
-    'dataHealthCleanupConfirmationRequired',
-    'dataHealthSelectionRequired',
-    'dataHealthSelectionTooLarge',
-    'dataHealthSelectionChanged',
-    'dataHealthPlanInvalid',
-    'dataHealthPlanConsumed',
-    'dataHealthPlanExpired',
-    'dataHealthEnvironmentChanged',
-    'dataHealthCleanupBusy',
-    'dataHealthQuarantineInvalid',
-    'dataHealthQuarantineNotEligible',
-    'dataHealthQuarantineNoLongerOrphan',
-    'dataHealthNoOrdersToPurge',
-    'dataHealthOrderPurgePlanInvalid',
-    'dataHealthOrderPurgePlanConsumed',
-    'dataHealthOrderPurgePlanExpired',
-    'dataHealthOrderPurgeConfirmationRequired',
-    'dataHealthOrderPurgeBusy',
-    'dataHealthOrderPurgeSelectionChanged',
-    'dataHealthOrderPurgeIncomplete',
-    'dataHealthDevelopmentOnly',
-    'devCloudBackupDevelopmentOnly',
-    'devCloudBackupFileRequired',
-    'devCloudBackupFileInvalid',
-    'devCloudBackupNotFound',
-    'devCloudBackupManifestMissing',
-    'devCloudBackupManifestUnsupported',
-    'devCloudBackupManifestInvalidEnvironment',
-    'devCloudBackupTursoSourceMissing',
-    'devCloudBackupRestoreConfirmationRequired',
-    'devCloudBackupArchiveIncomplete',
-    'googlePlayConsoleDevelopmentOnly',
-    'googlePlayConsoleCredentialsMissing',
-    'googlePlayEditMissing',
-    'googlePlayImageFileRequired',
-    'googlePlayImageIdRequired',
-    'googlePlayFastlaneActionRequired',
-    'googlePlayProductionConfirmationRequired',
-  ];
-  if (knownCodes.includes(message)) {
+  const knownCodes = KNOWN_BUSINESS_API_ERROR_CODES.filter(
+    (code) =>
+      !['forbidden', 'invalidJsonBody', 'internalServerError', 'unexpectedError', 'requestFailed', 'invalidLoginResponse'].includes(code),
+  );
+  if (knownCodes.includes(message as (typeof knownCodes)[number])) {
     if (!isQuietMappedServiceError(message)) {
       void logMappedServiceError(error, message, 400);
     }
@@ -230,7 +149,7 @@ export function mapServiceError(error: unknown): NextResponse {
   }
 
   void logMappedServiceError(error, message, 500);
-  return apiError(message, 500, { skipPersistence: true });
+  return apiError('internalServerError', 500, { skipPersistence: true });
 }
 
 async function logMappedServiceError(

@@ -77,7 +77,7 @@ export function ProductPageContent({
   const returnTo = searchParams.get("returnTo");
   const returnUrl =
     returnTo === "profile-products" ? "/profile?mode=edit&tab=products" : null;
-  const { locale } = useTranslation();
+  const { locale, formatApiError } = useTranslation();
   const { session, isLoggedIn, isLoading: sessionLoading } = useSession();
   const [product, setProduct] = React.useState<ProductRecord | null>(
     initialProduct,
@@ -186,12 +186,7 @@ export function ProductPageContent({
         }
         if (!cancelled) setStyle(loadedStyle);
       } catch (loadError) {
-        if (!cancelled)
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : "تعذر تحميل المنتج.",
-          );
+        if (!cancelled) setError(formatApiError(loadError));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -208,6 +203,7 @@ export function ProductPageContent({
     initialProduct,
     mode,
     productId,
+    formatApiError,
   ]);
 
   const productShareTitle =
@@ -379,9 +375,7 @@ export function ProductPageContent({
         );
       }
     } catch (saveError) {
-      setError(
-        saveError instanceof Error ? saveError.message : "تعذر حفظ المنتج.",
-      );
+      setError(formatApiError(saveError));
     } finally {
       setSaving(false);
     }

@@ -142,7 +142,7 @@ export function BlobImageUpload({
   hint,
   error,
 }: BlobImageUploadProps) {
-  const { t } = useTranslation();
+  const { t, formatApiError } = useTranslation();
   const [isDragging, setIsDragging] = React.useState(false);
   const [localError, setLocalError] = React.useState<string | null>(null);
 
@@ -202,7 +202,7 @@ export function BlobImageUpload({
       });
       if (!res.ok) {
         if (isCancelledError(res.error)) return;
-        setLocalError(res.error.message);
+        setLocalError(formatApiError(res.error));
         return;
       }
       const first = res.value[0];
@@ -213,9 +213,7 @@ export function BlobImageUpload({
     } catch (error) {
       // Dismissing the picker is a normal outcome, not an error.
       if (isCancelledError(error)) return;
-      setLocalError(
-        error instanceof Error ? error.message : String(error),
-      );
+      setLocalError(formatApiError(error));
     }
   };
 

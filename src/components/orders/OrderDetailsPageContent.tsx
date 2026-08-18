@@ -42,6 +42,7 @@ import {
 import type { DbRow, OrderDetails, OrderRole } from "./order-types";
 
 import { RunAction, text, BackToOrders, OrderSummary } from "./order-details/OrderDetailsPageContent.navigation-summary";
+import { useTranslation } from "@/lib/i18n";
 import { UnifiedDeliveryPlanPanel } from "./order-details/OrderDetailsPageContent.delivery-plan";
 import { SellerOrderCard } from "./order-details/OrderDetailsPageContent.seller-orders";
 import { OrderLevelActions, ShipmentsPanel } from "./order-details/OrderDetailsPageContent.shipments";
@@ -50,6 +51,7 @@ import { BuyerDeliveryAddressPanel } from "./order-details/OrderDetailsPageConte
 import { useOrderDetailsAutoRefresh } from "./OrderNotificationsController";
 
 export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
+  const { formatApiError } = useTranslation();
   const { session, isLoading: sessionLoading } = useSession();
   const searchParams = useSearchParams();
   const admin = isSuperAdmin(session);
@@ -72,11 +74,11 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
       )}`;
       setDetails(await asolApi.get<OrderDetails>(route));
     } catch (err) {
-      setError(err instanceof Error ? err.message : text.loadFailed);
+      setError(formatApiError(err));
     } finally {
       setLoading(false);
     }
-  }, [activeRole, orderId, session?.phone, session?.uid]);
+  }, [activeRole, formatApiError, orderId, session?.phone, session?.uid]);
 
   React.useEffect(() => {
     void load();
@@ -106,7 +108,7 @@ export function OrderDetailsPageContent({ orderId }: { orderId: string }) {
       );
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : text.actionFailed);
+      setError(formatApiError(err));
     } finally {
       setBusyAction("");
     }

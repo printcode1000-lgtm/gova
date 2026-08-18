@@ -44,6 +44,10 @@ every role the user holds on that order (buyer, seller, service_provider) so the
 list no longer needs a `role` filter. Super-admin listing returns all orders with
 empty `viewerRoles` and uses `role=admin` on the detail link.
 
+The list query never joins across shards. It gathers visible `order_id` values
+from `orders-core`, `orders-delivery-plans`, and `orders-fulfillment` in separate
+queries, then loads and sorts matching rows from `orders-core` only.
+
 **`GET /api/orders/<id>` stays on the main app.** The detail view enriches the
 order with the buyer's and seller's profile contacts, fulfilment settings, and
 store details — all in the profile shards, which this account has no credentials

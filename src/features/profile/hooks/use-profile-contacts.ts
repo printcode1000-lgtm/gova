@@ -21,7 +21,7 @@ function isContactsDirty(
 }
 
 export function useProfileContacts() {
-  const { t } = useTranslation();
+  const { formatApiError } = useTranslation();
   const { session } = useSession();
   const uid = session?.uid ?? '';
   const queryClient = useQueryClient();
@@ -86,13 +86,11 @@ export function useProfileContacts() {
 
   const error = useMemo(() => {
     if (contactsQuery.error) {
-      return (contactsQuery.error as Error).message;
+      return formatApiError(contactsQuery.error);
     }
     if (!saveMutation.error) return null;
-    const msg = (saveMutation.error as Error).message;
-    if (msg === 'userNotFound') return t('auth.validation.userNotFound');
-    return msg;
-  }, [contactsQuery.error, saveMutation.error, t]);
+    return formatApiError(saveMutation.error);
+  }, [contactsQuery.error, formatApiError, saveMutation.error]);
 
   const saveAsync = async () => {
     await saveMutation.mutateAsync(contacts);

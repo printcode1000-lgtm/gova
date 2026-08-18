@@ -22,7 +22,7 @@ import { queueRegistrationSuccessToast } from '@/features/auth/components/LoginS
 import { announceAuthLoginCompleted } from '../application/auth-lifecycle-events';
 
 export function useRegister() {
-  const { t } = useTranslation();
+  const { t, formatApiError } = useTranslation();
   const router = useRouter();
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
@@ -108,15 +108,8 @@ export function useRegister() {
 
   const error = useMemo(() => {
     if (!mutation.error) return null;
-    const msg = (mutation.error as Error).message;
-    if (msg === 'phoneAlreadyRegistered')
-      return t('auth.validation.phoneAlreadyRegistered');
-    if (msg === 'emailAlreadyRegistered')
-      return t('auth.validation.emailAlreadyRegistered');
-    if (msg === 'passwordTooShort')
-      return t('auth.validation.passwordMinLength');
-    return msg;
-  }, [mutation.error, t]);
+    return formatApiError(mutation.error);
+  }, [mutation.error, formatApiError]);
 
   const onSubmit = form.handleSubmit(
     (data) => {

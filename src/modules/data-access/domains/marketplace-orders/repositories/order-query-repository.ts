@@ -30,6 +30,45 @@ function uniqueStrings(values: unknown[]): string[] {
   return [...new Set(values.map((value) => String(value)).filter(Boolean))];
 }
 
+async function collectVisibleOrderIdsForUser(
+  db: MarketplaceDb,
+  userId: string,
+): Promise<string[]> {
+  const orderIdSet = new Set<string>();
+
+  const buyerRows = await db.execute("SELECT id FROM orders WHERE buyer_id=?", [
+    userId,
+  ]);
+  for (const row of buyerRows) orderIdSet.add(String(row.id));
+
+  const sellerRows = await db.execute(
+    "SELECT order_id FROM seller_orders WHERE seller_id=? OR service_provider_id=?",
+    [userId, userId],
+  );
+  for (const row of sellerRows) orderIdSet.add(String(row.order_id));
+
+  const candidates = await db.execute(
+    "SELECT plan_id FROM delivery_plan_candidates WHERE provider_id=?",
+    [userId],
+  );
+  const planIds = uniqueStrings(candidates.map((row) => row.plan_id));
+  if (planIds.length > 0) {
+    const planOrders = await db.execute(
+      `SELECT order_id FROM delivery_plans WHERE id IN (${placeholders(planIds)})`,
+      planIds,
+    );
+    for (const row of planOrders) orderIdSet.add(String(row.order_id));
+  }
+
+  const shipmentRows = await db.execute(
+    "SELECT DISTINCT order_id FROM shipments WHERE carrier_id=?",
+    [userId],
+  );
+  for (const row of shipmentRows) orderIdSet.add(String(row.order_id));
+
+  return [...orderIdSet];
+}
+
 export class OrderQueryRepository {
   constructor(private db: MarketplaceDb) {}
 
@@ -46,26 +85,15 @@ export class OrderQueryRepository {
           "SELECT * FROM orders ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?",
           [fetchLimit, offset],
         )
-      : await this.db.execute(
-          `SELECT o.* FROM orders o
-           WHERE o.buyer_id=?
-           OR EXISTS (
-             SELECT 1 FROM seller_orders so
-             WHERE so.order_id=o.id AND (so.seller_id=? OR so.service_provider_id=?)
-           )
-           OR EXISTS (
-             SELECT 1 FROM delivery_plans dp
-             INNER JOIN delivery_plan_candidates dpc ON dpc.plan_id=dp.id
-             WHERE dp.order_id=o.id AND dpc.provider_id=?
-           )
-           OR EXISTS (
-             SELECT 1 FROM shipments s
-             WHERE s.order_id=o.id AND s.carrier_id=?
-           )
-           ORDER BY o.created_at DESC, o.id DESC
-           LIMIT ? OFFSET ?`,
-          [userId, userId, userId, userId, userId, fetchLimit, offset],
-        );
+      : await (async () => {
+          const orderIds = await collectVisibleOrderIdsForUser(this.db, userId);
+          if (orderIds.length === 0) return [];
+          const rows = await this.db.execute(
+            `SELECT * FROM orders WHERE id IN (${placeholders(orderIds)}) ORDER BY created_at DESC, id DESC`,
+            orderIds,
+          );
+          return rows.slice(offset, offset + fetchLimit);
+        })();
 
     const hasMore = orders.length > limit;
     const page = hasMore ? orders.slice(0, limit) : orders;

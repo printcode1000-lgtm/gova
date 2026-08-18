@@ -19,7 +19,7 @@ import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-re
 import { announceAuthLoginCompleted } from '../application/auth-lifecycle-events';
 
 export function useLogin() {
-  const { t } = useTranslation();
+  const { t, formatApiError } = useTranslation();
   const router = useRouter();
   const { endGuestSession } = useGuestSession();
   const { setSession } = useSession();
@@ -81,11 +81,8 @@ export function useLogin() {
 
   const error = useMemo(() => {
     if (!mutation.error) return null;
-    const msg = (mutation.error as Error).message;
-    if (msg === 'userNotFound') return t('auth.validation.userNotFound');
-    if (msg === 'invalidPassword') return t('auth.validation.invalidPassword');
-    return msg;
-  }, [mutation.error, t]);
+    return formatApiError(mutation.error);
+  }, [mutation.error, formatApiError]);
 
   const onSubmit = form.handleSubmit(
     (data) => {

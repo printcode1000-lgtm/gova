@@ -24,7 +24,7 @@ const PAGE_SIZE = 5;
 
 export function OrdersPageContent() {
   const { session, isLoading: sessionLoading } = useSession();
-  const { locale } = useTranslation();
+  const { locale, formatApiError } = useTranslation();
   const copy = locale === "ar"
     ? {
         title: "الطلبات",
@@ -86,13 +86,13 @@ export function OrdersPageContent() {
         setItems((current) => (reset ? data.items : [...current, ...data.items]));
         setHasMore(data.hasMore);
       } catch (err) {
-        setError(err instanceof Error ? err.message : copy.loadFailed);
+        setError(formatApiError(err));
       } finally {
         setLoading(false);
         setLoadingMore(false);
       }
     },
-    [copy.loadFailed, session?.phone, session?.uid],
+    [formatApiError, session?.phone, session?.uid],
   );
 
   React.useEffect(() => {

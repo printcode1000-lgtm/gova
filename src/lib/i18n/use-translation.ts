@@ -8,6 +8,7 @@ import { useAppPreferences } from '@/lib/preferences';
 import { isArabicOnlyRoute } from './arabic-only-routes';
 import { isRtlLocale } from './constants';
 import type { TranslationKey } from './dictionaries';
+import { formatUserFacingApiError } from '@/core/api/user-facing-api-error';
 import { translate } from './translate';
 import type { Locale, TranslationParams } from './types';
 
@@ -29,13 +30,20 @@ export function useTranslation() {
     [updatePreferences],
   );
 
+  const formatApiError = useCallback(
+    (error: unknown, fallbackKey?: string) =>
+      formatUserFacingApiError(t, error, fallbackKey),
+    [t],
+  );
+
   return useMemo(
     () => ({
       t,
       locale,
       changeLanguage,
       isRTL: isRtlLocale(locale),
+      formatApiError,
     }),
-    [t, locale, changeLanguage],
+    [t, locale, changeLanguage, formatApiError],
   );
 }

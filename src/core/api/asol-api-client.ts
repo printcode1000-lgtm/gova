@@ -1,4 +1,5 @@
 import { ApiError, NetworkOfflineError, NetworkUnavailableError } from './api-error';
+import { sanitizeApiErrorCodeForClient } from './business-api-error-codes';
 import { buildAsolApiUrl, buildPublicAssetUrl } from './asol-api-config';
 import { asolHttpFetch } from './asol-http-transport';
 import { trackAsolApiRequest } from '@/core/monitor/asol-api-monitor';
@@ -99,19 +100,23 @@ export class AsolApiClient {
     }
 
     if (!response.ok) {
-      const message =
+      const rawMessage =
         typeof data === 'object' &&
         data !== null &&
         'error' in data &&
         typeof (data as { error: unknown }).error === 'string'
           ? (data as { error: string }).error
           : `Request failed (${response.status})`;
+      const message = sanitizeApiErrorCodeForClient(rawMessage, response.status);
       throw new ApiError(message, response.status);
     }
 
     if (text && !contentType.includes('application/json')) {
       throw new ApiError(
-        `Expected JSON response but received ${contentType || 'an unknown content type'}`,
+        sanitizeApiErrorCodeForClient(
+          `Expected JSON response but received ${contentType || 'an unknown content type'}`,
+          response.status,
+        ),
         response.status,
       );
     }

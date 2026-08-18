@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { useTranslation } from "@/lib/i18n";
 import { pharmacyProfileCatalogApi } from "../services/pharmacy-profile-catalog-api";
 import {
   PHARMACY_MAIN_CATEGORY_ID,
@@ -22,6 +23,7 @@ import { PharmacyCategoryIcon } from "./PharmacyCategoryIcon";
 import { text, CreateCategoryDialog, IconButton, ManagerColumn, ProductManagerCard, StatusBadge, VisibilityButton, LoadingFrame, MessageFrame } from "./catalog-manager/PharmacyCatalogManagerPage.dialogs";
 
 export function PharmacyCatalogManagerPage() {
+  const { formatApiError } = useTranslation();
   const searchParams = useSearchParams();
   const requestedUid = searchParams.get("uid") ?? "";
   const { session, isLoading } = useSession();
@@ -55,11 +57,11 @@ export function PharmacyCatalogManagerPage() {
     try {
       setCatalog(await pharmacyProfileCatalogApi.list(uid, true));
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : String(loadError));
+      setError(formatApiError(loadError));
     } finally {
       setBusy(false);
     }
-  }, [allowed, uid]);
+  }, [allowed, formatApiError, uid]);
 
   React.useEffect(() => {
     void load();

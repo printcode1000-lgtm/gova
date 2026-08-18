@@ -15,6 +15,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { asolApi } from "@/core/api";
+import { useTranslation } from "@/lib/i18n";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 
@@ -109,6 +110,7 @@ function operationBusyFor(busy: string, kind: BackupOperationKind, fileName: str
 }
 
 export function DevCloudBackupPage() {
+  const { formatApiError } = useTranslation();
   const { session, isLoading } = useSession();
   const allowedUser = !isLoading && isSuperAdmin(session);
   const [state, setState] = React.useState<ListResponse | null>(null);
@@ -146,11 +148,7 @@ export function DevCloudBackupPage() {
         }),
       );
     } catch (loadError) {
-      setError(
-        loadError instanceof Error
-          ? loadError.message
-          : "تعذر تحميل حالة النسخ الاحتياطي",
-      );
+      setError(formatApiError(loadError));
     } finally {
       setBusy("");
     }
@@ -205,11 +203,7 @@ export function DevCloudBackupPage() {
       setNotice("تم إنشاء النسخة الاحتياطية وحفظها محليًا.");
       await load();
     } catch (createError) {
-      setError(
-        createError instanceof Error
-          ? createError.message
-          : "تعذر إنشاء النسخة الاحتياطية",
-      );
+      setError(formatApiError(createError));
     } finally {
       setBusy("");
     }
@@ -231,11 +225,7 @@ export function DevCloudBackupPage() {
       anchor.click();
       URL.revokeObjectURL(url);
     } catch (downloadError) {
-      setError(
-        downloadError instanceof Error
-          ? downloadError.message
-          : "تعذر تنزيل النسخة الاحتياطية",
-      );
+      setError(formatApiError(downloadError));
     } finally {
       setBusy("");
     }
@@ -266,10 +256,7 @@ export function DevCloudBackupPage() {
       finishOperation("done", message);
       await load();
     } catch (updateError) {
-      const message =
-        updateError instanceof Error
-          ? updateError.message
-          : "تعذر تحديث النسخة المحفوظة";
+      const message = formatApiError(updateError);
       setError(message);
       finishOperation("failed", message);
     } finally {
@@ -304,10 +291,7 @@ export function DevCloudBackupPage() {
       setNotice(message);
       finishOperation("done", message);
     } catch (inspectError) {
-      const message =
-        inspectError instanceof Error
-          ? inspectError.message
-          : "تعذر فحص النسخة المحفوظة";
+      const message = formatApiError(inspectError);
       setError(message);
       finishOperation("failed", message);
     } finally {
@@ -342,10 +326,7 @@ export function DevCloudBackupPage() {
       setNotice(message);
       finishOperation("done", message);
     } catch (compareError) {
-      const message =
-        compareError instanceof Error
-          ? compareError.message
-          : "تعذر مقارنة النسخة المحفوظة";
+      const message = formatApiError(compareError);
       setError(message);
       finishOperation("failed", message);
     } finally {
@@ -371,11 +352,7 @@ export function DevCloudBackupPage() {
       setNotice(`تم حذف النسخة المحلية ${fileName}.`);
       await load();
     } catch (deleteError) {
-      setError(
-        deleteError instanceof Error
-          ? deleteError.message
-          : "تعذر حذف النسخة المحفوظة",
-      );
+      setError(formatApiError(deleteError));
     } finally {
       setBusy("");
     }
@@ -414,10 +391,7 @@ export function DevCloudBackupPage() {
       setNotice(message);
       await load();
     } catch (restoreError) {
-      const message =
-        restoreError instanceof Error
-          ? restoreError.message
-          : "تعذر تنفيذ الاستعادة";
+      const message = formatApiError(restoreError);
       finishOperation("failed", message);
       setError(message);
     } finally {

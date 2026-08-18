@@ -4,7 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { Search, ShieldAlert, UserCheck, UserRoundSearch } from "lucide-react";
 
-import { asolApi } from "@/core/api";
+import { asolApi } from "@/core/api/asol-api-client";
+import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSession } from "@/features/auth/components/SessionProvider";
@@ -44,6 +45,7 @@ function specialtyLabel(value: string) {
 }
 
 export function SuperAdminUsersPage() {
+  const { formatApiError } = useTranslation();
   const { session, isLoading, setSession } = useSession();
   const allowed = !isLoading && isSuperAdmin(session);
   const [query, setQuery] = React.useState("");
@@ -75,7 +77,7 @@ export function SuperAdminUsersPage() {
       );
       setResults(data.results);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "تعذر البحث في المستخدمين");
+      setError(formatApiError(err));
     } finally {
       setLoading(false);
     }
@@ -104,7 +106,7 @@ export function SuperAdminUsersPage() {
       window.location.assign("/profile?mode=edit");
     } catch (err) {
       await asolDbDeleteSuperAdminOriginalSession();
-      setError(err instanceof Error ? err.message : "تعذر الدخول كصاحب الحساب");
+      setError(formatApiError(err));
     } finally {
       setImpersonatingUid("");
     }

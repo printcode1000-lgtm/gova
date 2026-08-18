@@ -7,7 +7,10 @@ import type {
   SellerDiscountRule,
 } from "../entities/seller-discount.entity";
 
+import { useTranslation } from "@/lib/i18n";
+
 export function useSellerDiscounts(sellerUid: string, includeInactive = true) {
+  const { formatApiError } = useTranslation();
   const [discounts, setDiscounts] = React.useState<SellerDiscountRule[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -27,11 +30,11 @@ export function useSellerDiscounts(sellerUid: string, includeInactive = true) {
         ),
       );
     } catch (nextError) {
-      setError((nextError as Error).message);
+      setError(formatApiError(nextError));
     } finally {
       setIsLoading(false);
     }
-  }, [includeInactive, sellerUid]);
+  }, [formatApiError, includeInactive, sellerUid]);
 
   React.useEffect(() => {
     void reload();

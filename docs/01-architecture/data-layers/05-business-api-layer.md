@@ -45,6 +45,17 @@ Applied on first SQLite connection in `sqlite-db-client.ts` — not in route han
 
 Business API = **JSON boundary** — no SQL in routes.
 
+## User-facing errors
+
+API routes must return **stable error codes** only, never raw exception text.
+`mapServiceError()` and `apiError()` sanitize unknown or technical messages to
+`internalServerError` / `requestFailed` before they reach the client. The full
+failure is still logged through `@asol/system-logs-core` on the server.
+
+In the browser, `formatUserFacingApiError()` / `useTranslation().formatApiError`
+map those codes (and network failures) to localized copy under `errors.api.*`.
+UI must not render `error.message` from API failures directly.
+
 ## Adding an API for a new database
 
 1. Route under `src/app/api/<domain>/`
