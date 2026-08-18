@@ -1,0 +1,4 @@
+# Gradle outputs for the Capacitor :native-core Android library module.
+# Long paths under build/.transforms/ break `git add -A` on Windows during deploy.
+.gradle/
+build/

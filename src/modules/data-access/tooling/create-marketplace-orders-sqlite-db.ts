@@ -1,10 +1,10 @@
-import { existsSync, mkdirSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync } from "fs";
 import path from "path";
 import Database from "better-sqlite3";
 
 import { MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH } from "@/modules/data-access/core/database/environment";
 
-const migrationPath = path.join(
+const migrationsDir = path.join(
   process.cwd(),
   "src",
   "modules",
@@ -13,7 +13,6 @@ const migrationPath = path.join(
   "marketplace-orders",
   "db",
   "migrations",
-  "0000_marketplace_orders.sql",
 );
 
 const dbDir = path.dirname(MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH);
@@ -22,8 +21,12 @@ if (!existsSync(dbDir)) mkdirSync(dbDir, { recursive: true });
 const db = new Database(MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH);
 try {
   db.pragma("foreign_keys = ON");
-  db.exec(readFileSync(migrationPath, "utf8"));
-  console.log("Applied marketplace orders migration to local SQLite.");
+  for (const file of readdirSync(migrationsDir)
+    .filter((name) => name.endsWith(".sql"))
+    .sort()) {
+    db.exec(readFileSync(path.join(migrationsDir, file), "utf8"));
+  }
+  console.log("Applied marketplace orders migrations to local SQLite.");
 } finally {
   db.close();
 }

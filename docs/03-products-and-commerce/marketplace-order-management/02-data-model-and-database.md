@@ -27,7 +27,7 @@ links may contain one unified shipment or several hybrid group shipments.
 
 ## Development database
 
-Development uses generated order shard files in `public/sync_data/sync_sqlite` (`orders-core.db`, `orders-items.db`, and the remaining order shards). `npm run db:ensure` refreshes the shards from the local source database and verifies all 17 profile/order shards exist.
+Development uses generated order shard files in `public/sync_data/sync_sqlite` (`orders-core.db`, `orders-items.db`, and the remaining order shards). `npm run db:ensure` applies pending migrations under `marketplace-orders/db/migrations` to the local source database, refreshes the shards from it, and verifies all 17 profile/order shards exist. After adding a migration such as `0001_seller_order_fulfillment_snapshot.sql` (`seller_orders.fulfillment_snapshot_json`), run `npm run db:ensure` then `npm run db:schema:sync` before deploying code that reads the new column.
 
 ## Production database
 

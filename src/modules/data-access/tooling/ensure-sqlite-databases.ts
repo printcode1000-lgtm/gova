@@ -47,6 +47,25 @@ ensureDatabase(
 );
 
 const BetterSqlite = require("better-sqlite3") as typeof import("better-sqlite3");
+const ordersDatabase = new BetterSqlite(MARKETPLACE_ORDERS_SOURCE_SQLITE_DB_PATH);
+try {
+  for (const migration of [
+    "src/modules/data-access/domains/marketplace-orders/db/migrations/0001_seller_order_fulfillment_snapshot.sql",
+  ]) {
+    try {
+      ordersDatabase.exec(readFileSync(path.join(process.cwd(), migration), "utf8"));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (!message.toLowerCase().includes("duplicate column")) {
+        throw error;
+      }
+    }
+  }
+  console.log("Marketplace orders source schema ready for shard split");
+} finally {
+  ordersDatabase.close();
+}
+
 const profileDatabase = new BetterSqlite(PROFILE_SOURCE_SQLITE_DB_PATH);
 try {
   for (const migration of [

@@ -68,6 +68,8 @@ first place a problem is discovered. In order, the preflight:
    Vercel builds;
 4. refuses to publish scratch files (`__probe*`, `*.log`, `*.tmp`, `*.bak`,
    scratchpad paths), since `git add -A` stages whatever is in the tree;
+   `packages/native-core/android/build/` is gitignored so local Gradle output
+   never enters a deployment commit;
 5. refuses a downgrade of `releaseId`, `version`, or `minimumNativeVersion` in
    `public/asol-web-manifest.json` — what a verification-only `build:static`
    produces when the release environment variables are unset;

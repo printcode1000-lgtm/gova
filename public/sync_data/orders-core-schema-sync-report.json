@@ -1,16 +1,25 @@
 {
-  "executedAt": "2026-08-18T06:58:59.669Z",
-  "durationMs": 3358,
-  "sqliteSchemaVersion": "869fdf53232b59e9",
+  "executedAt": "2026-08-18T17:39:55.326Z",
+  "durationMs": 3299,
+  "sqliteSchemaVersion": "1aedfab07733c4eb",
   "tursoSchemaVersionBefore": "869fdf53232b59e9",
-  "tursoSchemaVersionAfter": "869fdf53232b59e9",
-  "operations": [],
+  "tursoSchemaVersionAfter": "bcbe6be11ea61c64",
+  "operations": [
+    {
+      "type": "ADD_COLUMN",
+      "tableName": "seller_orders",
+      "sql": "ALTER TABLE \"seller_orders\" ADD COLUMN \"fulfillment_snapshot_json\" TEXT NOT NULL DEFAULT '{}'",
+      "description": "Add column \"seller_orders.fulfillment_snapshot_json\""
+    }
+  ],
   "tablesModified": 0,
-  "columnsAdded": 0,
+  "columnsAdded": 1,
   "indexesAdded": 0,
   "viewsAdded": 0,
   "triggersAdded": 0,
-  "sqlExecuted": [],
+  "sqlExecuted": [
+    "ALTER TABLE \"seller_orders\" ADD COLUMN \"fulfillment_snapshot_json\" TEXT NOT NULL DEFAULT '{}'"
+  ],
   "errors": [],
   "warnings": [],
   "skipped": false
