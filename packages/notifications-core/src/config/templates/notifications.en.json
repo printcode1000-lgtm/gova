@@ -340,7 +340,7 @@
     "sound": "silent"
   },
   "shipping.quoteRequested": {
-    "title": "Shipping quote requested",
+    "title": "📦 Shipping quote requested",
     "body": "Order {{orderNumber}} needs a location-based shipping quote.",
     "category": "offers",
     "priority": "high",
@@ -351,7 +351,7 @@
     "sound": "default"
   },
   "shipping.quoteProposed": {
-    "title": "New shipping quote",
+    "title": "💸 New shipping quote",
     "body": "A shipping quote of {{amount}} was sent. Open the order to accept or reject it.",
     "category": "offers",
     "priority": "high",
@@ -362,7 +362,7 @@
     "sound": "default"
   },
   "shipping.quoteAccepted": {
-    "title": "Shipping quote accepted",
+    "title": "✅ Shipping quote accepted",
     "body": "The buyer accepted the shipping quote of {{amount}}.",
     "category": "offers",
     "priority": "high",
@@ -373,7 +373,7 @@
     "sound": "default"
   },
   "shipping.quoteRejected": {
-    "title": "Shipping quote rejected",
+    "title": "❌ Shipping quote rejected",
     "body": "The buyer rejected the shipping quote of {{amount}}. You can send a revised quote.",
     "category": "offers",
     "priority": "high",
@@ -384,7 +384,7 @@
     "sound": "default"
   },
   "delivery.planInvitation": {
-    "title": "Unified delivery request",
+    "title": "🚚 Unified delivery request",
     "body": "A multi-seller order with {{sellerCount}} pickup stops. You can send one quote for the whole delivery.",
     "category": "offers",
     "priority": "high",
@@ -398,7 +398,7 @@
     "sound": "default"
   },
   "delivery.quoteProposed": {
-    "title": "New unified delivery quote",
+    "title": "💸 New unified delivery quote",
     "body": "A quote of {{amount}} arrived to collect your order from several sellers in one shipment.",
     "category": "offers",
     "priority": "high",
@@ -409,8 +409,8 @@
     "sound": "default"
   },
   "delivery.quoteAccepted": {
-    "title": "Unified delivery quote selected",
-    "body": "The buyer accepted your quote of {{amount}}.",
+    "title": "✅ Unified delivery quote accepted",
+    "body": "The buyer accepted the unified delivery quote of {{amount}}.",
     "category": "offers",
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
@@ -423,8 +423,8 @@
     "sound": "default"
   },
   "delivery.quoteRejected": {
-    "title": "Delivery quote not selected",
-    "body": "The buyer rejected the delivery quote of {{amount}}. You can send a revised quote.",
+    "title": "❌ Unified delivery quote rejected",
+    "body": "The buyer rejected the unified delivery quote of {{amount}}. A revised quote can be sent.",
     "category": "offers",
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
@@ -437,7 +437,7 @@
     "sound": "default"
   },
   "delivery.separateSelected": {
-    "title": "Separate delivery selected",
+    "title": "🔀 Separate delivery selected",
     "body": "The buyer chose to keep each seller's delivery independent.",
     "category": "offers",
     "priority": "high",

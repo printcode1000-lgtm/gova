@@ -6,6 +6,7 @@ import {
 } from "@/features/notifications/server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 import type { ActorRole } from "@/modules/marketplace-orders/domain/enums";
+import { excludeActorFromPartyUids } from "./order-party-helpers.server";
 
 export interface ActionInput {
   uid: string;
@@ -45,9 +46,10 @@ export function grantDeliveryPlan(
     quoteId?: string;
     status: keyof typeof DELIVERY_PLAN_TEMPLATES;
     amount?: number;
+    actorUid?: string | null;
   },
 ): void {
-  const recipients = Array.from(new Set(input.uids.filter(Boolean)));
+  const recipients = excludeActorFromPartyUids(input.uids, input.actorUid);
   if (recipients.length === 0) return;
   const issued = grants.issue({
     uids: recipients,
@@ -102,9 +104,10 @@ export function issueOrderPartyGrant(
     variables?: Record<string, unknown>;
     variablesByLocale?: ReturnType<typeof moneyVariablesByLocale>;
     metadata?: Record<string, unknown>;
+    actorUid?: string | null;
   },
 ): void {
-  const recipients = Array.from(new Set(input.uids.filter(Boolean)));
+  const recipients = excludeActorFromPartyUids(input.uids, input.actorUid);
   if (recipients.length === 0) return;
   const issued = grants.issue({
     uids: recipients,
@@ -137,10 +140,12 @@ export function grantBuyerAddressApplied(
     orderId: string;
     sellerUids: string[];
     providerUids: string[];
+    actorUid?: string | null;
   },
 ): void {
   issueOrderPartyGrant(grants, {
     uids: input.sellerUids,
+    actorUid: input.actorUid,
     templateId: ORDER_BUYER_ADDRESS_SELLER_TEMPLATE,
     dedupeKey: `order.buyer-address:${input.orderId}:sellers`,
     orderId: input.orderId,
@@ -149,6 +154,7 @@ export function grantBuyerAddressApplied(
   });
   issueOrderPartyGrant(grants, {
     uids: input.providerUids,
+    actorUid: input.actorUid,
     templateId: ORDER_BUYER_ADDRESS_PROVIDER_TEMPLATE,
     dedupeKey: `order.buyer-address:${input.orderId}:providers`,
     orderId: input.orderId,
@@ -164,10 +170,12 @@ export function grantCarrierLinkedToOrder(
     buyerUid: string;
     carrierUid: string;
     sellerOrderId: string;
+    actorUid?: string | null;
   },
 ): void {
   issueOrderPartyGrant(grants, {
     uids: [input.buyerUid],
+    actorUid: input.actorUid,
     templateId: ORDER_CARRIER_LINKED_BUYER_TEMPLATE,
     dedupeKey: `order.carrier-linked:${input.orderId}:buyer:${input.sellerOrderId}`,
     orderId: input.orderId,
@@ -180,6 +188,7 @@ export function grantCarrierLinkedToOrder(
   });
   issueOrderPartyGrant(grants, {
     uids: [input.carrierUid],
+    actorUid: input.actorUid,
     templateId: ORDER_CARRIER_LINKED_PROVIDER_TEMPLATE,
     dedupeKey: `order.carrier-linked:${input.orderId}:provider:${input.sellerOrderId}`,
     orderId: input.orderId,
@@ -199,10 +208,12 @@ export function grantShippingQuoteRequested(
     sellerOrderId: string;
     sellerUid: string;
     providerUid?: string;
+    actorUid?: string | null;
   },
 ): void {
   issueOrderPartyGrant(grants, {
     uids: [input.sellerUid],
+    actorUid: input.actorUid,
     templateId: SHIPPING_QUOTE_REQUESTED_TEMPLATE,
     dedupeKey: `shipping-quote-requested:${input.sellerOrderId}:seller`,
     orderId: input.orderId,
@@ -215,6 +226,7 @@ export function grantShippingQuoteRequested(
   if (input.providerUid) {
     issueOrderPartyGrant(grants, {
       uids: [input.providerUid],
+      actorUid: input.actorUid,
       templateId: SHIPPING_QUOTE_REQUESTED_TEMPLATE,
       dedupeKey: `shipping-quote-requested:${input.sellerOrderId}:provider`,
       orderId: input.orderId,
@@ -286,9 +298,10 @@ export function grantShippingQuote(
     quoteId: string;
     status: keyof typeof SHIPPING_QUOTE_TEMPLATES;
     amount: number;
+    actorUid?: string | null;
   },
 ): void {
-  const recipients = Array.from(new Set(input.uids.filter(Boolean)));
+  const recipients = excludeActorFromPartyUids(input.uids, input.actorUid);
   if (recipients.length === 0) return;
   const issued = grants.issue({
     uids: recipients,

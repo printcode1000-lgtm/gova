@@ -39,6 +39,7 @@ export async function issueShippingQuoteBootstrapGrants(
   orderId: string,
   details: OrderDetails,
   createdSellerOrderIds: string[],
+  actorUid?: string | null,
 ) {
   for (const sellerOrderId of createdSellerOrderIds) {
     const sellerOrder = details.sellerOrders.find(
@@ -50,6 +51,7 @@ export async function issueShippingQuoteBootstrapGrants(
       sellerOrderId,
       sellerUid: String(sellerOrder.seller_id ?? ""),
       providerUid: String(sellerOrder.service_provider_id ?? "") || undefined,
+      actorUid,
     });
   }
 }
@@ -104,12 +106,14 @@ export async function applyBuyerDeliveryToOrder(
     orderId,
     sellerUids: parties.sellerUids,
     providerUids: parties.providerUids,
+    actorUid: buyerUid,
   });
   await issueShippingQuoteBootstrapGrants(
     grants,
     orderId,
     details,
     createdSellerOrderIds,
+    buyerUid,
   );
 
   return { order, createdShippingQuotes: createdSellerOrderIds.length };
@@ -138,6 +142,7 @@ export async function applyCarrierToOrder(
     buyerUid: String(details.order.buyer_id ?? ""),
     carrierUid,
     sellerOrderId,
+    actorUid: actor.id,
   });
 
   details = (await queries.getDetails(orderId)) ?? details;
@@ -153,6 +158,7 @@ export async function applyCarrierToOrder(
       orderId,
       details,
       createdSellerOrderIds,
+      actor.id,
     );
   }
 
@@ -181,6 +187,7 @@ export async function syncSellerFulfillmentToOpenOrders(
     if (buyerUid) {
       issueOrderPartyGrant(grants, {
         uids: [buyerUid],
+        actorUid: sellerUid,
         templateId: "order.fulfillmentUpdated",
         dedupeKey: `order.fulfillment-sync:${orderId}:${sellerUid}:buyer`,
         orderId,
@@ -190,6 +197,7 @@ export async function syncSellerFulfillmentToOpenOrders(
     }
     issueOrderPartyGrant(grants, {
       uids: parties.providerUids,
+      actorUid: sellerUid,
       templateId: "order.fulfillmentUpdated",
       dedupeKey: `order.fulfillment-sync:${orderId}:${sellerUid}:providers`,
       orderId,

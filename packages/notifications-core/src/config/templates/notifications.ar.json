@@ -384,7 +384,7 @@
     "sound": "default"
   },
   "delivery.planInvitation": {
-    "title": "طلب عرض توصيل موحّد",
+    "title": "🚚 طلب عرض توصيل موحّد",
     "body": "طلب متعدد البائعين يضم {{sellerCount}} محطات استلام. يمكنك إرسال عرض واحد للتوصيل الكامل.",
     "category": "offers",
     "priority": "high",
@@ -398,7 +398,7 @@
     "sound": "default"
   },
   "delivery.quoteProposed": {
-    "title": "عرض جديد للتوصيل الموحّد",
+    "title": "💸 عرض جديد للتوصيل الموحّد",
     "body": "وصل عرض بقيمة {{amount}} لجمع طلبك من عدة بائعين في شحنة واحدة.",
     "category": "offers",
     "priority": "high",
@@ -409,8 +409,8 @@
     "sound": "default"
   },
   "delivery.quoteAccepted": {
-    "title": "تم اختيار عرض التوصيل الموحّد",
-    "body": "وافق المشتري على عرضك بقيمة {{amount}}.",
+    "title": "✅ تم قبول عرض التوصيل الموحّد",
+    "body": "وافق المشتري على عرض التوصيل الموحّد بقيمة {{amount}}.",
     "category": "offers",
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
@@ -423,8 +423,8 @@
     "sound": "default"
   },
   "delivery.quoteRejected": {
-    "title": "لم يتم اختيار عرض التوصيل",
-    "body": "رفض المشتري عرض التوصيل بقيمة {{amount}}. يمكنك إرسال عرض معدل.",
+    "title": "❌ لم يُقبل عرض التوصيل الموحّد",
+    "body": "رفض المشتري عرض التوصيل الموحّد بقيمة {{amount}}. يمكن إرسال عرض معدّل.",
     "category": "offers",
     "priority": "high",
     "channels": ["in_app", "web_push", "android_push", "ios_push"],
@@ -437,7 +437,7 @@
     "sound": "default"
   },
   "delivery.separateSelected": {
-    "title": "اختيار التوصيل المنفصل",
+    "title": "🔀 اختيار التوصيل المنفصل",
     "body": "اختار المشتري العودة إلى توصيل كل بائع بصورة مستقلة.",
     "category": "offers",
     "priority": "high",
