@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  type ServiceDeployTarget,
+  type DeployPushTarget,
   resolveServiceDeployTargets,
 } from "./deploy-push-target-choice";
 import {
@@ -27,14 +27,15 @@ const ROOT_VERCEL_LINK = path.join(ROOT, ".vercel", "project.json");
 const STALE_GIT_LOCK_AGE_MS = 2 * 60 * 1000;
 const FAIL_PREFIX = "[deploy:push] FAILED —";
 
-const SERVICE_DEPLOYS: Record<
-  ServiceDeployTarget,
-  { target: ServiceDeployTarget; script: string }
+const ISOLATED_DEPLOYS: Record<
+  DeployPushTarget,
+  { target: DeployPushTarget; script: string }
 > = {
   notifications: { target: "notifications", script: "notifications:deploy" },
   products: { target: "products", script: "products:deploy" },
   orders: { target: "orders", script: "orders:deploy" },
   profiles: { target: "profiles", script: "profiles:deploy" },
+  submain: { target: "submain", script: "submain:deploy" },
 };
 
 function git(args: string[]): string {
@@ -127,14 +128,14 @@ function printRollbackGuidance(revision: string): void {
   );
 }
 
-function formatSuccessLine(serviceTargets: ServiceDeployTarget[]): string {
-  if (serviceTargets.length === 0) {
+function formatSuccessLine(isolatedTargets: DeployPushTarget[]): string {
+  if (isolatedTargets.length === 0) {
     return "[deploy:push] SUCCESS — secrets backup completed, GitHub push verified, and main Vercel production target is READY.";
   }
-  if (serviceTargets.length === 1) {
-    return `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and ${serviceTargets[0]} Vercel production targets are READY.`;
+  if (isolatedTargets.length === 1) {
+    return `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and ${isolatedTargets[0]} Vercel production targets are READY.`;
   }
-  return `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and ${serviceTargets.length} selected service Vercel production targets are READY.`;
+  return `[deploy:push] SUCCESS — secrets backup completed, GitHub push verified; main and ${isolatedTargets.length} selected isolated Vercel production targets are READY.`;
 }
 
 async function verifyMainDeployment(input: {
@@ -187,7 +188,7 @@ function fail(message: string, revision?: string): void {
 }
 
 async function main(): Promise<void> {
-  const serviceTargets = await resolveServiceDeployTargets(process.argv.slice(2));
+  const isolatedTargets = await resolveServiceDeployTargets(process.argv.slice(2));
 
   assertMainBranch();
   assertMainDeploymentCredentials();
@@ -245,8 +246,8 @@ async function main(): Promise<void> {
 
   const reports: VercelDeploymentReport[] = [];
 
-  for (const serviceTarget of serviceTargets) {
-    const deployment = SERVICE_DEPLOYS[serviceTarget];
+  for (const isolatedTarget of isolatedTargets) {
+    const deployment = ISOLATED_DEPLOYS[isolatedTarget];
     const comment = `deploy(${deployment.target}): ${timestamp} @ ${revision.slice(0, 12)}`;
     try {
       const report = await runDeploymentNpmScript(deployment.script, {
@@ -291,7 +292,7 @@ async function main(): Promise<void> {
   }
 
   printFinalSummary(reports);
-  console.log(formatSuccessLine(serviceTargets));
+  console.log(formatSuccessLine(isolatedTargets));
 }
 
 /**

@@ -1,13 +1,20 @@
 import { createInterface } from "node:readline";
 
-/** Isolated Vercel service accounts — `main` is always verified separately. */
+/** Isolated Vercel accounts — `main` is always verified separately. */
 export type ServiceDeployTarget = "notifications" | "products" | "orders" | "profiles";
+
+export type DeployPushTarget = ServiceDeployTarget | "submain";
 
 export const ALL_SERVICE_TARGETS: readonly ServiceDeployTarget[] = [
   "notifications",
   "products",
   "orders",
   "profiles",
+];
+
+export const ALL_DEPLOY_PUSH_TARGETS: readonly DeployPushTarget[] = [
+  ...ALL_SERVICE_TARGETS,
+  "submain",
 ];
 
 export const VERCEL_TARGET_FLAG = "--vercel-target=";
@@ -22,7 +29,16 @@ const CHOICES = [
   { key: "2", target: "products" as const, label: "Products (asol-products)" },
   { key: "3", target: "orders" as const, label: "Orders (asol-orders)" },
   { key: "4", target: "profiles" as const, label: "Profiles (asol-profiles)" },
-  { key: "5", target: "all" as const, label: "All four service accounts" },
+  {
+    key: "5",
+    target: "submain" as const,
+    label: "Secondary full app (asol-submain, groupstenderximages@gmail.com)",
+  },
+  {
+    key: "6",
+    target: "all" as const,
+    label: "All five isolated accounts (4 services + asol-submain)",
+  },
 ] as const;
 
 function ask(question: string): Promise<string> {
@@ -37,7 +53,7 @@ function ask(question: string): Promise<string> {
 
 function parseProvidedTargets(
   args: readonly string[],
-): ServiceDeployTarget[] | "all" | "none" | null {
+): DeployPushTarget[] | "all" | "none" | null {
   const provided = args.filter((argument) => argument.startsWith(VERCEL_TARGET_FLAG));
   if (provided.length === 0) return null;
 
@@ -69,29 +85,29 @@ function parseProvidedTargets(
 
   const unknown = values.filter(
     (value) =>
-      value !== "main" && !ALL_SERVICE_TARGETS.includes(value as ServiceDeployTarget),
+      value !== "main" && !ALL_DEPLOY_PUSH_TARGETS.includes(value as DeployPushTarget),
   );
   if (unknown.length > 0) {
     throw new Error(
-      `Unknown Vercel target(s): ${unknown.join(", ")}. Expected: ${ALL_SERVICE_TARGETS.join(", ")}, main, none, or all.`,
+      `Unknown Vercel target(s): ${unknown.join(", ")}. Expected: ${ALL_DEPLOY_PUSH_TARGETS.join(", ")}, main, none, or all.`,
     );
   }
 
-  const services = values.filter((value) => value !== "main") as ServiceDeployTarget[];
-  if (services.length === 0) return "none";
+  const isolated = values.filter((value) => value !== "main") as DeployPushTarget[];
+  if (isolated.length === 0) return "none";
 
-  return [...new Set(services)];
+  return [...new Set(isolated)];
 }
 
 function expandSelection(
-  selection: ServiceDeployTarget[] | "all" | "none",
-): ServiceDeployTarget[] {
-  if (selection === "all") return [...ALL_SERVICE_TARGETS];
+  selection: DeployPushTarget[] | "all" | "none",
+): DeployPushTarget[] {
+  if (selection === "all") return [...ALL_DEPLOY_PUSH_TARGETS];
   if (selection === "none") return [];
   return selection;
 }
 
-function logResolvedTargets(source: string, targets: ServiceDeployTarget[]): void {
+function logResolvedTargets(source: string, targets: DeployPushTarget[]): void {
   if (targets.length === 0) {
     console.log(
       `[deploy:push] Service targets: none — secrets backup, GitHub push, and main verification only (${source}).`,
@@ -110,7 +126,7 @@ function logResolvedTargets(source: string, targets: ServiceDeployTarget[]): voi
  */
 export async function resolveServiceDeployTargets(
   args: readonly string[],
-): Promise<ServiceDeployTarget[]> {
+): Promise<DeployPushTarget[]> {
   const provided = parseProvidedTargets(args);
   if (provided !== null) {
     const targets = expandSelection(provided);
@@ -129,7 +145,7 @@ export async function resolveServiceDeployTargets(
         "  --vercel-target=notifications",
         "  --vercel-target=all",
         "",
-        `Service values: ${ALL_SERVICE_TARGETS.join(", ")}, all, main, or none.`,
+        `Service values: ${ALL_DEPLOY_PUSH_TARGETS.join(", ")}, all, main, or none.`,
         "secrets:backup, GitHub push, and main Vercel verification always run.",
       ].join("\n"),
     );
@@ -150,7 +166,7 @@ export async function resolveServiceDeployTargets(
       (choice) => choice.key === answer || choice.target === answer,
     );
     if (!chosen) {
-      console.log("Not one of the choices. Answer 0–5, or press Ctrl+C to stop.");
+      console.log("Not one of the choices. Answer 0–6, or press Ctrl+C to stop.");
       continue;
     }
     const targets =

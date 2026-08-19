@@ -155,7 +155,8 @@ Interactive choices:
 | 2 | `products` |
 | 3 | `orders` |
 | 4 | `profiles` |
-| 5 | all four services |
+| 5 | `submain` (`asol-submain`, `groupstenderximages@gmail.com`) |
+| 6 | all five isolated accounts (4 services + `asol-submain`) |
 
 Non-interactive examples:
 
@@ -165,6 +166,7 @@ npm run deploy:push:all
 npm run deploy:push -- --vercel-target=main
 npm run deploy:push -- --vercel-target=none
 npm run deploy:push -- --vercel-target=notifications
+npm run deploy:push -- --vercel-target=submain
 npm run deploy:push -- --vercel-target=all
 ```
 
@@ -179,16 +181,18 @@ processes run without `NODE_OPTIONS` / VS Code inspector hooks so nested
 `npx tsx` deploy scripts keep piped output reliable. VS Code launch configs for
 deploy run `npx tsx scripts/deploy-*.ts` with `autoAttachChildProcesses: false`.
 
-`--vercel-target=main` and `--vercel-target=none` skip the four isolated service
-deploy scripts. Any other choice still runs the mandatory steps above, then
-deploys and verifies only the selected service account(s).
+`--vercel-target=main` and `--vercel-target=none` skip the five isolated deploy
+scripts (four services plus `asol-submain`). Any other choice still runs the
+mandatory steps above, then deploys and verifies only the selected account(s).
 
-When no service is chosen, success requires secrets backup, GitHub verification,
-and main `READY` on Vercel. When a service is also chosen, that account must
-reach `READY` as well.
+When no isolated account is chosen, success requires secrets backup, GitHub
+verification, and main `READY` on Vercel. When an isolated account is also
+chosen, that account must reach `READY` as well. `submain` uses
+`VERCEL_SUBMAIN_TOKEN` and `VERCEL_SUBMAIN_ORG_ID`; it is never GitHub-linked.
 
 `VERCEL_TOKEN` and the root `.vercel/project.json` are always required for main
-verification. Service accounts use their own tokens from `.env.local` / `.env`.
+verification. Isolated accounts use their own tokens from `.env.local` / `.env`
+(`VERCEL_SUBMAIN_TOKEN` + `VERCEL_SUBMAIN_ORG_ID` for `asol-submain`).
 
 It does not refuse scratch files, manifest downgrades, or empty runs, and it does
 not report native/OTA surface status.
