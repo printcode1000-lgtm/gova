@@ -3,7 +3,7 @@ import "server-only";
 import type { NotificationGrantIssuer } from "@/features/notifications/server";
 import { moneyVariablesByLocale } from "@/features/notifications/server";
 import { getMarketplaceOrderQueries } from "@/modules/data-access/domains/marketplace-orders/index.server";
-import { collectOrderPartyUids } from "./order-party-helpers.server";
+import { collectOrderPartyUids, excludeActorFromPartyUids } from "./order-party-helpers.server";
 import { issueOrderPartyGrant } from "./order-action-grants.server";
 
 type MarketplaceOrderQueries = ReturnType<typeof getMarketplaceOrderQueries>;
@@ -23,13 +23,10 @@ export interface OrderActionNotificationContext {
 }
 
 function uniqueUids(values: unknown[], actorUid: string) {
-  return [
-    ...new Set(
-      values
-        .map((value) => String(value ?? "").trim())
-        .filter((uid) => uid && uid !== actorUid),
-    ),
-  ];
+  return excludeActorFromPartyUids(
+    values.map((value) => String(value ?? "").trim()).filter(Boolean),
+    actorUid,
+  );
 }
 
 function orderNumber(details: OrderDetails) {

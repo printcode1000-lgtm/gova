@@ -60,7 +60,12 @@ Order-related notifications dispatch `asol:orders:data-refresh` so open order
 list and detail pages reload party-visible data after any notified change.
 
 Every order mutation route issues signed notification grants to the other
-parties (never the actor). Templates live in
+parties (never the actor). Recipient lists are built from the full order party
+set — buyer, every seller, every linked service provider, shipment carriers, and
+delivery-plan candidates — then filtered with `excludeActorFromPartyUids` so the
+user who performed the action does not receive a duplicate notification on their
+own device. Dedicated shipping-quote and delivery-plan grants use the same
+party resolution. Templates live in
 `packages/notifications-core/src/config/templates/` with expressive emoji
 prefixes in titles. Coverage includes item accept/reject, custom pricing,
 cancellations, returns, shipment progress, shipping quotes, delivery plans,

@@ -167,7 +167,7 @@
     "test:cart-pricing": "npx tsx src/features/cart/tests/cart-catalogue-pricing.test.ts",
     "orders:deploy": "npx tsx scripts/deploy-orders-service.ts",
     "db:migrate:orders": "npx tsx src/modules/data-access/tooling/migrate-order-shards.ts",
-    "test:orders-module": "npx tsx src/modules/marketplace-orders/tests/orders-service-module-contract.test.ts",
+    "test:orders-module": "npx tsx src/modules/marketplace-orders/tests/orders-service-module-contract.test.ts && npx tsx src/features/orders/tests/order-party-helpers.test.ts",
     "db:migrate:product-image-urls": "npx tsx src/modules/data-access/tooling/strip-product-image-urls.ts",
     "db:migrate:profiles": "npx tsx src/modules/data-access/tooling/migrate-profile-shards.ts",
     "profiles:deploy": "npx tsx scripts/deploy-profiles-service.ts",

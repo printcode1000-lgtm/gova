@@ -27,6 +27,7 @@ import {
   finalizeOrderActionResponse,
   type OrderActionNotificationContext,
 } from "@/features/orders/services/order-action-notifications.server";
+import { resolveOrderUpdateRecipients } from "@/features/orders/services/order-party-helpers.server";
 
 export async function POST(
   request: Request,
@@ -85,6 +86,20 @@ export async function POST(
           queries,
           context,
         });
+
+        const recipientsForOrderUpdate = async () => {
+          const details = await queries.getDetails(orderId);
+          if (!details) return [] as string[];
+          return resolveOrderUpdateRecipients(
+            {
+              buyerId: details.order.buyer_id,
+              sellerOrders: details.sellerOrders,
+              shipments: details.shipments,
+              deliveryPlanCandidates: details.deliveryPlanCandidates,
+            },
+            body.uid,
+          );
+        };
 
         switch (body.action) {
           case "seller_accept_item":
@@ -203,11 +218,12 @@ export async function POST(
               asSeller,
             );
             grantShippingQuote(notificationGrants, {
-              uids: [String(quote.buyer_id)],
+              uids: await recipientsForOrderUpdate(),
               orderId,
               quoteId: String(quote.id),
               status: "pending_buyer",
               amount: Number(quote.total_shipping_price),
+              actorUid: body.uid,
             });
             return apiSuccess(
               notificationsServer.attachGrants(
@@ -231,12 +247,23 @@ export async function POST(
             const details =
               await getMarketplaceOrderQueries().getDetails(orderId);
             grantDeliveryPlan(notificationGrants, {
-              uids: [String(details?.order.buyer_id ?? "")],
+              uids: details
+                ? resolveOrderUpdateRecipients(
+                    {
+                      buyerId: details.order.buyer_id,
+                      sellerOrders: details.sellerOrders,
+                      shipments: details.shipments,
+                      deliveryPlanCandidates: details.deliveryPlanCandidates,
+                    },
+                    body.uid,
+                  )
+                : [],
               orderId,
               planId: body.deliveryPlanId,
               quoteId: String(quote.id),
               status: "new_quote",
               amount: Number(quote.total_shipping_price),
+              actorUid: body.uid,
             });
             return apiSuccess(
               notificationsServer.attachGrants(
@@ -258,12 +285,13 @@ export async function POST(
               (entry) => String(entry.id) === body.deliveryPlanQuoteId,
             );
             grantDeliveryPlan(notificationGrants, {
-              uids: [String(quote?.provider_id ?? "")],
+              uids: await recipientsForOrderUpdate(),
               orderId,
               planId: String(plan.id),
               quoteId: body.deliveryPlanQuoteId,
               status: "accepted",
               amount: Number(quote?.total_shipping_price ?? 0),
+              actorUid: body.uid,
             });
             return apiSuccess(
               notificationsServer.attachGrants(
@@ -280,12 +308,13 @@ export async function POST(
               asBuyer,
             );
             grantDeliveryPlan(notificationGrants, {
-              uids: [String(quote.provider_id ?? "")],
+              uids: await recipientsForOrderUpdate(),
               orderId,
               planId: String(quote.plan_id),
               quoteId: body.deliveryPlanQuoteId,
               status: "rejected",
               amount: Number(quote.total_shipping_price),
+              actorUid: body.uid,
             });
             return apiSuccess(
               notificationsServer.attachGrants(
@@ -304,13 +333,21 @@ export async function POST(
             const details =
               await getMarketplaceOrderQueries().getDetails(orderId);
             grantDeliveryPlan(notificationGrants, {
-              uids:
-                details?.deliveryPlanCandidates.map((candidate) =>
-                  String(candidate.provider_id),
-                ) ?? [],
+              uids: details
+                ? resolveOrderUpdateRecipients(
+                    {
+                      buyerId: details.order.buyer_id,
+                      sellerOrders: details.sellerOrders,
+                      shipments: details.shipments,
+                      deliveryPlanCandidates: details.deliveryPlanCandidates,
+                    },
+                    body.uid,
+                  )
+                : [],
               orderId,
               planId: body.deliveryPlanId,
               status: "separate",
+              actorUid: body.uid,
             });
             return apiSuccess(
               notificationsServer.attachGrants(
@@ -340,15 +377,12 @@ export async function POST(
               asBuyer,
             );
             grantShippingQuote(notificationGrants, {
-              uids: [
-                String(quote.proposed_by ?? ""),
-                String(quote.seller_id ?? ""),
-                String(quote.service_provider_id ?? ""),
-              ],
+              uids: await recipientsForOrderUpdate(),
               orderId,
               quoteId: String(quote.id),
               status: "accepted",
               amount: Number(quote.total_shipping_price),
+              actorUid: body.uid,
             });
             return apiSuccess(
               notificationsServer.attachGrants(
@@ -365,15 +399,12 @@ export async function POST(
               asBuyer,
             );
             grantShippingQuote(notificationGrants, {
-              uids: [
-                String(quote.proposed_by ?? ""),
-                String(quote.seller_id ?? ""),
-                String(quote.service_provider_id ?? ""),
-              ],
+              uids: await recipientsForOrderUpdate(),
               orderId,
               quoteId: String(quote.id),
               status: "rejected",
               amount: Number(quote.total_shipping_price),
+              actorUid: body.uid,
             });
             return apiSuccess(
               notificationsServer.attachGrants(
