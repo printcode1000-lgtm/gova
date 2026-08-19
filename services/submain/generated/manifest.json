@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T22:28:06.554Z",
+  "generatedAt": "2026-08-19T22:54:58.030Z",
   "entryPoints": [
     "features/product-search/services/product-search-service.server.ts",
     "features/product-search/services/product-search-products.server.ts",

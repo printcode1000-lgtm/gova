@@ -3,7 +3,11 @@ import { traceDatabaseQuery } from '../../ports/telemetry';
 import { assertServerDataAccessRuntime } from './environment';
 
 export abstract class AbstractDatabaseClient implements IDatabaseClient {
-  protected constructor() {
+  // Public because `DataSourceRegistry` constructs the adapters directly. It used to reach
+  // them through an untyped `require()`, which hid the protected constructor from the
+  // compiler; the adapters are internal files behind no package door, so the registry stays
+  // the only possible construction site and the runtime guard below still holds.
+  constructor() {
     assertServerDataAccessRuntime();
   }
 

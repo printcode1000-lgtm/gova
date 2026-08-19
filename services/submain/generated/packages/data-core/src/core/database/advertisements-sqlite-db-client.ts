@@ -1,4 +1,5 @@
 import { nodeRequire } from '../node-require';
+import { ensureAdvertisementsDevMigrations } from './ensure-advertisements-migrations';
 import "server-only";
 
 import { isDevelopment } from "@/core/config";
@@ -18,9 +19,6 @@ export class AdvertisementsSQLiteDatabaseClient extends AbstractDatabaseClient {
       sqlite,
       isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
     );
-    const {
-      ensureAdvertisementsDevMigrations,
-    } = nodeRequire("./ensure-advertisements-migrations");
     ensureAdvertisementsDevMigrations(this._db);
     return this._db;
   }

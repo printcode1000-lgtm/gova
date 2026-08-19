@@ -315,6 +315,25 @@ for (const edge of ALLOWED_APP_EDGES) {
   );
 }
 
+// ── Runtime require resolves only package specifiers ────────────────────────
+//
+// `nodeRequire` is `createRequire`: a real Node resolution performed at runtime, not a
+// bundler edge. This package ships TypeScript sources, so a relative specifier has no
+// extension for Node to resolve and throws `Cannot find module` on the first query —
+// which is exactly how every data source went down after the move to ESM. Relative
+// modules belong in a static `import`; `nodeRequire` is for `node_modules` only.
+const RUNTIME_REQUIRE = /(?:^|[^\w$.])[\w$]*[Rr]equire\s*\(\s*['"](\.[^'"]*)['"]\s*\)/g;
+for (const file of productionFiles) {
+  const source = readFileSync(file, 'utf8');
+  RUNTIME_REQUIRE.lastIndex = 0;
+  const match = RUNTIME_REQUIRE.exec(source);
+  assert.ok(
+    match === null,
+    `${file} passes the relative specifier '${match?.[1]}' to a runtime require(). Node cannot ` +
+      'resolve a TypeScript source without an extension — import the module statically instead.',
+  );
+}
+
 // ── Rule 3: the gate is wired into the release chains ───────────────────────
 const rootManifest = JSON.parse(readFileSync(path.join(REPO_ROOT, 'package.json'), 'utf8'));
 for (const chain of ['build', 'build:static', 'test']) {

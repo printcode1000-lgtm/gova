@@ -1,8 +1,23 @@
-import { nodeRequire } from './node-require';
 import "server-only";
 
 import type { IDatabaseClient } from "./database/database-client.interface";
 import { getServerDatabaseBackend } from "./database/environment";
+// Adapters are imported statically. A relative `nodeRequire()` cannot work here: this
+// package ships TypeScript sources, and `createRequire` is a real Node resolution at
+// runtime, which has no extension to resolve `./database/<client>` against — every data
+// source failed with "Cannot find module". Importing the classes costs nothing at load
+// time: each adapter still pulls its driver (`better-sqlite3`, `@libsql/client`, drizzle)
+// lazily through `nodeRequire` inside the branch that needs it, so a Turso deployment
+// never loads the SQLite driver and a SQLite run never opens a libSQL connection.
+import { SQLiteDatabaseClient } from "./database/sqlite-db-client";
+import { TursoDatabaseClient } from "./database/turso-db-client";
+import { ProductSQLiteDatabaseClient } from "./database/product-sqlite-db-client";
+import { ProductTursoDatabaseClient } from "./database/product-turso-db-client";
+import { AdvertisementsSQLiteDatabaseClient } from "./database/advertisements-sqlite-db-client";
+import { AdvertisementsTursoDatabaseClient } from "./database/advertisements-turso-db-client";
+import { ProfileShardedDatabaseClient } from "./database/profile-sharded-db-client";
+import { NotificationsSQLiteDatabaseClient } from "./database/notifications-sqlite-db-client";
+import { NotificationsTursoDatabaseClient } from "./database/notifications-turso-db-client";
 
 export type ServerDataSourceName =
   | "users"
@@ -34,22 +49,22 @@ class DataSourceRegistry {
     switch (name) {
       case "users":
         return backend === "sqlite"
-          ? new (nodeRequire("./database/sqlite-db-client").SQLiteDatabaseClient)()
-          : new (nodeRequire("./database/turso-db-client").TursoDatabaseClient)();
+          ? new SQLiteDatabaseClient()
+          : new TursoDatabaseClient();
       case "products":
         return backend === "sqlite"
-          ? new (nodeRequire("./database/product-sqlite-db-client").ProductSQLiteDatabaseClient)()
-          : new (nodeRequire("./database/product-turso-db-client").ProductTursoDatabaseClient)();
+          ? new ProductSQLiteDatabaseClient()
+          : new ProductTursoDatabaseClient();
       case "advertisements":
         return backend === "sqlite"
-          ? new (nodeRequire("./database/advertisements-sqlite-db-client").AdvertisementsSQLiteDatabaseClient)()
-          : new (nodeRequire("./database/advertisements-turso-db-client").AdvertisementsTursoDatabaseClient)();
+          ? new AdvertisementsSQLiteDatabaseClient()
+          : new AdvertisementsTursoDatabaseClient();
       case "profiles":
-        return new (nodeRequire("./database/profile-sharded-db-client").ProfileShardedDatabaseClient)();
+        return new ProfileShardedDatabaseClient();
       case "notifications":
         return backend === "sqlite"
-          ? new (nodeRequire("./database/notifications-sqlite-db-client").NotificationsSQLiteDatabaseClient)()
-          : new (nodeRequire("./database/notifications-turso-db-client").NotificationsTursoDatabaseClient)();
+          ? new NotificationsSQLiteDatabaseClient()
+          : new NotificationsTursoDatabaseClient();
     }
   }
 }

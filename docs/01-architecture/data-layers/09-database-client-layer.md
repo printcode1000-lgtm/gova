@@ -29,6 +29,20 @@ repositories, independent of the runtime driver.
 The registry creates a source lazily on its first operation. Importing one
 repository does not open unrelated databases or require their credentials.
 
+## Module loading
+
+The registry imports its adapter classes with static `import` statements, and the
+adapters load their drivers (`better-sqlite3`, `@libsql/client`, Drizzle) lazily
+through `nodeRequire` inside the branch that needs them. Laziness therefore lives at
+the driver boundary, not at the adapter boundary: a Turso runtime still never loads
+the SQLite driver.
+
+Relative specifiers must never go through `nodeRequire`. It is `createRequire`, so it
+resolves at runtime against Node's CommonJS rules, and this package ships TypeScript
+sources with no extension for it to resolve — `nodeRequire('./database/<client>')`
+fails with `Cannot find module`, taking every data source down with it. Reserve
+`nodeRequire` for package specifiers that exist in `node_modules`.
+
 ## Rules
 
 - Only `packages/data-core/src` imports `better-sqlite3`, `@libsql/client`, or Drizzle.
