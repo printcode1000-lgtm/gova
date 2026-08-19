@@ -3,12 +3,12 @@ import "server-only";
 import { authService } from "@/features/auth/services/auth-service.bootstrap.server";
 import { notificationsServer, type NotificationGrantIssuer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
-import type { MarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/commands/marketplace-order-service";
+import type { MarketplaceOrderService } from "@asol/data-core/marketplace-orders";
 import {
   getMarketplaceOrderQueries,
-} from "@/modules/data-access/domains/marketplace-orders/index.server";
-import type { Actor } from "@/modules/marketplace-orders/domain/types";
-import { fulfillmentSettingsToSnapshot } from "@/modules/marketplace-orders/domain/fulfillment-snapshot";
+} from "@asol/data-core/marketplace-orders";
+import type { Actor } from "@asol/orders-core";
+import { fulfillmentSettingsToSnapshot } from "@asol/orders-core";
 
 import { bootstrapLocationShippingQuotes } from "./order-shipping-bootstrap.server";
 import { collectOrderPartyUids } from "./order-party-helpers.server";

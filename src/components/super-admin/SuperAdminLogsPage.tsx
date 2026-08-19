@@ -415,7 +415,7 @@ export function SuperAdminLogsPage() {
                       className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground"
                       dir="ltr"
                     >
-                      <time title="آخر ظهور">
+                      <time aria-label="آخر ظهور">
                         {new Date(entry.lastOccurredAt).toLocaleString("ar-EG")}
                       </time>
                       <span>{entry.platform}</span>
@@ -429,7 +429,7 @@ export function SuperAdminLogsPage() {
                       {entry.occurrences > 1 && (
                         <span
                           className="rounded-full bg-muted px-2 py-0.5 font-bold"
-                          title="عدد مرات التكرار"
+                          aria-label="عدد مرات التكرار"
                         >
                           ×{entry.occurrences}
                         </span>
@@ -517,7 +517,7 @@ export function SuperAdminLogsPage() {
                   )}
                   {entry.stack && (
                     <details className="mt-2">
-                      <summary className="cursor-pointer text-xs font-medium text-primary">
+                      <summary className="text-xs font-medium text-primary">
                         تتبع المكدس
                       </summary>
                       <pre

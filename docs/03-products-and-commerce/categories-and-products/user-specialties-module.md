@@ -48,12 +48,12 @@ The module follows the project's standard layered architecture:
 ## Files and Components
 
 ### Database Schema
-- **Location**: `src/modules/data-access/core/database/profile/user-specialties.schema.ts`
+- **Location**: `packages/data-core/src/core/database/profile/user-specialties.schema.ts`
 - **Description**: Drizzle ORM schema definition for the `user_specialties` table
 - **Columns**: Boolean columns for each specialty (e.g., `womens_clothing_1`, `hijab_fashion_13`, etc.)
 
 ### Repository Layer
-- **Location**: `src/modules/data-access/domains/profile/repositories/profile-repository.ts`
+- **Location**: `packages/data-core/src/domains/profile/repositories/profile-repository.ts`
 - **Method**: `getUsersBySpecialty(categoryId, subcategoryId, offset, limit)`
 - **Description**: Resolves the correct specialty column internally using `columnByDoctorAppointment` or `columnBySelection` maps, then queries the database
 - **Features**:
@@ -63,7 +63,7 @@ The module follows the project's standard layered architecture:
   - Returns complete user profile data (`UserProfileRow[]`)
 
 ### Query Operation
-- **Location**: `src/modules/data-access/domains/profile/operations/queries/get-users-by-specialty.query.ts`
+- **Location**: `packages/data-core/src/domains/profile/operations/queries/get-users-by-specialty.query.ts`
 - **Class**: `GetUsersBySpecialtyQuery`
 - **Method**: `execute(categoryId, subcategoryId, offset, limit)`
 - **Description**: Query operation that wraps the repository method. Imports `UserProfileRow` type from the repository interface (not from the database-client layer directly).
@@ -124,14 +124,14 @@ The module follows the project's standard layered architecture:
 - **Description**: Page for displaying doctors by medical specialty
 
 ### Helper Functions
-- **Location**: `src/modules/data-access/domains/profile/repositories/specialty-columns.server.ts`
+- **Location**: `packages/data-core/src/domains/profile/repositories/specialty-columns.server.ts`
 - **Functions**:
   - `columnBySelection`: Map of `"categoryId:subcategoryId"` → column name
   - `columnByDoctorAppointment`: Map of doctor specialty ID → column name
   - `selectedSpecialtyColumns`: Converts user selection to column names
   - **Feature**: Automatically includes all subcategories when a collection member is selected
 
-- **Location**: `src/modules/data-access/domains/profile/repositories/specialty-columns.client.ts`
+- **Location**: `packages/data-core/src/domains/profile/repositories/specialty-columns.client.ts`
 - **Description**: Client-side version of column mapping (without server-only)
 
 ## Usage Examples
@@ -263,7 +263,7 @@ requires complete set equality between the mapping file and `profile-core.user_s
 
 ### Type Propagation
 - `UserProfileRow` is exported from `profile-repository.interface.ts` and re-exported from `profile-service.interface.ts`
-- The Query and Client Service layers import the type from their own adjacent interfaces — not from `@/modules/data-access/core/database/...` — to avoid architecture violations
+- The Query and Client Service layers import the type from their own adjacent interfaces — not from `@asol/data-core/core` — to avoid architecture violations
 
 ### Pagination
 - Default limit: 10 users per page

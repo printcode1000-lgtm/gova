@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { ASOL_DB_STORES, createAsolDbZustandStorage } from '@/modules/data-access/browser/asol-db';
+import { ASOL_DB_STORES, createAsolDbZustandStorage } from '@asol/data-core/browser';
 import { nextSellerId } from '@/lib/seller/next-id';
 import type {
   OnboardingStep,

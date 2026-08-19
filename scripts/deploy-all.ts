@@ -168,6 +168,12 @@ const PREFLIGHT_STEPS = [
   "db:ensure",
   "db:schema:sync:release",
   "build:static",
+  // The shared code now lives in sealed packages, so what each service uploads is decided by
+  // a graph walker rather than by a folder. A specifier the walker cannot see is never copied,
+  // and nothing below notices: the remote build resolves lazily and succeeds, then the first
+  // request fails with "Cannot find module". This step re-reads each upload and resolves every
+  // edge inside it — the only check between "the mirror was written" and "the mirror is whole".
+  "services:verify",
   // Added after every one of these passed and all four service accounts still failed
   // their remote build. Each service is uploaded alone and installed against its own
   // `package.json`; nothing above exercises that. This is the only step that builds a

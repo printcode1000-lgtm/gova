@@ -55,15 +55,15 @@ export function ReturnsSection() {
                 <div
                   key={policy}
                   className={cn(
-                    'relative flex items-start gap-3 rounded-lg border p-4 cursor-pointer transition-all',
+                    'relative flex items-start gap-3 rounded-lg border p-4 transition-all',
                     returns.policyType === policy
                       ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50',
+                      : 'border-border',
                   )}
                 >
                   <RadioGroupItem value={policy} id={policy} className="mt-0.5" />
                   <div className="flex-1">
-                    <Label htmlFor={policy} className="font-medium cursor-pointer">
+                    <Label htmlFor={policy} className="font-medium">
                       {t(`onboarding.returns.policyTypes.${policy}.label`)}
                     </Label>
                     <p className="text-sm text-muted-foreground mt-1">

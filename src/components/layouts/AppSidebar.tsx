@@ -109,20 +109,20 @@ export const AppSidebar = React.memo(function AppSidebar({
   const isProfileEditActive = activeProfileMode === "edit";
   const sidebarTone =
     resolvedScheme === "dark"
-      ? "text-primary font-normal hover:text-primary"
-      : "text-blue-900 font-normal hover:text-blue-900";
+      ? "text-primary font-normal"
+      : "text-blue-900 font-normal";
   const sidebarActiveTone = "asol-nav-pill-active ring-1 ring-primary/20";
   const sidebarSurface =
     resolvedScheme === "dark" ? "bg-surface-bright" : "bg-[#F8FBFF]";
-  const sidebarHoverSurface =
+  const sidebarPressSurface =
     resolvedScheme === "dark"
-      ? "hover:bg-surface-container-high active:bg-surface-variant"
-      : "hover:bg-blue-100/70 active:bg-blue-200";
+      ? "active:bg-surface-variant"
+      : "active:bg-blue-200";
   const sidebarControlClass = cn(
     "asol-control w-full min-w-0 flex items-center justify-start gap-3 rounded-lg text-sm font-medium leading-5 active:opacity-90",
     sidebarSurface,
     sidebarTone,
-    sidebarHoverSurface,
+    sidebarPressSurface,
   );
   const sidebarIconClass = "w-5 h-5 shrink-0";
   const sidebarSmallIconClass = "h-4 w-4 shrink-0";
@@ -248,12 +248,12 @@ export const AppSidebar = React.memo(function AppSidebar({
     const itemClass = cn(
       "flex min-w-0 items-center gap-2 rounded-md px-3 py-2 text-sm leading-5 break-words",
       sidebarTone,
-      sidebarHoverSurface,
+      sidebarPressSurface,
     );
     const groupButtonClass = cn(
       "flex w-full min-w-0 items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold leading-5 break-words",
       sidebarTone,
-      sidebarHoverSurface,
+      sidebarPressSurface,
     );
     const groupPanelClass =
       "ms-2 space-y-1 border-s border-outline-variant/40 ps-2";
@@ -429,7 +429,7 @@ export const AppSidebar = React.memo(function AppSidebar({
     t,
     onClose,
     sidebarControlClass,
-    sidebarHoverSurface,
+    sidebarPressSurface,
     sidebarIconClass,
     sidebarSmallIconClass,
     sidebarSurface,
@@ -475,7 +475,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 className={cn(
                   "asol-control-icon flex items-center justify-center rounded-full active:opacity-80",
                   sidebarTone,
-                  sidebarHoverSurface,
+                  sidebarPressSurface,
                 )}
                 onClick={onClose}
                 aria-label={t("sidebar.close")}
@@ -556,7 +556,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                               "w-full flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-sm font-medium transition-all",
                               isProfilePreviewActive
                                 ? sidebarActiveTone
-                                : cn(sidebarTone, sidebarHoverSurface),
+                                : cn(sidebarTone, sidebarPressSurface),
                             )}
                           >
                             <Eye className="w-4 h-4" />
@@ -574,7 +574,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                               "w-full flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-sm font-medium transition-all",
                               isProfileEditActive
                                 ? sidebarActiveTone
-                                : cn(sidebarTone, sidebarHoverSurface),
+                                : cn(sidebarTone, sidebarPressSurface),
                             )}
                           >
                             <Edit className="w-4 h-4" />
@@ -629,7 +629,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                       className={cn(
                         "flex w-fit min-w-0 flex-col items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-medium leading-5",
                         sidebarTone,
-                        sidebarHoverSurface,
+                        sidebarPressSurface,
                       )}
                     >
                       <Languages className={sidebarIconClass} />
@@ -646,7 +646,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                       className={cn(
                         "flex w-fit min-w-0 flex-col items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-medium leading-5",
                         sidebarTone,
-                        sidebarHoverSurface,
+                        sidebarPressSurface,
                       )}
                     >
                       {themePreferences.themeMode === "dark" ? (
@@ -667,7 +667,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                       className={cn(
                         "flex w-fit min-w-0 flex-col items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-medium leading-5",
                         sidebarTone,
-                        sidebarHoverSurface,
+                        sidebarPressSurface,
                       )}
                     >
                       <Bell className={sidebarIconClass} />
@@ -733,7 +733,7 @@ export const AppSidebar = React.memo(function AppSidebar({
               <button
                 onClick={confirmLogout}
                 disabled={logout.isPending}
-                className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg hover:bg-red-700 disabled:opacity-50 text-sm flex items-center justify-center gap-2"
+                className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg disabled:opacity-50 text-sm flex items-center justify-center gap-2"
               >
                 <FontAwesomeIcon icon={faRightFromBracket} />
                 {logout.isPending
@@ -743,7 +743,7 @@ export const AppSidebar = React.memo(function AppSidebar({
               <button
                 onClick={() => setLogoutDialogOpen(false)}
                 disabled={logout.isPending}
-                className="flex-1 border border-gray-300 py-2 px-3 rounded-lg hover:bg-gray-50 disabled:opacity-50 text-sm"
+                className="flex-1 border border-gray-300 py-2 px-3 rounded-lg disabled:opacity-50 text-sm"
               >
                 {t("sidebar.logoutCancel")}
               </button>

@@ -6,7 +6,7 @@ Repositories own persistence mapping and database statements for one domain.
 
 ## Location
 
-`src/modules/data-access/domains/[domain]/repositories/`
+`packages/data-core/src/domains/[domain]/repositories/`
 
 ## Responsibilities
 
@@ -31,7 +31,7 @@ production. A repository knows its logical source, never a file name or URL.
 
 ## Adding persistence
 
-1. Add or update the schema under `src/modules/data-access/core/database`.
+1. Add or update the schema under `packages/data-core/src/core/database`.
 2. Add a focused repository method and its typed contract.
 3. Call it from a query or command.
 4. Export the public operation through the domain `index.server.ts`.

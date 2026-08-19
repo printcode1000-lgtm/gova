@@ -1,6 +1,6 @@
 "use client";
 
-import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
+import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@asol/data-core/browser";
 import { NotificationPlatforms } from "@asol/notifications-core";
 import { WEB_PUSH_VAPID_PUBLIC_KEY } from "@asol/notifications-core";
 import { notificationApiService } from "../../services/notification-api-service";

@@ -2,9 +2,9 @@ import "server-only";
 
 import { categoryService } from "@/features/categories";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
-import { GetNotificationUserIdentityQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-user-identity.query";
-import { GetSpecialtyChatPreferencesQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-specialty-chat-preferences.query";
-import { SetSpecialtyChatPreferencesCommand } from "@/modules/data-access/domains/notifications/operations/commands/set-specialty-chat-preferences.command";
+import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
+import { GetSpecialtyChatPreferencesQuery } from "@asol/data-core/notifications";
+import { SetSpecialtyChatPreferencesCommand } from "@asol/data-core/notifications";
 import {
   notificationsServer,
   NotificationCategories,

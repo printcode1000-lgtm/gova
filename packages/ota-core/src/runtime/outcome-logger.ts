@@ -5,7 +5,7 @@ import {
   asolDbGet,
   asolDbSet,
   ASOL_DB_STORES,
-} from "@/modules/data-access/browser/asol-db";
+} from "@asol/data-core/browser";
 import { getPlatformName } from '@asol/native-core';
 import { otaTelemetry, type OtaLogEntry } from "../ports";
 

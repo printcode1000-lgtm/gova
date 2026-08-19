@@ -1,6 +1,6 @@
 import "server-only";
 
-import { GetNotificationUserIdentityQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-user-identity.query";
+import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
 import {
   decryptMobilePushCredentialBlob,
   isMobilePushUnlockConfigured,

@@ -286,11 +286,11 @@ export function HeroSlider({
       transitionTimingFunction: "ease-in-out",
     };
 
-    let className = "absolute inset-0 ";
+    let className = "absolute inset-0";
 
     switch (activeConfig?.transition) {
       case "Fade":
-        className += "transition-opacity ";
+        className += "transition-opacity";
         if (isActive) {
           className += "opacity-100 z-10 pointer-events-auto";
         } else if (isExiting) {
@@ -301,7 +301,7 @@ export function HeroSlider({
         break;
 
       case "Zoom":
-        className += "transition-all ";
+        className += "transition-all";
         if (isActive) {
           className += "opacity-100 scale-100 z-10 pointer-events-auto";
         } else if (isExiting) {
@@ -312,7 +312,7 @@ export function HeroSlider({
         break;
 
       case "SlideLeft":
-        className += "transition-transform ";
+        className += "transition-transform";
         if (isActive) {
           className += "translate-x-0 z-10 pointer-events-auto";
         } else if (isExiting) {
@@ -323,7 +323,7 @@ export function HeroSlider({
         break;
 
       case "SlideRight":
-        className += "transition-transform ";
+        className += "transition-transform";
         if (isActive) {
           className += "translate-x-0 z-10 pointer-events-auto";
         } else if (isExiting) {
@@ -334,7 +334,7 @@ export function HeroSlider({
         break;
 
       case "Parallax":
-        className += "transition-transform ";
+        className += "transition-transform";
         if (isActive) {
           className += "translate-x-0 z-10 pointer-events-auto";
         } else if (isExiting) {
@@ -373,7 +373,7 @@ export function HeroSlider({
       transitionTimingFunction: "ease-in-out",
     };
 
-    let className = "object-cover scale-110 absolute inset-0 ";
+    let className = "object-cover scale-110 absolute inset-0";
 
     if (isActive) {
       style.transform = "translate3d(0, 0, 0)";
@@ -472,7 +472,7 @@ export function HeroSlider({
                       if (
                         mode === "view" &&
                         isActive &&
-                        (e.key === "Enter" || e.key === " ")
+                        (e.key === "Enter" || e.key === "")
                       ) {
                         e.preventDefault();
                         handleSlideClick(slide.action, true);
@@ -527,7 +527,7 @@ export function HeroSlider({
                   <button
                     type="button"
                     onClick={onLeftClick}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-xs transition hover:bg-black/50 active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-xs transition active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
                     aria-label="Previous slide"
                   >
                     {isRTL ? (
@@ -568,7 +568,7 @@ export function HeroSlider({
                   <button
                     type="button"
                     onClick={onRightClick}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-xs transition hover:bg-black/50 active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-xs transition active:scale-95 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
                     aria-label="Next slide"
                   >
                     {isRTL ? (

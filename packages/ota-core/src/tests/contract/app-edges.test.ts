@@ -10,14 +10,17 @@ import path from 'path';
  * those are now inverted: the package names ports in `src/ports/`, and the application
  * registers implementations through `src/features/ota/ota-core-ports.ts`.
  *
- * The four that remain are deliberate, and the distinction is the point of this file:
+ * The two that remain are deliberate, and the distinction is the point of this file:
  *
  * | Edge | Why it stays |
  * | :-- | :-- |
- * | `@/modules/data-access/browser/asol-db` | The central data-access module is where database code is required to live |
- * | `@/modules/data-access/domains/ota/index.server` | Same layer; the drizzle contract forbids moving it into a package |
  * | `@/core/api` | The designated HTTP transport, itself governed by `ALLOWED_FETCH_FILES` |
  * | `@/features/categories` | Build-time only (`publishing/build/out-public-assets.ts`) |
+ *
+ * Two former app edges are gone rather than budgeted: the OTA state reads used to point at
+ * `@/modules/data-access/...` and now go through `@asol/data-core/browser` and
+ * `@asol/data-core/ota`. Those are layer-1 → layer-1 package doors, not knowledge of the
+ * application, so they are pinned separately in `DECLARED_PACKAGE_DOORS`.
  *
  * `@/features/categories` is the one judgement call. It could be a port, but a port needs
  * a safe default, and the safe default for build-time asset generation is an **empty**
@@ -34,8 +37,13 @@ const DECLARED_APP_EDGES = new Set([
   '@/core/api',
   '@/core/config/public-env',
   '@/features/categories',
-  '@/modules/data-access/browser/asol-db',
-  '@/modules/data-access/domains/ota/index.server',
+]);
+
+/** Sealed-package doors this package may reach, and only through a declared door. */
+const DECLARED_PACKAGE_DOORS = new Set([
+  '@asol/data-core/browser',
+  '@asol/data-core/ota',
+  '@asol/native-core',
 ]);
 
 /**
@@ -89,6 +97,21 @@ export async function runAppEdgeTests(): Promise<void> {
             `"${specifier}", which is not a declared edge into the application.\n` +
             `Rule 7 runs both ways: a package must not quietly grow new knowledge of the ` +
             `app. Invert the dependency, or add it to DECLARED_APP_EDGES on purpose.`,
+        );
+      }
+    }
+  }
+
+  // Package doors get the same treatment as app edges: declared, and only through a door.
+  const doorsFound = new Set<string>();
+  for (const file of sourceFiles(PACKAGE_SRC)) {
+    for (const match of readFileSync(file, 'utf8').matchAll(/\bfrom\s+['"](@asol\/[^'"]+)['"]/g)) {
+      if (match[1].startsWith('@asol/ota-core')) continue;
+      doorsFound.add(match[1]);
+      if (!DECLARED_PACKAGE_DOORS.has(match[1])) {
+        throw new Error(
+          `ota-core app-edge contract: ${path.relative(process.cwd(), file)} imports ` +
+            `"${match[1]}", which is not a declared package door.`,
         );
       }
     }

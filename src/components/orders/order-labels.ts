@@ -4,7 +4,7 @@ import type { DbRow, OrderRole, OrderViewerRole } from "./order-types";
 import {
   parseSellerFulfillmentSnapshot,
   type SellerFulfillmentSnapshot,
-} from "@/modules/marketplace-orders/domain/fulfillment-snapshot";
+} from "@asol/orders-core";
 
 export function formatMoney(minor: unknown, currency = "EGP", locale = "ar") {
   return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-EG", {

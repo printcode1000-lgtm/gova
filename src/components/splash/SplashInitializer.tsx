@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from '@/features/auth/components/SessionProvider';
 import { isSuperAdmin } from '@/features/auth/utils/super-admin';
 import { useTranslation } from '@/lib/i18n';
-import { asolDbGet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
+import { asolDbGet, ASOL_DB_STORES } from '@asol/data-core/browser';
 import { runInitialization } from '@/lib/initialization/initialization';
 import { otaUpdateService } from '@asol/ota-core';
 

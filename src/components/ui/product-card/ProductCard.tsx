@@ -35,9 +35,9 @@ interface ProductCardProps {
 const variantClass: Record<ProductCardVariant, string> = {
   search: "rounded-lg border border-outline-variant bg-surface",
   "profile-preview":
-    "rounded-lg border border-outline-variant bg-surface transition hover:border-primary/70 hover:shadow-sm",
+    "rounded-lg border border-outline-variant bg-surface transition",
   "profile-edit":
-    "rounded-lg border border-outline-variant bg-surface transition hover:border-primary/70 hover:shadow-sm",
+    "rounded-lg border border-outline-variant bg-surface transition",
   "featured-marquee":
     "w-40 rounded-xl p-2 asol-card-tonal asol-card-tonal-tertiary active:scale-95 transition-transform",
   compact: "rounded-lg border border-outline-variant bg-surface",
@@ -62,15 +62,15 @@ function actionIcon(kind: ProductCardAction["kind"]) {
 
 function actionClass(action: ProductCardAction) {
   if (action.tone === "danger") {
-    return "bg-surface-container-low text-destructive hover:bg-destructive hover:text-on-destructive";
+    return "bg-surface-container-low text-destructive";
   }
   if (action.tone === "tertiary" || action.active) {
-    return "bg-tertiary text-on-tertiary hover:bg-tertiary/90";
+    return "bg-tertiary text-on-tertiary";
   }
   if (action.tone === "primary") {
-    return "bg-primary text-on-primary hover:bg-primary/90";
+    return "bg-primary text-on-primary";
   }
-  return "bg-surface-container-low text-on-surface hover:bg-primary hover:text-on-primary";
+  return "bg-surface-container-low text-on-surface";
 }
 
 function badgeClass(tone: ProductCardViewModel["badges"][number]["tone"]) {
@@ -203,7 +203,6 @@ export function ProductCard({
               } ${actionClass(
                 action,
               )}`}
-              title={action.label}
               aria-label={action.label}
             >
               {action.kind === "toggleFeatured" ? (

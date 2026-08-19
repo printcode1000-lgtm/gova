@@ -60,6 +60,26 @@ Avoid:
 * fragile patches
 * disabling tests or lint rules merely to make builds pass
 
+## Touch-Only UI
+
+The application is built exclusively for mobile touch devices and ships through Capacitor. There is no pointer.
+
+Never introduce:
+
+* `hover:` or `group-hover:` Tailwind variants
+* CSS `:hover` selectors
+* `cursor-pointer` or `cursor: pointer`
+* a `title` attribute on a DOM element — it renders the browser hover tooltip no touch user can reach (use `aria-label`; a `title` prop on a React component is fine)
+* desktop browser chrome the baseline removes — tap highlight, text selection on controls, double-tap zoom delay, visible scrollbars
+
+Always use:
+
+* `active:` (or CSS `:active`) for press feedback — a control must never be left with no feedback
+* `focus-visible:` for keyboard and accessibility navigation
+* `transition-*` where motion helps
+
+The baseline lives in `src/app/globals.css`. Full policy: `docs/04-ui-components/touch-interaction-policy.md`.
+
 ## Single Responsibility
 
 Every module, component, service, hook, utility, and file should have one clear responsibility.

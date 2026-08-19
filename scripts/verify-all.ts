@@ -33,6 +33,11 @@ const STEPS: readonly Step[] = [
   { script: "validate-storage-profiles" },
   { script: "validate:error-logging" },
   { script: "version:validate" },
+  // The gate list in `.github/workflows/native-core.yml` is a hand-maintained copy of the
+  // package gates in package.json, and it had already drifted by seven packages. This asserts
+  // the copy rather than trusting it, and pins the `verify` job id that branch protection
+  // requires — renaming that job leaves a required check that never reports.
+  { script: "ci:coverage" },
 
   // Native container policy. These read committed project files only.
   { script: "android:backup:validate" },
@@ -63,6 +68,25 @@ const STEPS: readonly Step[] = [
   { script: "test:ota-hardening" },
   { script: "test:data-health" },
   { script: "test:dev-cloud-backup" },
+
+  // The package seals. `test:data-core` also carries the offline schema-parity half — the
+  // declared shards, the migration DDL, and the table→shard lookup describing one schema. The
+  // live half is `db:schema:sync:release` during `deploy:all`, and is deliberately not repeated
+  // here: a check that needs a credential cannot be part of a suite meant to run on any checkout.
+  { script: "test:data-core" },
+  { script: "test:orders-core" },
+  { script: "test:compositions" },
+
+  // Between "the mirror was written" and "the mirror builds": a specifier the walker cannot see
+  // is never copied, and the remote build still succeeds. Skipped rather than failed when the
+  // git-ignored mirrors are absent, so a clean checkout can still run this suite.
+  {
+    script: "services:verify",
+    skipUnless: {
+      path: path.join("services", "orders", "generated"),
+      reason: "no service mirrors on disk — run npm run services:sync first",
+    },
+  },
 
   // Needs a static build to inspect; skipped rather than failed when absent so
   // the suite stays runnable on a clean checkout.

@@ -122,10 +122,10 @@ export function MarketingSection() {
                     <label
                       key={product.id}
                       className={cn(
-                        'flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all',
+                        'flex items-center gap-3 p-3 rounded-lg border transition-all',
                         marketing.featuredProductIds.includes(product.id)
                           ? 'border-primary bg-primary/5'
-                          : 'border-border hover:border-primary/50',
+                          : 'border-border',
                       )}
                     >
                       <input

@@ -1,7 +1,7 @@
 import { apiSuccess } from "@/core/api/api-response";
-import { getMarketplaceOrderQueries } from "@/modules/data-access/domains/marketplace-orders/index.server";
+import { getMarketplaceOrderQueries } from "@asol/data-core/marketplace-orders";
 import { runTracedBusinessRoute } from "../auth/traced-route";
-import { actorFromInput } from "@/modules/marketplace-orders/domain/actor-from-input";
+import { actorFromInput } from "@asol/orders-core";
 import { mapOrderError } from "./order-api-helpers";
 
 export async function GET(request: Request) {

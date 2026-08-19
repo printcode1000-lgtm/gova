@@ -34,7 +34,7 @@ export function FavoriteButton({ item, className, label }: FavoriteButtonProps) 
   return (
     <button
       type="button"
-      title={active ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
+      aria-label={active ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
       onClick={(event) => void handleClick(event)}
       disabled={isLoading || isMutating}
       className={cn(

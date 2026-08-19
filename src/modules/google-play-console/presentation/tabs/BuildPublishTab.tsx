@@ -48,7 +48,7 @@ export function BuildPublishTab() {
               const confirmation = confirmations[command.id] ?? "";
               return (
                 <details key={command.id} className="group rounded-md border bg-surface p-4">
-                  <summary className="flex cursor-pointer list-none justify-between gap-3">
+                  <summary className="flex list-none justify-between gap-3">
                     <span><strong>{t(command.documentation.titleKey)}</strong>
                       <code className="mt-1 block text-xs" dir="ltr">npm run {command.script}</code></span>
                     <ChevronDown className="h-4 w-4 group-open:rotate-180" />
@@ -71,7 +71,7 @@ export function BuildPublishTab() {
                         }))} />
                     ) : null}
                     {!ready?.ready ? <div className="rounded-md bg-muted p-2">
-                      {t("releaseConsole.build.notReady", { names: ready?.missingEnv.join(", ") || "-" })}</div> : null}
+                      {t("releaseConsole.build.notReady", { names: ready?.missingEnv.join(",") || "-" })}</div> : null}
                     {jobs.startError ? (
                       <div role="alert" className="rounded-md bg-error-container p-2 text-on-error-container">
                         {t("releaseConsole.errors.job")}: {jobs.startError}
@@ -79,7 +79,7 @@ export function BuildPublishTab() {
                     ) : null}
                     {latestJob ? (
                       <div role="status" className="rounded-md bg-muted p-2 text-xs">
-                        <strong><code dir="ltr">{latestJob.id}</code></strong>{" "}
+                        <strong><code dir="ltr">{latestJob.id}</code></strong>{""}
                         {t(`releaseConsole.jobStatus.${latestJob.status}`)}
                       </div>
                     ) : null}

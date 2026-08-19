@@ -3,7 +3,7 @@
 import {
   asolDbClearAll,
   clearBrowserDatabases,
-} from '@/modules/data-access/browser';
+} from '@asol/data-core/browser';
 import { notifications } from '@/features/notifications';
 
 function clearCookies(): void {

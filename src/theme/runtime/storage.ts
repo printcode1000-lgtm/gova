@@ -1,4 +1,4 @@
-import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@asol/data-core/browser';
 import { DEFAULT_THEME_PREFERENCES, FONT_SIZE_MAX, FONT_SIZE_MIN } from './defaults';
 import type { ThemeDensity, ThemeMode, ThemePreferences } from './types';
 

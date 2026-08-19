@@ -41,7 +41,7 @@ export function QuickActions({ actions, className }: QuickActionsProps) {
             <Card
               key={action.id}
               className={cn(
-                'group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg',
+                'group overflow-hidden transition-all duration-300',
                 isPrimary && 'border-primary/30 bg-primary/5'
               )}
             >
@@ -51,7 +51,7 @@ export function QuickActions({ actions, className }: QuickActionsProps) {
                     'relative mb-3 rounded-full p-2.5 transition-colors',
                     isPrimary
                       ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted group-hover:bg-primary/10'
+                      : 'bg-muted'
                   )}
                 >
                   <IconComponent
@@ -59,7 +59,7 @@ export function QuickActions({ actions, className }: QuickActionsProps) {
                       'h-5 w-5',
                       isPrimary
                         ? 'text-primary-foreground'
-                        : 'text-muted-foreground group-hover:text-primary'
+                        : 'text-muted-foreground'
                     )}
                   />
                   {action.badge !== undefined && action.badge > 0 && (

@@ -7,17 +7,24 @@ src/
 |   |-- architecture/                # enforced dependency contracts
 |   |-- config/                      # runtime and server configuration
 |   `-- provisioning/                # R2-only provisioning utilities
-|-- modules/
-|   `-- data-access/
-|       |-- core/
-|       |   |-- data-source-registry.ts
-|       |   |-- database/            # adapters, schemas, migrations, shards
-|       |   `-- turso/               # low-level libSQL clients
-|       |-- browser/                 # AsolDB and IndexedDB operations
-|       |-- domains/                 # queries, commands, repositories, ports
-|       `-- provisioning/core/       # SQLite-to-Turso schema provisioning
 |-- features/                        # UI, hooks, client/server feature services
 `-- app/api/                         # Business API routes
+
+packages/data-core/                  # @asol/data-core — every database, sealed
+|-- package.json                     # the 24 doors; nothing else is importable
+`-- src/
+    |-- index.ts                     # door "."         module identity + backend policy
+    |-- ports/telemetry.ts           # door "./telemetry"
+    |-- core/
+    |   |-- index.ts                 # door "./core"    data source registry
+    |   |-- data-source-registry.ts
+    |   |-- database/                # NO DOOR — drivers, schemas, migrations, shards
+    |   `-- turso/                   # low-level libSQL clients
+    |-- browser/index.ts             # door "./browser" AsolDB and IndexedDB
+    |-- domains/<name>/index.server.ts  # one door per domain (18)
+    |-- provisioning/core/index.ts   # door "./provisioning"
+    |-- tooling/index.ts             # door "./tooling"
+    `-- tests/                       # contract + schema parity, gate: test:data-core
 
 public/sync_data/
 |-- sync_sqlite/                     # local databases and shards (@asol/dev-core paths)
@@ -79,7 +86,7 @@ root `tsconfig.json` excludes it so the two module graphs never merge. See
 | Concern | Client | Server |
 |---|---|---|
 | HTTP | `asolApi` | Business API routes |
-| Browser persistence | `@/modules/data-access/browser` | Not available |
+| Browser persistence | `@asol/data-core/browser` | Not available |
 | Domain data | Client API service | `domains/<domain>/index.server.ts` |
 | Database source | Not available | Central `DataSourceRegistry` |
 

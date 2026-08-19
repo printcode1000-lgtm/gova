@@ -100,7 +100,7 @@ export function CollectionSubcategoriesPage({
                     src={imageSrc}
                     alt={altText}
                     fill
-                    className="object-cover transition-opacity group-hover:opacity-90"
+                    className="object-cover transition-opacity"
                   />
                 </div>
                 <span className={categoryTileTitleClassName}>{name}</span>

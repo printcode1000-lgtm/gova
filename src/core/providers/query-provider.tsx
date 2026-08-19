@@ -7,8 +7,9 @@ import {
   type Persister,
   PersistQueryClientProvider,
 } from '@tanstack/react-query-persist-client';
-import { createAsolDbPersister } from '@/modules/data-access/browser/asol-db-persister';
+import { createAsolDbPersister } from '@asol/data-core/browser';
 import { attachQueryObserver } from '@/core/monitor/query-observer';
+import { registerMonitorTelemetry } from '@/core/monitor/data-core-telemetry';
 import { publicEnv } from '@/core/config/public-env';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
@@ -40,6 +41,10 @@ function makeQueryClient(): QueryClient {
     },
   });
 }
+
+// The browser half of the telemetry seam. It runs at module scope so the IndexedDB persister
+// created below is already announcing its operations by the time the first cache read happens.
+registerMonitorTelemetry();
 
 let browserQueryClient: QueryClient | undefined;
 

@@ -54,11 +54,11 @@ export function MerchantOverview({ overview, className }: MerchantOverviewProps)
           return (
             <Card
               key={key}
-              className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg"
+              className="group relative overflow-hidden transition-all duration-300"
             >
               <CardContent className="flex flex-col items-center justify-center p-4 sm:p-6">
-                <div className="mb-3 asol-merchant-icon-well p-2.5 transition-colors group-hover:opacity-90">
-                  <Icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary" />
+                <div className="mb-3 asol-merchant-icon-well p-2.5 transition-colors">
+                  <Icon className="h-5 w-5 text-muted-foreground transition-colors" />
                 </div>
                 <span className="text-2xl font-bold tracking-tight sm:text-3xl">
                   {displayValue}

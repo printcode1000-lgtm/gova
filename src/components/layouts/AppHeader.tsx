@@ -58,8 +58,8 @@ export function AppHeader({
                 isSidebarOpen
                   ? 'bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20'
                   : resolvedScheme === 'dark'
-                    ? 'text-primary hover:bg-surface-container-high active:bg-surface-variant'
-                    : 'text-blue-900 hover:bg-blue-100/70 active:bg-blue-200'
+                    ? 'text-primary active:bg-surface-variant'
+                    : 'text-blue-900 active:bg-blue-200'
               )}
               aria-pressed={isSidebarOpen}
               aria-label={t('sidebar.menu')}
@@ -80,8 +80,8 @@ export function AppHeader({
                 isSearchActive
                   ? 'bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20'
                   : resolvedScheme === 'dark'
-                    ? 'text-primary hover:bg-surface-container-high active:bg-surface-variant'
-                    : 'text-blue-900 hover:bg-blue-100/70 active:bg-blue-200'
+                    ? 'text-primary active:bg-surface-variant'
+                    : 'text-blue-900 active:bg-blue-200'
               )}
               aria-current={isSearchActive ? 'page' : undefined}
               aria-label={t('header.search')}
@@ -97,8 +97,8 @@ export function AppHeader({
                 isCartActive
                   ? 'bg-primary-container text-on-primary-container shadow-sm ring-1 ring-primary/20'
                   : resolvedScheme === 'dark'
-                    ? 'text-primary hover:bg-surface-container-high active:bg-surface-variant'
-                    : 'text-blue-900 hover:bg-blue-100/70 active:bg-blue-200'
+                    ? 'text-primary active:bg-surface-variant'
+                    : 'text-blue-900 active:bg-blue-200'
               )}
               aria-current={isCartActive ? 'page' : undefined}
               aria-label={t('header.cart')}

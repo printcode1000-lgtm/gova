@@ -24,9 +24,9 @@ export const SCRIPTS = join(ROOT, 'scripts');
 export const PUBLIC_PUSH_WORKER = join(ROOT, 'public', 'asol-push-sw.js');
 export const PUSH_WORKER_SOURCE = join(
   ROOT,
+  'packages',
+  'data-core',
   'src',
-  'modules',
-  'data-access',
   'browser',
   'workers',
   'asol-push-sw.js',
@@ -42,10 +42,10 @@ export interface Violation {
 export const violations: Violation[] = [];
 
 export const STRUCTURED_CATEGORY_COLUMN_FILES = new Set([
-  'src/modules/data-access/core/database/profile/profile.schema.ts',
-  'src/modules/data-access/core/database/product/product.schema.ts',
-  'src/modules/data-access/domains/profile/repositories/profile-repository.ts',
-  'src/modules/data-access/domains/product/repositories/product-repository.ts',
+  'packages/data-core/src/core/database/profile/profile.schema.ts',
+  'packages/data-core/src/core/database/product/product.schema.ts',
+  'packages/data-core/src/domains/profile/repositories/profile-repository.ts',
+  'packages/data-core/src/domains/product/repositories/product-repository.ts',
 ]);
 
 export function walk(dir: string): string[] {
@@ -99,7 +99,7 @@ export const NATIVE_CAPABILITY_PATTERNS: Array<{
     use: 'NativeCore.getCurrentPosition',
     allowed: new Set([
       // Explicit opt-out provider kept for tests and deliberate raw access.
-      'src/components/ui/AsolMap/gps.ts',
+      'packages/map-core/src/gps.ts',
     ]),
   },
   {

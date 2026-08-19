@@ -345,7 +345,7 @@ export function ProductsSection() {
               {data.products.products.map((product) => (
                 <div
                   key={product.id}
-                  className="flex items-center gap-4 p-4 rounded-lg border hover:border-primary/50 transition-colors"
+                  className="flex items-center gap-4 p-4 rounded-lg border transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">

@@ -223,7 +223,7 @@ export function AccountDeletionPageContent() {
             className="block w-full rounded-xl border border-outline/40 bg-surface-container p-3"
           />
         </label>
-        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-error/20 p-4">
+        <label className="flex items-start gap-3 rounded-xl border border-error/20 p-4">
           <input
             type="checkbox"
             checked={accepted}

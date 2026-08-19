@@ -10,7 +10,7 @@ import type {
   NotificationTestResult,
 } from '@asol/notifications-core';
 import { getNotificationTestScenario } from '@asol/notifications-core';
-import { ListBroadcastRecipientsQuery } from '@/modules/data-access/domains/notifications/operations/queries/list-broadcast-recipients.query';
+import { ListBroadcastRecipientsQuery } from '@asol/data-core/notifications';
 import { NotificationGrantCollector } from './notification-grant-collector.server';
 
 export class NotificationBroadcastService {

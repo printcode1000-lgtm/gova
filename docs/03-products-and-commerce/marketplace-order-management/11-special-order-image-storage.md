@@ -25,7 +25,7 @@ Development automatically resolves the configured Cloudflare profile to `LocalSt
 6. Call `addCustomRequestImage` with `storageProfileId`, `imageKey`, URL, WebP MIME type, processed file size, optional dimensions, filename, and description.
 7. The marketplace database stores the storage identity and writes an image-upload audit event.
 
-The example manager configuration is `src/modules/marketplace-orders/examples/custom-request-images.image.json`.
+The example manager configuration is `packages/orders-core/src/examples/custom-request-images.image.json`.
 
 ## Required persistence behavior
 

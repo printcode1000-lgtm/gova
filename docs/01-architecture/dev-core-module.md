@@ -38,7 +38,7 @@ General deployment/runtime detection remains in `src/core/config/runtime-context
 | `db:ensure` / shard-split tooling | — | `data-access/tooling` (imports paths from here) |
 | Dev UI (`/dev/*`, catalog-studio, cloud backup) | — | `src/app/dev`, `src/modules/*`, `src/features/*` |
 
-`src/modules/data-access/core/database/environment.ts` is now a thin adapter: it re-exports resolved absolute paths from `@asol/dev-core/server` and keeps data-access-specific runtime helpers (`isDevRuntime`, provisioning checks).
+`packages/data-core/src/core/database/environment.ts` is now a thin adapter: it re-exports resolved absolute paths from `@asol/dev-core/server` and keeps data-access-specific runtime helpers (`isDevRuntime`, provisioning checks).
 
 Development guards in `data-health`, `dev-cloud-backup`, and `google-play-console` call `@asol/dev-core/server` instead of duplicating predicates.
 

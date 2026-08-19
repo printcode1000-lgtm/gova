@@ -8,7 +8,7 @@ Asol uses IndexedDB (AsolDB) as its primary client-side persistent storage mecha
 
 - **Database Name:** `AsolDB`
 - **Current Version:** `9`
-- **Low-level Implementation:** `src/modules/data-access/browser/asol-db/index.ts`
+- **Low-level Implementation:** `packages/data-core/src/browser/asol-db/index.ts`
 - **Object Stores Schema:** Every object store is configured with `{ keyPath: 'key' }` and stores key-value pairs (where value can be a structured cloneable object).
 
 ---
@@ -70,7 +70,7 @@ Stores the original `Blob` and safe file metadata for every image currently stag
 
 ## Core Database APIs
 
-`src/modules/data-access/browser/asol-db/index.ts` exposes the following asynchronous helper functions:
+`packages/data-core/src/browser/asol-db/index.ts` exposes the following asynchronous helper functions:
 
 ```typescript
 // Read value associated with a key from a store

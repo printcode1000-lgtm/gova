@@ -1,0 +1,332 @@
+/**
+ * `@asol/data-core` contract test.
+ *
+ * It pins the four things that make this package a seal rather than a folder: the exact set of
+ * declared doors, the absence of a door onto the drivers, the safety of every telemetry
+ * default, and the budget of application modules the package is still allowed to reach.
+ *
+ * Run by `npm run test:data-core`, which is in the `build`, `build:static`, and `test` chains —
+ * rule 3 was missed three times in this repository by writing a test that gated nothing.
+ */
+import assert from 'node:assert/strict';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const PACKAGE_ROOT = path.resolve(HERE, '..', '..');
+const SRC = path.join(PACKAGE_ROOT, 'src');
+const REPO_ROOT = path.resolve(PACKAGE_ROOT, '..', '..');
+
+const manifest = JSON.parse(readFileSync(path.join(PACKAGE_ROOT, 'package.json'), 'utf8'));
+
+function walk(dir: string, out: string[] = []): string[] {
+  for (const entry of readdirSync(dir)) {
+    const full = path.join(dir, entry);
+    if (statSync(full).isDirectory()) walk(full, out);
+    else if (/\.tsx?$/.test(entry)) out.push(full.split(path.sep).join('/'));
+  }
+  return out;
+}
+
+const sourceFiles = walk(SRC);
+const productionFiles = sourceFiles.filter((f) => !f.includes('/tests/') && !f.endsWith('.test.ts'));
+
+// ── Rule 2: the declared doors, pinned ──────────────────────────────────────
+const EXPECTED_DOORS = [
+  '.',
+  './telemetry',
+  './core',
+  './browser',
+  './provisioning',
+  './tooling',
+  './account-deletion',
+  './advertisements',
+  './auth',
+  './data-health',
+  './dev-cloud-backup',
+  './feature-flags',
+  './follow',
+  './marketplace-orders',
+  './notifications',
+  './ota',
+  './password-recovery',
+  './pharmacy-profile-catalog',
+  './product',
+  './product-search',
+  './profile',
+  './seller-discounts',
+  './super-admin',
+  './system-logs',
+];
+
+assert.deepEqual(
+  Object.keys(manifest.exports).sort(),
+  [...EXPECTED_DOORS].sort(),
+  'The door set changed. A new domain door is fine; an undeclared one is not — update this list deliberately.',
+);
+
+assert.ok(
+  !JSON.stringify(manifest.exports).includes('./*'),
+  'A wildcard door makes every internal file importable and defeats the seal (rule 5).',
+);
+
+for (const [door, entry] of Object.entries(manifest.exports) as [string, { types: string }][]) {
+  const target = path.join(PACKAGE_ROOT, entry.types);
+  assert.ok(statSync(target).isFile(), `Door ${door} points at a missing file: ${entry.types}`);
+}
+
+// ── One door per domain, and no barrel across domains ───────────────────────
+const domainDirs = readdirSync(path.join(SRC, 'domains'));
+for (const domain of domainDirs) {
+  assert.ok(
+    Object.keys(manifest.exports).includes(`./${domain}`),
+    `Domain ${domain} has no declared door, so nothing can reach it.`,
+  );
+}
+
+const rootDoorSource = readFileSync(path.join(SRC, 'index.ts'), 'utf8');
+assert.ok(
+  !rootDoorSource.includes('./domains/'),
+  'The root door must never re-export a domain. A barrel mirrors every domain schema into any ' +
+    'deployment that imports it — the failure already recorded for the account-declarations barrel.',
+);
+
+// ── The drivers have no door at all ─────────────────────────────────────────
+const doorTargets = new Set(
+  (Object.values(manifest.exports) as { types: string }[]).map((e) =>
+    path.join(PACKAGE_ROOT, e.types).split(path.sep).join('/'),
+  ),
+);
+for (const target of doorTargets) {
+  assert.ok(
+    !target.includes('/src/core/database/'),
+    `A door points into src/core/database (${target}). drizzle-orm, @libsql/client and ` +
+      'better-sqlite3 are reachable only from inside this package, and that is the whole seal.',
+  );
+}
+
+// ── Rule 4/9: the browser door must never reach a node builtin ──────────────
+function importsOf(file: string): string[] {
+  const source = readFileSync(file, 'utf8');
+  return [...source.matchAll(/from\s+['"]([^'"]+)['"]/g)].map((m) => m[1]);
+}
+
+function closureFrom(entry: string): Set<string> {
+  const seen = new Set<string>();
+  const stack = [entry];
+  while (stack.length) {
+    const file = stack.pop()!;
+    if (seen.has(file)) continue;
+    seen.add(file);
+    for (const specifier of importsOf(file)) {
+      if (!specifier.startsWith('.')) continue;
+      const base = path.posix.join(path.posix.dirname(file.split(path.sep).join('/')), specifier);
+      for (const ext of ['.ts', '.tsx', '/index.ts']) {
+        try {
+          if (statSync(base + ext).isFile()) {
+            stack.push(base + ext);
+            break;
+          }
+        } catch {
+          /* try the next extension */
+        }
+      }
+    }
+  }
+  return seen;
+}
+
+const browserClosure = closureFrom(path.join(SRC, 'browser', 'index.ts'));
+for (const file of browserClosure) {
+  for (const specifier of importsOf(file)) {
+    assert.ok(
+      !specifier.startsWith('node:') &&
+        !['fs', 'path', 'crypto', 'child_process'].includes(specifier),
+      `The browser door reaches a node builtin through ${file} (${specifier}). That import ends ` +
+        'up in the shipped web bundle.',
+    );
+    assert.ok(
+      !['drizzle-orm', 'better-sqlite3', '@libsql/client'].includes(specifier) &&
+        !specifier.startsWith('drizzle-orm/') &&
+        !specifier.startsWith('@libsql/'),
+      `The browser door reaches a server database driver through ${file} (${specifier}).`,
+    );
+  }
+}
+
+// ── Rule 7 (reverse): every telemetry default is safe ───────────────────────
+const telemetry = await import('../ports/telemetry.ts');
+telemetry.resetDataCoreTelemetry();
+
+const marker = Symbol('untouched');
+assert.equal(telemetry.dataCoreTelemetry().isEnabled(), false, 'Telemetry must default to off.');
+assert.equal(
+  telemetry.createDrizzleDevLogger(),
+  undefined,
+  'The default query logger must be absent, not a stub that allocates on every statement.',
+);
+assert.equal(
+  await telemetry.traceServerLayer('query-command', 'unregistered', async () => marker),
+  marker,
+  'With nothing registered, traceServerLayer must run the action and return its value untouched.',
+);
+assert.equal(
+  await telemetry.traceDatabaseQuery(
+    { driver: 'SQLite-Dev', sql: 'SELECT 1', params: [], table: '' },
+    async () => marker,
+  ),
+  marker,
+  'With nothing registered, a query must still run. A forgotten registration costs trace lines, never data.',
+);
+assert.equal(
+  await telemetry.traceBrowserDatabaseOperation('cache', 'k', 'get', async () => marker),
+  marker,
+  'With nothing registered, an IndexedDB read must still run.',
+);
+
+await assert.rejects(
+  telemetry.traceDatabaseQuery(
+    { driver: 'SQLite-Dev', sql: 'SELECT 1', params: [], table: '' },
+    async () => {
+      throw new Error('boom');
+    },
+  ),
+  /boom/,
+  'The default must propagate the original failure rather than swallowing it.',
+);
+
+// ── Rule 7: the application edges this package is allowed to keep ───────────
+/**
+ * Each entry is a module in `src/` that `@asol/data-core` still imports, and the reason it is
+ * layering rather than a violation. Driving the count to zero was never the goal; naming which
+ * edges are real is. **This list should only ever shrink.**
+ */
+const ALLOWED_APP_EDGES = new Set([
+  // Data-health policy: the rules that decide what a cleanup may touch live with the feature
+  // that renders them, and a port would need a safe default — there is none for "may I delete".
+  '@/modules/data-health/domain/policy',
+  '@/modules/data-health/domain/types',
+  '@/modules/data-health/domain/source-registry',
+  '@/modules/data-health/domain/execution-context.server',
+  '@/modules/dev-cloud-backup/domain/types',
+  // Feature contracts: row shapes the application owns and the UI renders directly. Moving them
+  // here would give this package a second reason to change (rule 8).
+  '@/features/profile/entities/profile-specialties.entity',
+  '@/features/profile/entities/store-details.entity',
+  '@/features/profile/entities/profile-fulfillment-settings.entity',
+  '@/features/profile/entities/profile-contacts.entity',
+  '@/features/profile/entities/profile-review.entity',
+  '@/features/profile-working-hours',
+  '@/features/auth/entities/user.entity',
+  '@/features/auth/entities/profile.entity',
+  '@/features/auth/utils/phone-normalization',
+  '@/features/auth/utils/email-normalization',
+  '@/features/product/entities/product-review.entity',
+  '@/features/product-search/entities/product-search.types',
+  '@/features/product-search/config/product-search-fields',
+  '@/features/product-search/utils/arabic-search',
+  '@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types',
+  '@/features/follow/entities/follow.types',
+  '@/features/seller-discounts/entities/seller-discount.entity',
+  '@/features/advertisements/entities/home-hero-slider.entity',
+  '@/features/advertisements/entities/trending-ribbon.entity',
+  '@/features/advertisements/entities/featured-marquee.entity',
+  '@/features/advertisements/config/home-hero-slider.seed.json',
+  // Build-time catalog data. A port would need an empty asset set as its safe default, which is
+  // a silently wrong result — an import that fails loudly beats a default that fails quietly.
+  '@/features/categories',
+  // Designated leaves: the config module and the single approved HTTP transport.
+  '@/core/config',
+  '@/core/config/server-env',
+  '@/core/config/server-env.values',
+  '@/core/config/runtime-context',
+  '@/core/config/runtime-context.server',
+  '@/core/api/asol-http-transport',
+  '@/config/storage-profiles.json',
+]);
+
+/**
+ * Sealed packages this one may reach, and only through a declared door. The order vocabulary
+ * used to be eight `@/modules/marketplace-orders/*` app edges; it is now one door on
+ * `@asol/orders-core`, which is a layer-1 → layer-1 edge rather than knowledge of the app.
+ */
+const DECLARED_PACKAGE_DOORS = new Set([
+  '@asol/orders-core',
+  '@asol/auth-core',
+  '@asol/auth-core/server',
+  '@asol/dev-core',
+  '@asol/dev-core/server',
+  '@asol/notifications-core',
+  '@asol/ota-core',
+  '@asol/product-core',
+  '@asol/product-core/server',
+  '@asol/storage-core',
+  '@asol/storage-core/server',
+  '@asol/system-logs-core',
+  '@asol/system-logs-core/server',
+]);
+
+/** Inverted into `src/ports/telemetry.ts`. Re-importing one of these must fail loudly. */
+const INVERTED_EDGES = [
+  '@/core/monitor/trace-server-layer',
+  '@/core/monitor/drizzle-dev-logger',
+  '@/core/monitor/monitor-store',
+  '@/core/monitor/asol-db-monitor',
+  '@/core/monitor/types',
+];
+
+const seenEdges = new Set<string>();
+for (const file of productionFiles) {
+  for (const specifier of importsOf(file)) {
+    if (!specifier.startsWith('@/')) continue;
+    seenEdges.add(specifier);
+    assert.ok(
+      !INVERTED_EDGES.includes(specifier),
+      `${file} imports ${specifier}, which was deliberately inverted into src/ports/telemetry.ts. ` +
+        'Register an implementation from the application seam instead of importing the monitor here.',
+    );
+    assert.ok(
+      ALLOWED_APP_EDGES.has(specifier),
+      `${file} adds a new application edge: ${specifier}. This budget should only shrink — if the ` +
+        'edge is genuinely layering, add it here with the reason it is not a violation.',
+    );
+  }
+}
+
+const seenDoors = new Set<string>();
+for (const file of productionFiles) {
+  for (const specifier of importsOf(file)) {
+    if (!specifier.startsWith('@asol/') || specifier.startsWith('@asol/data-core')) continue;
+    seenDoors.add(specifier);
+    assert.ok(
+      DECLARED_PACKAGE_DOORS.has(specifier),
+      `${file} imports ${specifier}, which is not a declared package door. A door that resolves ` +
+        'is not the same as a door this package agreed to depend on.',
+    );
+  }
+}
+
+for (const edge of ALLOWED_APP_EDGES) {
+  assert.ok(
+    seenEdges.has(edge),
+    `${edge} is budgeted but no longer imported. Delete the entry — a budget that overstates the ` +
+      'edges hides the next one that is added.',
+  );
+}
+
+// ── Rule 3: the gate is wired into the release chains ───────────────────────
+const rootManifest = JSON.parse(readFileSync(path.join(REPO_ROOT, 'package.json'), 'utf8'));
+for (const chain of ['build', 'build:static', 'test']) {
+  assert.ok(
+    rootManifest.scripts[chain].includes('test:data-core'),
+    `test:data-core is missing from the ${chain} chain. A test that does not gate the release ` +
+      'does not satisfy rule 3.',
+  );
+}
+
+console.log(
+  `@asol/data-core contract: ${Object.keys(manifest.exports).length} doors, ` +
+    `${productionFiles.length} production files, ${seenEdges.size} budgeted app edges, ` +
+    `${seenDoors.size} package doors — all green.`,
+);

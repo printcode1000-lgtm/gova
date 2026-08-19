@@ -161,7 +161,7 @@ export function OrdersPageContent() {
                 <Link
                   key={id}
                   href={`/orders/details?orderId=${encodeURIComponent(id)}&role=${detailRole}`}
-                  className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition hover:border-primary"
+                  className="rounded-xl border border-outline-variant bg-surface p-4 shadow-sm transition"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -227,7 +227,7 @@ export function OrdersPageContent() {
                 type="button"
                 onClick={() => void loadOrders()}
                 disabled={loadingMore}
-                className="inline-flex min-w-40 items-center justify-center gap-2 rounded-xl border border-outline-variant bg-surface px-5 py-2.5 text-sm font-semibold text-on-surface transition hover:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex min-w-40 items-center justify-center gap-2 rounded-xl border border-outline-variant bg-surface px-5 py-2.5 text-sm font-semibold text-on-surface transition disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loadingMore ? (
                   <>

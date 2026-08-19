@@ -1,7 +1,7 @@
 import "server-only";
 
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
-import { featureFlagRepository } from "@/modules/data-access/domains/feature-flags/index.server";
+import { featureFlagRepository } from "@asol/data-core/feature-flags";
 import { FEATURE_FLAGS } from "../definitions";
 import type { RemoteFeatureFlagValues } from "../types";
 

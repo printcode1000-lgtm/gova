@@ -1,7 +1,7 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { notificationsServer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
-import { getMarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/index.server";
+import { getMarketplaceOrderService } from "@asol/data-core/marketplace-orders";
 import type { SaveProfileFulfillmentSettingsInput } from "@/features/profile/entities/profile-fulfillment-settings.entity";
 import { runTracedBusinessRoute } from "../../auth/traced-route";
 import { syncSellerFulfillmentToOpenOrders } from "@/features/orders/services/order-progression.server";

@@ -2,8 +2,8 @@ import "server-only";
 
 import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
-import type { MarketplaceOrderService } from "@/modules/data-access/domains/marketplace-orders/commands/marketplace-order-service";
-import type { Actor } from "@/modules/marketplace-orders/domain/types";
+import type { MarketplaceOrderService } from "@asol/data-core/marketplace-orders";
+import type { Actor } from "@asol/orders-core";
 
 interface OrderDetailsLike {
   sellerOrders: Array<Record<string, unknown>>;

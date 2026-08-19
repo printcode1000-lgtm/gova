@@ -1,7 +1,8 @@
 import { ORDERS_DECLARATION } from '@asol/account-declarations/orders';
 import * as serverEnv from '@/core/config/server-env';
-import * as marketplaceOrders from '@/modules/data-access/domains/marketplace-orders/index.server';
-import { actorFromInput } from '@/modules/marketplace-orders/domain/actor-from-input';
+import * as marketplaceOrders from '@asol/data-core/marketplace-orders';
+import { actorFromInput, configureOrdersCore } from '@asol/orders-core';
+import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
 
 export interface OrdersRuntimeConfig {
   /** Overrides the environment. Used by tests; production reads the declaration's keys. */
@@ -62,6 +63,12 @@ export function assertOrdersEnv(env: NodeJS.ProcessEnv = process.env): void {
  * credential exists. Routes call `assertOrdersEnv()` when a request arrives.
  */
 export function createOrdersRuntime(_config?: OrdersRuntimeConfig): OrdersRuntime {
+  // `@asol/orders-core` fails closed on identity, and this deployment has no `instrumentation.ts`
+  // to register it. Wiring an application capability into one account's runtime is precisely what
+  // layer 2 exists for, so the composition is the registration point here rather than a seam in
+  // `src/` that the orders service would have to mirror for no other reason.
+  configureOrdersCore({ identity: { isSuperAdminIdentity } });
+
   return {
     accountName: ORDERS_DECLARATION.project,
     database: {

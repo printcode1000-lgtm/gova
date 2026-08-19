@@ -13,7 +13,7 @@ import {
 import {
   productRepository,
   type ProductRepository,
-} from "@/modules/data-access/domains/product/index.server";
+} from "@asol/data-core/product";
 import { categoryService } from "@/features/categories";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 import { pharmacyProfileCatalogService } from "@/features/pharmacy-profile-catalog/services/pharmacy-profile-catalog.service.server";

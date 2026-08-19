@@ -527,11 +527,11 @@ export const SpecialtiesCard = React.forwardRef<
             return (
               <div
                 key={category.id}
-                className="relative flex flex-col gap-1 group transition-transform duration-200 active:scale-95 cursor-pointer"
+                className="relative flex flex-col gap-1 group transition-transform duration-200 active:scale-95"
                 onClick={() => handleCategoryClick(category)}
               >
                 <div className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
-                  <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright group-hover:opacity-90 transition-opacity">
+                  <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright transition-opacity">
                     <Image
                       src={imgSrc}
                       alt={categoryName}
@@ -564,7 +564,7 @@ export const SpecialtiesCard = React.forwardRef<
                   </div>
                   <Label
                     htmlFor={categoryId}
-                    className="text-[10px] font-normal leading-3 truncate cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-[10px] font-normal leading-3 truncate peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     {categoryName}
                   </Label>
@@ -596,7 +596,7 @@ export const SpecialtiesCard = React.forwardRef<
                     onClick={() =>
                       setDeleteDialog({ type: "main", categoryId })
                     }
-                    className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
+                    className="p-0.5 rounded transition-colors"
                     aria-label={locale === "ar" ? "حذف" : "Delete"}
                   >
                     <X className="h-3 w-3" />
@@ -620,7 +620,7 @@ export const SpecialtiesCard = React.forwardRef<
                                 subcategoryId: subId,
                               })
                             }
-                            className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
+                            className="p-0.5 rounded transition-colors"
                             aria-label={locale === "ar" ? "حذف" : "Delete"}
                           >
                             <X className="h-2.5 w-2.5" />
@@ -646,7 +646,7 @@ export const SpecialtiesCard = React.forwardRef<
                   <button
                     type="button"
                     onClick={() => setIsDoctorAppointmentView(false)}
-                    className="px-3 py-1.5 rounded-lg text-sm bg-surface-container hover:bg-surface-container-high transition-colors"
+                    className="px-3 py-1.5 rounded-lg text-sm bg-surface-container transition-colors"
                   >
                     {locale === "ar" ? "\u0631\u062c\u0648\u0639" : "Back"}
                   </button>
@@ -664,7 +664,7 @@ export const SpecialtiesCard = React.forwardRef<
               <button
                 type="button"
                 onClick={() => setIsDialogOpen(false)}
-                className="p-2 rounded-full hover:bg-surface-container transition-colors"
+                className="p-2 rounded-full transition-colors"
                 aria-label="Close"
               >
                 <X className="h-5 w-5 text-on-surface-variant" />
@@ -711,7 +711,7 @@ export const SpecialtiesCard = React.forwardRef<
                         key={subcategory.id}
                         className={`relative flex flex-col gap-1 group ${
                           isGroup
-                            ? "cursor-pointer transition-transform duration-200 active:scale-95"
+                            ? "transition-transform duration-200 active:scale-95"
                             : ""
                         }`}
                         onClick={() => {
@@ -719,7 +719,7 @@ export const SpecialtiesCard = React.forwardRef<
                         }}
                       >
                         <div className="relative aspect-[4/3.5] rounded-lg overflow-hidden border-2 border-transparent transition-all">
-                          <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright group-hover:opacity-90 transition-opacity">
+                          <div className="relative w-full h-full rounded-lg overflow-hidden bg-surface-bright transition-opacity">
                             <Image
                               src={imgSrc}
                               alt={subcategoryName}
@@ -745,7 +745,7 @@ export const SpecialtiesCard = React.forwardRef<
                           )}
                           <Label
                             htmlFor={`sub-${subcategoryId}`}
-                            className="text-[10px] font-normal leading-3 truncate cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="text-[10px] font-normal leading-3 truncate peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                           >
                             {subcategoryName}
                           </Label>
@@ -784,7 +784,7 @@ export const SpecialtiesCard = React.forwardRef<
                               subcategoryId: subId,
                             })
                           }
-                          className="p-0.5 rounded hover:bg-error/10 hover:text-error transition-colors"
+                          className="p-0.5 rounded transition-colors"
                           aria-label={locale === "ar" ? "حذف" : "Delete"}
                         >
                           <X className="h-3 w-3" />
@@ -797,7 +797,7 @@ export const SpecialtiesCard = React.forwardRef<
                 <button
                   type="button"
                   onClick={() => setIsDialogOpen(false)}
-                  className="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                  className="px-4 py-2 bg-primary text-on-primary rounded-lg font-medium transition-colors"
                 >
                   {locale === "ar" ? "تم" : "Done"}
                 </button>
@@ -887,7 +887,7 @@ export const SpecialtiesCard = React.forwardRef<
                 size="sm"
                 onClick={handleDelete}
                 disabled={deleteProductWarning.isLoading}
-                className="text-xs bg-error text-on-error hover:bg-error/90"
+                className="text-xs bg-error text-on-error"
               >
                 {locale === "ar" ? "حذف" : "Delete"}
               </Button>

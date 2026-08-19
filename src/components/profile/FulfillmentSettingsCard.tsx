@@ -250,7 +250,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
             </div>
             <button
               type="submit"
-              className="h-10 shrink-0 rounded-md bg-primary px-4 text-sm font-semibold text-on-primary transition hover:bg-primary/90"
+              className="h-10 shrink-0 rounded-md bg-primary px-4 text-sm font-semibold text-on-primary transition"
             >
               {text.search}
             </button>
@@ -292,7 +292,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
                     className={
                       isSelected
                         ? "border-primary bg-primary/10"
-                        : "hover:border-primary/50"
+                        : ""
                     }
                     onOpen={() => openProviderProfile(user.uid)}
                   />

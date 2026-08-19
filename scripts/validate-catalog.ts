@@ -10,7 +10,7 @@ const root = process.cwd();
 const { publicRoot, catalogRoot } = resolveCatalogRoots(root);
 
 const schemaSource = fs.readFileSync(
-  path.join(root, 'src/modules/data-access/core/database/profile/user-specialties.schema.ts'),
+  path.join(root, 'packages/data-core/src/core/database/profile/user-specialties.schema.ts'),
   'utf8',
 );
 const expectedDatabaseColumns = new Set(

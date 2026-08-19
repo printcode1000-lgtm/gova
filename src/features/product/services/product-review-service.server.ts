@@ -1,10 +1,10 @@
 import "server-only";
 
-import { getUserByUidQuery } from "@/modules/data-access/domains/auth/operations/instances";
+import { getUserByUidQuery } from "@asol/data-core/auth";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
-import { productRepository } from "@/modules/data-access/domains/product/index.server";
-import { productReviewRepository } from "@/modules/data-access/domains/product/index.server";
+import { productRepository } from "@asol/data-core/product";
+import { productReviewRepository } from "@asol/data-core/product";
 import type {
   ProductReviewsResult,
   ReviewSort,

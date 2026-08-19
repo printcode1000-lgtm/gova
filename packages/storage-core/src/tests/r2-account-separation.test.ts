@@ -136,9 +136,7 @@ export async function runR2AccountSeparationTest() {
 
   const repository = stripComments(
     read(
-      'src',
-      'modules',
-      'data-access',
+      'packages', 'data-core', 'src',
       'domains',
       'product',
       'repositories',

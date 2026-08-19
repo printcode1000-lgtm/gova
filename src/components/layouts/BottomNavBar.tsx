@@ -70,8 +70,8 @@ export function BottomNavBar() {
               isActive
                 ? 'asol-nav-pill-active shadow-sm ring-1 ring-primary/20'
                 : resolvedScheme === 'dark'
-                  ? 'text-primary font-normal hover:bg-surface-container-high hover:text-primary'
-                  : 'text-blue-900 font-normal hover:bg-blue-100/70 hover:text-blue-900'
+                  ? 'text-primary font-normal'
+                  : 'text-blue-900 font-normal'
             )}
             aria-current={isActive ? 'page' : undefined}
           >

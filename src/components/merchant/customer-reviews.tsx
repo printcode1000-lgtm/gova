@@ -67,13 +67,13 @@ function RatingBar({
 
 function ReviewCard({ review, t }: { review: Review; t: (key: string) => string }) {
   return (
-    <div className="space-y-3 p-4 sm:p-5 transition-colors hover:bg-muted/30">
+    <div className="space-y-3 p-4 sm:p-5 transition-colors">
       <div className="flex items-start gap-3">
         <Avatar className="h-10 w-10">
           <AvatarImage src={review.customer.avatar} alt={review.customer.name} />
           <AvatarFallback>
             {review.customer.name
-              .split(' ')
+              .split('')
               .map((n) => n[0])
               .join('')}
           </AvatarFallback>

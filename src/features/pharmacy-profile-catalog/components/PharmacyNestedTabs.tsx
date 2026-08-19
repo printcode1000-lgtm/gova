@@ -124,7 +124,7 @@ export function PharmacyNestedTabs({
         {showManagement ? (
           <Link
             href={managerHref}
-            className="inline-flex h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
+            className="inline-flex h-9 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition"
           >
             <Settings2 className="h-4 w-4" />
             {text.manage}
@@ -184,7 +184,7 @@ function PharmacyTabButton({
           ? "border-primary bg-primary text-on-primary"
           : item.status === "hidden"
             ? "border-error/40 bg-error/10 text-error"
-            : "border-outline-variant bg-surface text-on-surface hover:border-primary/50"
+            : "border-outline-variant bg-surface text-on-surface"
       }`}
     >
       <PharmacyCategoryIcon icon={icon} className="h-4 w-4 text-center" />

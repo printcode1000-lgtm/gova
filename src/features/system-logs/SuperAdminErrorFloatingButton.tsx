@@ -85,9 +85,8 @@ export function SuperAdminErrorFloatingButton() {
     <button
       type="button"
       onClick={() => router.push("/super-admin/logs")}
-      className="fixed bottom-[calc(5.5rem+var(--asol-safe-area-bottom))] end-4 z-[145] flex min-h-12 max-w-[calc(100vw-2rem)] items-center gap-2 rounded-full border border-error/40 bg-error px-4 py-3 text-sm font-bold text-on-error shadow-2xl shadow-error/25 transition hover:bg-error/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2"
+      className="fixed bottom-[calc(5.5rem+var(--asol-safe-area-bottom))] end-4 z-[145] flex min-h-12 max-w-[calc(100vw-2rem)] items-center gap-2 rounded-full border border-error/40 bg-error px-4 py-3 text-sm font-bold text-on-error shadow-2xl shadow-error/25 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2"
       aria-label={`فتح سجل الأخطاء: ${errorCount}`}
-      title="فتح سجل الأخطاء"
     >
       <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
         <Bug className="h-5 w-5" />

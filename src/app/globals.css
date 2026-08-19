@@ -50,6 +50,68 @@
   --asol-bottom-nav-clearance: calc(var(--asol-bottom-nav-space) + 1rem);
 }
 
+/*
+ * Touch-only interaction baseline.
+ *
+ * ASOL ships as a Capacitor application; every real user session happens on a
+ * touch screen where no pointer can hover. Hover styling is therefore removed
+ * from the codebase entirely (see docs/04-ui-components/touch-interaction-policy.md),
+ * and the desktop chrome the browser adds on its own is neutralized here:
+ * the Android/iOS tap flash, the accidental text selection a long press starts,
+ * the double-tap zoom delay, and the desktop scrollbar gutter.
+ *
+ * `:active` and `:focus-visible` are deliberately kept — the first is the only
+ * honest touch feedback, the second never fires on touch but keeps keyboard and
+ * accessibility navigation usable.
+ */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Long-pressing a control must not start a text selection. Text containers,
+   inputs and anything explicitly marked selectable keep normal behavior. */
+button,
+a,
+label,
+summary,
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="option"] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea,
+[contenteditable="true"],
+.asol-selectable {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+/* Desktop scrollbars are chrome no touch device renders; hide them without
+   disabling scrolling itself. */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 .asol-shell-main {
   padding-top: calc(
     var(--asol-app-header-height) + var(--asol-shell-main-gap)
@@ -82,7 +144,6 @@
   background: transparent;
   color: var(--color-primary);
   opacity: 0.72;
-  cursor: pointer;
   touch-action: manipulation;
   transition:
     color var(--duration-short-3) var(--easing-standard),

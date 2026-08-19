@@ -13,8 +13,8 @@ import {
   getUsersBySpecialtyQuery,
   getProfileFulfillmentSettingsQuery,
   upsertProfileFulfillmentSettingsCommand,
-} from "@/modules/data-access/domains/profile/operations/instances";
-import { getUserByUidQuery } from "@/modules/data-access/domains/auth/operations/instances";
+} from "@asol/data-core/profile";
+import { getUserByUidQuery } from "@asol/data-core/auth";
 
 export const profileService = new ProfileService(
   getProfileContactsQuery,

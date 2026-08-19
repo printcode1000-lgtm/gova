@@ -25,7 +25,7 @@ export function StoreInformation({ store, className }: StoreInformationProps) {
     : `${store.about.slice(0, MAX_PREVIEW_LENGTH)}...`;
 
   return (
-    <Card className={cn('overflow-hidden transition-all duration-300 hover:shadow-lg', className)}>
+    <Card className={cn('overflow-hidden transition-all duration-300', className)}>
       <CardHeader>
         <div className="flex items-center gap-2">
           <div className="asol-merchant-icon-well">

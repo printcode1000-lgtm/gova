@@ -254,13 +254,13 @@ export function SuperAdminNotificationBroadcastPage() {
               المطلوب: <strong>{result.requested}</strong>
             </p>
             <p>
-              تم الإرسال:{" "}
+              تم الإرسال:{""}
               <strong>
                 {result.results.filter((item) => item.status === "sent").length}
               </strong>
             </p>
             <p>
-              إرسال جزئي:{" "}
+              إرسال جزئي:{""}
               <strong>
                 {
                   result.results.filter((item) => item.status === "partial")
@@ -269,7 +269,7 @@ export function SuperAdminNotificationBroadcastPage() {
               </strong>
             </p>
             <p>
-              في الانتظار:{" "}
+              في الانتظار:{""}
               <strong>
                 {
                   result.results.filter((item) => item.status === "queued")
@@ -278,7 +278,7 @@ export function SuperAdminNotificationBroadcastPage() {
               </strong>
             </p>
             <p>
-              فشل:{" "}
+              فشل:{""}
               <strong>
                 {
                   result.results.filter((item) => item.status === "failed")
@@ -287,7 +287,7 @@ export function SuperAdminNotificationBroadcastPage() {
               </strong>
             </p>
             <p>
-              بدون رمز جهاز:{" "}
+              بدون رمز جهاز:{""}
               <strong>
                 {
                   result.results.filter((item) => item.status === "no_tokens")
@@ -296,7 +296,7 @@ export function SuperAdminNotificationBroadcastPage() {
               </strong>
             </p>
             <p>
-              أوقف كل الإشعارات:{" "}
+              أوقف كل الإشعارات:{""}
               <strong>
                 {
                   result.results.filter((item) => item.status === "muted")
@@ -371,7 +371,7 @@ function RecipientRow({
     <button
       type="button"
       onClick={onToggle}
-      className="flex w-full items-start gap-3 rounded-lg border bg-background p-3 text-start transition hover:border-primary/40"
+      className="flex w-full items-start gap-3 rounded-lg border bg-background p-3 text-start transition"
     >
       {checked ? (
         <CheckSquare className="mt-1 h-5 w-5 shrink-0 text-primary" />
@@ -387,9 +387,9 @@ function RecipientRow({
           {recipient.emailMasked ? ` - ${recipient.emailMasked}` : ""}
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          رموز الأجهزة: {recipient.tokenCount} | المنصات:{" "}
-          {recipient.platforms.join(", ")} | المزودون:{" "}
-          {recipient.providers.join(", ")}
+          رموز الأجهزة: {recipient.tokenCount} | المنصات:{""}
+          {recipient.platforms.join(",")} | المزودون:{""}
+          {recipient.providers.join(",")}
         </p>
       </div>
     </button>

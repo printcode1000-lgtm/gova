@@ -8,7 +8,7 @@
 | Multiple sellers and providers | Seller-order grouping and seller/provider foreign context |
 | Independent shipments | `shipments.order_id` plus polymorphic `shipment_items`; no shipment-to-seller parent relationship |
 | Mixed and multi-seller shipments | Assignment services and multi-seller mixed shipment test |
-| Isolated module | `src/modules/marketplace-orders` owns all order-system runtime code |
+| Isolated module | `@asol/orders-core` owns the order vocabulary; `@asol/data-core/marketplace-orders` owns its persistence |
 | Development and production databases | SQLite and Turso adapters, environment config, shared migration |
 
 ## Data and invariants

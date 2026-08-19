@@ -1048,8 +1048,7 @@ const StorageImageSlot = React.forwardRef<
             onClick={removeCurrent}
             disabled={busy && !isQueued}
             aria-label={t("storage.imageManager.remove")}
-            title={t("storage.imageManager.remove")}
-            className="absolute right-2 top-2 rounded-full bg-background p-1.5 shadow-md transition-colors hover:bg-destructive hover:text-destructive-foreground disabled:opacity-50"
+            className="absolute right-2 top-2 rounded-full bg-background p-1.5 shadow-md transition-colors disabled:opacity-50"
           >
             <X className="h-4 w-4" />
           </button>
@@ -1088,8 +1087,7 @@ const StorageImageSlot = React.forwardRef<
                   type="button"
                   disabled={busy}
                   aria-label={t("storage.imageSource.open")}
-                  title={t("storage.imageSource.open")}
-                  className="rounded-lg px-3 py-1.5 text-sm font-medium text-primary transition hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-lg px-3 py-1.5 text-sm font-medium text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {t("storage.imageSource.open")}
                 </button>

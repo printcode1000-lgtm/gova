@@ -44,6 +44,78 @@
       "@asol/account-declarations/profiles": [
         "./generated/packages/account-declarations/src/accounts/profiles.ts"
       ],
+      "@asol/data-core": [
+        "./generated/packages/data-core/src/index.ts"
+      ],
+      "@asol/data-core/telemetry": [
+        "./generated/packages/data-core/src/ports/telemetry.ts"
+      ],
+      "@asol/data-core/core": [
+        "./generated/packages/data-core/src/core/index.ts"
+      ],
+      "@asol/data-core/browser": [
+        "./generated/packages/data-core/src/browser/index.ts"
+      ],
+      "@asol/data-core/provisioning": [
+        "./generated/packages/data-core/src/provisioning/core/index.ts"
+      ],
+      "@asol/data-core/tooling": [
+        "./generated/packages/data-core/src/tooling/index.ts"
+      ],
+      "@asol/data-core/account-deletion": [
+        "./generated/packages/data-core/src/domains/account-deletion/index.server.ts"
+      ],
+      "@asol/data-core/advertisements": [
+        "./generated/packages/data-core/src/domains/advertisements/index.server.ts"
+      ],
+      "@asol/data-core/auth": [
+        "./generated/packages/data-core/src/domains/auth/index.server.ts"
+      ],
+      "@asol/data-core/data-health": [
+        "./generated/packages/data-core/src/domains/data-health/index.server.ts"
+      ],
+      "@asol/data-core/dev-cloud-backup": [
+        "./generated/packages/data-core/src/domains/dev-cloud-backup/index.server.ts"
+      ],
+      "@asol/data-core/feature-flags": [
+        "./generated/packages/data-core/src/domains/feature-flags/index.server.ts"
+      ],
+      "@asol/data-core/follow": [
+        "./generated/packages/data-core/src/domains/follow/index.server.ts"
+      ],
+      "@asol/data-core/marketplace-orders": [
+        "./generated/packages/data-core/src/domains/marketplace-orders/index.server.ts"
+      ],
+      "@asol/data-core/notifications": [
+        "./generated/packages/data-core/src/domains/notifications/index.server.ts"
+      ],
+      "@asol/data-core/ota": [
+        "./generated/packages/data-core/src/domains/ota/index.server.ts"
+      ],
+      "@asol/data-core/password-recovery": [
+        "./generated/packages/data-core/src/domains/password-recovery/index.server.ts"
+      ],
+      "@asol/data-core/pharmacy-profile-catalog": [
+        "./generated/packages/data-core/src/domains/pharmacy-profile-catalog/index.server.ts"
+      ],
+      "@asol/data-core/product": [
+        "./generated/packages/data-core/src/domains/product/index.server.ts"
+      ],
+      "@asol/data-core/product-search": [
+        "./generated/packages/data-core/src/domains/product-search/index.server.ts"
+      ],
+      "@asol/data-core/profile": [
+        "./generated/packages/data-core/src/domains/profile/index.server.ts"
+      ],
+      "@asol/data-core/seller-discounts": [
+        "./generated/packages/data-core/src/domains/seller-discounts/index.server.ts"
+      ],
+      "@asol/data-core/super-admin": [
+        "./generated/packages/data-core/src/domains/super-admin/index.server.ts"
+      ],
+      "@asol/data-core/system-logs": [
+        "./generated/packages/data-core/src/domains/system-logs/index.server.ts"
+      ],
       "@asol/dev-core": [
         "./generated/packages/dev-core/src/index.ts"
       ],
@@ -52,6 +124,9 @@
       ],
       "@asol/orders-composition": [
         "./generated/packages/orders-composition/src/index.ts"
+      ],
+      "@asol/orders-core": [
+        "./generated/packages/orders-core/src/index.ts"
       ]
     }
   },

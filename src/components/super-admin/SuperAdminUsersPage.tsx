@@ -15,7 +15,7 @@ import type { UserSession } from "@/features/auth/entities/session.entity";
 import {
   asolDbDeleteSuperAdminOriginalSession,
   asolDbSetSuperAdminOriginalSession,
-} from "@/modules/data-access/browser/asol-db";
+} from "@asol/data-core/browser";
 
 interface AdminUserResult {
   uid: string;

@@ -6,7 +6,7 @@ import {
   DEFAULT_ALERT_WINDOW_MS,
   DEFAULT_RETENTION_DAYS,
 } from '@asol/system-logs-core/server';
-import { profilesDataSource } from '@/modules/data-access/core';
+import { profilesDataSource } from '@asol/data-core/core';
 import { isSuperAdminIdentity } from '@/features/auth/utils/super-admin';
 
 function retentionDays() {

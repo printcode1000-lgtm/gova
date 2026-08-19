@@ -1,15 +1,20 @@
-# Central Data Access Module
+# Central Data Access Module — `@asol/data-core`
 
 ## Purpose
 
-`src/modules/data-access` is the exclusive ownership boundary for every
-application database operation. It contains runtime queries and commands,
-repositories, SQLite and Turso adapters, sharded database routing, schemas,
-migrations, database provisioning, and browser IndexedDB primitives.
+`packages/data-core` is the exclusive ownership boundary for every application
+database operation. It contains runtime queries and commands, repositories,
+SQLite and Turso adapters, sharded database routing, schemas, migrations,
+database provisioning, and browser IndexedDB primitives.
 
-There is no compatibility layer at the previous `src/core/database`,
-`src/lib/asol-db`, feature repository, or feature operation paths. Consumers
-must use the new module directly.
+It is a **sealed package**, not a folder. Nothing outside it may import one of
+its files by path; every consumer goes through a declared door in the package's
+`exports` map. The full contract, the door list, and the reasoning behind the
+shape live in [data-core-module.md](../data-core-module.md).
+
+There is no compatibility layer at the previous `src/modules/data-access`,
+`src/core/database`, `src/lib/asol-db`, feature repository, or feature operation
+paths. Consumers must use the package doors directly.
 
 ## Data flows
 
@@ -24,7 +29,7 @@ UI -> Client Service -> AsolApiClient -> Business API -> Server Service
 Browser-local data follows this path:
 
 ```text
-Client feature -> @/modules/data-access/browser -> AsolDB (IndexedDB)
+Client feature -> @asol/data-core/browser -> AsolDB (IndexedDB)
 ```
 
 Clients never receive database credentials and never submit SQL. Static and
@@ -71,16 +76,20 @@ router. The adapter resolves each table to its declared order shard.
 
 ## Import rules
 
+- Every import from outside the package uses a declared door:
+  `@asol/data-core`, `/core`, `/browser`, `/telemetry`, `/provisioning`,
+  `/tooling`, or `/<domain>`. A path into `src/` resolves nothing.
 - UI, hooks, and client services cannot import server data-access entry points.
-- Server services consume `domains/<domain>/index.server.ts` or a typed query or
+- Server services consume `@asol/data-core/<domain>` or a typed query or
   command. They do not import database adapters.
-- Only `src/modules/data-access` may import Drizzle, `better-sqlite3`, or
-  `@libsql/client`.
-- Only `src/modules/data-access` may contain production SQL.
-- Only `src/modules/data-access/browser` may call IndexedDB APIs.
-- Database-backed tests that issue SQL live inside their owning data-access
-  domain; tests outside the module cannot issue SQL or import a driver.
-- Database maintenance executables live in `data-access/tooling`; `scripts/`
+- Only `packages/data-core/src` may import Drizzle, `better-sqlite3`, or
+  `@libsql/client` — and `src/core/database/`, where those live, has **no door
+  at all**, so the seal enforces it rather than a path pattern.
+- Only `packages/data-core/src` may contain production SQL.
+- Only `packages/data-core/src/browser` may call IndexedDB APIs.
+- Database-backed tests that issue SQL live inside their owning domain in the
+  package; tests outside it cannot issue SQL or import a driver.
+- Database maintenance executables live in `src/tooling`; `scripts/`
   may orchestrate them but cannot contain SQL or open a database.
 - Cross-shard SQL is rejected by the shard router.
 - Browser code cannot choose SQLite or Turso and cannot access server secrets.

@@ -181,7 +181,7 @@ public/sync_data/sync_sqlite/advertisements.db
 Its schema is defined in:
 
 ```text
-src/modules/data-access/core/database/advertisements/advertisements.schema.ts
+packages/data-core/src/core/database/advertisements/advertisements.schema.ts
 ```
 
 Runtime behavior uses one `hero_slider` record with the ID `home-hero-slider`. `config_json` contains the complete current configuration, including slides.
@@ -222,8 +222,8 @@ Relevant files:
 - `src/app/api/advertisements/home-hero-slider/route.ts`
 - `src/app/api/advertisements/home-hero-slider/version/route.ts`
 - `src/features/advertisements/services/home-hero-slider-service.server.ts`
-- `src/modules/data-access/domains/advertisements/repositories/home-hero-slider.repository.ts`
-- `src/modules/data-access/core/database/advertisements-db-client.ts`
+- `packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts`
+- `packages/data-core/src/core/database/advertisements-db-client.ts`
 
 ### API routes
 

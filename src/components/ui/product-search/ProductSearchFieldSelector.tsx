@@ -63,7 +63,7 @@ export function ProductSearchFieldSelector({
         {fields.map((field) => (
           <label
             key={field.key}
-            className={`inline-flex h-8 cursor-pointer items-center gap-2 rounded-lg border px-2 text-xs transition ${
+            className={`inline-flex h-8  items-center gap-2 rounded-lg border px-2 text-xs transition ${
               selected.has(field.key)
                 ? "border-primary bg-primary text-on-primary"
                 : "border-outline-variant bg-surface text-on-surface"

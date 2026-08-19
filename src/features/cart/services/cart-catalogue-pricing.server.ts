@@ -1,6 +1,6 @@
 import "server-only";
 
-import { productRepository } from "@/modules/data-access/domains/product/index.server";
+import { productRepository } from "@asol/data-core/product";
 
 /**
  * Resolves cart prices from the catalogue instead of trusting the request.

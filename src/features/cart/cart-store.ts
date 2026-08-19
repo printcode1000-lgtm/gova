@@ -1,7 +1,7 @@
 "use client";
 
 import type { StoredImage } from "@asol/storage-core";
-import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
+import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@asol/data-core/browser";
 
 export const CART_STORAGE_KEY = "asol:cart:v1";
 export const CART_CHANGED_EVENT = "asol:cart:changed";

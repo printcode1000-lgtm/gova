@@ -55,6 +55,7 @@ for (const required of [
   "db:ensure",
   "db:schema:sync:release",
   "build:static",
+  "services:verify",
   "services:build",
 ]) {
   assert.ok(

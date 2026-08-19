@@ -175,7 +175,7 @@ export function VerificationSection() {
                       variant="ghost"
                       size="sm"
                       onClick={() => removeDocument(uploadedDoc.id)}
-                      className="text-destructive hover:text-destructive"
+                      className="text-destructive"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -229,7 +229,7 @@ export function VerificationSection() {
                     'flex items-start gap-3 p-4 rounded-lg border text-left transition-all',
                     isSelected
                       ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50',
+                      : 'border-border',
                   )}
                 >
                   <span className="text-2xl">{badge.icon}</span>

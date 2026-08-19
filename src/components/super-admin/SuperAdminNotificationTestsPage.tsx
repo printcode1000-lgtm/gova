@@ -457,7 +457,7 @@ export function SuperAdminNotificationTestsPage() {
               key={item.id}
               type="button"
               onClick={() => setScenarioId(item.id)}
-              className={`rounded-xl border p-4 text-start transition-colors ${scenarioId === item.id ? "border-primary bg-primary/10" : "hover:bg-muted/50"}`}
+              className={`rounded-xl border p-4 text-start transition-colors ${scenarioId === item.id ? "border-primary bg-primary/10" : ""}`}
             >
               <span className="flex items-center gap-2 font-semibold">
                 {item.audible ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}

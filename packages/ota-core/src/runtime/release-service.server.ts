@@ -6,7 +6,7 @@ import { asolApi } from "@/core/api";
 // its own code, and the re-export that made it work is what leaked `@asol/ota-core/publishing`
 // into all four service mirrors and broke their builds.
 import { getOtaApprovalServerConfig } from "../publishing/config/ota-r2-target";
-import { otaReleaseRepository } from "@/modules/data-access/domains/ota/index.server";
+import { otaReleaseRepository } from "@asol/data-core/ota";
 import { compareOtaManifests } from "../domain/release/release-diff";
 import { compareOtaCanonicalStrings } from "../domain/release/canonical-order";
 import { isOtaRolloutEligible } from "../domain/release/rollout";

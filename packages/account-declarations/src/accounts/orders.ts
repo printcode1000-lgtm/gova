@@ -32,9 +32,16 @@ export const ORDERS_DECLARATION = {
     ...OPTIONAL_ENV_KEYS,
   ],
   optionalEnv: [],
+  // The order reads themselves are no longer listed here. They live behind
+  // `@asol/data-core/marketplace-orders`, which `@asol/orders-composition` imports, so the
+  // mirror walker reaches them through the package graph. Naming a package file as a mirror
+  // entry point would mean naming an internal path, which is exactly what the seal forbids.
+  // Only application files are listed here. The order reads and the order vocabulary both live
+  // in packages now — `@asol/data-core/marketplace-orders` and `@asol/orders-core` — and
+  // `@asol/orders-composition` imports both, so the mirror walker reaches them through the
+  // package graph. Naming a file inside a sealed package as a mirror entry point would mean
+  // naming an internal path, which is exactly what the seal forbids.
   mirrorEntryPoints: [
-    'modules/data-access/domains/marketplace-orders/index.server.ts',
-    'modules/marketplace-orders/domain/actor-from-input.ts',
     'core/config/server-env.ts',
   ],
   runtimeAssets: [],

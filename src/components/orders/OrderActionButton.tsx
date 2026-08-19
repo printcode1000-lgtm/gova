@@ -33,8 +33,8 @@ export function OrderActionButton({
         full ? "w-full" : ""
       } ${
         danger
-          ? "bg-error/10 text-error hover:bg-error/15"
-          : "bg-primary/10 text-primary hover:bg-primary/15"
+          ? "bg-error/10 text-error"
+          : "bg-primary/10 text-primary"
       }`}
     >
       {busy ? (

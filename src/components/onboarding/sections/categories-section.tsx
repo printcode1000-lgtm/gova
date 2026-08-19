@@ -86,7 +86,7 @@ export function CategoriesSection() {
                     'rounded-lg border transition-all',
                     category.isSelected
                       ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50',
+                      : 'border-border',
                   )}
                 >
                   <div className="flex items-center gap-3 p-4">
@@ -101,7 +101,7 @@ export function CategoriesSection() {
                       <button
                         type="button"
                         onClick={() => toggleExpand(category.id)}
-                        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+                        className="flex items-center gap-1 text-sm text-muted-foreground"
                       >
                         <Badge variant="secondary" className="mr-2">
                           {t('onboarding.categories.subcategories', { count: subcategories.length })}

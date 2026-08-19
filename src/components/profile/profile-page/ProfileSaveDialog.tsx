@@ -58,7 +58,7 @@ export function ProfileSaveDialog({
           <Button
             type="button"
             onClick={() => setSaveDialog(null)}
-            className="h-9 rounded-lg bg-primary px-4 py-2 font-medium text-on-primary transition-colors hover:bg-primary/90"
+            className="h-9 rounded-lg bg-primary px-4 py-2 font-medium text-on-primary transition-colors"
           >
             {locale === "ar" ? "إغلاق" : "Close"}
           </Button>

@@ -94,7 +94,7 @@ export function ImagePlaceholder({ alt = '', className = '', width, height }: Im
         height: height || '100%', 
         minHeight: height ? undefined : '120px' 
       }}
-      title={alt}
+      aria-label={alt}
     >
       <Icon className="w-8 h-8 opacity-60 mb-2 shrink-0" />
       <span className="text-xs text-center font-medium opacity-80 line-clamp-2 px-1" dir="rtl">

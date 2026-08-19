@@ -28,7 +28,7 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-import { ASOL_DB_STORES, asolDbDelete } from "@/modules/data-access/browser/asol-db";
+import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 
 import { ResolvedItem, getProductName, getProductPrice, getProductImage, buildProductAction } from "./featured-marquee/SuperAdminFeaturedMarqueePage.product-display";
 
@@ -306,7 +306,7 @@ export function SuperAdminFeaturedMarqueePage() {
             type="button"
             onClick={() => void save()}
             disabled={busy}
-            className="ms-auto bg-primary text-on-primary hover:bg-primary/95"
+            className="ms-auto bg-primary text-on-primary"
           >
             <Save className="me-2 h-4 w-4" />
             حفظ
@@ -386,7 +386,7 @@ export function SuperAdminFeaturedMarqueePage() {
               size="sm"
               onClick={() => void save()}
               disabled={busy || items.length === 0}
-              className="bg-primary text-on-primary hover:bg-primary/95"
+              className="bg-primary text-on-primary"
             >
               {busy ? (
                 <Loader2 className="me-1 h-3 w-3 animate-spin" />
@@ -411,7 +411,7 @@ export function SuperAdminFeaturedMarqueePage() {
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={(event) => handleDragOver(event, index)}
                 onDragEnd={handleDragEnd}
-                className="flex items-center gap-3 rounded-lg border bg-surface p-2 transition-colors hover:border-primary/30"
+                className="flex items-center gap-3 rounded-lg border bg-surface p-2 transition-colors"
               >
                 <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-muted-foreground" />
 
@@ -464,7 +464,7 @@ export function SuperAdminFeaturedMarqueePage() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  className="shrink-0 text-destructive"
                   onClick={() => removeProduct(item.productId)}
                   aria-label="حذف المنتج من الشريط"
                 >

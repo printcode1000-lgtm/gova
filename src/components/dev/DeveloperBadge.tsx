@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { isDevelopment } from '@/core/config';
-import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@asol/data-core/browser';
 
 const pages = [
   { path: '/', name: 'شاشة البداية' },

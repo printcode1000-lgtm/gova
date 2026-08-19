@@ -135,10 +135,10 @@ export function LocationSection() {
                 <label
                   key={country}
                   className={cn(
-                    'flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition-all',
+                    'flex items-center gap-2 p-3 rounded-lg border transition-all',
                     isSelected
                       ? 'border-primary bg-primary/10'
-                      : 'border-border hover:border-primary/50',
+                      : 'border-border',
                   )}
                 >
                   <Checkbox

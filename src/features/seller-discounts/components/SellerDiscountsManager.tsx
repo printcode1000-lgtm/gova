@@ -122,7 +122,7 @@ export const SellerDiscountsManager = React.forwardRef<
                 key={type}
                 type="button"
                 onClick={() => addDiscount(type)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-outline-variant bg-surface px-2.5 text-xs font-semibold text-on-surface shadow-sm hover:bg-surface-container"
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-outline-variant bg-surface px-2.5 text-xs font-semibold text-on-surface shadow-sm"
               >
                 <Plus className="h-3.5 w-3.5" />
                 {labels[type]}

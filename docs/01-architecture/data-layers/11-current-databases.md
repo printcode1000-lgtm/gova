@@ -55,7 +55,7 @@ the same data, one owns it and the other resolves it by `uid` in a second query
 ### Schema
 
 ```text
-src/modules/data-access/core/database/schema.ts
+packages/data-core/src/core/database/schema.ts
 ```
 
 Primary table:
@@ -91,8 +91,8 @@ OTA approval also uses this database through `/api/ota/access` and `/api/ota/adm
 ### Schema
 
 ```text
-src/modules/data-access/core/database/profile/profile.schema.ts
-src/modules/data-access/core/database/profile/user-specialties.schema.ts
+packages/data-core/src/core/database/profile/profile.schema.ts
+packages/data-core/src/core/database/profile/user-specialties.schema.ts
 ```
 
 Primary tables include:
@@ -142,8 +142,8 @@ clears every shard server-side.
 ### Schema
 
 ```text
-src/modules/data-access/core/database/product/product.schema.ts
-src/modules/data-access/core/database/product/migrations
+packages/data-core/src/core/database/product/product.schema.ts
+packages/data-core/src/core/database/product/migrations
 ```
 
 Primary tables include:
@@ -197,8 +197,8 @@ health, and the profile count refresh all read this database server-side.
 ### Schema
 
 ```text
-src/modules/data-access/core/database/advertisements/advertisements.schema.ts
-src/modules/data-access/core/database/advertisements/migrations
+packages/data-core/src/core/database/advertisements/advertisements.schema.ts
+packages/data-core/src/core/database/advertisements/migrations
 ```
 
 Primary tables include:
@@ -220,7 +220,7 @@ Primary tables include:
 ### Schema
 
 ```text
-src/modules/data-access/domains/marketplace-orders/db/migrations
+packages/data-core/src/domains/marketplace-orders/db/migrations
 ```
 
 Primary tables include:
@@ -250,7 +250,7 @@ can never consume the quota that serves logins, profiles, or the catalogue.
 | --- | --- |
 | API (list) | `GET /api/orders` — served by the [orders service](../../05-platform-features/orders-service-module.md) |
 | API (detail + writes) | `GET /api/orders/:id` and every `POST` — main app |
-| Module | `src/modules/marketplace-orders` |
+| Module | `@asol/orders-core` (domain) · `@asol/data-core/marketplace-orders` (reads and writes) |
 | Database client | Marketplace orders DB client |
 
 ### The rule that follows from the split
@@ -272,8 +272,8 @@ See [Marketplace Order Management](../marketplace-order-management/README.md).
 ### Schema
 
 ```text
-src/modules/data-access/core/database/notifications/notifications.schema.ts
-src/modules/data-access/core/database/notifications/migrations
+packages/data-core/src/core/database/notifications/notifications.schema.ts
+packages/data-core/src/core/database/notifications/migrations
 ```
 
 Tables:
@@ -342,7 +342,7 @@ The build runs schema sync before Next.js compilation.
 ## Adding a New Database
 
 1. Add a local SQLite database path.
-2. Add schema and migrations under `src/modules/data-access/core/database/...` or the owning module.
+2. Add schema and migrations under `packages/data-core/src/core/database/...` or the owning module.
 3. Add a database client.
 4. Add Turso environment variables.
 5. Add schema sync wiring.

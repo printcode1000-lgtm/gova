@@ -62,15 +62,27 @@ first place a problem is discovered. In order, the preflight:
    and every Turso database (users, product, advertisements, notifications, and
    all profile/order shards) is synchronized **before** `build:static` or any git
    write, then `build:static` — the release build, which also re-runs the
-   architecture and test gates — and `services:build`, which runs `next build`
-   inside all four service folders.
+   architecture and test gates — then `services:verify`, and finally
+   `services:build`, which runs `next build` inside all four service folders.
 
    `services:build` was added after every other check in this list passed, the
    release commit was pushed, `main` went `READY`, and **all four service
    accounts then failed their remote build**. Each service is uploaded alone and
    installed against its own `package.json`, so nothing that runs at the
    repository root exercises it. It is the only step here that builds what
-   Vercel builds;
+   Vercel builds.
+
+   `services:verify` sits immediately before it and covers the gap `services:build`
+   cannot. The shared code now lives in sealed packages, so what each service
+   uploads is decided by a graph walker rather than by a folder, and a specifier
+   the walker cannot see is simply never copied. Nothing downstream notices: the
+   remote build resolves lazily and succeeds, and the failure lands on the first
+   request as `Cannot find module`. It happened — when `@asol/data-core` became an
+   ES module its lazy driver loads changed from `require(...)` to a `createRequire`
+   handle, the walker's pattern stopped matching, and **every database driver
+   dropped out of all four mirrors while all four still built**. The step re-reads
+   each upload and resolves every edge inside it: relative paths, `@/` paths, and
+   `@asol/<package>/<door>` through the mirrored package's own `exports` map;
 4. refuses to publish scratch files (`__probe*`, `*.log`, `*.tmp`, `*.bak`,
    scratchpad paths), since `git add -A` stages whatever is in the tree;
    `packages/native-core/android/build/` is gitignored so local Gradle output

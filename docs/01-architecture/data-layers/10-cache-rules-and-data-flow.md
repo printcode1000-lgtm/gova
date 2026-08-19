@@ -4,7 +4,7 @@
 
 ### AsolDB (IndexedDB)
 
-**Location:** `src/modules/data-access/browser/asol-db/`
+**Location:** `packages/data-core/src/browser/asol-db/`
 
 | Store | Purpose |
 |-------|---------|

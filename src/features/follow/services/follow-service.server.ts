@@ -9,7 +9,7 @@ import type {
   FollowStatusInput,
   FollowTargetType,
 } from "../entities/follow.types";
-import { FollowRepository } from "@/modules/data-access/domains/follow/index.server";
+import { FollowRepository } from "@asol/data-core/follow";
 import { verifySignedSessionToken } from "@asol/auth-core/server";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import { notificationsServer } from "@/features/notifications/server";

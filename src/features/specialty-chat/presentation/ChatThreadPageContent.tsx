@@ -187,7 +187,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
   return (
     <main className="mx-auto w-full max-w-3xl px-3 pb-40 pt-3 sm:px-5">
       <header className="sticky top-0 z-20 -mx-3 flex items-center gap-3 border-b border-outline-variant bg-surface/95 px-3 py-3 backdrop-blur sm:-mx-5 sm:px-5">
-        <Link href="/notifications?filter=chat" aria-label={locale === "ar" ? "العودة" : "Back"} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-surface-container">
+        <Link href="/notifications?filter=chat" aria-label={locale === "ar" ? "العودة" : "Back"} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
           <BackIcon className="h-5 w-5" />
         </Link>
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">

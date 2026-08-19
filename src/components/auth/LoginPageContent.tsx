@@ -100,7 +100,7 @@ export function LoginPageContent() {
                         </span>
                         <Link
                           href="/forgot-password"
-                          className="text-xs text-primary hover:underline"
+                          className="text-xs text-primary"
                         >
                           {t('auth.login.forgotPassword')}
                         </Link>
@@ -181,7 +181,7 @@ export function LoginPageContent() {
                   className="asol-auth-outline-btn asol-control h-12 text-sm group"
                 >
                   {t('auth.login.createAccount')}
-                  <ArrowRight className="h-4 w-4 inline ms-2 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-4 w-4 inline ms-2 transition-transform" />
                 </button>
               </Link>
             </div>

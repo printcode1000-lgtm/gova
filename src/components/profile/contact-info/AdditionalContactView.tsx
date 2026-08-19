@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGpsProvider } from '@/components/ui/AsolMap';
+import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGpsProvider } from '@asol/map-core';
 import type { LocationEntry } from '@/features/profile/entities/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/share-location-url";
@@ -329,7 +329,7 @@ return (
                             variant="ghost"
                             size="icon"
                             onClick={() => removeLocation(loc.id)}
-                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            className="h-8 w-8 text-destructive"
                             title={locale === 'ar' ? 'حذف الموقع' : 'Remove location'}
                           >
                             <X className="h-4 w-4" />
@@ -339,11 +339,6 @@ return (
 
                       {!readOnly ? (
                         <div className="space-y-2">
-                          <Input
-                            value={loc.address || ''}
-                            onChange={(e) => updateLocationEntry(loc.id, { address: e.target.value })}
-                            placeholder={locale === 'ar' ? 'أدخل عنوان هذا الموقع' : 'Enter address for this location'}
-                          />
                           {openMapId === loc.id ? (
                             <div className="space-y-2">
                               <AsolMap
@@ -370,7 +365,6 @@ return (
                                     : []
                                 }
                                 toolbar={{
-                                  save: { enabled: true, label: locale === 'ar' ? 'حفظ الموقع' : 'Save location' },
                                   gps: { enabled: true, label: locale === 'ar' ? 'تحديد الموقع الحالي' : 'Locate me' },
                                   share: { enabled: true, label: locale === 'ar' ? 'مشاركة الموقع' : 'Share location' },
                                   reset: { enabled: true, label: locale === 'ar' ? 'إعادة الضبط' : 'Reset' },
@@ -384,20 +378,33 @@ return (
                                 ariaLabel={locale === 'ar' ? 'اختيار موقع المتجر' : 'Pick store location'}
                                 loadingLabel={locale === 'ar' ? 'جارٍ تحميل الخريطة…' : 'Loading map…'}
                                 retryLabel={locale === 'ar' ? 'إعادة المحاولة' : 'Retry'}
-                                onTap={({ latitude: lat, longitude: lng }) => {
-                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng });
-                                  setMapMessage(loc.id, locale === 'ar' ? 'تم اختيار الموقع. احفظ الملف الشخصي لتثبيت التغيير.' : 'Location selected. Save the profile to confirm.');
+                                addressPrompt={{
+                                  enabled: true,
+                                  title: locale === 'ar' ? 'عنوان هذا الموقع' : 'Address for this location',
+                                  placeholder: locale === 'ar' ? 'اكتب وصف العنوان' : 'Describe this location',
+                                  confirmLabel: locale === 'ar' ? 'تأكيد' : 'Confirm',
+                                  cancelLabel: locale === 'ar' ? 'إلغاء' : 'Cancel',
+                                  value: loc.address || '',
                                 }}
-                                onGpsCompleted={({ latitude: lat, longitude: lng }) => {
-                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng });
-                                  setMapMessage(loc.id, locale === 'ar' ? 'تم تحديد موقعك الحالي.' : 'Current location detected.');
-                                }}
-                                onSave={() =>
+                                onTap={({ latitude: lat, longitude: lng }) =>
+                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng })
+                                }
+                                onGpsCompleted={({ latitude: lat, longitude: lng }) =>
+                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng })
+                                }
+                                onLocationCommitted={({ latitude: lat, longitude: lng, address }) =>
+                                  updateLocationEntry(loc.id, { latitude: lat, longitude: lng, address })
+                                }
+                                onGpsError={(mapError) =>
                                   setMapMessage(
                                     loc.id,
-                                    loc.latitude && loc.longitude
-                                      ? (locale === 'ar' ? 'تم تثبيت الموقع. استخدم زر الحفظ لتأكيده.' : 'Location pinned. Use Save to confirm.')
-                                      : (locale === 'ar' ? 'حدد موقعًا على الخريطة أولًا.' : 'Tap the map to select a location first.'),
+                                    mapError.code !== 'permission'
+                                      ? (locale === 'ar' ? 'تعذر تحديد موقعك الحالي. حدد الموقع على الخريطة.' : 'Could not read your location. Pick it on the map instead.')
+                                      : mapError.requiresSettings
+                                        ? (locale === 'ar' ? 'إذن الموقع محظور. فعّله من إعدادات التطبيق ثم أعد المحاولة.' : 'Location permission is blocked. Enable it in app settings, then retry.')
+                                        : mapError.permissionState === 'unsupported'
+                                          ? (locale === 'ar' ? 'تحديد الموقع غير مدعوم على هذا الجهاز. حدد الموقع على الخريطة.' : 'Location is unsupported on this device. Pick it on the map instead.')
+                                          : (locale === 'ar' ? 'لم يُمنح إذن الموقع. اسمح بالوصول أو حدد الموقع على الخريطة.' : 'Location permission was not granted. Allow access, or pick it on the map.'),
                                   )
                                 }
                                 onShare={({ latitude: lat, longitude: lng }) => {
@@ -418,9 +425,6 @@ return (
                                 }}
                                 onClose={() => setOpenMapId(null)}
                               />
-                              <p className="text-xs text-muted-foreground mt-1">
-                                {locale === 'ar' ? 'اضغط على الخريطة لتحديد الموقع.' : 'Tap the map to pin a location.'}
-                              </p>
                               {mapMessages[loc.id] && (
                                 <p className="text-xs font-medium text-primary mt-1" role="status">
                                   {mapMessages[loc.id]}
@@ -445,7 +449,7 @@ return (
                               href={`geo:${loc.latitude},${loc.longitude}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                              className="inline-flex items-center gap-1 text-xs text-primary"
                             >
                               <MapPin className="h-3 w-3" />
                               {locale === 'ar' ? 'فتح في الخرائط' : 'Open in maps'}

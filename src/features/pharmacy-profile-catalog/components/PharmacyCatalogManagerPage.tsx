@@ -240,7 +240,7 @@ export function PharmacyCatalogManagerPage() {
           </div>
           <Link
             href={addProductHref}
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary transition hover:bg-primary/90"
+            className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary transition"
           >
             <PackagePlus className="h-4 w-4" />
             {text.addProduct}
@@ -269,7 +269,7 @@ export function PharmacyCatalogManagerPage() {
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     category.id === activeCategoryId
                       ? "border-primary bg-primary/10"
-                      : "border-outline-variant hover:border-primary/50"
+                      : "border-outline-variant"
                   } ${category.status === "hidden" ? "opacity-55" : ""}`}
                 >
                   <button
@@ -309,7 +309,7 @@ export function PharmacyCatalogManagerPage() {
                   className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-start text-xs transition ${
                     subcategory.id === activeSubcategoryId
                       ? "border-tertiary bg-tertiary/10"
-                      : "border-outline-variant hover:border-tertiary/50"
+                      : "border-outline-variant"
                   } ${subcategory.status === "hidden" ? "opacity-55" : ""}`}
                 >
                   <button

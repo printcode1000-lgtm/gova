@@ -56,7 +56,7 @@ const settingsSource = readFileSync(
 const notificationSchemaSource = readFileSync(
   path.join(
     process.cwd(),
-    "src/modules/data-access/core/database/notifications/notifications.schema.ts",
+    "packages/data-core/src/core/database/notifications/notifications.schema.ts",
   ),
   "utf8",
 );

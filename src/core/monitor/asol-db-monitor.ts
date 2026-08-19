@@ -5,7 +5,7 @@ import {
   getSessionId,
   useMonitorStore,
 } from './monitor-store';
-import type { AsolDbStoreName } from '@/modules/data-access/browser/asol-db';
+import type { AsolDbStoreName } from '@asol/data-core/browser';
 import type { OperationRecord, OperationType } from './types';
 
 type AsolDbOp = 'get' | 'set' | 'delete' | 'clear';

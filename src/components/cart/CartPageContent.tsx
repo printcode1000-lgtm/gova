@@ -280,7 +280,7 @@ export function CartPageContent() {
           <button
             type="button"
             onClick={() => void clearCart()}
-            className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition hover:border-error hover:text-error"
+            className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition"
           >
             <Trash2 className="h-4 w-4" />
             {copy.clear}
@@ -316,12 +316,12 @@ export function CartPageContent() {
                       توصيل موحّد لعدة بائعين
                     </h2>
                     <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                      سيطلب النظام عرضًا واحدًا لجمع المنتجات من{" "}
+                      سيطلب النظام عرضًا واحدًا لجمع المنتجات من{""}
                       {sellerGroups.length} بائعين وتسليمها إليك في شحنة واحدة،
                       ولن تُحسب رسوم كل بائع بصورة منفصلة.
                     </p>
                     <p className="mt-2 text-xs font-semibold text-on-surface">
-                      تكلفة التوصيل المنفصل المؤكدة حاليًا:{" "}
+                      تكلفة التوصيل المنفصل المؤكدة حاليًا:{""}
                       {formatMoney(separateDeliveryEstimateMinor)}
                       {sellerGroups.some((group) => group.quoteRequired)
                         ? "، وقد تزيد بعد تسعير المواقع."
@@ -352,7 +352,7 @@ export function CartPageContent() {
                   </div>
                   <Link
                     href={`/profile?mode=view&uid=${encodeURIComponent(group.sellerId)}`}
-                    className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
+                    className="inline-flex items-center gap-2 rounded-lg border border-outline-variant px-3 py-2 text-xs font-semibold text-on-surface transition"
                   >
                     <ExternalLink className="h-4 w-4" />
                     {copy.viewSeller}
@@ -429,7 +429,7 @@ export function CartPageContent() {
                             <button
                               type="button"
                               onClick={() => void removeCartItem(item.id)}
-                              className="rounded-full p-2 text-muted-foreground transition hover:bg-error/10 hover:text-error"
+                              className="rounded-full p-2 text-muted-foreground transition"
                               aria-label="حذف من السلة"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -446,7 +446,7 @@ export function CartPageContent() {
                                     item.quantity - 1,
                                   )
                                 }
-                                className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
+                                className="flex h-9 w-9 items-center justify-center transition"
                                 aria-label="تقليل الكمية"
                               >
                                 <Minus className="h-4 w-4" />
@@ -462,7 +462,7 @@ export function CartPageContent() {
                                     item.quantity + 1,
                                   )
                                 }
-                                className="flex h-9 w-9 items-center justify-center transition hover:bg-muted"
+                                className="flex h-9 w-9 items-center justify-center transition"
                                 aria-label="زيادة الكمية"
                               >
                                 <Plus className="h-4 w-4" />
@@ -486,7 +486,7 @@ export function CartPageContent() {
                 </div>
 
                 <details className="mt-4 rounded-lg border border-outline-variant bg-muted/20 p-3">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-bold">
+                  <summary className="flex list-none items-center justify-between gap-3 text-sm font-bold">
                     سياسة الشحن والإرجاع الخاصة بالبائع
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </summary>
@@ -497,7 +497,7 @@ export function CartPageContent() {
                       </p>
                     ) : null}
                     <p>
-                      الحالة:{" "}
+                      الحالة:{""}
                       <span className="font-semibold text-on-surface">
                         {group.settings.returns.enabled
                           ? "الإرجاع متاح"
@@ -507,13 +507,13 @@ export function CartPageContent() {
                     {group.settings.returns.enabled ? (
                       <>
                         <p>
-                          عدد أيام الإرجاع:{" "}
+                          عدد أيام الإرجاع:{""}
                           <span className="font-semibold text-on-surface">
                             {group.settings.returns.returnWindowDays}
                           </span>
                         </p>
                         <p>
-                          تكلفة شحن الإرجاع:{" "}
+                          تكلفة شحن الإرجاع:{""}
                           <span className="font-semibold text-on-surface">
                             {group.settings.returns.returnShippingPayer ===
                             "buyer"
@@ -625,7 +625,7 @@ export function CartPageContent() {
               type="button"
               disabled={isSubmitting || isSessionLoading}
               onClick={submitOrder}
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-on-primary transition disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

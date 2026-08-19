@@ -368,7 +368,7 @@ export const ProductsCard = React.forwardRef<
 
       {!readOnly ? (
         <section className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-          <label className="flex cursor-pointer items-center justify-between gap-4">
+          <label className="flex items-center justify-between gap-4">
             <span className="min-w-0">
               <span className="block text-sm font-semibold text-on-surface">
                 {locale === 'ar' ? 'الطلب الخاص' : 'Custom requests'}

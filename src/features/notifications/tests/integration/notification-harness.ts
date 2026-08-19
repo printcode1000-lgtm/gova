@@ -469,7 +469,7 @@ function installFakes(): void {
   if (injected) return;
   injected = true;
 
-  inject("@/modules/data-access/browser/asol-db", {
+  inject("@asol/data-core/browser", {
     ASOL_DB_STORES: {
       NOTIFICATIONS: "notifications",
       NOTIFICATION_SETTINGS: "notificationSettings",

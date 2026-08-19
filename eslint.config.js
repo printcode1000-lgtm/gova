@@ -60,25 +60,35 @@ module.exports = [
   ,
   {
     files: ['src/**/*.{ts,tsx,js,jsx,cjs,mjs}', 'scripts/**/*.{ts,tsx,js,jsx,cjs,mjs}'],
-    ignores: ['src/modules/data-access/**', 'scripts/architecture-check.ts'],
+    ignores: ['scripts/architecture-check.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
         {
           paths: [
-            { name: 'better-sqlite3', message: 'Database drivers belong to src/modules/data-access only.' },
-            { name: '@libsql/client', message: 'Database drivers belong to src/modules/data-access only.' },
-            { name: 'drizzle-orm', message: 'Database query APIs belong to src/modules/data-access only.' },
+            { name: 'better-sqlite3', message: 'Database drivers belong to @asol/data-core only.' },
+            { name: '@libsql/client', message: 'Database drivers belong to @asol/data-core only.' },
+            { name: 'drizzle-orm', message: 'Database query APIs belong to @asol/data-core only.' },
           ],
           patterns: [
-            { group: ['@libsql/*', 'drizzle-orm/*'], message: 'Database query APIs belong to src/modules/data-access only.' },
+            { group: ['@libsql/*', 'drizzle-orm/*'], message: 'Database query APIs belong to @asol/data-core only.' },
+            {
+              group: ['@asol/data-core/src/**', '@asol/data-core/src', '**/packages/data-core/**'],
+              message:
+                'Deep import into @asol/data-core is forbidden. Use a declared door: @asol/data-core, /core, /browser, /telemetry, /provisioning, /tooling, or /<domain>.',
+            },
+            {
+              group: ['@asol/orders-core/**', '**/packages/orders-core/**'],
+              message:
+                'The order domain has exactly one door. Import from @asol/orders-core, never a sub-path.',
+            },
           ],
         },
       ],
       'no-restricted-globals': [
         'error',
         { name: 'localStorage', message: 'Use the approved AsolDB or preferences adapter.' },
-        { name: 'indexedDB', message: 'Use the central browser adapter in src/modules/data-access/browser.' },
+        { name: 'indexedDB', message: 'Use the central browser adapter behind @asol/data-core/browser.' },
       ],
     },
   },

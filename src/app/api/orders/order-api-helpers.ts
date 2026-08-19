@@ -1,14 +1,25 @@
 import "server-only";
 
 import { apiError } from "@/core/api/api-response";
-import type { MinorUnits } from "@/modules/marketplace-orders/domain/types";
+import type { MinorUnits } from "@asol/orders-core";
+import { registerOrdersCorePorts } from "@/features/orders/orders-core-ports";
 
 /**
  * `actorFromInput` used to live here. It moved to
- * `@/modules/marketplace-orders/domain/actor-from-input` because the orders
+ * `@asol/orders-core` because the orders
  * service needs it too, and mirroring app-router files into a deployment that
  * has no such routes made no sense.
  */
+
+/**
+ * Registering here as well as in `instrumentation.ts` is deliberate, not a duplicate.
+ *
+ * The identity port fails closed, so a code path that reaches an order route without having run
+ * the startup hook would treat the real super admin as an ordinary buyer — a silent, correct-looking
+ * result rather than an error. Every order route in the main app imports this module, so this is the
+ * one place that cannot be bypassed. `configureOrdersCore` merges, so registering twice is free.
+ */
+registerOrdersCorePorts();
 
 export function moneyMinor(value: unknown): MinorUnits {
   const amount = Number(value);

@@ -100,7 +100,7 @@ export function OpenInAsolHeaderPrompt({
           href={prompt.installUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-0.5 inline-flex shrink-0 font-bold text-primary underline-offset-2 hover:underline sm:mt-0"
+          className="mt-0.5 inline-flex shrink-0 font-bold text-primary underline-offset-2 sm:mt-0"
         >
           {appStore
             ? ar

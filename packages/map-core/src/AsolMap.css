@@ -1,0 +1,59 @@
+.asol-map { --asol-safe-top: env(safe-area-inset-top, 0px); --asol-safe-right: env(safe-area-inset-right, 0px); --asol-safe-bottom: env(safe-area-inset-bottom, 0px); --asol-safe-left: env(safe-area-inset-left, 0px); position: relative; width: 100%; min-height: 18rem; overflow: hidden; border-radius: var(--radius-md, 12px); background: var(--color-surface-container, #eef0f2); color: var(--color-on-surface, #202124); touch-action: pan-x pan-y; }
+.asol-map__canvas { position: absolute; inset: 0; }
+.asol-map .maplibregl-canvas { outline: none; }
+.asol-map .maplibregl-canvas:focus-visible { outline: 3px solid var(--color-primary, #1a73e8); outline-offset: -3px; }
+/* Attribution is required by the tile licence but must not compete with the map:
+   white text on a fully transparent plate, kept readable by a text shadow rather
+   than by a background box. */
+.asol-map .maplibregl-ctrl-attrib { min-height: 0; margin: 0; padding: 0 3px; border-radius: 2px 0 0; background: transparent; color: #fff; font-size: 7px; line-height: 9px; opacity: 1; text-shadow: 0 0 2px rgba(0, 0, 0, .85); }
+.asol-map .maplibregl-ctrl-attrib-button { filter: invert(1); }
+.asol-map .maplibregl-ctrl-attrib-inner { display: block; white-space: nowrap; }
+.asol-map .maplibregl-ctrl-attrib a { color: #fff; font-size: inherit; line-height: inherit; }
+/* The toolbar is a permanent side rail: one column pinned to the map's right
+   edge at every screen size. It never becomes a horizontal strip across the
+   map — that layout stole the top of the canvas and cut every label short. Its
+   own size scales with the viewport through clamp(), so a small phone gets a
+   narrower rail rather than a different layout. */
+.asol-map__controls { position: absolute; z-index: 4; top: calc(.5rem + var(--asol-safe-top)); right: calc(.5rem + var(--asol-safe-right)); display: flex; max-height: calc(100% - 1rem - var(--asol-safe-top) - var(--asol-safe-bottom)); flex-direction: column; gap: clamp(.25rem, 1.2vw, .5rem); overflow-y: auto; overscroll-behavior: contain; }
+.asol-map__control-group { display: grid; overflow: hidden; border-radius: .75rem; box-shadow: var(--shadow-1, 0 1px 4px #0003); }
+.asol-map__control, .asol-map__control-group button { display: flex; width: clamp(2.75rem, 13vw, 4rem); min-width: 0; min-height: clamp(2.5rem, 11vw, 3.5rem); flex: 0 0 auto; flex-direction: column; align-items: center; justify-content: center; gap: .125rem; padding: .25rem .125rem; border: 1px solid var(--color-outline-variant, #dadce0); background: var(--color-surface-container-lowest, #fff); color: inherit; touch-action: manipulation; }
+.asol-map__control { border-radius: .75rem; box-shadow: var(--shadow-1, 0 1px 4px #0003); }
+.asol-map__control svg, .asol-map__control-group svg { width: clamp(1rem, 4.5vw, 1.25rem); height: clamp(1rem, 4.5vw, 1.25rem); flex: 0 0 auto; }
+/* Two wrapped lines instead of one ellipsised line: at rail widths a label like
+   "مشاركة الموقع" is unreadable when truncated to "مشاركة الم…". */
+.asol-map__control-label { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; width: 100%; overflow: hidden; font-size: clamp(.5rem, 2.2vw, .625rem); font-weight: 600; line-height: 1.15; text-align: center; overflow-wrap: anywhere; white-space: normal; }
+.asol-map__control:active, .asol-map__control-group button:active { background: var(--color-surface-container-high, #e8eaed); }
+.asol-map__control:focus-visible, .asol-map__control-group button:focus-visible, .asol-map__retry:focus-visible { outline: 3px solid var(--color-primary, #1a73e8); outline-offset: 2px; }
+.asol-map__overlay { position: absolute; z-index: 8; inset: 0; display: grid; place-content: center; gap: .75rem; padding: 1rem; text-align: center; background: color-mix(in srgb, var(--color-surface, #fff) 86%, transparent); }
+.asol-map__spinner { width: 2rem; height: 2rem; margin: auto; border: 3px solid var(--color-outline-variant, #dadce0); border-top-color: var(--color-primary, #1a73e8); border-radius: 50%; animation: asol-map-spin .8s linear infinite; }
+.asol-map__retry { border: 0; border-radius: 999px; padding: .7rem 1.25rem; background: var(--color-primary, #1a73e8); color: var(--color-on-primary, #fff); }
+.asol-map__popup { min-width: 10rem; color: #202124; }
+
+/* Address balloon — the package's only input surface. It is anchored to the pin so
+   the label and the coordinates are visibly one thing; a field beside the map could
+   describe a point the user has since moved. */
+.asol-map__address-popup .maplibregl-popup-content { padding: 0; border-radius: .875rem; background: transparent; box-shadow: none; }
+.asol-map__address-popup .maplibregl-popup-tip { border-top-color: var(--color-surface-container-lowest, #fff); border-bottom-color: var(--color-surface-container-lowest, #fff); }
+.asol-map__popup--address { min-width: 0; }
+.asol-map__address { display: flex; width: 15rem; max-width: 70vw; flex-direction: column; gap: .5rem; padding: .75rem; border: 1px solid var(--color-outline-variant, #dadce0); border-radius: .875rem; background: var(--color-surface-container-lowest, #fff); box-shadow: 0 8px 24px rgba(0, 0, 0, .18); color: var(--color-on-surface, #202124); }
+.asol-map__address-title { display: flex; align-items: center; gap: .375rem; margin: 0; font-size: .75rem; font-weight: 700; }
+.asol-map__address-title svg { width: .875rem; height: .875rem; color: var(--color-primary, #1a73e8); }
+.asol-map__address-input { width: 100%; min-height: 2.25rem; padding: .375rem .625rem; border: 1px solid var(--color-outline-variant, #dadce0); border-radius: .625rem; background: var(--color-surface, #fff); color: inherit; font-size: .8125rem; }
+.asol-map__address-input:focus-visible { border-color: var(--color-primary, #1a73e8); outline: 2px solid color-mix(in srgb, var(--color-primary, #1a73e8) 35%, transparent); outline-offset: 1px; }
+.asol-map__address-actions { display: flex; gap: .375rem; }
+.asol-map__address-button { display: inline-flex; min-height: 2.125rem; flex: 1 1 0; align-items: center; justify-content: center; gap: .25rem; border: 1px solid transparent; border-radius: .625rem; font-size: .75rem; font-weight: 600; touch-action: manipulation; }
+.asol-map__address-button svg { width: .875rem; height: .875rem; }
+.asol-map__address-button--primary { background: var(--color-primary, #1a73e8); color: var(--color-on-primary, #fff); }
+.asol-map__address-button--primary:active { background: color-mix(in srgb, var(--color-primary, #1a73e8) 88%, #000); }
+.asol-map__address-button--primary:disabled { opacity: .5; }
+.asol-map__address-button--ghost { border-color: var(--color-outline-variant, #dadce0); background: transparent; color: inherit; }
+.asol-map__address-button--ghost:active { background: var(--color-surface-container-high, #e8eaed); }
+.asol-map__address-button:focus-visible { outline: 2px solid var(--color-primary, #1a73e8); outline-offset: 2px; }
+@keyframes asol-map-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .asol-map__spinner { animation-duration: 1.8s; } }
+/* A short map (landscape phone, collapsed section) keeps the rail vertical and
+   only tightens it, so the controls stay in one predictable place. */
+@media (max-height: 500px) {
+  .asol-map__control, .asol-map__control-group button { min-height: 2.25rem; }
+  .asol-map__control-label { -webkit-line-clamp: 1; }
+}

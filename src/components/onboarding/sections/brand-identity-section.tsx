@@ -140,7 +140,7 @@ export function BrandIdentitySection() {
                 <Badge key={usp} variant="secondary" className="gap-1 pl-3">
                   <Sparkles className="h-3 w-3" />
                   {usp}
-                  <button type="button" onClick={() => removeUSP(usp)} className="ml-1 hover:bg-muted-foreground/20 rounded-full">
+                  <button type="button" onClick={() => removeUSP(usp)} className="ml-1 rounded-full">
                     <X className="h-3 w-3" />
                   </button>
                 </Badge>

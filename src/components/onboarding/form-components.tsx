@@ -245,18 +245,18 @@ export function BlobImageUpload({
               alt={t('onboarding.form.uploadedAlt')}
               className="absolute inset-0 h-full w-full rounded-lg object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 hover:opacity-100 transition-opacity rounded-lg" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 transition-opacity rounded-lg" />
             <button
               type="button"
               onClick={onRemove}
-              className="absolute top-2 right-2 p-1.5 rounded-full bg-background shadow-md hover:bg-destructive hover:text-destructive-foreground transition-colors"
+              className="absolute top-2 right-2 p-1.5 rounded-full bg-background shadow-md transition-colors"
             >
               <X className="h-4 w-4" />
             </button>
           </>
         ) : (
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            className="absolute inset-0 flex flex-col items-center justify-center gap-2"
             onClick={() => void openPicker()}
           >
             <div className="rounded-full bg-muted p-3">
@@ -330,7 +330,7 @@ export function MultiSelect({
               <button
                 type="button"
                 onClick={() => handleRemove(v)}
-                className="ml-1 rounded-full hover:bg-muted-foreground/20"
+                className="ml-1 rounded-full"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -353,7 +353,7 @@ export function MultiSelect({
                 <button
                   key={opt.value}
                   type="button"
-                  className="w-full px-3 py-2 text-left text-sm hover:bg-muted transition-colors"
+                  className="w-full px-3 py-2 text-left text-sm transition-colors"
                   onClick={() => handleSelect(opt.value)}
                 >
                   {opt.label}
@@ -404,7 +404,7 @@ export function CheckboxGroup({
               'flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all',
               isSelected
                 ? 'border-primary bg-primary/10 text-primary'
-                : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                : 'border-border'
             )}
           >
             <div

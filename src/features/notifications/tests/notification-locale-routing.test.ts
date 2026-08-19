@@ -9,9 +9,9 @@ import type {
 import type { RegisteredNotificationToken } from "@asol/notifications-core";
 import { NotificationPlatforms } from "@asol/notifications-core";
 import { moneyVariablesByLocale } from "../shared/notification-money";
-import type { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
-import type { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
-import type { GetNotificationPushPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-push-preference.query";
+import type { ListNotificationTokensQuery } from "@asol/data-core/notifications";
+import type { DeleteNotificationTokenCommand } from "@asol/data-core/notifications";
+import type { GetNotificationPushPreferenceQuery } from "@asol/data-core/notifications";
 
 function token(
   id: string,

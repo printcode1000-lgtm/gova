@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGpsProvider } from '@/components/ui/AsolMap';
+import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGpsProvider } from '@asol/map-core';
 import type { LocationEntry } from '@/features/profile/entities/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/share-location-url";
@@ -155,7 +155,7 @@ export function ContactQuickAddGrid({
               key={item.id}
               type="button"
               onClick={() => onAdd(item.id)}
-              className="group relative flex min-h-12 w-16 shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg border px-0.5 py-1 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:scale-95 sm:w-16"
+              className="group relative flex min-h-14 w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-lg border px-0.5 py-1 text-center shadow-sm transition-all active:scale-95 sm:w-[4.25rem]"
               style={{
                 background: `linear-gradient(135deg, ${getContactVisualColor(item.id)}1F, ${getContactVisualColor(item.id)}08)`,
                 borderColor: `${getContactVisualColor(item.id)}55`,
@@ -168,11 +168,11 @@ export function ContactQuickAddGrid({
               ) : null}
               <FontAwesomeIcon
                 icon={item.icon}
-                className="h-5 w-5 transition-transform group-hover:scale-105"
+                className="h-6 w-6 transition-transform"
                 style={{ color: getContactVisualColor(item.id) }}
               />
               <span
-                className="line-clamp-2 w-[4.5rem] origin-top scale-[0.55] text-center text-[10px] font-semibold leading-[10px] tracking-tight text-muted-foreground"
+                className="line-clamp-2 w-[4.5rem] origin-top scale-[0.75] text-center text-[10px] font-semibold leading-[11px] tracking-tight text-muted-foreground"
               >
                 {item.label}
               </span>

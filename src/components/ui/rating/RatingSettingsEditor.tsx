@@ -50,7 +50,7 @@ export function RatingSettingsEditor({
           }
           disabled={disabled}
         />
-        <Label htmlFor="rating-settings-enabled" className="cursor-pointer">
+        <Label htmlFor="rating-settings-enabled" className="">
           {labels.enabled}
         </Label>
       </div>

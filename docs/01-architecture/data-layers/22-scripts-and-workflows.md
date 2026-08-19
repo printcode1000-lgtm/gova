@@ -18,9 +18,13 @@ npm run test:service-mirror-core
 npm run test:account-bridge
 npm run test:compositions
 npm run test:account-declarations
+npm run test:data-core                # every database + offline schema parity
+npm run test:orders-core               # the order domain
+npm run ci:coverage                    # every package gate actually runs in CI
 
 # Service deployments — the only check that builds what Vercel builds
 npm run services:sync            # refresh the four generated/ mirrors
+npm run services:verify          # every module edge resolves inside each upload
 npm run services:build           # next build in all four service folders
 
 # GitHub repository administration (rule 6)
@@ -49,7 +53,7 @@ npm run r2:sync:cors
 ## Typical: local schema change (users)
 
 ```bash
-# 1. Edit src/modules/data-access/core/database/schema.ts
+# 1. Edit packages/data-core/src/core/database/schema.ts
 npm run db:drizzle -- generate
 npm run dev                    # migrations on first API call
 npm run build                  # sync DDL to Turso
@@ -57,7 +61,7 @@ git push
 ```
 
 All executable database implementations are under
-`src/modules/data-access/tooling/`. Package commands are the supported entry
+`packages/data-core/src/tooling/`. Package commands are the supported entry
 points. Files under `scripts/` may coordinate builds and configuration, but the
 architecture check rejects database drivers, SQL, and IndexedDB access there.
 
@@ -152,6 +156,26 @@ this step existed — see
 If it reports a missing npm package, the fix is to add the package to that
 service's `package.json`, not to the root's. `npm run services:sync` fails the
 same way, earlier, through `assertBareSpecifiersAreDeclared`.
+
+### `services:verify` — the gap between written and whole
+
+`npm run services:verify` (`scripts/verify-service-mirrors.ts`) runs between the
+two and covers what neither does. The sync writes whatever its graph walker
+finds; the build compiles whatever was written. **A specifier the walker cannot
+see is never copied, and the build never notices** — resolution is lazy, the
+remote build succeeds, and the failure lands on the first request as `Cannot
+find module`.
+
+That is not hypothetical. When `@asol/data-core` became an ES module its lazy
+driver loads changed from `require(...)` to a `createRequire` handle named
+`nodeRequire(...)`; the walker matched on the bare name, and **every database
+driver dropped out of all four mirrors while all four still built**. The mirror
+counts fell from 101/236/57/178 to 79/220/62/162 and nothing turned red.
+
+The verifier re-reads each upload and resolves every edge inside it — relative
+paths, `@/` paths, and `@asol/<package>/<door>` through the mirrored package's
+own `exports` map, so an undeclared door is reported rather than quietly
+resolved by path. It is in `deploy:all` preflight, in `verify:all`, and in CI.
 
 ## Branch protection
 

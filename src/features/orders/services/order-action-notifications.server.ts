@@ -2,7 +2,7 @@ import "server-only";
 
 import type { NotificationGrantIssuer } from "@/features/notifications/server";
 import { moneyVariablesByLocale } from "@/features/notifications/server";
-import { getMarketplaceOrderQueries } from "@/modules/data-access/domains/marketplace-orders/index.server";
+import { getMarketplaceOrderQueries } from "@asol/data-core/marketplace-orders";
 import { collectOrderPartyUids, excludeActorFromPartyUids } from "./order-party-helpers.server";
 import { issueOrderPartyGrant } from "./order-action-grants.server";
 

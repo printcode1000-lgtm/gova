@@ -7,7 +7,7 @@ import {
   asolDbGet,
   asolDbGetAll,
   asolDbSet,
-} from "@/modules/data-access/browser/asol-db";
+} from "@asol/data-core/browser";
 import { publicEnv } from "@/core/config/public-env";
 import {
   DEFAULT_APP_PREFERENCES,

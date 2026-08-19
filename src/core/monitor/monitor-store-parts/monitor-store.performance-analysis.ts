@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@/modules/data-access/browser/asol-db';
+import { asolDbGet, asolDbSet, ASOL_DB_STORES } from '@asol/data-core/browser';
 import type {
   OperationRecord,
   MonitorStats,

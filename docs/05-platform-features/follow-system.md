@@ -28,8 +28,8 @@ Files:
 - `src/features/follow`
 - `src/components/ui/follow`
 - `src/app/api/follow`
-- `src/modules/data-access/core/database/profile/profile.schema.ts`
-- `src/modules/data-access/core/database/profile/migrations/0009_follows.sql`
+- `packages/data-core/src/core/database/profile/profile.schema.ts`
+- `packages/data-core/src/core/database/profile/migrations/0009_follows.sql`
 
 ## Database
 

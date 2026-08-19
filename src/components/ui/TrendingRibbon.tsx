@@ -249,7 +249,7 @@ export function TrendingRibbon({ config }: TrendingRibbonProps) {
                 dir={isRTL ? "rtl" : "ltr"}
                 type="button"
                 onClick={(e) => handleItemClick(e, item.action)}
-                className="text-sm text-on-surface-variant hover:text-primary transition-colors focus:outline-hidden focus-visible:underline cursor-pointer"
+                className="text-sm text-on-surface-variant transition-colors focus:outline-hidden focus-visible:underline"
                 aria-label={item.label}
               >
                 {item.label}

@@ -115,7 +115,7 @@ it for any package.
 
 ## Current status
 
-Eighteen sealed packages, arranged in four layers. The layering is not decoration — see
+Twenty-one sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
 Doors and app-edge counts below are measured, not intended. Re-measure with:
@@ -124,7 +124,7 @@ Doors and app-edge counts below are measured, not intended. Re-measure with:
 node -e "for(const p of require('fs').readdirSync('packages')) try{const m=require('./packages/'+p+'/package.json'); if(m.name?.startsWith('@asol/')) console.log(m.name, Object.keys(m.exports||{}).join(' '))}catch{}"
 ```
 
-### Full inventory (18 packages)
+### Full inventory (21 packages)
 
 | Package | Layer | Doors | `test:*-core` gate |
 | :-- | :-- | :-- | :-- |
@@ -134,6 +134,8 @@ node -e "for(const p of require('fs').readdirSync('packages')) try{const m=requi
 | `products-composition` | 2 | `.` | `test:compositions` |
 | `profiles-composition` | 2 | `.` | `test:compositions` |
 | `notifications-composition` | 2 | `.` | `test:compositions` |
+| `orders-core` | 1 | `.` | `test:orders-core` |
+| `data-core` | 1 | `.` · `./telemetry` · `./core` · `./browser` · `./provisioning` · `./tooling` · per-domain (18) | `test:data-core` |
 | `native-core` | 1 | `.` · `./scripts/validate-android-r8-policy` | `test:native-core` |
 | `ota-core` | 1 | `.` · `./publishing` · `./server` | `test:ota-core` |
 | `storage-core` | 1 | `.` · `./server` | `test:storage-core` |
@@ -146,21 +148,22 @@ node -e "for(const p of require('fs').readdirSync('packages')) try{const m=requi
 | `system-logs-core` | 1 | `.` · `./server` | `test:system-logs-core` |
 | `vercel-deploy-core` | 1 | `.` | `test:vercel-deploy-core` |
 | `service-mirror-core` | 1 | `.` | `test:service-mirror-core` |
+| `map-core` | 1 | `.` | `test:map-core` |
 
 Compositions are gated collectively by `test:compositions`, not individual `test:*-core` scripts.
 
 ### Rule matrix (layer-1 capability packages)
 
-| # | Rule | native-core | ota-core | storage-core | notifications-core | auth-core | catalog-core | product-style-core | product-core | dev-core | system-logs-core | vercel-deploy-core | service-mirror-core |
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| 1 | Core Module | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 2 | Single public API | ✅ 2 doors | ✅ 3 doors | ✅ 2 doors | ✅ 4 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 1 | ✅ 1 |
-| 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 7 | Independent package | ✅ 0 edges | ✅ 5, designated + pinned | ✅ 1 → dev-core | ✅ 4, designated + pinned | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges |
-| 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| # | Rule | orders-core | data-core | native-core | ota-core | storage-core | notifications-core | auth-core | catalog-core | product-style-core | product-core | dev-core | system-logs-core | vercel-deploy-core | service-mirror-core | map-core |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| 1 | Core Module | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 2 | Single public API | ✅ 1 door | ✅ 24 doors | ✅ 2 doors | ✅ 3 doors | ✅ 2 doors | ✅ 4 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 2 doors | ✅ 1 | ✅ 1 | ✅ 1 |
+| 3 | Tests gate the build | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 7 | Independent package | ✅ 0 edges | ✅ 34, budgeted + pinned | ✅ 0 edges | ✅ 3, designated + pinned | ✅ 1 → dev-core | ✅ 4, designated + pinned | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 1 → native-core |
+| 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 Other sealed packages (`account-declarations`, `account-bridge`, the four `*-composition` packages)
 follow the same eight rules; their shapes differ (data-only declarations, device bridge, layer-2
@@ -198,21 +201,31 @@ the contract rather than a matter of taste.
   layer 2  @asol/*-composition           the only place that knows an account uses db AND images
   layer 1  vercel-deploy-core, service-mirror-core, storage-core, ota-core,
            native-core, notifications-core, auth-core, catalog-core,
-           product-style-core, product-core, dev-core, system-logs-core
+           product-style-core, product-core, dev-core, system-logs-core,
+           map-core, data-core, orders-core
                                          capability logic, held once
 ```
+
+`data-core` is the largest layer-1 package and the only one holding a database driver. Three
+other layer-1 packages import one of its doors, which is the same layer talking to itself rather
+than a new direction: see [data-core-module.md](./data-core-module.md).
 
 Measured dependencies, rather than intended ones:
 
 | Package | Imports |
 | :-- | :-- |
 | `account-declarations` | **nothing** — asserted by its own test |
-| `native-core`, `service-mirror-core`, `notifications-core`, `auth-core`, `catalog-core`, `product-style-core`, `product-core`, `dev-core`, `system-logs-core` | nothing |
+| `native-core`, `service-mirror-core`, `auth-core`, `catalog-core`, `product-style-core`, `product-core`, `dev-core`, `system-logs-core` | nothing |
+| `orders-core` | **nothing** — asserted by its own test |
+| `data-core` | `orders-core`, `dev-core`, `storage-core`, `system-logs-core`, `product-core`, `auth-core`, `notifications-core`, `ota-core` |
+| `notifications-core` | `data-core` (one door: `./notifications`) |
+| `map-core` | `native-core` (platform GPS and location permission) |
 | `storage-core` | `dev-core` (local path contract for `LocalStorageProvider`) |
 | `vercel-deploy-core` | `account-declarations` |
 | `orders-`, `products-`, `profiles-composition` | `account-declarations` |
 | `notifications-composition` | `account-declarations`, `notifications-core` |
-| `ota-core`, `account-bridge` | `native-core` |
+| `ota-core` | `native-core`, `data-core` (`./browser`, `./ota`) |
+| `account-bridge` | `native-core` |
 
 Regenerate this table rather than editing it by hand:
 
@@ -225,6 +238,10 @@ Three of these look like layer violations and are not:
 **Layer 1 reading layer 3** (`vercel-deploy-core` → `account-declarations`) is safe precisely
 because layer 3 imports nothing. Data carries nothing with it, so the direction that matters — a
 composition dragging the deploy engine into a deployment — cannot happen through it.
+
+**`map-core` reading `native-core`** is the same rule 9 case: the map must never touch
+`navigator.geolocation` or a Capacitor plugin itself, so its GPS provider goes through the device
+door and inherits permission handling and the error taxonomy. See [map-core-module.md](map-core-module.md).
 
 **`ota-core` and `account-bridge` reading `native-core`** is rule 9 working as intended, not being
 broken. Platform identity is owned once; upgrading Capacitor touches `native-core` alone, and its
@@ -344,6 +361,20 @@ on a real green run: GitHub matches on the check-run name it actually reports, a
 reports blocks every merge permanently — a worse failure than no protection at all. Confirm any new
 check name against a real run before adding it to `REQUIRED_STATUS_CHECKS`.
 
+`verify` is the job id in `.github/workflows/native-core.yml`. The file and the workflow keep the
+`native-core` name even though they now guard twenty-one packages, because renaming either is
+harmless while renaming the **job** is not — and a name that reads slightly stale costs less than a
+required check that never reports. `npm run ci:coverage` pins the job id, refuses a `name:` on that
+job (which would replace the check-run name), and asserts that branch protection still requires it.
+
+**A reviewer that does not run the gate is not a reviewer.** The workflow's gate list was a
+hand-maintained copy of the `test:*-core` scripts in `package.json`, and it had drifted by seven
+packages — `auth-core`, `catalog-core`, `product-core`, `product-style-core`, `dev-core`,
+`system-logs-core` and `map-core` never ran on the check that gates every merge, so breaking one of
+them merged green. `ci:coverage` now fails when any package gate is missing from CI, and it runs in
+`verify:all` and in `test:deployment-tools`. This is the same shape as the rule 3 weakness below:
+the test existed, and nothing made it gate anything.
+
 **Two settings stay off on purpose.** `required_signatures` and `enforce_admins` would each reject
 `deploy:all`'s direct unsigned push to `main`, which is the only supported release path. A protection
 rule that blocks releases is not stricter — it is broken.
@@ -394,8 +425,8 @@ lines or admin access — never updates. That property is asserted by the contra
 
 | Edge | Why it is layering rather than a violation |
 | :-- | :-- |
-| `@/modules/data-access/browser/asol-db` | The central data-access module is where database code is required to live |
-| `@/modules/data-access/domains/ota/index.server` | Same layer. Moving it into the package would break `ALLOWED_DRIZZLE_ORM_FILES_PATTERN` — trading one edge for a broken rule |
+| `@asol/data-core/browser` | The central data-access module is where database code is required to live |
+| `@asol/data-core/ota` | Same layer. Moving it into the package would break `ALLOWED_DRIZZLE_ORM_FILES_PATTERN` — trading one edge for a broken rule |
 | `@/core/api` | The designated HTTP transport, itself governed by `ALLOWED_FETCH_FILES` |
 | `@/core/config/public-env` | A config leaf |
 | `@/features/categories` | Build-time only, in `publishing/build/out-public-assets.ts` |

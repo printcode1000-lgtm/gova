@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
 import dotenv from 'dotenv';
-import { DATABASE_SHARD_NAMES, envPrefixForShard } from '../src/modules/data-access/core/database/database-shards';
+import { DATABASE_SHARD_NAMES, envPrefixForShard } from '@asol/data-core/provisioning';
 import {
   findProject,
   listProjectEnv,

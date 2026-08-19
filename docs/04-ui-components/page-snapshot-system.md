@@ -33,7 +33,7 @@ index.ts
 Storage is provided by:
 
 ```text
-src/modules/data-access/browser/asol-db/index.ts
+packages/data-core/src/browser/asol-db/index.ts
 ```
 
 The `AsolDB` schema version is increased and a new object store is added:

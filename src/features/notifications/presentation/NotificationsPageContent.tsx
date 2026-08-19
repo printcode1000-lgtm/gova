@@ -316,7 +316,7 @@ export function NotificationsPageContent() {
                 type="button"
                 onClick={() => selectFilter(item.id)}
                 aria-pressed={active}
-                className="group relative flex h-16 w-16 shrink-0 snap-center flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 hover:border-opacity-100 hover:shadow-md active:scale-95"
+                className="group relative flex h-16 w-16 shrink-0 snap-center flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 active:scale-95"
                 style={{
                   paddingInline: "0.0625rem",
                   paddingBlock: "0.0625rem",
@@ -349,7 +349,7 @@ export function NotificationsPageContent() {
                   ) : null}
                   <Icon
                     aria-hidden="true"
-                    className="relative z-10 shrink-0 transition-transform duration-300 group-hover:scale-105"
+                    className="relative z-10 shrink-0 transition-transform duration-300"
                     style={{
                       color,
                       width: "2rem",
@@ -444,7 +444,7 @@ function ChatConversationList({
             key={conversation.key}
             href={`/notifications/chat?conversationId=${encodeURIComponent(conversation.key)}`}
             className={cn(
-              "flex min-w-0 items-center gap-3 p-4 transition hover:bg-surface-container",
+              "flex min-w-0 items-center gap-3 p-4 transition",
               index > 0 && "border-t border-outline-variant/70",
             )}
           >
@@ -461,7 +461,7 @@ function ChatConversationList({
               {specialty ? <span className="mt-0.5 block truncate text-xs font-semibold text-primary">{specialty}</span> : null}
               <span className="mt-1 flex items-center justify-between gap-2">
                 <span className="truncate text-sm text-on-surface-variant">
-                  {outgoing ? (locale === "ar" ? "أنت: " : "You: ") : ""}
+                  {outgoing ? (locale === "ar" ? "أنت: " : "You:") : ""}
                   {conversation.latest.body}
                 </span>
                 {conversation.unreadCount > 0 ? (
@@ -559,7 +559,7 @@ function NotificationGroupCard({
 
       {group.items.length > 1 ? (
         <details className="border-t border-outline-variant/70 bg-surface-container/50">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 text-sm font-semibold text-primary">
+          <summary className="flex list-none items-center justify-between gap-2 px-4 py-3 text-sm font-semibold text-primary">
             <span>
               {locale === "ar"
                 ? `عرض سجل التحديثات (${group.items.length})`

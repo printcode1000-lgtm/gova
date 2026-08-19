@@ -11,7 +11,7 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import {
   asolDbDeleteSuperAdminOriginalSession,
   asolDbGetSuperAdminOriginalSession,
-} from "@/modules/data-access/browser/asol-db";
+} from "@asol/data-core/browser";
 
 /** Height published to the layout so the header is pushed below the banner. */
 const TOP_OVERLAY_VAR = "--asol-top-overlay-height";

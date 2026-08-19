@@ -9,7 +9,7 @@
  * Four other edges are deliberately **not** ports, because they are the repository's own
  * designed doors rather than violations:
  *
- * - `@/modules/data-access/browser/asol-db` and `@/modules/data-access/domains/ota` —
+ * - `@asol/data-core/browser` and `@asol/data-core/ota` —
  *   the central data-access module is where database code is required to live; the
  *   drizzle contract (`ALLOWED_DRIZZLE_ORM_FILES_PATTERN`) forbids moving it here, and
  *   `orders-composition` depends on the same layer.

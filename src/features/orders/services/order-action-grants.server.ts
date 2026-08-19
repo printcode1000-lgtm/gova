@@ -5,7 +5,7 @@ import {
   type NotificationGrantIssuer,
 } from "@/features/notifications/server";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
-import type { ActorRole } from "@/modules/marketplace-orders/domain/enums";
+import type { ActorRole } from "@asol/orders-core";
 import { excludeActorFromPartyUids } from "./order-party-helpers.server";
 
 export interface ActionInput {

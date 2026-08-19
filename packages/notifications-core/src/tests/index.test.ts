@@ -41,9 +41,18 @@ function sourceFiles(dir: string): string[] {
 /** Every `@/` module this package may import. Designated layers only. Shrink, never grow. */
 const DECLARED_APP_EDGES = new Set([
   '@/core/config/server-env/server-env.values.turso-env',
-  '@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command',
-  '@/modules/data-access/domains/notifications/operations/queries/get-notification-push-preference.query',
-  '@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query',
+]);
+
+/**
+ * Sealed packages this one may reach, and the door it must use. The notification token reads
+ * used to be three `@/modules/data-access/...` app edges; they now go through one declared door
+ * on `@asol/data-core`, which is a layer-1 → layer-1 edge rather than knowledge of the app.
+ * A deep path here would resolve nothing — the seal has no wildcard — but pinning the door
+ * keeps a second one from appearing unnoticed.
+ */
+const DECLARED_PACKAGE_DOORS = new Set([
+  '@asol/data-core/notifications',
+  '@asol/native-core',
 ]);
 
 async function main(): Promise<void> {
@@ -114,7 +123,21 @@ async function main(): Promise<void> {
     `declared edges no longer imported: ${stale.join(', ')}. A budget with unspent room ` +
       'silently allows the coupling back.',
   );
-  console.log(`  ✔ App edges pinned at ${found.size}, all designated layers.`);
+
+  const packageDoors = new Set<string>();
+  for (const file of files) {
+    for (const match of readFileSync(file, 'utf8').matchAll(/\bfrom\s+['"](@asol\/[^'"]+)['"]/g)) {
+      if (match[1].startsWith('@asol/notifications-core')) continue;
+      packageDoors.add(match[1]);
+      assert(
+        DECLARED_PACKAGE_DOORS.has(match[1]),
+        `${path.basename(file)} imports "${match[1]}", which is not a declared package door.`,
+      );
+    }
+  }
+  console.log(
+    `  ✔ App edges pinned at ${found.size}, package doors at ${packageDoors.size}, all designated layers.`,
+  );
 
   // ── Channel creation stays in native-core ─────────────────────────────────
   for (const file of files) {

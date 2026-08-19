@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { SchemaSyncReport } from '@/modules/data-access/provisioning/core/types';
+import type { SchemaSyncReport } from '@asol/data-core/provisioning';
 import { asolApi } from '@/core/api';
 
 export function SchemaSyncPanel() {

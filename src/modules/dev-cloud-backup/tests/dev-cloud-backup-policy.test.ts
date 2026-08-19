@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 
 import dotenv from "dotenv";
 
-import { discoverTursoBackupSources } from "@/modules/data-access/domains/dev-cloud-backup/repositories/turso-backup.repository.server";
+import { discoverTursoBackupSources } from "@asol/data-core/dev-cloud-backup";
 import {
   assertDevCloudBackupAllowed,
   devCloudBackupEnvironment,

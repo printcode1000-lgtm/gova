@@ -373,7 +373,7 @@ export function DeveloperCategorySelector() {
             </div>
 
             <details className="group sm:col-span-2">
-              <summary className="flex cursor-pointer list-none items-center justify-between rounded-xl border bg-muted/40 px-4 py-3 font-semibold transition-colors hover:bg-muted/70">
+              <summary className="flex list-none items-center justify-between rounded-xl border bg-muted/40 px-4 py-3 font-semibold transition-colors">
                 <span>معلومات العناصر المختارة</span>
                 <span className="text-lg text-muted-foreground transition-transform group-open:rotate-180">
                   ^
@@ -486,7 +486,7 @@ export function DeveloperCategorySelector() {
                           className={`rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors ${
                             previewMode === mode
                               ? "border-primary bg-primary text-on-primary"
-                              : "bg-background hover:bg-muted"
+                              : "bg-background"
                           }`}
                         >
                           {label}

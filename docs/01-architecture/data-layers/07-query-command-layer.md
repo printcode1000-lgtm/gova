@@ -7,8 +7,8 @@ or one cohesive transactional aggregate.
 
 ## Location
 
-`src/modules/data-access/domains/[domain]/queries/` and
-`src/modules/data-access/domains/[domain]/commands/`
+`packages/data-core/src/domains/[domain]/queries/` and
+`packages/data-core/src/domains/[domain]/commands/`
 
 ```text
 domains/[domain]/

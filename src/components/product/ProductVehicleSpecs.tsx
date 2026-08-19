@@ -114,7 +114,7 @@ export function ProductVehicleSpecs({
             className="rounded-xl border bg-card"
             open={false}
           >
-            <summary className="cursor-pointer px-4 py-3 font-semibold">
+            <summary className="px-4 py-3 font-semibold">
               {group.name.ar}
               {selectedOption ? (
                 <span className="mr-2 text-sm font-normal text-primary">

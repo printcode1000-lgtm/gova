@@ -4,7 +4,7 @@ import { createHmac, randomBytes, randomInt, timingSafeEqual } from 'node:crypto
 import { hashPassword } from '@asol/auth-core/server';
 import { assertPasswordMeetsMinimum, readPasswordInput } from '@asol/auth-core';
 import { getPasswordRecoveryConfig } from '@/core/config/server-env';
-import { PasswordRecoveryOperations } from '@/modules/data-access/domains/password-recovery/operations/password-recovery.operations';
+import { PasswordRecoveryOperations } from '@asol/data-core/password-recovery';
 import {
   maskRecoveryEmail,
   normalizeRecoveryPhone,

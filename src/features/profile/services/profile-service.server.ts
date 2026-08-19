@@ -1,17 +1,17 @@
 import "server-only";
 
-import type { GetProfileContactsQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-contacts.query";
-import type { UpsertProfileContactsCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-contacts.command";
-import type { GetProfileImageKeysQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-image-keys.query";
-import type { UpsertProfileImageKeysCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-image-keys.command";
-import type { GetStoreDetailsQuery } from "@/modules/data-access/domains/profile/operations/queries/get-store-details.query";
-import type { UpsertStoreDetailsCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-store-details.command";
-import type { GetProfileSpecialtiesQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-specialties.query";
-import type { UpsertProfileSpecialtiesCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-specialties.command";
-import type { GetUsersBySpecialtyQuery } from "@/modules/data-access/domains/profile/operations/queries/get-users-by-specialty.query";
-import type { GetProfileFulfillmentSettingsQuery } from "@/modules/data-access/domains/profile/operations/queries/get-profile-fulfillment-settings.query";
-import type { UpsertProfileFulfillmentSettingsCommand } from "@/modules/data-access/domains/profile/operations/commands/upsert-profile-fulfillment-settings.command";
-import type { GetUserByUidQuery } from "@/modules/data-access/domains/auth/operations/queries/get-user-by-uid.query";
+import type { GetProfileContactsQuery } from "@asol/data-core/profile";
+import type { UpsertProfileContactsCommand } from "@asol/data-core/profile";
+import type { GetProfileImageKeysQuery } from "@asol/data-core/profile";
+import type { UpsertProfileImageKeysCommand } from "@asol/data-core/profile";
+import type { GetStoreDetailsQuery } from "@asol/data-core/profile";
+import type { UpsertStoreDetailsCommand } from "@asol/data-core/profile";
+import type { GetProfileSpecialtiesQuery } from "@asol/data-core/profile";
+import type { UpsertProfileSpecialtiesCommand } from "@asol/data-core/profile";
+import type { GetUsersBySpecialtyQuery } from "@asol/data-core/profile";
+import type { GetProfileFulfillmentSettingsQuery } from "@asol/data-core/profile";
+import type { UpsertProfileFulfillmentSettingsCommand } from "@asol/data-core/profile";
+import type { GetUserByUidQuery } from "@asol/data-core/auth";
 import { authOperationsService } from "@/features/auth/server/auth-core-bootstrap.server";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import type {

@@ -20,8 +20,8 @@ export function SpecialtyRequestComposer() {
   const triggerClassName = cn(
     "asol-control-icon flex items-center justify-center rounded-full transition-all duration-200",
     resolvedScheme === "dark"
-      ? "text-primary hover:bg-surface-container-high active:bg-surface-variant"
-      : "text-blue-900 hover:bg-blue-100/70 active:bg-blue-200",
+      ? "text-primary active:bg-surface-variant"
+      : "text-blue-900 active:bg-blue-200",
   );
 
   return (
@@ -40,7 +40,6 @@ export function SpecialtyRequestComposer() {
           type="button"
           className={triggerClassName}
           aria-label={trigger}
-          title={trigger}
           onClick={() => setShowLoginDialog(true)}
         >
           <Send className="h-5 w-5" />

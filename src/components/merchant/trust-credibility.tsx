@@ -67,7 +67,7 @@ export function TrustCredibility({
             return (
               <div
                 key={credential.id}
-                className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 transition-colors hover:bg-muted/50"
+                className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 transition-colors"
               >
                 <div className="rounded-full bg-merchant-success/10 p-2">
                   <IconComponent className="h-4 w-4 text-merchant-success" />

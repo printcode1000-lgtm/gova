@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGpsProvider } from '@/components/ui/AsolMap';
+import { AsolMap, markerAt, createOpenStreetMapProvider, createNativePlatformGpsProvider } from '@asol/map-core';
 import type { LocationEntry } from '@/features/profile/entities/profile-contacts.entity';
 import { getContactVisualColor, getContactVisualIcon } from "./contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/share-location-url";

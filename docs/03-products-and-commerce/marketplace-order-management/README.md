@@ -20,7 +20,7 @@ This documentation describes Asol's isolated marketplace order module. The modul
 
 ## Source location
 
-The implementation is isolated under `src/modules/marketplace-orders`. Consumers should import public domain types and calculators from the module barrel, and server code should obtain the service through `api/server.ts`.
+The implementation is split across two sealed packages: [`@asol/orders-core`](../../01-architecture/orders-core-module.md) holds the domain — types, enums, validators, calculators, permissions, the actor model — behind a single door, and `@asol/data-core/marketplace-orders` holds its persistence. Consumers import domain types and calculators from `@asol/orders-core`; server code obtains the service facade from `@asol/data-core/marketplace-orders`.
 
 ## Core invariants
 

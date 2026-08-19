@@ -99,8 +99,8 @@ export default function PrivacyPolicyPage() {
               التواصل معنا
             </h2>
             <p className="text-on-surface-variant">
-              لأي استفسار أو ملاحظات، يمكنكم التواصل عبر البريد الإلكتروني:{' '}
-              <a href="mailto:suezbazaar@gmail.com" className="text-primary hover:underline">
+              لأي استفسار أو ملاحظات، يمكنكم التواصل عبر البريد الإلكتروني:{''}
+              <a href="mailto:suezbazaar@gmail.com" className="text-primary">
                 suezbazaar@gmail.com
               </a>
             </p>

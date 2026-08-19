@@ -13,7 +13,7 @@ Generate Zod from Drizzle table definitions:
 
 ```typescript
 import { createInsertSchema } from 'drizzle-zod';
-import { users } from '@/modules/data-access/core/database/schema';
+import { users } from '@asol/data-core/core';
 
 const baseSchema = createInsertSchema(users, {
   phone: createPhoneField(t),

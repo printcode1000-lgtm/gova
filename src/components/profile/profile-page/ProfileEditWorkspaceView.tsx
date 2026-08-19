@@ -80,7 +80,7 @@ return (
                     onClick={() => selectSection(section)}
                     aria-pressed={active}
                     aria-controls={PROFILE_SECTION_IDS[section]}
-                    className="group relative flex h-16 w-16 shrink-0 snap-center flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 hover:border-opacity-100 hover:shadow-md active:scale-95"
+                    className="group relative flex h-16 w-16 shrink-0 snap-center flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 active:scale-95"
                     style={{
                       paddingInline: "0.0625rem",
                       paddingBlock: "0.0625rem",
@@ -113,7 +113,7 @@ return (
                       ) : null}
                       <FontAwesomeIcon
                         icon={PROFILE_EDIT_TAB_ICONS[section]}
-                        className="relative z-10 shrink-0 transition-transform duration-300 group-hover:scale-105"
+                        className="relative z-10 shrink-0 transition-transform duration-300"
                         style={{
                           color,
                           width: "2rem",
@@ -175,7 +175,7 @@ return (
                         ? "حفظ تعديلات الملف"
                         : "Save profile changes"}
                       <span className="rounded-full bg-error/10 px-2 py-0.5 text-[11px] font-semibold text-error">
-                        {dirtySections.length}{" "}
+                        {dirtySections.length}{""}
                         {locale === "ar"
                           ? "قسم معدل"
                           : dirtySections.length === 1
@@ -446,7 +446,7 @@ return (
                   aria-label={
                     locale === "ar" ? "القسم السابق" : "Previous section"
                   }
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition hover:bg-surface-container disabled:pointer-events-none disabled:opacity-25"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition disabled:pointer-events-none disabled:opacity-25"
                 >
                   {locale === "ar" ? (
                     <ChevronRight className="h-4 w-4" />
@@ -467,7 +467,7 @@ return (
                   onClick={() => goToAdjacentSection(1)}
                   disabled={activeSectionIndex === PROFILE_SECTIONS.length - 1}
                   aria-label={locale === "ar" ? "القسم التالي" : "Next section"}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition hover:bg-surface-container disabled:pointer-events-none disabled:opacity-25"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface/95 text-on-surface shadow-md transition disabled:pointer-events-none disabled:opacity-25"
                 >
                   {locale === "ar" ? (
                     <ChevronLeft className="h-4 w-4" />

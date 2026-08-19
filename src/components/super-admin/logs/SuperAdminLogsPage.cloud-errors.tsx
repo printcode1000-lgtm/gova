@@ -261,7 +261,7 @@ export function CloudErrorsContainer({
                   </p>
                 )}
                 <details className="mt-3 rounded-md bg-muted/30 p-3">
-                  <summary className="cursor-pointer text-xs font-semibold text-primary">
+                  <summary className="text-xs font-semibold text-primary">
                     عرض كل التفاصيل
                   </summary>
                   <dl

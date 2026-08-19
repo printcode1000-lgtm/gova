@@ -212,7 +212,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         <Button
                           type="button"
                           variant="outline"
-                          className={`${ACTION_TILE_CLASS} border-input hover:bg-accent hover:text-accent-foreground`}
+                          className={`${ACTION_TILE_CLASS} border-input  `}
                           style={ACTION_TILE_STYLE}
                           title={t("profilePreview.shareAria")}
                           aria-label={t("profilePreview.shareAria")}
@@ -231,7 +231,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       <Button
                         type="button"
                         variant="outline"
-                        className={`${ACTION_TILE_CLASS} border-input hover:bg-accent hover:text-accent-foreground`}
+                        className={`${ACTION_TILE_CLASS} border-input  `}
                         style={ACTION_TILE_STYLE}
                         title={
                           locale === "ar"
@@ -264,7 +264,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                       <Button
                         type="button"
                         variant="outline"
-                        className={`${ACTION_TILE_CLASS} border-input hover:bg-accent hover:text-accent-foreground`}
+                        className={`${ACTION_TILE_CLASS} border-input  `}
                         style={ACTION_TILE_STYLE}
                         title={t("profilePreview.customRequestAria")}
                         aria-label={t("profilePreview.customRequestAria")}

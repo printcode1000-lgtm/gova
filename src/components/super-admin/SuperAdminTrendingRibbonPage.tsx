@@ -24,7 +24,7 @@ import {
 import { trendingRibbonApiService } from "@/features/advertisements/services/trending-ribbon-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { ASOL_DB_STORES, asolDbDelete } from "@/modules/data-access/browser/asol-db";
+import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -279,7 +279,7 @@ export function SuperAdminTrendingRibbonPage() {
             type="button"
             onClick={() => void save()}
             disabled={busy}
-            className="ms-auto bg-primary text-on-primary hover:bg-primary/95"
+            className="ms-auto bg-primary text-on-primary"
           >
             <Save className="me-2 h-4 w-4" />
             حفظ
@@ -380,7 +380,7 @@ export function SuperAdminTrendingRibbonPage() {
               size="sm"
               onClick={() => void save()}
               disabled={busy || items.length === 0}
-              className="bg-primary text-on-primary hover:bg-primary/95"
+              className="bg-primary text-on-primary"
             >
               {busy ? (
                 <Loader2 className="me-1 h-3 w-3 animate-spin" />
@@ -405,7 +405,7 @@ export function SuperAdminTrendingRibbonPage() {
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={(e) => handleDragOver(e, index)}
                 onDragEnd={handleDragEnd}
-                className="flex items-center gap-3 rounded-lg border bg-surface p-3 transition-colors hover:border-primary/30"
+                className="flex items-center gap-3 rounded-lg border bg-surface p-3 transition-colors"
               >
                 <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-muted-foreground" />
                 <div className="min-w-0 flex-1">
@@ -421,7 +421,7 @@ export function SuperAdminTrendingRibbonPage() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  className="shrink-0 text-destructive"
                   onClick={() => removeItem(index)}
                 >
                   <Trash2 className="h-4 w-4" />

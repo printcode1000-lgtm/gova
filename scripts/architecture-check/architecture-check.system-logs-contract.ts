@@ -20,7 +20,7 @@ const REQUIRED_CAPTURE_FILES = [
 ];
 
 const FORBIDDEN_APP_IMPORTS = [
-  '@/modules/data-access/domains/system-logs/repositories/persistent-system-log-repository',
+  '@asol/data-core/system-logs',
 ];
 
 export function checkSystemLogsContract(filePath: string, content: string): void {

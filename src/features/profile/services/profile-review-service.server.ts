@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getUserByUidQuery } from "@/modules/data-access/domains/auth/operations/instances";
+import { getUserByUidQuery } from "@asol/data-core/auth";
 import { logServerSystemIssue } from "@/features/system-logs/services/persistent-system-log-service.server";
 import type { ReviewSort } from "@/features/product/entities/product-review.entity";
 import type {
@@ -8,7 +8,7 @@ import type {
   SaveProfileReviewInput,
   UpdateProfileReviewInput,
 } from "../entities/profile-review.entity";
-import { profileReviewRepository } from "@/modules/data-access/domains/profile/index.server";
+import { profileReviewRepository } from "@asol/data-core/profile";
 import { profileService } from "./profile-service.bootstrap.server";
 
 function assertRating(value: number): void {

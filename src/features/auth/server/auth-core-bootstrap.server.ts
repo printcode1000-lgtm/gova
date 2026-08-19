@@ -15,9 +15,9 @@ import {
   getUserByUidQuery,
   updateLastLoginCommand,
   updateUserCommand,
-} from '@/modules/data-access/domains/auth/operations/instances';
-import { accountDeletionRepository } from '@/modules/data-access/domains/account-deletion/index.server';
-import { getProfileSpecialtiesQuery } from '@/modules/data-access/domains/profile/operations/instances';
+} from '@asol/data-core/auth';
+import { accountDeletionRepository } from '@asol/data-core/account-deletion';
+import { getProfileSpecialtiesQuery } from '@asol/data-core/profile';
 
 function toAuthUserRecord(user: {
   uid: string;

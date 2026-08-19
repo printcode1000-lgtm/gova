@@ -4,9 +4,9 @@ import {
   provisionTursoAdvertisementsDatabase,
   provisionTursoDatabase,
   provisionTursoProductDatabase,
-} from "../src/modules/data-access/provisioning/core/turso-provisioner";
-import { runAllSchemaSyncs } from "../src/modules/data-access/provisioning/core/schema-sync";
-import { provisionDatabaseShards } from "@/modules/data-access/tooling/provision-database-shards";
+  runAllSchemaSyncs,
+} from "@asol/data-core/provisioning";
+import { provisionDatabaseShards } from "@asol/data-core/tooling";
 
 process.env.ASOL_PROVISIONING = "true";
 

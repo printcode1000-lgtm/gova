@@ -239,7 +239,7 @@ export function FeaturedMarquee({ config }: FeaturedMarqueeProps) {
             <div
               key={`${item.id}-${idx}`}
               aria-label={item.title}
-              className="shrink-0 w-40 cursor-pointer"
+              className="shrink-0 w-40"
             >
               <ProductCard
                 card={createFeaturedProductCardViewModel(item)}

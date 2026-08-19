@@ -162,7 +162,7 @@ export function ProfileProductsTabs({
             className={`flex h-12 min-w-fit items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition ${
               tab.id === selectedMainId
                 ? "border-primary bg-primary text-on-primary"
-                : "border-outline-variant bg-surface text-on-surface hover:border-primary/50"
+                : "border-outline-variant bg-surface text-on-surface"
             }`}
           >
             <span className="relative h-7 w-7 overflow-hidden rounded-md bg-surface-bright">
@@ -194,7 +194,7 @@ export function ProfileProductsTabs({
               className={`flex h-10 min-w-fit items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold transition ${
                 tab.id === selectedSubId
                   ? "border-tertiary bg-tertiary text-on-tertiary"
-                  : "border-outline-variant bg-surface-container-low text-on-surface hover:border-tertiary/50"
+                  : "border-outline-variant bg-surface-container-low text-on-surface"
               }`}
             >
               <span className="relative h-6 w-6 overflow-hidden rounded bg-surface-bright">
@@ -256,7 +256,7 @@ export function ProfileProductsTabs({
                 className={`inline-flex h-9 items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition ${
                   showFeaturedOnly
                     ? "border-tertiary bg-tertiary text-on-tertiary"
-                    : "border-outline-variant bg-surface text-on-surface hover:border-tertiary/60"
+                    : "border-outline-variant bg-surface text-on-surface"
                 }`}
               >
                 <Star className={`h-4 w-4 ${showFeaturedOnly ? "fill-current" : ""}`} />
@@ -346,7 +346,7 @@ export function ProfileProductsTabs({
                 activeSubTab.productSubcategoryId,
               )
             }
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary transition hover:bg-primary/90"
+            className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-xs font-semibold text-on-primary transition"
           >
             <Plus className="h-4 w-4" />
             {labels.addProduct}

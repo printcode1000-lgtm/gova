@@ -5,7 +5,7 @@ import {
   AsolMap,
   createOpenStreetMapProvider,
   markerAt,
-} from "@/components/ui/AsolMap";
+} from "@asol/map-core";
 import type { ProductPropertySpecsData } from "@/features/product/entities/product.entity";
 import { ProductField } from "./ProductComponentPrimitives";
 import type {
@@ -87,6 +87,22 @@ export function ProductPropertySpecs({
     [onChange, specs],
   );
 
+  /**
+   * The map balloon carries the coordinates and the address the user typed for them
+   * in one confirmed action, so both land in the form together and cannot drift.
+   */
+  const commitLocation = React.useCallback(
+    (nextLatitude: number, nextLongitude: number, address: string) => {
+      onChange({
+        ...specs,
+        locationLatitude: String(nextLatitude),
+        locationLongitude: String(nextLongitude),
+        address,
+      });
+    },
+    [onChange, specs],
+  );
+
   const resetLocation = React.useCallback(() => {
     onChange({ ...specs, locationLatitude: "", locationLongitude: "" });
     setMapMessage("تمت إعادة ضبط الموقع.");
@@ -163,7 +179,6 @@ export function ProductPropertySpecs({
                       : []
                   }
                   toolbar={{
-                    save: { enabled: true, label: "حفظ الموقع" },
                     gps: { enabled: true, label: "تحديد الموقع الحالي" },
                     share: { enabled: true, label: "مشاركة الموقع" },
                     reset: { enabled: true, label: "إعادة الضبط" },
@@ -177,6 +192,17 @@ export function ProductPropertySpecs({
                   ariaLabel="اختيار موقع العقار"
                   loadingLabel="جارٍ تحميل الخريطة…"
                   retryLabel="إعادة المحاولة"
+                  addressPrompt={{
+                    enabled: true,
+                    title: "عنوان العقار",
+                    placeholder: "اكتب وصف العنوان",
+                    confirmLabel: "تأكيد",
+                    cancelLabel: "إلغاء",
+                    value: specs.address ?? "",
+                  }}
+                  onLocationCommitted={({ latitude: nextLatitude, longitude: nextLongitude, address }) =>
+                    commitLocation(nextLatitude, nextLongitude, address)
+                  }
                   onTap={({
                     latitude: nextLatitude,
                     longitude: nextLongitude,
@@ -185,11 +211,15 @@ export function ProductPropertySpecs({
                     latitude: nextLatitude,
                     longitude: nextLongitude,
                   }) => updateLocation(nextLatitude, nextLongitude)}
-                  onSave={() =>
+                  onGpsError={(mapError) =>
                     setMapMessage(
-                      hasLocation
-                        ? "تم تثبيت الموقع داخل بيانات النموذج. استخدم زر حفظ التعديلات أو إنشاء المنتج للحفظ النهائي."
-                        : "حدد موقعًا على الخريطة أولًا.",
+                      mapError.code !== "permission"
+                        ? "تعذر تحديد موقعك الحالي. حدد الموقع على الخريطة."
+                        : mapError.requiresSettings
+                          ? "إذن الموقع محظور. فعّله من إعدادات التطبيق ثم أعد المحاولة."
+                          : mapError.permissionState === "unsupported"
+                            ? "تحديد الموقع غير مدعوم على هذا الجهاز. حدد الموقع على الخريطة."
+                            : "لم يُمنح إذن الموقع. اسمح بالوصول أو حدد الموقع على الخريطة.",
                     )
                   }
                   onShare={({
@@ -208,9 +238,6 @@ export function ProductPropertySpecs({
                   فتح الخريطة
                 </button>
               )}
-              <p className="text-xs text-muted-foreground">
-                اضغط على الخريطة لتحديد موقع العقار.
-              </p>
               {mapMessage ? (
                 <p className="text-xs font-medium text-primary" role="status">
                   {mapMessage}

@@ -113,13 +113,13 @@ export function checkFile(filePath: string): void {
 
   if (
     /\b(?:window\.)?indexedDB\s*\./.test(content) &&
-    !fileRel.startsWith('src/modules/data-access/browser/')
+    !fileRel.startsWith('packages/data-core/src/browser/')
   ) {
     addViolation(
       'database-client',
       filePath,
       'IndexedDB accessed outside the central Data Access browser adapter.',
-      'Use @/modules/data-access/browser.'
+      'Use @asol/data-core/browser'
     );
   }
 
@@ -132,7 +132,7 @@ export function checkFile(filePath: string): void {
   }
   if (
     DIRECT_DATABASE_CALL_PATTERNS.some((pattern) => pattern.test(strippedContent)) &&
-    !fileRel.startsWith('src/modules/data-access/')
+    !fileRel.startsWith('packages/data-core/src/')
   ) {
     addViolation(
       'database-client',
@@ -249,7 +249,7 @@ export function checkExternalDataAccessOwnership(filePath: string): void {
       'database-client',
       filePath,
       'Database driver imported outside the central Data Access module.',
-      'Move the implementation to src/modules/data-access.',
+      'Move the implementation to packages/data-core/src.',
     );
   }
   if (/\b(?:window\.)?indexedDB\s*\./.test(content)) {
@@ -257,7 +257,7 @@ export function checkExternalDataAccessOwnership(filePath: string): void {
       'database-client',
       filePath,
       'IndexedDB accessed outside the central Data Access browser adapter.',
-      'Use src/modules/data-access/browser.',
+      'Use packages/data-core/src/browser.',
     );
   }
   if (RAW_SQL_PATTERNS.some((pattern) => pattern.test(strippedContent))) {
@@ -265,7 +265,7 @@ export function checkExternalDataAccessOwnership(filePath: string): void {
       'repository',
       filePath,
       `Database statement detected outside Data Access (${fileRel}).`,
-      'Move the query or command to src/modules/data-access.',
+      'Move the query or command to packages/data-core/src.',
     );
   }
   if (DIRECT_DATABASE_CALL_PATTERNS.some((pattern) => pattern.test(strippedContent))) {
@@ -319,7 +319,7 @@ export function checkCategoryModuleContract(fileRel: string, content: string, fi
       !pharmacyCatalogInfrastructure &&
       !STRUCTURED_CATEGORY_COLUMN_FILES.has(fileRel) &&
       !fileRel.startsWith(
-        'src/modules/data-access/domains/profile/repositories/profile-repository-parts/',
+        'packages/data-core/src/domains/profile/repositories/profile-repository-parts/',
       ) &&
       /\b(title_ar|title_en|category_id|original_id|sub_collection|collection_ar|collection_en|collection_image)\b/.test(productionContent)
     ) {

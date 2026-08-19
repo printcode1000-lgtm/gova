@@ -203,7 +203,7 @@ export function WorkingHoursCard({
                               })),
                             )
                           }
-                          className="mt-5 inline-flex h-10 items-center justify-center rounded-lg border border-outline-variant px-3 text-destructive transition hover:bg-destructive hover:text-on-destructive sm:mt-0"
+                          className="mt-5 inline-flex h-10 items-center justify-center rounded-lg border border-outline-variant px-3 text-destructive transition sm:mt-0"
                           aria-label="Remove period"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -231,7 +231,7 @@ export function WorkingHoursCard({
                         })),
                       )
                     }
-                    className="inline-flex h-8 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
+                    className="inline-flex h-8 items-center gap-2 rounded-lg border border-outline-variant px-3 text-xs font-semibold text-on-surface transition"
                   >
                     <Plus className="h-4 w-4" />
                     {text.addPeriod}

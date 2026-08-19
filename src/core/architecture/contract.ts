@@ -46,7 +46,7 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/core/config/catalog-studio.server.ts',
   'src/core/config/system-logs.server.ts',
   'src/instrumentation.ts',
-  'src/modules/data-access/domains/marketplace-orders/db/config.ts',
+  'packages/data-core/src/domains/marketplace-orders/db/config.ts',
   'src/modules/data-health/domain/development-guard.server.ts',
   'src/modules/dev-cloud-backup/domain/development-guard.server.ts',
   'src/modules/google-play-console/domain/development-guard.server.ts',
@@ -73,22 +73,29 @@ export const ALLOWED_FETCH_FILES = new Set([
   'packages/account-bridge/src/notifications.ts',
 ]);
 
+/**
+ * Database code lives in one sealed package. These three lists used to point at
+ * `src/modules/data-access/`, where a folder path was the only thing standing between an
+ * app file and `drizzle-orm`. They now point inside `@asol/data-core`, and the folder they
+ * name — `src/core/` — has no entry in that package's `exports` map, so the seal, not a
+ * regular expression, is what keeps the ORM out of the rest of the repository.
+ */
 export const ALLOWED_DRIZZLE_ORM_FILES_PATTERN = [
-  /^src\/modules\/data-access\//,
+  /^packages\/data-core\/src\//,
 ];
 
 export const ALLOWED_DB_DRIVER_FILES_PATTERN = [
-  /^src\/modules\/data-access\//,
+  /^packages\/data-core\/src\//,
 ];
 
 export const ALLOWED_SQL_FILES_PATTERN = [
-  /^src\/modules\/data-access\//,
+  /^packages\/data-core\/src\//,
 ];
 
 /** Client-side IndexedDB utilities — not the server Database Client layer. */
 const CLIENT_STORAGE_PATHS = new Set([
-  'src/modules/data-access/browser/asol-db-persister.ts',
-  'src/modules/data-access/browser/asol-db/index.ts',
+  'packages/data-core/src/browser/asol-db-persister.ts',
+  'packages/data-core/src/browser/asol-db/index.ts',
 ]);
 
 const SERVER_ONLY_ALLOWED_LAYERS: ArchitectureLayer[] = [
@@ -133,17 +140,17 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p === 'src/core/api/asol-api-client.ts') return 'asol-api-client';
   if (p.startsWith('src/core/api/')) return 'api-shared';
   if (p.startsWith('src/core/config/')) return 'configuration';
-  if (p.startsWith('src/modules/data-access/tooling/')) return 'provisioning';
-  if (p.startsWith('src/modules/data-access/provisioning/core/')) return 'provisioning';
-  if (p.startsWith('src/modules/data-access/domains/') && p.includes('/tests/')) return 'dev-tools';
-  if (p.startsWith('src/modules/data-access/domains/') && p.includes('/application/')) return 'server-services';
-  if (p.startsWith('src/modules/data-access/core/')) return 'database-client';
-  if (p.startsWith('src/modules/data-access/browser/')) return 'shared';
-  if (p.startsWith('src/modules/data-access/domains/marketplace-orders/db/')) return 'database-client';
-  if (p.startsWith('src/modules/data-access/domains/marketplace-orders/') && p.endsWith('/index.server.ts')) return 'server-services';
-  if (p.startsWith('src/modules/data-access/domains/') && p.endsWith('/index.server.ts')) return 'operations';
-  if (p.startsWith('src/modules/data-access/domains/') && p.includes('/commands/')) return 'operations';
-  if (p.startsWith('src/modules/data-access/domains/') && p.includes('/queries/')) return 'operations';
+  if (p.startsWith('packages/data-core/src/tooling/')) return 'provisioning';
+  if (p.startsWith('packages/data-core/src/provisioning/core/')) return 'provisioning';
+  if (p.startsWith('packages/data-core/src/domains/') && p.includes('/tests/')) return 'dev-tools';
+  if (p.startsWith('packages/data-core/src/domains/') && p.includes('/application/')) return 'server-services';
+  if (p.startsWith('packages/data-core/src/core/')) return 'database-client';
+  if (p.startsWith('packages/data-core/src/browser/')) return 'shared';
+  if (p.startsWith('packages/data-core/src/domains/marketplace-orders/db/')) return 'database-client';
+  if (p.startsWith('packages/data-core/src/domains/marketplace-orders/') && p.endsWith('/index.server.ts')) return 'server-services';
+  if (p.startsWith('packages/data-core/src/domains/') && p.endsWith('/index.server.ts')) return 'operations';
+  if (p.startsWith('packages/data-core/src/domains/') && p.includes('/commands/')) return 'operations';
+  if (p.startsWith('packages/data-core/src/domains/') && p.includes('/queries/')) return 'operations';
   if (p === 'src/modules/data-health/domain/execution-context.server.ts') return 'configuration';
   if (p === 'src/modules/data-health/domain/development-guard.server.ts') return 'configuration';
   if (p === 'src/modules/dev-cloud-backup/domain/development-guard.server.ts') return 'configuration';
@@ -156,7 +163,7 @@ export function classifyLayer(relativePath: string): ArchitectureLayer {
   if (p.startsWith('src/modules/google-play-console/services/')) return 'server-services';
   if (p.startsWith('src/modules/data-health/tests/')) return 'dev-tools';
   if (p.startsWith('src/modules/dev-cloud-backup/tests/')) return 'dev-tools';
-  if (p.startsWith('src/modules/marketplace-orders/api/') || p.startsWith('src/modules/marketplace-orders/services/')) return 'server-services';
+  if (p.startsWith('packages/orders-core/src/')) return 'shared';
   if (p.includes('/application/') && p.includes('/features/storage/')) return 'server-services';
   // A feature's server entry point — `src/features/<name>/server.ts` — is the
   // server half of that module's public API, not a shared utility. Without this
@@ -221,19 +228,33 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   if (importPath === '@libsql/client' || importPath.startsWith('@libsql/')) return 'forbidden-package';
   if (importPath === 'axios') return 'forbidden-package';
 
+  // `@asol/data-core` is reached only through its declared doors, so the door name is the
+  // layer. Without this the whole package would classify as `external` and every layer
+  // rule that used to guard `src/modules/data-access/` would stop applying the moment the
+  // code moved into the package.
+  if (importPath === '@asol/data-core' || importPath.startsWith('@asol/data-core/')) {
+    const dataCoreDoor = importPath.slice('@asol/data-core'.length).replace(/^\//, '');
+    if (dataCoreDoor === '') return 'shared';
+    if (dataCoreDoor === 'core') return 'database-client';
+    if (dataCoreDoor === 'browser') return 'shared';
+    if (dataCoreDoor === 'provisioning' || dataCoreDoor === 'tooling') return 'provisioning';
+    if (dataCoreDoor === 'marketplace-orders') return 'server-services';
+    return 'operations';
+  }
+
   const resolved = importPath.startsWith('@/') ? `src/${importPath.slice(2)}` : null;
   if (!resolved) return 'external';
 
-  if (resolved.startsWith('src/modules/data-access/core/')) return 'database-client';
-  if (resolved.startsWith('src/modules/data-access/browser/')) return 'shared';
-  if (resolved.startsWith('src/modules/data-access/domains/marketplace-orders/') && resolved.endsWith('/index.server')) {
+  if (resolved.startsWith('packages/data-core/src/core/')) return 'database-client';
+  if (resolved.startsWith('packages/data-core/src/browser/')) return 'shared';
+  if (resolved.startsWith('packages/data-core/src/domains/marketplace-orders/') && resolved.endsWith('/index.server')) {
     return 'server-services';
   }
-  if (resolved.startsWith('src/modules/data-access/domains/') && resolved.endsWith('/index.server')) {
+  if (resolved.startsWith('packages/data-core/src/domains/') && resolved.endsWith('/index.server')) {
     return 'operations';
   }
   if (
-    resolved.startsWith('src/modules/data-access/domains/') &&
+    resolved.startsWith('packages/data-core/src/domains/') &&
     (resolved.includes('/commands/') || resolved.includes('/queries/'))
   ) {
     return 'operations';
@@ -246,13 +267,13 @@ export function importTargetLayer(importPath: string): ArchitectureLayer | 'exte
   if (resolved.includes('/services/') && (resolved.includes('-api-service') || resolved.endsWith('/auth-service') || resolved.endsWith('/session-service'))) {
     return 'client-services';
   }
-  if (resolved.includes('/core/database/asol-db-persister') || resolved.startsWith('src/modules/data-access/browser/asol-db/')) {
+  if (resolved.includes('/core/database/asol-db-persister') || resolved.startsWith('packages/data-core/src/browser/asol-db/')) {
     return 'shared';
   }
   if (resolved.includes('/core/database/db-client') || resolved.includes('/core/database/sqlite-db-client') || resolved.includes('/core/database/profile-db-client')) {
     return 'database-client';
   }
-  if (resolved.includes('/core/database/') || resolved === 'src/modules/data-access/core/turso/users-turso-client.ts') {
+  if (resolved.includes('/core/database/') || resolved === 'packages/data-core/src/core/turso/users-turso-client.ts') {
     return 'database-client';
   }
   if (resolved.includes('/core/api/asol-api-client') || resolved === 'src/core/api') return 'asol-api-client';

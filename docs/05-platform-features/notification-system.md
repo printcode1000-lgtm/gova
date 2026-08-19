@@ -2060,12 +2060,12 @@ Specialty-chat receipt pushes are handled before display: they update the
 matching outgoing notification and never call `showNotification`.
 
 The service worker duplicates the AsolDB name, version, and store list from
-`src/modules/data-access/browser/asol-db`, because a static worker cannot import
+`packages/data-core/src/browser/asol-db`, because a static worker cannot import
 the module. `notification-local-storage-contract.test.ts` compares the two and
 fails the build when they drift — opening IndexedDB with a stale version there
 throws and silently drops every browser push.
 
-The worker source is `src/modules/data-access/browser/workers/asol-push-sw.js`.
+The worker source is `packages/data-core/src/browser/workers/asol-push-sw.js`.
 `public/asol-push-sw.js` is generated from it by `npm run data-access:sync-public`,
 and the architecture check rejects a hand-edited public copy.
 

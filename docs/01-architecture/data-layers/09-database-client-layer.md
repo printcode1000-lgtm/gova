@@ -7,7 +7,7 @@ repositories, independent of the runtime driver.
 
 ## Location
 
-`src/modules/data-access/core/`
+`packages/data-core/src/core/`
 
 | Path | Purpose |
 |---|---|
@@ -31,7 +31,7 @@ repository does not open unrelated databases or require their credentials.
 
 ## Rules
 
-- Only `src/modules/data-access` imports `better-sqlite3`, `@libsql/client`, or Drizzle.
+- Only `packages/data-core/src` imports `better-sqlite3`, `@libsql/client`, or Drizzle.
 - Repositories request logical sources such as `usersDataSource` and
   `profilesDataSource`.
 - Features never choose SQLite, Turso, a file path, URL, or shard.

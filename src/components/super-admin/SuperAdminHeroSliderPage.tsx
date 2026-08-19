@@ -16,7 +16,7 @@ import { homeHeroSliderApiService } from "@/features/advertisements/services/hom
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-import { ASOL_DB_STORES, asolDbDelete } from "@/modules/data-access/browser/asol-db";
+import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 
 const quickIntervals = [5, 15, 30, 60];
 
@@ -191,7 +191,7 @@ export function SuperAdminHeroSliderPage() {
             type="button"
             onClick={() => void save()}
             disabled={busy}
-            className="ms-auto bg-primary text-on-primary hover:bg-primary/95"
+            className="ms-auto bg-primary text-on-primary"
           >
             <Save className="me-2 h-4 w-4" />
             حفظ

@@ -111,7 +111,7 @@ export function CreateCategoryDialog({
             type="button"
             disabled={disabled}
             onClick={onClose}
-            className="h-9 rounded-lg border border-outline-variant px-4 text-xs font-semibold text-on-surface hover:border-primary disabled:opacity-60"
+            className="h-9 rounded-lg border border-outline-variant px-4 text-xs font-semibold text-on-surface disabled:opacity-60"
           >
             {text.cancel}
           </button>
@@ -144,8 +144,8 @@ export function IconButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary disabled:opacity-50"
-      title={title}
+      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-outline-variant text-on-surface-variant disabled:opacity-50"
+      aria-label={title}
     >
       {children}
     </button>
@@ -238,8 +238,8 @@ export function VisibilityButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary disabled:opacity-50"
-      title={hidden ? text.restore : text.hide}
+      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-outline-variant text-on-surface-variant disabled:opacity-50"
+      aria-label={hidden ? text.restore : text.hide}
     >
       {hidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
     </button>

@@ -32,14 +32,14 @@ export function BestSellingProducts({ products, className }: BestSellingProducts
         {products.map((product) => (
           <Card
             key={product.id}
-            className="group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg"
+            className="group overflow-hidden transition-all duration-300"
           >
             {/* Product Image */}
             <div className="relative aspect-square overflow-hidden">
               <img
                 src={product.image}
                 alt={product.name}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-500"
               />
               {product.originalPrice && (
                 <Badge className="absolute top-2 left-2 bg-destructive">

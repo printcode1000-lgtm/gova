@@ -27,9 +27,9 @@ interface SellerCardProps {
 const variantClass: Record<SellerCardVariant, string> = {
   search: "rounded-lg border border-outline-variant bg-surface p-4 text-center",
   "category-sellers":
-    "rounded-xl border border-outline-variant bg-surface p-4 text-center shadow-sm transition hover:border-primary/60 hover:shadow-md",
+    "rounded-xl border border-outline-variant bg-surface p-4 text-center shadow-sm transition",
   "doctor-sellers":
-    "rounded-xl border border-outline-variant bg-surface p-4 text-center shadow-sm transition hover:border-primary/60 hover:shadow-md",
+    "rounded-xl border border-outline-variant bg-surface p-4 text-center shadow-sm transition",
   "linked-provider":
     "rounded-lg border border-outline-variant bg-surface p-3",
   compact: "rounded-lg border border-outline-variant bg-surface p-3",
@@ -53,15 +53,15 @@ function actionIcon(kind: SellerCardAction["kind"]) {
 
 function actionClass(action: SellerCardAction) {
   if (action.tone === "danger") {
-    return "bg-surface-container-low text-destructive hover:bg-destructive hover:text-on-destructive";
+    return "bg-surface-container-low text-destructive";
   }
   if (action.tone === "tertiary" || action.active) {
-    return "bg-tertiary text-on-tertiary hover:bg-tertiary/90";
+    return "bg-tertiary text-on-tertiary";
   }
   if (action.tone === "primary") {
-    return "bg-primary text-on-primary hover:bg-primary/90";
+    return "bg-primary text-on-primary";
   }
-  return "bg-surface-container-low text-on-surface hover:bg-primary hover:text-on-primary";
+  return "bg-surface-container-low text-on-surface";
 }
 
 function badgeClass(tone: SellerCardViewModel["badges"][number]["tone"]) {
@@ -179,7 +179,6 @@ export function SellerCard({
               className={`flex h-8 items-center justify-center rounded-md transition disabled:opacity-50 ${actionClass(
                 action,
               )}`}
-              title={action.label}
               aria-label={action.label}
             >
               {actionIcon(action.kind)}

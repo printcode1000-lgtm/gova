@@ -89,7 +89,7 @@ const COPY = {
       ["How does ASOL work for registration, buying, or selling a product?", "Registration on ASOL is completely free and stays free. You can buy products easily, complete the order, and track it until delivery."],
       ["How can I create a free or customized advertisement or marketing campaign?", "Once you create your own page on ASOL, it becomes a distinctive promotional storefront for you, where you can add your products, highlight featured ones, show your contact information, and share your page with anyone anywhere. You can also create an ongoing campaign inside ASOL by adding a service product that appears to users as a continuous ad, or contact us for general or customized campaigns that suit your business."],
       ["Do you provide marketing services for small businesses?", "Yes. We provide marketing solutions for startups, small and medium businesses, and larger companies, with flexible options based on budget and goals."],
-      ["What are ASOL's responsibility limits regarding sellers, buyers, and the quality of listed products or services?", "ASOL operates as a platform for listing products and services and enabling communication between users. It does not guarantee the seriousness of sellers or buyers, nor the quality of any product or service. Users should verify the other party themselves and should not make any payment until they receive the product or obtain the service and confirm it. ASOL also commits to removing any product or service provider proven through reports or review to be offering fake products or services or engaging in any form of fraud or deception."],
+      ["What are ASOL's responsibility limits regarding sellers, buyers, and the quality of listed products or services?","ASOL operates as a platform for listing products and services and enabling communication between users. It does not guarantee the seriousness of sellers or buyers, nor the quality of any product or service. Users should verify the other party themselves and should not make any payment until they receive the product or obtain the service and confirm it. ASOL also commits to removing any product or service provider proven through reports or review to be offering fake products or services or engaging in any form of fraud or deception."],
     ],
     privacy: "Privacy policy",
     delete: "Delete account",
@@ -153,7 +153,7 @@ export function ContactPageContent() {
             <ContactLine icon={faEnvelope} text="suezbazaar@gmail.com" href="mailto:suezbazaar@gmail.com" />
             <ContactLine icon={faClock} text={c.hours} />
             <ContactLine icon={faLocationDot} text={c.location} />
-            <div className="mt-5 flex flex-wrap gap-3">{SOCIALS.map((social) => <a key={social.label} href={social.href} target="_blank" rel="noreferrer" title={social.label} className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary transition-transform hover:-translate-y-1"><FontAwesomeIcon icon={social.icon} /></a>)}</div>
+            <div className="mt-5 flex flex-wrap gap-3">{SOCIALS.map((social) => <a key={social.label} href={social.href} target="_blank" rel="noreferrer" aria-label={social.label} className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary transition-transform"><FontAwesomeIcon icon={social.icon} /></a>)}</div>
           </section>
           <section className="rounded-3xl border border-outline/30 bg-surface p-6 text-center shadow-sm">
             <Image src="/images/qr-code.png" width={180} height={180} alt={c.qr} className="mx-auto rounded-xl" />
@@ -169,7 +169,7 @@ export function ContactPageContent() {
 
       <section className="rounded-3xl border border-outline/30 bg-surface p-6 md:p-8">
         <h2 className="mb-5 flex items-center gap-3 text-2xl font-bold"><FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />{c.faq}</h2>
-        <div className="space-y-3">{c.faqs.map(([question, answer], index) => <details key={question} className="group rounded-xl bg-surface-container p-4"><summary className="flex cursor-pointer list-none items-center gap-3 font-semibold"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><FontAwesomeIcon icon={faQuestionCircle} /></span><span className="flex-1">{question}</span><FontAwesomeIcon icon={faChevronDown} className="text-primary transition-transform group-open:rotate-180" /></summary><p className="mt-4 border-t border-outline/20 pt-4 leading-8 text-on-surface-variant">{answer}</p></details>)}</div>
+        <div className="space-y-3">{c.faqs.map(([question, answer], index) => <details key={question} className="group rounded-xl bg-surface-container p-4"><summary className="flex list-none items-center gap-3 font-semibold"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><FontAwesomeIcon icon={faQuestionCircle} /></span><span className="flex-1">{question}</span><FontAwesomeIcon icon={faChevronDown} className="text-primary transition-transform group-open:rotate-180" /></summary><p className="mt-4 border-t border-outline/20 pt-4 leading-8 text-on-surface-variant">{answer}</p></details>)}</div>
       </section>
 
       <div className="grid gap-4 sm:grid-cols-2">

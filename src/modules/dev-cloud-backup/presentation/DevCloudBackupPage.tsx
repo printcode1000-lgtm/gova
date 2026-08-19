@@ -714,7 +714,7 @@ export function DevCloudBackupPage() {
                     type="button"
                     size="sm"
                     variant="outline"
-                    className="border-amber-400 text-amber-800 hover:bg-amber-50"
+                    className="border-amber-400 text-amber-800"
                     disabled={commandDisabled}
                     onClick={() => void restoreSavedBackup(backup.fileName, "merge")}
                   >
@@ -725,7 +725,7 @@ export function DevCloudBackupPage() {
                     type="button"
                     size="sm"
                     variant="destructive"
-                    className="bg-amber-700 hover:bg-amber-800"
+                    className="bg-amber-700"
                     disabled={commandDisabled}
                     onClick={() => void restoreSavedBackup(backup.fileName, "replace")}
                   >

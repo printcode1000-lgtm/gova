@@ -56,13 +56,13 @@ src/features/product/entities/product.entity.ts (re-export shim for `@asol/produ
 The product database schema is defined in:
 
 ```text
-src/modules/data-access/core/database/product/product.schema.ts
+packages/data-core/src/core/database/product/product.schema.ts
 ```
 
 The base migration is:
 
 ```text
-src/modules/data-access/core/database/product/migrations/0000_products.sql
+packages/data-core/src/core/database/product/migrations/0000_products.sql
 ```
 
 The `products` table stores grouped product sections as explicit columns:
@@ -115,7 +115,7 @@ There is no nested `data` object in product create/update payloads.
 Location:
 
 ```text
-src/modules/data-access/domains/product/repositories/product-repository.ts
+packages/data-core/src/domains/product/repositories/product-repository.ts
 ```
 
 UI, hooks, client services, and server services must consume the typed grouped object. They must not know database column names.
@@ -199,8 +199,8 @@ The local SQLite schema is the source of truth. `npm run db:schema:sync` syncs s
 
 Product schema changes must update:
 
-1. `src/modules/data-access/core/database/product/product.schema.ts`
-2. `src/modules/data-access/core/database/product/migrations`
+1. `packages/data-core/src/core/database/product/product.schema.ts`
+2. `packages/data-core/src/core/database/product/migrations`
 3. `ProductRecord` and related entity types
 4. `ProductRepository` column mapping
 5. This document

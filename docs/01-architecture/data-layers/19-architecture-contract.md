@@ -34,7 +34,7 @@ No shortcut paths. Every feature follows the same layers.
 |------|-----------------|
 | `fetch()`, axios, XHR | `asol-http-transport.ts` |
 | Raw SQL | Repository, Database Client, Provisioning |
-| `drizzle-orm` | Repository, `src/modules/data-access/core/database/**` |
+| `drizzle-orm` | Repository, `packages/data-core/src/core/database/**` |
 | `@libsql/client`, `better-sqlite3` | Database Client, Provisioning |
 | `process.env` | `src/core/config/*` |
 | Secrets in client files | Forbidden |
@@ -51,14 +51,14 @@ Success = 100% score, all layer checks pass.
 ## Data-access enforcement
 
 - ESLint rejects `better-sqlite3`, `@libsql/client`, Drizzle, and direct
-  IndexedDB usage outside `src/modules/data-access` while code is authored.
+  IndexedDB usage outside `packages/data-core/src` while code is authored.
 - The architecture scanner covers runtime source, database-backed tests,
   maintenance tools, and the generated push worker. Database code under
   `scripts/` is rejected.
 - Runtime database construction resolves through the central runtime context
   and is rejected in browser, static-export, Android, and iOS execution.
 - Provisioning and maintenance environment variables are isolated under
-  `src/modules/data-access/provisioning` and `src/modules/data-access/tooling`.
+  `packages/data-core/src/provisioning` and `packages/data-core/src/tooling`.
 - There are no per-feature SQL or driver waivers outside the module.
 
 ## Where the checks actually run

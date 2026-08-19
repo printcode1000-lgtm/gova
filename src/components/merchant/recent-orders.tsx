@@ -40,14 +40,14 @@ export function RecentOrders({ orders, className }: RecentOrdersProps) {
           {orders.map((order) => (
             <div
               key={order.id}
-              className="flex items-center gap-4 p-4 transition-colors hover:bg-muted/50"
+              className="flex items-center gap-4 p-4 transition-colors"
             >
               {/* Customer Avatar */}
               <Avatar className="h-10 w-10">
                 <AvatarImage src={order.customer.avatar} alt={order.customer.name} />
                 <AvatarFallback>
                   {order.customer.name
-                    .split(' ')
+                    .split('')
                     .map((n) => n[0])
                     .join('')}
                 </AvatarFallback>

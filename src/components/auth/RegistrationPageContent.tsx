@@ -93,8 +93,8 @@ export function RegistrationPageContent() {
             </FormProvider>
 
             <p className="text-center text-sm text-on-surface-variant">
-              {t('auth.registration.hasAccount')}{' '}
-              <Link href="/login" className="font-medium text-primary hover:underline">
+              {t('auth.registration.hasAccount')}{''}
+              <Link href="/login" className="font-medium text-primary">
                 {t('auth.registration.loginLink')}
               </Link>
             </p>

@@ -204,7 +204,7 @@ export function ShareMenu({ content, locale, trigger }: ShareMenuProps) {
           type="button"
           onClick={() => void saveQrCode()}
           disabled={savingQrCode}
-          className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline-variant/70 bg-surface-container-low px-4 text-sm font-bold text-on-surface transition hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-outline-variant/70 bg-surface-container-low px-4 text-sm font-bold text-on-surface transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <QrCode className="h-5 w-5" />
           {savingQrCode
@@ -251,7 +251,7 @@ function DestinationButton({
     >
       <span
         className={cn(
-          "flex h-14 w-14 items-center justify-center rounded-2xl text-2xl shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md group-active:scale-95 [&>svg]:h-6 [&>svg]:w-6",
+          "flex h-14 w-14 items-center justify-center rounded-2xl text-2xl shadow-sm transition group-active:scale-95 [&>svg]:h-6 [&>svg]:w-6",
           destinationStyles[destination],
         )}
       >

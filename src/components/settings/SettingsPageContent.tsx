@@ -184,7 +184,7 @@ export function SettingsPageContent() {
           <button
             type="button"
             disabled={clearing}
-            className="asol-control flex w-full items-center justify-center gap-2 rounded-xl border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 px-6 py-3 font-semibold text-error shadow-lg shadow-error/10 transition-all hover:border-error/50 hover:shadow-error/20 md:w-auto disabled:opacity-60"
+            className="asol-control flex w-full items-center justify-center gap-2 rounded-xl border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 px-6 py-3 font-semibold text-error shadow-lg shadow-error/10 transition-all md:w-auto disabled:opacity-60"
             onClick={handleClearAll}
           >
             <FontAwesomeIcon icon={faRotateLeft} className="h-4 w-4" />
@@ -215,14 +215,14 @@ export function SettingsPageContent() {
               <button
                 type="button"
                 onClick={() => setShowClearDialog(false)}
-                className="asol-control flex-1 rounded-xl px-4 py-2 font-semibold text-on-surface-variant hover:bg-surface-variant"
+                className="asol-control flex-1 rounded-xl px-4 py-2 font-semibold text-on-surface-variant"
               >
                 إلغاء
               </button>
               <button
                 type="button"
                 onClick={confirmClearAll}
-                className="asol-control flex-1 rounded-xl bg-error px-4 py-2 font-semibold text-on-primary hover:bg-error/90"
+                className="asol-control flex-1 rounded-xl bg-error px-4 py-2 font-semibold text-on-primary"
               >
                 تأكيد
               </button>

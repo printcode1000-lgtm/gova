@@ -15,7 +15,7 @@ import type {
 import {
   orderPurgeRepository,
   type OrderPurgeSnapshot,
-} from "@/modules/data-access/domains/data-health/index.server";
+} from "@asol/data-core/data-health";
 
 type Row = Record<string, unknown>;
 

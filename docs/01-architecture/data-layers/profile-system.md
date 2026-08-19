@@ -126,7 +126,7 @@ Fixed pharmacy starter products are excluded from these counts. Only real saved 
 The structural migration is:
 
 ```text
-src/modules/data-access/core/database/profile/migrations/0010_profile_structured_search.sql
+packages/data-core/src/core/database/profile/migrations/0010_profile_structured_search.sql
 ```
 
 Existing local shards and Turso schemas are refreshed with:

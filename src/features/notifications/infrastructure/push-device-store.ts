@@ -1,6 +1,6 @@
 "use client";
 
-import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@/modules/data-access/browser/asol-db";
+import { ASOL_DB_STORES, asolDbGet, asolDbSet } from "@asol/data-core/browser";
 
 /**
  * Where this device's push registration state is kept.

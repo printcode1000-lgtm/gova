@@ -9,10 +9,10 @@ import {
   MAX_GRANTS_PER_REQUEST,
   verifyNotificationGrant,
 } from "@asol/notifications-core/server";
-import { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
-import { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
-import { GetNotificationPushPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-push-preference.query";
-import { GetNotificationUserIdentityQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-user-identity.query";
+import { DeleteNotificationTokenCommand } from "@asol/data-core/notifications";
+import { ListNotificationTokensQuery } from "@asol/data-core/notifications";
+import { GetNotificationPushPreferenceQuery } from "@asol/data-core/notifications";
+import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
 
 export interface RecipientTokenGrantResult {
   send: SendNotificationToUsersInput;

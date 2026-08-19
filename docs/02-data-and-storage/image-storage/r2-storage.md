@@ -22,8 +22,8 @@ Local secrets live in `.env.local` (gitignored). Template in `.env.example`.
 | `packages/storage-core/src/domain/accounts/account-registry.ts` | Registry holding `general` and `products` accounts single source of truth |
 | `packages/storage-core/scripts/sync-cors.ts` | Apply full browser CORS to general and product buckets (`r2:sync:cors`) |
 | `packages/ota-core/scripts/sync-cors.ts` | Apply full browser CORS to dedicated OTA bucket (`ota:sync:cors`) |
-| `src/modules/data-access/tooling/migrate-r2-image-public-url.ts` | Copy old public R2 image URLs into active bucket and rewrite database references |
-| `src/modules/data-access/tooling/migrate-r2-cloud-folders.ts` | Move active R2 objects from legacy profile folders into current cloud folders |
+| `packages/data-core/src/tooling/migrate-r2-image-public-url.ts` | Copy old public R2 image URLs into active bucket and rewrite database references |
+| `packages/data-core/src/tooling/migrate-r2-cloud-folders.ts` | Move active R2 objects from legacy profile folders into current cloud folders |
 
 ## Sync CORS
 

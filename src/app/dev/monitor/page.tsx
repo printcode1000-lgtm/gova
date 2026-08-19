@@ -216,7 +216,7 @@ export default function MonitorPage() {
           --shadow: rgba(0, 0, 0, 0.4);
           --scroll-track: #0f172a;
           --scroll-thumb: #334155;
-          --bg-hover: #222b48;
+           #222b48;
         }
         :root[data-monitor-theme="light"] {
           --bg-main: #f8fafc;
@@ -229,7 +229,7 @@ export default function MonitorPage() {
           --shadow: rgba(0, 0, 0, 0.05);
           --scroll-track: #f1f5f9;
           --scroll-thumb: #cbd5e1;
-          --bg-hover: #e2e8f0;
+           #e2e8f0;
         }
 
         .monitor-container {
@@ -301,14 +301,13 @@ export default function MonitorPage() {
           font-size: 13px;
           font-weight: 600;
           border-radius: 8px;
-          cursor: pointer;
           border: 1px solid var(--border);
           background: var(--bg-card);
           color: var(--text-main);
           transition: all 0.2s ease;
         }
-        .btn:hover {
-          background: var(--bg-hover);
+        .btn:active {
+          background: var(--bg-active);
           transform: translateY(-1px);
         }
         .btn-primary {
@@ -316,7 +315,7 @@ export default function MonitorPage() {
           color: white;
           border: none;
         }
-        .btn-primary:hover {
+        .btn-primary:active {
           background: #2563eb;
         }
 
@@ -336,7 +335,6 @@ export default function MonitorPage() {
           font-size: 13px;
           font-weight: 600;
           border-radius: 6px;
-          cursor: pointer;
           border: none;
           background: transparent;
           color: var(--text-muted);
@@ -344,7 +342,7 @@ export default function MonitorPage() {
           transition: all 0.2s ease;
         }
         .tab-btn.active {
-          background: var(--bg-hover);
+          background: var(--bg-active);
           color: var(--text-main);
         }
 
@@ -424,7 +422,7 @@ export default function MonitorPage() {
           overflow: hidden;
           transition: transform 0.2s ease;
         }
-        .stat-card:hover {
+        .stat-card:active {
           transform: translateY(-2px);
         }
 
@@ -506,13 +504,12 @@ export default function MonitorPage() {
           justify-content: space-between;
           padding: 6px 8px;
           border-radius: 6px;
-          cursor: pointer;
           margin-bottom: 2px;
           font-size: 13px;
           transition: background-color 0.15s ease;
         }
-        .tree-node-row:hover {
-          background: var(--bg-hover);
+        .tree-node-row:active {
+          background: var(--bg-active);
         }
 
         .tree-node-info {
@@ -677,12 +674,11 @@ export default function MonitorPage() {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          cursor: pointer;
           padding: 0 4px;
           box-shadow: 0 2px 4px rgba(0,0,0,0.2);
           transition: transform 0.15s ease;
         }
-        .flame-bar:hover {
+        .flame-bar:active {
           transform: scaleY(1.08);
           z-index: 10;
         }
@@ -1036,7 +1032,7 @@ export default function MonitorPage() {
                   </thead>
                   <tbody>
                     {stats.slowestOps.map((op) => (
-                      <tr key={op.id} style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer' }} onClick={() => selectOperation(op.id)}>
+                      <tr key={op.id} style={{ borderBottom: '1px solid var(--border)' }} onClick={() => selectOperation(op.id)}>
                         <td style={{ padding: '6px', fontWeight: 600 }}>{op.table}</td>
                         <td style={{ padding: '6px' }}><span style={{ color: OP_TYPE_COLORS[op.operationType] }}>{op.operationType}</span></td>
                         <td style={{ padding: '6px', textAlign: 'right', fontWeight: 700, color: op.executionTime > SLOW_QUERY_THRESHOLD_MS ? '#ef4444' : 'var(--text-main)' }}>{op.executionTime} ms</td>
@@ -1079,7 +1075,7 @@ export default function MonitorPage() {
             <div className="card-header">
               <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0 }}>تتبع العمليات (شجرة التدفق)</h2>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <label style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                <label style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <input
                     type="checkbox"
                     checked={autoScroll}
@@ -1302,7 +1298,6 @@ export default function MonitorPage() {
                             <g
                               key={node.id}
                               transform={`translate(${pos.x - 30}, ${pos.y - 20})`}
-                              style={{ cursor: 'pointer' }}
                               onClick={() => selectOperation(node.recordId)}
                             >
                               <rect width="60" height="40" rx="6" fill={color} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
@@ -1603,7 +1598,7 @@ export default function MonitorPage() {
                       key={idx}
                       className={`diff-line ${line.type === 'added' ? 'diff-added' : line.type === 'removed' ? 'diff-removed' : ''}`}
                     >
-                      {line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '} {line.text}
+                      {line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ''} {line.text}
                     </span>
                   ))}
                 </div>
@@ -1652,7 +1647,7 @@ function TreeItem({ node, onSelect, selectedId }: TreeItemProps) {
           }
         }}
         style={{
-          background: selectedId && node.records?.[0]?.id === selectedId ? 'var(--bg-hover)' : '',
+          background: selectedId && node.records?.[0]?.id === selectedId ? 'var(--bg-active)' : '',
           borderLeft: !hasChildren ? `2px solid ${node.records?.[0]?.table ? LAYER_COLORS.database : LAYER_COLORS.hook}` : '',
         }}
       >

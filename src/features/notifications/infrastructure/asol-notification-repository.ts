@@ -5,7 +5,7 @@ import {
   asolDbDelete,
   asolDbGet,
   asolDbSet,
-} from "@/modules/data-access/browser/asol-db";
+} from "@asol/data-core/browser";
 import type {
   DeviceToken,
   NotificationAnalyticsEvent,

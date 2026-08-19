@@ -16,7 +16,13 @@ const SPECIFIER_PATTERNS = [
   /\bfrom\s+['"]([^'"]+)['"]/g,
   /\bimport\s+['"]([^'"]+)['"]/g,
   /\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
-  /\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
+  // Any identifier ending in `require` — `require(...)`, and also `nodeRequire(...)`, the
+  // `createRequire` handle an ES module has to build for itself. `\brequire` matched only the
+  // bare name, so when `@asol/data-core` became an ES module and renamed its lazy loader, every
+  // database driver silently dropped out of all four service mirrors: the deployments still
+  // built, and would have failed at the first query with "Cannot find module". A walker that
+  // misses an edge produces an upload that looks complete, which is the worst failure it has.
+  /(?:^|[^\w$.])[\w$]*[Rr]equire\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
 ];
 
 export function readOutputOverride(): string | null {

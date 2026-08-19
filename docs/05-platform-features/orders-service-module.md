@@ -24,8 +24,19 @@ services/orders/
 └── generated/            # mirrored from src/, git-ignored
 ```
 
-Twenty-seven mirrored modules, which is the tightest of the three services: the
-orders domain touches neither profiles nor products.
+Sixty-two mirrored modules, still the tightest of the four services: the orders
+domain touches neither profiles nor products. The count rose when the shared code
+moved into sealed packages — the mirror now carries `@asol/orders-core`,
+`@asol/data-core` and their manifests instead of a handful of `src/` files, and the
+walker still copies only what the routes actually reach. Verified after the
+migration: no profile, product, or notification schema is present.
+
+The order list therefore arrives here through two doors and nothing else:
+`@asol/data-core/marketplace-orders` for the reads and `@asol/orders-core` for what
+an order means. Neither is named in the account declaration's mirror entry points —
+`@asol/orders-composition` imports them, and the walker follows the package graph.
+Naming a file inside a sealed package as an entry point would mean naming an
+internal path, which is what the seal forbids.
 
 ## One route, and why only one
 

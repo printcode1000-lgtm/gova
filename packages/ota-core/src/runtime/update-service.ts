@@ -194,7 +194,7 @@ import {
   asolDbGet,
   asolDbSet,
   ASOL_DB_STORES,
-} from "@/modules/data-access/browser/asol-db";
+} from "@asol/data-core/browser";
 
 import { otaApiService } from "./api-service";
 import { otaRevocationService } from "./revocation-service";

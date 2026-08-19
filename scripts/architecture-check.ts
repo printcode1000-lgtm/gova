@@ -37,6 +37,8 @@ import { validationEngine as categoryValidationEngine } from "../src/features/ca
 import { ROOT, SRC, SCRIPTS, violations, walk, rel } from "./architecture-check/architecture-check.architecture-types";
 import { checkNotificationModuleContract } from "./architecture-check/architecture-check.notification-contract";
 import { checkDeadContractRules } from "./architecture-check/architecture-check.storage-core-contract";
+import { checkTouchInteractionContract } from "./architecture-check/architecture-check.touch-interaction-contract";
+import { checkMapLibreWorkerContract } from "./architecture-check/architecture-check.maplibre-worker-contract";
 import { checkFile, checkExternalDataAccessOwnership, checkGeneratedDataAccessArtifacts } from "./architecture-check/architecture-check.native-contract";
 import { checkAccountBridgeContract } from "./architecture-check/architecture-check.account-bridge-contract";
 import { checkPackageSealContract } from "./architecture-check/architecture-check.package-seal-contract";
@@ -88,6 +90,8 @@ function main(): void {
     checkAccountBridgeContract(file, readFileSync(file, 'utf8'));
     checkPackageSealContract(file, readFileSync(file, 'utf8'));
   }
+  checkTouchInteractionContract();
+  checkMapLibreWorkerContract();
   checkGeneratedDataAccessArtifacts();
   checkSystemLogsBootstrapContract();
 

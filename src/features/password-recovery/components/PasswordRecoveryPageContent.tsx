@@ -68,7 +68,7 @@ export function PasswordRecoveryPageContent() {
                   </div>
                 </label>
                 <SubmitButton loading={recovery.isLoading} label={t('auth.passwordRecovery.sendCode')} />
-                <Link href="/login" className="block text-center text-sm text-primary hover:underline">{t('auth.passwordRecovery.backToLogin')}</Link>
+                <Link href="/login" className="block text-center text-sm text-primary">{t('auth.passwordRecovery.backToLogin')}</Link>
               </form>
             )}
 
@@ -80,7 +80,7 @@ export function PasswordRecoveryPageContent() {
                   <input className="auth-input w-full text-center text-2xl tracking-[0.5em]" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" maxLength={6} />
                 </label>
                 <SubmitButton loading={recovery.isLoading} label={t('auth.passwordRecovery.verifyCode')} />
-                <button type="button" onClick={recovery.startOver} className="w-full text-sm text-primary hover:underline">{t('auth.passwordRecovery.changePhone')}</button>
+                <button type="button" onClick={recovery.startOver} className="w-full text-sm text-primary">{t('auth.passwordRecovery.changePhone')}</button>
               </form>
             )}
 
@@ -97,7 +97,7 @@ export function PasswordRecoveryPageContent() {
                 <Mail className="h-12 w-12 text-primary mx-auto" />
                 <p className="text-on-surface-variant">{t('auth.passwordRecovery.noEmail')}</p>
                 <Link href="/contact-us" className="auth-cta h-12 flex items-center justify-center">{t('auth.passwordRecovery.contactAdmin')}</Link>
-                <button type="button" onClick={recovery.startOver} className="text-sm text-primary hover:underline">{t('auth.passwordRecovery.changePhone')}</button>
+                <button type="button" onClick={recovery.startOver} className="text-sm text-primary">{t('auth.passwordRecovery.changePhone')}</button>
               </div>
             )}
 

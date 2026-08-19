@@ -131,10 +131,10 @@ export function CollectionsSection() {
                       <label
                         key={product.id}
                         className={cn(
-                          'flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all',
+                          'flex items-center gap-3 p-3 rounded-lg border transition-all',
                           newCollection.productIds?.includes(product.id)
                             ? 'border-primary bg-primary/5'
-                            : 'border-border hover:border-primary/50',
+                            : 'border-border',
                         )}
                       >
                         <Checkbox
@@ -203,7 +203,7 @@ export function CollectionsSection() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 opacity-0 transition-opacity"
                       onClick={() => removeCollection(collection.id)}
                     >
                       <X className="h-4 w-4" />

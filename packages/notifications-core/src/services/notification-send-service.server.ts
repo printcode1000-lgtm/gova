@@ -7,9 +7,9 @@ import type {
   SendNotificationToUsersInput,
   SendNotificationToUsersResult,
 } from "../domain/entities";
-import { ListNotificationTokensQuery } from "@/modules/data-access/domains/notifications/operations/queries/list-notification-tokens.query";
-import { GetNotificationPushPreferenceQuery } from "@/modules/data-access/domains/notifications/operations/queries/get-notification-push-preference.query";
-import { DeleteNotificationTokenCommand } from "@/modules/data-access/domains/notifications/operations/commands/delete-notification-token.command";
+import { ListNotificationTokensQuery } from "@asol/data-core/notifications";
+import { GetNotificationPushPreferenceQuery } from "@asol/data-core/notifications";
+import { DeleteNotificationTokenCommand } from "@asol/data-core/notifications";
 import { NotificationBuilder } from "../domain/notification-builder";
 import {
   NotificationCategories,

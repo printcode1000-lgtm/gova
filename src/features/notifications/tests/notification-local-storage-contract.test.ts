@@ -3,14 +3,14 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const schema = readFileSync(path.join(root, "src/modules/data-access/core/database/schema.ts"), "utf8");
+const schema = readFileSync(path.join(root, "packages/data-core/src/core/database/schema.ts"), "utf8");
 const localRepository = readFileSync(
   path.join(root, "src/features/notifications/infrastructure/asol-notification-repository.ts"),
   "utf8",
 );
 const serviceWorker = readFileSync(path.join(root, "public/asol-push-sw.js"), "utf8");
 const asolDb = readFileSync(
-  path.join(root, "src/modules/data-access/browser/asol-db/index.ts"),
+  path.join(root, "packages/data-core/src/browser/asol-db/index.ts"),
   "utf8",
 );
 

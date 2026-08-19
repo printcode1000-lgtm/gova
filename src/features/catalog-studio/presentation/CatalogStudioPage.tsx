@@ -222,7 +222,7 @@ function SectionButton({
       onClick={onClick}
       className={cn(
         "rounded-lg px-4 py-2 text-sm font-semibold transition-colors",
-        active ? "bg-primary text-primary-foreground" : "bg-surface-bright text-muted-foreground hover:text-foreground",
+        active ? "bg-primary text-primary-foreground" : "bg-surface-bright text-muted-foreground",
       )}
     >
       {label}
@@ -774,7 +774,7 @@ export function CatalogStudioPage() {
                       setSection(file.group === "manifest" ? "core" : (file.group as StudioSection));
                       openFile(file);
                     }}
-                    className="flex items-center gap-3 rounded-xl border p-3 text-start hover:border-primary hover:bg-primary/5"
+                    className="flex items-center gap-3 rounded-xl border p-3 text-start"
                   >
                     <FileJson className="h-5 w-5 text-primary" />
                     <span className="min-w-0 flex-1">
@@ -798,7 +798,7 @@ export function CatalogStudioPage() {
             <button
               type="button"
               onClick={() => openFile(snapshot.files.find((file) => file.path === "manifest.json")!)}
-              className="w-full rounded-2xl border bg-card p-5 text-start hover:border-primary"
+              className="w-full rounded-2xl border bg-card p-5 text-start"
             >
               <Database className="mb-2 h-6 w-6 text-primary" />
               <span className="block font-bold">البيان الوصفي</span>
@@ -823,7 +823,7 @@ export function CatalogStudioPage() {
                   onClick={() => openFile(file)}
                   className={cn(
                     "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-start",
-                    selectedPath === file.path ? "bg-primary text-primary-foreground" : "hover:bg-muted",
+                    selectedPath === file.path ? "bg-primary text-primary-foreground" : "",
                   )}
                 >
                   <FileJson className="h-4 w-4 shrink-0" />
@@ -897,7 +897,7 @@ export function CatalogStudioPage() {
                               setDragIndex(null);
                             }}
                             onClick={() => setSelectedIndex(index)}
-                            className={cn("cursor-pointer border-b hover:bg-muted/60", selectedIndex === index && "bg-primary/10")}
+                            className={cn("border-b", selectedIndex === index && "bg-primary/10")}
                           >
                             <td className="p-2"><GripVertical className="h-4 w-4 text-muted-foreground" /></td>
                             <td className="p-2 font-mono">{String(display?.order ?? "—")}</td>
@@ -908,9 +908,9 @@ export function CatalogStudioPage() {
                             <td className="max-w-56 truncate p-2 text-xs" dir="ltr">{String(item.imagePath ?? item.image ?? item.optionFile ?? item.column ?? "—")}</td>
                             <td className="p-2">
                               <div className="flex justify-center gap-1">
-                                <button type="button" title="لأعلى" onClick={(event) => { event.stopPropagation(); reorder(index, Math.max(0, index - 1)); }}><ArrowUp className="h-4 w-4" /></button>
-                                <button type="button" title="لأسفل" onClick={(event) => { event.stopPropagation(); reorder(index, Math.min(selectedItems.length - 1, index + 1)); }}><ArrowDown className="h-4 w-4" /></button>
-                                <button type="button" title="نسخ" onClick={(event) => { event.stopPropagation(); cloneItemAt(index); }}><Copy className="h-4 w-4" /></button>
+                                <button type="button" aria-label="لأعلى" onClick={(event) => { event.stopPropagation(); reorder(index, Math.max(0, index - 1)); }}><ArrowUp className="h-4 w-4" /></button>
+                                <button type="button" aria-label="لأسفل" onClick={(event) => { event.stopPropagation(); reorder(index, Math.min(selectedItems.length - 1, index + 1)); }}><ArrowDown className="h-4 w-4" /></button>
+                                <button type="button" aria-label="نسخ" onClick={(event) => { event.stopPropagation(); cloneItemAt(index); }}><Copy className="h-4 w-4" /></button>
                               </div>
                             </td>
                           </tr>
@@ -1022,10 +1022,10 @@ export function CatalogStudioPage() {
                 <article key={image.path} className="overflow-hidden rounded-2xl border bg-card">
                   <div className="aspect-[4/3] bg-surface-bright bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url("${image.publicUrl.replaceAll('"', "%22")}")` }} />
                   <div className="space-y-2 p-3">
-                    <p className="truncate font-mono text-xs" title={image.path} dir="ltr">{image.path}</p>
+                    <p className="truncate font-mono text-xs" aria-label={image.path} dir="ltr">{image.path}</p>
                     <div className="flex flex-wrap gap-1 text-[11px]"><span className="rounded bg-muted px-2 py-1">{humanSize(image.size)}</span><span className={cn("rounded px-2 py-1", image.references.length ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800")}>{image.references.length} مرجع</span></div>
                     <p className="truncate font-mono text-[10px] text-muted-foreground" dir="ltr">SHA {image.hash.slice(0, 16)}…</p>
-                    {image.references.length ? <details className="text-xs"><summary className="cursor-pointer">العلاقات</summary><div className="mt-1 space-y-1">{image.references.map((reference) => <p key={reference} className="break-all font-mono" dir="ltr">{reference}</p>)}</div></details> : null}
+                    {image.references.length ? <details className="text-xs"><summary className="">العلاقات</summary><div className="mt-1 space-y-1">{image.references.map((reference) => <p key={reference} className="break-all font-mono" dir="ltr">{reference}</p>)}</div></details> : null}
                     <Button variant="outline" size="sm" className="w-full" disabled={image.references.length > 0 || Boolean(busy)} onClick={() => void trashImage(image.path)}><Trash2 className="me-1 h-4 w-4" /> نقل للسلة</Button>
                   </div>
                 </article>
@@ -1044,7 +1044,7 @@ export function CatalogStudioPage() {
                 <div key={`${entry.at}:${index}`} className="rounded-xl border p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2"><span className="font-mono text-xs">{entry.action}</span><time className="text-xs text-muted-foreground">{new Date(entry.at).toLocaleString("ar-EG")}</time></div>
                   <p className="mt-2 text-sm">{entry.details}</p>
-                  <p className="mt-2 break-all font-mono text-xs" dir="ltr">{entry.files.join(", ")}</p>
+                  <p className="mt-2 break-all font-mono text-xs" dir="ltr">{entry.files.join(",")}</p>
                   {entry.recoveryPath ? <p className="mt-1 break-all text-xs text-amber-700" dir="ltr">مسار الاسترجاع: {entry.recoveryPath}</p> : null}
                 </div>
               ))}

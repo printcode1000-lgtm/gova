@@ -43,7 +43,7 @@ export function BuyerDeliveryAddressPanel({
       <div className="mt-3 flex flex-wrap gap-2">
         <Link
           href={profileHref}
-          className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition hover:border-primary hover:text-primary"
+          className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold text-on-surface transition"
         >
           <MapPin className="h-4 w-4" />
           {text.editBuyerAddressInProfile}

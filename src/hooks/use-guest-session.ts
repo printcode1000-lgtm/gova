@@ -5,7 +5,7 @@ import {
   asolDbGetGuestSession,
   asolDbSetGuestSession,
   type GuestSessionData,
-} from '@/modules/data-access/browser/asol-db';
+} from '@asol/data-core/browser';
 import * as React from 'react';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 

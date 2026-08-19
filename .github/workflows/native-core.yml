@@ -1,3 +1,16 @@
+# The repository's release gate.
+#
+# The file is still named `native-core.yml` and the workflow is still named `native-core`
+# because **the job id `verify` is what branch protection matches on**, and it is the only name
+# here that must not change. `scripts/protect-main-branch.ts` lists `verify` as a required status
+# check; GitHub matches on the check-run name a workflow actually reports, and a required name
+# that never reports blocks every merge permanently. Renaming the file or the workflow would be
+# harmless, renaming the job would not — so nothing is renamed and the reason is written down.
+#
+# What the workflow guards has grown well past native-core: twenty-one sealed packages, four
+# service deployments, and the mirror that feeds them. `Package gate coverage` below fails when a
+# `test:*-core` script exists that this file never runs, so the list cannot silently fall behind
+# again — it already had, for seven packages, before `data-core` and `orders-core` were added.
 name: native-core
 
 on:
@@ -42,6 +55,12 @@ jobs:
       - name: Architecture invariants check
         run: npm run architecture:check
 
+      # Fails when a `test:*-core` script is not run by this workflow. Without it the gate list
+      # below is a hand-maintained copy of package.json that drifts silently — which is exactly
+      # what happened.
+      - name: Package gate coverage
+        run: npm run ci:coverage
+
       - name: Native core boundary tests
         run: npm run test:native-core
 
@@ -57,6 +76,42 @@ jobs:
       - name: Storage core tests
         run: npm run test:storage-core
 
+      # Every database in the project, plus the schema-parity half that needs no credentials.
+      # `db:schema:sync:release` does the live half during `deploy:all`; it is deliberately not
+      # repeated here, because a green build must not depend on a live database.
+      - name: Data core tests
+        run: npm run test:data-core
+
+      # The order domain: one door, zero application edges, identity port fails closed.
+      - name: Orders core tests
+        run: npm run test:orders-core
+
+      # The delivery half of notifications — the grant protocol and the push fan-out. The UI half
+      # stayed in the application, so `test:notifications` above does not cover this package.
+      - name: Notifications core tests
+        run: npm run test:notifications-core
+
+      - name: Auth core tests
+        run: npm run test:auth-core
+
+      - name: Catalog core tests
+        run: npm run test:catalog-core
+
+      - name: Product core tests
+        run: npm run test:product-core
+
+      - name: Product style core tests
+        run: npm run test:product-style-core
+
+      - name: Dev core tests
+        run: npm run test:dev-core
+
+      - name: System logs core tests
+        run: npm run test:system-logs-core
+
+      - name: Map core tests
+        run: npm run test:map-core
+
       - name: Account declarations tests
         run: npm run test:account-declarations
 
@@ -68,6 +123,13 @@ jobs:
 
       - name: Composition layer tests
         run: npm run test:compositions
+
+      # Between "the mirror was written" and "the mirror builds" there is a gap: a specifier the
+      # walker cannot see is never copied, the remote build resolves lazily and succeeds, and the
+      # first request fails with "Cannot find module". This re-reads each upload and resolves
+      # every edge inside it.
+      - name: Verify service uploads are complete
+        run: npm run services:verify
 
       # The check that would have caught three production failures. Each service folder
       # is uploaded to Vercel alone and installed against its own package.json, so

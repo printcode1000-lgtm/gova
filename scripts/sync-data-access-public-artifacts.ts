@@ -4,9 +4,9 @@ import path from "node:path";
 const root = process.cwd();
 const source = path.join(
   root,
+  "packages",
+  "data-core",
   "src",
-  "modules",
-  "data-access",
   "browser",
   "workers",
   "asol-push-sw.js",

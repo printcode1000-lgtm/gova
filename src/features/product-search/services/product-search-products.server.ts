@@ -5,7 +5,7 @@ import type {
   ProductSearchRequest,
   ProductSearchResult,
 } from "../entities/product-search.types";
-import { productSearchRepository } from "@/modules/data-access/domains/product-search/index.server";
+import { productSearchRepository } from "@asol/data-core/product-search";
 import { getEnabledProductSearchFieldKeys } from "./product-search-fields.server";
 import { imageStorageService } from "@/features/storage/services/image-storage-service.bootstrap.server";
 

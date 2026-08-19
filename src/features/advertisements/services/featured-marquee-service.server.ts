@@ -7,7 +7,7 @@ import type {
   FeaturedMarqueeRecord,
   SuperAdminIdentity,
 } from "../entities/featured-marquee.entity";
-import { featuredMarqueeRepository } from "@/modules/data-access/domains/advertisements/index.server";
+import { featuredMarqueeRepository } from "@asol/data-core/advertisements";
 import { featuredMarqueeConfigSchema } from "../validation/featured-marquee.schema";
 
 function parseConfig(config: FeaturedMarqueeConfig): FeaturedMarqueeConfig {

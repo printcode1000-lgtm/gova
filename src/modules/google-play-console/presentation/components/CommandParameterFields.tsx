@@ -55,9 +55,9 @@ export function Parameter({ command, schema, value, t, onChange }: {
         {schema.values.map((item) => {
           const selected = value === item;
           return <label key={item}
-            className={`cursor-pointer rounded-lg border p-3 transition-colors ${selected
+            className={` rounded-lg border p-3 transition-colors ${selected
               ? "border-primary bg-primary/10 ring-1 ring-primary"
-              : "bg-surface hover:bg-muted/60"}`}>
+              : "bg-surface"}`}>
             <span className="flex items-start gap-2">
               <input type="radio" name={`${command.id}-${schema.name}`}
                 value={item} checked={selected}

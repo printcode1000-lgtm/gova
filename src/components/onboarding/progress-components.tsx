@@ -116,8 +116,8 @@ export function OnboardingSidebar({
             className={cn(
               'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all',
               isCurrent && 'bg-primary/10 text-primary font-medium',
-              isComplete && !isCurrent && 'text-foreground hover:bg-muted/50',
-              !isComplete && !isCurrent && 'text-muted-foreground hover:bg-muted/30',
+              isComplete && !isCurrent && 'text-foreground',
+              !isComplete && !isCurrent && 'text-muted-foreground',
             )}
           >
             <div

@@ -37,13 +37,13 @@ export function FeaturedCollections({ collections, className }: FeaturedCollecti
         {collections.map((collection) => (
           <Card
             key={collection.id}
-            className="group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg"
+            className="group overflow-hidden transition-all duration-300"
           >
             <div className="relative aspect-[4/3] overflow-hidden">
               <img
                 src={collection.coverImage}
                 alt={collection.name}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="h-full w-full object-cover transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
               <Badge

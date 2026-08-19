@@ -14,8 +14,8 @@ import type {
   DataHealthReport,
   DataHealthSchemaComparison,
 } from "../domain/types";
-import { dataHealthRepository } from "@/modules/data-access/domains/data-health/index.server";
-import { schemaComparisonRepository } from "@/modules/data-access/domains/data-health/index.server";
+import { dataHealthRepository } from "@asol/data-core/data-health";
+import { schemaComparisonRepository } from "@asol/data-core/data-health";
 
 function text(value: unknown): string {
   return String(value ?? "").trim();

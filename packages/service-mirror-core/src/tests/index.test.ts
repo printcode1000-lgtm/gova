@@ -26,12 +26,28 @@ function runTests(): void {
     import { foo } from '@/core/config';
     const db = require('./data-source-registry');
     const dynamic = import('../lazy-module');
+    const driver = new (nodeRequire('./database/turso-db-client').TursoDatabaseClient)();
+    const own = myRequire("./also-followed");
   `;
   const specifiers = collectSpecifiers(sampleCode);
   assert(specifiers.includes('@/core/config'), 'M2: import specifier captured');
   assert(specifiers.includes('./data-source-registry'), 'M2: require specifier captured');
   assert(specifiers.includes('../lazy-module'), 'M2: dynamic import captured');
-  console.log('  ✔ require() and dynamic import specifiers followed (M6 / M2).');
+  // An ES module cannot call bare `require`, so a package that declares `"type": "module"` and
+  // still needs a synchronous lazy load builds its own handle with `createRequire`. When
+  // `@asol/data-core` did exactly that, a pattern anchored on the bare name stopped matching and
+  // every database driver silently vanished from all four mirrors — the uploads still built and
+  // would have failed at the first query. Any identifier ending in `require` is followed now.
+  assert(
+    specifiers.includes('./database/turso-db-client'),
+    'M2: createRequire handle (nodeRequire) specifier captured',
+  );
+  assert(specifiers.includes('./also-followed'), 'M2: any *require identifier captured');
+  assert(
+    !collectSpecifiers(`const x = notRequired('./skipped');`).includes('./skipped'),
+    'M2: a call that merely contains the letters is not treated as a module edge',
+  );
+  console.log('  ✔ require(), createRequire handles, and dynamic imports followed (M6 / M2).');
 
   // Test M3: Outside src/ throws
   const root = process.cwd();
