@@ -249,7 +249,7 @@ function checkWeb(): void {
 function checkProduction(): void {
   const link = existsSync(path.join(ROOT, ".vercel", "project.json"));
   add({ scenario: "production", item: "Main Vercel project link", level: link ? "OK" : "CONFIGURE", installed: link ? ".vercel/project.json" : undefined, required: "One GitHub-linked main Vercel project", action: link ? "No action." : "Run vercel link only for the main gova project." });
-  const keys = ["VERCEL_TOKEN", "VERCEL_NOTIFICATIONS_TOKEN", "VERCEL_PRODUCTS_TOKEN", "VERCEL_ORDERS_TOKEN", "VERCEL_PROFILES_TOKEN"];
+  const keys = ["VERCEL_TOKEN", "VERCEL_SUBMAIN_TOKEN", "VERCEL_NOTIFICATIONS_TOKEN", "VERCEL_PRODUCTS_TOKEN", "VERCEL_ORDERS_TOKEN", "VERCEL_PROFILES_TOKEN"];
   const missing = keys.filter((key) => !envConfigured(key));
   add({ scenario: "production", item: "Vercel account tokens", level: missing.length ? "CONFIGURE" : "OK", installed: `${keys.length - missing.length}/${keys.length} configured`, required: keys.join(", "), action: missing.length ? `Configure without committing: ${missing.join(", ")}.` : "No action." });
   add({ scenario: "production", item: "Vercel CLI", level: "INFO", installed: "ephemeral", required: "vercel@59.0.0", action: "No global install. Deployment scripts download the pinned CLI through npx." });

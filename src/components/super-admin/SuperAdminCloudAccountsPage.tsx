@@ -68,8 +68,11 @@ export function SuperAdminCloudAccountsPage() {
             الحسابات السحابية
           </h1>
           <p className="text-sm text-on-surface-variant">
-            كل حساب خارجي يُنشر عليه المشروع أو يخزّن فيه بياناته: ما هو
-            الغرض منه، وما الذي يحتويه فعليًا.
+            ستة حسابات Vercel وخمسة Turso وثلاثة R2. حساب{" "}
+            <span dir="ltr">submain</span> يستخدم{" "}
+            <span dir="ltr">groupstenderximages@gmail.com</span>. الأسرار في{" "}
+            <span dir="ltr">.env.local</span> والنسخ الاحتياطي المشفّر فقط — لا
+            في Git.
           </p>
         </div>
       </header>
@@ -92,7 +95,7 @@ export function SuperAdminCloudAccountsPage() {
         <tbody>
           <tr className="border-t">
             <td className="p-3">Vercel</td>
-            <td className="p-3">5</td>
+            <td className="p-3">6</td>
             <td className="p-3">نشرة واحدة لكل حساب</td>
           </tr>
           <tr className="border-t">
@@ -108,13 +111,15 @@ export function SuperAdminCloudAccountsPage() {
         </tbody>
       </TableWrap>
       <Note>
-        الرقم خمسة ليس صدفة: <strong>حساب Vercel واحد لكل نشرة، وبياناته على
-        حساب Turso الخاص به.</strong> فهرس منتجات مزدحم لا يمكن أن يستهلك
-        الحصة التي تخدم تسجيل الدخول، وموجة إشعارات كبيرة لا يمكن أن تستهلك
-        أيًا منهما.
+        الرقم ستة لحسابات Vercel: <strong>حساب واحد لكل نشرة.</strong> أربعة
+        منها خدمات قراءة أو إشعارات معزولة على Turso خاص؛ واثنان يشغّلان
+        التطبيق الكامل (<span dir="ltr">gova</span> عبر GitHub و{" "}
+        <span dir="ltr">submain</span> عبر{" "}
+        <span dir="ltr">npm run submain:deploy</span>) ويشتركان في بيئة
+        التشغيل دون مشاركة رموز نشر الحسابات الأخرى.
       </Note>
 
-      <SectionTitle>Vercel — خمسة حسابات</SectionTitle>
+      <SectionTitle>Vercel — ستة حسابات</SectionTitle>
       <TableWrap>
         <thead className="bg-muted/50 text-xs text-on-surface-variant">
           <tr>
@@ -140,6 +145,17 @@ export function SuperAdminCloudAccountsPage() {
               <strong>متصل</strong> — كل push يعيد النشر
             </td>
             <td className="p-3">push إلى GitHub</td>
+          </tr>
+          <tr className="border-t align-top">
+            <td className="p-3" dir="ltr">submain</td>
+            <td className="p-3" dir="ltr">submain</td>
+            <td className="p-3" dir="ltr">groupstenderximages@gmail.com</td>
+            <td className="p-3">
+              نفس كود التطبيق الكامل مثل <span dir="ltr">gova</span> — للعمل
+              المعزول على الواجهة والميزات دون ربط GitHub
+            </td>
+            <td className="p-3">غير متصل</td>
+            <td className="p-3" dir="ltr">npm run submain:deploy</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3" dir="ltr">101-0902</td>
@@ -195,10 +211,11 @@ export function SuperAdminCloudAccountsPage() {
          ╲── notification-bridge ──► asol-notifications`}
       </pre>
       <Note>
-        <span dir="ltr">gova</span> هو الوحيد المتصل بـ GitHub. الحسابات
-        الأربعة الأخرى تُحدَّث حصريًا بأمر طرفي (terminal) يرفع مجلدًا واحدًا
-        — <span dir="ltr">services/&lt;name&gt;/</span> — ولا شيء آخر في
-        المستودع يغادر الجهاز.
+        <span dir="ltr">gova</span> هو الوحيد المتصل بـ GitHub.{" "}
+        <span dir="ltr">submain</span> والحسابات الأربعة للخدمات تُحدَّث
+        حصريًا بأوامر نشر طرفية — <span dir="ltr">submain:deploy</span> يرفع
+        جذر المستودع؛ كل خدمة أخرى ترفع مجلدًا واحدًا فقط —{" "}
+        <span dir="ltr">services/&lt;name&gt;/</span>.
       </Note>
 
       <SectionTitle>Turso — خمسة حسابات، 21 قاعدة بيانات</SectionTitle>
@@ -220,7 +237,7 @@ export function SuperAdminCloudAccountsPage() {
             <td className="p-3">
               المستخدمون والمصادقة، الإعلانات، عمليات النظام
             </td>
-            <td className="p-3" dir="ltr">gova</td>
+            <td className="p-3" dir="ltr">gova + submain</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3" dir="ltr">hesham102</td>
@@ -253,8 +270,9 @@ export function SuperAdminCloudAccountsPage() {
         </tbody>
       </TableWrap>
       <Note>
-        <span dir="ltr">gova</span> يحمل كل اعتماد (credential)، لأن الكتابة
-        والقراءات من طرف الخادم تعبر النطاقات. كل نشرة للقراءة فقط تحمل{" "}
+        <span dir="ltr">gova</span> و<span dir="ltr">submain</span> يحملان كل
+        اعتماد (credential) لتشغيل التطبيق الكامل، لأن الكتابة والقراءات من
+        طرف الخادم تعبر النطاقات. كل نشرة للقراءة فقط تحمل{" "}
         <strong>فقط</strong> الشظايا التي تخدمها.
       </Note>
 
@@ -563,8 +581,11 @@ export function SuperAdminCloudAccountsPage() {
       </TableWrap>
       <Note>
         <span dir="ltr">npm run db:push:vercel-env</span> يدفع مجموعة متغيرات
-        طرف الخادم إلى مشروع <span dir="ltr">gova</span>. كل سكربت نشر خدمة
-        يدفع فقط ما يحتاجه ذلك الحساب.
+        طرف الخادم إلى مشروع <span dir="ltr">gova</span>. أمر{" "}
+        <span dir="ltr">submain:deploy</span> يزامن نفس مفاتيح التشغيل
+        (بدون رموز نشر الحسابات الأخرى) إلى مشروع{" "}
+        <span dir="ltr">submain</span>. كل سكربت نشر خدمة يدفع فقط ما يحتاجه
+        ذلك الحساب.
       </Note>
       <Note>
         <strong>القيمة الاحتياطية (fallback) التي تعبر حدود حساب ليست
