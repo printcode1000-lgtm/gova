@@ -92,7 +92,7 @@ function failedReport(
   message: string,
 ): VercelDeploymentReport {
   const project =
-    target === "main" ? "gova" : target === "submain" ? "submain" : `asol-${target}`;
+    target === "main" ? "gova" : target === "submain" ? "asol-submain" : `asol-${target}`;
   return {
     target,
     project,

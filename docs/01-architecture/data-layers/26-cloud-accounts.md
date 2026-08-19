@@ -27,7 +27,7 @@ share deploy tokens.
 | Account | Email | Project | Serves | GitHub | Updated by |
 |---|---|---|---|---|---|
 | `hesham-101` | `print.code.1000@gmail.com` | `gova` | everything not listed below: all writes, `GET /api/orders/:id`, profile reviews and discounts, the super-admin console | **connected** — every push redeploys | pushing to GitHub |
-| `submain` | `groupstenderximages@gmail.com` | `submain` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run submain:deploy` |
+| `submain` | `groupstenderximages@gmail.com` | `asol-submain` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run submain:deploy` |
 | `101-0902` | `bs.bid.story@gmail.com` | `asol-notifications` | push fan-out only | not connected | `npm run notifications:deploy` |
 | products account | `gnagnahesham@gmail.com` | `asol-products` | product reads | not connected | `npm run products:deploy` |
 | orders account | `tenderx10@gmail.com` | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
@@ -51,8 +51,30 @@ to no account at all — it runs in the user's browser:
 
 Only `gova` is connected to GitHub. `submain` and the four read-only service
 accounts are updated exclusively by terminal deploy commands — `submain:deploy`
-uploads the repository root; each service command uploads one folder —
-`services/<name>/` — and nothing else in the repository leaves the machine.
+uploads the repository root via CLI and must never receive a Git repository link.
+CLI deploy metadata uses `asolDeployment*` keys only; `githubCommit*` metadata is
+reserved for the GitHub-linked `gova` project so submain deploys cannot appear on
+the repository's Deployments tab.
+
+The Vercel CLI also probes the local repository on its own and attaches the last
+commit (sha, branch, message, remote URL) to every upload, which the dashboard
+renders as a GitHub source row such as `Source: main f1c85e4` even for projects
+with no Git link. `runVercel` blocks that probe by pointing `GIT_DIR` at a path
+that cannot exist, so CLI deploys of `submain` and the four service accounts are
+uploaded without commit data and show no source row.
+
+To rebuild the secondary app from scratch:
+
+```bash
+npm run submain:recreate-vercel-project
+```
+
+This deletes the existing `asol-submain` Vercel project (and any legacy `submain`
+project) after removing any Git link, creates a fresh GitHub-free project, syncs
+runtime env vars, and deploys.
+
+Each service command uploads one folder — `services/<name>/` — and nothing else in
+the repository leaves the machine.
 
 ### Sealed Capability Packages
 

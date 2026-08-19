@@ -25,6 +25,8 @@ export interface AccountDeclaration {
   name: 'gova' | 'submain' | 'notifications' | 'products' | 'orders' | 'profiles';
   project: string;
   tokenEnvVar: string;
+  /** Fallback when the token cannot list teams (scoped deploy tokens). */
+  teamIdEnvVar?: string;
   serviceDir?: string;
   deployFromRepositoryRoot?: boolean;
   requiredEnv: readonly string[];

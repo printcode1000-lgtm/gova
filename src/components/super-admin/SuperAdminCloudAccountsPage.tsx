@@ -148,7 +148,7 @@ export function SuperAdminCloudAccountsPage() {
           </tr>
           <tr className="border-t align-top">
             <td className="p-3" dir="ltr">submain</td>
-            <td className="p-3" dir="ltr">submain</td>
+            <td className="p-3" dir="ltr">asol-submain</td>
             <td className="p-3" dir="ltr">groupstenderximages@gmail.com</td>
             <td className="p-3">
               نفس كود التطبيق الكامل مثل <span dir="ltr">gova</span> — للعمل

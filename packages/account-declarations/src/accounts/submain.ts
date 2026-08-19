@@ -14,8 +14,9 @@ import {
  */
 export const SUBMAIN_DECLARATION = {
   name: 'submain',
-  project: 'submain',
+  project: 'asol-submain',
   tokenEnvVar: 'VERCEL_SUBMAIN_TOKEN',
+  teamIdEnvVar: 'VERCEL_SUBMAIN_ORG_ID',
   deployFromRepositoryRoot: true,
   serviceDir: undefined,
   requiredEnv: GOVA_RUNTIME_REQUIRED_ENV_KEYS,

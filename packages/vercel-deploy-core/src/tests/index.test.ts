@@ -43,6 +43,21 @@ async function runTests(): Promise<void> {
   assert(cliPinMatches !== null && cliPinMatches.length === 2, 'D3: vercel@59.0.0 CLI pin present in runVercel');
   console.log('  ✔ CLI pin @59.0.0 verified.');
 
+  // Test 3b: CLI uploads carry no Git commit metadata (D1)
+  assert(
+    indexSource.includes("GIT_DIR: path.join(options.serviceDir, '.asol-no-git-metadata')"),
+    'D1: runVercel blocks the CLI Git metadata probe so uploads have no GitHub source',
+  );
+  const monitorSource = readFileSync(
+    path.join(process.cwd(), 'packages', 'vercel-deploy-core', 'src', 'vercel-deployment-monitor.ts'),
+    'utf-8',
+  );
+  assert(
+    monitorSource.includes("if (input.target === 'main')"),
+    'D1: githubCommit* metadata stays behind the main-only guard',
+  );
+  console.log('  ✔ GitHub-shaped deployment metadata restricted to main (D1).');
+
   // Test 4: Project creation POST body has no gitRepository field (D1)
   assert(indexSource.includes("framework: 'nextjs'"), 'D1: framework nextjs present');
   assert(!indexSource.includes('gitRepository'), 'D1: no gitRepository field in project creation');

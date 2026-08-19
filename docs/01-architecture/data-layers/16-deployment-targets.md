@@ -25,7 +25,7 @@ application codebase for isolated UI work and is updated only through
 
 | | Main app | Submain app | Notifications | Products | Orders | Profiles |
 |---|---|---|---|---|---|---|
-| Vercel project | `gova` | `submain` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
+| Vercel project | `gova` | `asol-submain` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
 | GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
 | Updated by | pushing to the repository | `npm run submain:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
 | Uploaded files | the repository | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |

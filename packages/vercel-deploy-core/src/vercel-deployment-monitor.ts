@@ -79,7 +79,7 @@ export function vercelDeploymentMetadata(input: {
   runId: string;
   revision: string;
 }): string[] {
-  return [
+  const metadata = [
     '--meta',
     `asolDeploymentTarget=${input.target}`,
     '--meta',
@@ -88,11 +88,19 @@ export function vercelDeploymentMetadata(input: {
     `asolDeploymentRevision=${input.revision}`,
     '--meta',
     `asolDeploymentComment=${input.comment}`,
-    '--meta',
-    `githubCommitMessage=${input.comment}`,
-    '--meta',
-    `githubCommitSha=${input.revision}`,
   ];
+
+  // Only the GitHub-linked main app may emit GitHub-shaped deployment metadata.
+  if (input.target === 'main') {
+    metadata.push(
+      '--meta',
+      `githubCommitMessage=${input.comment}`,
+      '--meta',
+      `githubCommitSha=${input.revision}`,
+    );
+  }
+
+  return metadata;
 }
 
 export async function waitForVercelProductionDeployment(input: {
@@ -125,7 +133,12 @@ export async function waitForVercelProductionDeployment(input: {
     const data = (await response.json()) as { deployments?: VercelDeploymentRecord[] };
     found = data.deployments?.find((deployment) => {
       if (input.runId) return deployment.meta?.asolDeploymentRunId === input.runId;
-      if (input.revision) return deployment.meta?.githubCommitSha === input.revision;
+      if (input.revision) {
+        return (
+          deployment.meta?.asolDeploymentRevision === input.revision ||
+          deployment.meta?.githubCommitSha === input.revision
+        );
+      }
       return false;
     });
 

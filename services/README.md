@@ -6,7 +6,7 @@ shared between deployments except source that is mirrored explicitly.
 | Vercel account | Email | Project | Module | Uploaded files | Updated by |
 |---|---|---|---|---|---|
 | `hesham-101` (`team_uksNmh…`) | `print.code.1000@gmail.com` | `gova` | the repository root — `src/`, `public/`, `platform/`, `scripts/` | the repository, minus `services/` | pushing to GitHub (connected) |
-| `submain` | `groupstenderximages@gmail.com` | `submain` | the repository root (same as `gova`) | the full repository | `npm run submain:deploy` (no GitHub connection) |
+| `submain` | `groupstenderximages@gmail.com` | `asol-submain` | the repository root (same as `gova`) | the full repository | `npm run submain:deploy` (no GitHub connection) |
 | `101-0902` (`team_cmIfma…`) | `bs.bid.story@gmail.com` | `asol-notifications` | [`services/notifications/`](./notifications) | that folder alone | `npm run notifications:deploy` (no GitHub connection) |
 | products account | `gnagnahesham@gmail.com` | `asol-products` | [`services/products/`](./products) | that folder alone | `npm run products:deploy` (no GitHub connection) |
 | orders account | `tenderx10@gmail.com` | `asol-orders` | [`services/orders/`](./orders) | that folder alone | `npm run orders:deploy` (no GitHub connection) |

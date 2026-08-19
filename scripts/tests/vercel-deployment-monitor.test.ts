@@ -15,6 +15,15 @@ const metadata = vercelDeploymentMetadata({
 assert.equal(metadata.includes("asolDeploymentComment=deploy(products): test"), true);
 assert.equal(metadata.includes("asolDeploymentTarget=products"), true);
 assert.equal(metadata.includes("asolDeploymentRunId=run-products"), true);
+assert.equal(metadata.includes("githubCommitSha="), false);
+
+const mainMetadata = vercelDeploymentMetadata({
+  target: "main",
+  comment: "deploy(main): test",
+  runId: "run-main",
+  revision: "abc123",
+});
+assert.equal(mainMetadata.includes("githubCommitSha=abc123"), true);
 
 const originalFetch = globalThis.fetch;
 globalThis.fetch = (async (input: string | URL | Request) => {

@@ -31,6 +31,16 @@ export async function resolveTeamId(token: string): Promise<string | undefined> 
   return team?.id;
 }
 
+function resolveAccountTeamId(
+  declaration: AccountDeclaration,
+  env: Record<string, string | undefined>,
+  token: string,
+): Promise<string | undefined> {
+  return resolveTeamId(token).then(
+    (teamId) => teamId ?? (declaration.teamIdEnvVar ? env[declaration.teamIdEnvVar]?.trim() : undefined),
+  );
+}
+
 export function withTeam(url: string, teamId?: string): string {
   if (!teamId) return url;
   return `${url}${url.includes('?') ? '&' : '?'}teamId=${encodeURIComponent(teamId)}`;
@@ -43,6 +53,8 @@ export async function ensureProject(token: string, projectName: string, teamId?:
   );
   if (found.ok) {
     const data = (await found.json()) as { id: string };
+    await disconnectProjectGitLink(token, data.id, teamId);
+    await disableProjectGitIntegrations(token, data.id, teamId);
     console.log(`Project exists: ${projectName} (${data.id})`);
     return data.id;
   }
@@ -59,6 +71,7 @@ export async function ensureProject(token: string, projectName: string, teamId?:
   }
   const data = (await created.json()) as { id: string };
   console.log(`Project created: ${projectName} (${data.id})`);
+  await disableProjectGitIntegrations(token, data.id, teamId);
   return data.id;
 }
 
@@ -82,6 +95,103 @@ export async function findProject(
   if (!response.ok) return null;
   const data = (await response.json()) as { id: string };
   return data.id;
+}
+
+export interface VercelProjectSummary {
+  id: string;
+  name: string;
+  link?: { type?: string; repo?: string; repoId?: number };
+}
+
+export async function getProject(
+  token: string,
+  projectName: string,
+  teamId?: string,
+): Promise<VercelProjectSummary | null> {
+  const response = await fetch(
+    withTeam(`https://api.vercel.com/v9/projects/${encodeURIComponent(projectName)}`, teamId),
+    { headers: buildHeaders(token) },
+  );
+  if (!response.ok) return null;
+  return (await response.json()) as VercelProjectSummary;
+}
+
+export function assertProjectNotGitLinked(
+  project: VercelProjectSummary | null,
+  projectName: string,
+): void {
+  if (!project?.link?.type) return;
+  throw new Error(
+    `Project ${projectName} is Git-linked (${project.link.type}${project.link.repo ? `: ${project.link.repo}` : ''}). Only gova may use GitHub.`,
+  );
+}
+
+export async function deleteProject(
+  token: string,
+  projectName: string,
+  teamId?: string,
+): Promise<boolean> {
+  const project = await getProject(token, projectName, teamId);
+  if (!project) {
+    console.log(`Project not found: ${projectName}`);
+    return false;
+  }
+
+  await disconnectProjectGitLink(token, project.id, teamId);
+  await disableProjectGitIntegrations(token, project.id, teamId);
+
+  const response = await fetch(
+    withTeam(`https://api.vercel.com/v9/projects/${encodeURIComponent(project.id)}`, teamId),
+    { method: 'DELETE', headers: buildHeaders(token) },
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Failed to delete project ${projectName}: ${response.status} ${await response.text()}`,
+    );
+  }
+  console.log(`Project deleted: ${projectName} (${project.id})`);
+  return true;
+}
+
+export async function disconnectProjectGitLink(
+  token: string,
+  projectId: string,
+  teamId?: string,
+): Promise<void> {
+  const response = await fetch(
+    withTeam(`https://api.vercel.com/v9/projects/${encodeURIComponent(projectId)}/link`, teamId),
+    { method: 'DELETE', headers: buildHeaders(token) },
+  );
+  if (response.status === 404) return;
+  if (!response.ok) {
+    throw new Error(
+      `Failed to disconnect Git link for project ${projectId}: ${response.status} ${await response.text()}`,
+    );
+  }
+  console.log(`Git link removed from project ${projectId}.`);
+}
+
+export async function disableProjectGitIntegrations(
+  token: string,
+  projectId: string,
+  teamId?: string,
+): Promise<void> {
+  const response = await fetch(
+    withTeam(`https://api.vercel.com/v9/projects/${encodeURIComponent(projectId)}`, teamId),
+    {
+      method: 'PATCH',
+      headers: buildHeaders(token),
+      body: JSON.stringify({
+        gitProviderOptions: { createDeployments: 'disabled' },
+        gitComments: { onCommit: false, onPullRequest: false },
+      }),
+    },
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Failed to disable Git integrations for project ${projectId}: ${response.status} ${await response.text()}`,
+    );
+  }
 }
 
 export type EnvUpsertResult = 'created' | 'updated';
@@ -206,16 +316,25 @@ export function runVercel(options: RunVercelOptions): void {
     ? [npxCli, '--yes', '--package=vercel@59.0.0', 'vercel', ...options.args]
     : ['--yes', '--package=vercel@59.0.0', 'vercel', ...options.args];
 
+  const childEnv: NodeJS.ProcessEnv = {
+    ...process.env,
+    VERCEL_PROJECT_ID: options.projectId,
+    VERCEL_TOKEN: options.token,
+    // The Vercel CLI reads the local repository and attaches commit metadata to every
+    // upload, which the dashboard renders as a GitHub source row (`Source: main <sha>`).
+    // Only the GitHub-linked gova project may look Git-sourced, and runVercel serves the
+    // GitHub-free accounts exclusively, so Git is pointed at a path that cannot exist:
+    // the CLI metadata probe fails and the deployment is uploaded without commit data.
+    GIT_DIR: path.join(options.serviceDir, '.asol-no-git-metadata'),
+  };
+  if (options.teamId) childEnv.VERCEL_ORG_ID = options.teamId;
+  else delete childEnv.VERCEL_ORG_ID;
+
   execFileSync(command, commandArgs, {
     stdio: 'inherit',
     shell: false,
     cwd: options.serviceDir,
-    env: {
-      ...process.env,
-      VERCEL_ORG_ID: options.teamId ?? '',
-      VERCEL_PROJECT_ID: options.projectId,
-      VERCEL_TOKEN: options.token,
-    },
+    env: childEnv,
   });
 }
 
@@ -247,7 +366,7 @@ export async function deployAccountService(options: DeployAccountServiceOptions)
     ? declaration.serviceDir
     : path.join(process.cwd(), declaration.serviceDir);
 
-  const teamId = await resolveTeamId(token);
+  const teamId = await resolveAccountTeamId(declaration, env, token);
   const projectId = await ensureProject(token, declaration.project, teamId);
 
   console.log('\nSyncing environment variables:');
@@ -331,7 +450,7 @@ export async function deployAccountRootApp(
   }
 
   const repositoryRoot = process.cwd();
-  const teamId = await resolveTeamId(token);
+  const teamId = await resolveAccountTeamId(declaration, env, token);
   const projectId = await ensureProject(token, declaration.project, teamId);
 
   console.log('\nSyncing environment variables:');

@@ -20,7 +20,12 @@ npm run submain:deploy
 ```
 
 Runtime database and R2 credentials match `gova`; deploy tokens for other Vercel
-accounts are never pushed to the `submain` project.
+accounts are never pushed to the `submain` project. The project must never be
+GitHub-linked — only `gova` uses the repository integration. To rebuild it:
+
+```bash
+npm run submain:recreate-vercel-project
+```
 
 ## Source of truth
 

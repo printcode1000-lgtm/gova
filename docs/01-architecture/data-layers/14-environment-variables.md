@@ -151,6 +151,8 @@ VERCEL_NOTIFICATIONS_TOKEN=
 # Vercel API token for the secondary full-application account (deploy script only).
 # Account email: groupstenderximages@gmail.com. Token name on Vercel: submain.
 VERCEL_SUBMAIN_TOKEN=
+# Team scope for submain when the deploy token cannot list teams.
+VERCEL_SUBMAIN_ORG_ID=
 ```
 
 Which deployment gets what:
@@ -285,7 +287,8 @@ Then wait for the deployment to finish.
 
 **Secondary full app (`submain`)** — account email `groupstenderximages@gmail.com`,
 not connected to GitHub. Deploy token: `VERCEL_SUBMAIN_TOKEN` (deploy script only;
-never stored on the Vercel project). Syncs the same runtime keys as `gova` without
+never stored on the Vercel project). When the token cannot list teams, also set
+`VERCEL_SUBMAIN_ORG_ID` locally. Syncs the same runtime keys as `gova` without
 foreign deploy tokens:
 
 ```bash
