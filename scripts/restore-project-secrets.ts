@@ -13,7 +13,7 @@ import {
 } from "./secret-archive-utils";
 import {
   decryptArchiveToZip,
-  promptHidden,
+  resolveSecretArchivePasswordOrPrompt,
 } from "./secret-archive-crypto";
 
 async function extractZipSafely(zipPath: string, destinationRoot: string): Promise<void> {
@@ -53,7 +53,7 @@ async function main(): Promise<void> {
 
   try {
     console.log(`Restoring from: ${archivePath}`);
-    const password = await promptHidden("Private-key password: ");
+    const password = await resolveSecretArchivePasswordOrPrompt();
     await decryptArchiveToZip(archivePath, decryptedZipPath, password);
     await extractZipSafely(decryptedZipPath, restoreDirectory);
     const manifestPath = path.join(restoreDirectory, MANIFEST_FILE_NAME);

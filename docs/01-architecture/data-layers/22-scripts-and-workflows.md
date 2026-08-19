@@ -44,6 +44,8 @@ npm run deploy:redeploy-main    # pick up new env vars on the GitHub-linked main
 npm run submain:deploy          # full app on submain (groupstenderximages@gmail.com)
 npm run deploy:all              # preflight + push main + all six Vercel targets
 npm run deploy:all:skip-build   # same without local npm run build
+npm run prepare:deploy-session  # cloud-agent readiness check + resumable state file
+npm run secrets:restore         # decrypt config/secret-archive-latest.zip.enc
 npm run data-access:sync-public
 
 # Cloudflare R2
@@ -190,3 +192,31 @@ to.
 
 `enforce_admins` is deliberately off: `deploy:all` and `deploy:push` push to
 `main` directly and are the supported release paths.
+
+## Cursor Cloud Agent deploy session
+
+A cloud VM has no local `.env.local` or `.vercel/project.json` until secrets are
+restored. Use the committed encrypted archive:
+
+```bash
+# 1. Configure once in the agent environment (not in git):
+export ASOL_SECRET_ARCHIVE_PASSWORD='…'
+
+# 2. Restore gitignored deploy files:
+npm run secrets:restore
+
+# 3. Verify readiness (writes .deploy-session/state.json, non-zero if blocked):
+npm run prepare:deploy-session
+
+# 4. From main at the target commit:
+git checkout main
+npm run deploy:all
+```
+
+`prepare:deploy-session` records the current git revision, missing env keys, and
+the Cursor agent URL (`https://cursor.com/agents/<bcId>`) so the same run can be
+resumed from another device. The state file is gitignored.
+
+If `secrets:restore` is skipped, `deploy:all` stops immediately (`VERCEL_TOKEN`
+and `.vercel/project.json`), and `npm test` fails at `ios:push:validate` because
+`GoogleService-Info.plist` is gitignored.

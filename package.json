@@ -100,6 +100,7 @@
     "secrets:backup": "npx tsx scripts/backup-project-secrets.ts",
     "secrets:restore": "npx tsx scripts/restore-project-secrets.ts",
     "secrets:key:init": "npx tsx scripts/initialize-secret-archive-key.ts",
+    "prepare:deploy-session": "npx tsx scripts/prepare-deploy-session.ts",
     "db:sync:users": "npx tsx packages/data-core/src/tooling/sync-users-sqlite-to-turso.ts",
     "db:setup:turso": "npm run db:schema:sync",
     "db:create:sqlite": "npx tsx packages/data-core/src/tooling/create-sqlite-db.ts",

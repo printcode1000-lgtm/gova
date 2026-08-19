@@ -320,6 +320,22 @@ GITHUB_ADMIN_TOKEN=
 GITHUB_REPOSITORY=printcode1000-lgtm/gova
 ```
 
+## Encrypted secret archive (restore only)
+
+```env
+ASOL_SECRET_ARCHIVE_PASSWORD=
+```
+
+Server-only. Used by `npm run secrets:restore` when no interactive terminal is
+available — for example a Cursor Cloud Agent VM. The password unlocks
+`config/secret-archive-latest.zip.enc` via its sidecar recovery key
+(`config/secret-archive-latest.zip.enc.private-key.pem`). It is **not** stored in
+the repository; configure it in the agent or shell environment before restore.
+
+After restore, `.env.local`, `.vercel/project.json`, and other gitignored deploy
+files are written back to the workspace. `npm run deploy:all` still requires a
+`main` checkout and every production credential listed above.
+
 Server-only, and `.env.local` only — never `.env.example`, which is committed.
 `GITHUB_REPOSITORY` is optional; the script reads the `origin` remote when it is
 unset.

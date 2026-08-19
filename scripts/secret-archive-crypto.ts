@@ -47,9 +47,28 @@ interface EnvelopeHeader {
   iv: string;
 }
 
+/** Password for decrypting `config/secret-archive-latest.zip.enc` (non-interactive restore). */
+export const SECRET_ARCHIVE_PASSWORD_ENV = "ASOL_SECRET_ARCHIVE_PASSWORD";
+
+export function resolveSecretArchivePassword(): string | null {
+  const fromEnv = process.env[SECRET_ARCHIVE_PASSWORD_ENV]?.trim();
+  return fromEnv || null;
+}
+
+export async function resolveSecretArchivePasswordOrPrompt(
+  label = "Private-key password: ",
+): Promise<string> {
+  const fromEnv = resolveSecretArchivePassword();
+  if (fromEnv) return fromEnv;
+  return promptHidden(label);
+}
+
 export async function promptHidden(label: string): Promise<string> {
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
-    throw new Error("A real interactive terminal is required for the private-key password.");
+    throw new Error(
+      `A real interactive terminal is required for the private-key password. ` +
+        `Set ${SECRET_ARCHIVE_PASSWORD_ENV} for non-interactive restore.`,
+    );
   }
   process.stdout.write(label);
   process.stdin.setRawMode(true);
