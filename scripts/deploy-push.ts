@@ -11,6 +11,7 @@ import {
   DeploymentNpmScriptError,
   runDeploymentNpmScript,
 } from "./lib/run-deployment-npm-script";
+import { pushMainBranch } from "./lib/push-main-branch";
 import {
   type VercelDeploymentReport,
   waitForVercelProductionDeployment,
@@ -227,10 +228,7 @@ async function main(): Promise<void> {
 
   console.log("[deploy:push] Pushing main to GitHub...");
   try {
-    execFileSync("git", ["push", "origin", MAIN_BRANCH], {
-      cwd: ROOT,
-      stdio: "inherit",
-    });
+    pushMainBranch(ROOT, MAIN_BRANCH, "deploy:push");
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     fail(`git push to origin/${MAIN_BRANCH} did not complete: ${message}`);

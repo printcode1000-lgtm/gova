@@ -83,6 +83,9 @@ first place a problem is discovered. In order, the preflight:
 Only then does it create or verify the encrypted secret backup, stage the
 complete working tree, and create a main deployment commit named
 `deploy(main): <ISO timestamp>`. It pushes `main` to GitHub, which lets the one
+GitHub-linked Vercel project auto-deploy. When branch protection rejects a plain
+`git push origin main`, `deploy:all` and `deploy:push` retry once using
+`GITHUB_ADMIN_TOKEN` from `.env.local` (same credential as `npm run github:protect`).
 existing GitHub integration update `gova`. The other four projects remain
 disconnected from GitHub and deploy sequentially through their dedicated
 tokens. Each account receives its own visible comment, for example
