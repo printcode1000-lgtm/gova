@@ -238,7 +238,6 @@ const ALLOWED_APP_EDGES = new Set([
   '@/features/categories',
   // Designated leaves: the config module and the single approved HTTP transport.
   '@/core/config',
-  '@/core/config/server-env',
   '@/core/config/server-env.values',
   '@/core/config/runtime-context',
   '@/core/config/runtime-context.server',
