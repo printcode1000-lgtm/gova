@@ -1,6 +1,6 @@
 {
-  "executedAt": "2026-08-19T05:51:34.770Z",
-  "durationMs": 2095,
+  "executedAt": "2026-08-19T15:10:36.925Z",
+  "durationMs": 4032,
   "sqliteSchemaVersion": "f0f7bc0821708b25",
   "tursoSchemaVersionBefore": "50a4e0600e686482",
   "tursoSchemaVersionAfter": "50a4e0600e686482",
@@ -11,6 +11,7 @@
   "viewsAdded": 0,
   "triggersAdded": 0,
   "sqlExecuted": [],
+  "residualOperations": [],
   "errors": [],
   "warnings": [],
   "skipped": false

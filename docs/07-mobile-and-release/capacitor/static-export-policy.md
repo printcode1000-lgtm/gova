@@ -33,6 +33,8 @@ Filtering never deletes files from the original `src/` or `public/` directories.
 | `asol-push-sw.js`             | Web Push service worker registered by the notifications feature                   |
 | `asol-theme-init.js`          | Blocking theme initialization before React starts                                 |
 | `logo.png`                    | Layout metadata and the shared `AppIcon` component                                |
+| `maplibre-gl-worker.mjs`      | MapLibre web worker pinned by `@asol/map-core` (`setWorkerUrl`)                   |
+| `maplibre-gl-shared.mjs`      | Shared MapLibre runtime imported by the worker sibling                            |
 
 Missing allowlisted files fail the build with `Required static asset not found`.
 
@@ -189,6 +191,8 @@ asol-app-init.js
 asol-push-sw.js
 asol-theme-init.js
 logo.png
+maplibre-gl-worker.mjs
+maplibre-gl-shared.mjs
 catagory/**
 images/mainCategories/**
 images/pharmacy_fixed/**

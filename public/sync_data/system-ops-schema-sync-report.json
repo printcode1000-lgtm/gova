@@ -1,6 +1,6 @@
 {
-  "executedAt": "2026-08-19T05:51:51.518Z",
-  "durationMs": 3958,
+  "executedAt": "2026-08-19T15:11:09.525Z",
+  "durationMs": 7853,
   "sqliteSchemaVersion": "f514cdeafdb4fdb6",
   "tursoSchemaVersionBefore": "396d1e1e9ae9b0a6",
   "tursoSchemaVersionAfter": "396d1e1e9ae9b0a6",
@@ -11,6 +11,7 @@
   "viewsAdded": 0,
   "triggersAdded": 0,
   "sqlExecuted": [],
+  "residualOperations": [],
   "errors": [],
   "warnings": [
     "Column \"system_logs.origin\" exists on Turso but not in SQLite. Not removed automatically.",

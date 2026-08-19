@@ -253,6 +253,8 @@ export const STATIC_PUBLIC_ALLOW_FILES = [
   "asol-theme-init.js",
   "logo.png",
   "images/qr-code.png",
+  "maplibre-gl-worker.mjs",
+  "maplibre-gl-shared.mjs",
 ] as const;
 
 export const STATIC_PUBLIC_ALLOW_DIRECTORIES = [
