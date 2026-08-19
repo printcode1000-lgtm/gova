@@ -10,5 +10,7 @@
   },
   "html.validate.scripts": false,
   "workbench.browser.openLocalhostLinks": true,
-  "workbench.browser.enableChatTools": true
+  "workbench.browser.enableChatTools": true,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000
 }

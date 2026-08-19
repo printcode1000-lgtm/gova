@@ -39,3 +39,9 @@ Relationship Graph in JSON format only,
 header.brand سوف أصول
 splash.tagline السويس بين ايديك
 
+# الحسابات للتجربة
+0     ادمن
+1   مشتري
+2   بائع
+3   مقدم خدمة 
+
