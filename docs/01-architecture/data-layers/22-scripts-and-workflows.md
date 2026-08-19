@@ -42,7 +42,8 @@ npm run provision:mobile-push   # native outbound push credentials → .env.loca
 npm run db:push:vercel-env      # Turso + bridge URLs + ASOL_MOBILE_PUSH_* when provisioned
 npm run deploy:redeploy-main    # pick up new env vars on the GitHub-linked main app
 npm run submain:deploy          # full app on submain (groupstenderximages@gmail.com)
-npm run deploy:all              # preflight + push main + all six Vercel targets
+npm run sub2main:deploy         # full app on sub2main (tenderx.engineer100@gmail.com)
+npm run deploy:all              # preflight + push main + all seven Vercel targets
 npm run deploy:all:skip-build   # same without local npm run build
 npm run data-access:sync-public
 
@@ -129,7 +130,7 @@ running the TypeScript script directly. It reports:
 
 - Node/npm/Git versions and lockfile-to-`node_modules` consistency;
 - compatible npm updates separately from major-version review items;
-- the one GitHub-linked Vercel project, six account tokens (including
+- the one GitHub-linked Vercel project, seven account tokens (including
   `VERCEL_SUBMAIN_TOKEN` for `groupstenderximages@gmail.com`), and the ephemeral
   Vercel CLI policy;
 - JDK 21, Android SDK 36, ADB, and the checked-in Gradle wrapper;

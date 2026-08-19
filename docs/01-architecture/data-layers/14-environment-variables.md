@@ -264,7 +264,7 @@ pointed at un-sharded databases that no code read; both have been deleted.
 
 ## Never expose
 
-`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_NOTIFICATIONS_API_TOKEN`, `TURSO_NOTIFICATIONS_AUTH_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, `VERCEL_SUBMAIN_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `ASOL_NOTIFICATION_GRANT_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON`, `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
+`TURSO_API_TOKEN`, `TURSO_AUTH_TOKEN`, `TURSO_NOTIFICATIONS_API_TOKEN`, `TURSO_NOTIFICATIONS_AUTH_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, `VERCEL_SUBMAIN_TOKEN`, `VERCEL_SUB2MAIN_TOKEN`, shard `*_DATABASE_AUTH_TOKEN` values, `R2_API_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `PRODUCT_R2_API_TOKEN`, `PRODUCT_R2_ACCESS_KEY_ID`, `PRODUCT_R2_SECRET_ACCESS_KEY`, `ASOL_SESSION_SIGNING_SECRET`, `ASOL_NOTIFICATION_GRANT_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64`, `FIREBASE_ADMIN_SERVICE_ACCOUNT_JSON`, `FIREBASE_ANDROID_GOOGLE_SERVICES_BASE64`, `APNS_PRIVATE_KEY`, `VERCEL_TOKEN` — not in client bundles, IndexedDB, localStorage, or logs.
 
 ## Vercel deploy
 
@@ -293,6 +293,16 @@ foreign deploy tokens:
 
 ```bash
 npm run submain:deploy
+```
+
+**Third full app (`sub2main`)** — account email `tenderx.engineer100@gmail.com`,
+not connected to GitHub. Deploy token: `VERCEL_SUB2MAIN_TOKEN` (deploy script only;
+never stored on the Vercel project). When the token cannot list teams, also set
+`VERCEL_SUB2MAIN_ORG_ID` locally. Syncs the same runtime keys as `gova` without
+foreign deploy tokens:
+
+```bash
+npm run sub2main:deploy
 ```
 
 **Notifications service** — deliberately **not** connected to GitHub. A push

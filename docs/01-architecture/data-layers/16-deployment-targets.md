@@ -11,26 +11,27 @@
 | Orders service | `npm run orders:deploy` | Own origin, `GET /api/orders` | Order shards only |
 | Profiles service | `npm run profiles:deploy` | Own origin, profile read APIs | Profile shards only |
 | Secondary full app | `npm run submain:deploy` | Same routes as main app | Same Turso/R2 runtime as `gova` |
+| Third full app | `npm run sub2main:deploy` | Same routes as main app | Same Turso/R2 runtime as `gova` |
 
 The first four share **identical application code** — only environment
 configuration changes.
 
-## Six Vercel accounts
+## Seven Vercel accounts
 
 Five read-only or push-only targets are not the primary GitHub-linked main
 application, and none of them may be called by it directly: every crossing goes
-through a browser-only bridge. The sixth account (`submain`) hosts the same full
-application codebase for isolated UI work and is updated only through
-`npm run submain:deploy`.
+through a browser-only bridge. Two additional accounts (`submain`, `sub2main`)
+host the same full application codebase for isolated UI work and are updated
+only through their CLI deploy commands.
 
-| | Main app | Submain app | Notifications | Products | Orders | Profiles |
-|---|---|---|---|---|---|---|
-| Vercel project | `gova` | `asol-submain` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
-| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
-| Updated by | pushing to the repository | `npm run submain:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
+| | Main app | Submain app | Sub2main app | Notifications | Products | Orders | Profiles |
+|---|---|---|---|---|---|---|---|
+| Vercel project | `gova` | `asol-submain` | `asol-sub2main` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
+| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
+| Updated by | pushing to the repository | `npm run submain:deploy` | `npm run sub2main:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
 | Uploaded files | the repository | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |
-| Serves | production primary | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
-| Turso account | `hesham101` (+ all shards via env) | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
+| Serves | production primary | isolated full-app staging | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
+| Turso account | `hesham101` (+ all shards via env) | same runtime env as `gova` | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
 
 The connectors are driven by seven sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, and `@asol/profiles-composition`. See [26-cloud-accounts.md](./26-cloud-accounts.md), [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md), and [Service Bridge Module](../../05-platform-features/service-bridge-module.md).
 
@@ -127,7 +128,7 @@ push, the exact `git revert` and Vercel rollback steps are printed.
 
 The final console line is always explicit:
 
-- success: `[deploy:all] SUCCESS — preflight passed, secrets backup completed, GitHub push completed, and all 6 Vercel production targets are READY.`
+- success: `[deploy:all] SUCCESS — preflight passed, secrets backup completed, GitHub push completed, and all 7 Vercel production targets are READY.`
 - success with `--skip-preflight`: `preflight skipped` appears in the same line.
 - failure: `[deploy:all] FAILED — <reason>` (with `git revert` guidance when the
   push already landed).
@@ -156,7 +157,8 @@ Interactive choices:
 | 3 | `orders` |
 | 4 | `profiles` |
 | 5 | `submain` (`asol-submain`, `groupstenderximages@gmail.com`) |
-| 6 | all five isolated accounts (4 services + `asol-submain`) |
+| 6 | `sub2main` (`asol-sub2main`, `tenderx.engineer100@gmail.com`) |
+| 7 | all six isolated accounts (4 services + `asol-submain` + `asol-sub2main`) |
 
 Non-interactive examples:
 
@@ -167,6 +169,7 @@ npm run deploy:push -- --vercel-target=main
 npm run deploy:push -- --vercel-target=none
 npm run deploy:push -- --vercel-target=notifications
 npm run deploy:push -- --vercel-target=submain
+npm run deploy:push -- --vercel-target=sub2main
 npm run deploy:push -- --vercel-target=all
 ```
 
@@ -181,18 +184,18 @@ processes run without `NODE_OPTIONS` / VS Code inspector hooks so nested
 `npx tsx` deploy scripts keep piped output reliable. VS Code launch configs for
 deploy run `npx tsx scripts/deploy-*.ts` with `autoAttachChildProcesses: false`.
 
-`--vercel-target=main` and `--vercel-target=none` skip the five isolated deploy
-scripts (four services plus `asol-submain`). Any other choice still runs the
+`--vercel-target=main` and `--vercel-target=none` skip the six isolated deploy
+scripts (four services plus `asol-submain` and `asol-sub2main`). Any other choice still runs the
 mandatory steps above, then deploys and verifies only the selected account(s).
 
 When no isolated account is chosen, success requires secrets backup, GitHub
 verification, and main `READY` on Vercel. When an isolated account is also
 chosen, that account must reach `READY` as well. `submain` uses
-`VERCEL_SUBMAIN_TOKEN` and `VERCEL_SUBMAIN_ORG_ID`; it is never GitHub-linked.
+`VERCEL_SUBMAIN_TOKEN` and `VERCEL_SUBMAIN_ORG_ID`; `sub2main` uses
+`VERCEL_SUB2MAIN_TOKEN` and `VERCEL_SUB2MAIN_ORG_ID`. Neither is GitHub-linked.
 
 `VERCEL_TOKEN` and the root `.vercel/project.json` are always required for main
-verification. Isolated accounts use their own tokens from `.env.local` / `.env`
-(`VERCEL_SUBMAIN_TOKEN` + `VERCEL_SUBMAIN_ORG_ID` for `asol-submain`).
+verification. Isolated accounts use their own tokens from `.env.local` / `.env`.
 
 It does not refuse scratch files, manifest downgrades, or empty runs, and it does
 not report native/OTA surface status.
@@ -215,7 +218,7 @@ polls the Vercel API for the deployment tagged with this exact run id until it i
 ready build into an error. The main GitHub-triggered deployment is independently
 matched by commit SHA and monitored the same way. The final console table always
 shows target, account, project, unique comment, state, URL, and Vercel error.
-`deploy:all` exits non-zero if any of the six production targets is not verified
+`deploy:all` exits non-zero if any of the seven production targets is not verified
 `READY`.
 
 Each service continues to read its dedicated Vercel token and required
@@ -251,12 +254,19 @@ next build
 
 Schema sync requires Turso env vars on CI/Vercel — see [20-schema-provisioning.md](./20-schema-provisioning.md).
 
-The root `.vercelignore` excludes `.env*` but explicitly re-includes `!.env.example`.
-`npm run build` runs `ios:push:validate`, which reads Firebase identity keys from that
-committed template; omitting it from the Vercel upload breaks the main deployment.
-On Vercel (`VERCEL=1`), `ios:push:validate` exits immediately because
-`GoogleService-Info.plist` is gitignored and never uploaded; `deploy:all` preflight
-already runs the full check locally before push.
+The root `.vercelignore` trims repository-root Vercel uploads (`gova` via GitHub
+and `asol-submain` / `asol-sub2main` via CLI). It excludes native shells at the repository root only (`/android/`, `/ios/`,
+`/fastlane/`), `docs/`, local SQLite mirrors (`public/sync_data/`), service
+`generated/` trees, CI/editor folders, and secret archives. It keeps `src/`,
+`packages/` (including `packages/native-core/{android,ios}` for contract tests),
+hand-written `services/*` sources, `scripts/`, and runtime `public/` assets.
+
+`scripts/tests/vercelignore-contract.test.ts` guards required and excluded paths.
+The file excludes `.env*` but explicitly re-includes `!.env.example`.
+`npm run build` runs `ios:push:validate`, `notification-sound-contract`, and
+`android-notification-inbox-contract`, which exit immediately when root
+`android/` / `ios/` shells are not uploaded; `deploy:all` preflight already runs
+the full checks locally before push.
 
 Every database in the sync set needs its credentials present, the notifications
 database included. A missing `TURSO_NOTIFICATIONS_*` pair fails the whole build,

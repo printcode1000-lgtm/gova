@@ -3,7 +3,11 @@ import { createInterface } from "node:readline";
 /** Isolated Vercel accounts — `main` is always verified separately. */
 export type ServiceDeployTarget = "notifications" | "products" | "orders" | "profiles";
 
-export type DeployPushTarget = ServiceDeployTarget | "submain";
+export type RootAppDeployTarget = "submain" | "sub2main";
+
+export type DeployPushTarget = ServiceDeployTarget | RootAppDeployTarget;
+
+export const ALL_ROOT_APP_TARGETS: readonly RootAppDeployTarget[] = ["submain", "sub2main"];
 
 export const ALL_SERVICE_TARGETS: readonly ServiceDeployTarget[] = [
   "notifications",
@@ -14,7 +18,7 @@ export const ALL_SERVICE_TARGETS: readonly ServiceDeployTarget[] = [
 
 export const ALL_DEPLOY_PUSH_TARGETS: readonly DeployPushTarget[] = [
   ...ALL_SERVICE_TARGETS,
-  "submain",
+  ...ALL_ROOT_APP_TARGETS,
 ];
 
 export const VERCEL_TARGET_FLAG = "--vercel-target=";
@@ -36,8 +40,13 @@ const CHOICES = [
   },
   {
     key: "6",
+    target: "sub2main" as const,
+    label: "Third full app (asol-sub2main, tenderx.engineer100@gmail.com)",
+  },
+  {
+    key: "7",
     target: "all" as const,
-    label: "All five isolated accounts (4 services + asol-submain)",
+    label: "All six isolated accounts (4 services + asol-submain + asol-sub2main)",
   },
 ] as const;
 
@@ -166,12 +175,12 @@ export async function resolveServiceDeployTargets(
       (choice) => choice.key === answer || choice.target === answer,
     );
     if (!chosen) {
-      console.log("Not one of the choices. Answer 0–6, or press Ctrl+C to stop.");
+      console.log("Not one of the choices. Answer 0–7, or press Ctrl+C to stop.");
       continue;
     }
     const targets =
       chosen.target === "all"
-        ? [...ALL_SERVICE_TARGETS]
+        ? [...ALL_DEPLOY_PUSH_TARGETS]
         : chosen.target === "none"
           ? []
           : [chosen.target];

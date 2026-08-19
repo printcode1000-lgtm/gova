@@ -11,23 +11,24 @@ variable carries what.
 
 | Provider | Accounts | Holds |
 |---|---:|---|
-| Vercel | 6 | one deployment each |
+| Vercel | 7 | one deployment each |
 | Turso | 5 | 21 databases, 70 application tables |
 | Cloudflare R2 | 3 | 3 buckets |
 
-The number six is not a coincidence: **one Vercel account per deployment, and
+The number seven is not a coincidence: **one Vercel account per deployment, and
 its data on its own Turso account** for the four read-only services. The primary
-and secondary full-application accounts share runtime credentials but never
+and two secondary full-application accounts share runtime credentials but never
 share deploy tokens.
 
 ---
 
-## Vercel — six accounts
+## Vercel — seven accounts
 
 | Account | Email | Project | Serves | GitHub | Updated by |
 |---|---|---|---|---|---|
 | `hesham-101` | `print.code.1000@gmail.com` | `gova` | everything not listed below: all writes, `GET /api/orders/:id`, profile reviews and discounts, the super-admin console | **connected** — every push redeploys | pushing to GitHub |
 | `submain` | `groupstenderximages@gmail.com` | `asol-submain` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run submain:deploy` |
+| `sub2main` | `tenderx.engineer100@gmail.com` | `asol-sub2main` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run sub2main:deploy` |
 | `101-0902` | `bs.bid.story@gmail.com` | `asol-notifications` | push fan-out only | not connected | `npm run notifications:deploy` |
 | products account | `gnagnahesham@gmail.com` | `asol-products` | product reads | not connected | `npm run products:deploy` |
 | orders account | `tenderx10@gmail.com` | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
@@ -49,29 +50,30 @@ to no account at all — it runs in the user's browser:
          ╲── notification-bridge ──► asol-notifications
 ```
 
-Only `gova` is connected to GitHub. `submain` and the four read-only service
-accounts are updated exclusively by terminal deploy commands — `submain:deploy`
-uploads the repository root via CLI and must never receive a Git repository link.
+Only `gova` is connected to GitHub. `submain`, `sub2main`, and the four read-only service
+accounts are updated exclusively by terminal deploy commands — `submain:deploy` and
+`sub2main:deploy` upload the repository root via CLI and must never receive a Git repository link.
 CLI deploy metadata uses `asolDeployment*` keys only; `githubCommit*` metadata is
-reserved for the GitHub-linked `gova` project so submain deploys cannot appear on
+reserved for the GitHub-linked `gova` project so CLI full-app deploys cannot appear on
 the repository's Deployments tab.
 
 The Vercel CLI also probes the local repository on its own and attaches the last
 commit (sha, branch, message, remote URL) to every upload, which the dashboard
 renders as a GitHub source row such as `Source: main f1c85e4` even for projects
 with no Git link. `runVercel` blocks that probe by pointing `GIT_DIR` at a path
-that cannot exist, so CLI deploys of `submain` and the four service accounts are
+that cannot exist, so CLI deploys of `submain`, `sub2main`, and the four service accounts are
 uploaded without commit data and show no source row.
 
-To rebuild the secondary app from scratch:
+To rebuild a secondary full app from scratch:
 
 ```bash
 npm run submain:recreate-vercel-project
+npm run sub2main:recreate-vercel-project
 ```
 
-This deletes the existing `asol-submain` Vercel project (and any legacy `submain`
-project) after removing any Git link, creates a fresh GitHub-free project, syncs
-runtime env vars, and deploys.
+Each command deletes the existing Vercel project (and any legacy short name) after
+removing any Git link, creates a fresh GitHub-free project, syncs runtime env
+vars, and deploys.
 
 Each service command uploads one folder — `services/<name>/` — and nothing else in
 the repository leaves the machine.
@@ -100,13 +102,13 @@ and [Notification Bridge Module](../../05-platform-features/notification-bridge-
 
 | Account | Databases | Domain | Read by |
 |---|---:|---|---|
-| `hesham101` | 3 | users and auth, advertisements, system operations | `gova` + `submain` |
+| `hesham101` | 3 | users and auth, advertisements, system operations | `gova` + `submain` + `sub2main` |
 | `hesham102` | 1 | notifications | `gova` + `asol-notifications` |
 | `hesham103` | 1 | products | `gova` + `asol-products` |
 | `hesham104` | 9 | marketplace order shards | `gova` + `asol-orders` |
 | `hesham105` | 7 | profile shards | `gova` + `asol-profiles` |
 
-`gova` and `submain` hold every runtime credential, because writes and
+`gova`, `submain`, and `sub2main` hold every runtime credential, because writes and
 server-side reads cross domains. Each read-only deployment holds **only** the
 shards it serves.
 
@@ -210,13 +212,13 @@ Nothing here is a secret store. Every value is an environment variable:
 |---|---|
 | Turso runtime | `TURSO_*_DATABASE_URL` / `_AUTH_TOKEN`, per-shard `<SHARD>_DATABASE_*` |
 | Turso platform | `TURSO_*_API_TOKEN`, `TURSO_*_ORGANIZATION` — scripts only |
-| `VERCEL` | `VERCEL_TOKEN`, `VERCEL_SUBMAIN_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, `VERCEL_PRODUCTS_TOKEN`, `VERCEL_ORDERS_TOKEN`, `VERCEL_PROFILES_TOKEN` |
+| `VERCEL` | `VERCEL_TOKEN`, `VERCEL_SUBMAIN_TOKEN`, `VERCEL_SUB2MAIN_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, `VERCEL_PRODUCTS_TOKEN`, `VERCEL_ORDERS_TOKEN`, `VERCEL_PROFILES_TOKEN` |
 | R2 | `R2_*`, `PRODUCT_R2_*`, and `ASOL_OTA_R2_*` for dedicated OTA storage |
 | Client-safe origins | `NEXT_PUBLIC_ASOL_{NOTIFICATIONS,PRODUCTS,ORDERS,PROFILES}_URL`, `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` |
 
 `npm run db:push:vercel-env` pushes the server-side set to the `gova` project.
-`npm run submain:deploy` syncs the same runtime keys (without foreign Vercel
-deploy tokens) to the `submain` project. Each service deploy script pushes only
-what that account needs.
+`npm run submain:deploy` and `npm run sub2main:deploy` sync the same runtime keys
+(without foreign Vercel deploy tokens) to their projects. Each service deploy
+script pushes only what that account needs.
 
 **A fallback that crosses an account boundary is not a default — it is a silent redirect.** OTA operations read `ASOL_OTA_R2_*` directly with zero fallbacks. Every fallback chain across accounts has been removed.

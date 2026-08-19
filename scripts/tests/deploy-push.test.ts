@@ -27,8 +27,10 @@ assert.deepEqual(expandSelection("all"), [
   "orders",
   "profiles",
   "submain",
+  "sub2main",
 ]);
 assert.deepEqual(parseProvidedTargets(["--vercel-target=submain"]), ["submain"]);
+assert.deepEqual(parseProvidedTargets(["--vercel-target=sub2main"]), ["sub2main"]);
 
 assert.throws(() => parseProvidedTargets(["--vercel-target=unknown"]), /Unknown Vercel target/);
 assert.throws(

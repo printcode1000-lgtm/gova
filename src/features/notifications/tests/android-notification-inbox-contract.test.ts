@@ -3,6 +3,12 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
+if (!existsSync(path.join(root, "android/app/src/main/AndroidManifest.xml"))) {
+  console.log(
+    "Skipping Android notification inbox contract: the Capacitor android shell is not present in this upload.",
+  );
+  process.exit(0);
+}
 const read = (relative: string) => readFileSync(path.join(root, relative), "utf8");
 const ANDROID = existsSync(path.join(root, "packages/native-core/android/src/main/java/hgh/asol/app"))
   ? "packages/native-core/android/src/main/java/hgh/asol/app"

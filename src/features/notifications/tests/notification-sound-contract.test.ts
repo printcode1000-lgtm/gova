@@ -2,6 +2,21 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
+import { APPLE_SOUND_FILE } from "@asol/notifications-core";
+
+const hasRootAndroidShell = existsSync(
+  path.resolve("android", "app", "src", "main", "AndroidManifest.xml"),
+);
+const hasRootIosShell = existsSync(
+  path.resolve("ios", "App", "App", APPLE_SOUND_FILE),
+);
+if (!hasRootAndroidShell || !hasRootIosShell) {
+  console.log(
+    "Skipping notification sound contract: root Capacitor android/ios shells are not present in this upload.",
+  );
+  process.exit(0);
+}
+
 import { DEFAULT_CHANNELS, DEFAULT_CHANNEL_ID, DEFAULT_CHANNEL_SOUND } from '@asol/native-core';
 import {
   ANDROID_SOUND_FILE,

@@ -12,6 +12,7 @@ import {
   waitForVercelProductionDeployment,
 } from "./lib/vercel-deployment-monitor";
 import { pushMainBranch } from "./lib/push-main-branch";
+import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
@@ -32,6 +33,7 @@ const SERVICE_DEPLOYS = [
   { target: "orders", script: "orders:deploy" },
   { target: "profiles", script: "profiles:deploy" },
   { target: "submain", script: "submain:deploy" },
+  { target: "sub2main", script: "sub2main:deploy" },
 ] as const;
 
 function git(args: string[]): string {
@@ -92,7 +94,9 @@ function failedReport(
   message: string,
 ): VercelDeploymentReport {
   const project =
-    target === "main" ? "gova" : target === "submain" ? "asol-submain" : `asol-${target}`;
+    target === "main"
+      ? "gova"
+      : (ACCOUNT_DECLARATIONS[target]?.project ?? `asol-${target}`);
   return {
     target,
     project,
@@ -359,7 +363,7 @@ function printRollbackGuidance(revision: string): void {
 
 function formatSuccessLine(skipPreflight: boolean): string {
   const preflight = skipPreflight ? "preflight skipped" : "preflight passed";
-  return `[deploy:all] SUCCESS — ${preflight}, secrets backup completed, GitHub push completed, and all 6 Vercel production targets are READY.`;
+  return `[deploy:all] SUCCESS — ${preflight}, secrets backup completed, GitHub push completed, and all 7 Vercel production targets are READY.`;
 }
 
 function fail(message: string, revision?: string): void {

@@ -8,6 +8,7 @@ import {
   ORDERS_DECLARATION,
   PROFILES_DECLARATION,
   SUBMAIN_DECLARATION,
+  SUB2MAIN_DECLARATION,
 } from '../index';
 
 function assert(condition: boolean, message: string): void {
@@ -75,7 +76,7 @@ function runTests(): void {
     assert(declaration.project.length > 0, `${name}: has a project`);
     assert(declaration.tokenEnvVar.startsWith('VERCEL_'), `${name}: token var is a Vercel token`);
   }
-  console.log('  ✔ All six declarations are well-formed.');
+  console.log('  ✔ All seven declarations are well-formed.');
 
   // ---------------------------------------------------------------- credential isolation
   for (const declaration of [
@@ -100,7 +101,7 @@ function runTests(): void {
   // Rule 0 at the data layer: a declaration may name only its own account.
   const names = ['notifications', 'products', 'orders', 'profiles'] as const;
   for (const declaration of Object.values(ACCOUNT_DECLARATIONS)) {
-    if (declaration.name === 'gova' || declaration.name === 'submain') continue;
+    if (declaration.name === 'gova' || declaration.name === 'submain' || declaration.name === 'sub2main') continue;
     const keys = [...declaration.requiredEnv, ...declaration.optionalEnv];
     for (const other of names) {
       if (other === declaration.name) continue;
@@ -127,7 +128,14 @@ function runTests(): void {
     !SUBMAIN_DECLARATION.requiredEnv.some((key) => key.startsWith('VERCEL_')),
     'submain runtime env must not include deploy tokens',
   );
-  console.log('  ✔ gova is declared as verification-only; submain is root-deploy isolated.');
+  assert(SUB2MAIN_DECLARATION.deployFromRepositoryRoot === true, 'sub2main deploys from repository root');
+  assert(SUB2MAIN_DECLARATION.serviceDir === undefined, 'sub2main has no serviceDir');
+  assert(SUB2MAIN_DECLARATION.tokenEnvVar === 'VERCEL_SUB2MAIN_TOKEN', 'sub2main token var');
+  assert(
+    !SUB2MAIN_DECLARATION.requiredEnv.some((key) => key.startsWith('VERCEL_')),
+    'sub2main runtime env must not include deploy tokens',
+  );
+  console.log('  ✔ gova is verification-only; submain and sub2main are root-deploy isolated.');
 
   // ---------------------------------------------------------------- compositions stay off the engine
   // This is the regression that made layer 2 unwireable: each composition imported the

@@ -36,6 +36,7 @@ const ISOLATED_DEPLOYS: Record<
   orders: { target: "orders", script: "orders:deploy" },
   profiles: { target: "profiles", script: "profiles:deploy" },
   submain: { target: "submain", script: "submain:deploy" },
+  sub2main: { target: "sub2main", script: "sub2main:deploy" },
 };
 
 function git(args: string[]): string {
