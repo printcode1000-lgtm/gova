@@ -68,11 +68,11 @@ export function SuperAdminCloudAccountsPage() {
             الحسابات السحابية
           </h1>
           <p className="text-sm text-on-surface-variant">
-            سبعة حسابات Vercel وخمسة Turso وثلاثة R2. حسابا{" "}
-            <span dir="ltr">submain</span> و<span dir="ltr">sub2main</span>{" "}
-            للتطبيق الكامل المعزول. الأسرار في{" "}
-            <span dir="ltr">.env.local</span> والنسخ الاحتياطي المشفّر فقط — لا
-            في Git.
+            سبعة حسابات Vercel وخمسة Turso وثلاثة R2.{" "}
+            <span dir="ltr">submain</span> للبحث والسلة وإنشاء الطلبات؛{" "}
+            <span dir="ltr">sub2main</span> لكتابات البائع (بروفايل، منتجات،
+            تخزين). الأسرار في <span dir="ltr">.env.local</span> والنسخ
+            الاحتياطي المشفّر فقط — لا في Git.
           </p>
         </div>
       </header>
@@ -111,12 +111,13 @@ export function SuperAdminCloudAccountsPage() {
         </tbody>
       </TableWrap>
       <Note>
-        الرقم سبعة لحسابات Vercel: <strong>حساب واحد لكل نشرة.</strong> أربعة
-        منها خدمات قراءة أو إشعارات معزولة على Turso خاص؛ وثلاثة تشغّل
-        التطبيق الكامل (<span dir="ltr">gova</span> عبر GitHub و{" "}
-        <span dir="ltr">submain</span> / <span dir="ltr">sub2main</span> عبر
-        أوامر نشر طرفية) ويشتركون في بيئة التشغيل دون مشاركة رموز نشر الحسابات
-        الأخرى.
+        الرقم سبعة لحسابات Vercel: <strong>حساب واحد لكل نشرة.</strong>{" "}
+        <span dir="ltr">gova</span> هو التطبيق الكامل عبر GitHub؛ الستة
+        الباقية خدمات معزولة تُنشر من{" "}
+        <span dir="ltr">services/&lt;name&gt;/</span> عبر أوامر طرفية — بما فيها{" "}
+        <span dir="ltr">submain</span> (بحث وسلة وطلبات) و{" "}
+        <span dir="ltr">sub2main</span> (كتابات البائع). الجسر (bridge) في
+        المتصفح يوجّه الطلبات؛ لا يوجد اتصال خادم-إلى-خادم بين الحسابات.
       </Note>
 
       <SectionTitle>Vercel — سبعة حسابات</SectionTitle>
@@ -137,9 +138,9 @@ export function SuperAdminCloudAccountsPage() {
             <td className="p-3" dir="ltr">gova</td>
             <td className="p-3" dir="ltr">print.code.1000@gmail.com</td>
             <td className="p-3">
-              كل ما لم يُذكر أدناه: جميع عمليات الكتابة،{" "}
-              <span dir="ltr">GET /api/orders/:id</span>، تقييمات وخصومات
-              البروفايل، ولوحة السوبر أدمن
+              التطبيق الكامل: كل ما لم يُوجَّه للجسر — تفاصيل الطلب{" "}
+              <span dir="ltr">GET /api/orders/:id</span>، تقييمات البروفايل،
+              ولوحة السوبر أدمن
             </td>
             <td className="p-3">
               <strong>متصل</strong> — كل push يعيد النشر
@@ -151,8 +152,11 @@ export function SuperAdminCloudAccountsPage() {
             <td className="p-3" dir="ltr">asol-submain</td>
             <td className="p-3" dir="ltr">groupstenderximages@gmail.com</td>
             <td className="p-3">
-              نفس كود التطبيق الكامل مثل <span dir="ltr">gova</span> — للعمل
-              المعزول على الواجهة والميزات دون ربط GitHub
+              البحث في المنتجات والبائعين، إنشاء الطلب من السلة أو من
+              البروفايل —{" "}
+              <span dir="ltr">/api/search/*</span>،{" "}
+              <span dir="ltr">POST /api/orders/from-cart</span>،{" "}
+              <span dir="ltr">POST /api/orders/custom-request-from-profile</span>
             </td>
             <td className="p-3">غير متصل</td>
             <td className="p-3" dir="ltr">npm run submain:deploy</td>
@@ -162,8 +166,8 @@ export function SuperAdminCloudAccountsPage() {
             <td className="p-3" dir="ltr">asol-sub2main</td>
             <td className="p-3" dir="ltr">tenderx.engineer100@gmail.com</td>
             <td className="p-3">
-              نفس كود التطبيق الكامل مثل <span dir="ltr">gova</span> — للعمل
-              المعزول على الواجهة والميزات دون ربط GitHub
+              كتابات البائع: إنشاء/تعديل/حذف المنتجات، تحديث البروفايل
+              والخصومات، رفع الصور، كتالوج الصيدلية — عبر جسر المتصفح فقط
             </td>
             <td className="p-3">غير متصل</td>
             <td className="p-3" dir="ltr">npm run sub2main:deploy</td>
@@ -219,16 +223,15 @@ export function SuperAdminCloudAccountsPage() {
   gova ◄── service-bridge ──┼──► asol-products
        ╲                    │    asol-orders
         ╲                   │    asol-profiles
-         ╲── notification-bridge ──► asol-notifications`}
+         ╲── notification-bridge ──► asol-notifications
+         ╲── account-bridge ──► asol-submain   (search, cart, orders)
+          ╲── account-bridge ──► asol-sub2main (seller writes, uploads)`}
       </pre>
       <Note>
-        <span dir="ltr">gova</span> هو الوحيد المتصل بـ GitHub.{" "}
-        <span dir="ltr">submain</span> و<span dir="ltr">sub2main</span> والحسابات
-        الأربعة للخدمات تُحدَّث حصريًا بأوامر نشر طرفية —{" "}
-        <span dir="ltr">submain:deploy</span> و{" "}
-        <span dir="ltr">sub2main:deploy</span> يرفعان جذر المستودع؛ كل خدمة
-        أخرى ترفع مجلدًا واحدًا فقط —{" "}
-        <span dir="ltr">services/&lt;name&gt;/</span>.
+        <span dir="ltr">gova</span> هو الوحيد المتصل بـ GitHub. الحسابات الستة
+        الأخرى تُحدَّث حصريًا بأوامر نشر طرفية — كل واحد يرفع مجلدًا واحدًا
+        فقط: <span dir="ltr">services/&lt;name&gt;/</span> (بما فيها{" "}
+        <span dir="ltr">submain</span> و<span dir="ltr">sub2main</span>).
       </Note>
 
       <SectionTitle>Turso — خمسة حسابات، 21 قاعدة بيانات</SectionTitle>
@@ -264,29 +267,29 @@ export function SuperAdminCloudAccountsPage() {
             <td className="p-3">1</td>
             <td className="p-3" dir="ltr">gnagnahesham@gmail.com</td>
             <td className="p-3">المنتجات</td>
-            <td className="p-3" dir="ltr">gova + asol-products</td>
+            <td className="p-3" dir="ltr">gova + asol-products + sub2main</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3" dir="ltr">hesham104</td>
             <td className="p-3">9</td>
             <td className="p-3" dir="ltr">tenderx10@gmail.com</td>
             <td className="p-3">شظايا طلبات السوق (marketplace order shards)</td>
-            <td className="p-3" dir="ltr">gova + asol-orders</td>
+            <td className="p-3" dir="ltr">gova + asol-orders + submain</td>
           </tr>
           <tr className="border-t align-top">
             <td className="p-3" dir="ltr">hesham105</td>
             <td className="p-3">7</td>
             <td className="p-3" dir="ltr">hesham10125@gmail.com</td>
             <td className="p-3">شظايا البروفايل (profile shards)</td>
-            <td className="p-3" dir="ltr">gova + asol-profiles</td>
+            <td className="p-3" dir="ltr">gova + asol-profiles + sub2main</td>
           </tr>
         </tbody>
       </TableWrap>
       <Note>
-        <span dir="ltr">gova</span> و<span dir="ltr">submain</span> و
-        <span dir="ltr">sub2main</span> يحملون كل اعتماد (credential) لتشغيل
-        التطبيق الكامل، لأن الكتابة والقراءات من طرف الخادم تعبر النطاقات. كل نشرة للقراءة فقط تحمل{" "}
-        <strong>فقط</strong> الشظايا التي تخدمها.
+        <span dir="ltr">gova</span> و<span dir="ltr">submain</span> يحملان
+        اعتمادات التشغيل الكاملة. <span dir="ltr">sub2main</span> يحمل
+        اعتمادات المنتجات وشظايا البروفايل والمستخدمين لكتابات البائع. كل
+        نشرة للقراءة فقط تحمل <strong>فقط</strong> الشظايا التي تخدمها.
       </Note>
 
       <SubTitle>hesham101 — 3 قواعد بيانات</SubTitle>
@@ -594,11 +597,10 @@ export function SuperAdminCloudAccountsPage() {
       </TableWrap>
       <Note>
         <span dir="ltr">npm run db:push:vercel-env</span> يدفع مجموعة متغيرات
-        طرف الخادم إلى مشروع <span dir="ltr">gova</span>. أمر{" "}
-        <span dir="ltr">submain:deploy</span> و{" "}
-        <span dir="ltr">sub2main:deploy</span> يزامنان نفس مفاتيح التشغيل
-        (بدون رموز نشر الحسابات الأخرى) إلى مشروعيهما. كل سكربت نشر خدمة يدفع
-        فقط ما يحتاجه ذلك الحساب.
+        طرف الخادم إلى مشروع <span dir="ltr">gova</span>. أوامر نشر الخدمات
+        (<span dir="ltr">submain:deploy</span>،{" "}
+        <span dir="ltr">sub2main:deploy</span>، وغيرها) تزامن فقط ما يحتاجه
+        كل حساب — بدون رموز نشر الحسابات الأخرى.
       </Note>
       <Note>
         <strong>القيمة الاحتياطية (fallback) التي تعبر حدود حساب ليست

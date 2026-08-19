@@ -9,21 +9,19 @@ accounts, five Turso accounts, and three Cloudflare R2 accounts.
 The page shows account names, project names, login emails, and what each account
 holds. It never displays tokens, keys, or secret values.
 
-## Secondary full-app accounts (`submain`, `sub2main`)
+## Workload accounts (`submain`, `sub2main`)
 
-The `submain` Vercel account uses **`groupstenderximages@gmail.com`**. The
-`sub2main` account uses **`tenderx.engineer100@gmail.com`**. Both host the same
-full application codebase as the primary `gova` deployment, but neither is
-GitHub-linked. Updates run only through:
+| Account | Email | Project | Role | Deploy |
+|---|---|---|---|---|
+| `submain` | `groupstenderximages@gmail.com` | `asol-submain` | Search, cart checkout, order creation (`/api/search/*`, `POST /api/orders/from-cart`, `POST /api/orders/custom-request-from-profile`) | `npm run submain:deploy` |
+| `sub2main` | `tenderx.engineer100@gmail.com` | `asol-sub2main` | Seller writes: product mutations, profile updates, image uploads, pharmacy catalog | `npm run sub2main:deploy` |
 
-```bash
-npm run submain:deploy
-npm run sub2main:deploy
-```
+Both deploy from `services/<name>/` via CLI (never GitHub-linked). The browser
+bridge routes matching API calls; no server-to-server calls between accounts.
+Runtime credentials are scoped per account — see
+`packages/account-declarations/src/accounts/submain.ts` and `sub2main.ts`.
 
-Runtime database and R2 credentials match `gova`; deploy tokens for other Vercel
-accounts are never pushed to these projects. Neither project must be GitHub-linked
-— only `gova` uses the repository integration. To rebuild from scratch:
+To recreate a project from scratch:
 
 ```bash
 npm run submain:recreate-vercel-project

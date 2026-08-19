@@ -14,6 +14,8 @@ import {
   ORDERS_BASE_URL,
   PRODUCTS_BASE_URL,
   PROFILES_BASE_URL,
+  SUBMAIN_BASE_URL,
+  SUB2MAIN_BASE_URL,
 } from "@asol/native-core";
 
 export const rootDir = process.cwd();
@@ -108,6 +110,34 @@ export function assertStaticProfilesBaseUrl(): void {
   }
   process.env.NEXT_PUBLIC_ASOL_PROFILES_URL = profilesBaseUrl;
   console.log(`Static profiles base URL: ${profilesBaseUrl}`);
+}
+
+export function assertStaticSubmainBaseUrl(): void {
+  const submainBaseUrl =
+    process.env.NEXT_PUBLIC_ASOL_SUBMAIN_URL?.replace(/\/$/, "") ||
+    SUBMAIN_BASE_URL.replace(/\/$/, "");
+  if (!/^https?:\/\/.+/.test(submainBaseUrl)) {
+    throw new Error(
+      "A static build needs an absolute submain service URL, but none resolved. " +
+        "Set NEXT_PUBLIC_ASOL_SUBMAIN_URL, or fix SUBMAIN_BASE_URL.",
+    );
+  }
+  process.env.NEXT_PUBLIC_ASOL_SUBMAIN_URL = submainBaseUrl;
+  console.log(`Static submain base URL: ${submainBaseUrl}`);
+}
+
+export function assertStaticSub2mainBaseUrl(): void {
+  const sub2mainBaseUrl =
+    process.env.NEXT_PUBLIC_ASOL_SUB2MAIN_URL?.replace(/\/$/, "") ||
+    SUB2MAIN_BASE_URL.replace(/\/$/, "");
+  if (!/^https?:\/\/.+/.test(sub2mainBaseUrl)) {
+    throw new Error(
+      "A static build needs an absolute sub2main service URL, but none resolved. " +
+        "Set NEXT_PUBLIC_ASOL_SUB2MAIN_URL, or fix SUB2MAIN_BASE_URL.",
+    );
+  }
+  process.env.NEXT_PUBLIC_ASOL_SUB2MAIN_URL = sub2mainBaseUrl;
+  console.log(`Static sub2main base URL: ${sub2mainBaseUrl}`);
 }
 
 export function assertStaticMobilePushCredentialBlob(): void {

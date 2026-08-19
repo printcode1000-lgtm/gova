@@ -3,7 +3,7 @@ import path from 'path';
 import { builtinModules } from 'module';
 
 export interface ServiceMirrorOptions {
-  serviceName: 'notifications' | 'products' | 'orders' | 'profiles';
+  serviceName: 'notifications' | 'products' | 'orders' | 'profiles' | 'submain' | 'sub2main';
   serviceDir: string;
   entryPoints: readonly string[];
   runtimeAssets?: readonly string[];

@@ -1,0 +1,14 @@
+export const MEMORY_LOG_MAX_ENTRIES = 2_000;
+export const CLIENT_DEDUPE_WINDOW_MS = 15_000;
+export const DEFAULT_RETENTION_DAYS = 90;
+export const DEFAULT_ALERT_THRESHOLD = 10;
+export const DEFAULT_ALERT_WINDOW_MS = 60 * 60 * 1_000;
+export const INGEST_RATE_WINDOW_MS = 60_000;
+export const MAX_INGEST_PER_CLIENT = 120;
+export const MAX_INGEST_PER_INSTANCE = 1_000;
+export const MAX_INGEST_BODY_BYTES = 256 * 1024;
+export const MAX_INGEST_BATCH = 25;
+export const MESSAGE_CLIP = 8_000;
+export const STACK_CLIP = 12_000;
+export const LIST_DEFAULT_LIMIT = 100;
+export const LIST_MAX_LIMIT = 500;

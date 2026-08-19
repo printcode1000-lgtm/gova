@@ -15,10 +15,11 @@ variable carries what.
 | Turso | 5 | 21 databases, 70 application tables |
 | Cloudflare R2 | 3 | 3 buckets |
 
-The number seven is not a coincidence: **one Vercel account per deployment, and
-its data on its own Turso account** for the four read-only services. The primary
-and two secondary full-application accounts share runtime credentials but never
-share deploy tokens.
+The number seven is not a coincidence: **one Vercel account per deployment.**
+`gova` is the full GitHub-linked application; the other six are isolated CLI
+services (including `submain` for search/cart/orders and `sub2main` for seller
+writes). Each read-only microservice holds data on its own Turso account; workload
+accounts hold only the credentials their routes need.
 
 ---
 
@@ -26,9 +27,9 @@ share deploy tokens.
 
 | Account | Email | Project | Serves | GitHub | Updated by |
 |---|---|---|---|---|---|
-| `hesham-101` | `print.code.1000@gmail.com` | `gova` | everything not listed below: all writes, `GET /api/orders/:id`, profile reviews and discounts, the super-admin console | **connected** — every push redeploys | pushing to GitHub |
-| `submain` | `groupstenderximages@gmail.com` | `asol-submain` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run submain:deploy` |
-| `sub2main` | `tenderx.engineer100@gmail.com` | `asol-sub2main` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run sub2main:deploy` |
+| `hesham-101` | `print.code.1000@gmail.com` | `gova` | full app minus bridge-routed APIs: order detail `GET /api/orders/:id`, profile reviews, super-admin console | **connected** — every push redeploys | pushing to GitHub |
+| `submain` | `groupstenderximages@gmail.com` | `asol-submain` | search (`/api/search/*`), cart checkout, order creation (`POST /api/orders/from-cart`, `POST /api/orders/custom-request-from-profile`) | not connected | `npm run submain:deploy` |
+| `sub2main` | `tenderx.engineer100@gmail.com` | `asol-sub2main` | seller writes: product mutations, profile updates, storage uploads, pharmacy catalog | not connected | `npm run sub2main:deploy` |
 | `101-0902` | `bs.bid.story@gmail.com` | `asol-notifications` | push fan-out only | not connected | `npm run notifications:deploy` |
 | products account | `gnagnahesham@gmail.com` | `asol-products` | product reads | not connected | `npm run products:deploy` |
 | orders account | `tenderx10@gmail.com` | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
@@ -48,11 +49,12 @@ to no account at all — it runs in the user's browser:
        ╲  (@asol/account    │    asol-orders
         ╲  -bridge)         │    asol-profiles
          ╲── notification-bridge ──► asol-notifications
+         ╲── account-bridge ──► asol-submain   (search, cart, orders)
+          ╲── account-bridge ──► asol-sub2main (seller writes, uploads)
 ```
 
-Only `gova` is connected to GitHub. `submain`, `sub2main`, and the four read-only service
-accounts are updated exclusively by terminal deploy commands — `submain:deploy` and
-`sub2main:deploy` upload the repository root via CLI and must never receive a Git repository link.
+Only `gova` is connected to GitHub. All six other accounts deploy from
+`services/<name>/` via terminal commands — never via a Git repository link.
 CLI deploy metadata uses `asolDeployment*` keys only; `githubCommit*` metadata is
 reserved for the GitHub-linked `gova` project so CLI full-app deploys cannot appear on
 the repository's Deployments tab.
@@ -104,13 +106,13 @@ and [Notification Bridge Module](../../05-platform-features/notification-bridge-
 |---|---:|---|---|
 | `hesham101` | 3 | users and auth, advertisements, system operations | `gova` + `submain` + `sub2main` |
 | `hesham102` | 1 | notifications | `gova` + `asol-notifications` |
-| `hesham103` | 1 | products | `gova` + `asol-products` |
-| `hesham104` | 9 | marketplace order shards | `gova` + `asol-orders` |
-| `hesham105` | 7 | profile shards | `gova` + `asol-profiles` |
+| `hesham103` | 1 | products | `gova` + `asol-products` + `sub2main` |
+| `hesham104` | 9 | marketplace order shards | `gova` + `asol-orders` + `submain` |
+| `hesham105` | 7 | profile shards | `gova` + `asol-profiles` + `sub2main` |
 
-`gova`, `submain`, and `sub2main` hold every runtime credential, because writes and
-server-side reads cross domains. Each read-only deployment holds **only** the
-shards it serves.
+`gova` and `submain` hold the full application runtime credentials. `sub2main`
+holds product, profile-shard, users, and R2 credentials for seller writes. Each
+read-only deployment holds **only** the shards it serves.
 
 ### hesham101 — 3 databases
 
@@ -214,11 +216,10 @@ Nothing here is a secret store. Every value is an environment variable:
 | Turso platform | `TURSO_*_API_TOKEN`, `TURSO_*_ORGANIZATION` — scripts only |
 | `VERCEL` | `VERCEL_TOKEN`, `VERCEL_SUBMAIN_TOKEN`, `VERCEL_SUB2MAIN_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, `VERCEL_PRODUCTS_TOKEN`, `VERCEL_ORDERS_TOKEN`, `VERCEL_PROFILES_TOKEN` |
 | R2 | `R2_*`, `PRODUCT_R2_*`, and `ASOL_OTA_R2_*` for dedicated OTA storage |
-| Client-safe origins | `NEXT_PUBLIC_ASOL_{NOTIFICATIONS,PRODUCTS,ORDERS,PROFILES}_URL`, `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` |
+| Client-safe origins | `NEXT_PUBLIC_ASOL_{NOTIFICATIONS,PRODUCTS,ORDERS,PROFILES,SUBMAIN,SUB2MAIN}_URL`, `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` |
 
 `npm run db:push:vercel-env` pushes the server-side set to the `gova` project.
-`npm run submain:deploy` and `npm run sub2main:deploy` sync the same runtime keys
-(without foreign Vercel deploy tokens) to their projects. Each service deploy
-script pushes only what that account needs.
+Each service deploy script (`submain:deploy`, `sub2main:deploy`, and the four
+read-only services) syncs only the runtime keys that account needs.
 
 **A fallback that crosses an account boundary is not a default — it is a silent redirect.** OTA operations read `ASOL_OTA_R2_*` directly with zero fallbacks. Every fallback chain across accounts has been removed.

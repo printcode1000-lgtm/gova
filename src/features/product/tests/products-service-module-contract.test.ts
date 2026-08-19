@@ -76,11 +76,11 @@ for (const file of filesBelow(path.join(serviceRoot, "src", "app", "api"))) {
 // ── 3. Seller search must NOT live here ──────────────────────────────────────
 
 assert.ok(
-  !existsSync(path.join(serviceRoot, "src", "app", "api", "search", "sellers")),
-  "/api/search/sellers reads the profile shards, not products. It belongs to the main app.",
+  !existsSync(path.join(serviceRoot, "src", "app", "api", "search")),
+  "Search routes belong to the submain service, not products.",
 );
 
-// ── 4. The bridge must not redirect anything but reads ───────────────────────
+// ── 4. The bridge routes submain writes and search reads only ──────────────────
 
 const bridge = readFileSync(
   path.join(root, "packages", "account-bridge", "src", "index.ts"),
@@ -88,8 +88,8 @@ const bridge = readFileSync(
 );
 assert.match(
   stripComments(bridge),
-  /method\.toUpperCase\(\)\s*!==\s*["']GET["']/,
-  "The service bridge must redirect GET only; a redirected write would reach an account that cannot serve it.",
+  /SUBMAIN_ROUTES/,
+  "The service bridge must declare submain-owned routes explicitly.",
 );
 assert.match(
   stripComments(bridge),

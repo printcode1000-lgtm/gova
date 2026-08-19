@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "id": 1,
+      "name": {
+        "ar": "الملابس والأزياء",
+        "en": "Clothing & Fashion"
+      },
+      "icon": "fas fa-shirt",
+      "image": "Clothing & Fashion.webp",
+      "createdAt": "2026-06-14 04:03:26",
+      "updatedAt": "2026-06-14 04:03:26",
+      "display": {
+        "order": 10,
+        "hidden": false
+      }
+    },
+    {
+      "id": 2,
+      "name": {
+        "ar": "الأطعمة والمشروبات",
+        "en": "Food & Beverages"
+      },
+      "icon": "fas fa-utensils",
+      "image": "Food & Beverages.webp",
+      "createdAt": "2026-06-14 04:03:26",
+      "updatedAt": "2026-06-14 04:03:26",
+      "display": {
+        "order": 20,
+        "hidden": false
+      }
+    },
+    {
+      "id": 3,
+      "name": {
+        "ar": "التقنية والالكترونيات",
+        "en": "Tech & Electronics"
+      },
+      "icon": "fas fa-robot",
+      "image": "Tech & Electronics.webp",
+      "createdAt": "2026-06-14 04:03:26",
+      "updatedAt": "2026-06-14 04:03:26",
+      "display": {
+        "order": 30,
+        "hidden": false
+      }
+    },
+    {
+      "id": 4,
+      "name": {
+        "ar": "الصحة والجمال",
+        "en": "Health & Beauty"
+      },
+      "icon": "fas fa-spa",
+      "image": "Health & Beauty.webp",
+      "createdAt": "2026-06-14 04:03:26",
+      "updatedAt": "2026-06-14 04:03:26",
+      "display": {
+        "order": 140,
+        "hidden": false
+      }
+    },
+    {
+      "id": 5,
+      "name": {
+        "ar": "المنزل والأثاث",
+        "en": "Home & Furniture"
+      },
+      "icon": "fas fa-couch",
+      "image": "Home & Furniture.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 50,
+        "hidden": false
+      }
+    },
+    {
+      "id": 6,
+      "name": {
+        "ar": "خدمات تعليمية",
+        "en": "Educational Services"
+      },
+      "icon": "fas fa-briefcase",
+      "image": "Educational Services.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 60,
+        "hidden": false
+      }
+    },
+    {
+      "id": 7,
+      "name": {
+        "ar": "سوق المركبات",
+        "en": "Vehicles Market"
+      },
+      "icon": "fas fa-car",
+      "image": "Vehicles Market.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 70,
+        "hidden": false
+      }
+    },
+    {
+      "id": 8,
+      "name": {
+        "ar": "الرياضة والترفيه",
+        "en": "Sports & Entertainment"
+      },
+      "icon": "fas fa-basketball-ball",
+      "image": "Sports.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 80,
+        "hidden": false
+      }
+    },
+    {
+      "id": 12,
+      "name": {
+        "ar": "الحيوانات الأليفة",
+        "en": "Pets"
+      },
+      "icon": "fas fa-paw",
+      "image": "Pets.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 90,
+        "hidden": false
+      }
+    },
+    {
+      "id": 13,
+      "name": {
+        "ar": "الفنون والحرف",
+        "en": "Arts & Crafts"
+      },
+      "icon": "fas fa-paint-brush",
+      "image": "Arts & Crafts.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 100,
+        "hidden": false
+      }
+    },
+    {
+      "id": 16,
+      "name": {
+        "ar": "العقارات",
+        "en": "Real Estate"
+      },
+      "icon": "fas fa-city",
+      "image": "Real Estate.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 110,
+        "hidden": false
+      }
+    },
+    {
+      "id": 17,
+      "name": {
+        "ar": "المناسبات والهدايا",
+        "en": "Events & Gifts"
+      },
+      "icon": "fas fa-gift",
+      "image": "Events & Gifts.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 120,
+        "hidden": false
+      }
+    },
+    {
+      "id": 20,
+      "name": {
+        "ar": "الخدمات الطبية",
+        "en": "Medical Services"
+      },
+      "icon": "fas fa-user-md",
+      "image": "Medical Services.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 130,
+        "hidden": false
+      }
+    },
+    {
+      "id": 23,
+      "name": {
+        "ar": "ماى واى",
+        "en": "My Way"
+      },
+      "icon": "fas fa-m",
+      "image": "My Way.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 10,
+        "hidden": false
+      }
+    },
+    {
+      "id": 44,
+      "name": {
+        "ar": "أوريفليم",
+        "en": "Oriflame"
+      },
+      "icon": "fas fa-circle-notch",
+      "image": "Oriflame.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 20,
+        "hidden": false
+      }
+    },
+    {
+      "id": 45,
+      "name": {
+        "ar": "افون",
+        "en": "Avon"
+      },
+      "icon": "fas fa-v",
+      "image": "Avon.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 30,
+        "hidden": false
+      }
+    },
+    {
+      "id": 46,
+      "name": {
+        "ar": "خدمات التوصيل",
+        "en": "Delivery Services"
+      },
+      "icon": "fas fa-shipping-fast",
+      "image": "Shipping & Delivery.webp",
+      "createdAt": "2026-06-14 04:03:27",
+      "updatedAt": "2026-06-14 04:03:27",
+      "display": {
+        "order": 150,
+        "hidden": false
+      }
+    }
+  ]
+}

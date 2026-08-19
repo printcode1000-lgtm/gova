@@ -1,4 +1,5 @@
 import { nodeRequire } from '../node-require';
+import { ensureNotificationsDevMigrations } from './ensure-notifications-migrations';
 import "server-only";
 
 import { isDevelopment } from "@/core/config";
@@ -18,9 +19,6 @@ export class NotificationsSQLiteDatabaseClient extends AbstractDatabaseClient {
       sqlite,
       isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
     );
-    const {
-      ensureNotificationsDevMigrations,
-    } = nodeRequire("./ensure-notifications-migrations");
     ensureNotificationsDevMigrations(this._db);
     return this._db;
   }

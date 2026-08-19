@@ -22,8 +22,6 @@ export const PRODUCTS_DECLARATION = {
   mirrorEntryPoints: [
     'features/product/services/product-service.server.ts',
     'features/product/services/product-review-service.server.ts',
-    'features/product-search/services/product-search-products.server.ts',
-    'features/product-search/services/product-search-fields.server.ts',
     'features/categories/index.ts',
     'core/config/server-env.ts',
   ],

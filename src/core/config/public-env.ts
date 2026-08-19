@@ -60,6 +60,8 @@ export const publicEnv = {
    */
   profilesUrl:
     process.env.NEXT_PUBLIC_ASOL_PROFILES_URL?.replace(/\/$/, "") || "",
+  submainUrl: process.env.NEXT_PUBLIC_ASOL_SUBMAIN_URL?.replace(/\/$/, "") || "",
+  sub2mainUrl: process.env.NEXT_PUBLIC_ASOL_SUB2MAIN_URL?.replace(/\/$/, "") || "",
   otaManifestUrl: process.env.NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL || "",
   otaPublicKey: process.env.NEXT_PUBLIC_ASOL_OTA_PUBLIC_KEY || "",
   webBundleVersion:

@@ -25,7 +25,7 @@ import path from 'node:path';
 import { collectSpecifiers } from '@asol/service-mirror-core';
 
 const ROOT = process.cwd();
-const SERVICES = ['notifications', 'products', 'orders', 'profiles'] as const;
+const SERVICES = ['notifications', 'products', 'orders', 'profiles', 'submain', 'sub2main'] as const;
 
 const CODE_EXTENSIONS = ['.ts', '.tsx', '.mts', '.cts', '.js', '.mjs'];
 const RESOLUTION_SUFFIXES = [
@@ -168,7 +168,7 @@ function main(): void {
     process.exit(1);
   }
 
-  console.log('[services:verify] All 4 service uploads are complete.');
+  console.log('[services:verify] All 6 service uploads are complete.');
 }
 
 main();

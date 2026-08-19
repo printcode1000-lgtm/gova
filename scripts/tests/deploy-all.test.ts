@@ -12,8 +12,19 @@
 import assert from "node:assert/strict";
 import { __testables } from "../deploy-all";
 
-const { parseFlags, compareVersions, SCRATCH_FILE_PATTERNS, PREFLIGHT_STEPS, RELEASE_MANIFEST, formatSuccessLine, FAIL_PREFIX } =
-  __testables;
+const {
+  parseFlags,
+  parseArgv,
+  resolvePhasesToRun,
+  compareVersions,
+  SCRATCH_FILE_PATTERNS,
+  PREFLIGHT_STEPS,
+  RELEASE_MANIFEST,
+  formatSuccessLine,
+  FAIL_PREFIX,
+  DEPLOY_ALL_PHASE_ORDER,
+  SERVICES_PHASE_ALIAS,
+} = __testables;
 
 // ── 1. Importing the module must not have deployed ─────────────────────────
 // Reaching this line at all proves `main()` did not run on import.
@@ -120,5 +131,30 @@ assert.match(
   "Success line must record when preflight was skipped.",
 );
 assert.equal(FAIL_PREFIX, "[deploy:all] FAILED —", "Failure prefix must be stable.");
+
+// ── 9. Phased deploy resolves the full release order by default ────────────
+assert.deepEqual(
+  resolvePhasesToRun({ listPhases: false }),
+  [...DEPLOY_ALL_PHASE_ORDER],
+  "Full deploy:all must run every phase in order.",
+);
+
+// ── 10. Single-phase and alias selection ───────────────────────────────────
+assert.deepEqual(
+  resolvePhasesToRun({ listPhases: false, onlyPhase: "preflight" }),
+  ["preflight"],
+);
+assert.deepEqual(
+  resolvePhasesToRun({ listPhases: false, onlyPhase: SERVICES_PHASE_ALIAS }),
+  ["notifications", "products", "orders", "profiles", "submain", "sub2main"],
+);
+assert.deepEqual(
+  resolvePhasesToRun({ listPhases: false, fromPhase: "submain" }),
+  ["submain", "sub2main", "main"],
+);
+
+// ── 11. Phase flags reject unknown ids and conflicting selectors ───────────
+assert.throws(() => parseArgv(["--phase=unknown"]), /Unknown phase/);
+assert.throws(() => parseArgv(["--phase=preflight", "--from-phase=publish"]), /not both/);
 
 console.log("deploy:all guard tests passed.");

@@ -4,6 +4,22 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  DEPLOY_ALL_PHASE_ORDER,
+  type DeployAllPhaseId,
+  type DeployAllServicePhaseId,
+  formatPhaseList,
+  isDeployAllPhaseId,
+  phasesFrom,
+  phasePrerequisites,
+  SERVICE_PHASE_IDS,
+} from "./lib/deploy-all-phases";
+import {
+  assertPhasePrerequisites,
+  markPhaseComplete,
+  readDeployAllState,
+  writeDeployAllState,
+} from "./lib/deploy-all-state";
+import {
   DeploymentNpmScriptError,
   runDeploymentNpmScript,
 } from "./lib/run-deployment-npm-script";
@@ -27,14 +43,18 @@ const GIT_INDEX_LOCK = path.join(ROOT, ".git", "index.lock");
 const ROOT_VERCEL_LINK = path.join(ROOT, ".vercel", "project.json");
 const STALE_GIT_LOCK_AGE_MS = 2 * 60 * 1000;
 const FAIL_PREFIX = "[deploy:all] FAILED —";
-const SERVICE_DEPLOYS = [
-  { target: "notifications", script: "notifications:deploy" },
-  { target: "products", script: "products:deploy" },
-  { target: "orders", script: "orders:deploy" },
-  { target: "profiles", script: "profiles:deploy" },
-  { target: "submain", script: "submain:deploy" },
-  { target: "sub2main", script: "sub2main:deploy" },
-] as const;
+const SERVICES_PHASE_ALIAS = "services";
+
+const SERVICE_DEPLOYS: Readonly<
+  Record<DeployAllServicePhaseId, { target: DeployAllServicePhaseId; script: string }>
+> = {
+  notifications: { target: "notifications", script: "notifications:deploy" },
+  products: { target: "products", script: "products:deploy" },
+  orders: { target: "orders", script: "orders:deploy" },
+  profiles: { target: "profiles", script: "profiles:deploy" },
+  submain: { target: "submain", script: "submain:deploy" },
+  sub2main: { target: "sub2main", script: "sub2main:deploy" },
+};
 
 function git(args: string[]): string {
   return execFileSync("git", args, {
@@ -109,6 +129,7 @@ function failedReport(
 }
 
 function printFinalSummary(reports: VercelDeploymentReport[]): void {
+  if (reports.length === 0) return;
   console.log("\n[deploy:all] Final verified production report");
   console.table(
     reports.map((report) => ({
@@ -132,17 +153,32 @@ interface DeployFlags {
   allowScratchFiles: boolean;
 }
 
+interface PhaseSelection {
+  listPhases: boolean;
+  onlyPhase?: DeployAllPhaseId | typeof SERVICES_PHASE_ALIAS;
+  fromPhase?: DeployAllPhaseId;
+  revisionOverride?: string;
+}
+
+interface ParsedArgv {
+  flags: DeployFlags;
+  phase: PhaseSelection;
+}
+
+const DEPLOY_FLAG_NAMES = new Set([
+  "--skip-preflight",
+  "--allow-empty",
+  "--allow-manifest-downgrade",
+  "--allow-scratch-files",
+]);
+
 function parseFlags(argv: readonly string[]): DeployFlags {
-  const known = new Set([
-    "--skip-preflight",
-    "--allow-empty",
-    "--allow-manifest-downgrade",
-    "--allow-scratch-files",
-  ]);
-  const unknown = argv.filter((arg) => !known.has(arg));
+  const unknown = argv.filter(
+    (arg) => !DEPLOY_FLAG_NAMES.has(arg) && !arg.startsWith("--phase=") && !arg.startsWith("--from-phase=") && !arg.startsWith("--revision=") && arg !== "--list-phases",
+  );
   if (unknown.length > 0) {
     throw new Error(
-      `Unknown option(s): ${unknown.join(", ")}. Known: ${[...known].join(", ")}.`,
+      `Unknown option(s): ${unknown.join(", ")}. Known deploy flags: ${[...DEPLOY_FLAG_NAMES].join(", ")}; phase flags: --phase=<id>, --from-phase=<id>, --revision=<sha>, --list-phases.`,
     );
   }
   return {
@@ -151,6 +187,101 @@ function parseFlags(argv: readonly string[]): DeployFlags {
     allowManifestDowngrade: argv.includes("--allow-manifest-downgrade"),
     allowScratchFiles: argv.includes("--allow-scratch-files"),
   };
+}
+
+function parsePhaseArg(argv: readonly string[], prefix: "--phase=" | "--from-phase="): string | undefined {
+  const entry = argv.find((arg) => arg.startsWith(prefix));
+  return entry?.slice(prefix.length);
+}
+
+function parseRevisionArg(argv: readonly string[]): string | undefined {
+  const entry = argv.find((arg) => arg.startsWith("--revision="));
+  return entry?.slice("--revision=".length);
+}
+
+function parseArgv(argv: readonly string[]): ParsedArgv {
+  const flags = parseFlags(argv);
+  const revisionOverride = parseRevisionArg(argv);
+  if (argv.includes("--list-phases")) {
+    return { flags, phase: { listPhases: true } };
+  }
+
+  const onlyPhaseRaw = parsePhaseArg(argv, "--phase=");
+  const fromPhaseRaw = parsePhaseArg(argv, "--from-phase=");
+  if (onlyPhaseRaw && fromPhaseRaw) {
+    throw new Error("Use either --phase=<id> or --from-phase=<id>, not both.");
+  }
+
+  if (onlyPhaseRaw) {
+    if (onlyPhaseRaw === SERVICES_PHASE_ALIAS) {
+      return {
+        flags,
+        phase: { listPhases: false, onlyPhase: SERVICES_PHASE_ALIAS, revisionOverride },
+      };
+    }
+    if (!isDeployAllPhaseId(onlyPhaseRaw)) {
+      throw new Error(
+        `Unknown phase "${onlyPhaseRaw}". Run with --list-phases to see valid phase ids.`,
+      );
+    }
+    return {
+      flags,
+      phase: { listPhases: false, onlyPhase: onlyPhaseRaw, revisionOverride },
+    };
+  }
+
+  if (fromPhaseRaw) {
+    if (!isDeployAllPhaseId(fromPhaseRaw)) {
+      throw new Error(
+        `Unknown phase "${fromPhaseRaw}". Run with --list-phases to see valid phase ids.`,
+      );
+    }
+    return {
+      flags,
+      phase: { listPhases: false, fromPhase: fromPhaseRaw, revisionOverride },
+    };
+  }
+
+  return {
+    flags,
+    phase: {
+      listPhases: false,
+      revisionOverride,
+    },
+  };
+}
+
+function resolvePhasesToRun(selection: PhaseSelection): DeployAllPhaseId[] {
+  if (selection.onlyPhase === SERVICES_PHASE_ALIAS) {
+    return [...SERVICE_PHASE_IDS];
+  }
+  if (selection.onlyPhase) {
+    return [selection.onlyPhase];
+  }
+  if (selection.fromPhase) {
+    return phasesFrom(selection.fromPhase);
+  }
+  return [...DEPLOY_ALL_PHASE_ORDER];
+}
+
+function requiredPrerequisites(
+  phaseId: DeployAllPhaseId,
+  flags: DeployFlags,
+): DeployAllPhaseId[] {
+  const required = phasePrerequisites(phaseId);
+  if (flags.skipPreflight) {
+    return required.filter((id) => id !== "preflight");
+  }
+  return required;
+}
+
+function printPhaseRetryHint(failedPhase: DeployAllPhaseId): void {
+  console.error(
+    `\n[deploy:all] Fix the failure, then retry only this phase:\n` +
+      `  npm run deploy:all -- --phase=${failedPhase}\n` +
+      `Or continue from here:\n` +
+      `  npm run deploy:all -- --from-phase=${failedPhase}`,
+  );
 }
 
 /**
@@ -185,7 +316,7 @@ const PREFLIGHT_STEPS = [
   "services:build",
 ] as const;
 
-async function preflight(flags: DeployFlags): Promise<void> {
+async function runPreflightPhase(flags: DeployFlags): Promise<void> {
   if (flags.skipPreflight) {
     console.warn(
       "\n[deploy:all] ⚠ PREFLIGHT SKIPPED. Not verified before publishing:\n" +
@@ -205,11 +336,12 @@ async function preflight(flags: DeployFlags): Promise<void> {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(
         `Preflight failed at "${step}": ${message}\n` +
-          "Nothing has been committed or pushed. Fix the failure and run deploy:all again.",
+          "Nothing has been committed or pushed. Fix the failure and retry:\n" +
+          "  npm run deploy:all -- --phase=preflight",
       );
     }
   }
-  console.log("[deploy:all] Preflight passed; proceeding to commit and push.");
+  console.log("[deploy:all] Preflight passed; safe to publish.");
 }
 
 /**
@@ -398,15 +530,32 @@ async function verifyMainDeployment(input: {
   });
 }
 
-async function main(): Promise<void> {
-  const flags = parseFlags(process.argv.slice(2));
+interface PublishContext {
+  revision: string;
+  runId: string;
+  timestamp: string;
+  mainComment: string;
+}
 
-  // Everything that can refuse the deployment runs before the first git write.
-  // The push is what makes a release public and is the point of no return, so
-  // nothing below it may be the first place a problem is discovered.
+function resolvePublishContext(
+  selection: PhaseSelection,
+  existing?: ReturnType<typeof readDeployAllState>,
+): PublishContext {
+  const revision =
+    selection.revisionOverride?.trim() ||
+    existing?.revision?.trim() ||
+    git(["rev-parse", "HEAD"]);
+  const timestamp = existing?.timestamp || new Date().toISOString();
+  const mainComment = existing?.mainComment || `deploy(main): ${timestamp}`;
+  const runId =
+    existing?.runId ||
+    `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
+  return { revision, runId, timestamp, mainComment };
+}
+
+async function runPublishPhase(flags: DeployFlags): Promise<PublishContext> {
   assertMainBranch();
   assertDeploymentCredentials();
-  await preflight(flags);
   assertNoScratchFiles(flags);
   assertReleaseManifestNotDowngraded(flags);
   assertSomethingToDeploy(flags);
@@ -422,7 +571,6 @@ async function main(): Promise<void> {
   execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
   const commitArgs = ["commit", "--allow-empty", "-m", mainComment];
   if (flags.skipPreflight) {
-    // Recorded in history so a shortcut taken under pressure stays visible.
     commitArgs.push(
       "-m",
       `Preflight skipped via --skip-preflight. Not verified: ${PREFLIGHT_STEPS.join(", ")}.`,
@@ -446,54 +594,152 @@ async function main(): Promise<void> {
     "[deploy:all] GitHub push completed; only the existing GitHub-linked main Vercel project will auto-deploy.",
   );
 
+  writeDeployAllState({
+    revision,
+    runId,
+    timestamp,
+    mainComment,
+    skipPreflight: flags.skipPreflight,
+    completedPhases: readDeployAllState()?.completedPhases ?? [],
+    lastUpdated: new Date().toISOString(),
+  });
+
+  return { revision, runId, timestamp, mainComment };
+}
+
+async function runServicePhase(
+  phaseId: DeployAllServicePhaseId,
+  context: PublishContext,
+): Promise<VercelDeploymentReport> {
+  const deployment = SERVICE_DEPLOYS[phaseId];
+  const comment = `deploy(${deployment.target}): ${context.timestamp} @ ${context.revision.slice(0, 12)}`;
+  const report = await runDeploymentNpmScript(deployment.script, {
+    logPrefix: "deploy:all",
+    captureReport: true,
+    env: {
+      ASOL_DEPLOYMENT_RUN_ID: `${context.runId}-${deployment.target}`,
+      ASOL_DEPLOYMENT_REVISION: context.revision,
+      ASOL_DEPLOYMENT_COMMENT: comment,
+    },
+  });
+  if (!report) throw new Error("The service returned no deployment report.");
+  if (report.state !== "READY") {
+    throw new Error(report.message || `Service ${deployment.target} is ${report.state}.`);
+  }
+  return report;
+}
+
+async function main(): Promise<void> {
+  const { flags, phase } = parseArgv(process.argv.slice(2));
+
+  if (phase.listPhases) {
+    console.log("[deploy:all] Phases (in order):\n" + formatPhaseList());
+    console.log(
+      "\nAliases:\n" +
+        `  --phase=${SERVICES_PHASE_ALIAS}  all six CLI service deploys\n` +
+        "\nExamples:\n" +
+        "  npm run deploy:all -- --phase=preflight\n" +
+        "  npm run deploy:all -- --phase=publish\n" +
+        "  npm run deploy:all -- --phase=submain\n" +
+        "  npm run deploy:all -- --from-phase=notifications\n",
+    );
+    return;
+  }
+
+  const phasesToRun = resolvePhasesToRun(phase);
+  const runningFullRelease =
+    phasesToRun.length === DEPLOY_ALL_PHASE_ORDER.length &&
+    phasesToRun.every((id, index) => id === DEPLOY_ALL_PHASE_ORDER[index]);
+
+  let publishContext = resolvePublishContext(phase, readDeployAllState());
   const reports: VercelDeploymentReport[] = [];
-  const failures: string[] = [];
-  for (const deployment of SERVICE_DEPLOYS) {
-    const comment = `deploy(${deployment.target}): ${timestamp} @ ${revision.slice(0, 12)}`;
+
+  for (const phaseId of phasesToRun) {
+    console.log(`\n[deploy:all] ── phase: ${phaseId} ──`);
     try {
-      const report = await runDeploymentNpmScript(deployment.script, {
-        logPrefix: "deploy:all",
-        captureReport: true,
-        env: {
-          ASOL_DEPLOYMENT_RUN_ID: `${runId}-${deployment.target}`,
-          ASOL_DEPLOYMENT_REVISION: revision,
-          ASOL_DEPLOYMENT_COMMENT: comment,
-        },
-      });
-      if (!report) throw new Error("The service returned no deployment report.");
-      reports.push(report);
+      if (phaseId === "preflight") {
+        assertMainBranch();
+        assertDeploymentCredentials();
+        await runPreflightPhase(flags);
+        markPhaseComplete("preflight", { skipPreflight: flags.skipPreflight });
+        continue;
+      }
+
+      const prerequisites = requiredPrerequisites(phaseId, flags);
+      if (prerequisites.length > 0) {
+        assertPhasePrerequisites(phaseId, prerequisites);
+      }
+
+      if (phaseId === "publish") {
+        publishContext = await runPublishPhase(flags);
+        markPhaseComplete("publish", publishContext);
+        continue;
+      }
+
+      if ((SERVICE_PHASE_IDS as readonly string[]).includes(phaseId)) {
+        publishContext = resolvePublishContext(phase, readDeployAllState());
+        if (!publishContext.revision) {
+          throw new Error(
+            'Publish phase has not run yet. Run "npm run deploy:all -- --phase=publish" first.',
+          );
+        }
+        const report = await runServicePhase(phaseId as DeployAllServicePhaseId, publishContext);
+        reports.push(report);
+        markPhaseComplete(phaseId);
+        console.log(`[deploy:all] Phase "${phaseId}" completed (${report.state}).`);
+        continue;
+      }
+
+      if (phaseId === "main") {
+        publishContext = resolvePublishContext(phase, readDeployAllState());
+        const mainReport = await verifyMainDeployment({
+          revision: publishContext.revision,
+          comment: publishContext.mainComment,
+        });
+        reports.unshift(mainReport);
+        if (mainReport.state !== "READY") {
+          throw new Error(mainReport.message || `Main deployment is ${mainReport.state}.`);
+        }
+        markPhaseComplete("main");
+        console.log(`[deploy:all] Phase "main" completed (${mainReport.state}).`);
+      }
     } catch (error) {
-      const report = error instanceof DeploymentNpmScriptError ? error.report : undefined;
       const message = error instanceof Error ? error.message : String(error);
-      reports.push(report ?? failedReport(deployment.target, comment, message));
-      failures.push(`${deployment.script}: ${message}`);
+      if (error instanceof DeploymentNpmScriptError && error.report) {
+        reports.push(error.report);
+      }
+      printPhaseRetryHint(phaseId);
+      const rollbackRevision =
+        phaseId !== "preflight" && phaseId !== "publish" ? publishContext.revision : undefined;
+      fail(`phase "${phaseId}" failed — ${message}`, rollbackRevision);
+      printFinalSummary(reports);
+      return;
     }
   }
 
-  try {
-    const mainReport = await verifyMainDeployment({ revision, comment: mainComment });
-    reports.unshift(mainReport);
-    if (mainReport.state !== "READY") failures.push(`main: ${mainReport.message}`);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    reports.unshift(failedReport("main", mainComment, message));
-    failures.push(`main: ${message}`);
-  }
-
   printFinalSummary(reports);
-  reportNativeSurfaceStatus();
-  if (failures.length > 0 || reports.some((report) => report.state !== "READY")) {
-    const detail =
-      failures.length > 0
-        ? failures.join("; ")
-        : reports
-            .filter((report) => report.state !== "READY")
-            .map((report) => `${report.target}: ${report.state}`)
-            .join("; ");
-    fail(`deployment verification failed — ${detail}`, revision);
+  if (runningFullRelease) {
+    reportNativeSurfaceStatus();
+    console.log(formatSuccessLine(flags.skipPreflight));
+    writeDeployAllState({
+      ...publishContext,
+      skipPreflight: flags.skipPreflight,
+      completedPhases: [...DEPLOY_ALL_PHASE_ORDER],
+      lastUpdated: new Date().toISOString(),
+    });
     return;
   }
-  console.log(formatSuccessLine(flags.skipPreflight));
+
+  const completed = readDeployAllState()?.completedPhases ?? [];
+  const remaining = DEPLOY_ALL_PHASE_ORDER.filter((id) => !completed.includes(id));
+  if (remaining.length > 0) {
+    console.log(
+      `[deploy:all] Remaining phase(s): ${remaining.join(", ")}\n` +
+        `Continue with: npm run deploy:all -- --from-phase=${remaining[0]}`,
+    );
+  } else {
+    console.log("[deploy:all] All phases completed for this run.");
+  }
 }
 
 /**
@@ -532,12 +778,16 @@ function reportNativeSurfaceStatus(): void {
 
 export const __testables = {
   parseFlags,
+  parseArgv,
+  resolvePhasesToRun,
   compareVersions,
   SCRATCH_FILE_PATTERNS,
   PREFLIGHT_STEPS,
   RELEASE_MANIFEST,
   formatSuccessLine,
   FAIL_PREFIX,
+  DEPLOY_ALL_PHASE_ORDER,
+  SERVICES_PHASE_ALIAS,
 };
 
 /**

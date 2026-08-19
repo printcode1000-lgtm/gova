@@ -2,6 +2,8 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'fs';
 import path from 'path';
 import {
   READ_ROUTES,
+  SUBMAIN_ROUTES,
+  SUB2MAIN_ROUTES,
   resolveServiceOriginForRuntime,
   type AppDeployment,
   type AppPlatform,
@@ -179,14 +181,22 @@ function runRule0Tests(): void {
 
   // ---------------------------------------------------------------- T3: Not reachable from a deployment
   const servicesFiles = getAllFiles(path.join(process.cwd(), 'services'), ['.ts', '.tsx']);
+  const forbiddenChannelPatterns = [
+    '@asol/account-bridge',
+    'src/modules/service-bridge',
+    'src/modules/notification-bridge',
+  ];
   for (const file of servicesFiles) {
-    const content = readFileSync(file, 'utf-8');
-    assert(
-      !content.includes('@asol/account-bridge') &&
-        !content.includes('src/modules/service-bridge') &&
-        !content.includes('src/modules/notification-bridge'),
-      `T3: Service file ${file} imports inter-account channel!`,
-    );
+    const content = readFileSync(file, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+    for (const match of content.matchAll(/\bfrom\s+['"]([^'"]+)['"]/g)) {
+      const specifier = match[1];
+      for (const forbidden of forbiddenChannelPatterns) {
+        assert(
+          !specifier.includes(forbidden),
+          `T3: Service file ${file} imports inter-account channel "${specifier}"!`,
+        );
+      }
+    }
   }
   console.log('  ✔ T3: Channel unreachable from service deployments verified.');
 
@@ -199,6 +209,8 @@ function runRule0Tests(): void {
     products: 'https://products.example.com',
     orders: 'https://orders.example.com',
     profiles: 'https://profiles.example.com',
+    submain: 'https://submain.example.com',
+    sub2main: 'https://sub2main.example.com',
   } as const;
 
   const platforms = ['web', 'android', 'ios'] as const;
@@ -328,12 +340,29 @@ function runRule0Tests(): void {
       products: 'https://products.example.com',
       orders: 'https://orders.example.com',
       profiles: 'https://profiles.example.com',
+      submain: 'https://submain.example.com',
+      sub2main: 'https://sub2main.example.com',
     },
   };
   assert(resolveServiceOriginForRuntime('GET', '/api/orders', runtime) === 'https://orders.example.com', 'T7: /api/orders matches orders');
   assert(resolveServiceOriginForRuntime('GET', '/api/orders/12345', runtime) === null, 'T7: /api/orders/12345 returns null');
   assert(resolveServiceOriginForRuntime('GET', '/api/orders/12345/items', runtime) === null, 'T7: /api/orders/12345/items returns null');
-  assert(resolveServiceOriginForRuntime('GET', '/api/search/sellers', runtime) === null, 'T7: /api/search/sellers returns null');
+  assert(
+    resolveServiceOriginForRuntime('GET', '/api/search/sellers', runtime) === 'https://submain.example.com',
+    'T7: /api/search/sellers routes to submain',
+  );
+  assert(
+    resolveServiceOriginForRuntime('POST', '/api/orders/from-cart', runtime) === 'https://submain.example.com',
+    'T7: POST /api/orders/from-cart routes to submain',
+  );
+  assert(
+    resolveServiceOriginForRuntime('PUT', '/api/profile/editor', runtime) === 'https://sub2main.example.com',
+    'T7: PUT /api/profile/editor routes to sub2main',
+  );
+  assert(
+    resolveServiceOriginForRuntime('POST', '/api/products', runtime) === 'https://sub2main.example.com',
+    'T7: POST /api/products routes to sub2main',
+  );
   assert(resolveServiceOriginForRuntime('GET', '/api/profile/reviews', runtime) === null, 'T7: /api/profile/reviews returns null');
 
   // Verify a prefix-based matcher would fail this test
@@ -345,7 +374,7 @@ function runRule0Tests(): void {
 
   // ---------------------------------------------------------------- T8: Exported surface is pinned
   const mainKeys = Object.keys(doorMain).sort();
-  assert(mainKeys.includes('resolveServiceOrigin') && mainKeys.includes('resolveServiceOriginForRuntime') && mainKeys.includes('READ_ROUTES'), 'T8: Door . exports exact surface');
+  assert(mainKeys.includes('resolveServiceOrigin') && mainKeys.includes('resolveServiceOriginForRuntime') && mainKeys.includes('READ_ROUTES') && mainKeys.includes('SUBMAIN_ROUTES') && mainKeys.includes('SUB2MAIN_ROUTES'), 'T8: Door . exports exact surface');
 
   const notificationsKeys = Object.keys(doorNotifications).sort();
   assert(notificationsKeys.includes('deliverNotificationGrants') && notificationsKeys.includes('scheduleNotificationGrantDelivery'), 'T8: Door ./notifications exports exact surface');
@@ -360,12 +389,18 @@ function runRule0Tests(): void {
   console.log('  ✔ T9: Single path invariant verified (declarations carry zero sibling references).');
 
   // ---------------------------------------------------------------- T10: public-env isolation
-  const ordersGenerated = path.join(process.cwd(), 'services/orders/generated/src/core/config/public-env.ts');
-  if (existsSync(ordersGenerated)) {
-    const content = readFileSync(ordersGenerated, 'utf-8');
-    assert(!content.includes('asol-notifications') && !content.includes('asol-products'), 'T10: orders mirror clean');
+  for (const service of ['orders', 'notifications', 'products', 'profiles', 'submain', 'sub2main'] as const) {
+    const publicEnvPath = path.join(process.cwd(), `services/${service}/generated/src/core/config/public-env.ts`);
+    if (!existsSync(publicEnvPath)) continue;
+    const content = readFileSync(publicEnvPath, 'utf-8');
+    for (const sibling of ['asol-notifications', 'asol-products', 'asol-orders', 'asol-profiles', 'asol-submain', 'asol-sub2main']) {
+      assert(
+        !content.includes(sibling),
+        `T10: ${service} mirror must not embed sibling origin ${sibling}`,
+      );
+    }
   }
-  console.log('  ✔ T10: public-env isolation verified.');
+  console.log('  ✔ T10: public-env isolation verified across service mirrors.');
 
   console.log('\n✅ All 10 Rule 0 tests in @asol/account-bridge passed successfully!');
 }

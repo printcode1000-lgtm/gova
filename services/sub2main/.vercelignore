@@ -1,0 +1,8 @@
+# Vercel prefers this file over .gitignore when deciding what to upload.
+#
+# It exists specifically so `generated/` IS uploaded: the repository ignores it
+# because it is produced by scripts/sync-submain-service-sources.ts, but the
+# remote build cannot compile without it.
+node_modules
+.next
+.vercel

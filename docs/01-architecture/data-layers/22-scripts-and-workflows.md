@@ -43,7 +43,11 @@ npm run db:push:vercel-env      # Turso + bridge URLs + ASOL_MOBILE_PUSH_* when 
 npm run deploy:redeploy-main    # pick up new env vars on the GitHub-linked main app
 npm run submain:deploy          # full app on submain (groupstenderximages@gmail.com)
 npm run sub2main:deploy         # full app on sub2main (tenderx.engineer100@gmail.com)
-npm run deploy:all              # preflight + push main + all seven Vercel targets
+npm run deploy:all              # all phases: preflight → publish → 6 services → main
+npm run deploy:all:preflight    # lint/build/test gate only
+npm run deploy:all:publish      # commit + push main only
+npm run deploy:all:services     # six CLI service deploys
+npm run deploy:all:main         # verify GitHub-linked gova READY
 npm run deploy:all:skip-build   # same without local npm run build
 npm run data-access:sync-public
 

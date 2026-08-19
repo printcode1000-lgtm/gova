@@ -7,6 +7,8 @@ const scripts = [
   'scripts/sync-products-service-sources.ts',
   'scripts/sync-orders-service-sources.ts',
   'scripts/sync-profiles-service-sources.ts',
+  'scripts/sync-submain-service-sources.ts',
+  'scripts/sync-sub2main-service-sources.ts',
 ];
 
 for (const script of scripts) {

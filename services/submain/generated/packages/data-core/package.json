@@ -1,0 +1,109 @@
+{
+  "name": "@asol/data-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./telemetry": {
+      "types": "./src/ports/telemetry.ts",
+      "default": "./src/ports/telemetry.ts"
+    },
+    "./core": {
+      "types": "./src/core/index.ts",
+      "default": "./src/core/index.ts"
+    },
+    "./browser": {
+      "types": "./src/browser/index.ts",
+      "default": "./src/browser/index.ts"
+    },
+    "./provisioning": {
+      "types": "./src/provisioning/core/index.ts",
+      "default": "./src/provisioning/core/index.ts"
+    },
+    "./tooling": {
+      "types": "./src/tooling/index.ts",
+      "default": "./src/tooling/index.ts"
+    },
+    "./account-deletion": {
+      "types": "./src/domains/account-deletion/index.server.ts",
+      "default": "./src/domains/account-deletion/index.server.ts"
+    },
+    "./advertisements": {
+      "types": "./src/domains/advertisements/index.server.ts",
+      "default": "./src/domains/advertisements/index.server.ts"
+    },
+    "./auth": {
+      "types": "./src/domains/auth/index.server.ts",
+      "default": "./src/domains/auth/index.server.ts"
+    },
+    "./data-health": {
+      "types": "./src/domains/data-health/index.server.ts",
+      "default": "./src/domains/data-health/index.server.ts"
+    },
+    "./dev-cloud-backup": {
+      "types": "./src/domains/dev-cloud-backup/index.server.ts",
+      "default": "./src/domains/dev-cloud-backup/index.server.ts"
+    },
+    "./feature-flags": {
+      "types": "./src/domains/feature-flags/index.server.ts",
+      "default": "./src/domains/feature-flags/index.server.ts"
+    },
+    "./follow": {
+      "types": "./src/domains/follow/index.server.ts",
+      "default": "./src/domains/follow/index.server.ts"
+    },
+    "./marketplace-orders": {
+      "types": "./src/domains/marketplace-orders/index.server.ts",
+      "default": "./src/domains/marketplace-orders/index.server.ts"
+    },
+    "./notifications": {
+      "types": "./src/domains/notifications/index.server.ts",
+      "default": "./src/domains/notifications/index.server.ts"
+    },
+    "./ota": {
+      "types": "./src/domains/ota/index.server.ts",
+      "default": "./src/domains/ota/index.server.ts"
+    },
+    "./password-recovery": {
+      "types": "./src/domains/password-recovery/index.server.ts",
+      "default": "./src/domains/password-recovery/index.server.ts"
+    },
+    "./pharmacy-profile-catalog": {
+      "types": "./src/domains/pharmacy-profile-catalog/index.server.ts",
+      "default": "./src/domains/pharmacy-profile-catalog/index.server.ts"
+    },
+    "./product": {
+      "types": "./src/domains/product/index.server.ts",
+      "default": "./src/domains/product/index.server.ts"
+    },
+    "./product-search": {
+      "types": "./src/domains/product-search/index.server.ts",
+      "default": "./src/domains/product-search/index.server.ts"
+    },
+    "./profile": {
+      "types": "./src/domains/profile/index.server.ts",
+      "default": "./src/domains/profile/index.server.ts"
+    },
+    "./seller-discounts": {
+      "types": "./src/domains/seller-discounts/index.server.ts",
+      "default": "./src/domains/seller-discounts/index.server.ts"
+    },
+    "./super-admin": {
+      "types": "./src/domains/super-admin/index.server.ts",
+      "default": "./src/domains/super-admin/index.server.ts"
+    },
+    "./system-logs": {
+      "types": "./src/domains/system-logs/index.server.ts",
+      "default": "./src/domains/system-logs/index.server.ts"
+    }
+  },
+  "scripts": {
+    "test": "npx tsx src/tests/index.test.ts"
+  }
+}

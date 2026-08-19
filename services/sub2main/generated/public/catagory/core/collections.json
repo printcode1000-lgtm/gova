@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "id": 0,
+      "name": {
+        "ar": "بيوتي ستور",
+        "en": "Beauty Store"
+      },
+      "image": "Beauty Store.webp",
+      "memberCategoryIds": [
+        23,
+        44,
+        45
+      ],
+      "display": {
+        "order": 40,
+        "hidden": false
+      }
+    }
+  ]
+}

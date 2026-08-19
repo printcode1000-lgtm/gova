@@ -1,0 +1,29 @@
+{
+  "name": "@asol/notifications-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "default": "./src/server.ts"
+    },
+    "./builder": {
+      "types": "./src/builder.ts",
+      "default": "./src/builder.ts"
+    },
+    "./providers": {
+      "types": "./src/providers.ts",
+      "default": "./src/providers.ts"
+    }
+  },
+  "scripts": {
+    "test": "npx tsx src/tests/index.test.ts"
+  }
+}

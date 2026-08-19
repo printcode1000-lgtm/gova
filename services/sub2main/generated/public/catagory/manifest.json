@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 3,
+  "catalogVersion": "3.0.0",
+  "datasets": {
+    "core": {
+      "categories": "core/categories.json",
+      "subcategories": "core/subcategories.json",
+      "collections": "core/collections.json",
+      "specialtyColumns": "core/specialty-columns.json"
+    },
+    "pharmacy": {
+      "categories": "pharmacy/categories.json",
+      "subcategories": "pharmacy/subcategories.json",
+      "ingredients": "pharmacy/ingredients.json",
+      "forms": "pharmacy/forms.json",
+      "strengths": "pharmacy/strengths.json"
+    },
+    "vehicles": {
+      "groups": "vehicles/groups.json"
+    }
+  },
+  "assets": {
+    "mainCategories": "/images/mainCategories",
+    "subcategories": "/images/subCategories",
+    "pharmacy": "/images/pharmacy_fixed",
+    "vehicles": "/catagory/vehicles/images"
+  }
+}

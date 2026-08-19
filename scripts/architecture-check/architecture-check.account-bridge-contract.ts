@@ -41,7 +41,9 @@ export function checkAccountBridgeContract(filePath: string, content: string): v
       imp.startsWith('@asol/notifications-composition/') ||
       imp.startsWith('@asol/products-composition/') ||
       imp.startsWith('@asol/orders-composition/') ||
-      imp.startsWith('@asol/profiles-composition/')
+      imp.startsWith('@asol/profiles-composition/') ||
+      imp.startsWith('@asol/submain-composition/') ||
+      imp.startsWith('@asol/sub2main-composition/')
     ) {
       addViolation(
         'Rule 5 Contract',

@@ -1,4 +1,5 @@
 import { nodeRequire } from '../node-require';
+import { ensureProductDevMigrations } from './ensure-product-migrations';
 import "server-only";
 
 import { isDevelopment } from "@/core/config";
@@ -19,7 +20,7 @@ export class ProductSQLiteDatabaseClient extends AbstractDatabaseClient {
       sqlite,
       isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
     );
-    nodeRequire("./ensure-product-migrations").ensureProductDevMigrations(this._db);
+    ensureProductDevMigrations(this._db);
     return this._db;
   }
 

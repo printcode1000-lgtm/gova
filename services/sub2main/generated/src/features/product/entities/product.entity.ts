@@ -1,0 +1,25 @@
+export type {
+  ProductImage,
+  ProductStatus,
+  ProductRatingMode,
+  ProductMainData,
+  ProductPriceData,
+  ProductSpecificationsData,
+  ProductVehicleSpecsData,
+  ProductPropertySpecsData,
+  ProductPharmacyCatalogData,
+  ProductPharmacySpecsData,
+  ProductRatingData,
+  ProductDetails,
+  ProductRecord,
+  CreateProductInput,
+  UpdateProductInput,
+} from "@asol/product-core";
+export {
+  createEmptyProductDetails,
+  toProductDetails,
+  isSafeProductId,
+  normalizeProductStatus,
+  normalizeProductDetails,
+  normalizeRatingMode,
+} from "@asol/product-core";

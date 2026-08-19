@@ -120,6 +120,35 @@ Each is opt-in, and none is the default:
 An unrecognised option aborts rather than being ignored, so a mistyped
 `--skip-preflght` can never be read as something more permissive.
 
+### Phased runs (retry one step)
+
+`deploy:all` is split into ordered phases. A failure stops the run; fix the
+problem and retry **only** the failed phase (or continue from it). Progress is
+stored in `.deploy-all/run-state.json` (gitignored).
+
+| Phase | What it does |
+| :-- | :-- |
+| `preflight` | Branch/credential guards + lint through `services:build` |
+| `publish` | `secrets:backup`, deployment commit, `git push origin main` |
+| `notifications` … `sub2main` | One CLI service deploy each (six accounts) |
+| `main` | Wait until the GitHub-linked `gova` production deployment is `READY` |
+
+```bash
+npm run deploy:all                      # all phases in order
+npm run deploy:all:preflight            # phase 1 only
+npm run deploy:all:publish              # phase 2 only (requires preflight in state)
+npm run deploy:all:services             # all six service phases
+npm run deploy:all:main                 # verify gova only
+
+npm run deploy:all -- --phase=submain   # retry one service
+npm run deploy:all -- --from-phase=orders   # orders → profiles → submain → sub2main → main
+npm run deploy:all -- --list-phases
+```
+
+`--phase=services` is an alias for the six service phases. `--revision=<sha>`
+overrides the saved revision when retrying deploy phases after a manual fix.
+`--skip-preflight` removes the `preflight` prerequisite for `publish`.
+
 After the deployment table, the run reports whether the native surface has
 changed since the last store release. `ota:publish` refuses while it has, so the
 operator learns here instead of at the next OTA attempt; the baseline is

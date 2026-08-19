@@ -81,6 +81,8 @@ export {
   PRODUCTS_BASE_URL,
   ORDERS_BASE_URL,
   PROFILES_BASE_URL,
+  SUBMAIN_BASE_URL,
+  SUB2MAIN_BASE_URL,
 } from "./domain/defaults/platform-defaults";
 
 // ── Platform identity ─────────────────────────────────────────────────────

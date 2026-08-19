@@ -19,7 +19,7 @@ import path from 'path';
  * about what would actually be uploaded.
  */
 
-const SERVICES = ['notifications', 'products', 'orders', 'profiles'] as const;
+const SERVICES = ['notifications', 'products', 'orders', 'profiles', 'submain', 'sub2main'] as const;
 
 const ROOT = process.cwd();
 

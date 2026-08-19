@@ -1,0 +1,486 @@
+{
+  "order.created": {
+    "title": "Order created",
+    "body": "Your order {{orderNumber}} was created successfully.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.received": {
+    "title": "New order",
+    "body": "You received a new order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.buyerAddressReady": {
+    "title": "Delivery address ready",
+    "body": "The buyer added a delivery address for order {{orderNumber}}. You can proceed with shipping.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.buyerAddressProvider": {
+    "title": "Delivery address available",
+    "body": "The buyer added a delivery address for order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=service_provider", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.carrierLinkedBuyer": {
+    "title": "Delivery provider linked",
+    "body": "The seller linked a delivery provider to order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.carrierLinked": {
+    "title": "Linked to order",
+    "body": "You were linked as the delivery provider for order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=service_provider", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.updated": {
+    "title": "Order update",
+    "body": "Order {{orderNumber}} changed to {{status}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "shipment.updated": {
+    "title": "Shipment update",
+    "body": "The shipment for order {{orderNumber}} is now {{status}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Track shipment" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "order.sellerAccepted": {
+    "title": "Seller accepted",
+    "body": "{{sellerName}} accepted {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app"],
+    "targets": ["center", "badge", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.sellerRejected": {
+    "title": "Seller rejected",
+    "body": "{{sellerName}} rejected {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "urgent"
+  },
+  "return.requested": {
+    "title": "Return requested",
+    "body": "A return request was sent for {{productName}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Review return" },
+    "groupKey": "returns",
+    "sound": "default"
+  },
+  "order.fulfillmentUpdated": {
+    "title": "⚙️ Fulfillment updated",
+    "body": "The seller updated shipping pricing or return policy for order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.customPriceOffered": {
+    "title": "💰 New price offer",
+    "body": "The seller sent a price offer of {{amount}} for {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.customPriceAccepted": {
+    "title": "✅ Price accepted",
+    "body": "The buyer accepted the price for {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.customPriceRejected": {
+    "title": "❌ Price rejected",
+    "body": "The buyer rejected the price for {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.itemPreparing": {
+    "title": "📦 Preparing item",
+    "body": "The seller is preparing {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.itemReady": {
+    "title": "🚚 Ready to ship",
+    "body": "{{productName}} is ready for shipping in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.cancelled": {
+    "title": "🛑 Order cancelled",
+    "body": "{{productName}} was cancelled in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "default"
+  },
+  "order.deliveryRejected": {
+    "title": "📭 Delivery rejected",
+    "body": "The buyer rejected delivery of {{productName}} in order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "orders",
+    "sound": "urgent"
+  },
+  "order.returnApproved": {
+    "title": "↩️ Return approved",
+    "body": "The seller approved the return request for order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "returns",
+    "sound": "default"
+  },
+  "order.returnRejected": {
+    "title": "⛔ Return rejected",
+    "body": "The seller rejected the return request for order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "returns",
+    "sound": "default"
+  },
+  "order.shipmentCreated": {
+    "title": "📋 New shipment",
+    "body": "A shipment was created for order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Track shipment" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipment.receivedByCarrier": {
+    "title": "📥 Shipment received",
+    "body": "The carrier received the shipment for order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Track shipment" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipment.rejectedByCarrier": {
+    "title": "🚫 Shipment rejected",
+    "body": "The carrier rejected the shipment for order {{orderNumber}}.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Track shipment" },
+    "groupKey": "shipments",
+    "sound": "urgent"
+  },
+  "shipment.inTransit": {
+    "title": "🚛 In transit",
+    "body": "The shipment for order {{orderNumber}} is on the way.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Track shipment" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipment.outForDelivery": {
+    "title": "🏃 Out for delivery",
+    "body": "The shipment for order {{orderNumber}} is out for delivery now.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders", "buyer_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "Track shipment" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipment.delivered": {
+    "title": "✅ Delivered",
+    "body": "The shipment for order {{orderNumber}} was delivered.",
+    "category": "orders",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "message.new": {
+    "title": "New message",
+    "body": "You have a new message from {{userName}}.",
+    "category": "chat",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/chat/{{chatId}}", "label": "Open chat" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "payment.received": {
+    "title": "Payment recorded",
+    "body": "{{amount}} was recorded for order {{orderNumber}}.",
+    "category": "payment",
+    "priority": "normal",
+    "channels": ["in_app"],
+    "targets": ["center", "badge", "orders", "seller_dashboard"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}", "label": "View order" },
+    "groupKey": "payments",
+    "sound": "default"
+  },
+  "offer.received": {
+    "title": "New offer",
+    "body": "You received a new offer for {{amount}}.",
+    "category": "offers",
+    "priority": "normal",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "home"],
+    "deepLink": { "href": "/offers/{{offerId}}", "label": "View details" },
+    "groupKey": "offers",
+    "sound": "default"
+  },
+  "system.info": {
+    "title": "ASOL notice",
+    "body": "{{message}}",
+    "category": "system",
+    "priority": "low",
+    "channels": ["in_app"],
+    "targets": ["center", "badge"],
+    "groupKey": "system",
+    "sound": "silent"
+  },
+  "shipping.quoteRequested": {
+    "title": "📦 Shipping quote requested",
+    "body": "Order {{orderNumber}} needs a location-based shipping quote.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipping.quoteProposed": {
+    "title": "💸 New shipping quote",
+    "body": "A shipping quote of {{amount}} was sent. Open the order to accept or reject it.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=buyer", "label": "View order" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipping.quoteAccepted": {
+    "title": "✅ Shipping quote accepted",
+    "body": "The buyer accepted the shipping quote of {{amount}}.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "shipping.quoteRejected": {
+    "title": "❌ Shipping quote rejected",
+    "body": "The buyer rejected the shipping quote of {{amount}}. You can send a revised quote.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=seller", "label": "View order" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.planInvitation": {
+    "title": "🚚 Unified delivery request",
+    "body": "A multi-seller order with {{sellerCount}} pickup stops. You can send one quote for the whole delivery.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "View delivery plan"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteProposed": {
+    "title": "💸 New unified delivery quote",
+    "body": "A quote of {{amount}} arrived to collect your order from several sellers in one shipment.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": { "href": "/orders/details?orderId={{orderId}}&role=buyer", "label": "View delivery plan" },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteAccepted": {
+    "title": "✅ Unified delivery quote accepted",
+    "body": "The buyer accepted the unified delivery quote of {{amount}}.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "View delivery plan"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.quoteRejected": {
+    "title": "❌ Unified delivery quote rejected",
+    "body": "The buyer rejected the unified delivery quote of {{amount}}. A revised quote can be sent.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "View delivery plan"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "delivery.separateSelected": {
+    "title": "🔀 Separate delivery selected",
+    "body": "The buyer chose to keep each seller's delivery independent.",
+    "category": "offers",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "orders"],
+    "deepLink": {
+      "href": "/orders/details?orderId={{orderId}}&role=service_provider",
+      "label": "View delivery plan"
+    },
+    "groupKey": "shipments",
+    "sound": "default"
+  },
+  "specialty.request": {
+    "title": "New request: {{specialtyName}}",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "View and reply" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "specialty.replyFromProvider": {
+    "title": "New reply to your request",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "View and reply" },
+    "groupKey": "chat",
+    "sound": "default"
+  },
+  "specialty.messageFromBuyer": {
+    "title": "New message from the buyer",
+    "body": "{{message}}",
+    "category": "chat",
+    "priority": "high",
+    "channels": ["in_app", "web_push", "android_push", "ios_push"],
+    "targets": ["center", "badge", "popup", "chat"],
+    "deepLink": { "href": "/notifications", "label": "View and reply" },
+    "groupKey": "chat",
+    "sound": "default"
+  }
+}

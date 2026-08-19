@@ -1,4 +1,5 @@
 import { nodeRequire } from '../node-require';
+import { ensureDevMigrations } from './ensure-migrations';
 import 'server-only';
 
 import { isDevelopment } from '@/core/config';
@@ -17,7 +18,6 @@ export class SQLiteDatabaseClient extends AbstractDatabaseClient {
     const sqlite = new Database(PRIMARY_SQLITE_DB_PATH);
     this._db = drizzle(sqlite, isDevelopment ? { logger: createDrizzleDevLogger() } : undefined);
 
-    const { ensureDevMigrations } = nodeRequire('./ensure-migrations');
     ensureDevMigrations(this._db);
 
     return this._db;

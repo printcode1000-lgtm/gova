@@ -28,6 +28,9 @@ tsconfig.tsbuildinfo
 *.swo
 *~
 
+# deploy:all phased run state (revision, completed phases)
+.deploy-all/
+
 # SSH deploy keys
 .git_deploy_key
 .git_deploy_key.pub

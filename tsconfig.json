@@ -50,6 +50,15 @@
       "@asol/account-declarations/profiles": [
         "./packages/account-declarations/src/accounts/profiles.ts"
       ],
+      "@asol/account-declarations/submain": [
+        "./packages/account-declarations/src/accounts/submain.ts"
+      ],
+      "@asol/account-declarations/sub2main": [
+        "./packages/account-declarations/src/accounts/sub2main.ts"
+      ],
+      "@asol/sub2main-composition": [
+        "./packages/sub2main-composition/src/index.ts"
+      ],
       "@asol/auth-core": [
         "./packages/auth-core/src/index.ts"
       ],
@@ -193,6 +202,9 @@
       ],
       "@asol/profiles-composition": [
         "./packages/profiles-composition/src/index.ts"
+      ],
+      "@asol/submain-composition": [
+        "./packages/submain-composition/src/index.ts"
       ],
       "@asol/service-mirror-core": [
         "./packages/service-mirror-core/src/index.ts"

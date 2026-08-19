@@ -115,7 +115,7 @@ it for any package.
 
 ## Current status
 
-Twenty-one sealed packages, arranged in four layers. The layering is not decoration — see
+Twenty-three sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
 Doors and app-edge counts below are measured, not intended. Re-measure with:
@@ -124,7 +124,7 @@ Doors and app-edge counts below are measured, not intended. Re-measure with:
 node -e "for(const p of require('fs').readdirSync('packages')) try{const m=require('./packages/'+p+'/package.json'); if(m.name?.startsWith('@asol/')) console.log(m.name, Object.keys(m.exports||{}).join(' '))}catch{}"
 ```
 
-### Full inventory (21 packages)
+### Full inventory (23 packages)
 
 | Package | Layer | Doors | `test:*-core` gate |
 | :-- | :-- | :-- | :-- |
@@ -134,6 +134,8 @@ node -e "for(const p of require('fs').readdirSync('packages')) try{const m=requi
 | `products-composition` | 2 | `.` | `test:compositions` |
 | `profiles-composition` | 2 | `.` | `test:compositions` |
 | `notifications-composition` | 2 | `.` | `test:compositions` |
+| `submain-composition` | 2 | `.` | `test:compositions` |
+| `sub2main-composition` | 2 | `.` | `test:compositions` |
 | `orders-core` | 1 | `.` | `test:orders-core` |
 | `data-core` | 1 | `.` · `./telemetry` · `./core` · `./browser` · `./provisioning` · `./tooling` · per-domain (18) | `test:data-core` |
 | `native-core` | 1 | `.` · `./scripts/validate-android-r8-policy` | `test:native-core` |
@@ -165,7 +167,7 @@ Compositions are gated collectively by `test:compositions`, not individual `test
 | 7 | Independent package | ✅ 0 edges | ✅ 34, budgeted + pinned | ✅ 0 edges | ✅ 3, designated + pinned | ✅ 1 → dev-core | ✅ 4, designated + pinned | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 1 → native-core |
 | 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-Other sealed packages (`account-declarations`, `account-bridge`, the four `*-composition` packages)
+Other sealed packages (`account-declarations`, `account-bridge`, the six `*-composition` packages)
 follow the same eight rules; their shapes differ (data-only declarations, device bridge, layer-2
 wiring) and are documented in their own sections below rather than duplicated in this matrix.
 
@@ -223,6 +225,8 @@ Measured dependencies, rather than intended ones:
 | `storage-core` | `dev-core` (local path contract for `LocalStorageProvider`) |
 | `vercel-deploy-core` | `account-declarations` |
 | `orders-`, `products-`, `profiles-composition` | `account-declarations` |
+| `submain-composition` | `account-declarations` |
+| `sub2main-composition` | `account-declarations` |
 | `notifications-composition` | `account-declarations`, `notifications-core` |
 | `ota-core` | `native-core`, `data-core` (`./browser`, `./ota`) |
 | `account-bridge` | `native-core` |
@@ -282,6 +286,8 @@ the composition is the connector between those tasks:
 | `products` | `database` · `catalog` · `images` · `config` |
 | `profiles` | `database` · `images` · `config` |
 | `notifications` | **`crypto`** · `delivery` · `config` |
+| `submain` | `search` · `cart` · `catalog` · `config` |
+| `sub2main` | `profile` · `products` · `storage` · `catalog` · `config` |
 
 **An absent key is a capability the account cannot reach.** `orders` exposes no `images` and no
 `crypto` because it holds neither an R2 credential nor a signing secret — so there is nothing to

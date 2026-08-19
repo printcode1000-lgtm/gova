@@ -11,6 +11,8 @@ import {
   assertStaticOrdersBaseUrl,
   assertStaticProductsBaseUrl,
   assertStaticProfilesBaseUrl,
+  assertStaticSubmainBaseUrl,
+  assertStaticSub2mainBaseUrl,
   assertStaticMobilePushCredentialBlob,
   auditStaticApiBaseUrl,
   auditStaticMobilePushSecurity,
@@ -162,6 +164,8 @@ export async function buildStaticOut(
     assertStaticProductsBaseUrl();
     assertStaticOrdersBaseUrl();
     assertStaticProfilesBaseUrl();
+    assertStaticSubmainBaseUrl();
+    assertStaticSub2mainBaseUrl();
     assertStaticMobilePushCredentialBlob();
     prepareTempBuildDir();
 

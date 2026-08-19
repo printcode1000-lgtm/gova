@@ -44,6 +44,12 @@
       "@asol/account-declarations/profiles": [
         "./generated/packages/account-declarations/src/accounts/profiles.ts"
       ],
+      "@asol/account-declarations/submain": [
+        "./generated/packages/account-declarations/src/accounts/submain.ts"
+      ],
+      "@asol/account-declarations/sub2main": [
+        "./generated/packages/account-declarations/src/accounts/sub2main.ts"
+      ],
       "@asol/data-core": [
         "./generated/packages/data-core/src/index.ts"
       ],

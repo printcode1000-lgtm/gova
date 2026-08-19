@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "id": 1,
+      "name": {
+        "ar": "الأدوية والعلاج",
+        "en": "Medicines & Treatments"
+      },
+      "icon": "fas fa-pills",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 10,
+        "hidden": false
+      }
+    },
+    {
+      "id": 2,
+      "name": {
+        "ar": "العناية بالبشرة",
+        "en": "Skin Care"
+      },
+      "icon": "fas fa-spa",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 20,
+        "hidden": false
+      }
+    },
+    {
+      "id": 3,
+      "name": {
+        "ar": "العناية بالشعر",
+        "en": "Hair Care"
+      },
+      "icon": "fas fa-pump-soap",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 30,
+        "hidden": false
+      }
+    },
+    {
+      "id": 4,
+      "name": {
+        "ar": "العناية الشخصية",
+        "en": "Personal Care"
+      },
+      "icon": "fas fa-bath",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 40,
+        "hidden": false
+      }
+    },
+    {
+      "id": 5,
+      "name": {
+        "ar": "الأم والطفل",
+        "en": "Mother & Baby"
+      },
+      "icon": "fas fa-baby",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 50,
+        "hidden": false
+      }
+    },
+    {
+      "id": 6,
+      "name": {
+        "ar": "الفيتامينات والمكملات",
+        "en": "Vitamins & Supplements"
+      },
+      "icon": "fas fa-capsules",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 60,
+        "hidden": false
+      }
+    },
+    {
+      "id": 7,
+      "name": {
+        "ar": "الأجهزة والمستلزمات الطبية",
+        "en": "Medical Devices & Supplies"
+      },
+      "icon": "fas fa-stethoscope",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 70,
+        "hidden": false
+      }
+    },
+    {
+      "id": 8,
+      "name": {
+        "ar": "الصحة المتكاملة والوقاية",
+        "en": "Integrated Health & Prevention"
+      },
+      "icon": "fas fa-shield-alt",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 80,
+        "hidden": false
+      }
+    },
+    {
+      "id": 9,
+      "name": {
+        "ar": "التجميل والمكياج",
+        "en": "Beauty & Makeup"
+      },
+      "icon": "fas fa-magic",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 90,
+        "hidden": false
+      }
+    },
+    {
+      "id": 10,
+      "name": {
+        "ar": "الصحة الجنسية والزواجية",
+        "en": "Sexual & Marital Health"
+      },
+      "icon": "fas fa-venus-mars",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 100,
+        "hidden": false
+      }
+    },
+    {
+      "id": 11,
+      "name": {
+        "ar": "العناية بالقدم واليدين",
+        "en": "Foot & Hand Care"
+      },
+      "icon": "fas fa-hands",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 110,
+        "hidden": false
+      }
+    },
+    {
+      "id": 12,
+      "name": {
+        "ar": "الاسترخاء والنوم والعناية بالعقل",
+        "en": "Relaxation, Sleep & Mind Care"
+      },
+      "icon": "fas fa-bed",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 120,
+        "hidden": false
+      }
+    },
+    {
+      "id": 13,
+      "name": {
+        "ar": "كبار السن والرعاية المنزلية",
+        "en": "Elderly & Home Care"
+      },
+      "icon": "fas fa-wheelchair",
+      "createdAt": "2026-06-14 04:03:39",
+      "updatedAt": "2026-06-14 04:03:39",
+      "display": {
+        "order": 130,
+        "hidden": false
+      }
+    },
+    {
+      "id": 14,
+      "name": {
+        "ar": "الرياضة واللياقة البدنية",
+        "en": "Sports & Fitness"
+      },
+      "icon": "fas fa-dumbbell",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 140,
+        "hidden": false
+      }
+    },
+    {
+      "id": 15,
+      "name": {
+        "ar": "البيطري والعناية بالحيوانات الأليفة",
+        "en": "Veterinary & Pet Care"
+      },
+      "icon": "fas fa-paw",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 150,
+        "hidden": false
+      }
+    },
+    {
+      "id": 16,
+      "name": {
+        "ar": "الإقلاع عن التدخين",
+        "en": "Smoking Cessation"
+      },
+      "icon": "fas fa-smoking-ban",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 160,
+        "hidden": false
+      }
+    },
+    {
+      "id": 17,
+      "name": {
+        "ar": "الخدمات العضوية والطبيعية",
+        "en": "Organic & Natural Products"
+      },
+      "icon": "fas fa-leaf",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 170,
+        "hidden": false
+      }
+    },
+    {
+      "id": 18,
+      "name": {
+        "ar": "خدمات صيدلانية",
+        "en": "Pharmacy Services"
+      },
+      "icon": "fas fa-clinic-medical",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 180,
+        "hidden": false
+      }
+    },
+    {
+      "id": 19,
+      "name": {
+        "ar": "🎁 هدايا وعطور",
+        "en": "Gifts & Perfumes"
+      },
+      "icon": "fas fa-gift",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 190,
+        "hidden": false
+      }
+    },
+    {
+      "id": 20,
+      "name": {
+        "ar": "🔥 الأكثر مبيعاً",
+        "en": "Best Sellers"
+      },
+      "icon": "fas fa-fire-alt",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 200,
+        "hidden": false
+      }
+    },
+    {
+      "id": 21,
+      "name": {
+        "ar": "🎒 العودة للمدارس (موسمي)",
+        "en": "Back to School (Seasonal)"
+      },
+      "icon": "fas fa-school",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 210,
+        "hidden": false
+      }
+    },
+    {
+      "id": 22,
+      "name": {
+        "ar": "☀️ الصيف والعناية بالشمس (موسمي)",
+        "en": "Summer & Sun Care (Seasonal)"
+      },
+      "icon": "fas fa-sun",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 220,
+        "hidden": false
+      }
+    },
+    {
+      "id": 23,
+      "name": {
+        "ar": "❄️ الشتاء ونزلات البرد (موسمي)",
+        "en": "Winter & Colds (Seasonal)"
+      },
+      "icon": "fas fa-snowflake",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 230,
+        "hidden": false
+      }
+    },
+    {
+      "id": 24,
+      "name": {
+        "ar": "⭐ عروض وصفقات خاصة",
+        "en": "Special Offers & Deals"
+      },
+      "icon": "fas fa-percent",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 240,
+        "hidden": false
+      }
+    },
+    {
+      "id": 25,
+      "name": {
+        "ar": "إنقاص الوزن والسمنة",
+        "en": "Weight Loss & Obesity"
+      },
+      "icon": "fas fa-weight",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 250,
+        "hidden": false
+      }
+    },
+    {
+      "id": 26,
+      "name": {
+        "ar": "الحجامة والطب البديل",
+        "en": "Cupping & Alternative Medicine"
+      },
+      "icon": "fas fa-mortar-pestle",
+      "createdAt": "2026-06-14 04:03:40",
+      "updatedAt": "2026-06-14 04:03:40",
+      "display": {
+        "order": 260,
+        "hidden": false
+      }
+    }
+  ]
+}

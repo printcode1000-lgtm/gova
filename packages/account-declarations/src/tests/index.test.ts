@@ -99,11 +99,11 @@ function runTests(): void {
 
   // ---------------------------------------------------------------- no cross-account knowledge
   // Rule 0 at the data layer: a declaration may name only its own account.
-  const names = ['notifications', 'products', 'orders', 'profiles'] as const;
+  const isolatedServiceNames = ['notifications', 'products', 'orders', 'profiles'] as const;
   for (const declaration of Object.values(ACCOUNT_DECLARATIONS)) {
     if (declaration.name === 'gova' || declaration.name === 'submain' || declaration.name === 'sub2main') continue;
     const keys = [...declaration.requiredEnv, ...declaration.optionalEnv];
-    for (const other of names) {
+    for (const other of isolatedServiceNames) {
       if (other === declaration.name) continue;
       const foreign = keys.filter((key) => key.includes(other.toUpperCase()));
       assert(
@@ -121,26 +121,27 @@ function runTests(): void {
   // ---------------------------------------------------------------- gova is verification-only
   assert(GOVA_DECLARATION.serviceDir === undefined, 'gova has no serviceDir: it is the whole repo');
   assert(GOVA_DECLARATION.mirrorEntryPoints.length === 0, 'gova has no mirror');
-  assert(SUBMAIN_DECLARATION.deployFromRepositoryRoot === true, 'submain deploys from repository root');
-  assert(SUBMAIN_DECLARATION.serviceDir === undefined, 'submain has no serviceDir');
+  assert(SUBMAIN_DECLARATION.serviceDir === 'services/submain', 'submain deploys from services/submain');
+  assert(SUBMAIN_DECLARATION.deployFromRepositoryRoot === undefined, 'submain is not a root deploy');
   assert(SUBMAIN_DECLARATION.tokenEnvVar === 'VERCEL_SUBMAIN_TOKEN', 'submain token var');
   assert(
     !SUBMAIN_DECLARATION.requiredEnv.some((key) => key.startsWith('VERCEL_')),
     'submain runtime env must not include deploy tokens',
   );
-  assert(SUB2MAIN_DECLARATION.deployFromRepositoryRoot === true, 'sub2main deploys from repository root');
-  assert(SUB2MAIN_DECLARATION.serviceDir === undefined, 'sub2main has no serviceDir');
+  assert(SUB2MAIN_DECLARATION.serviceDir === 'services/sub2main', 'sub2main deploys from services/sub2main');
+  assert(SUB2MAIN_DECLARATION.deployFromRepositoryRoot === undefined, 'sub2main is not a root deploy');
   assert(SUB2MAIN_DECLARATION.tokenEnvVar === 'VERCEL_SUB2MAIN_TOKEN', 'sub2main token var');
   assert(
     !SUB2MAIN_DECLARATION.requiredEnv.some((key) => key.startsWith('VERCEL_')),
     'sub2main runtime env must not include deploy tokens',
   );
-  console.log('  ✔ gova is verification-only; submain and sub2main are root-deploy isolated.');
+  console.log('  ✔ gova is verification-only; submain and sub2main are service deploys.');
 
   // ---------------------------------------------------------------- compositions stay off the engine
   // This is the regression that made layer 2 unwireable: each composition imported the
   // deploy engine to read one string.
-  for (const service of names) {
+  const compositionNames = [...isolatedServiceNames, 'submain', 'sub2main'] as const;
+  for (const service of compositionNames) {
     const compositionIndex = path.join(
       process.cwd(),
       `packages/${service}-composition/src/index.ts`,
