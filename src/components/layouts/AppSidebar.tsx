@@ -61,6 +61,13 @@ import { clearImageUploadClientState } from "@/features/storage/services/image-u
 
 import { AppSidebarProps } from "./app-sidebar/AppSidebar.sidebar-model";
 
+const COLLAPSED_SUPER_ADMIN_GROUPS = {
+  content: false,
+  data: false,
+  notifications: false,
+  system: false,
+} as const;
+
 export const AppSidebar = React.memo(function AppSidebar({
   isOpen,
   onClose,
@@ -89,12 +96,9 @@ export const AppSidebar = React.memo(function AppSidebar({
   const pathname = usePathname();
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
-  const [superAdminGroupsOpen, setSuperAdminGroupsOpen] = useState({
-    content: true,
-    data: false,
-    notifications: false,
-    system: false,
-  });
+  const [superAdminGroupsOpen, setSuperAdminGroupsOpen] = useState<
+    Record<keyof typeof COLLAPSED_SUPER_ADMIN_GROUPS, boolean>
+  >({ ...COLLAPSED_SUPER_ADMIN_GROUPS });
   const [settingsGroupOpen, setSettingsGroupOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const logout = useLogout();
@@ -109,8 +113,7 @@ export const AppSidebar = React.memo(function AppSidebar({
     resolvedScheme === "dark"
       ? "text-primary font-normal hover:text-primary"
       : "text-blue-900 font-normal hover:text-blue-900";
-  const sidebarActiveTone =
-    "asol-nav-pill-active shadow-sm ring-1 ring-primary/20";
+  const sidebarActiveTone = "asol-nav-pill-active ring-1 ring-primary/20";
   const sidebarSurface =
     resolvedScheme === "dark" ? "bg-surface-bright" : "bg-[#F8FBFF]";
   const sidebarHoverSurface =
@@ -218,7 +221,11 @@ export const AppSidebar = React.memo(function AppSidebar({
   }, [themePreferences.themeMode, updateThemePreferences]);
 
   const handleSuperAdminToggle = useCallback(() => {
-    setSuperAdminOpen((open) => !open);
+    setSuperAdminOpen((open) => {
+      const next = !open;
+      if (next) setSuperAdminGroupsOpen({ ...COLLAPSED_SUPER_ADMIN_GROUPS });
+      return next;
+    });
   }, []);
 
   const handleSuperAdminGroupToggle = useCallback(
@@ -234,33 +241,7 @@ export const AppSidebar = React.memo(function AppSidebar({
   useEffect(() => {
     if (!pathname.startsWith("/super-admin")) return;
     setSuperAdminOpen(true);
-
-    if (
-      pathname.includes("/hero-slider") ||
-      pathname.includes("/featured-marquee") ||
-      pathname.includes("/trending-ribbon")
-    ) {
-      setSuperAdminGroupsOpen((current) => ({ ...current, content: true }));
-      return;
-    }
-
-    if (pathname.includes("/cloud-accounts")) {
-      setSuperAdminGroupsOpen((current) => ({ ...current, data: true }));
-      return;
-    }
-
-    if (
-      pathname.includes("/notifications-broadcast") ||
-      pathname.includes("/notification-tests")
-    ) {
-      setSuperAdminGroupsOpen((current) => ({
-        ...current,
-        notifications: true,
-      }));
-      return;
-    }
-
-    setSuperAdminGroupsOpen((current) => ({ ...current, system: true }));
+    setSuperAdminGroupsOpen({ ...COLLAPSED_SUPER_ADMIN_GROUPS });
   }, [pathname]);
 
   // Memoize super admin content
@@ -279,15 +260,23 @@ export const AppSidebar = React.memo(function AppSidebar({
     const groupPanelClass =
       "ms-2 space-y-1 border-s border-outline-variant/40 ps-2";
     return (
-      <div className={cn("rounded-lg", sidebarSurface)}>
+      <div
+        className={cn(
+          "asol-control overflow-hidden rounded-2xl border",
+          resolvedScheme === "dark"
+            ? "border-outline-variant/30"
+            : "border-outline-variant/20",
+          sidebarSurface,
+        )}
+      >
         <button
           type="button"
           onClick={handleSuperAdminToggle}
           aria-expanded={superAdminOpen}
-          className={sidebarControlClass}
+          className={cn(sidebarControlClass, "rounded-none")}
         >
           <ShieldCheck className={sidebarIconClass} />
-          منطقة السوبر أدمن
+          لوحة تحكم السوبر أدمن
           <ChevronDown
             className={cn(
               "ms-auto h-4 w-4 transition-transform",
@@ -297,7 +286,7 @@ export const AppSidebar = React.memo(function AppSidebar({
         </button>
         {superAdminOpen && (
           <div className="space-y-2 px-2 pb-3 sm:px-3 sm:pe-3 sm:ps-11">
-            <div className="rounded-md border border-outline-variant/30 bg-background/40">
+            <div className="overflow-hidden rounded-xl border border-outline-variant/25">
               <button
                 type="button"
                 onClick={() => handleSuperAdminGroupToggle("content")}
@@ -305,7 +294,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 className={groupButtonClass}
               >
                 <Sliders className={sidebarSmallIconClass} />
-                المحتوى والعروض
+                واجهة المتجر والعروض
                 <ChevronDown
                   className={cn(
                     "ms-auto h-4 w-4 transition-transform",
@@ -321,7 +310,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <Sliders className={sidebarSmallIconClass} />
-                    شريط العرض الرئيسي
+                    سلايدر الواجهة الرئيسية
                   </Link>
                   <Link
                     href="/super-admin/featured-marquee"
@@ -329,7 +318,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <Sparkles className={sidebarSmallIconClass} />
-                    الشريط المميز
+                    شريط المنتجات المميزة
                   </Link>
                   <Link
                     href="/super-admin/trending-ribbon"
@@ -337,13 +326,13 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <TrendingUp className={sidebarSmallIconClass} />
-                    شريط الأخبار/النصوص
+                    الشريط الإخباري المتحرك
                   </Link>
                 </div>
               )}
             </div>
 
-            <div className="rounded-md border border-outline-variant/30 bg-background/40">
+            <div className="overflow-hidden rounded-xl border border-outline-variant/25">
               <button
                 type="button"
                 onClick={() => handleSuperAdminGroupToggle("data")}
@@ -351,7 +340,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 className={groupButtonClass}
               >
                 <DatabaseZap className={sidebarSmallIconClass} />
-                البيانات والنسخ
+                البيانات والنسخ الاحتياطي
                 <ChevronDown
                   className={cn(
                     "ms-auto h-4 w-4 transition-transform",
@@ -367,13 +356,13 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <Cloud className={sidebarSmallIconClass} />
-                    الحسابات السحابية
+                    حسابات التخزين السحابي
                   </Link>
                 </div>
               )}
             </div>
 
-            <div className="rounded-md border border-outline-variant/30 bg-background/40">
+            <div className="overflow-hidden rounded-xl border border-outline-variant/25">
               <button
                 type="button"
                 onClick={() => handleSuperAdminGroupToggle("notifications")}
@@ -381,7 +370,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 className={groupButtonClass}
               >
                 <Megaphone className={sidebarSmallIconClass} />
-                الإشعارات
+                الإشعارات والبث
                 <ChevronDown
                   className={cn(
                     "ms-auto h-4 w-4 transition-transform",
@@ -397,7 +386,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <TestTube2 className={sidebarSmallIconClass} />
-                    اختبارات الإشعارات
+                    اختبار إرسال الإشعارات
                   </Link>
                   <Link
                     href="/super-admin/notifications-broadcast"
@@ -405,13 +394,13 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <Megaphone className={sidebarSmallIconClass} />
-                    إرسال إشعار جماعي
+                    بث إشعار لكل المستخدمين
                   </Link>
                 </div>
               )}
             </div>
 
-            <div className="rounded-md border border-outline-variant/30 bg-background/40">
+            <div className="overflow-hidden rounded-xl border border-outline-variant/25">
               <button
                 type="button"
                 onClick={() => handleSuperAdminGroupToggle("system")}
@@ -419,7 +408,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                 className={groupButtonClass}
               >
                 <ShieldCheck className={sidebarSmallIconClass} />
-                النظام والصلاحيات
+                النظام وحسابات المستخدمين
                 <ChevronDown
                   className={cn(
                     "ms-auto h-4 w-4 transition-transform",
@@ -435,7 +424,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <ScrollText className={sidebarSmallIconClass} />
-                    سجل النظام
+                    سجل أحداث النظام
                   </Link>
                   <Link
                     href="/super-admin/users"
@@ -443,7 +432,7 @@ export const AppSidebar = React.memo(function AppSidebar({
                     className={itemClass}
                   >
                     <Users className={sidebarSmallIconClass} />
-                    بحث المستخدمين
+                    إدارة حسابات المستخدمين
                   </Link>
                 </div>
               )}
@@ -516,22 +505,12 @@ export const AppSidebar = React.memo(function AppSidebar({
               </button>
             </div>
 
-            <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain p-3 pt-2 pb-[calc(0.75rem+var(--asol-safe-area-bottom))] [scrollbar-width:thin]">
+            <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain p-3 pt-2 pb-[calc(0.75rem+var(--asol-safe-area-bottom))] [scrollbar-width:thin] [&>*]:shrink-0">
               {isLoggedIn ? (
                 <>
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    disabled={logout.isPending}
-                    className={cn(sidebarControlClass, "disabled:opacity-60")}
-                  >
-                    <LogOut className={sidebarIconClass} />
-                    {t("sidebar.logout")}
-                  </button>
-
                   <div
                     className={cn(
-                      "asol-control space-y-2 rounded-2xl border p-2.5 shadow-sm",
+                      "asol-control space-y-2 rounded-2xl border p-2.5",
                       resolvedScheme === "dark"
                         ? "border-outline-variant/30"
                         : "border-outline-variant/20",
@@ -640,7 +619,7 @@ export const AppSidebar = React.memo(function AppSidebar({
 
               <div
                 className={cn(
-                  "asol-control overflow-hidden rounded-2xl border shadow-sm",
+                  "asol-control overflow-hidden rounded-2xl border",
                   resolvedScheme === "dark"
                     ? "border-outline-variant/30"
                     : "border-outline-variant/20",
@@ -737,6 +716,18 @@ export const AppSidebar = React.memo(function AppSidebar({
                   {t("sidebar.about")}
                 </button>
               </Link>
+
+              {isLoggedIn ? (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={logout.isPending}
+                  className={cn(sidebarControlClass, "disabled:opacity-60")}
+                >
+                  <LogOut className={sidebarIconClass} />
+                  {t("sidebar.logout")}
+                </button>
+              ) : null}
             </div>
           </div>
         </FocusTrap>

@@ -839,7 +839,7 @@
     "sidebar.logout": "Log out",
     "sidebar.logoutConfirmTitle": "Confirm Logout",
     "sidebar.logoutConfirmMessage": "Are you sure you want to log out?",
-    "sidebar.logoutConfirm": "Yes, Log out",
+    "sidebar.logoutConfirm": "Yes",
     "sidebar.logoutCancel": "Cancel",
     "sidebar.logoutting": "Logging out...",
     "sidebar.menu": "Menu",
