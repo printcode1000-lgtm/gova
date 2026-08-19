@@ -298,3 +298,84 @@ export async function deployAccountService(options: DeployAccountServiceOptions)
     throw new Error(`Vercel verification failed: ${report.message}`);
   }
 }
+
+export interface DeployAccountRootAppOptions {
+  declaration: AccountDeclaration;
+  env?: Record<string, string | undefined>;
+}
+
+/**
+ * Deploy a full-application account from the repository root.
+ *
+ * Used for secondary application hosts that are never GitHub-linked. The upload
+ * includes the whole monorepo; Vercel builds the main Next.js application from it.
+ */
+export async function deployAccountRootApp(
+  options: DeployAccountRootAppOptions,
+): Promise<void> {
+  const { declaration } = options;
+  const env = options.env ?? process.env;
+
+  if (!declaration.deployFromRepositoryRoot) {
+    throw new Error(`Account ${declaration.name} is not declared for repository-root deploy`);
+  }
+
+  const token = env[declaration.tokenEnvVar];
+  if (!token) {
+    throw new Error(`${declaration.tokenEnvVar} is missing from environment`);
+  }
+
+  const missing = declaration.requiredEnv.filter((key) => !env[key]?.trim());
+  if (missing.length > 0) {
+    throw new Error(`Missing required environment values: ${missing.join(', ')}`);
+  }
+
+  const repositoryRoot = process.cwd();
+  const teamId = await resolveTeamId(token);
+  const projectId = await ensureProject(token, declaration.project, teamId);
+
+  console.log('\nSyncing environment variables:');
+  for (const key of declaration.requiredEnv) {
+    await upsertEnv(token, projectId, key, env[key]!.trim(), teamId);
+  }
+  for (const key of declaration.optionalEnv) {
+    const value = env[key]?.trim();
+    if (value) await upsertEnv(token, projectId, key, value, teamId);
+    else console.log(`  skip ${key} (not set locally)`);
+  }
+
+  console.log(`\nUploading repository root and building remotely (${declaration.project})...`);
+  const runId = env.ASOL_DEPLOYMENT_RUN_ID?.trim() || `${declaration.name}-${Date.now()}`;
+  const revision = env.ASOL_DEPLOYMENT_REVISION?.trim() || 'standalone';
+  const comment =
+    env.ASOL_DEPLOYMENT_COMMENT?.trim() ||
+    `${declaration.name} production deploy ${new Date().toISOString()}`;
+
+  runVercel({
+    args: [
+      'deploy',
+      '--prod',
+      '--yes',
+      ...vercelDeploymentMetadata({ target: declaration.name, comment, runId, revision }),
+    ],
+    projectId,
+    serviceDir: repositoryRoot,
+    token,
+    teamId,
+  });
+
+  const report = await waitForVercelProductionDeployment({
+    token,
+    project: declaration.project,
+    target: declaration.name,
+    account: teamId ?? 'personal',
+    comment,
+    teamId,
+    runId,
+  });
+
+  printDeploymentReport(report);
+  if (report.state !== 'READY') {
+    throw new Error(`Vercel verification failed: ${report.message}`);
+  }
+}
