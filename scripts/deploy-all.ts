@@ -11,6 +11,7 @@ import {
   type VercelDeploymentReport,
   waitForVercelProductionDeployment,
 } from "./lib/vercel-deployment-monitor";
+import { pushMainBranch } from "./lib/push-main-branch";
 import {
   inspectNativeCompatibility,
   resolveNativeBaseline,
@@ -430,10 +431,7 @@ async function main(): Promise<void> {
   const revision = git(["rev-parse", "HEAD"]);
   const runId = `${timestamp.replace(/[^0-9]/g, "").slice(0, 17)}-${revision.slice(0, 12)}`;
   console.log("[deploy:all] Pushing main to GitHub...");
-  execFileSync("git", ["push", "origin", MAIN_BRANCH], {
-    cwd: ROOT,
-    stdio: "inherit",
-  });
+  pushMainBranch(ROOT, MAIN_BRANCH, "deploy:all");
   console.log(
     "[deploy:all] GitHub push completed; only the existing GitHub-linked main Vercel project will auto-deploy.",
   );
