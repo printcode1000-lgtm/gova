@@ -4,7 +4,6 @@ import {
   Bell,
   ChevronDown,
   Cloud,
-  DatabaseZap,
   Edit,
   Eye,
   FileText,
@@ -63,7 +62,6 @@ import { AppSidebarProps } from "./app-sidebar/AppSidebar.sidebar-model";
 
 const COLLAPSED_SUPER_ADMIN_GROUPS = {
   content: false,
-  data: false,
   notifications: false,
   system: false,
 } as const;
@@ -333,33 +331,14 @@ export const AppSidebar = React.memo(function AppSidebar({
             </div>
 
             <div className="overflow-hidden rounded-xl border border-outline-variant/25">
-              <button
-                type="button"
-                onClick={() => handleSuperAdminGroupToggle("data")}
-                aria-expanded={superAdminGroupsOpen.data}
+              <Link
+                href="/super-admin/cloud-accounts"
+                onClick={onClose}
                 className={groupButtonClass}
               >
-                <DatabaseZap className={sidebarSmallIconClass} />
-                البيانات والنسخ الاحتياطي
-                <ChevronDown
-                  className={cn(
-                    "ms-auto h-4 w-4 transition-transform",
-                    superAdminGroupsOpen.data && "rotate-180",
-                  )}
-                />
-              </button>
-              {superAdminGroupsOpen.data && (
-                <div className={groupPanelClass}>
-                  <Link
-                    href="/super-admin/cloud-accounts"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <Cloud className={sidebarSmallIconClass} />
-                    حسابات التخزين السحابي
-                  </Link>
-                </div>
-              )}
+                <Cloud className={sidebarSmallIconClass} />
+                حسابات التخزين السحابي
+              </Link>
             </div>
 
             <div className="overflow-hidden rounded-xl border border-outline-variant/25">

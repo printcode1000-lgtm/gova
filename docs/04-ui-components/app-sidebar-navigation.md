@@ -22,6 +22,11 @@ cards above it. Growth is absorbed by scrolling, not by shrinking siblings.
 - The section shell matches the settings card exactly (same border, radius, no shadow).
 - Opening the section always resets every inner group to the collapsed state
   (`COLLAPSED_SUPER_ADMIN_GROUPS`); no group is expanded by default.
+- A destination that is the only entry of its topic is rendered as a direct link
+  card instead of a collapsible group, styled with the same header class
+  (`groupButtonClass`) so it sits flush with the collapsible cards around it.
+  `حسابات التخزين السحابي` is such an entry; it has no group toggle and no key in
+  `COLLAPSED_SUPER_ADMIN_GROUPS`.
 - Navigating to any `/super-admin/*` route expands the section itself and keeps
   all groups collapsed — the route no longer auto-expands a matching group.
 - The expanded panel stays in normal document flow: it grows inside the card and
@@ -38,7 +43,7 @@ after the role each destination performs.
 | واجهة المتجر والعروض | سلايدر الواجهة الرئيسية | `/super-admin/hero-slider` |
 | واجهة المتجر والعروض | شريط المنتجات المميزة | `/super-admin/featured-marquee` |
 | واجهة المتجر والعروض | الشريط الإخباري المتحرك | `/super-admin/trending-ribbon` |
-| البيانات والنسخ الاحتياطي | حسابات التخزين السحابي | `/super-admin/cloud-accounts` |
+| — (direct entry, no group) | حسابات التخزين السحابي | `/super-admin/cloud-accounts` |
 
 See [super-admin-cloud-accounts.md](../06-super-admin-and-operations/super-admin-cloud-accounts.md).
 | الإشعارات والبث | اختبار إرسال الإشعارات | `/super-admin/notification-tests` |
