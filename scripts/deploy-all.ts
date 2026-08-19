@@ -30,6 +30,7 @@ const SERVICE_DEPLOYS = [
   { target: "products", script: "products:deploy" },
   { target: "orders", script: "orders:deploy" },
   { target: "profiles", script: "profiles:deploy" },
+  { target: "submain", script: "submain:deploy" },
 ] as const;
 
 function git(args: string[]): string {
@@ -89,9 +90,11 @@ function failedReport(
   comment: string,
   message: string,
 ): VercelDeploymentReport {
+  const project =
+    target === "main" ? "gova" : target === "submain" ? "submain" : `asol-${target}`;
   return {
     target,
-    project: target === "main" ? "gova" : `asol-${target}`,
+    project,
     account: "unknown",
     comment,
     state: "ERROR",
@@ -349,7 +352,7 @@ function printRollbackGuidance(revision: string): void {
 
 function formatSuccessLine(skipPreflight: boolean): string {
   const preflight = skipPreflight ? "preflight skipped" : "preflight passed";
-  return `[deploy:all] SUCCESS — ${preflight}, secrets backup completed, GitHub push completed, and all 5 Vercel production targets are READY.`;
+  return `[deploy:all] SUCCESS — ${preflight}, secrets backup completed, GitHub push completed, and all 6 Vercel production targets are READY.`;
 }
 
 function fail(message: string, revision?: string): void {

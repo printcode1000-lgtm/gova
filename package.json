@@ -171,6 +171,7 @@
     "db:migrate:product-image-urls": "npx tsx src/modules/data-access/tooling/strip-product-image-urls.ts",
     "db:migrate:profiles": "npx tsx src/modules/data-access/tooling/migrate-profile-shards.ts",
     "profiles:deploy": "npx tsx scripts/deploy-profiles-service.ts",
+    "submain:deploy": "npx tsx scripts/deploy-submain.ts",
     "test:profiles-module": "npx tsx src/features/profile/tests/profiles-service-module-contract.test.ts",
     "services:build": "npx tsx scripts/build-all-services.ts",
     "test:account-declarations": "npx tsx packages/account-declarations/src/tests/index.test.ts",

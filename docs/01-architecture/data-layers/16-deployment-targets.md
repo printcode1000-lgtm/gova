@@ -10,23 +10,27 @@
 | Products service | `npm run products:deploy` | Own origin, product read APIs | Product Turso only |
 | Orders service | `npm run orders:deploy` | Own origin, `GET /api/orders` | Order shards only |
 | Profiles service | `npm run profiles:deploy` | Own origin, profile read APIs | Profile shards only |
+| Secondary full app | `npm run submain:deploy` | Same routes as main app | Same Turso/R2 runtime as `gova` |
 
 The first four share **identical application code** — only environment
 configuration changes.
 
-## Five Vercel accounts
+## Six Vercel accounts
 
-Four targets are not the main application, and none of them may be called by
-it: every crossing goes through a browser-only bridge.
+Five read-only or push-only targets are not the primary GitHub-linked main
+application, and none of them may be called by it directly: every crossing goes
+through a browser-only bridge. The sixth account (`submain`) hosts the same full
+application codebase for isolated UI work and is updated only through
+`npm run submain:deploy`.
 
-| | Main app | Notifications | Products | Orders | Profiles |
-|---|---|---|---|---|---|
-| Vercel project | `gova` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
-| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** |
-| Updated by | pushing to the repository | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
-| Uploaded files | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |
-| Serves | everything else | push fan-out only | product reads only | the order list only | five profile reads |
-| Turso account | `hesham101` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
+| | Main app | Submain app | Notifications | Products | Orders | Profiles |
+|---|---|---|---|---|---|---|
+| Vercel project | `gova` | `submain` | `asol-notifications` | `asol-products` | `asol-orders` | `asol-profiles` |
+| GitHub | connected — every push redeploys | **not connected** | **not connected** | **not connected** | **not connected** | **not connected** |
+| Updated by | pushing to the repository | `npm run submain:deploy` | `npm run notifications:deploy` | `npm run products:deploy` | `npm run orders:deploy` | `npm run profiles:deploy` |
+| Uploaded files | the repository | the repository | `services/notifications/` | `services/products/` | `services/orders/` | `services/profiles/` |
+| Serves | production primary | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
+| Turso account | `hesham101` (+ all shards via env) | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
 
 The connectors are driven by seven sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, and `@asol/profiles-composition`. See [26-cloud-accounts.md](./26-cloud-accounts.md).
 The connectors are documented in
@@ -111,7 +115,7 @@ push, the exact `git revert` and Vercel rollback steps are printed.
 
 The final console line is always explicit:
 
-- success: `[deploy:all] SUCCESS — preflight passed, secrets backup completed, GitHub push completed, and all 5 Vercel production targets are READY.`
+- success: `[deploy:all] SUCCESS — preflight passed, secrets backup completed, GitHub push completed, and all 6 Vercel production targets are READY.`
 - success with `--skip-preflight`: `preflight skipped` appears in the same line.
 - failure: `[deploy:all] FAILED — <reason>` (with `git revert` guidance when the
   push already landed).

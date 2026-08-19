@@ -148,6 +148,8 @@ ASOL_MOBILE_PUSH_CREDENTIAL_BLOB=
 NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB=
 # Vercel API token for the notifications account (deploy script only).
 VERCEL_NOTIFICATIONS_TOKEN=
+# Vercel API token for the secondary full-application account (deploy script only).
+VERCEL_SUBMAIN_TOKEN=
 ```
 
 Which deployment gets what:

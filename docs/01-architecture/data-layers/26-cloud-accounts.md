@@ -11,21 +11,23 @@ variable carries what.
 
 | Provider | Accounts | Holds |
 |---|---:|---|
-| Vercel | 5 | one deployment each |
+| Vercel | 6 | one deployment each |
 | Turso | 5 | 21 databases, 70 application tables |
 | Cloudflare R2 | 3 | 3 buckets |
 
-The number five is not a coincidence: **one Vercel account per deployment, and
-its data on its own Turso account.** A busy catalogue cannot consume the quota
-that serves logins, and a push storm cannot consume either.
+The number six is not a coincidence: **one Vercel account per deployment, and
+its data on its own Turso account** for the four read-only services. The primary
+and secondary full-application accounts share runtime credentials but never
+share deploy tokens.
 
 ---
 
-## Vercel — five accounts
+## Vercel — six accounts
 
 | Account | Project | Serves | GitHub | Updated by |
 |---|---|---|---|---|
 | `hesham-101` | `gova` | everything not listed below: all writes, `GET /api/orders/:id`, profile reviews and discounts, the super-admin console | **connected** — every push redeploys | pushing to GitHub |
+| `submain` | `submain` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run submain:deploy` |
 | `101-0902` | `asol-notifications` | push fan-out only | not connected | `npm run notifications:deploy` |
 | products account | `asol-products` | product reads | not connected | `npm run products:deploy` |
 | orders account | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
@@ -53,7 +55,7 @@ else in the repository leaves the machine.
 
 ### Sealed Capability Packages
 
-The 5 Vercel account architecture is enforced and driven by 6 sealed capability packages under `packages/`:
+The 6 Vercel account architecture is enforced and driven by 6 sealed capability packages under `packages/`:
 
 1. **`@asol/vercel-deploy-core`** (`packages/vercel-deploy-core/`): Central account declaration registry (`GOVA_DECLARATION`, `NOTIFICATIONS_DECLARATION`, `PRODUCTS_DECLARATION`, `ORDERS_DECLARATION`, `PROFILES_DECLARATION`), GitHub-free project creation (`POST /v10/projects`), credential upserting, ephemeral Vercel CLI runner (`vercel@59.0.0`), and account deployment orchestrator.
 2. **`@asol/service-mirror-core`** (`packages/service-mirror-core/`): Shared import-graph mirror walker that builds `generated/src` and `generated/public` for the four read-only microservices while keeping baseline files byte-identical.
@@ -184,7 +186,7 @@ Nothing here is a secret store. Every value is an environment variable:
 |---|---|
 | Turso runtime | `TURSO_*_DATABASE_URL` / `_AUTH_TOKEN`, per-shard `<SHARD>_DATABASE_*` |
 | Turso platform | `TURSO_*_API_TOKEN`, `TURSO_*_ORGANIZATION` — scripts only |
-| Vercel | `VERCEL_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, `VERCEL_PRODUCTS_TOKEN`, `VERCEL_ORDERS_TOKEN`, `VERCEL_PROFILES_TOKEN` |
+| `VERCEL` | `VERCEL_TOKEN`, `VERCEL_SUBMAIN_TOKEN`, `VERCEL_NOTIFICATIONS_TOKEN`, `VERCEL_PRODUCTS_TOKEN`, `VERCEL_ORDERS_TOKEN`, `VERCEL_PROFILES_TOKEN` |
 | R2 | `R2_*`, `PRODUCT_R2_*`, and `ASOL_OTA_R2_*` for dedicated OTA storage |
 | Client-safe origins | `NEXT_PUBLIC_ASOL_{NOTIFICATIONS,PRODUCTS,ORDERS,PROFILES}_URL`, `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` |
 
