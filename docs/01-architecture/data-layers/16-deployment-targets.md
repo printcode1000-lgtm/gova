@@ -32,10 +32,7 @@ application codebase for isolated UI work and is updated only through
 | Serves | production primary | isolated full-app staging | push fan-out only | product reads only | the order list only | five profile reads |
 | Turso account | `hesham101` (+ all shards via env) | same runtime env as `gova` | `hesham102` | `hesham103` | `hesham104` | `hesham105` |
 
-The connectors are driven by seven sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, and `@asol/profiles-composition`. See [26-cloud-accounts.md](./26-cloud-accounts.md).
-The connectors are documented in
-[Notification Bridge Module](../../05-platform-features/notification-bridge-module.md)
-and [Service Bridge Module](../../05-platform-features/service-bridge-module.md).
+The connectors are driven by seven sealed capability packages under `packages/`: `@asol/vercel-deploy-core`, `@asol/service-mirror-core`, `@asol/account-bridge`, `@asol/notifications-composition`, `@asol/products-composition`, `@asol/orders-composition`, and `@asol/profiles-composition`. See [26-cloud-accounts.md](./26-cloud-accounts.md), [Notification Bridge Module](../../05-platform-features/notification-bridge-module.md), and [Service Bridge Module](../../05-platform-features/service-bridge-module.md).
 
 Keep the main project's GitHub connection as it is. The deploy command runs the
 CLI with `services/notifications` as its working directory, so it writes that
@@ -199,7 +196,7 @@ polls the Vercel API for the deployment tagged with this exact run id until it i
 ready build into an error. The main GitHub-triggered deployment is independently
 matched by commit SHA and monitored the same way. The final console table always
 shows target, account, project, unique comment, state, URL, and Vercel error.
-`deploy:all` exits non-zero if any of the five production targets is not verified
+`deploy:all` exits non-zero if any of the six production targets is not verified
 `READY`.
 
 Each service continues to read its dedicated Vercel token and required

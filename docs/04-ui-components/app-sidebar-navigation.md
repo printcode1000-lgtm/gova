@@ -39,6 +39,8 @@ after the role each destination performs.
 | واجهة المتجر والعروض | شريط المنتجات المميزة | `/super-admin/featured-marquee` |
 | واجهة المتجر والعروض | الشريط الإخباري المتحرك | `/super-admin/trending-ribbon` |
 | البيانات والنسخ الاحتياطي | حسابات التخزين السحابي | `/super-admin/cloud-accounts` |
+
+See [super-admin-cloud-accounts.md](../06-super-admin-and-operations/super-admin-cloud-accounts.md).
 | الإشعارات والبث | اختبار إرسال الإشعارات | `/super-admin/notification-tests` |
 | الإشعارات والبث | بث إشعار لكل المستخدمين | `/super-admin/notifications-broadcast` |
 | النظام وحسابات المستخدمين | سجل أحداث النظام | `/super-admin/logs` |

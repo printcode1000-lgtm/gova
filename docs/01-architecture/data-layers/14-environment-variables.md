@@ -149,6 +149,7 @@ NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB=
 # Vercel API token for the notifications account (deploy script only).
 VERCEL_NOTIFICATIONS_TOKEN=
 # Vercel API token for the secondary full-application account (deploy script only).
+# Account email: groupstenderximages@gmail.com. Token name on Vercel: submain.
 VERCEL_SUBMAIN_TOKEN=
 ```
 
@@ -265,9 +266,11 @@ pointed at un-sharded databases that no code read; both have been deleted.
 
 ## Vercel deploy
 
-Two Vercel accounts, deployed two different ways.
+Six Vercel accounts; see [26-cloud-accounts.md](./26-cloud-accounts.md). The two
+full-application deployments share runtime env keys but use different deploy
+tokens and update paths.
 
-**Main app** — connected to GitHub and redeployed automatically on every push.
+**Main app (`gova`)** — connected to GitHub and redeployed automatically on every push.
 That link must stay as it is. After local provisioning, push users, product,
 advertisements, notifications, every shard runtime variable, and native mobile
 push credentials (`ASOL_MOBILE_PUSH_*`, `NEXT_PUBLIC_ASOL_MOBILE_PUSH_CREDENTIAL_BLOB`):
@@ -279,6 +282,15 @@ npm run deploy:redeploy-main    # or push to GitHub if you prefer the normal pip
 ```
 
 Then wait for the deployment to finish.
+
+**Secondary full app (`submain`)** — account email `groupstenderximages@gmail.com`,
+not connected to GitHub. Deploy token: `VERCEL_SUBMAIN_TOKEN` (deploy script only;
+never stored on the Vercel project). Syncs the same runtime keys as `gova` without
+foreign deploy tokens:
+
+```bash
+npm run submain:deploy
+```
 
 **Notifications service** — deliberately **not** connected to GitHub. A push
 changes nothing there; it only ever updates when this command runs:

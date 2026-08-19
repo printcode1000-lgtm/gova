@@ -3,13 +3,14 @@
 Each Vercel account this project deploys to owns exactly one module. Nothing is
 shared between deployments except source that is mirrored explicitly.
 
-| Vercel account | Project | Module | Uploaded files | Updated by |
-|---|---|---|---|---|
-| `hesham-101` (`team_uksNmh…`) | `gova` | the repository root — `src/`, `public/`, `platform/`, `scripts/` | the repository, minus `services/` | pushing to GitHub (connected) |
-| `101-0902` (`team_cmIfma…`) | `asol-notifications` | [`services/notifications/`](./notifications) | that folder alone | `npm run notifications:deploy` (no GitHub connection) |
-| products account | `asol-products` | [`services/products/`](./products) | that folder alone | `npm run products:deploy` (no GitHub connection) |
-| orders account | `asol-orders` | [`services/orders/`](./orders) | that folder alone | `npm run orders:deploy` (no GitHub connection) |
-| profiles account | `asol-profiles` | [`services/profiles/`](./profiles) | that folder alone | `npm run profiles:deploy` (no GitHub connection) |
+| Vercel account | Email | Project | Module | Uploaded files | Updated by |
+|---|---|---|---|---|---|
+| `hesham-101` (`team_uksNmh…`) | `print.code.1000@gmail.com` | `gova` | the repository root — `src/`, `public/`, `platform/`, `scripts/` | the repository, minus `services/` | pushing to GitHub (connected) |
+| `submain` | `groupstenderximages@gmail.com` | `submain` | the repository root (same as `gova`) | the full repository | `npm run submain:deploy` (no GitHub connection) |
+| `101-0902` (`team_cmIfma…`) | `bs.bid.story@gmail.com` | `asol-notifications` | [`services/notifications/`](./notifications) | that folder alone | `npm run notifications:deploy` (no GitHub connection) |
+| products account | `gnagnahesham@gmail.com` | `asol-products` | [`services/products/`](./products) | that folder alone | `npm run products:deploy` (no GitHub connection) |
+| orders account | `tenderx10@gmail.com` | `asol-orders` | [`services/orders/`](./orders) | that folder alone | `npm run orders:deploy` (no GitHub connection) |
+| profiles account | `hesham10125@gmail.com` | `asol-profiles` | [`services/profiles/`](./profiles) | that folder alone | `npm run profiles:deploy` (no GitHub connection) |
 | *(none — runs in the browser)* | — | `src/modules/notification-bridge/` | ships inside the main app's client bundle | with the main app |
 | *(none — runs in the browser)* | — | `src/modules/service-bridge/` | ships inside the main app's client bundle | with the main app |
 

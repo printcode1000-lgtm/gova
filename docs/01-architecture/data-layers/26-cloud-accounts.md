@@ -24,14 +24,14 @@ share deploy tokens.
 
 ## Vercel — six accounts
 
-| Account | Project | Serves | GitHub | Updated by |
-|---|---|---|---|---|
-| `hesham-101` | `gova` | everything not listed below: all writes, `GET /api/orders/:id`, profile reviews and discounts, the super-admin console | **connected** — every push redeploys | pushing to GitHub |
-| `submain` | `submain` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run submain:deploy` |
-| `101-0902` | `asol-notifications` | push fan-out only | not connected | `npm run notifications:deploy` |
-| products account | `asol-products` | product reads | not connected | `npm run products:deploy` |
-| orders account | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
-| profiles account | `asol-profiles` | five profile reads | not connected | `npm run profiles:deploy` |
+| Account | Email | Project | Serves | GitHub | Updated by |
+|---|---|---|---|---|---|
+| `hesham-101` | `print.code.1000@gmail.com` | `gova` | everything not listed below: all writes, `GET /api/orders/:id`, profile reviews and discounts, the super-admin console | **connected** — every push redeploys | pushing to GitHub |
+| `submain` | `groupstenderximages@gmail.com` | `submain` | the same full application codebase as `gova`, deployed for isolated UI and feature work | **not connected** | `npm run submain:deploy` |
+| `101-0902` | `bs.bid.story@gmail.com` | `asol-notifications` | push fan-out only | not connected | `npm run notifications:deploy` |
+| products account | `gnagnahesham@gmail.com` | `asol-products` | product reads | not connected | `npm run products:deploy` |
+| orders account | `tenderx10@gmail.com` | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
+| profiles account | `hesham10125@gmail.com` | `asol-profiles` | five profile reads | not connected | `npm run profiles:deploy` |
 
 ### The rule that makes this work
 
@@ -49,9 +49,10 @@ to no account at all — it runs in the user's browser:
          ╲── notification-bridge ──► asol-notifications
 ```
 
-Only `gova` is connected to GitHub. The other four are updated exclusively by a
-terminal command that uploads one folder — `services/<name>/` — and nothing
-else in the repository leaves the machine.
+Only `gova` is connected to GitHub. `submain` and the four read-only service
+accounts are updated exclusively by terminal deploy commands — `submain:deploy`
+uploads the repository root; each service command uploads one folder —
+`services/<name>/` — and nothing else in the repository leaves the machine.
 
 ### Sealed Capability Packages
 
@@ -77,14 +78,15 @@ and [Notification Bridge Module](../../05-platform-features/notification-bridge-
 
 | Account | Databases | Domain | Read by |
 |---|---:|---|---|
-| `hesham101` | 3 | users and auth, advertisements, system operations | `gova` |
+| `hesham101` | 3 | users and auth, advertisements, system operations | `gova` + `submain` |
 | `hesham102` | 1 | notifications | `gova` + `asol-notifications` |
 | `hesham103` | 1 | products | `gova` + `asol-products` |
 | `hesham104` | 9 | marketplace order shards | `gova` + `asol-orders` |
 | `hesham105` | 7 | profile shards | `gova` + `asol-profiles` |
 
-`gova` holds every credential, because writes and server-side reads cross
-domains. Each read-only deployment holds **only** the shards it serves.
+`gova` and `submain` hold every runtime credential, because writes and
+server-side reads cross domains. Each read-only deployment holds **only** the
+shards it serves.
 
 ### hesham101 — 3 databases
 
@@ -190,6 +192,9 @@ Nothing here is a secret store. Every value is an environment variable:
 | R2 | `R2_*`, `PRODUCT_R2_*`, and `ASOL_OTA_R2_*` for dedicated OTA storage |
 | Client-safe origins | `NEXT_PUBLIC_ASOL_{NOTIFICATIONS,PRODUCTS,ORDERS,PROFILES}_URL`, `NEXT_PUBLIC_ASOL_OTA_MANIFEST_URL` |
 
-`npm run db:push:vercel-env` pushes the server-side set to the `gova` project. Each service deploy script pushes only what that account needs.
+`npm run db:push:vercel-env` pushes the server-side set to the `gova` project.
+`npm run submain:deploy` syncs the same runtime keys (without foreign Vercel
+deploy tokens) to the `submain` project. Each service deploy script pushes only
+what that account needs.
 
 **A fallback that crosses an account boundary is not a default — it is a silent redirect.** OTA operations read `ASOL_OTA_R2_*` directly with zero fallbacks. Every fallback chain across accounts has been removed.
