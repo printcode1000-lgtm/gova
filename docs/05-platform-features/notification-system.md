@@ -250,6 +250,17 @@ wrong, never *what the value was*.
 `invalid-field`, `unsupported-value`, `unsafe-route`, `invalid-metadata`,
 `invalid-record`, `permission-denied`, `unsupported-platform`, `delivery-failed`.
 
+### Device-token routes take untyped bodies
+
+`NotificationTokenService.register` and `remove` read every text field through a
+`trimmedText` coercion rather than calling `.trim()` on the declared type. A request
+body is JSON the client controls, so a missing field is `undefined` at runtime no
+matter what the TypeScript signature promises; dereferencing it threw a `TypeError`
+that `mapServiceError` could only report as a 500, hiding a bad payload behind a
+server fault and persisting it as a system issue. Coerced to an empty string, the
+existing checks classify it: no identity is `forbidden` (403), and a blank device id
+or token returns its own 400 code.
+
 ## Secret Redaction
 
 `domain/notification-redaction.ts` is the module's only logger and its single

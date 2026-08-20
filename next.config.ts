@@ -48,9 +48,10 @@ const nextConfig: NextConfig = {
       process.env.NEXT_PUBLIC_ASOL_NATIVE_VERSION ?? CURRENT_NATIVE_APP_VERSION,
   },
 
-  // These are Node.js-only packages. Prevent Next.js from bundling them
-  // through the client-side (or edge) bundler — let Node require() them at runtime.
-  serverExternalPackages: ['@libsql/client', 'better-sqlite3'],
+  // Node.js-only packages. Prevent Next.js from bundling them — let Node require()
+  // them at runtime. `drizzle-orm` must be external so lazy `nodeRequire('drizzle-orm/libsql')`
+  // in @asol/data-core resolves on Vercel (bundling drops the libsql subpath).
+  serverExternalPackages: ['@libsql/client', 'better-sqlite3', 'drizzle-orm'],
 
   images: {
     unoptimized: isStatic,

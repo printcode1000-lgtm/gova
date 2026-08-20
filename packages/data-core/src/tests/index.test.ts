@@ -321,6 +321,13 @@ for (const edge of ALLOWED_APP_EDGES) {
 // extension for Node to resolve and throws `Cannot find module` on the first query —
 // which is exactly how every data source went down after the move to ESM. Relative
 // modules belong in a static `import`; `nodeRequire` is for `node_modules` only.
+const rootNextConfig = readFileSync(path.join(REPO_ROOT, 'next.config.ts'), 'utf8');
+assert.match(
+  rootNextConfig,
+  /serverExternalPackages:\s*\[[^\]]*['"]drizzle-orm['"]/,
+  'next.config.ts must list drizzle-orm in serverExternalPackages so nodeRequire("drizzle-orm/libsql") resolves on Vercel.',
+);
+
 const RUNTIME_REQUIRE = /(?:^|[^\w$.])[\w$]*[Rr]equire\s*\(\s*['"](\.[^'"]*)['"]\s*\)/g;
 for (const file of productionFiles) {
   const source = readFileSync(file, 'utf8');

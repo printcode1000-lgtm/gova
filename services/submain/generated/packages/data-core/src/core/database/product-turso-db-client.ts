@@ -2,7 +2,7 @@ import { nodeRequire } from '../node-require';
 import "server-only";
 
 import { AbstractDatabaseClient } from "./abstract-database-client";
-import { getTursoProductRuntimeCredentials } from "@/core/config/server-env";
+import { getTursoProductRuntimeCredentials } from "@/core/config/server-env.values";
 
 let productTursoClient: any = null;
 

@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
       'better-sqlite3': './stubs/better-sqlite3.js',
     },
   },
-  serverExternalPackages: ['@libsql/client'],
+  serverExternalPackages: ['@libsql/client', 'drizzle-orm'],
 };
 
 export default nextConfig;

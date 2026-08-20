@@ -2,7 +2,7 @@ import { nodeRequire } from '../node-require';
 import 'server-only';
 
 import { isDevRuntime, isProvisioningContext } from '@/core/config/runtime-context.server';
-import { getTursoNotificationsRuntimeCredentials } from '@/core/config/server-env';
+import { getTursoNotificationsRuntimeCredentials } from '@/core/config/server-env.values';
 
 let tursoNotificationsClientInstance: unknown | null = null;
 

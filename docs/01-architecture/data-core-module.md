@@ -47,7 +47,11 @@ single wildcard silently defeated the `native-core` seal once and must never rea
 ### `src/core/database/` has no door
 
 This is the part worth keeping. `drizzle-orm`, `better-sqlite3`, and `@libsql/client` are
-imported only inside that folder, and **no entry in the `exports` map leads to it**. Before the
+imported only inside that folder, and **no entry in the `exports` map leads to it**. The Turso
+adapters load `drizzle-orm/libsql` through `nodeRequire` at runtime; every Next.js deployment
+that uses this package must list `drizzle-orm` in `serverExternalPackages` (alongside
+`@libsql/client`) or Vercel bundles away the subpath and every Turso query fails with
+`Cannot find module 'drizzle-orm/libsql'`. Before the
 migration the same guarantee was three regular expressions in
 `src/core/architecture/contract.ts` matching a folder path; a file that moved out of the folder
 lost the protection silently. Now the resolver enforces it: an import of a driver from anywhere

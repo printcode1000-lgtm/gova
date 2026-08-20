@@ -2,7 +2,7 @@ import { nodeRequire } from '../node-require';
 import 'server-only';
 
 import { isDevRuntime, isProvisioningContext } from '@/core/config/runtime-context.server';
-import { getTursoAdvertisementsRuntimeCredentials } from '@/core/config/server-env';
+import { getTursoAdvertisementsRuntimeCredentials } from '@/core/config/server-env.values';
 
 let tursoAdvertisementsClientInstance: unknown | null = null;
 
