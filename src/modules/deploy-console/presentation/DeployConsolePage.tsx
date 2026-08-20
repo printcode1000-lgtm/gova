@@ -2,7 +2,6 @@
 
 import * as React from "react";
 
-import { PageSnapshotPage } from "@/features/page-snapshot";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -273,10 +272,9 @@ export function DeployConsolePage() {
   };
 
   return (
-    <PageSnapshotPage
-      as="main"
-      nestedScroll
-      scrollId="dev-deploy-console-scroll"
+    <main
+      data-snapshot-scroll
+      data-snapshot-id="dev-deploy-console-scroll"
       className="mx-auto w-full max-w-3xl space-y-4 p-4 pb-24"
       dir="rtl"
     >
@@ -557,6 +555,6 @@ export function DeployConsolePage() {
           </div>
         </div>
       ) : null}
-    </PageSnapshotPage>
+    </main>
   );
 }
