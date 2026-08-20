@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20T13:57:36.003Z",
+  "generatedAt": "2026-08-20T13:49:19.839Z",
   "entryPoints": [
     "features/product/services/product-service.server.ts",
     "features/profile/services/profile-service.bootstrap.server.ts",

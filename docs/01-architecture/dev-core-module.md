@@ -36,7 +36,7 @@ General deployment/runtime detection remains in `src/core/config/runtime-context
 | SQLite DB clients (Drizzle + better-sqlite3) | — | `data-access/core/database` |
 | `LocalStorageProvider` implementation | — | `@asol/storage-core` (imports path resolvers from here) |
 | `db:ensure` / shard-split tooling | — | `data-access/tooling` (imports paths from here) |
-| Dev UI (`/dev/*`, catalog-studio, cloud backup, deploy console) | — | `src/app/dev`, `src/modules/*`, `src/features/*` |
+| Dev UI (`/dev/*`, catalog-studio, cloud backup) | — | `src/app/dev`, `src/modules/*`, `src/features/*` |
 
 `packages/data-core/src/core/database/environment.ts` is now a thin adapter: it re-exports resolved absolute paths from `@asol/dev-core/server` and keeps data-access-specific runtime helpers (`isDevRuntime`, provisioning checks).
 

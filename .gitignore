@@ -30,8 +30,6 @@ tsconfig.tsbuildinfo
 
 # deploy:all phased run state (revision, completed phases)
 .deploy-all/
-.deploy-push/
-.deploy-console/
 
 # SSH deploy keys
 .git_deploy_key

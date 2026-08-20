@@ -24,7 +24,6 @@ const pages = [
   { path: '/dev/data-health', name: 'صحة البيانات' },
   { path: '/dev/dev-cloud-backup', name: 'النسخ السحابي للتطوير' },
   { path: '/dev/release-console', name: 'وحدة الإصدار' },
-  { path: '/dev/deploy-console', name: 'وحدة النشر' },
 ];
 
 const SPLASH_NAV_TOGGLE_KEY = 'asol-dev-splash-nav-toggle';
