@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T22:55:03.748Z",
+  "generatedAt": "2026-08-20T13:49:19.839Z",
   "entryPoints": [
     "features/product/services/product-service.server.ts",
     "features/profile/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 336,
+  "fileCount": 337,
   "files": [
     "packages/auth-core/src/domain/account-deletion-registry.ts",
     "packages/auth-core/src/domain/constants.ts",
@@ -51,6 +51,7 @@
     "packages/data-core/src/core/database/advertisements-turso-db-client.ts",
     "packages/data-core/src/core/database/database-client.interface.ts",
     "packages/data-core/src/core/database/database-shards.ts",
+    "packages/data-core/src/core/database/drizzle-libsql.server.ts",
     "packages/data-core/src/core/database/ensure-advertisements-migrations.ts",
     "packages/data-core/src/core/database/ensure-migrations.ts",
     "packages/data-core/src/core/database/ensure-notifications-migrations.ts",

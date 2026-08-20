@@ -2,7 +2,8 @@ import { nodeRequire } from '../node-require';
 import "server-only";
 
 import { AbstractDatabaseClient } from "./abstract-database-client";
-import { getTursoProductRuntimeCredentials } from "@/core/config/server-env";
+import { getTursoProductRuntimeCredentials } from "@/core/config/server-env.values";
+import { drizzle } from "./drizzle-libsql.server";
 
 let productTursoClient: any = null;
 
@@ -17,7 +18,6 @@ export class ProductTursoDatabaseClient extends AbstractDatabaseClient {
   private _db: any = null;
   get db(): any {
     if (!this._db) {
-      const { drizzle } = nodeRequire("drizzle-orm/libsql");
       this._db = drizzle(getProductTursoClient());
     }
     return this._db;

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20T04:52:37.695Z",
+  "generatedAt": "2026-08-20T13:49:17.088Z",
   "entryPoints": [
     "features/product-search/services/product-search-service.server.ts",
     "features/product-search/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 333,
+  "fileCount": 334,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -45,6 +45,7 @@
     "packages/data-core/src/core/database/advertisements-turso-db-client.ts",
     "packages/data-core/src/core/database/database-client.interface.ts",
     "packages/data-core/src/core/database/database-shards.ts",
+    "packages/data-core/src/core/database/drizzle-libsql.server.ts",
     "packages/data-core/src/core/database/ensure-advertisements-migrations.ts",
     "packages/data-core/src/core/database/ensure-migrations.ts",
     "packages/data-core/src/core/database/ensure-notifications-migrations.ts",

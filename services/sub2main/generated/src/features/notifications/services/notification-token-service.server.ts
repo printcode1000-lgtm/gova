@@ -13,6 +13,17 @@ import { ListNotificationTokensQuery } from "@asol/data-core/notifications";
 import { GetNotificationPushPreferenceQuery } from "@asol/data-core/notifications";
 import { GetNotificationUserIdentityQuery } from "@asol/data-core/notifications";
 
+/**
+ * A request body is untyped JSON, whatever the parameter type says. Reading `.trim()`
+ * straight off a missing field threw a `TypeError`, which `mapServiceError` can only
+ * report as a 500 — a malformed client payload logged as a server fault. Missing text
+ * becomes an empty string here, so the checks below classify it instead: no identity
+ * is `forbidden`, and a blank device id or token is its own 400 code.
+ */
+function trimmedText(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 export class NotificationTokenService {
   constructor(
     private readonly upsertToken = new UpsertNotificationTokenCommand(),
@@ -26,10 +37,10 @@ export class NotificationTokenService {
   async register(
     input: RegisterNotificationTokenInput,
   ): Promise<RegisteredNotificationToken> {
-    const uid = input.uid.trim();
-    const phone = input.phone.trim();
-    const token = input.token.trim();
-    const deviceId = input.deviceId.trim();
+    const uid = trimmedText(input?.uid);
+    const phone = trimmedText(input?.phone);
+    const token = trimmedText(input?.token);
+    const deviceId = trimmedText(input?.deviceId);
     const user = await this.users.execute(uid);
     if (!user || user.phone !== phone) throw new Error("forbidden");
     if (!deviceId || deviceId.length > 200)
@@ -60,8 +71,9 @@ export class NotificationTokenService {
   }
 
   async remove(input: DeleteNotificationTokenInput): Promise<void> {
-    const user = await this.users.execute(input.uid.trim());
-    if (!user || !input.phone || user.phone !== input.phone.trim()) {
+    const user = await this.users.execute(trimmedText(input?.uid));
+    const phone = trimmedText(input?.phone);
+    if (!user || !phone || user.phone !== phone) {
       throw new Error("forbidden");
     }
     return this.deleteToken.execute({ ...input, uid: user.uid });
@@ -75,8 +87,8 @@ export class NotificationTokenService {
     uid: string,
     phone: string,
   ): Promise<NotificationDeliveryPreference> {
-    const user = await this.users.execute(uid.trim());
-    if (!user || user.phone !== phone.trim()) throw new Error("forbidden");
+    const user = await this.users.execute(trimmedText(uid));
+    if (!user || user.phone !== trimmedText(phone)) throw new Error("forbidden");
     return this.getPushPreferenceQuery.execute(user.uid);
   }
 
@@ -90,8 +102,8 @@ export class NotificationTokenService {
     phone: string,
     pushEnabled: boolean,
   ): Promise<NotificationDeliveryPreference> {
-    const user = await this.users.execute(uid.trim());
-    if (!user || user.phone !== phone.trim()) throw new Error("forbidden");
+    const user = await this.users.execute(trimmedText(uid));
+    if (!user || user.phone !== trimmedText(phone)) throw new Error("forbidden");
     return this.setPushPreferenceCommand.execute(user.uid, pushEnabled);
   }
 }
