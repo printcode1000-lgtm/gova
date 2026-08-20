@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
     },
   },
   serverExternalPackages: ['@libsql/client', 'drizzle-orm'],
+  outputFileTracingIncludes: {
+    '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
+  },
 };
 
 export default nextConfig;

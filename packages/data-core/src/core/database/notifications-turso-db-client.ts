@@ -1,10 +1,10 @@
-import { nodeRequire } from '../node-require';
 import 'server-only';
 
 import { isDevelopment } from '@/core/config';
 import { createDrizzleDevLogger } from '../../ports/telemetry';
 import { getTursoNotificationsClient } from '../turso/notifications-turso-client';
 import { AbstractDatabaseClient } from './abstract-database-client';
+import { drizzle } from './drizzle-libsql.server';
 
 export class NotificationsTursoDatabaseClient extends AbstractDatabaseClient {
   private _db: any = null;
@@ -12,7 +12,6 @@ export class NotificationsTursoDatabaseClient extends AbstractDatabaseClient {
   get db(): any {
     if (this._db) return this._db;
 
-    const { drizzle } = nodeRequire('drizzle-orm/libsql');
     const client = getTursoNotificationsClient();
     this._db = drizzle(
       client,

@@ -49,9 +49,12 @@ const nextConfig: NextConfig = {
   },
 
   // Node.js-only packages. Prevent Next.js from bundling them — let Node require()
-  // them at runtime. `drizzle-orm` must be external so lazy `nodeRequire('drizzle-orm/libsql')`
-  // in @asol/data-core resolves on Vercel (bundling drops the libsql subpath).
+  // them at runtime. `drizzle-orm` stays external; Turso adapters import through
+  // `drizzle-libsql.server.ts` so Next file tracing ships `drizzle-orm/libsql`.
   serverExternalPackages: ['@libsql/client', 'better-sqlite3', 'drizzle-orm'],
+  outputFileTracingIncludes: {
+    '/*': ['./node_modules/drizzle-orm/libsql/**/*'],
+  },
 
   images: {
     unoptimized: isStatic,

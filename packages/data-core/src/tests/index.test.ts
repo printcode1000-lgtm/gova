@@ -325,7 +325,17 @@ const rootNextConfig = readFileSync(path.join(REPO_ROOT, 'next.config.ts'), 'utf
 assert.match(
   rootNextConfig,
   /serverExternalPackages:\s*\[[^\]]*['"]drizzle-orm['"]/,
-  'next.config.ts must list drizzle-orm in serverExternalPackages so nodeRequire("drizzle-orm/libsql") resolves on Vercel.',
+  'next.config.ts must list drizzle-orm in serverExternalPackages so drizzle-orm/libsql can resolve on Vercel.',
+);
+assert.match(
+  rootNextConfig,
+  /outputFileTracingIncludes:\s*\{[\s\S]*drizzle-orm\/libsql/,
+  'next.config.ts must trace drizzle-orm/libsql for lazy Turso adapters on Vercel.',
+);
+assert.match(
+  readFileSync(path.join(REPO_ROOT, 'packages/data-core/src/core/database/drizzle-libsql.server.ts'), 'utf8'),
+  /from 'drizzle-orm\/libsql'/,
+  'Turso drizzle adapters must import libsql statically through drizzle-libsql.server.ts.',
 );
 
 const RUNTIME_REQUIRE = /(?:^|[^\w$.])[\w$]*[Rr]equire\s*\(\s*['"](\.[^'"]*)['"]\s*\)/g;
