@@ -119,3 +119,6 @@ services/profiles/src/config/
 tmp/
 .codex-logs/
 .dev-server.*.log
+
+# Git bundles
+*.bundle
