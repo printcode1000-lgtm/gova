@@ -166,6 +166,26 @@ The final console line is always explicit:
 the module does not deploy — the entrypoint is guarded so `npm test` can never
 become a release.
 
+### Dev Deploy Console (`/dev/deploy-console`)
+
+Local-development UI for composing `deploy:all` and `deploy:push` without typing
+flags by hand. Available only when the app is in strict local development
+(`NODE_ENV=development`, not Vercel, not static export).
+
+| Surface | Role |
+| :-- | :-- |
+| `/dev/deploy-console` | Two tabs (Deploy All / Deploy Push), checkboxes for phases/targets/flags, Arabic RTL descriptions (Latin/CLI tokens isolated LTR), in-page terminal with copy/clear |
+| `POST /api/dev/deploy-console` | Validates the selection, starts a **detached** OS process, returns `{ runId, status }` immediately |
+| `GET /api/dev/deploy-console?offset=` | Polls `.deploy-console/current.log` and run status for the in-page terminal panel |
+
+Important behaviour:
+
+- Deploy All phases run **sequentially** as separate `npx tsx scripts/deploy-all.ts --phase=<id>` invocations chained with `&&` (stops on first failure).
+- Deploy Push always includes secrets backup, GitHub push, and main verification; isolated targets map to `--vercel-target=`.
+- The deploy child is detached (`unref`) with stdout/stderr redirected to `.deploy-console/current.log` (gitignored). The page polls the log every ~1.2s while status is `running`.
+- A second launch is refused with `409` while a run’s PID is still alive.
+- Linked from the ASOL DEV badge as «وحدة النشر».
+
 ### `deploy:push` — publish and verify only
 
 `scripts/deploy-push.ts` skips every preflight gate. At startup it asks which

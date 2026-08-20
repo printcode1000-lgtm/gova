@@ -14,6 +14,7 @@ export const ARABIC_ONLY_SOURCE_ROOTS = [
   "src/modules/google-play-console",
   "src/modules/data-health",
   "src/modules/dev-cloud-backup",
+  "src/modules/deploy-console",
   "src/features/catalog-studio",
   "src/components/dev/DeveloperCategorySelector.tsx",
   "src/components/dev/DeveloperBadge.tsx",
