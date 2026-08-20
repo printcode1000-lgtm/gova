@@ -13,7 +13,9 @@ export class TursoDatabaseClient extends AbstractDatabaseClient {
     if (this._db) return this._db;
 
     const client = getTursoClient();
-    this._db = drizzle(client, isDevelopment ? { logger: createDrizzleDevLogger() } : undefined);
+    this._db = isDevelopment
+      ? drizzle(client, { logger: createDrizzleDevLogger() })
+      : drizzle(client);
 
     return this._db;
   }

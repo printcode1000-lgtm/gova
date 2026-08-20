@@ -472,7 +472,7 @@ export function HeroSlider({
                       if (
                         mode === "view" &&
                         isActive &&
-                        (e.key === "Enter" || e.key === "")
+                        e.key === "Enter"
                       ) {
                         e.preventDefault();
                         handleSlideClick(slide.action, true);
@@ -585,9 +585,11 @@ export function HeroSlider({
       </section>
       {mode === "admin-edit" && (
         <HeroSliderEditor
+          ref={imageUploadRef}
           value={draftConfig}
           onChange={handleConfigChange}
           onSave={onSave}
+          onPendingChange={onImagesPendingChange}
           onCancel={
             onCancel
               ? () => {

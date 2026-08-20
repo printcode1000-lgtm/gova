@@ -2,7 +2,7 @@
 
 import { Eye, RefreshCw, Save, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
@@ -16,9 +16,19 @@ import { homeHeroSliderApiService } from "@/features/advertisements/services/hom
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 
 const quickIntervals = [5, 15, 30, 60];
+
+const loadErrorMessages: Record<string, string> = {
+  forbidden: "غير مصرح لك بهذه العملية.",
+};
+
+function formatLoadError(error: unknown): string {
+  const rawMessage = error instanceof Error ? error.message : "";
+  return loadErrorMessages[rawMessage] ?? rawMessage ?? "تعذر تحميل الإعدادات.";
+}
 
 export function SuperAdminHeroSliderPage() {
   const router = useRouter();
@@ -29,11 +39,17 @@ export function SuperAdminHeroSliderPage() {
   const [intervalMinutes, setIntervalMinutes] = useState(15);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [imagesPending, setImagesPending] = useState(false);
+  const imageUploadRef = useRef<StorageImageManagerHandle | null>(null);
+  const configRef = useRef<HeroSliderConfig | null>(null);
+  configRef.current = config;
 
   const load = useCallback(async () => {
     if (!session || !isSuperAdmin(session)) return;
     setBusy(true);
     setMessage(null);
+    setLoadFailed(false);
     try {
       const next = await homeHeroSliderApiService.getAdmin(session);
       setRecord(next);
@@ -45,9 +61,8 @@ export function SuperAdminHeroSliderPage() {
         operation: "load-settings",
         error,
       });
-      setMessage(
-        error instanceof Error ? error.message : "تعذر تحميل الإعدادات.",
-      );
+      setLoadFailed(true);
+      setMessage(formatLoadError(error));
     } finally {
       setBusy(false);
     }
@@ -59,20 +74,35 @@ export function SuperAdminHeroSliderPage() {
   }, [authorized, isLoading, load, router, session]);
 
   const save = async () => {
-    if (!session || !config || !record) return;
+    const currentConfig = configRef.current;
+    if (!session || !currentConfig || !record) return;
+
     setBusy(true);
     setMessage(null);
     try {
+      if (imageUploadRef.current?.hasPending()) {
+        const uploaded = await imageUploadRef.current.uploadPending();
+        if (!uploaded) {
+          setMessage("تعذر إكمال رفع الصور. أعد المحاولة ثم احفظ.");
+          return;
+        }
+      }
+
+      const configToSave = configRef.current ?? currentConfig;
       const saved = await homeHeroSliderApiService.save(
         session,
-        config,
+        configToSave,
         intervalMinutes,
       );
-      // Invalidate IndexedDB cache so that the home page slider updates immediately
       try {
         await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, HOME_HERO_CACHE_KEY);
-      } catch (err) {
-        console.error("Failed to delete local slider cache:", err);
+      } catch (error) {
+        reportSystemIssue({
+          level: "warning",
+          feature: "HeroSliderAdmin",
+          operation: "invalidate-home-cache",
+          error,
+        });
       }
       setRecord(saved);
       setConfig(saved.config);
@@ -101,10 +131,38 @@ export function SuperAdminHeroSliderPage() {
     }
   };
 
-  if (isLoading || !authorized || !config || !record) {
+  if (isLoading || !authorized) {
     return (
       <main className="container px-4 py-8 text-sm text-on-surface-variant">
-        جاري التحقق وتحميل الإعدادات…
+        جاري التحقق من الصلاحيات…
+      </main>
+    );
+  }
+
+  if (loadFailed) {
+    return (
+      <main className="container mx-auto max-w-6xl px-4 py-8">
+        <div className="rounded-lg border border-destructive/30 bg-card px-4 py-6">
+          <p className="text-sm text-destructive">{message}</p>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4"
+            onClick={() => void load()}
+            disabled={busy}
+          >
+            <RefreshCw className="me-2 h-4 w-4" />
+            إعادة المحاولة
+          </Button>
+        </div>
+      </main>
+    );
+  }
+
+  if (!config || !record) {
+    return (
+      <main className="container px-4 py-8 text-sm text-on-surface-variant">
+        جاري تحميل الإعدادات…
       </main>
     );
   }
@@ -190,7 +248,7 @@ export function SuperAdminHeroSliderPage() {
           <Button
             type="button"
             onClick={() => void save()}
-            disabled={busy}
+            disabled={busy || imagesPending}
             className="ms-auto bg-primary text-on-primary"
           >
             <Save className="me-2 h-4 w-4" />
@@ -203,7 +261,13 @@ export function SuperAdminHeroSliderPage() {
         <Eye className="h-5 w-5 text-primary" />
         <h2 className="font-semibold">المعاينة الحية والتحرير</h2>
       </div>
-      <HeroSlider mode="admin-edit" config={config} onChange={setConfig} />
+      <HeroSlider
+        mode="admin-edit"
+        config={config}
+        onChange={setConfig}
+        imageUploadRef={imageUploadRef}
+        onImagesPendingChange={setImagesPending}
+      />
     </main>
   );
 }

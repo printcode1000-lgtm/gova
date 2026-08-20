@@ -243,11 +243,12 @@ The `PUT` payload contains only `identity`, `config`, and `checkIntervalMinutes`
   -> loads HomeHeroRecord through HomeHeroSliderApiService
   -> passes record.config to HeroSlider mode="admin-edit"
   -> receives changes through onChange
+  -> completes any pending slide image uploads before save
   -> saves the current record and increments version
   -> invalidates the Home cache
 ```
 
-The super-admin page also controls `checkIntervalMinutes` and displays version/update metadata. There is one Save button. Zod validates every submitted configuration before repository writes.
+The super-admin page also controls `checkIntervalMinutes` and displays version/update metadata. There is one Save button. Save stays disabled while slide images are still uploading. Zod validates every submitted configuration before repository writes.
 
 ## Home synchronization and IndexedDB cache
 

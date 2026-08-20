@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import {
   ArrowDown,
   ArrowUp,
@@ -14,7 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { StorageProfiles, type StoredImage } from "@asol/storage-core";
-import { StorageImageManager } from "@/features/storage/components/StorageImageManager";
+import {
+  StorageImageManager,
+  type StorageImageManagerHandle,
+} from "@/features/storage/components/StorageImageManager";
 import type {
   HeroSliderConfig,
   HeroSliderSlide,
@@ -34,6 +38,7 @@ interface HeroSliderEditorProps {
   onChange: (config: HeroSliderConfig) => void;
   onSave?: (config: HeroSliderConfig) => void;
   onCancel?: () => void;
+  onPendingChange?: (pending: boolean) => void;
 }
 
 const createSlide = (priority: number): HeroSliderSlide => ({
@@ -45,12 +50,39 @@ const createSlide = (priority: number): HeroSliderSlide => ({
   action: "",
 });
 
-export function HeroSliderEditor({
-  value,
-  onChange,
-  onSave,
-  onCancel,
-}: HeroSliderEditorProps) {
+export const HeroSliderEditor = React.forwardRef<
+  StorageImageManagerHandle,
+  HeroSliderEditorProps
+>(function HeroSliderEditor(
+  { value, onChange, onSave, onCancel, onPendingChange },
+  ref,
+) {
+  const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
+  const [pendingSlots, setPendingSlots] = React.useState<Set<number>>(
+    () => new Set(),
+  );
+
+  React.useEffect(() => {
+    onPendingChange?.(pendingSlots.size > 0);
+  }, [onPendingChange, pendingSlots]);
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      hasPending: () =>
+        managerRefs.current.some((manager) => manager?.hasPending()),
+      uploadPending: async () => {
+        for (const manager of managerRefs.current) {
+          if (manager?.hasPending() && !(await manager.uploadPending())) {
+            return false;
+          }
+        }
+        return true;
+      },
+    }),
+    [],
+  );
+
   const updateSlide = (index: number, patch: Partial<HeroSliderSlide>) => {
     const slides = value.slides.map((slide, slideIndex) =>
       slideIndex === index ? { ...slide, ...patch } : slide,
@@ -215,6 +247,9 @@ export function HeroSliderEditor({
               <div className="space-y-2 sm:col-span-2">
                 <Label>صورة الشريحة</Label>
                 <StorageImageManager
+                  ref={(handle) => {
+                    managerRefs.current[index] = handle;
+                  }}
                   config={{
                     id: `home-hero-slide-${index}`,
                     storageProfileId: StorageProfiles.HomeHeroSlider,
@@ -241,6 +276,14 @@ export function HeroSliderEditor({
                       imageKey: images[0]?.imageKey ?? "",
                     })
                   }
+                  onPendingChange={(pending) => {
+                    setPendingSlots((current) => {
+                      const next = new Set(current);
+                      if (pending) next.add(index);
+                      else next.delete(index);
+                      return next;
+                    });
+                  }}
                 />
               </div>
               <div className="space-y-2">
@@ -310,4 +353,4 @@ export function HeroSliderEditor({
       </div>
     </section>
   );
-}
+});
