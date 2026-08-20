@@ -1,0 +1,111 @@
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
+
+import { normalizePath } from './contracts/contract';
+import { ROOT, SRC, SCRIPTS, violations, walk, rel } from './checks/architecture-types';
+import { checkNotificationModuleContract } from './checks/notification-contract';
+import { checkDeadContractRules } from './checks/storage-core-contract';
+import { checkTouchInteractionContract } from './checks/touch-interaction-contract';
+import { checkMapLibreWorkerContract } from './checks/maplibre-worker-contract';
+import {
+  checkFile,
+  checkExternalDataAccessOwnership,
+  checkGeneratedDataAccessArtifacts,
+} from './checks/native-contract';
+import { checkAccountBridgeContract } from './checks/account-bridge-contract';
+import { checkPackageSealContract } from './checks/package-seal-contract';
+import {
+  checkSystemLogsBootstrapContract,
+  checkSystemLogsContract,
+} from './checks/system-logs-contract';
+import { printReport, reportNativeSurface } from './checks/file-analysis';
+
+/**
+ * The whole repository-wide architecture scan, as a function.
+ *
+ * The rules and the code that enforces them used to sit on opposite sides of the repository —
+ * definitions under `src/core/architecture/`, enforcement under `scripts/architecture-check/` —
+ * joined by relative imports that reached out of `scripts` and into the application source. The
+ * tooling that enforces rule 5 was itself the clearest example of what rule 5 forbids.
+ *
+ * `preflight` is how the two checks that need the *application* stay out of this package: storage
+ * profile validation and category data validation are passed in by the CLI, which is allowed to
+ * know both.
+ */
+export interface ArchitectureCheckOptions {
+  /** Run before the scan. Each returns an error list; a non-empty list aborts. */
+  preflight?: ReadonlyArray<{ label: string; run: () => readonly string[] }>;
+}
+
+export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): number {
+  for (const step of options.preflight ?? []) {
+    const errors = step.run();
+    if (errors.length > 0) {
+      console.error(`✖ ${step.label}`);
+      for (const error of errors) console.error(error);
+      return 1;
+    }
+  }
+
+  for (const file of walk(SRC)) {
+    const content = readFileSync(file, 'utf8');
+    checkFile(file);
+    checkPackageSealContract(file, content);
+    checkSystemLogsContract(file, content);
+  }
+
+  // `packages/` was never walked by this check. Every sealed package's own source was
+  // therefore exempt from the repository-wide scan that rule 5 relies on — which is how
+  // one package came to reach another by relative path without anything noticing.
+  const packagesDir = join(ROOT, 'packages');
+  if (existsSync(packagesDir)) {
+    for (const file of walk(packagesDir)) {
+      if (file.includes('node_modules')) continue;
+      // This package holds the rules, so its own contract files quote every pattern the scan
+      // looks for. Scanning them reports the rule text itself as a violation.
+      if (normalizePath(file).includes('packages/architecture-core/src/contracts/')) continue;
+      checkPackageSealContract(file, readFileSync(file, 'utf8'));
+    }
+  }
+
+  for (const file of walk(SCRIPTS)) {
+    if (rel(file) === 'scripts/architecture-check.ts') continue;
+    checkExternalDataAccessOwnership(file);
+    checkAccountBridgeContract(file, readFileSync(file, 'utf8'));
+    checkPackageSealContract(file, readFileSync(file, 'utf8'));
+  }
+  checkTouchInteractionContract();
+  checkMapLibreWorkerContract();
+  checkGeneratedDataAccessArtifacts();
+  checkSystemLogsBootstrapContract();
+
+  const fileContents = new Map<string, string>();
+  for (const file of walk(SRC)) {
+    fileContents.set(file, readFileSync(file, 'utf8'));
+  }
+  for (const file of walk(SCRIPTS)) {
+    fileContents.set(file, readFileSync(file, 'utf8'));
+  }
+  checkDeadContractRules(fileContents);
+
+  const servicesDir = join(ROOT, 'services');
+  if (existsSync(servicesDir)) {
+    for (const file of walk(servicesDir)) {
+      if (file.includes('node_modules')) continue;
+      const content = readFileSync(file, 'utf8');
+      checkAccountBridgeContract(file, content);
+      checkPackageSealContract(file, content);
+      if (file.includes('services/notifications/src')) {
+        checkNotificationModuleContract(file, content);
+      }
+    }
+  }
+
+  printReport();
+  if (violations.length > 0) return 1;
+
+  console.log('All architecture checks passed.\n');
+  // After the verdict, so a passing check still surfaces the store-release cost.
+  reportNativeSurface();
+  return 0;
+}

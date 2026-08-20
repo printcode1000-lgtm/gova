@@ -65,7 +65,7 @@ is the only registry of dataset paths and public asset roots.
 - `src/features/categories` owns core category projections and relationship resolution.
 - `src/features/pharmacy-profile-catalog` owns pharmacy projections and seller overrides.
 - `src/features/vehicle-catalog` owns manifest-driven vehicle loading and caching.
-- `@asol/catalog-core` owns shared versioned contracts; `src/features/catalog-data` re-exports them.
+- `@asol/catalog-core` owns shared versioned contracts; `@asol/catalog-core` re-exports them.
 
 All public projections use `visibleCatalogItems`. Raw loaders retain hidden records for validation
 and Catalog Studio, but application services never expose them on display surfaces.

@@ -73,7 +73,7 @@ assert.ok(
 
 const root = process.cwd();
 const storageProfiles = JSON.parse(
-  readFileSync(path.join(root, "src/config/storage-profiles.json"), "utf8"),
+  readFileSync(path.join(root, "packages/storage-core/src/config/storage-profiles.json"), "utf8"),
 ) as {
   profiles: Array<{
     id: string;

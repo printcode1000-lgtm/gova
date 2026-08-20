@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 
-import { RegistrationPageContent } from '@/components/auth/RegistrationPageContent';
+import { RegistrationPageContent } from '@/features/auth/presentation/RegistrationPageContent';
 import { useTranslation } from '@/lib/i18n';
 
 function RegistrationFallback() {

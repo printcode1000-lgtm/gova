@@ -127,8 +127,8 @@ The product page works with `ProductDetails` as its local editing state.
 Location:
 
 ```text
-src/components/product/ProductPageContent.tsx
-src/components/product/ProductComponentsRenderer.tsx
+src/features/product/presentation/ProductPageContent.tsx
+src/features/product/presentation/ProductComponentsRenderer.tsx
 ```
 
 Product style controls component visibility and ordering only. It does not change the database model.

@@ -1,4 +1,5 @@
 import { assertOrdersEnv, createOrdersRuntime } from '@asol/orders-composition';
+import { parseOrderListQuery } from '@asol/orders-core';
 import { corsHeaders, orderErrorResponse, preflight } from '../../lib/http';
 
 export const runtime = 'nodejs';
@@ -30,17 +31,10 @@ export async function GET(request: Request): Promise<Response> {
     const { database } = createOrdersRuntime();
     assertOrdersEnv();
 
-    const url = new URL(request.url);
-    const actor = database.actorFromInput(
-      {
-        uid: url.searchParams.get('uid') ?? '',
-        phone: url.searchParams.get('phone') ?? '',
-        role: (url.searchParams.get('role') as never) ?? undefined,
-      },
-      'buyer',
-    );
-    const limit = Number(url.searchParams.get('limit') ?? '5');
-    const offset = Number(url.searchParams.get('offset') ?? '0');
+    // The request shape belongs to the order domain, not to either route file: the main
+    // application parses the same six parameters with this function.
+    const { actorInput, limit, offset } = parseOrderListQuery(new URL(request.url).searchParams);
+    const actor = database.actorFromInput(actorInput, 'buyer');
     const data = await database.listForUser(actor.id, {
       limit,
       offset,

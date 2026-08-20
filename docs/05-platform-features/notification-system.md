@@ -97,7 +97,7 @@ The module follows a layered structure:
 
 ### Layer dependency matrix
 
-Enforced by `src/core/architecture/notification-contract.ts`. Read each row as
+Enforced by `packages/architecture-core/src/contracts/notification-contract.ts`. Read each row as
 "may depend on":
 
 | Layer | May import |
@@ -541,7 +541,7 @@ Current consumers:
 
 | Caller | Operation | Template |
 |--------|-----------|----------|
-| `src/components/cart/CartPageContent.tsx` | `notifications.publishEvent` | `orders.created` (buyer, local) |
+| `src/features/cart/presentation/CartPageContent.tsx` | `notifications.publishEvent` | `orders.created` (buyer, local) |
 | `src/app/api/orders/from-cart` | signed grant | `order.received` (each seller) |
 | `src/app/api/orders/custom-request-from-profile` | signed grant | `order.received` (seller) |
 
@@ -848,8 +848,8 @@ preferences the notifications module does not own:
 
 ```text
 src/app/settings/notifications/page.tsx                       the route
-src/components/settings/NotificationsSettingsPageContent.tsx  the page shell
-src/components/settings/NotificationDeviceSettingsCard.tsx    device + chat state
+src/features/settings/presentation/NotificationsSettingsPageContent.tsx  the page shell
+src/features/settings/presentation/NotificationDeviceSettingsCard.tsx    device + chat state
 ```
 
 ## Device Token Flow

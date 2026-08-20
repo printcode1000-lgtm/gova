@@ -28,7 +28,7 @@ The `/registration` page already followed this pattern; `/profile` did not.
 
 ## Solution
 
-1. Move page logic to `src/components/profile/ProfilePageContent.tsx` (contains `useSearchParams`).
+1. Move page logic to `src/features/profile/presentation/ProfilePageContent.tsx` (contains `useSearchParams`).
 2. Make `src/app/profile/page.tsx` a thin wrapper:
 
 ```tsx
@@ -53,5 +53,5 @@ When adding `useSearchParams()` to any page:
 ## Related Files
 
 - `src/app/profile/page.tsx`
-- `src/components/profile/ProfilePageContent.tsx`
+- `src/features/profile/presentation/ProfilePageContent.tsx`
 - `src/app/registration/page.tsx` (reference for correct pattern)

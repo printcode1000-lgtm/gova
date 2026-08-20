@@ -10,7 +10,7 @@ import {
 import { asolNotificationRepository } from "../infrastructure/asol-notification-repository";
 import { webPushBrowserService } from "../infrastructure/web-push/web-push-browser.service";
 import { notificationApiService } from "../services/notification-api-service";
-import { ensureMobilePushCredentials } from "@/modules/notification-bridge";
+import { ensureMobilePushCredentials } from '@asol/account-bridge/notifications';
 import { SingleFlight } from "../shared/keyed-mutex";
 
 /**
@@ -153,7 +153,7 @@ export class DeviceTokenService {
     }
     await nativePushService.unregister();
     try {
-      const { clearMobilePushCredentials } = await import('@/modules/notification-bridge');
+      const { clearMobilePushCredentials } = await import('@asol/account-bridge/notifications');
       await clearMobilePushCredentials();
     } catch (error) {
       notificationLog.warn('Mobile push credentials could not be cleared.', error);

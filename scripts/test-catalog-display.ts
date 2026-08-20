@@ -6,11 +6,11 @@ import { categoryService } from "../src/features/categories";
 import {
   isCatalogItemVisible,
   visibleCatalogItems,
-} from "../src/features/catalog-data/utils/catalog-display";
+} from '@asol/catalog-core';
 import {
   vehicleGroupCatalogFileSchema,
   vehicleOptionCatalogFileSchema,
-} from "../src/features/catalog-data/contracts/catalog-v3.contract";
+} from '@asol/catalog-core';
 import { pharmacyStaticCatalogService } from "../src/features/pharmacy-profile-catalog/services/pharmacy-static-catalog.service";
 
 type OrderedItem = { display: { order: number; hidden: boolean } };

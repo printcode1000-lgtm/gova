@@ -4,7 +4,7 @@ import { assertGooglePlayConsoleAllowed } from "@/modules/google-play-console/do
 import { resolveStoredArtifact } from "@/modules/release-commands/services/build-job-artifacts.server";
 import { readBuildJobRecord } from "@/modules/release-commands/services/build-job-runner.server";
 import { analyzeBundleArtifact } from "@/modules/release-commands/services/bundle-analyzer.server";
-import { runTracedBusinessRoute } from "../../../../../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request, context: { params: Promise<{ jobId: string; name: string }> }) {
   return runTracedBusinessRoute("GET /api/super-admin/build-jobs/[jobId]/artifacts/[name]/analysis", async () => {

@@ -140,6 +140,21 @@
       "@asol/dev-core/server": [
         "./generated/packages/dev-core/src/server.ts"
       ],
+      "@asol/env-core": [
+        "./generated/packages/env-core/src/index.ts"
+      ],
+      "@asol/env-core/files": [
+        "./generated/packages/env-core/src/domain/env-files.ts"
+      ],
+      "@asol/observability-core": [
+        "./generated/packages/observability-core/src/index.ts"
+      ],
+      "@asol/observability-core/dev-trace": [
+        "./generated/packages/observability-core/src/traces/dev-trace-types.ts"
+      ],
+      "@asol/observability-core/server": [
+        "./generated/packages/observability-core/src/server.ts"
+      ],
       "@asol/product-core": [
         "./generated/packages/product-core/src/index.ts"
       ],
@@ -155,11 +170,20 @@
       "@asol/products-composition": [
         "./generated/packages/products-composition/src/index.ts"
       ],
+      "@asol/service-runtime-core": [
+        "./generated/packages/service-runtime-core/src/index.ts"
+      ],
+      "@asol/signed-token-core": [
+        "./generated/packages/signed-token-core/src/index.ts"
+      ],
       "@asol/storage-core": [
         "./generated/packages/storage-core/src/index.ts"
       ],
       "@asol/storage-core/server": [
         "./generated/packages/storage-core/src/server.ts"
+      ],
+      "@asol/storage-core/profiles-config": [
+        "./generated/packages/storage-core/src/config/storage-profiles.json"
       ],
       "@asol/system-logs-core": [
         "./generated/packages/system-logs-core/src/index.ts"

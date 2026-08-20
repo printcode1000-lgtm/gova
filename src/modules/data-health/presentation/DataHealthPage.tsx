@@ -1,5 +1,7 @@
 "use client";
 
+import { formatAdminDateTime } from "@asol/format-core";
+
 import * as React from "react";
 import Link from "next/link";
 import {
@@ -83,16 +85,7 @@ const cleanupLabels: Record<DataHealthIssue["cleanupAction"], string> = {
   none: "فحص يدوي",
 };
 
-function dateText(value?: string) {
-  if (!value) return "-";
-  const date = new Date(value);
-  return Number.isNaN(date.getTime())
-    ? value
-    : date.toLocaleString("ar-EG", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      });
-}
+const dateText = formatAdminDateTime;
 
 function severityClass(severity: DataHealthIssue["severity"]) {
   if (severity === "critical") return "border-red-200 bg-red-50 text-red-700";

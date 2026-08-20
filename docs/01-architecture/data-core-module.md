@@ -54,7 +54,7 @@ left production with `Cannot find module 'drizzle-orm/libsql/index.cjs'`. Every 
 must also list `drizzle-orm` in `serverExternalPackages` and include
 `node_modules/drizzle-orm/libsql/**/*` in `outputFileTracingIncludes`. Before the
 migration the same guarantee was three regular expressions in
-`src/core/architecture/contract.ts` matching a folder path; a file that moved out of the folder
+`packages/architecture-core/src/contracts/contract.ts` matching a folder path; a file that moved out of the folder
 lost the protection silently. Now the resolver enforces it: an import of a driver from anywhere
 else resolves nothing, and the contract test asserts that no door target contains
 `/src/core/database/`.
@@ -79,7 +79,7 @@ differently.
 
 **Inverted — the developer monitor.** Nineteen imports of `@/core/monitor/*` are gone. The
 package now declares `src/ports/telemetry.ts` and announces work through it; the application
-registers an implementation in `src/core/monitor/data-core-telemetry.ts` (shared) and
+registers an implementation in `packages/observability-core/src/monitor/data-core-telemetry.ts` (shared) and
 `data-core-telemetry.server.ts` (the `server-only` half). Those two files are the seam and the
 only modules allowed to know both sides. Registration happens in `src/instrumentation.ts` on the
 server and at module scope in the query provider in the browser.
@@ -94,15 +94,18 @@ returns its value, the drizzle logger is absent rather than a stub, and a failur
 propagates. A forgotten registration costs trace lines in `/dev/monitor` — never a query, never
 a write.
 
-**Budgeted — 34 edges that remain**, pinned in `packages/data-core/src/tests/index.test.ts` with
-the reason each one is layering rather than a violation:
+**Budgeted — 30 edges that remain**, pinned in `packages/data-core/src/tests/index.test.ts` with
+the reason each one is layering rather than a violation. The count fell from 34 during the
+2026-08 consolidation: the two `auth/utils/*-normalization` shims became real functions in
+`@asol/auth-core/server`, and the storage profile file moved into the package that validates it.
+Package doors replaced them, which is the direction this list is meant to move:
 
 | Group | Why it stays |
 | :-- | :-- |
 | `@/modules/data-health/*`, `@/modules/dev-cloud-backup/domain/types` (5) | Cleanup policy lives with the feature that renders it, and "may I delete this" has no safe default, so it cannot be a port. |
 | `@/features/*/entities/*`, `@/features/profile-working-hours` (18) | Feature contracts the UI renders directly. Moving them here would give this package a second reason to change and break rule 8. |
-| `@/features/categories`, `@/features/product-search/*`, `@/features/auth/utils/*-normalization` (5) | Build-time catalog data and normalization leaves. A port for build-time assets would default to an empty asset set — a silently wrong artifact. |
-| `@/core/config/*`, `@/core/api/asol-http-transport`, `@/config/storage-profiles.json` (7) | Designated leaves: the config module and the single approved HTTP transport. |
+| `@/features/categories`, `@/features/product-search/*` (3) | Build-time catalog data and search vocabulary. A port for build-time assets would default to an empty asset set — a silently wrong artifact. |
+| `@/core/config/*`, `@/core/api/asol-http-transport` (6) | Designated leaves: the config module and the single approved HTTP transport. |
 
 Driving the count to zero was never the goal; naming which edges are real is. **The list should
 only ever shrink**, and the test fails both when a new edge appears and when a budgeted one

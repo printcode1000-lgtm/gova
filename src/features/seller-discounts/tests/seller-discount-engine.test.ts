@@ -8,7 +8,7 @@ import {
 import {
   majorCurrencyInputToMinor,
   minorCurrencyToInputValue,
-} from "@/features/seller-discounts/components/discount-editor/seller-discount-currency";
+} from "@asol/format-core";
 
 assert.equal(minorCurrencyToInputValue(0), "");
 assert.equal(minorCurrencyToInputValue(25_050), "250.5");

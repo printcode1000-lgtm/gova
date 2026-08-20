@@ -95,10 +95,10 @@ needed for the checks themselves.
 
 | File | Role |
 |------|------|
-| `src/core/architecture/contract.ts` | Layer definitions, import matrix |
-| `src/core/architecture/notification-contract.ts` | Notification module boundary, entry points, layer matrix, transport ownership |
+| `packages/architecture-core/src/contracts/contract.ts` | Layer definitions, import matrix |
+| `packages/architecture-core/src/contracts/notification-contract.ts` | Notification module boundary, entry points, layer matrix, transport ownership |
 | `scripts/architecture-check.ts` | Project scanner |
-| `scripts/architecture-check/architecture-check.notification-contract.ts` | Notification boundary checker |
+| `packages/architecture-core/src/checks/notification-contract.ts` | Notification boundary checker |
 
 To change rules, edit the contract file — that is an explicit architectural
 decision.

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 
 interface RouteErrorFallbackProps {
   error: Error & { digest?: string };

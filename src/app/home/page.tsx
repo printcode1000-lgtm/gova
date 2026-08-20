@@ -1,4 +1,4 @@
-import HomeScreen from '@/components/home/HomeScreen';
+import HomeScreen from '@/features/home/presentation/HomeScreen';
 import { categoryService } from '@/features/categories';
 
 export default function HomePage() {

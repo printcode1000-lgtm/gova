@@ -10,11 +10,11 @@ import {
   resolveRestoreArchivePath,
   restoreManifestFiles,
   writeLastBackupState,
-} from "./secret-archive-utils";
+} from "@asol/secrets-core";
 import {
   decryptArchiveToZip,
   promptHidden,
-} from "./secret-archive-crypto";
+} from "@asol/secrets-core";
 
 async function extractZipSafely(zipPath: string, destinationRoot: string): Promise<void> {
   const entries = unzipSync(await readFile(zipPath));

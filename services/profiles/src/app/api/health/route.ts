@@ -1,10 +1,9 @@
+import { shardHealthResponse } from '@asol/service-runtime-core';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-/**
- * Liveness only. Reports whether each shard credential is present, never its
- * value, so a partially configured deployment is visible without a query.
- */
+/** The seven shards this deployment queries. Presence only — see `@asol/service-runtime-core`. */
 const SHARD_PREFIXES = [
   'PROFILE_CORE',
   'PROFILE_CONTACT',
@@ -16,10 +15,5 @@ const SHARD_PREFIXES = [
 ] as const;
 
 export function GET(): Response {
-  const missing = SHARD_PREFIXES.filter((p) => !process.env[`${p}_DATABASE_URL`]);
-  return Response.json({
-    service: 'asol-profiles',
-    ok: missing.length === 0,
-    configured: { shards: SHARD_PREFIXES.length - missing.length, missing },
-  });
+  return shardHealthResponse({ service: 'asol-profiles', shardPrefixes: SHARD_PREFIXES });
 }

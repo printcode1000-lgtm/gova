@@ -1,7 +1,7 @@
 'use client';
 
 import { configureSystemLogsCore } from '@asol/system-logs-core';
-import { getCurrentFlowId, getSessionId } from '@/core/monitor/monitor-store';
+import { getCurrentFlowId, getSessionId } from '@asol/observability-core';
 import { persistentSystemLogApiService } from './services/persistent-system-log-api-service';
 
 let configured = false;

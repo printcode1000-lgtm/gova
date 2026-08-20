@@ -10,6 +10,7 @@ import {
   Button,
 } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatCount } from "@asol/format-core";
 import { followApiService, type FollowStatus, type FollowTargetType } from "@/features/follow";
 import { useTranslation } from "@/lib/i18n";
 import { Input } from "@/components/ui/input";
@@ -49,9 +50,7 @@ const targetLabelsEn: Record<FollowTargetType, string> = {
   category: "Category",
 };
 
-function formatCount(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US").format(Math.max(0, value));
-}
+
 
 function dialogText(mode: DialogMode, label: string, t: (key: string, params?: Record<string, string | number>) => string) {
   switch (mode) {

@@ -1,9 +1,12 @@
 # Notification Bridge Module
 
 The connector between the two backend deployments. It is implemented in
-`@asol/account-bridge` (door `./notifications`), re-exported via
-`src/modules/notification-bridge/`, ships in the browser bundle, and runs
-nowhere else.
+`@asol/account-bridge` (door `./notifications`), ships in the browser bundle, and runs nowhere
+else.
+
+The one-line re-export the application used to import it through
+(`src/modules/notification-bridge/`) is gone, along with its sibling for the service bridge. Its
+test moved into the package it tests. Import `@asol/account-bridge/notifications` directly.
 
 ## Why it exists
 
@@ -210,7 +213,7 @@ packages/account-bridge/
     ├── fcm-message.ts                # FCM HTTP v1 payload (channels + data map)
     └── provider-payload.ts             # NotificationBuilder for templates
 
-src/modules/notification-bridge/      # re-exports @asol/account-bridge/notifications
+@asol/account-bridge/notifications/      # re-exports @asol/account-bridge/notifications
 src/app/api/notifications/
 ├── recipient-tokens/route.ts
 └── mobile-push/unlock/route.ts

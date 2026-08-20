@@ -1,7 +1,7 @@
 import type {
   RegistrationFormData,
   LoginFormData,
-} from '@/lib/validation/auth';
+} from '@asol/auth-core';
 import type {
   UpdateProfileInput,
   UserProfile,

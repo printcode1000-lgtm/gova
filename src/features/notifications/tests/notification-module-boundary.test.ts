@@ -10,7 +10,7 @@ import {
   NOTIFICATION_PUBLIC_ENTRY_POINTS,
   NOTIFICATION_PUBLIC_SPECIFIERS,
   NOTIFICATION_TRANSPORT_RULES,
-} from "@/core/architecture/notification-contract";
+} from "@asol/architecture-core";
 import {
   NOTIFICATION_COMMAND_TYPES,
   type NotificationCommand,

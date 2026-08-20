@@ -15,7 +15,7 @@ import type {
 import {
   isCatalogItemVisible,
   visibleCatalogItems,
-} from "@/features/catalog-data/utils/catalog-display";
+} from '@asol/catalog-core';
 
 const categories = Object.freeze(loadPharmacyCategories());
 const subcategories = Object.freeze(loadPharmacySubcategories());

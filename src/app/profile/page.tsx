@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { ProfilePageContent } from "@/components/profile/ProfilePageContent";
+import { ProfilePageContent } from "@/features/profile/presentation/ProfilePageContent";
 
 function ProfilePageFallback() {
   return (

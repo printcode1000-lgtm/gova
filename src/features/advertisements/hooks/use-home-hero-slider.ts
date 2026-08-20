@@ -14,7 +14,7 @@ import {
   type HomeHeroPublished,
 } from "../entities/home-hero-slider.entity";
 import { homeHeroSliderApiService } from "../services/home-hero-slider-api-service";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 
 const LEGACY_CACHE_KEY = "advertisements:home-hero-slider:v2";
 

@@ -176,7 +176,7 @@ profile overrides.
 
 ### What decides where a file goes
 
-`src/config/storage-profiles.json` routes application images:
+`packages/storage-core/src/config/storage-profiles.json` routes application images:
 
 | Profile | Account | Cloud folder |
 |---|---|---|

@@ -181,11 +181,10 @@ function runRule0Tests(): void {
 
   // ---------------------------------------------------------------- T3: Not reachable from a deployment
   const servicesFiles = getAllFiles(path.join(process.cwd(), 'services'), ['.ts', '.tsx']);
-  const forbiddenChannelPatterns = [
-    '@asol/account-bridge',
-    'src/modules/service-bridge',
-    'src/modules/notification-bridge',
-  ];
+  // One name, because there is now one channel. The two `src/modules/*-bridge` entries that used
+  // to be listed here named re-export shims that no longer exist — a forbidden pattern matching
+  // nothing reads as coverage while guarding nothing.
+  const forbiddenChannelPatterns = ['@asol/account-bridge'];
   for (const file of servicesFiles) {
     const content = readFileSync(file, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
     for (const match of content.matchAll(/\bfrom\s+['"]([^'"]+)['"]/g)) {

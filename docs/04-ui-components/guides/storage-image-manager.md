@@ -15,7 +15,7 @@ Feature-specific JSON config files should live beside the feature UI that uses t
 Example for profile:
 
 ```text
-src/components/profile/image-configs/
+src/features/profile/presentation/image-configs/
 ```
 
 ## JSON format
@@ -248,7 +248,7 @@ Prefer one versioned config document containing a slot array when a screen needs
 Profile storefront images use:
 
 ```text
-src/components/profile/image-configs/storefront-images.image.json
+src/features/profile/presentation/image-configs/storefront-images.image.json
 ```
 
 The document contains a schema version and independent slot definitions:

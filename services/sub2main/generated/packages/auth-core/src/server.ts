@@ -55,7 +55,7 @@ export { registerSessionSigningSecret, getSessionSigningSecret } from './ports/s
 export { hashPassword, verifyPassword } from './server/password';
 export { createSignedSessionToken, verifySignedSessionToken } from './server/session-token';
 export { extractSessionToken, assertSessionMatchesUid } from './server/session-auth';
-export { normalizeAuthPhone, normalizeAuthEmail } from './server/normalize';
+export { normalizeAuthPhone, normalizeAuthEmail, authPhoneCandidates } from './server/normalize';
 export {
   registerSuperAdminIdentity,
   isSuperAdminIdentity,

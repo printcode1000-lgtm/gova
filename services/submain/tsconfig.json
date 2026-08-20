@@ -140,6 +140,15 @@
       "@asol/dev-core/server": [
         "./generated/packages/dev-core/src/server.ts"
       ],
+      "@asol/env-core": [
+        "./generated/packages/env-core/src/index.ts"
+      ],
+      "@asol/env-core/files": [
+        "./generated/packages/env-core/src/domain/env-files.ts"
+      ],
+      "@asol/format-core": [
+        "./generated/packages/format-core/src/index.ts"
+      ],
       "@asol/notifications-core": [
         "./generated/packages/notifications-core/src/index.ts"
       ],
@@ -151,6 +160,15 @@
       ],
       "@asol/notifications-core/providers": [
         "./generated/packages/notifications-core/src/providers.ts"
+      ],
+      "@asol/observability-core": [
+        "./generated/packages/observability-core/src/index.ts"
+      ],
+      "@asol/observability-core/dev-trace": [
+        "./generated/packages/observability-core/src/traces/dev-trace-types.ts"
+      ],
+      "@asol/observability-core/server": [
+        "./generated/packages/observability-core/src/server.ts"
       ],
       "@asol/orders-core": [
         "./generated/packages/orders-core/src/index.ts"
@@ -167,11 +185,20 @@
       "@asol/product-style-core/server": [
         "./generated/packages/product-style-core/src/server.ts"
       ],
+      "@asol/service-runtime-core": [
+        "./generated/packages/service-runtime-core/src/index.ts"
+      ],
+      "@asol/signed-token-core": [
+        "./generated/packages/signed-token-core/src/index.ts"
+      ],
       "@asol/storage-core": [
         "./generated/packages/storage-core/src/index.ts"
       ],
       "@asol/storage-core/server": [
         "./generated/packages/storage-core/src/server.ts"
+      ],
+      "@asol/storage-core/profiles-config": [
+        "./generated/packages/storage-core/src/config/storage-profiles.json"
       ],
       "@asol/submain-composition": [
         "./generated/packages/submain-composition/src/index.ts"

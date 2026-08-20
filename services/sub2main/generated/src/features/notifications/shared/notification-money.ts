@@ -3,10 +3,7 @@ import type {
   NotificationVariables,
 } from "@asol/notifications-core";
 
-const INTL_LOCALES: Record<NotificationLocale, string> = {
-  ar: "ar-EG",
-  en: "en-EG",
-};
+import { formatCurrencyMinor } from "@asol/format-core";
 
 /**
  * A money variable rendered once per supported language.
@@ -21,14 +18,11 @@ export function moneyVariablesByLocale(
   minorUnits: number,
   currency = "EGP",
 ): Partial<Record<NotificationLocale, NotificationVariables>> {
-  const entries = (Object.keys(INTL_LOCALES) as NotificationLocale[]).map(
+  const entries = (["ar", "en"] as NotificationLocale[]).map(
     (locale) => [
       locale,
       {
-        [name]: new Intl.NumberFormat(INTL_LOCALES[locale], {
-          style: "currency",
-          currency,
-        }).format(minorUnits / 100),
+        [name]: formatCurrencyMinor(minorUnits, { locale, currency }),
       },
     ],
   );

@@ -62,7 +62,7 @@ attribute.
 
 ## Enforcement
 
-The policy is a build gate, not a review convention. `scripts/architecture-check/architecture-check.touch-interaction-contract.ts`
+The policy is a build gate, not a review convention. `packages/architecture-core/src/checks/touch-interaction-contract.ts`
 scans every `.ts`, `.tsx`, and `.css` file under `src/` and `packages/` and fails
 `npm run architecture:check` on any `hover:` variant (including `group-hover:` /
 `peer-hover:` and prefixed forms such as `dark:hover:`), any CSS `:hover`

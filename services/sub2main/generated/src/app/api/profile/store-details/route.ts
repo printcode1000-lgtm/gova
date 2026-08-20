@@ -1,7 +1,7 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
 import { profileService } from '@/features/profile/services/profile-service.bootstrap.server';
 import type { SaveStoreDetailsInput } from '@/features/profile/entities/store-details.entity';
-import { runTracedBusinessRoute } from '../../auth/traced-route';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute('GET /api/profile/store-details', async () => {

@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { formatCurrencyMajor, formatDateTime } from "@asol/format-core";
 import {
   Archive,
   Bell,
@@ -99,10 +100,7 @@ function categoryTone(category: NotificationCategory): string {
 }
 
 function formatDate(value: string, locale: "ar" | "en") {
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-EG", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value));
+  return formatDateTime(value, locale);
 }
 
 function amountLabel(notification: NotificationEntity, locale: "ar" | "en") {
@@ -110,11 +108,7 @@ function amountLabel(notification: NotificationEntity, locale: "ar" | "en") {
   const amount = typeof raw === "number" ? raw : Number(raw);
   if (!Number.isFinite(amount)) return "";
   const currency = String(notification.metadata?.currency ?? "EGP");
-  return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-EG", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 2,
-  }).format(amount);
+  return formatCurrencyMajor(amount, { locale, currency, maximumFractionDigits: 2 });
 }
 
 /**

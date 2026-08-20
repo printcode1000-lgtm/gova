@@ -6,7 +6,7 @@
  * the browser bridge picks them up wherever they appear and delivers them to
  * the notifications service.
  *
- * See `src/modules/notification-bridge` for the browser half.
+ * See `@asol/account-bridge/notifications` for the browser half.
  */
 
 export const NOTIFICATION_GRANTS_KEY = "notificationGrants";

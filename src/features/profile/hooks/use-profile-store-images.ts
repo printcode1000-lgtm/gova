@@ -8,7 +8,7 @@ import type {
   StoreImagesData,
 } from "../entities/store-images.entity";
 import { profileService } from "../services/profile-service";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 
 const profileStoreImagesQueryKey = (uid: string) =>
   ["profile", "store-images", uid] as const;

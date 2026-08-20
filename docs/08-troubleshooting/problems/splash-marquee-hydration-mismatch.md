@@ -24,7 +24,7 @@ Hydration failed because the server rendered text didn't match the client. As a 
 
 ## Root Cause
 
-Inside `src/components/splash/TopMarquee.tsx`, the list of featured categories for the marquee loop was chosen randomly on each render:
+Inside `src/features/splash/presentation/TopMarquee.tsx`, the list of featured categories for the marquee loop was chosen randomly on each render:
 
 ```typescript
 // Inside TopMarquee render function (runs on both Server and Client during hydration)
@@ -59,4 +59,4 @@ const loopItems = [...selectedCategories, ...selectedCategories];
 
 ## Related Files
 
-- `src/components/splash/TopMarquee.tsx` (Fixed selection logic)
+- `src/features/splash/presentation/TopMarquee.tsx` (Fixed selection logic)

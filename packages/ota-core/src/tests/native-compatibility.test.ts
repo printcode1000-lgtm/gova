@@ -242,7 +242,7 @@ for (const [file, reason] of NATIVE_CONTRACT_FILES) {
 // Pure web changes must NOT trip the gate
 // ---------------------------------------------------------------------------
 for (const file of [
-  "src/components/profile/ProfilePreviewContent.tsx",
+  "src/features/profile/presentation/ProfilePreviewContent.tsx",
   "src/features/notifications/application/notification-sender.ts",
   "src/locales/ar.json",
   "docs/07-mobile-and-release/capacitor/native-platform.md",

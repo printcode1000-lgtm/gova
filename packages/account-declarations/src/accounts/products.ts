@@ -19,11 +19,13 @@ export const PRODUCTS_DECLARATION = {
   serviceDir: 'services/products',
   requiredEnv: REQUIRED_ENV_KEYS,
   optionalEnv: OPTIONAL_ENV_KEYS,
+  // Nothing is copied in beside the walked module graph: the storage profile file now travels
+  // with `@asol/storage-core`, which imports it.
+  runtimeAssets: [],
   mirrorEntryPoints: [
     'features/product/services/product-service.server.ts',
     'features/product/services/product-review-service.server.ts',
     'features/categories/index.ts',
     'core/config/server-env.ts',
   ],
-  runtimeAssets: ['src/config/storage-profiles.json'],
 } as const;

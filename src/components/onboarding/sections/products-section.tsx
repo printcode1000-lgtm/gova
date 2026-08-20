@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { StorageImageManager } from '@/features/storage/components/StorageImageManager';
 import { StorageProfiles } from '@asol/storage-core';
 import type { Product, ProductVariant } from '@/lib/onboarding/types';
-import { nextSellerId } from '@/lib/seller/next-id';
+import { nextSellerId } from '@/lib/onboarding/next-id';
 
 function generateId() {
   return nextSellerId('prod');

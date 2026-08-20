@@ -61,6 +61,8 @@ const STEPS: readonly Step[] = [
   { script: "test:password-recovery" },
   { script: "test:image-upload-queue" },
   { script: "test:feature-flags" },
+  { script: "test:composition-ports" },
+  { script: "test:i18n-arabic-only-routes" },
   { script: "test:native-core" },
   { script: "test:ota-compatibility" },
   { script: "test:ota-delivery" },

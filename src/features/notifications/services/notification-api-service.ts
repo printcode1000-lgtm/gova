@@ -2,7 +2,7 @@ import { asolApi, ASOL_API_ROUTES } from "@/core/api";
 import {
   deliverNotificationGrants,
   type NotificationBridgeRecipientResult,
-} from "@/modules/notification-bridge";
+} from '@asol/account-bridge/notifications';
 import type {
   DeleteNotificationTokenInput,
   DeviceToken,

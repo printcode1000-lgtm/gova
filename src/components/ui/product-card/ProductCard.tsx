@@ -17,7 +17,7 @@ import type {
   ProductCardVariant,
   ProductCardViewModel,
 } from "@/features/product-card";
-import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
+import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
 
 interface ProductCardProps {

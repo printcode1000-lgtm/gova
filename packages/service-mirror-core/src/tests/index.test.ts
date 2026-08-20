@@ -58,8 +58,15 @@ function runTests(): void {
   console.log('  ✔ Outside src/ resolution boundary enforced (M3).');
 
   // Test M4: Runtime assets for products and profiles, none for notifications and orders
-  assert(PRODUCTS_DECLARATION.runtimeAssets.includes('src/config/storage-profiles.json'), 'M4: products receives storage-profiles.json');
-  assert(PROFILES_DECLARATION.runtimeAssets.includes('src/config/storage-profiles.json'), 'M4: profiles receives storage-profiles.json');
+  // M4: the storage profile file is no longer copied into a deployment as a runtime asset. It is
+  // imported by `@asol/storage-core`'s loader, so the module walker carries it into exactly the
+  // uploads whose graph reaches it — the copies it replaced had to be kept in step by hand.
+  for (const declaration of [PRODUCTS_DECLARATION, PROFILES_DECLARATION]) {
+    assert(
+      !(declaration.runtimeAssets ?? []).includes('src/config/storage-profiles.json'),
+      'M4: storage-profiles.json must travel through the module graph, not as a copied asset',
+    );
+  }
   assert(NOTIFICATIONS_DECLARATION.runtimeAssets.length === 0, 'M4: notifications receives 0 runtime assets');
   assert(ORDERS_DECLARATION.runtimeAssets.length === 0, 'M4: orders receives 0 runtime assets');
   console.log('  ✔ Runtime assets configuration verified (M4).');

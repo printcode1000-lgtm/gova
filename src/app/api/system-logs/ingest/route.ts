@@ -16,7 +16,7 @@ import {
   normalizeIngestPayload,
   validateIngestBatchSize,
 } from "@asol/system-logs-core/server";
-import { runTracedBusinessRoute } from "../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST(request: Request) {
   return runTracedBusinessRoute("POST /api/system-logs/ingest", async () => {

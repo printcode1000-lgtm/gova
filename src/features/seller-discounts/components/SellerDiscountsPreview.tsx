@@ -1,5 +1,7 @@
 "use client";
 
+import { formatDate } from "@asol/format-core";
+
 import {
   CalendarDays,
   Gift,
@@ -167,9 +169,8 @@ function describeScope(discount: SellerDiscountRule, locale: "ar" | "en") {
 
 function describeValidity(discount: SellerDiscountRule, locale: "ar" | "en") {
   const ar = locale === "ar";
-  const formatter = new Intl.DateTimeFormat(ar ? "ar-EG" : "en-US", { dateStyle: "medium" });
-  const start = discount.startsAt ? formatter.format(new Date(discount.startsAt)) : "";
-  const end = discount.endsAt ? formatter.format(new Date(discount.endsAt)) : "";
+  const start = formatDate(discount.startsAt, locale);
+  const end = formatDate(discount.endsAt, locale);
   if (start && end) return ar ? `من ${start} إلى ${end}` : `${start} to ${end}`;
   if (end) return ar ? `متاح حتى ${end}` : `Available until ${end}`;
   if (start) return ar ? `يبدأ في ${start}` : `Starts ${start}`;
@@ -217,8 +218,8 @@ function describe(discount: SellerDiscountRule, locale: "ar" | "en") {
       : "";
   const end = discount.endsAt
     ? ar
-      ? ` حتى ${new Date(discount.endsAt).toLocaleDateString("ar-EG")}`
-      : ` until ${new Date(discount.endsAt).toLocaleDateString("en-US")}`
+      ? ` حتى ${formatDate(discount.endsAt, "ar")}`
+      : ` until ${formatDate(discount.endsAt, "en")}`
     : "";
   return `${value}${min}${end}`;
 }

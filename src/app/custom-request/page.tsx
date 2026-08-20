@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { CustomRequestPageContent } from "@/components/profile/CustomRequestPageContent";
+import { CustomRequestPageContent } from "@/features/profile/presentation/CustomRequestPageContent";
 
 function CustomRequestPageFallback() {
   return (

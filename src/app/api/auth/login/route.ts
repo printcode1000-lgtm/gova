@@ -1,7 +1,7 @@
 import { apiSuccess, mapServiceError, readJsonBody } from '@/core/api/api-response';
 import { authService } from '@/features/auth/services/auth-service.bootstrap.server';
-import type { LoginFormData } from '@/lib/validation/auth';
-import { runTracedBusinessRoute } from '../traced-route';
+import type { LoginFormData } from '@asol/auth-core';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST(request: Request) {
   return runTracedBusinessRoute('POST /api/auth/login', async () => {

@@ -15,7 +15,7 @@ The `@asol/native-core` package (`packages/native-core/`) is the single sealed b
 
 1. **Package Exports**: `packages/native-core/package.json` maps only `"." -> "./src/index.ts"`. Deep imports (e.g. `@asol/native-core/adapters/...`) are forbidden.
 2. **ESLint `no-restricted-imports`**: Enforces that `@capacitor/*`, `@capawesome/*`, and `@capgo/*` can only be imported within `packages/native-core/src/adapters/**`.
-3. **Architecture Contract Engine**: `scripts/architecture-check/architecture-check.native-core-contract.ts` walks the whole repository during `architecture:check`, which runs inside `build` and `build:static`. This is the mechanism that scans every file.
+3. **Architecture Contract Engine**: `packages/architecture-core/src/checks/native-core-contract.ts` walks the whole repository during `architecture:check`, which runs inside `build` and `build:static`. This is the mechanism that scans every file.
 4. **Contract Tests**: `packages/native-core/src/tests/contract/` locks the *shape* of the boundary — `native-core-boundary.test.ts` pins the exported surface, and `native-core-ast-boundary.test.ts` checks the public entrypoint for leaked vendor types. These assert on the package itself; repo-wide scanning is mechanism 3's job.
 
 The `paths` entry in the root `tsconfig.json` deliberately maps only the bare specifier `@asol/native-core`. A `@asol/native-core/*` wildcard must never be reintroduced: it silently re-opens every internal file and defeats mechanism 1.

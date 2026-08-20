@@ -466,6 +466,6 @@ error taxonomy. `npm run test:map-core` asserts they are not exported.
 
 | File | Use |
 | --- | --- |
-| `src/components/profile/contact-info/AdditionalContactView.tsx` | Store location picker with the address balloon |
-| `src/components/product/ProductPropertySpecs.tsx` | Property location picker with the address balloon |
-| `src/components/profile/contact-info/ContactInfoCard.contact-types.tsx` | Shared tile and GPS provider singletons |
+| `src/features/profile/presentation/contact-info/AdditionalContactView.tsx` | Store location picker with the address balloon |
+| `src/features/product/presentation/ProductPropertySpecs.tsx` | Property location picker with the address balloon |
+| `src/features/profile/presentation/contact-info/ContactInfoCard.contact-types.tsx` | Shared tile and GPS provider singletons |

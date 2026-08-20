@@ -4,7 +4,7 @@ import {
   type NotificationTestInput,
 } from "@/features/notifications/server";
 import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
-import { runTracedBusinessRoute } from "../../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export const runtime = "nodejs";
 

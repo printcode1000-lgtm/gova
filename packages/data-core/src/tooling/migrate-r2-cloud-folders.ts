@@ -4,7 +4,7 @@ import { resolveSqliteDirectory } from "@asol/dev-core/server";
 import Database from "better-sqlite3";
 import dotenv from "dotenv";
 import { createClient, type Client, type InStatement } from "@libsql/client";
-import storageProfiles from "@/config/storage-profiles.json";
+import storageProfiles from "@asol/storage-core/profiles-config";
 
 dotenv.config({ path: ".env.local" });
 dotenv.config({ path: ".env" });

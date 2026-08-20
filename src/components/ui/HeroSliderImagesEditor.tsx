@@ -9,7 +9,7 @@ import {
   StorageImageManager,
   type StorageImageManagerHandle,
 } from "@/features/storage/components/StorageImageManager";
-import storefrontImagesConfig from "@/components/profile/image-configs/storefront-images.image.json";
+import storefrontImagesConfig from "@/features/profile/presentation/image-configs/storefront-images.image.json";
 import type { HeroSliderConfig, HeroSliderSlide } from "./HeroSlider";
 
 const storefrontSlots = storefrontImagesConfig.slots.map(

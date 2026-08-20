@@ -9,7 +9,7 @@ import {
   toStorageProfileClientView,
   getStorageProfileById,
 } from "@asol/storage-core/server";
-import { traceServerLayer } from "@/core/monitor/trace-server-layer";
+import { traceServerLayer } from '@asol/observability-core/server';
 
 export interface UploadImageCommand {
   storageProfileId: string;

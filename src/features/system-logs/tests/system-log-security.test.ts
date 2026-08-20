@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   redactSystemLogText,
   sanitizePersistentSystemLog,
-} from "../system-log-sanitizer";
+} from '@asol/system-logs-core';
 import type { PersistentSystemLogInput } from "../entities/persistent-system-log.entity";
 
 const base: PersistentSystemLogInput = {

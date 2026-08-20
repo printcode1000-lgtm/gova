@@ -129,7 +129,7 @@ See [`doc/problems/english-locale-hydration-flash.md`](../problems/english-local
 
 | Surface | Copy source | Hook |
 |---------|-------------|------|
-| Super Admin pages | Hardcoded Arabic in components, or `src/locales/admin-ar.json` | `useAdminArabic()` |
+| Super Admin pages (`src/features/super-admin/presentation/`) | Hardcoded Arabic in components, or `src/locales/admin-ar.json` | `useAdminArabic()` |
 | Dev tools (`/dev/*`) | Same | `useAdminArabic()` or hardcoded Arabic |
 | Super Admin sidebar labels | Hardcoded Arabic in `AppSidebar.tsx` | none |
 
@@ -139,8 +139,9 @@ Rules:
 2. Put admin/dev UI strings in `src/locales/admin-ar.json` (Arabic only) or inline in the component.
 3. Use `useAdminArabic()` instead of `useTranslation()` under the guarded source roots listed in `src/lib/i18n/arabic-only-routes.ts`.
 4. `useTranslation()` still forces `locale = 'ar'` on `/super-admin/*` and `/dev/*` as a safety net, but new code must not rely on that.
-5. `npm run test:i18n-arabic-only-routes` fails if guarded files import `@/lib/i18n` or call `useTranslation()`.
-6. Admin/dev UI copy is hardcoded Arabic in components (for example the operation monitor and super-admin log panels) or loaded from `admin-ar.json` — never from `ar.json` / `en.json`.
+5. `npm run test:i18n-arabic-only-routes` fails if guarded files import `@/lib/i18n` or call `useTranslation()`. It runs in the `test` chain and in `verify:all` — it was in neither until 2026-08, and had been failing silently against two admin surfaces that imported the public barrel for one function.
+6. `useAdminArabic()` returns `formatApiError` as well as `t`. An admin screen still has to render a failed request, and before that the only way to do it was importing the public barrel — which is exactly what these surfaces are forbidden to do. A rule that cannot be followed gets broken.
+7. Admin/dev UI copy is hardcoded Arabic in components (for example the operation monitor and super-admin log panels) or loaded from `admin-ar.json` — never from `ar.json` / `en.json`.
 
 ---
 
@@ -167,7 +168,7 @@ Rules:
 Schemas are created with a `t` function so error messages are localized:
 
 ```ts
-// src/lib/validation/auth.ts
+// @asol/auth-core
 export function createRegistrationSchema(t: (key: string) => string) { ... }
 
 // In component
@@ -179,7 +180,7 @@ const schema = useMemo(() => createRegistrationSchema(t), [t]);
 
 ## Splash initialization
 
-`src/lib/initialization/initialization.ts` emits `statusKey` values (e.g. `init.starting`). `SplashInitializer` translates them with `t(statusKey)`.
+`src/features/splash/services/initialization.ts` emits `statusKey` values (e.g. `init.starting`). `SplashInitializer` translates them with `t(statusKey)`.
 
 ---
 

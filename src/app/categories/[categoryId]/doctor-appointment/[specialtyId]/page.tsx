@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { DoctorAppointmentSellersPageContent } from "@/components/categories/DoctorAppointmentSellersPageContent";
+import { DoctorAppointmentSellersPageContent } from "@/features/categories/presentation/DoctorAppointmentSellersPageContent";
 import { categoryService } from "@/features/categories";
 import { notFound } from "next/navigation";
 

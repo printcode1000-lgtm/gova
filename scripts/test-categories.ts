@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 
 import { categoryService, CATEGORY_CONSTANTS } from "../src/features/categories";
-import { visibleCatalogItems } from "../src/features/catalog-data/utils/catalog-display";
+import { visibleCatalogItems } from '@asol/catalog-core';
 
 const main = categoryService.getAllDisplayCategories();
 assert(main.length > 0, "main display list must not be empty");

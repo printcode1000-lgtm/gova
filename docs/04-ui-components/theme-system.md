@@ -221,7 +221,7 @@ This rule applies to floating actions, save bars, toasts, network banners, and n
 
 Theme mode (light / dark) is toggled from the collapsible "Settings" group in the sidebar (`src/components/layouts/AppSidebar.tsx`), next to the language toggle.
 
-Remaining theme options are in **Settings** (`src/components/settings/SettingsPageContent.tsx`):
+Remaining theme options are in **Settings** (`src/features/settings/presentation/SettingsPageContent.tsx`):
 
 - Font size slider
 - Density chips

@@ -2,7 +2,7 @@ import { apiError, apiSuccess } from "@/core/api/api-response";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
 import type { TrendingRibbonConfig } from "@/features/advertisements/entities/trending-ribbon.entity";
 import { featuredTrendingRibbonService } from "@/features/advertisements/services/trending-ribbon-service.server";
-import { runTracedBusinessRoute } from "../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute(

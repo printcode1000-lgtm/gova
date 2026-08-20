@@ -18,7 +18,7 @@ import { asolNotificationRepository } from "../infrastructure/asol-notification-
 import { notificationAnalyticsService } from "./analytics-service";
 import { notificationBadgeService } from "./badge-service";
 import { notificationRouter } from "./notification-router";
-import { notifyOrderDataRefreshFromNotification } from "@/lib/order-data-refresh";
+import { notifyOrderDataRefreshFromNotification } from '@/features/orders/order-data-refresh';
 
 function emitChanged(uid: string, notificationId?: string): void {
   if (typeof window === "undefined") return;

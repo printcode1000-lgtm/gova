@@ -1,4 +1,5 @@
 import { assertProfilesEnv, createProfilesRuntime } from '@asol/profiles-composition';
+import { parseUsersBySpecialtyQuery } from '@/features/profile/entities/profile-query-requests';
 import { corsHeaders, preflight, profileErrorResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
@@ -19,15 +20,15 @@ export async function GET(request: Request): Promise<Response> {
     const { database } = createProfilesRuntime();
     assertProfilesEnv();
 
-    const url = new URL(request.url);
-    const minRatingParam = url.searchParams.get('minRating');
+    // Parsed by the same function the main application uses: one URL, one meaning.
+    const query = parseUsersBySpecialtyQuery(new URL(request.url).searchParams);
     const users = await database.profiles.getUsersBySpecialty(
-      Number(url.searchParams.get('categoryId') ?? '0'),
-      Number(url.searchParams.get('subcategoryId') ?? '0'),
-      Number(url.searchParams.get('offset') ?? '0'),
-      Number(url.searchParams.get('limit') ?? '10'),
-      url.searchParams.get('search') ?? undefined,
-      minRatingParam ? Number(minRatingParam) : undefined,
+      query.categoryId,
+      query.subcategoryId,
+      query.offset,
+      query.limit,
+      query.search,
+      query.minRating,
     );
     const data = await Promise.all(
       users.map(async (user) => ({

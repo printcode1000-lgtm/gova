@@ -1,4 +1,5 @@
 import { createPublicKey } from "node:crypto";
+import { readListEnv, readOptionalEnv, requireEnv } from "@asol/env-core";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
@@ -7,37 +8,25 @@ export function getTursoRuntimeCredentials(): {
   url: string;
   authToken: string;
 } {
-  const url = process.env.TURSO_DATABASE_URL;
-  const authToken = process.env.TURSO_AUTH_TOKEN;
-
-  if (!url)
-    throw new Error("TURSO_DATABASE_URL environment variable is not set");
-  if (!authToken)
-    throw new Error("TURSO_AUTH_TOKEN environment variable is not set");
-
-  return { url, authToken };
+  return {
+    url: requireEnv("TURSO_DATABASE_URL"),
+    authToken: requireEnv("TURSO_AUTH_TOKEN"),
+  };
 }
 
 export function getTursoPlatformCredentials(): {
   apiToken: string;
   organization: string;
 } {
-  const apiToken = process.env.TURSO_API_TOKEN;
-  const organization = process.env.TURSO_ORGANIZATION;
-
-  if (!apiToken)
-    throw new Error("TURSO_API_TOKEN is required for Turso provisioning");
-  if (!organization)
-    throw new Error("TURSO_ORGANIZATION is required for Turso provisioning");
-
-  return { apiToken, organization };
+  return {
+    apiToken: requireEnv("TURSO_API_TOKEN"),
+    organization: requireEnv("TURSO_ORGANIZATION"),
+  };
 }
 
 export function getCorsOrigins(): string[] {
-  const fromEnv = process.env.ASOL_CORS_ORIGINS?.split(",")
-    .map((o) => o.trim())
-    .filter(Boolean);
-  if (fromEnv?.length) return fromEnv;
+  const fromEnv = readListEnv("ASOL_CORS_ORIGINS");
+  if (fromEnv.length) return fromEnv;
 
   return [
     "http://localhost:3001",
@@ -49,9 +38,7 @@ export function getCorsOrigins(): string[] {
   ];
 }
 
-export function readOptionalEnv(key: string): string | undefined {
-  return process.env[key];
-}
+export { readOptionalEnv };
 
 export function getAppLinkAssociationConfig(): {
   androidCertificateFingerprints: string[];

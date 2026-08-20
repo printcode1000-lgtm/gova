@@ -12,22 +12,22 @@ import {
   phasesFrom,
   phasePrerequisites,
   SERVICE_PHASE_IDS,
-} from "./lib/deploy-all-phases";
+} from "@asol/release-core";
 import {
   assertPhasePrerequisites,
   markPhaseComplete,
   readDeployAllState,
   writeDeployAllState,
-} from "./lib/deploy-all-state";
+} from "@asol/release-core";
 import {
   DeploymentNpmScriptError,
   runDeploymentNpmScript,
-} from "./lib/run-deployment-npm-script";
+} from "@asol/release-core";
 import {
   type VercelDeploymentReport,
   waitForVercelProductionDeployment,
-} from "./lib/vercel-deployment-monitor";
-import { pushMainBranch } from "./lib/push-main-branch";
+} from "@asol/vercel-deploy-core";
+import { pushMainBranch } from "@asol/release-core";
 import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 import {
   inspectNativeCompatibility,

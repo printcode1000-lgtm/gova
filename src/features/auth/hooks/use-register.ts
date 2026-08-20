@@ -9,14 +9,14 @@ import { useTranslation } from '@/lib/i18n';
 import {
   createRegistrationSchema,
   type RegistrationFormData,
-} from '@/lib/validation/auth';
+} from '@asol/auth-core';
 import { useGuestSession } from '@/hooks/use-guest-session';
 import { useSession } from '@/features/auth/components/SessionProvider';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
 import { authMonitorMeta } from './auth-monitor-meta';
-import { startNewFlow } from '@/core/monitor/monitor-store';
-import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
+import { startNewFlow } from '@asol/observability-core';
+import { reportSystemIssue } from '@asol/system-logs-core';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 import { queueRegistrationSuccessToast } from '@/features/auth/components/LoginSuccessToast';
 import { announceAuthLoginCompleted } from '../application/auth-lifecycle-events';

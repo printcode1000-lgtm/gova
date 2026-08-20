@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { registerSystemLogsCoreServerPorts } from '../system-logs-core-bootstrap.server';
+import { registerSystemLogsCoreServerPorts } from '@/core/config/system-logs.server';
 import {
   persistentSystemLogService,
   logServerSystemIssue,

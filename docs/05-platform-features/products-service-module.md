@@ -101,7 +101,7 @@ Two things the notifications mirror did not need:
   climbs out of `src/`, so `public/` is mirrored under `generated/public` to keep
   that climb resolving to the same depth.
 - **Runtime assets.** `storage-profile-loader.server.ts` reads
-  `src/config/storage-profiles.json` through `fs`, which an import walker cannot
+  `packages/storage-core/src/config/storage-profiles.json` through `fs`, which an import walker cannot
   see. It is copied explicitly; without it, page-data collection fails with
   ENOENT at build time.
 

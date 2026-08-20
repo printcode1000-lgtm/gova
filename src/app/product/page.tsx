@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ProductPageContent } from "@/components/product/ProductPageContent";
+import { ProductPageContent } from "@/features/product/presentation/ProductPageContent";
 
 export default function ProductPage() {
   return (

@@ -1,8 +1,7 @@
 import { apiError, apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { categoryService } from "@/features/categories";
+import { isSearchCategorySelectionShaped } from "@/features/product-search/entities/product-search.request";
 import { getEnabledProductSearchFields } from "@/features/product-search/services/product-search-fields.server";
-
-const SAFE_ID = /^\d+$/;
 
 export async function GET(request: Request) {
   try {
@@ -10,8 +9,7 @@ export async function GET(request: Request) {
     const mainCategoryId = q.get("mainCategoryId") ?? "";
     const subcategoryId = q.get("subcategoryId") ?? "";
     if (
-      !SAFE_ID.test(mainCategoryId) ||
-      !SAFE_ID.test(subcategoryId) ||
+      !isSearchCategorySelectionShaped(mainCategoryId, subcategoryId) ||
       !categoryService.resolveProductSelection(mainCategoryId, subcategoryId).valid
     ) {
       return apiError("invalidSearchCategory", 400);

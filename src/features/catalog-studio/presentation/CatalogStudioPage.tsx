@@ -1,5 +1,7 @@
 "use client";
 
+import { formatDateTimeDefault } from "@asol/format-core";
+
 import * as React from "react";
 import {
   AlertTriangle,
@@ -1042,7 +1044,7 @@ export function CatalogStudioPage() {
             <div className="mt-4 space-y-3">
               {snapshot.audit.length === 0 ? <p className="text-sm text-muted-foreground">لا توجد عمليات محفوظة بعد.</p> : snapshot.audit.map((entry, index) => (
                 <div key={`${entry.at}:${index}`} className="rounded-xl border p-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2"><span className="font-mono text-xs">{entry.action}</span><time className="text-xs text-muted-foreground">{new Date(entry.at).toLocaleString("ar-EG")}</time></div>
+                  <div className="flex flex-wrap items-center justify-between gap-2"><span className="font-mono text-xs">{entry.action}</span><time className="text-xs text-muted-foreground">{formatDateTimeDefault(entry.at)}</time></div>
                   <p className="mt-2 text-sm">{entry.details}</p>
                   <p className="mt-2 break-all font-mono text-xs" dir="ltr">{entry.files.join(",")}</p>
                   {entry.recoveryPath ? <p className="mt-1 break-all text-xs text-amber-700" dir="ltr">مسار الاسترجاع: {entry.recoveryPath}</p> : null}

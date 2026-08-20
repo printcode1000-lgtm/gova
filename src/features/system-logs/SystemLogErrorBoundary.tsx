@@ -4,7 +4,7 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 import { setSystemLogCollectorAuthorized } from "@/features/system-logs/system-log-store";
 
 interface Props {

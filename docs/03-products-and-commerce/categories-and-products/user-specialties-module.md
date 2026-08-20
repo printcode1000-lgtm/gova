@@ -99,7 +99,7 @@ The module follows the project's standard layered architecture:
 - **Response**: `UserProfileRow[]` with an extra computed field `avatarUrl` (resolved from `avatarImageKey` via `imageStorageOrchestrator`, or `null` if no avatar)
 
 ### UI Components
-- **Location**: `src/components/categories/SellersPageContent.tsx`
+- **Location**: `src/features/categories/presentation/SellersPageContent.tsx`
 - **Description**: Component for displaying sellers by specialty
 - **Features**:
   - Receives `categoryId`, `subcategoryId`, `subcategoryName` as props
@@ -108,7 +108,7 @@ The module follows the project's standard layered architecture:
   - Supports pagination with "Load More" button
   - Localization support (Arabic/English)
 
-- **Location**: `src/components/categories/DoctorAppointmentSellersPageContent.tsx`
+- **Location**: `src/features/categories/presentation/DoctorAppointmentSellersPageContent.tsx`
 - **Description**: Component for displaying doctors by medical specialty
 - **Features**:
   - Specialized for medical specialties
@@ -194,7 +194,7 @@ const response2 = await fetch(
 
 ## Specialties Selection Limit (SpecialtiesCard)
 
-The `SpecialtiesCard` component (`src/components/profile/SpecialtiesCard.tsx`) enforces the following rules when a user edits their profile:
+The `SpecialtiesCard` component (`src/features/profile/presentation/SpecialtiesCard.tsx`) enforces the following rules when a user edits their profile:
 
 | User Role | Main Categories Limit |
 |---|---|

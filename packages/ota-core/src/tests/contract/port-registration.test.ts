@@ -14,13 +14,16 @@ import path from 'path';
  * default that makes the inversion shippable is the same property that hides a missing
  * registration. Convention cannot carry that; a check has to.
  *
- * The rule: importing the OTA **runtime** surface obliges you to import the seam.
+ * The rule: importing the OTA **runtime** surface obliges you to import the browser composition
+ * root, which is where every client-side port registration now lives.
  * Type-only imports and the publishing/server entries are exempt — they do not run in the
  * client, and the server half registers itself in `src/features/ota/server.ts`.
  */
 
 const APP_SRC = path.join(process.cwd(), 'src');
-const SEAM = '@/features/ota/ota-core-ports';
+const SEAM = '@/core/composition/browser-ports';
+const SEAM_CALL = /registerBrowserPorts\(\s*\)/;
+const OTA_SEAM = 'src/features/ota/ota-core-ports.ts';
 
 /** Runtime symbols whose behaviour depends on a registered port. */
 const RUNTIME_SYMBOLS = ['useOtaUpdate', 'otaUpdateService', 'otaRevocationService'];
@@ -66,15 +69,29 @@ export async function runPortRegistrationTests(): Promise<void> {
         `ota-core port registration: ${relative} uses the OTA runtime but never imports\n` +
           `"${SEAM}". Without the registration the ports stay at their defaults — telemetry\n` +
           `is silently dropped and the super-admin predicate returns false for everyone.\n` +
-          `Add \`import { registerOtaCorePorts } from "${SEAM}";\` and call it at module load.`,
+          `Add \`import { registerBrowserPorts } from "${SEAM}";\` and call it at module load.`,
       );
     }
-    if (!/registerOtaCorePorts\(\s*\)/.test(content)) {
+    if (!SEAM_CALL.test(content)) {
       throw new Error(
         `ota-core port registration: ${relative} imports the seam but never calls\n` +
-          `registerOtaCorePorts(). An unused import registers nothing.`,
+          `registerBrowserPorts(). An unused import registers nothing.`,
       );
     }
+  }
+
+  // The root is only a valid seam while it still registers *these* ports. Without this the
+  // check above would keep passing after someone dropped OTA from the composition root.
+  const rootSource = readFileSync(
+    path.join(process.cwd(), 'src/core/composition/browser-ports.ts'),
+    'utf8',
+  );
+  if (!/registerOtaCorePorts\(\s*\)/.test(rootSource) || !rootSource.includes(OTA_SEAM.replace('src/', '@/').replace('.ts', ''))) {
+    throw new Error(
+      'ota-core port registration: the browser composition root no longer calls ' +
+        'registerOtaCorePorts(). Every consumer would still pass this check while the ports ' +
+        'stay at their defaults — which is the exact failure this test exists for.',
+    );
   }
 
   if (checked === 0) {

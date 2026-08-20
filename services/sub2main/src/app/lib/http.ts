@@ -1,39 +1,22 @@
-export function corsHeaders(request: Request): Record<string, string> {
-  const origin = request.headers.get('origin');
-  return {
-    'Access-Control-Allow-Origin': origin ?? '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Accept, X-Asol-Trace-Id',
-    'Access-Control-Max-Age': '86400',
-    Vary: 'Origin',
-  };
-}
+import { createServiceHttp, type ErrorStatusRule } from '@asol/service-runtime-core';
 
-export function preflight(request: Request): Response {
-  return new Response(null, { status: 204, headers: corsHeaders(request) });
-}
+/**
+ * The sub2main deployment's HTTP policy: seller-facing profile and product writes, so it answers
+ * more methods than the read-only mirrors. The mechanism is `@asol/service-runtime-core`.
+ */
+const SELLER_ERROR_RULES: readonly ErrorStatusRule[] = [
+  { status: 404, equals: ['productNotFound'], includes: ['NotFound'] },
+  { status: 403, equals: ['productForbidden'], includes: ['Forbidden'] },
+  { status: 400, equals: ['invalidProduct'], includes: ['required'] },
+];
 
-export function withCors(request: Request, response: Response): Response {
-  const headers = new Headers(response.headers);
-  for (const [key, value] of Object.entries(corsHeaders(request))) {
-    headers.set(key, value);
-  }
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
-}
+const http = createServiceHttp({
+  methods: 'GET, POST, PUT, DELETE, OPTIONS',
+  headers: 'Content-Type, Accept, X-Asol-Trace-Id',
+  defaultRules: SELLER_ERROR_RULES,
+});
 
-export function sellerErrorResponse(request: Request, error: unknown): Response {
-  const message = error instanceof Error ? error.message : 'Internal Server Error';
-  const status =
-    message === 'productNotFound' || message.includes('NotFound')
-      ? 404
-      : message === 'productForbidden' || message.includes('Forbidden')
-        ? 403
-        : message === 'invalidProduct' || message.includes('required')
-          ? 400
-          : 500;
-  return Response.json({ error: message }, { status, headers: corsHeaders(request) });
-}
+export const corsHeaders = http.corsHeaders;
+export const preflight = http.preflight;
+export const withCors = http.withCors;
+export const sellerErrorResponse = http.errorResponse;

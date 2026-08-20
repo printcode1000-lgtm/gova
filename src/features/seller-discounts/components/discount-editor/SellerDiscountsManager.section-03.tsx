@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { ProfileSectionStatus } from "@/components/profile/profile-save-controller";
+import type { ProfileSectionStatus } from "@/features/profile/presentation/profile-save-controller";
 import {
   createEmptySellerDiscount,
   formatMinorCurrency,
@@ -27,7 +27,7 @@ import { useSellerDiscounts } from "../../hooks/use-seller-discounts";
 import {
   majorCurrencyInputToMinor,
   minorCurrencyToInputValue,
-} from "./seller-discount-currency";
+} from "@asol/format-core";
 
 export function NumberInput({
   value,

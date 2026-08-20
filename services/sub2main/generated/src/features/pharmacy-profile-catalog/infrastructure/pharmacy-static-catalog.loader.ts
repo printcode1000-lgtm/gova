@@ -10,7 +10,7 @@ import type {
   PharmacyCatalogIngredientV3,
   PharmacyCatalogStrengthV3,
   PharmacyCatalogSubcategoryV3,
-} from "@/features/catalog-data/types/catalog-v3.types";
+} from '@asol/catalog-core';
 import type {
   PharmacyCatalogActiveIngredient,
   PharmacyCatalogCategory,

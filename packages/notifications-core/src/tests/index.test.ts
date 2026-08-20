@@ -53,6 +53,9 @@ const DECLARED_APP_EDGES = new Set([
 const DECLARED_PACKAGE_DOORS = new Set([
   '@asol/data-core/notifications',
   '@asol/native-core',
+  // Signing, not policy: the grant's envelope, constant-time comparison and rejection order are
+  // held once in @asol/signed-token-core. What a grant authorises stays in this package.
+  '@asol/signed-token-core',
 ]);
 
 async function main(): Promise<void> {

@@ -1,11 +1,16 @@
-export function requireEnv(key: string): string {
-  const value = process.env[key];
-  if (!value) throw new Error(`${key} environment variable is not set`);
-  return value;
-}
+import { readEnv, requireEnv } from "@asol/env-core";
+
+/**
+ * Reading rules come from `@asol/env-core`; the keys and what they mean stay here.
+ *
+ * `requireEnv` is re-exported because the application already imports it from this module and it
+ * is the same function — a second implementation of "throw when unset" is how `""` came to mean
+ * two different things in one process.
+ */
+export { requireEnv };
 
 export function getMobilePushUnlockKeyBuffer(): Buffer | null {
-  const raw = process.env.ASOL_MOBILE_PUSH_UNLOCK_KEY?.trim() ?? "";
+  const raw = readEnv("ASOL_MOBILE_PUSH_UNLOCK_KEY");
   if (!raw) return null;
   if (/^[0-9a-fA-F]{64}$/.test(raw)) return Buffer.from(raw, "hex");
   const decoded = Buffer.from(raw, "base64");
@@ -17,5 +22,5 @@ export function isMobilePushUnlockConfigured(): boolean {
 }
 
 export function getOptionalMobilePushServerCredentialBlob(): string {
-  return process.env.ASOL_MOBILE_PUSH_CREDENTIAL_BLOB?.trim() ?? "";
+  return readEnv("ASOL_MOBILE_PUSH_CREDENTIAL_BLOB");
 }

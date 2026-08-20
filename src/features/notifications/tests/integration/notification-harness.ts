@@ -697,7 +697,7 @@ function installFakes(): void {
     },
   });
 
-  inject("@/modules/notification-bridge", {
+  inject('@asol/account-bridge/notifications', {
     deliverNotificationGrants: async () => ({ delivered: 0, recipientResults: [] }),
   });
 }

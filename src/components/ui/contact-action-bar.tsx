@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 import {
   getContactVisualColor,
   getContactVisualIcon,
-} from "@/components/profile/contact-visual-style";
+} from "@/features/profile/presentation/contact-visual-style";
 
 export interface ContactActionPhone {
   id: string;

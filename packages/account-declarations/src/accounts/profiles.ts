@@ -53,9 +53,11 @@ export const PROFILES_DECLARATION = {
     'R2_PUBLIC_URL',
   ],
   optionalEnv: ['NEXT_PUBLIC_R2_PUBLIC_URL'],
+  // Nothing is copied in beside the walked module graph: the storage profile file now travels
+  // with `@asol/storage-core`, which imports it.
+  runtimeAssets: [],
   mirrorEntryPoints: [
     'features/profile/services/profile-service.bootstrap.server.ts',
     'core/config/server-env.ts',
   ],
-  runtimeAssets: ['src/config/storage-profiles.json'],
 } as const;

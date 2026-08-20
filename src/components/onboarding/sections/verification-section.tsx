@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { DocumentType, VerificationDocument } from '@/lib/onboarding/types';
-import { nextSellerId } from '@/lib/seller/next-id';
+import { nextSellerId } from '@/lib/onboarding/next-id';
 import { NativeCore, isCancelledError } from '@asol/native-core';
 
 const DOCUMENT_TYPES: DocumentType[] = [

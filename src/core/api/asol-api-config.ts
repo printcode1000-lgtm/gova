@@ -1,5 +1,5 @@
 import { publicEnv, withBasePath } from '@/core/config/public-env';
-import { resolveServiceOrigin } from '@/modules/service-bridge';
+import { resolveServiceOrigin } from '@asol/account-bridge';
 
 /**
  * ASOL API configuration — platform-agnostic.

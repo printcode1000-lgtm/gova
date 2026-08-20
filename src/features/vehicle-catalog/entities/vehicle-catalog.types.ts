@@ -1,7 +1,7 @@
 import type {
   VehicleCatalogGroup,
   VehicleCatalogOption,
-} from "@/features/catalog-data/types/catalog-v3.types";
+} from '@asol/catalog-core';
 
 export interface VehicleCatalog {
   groups: readonly VehicleCatalogGroup[];

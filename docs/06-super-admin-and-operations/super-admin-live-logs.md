@@ -205,6 +205,6 @@ src/features/system-logs/
 
 src/app/api/system-logs/
 src/app/global-error.tsx
-src/components/super-admin/SuperAdminLogsPage.tsx
+src/features/super-admin/presentation/SuperAdminLogsPage.tsx
 scripts/validate-error-logging.ts
 ```

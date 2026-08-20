@@ -18,7 +18,7 @@ import {
 } from "@/features/notifications";
 import type { SendSpecialtyMessageInput, SendSpecialtyRequestInput, SendSpecialtyRequestResult, SpecialtyChatPreferenceChanges, SpecialtyChatPreferences, StartProductConversationInput, StartProductConversationResult, StartProfileConversationInput, StartProfileConversationResult } from "../domain/types";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
-import { deliverNotificationGrants } from "@/modules/notification-bridge";
+import { deliverNotificationGrants } from '@asol/account-bridge/notifications';
 
 function identity(session: UserSession) {
   if (!session.sessionToken) throw new Error("specialtyChatLoginRefreshRequired");

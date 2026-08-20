@@ -1,49 +1,27 @@
+import { createServiceHttp, type ErrorStatusRule } from '@asol/service-runtime-core';
+
 /**
- * Minimal HTTP helpers for the orders service.
+ * The orders deployment's HTTP policy.
  *
- * The main app's `apiSuccess` / `mapOrderError` are deliberately not reused:
- * they reach into request tracing and system logging, which would pull a large
- * part of the application's module graph into a deployment that only reads
- * orders.
- *
- * The status mapping below mirrors `mapOrderError` in
- * `src/app/api/orders/order-api-helpers.ts` so a client cannot tell which
- * deployment answered. Only the branches a read path can reach are kept —
- * conflict codes belong to writes, which never run here.
+ * The mechanism — headers, message fallback, rule order — is `@asol/service-runtime-core`. What
+ * stays here is what only this deployment knows: it answers reads, and the status mapping mirrors
+ * `mapOrderError` in `src/app/api/orders/order-api-helpers.ts` so a client cannot tell which
+ * deployment answered. Only the branches a read path can reach are kept — conflict codes belong
+ * to writes, which never run here.
  */
+const ORDER_ERROR_RULES: readonly ErrorStatusRule[] = [
+  { status: 401, equals: ['userNotFound'] },
+  { status: 403, equals: ['Forbidden'], includes: ['only'] },
+  { status: 404, includes: ['not found', 'notFound'] },
+  { status: 400, includes: ['required', 'invalid', 'must', 'does not'] },
+];
 
-export function corsHeaders(request: Request): Record<string, string> {
-  // The browser is the only caller and these endpoints are read-only. No
-  // credentials are accepted — the bridge sends `credentials: "omit"` — so a
-  // permissive origin cannot be used to ride on someone's session.
-  const origin = request.headers.get('origin');
-  return {
-    'Access-Control-Allow-Origin': origin ?? '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Accept',
-    'Access-Control-Max-Age': '86400',
-    Vary: 'Origin',
-  };
-}
+const http = createServiceHttp({
+  methods: 'GET, OPTIONS',
+  headers: 'Content-Type, Accept',
+  defaultRules: ORDER_ERROR_RULES,
+});
 
-export function preflight(request: Request): Response {
-  return new Response(null, { status: 204, headers: corsHeaders(request) });
-}
-
-export function orderErrorResponse(request: Request, error: unknown): Response {
-  const message = error instanceof Error ? error.message : 'Internal Server Error';
-  const status =
-    message === 'userNotFound'
-      ? 401
-      : message === 'Forbidden' || message.includes('only')
-        ? 403
-        : message.includes('not found') || message.includes('notFound')
-          ? 404
-          : message.includes('required') ||
-              message.includes('invalid') ||
-              message.includes('must') ||
-              message.includes('does not')
-            ? 400
-            : 500;
-  return Response.json({ error: message }, { status, headers: corsHeaders(request) });
-}
+export const corsHeaders = http.corsHeaders;
+export const preflight = http.preflight;
+export const orderErrorResponse = http.errorResponse;

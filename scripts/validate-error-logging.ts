@@ -5,8 +5,8 @@ const root = process.cwd();
 const sourceRoots = ["src", "scripts"].map((item) => path.join(root, item));
 const violations: string[] = [];
 const preAuthCriticalFiles = new Set([
-  "src/components/auth/PhoneVerification.tsx",
-  "src/components/auth/LoginPageContent.tsx",
+  "src/features/auth/presentation/PhoneVerification.tsx",
+  "src/features/auth/presentation/LoginPageContent.tsx",
   "src/components/layouts/SafeAreaController.tsx",
   "src/core/providers/query-provider.tsx",
   "src/features/auth/components/SessionProvider.tsx",

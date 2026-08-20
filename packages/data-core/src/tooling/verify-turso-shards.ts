@@ -9,18 +9,7 @@ import {
   type DatabaseShardName,
 } from "../core/database/database-shards";
 import { SQLITE_DIRECTORY } from "../core/database/environment";
-
-function readEnvFiles(): Record<string, string> {
-  const values: Record<string, string> = {};
-  for (const file of [".env.local", ".env"]) {
-    if (!fs.existsSync(file)) continue;
-    for (const line of fs.readFileSync(file, "utf8").split(/\r?\n/)) {
-      const match = /^([A-Z0-9_]+)=(.*)$/.exec(line);
-      if (match && values[match[1]] === undefined) values[match[1]] = match[2];
-    }
-  }
-  return values;
-}
+import { readEnvFiles } from "@asol/env-core/files";
 
 function quoteIdent(value: string): string {
   return `"${value.replace(/"/g, '""')}"`;

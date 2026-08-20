@@ -2,7 +2,7 @@ import { apiSuccess, mapServiceError } from '@/core/api/api-response';
 import type { SaveProfileEditorInput } from '@/features/profile/entities/profile-editor.entity';
 import { profileService } from '@/features/profile/services/profile-service.bootstrap.server';
 import { extractSessionToken } from '@asol/auth-core/server';
-import { runTracedBusinessRoute } from '../../auth/traced-route';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function PUT(request: Request) {
   return runTracedBusinessRoute('PUT /api/profile/editor', async () => {

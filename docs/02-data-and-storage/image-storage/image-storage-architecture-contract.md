@@ -4,7 +4,7 @@ Non-negotiable rules for every developer, AI agent, feature, page, API, service,
 
 Violations must be rejected. Enforced by `npm run architecture:check` and startup validation.
 
-See implementation: `src/core/architecture/image-storage-contract.ts`, `packages/storage-core/src/domain/profiles/storage-profile-validator.ts`.
+See implementation: `packages/architecture-core/src/contracts/image-storage-contract.ts`, `packages/storage-core/src/domain/profiles/storage-profile-validator.ts`.
 
 ---
 
@@ -25,7 +25,7 @@ UI must never know: Provider, Cloudflare, Google Drive, Local Storage, Folder, B
 
 ## 3–5. Storage Profiles
 
-- Single source: `src/config/storage-profiles.json` (requires `version` + `profiles`)
+- Single source: `packages/storage-core/src/config/storage-profiles.json` (requires `version` + `profiles`)
 - Each profile: `id`, `enabled`, `provider`, `folder`, `maxImageSizeKB`, `outputFormat`, and optional validated `folderStrategy`
 - No code defaults — missing/invalid config fails startup
 

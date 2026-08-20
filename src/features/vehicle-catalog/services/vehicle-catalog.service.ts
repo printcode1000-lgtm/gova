@@ -4,7 +4,7 @@ import {
   visibleCatalogItems,
   vehicleGroupCatalogFileSchema,
   vehicleOptionCatalogFileSchema,
-} from "@/features/catalog-data";
+} from '@asol/catalog-core';
 import type { VehicleCatalog } from "../entities/vehicle-catalog.types";
 
 const publicCatalogUrl = (relativePath: string) => `/catagory/${relativePath.replace(/^\/+/, "")}`;

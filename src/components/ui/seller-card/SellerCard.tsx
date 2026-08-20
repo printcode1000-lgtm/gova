@@ -9,7 +9,7 @@ import type {
   SellerCardVariant,
   SellerCardViewModel,
 } from "@/features/seller-card";
-import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
+import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { FavoriteButton, favoriteFromSellerCard } from "@/features/favorites";
 
 interface SellerCardProps {

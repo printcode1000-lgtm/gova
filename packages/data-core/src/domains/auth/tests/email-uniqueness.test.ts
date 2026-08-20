@@ -4,7 +4,7 @@ import path from 'node:path';
 import Database from 'better-sqlite3';
 
 import type { User } from '@/features/auth/entities/user.entity';
-import { normalizeAuthEmail } from '@/features/auth/utils/email-normalization';
+import { normalizeAuthEmail } from '@asol/auth-core/server';
 import { CreateUserCommand } from '../operations/commands/create-user.command';
 import { UpdateUserProfileCommand } from '../operations/commands/update-user-profile.command';
 import type { IUserRepository } from '../repositories/user-repository.interface';

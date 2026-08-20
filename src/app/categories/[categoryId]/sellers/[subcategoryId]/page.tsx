@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { SellersPageContent } from "@/components/categories/SellersPageContent";
+import { SellersPageContent } from "@/features/categories/presentation/SellersPageContent";
 import { categoryService } from "@/features/categories";
 import { notFound } from "next/navigation";
 

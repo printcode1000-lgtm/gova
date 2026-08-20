@@ -17,7 +17,7 @@ import {
 } from "@asol/auth-core";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { clearAllClientStorage } from "@/lib/storage/client-storage";
+import { clearAllClientStorage } from '@/features/app-reset/client-storage';
 import { useTranslation } from "@/lib/i18n";
 import { accountDeletionApiService } from "@/features/auth/services/account-deletion-api-service";
 import { notifications } from "@/features/notifications";

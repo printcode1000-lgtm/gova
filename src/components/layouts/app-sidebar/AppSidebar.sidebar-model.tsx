@@ -40,7 +40,7 @@ import {
   useResolvedColorScheme,
   useThemePreferences,
 } from "@/lib/preferences";
-import { clearAllClientStorage } from "@/lib/storage/client-storage";
+import { clearAllClientStorage } from '@/features/app-reset/client-storage';
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { queueLogoutSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { useLogout } from "@/features/auth/hooks/use-logout";

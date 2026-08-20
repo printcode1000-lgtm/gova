@@ -49,7 +49,7 @@ const clientSource = readFileSync(
 const settingsSource = readFileSync(
   path.join(
     process.cwd(),
-    "src/components/settings/NotificationDeviceSettingsCard.tsx",
+    "src/features/settings/presentation/NotificationDeviceSettingsCard.tsx",
   ),
   "utf8",
 );

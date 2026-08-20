@@ -62,7 +62,7 @@ assert.ok(
 
 const arabicTextPattern = /[\u0600-\u06FF]/;
 const devNavSource = readFileSync(
-  path.join(root, "src/components/dev/DeveloperBadge.tsx"),
+  path.join(root, "src/features/dev-tools/presentation/DeveloperBadge.tsx"),
   "utf8",
 );
 for (const [, label] of devNavSource.matchAll(/name:\s*['"]([^'"]+)['"]/g)) {

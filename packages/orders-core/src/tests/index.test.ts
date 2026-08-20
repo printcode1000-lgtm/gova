@@ -161,11 +161,20 @@ assert.ok(
   seam.includes('configureOrdersCore') && seam.includes('isSuperAdminIdentity'),
   'The application seam no longer registers the identity port.',
 );
+// Start-up registration now runs through the application's server composition root, which
+// `src/instrumentation.ts` calls before the first request. Both links are asserted: a root that
+// stops registering, and an instrumentation that stops calling the root, are equally silent.
 assert.ok(
-  readFileSync(path.join(REPO_ROOT, 'src/instrumentation.ts'), 'utf8').includes(
+  readFileSync(path.join(REPO_ROOT, 'src/core/composition/server-ports.ts'), 'utf8').includes(
     'registerOrdersCorePorts',
   ),
-  'The main app no longer registers the orders identity port at startup.',
+  'The server composition root no longer registers the orders identity port.',
+);
+assert.ok(
+  readFileSync(path.join(REPO_ROOT, 'src/instrumentation.ts'), 'utf8').includes(
+    'registerAppServerPorts',
+  ),
+  'The main app no longer runs the server composition root at startup.',
 );
 assert.ok(
   readFileSync(path.join(REPO_ROOT, 'src/app/api/orders/order-api-helpers.ts'), 'utf8').includes(

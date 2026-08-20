@@ -1,10 +1,10 @@
 import { assertSubmainEnv, createSubmainRuntime } from '@asol/submain-composition';
+import { isSearchCategorySelectionShaped } from '@/features/product-search/entities/product-search.request';
+
 import { corsHeaders, preflight, searchErrorResponse } from '../../../lib/http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-const SAFE_ID = /^\d+$/;
 
 export async function GET(request: Request): Promise<Response> {
   try {
@@ -15,8 +15,7 @@ export async function GET(request: Request): Promise<Response> {
     const mainCategoryId = q.get('mainCategoryId') ?? '';
     const subcategoryId = q.get('subcategoryId') ?? '';
     if (
-      !SAFE_ID.test(mainCategoryId) ||
-      !SAFE_ID.test(subcategoryId) ||
+      !isSearchCategorySelectionShaped(mainCategoryId, subcategoryId) ||
       !catalog.categories.resolveProductSelection(mainCategoryId, subcategoryId).valid
     ) {
       return Response.json(

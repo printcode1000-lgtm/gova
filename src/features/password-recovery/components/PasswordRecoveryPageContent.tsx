@@ -3,8 +3,8 @@
 import { CheckCircle2, Eye, EyeOff, KeyRound, Loader2, Mail, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
-import { AuthHero } from '@/components/auth/AuthHero';
-import { AuthMobileBrand } from '@/components/auth/AuthMobileBrand';
+import { AuthHero } from '@/features/auth/presentation/AuthHero';
+import { AuthMobileBrand } from '@/features/auth/presentation/AuthMobileBrand';
 import { useTranslation } from '@/lib/i18n';
 import { usePasswordRecovery } from '../hooks/use-password-recovery';
 

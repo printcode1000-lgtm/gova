@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import profiles from "@/config/storage-profiles.json";
+import profiles from "@asol/storage-core/profiles-config";
 import { StorageProfiles, buildObjectPath } from "@asol/storage-core";
 import { validateImageAttachment } from "@asol/orders-core";
 

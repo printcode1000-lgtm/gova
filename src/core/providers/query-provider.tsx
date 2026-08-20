@@ -8,8 +8,7 @@ import {
   PersistQueryClientProvider,
 } from '@tanstack/react-query-persist-client';
 import { createAsolDbPersister } from '@asol/data-core/browser';
-import { attachQueryObserver } from '@/core/monitor/query-observer';
-import { registerMonitorTelemetry } from '@/core/monitor/data-core-telemetry';
+import { attachQueryObserver, registerMonitorTelemetry } from '@asol/observability-core';
 import { publicEnv } from '@/core/config/public-env';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 

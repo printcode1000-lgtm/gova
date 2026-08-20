@@ -1,5 +1,7 @@
 "use client";
 
+import { formatAdminClock, formatAdminDateTime } from "@asol/format-core";
+
 import * as React from "react";
 import {
   ArchiveRestore,
@@ -15,7 +17,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { asolApi } from "@/core/api";
-import { useTranslation } from "@/lib/i18n";
+import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 
@@ -67,27 +69,10 @@ function sizeText(bytes: number) {
   return `${(bytes / 1024 / 1024 / 1024).toFixed(2)} GB`;
 }
 
-function dateText(value?: string) {
-  if (!value) return "-";
-  const date = new Date(value);
-  return Number.isNaN(date.getTime())
-    ? value
-    : date.toLocaleString("ar-EG", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      });
-}
+const dateText = formatAdminDateTime;
 
 function formatOperationTime(value?: string) {
-  if (!value) return "";
-  const date = new Date(value);
-  return Number.isNaN(date.getTime())
-    ? value
-    : date.toLocaleTimeString("ar-EG", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      });
+  return formatAdminClock(value, { emptyText: "", seconds: true });
 }
 
 function backupOperationTitle(kind: BackupOperationKind) {
@@ -110,7 +95,7 @@ function operationBusyFor(busy: string, kind: BackupOperationKind, fileName: str
 }
 
 export function DevCloudBackupPage() {
-  const { formatApiError } = useTranslation();
+  const { formatApiError } = useAdminArabic();
   const { session, isLoading } = useSession();
   const allowedUser = !isLoading && isSuperAdmin(session);
   const [state, setState] = React.useState<ListResponse | null>(null);

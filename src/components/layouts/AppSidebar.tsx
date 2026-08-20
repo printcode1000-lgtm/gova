@@ -45,7 +45,7 @@ import {
   useResolvedColorScheme,
   useThemePreferences,
 } from "@/lib/preferences";
-import { clearAllClientStorage } from "@/lib/storage/client-storage";
+import { clearAllClientStorage } from '@/features/app-reset/client-storage';
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { queueLogoutSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { useLogout } from "@/features/auth/hooks/use-logout";
@@ -53,7 +53,7 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { formatSessionPhone } from "@/features/auth/entities/session.entity";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
-import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
+import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { notifications } from "@/features/notifications";
 import { Button } from "@/components/ui/button";
 import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";

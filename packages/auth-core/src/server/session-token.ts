@@ -1,37 +1,28 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { signEnvelope, verifyEnvelope } from '@asol/signed-token-core';
+
 import type { SignedSessionClaims } from '../domain/entities';
 import { getSessionSigningSecret } from '../ports/session-signing-secret.port';
 
-function signature(payload: string): string {
-  return createHmac('sha256', getSessionSigningSecret()).update(payload).digest('base64url');
-}
+const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+/**
+ * The envelope, the constant-time comparison and the rejection order live in
+ * `@asol/signed-token-core`. What stays here is the only part that is about a *session*: how long
+ * one lasts, and which claims make it usable.
+ */
+const ENVELOPE = {
+  secret: getSessionSigningSecret,
+  invalidError: 'sessionTokenInvalid',
+  expiredError: 'sessionTokenExpired',
+};
 
 export function createSignedSessionToken(uid: string, phone: string): string {
-  const payload = Buffer.from(
-    JSON.stringify({ uid, phone, expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000 }),
-  ).toString('base64url');
-  return `${payload}.${signature(payload)}`;
+  return signEnvelope<SignedSessionClaims>({ uid, phone }, { ...ENVELOPE, ttlMs: SESSION_TTL_MS });
 }
 
 export function verifySignedSessionToken(token: string): SignedSessionClaims {
-  const [payload, candidate] = token.split('.');
-  if (!payload || !candidate) throw new Error('sessionTokenInvalid');
-  const expected = signature(payload);
-  if (
-    candidate.length !== expected.length ||
-    !timingSafeEqual(Buffer.from(candidate), Buffer.from(expected))
-  ) {
-    throw new Error('sessionTokenInvalid');
-  }
-  let claims: SignedSessionClaims;
-  try {
-    claims = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) as SignedSessionClaims;
-  } catch {
-    throw new Error('sessionTokenInvalid');
-  }
-  if (!claims.uid || !claims.phone || !Number.isFinite(claims.expiresAt)) {
-    throw new Error('sessionTokenInvalid');
-  }
-  if (claims.expiresAt <= Date.now()) throw new Error('sessionTokenExpired');
-  return claims;
+  return verifyEnvelope<SignedSessionClaims>(token, {
+    ...ENVELOPE,
+    validate: (claims) => Boolean(claims.uid) && Boolean(claims.phone),
+  });
 }

@@ -1,4 +1,4 @@
-import type { CatalogDisplay } from "@/features/catalog-data/types/catalog-v3.types";
+import type { CatalogDisplay } from '@asol/catalog-core';
 
 export interface PharmacyCatalogCategory {
   id: number;

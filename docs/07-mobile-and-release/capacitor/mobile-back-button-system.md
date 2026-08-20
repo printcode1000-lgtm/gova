@@ -43,7 +43,7 @@ The responsibilities are separated as follows:
 | File | Responsibility |
 |---|---|
 | `src/app/layout.tsx` | Mounts the global controller once for the whole application |
-| `src/components/navigation/MobileBackButtonController.tsx` | Displays the accessible, translated confirmation message |
+| `src/features/navigation/presentation/MobileBackButtonController.tsx` | Displays the accessible, translated confirmation message |
 | `src/features/navigation/hooks/use-mobile-back-button.ts` | Implements history, home fallback, and double-press logic |
 | `src/platform/navigation/capacitor-back-button-adapter.ts` | Wraps `@capacitor/app` and restricts the feature to native Android |
 | `src/locales/ar.json` | Arabic exit-confirmation translation |

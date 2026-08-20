@@ -1,4 +1,4 @@
-import { SuperAdminLogsPage } from "@/components/super-admin/SuperAdminLogsPage";
+import { SuperAdminLogsPage } from "@/features/super-admin/presentation/SuperAdminLogsPage";
 
 export default function LogsPage() {
   return <SuperAdminLogsPage />;

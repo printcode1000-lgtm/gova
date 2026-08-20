@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
 import { imageStorageService } from '@/features/storage/services/image-storage-service.bootstrap.server';
-import { runTracedBusinessRoute } from '../../../auth/traced-route';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(
   _request: Request,

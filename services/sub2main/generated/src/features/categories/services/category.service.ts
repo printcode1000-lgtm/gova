@@ -2,7 +2,7 @@ import { CATEGORY_CONSTANTS } from "../domain/constants/category-constants";
 import {
   isCatalogItemVisible,
   visibleCatalogItems,
-} from "@/features/catalog-data/utils/catalog-display";
+} from '@asol/catalog-core';
 import type { Category } from "../domain/entities/category.entity";
 import type { Collection } from "../domain/entities/collection.entity";
 import type { Subcategory } from "../domain/entities/subcategory.entity";

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { ProfilePageContent } from "@/components/profile/ProfilePageContent";
+import { ProfilePageContent } from "@/features/profile/presentation/ProfilePageContent";
 import {
   loadPublicProfileShareRecord,
   profileShareMetadata,

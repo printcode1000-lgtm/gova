@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 
 import {
   parseDeploymentReport,
-} from "../lib/run-deployment-npm-script";
+} from "@asol/release-core";
 
 const sampleReport = {
   target: "notifications",

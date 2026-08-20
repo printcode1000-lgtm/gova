@@ -92,7 +92,7 @@ Rules 2, 5, and 7 are enforced by four independent layers, because any one of th
    wildcard. Deep imports fail at resolution time.
 2. **ESLint `no-restricted-imports`** — bans deep paths and vendor dependencies outside the adapter
    layer.
-3. **`scripts/architecture-check/architecture-check.package-seal-contract.ts`** — walks the whole
+3. **`packages/architecture-core/src/checks/package-seal-contract.ts`** — walks the whole
    repository during `architecture:check`, which runs inside `build` and `build:static`. It reads
    each package's own `exports` map, so it covers every package automatically rather than only the
    ones someone wrote a contract file for. It rejects two things: an import through an undeclared
@@ -115,7 +115,7 @@ it for any package.
 
 ## Current status
 
-Twenty-three sealed packages, arranged in four layers. The layering is not decoration — see
+Thirty-one sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
 Doors and app-edge counts below are measured, not intended. Re-measure with:
@@ -124,7 +124,10 @@ Doors and app-edge counts below are measured, not intended. Re-measure with:
 node -e "for(const p of require('fs').readdirSync('packages')) try{const m=require('./packages/'+p+'/package.json'); if(m.name?.startsWith('@asol/')) console.log(m.name, Object.keys(m.exports||{}).join(' '))}catch{}"
 ```
 
-### Full inventory (23 packages)
+### Full inventory (31 packages)
+
+The eight most recent additions and the moves around them are described in
+[consolidation-2026-08.md](./consolidation-2026-08.md).
 
 | Package | Layer | Doors | `test:*-core` gate |
 | :-- | :-- | :-- | :-- |
@@ -138,9 +141,9 @@ node -e "for(const p of require('fs').readdirSync('packages')) try{const m=requi
 | `sub2main-composition` | 2 | `.` | `test:compositions` |
 | `orders-core` | 1 | `.` | `test:orders-core` |
 | `data-core` | 1 | `.` · `./telemetry` · `./core` · `./browser` · `./provisioning` · `./tooling` · per-domain (18) | `test:data-core` |
-| `native-core` | 1 | `.` · `./scripts/validate-android-r8-policy` | `test:native-core` |
+| `native-core` | 1 | `.` · `./platform-globals` · `./scripts/validate-android-r8-policy` | `test:native-core` |
 | `ota-core` | 1 | `.` · `./publishing` · `./server` | `test:ota-core` |
-| `storage-core` | 1 | `.` · `./server` | `test:storage-core` |
+| `storage-core` | 1 | `.` · `./server` · `./profiles-config` | `test:storage-core` |
 | `notifications-core` | 1 | `.` · `./server` · `./builder` · `./providers` | `test:notifications-core` |
 | `auth-core` | 1 | `.` · `./server` | `test:auth-core` |
 | `catalog-core` | 1 | `.` · `./server` | `test:catalog-core` |
@@ -151,6 +154,14 @@ node -e "for(const p of require('fs').readdirSync('packages')) try{const m=requi
 | `vercel-deploy-core` | 1 | `.` | `test:vercel-deploy-core` |
 | `service-mirror-core` | 1 | `.` | `test:service-mirror-core` |
 | `map-core` | 1 | `.` | `test:map-core` |
+| `format-core` | 1 | `.` | `test:format-core` |
+| `signed-token-core` | 1 | `.` | `test:signed-token-core` |
+| `service-runtime-core` | 1 | `.` | `test:service-runtime-core` |
+| `architecture-core` | 1 | `.` | `test:architecture-core` |
+| `observability-core` | 1 | `.` · `./dev-trace` · `./server` | `test:observability-core` |
+| `env-core` | 1 | `.` · `./files` | `test:env-core` |
+| `release-core` | 1 | `.` | `test:release-core` |
+| `secrets-core` | 1 | `.` | `test:secrets-core` |
 
 Compositions are gated collectively by `test:compositions`, not individual `test:*-core` scripts.
 
@@ -201,10 +212,12 @@ the contract rather than a matter of taste.
                                          runs on the device, never on a server (Rule 0)
   layer 3  @asol/account-declarations    pure data: project, token var, env keys, entry points
   layer 2  @asol/*-composition           the only place that knows an account uses db AND images
-  layer 1  vercel-deploy-core, service-mirror-core, storage-core, ota-core,
-           native-core, notifications-core, auth-core, catalog-core,
-           product-style-core, product-core, dev-core, system-logs-core,
-           map-core, data-core, orders-core
+  layer 1  vercel-deploy-core, service-mirror-core, service-runtime-core,
+           storage-core, ota-core, native-core, notifications-core, auth-core,
+           catalog-core, product-style-core, product-core, dev-core,
+           system-logs-core, map-core, data-core, orders-core,
+           format-core, signed-token-core, env-core, observability-core,
+           architecture-core, release-core, secrets-core
                                          capability logic, held once
 ```
 
@@ -217,10 +230,16 @@ Measured dependencies, rather than intended ones:
 | Package | Imports |
 | :-- | :-- |
 | `account-declarations` | **nothing** — asserted by its own test |
-| `native-core`, `service-mirror-core`, `auth-core`, `catalog-core`, `product-style-core`, `product-core`, `dev-core`, `system-logs-core` | nothing |
+| `native-core`, `service-mirror-core`, `service-runtime-core`, `catalog-core`, `product-style-core`, `product-core`, `dev-core`, `system-logs-core` | nothing |
+| `format-core`, `signed-token-core`, `env-core` | **nothing** — asserted by their own tests |
+| `auth-core` | `signed-token-core` (the envelope its session token travels in) |
+| `observability-core` | `data-core` (`./browser`, `./telemetry`) |
+| `architecture-core` | `ota-core` (`./publishing`, for the native-surface report) |
+| `release-core` | `vercel-deploy-core` |
+| `secrets-core` | **nothing** |
 | `orders-core` | **nothing** — asserted by its own test |
 | `data-core` | `orders-core`, `dev-core`, `storage-core`, `system-logs-core`, `product-core`, `auth-core`, `notifications-core`, `ota-core` |
-| `notifications-core` | `data-core` (one door: `./notifications`) |
+| `notifications-core` | `data-core` (one door: `./notifications`), `signed-token-core` |
 | `map-core` | `native-core` (platform GPS and location permission) |
 | `storage-core` | `dev-core` (local path contract for `LocalStorageProvider`) |
 | `vercel-deploy-core` | `account-declarations` |
@@ -338,6 +357,10 @@ stricter rule than the package's.
 ---
 
 ## Standing weaknesses
+
+**Rule 3's guard now covers eight more packages.** Every gate added in the 2026-08 consolidation
+is in `build`, `build:static`, `test` and the `verify` job; `ci:coverage` reports 23 package gates
+running in CI and fails if any is missing from the workflow.
 
 **Rule 3 has been missed three times in a row.** In each migration the tests were written and passed,
 but the new `test:*-core` script was not added to the `build` and `build:static` chains — so a broken
@@ -602,7 +625,7 @@ Measured rule 7: **0 import edges** into other `@asol/*` packages. `test:auth-co
 
 ## `@asol/catalog-core` — what was sealed, and what was not
 
-Catalog v3 contracts lived in `src/features/catalog-data/` and the full-tree validator lived in
+Catalog v3 contracts lived in `@asol/catalog-core/` and the full-tree validator lived in
 `scripts/validate-catalog.ts`. The sealed package holds everything that must stay identical across
 Catalog Studio, CI, and runtime consumers:
 
@@ -617,7 +640,7 @@ Catalog Studio, CI, and runtime consumers:
 | JSON files under `public/catagory/` | — | static data (read/written by studio) |
 | `user_specialties` Drizzle schema | — | `data-access` (columns passed into validator) |
 
-Two doors: `@asol/catalog-core` and `@asol/catalog-core/server`. `src/features/catalog-data` is now a
+Two doors: `@asol/catalog-core` and `@asol/catalog-core/server`. `@asol/catalog-core` is now a
 thin re-export shim. Full map: [catalog-core-module.md](./catalog-core-module.md).
 
 ### Two doors, same pattern as `storage-core`
@@ -664,7 +687,7 @@ The product entity, normalization, and row mapping lived in `features/product` a
 | `PRODUCT_COLUMNS`, `mapProductRow`, `productRowValues` | yes (`/server`) | — |
 | `ProductService` orchestration | — | `features/product/services` |
 | SQL execution + profile counts | — | `product-repository.ts` |
-| Product page UI | — | `src/components/product/` |
+| Product page UI | — | `src/features/product/presentation/` |
 
 Two doors: `@asol/product-core` and `@asol/product-core/server`. Full map:
 [product-core-module.md](./product-core-module.md).

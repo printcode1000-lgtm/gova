@@ -10,12 +10,10 @@ export function isArabicOnlyRoute(pathname: string): boolean {
 export const ARABIC_ONLY_SOURCE_ROOTS = [
   "src/app/super-admin",
   "src/app/dev",
-  "src/components/super-admin",
+  "src/features/super-admin/presentation",
   "src/modules/google-play-console",
   "src/modules/data-health",
   "src/modules/dev-cloud-backup",
   "src/features/catalog-studio",
-  "src/components/dev/DeveloperCategorySelector.tsx",
-  "src/components/dev/DeveloperBadge.tsx",
-  "src/core/monitor",
+  "src/features/dev-tools/presentation",
 ] as const;

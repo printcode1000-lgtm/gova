@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { OrderDetailsPageContent } from "@/components/orders/OrderDetailsPageContent";
+import { OrderDetailsPageContent } from "@/features/orders/presentation/OrderDetailsPageContent";
 
 function OrderDetailsFromQuery() {
   const searchParams = useSearchParams();

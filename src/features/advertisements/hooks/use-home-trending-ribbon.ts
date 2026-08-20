@@ -8,7 +8,7 @@ import {
   type TrendingRibbonPublished,
 } from "@/features/advertisements/entities/trending-ribbon.entity";
 import { trendingRibbonApiService } from "@/features/advertisements/services/trending-ribbon-api-service";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 import {
   ASOL_DB_STORES,
   asolDbDelete,

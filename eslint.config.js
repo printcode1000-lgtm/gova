@@ -117,9 +117,15 @@ module.exports = [
                 'Direct Capacitor imports are forbidden in app code. Use @asol/native-core instead.',
             },
             {
-              group: ['@asol/native-core/*'],
+              // The package has three declared doors — `.`, `./platform-globals`, and the R8
+              // policy validator — and a deep import into its source is what must not resolve.
+              // Banning every sub-path also banned the doors, which is why the configuration
+              // leaf that needs platform identity without a Capacitor dependency could not be
+              // written against one.
+              group: ['@asol/native-core/src/**', '**/packages/native-core/src/**'],
               message:
-                'Import from @asol/native-core only (root), not from sub-paths.',
+                'Deep import into @asol/native-core is forbidden. Use a declared door: ' +
+                '@asol/native-core or @asol/native-core/platform-globals.',
             },
             {
               group: [

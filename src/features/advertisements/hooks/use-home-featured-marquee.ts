@@ -10,7 +10,7 @@ import {
 } from "@/features/advertisements/entities/featured-marquee.entity";
 import { featuredMarqueeApiService } from "@/features/advertisements/services/featured-marquee-api-service";
 import { productApiService } from "@/features/product/services/product-api-service";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 import {
   ASOL_DB_STORES,
   asolDbGet,

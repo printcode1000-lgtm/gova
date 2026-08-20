@@ -1,7 +1,7 @@
 import { createSseStream } from "@asol/system-logs-core/server";
 import { verifySignedSessionToken } from "@asol/auth-core/server";
 import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
-import { registerSystemLogsCoreServerPorts } from "@/features/system-logs/system-logs-core-bootstrap.server";
+import { registerSystemLogsCoreServerPorts } from '@/core/config/system-logs.server';
 
 registerSystemLogsCoreServerPorts();
 

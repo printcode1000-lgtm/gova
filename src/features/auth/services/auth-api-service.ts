@@ -1,5 +1,5 @@
 import { asolApi, ASOL_API_ROUTES } from '@/core/api';
-import type { RegistrationFormData, LoginFormData } from '@/lib/validation/auth';
+import type { RegistrationFormData, LoginFormData } from '@asol/auth-core';
 import type { UpdateProfileInput, UserProfile } from '../entities/profile.entity';
 import type { IAuthService, LoginResult } from './auth-service.interface';
 

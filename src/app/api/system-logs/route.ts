@@ -6,7 +6,7 @@ import type {
 } from "@/features/system-logs/entities/persistent-system-log.entity";
 import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
 import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
-import { runTracedBusinessRoute } from "../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 function assertSuperAdmin(request: Request) {
   assertSuperAdminRequest(request);

@@ -7,7 +7,7 @@ import { useSession } from '@/features/auth/components/SessionProvider';
 import type { ProfileContactsData } from '../entities/profile-contacts.entity';
 import { profileService } from '../services/profile-service';
 import { mergePrimaryContacts } from '../utils/merge-primary-contacts';
-import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
+import { reportSystemIssue } from '@asol/system-logs-core';
 import {
   profileContactsQueryKey,
   profilePublicContactsQueryKey,

@@ -12,7 +12,7 @@
 Architecture Violation
 
 Layer: asol-api-client
-File: src/components/home/CategoriesGrid.tsx
+File: src/features/home/presentation/CategoriesGrid.tsx
 Violation: fetch() used outside asol-http-transport.ts.
 Allowed: Use asolApi from @/core/api.
 
@@ -50,7 +50,7 @@ const data = await asolApi.getPublicJson<Category[]>('/catagory/core/categories.
 
 > Current architecture: this historical workaround has been superseded. UI code must import typed projections from `@/features/categories`; only the category module may import the canonical JSON files.
 
-**File changed:** `src/components/home/CategoriesGrid.tsx`
+**File changed:** `src/features/home/presentation/CategoriesGrid.tsx`
 
 ---
 
@@ -75,7 +75,7 @@ See [data-layers/04-asol-api-client-layer.md](../system/data-layers/04-asol-api-
 
 ## Related files
 
-- `src/components/home/CategoriesGrid.tsx`
-- `src/components/splash/TopMarquee.tsx` (correct reference)
+- `src/features/home/presentation/CategoriesGrid.tsx`
+- `src/features/splash/presentation/TopMarquee.tsx` (correct reference)
 - `src/core/api/asol-api-client.ts` — `getPublicJson()`
 - `scripts/architecture-check.ts`

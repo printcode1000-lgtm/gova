@@ -220,8 +220,6 @@ const ALLOWED_APP_EDGES = new Set([
   '@/features/profile-working-hours',
   '@/features/auth/entities/user.entity',
   '@/features/auth/entities/profile.entity',
-  '@/features/auth/utils/phone-normalization',
-  '@/features/auth/utils/email-normalization',
   '@/features/product/entities/product-review.entity',
   '@/features/product-search/entities/product-search.types',
   '@/features/product-search/config/product-search-fields',
@@ -242,7 +240,6 @@ const ALLOWED_APP_EDGES = new Set([
   '@/core/config/runtime-context',
   '@/core/config/runtime-context.server',
   '@/core/api/asol-http-transport',
-  '@/config/storage-profiles.json',
 ]);
 
 /**
@@ -251,6 +248,10 @@ const ALLOWED_APP_EDGES = new Set([
  * `@asol/orders-core`, which is a layer-1 → layer-1 edge rather than knowledge of the app.
  */
 const DECLARED_PACKAGE_DOORS = new Set([
+  // The storage profile file is owned by the package that validates it, not by the application.
+  '@asol/storage-core/profiles-config',
+  // Reading rules only. Which keys this package needs stays here; what "unset" means does not.
+  '@asol/env-core/files',
   '@asol/orders-core',
   '@asol/auth-core',
   '@asol/auth-core/server',
@@ -267,24 +268,22 @@ const DECLARED_PACKAGE_DOORS = new Set([
 ]);
 
 /** Inverted into `src/ports/telemetry.ts`. Re-importing one of these must fail loudly. */
-const INVERTED_EDGES = [
-  '@/core/monitor/trace-server-layer',
-  '@/core/monitor/drizzle-dev-logger',
-  '@/core/monitor/monitor-store',
-  '@/core/monitor/asol-db-monitor',
-  '@/core/monitor/types',
-];
+/**
+ * The developer monitor, which this package must never import.
+ *
+ * It used to reach five modules under `src/core/monitor/` directly. Those now live in
+ * `@asol/observability-core`, and the direction is inverted: this package announces what it did
+ * through `src/ports/telemetry.ts`, and the application registers a recorder. Moving the monitor
+ * into a package of its own does not make importing it acceptable — a data layer that knows how
+ * it is being observed is the coupling the port removed.
+ */
+const INVERTED_PACKAGE_DOORS = ['@asol/observability-core', '@asol/observability-core/server'];
 
 const seenEdges = new Set<string>();
 for (const file of productionFiles) {
   for (const specifier of importsOf(file)) {
     if (!specifier.startsWith('@/')) continue;
     seenEdges.add(specifier);
-    assert.ok(
-      !INVERTED_EDGES.includes(specifier),
-      `${file} imports ${specifier}, which was deliberately inverted into src/ports/telemetry.ts. ` +
-        'Register an implementation from the application seam instead of importing the monitor here.',
-    );
     assert.ok(
       ALLOWED_APP_EDGES.has(specifier),
       `${file} adds a new application edge: ${specifier}. This budget should only shrink — if the ` +
@@ -298,6 +297,11 @@ for (const file of productionFiles) {
   for (const specifier of importsOf(file)) {
     if (!specifier.startsWith('@asol/') || specifier.startsWith('@asol/data-core')) continue;
     seenDoors.add(specifier);
+    assert.ok(
+      !INVERTED_PACKAGE_DOORS.includes(specifier),
+      `${file} imports ${specifier}, which was deliberately inverted into src/ports/telemetry.ts. ` +
+        'Register a recorder from the application seam instead of importing the monitor here.',
+    );
     assert.ok(
       DECLARED_PACKAGE_DOORS.has(specifier),
       `${file} imports ${specifier}, which is not a declared package door. A door that resolves ` +

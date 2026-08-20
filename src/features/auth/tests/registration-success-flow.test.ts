@@ -7,9 +7,9 @@ function source(relativePath: string): string {
 }
 
 const login = source('src/features/auth/hooks/use-login.ts');
-const loginPage = source('src/components/auth/LoginPageContent.tsx');
+const loginPage = source('src/features/auth/presentation/LoginPageContent.tsx');
 const registration = source('src/features/auth/hooks/use-register.ts');
-const registrationPage = source('src/components/auth/RegistrationPageContent.tsx');
+const registrationPage = source('src/features/auth/presentation/RegistrationPageContent.tsx');
 const toast = source('src/features/auth/components/LoginSuccessToast.tsx');
 const notificationOptIn = source(
   'src/features/notifications/presentation/NotificationOptInController.tsx',

@@ -1,6 +1,6 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { featuredMarqueeService } from "@/features/advertisements/services/featured-marquee-service.server";
-import { runTracedBusinessRoute } from "../../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET() {
   return runTracedBusinessRoute(

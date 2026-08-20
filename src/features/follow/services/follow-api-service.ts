@@ -7,7 +7,7 @@ import type {
   SendFollowerNotificationInput,
   SendFollowerNotificationResult,
 } from "../entities/follow.types";
-import { deliverNotificationGrants } from "@/modules/notification-bridge";
+import { deliverNotificationGrants } from '@asol/account-bridge/notifications';
 
 function toQuery(input: FollowStatusInput): string {
   const params = new URLSearchParams({

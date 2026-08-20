@@ -2,7 +2,7 @@ import { apiSuccess, mapServiceError } from '@/core/api/api-response';
 import { authService } from '@/features/auth/services/auth-service.bootstrap.server';
 import type { UpdateProfileInput } from '@/features/auth/entities/profile.entity';
 import { extractSessionToken } from '@asol/auth-core/server';
-import { runTracedBusinessRoute } from '../traced-route';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function PUT(request: Request) {
   return runTracedBusinessRoute('PUT /api/auth/profile', async () => {

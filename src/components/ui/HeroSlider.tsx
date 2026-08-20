@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } fro
 import { Skeleton } from "@/components/ui/skeleton";
 import { HeroSliderEditor } from "@/components/ui/HeroSliderEditor";
 import { HeroSliderImagesEditor } from "@/components/ui/HeroSliderImagesEditor";
-import { shouldUseUnoptimizedImage } from "@/lib/images/external-image";
+import { shouldUseUnoptimizedImage } from '@asol/storage-core';
 import { useTranslation } from "@/lib/i18n";
 import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
 

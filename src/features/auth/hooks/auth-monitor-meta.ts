@@ -1,4 +1,4 @@
-import type { OperationType } from '@/core/monitor/types';
+import type { OperationType } from '@asol/observability-core';
 
 export const AUTH_FEATURE = 'auth';
 

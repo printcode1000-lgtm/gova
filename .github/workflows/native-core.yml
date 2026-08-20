@@ -97,6 +97,24 @@ jobs:
       - name: Catalog core tests
         run: npm run test:catalog-core
 
+      - name: Format core tests
+        run: npm run test:format-core
+
+      - name: Signed token core tests
+        run: npm run test:signed-token-core
+
+      - name: Architecture core tests
+        run: npm run test:architecture-core
+
+      - name: Observability core tests
+        run: npm run test:observability-core
+
+      - name: Env core tests
+        run: npm run test:env-core
+
+      - name: Release and secrets core tests
+        run: npm run test:release-core && npm run test:secrets-core
+
       - name: Product core tests
         run: npm run test:product-core
 
@@ -119,7 +137,7 @@ jobs:
         run: npm run test:account-bridge
 
       - name: Vercel deploy and service mirror tests
-        run: npm run test:vercel-deploy-core && npm run test:service-mirror-core
+        run: npm run test:vercel-deploy-core && npm run test:service-mirror-core && npm run test:service-runtime-core
 
       - name: Composition layer tests
         run: npm run test:compositions

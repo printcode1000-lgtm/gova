@@ -2,8 +2,8 @@ import { ApiError, NetworkOfflineError, NetworkUnavailableError } from './api-er
 import { sanitizeApiErrorCodeForClient } from './business-api-error-codes';
 import { buildAsolApiUrl, buildPublicAssetUrl } from './asol-api-config';
 import { asolHttpFetch } from './asol-http-transport';
-import { trackAsolApiRequest } from '@/core/monitor/asol-api-monitor';
-import { scheduleNotificationGrantDelivery } from '@/modules/notification-bridge';
+import { trackAsolApiRequest } from '@asol/observability-core';
+import { scheduleNotificationGrantDelivery } from '@asol/account-bridge/notifications';
 
 export interface AsolApiRequestOptions {
   headers?: Record<string, string>;

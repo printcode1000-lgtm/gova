@@ -4,7 +4,7 @@ import type {
   SpecialtyChatPreferenceChanges,
 } from "@/features/specialty-chat/domain/types";
 import { specialtyChatService } from "@/features/specialty-chat/services/specialty-chat-service.server";
-import { runTracedBusinessRoute } from "../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 function preferenceChanges(value: unknown): SpecialtyChatPreferenceChanges {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};

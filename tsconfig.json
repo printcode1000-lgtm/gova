@@ -26,6 +26,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@asol/architecture-core": [
+        "./packages/architecture-core/src/index.ts"
+      ],
       "@asol/account-bridge": [
         "./packages/account-bridge/src/index.ts"
       ],
@@ -149,8 +152,20 @@
       "@asol/dev-core/server": [
         "./packages/dev-core/src/server.ts"
       ],
+      "@asol/env-core": [
+        "./packages/env-core/src/index.ts"
+      ],
+      "@asol/env-core/files": [
+        "./packages/env-core/src/domain/env-files.ts"
+      ],
+      "@asol/format-core": [
+        "./packages/format-core/src/index.ts"
+      ],
       "@asol/map-core": [
         "./packages/map-core/src/index.ts"
+      ],
+      "@asol/native-core/platform-globals": [
+        "./packages/native-core/src/domain/platform/platform-globals.ts"
       ],
       "@asol/native-core": [
         "./packages/native-core/src/index.ts"
@@ -169,6 +184,15 @@
       ],
       "@asol/notifications-core/server": [
         "./packages/notifications-core/src/server.ts"
+      ],
+      "@asol/observability-core": [
+        "./packages/observability-core/src/index.ts"
+      ],
+      "@asol/observability-core/dev-trace": [
+        "./packages/observability-core/src/traces/dev-trace-types.ts"
+      ],
+      "@asol/observability-core/server": [
+        "./packages/observability-core/src/server.ts"
       ],
       "@asol/orders-composition": [
         "./packages/orders-composition/src/index.ts"
@@ -206,11 +230,26 @@
       "@asol/submain-composition": [
         "./packages/submain-composition/src/index.ts"
       ],
+      "@asol/service-runtime-core": [
+        "./packages/service-runtime-core/src/index.ts"
+      ],
+      "@asol/release-core": [
+        "./packages/release-core/src/index.ts"
+      ],
+      "@asol/secrets-core": [
+        "./packages/secrets-core/src/index.ts"
+      ],
       "@asol/service-mirror-core": [
         "./packages/service-mirror-core/src/index.ts"
       ],
+      "@asol/signed-token-core": [
+        "./packages/signed-token-core/src/index.ts"
+      ],
       "@asol/storage-core": [
         "./packages/storage-core/src/index.ts"
+      ],
+      "@asol/storage-core/profiles-config": [
+        "./packages/storage-core/src/config/storage-profiles.json"
       ],
       "@asol/storage-core/server": [
         "./packages/storage-core/src/server.ts"

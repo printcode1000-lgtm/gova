@@ -17,11 +17,11 @@ import {
   runSevenZip,
   writeLastBackupState,
   writeTemporaryManifest,
-} from "./secret-archive-utils";
+} from "@asol/secrets-core";
 import {
   copyRecoveryKeyBesideArchive,
   encryptZipWithPublicKey,
-} from "./secret-archive-crypto";
+} from "@asol/secrets-core";
 
 async function publishPortableEncryptedBackup(archivePath: string): Promise<void> {
   const recoveryKeyPath = `${archivePath}.private-key.pem`;

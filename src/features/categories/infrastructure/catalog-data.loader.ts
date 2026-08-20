@@ -10,7 +10,7 @@ import type {
   CatalogManifest,
   CatalogSubcategory,
   SpecialtyColumnMapping,
-} from "@/features/catalog-data/types/catalog-v3.types";
+} from '@asol/catalog-core';
 import type { Category } from "../domain/entities/category.entity";
 import type { Collection } from "../domain/entities/collection.entity";
 import type { Subcategory } from "../domain/entities/subcategory.entity";

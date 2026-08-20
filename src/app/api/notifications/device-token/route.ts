@@ -4,7 +4,7 @@ import {
   type DeleteNotificationTokenInput,
   type RegisterNotificationTokenInput,
 } from "@/features/notifications/server";
-import { runTracedBusinessRoute } from "../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST(request: Request) {
   return runTracedBusinessRoute(

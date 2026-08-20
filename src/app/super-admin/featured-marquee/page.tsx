@@ -1,4 +1,4 @@
-import { SuperAdminFeaturedMarqueePage } from "@/components/super-admin/SuperAdminFeaturedMarqueePage";
+import { SuperAdminFeaturedMarqueePage } from "@/features/super-admin/presentation/SuperAdminFeaturedMarqueePage";
 
 export default function FeaturedMarqueeAdminPage() {
   return <SuperAdminFeaturedMarqueePage />;

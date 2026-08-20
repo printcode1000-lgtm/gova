@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
 import { notificationsServer } from '@/features/notifications/server';
-import { runTracedBusinessRoute } from '../../../auth/traced-route';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute('GET /api/notifications/broadcast/recipients', async () => {

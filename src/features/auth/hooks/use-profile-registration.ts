@@ -8,7 +8,7 @@ import {
   isProfileFormDirty,
   toProfileFormData,
   type ProfileFormData,
-} from '@/lib/validation/profile';
+} from '@asol/auth-core';
 import { useSession } from '@/features/auth/components/SessionProvider';
 import { authService } from '../services/auth-service';
 import { sessionService } from '../services/session-service';
@@ -16,7 +16,7 @@ import { authMonitorMeta } from './auth-monitor-meta';
 import type { UserProfile } from '../entities/profile.entity';
 import type { ProfileRegistrationSnapshot } from '@/features/profile/entities/profile-editor.entity';
 import { isExpectedProfileSaveRejection } from '@/core/api/expected-business-error-codes';
-import { reportSystemIssue } from '@/features/system-logs/report-system-issue';
+import { reportSystemIssue } from '@asol/system-logs-core';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
 
 export function useProfileRegistration() {

@@ -47,7 +47,7 @@ RootLayout
 | File | Responsibility |
 |---|---|
 | `src/app/layout.tsx` | Mounts one global controller |
-| `src/components/voice-input/VoiceInputController.tsx` | Connects application locale and translated labels |
+| `src/features/voice-input/presentation/VoiceInputController.tsx` | Connects application locale and translated labels |
 | `src/features/voice-input/hooks/use-voice-input-scanner.ts` | Owns scanner lifecycle and locale updates |
 | `src/features/voice-input/voice-input-scanner.ts` | Scans fields, creates buttons, inserts transcripts, and performs cleanup |
 | `src/platform/speech/speech-recognition-adapter.ts` | Selects and isolates native or browser recognition |

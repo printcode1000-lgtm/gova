@@ -57,7 +57,7 @@ Displays three distinct storage targets:
 - `r2-products`: Legacy R2 bucket for product images (`product-default`) exclusively.
 - `local-sync-mirror`: Local unified mirror located under `public/sync_data/sync_file/images/...`, excluded from cloud operations.
 
-Storage bucket distribution and directory paths depend on `src/config/storage-profiles.json`. Account credentials, keys, and secret access tokens are never exposed on the user interface.
+Storage bucket distribution and directory paths depend on `packages/storage-core/src/config/storage-profiles.json`. Account credentials, keys, and secret access tokens are never exposed on the user interface.
 
 Historical order items are not treated as corrupted simply because the active product was deleted, provided the name/image snapshot remains preserved. Financial and dispute records are never deleted automatically.
 

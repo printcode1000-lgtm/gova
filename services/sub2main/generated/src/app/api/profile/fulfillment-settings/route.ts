@@ -3,7 +3,7 @@ import { notificationsServer } from "@/features/notifications/server";
 import { profileService } from "@/features/profile/services/profile-service.bootstrap.server";
 import { getMarketplaceOrderService } from "@asol/data-core/marketplace-orders";
 import type { SaveProfileFulfillmentSettingsInput } from "@/features/profile/entities/profile-fulfillment-settings.entity";
-import { runTracedBusinessRoute } from "../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 import { syncSellerFulfillmentToOpenOrders } from "@/features/orders/services/order-progression.server";
 
 export async function GET(request: Request) {

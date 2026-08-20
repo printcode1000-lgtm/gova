@@ -1,11 +1,9 @@
+import { shardHealthResponse } from '@asol/service-runtime-core';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-/**
- * Liveness only. It reports whether each shard credential is *present*, never
- * its value, so the endpoint can stay public while still making a partially
- * configured deployment visible without issuing a query.
- */
+/** The nine shards this deployment queries. Presence only — see `@asol/service-runtime-core`. */
 const SHARD_PREFIXES = [
   'ORDERS_CORE',
   'ORDERS_ITEMS',
@@ -19,12 +17,5 @@ const SHARD_PREFIXES = [
 ] as const;
 
 export function GET(): Response {
-  const missing = SHARD_PREFIXES.filter(
-    (prefix) => !process.env[`${prefix}_DATABASE_URL`],
-  );
-  return Response.json({
-    service: 'asol-orders',
-    ok: missing.length === 0,
-    configured: { shards: SHARD_PREFIXES.length - missing.length, missing },
-  });
+  return shardHealthResponse({ service: 'asol-orders', shardPrefixes: SHARD_PREFIXES });
 }

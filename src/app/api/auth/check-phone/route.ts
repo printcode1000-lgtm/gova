@@ -1,6 +1,6 @@
 import { apiSuccess, apiError } from '@/core/api/api-response';
 import { authService } from '@/features/auth/services/auth-service.bootstrap.server';
-import { runTracedBusinessRoute } from '../traced-route';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 /**
  * GET /api/auth/check-phone?phone=01xxxxxxxxx

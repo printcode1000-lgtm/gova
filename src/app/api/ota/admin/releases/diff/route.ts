@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
 import { otaReleaseService } from '@asol/ota-core/server';
-import { runTracedBusinessRoute } from '../../../../auth/traced-route';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 import { registerOtaCoreServerPorts } from "@/features/ota/server";
 
 // Supplies ota-core with the server-side log reader and the super-admin predicate.

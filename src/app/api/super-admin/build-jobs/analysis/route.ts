@@ -2,7 +2,7 @@ import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
 import { assertGooglePlayConsoleAllowed } from "@/modules/google-play-console/domain/development-guard.server";
 import { listCachedBundleAnalyses } from "@/modules/release-commands/services/bundle-analyzer.server";
-import { runTracedBusinessRoute } from "../../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/super-admin/build-jobs/analysis", async () => {

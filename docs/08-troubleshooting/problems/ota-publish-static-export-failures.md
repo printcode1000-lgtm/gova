@@ -147,9 +147,9 @@ Applied to:
 ### Related files
 
 - `src/app/categories/[categoryId]/page.tsx`
-- `src/components/categories/CategorySubcategoriesPage.tsx`
+- `src/features/categories/presentation/CategorySubcategoriesPage.tsx`
 - `src/app/product/page.tsx`
-- `src/components/product/ProductPageContent.tsx`
+- `src/features/product/presentation/ProductPageContent.tsx`
 
 ## Verification
 

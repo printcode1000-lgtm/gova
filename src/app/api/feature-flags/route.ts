@@ -1,6 +1,6 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
 import { featureFlagService } from "@/features/feature-flags/services/feature-flag-service.server";
-import { runTracedBusinessRoute } from "../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 /**
  * The live control plane for capability-backed features.

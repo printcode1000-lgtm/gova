@@ -1,4 +1,4 @@
-import { CategorySubcategoriesPage } from "@/components/categories/CategorySubcategoriesPage";
+import { CategorySubcategoriesPage } from "@/features/categories/presentation/CategorySubcategoriesPage";
 import { categoryService } from "@/features/categories";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";

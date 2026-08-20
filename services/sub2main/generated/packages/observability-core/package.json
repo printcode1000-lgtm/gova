@@ -1,0 +1,25 @@
+{
+  "name": "@asol/observability-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./dev-trace": {
+      "types": "./src/traces/dev-trace-types.ts",
+      "default": "./src/traces/dev-trace-types.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "default": "./src/server.ts"
+    }
+  },
+  "scripts": {
+    "test": "npx tsx src/tests/index.test.ts"
+  }
+}

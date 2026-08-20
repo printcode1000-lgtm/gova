@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import SplashScreen from '@/components/splash/SplashScreen';
+import SplashScreen from '@/features/splash/presentation/SplashScreen';
 import { categoryService } from '@/features/categories';
 
 export default function SplashPage() {

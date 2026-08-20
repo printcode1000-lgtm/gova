@@ -1,7 +1,6 @@
 import "server-only";
 
 import { apiError } from "@/core/api/api-response";
-import type { MinorUnits } from "@asol/orders-core";
 import { registerOrdersCorePorts } from "@/features/orders/orders-core-ports";
 
 /**
@@ -20,14 +19,6 @@ import { registerOrdersCorePorts } from "@/features/orders/orders-core-ports";
  * one place that cannot be bypassed. `configureOrdersCore` merges, so registering twice is free.
  */
 registerOrdersCorePorts();
-
-export function moneyMinor(value: unknown): MinorUnits {
-  const amount = Number(value);
-  if (!Number.isSafeInteger(amount) || amount < 0) {
-    throw new Error("invalidMoney");
-  }
-  return amount;
-}
 
 export function mapOrderError(error: unknown) {
   const message =

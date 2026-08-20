@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { StoredImage, StorageProfileId } from "@asol/storage-core";
 import { imageStorageService } from "../services/image-storage-service";
 import type { ImageUploadProgressStage } from "../services/image-storage-service.interface";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 import {
   imageUploadQueue,
   isImageUploadCancelledError,

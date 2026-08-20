@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import type { ShippingMethod, ShippingProvider } from '@/lib/onboarding/types';
-import { nextSellerId } from '@/lib/seller/next-id';
+import { nextSellerId } from '@/lib/onboarding/next-id';
 
 const SHIPPING_PROVIDERS: ShippingProvider[] = [
   'standard',

@@ -1,34 +1,20 @@
 import "server-only";
 
-import { getServerRuntimeContext } from "@/core/config/runtime-context.server";
 import {
-  assertStrictLocalDevelopmentAllowed,
-  buildLocalDevelopmentEnvironment,
-  isStrictLocalDevelopmentRuntime,
-  readLocalDevelopmentRuntimeFromProcess,
-} from "@asol/dev-core/server";
+  assertDevelopmentToolingAllowed,
+  developmentToolingEnvironment,
+} from "@/core/config/development-guard.server";
 
-function readRuntimeInput() {
-  return readLocalDevelopmentRuntimeFromProcess(getServerRuntimeContext());
-}
-
-function isDevCloudBackupRuntimeAllowed(): boolean {
-  return isStrictLocalDevelopmentRuntime(readRuntimeInput());
-}
-
+/**
+ * Cloud backup writes to R2 with the project's own credentials and can restore over live data, so
+ * it takes the **strict** gate: never on Vercel, never during a static export, never in the
+ * production-build phase. The gate itself lives in `@/core/config/development-guard.server`; the
+ * choice of `strict` is this module's, and it is the whole point of the file.
+ */
 export function assertDevCloudBackupAllowed(): void {
-  assertStrictLocalDevelopmentAllowed(
-    readRuntimeInput(),
-    "devCloudBackupDevelopmentOnly",
-  );
+  assertDevelopmentToolingAllowed("devCloudBackupDevelopmentOnly", { strict: true });
 }
 
 export function devCloudBackupEnvironment() {
-  const runtime = getServerRuntimeContext();
-  return {
-    allowed: isDevCloudBackupRuntimeAllowed(),
-    nodeEnv: process.env.NODE_ENV === "development" ? "development" : "production",
-    publicMode: runtime.deployment,
-    vercel: runtime.deployment === "web-production",
-  };
+  return developmentToolingEnvironment({ strict: true });
 }

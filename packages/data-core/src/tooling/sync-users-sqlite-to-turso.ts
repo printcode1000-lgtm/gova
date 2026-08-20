@@ -3,7 +3,7 @@ import Database from "better-sqlite3";
 import dotenv from "dotenv";
 import { createClient } from "@libsql/client";
 import { PRIMARY_SQLITE_DB_PATH } from "../core/database/environment";
-import { normalizeAuthPhone } from "@/features/auth/utils/phone-normalization";
+import { normalizeAuthPhone } from "@asol/auth-core/server";
 
 process.env.ASOL_PROVISIONING = "true";
 

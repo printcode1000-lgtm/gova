@@ -12,6 +12,7 @@ export * from "./domain/types";
 export * from "./domain/entities";
 export * from "./domain/value-objects/money";
 export * from "./domain/actor-from-input";
+export * from "./domain/order-list-request";
 export * from "./domain/fulfillment-snapshot";
 export * from "./domain/order-details-visibility";
 export * from "./validators";

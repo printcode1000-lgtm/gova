@@ -168,11 +168,11 @@ async function main() {
     "utf8",
   );
   const productSource = readFileSync(
-    path.join(root, "src/components/product/ProductPageContent.tsx"),
+    path.join(root, "src/features/product/presentation/ProductPageContent.tsx"),
     "utf8",
   );
   const productEditorsSource = readFileSync(
-    path.join(root, "src/components/product/ProductImageEditors.tsx"),
+    path.join(root, "src/features/product/presentation/ProductImageEditors.tsx"),
     "utf8",
   );
   const heroEditorsSource = readFileSync(
@@ -180,11 +180,11 @@ async function main() {
     "utf8",
   );
   const profileSource = readFileSync(
-    path.join(root, "src/components/profile/StoreIdentityCard.tsx"),
+    path.join(root, "src/features/profile/presentation/StoreIdentityCard.tsx"),
     "utf8",
   );
   const profileSaveSource = readFileSync(
-    path.join(root, "src/components/profile/use-profile-save.ts"),
+    path.join(root, "src/features/profile/presentation/use-profile-save.ts"),
     "utf8",
   );
   assert.match(managerSource, /uploadPending:\s*async/);

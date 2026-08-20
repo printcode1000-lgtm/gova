@@ -12,7 +12,7 @@ Profile-driven multi-provider architecture. The UI passes only **storage profile
 | `StorageProfiles.HomeHeroSlider` | 1024   | webp   | `images/advertisements/home-hero-slider` | `images/content/advertisements/home-hero-slider` |
 | `StorageProfiles.SpicialOrder`   | 500    | webp   | `images/spicialOrder`                    | `images/content/spicialOrder`                    |
 
-Config: `src/config/storage-profiles.json` (server-only).
+Config: `packages/storage-core/src/config/storage-profiles.json` (server-only).
 
 ## Pipeline
 

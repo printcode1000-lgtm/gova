@@ -1,6 +1,6 @@
 import { apiSuccess, mapServiceError } from '@/core/api/api-response';
 import { authService } from '@/features/auth/services/auth-service.bootstrap.server';
-import { runTracedBusinessRoute } from '../traced-route';
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function POST() {
   return runTracedBusinessRoute('POST /api/auth/logout', async () => {

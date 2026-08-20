@@ -32,7 +32,7 @@ npm run sub2main:recreate-vercel-project
 
 | Layer | Location |
 |---|---|
-| Super Admin UI | `src/components/super-admin/SuperAdminCloudAccountsPage.tsx` |
+| Super Admin UI | `src/features/super-admin/presentation/SuperAdminCloudAccountsPage.tsx` |
 | Architecture reference | [26-cloud-accounts.md](../01-architecture/data-layers/26-cloud-accounts.md) |
 | Deploy commands | [16-deployment-targets.md](../01-architecture/data-layers/16-deployment-targets.md), [22-scripts-and-workflows.md](../01-architecture/data-layers/22-scripts-and-workflows.md) |
 | Environment variables | [14-environment-variables.md](../01-architecture/data-layers/14-environment-variables.md) (`VERCEL_SUBMAIN_TOKEN`, `VERCEL_SUB2MAIN_TOKEN`) |

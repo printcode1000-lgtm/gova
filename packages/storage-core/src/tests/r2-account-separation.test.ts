@@ -30,7 +30,7 @@ export async function runR2AccountSeparationTest() {
   }
 
   const profiles = (
-    JSON.parse(read('src', 'config', 'storage-profiles.json')) as {
+    JSON.parse(read('packages', 'storage-core', 'src', 'config', 'storage-profiles.json')) as {
       profiles: StorageProfileEntry[];
     }
   ).profiles;

@@ -12,7 +12,7 @@ Three Cloudflare R2 accounts. One holds product images, one holds general media 
 
 ## What decides where a file goes
 
-`src/config/storage-profiles.json`, and nothing else. Each profile names its
+`packages/storage-core/src/config/storage-profiles.json`, and nothing else. Each profile names its
 provider, and the provider names the account:
 
 | Profile | Account | Cloud folder |

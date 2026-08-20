@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { isDevelopment } from '@/core/config';
-import { DEV_TRACE_HEADER } from '@/core/monitor/dev-trace-types';
-import { getDevTrace, serializeDevTrace } from '@/core/monitor/server-trace';
+import { DEV_TRACE_HEADER } from '@asol/observability-core/dev-trace';
+import { getDevTrace, serializeDevTrace } from '@asol/observability-core/server';
 import { isQuietMappedServiceError } from '@/core/api/expected-business-error-codes';
 import {
   KNOWN_BUSINESS_API_ERROR_CODES,

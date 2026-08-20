@@ -208,7 +208,7 @@ use `deploy:push:main` / `deploy:push:all` or `npx tsx scripts/deploy-push.ts
 
 Service deploy scripts emit `[ASOL_DEPLOY_REPORT]` on stdout. `deploy:push` and
 `deploy:all` capture that line from the child npm process (stdout and stderr,
-after streams close) via `scripts/lib/run-deployment-npm-script.ts`. Child
+after streams close) via `packages/release-core/src/pipeline/run-deployment-npm-script.ts`. Child
 processes run without `NODE_OPTIONS` / VS Code inspector hooks so nested
 `npx tsx` deploy scripts keep piped output reliable. VS Code launch configs for
 deploy run `npx tsx scripts/deploy-*.ts` with `autoAttachChildProcesses: false`.

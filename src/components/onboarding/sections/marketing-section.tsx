@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import type { CouponCode } from '@/lib/onboarding/types';
-import { nextSellerId } from '@/lib/seller/next-id';
+import { nextSellerId } from '@/lib/onboarding/next-id';
 
 function generateCouponCode() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

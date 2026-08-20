@@ -1,7 +1,7 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
 import type { FeaturedMarqueeConfig } from "@/features/advertisements/entities/featured-marquee.entity";
 import { featuredMarqueeService } from "@/features/advertisements/services/featured-marquee-service.server";
-import { runTracedBusinessRoute } from "../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute(

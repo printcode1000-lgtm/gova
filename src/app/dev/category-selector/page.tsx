@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { DeveloperCategorySelector } from '@/components/dev/DeveloperCategorySelector';
+import { DeveloperCategorySelector } from '@/features/dev-tools/presentation/DeveloperCategorySelector';
 import { isDevelopment } from '@/core/config';
 
 export default function DeveloperCategorySelectorPage() {

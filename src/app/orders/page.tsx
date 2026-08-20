@@ -1,4 +1,4 @@
-import { OrdersPageContent } from "@/components/orders/OrdersPageContent";
+import { OrdersPageContent } from "@/features/orders/presentation/OrdersPageContent";
 
 export default function OrdersPage() {
   return <OrdersPageContent />;

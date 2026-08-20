@@ -9,7 +9,7 @@ import {
   type ProfileFulfillmentSettings,
 } from "../entities/profile-fulfillment-settings.entity";
 import { profileService } from "../services/profile-service";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 import { profileFulfillmentSettingsQueryKey } from "./use-profile-public-fulfillment-settings";
 
 function isDirty(

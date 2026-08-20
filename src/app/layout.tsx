@@ -14,10 +14,10 @@ import { AppQueryProvider } from "@/core/providers/query-provider";
 import { SessionProvider } from "@/features/auth/components/SessionProvider";
 import { LoginSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { NetworkStatusProvider } from "@/features/network/hooks/use-network-status";
-import { NetworkStatusBanner } from "@/components/network/NetworkStatusBanner";
+import { NetworkStatusBanner } from "@/features/network/presentation/NetworkStatusBanner";
 import { OtaUpdateProvider } from "@asol/ota-core";
-import { MobileBackButtonController } from "@/components/navigation/MobileBackButtonController";
-import { VoiceInputController } from "@/components/voice-input/VoiceInputController";
+import { MobileBackButtonController } from "@/features/navigation/presentation/MobileBackButtonController";
+import { VoiceInputController } from "@/features/voice-input/presentation/VoiceInputController";
 import { SystemLogCollector } from "@/features/system-logs/SystemLogCollector";
 import { SystemLogErrorBoundary } from "@/features/system-logs/SystemLogErrorBoundary";
 import { SuperAdminErrorFloatingButton } from "@/features/system-logs/SuperAdminErrorFloatingButton";
@@ -31,7 +31,7 @@ import {
   WebPushController,
 } from "@/features/notifications/ui";
 import { SpecialtyChatNotificationsController } from "@/features/specialty-chat";
-import { OrderNotificationsController } from "@/components/orders/OrderNotificationsController";
+import { OrderNotificationsController } from "@/features/orders/presentation/OrderNotificationsController";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
@@ -46,7 +46,7 @@ import {
 
 const DeveloperBadge = isDevelopment
   ? dynamic(() =>
-      import("@/components/dev/DeveloperBadge").then((m) => m.DeveloperBadge),
+      import("@/features/dev-tools/presentation/DeveloperBadge").then((m) => m.DeveloperBadge),
     )
   : () => null;
 

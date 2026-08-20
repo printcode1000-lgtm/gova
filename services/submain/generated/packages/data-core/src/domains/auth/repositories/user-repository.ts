@@ -6,8 +6,8 @@ import type { IDatabaseClient } from '../../../core/database/database-client.int
 import { users } from '../../../core/database/schema';
 import type { User } from '@/features/auth/entities/user.entity';
 import type { IUserRepository } from './user-repository.interface';
-import { authPhoneCandidates, normalizeAuthPhone } from '@/features/auth/utils/phone-normalization';
-import { normalizeAuthEmail } from '@/features/auth/utils/email-normalization';
+import { authPhoneCandidates, normalizeAuthPhone } from '@asol/auth-core/server';
+import { normalizeAuthEmail } from '@asol/auth-core/server';
 
 export class UserRepository implements IUserRepository {
   constructor(private database: IDatabaseClient = usersDataSource) {}

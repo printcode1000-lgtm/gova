@@ -17,11 +17,11 @@ import type {
   PharmacyProfileCatalogSubcategoryView,
   PharmacyProfileCatalogView,
 } from "../entities/pharmacy-profile-catalog.types";
-import { ProductField } from "@/components/product/ProductComponentPrimitives";
+import { ProductField } from "@/features/product/presentation/ProductComponentPrimitives";
 import type {
   ProductComponentConfig,
   ProductMode,
-} from "@/components/product/product-component.types";
+} from "@/features/product/presentation/product-component.types";
 
 interface ProductPharmacySpecsProps {
   mode: ProductMode;

@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import path from 'path';
+import storageProfilesConfig from '../../config/storage-profiles.json';
 import { validateStorageProfilesFile } from '../../domain/profiles/storage-profile-validator';
 import type {
   StorageProfile,
@@ -7,13 +8,32 @@ import type {
   StorageProfilesFile,
 } from '../../domain/profiles/storage-profile.types';
 
-const CONFIG_PATH = path.join(process.cwd(), 'src/config/storage-profiles.json');
+/**
+ * The profile file is part of this package, imported as a module rather than read from
+ * `process.cwd()`.
+ *
+ * It used to live in the application at `src/config/storage-profiles.json` and be read by path,
+ * which meant two things: this package could only load in a process whose working directory was
+ * the repository root, and every deployment that needed profiles kept its own committed copy of
+ * the file — three copies, kept in step by hand.
+ *
+ * The on-disk path below is used only by the hot-reload helper, which is developer tooling and
+ * always runs from the repository root.
+ */
+const CONFIG_PATH = path.join(
+  process.cwd(),
+  'packages/storage-core/src/config/storage-profiles.json',
+);
 
 let cachedConfig: StorageProfilesFile | null = null;
 
+/**
+ * Validates the bundled configuration. Named "from disk" for the callers that already use it;
+ * what it validates is the module above, so it works in every runtime rather than only where the
+ * repository happens to be checked out.
+ */
 export function loadAndValidateStorageProfilesFromDisk(): StorageProfilesFile {
-  const raw = readFileSync(CONFIG_PATH, 'utf8');
-  return validateStorageProfilesFile(JSON.parse(raw) as unknown);
+  return validateStorageProfilesFile(storageProfilesConfig as unknown);
 }
 
 function loadConfig(): StorageProfilesFile {

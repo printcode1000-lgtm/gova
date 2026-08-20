@@ -1,6 +1,7 @@
 import "server-only";
 
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { signEnvelope, verifyEnvelope } from "@asol/signed-token-core";
+
 import { getNotificationGrantSecret } from "@/core/config/server-env/server-env.values.turso-env";
 import type { SendNotificationToUsersInput } from "../domain/entities";
 
@@ -35,11 +36,15 @@ export interface NotificationGrantPayload {
   expiresAt: number;
 }
 
-function signature(value: string): string {
-  return createHmac("sha256", getNotificationGrantSecret())
-    .update(value)
-    .digest("base64url");
-}
+/**
+ * Signing itself is `@asol/signed-token-core`. This module keeps what a *grant* is: the schema
+ * version the service will accept, the send it authorises, and the five-minute window.
+ */
+const ENVELOPE = {
+  secret: getNotificationGrantSecret,
+  invalidError: "notificationGrantInvalid",
+  expiredError: "notificationGrantExpired",
+};
 
 export function createNotificationGrant(
   send: SendNotificationToUsersInput,
@@ -50,47 +55,26 @@ export function createNotificationGrant(
   }
   if (!send.dedupeKey) throw new Error("notificationGrantDedupeKeyRequired");
 
-  const now = Date.now();
-  const payload: NotificationGrantPayload = {
-    v: 1,
-    actorUid: options.actorUid ?? null,
-    send,
-    issuedAt: now,
-    expiresAt: now + (options.ttlMs ?? NOTIFICATION_GRANT_TTL_MS),
-  };
-  const encoded = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  return `${encoded}.${signature(encoded)}`;
+  return signEnvelope<NotificationGrantPayload>(
+    { v: 1, actorUid: options.actorUid ?? null, send, issuedAt: Date.now() },
+    { ...ENVELOPE, ttlMs: options.ttlMs ?? NOTIFICATION_GRANT_TTL_MS },
+  );
 }
 
 export function verifyNotificationGrant(token: string): NotificationGrantPayload {
-  const [encoded, candidate] = typeof token === "string" ? token.split(".") : [];
-  if (!encoded || !candidate) throw new Error("notificationGrantInvalid");
-
-  const expected = signature(encoded);
-  if (
-    candidate.length !== expected.length ||
-    !timingSafeEqual(Buffer.from(candidate), Buffer.from(expected))
-  ) {
-    throw new Error("notificationGrantInvalid");
-  }
-
-  let payload: NotificationGrantPayload;
-  try {
-    payload = JSON.parse(
-      Buffer.from(encoded, "base64url").toString("utf8"),
-    ) as NotificationGrantPayload;
-  } catch {
-    throw new Error("notificationGrantInvalid");
-  }
-
-  if (payload.v !== 1) throw new Error("notificationGrantUnsupportedVersion");
-  if (!payload.send || !Array.isArray(payload.send.uids) || payload.send.uids.length === 0) {
-    throw new Error("notificationGrantInvalid");
-  }
-  if (!payload.send.dedupeKey) throw new Error("notificationGrantInvalid");
-  if (typeof payload.expiresAt !== "number" || payload.expiresAt <= Date.now()) {
-    throw new Error("notificationGrantExpired");
-  }
-
+  const payload = verifyEnvelope<NotificationGrantPayload>(token, {
+    ...ENVELOPE,
+    // The version check runs before the shape check so an older grant reports what is actually
+    // wrong with it rather than looking forged.
+    validate: (value) => {
+      if (value.v !== 1) throw new Error("notificationGrantUnsupportedVersion");
+      return (
+        Boolean(value.send) &&
+        Array.isArray(value.send.uids) &&
+        value.send.uids.length > 0 &&
+        Boolean(value.send.dedupeKey)
+      );
+    },
+  });
   return payload;
 }

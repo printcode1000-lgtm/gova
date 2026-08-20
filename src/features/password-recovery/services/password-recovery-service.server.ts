@@ -1,6 +1,7 @@
 import 'server-only';
 
-import { createHmac, randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
+import { randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
+import { hmacDigest } from '@asol/signed-token-core';
 import { hashPassword } from '@asol/auth-core/server';
 import { assertPasswordMeetsMinimum, readPasswordInput } from '@asol/auth-core';
 import { getPasswordRecoveryConfig } from '@/core/config/server-env';
@@ -26,9 +27,13 @@ export class PasswordRecoveryService {
     private readonly mailer = new PasswordRecoveryEmailService(),
   ) {}
 
+  /**
+   * A lookup hash, not a token: the recovery table stores these and queries by them, so the
+   * encoding is hex and stays hex. The HMAC itself comes from `@asol/signed-token-core`, which is
+   * where every keyed digest in this project is computed.
+   */
   private digest(value: string): string {
-    const { signingSecret } = getPasswordRecoveryConfig();
-    return createHmac('sha256', signingSecret).update(value).digest('hex');
+    return hmacDigest(getPasswordRecoveryConfig().signingSecret, value);
   }
 
   async requestCode(input: RecoveryRequestInput, requestIp: string): Promise<RecoveryRequestResult> {

@@ -6,7 +6,7 @@ The `FeaturedMarquee` is a reusable, self-scrolling product showcase component d
 
 ## Component Location
 * Code: [FeaturedMarquee.tsx](file:///c:/Users/hesham/Desktop/asol/src/components/ui/FeaturedMarquee.tsx)
-* Configuration Example (Home Page): [home-featured-marquee.json](file:///c:/Users/hesham/Desktop/asol/src/components/home/home-featured-marquee.json)
+* Configuration Example (Home Page): [home-featured-marquee.json](file:///c:/Users/hesham/Desktop/asol/src/features/home/presentation/home-featured-marquee.json)
 
 ---
 

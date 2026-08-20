@@ -1,10 +1,12 @@
 'use client';
 
+import { formatAdminClock } from '@asol/format-core';
+
 import * as React from 'react';
 import { notFound } from 'next/navigation';
-import { useMonitorStore, startNewFlow, type TreeNode } from '@/core/monitor/monitor-store';
-import { LAYER_COLORS, OP_TYPE_COLORS, STATUS_COLORS, SLOW_QUERY_THRESHOLD_MS, resolveMonitorLayer } from '@/core/monitor/types';
-import type { OperationRecord, LayerName } from '@/core/monitor/types';
+import { useMonitorStore, startNewFlow, type TreeNode } from '@asol/observability-core';
+import { LAYER_COLORS, OP_TYPE_COLORS, STATUS_COLORS, SLOW_QUERY_THRESHOLD_MS, resolveMonitorLayer } from '@asol/observability-core';
+import type { OperationRecord, LayerName } from '@asol/observability-core';
 import { SchemaSyncPanel } from './SchemaSyncPanel';
 
 // Guard production environment
@@ -1130,7 +1132,7 @@ export default function MonitorPage() {
             >
               {flows.map((f) => (
                 <option key={f.id} value={f.id}>
-                  تدفق {f.id.slice(0, 8)}… ({f.feature}) — {new Date(f.timestamp).toLocaleTimeString('ar-EG')}
+                  تدفق {f.id.slice(0, 8)}… ({f.feature}) — {formatAdminClock(f.timestamp, { seconds: true })}
                 </option>
               ))}
             </select>

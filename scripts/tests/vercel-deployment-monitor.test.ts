@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   vercelDeploymentMetadata,
   waitForVercelProductionDeployment,
-} from "../lib/vercel-deployment-monitor";
+} from "@asol/vercel-deploy-core";
 
 async function main() {
 const metadata = vercelDeploymentMetadata({

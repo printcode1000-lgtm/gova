@@ -41,7 +41,7 @@ const inboxService = read("src/features/notifications/application/native-inbox-s
 const fcmProvider = read(
   "packages/notifications-core/src/services/providers/fcm-notification-provider.server.ts",
 );
-const clientStorage = read("src/lib/storage/client-storage.ts");
+const clientStorage = read("src/features/app-reset/client-storage.ts");
 
 assert.ok(
   activity.includes("AsolNativeCore.onCreate(this)") ||

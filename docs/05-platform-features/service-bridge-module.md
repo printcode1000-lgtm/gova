@@ -1,9 +1,12 @@
 # Service Bridge Module
 
 The connector between the main app and the read-only service deployments. It
-is implemented in `@asol/account-bridge` (door `.`), re-exported via
-`src/modules/service-bridge/`, ships in the browser bundle, and runs nowhere
+is implemented in `@asol/account-bridge` (door `.`), ships in the browser bundle, and runs nowhere
 else.
+
+The application used to import it through a one-line re-export at `src/modules/service-bridge/`.
+That shim is gone: a second name for a package door makes the seal harder to read and buys
+nothing. Import `@asol/account-bridge` directly.
 
 ## Why it exists
 
@@ -123,7 +126,7 @@ one carries nothing — it only chooses an address.
 ## Files
 
 ```text
-src/modules/service-bridge/
+@asol/account-bridge/
 ├── index.ts                   # public surface
 └── service-bridge.client.ts   # route table + browser and method guards
 

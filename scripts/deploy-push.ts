@@ -10,12 +10,12 @@ import {
 import {
   DeploymentNpmScriptError,
   runDeploymentNpmScript,
-} from "./lib/run-deployment-npm-script";
-import { pushMainBranch } from "./lib/push-main-branch";
+} from "@asol/release-core";
+import { pushMainBranch } from "@asol/release-core";
 import {
   type VercelDeploymentReport,
   waitForVercelProductionDeployment,
-} from "./lib/vercel-deployment-monitor";
+} from "@asol/vercel-deploy-core";
 import { loadReleaseEnvironment } from "./load-release-env";
 
 loadReleaseEnvironment();

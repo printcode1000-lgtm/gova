@@ -20,36 +20,13 @@ import {
 } from "@/features/notifications/ui";
 import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { calendarDayKey, formatRelativeDay, formatTime } from "@asol/format-core";
 import { specialtyChatClient } from "../application/specialty-chat-client";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
 
-function formatMessageTime(value: string, locale: "ar" | "en") {
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-EG", {
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(value));
-}
-
-function dateKey(value: string): string {
-  const date = new Date(value);
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-}
-
-function formatDay(value: string, locale: "ar" | "en") {
-  const date = new Date(value);
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
-  if (dateKey(value) === dateKey(today.toISOString())) {
-    return locale === "ar" ? "اليوم" : "Today";
-  }
-  if (dateKey(value) === dateKey(yesterday.toISOString())) {
-    return locale === "ar" ? "أمس" : "Yesterday";
-  }
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-EG", {
-    dateStyle: "medium",
-  }).format(date);
-}
+const formatMessageTime = formatTime;
+const dateKey = calendarDayKey;
+const formatDay = formatRelativeDay;
 
 export function ChatThreadPageContent({ conversationKey }: { conversationKey: string }) {
   const { locale, isRTL } = useTranslation();

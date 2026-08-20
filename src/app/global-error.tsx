@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
-import { registerSystemLogsCoreBrowserPorts } from "@/features/system-logs/system-logs-core-bootstrap";
+import { reportSystemIssue } from '@asol/system-logs-core';
+import { registerBrowserPorts } from "@/core/composition/browser-ports";
 
 export default function GlobalError({
   error,
@@ -12,7 +12,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    registerSystemLogsCoreBrowserPorts();
+    registerBrowserPorts();
     const enriched = new Error(
       error.digest ? `${error.message} (digest: ${error.digest})` : error.message,
     );

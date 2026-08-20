@@ -128,11 +128,20 @@
       "@asol/dev-core/server": [
         "./generated/packages/dev-core/src/server.ts"
       ],
+      "@asol/env-core": [
+        "./generated/packages/env-core/src/index.ts"
+      ],
+      "@asol/env-core/files": [
+        "./generated/packages/env-core/src/domain/env-files.ts"
+      ],
       "@asol/orders-composition": [
         "./generated/packages/orders-composition/src/index.ts"
       ],
       "@asol/orders-core": [
         "./generated/packages/orders-core/src/index.ts"
+      ],
+      "@asol/service-runtime-core": [
+        "./generated/packages/service-runtime-core/src/index.ts"
       ]
     }
   },

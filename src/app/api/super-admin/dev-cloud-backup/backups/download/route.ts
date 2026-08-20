@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { apiError, mapServiceError } from "@/core/api/api-response";
 import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
 import { devCloudBackupService } from "@/modules/dev-cloud-backup/services/dev-cloud-backup-service.server";
-import { runTracedBusinessRoute } from "../../../../auth/traced-route";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute(

@@ -1,3 +1,3 @@
-import { auditCapacitorDefaultBundle } from "../../../scripts/lib/capacitor-defaults-audit";
+import { auditCapacitorDefaultBundle } from "./capacitor-defaults-audit";
 
 auditCapacitorDefaultBundle();

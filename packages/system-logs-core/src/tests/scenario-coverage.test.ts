@@ -12,9 +12,10 @@ const requiredCaptureSurfaces = [
   'src/features/system-logs/SystemLogCollector.tsx',
   'src/features/system-logs/SystemLogErrorBoundary.tsx',
   'src/features/system-logs/RouteErrorFallback.tsx',
-  'src/features/system-logs/report-system-issue.ts',
+  // `reportSystemIssue` is imported straight from this package now — the application's one-line
+  // re-export of it was a second name for one surface, not a second surface.
   'src/app/global-error.tsx',
-  'src/app/api/auth/traced-route.ts',
+  'src/core/api/traced-route.ts',
   'src/core/api/api-response.ts',
   'packages/system-logs-core/src/browser/global-capture.ts',
   'packages/system-logs-core/src/browser/capture-coordinator.ts',
@@ -44,7 +45,7 @@ export function runScenarioCoverageTest() {
   assert.ok(globalError.includes('reportSystemIssue'));
 
   const tracedRoute = readFileSync(
-    path.join(workspaceRoot, 'src/app/api/auth/traced-route.ts'),
+    path.join(workspaceRoot, 'src/core/api/traced-route.ts'),
     'utf8',
   );
   assert.ok(tracedRoute.includes('isErrorAlreadyLogged'));

@@ -9,7 +9,7 @@ import {
   type StoreDetailsData,
 } from "../entities/store-details.entity";
 import { profileService } from "../services/profile-service";
-import { reportSystemIssue } from "@/features/system-logs/report-system-issue";
+import { reportSystemIssue } from '@asol/system-logs-core';
 
 const storeDetailsQueryKey = (uid: string) =>
   ["profile", "store-details", uid] as const;

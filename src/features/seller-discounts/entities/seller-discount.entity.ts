@@ -1,3 +1,5 @@
+import { formatPlainMoneyMinor } from "@asol/format-core";
+
 export type SellerDiscountType =
   | "quantity"
   | "bundle"
@@ -176,5 +178,5 @@ export function createEmptySellerDiscount(
 }
 
 export function formatMinorCurrency(value: number, locale: "ar" | "en" = "ar") {
-  return `${(Math.max(0, value) / 100).toLocaleString(locale === "ar" ? "ar-EG" : "en-US")} ${locale === "ar" ? "ج.م" : "EGP"}`;
+  return formatPlainMoneyMinor(value, locale);
 }

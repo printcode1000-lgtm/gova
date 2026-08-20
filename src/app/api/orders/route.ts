@@ -1,23 +1,16 @@
 import { apiSuccess } from "@/core/api/api-response";
 import { getMarketplaceOrderQueries } from "@asol/data-core/marketplace-orders";
-import { runTracedBusinessRoute } from "../auth/traced-route";
-import { actorFromInput } from "@asol/orders-core";
+import { runTracedBusinessRoute } from '@/core/api/traced-route';
+import { actorFromInput, parseOrderListQuery } from "@asol/orders-core";
 import { mapOrderError } from "./order-api-helpers";
 
 export async function GET(request: Request) {
   return runTracedBusinessRoute("GET /api/orders", async () => {
     try {
-      const url = new URL(request.url);
-      const actor = actorFromInput(
-        {
-          uid: url.searchParams.get("uid") ?? "",
-          phone: url.searchParams.get("phone") ?? "",
-          role: (url.searchParams.get("role") as any) ?? undefined,
-        },
-        "buyer",
+      const { actorInput, limit, offset } = parseOrderListQuery(
+        new URL(request.url).searchParams,
       );
-      const limit = Number(url.searchParams.get("limit") ?? "5");
-      const offset = Number(url.searchParams.get("offset") ?? "0");
+      const actor = actorFromInput(actorInput, "buyer");
       const repo = getMarketplaceOrderQueries();
       return apiSuccess(
         await repo.listForUser(actor.id, {

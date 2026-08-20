@@ -14,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import type { Collection } from '@/lib/onboarding/types';
-import { nextSellerId } from '@/lib/seller/next-id';
+import { nextSellerId } from '@/lib/onboarding/next-id';
 
 function generateId() {
   return nextSellerId('col');

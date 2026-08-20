@@ -9,11 +9,11 @@
 | Reusable component and public types | `src/components/ui/HeroSlider.tsx`                          |
 | Full administrative editor          | `src/components/ui/HeroSliderEditor.tsx`                    |
 | Image-only profile editor           | `src/components/ui/HeroSliderImagesEditor.tsx`              |
-| Home integration                    | `src/components/home/HomeScreen.tsx`                        |
+| Home integration                    | `src/features/home/presentation/HomeScreen.tsx`                        |
 | Home cache and synchronization      | `src/features/advertisements/hooks/use-home-hero-slider.ts` |
-| Super-admin page                    | `src/components/super-admin/SuperAdminHeroSliderPage.tsx`   |
-| Profile preview integration         | `src/components/profile/ProfilePageContent.tsx`             |
-| Profile image-editing tabs          | `src/components/profile/StoreIdentityCard.tsx`              |
+| Super-admin page                    | `src/features/super-admin/presentation/SuperAdminHeroSliderPage.tsx`   |
+| Profile preview integration         | `src/features/profile/presentation/ProfilePageContent.tsx`             |
+| Profile image-editing tabs          | `src/features/profile/presentation/StoreIdentityCard.tsx`              |
 | Image management UI                 | `src/features/storage/components/StorageImageManager.tsx`   |
 
 ## Component modes
@@ -203,7 +203,7 @@ The initial record is validated and seeded from:
 src/features/advertisements/config/home-hero-slider.seed.json
 ```
 
-The seed document contains `schemaVersion` and `config`. Zod validates it before insertion. The obsolete `src/components/home/home-hero-slider.json` file has been removed; there is now one seed source and one runtime database source.
+The seed document contains `schemaVersion` and `config`. Zod validates it before insertion. The obsolete `src/features/home/presentation/home-hero-slider.json` file has been removed; there is now one seed source and one runtime database source.
 
 ### Server layers
 
@@ -289,7 +289,7 @@ Maximum processed image size: 1 MB (1024 KB)
 Output format: WebP
 ```
 
-This profile is declared in `src/config/storage-profiles.json` and exposed as `StorageProfiles.HomeHeroSlider`.
+This profile is declared in `packages/storage-core/packages/storage-core/src/config/storage-profiles.json` and exposed as `StorageProfiles.HomeHeroSlider`.
 
 `StorageImageManager` uploads the image and returns:
 
@@ -344,7 +344,7 @@ The image-only editor exposes three slots and returns updated slide image keys t
 The three slots are defined in one versioned configuration document:
 
 ```text
-src/components/profile/image-configs/storefront-images.image.json
+src/features/profile/presentation/image-configs/storefront-images.image.json
 ```
 
 `HeroSliderImagesEditor` parses each slot through `parseStorageImageManagerConfig`. Consolidating the former three files does not change `StorageImageManager` behavior because every slot retains its own ID and validation settings.
@@ -399,7 +399,7 @@ Maximum processed image size: 20 KB
 Output format: WebP
 ```
 
-These profiles are also declared in `src/config/storage-profiles.json`.
+These profiles are also declared in `packages/storage-core/packages/storage-core/src/config/storage-profiles.json`.
 
 ## Choosing the correct mode and persistence flow
 

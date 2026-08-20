@@ -20,6 +20,9 @@ export const SUB2MAIN_DECLARATION = {
   deployFromRepositoryRoot: undefined,
   requiredEnv: SUB2MAIN_RUNTIME_REQUIRED_ENV_KEYS,
   optionalEnv: SUB2MAIN_RUNTIME_OPTIONAL_ENV_KEYS,
+  // Nothing is copied in beside the walked module graph: the storage profile file now travels
+  // with `@asol/storage-core`, which imports it.
+  runtimeAssets: [],
   mirrorEntryPoints: [
     'features/product/services/product-service.server.ts',
     'features/profile/services/profile-service.bootstrap.server.ts',
@@ -39,5 +42,4 @@ export const SUB2MAIN_DECLARATION = {
     'core/config/server-env.ts',
     'features/categories/index.ts',
   ],
-  runtimeAssets: ['src/config/storage-profiles.json'],
 } as const;

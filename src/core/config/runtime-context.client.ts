@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  readGlobalNativePlatform,
+  readGlobalPlatformName,
+} from "@asol/native-core/platform-globals";
+
 import { publicEnv } from "./public-env";
 import {
   resolveClientRuntime,
@@ -7,20 +12,9 @@ import {
   type AppRuntimeContext,
 } from "./runtime-context";
 
-function platform(): AppPlatform {
-  const candidate = (globalThis as typeof globalThis & {
-    Capacitor?: { getPlatform?: () => string; isNativePlatform?: () => boolean };
-  }).Capacitor;
-  const value = candidate?.getPlatform?.();
-  return value === "android" || value === "ios" ? value : "web";
-}
-
 export function getClientRuntimeContext(): AppRuntimeContext {
-  const currentPlatform = platform();
-  const isNative = Boolean(
-    (globalThis as typeof globalThis & { Capacitor?: { isNativePlatform?: () => boolean } })
-      .Capacitor?.isNativePlatform?.(),
-  );
+  const currentPlatform: AppPlatform = readGlobalPlatformName();
+  const isNative = readGlobalNativePlatform();
   return resolveClientRuntime({
     mode: publicEnv.mode,
     apiBaseUrl: publicEnv.apiBaseUrl,

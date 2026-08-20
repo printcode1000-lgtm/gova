@@ -1,6 +1,7 @@
 import "server-only";
 
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { signEnvelope, verifyEnvelope } from "@asol/signed-token-core";
+
 import { getAsolSessionSigningSecret } from "@/core/config/server-env";
 
 export interface SpecialtyChatCapability {
@@ -10,37 +11,31 @@ export interface SpecialtyChatCapability {
   expiresAt: number;
 }
 
-function signature(value: string): string {
-  return createHmac("sha256", getAsolSessionSigningSecret())
-    .update(value)
-    .digest("base64url");
-}
+const CAPABILITY_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+/**
+ * The signing envelope is `@asol/signed-token-core`. What belongs here is what a specialty-chat
+ * capability *authorises*: this buyer talking to this seller about this request, for a week.
+ */
+const ENVELOPE = {
+  secret: getAsolSessionSigningSecret,
+  invalidError: "specialtyChatCapabilityInvalid",
+  expiredError: "specialtyChatCapabilityExpired",
+};
 
 export function createSpecialtyChatCapability(
   value: Omit<SpecialtyChatCapability, "expiresAt"> & { expiresAt?: number },
 ): string {
-  const payload = Buffer.from(
-    JSON.stringify({
-      ...value,
-      expiresAt: value.expiresAt ?? Date.now() + 7 * 24 * 60 * 60 * 1000,
-    }),
-  ).toString("base64url");
-  return `${payload}.${signature(payload)}`;
+  return signEnvelope<SpecialtyChatCapability>(value, {
+    ...ENVELOPE,
+    ttlMs: CAPABILITY_TTL_MS,
+  });
 }
 
 export function verifySpecialtyChatCapability(token: string): SpecialtyChatCapability {
-  const [payload, candidate] = token.split(".");
-  if (!payload || !candidate) throw new Error("specialtyChatCapabilityInvalid");
-  const expected = signature(payload);
-  if (
-    candidate.length !== expected.length ||
-    !timingSafeEqual(Buffer.from(candidate), Buffer.from(expected))
-  ) {
-    throw new Error("specialtyChatCapabilityInvalid");
-  }
-  const value = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as SpecialtyChatCapability;
-  if (!value.requestId || !value.buyerUid || !value.sellerUid || value.expiresAt <= Date.now()) {
-    throw new Error("specialtyChatCapabilityExpired");
-  }
-  return value;
+  return verifyEnvelope<SpecialtyChatCapability>(token, {
+    ...ENVELOPE,
+    validate: (value) =>
+      Boolean(value.requestId) && Boolean(value.buyerUid) && Boolean(value.sellerUid),
+  });
 }
