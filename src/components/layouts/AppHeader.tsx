@@ -13,6 +13,7 @@ import {
   OpenInAsolHeaderPrompt,
   type AsolInstallPrompt,
 } from '@/features/sharing';
+import { PageSaveHeaderButton } from '@/features/page-save/components/PageSaveHeaderButton';
 
 import { AppSidebar } from './AppSidebar';
 
@@ -71,6 +72,8 @@ export function AppHeader({
 
           <div className="flex items-center gap-2">
             <SpecialtyRequestComposer />
+
+            <PageSaveHeaderButton />
 
             <Link
               href="/search"

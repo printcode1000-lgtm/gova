@@ -57,7 +57,7 @@ interface UseProfileSaveReturn {
     productsController: ProfileSpecialtiesController | null,
     fulfillmentController: ProfileFulfillmentController | null,
     discountsController: ProfileDiscountsController | null
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   setSaveDialog: React.Dispatch<React.SetStateAction<{ type: 'success' | 'error', message: string } | null>>;
 }
 
@@ -151,7 +151,8 @@ export function useProfileSave({
     specialtiesController: ProfileSpecialtiesController | null,
     productsController: ProfileSpecialtiesController | null,
     fulfillmentController: ProfileFulfillmentController | null,
-    discountsController: ProfileDiscountsController | null
+    discountsController: ProfileDiscountsController | null,
+    sectionsFilter?: ProfileEditTab[],
   ) => {
     setSaveError(null);
 
@@ -173,13 +174,13 @@ export function useProfileSave({
         operation: "save-blocked-missing-controller-or-session",
         error: new Error("Profile save could not start because a required controller or session UID was unavailable."),
       });
-      return;
+      return false;
     }
 
     const registration = registrationController.prepareSnapshot();
     if (!registration) {
       setActiveTab("registration");
-      return;
+      return false;
     }
 
     const dirtySections = (
@@ -187,7 +188,14 @@ export function useProfileSave({
         [ProfileEditTab, ProfileSectionStatus | null]
       >
     ).filter(([, status]) => status?.isDirty);
-    const changedSections = dirtySections.map(([section]) => section);
+    const changedSections = (
+      sectionsFilter
+        ? dirtySections.filter(([section]) => sectionsFilter.includes(section))
+        : dirtySections
+    ).map(([section]) => section);
+    if (changedSections.length === 0) {
+      return false;
+    }
     const shouldSaveStoreFromProducts =
       changedSections.includes("products") &&
       Boolean(productsController.getStoreDetailsSnapshot);
@@ -226,16 +234,6 @@ export function useProfileSave({
 
     try {
       setIsUnifiedSaving(true);
-      if (
-        storeController.prepareForSave &&
-        !(await storeController.prepareForSave())
-      ) {
-        throw new Error(
-          locale === "ar"
-            ? "تعذر رفع صور التعريف. أعد المحاولة قبل الحفظ."
-            : "Profile images could not be uploaded. Retry before saving.",
-        );
-      }
       if (editorSections.length > 0) {
         const saved = await profileService.saveEditor({
           uid: session.uid,
@@ -285,12 +283,13 @@ export function useProfileSave({
       }
       if (returnTo && isSafeInternalReturnPath(returnTo)) {
         router.push(returnTo);
-        return;
+        return true;
       }
       setSaveDialog({
         type: 'success',
         message: locale === 'ar' ? 'تم حفظ التغييرات بنجاح' : 'Changes saved successfully'
       });
+      return true;
     } catch (error) {
       if (!isExpectedProfileSaveRejection(error)) {
         reportSystemIssue({
@@ -319,6 +318,7 @@ export function useProfileSave({
           message: locale === 'ar' ? 'فشل حفظ التغييرات' : 'Failed to save changes'
         });
       }
+      return false;
     } finally {
       setIsUnifiedSaving(false);
     }

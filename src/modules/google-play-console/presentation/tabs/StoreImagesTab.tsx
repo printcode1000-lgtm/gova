@@ -8,10 +8,12 @@ import { Input } from "@/components/ui/input";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { GOOGLE_PLAY_IMAGE_TYPES, type GooglePlayImageType } from "../../domain/store-assets-types";
 import { useStoreAssets } from "../../hooks/use-store-assets";
+import { useStoreImagesPageSave } from "../../hooks/use-store-images-page-save";
 
 export function StoreImagesTab() {
   const { t } = useAdminArabic();
   const store = useStoreAssets();
+  useStoreImagesPageSave(store, true);
   if (!store.snapshot) return <div className="p-4 text-sm">{t("releaseConsole.loading")}</div>;
   return (
     <section className="space-y-4">
@@ -30,9 +32,14 @@ export function StoreImagesTab() {
           type="file"
           accept="image/png,image/jpeg"
           multiple
-          onChange={(event) => void store.upload(event.target.files)}
+          onChange={(event) => store.queueUpload(event.target.files)}
         />
       </div>
+      {store.stagedUploads.length > 0 ? (
+        <p className="text-sm text-on-surface-variant">
+          {store.stagedUploads.length} صورة جاهزة للرفع عبر أيقونة الحفظ.
+        </p>
+      ) : null}
       <div className="grid gap-3 md:grid-cols-2">
         {store.snapshot.images.map((group) => (
           <section key={`${group.language}:${group.imageType}`} className="rounded-md border bg-surface p-3">

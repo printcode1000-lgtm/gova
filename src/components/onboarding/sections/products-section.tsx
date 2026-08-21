@@ -4,6 +4,8 @@ import * as React from 'react';
 import { Package, Plus, X } from 'lucide-react';
 import { useOnboardingStore } from '@/lib/onboarding';
 import { useTranslation } from '@/lib/i18n';
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -51,8 +53,32 @@ export function ProductsSection() {
       addProduct(editingProduct);
       setEditingProduct(null);
       setShowForm(false);
+      return true;
     }
+    return false;
   };
+
+  usePageSaveRegistration({
+    id: "onboarding-product-form",
+    label: "منتج جديد",
+    returnPath: "/onboarding",
+    enabled: showForm && Boolean(editingProduct),
+    items: [
+      {
+        id: "onboarding-product-draft",
+        label: "حفظ المنتج في القائمة",
+        isDirty: true,
+        canSave: Boolean(editingProduct),
+        description: buildPageSaveOperationDescription(t, ["save"]),
+      },
+    ],
+    isSaving: false,
+    canSave: Boolean(editingProduct),
+    save: async (selectedItemIds) => {
+      if (!selectedItemIds.includes("onboarding-product-draft")) return true;
+      return handleSaveProduct();
+    },
+  });
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">

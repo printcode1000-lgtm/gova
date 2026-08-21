@@ -22,6 +22,25 @@ orchestration while `storage-image-manager.types.ts` owns the React-facing
 contracts and `storage-image-manager-ui.tsx` owns the shared dialog/button/spinner
 presentation primitives.
 
+## Global card chrome
+
+Every rendered slot is wrapped by `StorageImageSlotFrame` inside the core
+component. Features must not add their own outer border, background tint, or
+padding around `StorageImageManager`.
+
+| Layer | Owner | Classes / behavior |
+| ----- | ----- | ------------------ |
+| Outer frame | `StorageImageSlotFrame` | `border-primary/20`, `bg-primary/5`, `p-0.5`, `overflow-hidden`, config aspect ratio |
+| Upload surface | `StorageImageSlot` | dashed inner border, `h-full w-full`, clipped previews |
+| Empty state | shared UI constants | compact icon + label, wrapped text allowed, always clipped inside the frame |
+
+Import the component only through
+`@/features/storage/components/StorageImageManager`. That wrapper injects session
+and translation ports, then renders the sealed core component unchanged.
+
+Structural tests in `packages/storage-image-manager-core/src/tests/index.test.ts`
+and `src/features/storage/tests/image-upload-queue.test.ts` guard this contract.
+
 Feature-specific JSON config files should live beside the feature UI that uses them.
 
 Example for profile:
@@ -56,8 +75,8 @@ Every config file must use this exact shape:
 | `maxItems`         | Number of slots rendered by this config. Use `1` for normal one-image instances. |
 | `aspectRatio`      | `square`, `landscape`, `portrait`, or `wide`                                     |
 | `allowReplace`     | Legacy compatibility flag. An uploaded image is replaced by deleting it first.   |
-| `confirmUpload`    | Shows confirmation before upload                                                 |
-| `confirmRemove`    | Shows confirmation before clearing/removing                                      |
+| `confirmUpload`    | Stages uploads until `@asol/page-save-core` runs `uploadPending()` via the header save dialog |
+| `confirmRemove`    | Shows confirmation before clearing/removing when `confirmUpload` is `false`. When `confirmUpload` is `true`, remove/clear runs immediately and the page-save dialog describes the pending delete. |
 | `deleteFromStorageOnRemove` | Optional; defaults to `true`. When `false`, removal only clears the UI value and leaves provider deletion to the feature. |
 
 `storageScope` is optional only for profiles without a dynamic folder strategy. It is required when the selected storage profile declares:
@@ -145,6 +164,8 @@ For an empty slot, `StorageImageManager` asks the user how to add the image:
 
 The component still works with one image per slot. The source picker does not enable multiple-image selection.
 
+Every slot is wrapped in the shared card chrome (`border-primary/20`, `bg-primary/5`, minimal `p-0.5` padding). The outer frame owns the configured aspect ratio and clips overflow; the dashed upload surface fills that frame so icons, labels, and previews never extend outside the card.
+
 Native Android/iOS behavior is isolated behind:
 
 ```text
@@ -178,8 +199,8 @@ Selecting an image prepares it for upload:
 4. Show the project `LoadingSpinner` and a localized description while reading, detecting, converting, and preparing the preview.
 5. Keep the selected image visible without changing the stored image reference.
 6. Persist the original image `Blob` and metadata in the `imageUploadDrafts` AsolDB store before displaying the preview. No local filesystem or cloud provider write occurs yet.
-7. Ask for upload confirmation in a localized in-app dialog when `confirmUpload` is enabled.
-8. Show the spinner through profile loading, compression, upload, persistence, and final-image loading.
+7. When `confirmUpload` is enabled, the slot stages the file locally and marks the page dirty. Upload runs only through `@asol/page-save-core` (`prepareForSave` / `uploadPending()` from the header save icon). The per-slot upload button is not rendered.
+8. Show the spinner through profile loading, compression, upload, persistence, and final-image loading when upload is triggered from the page-save flow.
 9. Compress and convert the image for the selected storage profile.
 10. Send multipart data to the upload API.
 11. Persist the returned `imageKey` through the feature's `onChange` handler.
@@ -189,9 +210,9 @@ Navigating away and returning restores the selected preview and its `ready`, `qu
 
 Draft keys include the authenticated `uid` (or `guest`), current pathname, manager id, slot index, storage profile, and storage scope. Removing a selected image deletes its draft. Logout cancels the queue and clears the draft store before the session is removed.
 
-If confirmation is declined, the selected preview remains visible and the upload button can retry the same file.
+If confirmation is declined on legacy surfaces (`confirmUpload: false`), the selected preview remains visible until the user clears it or saves through the header dialog. When `confirmUpload: true`, upload/delete confirmations live in `@asol/page-save-core`'s save dialog instead of per-slot dialogs.
 
-An owning page may call the manager handle's `uploadPending()` at its save/commit boundary. This path is itself the user's upload confirmation and therefore does not open the optional manual-upload confirmation dialog. Pages with several independent managers must keep a synchronous ref to the latest combined image collection while awaiting managers sequentially; relying only on a render-captured array can cause a later upload callback to overwrite an earlier uploaded key.
+An owning page calls the manager handle's `uploadPending()` from `@asol/page-save-core` (`prepareForSave` / `executePageSave`). Pages with several independent managers must keep a synchronous ref to the latest combined image collection while awaiting managers sequentially.
 
 There is no Replace button after upload. The user deletes the stored image and then selects a new one. Confirmation and error messages use translated application dialogs; browser `alert`/`confirm` messages are forbidden in this component.
 

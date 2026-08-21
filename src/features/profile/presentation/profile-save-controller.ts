@@ -11,6 +11,7 @@ export interface ProfileSectionStatus {
   isSaving: boolean;
   canSave: boolean;
   label: string;
+  description?: string;
 }
 
 export interface ProfileSectionController extends ProfileSectionStatus {

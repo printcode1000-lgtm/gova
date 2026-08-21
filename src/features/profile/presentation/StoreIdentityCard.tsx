@@ -20,7 +20,10 @@ import type {
   StoreDetailsController,
 } from "./profile-save-controller";
 import storeLogoImageConfig from "./image-configs/store-logo.image.json";
+import { MAX_STOREFRONT_COVER_IMAGES } from "./image-configs/storefront-images.constants";
 import { StoreIdentityImagesEditor } from "./store-identity/StoreIdentityImagesEditor";
+import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
+import type { PageSaveOperation } from "@/features/page-save/utils/page-save-operation-description";
 
 const storeLogoConfig = parseStorageImageManagerConfig(storeLogoImageConfig);
 
@@ -74,7 +77,7 @@ export const StoreIdentityCard = React.forwardRef<
     ? (heroConfig?.slides ?? [])
         .map((slide) => slide.imageKey ?? "")
         .filter(Boolean)
-        .slice(0, 3)
+        .slice(0, MAX_STOREFRONT_COVER_IMAGES)
     : savedCoverKeys;
   const currentLogoKey = logoTouched ? (logoImage?.imageKey ?? "") : savedLogoKey;
   const imagesDirty =
@@ -83,6 +86,43 @@ export const StoreIdentityCard = React.forwardRef<
     currentLogoKey !== savedLogoKey ||
     JSON.stringify(currentCoverKeys) !== JSON.stringify(savedCoverKeys);
   const sectionDirty = isDirty || imagesDirty;
+
+  const sectionDescription = React.useMemo(() => {
+    if (!sectionDirty) return undefined;
+    const operations: PageSaveOperation[] = [];
+    if (logoPending || heroPending) {
+      operations.push("upload");
+    } else if (imagesDirty) {
+      const logoRemoved = logoTouched && !currentLogoKey && Boolean(savedLogoKey);
+      const coversRemoved =
+        heroTouched && currentCoverKeys.length < savedCoverKeys.length;
+      const logoReplaced =
+        logoTouched && Boolean(currentLogoKey) && currentLogoKey !== savedLogoKey;
+      const coversChanged =
+        heroTouched &&
+        JSON.stringify(currentCoverKeys) !== JSON.stringify(savedCoverKeys);
+      if (logoRemoved || coversRemoved) operations.push("delete");
+      if (logoReplaced || (coversChanged && !coversRemoved)) {
+        operations.push("upload");
+      }
+    }
+    if (isDirty) operations.push("save");
+    if (operations.length === 0) operations.push("save");
+    return buildPageSaveOperationDescription(t, operations);
+  }, [
+    currentCoverKeys,
+    currentLogoKey,
+    heroPending,
+    heroTouched,
+    imagesDirty,
+    isDirty,
+    logoPending,
+    logoTouched,
+    savedCoverKeys,
+    savedLogoKey,
+    sectionDirty,
+    t,
+  ]);
 
   const prepareImagesForSave = React.useCallback(async () => {
     if (!imagesDirty) return true;
@@ -101,7 +141,7 @@ export const StoreIdentityCard = React.forwardRef<
       ? (hero?.slides ?? [])
           .map((slide) => slide.imageKey)
           .filter((imageKey): imageKey is string => Boolean(imageKey))
-          .slice(0, 3)
+          .slice(0, MAX_STOREFRONT_COVER_IMAGES)
       : storeImages.coverImageKeys;
     if (
       logoTouchedRef.current &&
@@ -143,8 +183,14 @@ export const StoreIdentityCard = React.forwardRef<
   );
 
   React.useEffect(() => {
-    onStatusChange?.({ isDirty: sectionDirty, isSaving, canSave: true, label });
-  }, [isSaving, label, onStatusChange, sectionDirty]);
+    onStatusChange?.({
+      isDirty: sectionDirty,
+      isSaving,
+      canSave: true,
+      label,
+      description: sectionDescription,
+    });
+  }, [isSaving, label, onStatusChange, sectionDescription, sectionDirty]);
 
   React.useEffect(() => {
     const nextLogoImage =

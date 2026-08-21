@@ -14,14 +14,35 @@ export function usePlayTracks() {
     if (headers) setSnapshot(await storeAssetsApiService.snapshot(headers));
   }, [headers]);
   React.useEffect(() => { void refresh(); }, [refresh]);
-  const mutate = async (operation: Promise<Awaited<ReturnType<typeof storeAssetsApiService.updateTrack>>>) => {
+  const update = async (input: GooglePlayTrackMutationInput) => {
+    if (!headers) return false;
     setBusy(true);
-    try { setSnapshot((await operation).snapshot); } finally { setBusy(false); }
+    try {
+      setSnapshot((await storeAssetsApiService.updateTrack(input, headers)).snapshot);
+      return true;
+    } finally {
+      setBusy(false);
+    }
   };
-  const update = (input: GooglePlayTrackMutationInput) => headers && mutate(
-    storeAssetsApiService.updateTrack(input, headers),
-  );
-  const promote = (input: GooglePlayPromoteInput) => headers && mutate(storeAssetsApiService.promote(input, headers));
-  const uploadMapping = (form: FormData) => headers && mutate(storeAssetsApiService.uploadMapping(form, headers));
+  const promote = async (input: GooglePlayPromoteInput) => {
+    if (!headers) return false;
+    setBusy(true);
+    try {
+      setSnapshot((await storeAssetsApiService.promote(input, headers)).snapshot);
+      return true;
+    } finally {
+      setBusy(false);
+    }
+  };
+  const uploadMapping = async (form: FormData) => {
+    if (!headers) return false;
+    setBusy(true);
+    try {
+      setSnapshot((await storeAssetsApiService.uploadMapping(form, headers)).snapshot);
+      return true;
+    } finally {
+      setBusy(false);
+    }
+  };
   return { snapshot, busy, refresh, update, promote, uploadMapping };
 }

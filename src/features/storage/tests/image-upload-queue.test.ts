@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import {
   DuplicateImageUploadError,
@@ -201,10 +201,28 @@ async function main() {
     path.join(root, "src/features/profile/presentation/use-profile-save.ts"),
     "utf8",
   );
+  const profileModelSource = readFileSync(
+    path.join(
+      root,
+      "src/features/profile/presentation/profile-page/ProfilePageContent.model.tsx",
+    ),
+    "utf8",
+  );
   assert.match(managerSource, /uploadPending:\s*async/);
+  assert.doesNotMatch(
+    managerSource,
+    /uploadSelected/,
+    "per-slot upload buttons are forbidden when confirmUpload defers to page-save",
+  );
+  assert.match(
+    managerSource,
+    /if \(!config\.confirmRemove \|\| config\.confirmUpload\) return action\(\)/,
+    "page-save deferred uploads must not show separate remove confirmations",
+  );
   assert.match(appManagerSource, /CoreStorageImageManager/);
   assert.match(appManagerSource, /draftOwnerId=\{draftOwnerId\}/);
-  assert.match(productSource, /await imageUploadRef\.current\?\.uploadPending\(\)/);
+  assert.match(productSource, /prepareForSave:\s*async \(selectedItemIds\)/);
+  assert.match(productSource, /uploadProductImages\(\)/);
   assert.match(productEditorsSource, /const imagesRef = React\.useRef\(images\)/);
   assert.match(productEditorsSource, /const next:[^=]+= \[\.\.\.imagesRef\.current\]/);
   assert.match(productEditorsSource, /imagesRef\.current = normalized/);
@@ -227,9 +245,9 @@ async function main() {
   assert.match(profileImagesEditorSource, /imageTab === "logo"[\s\S]{0,500}: "hidden"/);
   assert.match(profileImagesEditorSource, /imageTab === "hero" \? "block" : "hidden"/);
   assert.match(
-    profileSaveSource,
-    /storeController\.prepareForSave &&[\s\S]{0,120}await storeController\.prepareForSave\(\)/,
-    "unified profile save must always flush pending profile image drafts",
+    profileModelSource,
+    /storeRef\.current\?\.prepareForSave/,
+    "unified profile save must flush pending profile image drafts via page-save prepareForSave",
   );
   assert.match(profileSource, /if \(!imagesDirty\) return true/);
   assert.match(
@@ -247,6 +265,84 @@ async function main() {
     /DropdownMenuTrigger asChild>[\s\S]{0,200}<button[^>]+className="absolute inset-0/,
     "the entire empty image card must not open the source picker",
   );
+
+  const uiSource = readFileSync(
+    path.join(
+      root,
+      "packages/storage-image-manager-core/src/components/storage-image-manager-ui.tsx",
+    ),
+    "utf8",
+  );
+  assert.match(
+    managerSource,
+    /<StorageImageSlotFrame[\s\S]*aspectRatio=\{parsedConfig\.aspectRatio\}/,
+    "every StorageImageManager slot must use the shared frame with config aspect ratio",
+  );
+  assert.match(
+    uiSource,
+    /border-primary\/20 bg-primary\/5 p-0\.5/,
+    "shared image-slot chrome must stay centralized in storage-image-manager-core",
+  );
+
+  const allowedCoreComponentWiring = new Set([
+    path.join(root, "src/features/storage/components/StorageImageManager.tsx"),
+  ]);
+  const allowedCoreHookWiring = new Set([
+    path.join(root, "src/features/storage/hooks/use-storage-profile-upload.ts"),
+  ]);
+
+  function walkSourceFiles(dir: string, files: string[] = []): string[] {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (entry.name === "node_modules" || entry.name === ".next") continue;
+        walkSourceFiles(fullPath, files);
+      } else if (/\.(ts|tsx)$/.test(entry.name)) {
+        files.push(fullPath);
+      }
+    }
+    return files;
+  }
+
+  for (const filePath of walkSourceFiles(path.join(root, "src"))) {
+    if (filePath.includes(`${path.sep}tests${path.sep}`)) continue;
+    const source = readFileSync(filePath, "utf8");
+    if (!source.includes("StorageImageManager")) continue;
+
+    if (
+      source.includes('from "@asol/storage-image-manager-core"') &&
+      !allowedCoreComponentWiring.has(filePath) &&
+      !allowedCoreHookWiring.has(filePath)
+    ) {
+      assert.fail(
+        `${path.relative(root, filePath)} must not import @asol/storage-image-manager-core directly; use @/features/storage/components/StorageImageManager`,
+      );
+    }
+
+    if (
+      /from ["']@\/features\/storage\/components\/StorageImageManager["']/.test(source) ||
+      /from ["']@asol\/storage-image-manager-core["']/.test(source) ||
+      !source.includes("<StorageImageManager")
+    ) {
+      continue;
+    }
+
+    assert.fail(
+      `${path.relative(root, filePath)} renders StorageImageManager without importing the app wrapper door`,
+    );
+  }
+
+  assert.doesNotMatch(
+    profileImagesEditorSource,
+    /ProfileImageCardFrame|border-primary\/20 bg-primary\/5 p-[23]/,
+    "profile image editors must not re-wrap StorageImageManager with duplicate frame chrome",
+  );
+  assert.doesNotMatch(
+    heroEditorsSource,
+    /ProfileImageCardFrame|border-primary\/20 bg-primary\/5 p-[23]/,
+    "hero image editors must not re-wrap StorageImageManager with duplicate frame chrome",
+  );
+
   console.log("Image upload queue tests passed.");
 }
 

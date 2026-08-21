@@ -41,12 +41,18 @@ export const PROFILE_FULFILLMENT_SECTION_IDS: Record<
 export const PROFILE_SECTIONS: ProfileEditTab[] = [
   "registration",
   "specialties",
+  "store",
   "products",
   "contact",
-  "store",
   "workingHours",
   "fulfillment",
   "discounts",
 ];
+
+/** Scroll containers driven by `activeTab` — excluded from page-snapshot scroll restore. */
+export const PROFILE_EDIT_SNAPSHOT_SCROLL_IDS = [
+  "profile-edit-tabs-scroll",
+  "profile-edit-carousel-scroll",
+] as const;
 
 export type { ProfileSectionStatus };

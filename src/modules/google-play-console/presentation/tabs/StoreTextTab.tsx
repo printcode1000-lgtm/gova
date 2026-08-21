@@ -1,18 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Save, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { useStoreAssets } from "../../hooks/use-store-assets";
 import type { GooglePlayStoreListing } from "../../domain/store-assets-types";
 import { Field } from "../components/Field";
+import { useStoreTextPageSave } from "../../hooks/use-store-text-page-save";
 
 export function StoreTextTab() {
   const { t } = useAdminArabic();
   const store = useStoreAssets();
   const [acknowledged, setAcknowledged] = React.useState(false);
+  useStoreTextPageSave(store, true, acknowledged);
   if (!store.snapshot) return <div className="p-4 text-sm">{t("releaseConsole.loading")}</div>;
   const patch = (index: number, next: Partial<GooglePlayStoreListing>) => {
     store.setListings(store.listings.map((item, itemIndex) => itemIndex === index ? { ...item, ...next } : item));
@@ -61,9 +63,6 @@ export function StoreTextTab() {
           <Button variant="outline" onClick={() => store.setListings([...store.listings, { language: "en-US" }])}>
             <Plus className="h-4 w-4" />{t("releaseConsole.text.addLanguage")}
           </Button>
-          <Button disabled={!acknowledged || store.busy === "save"} onClick={() => void store.save()}>
-            <Save className="h-4 w-4" />{t("releaseConsole.actions.save")}
-          </Button>
         </div>
       </div>
       <aside className="rounded-md border bg-surface p-4">
@@ -76,6 +75,11 @@ export function StoreTextTab() {
             onChange={(event) => setAcknowledged(event.target.checked)} />
           {t("releaseConsole.text.acknowledgeDiff")}
         </label>
+        {!acknowledged && store.isTextDirty ? (
+          <p className="mt-2 text-xs text-on-surface-variant">
+            {t("releaseConsole.text.acknowledgeDiff")}
+          </p>
+        ) : null}
       </aside>
     </section>
   );

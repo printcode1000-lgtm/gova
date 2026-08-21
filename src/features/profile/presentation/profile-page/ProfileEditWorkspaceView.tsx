@@ -26,7 +26,7 @@ import type { ProfilePageContentModel } from "./ProfilePageContent.model";
 import { PROFILE_EDIT_TAB_COLORS,ProfileEditSectionFrame } from "./ProfilePageContent.profile-tabs";
 import {
   ProfileEditCarouselControls,
-  ProfileEditSaveBanner,
+  ProfileEditSaveFeedback,
   ProfileEditTabsBar,
 } from "./ProfileEditWorkspaceChrome";
 import { ProfileSaveDialog } from "./ProfileSaveDialog";
@@ -40,20 +40,19 @@ return (
         >
           <ProfileEditTabsBar model={model} />
 
-          <ProfileEditSaveBanner model={model} />
+          <ProfileEditSaveFeedback model={model} />
 
           <Card className="order-3 w-full max-w-full overflow-hidden rounded-3xl border border-outline-variant/50 bg-surface/95 shadow-xl shadow-primary/5">
             <CardContent className="p-0">
               <div className="relative">
                 <div
-                  data-snapshot-scroll
                   data-snapshot-id="profile-edit-carousel-scroll"
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
                   style={
                     carouselHeight ? { height: carouselHeight } : undefined
                   }
-                  className="flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth transition-[height] duration-300 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  className="flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] duration-300 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 >
                   <div
                     ref={(node) => {
@@ -63,7 +62,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "registration"}
                     inert={activeTab !== "registration"}
-                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faUserCircle}
@@ -74,7 +73,6 @@ return (
                     >
                       <ProfileRegistrationInfoCard
                         ref={registrationRef}
-                        showSaveButton={false}
                         onStatusChange={handleRegistrationStatus}
                       />
                     </ProfileEditSectionFrame>
@@ -87,7 +85,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "specialties"}
                     inert={activeTab !== "specialties"}
-                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faStar}
@@ -99,9 +97,31 @@ return (
                       <SpecialtiesCard
                         uid={session?.uid ?? ""}
                         ref={specialtiesRef}
-                        showSaveButton={false}
                         onStatusChange={handleSpecialtiesStatus}
                         unlimited={superAdmin}
+                      />
+                    </ProfileEditSectionFrame>
+                  </div>
+                  <div
+                    ref={(node) => {
+                      panelRefs.current.store = node;
+                    }}
+                    id={PROFILE_SECTION_IDS.store}
+                    role="region"
+                    aria-hidden={activeTab !== "store"}
+                    inert={activeTab !== "store"}
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                  >
+                    <ProfileEditSectionFrame
+                      icon={faBuilding}
+                      title={t("onboarding.storeIdentity.title")}
+                      status={sectionStatuses.store}
+                      locale={locale}
+                      color={PROFILE_EDIT_TAB_COLORS.store}
+                    >
+                      <StoreIdentityCard
+                        ref={storeRef}
+                        onStatusChange={handleStoreStatus}
                       />
                     </ProfileEditSectionFrame>
                   </div>
@@ -113,7 +133,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "products"}
                     inert={activeTab !== "products"}
-                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faTags}
@@ -125,7 +145,6 @@ return (
                       <ProductsCard
                         uid={session?.uid ?? ""}
                         ref={productsRef}
-                        showSaveButton={false}
                         onStatusChange={handleProductsStatus}
                       />
                     </ProfileEditSectionFrame>
@@ -138,7 +157,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "contact"}
                     inert={activeTab !== "contact"}
-                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faComments}
@@ -150,32 +169,7 @@ return (
                     >
                       <ProfileContactsCard
                         ref={contactsRef}
-                        showSaveButton={false}
                         onStatusChange={handleContactStatus}
-                      />
-                    </ProfileEditSectionFrame>
-                  </div>
-                  <div
-                    ref={(node) => {
-                      panelRefs.current.store = node;
-                    }}
-                    id={PROFILE_SECTION_IDS.store}
-                    role="region"
-                    aria-hidden={activeTab !== "store"}
-                    inert={activeTab !== "store"}
-                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
-                  >
-                    <ProfileEditSectionFrame
-                      icon={faBuilding}
-                      title={t("onboarding.storeIdentity.title")}
-                      status={sectionStatuses.store}
-                      locale={locale}
-                      color={PROFILE_EDIT_TAB_COLORS.store}
-                    >
-                      <StoreIdentityCard
-                        ref={storeRef}
-                        showSaveButton={false}
-                        onStatusChange={handleStoreStatus}
                       />
                     </ProfileEditSectionFrame>
                   </div>
@@ -187,7 +181,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "workingHours"}
                     inert={activeTab !== "workingHours"}
-                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faClock}
@@ -210,7 +204,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "fulfillment"}
                     inert={activeTab !== "fulfillment"}
-                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faTruckFast}
@@ -233,7 +227,7 @@ return (
                     role="region"
                     aria-hidden={activeTab !== "discounts"}
                     inert={activeTab !== "discounts"}
-                    className="w-full max-w-full shrink-0 snap-center bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
+                    className="w-full max-w-full shrink-0 snap-center snap-always bg-gradient-to-b from-surface-container-low/40 to-surface p-3 sm:p-5 lg:p-6"
                   >
                     <ProfileEditSectionFrame
                       icon={faPercent}

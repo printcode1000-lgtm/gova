@@ -1,11 +1,12 @@
 "use client";
 
-import { Ban, CheckCircle2, ClipboardCopy, CloudDownload, RefreshCw, Save } from "lucide-react";
+import { Ban, CheckCircle2, ClipboardCopy, CloudDownload, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { useOtaAdmin } from "../../hooks/use-ota-admin";
+import { useOtaRolloutPageSave } from "../../hooks/use-ota-rollout-page-save";
 import { Metric } from "../components/Metric";
 import { OtaReleaseChanges } from "../components/OtaReleaseChanges";
 
@@ -14,6 +15,7 @@ export function OtaReleasesTab() {
   const ota = useOtaAdmin();
   const current = ota.dashboard?.current;
   const release = current?.release;
+  useOtaRolloutPageSave(ota, true, release?.rolloutPercentage);
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap justify-end gap-2">
@@ -51,9 +53,6 @@ export function OtaReleasesTab() {
             <label className="grid gap-1 text-sm"><span>{t("releaseConsole.ota.rollout")}</span>
               <Input className="w-28" type="number" min={release.rolloutPercentage} max="100"
                 value={ota.rollout} onChange={(event) => ota.setRollout(Number(event.target.value))} /></label>
-            <Button variant="outline" disabled={ota.busy} onClick={() => void ota.changeApproval(release.approved)}>
-              <Save className="h-4 w-4" />{t("releaseConsole.ota.saveRollout")}
-            </Button>
             <Button variant={release.approved ? "destructive" : "default"} disabled={ota.busy}
               onClick={() => void ota.changeApproval(!release.approved)}>
               {release.approved ? <Ban className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}

@@ -142,14 +142,14 @@ export function ProfileProductsTabs({
       <div
         data-snapshot-scroll
         data-snapshot-id={`profile-products-main-${mode}-${ownerUid}`}
-        className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory scroll-smooth gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {tabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
             onClick={() => onSelectMain(tab.id)}
-            className={`flex h-12 min-w-fit items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition ${
+            className={`flex h-12 min-w-fit shrink-0 snap-center snap-always items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition ${
               tab.id === selectedMainId
                 ? "border-primary bg-primary text-on-primary"
                 : "border-outline-variant bg-surface text-on-surface"
@@ -174,14 +174,14 @@ export function ProfileProductsTabs({
         <div
           data-snapshot-scroll
           data-snapshot-id={`profile-products-sub-${mode}-${ownerUid}`}
-          className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory scroll-smooth gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {activeMain.subTabs.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => onSelectSub(tab.id)}
-              className={`flex h-10 min-w-fit items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold transition ${
+              className={`flex h-10 min-w-fit shrink-0 snap-center snap-always items-center gap-2 rounded-lg border px-3 text-[11px] font-semibold transition ${
                 tab.id === selectedSubId
                   ? "border-tertiary bg-tertiary text-on-tertiary"
                   : "border-outline-variant bg-surface-container-low text-on-surface"

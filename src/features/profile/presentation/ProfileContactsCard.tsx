@@ -1,9 +1,6 @@
 'use client';
 
-import { Loader2, Save } from 'lucide-react';
-
 import { ContactInfoCard } from '@/features/profile/presentation/ContactInfoCard';
-import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { useProfileContacts } from '@/features/profile/hooks/use-profile-contacts';
 import * as React from 'react';
@@ -13,14 +10,13 @@ import type {
 } from './profile-save-controller';
 
 interface ProfileContactsCardProps {
-  showSaveButton?: boolean;
   onStatusChange?: (status: ProfileSectionStatus) => void;
 }
 
 export const ProfileContactsCard = React.forwardRef<
   ProfileContactsController,
   ProfileContactsCardProps
->(function ProfileContactsCard({ showSaveButton = true, onStatusChange }, ref) {
+>(function ProfileContactsCard({ onStatusChange }, ref) {
   const { t } = useTranslation();
   const {
     contacts,
@@ -80,24 +76,6 @@ export const ProfileContactsCard = React.forwardRef<
         onChange={updateContacts}
         hidePrimarySection
       />
-
-      {showSaveButton && isDirty ? (
-        <div className="flex justify-end">
-          <Button
-            type="button"
-            onClick={save}
-            disabled={isSaving}
-            className="gap-2"
-          >
-            {isSaving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
-            {t('profile.save')}
-          </Button>
-        </div>
-      ) : null}
     </div>
   );
 });

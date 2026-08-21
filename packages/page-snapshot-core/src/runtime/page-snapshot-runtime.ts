@@ -118,6 +118,8 @@ function captureElementScroll(): Record<string, { x: number; y: number }> {
   if (!isBrowser()) return {};
   const result: Record<string, { x: number; y: number }> = {};
   document.querySelectorAll<HTMLElement>("[data-snapshot-scroll]").forEach((element) => {
+    const snapshotId = element.getAttribute("data-snapshot-id");
+    if (snapshotId?.startsWith("profile-edit-")) return;
     const selector = selectorForElement(element);
     if (!selector) return;
     result[selector] = { x: element.scrollLeft, y: element.scrollTop };
@@ -298,6 +300,7 @@ export function applySnapshotToDom(snapshot: PageSnapshotRecord): void {
   }
 
   for (const [selector, scroll] of Object.entries(snapshot.scroll.elements)) {
+    if (selector.includes("profile-edit-")) continue;
     const element = document.querySelector<HTMLElement>(selector);
     if (element) element.scrollTo({ left: scroll.x, top: scroll.y });
   }

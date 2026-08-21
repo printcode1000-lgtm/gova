@@ -170,7 +170,32 @@ async function main() {
     ),
     "utf8",
   );
+  const uiSource = readFileSync(
+    path.join(
+      root,
+      "packages/storage-image-manager-core/src/components/storage-image-manager-ui.tsx",
+    ),
+    "utf8",
+  );
   assert.match(managerSource, /uploadPending:\s*async/);
+  assert.match(managerSource, /StorageImageSlotFrame/);
+  assert.match(uiSource, /StorageImageSlotFrame[\s\S]*overflow-hidden/);
+  assert.match(
+    uiSource,
+    /storageImageSlotSurfaceClasses\s*=\s*\n\s*"[^"]*h-full w-full[^"]*overflow-hidden/,
+  );
+  assert.doesNotMatch(
+    uiSource,
+    /storageImageSlotSurfaceClasses\s*=\s*\n\s*"[^"]*min-h-/,
+    "slot height must follow the frame aspect ratio instead of forcing min-height overflow",
+  );
+  assert.match(managerSource, /aspectRatio=\{parsedConfig\.aspectRatio\}/);
+  assert.match(
+    uiSource,
+    /border-primary\/20 bg-primary\/5 p-0\.5/,
+    "every image slot uses the shared outer frame padding and chrome",
+  );
+  assert.match(uiSource, /storageImageEmptyStateClasses[\s\S]*overflow-hidden/);
   assert.doesNotMatch(
     managerSource,
     /DropdownMenuTrigger asChild>[\s\S]{0,200}<button[^>]+className="absolute inset-0/,

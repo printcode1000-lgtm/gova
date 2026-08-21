@@ -1,0 +1,1 @@
+export const MAX_PROFILE_COVER_IMAGES = 4;

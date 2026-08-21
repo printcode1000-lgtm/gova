@@ -1,15 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
-  faCircleCheck,
-  faFloppyDisk,
-  faListCheck,
-  faPenToSquare,
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ProfileEditTab } from "../profile-page.types";
 import { PROFILE_SECTION_IDS, PROFILE_SECTIONS } from "../profile-page.types";
 import type { ProfilePageContentModel } from "./ProfilePageContent.model";
@@ -44,9 +39,9 @@ export function ProfileEditTabsBar({
   return (
     <div className="order-2 w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/40 bg-surface-container-low/85 shadow-sm backdrop-blur-xl">
       <div
-        data-snapshot-scroll
+        ref={model.tabsScrollRef}
         data-snapshot-id="profile-edit-tabs-scroll"
-        className="flex snap-x snap-mandatory items-stretch gap-1.5 overflow-x-auto px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory scroll-smooth items-stretch gap-1.5 overflow-x-auto overscroll-x-contain px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-label={model.t("profile.subtitle")}
       >
         {PROFILE_SECTIONS.map((section) => {
@@ -63,7 +58,7 @@ export function ProfileEditTabsBar({
               onClick={() => model.selectSection(section)}
               aria-pressed={active}
               aria-controls={PROFILE_SECTION_IDS[section]}
-              className="group relative flex h-16 w-16 shrink-0 snap-center flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 active:scale-95"
+              className="group relative flex h-16 w-16 shrink-0 snap-center snap-always flex-col items-center justify-center gap-0 rounded-xl border text-center shadow-sm transition-all duration-200 active:scale-95"
               style={{
                 paddingInline: "0.0625rem",
                 paddingBlock: "0.0625rem",
@@ -128,83 +123,19 @@ export function ProfileEditTabsBar({
   );
 }
 
-export function ProfileEditSaveBanner({
+export function ProfileEditSaveFeedback({
   model,
 }: {
   model: ProfilePageContentModel;
 }) {
-  if (model.dirtySections.length === 0) return null;
+  if (!model.saveError) return null;
 
   return (
-    <div className="order-1 w-full max-w-full overflow-hidden rounded-3xl border border-primary/20 bg-surface/90 p-3 shadow-lg shadow-primary/5 backdrop-blur-xl sm:p-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex min-w-0 items-start gap-3">
-          <span
-            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-              model.dirtyLabels.length > 0
-                ? "bg-error/10 text-error"
-                : "bg-primary/10 text-primary"
-            }`}
-          >
-            <FontAwesomeIcon
-              icon={
-                model.isUnifiedSaving
-                  ? faFloppyDisk
-                  : model.dirtyLabels.length > 0
-                    ? faPenToSquare
-                    : faCircleCheck
-              }
-              className="h-5 w-5"
-            />
-          </span>
-          <div className="min-w-0">
-            <p className="flex flex-wrap items-center gap-2 text-sm font-bold text-on-surface">
-              <FontAwesomeIcon icon={faListCheck} className="h-4 w-4 text-primary" />
-              {model.locale === "ar" ? "حفظ تعديلات الملف" : "Save profile changes"}
-              <span className="rounded-full bg-error/10 px-2 py-0.5 text-[11px] font-semibold text-error">
-                {model.dirtySections.length}{""}
-                {model.locale === "ar"
-                  ? "قسم معدل"
-                  : model.dirtySections.length === 1
-                    ? "changed section"
-                    : "changed sections"}
-              </span>
-            </p>
-            <p className="mt-1 line-clamp-2 text-xs leading-5 text-on-surface-variant">
-              {model.isUnifiedSaving
-                ? model.t("profile.saving")
-                : model.dirtyLabels.length > 0
-                  ? `${model.t("profile.saveTargets")}: ${model.dirtyLabels.join("، ")}`
-                  : model.locale === "ar"
-                    ? "لا توجد تغييرات غير محفوظة في التبويب الحالي أو باقي التبويبات."
-                    : "There are no unsaved changes in the current tab or other tabs."}
-            </p>
-            {model.saveError ? (
-              <p className="mt-2 inline-flex items-center gap-2 rounded-xl bg-error/10 px-3 py-1.5 text-xs font-semibold text-error">
-                <FontAwesomeIcon icon={faTriangleExclamation} className="h-4 w-4" />
-                {model.saveError}
-              </p>
-            ) : null}
-          </div>
-        </div>
-        <Button
-          type="button"
-          className="h-11 shrink-0 gap-2 rounded-2xl px-5 font-bold shadow-md shadow-primary/15"
-          onClick={() => void model.saveProfileChanges()}
-          disabled={
-            model.isUnifiedSaving ||
-            model.isSaveBlocked ||
-            model.dirtySections.length === 0
-          }
-        >
-          {model.isUnifiedSaving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <FontAwesomeIcon icon={faFloppyDisk} className="h-4 w-4" />
-          )}
-          {model.isUnifiedSaving ? model.t("profile.saving") : model.t("profile.save")}
-        </Button>
-      </div>
+    <div className="order-1 w-full max-w-full overflow-hidden rounded-3xl border border-error/20 bg-error/5 p-3 shadow-lg shadow-error/5 backdrop-blur-xl sm:p-4">
+      <p className="inline-flex items-center gap-2 text-sm font-semibold text-error">
+        <FontAwesomeIcon icon={faTriangleExclamation} className="h-4 w-4" />
+        {model.saveError}
+      </p>
     </div>
   );
 }

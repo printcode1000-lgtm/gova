@@ -68,6 +68,42 @@ export const aspectClasses: Record<StorageImageAspectRatio, string> = {
   wide: "aspect-[21/9]",
 };
 
+export function StorageImageSlotFrame({
+  children,
+  aspectRatio,
+}: {
+  children: React.ReactNode;
+  aspectRatio: StorageImageAspectRatio;
+}) {
+  return (
+    <div className="w-full min-w-0 overflow-hidden rounded-lg border-2 border-primary/20 bg-primary/5 p-0.5">
+      <div
+        className={cn(
+          "relative w-full min-w-0 overflow-hidden",
+          aspectClasses[aspectRatio],
+        )}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export const storageImageSlotSurfaceClasses =
+  "relative h-full w-full min-w-0 overflow-hidden rounded-lg border-2 border-dashed transition-all duration-200";
+
+export const storageImageEmptyStateClasses =
+  "absolute inset-0 flex min-h-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-lg px-1.5 py-1";
+
+export const storageImageEmptyStateIconClasses =
+  "shrink-0 rounded-full bg-muted p-1.5";
+
+export const storageImageEmptyStateLabelClasses =
+  "max-w-full text-center text-xs font-medium leading-tight text-primary transition [overflow-wrap:anywhere] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60";
+
+export const storageImageEmptyStateProgressClasses =
+  "max-w-full text-center text-xs font-medium leading-tight text-primary [overflow-wrap:anywhere]";
+
 export function StorageManagerDialog({
   state,
   onClose,

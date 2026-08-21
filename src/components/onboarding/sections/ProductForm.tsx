@@ -58,10 +58,6 @@ export function ProductForm({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = () => {
-    if (validate()) onSave();
-  };
-
   const addVariant = () => {
     const variant: ProductVariant = {
       id: nextSellerId("var"),
@@ -335,9 +331,6 @@ export function ProductForm({
       <div className="flex justify-end gap-3 border-t pt-4">
         <Button variant="outline" onClick={onCancel}>
           {t("onboarding.common.cancel")}
-        </Button>
-        <Button onClick={handleSave}>
-          {t("onboarding.products.saveProduct")}
         </Button>
       </div>
     </div>

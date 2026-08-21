@@ -94,6 +94,21 @@ Store details are split across real columns and tables. Store name, description,
 
 Working hours are normalized by `src/features/profile-working-hours` and saved through the regular profile editor flow. They are stored in `profile_working_hours` and do not have a separate save button.
 
+## Profile edit workspace navigation
+
+`/profile?mode=edit` uses a horizontal snap carousel for main tabs. Tab order
+(starting after **Registration**): Specialties, **Store identity**, Products,
+Contact, Working hours, Shipping/returns, Offers.
+
+`profile.edit.activeTab` is restored from page snapshots. The tab strip and
+carousel scroll positions are **not** restored from snapshots — they always
+resync to `activeTab` on return so the visible panel, wave indicator, and
+`inert` state stay aligned (prevents a frozen inactive panel from appearing
+on screen).
+
+Product category main/sub tab rows inside the Products panel use the same
+`snap-x snap-mandatory` treatment.
+
 The working-hours editor deliberately shows the day and period controls only;
 its surrounding profile tab owns the section title. The former duplicate inner
 title, explanatory sentence, and copy-first-day shortcut are not part of the

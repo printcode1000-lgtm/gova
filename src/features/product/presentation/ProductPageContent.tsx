@@ -23,6 +23,9 @@ import type { StorageImageManagerHandle } from "@/features/storage/components/St
 import { ProductComponentsRenderer } from "./ProductComponentsRenderer";
 import type { ProductStyleComponents } from "./product-component.types";
 import { createDefaultProductStyleComponents } from "@/components/ui/product-style-settings";
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
+import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
 import {
   buildProductShareUrl,
   ShareMenu,
@@ -48,11 +51,12 @@ export function ProductPageContent({
     initialPharmacySubcategory,
     returnUrl,
   } = productPageRouteModel(searchParams);
-  const { locale, formatApiError } = useTranslation();
+  const { locale, formatApiError, t } = useTranslation();
   const { session, isLoggedIn, isLoading: sessionLoading } = useSession();
   const [saving, setSaving] = React.useState(false);
   const [openingConversation, setOpeningConversation] = React.useState(false);
   const imageUploadRef = React.useRef<StorageImageManagerHandle | null>(null);
+  const [imagesPending, setImagesPending] = React.useState(false);
   const {
     product,
     setProduct,
@@ -222,31 +226,49 @@ export function ProductPageContent({
     </Button>
   ) : null;
 
-  const save = async () => {
-    if (!session?.uid || !ownerAllowed) return;
+  const [savedBaseline, setSavedBaseline] = React.useState("");
+  React.useEffect(() => {
+    if (loading) return;
+    setSavedBaseline(JSON.stringify(detailsRef.current));
+  }, [loading, mode, product?.id]);
+
+  const isProductDirty = React.useMemo(
+    () => JSON.stringify(details) !== savedBaseline,
+    [details, savedBaseline],
+  );
+
+  const uploadProductImages = async (): Promise<boolean> => {
+    const imagesUploaded = await imageUploadRef.current?.uploadPending();
+    if (imagesUploaded === false) {
+      setError(
+        locale === "ar"
+          ? "تعذر رفع إحدى الصور. أعد المحاولة قبل الحفظ."
+          : "An image could not be uploaded. Retry before saving.",
+      );
+      return false;
+    }
+    const currentDetails = detailsRef.current;
+    if (
+      currentDetails.images.some(
+        (image) => !image.imageKey || image.isUploading || image.error,
+      )
+    ) {
+      setError(
+        locale === "ar"
+          ? "لم يكتمل رفع جميع الصور."
+          : "Not all images have finished uploading.",
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const saveProductDetails = async (): Promise<boolean> => {
+    if (!session?.uid || !ownerAllowed) return false;
     setSaving(true);
     setError("");
     try {
-      const imagesUploaded = await imageUploadRef.current?.uploadPending();
-      if (imagesUploaded === false) {
-        throw new Error(
-          locale === "ar"
-            ? "تعذر رفع إحدى الصور. أعد المحاولة قبل الحفظ."
-            : "An image could not be uploaded. Retry before saving.",
-        );
-      }
       const currentDetails = detailsRef.current;
-      if (
-        currentDetails.images.some(
-          (image) => !image.imageKey || image.isUploading || image.error,
-        )
-      ) {
-        throw new Error(
-          locale === "ar"
-            ? "لم يكتمل رفع جميع الصور."
-            : "Not all images have finished uploading.",
-        );
-      }
       const saved =
         mode === "new"
           ? await productApiService.create({
@@ -262,6 +284,7 @@ export function ProductPageContent({
               ...currentDetails,
               status: product?.status,
             });
+      setSavedBaseline(JSON.stringify(currentDetails));
       if (returnUrl) {
         router.replace(returnUrl);
       } else {
@@ -269,12 +292,84 @@ export function ProductPageContent({
           `/product?mode=view&productId=${encodeURIComponent(saved.id)}&mainCategoryId=${encodeURIComponent(saved.mainCategoryId)}&subcategoryId=${encodeURIComponent(saved.subcategoryId)}`,
         );
       }
+      return true;
     } catch (saveError) {
       setError(formatApiError(saveError));
+      return false;
     } finally {
       setSaving(false);
     }
   };
+
+  const save = async (): Promise<boolean> => {
+    if (!(await uploadProductImages())) return false;
+    return saveProductDetails();
+  };
+
+  const imageChanges = React.useMemo(() => {
+    if (!savedBaseline) {
+      return { hasUpload: imagesPending, hasDelete: false };
+    }
+    try {
+      const baseline = JSON.parse(savedBaseline) as ProductDetails;
+      const baselineKeys = baseline.images
+        .map((image) => image.imageKey)
+        .filter(Boolean);
+      const currentKeys = details.images
+        .map((image) => image.imageKey)
+        .filter(Boolean);
+      const hasDelete = baselineKeys.some((key) => !currentKeys.includes(key));
+      return { hasUpload: imagesPending, hasDelete };
+    } catch {
+      return { hasUpload: imagesPending, hasDelete: false };
+    }
+  }, [details.images, imagesPending, savedBaseline]);
+
+  const pageSaveItems = React.useMemo(
+    () => [
+      buildImageUploadPageSaveItem({
+        id: "product-images",
+        label: locale === "ar" ? "صور المنتج" : "Product images",
+        hasPending: imageChanges.hasUpload || imageChanges.hasDelete,
+        hasPendingUpload: imageChanges.hasUpload,
+        hasPendingDelete: imageChanges.hasDelete,
+        t,
+      }),
+      {
+        id: "product-details",
+        label: locale === "ar" ? "بيانات المنتج" : "Product details",
+        isDirty: isProductDirty,
+        canSave: isProductDirty && !saving,
+        description: buildPageSaveOperationDescription(t, ["save"]),
+      },
+    ],
+    [imageChanges, isProductDirty, locale, saving, t],
+  );
+
+  usePageSaveRegistration({
+    id: `product-${mode}-${productId || "new"}`,
+    label:
+      locale === "ar"
+        ? mode === "new"
+          ? "منتج جديد"
+          : "تعديل المنتج"
+        : mode === "new"
+          ? "New product"
+          : "Edit product",
+    returnPath: `/product?${searchParams.toString()}`,
+    enabled: editable && ownerAllowed,
+    items: pageSaveItems,
+    isSaving: saving,
+    canSave: (isProductDirty || imagesPending) && !saving,
+    prepareForSave: async (selectedItemIds) => {
+      if (!selectedItemIds.includes("product-images")) return true;
+      return uploadProductImages();
+    },
+    save: async (selectedItemIds) => {
+      if (!selectedItemIds.includes("product-details")) return true;
+      return saveProductDetails();
+    },
+  });
 
   const copyToClipboard = async (text: string) => {
     if (!text) return;
@@ -330,25 +425,12 @@ export function ProductPageContent({
         favoriteAction={favoriteAction}
         contactAction={contactAction}
         imageUploadRef={imageUploadRef}
+        onImagesPendingChange={setImagesPending}
       />
       {error ? (
         <p className="rounded-xl bg-destructive/10 p-3 text-destructive">
           {error}
         </p>
-      ) : null}
-      {editable ? (
-        <button
-          type="button"
-          onClick={save}
-          disabled={saving}
-          className="w-full rounded-xl bg-primary px-5 py-3 font-bold text-on-primary disabled:opacity-60"
-        >
-          {saving
-            ? "جار الحفظ..."
-            : mode === "new"
-              ? "إنشاء المنتج"
-              : "حفظ التعديلات"}
-        </button>
       ) : null}
       {mode === "view" && isSuperAdmin(session) ? (
         <div className="rounded-2xl border border-warning/30 bg-warning/5 p-4 sm:p-5">

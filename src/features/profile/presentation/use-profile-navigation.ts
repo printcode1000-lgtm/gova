@@ -13,11 +13,13 @@ interface UseProfileNavigationReturn {
   activeTab: ProfileEditTab;
   carouselHeight: number | undefined;
   carouselRef: React.RefObject<HTMLDivElement | null>;
+  tabsScrollRef: React.RefObject<HTMLDivElement | null>;
   panelRefs: React.RefObject<Record<ProfileEditTab, HTMLDivElement | null>>;
   navButtonRefs: React.RefObject<Record<ProfileEditTab, HTMLButtonElement | null>>;
   activeSectionIndex: number;
   handleCarouselScroll: () => void;
   selectSection: (section: ProfileEditTab) => void;
+  resyncScrollToActiveTab: () => void;
   goToAdjacentSection: (offset: -1 | 1) => void;
 }
 
@@ -41,6 +43,7 @@ export function useProfileNavigation({
     : "registration";
   const [carouselHeight, setCarouselHeight] = React.useState<number>();
   const carouselRef = React.useRef<HTMLDivElement>(null);
+  const tabsScrollRef = React.useRef<HTMLDivElement>(null);
   const panelRefs = React.useRef<Record<ProfileEditTab, HTMLDivElement | null>>(
     {
       registration: null,
@@ -110,6 +113,10 @@ export function useProfileNavigation({
     }, 350);
   }, [scrollElementHorizontally]);
 
+  const resyncScrollToActiveTab = React.useCallback(() => {
+    scrollToSection(resolvedActiveTab);
+  }, [resolvedActiveTab, scrollToSection]);
+
   const selectSection = (section: ProfileEditTab) => {
     setActiveTab(section);
     scrollToSection(section);
@@ -132,8 +139,14 @@ export function useProfileNavigation({
   }, [isLoading, isLoggedIn, requestedTab, scrollToSection, showEditCard]);
 
   React.useEffect(() => {
-    if (!showEditCard || isLoading || !isLoggedIn) return;
-    const frame = requestAnimationFrame(() => scrollToSection(resolvedActiveTab));
+    if (!showEditCard) {
+      setCarouselHeight(undefined);
+      return;
+    }
+    if (isLoading || !isLoggedIn) return;
+    const frame = requestAnimationFrame(() => {
+      requestAnimationFrame(() => scrollToSection(resolvedActiveTab));
+    });
     return () => cancelAnimationFrame(frame);
   }, [isLoading, isLoggedIn, resolvedActiveTab, scrollToSection, showEditCard]);
 
@@ -215,11 +228,13 @@ export function useProfileNavigation({
     activeTab: resolvedActiveTab,
     carouselHeight,
     carouselRef,
+    tabsScrollRef,
     panelRefs,
     navButtonRefs,
     activeSectionIndex,
     handleCarouselScroll,
     selectSection,
+    resyncScrollToActiveTab,
     goToAdjacentSection,
   };
 }

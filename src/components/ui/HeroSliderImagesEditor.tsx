@@ -124,11 +124,11 @@ export const HeroSliderImagesEditor = React.forwardRef<
         <div>
           <h2 className="font-semibold">صور واجهة المتجر</h2>
           <p className="text-sm text-muted-foreground">
-            يمكنك إضافة أو استبدال ثلاث صور بحد أقصى. بقية إعدادات العرض ثابتة.
+            يمكنك إضافة أو استبدال {MAX_PROFILE_SLIDES} صور بحد أقصى. بقية إعدادات العرض ثابتة.
           </p>
         </div>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3">
         {storefrontSlots.map((slotConfig, index) => (
           <StorageImageManager
             ref={(manager) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ArrowRight, FileUp, Save } from "lucide-react";
+import { ArrowRight, FileUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import type { GooglePlayTrackName } from "../../domain/store-assets-types";
 import { usePlayTracks } from "../../hooks/use-play-tracks";
+import { usePlayTracksPageSave } from "../../hooks/use-play-tracks-page-save";
 
 const TRACKS: GooglePlayTrackName[] = ["internal", "alpha", "beta", "production"];
 
@@ -24,22 +25,34 @@ export function PlayTracksTab() {
   const [notes, setNotes] = React.useState("");
   if (!tracks.snapshot) return <div className="p-4 text-sm">{t("releaseConsole.loading")}</div>;
   const releaseNotes = notes ? [{ language: "en-US", text: notes }] : undefined;
-  const update = () => tracks.update({
+  const update = async () => {
+    return tracks.update({
+      track,
+      release: {
+        versionCodes: versionCode ? [versionCode] : [],
+        status,
+        userFraction: fraction ? Number(fraction) : undefined,
+        releaseNotes,
+      },
+    });
+  };
+  usePlayTracksPageSave(tracks, true, {
     track,
-    release: {
-      versionCodes: versionCode ? [versionCode] : [],
-      status,
-      userFraction: fraction ? Number(fraction) : undefined,
-      releaseNotes,
-    },
+    versionCode,
+    status,
+    fraction,
+    notes,
+    onUpdate: update,
   });
-  const promote = () => tracks.promote({ fromTrack, toTrack, versionCode, releaseNotes });
-  const mapping = (files: FileList | null) => {
+  const promote = async () =>
+    tracks.promote({ fromTrack, toTrack, versionCode, releaseNotes });
+  const mapping = async (files: FileList | null) => {
     const file = files?.[0];
-    if (!file) return;
+    if (!file) return false;
     const form = new FormData();
-    form.set("versionCode", versionCode); form.set("file", file);
-    tracks.uploadMapping(form);
+    form.set("versionCode", versionCode);
+    form.set("file", file);
+    return tracks.uploadMapping(form);
   };
   return (
     <section className="space-y-4">
@@ -70,8 +83,6 @@ export function PlayTracksTab() {
             placeholder={t("releaseConsole.tracks.rollout")} />
           <Textarea value={notes} onChange={(event) => setNotes(event.target.value)}
             placeholder={t("releaseConsole.tracks.changelog")} />
-          <Button disabled={tracks.busy} onClick={update}><Save className="h-4 w-4" />
-            {t("releaseConsole.actions.save")}</Button>
         </section>
         <section className="space-y-3 rounded-md border bg-surface p-4">
           <h2 className="font-semibold">{t("releaseConsole.tracks.promote")}</h2>
@@ -80,13 +91,13 @@ export function PlayTracksTab() {
             <ArrowRight className="h-4 w-4" />
             <TrackSelect value={toTrack} onChange={setToTrack} />
           </div>
-          <Button disabled={!versionCode || tracks.busy} onClick={promote}>
+          <Button disabled={!versionCode || tracks.busy} onClick={() => void promote()}>
             {t("releaseConsole.tracks.promote")}
           </Button>
           <label className="block border-t pt-3 text-sm">
             <span className="mb-2 flex items-center gap-2 font-medium"><FileUp className="h-4 w-4" />
               {t("releaseConsole.tracks.mapping")}</span>
-            <Input type="file" accept="text/plain" onChange={(event) => mapping(event.target.files)} />
+            <Input type="file" accept="text/plain" onChange={(event) => void mapping(event.target.files)} />
           </label>
         </section>
       </div>

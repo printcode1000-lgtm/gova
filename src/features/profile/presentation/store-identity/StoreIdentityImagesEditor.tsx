@@ -74,22 +74,15 @@ export function StoreIdentityImagesEditor({
         </button>
       </div>
 
-      <div
-        className={
-          imageTab === "logo"
-            ? "inline-block rounded-lg border-2 border-primary/20 bg-primary/5 p-2 sm:p-3"
-            : "hidden"
-        }
-      >
-        <div className="h-[120px] w-[120px] sm:h-[150px] sm:w-[150px]">
-          <StorageImageManager
-            ref={logoManagerRef}
-            config={storeLogoConfig}
-            value={logoImage ? [logoImage] : []}
-            onChange={onLogoImagesChange}
-            onPendingChange={onLogoPendingChange}
-          />
-        </div>
+      <div className={imageTab === "logo" ? "block w-fit max-w-full" : "hidden"}>
+        <StorageImageManager
+          ref={logoManagerRef}
+          config={storeLogoConfig}
+          className="w-[120px] sm:w-[150px]"
+          value={logoImage ? [logoImage] : []}
+          onChange={onLogoImagesChange}
+          onPendingChange={onLogoPendingChange}
+        />
       </div>
       <div className={imageTab === "hero" ? "block" : "hidden"}>
         <HeroSlider

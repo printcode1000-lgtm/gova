@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { useOnboardingStore, stepOrder } from '@/lib/onboarding';
 import { useTranslation } from '@/lib/i18n';
+import { useOnboardingPageSave } from '@/features/page-save/hooks/use-onboarding-page-save';
+import { OnboardingSaveBridgeProvider } from '@/features/page-save/context/onboarding-save-bridge';
 import { OnboardingSidebar, OnboardingProgress, MobileOnboardingNav, useStepConfig } from './index';
 import {
   StoreIdentitySection,
@@ -104,6 +106,9 @@ export function OnboardingPage() {
   const stepConfig = useStepConfig();
   const [isTransitioning, setIsTransitioning] = React.useState(false);
   const [showCompletion, setShowCompletion] = React.useState(false);
+  const [imagesPending, setImagesPending] = React.useState(false);
+
+  useOnboardingPageSave(!showCompletion, imagesPending);
 
   const isComplete = completedSteps.length === stepOrder.length;
 
@@ -146,7 +151,8 @@ export function OnboardingPage() {
     );
 
   return (
-    <div className="asol-onboarding-shell">
+    <OnboardingSaveBridgeProvider setImagesPending={setImagesPending}>
+      <div className="asol-onboarding-shell">
       <div className="hidden lg:block">
         <div className="flex">
           <aside className="w-80 min-h-screen border-r asol-onboarding-sidebar p-6 sticky top-0">
@@ -212,6 +218,7 @@ export function OnboardingPage() {
         </main>
       </div>
     </div>
+    </OnboardingSaveBridgeProvider>
   );
 }
 

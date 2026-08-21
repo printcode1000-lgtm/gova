@@ -11,6 +11,13 @@ import type {
 import { storeAssetsApiService } from "../services/store-assets-api-service";
 import { useAuthHeaders } from "./use-auth-headers";
 
+export interface StagedStoreImageUpload {
+  id: string;
+  language: string;
+  imageType: GooglePlayImageType;
+  file: File;
+}
+
 export function useStoreAssets() {
   const headers = useAuthHeaders();
   const [snapshot, setSnapshot] = React.useState<GooglePlayStoreAssetsSnapshot | null>(null);
@@ -18,6 +25,7 @@ export function useStoreAssets() {
   const [listings, setListings] = React.useState<GooglePlayStoreListing[]>([]);
   const [language, setLanguage] = React.useState("ar");
   const [imageType, setImageType] = React.useState<GooglePlayImageType>("icon");
+  const [stagedUploads, setStagedUploads] = React.useState<StagedStoreImageUpload[]>([]);
   const [busy, setBusy] = React.useState("");
   const [error, setError] = React.useState("");
   const apply = React.useCallback((next: GooglePlayStoreAssetsSnapshot) => {
@@ -34,31 +42,72 @@ export function useStoreAssets() {
     finally { setBusy(""); }
   }, [apply, headers]);
   React.useEffect(() => { void load(); }, [load]);
-  const save = async () => {
-    if (!headers) return;
+
+  const isTextDirty = React.useMemo(() => {
+    if (!snapshot) return false;
+    return (
+      JSON.stringify({ details: snapshot.details, listings: snapshot.listings }) !==
+      JSON.stringify({ details, listings })
+    );
+  }, [details, listings, snapshot]);
+
+  const save = async (): Promise<boolean> => {
+    if (!headers) return false;
     setBusy("save");
-    try { apply((await storeAssetsApiService.save({ details, listings }, headers)).snapshot); }
-    finally { setBusy(""); }
+    try {
+      apply((await storeAssetsApiService.save({ details, listings }, headers)).snapshot);
+      return true;
+    } finally {
+      setBusy("");
+    }
   };
-  const upload = async (files: FileList | null) => {
-    if (!headers || !files?.length) return;
+
+  const queueUpload = (files: FileList | null) => {
+    if (!files?.length) return;
+    setStagedUploads((current) => [
+      ...current,
+      ...Array.from(files).map((file) => ({
+        id: `${Date.now()}-${file.name}`,
+        language,
+        imageType,
+        file,
+      })),
+    ]);
+  };
+
+  const flushStagedUploads = async (): Promise<boolean> => {
+    if (!headers || stagedUploads.length === 0) return true;
     setBusy("upload");
     try {
-      for (const file of Array.from(files)) {
-        const dimensions = await imageDimensions(file);
-        const count = snapshot?.images.find(
-          (group) => group.language === language && group.imageType === imageType,
-        )?.images.length ?? 0;
+      for (const staged of stagedUploads) {
+        const dimensions = await imageDimensions(staged.file);
+        const count =
+          snapshot?.images.find(
+            (group) =>
+              group.language === staged.language &&
+              group.imageType === staged.imageType,
+          )?.images.length ?? 0;
         const validation = validateGooglePlayImage({
-          imageType, contentType: file.type, size: file.size, dimensions, existingCount: count,
+          imageType: staged.imageType,
+          contentType: staged.file.type,
+          size: staged.file.size,
+          dimensions,
+          existingCount: count,
         });
         if (!validation.ok) throw new Error(validation.message);
         const form = new FormData();
-        form.set("language", language); form.set("imageType", imageType); form.set("file", file);
+        form.set("language", staged.language);
+        form.set("imageType", staged.imageType);
+        form.set("file", staged.file);
         apply((await storeAssetsApiService.uploadImage(form, headers)).snapshot);
       }
-    } finally { setBusy(""); }
+      setStagedUploads([]);
+      return true;
+    } finally {
+      setBusy("");
+    }
   };
+
   const removeImage = async (id: string, itemLanguage: string, type: GooglePlayImageType) => {
     if (headers) apply((await storeAssetsApiService.deleteImage({
       imageId: id, language: itemLanguage, imageType: type,
@@ -72,7 +121,8 @@ export function useStoreAssets() {
   };
   return {
     snapshot, details, setDetails, listings, setListings, language, setLanguage, imageType,
-    setImageType, busy, error, load, save, upload, removeImage, removeListing, restore,
+    setImageType, stagedUploads, isTextDirty, busy, error, load, save, queueUpload,
+    flushStagedUploads, removeImage, removeListing, restore,
   };
 }
 

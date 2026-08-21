@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Camera, Image as ImageIcon, Images, Upload, X } from "lucide-react";
+import { Camera, Image as ImageIcon, Images, X } from "lucide-react";
 import {
   StorageProfiles,
   type StorageProfileId,
@@ -22,11 +22,16 @@ import {
   type ImageUploadDraftStatus,
 } from "../services/image-upload-draft-service";
 import {
-  aspectClasses,
   cn,
   defaultTranslate,
   InlineLoadingSpinner,
   ManagerButton,
+  StorageImageSlotFrame,
+  storageImageEmptyStateClasses,
+  storageImageEmptyStateIconClasses,
+  storageImageEmptyStateLabelClasses,
+  storageImageEmptyStateProgressClasses,
+  storageImageSlotSurfaceClasses,
   StorageManagerDialog,
 } from "./storage-image-manager-ui";
 export type {
@@ -835,20 +840,6 @@ const StorageImageSlot = React.forwardRef<
     }
   };
 
-  const uploadSelected = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (!selectedFile) return;
-    const runUpload = () => void uploadCandidate(selectedFile);
-    if (!config.confirmUpload) return runUpload();
-    setDialog({
-      kind: "confirm",
-      title: t("storage.imageManager.uploadTitle"),
-      message: t("storage.imageManager.confirmUpload"),
-      onConfirm: runUpload,
-    });
-  };
-
   const removeCurrent = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -876,7 +867,7 @@ const StorageImageSlot = React.forwardRef<
       else void removeImage();
     };
     const action = selectedFile ? clearSelected : removeStored;
-    if (!config.confirmRemove) return action();
+    if (!config.confirmRemove || config.confirmUpload) return action();
     setDialog({
       kind: "confirm",
       title: t("storage.imageManager.removeTitle"),
@@ -890,8 +881,7 @@ const StorageImageSlot = React.forwardRef<
   return (
     <div
       className={cn(
-        "relative rounded-lg border-2 border-dashed transition-all duration-200",
-        aspectClasses[config.aspectRatio],
+        storageImageSlotSurfaceClasses,
         isDragging && "border-primary bg-primary/5",
         displayError ? "border-destructive" : "border-border",
         previewUrl && "border-solid",
@@ -940,9 +930,11 @@ const StorageImageSlot = React.forwardRef<
             }}
           />
           {showProgress && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-background/80 px-4 text-center">
+            <div className="absolute inset-0 flex min-h-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-lg bg-background/80 px-1.5 py-1 text-center">
               <InlineLoadingSpinner size="md" />
-              <p className="text-sm font-medium">{stageLabels[stage]}</p>
+              <p className={storageImageEmptyStateProgressClasses}>
+                {stageLabels[stage]}
+              </p>
             </div>
           )}
           <button
@@ -954,31 +946,19 @@ const StorageImageSlot = React.forwardRef<
           >
             <X className="h-4 w-4" />
           </button>
-          {selectedFile && (
-            <ManagerButton
-              type="button"
-              variant="icon"
-              onClick={uploadSelected}
-              disabled={busy}
-              aria-label={t("storage.imageManager.upload")}
-              className="absolute bottom-2 left-2 h-9 w-9 bg-background/90 shadow-md"
-            >
-              <Upload className="h-4 w-4" />
-            </ManagerButton>
-          )}
         </>
       ) : (
         <DropdownMenu.Root>
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg px-4">
-            <span className="rounded-full bg-muted p-3">
+          <div className={storageImageEmptyStateClasses}>
+            <span className={storageImageEmptyStateIconClasses}>
               {showProgress ? (
                 <InlineLoadingSpinner size="sm" />
               ) : (
-                <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                <ImageIcon className="h-4 w-4 text-muted-foreground" />
               )}
             </span>
             {showProgress ? (
-              <span className="text-sm font-medium text-primary">
+              <span className={storageImageEmptyStateProgressClasses}>
                 {stageLabels[stage]}
               </span>
             ) : (
@@ -987,7 +967,7 @@ const StorageImageSlot = React.forwardRef<
                   type="button"
                   disabled={busy}
                   aria-label={t("storage.imageSource.open")}
-                  className="rounded-lg px-3 py-1.5 text-sm font-medium text-primary transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60"
+                  className={storageImageEmptyStateLabelClasses}
                 >
                   {t("storage.imageSource.open")}
                 </button>
@@ -1154,39 +1134,44 @@ export const StorageImageManager = React.forwardRef<
         )}
       >
         {slots.map((image, index) => (
-          <StorageImageSlot
-            ref={(handle) => {
-              slotRefs.current[index] = handle;
-            }}
-            key={`${parsedConfig.id}-${index}`}
-            config={parsedConfig}
-            image={image}
-            index={index}
-            draftOwnerId={draftOwnerId}
-            draftPageKey={draftPageKey}
-            translate={translate}
-            onUploaded={(itemIndex, uploadedImage) => {
-              onChange(
-                normalizeImages(
-                  replaceAt(images, itemIndex, uploadedImage),
-                  maxItems,
-                ),
-              );
-            }}
-            onRemoved={(itemIndex) => {
-              onChange(normalizeImages(removeAt(images, itemIndex), maxItems));
-            }}
-            onPendingChange={(itemIndex, pending) => {
-              setPendingSlots((current) => {
-                if (current.has(itemIndex) === pending) return current;
-                const next = new Set(current);
-                if (pending) next.add(itemIndex);
-                else next.delete(itemIndex);
-                return next;
-              });
-            }}
-            onPreviewChange={onPreviewChange}
-          />
+          <StorageImageSlotFrame
+            key={`${parsedConfig.id}-${index}-frame`}
+            aspectRatio={parsedConfig.aspectRatio}
+          >
+            <StorageImageSlot
+              ref={(handle) => {
+                slotRefs.current[index] = handle;
+              }}
+              key={`${parsedConfig.id}-${index}`}
+              config={parsedConfig}
+              image={image}
+              index={index}
+              draftOwnerId={draftOwnerId}
+              draftPageKey={draftPageKey}
+              translate={translate}
+              onUploaded={(itemIndex, uploadedImage) => {
+                onChange(
+                  normalizeImages(
+                    replaceAt(images, itemIndex, uploadedImage),
+                    maxItems,
+                  ),
+                );
+              }}
+              onRemoved={(itemIndex) => {
+                onChange(normalizeImages(removeAt(images, itemIndex), maxItems));
+              }}
+              onPendingChange={(itemIndex, pending) => {
+                setPendingSlots((current) => {
+                  if (current.has(itemIndex) === pending) return current;
+                  const next = new Set(current);
+                  if (pending) next.add(itemIndex);
+                  else next.delete(itemIndex);
+                  return next;
+                });
+              }}
+              onPreviewChange={onPreviewChange}
+            />
+          </StorageImageSlotFrame>
         ))}
       </div>
       {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}

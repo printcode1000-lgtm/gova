@@ -9,7 +9,6 @@ import {
   Package,
   Plus,
   RefreshCw,
-  Save,
   ShieldCheck,
   Trash2,
 } from "lucide-react";
@@ -31,11 +30,15 @@ import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
+import { useTranslation } from "@/lib/i18n";
 
 import { ResolvedItem, getProductName, getProductPrice, getProductImage, buildProductAction } from "./featured-marquee/SuperAdminFeaturedMarqueePage.product-display";
 
 export function SuperAdminFeaturedMarqueePage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { session, isLoading: sessionLoading } = useSession();
   const authorized = isSuperAdmin(session);
 
@@ -44,6 +47,7 @@ export function SuperAdminFeaturedMarqueePage() {
   const [newProductId, setNewProductId] = useState("");
   const [intervalMinutes, setIntervalMinutes] = useState(15);
   const [busy, setBusy] = useState(false);
+  const [saveBusy, setSaveBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<"success" | "error">(
     "success",
@@ -165,9 +169,9 @@ export function SuperAdminFeaturedMarqueePage() {
     dragIndex.current = null;
   };
 
-  const save = async () => {
-    if (!session || !record) return;
-    setBusy(true);
+  const save = async (): Promise<boolean> => {
+    if (!session || !record) return false;
+    setSaveBusy(true);
     setMessage(null);
     try {
       const productIds = items
@@ -191,6 +195,7 @@ export function SuperAdminFeaturedMarqueePage() {
       setRecord(saved);
       setMessage("تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.");
       setMessageType("success");
+      return true;
     } catch (error) {
       reportSystemIssue({
         feature: "FeaturedMarqueeAdmin",
@@ -205,10 +210,44 @@ export function SuperAdminFeaturedMarqueePage() {
       };
       setMessage(arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.");
       setMessageType("error");
+      return false;
     } finally {
-      setBusy(false);
+      setSaveBusy(false);
     }
   };
+
+  const savedFingerprint = record
+    ? `${record.checkIntervalMinutes}:${record.config.productIds.join(",")}`
+    : "";
+  const currentFingerprint = `${intervalMinutes}:${items
+    .filter((item) => item.product !== null)
+    .map((item) => item.productId)
+    .join(",")}`;
+  const isMarqueeDirty =
+    Boolean(record) && currentFingerprint !== savedFingerprint;
+
+  usePageSaveRegistration({
+    id: "super-admin-featured-marquee",
+    label: "شريط المنتجات المميزة",
+    returnPath: "/super-admin/featured-marquee",
+    enabled: authorized && Boolean(record),
+    items: [
+      {
+        id: "featured-marquee",
+        label: "منتجات الشريط",
+        isDirty: isMarqueeDirty,
+        canSave:
+          isMarqueeDirty && !saveBusy && items.some((item) => item.product),
+        description: buildPageSaveOperationDescription(t, ["save"]),
+      },
+    ],
+    isSaving: saveBusy,
+    canSave: isMarqueeDirty && !saveBusy && items.some((item) => item.product),
+    save: async (selectedItemIds) => {
+      if (!selectedItemIds.includes("featured-marquee")) return true;
+      return save();
+    },
+  });
 
   const validItems = items.filter((item) => item.product !== null);
   const previewConfig = useMemo(
@@ -304,15 +343,6 @@ export function SuperAdminFeaturedMarqueePage() {
             <RefreshCw className="me-2 h-4 w-4" />
             فحص الآن
           </Button>
-          <Button
-            type="button"
-            onClick={() => void save()}
-            disabled={busy}
-            className="ms-auto bg-primary text-on-primary"
-          >
-            <Save className="me-2 h-4 w-4" />
-            حفظ
-          </Button>
         </div>
       </section>
 
@@ -382,20 +412,6 @@ export function SuperAdminFeaturedMarqueePage() {
             >
               <RefreshCw className="me-1 h-3 w-3" />
               تحديث
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => void save()}
-              disabled={busy || items.length === 0}
-              className="bg-primary text-on-primary"
-            >
-              {busy ? (
-                <Loader2 className="me-1 h-3 w-3 animate-spin" />
-              ) : (
-                <Save className="me-1 h-3 w-3" />
-              )}
-              حفظ
             </Button>
           </div>
         </div>

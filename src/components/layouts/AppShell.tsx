@@ -7,6 +7,7 @@ import { useOpenInAsolHeaderPrompt } from '@/features/sharing';
 import { AppHeader } from './AppHeader';
 import { BottomNavBar } from './BottomNavBar';
 import { BOTTOM_NAV_CLEARANCE } from './bottom-nav-layout';
+import { PageSaveRuntimeInit } from '@/features/page-save/components/PageSaveRuntimeInit';
 
 interface AppShellProps {
   children: ReactNode;
@@ -25,6 +26,7 @@ export function AppShell({ children }: AppShellProps) {
   // shell only has to consume the resulting CSS variables.
   return (
     <div style={shellStyle}>
+      <PageSaveRuntimeInit />
       <AppHeader installPrompt={installPrompt} />
       <main
         className="asol-canvas asol-shell-main min-h-screen"

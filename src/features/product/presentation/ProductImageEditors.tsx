@@ -26,6 +26,7 @@ export const ProductImageEditors = React.forwardRef<
     mainCategoryId: string;
     images: StoredImage[];
     onChange: (images: StoredImage[]) => void;
+    onPendingChange?: (pending: boolean) => void;
     deferStorageDeletion?: boolean;
   }
 >(function ProductImageEditors({
@@ -33,15 +34,21 @@ export const ProductImageEditors = React.forwardRef<
   mainCategoryId,
   images,
   onChange,
+  onPendingChange,
   deferStorageDeletion = false,
 }, ref) {
   const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
+  const pendingSlotsRef = React.useRef(new Set<number>());
   const imagesRef = React.useRef(images);
   const normalized = React.useMemo(
     () => normalizeProductImages(images, maxImages),
     [images, maxImages],
   );
   imagesRef.current = normalized;
+
+  const syncPending = React.useCallback(() => {
+    onPendingChange?.(pendingSlotsRef.current.size > 0);
+  }, [onPendingChange]);
 
   React.useImperativeHandle(ref, () => ({
     hasPending: () =>
@@ -92,6 +99,11 @@ export const ProductImageEditors = React.forwardRef<
               const updated = normalizeProductImages(next, maxImages);
               imagesRef.current = updated;
               onChange(updated);
+            }}
+            onPendingChange={(pending) => {
+              if (pending) pendingSlotsRef.current.add(index);
+              else pendingSlotsRef.current.delete(index);
+              syncPending();
             }}
           />
         );

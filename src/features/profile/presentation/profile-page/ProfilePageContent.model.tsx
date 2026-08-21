@@ -22,6 +22,7 @@ import type {
 ProfileEditTab,
 ProfileSectionStatus,
 } from "../profile-page.types";
+import { PROFILE_EDIT_SNAPSHOT_SCROLL_IDS } from "../profile-page.types";
 import type {
 ProfileContactsController,
 ProfileFulfillmentController,
@@ -31,6 +32,8 @@ StoreDetailsController,
 } from "../profile-save-controller";
 import { useProfileNavigation } from "../use-profile-navigation";
 import { useProfileSave } from "../use-profile-save";
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
 import { useProfileShowcaseModel } from "./ProfilePageContent.showcase-model";
 
 export function useProfilePageContentModel({
@@ -107,11 +110,13 @@ const {
     activeTab,
     carouselHeight,
     carouselRef,
+    tabsScrollRef,
     panelRefs,
     navButtonRefs,
     activeSectionIndex,
     handleCarouselScroll,
     selectSection,
+    resyncScrollToActiveTab,
     goToAdjacentSection,
   } = useProfileNavigation({
     showEditCard,
@@ -195,6 +200,13 @@ React.useEffect(() => {
         for (const [selector, position] of Object.entries(
           snapshot.scroll.elements,
         )) {
+          if (
+            PROFILE_EDIT_SNAPSHOT_SCROLL_IDS.some((id) =>
+              selector.includes(id),
+            )
+          ) {
+            continue;
+          }
           document.querySelector<HTMLElement>(selector)?.scrollTo({
             left: position.x,
             top: position.y,
@@ -206,6 +218,7 @@ React.useEffect(() => {
           top: snapshot.scroll.y,
           behavior: "auto",
         });
+        resyncScrollToActiveTab();
       };
       const scheduleRestoreScroll = () => {
         if (restoreFrame !== null) cancelAnimationFrame(restoreFrame);
@@ -242,7 +255,7 @@ React.useEffect(() => {
       window.removeEventListener("touchstart", stopAutomaticRestore);
       window.removeEventListener("keydown", stopAutomaticRestore);
     };
-  }, [editSnapshotReady, restoreEditSnapshot]);
+  }, [editSnapshotReady, resyncScrollToActiveTab, restoreEditSnapshot]);
 
 const dirtySections = (
     Object.entries(sectionStatuses) as Array<
@@ -257,7 +270,7 @@ const dirtyLabels = dirtySections
 const isSaveBlocked = dirtySections.some(([, status]) => !status?.canSave);
 
 const saveProfileChanges = React.useCallback(
-    () =>
+    (sectionsFilter?: ProfileEditTab[]) =>
       handleSaveChangedSections(
         registrationRef.current,
         contactsRef.current,
@@ -267,9 +280,45 @@ const saveProfileChanges = React.useCallback(
         productsRef.current,
         fulfillmentRef.current,
         discountsRef.current,
+        sectionsFilter,
       ),
     [handleSaveChangedSections],
   );
+
+const pageSaveItems = React.useMemo(
+  () =>
+    dirtySections.map(([section, status]) => ({
+      id: section,
+      label: status?.label ?? section,
+      description:
+        status?.description ?? buildPageSaveOperationDescription(t, ["save"]),
+      isDirty: true,
+      canSave: status?.canSave ?? true,
+    })),
+  [dirtySections, t],
+);
+
+usePageSaveRegistration({
+  id: "profile-edit",
+  label: locale === "ar" ? "الملف الشخصي" : "Profile",
+  returnPath: "/profile?mode=edit",
+  enabled: showEditCard,
+  items: pageSaveItems,
+  isSaving: isUnifiedSaving,
+  canSave: !isSaveBlocked && dirtySections.length > 0,
+  prepareForSave: async (selectedItemIds) => {
+    if (
+      selectedItemIds.includes("store") &&
+      storeRef.current?.prepareForSave &&
+      !(await storeRef.current.prepareForSave())
+    ) {
+      return false;
+    }
+    return true;
+  },
+  save: async (selectedItemIds) =>
+    saveProfileChanges(selectedItemIds as ProfileEditTab[]),
+});
 
 const earlyView = isLoading ? (
       <div className="container px-4 py-8 text-sm text-on-surface-variant">
@@ -288,7 +337,7 @@ const earlyView = isLoading ? (
       </div>
     ) : null;
 
-return { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving, saveDialog, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections, setSaveDialog, editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView };
+return { initialPublicProfile, t, locale, router, session, isLoggedIn, isLoading, setSession, superAdmin, searchParams, mode, uid, isViewingOtherProfile, showEditCard, showPreviewCard, matchingInitialProfile, storeImages, isLoadingStoreImages, storeDetails, isLoadingStoreDetails, previewUid, isPreviewOwner, previewContacts, isLoadingPreviewContacts, previewFulfillment, isLoadingPreviewFulfillment, registrationRef, specialtiesRef, productsRef, contactsRef, storeRef, workingHoursRef, fulfillmentRef, discountsRef, activeTab, carouselHeight, carouselRef, tabsScrollRef, panelRefs, navButtonRefs, activeSectionIndex, handleCarouselScroll, selectSection, resyncScrollToActiveTab, goToAdjacentSection, sectionStatuses, saveError, isUnifiedSaving, saveDialog, handleRegistrationStatus, handleSpecialtiesStatus, handleProductsStatus, handleContactStatus, handleStoreStatus, handleWorkingHoursStatus, handleFulfillmentStatus, handleDiscountsStatus, handleSaveChangedSections, setSaveDialog, editSnapshotReady, restoreEditSnapshot, restoredEditSnapshotRef, featuredProducts, setFeaturedProducts, isLoadingFeaturedProducts, setIsLoadingFeaturedProducts, heroSliderConfig, profileFeaturedConfig, profileTrendingConfig, dirtySections, dirtyLabels, isSaveBlocked, saveProfileChanges, earlyView };
 }
 
 

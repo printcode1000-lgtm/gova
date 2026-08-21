@@ -6,7 +6,9 @@ import { useTranslation } from '@/lib/i18n';
 import { FormField, FormInput, FormTextarea, FormSelect, MultiSelect } from '../form-components';
 import { StepNavigation } from '../progress-components';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StorageImageManager } from '@/features/storage/components/StorageImageManager';
+import { StorageImageManager, type StorageImageManagerHandle } from '@/features/storage/components/StorageImageManager';
+import { registerPageSaveImageUploadHandle } from '@/features/page-save/runtime/page-save-image-upload-registry';
+import { useOnboardingSaveBridge } from '@/features/page-save/context/onboarding-save-bridge';
 import { StorageProfiles, type StoredImage } from '@asol/storage-core';
 
 const STORE_CATEGORY_KEYS: Record<string, string> = {
@@ -41,6 +43,25 @@ export function StoreIdentitySection() {
   const { t } = useTranslation();
   const { data, updateStoreIdentity, setStoreImage, markStepComplete } = useOnboardingStore();
   const [errors, setErrors] = React.useState<Record<string, string>>({});
+  const bridge = useOnboardingSaveBridge();
+  const [logoHandle, setLogoHandle] = React.useState<StorageImageManagerHandle | null>(null);
+  const [coverHandle, setCoverHandle] = React.useState<StorageImageManagerHandle | null>(null);
+  const logoPendingRef = React.useRef(false);
+  const coverPendingRef = React.useRef(false);
+
+  const syncPending = React.useCallback(() => {
+    bridge?.setImagesPending(logoPendingRef.current || coverPendingRef.current);
+  }, [bridge]);
+
+  React.useEffect(() => {
+    if (!logoHandle) return undefined;
+    return registerPageSaveImageUploadHandle("onboarding-store-logo", logoHandle);
+  }, [logoHandle]);
+
+  React.useEffect(() => {
+    if (!coverHandle) return undefined;
+    return registerPageSaveImageUploadHandle("onboarding-store-cover", coverHandle);
+  }, [coverHandle]);
 
   const { storeIdentity } = data;
 
@@ -150,6 +171,7 @@ export function StoreIdentitySection() {
 
           <div className="grid gap-6 lg:grid-cols-2">
             <StorageImageManager
+              ref={setLogoHandle}
               config={{
                 id: 'onboarding-store-logo',
                 storageProfileId: StorageProfiles.Avatar,
@@ -172,11 +194,16 @@ export function StoreIdentitySection() {
                   : []
               }
               onChange={(images) => handleLogoChange(images[0] ?? null)}
+              onPendingChange={(pending) => {
+                logoPendingRef.current = pending;
+                syncPending();
+              }}
               label={t('onboarding.storeIdentity.storeLogo')}
               hint={t('onboarding.storeIdentity.logoHint')}
             />
 
             <StorageImageManager
+              ref={setCoverHandle}
               config={{
                 id: 'onboarding-store-cover',
                 storageProfileId: StorageProfiles.Cover,
@@ -199,6 +226,10 @@ export function StoreIdentitySection() {
                   : []
               }
               onChange={(images) => handleCoverChange(images[0] ?? null)}
+              onPendingChange={(pending) => {
+                coverPendingRef.current = pending;
+                syncPending();
+              }}
               label={t('onboarding.storeIdentity.coverImage')}
               hint={t('onboarding.storeIdentity.coverHint')}
             />

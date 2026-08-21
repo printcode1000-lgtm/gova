@@ -26,7 +26,6 @@ import {
   Plus,
   RefreshCw,
   RotateCcw,
-  Save,
   Search,
   ShieldAlert,
   Trash2,
@@ -34,14 +33,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { asolApi } from "@/core/api";
 import { useSession } from "@/features/auth/components/SessionProvider";
@@ -88,6 +79,7 @@ import {
 } from "./catalog-studio-drafts";
 import { SectionButton } from "./SectionButton";
 import { StatusBox } from "./StatusBox";
+import { useCatalogStudioPageSave } from "../hooks/use-catalog-studio-page-save";
 
 export function CatalogStudioPage() {
   const { session, isLoading: sessionLoading } = useSession();
@@ -107,7 +99,6 @@ export function CatalogStudioPage() {
   const [error, setError] = React.useState("");
   const [notice, setNotice] = React.useState("");
   const [validation, setValidation] = React.useState<CatalogStudioValidationResult | null>(null);
-  const [saveDialogOpen, setSaveDialogOpen] = React.useState(false);
   const [itemJson, setItemJson] = React.useState("");
   const [itemJsonError, setItemJsonError] = React.useState("");
   const [dragIndex, setDragIndex] = React.useState<number | null>(null);
@@ -324,32 +315,27 @@ export function CatalogStudioPage() {
     }
   }, [authHeaders, changedFiles.length, draftPayload]);
 
-  const saveChanges = React.useCallback(async () => {
-    if (!authHeaders || changedFiles.length === 0) return;
-    setBusy("save");
-    setError("");
-    try {
-      const result = await asolApi.put<CatalogStudioSaveResult>(
-        CATALOG_STUDIO_API,
-        { files: draftPayload() },
-        { headers: authHeaders },
-      );
-      setValidation(result);
-      if (!result.saved) {
-        setNotice("فشل التحقق؛ لم يتغير أي ملف أصلي.");
-        setSaveDialogOpen(false);
-        return;
-      }
-      setNotice(`تم حفظ ${result.changedFiles.length} ملفًا بعد التحقق والـ rollback guard.`);
-      setSaveDialogOpen(false);
-      await loadSnapshot({ clearDrafts: true });
-    } catch (saveError) {
-      setError(errorText(saveError));
-      setSaveDialogOpen(false);
-    } finally {
-      setBusy("");
-    }
-  }, [authHeaders, changedFiles.length, draftPayload, loadSnapshot]);
+  useCatalogStudioPageSave({
+    enabled: authorized && desktopWeb === true,
+    changedFiles,
+    drafts,
+    filesByPath,
+    uploadFile,
+    uploadRoot,
+    replaceImage,
+    authHeaders: authHeaders ?? null,
+    busy,
+    draftPayload,
+    onSaved: () => loadSnapshot({ clearDrafts: true }),
+    setBusy,
+    setError,
+    setNotice,
+    setValidation,
+    clearUpload: () => {
+      setUploadFile(null);
+      setReplaceImage(false);
+    },
+  });
 
   const openFile = React.useCallback((file: CatalogStudioFile) => {
     setSelectedPath(file.path);
@@ -488,27 +474,6 @@ export function CatalogStudioPage() {
     setValidation(null);
   }, [selectedFile]);
 
-  const uploadImage = React.useCallback(async () => {
-    if (!authHeaders || !uploadFile) return;
-    setBusy("image-upload");
-    setError("");
-    try {
-      const form = new FormData();
-      form.set("file", uploadFile);
-      form.set("root", uploadRoot);
-      form.set("replace", String(replaceImage));
-      await asolApi.postForm(CATALOG_STUDIO_IMAGES_API, form, { headers: authHeaders });
-      setUploadFile(null);
-      setReplaceImage(false);
-      setNotice("تم رفع الصورة ذريًا وتحديث سجل العمليات.");
-      await loadSnapshot();
-    } catch (uploadError) {
-      setError(errorText(uploadError));
-    } finally {
-      setBusy("");
-    }
-  }, [authHeaders, loadSnapshot, replaceImage, uploadFile, uploadRoot]);
-
   const trashImage = React.useCallback(
     async (relativePath: string) => {
       if (!authHeaders || !window.confirm("نقل الصورة غير المستخدمة إلى سلة المطور القابلة للاستعادة؟")) return;
@@ -577,9 +542,6 @@ export function CatalogStudioPage() {
             </Button>
             <Button variant="outline" onClick={() => void validateChanges()} disabled={Boolean(busy) || changedFiles.length === 0}>
               <ClipboardCheck className="me-2 h-4 w-4" /> فحص شامل
-            </Button>
-            <Button onClick={() => setSaveDialogOpen(true)} disabled={Boolean(busy) || changedFiles.length === 0}>
-              <Save className="me-2 h-4 w-4" /> حفظ آمن ({changedFiles.length})
             </Button>
           </div>
         </div>
@@ -869,8 +831,7 @@ export function CatalogStudioPage() {
               <select value={uploadRoot} onChange={(event) => setUploadRoot(event.target.value as CatalogStudioImageRoot)} className="w-full rounded-lg border bg-background px-3 py-2">{Object.entries(imageRootLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select>
               <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)} className="block w-full rounded-lg border p-2 text-sm" />
               <label className="flex items-center justify-between rounded-lg border p-3 text-sm"><span>استبدال إذا كان الاسم موجودًا</span><Switch checked={replaceImage} onCheckedChange={setReplaceImage} /></label>
-              <p className="text-xs text-muted-foreground">حد أقصى 10 MB. يتم فحص توقيع PNG/JPG/WEBP. عند الاستبدال تُحفظ نسخة استعادة خارج public.</p>
-              <Button className="w-full" onClick={() => void uploadImage()} disabled={!uploadFile || Boolean(busy)}>{busy === "image-upload" ? <Loader2 className="me-2 h-4 w-4 animate-spin" /> : <Upload className="me-2 h-4 w-4" />} رفع آمن</Button>
+              <p className="text-xs text-muted-foreground">حد أقصى 10 MB. يتم فحص توقيع PNG/JPG/WEBP. عند الاستبدال تُحفظ نسخة استعادة خارج public. استخدم أيقونة الحفظ في الشريط العلوي لرفع الصورة المختارة.</p>
             </aside>
             <div className="grid max-h-[72vh] gap-3 overflow-auto sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {filteredImages.map((image) => (
@@ -927,20 +888,9 @@ export function CatalogStudioPage() {
       {changedFiles.length > 0 ? (
         <div className="sticky bottom-3 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50/95 p-3 shadow-xl backdrop-blur dark:border-amber-900 dark:bg-amber-950/90">
           <div className="flex items-center gap-2 text-sm text-amber-900 dark:text-amber-100"><AlertTriangle className="h-5 w-5" /><span>{changedFiles.length} ملفًا في المسودة ولم تُكتب على المصدر بعد.</span></div>
-          <div className="flex gap-2"><Button variant="outline" size="sm" onClick={() => { if (window.confirm("مسح كل تعديلات المسودة؟")) setDrafts({}); }}><CircleOff className="me-1 h-4 w-4" />مسح المسودة</Button><Button size="sm" onClick={() => setSaveDialogOpen(true)}><Save className="me-1 h-4 w-4" />مراجعة وحفظ</Button></div>
+          <div className="flex gap-2"><Button variant="outline" size="sm" onClick={() => { if (window.confirm("مسح كل تعديلات المسودة؟")) setDrafts({}); }}><CircleOff className="me-1 h-4 w-4" />مسح المسودة</Button></div>
         </div>
       ) : null}
-
-      <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
-        <DialogContent className="max-w-2xl" dir="rtl">
-          <DialogHeader><DialogTitle>مراجعة الحفظ الآمن</DialogTitle><DialogDescription>سيتم التحقق من نسخة كاملة ثم حفظ الملفات كوحدة واحدة مع نسخة rollback.</DialogDescription></DialogHeader>
-          <div className="max-h-72 overflow-auto rounded-xl border p-3">
-            {changedFiles.map((filePath) => <div key={filePath} className="flex items-center gap-2 border-b py-2 last:border-0"><GitCompareArrows className="h-4 w-4 text-amber-600" /><span className="font-mono text-xs" dir="ltr">{filePath}</span></div>)}
-          </div>
-          {validation ? <StatusBox kind={validation.valid ? "success" : "error"}>{validation.valid ? "آخر فحص للمسودة ناجح." : "آخر فحص فشل. سيعيد الخادم الفحص ولن يكتب الملفات عند وجود خطأ."}</StatusBox> : <StatusBox kind="notice">سيجري الخادم الفحص الكامل قبل أي كتابة حتى لو لم تضغط «فحص شامل».</StatusBox>}
-          <DialogFooter><Button variant="outline" onClick={() => setSaveDialogOpen(false)}>إلغاء</Button><Button onClick={() => void saveChanges()} disabled={busy === "save"}>{busy === "save" ? <Loader2 className="me-2 h-4 w-4 animate-spin" /> : <Save className="me-2 h-4 w-4" />}تحقق واحفظ</Button></DialogFooter>
-        </DialogContent>
-      </Dialog>
     </main>
   );
 }

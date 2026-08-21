@@ -221,6 +221,9 @@
       "@asol/page-snapshot-core": [
         "./packages/page-snapshot-core/src/index.ts"
       ],
+      "@asol/page-save-core": [
+        "./packages/page-save-core/src/index.ts"
+      ],
       "@asol/ota-core": [
         "./packages/ota-core/src/index.ts"
       ],

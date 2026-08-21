@@ -68,6 +68,7 @@ export function ProductComponentsRenderer({
   favoriteAction = null,
   contactAction = null,
   imageUploadRef,
+  onImagesPendingChange,
 }: {
   mode: ProductMode;
   components: ProductStyleComponents;
@@ -81,6 +82,7 @@ export function ProductComponentsRenderer({
   favoriteAction?: ReactNode;
   contactAction?: ReactNode;
   imageUploadRef?: RefObject<StorageImageManagerHandle | null>;
+  onImagesPendingChange?: (pending: boolean) => void;
 }) {
   const visible = Object.entries(components)
     .filter(([, config]) => config.visible)
@@ -111,6 +113,7 @@ export function ProductComponentsRenderer({
                   mainCategoryId={mainCategoryId}
                   images={product.images}
                   onChange={(images) => onProductChange({ ...product, images })}
+                  onPendingChange={onImagesPendingChange}
                   deferStorageDeletion={mode === "edit"}
                 />
               )}

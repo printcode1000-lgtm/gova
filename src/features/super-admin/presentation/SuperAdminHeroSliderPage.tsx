@@ -2,7 +2,7 @@
 
 import { formatDateTimeDefault } from "@asol/format-core";
 
-import { Eye, RefreshCw, Save, ShieldCheck } from "lucide-react";
+import { Eye, RefreshCw, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -17,6 +17,10 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
 import { useSuperAdminHeroSliderSave } from "./use-super-admin-hero-slider-save";
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { buildImageUploadPageSaveItem } from "@/features/page-save/utils/page-save-image-items";
+import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
+import { useTranslation } from "@/lib/i18n";
 
 const quickIntervals = [5, 15, 30, 60];
 
@@ -31,6 +35,7 @@ function formatLoadError(error: unknown): string {
 
 export function SuperAdminHeroSliderPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { session, isLoading } = useSession();
   const authorized = isSuperAdmin(session);
   const [record, setRecord] = useState<HomeHeroRecord | null>(null);
@@ -63,7 +68,8 @@ export function SuperAdminHeroSliderPage() {
   const {
     busy: saveBusy,
     message: saveMessage,
-    saveNow,
+    uploadPendingImages,
+    persistConfig,
     isDirty,
     canPersist,
   } = useSuperAdminHeroSliderSave({
@@ -76,6 +82,39 @@ export function SuperAdminHeroSliderPage() {
     imageUploadRef,
     imagesPending,
     onSaved: handleSaved,
+  });
+
+  usePageSaveRegistration({
+    id: "super-admin-hero-slider",
+    label: "سلايدر الواجهة الرئيسية",
+    returnPath: "/super-admin/hero-slider",
+    enabled: authorized && !loadFailed && Boolean(record),
+    items: [
+      buildImageUploadPageSaveItem({
+        id: "hero-slider-images",
+        label: "صور السلايدر",
+        hasPending: imagesPending,
+        canSave: canPersist,
+        t,
+      }),
+      {
+        id: "hero-slider-config",
+        label: "إعدادات السلايدر",
+        isDirty,
+        canSave: canPersist,
+        description: buildPageSaveOperationDescription(t, ["save"]),
+      },
+    ],
+    isSaving: saveBusy,
+    canSave: canPersist,
+    prepareForSave: async (selectedItemIds) => {
+      if (!selectedItemIds.includes("hero-slider-images")) return true;
+      return uploadPendingImages();
+    },
+    save: async (selectedItemIds) => {
+      if (!selectedItemIds.includes("hero-slider-config")) return true;
+      return persistConfig();
+    },
   });
 
   const load = useCallback(async () => {
@@ -221,25 +260,10 @@ export function SuperAdminHeroSliderPage() {
               {interval} دقيقة
             </Button>
           ))}
-          <Button
-            type="button"
-            onClick={() => void saveNow()}
-            disabled={busy || !canPersist}
-            className="ms-auto bg-primary text-on-primary"
-          >
-            <Save className="me-2 h-4 w-4" />
-            {saveBusy
-              ? "جاري الحفظ…"
-              : imagesPending
-                ? "حفظ ورفع الصور"
-                : isDirty
-                  ? "حفظ الآن"
-                  : "حفظ"}
-          </Button>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          المعاينة تعرض كل التعديلات والصور محلياً. الصفحة الرئيسية لا تتغير إلا
-          بعد الضغط على حفظ.
+          المعاينة تعرض كل التعديلات والصور محلياً. استخدم أيقونة الحفظ في الشريط
+          العلوي لتطبيق التغييرات على الصفحة الرئيسية.
         </p>
       </section>
 

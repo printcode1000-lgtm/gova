@@ -93,7 +93,7 @@ The super-admin page has one "Save" button next to the check interval inputs. Ed
 
 This is a restricted image editor. It does not render the carousel preview and does not expose transitions, titles, subtitles, actions, durations, autoplay, or ordering controls.
 
-It displays up to three image slots backed by `StorageImageManager`. The project uses this mode in the “Storefront images” tab beside the “Profile image” tab in `/profile?mode=edit`.
+It displays up to four image slots backed by `StorageImageManager`. The project uses this mode in the “Storefront images” tab beside the “Profile image” tab in `/profile?mode=edit`.
 
 ```tsx
 <HeroSlider
@@ -104,7 +104,7 @@ It displays up to three image slots backed by `StorageImageManager`. The project
       coverImageKeys: nextConfig.slides
         .map((slide) => slide.imageKey)
         .filter((key): key is string => Boolean(key))
-        .slice(0, 3),
+        .slice(0, 4),
     });
   }}
 />
@@ -369,15 +369,15 @@ If the user has no storefront images, the reusable slider displays its empty sta
 - “Profile image” manages the store logo/avatar.
 - “Storefront images” renders `HeroSlider` in `images-edit` mode.
 
-The image-only editor exposes three slots and returns updated slide image keys through `onChange`. Selecting an image marks the unified Profile save bar dirty. The logo and storefront managers stay mounted while their visual tabs change, so a locally staged draft keeps its live upload handle. Every unified Profile save attempts the pending-image preparation step first and treats that save gesture as upload confirmation; the per-image confirmation dialog is only for the manual upload button. Upload callbacks update synchronous touched/image refs before the commit reads keys, preventing the same render from persisting a stale pre-upload key. A failed upload blocks the save. The commit persists only the first three canonical cover keys through `saveStoreImages`, while untouched logo or cover fields are preserved rather than overwritten.
+The image-only editor exposes four slots in a fixed 2×2 grid and returns updated slide image keys through `onChange`. Selecting an image marks the unified Profile save bar dirty. The logo and storefront managers stay mounted while their visual tabs change, so a locally staged draft keeps its live upload handle. Every unified Profile save attempts the pending-image preparation step first and treats that save gesture as upload confirmation; the per-image confirmation dialog is only for the manual upload button. Upload callbacks update synchronous touched/image refs before the commit reads keys, preventing the same render from persisting a stale pre-upload key. A failed upload blocks the save. The commit persists only the first four canonical cover keys through `saveStoreImages`, while untouched logo or cover fields are preserved rather than overwritten.
 
-The three slots are defined in one versioned configuration document:
+The four slots are defined in one versioned configuration document:
 
 ```text
 src/features/profile/presentation/image-configs/storefront-images.image.json
 ```
 
-`HeroSliderImagesEditor` parses each slot through `parseStorageImageManagerConfig`. Consolidating the former three files does not change `StorageImageManager` behavior because every slot retains its own ID and validation settings.
+`HeroSliderImagesEditor` parses each slot through `parseStorageImageManagerConfig`. Every slot uses the shared `StorageImageManager` card chrome and empty-state layout from `@asol/storage-image-manager-core`, matching profile logo uploads and other image pickers project-wide.
 
 ```text
 /profile?mode=edit
@@ -399,7 +399,7 @@ Profile image references are stored in the profile shards:
 | `avatar_image_key`      | Store logo/profile image object key.                             |
 | `profile_images.image_key` | Canonical image object key. |
 | `profile_images.image_type` | `avatar` or `cover`. |
-| `profile_images.sort_order` | Canonical order of up to three storefront images. |
+| `profile_images.sort_order` | Canonical order of up to four storefront images. |
 
 There is no singular cover-key write contract or fallback column. The API exposes `coverImageKeys` as the only persisted cover-key collection and derives `coverUrl` from its first item solely as a display convenience.
 
@@ -467,4 +467,4 @@ For a new editable carousel:
 - Never serialize callback functions such as `onAction`.
 - Wait for image upload completion and a non-empty `imageKey` before persisting an image reference.
 - Save the database record before deleting removed Home image objects.
-- Keep Profile image limits aligned across the UI, profile service, and repository. The current maximum is three.
+- Keep Profile image limits aligned across the UI, profile service, and repository. The current maximum is four.

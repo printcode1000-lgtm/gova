@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Lock, Loader2, Mail, Save } from "lucide-react";
+import { ChevronDown, Lock, Loader2, Mail } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -16,17 +16,13 @@ import type {
 import { PhoneVerification } from "@/features/auth/presentation/PhoneVerification";
 
 interface ProfileRegistrationInfoCardProps {
-  showSaveButton?: boolean;
   onStatusChange?: (status: ProfileSectionStatus) => void;
 }
 
 export const ProfileRegistrationInfoCard = React.forwardRef<
   ProfileRegistrationController,
   ProfileRegistrationInfoCardProps
->(function ProfileRegistrationInfoCard(
-  { showSaveButton = true, onStatusChange },
-  ref,
-) {
+>(function ProfileRegistrationInfoCard({ onStatusChange }, ref) {
   const { t } = useTranslation();
   const {
     form,
@@ -227,27 +223,6 @@ export const ProfileRegistrationInfoCard = React.forwardRef<
             </div>
           ) : null}
         </div>
-
-        {showSaveButton && isDirty ? (
-          <Button
-            type="button"
-            className="w-full auth-cta h-10 sm:h-11 text-xs sm:text-sm"
-            onClick={save}
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <>
-                <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin me-2" />
-                {t("profile.saving")}
-              </>
-            ) : (
-              <>
-                <Save className="h-3.5 w-3.5 sm:h-4 sm:w-4 me-2" />
-                {t("profile.save")}
-              </>
-            )}
-          </Button>
-        ) : null}
       </div>
     </div>
   );

@@ -8,7 +8,6 @@ import {
   Loader2,
   Plus,
   RefreshCw,
-  Save,
   ShieldCheck,
   Trash2,
 } from "lucide-react";
@@ -29,6 +28,9 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
 import { reportSystemIssue } from '@asol/system-logs-core';
+import { usePageSaveRegistration } from "@/features/page-save/hooks/use-page-save-registration";
+import { buildPageSaveOperationDescription } from "@/features/page-save/utils/page-save-operation-description";
+import { useTranslation } from "@/lib/i18n";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -41,6 +43,7 @@ interface FormItem {
 
 export function SuperAdminTrendingRibbonPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { session, isLoading: sessionLoading } = useSession();
   const authorized = isSuperAdmin(session);
 
@@ -51,6 +54,7 @@ export function SuperAdminTrendingRibbonPage() {
   const [newItemAction, setNewItemAction] = useState("");
   const [intervalMinutes, setIntervalMinutes] = useState(15);
   const [busy, setBusy] = useState(false);
+  const [saveBusy, setSaveBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<"success" | "error">("success");
 
@@ -142,9 +146,9 @@ export function SuperAdminTrendingRibbonPage() {
 
   // ── Save ────────────────────────────────────────────────────────────────────
 
-  const save = async () => {
-    if (!session || !record) return;
-    setBusy(true);
+  const save = async (): Promise<boolean> => {
+    if (!session || !record) return false;
+    setSaveBusy(true);
     setMessage(null);
     try {
       const saved = await trendingRibbonApiService.save(
@@ -167,6 +171,7 @@ export function SuperAdminTrendingRibbonPage() {
       setRecord(saved);
       setMessage("تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.");
       setMessageType("success");
+      return true;
     } catch (error) {
       reportSystemIssue({
         feature: "TrendingRibbonAdmin",
@@ -182,10 +187,51 @@ export function SuperAdminTrendingRibbonPage() {
         arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.",
       );
       setMessageType("error");
+      return false;
     } finally {
-      setBusy(false);
+      setSaveBusy(false);
     }
   };
+
+  const savedFingerprint = record
+    ? JSON.stringify({
+        label: record.config.label,
+        items: record.config.items,
+        intervalMinutes: record.checkIntervalMinutes,
+      })
+    : "";
+  const currentFingerprint = JSON.stringify({
+    label: badgeLabel.trim(),
+    items: items.map((item) => ({
+      label: item.label.trim(),
+      action: item.action.trim(),
+    })),
+    intervalMinutes,
+  });
+  const isRibbonDirty =
+    Boolean(record) && currentFingerprint !== savedFingerprint;
+
+  usePageSaveRegistration({
+    id: "super-admin-trending-ribbon",
+    label: "شريط الأخبار",
+    returnPath: "/super-admin/trending-ribbon",
+    enabled: authorized && Boolean(record),
+    items: [
+      {
+        id: "trending-ribbon",
+        label: "عناصر الشريط",
+        isDirty: isRibbonDirty,
+        canSave: isRibbonDirty && !saveBusy && items.length > 0,
+        description: buildPageSaveOperationDescription(t, ["save"]),
+      },
+    ],
+    isSaving: saveBusy,
+    canSave: isRibbonDirty && !saveBusy && items.length > 0,
+    save: async (selectedItemIds) => {
+      if (!selectedItemIds.includes("trending-ribbon")) return true;
+      return save();
+    },
+  });
 
   // ── Preview config ──────────────────────────────────────────────────────────
 
@@ -278,15 +324,6 @@ export function SuperAdminTrendingRibbonPage() {
             <RefreshCw className="me-2 h-4 w-4" />
             فحص الآن
           </Button>
-          <Button
-            type="button"
-            onClick={() => void save()}
-            disabled={busy}
-            className="ms-auto bg-primary text-on-primary"
-          >
-            <Save className="me-2 h-4 w-4" />
-            حفظ
-          </Button>
         </div>
       </section>
 
@@ -377,20 +414,6 @@ export function SuperAdminTrendingRibbonPage() {
             >
               <RefreshCw className="me-1 h-3 w-3" />
               تحديث
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => void save()}
-              disabled={busy || items.length === 0}
-              className="bg-primary text-on-primary"
-            >
-              {busy ? (
-                <Loader2 className="me-1 h-3 w-3 animate-spin" />
-              ) : (
-                <Save className="me-1 h-3 w-3" />
-              )}
-              حفظ
             </Button>
           </div>
         </div>

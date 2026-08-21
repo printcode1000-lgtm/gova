@@ -108,16 +108,6 @@ export const HeroSliderEditor = React.forwardRef<
               <RotateCcw className="me-2 h-4 w-4" /> تراجع
             </Button>
           )}
-          {onSave && (
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => onSave(value)}
-              disabled={!value.slides.length}
-            >
-              <Save className="me-2 h-4 w-4" /> حفظ
-            </Button>
-          )}
         </div>
       </div>
 
