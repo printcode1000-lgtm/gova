@@ -4,6 +4,7 @@ import { CheckSquare, Square } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { AndroidReleaseRunbookPhase } from "@asol/release-core/console";
+import type { BuildJobRecord } from "@asol/release-core/console";
 import {
   branchIdsFromAndroidRunbook,
   dangerousAndroidBranchIds,
@@ -11,16 +12,22 @@ import {
 import { DeployRunbookCollapsible } from "../DeployRunbookCollapsible";
 import { PhaseBlock } from "./AndroidReleaseRunbookPhaseBlocks";
 import type { AndroidRunbookTreeContext } from "./AndroidReleaseRunbookTreeShared";
+import type { AndroidRunbookStart } from "./AndroidReleaseRunbookTreeShared";
 
 const SELECT_BTN =
   "h-auto w-full min-w-0 justify-start whitespace-normal py-2 text-left";
 
-export function AndroidReleaseRunbookTree(
-  props: AndroidRunbookTreeContext & {
-    runbook: readonly AndroidReleaseRunbookPhase[];
-    setSelected: (next: Set<string>) => void;
-  },
-) {
+export function AndroidReleaseRunbookTree(props: {
+  runbook: readonly AndroidReleaseRunbookPhase[];
+  selected: Set<string>;
+  setSelected: (next: Set<string>) => void;
+  t: (key: string, params?: Record<string, string>) => string;
+  busy: boolean;
+  cancel: (job: BuildJobRecord) => Promise<unknown>;
+  jobs: readonly BuildJobRecord[];
+  missingEnvOf: (commandId: string) => readonly string[];
+  start: AndroidRunbookStart;
+}) {
   const allIds = branchIdsFromAndroidRunbook(props.runbook);
   const dangerousIds = dangerousAndroidBranchIds(props.runbook);
   const safeIds = allIds.filter((id) => !dangerousIds.includes(id));
