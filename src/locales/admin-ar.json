@@ -301,6 +301,7 @@
     "releaseConsole.parameters.minimumNativeVersion": "أقل إصدار أصلي مطلوب (مثل 0.2.0)",
     "releaseConsole.images.backups": "نسخ أصول المتجر الاحتياطية",
     "releaseConsole.images.restore": "استعادة",
+    "releaseConsole.images.unavailable": "تعذّر تحميل المعاينة",
     "releaseConsole.play.successfulEndpoints": "النقاط المتاحة",
     "releaseConsole.play.failedEndpoints": "النقاط غير المتاحة",
     "releaseConsole.play.tracks": "المسارات",

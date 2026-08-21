@@ -85,6 +85,19 @@ function safeResourceUrl(url?: string): string | undefined {
   return `${header || 'data:'},<redacted>`;
 }
 
+function isExpectedExternalImageMiss(
+  tagName: string,
+  url: string | undefined,
+  pagePath: string,
+): boolean {
+  if (tagName !== 'IMG' || !url) return false;
+  if (!/googleusercontent\.com/i.test(url)) return false;
+  return (
+    pagePath.includes('/dev/release-console') ||
+    pagePath.includes('/super-admin/release-console')
+  );
+}
+
 function isBenignBrowserError(message: string): boolean {
   return (
     message === 'ResizeObserver loop completed with undelivered notifications.' ||
@@ -198,6 +211,7 @@ export function installGlobalCapture(options: InstallGlobalCaptureOptions) {
           ? target.href
           : undefined;
     const safeUrl = safeResourceUrl(url);
+    if (isExpectedExternalImageMiss(target.tagName, safeUrl, page())) return;
     const versions = options.versions();
     void captureSystemLog(
       {
