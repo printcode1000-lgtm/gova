@@ -152,7 +152,8 @@ npm run cap:open:ios
 ### Requirements
 
 - Node.js dependencies installed (`npm ci`)
-- **Android:** Android Studio, SDK, JDK
+- **Android:** Android Studio, SDK Platform 36, JDK 21 LTS
+- **Android JDK on Windows:** set `JAVA_HOME` to the installed JDK root such as `C:\Program Files\Java\jdk-21.0.12` or Android Studio's `C:\Program Files\Android\Android Studio\jbr`. An outdated `C:\Program Files\Java\jdk-21` path fails even when `java -version` works. See [invalid-java-home-windows.md](../../08-troubleshooting/problems/invalid-java-home-windows.md).
 - **iOS:** macOS, Xcode, CocoaPods (installed by Capacitor on first sync)
 
 ---

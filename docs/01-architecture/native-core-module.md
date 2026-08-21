@@ -82,6 +82,8 @@ To upgrade Capacitor or any plugin:
    ```
 5. If Android/iOS native wrappers need updates, modify `packages/native-core/android/` or `packages/native-core/ios/`, then test with `npm run android:r8:validate` and `npm run ios:push:validate`.
 
+Gradle package builds (`android:build:debug`, `release:android`, `android:r8:verify-release`, connected-device tests) invoke `packages/native-core/scripts/android-build-preflight.ts` through `scripts/android/gradle.ts` before `gradlew`. The preflight discovers JDK 21, validates Android SDK Platform 36 and Build-Tools, and stops with a bilingual error when anything is missing.
+
 ### Where the native code is wired in
 
 - **Android** — `packages/native-core/android` is a Gradle library module, registered as `include ':native-core'` in `android/settings.gradle` and consumed by `implementation project(':native-core')` in `android/app/build.gradle`. `MainActivity` is a thin delegate over `AsolNativeCore`.

@@ -25,8 +25,10 @@ import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCom
 import {
   allAndroidReleaseBranchIds,
   ANDROID_RELEASE_RUNBOOKS,
+  androidRunbookStatsByTab,
   findAndroidReleaseBranch,
 } from "@asol/release-core/console";
+import { ANDROID_RELEASE_BRANCH_HELP } from "../../google-play-console/presentation/android-release-runbook-copy";
 import { assertBuildJobTransition } from "@asol/release-core/console";
 import { nextBuildJobActivity, nextBuildJobStage } from "@asol/release-core/console";
 import {
@@ -130,6 +132,27 @@ for (const branchId of androidBranchIds) {
   const branch = findAndroidReleaseBranch(branchId)!;
   assert.ok(BUILD_COMMAND_CATALOG.some((command) => command.id === branch.commandId),
     `android runbook branch ${branchId} references missing catalog command ${branch.commandId}`);
+  assert.ok(branch.label.trim(), `android runbook branch ${branchId} must declare an Arabic label`);
+  assert.ok(ANDROID_RELEASE_BRANCH_HELP[branchId]?.trim(),
+    `missing Arabic branch help: ${branchId}`);
+}
+const runbookStats = androidRunbookStatsByTab();
+const minimumBranchesByTab: Record<string, number> = {
+  "release-android": 35,
+  "build-static": 25,
+  "cap-prepare-android": 30,
+  "android-build-debug": 55,
+  "ota-publish": 18,
+};
+for (const [pathId, minimum] of Object.entries(minimumBranchesByTab)) {
+  assert.ok(
+    runbookStats[pathId as keyof typeof runbookStats].branches >= minimum,
+    `${pathId} runbook must expose at least ${minimum} command branches (found ${runbookStats[pathId as keyof typeof runbookStats].branches})`,
+  );
+  assert.ok(
+    runbookStats[pathId as keyof typeof runbookStats].phases >= 3,
+    `${pathId} runbook must declare at least three phases`,
+  );
 }
 const androidPathsUi = await readFile(
   "src/modules/google-play-console/presentation/components/AndroidReleasePaths.tsx",
@@ -147,6 +170,18 @@ for (const key of [
   assert.ok(adminAr[key]?.trim(), `missing Arabic android paths UI string: ${key}`);
 }
 assert.equal(BUILD_COMMAND_CATALOG.filter((item) => item.script === "ota:publish").length, 1);
+const gradleRunnerSource = await readFile("scripts/android/gradle.ts", "utf8");
+assert.match(
+  gradleRunnerSource,
+  /runAndroidBuildPreflight/,
+  "Gradle package builds must run Android preflight before gradlew",
+);
+const signedBuildSource = await readFile("scripts/build-android-signed.ts", "utf8");
+assert.match(
+  signedBuildSource,
+  /runAndroidBuildPreflight/,
+  "Signed Android package builds must run Android preflight before gradlew",
+);
 // One merged full-release path. It publishes nothing, so it needs no OTA
 // credentials and no confirmation phrase: the shell it builds carries its own
 // complete bundle, and OTA publication is `ota-publish` on its own button.

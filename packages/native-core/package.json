@@ -8,7 +8,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./platform-globals": "./src/domain/platform/platform-globals.ts",
-    "./scripts/validate-android-r8-policy": "./scripts/validate-android-r8-policy.ts"
+    "./scripts/validate-android-r8-policy": "./scripts/validate-android-r8-policy.ts",
+    "./scripts/android-build-preflight": "./scripts/android-build-preflight.ts"
   },
   "scripts": {
     "test": "npx tsx src/tests/index.test.ts"

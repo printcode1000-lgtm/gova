@@ -5,6 +5,7 @@ import path from "node:path";
 import dotenv from "dotenv";
 
 import { gradleWrapperPath } from "./android/gradle";
+import { runAndroidBuildPreflight } from "@asol/native-core/scripts/android-build-preflight";
 import { reportStage } from "./release-stage";
 
 if (existsSync(".env.local")) dotenv.config({ path: ".env.local", quiet: true });
@@ -39,17 +40,6 @@ function requireSyncedWebBundle(): void {
   ]) {
     if (!existsSync(required)) throw new Error(`Synced release web bundle is missing: ${required}`);
   }
-}
-
-function resolveJavaHome(): string | undefined {
-  const candidates = [
-    process.env.ASOL_ANDROID_JAVA_HOME,
-    process.platform === "win32" ? "C:\\Program Files\\Android\\Android Studio\\jbr" : undefined,
-    process.env.JAVA_HOME,
-  ];
-  return candidates.find((candidate) =>
-    candidate && existsSync(path.join(candidate, "bin", process.platform === "win32" ? "java.exe" : "java")),
-  );
 }
 
 function resolveApkSigner(): string {
@@ -93,14 +83,7 @@ function assertArtifact(file: string): void {
 function main(): void {
   requireSigningEnvironment();
   requireSyncedWebBundle();
-  const javaHome = resolveJavaHome();
-  const env = {
-    ...process.env,
-    ...(javaHome ? {
-      JAVA_HOME: javaHome,
-      PATH: `${path.join(javaHome, "bin")}${path.delimiter}${process.env.PATH ?? ""}`,
-    } : {}),
-  };
+  const { javaHome, env } = runAndroidBuildPreflight({ env: process.env });
 
   reportStage("building-android");
   console.log(`Building signed Android AAB and APK${javaHome ? ` with Java at ${javaHome}` : ""}...`);

@@ -4,6 +4,7 @@ import { homedir, platform, release } from "node:os";
 import path from "node:path";
 import dotenv from "dotenv";
 import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
+import { isValidJavaHome, resolveJavaHome } from "./android/java-home";
 
 dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });
@@ -297,7 +298,29 @@ function androidSdkRoot(): string | null {
 
 function checkAndroid(): void {
   const java = commandVersion("java", ["-version"]);
-  add({ scenario: "android", item: "JDK", level: java?.includes("21") ? "OK" : java ? "UPDATE" : "INSTALL", installed: java ?? undefined, required: "JDK 21 LTS", action: java?.includes("21") ? "No action." : "Install JDK 21 and set JAVA_HOME." });
+  const resolvedJavaHome = resolveJavaHome();
+  const configuredJavaHome = process.env.JAVA_HOME?.trim();
+  const javaOk = Boolean(java?.includes("21"));
+  const javaHomeOk = Boolean(resolvedJavaHome);
+  const javaHomeMismatch = Boolean(configuredJavaHome && !isValidJavaHome(configuredJavaHome) && javaHomeOk);
+  add({
+    scenario: "android",
+    item: "JDK",
+    level: javaOk && javaHomeOk ? (javaHomeMismatch ? "CONFIGURE" : "OK") : java ? "UPDATE" : "INSTALL",
+    installed: [
+      java ?? "java not found",
+      configuredJavaHome ? `JAVA_HOME=${configuredJavaHome}` : "JAVA_HOME unset",
+      resolvedJavaHome ? `resolved=${resolvedJavaHome}` : "no valid JDK home",
+    ].join("; "),
+    required: "JDK 21 LTS with a valid JAVA_HOME or ASOL_ANDROID_JAVA_HOME",
+    action: !javaOk
+      ? "Install JDK 21 and point JAVA_HOME at its root directory."
+      : javaHomeMismatch
+        ? `JAVA_HOME points to a missing directory. Set JAVA_HOME=${resolvedJavaHome} or ASOL_ANDROID_JAVA_HOME in your user environment.`
+        : javaHomeOk
+          ? "No action."
+          : "Install JDK 21 and set JAVA_HOME or ASOL_ANDROID_JAVA_HOME.",
+  });
   const sdkRoot = androidSdkRoot();
   const platform36 = sdkRoot ? existsSync(path.join(sdkRoot, "platforms", "android-36")) : false;
   add({ scenario: "android", item: "Android SDK", level: platform36 ? "OK" : sdkRoot ? "UPDATE" : "INSTALL", installed: sdkRoot ?? undefined, required: "Android SDK Platform 36 and current Build Tools", action: platform36 ? "No action." : "Install Android Studio, SDK Platform 36, Build Tools, and Platform Tools; set ANDROID_HOME." });

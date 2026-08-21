@@ -1,6 +1,8 @@
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 
+import { runAndroidBuildPreflight } from "@asol/native-core/scripts/android-build-preflight";
+
 /**
  * Run the Gradle wrapper from the Android project.
  *
@@ -28,13 +30,14 @@ export function runGradle(
   androidDirectory = ANDROID_DIRECTORY,
 ): void {
   const wrapper = gradleWrapperPath(androidDirectory);
+  const { env: gradleEnv } = runAndroidBuildPreflight({ env, androidDirectory });
   if (process.platform === "win32") {
     execFileSync(
       process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe",
       ["/d", "/c", wrapper, ...tasks],
-      { cwd: androidDirectory, stdio: "inherit", env },
+      { cwd: androidDirectory, stdio: "inherit", env: gradleEnv },
     );
     return;
   }
-  execFileSync(wrapper, tasks, { cwd: androidDirectory, stdio: "inherit", env });
+  execFileSync(wrapper, tasks, { cwd: androidDirectory, stdio: "inherit", env: gradleEnv });
 }

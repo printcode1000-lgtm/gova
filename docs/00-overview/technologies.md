@@ -23,6 +23,8 @@ install, update, or configuration actions without modifying the machine.
 | Vercel CLI | `59.0.0`, ephemeral | Service deployment only; invoked through pinned `npx`, never installed in the application dependency tree |
 | Drizzle Kit | `0.31.10`, ephemeral | Schema tooling through `npm run db:drizzle` |
 | Java | JDK `21 LTS` | Android Gradle toolchain |
+
+On Windows, point `JAVA_HOME` at the installed JDK root (for example `C:\Program Files\Java\jdk-21.0.12`), not the generic `jdk-21` path unless that directory actually exists. Android Studio's bundled runtime at `C:\Program Files\Android\Android Studio\jbr` also satisfies the requirement. Repository Gradle scripts run `packages/native-core/scripts/android-build-preflight.ts` before any Gradle task: it discovers a valid JDK, validates Android SDK Platform 36 and Build-Tools, and stops with a bilingual error when anything is missing. Direct `android\gradlew.bat` calls and Android Studio still rely on a correct user `JAVA_HOME`. See [invalid-java-home-windows.md](../08-troubleshooting/problems/invalid-java-home-windows.md).
 | Gradle | wrapper `9.4.1` | Android builds; no global Gradle installation |
 | Android Gradle Plugin | `9.2.1` | Android application build |
 | Android SDK | compile/target `36`, minimum `24` | Android platform baseline |

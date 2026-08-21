@@ -1,15 +1,11 @@
-import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
 import { withoutVsCodeDebuggerEnv } from "../../../scripts/child-process-env";
+import { runGradle } from "../../../scripts/android/gradle";
 
 const root = process.cwd();
 const androidDirectory = path.join(root, "android");
-const gradlePath = path.join(
-  androidDirectory,
-  process.platform === "win32" ? "gradlew.bat" : "gradlew",
-);
 const mappingDirectory = path.join(
   androidDirectory,
   "app",
@@ -23,23 +19,7 @@ const usagePath = path.join(mappingDirectory, "usage.txt");
 const configurationPath = path.join(mappingDirectory, "configuration.txt");
 const resourcesPath = path.join(mappingDirectory, "resources.txt");
 
-if (process.platform === "win32") {
-  execFileSync(
-    process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe",
-    ["/d", "/c", gradlePath, ":app:minifyReleaseWithR8"],
-    {
-      cwd: androidDirectory,
-      env: withoutVsCodeDebuggerEnv(process.env),
-      stdio: "inherit",
-    },
-  );
-} else {
-  execFileSync(gradlePath, [":app:minifyReleaseWithR8"], {
-    cwd: androidDirectory,
-    env: withoutVsCodeDebuggerEnv(process.env),
-    stdio: "inherit",
-  });
-}
+runGradle([":app:minifyReleaseWithR8"], withoutVsCodeDebuggerEnv(process.env), androidDirectory);
 
 for (const outputPath of [
   mappingPath,
