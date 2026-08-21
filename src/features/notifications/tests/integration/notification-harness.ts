@@ -21,126 +21,26 @@
 
 import { createRequire } from "node:module";
 import path from "node:path";
+import type {
+  HarnessState,
+  InboundPayload,
+  Listener,
+  NativeInboxRecordFixture,
+} from "./notification-harness.types";
+import { freshHarnessState } from "./notification-harness-state";
+
+export type {
+  FakePermissionState,
+  HarnessState,
+  InboundPayload,
+  NativeInboxRecordFixture,
+} from "./notification-harness.types";
 
 const requireFromHere = createRequire(__filename);
 const SRC_ROOT = path.resolve(__dirname, "../../../..");
 
-// ---------------------------------------------------------------------------
-// Recorded edges
-// ---------------------------------------------------------------------------
-
-export interface InboundPayload {
-  id?: string;
-  title?: string;
-  body?: string;
-  data?: Record<string, unknown>;
-  tag?: string;
-  channelId?: string;
-}
-
-export type FakePermissionState = "granted" | "denied" | "prompt" | "blocked" | "unsupported";
-
-/**
- * One record in the fake Android device-local inbox.
- *
- * The real one is an application-private, encrypted file that the native push
- * service writes *before* it posts a notification — so it exists even when no
- * WebView, and usually no process, was ever running. This models exactly that:
- * `deliverNativePush` writes a record without touching a single listener,
- * which is what makes "a push received while the app was dead" testable at all.
- */
-export interface NativeInboxRecordFixture {
-  recordId: string;
-  uid: string;
-  notificationId: string;
-  dedupeKey: string;
-  channelId: string;
-  createdAt: string;
-  receivedAt: number;
-  payload: InboundPayload;
-}
-
-export interface HarnessState {
-  /** Every AsolDB record, keyed `store:key`. Survives a simulated relaunch. */
-  db: Map<string, unknown>;
-  platform: "android" | "ios" | "web";
-  isNative: boolean;
-  permission: FakePermissionState;
-  online: boolean;
-
-  /** Notifications the OS is currently showing. */
-  deliveredTray: InboundPayload[];
-
-  /**
-   * The device-local native inbox. On disk, so it survives a relaunch.
-   *
-   * Reset only by `resetHarnessCompletely`, exactly like the AsolDB map: a
-   * process restart does not erase application-private storage, and a test that
-   * pretended otherwise would prove the opposite of what it claims.
-   */
-  nativeInbox: NativeInboxRecordFixture[];
-  /** Set to make the native inbox bridge unavailable, as an old shell is. */
-  nativeInboxUnavailable: boolean;
-  /** The pending launch tap, as the native tap protocol reports it. */
-  nativeTap: { recordId: string; uid: string; notificationId: string } | null;
-  /** Records the web layer acknowledged, in order. */
-  acknowledgedRecordIds: string[];
-  /** Set to make every IndexedDB write fail, as a full or blocked store does. */
-  dbWriteError: Error | null;
-  nativeInboxClearedCount: number;
-  /** What the push plugin will answer `register()` with. */
-  registrationToken: string;
-  registrationError: Error | null;
-  /** Set to make the delivered-inbox plugin unavailable. */
-  inboxUnavailable: boolean;
-  /** Set to make the native channel bridge reject, as it does when a channel
-   * could not be ensured. */
-  channelCreationError: Error | null;
-
-  // Recordings
-  createdChannels: number;
-  registerCalls: number;
-  unregisterCalls: number;
-  removeAllDeliveredCalls: number;
-  localDisplays: Array<{ id: string; title: string; channelId?: string; sound?: string }>;
-  serverRegisteredTokens: Array<Record<string, unknown>>;
-  serverRemovedTokens: Array<Record<string, unknown>>;
-  webPushSubscribed: boolean;
-  loggedLines: Array<{ level: string; message: string; details: unknown }>;
-}
-
-function freshState(): HarnessState {
-  return {
-    db: new Map(),
-    platform: "android",
-    isNative: true,
-    permission: "granted",
-    online: true,
-    deliveredTray: [],
-    nativeInbox: [],
-    nativeInboxUnavailable: false,
-    nativeTap: null,
-    acknowledgedRecordIds: [],
-    dbWriteError: null,
-    nativeInboxClearedCount: 0,
-    registrationToken: "fcm-token-aaaaaaaaaaaaaaaaaaaaaaaa:APA91bTESTTESTTESTTESTTEST",
-    registrationError: null,
-    inboxUnavailable: false,
-    channelCreationError: null,
-    createdChannels: 0,
-    registerCalls: 0,
-    unregisterCalls: 0,
-    removeAllDeliveredCalls: 0,
-    localDisplays: [],
-    serverRegisteredTokens: [],
-    serverRemovedTokens: [],
-    webPushSubscribed: false,
-    loggedLines: [],
-  };
-}
-
 /** The one mutable state object every fake reads. */
-export const harnessState: HarnessState = freshState();
+export const harnessState: HarnessState = freshHarnessState();
 
 /**
  * Keep the stored records, drop everything else. Models a process restart.
@@ -155,18 +55,16 @@ export function resetHarnessKeepingStorage(): void {
   const db = harnessState.db;
   const nativeInbox = harnessState.nativeInbox;
   const nativeTap = harnessState.nativeTap;
-  Object.assign(harnessState, freshState(), { db, nativeInbox, nativeTap });
+  Object.assign(harnessState, freshHarnessState(), { db, nativeInbox, nativeTap });
 }
 
 export function resetHarnessCompletely(): void {
-  Object.assign(harnessState, freshState());
+  Object.assign(harnessState, freshHarnessState());
 }
 
 // ---------------------------------------------------------------------------
 // Push plugin fake
 // ---------------------------------------------------------------------------
-
-type Listener<T> = (payload: T) => void;
 
 class FakePushPlugin {
   readonly received = new Set<Listener<InboundPayload>>();

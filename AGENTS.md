@@ -80,7 +80,8 @@ chrome — the baseline in `src/app/globals.css` already neutralizes it.
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Stops port 3001, regenerates branding/app-init, validates the catalog, then `next dev --turbo --port 3001`. |
+| `npm run dev` | Fast local startup: runs `next dev --turbo --port 3001` only. No preflight generation, catalog validation, tests, or port cleanup. |
+| `npm run dev:checked` | Slower checked startup: stops port 3001, regenerates branding/app-init, validates the catalog, then starts dev on 3001. |
 | `npm run build` | Full gate: generation → `catalog:validate` → `architecture:check` → `services:sync` → every `test:*-core` and composition suite → `db:ensure` → `db:schema:sync` → `next build`. |
 | `npm start` | `next start --port 3002`. Serves an existing `.next`; fails without a prior build. A different port from `dev` so both can run at once. |
 | `npm run build:static` | Static export (`output: 'export'`) for the Capacitor/OTA bundle. **Overwrites the release output** — never run it to "check" a change. |
@@ -89,7 +90,7 @@ chrome — the baseline in `src/app/globals.css` already neutralizes it.
 | `npm run architecture:check` | Isolation and seal contracts. |
 | `npm test` | The full suite, wider than what `build` runs. |
 
-Ports: `dev` **3001**, `npm start` **3002**, static preview **5500** — all three can run side by side. `server:stop` (which `dev` runs first) only frees 3001, so it never kills the local production server.
+Ports: `dev` **3001**, `npm start` **3002**, static preview **5500** — all three can run side by side. `server:stop` is kept for checked/manual flows and kills every process using local port 3001, then verifies the port is free, so it never kills the local production server on 3002.
 
 ---
 
@@ -130,15 +131,11 @@ Rules for reporting:
 preflight → publish → notifications → products → orders → profiles → submain → sub2main → main
 ```
 
-`preflight` = `lint`, `typecheck`, `architecture:check`, `test`, `db:ensure`,
-`db:schema:sync:release`, `build:static`, then the service-mirror completeness
-check. Resume a failed run with `--phase=<id>`.
-
-**Known gap:** preflight builds the *static export*, not the server build. A
-failure specific to `next build` passes preflight and surfaces on Vercel. When a
-change touches server components, route handlers, or file tracing, run
-`npm run build` **before** `deploy:all` — not after, since preflight's
-`build:static` overwrites the release output.
+`preflight` is grouped and comprehensive: production environment readiness,
+all seven Vercel account tokens, `lint`, `typecheck`, `architecture:check`,
+`test`, database ensure/schema sync, server build, static release build,
+service mirror sync/verification, and per-service Vercel-shaped builds.
+Resume a failed run with `--phase=<id>`.
 
 The six `services/*` projects deploy as separate Vercel projects (seven production targets in total, with `main`). `npm start`
 from the repo root does not exercise them.

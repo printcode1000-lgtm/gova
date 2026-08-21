@@ -16,6 +16,13 @@ import type { LocationEntry } from '@/features/profile/entities/profile-contacts
 import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-style";
 import { shareLocationUrl } from "@/features/sharing/share-location-url";
 import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid } from "./ContactInfoCard.contact-types";
+import {
+  createEmailLink,
+  createLocationEntry,
+  createPhoneLink,
+  createSocialLink,
+  createWebsiteLink,
+} from "./ContactInfoCard.entry-factories";
 
 export function useContactInfoCardModel({
   data,
@@ -75,7 +82,7 @@ const updateField = (field: keyof ContactInfoData, value: string) => {
 const addPhone = (type: string) => {
     const newData = {
       ...localData,
-      phones: [...localData.phones, { id: Date.now().toString(), number: '', type }],
+      phones: [...localData.phones, createPhoneLink(type)],
     };
     setLocalData(newData);
     onChange?.(newData);
@@ -149,7 +156,7 @@ const handleAddItem = (value: string) => {
 const addWebsite = () => {
     const newData = {
       ...localData,
-      websites: [...localData.websites, { id: Date.now().toString(), url: '' }],
+      websites: [...localData.websites, createWebsiteLink()],
     };
     setLocalData(newData);
     onChange?.(newData);
@@ -178,7 +185,7 @@ const removeWebsite = (id: string) => {
 const addEmail = () => {
     const newData = {
       ...localData,
-      emails: [...localData.emails, { id: Date.now().toString(), email: '', isPrimary: false }],
+      emails: [...localData.emails, createEmailLink()],
     };
     setLocalData(newData);
     onChange?.(newData);
@@ -207,7 +214,7 @@ const removeEmail = (id: string) => {
 const addSocialLink = (platform: string) => {
     const newData = {
       ...localData,
-      socialLinks: [...localData.socialLinks, { id: Date.now().toString(), platform, url: '' }],
+      socialLinks: [...localData.socialLinks, createSocialLink(platform)],
     };
     setLocalData(newData);
     onChange?.(newData);
@@ -238,12 +245,11 @@ const addAnotherLink = (platform: string) => {
   };
 
 const addLocation = () => {
-    const id = `loc-${Date.now()}`;
-    const newEntry: LocationEntry = { id, address: '', latitude: 0, longitude: 0 };
+    const newEntry = createLocationEntry();
     const newData = { ...localData, locations: [...localData.locations, newEntry] };
     setLocalData(newData);
     onChange?.(newData);
-    setOpenMapId(id);
+    setOpenMapId(newEntry.id);
   };
 
 const updateLocationEntry = (id: string, updates: Partial<Omit<LocationEntry, 'id'>>) => {

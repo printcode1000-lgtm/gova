@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import {
   HOME_HERO_CACHE_KEY,
   type HomeHeroRecord,
-} from "@/features/advertisements/entities/home-hero-slider.entity";
+} from "@asol/hero-slider-core";
 import { homeHeroSliderApiService } from "@/features/advertisements/services/home-hero-slider-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";

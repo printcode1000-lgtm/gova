@@ -17,7 +17,7 @@ export const R2_S3_CLIENT_ALLOWED_IMPORTERS = new Set([
   'packages/storage-core/src/adapters/s3-client.adapter.ts',
   'packages/storage-core/src/server/transport/r2-object-store.ts',
   'packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts',
-  'src/modules/dev-cloud-backup/repositories/r2-backup.repository.server.ts',
+  'packages/backup-core/src/server/r2-backup.repository.ts',
   'packages/data-core/src/tooling/migrate-r2-image-public-url.ts',
   'packages/data-core/src/tooling/migrate-r2-cloud-folders.ts',
 ]);
@@ -39,7 +39,7 @@ export const IMAGE_STORAGE_FORBIDDEN_PATTERN_EXEMPT = new Set([
   'packages/storage-core/src/server/transport/r2-object-store.ts',
   'packages/storage-core/src/domain/images/image-key-generator.ts',
   'packages/ota-core/src/publishing/adapters/r2-storage.adapter.ts',
-  'src/modules/dev-cloud-backup/repositories/r2-backup.repository.server.ts',
+  'packages/backup-core/src/server/r2-backup.repository.ts',
   'packages/data-core/src/tooling/migrate-r2-image-public-url.ts',
   'packages/data-core/src/tooling/migrate-r2-cloud-folders.ts',
   'packages/architecture-core/src/contracts/image-storage-contract.ts',

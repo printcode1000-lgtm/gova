@@ -22,16 +22,13 @@ import {
 import type {
   HeroSliderConfig,
   HeroSliderSlide,
-  HeroSliderTransition,
 } from "./HeroSlider";
-
-const transitions: HeroSliderTransition[] = [
-  "Fade",
-  "SlideLeft",
-  "SlideRight",
-  "Zoom",
-  "Parallax",
-];
+import type { HeroSliderTransition } from "./hero-slider.types";
+import {
+  createHeroSliderSlide,
+  heroSliderTransitions,
+} from "./hero-slider-editor-model";
+import { useHeroSliderEditorUploadState } from "./use-hero-slider-editor-upload-state";
 
 interface HeroSliderEditorProps {
   value: HeroSliderConfig;
@@ -41,15 +38,6 @@ interface HeroSliderEditorProps {
   onPendingChange?: (pending: boolean) => void;
 }
 
-const createSlide = (priority: number): HeroSliderSlide => ({
-  priority,
-  image: "",
-  title: "شريحة جديدة",
-  subtitle: "",
-  duration: 4000,
-  action: "",
-});
-
 export const HeroSliderEditor = React.forwardRef<
   StorageImageManagerHandle,
   HeroSliderEditorProps
@@ -57,31 +45,10 @@ export const HeroSliderEditor = React.forwardRef<
   { value, onChange, onSave, onCancel, onPendingChange },
   ref,
 ) {
-  const managerRefs = React.useRef<Array<StorageImageManagerHandle | null>>([]);
-  const [pendingSlots, setPendingSlots] = React.useState<Set<number>>(
-    () => new Set(),
-  );
-
-  React.useEffect(() => {
-    onPendingChange?.(pendingSlots.size > 0);
-  }, [onPendingChange, pendingSlots]);
-
-  React.useImperativeHandle(
+  const { managerRefs, setPendingSlots } = useHeroSliderEditorUploadState({
     ref,
-    () => ({
-      hasPending: () =>
-        managerRefs.current.some((manager) => manager?.hasPending()),
-      uploadPending: async () => {
-        for (const manager of managerRefs.current) {
-          if (manager?.hasPending() && !(await manager.uploadPending())) {
-            return false;
-          }
-        }
-        return true;
-      },
-    }),
-    [],
-  );
+    onPendingChange,
+  });
 
   const updateSlide = (index: number, patch: Partial<HeroSliderSlide>) => {
     const slides = value.slides.map((slide, slideIndex) =>
@@ -154,7 +121,7 @@ export const HeroSliderEditor = React.forwardRef<
               })
             }
           >
-            {transitions.map((transition) => (
+            {heroSliderTransitions.map((transition) => (
               <option key={transition}>{transition}</option>
             ))}
           </select>
@@ -343,7 +310,7 @@ export const HeroSliderEditor = React.forwardRef<
               ...value,
               slides: [
                 ...value.slides,
-                createSlide((value.slides.length + 1) * 100),
+                createHeroSliderSlide((value.slides.length + 1) * 100),
               ],
             })
           }

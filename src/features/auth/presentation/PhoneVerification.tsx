@@ -11,6 +11,7 @@ import type { RegistrationFormData } from '@asol/auth-core';
 
 import { OtpInput } from './OtpInput';
 import { usePhoneVerification } from '@/hooks/use-phone-verification';
+import { canSendPhoneOtp, formatPhoneDisplay } from './phone-verification-model';
 
 interface PhoneVerificationProps {
   // Props mode (for profile)
@@ -113,18 +114,7 @@ export function PhoneVerification({
     }
   };
 
-  const formatPhoneDisplay = (val: string) => {
-    const digits = val.replace(/\D/g, '');
-    if (digits.length === 0) return '+20';
-    if (digits.length <= 2) return `+20 ${digits}`;
-    if (digits.length <= 5) return `+20 ${digits.slice(0, 2)} ${digits.slice(2)}`;
-    if (digits.length <= 8) {
-      return `+20 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
-    }
-    return `+20 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 8)} ${digits.slice(8, 11)}`;
-  };
-
-  const canSend = phone.replace(/\D/g, '').length === 11;
+  const canSend = canSendPhoneOtp(phone);
 
   if (isFormMode && formContext) {
     // Form mode (registration)

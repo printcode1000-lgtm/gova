@@ -2,7 +2,9 @@
 
 ## Objective
 
-The `src/modules/data-health` module serves as a standalone center for inspecting project data integrity, comparing database schemas, managing quarantines, and executing specific, auditable cleanup operations directly from `/super-admin/data-health`.
+The `/super-admin/data-health` application module composes the sealed `@asol/data-health-core`
+capability with `data-core`, storage and system logging. The package owns shared policy, contracts
+and the image-source registry; the application owns presentation and orchestration.
 
 Next.js files under `src/app` are thin entry points. Business logic, UI, policies, and repositories reside within the module to facilitate adding new health check rules without bloating the Super Admin page.
 
@@ -22,7 +24,10 @@ Next.js files under `src/app` are thin entry points. Business logic, UI, policie
 - `db`: Schema definitions for health checks log, plans, audit trails, quarantines, and locks.
 - `repositories`: Database readers, storage inventories, schema comparators, and specific change applicators.
 - `services`: Plan creation, plan validation, locking, and quarantine management.
-- `presentation`: Super Admin interface.
+- `presentation`: Super Admin interface split by responsibility. `DataHealthPage.tsx`
+  composes the screen, `use-data-health-page.ts` owns client state and API
+  actions, and the panel/dialog files own rendering for findings, topology,
+  schema comparison, history, and confirmation dialogs.
 - `tests`: Policy contracts, signatures, and module table schema tests.
 
 ## Inspection Scope
@@ -47,7 +52,10 @@ The `/super-admin/data-health` page displays a live execution map generated dyna
 
 The inspection executes `quick_check` and `foreign_key_check` independently for each database. If the runtime driver does not support a specific SQLite check, the page logs a warning with the database name instead of dropping the check or attributing the result to another database.
 
-The map also renders all registered image sources defined in `src/modules/data-health/domain/source-registry.ts` alongside tables, fields, and ownership types. This encompasses owned images, shared image snapshots, fixed assets, and storage cleanup tasks (not limited to files in R2).
+The map also renders all registered image sources defined in
+`packages/data-health-core/src/domain/source-registry.ts` alongside tables, fields, and ownership
+types. This encompasses owned images, shared image snapshots, fixed assets, and storage cleanup
+tasks (not limited to files in R2).
 
 ### Image Storage Targets
 
@@ -144,7 +152,10 @@ The `static out` build contains no database secrets and does not connect directl
 
 ## Image Source Contracts
 
-`domain/source-registry.ts` maintains a registry of every table or manifest storing images or image snapshots. The `test:data-health` suite reads SQLite schema and fails if an unregistered image field is detected. It also verifies that all enabled cloud storage files utilize R2 and that fixed pharmacy image assets exist.
+`@asol/data-health-core` maintains a registry of every table or manifest storing images or image
+snapshots. The `test:data-health` suite reads SQLite schema and fails if an unregistered image
+field is detected. It also verifies that all enabled cloud storage files utilize R2 and that fixed
+pharmacy image assets exist.
 
 Storage inventory does not hardcode storage file lists; it dynamically reads all enabled profiles from `storage-profiles.json`. The JSON reader extracts `imageKey`, `image_key`, `storageProfileId`, and `storage_profile_id` at any nesting depth, supporting fallback defaults for legacy data.
 

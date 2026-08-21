@@ -6,7 +6,10 @@
 
 | Responsibility                      | File                                                        |
 | ----------------------------------- | ----------------------------------------------------------- |
-| Reusable component and public types | `src/components/ui/HeroSlider.tsx`                          |
+| Runtime contract, schemas and save policy | `packages/hero-slider-core/src`                            |
+| Reusable component                  | `src/components/ui/HeroSlider.tsx`                          |
+| Reusable component public props/types | `src/components/ui/hero-slider.types.ts`                   |
+| Reusable component transition styling | `src/components/ui/hero-slider-styles.ts`                  |
 | Full administrative editor          | `src/components/ui/HeroSliderEditor.tsx`                    |
 | Image-only profile editor           | `src/components/ui/HeroSliderImagesEditor.tsx`              |
 | Home integration                    | `src/features/home/presentation/HomeScreen.tsx`                        |
@@ -14,7 +17,7 @@
 | Super-admin page                    | `src/features/super-admin/presentation/SuperAdminHeroSliderPage.tsx`   |
 | Profile preview integration         | `src/features/profile/presentation/ProfilePageContent.tsx`             |
 | Profile image-editing tabs          | `src/features/profile/presentation/StoreIdentityCard.tsx`              |
-| Image management UI                 | `src/features/storage/components/StorageImageManager.tsx`   |
+| Image management UI                 | `@asol/storage-image-manager-core` via `src/features/storage/components/StorageImageManager.tsx` |
 
 ## Component modes
 
@@ -212,6 +215,7 @@ The Home advertisement data flows through:
 ```text
 API route
   -> HomeHeroSlider server service
+  -> @asol/hero-slider-core service policy
   -> HomeHeroSlider repository
   -> advertisements database client
   -> advertisements.db / Turso advertisements database
@@ -222,6 +226,7 @@ Relevant files:
 - `src/app/api/advertisements/home-hero-slider/route.ts`
 - `src/app/api/advertisements/home-hero-slider/version/route.ts`
 - `src/features/advertisements/services/home-hero-slider-service.server.ts`
+- `packages/hero-slider-core/src/server/home-hero-slider-service.ts`
 - `packages/data-core/src/domains/advertisements/repositories/home-hero-slider.repository.ts`
 - `packages/data-core/src/core/database/advertisements-db-client.ts`
 

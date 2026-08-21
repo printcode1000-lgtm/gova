@@ -287,34 +287,36 @@ function printPhaseRetryHint(failedPhase: DeployAllPhaseId): void {
 /**
  * Every check that must pass before source becomes public.
  *
- * `build:static` is included deliberately: it is the release build, and it also
- * runs `architecture:check` and the test suites. Discovering a broken build
- * here costs minutes; discovering it after the push costs a failed production
+ * Both server and static builds are included deliberately. `npm run build`
+ * catches server-component, route-handler, and file-tracing failures, while
+ * `build:static` produces the release bundle. Discovering either failure here
+ * costs minutes; discovering it after the push costs a failed production
  * deployment on a commit that is already on `main`.
  */
-const PREFLIGHT_STEPS = [
-  "lint",
-  "typecheck",
-  "architecture:check",
-  "test",
-  // Apply local migrations to every SQLite source, refresh profile/order shards,
-  // then push DDL to every Turso database before any release build or git write.
-  // Without this gate, code that expects new columns can reach production first.
-  "db:ensure",
-  "db:schema:sync:release",
-  "build:static",
-  // The shared code now lives in sealed packages, so what each service uploads is decided by
-  // a graph walker rather than by a folder. A specifier the walker cannot see is never copied,
-  // and nothing below notices: the remote build resolves lazily and succeeds, then the first
-  // request fails with "Cannot find module". This step re-reads each upload and resolves every
-  // edge inside it — the only check between "the mirror was written" and "the mirror is whole".
-  "services:verify",
-  // Added after every one of these passed and all four service accounts still failed
-  // their remote build. Each service is uploaded alone and installed against its own
-  // `package.json`; nothing above exercises that. This is the only step that builds a
-  // service the way Vercel does.
-  "services:build",
+const PREFLIGHT_GROUPS = [
+  {
+    label: "environment and Vercel accounts",
+    steps: ["doctor:environment:production", "vercel:accounts:check"],
+  },
+  {
+    label: "source quality and architecture",
+    steps: ["lint", "typecheck", "architecture:check", "test"],
+  },
+  {
+    label: "database and runtime contracts",
+    steps: ["db:ensure", "db:schema:sync:release"],
+  },
+  {
+    label: "main app builds",
+    steps: ["build", "build:static"],
+  },
+  {
+    label: "isolated service deployments",
+    steps: ["services:sync", "services:verify", "services:build"],
+  },
 ] as const;
+
+const PREFLIGHT_STEPS = PREFLIGHT_GROUPS.flatMap((group) => group.steps);
 
 async function runPreflightPhase(flags: DeployFlags): Promise<void> {
   if (flags.skipPreflight) {
@@ -326,19 +328,25 @@ async function runPreflightPhase(flags: DeployFlags): Promise<void> {
     return;
   }
 
-  console.log(
-    `[deploy:all] Preflight: ${PREFLIGHT_STEPS.map((step) => `npm run ${step}`).join(", ")}`,
-  );
-  for (const step of PREFLIGHT_STEPS) {
-    try {
-      await runDeploymentNpmScript(step, { logPrefix: "deploy:all" });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      throw new Error(
-        `Preflight failed at "${step}": ${message}\n` +
-          "Nothing has been committed or pushed. Fix the failure and retry:\n" +
-          "  npm run deploy:all -- --phase=preflight",
-      );
+  console.log("[deploy:all] Preflight plan:");
+  for (const group of PREFLIGHT_GROUPS) {
+    console.log(
+      `  - ${group.label}: ${group.steps.map((step) => `npm run ${step}`).join(" → ")}`,
+    );
+  }
+  for (const group of PREFLIGHT_GROUPS) {
+    console.log(`\n[deploy:all] Preflight group: ${group.label}`);
+    for (const step of group.steps) {
+      try {
+        await runDeploymentNpmScript(step, { logPrefix: "deploy:all" });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(
+          `Preflight failed at "${step}" in "${group.label}": ${message}\n` +
+            "Nothing has been committed or pushed. Fix the failure and retry:\n" +
+            "  npm run deploy:all -- --phase=preflight",
+        );
+      }
     }
   }
   console.log("[deploy:all] Preflight passed; safe to publish.");
@@ -348,13 +356,27 @@ async function runPreflightPhase(flags: DeployFlags): Promise<void> {
  * Credentials are checked up front.
  *
  * `verifyMainDeployment` needs both of these, but it runs last — after the push
- * and after four service deployments. A missing token discovered there leaves a
+ * and after six service deployments. A missing token discovered there leaves a
  * published commit that was never verified.
  */
 function assertDeploymentCredentials(): void {
-  if (!process.env.VERCEL_TOKEN?.trim()) {
+  const missingTokens = Object.values(ACCOUNT_DECLARATIONS)
+    .map((declaration) => declaration.tokenEnvVar)
+    .filter((key) => !process.env[key]?.trim());
+  if (missingTokens.length > 0) {
     throw new Error(
-      "VERCEL_TOKEN is required to verify the production deployment. Set it before running deploy:all.",
+      `Vercel token(s) required before running deploy:all: ${missingTokens.join(", ")}.`,
+    );
+  }
+  const missingRuntime = Object.values(ACCOUNT_DECLARATIONS).flatMap((declaration) =>
+    declaration.requiredEnv
+      .filter((key) => !process.env[key]?.trim())
+      .map((key) => `${declaration.name}: ${key}`),
+  );
+  if (missingRuntime.length > 0) {
+    throw new Error(
+      "Required Vercel runtime environment values are missing:\n" +
+        missingRuntime.map((entry) => `  - ${entry}`).join("\n"),
     );
   }
   if (!existsSync(ROOT_VERCEL_LINK)) {
@@ -782,6 +804,7 @@ export const __testables = {
   resolvePhasesToRun,
   compareVersions,
   SCRATCH_FILE_PATTERNS,
+  PREFLIGHT_GROUPS,
   PREFLIGHT_STEPS,
   RELEASE_MANIFEST,
   formatSuccessLine,

@@ -14,7 +14,13 @@ import {
   resetHarnessKeepingStorage,
   tapNativeNotification,
 } from "./notification-harness";
-import type { NotificationEntity } from "@asol/notifications-core";
+import {
+  PHONE,
+  UID,
+  startAndroidSession,
+  startAndroidSessionCapturingOpens,
+  type NotificationFlowScenario,
+} from "./notification-flow.session";
 
 /**
  * The notification module, driven the way the application drives it.
@@ -30,44 +36,9 @@ import type { NotificationEntity } from "@asol/notifications-core";
  * fixtures cannot fail when the real path stops writing them.
  */
 
-const UID = "user-1";
-const PHONE = "+201000000000";
-
-const scenarios: Array<{ name: string; run: () => Promise<void> }> = [];
+const scenarios: NotificationFlowScenario[] = [];
 function scenario(name: string, run: () => Promise<void>): void {
   scenarios.push({ name, run });
-}
-
-async function startAndroidSession(): Promise<
-  ReturnType<typeof loadNotificationModule>
-> {
-  const loaded = loadNotificationModule();
-  await loaded.notifications.initialize({ uid: UID, phone: PHONE });
-  await flushMicrotasks();
-  return loaded;
-}
-
-/**
- * Start a session and record what the shell was told to open.
- *
- * `onOpened` is the module's whole contribution to routing: it hands back a
- * notification that is already stored and already marked read, and the shell
- * decides where to go. Capturing it here is how a cold-start tap is asserted
- * without rendering a router.
- */
-async function startAndroidSessionCapturingOpens(uid = UID): Promise<{
-  loaded: ReturnType<typeof loadNotificationModule>;
-  opened: NotificationEntity[];
-}> {
-  const loaded = loadNotificationModule();
-  const opened: NotificationEntity[] = [];
-  await loaded.notifications.initialize({
-    uid,
-    phone: PHONE,
-    handlers: { onOpened: (notification) => { opened.push(notification); } },
-  });
-  await flushMicrotasks();
-  return { loaded, opened };
 }
 
 // ---------------------------------------------------------------------------

@@ -6,7 +6,7 @@ import { ChevronDown, ExternalLink, FolderOpen, LoaderCircle, LockKeyhole, Play 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
-import type { BuildParameterName } from "@/modules/release-commands/domain/build-command-catalog";
+import type { BuildParameterName } from "@asol/release-core/console";
 import { AndroidReleasePaths } from "../components/AndroidReleasePaths";
 import { CapBuildGuide, Doc, Parameter } from "../components/CommandParameterFields";
 import { ReleaseCommandConfirmDialog } from "../components/ReleaseCommandConfirmDialog";

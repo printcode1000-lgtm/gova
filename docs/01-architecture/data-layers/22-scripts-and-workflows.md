@@ -4,7 +4,8 @@
 
 ```bash
 # Development
-npm run dev
+npm run dev                    # fast Next dev only
+npm run dev:checked            # slower startup with generation + catalog validation
 npm run db:create:sqlite
 npm run db:create:profile
 
@@ -23,9 +24,9 @@ npm run test:orders-core               # the order domain
 npm run ci:coverage                    # every package gate actually runs in CI
 
 # Service deployments — the only check that builds what Vercel builds
-npm run services:sync            # refresh the four generated/ mirrors
+npm run services:sync            # refresh the six generated/ mirrors
 npm run services:verify          # every module edge resolves inside each upload
-npm run services:build           # next build in all four service folders
+npm run services:build           # next build in all six service folders
 
 # GitHub repository administration (rule 6)
 npm run github:protect -- --dry-run
@@ -43,12 +44,12 @@ npm run db:push:vercel-env      # Turso + bridge URLs + ASOL_MOBILE_PUSH_* when 
 npm run deploy:redeploy-main    # pick up new env vars on the GitHub-linked main app
 npm run submain:deploy          # full app on submain (groupstenderximages@gmail.com)
 npm run sub2main:deploy         # full app on sub2main (tenderx.engineer100@gmail.com)
-npm run deploy:all              # all phases: preflight → publish → 6 services → main
-npm run deploy:all:preflight    # lint/build/test gate only
+npm run vercel:accounts:check   # read-only check for all seven Vercel account tokens
+npm run deploy:all              # full gate: env/Vercel → checks/tests → DB → builds → services → main
+npm run deploy:all:preflight    # comprehensive preflight only, no commit/push/deploy
 npm run deploy:all:publish      # commit + push main only
 npm run deploy:all:services     # six CLI service deploys
 npm run deploy:all:main         # verify GitHub-linked gova READY
-npm run deploy:all:skip-build   # same without local npm run build
 npm run data-access:sync-public
 
 # Cloudflare R2
@@ -145,6 +146,17 @@ values. A missing/update/configure result produces a non-zero exit code, making
 it suitable for onboarding and CI diagnostics.
 
 ## Service deployment checks
+
+`npm run deploy:all` starts with a comprehensive preflight before the first
+Git write. The preflight is ordered as:
+
+1. production environment readiness and `vercel:accounts:check` for all seven
+   Vercel account tokens;
+2. `lint`, `typecheck`, `architecture:check`, and the full `test` chain;
+3. local database ensure and release schema sync;
+4. both `npm run build` and `npm run build:static`, so server and static
+   release output are both exercised before publishing;
+5. service mirror sync, mirror edge verification, and per-service builds.
 
 `npm run services:build` (`scripts/build-all-services.ts`) refreshes the four
 mirrors and then runs `next build` inside every `services/<name>/` folder,

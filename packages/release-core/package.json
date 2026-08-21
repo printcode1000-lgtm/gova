@@ -9,6 +9,18 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./console": {
+      "types": "./src/console.ts",
+      "default": "./src/console.ts"
+    },
+    "./console-server": {
+      "types": "./src/console-server.ts",
+      "default": "./src/console-server.ts"
+    },
+    "./console-artifacts": {
+      "types": "./src/console-artifacts.ts",
+      "default": "./src/console-artifacts.ts"
     }
   },
   "scripts": {

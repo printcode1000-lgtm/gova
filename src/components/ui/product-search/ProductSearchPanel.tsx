@@ -5,12 +5,8 @@ import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { ProductCard } from "@/components/ui/product-card";
-import { SellerCard } from "@/components/ui/seller-card";
 import { categoryService } from "@/features/categories";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
-import { createProductCardViewModel } from "@/features/product-card";
-import { createSellerCardViewModel } from "@/features/seller-card";
 import {
   productSearchApiService,
   type ProductSearchField,
@@ -22,29 +18,10 @@ import {
 } from "@/features/product-search";
 import type { UserProfileRow } from "@/features/profile/services/profile-service.interface";
 import { ProductSearchFieldSelector } from "./ProductSearchFieldSelector";
-
-type Locale = "ar" | "en";
-
-interface ProductSearchPanelProps {
-  variant: "compact" | "full";
-  mode?: ProductSearchMode;
-  ownerUid?: string;
-  fixedMainCategoryId?: string;
-  fixedSubcategoryId?: string;
-  includeDrafts?: boolean;
-  locale?: Locale;
-  initialQuery?: string;
-  initialSort?: ProductSearchSort;
-  onProductsChange?: (products: ProductRecord[]) => void;
-  onLoadingChange?: (loading: boolean) => void;
-}
-
-function defaultFieldKeys(fields: ProductSearchField[]) {
-  const basic = fields
-    .filter((field) => field.group === "basic")
-    .map((field) => field.key);
-  return basic.length > 0 ? basic : fields.map((field) => field.key);
-}
+import { ProductSearchResults } from "./ProductSearchResults";
+import { defaultFieldKeys } from "./product-search-fields";
+import type { ProductSearchPanelProps } from "./product-search-panel.types";
+import { runProductSearchPanelRequest } from "./product-search-panel-request";
 
 export function ProductSearchPanel({
   variant,
@@ -147,31 +124,24 @@ export function ProductSearchPanel({
     onLoadingChange?.(true);
     setHasSearched(true);
     try {
-      if (activeMode === "sellers") {
-        const result = await productSearchApiService.searchSellers({
-          q: query,
-          mainCategoryId,
-          subcategoryId,
-          sort: sort === "name" ? "name" : "relevance",
-          minRating: sellerMinRating,
-          limit: isCompact ? 12 : 24,
-        });
+      const result = await runProductSearchPanelRequest({
+        activeMode,
+        query,
+        ownerUid,
+        mainCategoryId,
+        subcategoryId,
+        fieldKeys,
+        sort,
+        filters,
+        includeDrafts,
+        sellerMinRating,
+        isCompact,
+      });
+      if (result.mode === "sellers") {
         setSellers(result.items);
         setTotal(result.total);
         return;
       }
-
-      const result = await productSearchApiService.searchProducts({
-        q: query,
-        ownerUid,
-        mainCategoryId,
-        subcategoryId,
-        fields: fieldKeys,
-        sort: sort as ProductSearchSort,
-        filters,
-        includeDrafts,
-        limit: isCompact ? 48 : 24,
-      });
       setProducts(result.items);
       setTotal(result.total);
       onProductsChange?.(result.items);
@@ -439,37 +409,13 @@ export function ProductSearchPanel({
         </div>
       ) : null}
 
-      {!isCompact && activeMode === "products" ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {products.map((product) => {
-            const card = createProductCardViewModel(product);
-            return (
-              <ProductCard
-                key={product.id}
-                card={card}
-                variant="search"
-                onOpen={() => router.push(card.href)}
-              />
-            );
-          })}
-        </div>
-      ) : null}
-
-      {!isCompact && activeMode === "sellers" ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {sellers.map((seller) => {
-            const card = createSellerCardViewModel(seller);
-            return (
-              <SellerCard
-                key={seller.uid}
-                card={card}
-                variant="search"
-                onOpen={() => router.push(card.href)}
-              />
-            );
-          })}
-        </div>
-      ) : null}
+      <ProductSearchResults
+        activeMode={activeMode}
+        isCompact={isCompact}
+        products={products}
+        sellers={sellers}
+        onOpen={(href) => router.push(href)}
+      />
     </section>
   );
 }

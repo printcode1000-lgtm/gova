@@ -849,7 +849,8 @@ preferences the notifications module does not own:
 ```text
 src/app/settings/notifications/page.tsx                       the route
 src/features/settings/presentation/NotificationsSettingsPageContent.tsx  the page shell
-src/features/settings/presentation/NotificationDeviceSettingsCard.tsx    device + chat state
+src/features/settings/presentation/NotificationDeviceSettingsCard.tsx    device + chat presentation
+src/features/settings/presentation/use-notification-device-settings-card.ts device + chat state/actions
 ```
 
 ## Device Token Flow

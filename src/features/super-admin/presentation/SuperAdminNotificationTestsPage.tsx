@@ -41,6 +41,15 @@ import {
   type NotificationTestScenarioId,
 } from "@/features/notifications";
 import { DEFAULT_CHANNELS } from '@asol/native-core';
+import {
+  NOTIFICATION_PERMISSION_LABELS,
+  createRequestId,
+  formatStoredTestResultStatus,
+  formatTestResultStatus,
+  notificationTestBatchSizeOptions,
+  notificationTestDelayOptions,
+  wait,
+} from "./notification-tests/notification-test-presentation";
 
 type TestMode = "local" | "push";
 
@@ -62,60 +71,6 @@ interface TestHistoryEntry {
   status: string;
   tokenCount: number;
   centerStatus: "saved" | "pending" | "missing";
-}
-
-const delayOptions = [0, 5, 10, 30] as const;
-const batchSizeOptions = [1, 5] as const;
-
-const TEST_RESULT_STATUS_LABELS: Record<string, string> = {
-  saved: "محفوظ",
-  missing: "مفقود",
-  failed: "فشل",
-  sent: "أُرسل",
-  partial: "جزئي",
-  queued: "في الانتظار",
-  no_tokens: "بدون رموز",
-  muted: "مكتوم",
-};
-
-const NOTIFICATION_PERMISSION_LABELS: Record<string, string> = {
-  granted: "مسموح",
-  denied: "مرفوض",
-  default: "افتراضي",
-  prompt: "بانتظار الطلب",
-};
-
-function formatTestResultStatus(
-  code: string,
-  index?: number,
-  total?: number,
-): string {
-  const label = TEST_RESULT_STATUS_LABELS[code] ?? code;
-  if (index != null && total != null) {
-    return `${label} ${index}/${total}`;
-  }
-  return label;
-}
-
-function formatStoredTestResultStatus(status: string): string {
-  const match = status.match(/^([a-z_]+)(?:\s+(\d+)\/(\d+))?$/i);
-  if (!match) return status;
-  const [, code, index, total] = match;
-  return formatTestResultStatus(
-    code,
-    index ? Number(index) : undefined,
-    total ? Number(total) : undefined,
-  );
-}
-
-function createRequestId(): string {
-  return typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : `${Date.now()}:${Math.random().toString(36).slice(2)}`;
-}
-
-function wait(milliseconds: number): Promise<void> {
-  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 }
 
 export function SuperAdminNotificationTestsPage() {
@@ -499,13 +454,13 @@ export function SuperAdminNotificationTestsPage() {
             <div className="space-y-2">
               <Label htmlFor="notification-test-batch-size">عدد الإشعارات المتتالية</Label>
               <select id="notification-test-batch-size" className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={batchSize} onChange={(event) => setBatchSize(Number(event.target.value))}>
-                {batchSizeOptions.map((count) => <option key={count} value={count}>{count === 1 ? "إشعار واحد" : `${count} إشعارات متتالية`}</option>)}
+                {notificationTestBatchSizeOptions.map((count) => <option key={count} value={count}>{count === 1 ? "إشعار واحد" : `${count} إشعارات متتالية`}</option>)}
               </select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="notification-test-delay">التأخير</Label>
               <select id="notification-test-delay" className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={delaySeconds} onChange={(event) => setDelaySeconds(Number(event.target.value))}>
-                {delayOptions.map((seconds) => <option key={seconds} value={seconds}>{seconds === 0 ? "فوري" : `بعد ${seconds} ثوانٍ`}</option>)}
+                {notificationTestDelayOptions.map((seconds) => <option key={seconds} value={seconds}>{seconds === 0 ? "فوري" : `بعد ${seconds} ثوانٍ`}</option>)}
               </select>
               <p className="text-xs text-muted-foreground">استخدم التأخير لتضع التطبيق في الخلفية أو تقفل الشاشة. لا تغلق التطبيق قبل أن ينتهي العد التنازلي.</p>
             </div>

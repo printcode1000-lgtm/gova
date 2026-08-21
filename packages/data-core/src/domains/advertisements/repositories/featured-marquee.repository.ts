@@ -6,10 +6,11 @@ import { eq } from "drizzle-orm";
 import { featuredMarquee } from "../../../core/database/advertisements/advertisements.schema";
 import type { IDatabaseClient } from "../../../core/database/database-client.interface";
 import {
+  DEFAULT_FEATURED_MARQUEE_CONFIG,
   FEATURED_MARQUEE_ID,
   type FeaturedMarqueeConfig,
   type FeaturedMarqueeRecord,
-} from "@/features/advertisements/entities/featured-marquee.entity";
+} from "@asol/featured-marquee-core";
 
 function parseConfig(value: string): FeaturedMarqueeConfig {
   return JSON.parse(value) as FeaturedMarqueeConfig;
@@ -23,7 +24,7 @@ export class FeaturedMarqueeRepository {
     if (!row) {
       return {
         id: FEATURED_MARQUEE_ID,
-        config: { productIds: [] },
+        config: DEFAULT_FEATURED_MARQUEE_CONFIG,
         version: 0,
         checkIntervalMinutes: 15,
         updatedAt: "",

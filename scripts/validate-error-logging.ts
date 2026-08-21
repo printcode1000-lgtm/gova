@@ -72,7 +72,10 @@ for (const file of files) {
     relative.endsWith("/route.ts") &&
     !relative.endsWith("src/app/api/health/route.ts")
   ) {
-    const hasTracing = content.includes("runTracedBusinessRoute(");
+    const hasTracing =
+      content.includes("runTracedBusinessRoute(") ||
+      /\brunSuperAdminRoute\s*(?:<[^>]+>)?\s*\(/.test(content) ||
+      /\brunSuperAdminJsonRoute\s*(?:<[^>]+>)?\s*\(/.test(content);
     const hasCatch = /catch\s*\(/.test(content);
     if (!hasTracing && !hasCatch) {
       violations.push(`${relative}: API route has no tracing wrapper or catch block`);

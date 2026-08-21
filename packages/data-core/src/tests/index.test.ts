@@ -203,13 +203,6 @@ await assert.rejects(
  * edges are real is. **This list should only ever shrink.**
  */
 const ALLOWED_APP_EDGES = new Set([
-  // Data-health policy: the rules that decide what a cleanup may touch live with the feature
-  // that renders them, and a port would need a safe default — there is none for "may I delete".
-  '@/modules/data-health/domain/policy',
-  '@/modules/data-health/domain/types',
-  '@/modules/data-health/domain/source-registry',
-  '@/modules/data-health/domain/execution-context.server',
-  '@/modules/dev-cloud-backup/domain/types',
   // Feature contracts: row shapes the application owns and the UI renders directly. Moving them
   // here would give this package a second reason to change (rule 8).
   '@/features/profile/entities/profile-specialties.entity',
@@ -227,9 +220,6 @@ const ALLOWED_APP_EDGES = new Set([
   '@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types',
   '@/features/follow/entities/follow.types',
   '@/features/seller-discounts/entities/seller-discount.entity',
-  '@/features/advertisements/entities/home-hero-slider.entity',
-  '@/features/advertisements/entities/trending-ribbon.entity',
-  '@/features/advertisements/entities/featured-marquee.entity',
   '@/features/advertisements/config/home-hero-slider.seed.json',
   // Build-time catalog data. A port would need an empty asset set as its safe default, which is
   // a silently wrong result — an import that fails loudly beats a default that fails quietly.
@@ -248,6 +238,15 @@ const ALLOWED_APP_EDGES = new Set([
  * `@asol/orders-core`, which is a layer-1 → layer-1 edge rather than knowledge of the app.
  */
 const DECLARED_PACKAGE_DOORS = new Set([
+  // The database adapter implements backup-core's port without giving backup-core a data driver.
+  '@asol/backup-core',
+  // Shared cleanup vocabulary and policy. The runtime fact is supplied by a local adapter.
+  '@asol/data-health-core',
+  '@asol/data-health-core/server',
+  // Advertisement feature contracts now live in sealed UI-core packages.
+  '@asol/hero-slider-core',
+  '@asol/trending-ribbon-core',
+  '@asol/featured-marquee-core',
   // The storage profile file is owned by the package that validates it, not by the application.
   '@asol/storage-core/profiles-config',
   // Reading rules only. Which keys this package needs stays here; what "unset" means does not.

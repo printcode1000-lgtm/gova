@@ -1,9 +1,9 @@
 import { apiSuccess, mapServiceError } from "@/core/api/api-response";
 import { assertSuperAdminRequest } from "@/features/super-admin/services/super-admin-auth.server";
 import { assertGooglePlayConsoleAllowed } from "@/modules/google-play-console/domain/development-guard.server";
-import { resolveStoredArtifact } from "@/modules/release-commands/services/build-job-artifacts.server";
+import { resolveStoredArtifact } from "@asol/release-core/console-artifacts";
 import { readBuildJobRecord } from "@/modules/release-commands/services/build-job-runner.server";
-import { analyzeBundleArtifact } from "@/modules/release-commands/services/bundle-analyzer.server";
+import { analyzeBundleArtifact } from "@asol/release-core/console-artifacts";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
 export async function GET(request: Request, context: { params: Promise<{ jobId: string; name: string }> }) {

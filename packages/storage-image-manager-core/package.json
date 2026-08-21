@@ -1,0 +1,25 @@
+{
+  "name": "@asol/storage-image-manager-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./client-lifecycle": {
+      "types": "./src/client-lifecycle.ts",
+      "default": "./src/client-lifecycle.ts"
+    },
+    "./services": {
+      "types": "./src/services.ts",
+      "default": "./src/services.ts"
+    }
+  },
+  "scripts": {
+    "test": "npx tsx src/tests/index.test.ts"
+  }
+}

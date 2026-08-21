@@ -28,8 +28,8 @@ import {
   type GooglePlayTrackMutationInput,
   type GooglePlayTrackName,
   type GooglePlayTrackSnapshot,
-} from "../domain/store-assets-types";
-import { readImageDimensions, validateGooglePlayImage } from "../domain/image-validation";
+} from "@asol/google-play-store-assets-core";
+import { readImageDimensions, validateGooglePlayImage } from "@asol/google-play-store-assets-core/images";
 import { resolveGooglePlayCredentials } from "./google-play-credentials.server";
 import { withGooglePlayEditLock } from "./google-play-edit-lock.server";
 

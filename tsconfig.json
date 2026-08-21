@@ -161,6 +161,24 @@
       "@asol/format-core": [
         "./packages/format-core/src/index.ts"
       ],
+      "@asol/google-play-store-assets-core": [
+        "./packages/google-play-store-assets-core/src/index.ts"
+      ],
+      "@asol/google-play-store-assets-core/images": [
+        "./packages/google-play-store-assets-core/src/images.ts"
+      ],
+      "@asol/featured-marquee-core": [
+        "./packages/featured-marquee-core/src/index.ts"
+      ],
+      "@asol/featured-marquee-core/server": [
+        "./packages/featured-marquee-core/src/server.ts"
+      ],
+      "@asol/hero-slider-core": [
+        "./packages/hero-slider-core/src/index.ts"
+      ],
+      "@asol/hero-slider-core/server": [
+        "./packages/hero-slider-core/src/server.ts"
+      ],
       "@asol/map-core": [
         "./packages/map-core/src/index.ts"
       ],
@@ -199,6 +217,9 @@
       ],
       "@asol/orders-core": [
         "./packages/orders-core/src/index.ts"
+      ],
+      "@asol/page-snapshot-core": [
+        "./packages/page-snapshot-core/src/index.ts"
       ],
       "@asol/ota-core": [
         "./packages/ota-core/src/index.ts"
@@ -254,11 +275,26 @@
       "@asol/storage-core/server": [
         "./packages/storage-core/src/server.ts"
       ],
+      "@asol/storage-image-manager-core": [
+        "./packages/storage-image-manager-core/src/index.ts"
+      ],
+      "@asol/storage-image-manager-core/client-lifecycle": [
+        "./packages/storage-image-manager-core/src/client-lifecycle.ts"
+      ],
+      "@asol/storage-image-manager-core/services": [
+        "./packages/storage-image-manager-core/src/services.ts"
+      ],
       "@asol/system-logs-core": [
         "./packages/system-logs-core/src/index.ts"
       ],
       "@asol/system-logs-core/server": [
         "./packages/system-logs-core/src/server.ts"
+      ],
+      "@asol/trending-ribbon-core": [
+        "./packages/trending-ribbon-core/src/index.ts"
+      ],
+      "@asol/trending-ribbon-core/server": [
+        "./packages/trending-ribbon-core/src/server.ts"
       ],
       "@asol/vercel-deploy-core": [
         "./packages/vercel-deploy-core/src/index.ts"

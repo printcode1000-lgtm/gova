@@ -32,14 +32,16 @@ npm run sub2main:recreate-vercel-project
 
 | Layer | Location |
 |---|---|
-| Super Admin UI | `src/features/super-admin/presentation/SuperAdminCloudAccountsPage.tsx` |
+| Super Admin UI shell | `src/features/super-admin/presentation/SuperAdminCloudAccountsPage.tsx` |
+| Cloud accounts reference content | `src/features/super-admin/presentation/SuperAdminCloudAccountsContent.tsx` |
 | Architecture reference | [26-cloud-accounts.md](../01-architecture/data-layers/26-cloud-accounts.md) |
 | Deploy commands | [16-deployment-targets.md](../01-architecture/data-layers/16-deployment-targets.md), [22-scripts-and-workflows.md](../01-architecture/data-layers/22-scripts-and-workflows.md) |
 | Environment variables | [14-environment-variables.md](../01-architecture/data-layers/14-environment-variables.md) (`VERCEL_SUBMAIN_TOKEN`, `VERCEL_SUB2MAIN_TOKEN`) |
 | Account declarations | `packages/account-declarations/src/accounts/submain.ts`, `packages/account-declarations/src/accounts/sub2main.ts` |
 
-When account layout, emails, or deploy flows change, update the UI page and the
-matching `docs/` files in the same change.
+When account layout, emails, or deploy flows change, update the content component
+and the matching `docs/` files in the same change. The page shell stays limited
+to session loading and super-admin access decisions.
 
 ## Access
 

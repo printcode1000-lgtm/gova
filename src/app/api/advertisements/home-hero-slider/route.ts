@@ -1,5 +1,5 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
-import type { HomeHeroConfig } from "@/features/advertisements/entities/home-hero-slider.entity";
+import type { HomeHeroConfig } from "@asol/hero-slider-core";
 import { homeHeroSliderService } from "@/features/advertisements/services/home-hero-slider-service.server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 

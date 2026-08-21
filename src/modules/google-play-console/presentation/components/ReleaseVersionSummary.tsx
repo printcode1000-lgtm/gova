@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReleaseVersionSnapshot } from "@/modules/release-commands/domain/build-job-types";
+import type { ReleaseVersionSnapshot } from "@asol/release-core/console";
 import {
   isNativeVersion,
   nextContentVersion,

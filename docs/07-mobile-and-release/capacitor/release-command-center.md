@@ -1,10 +1,18 @@
 # Release Command Center
 
-The release command center lives in `src/modules/release-commands`.
+The release command center UI lives in `src/modules/google-play-console`. Its browser-safe command
+policy is sealed behind `@asol/release-core/console`, process mechanics are behind
+`@asol/release-core/console-server`, and artifact analysis is isolated in
+`@asol/release-core/console-artifacts`. `src/modules/release-commands` now contains only the client
+API/hook and the single server wiring seam.
+
+Google Play Store asset contracts and image validation are sealed separately in
+`@asol/google-play-store-assets-core`, so release-command tests exercise the same PNG/JPEG validation
+rules used by the Store Assets tab without importing the app module.
 
 ## Catalog
 
-`domain/build-command-catalog.ts` is the single source of truth for every command. Each
+`packages/release-core/src/console/build-command-catalog.ts` is the single source of truth for every command. Each
 entry declares:
 
 - command id
@@ -19,7 +27,7 @@ entry declares:
 
 ## Job Runner
 
-`services/build-job-runner.server.ts` runs commands through async `spawn`, never
+`@asol/release-core/console-server` runs commands through async `spawn`, never
 `spawnSync`. stdout and stderr are written to:
 
 `.backups/build-jobs/<jobId>.log`
@@ -27,6 +35,10 @@ entry declares:
 Metadata is written to:
 
 `.backups/build-jobs/<jobId>.json`
+
+The runner keeps process orchestration and state transitions. Build-job
+directory paths, record/log file naming, retry constants, and retention limits
+live in `packages/release-core/src/console-server/build-job-files.ts`.
 
 ## Single Flight
 

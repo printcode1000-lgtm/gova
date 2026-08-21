@@ -21,8 +21,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   TRENDING_RIBBON_CACHE_KEY,
+  TRENDING_RIBBON_FALLBACK_LABEL,
   type TrendingRibbonRecord,
-} from "@/features/advertisements/entities/trending-ribbon.entity";
+} from "@asol/trending-ribbon-core";
 import { trendingRibbonApiService } from "@/features/advertisements/services/trending-ribbon-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
@@ -44,7 +45,7 @@ export function SuperAdminTrendingRibbonPage() {
   const authorized = isSuperAdmin(session);
 
   const [record, setRecord] = useState<TrendingRibbonRecord | null>(null);
-  const [badgeLabel, setBadgeLabel] = useState("home.trending.label");
+  const [badgeLabel, setBadgeLabel] = useState(TRENDING_RIBBON_FALLBACK_LABEL);
   const [items, setItems] = useState<FormItem[]>([]);
   const [newItemLabel, setNewItemLabel] = useState("");
   const [newItemAction, setNewItemAction] = useState("");
@@ -72,7 +73,7 @@ export function SuperAdminTrendingRibbonPage() {
     try {
       const next = await trendingRibbonApiService.getAdmin(session);
       setRecord(next);
-      setBadgeLabel(next.config.label || "home.trending.label");
+      setBadgeLabel(next.config.label || TRENDING_RIBBON_FALLBACK_LABEL);
       setItems(next.config.items || []);
       setIntervalMinutes(next.checkIntervalMinutes);
     } catch (error) {

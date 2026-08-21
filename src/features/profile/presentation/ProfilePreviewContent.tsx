@@ -4,9 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
-  faBookOpen,
   faBoxOpen,
   faClock,
   faComments,
@@ -47,6 +45,8 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { ProfileProductsPreview } from "./ProfileProductsPreview";
 import { ProfileFulfillmentPreviewCard } from "./ProfilePreviewInformation";
+import { ProfilePreviewSectionHeading } from "./ProfilePreviewSectionHeading";
+import { ProfileStorySection } from "./ProfileStorySection";
 
 interface ProfilePreviewContentProps {
   locale: "ar" | "en";
@@ -214,7 +214,6 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                           variant="outline"
                           className={`${ACTION_TILE_CLASS} border-input  `}
                           style={ACTION_TILE_STYLE}
-                          title={t("profilePreview.shareAria")}
                           aria-label={t("profilePreview.shareAria")}
                         >
                           <FontAwesomeIcon
@@ -233,11 +232,6 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         variant="outline"
                         className={`${ACTION_TILE_CLASS} border-input  `}
                         style={ACTION_TILE_STYLE}
-                        title={
-                          locale === "ar"
-                            ? "مراسلة صاحب الصفحة"
-                            : "Message page owner"
-                        }
                         aria-label={
                           locale === "ar"
                             ? "مراسلة صاحب الصفحة"
@@ -266,7 +260,6 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
                         variant="outline"
                         className={`${ACTION_TILE_CLASS} border-input  `}
                         style={ACTION_TILE_STYLE}
-                        title={t("profilePreview.customRequestAria")}
                         aria-label={t("profilePreview.customRequestAria")}
                         onClick={() =>
                           router.push(
@@ -343,7 +336,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
 
       {previewUid ? (
         <section className="rounded-3xl border border-outline-variant/70 bg-surface p-3 shadow-sm sm:p-6">
-          <SectionHeading
+          <ProfilePreviewSectionHeading
             icon={faBoxOpen}
             title={t("profilePreview.products")}
             hint={t("profilePreview.productsHint")}
@@ -355,7 +348,7 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       {!loading.details && !loading.fulfillment ? (
         <section className="grid items-stretch gap-5 lg:grid-cols-2">
           <div className="h-full rounded-3xl border border-outline-variant/70 bg-surface p-4 shadow-sm sm:p-6">
-            <SectionHeading
+            <ProfilePreviewSectionHeading
               icon={faClock}
               title={t("profilePreview.workingHours")}
               hint={t("profilePreview.workingHoursHint")}
@@ -374,43 +367,18 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
       ) : null}
 
       {!loading.details && storeDetails.storeStory ? (
-        <section
-          data-snapshot-expanded="profile-preview-story"
-          aria-expanded={storyExpanded}
-          className="rounded-3xl border border-outline-variant/70 bg-gradient-to-br from-primary/5 to-secondary/5 p-5 shadow-sm sm:p-7"
-        >
-          <button
-            type="button"
-            onClick={() => setStoryExpanded((current) => !current)}
-            className="flex w-full items-center gap-3 text-start"
-          >
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-xl text-primary">
-              <FontAwesomeIcon icon={faBookOpen} />
-            </span>
-            <span className="flex-1">
-              <strong className="block text-lg">
-                {t("profilePreview.storeStory")}
-              </strong>
-              <span className="text-xs text-on-surface-variant">
-                {t("profilePreview.storeStoryHint")}
-              </span>
-            </span>
-            <FontAwesomeIcon
-              icon={faBookOpen}
-              className={`text-primary transition-transform ${storyExpanded ? "scale-110" : "opacity-60"}`}
-            />
-          </button>
-          {storyExpanded ? (
-            <p className="mt-5 whitespace-pre-wrap border-t border-outline-variant/60 pt-5 text-sm leading-8 text-on-surface-variant">
-              {storeDetails.storeStory}
-            </p>
-          ) : null}
-        </section>
+        <ProfileStorySection
+          story={storeDetails.storeStory}
+          expanded={storyExpanded}
+          setExpanded={setStoryExpanded}
+          title={t("profilePreview.storeStory")}
+          hint={t("profilePreview.storeStoryHint")}
+        />
       ) : null}
 
       {!loading.details && storeDetails.ratingSettings?.enabled ? (
         <section className="rounded-3xl border border-outline-variant/70 bg-surface p-4 pb-10 shadow-sm sm:p-7">
-          <SectionHeading
+          <ProfilePreviewSectionHeading
             icon={faComments}
             title={t("profilePreview.reviews")}
             hint={t("profilePreview.reviewsHint")}
@@ -432,24 +400,3 @@ export function ProfilePreviewContent(props: ProfilePreviewContentProps) {
   );
 }
 
-function SectionHeading({
-  icon,
-  title,
-  hint,
-}: {
-  icon: IconDefinition;
-  title: string;
-  hint: string;
-}) {
-  return (
-    <div className="mb-5 flex items-center gap-3">
-      <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-xl text-primary">
-        <FontAwesomeIcon icon={icon} />
-      </span>
-      <div>
-        <h2 className="text-xl font-bold">{title}</h2>
-        <p className="text-xs text-on-surface-variant">{hint}</p>
-      </div>
-    </div>
-  );
-}

@@ -2,12 +2,12 @@
 
 import * as React from "react";
 
-import { validateGooglePlayImage } from "../domain/image-validation";
+import { validateGooglePlayImage } from "@asol/google-play-store-assets-core/images";
 import type {
   GooglePlayImageType,
   GooglePlayStoreAssetsSnapshot,
   GooglePlayStoreListing,
-} from "../domain/store-assets-types";
+} from "@asol/google-play-store-assets-core";
 import { storeAssetsApiService } from "../services/store-assets-api-service";
 import { useAuthHeaders } from "./use-auth-headers";
 

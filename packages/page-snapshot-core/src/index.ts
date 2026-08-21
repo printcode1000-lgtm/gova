@@ -1,0 +1,31 @@
+export type {
+  PageSnapshotIdentity,
+  PageSnapshotScroll,
+  PageSnapshotFormField,
+  PageSnapshotRecord,
+  SavePageSnapshotInput,
+  RestorePageSnapshotInput,
+  PageSnapshotOptions,
+  PageSnapshotStoragePort,
+  PageSnapshotRuntimeConfig,
+} from "./domain/page-snapshot.types";
+export { PAGE_SNAPSHOT_VERSION } from "./domain/page-snapshot.types";
+export {
+  configurePageSnapshotCore,
+  normalizeSnapshotRecord,
+  stableSerializeSnapshotValue,
+  createPageSnapshotKey,
+  isSensitiveSnapshotElement,
+  captureSnapshot,
+  persistSnapshot,
+  isSnapshotCompatible,
+  saveSnapshot,
+  restoreSnapshot,
+  hasSnapshot,
+  deleteSnapshot,
+  clearSnapshots,
+  pauseSnapshot,
+  resumeSnapshot,
+  cleanupExpiredSnapshots,
+  applySnapshotToDom,
+} from "./runtime/page-snapshot-runtime";

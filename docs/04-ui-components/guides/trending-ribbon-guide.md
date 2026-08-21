@@ -5,8 +5,10 @@ The `TrendingRibbon` is a reusable, self-scrolling text ticker component designe
 ---
 
 ## Component Location
-* Code: [TrendingRibbon.tsx](file:///c:/Users/hesham/Desktop/asol/src/components/ui/TrendingRibbon.tsx)
-* Configuration Example (Home Page): [home-trending-ribbon.json](file:///c:/Users/hesham/Desktop/asol/src/features/home/presentation/home-trending-ribbon.json)
+* Runtime contract and validation: `packages/trending-ribbon-core/src`
+* Component code: `src/components/ui/TrendingRibbon.tsx`
+* Home cache and synchronization: `src/features/advertisements/hooks/use-home-trending-ribbon.ts`
+* Server adapter: `src/features/advertisements/services/trending-ribbon-service.server.ts`
 
 ---
 
@@ -22,6 +24,10 @@ The `TrendingRibbon` is a reusable, self-scrolling text ticker component designe
 ## Configuration Model
 
 The component accepts **exactly one prop**: `config`.
+
+The persisted Home advertisement contract and runtime payload guards are owned
+by `@asol/trending-ribbon-core`; the React component receives already validated
+display data and never talks to persistence directly.
 
 ### `TrendingRibbonConfig` Schema
 

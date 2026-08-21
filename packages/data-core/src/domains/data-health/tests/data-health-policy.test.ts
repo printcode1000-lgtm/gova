@@ -16,9 +16,9 @@ import {
   makeIssue,
   quarantineResourceType,
   stableHash,
-} from "@/modules/data-health/domain/policy";
+} from "@asol/data-health-core/server";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../db/metadata-schema";
-import { DATA_HEALTH_IMAGE_SOURCES } from "@/modules/data-health/domain/source-registry";
+import { DATA_HEALTH_IMAGE_SOURCES } from "@asol/data-health-core";
 
 const base = {
   category: "image" as const,

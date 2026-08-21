@@ -9,30 +9,22 @@ import {
   asolDbSet,
 } from "@asol/data-core/browser";
 import {
+  DEFAULT_HOME_HERO_PUBLISHED,
   HOME_HERO_CACHE_KEY,
+  HOME_HERO_LEGACY_CACHE_KEY,
   type HomeHeroConfig,
   type HomeHeroPublished,
-} from "../entities/home-hero-slider.entity";
+} from "@asol/hero-slider-core";
 import { homeHeroSliderApiService } from "../services/home-hero-slider-api-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
-
-const LEGACY_CACHE_KEY = "advertisements:home-hero-slider:v2";
 
 interface HomeHeroCache extends HomeHeroPublished {
   lastCheckedAt: string;
 }
 
 const fallback: HomeHeroPublished = {
-  config: {
-    transition: "SlideLeft",
-    transitionDuration: 500,
-    autoPlay: false,
-    loop: false,
-    slides: [],
-  } satisfies HomeHeroConfig,
-  version: 0,
-  checkIntervalMinutes: 15,
-  updatedAt: "",
+  ...DEFAULT_HOME_HERO_PUBLISHED,
+  config: DEFAULT_HOME_HERO_PUBLISHED.config satisfies HomeHeroConfig,
 };
 
 export function useHomeHeroSlider() {
@@ -44,7 +36,7 @@ export function useHomeHeroSlider() {
         ASOL_DB_STORES.APP_SETTINGS,
         HOME_HERO_CACHE_KEY,
       );
-      await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, LEGACY_CACHE_KEY);
+      await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, HOME_HERO_LEGACY_CACHE_KEY);
       if (cached) setData(cached);
 
       const intervalMs = (cached?.checkIntervalMinutes ?? 15) * 60_000;

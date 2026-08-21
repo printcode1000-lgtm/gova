@@ -3,7 +3,6 @@
 import {
   Bell,
   ChevronDown,
-  Cloud,
   Edit,
   Eye,
   FileText,
@@ -12,24 +11,16 @@ import {
   LogIn,
   LogOut,
   MessagesSquare,
-  Megaphone,
   Moon,
-  ScrollText,
   Settings2,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
   Sun,
-  TestTube2,
-  TrendingUp,
   X,
   User,
-  Users,
 } from "lucide-react";
 import Link from "next/link";
 import NextImage from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -45,26 +36,23 @@ import {
   useResolvedColorScheme,
   useThemePreferences,
 } from "@/lib/preferences";
-import { clearAllClientStorage } from '@/features/app-reset/client-storage';
 import { useSession } from "@/features/auth/components/SessionProvider";
-import { queueLogoutSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { formatSessionPhone } from "@/features/auth/entities/session.entity";
 import { useStoreDetails } from "@/features/profile/hooks/use-store-details";
 import { useProfileStoreImages } from "@/features/profile/hooks/use-profile-store-images";
 import { shouldUseUnoptimizedImage } from '@asol/storage-core';
-import { notifications } from "@/features/notifications";
 import { Button } from "@/components/ui/button";
-import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
 
 import { AppSidebarProps } from "./app-sidebar/AppSidebar.sidebar-model";
-
-const COLLAPSED_SUPER_ADMIN_GROUPS = {
-  content: false,
-  notifications: false,
-  system: false,
-} as const;
+import {
+  AppSidebarSuperAdminSection,
+  COLLAPSED_SUPER_ADMIN_GROUPS,
+  type SuperAdminGroupKey,
+} from "./app-sidebar/AppSidebarSuperAdminSection";
+import { executeSidebarLogout } from "./app-sidebar/AppSidebar.logout";
+import { createAppSidebarStyles } from "./app-sidebar/AppSidebar.styles";
 
 export const AppSidebar = React.memo(function AppSidebar({
   isOpen,
@@ -95,7 +83,7 @@ export const AppSidebar = React.memo(function AppSidebar({
   const showSuperAdmin = isSuperAdmin(session);
   const [superAdminOpen, setSuperAdminOpen] = useState(false);
   const [superAdminGroupsOpen, setSuperAdminGroupsOpen] = useState<
-    Record<keyof typeof COLLAPSED_SUPER_ADMIN_GROUPS, boolean>
+    Record<SuperAdminGroupKey, boolean>
   >({ ...COLLAPSED_SUPER_ADMIN_GROUPS });
   const [settingsGroupOpen, setSettingsGroupOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
@@ -107,25 +95,15 @@ export const AppSidebar = React.memo(function AppSidebar({
   );
   const isProfilePreviewActive = activeProfileMode === "preview";
   const isProfileEditActive = activeProfileMode === "edit";
-  const sidebarTone =
-    resolvedScheme === "dark"
-      ? "text-primary font-normal"
-      : "text-blue-900 font-normal";
-  const sidebarActiveTone = "asol-nav-pill-active ring-1 ring-primary/20";
-  const sidebarSurface =
-    resolvedScheme === "dark" ? "bg-surface-bright" : "bg-[#F8FBFF]";
-  const sidebarPressSurface =
-    resolvedScheme === "dark"
-      ? "active:bg-surface-variant"
-      : "active:bg-blue-200";
-  const sidebarControlClass = cn(
-    "asol-control w-full min-w-0 flex items-center justify-start gap-3 rounded-lg text-sm font-medium leading-5 active:opacity-90",
+  const {
+    sidebarActiveTone,
+    sidebarControlClass,
+    sidebarIconClass,
+    sidebarPressSurface,
+    sidebarSmallIconClass,
     sidebarSurface,
     sidebarTone,
-    sidebarPressSurface,
-  );
-  const sidebarIconClass = "w-5 h-5 shrink-0";
-  const sidebarSmallIconClass = "h-4 w-4 shrink-0";
+  } = createAppSidebarStyles(resolvedScheme);
 
   useEffect(() => {
     setMounted(true);
@@ -192,13 +170,11 @@ export const AppSidebar = React.memo(function AppSidebar({
     if (logout.isPending) return;
 
     setLogoutDialogOpen(false);
-    onClose();
-    queueLogoutSuccessToast();
-    router.replace("/home");
-    queryClient.clear();
-
-    void logout.mutateAsync().catch((error) => {
-      console.warn("[AppSidebar] Logout failed.", error);
+    executeSidebarLogout({
+      clearQueryCache: () => queryClient.clear(),
+      closeSidebar: onClose,
+      logout: () => logout.mutateAsync(),
+      replaceRoute: (href) => router.replace(href),
     });
   }, [logout, onClose, queryClient, router]);
 
@@ -227,7 +203,7 @@ export const AppSidebar = React.memo(function AppSidebar({
   }, []);
 
   const handleSuperAdminGroupToggle = useCallback(
-    (group: keyof typeof superAdminGroupsOpen) => {
+    (group: SuperAdminGroupKey) => {
       setSuperAdminGroupsOpen((current) => ({
         ...current,
         [group]: !current[group],
@@ -241,200 +217,6 @@ export const AppSidebar = React.memo(function AppSidebar({
     setSuperAdminOpen(true);
     setSuperAdminGroupsOpen({ ...COLLAPSED_SUPER_ADMIN_GROUPS });
   }, [pathname]);
-
-  // Memoize super admin content
-  const superAdminContent = useMemo(() => {
-    if (!showSuperAdmin) return null;
-    const itemClass = cn(
-      "flex min-w-0 items-center gap-2 rounded-md px-3 py-2 text-sm leading-5 break-words",
-      sidebarTone,
-      sidebarPressSurface,
-    );
-    const groupButtonClass = cn(
-      "flex w-full min-w-0 items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold leading-5 break-words",
-      sidebarTone,
-      sidebarPressSurface,
-    );
-    const groupPanelClass =
-      "ms-2 space-y-1 border-s border-outline-variant/40 ps-2";
-    return (
-      <div
-        className={cn(
-          "asol-control overflow-hidden rounded-2xl border",
-          resolvedScheme === "dark"
-            ? "border-outline-variant/30"
-            : "border-outline-variant/20",
-          sidebarSurface,
-        )}
-      >
-        <button
-          type="button"
-          onClick={handleSuperAdminToggle}
-          aria-expanded={superAdminOpen}
-          className={cn(sidebarControlClass, "rounded-none")}
-        >
-          <ShieldCheck className={sidebarIconClass} />
-          لوحة تحكم السوبر أدمن
-          <ChevronDown
-            className={cn(
-              "ms-auto h-4 w-4 transition-transform",
-              superAdminOpen && "rotate-180",
-            )}
-          />
-        </button>
-        {superAdminOpen && (
-          <div className="space-y-2 px-2 pb-3 sm:px-3 sm:pe-3 sm:ps-11">
-            <div className="overflow-hidden rounded-xl border border-outline-variant/25">
-              <button
-                type="button"
-                onClick={() => handleSuperAdminGroupToggle("content")}
-                aria-expanded={superAdminGroupsOpen.content}
-                className={groupButtonClass}
-              >
-                <Sliders className={sidebarSmallIconClass} />
-                واجهة المتجر والعروض
-                <ChevronDown
-                  className={cn(
-                    "ms-auto h-4 w-4 transition-transform",
-                    superAdminGroupsOpen.content && "rotate-180",
-                  )}
-                />
-              </button>
-              {superAdminGroupsOpen.content && (
-                <div className={groupPanelClass}>
-                  <Link
-                    href="/super-admin/hero-slider"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <Sliders className={sidebarSmallIconClass} />
-                    سلايدر الواجهة الرئيسية
-                  </Link>
-                  <Link
-                    href="/super-admin/featured-marquee"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <Sparkles className={sidebarSmallIconClass} />
-                    شريط المنتجات المميزة
-                  </Link>
-                  <Link
-                    href="/super-admin/trending-ribbon"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <TrendingUp className={sidebarSmallIconClass} />
-                    الشريط الإخباري المتحرك
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <div className="overflow-hidden rounded-xl border border-outline-variant/25">
-              <Link
-                href="/super-admin/cloud-accounts"
-                onClick={onClose}
-                className={groupButtonClass}
-              >
-                <Cloud className={sidebarSmallIconClass} />
-                حسابات التخزين السحابي
-              </Link>
-            </div>
-
-            <div className="overflow-hidden rounded-xl border border-outline-variant/25">
-              <button
-                type="button"
-                onClick={() => handleSuperAdminGroupToggle("notifications")}
-                aria-expanded={superAdminGroupsOpen.notifications}
-                className={groupButtonClass}
-              >
-                <Megaphone className={sidebarSmallIconClass} />
-                الإشعارات والبث
-                <ChevronDown
-                  className={cn(
-                    "ms-auto h-4 w-4 transition-transform",
-                    superAdminGroupsOpen.notifications && "rotate-180",
-                  )}
-                />
-              </button>
-              {superAdminGroupsOpen.notifications && (
-                <div className={groupPanelClass}>
-                  <Link
-                    href="/super-admin/notification-tests"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <TestTube2 className={sidebarSmallIconClass} />
-                    اختبار إرسال الإشعارات
-                  </Link>
-                  <Link
-                    href="/super-admin/notifications-broadcast"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <Megaphone className={sidebarSmallIconClass} />
-                    بث إشعار لكل المستخدمين
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <div className="overflow-hidden rounded-xl border border-outline-variant/25">
-              <button
-                type="button"
-                onClick={() => handleSuperAdminGroupToggle("system")}
-                aria-expanded={superAdminGroupsOpen.system}
-                className={groupButtonClass}
-              >
-                <ShieldCheck className={sidebarSmallIconClass} />
-                النظام وحسابات المستخدمين
-                <ChevronDown
-                  className={cn(
-                    "ms-auto h-4 w-4 transition-transform",
-                    superAdminGroupsOpen.system && "rotate-180",
-                  )}
-                />
-              </button>
-              {superAdminGroupsOpen.system && (
-                <div className={groupPanelClass}>
-                  <Link
-                    href="/super-admin/logs"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <ScrollText className={sidebarSmallIconClass} />
-                    سجل أحداث النظام
-                  </Link>
-                  <Link
-                    href="/super-admin/users"
-                    onClick={onClose}
-                    className={itemClass}
-                  >
-                    <Users className={sidebarSmallIconClass} />
-                    إدارة حسابات المستخدمين
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }, [
-    showSuperAdmin,
-    superAdminOpen,
-    superAdminGroupsOpen,
-    handleSuperAdminToggle,
-    handleSuperAdminGroupToggle,
-    t,
-    onClose,
-    sidebarControlClass,
-    sidebarPressSurface,
-    sidebarIconClass,
-    sidebarSmallIconClass,
-    sidebarSurface,
-    sidebarTone,
-  ]);
 
   if (!mounted) return null;
 
@@ -585,7 +367,22 @@ export const AppSidebar = React.memo(function AppSidebar({
                     </div>
                   </div>
 
-                  {superAdminContent}
+                  {showSuperAdmin ? (
+                    <AppSidebarSuperAdminSection
+                      resolvedScheme={resolvedScheme}
+                      sidebarControlClass={sidebarControlClass}
+                      sidebarIconClass={sidebarIconClass}
+                      sidebarSmallIconClass={sidebarSmallIconClass}
+                      sidebarSurface={sidebarSurface}
+                      sidebarTone={sidebarTone}
+                      sidebarPressSurface={sidebarPressSurface}
+                      superAdminOpen={superAdminOpen}
+                      superAdminGroupsOpen={superAdminGroupsOpen}
+                      onClose={onClose}
+                      onToggle={handleSuperAdminToggle}
+                      onGroupToggle={handleSuperAdminGroupToggle}
+                    />
+                  ) : null}
                 </>
               ) : (
                 <Link href="/login" onClick={onClose}>

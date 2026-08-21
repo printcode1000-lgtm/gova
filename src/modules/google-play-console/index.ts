@@ -19,4 +19,4 @@ export type {
   GooglePlayStoreAssetsSnapshot,
   GooglePlayStoreImageGroup,
   GooglePlayStoreListing,
-} from "./domain/store-assets-types";
+} from "@asol/google-play-store-assets-core";

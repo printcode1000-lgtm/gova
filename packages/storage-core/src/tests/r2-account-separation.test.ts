@@ -61,7 +61,7 @@ export async function runR2AccountSeparationTest() {
     ['packages', 'ota-core', 'src', 'publishing', 'config', 'ota-config.ts'],
     ['src', 'core', 'config', 'server-env.values.ts'],
     ['src', 'core', 'config', 'server-env', 'server-env.values.auth-notifications.ts'],
-    ['src', 'modules', 'release-commands', 'domain', 'build-command-catalog.ts'],
+    ['packages', 'release-core', 'src', 'console', 'build-command-catalog.ts'],
   ] as const;
 
   for (const segments of otaSources) {

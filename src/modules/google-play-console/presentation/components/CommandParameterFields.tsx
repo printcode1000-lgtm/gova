@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type {
   BuildCommandCatalogEntry,
   BuildParameterName,
-} from "@/modules/release-commands/domain/build-command-catalog";
+} from "@asol/release-core/console";
 
 /** Documentation row inside an expanded command card. */
 export function Doc({ label, value }: { label: string; value: string }) {

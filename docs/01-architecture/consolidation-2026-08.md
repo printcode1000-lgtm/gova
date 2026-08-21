@@ -1,5 +1,8 @@
 # The 2026-08 consolidation
 
+Follow-up: the later repository-wide pass is documented in
+[capability-consolidation-2026-08-follow-up.md](./capability-consolidation-2026-08-follow-up.md).
+
 One change, eight new sealed packages, and a set of moves that put every scattered concern behind
 a single owner. This page is the map: what moved, where it went, and — for each case — the reason
 the old arrangement was a problem rather than merely untidy.

@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { BuildJobRecord } from "@/modules/release-commands/domain/build-job-types";
+import type { BuildJobRecord } from "@asol/release-core/console";
 
 /**
  * Confirmation shown before a running job is killed. Stopping mid-build can

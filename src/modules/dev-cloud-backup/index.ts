@@ -3,7 +3,7 @@ export { DEV_CLOUD_BACKUP_API, DEV_CLOUD_BACKUP_ROUTE } from "./config";
 export {
   DEV_CLOUD_BACKUP_RESTORE_MODES,
   devCloudBackupRestoreConfirmation,
-} from "./domain/types";
+} from "@asol/backup-core";
 export type {
   DevCloudBackupInspectResult,
   DevCloudBackupDiffReport,
@@ -13,4 +13,4 @@ export type {
   DevCloudBackupRestoreResult,
   DevCloudBackupSummary,
   DevCloudBackupUpdateResult,
-} from "./domain/types";
+} from "@asol/backup-core";

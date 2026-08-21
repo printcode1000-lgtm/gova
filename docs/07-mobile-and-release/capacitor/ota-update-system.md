@@ -136,6 +136,11 @@ capability registry, which resolves each key through
 `Capacitor.isPluginAvailable` — see
 [Capability-aware delivery](#capability-aware-delivery).
 
+The update service keeps the OTA decision flow. Capacitor OTA calls,
+background-download calls, preferences, storage capacity, and app restart
+bridges are isolated beside it in
+`packages/ota-core/src/runtime/native-adapters.ts`.
+
 ### 2. Publish gate — the channel refuses an unsafe upload
 
 `scripts/ota/ota-native-compatibility.ts` compares the **working tree** against

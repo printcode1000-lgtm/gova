@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-import type { BuildCommandCatalogEntry } from "../domain/build-command-catalog";
-import type { BuildCommandReadiness, BuildJobRecord, ReleaseVersionSnapshot, StartBuildJobInput } from "../domain/build-job-types";
+import type { BuildCommandCatalogEntry } from "@asol/release-core/console";
+import type { BuildCommandReadiness, BuildJobRecord, ReleaseVersionSnapshot, StartBuildJobInput } from "@asol/release-core/console";
 import { buildJobApiService } from "../services/build-job-api-service";
 
 export function useBuildJobs(headers?: Record<string, string>) {

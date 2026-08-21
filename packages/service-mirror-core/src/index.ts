@@ -11,6 +11,7 @@ export interface ServiceMirrorOptions {
 }
 
 const RESOLVE_EXTENSIONS = ['.ts', '.tsx', '.json', '.js'];
+const TRANSIENT_WRITE_ERROR_CODES = new Set(['EBUSY', 'EMFILE', 'ENFILE', 'EPERM', 'UNKNOWN']);
 
 const SPECIFIER_PATTERNS = [
   /\bfrom\s+['"]([^'"]+)['"]/g,
@@ -24,6 +25,28 @@ const SPECIFIER_PATTERNS = [
   // misses an edge produces an upload that looks complete, which is the worst failure it has.
   /(?:^|[^\w$.])[\w$]*[Rr]equire\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
 ];
+
+function waitForRetry(milliseconds: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+}
+
+function writeFileSyncWithTransientRetry(filePath: string, content: string): void {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    try {
+      writeFileSync(filePath, content, 'utf8');
+      return;
+    } catch (error) {
+      lastError = error;
+      const code = typeof error === 'object' && error !== null && 'code' in error
+        ? String((error as { code?: unknown }).code)
+        : '';
+      if (!TRANSIENT_WRITE_ERROR_CODES.has(code) || attempt === 5) break;
+      waitForRetry(50 * (attempt + 1));
+    }
+  }
+  throw lastError;
+}
 
 export function readOutputOverride(): string | null {
   const index = process.argv.indexOf('--out');
@@ -416,10 +439,9 @@ export function syncServiceMirror(options: ServiceMirrorOptions): { fileCount: n
   };
 
   mkdirSync(outputRoot, { recursive: true });
-  writeFileSync(
+  writeFileSyncWithTransientRetry(
     path.join(outputRoot, 'manifest.json'),
     `${JSON.stringify(manifest, null, 2)}\n`,
-    'utf8',
   );
 
   const assetSummary = assetCount > 0 ? ` and ${assetCount} runtime asset(s)` : '';

@@ -1,0 +1,49 @@
+"use client";
+
+import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+export function ProfileStorySection({
+  story,
+  expanded,
+  setExpanded,
+  title,
+  hint,
+}: {
+  story: string;
+  expanded: boolean;
+  setExpanded: (next: boolean | ((current: boolean) => boolean)) => void;
+  title: string;
+  hint: string;
+}) {
+  return (
+    <section
+      data-snapshot-expanded="profile-preview-story"
+      aria-expanded={expanded}
+      className="rounded-3xl border border-outline-variant/70 bg-gradient-to-br from-primary/5 to-secondary/5 p-5 shadow-sm sm:p-7"
+    >
+      <button
+        type="button"
+        onClick={() => setExpanded((current) => !current)}
+        className="flex w-full items-center gap-3 text-start"
+      >
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-xl text-primary">
+          <FontAwesomeIcon icon={faBookOpen} />
+        </span>
+        <span className="flex-1">
+          <strong className="block text-lg">{title}</strong>
+          <span className="text-xs text-on-surface-variant">{hint}</span>
+        </span>
+        <FontAwesomeIcon
+          icon={faBookOpen}
+          className={`text-primary transition-transform ${expanded ? "scale-110" : "opacity-60"}`}
+        />
+      </button>
+      {expanded ? (
+        <p className="mt-5 whitespace-pre-wrap border-t border-outline-variant/60 pt-5 text-sm leading-8 text-on-surface-variant">
+          {story}
+        </p>
+      ) : null}
+    </section>
+  );
+}

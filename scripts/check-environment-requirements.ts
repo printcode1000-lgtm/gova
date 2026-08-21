@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir, platform, release } from "node:os";
 import path from "node:path";
 import dotenv from "dotenv";
+import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 
 dotenv.config({ path: ".env.local", quiet: true });
 dotenv.config({ path: ".env", quiet: true });
@@ -21,6 +22,7 @@ interface CheckResult {
 
 const ROOT = process.cwd();
 const requested = (process.argv.find((arg) => arg.startsWith("--scenario="))?.split("=")[1] ?? "all") as Scenario;
+const skipOutdated = process.argv.includes("--skip-outdated");
 const VALID_SCENARIOS = new Set<Scenario>(["all", "development", "web", "production", "android", "ios"]);
 if (!VALID_SCENARIOS.has(requested)) {
   throw new Error(`Unknown scenario "${requested}". Use all, development, web, production, android, or ios.`);
@@ -249,7 +251,7 @@ function checkWeb(): void {
 function checkProduction(): void {
   const link = existsSync(path.join(ROOT, ".vercel", "project.json"));
   add({ scenario: "production", item: "Main Vercel project link", level: link ? "OK" : "CONFIGURE", installed: link ? ".vercel/project.json" : undefined, required: "One GitHub-linked main Vercel project", action: link ? "No action." : "Run vercel link only for the main gova project." });
-  const keys = ["VERCEL_TOKEN", "VERCEL_SUBMAIN_TOKEN", "VERCEL_SUB2MAIN_TOKEN", "VERCEL_NOTIFICATIONS_TOKEN", "VERCEL_PRODUCTS_TOKEN", "VERCEL_ORDERS_TOKEN", "VERCEL_PROFILES_TOKEN"];
+  const keys = [...new Set(Object.values(ACCOUNT_DECLARATIONS).map((declaration) => declaration.tokenEnvVar))];
   const missing = keys.filter((key) => !envConfigured(key));
   add({ scenario: "production", item: "Vercel account tokens", level: missing.length ? "CONFIGURE" : "OK", installed: `${keys.length - missing.length}/${keys.length} configured`, required: keys.join(", "), action: missing.length ? `Configure without committing: ${missing.join(", ")}.` : "No action." });
   add({ scenario: "production", item: "Vercel CLI", level: "INFO", installed: "ephemeral", required: "vercel@59.0.0", action: "No global install. Deployment scripts download the pinned CLI through npx." });
@@ -269,12 +271,16 @@ function checkProduction(): void {
     "NEXT_PUBLIC_ASOL_ORDERS_URL",
     "NEXT_PUBLIC_ASOL_PROFILES_URL",
   ];
-  const runtimeMissing = [...databaseKeys, ...notificationKeys].filter((key) => !envConfigured(key));
+  const accountRuntimeKeys = Object.values(ACCOUNT_DECLARATIONS).flatMap((declaration) => [
+    ...declaration.requiredEnv,
+  ]);
+  const runtimeKeys = [...new Set([...databaseKeys, ...notificationKeys, ...accountRuntimeKeys])];
+  const runtimeMissing = runtimeKeys.filter((key) => !envConfigured(key));
   add({
     scenario: "production",
     item: "Production runtime configuration",
     level: runtimeMissing.length ? "CONFIGURE" : "OK",
-    installed: `${databaseKeys.length + notificationKeys.length - runtimeMissing.length}/${databaseKeys.length + notificationKeys.length} required values configured`,
+    installed: `${runtimeKeys.length - runtimeMissing.length}/${runtimeKeys.length} required values configured`,
     required: "Main/product/notification/order/profile databases, signing secrets, push key, and four public service origins",
     action: runtimeMissing.length ? `Configure without committing: ${runtimeMissing.join(", ")}.` : "No action.",
   });
@@ -336,5 +342,5 @@ if (scenarios.has("web") || scenarios.has("development")) checkWeb();
 if (scenarios.has("production")) checkProduction();
 if (scenarios.has("android")) checkAndroid();
 if (scenarios.has("ios")) checkIos();
-checkOutdatedPackages();
+if (!skipOutdated) checkOutdatedPackages();
 printReport();

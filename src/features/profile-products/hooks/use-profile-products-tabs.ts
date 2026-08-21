@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useSnapshotState } from "@/features/page-snapshot";
-import { CATEGORY_CONSTANTS, categoryService } from "@/features/categories";
+import { categoryService } from "@/features/categories";
 import { productApiService } from "@/features/product/services/product-api-service";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import {
@@ -17,73 +17,14 @@ import type {
   ProfileProductsSubTab,
   UseProfileProductsTabsInput,
 } from "../entities/profile-products.types";
-
-const EMPTY_FILTERS: ProfileProductsFilters = {
-  searchText: "",
-  sortBy: "newest",
-  extra: {},
-};
-
-const bucketKey = (categoryId: string, subcategoryId: string) =>
-  `${categoryId}:${subcategoryId}`;
-
-function normalizeSelection(
-  selection: ProfileSpecialtiesSelection,
-): ProfileSpecialtiesSelection {
-  return {
-    main: selection.main.map(Number),
-    sub: Object.fromEntries(
-      Object.entries(selection.sub).map(([key, values]) => [
-        String(key),
-        values.map(Number),
-      ]),
-    ),
-  };
-}
-
-function subProductId(sub: {
-  id: number | string;
-  originalId?: number;
-}): string {
-  return String(sub.originalId ?? sub.id);
-}
-
-function productName(product: ProductRecord): string {
-  return product.mainData.name || "";
-}
-
-function sortProducts(
-  products: ProductRecord[],
-  sortBy: ProfileProductsFilters["sortBy"],
-) {
-  const next = [...products];
-  if (sortBy === "name") {
-    next.sort((a, b) => productName(a).localeCompare(productName(b), "ar"));
-    return next;
-  }
-  next.sort((a, b) => {
-    const left = new Date(a.createdAt).getTime();
-    const right = new Date(b.createdAt).getTime();
-    return sortBy === "oldest" ? left - right : right - left;
-  });
-  return next;
-}
-
-function normalizeFilters(
-  filters: ProfileProductsFilters,
-): ProfileProductsFilters {
-  const sortBy =
-    filters.sortBy === "oldest" || filters.sortBy === "name"
-      ? filters.sortBy
-      : "newest";
-  return {
-    searchText:
-      typeof filters.searchText === "string" ? filters.searchText : "",
-    sortBy,
-    extra:
-      filters.extra && typeof filters.extra === "object" ? filters.extra : {},
-  };
-}
+import {
+  EMPTY_PROFILE_PRODUCTS_FILTERS,
+  buildProfileProductsTabs,
+  filterActiveProfileProducts,
+  normalizeProfileProductsFilters,
+  normalizeProfileProductsSelection,
+  profileProductsBucketKey,
+} from "./profile-products-tabs-model";
 
 export function useProfileProductsTabs({
   uid,
@@ -114,10 +55,10 @@ export function useProfileProductsTabs({
   );
   const [filters, setFilters] = useSnapshotState<ProfileProductsFilters>(
     `${snapshotKeyPrefix}.${mode}.filters`,
-    EMPTY_FILTERS,
+    EMPTY_PROFILE_PRODUCTS_FILTERS,
   );
   const normalizedFilters = React.useMemo(
-    () => normalizeFilters(filters),
+    () => normalizeProfileProductsFilters(filters),
     [filters],
   );
 
@@ -132,7 +73,7 @@ export function useProfileProductsTabs({
       .getSpecialties(uid)
       .then((next) => {
         if (!cancelled) {
-          setSelection(normalizeSelection(next));
+          setSelection(normalizeProfileProductsSelection(next));
           setError(null);
         }
       })
@@ -161,85 +102,13 @@ export function useProfileProductsTabs({
   );
 
   const tabs = React.useMemo<ProfileProductsMainTab[]>(() => {
-    const mainOptions = categoryService.getProfileMainOptions();
-    const selectedMainIds = new Set(selection.main.map(String));
-
-    return mainOptions
-      .filter((category) => selectedMainIds.has(String(category.id)))
-      .flatMap((category): ProfileProductsMainTab[] => {
-        const categoryId = String(category.id);
-
-        if (category.isCollection) {
-          const selectedMemberIds = new Set(
-            (selection.sub[categoryId] ?? []).map(String),
-          );
-          return (categoryService.getCollection(category.id)?.items ?? [])
-            .filter((member) => selectedMemberIds.has(String(member.id)))
-            .map((member) => {
-              const memberId = String(member.id);
-              const subTabs = (
-                categoryService.getCategoryTree(member.id)?.subcategories ?? []
-              )
-                .filter(
-                  (sub) =>
-                    sub.kind === "subcategory" &&
-                    sub.selectable !== false &&
-                    typeof sub.originalId === "number",
-                )
-                .map((sub): ProfileProductsSubTab => ({
-                  id: bucketKey(memberId, subProductId(sub)),
-                  categoryId: memberId,
-                  productSubcategoryId: subProductId(sub),
-                  label: locale === "ar" ? sub.nameAr : sub.nameEn,
-                  imageUrl: sub.imageUrl,
-                  productCount:
-                    productsByBucket[bucketKey(memberId, subProductId(sub))]
-                      ?.length,
-                }));
-              return {
-                id: memberId,
-                label: locale === "ar" ? member.nameAr : member.nameEn,
-                imageUrl: member.imageUrl,
-                subTabs,
-              };
-            });
-        }
-
-        const selectedSubIds = new Set(
-          (selection.sub[categoryId] ?? [])
-            .map(String)
-            .filter(
-              (subId) =>
-                includeDoctorAppointmentItems ||
-                categoryId !== String(CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID) ||
-                !doctorAppointmentIds.has(subId),
-            ),
-        );
-        const subTabs = categoryService
-          .getProfileSubOptions(category.id, false)
-          .filter(
-            (sub) =>
-              selectedSubIds.has(subProductId(sub)) &&
-              sub.kind === "subcategory" &&
-              sub.selectable !== false,
-          )
-          .map((sub): ProfileProductsSubTab => ({
-            id: bucketKey(categoryId, subProductId(sub)),
-            categoryId,
-            productSubcategoryId: subProductId(sub),
-            label: locale === "ar" ? sub.nameAr : sub.nameEn,
-            imageUrl: sub.imageUrl,
-            productCount:
-              productsByBucket[bucketKey(categoryId, subProductId(sub))]
-                ?.length,
-          }));
-        return [{
-          id: categoryId,
-          label: locale === "ar" ? category.nameAr : category.nameEn,
-          imageUrl: category.imageUrl,
-          subTabs,
-        }];
-      });
+    return buildProfileProductsTabs({
+      doctorAppointmentIds,
+      includeDoctorAppointmentItems,
+      locale,
+      productsByBucket,
+      selection,
+    });
   }, [
     doctorAppointmentIds,
     includeDoctorAppointmentItems,
@@ -280,13 +149,13 @@ export function useProfileProductsTabs({
     selectedMain?.subTabs[0] ??
     null;
   const activeBucket = activeSubTab
-    ? bucketKey(activeSubTab.categoryId, activeSubTab.productSubcategoryId)
+    ? profileProductsBucketKey(activeSubTab.categoryId, activeSubTab.productSubcategoryId)
     : "";
 
   const loadProducts = React.useCallback(
     async (subTab: ProfileProductsSubTab) => {
       if (!uid) return;
-      const key = bucketKey(subTab.categoryId, subTab.productSubcategoryId);
+      const key = profileProductsBucketKey(subTab.categoryId, subTab.productSubcategoryId);
       setLoadingBuckets((current) => new Set(current).add(key));
       try {
         const products = await productApiService.listByOwnerAndCategory(
@@ -315,16 +184,12 @@ export function useProfileProductsTabs({
   }, [activeBucket, activeSubTab, loadProducts, productsByBucket]);
 
   const activeProducts = React.useMemo(() => {
-    const raw = (productsByBucket[activeBucket] ?? []).filter(
-      (product) => mode !== "preview" || product.status === "active",
-    );
-    const search = normalizedFilters.searchText.trim().toLowerCase();
-    const filtered = search
-      ? raw.filter((product) =>
-          productName(product).toLowerCase().includes(search),
-        )
-      : raw;
-    return sortProducts(filtered, normalizedFilters.sortBy);
+    return filterActiveProfileProducts({
+      activeBucket,
+      mode,
+      normalizedFilters,
+      productsByBucket,
+    });
   }, [
     activeBucket,
     mode,
@@ -369,9 +234,9 @@ export function useProfileProductsTabs({
   const updateFilters = React.useCallback(
     (next: Partial<ProfileProductsFilters>) => {
       setFilters((current) => ({
-        ...normalizeFilters(current),
+        ...normalizeProfileProductsFilters(current),
         ...next,
-        extra: { ...normalizeFilters(current).extra, ...(next.extra ?? {}) },
+        extra: { ...normalizeProfileProductsFilters(current).extra, ...(next.extra ?? {}) },
       }));
     },
     [setFilters],
@@ -396,3 +261,4 @@ export function useProfileProductsTabs({
     removeProductFromCurrentBucket,
   };
 }
+

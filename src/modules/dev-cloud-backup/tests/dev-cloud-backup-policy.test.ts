@@ -4,11 +4,11 @@ import { existsSync } from "node:fs";
 import dotenv from "dotenv";
 
 import { discoverTursoBackupSources } from "@asol/data-core/dev-cloud-backup";
+import { backupStoragePrefixes } from "@asol/backup-core/server";
 import {
   assertDevCloudBackupAllowed,
   devCloudBackupEnvironment,
 } from "../domain/development-guard.server";
-import { r2BackupRepository } from "../repositories/r2-backup.repository.server";
 
 const original = {
   nodeEnv: process.env.NODE_ENV,
@@ -80,7 +80,7 @@ try {
 
   // R2 admits no exclusions: the only prefix is the whole bucket.
   assert.deepEqual(
-    r2BackupRepository.prefixes(),
+    backupStoragePrefixes(),
     [""],
     "R2 backup must cover every object with no prefix filtering",
   );

@@ -11,20 +11,10 @@ import {
 import type { ResolvedColorScheme } from './resolve-theme';
 import type { ThemeMode, ThemePreferences } from './types';
 import { reportPreAuthFailure } from '@/features/system-logs/pre-auth-failure-reporter';
+import { ThemeContext, type ThemeContextValue } from './theme-context';
+import { THEME_MODE_CYCLE } from './theme-mode-cycle';
 
-export type ThemeContextValue = {
-  preferences: ThemePreferences;
-  resolvedScheme: ResolvedColorScheme;
-  updatePreferences: (patch: Partial<ThemePreferences>) => void;
-  resetPreferences: () => void;
-  replacePreferences: (next: ThemePreferences) => void;
-  toggleColorScheme: () => void;
-  cycleThemeMode: () => void;
-};
-
-const ThemeContext = React.createContext<ThemeContextValue | null>(null);
-
-const THEME_MODE_CYCLE: ThemeMode[] = ['light', 'dark'];
+export type { ThemeContextValue } from './theme-context';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [preferences, setPreferences] = React.useState<ThemePreferences>(DEFAULT_THEME_PREFERENCES);
@@ -92,7 +82,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const cycleThemeMode = React.useCallback(() => {
     const current = preferencesRef.current.themeMode;
-    const next = current === 'light' ? 'dark' : 'light';
+    const currentIndex = THEME_MODE_CYCLE.indexOf(current);
+    const next = THEME_MODE_CYCLE[(currentIndex + 1) % THEME_MODE_CYCLE.length] ?? 'light';
     void commitPreferences({ ...preferencesRef.current, themeMode: next }).catch((error) => {
       reportPreAuthFailure('cycle-theme-mode', error);
     });

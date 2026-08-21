@@ -5,8 +5,10 @@ The `FeaturedMarquee` is a reusable, self-scrolling product showcase component d
 ---
 
 ## Component Location
-* Code: [FeaturedMarquee.tsx](file:///c:/Users/hesham/Desktop/asol/src/components/ui/FeaturedMarquee.tsx)
-* Configuration Example (Home Page): [home-featured-marquee.json](file:///c:/Users/hesham/Desktop/asol/src/features/home/presentation/home-featured-marquee.json)
+* Runtime contract and validation: `packages/featured-marquee-core/src`
+* Component code: `src/components/ui/FeaturedMarquee.tsx`
+* Home cache and synchronization: `src/features/advertisements/hooks/use-home-featured-marquee.ts`
+* Server adapter: `src/features/advertisements/services/featured-marquee-service.server.ts`
 
 ---
 
@@ -22,6 +24,10 @@ The `FeaturedMarquee` is a reusable, self-scrolling product showcase component d
 ## Configuration Model
 
 The component accepts **exactly one prop**: `config`.
+
+The persisted Home advertisement contract is owned by
+`@asol/featured-marquee-core`; the React component receives already resolved UI
+items and never talks to persistence directly.
 
 ### `FeaturedMarqueeConfig` Schema
 

@@ -17,15 +17,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "@/features/auth/components/SessionProvider";
-
-type DialogMode =
-  | "login_required"
-  | "confirm_follow"
-  | "confirm_unfollow"
-  | "owner_actions"
-  | "notify_followers"
-  | "error"
-  | "success";
+import {
+  followDialogText,
+  targetLabels,
+  targetLabelsEn,
+  type FollowDialogMode,
+} from "./follow-dialog-text";
 
 interface FollowButtonProps {
   targetType: FollowTargetType;
@@ -36,68 +33,6 @@ interface FollowButtonProps {
   isSuperAdmin?: boolean;
   targetLabel?: string;
   className?: string;
-}
-
-const targetLabels: Record<FollowTargetType, string> = {
-  store: "مقدم الخدمة",
-  product: "المنتج",
-  category: "الفئة",
-};
-
-const targetLabelsEn: Record<FollowTargetType, string> = {
-  store: "Provider",
-  product: "Product",
-  category: "Category",
-};
-
-
-
-function dialogText(mode: DialogMode, label: string, t: (key: string, params?: Record<string, string | number>) => string) {
-  switch (mode) {
-    case "login_required":
-      return {
-        title: t("follow.dialog.loginRequired.title"),
-        body: t("follow.dialog.loginRequired.body", { label }),
-        action: t("follow.dialog.loginRequired.action"),
-      };
-    case "confirm_follow":
-      return {
-        title: t("follow.dialog.confirmFollow.title"),
-        body: t("follow.dialog.confirmFollow.body", { label }),
-        action: t("follow.dialog.confirmFollow.action"),
-      };
-    case "confirm_unfollow":
-      return {
-        title: t("follow.dialog.confirmUnfollow.title"),
-        body: t("follow.dialog.confirmUnfollow.body", { label }),
-        action: t("follow.dialog.confirmUnfollow.action"),
-      };
-    case "owner_actions":
-      return {
-        title: t("follow.dialog.ownerActions.title"),
-        body: t("follow.dialog.ownerActions.body", { label }),
-        action: t("follow.dialog.ownerActions.action"),
-      };
-    case "notify_followers":
-      return {
-        title: t("follow.dialog.notification.title"),
-        body: t("follow.dialog.notification.body", { label }),
-        action: t("follow.dialog.notification.send"),
-      };
-    case "success":
-      return {
-        title: t("follow.dialog.success.title"),
-        body: t("follow.dialog.success.body"),
-        action: t("follow.dialog.success.action"),
-      };
-    case "error":
-    default:
-      return {
-        title: t("follow.dialog.error.title"),
-        body: t("follow.dialog.error.body"),
-        action: t("follow.dialog.error.action"),
-      };
-  }
 }
 
 export function FollowButton({
@@ -116,7 +51,7 @@ export function FollowButton({
   const [status, setStatus] = React.useState<FollowStatus | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isMutating, setIsMutating] = React.useState(false);
-  const [dialogMode, setDialogMode] = React.useState<DialogMode | null>(null);
+  const [dialogMode, setDialogMode] = React.useState<FollowDialogMode | null>(null);
   const [notificationTitle, setNotificationTitle] = React.useState("");
   const [notificationBody, setNotificationBody] = React.useState("");
   const [notificationResult, setNotificationResult] = React.useState<{
@@ -241,7 +176,7 @@ export function FollowButton({
     }
   };
 
-  const textForDialog = dialogMode ? dialogText(dialogMode, label, t) : null;
+  const textForDialog = dialogMode ? followDialogText(dialogMode, label, t) : null;
 
   return (
     <>

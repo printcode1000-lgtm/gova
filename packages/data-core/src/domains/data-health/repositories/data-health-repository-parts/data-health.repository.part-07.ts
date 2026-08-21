@@ -17,9 +17,9 @@ import {
   makeIssue,
   quarantineResourceType,
   severityRank,
-} from "@/modules/data-health/domain/policy";
-import { resolveDataHealthExecutionContext } from "@/modules/data-health/domain/execution-context.server";
-import { DATA_HEALTH_IMAGE_SOURCES } from "@/modules/data-health/domain/source-registry";
+} from "@asol/data-health-core/server";
+import { resolveDataHealthExecutionContext } from "../../runtime-context.server";
+import { DATA_HEALTH_IMAGE_SOURCES } from "@asol/data-health-core";
 import type {
   DataHealthAuditEntry,
   DataHealthCleanupAction,
@@ -29,7 +29,7 @@ import type {
   DataHealthQuarantineEntry,
   DataHealthReport,
   DataHealthTopology,
-} from "@/modules/data-health/domain/types";
+} from "@asol/data-health-core";
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../../db/metadata-schema";
 import { storageInventoryRepository } from "../storage-inventory.repository.server";
 import { DataHealthPart6 } from "./data-health.repository.part-06";

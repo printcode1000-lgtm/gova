@@ -203,6 +203,15 @@ Shared search panel.
 Variants:
 
 - `compact`: used inside profile product tabs.
+
+The shared `ProductSearchPanel` keeps UI orchestration. Its props contract is in
+`src/components/ui/product-search/product-search-panel.types.ts`, and default
+field selection lives in `src/components/ui/product-search/product-search-fields.ts`.
+
+Profile product tab selection uses
+`src/features/profile-products/hooks/profile-products-tabs-model.ts` for
+non-React normalization, bucket keys, filtering, and product sorting; the hook
+keeps React state and loading.
 - `full`: used in `/search`.
 
 ### `ProductSearchFieldSelector`

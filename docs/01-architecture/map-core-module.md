@@ -79,7 +79,7 @@ The package is split by responsibility:
 
 | Module | Responsibility |
 | --- | --- |
-| `AsolMap.tsx` | Map engine lifecycle, event translation, layer orchestration, and recovery UI |
+| `AsolMap.tsx` | Map engine lifecycle, event translation, layer orchestration, worker URL pinning, and recovery UI |
 | `AddressBalloon.tsx` | The in-map address form rendered inside the marker popup |
 | `providers.ts` | Tile-provider contracts and raster/OSM provider factories |
 | `gps.ts` | Browser and native/Capacitor geolocation adapters |
@@ -120,8 +120,9 @@ ASOL therefore hosts the worker itself:
   into `public/`. The worker is not self-contained — it imports the shared runtime as a
   sibling, so copying the worker alone reproduces the same 404-as-HTML one level deeper.
 - `AsolMap.tsx` calls `setWorkerUrl('/maplibre-gl-worker.mjs')` at module scope.
-- The sync runs from `app:init` (so `npm run dev` and `npm run build` cover it) and
-  explicitly in `build:static`, which does not go through `app:init`.
+- The sync runs from `app:init` (so `npm run build` and `npm run dev:checked` cover it)
+  and explicitly in `build:static`, which does not go through `app:init`.
+  `npm run dev` is intentionally fast and does not run this sync before startup.
 - `npm run architecture:check` fails if either artifact is missing, has drifted from
   the installed package, or if `AsolMap` stops pinning the worker URL.
 

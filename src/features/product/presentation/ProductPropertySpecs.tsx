@@ -14,6 +14,10 @@ import type {
 } from "./product-component.types";
 import { isCancelledError } from '@asol/native-core';
 import { shareLocationUrl } from "@/features/sharing/share-location-url";
+import {
+  googleMapsSearchUrl,
+  openDeviceMaps,
+} from "@/features/location/location-links";
 
 const DEFAULT_LOCATION = {
   latitude: 29.9668,
@@ -39,23 +43,6 @@ function readCoordinate(value: string | undefined, min: number, max: number) {
   return Number.isFinite(number) && number >= min && number <= max
     ? number
     : null;
-}
-
-function openDeviceMaps(latitude: number, longitude: number) {
-  const encoded = encodeURIComponent(`${latitude},${longitude}`);
-  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-    window.location.href = `maps://maps.apple.com/?q=${encoded}&ll=${encoded}`;
-    return;
-  }
-  if (/Android/i.test(navigator.userAgent)) {
-    window.location.href = `geo:${latitude},${longitude}?q=${encoded}`;
-    return;
-  }
-  window.open(
-    `https://www.google.com/maps/search/?api=1&query=${encoded}`,
-    "_blank",
-    "noopener,noreferrer",
-  );
 }
 
 export function ProductPropertySpecs({
@@ -110,7 +97,7 @@ export function ProductPropertySpecs({
 
   const shareLocation = React.useCallback(
     async (nextLatitude: number, nextLongitude: number) => {
-      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${nextLatitude},${nextLongitude}`)}`;
+      const url = googleMapsSearchUrl(nextLatitude, nextLongitude);
       // The shared helper also copies the link when sharing is unavailable or
       // fails, so the user is never left without a way to keep the location.
       await shareLocationUrl(

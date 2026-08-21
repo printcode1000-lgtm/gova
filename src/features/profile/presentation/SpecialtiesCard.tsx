@@ -1,11 +1,8 @@
 "use client";
 
-import { formatCount } from "@asol/format-core";
-
 import * as React from "react";
 import Image from "next/image";
-import { X, AlertTriangle } from "lucide-react";
-import { BOTTOM_NAV_CLEARANCE } from "@/components/layouts/bottom-nav-layout";
+import { X } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -16,7 +13,6 @@ import { profileService } from "@/features/profile/services/profile-service";
 import { productApiService } from "@/features/product/services/product-api-service";
 import {
   categoryService,
-  CATEGORY_CONSTANTS,
   type CategoryDisplay,
   type SubcategoryDisplay,
 } from "@/features/categories";
@@ -25,77 +21,19 @@ import type {
   ProfileSectionStatus,
   ProfileSpecialtiesController,
 } from "./profile-save-controller";
-
-const MEDICAL_SERVICES_CATEGORY_ID = CATEGORY_CONSTANTS.MEDICAL_SERVICES_ID;
-const DELIVERY_SERVICES_ID = CATEGORY_CONSTANTS.DELIVERY_SERVICES_ID;
-
-function isIntegerId(value: unknown): value is number {
-  return typeof value === "number" && Number.isInteger(value);
-}
-
-function selectableSubcategoryIdsForCategory(category: CategoryDisplay): string[] {
-  const regularIds = categoryService
-    .getProfileSubOptions(category.id, category.isCollection)
-    .filter((item) => !item.isDoctorAppointmentGroup && item.selectable !== false)
-    .map((item) => item.originalId ?? item.id)
-    .filter(isIntegerId)
-    .map(String);
-
-  if (category.id !== MEDICAL_SERVICES_CATEGORY_ID) {
-    return regularIds;
-  }
-
-  const doctorIds = categoryService
-    .getDoctorAppointmentItems()
-    .map((item) => item.originalId ?? item.id)
-    .filter(isIntegerId)
-    .map(String);
-
-  return Array.from(new Set([...regularIds, ...doctorIds]));
-}
-
-function categoryRequiresSubcategorySelection(category: CategoryDisplay): boolean {
-  return (
-    category.id !== DELIVERY_SERVICES_ID &&
-    selectableSubcategoryIdsForCategory(category).length > 0
-  );
-}
-
-function normalizeLoadedSpecialties(
-  selection: ProfileSpecialtiesSelection,
-): ProfileSpecialtiesSelection {
-  const categories = categoryService.getProfileMainOptions();
-  const categoryById = new Map(categories.map((category) => [category.id, category]));
-  const normalizedSub = Object.fromEntries(
-    Object.entries(selection.sub)
-      .map(([categoryId, ids]) => {
-        const category = categoryById.get(Number(categoryId));
-        if (!category) return null;
-        const allowedIds = new Set(selectableSubcategoryIdsForCategory(category));
-        const normalizedIds = Array.from(
-          new Set(ids.map(String).filter((id) => allowedIds.has(id))),
-        ).map(Number);
-        return normalizedIds.length > 0 ? [categoryId, normalizedIds] : null;
-      })
-      .filter((entry): entry is [string, number[]] => Boolean(entry)),
-  );
-  const main = Array.from(new Set(selection.main)).filter((categoryId) => {
-    const category = categoryById.get(categoryId);
-    if (!category) return false;
-    return (
-      !categoryRequiresSubcategorySelection(category) ||
-      (normalizedSub[String(categoryId)]?.length ?? 0) > 0
-    );
-  });
-  const mainSet = new Set(main.map(String));
-
-  return {
-    main,
-    sub: Object.fromEntries(
-      Object.entries(normalizedSub).filter(([categoryId]) => mainSet.has(categoryId)),
-    ),
-  };
-}
+import {
+  categoryRequiresSubcategorySelection,
+  MEDICAL_SERVICES_CATEGORY_ID,
+  normalizeLoadedSpecialties,
+  selectableSubcategoryIdsForCategory,
+} from "./specialties-selection";
+import {
+  SpecialtiesDeleteDialog,
+  type SpecialtyDeleteDialogState,
+  type SpecialtyDeleteProductWarning,
+} from "./SpecialtiesDeleteDialog";
+import { specialtyDeleteImpactPairs } from "./specialties-delete-impact";
+import { SpecialtiesToast } from "./SpecialtiesToast";
 
 /**
  * EXCEPTIONAL CATEGORIES:
@@ -154,16 +92,14 @@ export const SpecialtiesCard = React.forwardRef<
   const [isLoadingSubcategories, setIsLoadingSubcategories] =
     React.useState(false);
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
-  const [deleteDialog, setDeleteDialog] = React.useState<{
-    type: "main" | "sub";
-    categoryId: string;
-    subcategoryId?: string;
-  } | null>(null);
-  const [deleteProductWarning, setDeleteProductWarning] = React.useState<{
-    isLoading: boolean;
-    count: number;
-    names: string[];
-  }>({ isLoading: false, count: 0, names: [] });
+  const [deleteDialog, setDeleteDialog] =
+    React.useState<SpecialtyDeleteDialogState | null>(null);
+  const [deleteProductWarning, setDeleteProductWarning] =
+    React.useState<SpecialtyDeleteProductWarning>({
+      isLoading: false,
+      count: 0,
+      names: [],
+    });
   const label = t("onboarding.storeIdentity.specialties");
 
   const applySelection = React.useCallback(
@@ -251,12 +187,10 @@ export const SpecialtiesCard = React.forwardRef<
     }
 
     let cancelled = false;
-    const pairs = deleteDialog.subcategoryId
-      ? [[deleteDialog.categoryId, deleteDialog.subcategoryId]]
-      : (selectedSubcategories[deleteDialog.categoryId] ?? []).map((subId) => [
-          deleteDialog.categoryId,
-          subId,
-        ]);
+    const pairs = specialtyDeleteImpactPairs({
+      deleteDialog,
+      selectedSubcategories,
+    });
 
     if (pairs.length === 0) {
       setDeleteProductWarning({ isLoading: false, count: 0, names: [] });
@@ -808,94 +742,18 @@ export const SpecialtiesCard = React.forwardRef<
           </div>
         </div>
       )}
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div
-          className="fixed right-4 z-[100] animate-in fade-in slide-in-from-bottom-4 rounded-lg bg-red-600 px-4 py-3 text-white shadow-lg duration-300"
-          style={{ bottom: BOTTOM_NAV_CLEARANCE }}
-        >
-          <p className="text-sm font-medium">{toastMessage}</p>
-        </div>
-      )}
+      <SpecialtiesToast message={toastMessage} />
 
-      {/* Delete Confirmation Dialog */}
       {deleteDialog && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-surface rounded-xl shadow-xl max-w-sm w-full p-4 space-y-3">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-error/10 flex items-center justify-center">
-                <AlertTriangle className="h-4 w-4 text-error" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-sm font-semibold text-on-surface">
-                  {locale === "ar" ? "تأكيد الحذف" : "Confirm Delete"}
-                </h3>
-                <p className="text-xs text-on-surface-variant mt-1">
-                  {deleteDialog.type === "main"
-                    ? locale === "ar"
-                      ? `هل أنت متأكد من حذف "${getCategoryName(deleteDialog.categoryId)}"؟ سيتم حذف جميع التخصصات الفرعية التابعة له.`
-                      : `Are you sure you want to delete "${getCategoryName(deleteDialog.categoryId)}"? All its subcategories will also be removed.`
-                    : locale === "ar"
-                      ? `هل أنت متأكد من حذف "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"؟`
-                      : `Are you sure you want to delete "${getSubcategoryName(deleteDialog.categoryId, deleteDialog.subcategoryId!)}"?`}
-                </p>
-                <div className="mt-2 rounded-lg border border-warning/35 bg-warning/10 px-3 py-2 text-xs text-on-surface">
-                  {deleteProductWarning.isLoading ? (
-                    <span>
-                      {locale === "ar"
-                        ? "جاري فحص المنتجات المرتبطة بهذا التخصص..."
-                        : "Checking products linked to this specialty..."}
-                    </span>
-                  ) : deleteProductWarning.count > 0 ? (
-                    <div className="space-y-1">
-                      <p className="font-medium text-warning">
-                        {locale === "ar"
-                          ? `تنبيه: لديك ${formatCount(deleteProductWarning.count, "ar")} منتج/منتجات داخل هذا التخصص.`
-                          : `Warning: you have ${formatCount(deleteProductWarning.count, "en")} product(s) in this specialty.`}
-                      </p>
-                      {deleteProductWarning.names.length > 0 && (
-                        <p className="text-on-surface-variant">
-                          {deleteProductWarning.names.join("، ")}
-                        </p>
-                      )}
-                      <p className="text-on-surface-variant">
-                        {locale === "ar"
-                          ? "إلغاء الاشتراك لا يحذف المنتجات، لكنه قد يجعلها خارج تخصصات ملفك المختارة."
-                          : "Unsubscribing will not delete products, but they may no longer match your selected profile specialties."}
-                      </p>
-                    </div>
-                  ) : (
-                    <span className="text-on-surface-variant">
-                      {locale === "ar"
-                        ? "لا توجد منتجات مرتبطة بهذا التخصص حاليًا."
-                        : "No products are currently linked to this specialty."}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-2 justify-end pt-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setDeleteDialog(null)}
-                className="text-xs"
-              >
-                {locale === "ar" ? "إلغاء" : "Cancel"}
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                onClick={handleDelete}
-                disabled={deleteProductWarning.isLoading}
-                className="text-xs bg-error text-on-error"
-              >
-                {locale === "ar" ? "حذف" : "Delete"}
-              </Button>
-            </div>
-          </div>
-        </div>
+        <SpecialtiesDeleteDialog
+          dialog={deleteDialog}
+          warning={deleteProductWarning}
+          locale={locale}
+          getCategoryName={getCategoryName}
+          getSubcategoryName={getSubcategoryName}
+          onCancel={() => setDeleteDialog(null)}
+          onDelete={handleDelete}
+        />
       )}
     </>
   );

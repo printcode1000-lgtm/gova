@@ -7,4 +7,4 @@ export type {
   DataHealthOrderPurgePlan,
   DataHealthOrderPurgeResult,
   DataHealthReport,
-} from "./domain/types";
+} from "@asol/data-health-core";

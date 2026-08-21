@@ -1,0 +1,51 @@
+type DetailRecord = Record<string, unknown>;
+
+function formatDetailValue(value: unknown) {
+  if (value === null) return "null";
+  if (value === undefined) return "-";
+  if (typeof value === "object") return JSON.stringify(value, null, 2);
+  return String(value);
+}
+
+export function SelectedRecordDetails({
+  title,
+  record,
+}: {
+  title: string;
+  record: DetailRecord | null;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border bg-background/70">
+      <h3 className="border-b px-4 py-3 text-sm font-bold">{title}</h3>
+      {record ? (
+        <dl className="divide-y text-sm">
+          {Object.entries(record).map(([key, value]) => (
+            <div
+              key={key}
+              className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(130px,0.4fr)_1fr] sm:gap-4"
+            >
+              <dt
+                className="font-mono text-xs font-semibold text-primary"
+                dir="ltr"
+              >
+                {key}
+              </dt>
+              <dd
+                className="break-all whitespace-pre-wrap text-muted-foreground"
+                dir="auto"
+              >
+                {formatDetailValue(value)}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <p className="px-4 py-5 text-sm text-muted-foreground">
+          لم يتم الاختيار بعد.
+        </p>
+      )}
+    </div>
+  );
+}
+
+export type { DetailRecord };

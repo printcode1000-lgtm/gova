@@ -2,6 +2,7 @@
 
 Source: `src/components/layouts/AppSidebar.tsx`
 Props contract: `src/components/layouts/app-sidebar/AppSidebar.sidebar-model.tsx`
+Super Admin section: `src/components/layouts/app-sidebar/AppSidebarSuperAdminSection.tsx`
 
 ## Card surfaces
 

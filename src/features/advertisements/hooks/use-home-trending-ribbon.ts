@@ -4,9 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 
 import type { TrendingRibbonConfig as UIRibbonConfig } from "@/components/ui/TrendingRibbon";
 import {
+  DEFAULT_TRENDING_RIBBON_PUBLISHED,
   TRENDING_RIBBON_CACHE_KEY,
+  TRENDING_RIBBON_FALLBACK_LABEL,
+  isTrendingRibbonPublished,
   type TrendingRibbonPublished,
-} from "@/features/advertisements/entities/trending-ribbon.entity";
+} from "@asol/trending-ribbon-core";
 import { trendingRibbonApiService } from "@/features/advertisements/services/trending-ribbon-api-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import {
@@ -29,41 +32,9 @@ interface HomeTrendingRibbonState {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const FALLBACK_LABEL = "home.trending.label";
+const FALLBACK_LABEL = TRENDING_RIBBON_FALLBACK_LABEL;
 
-const fallback: TrendingRibbonPublished = {
-  config: { label: FALLBACK_LABEL, items: [] },
-  version: 0,
-  checkIntervalMinutes: 15,
-  updatedAt: "",
-};
-
-function isValidTrendingConfig(value: unknown): value is UIRibbonConfig {
-  if (!value || typeof value !== "object") return false;
-  const config = value as Partial<UIRibbonConfig>;
-  return (
-    typeof config.label === "string" &&
-    Array.isArray(config.items) &&
-    config.items.every(
-      (item) =>
-        Boolean(item) &&
-        typeof item === "object" &&
-        typeof item.label === "string" &&
-        typeof item.action === "string",
-    )
-  );
-}
-
-function isValidPublished(value: unknown): value is TrendingRibbonPublished {
-  if (!value || typeof value !== "object") return false;
-  const published = value as Partial<TrendingRibbonPublished>;
-  return (
-    isValidTrendingConfig(published.config) &&
-    typeof published.version === "number" &&
-    typeof published.checkIntervalMinutes === "number" &&
-    typeof published.updatedAt === "string"
-  );
-}
+const fallback: TrendingRibbonPublished = DEFAULT_TRENDING_RIBBON_PUBLISHED;
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
 
@@ -79,7 +50,7 @@ export function useHomeTrendingRibbon() {
         ASOL_DB_STORES.APP_SETTINGS,
         TRENDING_RIBBON_CACHE_KEY,
       );
-      const cached = isValidPublished(stored) ? stored : null;
+      const cached = isTrendingRibbonPublished(stored) ? stored : null;
 
       if (stored && !cached) {
         await asolDbDelete(
@@ -109,7 +80,7 @@ export function useHomeTrendingRibbon() {
       ) {
         // Config changed — download full data
         const remote = await trendingRibbonApiService.getCurrent();
-        if (!isValidPublished(remote)) {
+        if (!isTrendingRibbonPublished(remote)) {
           throw new Error("Trending ribbon API returned an invalid payload");
         }
         next = remote;

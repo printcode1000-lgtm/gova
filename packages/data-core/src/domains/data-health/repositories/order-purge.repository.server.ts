@@ -7,7 +7,7 @@ import { createMarketplaceOrdersDb } from "../../marketplace-orders/db/client";
 import type { MarketplaceDb } from "../../marketplace-orders/ports/marketplace-order-store";
 
 import { DATA_HEALTH_METADATA_STATEMENTS } from "../db/metadata-schema";
-import { stableHash } from "@/modules/data-health/domain/policy";
+import { stableHash } from "@asol/data-health-core/server";
 
 type Row = Record<string, unknown>;
 

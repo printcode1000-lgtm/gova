@@ -6,7 +6,7 @@ import type {
   TrendingRibbonConfig,
   TrendingRibbonPublished,
   TrendingRibbonRecord,
-} from "../entities/trending-ribbon.entity";
+} from "@asol/trending-ribbon-core";
 
 type TrendingRibbonVersion = Pick<
   TrendingRibbonPublished,

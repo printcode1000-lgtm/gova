@@ -5,12 +5,12 @@ import {
   DuplicateImageUploadError,
   ImageUploadCancelledError,
   ImageUploadQueue,
-} from "../services/image-upload-queue";
+} from "@asol/storage-image-manager-core/services";
 import {
   buildImageUploadDraftKey,
   imageUploadDraftToFile,
   type ImageUploadDraft,
-} from "../services/image-upload-draft-service";
+} from "@asol/storage-image-manager-core/services";
 import { StorageProfiles } from "@asol/storage-core";
 
 function deferred<T>() {
@@ -164,6 +164,13 @@ async function main() {
   testDraftIdentityAndFileRestoration();
   const root = process.cwd();
   const managerSource = readFileSync(
+    path.join(
+      root,
+      "packages/storage-image-manager-core/src/components/StorageImageManager.tsx",
+    ),
+    "utf8",
+  );
+  const appManagerSource = readFileSync(
     path.join(root, "src/features/storage/components/StorageImageManager.tsx"),
     "utf8",
   );
@@ -183,11 +190,20 @@ async function main() {
     path.join(root, "src/features/profile/presentation/StoreIdentityCard.tsx"),
     "utf8",
   );
+  const profileImagesEditorSource = readFileSync(
+    path.join(
+      root,
+      "src/features/profile/presentation/store-identity/StoreIdentityImagesEditor.tsx",
+    ),
+    "utf8",
+  );
   const profileSaveSource = readFileSync(
     path.join(root, "src/features/profile/presentation/use-profile-save.ts"),
     "utf8",
   );
   assert.match(managerSource, /uploadPending:\s*async/);
+  assert.match(appManagerSource, /CoreStorageImageManager/);
+  assert.match(appManagerSource, /draftOwnerId=\{draftOwnerId\}/);
   assert.match(productSource, /await imageUploadRef\.current\?\.uploadPending\(\)/);
   assert.match(productEditorsSource, /const imagesRef = React\.useRef\(images\)/);
   assert.match(productEditorsSource, /const next:[^=]+= \[\.\.\.imagesRef\.current\]/);
@@ -208,8 +224,8 @@ async function main() {
     /const coverImageKeys = heroTouchedRef\.current/,
     "profile save must read the upload callback's current cover state",
   );
-  assert.match(profileSource, /imageTab === "logo"[\s\S]{0,500}: "hidden"/);
-  assert.match(profileSource, /imageTab === "hero" \? "block" : "hidden"/);
+  assert.match(profileImagesEditorSource, /imageTab === "logo"[\s\S]{0,500}: "hidden"/);
+  assert.match(profileImagesEditorSource, /imageTab === "hero" \? "block" : "hidden"/);
   assert.match(
     profileSaveSource,
     /storeController\.prepareForSave &&[\s\S]{0,120}await storeController\.prepareForSave\(\)/,

@@ -42,6 +42,7 @@ import {
 import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
+import { shipmentActionAvailability } from "./shipment-action-model";
 
 export function OrderLevelActions({
   order,
@@ -139,33 +140,17 @@ export function ShipmentCard({
 }) {
   const shipmentId = String(shipment.id);
   const carrierId = String(shipment.carrier_id ?? "");
-  const shipmentStatus = String(shipment.status ?? "");
   const isCarrier = admin || sessionUid === carrierId;
   const shipmentItems = details.shipmentItems.filter(
     (item) => String(item.shipment_id) === shipmentId,
   );
-  const canReceive = [
-    "waiting_for_carrier_pickup",
-    "partially_received_by_carrier",
-  ].includes(shipmentStatus);
-  const canReject = [
-    "waiting_for_carrier_pickup",
-    "partially_received_by_carrier",
-  ].includes(shipmentStatus);
-  const canTransit = [
-    "waiting_for_carrier_pickup",
-    "fully_received_by_carrier",
-    "partially_received_by_carrier",
-  ].includes(shipmentStatus);
-  const canOutForDelivery = [
-    "in_transit",
-    "arrived_at_distribution_center",
-  ].includes(shipmentStatus);
-  const canDeliver = [
-    "in_transit",
-    "out_for_delivery",
-    "partially_delivered",
-  ].includes(shipmentStatus);
+  const {
+    canReceive,
+    canReject,
+    canTransit,
+    canOutForDelivery,
+    canDeliver,
+  } = shipmentActionAvailability(shipment.status);
 
   return (
     <div className="rounded-lg border border-outline-variant p-3">

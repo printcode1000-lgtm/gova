@@ -8,7 +8,13 @@ The system is mounted globally through `SnapshotProvider` in the root layout. Pa
 
 ## Architecture
 
-The module lives under:
+The stable snapshot contract and browser policy live in:
+
+```text
+packages/page-snapshot-core
+```
+
+The React integration lives under:
 
 ```text
 src/features/page-snapshot
@@ -18,13 +24,18 @@ Main parts:
 
 ```text
 entities/page-snapshot.types.ts
-  Snapshot contracts, version, identity, and options.
+  Compatibility re-export of the package contracts.
 
 services/page-snapshot-service.ts
-  AsolDB persistence, key creation, TTL/version checks, DOM capture, and DOM restore.
+  Application adapter that injects AsolDB and the current build id into
+  @asol/page-snapshot-core.
 
 hooks/use-page-snapshot.tsx
   SnapshotProvider, usePageSnapshot, and useSnapshotState.
+
+hooks/page-snapshot-browser.ts
+  Browser-only React integration helpers for navigation events and URL query
+  normalization.
 
 index.ts
   Public module exports.
@@ -35,6 +46,9 @@ Storage is provided by:
 ```text
 packages/data-core/src/browser/asol-db/index.ts
 ```
+
+`@asol/page-snapshot-core` does not import `data-core` directly; the app adapter
+passes the storage functions through a port.
 
 The `AsolDB` schema version is increased and a new object store is added:
 
@@ -196,6 +210,12 @@ import {
   SnapshotProvider,
 } from '@/features/page-snapshot';
 ```
+
+The same non-React runtime exports are available from `@asol/page-snapshot-core`
+for tests and package consumers.
+Inside the package, deterministic key construction and stable serialization live
+in `runtime/page-snapshot-key.ts`; DOM capture and restore remain in
+`runtime/page-snapshot-runtime.ts`.
 
 ### saveSnapshot
 

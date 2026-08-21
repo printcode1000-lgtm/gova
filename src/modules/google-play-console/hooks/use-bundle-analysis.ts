@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import type { BundleAnalysis, BundleAnalysisComparison } from "@/modules/release-commands/domain/bundle-analysis-types";
+import type { BundleAnalysis, BundleAnalysisComparison } from "@asol/release-core/console";
 import { buildJobApiService } from "@/modules/release-commands/services/build-job-api-service";
 
 import { useReleaseJobs } from "./use-release-jobs";

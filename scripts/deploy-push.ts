@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   type DeployPushTarget,
+  ALL_DEPLOY_PUSH_TARGETS,
   resolveServiceDeployTargets,
 } from "./deploy-push-target-choice";
 import {
@@ -14,8 +15,10 @@ import {
 import { pushMainBranch } from "@asol/release-core";
 import {
   type VercelDeploymentReport,
+  verifyAccountTokenAccess,
   waitForVercelProductionDeployment,
 } from "@asol/vercel-deploy-core";
+import { ACCOUNT_DECLARATIONS } from "@asol/account-declarations";
 import { loadReleaseEnvironment } from "./load-release-env";
 
 loadReleaseEnvironment();
@@ -26,6 +29,31 @@ const GIT_INDEX_LOCK = path.join(ROOT, ".git", "index.lock");
 const ROOT_VERCEL_LINK = path.join(ROOT, ".vercel", "project.json");
 const STALE_GIT_LOCK_AGE_MS = 2 * 60 * 1000;
 const FAIL_PREFIX = "[deploy:push] FAILED —";
+const RELEASE_MANIFEST = "public/asol-web-manifest.json";
+
+interface DeployPushFlags {
+  allowEmpty: boolean;
+  allowManifestDowngrade: boolean;
+  allowScratchFiles: boolean;
+}
+
+interface ParsedArgv {
+  flags: DeployPushFlags;
+  targetArgs: string[];
+}
+
+const DEPLOY_PUSH_FLAG_NAMES = new Set([
+  "--allow-empty",
+  "--allow-manifest-downgrade",
+  "--allow-scratch-files",
+]);
+
+const SCRATCH_FILE_PATTERNS = [
+  /(^|\/)__probe/i,
+  /\.(log|tmp|bak|orig|rej)$/i,
+  /(^|\/)scratchpad\//i,
+  /(^|\/)\.DS_Store$/,
+];
 
 const ISOLATED_DEPLOYS: Record<
   DeployPushTarget,
@@ -101,6 +129,148 @@ function assertMainDeploymentCredentials(): void {
       ".vercel/project.json is required to identify the GitHub-linked main project.",
     );
   }
+}
+
+function parseArgv(argv: readonly string[]): ParsedArgv {
+  const unknown = argv.filter(
+    (arg) => !DEPLOY_PUSH_FLAG_NAMES.has(arg) && !arg.startsWith("--vercel-target="),
+  );
+  if (unknown.length > 0) {
+    throw new Error(
+      `Unknown option(s): ${unknown.join(", ")}. Known flags: ${[
+        ...DEPLOY_PUSH_FLAG_NAMES,
+      ].join(", ")}; target flag: --vercel-target=<main|none|all|${ALL_DEPLOY_PUSH_TARGETS.join("|")}>.`,
+    );
+  }
+  return {
+    flags: {
+      allowEmpty: argv.includes("--allow-empty"),
+      allowManifestDowngrade: argv.includes("--allow-manifest-downgrade"),
+      allowScratchFiles: argv.includes("--allow-scratch-files"),
+    },
+    targetArgs: argv.filter((arg) => arg.startsWith("--vercel-target=")),
+  };
+}
+
+function changedPaths(): string[] {
+  return git(["status", "--porcelain"])
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map((line) => line.slice(3).trim());
+}
+
+function assertNoScratchFiles(flags: DeployPushFlags): void {
+  const scratch = changedPaths().filter((entry) =>
+    SCRATCH_FILE_PATTERNS.some((pattern) => pattern.test(entry)),
+  );
+  if (scratch.length > 0 && !flags.allowScratchFiles) {
+    throw new Error(
+      "Refusing to publish scratch files:\n" +
+        scratch.map((entry) => `  - ${entry}`).join("\n") +
+        "\nRemove them, or pass --allow-scratch-files if they are intentional.",
+    );
+  }
+}
+
+function compareVersions(left: string, right: string): number {
+  const leftParts = left.split(/[.\-+]/);
+  const rightParts = right.split(/[.\-+]/);
+  const length = Math.max(leftParts.length, rightParts.length);
+  for (let index = 0; index < length; index += 1) {
+    const a = leftParts[index] ?? "";
+    const b = rightParts[index] ?? "";
+    const numericA = Number(a);
+    const numericB = Number(b);
+    if (Number.isFinite(numericA) && Number.isFinite(numericB) && a !== "" && b !== "") {
+      if (numericA !== numericB) return numericA < numericB ? -1 : 1;
+      continue;
+    }
+    if (a !== b) return a < b ? -1 : 1;
+  }
+  return 0;
+}
+
+function assertReleaseManifestNotDowngraded(flags: DeployPushFlags): void {
+  const manifestPath = path.join(ROOT, RELEASE_MANIFEST);
+  if (!existsSync(manifestPath)) return;
+
+  let committed: Record<string, unknown>;
+  let current: Record<string, unknown>;
+  try {
+    committed = JSON.parse(git(["show", `HEAD:${RELEASE_MANIFEST}`]));
+    current = JSON.parse(readFileSync(manifestPath, "utf8"));
+  } catch {
+    return;
+  }
+
+  const downgraded = (["releaseId", "version", "minimumNativeVersion"] as const).filter(
+    (key) => {
+      const before = committed[key];
+      const after = current[key];
+      return (
+        typeof before === "string" &&
+        typeof after === "string" &&
+        before !== after &&
+        compareVersions(after, before) < 0
+      );
+    },
+  );
+
+  if (downgraded.length > 0 && !flags.allowManifestDowngrade) {
+    throw new Error(
+      `${RELEASE_MANIFEST} would be downgraded (${downgraded.join(", ")}).\n` +
+        "Restore it or pass --allow-manifest-downgrade if this is intentional.",
+    );
+  }
+}
+
+function assertSomethingToPush(flags: DeployPushFlags): void {
+  if (flags.allowEmpty) return;
+  if (changedPaths().length > 0) return;
+  let remoteHead = "";
+  try {
+    remoteHead = git(["rev-parse", `origin/${MAIN_BRANCH}`]);
+  } catch {
+    return;
+  }
+  if (remoteHead === git(["rev-parse", "HEAD"])) {
+    throw new Error(
+      `Nothing to push: the working tree is clean and HEAD already matches origin/${MAIN_BRANCH}.\n` +
+        "Pass --allow-empty to redeploy the current commit anyway.",
+    );
+  }
+}
+
+async function assertVercelAccountsForTargets(targets: readonly DeployPushTarget[]): Promise<void> {
+  const declarations = [
+    ACCOUNT_DECLARATIONS.gova,
+    ...targets.map((target) => ACCOUNT_DECLARATIONS[target]),
+  ];
+  const reports = [];
+  for (const declaration of declarations) {
+    reports.push(await verifyAccountTokenAccess(declaration));
+  }
+  console.log("[deploy:push] Vercel account access verified:");
+  console.table(
+    reports.map((report) => ({
+      target: report.name,
+      project: report.project,
+      token: report.tokenEnvVar,
+      scope: report.teamId ? `team:${report.teamId}` : report.account,
+    })),
+  );
+}
+
+async function assertFastPublishReadiness(
+  targets: readonly DeployPushTarget[],
+  flags: DeployPushFlags,
+): Promise<void> {
+  assertMainBranch();
+  assertMainDeploymentCredentials();
+  await assertVercelAccountsForTargets(targets);
+  assertNoScratchFiles(flags);
+  assertReleaseManifestNotDowngraded(flags);
+  assertSomethingToPush(flags);
 }
 
 function printFinalSummary(reports: VercelDeploymentReport[]): void {
@@ -188,11 +358,19 @@ function fail(message: string, revision?: string): void {
   process.exitCode = 1;
 }
 
-async function main(): Promise<void> {
-  const isolatedTargets = await resolveServiceDeployTargets(process.argv.slice(2));
+export const __testables = {
+  parseArgv,
+  compareVersions,
+  SCRATCH_FILE_PATTERNS,
+  RELEASE_MANIFEST,
+  formatSuccessLine,
+  FAIL_PREFIX,
+};
 
-  assertMainBranch();
-  assertMainDeploymentCredentials();
+async function main(): Promise<void> {
+  const { flags, targetArgs } = parseArgv(process.argv.slice(2));
+  const isolatedTargets = await resolveServiceDeployTargets(targetArgs);
+  await assertFastPublishReadiness(isolatedTargets, flags);
 
   try {
     await runDeploymentNpmScript("secrets:backup", { logPrefix: "deploy:push" });
@@ -210,7 +388,10 @@ async function main(): Promise<void> {
 
   try {
     execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
-    execFileSync("git", ["commit", "--allow-empty", "-m", mainComment], {
+    const commitArgs = flags.allowEmpty
+      ? ["commit", "--allow-empty", "-m", mainComment]
+      : ["commit", "-m", mainComment];
+    execFileSync("git", commitArgs, {
       cwd: ROOT,
       stdio: "inherit",
     });

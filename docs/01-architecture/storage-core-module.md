@@ -93,7 +93,7 @@ If the `products` account needs to split high-resolution gallery images into a d
 1. Add `product-hd` definition in `account-registry.ts`.
 2. Update the `storageAccount` or `provider` field for the relevant profile in `storage-profiles.json` from `products` to `product-hd`.
 3. Provide the new `PRODUCT_HD_R2_*` environment variables.
-All application routes and components using `StorageImageManager` continue working without line-of-code changes.
+All application routes and components using the `StorageImageManager` wrapper continue working without line-of-code changes; the image manager itself lives in `@asol/storage-image-manager-core`.
 
 ---
 

@@ -115,7 +115,7 @@ it for any package.
 
 ## Current status
 
-Thirty-one sealed packages, arranged in four layers. The layering is not decoration — see
+Thirty-eight sealed packages, arranged in four layers. The layering is not decoration — see
 [The four layers](#the-four-layers).
 
 Doors and app-edge counts below are measured, not intended. Re-measure with:
@@ -124,10 +124,18 @@ Doors and app-edge counts below are measured, not intended. Re-measure with:
 node -e "for(const p of require('fs').readdirSync('packages')) try{const m=require('./packages/'+p+'/package.json'); if(m.name?.startsWith('@asol/')) console.log(m.name, Object.keys(m.exports||{}).join(' '))}catch{}"
 ```
 
-### Full inventory (31 packages)
+### Full inventory (38 packages)
 
-The eight most recent additions and the moves around them are described in
-[consolidation-2026-08.md](./consolidation-2026-08.md).
+The first consolidation wave is described in
+[consolidation-2026-08.md](./consolidation-2026-08.md); the repository-wide follow-up that added
+`data-health-core`, `backup-core` and the release-console doors is in
+[capability-consolidation-2026-08-follow-up.md](./capability-consolidation-2026-08-follow-up.md).
+The UI-adjacent follow-up that added `hero-slider-core`, `featured-marquee-core`,
+`trending-ribbon-core`, and `page-snapshot-core` is in
+[ui-capability-core-packages-2026-08.md](./ui-capability-core-packages-2026-08.md).
+The application-side SRP split that separated large page/provider/test files
+without introducing new sealed packages is recorded in
+[srp-file-splits-2026-08.md](./srp-file-splits-2026-08.md).
 
 | Package | Layer | Doors | `test:*-core` gate |
 | :-- | :-- | :-- | :-- |
@@ -141,26 +149,34 @@ The eight most recent additions and the moves around them are described in
 | `sub2main-composition` | 2 | `.` | `test:compositions` |
 | `orders-core` | 1 | `.` | `test:orders-core` |
 | `data-core` | 1 | `.` · `./telemetry` · `./core` · `./browser` · `./provisioning` · `./tooling` · per-domain (18) | `test:data-core` |
+| `data-health-core` | 1 | `.` · `./server` | `test:data-health-core` |
+| `backup-core` | 1 | `.` · `./server` | `test:backup-core` |
 | `native-core` | 1 | `.` · `./platform-globals` · `./scripts/validate-android-r8-policy` | `test:native-core` |
 | `ota-core` | 1 | `.` · `./publishing` · `./server` | `test:ota-core` |
 | `storage-core` | 1 | `.` · `./server` · `./profiles-config` | `test:storage-core` |
+| `storage-image-manager-core` | 1 | `.` · `./services` · `./client-lifecycle` | `test:storage-image-manager-core` |
 | `notifications-core` | 1 | `.` · `./server` · `./builder` · `./providers` | `test:notifications-core` |
 | `auth-core` | 1 | `.` · `./server` | `test:auth-core` |
 | `catalog-core` | 1 | `.` · `./server` | `test:catalog-core` |
 | `product-style-core` | 1 | `.` · `./server` | `test:product-style-core` |
 | `product-core` | 1 | `.` · `./server` | `test:product-core` |
+| `hero-slider-core` | 1 | `.` · `./server` | `test:hero-slider-core` |
+| `featured-marquee-core` | 1 | `.` · `./server` | `test:featured-marquee-core` |
+| `trending-ribbon-core` | 1 | `.` · `./server` | `test:trending-ribbon-core` |
+| `page-snapshot-core` | 1 | `.` | `test:page-snapshot-core` |
 | `dev-core` | 1 | `.` · `./server` | `test:dev-core` |
 | `system-logs-core` | 1 | `.` · `./server` | `test:system-logs-core` |
 | `vercel-deploy-core` | 1 | `.` | `test:vercel-deploy-core` |
 | `service-mirror-core` | 1 | `.` | `test:service-mirror-core` |
 | `map-core` | 1 | `.` | `test:map-core` |
 | `format-core` | 1 | `.` | `test:format-core` |
+| `google-play-store-assets-core` | 1 | `.` · `./images` | `test:google-play-store-assets-core` |
 | `signed-token-core` | 1 | `.` | `test:signed-token-core` |
 | `service-runtime-core` | 1 | `.` | `test:service-runtime-core` |
 | `architecture-core` | 1 | `.` | `test:architecture-core` |
 | `observability-core` | 1 | `.` · `./dev-trace` · `./server` | `test:observability-core` |
 | `env-core` | 1 | `.` · `./files` | `test:env-core` |
-| `release-core` | 1 | `.` | `test:release-core` |
+| `release-core` | 1 | `.` · `./console` · `./console-server` · `./console-artifacts` | `test:release-core` |
 | `secrets-core` | 1 | `.` | `test:secrets-core` |
 
 Compositions are gated collectively by `test:compositions`, not individual `test:*-core` scripts.
@@ -175,7 +191,7 @@ Compositions are gated collectively by `test:compositions`, not individual `test
 | 4 | Internal validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 5 | No deep imports | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 6 | Branch protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 7 | Independent package | ✅ 0 edges | ✅ 34, budgeted + pinned | ✅ 0 edges | ✅ 3, designated + pinned | ✅ 1 → dev-core | ✅ 4, designated + pinned | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 1 → native-core |
+| 7 | Independent package | ✅ 0 edges | ✅ 22 app edges + 20 package doors, pinned | ✅ 0 edges | ✅ 3, designated + pinned | ✅ 1 → dev-core | ✅ 4, designated + pinned | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 0 edges | ✅ 1 → native-core |
 | 8 | SRP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 Other sealed packages (`account-declarations`, `account-bridge`, the six `*-composition` packages)
@@ -217,11 +233,14 @@ the contract rather than a matter of taste.
            catalog-core, product-style-core, product-core, dev-core,
            system-logs-core, map-core, data-core, orders-core,
            format-core, signed-token-core, env-core, observability-core,
-           architecture-core, release-core, secrets-core
+           architecture-core, release-core, secrets-core, data-health-core,
+           backup-core, hero-slider-core, featured-marquee-core,
+           trending-ribbon-core, page-snapshot-core, storage-image-manager-core,
+           google-play-store-assets-core
                                          capability logic, held once
 ```
 
-`data-core` is the largest layer-1 package and the only one holding a database driver. Three
+`data-core` is the largest layer-1 package and the only one holding a database driver. Four
 other layer-1 packages import one of its doors, which is the same layer talking to itself rather
 than a new direction: see [data-core-module.md](./data-core-module.md).
 
@@ -230,18 +249,22 @@ Measured dependencies, rather than intended ones:
 | Package | Imports |
 | :-- | :-- |
 | `account-declarations` | **nothing** — asserted by its own test |
-| `native-core`, `service-mirror-core`, `service-runtime-core`, `catalog-core`, `product-style-core`, `product-core`, `dev-core`, `system-logs-core` | nothing |
+| `native-core`, `service-mirror-core`, `service-runtime-core`, `catalog-core`, `product-style-core`, `product-core`, `hero-slider-core`, `featured-marquee-core`, `trending-ribbon-core`, `page-snapshot-core`, `google-play-store-assets-core`, `dev-core` | nothing |
 | `format-core`, `signed-token-core`, `env-core` | **nothing** — asserted by their own tests |
 | `auth-core` | `signed-token-core` (the envelope its session token travels in) |
 | `observability-core` | `data-core` (`./browser`, `./telemetry`) |
 | `architecture-core` | `ota-core` (`./publishing`, for the native-surface report) |
-| `release-core` | `vercel-deploy-core` |
+| `release-core` | `vercel-deploy-core`, `ota-core` (`./publishing`, for release-console version truth) |
+| `data-health-core` | **nothing** — runtime selection is explicit input |
+| `backup-core` | `storage-core` (`./server`); database access is a port |
 | `secrets-core` | **nothing** |
 | `orders-core` | **nothing** — asserted by its own test |
-| `data-core` | `orders-core`, `dev-core`, `storage-core`, `system-logs-core`, `product-core`, `auth-core`, `notifications-core`, `ota-core` |
+| `data-core` | `orders-core`, `dev-core`, `storage-core`, `system-logs-core`, `product-core`, `auth-core`, `notifications-core`, `ota-core`, `data-health-core`, `backup-core`, `hero-slider-core`, `featured-marquee-core`, `trending-ribbon-core` |
 | `notifications-core` | `data-core` (one door: `./notifications`), `signed-token-core` |
 | `map-core` | `native-core` (platform GPS and location permission) |
 | `storage-core` | `dev-core` (local path contract for `LocalStorageProvider`) |
+| `storage-image-manager-core` | `storage-core`, `data-core` (`./browser`), `native-core`, `system-logs-core` |
+| `system-logs-core` | **nothing** |
 | `vercel-deploy-core` | `account-declarations` |
 | `orders-`, `products-`, `profiles-composition` | `account-declarations` |
 | `submain-composition` | `account-declarations` |
@@ -358,8 +381,8 @@ stricter rule than the package's.
 
 ## Standing weaknesses
 
-**Rule 3's guard now covers eight more packages.** Every gate added in the 2026-08 consolidation
-is in `build`, `build:static`, `test` and the `verify` job; `ci:coverage` reports 23 package gates
+**Rule 3's guard now covers the added packages.** Every gate added in the 2026-08 consolidation
+is in `build`, `build:static`, `test` and the `verify` job; `ci:coverage` reports 31 package gates
 running in CI and fails if any is missing from the workflow.
 
 **Rule 3 has been missed three times in a row.** In each migration the tests were written and passed,
@@ -391,7 +414,7 @@ reports blocks every merge permanently — a worse failure than no protection at
 check name against a real run before adding it to `REQUIRED_STATUS_CHECKS`.
 
 `verify` is the job id in `.github/workflows/native-core.yml`. The file and the workflow keep the
-`native-core` name even though they now guard twenty-one packages, because renaming either is
+`native-core` name even though they now guard thirty-one packages, because renaming either is
 harmless while renaming the **job** is not — and a name that reads slightly stale costs less than a
 required check that never reports. `npm run ci:coverage` pins the job id, refuses a `name:` on that
 job (which would replace the check-run name), and asserts that branch protection still requires it.

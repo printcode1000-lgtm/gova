@@ -7,7 +7,7 @@ import type {
   FeaturedMarqueePublished,
   FeaturedMarqueeRecord,
   SuperAdminIdentity,
-} from "../entities/featured-marquee.entity";
+} from "@asol/featured-marquee-core";
 
 export const featuredMarqueeApiService = {
   getCurrent: () =>

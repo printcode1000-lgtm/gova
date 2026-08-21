@@ -78,7 +78,6 @@ silently remain on an older framework release.
 | `@fortawesome/react-fontawesome` | `3.5.0` |
 | `@hookform/resolvers` | `5.8.0` |
 | `@libsql/client` | `0.17.4` |
-| `@radix-ui/react-avatar` | `1.2.6` |
 | `@radix-ui/react-checkbox` | `1.3.11` |
 | `@radix-ui/react-dialog` | `1.1.23` |
 | `@radix-ui/react-dropdown-menu` | `2.1.24` |
@@ -86,7 +85,6 @@ silently remain on an older framework release.
 | `@radix-ui/react-progress` | `1.1.16` |
 | `@radix-ui/react-radio-group` | `1.4.7` |
 | `@radix-ui/react-select` | `2.3.7` |
-| `@radix-ui/react-separator` | `1.1.15` |
 | `@radix-ui/react-slot` | `1.3.3` |
 | `@radix-ui/react-switch` | `1.3.7` |
 | `@radix-ui/react-tabs` | `1.1.21` |

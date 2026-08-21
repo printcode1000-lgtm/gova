@@ -6,10 +6,11 @@ import { eq } from "drizzle-orm";
 import { trendingRibbon } from "../../../core/database/advertisements/advertisements.schema";
 import type { IDatabaseClient } from "../../../core/database/database-client.interface";
 import {
+  DEFAULT_TRENDING_RIBBON_CONFIG,
   TRENDING_RIBBON_ID,
   type TrendingRibbonConfig,
   type TrendingRibbonRecord,
-} from "@/features/advertisements/entities/trending-ribbon.entity";
+} from "@asol/trending-ribbon-core";
 
 function parseConfig(raw: string): TrendingRibbonConfig {
   return JSON.parse(raw) as TrendingRibbonConfig;
@@ -23,7 +24,7 @@ export class TrendingRibbonRepository {
     if (!row) {
       return {
         id: TRENDING_RIBBON_ID,
-        config: { label: "home.trending.label", items: [] },
+        config: DEFAULT_TRENDING_RIBBON_CONFIG,
         version: 0,
         checkIntervalMinutes: 15,
         updatedAt: "",

@@ -8,7 +8,7 @@ import path from "node:path";
 
 import { zipSync } from "fflate";
 
-import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@/modules/google-play-console/domain/image-validation";
+import { detectImageContentType, readImageDimensions, validateGooglePlayImage } from "@asol/google-play-store-assets-core/images";
 import { assertCapBuildInputBundle, assertReleaseStaticBundle } from "@asol/ota-core/publishing";
 import { validateAndroidR8PolicySources, type AndroidR8PolicySources } from "@asol/native-core/scripts/validate-android-r8-policy";
 import {
@@ -21,9 +21,9 @@ import {
   parseContentVersion,
   releaseContentVersion,
 } from "@asol/ota-core";
-import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "../domain/build-command-catalog";
-import { assertBuildJobTransition } from "../domain/build-job-types";
-import { nextBuildJobActivity, nextBuildJobStage } from "../domain/build-job-progress";
+import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "@asol/release-core/console";
+import { assertBuildJobTransition } from "@asol/release-core/console";
+import { nextBuildJobActivity, nextBuildJobStage } from "@asol/release-core/console";
 import {
   acquireBuildJobLock,
   assertBuildJobId,
@@ -38,8 +38,12 @@ import {
   startBuildJob,
   trackBuildJobProcess,
 } from "../services/build-job-runner.server";
-import { analyzeBundleArtifact, classifyEntry } from "../services/bundle-analyzer.server";
-import { changedBuildArtifacts, snapshotBuildOutputs } from "../services/build-job-artifacts.server";
+import {
+  analyzeBundleArtifact,
+  changedBuildArtifacts,
+  classifyEntry,
+  snapshotBuildOutputs,
+} from "@asol/release-core/console-artifacts";
 
 async function main() {
 const packageJson = JSON.parse(await readFile("package.json", "utf8")) as { scripts: Record<string, string> };
@@ -535,7 +539,7 @@ try {
   assert.equal(lastMeaningfulLine(`x${"y".repeat(400)}`)!.length, 300,
     "a runaway line must not overflow the chip");
   const runnerSource = await readFile(
-    "src/modules/release-commands/services/build-job-runner.server.ts", "utf8",
+    "packages/release-core/src/console-server/build-job-runner.ts", "utf8",
   );
   assert.match(runnerSource, /const stageAtExit = current\.stage/,
     "a failed job must keep the stage it actually stopped at");
@@ -729,7 +733,7 @@ async function verifyArtifactCollection() {
   });
   assert.ok(Array.isArray(vanished));
 
-  const source = await readFile("src/modules/release-commands/services/build-job-artifacts.server.ts", "utf8");
+  const source = await readFile("packages/release-core/src/console-server/build-job-artifacts.ts", "utf8");
   const describeBody = source.slice(
     source.indexOf("async function describeFile"),
     source.indexOf("async function statOrNull"),

@@ -2,13 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import type { ProductDetails } from "@/features/product/entities/product.entity";
 import { pharmacyStaticCatalogService } from "../services/pharmacy-static-catalog.service";
 import { pharmacyProfileCatalogApi } from "../services/pharmacy-profile-catalog-api";
@@ -22,6 +15,7 @@ import type {
   ProductComponentConfig,
   ProductMode,
 } from "@/features/product/presentation/product-component.types";
+import { PharmacySelect } from "./PharmacySelect";
 
 interface ProductPharmacySpecsProps {
   mode: ProductMode;
@@ -416,36 +410,3 @@ export function ProductPharmacySpecs({
   );
 }
 
-function PharmacySelect({
-  label,
-  value,
-  disabled,
-  placeholder,
-  options,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  disabled?: boolean;
-  placeholder: string;
-  options: Array<{ value: string; label: string }>;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <label className="space-y-1.5 text-sm font-medium">
-      <span>{label}</span>
-      <Select value={value} disabled={disabled} onValueChange={onChange}>
-        <SelectTrigger className="asol-control asol-field-surface w-full border border-input text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </label>
-  );
-}

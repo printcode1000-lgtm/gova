@@ -1,4 +1,5 @@
 import { asolApi, ASOL_API_ROUTES } from "@/core/api";
+import { configureImageStorageApiAdapter } from "@asol/storage-image-manager-core/services";
 import {
   type ImageUploadResult,
   type StorageOutputFormat,
@@ -50,3 +51,4 @@ export class ImageStorageApiService implements IImageStorageApiAdapter {
 }
 
 export const imageStorageApiService = new ImageStorageApiService();
+configureImageStorageApiAdapter(imageStorageApiService);

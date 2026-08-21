@@ -17,20 +17,20 @@ import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-s
 import { shareLocationUrl } from "@/features/sharing/share-location-url";
 import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid } from "./ContactInfoCard.contact-types";
 import type { ContactInfoCardModel } from "./ContactInfoCard.model";
+import { geoLocationUrl, googleMapsSearchUrl } from "./contact-location-links";
+import { ContactSectionHeader } from "./ContactSectionHeader";
 
 export function AdditionalContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, groupedSocialLinks } = model;
 return (
         /* Additional Contact Section without outer Card */
         <>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-base font-semibold flex items-center gap-2">
-                <Share2 className="h-4 w-4 text-muted-foreground" />
-                {t('onboarding.contactInfo.additionalContact')}
-              </h2>
-              <p className="text-xs text-muted-foreground">{t('onboarding.contactInfo.additionalContactHint')}</p>
-            </div>
+          <div className="mb-6 flex items-center justify-between">
+            <ContactSectionHeader
+              icon={Share2}
+              title={t('onboarding.contactInfo.additionalContact')}
+              description={t('onboarding.contactInfo.additionalContactHint')}
+            />
           </div>
 
           <div className="space-y-4">
@@ -105,7 +105,7 @@ return (
                             size="icon"
                             onClick={() => removePhone(phone.id)}
                             className="shrink-0 h-8 w-8"
-                            title={t('onboarding.contactInfo.remove')}
+                            aria-label={t('onboarding.contactInfo.remove')}
                           >
                             <X className="h-4 w-4" />
                           </Button>
@@ -162,7 +162,7 @@ return (
                           size="icon"
                           onClick={() => removeEmail(emailLink.id)}
                           className="shrink-0 h-8 w-8"
-                          title={t('onboarding.contactInfo.remove')}
+                          aria-label={t('onboarding.contactInfo.remove')}
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -229,7 +229,7 @@ return (
                                 size="icon"
                                 onClick={() => removeSocialLink(link.id)}
                                 className="shrink-0 h-8 w-8"
-                                title={t('onboarding.contactInfo.remove')}
+                                aria-label={t('onboarding.contactInfo.remove')}
                               >
                                 <X className="h-4 w-4" />
                               </Button>
@@ -288,7 +288,7 @@ return (
                           size="icon"
                           onClick={() => removeWebsite(site.id)}
                           className="shrink-0 h-8 w-8"
-                          title={t('onboarding.contactInfo.remove')}
+                          aria-label={t('onboarding.contactInfo.remove')}
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -330,7 +330,7 @@ return (
                             size="icon"
                             onClick={() => removeLocation(loc.id)}
                             className="h-8 w-8 text-destructive"
-                            title={locale === 'ar' ? 'حذف الموقع' : 'Remove location'}
+                            aria-label={locale === 'ar' ? 'حذف الموقع' : 'Remove location'}
                           >
                             <X className="h-4 w-4" />
                           </Button>
@@ -408,7 +408,7 @@ return (
                                   )
                                 }
                                 onShare={({ latitude: lat, longitude: lng }) => {
-                                  const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
+                                  const url = googleMapsSearchUrl(lat, lng);
                                   void shareLocationUrl(
                                     url,
                                     locale === 'ar' ? 'موقع المتجر' : 'Store location',
@@ -446,7 +446,7 @@ return (
                           <div className="text-sm font-medium">{loc.address || (locale === 'ar' ? 'بدون عنوان' : 'No address')}</div>
                           {loc.latitude && loc.longitude ? (
                             <a
-                              href={`geo:${loc.latitude},${loc.longitude}`}
+                              href={geoLocationUrl(loc.latitude, loc.longitude)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 text-xs text-primary"

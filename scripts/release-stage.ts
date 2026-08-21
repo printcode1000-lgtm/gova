@@ -12,7 +12,7 @@
  * interleaved from several child processes, and a bare word would be matched
  * inside unrelated text.
  */
-import type { BuildJobStage } from "../src/modules/release-commands/domain/build-job-types";
+import type { BuildJobStage } from "@asol/release-core/console";
 
 export const RELEASE_STAGE_MARKER_PREFIX = "[stage]";
 export const RELEASE_STEP_MARKER_PREFIX = "[step]";

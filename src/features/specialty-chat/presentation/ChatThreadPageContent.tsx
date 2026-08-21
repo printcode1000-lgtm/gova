@@ -20,13 +20,13 @@ import {
 } from "@/features/notifications/ui";
 import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { calendarDayKey, formatRelativeDay, formatTime } from "@asol/format-core";
 import { specialtyChatClient } from "../application/specialty-chat-client";
 import { SPECIALTY_CHAT_KINDS } from "../domain/types";
-
-const formatMessageTime = formatTime;
-const dateKey = calendarDayKey;
-const formatDay = formatRelativeDay;
+import {
+  chatMessageDayKey,
+  formatChatMessageDay,
+  formatChatMessageTime,
+} from "./chat-thread-format";
 
 export function ChatThreadPageContent({ conversationKey }: { conversationKey: string }) {
   const { locale, isRTL } = useTranslation();
@@ -179,7 +179,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
       <section className="space-y-2 py-4" aria-label={title}>
         {messages.map((message, index) => {
           const outgoing = message.metadata?.outgoing === true;
-          const showDay = index === 0 || dateKey(messages[index - 1].createdAt) !== dateKey(message.createdAt);
+          const showDay = index === 0 || chatMessageDayKey(messages[index - 1].createdAt) !== chatMessageDayKey(message.createdAt);
           const read = Boolean(message.metadata?.remoteReadAt);
           const received = Boolean(message.metadata?.remoteReceivedAt);
           return (
@@ -187,7 +187,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
               {showDay ? (
                 <div className="flex justify-center py-2">
                   <time className="rounded-full bg-surface-container px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
-                    {formatDay(message.createdAt, locale)}
+                    {formatChatMessageDay(message.createdAt, locale)}
                   </time>
                 </div>
               ) : null}
@@ -202,7 +202,7 @@ export function ChatThreadPageContent({ conversationKey }: { conversationKey: st
                 >
                   <p className="whitespace-pre-wrap break-words text-sm leading-6">{message.body}</p>
                   <span className={cn("mt-1 flex items-center justify-end gap-1 text-[10px]", outgoing ? "text-on-primary/75" : "text-muted-foreground")}>
-                    {formatMessageTime(message.createdAt, locale)}
+                    {formatChatMessageTime(message.createdAt, locale)}
                     {outgoing ? (
                       read || received ? (
                         <CheckCheck className={cn("h-3.5 w-3.5", read && "text-cyan-200")} />

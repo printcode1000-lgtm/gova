@@ -3,11 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 
 import type { FeaturedMarqueeConfig as MarqueeUIConfig } from "@/components/ui/FeaturedMarquee";
-import type { FeaturedMarqueeConfig } from "@/features/advertisements/entities/featured-marquee.entity";
 import {
+  DEFAULT_FEATURED_MARQUEE_PUBLISHED,
   FEATURED_MARQUEE_CACHE_KEY,
+  FEATURED_MARQUEE_SECTION_TITLE,
+  type FeaturedMarqueeConfig,
   type FeaturedMarqueePublished,
-} from "@/features/advertisements/entities/featured-marquee.entity";
+} from "@asol/featured-marquee-core";
 import { featuredMarqueeApiService } from "@/features/advertisements/services/featured-marquee-api-service";
 import { productApiService } from "@/features/product/services/product-api-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
@@ -32,14 +34,9 @@ interface FeaturedMarqueeCache extends FeaturedMarqueePublished {
 
 // â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-const FALLBACK_SECTION_TITLE = "home.featured.title";
+const FALLBACK_SECTION_TITLE = FEATURED_MARQUEE_SECTION_TITLE;
 
-const fallback: FeaturedMarqueePublished = {
-  config: { productIds: [] },
-  version: 0,
-  checkIntervalMinutes: 15,
-  updatedAt: "",
-};
+const fallback: FeaturedMarqueePublished = DEFAULT_FEATURED_MARQUEE_PUBLISHED;
 
 // â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 

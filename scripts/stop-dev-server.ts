@@ -3,35 +3,43 @@ import { execFileSync } from 'child_process';
 
 const PORTS = [3001];
 
-function listWindowsListeners(port: number): Set<number> {
+function localAddressUsesPort(localAddress: string, port: number): boolean {
+  return localAddress.endsWith(`:${port}`);
+}
+
+function wait(milliseconds: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+}
+
+function listWindowsPortProcesses(port: number): Set<number> {
   const pids = new Set<number>();
 
   try {
-    const out = execFileSync('netstat', ['-ano', '-p', 'tcp'], {
+    const out = execFileSync('netstat', ['-ano'], {
       encoding: 'utf-8',
       windowsHide: true,
     });
 
     for (const line of out.split(/\r?\n/)) {
       const trimmed = line.trim();
+      if (!trimmed.startsWith('TCP') && !trimmed.startsWith('UDP')) continue;
       const columns = trimmed.split(/\s+/);
       const localAddress = columns[1] ?? '';
-      const state = columns[3] ?? '';
-      const pid = Number(columns[4]);
+      const pid = Number(columns[columns.length - 1]);
 
-      if (state !== 'LISTENING' || !localAddress.endsWith(`:${port}`)) continue;
+      if (!localAddressUsesPort(localAddress, port)) continue;
       if (pid > 0) pids.add(pid);
     }
   } catch {
-    // netstat can fail when it is unavailable; treat that as no listeners.
+    // netstat can fail when it is unavailable; treat that as no known port users.
   }
 
   return pids;
 }
 
-function listUnixListeners(port: number): Set<number> {
+function listUnixPortProcesses(port: number): Set<number> {
   try {
-    const out = execFileSync('lsof', [`-tiTCP:${port}`, '-sTCP:LISTEN'], {
+    const out = execFileSync('lsof', ['-ti', `:${port}`], {
       encoding: 'utf-8',
     });
 
@@ -49,7 +57,7 @@ function listUnixListeners(port: number): Set<number> {
 function stopProcessTree(pid: number): void {
   try {
     if (process.platform === 'win32') {
-      // /T stops the listener and every child process it spawned.
+      // /T stops the port owner and every child process it spawned.
       execFileSync('taskkill', ['/PID', String(pid), '/T', '/F'], {
         stdio: 'ignore',
         windowsHide: true,
@@ -62,19 +70,38 @@ function stopProcessTree(pid: number): void {
   }
 }
 
+function listPortProcesses(port: number): Set<number> {
+  return process.platform === 'win32'
+    ? listWindowsPortProcesses(port)
+    : listUnixPortProcesses(port);
+}
+
 let stoppedCount = 0;
 
 for (const port of PORTS) {
-  const pids =
-    process.platform === 'win32' ? listWindowsListeners(port) : listUnixListeners(port);
+  const pids = listPortProcesses(port);
 
   for (const pid of pids) {
     stopProcessTree(pid);
     stoppedCount += 1;
-    console.log(`Stopped process tree ${pid} using port ${port}.`);
+    console.log(`Stopped process tree ${pid} using local port ${port}.`);
+  }
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const remainingPids = listPortProcesses(port);
+    if (remainingPids.size === 0) break;
+    for (const pid of remainingPids) stopProcessTree(pid);
+    wait(100 * (attempt + 1));
+  }
+
+  const remainingPids = listPortProcesses(port);
+  if (remainingPids.size > 0) {
+    throw new Error(
+      `Port ${port} is still used by process(es): ${[...remainingPids].join(', ')}`,
+    );
   }
 }
 
 if (stoppedCount === 0) {
-  console.log(`No development server is using port ${PORTS.join(', ')}.`);
+  console.log(`No process is using local port ${PORTS.join(', ')}.`);
 }

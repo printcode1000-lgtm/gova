@@ -1,11 +1,7 @@
 "use client";
 
 import type { ReactNode, RefObject } from "react";
-import type { StoredImage } from "@asol/storage-core";
-import {
-  createEmptyProductDetails,
-  type ProductDetails,
-} from "@/features/product/entities/product.entity";
+import type { ProductDetails } from "@/features/product/entities/product.entity";
 import {
   ProductComponentFrame,
   ProductField,
@@ -23,137 +19,15 @@ import type {
 } from "./product-component.types";
 import { ProductVehicleSpecs } from "./ProductVehicleSpecs";
 import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
-
-type BasicFieldKind = "text" | "number" | "textarea" | "boolean";
-
-const FIELDS: Record<string, Array<[string, string, BasicFieldKind]>> = {
-  mainData: [
-    ["name", "الاسم", "text"],
-    ["brand", "العلامة التجارية", "text"],
-    ["manufacturer", "الشركة المصنعة", "text"],
-    ["available", "متوفر", "boolean"],
-    ["description", "الوصف", "textarea"],
-  ],
-  price: [
-    ["current", "السعر الحالي", "number"],
-    ["beforeDiscount", "السعر قبل الخصم", "number"],
-    ["needsCar", "يحتاج سيارة نقل", "boolean"],
-  ],
-  specifications: [
-    ["color", "اللون", "text"],
-    ["dimensions", "الأبعاد", "text"],
-    ["condition", "الحالة", "text"],
-    ["size", "المقاس", "text"],
-    ["weight", "الوزن", "text"],
-    ["year", "السنة", "number"],
-  ],
-  propertySpecs: [
-    ["area", "المساحة", "text"],
-    ["rooms", "عدد الغرف", "number"],
-    ["bathrooms", "عدد الحمامات", "number"],
-    ["type", "نوع العقار", "text"],
-    ["address", "العنوان", "text"],
-    ["finishing", "التشطيب", "text"],
-  ],
-  rating: [
-    ["rating", "التقييم", "number"],
-    ["comment", "التعليق", "textarea"],
-  ],
-};
-
-const TITLES: Record<string, string> = {
-  images: "الصور",
-  rating: "التقييم",
-  price: "السعر",
-  order: "الطلب",
-  mainData: "البيانات الأساسية",
-  specifications: "المواصفات",
-  vehicleSpecs: "مواصفات المركبة",
-  propertySpecs: "مواصفات العقار",
-  pharmacySpecs: "مواصفات الصيدلية",
-};
-
-export const PRODUCT_DEMO_IMAGES: StoredImage[] = [
-  {
-    imageKey: "demo-product-1.webp",
-    url: "/images/subCategories/Allergy and Immunology.webp",
-  },
-  {
-    imageKey: "demo-product-2.webp",
-    url: "/images/subCategories/Animal Care & Training.webp",
-  },
-  {
-    imageKey: "demo-product-3.webp",
-    url: "/images/subCategories/Apartments & Houses for Sale.webp",
-  },
-  {
-    imageKey: "demo-product-4.webp",
-    url: "/images/subCategories/Art Tools & Supplies.webp",
-  },
-];
-
-export const PRODUCT_DEMO_DETAILS: ProductDetails = createEmptyProductDetails({
-  rating: {
-    rating: "4",
-    comment: "منتج ممتاز وجودته جيدة جدًا",
-    enabled: true,
-    targetEnabled: true,
-    mode: "",
-  },
-  price: {
-    current: "1250",
-    beforeDiscount: "1500",
-    label: "",
-    needsCar: false,
-  },
-  mainData: {
-    name: "منتج تجريبي",
-    brand: "أصول",
-    manufacturer: "الشركة المصنعة",
-    available: true,
-    description: "وصف تجريبي للمنتج أو الخدمة المعروضة.",
-  },
-  specifications: {
-    color: "أسود",
-    dimensions: "40 x 30 x 15 سم",
-    condition: "جديد",
-    size: "متوسط",
-    weight: "2 كجم",
-    year: "2026",
-  },
-  vehicleSpecs: {
-    brand: "toyota",
-    bodyType: "sedan",
-    fuel: "benzine",
-    transmission: "automatic",
-    special: "special_needs",
-  },
-  propertySpecs: {
-    area: "180 م²",
-    rooms: "3",
-    bathrooms: "2",
-    type: "شقة",
-    address: "القاهرة الجديدة",
-    locationLatitude: "",
-    locationLongitude: "",
-    finishing: "سوبر لوكس",
-  },
-  pharmacySpecs: {
-    pharmacyCategoryId: "",
-    pharmacyCategory: "الأدوية والعلاج",
-    pharmacySubcategoryId: "",
-    pharmacySubcategory: "مسكنات الألم وخافض الحرارة",
-    activeIngredientId: "",
-    activeIngredient: "باراسيتامول",
-    nameAr: "دواء تجريبي",
-    nameEn: "Demo Medicine",
-    formId: "",
-    form: "أقراص",
-    concentrationId: "",
-    concentration: "500 مجم",
-    prescriptionRequired: false,
-  },
-});
+import {
+  PRODUCT_COMPONENT_FIELDS,
+  PRODUCT_COMPONENT_TITLES,
+  type BasicFieldKind,
+} from "./product-components-renderer.config";
+export {
+  PRODUCT_DEMO_DETAILS,
+  PRODUCT_DEMO_IMAGES,
+} from "./product-components-demo-data";
 
 function readValue(product: ProductDetails, section: string, key: string) {
   const value = (product as unknown as Record<string, Record<string, unknown>>)[
@@ -225,7 +99,7 @@ export function ProductComponentsRenderer({
       {visible.map(([key, config]) => {
         if (key === "images") {
           return (
-            <ProductComponentFrame key={key} title={TITLES[key]}>
+            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               {mode === "view" ? (
                 <ProductImageGallery
                   images={product.images.slice(0, Number(config.count || 1))}
@@ -254,7 +128,7 @@ export function ProductComponentsRenderer({
                 : config.type === "stars-comments";
 
           return (
-            <ProductComponentFrame key={key} title={TITLES[key]}>
+            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               {mode === "view" ? (
                 <ProductReviews
                   productId={productId}
@@ -279,7 +153,7 @@ export function ProductComponentsRenderer({
           const showShare = config.share !== false;
           const showProfile = config.profile !== false;
           return (
-            <ProductComponentFrame key={key} title={TITLES[key]}>
+            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <div className="flex flex-wrap gap-2">
                 {config.cart ? (
                   <ProductAddToCartButton
@@ -304,7 +178,7 @@ export function ProductComponentsRenderer({
 
         if (key === "vehicleSpecs") {
           return (
-            <ProductComponentFrame key={key} title={TITLES[key]}>
+            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <ProductVehicleSpecs
                 mode={mode}
                 config={config}
@@ -319,7 +193,7 @@ export function ProductComponentsRenderer({
 
         if (key === "propertySpecs") {
           return (
-            <ProductComponentFrame key={key} title={TITLES[key]}>
+            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <ProductPropertySpecs
                 mode={mode}
                 config={config}
@@ -334,7 +208,7 @@ export function ProductComponentsRenderer({
 
         if (key === "pharmacySpecs") {
           return (
-            <ProductComponentFrame key={key} title={TITLES[key]}>
+            <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key]}>
               <ProductPharmacySpecs
                 mode={mode}
                 config={config}
@@ -347,9 +221,9 @@ export function ProductComponentsRenderer({
         }
 
         return (
-          <ProductComponentFrame key={key} title={TITLES[key] ?? key}>
+          <ProductComponentFrame key={key} title={PRODUCT_COMPONENT_TITLES[key] ?? key}>
             <div className="grid gap-3 sm:grid-cols-2">
-              {(FIELDS[key] ?? []).map(([fieldKey, label, kind]) => {
+              {(PRODUCT_COMPONENT_FIELDS[key] ?? []).map(([fieldKey, label, kind]) => {
                 if (config[fieldKey] === false) return null;
                 return (
                   <ProductField

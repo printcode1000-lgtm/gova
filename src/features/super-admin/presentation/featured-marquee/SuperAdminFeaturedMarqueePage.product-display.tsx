@@ -21,7 +21,7 @@ import { Label } from "@/components/ui/label";
 import {
   FEATURED_MARQUEE_CACHE_KEY,
   type FeaturedMarqueeRecord,
-} from "@/features/advertisements/entities/featured-marquee.entity";
+} from "@asol/featured-marquee-core";
 import { featuredMarqueeApiService } from "@/features/advertisements/services/featured-marquee-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";

@@ -17,6 +17,7 @@ import { getContactVisualColor, getContactVisualIcon } from "../contact-visual-s
 import { shareLocationUrl } from "@/features/sharing/share-location-url";
 import { SOCIAL_PLATFORMS, PHONE_TYPES, SocialLink, PhoneLink, ContactInfoData, ContactInfoCardProps, tileProvider, gpsProvider, normalizeContactInfoData, quickAddColor, quickAddIcon, ContactQuickAddGrid } from "./ContactInfoCard.contact-types";
 import type { ContactInfoCardModel } from "./ContactInfoCard.model";
+import { ContactSectionHeader } from "./ContactSectionHeader";
 
 export function PrimaryContactView({ model }: { model: ContactInfoCardModel }) {
 const { data, onChange, readOnly, hidePrimarySection, t, locale, shouldWrapInCard, localData, setLocalData, isPasswordOpen, setIsPasswordOpen, passwordData, setPasswordData, openMapId, setOpenMapId, mapMessages, setMapMessages, updateField, addPhone, updatePhone, removePhone, addAnotherPhone, phonesForAdditional, groupedPhones, addedPhoneTypes, availablePhoneTypes, hasAdditionalEmails, hasWebsites, handleAddItem, addWebsite, updateWebsite, removeWebsite, addEmail, updateEmail, removeEmail, addSocialLink, updateSocialLink, removeSocialLink, addAnotherLink, addLocation, updateLocationEntry, removeLocation, setMapMessage, addedPlatforms, availablePlatforms, quickAddItems, groupedSocialLinks } = model;
@@ -30,13 +31,11 @@ return (
             {/* Primary Contact Section */}
             <Card>
               <CardHeader>
-                <div>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    {t('onboarding.contactInfo.primaryContact')}
-                  </CardTitle>
-                  <CardDescription className="text-xs">{t('onboarding.contactInfo.primaryContactHint')}</CardDescription>
-                </div>
+                <ContactSectionHeader
+                  icon={Phone}
+                  title={t('onboarding.contactInfo.primaryContact')}
+                  description={t('onboarding.contactInfo.primaryContactHint')}
+                />
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Primary WhatsApp */}
@@ -214,7 +213,7 @@ return (
                             size="icon"
                             onClick={() => removePhone(phone.id)}
                             className="shrink-0 h-7 w-7 sm:h-8 sm:w-8"
-                            title={t('onboarding.contactInfo.remove')}
+                            aria-label={t('onboarding.contactInfo.remove')}
                           >
                             <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </Button>
@@ -271,7 +270,7 @@ return (
                           size="icon"
                           onClick={() => removeEmail(emailLink.id)}
                           className="shrink-0 h-8 w-8"
-                          title={t('onboarding.contactInfo.remove')}
+                          aria-label={t('onboarding.contactInfo.remove')}
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -338,7 +337,7 @@ return (
                                 size="icon"
                                 onClick={() => removeSocialLink(link.id)}
                                 className="shrink-0 h-8 w-8"
-                                title={t('onboarding.contactInfo.remove')}
+                                aria-label={t('onboarding.contactInfo.remove')}
                               >
                                 <X className="h-4 w-4" />
                               </Button>
@@ -397,7 +396,7 @@ return (
                           size="icon"
                           onClick={() => removeWebsite(site.id)}
                           className="shrink-0 h-8 w-8"
-                          title={t('onboarding.contactInfo.remove')}
+                          aria-label={t('onboarding.contactInfo.remove')}
                         >
                           <X className="h-4 w-4" />
                         </Button>

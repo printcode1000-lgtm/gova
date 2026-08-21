@@ -31,6 +31,10 @@ The console is intentionally absent outside local development:
 
 ## Store Image Validation
 
+The Store assets contracts and image validators are sealed in `@asol/google-play-store-assets-core`.
+The app module keeps only the browser hooks, server Google API wiring, edit locking, and credential
+access that cannot live in a pure package.
+
 - Icon: PNG, exactly 512 x 512, at most 1 MB.
 - Feature graphic: PNG or JPEG, exactly 1024 x 500, at most 15 MB.
 - TV banner: PNG or JPEG, exactly 1280 x 720, at most 15 MB.

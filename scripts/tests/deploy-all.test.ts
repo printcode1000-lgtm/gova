@@ -18,6 +18,7 @@ const {
   resolvePhasesToRun,
   compareVersions,
   SCRATCH_FILE_PATTERNS,
+  PREFLIGHT_GROUPS,
   PREFLIGHT_STEPS,
   RELEASE_MANIFEST,
   formatSuccessLine,
@@ -59,13 +60,17 @@ assert.throws(() => parseFlags(["--force"]), /Unknown option/);
 
 // ── 5. Preflight must cover the release path ───────────────────────────────
 for (const required of [
+  "doctor:environment:production",
+  "vercel:accounts:check",
   "lint",
   "typecheck",
   "architecture:check",
   "test",
   "db:ensure",
   "db:schema:sync:release",
+  "build",
   "build:static",
+  "services:sync",
   "services:verify",
   "services:build",
 ]) {
@@ -74,6 +79,21 @@ for (const required of [
     `Preflight must run "${required}" before publishing.`,
   );
 }
+assert.deepEqual(
+  PREFLIGHT_GROUPS.map((group) => group.label),
+  [
+    "environment and Vercel accounts",
+    "source quality and architecture",
+    "database and runtime contracts",
+    "main app builds",
+    "isolated service deployments",
+  ],
+  "Preflight groups must stay ordered from environment readiness to deployment-shaped checks.",
+);
+assert.ok(
+  PREFLIGHT_STEPS.indexOf("build") < PREFLIGHT_STEPS.indexOf("build:static"),
+  "Server build must run before static release build so static output remains the final release artifact.",
+);
 
 // ── 6. Version comparison drives the manifest-downgrade refusal ────────────
 assert.ok(compareVersions("0.1.0", "0.1.15") < 0, "0.1.0 is older than 0.1.15");

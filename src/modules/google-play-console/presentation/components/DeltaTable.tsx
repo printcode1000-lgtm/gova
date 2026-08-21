@@ -1,6 +1,6 @@
 "use client";
 
-import type { BundleAnalysisDelta } from "@/modules/release-commands/domain/bundle-analysis-types";
+import type { BundleAnalysisDelta } from "@asol/release-core/console";
 import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 
 export function DeltaTable({ rows, emptyText }: { rows: BundleAnalysisDelta[]; emptyText: string }) {

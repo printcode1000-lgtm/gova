@@ -31,6 +31,46 @@ export async function resolveTeamId(token: string): Promise<string | undefined> 
   return team?.id;
 }
 
+export interface VercelAccountAccessReport {
+  name: AccountDeclaration['name'];
+  project: string;
+  tokenEnvVar: string;
+  account: string;
+  teamId?: string;
+}
+
+async function resolveTokenAccountName(token: string, tokenEnvVar: string): Promise<string> {
+  const response = await fetch('https://api.vercel.com/v2/user', {
+    headers: buildHeaders(token),
+  });
+  if (!response.ok) {
+    throw new Error(`${tokenEnvVar} was rejected by Vercel (${response.status}).`);
+  }
+  const data = (await response.json()) as {
+    user?: { username?: string; email?: string; uid?: string; id?: string };
+  };
+  return data.user?.email ?? data.user?.username ?? data.user?.uid ?? data.user?.id ?? 'personal';
+}
+
+export async function verifyAccountTokenAccess(
+  declaration: AccountDeclaration,
+  env: Record<string, string | undefined> = process.env,
+): Promise<VercelAccountAccessReport> {
+  const token = env[declaration.tokenEnvVar]?.trim();
+  if (!token) {
+    throw new Error(`${declaration.tokenEnvVar} is missing from environment.`);
+  }
+  const account = await resolveTokenAccountName(token, declaration.tokenEnvVar);
+  const teamId = await resolveAccountTeamId(declaration, env, token);
+  return {
+    name: declaration.name,
+    project: declaration.project,
+    tokenEnvVar: declaration.tokenEnvVar,
+    account,
+    teamId,
+  };
+}
+
 function resolveAccountTeamId(
   declaration: AccountDeclaration,
   env: Record<string, string | undefined>,

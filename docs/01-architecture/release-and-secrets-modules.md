@@ -9,9 +9,9 @@ credentials were the only consequential code in the repository with no gate on i
 
 ### Mission
 
-The shape of a release run: the phase order, what each phase depends on, how a resumable run
-remembers where it stopped, and how a child npm script is streamed and its Vercel deployment
-awaited.
+The shape of every release run: deployment phase order, the local command catalog and job state
+machine, process execution, artifact discovery and bundle analysis. Application-only services
+(HTTP, runtime guard, npm path and public version) enter through one fail-closed console port.
 
 `deploy:all` pushes directly to `main` and is the only supported release path. Its ordering lived
 in `scripts/lib/`, outside every package gate, beside a `vercel-deployment-monitor.ts` that only
@@ -22,6 +22,9 @@ re-exported `@asol/vercel-deploy-core` — a second name for a door that already
 | Door | Import | Contents |
 | :--- | :--- | :--- |
 | `.` | `@asol/release-core` | `DEPLOY_ALL_PHASE_ORDER`, `phasesFrom`, `phasePrerequisites`, the deploy state file, `runDeploymentNpmScript`, `pushMainBranch` |
+| `./console` | `@asol/release-core/console` | Browser-safe command catalog, job transitions, progress parsing and artifact types |
+| `./console-server` | `@asol/release-core/console-server` | Fail-closed job/process runner |
+| `./console-artifacts` | `@asol/release-core/console-artifacts` | Artifact discovery and bundle analysis without loading the process/OTA graph |
 
 ### The phase order
 

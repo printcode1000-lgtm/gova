@@ -16,9 +16,9 @@ import {
 import type {
   BuildCommandCatalogEntry,
   BuildParameterName,
-} from "@/modules/release-commands/domain/build-command-catalog";
-import type { StartBuildJobInput } from "@/modules/release-commands/domain/build-job-types";
-import type { ReleaseVersionSnapshot } from "@/modules/release-commands/domain/build-job-types";
+} from "@asol/release-core/console";
+import type { StartBuildJobInput } from "@asol/release-core/console";
+import type { ReleaseVersionSnapshot } from "@asol/release-core/console";
 import { Parameter } from "./CommandParameterFields";
 import { ReleaseCurrentVersions, ReleaseSelectedVersions } from "./ReleaseVersionSummary";
 

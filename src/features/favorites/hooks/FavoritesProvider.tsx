@@ -7,7 +7,6 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import {
   favoriteKey,
   type FavoriteCollection,
-  type FavoriteItem,
   type FavoriteItemInput,
   type FavoriteTargetType,
 } from "../entities/favorite.entity";
@@ -18,24 +17,8 @@ import {
 } from "../services/favorite-collection";
 import { favoriteStorage } from "../services/favorite-storage";
 import { reportPreAuthFailure } from "@/features/system-logs/pre-auth-failure-reporter";
-
-interface FavoritesContextValue {
-  items: FavoriteItem[];
-  isLoading: boolean;
-  totalCount: number;
-  productCount: number;
-  sellerCount: number;
-  isFavorite: (type: FavoriteTargetType, targetId: string) => boolean;
-  toggleFavorite: (input: FavoriteItemInput) => Promise<void>;
-  removeFavorite: (type: FavoriteTargetType, targetId: string) => Promise<void>;
-}
-
-interface FavoriteNotice {
-  message: string;
-  removed?: FavoriteItem;
-}
-
-const FavoritesContext = React.createContext<FavoritesContextValue | null>(null);
+import { FavoritesContext, type FavoritesContextValue } from "./favorites-context";
+import { FavoriteNoticeToast, type FavoriteNotice } from "./favorite-notice-toast";
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { session, isLoading: isSessionLoading } = useSession();
@@ -177,25 +160,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   return (
     <FavoritesContext.Provider value={value}>
       {children}
-      {notice ? (
-        <div
-          className="fixed inset-x-4 z-[70] mx-auto flex max-w-sm items-center justify-between gap-3 rounded-xl bg-inverse-surface px-4 py-3 text-sm text-inverse-on-surface shadow-xl"
-          style={{
-            bottom: "calc(var(--asol-bottom-nav-space) + 0.75rem)",
-          }}
-        >
-          <span>{notice.message}</span>
-          {notice.removed ? (
-            <button
-              type="button"
-              className="shrink-0 font-bold text-inverse-primary"
-              onClick={() => void undoRemoval()}
-            >
-              تراجع
-            </button>
-          ) : null}
-        </div>
-      ) : null}
+      {notice ? <FavoriteNoticeToast notice={notice} onUndo={() => void undoRemoval()} /> : null}
     </FavoritesContext.Provider>
   );
 }

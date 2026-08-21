@@ -56,6 +56,10 @@ The shared definitions live in
 tests verify that each displayed scenario resolves to the advertised Android
 channel and that its audible label matches its sound value.
 
+The page keeps the diagnostic workflow. Presentation constants, request-id
+formatting, status labels, and countdown waits live beside it in
+`src/features/super-admin/presentation/notification-tests/notification-test-presentation.ts`.
+
 ## Background and locked-screen checks
 
 The delay selector gives the tester time to background the application or lock

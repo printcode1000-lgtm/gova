@@ -7,7 +7,7 @@ import type {
   HomeHeroPublished,
   HomeHeroRecord,
   SuperAdminIdentity,
-} from "../entities/home-hero-slider.entity";
+} from "@asol/hero-slider-core";
 
 export const homeHeroSliderApiService = {
   getCurrent: () =>

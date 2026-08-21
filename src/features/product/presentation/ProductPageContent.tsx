@@ -3,10 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Copy, MessageCircle, Share2, UserCircle } from "lucide-react";
+import { MessageCircle, Share2, UserCircle } from "lucide-react";
 
-import { NativeCore } from "@asol/native-core";
-import { ApiError, asolApi } from "@/core/api";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useSession } from "@/features/auth/components/SessionProvider";
@@ -17,44 +15,22 @@ import type {
   ProductDetails,
   ProductRecord,
 } from "@/features/product/entities/product.entity";
-import {
-  createEmptyProductDetails,
-  toProductDetails,
-} from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
 import { createProductCardViewModel } from "@/features/product-card";
 import { FavoriteButton, favoriteFromProductCard } from "@/features/favorites";
 import { specialtyChatClient } from "@/features/specialty-chat";
 import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
 import { ProductComponentsRenderer } from "./ProductComponentsRenderer";
-import type {
-  ProductMode,
-  ProductStyleComponents,
-} from "./product-component.types";
+import type { ProductStyleComponents } from "./product-component.types";
 import { createDefaultProductStyleComponents } from "@/components/ui/product-style-settings";
-import { createPharmacyInitialDetails } from "@/features/pharmacy-profile-catalog/utils/pharmacy-initial-fields";
-import {
-  PHARMACY_MAIN_CATEGORY_ID,
-  PHARMACY_SUBCATEGORY_ID,
-} from "@/features/pharmacy-profile-catalog/entities/pharmacy-profile-catalog.types";
 import {
   buildProductShareUrl,
   ShareMenu,
 } from "@/features/sharing";
-
-// Clipboard access belongs to Native Core, which picks the native or web
-// implementation. It returns a Result rather than throwing, so a copy button on
-// a platform without clipboard access stays silent instead of breaking the page.
-const clipboard = {
-  write: async (text: string): Promise<void> => {
-    if (!text) return;
-    await NativeCore.writeClipboard({ string: text });
-  },
-};
-
-interface ProductStyleFile {
-  components: ProductStyleComponents;
-}
+import { AdminCopyValue } from "./AdminCopyValue";
+import { productPageClipboard } from "./product-page-clipboard";
+import { productPageRouteModel } from "./product-page-route-model";
+import { useProductPageLoader } from "./use-product-page-loader";
 
 export function ProductPageContent({
   initialProduct = null,
@@ -63,46 +39,40 @@ export function ProductPageContent({
 } = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const requestedMode = searchParams.get("mode");
-  const mode: ProductMode =
-    requestedMode === "edit" || requestedMode === "new"
-      ? requestedMode
-      : "view";
-  const productId = searchParams.get("productId") ?? "";
-  const initialMain = searchParams.get("mainCategoryId") ?? "";
-  const initialSub = searchParams.get("subcategoryId") ?? "";
-  const initialPharmacyCategory = searchParams.get("pharmacyCategoryId") ?? "";
-  const initialPharmacySubcategory =
-    searchParams.get("pharmacySubcategoryId") ?? "";
-  const returnTo = searchParams.get("returnTo");
-  const returnUrl =
-    returnTo === "profile-products" ? "/profile?mode=edit&tab=products" : null;
+  const {
+    mode,
+    productId,
+    initialMain,
+    initialSub,
+    initialPharmacyCategory,
+    initialPharmacySubcategory,
+    returnUrl,
+  } = productPageRouteModel(searchParams);
   const { locale, formatApiError } = useTranslation();
   const { session, isLoggedIn, isLoading: sessionLoading } = useSession();
-  const [product, setProduct] = React.useState<ProductRecord | null>(
-    initialProduct,
-  );
-  const [style, setStyle] = React.useState<ProductStyleFile | null>(null);
-  const [details, setDetails] = React.useState<ProductDetails>(() =>
-    initialProduct
-      ? toProductDetails(initialProduct)
-      : createEmptyProductDetails(),
-  );
-  const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
   const [openingConversation, setOpeningConversation] = React.useState(false);
-  const [error, setError] = React.useState("");
-  const detailsRef = React.useRef(details);
   const imageUploadRef = React.useRef<StorageImageManagerHandle | null>(null);
-
-  const updateDetails = React.useCallback((next: ProductDetails) => {
-    detailsRef.current = next;
-    setDetails(next);
-  }, []);
-
-  React.useEffect(() => {
-    detailsRef.current = details;
-  }, [details]);
+  const {
+    product,
+    setProduct,
+    style,
+    details,
+    detailsRef,
+    updateDetails,
+    loading,
+    error,
+    setError,
+  } = useProductPageLoader({
+    initialProduct,
+    mode,
+    productId,
+    initialMain,
+    initialSub,
+    initialPharmacyCategory,
+    initialPharmacySubcategory,
+    formatApiError,
+  });
 
   const mainCategoryId = product?.mainCategoryId ?? initialMain;
   const subcategoryId = product?.subcategoryId ?? initialSub;
@@ -130,81 +100,6 @@ export function ProductPageContent({
     };
   }, [locale, mainCategoryId, subcategoryId]);
 
-  React.useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      setLoading(true);
-      setError("");
-      try {
-        let loadedProduct: ProductRecord | null = null;
-        if (mode !== "new") {
-          if (!productId) throw new Error("يلزم تحديد المنتج.");
-          loadedProduct =
-            initialProduct?.id === productId
-              ? initialProduct
-              : await productApiService.get(productId);
-          if (!cancelled) {
-            setProduct(loadedProduct);
-            setDetails(toProductDetails(loadedProduct));
-          }
-        } else {
-          if (!initialMain || !initialSub)
-            throw new Error("يلزم تحديد التصنيف الرئيسي والفرعي.");
-          if (!cancelled) {
-            setProduct(null);
-            setDetails(
-              initialMain === PHARMACY_MAIN_CATEGORY_ID &&
-                initialSub === PHARMACY_SUBCATEGORY_ID
-                ? createPharmacyInitialDetails(
-                    initialPharmacyCategory,
-                    initialPharmacySubcategory,
-                  )
-                : createEmptyProductDetails(),
-            );
-          }
-        }
-
-        const main = loadedProduct?.mainCategoryId ?? initialMain;
-        const sub = loadedProduct?.subcategoryId ?? initialSub;
-        let loadedStyle: ProductStyleFile;
-        try {
-          loadedStyle = await asolApi.getPublicJson<ProductStyleFile>(
-            `/product/style/${encodeURIComponent(main)}__${encodeURIComponent(sub)}.json`,
-            { suppressErrorLog: true },
-          );
-        } catch (styleError) {
-          if (!(styleError instanceof ApiError) || styleError.status !== 404) {
-            console.error(
-              "[ProductPage] Failed to load product style.",
-              styleError,
-            );
-            throw styleError;
-          }
-          loadedStyle = await asolApi.getPublicJson<ProductStyleFile>(
-            "/product/style/default.json",
-          );
-        }
-        if (!cancelled) setStyle(loadedStyle);
-      } catch (loadError) {
-        if (!cancelled) setError(formatApiError(loadError));
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    initialMain,
-    initialPharmacyCategory,
-    initialPharmacySubcategory,
-    initialSub,
-    initialProduct,
-    mode,
-    productId,
-    formatApiError,
-  ]);
 
   const productShareTitle =
     details.mainData.name ||
@@ -383,7 +278,7 @@ export function ProductPageContent({
 
   const copyToClipboard = async (text: string) => {
     if (!text) return;
-    await clipboard.write(text);
+    await productPageClipboard.write(text);
   };
 
   if (loading || sessionLoading)
@@ -500,31 +395,3 @@ export function ProductPageContent({
   );
 }
 
-function AdminCopyValue({
-  label,
-  value,
-  onCopy,
-}: {
-  label: string;
-  value: string;
-  onCopy: (value: string) => void | Promise<void>;
-}) {
-  return (
-    <div className="rounded-lg border border-outline-variant/30 bg-surface-container-high p-3">
-      <span className="block text-on-surface-variant">{label}</span>
-      <code className="mt-1 block break-all font-mono text-primary">
-        {value || "-"}
-      </code>
-      {value ? (
-        <button
-          type="button"
-          onClick={() => void onCopy(value)}
-          className="mt-2 inline-flex items-center gap-1 rounded border border-outline-variant px-2 py-1 text-[10px]"
-        >
-          <Copy className="h-3 w-3" />
-          نسخ
-        </button>
-      ) : null}
-    </div>
-  );
-}

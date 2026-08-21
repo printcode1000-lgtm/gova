@@ -39,7 +39,7 @@ Product creation and unified profile saving are commit boundaries. If a user has
 ## Upload queue
 
 All `StorageImageManager` instances share the FIFO queue in
-`src/features/storage/services/image-upload-queue.ts`. The queue processes one
+`packages/storage-image-manager-core/src/services/image-upload-queue.ts`. The queue processes one
 complete image pipeline at a time (profile lookup, compression, upload, and
 finalization), updates waiting positions, prevents duplicate requests for the
 same manager slot and file, and continues after an item fails. A queued item can
@@ -60,14 +60,15 @@ in-memory queue and clears every image draft on Web, Android, and iOS.
 | Profiles            | `packages/storage-core/src/domain/profiles/`                    |
 | ImageKeyGenerator   | `packages/storage-core/src/domain/images/image-key-generator.ts` |
 | Rules               | `packages/storage-core/src/domain/images/image-rules.ts`       |
-| Processing (Canvas) | `src/features/storage/processing/`                              |
+| Processing (Canvas) | `packages/storage-image-manager-core/src/processing/`           |
 | Providers           | `packages/storage-core/src/server/providers/`                  |
 | Orchestrator        | `packages/storage-core/src/server/storage/`                    |
-| **Client service**  | `src/features/storage/services/image-storage-service.ts`        |
-| Draft persistence   | `src/features/storage/services/image-upload-draft-service.ts`    |
+| **Client service**  | `packages/storage-image-manager-core/src/services/image-storage-service.ts` |
+| Draft persistence   | `packages/storage-image-manager-core/src/services/image-upload-draft-service.ts` |
 | API adapter         | `src/features/storage/services/image-storage-api-service.ts`    |
-| Hook                | `src/features/storage/hooks/use-storage-profile-upload.ts`      |
-| UI                  | `src/features/storage/components/StorageImageManager.tsx`       |
+| App wiring          | `src/features/storage/components/StorageImageManager.tsx` and service shims |
+| Hook                | `packages/storage-image-manager-core/src/hooks/use-storage-profile-upload.ts` |
+| UI                  | `packages/storage-image-manager-core/src/components/StorageImageManager.tsx` |
 
 ## APIs
 

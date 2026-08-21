@@ -1,4 +1,4 @@
-import type { BundleAnalysisNode } from "@/modules/release-commands/domain/bundle-analysis-types";
+import type { BundleAnalysisNode } from "@asol/release-core/console";
 
 import { SizeBar } from "./SizeBar";
 

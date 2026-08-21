@@ -1,26 +1,13 @@
-export const FEATURED_MARQUEE_ID = "home-featured-marquee";
-export const FEATURED_MARQUEE_CACHE_KEY = "advertisements:featured-marquee:v1";
-
-/** قائمة معرفات المنتجات المختارة للعرض في الشريط */
-export interface FeaturedMarqueeConfig {
-  productIds: string[];
-}
-
-export interface FeaturedMarqueeRecord {
-  id: typeof FEATURED_MARQUEE_ID;
-  config: FeaturedMarqueeConfig;
-  version: number;
-  checkIntervalMinutes: number;
-  updatedAt: string;
-  updatedBy: string | null;
-}
-
-export interface FeaturedMarqueePublished {
-  config: FeaturedMarqueeConfig;
-  version: number;
-  checkIntervalMinutes: number;
-  updatedAt: string;
-}
-
-// Re-use SuperAdminIdentity from hero slider entity
-export type { SuperAdminIdentity } from "./home-hero-slider.entity";
+export type {
+  FeaturedMarqueeConfig,
+  FeaturedMarqueeRecord,
+  FeaturedMarqueePublished,
+  SuperAdminIdentity,
+} from "@asol/featured-marquee-core";
+export {
+  FEATURED_MARQUEE_ID,
+  FEATURED_MARQUEE_CACHE_KEY,
+  FEATURED_MARQUEE_SECTION_TITLE,
+  DEFAULT_FEATURED_MARQUEE_CONFIG,
+  DEFAULT_FEATURED_MARQUEE_PUBLISHED,
+} from "@asol/featured-marquee-core";

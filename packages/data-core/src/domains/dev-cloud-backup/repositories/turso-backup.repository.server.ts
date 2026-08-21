@@ -8,7 +8,7 @@ import {
 } from "@/core/config/server-env.values";
 import { DATABASE_SHARD_NAMES, envPrefixForShard } from "../../../core/database/database-shards";
 
-import type { DevCloudBackupDatabaseManifest } from "@/modules/dev-cloud-backup/domain/types";
+import type { DevCloudBackupDatabaseManifest } from "@asol/backup-core";
 
 type Row = Record<string, unknown>;
 

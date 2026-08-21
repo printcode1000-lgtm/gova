@@ -2,15 +2,9 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { ChevronDown, Package, Plus, Search, Star } from "lucide-react";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { ProductCard } from "@/components/ui/product-card";
+import { ChevronDown, Plus, Search, Star } from "lucide-react";
 import { ProductSearchPanel } from "@/components/ui/product-search";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
-import {
-  createProductCardViewModel,
-  type ProductCardAction,
-} from "@/features/product-card";
 import {
   isPharmacyProfileBucket,
   PharmacyNestedTabs,
@@ -21,6 +15,11 @@ import type {
   ProfileProductsSubTab,
   ProfileProductsTabsMode,
 } from "@/features/profile-products";
+import { ProfileProductsGrid } from "./ProfileProductsGrid";
+import {
+  ProfileProductsTabsEmpty,
+  ProfileProductsTabsLoading,
+} from "./ProfileProductsTabsStates";
 
 export interface ProfileProductsTabsLabels {
   title: string;
@@ -127,22 +126,13 @@ export function ProfileProductsTabs({
     isLoadingProducts || (showFeaturedOnly && isLoadingFeaturedProducts);
 
   if (isLoadingTabs) {
-    return (
-      <div className="flex justify-center py-8">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
+    return <ProfileProductsTabsLoading size="lg" />;
   }
 
   if (tabs.length === 0) {
     return (
       <section className="space-y-3">
-        <div className="rounded-lg border border-dashed border-outline-variant py-8 text-center">
-          <Package className="mx-auto mb-2 h-8 w-8 text-on-surface-variant" />
-          <p className="text-sm text-on-surface-variant">
-            {labels.emptySpecialties}
-          </p>
-        </div>
+        <ProfileProductsTabsEmpty label={labels.emptySpecialties} />
       </section>
     );
   }
@@ -282,57 +272,24 @@ export function ProfileProductsTabs({
 
       <div className="min-h-[160px]">
         {productsLoading ? (
-          <div className="flex justify-center py-8">
-            <LoadingSpinner size="sm" />
-          </div>
+          <ProfileProductsTabsLoading size="sm" />
         ) : visibleProducts.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-outline-variant py-8 text-center">
-            <Package className="mx-auto mb-2 h-7 w-7 text-on-surface-variant" />
-            <p className="text-xs text-on-surface-variant">
-              {labels.emptyProducts}
-            </p>
-          </div>
+          <ProfileProductsTabsEmpty
+            label={labels.emptyProducts}
+            iconSize="h-7 w-7"
+            textSize="text-xs"
+          />
         ) : (
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-            {visibleProducts.map((product) => {
-              const featured = featuredProductIds.includes(product.id);
-              const card = createProductCardViewModel(product);
-              const actions: ProductCardAction[] = [];
-              if (showManagement && onToggleFeatured) {
-                actions.push({
-                  kind: "toggleFeatured",
-                  label: featured ? labels.removeFeatured : labels.addFeatured,
-                  active: featured,
-                  tone: featured ? "tertiary" : undefined,
-                  onClick: () => onToggleFeatured(product),
-                });
-              }
-              if (showManagement && onEditProduct) {
-                actions.push({
-                  kind: "edit",
-                  label: labels.edit,
-                  onClick: () => onEditProduct(product),
-                });
-              }
-              if (showManagement && onDeleteProduct) {
-                actions.push({
-                  kind: "delete",
-                  label: labels.delete,
-                  tone: "danger",
-                  onClick: () => onDeleteProduct(product),
-                });
-              }
-              return (
-                <ProductCard
-                  key={product.id}
-                  card={card}
-                  variant={showManagement ? "profile-edit" : "profile-preview"}
-                  actions={actions}
-                  onOpen={() => onViewProduct(product)}
-                />
-              );
-            })}
-          </div>
+          <ProfileProductsGrid
+            featuredProductIds={featuredProductIds}
+            labels={labels}
+            products={visibleProducts}
+            showManagement={showManagement}
+            onDeleteProduct={onDeleteProduct}
+            onEditProduct={onEditProduct}
+            onToggleFeatured={onToggleFeatured}
+            onViewProduct={onViewProduct}
+          />
         )}
       </div>
 

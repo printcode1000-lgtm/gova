@@ -1,8 +1,8 @@
 import { asolApi } from "@/core/api";
 
-import type { BuildCommandCatalogEntry } from "../domain/build-command-catalog";
-import type { BundleAnalysis, BundleAnalysisComparison } from "../domain/bundle-analysis-types";
-import type { BuildArtifactDescriptor, BuildCommandReadiness, BuildJobRecord, PaginatedBuildJobs, ReleaseVersionSnapshot, StartBuildJobInput } from "../domain/build-job-types";
+import type { BuildCommandCatalogEntry } from "@asol/release-core/console";
+import type { BundleAnalysis, BundleAnalysisComparison } from "@asol/release-core/console";
+import type { BuildArtifactDescriptor, BuildCommandReadiness, BuildJobRecord, PaginatedBuildJobs, ReleaseVersionSnapshot, StartBuildJobInput } from "@asol/release-core/console";
 
 export const BUILD_JOBS_API = "/api/super-admin/build-jobs";
 export interface BuildCommandCatalogResponse {

@@ -15,150 +15,43 @@ import {
   Truck,
 } from "lucide-react";
 
-import { asolApi } from "@/core/api/asol-api-client";
-import { ASOL_API_ROUTES } from "@/core/api/asol-api-routes";
 import {
   clearCart,
   getCartTotalMinor,
   removeCartItem,
   updateCartItemQuantity,
 } from "@/features/cart/cart-store";
-import { calculateSellerShipping } from "@/features/cart/shipping-pricing";
 import { useCart } from "@/features/cart/use-cart";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useTranslation } from "@/lib/i18n";
 import { notifications } from "@/features/notifications";
 import { useCartDiscountQuote } from "@/features/seller-discounts";
-import {
-  EMPTY_PROFILE_FULFILLMENT_SETTINGS,
-  normalizeProfileFulfillmentSettings,
-  type ProfileFulfillmentSettings,
-} from "@/features/profile/entities/profile-fulfillment-settings.entity";
-import { profileService } from "@/features/profile/services/profile-service";
-import { formatCurrencyMinor } from "@asol/format-core";
-
-function formatMoney(minor: number, locale = "ar") {
-  return formatCurrencyMinor(minor, { locale });
-}
-
-function orderErrorMessage(message: string) {
-  if (message.includes("Buyer phone is required")) {
-    return "يجب توفر رقم هاتف في الحساب قبل إرسال الطلب.";
-  }
-  if (message.includes("Delivery carrier required")) {
-    return "لا يمكن إرسال الطلب لأن أحد البائعين لم يربط مقدم خدمة توصيل في إعدادات الشحن والإرجاع.";
-  }
-  if (message.includes("userNotFound")) {
-    return "يجب تسجيل الدخول قبل إرسال الطلب.";
-  }
-  return message || "تعذر إرسال الطلب. حاول مرة أخرى.";
-}
+import { formatMoney, orderErrorMessage } from "./cart-page-format";
+import { cartPageCopy } from "./cart-page-copy";
+import { buildCartSellerGroups, sellerIdsFromCartItems } from "./cart-seller-groups";
+import { submitCartOrder } from "./cart-order-submit";
+import { useCartCheckoutSettings } from "./use-cart-checkout-settings";
 
 export function CartPageContent() {
   const router = useRouter();
   const { locale } = useTranslation();
-  const copy = locale === "ar" ? {
-    title: "السلة", description: "راجع المنتجات والخدمات قبل إرسالها كطلب رسمي بنظام الدفع عند الاستلام.", clear: "تفريغ السلة",
-    emptyTitle: "السلة فارغة", emptyText: "عند إضافة منتج أو خدمة ستظهر هنا، وستظهر النقطة الحمراء في الهيدر.", browse: "تصفح المنتجات",
-    seller: "البائع", viewSeller: "عرض بروفايل البائع", noImage: "بدون صورة", unitPrice: "سعر الوحدة", summary: "ملخص السلة",
-    coupon: "كود الخصم", couponHint: "يمكن إدخال أكثر من كود بفاصلة.", itemCount: "عدد العناصر", productsTotal: "إجمالي المنتجات",
-    loadingDiscounts: "جاري حساب الخصومات", total: "الإجمالي", submit: "إرسال الطلب", submitHint: "سيتم إنشاء الطلب الرسمي من قاعدة البيانات، والدفع عند الاستلام فقط.",
-  } : {
-    title: "Cart", description: "Review products and services before submitting an official cash-on-delivery order.", clear: "Clear cart",
-    emptyTitle: "Your cart is empty", emptyText: "Products and services you add will appear here.", browse: "Browse products",
-    seller: "Seller", viewSeller: "View seller profile", noImage: "No image", unitPrice: "Unit price", summary: "Cart summary",
-    coupon: "Discount code", couponHint: "Separate multiple codes with commas.", itemCount: "Items", productsTotal: "Products total",
-    loadingDiscounts: "Calculating discounts", total: "Total", submit: "Submit order", submitHint: "The official order will be created in the database. Payment is cash on delivery only.",
-  };
+  const copy = cartPageCopy(locale);
   const { session, isLoading: isSessionLoading } = useSession();
   const { items, totalQuantity } = useCart();
-  const [sellerSettings, setSellerSettings] = React.useState<
-    Record<string, ProfileFulfillmentSettings>
-  >({});
-  const [qualifiedDeliveryAvailable, setQualifiedDeliveryAvailable] =
-    React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState("");
   const [couponText, setCouponText] = React.useState("");
   const productsTotalMinor = getCartTotalMinor(items);
   const sellerIds = React.useMemo(
-    () =>
-      Array.from(new Set(items.map((item) => item.sellerId))).filter(Boolean),
+    () => sellerIdsFromCartItems(items),
     [items],
   );
 
-  React.useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      const entries = await Promise.all(
-        sellerIds.map(async (sellerId) => {
-          try {
-            const settings =
-              await profileService.getFulfillmentSettings(sellerId);
-            return [
-              sellerId,
-              normalizeProfileFulfillmentSettings(settings),
-            ] as const;
-          } catch {
-            return [sellerId, EMPTY_PROFILE_FULFILLMENT_SETTINGS] as const;
-          }
-        }),
-      );
-      if (!cancelled) setSellerSettings(Object.fromEntries(entries));
-    };
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [sellerIds]);
-
-  React.useEffect(() => {
-    let cancelled = false;
-    if (sellerIds.length < 2) {
-      setQualifiedDeliveryAvailable(false);
-      return;
-    }
-    void profileService
-      .getUsersBySpecialty(46, 132, 0, 1)
-      .then((users) => {
-        if (!cancelled) setQualifiedDeliveryAvailable(users.length > 0);
-      })
-      .catch(() => {
-        if (!cancelled) setQualifiedDeliveryAvailable(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [sellerIds.length]);
+  const { sellerSettings, qualifiedDeliveryAvailable } =
+    useCartCheckoutSettings(sellerIds);
 
   const sellerGroups = React.useMemo(
-    () =>
-      sellerIds.map((sellerId) => {
-        const sellerItems = items.filter((item) => item.sellerId === sellerId);
-        const subtotalMinor = getCartTotalMinor(sellerItems);
-        const settings =
-          sellerSettings[sellerId] ?? EMPTY_PROFILE_FULFILLMENT_SETTINGS;
-        const hasSpecialVehicle = sellerItems.some(
-          (item) => item.requiresSpecialVehicle,
-        );
-        const shipping = calculateSellerShipping(
-          settings.shippingPricing,
-          subtotalMinor,
-          hasSpecialVehicle,
-        );
-
-        return {
-          sellerId,
-          items: sellerItems,
-          settings,
-          subtotalMinor,
-          shippingMinor: shipping.confirmedShippingMinor,
-          specialVehicleFeeMinor: shipping.specialVehicleFeeMinor,
-          quoteRequired: shipping.quoteRequired,
-          eligibleForFree: shipping.freeThresholdApplied,
-          hasSpecialVehicle,
-        };
-      }),
+    () => buildCartSellerGroups({ items, sellerIds, sellerSettings }),
     [items, sellerIds, sellerSettings],
   );
 
@@ -217,42 +110,14 @@ export function CartPageContent() {
     setIsSubmitting(true);
     setSubmitError("");
     try {
-      const result = await asolApi.post<{ orderId: string }>(
-        ASOL_API_ROUTES.orders.fromCart,
-        {
-          uid: session.uid,
-          phone: session.phone,
-          couponCodes,
-          items: items.map((item) => ({
-            productId: item.productId,
-            sellerId: item.sellerId,
-            name: item.name,
-            description: item.description,
-            imageUrl: item.imageUrl,
-            quantity: item.quantity,
-            unitPriceMinor: item.unitPriceMinor,
-            priceLabel: item.priceLabel,
-            requiresSpecialVehicle: item.requiresSpecialVehicle,
-            mainCategoryId: item.mainCategoryId,
-          })),
-        },
-        { suppressErrorLog: true },
-      );
-      await notifications.publishEvent({
-        event: {
-          name: "orders.created",
-          uid: session.uid,
-          dedupeKey: `orders.created:${result.orderId}:buyer:${session.uid}`,
-          variables: {
-            orderId: result.orderId,
-            orderNumber: result.orderId,
-          },
-        },
-        locale: "ar",
+      const orderId = await submitCartOrder({
+        session,
+        couponCodes,
+        items,
       });
       await clearCart();
       router.push(
-        `/orders/details?orderId=${encodeURIComponent(result.orderId)}`,
+        `/orders/details?orderId=${encodeURIComponent(orderId)}`,
       );
     } catch (error) {
       setSubmitError(

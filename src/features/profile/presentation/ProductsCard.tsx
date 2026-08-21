@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Package } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ProfileProductsTabs } from '@/components/ui/profile-products-tabs';
 import { useProfileProductsTabs } from '@/features/profile-products';
@@ -19,30 +18,14 @@ import type {
   ProfileSpecialtiesController,
 } from './profile-save-controller';
 import { useTranslation } from '@/lib/i18n';
+import { cloneShowcase, isShowcaseDirty } from './products-card-model';
+import { ProductDeleteDialog } from './ProductDeleteDialog';
 
 interface ProductsCardProps {
   uid: string;
   showSaveButton?: boolean;
   onStatusChange?: (status: ProfileSectionStatus) => void;
   readOnly?: boolean;
-}
-
-function cloneShowcase(showcase: ProfileShowcaseSettings): ProfileShowcaseSettings {
-  return {
-    featuredProductIds: [...showcase.featuredProductIds],
-    trending: {
-      label: showcase.trending.label,
-      items: showcase.trending.items.map((item) => ({ ...item })),
-    },
-    customRequestEnabled: showcase.customRequestEnabled,
-  };
-}
-
-function isShowcaseDirty(
-  current: ProfileShowcaseSettings,
-  baseline: ProfileShowcaseSettings,
-): boolean {
-  return JSON.stringify(current) !== JSON.stringify(baseline);
 }
 
 export const ProductsCard = React.forwardRef<
@@ -391,43 +374,12 @@ export const ProductsCard = React.forwardRef<
       ) : null}
 
       {pendingDelete ? (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-surface p-5 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Package className="h-5 w-5" />
-              {locale === 'ar' ? 'حذف المنتج' : 'Delete product'}
-            </h3>
-            <p className="mt-2 text-sm text-on-surface-variant">
-              {locale === 'ar'
-                ? 'سيتم حذف المنتج وصوره نهائيًا من التخزين. هل تريد المتابعة؟'
-                : 'The product and its stored images will be permanently deleted. Continue?'}
-            </p>
-            <div className="mt-5 flex justify-end gap-2">
-              <button
-                type="button"
-                disabled={isDeletingProduct}
-                onClick={() => setPendingDelete(null)}
-                className="rounded-lg border px-4 py-2 text-sm"
-              >
-                {locale === 'ar' ? 'إلغاء' : 'Cancel'}
-              </button>
-              <button
-                type="button"
-                disabled={isDeletingProduct}
-                onClick={() => void confirmDeleteProduct()}
-                className="rounded-lg bg-destructive px-4 py-2 text-sm text-destructive-foreground disabled:opacity-60"
-              >
-                {isDeletingProduct
-                  ? locale === 'ar'
-                    ? 'جار الحذف...'
-                    : 'Deleting...'
-                  : locale === 'ar'
-                    ? 'تأكيد الحذف'
-                    : 'Confirm delete'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProductDeleteDialog
+          locale={locale}
+          isDeleting={isDeletingProduct}
+          onCancel={() => setPendingDelete(null)}
+          onConfirm={() => void confirmDeleteProduct()}
+        />
       ) : null}
     </div>
   );

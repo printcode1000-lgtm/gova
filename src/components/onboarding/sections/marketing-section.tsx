@@ -14,15 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import type { CouponCode } from '@/lib/onboarding/types';
 import { nextSellerId } from '@/lib/onboarding/next-id';
-
-function generateCouponCode() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = '';
-  for (let i = 0; i < 8; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return code;
-}
+import { generateCouponCode } from './marketing-section-model';
 
 export function MarketingSection() {
   const { t } = useTranslation();

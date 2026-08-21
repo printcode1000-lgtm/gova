@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { persistentSystemLogService } from "@/features/system-logs/services/persistent-system-log-service.server";
 import { imageStorageOrchestrator } from "@asol/storage-core/server";
 
-import { cleanupConfirmationText, DATA_HEALTH_POLICY } from "../domain/policy";
+import { cleanupConfirmationText, DATA_HEALTH_POLICY } from "@asol/data-health-core/server";
 import { assertDataHealthAllowed } from "../domain/development-guard.server";
 import { resolveDataHealthExecutionContext } from "../domain/execution-context.server";
 import type {
@@ -13,7 +13,7 @@ import type {
   DataHealthCleanupResult,
   DataHealthReport,
   DataHealthSchemaComparison,
-} from "../domain/types";
+} from "@asol/data-health-core";
 import { dataHealthRepository } from "@asol/data-core/data-health";
 import { schemaComparisonRepository } from "@asol/data-core/data-health";
 

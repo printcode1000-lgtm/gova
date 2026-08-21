@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import type { BuildJobRecord, BuildJobStatus } from "@/modules/release-commands/domain/build-job-types";
+import type { BuildJobRecord, BuildJobStatus } from "@asol/release-core/console";
 
 export const RUNNING_STATUSES = new Set<BuildJobStatus>(["queued", "running"]);
 

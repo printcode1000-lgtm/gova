@@ -9,6 +9,7 @@ import {
   phasePrerequisites,
   phasesFrom,
 } from '../index';
+import { BUILD_COMMAND_CATALOG, assertBuildJobTransition } from '../console';
 
 const ROOT = process.cwd();
 
@@ -16,7 +17,40 @@ const ROOT = process.cwd();
 const manifest = JSON.parse(readFileSync(path.join(ROOT, 'packages/release-core/package.json'), 'utf8')) as {
   exports: Record<string, unknown>;
 };
-assert.deepEqual(Object.keys(manifest.exports), ['.'], 'One door.');
+assert.deepEqual(
+  Object.keys(manifest.exports),
+  ['.', './console', './console-server', './console-artifacts'],
+  'Four load-time contracts: pipeline, browser vocabulary, process runner, and artifact tools.',
+);
+
+assert.ok(BUILD_COMMAND_CATALOG.length > 0, 'The console command catalog must not become empty.');
+assert.doesNotThrow(() => assertBuildJobTransition('queued', 'running'));
+for (const file of [
+  'console/build-command-catalog.ts',
+  'console/build-job-progress.ts',
+  'console/build-job-types.ts',
+  'console/bundle-analysis-types.ts',
+  'console.ts',
+]) {
+  const text = readFileSync(path.join(ROOT, 'packages/release-core/src', file), 'utf8');
+  assert.doesNotMatch(text, /(?:node:|server-only|@\/)/, `${file} must stay browser-safe.`);
+}
+
+for (const file of [
+  'console-server/build-job-runner.ts',
+  'console-server/build-job-artifacts.ts',
+  'console-server/bundle-analyzer.ts',
+  'console-server.ts',
+  'console-artifacts.ts',
+]) {
+  const text = readFileSync(path.join(ROOT, 'packages/release-core/src', file), 'utf8');
+  assert.doesNotMatch(text, /@\//, `${file} must receive application services through a port.`);
+}
+assert.match(
+  readFileSync(path.join(ROOT, 'packages/release-core/src/console-server/build-job-runner.ts'), 'utf8'),
+  /releaseConsolePortsNotConfigured/,
+  'The release runner must fail closed before the application seam is registered.',
+);
 
 // ── Phase order is the release ──────────────────────────────────────────────
 //
@@ -98,5 +132,5 @@ for (const file of ['pipeline/phases.ts', 'pipeline/state.ts', 'pipeline/run-dep
 }
 
 console.log(
-  `@asol/release-core contract: 1 door, ${DEPLOY_ALL_PHASE_ORDER.length} phases pinned in order.`,
+  `@asol/release-core contract: 4 doors, ${DEPLOY_ALL_PHASE_ORDER.length} phases and console boundaries pinned.`,
 );

@@ -7,8 +7,20 @@ It handles image selection, preview, upload confirmation, storage upload, and re
 ## Location
 
 ```text
-src/features/storage/components/StorageImageManager.tsx
+packages/storage-image-manager-core/src/components/StorageImageManager.tsx
 ```
+
+The application keeps a compatibility wrapper at
+`src/features/storage/components/StorageImageManager.tsx`. That wrapper only
+injects app-owned session and translation ports, then renders the package
+component. Queueing, draft persistence, image processing, upload orchestration,
+and the imperative `uploadPending()` handle live in
+`@asol/storage-image-manager-core`.
+
+Inside `@asol/storage-image-manager-core`, the public component keeps the slot
+orchestration while `storage-image-manager.types.ts` owns the React-facing
+contracts and `storage-image-manager-ui.tsx` owns the shared dialog/button/spinner
+presentation primitives.
 
 Feature-specific JSON config files should live beside the feature UI that uses them.
 
@@ -282,7 +294,7 @@ The document contains a schema version and independent slot definitions:
 Allowed path:
 
 ```text
-UI -> StorageImageManager -> useStorageProfileUpload -> ImageStorageService -> AsolApiClient -> Storage API
+UI -> app StorageImageManager wrapper -> @asol/storage-image-manager-core -> app ImageStorageApiService -> Storage API
 ```
 
 Feature persistence stays outside the component:

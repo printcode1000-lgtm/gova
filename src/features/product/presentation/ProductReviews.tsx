@@ -12,6 +12,11 @@ import { productReviewApiService } from "@/features/product/services/product-rev
 import { profileApiService } from "@/features/profile/services/profile-api-service";
 
 import { PAGE_SIZE, emptyReviewsResult, Stars, relativeDate } from "./product-reviews/ProductReviews.review-formatting";
+import {
+  ProductReviewDialog,
+  ProductReviewReplyDialog,
+} from "./product-reviews/ProductReviewDialogs";
+import { ProductReviewsSummary } from "./product-reviews/ProductReviewsSummary";
 
 export function ProductReviews({
   productId,
@@ -192,28 +197,15 @@ export function ProductReviews({
     total = result?.total ?? 0;
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4">
-        <button
-          type="button"
-          onClick={() =>
-            sectionRef.current?.scrollIntoView({ behavior: "smooth" })
-          }
-          className="flex items-center gap-2"
-        >
-          <Stars value={average} />
-          <strong>{average.toFixed(1)}</strong>
-          <span className="text-sm text-muted-foreground">({total})</span>
-        </button>
-        {canRate ? (
-          <button
-            type="button"
-            onClick={() => openReview(result?.currentUserReview ?? null)}
-            className="rounded-xl bg-primary px-4 py-2 font-semibold text-on-primary"
-          >
-            تقييم
-          </button>
-        ) : null}
-      </div>
+      <ProductReviewsSummary
+        average={average}
+        total={total}
+        canRate={canRate}
+        onScrollToReviews={() =>
+          sectionRef.current?.scrollIntoView({ behavior: "smooth" })
+        }
+        onRate={() => openReview(result?.currentUserReview ?? null)}
+      />
       <section ref={sectionRef} className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-xl font-bold">
@@ -408,87 +400,26 @@ export function ProductReviews({
         ) : null}
       </section>
       {modal ? (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-background p-5 shadow-xl"
-          >
-            <h3 className="text-xl font-bold">
-              {editing ? "تعديل التقييم" : "تقييم"}
-            </h3>
-            <div className="my-5 flex justify-center gap-1" dir="ltr">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => setRating(star)}
-                  className={`text-3xl ${star <= rating ? "text-amber-500" : "text-gray-300"}`}
-                >
-                  ★
-                </button>
-              ))}
-            </div>
-            {commentsEnabled ? (
-              <textarea
-                value={comment}
-                onChange={(event) => setComment(event.target.value)}
-                className="asol-control asol-field-surface min-h-28 w-full border border-input p-3"
-                placeholder="اكتب مراجعتك"
-              />
-            ) : null}
-            <div className="mt-4 flex gap-2">
-              <button
-                type="button"
-                disabled={busy || rating < 1}
-                onClick={submit}
-                className="flex-1 rounded-xl bg-primary px-4 py-2 text-on-primary"
-              >
-                {editing ? "حفظ" : "إرسال"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setModal(false)}
-                className="rounded-xl border px-4 py-2"
-              >
-                إلغاء
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProductReviewDialog
+          busy={busy}
+          comment={comment}
+          commentsEnabled={commentsEnabled}
+          editing={editing}
+          rating={rating}
+          onCancel={() => setModal(false)}
+          onCommentChange={setComment}
+          onRatingChange={setRating}
+          onSubmit={submit}
+        />
       ) : null}
       {replyReview ? (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="w-full max-w-md rounded-2xl bg-background p-5"
-          >
-            <h3 className="text-xl font-bold">رد البائع</h3>
-            <textarea
-              value={replyText}
-              onChange={(event) => setReplyText(event.target.value)}
-              className="asol-control asol-field-surface mt-4 min-h-28 w-full border border-input p-3"
-            />
-            <div className="mt-4 flex gap-2">
-              <button
-                type="button"
-                disabled={busy || !replyText.trim()}
-                onClick={saveReply}
-                className="flex-1 rounded-xl bg-primary px-4 py-2 text-on-primary"
-              >
-                حفظ
-              </button>
-              <button
-                type="button"
-                onClick={() => setReplyReview(null)}
-                className="rounded-xl border px-4 py-2"
-              >
-                إلغاء
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProductReviewReplyDialog
+          busy={busy}
+          replyText={replyText}
+          onCancel={() => setReplyReview(null)}
+          onReplyTextChange={setReplyText}
+          onSave={saveReply}
+        />
       ) : null}
     </div>
   );

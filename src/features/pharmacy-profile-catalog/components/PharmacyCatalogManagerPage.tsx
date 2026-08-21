@@ -11,8 +11,6 @@ import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { useTranslation } from "@/lib/i18n";
 import { pharmacyProfileCatalogApi } from "../services/pharmacy-profile-catalog-api";
 import {
-  PHARMACY_MAIN_CATEGORY_ID,
-  PHARMACY_SUBCATEGORY_ID,
   type PharmacyProfileCatalogCategoryView,
   type PharmacyProfileCatalogProductView,
   type PharmacyProfileCatalogSubcategoryView,
@@ -21,6 +19,13 @@ import {
 import { PharmacyCategoryIcon } from "./PharmacyCategoryIcon";
 
 import { text, CreateCategoryDialog, IconButton, ManagerColumn, ProductManagerCard, StatusBadge, VisibilityButton, LoadingFrame, MessageFrame } from "./catalog-manager/PharmacyCatalogManagerPage.dialogs";
+import {
+  buildAddPharmacyProductHref,
+  sortedPharmacyCategories,
+  sortedPharmacyProducts,
+  sortedPharmacySubcategories,
+  type PharmacyCatalogEditDialog,
+} from "./catalog-manager/PharmacyCatalogManagerPage.model";
 
 export function PharmacyCatalogManagerPage() {
   const { formatApiError } = useTranslation();
@@ -34,20 +39,7 @@ export function PharmacyCatalogManagerPage() {
   const [activeSubcategoryId, setActiveSubcategoryId] = React.useState(searchParams.get("subcategoryId") ?? "");
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [editDialog, setEditDialog] = React.useState<
-    | { mode: "create"; kind: "category" | "subcategory" }
-    | {
-        mode: "edit";
-        kind: "category";
-        item: PharmacyProfileCatalogCategoryView;
-      }
-    | {
-        mode: "edit";
-        kind: "subcategory";
-        item: PharmacyProfileCatalogSubcategoryView;
-      }
-    | null
-  >(null);
+  const [editDialog, setEditDialog] = React.useState<PharmacyCatalogEditDialog | null>(null);
   const [editName, setEditName] = React.useState("");
 
   const load = React.useCallback(async () => {
@@ -68,22 +60,16 @@ export function PharmacyCatalogManagerPage() {
   }, [load]);
 
   const categories = React.useMemo(
-    () => [...(catalog?.categories ?? [])].sort((left, right) => left.sortOrder - right.sortOrder),
-    [catalog?.categories],
+    () => sortedPharmacyCategories(catalog),
+    [catalog],
   );
   const subcategories = React.useMemo(
-    () =>
-      (catalog?.subcategories ?? [])
-        .filter((item) => item.parentCategoryId === activeCategoryId)
-        .sort((left, right) => left.sortOrder - right.sortOrder),
-    [activeCategoryId, catalog?.subcategories],
+    () => sortedPharmacySubcategories(catalog, activeCategoryId),
+    [activeCategoryId, catalog],
   );
   const products = React.useMemo(
-    () =>
-      (catalog?.products ?? [])
-        .filter((item) => item.parentSubcategoryId === activeSubcategoryId)
-        .sort((left, right) => left.sortOrder - right.sortOrder),
-    [activeSubcategoryId, catalog?.products],
+    () => sortedPharmacyProducts(catalog, activeSubcategoryId),
+    [activeSubcategoryId, catalog],
   );
   const activeCategory = categories.find((item) => item.id === activeCategoryId) ?? categories[0];
 
@@ -202,14 +188,10 @@ export function PharmacyCatalogManagerPage() {
     );
   }
 
-  const addProductHref = `/product?${new URLSearchParams({
-    mode: "new",
-    mainCategoryId: PHARMACY_MAIN_CATEGORY_ID,
-    subcategoryId: PHARMACY_SUBCATEGORY_ID,
-    pharmacyCategoryId: activeCategoryId,
-    pharmacySubcategoryId: activeSubcategoryId,
-    returnTo: "profile-products",
-  }).toString()}`;
+  const addProductHref = buildAddPharmacyProductHref({
+    activeCategoryId,
+    activeSubcategoryId,
+  });
 
   if (isLoading) {
     return <LoadingFrame />;

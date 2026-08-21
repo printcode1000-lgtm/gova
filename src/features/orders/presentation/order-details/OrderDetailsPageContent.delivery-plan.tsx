@@ -44,6 +44,8 @@ import type { DbRow, OrderDetails, OrderRole } from "../order-types";
 import { RunAction, text } from "./OrderDetailsPageContent.navigation-summary";
 import { deliveryStopAddress } from "./OrderDetailsPageContent.seller-orders";
 import { QuoteAmount } from "./OrderDetailsPageContent.shipping-quotes";
+import { unifiedDeliveryPlanStatusText } from "./unified-delivery-plan-model";
+import { UnifiedDeliveryQuoteForm } from "./UnifiedDeliveryQuoteForm";
 
 export function UnifiedDeliveryPlanPanel({
   plan,
@@ -144,16 +146,6 @@ export function UnifiedDeliveryPlanPanel({
     "provider_send_unified_delivery_quote:",
   );
 
-  const statusText: Record<string, string> = {
-    collecting_quotes: "نجمع عروض مقدمي التوصيل",
-    pending_buyer: "توجد عروض بانتظار قرار المشتري",
-    accepted: "تم اختيار عرض التوصيل الموحّد",
-    reprice_required: "تغيرت محطات الاستلام ويجب إرسال عرض جديد",
-    separate_selected: "اختار المشتري التوصيل المنفصل",
-    cancelled: "أُلغيت خطة التوصيل",
-    completed: "أُنشئت شحنة التوصيل الموحّد",
-  };
-
   return (
     <section className="mb-5 overflow-hidden rounded-2xl border border-primary/30 bg-primary/5 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-primary/20 p-4">
@@ -164,7 +156,7 @@ export function UnifiedDeliveryPlanPanel({
           <div>
             <h2 className="font-bold">خطة التوصيل الموحّد</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              {statusText[String(plan.status)] ?? String(plan.status)}
+              {unifiedDeliveryPlanStatusText(plan.status)}
             </p>
           </div>
         </div>
@@ -343,64 +335,22 @@ export function UnifiedDeliveryPlanPanel({
       )}
 
       {canQuote ? (
-        <div className="grid gap-3 border-t border-primary/15 p-4 sm:grid-cols-2 lg:grid-cols-[160px_160px_1fr_auto] lg:items-end">
-          <label className="space-y-1 text-xs font-semibold">
-            قيمة التوصيل
-            <Input
-              type="number"
-              min={0}
-              step="0.01"
-              inputMode="decimal"
-              value={baseAmount}
-              onChange={(event) => setBaseAmount(event.target.value)}
-              placeholder="0.00"
-            />
-          </label>
-          {candidateRequiresSpecialVehicle ? (
-            <label className="space-y-1 text-xs font-semibold">
-              سيارة النقل مرة واحدة
-              <Input
-                type="number"
-                min={0}
-                step="0.01"
-                inputMode="decimal"
-                value={vehicleAmount}
-                onChange={(event) => setVehicleAmount(event.target.value)}
-                placeholder="0.00"
-              />
-            </label>
-          ) : null}
-          <label className="space-y-1 text-xs font-semibold">
-            تفاصيل المسار والمدة
-            <Textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              maxLength={1000}
-              rows={2}
-              placeholder="عدد محطات الاستلام والمدة المتوقعة"
-            />
-          </label>
-          <button
-            type="button"
-            disabled={!validQuote || sending || Boolean(busyAction)}
-            onClick={() =>
-              runAction("provider_send_unified_delivery_quote", {
-                deliveryPlanId: planId,
-                shippingPriceMinor: baseMinor,
-                specialVehicleFeeMinor: vehicleMinor,
-                notes,
-              })
-            }
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-on-primary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {sending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Send className="h-4 w-4" />
-            )}
-            إرسال العرض
-          </button>
-        </div>
+        <UnifiedDeliveryQuoteForm
+          planId={planId}
+          candidateRequiresSpecialVehicle={candidateRequiresSpecialVehicle}
+          baseAmount={baseAmount}
+          setBaseAmount={setBaseAmount}
+          vehicleAmount={vehicleAmount}
+          setVehicleAmount={setVehicleAmount}
+          notes={notes}
+          setNotes={setNotes}
+          validQuote={validQuote}
+          sending={sending}
+          busyAction={busyAction}
+          baseMinor={baseMinor}
+          vehicleMinor={vehicleMinor}
+          runAction={runAction}
+        />
       ) : null}
 
       <div className="flex flex-wrap items-center gap-2 border-t border-primary/15 p-4">

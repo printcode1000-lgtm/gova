@@ -12,21 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import type { ShippingMethod, ShippingProvider } from '@/lib/onboarding/types';
 import { nextSellerId } from '@/lib/onboarding/next-id';
-
-const SHIPPING_PROVIDERS: ShippingProvider[] = [
-  'standard',
-  'express',
-  'same_day',
-  'international',
-];
-
-const SHIPPING_ICONS: Record<ShippingProvider, string> = {
-  standard: '📦',
-  express: '🚀',
-  same_day: '⚡',
-  international: '✈️',
-  pickup: '🏪',
-};
+import { SHIPPING_ICONS, SHIPPING_PROVIDERS } from './shipping-section-model';
 
 export function ShippingSection() {
   const { t } = useTranslation();

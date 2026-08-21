@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 import { NativeCore } from '@asol/native-core';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useSession } from '@/features/auth/components/SessionProvider';
 import {
   applySnapshotToDom,
   captureSnapshot,
@@ -22,77 +20,14 @@ import type {
   PageSnapshotOptions,
   PageSnapshotRecord,
 } from '../entities/page-snapshot.types';
-
-interface SnapshotRegistryEntry<T = unknown> {
-  get: () => T;
-  set: (value: T) => void;
-}
-
-interface SnapshotContextValue {
-  registerState: <T>(key: string, entry: SnapshotRegistryEntry<T>) => () => void;
-  getIdentity: (options?: PageSnapshotOptions) => PageSnapshotIdentity;
-  requestSave: () => void;
-  lastSnapshot: PageSnapshotRecord | null;
-}
-
-const SnapshotContext = React.createContext<SnapshotContextValue | null>(null);
-
-const DEFAULT_DEBOUNCE_MS = 600;
-const DEFAULT_RESTORE_DELAY_MS = 80;
-
-function searchParamsToRecord(params: URLSearchParams): Record<string, string | string[]> {
-  const result: Record<string, string | string[]> = {};
-  params.forEach((value, key) => {
-    const existing = result[key];
-    if (Array.isArray(existing)) existing.push(value);
-    else if (existing !== undefined) result[key] = [existing, value];
-    else result[key] = value;
-  });
-  return result;
-}
-
-let navigationEventsInstalled = false;
-
-function installNavigationEvents(): void {
-  if (typeof window === 'undefined' || navigationEventsInstalled) return;
-  navigationEventsInstalled = true;
-  const patch = (name: 'pushState' | 'replaceState') => {
-    const original = window.history[name];
-    window.history[name] = function patchedHistoryMethod(...args) {
-      window.dispatchEvent(new Event('asol:before-navigation'));
-      return original.apply(this, args);
-    };
-  };
-  patch('pushState');
-  patch('replaceState');
-}
-
-function usePageSnapshotIdentity(namespace?: string): PageSnapshotIdentity {
-  const pathname = usePathname() || '/';
-  const searchParams = useSearchParams();
-  const { session } = useSession();
-  const querySignature = searchParams.toString();
-  const query = React.useMemo(
-    () => searchParamsToRecord(new URLSearchParams(querySignature)),
-    [querySignature],
-  );
-  const route = namespace ? `${namespace}:${pathname}` : pathname;
-
-  React.useEffect(() => {
-    installNavigationEvents();
-  }, []);
-
-  return React.useMemo(
-    () => ({
-      userId: session?.uid || 'anonymous',
-      route,
-      pathname,
-      params: {},
-      query,
-    }),
-    [pathname, query, route, session?.uid],
-  );
-}
+import {
+  DEFAULT_DEBOUNCE_MS,
+  DEFAULT_RESTORE_DELAY_MS,
+  SnapshotContext,
+  type SnapshotContextValue,
+  type SnapshotRegistryEntry,
+} from './page-snapshot-context';
+import { usePageSnapshotIdentity } from './use-page-snapshot-identity';
 
 export function SnapshotProvider({ children }: { children: React.ReactNode }) {
   const identity = usePageSnapshotIdentity();

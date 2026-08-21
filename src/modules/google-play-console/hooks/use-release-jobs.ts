@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import type { BuildJobRecord, StartBuildJobInput } from "@/modules/release-commands/domain/build-job-types";
+import type { BuildJobRecord, StartBuildJobInput } from "@asol/release-core/console";
 import { useBuildJobs } from "@/modules/release-commands/hooks/use-build-jobs";
 
 import { useAuthHeaders } from "./use-auth-headers";

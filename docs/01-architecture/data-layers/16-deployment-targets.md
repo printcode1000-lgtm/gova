@@ -56,18 +56,22 @@ because the push is what makes a release public and nothing after it may be the
 first place a problem is discovered. In order, the preflight:
 
 1. refuses a non-`main` branch;
-2. requires `VERCEL_TOKEN` and the root `.vercel/project.json` up front, rather
-   than at the end after the push and four service deployments;
-3. runs `lint`, `typecheck`, `architecture:check`, `test`, then `db:ensure` and
-   `db:schema:sync:release` so every SQLite source has pending migrations applied
-   and every Turso database (users, product, advertisements, notifications, and
-   all profile/order shards) is synchronized **before** `build:static` or any git
-   write, then `build:static` — the release build, which also re-runs the
-   architecture and test gates — then `services:verify`, and finally
-   `services:build`, which runs `next build` inside all four service folders.
+2. checks production environment readiness, the root `.vercel/project.json`,
+   and all seven Vercel account tokens (`gova`, `submain`, `sub2main`,
+   `notifications`, `products`, `orders`, and `profiles`) before any git write;
+3. runs `lint`, `typecheck`, `architecture:check`, the full `test` chain,
+   `db:ensure`, and `db:schema:sync:release` so every SQLite source has pending
+   migrations applied and every Turso database (users, product, advertisements,
+   notifications, and all profile/order shards) is synchronized **before** any
+   release build or git write;
+4. runs both `build` and `build:static`: the server build catches
+   server-component, route-handler, and file-tracing failures, then the static
+   release build leaves the static artifact as the final release output;
+5. runs `services:sync`, `services:verify`, and finally `services:build`, which
+   runs `next build` inside every isolated service folder.
 
    `services:build` was added after every other check in this list passed, the
-   release commit was pushed, `main` went `READY`, and **all four service
+   release commit was pushed, `main` went `READY`, and **the isolated service
    accounts then failed their remote build**. Each service is uploaded alone and
    installed against its own `package.json`, so nothing that runs at the
    repository root exercises it. It is the only step here that builds what
@@ -84,14 +88,14 @@ first place a problem is discovered. In order, the preflight:
    dropped out of all four mirrors while all four still built**. The step re-reads
    each upload and resolves every edge inside it: relative paths, `@/` paths, and
    `@asol/<package>/<door>` through the mirrored package's own `exports` map;
-4. refuses to publish scratch files (`__probe*`, `*.log`, `*.tmp`, `*.bak`,
+6. refuses to publish scratch files (`__probe*`, `*.log`, `*.tmp`, `*.bak`,
    scratchpad paths), since `git add -A` stages whatever is in the tree;
    `packages/native-core/android/build/` is gitignored so local Gradle output
    never enters a deployment commit;
-5. refuses a downgrade of `releaseId`, `version`, or `minimumNativeVersion` in
+7. refuses a downgrade of `releaseId`, `version`, or `minimumNativeVersion` in
    `public/asol-web-manifest.json` — what a verification-only `build:static`
    produces when the release environment variables are unset;
-6. refuses an empty run whose `HEAD` already matches `origin/main`.
+8. refuses an empty run whose `HEAD` already matches `origin/main`.
 
 Only then does it create or verify the encrypted secret backup, stage the
 complete working tree, and create a main deployment commit named
@@ -99,7 +103,7 @@ complete working tree, and create a main deployment commit named
 GitHub-linked Vercel project auto-deploy. When branch protection rejects a plain
 `git push origin main`, `deploy:all` and `deploy:push` retry once using
 `GITHUB_ADMIN_TOKEN` from `.env.local` (same credential as `npm run github:protect`).
-existing GitHub integration update `gova`. The other four projects remain
+existing GitHub integration update `gova`. The other six projects remain
 disconnected from GitHub and deploy sequentially through their dedicated
 tokens. Each account receives its own visible comment, for example
 `deploy(products): <timestamp> @ <revision>`, plus target/run/revision metadata.
@@ -112,7 +116,7 @@ Each is opt-in, and none is the default:
 
 | Flag | Effect |
 | :-- | :-- |
-| `--skip-preflight` | Skips step 3. Prints every skipped check and records the shortcut in the commit message body, so it stays visible in history. |
+| `--skip-preflight` | Skips the comprehensive preflight. Prints every skipped check and records the shortcut in the commit message body, so it stays visible in history. |
 | `--allow-scratch-files` | Publishes files matching the scratch patterns. |
 | `--allow-manifest-downgrade` | Publishes a lower release manifest. |
 | `--allow-empty` | Redeploys the current commit with nothing to change. |
@@ -128,7 +132,7 @@ stored in `.deploy-all/run-state.json` (gitignored).
 
 | Phase | What it does |
 | :-- | :-- |
-| `preflight` | Branch/credential guards + lint through `services:build` |
+| `preflight` | Branch/credential guards + production/Vercel readiness + checks/tests + DB sync + server/static builds + service mirror verification/builds |
 | `publish` | `secrets:backup`, deployment commit, `git push origin main` |
 | `notifications` … `sub2main` | One CLI service deploy each (six accounts) |
 | `main` | Wait until the GitHub-linked `gova` production deployment is `READY` |
@@ -168,9 +172,14 @@ become a release.
 
 ### `deploy:push` — publish and verify only
 
-`scripts/deploy-push.ts` skips every preflight gate. At startup it asks which
-isolated Vercel **service** account(s) to deploy (or accepts `--vercel-target=`
-on the command line). These three steps are **always mandatory**:
+`scripts/deploy-push.ts` skips the expensive preflight gates: no lint, typecheck,
+tests, builds, database sync, or service mirror build. It still runs fast safety
+guards before the first git write: main branch, required Vercel account access
+for the selected targets, scratch-file refusal, release-manifest downgrade
+refusal, and non-empty deployment refusal unless explicitly allowed. At startup
+it asks which isolated Vercel **service** account(s) to deploy (or accepts
+`--vercel-target=` on the command line). These three steps are **always
+mandatory**:
 
 1. `secrets:backup`
 2. GitHub push to `main` with `origin/main` verification
@@ -224,10 +233,20 @@ chosen, that account must reach `READY` as well. `submain` uses
 `VERCEL_SUB2MAIN_TOKEN` and `VERCEL_SUB2MAIN_ORG_ID`. Neither is GitHub-linked.
 
 `VERCEL_TOKEN` and the root `.vercel/project.json` are always required for main
-verification. Isolated accounts use their own tokens from `.env.local` / `.env`.
+verification. Selected isolated accounts use their own tokens from `.env.local`
+/ `.env`, and those tokens are checked before `secrets:backup`, `commit`, or
+`push`.
 
-It does not refuse scratch files, manifest downgrades, or empty runs, and it does
-not report native/OTA surface status.
+Fast safety escape hatches are explicit:
+
+| Flag | Effect |
+| :-- | :-- |
+| `--allow-empty` | Redeploys the current commit when there is nothing new to commit. |
+| `--allow-scratch-files` | Allows files matching scratch patterns such as `*.log`, `*.tmp`, `*.bak`, or `scratchpad/`. |
+| `--allow-manifest-downgrade` | Allows a lower `releaseId`, `version`, or `minimumNativeVersion` in `public/asol-web-manifest.json`. |
+
+It still does not report native/OTA surface status; use `deploy:all` for the
+full release gate.
 
 The final console line is always explicit:
 
@@ -258,7 +277,8 @@ main deployment. The root link is never rewritten by a service command.
 The Vercel CLI is intentionally not a project dependency. Each isolated service
 deployment invokes `vercel@59.0.0` as an ephemeral `npx --package` tool, keeping
 its large framework-builder dependency graph out of the application lockfile
-and deployed runtime. Update the identical pin in all four deploy scripts
+and deployed runtime. Update the identical pin in the deploy core and all
+isolated deploy scripts
 together after verifying the CLI.
 
 ## Static export

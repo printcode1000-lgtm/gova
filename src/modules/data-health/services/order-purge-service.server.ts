@@ -7,11 +7,11 @@ import { persistentSystemLogService } from "@/features/system-logs/services/pers
 
 import { resolveDataHealthExecutionContext } from "../domain/execution-context.server";
 import { assertDataHealthAllowed } from "../domain/development-guard.server";
-import { DATA_HEALTH_POLICY } from "../domain/policy";
+import { DATA_HEALTH_POLICY } from "@asol/data-health-core/server";
 import type {
   DataHealthOrderPurgePlan,
   DataHealthOrderPurgeResult,
-} from "../domain/types";
+} from "@asol/data-health-core";
 import {
   orderPurgeRepository,
   type OrderPurgeSnapshot,

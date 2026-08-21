@@ -16,6 +16,7 @@ The component still uploads only one image per slot. It does not support selecti
 ## Main files
 
 ```text
+packages/storage-image-manager-core/src/components/StorageImageManager.tsx
 src/features/storage/components/StorageImageManager.tsx
 src/platform/media/capacitor-image-source-adapter.ts
 ios/App/App/Info.plist
@@ -168,7 +169,7 @@ dependency behind any entry that reappears.
 The allowed flow remains:
 
 ```text
-UI -> StorageImageManager -> useStorageProfileUpload -> ImageStorageService -> AsolApiClient -> Storage API
+UI -> app StorageImageManager wrapper -> @asol/storage-image-manager-core -> app ImageStorageApiService -> Storage API
 ```
 
 The Capacitor-specific camera code is isolated behind:

@@ -121,6 +121,14 @@ Search must not parse profile JSON because those columns no longer exist.
 
 Fixed pharmacy starter products are excluded from these counts. Only real saved products in `products` are counted.
 
+## Profile Specialties UI
+
+`src/features/profile/presentation/SpecialtiesCard.tsx` owns the interactive
+specialties UI and save controller. Selection normalization and subcategory
+eligibility live in
+`src/features/profile/presentation/specialties-selection.ts`, so the UI does not
+embed catalog-selection rules directly.
+
 ## Migration
 
 The structural migration is:

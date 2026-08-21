@@ -1,6 +1,6 @@
 # Dev Cloud Backup Module
 
-`src/modules/dev-cloud-backup` is a super-admin development-only tool for
+`@asol/backup-core` is the sealed archive capability behind the super-admin development-only tool for
 backing up and restoring the cloud development state:
 
 - Every Turso database reachable from the environment. Sources are discovered,
@@ -8,7 +8,12 @@ backing up and restoring the cloud development state:
 - Every Cloudflare R2 object in both the general and product buckets. There is
   no scope option and no prefix filtering: a backup is always complete.
 
-The UI is available at `/super-admin/dev-cloud-backup`.
+The UI is available at `/super-admin/dev-cloud-backup`. It remains under
+`src/modules/dev-cloud-backup`; one server wiring file supplies the Turso adapter and strict local
+runtime guard to the package.
+The presentation layer is split by responsibility: `DevCloudBackupPage.tsx` composes the screen,
+`use-dev-cloud-backup-page.ts` owns client state and API operations, and the saved-list/result/status
+components own rendering only.
 
 The page is command-driven only. Operators do not upload or edit zip files
 manually. Backups are created by the module, stored under `.backups/dev-cloud/`,
@@ -58,6 +63,13 @@ gova-dev-cloud-backup-<timestamp>-<id>.zip
 `manifest.json` contains `manifestVersion`, `createdByModuleVersion`, database
 table metadata, R2 object metadata, and the R2 prefixes used for the backup.
 The manifest is the compatibility contract for future module changes.
+
+The package owns this contract, ZIP validation, local archive lifecycle, comparison, restore
+orchestration and complete R2 traversal. Its database/environment port contracts live in
+`packages/backup-core/src/server/dev-cloud-backup-ports.ts`, while
+`dev-cloud-backup-service.ts` keeps orchestration behavior. The Turso repository remains in
+`@asol/data-core`, the repository's only database-driver package, and implements
+`backup-core`'s fail-closed database port.
 
 ## Editing Backups
 
@@ -135,6 +147,7 @@ Run:
 
 ```bash
 npm run test:dev-cloud-backup
+npm run test:backup-core
 npm run architecture:check
 npm run typecheck
 ```

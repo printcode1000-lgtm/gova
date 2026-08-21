@@ -2,11 +2,9 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, Truck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { SellerCard } from "@/components/ui/seller-card";
 import {
   Select,
   SelectContent,
@@ -20,10 +18,6 @@ import { normalizeProfileFulfillmentSettings } from "@/features/profile/entities
 import { useProfileFulfillmentSettings } from "@/features/profile/hooks/use-profile-fulfillment-settings";
 import { useUsersBySpecialty } from "@/features/profile/hooks/use-users-by-specialty";
 import type { UserProfileRow } from "@/features/profile/services/profile-service.interface";
-import {
-  createSellerCardViewModel,
-  type SellerCardAction,
-} from "@/features/seller-card";
 import { useTranslation } from "@/lib/i18n";
 import type {
   ProfileFulfillmentController,
@@ -31,10 +25,10 @@ import type {
 } from "./profile-save-controller";
 
 import { FulfillmentSettingsCardProps } from "./fulfillment-settings/FulfillmentSettingsCard.fulfillment-types";
-import {
-  PROFILE_FULFILLMENT_SECTION_IDS,
-  type ProfileFulfillmentSection,
-} from "./profile-page.types";
+import { PROFILE_FULFILLMENT_SECTION_IDS } from "./profile-page.types";
+import { fulfillmentSettingsCopy } from "./fulfillment-settings/fulfillment-settings-copy";
+import { useFulfillmentSectionScroll } from "./fulfillment-settings/use-fulfillment-section-scroll";
+import { FulfillmentCarrierSearch } from "./fulfillment-settings/FulfillmentCarrierSearch";
 
 export const FulfillmentSettingsCard = React.forwardRef<
   ProfileFulfillmentController,
@@ -60,75 +54,7 @@ export const FulfillmentSettingsCard = React.forwardRef<
   const [searchText, setSearchText] = React.useState("");
   const [submittedSearchText, setSubmittedSearchText] = React.useState("");
   const label = locale === "ar" ? "الشحن والإرجاع" : "Shipping and returns";
-  const text = {
-    loading: locale === "ar" ? "جاري التحميل..." : "Loading...",
-    invalidCarrier:
-      locale === "ar"
-        ? "يجب اختيار مقدمي توصيل لديهم تخصص خدمات التوصيل."
-        : "Selected carriers must have the delivery services specialty.",
-    saved: locale === "ar" ? "تم الحفظ" : "Saved",
-    shippingMethods:
-      locale === "ar"
-        ? "اختر مقدمي خدمة التوصيل"
-        : "Choose delivery providers",
-    searchPlaceholder:
-      locale === "ar" ? "ابحث باسم المتجر" : "Search by store name",
-    search: locale === "ar" ? "بحث" : "Search",
-    loadingProviders:
-      locale === "ar"
-        ? "جاري تحميل مقدمي التوصيل..."
-        : "Loading delivery providers...",
-    noMatchingProviders:
-      locale === "ar" ? "لا توجد نتائج مطابقة." : "No matching providers.",
-    noDeliveryProviders:
-      locale === "ar"
-        ? "لا يوجد مقدمو خدمات توصيل حتى الآن."
-        : "No delivery service providers yet.",
-    remove: locale === "ar" ? "إلغاء" : "Remove",
-    select: locale === "ar" ? "تحديد" : "Select",
-    viewProfile: locale === "ar" ? "عرض البروفايل" : "View profile",
-    selectedCount: (count: number) =>
-      locale === "ar"
-        ? `تم اختيار ${count} مقدم توصيل.`
-        : `${count} delivery provider(s) selected.`,
-    returnPolicy: locale === "ar" ? "سياسة الإرجاع" : "Return policy",
-    shippingPricing: locale === "ar" ? "تسعير الشحن" : "Shipping pricing",
-    shippingPricingMode:
-      locale === "ar" ? "طريقة حساب الشحن" : "Shipping pricing method",
-    freeShipping: locale === "ar" ? "شحن مجاني" : "Free shipping",
-    flatShipping: locale === "ar" ? "قيمة ثابتة" : "Flat rate",
-    locationShipping: locale === "ar" ? "حسب المكان" : "By location",
-    flatRate: locale === "ar" ? "قيمة الشحن الثابتة" : "Flat shipping rate",
-    specialVehicleFee:
-      locale === "ar"
-        ? "رسوم سيارة النقل عند الحاجة"
-        : "Special vehicle fee when needed",
-    freeShippingThreshold:
-      locale === "ar"
-        ? "حد أدنى للطلب لشحن مجاني"
-        : "Free shipping minimum order",
-    shippingNotes: locale === "ar" ? "ملاحظات الشحن" : "Shipping notes",
-    shippingNotesPlaceholder:
-      locale === "ar"
-        ? "مثال: السعر النهائي قد يختلف حسب العنوان أو حجم الطلب."
-        : "Example: final shipping may vary by address or order size.",
-    returnsAvailable:
-      locale === "ar" ? "الإرجاع متاح" : "Returns are available",
-    returnsUnavailable:
-      locale === "ar" ? "الإرجاع غير متاح" : "Returns are unavailable",
-    returnWindowDays:
-      locale === "ar" ? "عدد أيام الإرجاع" : "Return window days",
-    returnShippingPayer:
-      locale === "ar" ? "من يتحمل تكلفة شحن الإرجاع" : "Return shipping payer",
-    buyer: locale === "ar" ? "المشتري" : "Buyer",
-    seller: locale === "ar" ? "البائع" : "Seller",
-    caseByCase: locale === "ar" ? "حسب الحالة" : "Case by case",
-    policyText: locale === "ar" ? "نص السياسة" : "Policy text",
-    policyPlaceholder:
-      locale === "ar"
-        ? "اكتب شروط الإرجاع الخاصة بمتجرك."
-        : "Write your store return policy.",
-  };
+  const text = fulfillmentSettingsCopy(locale);
   const hasSubmittedSearch = submittedSearchText.trim().length > 0;
   const { data: deliveryUsers, isLoading: isLoadingDeliveryUsers } =
     useUsersBySpecialty(
@@ -157,23 +83,12 @@ export const FulfillmentSettingsCard = React.forwardRef<
     onStatusChange?.({ isDirty, isSaving, canSave: true, label });
   }, [isDirty, isSaving, label, onStatusChange]);
 
-  React.useEffect(() => {
-    if (isLoading) return;
-    const section = fulfillmentSection as ProfileFulfillmentSection | null;
-    if (section === "shipping") {
-      shippingSectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-      return;
-    }
-    if (section === "returns") {
-      returnsSectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [fulfillmentSection, isLoading]);
+  useFulfillmentSectionScroll({
+    fulfillmentSection,
+    isLoading,
+    returnsSectionRef,
+    shippingSectionRef,
+  });
 
   const users = (deliveryUsers ?? []) as UserProfileRow[];
   const safeSettings = normalizeProfileFulfillmentSettings(settings);
@@ -224,90 +139,19 @@ export const FulfillmentSettingsCard = React.forwardRef<
         </div>
       ) : null}
 
-      <section className="space-y-4 rounded-xl border border-outline-variant p-4">
-        <div className="flex items-center gap-2">
-          <Truck className="h-5 w-5 text-primary" />
-          <h3 className="text-sm font-bold">{text.shippingMethods}</h3>
-        </div>
-
-        <div className="space-y-3">
-          <form
-            className="flex gap-2"
-            onSubmit={(event) => {
-              event.preventDefault();
-              submitSearch();
-            }}
-          >
-            <div className="relative min-w-0 flex-1">
-              <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="deliveryProviderSearch"
-                value={searchText}
-                onChange={(event) => setSearchText(event.target.value)}
-                placeholder={text.searchPlaceholder}
-                className="asol-input-decorated-start"
-              />
-            </div>
-            <button
-              type="submit"
-              className="h-10 shrink-0 rounded-md bg-primary px-4 text-sm font-semibold text-on-primary transition"
-            >
-              {text.search}
-            </button>
-          </form>
-
-          {isLoadingDeliveryUsers ? (
-            <p className="text-sm text-muted-foreground">
-              {text.loadingProviders}
-            </p>
-          ) : displayedUsers.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-outline-variant p-4 text-center text-sm text-muted-foreground">
-              {emptyDeliveryProvidersMessage}
-            </p>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {displayedUsers.map((user) => {
-                const isSelected = selected.has(user.uid);
-                const card = createSellerCardViewModel(user);
-                const actions: SellerCardAction[] = [
-                  {
-                    kind: "view",
-                    label: text.viewProfile,
-                    onClick: () => openProviderProfile(user.uid),
-                  },
-                  {
-                    kind: isSelected ? "remove" : "select",
-                    label: isSelected ? text.remove : text.select,
-                    active: isSelected,
-                    tone: isSelected ? "tertiary" : "primary",
-                    onClick: () => toggleCarrier(user.uid),
-                  },
-                ];
-                return (
-                  <SellerCard
-                    key={user.uid}
-                    card={card}
-                    variant="linked-provider"
-                    actions={actions}
-                    className={
-                      isSelected
-                        ? "border-primary bg-primary/10"
-                        : ""
-                    }
-                    onOpen={() => openProviderProfile(user.uid)}
-                  />
-                );
-              })}
-            </div>
-          )}
-
-          {safeSettings.carrierUids.length > 0 ? (
-            <p className="text-xs text-muted-foreground">
-              {text.selectedCount(safeSettings.carrierUids.length)}
-            </p>
-          ) : null}
-        </div>
-      </section>
+      <FulfillmentCarrierSearch
+        text={text}
+        searchText={searchText}
+        setSearchText={setSearchText}
+        submitSearch={submitSearch}
+        isLoadingDeliveryUsers={isLoadingDeliveryUsers}
+        displayedUsers={displayedUsers}
+        emptyDeliveryProvidersMessage={emptyDeliveryProvidersMessage}
+        selected={selected}
+        toggleCarrier={toggleCarrier}
+        openProviderProfile={openProviderProfile}
+        selectedCount={safeSettings.carrierUids.length}
+      />
 
       <section
         ref={shippingSectionRef}

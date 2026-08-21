@@ -6,10 +6,11 @@ import { eq } from "drizzle-orm";
 import { heroSlider } from "../../../core/database/advertisements/advertisements.schema";
 import type { IDatabaseClient } from "../../../core/database/database-client.interface";
 import {
+  DEFAULT_HOME_HERO_CONFIG,
   HOME_HERO_SLIDER_ID,
   type HomeHeroConfig,
   type HomeHeroRecord,
-} from "@/features/advertisements/entities/home-hero-slider.entity";
+} from "@asol/hero-slider-core";
 
 function parseConfig(value: string): HomeHeroConfig {
   return JSON.parse(value) as HomeHeroConfig;
@@ -23,13 +24,7 @@ export class HomeHeroSliderRepository {
     if (!row) {
       return {
         id: HOME_HERO_SLIDER_ID,
-        config: {
-          transition: "SlideLeft",
-          transitionDuration: 500,
-          autoPlay: false,
-          loop: false,
-          slides: [],
-        },
+        config: DEFAULT_HOME_HERO_CONFIG,
         version: 0,
         checkIntervalMinutes: 15,
         updatedAt: "",

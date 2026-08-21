@@ -1,6 +1,5 @@
 import { apiError, apiSuccess } from "@/core/api/api-response";
-import { isSuperAdminIdentity } from "@/features/auth/utils/super-admin";
-import type { TrendingRibbonConfig } from "@/features/advertisements/entities/trending-ribbon.entity";
+import type { TrendingRibbonConfig } from "@asol/trending-ribbon-core";
 import { featuredTrendingRibbonService } from "@/features/advertisements/services/trending-ribbon-service.server";
 import { runTracedBusinessRoute } from '@/core/api/traced-route';
 
@@ -12,12 +11,19 @@ export async function GET(request: Request) {
       if (url.searchParams.get("admin") !== "1") {
         return apiSuccess(await featuredTrendingRibbonService.getCurrent());
       }
-      const uid = url.searchParams.get("uid") ?? "";
-      const phone = url.searchParams.get("phone") ?? "";
-      if (!isSuperAdminIdentity(uid, phone)) {
-        return apiError("forbidden", 403);
+      try {
+        return apiSuccess(
+          await featuredTrendingRibbonService.getAdmin({
+            uid: url.searchParams.get("uid") ?? "",
+            phone: url.searchParams.get("phone") ?? "",
+          }),
+        );
+      } catch (error) {
+        return apiError(
+          error instanceof Error ? error.message : "forbidden",
+          403,
+        );
       }
-      return apiSuccess(await featuredTrendingRibbonService.getCurrent());
     },
   );
 }
@@ -32,14 +38,11 @@ export async function PUT(request: Request) {
           config: TrendingRibbonConfig;
           checkIntervalMinutes: number;
         };
-        if (!isSuperAdminIdentity(body.identity.uid, body.identity.phone)) {
-          return apiError("forbidden", 403);
-        }
         return apiSuccess(
           await featuredTrendingRibbonService.save(
+            body.identity,
             body.config,
             body.checkIntervalMinutes,
-            body.identity.uid,
           ),
         );
       } catch (error) {

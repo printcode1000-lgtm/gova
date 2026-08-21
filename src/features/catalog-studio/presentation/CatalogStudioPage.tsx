@@ -51,186 +51,43 @@ import { cn } from "@/lib/utils";
 
 import {
   CATALOG_STUDIO_API,
-  CATALOG_STUDIO_DRAFT_KEY,
   CATALOG_STUDIO_IMAGES_API,
   CATALOG_STUDIO_MIN_WIDTH,
 } from "../config";
 import type {
   CatalogStudioDraftFile,
   CatalogStudioFile,
-  CatalogStudioGroup,
   CatalogStudioImageRoot,
   CatalogStudioSaveResult,
   CatalogStudioSnapshot,
   CatalogStudioValidationResult,
 } from "../domain/catalog-studio.types";
-
-type StudioSection =
-  | "overview"
-  | "core"
-  | "pharmacy"
-  | "vehicles"
-  | "assets"
-  | "schemas"
-  | "audit";
-type EditorMode = "structured" | "raw" | "relations" | "diff";
-type JsonRecord = Record<string, unknown>;
-
-interface StoredDraft {
-  revision: string;
-  files: Record<string, string>;
-}
-
-const sectionLabels: Record<StudioSection, string> = {
-  overview: "نظرة عامة",
-  core: "التصنيفات",
-  pharmacy: "الصيدلية",
-  vehicles: "المركبات",
-  assets: "الصور",
-  schemas: "المخططات",
-  audit: "التحقق والسجل",
-};
-
-const groupSections: Partial<Record<StudioSection, CatalogStudioGroup>> = {
-  core: "core",
-  pharmacy: "pharmacy",
-  vehicles: "vehicles",
-  schemas: "schemas",
-};
-
-const primitiveKeys = [
-  "id",
-  "key",
-  "categoryId",
-  "subcategoryId",
-  "originalId",
-  "icon",
-  "image",
-  "imagePath",
-  "prescriptionRequired",
-  "optionFile",
-  "supportsImage",
-  "isDefault",
-  "value",
-  "column",
-  "kind",
-  "mainId",
-  "childId",
-] as const;
-
-function parseObject(content: string): JsonRecord | null {
-  try {
-    const value: unknown = JSON.parse(content);
-    return value && typeof value === "object" && !Array.isArray(value)
-      ? (value as JsonRecord)
-      : null;
-  } catch {
-    return null;
-  }
-}
-
-function formatted(value: unknown): string {
-  return `${JSON.stringify(value, null, 2)}\n`;
-}
-
-function itemsFor(value: JsonRecord | null, file: CatalogStudioFile | null): JsonRecord[] {
-  if (!value || !file?.itemKey) return [];
-  const items = value[file.itemKey];
-  return Array.isArray(items) ? (items as JsonRecord[]) : [];
-}
-
-function displayFor(item: JsonRecord): JsonRecord | null {
-  return item.display && typeof item.display === "object" && !Array.isArray(item.display)
-    ? (item.display as JsonRecord)
-    : null;
-}
-
-function nameFor(item: JsonRecord, locale: "ar" | "en"): string {
-  const name = item.name;
-  return name && typeof name === "object" && !Array.isArray(name)
-    ? String((name as JsonRecord)[locale] ?? "")
-    : "";
-}
-
-function identityFor(item: JsonRecord): string {
-  return String(item.id ?? item.key ?? item.column ?? "—");
-}
-
-function parentKey(item: JsonRecord, collections: JsonRecord[]): string {
-  if (item.categoryId !== undefined) return `category:${String(item.categoryId)}`;
-  if (item.subcategoryId !== undefined) return `subcategory:${String(item.subcategoryId)}`;
-  if (item.id !== undefined) {
-    const collection = collections.find((candidate) =>
-      Array.isArray(candidate.memberCategoryIds)
-        ? candidate.memberCategoryIds.some((id) => String(id) === String(item.id))
-        : false,
-    );
-    if (collection) return `collection:${identityFor(collection)}`;
-  }
-  return "root";
-}
-
-function humanSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
-}
-
-function errorText(error: unknown): string {
-  const raw = error instanceof Error ? error.message : String(error);
-  const code = raw.split(":")[0];
-  const messages: Record<string, string> = {
-    forbidden: "الجلسة الحالية لا تملك صلاحية Super Admin.",
-    catalogStudioDevelopmentOnly: "استوديو الكتالوج يعمل في وضع التطوير فقط.",
-    catalogStudioNoChanges: "لا توجد تعديلات للتحقق أو الحفظ.",
-    catalogStudioSaveBusy: "توجد عملية حفظ أخرى قيد التنفيذ.",
-    catalogStudioConcurrentChange: "تغير الملف على القرص بعد فتحه. أعد التحميل قبل الحفظ.",
-    catalogStudioImageAlreadyExists: "توجد صورة بالاسم نفسه. فعّل خيار الاستبدال إذا كان مقصودًا.",
-    catalogStudioImageReferenced: "لا يمكن حذف صورة مرتبطة بعناصر الكتالوج.",
-    catalogStudioImageSignatureInvalid: "محتوى الصورة لا يطابق امتدادها.",
-    catalogStudioImageSizeInvalid: "الصورة فارغة أو أكبر من 10 MB.",
-    catalogStudioImageTypeInvalid: "الامتدادات المسموحة للرفع: PNG وJPG وWEBP.",
-  };
-  return messages[code] ?? raw;
-}
-
-function StatusBox({ kind, children }: { kind: "error" | "success" | "notice"; children: React.ReactNode }) {
-  return (
-    <div
-      className={cn(
-        "rounded-xl border px-4 py-3 text-sm",
-        kind === "error" && "border-red-300 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950/30 dark:text-red-200",
-        kind === "success" && "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-200",
-        kind === "notice" && "border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200",
-      )}
-    >
-      {children}
-    </div>
-  );
-}
-
-function SectionButton({
-  active,
-  label,
-  onClick,
-}: {
-  active: boolean;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "rounded-lg px-4 py-2 text-sm font-semibold transition-colors",
-        active ? "bg-primary text-primary-foreground" : "bg-surface-bright text-muted-foreground",
-      )}
-    >
-      {label}
-    </button>
-  );
-}
+import {
+  displayFor,
+  errorText,
+  formatted,
+  humanSize,
+  identityFor,
+  itemsFor,
+  nameFor,
+  parentKey,
+  parseObject,
+  type JsonRecord,
+} from "./catalog-studio-format";
+import {
+  groupSections,
+  primitiveKeys,
+  sectionLabels,
+  type EditorMode,
+  type StudioSection,
+} from "./catalog-studio-sections";
+import {
+  clearCatalogStudioDraft,
+  readCatalogStudioDraft,
+  writeCatalogStudioDraft,
+} from "./catalog-studio-drafts";
+import { SectionButton } from "./SectionButton";
+import { StatusBox } from "./StatusBox";
 
 export function CatalogStudioPage() {
   const { session, isLoading: sessionLoading } = useSession();
@@ -288,14 +145,13 @@ export function CatalogStudioPage() {
         setSnapshot(next);
         if (options.clearDrafts) {
           setDrafts({});
-          sessionStorage.removeItem(CATALOG_STUDIO_DRAFT_KEY);
+          clearCatalogStudioDraft();
           draftRestored.current = true;
         } else if (!draftRestored.current) {
           draftRestored.current = true;
           try {
-            const stored = sessionStorage.getItem(CATALOG_STUDIO_DRAFT_KEY);
-            if (stored) {
-              const parsed = JSON.parse(stored) as StoredDraft;
+            const parsed = readCatalogStudioDraft();
+            if (parsed) {
               if (parsed.revision === next.revision) {
                 const allowed = new Set(next.files.filter((file) => !file.readOnly).map((file) => file.path));
                 setDrafts(
@@ -303,12 +159,12 @@ export function CatalogStudioPage() {
                 );
                 setNotice("تمت استعادة المسودة المحلية المطابقة لنفس إصدار الملفات.");
               } else {
-                sessionStorage.removeItem(CATALOG_STUDIO_DRAFT_KEY);
+                clearCatalogStudioDraft();
                 setNotice("لم تُستعد مسودة قديمة لأن الملفات تغيرت على القرص.");
               }
             }
           } catch {
-            sessionStorage.removeItem(CATALOG_STUDIO_DRAFT_KEY);
+            clearCatalogStudioDraft();
           }
         }
       } catch (loadError) {
@@ -328,12 +184,9 @@ export function CatalogStudioPage() {
     if (!snapshot || !draftRestored.current) return;
     try {
       if (Object.keys(drafts).length === 0) {
-        sessionStorage.removeItem(CATALOG_STUDIO_DRAFT_KEY);
+        clearCatalogStudioDraft();
       } else {
-        sessionStorage.setItem(
-          CATALOG_STUDIO_DRAFT_KEY,
-          JSON.stringify({ revision: snapshot.revision, files: drafts } satisfies StoredDraft),
-        );
+        writeCatalogStudioDraft({ revision: snapshot.revision, files: drafts });
       }
     } catch {
       setNotice("المسودة كبيرة ولا يمكن حفظها في sessionStorage؛ أبقِ الصفحة مفتوحة حتى الحفظ.");

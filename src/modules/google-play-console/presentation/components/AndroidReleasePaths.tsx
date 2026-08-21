@@ -7,7 +7,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { asolApi } from "@/core/api";
-import type { BuildCommandReadiness, BuildJobRecord } from "@/modules/release-commands/domain/build-job-types";
+import type { BuildCommandReadiness, BuildJobRecord } from "@asol/release-core/console";
 import {
   latestJobFor, runningLabel, RUNNING_STATUSES, SecondaryAction, StatusChip, StopButton,
 } from "./ReleaseJobIndicators";

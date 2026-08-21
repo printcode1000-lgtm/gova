@@ -7,7 +7,7 @@
 # that never reports blocks every merge permanently. Renaming the file or the workflow would be
 # harmless, renaming the job would not — so nothing is renamed and the reason is written down.
 #
-# What the workflow guards has grown well past native-core: twenty-one sealed packages, four
+# What the workflow guards has grown well past native-core: thirty-one sealed packages, four
 # service deployments, and the mirror that feeds them. `Package gate coverage` below fails when a
 # `test:*-core` script exists that this file never runs, so the list cannot silently fall behind
 # again — it already had, for seven packages, before `data-core` and `orders-core` were added.
@@ -76,6 +76,9 @@ jobs:
       - name: Storage core tests
         run: npm run test:storage-core
 
+      - name: Storage image manager core tests
+        run: npm run test:storage-image-manager-core
+
       # Every database in the project, plus the schema-parity half that needs no credentials.
       # `db:schema:sync:release` does the live half during `deploy:all`; it is deliberately not
       # repeated here, because a green build must not depend on a live database.
@@ -99,6 +102,9 @@ jobs:
 
       - name: Format core tests
         run: npm run test:format-core
+
+      - name: Google Play store assets core tests
+        run: npm run test:google-play-store-assets-core
 
       - name: Signed token core tests
         run: npm run test:signed-token-core
@@ -129,6 +135,15 @@ jobs:
 
       - name: Map core tests
         run: npm run test:map-core
+
+      - name: Data health and backup core tests
+        run: npm run test:data-health-core && npm run test:backup-core
+
+      - name: Home advertising UI core tests
+        run: npm run test:hero-slider-core && npm run test:featured-marquee-core && npm run test:trending-ribbon-core
+
+      - name: Page snapshot core tests
+        run: npm run test:page-snapshot-core
 
       - name: Account declarations tests
         run: npm run test:account-declarations

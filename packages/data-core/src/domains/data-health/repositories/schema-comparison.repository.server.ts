@@ -18,8 +18,8 @@ import { SQLITE_DIRECTORY } from "../../../core/database/environment";
 import type {
   DataHealthSchemaComparison,
   DataHealthSchemaDifference,
-} from "@/modules/data-health/domain/types";
-import { resolveDataHealthExecutionContext } from "@/modules/data-health/domain/execution-context.server";
+} from "@asol/data-health-core";
+import { resolveDataHealthExecutionContext } from "../runtime-context.server";
 
 type Row = Record<string, unknown>;
 type Executor = {

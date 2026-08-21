@@ -1,12 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Image as ImageIcon, LayoutTemplate } from "lucide-react";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
+import { type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { RatingSettingsEditor } from "@/components/ui/rating/RatingSettingsEditor";
 import { useTranslation } from "@/lib/i18n";
 import type { StoredImage } from "@asol/storage-core";
@@ -22,6 +20,7 @@ import type {
   StoreDetailsController,
 } from "./profile-save-controller";
 import storeLogoImageConfig from "./image-configs/store-logo.image.json";
+import { StoreIdentityImagesEditor } from "./store-identity/StoreIdentityImagesEditor";
 
 const storeLogoConfig = parseStorageImageManagerConfig(storeLogoImageConfig);
 
@@ -219,67 +218,24 @@ export const StoreIdentityCard = React.forwardRef<
       ) : null}
 
       {!readOnly ? (
-        <div className="space-y-4">
-          <div className="flex gap-2 overflow-x-auto border-b border-outline-variant">
-            <button
-              type="button"
-              onClick={() => setImageTab("logo")}
-              className={`flex flex-shrink-0 items-center gap-2 border-b-2 px-3 pb-3 text-xs font-medium transition-colors sm:text-sm ${
-                imageTab === "logo"
-                  ? "border-primary text-primary"
-                  : "border-transparent text-on-surface-variant"
-              }`}
-            >
-              <ImageIcon className="h-4 w-4" />
-              {t("onboarding.storeIdentity.storeLogo")}
-            </button>
-            <button
-              type="button"
-              onClick={() => setImageTab("hero")}
-              className={`flex flex-shrink-0 items-center gap-2 border-b-2 px-3 pb-3 text-xs font-medium transition-colors sm:text-sm ${
-                imageTab === "hero"
-                  ? "border-primary text-primary"
-                  : "border-transparent text-on-surface-variant"
-              }`}
-            >
-              <LayoutTemplate className="h-4 w-4" />
-              صور واجهة المتجر
-            </button>
-          </div>
-
-          <div
-            className={
-              imageTab === "logo"
-                ? "inline-block rounded-lg border-2 border-primary/20 bg-primary/5 p-2 sm:p-3"
-                : "hidden"
-            }
-          >
-              <div className="h-[120px] w-[120px] sm:h-[150px] sm:w-[150px]">
-                <StorageImageManager
-                  ref={logoManagerRef}
-                  config={storeLogoConfig}
-                  value={logoImage ? [logoImage] : []}
-                  onChange={handleLogoImagesChange}
-                  onPendingChange={setLogoPending}
-                />
-              </div>
-          </div>
-          <div className={imageTab === "hero" ? "block" : "hidden"}>
-            <HeroSlider
-              mode="images-edit"
-              config={heroConfig ?? profileHeroConfig}
-              onChange={handleHeroImagesChange}
-              imageUploadRef={heroManagerRef}
-              onImagesPendingChange={setHeroPending}
-            />
-          </div>
-
-          {(isImagesLoading || isSavingImages) && (
-            <p className="text-xs text-muted-foreground">
-              {isSavingImages ? t("onboarding.common.uploading") : ""}
-            </p>
-          )}
-        </div>
+        <StoreIdentityImagesEditor
+          imageTab={imageTab}
+          setImageTab={setImageTab}
+          logoManagerRef={logoManagerRef}
+          heroManagerRef={heroManagerRef}
+          logoImage={logoImage}
+          storeLogoConfig={storeLogoConfig}
+          heroConfig={heroConfig}
+          profileHeroConfig={profileHeroConfig}
+          onLogoImagesChange={handleLogoImagesChange}
+          onHeroImagesChange={handleHeroImagesChange}
+          onLogoPendingChange={setLogoPending}
+          onHeroPendingChange={setHeroPending}
+          isImagesLoading={isImagesLoading}
+          isSavingImages={isSavingImages}
+          uploadingLabel={t("onboarding.common.uploading")}
+          logoLabel={t("onboarding.storeIdentity.storeLogo")}
+        />
       ) : null}
 
       <div className="space-y-2">
