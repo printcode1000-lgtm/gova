@@ -114,7 +114,7 @@ export function SuperAdminErrorFloatingButton() {
         <button
           type="button"
           onClick={() => router.push(LOGS_ROUTE)}
-          className="flex items-center gap-1 rounded-full px-2 py-1 hover:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
+          className="flex items-center gap-1 rounded-full px-2 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
           aria-label={`فتح سجل الأخطاء: ${errorCount}`}
         >
           <span className="relative flex h-4 w-4 shrink-0 items-center justify-center">
@@ -128,9 +128,8 @@ export function SuperAdminErrorFloatingButton() {
         <button
           type="button"
           onClick={() => setConfirmClear(true)}
-          className="rounded-full px-1.5 py-1 hover:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
+          className="rounded-full px-1.5 py-1 active:bg-on-error/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-error"
           aria-label="مسح جميع السجلات"
-          title="مسح جميع السجلات"
         >
           <Trash2 className="h-3.5 w-3.5 shrink-0" />
         </button>
