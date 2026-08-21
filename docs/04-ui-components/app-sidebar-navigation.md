@@ -53,11 +53,29 @@ See [super-admin-cloud-accounts.md](../06-super-admin-and-operations/super-admin
 | النظام وحسابات المستخدمين | إدارة حسابات المستخدمين | `/super-admin/users` |
 
 The section trigger itself is labeled `لوحة تحكم السوبر أدمن`. Its header button
-uses three distinct semantic text colors on the shared sidebar surface: the
-`ShieldCheck` icon uses `text-primary`, the label uses `text-on-surface`, and the
-expand chevron uses `text-on-surface-variant`. Child elements set their own color
-classes so they stay distinct from each other and from the inherited `sidebarTone`
-on the control shell.
+uses the same `sidebarControlClass` stack as the settings card (icon, label, and
+chevron inherit `sidebarTone` from the outer shell).
+
+### Inner container surfaces
+
+When the section is expanded, each inner wrapper (`SuperAdminGroup` shell or the
+direct-link card for cloud accounts) gets a distinct background so the four blocks
+read as separate cards inside the shared outer shell. Borders stay a single hairline
+(`border-outline-variant/25` in light, `/35` in dark) on `rounded-xl` shells;
+depth comes from surface tint, not shadow.
+
+| Inner block | Background token |
+| --- | --- |
+| واجهة المتجر والعروض | `bg-surface-container-low` |
+| حسابات التخزين السحابي (direct link) | `bg-primary-container/15` |
+| الإشعارات والبث | `bg-secondary-container/20` |
+| النظام وحسابات المستخدمين | `bg-tertiary-container/15` |
+
+`SuperAdminGroup` accepts a `shellClass` prop (base border/radius plus one of the
+tokens above). Interactive rows inside still use `sidebarPressSurface` on buttons
+and links so `:active` feedback remains visible on each tinted surface. Tokens
+resolve through the theme (`src/theme/tokens.css`) so light and dark schemes stay
+harmonious without per-scheme class branches in the component.
 
 ## Guardrails
 

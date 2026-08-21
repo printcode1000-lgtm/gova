@@ -61,6 +61,14 @@ export function AppSidebarSuperAdminSection({
   );
   const groupPanelClass =
     "ms-2 space-y-1 border-s border-outline-variant/40 ps-2";
+  const innerShellBorder =
+    resolvedScheme === "dark"
+      ? "border-outline-variant/35"
+      : "border-outline-variant/25";
+  const innerShellBase = cn(
+    "overflow-hidden rounded-xl border",
+    innerShellBorder,
+  );
 
   return (
     <div
@@ -78,17 +86,12 @@ export function AppSidebarSuperAdminSection({
         aria-expanded={superAdminOpen}
         className={cn(sidebarControlClass, "rounded-none")}
       >
-        <ShieldCheck
-          className={cn(sidebarIconClass, "text-primary")}
-          aria-hidden
-        />
-        <span className="min-w-0 flex-1 text-on-surface">
-          لوحة تحكم السوبر أدمن
-        </span>
+        <ShieldCheck className={sidebarIconClass} aria-hidden />
+        <span className="min-w-0 flex-1">لوحة تحكم السوبر أدمن</span>
         <ChevronDown
           aria-hidden
           className={cn(
-            "ms-auto h-4 w-4 shrink-0 text-on-surface-variant transition-transform",
+            "ms-auto h-4 w-4 shrink-0 transition-transform",
             superAdminOpen && "rotate-180",
           )}
         />
@@ -101,6 +104,7 @@ export function AppSidebarSuperAdminSection({
             open={superAdminGroupsOpen.content}
             buttonClass={groupButtonClass}
             panelClass={groupPanelClass}
+            shellClass={cn(innerShellBase, "bg-surface-container-low")}
             onToggle={() => onGroupToggle("content")}
           >
             <SuperAdminLink href="/super-admin/hero-slider" icon={<Sliders className={sidebarSmallIconClass} />} label="سلايدر الواجهة الرئيسية" className={itemClass} onClose={onClose} />
@@ -108,7 +112,9 @@ export function AppSidebarSuperAdminSection({
             <SuperAdminLink href="/super-admin/trending-ribbon" icon={<TrendingUp className={sidebarSmallIconClass} />} label="الشريط الإخباري المتحرك" className={itemClass} onClose={onClose} />
           </SuperAdminGroup>
 
-          <div className="overflow-hidden rounded-xl border border-outline-variant/25">
+          <div
+            className={cn(innerShellBase, "bg-primary-container/15")}
+          >
             <Link href="/super-admin/cloud-accounts" onClick={onClose} className={groupButtonClass}>
               <Cloud className={sidebarSmallIconClass} />
               حسابات التخزين السحابي
@@ -121,6 +127,7 @@ export function AppSidebarSuperAdminSection({
             open={superAdminGroupsOpen.notifications}
             buttonClass={groupButtonClass}
             panelClass={groupPanelClass}
+            shellClass={cn(innerShellBase, "bg-secondary-container/20")}
             onToggle={() => onGroupToggle("notifications")}
           >
             <SuperAdminLink href="/super-admin/notification-tests" icon={<TestTube2 className={sidebarSmallIconClass} />} label="اختبار إرسال الإشعارات" className={itemClass} onClose={onClose} />
@@ -133,6 +140,7 @@ export function AppSidebarSuperAdminSection({
             open={superAdminGroupsOpen.system}
             buttonClass={groupButtonClass}
             panelClass={groupPanelClass}
+            shellClass={cn(innerShellBase, "bg-tertiary-container/15")}
             onToggle={() => onGroupToggle("system")}
           >
             <SuperAdminLink href="/super-admin/logs" icon={<ScrollText className={sidebarSmallIconClass} />} label="سجل أحداث النظام" className={itemClass} onClose={onClose} />
@@ -150,6 +158,7 @@ function SuperAdminGroup({
   open,
   buttonClass,
   panelClass,
+  shellClass,
   onToggle,
   children,
 }: {
@@ -158,11 +167,12 @@ function SuperAdminGroup({
   open: boolean;
   buttonClass: string;
   panelClass: string;
+  shellClass: string;
   onToggle: () => void;
   children: React.ReactNode;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-outline-variant/25">
+    <div className={shellClass}>
       <button type="button" onClick={onToggle} aria-expanded={open} className={buttonClass}>
         {icon}
         {label}
