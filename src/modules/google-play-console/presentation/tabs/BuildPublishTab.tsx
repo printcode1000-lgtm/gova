@@ -13,7 +13,7 @@ import { ReleaseCommandConfirmDialog } from "../components/ReleaseCommandConfirm
 import { ReleaseJobStopDialog } from "../components/ReleaseJobStopDialog";
 import { useReleaseJobs } from "../../hooks/use-release-jobs";
 
-const CATEGORIES = ["web-static", "ota", "native-android", "verification", "fastlane"] as const;
+const CATEGORIES = ["native-android"] as const;
 
 export function BuildPublishTab() {
   const { t } = useAdminArabic();
