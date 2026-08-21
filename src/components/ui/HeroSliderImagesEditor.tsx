@@ -11,6 +11,10 @@ import {
 } from "@/features/storage/components/StorageImageManager";
 import storefrontImagesConfig from "@/features/profile/presentation/image-configs/storefront-images.image.json";
 import type { HeroSliderConfig, HeroSliderSlide } from "./HeroSlider";
+import {
+  DEFAULT_HOME_HERO_TRANSITION,
+  DEFAULT_HOME_HERO_TRANSITION_DURATION,
+} from "@asol/hero-slider-core";
 
 const storefrontSlots = storefrontImagesConfig.slots.map(
   parseStorageImageManagerConfig,
@@ -31,6 +35,8 @@ function createSlide(image: StoredImage, index: number): HeroSliderSlide {
     title: "",
     subtitle: "",
     duration: 4000,
+    transition: DEFAULT_HOME_HERO_TRANSITION,
+    transitionDuration: DEFAULT_HOME_HERO_TRANSITION_DURATION,
     action: "",
   };
 }

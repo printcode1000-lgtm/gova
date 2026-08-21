@@ -187,9 +187,17 @@ assert.ok(
   'db:schema:sync:release is gone. It is the only step that reconciles these files with Turso.',
 );
 const deployAll = readFileSync(path.resolve(SRC, '../../../scripts/deploy-all.ts'), 'utf8');
+const deployAllRunbook = readFileSync(
+  path.resolve(SRC, '../../../packages/release-core/src/console/deploy-all-runbook.ts'),
+  'utf8',
+);
 assert.ok(
-  deployAll.includes('db:schema:sync:release'),
-  'deploy:all no longer runs db:schema:sync:release. Local schema would ship ahead of the cloud, ' +
+  deployAll.includes('DEPLOY_ALL_PREFLIGHT_SECTIONS'),
+  'deploy:all must drive preflight from DEPLOY_ALL_PREFLIGHT_SECTIONS so release schema sync stays wired.',
+);
+assert.ok(
+  deployAllRunbook.includes('db:schema:sync:release'),
+  'deploy:all preflight runbook no longer runs db:schema:sync:release. Local schema would ship ahead of the cloud, ' +
     'and code expecting a new column would reach production before the column does.',
 );
 

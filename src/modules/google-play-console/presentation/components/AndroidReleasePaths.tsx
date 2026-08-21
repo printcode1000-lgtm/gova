@@ -8,7 +8,7 @@ import { AndroidReleasePathActions } from "./AndroidReleasePathActions";
 import { AndroidReleasePathCard } from "./AndroidReleasePathCard";
 import { useAndroidStaticPreview } from "./use-android-static-preview";
 
-const DEFAULT_ENABLED_PATHS = new Set(ANDROID_RELEASE_PATHS.map((path) => path.id));
+const DEFAULT_ENABLED_PATHS = new Set<string>(ANDROID_RELEASE_PATHS.map((path) => path.id));
 
 export function AndroidReleasePaths({
   busy,
