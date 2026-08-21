@@ -82,7 +82,7 @@ To upgrade Capacitor or any plugin:
    ```
 5. If Android/iOS native wrappers need updates, modify `packages/native-core/android/` or `packages/native-core/ios/`, then test with `npm run android:r8:validate` and `npm run ios:push:validate`.
 
-Gradle package builds (`android:build:debug`, `release:android`, `android:r8:verify-release`, connected-device tests) invoke `packages/native-core/scripts/android-build-preflight.ts` through `scripts/android/gradle.ts` before `gradlew`. The preflight discovers JDK 21, validates Android SDK Platform 36 and Build-Tools, and stops with a bilingual error when anything is missing.
+Gradle package builds (`android:build:debug`, `release:android`, `android:r8:verify-release`, connected-device tests) invoke `packages/native-core/scripts/android-build-preflight.ts` through `scripts/android/gradle.ts` before `gradlew`. The preflight resolves invalid `JAVA_HOME` and Android SDK root paths and stops with a bilingual error when resolution fails after search.
 
 ### Where the native code is wired in
 

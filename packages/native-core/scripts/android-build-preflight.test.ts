@@ -34,22 +34,23 @@ assert.ok(report.some((entry) => entry.label === "ASOL_ANDROID_JAVA_HOME" && ent
 assert.ok(report.some((entry) => entry.label === "JAVA_HOME" && entry.path.includes("jdk-21")));
 
 const failureMessage = formatAndroidBuildPreflightFailure({
-  missing: [`JDK ${REQUIRED_JDK_MAJOR} (JAVA_HOME points to a missing directory: C:\\Program Files\\Java\\jdk-21)`],
+  missing: [`JDK ${REQUIRED_JDK_MAJOR} (JAVA_HOME is set to an invalid directory: C:\\Program Files\\Java\\jdk-21)`],
   jdkSearch: report,
   configuredJavaHome: "C:\\Program Files\\Java\\jdk-21",
   gradleWrapper: "C:\\repo\\android\\gradlew.bat",
 });
-assert.match(failureMessage, /Android build preflight failed\./);
-assert.match(failureMessage, /فشل فحص ما قبل بناء Android\./);
+assert.match(failureMessage, /could not resolve required paths/);
+assert.match(failureMessage, /تعذّر حل المسارات المطلوبة/);
+assert.match(failureMessage, /JAVA_HOME is set to an invalid directory: C:\\Program Files\\Java\\jdk-21/);
 assert.match(failureMessage, /Searched JDK locations/);
-assert.match(failureMessage, /npm run doctor:environment -- --scenario=android/);
+assert.match(failureMessage, /doctor:environment -- --scenario=android/);
 
 const missingAndroidRoot = tempRoot();
 assert.throws(
   () => runAndroidBuildPreflight({ root: missingAndroidRoot, env: process.env }),
   (error: unknown) => {
     assert.ok(error instanceof Error);
-    assert.match(error.message, /Android project directory/);
+    assert.match(error.message, /Gradle wrapper at/);
     return true;
   },
 );
@@ -73,7 +74,7 @@ assert.throws(
   (error: unknown) => {
     assert.ok(error instanceof Error);
     assert.match(error.message, /Android SDK/);
-    assert.match(error.message, /فشل فحص ما قبل بناء Android/);
+    assert.match(error.message, /تعذّر حل المسارات المطلوبة/);
     return true;
   },
 );

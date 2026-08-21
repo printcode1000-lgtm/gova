@@ -51,21 +51,31 @@ $env:ASOL_ANDROID_JAVA_HOME = "C:\Program Files\Java\jdk-21.0.12"
 
 ## Project behavior
 
-Repository scripts that invoke Gradle through `scripts/android/gradle.ts` run an Android build preflight **before any Gradle task starts**. The preflight lives in `packages/native-core/scripts/android-build-preflight.ts` and:
+Repository scripts that invoke Gradle through `scripts/android/gradle.ts` run an Android build preflight **before any Gradle task starts**. The preflight lives in `packages/native-core/scripts/android-build-preflight.ts` and focuses on **path resolution**, not a full environment audit:
 
-1. Validates `JAVA_HOME`, `ASOL_ANDROID_JAVA_HOME`, Android Studio JBR, and common Windows/macOS/Linux JDK install locations.
-2. Validates the Android SDK root (`ANDROID_SDK_ROOT`, `ANDROID_HOME`, `android/local.properties`, or the default `%LOCALAPPDATA%\Android\Sdk`).
-3. Requires Android SDK Platform 36 and at least one Build-Tools package.
-4. Requires the checked-in Gradle wrapper under `android/`.
-5. Auto-sets `JAVA_HOME` for the child Gradle process when a valid JDK is discovered.
-6. Stops immediately with a bilingual Arabic/English error listing missing items and every searched JDK path when anything is missing.
+1. Resolves JDK 21 when `JAVA_HOME` or `ASOL_ANDROID_JAVA_HOME` is missing or invalid by searching, in order: `ASOL_ANDROID_JAVA_HOME`, Android Studio JBR, `JAVA_HOME`, then `jdk-21*` under common Windows/macOS/Linux install directories.
+2. Resolves the Android SDK root when `ANDROID_SDK_ROOT` / `ANDROID_HOME` is missing or invalid from `android/local.properties` or the default `%LOCALAPPDATA%\Android\Sdk`.
+3. Requires the checked-in Gradle wrapper under `android/`.
+4. Auto-sets `JAVA_HOME` for the child Gradle process when a valid JDK is discovered.
+5. Stops immediately with a bilingual Arabic/English error showing the configured path, every searched JDK location, and resolved values when a path cannot be resolved after search.
 
-Discovery order for JDK resolution:
+Example failure when `JAVA_HOME` points at a generic folder that does not exist and no valid JDK is found:
 
-- `ASOL_ANDROID_JAVA_HOME`
-- Android Studio bundled JBR
-- `JAVA_HOME`
-- Filesystem scans under `C:\Program Files\Java`, `C:\Program Files\Eclipse Adoptium`, `C:\Program Files\Microsoft`, `C:\Program Files\Amazon Corretto`, and macOS/Linux JVM directories matching JDK 21 or 17 (only JDK 21 satisfies the project baseline).
+```text
+Android build preflight failed — could not resolve required paths.
+
+Unresolved paths:
+- JDK 21 (JAVA_HOME is set to an invalid directory: C:\Program Files\Java\jdk-21)
+
+Configured JAVA_HOME: C:\Program Files\Java\jdk-21
+Resolved JDK: none
+
+Searched JDK locations:
+- [missing] JAVA_HOME: C:\Program Files\Java\jdk-21
+- [missing] Program Files\Java (jdk-21*): (no matching install found)
+```
+
+When `jdk-21.0.12` exists under `C:\Program Files\Java\`, preflight discovers it automatically, passes, and Gradle receives the corrected `JAVA_HOME` even if the user variable still points at `jdk-21`.
 
 Direct `android\gradlew.bat` calls still require a correct user `JAVA_HOME`. Fix the user variable for Android Studio and manual Gradle use.
 

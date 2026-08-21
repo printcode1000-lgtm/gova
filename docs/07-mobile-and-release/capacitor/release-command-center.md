@@ -246,20 +246,24 @@ existence, not by being run.
 
 Every repository command that assembles an APK or AAB runs
 `packages/native-core/scripts/android-build-preflight.ts` **before Gradle starts**. The
-check also runs at the start of `android:build:debug` and `release:android`, so a missing
-JDK or SDK fails before the web bundle is rebuilt or Capacitor sync begins.
+resolver also runs at the start of `android:build:debug` and `release:android`, so an
+unresolvable JDK or SDK root fails before the web bundle is rebuilt or Capacitor sync begins.
 
-| Checked path | Source |
+| Resolved path | Source order |
 | :-- | :-- |
-| JDK 21 | `ASOL_ANDROID_JAVA_HOME`, Android Studio JBR, `JAVA_HOME`, common install directories |
+| JDK 21 | `ASOL_ANDROID_JAVA_HOME`, Android Studio JBR, `JAVA_HOME`, then `jdk-21*` under common install directories |
 | Android SDK root | `ANDROID_SDK_ROOT`, `ANDROID_HOME`, `android/local.properties`, default `%LOCALAPPDATA%\Android\Sdk` |
-| SDK Platform 36 | `<sdk>/platforms/android-36` |
-| Build-Tools | at least one directory under `<sdk>/build-tools` |
-| Android project | `android/` directory, `android/app/build.gradle`, checked-in `android/gradlew` |
+| Gradle wrapper | checked-in `android/gradlew` or `android/gradlew.bat` |
 
-On failure the script exits with code `1` and prints a bilingual English/Arabic error listing
-every missing item and every searched JDK path. Run it alone with `npm run android:preflight`.
-See [invalid-java-home-windows.md](../../08-troubleshooting/problems/invalid-java-home-windows.md).
+When `JAVA_HOME` points at a missing directory such as `C:\Program Files\Java\jdk-21` while
+`C:\Program Files\Java\jdk-21.0.12` exists, preflight auto-selects the discovered JDK and
+passes it to Gradle. It does **not** audit SDK Platform packages, Build-Tools, or other
+toolchain components — Gradle and Android Studio report those failures themselves.
+
+On failure the script exits with code `1` and prints a bilingual English/Arabic error showing
+the configured path, every searched JDK location, and the resolved values. Run it alone with
+`npm run android:preflight`. See
+[invalid-java-home-windows.md](../../08-troubleshooting/problems/invalid-java-home-windows.md).
 
 Hook points:
 

@@ -4,7 +4,6 @@ import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 
 export const REQUIRED_JDK_MAJOR = 21;
-export const REQUIRED_ANDROID_PLATFORM = "android-36";
 
 export interface JdkSearchEntry {
   label: string;
@@ -18,6 +17,7 @@ export interface AndroidBuildPreflightFailure {
   jdkSearch: JdkSearchEntry[];
   configuredJavaHome?: string;
   resolvedJavaHome?: string;
+  configuredAndroidSdkRoot?: string;
   androidSdkRoot?: string;
   gradleWrapper?: string;
 }
@@ -81,11 +81,11 @@ function discoverFilesystemJdkCandidates(): Array<{ label: string; path: string 
   const candidates: Array<{ label: string; path: string }> = [];
   if (process.platform === "win32") {
     const roots: Array<{ root: string; pattern: RegExp; label: string }> = [
-      { root: "C:\\Program Files\\Java", pattern: /^jdk-(?:21|17)/i, label: "Oracle/OpenJDK" },
-      { root: "C:\\Program Files\\Eclipse Adoptium", pattern: /^jdk-(?:21|17)/i, label: "Eclipse Adoptium" },
-      { root: "C:\\Program Files\\Microsoft", pattern: /^jdk-(?:21|17)/i, label: "Microsoft Build of OpenJDK" },
-      { root: "C:\\Program Files\\Amazon Corretto", pattern: /^jdk(?:21|17)/i, label: "Amazon Corretto" },
-      { root: "C:\\Program Files (x86)\\Java", pattern: /^jdk-(?:21|17)/i, label: "Oracle/OpenJDK (x86)" },
+      { root: "C:\\Program Files\\Java", pattern: /^jdk-21/i, label: "Program Files\\Java (jdk-21*)" },
+      { root: "C:\\Program Files\\Eclipse Adoptium", pattern: /^jdk-21/i, label: "Eclipse Adoptium (jdk-21*)" },
+      { root: "C:\\Program Files\\Microsoft", pattern: /^jdk-21/i, label: "Microsoft Build of OpenJDK (jdk-21*)" },
+      { root: "C:\\Program Files\\Amazon Corretto", pattern: /^jdk21/i, label: "Amazon Corretto (jdk21*)" },
+      { root: "C:\\Program Files (x86)\\Java", pattern: /^jdk-21/i, label: "Program Files (x86)\\Java (jdk-21*)" },
     ];
     for (const { root, pattern, label } of roots) {
       for (const directory of listMatchingDirectories(root, pattern)) {
@@ -191,43 +191,42 @@ function collectPreflightFailures(options: {
   const { root, env, androidDirectory } = options;
   const jdkSearch = buildJdkSearchReport(env);
   const resolvedJavaHome = jdkSearch.find((entry) => entry.status === "valid")?.path;
+  const configuredJavaHome = env.JAVA_HOME?.trim();
+  const configuredAndroidSdkRoot = env.ANDROID_SDK_ROOT?.trim() || env.ANDROID_HOME?.trim();
   const androidSdkRoot = resolveAndroidSdkRoot(root, env);
   const wrapper = gradleWrapperPath(androidDirectory);
   const missing: string[] = [];
 
-  if (!existsSync(androidDirectory)) {
-    missing.push(`Android project directory at ${androidDirectory}`);
-  } else {
-    const appBuildGradle = path.join(androidDirectory, "app", "build.gradle");
-    if (!existsSync(appBuildGradle)) {
-      missing.push(`Android app module at ${appBuildGradle}`);
-    }
-  }
-
   if (!resolvedJavaHome) {
-    const configured = env.JAVA_HOME?.trim();
-    if (configured && !existsSync(configured)) {
-      missing.push(`JDK ${REQUIRED_JDK_MAJOR} (JAVA_HOME points to a missing directory: ${configured})`);
+    if (configuredJavaHome && !existsSync(configuredJavaHome)) {
+      missing.push(
+        `JDK ${REQUIRED_JDK_MAJOR} (JAVA_HOME is set to an invalid directory: ${configuredJavaHome})`,
+      );
+    } else if (configuredJavaHome && !isValidJavaHome(configuredJavaHome)) {
+      missing.push(
+        `JDK ${REQUIRED_JDK_MAJOR} (JAVA_HOME points to ${configuredJavaHome} but bin/java is missing)`,
+      );
     } else if (jdkSearch.some((entry) => entry.status === "wrong-version")) {
       const wrong = jdkSearch.find((entry) => entry.status === "wrong-version");
       missing.push(
         `JDK ${REQUIRED_JDK_MAJOR} (found JDK ${wrong?.majorVersion ?? "?"} at ${wrong?.path ?? "unknown path"})`,
       );
     } else {
-      missing.push(`JDK ${REQUIRED_JDK_MAJOR} (no valid JAVA_HOME, ASOL_ANDROID_JAVA_HOME, or discovered JDK)`);
+      missing.push(
+        `JDK ${REQUIRED_JDK_MAJOR} (no valid JDK found after searching ASOL_ANDROID_JAVA_HOME, Android Studio JBR, JAVA_HOME, and common install directories)`,
+      );
     }
   }
 
   if (!androidSdkRoot) {
-    missing.push("Android SDK (set ANDROID_SDK_ROOT or ANDROID_HOME, or android/local.properties sdk.dir)");
-  } else {
-    const platformPath = path.join(androidSdkRoot, "platforms", REQUIRED_ANDROID_PLATFORM);
-    if (!existsSync(platformPath)) {
-      missing.push(`Android SDK Platform ${REQUIRED_ANDROID_PLATFORM.replace("android-", "")} at ${platformPath}`);
-    }
-    const buildToolsRoot = path.join(androidSdkRoot, "build-tools");
-    if (!existsSync(buildToolsRoot) || readdirSync(buildToolsRoot, { withFileTypes: true }).every((entry) => !entry.isDirectory())) {
-      missing.push(`Android SDK Build-Tools under ${buildToolsRoot}`);
+    if (configuredAndroidSdkRoot && !existsSync(configuredAndroidSdkRoot)) {
+      missing.push(
+        `Android SDK (ANDROID_SDK_ROOT/ANDROID_HOME points to a missing directory: ${configuredAndroidSdkRoot})`,
+      );
+    } else {
+      missing.push(
+        "Android SDK root (set ANDROID_SDK_ROOT or ANDROID_HOME, or android/local.properties sdk.dir, or install the default SDK under %LOCALAPPDATA%\\Android\\Sdk)",
+      );
     }
   }
 
@@ -238,8 +237,9 @@ function collectPreflightFailures(options: {
   return {
     missing,
     jdkSearch,
-    configuredJavaHome: env.JAVA_HOME?.trim(),
+    configuredJavaHome,
     resolvedJavaHome,
+    configuredAndroidSdkRoot,
     androidSdkRoot,
     gradleWrapper: wrapper,
   };
@@ -247,10 +247,10 @@ function collectPreflightFailures(options: {
 
 export function formatAndroidBuildPreflightFailure(failure: AndroidBuildPreflightFailure): string {
   const lines = [
-    "Android build preflight failed.",
-    "فشل فحص ما قبل بناء Android.",
+    "Android build preflight failed — could not resolve required paths.",
+    "فشل ما قبل بناء Android — تعذّر حل المسارات المطلوبة.",
     "",
-    "Missing requirements / المتطلبات الناقصة:",
+    "Unresolved paths / المسارات التي لم تُحل:",
     ...failure.missing.map((item) => `- ${item}`),
     "",
   ];
@@ -263,16 +263,21 @@ export function formatAndroidBuildPreflightFailure(failure: AndroidBuildPrefligh
   } else {
     lines.push("Resolved JDK / JDK المُكتشَف: none / لا يوجد");
   }
+  if (failure.configuredAndroidSdkRoot) {
+    lines.push(
+      `Configured ANDROID_SDK_ROOT/ANDROID_HOME / ANDROID_SDK_ROOT المُعرَّف: ${failure.configuredAndroidSdkRoot}`,
+    );
+  }
   if (failure.androidSdkRoot) {
-    lines.push(`Android SDK root / جذر Android SDK: ${failure.androidSdkRoot}`);
+    lines.push(`Resolved Android SDK root / جذر Android SDK المُكتشَف: ${failure.androidSdkRoot}`);
   } else {
-    lines.push("Android SDK root / جذر Android SDK: none / لا يوجد");
+    lines.push("Resolved Android SDK root / جذر Android SDK المُكتشَف: none / لا يوجد");
   }
   if (failure.gradleWrapper) {
     lines.push(`Gradle wrapper / ملف Gradle: ${failure.gradleWrapper}`);
   }
 
-  lines.push("", "Searched JDK locations / مسارات JDK التي تم فحصها:");
+  lines.push("", "Searched JDK locations / مسارات JDK التي تم البحث فيها:");
   for (const entry of failure.jdkSearch) {
     const detail = entry.majorVersion !== undefined ? ` (Java ${entry.majorVersion})` : "";
     lines.push(`- [${entry.status}] ${entry.label}: ${entry.path}${detail}`);
@@ -281,12 +286,12 @@ export function formatAndroidBuildPreflightFailure(failure: AndroidBuildPrefligh
   lines.push(
     "",
     "Fix / الإصلاح:",
-    `- Install JDK ${REQUIRED_JDK_MAJOR} LTS and point JAVA_HOME or ASOL_ANDROID_JAVA_HOME at its root directory (the folder that contains bin\\java.exe).`,
-    `- ثبّت JDK ${REQUIRED_JDK_MAJOR} LTS ووجّه JAVA_HOME أو ASOL_ANDROID_JAVA_HOME إلى جذر التثبيت (المجلد الذي يحتوي bin\\java.exe).`,
-    "- Install Android SDK Platform 36 and Build-Tools through Android Studio, then set ANDROID_SDK_ROOT.",
-    "- ثبّت Android SDK Platform 36 و Build-Tools عبر Android Studio، ثم عيّن ANDROID_SDK_ROOT.",
-    "- Verify with: npm run doctor:environment -- --scenario=android",
-    "- للتحقق: npm run doctor:environment -- --scenario=android",
+    `- Install JDK ${REQUIRED_JDK_MAJOR} LTS and point JAVA_HOME or ASOL_ANDROID_JAVA_HOME at its root directory (the folder that contains bin\\java.exe), for example C:\\Program Files\\Java\\jdk-21.0.12.`,
+    `- ثبّت JDK ${REQUIRED_JDK_MAJOR} LTS ووجّه JAVA_HOME أو ASOL_ANDROID_JAVA_HOME إلى جذر التثبيت (المجلد الذي يحتوي bin\\java.exe)، مثل C:\\Program Files\\Java\\jdk-21.0.12.`,
+    "- Install the Android SDK through Android Studio, then set ANDROID_SDK_ROOT or add sdk.dir to android/local.properties.",
+    "- ثبّت Android SDK عبر Android Studio، ثم عيّن ANDROID_SDK_ROOT أو أضف sdk.dir إلى android/local.properties.",
+    "- Optional full environment audit: npm run doctor:environment -- --scenario=android",
+    "- تدقيق بيئة اختياري: npm run doctor:environment -- --scenario=android",
   );
 
   return lines.join("\n");
@@ -332,10 +337,14 @@ export function withAndroidBuildPreflightEnv(env: NodeJS.ProcessEnv = process.en
 
 export function main(): void {
   const result = runAndroidBuildPreflight();
+  const configuredJavaHome = process.env.JAVA_HOME?.trim();
+  const javaNote = configuredJavaHome && configuredJavaHome !== result.javaHome
+    ? ` (JAVA_HOME was ${configuredJavaHome})`
+    : "";
   console.log(
     [
-      "Android build preflight passed.",
-      `JDK: ${result.javaHome}`,
+      "Android build preflight passed — paths resolved.",
+      `JDK: ${result.javaHome}${javaNote}`,
       `Android SDK: ${result.androidSdkRoot}`,
       `Gradle wrapper: ${result.gradleWrapper}`,
     ].join("\n"),

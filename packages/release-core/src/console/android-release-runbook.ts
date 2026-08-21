@@ -992,7 +992,7 @@ export const ANDROID_RELEASE_RUNBOOKS = {
         {
           id: "static-gates",
           label: "بوابات build:static قبل كتابة out/ (مرجع)",
-          branches: patternSubsteps("prepare-gate", "build-static", BUILD_STATIC_GATE_SUBSTEPS),
+          branches: patternSubsteps("prepare-gate", "build-static", BUILD_STATIC_SUBSTEPS),
         },
         {
           id: "static-artifacts",
