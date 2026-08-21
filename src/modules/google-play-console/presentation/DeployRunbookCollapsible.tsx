@@ -24,7 +24,7 @@ export function DeployRunbookCollapsible(props: {
       )}
     >
       <summary
-        className="flex list-none cursor-pointer flex-col gap-2 p-3 sm:flex-row sm:items-start sm:justify-between sm:gap-3 sm:p-4 [&::-webkit-details-marker]:hidden"
+        className="flex list-none flex-col gap-2 p-3 active:bg-muted/40 sm:flex-row sm:items-start sm:justify-between sm:gap-3 sm:p-4 [&::-webkit-details-marker]:hidden"
         onClick={(event) => {
           const target = event.target as HTMLElement;
           if (target.closest("button, a, input, select, textarea, label")) event.preventDefault();

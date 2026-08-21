@@ -4,6 +4,7 @@ import * as React from "react";
 import { Clipboard, LoaderCircle, Play, StopCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { NativeCore } from "@asol/native-core";
 import { Option } from "./DeployRunbookControls";
 import { DeployRunbookCollapsible } from "./DeployRunbookCollapsible";
 
@@ -78,19 +79,19 @@ function ConfirmationPhraseHelp(props: { exactPhrase: string; onApply: (value: s
 
   const applyPhrase = () => {
     props.onApply(props.exactPhrase);
-    void navigator.clipboard.writeText(props.exactPhrase).then(() => {
+    void NativeCore.writeClipboard({ string: props.exactPhrase }).then(() => {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     });
   };
 
   return (
-    <div className="flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant select-text">
+    <div className="asol-selectable flex flex-wrap items-start justify-between gap-2 text-xs text-on-surface-variant">
       <p className="min-w-0 break-words">
         يجب كتابة{" "}
         <button
           type="button"
-          className="font-mono text-primary underline-offset-2 hover:underline"
+          className="font-mono text-primary underline-offset-2 active:underline"
           dir="ltr"
           onClick={applyPhrase}
         >

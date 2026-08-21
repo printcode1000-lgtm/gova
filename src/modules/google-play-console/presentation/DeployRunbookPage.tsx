@@ -5,6 +5,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
+import { NativeCore } from "@asol/native-core";
 import { useBuildJobs } from "@/modules/release-commands/hooks/use-build-jobs";
 import { DEPLOY_ALL_RUNBOOK, DEPLOY_PUSH_RUNBOOK, deployAllBranchIds, deployPushBranchIds } from "@asol/release-core/console";
 import { useAuthHeaders } from "../hooks/use-auth-headers";
@@ -79,7 +80,7 @@ export function DeployRunbookPage() {
           <DeployRunbookCollapsible
             title="الطرفية"
             description="سجل job النظام المحلي؛ يُحدَّث أثناء التشغيل."
-            actions={<TerminalActions onCopy={() => void navigator.clipboard.writeText(jobs.log)} onClear={jobs.clearLog} />}
+            actions={<TerminalActions onCopy={() => void NativeCore.writeClipboard({ string: jobs.log })} onClear={jobs.clearLog} />}
           >
             <TerminalOutput text={jobs.log} />
           </DeployRunbookCollapsible>

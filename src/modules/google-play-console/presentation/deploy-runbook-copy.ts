@@ -34,7 +34,7 @@ export const ALL_BRANCH_HELP: Record<string, string> = {
 
 export const PUSH_BRANCH_HELP: Record<string, string> = {
   "push-main-branch": "يتأكد أن التشغيل من main فقط.",
-  "push-main-credentials": "يتأكد من VERCEL_TOKEN وربط مشروع gova الأساسي.",
+  "push-main-credentials": "يتأكد من توكن Vercel الأساسي وربط مشروع gova.",
   "push-target-accounts": "يتحقق من الحسابات المختارة في Vercel قبل commit/push.",
   "push-scratch-files": "يمنع دفع ملفات مؤقتة أو logs بالخطأ.",
   "push-release-manifest": "يمنع خفض manifest الإصدار في مسار الدفع السريع.",
