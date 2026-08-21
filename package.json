@@ -149,6 +149,7 @@
     "android:push:sync-assets": "npx tsx packages/native-core/scripts/sync-android-push-assets.ts",
     "android:backup:validate": "npx tsx packages/native-core/scripts/validate-android-backup-policy.ts",
     "android:preflight": "npx tsx packages/native-core/scripts/android-build-preflight.ts",
+    "coordinator:email": "npx tsx scripts/send-coordinator-completion-email.ts",
     "android:r8:validate": "npx tsx packages/native-core/scripts/validate-android-r8-policy.ts",
     "android:open:outputs": "npx tsx scripts/open-android-outputs.ts",
     "android:build:debug": "npx tsx scripts/build-android-debug.ts",
