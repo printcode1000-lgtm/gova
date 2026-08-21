@@ -6,6 +6,7 @@ import {
 
 import { BUILD_STATIC_CAP_PREPARE_PATH_HELP } from "./runbook-copy/build-static-cap-prepare-path";
 import { DEBUG_HOST_DEVICE_PATH_HELP } from "./runbook-copy/debug-host-device-path";
+import { HOST_VERIFY_ALL_PATH_HELP } from "./runbook-copy/host-verify-all-path";
 import { OTA_PUBLISH_PATH_HELP } from "./runbook-copy/ota-path";
 import { RELEASE_ANDROID_PATH_HELP } from "./runbook-copy/release-android-path";
 
@@ -14,6 +15,7 @@ const DETAILED_HELP: Record<string, string> = {
   ...RELEASE_ANDROID_PATH_HELP,
   ...BUILD_STATIC_CAP_PREPARE_PATH_HELP,
   ...DEBUG_HOST_DEVICE_PATH_HELP,
+  ...HOST_VERIFY_ALL_PATH_HELP,
   ...OTA_PUBLISH_PATH_HELP,
 };
 

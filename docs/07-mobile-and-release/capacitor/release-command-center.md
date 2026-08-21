@@ -415,7 +415,7 @@ per tab (runnable + reference):
 | `android-build-debug` | 4 | 14 | 84 |
 | `ota-publish` | 4 | 10 | 22 |
 
-Total: **241** selectable command branches across all tabs (**241** unique branch ids).
+Total: **23** phases, **68** sections, **241** selectable command branches across all tabs (**241** unique branch ids).
 
 Phase, section, and branch **labels** in the runbook source are Arabic; branch cards also
 read per-id help from `android-release-runbook-copy.ts` (generated Arabic text for every leaf,
