@@ -414,14 +414,14 @@ per tab (runnable + reference):
 | Tab | Phases | Sections | Branches |
 | :-- | --: | --: | --: |
 | `release-android` | 6 | 19 | 53 |
-| `build-static` | 4 | 11 | 31 |
-| `cap-prepare-android` | 5 | 14 | 51 |
+| `build-static` | 4 | 11 | 108 |
+| `cap-prepare-android` | 5 | 14 | 89 |
 | `android-build-debug` | 4 | 14 | 84 |
 | `ota-publish` | 4 | 10 | 22 |
 
-Total: **23** phases, **68** sections, **241** selectable command branches across all tabs (**241** unique branch ids).
+Total: **23** phases, **68** sections, **356** selectable command branches across all tabs (**356** unique branch ids).
 
 Phase, section, and branch **labels** in the runbook source are Arabic; branch cards also
 read per-id help from `android-release-runbook-copy.ts` (generated Arabic text for every leaf,
-with high-signal overrides in `android-release-runbook-detailed-help.ts`). Shared UI labels
+with high-signal overrides split under `presentation/runbook-copy/`). Shared UI labels
 remain in `src/locales/admin-ar.json` under `releaseConsole.androidPaths.*`.
