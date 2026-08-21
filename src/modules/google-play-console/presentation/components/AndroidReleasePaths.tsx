@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { BuildCommandReadiness, BuildJobRecord } from "@asol/release-core/console";
 import { ANDROID_RELEASE_PATHS } from "./android-release-paths-data";
 import { AndroidReleasePathActions } from "./AndroidReleasePathActions";
@@ -9,6 +10,7 @@ import { AndroidReleasePathCard } from "./AndroidReleasePathCard";
 import { useAndroidStaticPreview } from "./use-android-static-preview";
 
 const DEFAULT_ENABLED_PATHS = new Set<string>(ANDROID_RELEASE_PATHS.map((path) => path.id));
+const DEFAULT_ACTIVE_PATH = ANDROID_RELEASE_PATHS[0]?.id ?? "release-android";
 
 export function AndroidReleasePaths({
   busy,
@@ -26,6 +28,7 @@ export function AndroidReleasePaths({
   readonly t: (key: string, params?: Record<string, string>) => string;
 }) {
   const [enabledPaths, setEnabledPaths] = React.useState(DEFAULT_ENABLED_PATHS);
+  const [activePath, setActivePath] = React.useState(DEFAULT_ACTIVE_PATH);
   const { openPreview, previewState } = useAndroidStaticPreview();
 
   const missingEnvOf = (commandId: string) => {
@@ -53,22 +56,30 @@ export function AndroidReleasePaths({
           <p className="mt-1 text-xs leading-5 text-on-surface-variant">
             {t("releaseConsole.androidPaths.phaseHelp")}
           </p>
-          <div className="mt-2 grid gap-2 lg:grid-cols-2">
+          <Tabs className="mt-2" value={activePath} onValueChange={setActivePath}>
+            <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1">
+              {ANDROID_RELEASE_PATHS.map((path) => (
+                <TabsTrigger key={path.id} value={path.id}>
+                  {t(path.title)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
             {ANDROID_RELEASE_PATHS.map((path) => (
-              <AndroidReleasePathCard
-                key={path.id}
-                busy={busy}
-                cancel={cancel}
-                enabled={enabledPaths.has(path.id)}
-                jobs={jobs}
-                missingEnv={missingEnvOf(path.id)}
-                path={path}
-                setEnabled={(enabled) => setPathEnabled(path.id, enabled)}
-                start={start}
-                t={t}
-              />
+              <TabsContent key={path.id} value={path.id} className="mt-2">
+                <AndroidReleasePathCard
+                  busy={busy}
+                  cancel={cancel}
+                  enabled={enabledPaths.has(path.id)}
+                  jobs={jobs}
+                  missingEnv={missingEnvOf(path.id)}
+                  path={path}
+                  setEnabled={(enabled) => setPathEnabled(path.id, enabled)}
+                  start={start}
+                  t={t}
+                />
+              </TabsContent>
             ))}
-          </div>
+          </Tabs>
         </section>
       </div>
       <AndroidReleasePathActions
