@@ -20,6 +20,8 @@ npm run db:schema:sync
 | System operations | `system-ops.db` | System-ops Turso shard (`hesham101`) | `profilesDataSource` | `SYSTEM_OPS_DATABASE_URL`, `SYSTEM_OPS_DATABASE_AUTH_TOKEN` |
 | Marketplace order shards | `orders-*.db` | Matching Turso shards (separate account `hesham104`) | Marketplace orders DB client | `<SHARD>_DATABASE_URL`, `<SHARD>_DATABASE_AUTH_TOKEN` |
 
+`public/sync_data/sync_sqlite/system-ops.db` is gitignored. It is generated locally by `db:ensure`, holds runtime system logs and data-health records, and must not be committed. Other shard SQLite files remain tracked as schema sources.
+
 Logical relationships use shared IDs such as `uid`, `productId`, and `orderId`. There are no cross-file foreign keys between separate databases.
 
 ## One table, one database

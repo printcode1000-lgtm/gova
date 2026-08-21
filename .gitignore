@@ -122,3 +122,7 @@ tmp/
 
 # Git bundles
 *.bundle
+
+# Runtime system-ops shard: generated locally by db:ensure and holds system logs /
+# data-health records. Schema sync uses Turso; do not commit this SQLite file.
+public/sync_data/sync_sqlite/system-ops.db
