@@ -37,6 +37,10 @@ because everything after it is irreversible. The contract test pins this array *
 just its derived properties: every `phasesFrom` / `phasePrerequisites` check would still pass under
 a reordering that published before preflight.
 
+The CLI presents this order as a nested runbook: phase → section → branch → one command. The phase
+order stays in `@asol/release-core`; the script owns the printable sections and branches because
+they are operator-facing CLI structure rather than release-core invariants.
+
 ### What stays in `scripts/`
 
 `scripts/deploy-all.ts` and `scripts/deploy-push.ts` remain the CLIs: which phase the developer

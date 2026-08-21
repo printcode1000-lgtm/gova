@@ -48,6 +48,45 @@ function writeFileSyncWithTransientRetry(filePath: string, content: string): voi
   throw lastError;
 }
 
+function readPreviousGeneratedAtWhenManifestBodyMatches(
+  manifestPath: string,
+  nextManifest: {
+    generatedAt: string;
+    entryPoints: readonly string[];
+    fileCount: number;
+    files: readonly string[];
+  },
+): string | null {
+  if (!existsSync(manifestPath)) return null;
+
+  try {
+    const previous = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
+      generatedAt?: unknown;
+      entryPoints?: unknown;
+      fileCount?: unknown;
+      files?: unknown;
+    };
+    if (typeof previous.generatedAt !== 'string') return null;
+
+    const previousBody = {
+      entryPoints: previous.entryPoints,
+      fileCount: previous.fileCount,
+      files: previous.files,
+    };
+    const nextBody = {
+      entryPoints: nextManifest.entryPoints,
+      fileCount: nextManifest.fileCount,
+      files: nextManifest.files,
+    };
+
+    return JSON.stringify(previousBody) === JSON.stringify(nextBody)
+      ? previous.generatedAt
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 export function readOutputOverride(): string | null {
   const index = process.argv.indexOf('--out');
   if (index === -1) return null;
@@ -439,8 +478,11 @@ export function syncServiceMirror(options: ServiceMirrorOptions): { fileCount: n
   };
 
   mkdirSync(outputRoot, { recursive: true });
+  const manifestPath = path.join(outputRoot, 'manifest.json');
+  manifest.generatedAt =
+    readPreviousGeneratedAtWhenManifestBodyMatches(manifestPath, manifest) ?? manifest.generatedAt;
   writeFileSyncWithTransientRetry(
-    path.join(outputRoot, 'manifest.json'),
+    manifestPath,
     `${JSON.stringify(manifest, null, 2)}\n`,
   );
 

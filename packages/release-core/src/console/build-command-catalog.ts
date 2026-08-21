@@ -1,4 +1,4 @@
-export type BuildCommandCategory = "web-static" | "ota" | "native-android" | "verification" | "fastlane";
+export type BuildCommandCategory = "web-static" | "ota" | "native-android" | "verification" | "fastlane" | "deployment";
 export type BuildCommandDanger = "safe" | "destructive" | "publishes-live";
 export type BuildParameterName =
   | "notes"
@@ -12,7 +12,18 @@ export type BuildParameterName =
   | "nativeVersionAction"
   | "minimumNativeVersion"
   | "dryRun"
-  | "device";
+  | "device"
+  | "deployAllScenario"
+  | "deployAllBranches"
+  | "deployAllContinueOnError"
+  | "deployAllSkipPreflight"
+  | "deployAllAllowEmpty"
+  | "deployAllAllowManifestDowngrade"
+  | "deployAllAllowScratchFiles"
+  | "deployPushTarget"
+  | "deployPushAllowEmpty"
+  | "deployPushAllowManifestDowngrade"
+  | "deployPushAllowScratchFiles";
 
 export type BuildParameterSchema =
   | { name: BuildParameterName; type: "boolean"; flag: string }
@@ -86,12 +97,45 @@ const dryRun = { name: "dryRun", type: "boolean", flag: "--dry-run" } as const;
  * automatically, and the scripts refuse rather than guess when several are.
  */
 const device = { name: "device", type: "string", flag: "--device", maxLength: 64 } as const;
+const deployAllScenario = {
+  name: "deployAllScenario",
+  type: "enum",
+  flag: "--deploy-all-scenario",
+  values: [
+    "full",
+    "preflight",
+    "publish",
+    "services",
+    "main",
+    "from-notifications",
+    "from-products",
+    "from-orders",
+    "from-profiles",
+    "from-submain",
+    "from-sub2main",
+  ],
+} as const;
+const deployAllBranches = { name: "deployAllBranches", type: "string", flag: "--runbook-branches", maxLength: 2000 } as const;
+const deployAllContinueOnError = { name: "deployAllContinueOnError", type: "boolean", flag: "--continue-on-error" } as const;
+const deployAllSkipPreflight = { name: "deployAllSkipPreflight", type: "boolean", flag: "--skip-preflight" } as const;
+const deployAllAllowEmpty = { name: "deployAllAllowEmpty", type: "boolean", flag: "--allow-empty" } as const;
+const deployAllAllowManifestDowngrade = { name: "deployAllAllowManifestDowngrade", type: "boolean", flag: "--allow-manifest-downgrade" } as const;
+const deployAllAllowScratchFiles = { name: "deployAllAllowScratchFiles", type: "boolean", flag: "--allow-scratch-files" } as const;
+const deployPushTarget = {
+  name: "deployPushTarget",
+  type: "enum",
+  flag: "--vercel-target",
+  values: ["none", "main", "notifications", "products", "orders", "profiles", "submain", "sub2main", "all"],
+} as const;
+const deployPushAllowEmpty = { name: "deployPushAllowEmpty", type: "boolean", flag: "--allow-empty" } as const;
+const deployPushAllowManifestDowngrade = { name: "deployPushAllowManifestDowngrade", type: "boolean", flag: "--allow-manifest-downgrade" } as const;
+const deployPushAllowScratchFiles = { name: "deployPushAllowScratchFiles", type: "boolean", flag: "--allow-scratch-files" } as const;
 const track = { name: "track", type: "enum", flag: "track", values: ["internal", "alpha", "beta", "production"] } as const;
 const rollout = { name: "rollout", type: "number", flag: "rollout", min: 0, max: 1 } as const;
 const releaseNotes = { name: "releaseNotes", type: "localized-text", flag: "release_notes_b64", maxLanguages: 20, maxLength: 500 } as const;
 const optimization = { name: "optimization", type: "enum", flag: "--optimization", values: ["r8", "no-r8"] } as const;
 
-const exclusiveCategories = new Set<BuildCommandCategory>(["ota", "native-android", "fastlane"]);
+const exclusiveCategories = new Set<BuildCommandCategory>(["ota", "native-android", "fastlane", "deployment"]);
 
 function entry(id: string, script: string, category: BuildCommandCategory, danger: BuildCommandDanger, requiredEnv: string[], expectedArtifacts: string[], estimatedDuration: string, confirmationPhrase?: string, parameters: readonly BuildParameterSchema[] = [], hidden = false): BuildCommandCatalogEntry {
   return {
@@ -152,6 +196,21 @@ export const BUILD_COMMAND_CATALOG = [
   // Measured at ~2.5 min warm; the upper bound covers a cold tsc/tsx cache.
   entry("run-test-suite", "verify:all", "verification", "safe", [], [], "3-10 min", undefined, [], true),
   entry("run-device-tests", "android:device:tests", "verification", "safe", [], [], "5-15 min", undefined, [device], true),
+  entry("deploy-all-runbook", "deploy:all", "deployment", "publishes-live", ["VERCEL_TOKEN"], [], "20-90 min", "DEPLOY_ALL", [
+    deployAllScenario,
+    deployAllBranches,
+    deployAllContinueOnError,
+    deployAllSkipPreflight,
+    deployAllAllowEmpty,
+    deployAllAllowManifestDowngrade,
+    deployAllAllowScratchFiles,
+  ], true),
+  entry("deploy-push-runbook", "deploy:push", "deployment", "publishes-live", ["VERCEL_TOKEN"], [], "5-45 min", "DEPLOY_PUSH", [
+    deployPushTarget,
+    deployPushAllowEmpty,
+    deployPushAllowManifestDowngrade,
+    deployPushAllowScratchFiles,
+  ], true),
   entry("cap-sync", "cap:sync", "native-android", "safe", [], ["android/app/src/main/assets/public"], "3-8 min"),
   entry("cap-copy", "cap:copy", "native-android", "safe", [], ["android/app/src/main/assets/public"], "2-5 min"),
   entry("cap-verify-defaults", "cap:verify-defaults", "verification", "safe", [], [], "1-3 min"),
@@ -202,6 +261,19 @@ export function materializeBuildCommandParameters(command: BuildCommandCatalogEn
     } else if (schema.type === "enum") {
       if (typeof value !== "string" || !schema.values.includes(value)) throw new Error(`releaseCommandParameterInvalid:${schema.name}`);
       if (schema.name === "optimization") { if (value === "no-r8") argv.push("--no-r8"); }
+      else if (schema.name === "deployAllScenario") {
+        if (value === "preflight") argv.push("--phase=preflight");
+        if (value === "publish") argv.push("--phase=publish");
+        if (value === "services") argv.push("--phase=services");
+        if (value === "main") argv.push("--phase=main");
+        if (value === "from-notifications") argv.push("--from-phase=notifications");
+        if (value === "from-products") argv.push("--from-phase=products");
+        if (value === "from-orders") argv.push("--from-phase=orders");
+        if (value === "from-profiles") argv.push("--from-phase=profiles");
+        if (value === "from-submain") argv.push("--from-phase=submain");
+        if (value === "from-sub2main") argv.push("--from-phase=sub2main");
+      }
+      else if (schema.name === "deployPushTarget") argv.push(`--vercel-target=${value}`);
       else if (schema.name === "otaSource") {
         if (value === "resume-published") argv.push("--resume");
         if (value === "skip-ota") argv.push("--skip-ota");

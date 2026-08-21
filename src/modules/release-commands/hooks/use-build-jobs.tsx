@@ -111,5 +111,10 @@ export function useBuildJobs(headers?: Record<string, string>) {
     await buildJobApiService.cancel(job.id, headers); await refresh();
   }, [headers, refresh]);
 
-  return { catalog, readiness, versions, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, busy, startError, start, cancel, refresh, unavailable };
+  const clearLog = React.useCallback(() => {
+    setLog("");
+    setLogOffset(0);
+  }, []);
+
+  return { catalog, readiness, versions, jobs, selectedJobId, setSelectedJobId: (jobId: string) => { setSelectedJobId(jobId); setLog(""); setLogOffset(0); }, log, clearLog, busy, startError, start, cancel, refresh, unavailable };
 }

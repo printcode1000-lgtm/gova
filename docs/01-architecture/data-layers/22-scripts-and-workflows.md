@@ -147,16 +147,27 @@ it suitable for onboarding and CI diagnostics.
 
 ## Service deployment checks
 
-`npm run deploy:all` starts with a comprehensive preflight before the first
-Git write. The preflight is ordered as:
+`npm run deploy:all` is organized as a runbook:
+phase → section → branch → one command. The phase order is still
+`preflight → publish → notifications → products → orders → profiles → submain →
+sub2main → main`, but `--list-phases` now prints the nested sections too.
 
-1. production environment readiness and `vercel:accounts:check` for all seven
-   Vercel account tokens;
-2. `lint`, `typecheck`, `architecture:check`, and the full `test` chain;
-3. local database ensure and release schema sync;
-4. both `npm run build` and `npm run build:static`, so server and static
-   release output are both exercised before publishing;
-5. service mirror sync, mirror edge verification, and per-service builds.
+The preflight phase runs before the first Git write. Its sections are:
+
+1. environment and Vercel accounts:
+   `doctor:environment:production`, `vercel:accounts:check`;
+2. source quality and architecture:
+   `lint`, `typecheck`, `architecture:check`, `test`;
+3. database and runtime contracts:
+   `db:ensure`, `db:schema:sync:release`;
+4. main app builds:
+   `build`, then `build:static`;
+5. isolated service deployments:
+   `services:sync`, `services:verify`, then `services:build`.
+
+The publish phase has separate guard, secrets, and Git sections; every service
+phase has exactly one deploy branch; the final main phase has one Vercel
+readiness verification branch.
 
 `npm run services:build` (`scripts/build-all-services.ts`) refreshes the four
 mirrors and then runs `next build` inside every `services/<name>/` folder,
@@ -182,6 +193,12 @@ finds; the build compiles whatever was written. **A specifier the walker cannot
 see is never copied, and the build never notices** — resolution is lazy, the
 remote build succeeds, and the failure lands on the first request as `Cannot
 find module`.
+
+The mirror manifest keeps its previous `generatedAt` when the entry points and
+file list are byte-equivalent to the previous sync. A deploy that only refreshes
+service mirrors therefore must not leave timestamp-only changes in
+`services/*/generated/manifest.json`; a new timestamp means the mirrored
+content changed.
 
 That is not hypothetical. When `@asol/data-core` became an ES module its lazy
 driver loads changed from `require(...)` to a `createRequire` handle named

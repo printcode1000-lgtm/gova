@@ -18,8 +18,10 @@ const {
   resolvePhasesToRun,
   compareVersions,
   SCRATCH_FILE_PATTERNS,
-  PREFLIGHT_GROUPS,
+  PREFLIGHT_SECTIONS,
   PREFLIGHT_STEPS,
+  DEPLOY_ALL_RUNBOOK,
+  formatRunbook,
   RELEASE_MANIFEST,
   formatSuccessLine,
   FAIL_PREFIX,
@@ -80,7 +82,7 @@ for (const required of [
   );
 }
 assert.deepEqual(
-  PREFLIGHT_GROUPS.map((group) => group.label),
+  PREFLIGHT_SECTIONS.map((section) => section.label),
   [
     "environment and Vercel accounts",
     "source quality and architecture",
@@ -88,12 +90,42 @@ assert.deepEqual(
     "main app builds",
     "isolated service deployments",
   ],
-  "Preflight groups must stay ordered from environment readiness to deployment-shaped checks.",
+  "Preflight sections must stay ordered from environment readiness to deployment-shaped checks.",
 );
 assert.ok(
   PREFLIGHT_STEPS.indexOf("build") < PREFLIGHT_STEPS.indexOf("build:static"),
   "Server build must run before static release build so static output remains the final release artifact.",
 );
+
+assert.deepEqual(
+  DEPLOY_ALL_RUNBOOK.map((phase) => phase.id),
+  [...DEPLOY_ALL_PHASE_ORDER],
+  "The visible runbook must cover the exact deploy:all phase order.",
+);
+for (const phase of DEPLOY_ALL_RUNBOOK) {
+  assert.ok(phase.sections.length > 0, `${phase.id} must have at least one section.`);
+  for (const section of phase.sections) {
+    assert.ok(section.branches.length > 0, `${phase.id}/${section.id} must have branches.`);
+    for (const branch of section.branches) {
+      assert.equal(
+        typeof branch.command,
+        "string",
+        `${phase.id}/${section.id}/${branch.id} must expose one command string.`,
+      );
+      assert.ok(
+        branch.command.trim().length > 0,
+        `${phase.id}/${section.id}/${branch.id} command must not be empty.`,
+      );
+      assert.doesNotMatch(
+        branch.command,
+        /\s(?:&&|\|\||;)\s/,
+        `${phase.id}/${section.id}/${branch.id} must stay one command, not a chained script.`,
+      );
+    }
+  }
+}
+assert.match(formatRunbook(), /1\.1\.1 production-doctor: doctor:environment:production/);
+assert.match(formatRunbook(), /2\.3\.5 push-main: git:push main/);
 
 // ── 6. Version comparison drives the manifest-downgrade refusal ────────────
 assert.ok(compareVersions("0.1.0", "0.1.15") < 0, "0.1.0 is older than 0.1.15");

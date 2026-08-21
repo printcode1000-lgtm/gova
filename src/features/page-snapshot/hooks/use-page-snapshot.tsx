@@ -11,6 +11,7 @@ import {
   hasSnapshot,
   pauseSnapshot,
   persistSnapshot,
+  registerPageSnapshotCorePorts,
   restoreSnapshot,
   resumeSnapshot,
   saveSnapshot,
@@ -30,6 +31,8 @@ import {
 import { usePageSnapshotIdentity } from './use-page-snapshot-identity';
 
 export function SnapshotProvider({ children }: { children: React.ReactNode }) {
+  registerPageSnapshotCorePorts();
+
   const identity = usePageSnapshotIdentity();
   const registryRef = React.useRef(new Map<string, SnapshotRegistryEntry>());
   const saveTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -237,6 +240,8 @@ export function SnapshotProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function usePageSnapshot(options: PageSnapshotOptions = {}) {
+  registerPageSnapshotCorePorts();
+
   const context = React.useContext(SnapshotContext);
   const identity = usePageSnapshotIdentity(options.namespace);
   const enabled = options.enabled !== false;

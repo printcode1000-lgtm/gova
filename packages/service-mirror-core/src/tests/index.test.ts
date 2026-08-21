@@ -1,4 +1,4 @@
-import { existsSync, rmSync } from 'fs';
+import { existsSync, readFileSync, rmSync } from 'fs';
 import path from 'path';
 import {
   collectSpecifiers,
@@ -83,7 +83,21 @@ function runTests(): void {
     });
     assert(result.fileCount > 0, 'M5: throwaway output written');
     assert(existsSync(path.join(throwawayDir, 'src')), 'M5: throwaway src folder created');
-    assert(existsSync(path.join(throwawayDir, 'manifest.json')), 'M5: throwaway manifest created');
+    const manifestPath = path.join(throwawayDir, 'manifest.json');
+    assert(existsSync(manifestPath), 'M5: throwaway manifest created');
+    const firstGeneratedAt = JSON.parse(readFileSync(manifestPath, 'utf8')).generatedAt;
+    syncServiceMirror({
+      serviceName: 'notifications',
+      serviceDir: 'services/notifications',
+      entryPoints: NOTIFICATIONS_DECLARATION.mirrorEntryPoints,
+      runtimeAssets: NOTIFICATIONS_DECLARATION.runtimeAssets,
+      outOverride: throwawayDir,
+    });
+    const secondGeneratedAt = JSON.parse(readFileSync(manifestPath, 'utf8')).generatedAt;
+    assert(
+      secondGeneratedAt === firstGeneratedAt,
+      'M5: unchanged mirror sync preserves manifest generatedAt',
+    );
   } finally {
     rmSync(throwawayDir, { recursive: true, force: true });
   }

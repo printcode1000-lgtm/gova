@@ -51,24 +51,42 @@ npm run deploy:push   # publish only — no lint/build/test gates
 
 ### `deploy:all` — full release gate
 
-`scripts/deploy-all.ts` runs a **preflight gate before its first git write**,
-because the push is what makes a release public and nothing after it may be the
-first place a problem is discovered. In order, the preflight:
+`scripts/deploy-all.ts` runs from a visible runbook: phase → section → branch →
+one command. The top-level phase order stays:
 
-1. refuses a non-`main` branch;
-2. checks production environment readiness, the root `.vercel/project.json`,
-   and all seven Vercel account tokens (`gova`, `submain`, `sub2main`,
-   `notifications`, `products`, `orders`, and `profiles`) before any git write;
-3. runs `lint`, `typecheck`, `architecture:check`, the full `test` chain,
-   `db:ensure`, and `db:schema:sync:release` so every SQLite source has pending
-   migrations applied and every Turso database (users, product, advertisements,
-   notifications, and all profile/order shards) is synchronized **before** any
-   release build or git write;
-4. runs both `build` and `build:static`: the server build catches
-   server-component, route-handler, and file-tracing failures, then the static
-   release build leaves the static artifact as the final release output;
-5. runs `services:sync`, `services:verify`, and finally `services:build`, which
-   runs `next build` inside every isolated service folder.
+```text
+preflight → publish → notifications → products → orders → profiles → submain → sub2main → main
+```
+
+`--list-phases` prints both that phase order and the nested runbook. The shape is
+intentional: a failing branch names exactly one command or operation to inspect
+and retry.
+
+The **preflight** phase runs before the first git write, because the push is what
+makes a release public and nothing after it may be the first place a problem is
+discovered. Its sections are:
+
+| Section | Branches |
+| :-- | :-- |
+| environment and Vercel accounts | `doctor:environment:production`, `vercel:accounts:check` |
+| source quality and architecture | `lint`, `typecheck`, `architecture:check`, `test` |
+| database and runtime contracts | `db:ensure`, `db:schema:sync:release` |
+| main app builds | `build`, `build:static` |
+| isolated service deployments | `services:sync`, `services:verify`, `services:build` |
+
+The **publish** phase is also split into sections:
+
+| Section | Branches |
+| :-- | :-- |
+| local guards before staging | main-branch check, deployment credentials, scratch-file refusal, release-manifest downgrade refusal, non-empty deployment refusal |
+| secret archive | `secrets:backup` |
+| Git revision | clear stale index lock, `git add -A`, deployment commit, clean-tree verification, push `main` |
+
+The six isolated Vercel phases each contain one deploy branch:
+`notifications:deploy`, `products:deploy`, `orders:deploy`, `profiles:deploy`,
+`submain:deploy`, and `sub2main:deploy`. The final `main` phase contains one
+verification branch that matches the GitHub-linked deployment by commit SHA and
+waits until it is `READY`.
 
    `services:build` was added after every other check in this list passed, the
    release commit was pushed, `main` went `READY`, and **the isolated service
@@ -221,6 +239,9 @@ after streams close) via `packages/release-core/src/pipeline/run-deployment-npm-
 processes run without `NODE_OPTIONS` / VS Code inspector hooks so nested
 `npx tsx` deploy scripts keep piped output reliable. VS Code launch configs for
 deploy run `npx tsx scripts/deploy-*.ts` with `autoAttachChildProcesses: false`.
+Service mirror manifests preserve their previous `generatedAt` when the mirrored
+entry points and file list did not change, so a successful deploy does not leave
+timestamp-only manifest drift in the working tree.
 
 `--vercel-target=main` and `--vercel-target=none` skip the six isolated deploy
 scripts (four services plus `asol-submain` and `asol-sub2main`). Any other choice still runs the
