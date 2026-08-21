@@ -1826,15 +1826,17 @@ holds ASOL channels reports the *previous* build's configuration no matter what
 the working tree says. Verifying first creation therefore requires a device with
 no ASOL channels:
 
-1. Start from a true fresh install: `npm run android:build:debug` then
-   `npm run android:device:install -- --without-permissions`. The install step **erases this
-   application's data, storage, and notification channels on the connected
-   device**. It is destructive, it is never run automatically, and it must only
+1. Start from a true fresh install: `npm run android:build:debug`, then install
+   the APK with `npm run cap:run:clean:android` or `adb install -r
+   android/app/build/outputs/apk/debugR8/app-debugR8.apk` after uninstalling any
+   existing copy. That step **erases this application's data, storage, and
+   notification channels on the connected device** when you use the clean-run
+   command. It is destructive, it is never run automatically, and it must only
    be used on a device whose owner asked for it. See
    [Installation State And Clean Testing](../07-mobile-and-release/capacitor/installation-state-and-clean-testing.md).
-2. The `--without-permissions` flag deliberately leaves `POST_NOTIFICATIONS`
-   ungranted. Do not use the regular install command for this check because it
-   grants the permissions required by the general connected-device suite.
+2. Leave `POST_NOTIFICATIONS` ungranted before launching the app for this
+   check. The connected-device test suite grants permissions automatically; do
+   not run it before this verification.
 3. Launch the app so `MainActivity.onCreate` runs.
 4. `adb shell dumpsys notification_manager | grep asol_` — the complete channel
    set must already exist, every audible channel showing
@@ -1844,12 +1846,13 @@ no ASOL channels:
    permission must still be ungranted at this point.
 6. Only then grant the permission and verify registration and delivery.
 
-`NotificationChannelStartupInstrumentedTest` performs steps 2–5 as a connected
+`NotificationChannelStartupInstrumentedTest` performs steps 3–5 as a connected
 test (`./gradlew :app:connectedDebugR8AndroidTest`). It reads device state and
-posts nothing; it does not reinstall, so run it immediately after the
-`--without-permissions` install. In the regular device suite the permission is
-already granted, so this one pre-opt-in test is reported as skipped rather than
-producing a false failure; the rest of the suite still runs with the grant.
+posts nothing; it does not reinstall, so run it immediately after the clean
+install with permissions still ungranted. In the regular device suite the
+permission is already granted, so this one pre-opt-in test is reported as
+skipped rather than producing a false failure; the rest of the suite still runs
+with the grant.
 
 ## Remaining Limitations
 

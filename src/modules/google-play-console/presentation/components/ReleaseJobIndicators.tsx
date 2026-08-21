@@ -1,8 +1,7 @@
 "use client";
 
 import {
-  CheckCircle2, FlaskConical, FolderOpen, LoaderCircle, Smartphone,
-  SmartphoneCharging, Square, XCircle,
+  CheckCircle2, FlaskConical, FolderOpen, LoaderCircle, Smartphone, Square, XCircle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -34,7 +33,6 @@ export function runningLabel(
 const SECONDARY_ICONS = {
   tests: FlaskConical,
   device: Smartphone,
-  install: SmartphoneCharging,
   folder: FolderOpen,
 } as const;
 

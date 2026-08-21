@@ -36,11 +36,9 @@ import java.util.List;
  * <p><b>Run it on a clean install.</b> A channel keeps the sound, importance and
  * vibration it was first created with, so a device that still holds channels
  * from an earlier build reports that build's values and the sound assertions
- * fail with an explanation. The project's existing
- * `npm run android:device:install -- --without-permissions` does a full
- * reinstall without granting the notification permission and therefore
- * <b>erases this application's data, storage and notification channels on the
- * connected device</b>. This suite never runs it: invoke it deliberately, on a
+ * fail with an explanation. Use `npm run cap:run:clean:android` or uninstall
+ * and reinstall manually without granting the notification permission first.
+ * This suite never performs that reinstall: invoke it deliberately, on a
  * device whose owner asked for it.
  */
 @RunWith(AndroidJUnit4.class)

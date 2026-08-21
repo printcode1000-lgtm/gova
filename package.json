@@ -151,7 +151,6 @@
     "android:r8:validate": "npx tsx packages/native-core/scripts/validate-android-r8-policy.ts",
     "android:open:outputs": "npx tsx scripts/open-android-outputs.ts",
     "android:build:debug": "npx tsx scripts/build-android-debug.ts",
-    "android:device:install": "npx tsx packages/native-core/scripts/android-device-install.ts",
     "android:device:tests": "npx tsx packages/native-core/scripts/android-device-tests.ts",
     "verify:all": "npx tsx scripts/verify-all.ts",
     "version:validate": "npx tsx packages/ota-core/scripts/validate-app-versions.ts",

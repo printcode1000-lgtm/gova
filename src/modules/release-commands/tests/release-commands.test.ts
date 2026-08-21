@@ -503,19 +503,9 @@ try {
   const debugBuilderSource = await readFile("scripts/build-android-debug.ts", "utf8");
   assert.match(debugBuilderSource, /assembleDebugR8/,
     "the testing build must assemble the R8 variant, not plain debug");
-  // Building must never wipe a phone as a side effect of checking a compile
-  // error, and installing must never start a twenty-minute build.
+  // Building must never touch a connected device.
   assert.doesNotMatch(debugBuilderSource, /wipeProjectPackages|installApk/,
     "the build step must not touch a connected device");
-  const deviceInstaller = BUILD_COMMAND_CATALOG.find((item) => item.id === "android-device-install")!;
-  assert.equal(deviceInstaller.script, "android:device:install");
-  assert.equal(deviceInstaller.danger, "destructive");
-  assert.deepEqual(deviceInstaller.parameters.map((parameter) => parameter.name), ["device"]);
-  const deviceInstallerSource = await readFile("packages/native-core/scripts/android-device-install.ts", "utf8");
-  assert.doesNotMatch(deviceInstallerSource, /assembleDebugR8|cap:prepare:android/,
-    "the install step must build nothing");
-  assert.match(deviceInstallerSource, /assertTestApkExists/,
-    "installing must stop with a clear message when nothing has been built");
 
   // A failed job used to show a red chip carrying a job id and nothing else,
   // stamped with the one stage that had nothing to do with the failure.
@@ -543,13 +533,6 @@ try {
   );
   assert.match(runnerSource, /const stageAtExit = current\.stage/,
     "a failed job must keep the stage it actually stopped at");
-  const deviceInstallSource = await readFile("packages/native-core/scripts/android/device-install.ts", "utf8");
-  assert.match(deviceInstallSource, /pm uninstall/,
-    "the device must be wiped by uninstalling, not by clearing data alone");
-  assert.match(deviceInstallSource, /assertDeviceIsClean/,
-    "the wipe must be verified against the device rather than assumed");
-  assert.doesNotMatch(deviceInstallSource, /adbInherit\(adb, \["install", "-r"/,
-    "reinstalling over a previous copy would mask a failed uninstall");
 
   const archivePath = path.join(temp, "app-debug.apk");
   const fixtureEntries: Record<string, Uint8Array> = {

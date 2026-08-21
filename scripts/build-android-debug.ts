@@ -21,8 +21,8 @@ import { reportStage, reportStep } from "./release-stage";
  * `out/` would produce an APK that disagrees with the source being tested,
  * which is worse than no APK at all.
  *
- * It touches no device. Wiping a device and installing onto it is its own
- * command, so a rebuild never silently erases what is on a phone.
+ * It touches no device. Installing onto a connected device is a separate manual
+ * step outside the release console.
  */
 function main(): void {
   const env = withoutVsCodeDebuggerEnv(process.env);
@@ -49,7 +49,7 @@ function main(): void {
 
   reportStage("finalizing-results");
   console.log(`\nTest package ready: ${describeTestApk()} — R8 optimized, debug signed`);
-  console.log("Use the device install step to wipe a connected device and put this package on it.");
+  console.log("Install the APK on a connected device before running the connected-device tests.");
 }
 
 try {

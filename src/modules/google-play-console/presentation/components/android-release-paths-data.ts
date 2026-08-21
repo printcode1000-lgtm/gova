@@ -6,7 +6,7 @@ export const PREVIEW_PROBE_TIMEOUT_MS = 2500;
 export type AndroidReleaseSecondaryAction = {
   readonly id: string;
   readonly label: string;
-  readonly icon: "folder" | "install" | "tests" | "device";
+  readonly icon: "folder" | "tests" | "device";
 };
 
 export type AndroidReleasePath = {
@@ -46,11 +46,6 @@ export const ANDROID_RELEASE_PATHS = [
     description: "releaseConsole.androidPaths.debugApk.description",
     action: "releaseConsole.androidPaths.debugApk.action",
     secondaries: [
-      {
-        id: "android-device-install",
-        label: "releaseConsole.androidPaths.debugApk.install",
-        icon: "install",
-      },
       { id: "run-test-suite", label: "releaseConsole.androidPaths.debugApk.tests", icon: "tests" },
       {
         id: "run-device-tests",

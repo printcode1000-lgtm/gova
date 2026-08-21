@@ -267,7 +267,7 @@ Two extra R8 rule files, both scoped to `debugR8` and touching the release not a
   where static analysis cannot see them — minifying them away would have produced a green
   run that executed nothing.
 
-The card has four independent buttons, and the separation is deliberate:
+The card has three independent buttons, and the separation is deliberate:
 
 | Button | Command | What it does |
 | :-- | :-- | :-- |
@@ -275,20 +275,17 @@ The card has four independent buttons, and the separation is deliberate:
 
 The same command is available from VS Code as **Android Debug R8 - بناء حزمة الاختبار** in
 `.vscode/launch.json` (group **ASOL Capacitor**).
-| Wipe the device and install | `android:device:install` | Detect → full verified wipe → install → grant permissions. **Builds nothing** |
 | Host tests | `verify:all` | Repository checks on this machine |
 | Connected-device tests | `android:device:tests` | `androidTest` on the phone |
 
-Building is slow and safe; installing is fast and irreversible. Merging them would mean
-that rebuilding just to check a compile error wipes your phone as a side effect, and that
-wanting a reinstall costs a full build. And because installing builds nothing, it stops
-with a clear message when no built package exists instead of starting a build nobody asked
-for.
+Building is slow and safe; the test buttons are fast and read-only on the repository or
+device. Merging them would mean rebuilding just to check a compile error also runs every
+suite, and that wanting a quick host check costs a full native build.
 
-Wipe details and its guarantees are in
+For a clean install on a physical device, use
 [installation-state-and-clean-testing.md](./installation-state-and-clean-testing.md).
 
-Granting `POST_NOTIFICATIONS` automatically after install is deliberate: without it the
+Granting `POST_NOTIFICATIONS` before connected-device tests is deliberate: without it the
 notification tests skip themselves instead of failing, and a suite that skips its way to
 green is worse than one that fails.
 

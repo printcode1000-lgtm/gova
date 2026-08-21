@@ -179,17 +179,11 @@ export const BUILD_COMMAND_CATALOG = [
   // exclusive release lock that the native-android commands hold.
   entry("android-open-outputs", "android:open:outputs", "verification", "safe", [], [], "<1 min", undefined, [], true),
   entry("cap-prepare-android", "cap:prepare:android", "native-android", "destructive", [], ["out/asol-web-manifest.json", "android/app/src/main/assets/public"], "12-25 min", undefined, [], true),
-  // Testing path: rebuilds the web bundle, syncs it, assembles the R8-optimized
-  // debug-signed APK, then wipes every project package off the connected device
-  // and installs it. No keystore, no R2 write — but it rewrites the native web
+  // Testing path: rebuilds the web bundle, syncs it, and assembles the R8-optimized
+  // debug-signed APK. No keystore, no R2 write — but it rewrites the native web
   // assets, so it takes the same exclusive lock as the other native-android
-  // commands. It erases that app's data on the device by design: an install
-  // over yesterday's state is not a test of today's build.
+  // commands. It touches no connected device.
   entry("android-build-debug", "android:build:debug", "native-android", "destructive", [], ["android/app/build/outputs/apk/debugR8/app-debugR8.apk"], "15-35 min", undefined, [], true),
-  // Installing is its own command because it is the irreversible half. It
-  // builds nothing, so a rebuild never wipes a phone as a side effect, and a
-  // reinstall never waits on a twenty-minute build.
-  entry("android-device-install", "android:device:install", "native-android", "destructive", [], [], "1-3 min", undefined, [device], true),
   // Verification category: neither suite takes the release lock. The host suite
   // reads the working tree; the device suite drives an attached device. They
   // answer different questions and are deliberately separate buttons.
