@@ -75,7 +75,7 @@ No database plugin is installed. `@capacitor/filesystem` is used by the OTA plat
 | `npm run cap:build`                 | Automatic version + R2 delta publish + full verification + native version pinning + `cap sync` |
 | `npm run cap:build:local`           | Build and synchronize local device assets without publishing                                   |
 | `npm run cap:verify-defaults`       | Verify the fresh-install defaults and reject persisted/private data files                      |
-| `npm run cap:run:clean:android`     | Build locally, clear the Android test app data, and run a fresh installation                   |
+| `npm run cap:run:clean:android`     | Run `android:preflight`, build locally, clear the Android test app data, and run a fresh installation (Gradle via `cap run`) |
 | `npm run cap:run:clean:ios`         | Build locally, uninstall the iOS simulator app, and run a fresh installation                   |
 | `npm run android:backup:validate`   | Verify that cloud backup, auto-restore, and device transfer remain disabled                    |
 | `npm run android:preflight`         | Verify JDK 21, Android SDK Platform 36, Build-Tools, and the Gradle wrapper before any APK/AAB build |

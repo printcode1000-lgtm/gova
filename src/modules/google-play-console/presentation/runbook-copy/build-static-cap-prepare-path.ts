@@ -144,4 +144,24 @@ export const BUILD_STATIC_CAP_PREPARE_PATH_HELP: Record<string, string> = {
     "يراجع إعدادات Capacitor بعد مزامنة الأصول.",
   "prepare-open-outputs":
     "يفتح مجلد مخرجات Gradle إن وُجد.",
+  "static-stage-branding":
+    "مرجع: npm run branding:generate — أصول العلامة قبل export في build:static.",
+  "static-stage-maplibre":
+    "مرجع: npm run maplibre:sync — worker الخريطة قبل export في build:static.",
+  "static-stage-catalog-validate":
+    "مرجع: npm run catalog:validate — فحص الكتالوج قبل export في build:static.",
+  "static-stage-services-sync":
+    "مرجع: npm run services:sync — مرايا الخدمات قبل export في build:static.",
+  "static-gate-pipeline-native-core":
+    "مرجع: npm run test:native-core — بوابة native-core داخل build:static (خط أنابيب gates).",
+  "static-gate-pipeline-ota-core":
+    "مرجع: npm run test:ota-core — عقود OTA قبل export (خط أنابيب gates).",
+  "static-gate-pipeline-release-core":
+    "مرجع: npm run test:release-core — بوابة release-core داخل build:static (خط أنابيب gates).",
+  "static-gate-pipeline-release-commands":
+    "مرجع: npm run test:release-commands — عقود الكتالوج والشجرة داخل build:static (خط أنابيب gates).",
+  "static-gate-pipeline-architecture":
+    "مرجع: npm run architecture:check — حدود الوحدات داخل build:static (خط أنابيب gates).",
+  "static-gate-pipeline-ios-push":
+    "مرجع: npm run ios:push:validate — سياسة iOS push داخل build:static (خط أنابيب gates).",
 };

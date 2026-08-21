@@ -198,6 +198,27 @@ assert.ok(
   packageJson.scripts["android:preflight"],
   "android:preflight npm script must exist for standalone toolchain checks",
 );
+const fastlaneRunnerSource = await readFile("scripts/fastlane-runner.js", "utf8");
+assert.match(
+  fastlaneRunnerSource,
+  /android-build-preflight\.ts/,
+  "fastlane-runner must run Android preflight before non-doctor android lanes",
+);
+const capRunCleanSource = await readFile("scripts/cap-run-clean.ts", "utf8");
+assert.match(
+  capRunCleanSource,
+  /runAndroidBuildPreflight/,
+  "cap:run:clean:android must run Android preflight before cap run invokes Gradle",
+);
+const deviceTestsSource = await readFile(
+  "packages/native-core/scripts/android-device-tests.ts",
+  "utf8",
+);
+assert.match(
+  deviceTestsSource,
+  /runAndroidBuildPreflight/,
+  "android:device:tests must run Android preflight before connected Gradle tests",
+);
 // One merged full-release path. It publishes nothing, so it needs no OTA
 // credentials and no confirmation phrase: the shell it builds carries its own
 // complete bundle, and OTA publication is `ota-publish` on its own button.

@@ -1,5 +1,7 @@
 import { execFileSync } from "node:child_process";
 
+import { runAndroidBuildPreflight } from "@asol/native-core/scripts/android-build-preflight";
+
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 
 const APP_ID = "hgh.asol.app";
@@ -12,8 +14,12 @@ const env = withoutVsCodeDebuggerEnv(process.env);
 const npmExecutable = process.platform === "win32" ? "npm.cmd" : "npm";
 const npxExecutable = process.platform === "win32" ? "npx.cmd" : "npx";
 
-function runFile(executable: string, args: string[]): void {
-  execFileSync(executable, args, { stdio: "inherit", env });
+function runFile(
+  executable: string,
+  args: string[],
+  runEnv: NodeJS.ProcessEnv = env,
+): void {
+  execFileSync(executable, args, { stdio: "inherit", env: runEnv });
 }
 
 function ignoreMissingInstallation(action: () => void): void {
@@ -27,12 +33,13 @@ function ignoreMissingInstallation(action: () => void): void {
 }
 
 function runAndroid(): void {
-  runFile(npmExecutable, ["run", "cap:build:local"]);
+  const { env: preflightEnv } = runAndroidBuildPreflight({ env });
+  runFile(npmExecutable, ["run", "cap:build:local"], preflightEnv);
   ignoreMissingInstallation(() => {
     execFileSync(
       "adb",
       [...(target ? ["-s", target] : []), "shell", "pm", "clear", APP_ID],
-      { stdio: "inherit", env },
+      { stdio: "inherit", env: preflightEnv },
     );
   });
   runFile(npxExecutable, [
@@ -40,7 +47,7 @@ function runAndroid(): void {
     "run",
     "android",
     ...(target ? ["--target", target] : []),
-  ]);
+  ], preflightEnv);
 }
 
 function runIos(): void {

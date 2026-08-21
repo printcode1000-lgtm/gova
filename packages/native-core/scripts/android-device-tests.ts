@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { withoutVsCodeDebuggerEnv } from "../../../scripts/child-process-env";
 import { runGradle } from "../../../scripts/android/gradle";
+import { runAndroidBuildPreflight } from "./android-build-preflight";
 import { readDeviceArgument } from "../../../scripts/android/adb";
 import { detectDevice, grantRuntimePermissions } from "./android/device-install";
 import { reportStage, reportStep } from "../../../scripts/release-stage";
@@ -69,11 +70,15 @@ function collectXmlResults(directory: string): string[] {
 
 function main(): void {
   const env = withoutVsCodeDebuggerEnv(process.env);
+  const { env: preflightEnv } = runAndroidBuildPreflight({ env });
   const requestedSerial = readDeviceArgument(process.argv.slice(2));
 
   const { adb, device } = detectDevice(requestedSerial);
   // Gradle picks the device from the ambient serial when several are attached.
-  const gradleEnv: NodeJS.ProcessEnv = { ...env, ANDROID_SERIAL: device.serial };
+  const gradleEnv: NodeJS.ProcessEnv = {
+    ...preflightEnv,
+    ANDROID_SERIAL: device.serial,
+  };
 
   // Re-granted before every run: the notification checks skip themselves
   // without the permission, and a suite that skips its way to green is worse
