@@ -138,10 +138,10 @@ for (const branchId of androidBranchIds) {
 }
 const runbookStats = androidRunbookStatsByTab();
 const minimumBranchesByTab: Record<string, number> = {
-  "release-android": 35,
-  "build-static": 50,
-  "cap-prepare-android": 30,
-  "android-build-debug": 55,
+  "release-android": 45,
+  "build-static": 100,
+  "cap-prepare-android": 80,
+  "android-build-debug": 75,
   "ota-publish": 18,
 };
 for (const [pathId, minimum] of Object.entries(minimumBranchesByTab)) {
@@ -166,9 +166,31 @@ for (const key of [
   "releaseConsole.androidPaths.terminalTitle",
   "releaseConsole.androidPaths.treeTitle",
   "releaseConsole.androidPaths.phaseCheckboxHelp",
+  "releaseConsole.androidPaths.sectionCheckboxHelp",
+  "releaseConsole.androidPaths.branchCheckboxHelp",
 ]) {
   assert.ok(adminAr[key]?.trim(), `missing Arabic android paths UI string: ${key}`);
 }
+const androidRunbookTreeUi = await readFile(
+  "src/modules/google-play-console/presentation/components/AndroidReleaseRunbookTree.tsx",
+  "utf8",
+);
+assert.match(androidRunbookTreeUi, /selectAll|selectNone/,
+  "Android release runbook tree must expose bulk selection controls");
+for (const uiPath of [
+  "src/modules/google-play-console/presentation/components/AndroidReleaseRunbookBranchCard.tsx",
+  "src/modules/google-play-console/presentation/components/AndroidReleaseRunbookCascadeCheckbox.tsx",
+]) {
+  const uiSource = await readFile(uiPath, "utf8");
+  assert.match(uiSource, /type="checkbox"/, `${uiPath} must render checkboxes`);
+}
+const phaseBlocksSource = await readFile(
+  "src/modules/google-play-console/presentation/components/AndroidReleaseRunbookPhaseBlocks.tsx",
+  "utf8",
+);
+assert.match(phaseBlocksSource, /CascadeCheckbox/, "phase and section blocks must cascade parent checkboxes");
+assert.match(phaseBlocksSource, /CommandBranchCard/, "sections must render command branch cards with checkboxes");
+assert.equal(androidBranchIds.length, 356, "android release runbook must expose 356 selectable branches");
 assert.equal(BUILD_COMMAND_CATALOG.filter((item) => item.script === "ota:publish").length, 1);
 const gradleRunnerSource = await readFile("scripts/android/gradle.ts", "utf8");
 assert.match(
