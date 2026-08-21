@@ -1,6 +1,8 @@
 import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
 
+import { runAndroidBuildPreflight } from "@asol/native-core/scripts/android-build-preflight";
+
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { runGradle } from "./android/gradle";
 import { describeTestApk, TEST_APK_PATH } from "./android/test-apk";
@@ -27,15 +29,19 @@ import { reportStage, reportStep } from "./release-stage";
 function main(): void {
   const env = withoutVsCodeDebuggerEnv(process.env);
 
+  reportStage("preflight");
+  reportStep("validating JDK, Android SDK, and Gradle wrapper");
+  const { env: gradleEnv } = runAndroidBuildPreflight({ env });
+
   reportStage("building-web");
   reportStep("building and syncing the web bundle");
   console.log("Building the web bundle and syncing it into the Android project...");
-  execSync("npm run cap:prepare:android", { stdio: "inherit", env });
+  execSync("npm run cap:prepare:android", { stdio: "inherit", env: gradleEnv });
 
   reportStage("building-android");
   reportStep("assembling the R8-optimized debug APK");
   console.log("\nAssembling the R8-optimized, debug-signed APK...");
-  runGradle([":app:assembleDebugR8"], env);
+  runGradle([":app:assembleDebugR8"], gradleEnv);
 
   if (!existsSync(TEST_APK_PATH)) {
     throw new Error(`Gradle reported success but no APK was produced at ${TEST_APK_PATH}`);
@@ -45,7 +51,7 @@ function main(): void {
   // compilation, and building it now means the device-test button does not
   // have to wait for a Gradle run before it can start.
   reportStep("assembling the instrumented test package");
-  runGradle([":app:assembleDebugR8AndroidTest"], env);
+  runGradle([":app:assembleDebugR8AndroidTest"], gradleEnv);
 
   reportStage("finalizing-results");
   console.log(`\nTest package ready: ${describeTestApk()} — R8 optimized, debug signed`);

@@ -195,6 +195,15 @@ function collectPreflightFailures(options: {
   const wrapper = gradleWrapperPath(androidDirectory);
   const missing: string[] = [];
 
+  if (!existsSync(androidDirectory)) {
+    missing.push(`Android project directory at ${androidDirectory}`);
+  } else {
+    const appBuildGradle = path.join(androidDirectory, "app", "build.gradle");
+    if (!existsSync(appBuildGradle)) {
+      missing.push(`Android app module at ${appBuildGradle}`);
+    }
+  }
+
   if (!resolvedJavaHome) {
     const configured = env.JAVA_HOME?.trim();
     if (configured && !existsSync(configured)) {
@@ -321,14 +330,23 @@ export function withAndroidBuildPreflightEnv(env: NodeJS.ProcessEnv = process.en
   return runAndroidBuildPreflight({ env }).env;
 }
 
+export function main(): void {
+  const result = runAndroidBuildPreflight();
+  console.log(
+    [
+      "Android build preflight passed.",
+      `JDK: ${result.javaHome}`,
+      `Android SDK: ${result.androidSdkRoot}`,
+      `Gradle wrapper: ${result.gradleWrapper}`,
+    ].join("\n"),
+  );
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   try {
-    const result = runAndroidBuildPreflight();
-    console.log(
-      `Android build preflight passed: JAVA_HOME=${result.javaHome}; ANDROID_SDK_ROOT=${result.androidSdkRoot}`,
-    );
+    main();
   } catch (error) {
     console.error(error instanceof Error ? error.message : error);
-    process.exitCode = 1;
+    process.exit(1);
   }
 }

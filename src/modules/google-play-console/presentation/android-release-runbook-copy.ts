@@ -1,4 +1,13 @@
-export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
+import {
+  allAndroidReleaseBranchIds,
+  findAndroidReleaseBranch,
+  type AndroidReleaseRunbookBranch,
+} from "@asol/release-core/console";
+
+/** Arabic help overrides for high-signal runnable commands and sensitive paths. */
+const DETAILED_HELP: Record<string, string> = {
+  "release-preflight-android-preflight":
+    "يفحص JDK 21 وAndroid SDK 36 وgradlew قبل release:android — تشغيل مستقل لـ android:preflight.",
   "release-preflight-doctor":
     "يفحص JAVA_HOME وAndroid SDK ومفاتيح التوقيع وحساب Google Play قبل أي بناء native.",
   "release-preflight-open-outputs":
@@ -25,6 +34,8 @@ export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
     "مرجع: release:android --dry-run --native-version=next-patch — خطة فقط بدون توقيع.",
   "release-stage-cap-build":
     "مرجع داخلي: cap-build --no-ota يبني out/ ويختم الإصدارات ويزامن Capacitor قبل التوقيع.",
+  "release-stage-preflight":
+    "مرجع: android-build-preflight يعمل في بداية release:android قبل cap-build — JDK وSDK وgradlew.",
   "release-stage-signed-gradle":
     "مرجع داخلي: build-android-signed يشغّل bundleRelease وassembleRelease ثم يتحقق من التوقيع.",
   "release-stage-web-bundle-flag":
@@ -47,6 +58,20 @@ export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
     "build:static ثم cap:sync — web + Capacitor فقط بدون Gradle signing.",
   "release-signed-build":
     "مرجع: android:build:signed — bundleRelease + assembleRelease + تحقق التوقيع.",
+  "release-signed-stage-require-keystore":
+    "مرجع: build-android-signed يرفض عند غياب ASOL_ANDROID_KEYSTORE_* — لا مخرجات غير موقّعة.",
+  "release-signed-stage-require-web-bundle":
+    "مرجع: ASOL_WEB_BUNDLE_READY=1 وmanifest في out/ وassets/public مطلوبان قبل Gradle.",
+  "release-signed-stage-preflight":
+    "مرجع: android-build-preflight قبل bundleRelease/assembleRelease.",
+  "release-signed-stage-bundle-release":
+    "مرجع: :app:bundleRelease — حزمة AAB لرفع Google Play.",
+  "release-signed-stage-assemble-release":
+    "مرجع: :app:assembleRelease — APK release للت sideload.",
+  "release-signed-stage-jarsigner":
+    "مرجع: jarsigner -verify على app-release.aab بعد التجميع.",
+  "release-signed-stage-apksigner":
+    "مرجع: apksigner verify --verbose --print-certs على app-release.apk.",
   "release-gradle-bundle-release":
     "مرجع: :app:bundleRelease — حزمة AAB لـ Google Play.",
   "release-gradle-assemble-release":
@@ -129,6 +154,10 @@ export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
     "مرجع: test:release-core بعد export — عقود release-core.",
   "static-post-release-commands":
     "مرجع: test:release-commands بعد export — عقود الكتالوج والشجرة.",
+  "prepare-preflight-android-preflight":
+    "يفحص JDK 21 وAndroid SDK قبل export أو cap sync — تشغيل مستقل لـ android:preflight.",
+  "prepare-preflight-doctor":
+    "Fastlane doctor — JDK وSDK ومفاتيح التوقيع عند توفر Ruby.",
   "prepare-preflight-backup":
     "فحص سياسة Android backup قبل أي cap sync.",
   "prepare-preflight-r8":
@@ -143,18 +172,72 @@ export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
     "export تشخيصي؛ لا يُشحن إلى shell.",
   "prepare-build-static-local":
     "مرجع: build:static:local داخل مسار التحضير.",
+  "prepare-gate-native-core":
+    "مرجع: test:native-core — بوابة native-core داخل build:static قبل كتابة out/.",
+  "prepare-gate-ota-core":
+    "مرجع: test:ota-core — عقود OTA قبل export.",
+  "prepare-gate-release-core":
+    "مرجع: test:release-core — بوابة release-core داخل build:static.",
+  "prepare-gate-release-commands":
+    "مرجع: test:release-commands — عقود الكتالوج والشجرة داخل build:static.",
+  "prepare-gate-architecture":
+    "مرجع: architecture:check — حدود الوحدات داخل build:static.",
+  "prepare-gate-ios-push":
+    "مرجع: ios:push:validate — سياسة push قبل export.",
+  "prepare-static-artifact-manifest":
+    "مرجع: out/asol-web-manifest.json — قائمة الملفات الموقّعة لاحقاً في OTA.",
+  "prepare-static-artifact-index":
+    "مرجع: out/index.html — مطلوب لـ cap:verify-defaults.",
+  "prepare-static-stage-build-out":
+    "مرجع: build-out.ts — يكتب out/ وmanifest في نهاية build:static.",
+  "prepare-stage-build-static":
+    "مرجع: النصف الأول من cap:prepare:android — npm run build:static.",
+  "prepare-stage-cap-sync":
+    "مرجع: النصف الثاني من cap:prepare:android — npm run cap:sync.",
   "cap-prepare-android":
     "يبني web ثم يزامنه إلى android/app/src/main/assets/public عبر Capacitor.",
   "prepare-sync-assert-out":
     "مرجع: build-out.ts --assert-only — يتطلب out/ موجوداً قبل cap sync.",
   "prepare-sync-push-assets":
     "مرجع: android:push:sync-assets داخل cap:sync.",
+  "prepare-sync-backup-pre":
+    "مرجع: android:backup:validate قبل npx cap sync.",
+  "prepare-sync-r8-pre":
+    "مرجع: android:r8:validate قبل npx cap sync.",
+  "prepare-sync-ios-push-pre":
+    "مرجع: ios:push:validate قبل npx cap sync.",
+  "prepare-sync-npx-cap-sync":
+    "مرجع: npx cap sync — ينسخ out/ إلى android/app/src/main/assets/public.",
+  "prepare-sync-ios-spm":
+    "مرجع: ios:spm:normalize بعد cap sync.",
+  "prepare-sync-backup-post":
+    "مرجع: android:backup:validate بعد npx cap sync.",
+  "prepare-sync-r8-post":
+    "مرجع: android:r8:validate بعد npx cap sync.",
+  "prepare-sync-ios-push-post":
+    "مرجع: ios:push:validate بعد npx cap sync.",
   "prepare-sync-cap":
     "assert out/ + فحوص السياسات + npx cap sync + تطبيع iOS SPM.",
   "prepare-sync-copy":
     "cap copy فقط — يعيد استخدام out/ الموجود دون cap sync كامل.",
-  "prepare-sync-ios-spm":
-    "مرجع: ios:spm:normalize بعد cap sync.",
+  "prepare-copy-assert-out":
+    "مرجع: build-out.ts --assert-only قبل cap copy.",
+  "prepare-copy-push-assets":
+    "مرجع: android:push:sync-assets قبل cap copy.",
+  "prepare-copy-backup-pre":
+    "مرجع: android:backup:validate قبل npx cap copy.",
+  "prepare-copy-r8-pre":
+    "مرجع: android:r8:validate قبل npx cap copy.",
+  "prepare-copy-ios-push-pre":
+    "مرجع: ios:push:validate قبل npx cap copy.",
+  "prepare-copy-npx-cap-copy":
+    "مرجع: npx cap copy — نسخ assets دون sync كامل للم plugins.",
+  "prepare-copy-backup-post":
+    "مرجع: android:backup:validate بعد npx cap copy.",
+  "prepare-copy-r8-post":
+    "مرجع: android:r8:validate بعد npx cap copy.",
+  "prepare-copy-ios-push-post":
+    "مرجع: ios:push:validate بعد npx cap copy.",
   "prepare-cap-build-publish-new":
     "cap:build — ينشر OTA جديداً على R2 ثم يزامن المشاريع الأصلية.",
   "prepare-cap-build-resume":
@@ -173,6 +256,8 @@ export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
     "يراجع إعدادات Capacitor بعد مزامنة الأصول.",
   "prepare-open-outputs":
     "يفتح مجلد مخرجات Gradle إن وُجد.",
+  "debug-preflight-android-preflight":
+    "android:preflight — JDK 21 وAndroid SDK قبل assembleDebugR8.",
   "debug-preflight-doctor":
     "يفحص JAVA_HOME وAndroid SDK قبل assembleDebugR8.",
   "debug-preflight-backup":
@@ -185,10 +270,16 @@ export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
     "مسار اختبار: web جديد → sync → assembleDebugR8 + حزمة androidTest. لا keystore ولا R2.",
   "debug-prepare-android":
     "web + cap sync فقط بدون Gradle — مفيد قبل تشغيل اختبارات الجهاز.",
+  "debug-stage-preflight":
+    "مرجع: android-build-preflight في بداية android:build:debug.",
+  "debug-stage-cap-prepare":
+    "مرجع: npm run cap:prepare:android — export + sync قبل Gradle.",
   "debug-stage-assemble-apk":
     "مرجع: :app:assembleDebugR8 — APK محسّن بـ R8 وموقّع debug وdebuggable.",
   "debug-stage-assemble-test":
     "مرجع: :app:assembleDebugR8AndroidTest — حزمة الاختبارات المُجهَّزة.",
+  "debug-stage-verify-apk":
+    "مرجع: التحقق من وجود app-debugR8.apk بعد assembleDebugR8.",
   "debug-artifact-apk":
     "مرجع: android/app/build/outputs/apk/debugR8/app-debugR8.apk",
   "debug-open-outputs":
@@ -237,12 +328,18 @@ export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
     "اختبارات instrumentation على جهاز متصل؛ يختار الجهاز تلقائياً إذا كان واحداً فقط.",
   "run-device-tests-serial":
     "نفس android:device:tests لكن على serial محدد عند وجود أكثر من جهاز.",
-  "device-stage-permissions":
-    "مرجع: منح POST_NOTIFICATIONS قبل اختبارات الإشعارات.",
+  "device-stage-detect-device":
+    "مرجع: detectDevice — يختار جهاز adb واحد أو يرفض عند غياب/تعدد الأجهزة.",
+  "device-stage-grant-permissions":
+    "مرجع: grantRuntimePermissions — منح POST_NOTIFICATIONS قبل اختبارات الإشعارات.",
+  "device-stage-set-serial":
+    "مرجع: ANDROID_SERIAL يُمرَّر إلى Gradle لاختبار جهاز محدد.",
   "device-stage-connected-test":
     "مرجع: connectedDebugR8AndroidTest — يرفض صفر اختبارات كنجاح.",
-  "device-stage-results":
-    "مرجع: androidTest-results/connected — XML roster بعد الاختبار.",
+  "device-stage-zero-tests-refusal":
+    "مرجع: يرفض التشغيل إذا لم يُنفَّذ أي testcase — suite فارغ ليس نجاحاً.",
+  "device-stage-collect-xml":
+    "مرجع: androidTest-results/connected — roster XML بعد الاختبار.",
   "ota-preflight-status":
     "يقرأ manifest واعتماد الإصدار الحالي من R2 بدون نشر.",
   "ota-preflight-check":
@@ -288,3 +385,27 @@ export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = {
   "ota-post-release-commands":
     "test:release-commands — عقود الكتالوج والشجرة بعد النشر.",
 };
+
+function defaultHelp(branch: AndroidReleaseRunbookBranch): string {
+  if (branch.patternOnly) {
+    return (
+      `${branch.label} — مرجع فقط داخل الشجرة؛ لا يُشغَّل مباشرة من البطاقة. ` +
+      `الصيغة المعروضة: ${branch.command}`
+    );
+  }
+  if (branch.dangerous) {
+    return (
+      `${branch.label} — أمر حساس (${branch.commandId}). ` +
+      "قد يغيّر ملفات الإصدار أو ينشر على R2/Play؛ راجع نافذة التأكيد قبل التشغيل."
+    );
+  }
+  return `${branch.label} — يشغّل ${branch.command} عبر كتالوج release-core (${branch.commandId}).`;
+}
+
+export const ANDROID_RELEASE_BRANCH_HELP: Record<string, string> = Object.fromEntries(
+  allAndroidReleaseBranchIds().map((id) => {
+    const item = findAndroidReleaseBranch(id);
+    if (!item) return [id, ""];
+    return [id, (DETAILED_HELP[id] ?? defaultHelp(item)).trim()];
+  }),
+);

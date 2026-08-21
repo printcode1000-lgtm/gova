@@ -44,6 +44,17 @@ assert.match(failureMessage, /فشل فحص ما قبل بناء Android\./);
 assert.match(failureMessage, /Searched JDK locations/);
 assert.match(failureMessage, /npm run doctor:environment -- --scenario=android/);
 
+const missingAndroidRoot = tempRoot();
+assert.throws(
+  () => runAndroidBuildPreflight({ root: missingAndroidRoot, env: process.env }),
+  (error: unknown) => {
+    assert.ok(error instanceof Error);
+    assert.match(error.message, /Android project directory/);
+    return true;
+  },
+);
+rmSync(missingAndroidRoot, { recursive: true, force: true });
+
 const androidRoot = tempRoot();
 mkdirSync(path.join(androidRoot, "android"), { recursive: true });
 writeFileSync(path.join(androidRoot, "android", "gradlew.bat"), "@echo off\r\n");

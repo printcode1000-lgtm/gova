@@ -182,6 +182,22 @@ assert.match(
   /runAndroidBuildPreflight/,
   "Signed Android package builds must run Android preflight before gradlew",
 );
+const debugBuildSource = await readFile("scripts/build-android-debug.ts", "utf8");
+assert.match(
+  debugBuildSource,
+  /runAndroidBuildPreflight/,
+  "Debug Android package builds must run Android preflight before web sync and gradlew",
+);
+const releaseAndroidSource = await readFile("scripts/release-android.ts", "utf8");
+assert.match(
+  releaseAndroidSource,
+  /runAndroidBuildPreflight/,
+  "release:android must run Android preflight before cap-build and signing",
+);
+assert.ok(
+  packageJson.scripts["android:preflight"],
+  "android:preflight npm script must exist for standalone toolchain checks",
+);
 // One merged full-release path. It publishes nothing, so it needs no OTA
 // credentials and no confirmation phrase: the shell it builds carries its own
 // complete bundle, and OTA publication is `ota-publish` on its own button.

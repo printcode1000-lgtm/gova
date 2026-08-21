@@ -10,6 +10,11 @@ import {
   phasesFrom,
 } from '../index';
 import { BUILD_COMMAND_CATALOG, assertBuildJobTransition } from '../console';
+import {
+  allAndroidReleaseBranchIds,
+  androidRunbookStatsByTab,
+  ANDROID_RELEASE_RUNBOOKS,
+} from '../console/android-release-runbook';
 
 const ROOT = process.cwd();
 
@@ -52,6 +57,26 @@ assert.match(
   /releaseConsolePortsNotConfigured/,
   'The release runner must fail closed before the application seam is registered.',
 );
+
+const runbookStats = androidRunbookStatsByTab();
+for (const pathId of Object.keys(ANDROID_RELEASE_RUNBOOKS)) {
+  const stats = runbookStats[pathId as keyof typeof runbookStats];
+  assert.ok(stats.phases >= 3, `${pathId} must declare at least three runbook phases`);
+  assert.ok(stats.branches >= 18, `${pathId} must expose a granular command tree`);
+  assert.equal(
+    stats.branches,
+    branchIdsFromRunbook(ANDROID_RELEASE_RUNBOOKS[pathId as keyof typeof ANDROID_RELEASE_RUNBOOKS]).length,
+  );
+}
+assert.equal(new Set(allAndroidReleaseBranchIds()).size, allAndroidReleaseBranchIds().length);
+
+function branchIdsFromRunbook(
+  runbook: readonly { sections: readonly { branches: readonly { id: string }[] }[] }[],
+): string[] {
+  return runbook.flatMap((phase) =>
+    phase.sections.flatMap((section) => section.branches.map((branch) => branch.id)),
+  );
+}
 
 // ── Phase order is the release ──────────────────────────────────────────────
 //

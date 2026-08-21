@@ -78,6 +78,7 @@ No database plugin is installed. `@capacitor/filesystem` is used by the OTA plat
 | `npm run cap:run:clean:android`     | Build locally, clear the Android test app data, and run a fresh installation                   |
 | `npm run cap:run:clean:ios`         | Build locally, uninstall the iOS simulator app, and run a fresh installation                   |
 | `npm run android:backup:validate`   | Verify that cloud backup, auto-restore, and device transfer remain disabled                    |
+| `npm run android:preflight`         | Verify JDK 21, Android SDK Platform 36, Build-Tools, and the Gradle wrapper before any APK/AAB build |
 | `npm run android:r8:validate`       | Verify the permanent Release optimization and keep-rule policy                                 |
 | `npm run android:r8:verify-release` | Run R8/resource shrinking without APK/AAB and inspect reports and reflected entry points       |
 | `npm run cap:sync`                  | Copy `out/` into native projects and update native config                                      |
@@ -154,6 +155,7 @@ npm run cap:open:ios
 - Node.js dependencies installed (`npm ci`)
 - **Android:** Android Studio, SDK Platform 36, JDK 21 LTS
 - **Android JDK on Windows:** set `JAVA_HOME` to the installed JDK root such as `C:\Program Files\Java\jdk-21.0.12` or Android Studio's `C:\Program Files\Android\Android Studio\jbr`. An outdated `C:\Program Files\Java\jdk-21` path fails even when `java -version` works. See [invalid-java-home-windows.md](../../08-troubleshooting/problems/invalid-java-home-windows.md).
+- **Android build preflight:** every repository command that assembles an APK or AAB runs `packages/native-core/scripts/android-build-preflight.ts` **before** Gradle starts. It validates `JAVA_HOME` / `ASOL_ANDROID_JAVA_HOME`, discovers JDK 21 on common Windows/macOS/Linux paths, checks `ANDROID_SDK_ROOT` / `ANDROID_HOME` / `android/local.properties`, requires Android SDK Platform 36 and Build-Tools, and requires the checked-in wrapper under `android/`. On failure it exits with code `1` and prints a bilingual English/Arabic error listing every missing item and every searched JDK path. Run it alone with `npm run android:preflight`.
 - **iOS:** macOS, Xcode, CocoaPods (installed by Capacitor on first sync)
 
 ---

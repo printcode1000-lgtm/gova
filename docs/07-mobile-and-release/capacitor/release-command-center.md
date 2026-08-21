@@ -391,10 +391,10 @@ the Deploy runbook interaction model:
 
 | Tab | Phases (top level) | What they cover |
 | :-- | :-- | :-- |
-| `release-android` | preflight → version-planning → partial-web-sync → post-build-verification | doctor, backup/R8 policy, Capacitor audit, full `release:android` variants, optional `cap:build --no-ota`, R8 mapping verification |
+| `release-android` | preflight → version-planning → store-web-sync → signed-artifacts → play-publish → post-build-verification | doctor/preflight، backup/R8، تخطيط الإصدار، cap-build --no-ota، build-android-signed، Fastlane، R8 verify |
 | `build-static` | preflight → static-export → post-export | policy gates referenced by export, `build:static` variants, expected `out/` artifacts, `cap:verify-defaults`, `test:ota-core` |
-| `cap-prepare-android` | preflight → web-export → capacitor-sync → ide-and-audit | policy gates, standalone `build:static`, compound `cap:prepare:android`, granular `cap:sync` / `cap:copy`, Android Studio, post-sync audit |
-| `android-build-debug` | preflight → package-build → host-verification → device-verification | toolchain/policy gates, `android:build:debug` and prepare-only path, `verify:all` plus targeted verification commands, connected-device tests |
+| `cap-prepare-android` | preflight → web-export → capacitor-sync → cap-build-orchestration → ide-and-audit | preflight JDK/SDK، بوابات build:static، cap:prepare:android، خط cap:sync/copy خطوة بخطوة، Android Studio، cap:verify-defaults |
+| `android-build-debug` | preflight → package-build → host-verification → device-verification | preflight، android:build:debug، كل خطوات verify:all، connected-device tests |
 | `ota-publish` | preflight → publish → post-publish | `ota:status`, `ota:check`, CORS sync, prerequisite `build:static`, live `ota:publish` variants, `ota:self-test` and `test:ota-core` |
 
 Each tab now maps npm scripts at the finest practical granularity: `build:static` and
@@ -409,10 +409,10 @@ per tab (runnable + reference):
 
 | Tab | Phases | Sections (typ.) | Branches (typ.) |
 | :-- | --: | --: | --: |
-| `release-android` | 4 | 9+ | 40+ |
+| `release-android` | 6 | 14+ | 48+ |
 | `build-static` | 3 | 6+ | 30+ |
-| `cap-prepare-android` | 4 | 8+ | 40+ |
-| `android-build-debug` | 4 | 10+ | 60+ |
+| `cap-prepare-android` | 5 | 12+ | 50+ |
+| `android-build-debug` | 4 | 12+ | 85+ |
 | `ota-publish` | 3 | 7+ | 20+ |
 
 Phase, section, and branch **labels** in the runbook source are Arabic; branch cards also

@@ -4,6 +4,7 @@ import path from "node:path";
 import { withoutVsCodeDebuggerEnv } from "./child-process-env";
 import { loadReleaseEnvironment } from "./load-release-env";
 import { reportStage } from "./release-stage";
+import { runAndroidBuildPreflight } from "@asol/native-core/scripts/android-build-preflight";
 import {
   NATIVE_VERSION_FLAG,
   resolveNativeVersionAction,
@@ -61,6 +62,8 @@ async function main(): Promise<void> {
   ];
 
   reportStage("starting");
+  reportStage("preflight");
+  runAndroidBuildPreflight({ env: environment });
 
   // Release choices belong to cap-build: it plans the native version, opens the
   // content line, and synchronizes Capacitor. Passing the arguments through a

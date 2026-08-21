@@ -43,6 +43,122 @@ function branch(
   };
 }
 
+function patternSubsteps(
+  prefix: string,
+  commandId: string,
+  steps: readonly (readonly [string, string, string])[],
+): AndroidReleaseRunbookBranch[] {
+  return steps.map(([suffix, label, command]) =>
+    branch(`${prefix}-${suffix}`, label, command, commandId, { patternOnly: true }),
+  );
+}
+
+const VERIFY_ALL_SUBSTEPS = [
+  ["typecheck", "فحص أنواع TypeScript", "npm run typecheck"],
+  ["lint", "فحص ESLint", "npm run lint"],
+  ["architecture", "فحص حدود الوحدات", "npm run architecture:check"],
+  ["storage-profiles", "التحقق من storage profiles", "npm run validate-storage-profiles"],
+  ["error-logging", "عقد تسجيل الأخطاء", "npm run validate:error-logging"],
+  ["version-validate", "التحقق من app-versions", "npm run version:validate"],
+  ["ci-coverage", "مطابقة CI coverage", "npm run ci:coverage"],
+  ["android-backup", "سياسة Android backup", "npm run android:backup:validate"],
+  ["android-r8", "سياسة R8", "npm run android:r8:validate"],
+  ["ios-push", "سياسة iOS push", "npm run ios:push:validate"],
+  ["test-categories", "اختبارات الفئات", "npm run test:categories"],
+  ["test-installation", "سياسة bootstrap التثبيت", "npm run test:installation-bootstrap"],
+  ["test-runtime", "سياق التشغيل", "npm run test:runtime-context"],
+  ["test-r2", "طوبولوجيا R2", "npm run test:r2-storage"],
+  ["test-release-commands", "عقد release-commands", "npm run test:release-commands"],
+  ["test-deployment-tools", "أدوات النشر", "npm run test:deployment-tools"],
+  ["test-shipping", "تسعير الشحن", "npm run test:shipping-pricing"],
+  ["test-delivery", "مخطط التسليم", "npm run test:delivery-planner"],
+  ["test-discounts", "خصومات البائع", "npm run test:seller-discounts"],
+  ["test-marketplace-orders", "طلبات السوق", "npm run test:marketplace-orders"],
+  ["test-notifications", "الإشعارات", "npm run test:notifications"],
+  ["test-follow", "المتابعة", "npm run test:follow"],
+  ["test-favorites", "المفضلة", "npm run test:favorites"],
+  ["test-password-recovery", "استرداد كلمة المرور", "npm run test:password-recovery"],
+  ["test-image-upload", "طابور رفع الصور", "npm run test:image-upload-queue"],
+  ["test-feature-flags", "أعلام الميزات", "npm run test:feature-flags"],
+  ["test-composition-ports", "منافذ التركيب", "npm run test:composition-ports"],
+  ["test-i18n-routes", "مسارات عربية فقط", "npm run test:i18n-arabic-only-routes"],
+  ["test-native-core", "بوابة native-core", "npm run test:native-core"],
+  ["test-ota-compat", "توافق OTA", "npm run test:ota-compatibility"],
+  ["test-ota-delivery", "تسليم OTA", "npm run test:ota-delivery"],
+  ["test-ota-background", "OTA في الخلفية", "npm run test:ota-background"],
+  ["test-ota-hardening", "تصلّب OTA", "npm run test:ota-hardening"],
+  ["test-data-health", "صحة البيانات", "npm run test:data-health"],
+  ["test-dev-cloud-backup", "نسخ dev-cloud", "npm run test:dev-cloud-backup"],
+  ["test-data-core", "بوابة data-core", "npm run test:data-core"],
+  ["test-orders-core", "بوابة orders-core", "npm run test:orders-core"],
+  ["test-compositions", "تركيبات الخدمات", "npm run test:compositions"],
+  ["test-system-logs-core", "بوابة system-logs-core", "npm run test:system-logs-core"],
+  ["test-release-core", "بوابة release-core", "npm run test:release-core"],
+  ["services-verify", "تحقق مرايا الخدمات", "npm run services:verify"],
+  ["cap-verify-defaults", "تدقيق Capacitor", "npm run cap:verify-defaults"],
+] as const satisfies readonly (readonly [string, string, string])[];
+
+const BUILD_STATIC_GATE_SUBSTEPS = [
+  ["native-core", "بوابة native-core داخل build:static", "npm run test:native-core"],
+  ["ota-core", "عقود OTA قبل export", "npm run test:ota-core"],
+  ["release-core", "بوابة release-core", "npm run test:release-core"],
+  ["release-commands", "عقود الكتالوج والشجرة", "npm run test:release-commands"],
+  ["architecture", "حدود الوحدات", "npm run architecture:check"],
+  ["ios-push", "سياسة iOS push", "npm run ios:push:validate"],
+] as const satisfies readonly (readonly [string, string, string])[];
+
+const CAP_SYNC_PIPELINE_SUBSTEPS = [
+  ["assert-out", "build-out.ts --assert-only — out/ موجود", "npx tsx packages/ota-core/scripts/build-out.ts --assert-only"],
+  ["push-assets", "مزامنة أصول push إلى native-core", "npm run android:push:sync-assets"],
+  ["backup-pre", "android:backup:validate قبل cap sync", "npm run android:backup:validate"],
+  ["r8-pre", "android:r8:validate قبل cap sync", "npm run android:r8:validate"],
+  ["ios-push-pre", "ios:push:validate قبل cap sync", "npm run ios:push:validate"],
+  ["npx-cap-sync", "npx cap sync — نسخ out/ إلى المشاريع الأصلية", "npx cap sync"],
+  ["ios-spm", "تطبيع مسارات iOS SPM", "npm run ios:spm:normalize"],
+  ["backup-post", "android:backup:validate بعد cap sync", "npm run android:backup:validate"],
+  ["r8-post", "android:r8:validate بعد cap sync", "npm run android:r8:validate"],
+  ["ios-push-post", "ios:push:validate بعد cap sync", "npm run ios:push:validate"],
+] as const satisfies readonly (readonly [string, string, string])[];
+
+const CAP_COPY_PIPELINE_SUBSTEPS = [
+  ["assert-out", "build-out.ts --assert-only — out/ موجود", "npx tsx packages/ota-core/scripts/build-out.ts --assert-only"],
+  ["push-assets", "مزامنة أصول push إلى native-core", "npm run android:push:sync-assets"],
+  ["backup-pre", "android:backup:validate قبل cap copy", "npm run android:backup:validate"],
+  ["r8-pre", "android:r8:validate قبل cap copy", "npm run android:r8:validate"],
+  ["ios-push-pre", "ios:push:validate قبل cap copy", "npm run ios:push:validate"],
+  ["npx-cap-copy", "npx cap copy — نسخ assets دون sync كامل", "npx cap copy"],
+  ["backup-post", "android:backup:validate بعد cap copy", "npm run android:backup:validate"],
+  ["r8-post", "android:r8:validate بعد cap copy", "npm run android:r8:validate"],
+  ["ios-push-post", "ios:push:validate بعد cap copy", "npm run ios:push:validate"],
+] as const satisfies readonly (readonly [string, string, string])[];
+
+const DEBUG_BUILD_SCRIPT_STAGES = [
+  ["preflight", "android-build-preflight — JDK 21 وAndroid SDK 36", "npm run android:preflight"],
+  ["cap-prepare", "build:static ثم cap:sync", "npm run cap:prepare:android"],
+  ["assemble-apk", "assembleDebugR8 — APK محسّن بـ R8", "./gradlew :app:assembleDebugR8"],
+  ["assemble-test", "assembleDebugR8AndroidTest", "./gradlew :app:assembleDebugR8AndroidTest"],
+  ["verify-apk", "التحقق من app-debugR8.apk", "android/app/build/outputs/apk/debugR8/app-debugR8.apk"],
+] as const satisfies readonly (readonly [string, string, string])[];
+
+const DEVICE_TEST_SCRIPT_STAGES = [
+  ["detect-device", "اكتشاف جهاز adb — serial أو اختيار تلقائي", "adb devices"],
+  ["grant-permissions", "منح POST_NOTIFICATIONS قبل اختبارات الإشعارات", "adb shell pm grant … POST_NOTIFICATIONS"],
+  ["set-serial", "ANDROID_SERIAL لـ Gradle عند جهاز واحد", "ANDROID_SERIAL=<serial>"],
+  ["connected-test", "connectedDebugR8AndroidTest", "./gradlew :app:connectedDebugR8AndroidTest"],
+  ["zero-tests-refusal", "رفض صفر اختبارات كنجاح", "throw if total === 0"],
+  ["collect-xml", "جمع androidTest-results/connected/*.xml", "android/app/build/outputs/androidTest-results/connected/"],
+] as const satisfies readonly (readonly [string, string, string])[];
+
+const SIGNED_BUILD_SCRIPT_STAGES = [
+  ["require-keystore", "رفض عند غياب ASOL_ANDROID_KEYSTORE_*", "requireSigningEnvironment()"],
+  ["require-web-bundle", "ASOL_WEB_BUNDLE_READY=1 وملف manifest متزامن", "requireSyncedWebBundle()"],
+  ["preflight", "android-build-preflight قبل Gradle", "npm run android:preflight"],
+  ["bundle-release", "bundleRelease — AAB لـ Play", "./gradlew :app:bundleRelease"],
+  ["assemble-release", "assembleRelease — APK sideload", "./gradlew :app:assembleRelease"],
+  ["jarsigner", "jarsigner -verify على AAB", "jarsigner -verify app-release.aab"],
+  ["apksigner", "apksigner verify على APK", "apksigner verify --verbose --print-certs app-release.apk"],
+] as const satisfies readonly (readonly [string, string, string])[];
+
 export const ANDROID_RELEASE_RUNBOOKS = {
   "release-android": [
     {
@@ -51,17 +167,23 @@ export const ANDROID_RELEASE_RUNBOOKS = {
       sections: [
         {
           id: "signing-environment",
-          label: "JAVA_HOME, Android SDK, keystore, Play credentials",
+          label: "JAVA_HOME وAndroid SDK ومفاتيح التوقيع وحساب Play",
           branches: [
             branch(
+              "release-preflight-android-preflight",
+              "android:preflight — JDK 21 وAndroid SDK 36 وgradlew",
+              "npm run android:preflight",
+              "fastlane-android-doctor",
+            ),
+            branch(
               "release-preflight-doctor",
-              "Fastlane doctor — JDK, SDK, signing, Play service account",
+              "fastlane android doctor — JDK وSDK والتوقيع وحساب Play",
               "npm run fastlane:android:doctor",
               "fastlane-android-doctor",
             ),
             branch(
               "release-preflight-open-outputs",
-              "open android/app/build/outputs in the file manager",
+              "فتح android/app/build/outputs في مستكشف الملفات",
               "npm run android:open:outputs",
               "android-open-outputs",
             ),
@@ -172,25 +294,32 @@ export const ANDROID_RELEASE_RUNBOOKS = {
         },
         {
           id: "orchestrator-stages",
-          label: "what release:android runs internally (reference only)",
+          label: "ما يشغّله release:android داخلياً (مرجع)",
           branches: [
             branch(
+              "release-stage-preflight",
+              "android-build-preflight قبل cap-build",
+              "npm run android:preflight",
+              "release-android",
+              { patternOnly: true },
+            ),
+            branch(
               "release-stage-cap-build",
-              "cap-build --no-ota — web export, version stamp, cap sync",
+              "cap-build --no-ota — export وختم إصدارات وcap sync",
               "npx tsx scripts/cap-build.ts --no-ota --native-version=<current|next-patch>",
               "release-android",
               { patternOnly: true },
             ),
             branch(
               "release-stage-signed-gradle",
-              "build-android-signed — bundleRelease + assembleRelease + signature verify",
+              "build-android-signed — bundleRelease + assembleRelease + تحقق التوقيع",
               "npm run android:build:signed",
               "release-android",
               { patternOnly: true },
             ),
             branch(
               "release-stage-web-bundle-flag",
-              "ASOL_WEB_BUNDLE_READY=1 proof passed to build-android-signed",
+              "ASOL_WEB_BUNDLE_READY=1 يُمرَّر إلى build-android-signed",
               "ASOL_WEB_BUNDLE_READY=1",
               "release-android",
               { patternOnly: true },
@@ -285,30 +414,39 @@ export const ANDROID_RELEASE_RUNBOOKS = {
       sections: [
         {
           id: "signed-gradle-build",
-          label: "android:build:signed — R8 release AAB + APK",
+          label: "android:build:signed — AAB وAPK release محسّنان بـ R8",
           branches: [
             branch(
               "release-signed-build",
-              "bundleRelease + assembleRelease with release keystore",
+              "bundleRelease + assembleRelease بمفتاح release",
               "npm run android:build:signed",
               "release-android",
               { patternOnly: true, dangerous: true },
             ),
             branch(
               "release-gradle-bundle-release",
-              "assemble the Play upload bundle",
+              "حزمة AAB للرفع إلى Play",
               "./gradlew :app:bundleRelease",
               "release-android",
               { patternOnly: true },
             ),
             branch(
               "release-gradle-assemble-release",
-              "assemble the sideloadable release APK",
+              "APK release للت sideload",
               "./gradlew :app:assembleRelease",
               "release-android",
               { patternOnly: true },
             ),
           ],
+        },
+        {
+          id: "signed-build-pipeline",
+          label: "خطوات build-android-signed.ts بالتفصيل (مرجع)",
+          branches: patternSubsteps(
+            "release-signed-stage",
+            "release-android",
+            SIGNED_BUILD_SCRIPT_STAGES,
+          ),
         },
         {
           id: "signature-verification",
@@ -715,27 +853,45 @@ export const ANDROID_RELEASE_RUNBOOKS = {
   "cap-prepare-android": [
     {
       id: "preflight",
-      label: "policy gates before Capacitor mutates native projects",
+      label: "بوابات قبل أن يعدّل Capacitor المشاريع الأصلية",
       sections: [
         {
+          id: "toolchain",
+          label: "JDK وAndroid SDK قبل أي export أو sync",
+          branches: [
+            branch(
+              "prepare-preflight-android-preflight",
+              "android:preflight — JDK 21 وAndroid SDK 36 وgradlew",
+              "npm run android:preflight",
+              "fastlane-android-doctor",
+            ),
+            branch(
+              "prepare-preflight-doctor",
+              "fastlane android doctor — JDK وSDK والتوقيع",
+              "npm run fastlane:android:doctor",
+              "fastlane-android-doctor",
+            ),
+          ],
+        },
+        {
           id: "native-policies",
-          label: "Android backup/R8 and iOS push policies",
+          label: "سياسات Android backup/R8 وiOS push",
           branches: [
             branch(
               "prepare-preflight-backup",
-              "validate Android backup rules",
+              "التحقق من قواعد Android backup",
               "npm run android:backup:validate",
               "android-backup-validate",
             ),
             branch(
               "prepare-preflight-r8",
-              "validate Android R8 release policy",
+              "التحقق من سياسة R8 في release",
               "npm run android:r8:validate",
               "android-r8-validate",
             ),
             branch(
               "prepare-preflight-ios-push",
-              "validate iOS push policy sources (also gates cap:sync)",
+              "ios:push:validate — يعمل أيضاً داخل cap:sync",
               "npm run ios:push:validate",
               "cap-verify-defaults",
               { patternOnly: true },
@@ -744,11 +900,11 @@ export const ANDROID_RELEASE_RUNBOOKS = {
         },
         {
           id: "version-metadata",
-          label: "version metadata checks before sync",
+          label: "بيانات الإصدارات قبل المزامنة",
           branches: [
             branch(
               "prepare-preflight-version-validate",
-              "validate app version metadata",
+              "version:validate — versionName/versionCode وخط المحتوى",
               "npm run version:validate",
               "run-test-suite",
               { patternOnly: true },
@@ -759,29 +915,61 @@ export const ANDROID_RELEASE_RUNBOOKS = {
     },
     {
       id: "web-export",
-      label: "static web bundle creation",
+      label: "إنشاء حزمة الويب الثابتة في out/",
       sections: [
         {
           id: "static-build",
-          label: "build:static step inside cap:prepare:android",
+          label: "خطوة build:static داخل cap:prepare:android",
           branches: [
             branch(
               "prepare-build-static",
-              "full static export before any Capacitor sync",
+              "export ثابت كامل قبل أي cap sync",
               "npm run build:static",
               "build-static",
             ),
             branch(
               "prepare-build-static-diagnostic",
-              "diagnostic static export (must not ship to a shell)",
+              "export تشخيصي — لا يُشحن إلى shell",
               "npm run build:static -- --diagnostic",
               "build-static",
               { parameters: { diagnostic: true } },
             ),
             branch(
               "prepare-build-static-local",
-              "static export with local API base URL",
+              "export مع NEXT_PUBLIC_ASOL_API_BASE_URL محلي",
               "npm run build:static:local",
+              "build-static",
+              { patternOnly: true },
+            ),
+          ],
+        },
+        {
+          id: "static-gates",
+          label: "بوابات build:static قبل كتابة out/ (مرجع)",
+          branches: patternSubsteps("prepare-gate", "build-static", BUILD_STATIC_GATE_SUBSTEPS),
+        },
+        {
+          id: "static-artifacts",
+          label: "مخرجات out/ المتوقعة (مرجع)",
+          branches: [
+            branch(
+              "prepare-static-artifact-manifest",
+              "out/asol-web-manifest.json — قائمة الملفات الموقّعة",
+              "out/asol-web-manifest.json",
+              "build-static",
+              { patternOnly: true },
+            ),
+            branch(
+              "prepare-static-artifact-index",
+              "out/index.html — مطلوب لـ cap:verify-defaults",
+              "out/index.html",
+              "build-static",
+              { patternOnly: true },
+            ),
+            branch(
+              "prepare-static-stage-build-out",
+              "build-out.ts — الخطوة الأخيرة في build:static",
+              "npx tsx packages/ota-core/scripts/build-out.ts",
               "build-static",
               { patternOnly: true },
             ),
@@ -791,57 +979,58 @@ export const ANDROID_RELEASE_RUNBOOKS = {
     },
     {
       id: "capacitor-sync",
-      label: "Capacitor copy/sync into android/app/src/main/assets/public",
+      label: "نسخ/مزامنة Capacitor إلى android/app/src/main/assets/public",
       sections: [
         {
           id: "full-prepare",
-          label: "compound prepare path",
+          label: "مسار cap:prepare:android المركّب",
           branches: [
             branch(
               "cap-prepare-android",
-              "build:static then cap:sync — full Android preparation",
+              "build:static ثم cap:sync — تحضير Android كامل",
               "npm run cap:prepare:android",
               "cap-prepare-android",
+            ),
+            branch(
+              "prepare-stage-build-static",
+              "النصف الأول: npm run build:static",
+              "npm run build:static",
+              "cap-prepare-android",
+              { patternOnly: true },
+            ),
+            branch(
+              "prepare-stage-cap-sync",
+              "النصف الثاني: npm run cap:sync",
+              "npm run cap:sync",
+              "cap-prepare-android",
+              { patternOnly: true },
             ),
           ],
         },
         {
-          id: "sync-stages",
-          label: "cap:sync substeps (reference) and granular sync commands",
+          id: "sync-pipeline",
+          label: "خط أنابيب cap:sync خطوة بخطوة (مرجع)",
           branches: [
-            branch(
-              "prepare-sync-assert-out",
-              "build-out.ts --assert-only — out/ must already exist",
-              "npx tsx packages/ota-core/scripts/build-out.ts --assert-only",
-              "cap-sync",
-              { patternOnly: true },
-            ),
-            branch(
-              "prepare-sync-push-assets",
-              "sync Android push notification assets into native-core",
-              "npm run android:push:sync-assets",
-              "cap-sync",
-              { patternOnly: true },
-            ),
+            ...patternSubsteps("prepare-sync", "cap-sync", CAP_SYNC_PIPELINE_SUBSTEPS),
             branch(
               "prepare-sync-cap",
-              "assert out/, validate policies, npx cap sync, normalize iOS SPM",
+              "cap:sync كامل — assert + policies + npx cap sync + SPM",
               "npm run cap:sync",
               "cap-sync",
             ),
+          ],
+        },
+        {
+          id: "copy-pipeline",
+          label: "cap:copy — إعادة استخدام out/ دون sync كامل",
+          branches: [
             branch(
               "prepare-sync-copy",
-              "cap copy only — reuse existing out/ without cap sync",
+              "cap copy فقط — out/ موجود مسبقاً",
               "npm run cap:copy",
               "cap-copy",
             ),
-            branch(
-              "prepare-sync-ios-spm",
-              "ios:spm:normalize after cap sync",
-              "npm run ios:spm:normalize",
-              "cap-sync",
-              { patternOnly: true },
-            ),
+            ...patternSubsteps("prepare-copy", "cap-copy", CAP_COPY_PIPELINE_SUBSTEPS),
           ],
         },
       ],
@@ -908,15 +1097,15 @@ export const ANDROID_RELEASE_RUNBOOKS = {
     },
     {
       id: "ide-and-audit",
-      label: "Android Studio and post-sync verification",
+      label: "Android Studio والتدقيق بعد المزامنة",
       sections: [
         {
           id: "android-studio",
-          label: "open the native project locally",
+          label: "فتح المشروع الأصلي محلياً",
           branches: [
             branch(
               "cap-open-android",
-              "open android/ in Android Studio",
+              "فتح android/ في Android Studio",
               "npm run cap:open:android",
               "cap-open-android",
             ),
@@ -924,11 +1113,11 @@ export const ANDROID_RELEASE_RUNBOOKS = {
         },
         {
           id: "post-sync-audit",
-          label: "Capacitor defaults after assets are synced",
+          label: "Capacitor defaults بعد مزامنة الأصول",
           branches: [
             branch(
               "prepare-post-cap-verify",
-              "audit Capacitor defaults against synced web assets",
+              "cap:verify-defaults — تدقيق الإعدادات وسياسات push/R8",
               "npm run cap:verify-defaults",
               "cap-verify-defaults",
             ),
@@ -936,11 +1125,11 @@ export const ANDROID_RELEASE_RUNBOOKS = {
         },
         {
           id: "outputs-folder",
-          label: "inspect Gradle outputs when present",
+          label: "فحص مخرجات Gradle إن وُجدت",
           branches: [
             branch(
               "prepare-open-outputs",
-              "open android/app/build/outputs in the file manager",
+              "فتح android/app/build/outputs في مستكشف الملفات",
               "npm run android:open:outputs",
               "android-open-outputs",
             ),
@@ -952,15 +1141,21 @@ export const ANDROID_RELEASE_RUNBOOKS = {
   "android-build-debug": [
     {
       id: "preflight",
-      label: "environment and native policy before debugR8 assembly",
+      label: "البيئة وسياسات native قبل assembleDebugR8",
       sections: [
         {
           id: "toolchain",
-          label: "JDK and Android SDK discovery",
+          label: "اكتشاف JDK وAndroid SDK",
           branches: [
             branch(
+              "debug-preflight-android-preflight",
+              "android:preflight — JDK 21 وAndroid SDK 36",
+              "npm run android:preflight",
+              "fastlane-android-doctor",
+            ),
+            branch(
               "debug-preflight-doctor",
-              "Fastlane doctor — JAVA_HOME and Android SDK paths",
+              "fastlane android doctor — JAVA_HOME وAndroid SDK",
               "npm run fastlane:android:doctor",
               "fastlane-android-doctor",
             ),
@@ -1023,23 +1218,12 @@ export const ANDROID_RELEASE_RUNBOOKS = {
         },
         {
           id: "gradle-debugR8",
-          label: "Gradle tasks inside android:build:debug (reference only)",
-          branches: [
-            branch(
-              "debug-stage-assemble-apk",
-              "assembleDebugR8 — R8-minified, debug-signed, debuggable APK",
-              "./gradlew :app:assembleDebugR8",
-              "android-build-debug",
-              { patternOnly: true },
-            ),
-            branch(
-              "debug-stage-assemble-test",
-              "assembleDebugR8AndroidTest — instrumented test package",
-              "./gradlew :app:assembleDebugR8AndroidTest",
-              "android-build-debug",
-              { patternOnly: true },
-            ),
-          ],
+          label: "مهام Gradle داخل android:build:debug (مرجع)",
+          branches: patternSubsteps(
+            "debug-stage",
+            "android-build-debug",
+            DEBUG_BUILD_SCRIPT_STAGES,
+          ),
         },
         {
           id: "debug-artifacts",
@@ -1157,18 +1341,18 @@ export const ANDROID_RELEASE_RUNBOOKS = {
         },
         {
           id: "host-static-analysis",
-          label: "verify:all static analysis substeps (reference only)",
+          label: "خطوات التحليل الثابت داخل verify:all (مرجع)",
           branches: [
             branch(
               "host-verify-typecheck",
-              "TypeScript type check",
+              "فحص أنواع TypeScript",
               "npm run typecheck",
               "run-test-suite",
               { patternOnly: true },
             ),
             branch(
               "host-verify-lint",
-              "ESLint",
+              "فحص ESLint",
               "npm run lint",
               "run-test-suite",
               { patternOnly: true },
@@ -1182,12 +1366,17 @@ export const ANDROID_RELEASE_RUNBOOKS = {
             ),
             branch(
               "host-verify-ci-coverage",
-              "ci:coverage — native-core workflow gate parity",
+              "ci:coverage — مطابقة native-core workflow",
               "npm run ci:coverage",
               "run-test-suite",
               { patternOnly: true },
             ),
           ],
+        },
+        {
+          id: "host-verify-all-substeps",
+          label: "كل خطوات verify:all بالتفصيل (مرجع)",
+          branches: patternSubsteps("host-verify-all", "run-test-suite", VERIFY_ALL_SUBSTEPS),
         },
         {
           id: "targeted-host-checks",
@@ -1253,30 +1442,12 @@ export const ANDROID_RELEASE_RUNBOOKS = {
         },
         {
           id: "device-test-stages",
-          label: "what android:device:tests runs internally (reference only)",
-          branches: [
-            branch(
-              "device-stage-permissions",
-              "grant POST_NOTIFICATIONS before notification channel tests",
-              "adb shell pm grant … POST_NOTIFICATIONS",
-              "run-device-tests",
-              { patternOnly: true },
-            ),
-            branch(
-              "device-stage-connected-test",
-              "connectedDebugR8AndroidTest — refuses zero tests as success",
-              "./gradlew :app:connectedDebugR8AndroidTest",
-              "run-device-tests",
-              { patternOnly: true },
-            ),
-            branch(
-              "device-stage-results",
-              "androidTest-results/connected XML roster",
-              "android/app/build/outputs/androidTest-results/connected/",
-              "run-device-tests",
-              { patternOnly: true },
-            ),
-          ],
+          label: "ما يشغّله android:device:tests داخلياً (مرجع)",
+          branches: patternSubsteps(
+            "device-stage",
+            "run-device-tests",
+            DEVICE_TEST_SCRIPT_STAGES,
+          ),
         },
       ],
     },
@@ -1557,4 +1728,47 @@ export function findAndroidReleaseBranch(
     }
   }
   return undefined;
+}
+
+export interface AndroidRunbookTreeStats {
+  phases: number;
+  sections: number;
+  branches: number;
+  dangerousBranches: number;
+  patternOnlyBranches: number;
+}
+
+export function androidRunbookTreeStats(
+  runbook: readonly AndroidReleaseRunbookPhase[],
+): AndroidRunbookTreeStats {
+  let sections = 0;
+  let branches = 0;
+  let dangerousBranches = 0;
+  let patternOnlyBranches = 0;
+  for (const phase of runbook) {
+    sections += phase.sections.length;
+    for (const section of phase.sections) {
+      branches += section.branches.length;
+      for (const item of section.branches) {
+        if (item.dangerous) dangerousBranches += 1;
+        if (item.patternOnly) patternOnlyBranches += 1;
+      }
+    }
+  }
+  return {
+    phases: runbook.length,
+    sections,
+    branches,
+    dangerousBranches,
+    patternOnlyBranches,
+  };
+}
+
+export function androidRunbookStatsByTab(): Record<AndroidReleasePathId, AndroidRunbookTreeStats> {
+  return Object.fromEntries(
+    Object.entries(ANDROID_RELEASE_RUNBOOKS).map(([pathId, runbook]) => [
+      pathId,
+      androidRunbookTreeStats(runbook),
+    ]),
+  ) as Record<AndroidReleasePathId, AndroidRunbookTreeStats>;
 }

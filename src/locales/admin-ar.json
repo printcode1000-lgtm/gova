@@ -106,7 +106,7 @@
   "releaseConsole.androidPaths.tabSelectionSummary": "{selected} / {total} أوامر مفعّلة في هذا المسار.",
   "releaseConsole.androidPaths.terminalHelp": "سجل job النظام المحلي؛ يُحدَّث أثناء التشغيل.",
   "releaseConsole.androidPaths.terminalTitle": "الطرفية",
-  "releaseConsole.androidPaths.treeHelp": "كل مرحلة قابلة للطي؛ داخلها أقسام ثم أوامر npm بصيغها المختلفة.",
+  "releaseConsole.androidPaths.treeHelp": "كل مرحلة قابلة للطي؛ داخلها أقسام ثم أوامر npm/Gradle — 186 ورقة checkbox عبر 5 مسارات (23 مرحلة، 61 قسم).",
   "releaseConsole.androidPaths.treeTitle": "شجرة المراحل والأوامر",
   "releaseConsole.artifactMeaning.aab": "حزمة Android App Bundle لتسليم Google Play وتحليل الحزمة.",
   "releaseConsole.artifactMeaning.apk": "حزمة Android قابلة للتثبيت لاختبار الجهاز وتحليل الحزمة.",

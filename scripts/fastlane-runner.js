@@ -24,6 +24,25 @@ if (!bundle) {
 }
 
 const args = process.argv.slice(2);
+if (args[0] === "android" && args[1] !== "doctor") {
+  const tsxCli = path.join(root, "node_modules", "tsx", "dist", "cli.mjs");
+  const preflightScript = path.join(
+    root,
+    "packages",
+    "native-core",
+    "scripts",
+    "android-build-preflight.ts",
+  );
+  const preflight = spawnSync(process.execPath, [tsxCli, preflightScript], {
+    cwd: root,
+    stdio: "inherit",
+    env: process.env,
+    windowsHide: true,
+  });
+  if ((preflight.status ?? 1) !== 0) {
+    process.exit(preflight.status ?? 1);
+  }
+}
 const env = {
   ...process.env,
   LANG: process.env.LANG || "en_US.UTF-8",
