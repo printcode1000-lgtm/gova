@@ -242,6 +242,36 @@ The common thread: **a gate that never opens a directory reports green about it.
 Capacitor sync, the Gradle module and the iOS validator were each verified by their own
 existence, not by being run.
 
+## Android Build Preflight
+
+Every repository command that assembles an APK or AAB runs
+`packages/native-core/scripts/android-build-preflight.ts` **before Gradle starts**. The
+check also runs at the start of `android:build:debug` and `release:android`, so a missing
+JDK or SDK fails before the web bundle is rebuilt or Capacitor sync begins.
+
+| Checked path | Source |
+| :-- | :-- |
+| JDK 21 | `ASOL_ANDROID_JAVA_HOME`, Android Studio JBR, `JAVA_HOME`, common install directories |
+| Android SDK root | `ANDROID_SDK_ROOT`, `ANDROID_HOME`, `android/local.properties`, default `%LOCALAPPDATA%\Android\Sdk` |
+| SDK Platform 36 | `<sdk>/platforms/android-36` |
+| Build-Tools | at least one directory under `<sdk>/build-tools` |
+| Android project | `android/` directory, `android/app/build.gradle`, checked-in `android/gradlew` |
+
+On failure the script exits with code `1` and prints a bilingual English/Arabic error listing
+every missing item and every searched JDK path. Run it alone with `npm run android:preflight`.
+See [invalid-java-home-windows.md](../../08-troubleshooting/problems/invalid-java-home-windows.md).
+
+Hook points:
+
+- `scripts/android/gradle.ts` → `runGradle()` (all `:app:*` assemble/bundle tasks)
+- `scripts/build-android-debug.ts` → before `cap:prepare:android`
+- `scripts/build-android-signed.ts` → before signed release Gradle tasks
+- `scripts/release-android.ts` → before `cap-build`
+- `scripts/fastlane-runner.js` → before every Fastlane Android lane except `doctor`
+
+Direct `android\gradlew.bat` calls and Android Studio still rely on a correct user
+`JAVA_HOME`.
+
 ## Testing On A Real Device
 
 The testing card is a path of its own, separate from the release path. It builds `debugR8`
@@ -271,7 +301,7 @@ The card has three independent buttons, and the separation is deliberate:
 
 | Button | Command | What it does |
 | :-- | :-- | :-- |
-| Build the package | `android:build:debug` | Fresh web → sync → `assembleDebugR8` plus the test package. **Touches no device** |
+| Build the package | `android:build:debug` | Preflight → fresh web → sync → `assembleDebugR8` plus the test package. **Touches no device** |
 
 The same command is available from VS Code as **Android Debug R8 - بناء حزمة الاختبار** in
 `.vscode/launch.json` (group **ASOL Capacitor**).
@@ -339,11 +369,17 @@ the Deploy runbook interaction model:
 - **Tabs** — one tab per Android release path (`release-android`, `build-static`,
   `cap-prepare-android`, `android-build-debug`, `ota-publish`).
 - **Hierarchy** — inside each tab, `packages/release-core/src/console/android-release-runbook.ts`
-  defines **phases → sections → commands**. Each command row shows every runnable npm variant
-  (for example both `--native-version=current` and `--native-version=next-patch` on the full
-  release path, or `--diagnostic` on `build:static`). Branches marked `patternOnly` are
-  reference patterns only; the operator supplies real flag values through the confirmation
-  dialog.
+  defines **phases → sections → commands** that follow the real pipeline order rather than a
+  single compound button per path. Each tab breaks the workflow into multiple phases such as
+  preflight, export/sync, Gradle assembly, host verification, device verification, and live
+  publish. Sections group related catalog commands (for example `android:backup:validate` and
+  `android:r8:validate` under a native-policy section, or `verify:all` substeps under host
+  verification). Each command row shows every runnable npm variant (for example both
+  `--native-version=current` and `--native-version=next-patch` on the full release path, or
+  `--diagnostic` on `build:static`). Branches marked `patternOnly` are reference patterns only:
+  they document internal sub-steps such as Gradle task names or substeps inside `verify:all`,
+  and the operator supplies real flag values through the confirmation dialog when a branch is
+  runnable but parameterized.
 - **Checkboxes** — phase, section, and command levels all cascade: toggling a parent enables or
   disables every descendant, and partially selected parents render indeterminate. Disabled
   commands cannot start until re-enabled.
@@ -351,6 +387,35 @@ the Deploy runbook interaction model:
   Execution indicators parse `[stage]` / `[step]` lines plus the active job record to show
   status, command id, stage, and current activity while a job runs.
 
-Arabic help strings for each branch live in
-`src/modules/google-play-console/presentation/android-release-runbook-copy.ts`; shared UI
-labels are in `src/locales/admin-ar.json` under `releaseConsole.androidPaths.*`.
+### Tree shape per tab
+
+| Tab | Phases (top level) | What they cover |
+| :-- | :-- | :-- |
+| `release-android` | preflight → version-planning → partial-web-sync → post-build-verification | doctor, backup/R8 policy, Capacitor audit, full `release:android` variants, optional `cap:build --no-ota`, R8 mapping verification |
+| `build-static` | preflight → static-export → post-export | policy gates referenced by export, `build:static` variants, expected `out/` artifacts, `cap:verify-defaults`, `test:ota-core` |
+| `cap-prepare-android` | preflight → web-export → capacitor-sync → ide-and-audit | policy gates, standalone `build:static`, compound `cap:prepare:android`, granular `cap:sync` / `cap:copy`, Android Studio, post-sync audit |
+| `android-build-debug` | preflight → package-build → host-verification → device-verification | toolchain/policy gates, `android:build:debug` and prepare-only path, `verify:all` plus targeted verification commands, connected-device tests |
+| `ota-publish` | preflight → publish → post-publish | `ota:status`, `ota:check`, CORS sync, prerequisite `build:static`, live `ota:publish` variants, `ota:self-test` and `test:ota-core` |
+
+Each tab now maps npm scripts at the finest practical granularity: `build:static` and
+`cap:sync` substeps, every `verify:all` step, native-core preflight (JDK/SDK/Gradle),
+`ios:spm:normalize`, Gradle `assembleDebugR8`, the signed-release chain, and OTA publish
+variants (`--mandatory`, `--minimum-native-version`, `--notes`). Runnable leaves reference a
+catalog `commandId`; internal sub-steps use `patternOnly` reference rows.
+
+Tree depth is exposed for tests through `androidRunbookStatsByTab()` in
+`packages/release-core/src/console/android-release-runbook.ts`. Approximate branch counts
+per tab (runnable + reference):
+
+| Tab | Phases | Sections (typ.) | Branches (typ.) |
+| :-- | --: | --: | --: |
+| `release-android` | 4 | 9+ | 40+ |
+| `build-static` | 3 | 6+ | 30+ |
+| `cap-prepare-android` | 4 | 8+ | 40+ |
+| `android-build-debug` | 4 | 10+ | 60+ |
+| `ota-publish` | 3 | 7+ | 20+ |
+
+Phase, section, and branch **labels** in the runbook source are Arabic; branch cards also
+read per-id help from `android-release-runbook-copy.ts` (detailed overrides plus generated
+Arabic text for every leaf). Shared UI labels remain in `src/locales/admin-ar.json` under
+`releaseConsole.androidPaths.*`.
