@@ -11,8 +11,11 @@ import { useAdminArabic } from "@/lib/i18n/use-admin-arabic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSession } from "@/features/auth/components/SessionProvider";
+import { markPendingAuthLoginCompleted } from "@/features/auth/application/auth-lifecycle-events";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { sessionService } from "@/features/auth/services/session-service";
+import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
+import { notifications } from "@/features/notifications";
 import type { UserSession } from "@/features/auth/entities/session.entity";
 import {
   asolDbDeleteSuperAdminOriginalSession,
@@ -89,17 +92,31 @@ export function SuperAdminUsersPage() {
     if (!session?.sessionToken || !isSuperAdmin(session)) return;
     setImpersonatingUid(targetUid);
     setError("");
+    const superAdminSession = session;
     try {
+      try {
+        await notifications.unregisterDevice({
+          uid: superAdminSession.uid,
+          phone: superAdminSession.phone ?? "",
+        });
+      } catch {
+        // Never block impersonation on push cleanup failure.
+      }
       await asolDbDeleteSuperAdminOriginalSession();
-      await asolDbSetSuperAdminOriginalSession<UserSession>(session);
+      await asolDbSetSuperAdminOriginalSession<UserSession>(superAdminSession);
       const next = await asolApi.post<UserSession>(
         "/api/super-admin/impersonate",
         {
           targetUid,
         },
-        { headers: { "x-asol-session-token": session.sessionToken } },
+        { headers: { "x-asol-session-token": superAdminSession.sessionToken } },
       );
+      await clearImageUploadClientState();
       const stored = await sessionService.saveSession(next);
+      await markPendingAuthLoginCompleted({
+        uid: stored.uid,
+        phone: stored.phone,
+      });
       setSession(stored);
       window.location.assign("/profile?mode=edit");
     } catch (err) {

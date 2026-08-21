@@ -6,7 +6,10 @@ import { ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import type { UserSession } from "@/features/auth/entities/session.entity";
+import { markPendingAuthLoginCompleted } from "@/features/auth/application/auth-lifecycle-events";
 import { sessionService } from "@/features/auth/services/session-service";
+import { clearImageUploadClientState } from "@/features/storage/services/image-upload-client-lifecycle";
+import { notifications } from "@/features/notifications";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import {
   asolDbDeleteSuperAdminOriginalSession,
@@ -56,12 +59,30 @@ export function SuperAdminImpersonationBanner() {
   }, [original, session]);
 
   const stop = async () => {
-    if (!original) return;
-    const restored = await sessionService.saveSession(original);
-    await asolDbDeleteSuperAdminOriginalSession();
-    setOriginal(null);
-    setSession(restored);
-    window.location.assign("/super-admin/users");
+    if (!original || !session) return;
+    const impersonatedSession = session;
+    try {
+      try {
+        await notifications.unregisterDevice({
+          uid: impersonatedSession.uid,
+          phone: impersonatedSession.phone ?? "",
+        });
+      } catch {
+        // Never block restore on push cleanup failure.
+      }
+      await clearImageUploadClientState();
+      const restored = await sessionService.saveSession(original);
+      await asolDbDeleteSuperAdminOriginalSession();
+      await markPendingAuthLoginCompleted({
+        uid: restored.uid,
+        phone: restored.phone,
+      });
+      setOriginal(null);
+      setSession(restored);
+      window.location.assign("/super-admin/users");
+    } catch {
+      // Leave the banner visible so the operator can retry.
+    }
   };
 
   if (!original || !session || isSuperAdmin(session)) return null;

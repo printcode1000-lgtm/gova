@@ -12,6 +12,7 @@ import { ShellLayout } from "@/components/layouts/ShellLayout";
 import { SafeAreaController } from "@/components/layouts/SafeAreaController";
 import { AppQueryProvider } from "@/core/providers/query-provider";
 import { SessionProvider } from "@/features/auth/components/SessionProvider";
+import { AuthLoginBootstrapController } from "@/features/auth/components/AuthLoginBootstrapController";
 import { LoginSuccessToast } from "@/features/auth/components/LoginSuccessToast";
 import { NetworkStatusProvider } from "@/features/network/hooks/use-network-status";
 import { NetworkStatusBanner } from "@/features/network/presentation/NetworkStatusBanner";
@@ -89,6 +90,7 @@ export default function RootLayout({
         <InstallationBootstrap>
           <AppQueryProvider>
             <SessionProvider>
+              <AuthLoginBootstrapController />
               <FavoritesProvider>
                 <PreferencesProvider>
                   <SystemLogCollector />

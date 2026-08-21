@@ -44,6 +44,20 @@ Logout
   → sessionService.clearSession() // deletes auth/current
   → setSession(null)
 
+Super admin impersonation (hard navigation)
+  → unregister super-admin device push token
+  → asolDbSetSuperAdminOriginalSession(current)
+  → POST /api/super-admin/impersonate → target session + sessionToken
+  → markPendingAuthLoginCompleted(target)
+  → sessionService.saveSession(target) + window.location.assign(...)
+  → AuthLoginBootstrapController → announceAuthLoginCompleted(target)
+
+End impersonation
+  → unregister impersonated device push token
+  → restore superAdminOriginalSession to auth/current
+  → markPendingAuthLoginCompleted(super admin)
+  → window.location.assign(...)
+
 App load
   → SessionProvider.cleanLegacyStore() + getSession()
 ```
@@ -63,6 +77,8 @@ App load
 | Store | Key | Value |
 |---|---|---|
 | `auth` | `current` | `{ uid, phone, email?, specialties, sessionToken? }` when logged in |
+| `auth` | `superAdminOriginalSession` | Super-admin session preserved while impersonating |
+| `auth` | `pendingAuthLoginCompleted` | `{ uid, phone }` consumed once after a hard navigation login switch |
 | `guestSessions` | `current` | Guest browsing id (unrelated to login) |
 
 On first load, `cleanLegacyStore()`:

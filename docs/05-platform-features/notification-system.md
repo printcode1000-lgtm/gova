@@ -724,8 +724,10 @@ that renders UI; the other two render `null`.
 ### When it appears
 
 It listens for `AUTH_LOGIN_COMPLETED_EVENT`, dispatched by `useLogin` after a
-fresh interactive login. Session hydration does not dispatch it, so a returning
-user is never interrupted on an ordinary page load.
+fresh interactive login and replayed by `AuthLoginBootstrapController` after
+super-admin impersonation start/stop (both use hard navigation). Session
+hydration does not dispatch it, so a returning user is never interrupted on an
+ordinary page load.
 
 The dialog is delayed `4200 ms` so it does not collide with the post-login
 redirect and the success toast, and the pending timer is dropped if the user
@@ -791,6 +793,13 @@ dead end. Those users still have the manual toggle in `/settings/notifications`.
 
 `/settings/notifications` is the second surface for this state, so it obeys the
 same three rules rather than restating them:
+
+**Authentication:** the route is for signed-in users only. Guests who open
+`/settings/notifications` (direct link, sidebar, or deep link) see
+`LoginRequiredDialog` instead of the device toggles; closing the dialog navigates
+back or to `/home`. Implementation:
+`src/features/settings/presentation/NotificationsSettingsPageContent.tsx` +
+`src/features/auth/components/LoginRequiredDialog.tsx`.
 
 1. The **open app settings** button renders only where
    `permission.canOpenSettings` is true — read from the diagnostics snapshot,
