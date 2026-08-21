@@ -149,7 +149,9 @@ logs.
 - summary cards (total errors, last hour, top features)
 - search and platform filters
 - cloud error panel with HTTP/feature filters
-- live sections: normal / warning / error
+- live section tabs (normal / warning / error) always in one row at every
+  breakpoint; narrow viewports use compact padding, smaller icons, and truncated
+  Arabic labels so counts stay visible
 - SSE refresh plus 20s polling fallback
 
 Persisted entries are marked as saved. The floating error button deduplicates

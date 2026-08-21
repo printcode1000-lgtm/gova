@@ -326,7 +326,7 @@ export function SuperAdminLogsPage() {
         onRefresh={() => setRefreshKey((value) => value + 1)}
       />
 
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">
+      <div className="mb-5 grid grid-cols-3 gap-2 sm:gap-3">
         {sections.map((item) => {
           const TabIcon = item.icon;
           return (
@@ -335,17 +335,24 @@ export function SuperAdminLogsPage() {
               type="button"
               onClick={() => setActive(item.level)}
               className={cn(
-                "rounded-xl border bg-card p-4 text-start transition-colors",
+                "min-w-0 rounded-xl border bg-card p-2.5 text-start transition-colors sm:p-4",
                 active === item.level &&
                   "border-primary ring-2 ring-primary/20",
               )}
             >
-              <div className="flex items-center justify-between gap-3">
-                <span className="flex items-center gap-2 font-semibold">
-                  <TabIcon className={cn("h-5 w-5", item.color)} />
-                  {item.title}
+              <div className="flex min-w-0 items-center justify-between gap-1.5 sm:gap-3">
+                <span className="flex min-w-0 items-center gap-1.5 font-semibold sm:gap-2">
+                  <TabIcon
+                    className={cn(
+                      "h-4 w-4 shrink-0 sm:h-5 sm:w-5",
+                      item.color,
+                    )}
+                  />
+                  <span className="truncate text-sm sm:text-base">
+                    {item.title}
+                  </span>
                 </span>
-                <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-bold">
+                <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-bold sm:px-2.5 sm:py-1">
                   {grouped[item.level].length}
                 </span>
               </div>
