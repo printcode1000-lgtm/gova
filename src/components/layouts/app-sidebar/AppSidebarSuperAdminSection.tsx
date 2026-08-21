@@ -22,6 +22,21 @@ export const COLLAPSED_SUPER_ADMIN_GROUPS = {
 
 export type SuperAdminGroupKey = keyof typeof COLLAPSED_SUPER_ADMIN_GROUPS;
 
+type SuperAdminInnerSurfaceKey = SuperAdminGroupKey | "cloud";
+
+function superAdminInnerSurface(variant: SuperAdminInnerSurfaceKey) {
+  switch (variant) {
+    case "content":
+      return "bg-surface-container-low";
+    case "cloud":
+      return "bg-primary-container/15";
+    case "notifications":
+      return "bg-secondary-container/20";
+    case "system":
+      return "bg-tertiary-container/15";
+  }
+}
+
 export function AppSidebarSuperAdminSection({
   resolvedScheme,
   sidebarControlClass,
@@ -104,7 +119,7 @@ export function AppSidebarSuperAdminSection({
             open={superAdminGroupsOpen.content}
             buttonClass={groupButtonClass}
             panelClass={groupPanelClass}
-            shellClass={cn(innerShellBase, "bg-surface-container-low")}
+            shellClass={cn(innerShellBase, superAdminInnerSurface("content"))}
             onToggle={() => onGroupToggle("content")}
           >
             <SuperAdminLink href="/super-admin/hero-slider" icon={<Sliders className={sidebarSmallIconClass} />} label="سلايدر الواجهة الرئيسية" className={itemClass} onClose={onClose} />
