@@ -407,15 +407,17 @@ Tree depth is exposed for tests through `androidRunbookStatsByTab()` in
 `packages/release-core/src/console/android-release-runbook.ts`. Approximate branch counts
 per tab (runnable + reference):
 
-| Tab | Phases | Sections (typ.) | Branches (typ.) |
+| Tab | Phases | Sections | Branches |
 | :-- | --: | --: | --: |
-| `release-android` | 6 | 14+ | 48+ |
-| `build-static` | 3 | 6+ | 30+ |
-| `cap-prepare-android` | 5 | 12+ | 50+ |
-| `android-build-debug` | 4 | 12+ | 85+ |
-| `ota-publish` | 3 | 7+ | 20+ |
+| `release-android` | 6 | 19 | 53 |
+| `build-static` | 4 | 11 | 31 |
+| `cap-prepare-android` | 5 | 14 | 51 |
+| `android-build-debug` | 4 | 14 | 84 |
+| `ota-publish` | 4 | 10 | 22 |
+
+Total: **241** selectable command branches across all tabs (**241** unique branch ids).
 
 Phase, section, and branch **labels** in the runbook source are Arabic; branch cards also
-read per-id help from `android-release-runbook-copy.ts` (detailed overrides plus generated
-Arabic text for every leaf). Shared UI labels remain in `src/locales/admin-ar.json` under
-`releaseConsole.androidPaths.*`.
+read per-id help from `android-release-runbook-copy.ts` (generated Arabic text for every leaf,
+with high-signal overrides in `android-release-runbook-detailed-help.ts`). Shared UI labels
+remain in `src/locales/admin-ar.json` under `releaseConsole.androidPaths.*`.

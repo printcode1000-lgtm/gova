@@ -699,6 +699,15 @@ export const ANDROID_RELEASE_RUNBOOKS = {
             ),
           ],
         },
+        {
+          id: "build-static-gate-pipeline",
+          label: "catalogued build:static gate npm scripts (reference only)",
+          branches: patternSubsteps(
+            "static-gate-pipeline",
+            "run-test-suite",
+            BUILD_STATIC_GATE_SUBSTEPS,
+          ),
+        },
       ],
     },
     {
@@ -766,6 +775,40 @@ export const ANDROID_RELEASE_RUNBOOKS = {
               "static-stage-build-out",
               "packages/ota-core/scripts/build-out.ts — writes out/ and manifest",
               "npx tsx packages/ota-core/scripts/build-out.ts",
+              "build-static",
+              { patternOnly: true },
+            ),
+          ],
+        },
+        {
+          id: "build-static-preamble",
+          label: "خطوات build:static قبل build-out.ts (مرجع)",
+          branches: [
+            branch(
+              "static-stage-branding",
+              "branding:generate — أصول العلامة قبل export",
+              "npm run branding:generate",
+              "build-static",
+              { patternOnly: true },
+            ),
+            branch(
+              "static-stage-maplibre",
+              "maplibre:sync — worker الخريطة قبل export",
+              "npm run maplibre:sync",
+              "build-static",
+              { patternOnly: true },
+            ),
+            branch(
+              "static-stage-catalog-validate",
+              "catalog:validate — فحص الكتالوج قبل export",
+              "npm run catalog:validate",
+              "build-static",
+              { patternOnly: true },
+            ),
+            branch(
+              "static-stage-services-sync",
+              "services:sync — مرايا الخدمات قبل export",
+              "npm run services:sync",
               "build-static",
               { patternOnly: true },
             ),
