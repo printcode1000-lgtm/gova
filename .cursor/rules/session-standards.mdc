@@ -41,6 +41,17 @@ When making **any** modification to an area:
 - A pure typo or comment-only fix with zero behavioral impact does not require a doc update.
 - If no doc exists yet for that area and the change is non-trivial, add or extend the appropriate file under `docs/`.
 
+## 3. Single responsibility per file
+
+On **every** create or edit (`src/`, `packages/`, `scripts/`, `services/`, etc.), each file must
+have **one responsibility only** — one clear job and one primary reason to change.
+
+- Do not combine unrelated concerns in one file (UI + API + domain logic + misc helpers).
+- When a change adds a second responsibility, **split** into separate files.
+- Barrel/index files may re-export only; they must not hold implementation logic.
+
+See `AGENTS.md` §3a and `docs/01-architecture/module-isolation-rules.md` rule 8.
+
 ## Quick checklist
 
 | Do | Don't |
@@ -50,3 +61,4 @@ When making **any** modification to an area:
 | Read `docs/` for the area **before** editing | Start coding without reading relevant docs |
 | Update matching `docs/` in the same change | Leave docs stale after a behavior change |
 | Write docs in `docs/` in English | Put project docs outside `docs/` or write Arabic in `docs/` |
+| One responsibility per file; split when needed | Mix unrelated logic in one file |

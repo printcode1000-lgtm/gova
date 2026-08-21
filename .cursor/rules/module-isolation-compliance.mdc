@@ -28,6 +28,15 @@ Violations cause silent breaks, seal bypasses, and CI gaps.
 | 8 | Single responsibility per file |
 | 9 | Dependency upgrades stay inside the owning module |
 
+## Single responsibility (all files)
+
+Rule 8 applies to **every** file you create or edit, not only inside `packages/`:
+
+- One clear job and one primary reason to change per file.
+- Split when a second unrelated concern appears — do not expand a file to hold mixed UI, API,
+  domain logic, or unrelated helpers.
+- Barrel/index re-exports only are allowed; no implementation logic in barrels.
+
 ## Forbidden patterns
 
 - Deep imports: `@asol/<pkg>/src/...`, `@asol/<pkg>/internal/...`, or any path not in `exports`
