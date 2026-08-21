@@ -330,3 +330,27 @@ A step is free text rather than a fixed list: the set of checks changes, and any
 need editing with every addition. It is truncated at 80 characters because it renders inside
 a button. On failure it stays visible because it names what was running at the moment of the
 crash; on success it is cleared, because then it is only noise.
+
+## Android Release Paths Runbook UI
+
+The **Build & Publish** tab (`BuildPublishTab`) renders `AndroidReleasePaths`, which mirrors
+the Deploy runbook interaction model:
+
+- **Tabs** — one tab per Android release path (`release-android`, `build-static`,
+  `cap-prepare-android`, `android-build-debug`, `ota-publish`).
+- **Hierarchy** — inside each tab, `packages/release-core/src/console/android-release-runbook.ts`
+  defines **phases → sections → commands**. Each command row shows every runnable npm variant
+  (for example both `--native-version=current` and `--native-version=next-patch` on the full
+  release path, or `--diagnostic` on `build:static`). Branches marked `patternOnly` are
+  reference patterns only; the operator supplies real flag values through the confirmation
+  dialog.
+- **Checkboxes** — phase, section, and command levels all cascade: toggling a parent enables or
+  disables every descendant, and partially selected parents render indeterminate. Disabled
+  commands cannot start until re-enabled.
+- **Terminal** — the section polls the same build-job log stream as the Deploy runbook page.
+  Execution indicators parse `[stage]` / `[step]` lines plus the active job record to show
+  status, command id, stage, and current activity while a job runs.
+
+Arabic help strings for each branch live in
+`src/modules/google-play-console/presentation/android-release-runbook-copy.ts`; shared UI
+labels are in `src/locales/admin-ar.json` under `releaseConsole.androidPaths.*`.

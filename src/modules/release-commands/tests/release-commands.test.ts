@@ -22,6 +22,11 @@ import {
   releaseContentVersion,
 } from "@asol/ota-core";
 import { BUILD_COMMAND_CATALOG, materializeBuildCommandParameters, type BuildCommandCatalogEntry } from "@asol/release-core/console";
+import {
+  allAndroidReleaseBranchIds,
+  ANDROID_RELEASE_RUNBOOKS,
+  findAndroidReleaseBranch,
+} from "@asol/release-core/console";
 import { assertBuildJobTransition } from "@asol/release-core/console";
 import { nextBuildJobActivity, nextBuildJobStage } from "@asol/release-core/console";
 import {
@@ -108,6 +113,38 @@ for (const command of BUILD_COMMAND_CATALOG) {
     const key = `releaseConsole.commandDocs.${command.id}.${field}`;
     assert.ok(adminAr[key]?.trim(), `missing Arabic command documentation: ${key}`);
   }
+}
+const androidPathIds = [
+  "release-android",
+  "build-static",
+  "cap-prepare-android",
+  "android-build-debug",
+  "ota-publish",
+];
+assert.deepEqual(Object.keys(ANDROID_RELEASE_RUNBOOKS).sort(), androidPathIds.sort(),
+  "android release runbooks must cover every Build & Publish tab path");
+const androidBranchIds = allAndroidReleaseBranchIds();
+assert.equal(new Set(androidBranchIds).size, androidBranchIds.length,
+  "android release runbook branch ids must be unique");
+for (const branchId of androidBranchIds) {
+  const branch = findAndroidReleaseBranch(branchId)!;
+  assert.ok(BUILD_COMMAND_CATALOG.some((command) => command.id === branch.commandId),
+    `android runbook branch ${branchId} references missing catalog command ${branch.commandId}`);
+}
+const androidPathsUi = await readFile(
+  "src/modules/google-play-console/presentation/components/AndroidReleasePaths.tsx",
+  "utf8",
+);
+assert.match(androidPathsUi, /AndroidReleaseRunbookTree/,
+  "Android release paths must render the hierarchical runbook tree");
+assert.match(androidPathsUi, /AndroidReleasePathsTerminal/,
+  "Android release paths must render the live job terminal");
+for (const key of [
+  "releaseConsole.androidPaths.terminalTitle",
+  "releaseConsole.androidPaths.treeTitle",
+  "releaseConsole.androidPaths.phaseCheckboxHelp",
+]) {
+  assert.ok(adminAr[key]?.trim(), `missing Arabic android paths UI string: ${key}`);
 }
 assert.equal(BUILD_COMMAND_CATALOG.filter((item) => item.script === "ota:publish").length, 1);
 // One merged full-release path. It publishes nothing, so it needs no OTA

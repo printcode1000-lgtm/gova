@@ -16,7 +16,7 @@ The console is intentionally absent outside local development:
 3. `store-images`: validated image uploads, galleries, deletion, backups, and restore.
 4. `play-console`: read-only Android Publisher endpoints, configuration status, tracks, listings, reviews, products, APKs, and bundles.
 5. `play-tracks`: release status, staged rollout, changelogs, promotion, and R8 mapping upload.
-6. `build-publish`: the validated command catalog and command-specific operational documentation. The **Android release paths** section (`AndroidReleasePaths`) renders each catalog path as its own tab (labels from `releaseConsole.androidPaths.*`); the active tab shows one path card with its enable checkbox, primary/secondary actions, env readiness warnings, and job status. Shared actions (open outputs, static preview) stay below the tab strip.
+6. `build-publish`: the validated command catalog and command-specific operational documentation. The **Android release paths** section (`AndroidReleasePaths`) renders each catalog path as its own tab (labels from `releaseConsole.androidPaths.*`). Inside each tab, a **phase → section → command** runbook (see `android-release-runbook.ts`) lists every runnable npm variant with cascading checkboxes; execution indicators and a live terminal mirror the Deploy runbook page. Shared actions (open outputs, static preview) stay below the terminal strip.
 7. `jobs`: persisted job history, bounded streaming logs, cancellation, and changed artifacts.
 8. `bundle-analysis`: APK/AAB composition, device-delivery estimates, R8 provenance, and comparisons.
 9. `ota-releases`: approval, revocation, rollout, download testing, manifests, file changes, adoption, and audit history.

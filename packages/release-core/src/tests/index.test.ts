@@ -30,6 +30,7 @@ for (const file of [
   'console/build-job-progress.ts',
   'console/build-job-types.ts',
   'console/bundle-analysis-types.ts',
+  'console/android-release-runbook.ts',
   'console.ts',
 ]) {
   const text = readFileSync(path.join(ROOT, 'packages/release-core/src', file), 'utf8');

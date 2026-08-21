@@ -28,8 +28,11 @@ export function BuildPublishTab() {
         onCancel={jobs.dismissCancel}
       />
       <AndroidReleasePaths
+        activeJob={jobs.activeJob}
         busy={locked}
+        clearLog={jobs.clearLog}
         jobs={jobs.jobs}
+        log={jobs.log}
         readiness={jobs.readiness}
         start={jobs.start}
         cancel={jobs.cancel}

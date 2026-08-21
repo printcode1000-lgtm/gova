@@ -70,22 +70,31 @@ export function StatusChip({ job, t }: {
       : "bg-error-container text-on-error-container";
   const Icon = running ? LoaderCircle : job.status === "succeeded" ? CheckCircle2 : XCircle;
   return (
-    <p role="status" className={`mt-2 flex flex-wrap items-center gap-2 rounded-md p-2 text-xs ${tone}`}>
+    <p
+      role="status"
+      className={`mt-2 flex flex-nowrap items-center gap-2 overflow-x-auto rounded-md p-2 text-xs ${tone}`}
+    >
       <Icon className={`h-4 w-4 shrink-0 ${running ? "animate-spin" : ""}`} />
-      <span className="font-semibold">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
-      {job.stage ? <span>{t(
-        job.status === "failed"
-          ? "releaseConsole.jobProgress.failedAt"
-          : "releaseConsole.jobProgress.stage",
-        { stage: t(`releaseConsole.jobStage.${job.stage}`) },
-      )}</span> : null}
+      <span className="shrink-0 font-semibold">{t(`releaseConsole.jobStatus.${job.status}`)}</span>
+      {job.stage ? (
+        <span className="shrink-0">
+          {t(
+            job.status === "failed"
+              ? "releaseConsole.jobProgress.failedAt"
+              : "releaseConsole.jobProgress.stage",
+            { stage: t(`releaseConsole.jobStage.${job.stage}`) },
+          )}
+        </span>
+      ) : null}
       {/* The step names the individual check, test or package inside the
           stage — on a failed job it is what was running when it broke. */}
       {job.activity ? (
-        <span dir="ltr" className="font-mono opacity-80">{job.activity}</span>
+        <span dir="ltr" className="shrink-0 font-mono opacity-80">{job.activity}</span>
       ) : null}
-      <code dir="ltr">{job.id}</code>
-      {job.error ? <span dir="ltr">{job.error}</span> : null}
+      <code dir="ltr" className="shrink-0">{job.id}</code>
+      {job.error ? (
+        <span dir="ltr" className="min-w-0 truncate">{job.error}</span>
+      ) : null}
     </p>
   );
 }
