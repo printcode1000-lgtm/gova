@@ -139,7 +139,7 @@ for (const branchId of androidBranchIds) {
 const runbookStats = androidRunbookStatsByTab();
 const minimumBranchesByTab: Record<string, number> = {
   "release-android": 35,
-  "build-static": 25,
+  "build-static": 50,
   "cap-prepare-android": 30,
   "android-build-debug": 55,
   "ota-publish": 18,
