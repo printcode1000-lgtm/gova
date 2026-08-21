@@ -101,6 +101,27 @@ textarea,
   -webkit-touch-callout: default;
 }
 
+/* Terminal / log panes: keep vertical scroll obvious and touch-friendly. */
+.asol-terminal-scroll {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-on-surface-variant) 55%, transparent)
+    transparent;
+}
+
+.asol-terminal-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.asol-terminal-scroll::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-on-surface-variant) 55%, transparent);
+}
+
 /* Desktop scrollbars are chrome no touch device renders; hide them without
    disabling scrolling itself. */
 * {

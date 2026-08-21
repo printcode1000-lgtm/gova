@@ -2,19 +2,28 @@
 
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
-import { NativeCore } from "@asol/native-core";
 import { useBuildJobs } from "@/modules/release-commands/hooks/use-build-jobs";
-import { DEPLOY_ALL_RUNBOOK, DEPLOY_PUSH_RUNBOOK, deployAllBranchIds, deployPushBranchIds } from "@asol/release-core/console";
+import {
+  DEPLOY_PUSH_RUNBOOK,
+  deployAllBranchIds,
+  deployPushBranchIds,
+} from "@asol/release-core/console";
 import { useAuthHeaders } from "../hooks/use-auth-headers";
-import { RunbookPanel, Option } from "./DeployRunbookControls";
+import { RunbookPanel } from "./DeployRunbookControls";
 import { DeployRunbookCollapsible } from "./DeployRunbookCollapsible";
-import { ExecutionBox } from "./DeployRunbookExecutionBox";
-import { ExecutionIndicator, TerminalActions, TerminalOutput } from "./DeployRunbookTerminal";
+import { DeployRunbookMainGrid } from "./DeployRunbookMainGrid";
 import type { DeployTab } from "./DeployRunbookTypes";
-import { ALL_BRANCH_HELP, PUSH_BRANCH_HELP, deployAllScenarioArg, deployAllScenarios, deployPushTargets } from "./deploy-runbook-copy";
+import { PUSH_BRANCH_HELP, deployPushTargets } from "./deploy-runbook-copy";
+import { deployAllPreview, deployPushPreview } from "./deploy-runbook-preview";
+import {
+  DeployAllPanel,
+  Header,
+  StatusBadge,
+  Summary,
+  TabButtons,
+} from "./DeployRunbookPageSections";
 
 export function DeployRunbookPage() {
   const { session, isLoading } = useSession();
@@ -32,28 +41,73 @@ export function DeployRunbookPage() {
   const [allowScratchFiles, setAllowScratchFiles] = React.useState(false);
   const [confirmation, setConfirmation] = React.useState("");
 
-  if (isLoading) return <main className="p-4 text-sm text-on-surface-variant">جار التحميل...</main>;
-  if (!allowed) return <main className="mx-auto max-w-2xl p-4 sm:p-6"><div className="rounded-md bg-error-container p-4 text-on-error-container">هذه الصفحة متاحة للسوبر أدمن فقط.</div></main>;
+  if (isLoading) {
+    return <main className="p-4 text-sm text-on-surface-variant">جار التحميل...</main>;
+  }
+  if (!allowed) {
+    return (
+      <main className="mx-auto max-w-2xl p-4 sm:p-6">
+        <div className="rounded-md bg-error-container p-4 text-on-error-container">
+          هذه الصفحة متاحة للسوبر أدمن فقط.
+        </div>
+      </main>
+    );
+  }
 
   const activeJob = jobs.jobs.find((job) => job.status === "queued" || job.status === "running");
   const locked = jobs.busy || Boolean(activeJob);
   const exactPhrase = tab === "deploy-all" ? "DEPLOY_ALL" : "DEPLOY_PUSH";
   const selectedCount = tab === "deploy-all" ? allSelected.size : pushSelected.size;
-  const totalCount = tab === "deploy-all" ? deployAllBranchIds().length : deployPushBranchIds().length;
-  const commandPreview = tab === "deploy-all"
-    ? deployAllPreview(allScenario, allSelected, { continueOnError, skipPreflight, allowEmpty, allowManifestDowngrade, allowScratchFiles })
-    : deployPushPreview(pushTarget, { allowEmpty, allowManifestDowngrade, allowScratchFiles });
+  const totalCount =
+    tab === "deploy-all" ? deployAllBranchIds().length : deployPushBranchIds().length;
+  const commandPreview =
+    tab === "deploy-all"
+      ? deployAllPreview(allScenario, allSelected, {
+          continueOnError,
+          skipPreflight,
+          allowEmpty,
+          allowManifestDowngrade,
+          allowScratchFiles,
+        })
+      : deployPushPreview(pushTarget, {
+          allowEmpty,
+          allowManifestDowngrade,
+          allowScratchFiles,
+        });
 
-  const start = () => void jobs.start(tab === "deploy-all" ? {
-    commandId: "deploy-all-runbook", confirmationPhrase: exactPhrase,
-    parameters: { deployAllScenario: allScenario, deployAllBranches: [...allSelected].join(","), deployAllContinueOnError: continueOnError, deployAllSkipPreflight: skipPreflight, deployAllAllowEmpty: allowEmpty, deployAllAllowManifestDowngrade: allowManifestDowngrade, deployAllAllowScratchFiles: allowScratchFiles },
-  } : {
-    commandId: "deploy-push-runbook", confirmationPhrase: exactPhrase,
-    parameters: { deployPushTarget: pushTarget, deployPushAllowEmpty: allowEmpty, deployPushAllowManifestDowngrade: allowManifestDowngrade, deployPushAllowScratchFiles: allowScratchFiles },
-  });
+  const start = () =>
+    void jobs.start(
+      tab === "deploy-all"
+        ? {
+            commandId: "deploy-all-runbook",
+            confirmationPhrase: exactPhrase,
+            parameters: {
+              deployAllScenario: allScenario,
+              deployAllBranches: [...allSelected].join(","),
+              deployAllContinueOnError: continueOnError,
+              deployAllSkipPreflight: skipPreflight,
+              deployAllAllowEmpty: allowEmpty,
+              deployAllAllowManifestDowngrade: allowManifestDowngrade,
+              deployAllAllowScratchFiles: allowScratchFiles,
+            },
+          }
+        : {
+            commandId: "deploy-push-runbook",
+            confirmationPhrase: exactPhrase,
+            parameters: {
+              deployPushTarget: pushTarget,
+              deployPushAllowEmpty: allowEmpty,
+              deployPushAllowManifestDowngrade: allowManifestDowngrade,
+              deployPushAllowScratchFiles: allowScratchFiles,
+            },
+          },
+    );
 
   return (
-    <main className="mx-auto w-full min-w-0 max-w-7xl space-y-3 p-3 pb-24 sm:space-y-4 sm:p-4" dir="rtl">
+    <main
+      className="mx-auto w-full min-w-0 max-w-7xl space-y-3 p-3 pb-24 sm:space-y-4 sm:p-4"
+      dir="rtl"
+    >
       <Header />
       <TabButtons tab={tab} setTab={setTab} />
 
@@ -62,114 +116,61 @@ export function DeployRunbookPage() {
         description="نظرة سريعة على الفروع المفعّلة وحالة التنفيذ وسلوك الخطأ."
         badge={<StatusBadge status={activeJob?.status ?? "جاهز"} />}
       >
-        <Summary selectedCount={selectedCount} totalCount={totalCount} status={activeJob?.status ?? "جاهز"} continueOnError={continueOnError && tab === "deploy-all"} />
+        <Summary
+          selectedCount={selectedCount}
+          totalCount={totalCount}
+          status={activeJob?.status ?? "جاهز"}
+          continueOnError={continueOnError && tab === "deploy-all"}
+        />
       </DeployRunbookCollapsible>
 
       {tab === "deploy-all" ? (
-        <DeployAllPanel selected={allSelected} setSelected={setAllSelected} scenario={allScenario} setScenario={setAllScenario} continueOnError={continueOnError} setContinueOnError={setContinueOnError} skipPreflight={skipPreflight} setSkipPreflight={setSkipPreflight} />
+        <DeployAllPanel
+          selected={allSelected}
+          setSelected={setAllSelected}
+          scenario={allScenario}
+          setScenario={setAllScenario}
+          continueOnError={continueOnError}
+          setContinueOnError={setContinueOnError}
+          skipPreflight={skipPreflight}
+          setSkipPreflight={setSkipPreflight}
+        />
       ) : (
-        <RunbookPanel title="Deploy Push" description="المسار السريع: أسرار، commit، push، ثم تحقق Vercel للأهداف المختارة دون فحوصات build/test." runbook={DEPLOY_PUSH_RUNBOOK} help={PUSH_BRANCH_HELP} selected={pushSelected} setSelected={setPushSelected} scenarioLabel="هدف Vercel" scenarioValue={pushTarget} onScenarioChange={setPushTarget} scenarios={deployPushTargets} />
+        <RunbookPanel
+          title="Deploy Push"
+          description="المسار السريع: أسرار، commit، push، ثم تحقق Vercel للأهداف المختارة دون فحوصات build/test."
+          runbook={DEPLOY_PUSH_RUNBOOK}
+          help={PUSH_BRANCH_HELP}
+          selected={pushSelected}
+          setSelected={setPushSelected}
+          scenarioLabel="هدف Vercel"
+          scenarioValue={pushTarget}
+          onScenarioChange={setPushTarget}
+          scenarios={deployPushTargets}
+        />
       )}
 
-      <section className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)] lg:gap-4">
-        <div className="order-2 min-w-0 space-y-3 lg:order-1">
-          <DeployRunbookCollapsible title="مؤشرات التنفيذ" description="آخر مرحلة وقسم وفرع ظهر في سجل الطرفية.">
-            <ExecutionIndicator log={jobs.log} tab={tab} status={activeJob?.status ?? "idle"} />
-          </DeployRunbookCollapsible>
-
-          <DeployRunbookCollapsible
-            title="الطرفية"
-            description="سجل job النظام المحلي؛ يُحدَّث أثناء التشغيل."
-            actions={<TerminalActions onCopy={() => void NativeCore.writeClipboard({ string: jobs.log })} onClear={jobs.clearLog} />}
-          >
-            <TerminalOutput text={jobs.log} />
-          </DeployRunbookCollapsible>
-        </div>
-
-        <div className="order-1 min-w-0 lg:order-2">
-          <ExecutionBox locked={locked} activeJob={activeJob} exactPhrase={exactPhrase} confirmation={confirmation} setConfirmation={setConfirmation} commandPreview={commandPreview} allowEmpty={allowEmpty} setAllowEmpty={setAllowEmpty} allowManifestDowngrade={allowManifestDowngrade} setAllowManifestDowngrade={setAllowManifestDowngrade} allowScratchFiles={allowScratchFiles} setAllowScratchFiles={setAllowScratchFiles} startError={jobs.startError} onStart={start} onCancel={() => activeJob && void jobs.cancel(activeJob)} />
-        </div>
-      </section>
+      <DeployRunbookMainGrid
+        tab={tab}
+        log={jobs.log}
+        clearLog={jobs.clearLog}
+        activeJob={activeJob}
+        activeStatus={activeJob?.status ?? "idle"}
+        locked={locked}
+        exactPhrase={exactPhrase}
+        confirmation={confirmation}
+        setConfirmation={setConfirmation}
+        commandPreview={commandPreview}
+        allowEmpty={allowEmpty}
+        setAllowEmpty={setAllowEmpty}
+        allowManifestDowngrade={allowManifestDowngrade}
+        setAllowManifestDowngrade={setAllowManifestDowngrade}
+        allowScratchFiles={allowScratchFiles}
+        setAllowScratchFiles={setAllowScratchFiles}
+        startError={jobs.startError}
+        onStart={start}
+        onCancel={() => activeJob && void jobs.cancel(activeJob)}
+      />
     </main>
   );
-}
-
-function Header() {
-  return (
-    <header className="space-y-2 rounded-md border bg-surface p-3 sm:p-4">
-      <h1 className="text-xl font-semibold sm:text-2xl">مركز تشغيل Deploy</h1>
-      <p className="text-sm text-on-surface-variant">تنفيذ الأوامر يتم كعملية نظام مستقلة من خلال Job محلي، والصفحة تعرض الطرفية وتتحكم في التسلسل فقط.</p>
-    </header>
-  );
-}
-
-function TabButtons(props: { tab: DeployTab; setTab: (tab: DeployTab) => void }) {
-  return (
-    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-      <Button className="w-full sm:w-auto" variant={props.tab === "deploy-all" ? "default" : "outline"} onClick={() => props.setTab("deploy-all")}>Deploy All</Button>
-      <Button className="w-full sm:w-auto" variant={props.tab === "deploy-push" ? "default" : "outline"} onClick={() => props.setTab("deploy-push")}>Deploy Push</Button>
-    </div>
-  );
-}
-
-function StatusBadge(props: { status: string }) {
-  const running = props.status === "running" || props.status === "queued";
-  return (
-    <span className={`rounded-full px-2 py-0.5 text-xs ${running ? "bg-primary-container text-on-primary-container" : "bg-muted text-on-surface-variant"}`}>
-      {props.status}
-    </span>
-  );
-}
-
-function Summary(props: { selectedCount: number; totalCount: number; status: string; continueOnError: boolean }) {
-  return (
-    <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      <InfoCard title="الفروع المفعّلة" value={`${props.selectedCount} / ${props.totalCount}`} help="كل checkbox يحدد هل يدخل هذا الفرع ضمن خطة التشغيل الحالية أم يتم تجاوزه." />
-      <InfoCard title="حالة التنفيذ" value={props.status} help="العملية تستمر كـ job محلي حتى لو أغلقت الصفحة." />
-      <InfoCard title="سلوك الخطأ" value={props.continueOnError ? "استمرار" : "توقف"} help="الافتراضي يوقف التسلسل عند أول خطأ لحماية النشر من نتائج نصف مكتملة." className="sm:col-span-2 lg:col-span-1" />
-    </section>
-  );
-}
-
-function DeployAllPanel(props: { selected: Set<string>; setSelected: (next: Set<string>) => void; scenario: string; setScenario: (value: string) => void; continueOnError: boolean; setContinueOnError: (value: boolean) => void; skipPreflight: boolean; setSkipPreflight: (value: boolean) => void }) {
-  return (
-    <RunbookPanel
-      title="Deploy All"
-      description="المسار الكامل: فحوصات، بناء، قواعد بيانات، خدمات، GitHub، ثم تحقق Vercel."
-      runbook={DEPLOY_ALL_RUNBOOK}
-      help={ALL_BRANCH_HELP}
-      selected={props.selected}
-      setSelected={props.setSelected}
-      scenarioLabel="وضع التشغيل"
-      scenarioValue={props.scenario}
-      onScenarioChange={props.setScenario}
-      scenarios={deployAllScenarios}
-      extraOptions={
-        <>
-          <Option checked={props.continueOnError} onChange={props.setContinueOnError} label="الاستمرار بعد الخطأ" help="عند التفعيل يحاول الانتقال للمرحلة التالية بعد تسجيل الخطأ. الافتراضي أكثر أماناً: التوقف عند أول فشل." />
-          <Option checked={props.skipPreflight} onChange={props.setSkipPreflight} label="تجاوز preflight" help="يسمح بتشغيل publish دون انتظار الفحوصات الطويلة. يظهر هذا في commit حتى لا يختفي الاختصار." />
-        </>
-      }
-    />
-  );
-}
-
-function InfoCard(props: { title: string; value: string; help: string; className?: string }) {
-  return (
-    <div className={props.className ?? ""}>
-      <div className="min-w-0 rounded-md border bg-surface p-3">
-        <div className="text-xs text-on-surface-variant">{props.title}</div>
-        <div className="mt-1 text-lg font-semibold break-words">{props.value}</div>
-        <p className="mt-1 text-xs text-on-surface-variant break-words">{props.help}</p>
-      </div>
-    </div>
-  );
-}
-
-function deployAllPreview(scenario: string, selected: Set<string>, flags: { continueOnError: boolean; skipPreflight: boolean; allowEmpty: boolean; allowManifestDowngrade: boolean; allowScratchFiles: boolean }) {
-  return `npm run deploy:all -- ${deployAllScenarioArg(scenario)} --runbook-branches=${[...selected].join(",")}${flags.continueOnError ? " --continue-on-error" : ""}${flags.skipPreflight ? " --skip-preflight" : ""}${flags.allowEmpty ? " --allow-empty" : ""}${flags.allowManifestDowngrade ? " --allow-manifest-downgrade" : ""}${flags.allowScratchFiles ? " --allow-scratch-files" : ""}`.replace(/\s+/g, " ").trim();
-}
-
-function deployPushPreview(target: string, flags: { allowEmpty: boolean; allowManifestDowngrade: boolean; allowScratchFiles: boolean }) {
-  return `npm run deploy:push -- --vercel-target=${target}${flags.allowEmpty ? " --allow-empty" : ""}${flags.allowManifestDowngrade ? " --allow-manifest-downgrade" : ""}${flags.allowScratchFiles ? " --allow-scratch-files" : ""}`;
 }
