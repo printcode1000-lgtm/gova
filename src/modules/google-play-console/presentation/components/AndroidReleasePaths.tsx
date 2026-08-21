@@ -28,7 +28,7 @@ export function AndroidReleasePaths({
   readonly t: (key: string, params?: Record<string, string>) => string;
 }) {
   const [enabledPaths, setEnabledPaths] = React.useState(DEFAULT_ENABLED_PATHS);
-  const [activePath, setActivePath] = React.useState(DEFAULT_ACTIVE_PATH);
+  const [activePath, setActivePath] = React.useState<string>(DEFAULT_ACTIVE_PATH);
   const { openPreview, previewState } = useAndroidStaticPreview();
 
   const missingEnvOf = (commandId: string) => {
