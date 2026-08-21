@@ -78,11 +78,17 @@ export function AppSidebarSuperAdminSection({
         aria-expanded={superAdminOpen}
         className={cn(sidebarControlClass, "rounded-none")}
       >
-        <ShieldCheck className={sidebarIconClass} />
-        لوحة تحكم السوبر أدمن
+        <ShieldCheck
+          className={cn(sidebarIconClass, "text-primary")}
+          aria-hidden
+        />
+        <span className="min-w-0 flex-1 text-on-surface">
+          لوحة تحكم السوبر أدمن
+        </span>
         <ChevronDown
+          aria-hidden
           className={cn(
-            "ms-auto h-4 w-4 transition-transform",
+            "ms-auto h-4 w-4 shrink-0 text-on-surface-variant transition-transform",
             superAdminOpen && "rotate-180",
           )}
         />

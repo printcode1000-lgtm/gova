@@ -52,7 +52,12 @@ See [super-admin-cloud-accounts.md](../06-super-admin-and-operations/super-admin
 | النظام وحسابات المستخدمين | سجل أحداث النظام | `/super-admin/logs` |
 | النظام وحسابات المستخدمين | إدارة حسابات المستخدمين | `/super-admin/users` |
 
-The section trigger itself is labeled `لوحة تحكم السوبر أدمن`.
+The section trigger itself is labeled `لوحة تحكم السوبر أدمن`. Its header button
+uses three distinct semantic text colors on the shared sidebar surface: the
+`ShieldCheck` icon uses `text-primary`, the label uses `text-on-surface`, and the
+expand chevron uses `text-on-surface-variant`. Child elements set their own color
+classes so they stay distinct from each other and from the inherited `sidebarTone`
+on the control shell.
 
 ## Guardrails
 
