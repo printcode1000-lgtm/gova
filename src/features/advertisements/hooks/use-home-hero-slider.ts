@@ -12,9 +12,11 @@ import {
   DEFAULT_HOME_HERO_PUBLISHED,
   HOME_HERO_CACHE_KEY,
   HOME_HERO_LEGACY_CACHE_KEY,
+  normalizeHomeHeroConfig,
   type HomeHeroConfig,
   type HomeHeroPublished,
 } from "@asol/hero-slider-core";
+import { HOME_HERO_UPDATED_EVENT } from "../home-hero-slider-sync";
 import { homeHeroSliderApiService } from "../services/home-hero-slider-api-service";
 import { reportSystemIssue } from '@asol/system-logs-core';
 
@@ -27,6 +29,13 @@ const fallback: HomeHeroPublished = {
   config: DEFAULT_HOME_HERO_PUBLISHED.config satisfies HomeHeroConfig,
 };
 
+function normalizePublished(input: HomeHeroPublished): HomeHeroPublished {
+  return {
+    ...input,
+    config: normalizeHomeHeroConfig(input.config),
+  };
+}
+
 export function useHomeHeroSlider() {
   const [data, setData] = useState<HomeHeroPublished>(fallback);
 
@@ -37,7 +46,7 @@ export function useHomeHeroSlider() {
         HOME_HERO_CACHE_KEY,
       );
       await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, HOME_HERO_LEGACY_CACHE_KEY);
-      if (cached) setData(cached);
+      if (cached) setData(normalizePublished(cached));
 
       const intervalMs = (cached?.checkIntervalMinutes ?? 15) * 60_000;
       const lastCheck = cached ? Date.parse(cached.lastCheckedAt) : 0;
@@ -50,13 +59,13 @@ export function useHomeHeroSlider() {
         version.version !== cached.version ||
         version.updatedAt !== cached.updatedAt
       ) {
-        next = await homeHeroSliderApiService.getCurrent();
+        next = normalizePublished(await homeHeroSliderApiService.getCurrent());
         setData(next);
       } else if (version.checkIntervalMinutes !== cached.checkIntervalMinutes) {
-        next = {
+        next = normalizePublished({
           ...cached,
           checkIntervalMinutes: version.checkIntervalMinutes,
-        };
+        });
         setData(next);
       }
       await asolDbSet<HomeHeroCache>(
@@ -83,6 +92,14 @@ export function useHomeHeroSlider() {
     void checkForUpdates();
     const interval = window.setInterval(() => void checkForUpdates(), 60_000);
     return () => window.clearInterval(interval);
+  }, [checkForUpdates]);
+
+  useEffect(() => {
+    const onHeroUpdated = () => {
+      void checkForUpdates(true);
+    };
+    window.addEventListener(HOME_HERO_UPDATED_EVENT, onHeroUpdated);
+    return () => window.removeEventListener(HOME_HERO_UPDATED_EVENT, onHeroUpdated);
   }, [checkForUpdates]);
 
   return { ...data, checkForUpdates };

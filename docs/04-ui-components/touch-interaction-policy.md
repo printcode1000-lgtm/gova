@@ -60,6 +60,14 @@ Component props named `title` are untouched: `<ProductComponentFrame title={...}
 passes data to a component that renders it as a heading; it never becomes a DOM
 attribute.
 
+## Toggle switches
+
+Use `@/components/ui/switch` (`Switch`) for every on/off control. It is the single
+touch-sized pill (`h-8 w-14`) with RTL-aware thumb motion (`inset-inline-start`).
+`@/components/ui/toggle-switch` (`ToggleSwitch`) is a thin wrapper that adds a
+required `aria-label` when no visible label is wired with `htmlFor`. Do not
+reintroduce smaller Radix defaults or pointer-based `translate-x` thumb motion.
+
 ## Enforcement
 
 The policy is a build gate, not a review convention. `packages/architecture-core/src/checks/touch-interaction-contract.ts`

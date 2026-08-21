@@ -52,7 +52,7 @@
     "test:map-core": "npx tsx packages/map-core/src/tests/index.test.ts",
     "test:product-style-core": "npx tsx packages/product-style-core/src/tests/index.test.ts",
     "test:product-core": "npx tsx packages/product-core/src/tests/index.test.ts",
-    "test:hero-slider-core": "npx tsx packages/hero-slider-core/src/tests/index.test.ts",
+    "test:hero-slider-core": "npx tsx packages/hero-slider-core/src/tests/index.test.ts && npx tsx src/components/ui/hero-slider.test.ts && npx tsx src/features/super-admin/presentation/super-admin-hero-slider-save.test.ts",
     "test:featured-marquee-core": "npx tsx packages/featured-marquee-core/src/tests/index.test.ts",
     "test:trending-ribbon-core": "npx tsx packages/trending-ribbon-core/src/tests/index.test.ts",
     "test:page-snapshot-core": "npx tsx packages/page-snapshot-core/src/tests/index.test.ts",

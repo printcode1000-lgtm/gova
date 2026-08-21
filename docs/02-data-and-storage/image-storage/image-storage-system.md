@@ -120,8 +120,11 @@ public/sync_data/sync_file/
   images/
     avatars/
     covers/
+    advertisements/home-hero-slider/
     products/<mainCategoryId>/
     spicialOrder/
 ```
 
 See also [r2-storage.md](./r2-storage.md).
+
+`shouldUseUnoptimizedImage` in `@asol/storage-core` bypasses the Next.js optimizer for `blob:` and `data:` previews, local `/sync_data/sync_file/` URLs, and listed CDN hosts (`r2.dev`, `cloudflarestorage.com`, `googleusercontent.com`).

@@ -10,10 +10,11 @@ import {
   HOME_HERO_SLIDER_ID,
   type HomeHeroConfig,
   type HomeHeroRecord,
+  normalizeHomeHeroConfig,
 } from "@asol/hero-slider-core";
 
 function parseConfig(value: string): HomeHeroConfig {
-  return JSON.parse(value) as HomeHeroConfig;
+  return normalizeHomeHeroConfig(JSON.parse(value));
 }
 
 export class HomeHeroSliderRepository {

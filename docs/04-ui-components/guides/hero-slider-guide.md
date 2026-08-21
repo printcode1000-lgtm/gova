@@ -10,10 +10,15 @@
 | Reusable component                  | `src/components/ui/HeroSlider.tsx`                          |
 | Reusable component public props/types | `src/components/ui/hero-slider.types.ts`                   |
 | Reusable component transition styling | `src/components/ui/hero-slider-styles.ts`                  |
+| View-mode off-screen image probes   | `src/components/ui/HeroSliderImageProbe.tsx`                |
+| Carousel slide filtering helpers    | `src/components/ui/hero-slider-model.ts`                    |
+| Carousel UI helper tests            | `src/components/ui/hero-slider.test.ts`                     |
 | Full administrative editor          | `src/components/ui/HeroSliderEditor.tsx`                    |
 | Image-only profile editor           | `src/components/ui/HeroSliderImagesEditor.tsx`              |
 | Home integration                    | `src/features/home/presentation/HomeScreen.tsx`                        |
 | Home cache and synchronization      | `src/features/advertisements/hooks/use-home-hero-slider.ts` |
+| Home save broadcast                 | `src/features/advertisements/home-hero-slider-sync.ts`      |
+| Super-admin save (explicit publish) | `src/features/super-admin/presentation/use-super-admin-hero-slider-save.ts` |
 | Super-admin page                    | `src/features/super-admin/presentation/SuperAdminHeroSliderPage.tsx`   |
 | Profile preview integration         | `src/features/profile/presentation/ProfilePageContent.tsx`             |
 | Profile image-editing tabs          | `src/features/profile/presentation/StoreIdentityCard.tsx`              |
@@ -39,7 +44,8 @@ This is the default public display mode. It renders the carousel and enables:
 - Touch swiping.
 - Keyboard navigation.
 - RTL-aware navigation.
-- Image preloading and loading skeletons.
+- Image preloading and loading skeletons in **view** mode only, while every slide is still probing. Admin preview never covers the carousel with that overlay; it shows the slide image or the unavailable placeholder so editors can fix content.
+- Slides whose image URL is missing or fails to load are **omitted** from the carousel (probed off-screen first). If every slide is omitted, the same empty state as “no slides” is shown. Admin modes still surface the built-in unavailable placeholder so editors can fix content.
 - Slide actions through `config.onAction` (with automatic bypass for keyboard actions).
 - A safe empty state when no slides exist (displaying a user-friendly helper message instead of throwing errors).
 
@@ -67,7 +73,11 @@ This is the full configuration editor. It renders a live carousel preview follow
 - Adding and deleting slides.
 - Reordering slides.
 
-Autoplay and slide actions are disabled while editing. This prevents the editor from navigating away or changing slides unexpectedly.
+Autoplay, per-slide duration, looping, and transitions run in the admin live preview the same way as `view` mode. Slide tap actions stay disabled so editing does not navigate away. Add at least two slides to see transition effects; a single slide only shows titles and the static image.
+
+The live preview merges local `data:` previews from `StorageImageManager` into the carousel via `mergeHeroSliderAdminPreview` without mutating the persisted editor config. Staged slide images appear in the carousel immediately; server upload and Home publication happen only when the super-admin clicks Save. Local `/sync_data/sync_file/...` URLs bypass the Next.js image optimizer so newly written files render immediately after Save.
+
+Slide layout classes must stay space-separated (`absolute inset-0 …`). Concatenating tokens without spaces collapses the fill parent to zero size and leaves only the loading skeleton visible.
 
 The project uses this mode only in `/super-admin/hero-slider`. It controls the Home slider and is not used by Profile.
 
@@ -77,7 +87,7 @@ const [config, setConfig] = useState<HeroSliderConfig>(initialConfig);
 <HeroSlider mode="admin-edit" config={config} onChange={setConfig} />;
 ```
 
-The super-admin page has one "Save" button next to the check interval inputs. It replaces the current Home configuration directly; there are no draft, publish, restore, or history actions.
+The super-admin page has one "Save" button next to the check interval inputs. Edits and local image previews stay in the admin session until Save runs: pending uploads are flushed to storage, the configuration is written to SQLite/Turso, the Home cache is invalidated, and subscribers refresh. Home does not reflect draft edits before Save.
 
 ### `images-edit`
 
@@ -123,29 +133,33 @@ Both editing modes maintain internal editing state and synchronize it whenever t
 ## Configuration model
 
 ```ts
-type HeroSliderTransition =
+type HomeHeroTransition =
   | "Fade"
+  | "CrossFade"
   | "SlideLeft"
   | "SlideRight"
+  | "SlideUp"
+  | "SlideDown"
   | "Zoom"
-  | "Parallax";
+  | "Parallax"
+  | "KenBurns"
+  | "None";
 
-interface HeroSliderConfig {
-  transition: HeroSliderTransition;
-  transitionDuration: number;
+interface HomeHeroConfig {
   autoPlay: boolean;
   loop: boolean;
-  slides: HeroSliderSlide[];
-  onAction?: (action: string) => void;
+  slides: HomeHeroSlide[];
 }
 
-interface HeroSliderSlide {
+interface HomeHeroSlide {
   priority: number;
   image: string;
   imageKey?: string;
   title: string;
   subtitle: string;
   duration: number;
+  transition: HomeHeroTransition;
+  transitionDuration: number;
   action: string;
 }
 ```
@@ -154,8 +168,6 @@ interface HeroSliderSlide {
 
 | Field                | Meaning                                                                                                              |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `transition`         | Visual transition applied to every slide.                                                                            |
-| `transitionDuration` | Transition animation duration in milliseconds.                                                                       |
 | `autoPlay`           | Enables automatic slide advancement in `view` mode.                                                                  |
 | `loop`               | Returns to the first slide after the last slide.                                                                     |
 | `priority`           | Sort order. Lower values render first. The full editor renumbers reordered slides as `100`, `200`, `300`, and so on. |
@@ -164,6 +176,8 @@ interface HeroSliderSlide {
 | `title`              | Main slide heading. Profile-generated slides intentionally use an empty value.                                       |
 | `subtitle`           | Badge text above the heading. Profile-generated slides intentionally use an empty value.                             |
 | `duration`           | Time before autoplay advances from this slide, in milliseconds.                                                      |
+| `transition`         | Visual transition used when **entering** this slide. Horizontal slides mirror automatically on backward navigation and in RTL. |
+| `transitionDuration` | Transition animation duration in milliseconds for this slide (`0` with `None` snaps instantly).                      |
 | `action`             | Application-defined value passed to `onAction`.                                                                      |
 | `onAction`           | Runtime callback. It must not be serialized into JSON or stored in a database.                                       |
 
@@ -248,12 +262,12 @@ The `PUT` payload contains only `identity`, `config`, and `checkIntervalMinutes`
   -> loads HomeHeroRecord through HomeHeroSliderApiService
   -> passes record.config to HeroSlider mode="admin-edit"
   -> receives changes through onChange
-  -> completes any pending slide image uploads before save
-  -> saves the current record and increments version
-  -> invalidates the Home cache
+  -> receives changes through onChange (draft only; Home unchanged)
+  -> Save uploads pending slide images, persists config, increments version
+  -> invalidates the Home cache and broadcasts `asol:home-hero-slider-updated`
 ```
 
-The super-admin page also controls `checkIntervalMinutes` and displays version/update metadata. There is one Save button. Save stays disabled while slide images are still uploading. Zod validates every submitted configuration before repository writes.
+The super-admin page also controls `checkIntervalMinutes` and displays version/update metadata. Pending slide images are uploaded during Save, not on every edit. `useHomeHeroSlider` listens for the update event and forces a fresh fetch on Home only after a successful Save.
 
 ## Home synchronization and IndexedDB cache
 
@@ -279,7 +293,7 @@ Synchronization sequence:
 6. The new configuration and check time are stored in IndexedDB.
 7. Network failures preserve the last usable local configuration.
 
-`checkIntervalMinutes`, `transitionDuration`, and each slide's `duration` are independent settings.
+`checkIntervalMinutes`, each slide's `transitionDuration`, and each slide's `duration` are independent settings.
 
 ## Home image storage
 
@@ -306,6 +320,17 @@ interface StoredImage {
 ```
 
 The URL becomes `slide.image`, while the persistent object key becomes `slide.imageKey`. Uploaded images are identified by `imageKey`; the server regenerates their public URLs through the configured storage provider when returning data. A stored URL remains useful for external seed images that have no managed key.
+
+**Persistence contract (all runtimes):** the database stores only `imageKey` for managed home-hero-slider uploads; `image` is cleared on save. Every read (`getCurrent`, `getAdmin`, post-save response) resolves `image` from `imageKey` through the active storage provider:
+
+| Runtime | Provider | Public URL shape |
+| --- | --- | --- |
+| Local dev (`next dev` / `next start`) | `LocalStorageProvider` | `/sync_data/sync_file/images/advertisements/home-hero-slider/{key}` |
+| Production / static web / Android (OTA) | Cloudflare R2 | `https://…r2.dev/images/content/advertisements/home-hero-slider/{key}` |
+
+Saving rejects managed slide URLs without `imageKey`. Removed keys are deleted only after a successful save and only when the object still exists in storage.
+
+In local development those public URLs use `/sync_data/sync_file/...`. `shouldUseUnoptimizedImage` treats that prefix, `blob:`, `data:`, and listed CDN hosts as unoptimized so `next/image` does not send them through `/_next/image`.
 
 Removing an image in the editor only changes the local form. On Save, the server first commits the new configuration to SQLite or Turso. Only after that succeeds does it delete removed managed image keys from local storage or R2. A failed database save never deletes a referenced image, and there is no delayed cleanup queue.
 

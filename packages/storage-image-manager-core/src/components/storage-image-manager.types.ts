@@ -33,6 +33,7 @@ export interface StorageImageManagerProps {
   label?: React.ReactNode;
   hint?: React.ReactNode;
   onPendingChange?: (pending: boolean) => void;
+  onPreviewChange?: (slotIndex: number, previewUrl: string | null) => void;
   translate?: StorageImageManagerTranslate;
   draftOwnerId?: string | null;
   draftPageKey?: string | null;

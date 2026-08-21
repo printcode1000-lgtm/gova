@@ -1,0 +1,160 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+
+import type { HeroSliderConfig } from "@/components/ui/HeroSlider";
+import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
+import {
+  HOME_HERO_CACHE_KEY,
+  normalizeHomeHeroConfigForPersist,
+  type HomeHeroRecord,
+  type SuperAdminIdentity,
+} from "@asol/hero-slider-core";
+import { homeHeroSliderApiService } from "@/features/advertisements/services/home-hero-slider-api-service";
+import { notifyHomeHeroSliderUpdated } from "@/features/advertisements/home-hero-slider-sync";
+import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
+import { reportSystemIssue } from "@asol/system-logs-core";
+import {
+  heroSliderFingerprint,
+  isHeroSliderConfigReadyToPersist,
+} from "./super-admin-hero-slider-save-model";
+
+const saveErrorMessages: Record<string, string> = {
+  forbidden: "غير مصرح لك بهذه العملية.",
+  invalidHeroSliderConfig: "إعداد الشرائح غير صالح، يرجى مراجعة البيانات.",
+};
+
+function formatSaveSuccess(saved: HomeHeroRecord): string {
+  return saved.storageWarning === "imageDeleteFailed"
+    ? "تم حفظ التعديلات، لكن تعذر حذف ملف صورة قديم من التخزين."
+    : "تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.";
+}
+
+function formatSaveError(error: unknown): string {
+  const rawMessage = error instanceof Error ? error.message : "";
+  return saveErrorMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ التعديلات.";
+}
+
+function hasPendingUploads(
+  imageUploadRef: RefObject<StorageImageManagerHandle | null>,
+): boolean {
+  return imageUploadRef.current?.hasPending() ?? false;
+}
+
+export function useSuperAdminHeroSliderSave({
+  session,
+  record,
+  config,
+  intervalMinutes,
+  getConfig,
+  getIntervalMinutes,
+  imageUploadRef,
+  imagesPending,
+  onSaved,
+}: {
+  session: SuperAdminIdentity | null;
+  record: HomeHeroRecord | null;
+  config: HeroSliderConfig | null;
+  intervalMinutes: number;
+  getConfig: () => HeroSliderConfig | null;
+  getIntervalMinutes: () => number;
+  imageUploadRef: RefObject<StorageImageManagerHandle | null>;
+  imagesPending: boolean;
+  onSaved: (saved: HomeHeroRecord) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [savedFingerprint, setSavedFingerprint] = useState<string | null>(null);
+  const persistInFlightRef = useRef(false);
+
+  useEffect(() => {
+    if (!record) return;
+    setSavedFingerprint(
+      heroSliderFingerprint(record.config, record.checkIntervalMinutes),
+    );
+  }, [record?.version, record?.checkIntervalMinutes]);
+
+  const persist = useCallback(async () => {
+    if (!session || !record || persistInFlightRef.current) {
+      return false;
+    }
+
+    persistInFlightRef.current = true;
+    setBusy(true);
+    setMessage(null);
+    try {
+      if (hasPendingUploads(imageUploadRef)) {
+        const uploaded = await imageUploadRef.current!.uploadPending();
+        if (!uploaded) {
+          setMessage("تعذر إكمال رفع الصور. أعد المحاولة ثم احفظ.");
+          return false;
+        }
+      }
+
+      const configToSave = getConfig();
+      const intervalToSave = getIntervalMinutes();
+      if (!configToSave) return false;
+
+      if (!isHeroSliderConfigReadyToPersist(configToSave)) {
+        setMessage("أكمل رفع الصور لكل الشرائح ثم احفظ.");
+        return false;
+      }
+
+      const saved = await homeHeroSliderApiService.save(
+        session,
+        normalizeHomeHeroConfigForPersist(configToSave),
+        intervalToSave,
+      );
+      try {
+        await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, HOME_HERO_CACHE_KEY);
+      } catch (error) {
+        reportSystemIssue({
+          level: "warning",
+          feature: "HeroSliderAdmin",
+          operation: "invalidate-home-cache",
+          error,
+        });
+      }
+      onSaved(saved);
+      setSavedFingerprint(
+        heroSliderFingerprint(saved.config, saved.checkIntervalMinutes),
+      );
+      notifyHomeHeroSliderUpdated();
+      setMessage(formatSaveSuccess(saved));
+      return true;
+    } catch (error) {
+      reportSystemIssue({
+        feature: "HeroSliderAdmin",
+        operation: "save",
+        error,
+      });
+      setMessage(formatSaveError(error));
+      return false;
+    } finally {
+      persistInFlightRef.current = false;
+      setBusy(false);
+    }
+  }, [getConfig, getIntervalMinutes, imageUploadRef, onSaved, record, session]);
+
+  const saveNow = useCallback(async () => {
+    return persist();
+  }, [persist]);
+
+  const isDirty =
+    Boolean(config) &&
+    savedFingerprint !== null &&
+    heroSliderFingerprint(config!, intervalMinutes) !== savedFingerprint;
+
+  const hasUnpublishedDraft = isDirty || imagesPending;
+  const canPersist = Boolean(config) && hasUnpublishedDraft && !busy;
+
+  return {
+    busy,
+    message,
+    setMessage,
+    saveNow,
+    isDirty,
+    canPersist,
+    hasUnpublishedDraft,
+  };
+}

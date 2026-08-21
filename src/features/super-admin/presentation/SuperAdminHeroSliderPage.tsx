@@ -10,16 +10,13 @@ import { Button } from "@/components/ui/button";
 import { HeroSlider, type HeroSliderConfig } from "@/components/ui/HeroSlider";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  HOME_HERO_CACHE_KEY,
-  type HomeHeroRecord,
-} from "@asol/hero-slider-core";
+import type { HomeHeroRecord } from "@asol/hero-slider-core";
 import { homeHeroSliderApiService } from "@/features/advertisements/services/home-hero-slider-api-service";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { isSuperAdmin } from "@/features/auth/utils/super-admin";
 import { reportSystemIssue } from '@asol/system-logs-core';
 import type { StorageImageManagerHandle } from "@/features/storage/components/StorageImageManager";
-import { ASOL_DB_STORES, asolDbDelete } from "@asol/data-core/browser";
+import { useSuperAdminHeroSliderSave } from "./use-super-admin-hero-slider-save";
 
 const quickIntervals = [5, 15, 30, 60];
 
@@ -39,21 +36,57 @@ export function SuperAdminHeroSliderPage() {
   const [record, setRecord] = useState<HomeHeroRecord | null>(null);
   const [config, setConfig] = useState<HeroSliderConfig | null>(null);
   const [intervalMinutes, setIntervalMinutes] = useState(15);
-  const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [loadBusy, setLoadBusy] = useState(false);
+  const [loadMessage, setLoadMessage] = useState<string | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [imagesPending, setImagesPending] = useState(false);
   const imageUploadRef = useRef<StorageImageManagerHandle | null>(null);
   const configRef = useRef<HeroSliderConfig | null>(null);
+  const intervalRef = useRef(intervalMinutes);
+
   configRef.current = config;
+  intervalRef.current = intervalMinutes;
+
+  const handleConfigChange = useCallback((next: HeroSliderConfig) => {
+    configRef.current = next;
+    setConfig(next);
+  }, []);
+
+  const handleSaved = useCallback((saved: HomeHeroRecord) => {
+    configRef.current = saved.config;
+    intervalRef.current = saved.checkIntervalMinutes;
+    setRecord(saved);
+    setConfig(saved.config);
+    setIntervalMinutes(saved.checkIntervalMinutes);
+  }, []);
+
+  const {
+    busy: saveBusy,
+    message: saveMessage,
+    saveNow,
+    isDirty,
+    canPersist,
+  } = useSuperAdminHeroSliderSave({
+    session: authorized ? session : null,
+    record,
+    config,
+    intervalMinutes,
+    getConfig: () => configRef.current,
+    getIntervalMinutes: () => intervalRef.current,
+    imageUploadRef,
+    imagesPending,
+    onSaved: handleSaved,
+  });
 
   const load = useCallback(async () => {
     if (!session || !isSuperAdmin(session)) return;
-    setBusy(true);
-    setMessage(null);
+    setLoadBusy(true);
+    setLoadMessage(null);
     setLoadFailed(false);
     try {
       const next = await homeHeroSliderApiService.getAdmin(session);
+      configRef.current = next.config;
+      intervalRef.current = next.checkIntervalMinutes;
       setRecord(next);
       setConfig(next.config);
       setIntervalMinutes(next.checkIntervalMinutes);
@@ -64,9 +97,9 @@ export function SuperAdminHeroSliderPage() {
         error,
       });
       setLoadFailed(true);
-      setMessage(formatLoadError(error));
+      setLoadMessage(formatLoadError(error));
     } finally {
-      setBusy(false);
+      setLoadBusy(false);
     }
   }, [session]);
 
@@ -75,63 +108,8 @@ export function SuperAdminHeroSliderPage() {
     if (!isLoading && authorized) void load();
   }, [authorized, isLoading, load, router, session]);
 
-  const save = async () => {
-    const currentConfig = configRef.current;
-    if (!session || !currentConfig || !record) return;
-
-    setBusy(true);
-    setMessage(null);
-    try {
-      if (imageUploadRef.current?.hasPending()) {
-        const uploaded = await imageUploadRef.current.uploadPending();
-        if (!uploaded) {
-          setMessage("تعذر إكمال رفع الصور. أعد المحاولة ثم احفظ.");
-          return;
-        }
-      }
-
-      const configToSave = configRef.current ?? currentConfig;
-      const saved = await homeHeroSliderApiService.save(
-        session,
-        configToSave,
-        intervalMinutes,
-      );
-      try {
-        await asolDbDelete(ASOL_DB_STORES.APP_SETTINGS, HOME_HERO_CACHE_KEY);
-      } catch (error) {
-        reportSystemIssue({
-          level: "warning",
-          feature: "HeroSliderAdmin",
-          operation: "invalidate-home-cache",
-          error,
-        });
-      }
-      setRecord(saved);
-      setConfig(saved.config);
-      setMessage(
-        saved.storageWarning === "imageDeleteFailed"
-          ? "تم حفظ التعديلات، لكن تعذر حذف ملف صورة قديم من التخزين."
-          : "تم حفظ التعديلات وتطبيقها على الصفحة الرئيسية.",
-      );
-    } catch (error) {
-      reportSystemIssue({
-        feature: "HeroSliderAdmin",
-        operation: "save",
-        error,
-      });
-      const rawMessage = error instanceof Error ? error.message : "";
-      const arabicMessages: Record<string, string> = {
-        forbidden: "غير مصرح لك بهذه العملية.",
-        invalidHeroSliderConfig:
-          "إعداد الشرائح غير صالح، يرجى مراجعة البيانات.",
-      };
-      const displayMessage =
-        arabicMessages[rawMessage] ?? rawMessage ?? "تعذر حفظ الإعدادات.";
-      setMessage(displayMessage);
-    } finally {
-      setBusy(false);
-    }
-  };
+  const busy = loadBusy || saveBusy;
+  const message = loadMessage ?? saveMessage;
 
   if (isLoading || !authorized) {
     return (
@@ -222,9 +200,11 @@ export function SuperAdminHeroSliderPage() {
               min={5}
               max={1440}
               value={intervalMinutes}
-              onChange={(event) =>
-                setIntervalMinutes(Number(event.target.value))
-              }
+              onChange={(event) => {
+                const next = Number(event.target.value);
+                intervalRef.current = next;
+                setIntervalMinutes(next);
+              }}
             />
           </div>
           {quickIntervals.map((interval) => (
@@ -233,30 +213,34 @@ export function SuperAdminHeroSliderPage() {
               type="button"
               size="sm"
               variant={intervalMinutes === interval ? "default" : "outline"}
-              onClick={() => setIntervalMinutes(interval)}
+              onClick={() => {
+                intervalRef.current = interval;
+                setIntervalMinutes(interval);
+              }}
             >
               {interval} دقيقة
             </Button>
           ))}
           <Button
             type="button"
-            variant="outline"
-            onClick={() => void load()}
-            disabled={busy}
-          >
-            <RefreshCw className="me-2 h-4 w-4" />
-            فحص الآن
-          </Button>
-          <Button
-            type="button"
-            onClick={() => void save()}
-            disabled={busy || imagesPending}
+            onClick={() => void saveNow()}
+            disabled={busy || !canPersist}
             className="ms-auto bg-primary text-on-primary"
           >
             <Save className="me-2 h-4 w-4" />
-            حفظ
+            {saveBusy
+              ? "جاري الحفظ…"
+              : imagesPending
+                ? "حفظ ورفع الصور"
+                : isDirty
+                  ? "حفظ الآن"
+                  : "حفظ"}
           </Button>
         </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          المعاينة تعرض كل التعديلات والصور محلياً. الصفحة الرئيسية لا تتغير إلا
+          بعد الضغط على حفظ.
+        </p>
       </section>
 
       <div className="mb-3 flex items-center gap-2">
@@ -266,7 +250,7 @@ export function SuperAdminHeroSliderPage() {
       <HeroSlider
         mode="admin-edit"
         config={config}
-        onChange={setConfig}
+        onChange={handleConfigChange}
         imageUploadRef={imageUploadRef}
         onImagesPendingChange={setImagesPending}
       />

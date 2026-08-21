@@ -22,10 +22,14 @@ import {
 import type {
   HeroSliderConfig,
   HeroSliderSlide,
-} from "./HeroSlider";
-import type { HeroSliderTransition } from "./hero-slider.types";
+  HeroSliderTransition,
+} from "./hero-slider.types";
 import {
+  applyHeroSliderTransitionToSlides,
   createHeroSliderSlide,
+  DEFAULT_HOME_HERO_TRANSITION,
+  DEFAULT_HOME_HERO_TRANSITION_DURATION,
+  heroSliderTransitionLabels,
   heroSliderTransitions,
 } from "./hero-slider-editor-model";
 import { useHeroSliderEditorUploadState } from "./use-hero-slider-editor-upload-state";
@@ -36,19 +40,25 @@ interface HeroSliderEditorProps {
   onSave?: (config: HeroSliderConfig) => void;
   onCancel?: () => void;
   onPendingChange?: (pending: boolean) => void;
+  onPreviewChange?: (slideIndex: number, previewUrl: string | null) => void;
 }
 
 export const HeroSliderEditor = React.forwardRef<
   StorageImageManagerHandle,
   HeroSliderEditorProps
 >(function HeroSliderEditor(
-  { value, onChange, onSave, onCancel, onPendingChange },
+  { value, onChange, onSave, onCancel, onPendingChange, onPreviewChange },
   ref,
 ) {
   const { managerRefs, setPendingSlots } = useHeroSliderEditorUploadState({
     ref,
     onPendingChange,
   });
+  const [templateTransition, setTemplateTransition] =
+    React.useState<HeroSliderTransition>(DEFAULT_HOME_HERO_TRANSITION);
+  const [templateDuration, setTemplateDuration] = React.useState(
+    DEFAULT_HOME_HERO_TRANSITION_DURATION,
+  );
 
   const updateSlide = (index: number, patch: Partial<HeroSliderSlide>) => {
     const slides = value.slides.map((slide, slideIndex) =>
@@ -80,7 +90,11 @@ export const HeroSliderEditor = React.forwardRef<
         <div>
           <h2 className="font-semibold">إعدادات العرض الرئيسي</h2>
           <p className="text-sm text-muted-foreground">
-            تظهر التغييرات مباشرة في المعاينة أعلاه.
+            تظهر التغييرات والصور المختارة مباشرة في المعاينة أعلاه حتى قبل
+            الرفع. الصفحة الرئيسية لا تتغير إلا بعد الضغط على حفظ. التشغيل
+            التلقائي ومدة كل شريحة والتكرار تعمل كما في Home. لكل شريحة انتقال
+            خاص عند الدخول إليها. أضف شريحتين على الأقل لمعاينة الانتقالات.
+            النقر على الشريحة معطّل أثناء التحرير.
           </p>
         </div>
         <div className="flex gap-2">
@@ -109,41 +123,57 @@ export const HeroSliderEditor = React.forwardRef<
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-2">
-          <Label htmlFor="hero-transition">نوع الانتقال</Label>
+          <Label htmlFor="hero-template-transition">انتقال الشرائح الجديدة</Label>
           <select
-            id="hero-transition"
+            id="hero-template-transition"
             className="asol-control asol-field-surface w-full border border-input px-3 text-sm"
-            value={value.transition}
+            value={templateTransition}
             onChange={(event) =>
-              onChange({
-                ...value,
-                transition: event.target.value as HeroSliderTransition,
-              })
+              setTemplateTransition(event.target.value as HeroSliderTransition)
             }
           >
             {heroSliderTransitions.map((transition) => (
-              <option key={transition}>{transition}</option>
+              <option key={transition} value={transition}>
+                {heroSliderTransitionLabels[transition]}
+              </option>
             ))}
           </select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="hero-transition-duration">
-            مدة الانتقال (مللي ثانية)
+          <Label htmlFor="hero-template-transition-duration">
+            مدة الانتقال الافتراضية (مللي ثانية)
           </Label>
           <Input
-            id="hero-transition-duration"
+            id="hero-template-transition-duration"
             type="number"
-            min={100}
+            min={0}
             max={3000}
             step={100}
-            value={value.transitionDuration}
+            value={templateDuration}
             onChange={(event) =>
-              onChange({
-                ...value,
-                transitionDuration: Number(event.target.value),
-              })
+              setTemplateDuration(Number(event.target.value))
             }
           />
+        </div>
+        <div className="flex items-end sm:col-span-2">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            className="w-full"
+            disabled={!value.slides.length}
+            onClick={() =>
+              onChange(
+                applyHeroSliderTransitionToSlides(
+                  value,
+                  templateTransition,
+                  templateDuration,
+                ),
+              )
+            }
+          >
+            تطبيق الانتقال على كل الشرائح
+          </Button>
         </div>
         <div className="flex items-end gap-3 pb-2">
           <Switch
@@ -251,6 +281,7 @@ export const HeroSliderEditor = React.forwardRef<
                       return next;
                     });
                   }}
+                  onPreviewChange={onPreviewChange}
                 />
               </div>
               <div className="space-y-2">
@@ -284,6 +315,45 @@ export const HeroSliderEditor = React.forwardRef<
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor={`hero-transition-${index}`}>
+                  نوع الانتقال عند الدخول
+                </Label>
+                <select
+                  id={`hero-transition-${index}`}
+                  className="asol-control asol-field-surface w-full border border-input px-3 text-sm"
+                  value={slide.transition}
+                  onChange={(event) =>
+                    updateSlide(index, {
+                      transition: event.target.value as HeroSliderTransition,
+                    })
+                  }
+                >
+                  {heroSliderTransitions.map((transition) => (
+                    <option key={transition} value={transition}>
+                      {heroSliderTransitionLabels[transition]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor={`hero-transition-duration-${index}`}>
+                  مدة الانتقال (مللي ثانية)
+                </Label>
+                <Input
+                  id={`hero-transition-duration-${index}`}
+                  type="number"
+                  min={0}
+                  max={3000}
+                  step={100}
+                  value={slide.transitionDuration}
+                  onChange={(event) =>
+                    updateSlide(index, {
+                      transitionDuration: Number(event.target.value),
+                    })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor={`hero-duration-${index}`}>
                   مدة العرض (مللي ثانية)
                 </Label>
@@ -294,9 +364,14 @@ export const HeroSliderEditor = React.forwardRef<
                   step={500}
                   value={slide.duration}
                   onChange={(event) =>
-                    updateSlide(index, { duration: Number(event.target.value) })
+                    updateSlide(index, {
+                      duration: Math.max(1000, Number(event.target.value) || 1000),
+                    })
                   }
                 />
+                <p className="text-xs text-muted-foreground">
+                  تُطبَّق عند تفعيل «تشغيل تلقائي» ومع وجود شريحتين على الأقل.
+                </p>
               </div>
             </div>
           </fieldset>
@@ -310,7 +385,10 @@ export const HeroSliderEditor = React.forwardRef<
               ...value,
               slides: [
                 ...value.slides,
-                createHeroSliderSlide((value.slides.length + 1) * 100),
+                createHeroSliderSlide((value.slides.length + 1) * 100, {
+                  transition: templateTransition,
+                  transitionDuration: templateDuration,
+                }),
               ],
             })
           }

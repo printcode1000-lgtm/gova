@@ -8,7 +8,21 @@ import { HeroSliderImagesEditor } from "@/components/ui/HeroSliderImagesEditor";
 import { useTranslation } from "@/lib/i18n";
 import { HeroSliderNavigation } from "./HeroSliderNavigation";
 import { HeroSliderSlide } from "./HeroSliderSlide";
-import { nextHeroSlideIndex, sortedHeroSlides } from "./hero-slider-model";
+import { HeroSliderImageProbe } from "./HeroSliderImageProbe";
+import { mergeHeroSliderAdminPreview } from "./hero-slider-admin-preview";
+import {
+  resolveHeroSlideNavigationDirection,
+  resolveHeroSlideTransition,
+  type HeroSliderNavigationDirection,
+} from "./hero-slider-transition-runtime";
+import {
+  heroSliderAdminEntries,
+  heroSliderProbingEntries,
+  heroSliderVisibleEntries,
+  nextHeroSlideIndex,
+  shouldShowHeroSliderSkeleton,
+  sortedHeroSlides,
+} from "./hero-slider-model";
 export type {
   HeroSliderConfig,
   HeroSliderProps,
@@ -16,6 +30,10 @@ export type {
   HeroSliderTransition,
 } from "./hero-slider.types";
 import type { HeroSliderConfig, HeroSliderProps } from "./hero-slider.types";
+import {
+  DEFAULT_HOME_HERO_TRANSITION,
+  DEFAULT_HOME_HERO_TRANSITION_DURATION,
+} from "@asol/hero-slider-core";
 
 export function HeroSlider({
   config,
@@ -37,12 +55,62 @@ export function HeroSlider({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isRTL, setIsRTL] = useState(false);
+  const [adminPreviewBySlide, setAdminPreviewBySlide] = useState<
+    Record<number, string>
+  >({});
+  const [navigationDirection, setNavigationDirection] =
+    useState<HeroSliderNavigationDirection>("forward");
   const pressStartRef = useRef<number>(0);
   const activeConfig = mode === "view" ? config : draftConfig;
+  const carouselConfig = useMemo(
+    () =>
+      mode === "admin-edit"
+        ? mergeHeroSliderAdminPreview(activeConfig, adminPreviewBySlide)
+        : activeConfig,
+    [activeConfig, adminPreviewBySlide, mode],
+  );
+
+  const handleAdminPreviewChange = useCallback(
+    (slideIndex: number, previewUrl: string | null) => {
+      setAdminPreviewBySlide((current) => {
+        if (!previewUrl) {
+          if (!(slideIndex in current)) return current;
+          const next = { ...current };
+          delete next[slideIndex];
+          return next;
+        }
+        if (current[slideIndex] === previewUrl) return current;
+        return { ...current, [slideIndex]: previewUrl };
+      });
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (mode !== "admin-edit") {
+      setAdminPreviewBySlide({});
+    }
+  }, [mode]);
+
+  const slideImageSignature = useMemo(
+    () =>
+      sortedHeroSlides(carouselConfig)
+        .map((slide) => slide.image)
+        .join("\0"),
+    [carouselConfig],
+  );
 
   useEffect(() => {
     setDraftConfig(config);
+    setAdminPreviewBySlide({});
   }, [config]);
+
+  useEffect(() => {
+    setFailedImages({});
+    setLoadedImages({});
+    setCurrent(0);
+    setPrevious(null);
+  }, [slideImageSignature]);
 
   useEffect(() => {
     setIsRTL(
@@ -57,87 +125,119 @@ export function HeroSlider({
 
   // Phase 4 - Sorting
   const sortedSlides = useMemo(
-    () => sortedHeroSlides(activeConfig),
-    [activeConfig],
+    () => sortedHeroSlides(carouselConfig),
+    [carouselConfig],
   );
 
-  const hasSlides = sortedSlides.length > 0;
-  const isConfigLoaded = !!config && hasSlides;
-  const currentSlideHasImage = !!sortedSlides[current]?.image;
-  const isCurrentLoaded =
-    isConfigLoaded && (!currentSlideHasImage || !!loadedImages[current]);
-  const showSkeleton = hasSlides && !isCurrentLoaded;
+  const isViewMode = mode === "view";
+  const probingEntries = useMemo(
+    () =>
+      isViewMode
+        ? heroSliderProbingEntries(sortedSlides, loadedImages, failedImages)
+        : [],
+    [isViewMode, sortedSlides, loadedImages, failedImages],
+  );
+  const carouselEntries = useMemo(
+    () =>
+      isViewMode
+        ? heroSliderVisibleEntries(sortedSlides, loadedImages, failedImages)
+        : heroSliderAdminEntries(sortedSlides),
+    [isViewMode, sortedSlides, loadedImages, failedImages],
+  );
+
+  const hasSlides = carouselEntries.length > 0;
+  const enteringSlide = carouselEntries[current]?.slide;
+  const activeTransitionDuration =
+    enteringSlide?.transitionDuration ?? DEFAULT_HOME_HERO_TRANSITION_DURATION;
+  const activeTransition = resolveHeroSlideTransition(
+    enteringSlide?.transition ?? DEFAULT_HOME_HERO_TRANSITION,
+    navigationDirection,
+    isRTL,
+  );
+  const isConfigLoaded =
+    !!config && (isViewMode ? sortedSlides.some((slide) => slide.image) : hasSlides);
+  const showSkeleton = shouldShowHeroSliderSkeleton({
+    isViewMode,
+    probingCount: probingEntries.length,
+    visibleCount: carouselEntries.length,
+  });
 
   useEffect(() => {
-    if (current >= sortedSlides.length) {
-      setCurrent(Math.max(0, sortedSlides.length - 1));
+    if (current >= carouselEntries.length) {
+      setCurrent(Math.max(0, carouselEntries.length - 1));
       setPrevious(null);
     }
-  }, [current, sortedSlides.length]);
+  }, [current, carouselEntries.length]);
 
-  // Clear transition state after transitionDuration completes
+  // Clear transition state after the entering slide's transition duration completes
   useEffect(() => {
-    if (previous !== null && activeConfig?.transitionDuration) {
+    if (previous !== null) {
       const timer = setTimeout(() => {
         setPrevious(null);
-      }, activeConfig.transitionDuration);
+      }, activeTransitionDuration);
       return () => clearTimeout(timer);
     }
-  }, [current, previous, activeConfig?.transitionDuration]);
+  }, [current, previous, activeTransitionDuration]);
 
-  // Handlers for slide switching
+  const goToSlide = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      if (fromIndex === toIndex || !hasSlides) return;
+      setNavigationDirection(
+        resolveHeroSlideNavigationDirection(
+          fromIndex,
+          toIndex,
+          carouselEntries.length,
+          activeConfig.loop,
+        ),
+      );
+      setPrevious(fromIndex);
+      setCurrent(toIndex);
+    },
+    [activeConfig.loop, carouselEntries.length, hasSlides],
+  );
+
   const handleNext = useCallback(() => {
     if (!hasSlides) return;
-    setCurrent((prev) => {
-      if (prev < sortedSlides.length - 1) {
-        setPrevious(prev);
-        return prev + 1;
-      } else if (activeConfig.loop) {
-        setPrevious(prev);
-        return 0;
-      }
-      return prev;
-    });
-  }, [sortedSlides.length, activeConfig?.loop, hasSlides]);
+    if (current < carouselEntries.length - 1) {
+      goToSlide(current, current + 1);
+      return;
+    }
+    if (activeConfig.loop) goToSlide(current, 0);
+  }, [activeConfig.loop, carouselEntries.length, current, goToSlide, hasSlides]);
 
   const handlePrev = useCallback(() => {
     if (!hasSlides) return;
-    setCurrent((prev) => {
-      if (prev > 0) {
-        setPrevious(prev);
-        return prev - 1;
-      } else if (activeConfig.loop) {
-        setPrevious(prev);
-        return sortedSlides.length - 1;
-      }
-      return prev;
-    });
-  }, [sortedSlides.length, activeConfig?.loop, hasSlides]);
+    if (current > 0) {
+      goToSlide(current, current - 1);
+      return;
+    }
+    if (activeConfig.loop) {
+      goToSlide(current, carouselEntries.length - 1);
+    }
+  }, [activeConfig.loop, carouselEntries.length, current, goToSlide, hasSlides]);
 
   const handleSelectSlide = useCallback(
     (index: number) => {
-      if (index === current || !hasSlides) return;
-      setPrevious(current);
-      setCurrent(index);
+      goToSlide(current, index);
     },
-    [current, hasSlides],
+    [current, goToSlide],
   );
 
-  // Phase 6 - Dynamic Auto Play duration timer
+  // Phase 6 - Dynamic Auto Play duration timer (view + admin preview)
   useEffect(() => {
     if (
-      mode !== "view" ||
+      mode === "images-edit" ||
       !isConfigLoaded ||
       !activeConfig.autoPlay ||
-      sortedSlides.length <= 1 ||
+      carouselEntries.length <= 1 ||
       isPaused
     )
       return;
 
     // If not looping and we are at the last slide, stop autoplaying
-    if (!activeConfig.loop && current === sortedSlides.length - 1) return;
+    if (!activeConfig.loop && current === carouselEntries.length - 1) return;
 
-    const currentSlide = sortedSlides[current];
+    const currentSlide = carouselEntries[current]?.slide;
     const duration = currentSlide?.duration || 4000;
 
     const timer = setTimeout(() => {
@@ -151,23 +251,24 @@ export function HeroSlider({
     mode,
     activeConfig?.autoPlay,
     activeConfig?.loop,
-    sortedSlides,
+    carouselEntries,
+    carouselEntries[current]?.slide.duration,
     handleNext,
     isPaused,
   ]);
 
-  // Image load handler
-  const handleImageLoad = (index: number) => {
-    setLoadedImages((prev) => ({ ...prev, [index]: true }));
+  // Image load handler — keyed by the original slide index in sortedSlides.
+  const handleImageLoad = (originalIndex: number) => {
+    setLoadedImages((prev) => ({ ...prev, [originalIndex]: true }));
   };
 
-  const handleImageError = (index: number, src: string) => {
-    // A removed cloud object is a recoverable content problem. Render the
-    // built-in fallback without escalating the browser's resource event into
-    // an application error.
-    console.warn("[HeroSlider] slide-image-unavailable", { index, src });
-    setFailedImages((prev) => ({ ...prev, [index]: true }));
-    setLoadedImages((prev) => ({ ...prev, [index]: true }));
+  const handleImageError = (originalIndex: number, src: string) => {
+    console.warn("[HeroSlider] slide-image-unavailable", {
+      index: originalIndex,
+      src,
+    });
+    setFailedImages((prev) => ({ ...prev, [originalIndex]: true }));
+    setLoadedImages((prev) => ({ ...prev, [originalIndex]: true }));
   };
 
   // Phase 8 - Mobile Touch Gestures
@@ -243,7 +344,7 @@ export function HeroSlider({
   };
 
   // Preloading index helper
-  const nextIndex = nextHeroSlideIndex(current, sortedSlides.length);
+  const nextIndex = nextHeroSlideIndex(current, carouselEntries.length);
 
   const onLeftClick = isRTL ? handleNext : handlePrev;
   const onRightClick = isRTL ? handlePrev : handleNext;
@@ -277,7 +378,7 @@ export function HeroSlider({
           </div>
         )}
 
-        {!hasSlides && (
+        {!hasSlides && !(isViewMode && probingEntries.length > 0) && (
           <div className="absolute inset-0 flex items-center justify-center bg-muted px-6 text-center text-sm text-muted-foreground">
             {mode !== "view"
               ? t("heroSlider.addSlide")
@@ -285,8 +386,21 @@ export function HeroSlider({
           </div>
         )}
 
+        {isViewMode && probingEntries.length > 0 && (
+          <div className="absolute h-px w-px overflow-hidden" aria-hidden>
+            {probingEntries.map(({ slide, originalIndex }) => (
+              <HeroSliderImageProbe
+                key={`probe-${originalIndex}-${slide.priority}`}
+                src={slide.image}
+                onLoad={() => handleImageLoad(originalIndex)}
+                onError={() => handleImageError(originalIndex, slide.image)}
+              />
+            ))}
+          </div>
+        )}
+
         {/* Render slider contents if config is loaded */}
-        {isConfigLoaded && (
+        {isConfigLoaded && hasSlides && (
           <>
             <div
               className="relative w-full h-full overflow-hidden"
@@ -298,27 +412,28 @@ export function HeroSlider({
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseLeave}
             >
-              {sortedSlides.map((slide, index) => (
+              {carouselEntries.map(({ slide, originalIndex }, displayIndex) => (
                 <HeroSliderSlide
-                  key={`${slide.priority}-${index}`}
+                  key={`${slide.priority}-${originalIndex}`}
                   slide={slide}
-                  index={index}
+                  index={displayIndex}
                   current={current}
                   previous={previous}
                   nextIndex={nextIndex}
-                  config={activeConfig!}
                   mode={mode}
-                  imageFailed={Boolean(failedImages[index])}
+                  activeTransition={activeTransition}
+                  activeTransitionDuration={activeTransitionDuration}
+                  imageFailed={Boolean(failedImages[originalIndex])}
                   unavailableLabel={t("heroSlider.imageUnavailable")}
-                  onImageLoad={handleImageLoad}
-                  onImageError={handleImageError}
+                  onImageLoad={() => handleImageLoad(originalIndex)}
+                  onImageError={() => handleImageError(originalIndex, slide.image)}
                   onSlideClick={handleSlideClick}
                 />
               ))}
             </div>
 
             <HeroSliderNavigation
-              count={sortedSlides.length}
+              count={carouselEntries.length}
               current={current}
               isRTL={isRTL}
               onLeftClick={onLeftClick}
@@ -334,6 +449,7 @@ export function HeroSlider({
           value={draftConfig}
           onChange={handleConfigChange}
           onSave={onSave}
+          onPreviewChange={handleAdminPreviewChange}
           onPendingChange={onImagesPendingChange}
           onCancel={
             onCancel

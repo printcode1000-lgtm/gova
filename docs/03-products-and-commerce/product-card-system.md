@@ -132,7 +132,7 @@ This avoids opening `/product?mode=view` without a valid product id.
 
 ## Image Handling
 
-The card never renders an empty image source. If no image exists, it renders a package placeholder. External images that must bypass the Next.js optimizer use the existing `shouldUseUnoptimizedImage` helper.
+The card never renders an empty image source. If no image exists, it renders a package placeholder. External images that must bypass the Next.js optimizer use the existing `shouldUseUnoptimizedImage` helper (`blob:`, `data:`, local `/sync_data/sync_file/` URLs, and listed CDN hosts).
 
 ## Responsibilities
 

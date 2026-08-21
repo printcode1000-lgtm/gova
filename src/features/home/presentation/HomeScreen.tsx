@@ -27,8 +27,6 @@ export default function HomeScreen({ displayCategories }: HomeScreenProps) {
   const homeHero = useHomeHeroSlider();
   const homeHeroSliderConfig = useMemo<HeroSliderConfig>(
     () => ({
-      transition: homeHero.config.transition,
-      transitionDuration: homeHero.config.transitionDuration,
       autoPlay: homeHero.config.autoPlay,
       loop: homeHero.config.loop,
       onAction: (action) => {

@@ -166,8 +166,6 @@ export const StoreIdentityCard = React.forwardRef<
 
   const profileHeroConfig = React.useMemo<HeroSliderConfig>(
     () => ({
-      transition: "SlideLeft",
-      transitionDuration: 500,
       autoPlay: true,
       loop: true,
       slides: storeImages.coverUrls.map((url, index) => ({
@@ -177,6 +175,8 @@ export const StoreIdentityCard = React.forwardRef<
         title: "",
         subtitle: "",
         duration: 4000,
+        transition: "SlideLeft",
+        transitionDuration: 500,
         action: "",
       })),
     }),

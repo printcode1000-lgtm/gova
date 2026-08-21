@@ -7,8 +7,12 @@ import {
   HOME_HERO_LEGACY_CACHE_KEY,
   HOME_HERO_SLIDER_ID,
   clampHomeHeroCheckInterval,
+  collectRemovedHomeHeroImageKeys,
   homeHeroConfigSchema,
   homeHeroImageKeys,
+  normalizeHomeHeroConfig,
+  normalizeHomeHeroConfigForPersist,
+  prepareHomeHeroConfigForSave,
 } from "../index";
 import { createHomeHeroSliderService } from "../server";
 
@@ -25,13 +29,99 @@ function runValidationTest() {
   assert.equal(
     homeHeroConfigSchema.safeParse({
       ...DEFAULT_HOME_HERO_CONFIG,
-      transitionDuration: 99,
+      slides: [
+        {
+          priority: 100,
+          image: "x",
+          title: "t",
+          subtitle: "",
+          duration: 4000,
+          transition: "Fade",
+          transitionDuration: 4000,
+          action: "",
+        },
+      ],
     }).success,
     false,
   );
   assert.equal(clampHomeHeroCheckInterval(1), 5);
   assert.equal(clampHomeHeroCheckInterval(1500), 1440);
   console.log("✅ hero-slider-core validation test passed");
+}
+
+function runNormalizeTest() {
+  const legacy = {
+    transition: "Fade",
+    transitionDuration: 800,
+    autoPlay: true,
+    loop: false,
+    slides: [
+      {
+        priority: 100,
+        image: "x",
+        title: "t",
+        subtitle: "",
+        duration: 4000,
+        action: "",
+      },
+    ],
+  };
+  const normalized = normalizeHomeHeroConfig(legacy);
+  assert.equal(normalized.slides[0]?.transition, "Fade");
+  assert.equal(normalized.slides[0]?.transitionDuration, 800);
+  console.log("✅ hero-slider-core normalize test passed");
+}
+
+function runPersistTest() {
+  const managedSlide = {
+    priority: 100,
+    image:
+      "https://cdn.example/images/content/advertisements/home-hero-slider/new.webp",
+    imageKey: "new.webp",
+    title: "Managed",
+    subtitle: "",
+    duration: 4000,
+    transition: "SlideLeft" as const,
+    transitionDuration: 500,
+    action: "",
+  };
+  const normalized = normalizeHomeHeroConfigForPersist({
+    ...DEFAULT_HOME_HERO_CONFIG,
+    slides: [managedSlide],
+  });
+  assert.equal(normalized.slides[0]?.image, "");
+  assert.equal(normalized.slides[0]?.imageKey, "new.webp");
+
+  assert.throws(
+    () =>
+      prepareHomeHeroConfigForSave({
+        ...DEFAULT_HOME_HERO_CONFIG,
+        slides: [
+          {
+            ...managedSlide,
+            imageKey: "",
+          },
+        ],
+      }),
+    /invalidHeroSliderConfig/,
+  );
+
+  assert.throws(
+    () =>
+      collectRemovedHomeHeroImageKeys(
+        {
+          ...DEFAULT_HOME_HERO_CONFIG,
+          slides: [{ ...managedSlide, imageKey: "old.webp" }],
+        },
+        {
+          ...DEFAULT_HOME_HERO_CONFIG,
+          slides: [{ ...managedSlide, imageKey: "" }],
+        },
+      ),
+    /invalidHeroSliderConfig/,
+  );
+
+  console.log("✅ hero-slider-core persist test passed");
 }
 
 async function runServiceTest() {
@@ -47,6 +137,8 @@ async function runServiceTest() {
           title: "Old",
           subtitle: "",
           duration: 4000,
+          transition: "SlideLeft",
+          transitionDuration: 500,
           action: "",
         },
       ],
@@ -61,6 +153,9 @@ async function runServiceTest() {
     auth: { isSuperAdminIdentity: () => true },
     imageStorage: {
       resolveUrl: (_profile, key) => `https://cdn.test/${key}`,
+      async existsByKey() {
+        return true;
+      },
       async deleteByKey(_profile, key) {
         deleted.push(key);
       },
@@ -70,6 +165,7 @@ async function runServiceTest() {
         return records;
       },
       async save(config, checkIntervalMinutes, actorUid) {
+        records.config = config;
         return {
           ...records,
           config,
@@ -87,7 +183,8 @@ async function runServiceTest() {
   );
   assert.equal(saved.checkIntervalMinutes, 5);
   assert.deepEqual(deleted, ["old.webp"]);
-  assert.deepEqual(homeHeroImageKeys(records.config), ["old.webp"]);
+  assert.deepEqual(homeHeroImageKeys(records.config), []);
+  assert.equal(records.config.slides.length, 0);
   console.log("✅ hero-slider-core service test passed");
 }
 
@@ -95,6 +192,8 @@ async function main() {
   console.log("🚀 Running @asol/hero-slider-core test suite...\n");
   runContractTest();
   runValidationTest();
+  runNormalizeTest();
+  runPersistTest();
   await runServiceTest();
   console.log("\n🎉 All @asol/hero-slider-core tests passed successfully!");
 }

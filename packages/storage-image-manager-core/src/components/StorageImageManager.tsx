@@ -269,6 +269,7 @@ const StorageImageSlot = React.forwardRef<
     onUploaded: (index: number, image: StoredImage) => void;
     onRemoved: (index: number) => void;
     onPendingChange: (index: number, pending: boolean) => void;
+    onPreviewChange?: (index: number, previewUrl: string | null) => void;
   }
 >(function StorageImageSlot({
   config,
@@ -280,6 +281,7 @@ const StorageImageSlot = React.forwardRef<
   onUploaded,
   onRemoved,
   onPendingChange,
+  onPreviewChange,
 }, ref) {
   const t = translate ?? defaultTranslate;
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -316,6 +318,13 @@ const StorageImageSlot = React.forwardRef<
   React.useEffect(() => {
     onPendingChangeRef.current = onPendingChange;
   }, [onPendingChange]);
+  const onPreviewChangeRef = React.useRef(onPreviewChange);
+  React.useEffect(() => {
+    onPreviewChangeRef.current = onPreviewChange;
+  }, [onPreviewChange]);
+  React.useEffect(() => {
+    onPreviewChangeRef.current?.(index, selectedPreviewUrl);
+  }, [index, selectedPreviewUrl]);
 
   const draftKey = React.useMemo(
     () =>
@@ -1075,6 +1084,7 @@ export const StorageImageManager = React.forwardRef<
   label,
   hint,
   onPendingChange,
+  onPreviewChange,
   translate,
   draftOwnerId: providedDraftOwnerId,
   draftPageKey: providedDraftPageKey,
@@ -1175,6 +1185,7 @@ export const StorageImageManager = React.forwardRef<
                 return next;
               });
             }}
+            onPreviewChange={onPreviewChange}
           />
         ))}
       </div>

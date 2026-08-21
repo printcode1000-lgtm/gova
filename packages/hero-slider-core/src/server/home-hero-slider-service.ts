@@ -6,9 +6,13 @@ import type {
 } from "../domain/hero-slider.entity";
 import {
   clampHomeHeroCheckInterval,
-  homeHeroImageKeys,
 } from "../domain/hero-slider.entity";
+import {
+  collectRemovedHomeHeroImageKeys,
+  prepareHomeHeroConfigForSave,
+} from "../domain/home-hero-slider-persist";
 import { homeHeroConfigSchema } from "../domain/hero-slider.schema";
+import { normalizeHomeHeroConfig } from "../domain/home-hero-slider-normalize";
 
 export interface HomeHeroSliderRepositoryPort {
   get(): Promise<HomeHeroRecord>;
@@ -22,6 +26,7 @@ export interface HomeHeroSliderRepositoryPort {
 export interface HomeHeroSliderImageStoragePort {
   resolveUrl(profileId: "home-hero-slider", imageKey: string): string;
   deleteByKey(profileId: "home-hero-slider", imageKey: string): Promise<void>;
+  existsByKey(profileId: "home-hero-slider", imageKey: string): Promise<boolean>;
 }
 
 export interface HomeHeroSliderAuthPort {
@@ -34,8 +39,9 @@ export interface HomeHeroSliderServicePorts {
   auth: HomeHeroSliderAuthPort;
 }
 
-function parseConfig(config: HomeHeroConfig): HomeHeroConfig {
-  const result = homeHeroConfigSchema.safeParse(config);
+function parseConfig(config: unknown): HomeHeroConfig {
+  const normalized = normalizeHomeHeroConfig(config);
+  const result = homeHeroConfigSchema.safeParse(normalized);
   if (!result.success) throw new Error("invalidHeroSliderConfig");
   return result.data;
 }
@@ -65,7 +71,30 @@ function resolvedRecord(
   record: HomeHeroRecord,
   imageStorage: HomeHeroSliderImageStoragePort,
 ): HomeHeroRecord {
-  return { ...record, config: resolveHomeHeroImageUrls(record.config, imageStorage) };
+  return {
+    ...record,
+    config: resolveHomeHeroImageUrls(
+      normalizeHomeHeroConfig(record.config),
+      imageStorage,
+    ),
+  };
+}
+
+async function deleteRemovedHomeHeroImages(
+  imageStorage: HomeHeroSliderImageStoragePort,
+  removedKeys: string[],
+): Promise<HomeHeroRecord["storageWarning"]> {
+  let storageWarning: HomeHeroRecord["storageWarning"];
+  for (const imageKey of removedKeys) {
+    try {
+      const exists = await imageStorage.existsByKey("home-hero-slider", imageKey);
+      if (!exists) continue;
+      await imageStorage.deleteByKey("home-hero-slider", imageKey);
+    } catch {
+      storageWarning = "imageDeleteFailed";
+    }
+  }
+  return storageWarning;
 }
 
 export function createHomeHeroSliderService(ports: HomeHeroSliderServicePorts) {
@@ -102,25 +131,22 @@ export function createHomeHeroSliderService(ports: HomeHeroSliderServicePorts) {
       assertAdmin(ports.auth, identity);
       const current = await ports.repository.get();
       const parsed = parseConfig(config);
-      const nextKeys = new Set(homeHeroImageKeys(parsed));
-      const removedKeys = homeHeroImageKeys(current.config).filter((key) => !nextKeys.has(key));
+      const normalized = prepareHomeHeroConfigForSave(parsed);
+      const removedKeys = collectRemovedHomeHeroImageKeys(
+        current.config,
+        normalized,
+      );
 
       const saved = await ports.repository.save(
-        parsed,
+        normalized,
         clampHomeHeroCheckInterval(interval),
         identity.uid,
       );
 
-      let storageWarning: HomeHeroRecord["storageWarning"];
-      try {
-        await Promise.all(
-          removedKeys.map((imageKey) =>
-            ports.imageStorage.deleteByKey("home-hero-slider", imageKey),
-          ),
-        );
-      } catch {
-        storageWarning = "imageDeleteFailed";
-      }
+      const storageWarning = await deleteRemovedHomeHeroImages(
+        ports.imageStorage,
+        removedKeys,
+      );
 
       return {
         ...resolvedRecord(saved, ports.imageStorage),

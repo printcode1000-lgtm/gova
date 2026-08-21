@@ -3,6 +3,10 @@
 import { formatPlainMoneyMajor } from "@asol/format-core";
 import type { FeaturedMarqueeConfig } from "@/components/ui/FeaturedMarquee";
 import type { HeroSliderConfig } from "@/components/ui/HeroSlider";
+import {
+  DEFAULT_HOME_HERO_TRANSITION,
+  DEFAULT_HOME_HERO_TRANSITION_DURATION,
+} from "@asol/hero-slider-core";
 import type { TrendingRibbonConfig } from "@/components/ui/TrendingRibbon";
 import type { ProductRecord } from "@/features/product/entities/product.entity";
 import { productApiService } from "@/features/product/services/product-api-service";
@@ -36,12 +40,12 @@ export function useProfileShowcaseModel({
       title: "",
       subtitle: "",
       duration: 4000,
+      transition: DEFAULT_HOME_HERO_TRANSITION,
+      transitionDuration: DEFAULT_HOME_HERO_TRANSITION_DURATION,
       action: "",
     }));
 
     return {
-      transition: "SlideLeft",
-      transitionDuration: 500,
       autoPlay: true,
       loop: true,
       slides,

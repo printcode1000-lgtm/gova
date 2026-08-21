@@ -2,12 +2,23 @@ export const HOME_HERO_SLIDER_ID = "home-hero-slider";
 export const HOME_HERO_CACHE_KEY = "advertisements:home-hero-slider:v3";
 export const HOME_HERO_LEGACY_CACHE_KEY = "advertisements:home-hero-slider:v2";
 
-export type HomeHeroTransition =
-  | "Fade"
-  | "SlideLeft"
-  | "SlideRight"
-  | "Zoom"
-  | "Parallax";
+export const HOME_HERO_TRANSITIONS = [
+  "Fade",
+  "CrossFade",
+  "SlideLeft",
+  "SlideRight",
+  "SlideUp",
+  "SlideDown",
+  "Zoom",
+  "Parallax",
+  "KenBurns",
+  "None",
+] as const;
+
+export type HomeHeroTransition = (typeof HOME_HERO_TRANSITIONS)[number];
+
+export const DEFAULT_HOME_HERO_TRANSITION: HomeHeroTransition = "SlideLeft";
+export const DEFAULT_HOME_HERO_TRANSITION_DURATION = 500;
 
 export interface HomeHeroSlide {
   priority: number;
@@ -16,12 +27,12 @@ export interface HomeHeroSlide {
   title: string;
   subtitle: string;
   duration: number;
+  transition: HomeHeroTransition;
+  transitionDuration: number;
   action: string;
 }
 
 export interface HomeHeroConfig {
-  transition: HomeHeroTransition;
-  transitionDuration: number;
   autoPlay: boolean;
   loop: boolean;
   slides: HomeHeroSlide[];
@@ -50,8 +61,6 @@ export interface SuperAdminIdentity {
 }
 
 export const DEFAULT_HOME_HERO_CONFIG: HomeHeroConfig = {
-  transition: "SlideLeft",
-  transitionDuration: 500,
   autoPlay: false,
   loop: false,
   slides: [],
@@ -72,4 +81,23 @@ export function homeHeroImageKeys(config: HomeHeroConfig): string[] {
   return config.slides
     .map((slide) => slide.imageKey)
     .filter((key): key is string => Boolean(key));
+}
+
+export function createDefaultHomeHeroSlide(
+  priority: number,
+  overrides?: Partial<
+    Pick<HomeHeroSlide, "transition" | "transitionDuration">
+  >,
+): HomeHeroSlide {
+  return {
+    priority,
+    image: "",
+    title: "",
+    subtitle: "",
+    duration: 4000,
+    transition: overrides?.transition ?? DEFAULT_HOME_HERO_TRANSITION,
+    transitionDuration:
+      overrides?.transitionDuration ?? DEFAULT_HOME_HERO_TRANSITION_DURATION,
+    action: "",
+  };
 }

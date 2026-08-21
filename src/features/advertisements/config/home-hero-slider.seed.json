@@ -1,8 +1,6 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "config": {
-    "transition": "SlideLeft",
-    "transitionDuration": 500,
     "autoPlay": true,
     "loop": true,
     "slides": [
@@ -12,6 +10,8 @@
         "title": "Industrial Excellence in Suez",
         "subtitle": "Just Arrived",
         "duration": 4000,
+        "transition": "SlideLeft",
+        "transitionDuration": 500,
         "action": "go-to-slide1-promo"
       },
       {
@@ -20,6 +20,8 @@
         "title": "Featured Market Deals",
         "subtitle": "Featured",
         "duration": 5000,
+        "transition": "Fade",
+        "transitionDuration": 700,
         "action": "go-to-slide2-promo"
       }
     ]

@@ -6,9 +6,9 @@ import {
   getHeroSlideStyleAndClass,
 } from "./hero-slider-styles";
 import type {
-  HeroSliderConfig,
   HeroSliderProps,
   HeroSliderSlide as HeroSliderSlideModel,
+  HeroSliderTransition,
 } from "./hero-slider.types";
 
 export function HeroSliderSlide({
@@ -17,8 +17,9 @@ export function HeroSliderSlide({
   current,
   previous,
   nextIndex,
-  config,
   mode,
+  activeTransition,
+  activeTransitionDuration,
   imageFailed,
   unavailableLabel,
   onImageLoad,
@@ -30,8 +31,9 @@ export function HeroSliderSlide({
   current: number;
   previous: number | null;
   nextIndex: number;
-  config: HeroSliderConfig;
   mode: HeroSliderProps["mode"];
+  activeTransition: HeroSliderTransition;
+  activeTransitionDuration: number;
   imageFailed: boolean;
   unavailableLabel: string;
   onImageLoad: (index: number) => void;
@@ -52,16 +54,16 @@ export function HeroSliderSlide({
       current,
       previous,
       index,
-      transition: config.transition,
-      transitionDuration: config.transitionDuration,
+      transition: activeTransition,
+      transitionDuration: activeTransitionDuration,
     });
   const { className: imgClass, style: imgStyle } =
     getHeroImageStyle({
       current,
       previous,
       index,
-      transition: config.transition,
-      transitionDuration: config.transitionDuration,
+      transition: activeTransition,
+      transitionDuration: activeTransitionDuration,
     });
 
   return (
@@ -85,11 +87,18 @@ export function HeroSliderSlide({
           src={slide.image}
           alt={slide.title}
           fill
+          sizes="100vw"
           priority={isPriority}
           loading={isPriority ? undefined : "lazy"}
           className={imgClass}
           style={imgStyle}
-          onLoad={() => onImageLoad(index)}
+          onLoad={(event) => {
+            if (event.currentTarget.naturalWidth === 0) {
+              onImageError(index, slide.image);
+              return;
+            }
+            onImageLoad(index);
+          }}
           onError={() => onImageError(index, slide.image)}
           unoptimized={shouldUseUnoptimizedImage(slide.image)}
         />
