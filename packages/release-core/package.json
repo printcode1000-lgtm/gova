@@ -21,6 +21,10 @@
     "./console-artifacts": {
       "types": "./src/console-artifacts.ts",
       "default": "./src/console-artifacts.ts"
+    },
+    "./console/android-release-runbook": {
+      "types": "./src/console/android-release-runbook.ts",
+      "default": "./src/console/android-release-runbook.ts"
     }
   },
   "scripts": {
