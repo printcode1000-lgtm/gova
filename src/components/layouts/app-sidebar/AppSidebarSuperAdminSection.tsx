@@ -128,7 +128,7 @@ export function AppSidebarSuperAdminSection({
           </SuperAdminGroup>
 
           <div
-            className={cn(innerShellBase, "bg-primary-container/15")}
+            className={cn(innerShellBase, superAdminInnerSurface("cloud"))}
           >
             <Link href="/super-admin/cloud-accounts" onClick={onClose} className={groupButtonClass}>
               <Cloud className={sidebarSmallIconClass} />
@@ -142,7 +142,7 @@ export function AppSidebarSuperAdminSection({
             open={superAdminGroupsOpen.notifications}
             buttonClass={groupButtonClass}
             panelClass={groupPanelClass}
-            shellClass={cn(innerShellBase, "bg-secondary-container/20")}
+            shellClass={cn(innerShellBase, superAdminInnerSurface("notifications"))}
             onToggle={() => onGroupToggle("notifications")}
           >
             <SuperAdminLink href="/super-admin/notification-tests" icon={<TestTube2 className={sidebarSmallIconClass} />} label="اختبار إرسال الإشعارات" className={itemClass} onClose={onClose} />
@@ -155,7 +155,7 @@ export function AppSidebarSuperAdminSection({
             open={superAdminGroupsOpen.system}
             buttonClass={groupButtonClass}
             panelClass={groupPanelClass}
-            shellClass={cn(innerShellBase, "bg-tertiary-container/15")}
+            shellClass={cn(innerShellBase, superAdminInnerSurface("system"))}
             onToggle={() => onGroupToggle("system")}
           >
             <SuperAdminLink href="/super-admin/logs" icon={<ScrollText className={sidebarSmallIconClass} />} label="سجل أحداث النظام" className={itemClass} onClose={onClose} />
