@@ -75,6 +75,18 @@ function git(args: string[]): string {
   }).trim();
 }
 
+function hasStagedChanges(): boolean {
+  try {
+    execFileSync("git", ["diff", "--cached", "--quiet"], {
+      cwd: ROOT,
+      stdio: "ignore",
+    });
+    return false;
+  } catch {
+    return true;
+  }
+}
+
 function assertMainBranch(): void {
   const branch = git(["branch", "--show-current"]);
   if (branch !== MAIN_BRANCH) {
@@ -365,6 +377,7 @@ export const __testables = {
   RELEASE_MANIFEST,
   formatSuccessLine,
   FAIL_PREFIX,
+  hasStagedChanges,
 };
 
 async function main(): Promise<void> {
@@ -388,13 +401,24 @@ async function main(): Promise<void> {
 
   try {
     execFileSync("git", ["add", "-A"], { cwd: ROOT, stdio: "inherit" });
-    const commitArgs = flags.allowEmpty
-      ? ["commit", "--allow-empty", "-m", mainComment]
-      : ["commit", "-m", mainComment];
-    execFileSync("git", commitArgs, {
-      cwd: ROOT,
-      stdio: "inherit",
-    });
+    if (hasStagedChanges()) {
+      const commitArgs = flags.allowEmpty
+        ? ["commit", "--allow-empty", "-m", mainComment]
+        : ["commit", "-m", mainComment];
+      execFileSync("git", commitArgs, {
+        cwd: ROOT,
+        stdio: "inherit",
+      });
+    } else if (flags.allowEmpty) {
+      execFileSync("git", ["commit", "--allow-empty", "-m", mainComment], {
+        cwd: ROOT,
+        stdio: "inherit",
+      });
+    } else {
+      console.log(
+        "[deploy:push] No staged changes; reusing the current HEAD commit for this push.",
+      );
+    }
     if (git(["status", "--porcelain"])) {
       throw new Error(
         "The working tree changed while creating the deployment commit; refusing to push inconsistent source.",

@@ -1,8 +1,5 @@
 import type { DeployTab } from "./DeployRunbookTypes";
 
-const DEPLOY_PUSH_STEP_RE =
-  /\[deploy:push\] (Pushing main to GitHub|Verifying origin\/main matches the pushed commit)$/;
-
 export function parseDeployRunbookLogSnapshot(log: string, tab: DeployTab) {
   const lines = log.split(/\r?\n/).filter(Boolean);
   const latest = (pattern: RegExp) => {
@@ -18,7 +15,9 @@ export function parseDeployRunbookLogSnapshot(log: string, tab: DeployTab) {
   const deployAllStarted = latest(/\[deploy:all\] Starting ([^.\r\n]+)\.\.\./);
   const deployPushStarted = latest(/\[deploy:push\] Starting ([^.\r\n]+)\.\.\./);
   const deployPushTarget = latest(/\[deploy:push\] Service targets: ([^(]+)\(/);
-  const pushStep = latest(DEPLOY_PUSH_STEP_RE);
+  const pushStep = latest(
+    /\[deploy:push\] (Pushing main to GitHub|Verifying origin\/main matches the pushed commit)$/,
+  );
   return {
     commandFamily: tab === "deploy-all" ? "deploy:all" : "deploy:push",
     phase:
