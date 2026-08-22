@@ -20,7 +20,14 @@ The source must be a square PNG at least 500x500. Its original background is pre
 
 `@asol/branding-core/tooling` generates:
 
-- `public/logo.png` for web metadata and all React `AppIcon` usages.
+- `public/logo.png`, the full-resolution 1024px icon, for the Open Graph share
+  image and the React `AppIcon` component. `AppIcon` renders through
+  `next/image`, which resizes on the server, so the large source costs nothing
+  at request time.
+- `public/icons/asol-app-icon-192.png` for the browser tab and
+  `apple-touch-icon`. Those are raw `<link>` tags that nothing resizes, so the
+  named file is downloaded verbatim on first paint — 30KB here against 593KB
+  for the original, at a size no browser renders above 180px.
 - Android launcher icons for mdpi through xxxhdpi.
 - Android adaptive foreground icons and round icons.
 - Android monochrome/themed launcher icon inputs.
@@ -90,9 +97,9 @@ There is no application route or HTML page before `/`. The only pre-React frame 
 |---|---|
 | `packages/branding-core/assets/asol-app-icon.png` | Authoritative source image |
 | `packages/branding-core/src/tooling/generate-branding-assets.ts` | Deterministic multi-platform generator |
-| `packages/branding-core/src/index.ts` | Runtime-safe web and Android resource-name contract |
+| `packages/branding-core/src/index.ts` | Runtime-safe web and Android resource-name contract. Three web paths, deliberately separate: `BRANDING_WEB_APP_ICON_PATH` (1024px original), `BRANDING_WEB_BROWSER_ICON_PATH` (192px tab/apple icon), `BRANDING_WEB_PUSH_ICON_PATH` (192px tray icon) |
 | `public/logo.png` | Generated web/app UI icon |
-| `public/icons/` | Generated Web Push icon and badge |
+| `public/icons/` | Generated browser tab / `apple-touch-icon`, Web Push icon, and badge |
 | `android/app/src/main/res/mipmap-*` | Generated Android launcher/adaptive icons |
 | `android/app/src/main/res/drawable-*` | Generated Android monochrome launcher and notification icons |
 | `packages/native-core/android/src/main/res/drawable-*` | Generated notification resources consumed by native receiver code |

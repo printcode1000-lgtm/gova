@@ -13,6 +13,7 @@ import {
   BRANDING_ANDROID_NOTIFICATION_LARGE_ICON,
   BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
   BRANDING_WEB_APP_ICON_PATH,
+  BRANDING_WEB_BROWSER_ICON_PATH,
   BRANDING_WEB_PUSH_BADGE_PATH,
   BRANDING_WEB_PUSH_ICON_PATH,
 } from "../index";
@@ -79,6 +80,7 @@ async function main(): Promise<void> {
   assert.deepEqual(
     {
       web: BRANDING_WEB_APP_ICON_PATH,
+      browser: BRANDING_WEB_BROWSER_ICON_PATH,
       push: BRANDING_WEB_PUSH_ICON_PATH,
       badge: BRANDING_WEB_PUSH_BADGE_PATH,
       androidSmall: BRANDING_ANDROID_NOTIFICATION_SMALL_ICON,
@@ -87,6 +89,7 @@ async function main(): Promise<void> {
     },
     {
       web: "/logo.png",
+      browser: "/icons/asol-app-icon-192.png",
       push: "/icons/asol-app-icon-192.png",
       badge: "/icons/asol-notification-badge-96.png",
       androidSmall: "ic_stat_asol_notification",
@@ -119,6 +122,38 @@ async function main(): Promise<void> {
 
   await assertPng("packages/branding-core/assets/asol-app-icon.png", 1024);
   await assertPng("public/logo.png", 1024);
+
+  /**
+   * The browser tab and `apple-touch-icon` are raw `<link>` tags: nothing
+   * resizes them, so whatever `layout.tsx` names is downloaded verbatim on
+   * first paint. Naming the 1024px original there shipped 593KB for a tab icon
+   * on a phone-only application. The 192px asset is asserted to exist and to
+   * stay small, and the layout is asserted to point at it — a constant nobody
+   * reads would not have stopped the regression.
+   */
+  await assertPng("public/icons/asol-app-icon-192.png", 192);
+  const browserIconBytes = statSync(
+    path.join(root, "public", "icons", "asol-app-icon-192.png"),
+  ).size;
+  assert.ok(
+    browserIconBytes < 120_000,
+    `the browser icon must stay small; it is ${Math.round(browserIconBytes / 1024)}KB`,
+  );
+
+  const layoutSource = readFileSync(
+    path.join(root, "src", "app", "layout.tsx"),
+    "utf8",
+  );
+  assert.match(
+    layoutSource,
+    /icon: withBasePath\(BRANDING_WEB_BROWSER_ICON_PATH\)/,
+    "the browser tab icon must not be the full-resolution original",
+  );
+  assert.match(
+    layoutSource,
+    /apple: withBasePath\(BRANDING_WEB_BROWSER_ICON_PATH\)/,
+    "the apple-touch icon must not be the full-resolution original",
+  );
   assert.deepEqual(
     readFileSync(BRANDING_SOURCE_FILE),
     readFileSync(path.join(root, "public", "logo.png")),
