@@ -2,7 +2,7 @@ import { nodeRequire } from '../node-require';
 import { ensureAdvertisementsDevMigrations } from './ensure-advertisements-migrations';
 import "server-only";
 
-import { isDevelopment } from "@/core/config";
+import { dataCoreRuntimeConfig } from '../../ports/runtime-config';
 import { createDrizzleDevLogger } from '../../ports/telemetry';
 import { ADVERTISEMENTS_SQLITE_DB_PATH } from "./environment";
 import { AbstractDatabaseClient } from "./abstract-database-client";
@@ -17,7 +17,7 @@ export class AdvertisementsSQLiteDatabaseClient extends AbstractDatabaseClient {
     const sqlite = new Database(ADVERTISEMENTS_SQLITE_DB_PATH);
     this._db = drizzle(
       sqlite,
-      isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
+      dataCoreRuntimeConfig().isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
     );
     ensureAdvertisementsDevMigrations(this._db);
     return this._db;

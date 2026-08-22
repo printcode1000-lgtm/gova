@@ -9,13 +9,13 @@ import {
   getDefaultProductSearchFieldKeys,
   getProductSearchFieldByKey,
   getProductSearchFields,
-} from "@/features/product-search/config/product-search-fields";
+} from "../../../ports/product-search-fields";
 import type {
   ProductSearchRequest,
   ProductSearchResult,
   ProductSearchSort,
-} from "@/features/product-search/entities/product-search.types";
-import { normalizeSearchText } from "@/features/product-search/utils/arabic-search";
+} from "../entities";
+import { normalizeSearchText } from "../entities";
 
 const SORT_SQL: Record<ProductSearchSort, string> = {
   relevance: "created_at DESC",

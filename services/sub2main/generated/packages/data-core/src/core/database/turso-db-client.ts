@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { isDevelopment } from '@/core/config';
+import { dataCoreRuntimeConfig } from '../../ports/runtime-config';
 import { createDrizzleDevLogger } from '../../ports/telemetry';
 import { getTursoClient } from '../turso/users-turso-client';
 import { AbstractDatabaseClient } from './abstract-database-client';
@@ -13,7 +13,7 @@ export class TursoDatabaseClient extends AbstractDatabaseClient {
     if (this._db) return this._db;
 
     const client = getTursoClient();
-    this._db = isDevelopment
+    this._db = dataCoreRuntimeConfig().isDevelopment
       ? drizzle(client, { logger: createDrizzleDevLogger() })
       : drizzle(client);
 

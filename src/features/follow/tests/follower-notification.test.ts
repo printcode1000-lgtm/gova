@@ -5,6 +5,18 @@ const { createSignedSessionToken, registerSessionSigningSecret } = await import(
   "@asol/auth-core/server"
 );
 registerSessionSigningSecret(() => "follow-session-test-secret-0123456789abcdef");
+
+// The grant secret moved behind `@asol/notifications-core`'s server-config
+// port, registered by `registerAppServerPorts()` from `src/instrumentation.ts`
+// at server startup. This test drives the service directly, so it composes the
+// port the same way — exactly as it already does for the session secret above.
+// Without it every grant is dropped and the follow flow reports
+// `notificationGrantNotIssued` on a machine where the secret is present.
+const { registerNotificationsCorePorts } = await import(
+  "@/features/notifications/notifications-core-ports"
+);
+registerNotificationsCorePorts();
+
 const { FollowService } = await import("../services/follow-service.server");
 
 const repository = {

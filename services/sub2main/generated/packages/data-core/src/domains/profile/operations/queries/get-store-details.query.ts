@@ -3,7 +3,7 @@ import 'server-only';
 import {
   EMPTY_STORE_DETAILS,
   type StoreDetailsData,
-} from '@/features/profile/entities/store-details.entity';
+} from '../../entities';
 import type { IProfileRepository } from '../../repositories/profile-repository.interface';
 
 export class GetStoreDetailsQuery {

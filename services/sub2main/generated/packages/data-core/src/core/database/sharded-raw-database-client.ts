@@ -3,7 +3,7 @@ import "server-only";
 import path from "node:path";
 import { createRequire } from "node:module";
 import type { Client } from "@libsql/client";
-import { readOptionalEnv } from "@/core/config/server-env.values";
+import { readOptionalEnv } from '../../ports/runtime-config';
 import {
   assertServerDataAccessRuntime,
   isDevRuntime,

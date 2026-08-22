@@ -35,16 +35,13 @@ import {
   type WorkingDayId,
 } from "../../entities";
 import {
-  SPECIALTY_COLUMN_NAMES,
+  specialtyColumnNames,
   selectedSpecialtyColumns,
-  columnBySelection,
-  columnByDoctorAppointment,
+  columnForSelection,
+  columnForDoctorAppointment,
+  deliveryServicesSpecialtyColumn,
 } from "../specialty-columns.server";
 import { ProfilePart4 } from "./profile-repository.part-04";
-const DELIVERY_SERVICES_SPECIALTY_COLUMN = columnBySelection.get("46:46");
-if (!DELIVERY_SERVICES_SPECIALTY_COLUMN) {
-  throw new Error("Delivery Services specialty column mapping is missing");
-}
 const DAY_TO_INDEX = new Map<WorkingDayId, number>(
   WORKING_DAY_LABELS.map((day, index) => [day.id, index]),
 );
@@ -202,7 +199,7 @@ export class ProfilePart5 extends ProfilePart4 {
         categoryId,
         subcategoryId: categoryId,
         specialtyColumn:
-          columnBySelection.get(`${categoryId}:${categoryId}`) ??
+          columnForSelection(`${categoryId}:${categoryId}`) ??
           `main_category_${categoryId}`,
         source: "main",
         isEnabled: true,
@@ -214,8 +211,8 @@ export class ProfilePart5 extends ProfilePart4 {
           categoryId: Number(categoryId),
           subcategoryId,
           specialtyColumn:
-            columnBySelection.get(`${categoryId}:${subcategoryId}`) ??
-            columnByDoctorAppointment.get(subcategoryId) ??
+            columnForSelection(`${categoryId}:${subcategoryId}`) ??
+            columnForDoctorAppointment(subcategoryId) ??
             "",
           source: "profile",
           isEnabled: true,

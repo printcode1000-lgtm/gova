@@ -4,11 +4,11 @@ import type {
   ProfileShowcaseSettings,
   SaveStoreDetailsInput,
   StoreDetailsData,
-} from '@/features/profile/entities/store-details.entity';
-import { EMPTY_PROFILE_SHOWCASE, EMPTY_STORE_DETAILS } from '@/features/profile/entities/store-details.entity';
-import type { ProfileRatingSettings } from '@/features/profile/entities/profile-review.entity';
+} from '../../entities';
+import { EMPTY_PROFILE_SHOWCASE, EMPTY_STORE_DETAILS } from '../../entities';
+import type { ProfileRatingSettings } from '../../entities';
 import type { IProfileRepository } from '../../repositories/profile-repository.interface';
-import { normalizeProfileWorkingHours } from '@/features/profile-working-hours';
+import { normalizeProfileWorkingHours } from '../../entities';
 
 function normalizeText(value: unknown, maxLength: number): string {
   if (typeof value !== 'string' || value.length > maxLength) {

@@ -1,4 +1,4 @@
-import type { RatingDistributionItem, ReviewSort, SellerReply } from "@/features/product/entities/product-review.entity";
+import type { RatingDistributionItem, ReviewSort, SellerReply } from "../../product/entities/product-review.entity";
 
 export interface ProfileReview {
   id: string;

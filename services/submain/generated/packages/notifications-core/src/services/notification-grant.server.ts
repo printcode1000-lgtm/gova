@@ -2,7 +2,7 @@ import "server-only";
 
 import { signEnvelope, verifyEnvelope } from "@asol/signed-token-core";
 
-import { getNotificationGrantSecret } from "@/core/config/server-env/server-env.values.turso-env";
+import { getNotificationGrantSecret } from "../ports/server-config";
 import type { SendNotificationToUsersInput } from "../domain/entities";
 
 /**

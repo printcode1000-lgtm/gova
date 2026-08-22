@@ -3,10 +3,18 @@ import {
   createNotificationGrant,
   verifyNotificationGrant,
 } from "@asol/notifications-core/server";
+import { registerNotificationsCorePorts } from "../notifications-core-ports";
 
 // The signing secret is supplied by the npm script, not set here: touching the
 // environment outside the Configuration layer is an architecture violation, and
 // the check enforces it.
+//
+// Reading it is now the package's server-config port, registered by
+// `registerAppServerPorts()` from `src/instrumentation.ts` when the server
+// starts. A test that imports the signer directly has to compose it the same
+// way, or every grant fails with "port is not configured" on a machine where
+// the secret is present.
+registerNotificationsCorePorts();
 
 const send = {
   uids: ["usr_1", "usr_2"],

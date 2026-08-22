@@ -1,5 +1,5 @@
 import type { IProfileRepository } from '../../repositories/profile-repository.interface';
-import type { ProfileContactsData } from '@/features/profile/entities/profile-contacts.entity';
+import type { ProfileContactsData } from '../../entities';
 import { traceServerLayer } from '../../../../ports/telemetry';
 
 export class GetProfileContactsQuery {

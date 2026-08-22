@@ -7,3 +7,4 @@ export * from "./operations/commands/update-user.command";
 export * from "./operations/commands/update-user-profile.command";
 export * from "./operations/commands/update-last-login.command";
 export * from "./repositories/user-repository.interface";
+export * from "./entities";

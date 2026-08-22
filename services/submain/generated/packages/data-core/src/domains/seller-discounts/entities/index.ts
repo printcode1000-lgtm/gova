@@ -1,0 +1,2 @@
+export type { SellerDiscountScope, SellerDiscountConditions, SellerDiscountUsageLimits, SellerDiscountRule, SaveSellerDiscountInput, SellerDiscountUsageSummary, DiscountCartItem, DiscountBuyerContext, AppliedSellerDiscount, SellerDiscountCalculation, SellerDiscountCartQuote, SellerDiscountType, SellerDiscountStatus, SellerDiscountValueType } from "./seller-discount.entity";
+export { EMPTY_SELLER_DISCOUNT_SCOPE, EMPTY_SELLER_DISCOUNT_CONDITIONS, EMPTY_SELLER_DISCOUNT_USAGE_LIMITS, createEmptySellerDiscount } from "./seller-discount.entity";

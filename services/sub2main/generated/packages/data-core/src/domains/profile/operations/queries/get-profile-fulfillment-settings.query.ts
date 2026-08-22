@@ -2,7 +2,7 @@ import type { IProfileRepository } from "../../repositories/profile-repository.i
 import {
   EMPTY_PROFILE_FULFILLMENT_SETTINGS,
   type ProfileFulfillmentSettings,
-} from "@/features/profile/entities/profile-fulfillment-settings.entity";
+} from "../../entities";
 import { traceServerLayer } from '../../../../ports/telemetry';
 
 export class GetProfileFulfillmentSettingsQuery {

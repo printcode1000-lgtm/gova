@@ -134,6 +134,33 @@
       "@asol/data-core/system-logs": [
         "./generated/packages/data-core/src/domains/system-logs/index.server.ts"
       ],
+      "@asol/data-core/auth/entities": [
+        "./generated/packages/data-core/src/domains/auth/entities/index.ts"
+      ],
+      "@asol/data-core/follow/entities": [
+        "./generated/packages/data-core/src/domains/follow/entities/index.ts"
+      ],
+      "@asol/data-core/pharmacy-profile-catalog/entities": [
+        "./generated/packages/data-core/src/domains/pharmacy-profile-catalog/entities/index.ts"
+      ],
+      "@asol/data-core/product/entities": [
+        "./generated/packages/data-core/src/domains/product/entities/index.ts"
+      ],
+      "@asol/data-core/product-search/entities": [
+        "./generated/packages/data-core/src/domains/product-search/entities/index.ts"
+      ],
+      "@asol/data-core/profile/entities": [
+        "./generated/packages/data-core/src/domains/profile/entities/index.ts"
+      ],
+      "@asol/data-core/seller-discounts/entities": [
+        "./generated/packages/data-core/src/domains/seller-discounts/entities/index.ts"
+      ],
+      "@asol/data-core/runtime-config": [
+        "./generated/packages/data-core/src/ports/runtime-config.ts"
+      ],
+      "@asol/data-core/product-search-fields": [
+        "./generated/packages/data-core/src/ports/product-search-fields.ts"
+      ],
       "@asol/dev-core": [
         "./generated/packages/dev-core/src/index.ts"
       ],

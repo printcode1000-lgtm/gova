@@ -15,3 +15,4 @@ export * from "./operations/commands/upsert-profile-fulfillment-settings.command
 export * from "./operations/commands/upsert-profile-image-keys.command";
 export * from "./operations/commands/upsert-profile-specialties.command";
 export * from "./operations/commands/upsert-store-details.command";
+export * from "./entities";

@@ -30,3 +30,8 @@ export * from './services/providers/notification-provider-registry.server';
 export * from './services/providers/fcm-notification-provider.server';
 export * from './services/providers/fcm-http-v1.server';
 export * from './services/providers/noop-notification-provider.server';
+
+export {
+  configureNotificationsCoreServerConfig,
+  resetNotificationsCoreServerConfig,
+} from './ports/server-config';

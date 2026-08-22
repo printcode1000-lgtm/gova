@@ -1,9 +1,19 @@
-import type { AppRuntimeContext } from "@/core/config/runtime-context";
+/**
+ * Minimal runtime shape needed to pick a server DB backend.
+ * Mirrors the fields of app `AppRuntimeContext` without importing `@/`.
+ */
+export interface DatabaseRuntimeContext {
+  isNative: boolean;
+  platform: string;
+  isStatic: boolean;
+  supportsServerApi: boolean;
+  dataSource: string;
+}
 
 export type ServerDatabaseBackend = "sqlite" | "turso";
 
 export function resolveServerDatabaseBackend(
-  runtime: AppRuntimeContext,
+  runtime: DatabaseRuntimeContext,
   browserRuntime: boolean,
 ): ServerDatabaseBackend {
   if (browserRuntime) {

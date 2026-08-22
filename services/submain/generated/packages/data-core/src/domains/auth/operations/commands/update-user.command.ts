@@ -1,5 +1,5 @@
 import type { IUserRepository } from '../../repositories/user-repository.interface';
-import type { User } from '@/features/auth/entities/user.entity';
+import type { User } from '../../entities';
 import { traceServerLayer } from '../../../../ports/telemetry';
 
 export class UpdateUserCommand {

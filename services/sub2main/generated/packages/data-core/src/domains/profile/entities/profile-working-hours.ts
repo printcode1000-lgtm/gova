@@ -4,7 +4,15 @@ import type {
   WorkingDayLabel,
   WorkingHoursDay,
   WorkingHoursPeriod,
-} from "../entities/profile-working-hours.types";
+} from "./profile-working-hours.types";
+
+export type {
+  ProfileWorkingHours,
+  WorkingDayId,
+  WorkingDayLabel,
+  WorkingHoursDay,
+  WorkingHoursPeriod,
+} from "./profile-working-hours.types";
 
 export const WORKING_DAY_LABELS: WorkingDayLabel[] = [
   { id: "saturday", ar: "السبت", en: "Saturday" },

@@ -2,7 +2,7 @@ import { nodeRequire } from '../node-require';
 import { ensureNotificationsDevMigrations } from './ensure-notifications-migrations';
 import "server-only";
 
-import { isDevelopment } from "@/core/config";
+import { dataCoreRuntimeConfig } from '../../ports/runtime-config';
 import { createDrizzleDevLogger } from '../../ports/telemetry';
 import { NOTIFICATIONS_SQLITE_DB_PATH } from "./environment";
 import { AbstractDatabaseClient } from "./abstract-database-client";
@@ -17,7 +17,7 @@ export class NotificationsSQLiteDatabaseClient extends AbstractDatabaseClient {
     const sqlite = new Database(NOTIFICATIONS_SQLITE_DB_PATH);
     this._db = drizzle(
       sqlite,
-      isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
+      dataCoreRuntimeConfig().isDevelopment ? { logger: createDrizzleDevLogger() } : undefined,
     );
     ensureNotificationsDevMigrations(this._db);
     return this._db;

@@ -36,16 +36,12 @@ import {
   type WorkingDayId,
 } from "../../entities";
 import {
-  SPECIALTY_COLUMN_NAMES,
+  specialtyColumnNames,
   selectedSpecialtyColumns,
-  columnBySelection,
-  columnByDoctorAppointment,
+  columnForDoctorAppointment,
+  deliveryServicesSpecialtyColumn,
 } from "../specialty-columns.server";
 import { ProfilePart2 } from "./profile-repository.part-02";
-const DELIVERY_SERVICES_SPECIALTY_COLUMN = columnBySelection.get("46:46");
-if (!DELIVERY_SERVICES_SPECIALTY_COLUMN) {
-  throw new Error("Delivery Services specialty column mapping is missing");
-}
 const DAY_TO_INDEX = new Map<WorkingDayId, number>(
   WORKING_DAY_LABELS.map((day, index) => [day.id, index]),
 );
