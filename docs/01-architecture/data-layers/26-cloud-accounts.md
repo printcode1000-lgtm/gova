@@ -35,6 +35,46 @@ accounts hold only the credentials their routes need.
 | orders account | `tenderx10@gmail.com` | `asol-orders` | `GET /api/orders` (the list only) | not connected | `npm run orders:deploy` |
 | profiles account | `hesham10125@gmail.com` | `asol-profiles` | five profile reads | not connected | `npm run profiles:deploy` |
 
+## Every account names its owner
+
+An account id identifies a tenant. It does not say who can sign in and issue a new
+token when the current one is revoked, which is the thing you need at the moment
+something breaks. So every account in all three tables above carries an email, and
+adding one without an email is made to fail rather than trusted to be remembered:
+
+| Provider | Declared in | Enforced by |
+|---|---|---|
+| Vercel | `AccountDeclaration.email` in `@asol/account-declarations` | `typecheck` — `TS2741: Property 'email' is missing` |
+| Cloudflare R2 | `StorageAccountDefinition.email` in `@asol/storage-core` | `typecheck`, plus `registerStorageAccount` at runtime |
+| Turso | this table and the super-admin page | `npm run test:cloud-accounts` |
+
+Turso is the weak one, and deliberately so rather than by oversight: its five
+accounts are Turso *organizations* reached through `TURSO_*_ORGANIZATION` and
+`TURSO_*_API_TOKEN`, with no registry object anywhere in the tree to attach a field
+to. Inventing one to hold a single string would be a package that exists to satisfy
+a test.
+
+`npm run test:cloud-accounts` covers all three anyway, and it is also what makes
+updating the super-admin page mandatory rather than customary. It reads
+`SuperAdminCloudAccountsContent.tsx` and fails when:
+
+- any account row or column lacks something with an `@` in it — the check that would
+  have caught the apparel/pets account sitting there with an em dash;
+- an account declared in code is missing from the page, by email or by project name;
+- the page lists a different number of Vercel accounts than `ACCOUNT_DECLARATIONS`
+  declares, or fewer R2 accounts than the storage registry holds;
+- the at-a-glance count for a provider disagrees with that provider's own table;
+- a section title's count — `Vercel — سبعة حسابات`, `Cloudflare R2 — 4 حسابات` —
+  disagrees with the table beneath it.
+
+The last two are the stale-count failure repeated back at whoever adds the next
+account: the page states its own totals in three places, and all three have to move
+together. It runs inside `npm test` and `npm run build`.
+
+The page lists one R2 account the registry does not — OTA is routed through
+`R2_STORAGE_TARGETS` rather than the account registry — so the R2 comparison is
+"at least", while Vercel's is exact.
+
 ### The rule that makes this work
 
 **No deployment may call another.** None holds another's URL, and none has a
@@ -102,13 +142,13 @@ and [Notification Bridge Module](../../05-platform-features/notification-bridge-
 
 ## Turso — five accounts, 21 databases
 
-| Account | Databases | Domain | Read by |
-|---|---:|---|---|
-| `hesham101` | 3 | users and auth, advertisements, system operations | `gova` + `submain` + `sub2main` |
-| `hesham102` | 1 | notifications | `gova` + `asol-notifications` |
-| `hesham103` | 1 | products | `gova` + `asol-products` + `sub2main` |
-| `hesham104` | 9 | marketplace order shards | `gova` + `asol-orders` + `submain` |
-| `hesham105` | 7 | profile shards | `gova` + `asol-profiles` + `sub2main` |
+| Account | Email | Databases | Domain | Read by |
+|---|---|---:|---|---|
+| `hesham101` | `print.code.1000@gmail.com` | 3 | users and auth, advertisements, system operations | `gova` + `submain` + `sub2main` |
+| `hesham102` | `bs.bid.story@gmail.com` | 1 | notifications | `gova` + `asol-notifications` |
+| `hesham103` | `gnagnahesham@gmail.com` | 1 | products | `gova` + `asol-products` + `sub2main` |
+| `hesham104` | `tenderx10@gmail.com` | 9 | marketplace order shards | `gova` + `asol-orders` + `submain` |
+| `hesham105` | `hesham10125@gmail.com` | 7 | profile shards | `gova` + `asol-profiles` + `sub2main` |
 
 `gova` and `submain` hold the full application runtime credentials. `sub2main`
 holds product, profile-shard, users, and R2 credentials for seller writes. Each

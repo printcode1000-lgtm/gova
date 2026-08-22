@@ -20,6 +20,7 @@ export const OPTIONAL_ENV_KEYS = [
 export const PRODUCTS_DECLARATION = {
   name: 'products',
   project: 'asol-products',
+  email: 'gnagnahesham@gmail.com',
   tokenEnvVar: 'VERCEL_PRODUCTS_TOKEN',
   serviceDir: 'services/products',
   requiredEnv: REQUIRED_ENV_KEYS,

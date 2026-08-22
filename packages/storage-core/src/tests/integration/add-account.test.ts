@@ -13,6 +13,7 @@ export function runAddAccountTest() {
   const syntheticAccount = {
     id: 'synthetic-analytics',
     accountId: 'synthetic-acc-12345',
+    email: 'synthetic-owner@example.test',
     endpoint: 'https://synthetic-acc-12345.r2.cloudflarestorage.com',
     bucketName: 'analytics-bucket',
     publicUrl: 'https://pub-synthetic.r2.dev',

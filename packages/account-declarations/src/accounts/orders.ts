@@ -25,6 +25,7 @@ export const OPTIONAL_ENV_KEYS = [
 export const ORDERS_DECLARATION = {
   name: 'orders',
   project: 'asol-orders',
+  email: 'tenderx10@gmail.com',
   tokenEnvVar: 'VERCEL_ORDERS_TOKEN',
   serviceDir: 'services/orders',
   requiredEnv: [

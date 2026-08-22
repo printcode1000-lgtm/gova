@@ -28,6 +28,7 @@ export const OPTIONAL_ENV_KEYS = [
 export const PROFILES_DECLARATION = {
   name: 'profiles',
   project: 'asol-profiles',
+  email: 'hesham10125@gmail.com',
   tokenEnvVar: 'VERCEL_PROFILES_TOKEN',
   serviceDir: 'services/profiles',
   requiredEnv: [

@@ -18,6 +18,7 @@ export const OPTIONAL_ENV_KEYS = [
 export const NOTIFICATIONS_DECLARATION = {
   name: 'notifications',
   project: 'asol-notifications',
+  email: 'bs.bid.story@gmail.com',
   tokenEnvVar: 'VERCEL_NOTIFICATIONS_TOKEN',
   serviceDir: 'services/notifications',
   requiredEnv: REQUIRED_ENV_KEYS,

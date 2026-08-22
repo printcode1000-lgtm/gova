@@ -14,6 +14,7 @@ import {
 export const SUB2MAIN_DECLARATION = {
   name: 'sub2main',
   project: 'asol-sub2main',
+  email: 'tenderx.engineer100@gmail.com',
   tokenEnvVar: 'VERCEL_SUB2MAIN_TOKEN',
   teamIdEnvVar: 'VERCEL_SUB2MAIN_ORG_ID',
   serviceDir: 'services/sub2main',

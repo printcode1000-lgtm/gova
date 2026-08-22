@@ -25,6 +25,18 @@ import { PROFILES_DECLARATION } from './accounts/profiles';
 export interface AccountDeclaration {
   name: 'gova' | 'submain' | 'sub2main' | 'notifications' | 'products' | 'orders' | 'profiles';
   project: string;
+  /**
+   * The Vercel login this account belongs to.
+   *
+   * Required, so a declaration that omits it fails `typecheck` rather than being caught
+   * later by a person reading a table. Two of these files carried the email in a comment
+   * and the other five carried it nowhere — which meant the only complete record of who
+   * owns which deployment lived in one super-admin page's JSX.
+   *
+   * It is not a credential. `tokenEnvVar` names where the credential lives; this names
+   * the human who can issue a new one when that token is revoked.
+   */
+  email: string;
   tokenEnvVar: string;
   /** Fallback when the token cannot list teams (scoped deploy tokens). */
   teamIdEnvVar?: string;

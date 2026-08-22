@@ -4,6 +4,7 @@ const INITIAL_REGISTRY: Record<string, StorageAccountDefinition> = {
   general: {
     id: 'general',
     accountId: '8486fdbb1c87dc78481f2def0a23e043',
+    email: 'print.code.1000@gmail.com',
     endpoint: 'https://8486fdbb1c87dc78481f2def0a23e043.r2.cloudflarestorage.com',
     bucketName: 'pic1',
     publicUrl: 'https://pub-91c79e3f34ed4575b997fd68ac8dd278.r2.dev',
@@ -14,6 +15,7 @@ const INITIAL_REGISTRY: Record<string, StorageAccountDefinition> = {
   products: {
     id: 'products',
     accountId: '166409f3b449d8f1da0dee6d25ed3e08',
+    email: 'bids.stories@gmail.com',
     endpoint: 'https://166409f3b449d8f1da0dee6d25ed3e08.r2.cloudflarestorage.com',
     bucketName: 'gova-storage',
     publicUrl: 'https://pub-e1fa9cec1a694b118840c7c2ebc1633b.r2.dev',
@@ -24,6 +26,7 @@ const INITIAL_REGISTRY: Record<string, StorageAccountDefinition> = {
   'products-apparel-pets': {
     id: 'products-apparel-pets',
     accountId: 'f08cd5b705c3c57b1f65a220f7ef2642',
+    email: 'hesham.gaber@gmail.com',
     endpoint: 'https://f08cd5b705c3c57b1f65a220f7ef2642.r2.cloudflarestorage.com',
     bucketName: 'productcat1',
     publicUrl: 'https://pub-de6cc53c347e4e6fa0dea7b79bd0ce3e.r2.dev',
@@ -40,6 +43,13 @@ const registry: Map<string, StorageAccountDefinition> = new Map(
 export function registerStorageAccount(account: StorageAccountDefinition): void {
   if (!account.id || !account.accountId || !account.bucketName || !account.endpoint) {
     throw new Error(`Invalid storage account definition: missing required fields`);
+  }
+  // Named separately from the check above, and with the account id in the message: an
+  // account registered without a reachable owner is a bucket nobody can rotate keys on.
+  if (!account.email || !account.email.includes('@')) {
+    throw new Error(
+      `Storage account "${account.id}" needs an email: the Cloudflare login that owns it.`,
+    );
   }
   registry.set(account.id, account);
 }
