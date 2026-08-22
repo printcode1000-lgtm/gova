@@ -1,0 +1,35 @@
+{
+  "name": "gova Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "forwardPorts": [3001, 3002, 5500],
+  "portsAttributes": {
+    "3001": {
+      "label": "Next.js Dev Server",
+      "onAutoForward": "notify"
+    },
+    "3002": {
+      "label": "Production Preview Server",
+      "onAutoForward": "silent"
+    },
+    "5500": {
+      "label": "Static Preview Server",
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "npm install -g npm@11 && npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
