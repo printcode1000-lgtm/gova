@@ -23,6 +23,7 @@ import { checkPackageAppImportContract } from './checks/package-app-import-contr
 import { checkVendorOwnershipContract } from './checks/vendor-ownership-contract';
 import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contract';
 import { printReport, reportNativeSurface } from './checks/file-analysis';
+import { ROOT_VENDOR_OWNED_FILES } from './registry/capability-registry';
 
 /**
  * The whole repository-wide architecture scan, as a function.
@@ -53,6 +54,14 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
 
   checkCapabilityOwnershipContract();
   checkPageSaveGatewayContract();
+
+  // Root files owned by a capability for vendor purposes (e.g. capacitor.config.ts).
+  for (const rootFile of ROOT_VENDOR_OWNED_FILES) {
+    const absolute = join(ROOT, rootFile.relativePath);
+    if (!existsSync(absolute)) continue;
+    const content = readFileSync(absolute, 'utf8');
+    checkVendorOwnershipContract(absolute, content);
+  }
 
   for (const file of walk(SRC)) {
     const content = readFileSync(file, 'utf8');

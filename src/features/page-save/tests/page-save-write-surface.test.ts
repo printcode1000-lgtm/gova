@@ -19,6 +19,14 @@ import path from "node:path";
 
 const root = process.cwd();
 const scanRoots = ["src"];
+/**
+ * Directories skipped by the page-save write-surface scan.
+ * - node_modules / tests / __tests__: non-production
+ * - api: HTTP route handlers persist through domain/data owners, not page-save
+ *
+ * Frozen by `checkPageSaveGatewayContract` in `@asol/architecture-core`.
+ * Do not expand without updating docs/01-architecture/repository-architecture-enforcement.md.
+ */
 const skippedDirectories = new Set(["node_modules", "tests", "__tests__", "api"]);
 
 const CONTENT_WRITES = [

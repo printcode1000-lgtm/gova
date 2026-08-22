@@ -71,6 +71,31 @@ export function checkPageSaveGatewayContract(): void {
     }
   }
 
+  // Freeze the write-surface skip set. `api` is excluded because route handlers
+  // persist through domain/data owners, not page-save; expanding this set is an
+  // architectural decision and must update docs/01-architecture/repository-architecture-enforcement.md.
+  if (existsSync(writeSurfaceTest)) {
+    const writeSurfaceSource = readFileSync(writeSurfaceTest, 'utf8');
+    const skipMatch = writeSurfaceSource.match(
+      /skippedDirectories\s*=\s*new Set\(\[([^\]]*)\]\)/,
+    );
+    const approvedSkip = ['node_modules', 'tests', '__tests__', 'api'].sort().join(',');
+    const actualSkip = skipMatch
+      ? [...skipMatch[1]!.matchAll(/["']([^"']+)["']/g)]
+          .map((match) => match[1]!)
+          .sort()
+          .join(',')
+      : '';
+    if (!skipMatch || actualSkip !== approvedSkip) {
+      addViolation(
+        'Page Save Gateway',
+        writeSurfaceTest,
+        `page-save write-surface skippedDirectories is [${actualSkip || '(missing)'}].`,
+        `Keep exactly [${approvedSkip}]. Document any change in repository-architecture-enforcement.md.`,
+      );
+    }
+  }
+
   // Reject deep imports of page-save-core from application source.
   const srcRoot = join(ROOT, 'src');
   if (!existsSync(srcRoot)) return;

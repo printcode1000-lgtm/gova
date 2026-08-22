@@ -26,6 +26,10 @@ packages/architecture-core/src/
 
 See also [repository-architecture-enforcement.md](./repository-architecture-enforcement.md).
 
+Vendor ownership is registry-driven: `OWNED_VENDOR_MODULES` is derived from each package's
+`vendorModules`, tests under non-owners are rejected, `nodeRequire` / `createRequire` are
+scanned, and `ROOT_VENDOR_OWNED_FILES` covers root shell configs such as `capacitor.config.ts`.
+
 `scripts/architecture-check.ts` is a CLI:
 
 ```ts

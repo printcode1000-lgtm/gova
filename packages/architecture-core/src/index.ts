@@ -12,8 +12,10 @@ export * from './contracts/notification-contract';
 export {
   CAPABILITY_PACKAGES,
   OWNED_VENDOR_MODULES,
+  ROOT_VENDOR_OWNED_FILES,
   packageByFolder,
   ownersOfVendor,
+  rootVendorOwnerFolder,
   type CapabilityPackage,
   type PackageLayer,
 } from './registry/capability-registry';

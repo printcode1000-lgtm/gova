@@ -180,9 +180,15 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
     owns: 'Capacitor / native device capabilities',
     layer: 'capability',
     vendorModules: [
+      '@capacitor/cli',
       '@capacitor/core',
+      '@capacitor/action-sheet',
       '@capacitor/app',
+      '@capacitor/browser',
       '@capacitor/camera',
+      '@capacitor/clipboard',
+      '@capacitor/device',
+      '@capacitor/dialog',
       '@capacitor/filesystem',
       '@capacitor/geolocation',
       '@capacitor/haptics',
@@ -191,20 +197,25 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
       '@capacitor/network',
       '@capacitor/preferences',
       '@capacitor/push-notifications',
+      '@capacitor/screen-orientation',
       '@capacitor/share',
       '@capacitor/splash-screen',
       '@capacitor/status-bar',
+      '@capacitor/text-zoom',
+      '@capacitor/toast',
+      '@capacitor-mlkit/barcode-scanning',
       '@capawesome/capacitor-file-picker',
-      '@capgo/capacitor-updater',
+      '@capgo/capacitor-speech-recognition',
     ],
     mayImportApp: false,
   },
   {
     folder: 'notifications-core',
     name: '@asol/notifications-core',
-    owns: 'Push notification delivery (Web Push, FCM, APNs)',
+    owns: 'Push notification delivery (Web Push, FCM HTTP v1, APNs)',
     layer: 'capability',
-    vendorModules: ['web-push', 'google-auth-library', 'firebase-admin'],
+    // FCM uses HTTP v1 + google-auth-library; firebase-admin is not a production path.
+    vendorModules: ['web-push', 'google-auth-library'],
     mayImportApp: false,
   },
   {
@@ -393,18 +404,32 @@ export const CAPABILITY_PACKAGES: readonly CapabilityPackage[] = [
   },
 ] as const;
 
-/** Vendor modules that must never appear outside a registered owner. */
-export const OWNED_VENDOR_MODULES: readonly string[] = [
-  'better-sqlite3',
-  '@libsql/client',
-  'drizzle-orm',
-  'web-push',
-  'firebase-admin',
-  'google-auth-library',
-  '@aws-sdk/client-s3',
-  '@aws-sdk/s3-request-presigner',
-  'maplibre-gl',
-  'sharp',
+/**
+ * Derived from every package's `vendorModules`. Do not maintain a parallel list —
+ * a vendor present only here would be unenforceable against its real owner, and a
+ * vendor present only on a package would be invisible to the ownership scan.
+ *
+ * Dual ownership is intentional where two capabilities share one SDK for distinct
+ * jobs (e.g. `@aws-sdk/client-s3` for product media vs OTA artifacts;
+ * `google-auth-library` for FCM vs Google Play). Both owners must remain registered.
+ */
+export const OWNED_VENDOR_MODULES: readonly string[] = (() => {
+  const modules = new Set<string>();
+  for (const entry of CAPABILITY_PACKAGES) {
+    for (const vendor of entry.vendorModules) modules.add(vendor);
+  }
+  return Object.freeze([...modules].sort());
+})();
+
+/**
+ * Repository-root files that are not under `packages/<owner>/` but still belong
+ * to a capability owner for vendor-import purposes (e.g. Capacitor shell config).
+ */
+export const ROOT_VENDOR_OWNED_FILES: ReadonlyArray<{
+  relativePath: string;
+  ownerFolder: string;
+}> = [
+  { relativePath: 'capacitor.config.ts', ownerFolder: 'native-core' },
 ];
 
 export function packageByFolder(folder: string): CapabilityPackage | undefined {
@@ -417,4 +442,10 @@ export function ownersOfVendor(moduleName: string): readonly CapabilityPackage[]
       (owned) => moduleName === owned || moduleName.startsWith(owned + '/'),
     ),
   );
+}
+
+export function rootVendorOwnerFolder(relativePath: string): string | undefined {
+  const normalized = relativePath.replace(/\\/g, '/');
+  return ROOT_VENDOR_OWNED_FILES.find((entry) => entry.relativePath === normalized)
+    ?.ownerFolder;
 }
