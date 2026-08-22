@@ -75,6 +75,17 @@ const nextConfig: NextConfig = {
    * gitignored local Chrome profile that has no business in a build at all.
    */
   outputFileTracingExcludes: {
+    // Same reasoning for the Play store-asset routes: they read and write files
+    // under `assets/google-play/`, so the tracer cannot bound them either and
+    // swept the same 362MB in. Neither family can need a browser profile, a
+    // static export, or a native shell at runtime.
+    '/api/super-admin/google-play-store-assets/**': [
+      './test_profile/**',
+      './out/**',
+      './ios/**',
+      './android/**',
+      './public/**',
+    ],
     '/api/super-admin/build-jobs/**': [
       './test_profile/**',
       './out/**',

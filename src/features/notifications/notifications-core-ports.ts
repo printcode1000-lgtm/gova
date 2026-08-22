@@ -1,4 +1,12 @@
-import { configureNotificationsCoreServerConfig } from '@asol/notifications-core/server';
+import {
+  configureNotificationsCoreServerConfig,
+  configureNotificationTokenStore,
+} from '@asol/notifications-core/server';
+import {
+  DeleteNotificationTokenCommand,
+  GetNotificationPushPreferenceQuery,
+  ListNotificationTokensQuery,
+} from '@asol/data-core/notifications';
 import {
   getApnsServerConfig,
   getFirebaseAdminServiceAccount,
@@ -16,5 +24,17 @@ export function registerNotificationsCorePorts(): void {
     getFirebaseAdminServiceAccount,
     getApnsServerConfig,
     getNotificationGrantSecret,
+  });
+
+  // Delivery names three persistence operations as a port so the capability
+  // package no longer imports data-core — the edge that closed a package cycle.
+  // The concrete queries are wired here, at the composition boundary.
+  const listTokens = new ListNotificationTokensQuery();
+  const pushPreference = new GetNotificationPushPreferenceQuery();
+  const deleteToken = new DeleteNotificationTokenCommand();
+  configureNotificationTokenStore({
+    tokensByUid: (uids) => listTokens.byUids(uids),
+    pushEnabledUids: (uids) => pushPreference.pushEnabledUids(uids),
+    deleteToken: (input) => deleteToken.execute(input),
   });
 }

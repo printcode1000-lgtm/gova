@@ -1,4 +1,12 @@
-import { configureNotificationsCoreServerConfig } from '@asol/notifications-core/server';
+import {
+  configureNotificationsCoreServerConfig,
+  configureNotificationTokenStore,
+} from '@asol/notifications-core/server';
+import {
+  DeleteNotificationTokenCommand,
+  GetNotificationPushPreferenceQuery,
+  ListNotificationTokensQuery,
+} from '@asol/data-core/notifications';
 import { NOTIFICATIONS_DECLARATION } from '@asol/account-declarations/notifications';
 import * as serverEnv from '@/core/config/server-env';
 import {
@@ -83,6 +91,18 @@ function wireNotificationsCoreServerConfig(): void {
     getFirebaseAdminServiceAccount: serverEnv.getFirebaseAdminServiceAccount,
     getApnsServerConfig: serverEnv.getApnsServerConfig,
     getNotificationGrantSecret: serverEnv.getNotificationGrantSecret,
+  });
+
+  // The delivery path reads tokens through a port so the capability package
+  // does not import data-core. This deployment has no app instrumentation, so
+  // it wires the concrete queries here, exactly as the application does.
+  const listTokens = new ListNotificationTokensQuery();
+  const pushPreference = new GetNotificationPushPreferenceQuery();
+  const deleteToken = new DeleteNotificationTokenCommand();
+  configureNotificationTokenStore({
+    tokensByUid: (uids) => listTokens.byUids(uids),
+    pushEnabledUids: (uids) => pushPreference.pushEnabledUids(uids),
+    deleteToken: (input) => deleteToken.execute(input),
   });
 }
 

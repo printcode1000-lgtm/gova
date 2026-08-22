@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T22:12:33.164Z",
+  "generatedAt": "2026-08-22T22:44:30.870Z",
   "entryPoints": [
     "features/product-search/services/product-search-service.server.ts",
     "features/product-search/services/product-search-products.server.ts",
@@ -10,7 +10,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 369,
+  "fileCount": 370,
   "files": [
     "packages/account-declarations/src/accounts/gova-runtime-env-keys.ts",
     "packages/account-declarations/src/accounts/submain-runtime-env-keys.ts",
@@ -200,6 +200,7 @@
     "packages/notifications-core/src/domain/web-push-config.ts",
     "packages/notifications-core/src/index.ts",
     "packages/notifications-core/src/ports/server-config.ts",
+    "packages/notifications-core/src/ports/token-store.ts",
     "packages/notifications-core/src/server.ts",
     "packages/notifications-core/src/service-runtime.ts",
     "packages/notifications-core/src/services/notification-grant.server.ts",

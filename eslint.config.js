@@ -250,11 +250,20 @@ module.exports = [
   },
 
   // ── Repository-wide deep-import ban for every sealed @asol package ─────────
+  // Vendor ownership, mirroring packages/architecture-core/src/registry/
+  // capability-registry.ts. The registry is the authority; this rule is the
+  // editor-time echo of it, and the two must name the same owners — a rule that
+  // fires inside the package that owns the SDK is not enforcement, it is a
+  // broken build. `data-core` owns the database drivers and drizzle,
+  // `notifications-core` owns web-push and firebase-admin.
   {
     files: ['src/**/*.{ts,tsx}', 'scripts/**/*.ts', 'services/**/*.{ts,tsx}', 'packages/**/*.{ts,tsx}'],
     ignores: [
       'services/*/generated/**',
       'scripts/architecture-check.ts',
+      'packages/data-core/**',
+      'packages/notifications-core/**',
+      'packages/architecture-core/**',
     ],
     rules: {
       'no-restricted-imports': [
@@ -267,11 +276,26 @@ module.exports = [
                 'Deep import into a sealed @asol package is forbidden. Use a declared package door only.',
             },
             {
-              group: ['web-push', 'firebase-admin', 'better-sqlite3', '@libsql/client', 'drizzle-orm', 'drizzle-orm/*'],
+              // Sub-paths only. The bare names are matched as exact `paths`
+              // below: as a pattern, `web-push` also matched the relative
+              // import `../infrastructure/web-push/web-push-browser.service`,
+              // flagging a module for importing its own adapter.
+              group: ['drizzle-orm/*', '@libsql/*'],
               message:
                 'This vendor SDK is owned by a sealed package. Import through that package public door.',
             },
           ],
+          paths: [
+            'web-push',
+            'firebase-admin',
+            'better-sqlite3',
+            '@libsql/client',
+            'drizzle-orm',
+          ].map((name) => ({
+            name,
+            message:
+              'This vendor SDK is owned by a sealed package. Import through that package public door.',
+          })),
         },
       ],
     },

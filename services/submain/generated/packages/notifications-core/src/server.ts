@@ -35,3 +35,8 @@ export {
   configureNotificationsCoreServerConfig,
   resetNotificationsCoreServerConfig,
 } from './ports/server-config';
+export {
+  configureNotificationTokenStore,
+  resetNotificationTokenStore,
+  type NotificationTokenStorePort,
+} from './ports/token-store';

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T22:12:33.983Z",
+  "generatedAt": "2026-08-22T22:44:31.605Z",
   "entryPoints": [
     "features/product/services/product-service.server.ts",
     "features/profile/services/profile-service.bootstrap.server.ts",
@@ -19,7 +19,7 @@
     "core/config/server-env.ts",
     "features/categories/index.ts"
   ],
-  "fileCount": 370,
+  "fileCount": 371,
   "files": [
     "packages/auth-core/src/domain/account-deletion-registry.ts",
     "packages/auth-core/src/domain/constants.ts",
@@ -203,6 +203,7 @@
     "packages/notifications-core/src/domain/web-push-config.ts",
     "packages/notifications-core/src/index.ts",
     "packages/notifications-core/src/ports/server-config.ts",
+    "packages/notifications-core/src/ports/token-store.ts",
     "packages/notifications-core/src/server.ts",
     "packages/notifications-core/src/service-runtime.ts",
     "packages/notifications-core/src/services/notification-grant.server.ts",

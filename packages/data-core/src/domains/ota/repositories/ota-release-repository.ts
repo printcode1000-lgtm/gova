@@ -13,10 +13,10 @@ import {
   type OtaReleaseEntity,
 } from '../../../core/database/schema';
 import type {
-  OtaManifest,
   OtaReleaseAuditEntry,
+  OtaReleaseManifestRecord,
   OtaReleaseSummary,
-} from '@asol/ota-core';
+} from '../entities';
 
 export class OtaReleaseRepository {
   constructor(private readonly database: IDatabaseClient = usersDataSource) {}
@@ -43,7 +43,7 @@ export class OtaReleaseRepository {
     return rows[0] ? toSummary(rows[0]) : null;
   }
 
-  async getManifest(releaseId: string): Promise<OtaManifest | null> {
+  async getManifest(releaseId: string): Promise<unknown | null> {
     const rows = await this.database.db
       .select({ manifestJson: otaReleases.manifestJson })
       .from(otaReleases)
@@ -51,13 +51,13 @@ export class OtaReleaseRepository {
       .limit(1);
     if (!rows[0]) return null;
     try {
-      return JSON.parse(rows[0].manifestJson) as OtaManifest;
+      return JSON.parse(rows[0].manifestJson) as unknown;
     } catch {
       throw new Error('otaStoredManifestInvalid');
     }
   }
 
-  async discover(manifest: OtaManifest): Promise<OtaReleaseSummary> {
+  async discover(manifest: OtaReleaseManifestRecord): Promise<OtaReleaseSummary> {
     const current = await this.get(manifest.releaseId);
     const now = new Date().toISOString();
     const metadata = {

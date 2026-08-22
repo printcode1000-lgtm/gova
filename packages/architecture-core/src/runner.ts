@@ -19,6 +19,7 @@ import {
   checkSystemLogsContract,
 } from './checks/system-logs-contract';
 import { checkCapabilityOwnershipContract } from './checks/capability-ownership-contract';
+import { checkPackageCycleContract } from './checks/package-cycle-contract';
 import { checkPackageAppImportContract } from './checks/package-app-import-contract';
 import { checkVendorOwnershipContract } from './checks/vendor-ownership-contract';
 import { checkPageSaveGatewayContract } from './checks/page-save-gateway-contract';
@@ -53,6 +54,7 @@ export function runArchitectureCheck(options: ArchitectureCheckOptions = {}): nu
   }
 
   checkCapabilityOwnershipContract();
+  checkPackageCycleContract();
   checkPageSaveGatewayContract();
 
   // Root files owned by a capability for vendor purposes (e.g. capacitor.config.ts).

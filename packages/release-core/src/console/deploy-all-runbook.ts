@@ -63,6 +63,16 @@ export const DEPLOY_ALL_PREFLIGHT_SECTIONS: readonly DeployAllRunbookSection[] =
     label: "main app builds",
     branches: [
       branch("server-build", "server build", "build", "npm"),
+      // Reads the build's own route traces. Vercel rejects a function over
+      // 250MB at *upload*, after the deployment commit is pushed and the
+      // isolated services are live, and reports it as a build failure. Measuring
+      // here turns that into a preflight stop that names the route.
+      branch(
+        "function-size",
+        "Vercel function size budget",
+        "vercel:function-size:check",
+        "npm",
+      ),
       branch("static-build", "static release export", "build:static", "npm"),
     ],
   },

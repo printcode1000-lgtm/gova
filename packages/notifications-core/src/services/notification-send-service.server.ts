@@ -7,9 +7,7 @@ import type {
   SendNotificationToUsersInput,
   SendNotificationToUsersResult,
 } from "../domain/entities";
-import { ListNotificationTokensQuery } from "@asol/data-core/notifications";
-import { GetNotificationPushPreferenceQuery } from "@asol/data-core/notifications";
-import { DeleteNotificationTokenCommand } from "@asol/data-core/notifications";
+import { notificationTokenStore } from "../ports/token-store";
 import { NotificationBuilder } from "../domain/notification-builder";
 import {
   NotificationCategories,
@@ -22,11 +20,9 @@ import type { NotificationProviderPayload } from "./providers/notification-provi
 
 export class NotificationSendService {
   constructor(
-    private readonly listTokens = new ListNotificationTokensQuery(),
     private readonly providers = new NotificationProviderRegistry(),
-    private readonly deleteToken = new DeleteNotificationTokenCommand(),
     private readonly builder = new NotificationBuilder(),
-    private readonly pushPreference = new GetNotificationPushPreferenceQuery(),
+    private readonly tokens = notificationTokenStore,
   ) {}
 
   /**
@@ -54,9 +50,9 @@ export class NotificationSendService {
     // Checked before any token lookup: a muted account gets no send of any
     // kind, and the registration underneath is never touched by this switch.
     const pushEnabledUids = new Set(
-      await this.pushPreference.pushEnabledUids(uids),
+      await this.tokens().pushEnabledUids(uids),
     );
-    const tokensByUid = await this.listTokens.byUids(uids);
+    const tokensByUid = await this.tokens().tokensByUid(uids);
     const results = await Promise.all(
       uids.map(async (uid): Promise<NotificationTokenDeliveryResult> => {
         if (!pushEnabledUids.has(uid)) {
@@ -123,7 +119,7 @@ export class NotificationSendService {
       tokens
         .filter((token) => invalidIds.has(token.id))
         .map((token) =>
-          this.deleteToken.execute({ uid: token.uid, tokenId: token.id }),
+          this.tokens().deleteToken({ uid: token.uid, tokenId: token.id }),
         ),
     );
     return results;

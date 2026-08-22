@@ -136,37 +136,20 @@ export interface OtaReleaseAccess {
   reason: "approved" | "super_admin" | "awaiting_approval" | "rollout_pending";
 }
 
-export interface OtaReleaseSummary {
-  releaseId: string;
-  version: string;
-  manifestCreatedAt: string;
-  baseUrl: string;
-  size: number;
-  fileCount: number;
-  minimumNativeVersion: string;
-  requiredCapabilities: string[];
-  optionalCapabilities: string[];
-  mandatory: boolean;
-  notes: string;
-  signature: string;
-  approved: boolean;
-  rolloutPercentage: number;
-  approvedAt?: string;
-  approvedByUid?: string;
-  revokedAt?: string;
-  revokedByUid?: string;
-  discoveredAt: string;
-  lastSeenAt: string;
-}
+/**
+ * Row projections owned by `@asol/data-core` and re-exported here.
+ *
+ * They describe what the release tables store, so the definition lives with the
+ * tables. Duplicating them here closed a package cycle: data-core imported this
+ * package for the types while this package reads and writes through data-core.
+ * One definition, one direction, unchanged public surface.
+ */
+import type {
+  OtaReleaseAuditEntry,
+  OtaReleaseSummary,
+} from '@asol/data-core/ota';
 
-export interface OtaReleaseAuditEntry {
-  id: string;
-  releaseId: string;
-  version: string;
-  action: "discovered" | "approved" | "revoked" | "rollout_changed";
-  actorUid?: string;
-  createdAt: string;
-}
+export type { OtaReleaseAuditEntry, OtaReleaseSummary };
 
 export interface OtaAdminCurrentRelease {
   release?: OtaReleaseSummary;
