@@ -78,3 +78,22 @@ test at all.
 
 The CLIs — `secrets:backup`, `secrets:restore`, `secrets:key:init` — decide *when*; the package
 decides *how*, and the test fails if a CLI starts doing its own cryptography.
+
+### What is committed, and what is not
+
+`secrets:backup` publishes two files into `config/` — `PORTABLE_ARCHIVE_PATH`
+(`secret-archive-latest.zip.enc`) and `PORTABLE_RECOVERY_KEY_PATH` (that path plus
+`.private-key.pem`). Only the **archive** is tracked. The recovery key is git-ignored and must
+travel out of band.
+
+Both were tracked until 2026-08-22, on a public repository, which put the ciphertext and the key
+that opens it in the same download. The key file is itself passphrase-encrypted PKCS#8 — the
+restore CLI prompts for that passphrase — so nothing was ever exposed in plaintext, but publishing
+both reduced the archive's security to a single offline passphrase guess, which is not what the
+envelope was designed to rest on.
+
+Untracking it does not unpublish it: the key remains reachable in this repository's history, and the
+archive it opens is in there too. The remediation that actually closes it is rotation —
+`secrets:key:init` for a new keypair, `secrets:backup` to re-encrypt, and new credentials at each
+provider for anything the old archive held. Deleting the file from `HEAD` only stops the exposure
+from being extended.

@@ -259,75 +259,22 @@ script, which npm runs on install. `.gitattributes` pins the directory to LF —
 checkout, which is exactly when the checks matter most. `git push --no-verify`
 bypasses all of them, deliberately, for the one-off case.
 
-### `20-sync-data-committed`
-
-Refuses to push while `git status --porcelain -- public/sync_data` reports
-anything. Those files are tracked on purpose: the shard SQLite files are the
-schema sources the development server reads, and the `*-schema-sync-report.json`
-files record what the last sync produced. A push that carries code but leaves a
-changed shard in the working tree puts GitHub a step behind the machine that
-generated it, and the next clone gets a schema that never matched anything.
-
-`--porcelain` covers modified, staged, deleted, and untracked files and honours
-`.gitignore`, so `sync_sqlite/system-ops.db` — deliberately ignored as runtime
-log data, see [11. Current Databases](./11-current-databases.md) — never trips it.
-
-`deploy:all` and `deploy:push` are unaffected: both `git add -A` and commit before
-they push, so `public/sync_data` is already clean by the time the hook runs.
-
-### `30-secrets-backup-committed`
-
-Same rule, applied to the two files `npm run secrets:backup` publishes into
-`config/` — `secret-archive-latest.zip.enc` and its
-`.private-key.pem` (`PORTABLE_ARCHIVE_PATH` and `PORTABLE_RECOVERY_KEY_PATH` in
-`packages/secrets-core/src/archive/archive-workspace.ts`). They are tracked on
-purpose: the portable backup exists so a fresh clone can restore the project's
-secrets, and a backup that never left the machine that made it is not a backup.
-A regenerated archive left in the working tree means GitHub still carries the
-previous one, and a restore elsewhere silently gets stale secrets.
-
-`deploy:all` runs `secrets:backup` inside `publish`, so this also catches a
-release whose archive was regenerated but not staged.
-
-### The server-side block
-
-`npm run github:block-branches` (`scripts/block-branch-creation.ts`) applies a
-repository ruleset named `main-only` that restricts creation for `~ALL` refs
-except `refs/heads/main`, and reads it back to verify. It is **applied**.
-
-This is the layer that actually holds, because it does not depend on a checkout:
-`git push`, the GitHub web UI, and a cloud agent's admin-scoped API call are all
-refused — the API path returns `422 Reference update failed`, the push path
-returns `GH013 ... creations being restricted`.
-
-The ruleset carries no bypass actors. Repository admins are not exempt from
-rulesets by default and are not made exempt here: the automation that created
-those ten branches pushed with an owner-scoped token, so an admin exemption would
-exempt exactly the thing being blocked.
-
-**It cannot restrict a push to `main`.** The rule is `creation` only — not
-`update`, not `deletion`, not `non_fast_forward` — and `refs/heads/main` is
-excluded from the ruleset's conditions on top of that. `GET /repos/{repo}/rules/branches/main`
-returns an empty list, which is the direct confirmation: GitHub applies no ruleset
-rule to `main`. Normal pushes, force pushes, and deploy pushes are untouched.
-
-`--dry-run` prints the payload without sending, and `--remove` deletes the ruleset
-if branches are ever wanted again. It reads `GITHUB_ADMIN_TOKEN` from `.env.local`,
-the same token as `github:protect`.
-
-Note that a ruleset is a separate GitHub system from the branch protection
-described above: `github:protect` governs how `main` may move,
-`github:block-branches` governs whether any other branch may exist. Neither
-replaces the other.
+`10-main-only` is the only check. Two others existed briefly — one refusing to
+push while `public/sync_data` was dirty, one for the `secrets:backup` output in
+`config/` — and both were removed on purpose. They enforced a real rule, but they
+enforced it by holding back the push, and a push to `main` is not supposed to be
+held back for any reason. The rule they encoded now lives in `CLAUDE.md` rule 11
+as a rule rather than a gate. `10-main-only` stays because what it refuses is not
+a push to `main` at all.
 
 ### What is unrestricted on `main`
 
-Deliberately, nothing blocks the owner from pushing to `main` in any form. Branch
-protection sets `required_status_checks: ['verify']` and a pull-request
-requirement, but `enforce_admins` is `false`, so the owner's direct pushes bypass
-both — a real push reports `Bypassed rule violations for refs/heads/main` and
-succeeds. That is the supported release path for `deploy:all` and `deploy:push`,
-and the ruleset above was written not to touch it.
+Deliberately, nothing blocks a push to `main` in any form. Branch protection sets
+`required_status_checks: ['verify']` and a pull-request requirement, but
+`enforce_admins` is `false`, so the owner's direct pushes bypass both — a real
+push reports `Bypassed rule violations for refs/heads/main` and succeeds. That is
+the supported release path for `deploy:all` and `deploy:push`, and both the
+ruleset and the one remaining hook were written not to touch it.
 
 Nothing in `deploy:all`, `deploy:push`, or `.github/workflows/native-core.yml`
 creates a branch, so no release or CI path is affected either way.
