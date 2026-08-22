@@ -1,12 +1,25 @@
 {
+  "files.eol": "\n",
+  "files.encoding": "utf8",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.exclude": {
     "**/out": true
   },
   "files.watcherExclude": {
-    "**/out/**": true
+    "**/out/**": true,
+    "**/.next/**": true,
+    "**/node_modules/**": true
   },
   "search.exclude": {
-    "**/out/**": true
+    "**/out/**": true,
+    "**/.next/**": true,
+    "**/node_modules/**": true
   },
   "html.validate.scripts": false,
   "workbench.browser.openLocalhostLinks": true,
