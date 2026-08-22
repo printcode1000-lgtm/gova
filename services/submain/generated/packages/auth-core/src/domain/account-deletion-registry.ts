@@ -430,11 +430,6 @@ export const ACCOUNT_DELETION_IMAGE_SOURCES: DeletionImageSource[] = [
     description: 'Rows in profile_images for the deleted uid.',
   },
   {
-    id: 'user_profiles_legacy_keys',
-    step: 'collect_images',
-    description: 'avatar_image_key, cover_image_key, and cover_image_keys_json on user_profiles.',
-  },
-  {
     id: 'product_images_json',
     step: 'collect_images',
     description: 'images_json keys on products owned by the uid.',

@@ -32,14 +32,6 @@ export class AccountDeletionRepository {
       "SELECT image_key, image_type FROM profile_images WHERE uid = ?",
       [uid],
     ) as { image_key: string; image_type: string }[];
-    const profileKeyRows = await profilesDataSource.execute(
-      "SELECT avatar_image_key, cover_image_key, cover_image_keys_json FROM user_profiles WHERE uid = ? LIMIT 1",
-      [uid],
-    ) as {
-      avatar_image_key: string | null;
-      cover_image_key: string | null;
-      cover_image_keys_json: string | null;
-    }[];
     const productRows = await productsDataSource.execute(
       "SELECT images_json FROM products WHERE uid = ?",
       [uid],
@@ -53,28 +45,6 @@ export class AccountDeletionRepository {
       profileId: row.image_type === "avatar" ? "avatar" : "cover",
       key: row.image_key,
     }));
-
-    const profileKeys = profileKeyRows[0];
-    if (profileKeys) {
-      if (profileKeys.avatar_image_key) {
-        result.push({ profileId: "avatar", key: profileKeys.avatar_image_key });
-      }
-      if (profileKeys.cover_image_key) {
-        result.push({ profileId: "cover", key: profileKeys.cover_image_key });
-      }
-      if (profileKeys.cover_image_keys_json) {
-        try {
-          const keys = JSON.parse(profileKeys.cover_image_keys_json) as string[];
-          for (const key of keys) {
-            if (typeof key === "string" && key) {
-              result.push({ profileId: "cover", key });
-            }
-          }
-        } catch {
-          // malformed legacy cover keys must not block deletion
-        }
-      }
-    }
 
     for (const row of productRows) {
       try {

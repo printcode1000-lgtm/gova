@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
-import { ACCOUNT_DELETION_REGISTRY_VERSION } from '@asol/auth-core';
+import {
+  ACCOUNT_DELETION_IMAGE_SOURCES,
+  ACCOUNT_DELETION_REGISTRY_VERSION,
+} from '@asol/auth-core';
 import {
   DEFAULT_MIGRATION_SCAN_SOURCES,
   evaluateRegistryCoverage,
@@ -28,10 +31,25 @@ function runRegistryCoverageContractTest() {
   console.log('✅ account deletion registry coverage contract passed');
 }
 
+function runImageSourceContractTest() {
+  assert.deepEqual(
+    ACCOUNT_DELETION_IMAGE_SOURCES.map((source) => source.id),
+    [
+      'profile_images',
+      'product_images_json',
+      'pharmacy_override_images',
+      'custom_request_images',
+    ],
+    'Image cleanup sources must match the live image tables and JSON fields.',
+  );
+  console.log('✅ account deletion image source contract passed');
+}
+
 function main() {
   console.log('🚀 Running account deletion registry contract...\n');
   runRegistryVersionTest();
   runRegistryCoverageContractTest();
+  runImageSourceContractTest();
   console.log('\n🎉 Account deletion registry contract passed successfully!');
 }
 

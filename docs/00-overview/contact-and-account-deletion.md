@@ -103,10 +103,25 @@ Orders, payments, returns, disputes, and audit logs involve multiple parties and
 
 The deletion process spans user, profile, product, and order databases as well as image storage. Core data deletion executes in a fixed step order defined by `ACCOUNT_DELETION_STEP_ORDER` in `@asol/auth-core`. Image removal runs after database cleanup with up to three retry attempts per file; failures are returned in the API response under `imagesFailed` and logged server-side.
 
+`collect_images` reads exactly four live sources before database deletion:
+
+- `profile_images.image_key` on the `profile-media` shard
+- `products.images_json`
+- non-fixed `pharmacy_profile_product_overrides.image_key` values
+- `custom_request_images.image_key` for rows uploaded by the user
+
+It does not read image-key columns from `user_profiles`; those legacy columns
+were superseded by `profile_images` and do not exist on the live
+`profile-core` shard.
+
 ### Deletion Registry and Contract Test
 
 - Authoritative table and image-source manifest: `packages/auth-core/src/domain/account-deletion-registry.ts`.
 - `npm run test:account-deletion-registry` scans SQL migrations for user-owned tables and fails if any table is not covered by the registry, an exempt list, or a documented `ON DELETE CASCADE` child of `user_profiles`.
+- `npm run test:account-deletion-schema` parses every repository `SELECT`, opens
+  the matching local SQLite shard when present, and fails when a referenced
+  table or column does not exist. Absent optional shards are reported and
+  skipped rather than causing `SQLITE_CANTOPEN`.
 - When adding migrations that store per-user data, update the registry in the same change.
 
 ### API Response Fields
