@@ -5,7 +5,6 @@ import { formatAdminDate } from "@asol/format-core";
 import * as React from "react";
 import Link from "next/link";
 import {
-  CheckCircle2,
   Search,
   ShieldAlert,
   Trash2,
@@ -28,10 +27,7 @@ import {
   asolDbDeleteSuperAdminOriginalSession,
   asolDbSetSuperAdminOriginalSession,
 } from "@asol/data-core/browser";
-import {
-  SuperAdminUserDeleteDialog,
-  type SuperAdminDeleteTargetUser,
-} from "../components/SuperAdminUserDeleteDialog";
+import { usePageSaveOperationScope } from "@/features/page-save/hooks/use-page-save-operation-scope";
 
 interface AdminUserResult {
   uid: string;
@@ -68,16 +64,27 @@ export function SuperAdminUsersPage() {
   const [results, setResults] = React.useState<AdminUserResult[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [successMessage, setSuccessMessage] = React.useState("");
   const [impersonatingUid, setImpersonatingUid] = React.useState("");
-  const [userToDelete, setUserToDelete] = React.useState<SuperAdminDeleteTargetUser | null>(null);
-  const [isDeleting, setIsDeleting] = React.useState(false);
+
+  /**
+   * Deletion is staged, never run on tap.
+   *
+   * `@asol/page-save-core` is the only place ASOL performs a user-triggered
+   * delete, so this page owns no delete button, no confirmation dialog, and no
+   * result message: the header save icon and `PageSaveDialog` execute the
+   * staged operation and report it. See docs/05-platform-features/page-save-system.md.
+   */
+  const deletionOperations = usePageSaveOperationScope({
+    id: "super-admin-users",
+    label: "بحث المستخدمين",
+    returnPath: "/super-admin/users",
+    enabled: allowed,
+  });
 
   const search = React.useCallback(async () => {
     if (!session?.sessionToken || !isSuperAdmin(session)) return;
     setLoading(true);
     setError("");
-    setSuccessMessage("");
     try {
       const params = new URLSearchParams({
         q: query.trim(),
@@ -103,25 +110,46 @@ export function SuperAdminUsersPage() {
     if (allowed) void search();
   }, [allowed, search]);
 
-  const deleteUser = async (targetUid: string) => {
-    if (!session?.sessionToken || !isSuperAdmin(session)) return;
-    setIsDeleting(true);
+  /**
+   * Stage one account for deletion. Nothing is deleted here.
+   *
+   * The item id carries the uid, so re-tapping the same row restages rather
+   * than queueing a second delete, and each row is its own checkbox in the
+   * dialog. The label names the account because a super admin stages from a
+   * list — the account named in the dialog is what makes the confirmation
+   * mean something.
+   */
+  const stageUserDeletion = (user: AdminUserResult) => {
     setError("");
-    setSuccessMessage("");
-    try {
-      await asolApi.post(
-        "/api/super-admin/users/delete",
-        { targetUid },
-        { headers: { "x-asol-session-token": session.sessionToken } },
-      );
-      setResults((prev) => prev.filter((user) => user.uid !== targetUid));
-      setSuccessMessage("تم حذف حساب المستخدم بنجاح.");
-      setUserToDelete(null);
-    } catch (err) {
-      setError(formatApiError(err));
-    } finally {
-      setIsDeleting(false);
-    }
+    const displayName = user.storeName || user.email || user.phone || user.uid;
+    deletionOperations.stage({
+      itemId: `super-admin-user-delete:${user.uid}`,
+      kind: "delete",
+      label: `حذف حساب: ${displayName}`,
+      description: [
+        `الهاتف: ${user.phone || "غير مسجل"}`,
+        `المعرّف: ${user.uid}`,
+        user.productCount > 0 ? `يملك ${user.productCount} منتج سيتم حذفها.` : null,
+        "إجراء نهائي: يحذف البروفايل والصور والتخصصات ورموز الإشعارات والمنتجات، ويجهّل سجلات الطلبات.",
+      ]
+        .filter(Boolean)
+        .join(" — "),
+      execute: async () => {
+        if (!session?.sessionToken || !isSuperAdmin(session)) return false;
+        try {
+          await asolApi.post(
+            "/api/super-admin/users/delete",
+            { targetUid: user.uid },
+            { headers: { "x-asol-session-token": session.sessionToken } },
+          );
+          setResults((prev) => prev.filter((row) => row.uid !== user.uid));
+          return true;
+        } catch (err) {
+          setError(formatApiError(err));
+          return false;
+        }
+      },
+    });
   };
 
   const impersonate = async (targetUid: string) => {
@@ -250,13 +278,6 @@ export function SuperAdminUsersPage() {
         </div>
       ) : null}
 
-      {successMessage ? (
-        <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-          {successMessage}
-        </div>
-      ) : null}
-
       <section className="overflow-hidden rounded-lg border bg-surface">
         <div className="flex items-center justify-between border-b p-3">
           <div className="flex items-center gap-2 text-sm font-semibold">
@@ -343,7 +364,7 @@ export function SuperAdminUsersPage() {
                         type="button"
                         size="sm"
                         onClick={() => impersonate(user.uid)}
-                        disabled={Boolean(impersonatingUid) || isDeleting}
+                        disabled={Boolean(impersonatingUid)}
                       >
                         {impersonatingUid === user.uid ? (
                           "جاري الدخول..."
@@ -358,16 +379,22 @@ export function SuperAdminUsersPage() {
                         type="button"
                         variant="destructive"
                         size="sm"
-                        onClick={() => {
-                          setError("");
-                          setSuccessMessage("");
-                          setUserToDelete(user);
-                        }}
-                        disabled={user.uid === session?.uid || Boolean(impersonatingUid) || isDeleting}
+                        onClick={() => stageUserDeletion(user)}
+                        disabled={
+                          user.uid === session?.uid ||
+                          Boolean(impersonatingUid) ||
+                          deletionOperations.isStaged(
+                            `super-admin-user-delete:${user.uid}`,
+                          )
+                        }
                         className="gap-1"
                       >
                         <Trash2 className="h-4 w-4" />
-                        حذف الحساب
+                        {deletionOperations.isStaged(
+                          `super-admin-user-delete:${user.uid}`,
+                        )
+                          ? "بانتظار الحفظ"
+                          : "تجهيز الحذف"}
                       </Button>
                     </div>
                   </td>
@@ -389,14 +416,6 @@ export function SuperAdminUsersPage() {
         <ShieldAlert className="h-4 w-4" />
         يتم تسجيل كل عملية انتحال أو حذف حساب في سجل النظام.
       </div>
-
-      <SuperAdminUserDeleteDialog
-        user={userToDelete}
-        isOpen={Boolean(userToDelete)}
-        isDeleting={isDeleting}
-        onClose={() => setUserToDelete(null)}
-        onConfirm={deleteUser}
-      />
     </main>
   );
 }

@@ -12,21 +12,54 @@ function source(relativePath: string): string {
 
 // 1. Static contract and UI compliance tests
 const usersPage = source("src/features/super-admin/presentation/SuperAdminUsersPage.tsx");
-const deleteDialog = source("src/features/super-admin/components/SuperAdminUserDeleteDialog.tsx");
 const deleteRoute = source("src/app/api/super-admin/users/delete/route.ts");
 const userService = source("src/features/super-admin/services/super-admin-user-service.server.ts");
 
-// Verify UI components and route wiring
-assert.match(usersPage, /SuperAdminUserDeleteDialog/);
+// Verify route wiring
 assert.match(usersPage, /\/api\/super-admin\/users\/delete/);
-assert.match(usersPage, /deleteUser/);
-assert.match(usersPage, /userToDelete/);
-assert.match(usersPage, /حذف الحساب/);
 assert.match(deleteRoute, /runSuperAdminJsonRoute/);
 assert.match(deleteRoute, /deleteUser/);
 assert.match(userService, /deleteUser/);
 assert.match(userService, /accountDeletionService\.deleteBySuperAdmin/);
 assert.match(userService, /persistentSystemLogService\.add/);
+
+/**
+ * `@asol/page-save-core` is the only place ASOL performs a user-triggered
+ * delete, so this page stages the deletion and owns no delete button,
+ * confirmation, or result message of its own — the header save icon and
+ * `PageSaveDialog` execute it and report the outcome.
+ *
+ * See docs/05-platform-features/page-save-system.md § "Page integration".
+ */
+assert.match(
+  usersPage,
+  /usePageSaveOperationScope\(\{\s*id: "super-admin-users"/,
+  "The page must register a page-save scope for its deletions.",
+);
+assert.match(
+  usersPage,
+  /kind: "delete"/,
+  "Deletion must be staged as a page-save delete operation.",
+);
+assert.match(
+  usersPage,
+  /itemId: `super-admin-user-delete:\$\{user\.uid\}`/,
+  "Each staged item must be keyed by uid so a row cannot queue twice.",
+);
+
+// No page-authored confirmation or result surface. The dialog the package owns
+// is the only one allowed to name the operation and ask.
+for (const forbidden of [
+  ["SuperAdminUserDeleteDialog", "its own delete dialog"],
+  ["successMessage", "its own result message"],
+  ["setIsDeleting", "its own delete-in-progress state"],
+]) {
+  assert.equal(
+    usersPage.includes(forbidden[0]),
+    false,
+    `The page must not carry ${forbidden[1]}.`,
+  );
+}
 
 /**
  * Touch-only UI policy compliance.
@@ -44,56 +77,66 @@ const FORBIDDEN_TOUCH_PATTERNS = [
   `${"cursor"}: pointer`,
 ];
 
-for (const [name, content] of [
-  ["SuperAdminUsersPage", usersPage],
-  ["SuperAdminUserDeleteDialog", deleteDialog],
-]) {
-  for (const pattern of FORBIDDEN_TOUCH_PATTERNS) {
-    assert.equal(
-      content.includes(pattern),
-      false,
-      `${name} must not contain ${pattern} — see docs/04-ui-components/touch-interaction-policy.md`,
-    );
-  }
+for (const pattern of FORBIDDEN_TOUCH_PATTERNS) {
+  assert.equal(
+    usersPage.includes(pattern),
+    false,
+    `SuperAdminUsersPage must not contain ${pattern} — see docs/04-ui-components/touch-interaction-policy.md`,
+  );
 }
 
-/**
- * The dialog must not delete on a single tap.
- *
- * A super admin works down a list of rows, so the realistic mistake is
- * destroying the wrong account. The destructive button stays disabled until the
- * admin retypes the target's own identifier — a constant phrase would be the
- * same for every row and would catch nothing.
- */
-assert.match(
-  deleteDialog,
-  /superAdminDeleteConfirmationValue/,
-  "The dialog must gate deletion behind a retyped identifier.",
-);
-assert.match(
-  deleteDialog,
-  /disabled=\{isDeleting \|\| !confirmed\}/,
-  "The destructive button must be disabled until the confirmation matches.",
-);
-assert.match(
-  deleteDialog,
-  /if \(!user\.uid \|\| isDeleting \|\| !confirmed\) return;/,
-  "The confirm handler must refuse to fire without a matching confirmation.",
-);
-assert.match(
-  deleteDialog,
-  /React\.useEffect\(\(\) => \{\s*setConfirmation\(""\);\s*\}, \[user\?\.uid\]\);/,
-  "The typed value must reset per target so it cannot arm a different row.",
-);
-
-// The confirmation is a mis-tap guard, not authority: the route's only
-// gate is the super-admin signed session, and it must stay that way.
-assert.match(deleteRoute, /runSuperAdminJsonRoute/);
+// The route's only gate is the super-admin signed session. A client-supplied
+// confirmation could never be authority, so it must not become one.
 assert.doesNotMatch(
   deleteRoute,
   /confirmation/i,
   "The route must not accept a client-supplied confirmation as authority.",
 );
+
+/**
+ * Deletion follows the runtime, cloud or local.
+ *
+ * The repository names logical sources only — `usersDataSource`,
+ * `profilesDataSource`, `productsDataSource`, `notificationsDataSource`, and
+ * the sharded orders client. `DataSourceRegistry` picks the backend from
+ * `getServerDatabaseBackend()`, so `next dev` deletes out of the local SQLite
+ * shards and a deployment deletes out of Turso, with no branch in the deletion
+ * code itself.
+ *
+ * Naming a concrete client here would pin the deletion to one environment and
+ * silently delete from the wrong database in the other, which is exactly what
+ * this asserts can never happen.
+ */
+const deletionRepository = source(
+  "packages/data-core/src/domains/account-deletion/repositories/account-deletion-repository.server.ts",
+);
+
+for (const logicalSource of [
+  "usersDataSource",
+  "profilesDataSource",
+  "productsDataSource",
+  "notificationsDataSource",
+]) {
+  assert.match(
+    deletionRepository,
+    new RegExp(`\\b${logicalSource}\\.`),
+    `The deletion repository must read ${logicalSource} through the registry.`,
+  );
+}
+
+for (const concreteClient of [
+  "SQLiteDatabaseClient",
+  "TursoDatabaseClient",
+  "getTursoClient",
+  "getTursoNotificationsClient",
+  "better-sqlite3",
+]) {
+  assert.equal(
+    deletionRepository.includes(concreteClient),
+    false,
+    `The deletion repository must not reach ${concreteClient} directly — the registry chooses the backend per environment.`,
+  );
+}
 
 // 2. Functional service tests across all user scenarios
 async function runFunctionalTests() {

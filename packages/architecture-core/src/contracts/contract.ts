@@ -54,6 +54,11 @@ export const ALLOWED_PROCESS_ENV_FILES = new Set([
   'src/modules/data-health/tests/development-guard.test.ts',
   'src/features/notifications/tests/mobile-push-crypto.test.ts',
   'src/features/notifications/tests/mobile-push-unlock.service.test.ts',
+  // Spawns one child per case with `NEXT_PUBLIC_ASOL_NOTIFICATIONS_URL` set or
+  // cleared, because `publicEnv` freezes the value at module load. Building a
+  // child's environment is process management, not configuration reading — and
+  // inheriting the ambient value is precisely the bug it exists to prevent.
+  'src/features/notifications/tests/dev-notification-bridge.test.ts',
 ]);
 
 /**

@@ -28,6 +28,12 @@ tsconfig.tsbuildinfo
 .env*.local
 .env
 
+# Ephemeral agent worktrees. Never tracked: they carry a full checkout plus
+# whatever secrets a session restored into it, including the Android signing
+# keystore. `secrets:restore` refuses to write into a path Git does not ignore,
+# so an archive entry under here needs this line to be restorable at all.
+.claude/worktrees/
+
 # IDE
 .idea/
 *.swp

@@ -181,11 +181,28 @@ const sqliteFiles = {
   ),
 } as const;
 const unregisteredImageColumns: string[] = [];
+/**
+ * A shard file that is not on disk yet is skipped, not a failure.
+ *
+ * Most shards are tracked, but `system-ops.db` is gitignored on purpose — local
+ * runtime state, untracked since `054ffbe` — and `db:ensure` creates it. That
+ * script runs *after* the test suite in both `build` and `deploy:all`, so a
+ * fresh clone opened this file before anything had created it and the whole
+ * suite died on `SQLITE_CANTOPEN`, on a machine where nothing was actually
+ * wrong.
+ *
+ * Skipping cannot hide column drift: a shard absent from disk has no columns to
+ * drift, and the skipped names are printed so a shard that vanishes
+ * unexpectedly is still visible rather than silently unscanned.
+ */
+const skippedShards: string[] = [];
 for (const [databaseName, fileName] of Object.entries(sqliteFiles)) {
-  const db = new Database(
-    path.join(root, "public/sync_data/sync_sqlite", fileName),
-    { readonly: true },
-  );
+  const filePath = path.join(root, "public/sync_data/sync_sqlite", fileName);
+  if (!existsSync(filePath)) {
+    skippedShards.push(fileName);
+    continue;
+  }
+  const db = new Database(filePath, { readonly: true });
   try {
     const tables = db
       .prepare(
@@ -231,6 +248,12 @@ for (const item of pharmacyItems.items) {
   assert.ok(
     existsSync(path.join(root, "public", item.imagePath.replace(/^\/+/, ""))),
     `Missing pharmacy static image ${item.id}: ${item.imagePath}`,
+  );
+}
+
+if (skippedShards.length > 0) {
+  console.log(
+    `Data health policy: skipped ${skippedShards.length} shard file(s) not on disk (run db:ensure to create them): ${skippedShards.join(", ")}`,
   );
 }
 
