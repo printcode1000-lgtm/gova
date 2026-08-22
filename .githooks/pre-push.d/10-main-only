@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+# Refuses to push any branch other than `main`.
+#
+# `main` is the only branch this repository has. Every branch that used to exist was
+# created automatically — by a Claude Code session or a Cursor cloud agent — and none of
+# them carried work that main did not already have. The cleanup is only worth doing once,
+# so the boundary is enforced here rather than remembered.
+#
+# Reads the `pre-push` ref lines from stdin, replayed by the dispatcher:
+#   <local ref> <local sha> <remote ref> <remote sha>
+#
+# Deletions (`git push origin --delete <branch>`) arrive with a zero local sha and are
+# allowed through: removing a stray branch is the outcome this check exists to protect.
+#
+# Full rationale: docs/01-architecture/data-layers/22-scripts-and-workflows.md
+
+blocked=0
+
+while read -r _local_ref local_sha remote_ref _remote_sha; do
+  [ -n "$remote_ref" ] || continue
+
+  case "$remote_ref" in
+    refs/heads/main) continue ;;
+  esac
+
+  case "$local_sha" in
+    0000000000000000000000000000000000000000) continue ;;
+  esac
+
+  echo "pre-push: refusing to create or update '$remote_ref'." >&2
+  blocked=1
+done
+
+if [ "$blocked" -ne 0 ]; then
+  echo "" >&2
+  echo "main is the only branch in this repository. Commit to main and push that," >&2
+  echo "or use 'git push --no-verify' if you genuinely need a one-off branch." >&2
+  exit 1
+fi
+
+exit 0

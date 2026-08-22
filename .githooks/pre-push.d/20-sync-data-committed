@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# Refuses to push while anything under `public/sync_data` is uncommitted.
+#
+# Those files are tracked on purpose: the shard SQLite files are the schema sources the
+# development server reads, and the `*-schema-sync-report.json` files record what the last
+# sync produced. A push that carries code but leaves a changed shard sitting in the working
+# tree puts GitHub a step behind the machine that generated it, and the next machine to
+# clone gets a schema that never matched anything.
+#
+# `git status --porcelain` covers modified, staged, deleted, and untracked files, and
+# honours .gitignore — so `sync_sqlite/system-ops.db`, which is deliberately ignored as
+# runtime log data, never trips this.
+#
+# Full rationale: docs/01-architecture/data-layers/22-scripts-and-workflows.md
+
+# The push refs arrive on stdin from the dispatcher. This check does not care which ref is
+# being pushed — the working tree is either clean here or it is not — but stdin is drained
+# so the dispatcher's pipe never blocks on an unread writer.
+cat >/dev/null
+
+dirty=$(git status --porcelain -- public/sync_data)
+
+if [ -n "$dirty" ]; then
+  echo "pre-push: public/sync_data has uncommitted changes." >&2
+  echo "" >&2
+  printf '%s\n' "$dirty" >&2
+  echo "" >&2
+  echo "Every change under public/sync_data must reach GitHub. Commit it and push again:" >&2
+  echo "  git add public/sync_data && git commit -m 'sync: update sync_data'" >&2
+  echo "" >&2
+  echo "Override with 'git push --no-verify' only if you intend to leave it behind." >&2
+  exit 1
+fi
+
+exit 0

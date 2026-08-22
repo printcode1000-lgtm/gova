@@ -234,12 +234,9 @@ not already have; the largest diff among them was an empty commit pushed to
 retrigger CI. They were deleted in one sweep, and the rule is enforced locally
 from that point on.
 
-**`.githooks/pre-push`** rejects any push whose remote ref is not
+**`.githooks/pre-push.d/10-main-only`** rejects any push whose remote ref is not
 `refs/heads/main`. Branch *deletions* pass through — removing a stray branch is
-the outcome the hook protects, not something to block. The hook lives in a
-tracked directory rather than `.git/hooks` so it ships with the repository;
-`core.hooksPath` is pointed at it by the `prepare` npm script, which npm runs on
-install. `git push --no-verify` bypasses it, deliberately, for the one-off case.
+the outcome the check protects, not something to block.
 
 This is the enforcement layer, and its limit is worth stating plainly: it runs
 only in a checkout that has `core.hooksPath` set. A Cursor cloud agent, a Claude
@@ -247,29 +244,90 @@ Code cloud session, or the GitHub web UI can still create a branch. Agents
 working in this repository are told not to by rule 10 of `CLAUDE.md`; the hook
 covers the local path and nothing beyond it.
 
-### The server-side option, and why it is off
+## The pre-push hook
+
+Git allows exactly one `pre-push` hook file, so `.githooks/pre-push` is a
+dispatcher: it captures the ref lines Git sends on stdin, replays them into every
+file in `.githooks/pre-push.d/`, and fails the push if any check fails. Every
+check runs even after one fails, so a push held back for two reasons says so once
+rather than over two attempts.
+
+The hooks live in a tracked directory rather than `.git/hooks` so they ship with
+the repository; `core.hooksPath` is pointed at `.githooks` by the `prepare` npm
+script, which npm runs on install. `.gitattributes` pins the directory to LF —
+`core.autocrlf` is on here, and a CRLF shebang fails as `/bin/sh^M` on a fresh
+checkout, which is exactly when the checks matter most. `git push --no-verify`
+bypasses all of them, deliberately, for the one-off case.
+
+### `20-sync-data-committed`
+
+Refuses to push while `git status --porcelain -- public/sync_data` reports
+anything. Those files are tracked on purpose: the shard SQLite files are the
+schema sources the development server reads, and the `*-schema-sync-report.json`
+files record what the last sync produced. A push that carries code but leaves a
+changed shard in the working tree puts GitHub a step behind the machine that
+generated it, and the next clone gets a schema that never matched anything.
+
+`--porcelain` covers modified, staged, deleted, and untracked files and honours
+`.gitignore`, so `sync_sqlite/system-ops.db` — deliberately ignored as runtime
+log data, see [11. Current Databases](./11-current-databases.md) — never trips it.
+
+`deploy:all` and `deploy:push` are unaffected: both `git add -A` and commit before
+they push, so `public/sync_data` is already clean by the time the hook runs.
+
+### `30-secrets-backup-committed`
+
+Same rule, applied to the two files `npm run secrets:backup` publishes into
+`config/` — `secret-archive-latest.zip.enc` and its
+`.private-key.pem` (`PORTABLE_ARCHIVE_PATH` and `PORTABLE_RECOVERY_KEY_PATH` in
+`packages/secrets-core/src/archive/archive-workspace.ts`). They are tracked on
+purpose: the portable backup exists so a fresh clone can restore the project's
+secrets, and a backup that never left the machine that made it is not a backup.
+A regenerated archive left in the working tree means GitHub still carries the
+previous one, and a restore elsewhere silently gets stale secrets.
+
+`deploy:all` runs `secrets:backup` inside `publish`, so this also catches a
+release whose archive was regenerated but not staged.
+
+### The server-side block
 
 `npm run github:block-branches` (`scripts/block-branch-creation.ts`) applies a
 repository ruleset named `main-only` that restricts creation for `~ALL` refs
-except `refs/heads/main`, reads it back to verify, and refuses branch creation at
-GitHub with `GH013 ... creations being restricted`.
+except `refs/heads/main`, and reads it back to verify. It is **applied**.
 
-**It is deliberately not applied.** A ruleset with no bypass actors refuses the
-owner's own pushes too, and there is no useful middle setting: the automation
-that created those ten branches pushes with an owner-scoped token, so any bypass
-actor broad enough to keep the owner unblocked also unblocks the automation.
-Between a block that stops the developer and no server-side block at all, this
-repository takes the second — the hook plus the agent rule carry it.
+This is the layer that actually holds, because it does not depend on a checkout:
+`git push`, the GitHub web UI, and a cloud agent's admin-scoped API call are all
+refused — the API path returns `422 Reference update failed`, the push path
+returns `GH013 ... creations being restricted`.
 
-The script stays because the decision may not be permanent. `--dry-run` prints
-the payload without sending, and `--remove` deletes the ruleset if it is ever
-applied and then unwanted. It reads `GITHUB_ADMIN_TOKEN` from `.env.local`, the
-same token as `github:protect`.
+The ruleset carries no bypass actors. Repository admins are not exempt from
+rulesets by default and are not made exempt here: the automation that created
+those ten branches pushed with an owner-scoped token, so an admin exemption would
+exempt exactly the thing being blocked.
+
+**It cannot restrict a push to `main`.** The rule is `creation` only — not
+`update`, not `deletion`, not `non_fast_forward` — and `refs/heads/main` is
+excluded from the ruleset's conditions on top of that. `GET /repos/{repo}/rules/branches/main`
+returns an empty list, which is the direct confirmation: GitHub applies no ruleset
+rule to `main`. Normal pushes, force pushes, and deploy pushes are untouched.
+
+`--dry-run` prints the payload without sending, and `--remove` deletes the ruleset
+if branches are ever wanted again. It reads `GITHUB_ADMIN_TOKEN` from `.env.local`,
+the same token as `github:protect`.
 
 Note that a ruleset is a separate GitHub system from the branch protection
 described above: `github:protect` governs how `main` may move,
-`github:block-branches` would govern whether any other branch may exist. Neither
+`github:block-branches` governs whether any other branch may exist. Neither
 replaces the other.
+
+### What is unrestricted on `main`
+
+Deliberately, nothing blocks the owner from pushing to `main` in any form. Branch
+protection sets `required_status_checks: ['verify']` and a pull-request
+requirement, but `enforce_admins` is `false`, so the owner's direct pushes bypass
+both — a real push reports `Bypassed rule violations for refs/heads/main` and
+succeeds. That is the supported release path for `deploy:all` and `deploy:push`,
+and the ruleset above was written not to touch it.
 
 Nothing in `deploy:all`, `deploy:push`, or `.github/workflows/native-core.yml`
 creates a branch, so no release or CI path is affected either way.
