@@ -38,14 +38,37 @@ const repositoryPath = path.join(
 
 function parseSelectReferences(source: string): SelectReference[] {
   const references: SelectReference[] = [];
-  for (const match of source.matchAll(
-    /["'`]SELECT\s+(.+?)\s+FROM\s+([A-Za-z_][A-Za-z0-9_]*)/gi,
-  )) {
-    const columns = match[1].split(",").map((part) => {
+  for (const literal of source.matchAll(/"(SELECT[^"]+)"/gi)) {
+    const sql = literal[1];
+    assert.ok(sql, "Account-deletion SELECT literal must not be empty.");
+    const match = /^SELECT\s+(.+?)\s+FROM\s+([A-Za-z_][A-Za-z0-9_]*)/i.exec(sql);
+    assert.ok(match, `Could not parse account-deletion SELECT: ${sql}`);
+    const selectedColumns = match[1].split(",").map((part) => {
       const withoutAlias = part.trim().split(/\s+AS\s+/i)[0];
       return withoutAlias.split(".").at(-1) ?? withoutAlias;
     });
-    references.push({ table: match[2], columns });
+    const whereClause =
+      /\bWHERE\s+(.+?)(?:\s+ORDER\s+BY|\s+GROUP\s+BY|\s+LIMIT|$)/i.exec(sql)?.[1] ??
+      "";
+    const sqlKeywords = new Set([
+      "and",
+      "or",
+      "is",
+      "not",
+      "null",
+      "like",
+      "in",
+      "between",
+      "true",
+      "false",
+    ]);
+    const predicateColumns = [...whereClause.matchAll(/[A-Za-z_][A-Za-z0-9_]*/g)]
+      .map((token) => token[0])
+      .filter((token) => !sqlKeywords.has(token.toLowerCase()));
+    references.push({
+      table: match[2],
+      columns: [...new Set([...selectedColumns, ...predicateColumns])],
+    });
   }
   return references;
 }
